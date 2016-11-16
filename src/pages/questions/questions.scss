@@ -1,0 +1,25 @@
+page-questions {
+  .questions-container {
+    display: flex;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  question {
+    flex: 1 0 100vw;
+    padding: 16px;
+    height: 100%;
+    border: 1px solid red;
+  }
+
+  .bottom-bar {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+
+    button {
+      &.disabled {
+        color: lightgray;
+      }
+    }
+  }
+}

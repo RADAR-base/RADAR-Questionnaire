@@ -1,0 +1,20 @@
+<h2>{{question.lead}}</h2>
+<h3>{{question.content}}</h3>
+<p>Type: {{question.type}} | ID: {{question.id}}</p>
+<p>Value: {{value}}</p>
+
+<div *ngIf="question.type === 'radio'">
+  <radio-input
+    [responses]="question.responses"
+    (valueChange)="onValueChange($event)">
+  </radio-input>
+</div>
+
+<div *ngIf="question.type === 'range'">
+  <range-input
+    [min]="question.range.min"
+    [max]="question.range.max"
+    (valueChange)="onValueChange($event)">
+  </range-input>
+</div>
+

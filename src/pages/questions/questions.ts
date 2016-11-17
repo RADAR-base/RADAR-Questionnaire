@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, Content } from 'ionic-angular';
 
 import { Question } from '../../models/question';
 import { AnswerService } from '../../providers/answer-service';
@@ -10,9 +10,13 @@ import { AnswerService } from '../../providers/answer-service';
 })
 export class QuestionsPage {
 
+  @ViewChild(Content)
+  content: Content;
+
   @ViewChild('questionsContainer')
   questionsContainerRef: ElementRef;
   questionsContainerEl: HTMLElement;
+
   currentQuestion: number = 0;
   questions: Question[];
 
@@ -41,6 +45,8 @@ export class QuestionsPage {
     let min = !(this.currentQuestion + value < 0);
     let max = !(this.currentQuestion + value >= this.questions.length);
     if (min && max) {
+      this.content.scrollToTop(200);
+
       this.currentQuestion = this.currentQuestion + value;
       this.questionsContainerEl.style.transform =
         `translateX(-${this.currentQuestion * 100}%)`;

@@ -11,13 +11,14 @@ page-questions {
     border: 1px solid red;
   }
 
-  .bottom-bar {
+  .bottom-toolbar {
     display: flex;
     align-content: center;
     justify-content: center;
 
     button {
-      &.disabled {
+      &.disabled,
+      &.disabled:hover {
         color: lightgray;
       }
     }

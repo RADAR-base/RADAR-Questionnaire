@@ -5,7 +5,7 @@
   "local-plugins": true,
   "replace": true,
   "stylefmt": {
-    "!!config": ".stylelintrc"
+    "configFile": ".stylelintrc"
   },
   "postcss-sorting": {
     "empty-lines-between-children-rules": 1,

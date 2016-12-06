@@ -8,6 +8,7 @@ import { QuestionService } from '../providers/question-service';
 import { AnswerService } from '../providers/answer-service';
 import { RangeInputComponent } from '../components/range-input/range-input';
 import { RadioInputComponent } from '../components/radio-input/radio-input';
+import { FinishPage } from '../pages/finish/finish';
 
 @NgModule({
   imports: [
@@ -17,8 +18,13 @@ import { RadioInputComponent } from '../components/radio-input/radio-input';
   ],
   declarations: [
     MyApp,
+
+    // Pages
     HomePage,
     QuestionsPage,
+    FinishPage,
+
+    // Components
     QuestionComponent,
     RangeInputComponent,
     RadioInputComponent
@@ -26,8 +32,13 @@ import { RadioInputComponent } from '../components/radio-input/radio-input';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
+
+    // Pages
     HomePage,
     QuestionsPage,
+    FinishPage,
+
+    // Components
     QuestionComponent,
     RangeInputComponent,
     RadioInputComponent

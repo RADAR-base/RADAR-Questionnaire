@@ -1,8 +1,9 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { NavController, NavParams, Content } from 'ionic-angular';
+import { NavController, NavParams, Content, ViewController, App } from 'ionic-angular';
 
 import { Question } from '../../models/question';
 import { AnswerService } from '../../providers/answer-service';
+import { FinishPage } from '../finish/finish';
 
 @Component({
   selector: 'page-questions',
@@ -32,6 +33,8 @@ export class QuestionsPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    public viewCtrl: ViewController,
+    public appCtrl: App,
     private service: AnswerService
   ) {
   }
@@ -44,6 +47,7 @@ export class QuestionsPage {
   setCurrentQuestion(value = 0) {
     let min = !(this.currentQuestion + value < 0);
     let max = !(this.currentQuestion + value >= this.questions.length);
+    let finish = (this.currentQuestion + value === this.questions.length);
     if (min && max) {
       this.content.scrollToTop(200);
 
@@ -56,6 +60,10 @@ export class QuestionsPage {
       this.nextBtTxt = this.currentQuestion === this.questions.length - 1
         ? this.txtValues.finish
         : this.txtValues.next;
+    } else if (finish) {
+      // this.appCtrl.getRootNav().push(FinishPage);
+      this.navCtrl.push(FinishPage);
+      this.navCtrl.removeView(this.viewCtrl);
     }
   }
 

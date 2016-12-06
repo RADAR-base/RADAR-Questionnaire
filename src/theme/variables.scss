@@ -1,8 +1,32 @@
+// Application Globals
+
+// COLORS
+$cl-base: #0b4a59;
+$cl-light: #6d9aa5;
+$cl-lighter: #9bb5bc;
+
+// Transparent Base
+$cl-base-10: rgba(#0b4a59, 0.1);
+$cl-base-20: rgba(#0b4a59, 0.2);
+$cl-base-40: rgba(#0b4a59, 0.4);
+$cl-base-60: rgba(#0b4a59, 0.6);
+$cl-base-80: rgba(#0b4a59, 0.8);
+
+// Font
+$cl-font: white;
+$cl-font-light: rgba(white, 0.8);
+
+// Transparent whites
+$cl-white-10: rgba(white, 0.1);
+$cl-white-20: rgba(white, 0.2);
+$cl-white-40: rgba(white, 0.4);
+$cl-white-60: rgba(white, 0.6);
+$cl-white-80: rgba(white, 0.8);
+
 // Ionic Variables and Theming. For more info, please see:
 // http://ionicframework.com/docs/v2/theming/
 
 @import 'ionic.globals';
-
 
 // Shared Variables
 // --------------------------------------------------
@@ -10,8 +34,10 @@
 // the Sass variables found in Ionic's source scss files.
 // To view all the possible Ionic variables, see:
 // http://ionicframework.com/docs/v2/theming/overriding-ionic-variables/
-$text-color: #000;
-$background-color: #fff;
+$font-family-md-base: 'Montserrat', sans-serif;
+$text-color: $cl-font;
+$background-color: transparent;
+$button-md-text-transform: none;
 
 
 // Named Color Variables
@@ -23,24 +49,12 @@ $background-color: #fff;
 // The "primary" color is the only required color in the map.
 
 $colors: (
-  primary:    #387ef5,
-  secondary:  #32db64,
+  primary: $cl-base,
+  secondary: $cl-white-80,
   danger:     #f53d3d,
-  light:      #f4f4f4,
+  light: #fff,
   dark:       #222
 );
-
-// App iOS Variables
-// --------------------------------------------------
-// iOS only Sass variables can go here
-
-// App Material Design Variables
-// --------------------------------------------------
-// Material Design only Sass variables can go here
-
-// App Windows Variables
-// --------------------------------------------------
-// Windows only Sass variables can go here
 
 // App Theme
 // --------------------------------------------------

@@ -10,6 +10,11 @@ import { RangeInputComponent } from '../components/range-input/range-input';
 import { RadioInputComponent } from '../components/radio-input/radio-input';
 
 @NgModule({
+  imports: [
+    IonicModule.forRoot(MyApp, {
+      mode: "md"
+    })
+  ],
   declarations: [
     MyApp,
     HomePage,
@@ -17,9 +22,6 @@ import { RadioInputComponent } from '../components/radio-input/radio-input';
     QuestionComponent,
     RangeInputComponent,
     RadioInputComponent
-  ],
-  imports: [
-    IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
   entryComponents: [

@@ -1,5 +1,6 @@
-// http://ionicframework.com/docs/v2/theming/
+@import '../theme/mixins';
 
+// http://ionicframework.com/docs/v2/theming/
 
 // App Global Sass
 // --------------------------------------------------
@@ -15,7 +16,57 @@
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
 
+// Application
+ion-app.md,
+ion-content {
+  background-image: url('/assets/imgs/bg-mobile@3x.png');
+  background-position: top center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.icons-big {
+  margin-top: 32px;
+  margin-bottom: 32px;
+  padding: 0 80px;
+  width: 100%;
+}
+
+// Buttons
+.bt {
+  margin: 0;
+  box-shadow: none;
+
+  &--full {
+    @include font-large;
+
+    height: 56px;
+    border: 2px solid white;
+    background-color: $cl-base-20;
+  }
+
+  &.activated {
+    box-shadow: none;
+  }
+}
+
+// Fonts
+h2 {
+  @include font-title;
+}
+
+p {
+  @include font-large;
+}
+
+// Utils
 .fill {
   flex-grow: 1;
 }
 
+.pos-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}

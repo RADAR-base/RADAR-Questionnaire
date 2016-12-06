@@ -1,0 +1,32 @@
+// MIXINS
+@mixin font-body() {
+  color: $cl-font;
+  font-size: 14px;
+}
+
+@mixin font-body-strong() {
+  @include font-body;
+
+  font-weight: bold;
+}
+
+@mixin font-body-light() {
+  color: $cl-font-light;
+  font-size: 14px;
+}
+
+@mixin font-small() {
+  color: $cl-font-light;
+  font-size: 12px;
+}
+
+@mixin font-large() {
+  color: $cl-font;
+  font-size: 18px;
+  line-height: 1.35em;
+}
+
+@mixin font-title() {
+  color: $cl-font;
+  font-size: 20px;
+}

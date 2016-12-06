@@ -1,32 +1,47 @@
-// Application Globals
-
-// COLORS
-$cl-base: #0b4a59;
-$cl-light: #6d9aa5;
-$cl-lighter: #9bb5bc;
-
-// Transparent Base
-$cl-base-10: rgba(#0b4a59, 0.1);
-$cl-base-20: rgba(#0b4a59, 0.2);
-$cl-base-40: rgba(#0b4a59, 0.4);
-$cl-base-60: rgba(#0b4a59, 0.6);
-$cl-base-80: rgba(#0b4a59, 0.8);
-
-// Font
-$cl-font: white;
-$cl-font-light: rgba(white, 0.8);
-
-// Transparent whites
-$cl-white-10: rgba(white, 0.1);
-$cl-white-20: rgba(white, 0.2);
-$cl-white-40: rgba(white, 0.4);
-$cl-white-60: rgba(white, 0.6);
-$cl-white-80: rgba(white, 0.8);
-
 // Ionic Variables and Theming. For more info, please see:
 // http://ionicframework.com/docs/v2/theming/
 
 @import 'ionic.globals';
+
+// Named Color Variables
+// --------------------------------------------------
+// Named colors makes it easy to reuse colors on various components.
+// It's highly recommended to change the default colors
+// to match your app's branding. Ionic uses a Sass map of
+// colors so you can add, rename and remove colors as needed.
+// The "primary" color is the only required color in the map.
+
+// Main Map : map_get($colors, light)
+$colors: (
+  primary: #0b4a59,
+  secondary: #6d9aa5,
+  secondary-light: #9bb5bc,
+  danger: #f53d3d,
+  light: white,
+  dark: #222
+);
+$cl-primary: map_get($colors, primary);
+$cl-secondary: map_get($colors, secondary);
+$cl-secondary-light: map_get($colors, secondary-light);
+
+// Transparent Base
+$cl-primary-10: rgba(map_get($colors, primary), 0.1);
+$cl-primary-20: rgba(map_get($colors, primary), 0.2);
+$cl-primary-40: rgba(map_get($colors, primary), 0.4);
+$cl-primary-60: rgba(map_get($colors, primary), 0.6);
+$cl-primary-80: rgba(map_get($colors, primary), 0.8);
+
+// Transparent whites
+$cl-light: map_get($colors, light);
+$cl-light-10: rgba(map_get($colors, light), 0.1);
+$cl-light-20: rgba(map_get($colors, light), 0.2);
+$cl-light-40: rgba(map_get($colors, light), 0.4);
+$cl-light-60: rgba(map_get($colors, light), 0.6);
+$cl-light-80: rgba(map_get($colors, light), 0.8);
+
+// Font
+$cl-font: $cl-light;
+$cl-font-light: $cl-light-80;
 
 // Shared Variables
 // --------------------------------------------------
@@ -38,23 +53,6 @@ $font-family-md-base: 'Montserrat', sans-serif;
 $text-color: $cl-font;
 $background-color: transparent;
 $button-md-text-transform: none;
-
-
-// Named Color Variables
-// --------------------------------------------------
-// Named colors makes it easy to reuse colors on various components.
-// It's highly recommended to change the default colors
-// to match your app's branding. Ionic uses a Sass map of
-// colors so you can add, rename and remove colors as needed.
-// The "primary" color is the only required color in the map.
-
-$colors: (
-  primary: $cl-base,
-  secondary: $cl-white-80,
-  danger:     #f53d3d,
-  light: #fff,
-  dark:       #222
-);
 
 // App Theme
 // --------------------------------------------------

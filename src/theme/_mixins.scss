@@ -1,7 +1,7 @@
 // MIXINS
 @mixin font-body() {
   color: $cl-font;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 @mixin font-body-strong() {
@@ -11,8 +11,9 @@
 }
 
 @mixin font-body-light() {
+  @include font-body;
+
   color: $cl-font-light;
-  font-size: 14px;
 }
 
 @mixin font-small() {
@@ -29,4 +30,14 @@
 @mixin font-title() {
   color: $cl-font;
   font-size: 20px;
+}
+
+@mixin button-round() {
+  @include font-large;
+
+  padding: 8px 32px;
+  height: 56px;
+  border: 2px solid white;
+  border-radius: 56px;
+  background-color: $cl-primary-20;
 }

@@ -8,19 +8,28 @@ page-questions {
     flex: 1 0 100vw;
     padding: 16px;
     height: 100%;
-    border: 1px solid red;
   }
 
-  .bottom-toolbar {
+  .toolbar {
     display: flex;
     align-content: center;
     justify-content: center;
 
     button {
+      @include font-body;
+
       &.disabled,
       &.disabled:hover {
-        color: lightgray;
+        color: $cl-light-40;
       }
     }
+
+    .icon {
+      font-size: 32px;
+    }
+  }
+
+  .toolbar-background {
+    background-color: $cl-secondary;
   }
 }

@@ -1,14 +1,3 @@
-<ion-header>
-  <ion-navbar hideBackButton>
-    <ion-buttons left>
-      <button (click)="closePage()" ion-button icon-only>
-        <ion-icon name="close"></ion-icon>
-      </button>
-    </ion-buttons>
-    <ion-title>Questionnaire</ion-title>
-  </ion-navbar>
-</ion-header>
-
 <ion-content>
   <div #questionsContainer class="questions-container">
     <question *ngFor="let question of questions"
@@ -18,13 +7,12 @@
 </ion-content>
 
 <ion-footer>
-  <ion-toolbar class="bottom-toolbar">
+  <ion-toolbar>
     <ion-buttons left>
       <button ion-button left icon-left
-        [style.visibility]="isPreviousBtVisible ? 'visible' : 'hidden'"
         (click)="previousQuestion()">
-        <ion-icon name="ios-arrow-back-outline"></ion-icon>
-        PREVIOUS
+        <ion-icon [name]="iconPrevious"></ion-icon>
+        {{previousBtTxt}}
       </button>
     </ion-buttons>
     <ion-buttons right>
@@ -32,7 +20,7 @@
         [class.disabled]="isNextBtDisabled"
         (click)="nextQuestion()">
         {{nextBtTxt}}
-        <ion-icon name="ios-arrow-forward-outline"></ion-icon>
+        <ion-icon name="ios-arrow-forward"></ion-icon>
       </button>
     </ion-buttons>
   </ion-toolbar>

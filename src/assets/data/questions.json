@@ -1,6 +1,5 @@
 {
   "form": "PHQ8",
-  "title": "Weekly Checkup",
   "questions": [
     {
       "id": "PHQ8-1",
@@ -16,8 +15,8 @@
     },
     {
       "id": "PHQ8-8",
-      "lead": "RANGE TEST",
-      "content": "min:1, max:10",
+      "lead": "Over the past two weeks, how often have you been bothered by any of the following problems?",
+      "content": "Lorem ipsum dolor.",
       "range": {
         "min": 1, "max": 10
       },

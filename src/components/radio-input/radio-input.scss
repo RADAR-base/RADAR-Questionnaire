@@ -8,15 +8,13 @@ radio-input {
     margin: 0;
     padding: 0;
     width: 100%;
-    border: 1px grey solid;
     list-style: none;
   }
 
   ul li {
     display: flex;
     align-content: stretch;
-    border-bottom: 1px grey solid;
-    background-color: lightgray;
+    margin-bottom: 12px;
   }
 
   ul li:last-child {
@@ -29,23 +27,21 @@ radio-input {
   }
 
   ul li label {
+    @include button-round;
+
     position: relative;
     display: flex;
     flex-grow: 1;
-    align-content: center;
-    justify-content: center;
-    padding: 16px 0;
+    align-items: center;
+    justify-content: flex-start;
   }
 
   ul li:hover label {
-    background-color: darkseagreen;
-    color: #fff;
+    background-color: $cl-secondary;
   }
 
   input[type=radio]:checked + label {
-    background-color: green;
-    color: white;
-    font-weight: bold;
+    background-color: $cl-primary;
   }
 }
 

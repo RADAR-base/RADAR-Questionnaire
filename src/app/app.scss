@@ -38,11 +38,7 @@ ion-content {
   box-shadow: none;
 
   &--full {
-    @include font-large;
-
-    height: 56px;
-    border: 2px solid white;
-    background-color: $cl-base-20;
+    @include button-round;
   }
 
   &.activated {
@@ -51,12 +47,22 @@ ion-content {
 }
 
 // Fonts
-h2 {
+h1 {
   @include font-title;
+
+  margin: 1em 8px;
+}
+
+h2 {
+  @include font-large;
+
+  margin: 1em 8px;
 }
 
 p {
-  @include font-large;
+  @include font-body;
+
+  margin: 1em 8px;
 }
 
 // Utils

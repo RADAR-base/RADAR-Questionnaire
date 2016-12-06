@@ -1,7 +1,5 @@
-<h2>{{question.lead}}</h2>
-<h3>{{question.content}}</h3>
-<p>Type: {{question.type}} | ID: {{question.id}}</p>
-<p>Value: {{value}}</p>
+<p>{{question.lead}}</p>
+<h2>{{question.content}}</h2>
 
 <div *ngIf="question.type === 'radio'">
   <radio-input

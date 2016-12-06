@@ -24,11 +24,20 @@ export class QuestionsPage {
   // TODO: gather text variables in one place. get values from server?
   txtValues = {
     next: 'NEXT',
-    finish: 'FINISH'
+    previous: 'PREVIOUS',
+    finish: 'FINISH',
+    close: 'CLOSE',
   };
   nextBtTxt: string = this.txtValues.next;
+  previousBtTxt: string = this.txtValues.close;
   isNextBtDisabled: boolean = true;
   isPreviousBtVisible: boolean = false;
+
+  iconValues = {
+    previous: 'ios-arrow-back',
+    close: 'close-circle',
+  };
+  iconPrevious: string = this.iconValues.close;
 
   constructor(
     public navCtrl: NavController,
@@ -48,6 +57,8 @@ export class QuestionsPage {
     let min = !(this.currentQuestion + value < 0);
     let max = !(this.currentQuestion + value >= this.questions.length);
     let finish = (this.currentQuestion + value === this.questions.length);
+    let back = (this.currentQuestion + value === -1);
+
     if (min && max) {
       this.content.scrollToTop(200);
 
@@ -55,15 +66,26 @@ export class QuestionsPage {
       this.questionsContainerEl.style.transform =
         `translateX(-${this.currentQuestion * 100}%)`;
 
-      this.setNextDisabled();
-      this.isPreviousBtVisible = !!this.currentQuestion;
+      this.iconPrevious = !this.currentQuestion
+        ? this.iconValues.close
+        : this.iconValues.previous;
+
+      this.previousBtTxt = !this.currentQuestion
+        ? this.txtValues.close
+        : this.txtValues.previous;
+
       this.nextBtTxt = this.currentQuestion === this.questions.length - 1
         ? this.txtValues.finish
         : this.txtValues.next;
-    } else if (finish) {
-      // this.appCtrl.getRootNav().push(FinishPage);
+
+      this.setNextDisabled();
+    }
+    else if (finish) {
       this.navCtrl.push(FinishPage);
       this.navCtrl.removeView(this.viewCtrl);
+    }
+    else if (back) {
+      this.navCtrl.pop();
     }
   }
 
@@ -91,9 +113,5 @@ export class QuestionsPage {
 
   previousQuestion() {
     this.setCurrentQuestion(-1);
-  }
-
-  closePage() {
-    this.navCtrl.pop();
   }
 }

@@ -3,6 +3,7 @@ import { NavController, LoadingController } from 'ionic-angular';
 import { QuestionsPage } from '../questions/questions';
 import { QuestionService } from '../../providers/question-service';
 import { Question } from '../../models/question';
+import { AnswerService } from '../../providers/answer-service';
 
 @Component({
   selector: 'page-home',
@@ -18,17 +19,22 @@ export class HomePage {
   constructor(
     public navCtrl: NavController,
     public loadingCtrl: LoadingController,
-    private service: QuestionService
+    private questionService: QuestionService,
+    private answerService: AnswerService
   ) {
   }
 
   ionViewDidLoad() {
-    this.service.getQuestions()
+    this.questionService.get()
       .delay(2000)
       .subscribe(
         questions => this.serviceReady(questions),
         error => this.handleError(error)
       );
+  }
+
+  ionViewDidEnter() {
+    this.answerService.reset();
   }
 
   handleOpenPage() {

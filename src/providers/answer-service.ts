@@ -14,12 +14,16 @@ export class AnswerService {
   ) {
   }
 
-  addAnswer(value: Answer) {
+  add(value: Answer) {
     this.answers[value.id] = value.value;
   }
 
-  checkAnswer(id: string) {
+  check(id: string) {
     return this.answers.hasOwnProperty(id);
+  }
+
+  reset() {
+    this.answers = {};
   }
 
 }

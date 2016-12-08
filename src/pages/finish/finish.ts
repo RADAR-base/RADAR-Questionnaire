@@ -10,13 +10,13 @@ export class FinishPage {
 
   constructor(
     public navCtrl: NavController,
-    private service: AnswerService
+    private answerService: AnswerService
   ) {
   }
 
   ionViewDidLoad() {
     // TODO: Send data to server
-    console.log(this.service.answers);
+    console.log(this.answerService.answers);
   }
 
   handleClosePage() {

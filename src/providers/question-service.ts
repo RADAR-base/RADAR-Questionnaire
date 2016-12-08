@@ -16,7 +16,7 @@ export class QuestionService {
   ) {
   }
 
-  getQuestions(): Observable<Question[]> {
+  get(): Observable<Question[]> {
     return this.http.get(this.url)
       .map(this.extractData)
       .catch(this.handleError);

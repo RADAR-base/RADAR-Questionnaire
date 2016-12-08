@@ -44,7 +44,7 @@ export class QuestionsPage {
     public navParams: NavParams,
     public viewCtrl: ViewController,
     public appCtrl: App,
-    private service: AnswerService
+    private answerService: AnswerService
   ) {
   }
 
@@ -91,7 +91,7 @@ export class QuestionsPage {
 
   checkAnswer() {
     let id = this.questions[this.currentQuestion].id;
-    return this.service.checkAnswer(id);
+    return this.answerService.check(id);
   }
 
   setNextDisabled() {
@@ -106,7 +106,7 @@ export class QuestionsPage {
 
   onAnswer(event) {
     if (event.id) {
-      this.service.addAnswer(event);
+      this.answerService.add(event);
       this.setNextDisabled();
     }
   }

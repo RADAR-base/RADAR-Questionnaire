@@ -15,7 +15,8 @@ page-questions {
     align-content: center;
     justify-content: center;
 
-    button {
+    button,
+    button:hover:not(.disable-hover) {
       @include font-body;
 
       &.disabled,

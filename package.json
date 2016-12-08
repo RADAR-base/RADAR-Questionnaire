@@ -28,7 +28,7 @@
     "@angular/platform-server": "2.1.1",
     "@ionic/storage": "1.1.6",
     "ionic-angular": "2.0.0-rc.3",
-    "ionic-native": "^2.2.9",
+    "ionic-native": "^2.2.11",
     "ionicons": "3.0.0",
     "rxjs": "5.0.0-beta.12",
     "zone.js": "^0.7.2"
@@ -43,7 +43,7 @@
     "stylelint": "^7.6.0",
     "stylelint-config-standard": "^15.0.0",
     "tslint": "^4.0.2",
-    "typescript": "^2.0.10"
+    "typescript": "^2.1.4"
   },
   "cordovaPlugins": [
     "cordova-plugin-device",

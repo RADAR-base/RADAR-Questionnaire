@@ -1580,9 +1580,9 @@ ionic-angular@2.0.0-rc.3:
   version "2.0.0-rc.3"
   resolved "https://registry.yarnpkg.com/ionic-angular/-/ionic-angular-2.0.0-rc.3.tgz#69877173293ae2a585f139aad1cdb72fca2a3d9e"
 
-ionic-native@^2.2.9:
-  version "2.2.9"
-  resolved "https://registry.yarnpkg.com/ionic-native/-/ionic-native-2.2.9.tgz#8cb34bf3f9a36081b4b9a32463d4a9abe76cd0cd"
+ionic-native@^2.2.11:
+  version "2.2.11"
+  resolved "https://registry.yarnpkg.com/ionic-native/-/ionic-native-2.2.11.tgz#523e4032fce2cf3a75b9aeae7a06319b8a6d18ae"
   dependencies:
     rxjs "^5.0.0-beta.6"
 
@@ -3399,9 +3399,9 @@ type-is@~1.6.13:
     media-typer "0.3.0"
     mime-types "~2.1.13"
 
-typescript@^2.0.10:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.1.1.tgz#41c2b64472f529331b2055c0424862b44ce58d42"
+typescript@^2.1.4:
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.1.4.tgz#b53b69fb841126acb1dd4b397d21daba87572251"
 
 typescript@~2.0.10:
   version "2.0.10"

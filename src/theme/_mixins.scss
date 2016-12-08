@@ -36,8 +36,8 @@
   @include font-large;
 
   padding: 8px 32px;
-  height: 56px;
+  height: $bt-height;
   border: 2px solid white;
-  border-radius: 56px;
+  border-radius: $bt-height;
   background-color: $cl-primary-20;
 }

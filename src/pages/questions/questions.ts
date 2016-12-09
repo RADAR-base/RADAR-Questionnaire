@@ -18,6 +18,7 @@ export class QuestionsPage {
   questionsContainerRef: ElementRef;
   questionsContainerEl: HTMLElement;
 
+  progress: number = 0;
   currentQuestion: number = 0;
   questions: Question[];
 
@@ -51,6 +52,7 @@ export class QuestionsPage {
   ionViewDidLoad() {
     this.questions = this.navParams.data;
     this.questionsContainerEl = this.questionsContainerRef.nativeElement;
+    this.setCurrentQuestion();
   }
 
   setCurrentQuestion(value = 0) {
@@ -63,6 +65,8 @@ export class QuestionsPage {
       this.content.scrollToTop(200);
 
       this.currentQuestion = this.currentQuestion + value;
+      this.setProgress();
+
       this.questionsContainerEl.style.transform =
         `translateX(-${this.currentQuestion * 100}%)`;
 
@@ -87,6 +91,12 @@ export class QuestionsPage {
     else if (back) {
       this.navCtrl.pop();
     }
+  }
+
+  setProgress() {
+    let tick = Math.ceil(100 / this.questions.length);
+    let percent = Math.ceil(this.currentQuestion * 100 / this.questions.length);
+    this.progress = percent + tick;
   }
 
   checkAnswer() {

@@ -8,6 +8,9 @@
 
 <ion-footer>
   <ion-toolbar>
+    <div class="toolbar-progress">
+      <div [style.width.%]="progress" class="toolbar-progress__bar"></div>
+    </div>
     <ion-buttons left>
       <button ion-button left icon-left
         (click)="previousQuestion()">

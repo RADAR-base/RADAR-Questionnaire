@@ -1,5 +1,7 @@
 ## RADAR-Questionnaire
 
+[![bitHound Dependencies](https://www.bithound.io/github/RADAR-CNS/RADAR-Questionnaire/badges/dependencies.svg)](https://www.bithound.io/github/RADAR-CNS/RADAR-Questionnaire/develop/dependencies/npm) [![bitHound Dev Dependencies](https://www.bithound.io/github/RADAR-CNS/RADAR-Questionnaire/badges/devDependencies.svg)](https://www.bithound.io/github/RADAR-CNS/RADAR-Questionnaire/develop/dependencies/npm)
+
 Hybrid mobile application to actively capture data for the RADAR-CNS Platform.
 
 ## Note

@@ -15,14 +15,14 @@
       <button ion-button left icon-left
         (click)="previousQuestion()">
         <ion-icon [name]="iconPrevious"></ion-icon>
-        {{previousBtTxt}}
+        <div class="toolbar-label">{{previousBtTxt}}</div>
       </button>
     </ion-buttons>
     <ion-buttons right>
       <button ion-button right icon-right
         [class.disabled]="isNextBtDisabled"
         (click)="nextQuestion()">
-        {{nextBtTxt}}
+        <div class="toolbar-label">{{nextBtTxt}}</div>
         <ion-icon name="ios-arrow-forward"></ion-icon>
       </button>
     </ion-buttons>

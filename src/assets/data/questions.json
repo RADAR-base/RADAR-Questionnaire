@@ -2,6 +2,15 @@
   "form": "PHQ8",
   "questions": [
     {
+      "id": "PHQ8-0",
+      "lead": "Over the past two weeks, how often have you been bothered by any of the following problems?",
+      "content": "Mauris semper, velit facilisis sodales pulvinar, est mauris commodo risus, vitae aliquet lorem libero non nisi.",
+      "range": {
+        "min": 0, "max": 100, "step": 10
+      },
+      "type": "slider"
+    },
+    {
       "id": "PHQ8-1",
       "lead": "Over the past two weeks, how often have you been bothered by any of the following problems?",
       "content": "Little interest or pleasure in doing things.",
@@ -14,16 +23,25 @@
       "type": "radio"
     },
     {
-      "id": "PHQ8-8",
+      "id": "PHQ8-2",
       "lead": "Over the past two weeks, how often have you been bothered by any of the following problems?",
-      "content": "Lorem ipsum dolor.",
+      "content": "Nulla luctus sapien eu ligula bibendum, id vehicula nisi volutpat.",
+      "range": {
+        "min": 1, "max": 5
+      },
+      "type": "range"
+    },
+    {
+      "id": "PHQ8-3",
+      "lead": "Over the past two weeks, how often have you been bothered by any of the following problems?",
+      "content": "Pellentesque hendrerit nulla a vestibulum tincidunt. Nulla gravida placerat vulputate.",
       "range": {
         "min": 1, "max": 10
       },
       "type": "range"
     },
     {
-      "id": "PHQ8-2",
+      "id": "PHQ8-4",
       "lead": "Over the past two weeks, how often have you been bothered by any of the following problems?",
       "content": "Feeling down, depressed, or hopeless.",
       "responses": [
@@ -35,7 +53,7 @@
       "type": "radio"
     },
     {
-      "id": "PHQ8-3",
+      "id": "PHQ8-5",
       "lead": "Over the past two weeks, how often have you been bothered by any of the following problems?",
       "content": "Trouble falling asleep or staying asleep, or sleeping too much.",
       "responses": [
@@ -47,7 +65,7 @@
       "type": "radio"
     },
     {
-      "id": "PHQ8-4",
+      "id": "PHQ8-6",
       "lead": "Over the past two weeks, how often have you been bothered by any of the following problems?",
       "content": "Feeling tired or having little energy.",
       "responses": [
@@ -59,7 +77,7 @@
       "type": "radio"
     },
     {
-      "id": "PHQ8-5",
+      "id": "PHQ8-7",
       "lead": "Over the past two weeks, how often have you been bothered by any of the following problems?",
       "content": "Feeling bad about yourself – or that you are a failure or have let yourself or your family down.",
       "responses": [
@@ -71,7 +89,7 @@
       "type": "radio"
     },
     {
-      "id": "PHQ8-6",
+      "id": "PHQ8-8",
       "lead": "Over the past two weeks, how often have you been bothered by any of the following problems?",
       "content": "Trouble concentrating on things such as reading the newspaper of watching television.",
       "responses": [
@@ -83,7 +101,7 @@
       "type": "radio"
     },
     {
-      "id": "PHQ8-7",
+      "id": "PHQ8-9",
       "lead": "Over the past two weeks, how often have you been bothered by any of the following problems?",
       "content": "Moving or speaking so slowly that other people have noticed. Or the opposite – being so fidgety or restless that you have been moving around a lot more than usual.",
       "responses": [

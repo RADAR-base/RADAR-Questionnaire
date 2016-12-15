@@ -20,6 +20,7 @@ export class QuestionComponent {
     switch (this.question.type) {
       case QuestionType.radio:
       case QuestionType.range:
+      case QuestionType.slider:
         this.value = event;
         break;
 

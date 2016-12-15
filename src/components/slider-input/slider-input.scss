@@ -1,0 +1,26 @@
+slider-input {
+  .value {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 32px;
+  }
+
+  .value-number {
+    @include font-large;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 16px;
+    width: 128px;
+    height: $label-height;
+    border-radius: $label-height;
+    background-color: $cl-primary-40;
+  }
+
+  ion-label {
+    @include font-large;
+  }
+}

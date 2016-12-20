@@ -17,8 +17,8 @@ export class RangeInputComponent implements OnInit {
 
   @Output() valueChange: EventEmitter<number> = new EventEmitter<number>();
 
-  @Input() min: number = 2;
-  @Input() max: number = 8;
+  @Input() min: number = 1;
+  @Input() max: number = 10;
 
   value: number = null;
   uniqueID: number = uniqueID++;

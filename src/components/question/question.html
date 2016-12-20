@@ -16,3 +16,12 @@
   </range-input>
 </div>
 
+<div *ngIf="question.type === 'slider'">
+  <slider-input
+    [min]="question.range.min"
+    [max]="question.range.max"
+    [step]="question.range.step"
+    (valueChange)="onValueChange($event)">
+  </slider-input>
+</div>
+

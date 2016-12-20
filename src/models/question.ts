@@ -10,6 +10,7 @@ export interface Question {
 export class QuestionType {
   static radio: string = 'radio';
   static range: string = 'range';
+  static slider: string = 'slider';
   static audio: string = 'audio';
 }
 

@@ -1,10 +1,11 @@
 {
   "name": "RADAR-Questionnaire",
-  "short_name": "RADAR-Q",
+  "description": "An application that collects active data for research.",
+  "short_name": "RADAR-Questionnaire",
   "start_url": "index.html",
   "display": "standalone",
   "icons": [{
-    "src": "assets/imgs/radar-logo.png",
+    "src": "assets/icon/icon.png",
     "sizes": "512x512",
     "type": "image/png"
   }],

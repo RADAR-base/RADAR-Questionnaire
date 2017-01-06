@@ -43,3 +43,16 @@ Run the app in an Android emulator:
 ```
 $ ionic emulate android
 ```
+
+### Ionic State Reset
+
+Ionic CLI provides a simple command to reset and install the state set in `package.json`. 
+This command removes and reinstalls all platforms and plugins listed.
+```
+$ ionic state reset
+```
+
+You can also save the current state to `package.json`.
+```
+$ ionic state save
+```

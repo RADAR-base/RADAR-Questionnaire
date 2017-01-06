@@ -1,6 +1,7 @@
 {
   "version": "1.0.0",
   "name": "radar-questionnaire",
+  "description": "An application that collects active data for research.",
   "author": "RADAR-CNS",
   "homepage": "http://www.radar-cns.org/",
   "private": true,
@@ -54,12 +55,10 @@
     "ionic-plugin-keyboard"
   ],
   "cordovaPlatforms": [
-    "ios",
     {
-      "platform": "ios",
-      "version": "",
-      "locator": "ios"
+      "platform": "android",
+      "version": "6.1.0",
+      "locator": "android"
     }
-  ],
-  "description": "RADAR-Questionnaire"
+  ]
 }

@@ -17,12 +17,19 @@
 // automatically applied to the <body> element in the app.
 
 // Application
+body,
 ion-app.md,
 ion-content {
+  background-color: $cl-secondary;
   background-image: url('../assets/imgs/bg-mobile.png');
   background-position: top center;
   background-size: cover;
   background-repeat: no-repeat;
+}
+
+.app-loader {
+  padding: 16px;
+  text-align: center;
 }
 
 .icons-big {

@@ -17,7 +17,6 @@
 // automatically applied to the <body> element in the app.
 
 // Application
-body,
 ion-app.md,
 ion-content {
   background-color: $cl-secondary;
@@ -27,9 +26,8 @@ ion-content {
   background-repeat: no-repeat;
 }
 
-.app-loader {
-  padding: 16px;
-  text-align: center;
+body {
+  background-color: $cl-secondary;
 }
 
 .icons-big {

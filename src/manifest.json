@@ -4,11 +4,13 @@
   "short_name": "RADAR-Questionnaire",
   "start_url": "index.html",
   "display": "standalone",
-  "icons": [{
-    "src": "assets/icon/icon.png",
-    "sizes": "512x512",
-    "type": "image/png"
-  }],
-  "background_color": "#0b4a59",
-  "theme_color": "#0b4a59"
+  "icons": [
+    {
+      "src": "assets/icon/icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "background_color": "#6d9aa5",
+  "theme_color": "#6d9aa5"
 }

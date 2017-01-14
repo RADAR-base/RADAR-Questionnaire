@@ -2,7 +2,7 @@ import {
   Component, Input, OnInit, Output, EventEmitter
 } from '@angular/core';
 
-let uniqueID: number = 0;
+let uniqueID = 0;
 
 export interface Item {
   id: string;
@@ -26,7 +26,7 @@ export class RangeInputComponent implements OnInit {
   items: Item[] = Array();
 
   ngOnInit() {
-    for (let i=this.min, ii=this.max; i <= ii; i++) {
+    for (let i=this.min; i <= this.max; i++) {
       this.items.push({
         id: `range-${this.uniqueID}-${i}`,
         value: i

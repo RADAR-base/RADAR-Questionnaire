@@ -14,7 +14,7 @@ import { SliderInputComponent } from '../components/slider-input/slider-input';
 @NgModule({
   imports: [
     IonicModule.forRoot(MyApp, {
-      mode: "md"
+      mode: 'md'
     })
   ],
   declarations: [

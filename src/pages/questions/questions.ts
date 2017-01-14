@@ -56,10 +56,10 @@ export class QuestionsPage {
   }
 
   setCurrentQuestion(value = 0) {
-    let min = !(this.currentQuestion + value < 0);
-    let max = !(this.currentQuestion + value >= this.questions.length);
-    let finish = (this.currentQuestion + value === this.questions.length);
-    let back = (this.currentQuestion + value === -1);
+    const min = !(this.currentQuestion + value < 0);
+    const max = !(this.currentQuestion + value >= this.questions.length);
+    const finish = (this.currentQuestion + value === this.questions.length);
+    const back = (this.currentQuestion + value === -1);
 
     if (min && max) {
       this.content.scrollToTop(200);
@@ -94,13 +94,13 @@ export class QuestionsPage {
   }
 
   setProgress() {
-    let tick = Math.ceil(100 / this.questions.length);
-    let percent = Math.ceil(this.currentQuestion * 100 / this.questions.length);
+    const tick = Math.ceil(100 / this.questions.length);
+    const percent = Math.ceil(this.currentQuestion * 100 / this.questions.length);
     this.progress = percent + tick;
   }
 
   checkAnswer() {
-    let id = this.questions[this.currentQuestion].id;
+    const id = this.questions[this.currentQuestion].id;
     return this.answerService.check(id);
   }
 

@@ -4,7 +4,7 @@ import {
 
 import { Response } from '../../models/question';
 
-let uniqueID: number = 0;
+let uniqueID = 0;
 
 export interface Item {
   id: string;

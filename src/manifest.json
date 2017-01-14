@@ -1,7 +1,7 @@
 {
-  "name": "RADAR-Questionnaire",
+  "name": "RADAR Questionnaire",
   "description": "An application that collects active data for research.",
-  "short_name": "RADAR-Questionnaire",
+  "short_name": "RADAR-Q",
   "start_url": "index.html",
   "display": "standalone",
   "icons": [

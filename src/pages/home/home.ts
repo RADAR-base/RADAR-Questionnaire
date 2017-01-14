@@ -66,7 +66,7 @@ export class HomePage {
 
   startLoader() {
     this.loader = this.loadingCtrl.create({
-      content: "Please wait...",
+      content: 'Please wait...',
       dismissOnPageChange: true
     }).present();
   }

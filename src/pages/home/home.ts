@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
-import { NavController, LoadingController } from 'ionic-angular';
-import { QuestionsPage } from '../questions/questions';
-import { QuestionService } from '../../providers/question-service';
-import { Question } from '../../models/question';
-import { AnswerService } from '../../providers/answer-service';
+import 'rxjs/add/operator/delay'
+import { Component } from '@angular/core'
+import { LoadingController, NavController } from 'ionic-angular'
+import { QuestionsPage } from '../questions/questions'
+import { QuestionService } from '../../providers/question-service'
+import { Question } from '../../models/question'
+import { AnswerService } from '../../providers/answer-service'
 
 @Component({
   selector: 'page-home',
@@ -11,12 +12,12 @@ import { AnswerService } from '../../providers/answer-service';
 })
 export class HomePage {
 
-  loader;
-  questions: Question[];
-  isLoading: Boolean = true;
-  isOpenPageClicked: Boolean = false;
+  loader
+  questions: Question[]
+  isLoading: Boolean = true
+  isOpenPageClicked: Boolean = false
 
-  constructor(
+  constructor (
     public navCtrl: NavController,
     public loadingCtrl: LoadingController,
     private questionService: QuestionService,
@@ -24,55 +25,55 @@ export class HomePage {
   ) {
   }
 
-  ionViewDidLoad() {
+  ionViewDidLoad () {
     this.questionService.get()
       .delay(2000)
       .subscribe(
         questions => this.serviceReady(questions),
         error => this.handleError(error)
-      );
+      )
   }
 
-  ionViewDidEnter() {
-    this.answerService.reset();
+  ionViewDidEnter () {
+    this.answerService.reset()
   }
 
-  handleOpenPage() {
-    this.isOpenPageClicked = true;
+  handleOpenPage () {
+    this.isOpenPageClicked = true
 
     if (this.isLoading) {
-      this.startLoader();
+      this.startLoader()
     } else {
-      this.openPage();
+      this.openPage()
     }
   }
 
-  handleError(error) {
-    console.error(error);
+  handleError (error) {
+    console.error(error)
 
     if (this.loader) {
-      this.loader.dismissAll();
+      this.loader.dismissAll()
     }
   }
 
-  serviceReady(questions) {
-    this.questions = questions;
-    this.isLoading = false;
+  serviceReady (questions) {
+    this.questions = questions
+    this.isLoading = false
 
     if (this.isOpenPageClicked) {
-      this.openPage();
+      this.openPage()
     }
   }
 
-  startLoader() {
+  startLoader () {
     this.loader = this.loadingCtrl.create({
       content: 'Please wait...',
       dismissOnPageChange: true
-    }).present();
+    }).present()
   }
 
-  openPage() {
-    this.navCtrl.push(QuestionsPage, this.questions);
+  openPage () {
+    this.navCtrl.push(QuestionsPage, this.questions)
   }
 
 }

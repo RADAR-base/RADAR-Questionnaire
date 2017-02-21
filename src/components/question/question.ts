@@ -1,6 +1,6 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Question, QuestionType } from '../../models/question';
-import { Answer } from '../../models/answer';
+import { Component, EventEmitter, Input, Output } from '@angular/core'
+import { Question, QuestionType } from '../../models/question'
+import { Answer } from '../../models/answer'
 
 @Component({
   selector: 'question',
@@ -8,30 +8,30 @@ import { Answer } from '../../models/answer';
 })
 export class QuestionComponent {
 
-  @Input() question: Question;
-  @Output() answer: EventEmitter<Answer> = new EventEmitter<Answer>();
+  @Input() question: Question
+  @Output() answer: EventEmitter<Answer> = new EventEmitter<Answer>()
 
-  value: number;
+  value: number
 
-  onValueChange(event) {
+  onValueChange (event) {
     // on init the component fires the event once
-    if (event === undefined) return;
+    if (event === undefined) return
 
     switch (this.question.type) {
       case QuestionType.radio:
       case QuestionType.range:
       case QuestionType.slider:
-        this.value = event;
-        break;
+        this.value = event
+        break
 
       case QuestionType.audio:
         // TODO: add audio file reference to send
-        break;
+        break
     }
 
     this.answer.emit({
       id: this.question.id,
       value: this.value
-    });
+    })
   }
 }

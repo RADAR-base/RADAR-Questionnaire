@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
-import { AnswerService } from '../../providers/answer-service';
+import { Component } from '@angular/core'
+import { NavController } from 'ionic-angular'
+import { AnswerService } from '../../providers/answer-service'
 
 @Component({
   selector: 'page-finish',
@@ -8,19 +8,19 @@ import { AnswerService } from '../../providers/answer-service';
 })
 export class FinishPage {
 
-  constructor(
+  constructor (
     public navCtrl: NavController,
     private answerService: AnswerService
   ) {
   }
 
-  ionViewDidLoad() {
+  ionViewDidLoad () {
     // TODO: Send data to server
-    console.log(this.answerService.answers);
+    console.log(this.answerService.answers)
   }
 
-  handleClosePage() {
-    this.navCtrl.pop();
+  handleClosePage () {
+    this.navCtrl.pop()
   }
 
 }

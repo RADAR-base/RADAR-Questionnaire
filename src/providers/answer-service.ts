@@ -25,5 +25,5 @@ export class AnswerService {
   reset () {
     this.answers = {}
   }
-  
+
 }

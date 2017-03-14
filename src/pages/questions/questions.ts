@@ -2,12 +2,13 @@ import { Component, ElementRef, ViewChild } from '@angular/core'
 import { App, Content, NavController, NavParams, ViewController, Platform  } from 'ionic-angular'
 import * as opensmile from '../../../plugins/plugin.opensmile/www/opensmile' //file path to opensmile.js; Adding opensmile plugin
 import { Device } from 'ionic-native'
-
 import { Question } from '../../models/question'
 import { AnswerService } from '../../providers/answer-service'
 import { FinishPage } from '../finish/finish'
 
 declare var cordova: any
+declare var window: any
+
 
 @Component({
   selector: 'page-questions',
@@ -41,6 +42,9 @@ export class QuestionsPage {
   permission: boolean = false
   audio: boolean = false
   permissions = null
+  fileName: string = null
+  questionID: string = null
+  audioRecordStatus: boolean = false;
   answer = {
       id: null,
       value: null
@@ -60,29 +64,34 @@ export class QuestionsPage {
     private answerService: AnswerService,
     appPlatform: Platform
   ) {
-    document.addEventListener('pause', () => {      //Stop opensmile when application is on pause
+    //Stop opensmile when application is on pause
+    document.addEventListener('pause', () => {
         this.stopOpensmile()
     });
-    document.addEventListener("backbutton", () => { //Stop opensmile when back button is pressed
+    //Stop opensmile when back button is pressed
+    document.addEventListener("backbutton", () => { 
         this.stopOpensmile()
-    }, false);
+    });
   }
 
   ionViewDidLoad () {
     this.questions = this.navParams.data
     this.questionsContainerEl = this.questionsContainerRef.nativeElement
     var i = 0
-    while (i < this.questions.length) {				//Checking whether questionnaire contains any audio-type questions
+    //Checking whether questionnaire contains any audio-type questions
+    while (i < this.questions.length) {
       if (this.questions[i].type == 'audio') {
         this.audio = true
          break
       }
       i = i + 1
     }
-    if (Device.platform == 'Android') {				//Checking platform and permission
+    //Checking for platform and permission
+    if (Device.platform == 'Android') {
       this.permissions = cordova.plugins.permissions
       this.platform = true
-      if (this.audio == true) {						   // Checking permissions only if platform is android
+      // Checking permissions only if platform is android
+      if (this.audio == true) {
         this.checkPermissionAudio()
       }
     } else {
@@ -91,7 +100,8 @@ export class QuestionsPage {
     this.setCurrentQuestion()
   }
 
-  checkPermissionAudio() {							// Checking permission for audio recording and external storage
+  //Checking permission for audio recording and external storage
+  checkPermissionAudio() {
     this.permissions.hasPermission(this.permissions.RECORD_AUDIO,
     (status) => {
       if (!status.hasPermission) {
@@ -130,20 +140,60 @@ export class QuestionsPage {
       }
     }, null);
   }
+
   success(message) {
   }
 
   failure() {
     alert('Error calling OpenSmile Plugin')
   }
+
+  setFileName(file_name) {
+    this.fileName = file_name
+  }
+
+  setQuestionID(qid) {
+    this.questionID = qid
+  }
+
+  setAudioRecordStatus(status) {
+    this.audioRecordStatus = status
+  }
+  getAudioRecordStatus() {
+    return this.audioRecordStatus
+  }
+
   stopOpensmile() {
-    if(this.answerService.getAudioRecordStatus()) {
+    if(this.getAudioRecordStatus()) {
       opensmile.stop('Stop', this.success, this.failure)
-      this.answerService.setAudioRecordStatus(false)
+      this.setAudioRecordStatus(false)
+      this.readFile()
+    }
+  }
+
+  readFile() {
+    var ans_b64 = null
+    window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory + '/' + this.fileName, (fileEntry) => {
+      fileEntry.file( (file) => {
+        var reader = new FileReader()
+        reader.onloadend = (e: any) => {
+          ans_b64 = e.target.result
+          this.answer.id = this.questionID
+          var displayDate = new Date()
+          var date = displayDate.toISOString()
+				  this.answer.value = ans_b64
+          this.answerService.add(this.answer)
+        };
+        reader.readAsDataURL(file)
+      }, errorCallback)
+    }, errorCallback);
+    function errorCallback(error) {
+      alert("ERROR: " + error.code)
     }
   }
   setCurrentQuestion (value = 0) {
-		if (this.platform == false) {					//Checking for platform and if it is not android, audio questions will be skipped, don't show to user
+    //Checking for platform and if it is not android, audio questions will be skipped, don't show it to user
+		if (this.platform == false) {
 			while (this.questions[this.currentQuestion + value].type == 'audio') {
 				this.answer.id = this.questions[this.currentQuestion + value].id
 				this.answer.value = 'Platform not supported'

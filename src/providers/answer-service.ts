@@ -8,7 +8,6 @@ import { Answer } from '../models/answer'
 export class AnswerService {
 
   answers = {}
-  audioRecordStatus: boolean = false;
 
   constructor (
     public http: Http
@@ -26,11 +25,4 @@ export class AnswerService {
   reset () {
     this.answers = {}
   }
-  setAudioRecordStatus(status) {
-    this.audioRecordStatus = status
-  }
-  getAudioRecordStatus() {
-    return this.audioRecordStatus
-  }
-
 }

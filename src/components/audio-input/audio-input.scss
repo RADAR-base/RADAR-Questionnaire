@@ -1,5 +1,6 @@
 @mixin my_button() {
   @include font-large;
+
   height: $bt-height;
   border: 2px solid white;
   border-radius: $bt-height;
@@ -9,20 +10,20 @@
   text-align: center;
   align-items: center;
   justify-content: flex-start;
-  width:100%;
+  width: 100%;
   margin: 0 auto;
-  margin-top:100%;
+  margin-top: 100%;
 }
 audio-input {
   button {
     @include my_button;
+
     background-color: $cl-primary-20;
   }
   button.click {
     background-color: red;
   }
-  audio
-  { 
-    text-align: center; 
+  audio {
+    text-align: center;
   }
 }

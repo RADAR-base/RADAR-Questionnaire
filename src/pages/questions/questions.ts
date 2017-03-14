@@ -82,7 +82,7 @@ export class QuestionsPage {
     if (Device.platform == 'Android') {				//Checking platform and permission
       this.permissions = cordova.plugins.permissions
       this.platform = true
-      if (this.audio == true) {						    // Checking permissions only if platform is android
+      if (this.audio == true) {						   // Checking permissions only if platform is android
         this.checkPermissionAudio()
       }
     } else {

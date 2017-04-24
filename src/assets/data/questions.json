@@ -111,6 +111,26 @@
         {"response": "Nearly every day", "score": 3}
       ],
       "type": "radio"
+    },
+    {
+      "id": "PHQ8-10",
+      "lead": "Describe about you",
+      "content": "Could you describe something you are looking forward to this week?",
+      "options": {
+        "configFile": "liveinput_android.conf",
+        "compressionLevel": 1
+      },
+      "type": "audio"
+    },
+	  {
+      "id": "PHQ8-11",
+      "lead": "Could you please record your voice while reading the text below",
+      "content": "\"The Wind blew so hard, the birds clung to the trees. The world was filled with dust and leaves\"",
+      "options": {
+        "configFile": "raw_audio_bin.conf",
+        "compressionLevel": 1
+      },
+      "type": "audio"
     }
   ]
 }

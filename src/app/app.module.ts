@@ -10,6 +10,7 @@ import { RangeInputComponent } from '../components/range-input/range-input'
 import { RadioInputComponent } from '../components/radio-input/radio-input'
 import { FinishPage } from '../pages/finish/finish'
 import { SliderInputComponent } from '../components/slider-input/slider-input'
+import { AudioInputComponent } from '../components/audio-input/audio-input'	//added audio-input component
 
 @NgModule({
   imports: [
@@ -29,7 +30,8 @@ import { SliderInputComponent } from '../components/slider-input/slider-input'
     QuestionComponent,
     RangeInputComponent,
     RadioInputComponent,
-    SliderInputComponent
+    SliderInputComponent,
+    AudioInputComponent
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -44,7 +46,8 @@ import { SliderInputComponent } from '../components/slider-input/slider-input'
     QuestionComponent,
     RangeInputComponent,
     RadioInputComponent,
-    SliderInputComponent
+    SliderInputComponent,
+    AudioInputComponent
   ],
   providers: [
     QuestionService,

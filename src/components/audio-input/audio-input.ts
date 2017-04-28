@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core'
 import { MediaPlugin, Device } from 'ionic-native'
 import * as cordova1 from 'cordova'
-import * as opensmile from '../../../plugins/plugin.opensmile/www/opensmile' //file path to opensmile.js; Adding opensmile plugin
+import * as opensmile from '../../../plugins/cordova-plugin-opensmile/www/opensmile' //file path to opensmile.js; Adding opensmile plugin
 import { AnswerService } from '../../providers/answer-service'
 import { QuestionsPage } from '../../pages/questions/questions'
 declare var cordova: any

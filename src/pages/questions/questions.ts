@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core'
 import { App, Content, NavController, NavParams, ViewController, Platform  } from 'ionic-angular'
-import * as opensmile from '../../../plugins/plugin.opensmile/www/opensmile' //file path to opensmile.js; Adding opensmile plugin
+import * as opensmile from '../../../plugins/cordova-plugin-opensmile/www/opensmile' //file path to opensmile.js; Adding opensmile plugin
 import { Device } from 'ionic-native'
 import { Question } from '../../models/question'
 import { AnswerService } from '../../providers/answer-service'

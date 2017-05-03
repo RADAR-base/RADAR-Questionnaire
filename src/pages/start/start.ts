@@ -17,6 +17,19 @@ export class StartPage {
   isLoading: Boolean = true
   isOpenPageClicked: Boolean = false
 
+  txtValues = {
+    next: 'NEXT',
+    previous: 'PREVIOUS',
+    finish: 'FINISH',
+    close: 'CLOSE'
+  }
+  closeBtTxt: string = this.txtValues.close
+  iconValues = {
+    previous: 'ios-arrow-back',
+    close: 'close-circle'
+  }
+  iconClose: string = this.iconValues.close
+
   constructor (
     public navCtrl: NavController,
     public loadingCtrl: LoadingController,
@@ -46,6 +59,10 @@ export class StartPage {
     } else {
       this.openPage()
     }
+  }
+
+  handleClosePage () {
+    this.navCtrl.pop()
   }
 
   handleError (error) {

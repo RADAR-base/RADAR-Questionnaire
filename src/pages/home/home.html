@@ -8,9 +8,14 @@
     ipsum magnam!
   </h2>
   <div class="pos-bottom" padding>
-    <button ion-button class="bt bt--full" round full
-      (click)="handleOpenPage()">
-      Test Name
-    </button>
+    <ion-list>
+        <ion-item class="item-divider">Your Questionnaires</ion-item>
+        <ion-item>
+            <button ion-button class="bt bt--full" round full
+              (click)="handleOpenPage()">PHQ8</button>
+        </ion-item>
+        <ion-item>Experience Sampling</ion-item>
+        <ion-item>Self Report</ion-item>
+    </ion-list>
   </div>
 </ion-content>

@@ -12,5 +12,10 @@
       (click)="handleOpenPage()">
       Start
     </button>
+    <button ion-button class="bt bt--full" icon-left round full
+        (click)="handleClosePage()">
+        <ion-icon [name]="iconClose"></ion-icon>
+        <div class="toolbar-label">{{closeBtTxt}}</div>
+    </button>
   </div>
 </ion-content>

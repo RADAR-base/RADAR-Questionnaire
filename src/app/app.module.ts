@@ -10,6 +10,7 @@ import { RangeInputComponent } from '../components/range-input/range-input'
 import { SliderInputComponent } from '../components/slider-input/slider-input'
 import { FinishPage } from '../pages/finish/finish'
 import { HomePage } from '../pages/home/home'
+import { StartPage } from '../pages/start/start'
 import { QuestionsPage } from '../pages/questions/questions'
 import { AnswerService } from '../providers/answer-service'
 import { QuestionService } from '../providers/question-service'
@@ -28,6 +29,7 @@ import { MyApp } from './app.component'
 
     // Pages
     HomePage,
+    StartPage,
     QuestionsPage,
     FinishPage,
 
@@ -43,6 +45,7 @@ import { MyApp } from './app.component'
 
     // Pages
     HomePage,
+    StartPage,
     QuestionsPage,
     FinishPage,
 

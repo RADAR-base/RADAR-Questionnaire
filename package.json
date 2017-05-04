@@ -59,7 +59,7 @@
     "cordova-plugin-statusbar",
     "ionic-plugin-keyboard",
     "cordova-plugin-whitelist",
-    "ionic-plugin-keyboard"
+    "ionic-plugin-keyboard",
 		"cordova-plugin-opensmile"
   ],
   "cordovaPlatforms": [

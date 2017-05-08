@@ -4,6 +4,7 @@ import { LoadingController, NavController } from 'ionic-angular'
 import { QuestionsPage } from '../questions/questions'
 import { QuestionService } from '../../providers/question-service'
 import { Question } from '../../models/question'
+import { Assessment } from '../../models/assessment'
 import { AnswerService } from '../../providers/answer-service'
 
 @Component({
@@ -13,6 +14,8 @@ import { AnswerService } from '../../providers/answer-service'
 export class HomePage {
 
   loader
+
+  assessment: Assessment
   questions: Question[]
   isLoading: Boolean = true
   isOpenPageClicked: Boolean = false
@@ -29,7 +32,7 @@ export class HomePage {
     this.questionService.get()
       .delay(2000)
       .subscribe(
-        questions => this.serviceReady(questions),
+        assessment => this.serviceReady(assessment),
         error => this.handleError(error)
       )
   }
@@ -56,10 +59,18 @@ export class HomePage {
     }
   }
 
-  serviceReady (questions) {
-    this.questions = questions
-    this.isLoading = false
+  serviceReady (assessment) {
+    this.readyAssessment(assessment)
+    this.readyQuestions(assessment)
+  }
 
+  readyAssessment (assessment) {
+    this.assessment = assessment
+  }
+
+  readyQuestions (assessment) {
+    this.questions = assessment.questions
+    this.isLoading = false
     if (this.isOpenPageClicked) {
       this.openPage()
     }

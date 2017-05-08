@@ -26,7 +26,7 @@ export class QuestionService {
 
   private extractData (res: Response) {
     const body = res.json()
-    return body.questions || []
+    return body.assessments[0] || []
   }
 
   private handleError (error: Response | any) {

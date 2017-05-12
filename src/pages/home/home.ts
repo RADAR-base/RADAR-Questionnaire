@@ -11,6 +11,12 @@ export class HomePage {
 
   isOpenPageClicked: Boolean = false
 
+  // TODO: replace with actual values
+  checkmarks = ["1","2","3","4","5"]
+  circles = ["6","7","8","9"]
+  countCheckmarks = 5
+  countTotal = 9
+
   constructor (
     public navCtrl: NavController,
   ) {

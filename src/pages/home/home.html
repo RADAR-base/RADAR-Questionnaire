@@ -1,15 +1,15 @@
-<ion-toolbar>
-  <button ion-button menuToggle left>
-    <ion-icon name="menu"></ion-icon>
-  </button>
-  <ion-title>
-    RADAR-CNS
-  </ion-title>
-</ion-toolbar>
+<ion-header>
+  <ion-toolbar>
+    <button ion-button menuToggle left>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      RADAR-CNS
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content padding>
-  <img class="icons-big"
-    src="assets/imgs/radar-logo.svg" alt="RADAR_CNS Logo">
   <h2 text-center>
     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid beatae
     consequatur, delectus deleniti deserunt doloribus est exercitationem harum
@@ -17,14 +17,9 @@
     ipsum magnam!
   </h2>
   <div class="pos-bottom" padding>
-    <ion-list>
-        <ion-item class="item-divider">Your Questionnaires</ion-item>
-        <ion-item>
-            <button ion-button class="bt bt--full" round full
-              (click)="handleOpenPage()">PHQ8</button>
-        </ion-item>
-        <ion-item>Experience Sampling</ion-item>
-        <ion-item>Self Report</ion-item>
-    </ion-list>
+    <button ion-button class="bt bt--full" round full
+      (click)="handleOpenPage()">
+      Start
+    </button>
   </div>
 </ion-content>

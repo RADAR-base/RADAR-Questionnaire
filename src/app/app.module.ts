@@ -11,6 +11,7 @@ import { SliderInputComponent } from '../components/slider-input/slider-input'
 import { FinishPage } from '../pages/finish/finish'
 import { HomePage } from '../pages/home/home'
 import { StartPage } from '../pages/start/start'
+import { TaskSelectPage } from '../pages/taskselect/taskselect'
 import { QuestionsPage } from '../pages/questions/questions'
 import { AnswerService } from '../providers/answer-service'
 import { QuestionService } from '../providers/question-service'
@@ -32,6 +33,7 @@ import { MyApp } from './app.component'
     StartPage,
     QuestionsPage,
     FinishPage,
+    TaskSelectPage,
 
     // Components
     QuestionComponent,
@@ -48,6 +50,7 @@ import { MyApp } from './app.component'
     StartPage,
     QuestionsPage,
     FinishPage,
+    TaskSelectPage,
 
     // Components
     QuestionComponent,

@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons left>
+      <button ion-button navPop icon-only>
+        <ion-icon ios="ios-arrow-back" md="md-arrow-back"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>
+      RADAR-CNS
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div>
+    <ion-list>
+        <ion-item class="item-divider">Tasks</ion-item>
+        <ion-item>
+            <button ion-button class="bt bt--full" round full
+              (click)="handleOpenPage()">PHQ8</button>
+        </ion-item>
+        <ion-item>Experience Sampling</ion-item>
+        <ion-item>Self Report</ion-item>
+    </ion-list>
+  </div>
+</ion-content>

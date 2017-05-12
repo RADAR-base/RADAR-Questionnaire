@@ -12,15 +12,30 @@
 </ion-header>
 
 <ion-content>
-  <div>
+    <div padding><h2>Tasks</h2></div>
     <ion-list>
-        <ion-item class="item-divider">Tasks</ion-item>
-        <ion-item>
-            <button ion-button class="bt bt--full" round full
-              (click)="handleOpenPage()">PHQ8</button>
+        <ion-item no-lines (click)="handleOpenPage()">
+          <div text-center>
+            <div text-center>
+              <h2>PHQ8</h2>
+              <h3>Complete before <b>11:30</b></h3>
+            </div>
+          </div>
         </ion-item>
-        <ion-item>Experience Sampling</ion-item>
-        <ion-item>Self Report</ion-item>
+        <br>
+        <ion-item no-lines (click)="handleOpenPage()">
+          <div text-center>
+            <h4>Requires a quiet space</h4>
+            <h2>Experience Sampling</h2>
+            <h3>Complete before <b>12:40</b></h3>
+          </div>
+        </ion-item>
+        <br>
+        <ion-item no-lines (click)="handleOpenPage()">
+          <div text-center>
+            <h2>Self Report</h2>
+            <h3>Complete before <b>00:00</b></h3>
+          </div>
+        </ion-item>
     </ion-list>
-  </div>
 </ion-content>

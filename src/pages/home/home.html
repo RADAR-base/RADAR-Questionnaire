@@ -10,14 +10,15 @@
 </ion-header>
 
 <ion-content>
-  <div padding>
+  <div>
     <h2>Today <span class="count-today">{{countCheckmarks}}/{{countTotal}}</span></h2>
     <div><ion-icon class="checkmark checked" name="checkmark-circle" *ngFor="let checkmark of checkmarks"></ion-icon>
     <ion-icon class="checkmark" name="checkmark-circle" *ngFor="let circle of circles"></ion-icon></div>
   </div>
   <div class="message-next-task" text-center><h2><b>14 mins</b> to the next task</h2></div>
-  <div padding><h2>Upcoming tasks</h2>
-  <ion-list>
+  <div padding-horizontal><h2>Upcoming tasks</h2></div>
+  <ion-scroll scrollY="true" padding-horizontal class="flex-col-1">
+    <ion-list>
       <ion-item no-lines>
           <ion-grid class="upcoming-group">
             <ion-row>
@@ -90,8 +91,8 @@
             </ion-row>
           </ion-grid>
       </ion-item>
-  </ion-list>
-</div>
+    </ion-list>
+  </ion-scroll>
 </ion-content>
 
 <ion-footer>

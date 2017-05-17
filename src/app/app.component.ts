@@ -37,6 +37,6 @@ export class MyApp {
     })
     console.log(storeHasKeys)
     let today = new Date()
-    this.storage.set('referenceDate', today.getTime()).then(() => {})
+    this.storage.set('referenceDate', today.getTime()).then((error) => {})
   }
 }

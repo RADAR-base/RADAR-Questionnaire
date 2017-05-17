@@ -25,7 +25,7 @@ import { MyApp } from './app.component'
     }),
     IonicStorageModule.forRoot({
       name: '__appdb',
-         driverOrder: ['sqlite','indexeddb','websql']
+         driverOrder: ['sqlite','indexeddb', 'websql']
     })
   ],
   declarations: [

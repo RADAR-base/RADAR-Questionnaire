@@ -29,14 +29,11 @@ export class MyApp {
   }
 
   evalStore () {
-    var storeHasKeys = false
     this.storage.keys().then((keys) => {
-      if(keys.length > 1){
-        storeHasKeys = true
+      if(keys.length == 0){
+        let today = new Date()
+        this.storage.set('referenceDate', today.getTime())
       }
     })
-    console.log(storeHasKeys)
-    let today = new Date()
-    this.storage.set('referenceDate', today.getTime()).then((error) => {})
   }
 }

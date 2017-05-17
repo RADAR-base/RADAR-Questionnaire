@@ -14,4 +14,8 @@ export class SettingsPage {
     console.log('ionViewDidLoad Settings');
   }
 
+  handleReset() {
+    console.log("Handle reset!")
+  }
+
 }

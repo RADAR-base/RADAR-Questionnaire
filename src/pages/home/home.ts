@@ -24,7 +24,8 @@ export class HomePage {
     public navCtrl: NavController,
     public loadingCtrl: LoadingController,
     private questionService: QuestionService,
-    private answerService: AnswerService
+    private answerService: AnswerService,
+    private storage: Storage
   ) {
   }
 

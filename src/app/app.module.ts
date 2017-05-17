@@ -3,6 +3,7 @@ import { HttpModule } from '@angular/http'
 import { BrowserModule } from '@angular/platform-browser'
 import { SplashScreen } from '@ionic-native/splash-screen'
 import { StatusBar } from '@ionic-native/status-bar'
+import { IonicStorageModule } from '@ionic/storage'
 import { IonicApp, IonicModule } from 'ionic-angular'
 import { QuestionComponent } from '../components/question/question'
 import { RadioInputComponent } from '../components/radio-input/radio-input'
@@ -21,6 +22,10 @@ import { MyApp } from './app.component'
     HttpModule,
     IonicModule.forRoot(MyApp, {
       mode: 'md'
+    }),
+    IonicStorageModule.forRoot({
+      name: '__appdb',
+         driverOrder: ['sqlite','indexeddb','websql']
     })
   ],
   declarations: [

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core'
 import { HttpModule } from '@angular/http'
+import { MomentModule } from 'angular2-moment'
 import { BrowserModule } from '@angular/platform-browser'
 import { SplashScreen } from '@ionic-native/splash-screen'
 import { StatusBar } from '@ionic-native/status-bar'
@@ -21,6 +22,7 @@ import { MyApp } from './app.component'
   imports: [
     BrowserModule,
     HttpModule,
+    MomentModule,
     IonicModule.forRoot(MyApp, {
       mode: 'md'
     }),

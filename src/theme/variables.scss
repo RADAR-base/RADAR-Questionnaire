@@ -33,6 +33,14 @@ $cl-light-40: rgba(map_get($colors, light), 0.4);
 $cl-light-60: rgba(map_get($colors, light), 0.6);
 $cl-light-80: rgba(map_get($colors, light), 0.8);
 
+// Provoking colours
+$cl-danger: map_get($colors, danger);
+$cl-danger-10: rgba(map_get($colors, danger), 0.1);
+$cl-danger-20: rgba(map_get($colors, danger), 0.2);
+$cl-danger-40: rgba(map_get($colors, danger), 0.4);
+$cl-danger-60: rgba(map_get($colors, danger), 0.6);
+$cl-danger-80: rgba(map_get($colors, danger), 0.8);
+
 // Font
 $cl-font: $cl-light;
 $cl-font-light: $cl-light-80;

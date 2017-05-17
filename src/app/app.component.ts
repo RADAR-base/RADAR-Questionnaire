@@ -3,6 +3,7 @@ import { SplashScreen } from '@ionic-native/splash-screen'
 import { StatusBar } from '@ionic-native/status-bar'
 import { Platform } from 'ionic-angular'
 import { Storage } from '@ionic/storage'
+import { NotificationSettings } from '../models/settings'
 
 //import { HomePage } from '../pages/home/home'
 import { SettingsPage } from '../pages/settings/settings'
@@ -31,9 +32,17 @@ export class MyApp {
 
   evalStore () {
     this.storage.keys().then((keys) => {
+      let defaultNotificationSettings: NotificationSettings = {
+        sound: true,
+        vibration: false,
+        nightMode: true
+      }
       if(keys.length == 0){
         let today = new Date()
         this.storage.set('referenceDate', today.getTime())
+        this.storage.set('patientId', '123456789')
+        this.storage.set('language', 'English')
+        this.storage.set('notificationSettings', defaultNotificationSettings)
       }
     })
   }

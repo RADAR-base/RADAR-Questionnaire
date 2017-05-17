@@ -4,14 +4,15 @@ import { StatusBar } from '@ionic-native/status-bar'
 import { Platform } from 'ionic-angular'
 import { Storage } from '@ionic/storage'
 
-import { HomePage } from '../pages/home/home'
+//import { HomePage } from '../pages/home/home'
+import { SettingsPage } from '../pages/settings/settings'
 
 @Component({
   template: `
     <ion-nav [root]="rootPage"></ion-nav>`
 })
 export class MyApp {
-  rootPage = HomePage
+  rootPage = SettingsPage
 
   constructor (
     private platform: Platform,

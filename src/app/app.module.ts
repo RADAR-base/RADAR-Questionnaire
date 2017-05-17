@@ -11,6 +11,7 @@ import { RangeInputComponent } from '../components/range-input/range-input'
 import { SliderInputComponent } from '../components/slider-input/slider-input'
 import { FinishPage } from '../pages/finish/finish'
 import { HomePage } from '../pages/home/home'
+import { SettingsPage } from '../pages/settings/settings'
 import { QuestionsPage } from '../pages/questions/questions'
 import { AnswerService } from '../providers/answer-service'
 import { QuestionService } from '../providers/question-service'
@@ -35,6 +36,7 @@ import { MyApp } from './app.component'
     HomePage,
     QuestionsPage,
     FinishPage,
+    SettingsPage,
 
     // Components
     QuestionComponent,
@@ -50,6 +52,7 @@ import { MyApp } from './app.component'
     HomePage,
     QuestionsPage,
     FinishPage,
+    SettingsPage,
 
     // Components
     QuestionComponent,

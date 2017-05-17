@@ -6,6 +6,7 @@ import { QuestionService } from '../../providers/question-service'
 import { Question } from '../../models/question'
 import { Assessment } from '../../models/assessment'
 import { AnswerService } from '../../providers/answer-service'
+import { Storage } from '@ionic/storage'
 
 @Component({
   selector: 'page-home',
@@ -19,12 +20,14 @@ export class HomePage {
   questions: Question[]
   isLoading: Boolean = true
   isOpenPageClicked: Boolean = false
+  date: Date
 
   constructor (
     public navCtrl: NavController,
     public loadingCtrl: LoadingController,
     private questionService: QuestionService,
     private answerService: AnswerService,
+    private storage: Storage,
   ) {
   }
 
@@ -35,6 +38,9 @@ export class HomePage {
         assessment => this.serviceReady(assessment),
         error => this.handleError(error)
       )
+    this.storage.get('referenceDate').then((timestamp) => {
+      this.date = new Date(timestamp)
+    })
   }
 
   ionViewDidEnter () {

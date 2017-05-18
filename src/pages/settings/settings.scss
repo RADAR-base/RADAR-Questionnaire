@@ -19,7 +19,10 @@ page-settings {
   }
   ion-item.item {
     background-color: $cl-primary-40;
-    margin-bottom: 0.1em;
+    margin-bottom: $item-separation-distance;
+  }
+  ion-item.item:last-child {
+    margin-bottom: 0
   }
   ion-item-divider.item-divider {
     background-color: $cl-primary-10;

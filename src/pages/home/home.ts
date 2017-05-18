@@ -7,9 +7,11 @@ import { Question } from '../../models/question'
 import { Assessment } from '../../models/assessment'
 import { AnswerService } from '../../providers/answer-service'
 
+
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
+
 })
 export class HomePage {
 
@@ -24,18 +26,21 @@ export class HomePage {
     public navCtrl: NavController,
     public loadingCtrl: LoadingController,
     private questionService: QuestionService,
-    private answerService: AnswerService
+    private answerService: AnswerService,
+  
   ) {
+      
   }
+
+  
 
   ionViewDidLoad () {
 
     // Moved the answerService reset from ViewEnter 
     this.answerService.reset()
-
     
     this.questionService.get()
-      .delay(2000)
+      .delay(3000)
       .subscribe(
         assessment => this.serviceReady(assessment),
         error => this.handleError(error)

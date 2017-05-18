@@ -8,13 +8,21 @@ import { NotificationSettings } from '../../models/settings'
   selector: 'page-settings',
   templateUrl: 'settings.html',
 })
+
 export class SettingsPage {
 
   patientId: String
   referenceDate: Date
   language: String
+  test: any = {
+    'sound': false
+  }
   languagesSelectable: String[] = ['English','Italian','Spanish','Dutch','German']
-  notifications: NotificationSettings
+  notifications: NotificationSettings = {
+    'sound': false,
+    'vibration': false,
+    'nightMode': false
+  }
 
 
   constructor(public navCtrl: NavController,
@@ -40,13 +48,16 @@ export class SettingsPage {
     })
     this.storage.get('notificationSettings').then((notificationSettings) => {
       this.notifications = notificationSettings
-      console.log(this.notifications)
     })
   }
 
 
   backToHome() {
     console.log("Go back to home")
+  }
+
+  notificationChange(){
+    this.storage.set('notificationSettings', this.notifications)
   }
 
   showSelectLanguage() {
@@ -62,7 +73,7 @@ export class SettingsPage {
         handler: (selectedLanguage) => {
           console.log('Language set');
           this.storage.set('language', selectedLanguage)
-          this.loadSettings()
+          this.language = selectedLanguage
         }
       }
     ]

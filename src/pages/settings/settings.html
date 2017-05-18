@@ -12,39 +12,39 @@
 <ion-content>
 
   <ion-item-group>
-    <ion-item-divider>User Info</ion-item-divider>
-    <ion-item>Patient ID: <span item-right class="info-value">{{ patientId }}</span></ion-item>
-    <ion-item>Enrolement Date: <span item-right class="info-value">{{ referenceDate | amCalendar }}</span></ion-item>
+    <ion-item-divider no-lines>User Info</ion-item-divider>
+    <ion-item no-lines>Patient ID: <span item-right class="info-value">{{ patientId }}</span></ion-item>
+    <ion-item no-lines>Enrolement Date: <span item-right class="info-value">{{ referenceDate | amCalendar }}</span></ion-item>
   </ion-item-group>
 
   <ion-item-group>
-    <ion-item-divider>Language</ion-item-divider>
-    <ion-item>
+    <ion-item-divider no-lines>Language</ion-item-divider>
+    <ion-item no-lines>
       <span class="info-value">{{ language }}</span>
       <span item-right (click)="showSelectLanguage()"><ion-icon class="space-right" name="arrow-dropdown"></ion-icon>Select</span>
     </ion-item>
   </ion-item-group>
 
   <ion-item-group>
-    <ion-item-divider>Notifications</ion-item-divider>
-    <ion-item>
+    <ion-item-divider no-lines class="item-divider">Notifications</ion-item-divider>
+    <ion-item no-lines>
       <ion-label>
         Sound
       </ion-label>
-      <ion-toggle item-right checked="notifications.sound"></ion-toggle>
+      <ion-toggle item-right [(ngModel)]="notifications.sound" (ionChange)="notificationChange()"></ion-toggle>
     </ion-item>
-    <ion-item>
+    <ion-item no-lines>
       <ion-label>
         Vibration
       </ion-label>
-      <ion-toggle item-right checked="notifications.vibration"></ion-toggle>
+      <ion-toggle item-right [(ngModel)]="notifications.vibration" (ionChange)="notificationChange()"></ion-toggle>
     </ion-item>
-    <ion-item>
+    <ion-item no-lines>
       <ion-label>
         Night Mode
         <ion-icon (click)="showInfoNightMode()" name="information-circle"></ion-icon>
       </ion-label>
-      <ion-toggle item-right checked="notifications.nightMode"></ion-toggle>
+      <ion-toggle item-right [(ngModel)]="notifications.nightMode" (ionChange)="notificationChange()"></ion-toggle>
     </ion-item>
   </ion-item-group>
 

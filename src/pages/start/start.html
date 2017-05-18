@@ -1,4 +1,7 @@
 <ion-content padding>
+  <ion-item no-lines>
+      <ion-icon item-right [name]="iconClose" (click)="handleClosePage()"></ion-icon>
+  </ion-item>
   <img class="icons-big"
     src="assets/imgs/radar-logo.svg" alt="RADAR_CNS Logo">
   <h2 text-center>
@@ -11,11 +14,6 @@
     <button ion-button class="bt bt--full" round full
       (click)="handleOpenPage()">
       Start
-    </button>
-    <button ion-button class="bt bt--full" icon-left round full
-        (click)="handleClosePage()">
-        <ion-icon [name]="iconClose"></ion-icon>
-        <div class="toolbar-label">{{closeBtTxt}}</div>
     </button>
   </div>
 </ion-content>

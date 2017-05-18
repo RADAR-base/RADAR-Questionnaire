@@ -23,10 +23,8 @@ export class StartPage {
   txtValues = {
     next: 'NEXT',
     previous: 'PREVIOUS',
-    finish: 'FINISH',
-    close: 'CLOSE'
+    finish: 'FINISH'
   }
-  closeBtTxt: string = this.txtValues.close
   iconValues = {
     previous: 'ios-arrow-back',
     close: 'close-circle'

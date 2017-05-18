@@ -8,9 +8,11 @@ import { Assessment } from '../../models/assessment'
 import { AnswerService } from '../../providers/answer-service'
 import { Storage } from '@ionic/storage'
 
+
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
+
 })
 export class HomePage {
 
@@ -29,16 +31,18 @@ export class HomePage {
     private answerService: AnswerService,
     private storage: Storage,
   ) {
+
   }
+
+
 
   ionViewDidLoad () {
 
-    // Moved the answerService reset from ViewEnter 
+    // Moved the answerService reset from ViewEnter
     this.answerService.reset()
 
-    
     this.questionService.get()
-      .delay(2000)
+      .delay(3000)
       .subscribe(
         assessment => this.serviceReady(assessment),
         error => this.handleError(error)
@@ -49,7 +53,7 @@ export class HomePage {
   }
 
   ionViewDidEnter () {
-    
+
   }
 
   handleOpenPage () {

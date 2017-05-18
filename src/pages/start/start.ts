@@ -105,6 +105,6 @@ export class StartPage {
   }
 
   openPage () {
-    this.navCtrl.push(QuestionsPage, this.questions)
+    this.navCtrl.push(QuestionsPage, {'questions':this.questions, 'endText':this.assessment.endText})
   }
 }

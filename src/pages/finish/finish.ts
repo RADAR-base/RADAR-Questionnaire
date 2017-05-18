@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { NavController } from 'ionic-angular'
+import { NavController, NavParams } from 'ionic-angular'
 import { AnswerService } from '../../providers/answer-service'
 import { HomePage } from '../home/home'
 
@@ -10,9 +10,11 @@ import { HomePage } from '../home/home'
 })
 export class FinishPage {
 
+  content: string = ""
 
   constructor (
     public navCtrl: NavController,
+    public navParams: NavParams,
     private answerService: AnswerService
   ) {
 
@@ -21,6 +23,8 @@ export class FinishPage {
   ionViewDidLoad () {
     // TODO: Send data to server
     console.log(this.answerService.answers)
+    // resolve observable with async properly
+    this.content = this.navParams.data.endText
   }
 
   handleClosePage () {

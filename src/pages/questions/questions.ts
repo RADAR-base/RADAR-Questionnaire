@@ -50,7 +50,7 @@ export class QuestionsPage {
   }
 
   ionViewDidLoad () {
-    this.questions = this.navParams.data
+    this.questions = this.navParams.data.questions
     this.questionsContainerEl = this.questionsContainerRef.nativeElement
     this.setCurrentQuestion()
   }
@@ -84,7 +84,7 @@ export class QuestionsPage {
 
       this.setNextDisabled()
     } else if (finish) {
-      this.navCtrl.push(FinishPage)
+      this.navCtrl.push(FinishPage, {'endText': this.navParams.data.endText})
       this.navCtrl.removeView(this.viewCtrl)
     } else if (back) {
       this.navCtrl.pop()

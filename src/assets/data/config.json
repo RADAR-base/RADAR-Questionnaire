@@ -20,8 +20,8 @@
           "repeat": 2
         }
       },
-      "startText": "This is a test.",
-      "endText": "This is a test.",
+      "startText": "This questionnaire is known as the PHQ8. Clinicians use it to assess current depression in patients. Please note that none of your answers will be collected today. Thank you for taking part in this focus group.",
+      "endText": "In light of this focus group, none of your answers were saved.",
       "questions": [
         {
           "id": "PHQ8-0",
@@ -131,8 +131,8 @@
           "repeat": 1
         }
       },
-      "startText": "This is a test.",
-      "endText": "This is a test.",
+      "startText": "Here you can test some other input types. Please note that none of your answers will be collected today.",
+      "endText": "In light of this focus group, none of your answers were saved.",
       "questions": [
         {
           "id": "Test-0",

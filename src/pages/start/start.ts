@@ -1,6 +1,6 @@
 import 'rxjs/add/operator/delay'
 import { Component } from '@angular/core'
-import { LoadingController, NavController } from 'ionic-angular'
+import { LoadingController, NavController, NavParams } from 'ionic-angular'
 import { QuestionsPage } from '../questions/questions'
 import { QuestionService } from '../../providers/question-service'
 import { Question } from '../../models/question'
@@ -16,6 +16,8 @@ export class StartPage {
   loader
 
   assessment: Assessment
+  assessmentIndex: number
+  introduction: String = ""
   questions: Question[]
   isLoading: Boolean = true
   isOpenPageClicked: Boolean = false
@@ -33,6 +35,7 @@ export class StartPage {
 
   constructor (
     public navCtrl: NavController,
+    public navParams: NavParams,
     public loadingCtrl: LoadingController,
     private questionService: QuestionService,
     private answerService: AnswerService
@@ -40,10 +43,11 @@ export class StartPage {
   }
 
   ionViewDidLoad () {
+    this.assessmentIndex = this.navParams.data.assessmentIndex
     this.questionService.get()
-      .delay(2000)
+      .delay(0)
       .subscribe(
-        assessment => this.serviceReady(assessment),
+        assessments => this.serviceReady(assessments),
         error => this.handleError(error)
       )
   }
@@ -74,13 +78,15 @@ export class StartPage {
     }
   }
 
-  serviceReady (assessment) {
-    this.readyAssessment(assessment)
-    this.readyQuestions(assessment)
+  serviceReady (assessments) {
+    this.readyAssessment(assessments[this.assessmentIndex])
+    this.readyQuestions(assessments[this.assessmentIndex])
   }
 
   readyAssessment (assessment) {
+    // need to resolve this with async pipe properly
     this.assessment = assessment
+    this.introduction = assessment.startText
   }
 
   readyQuestions (assessment) {
@@ -101,5 +107,4 @@ export class StartPage {
   openPage () {
     this.navCtrl.push(QuestionsPage, this.questions)
   }
-
 }

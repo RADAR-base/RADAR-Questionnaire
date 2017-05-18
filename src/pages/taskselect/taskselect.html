@@ -14,25 +14,19 @@
 <ion-content>
     <div padding><h2>Tasks</h2></div>
     <ion-list>
-        <ion-item no-lines (click)="handleOpenPage()">
+        <ion-item no-lines (click)="handleOpenPage(0)">
           <div text-center>
             <div text-center>
+              <h4>Requires a quiet space</h4>
               <h2>PHQ8</h2>
-              <h3>Complete before <b>11:30</b></h3>
+              <h3>Complete before <b>13:30</b></h3>
             </div>
           </div>
         </ion-item>
-        <ion-item no-lines (click)="handleOpenPage()">
+        <ion-item no-lines (click)="handleOpenPage(1)">
           <div text-center>
-            <h4>Requires a quiet space</h4>
-            <h2>Experience Sampling</h2>
+            <h2>Other Inputs</h2>
             <h3>Complete before <b>12:40</b></h3>
-          </div>
-        </ion-item>
-        <ion-item no-lines (click)="handleOpenPage()">
-          <div text-center>
-            <h2>Self Report</h2>
-            <h3>Complete before <b>00:00</b></h3>
           </div>
         </ion-item>
     </ion-list>

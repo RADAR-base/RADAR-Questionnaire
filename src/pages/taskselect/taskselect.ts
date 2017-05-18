@@ -19,12 +19,12 @@ export class TaskSelectPage {
   }
 
   ionViewDidEnter () {
-    
+
   }
 
-  handleOpenPage () {
+  handleOpenPage (assessmentIndex) {
     this.isOpenPageClicked = true
-    this.openPage()
+    this.openPage(assessmentIndex)
   }
 
   handleError (error) {
@@ -33,12 +33,12 @@ export class TaskSelectPage {
 
   serviceReady () {
     if (this.isOpenPageClicked) {
-      this.openPage()
+      this.openPage(0)
     }
   }
 
-  openPage () {
-    this.navCtrl.push(StartPage)
+  openPage (assessmentIndex) {
+    this.navCtrl.push(StartPage, {"assessmentIndex": assessmentIndex})
   }
 
 }

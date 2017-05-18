@@ -33,6 +33,9 @@ $cl-light-40: rgba(map_get($colors, light), 0.4);
 $cl-light-60: rgba(map_get($colors, light), 0.6);
 $cl-light-80: rgba(map_get($colors, light), 0.8);
 
+// Checkmark
+$cl-checkmark: #9ad1c3;
+
 // Font
 $cl-font: $cl-light;
 $cl-font-light: $cl-light-80;

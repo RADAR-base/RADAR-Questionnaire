@@ -27,8 +27,6 @@ export class HomePage {
     private storage: Storage,
     ) {}
 
-
-
   ionViewDidLoad () {
   }
 

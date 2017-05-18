@@ -5,15 +5,15 @@ import { Platform } from 'ionic-angular'
 import { Storage } from '@ionic/storage'
 import { NotificationSettings } from '../models/settings'
 import { ConfigDataProvider } from '../providers/config-data';
-//import { HomePage } from '../pages/home/home'
-import { SettingsPage } from '../pages/settings/settings'
+import { HomePage } from '../pages/home/home'
+
 
 @Component({
   template:
     '<ion-nav [root]="rootPage"></ion-nav>'
 })
 export class MyApp {
-  rootPage = SettingsPage
+  rootPage = HomePage
 
   constructor (
     private platform: Platform,

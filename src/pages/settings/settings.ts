@@ -53,7 +53,7 @@ export class SettingsPage {
 
 
   backToHome() {
-    console.log("Go back to home")
+    this.navCtrl.pop()
   }
 
   notificationChange(){

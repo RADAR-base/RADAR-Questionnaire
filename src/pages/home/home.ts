@@ -3,6 +3,7 @@ import { Storage } from '@ionic/storage'
 import { NavController } from 'ionic-angular'
 import { TaskSelectPage } from '../taskselect/taskselect'
 import { StartPage } from '../start/start'
+import { SettingsPage } from '../settings/settings'
 
 
 @Component({
@@ -48,6 +49,10 @@ export class HomePage {
     if (this.isOpenPageClicked) {
       this.openPage()
     }
+  }
+
+  openSettingsPage () {
+    this.navCtrl.push(SettingsPage)
   }
 
   openPage () {

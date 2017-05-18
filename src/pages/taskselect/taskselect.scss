@@ -1,0 +1,18 @@
+page-taskselect {
+    .toolbar-background {
+        background-color: $cl-secondary;
+    }
+    .toolbar-title {
+        color: $cl-font;
+    }
+    .bar-button {
+        color: $cl-font;
+    }
+    .item{
+        background-color: $cl-primary-40 !important;
+    }
+    .item:hover{
+        background-color: $cl-primary !important;
+        cursor:pointer;
+    }
+}

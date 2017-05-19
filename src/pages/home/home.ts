@@ -1,6 +1,6 @@
 import { Component } from '@angular/core'
 import { Storage } from '@ionic/storage'
-import { NavController } from 'ionic-angular'
+import { NavController, AlertController } from 'ionic-angular'
 import { TaskSelectPage } from '../taskselect/taskselect'
 import { StartPage } from '../start/start'
 import { SettingsPage } from '../settings/settings'
@@ -24,6 +24,7 @@ export class HomePage {
 
   constructor (
     public navCtrl: NavController,
+    public alertCtrl: AlertController,
     private storage: Storage,
     ) {}
 
@@ -62,9 +63,41 @@ export class HomePage {
     }
   }
 
-  countTasks() {
+  countTasks () {
     // TODO: identify how many tasks are currently available
     return 3
+  }
+
+  showCredits () {
+    let buttons = [
+      {
+        text: 'Okay',
+        handler: () => {
+          console.log('Okay clicked');
+        }
+      }
+    ]
+    this.showAlert({
+      'title': 'Credits',
+      'message': 'The RADAR-CNS Questionnaire app was developed by the RADAR-CNS consortium. For more information click <a href="http://radar-cns.org">here</a>.',
+      'buttons': buttons
+    })
+  }
+
+  showAlert(parameters) {
+    let alert = this.alertCtrl.create({
+      title: parameters.title,
+      buttons: parameters.buttons
+    })
+    if(parameters.message) {
+      alert.setMessage(parameters.message)
+    }
+    if(parameters.inputs) {
+      for(var i=0; i<parameters.inputs.length; i++){
+        alert.addInput(parameters.inputs[i])
+      }
+    }
+    alert.present()
   }
 
 }

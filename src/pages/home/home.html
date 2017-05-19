@@ -1,11 +1,14 @@
 <ion-header>
   <ion-toolbar>
-    <button ion-button menuToggle right (click)="openSettingsPage()">
-      <ion-icon name="more"></ion-icon>
-    </button>
-    <ion-title text-center>
-      RADAR-CNS
-    </ion-title>
+      <button class="logo-small" ion-button menuToggle left (click)="showCredits()">
+        <img class="logo-small" src="assets/imgs/radar-logo.svg" alt="Logo">
+      </button>
+      <button ion-button menuToggle right (click)="openSettingsPage()">
+        <ion-icon name="cog"></ion-icon>
+      </button>
+      <ion-title text-center>
+        RADAR-CNS
+      </ion-title>
   </ion-toolbar>
 </ion-header>
 

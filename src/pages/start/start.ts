@@ -18,6 +18,7 @@ export class StartPage {
   assessment: Assessment
   assessmentIndex: number
   introduction: String = ""
+  title: String = ""
   questions: Question[]
   isLoading: Boolean = true
   isOpenPageClicked: Boolean = false
@@ -87,6 +88,7 @@ export class StartPage {
     // need to resolve this with async pipe properly
     this.assessment = assessment
     this.introduction = assessment.startText
+    this.title = assessment.name
   }
 
   readyQuestions (assessment) {

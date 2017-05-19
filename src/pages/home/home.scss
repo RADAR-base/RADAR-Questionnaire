@@ -74,9 +74,9 @@ page-home {
   }
   .message-next-task {
       background-color: $cl-light-10;
-      h2 {
-          padding: 10px;
-      }
+      padding: 7px 0;
+      margin: 5px 0 0 0;
+      font-size: 18px
   }
   .checkmark {
       font-size: 40px;

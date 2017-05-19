@@ -110,7 +110,7 @@
       ]
     },
     {
-      "name": "Test0",
+      "name": "Other Inputs",
       "protocol": {
         "repeatProtocol": {
           "unit": "weeks",

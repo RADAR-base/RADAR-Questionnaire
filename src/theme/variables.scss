@@ -61,7 +61,8 @@ $background-color: transparent;
 $button-md-text-transform: none;
 $toggle-md-track-background-color-off: $cl-light-80;
 $toggle-md-track-background-color-on: map_get($colors, success);
-$toggle-md-active-color: $cl-light;
+$toggle-md-handle-background-color-off: $cl-light;
+$toggle-md-handle-background-color-on: $cl-light;
 $alert-md-head-text-align: center;
 // App Theme
 // --------------------------------------------------
@@ -75,7 +76,6 @@ $alert-md-head-text-align: center;
 .alert-title {
   color: $cl-primary;
 }
-
 // Ionicons
 // --------------------------------------------------
 // The premium icon font for Ionic. For more info, please see:

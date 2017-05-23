@@ -1,6 +1,5 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core'
-import { MediaPlugin, Device } from 'ionic-native'
-import * as cordova1 from 'cordova'
+import { Device } from '@ionic-native/device'
 import * as opensmile from '../../../plugins/cordova-plugin-opensmile/www/opensmile' //file path to opensmile.js; Adding opensmile plugin
 import { AnswerService } from '../../providers/answer-service'
 import { QuestionsPage } from '../../pages/questions/questions'
@@ -31,7 +30,6 @@ export class AudioInputComponent implements OnInit {
   value: string = null
   configfile: string
   compression: number
-  media: MediaPlugin = null
   platform: boolean = false
   answer_b64: string = null
   permission: boolean = false
@@ -41,7 +39,7 @@ export class AudioInputComponent implements OnInit {
     value: null
   }
   ngOnInit() {
-    if (Device.platform == 'Android') {
+    if (this.device.platform == 'Android') {
       //Adding default answer for audio recording
       if (!this.answerService.check(this.qid)) {
         this.answer.id = this.qid
@@ -51,9 +49,9 @@ export class AudioInputComponent implements OnInit {
     }
   }
 
-  constructor(public questions: QuestionsPage, private answerService: AnswerService) {
+  constructor(public questions: QuestionsPage, private answerService: AnswerService, private device: Device) {
     //Checking platform is android or not. If platform is not android audio question won't be shown to users
-    if (Device.platform == 'Android') {
+    if (this.device.platform == 'Android') {
       this.text = 'Start Recording'
       const fs: string = cordova.file.externalDataDirectory;
       var path: string = fs
@@ -80,7 +78,7 @@ export class AudioInputComponent implements OnInit {
     this.recording = this.questions.getAudioRecordStatus()
     this.questions.setQuestionID(this.qid)
     //Getting permission status from questions page
-    this.permission = this.questions.getPermission()		  
+    this.permission = this.questions.getPermission()
     //Checking for platform and permission. If both are not true, code won't run
     if (this.platform && this.permission == true) {
       if (this.recording == false) {
@@ -135,5 +133,5 @@ export class AudioInputComponent implements OnInit {
       return 'Start Recording'
     }
   }
-  
+
 }

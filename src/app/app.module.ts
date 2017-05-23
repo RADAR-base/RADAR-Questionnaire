@@ -1,19 +1,26 @@
 import { NgModule } from '@angular/core'
+import { HttpModule } from '@angular/http'
+import { BrowserModule } from '@angular/platform-browser'
+import { SplashScreen } from '@ionic-native/splash-screen'
+import { StatusBar } from '@ionic-native/status-bar'
+import { Device } from '@ionic-native/device'
 import { IonicApp, IonicModule } from 'ionic-angular'
-import { MyApp } from './app.component'
+import { AudioInputComponent } from '../components/audio-input/audio-input'
+import { QuestionComponent } from '../components/question/question'
+import { RadioInputComponent } from '../components/radio-input/radio-input'
+import { RangeInputComponent } from '../components/range-input/range-input'
+import { SliderInputComponent } from '../components/slider-input/slider-input'
+import { FinishPage } from '../pages/finish/finish'
 import { HomePage } from '../pages/home/home'
 import { QuestionsPage } from '../pages/questions/questions'
-import { QuestionComponent } from '../components/question/question'
-import { QuestionService } from '../providers/question-service'
 import { AnswerService } from '../providers/answer-service'
-import { RangeInputComponent } from '../components/range-input/range-input'
-import { RadioInputComponent } from '../components/radio-input/radio-input'
-import { FinishPage } from '../pages/finish/finish'
-import { SliderInputComponent } from '../components/slider-input/slider-input'
-import { AudioInputComponent } from '../components/audio-input/audio-input'	//added audio-input component
+import { QuestionService } from '../providers/question-service'
+import { MyApp } from './app.component'
 
 @NgModule({
   imports: [
+    BrowserModule,
+    HttpModule,
     IonicModule.forRoot(MyApp, {
       mode: 'md'
     })
@@ -50,8 +57,11 @@ import { AudioInputComponent } from '../components/audio-input/audio-input'	//ad
     AudioInputComponent
   ],
   providers: [
+    StatusBar,
+    SplashScreen,
     QuestionService,
-    AnswerService
+    AnswerService,
+    Device
   ]
 })
 export class AppModule {

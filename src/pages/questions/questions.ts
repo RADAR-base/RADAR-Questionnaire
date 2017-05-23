@@ -1,7 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core'
 import { App, Content, NavController, NavParams, ViewController, Platform  } from 'ionic-angular'
 import * as opensmile from '../../../plugins/cordova-plugin-opensmile/www/opensmile' //file path to opensmile.js; Adding opensmile plugin
-import { Device } from 'ionic-native'
+import { Device } from '@ionic-native/device'
 import { Question } from '../../models/question'
 import { AnswerService } from '../../providers/answer-service'
 import { FinishPage } from '../finish/finish'
@@ -62,14 +62,15 @@ export class QuestionsPage {
     public viewCtrl: ViewController,
     public appCtrl: App,
     private answerService: AnswerService,
-    appPlatform: Platform
+    appPlatform: Platform,
+    private device: Device
   ) {
     //Stop opensmile when application is on pause
     document.addEventListener('pause', () => {
         this.stopOpensmile()
     });
     //Stop opensmile when back button is pressed
-    document.addEventListener("backbutton", () => { 
+    document.addEventListener("backbutton", () => {
         this.stopOpensmile()
     });
   }
@@ -87,7 +88,7 @@ export class QuestionsPage {
       i = i + 1
     }
     //Checking for platform and permission
-    if (Device.platform == 'Android') {
+    if (this.device.platform == 'Android') {
       this.permissions = cordova.plugins.permissions
       this.platform = true
       // Checking permissions only if platform is android

@@ -3,6 +3,7 @@ import { HttpModule } from '@angular/http'
 import { BrowserModule } from '@angular/platform-browser'
 import { SplashScreen } from '@ionic-native/splash-screen'
 import { StatusBar } from '@ionic-native/status-bar'
+import { Device } from '@ionic-native/device'
 import { IonicApp, IonicModule } from 'ionic-angular'
 import { AudioInputComponent } from '../components/audio-input/audio-input'
 import { QuestionComponent } from '../components/question/question'
@@ -57,7 +58,8 @@ import { MyApp } from './app.component'
     StatusBar,
     SplashScreen,
     QuestionService,
-    AnswerService
+    AnswerService,
+    Device
   ]
 })
 export class AppModule {

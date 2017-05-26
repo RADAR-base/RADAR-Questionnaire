@@ -22,6 +22,11 @@ In the project folder run `yarn` to install dependencies:
 $ yarn
 ```
 
+To install opensmile plugin use:
+```
+$ ionic cordova plugin add cordova-plugin-opensmile
+```
+
 To run the application in the browser use:
 ```
 $ ionic serve

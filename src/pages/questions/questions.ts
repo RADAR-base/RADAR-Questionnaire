@@ -85,8 +85,6 @@ export class QuestionsPage {
       this.audio = true
     }
 
-    console.log(this.questions.find(question => question.type === 'audio'))
-
     // Checking for platform and permission
     if (this.device.platform === 'Android') {
       this.platform = true

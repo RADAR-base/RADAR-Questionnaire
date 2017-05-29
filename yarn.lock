@@ -375,6 +375,10 @@ async@^2.0.0, async@^2.1.2:
   dependencies:
     lodash "^4.14.0"
 
+async@~0.9.0:
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/async/-/async-0.9.2.tgz#aea74d5e61c1f899613bf64bda66d4c78f2fd17d"
+
 asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
@@ -2569,6 +2573,12 @@ jstransform@~3.0.0:
     base62 "0.1.1"
     esprima-fb "~3001.1.0-dev-harmony-fb"
     source-map "0.1.31"
+
+kafka-rest@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/kafka-rest/-/kafka-rest-0.0.5.tgz#7b8ff99bd259e6b4b14c266884424d81a6ffdd9f"
+  dependencies:
+    async "~0.9.0"
 
 kind-of@^3.0.2:
   version "3.2.2"

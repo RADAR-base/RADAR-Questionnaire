@@ -41,6 +41,18 @@ $cl-font-light: $cl-light-80;
 $bt-height: 56px;
 $label-height: 40px;
 
+@font-face {
+  font-family: 'Montserrat';
+  src: url("../assets/fonts/Montserrat-Regular.ttf");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url("../assets/fonts/Montserrat-Bold.ttf");
+  font-weight: bold;
+}
+
 // Ionic Overrides
 $font-family-md-base: 'Montserrat', sans-serif;
 $text-color: $cl-font;

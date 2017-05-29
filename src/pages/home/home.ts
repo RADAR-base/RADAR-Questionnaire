@@ -30,10 +30,9 @@ export class HomePage {
 
   ionViewDidLoad () {
 
-    // Moved the answerService reset from ViewEnter 
+    // Moved the answerService reset from ViewEnter
     this.answerService.reset()
 
-    
     this.questionService.get()
       .delay(2000)
       .subscribe(
@@ -43,7 +42,7 @@ export class HomePage {
   }
 
   ionViewDidEnter () {
-    
+
   }
 
   handleOpenPage () {

@@ -42,15 +42,15 @@ $bt-height: 56px;
 $label-height: 40px;
 
 @font-face {
+  font-weight: normal;
   font-family: 'Montserrat';
   src: url("../assets/fonts/Montserrat-Regular.ttf");
-  font-weight: normal;
 }
 
 @font-face {
+  font-weight: bold;
   font-family: 'Montserrat';
   src: url("../assets/fonts/Montserrat-Bold.ttf");
-  font-weight: bold;
 }
 
 // Ionic Overrides

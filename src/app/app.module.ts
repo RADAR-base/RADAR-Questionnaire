@@ -37,7 +37,8 @@ import { MyApp } from './app.component'
     QuestionComponent,
     RangeInputComponent,
     RadioInputComponent,
-    SliderInputComponent
+    SliderInputComponent,
+    AudioInputComponent
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -52,7 +53,8 @@ import { MyApp } from './app.component'
     QuestionComponent,
     RangeInputComponent,
     RadioInputComponent,
-    SliderInputComponent
+    SliderInputComponent,
+    AudioInputComponent
   ],
   providers: [
     StatusBar,

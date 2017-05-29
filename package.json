@@ -13,8 +13,8 @@
         "deploy:before": "build",
         "build:before": "build",
         "run:before": "build",
-        "slint": "stylelint \"src/**/*.scss\"",
         "lint": "tslint --type-check -p ./tsconfig.json \"src/**/*.ts\"",
+        "lint:css": "stylelint \"src/**/*.scss\"",
         "css": "postcss \"src/**/*.scss\" --replace"
     },
     "dependencies": {

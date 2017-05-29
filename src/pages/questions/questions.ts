@@ -85,6 +85,8 @@ export class QuestionsPage {
       this.audio = true
     }
 
+    console.log(this.questions.find(question => question.type === 'audio'))
+
     // Checking for platform and permission
     if (this.device.platform === 'Android') {
       this.platform = true
@@ -109,7 +111,6 @@ export class QuestionsPage {
     ]
 
     permissions.requestPermissions(permissionList, (status) => {
-      console.log('requestPermission 2', status, permissionList)
       if (status.hasPermission) {
         this.permission = true
       } else {
@@ -118,8 +119,8 @@ export class QuestionsPage {
     }, errorCallback)
 
     function errorCallback (error) {
-      console.error(error)
       alert('Permission not set')
+      console.error(error)
     }
   }
 
@@ -175,29 +176,33 @@ export class QuestionsPage {
       alert('ERROR: ' + error.code)
     }
   }
+
   setCurrentQuestion (value = 0) {
+    // FIXME: this should be done in the service that fetches the questionnaires!
     // Checking for platform and if it is not android, audio questions will be skipped, don't show it to user
-    if (this.platform === false) {
-      while (this.questions[this.currentQuestion + value].type === 'audio') {
-        this.answer.id = this.questions[this.currentQuestion + value].id
-        this.answer.value = 'Platform not supported'
-        this.answerService.add(this.answer)
-        if (value <= -1) {
-          value = value - 1
-        } else {
-          value = value + 1
-        }
-        if (this.currentQuestion + value < 0) {
-          value = 0
-        }
-        if (this.currentQuestion + value === this.questions.length) {
-          break
-        }
-      }
-    }
-    if ((this.questions[this.currentQuestion].type === 'audio')) {
+    // if (this.platform === false) {
+    //   while (this.questions[this.currentQuestion + value].type === 'audio') {
+    //     this.answer.id = this.questions[this.currentQuestion + value].id
+    //     this.answer.value = 'Platform not supported'
+    //     this.answerService.add(this.answer)
+    //     if (value <= -1) {
+    //       value = value - 1
+    //     } else {
+    //       value = value + 1
+    //     }
+    //     if (this.currentQuestion + value < 0) {
+    //       value = 0
+    //     }
+    //     if (this.currentQuestion + value === this.questions.length) {
+    //       break
+    //     }
+    //   }
+    // }
+
+    if (this.audio) {
       this.stopOpensmile()
     }
+
     const min = !(this.currentQuestion + value < 0)
     const max = !(this.currentQuestion + value >= this.questions.length)
     const finish = (this.currentQuestion + value === this.questions.length)

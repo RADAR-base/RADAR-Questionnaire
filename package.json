@@ -14,7 +14,7 @@
         "build:before": "build",
         "run:before": "build",
         "slint": "stylelint \"src/**/*.scss\"",
-        "lint": "tslint \"src/**/*.ts\"",
+        "lint": "tslint --type-check -p ./tsconfig.json \"src/**/*.ts\"",
         "css": "postcss \"src/**/*.scss\" --replace"
     },
     "dependencies": {

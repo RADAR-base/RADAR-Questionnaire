@@ -15,7 +15,7 @@
         "run:before": "build",
         "lint": "tslint --type-check -p ./tsconfig.json \"src/**/*.ts\"",
         "lint:css": "stylelint \"src/**/*.scss\"",
-        "css": "postcss \"src/**/*.scss\" --replace"
+        "fix:css": "postcss \"src/**/*.scss\" --replace"
     },
     "dependencies": {
         "@angular/animations": "^4.1.3",

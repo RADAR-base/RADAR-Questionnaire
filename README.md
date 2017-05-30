@@ -32,6 +32,13 @@ To run the application in the browser use:
 $ ionic serve
 ```
 
+## Fix CSS
+
+Use the following command to sort, format and fix common css problems:
+```
+$ yarn fix:css
+```
+
 ### Android
 
 To add the Android platform. You need to have the [Android SDK](https://developer.android.com/studio/index.html) pre installed. This step also adds the plugins listed in `config.xml` to the project.

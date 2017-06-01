@@ -2,7 +2,8 @@ import { Component } from '@angular/core'
 import { SplashScreen } from '@ionic-native/splash-screen'
 import { StatusBar } from '@ionic-native/status-bar'
 import { Platform } from 'ionic-angular'
-import { ConfigDataProvider } from '../providers/config-data'; 
+import { FirebaseService } from '../providers/firebase-service'; 
+
 
 
 import { HomePage } from '../pages/home/home'
@@ -18,7 +19,7 @@ export class MyApp {
     private platform: Platform,
     private statusBar: StatusBar,
     private splashScreen: SplashScreen,
-    private configProvider : ConfigDataProvider
+    private firebaseService : FirebaseService
   ) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.

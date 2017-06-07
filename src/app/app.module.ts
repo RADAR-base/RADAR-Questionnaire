@@ -7,7 +7,8 @@ import { IonicApp, IonicModule } from 'ionic-angular'
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
-import { File } from '@ionic-native/file';
+import { IonicStorageModule } from '@ionic/storage';
+
 
 import { QuestionComponent } from '../components/question/question'
 import { RadioInputComponent } from '../components/radio-input/radio-input'
@@ -19,17 +20,18 @@ import { QuestionsPage } from '../pages/questions/questions'
 import { AnswerService } from '../providers/answer-service'
 import { QuestionService } from '../providers/question-service'
 import { FirebaseService } from '../providers/firebase-service';
+import { StorageService } from '../providers/storage-service'
 import { MyApp } from './app.component';
 
 
 // Firebase config setup
 export const firebaseConfig = {
-  apiKey: "AIzaSyBFVrRB-XE7nO1qmTXo74RaBeyWf0bWvTU",
-    authDomain: "fir-80243.firebaseapp.com",
-    databaseURL: "https://fir-80243.firebaseio.com",
-    projectId: "fir-80243",
-    storageBucket: "fir-80243.appspot.com",
-    messagingSenderId: "236588887630"
+  apiKey: "AIzaSyBTEYv6htFpRUXrp5G1cqnAcHT71Ed_lA0",
+  authDomain: "radar-armt.firebaseapp.com",
+  databaseURL: "https://radar-armt.firebaseio.com",
+  projectId: "radar-armt",
+  storageBucket: "radar-armt.appspot.com",
+  messagingSenderId: "1044012430872"
 
 }
 
@@ -42,11 +44,12 @@ export const firebaseConfig = {
     IonicModule.forRoot(MyApp, {
       mode: 'md'
     }),
+    IonicStorageModule.forRoot(),
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireDatabaseModule, // imports firebase/database, only needed for database features
     AngularFireAuthModule // imports firebase/auth, only needed for auth features
-    
-      ],
+
+  ],
   declarations: [
     MyApp,
 
@@ -80,9 +83,9 @@ export const firebaseConfig = {
     StatusBar,
     SplashScreen,
     QuestionService,
-    File,
-    AnswerService, 
+    AnswerService,
     FirebaseService,
+    StorageService,
     AngularFireDatabaseModule
   ]
 })

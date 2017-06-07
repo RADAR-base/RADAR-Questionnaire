@@ -1,78 +1,53 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
-import { File } from '@ionic-native/file';
-import 'rxjs/add/operator/map';
-import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
-var configFile = '../assets/data/config.json';
+import { StorageService } from '../providers/storage-service'
+import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
+
 
 @Injectable()
-export class FirebaseService  {
+export class FirebaseService {
 
-  items:FirebaseListObservable<any[]>
-  firebaseDataBase:any
+  items: FirebaseObjectObservable<any[]>
+  firebaseDataBase: any
 
-  private filePath:string        //config.json file path
-  private configFileName:string  //file name "config.json"
 
   constructor(
-  			  public http: Http,
-  			  private db: AngularFireDatabase,
-  			  private file: File
-  			  ){
-              this.filePath = this.file.applicationDirectory +"/www/assets/data"
-              this.configFileName = "config.json"
+    public http: Http,
+    private db: AngularFireDatabase,
+    private storage: StorageService
+  ) {
+    // fetch config from firebase
+    this.fetchConfigState()
+  }
 
-  					  //fetch config.json from firebase DB.
-		  			     this.fetchConfigState()
-                 console.log(this.dummy())
-		  	   }
+  fetchConfigState() {
 
-dummy(){
-return "hello"
-}
+    this.firebaseDataBase = this.db.app.database()
 
+    //create any reference point from the firebaseDataBase with .ref('/<NODE_NAME>')
+    var ref = this.firebaseDataBase.ref('version')
 
- fetchConfigState(){
+    //if version is changed fetch the config data
+    //ref.on : listen always
+    //ref.once : listen once changed and detach the listener
 
- 			 //Local config file will be updated in real time when config file is updated from firebase console.
-       this.firebaseDataBase = this.db.app.database()
-
-       //create any reference point from the firebaseDataBase with .ref('/<NODE_NAME>')
-       var ref = this.firebaseDataBase.ref('assessments')
-
-       // if version is changed update the local config file with changes
-       ref.on("value", snapshot => {
-              this.updateConfigfile()
-            })
- }
-
-updateConfigfile(){
-
-    var assessments = this.db.object('/') //fetch the config.json changes from Firebase
-
-    if(this.checkFileExists(this.filePath,this.configFileName) == true){
-      this.file.writeExistingFile(this.filePath,this.configFileName,JSON.stringify(assessments))
-      .then(function(res){
-        console.log("Config.json Succesfully updated");
-      },function(error){
-        console.log("Error updating Config.json: " + error)
+    ref.once("value", snapshot => {
+      // this.db.object('/') pulls all the child nodes
+      // can be changed accordingly
+      this.db.object('/').subscribe(configData => {
+        this.updateConfigData("config", configData) //key :"config"
       })
-    }else{
-        console.log("File Does not exist !")
-    }
+    })
+  }
 
- }
-
- checkFileExists(filePath:string,fileName:string):any
- {
-   this.file.checkFile(filePath,fileName)
-   .then(function(res){
-      return true
-   },function(err){
-      console.log("File does not exist")
-      return false
-   });
- }
+  updateConfigData(key, data) {
+    // save and update the config data in local storage
+    this.storage.set(key, data).then(result => {
+      console.log(result)
+    }, error => {
+      console.log(error)
+    })
+  }
 
 
 }

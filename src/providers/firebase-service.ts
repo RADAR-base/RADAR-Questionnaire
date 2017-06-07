@@ -13,7 +13,7 @@ export class FirebaseService {
 
   constructor(
     public http: Http,
-    private db: AngularFireDatabase,
+    private fireDb: AngularFireDatabase,
     private storage: StorageService
   ) {
     // fetch config from firebase
@@ -22,7 +22,7 @@ export class FirebaseService {
 
   fetchConfigState() {
 
-    this.firebaseDataBase = this.db.app.database()
+    this.firebaseDataBase = this.fireDb.app.database()
 
     //create any reference point from the firebaseDataBase with .ref('/<NODE_NAME>')
     var ref = this.firebaseDataBase.ref('version')
@@ -32,9 +32,9 @@ export class FirebaseService {
     //ref.once : listen once changed and detach the listener
 
     ref.once("value", snapshot => {
-      // this.db.object('/') pulls all the child nodes
+      // this.fireDb.object('/') pulls all the child nodes
       // can be changed accordingly
-      this.db.object('/').subscribe(configData => {
+      this.fireDb.object('/').subscribe(configData => {
         this.updateConfigData("config", configData) //key :"config"
       })
     })

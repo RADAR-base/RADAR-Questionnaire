@@ -3,6 +3,8 @@ import { Storage } from '@ionic/storage';
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/catch'
 import { Observable } from 'rxjs/Observable'
+import { NotificationSettings } from '../models/settings'
+import { StorageKeys } from '../enums/storage'
 
 @Injectable()
 export class StorageService {
@@ -13,34 +15,55 @@ export class StorageService {
 
   }
 
+  init(patientId:String) {
+    let allKeys = this.getAllKeys()
+    allKeys.then((keys) => {
+      console.log(keys)
+      if(keys.length==0){
+        let defaultNotificationSettings: NotificationSettings = {
+          sound: true,
+          vibration: false,
+          nightMode: true
+        }
+        let today = new Date()
+        this.set(StorageKeys.REFERENCEDATE, today.getTime())
+        this.set(StorageKeys.PATIENTID, patientId)
+        this.set(StorageKeys.LANGUAGE, 'English')
+        this.set(StorageKeys.SETTINGS_NOTIFICATIONS, defaultNotificationSettings)
+        this.set(StorageKeys.SETTINGS_LANGUAGES, ['English','Italian','Spanish','Dutch','German'])
+      }
+    }).catch((error) => {
+      this.handleError(error)
+    })
+  }
+
   getStorageState() {
     return this.storage.ready()
+  }
+
+  set(key: StorageKeys, value: any): Promise<any> {
+    return this.storage.set(key.toString(), value)
       .then((res) => { return res })
       .catch((error) => this.handleError(error))
   }
 
-  set(key: string, value: any): Promise<any> {
-    return this.storage.set(key, value)
-      .then((res) => { return res })
-      .catch((error) => this.handleError(error))
+  setFetchedConfiguration(config) {
+    this.set(StorageKeys.CONFIG_VERSION, config.version)
+    this.set(StorageKeys.CONFIG_ASSESSMENTS, config.assessments)
   }
 
-  get(key: string) {
-    return this.storage.get(key)
-      .then((res) => { return res })
-      .catch((error) => this.handleError(error))
+  get(key: StorageKeys) {
+    return this.storage.get(key.toString())
   }
 
-  remove(key: string) {
-    return this.storage.remove(key)
+  remove(key: StorageKeys) {
+    return this.storage.remove(key.toString())
       .then((res) => { return res })
       .catch((error) => this.handleError(error))
   }
 
   getAllKeys() {
     return this.storage.keys()
-      .then((res) => { return res })
-      .catch((error) => this.handleError(error))
   }
 
   clearStorage() {

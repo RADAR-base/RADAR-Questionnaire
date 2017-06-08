@@ -3,3 +3,8 @@ export interface NotificationSettings {
   vibration: Boolean,
   nightMode: Boolean
 }
+
+export interface WeeklyReportSubSettings {
+  name: String,
+  show: Boolean
+}

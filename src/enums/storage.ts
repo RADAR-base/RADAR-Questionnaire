@@ -11,6 +11,7 @@ export class StorageKeys {
     static LANGUAGE = new StorageKeys('LANGUAGE');
     static SETTINGS_NOTIFICATIONS = new StorageKeys('SETTINGS_NOTIFICATIONS');
     static SETTINGS_LANGUAGES = new StorageKeys('SETTINGS_LANGUAGES');
+    static SETTINGS_WEEKLYREPORT = new StorageKeys('SETTINGS_WEEKLYREPORT')
     static CONFIG_VERSION = new StorageKeys('CONFIG_VERSION')
     static CONFIG_ASSESSMENTS = new StorageKeys('CONFIG_ASSESSMENTS')
 }

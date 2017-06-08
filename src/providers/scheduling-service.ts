@@ -5,15 +5,8 @@ import { Assessment } from '../models/assessment'
 import { Task } from '../models/task'
 import { Protocol, Reminders, RepeatProtocol } from '../models/protocol'
 import { DefaultScheduleYearCoverage } from '../assets/data/defaultConfig'
-
 import 'rxjs/add/operator/map';
 
-/*
-  Generated class for the SchedulingService provider.
-
-  See https://angular.io/docs/ts/latest/guide/dependency-injection.html
-  for more info on providers and Angular 2 DI.
-*/
 @Injectable()
 export class SchedulingService {
 

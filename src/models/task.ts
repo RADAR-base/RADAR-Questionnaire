@@ -1,7 +1,7 @@
 import { Reminders } from './protocol'
 
 export interface Task {
- dateTime: Date
+ timestamp: number
  name: String
  reminderSettings: Reminders
  nQuestions: number

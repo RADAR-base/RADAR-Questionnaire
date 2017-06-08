@@ -3,6 +3,7 @@ import { Storage } from '@ionic/storage';
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/catch'
 import { Observable } from 'rxjs/Observable'
+import { NotificationSettings } from '../models/settings'
 
 @Injectable()
 export class StorageService {
@@ -13,10 +14,29 @@ export class StorageService {
 
   }
 
+  init(patientId:String) {
+    let allKeys = this.getAllKeys()
+    allKeys.then((keys) => {
+      if(keys.length==0){
+        let defaultNotificationSettings: NotificationSettings = {
+          sound: true,
+          vibration: false,
+          nightMode: true
+        }
+        let today = new Date()
+        this.set('referenceDate', today.getTime())
+        this.set('patientId', patientId)
+        this.set('language', 'English')
+        this.set('settings-notifications', defaultNotificationSettings)
+        this.set('settings-languages', ['English','Italian','Spanish','Dutch','German'])
+      }
+    }).catch((error) => {
+      this.handleError(error)
+    })
+  }
+
   getStorageState() {
     return this.storage.ready()
-      .then((res) => { return res })
-      .catch((error) => this.handleError(error))
   }
 
   set(key: string, value: any): Promise<any> {
@@ -27,8 +47,6 @@ export class StorageService {
 
   get(key: string) {
     return this.storage.get(key)
-      .then((res) => { return res })
-      .catch((error) => this.handleError(error))
   }
 
   remove(key: string) {
@@ -39,8 +57,6 @@ export class StorageService {
 
   getAllKeys() {
     return this.storage.keys()
-      .then((res) => { return res })
-      .catch((error) => this.handleError(error))
   }
 
   clearStorage() {

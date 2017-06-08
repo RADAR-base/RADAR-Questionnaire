@@ -13,6 +13,7 @@ import { StorageKeys } from '../../enums/storage'
 
 export class SettingsPage {
 
+  remoteConfigVersion: String
   patientId: String
   referenceDate: Date
   language: String
@@ -49,6 +50,9 @@ export class SettingsPage {
   }
 
   loadSettings() {
+    this.storage.get(StorageKeys.CONFIG_VERSION).then((configVersion) => {
+      this.remoteConfigVersion = configVersion
+    })
     this.storage.get(StorageKeys.PATIENTID).then((patientId) => {
       this.patientId = patientId
     })

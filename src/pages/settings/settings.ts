@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AlertController } from 'ionic-angular'
 import { StorageService } from '../../providers/storage-service'
 import { NotificationSettings } from '../../models/settings'
+import { WeeklyReportSubSettings } from '../../models/settings'
 import { StorageKeys } from '../../enums/storage'
 
 @Component({
@@ -21,6 +22,20 @@ export class SettingsPage {
     'vibration': false,
     'nightMode': false
   }
+  weeklyReport: WeeklyReportSubSettings[] = [
+    {
+      name: 'Progress',
+      show: false
+    },
+    {
+      name: 'Steps',
+      show: false
+    },
+    {
+      name: 'Heart rate',
+      show: false
+    }
+  ]
 
 
   constructor(public navCtrl: NavController,
@@ -49,6 +64,9 @@ export class SettingsPage {
     this.storage.get(StorageKeys.SETTINGS_LANGUAGES).then((settingsLanguages) => {
       this.languagesSelectable = settingsLanguages
     })
+    this.storage.get(StorageKeys.SETTINGS_WEEKLYREPORT).then((settingsWeeklyReport) => {
+      this.weeklyReport = settingsWeeklyReport
+    })
   }
 
 
@@ -56,8 +74,13 @@ export class SettingsPage {
     this.navCtrl.pop()
   }
 
-  notificationChange(){
+  notificationChange() {
     this.storage.set(StorageKeys.SETTINGS_NOTIFICATIONS, this.notifications)
+  }
+
+  weeklyReportChange(index) {
+    this.weeklyReport[index].show != this.weeklyReport[index].show
+    this.storage.set(StorageKeys.SETTINGS_WEEKLYREPORT, this.weeklyReport)
   }
 
   showSelectLanguage() {

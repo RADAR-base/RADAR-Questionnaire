@@ -3,7 +3,7 @@ import { Storage } from '@ionic/storage';
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/catch'
 import { Observable } from 'rxjs/Observable'
-import { NotificationSettings } from '../models/settings'
+import { NotificationSettings, WeeklyReportSubSettings } from '../models/settings'
 import { StorageKeys } from '../enums/storage'
 
 @Injectable()
@@ -25,11 +25,26 @@ export class StorageService {
           vibration: false,
           nightMode: true
         }
+        let defaultWeeklyReport: WeeklyReportSubSettings[] = [
+          {
+            name: 'Progress',
+            show: false
+          },
+          {
+            name: 'Steps',
+            show: false
+          },
+          {
+            name: 'Heart rate',
+            show: false
+          }
+        ]
         let today = new Date()
         this.set(StorageKeys.REFERENCEDATE, today.getTime())
         this.set(StorageKeys.PATIENTID, patientId)
         this.set(StorageKeys.LANGUAGE, 'English')
         this.set(StorageKeys.SETTINGS_NOTIFICATIONS, defaultNotificationSettings)
+        this.set(StorageKeys.SETTINGS_WEEKLYREPORT, defaultWeeklyReport)
         this.set(StorageKeys.SETTINGS_LANGUAGES, ['English','Italian','Spanish','Dutch','German'])
       }
     }).catch((error) => {

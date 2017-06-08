@@ -48,6 +48,16 @@
     </ion-item>
   </ion-item-group>
 
+  <ion-item-group>
+    <ion-item-divider no-lines>Weekly report</ion-item-divider>
+    <ion-item no-lines *ngFor="let subSetting of weeklyReport; let i = index">
+      <ion-label>
+        {{subSetting.name}}
+      </ion-label>
+      <ion-toggle item-right [(ngModel)]="subSetting.show" (ionChange)="weeklyReportChange(i)"></ion-toggle>
+    </ion-item>
+  </ion-item-group>
+
 </ion-content>
 
 <ion-footer>

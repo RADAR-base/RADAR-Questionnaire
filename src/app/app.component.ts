@@ -26,6 +26,7 @@ export class MyApp {
       statusBar.styleDefault()
       splashScreen.hide()
       this.storage.init('12345')
+      this.firebaseService.fetchConfigState()
     })
   }
 }

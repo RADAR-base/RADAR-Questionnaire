@@ -47,6 +47,11 @@ export class StorageService {
       .catch((error) => this.handleError(error))
   }
 
+  setFetchedConfiguration(config) {
+    this.set(StorageKeys.CONFIG_VERSION, config.version)
+    this.set(StorageKeys.CONFIG_ASSESSMENTS, config.assessments)
+  }
+
   get(key: StorageKeys) {
     return this.storage.get(key.toString())
   }

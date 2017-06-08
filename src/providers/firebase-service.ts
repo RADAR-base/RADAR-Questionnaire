@@ -23,31 +23,17 @@ export class FirebaseService {
   fetchConfigState() {
 
     this.firebaseDataBase = this.fireDb.app.database()
-
     //create any reference point from the firebaseDataBase with .ref('/<NODE_NAME>')
     var ref = this.firebaseDataBase.ref('version')
-
     //if version is changed fetch the config data
     //ref.on : listen always
     //ref.once : listen once changed and detach the listener
-
     ref.once("value", snapshot => {
       // this.fireDb.object('/') pulls all the child nodes
       // can be changed accordingly
       this.fireDb.object('/').subscribe(configData => {
-        this.updateConfigData("config", configData) //key :"config"
+        this.storage.setFetchedConfiguration(configData)
       })
     })
   }
-
-  updateConfigData(key, data) {
-    // save and update the config data in local storage
-    this.storage.set(key, data).then(result => {
-      console.log(result)
-    }, error => {
-      console.log(error)
-    })
-  }
-
-
 }

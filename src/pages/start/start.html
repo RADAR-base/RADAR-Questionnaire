@@ -1,0 +1,17 @@
+<ion-content padding>
+  <ion-item no-lines>
+      <ion-icon item-right [name]="iconClose" (click)="handleClosePage()"></ion-icon>
+  </ion-item>
+  <img class="icons-big"
+    src="assets/imgs/radar-logo.svg" alt="RADAR_CNS Logo">
+  <h1 text-center class="questionnaire-title">{{ title }}</h1>
+  <h2 text-center>
+    {{ introduction }}
+  </h2>
+  <div class="pos-bottom" padding>
+    <button ion-button class="bt bt--full" round full
+      (click)="handleOpenPage()">
+      Start
+    </button>
+  </div>
+</ion-content>

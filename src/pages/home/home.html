@@ -1,16 +1,108 @@
-<ion-content padding>
-  <img class="icons-big"
-    src="assets/imgs/radar-logo.svg" alt="RADAR_CNS Logo">
-  <h2 text-center>
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid beatae
-    consequatur, delectus deleniti deserunt doloribus est exercitationem harum
-    iste, magni quam quis, quisquam quo tempora veritatis. Aliquam aperiam
-    ipsum magnam!
-  </h2>
-  <div class="pos-bottom" padding>
+<ion-header>
+  <ion-toolbar>
+      <button class="logo-small" ion-button menuToggle left (click)="showCredits()">
+        <img class="logo-small" src="assets/imgs/radar-logo.svg" alt="Logo">
+      </button>
+      <button ion-button menuToggle right (click)="openSettingsPage()">
+        <ion-icon name="cog"></ion-icon>
+      </button>
+      <ion-title text-center>
+        RADAR-CNS
+      </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div>
+    <h2>Today <span class="count-today">{{countCheckmarks}}/{{countTotal}}</span></h2>
+    <div><ion-icon class="checkmark checked" name="checkmark-circle" *ngFor="let checkmark of checkmarks"></ion-icon>
+    <ion-icon class="checkmark" name="checkmark-circle" *ngFor="let circle of circles"></ion-icon></div>
+  </div>
+  <div class="message-next-task" text-center><b>14 mins</b> to the next task</div>
+  <div padding-horizontal><h2>Upcoming tasks</h2></div>
+  <ion-scroll scrollY="true" padding-horizontal class="flex-col-1">
+    <ion-list>
+      <ion-item no-lines>
+          <ion-grid class="upcoming-group">
+            <ion-row>
+              <ion-col>
+                <button ion-button disabled block>Tomorrow</button>
+              </ion-col>
+              <ion-col>
+                <button ion-button disabled block><img class="icon-small-50" src="assets/imgs/time-sunrise.svg" alt="AM">&nbsp;<span class="upcoming-count">3</span></button>
+              </ion-col>
+              <ion-col>
+                <button ion-button disabled block><img class="icon-small-75" src="assets/imgs/time-afternoon.svg" alt="AM/PM">&nbsp;<span class="upcoming-count">2</span></button>
+              </ion-col>
+              <ion-col>
+                <button ion-button disabled block><img  class="icon-small-75" src="assets/imgs/time-night.svg" alt="PM">&nbsp;<span class="upcoming-count">1</span></button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+      </ion-item>
+      <ion-item no-lines>
+        <ion-grid class="upcoming-group">
+            <ion-row>
+              <ion-col>
+                <button ion-button disabled block>Monday</button>
+              </ion-col>
+              <ion-col>
+                <button ion-button disabled block><img  img class="icon-small-50" src="assets/imgs/time-sunrise.svg" alt="AM">&nbsp;<span class="upcoming-count">1</span></button>
+              </ion-col>
+              <ion-col>
+                <button ion-button disabled block><img class="icon-small-75" src="assets/imgs/time-afternoon.svg" alt="AM/PM">&nbsp;<span class="upcoming-count">5</span></button>
+              </ion-col>
+              <ion-col>
+                <button ion-button disabled block><img  class="icon-small-75" src="assets/imgs/time-night.svg" alt="PM">&nbsp;<span class="upcoming-count">-</span></button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+      </ion-item>
+      <ion-item no-lines>
+        <ion-grid class="upcoming-group">
+            <ion-row>
+              <ion-col>
+                <button ion-button disabled block>Tuesday</button>
+              </ion-col>
+              <ion-col>
+                <button ion-button disabled block><img class="icon-small-50" src="assets/imgs/time-sunrise.svg" alt="AM">&nbsp;<span class="upcoming-count">2</span></button>
+              </ion-col>
+              <ion-col>
+                <button ion-button disabled block><img class="icon-small-75" src="assets/imgs/time-afternoon.svg" alt="AM/PM">&nbsp;<span class="upcoming-count">-</span></button>
+              </ion-col>
+              <ion-col>
+                <button ion-button disabled block><img  class="icon-small-75" src="assets/imgs/time-night.svg" alt="PM">&nbsp;<span class="upcoming-count">1</span></button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+      </ion-item>
+      <ion-item no-lines>
+        <ion-grid class="upcoming-group">
+            <ion-row>
+              <ion-col>
+                <button ion-button disabled block>18th May</button>
+              </ion-col>
+              <ion-col>
+                <button ion-button disabled block><img class="icon-small-50" src="assets/imgs/time-sunrise.svg" alt="AM">&nbsp;<span class="upcoming-count">4</span></button>
+              </ion-col>
+              <ion-col>
+                <button ion-button disabled block><img class="icon-small-75" src="assets/imgs/time-afternoon.svg" alt="AM/PM">&nbsp;<span class="upcoming-count">3</span></button>
+              </ion-col>
+              <ion-col>
+                <button ion-button disabled block><img  class="icon-small-75" src="assets/imgs/time-night.svg" alt="PM">&nbsp;<span class="upcoming-count">2</span></button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+      </ion-item>
+    </ion-list>
+  </ion-scroll>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar padding>
     <button ion-button class="bt bt--full" round full
       (click)="handleOpenPage()">
       Start
     </button>
-  </div>
-</ion-content>
+  </ion-toolbar>
+</ion-footer>

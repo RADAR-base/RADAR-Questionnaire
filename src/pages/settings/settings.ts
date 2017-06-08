@@ -4,6 +4,8 @@ import { AlertController } from 'ionic-angular'
 import { StorageService } from '../../providers/storage-service'
 import { NotificationSettings } from '../../models/settings'
 import { WeeklyReportSubSettings } from '../../models/settings'
+import { DefaultSettingsNotifications } from '../../assets/data/defaultConfig'
+import { DefaultSettingsWeeklyReport } from '../../assets/data/defaultConfig'
 import { StorageKeys } from '../../enums/storage'
 
 @Component({
@@ -18,25 +20,8 @@ export class SettingsPage {
   referenceDate: Date
   language: String
   languagesSelectable: String[]
-  notifications: NotificationSettings = {
-    'sound': false,
-    'vibration': false,
-    'nightMode': false
-  }
-  weeklyReport: WeeklyReportSubSettings[] = [
-    {
-      name: 'Progress',
-      show: false
-    },
-    {
-      name: 'Steps',
-      show: false
-    },
-    {
-      name: 'Heart rate',
-      show: false
-    }
-  ]
+  notifications: NotificationSettings = DefaultSettingsNotifications
+  weeklyReport: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
 
 
   constructor(public navCtrl: NavController,

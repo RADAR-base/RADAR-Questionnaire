@@ -20,11 +20,49 @@ export class SchedulingService {
   scheduleVersion: number
   configVersion: number
   refTimestamp: number
+  schedule: Task[]
   upToDate: Promise<Boolean>
   assessments: Promise<Assessment[]>
 
   constructor(private storage: StorageService) {
   }
+
+  getNext () {
+    return this.getData().then((schedule) => {
+      let timestamp = Date.now()
+      var nextIdx = 0
+      var nextTimestamp = timestamp * 2
+      for(var i = 0; i < schedule.length; i++){
+        if(schedule[i].timestamp >= timestamp &&
+            schedule[i].timestamp < nextTimestamp){
+          nextTimestamp = schedule[i].timestamp
+          nextIdx = i
+        }
+      }
+      return schedule[nextIdx]
+    })
+  }
+
+  getTasksForDate (date) {
+    return this.getData().then((schedule) => {
+      let startDate = this.setDateTimeToMidnight(date)
+      let endDate = this.advanceRepeat(startDate, 'day', 1)
+      var tasks: Task[] = []
+      for(var i = 0; i < schedule.length; i++){
+        if(schedule[i].timestamp < endDate.getTime() &&
+          schedule[i].timestamp > startDate.getTime()) {
+            tasks.push(schedule[i])
+          }
+      }
+      return tasks
+    })
+  }
+
+  getData () {
+    var schedule = this.storage.get(StorageKeys.SCHEDULE_TASKS)
+    return Promise.resolve(schedule)
+  }
+
 
   generateSchedule () {
     var scheduleVProm= this.storage.get(StorageKeys.SCHEDULE_VERSION)
@@ -116,7 +154,7 @@ export class SchedulingService {
 
   taskBuilder (assessment, taskDate) {
     let task: Task = {
-      dateTime: taskDate.getTime(),
+      timestamp: taskDate.getTime(),
       name: assessment.name,
       reminderSettings: assessment.protocol.reminders,
       nQuestions: assessment.questions.length,

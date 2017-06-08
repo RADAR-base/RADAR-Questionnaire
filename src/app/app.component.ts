@@ -21,7 +21,7 @@ export class MyApp {
     private splashScreen: SplashScreen,
     private firebaseService: FirebaseService,
     public storage: StorageService,
-    public schedule: SchedulingService,
+    public schedule: SchedulingService
   ) {
     platform.ready().then(() => {
       statusBar.styleDefault()
@@ -29,6 +29,12 @@ export class MyApp {
       this.storage.init('12345')
       this.firebaseService.fetchConfigState()
       this.schedule.generateSchedule()
+      this.schedule.getTasksForDate(new Date(2019,4,8)).then((tasks) => {
+        console.log(tasks)
+      })
+      this.schedule.getNext().then((task) => {
+        console.log(task)
+      })
     })
   }
 }

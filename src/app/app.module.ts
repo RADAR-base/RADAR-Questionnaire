@@ -23,22 +23,10 @@ import { TaskSelectPage } from '../pages/taskselect/taskselect'
 import { QuestionsPage } from '../pages/questions/questions'
 import { AnswerService } from '../providers/answer-service'
 import { QuestionService } from '../providers/question-service'
-import { FirebaseService } from '../providers/firebase-service';
+import { FirebaseService } from '../providers/firebase-service'
 import { StorageService } from '../providers/storage-service'
+import { FirebaseConfig } from '../assets/data/defaultConfig'
 import { MyApp } from './app.component';
-
-
-// Firebase config setup
-export const firebaseConfig = {
-  apiKey: "AIzaSyBTEYv6htFpRUXrp5G1cqnAcHT71Ed_lA0",
-  authDomain: "radar-armt.firebaseapp.com",
-  databaseURL: "https://radar-armt.firebaseio.com",
-  projectId: "radar-armt",
-  storageBucket: "radar-armt.appspot.com",
-  messagingSenderId: "1044012430872"
-
-}
-
 
 
 @NgModule({
@@ -53,7 +41,7 @@ export const firebaseConfig = {
       name: '__appdb',
          driverOrder: ['sqlite','indexeddb', 'websql']
     }),
-    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFireModule.initializeApp(FirebaseConfig),
     AngularFireDatabaseModule, // imports firebase/database, only needed for database features
     AngularFireAuthModule // imports firebase/auth, only needed for auth features
   ],

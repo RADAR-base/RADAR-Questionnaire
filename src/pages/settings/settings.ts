@@ -3,6 +3,9 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AlertController } from 'ionic-angular'
 import { StorageService } from '../../providers/storage-service'
 import { NotificationSettings } from '../../models/settings'
+import { WeeklyReportSubSettings } from '../../models/settings'
+import { DefaultSettingsNotifications } from '../../assets/data/defaultConfig'
+import { DefaultSettingsWeeklyReport } from '../../assets/data/defaultConfig'
 import { StorageKeys } from '../../enums/storage'
 
 @Component({
@@ -12,15 +15,13 @@ import { StorageKeys } from '../../enums/storage'
 
 export class SettingsPage {
 
+  remoteConfigVersion: String
   patientId: String
   referenceDate: Date
   language: String
   languagesSelectable: String[]
-  notifications: NotificationSettings = {
-    'sound': false,
-    'vibration': false,
-    'nightMode': false
-  }
+  notifications: NotificationSettings = DefaultSettingsNotifications
+  weeklyReport: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
 
 
   constructor(public navCtrl: NavController,
@@ -34,6 +35,9 @@ export class SettingsPage {
   }
 
   loadSettings() {
+    this.storage.get(StorageKeys.CONFIG_VERSION).then((configVersion) => {
+      this.remoteConfigVersion = configVersion
+    })
     this.storage.get(StorageKeys.PATIENTID).then((patientId) => {
       this.patientId = patientId
     })
@@ -49,6 +53,9 @@ export class SettingsPage {
     this.storage.get(StorageKeys.SETTINGS_LANGUAGES).then((settingsLanguages) => {
       this.languagesSelectable = settingsLanguages
     })
+    this.storage.get(StorageKeys.SETTINGS_WEEKLYREPORT).then((settingsWeeklyReport) => {
+      this.weeklyReport = settingsWeeklyReport
+    })
   }
 
 
@@ -56,8 +63,13 @@ export class SettingsPage {
     this.navCtrl.pop()
   }
 
-  notificationChange(){
+  notificationChange() {
     this.storage.set(StorageKeys.SETTINGS_NOTIFICATIONS, this.notifications)
+  }
+
+  weeklyReportChange(index) {
+    this.weeklyReport[index].show != this.weeklyReport[index].show
+    this.storage.set(StorageKeys.SETTINGS_WEEKLYREPORT, this.weeklyReport)
   }
 
   showSelectLanguage() {

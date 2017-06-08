@@ -1,12 +1,9 @@
 {
+  "extends": "tslint-config-standard",
   "rulesDirectory": [
-    "node_modules/tslint-eslint-rules/dist/rules",
     "node_modules/codelyzer"
   ],
-  "extends": "tslint-config-standard",
   "rules": {
-    "curly": false,
-
     "callable-types": true,
     "forin": true,
     "import-blacklist": [
@@ -17,7 +14,17 @@
     "interface-over-type-literal": true,
     "max-line-length": [
       true,
-      100
+      120
+    ],
+    "member-ordering": [
+      true,
+      {
+        "order": [
+          "static-field",
+          "instance-field",
+          "constructor"
+        ]
+      }
     ],
     "no-bitwise": true,
     "no-console": [
@@ -28,22 +35,32 @@
       "timeEnd",
       "trace"
     ],
-
     "no-construct": true,
     "no-debugger": true,
+    "no-empty": false,
     "no-empty-interface": true,
     "no-inferrable-types": [
       true,
       "ignore-params"
     ],
+    "no-floating-promises": false,
     "no-shadowed-variable": true,
     "no-string-literal": false,
-    "no-string-throw": true,
     "object-literal-sort-keys": false,
     "prefer-const": true,
     "typeof-compare": true,
-    "unified-signatures": true,
-
+    "directive-selector": [
+      true,
+      "attribute",
+      "app",
+      "camelCase"
+    ],
+    "component-selector": [
+      true,
+      "element",
+      "app",
+      "kebab-case"
+    ],
     "use-input-property-decorator": true,
     "use-output-property-decorator": true,
     "use-host-property-decorator": true,
@@ -51,6 +68,7 @@
     "no-output-rename": true,
     "use-life-cycle-interface": true,
     "use-pipe-transform-interface": true,
+    "component-class-suffix": true,
     "directive-class-suffix": true,
     "no-access-missing-member": true,
     "templates-use-public": true,

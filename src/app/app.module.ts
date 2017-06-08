@@ -4,7 +4,6 @@ import { MomentModule } from 'angular2-moment'
 import { BrowserModule } from '@angular/platform-browser'
 import { SplashScreen } from '@ionic-native/splash-screen'
 import { StatusBar } from '@ionic-native/status-bar'
-import { IonicStorageModule } from '@ionic/storage'
 import { IonicApp, IonicModule } from 'ionic-angular'
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';

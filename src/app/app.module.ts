@@ -9,6 +9,7 @@ import { IonicApp, IonicModule } from 'ionic-angular'
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
+import { IonicStorageModule } from '@ionic/storage';
 
 
 import { QuestionComponent } from '../components/question/question'
@@ -23,20 +24,23 @@ import { TaskSelectPage } from '../pages/taskselect/taskselect'
 import { QuestionsPage } from '../pages/questions/questions'
 import { AnswerService } from '../providers/answer-service'
 import { QuestionService } from '../providers/question-service'
-import { ConfigDataProvider } from '../providers/config-data';
+import { FirebaseService } from '../providers/firebase-service';
+import { StorageService } from '../providers/storage-service'
 import { MyApp } from './app.component';
 
 
 // Firebase config setup
 export const firebaseConfig = {
   apiKey: "AIzaSyBTEYv6htFpRUXrp5G1cqnAcHT71Ed_lA0",
-    authDomain: "radar-armt.firebaseapp.com",
-    databaseURL: "https://radar-armt.firebaseio.com",
-    projectId: "radar-armt",
-    storageBucket: "radar-armt.appspot.com",
-    messagingSenderId: "1044012430872"
+  authDomain: "radar-armt.firebaseapp.com",
+  databaseURL: "https://radar-armt.firebaseio.com",
+  projectId: "radar-armt",
+  storageBucket: "radar-armt.appspot.com",
+  messagingSenderId: "1044012430872"
 
 }
+
+
 
 @NgModule({
   imports: [
@@ -53,8 +57,7 @@ export const firebaseConfig = {
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireDatabaseModule, // imports firebase/database, only needed for database features
     AngularFireAuthModule // imports firebase/auth, only needed for auth features
-
-      ],
+  ],
   declarations: [
     MyApp,
 
@@ -94,7 +97,10 @@ export const firebaseConfig = {
     StatusBar,
     SplashScreen,
     QuestionService,
-    AnswerService, ConfigDataProvider,AngularFireDatabaseModule
+    AnswerService,
+    FirebaseService,
+    StorageService,
+    AngularFireDatabaseModule
   ]
 })
 export class AppModule {

@@ -1,11 +1,11 @@
 {
-  "version": 0.2,
+  "version": 0.321,
   "assessments":[
     {
       "name": "PHQ8",
       "protocol": {
         "repeatProtocol": {
-          "unit": "months",
+          "unit": "month",
           "amount": 1
         },
         "repeatQuestionnaire": {
@@ -22,6 +22,7 @@
       },
       "startText": "This questionnaire is known as the PHQ8. Clinicians use it to assess current depression in patients. Please note that none of your answers will be collected today. Thank you for taking part in this focus group.",
       "endText": "In light of this focus group, none of your answers were saved.",
+      "estimatedCompletionTime": 7,
       "questions": [
         {
           "id": "PHQ8-0",
@@ -113,7 +114,7 @@
       "name": "Other Inputs",
       "protocol": {
         "repeatProtocol": {
-          "unit": "weeks",
+          "unit": "week",
           "amount": 2
         },
         "repeatQuestionnaire": {
@@ -133,6 +134,7 @@
       },
       "startText": "Here you can test some other input types. Please note that none of your answers will be collected today.",
       "endText": "In light of this focus group, none of your answers were saved.",
+      "estimatedCompletionTime": 2,
       "questions": [
         {
           "id": "Test-0",

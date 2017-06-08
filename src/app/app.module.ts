@@ -25,6 +25,7 @@ import { AnswerService } from '../providers/answer-service'
 import { QuestionService } from '../providers/question-service'
 import { FirebaseService } from '../providers/firebase-service'
 import { StorageService } from '../providers/storage-service'
+import { SchedulingService } from '../providers/scheduling-service'
 import { FirebaseConfig } from '../assets/data/defaultConfig'
 import { MyApp } from './app.component';
 
@@ -87,6 +88,7 @@ import { MyApp } from './app.component';
     AnswerService,
     FirebaseService,
     StorageService,
+    SchedulingService,
     AngularFireDatabaseModule
   ]
 })

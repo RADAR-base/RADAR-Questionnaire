@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AlertController } from 'ionic-angular'
 import { StorageService } from '../../providers/storage-service'
 import { NotificationSettings } from '../../models/settings'
+import { StorageKeys } from '../../enums/storage'
 
 @Component({
   selector: 'page-settings',
@@ -29,24 +30,23 @@ export class SettingsPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad Settings');
     this.loadSettings()
   }
 
   loadSettings() {
-    this.storage.get('patientId').then((patientId) => {
+    this.storage.get(StorageKeys.PATIENTID).then((patientId) => {
       this.patientId = patientId
     })
-    this.storage.get('referenceDate').then((referenceDate) => {
+    this.storage.get(StorageKeys.REFERENCEDATE).then((referenceDate) => {
       this.referenceDate = referenceDate
     })
-    this.storage.get('language').then((language) => {
+    this.storage.get(StorageKeys.LANGUAGE).then((language) => {
       this.language = language
     })
-    this.storage.get('settings-notifications').then((settingsNotifications) => {
+    this.storage.get(StorageKeys.SETTINGS_NOTIFICATIONS).then((settingsNotifications) => {
       this.notifications = settingsNotifications
     })
-    this.storage.get('settings-languages').then((settingsLanguages) => {
+    this.storage.get(StorageKeys.SETTINGS_LANGUAGES).then((settingsLanguages) => {
       this.languagesSelectable = settingsLanguages
     })
   }
@@ -57,7 +57,7 @@ export class SettingsPage {
   }
 
   notificationChange(){
-    this.storage.set('settings-notifications', this.notifications)
+    this.storage.set(StorageKeys.SETTINGS_NOTIFICATIONS, this.notifications)
   }
 
   showSelectLanguage() {
@@ -70,7 +70,7 @@ export class SettingsPage {
       {
         text: 'Set',
         handler: (selectedLanguage) => {
-          this.storage.set('language', selectedLanguage)
+          this.storage.set(StorageKeys.LANGUAGE, selectedLanguage)
           this.language = selectedLanguage
         }
       }

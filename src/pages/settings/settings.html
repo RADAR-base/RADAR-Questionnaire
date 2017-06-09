@@ -1,0 +1,75 @@
+<ion-header>
+  <ion-toolbar>
+    <button ion-button menuToggle left (click)="backToHome()">
+      <ion-icon name="arrow-back"></ion-icon>
+    </button>
+    <ion-title>
+      Settings
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-item-group>
+    <ion-item-divider no-lines>User Info</ion-item-divider>
+    <ion-item no-lines>Patient ID: <span item-right class="info-value">{{ patientId }}</span></ion-item>
+    <ion-item no-lines>Enrolement Date: <span item-right class="info-value">{{ referenceDate | amCalendar }}</span></ion-item>
+  </ion-item-group>
+
+  <ion-item-group>
+    <ion-item-divider no-lines>Language</ion-item-divider>
+    <ion-item no-lines>
+      <span class="info-value">{{ language }}</span>
+      <span item-right (click)="showSelectLanguage()"><ion-icon class="space-right" name="arrow-dropdown"></ion-icon>Select</span>
+    </ion-item>
+  </ion-item-group>
+
+  <ion-item-group>
+    <ion-item-divider no-lines class="item-divider">Notifications</ion-item-divider>
+    <ion-item no-lines>
+      <ion-label>
+        Sound
+      </ion-label>
+      <ion-toggle item-right [(ngModel)]="notifications.sound" (ionChange)="notificationChange()"></ion-toggle>
+    </ion-item>
+    <ion-item no-lines>
+      <ion-label>
+        Vibration
+      </ion-label>
+      <ion-toggle item-right [(ngModel)]="notifications.vibration" (ionChange)="notificationChange()"></ion-toggle>
+    </ion-item>
+    <ion-item no-lines>
+      <ion-label>
+        Night Mode
+        <ion-icon (click)="showInfoNightMode()" name="information-circle"></ion-icon>
+      </ion-label>
+      <ion-toggle item-right [(ngModel)]="notifications.nightMode" (ionChange)="notificationChange()"></ion-toggle>
+    </ion-item>
+  </ion-item-group>
+
+  <ion-item-group>
+    <ion-item-divider no-lines>Weekly report</ion-item-divider>
+    <ion-item no-lines *ngFor="let subSetting of weeklyReport; let i = index">
+      <ion-label>
+        {{subSetting.name}}
+      </ion-label>
+      <ion-toggle item-right [(ngModel)]="subSetting.show" (ionChange)="weeklyReportChange(i)"></ion-toggle>
+    </ion-item>
+  </ion-item-group>
+
+  <ion-item-group>
+    <ion-item-divider no-lines>Versions</ion-item-divider>
+    <ion-item no-lines>Remote <span item-right class="info-value">V{{ remoteConfigVersion }}</span></ion-item>
+  </ion-item-group>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar padding>
+    <button ion-button class="bt bt--full" round full
+      (click)="showConfirmReset()">
+      Reset
+    </button>
+  </ion-toolbar>
+</ion-footer>

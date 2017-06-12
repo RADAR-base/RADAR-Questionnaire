@@ -12,13 +12,13 @@ export const FirebaseConfig = {
 }
 
 // DEFAULT SETTINGS
-export let DefaultSettingsNotifications: NotificationSettings = {
+export const DefaultSettingsNotifications: NotificationSettings = {
   sound: true,
   vibration: false,
   nightMode: true
 }
 
-export let DefaultSettingsWeeklyReport: WeeklyReportSubSettings[] = [
+export const DefaultSettingsWeeklyReport: WeeklyReportSubSettings[] = [
     {
       name: 'Progress',
       show: false
@@ -33,10 +33,14 @@ export let DefaultSettingsWeeklyReport: WeeklyReportSubSettings[] = [
     }
   ]
 
-export let DefaultSettingsSupportedLanguages: String[] = [
+export const DefaultSettingsSupportedLanguages: String[] = [
   'English',
   'Italian',
   'Spanish',
   'Dutch',
   'German'
 ]
+
+export const DefaultScheduleVersion: number = 0
+
+export const DefaultScheduleYearCoverage: number = 2

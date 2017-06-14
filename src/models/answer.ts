@@ -12,12 +12,17 @@ export interface Response {
   endTime: number
 }
 
-export interface AnswerExport {
-  "type": any,
-  "version": number,
-  "answers": Response[],
-  "startTime": number,
-  "endTime": number
+export interface AnswerValueExport {
+  type: any,
+  version: number,
+  answers: Response[],
+  startTime: number,
+  endTime: number
+}
+
+export interface AnswerKeyExport {
+  userId: string,
+  sourceId: string
 }
 
 // interface to submit answers to Kafka

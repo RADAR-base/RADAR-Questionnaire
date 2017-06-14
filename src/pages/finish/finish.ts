@@ -2,8 +2,13 @@ import { Component } from '@angular/core'
 import { NavController, NavParams } from 'ionic-angular'
 import { AnswerService } from '../../providers/answer-service'
 import { HomePage } from '../home/home'
+
 import { KafkaService }  from '../../providers/kafka-service'
-import { AnswerExport } from '../../models/answer'
+import { Utility } from  '../../utilities/util'
+
+import { AnswerValueExport } from '../../models/answer'
+import { AnswerKeyExport } from '../../models/answer'
+
 
 @Component({
   selector: 'page-finish',
@@ -17,7 +22,8 @@ export class FinishPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private answerService: AnswerService,
-    private kafkaService: KafkaService
+    private kafkaService: KafkaService,
+    private util: Utility
   ) {
 
   }
@@ -52,17 +58,39 @@ export class FinishPage {
       }
       answers.push(answer)
       if (answersProcessedCount == keylength) {
-        var AnswerObject: AnswerExport = {
-          "type": "PHQ8",
-          "version": 1,           // TODO:fetch version from config.json or local storage
-          "answers": answers,
-          "startTime": 12.02,
-          "endTime": 12.05
-        }
-        this.sendToKafka(AnswerObject)
+
+        this.createAnswerObject(answers)
+
+
       }
     }
   }
+
+  createAnswerObject(answers) {
+
+    //Payload for kafka : value Object which contains individual questionnaire response
+    var Answer: AnswerValueExport = {
+      "type": "PHQ8",
+      "version": 2,           // TODO:fetch version from config.json or local storage
+      "answers": answers,
+      "startTime": 12.02,
+      "endTime": 12.05
+    }
+
+    //Payload for kafka : key Object which contains device information
+    var deviceInfo = this.util.getDevice()
+
+    if (deviceInfo.isDeviceReady == true) {
+      var AnswerKey: AnswerKeyExport = { "userId": "user01", "sourceId": "Device not known" }
+    } else {
+      var AnswerKey: AnswerKeyExport = { "userId": "user01", "sourceId": deviceInfo.device.uuid }
+    }
+
+    var answerData = { "value": Answer, "key": AnswerKey }
+
+    this.sendToKafka(answerData)
+  }
+
 
   handleClosePage() {
     this.navCtrl.setRoot(HomePage)

@@ -12,9 +12,9 @@ export class KafkaService {
 
   private TOPIC_NAME = "active_questionnaire_phq8"  //kafka topic where data has to be submitted
 
-  private aRMT_ID_Schema: string
-  private aRMT_Value_Schema: string
-  private phq8Schema: string
+
+  private phq8ValueSchema: string
+  private phq8KeySchema: string
 
   private schemaUrl = 'assets/data/schema/schemas.json'
   private configUrl = 'assets/data/config/config.json'
@@ -43,30 +43,43 @@ export class KafkaService {
 
   validateData(schema, data) {
 
-    var armt_exportSchema = AvroSchema.parse(this.phq8Schema, { wrapUnions: true })
-    var finalData = armt_exportSchema.clone(data, { wrapUnions: true });  //wraps all strings and ints to there type
+    var armt_exportValueSchema = AvroSchema.parse(this.phq8ValueSchema, { wrapUnions: true })
+    var armt_exportKeySchema = AvroSchema.parse(this.phq8KeySchema, { wrapUnions: true })
 
-    this.send_toKafka(schema, finalData)
+    // wraps all strings and ints to there type
+    var key = armt_exportKeySchema.clone(data.key, { wrapUnions: true })
+    var value = armt_exportValueSchema.clone(data.value, { wrapUnions: true });
+
+    var payload = {
+      "key": key,
+      "value": value
+    }
+
+    this.send_toKafka(schema, payload)
   }
 
   prepareExportSchema(data) {
 
     this.util.getSchema(this.schemaUrl).subscribe(
       resp => {
-        this.phq8Schema = resp.schemas[0].active_questionnaire_phq8_Schema
+        this.phq8ValueSchema = resp.schemas[0].aRMT_phq8_Export_ValueSchema
+        this.phq8KeySchema = resp.schemas[0].aRMT_phq8_Export_KeySchema
+
         // Avroschema object from kafkaClient
-        this.aRMT_ID_Schema = new KafkaClient.AvroSchema({ "type": 'int' }) // TODO: include schema id type in config data
-        this.aRMT_Value_Schema = new KafkaClient.AvroSchema(this.phq8Schema)
+        var aRMT_Key_Schema = new KafkaClient.AvroSchema(this.phq8KeySchema)
+        var aRMT_Value_Schema = new KafkaClient.AvroSchema(this.phq8ValueSchema)
 
         var schemaObject = {
-          "ID_Schema": this.aRMT_ID_Schema,
-          "Value_Schema": this.aRMT_Value_Schema
+          "ID_Schema": aRMT_Key_Schema,
+          "Value_Schema": aRMT_Value_Schema
         }
         this.validateData(schemaObject, data)
+
       }, error => {
         console.log("Error at" + error)
       })
   }
+
 
 
   send_toKafka(schema, questionnaireData) {
@@ -74,10 +87,7 @@ export class KafkaService {
     this.getKafkaInstance().then(kafkaConnInstance => {
 
       // use kafka connection instance to submit to topic
-      kafkaConnInstance.topic(this.TOPIC_NAME).produce(schema.ID_Schema, schema.Value_Schema,
-        {
-          'key': 1, 'value': questionnaireData
-        },
+      kafkaConnInstance.topic(this.TOPIC_NAME).produce(schema.ID_Schema, schema.Value_Schema, questionnaireData,
         function(err, res) {
           if (res) {
             console.log(res)

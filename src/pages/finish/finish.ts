@@ -81,9 +81,9 @@ export class FinishPage {
     var deviceInfo = this.util.getDevice()
 
     if (deviceInfo.isDeviceReady == true) {
-      var AnswerKey: AnswerKeyExport = { "userId": "user01", "sourceId": "Device not known" }
-    } else {
       var AnswerKey: AnswerKeyExport = { "userId": "user01", "sourceId": deviceInfo.device.uuid }
+    } else {
+      var AnswerKey: AnswerKeyExport = { "userId": "user01", "sourceId": "Device not known" }
     }
 
     var answerData = { "value": Answer, "key": AnswerKey }

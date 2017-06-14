@@ -26,6 +26,8 @@ import { QuestionService } from '../providers/question-service'
 import { FirebaseService } from '../providers/firebase-service'
 import { StorageService } from '../providers/storage-service'
 import { FirebaseConfig } from '../assets/data/defaultConfig'
+import { KafkaService }  from '../providers/kafka-service'
+import { Utility } from '../utilities/util'
 import { MyApp } from './app.component';
 
 
@@ -39,7 +41,7 @@ import { MyApp } from './app.component';
     }),
     IonicStorageModule.forRoot({
       name: '__appdb',
-         driverOrder: ['sqlite','indexeddb', 'websql']
+      driverOrder: ['sqlite', 'indexeddb', 'websql']
     }),
     AngularFireModule.initializeApp(FirebaseConfig),
     AngularFireDatabaseModule, // imports firebase/database, only needed for database features
@@ -87,7 +89,9 @@ import { MyApp } from './app.component';
     AnswerService,
     FirebaseService,
     StorageService,
-    AngularFireDatabaseModule
+    AngularFireDatabaseModule,
+    KafkaService,
+    Utility
   ]
 })
 export class AppModule {

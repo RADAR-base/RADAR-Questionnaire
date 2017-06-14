@@ -1,0 +1,64 @@
+{
+	"schemas": [{
+		"active_questionnaire_phq8_Schema": {
+			"namespace": "org.radarcns.questionnaire",
+			"type": "record",
+			"name": "Questionnaire",
+			"doc": "General schema for questionnaire",
+			"fields": [{
+					"name": "type",
+					"type": {
+						"name": "QuestionnaireType",
+						"type": "enum",
+						"symbols": ["PHQ8", "ESM", "UNKNOWN"]
+					},
+					"doc": "Questionnaire names",
+					"default": "UNKNOWN"
+				},
+				{
+					"name": "version",
+					"type": "int",
+					"doc": "Questionnaire version useful to support possible update"
+				},
+				{
+					"name": "answers",
+					"type": {
+						"type": "array",
+						"items": {
+							"name": "Answer",
+							"type": "record",
+							"doc": "Questionnaire answer",
+							"fields": [{
+									"name": "value",
+									"type": ["int", "string", "double"],
+									"doc": "Subject answer"
+								},
+								{
+									"name": "startTime",
+									"type": "double",
+									"doc": "timestamp in UTC (s) when the question is shown"
+								},
+								{
+									"name": "endTime",
+									"type": "double",
+									"doc": "timestamp in UTC (s)  when the question is answered"
+								}
+							]
+						}
+					},
+					"doc": "Answers List"
+				},
+				{
+					"name": "startTime",
+					"type": "double",
+					"doc": "timestamp in UTC (s) when the questionnaire is submitted to the subject"
+				},
+				{
+					"name": "endTime",
+					"type": "double",
+					"doc": "timestamp in UTC (s) when the questionnaire is sent out to the platform"
+				}
+			]
+		}
+	}]
+}

@@ -3,6 +3,7 @@ import { HttpModule } from '@angular/http'
 import { MomentModule } from 'angular2-moment'
 import { BrowserModule } from '@angular/platform-browser'
 import { SplashScreen } from '@ionic-native/splash-screen'
+import { Device } from '@ionic-native/device'
 import { StatusBar } from '@ionic-native/status-bar'
 import { IonicApp, IonicModule } from 'ionic-angular'
 import { AngularFireModule } from 'angularfire2';
@@ -83,6 +84,7 @@ import { MyApp } from './app.component';
     SliderInputComponent
   ],
   providers: [
+    Device,
     StatusBar,
     SplashScreen,
     QuestionService,

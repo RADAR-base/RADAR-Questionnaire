@@ -1,6 +1,16 @@
 {
 	"schemas": [{
-		"active_questionnaire_phq8_Schema": {
+		"aRMT_phq8_Export_KeySchema":{
+					  "namespace": "org.radarcns.key",
+					  "type": "record",
+					  "name": "MeasurementKey",
+					  "doc": "Measurement key in the RADAR-CNS project",
+					  "fields": [
+					    {"name": "userId", "type": "string", "doc": "user ID"},
+					    {"name": "sourceId", "type": "string", "doc": "device source ID"}
+					  ]
+					},
+	"aRMT_phq8_Export_ValueSchema": {
 			"namespace": "org.radarcns.questionnaire",
 			"type": "record",
 			"name": "Questionnaire",

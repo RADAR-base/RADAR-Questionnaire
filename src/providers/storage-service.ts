@@ -30,7 +30,6 @@ export class StorageService {
         this.set(StorageKeys.SETTINGS_NOTIFICATIONS, DefaultSettingsNotifications)
         this.set(StorageKeys.SETTINGS_WEEKLYREPORT, DefaultSettingsWeeklyReport)
         this.set(StorageKeys.SETTINGS_LANGUAGES, DefaultSettingsSupportedLanguages)
-        console.log(DefaultScheduleVersion)
         this.set(StorageKeys.SCHEDULE_VERSION, DefaultScheduleVersion)
       }
     }).catch((error) => {

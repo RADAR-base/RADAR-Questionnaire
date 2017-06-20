@@ -13,6 +13,9 @@
 </ion-header>
 
 <ion-content>
+  <div text-center>
+    <button ion-button class="notification" (click)="openReportPage()">Your weekly report is ready!</button>
+  </div>
   <div>
     <h2>Today <span class="count-today">{{countCheckmarks}}/{{countTotal}}</span></h2>
     <div><ion-icon class="checkmark checked" name="checkmark-circle" *ngFor="let checkmark of checkmarks"></ion-icon>

@@ -1,0 +1,66 @@
+page-report {
+    .toolbar-background {
+        background-color: $cl-secondary;
+    }
+    .toolbar-title {
+        color: $cl-font;
+    }
+    .bar-button {
+        color: $cl-font;
+    }
+    .item{
+        background-color: $cl-primary-40 !important;
+        margin-bottom: $item-separation-distance
+    }
+    .item:last-child {
+        margin-bottom: 0
+    }
+    .item:hover{
+        background-color: $cl-primary !important;
+        cursor:pointer;
+    }
+
+    .swiper-pagination-bullet-active
+    {
+        background: white !important;
+    }
+
+    .report-card {
+        background-color: $cl-primary-40;
+        margin-left: 5%;
+        margin-right: 5%;
+        height: 85%;
+        // TODO: fix height
+    }
+
+    .report-dates {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .line {
+        width: 40%;
+        font-size: 1px;
+        display: inline-block;
+        line-height: 1px;
+
+        background-color:white;
+        margin-top: -6px;
+        margin-bottom: 10px;
+    }
+
+    .report-summary-text {
+        color: $cl-light-80;
+        font-style: italic;
+    }
+
+    .slide-zoom {
+        height: 100%;
+    }
+    
+    .report-line {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+}

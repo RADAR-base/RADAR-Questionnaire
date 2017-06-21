@@ -1,4 +1,4 @@
-import { Assessment } from './assessment';
+import { Assessment } from './assessment'
 
 export interface Config {
   version: number,

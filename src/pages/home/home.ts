@@ -1,5 +1,6 @@
 import { Component } from '@angular/core'
 import { Storage } from '@ionic/storage'
+import { Task } from '../../models/task'
 import { NavController, AlertController } from 'ionic-angular'
 import { TaskSelectPage } from '../taskselect/taskselect'
 import { StartPage } from '../start/start'
@@ -14,13 +15,17 @@ import { SettingsPage } from '../settings/settings'
 export class HomePage {
 
   isOpenPageClicked: Boolean = false
-  date: Date
-
-  // TODO: replace with actual values
-  checkmarks = ["1","2","3","4","5"]
-  circles = ["6","7","8","9"]
-  countCheckmarks = 5
-  countTotal = 9
+  nextTask: Task = {
+    timestamp: 1498096450000,
+    name: 'PhQ8',
+    reminderSettings: {
+      unit: 'hour',
+      amount: 2,
+      repeat: 1
+    },
+    nQuestions: 8,
+   estimatedCompletionTime: 5
+  }
 
   constructor (
     public navCtrl: NavController,
@@ -55,17 +60,7 @@ export class HomePage {
   }
 
   openPage () {
-    if (this.countTasks() > 1) {
-      this.navCtrl.push(TaskSelectPage)
-    }
-    else {
-      this.navCtrl.push(StartPage)
-    }
-  }
-
-  countTasks () {
-    // TODO: identify how many tasks are currently available
-    return 3
+    this.navCtrl.push(TaskSelectPage)
   }
 
   showCredits () {

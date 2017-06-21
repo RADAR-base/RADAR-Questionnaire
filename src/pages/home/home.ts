@@ -3,6 +3,7 @@ import { Storage } from '@ionic/storage'
 import { NavController, AlertController } from 'ionic-angular'
 import { TaskSelectPage } from '../taskselect/taskselect'
 import { StartPage } from '../start/start'
+import { ReportPage } from '../report/report'
 import { SettingsPage } from '../settings/settings'
 
 
@@ -52,6 +53,10 @@ export class HomePage {
 
   openSettingsPage () {
     this.navCtrl.push(SettingsPage)
+  }
+
+  openReportPage () {
+    this.navCtrl.push(ReportPage)
   }
 
   openPage () {

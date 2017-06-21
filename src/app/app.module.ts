@@ -21,6 +21,7 @@ import { SettingsPage } from '../pages/settings/settings'
 import { StartPage } from '../pages/start/start'
 import { TaskSelectPage } from '../pages/taskselect/taskselect'
 import { QuestionsPage } from '../pages/questions/questions'
+import { ReportPage } from '../pages/report/report'
 import { AnswerService } from '../providers/answer-service'
 import { QuestionService } from '../providers/question-service'
 import { FirebaseService } from '../providers/firebase-service'
@@ -56,6 +57,7 @@ import { MyApp } from './app.component';
     FinishPage,
     SettingsPage,
     TaskSelectPage,
+    ReportPage,
 
     // Components
     QuestionComponent,
@@ -74,6 +76,7 @@ import { MyApp } from './app.component';
     FinishPage,
     SettingsPage,
     TaskSelectPage,
+    ReportPage,
 
     // Components
     QuestionComponent,

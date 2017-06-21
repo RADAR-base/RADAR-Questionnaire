@@ -1,36 +1,26 @@
 <!-- Generated template for the TaskInfo component -->
-<div id="task-info-container">
-  <ion-grid>
-    <ion-row>
-      <ion-col>
-        <ion-row>
-          {{task.nQuestions}}
-        </ion-row>
-        <ion-row>
-          {{task.estimatedCompletionTime}}
-        </ion-row>
-      </ion-col>
+<div id="task-info-container" (click)="expand()">
 
-      <ion-col>
-        <ion-row>
-          <ion-col>
-            {{ test() }}
-          </ion-col>
-          <ion-col>
-            <ion-row>
-              {{ test() }}
-            </ion-row>
-            <ion-row>
-              {{ test() }}
-            </ion-row>
-          </ion-col>
-        </ion-row>
-      </ion-col>
-
-    </ion-row>
-  </ion-grid>
-
-  <div class='extra-info' *ngIf="hasExtraInfo">
-    Extra information
+  <div class="info">
+    <div id="questionnaire-metrics" [@alignCenterRightMetrics]="animateCenterRight">
+      <img class="icon-padding icon-sm" src="../../assets/icon/nTasks.png"/>{{task.nQuestions}}<span class="units">x</span>
+      <br>
+      <img class="icon-padding icon-sm" src="../../assets/icon/stopwatch.png"/>{{task.estimatedCompletionTime}}<span class="units">min</span>
+    </div>
+    <div id="push2">
+    </div>
+    <div id="questionnaire-time" [@alignCenterRightTime]="animateCenterRight">
+      <div id="hour">
+        {{ getHour() }}
+      </div>
+      <div [@scaleMinutes]="animateScale" id="minutes">
+        <span [@fade]="animateFade">:</span>{{ getMinutes() }}
+      </div>
+    </div>
   </div>
+
+  <div class="extra-info" *ngIf="hasExtraInfo" [@alignCenterRightExtraInfo]="animateCenterRight">
+    <img class="icon-padding extra-info-icon" src="../../assets/icon/warning.png"/>{{getExtraInfo()}}
+  </div>
+
 </div>

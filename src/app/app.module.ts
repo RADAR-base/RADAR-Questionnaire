@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { HttpModule } from '@angular/http'
 import { MomentModule } from 'angular2-moment'
 import { BrowserModule } from '@angular/platform-browser'
@@ -9,6 +10,7 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { IonicStorageModule } from '@ionic/storage';
+
 
 import { TaskInfoComponent } from '../components/task-info/task-info'
 import { QuestionComponent } from '../components/question/question'
@@ -35,6 +37,7 @@ import { MyApp } from './app.component';
     BrowserModule,
     HttpModule,
     MomentModule,
+    BrowserAnimationsModule,
     IonicModule.forRoot(MyApp, {
       mode: 'md'
     }),

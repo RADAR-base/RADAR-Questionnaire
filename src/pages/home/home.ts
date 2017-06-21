@@ -16,7 +16,7 @@ export class HomePage {
 
   isOpenPageClicked: Boolean = false
   nextTask: Task = {
-    timestamp: 1498096450000,
+    timestamp: 1498143250000,
     name: 'PhQ8',
     reminderSettings: {
       unit: 'hour',

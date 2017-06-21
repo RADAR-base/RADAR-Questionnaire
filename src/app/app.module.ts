@@ -10,7 +10,7 @@ import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { IonicStorageModule } from '@ionic/storage';
 
-
+import { TaskInfoComponent } from '../components/task-info/task-info'
 import { QuestionComponent } from '../components/question/question'
 import { RadioInputComponent } from '../components/radio-input/radio-input'
 import { RangeInputComponent } from '../components/range-input/range-input'
@@ -58,6 +58,7 @@ import { MyApp } from './app.component';
     TaskSelectPage,
 
     // Components
+    TaskInfoComponent,
     QuestionComponent,
     RangeInputComponent,
     RadioInputComponent,
@@ -76,6 +77,7 @@ import { MyApp } from './app.component';
     TaskSelectPage,
 
     // Components
+    TaskInfoComponent,
     QuestionComponent,
     RangeInputComponent,
     RadioInputComponent,

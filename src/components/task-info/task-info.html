@@ -1,0 +1,36 @@
+<!-- Generated template for the TaskInfo component -->
+<div id="task-info-container">
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-row>
+          {{task.nQuestions}}
+        </ion-row>
+        <ion-row>
+          {{task.estimatedCompletionTime}}
+        </ion-row>
+      </ion-col>
+
+      <ion-col>
+        <ion-row>
+          <ion-col>
+            {{ test() }}
+          </ion-col>
+          <ion-col>
+            <ion-row>
+              {{ test() }}
+            </ion-row>
+            <ion-row>
+              {{ test() }}
+            </ion-row>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+
+    </ion-row>
+  </ion-grid>
+
+  <div class='extra-info' *ngIf="hasExtraInfo">
+    Extra information
+  </div>
+</div>

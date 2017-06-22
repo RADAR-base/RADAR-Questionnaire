@@ -2,6 +2,7 @@ import { Component, Input, OnChanges } from '@angular/core'
 import { SchedulingService } from '../../providers/scheduling-service'
 import { StorageKeys } from '../../enums/storage'
 import { Task } from '../../models/task'
+import { ReportScheduling } from '../../models/report'
 import { TickerItem } from '../../models/ticker'
 
 @Component({
@@ -15,6 +16,7 @@ export class TickerBarComponent implements OnChanges {
   @Input() showAffirmation: boolean = false
   tickerItems: TickerItem[]
   tickerIndex: number = 0
+  report: ReportScheduling
 
   hasTask: boolean = true
   tickerWeeklyReport: string
@@ -22,31 +24,17 @@ export class TickerBarComponent implements OnChanges {
 
   constructor(private schedule: SchedulingService) {
     this.schedule.getCurrentReport().then((report) => {
-      console.log(report)
+      this.report = report
     })
   }
 
   ngOnChanges (changes) {
     this.updateTickerItems()
-
     if(this.tickerItems.length > 2){
       setInterval(() => {
         this.iterateIndex()
       }, 7500)
     }
-  }
-
-  updateTickerItems () {
-    this.tickerItems = []
-    if(this.task['timestamp'] > 0){
-      this.addTask()
-    } else if(this.showAffirmation){
-      this.addAffirmation()
-    } else {
-      this.addTasksNone()
-    }
-    this.tickerItems = this.tickerItems.concat(this.items)
-    this.tickerItems.push(this.tickerItems[0])
   }
 
   showNextTickerItem () {
@@ -60,7 +48,43 @@ export class TickerBarComponent implements OnChanges {
       this.tickerIndex = 0
       this.updateTickerItems()
     }
-    console.log(this.tickerIndex)
+  }
+
+  openReport () {
+    //TODO hook-up to reports page
+    console.log('Navigate to report page')
+    this.updateReport()
+    this.updateTickerItems()
+  }
+
+  updateReport () {
+    let now = new Date()
+    this.report['viewed'] = true
+    this.report['firstViewedOn'] = now.getTime()
+    this.schedule.updateReport(this.report)
+  }
+
+  updateTickerItems () {
+    this.tickerItems = []
+    if(this.report) {
+      this.addReportAvailable()
+    }
+    if(this.task['timestamp'] > 0){
+      this.addTask()
+    } else if(this.showAffirmation){
+      this.addAffirmation()
+    } else {
+      this.addTasksNone()
+    }
+    this.tickerItems = this.tickerItems.concat(this.items)
+    this.tickerItems.push(this.tickerItems[0])
+  }
+
+  addReportAvailable () {
+    if(this.report['viewed']==false){
+      let item = this.generateTickerItem('report', '', 'Report available! ', 'Click to view.')
+      this.tickerItems.push(item)
+    }
   }
 
   addTask () {
@@ -101,5 +125,4 @@ export class TickerBarComponent implements OnChanges {
     }
     return item
   }
-
 }

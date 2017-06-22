@@ -9,6 +9,10 @@ ticker-bar {
     display: flex;
   }
 
+  #report {
+    color: map_get($colors, warning);
+  }
+
   .ticker-item {
     flex: 1 0 100vw;
     transition: transform 0.8s ease-in-out;

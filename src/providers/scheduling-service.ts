@@ -58,6 +58,34 @@ export class SchedulingService {
     return Promise.resolve(schedule)
   }
 
+  getCurrentReport () {
+    return this.getReports().then((reports) => {
+      let now = new Date()
+      var delta = DefaultScheduleReportRepeat+1
+      var idx = 0
+      for(var i = 0; i<reports.length; i++){
+        let tmpDelta = now.getTime() - reports[i]['timestamp']
+        if(tmpDelta < delta && tmpDelta >= 0){
+          delta = tmpDelta
+          idx = i
+        }
+      }
+      return reports[idx]
+    })
+  }
+
+  getReports () {
+    var schedule = this.storage.get(StorageKeys.SCHEDULE_REPORT)
+    return Promise.resolve(schedule)
+  }
+
+  updateReport (updatedReport) {
+    this.getReports().then((reports) => {
+      var updatedReports = reports
+      updatedReports[updatedReport['index']] = updatedReport
+      this.setReportSchedule(updatedReports)
+    })
+  }
 
   generateSchedule () {
     var scheduleVProm= this.storage.get(StorageKeys.SCHEDULE_VERSION)
@@ -102,7 +130,7 @@ export class SchedulingService {
     let repeatQ = assessment.protocol.repeatQuestionnaire
 
     var iterDate = new Date(this.refTimestamp)
-    let yearsMillis = DefaultScheduleYearCoverage
+    let yearsMillis = DefaultScheduleYearCoverage * 60000 * 60 * 24 * 365
     let endDate  = new Date(this.refTimestamp + yearsMillis)
 
     var tmpSchedule: Task[] = []
@@ -140,10 +168,10 @@ export class SchedulingService {
         returnDate = new Date(date.getTime() + multiplier * 60000 * 60 * 24 * 31)
         break
       case 'year':
-        returnDate = new Date(date.getTime() + multiplier * DefaultScheduleYearCoverage/2)
+        returnDate = new Date(date.getTime() + multiplier * 60000 * 60 * 24 * 365)
         break
       default:
-        returnDate = new Date(date.getTime() + DefaultScheduleYearCoverage)
+        returnDate = new Date(date.getTime() + DefaultScheduleYearCoverage * 60000 * 60 * 24 * 365)
         break
     }
     return returnDate
@@ -167,25 +195,27 @@ export class SchedulingService {
 
   buildReportSchedule () {
     var iterDate = new Date(this.refTimestamp)
-    let yearsMillis = DefaultScheduleYearCoverage
+    iterDate = this.setDateTimeToMidnight(iterDate)
+    let yearsMillis = DefaultScheduleYearCoverage * 60000 * 60 * 24 * 365
     let endDate  = new Date(this.refTimestamp + yearsMillis)
     var tmpSchedule: ReportScheduling[] = []
 
     while(iterDate.getTime() <= endDate.getTime()){
-      iterDate = new Date(iterDate.getTime() + 60480000)
-      let report = this.reportBuilder(iterDate)
+      iterDate = this.advanceRepeat(iterDate, 'day', DefaultScheduleReportRepeat)
+      let report = this.reportBuilder(tmpSchedule.length, iterDate)
       tmpSchedule.push(report)
     }
     return Promise.resolve(tmpSchedule)
   }
 
-  reportBuilder (reportDate):ReportScheduling {
+  reportBuilder (index, reportDate):ReportScheduling {
     let report = {
+      'index': index,
       'timestamp': reportDate.getTime(),
       'viewed': false,
       'firstViewedOn': 0,
       range: {
-        'timestampStart':reportDate.getTime()-DefaultScheduleReportRepeat,
+        'timestampStart':reportDate.getTime() - DefaultScheduleReportRepeat * 60000 * 60 * 24,
         'timestampEnd':reportDate.getTime()
       }
     }

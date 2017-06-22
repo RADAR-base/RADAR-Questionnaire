@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core'
-import { StorageService } from '../../providers/storage-service'
+import { SchedulingService } from '../../providers/scheduling-service'
 import { StorageKeys } from '../../enums/storage'
 import { Task } from '../../models/task'
 import { TickerItem } from '../../models/ticker'
@@ -20,9 +20,9 @@ export class TickerBarComponent implements OnChanges {
   tickerWeeklyReport: string
   newWeeklyReport: boolean = false
 
-  constructor(private storage: StorageService) {
-    this.storage.get(StorageKeys.REFERENCEDATE).then((data) => {
-      console.log(data)
+  constructor(private schedule: SchedulingService) {
+    this.schedule.getCurrentReport().then((report) => {
+      console.log(report)
     })
   }
 

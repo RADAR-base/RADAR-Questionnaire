@@ -23,10 +23,7 @@ page-home {
       color: $cl-font;
   }
   .bar-button {
-      color: $cl-font;
-  }
-  ion-footer .toolbar-background {
-      background-color: $cl-primary-40;
+    color: $cl-font;
   }
 
   .icon-small-75 {
@@ -36,6 +33,10 @@ page-home {
     height: 50%;
   }
   .logo-small {
-    height: 40px
+    height: 40px;
+  }
+
+  .bg {
+    background-color: $cl-primary-40;
   }
 }

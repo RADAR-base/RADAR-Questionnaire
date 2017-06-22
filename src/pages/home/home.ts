@@ -21,10 +21,15 @@ export class HomePage {
   elTicker: ElementRef;
   @ViewChild('taskInfo')
   elInfo: ElementRef;
+  elInfoHeight: number
+  @ViewChild('footer')
+  elFooter: ElementRef;
+  elFooterHeight: number
 
   isOpenPageClicked: boolean = false
   nextTask: Task = DefaultTask
   showCalendar: boolean = false
+  showCompleted: boolean = false
 
   constructor (
     public navCtrl: NavController,
@@ -40,30 +45,55 @@ export class HomePage {
 
 
   displayCalendar (requestDisplay:boolean) {
-    this.elProgressHeight= this.elProgress.nativeElement.offsetHeight
+    console.log(requestDisplay)
     this.showCalendar = requestDisplay
-    this.applyTransformations()
+    this.elProgressHeight= this.elProgress.nativeElement.offsetHeight
+    this.applyCalendarTransformations()
   }
 
-  applyTransformations () {
+  displayCompleted (requestDisplay:boolean) {
+    console.log(requestDisplay)
+    this.showCompleted = requestDisplay
+    this.elInfoHeight= this.elInfo.nativeElement.offsetHeight
+    this.elFooterHeight= this.elFooter.nativeElement.offsetHeight
+    this.applyCompletedTransformations()
+  }
+
+  applyCalendarTransformations () {
     if(this.showCalendar){
       this.elProgress.nativeElement.style.transform =
         `translateY(-${this.elProgressHeight}px) scale(0.5)`
       this.elTicker.nativeElement.style.transform =
         `translateY(-${this.elProgressHeight}px)`
-        this.elInfo.nativeElement.style.transform =
-          `translateY(-${this.elProgressHeight}px)`
+      this.elInfo.nativeElement.style.transform =
+        `translateY(-${this.elProgressHeight}px)`
     } else {
       this.elProgress.nativeElement.style.transform =
-        `translateY(0px) scale(1)`
+        'translateY(0px) scale(1)'
       this.elTicker.nativeElement.style.transform =
-        `translateY(0px)`
-        this.elInfo.nativeElement.style.transform =
-          `translateY(0px)`
+        'translateY(0px)'
+      this.elInfo.nativeElement.style.transform =
+        'translateY(0px)'
     }
   }
 
-
+  applyCompletedTransformations () {
+    if(this.showCompleted){
+      this.elTicker.nativeElement.style.transform =
+        `translateY(${this.elInfoHeight+this.elFooterHeight}px)`
+      this.elInfo.nativeElement.style.transform =
+        `translateY(${this.elInfoHeight+this.elFooterHeight}px)`
+      this.elFooter.nativeElement.style.transform =
+        `translateY(${this.elInfoHeight+this.elFooterHeight}px)`
+    } else {
+      this.elTicker.nativeElement.style.transform =
+        'translateY(0px)'
+      this.elInfo.nativeElement.style.transform =
+        'translateY(0px)'
+      this.elFooter.nativeElement.style.transform =
+        'translateY(0px)'
+    }
+  }
 
   openSettingsPage () {
     this.navCtrl.push(SettingsPage)

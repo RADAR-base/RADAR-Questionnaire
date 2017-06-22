@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, EventEmitter, Output } from '@angular/core';
 import { RoundProgressConfig } from 'angular-svg-round-progressbar';
 
 
@@ -8,11 +8,14 @@ import { RoundProgressConfig } from 'angular-svg-round-progressbar';
 })
 export class TaskProgressComponent {
 
+  @Output() completed: EventEmitter<Boolean> = new EventEmitter()
+
   text: string;
   max: number = 3
   current: number = 0
   radius: number = 120
   duration: number = 800
+  complete: boolean = false
 
   @ViewChild('progressActive')
   elActive: ElementRef
@@ -31,31 +34,36 @@ export class TaskProgressComponent {
       'animation': 'easeInOutQuart',
       'duration': this.duration
     })
-
   }
 
   increment () {
     if(this.current >= this.max-1){
-      this.current += 1
-      this.transitionToComplete()
+      this.current = this.max
+      this.complete = true
     } else {
       this.current += 1
+      this.complete = false
+    }
+    this.transitionToComplete()
+    this.completed.emit(this.complete)
+  }
+
+  transitionToComplete () {
+    if(this.complete){
+      this.elActive.nativeElement.style.transform =
+      'translate3d(-100%,0,0) scale(0.1)'
+      this.elComplete.nativeElement.style.transform =
+      'translate3d(-100%,0,0) scale(1)'
+      this.elCheckmark.nativeElement.style.transform =
+      'scale(1)'
+      this.elCounter.nativeElement.style.transform =
+      'translate3d(0,250px,0)'
+    } else {
       this.elComplete.nativeElement.style.transform =
       'scale(0.1)'
       this.elCheckmark.nativeElement.style.transform =
       'scale(5)'
     }
-  }
-
-  transitionToComplete () {
-    this.elActive.nativeElement.style.transform =
-    'translate3d(-100%,0,0) scale(0.1)'
-    this.elComplete.nativeElement.style.transform =
-    'translate3d(-100%,0,0) scale(1)'
-    this.elCheckmark.nativeElement.style.transform =
-    'scale(1)'
-    this.elCounter.nativeElement.style.transform =
-    'translate3d(0,250px,0)'
   }
 
 }

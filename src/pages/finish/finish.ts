@@ -4,6 +4,8 @@ import { AnswerService } from '../../providers/answer-service'
 import { HomePage } from '../home/home'
 
 import { KafkaService }  from '../../providers/kafka-service'
+import { StorageService } from '../../providers/storage-service'
+import { StorageKeys } from '../../enums/storage'
 import { Utility } from  '../../utilities/util'
 
 import { AnswerValueExport } from '../../models/answer'
@@ -17,29 +19,56 @@ import { AnswerKeyExport } from '../../models/answer'
 export class FinishPage {
 
   content: string = ""
+  private configVersion: number = 0.1
+  private patientId: string = "1" // dummy value
+
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private answerService: AnswerService,
     private kafkaService: KafkaService,
+    private storage: StorageService,
     private util: Utility
   ) {
 
   }
 
   ionViewDidLoad() {
-    // TODO: Send data to server
+
     console.log(this.answerService.answers)
-    this.processQuestionnaireAnswers(this.answerService.answers)
 
     // resolve observable with async properly
     this.content = this.navParams.data.endText
+
+    // Before submitting data to kafka, fetch config version and Patient ID
+    this.fetchFromStorage().then(resp => {
+
+      // response values are in the same order as the promises provided
+      this.configVersion = resp[0]
+      this.patientId = resp[1]
+
+      // process answers and submit to kafka
+      this.processQuestionnaireAnswers(this.answerService.answers)
+
+    }, error => {
+      console.log(JSON.stringify(error))
+    })
+
   }
 
-  sendToKafka(QuestionnaireData) {
-    this.kafkaService.build(QuestionnaireData)  //submit data to kafka
+  // fetch patientID and config version from local storage
+  // include other items when required
+  // the values in response are in the same order as the promises
+  // local storage service get() returns a promise always
+  fetchFromStorage() {
+
+    const configVersion = this.storage.get(StorageKeys.CONFIG_VERSION)
+    const patientID = this.storage.get(StorageKeys.PATIENTID)
+
+    return Promise.all([configVersion, patientID])
   }
+
 
   processQuestionnaireAnswers(values) {
 
@@ -71,9 +100,9 @@ export class FinishPage {
     //Payload for kafka : value Object which contains individual questionnaire response
     var Answer: AnswerValueExport = {
       "type": "PHQ8",
-      "version": 2,           // TODO:fetch version from config.json or local storage
+      "version": this.configVersion,
       "answers": answers,
-      "startTime": 12.02,
+      "startTime": 12.02,  // whole questionnaire startTime and endTime
       "endTime": 12.05
     }
 
@@ -81,14 +110,19 @@ export class FinishPage {
     var deviceInfo = this.util.getDevice()
 
     if (deviceInfo.isDeviceReady == true) {
-      var AnswerKey: AnswerKeyExport = { "userId": "user01", "sourceId": deviceInfo.device.uuid }
+      var AnswerKey: AnswerKeyExport = { "userId": this.patientId, "sourceId": deviceInfo.device.uuid }
     } else {
-      var AnswerKey: AnswerKeyExport = { "userId": "user01", "sourceId": "Device not known" }
+      var AnswerKey: AnswerKeyExport = { "userId": this.patientId, "sourceId": "Device not known" }
     }
 
     var answerData = { "value": Answer, "key": AnswerKey }
 
     this.sendToKafka(answerData)
+
+  }
+
+  sendToKafka(QuestionnaireData) {
+    this.kafkaService.build(QuestionnaireData)  //submit data to kafka
   }
 
 

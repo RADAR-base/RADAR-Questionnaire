@@ -1,38 +1,25 @@
+
+
 import { Injectable } from '@angular/core'
 import { Device } from '@ionic-native/device'
 import { Observable } from 'rxjs/Observable'
 import 'rxjs/add/operator/map'
 import { Http, Response } from '@angular/http'
 
+import { StorageService } from '../providers/storage-service'
+import { StorageKeys } from '../enums/storage'
+
 @Injectable()
 export class Utility {
 
   constructor(
     private http: Http,
-    private device: Device
+    private device: Device,
+    private storage: StorageService
   ) {
   }
   private schemaUrl = 'assets/data/schema/schemas.json'
-  private configUrl = 'assets/data/config.json'
 
-
-  getConfigVersion() {
-
-    var version = null
-    this.getConfig(this.configUrl).subscribe(
-      function(config) { version = config.version },
-      function(error) { console.log("Error at" + error) },
-      function() {
-        return version
-      })
-  }
-
-  getConfig(configUrl) {
-
-    return this.http.get(configUrl)
-      .map(this.extractData)
-      .catch(this.handleError)
-  }
 
   getSchema(schemaUrl) {
     return this.http.get(schemaUrl)
@@ -54,8 +41,6 @@ export class Utility {
       }
     }
   }
-
-
 
   private extractData(res: Response) {
     const body = res.json()

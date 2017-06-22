@@ -69,11 +69,13 @@ export class TickerBarComponent implements OnChanges {
     if(this.report) {
       this.addReportAvailable()
     }
+    if(this.showAffirmation){
+      this.addAffirmation()
+    }
     if(this.task['timestamp'] > 0){
       this.addTask()
-    } else if(this.showAffirmation){
-      this.addAffirmation()
-    } else {
+    }
+    if(this.tickerItems.length == 0){
       this.addTasksNone()
     }
     this.tickerItems = this.tickerItems.concat(this.items)

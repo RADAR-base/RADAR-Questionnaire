@@ -13,7 +13,7 @@
       <div id="hour">
         {{ getHour() }}
       </div>
-      <div [@scaleMinutes]="animateScale" id="minutes">
+      <div id="minutes" [@scaleMinutes]="animateScale">
         <span [@fade]="animateFade">:</span>{{ getMinutes() }}
       </div>
     </div>

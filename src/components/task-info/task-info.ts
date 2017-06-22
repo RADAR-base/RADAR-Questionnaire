@@ -67,7 +67,8 @@ import { Task } from '../../models/task'
 export class TaskInfoComponent implements OnChanges {
 
   @Input() task: Task;
-  @Output() expanded: Boolean = true
+  @Output() collapse: EventEmitter<Boolean> = new EventEmitter()
+  expanded: Boolean = true
   hasExtraInfo: Boolean = true
   displayTask: Boolean = false
   animateFade: String
@@ -96,6 +97,7 @@ export class TaskInfoComponent implements OnChanges {
   }
 
   expand () {
+    this.collapse.emit(this.expanded)
     this.expanded = this.expanded ? false : true
     this.applyAnimationKeys()
   }

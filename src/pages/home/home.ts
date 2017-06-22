@@ -57,6 +57,10 @@ export class HomePage {
     this.navCtrl.push(TaskSelectPage)
   }
 
+  displayCalendar (requestDisplay:Boolean) {
+    console.log(requestDisplay)
+  }
+
   showCredits () {
     let buttons = [
       {

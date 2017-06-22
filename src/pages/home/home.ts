@@ -84,8 +84,8 @@ export class HomePage {
 
   applyCompletedTransformations () {
     if(this.showCompleted){
-      this.elTicker.nativeElement.style =
-        `padding-bottom: 0`
+      this.elTicker.nativeElement.style.padding =
+        `0`
       this.elTicker.nativeElement.style.transform =
         `translateY(${this.elInfoHeight+this.elFooterHeight}px)`
       this.elInfo.nativeElement.style.transform =
@@ -93,8 +93,8 @@ export class HomePage {
       this.elFooter.nativeElement.style.transform =
         `translateY(${this.elInfoHeight+this.elFooterHeight}px)`
     } else {
-      this.elTicker.nativeElement.style =
-        'padding-bottom: 2px'
+      this.elTicker.nativeElement.style.padding =
+        '0 0 2px 0'
       this.elTicker.nativeElement.style.transform =
         'translateY(0px)'
       this.elInfo.nativeElement.style.transform =

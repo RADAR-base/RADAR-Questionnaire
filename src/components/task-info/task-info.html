@@ -2,9 +2,9 @@
 
   <div class="info">
     <div id="questionnaire-metrics" [@alignCenterRightMetrics]="animateCenterRight">
-      <img class="icon-padding icon-sm" src="../../assets/icon/nTasks.png"/>{{task.nQuestions}}<span class="units">x</span>
+      <img class="icon-padding icon-sm" src="assets/imgs/nTasks.png"/>{{task.nQuestions}}<span class="units">x</span>
       <br>
-      <img class="icon-padding icon-sm" src="../../assets/icon/stopwatch.png"/>{{task.estimatedCompletionTime}}<span class="units">min</span>
+      <img class="icon-padding icon-sm" src="assets/imgs/stopwatch.png"/>{{task.estimatedCompletionTime}}<span class="units">min</span>
     </div>
     <div id="push2">
     </div>
@@ -19,7 +19,7 @@
   </div>
 
   <div class="extra-info" *ngIf="hasExtraInfo" [@alignCenterRightExtraInfo]="animateCenterRight">
-    <img class="icon-padding extra-info-icon" src="../../assets/icon/warning.png"/>{{getExtraInfo()}}
+    <img class="icon-padding extra-info-icon" src="assets/imgs/warning.png"/>{{getExtraInfo()}}
   </div>
 
 </div>

@@ -11,6 +11,7 @@ import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { IonicStorageModule } from '@ionic/storage';
 
+import { TaskProgressComponent } from '../components/task-progress/task-progress'
 import { TickerBarComponent } from '../components/ticker-bar/ticker-bar'
 import { TaskInfoComponent } from '../components/task-info/task-info'
 import { QuestionComponent } from '../components/question/question'
@@ -61,6 +62,7 @@ import { MyApp } from './app.component';
     TaskSelectPage,
 
     // Components
+    TaskProgressComponent,
     TickerBarComponent,
     TaskInfoComponent,
     QuestionComponent,
@@ -81,6 +83,7 @@ import { MyApp } from './app.component';
     TaskSelectPage,
 
     // Components
+    TaskProgressComponent,
     TickerBarComponent,
     TaskInfoComponent,
     QuestionComponent,

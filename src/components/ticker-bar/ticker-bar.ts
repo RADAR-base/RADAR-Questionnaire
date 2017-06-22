@@ -23,9 +23,12 @@ export class TickerBarComponent implements OnChanges {
 
   ngOnChanges (changes) {
     this.updateTickerItems()
-    setInterval(() => {
-      this.iterateIndex()
-    }, 7500)
+    
+    if(this.tickerItems.length > 2){
+      setInterval(() => {
+        this.iterateIndex()
+      }, 7500)
+    }
   }
 
   updateTickerItems () {
@@ -38,10 +41,6 @@ export class TickerBarComponent implements OnChanges {
       this.addTasksNone()
     }
     this.tickerItems = this.tickerItems.concat(this.items)
-    //TODO remove
-    this.addAffirmation()
-    this.addTasksNone()
-
     this.tickerItems.push(this.tickerItems[0])
   }
 

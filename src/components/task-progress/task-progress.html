@@ -1,9 +1,24 @@
 <div id="task-progress-container" (click)="increment()">
+
   <div id="navigation">
     Today
   </div>
+
   <div id="progress">
-    <round-progress class="progress-sub" [current]="current" [max]="max" [radius]="radius"></round-progress>
-    <div class="completed progress-sub"></div>
+    <div #progressActive class="progress-sub">
+      <round-progress [current]="current" [max]="max" [radius]="radius"></round-progress>
+    </div>
+    <div #progressComplete class="progress-sub">
+      <div class="completed">
+        <ion-icon #checkmark class="checkmark" name="checkmark"></ion-icon>
+      </div>
+    </div>
   </div>
+
+  <div #counter class="counter">
+    <span class="large">{{ current }}</span>
+    <br>
+    <span class="small">Completed</span>
+  </div>
+
 </div>

@@ -16,13 +16,37 @@ task-progress {
   }
 
   .progress-sub {
-    flex: 1 0 240px;
+    flex: 1 0 100vw;
+    transition: transform 0.8s ease-in-out;
   }
 
   .completed {
-    border-radius: 100%;
     width: 240px;
     height: 240px;
+    border-radius: 100%;
     background-color: map-get($colors, tertiary);
   }
+
+  .checkmark {
+    font-size: 220px;
+    padding-left: 35px;
+    transition: transform 0.8s ease-in;
+  }
+
+  .counter {
+    text-align: center;
+    margin-top: -135px;
+    transition: transform 0.8s ease-in-out;
+  }
+
+  .large {
+    font-size: 100px;
+    line-height: 2px
+  }
+
+  .small {
+    margin-top: -20px;
+    font-size: 18px;
+  }
+
 }

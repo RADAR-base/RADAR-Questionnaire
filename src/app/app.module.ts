@@ -11,7 +11,7 @@ import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { IonicStorageModule } from '@ionic/storage';
 
-import { InfoBarComponent } from '../components/info-bar/info-bar'
+import { TickerBarComponent } from '../components/ticker-bar/ticker-bar'
 import { TaskInfoComponent } from '../components/task-info/task-info'
 import { QuestionComponent } from '../components/question/question'
 import { RadioInputComponent } from '../components/radio-input/radio-input'
@@ -61,7 +61,7 @@ import { MyApp } from './app.component';
     TaskSelectPage,
 
     // Components
-    InfoBarComponent,
+    TickerBarComponent,
     TaskInfoComponent,
     QuestionComponent,
     RangeInputComponent,
@@ -81,7 +81,7 @@ import { MyApp } from './app.component';
     TaskSelectPage,
 
     // Components
-    InfoBarComponent,
+    TickerBarComponent,
     TaskInfoComponent,
     QuestionComponent,
     RangeInputComponent,

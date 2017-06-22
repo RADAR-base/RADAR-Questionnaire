@@ -13,7 +13,7 @@
 </ion-header>
 
 <ion-content>
-  <info-bar></info-bar>
+  <ticker-bar [task]='nextTask' [showAffirmation]="false"></ticker-bar>
   <task-info [task]='nextTask' (collapse)="displayCalendar($event)"></task-info>
 </ion-content>
 

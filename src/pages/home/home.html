@@ -13,15 +13,21 @@
 </ion-header>
 
 <ion-content>
-  <task-progress></task-progress>
-  <ticker-bar [task]='nextTask' [showAffirmation]="false"></ticker-bar>
-  <task-info [task]='nextTask' (collapse)="displayCalendar($event)"></task-info>
+  <div  #progressBar class="size-dynamic">
+    <task-progress></task-progress>
+  </div>
+  <div  #tickerBar class="size-static">
+    <ticker-bar [task]='nextTask' [showAffirmation]="false"></ticker-bar>
+  </div>
+  <div  #taskInfo class="size-static">
+    <task-info [task]='nextTask' (collapse)="displayCalendar($event)"></task-info>
+  </div>
 </ion-content>
 
 <ion-footer>
   <ion-toolbar padding>
     <button ion-button class="bt bt--full" round full
-      (click)="handleOpenPage()">
+      (click)="openTaskSelectPage()">
       Start
     </button>
   </ion-toolbar>

@@ -1,4 +1,6 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core'
+import { StorageService } from '../../providers/storage-service'
+import { StorageKeys } from '../../enums/storage'
 import { Task } from '../../models/task'
 import { TickerItem } from '../../models/ticker'
 
@@ -18,12 +20,15 @@ export class TickerBarComponent implements OnChanges {
   tickerWeeklyReport: string
   newWeeklyReport: boolean = false
 
-  constructor() {
+  constructor(private storage: StorageService) {
+    this.storage.get(StorageKeys.REFERENCEDATE).then((data) => {
+      console.log(data)
+    })
   }
 
   ngOnChanges (changes) {
     this.updateTickerItems()
-    
+
     if(this.tickerItems.length > 2){
       setInterval(() => {
         this.iterateIndex()

@@ -57,4 +57,6 @@ export const DefaultSettingsSupportedLanguages: String[] = [
 
 export const DefaultScheduleVersion: number = 0
 
-export const DefaultScheduleYearCoverage: number = 2
+export const DefaultScheduleYearCoverage: number = 6307200000 // 2 years
+
+export const DefaultScheduleReportRepeat: number = 60480000 // 7 days

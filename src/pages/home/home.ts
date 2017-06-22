@@ -25,7 +25,7 @@ export class HomePage {
     ) {}
 
   ionViewDidLoad () {
-    this.schedule.getNext().then((data) => {
+    this.schedule.getNextTask().then((data) => {
       this.nextTask = data
     })
   }

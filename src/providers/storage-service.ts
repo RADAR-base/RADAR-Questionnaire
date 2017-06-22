@@ -24,7 +24,8 @@ export class StorageService {
       console.log(keys)
       if(keys.length==0){
         let today = new Date()
-        this.set(StorageKeys.REFERENCEDATE, today.getTime())
+        //this.set(StorageKeys.REFERENCEDATE, today.getTime())
+        this.set(StorageKeys.REFERENCEDATE, 1496952304184)
         this.set(StorageKeys.PATIENTID, patientId)
         this.set(StorageKeys.LANGUAGE, DefaultSettingsSupportedLanguages[0])
         this.set(StorageKeys.SETTINGS_NOTIFICATIONS, DefaultSettingsNotifications)

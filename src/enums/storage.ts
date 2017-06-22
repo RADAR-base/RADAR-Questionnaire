@@ -16,4 +16,5 @@ export class StorageKeys {
     static CONFIG_ASSESSMENTS = new StorageKeys('CONFIG_ASSESSMENTS')
     static SCHEDULE_VERSION = new StorageKeys('SCHEDULE_VERSION')
     static SCHEDULE_TASKS = new StorageKeys('SCHEDULE_TASKS')
+    static SCHEDULE_REPORT = new StorageKeys('SCHEDULE_REPORT')
 }

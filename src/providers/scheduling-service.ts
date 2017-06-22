@@ -3,8 +3,10 @@ import { StorageService } from './storage-service'
 import { StorageKeys } from '../enums/storage'
 import { Assessment } from '../models/assessment'
 import { Task } from '../models/task'
+import { ReportScheduling } from '../models/report'
 import { Protocol, Reminders, RepeatProtocol } from '../models/protocol'
 import { DefaultScheduleYearCoverage } from '../assets/data/defaultConfig'
+import { DefaultScheduleReportRepeat } from '../assets/data/defaultConfig'
 import 'rxjs/add/operator/map';
 
 @Injectable()
@@ -20,8 +22,8 @@ export class SchedulingService {
   constructor(private storage: StorageService) {
   }
 
-  getNext () {
-    return this.getData().then((schedule) => {
+  getNextTask () {
+    return this.getTasks().then((schedule) => {
       let timestamp = Date.now()
       var nextIdx = 0
       var nextTimestamp = timestamp * 2
@@ -37,7 +39,7 @@ export class SchedulingService {
   }
 
   getTasksForDate (date) {
-    return this.getData().then((schedule) => {
+    return this.getTasks().then((schedule) => {
       let startDate = this.setDateTimeToMidnight(date)
       let endDate = this.advanceRepeat(startDate, 'day', 1)
       var tasks: Task[] = []
@@ -51,7 +53,7 @@ export class SchedulingService {
     })
   }
 
-  getData () {
+  getTasks () {
     var schedule = this.storage.get(StorageKeys.SCHEDULE_TASKS)
     return Promise.resolve(schedule)
   }
@@ -77,6 +79,8 @@ export class SchedulingService {
     this.getAssessments()
     .then((assessments) => this.buildSchedule(assessments))
     .then((schedule) => this.setSchedule(schedule))
+    this.buildReportSchedule()
+    .then((schedule) => this.setReportSchedule(schedule))
   }
 
   getAssessments () {
@@ -98,7 +102,7 @@ export class SchedulingService {
     let repeatQ = assessment.protocol.repeatQuestionnaire
 
     var iterDate = new Date(this.refTimestamp)
-    let yearsMillis = 60000 * 60 * 24 * 365 * DefaultScheduleYearCoverage
+    let yearsMillis = DefaultScheduleYearCoverage
     let endDate  = new Date(this.refTimestamp + yearsMillis)
 
     var tmpSchedule: Task[] = []
@@ -136,16 +140,16 @@ export class SchedulingService {
         returnDate = new Date(date.getTime() + multiplier * 60000 * 60 * 24 * 31)
         break
       case 'year':
-        returnDate.setFullYear(returnDate.getFullYear() + multiplier)
+        returnDate = new Date(date.getTime() + multiplier * DefaultScheduleYearCoverage/2)
         break
       default:
-        returnDate.setFullYear(returnDate.getFullYear() + DefaultScheduleYearCoverage)
+        returnDate = new Date(date.getTime() + DefaultScheduleYearCoverage)
         break
     }
     return returnDate
   }
 
-  taskBuilder (assessment, taskDate) {
+  taskBuilder (assessment, taskDate):Task {
     let task: Task = {
       timestamp: taskDate.getTime(),
       name: assessment.name,
@@ -159,5 +163,36 @@ export class SchedulingService {
   setSchedule (schedule) {
     this.storage.set(StorageKeys.SCHEDULE_TASKS, schedule)
     this.storage.set(StorageKeys.SCHEDULE_VERSION, this.configVersion)
+  }
+
+  buildReportSchedule () {
+    var iterDate = new Date(this.refTimestamp)
+    let yearsMillis = DefaultScheduleYearCoverage
+    let endDate  = new Date(this.refTimestamp + yearsMillis)
+    var tmpSchedule: ReportScheduling[] = []
+
+    while(iterDate.getTime() <= endDate.getTime()){
+      iterDate = new Date(iterDate.getTime() + 60480000)
+      let report = this.reportBuilder(iterDate)
+      tmpSchedule.push(report)
+    }
+    return Promise.resolve(tmpSchedule)
+  }
+
+  reportBuilder (reportDate):ReportScheduling {
+    let report = {
+      'timestamp': reportDate.getTime(),
+      'viewed': false,
+      'firstViewedOn': 0,
+      range: {
+        'timestampStart':reportDate.getTime()-DefaultScheduleReportRepeat,
+        'timestampEnd':reportDate.getTime()
+      }
+    }
+    return report
+  }
+
+  setReportSchedule (schedule) {
+    this.storage.set(StorageKeys.SCHEDULE_REPORT, schedule)
   }
 }

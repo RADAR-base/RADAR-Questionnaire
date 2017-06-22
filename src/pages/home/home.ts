@@ -48,6 +48,7 @@ export class HomePage {
     console.log(requestDisplay)
     this.showCalendar = requestDisplay
     this.elProgressHeight= this.elProgress.nativeElement.offsetHeight
+    this.elFooterHeight= this.elFooter.nativeElement.offsetHeight
     this.applyCalendarTransformations()
   }
 
@@ -67,6 +68,8 @@ export class HomePage {
         `translateY(-${this.elProgressHeight}px)`
       this.elInfo.nativeElement.style.transform =
         `translateY(-${this.elProgressHeight}px)`
+      this.elFooter.nativeElement.style.transform =
+        `translateY(${this.elFooterHeight}px)`
     } else {
       this.elProgress.nativeElement.style.transform =
         'translateY(0px) scale(1)'
@@ -74,11 +77,15 @@ export class HomePage {
         'translateY(0px)'
       this.elInfo.nativeElement.style.transform =
         'translateY(0px)'
+        this.elFooter.nativeElement.style.transform =
+          'translateY(0px)'
     }
   }
 
   applyCompletedTransformations () {
     if(this.showCompleted){
+      this.elTicker.nativeElement.style =
+        `padding-bottom: 0`
       this.elTicker.nativeElement.style.transform =
         `translateY(${this.elInfoHeight+this.elFooterHeight}px)`
       this.elInfo.nativeElement.style.transform =
@@ -86,6 +93,8 @@ export class HomePage {
       this.elFooter.nativeElement.style.transform =
         `translateY(${this.elInfoHeight+this.elFooterHeight}px)`
     } else {
+      this.elTicker.nativeElement.style =
+        'padding-bottom: 2px'
       this.elTicker.nativeElement.style.transform =
         'translateY(0px)'
       this.elInfo.nativeElement.style.transform =

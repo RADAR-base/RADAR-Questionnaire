@@ -1,4 +1,9 @@
-<!-- Generated template for the TaskProgress component -->
-<div>
-  {{text}}
+<div id="task-progress-container" (click)="increment()">
+  <div id="navigation">
+    Today
+  </div>
+  <div id="progress">
+    <round-progress class="progress-sub" [current]="current" [max]="max" [radius]="radius"></round-progress>
+    <div class="completed progress-sub"></div>
+  </div>
 </div>

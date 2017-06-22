@@ -1,11 +1,7 @@
 import { Component } from '@angular/core';
+import { RoundProgressConfig } from 'angular-svg-round-progressbar';
 
-/**
- * Generated class for the TaskProgress component.
- *
- * See https://angular.io/docs/ts/latest/api/core/index/ComponentMetadata-class.html
- * for more info on Angular Components.
- */
+
 @Component({
   selector: 'task-progress',
   templateUrl: 'task-progress.html'
@@ -13,10 +9,23 @@ import { Component } from '@angular/core';
 export class TaskProgressComponent {
 
   text: string;
+  max: number = 100
+  current: number = 8
+  radius = 120
 
-  constructor() {
-    console.log('Hello TaskProgress Component');
-    this.text = 'Hello World';
+  constructor(private progConfig: RoundProgressConfig) {
+    progConfig.setDefaults({
+      'color':'#7fcdbb',
+      'background': 'rgba(255,255,204,0.12)',
+      'stroke': 22,
+      'animation': 'easeInOutQuart',
+      'duration': 800
+    })
+    
+  }
+
+  increment () {
+    this.current += 20
   }
 
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, trigger, state, style, transition, animate, keyframes, ViewChild, ElementRef} from '@angular/core'
 import { SchedulingService } from '../../providers/scheduling-service'
 import { Task } from '../../models/task'
 import { NavController, AlertController } from 'ionic-angular'
@@ -11,12 +11,20 @@ import { DefaultTask } from '../../assets/data/defaultConfig'
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
-
 })
 export class HomePage {
 
-  isOpenPageClicked: Boolean = false
+  @ViewChild('progressBar')
+  elProgress: ElementRef;
+  elProgressHeight: number
+  @ViewChild('tickerBar')
+  elTicker: ElementRef;
+  @ViewChild('taskInfo')
+  elInfo: ElementRef;
+
+  isOpenPageClicked: boolean = false
   nextTask: Task = DefaultTask
+  showCalendar: boolean = false
 
   constructor (
     public navCtrl: NavController,
@@ -30,37 +38,40 @@ export class HomePage {
     })
   }
 
-  ionViewDidEnter () {
 
+  displayCalendar (requestDisplay:boolean) {
+    this.elProgressHeight= this.elProgress.nativeElement.offsetHeight
+    this.showCalendar = requestDisplay
+    this.applyTransformations()
   }
 
-  handleOpenPage () {
-    this.isOpenPageClicked = true
-    this.openPage()
-  }
-
-  handleError (error) {
-    console.error(error)
-  }
-
-  serviceReady () {
-    if (this.isOpenPageClicked) {
-      this.openPage()
+  applyTransformations () {
+    if(this.showCalendar){
+      this.elProgress.nativeElement.style.transform =
+        `translateY(-${this.elProgressHeight}px) scale(0.5)`
+      this.elTicker.nativeElement.style.transform =
+        `translateY(-${this.elProgressHeight}px)`
+        this.elInfo.nativeElement.style.transform =
+          `translateY(-${this.elProgressHeight}px)`
+    } else {
+      this.elProgress.nativeElement.style.transform =
+        `translateY(0px) scale(1)`
+      this.elTicker.nativeElement.style.transform =
+        `translateY(0px)`
+        this.elInfo.nativeElement.style.transform =
+          `translateY(0px)`
     }
   }
+
+
 
   openSettingsPage () {
     this.navCtrl.push(SettingsPage)
   }
 
-  openPage () {
+  openTaskSelectPage () {
     this.navCtrl.push(TaskSelectPage)
   }
-
-  displayCalendar (requestDisplay:Boolean) {
-    console.log(requestDisplay)
-  }
-
   showCredits () {
     let buttons = [
       {

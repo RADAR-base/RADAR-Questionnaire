@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, trigger, state, style, transition, animate, keyframes } from '@angular/core'
+import { Component, EventEmitter, Input, Output, trigger, state, style, transition, animate, keyframes, OnChanges } from '@angular/core'
 import { Task } from '../../models/task'
 
 /**
@@ -64,11 +64,12 @@ import { Task } from '../../models/task'
  ]
 })
 
-export class TaskInfoComponent {
+export class TaskInfoComponent implements OnChanges {
 
   @Input() task: Task;
   @Output() expanded: Boolean = true
-  hasExtraInfo: Boolean = true;
+  hasExtraInfo: Boolean = true
+  displayTask: Boolean = false
   animateFade: String
   animateScale: String
   animateCenterRight: String
@@ -86,9 +87,16 @@ export class TaskInfoComponent {
     this.applyAnimationKeys()
   }
 
+  ngOnChanges (changes) {
+    if(this.task['timestamp'] > 0) {
+      this.displayTask = true
+    } else {
+      this.displayTask = false
+    }
+  }
+
   expand () {
     this.expanded = this.expanded ? false : true
-    console.log(this.expanded)
     this.applyAnimationKeys()
   }
 

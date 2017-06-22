@@ -1,5 +1,5 @@
 <!-- Generated template for the TaskInfo component -->
-<div id="task-info-container" (click)="expand()">
+<div id="task-info-container" (click)="expand()" *ngIf="displayTask">
 
   <div class="info">
     <div id="questionnaire-metrics" [@alignCenterRightMetrics]="animateCenterRight">

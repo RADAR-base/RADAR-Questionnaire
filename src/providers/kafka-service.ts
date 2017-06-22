@@ -12,12 +12,12 @@ export class KafkaService {
 
   private TOPIC_NAME = "active_questionnaire_phq8"  //kafka topic where data has to be submitted
 
-
   private phq8ValueSchema: string
   private phq8KeySchema: string
 
   private schemaUrl = 'assets/data/schema/schemas.json'
   private configUrl = 'assets/data/config/config.json'
+
 
   constructor(
     private http: Http,

@@ -14,7 +14,7 @@
 			"namespace": "org.radarcns.questionnaire",
 			"type": "record",
 			"name": "Questionnaire",
-			"doc": "General schema for questionnaire",
+			"doc": "General schema for questionnaire. Check the specification folder to see how the questionnaire has been defined. For each QuestionnaireType there is a JSON file reporting the questions set and possible answers if available",
 			"fields": [{
 					"name": "type",
 					"type": {
@@ -27,7 +27,7 @@
 				},
 				{
 					"name": "version",
-					"type": "int",
+					"type": "double",
 					"doc": "Questionnaire version useful to support possible update"
 				},
 				{

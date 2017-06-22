@@ -10,6 +10,7 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { IonicStorageModule } from '@ionic/storage';
+import { RoundProgressModule } from 'angular-svg-round-progressbar';
 
 import { TaskProgressComponent } from '../components/task-progress/task-progress'
 import { TickerBarComponent } from '../components/ticker-bar/ticker-bar'
@@ -35,9 +36,10 @@ import { MyApp } from './app.component';
 
 @NgModule({
   imports: [
-    BrowserModule,
     HttpModule,
     MomentModule,
+    BrowserModule,
+    RoundProgressModule,
     BrowserAnimationsModule,
     IonicModule.forRoot(MyApp, {
       mode: 'md'

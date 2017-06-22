@@ -1,10 +1,11 @@
 import { Component } from '@angular/core'
-import { Storage } from '@ionic/storage'
+import { SchedulingService } from '../../providers/scheduling-service'
 import { Task } from '../../models/task'
 import { NavController, AlertController } from 'ionic-angular'
 import { TaskSelectPage } from '../taskselect/taskselect'
 import { StartPage } from '../start/start'
 import { SettingsPage } from '../settings/settings'
+import { DefaultTask } from '../../assets/data/defaultConfig'
 
 
 @Component({
@@ -15,25 +16,18 @@ import { SettingsPage } from '../settings/settings'
 export class HomePage {
 
   isOpenPageClicked: Boolean = false
-  nextTask: Task = {
-    timestamp: 1498143250000,
-    name: 'PhQ8',
-    reminderSettings: {
-      unit: 'hour',
-      amount: 2,
-      repeat: 1
-    },
-    nQuestions: 8,
-   estimatedCompletionTime: 5
-  }
+  nextTask: Task = DefaultTask
 
   constructor (
     public navCtrl: NavController,
     public alertCtrl: AlertController,
-    private storage: Storage,
+    private schedule: SchedulingService,
     ) {}
 
   ionViewDidLoad () {
+    this.schedule.getNext().then((data) => {
+      this.nextTask = data
+    })
   }
 
   ionViewDidEnter () {

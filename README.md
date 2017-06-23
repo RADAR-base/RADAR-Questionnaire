@@ -6,7 +6,7 @@ Hybrid mobile application to actively capture data for the RADAR-CNS Platform.
 
 ## Note
 
-We use the [Ionic 2 framework](http://ionicframework.com/docs/v2/), which is built with [Angular 2](https://angular.io/) and wraps [Apache Cordova](https://cordova.apache.org/).
+We use the [Ionic framework](http://ionicframework.com/docs/), which is built with [Angular](https://angular.io/) and wraps [Apache Cordova](https://cordova.apache.org/).
 
 ## Install
 
@@ -14,7 +14,7 @@ First install [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/en/d
 
 Globally install ionic and cordova:
 ```
-$ npm install -g ionic cordova
+$ yarn global add ionic cordova
 ```
 
 In the project folder run `yarn` to install dependencies:
@@ -22,37 +22,36 @@ In the project folder run `yarn` to install dependencies:
 $ yarn
 ```
 
+Cordova provides a simple command to install the plugins and platforms set in `package.json` or `config.xml`.
+```
+$ cordova prepare
+```
+
 To run the application in the browser use:
 ```
 $ ionic serve
+```
+
+## Fix CSS
+
+Use the following command to sort, format and fix common css problems:
+```
+$ yarn fix:css
 ```
 
 ### Android
 
 To add the Android platform. You need to have the [Android SDK](https://developer.android.com/studio/index.html) pre installed. This step also adds the plugins listed in `config.xml` to the project.
 ```
-$ ionic platform add android
+$ ionic cordova platform add android
 ```
 
 Run the app in an Android device:
 ```
-$ ionic run android
+$ ionic cordova run android
 ```
 
 Run the app in an Android emulator:
 ```
-$ ionic emulate android
-```
-
-### Ionic State Reset
-
-Ionic CLI provides a simple command to reset and install the state set in `package.json`. 
-This command removes and reinstalls all platforms and plugins listed.
-```
-$ ionic state reset
-```
-
-You can also save the current state to `package.json`.
-```
-$ ionic state save
+$ ionic cordova emulate android
 ```

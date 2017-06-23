@@ -34,7 +34,9 @@ export class TaskProgressComponent {
       'animation': 'easeInOutQuart',
       'duration': this.duration
     })
+    //TODO no tasks
   }
+
 
   increment () {
     if(this.current >= this.max-1){

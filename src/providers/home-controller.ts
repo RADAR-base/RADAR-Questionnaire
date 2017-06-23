@@ -73,7 +73,7 @@ export class HomeController {
     }
   }
 
-  updateTaskToComplete (task) {
+  updateTaskToComplete (task):Promise<any> {
     var updatedTask = task
     updatedTask.completed = true
     return this.schedule.insertTask(updatedTask)

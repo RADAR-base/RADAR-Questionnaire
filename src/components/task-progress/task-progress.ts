@@ -1,4 +1,5 @@
 import { Component, ViewChild, ElementRef, EventEmitter, Output } from '@angular/core';
+import { HomeController } from '../../providers/home-controller'
 import { RoundProgressConfig } from 'angular-svg-round-progressbar';
 
 
@@ -11,7 +12,7 @@ export class TaskProgressComponent {
   @Output() completed: EventEmitter<Boolean> = new EventEmitter()
 
   text: string;
-  max: number = 3
+  max: number = 1
   current: number = 0
   radius: number = 120
   duration: number = 800
@@ -26,7 +27,8 @@ export class TaskProgressComponent {
   @ViewChild('counter')
   elCounter: ElementRef
 
-  constructor(private progConfig: RoundProgressConfig) {
+  constructor(private progConfig: RoundProgressConfig,
+              private controller: HomeController) {
     progConfig.setDefaults({
       'color':'#7fcdbb',
       'background': 'rgba(255,255,204,0.12)',
@@ -34,9 +36,14 @@ export class TaskProgressComponent {
       'animation': 'easeInOutQuart',
       'duration': this.duration
     })
-    //TODO no tasks
+    this.controller.getTaskProgress()
+      .then((taskProgress) => this.updateProgress(taskProgress))
   }
 
+  updateProgress (taskProgress) {
+    this.max = taskProgress.numberOfTasks
+    this.current = taskProgress.completedTasks
+  }
 
   increment () {
     if(this.current >= this.max-1){

@@ -1,5 +1,6 @@
 import { Component, trigger, state, style, transition, animate, keyframes, ViewChild, ElementRef} from '@angular/core'
 import { SchedulingService } from '../../providers/scheduling-service'
+import { HomeController } from '../../providers/home-controller'
 import { Task } from '../../models/task'
 import { NavController, AlertController } from 'ionic-angular'
 import { TaskSelectPage } from '../taskselect/taskselect'
@@ -35,6 +36,7 @@ export class HomePage {
     public navCtrl: NavController,
     public alertCtrl: AlertController,
     private schedule: SchedulingService,
+    private controller: HomeController,
     ) {}
 
   ionViewDidLoad () {
@@ -46,9 +48,9 @@ export class HomePage {
 
   checkForNextTask () {
     if(!this.showCalendar){
-      this.schedule.getNextTask().then((data) => {
-        if(data){
-          this.nextTask = data
+      this.controller.getNextTask().then((task) => {
+        if(task){
+          this.nextTask = task
           this.displayCompleted(false)
         } else {
           this.nextTask = DefaultTask

@@ -47,7 +47,8 @@ export class HomeController {
       var nextTimestamp = timestamp * 2
       for(var i = 0; i < tasks.length; i++){
         if(tasks[i].timestamp >= timestamp &&
-            tasks[i].timestamp < nextTimestamp){
+            tasks[i].timestamp < nextTimestamp &&
+            tasks[i].completed == false){
           passedAtLeastOnce = true
           nextTimestamp = tasks[i].timestamp
           nextIdx = i

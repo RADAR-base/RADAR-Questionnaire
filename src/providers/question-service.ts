@@ -9,7 +9,7 @@ import { Assessment } from '../models/assessment'
 @Injectable()
 export class QuestionService {
 
-  assessment: Assessment
+  assessments: Assessment[]
 
   private url = 'assets/data/config.json'
 
@@ -18,7 +18,7 @@ export class QuestionService {
   ) {
   }
 
-  get (): Observable<Assessment> {
+  get (): Observable<Assessment[]> {
     return this.http.get(this.url)
       .map(this.extractData)
       .catch(this.handleError)
@@ -26,7 +26,7 @@ export class QuestionService {
 
   private extractData (res: Response) {
     const body = res.json()
-    return body.assessments[0] || []
+    return body.assessments || []
   }
 
   private handleError (error: Response | any) {

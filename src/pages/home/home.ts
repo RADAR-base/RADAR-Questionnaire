@@ -1,7 +1,7 @@
 import { Component, trigger, state, style, transition, animate, keyframes, ViewChild, ElementRef} from '@angular/core'
 import { SchedulingService } from '../../providers/scheduling-service'
 import { HomeController } from '../../providers/home-controller'
-import { Task } from '../../models/task'
+import { Task, TasksProgress } from '../../models/task'
 import { NavController, AlertController } from 'ionic-angular'
 import { TaskSelectPage } from '../taskselect/taskselect'
 import { StartPage } from '../start/start'
@@ -32,18 +32,24 @@ export class HomePage {
   nextTask: Task = DefaultTask
   showCalendar: boolean = false
   showCompleted: boolean = false
+  tasksProgress: TasksProgress
 
   constructor (
     public navCtrl: NavController,
     public alertCtrl: AlertController,
     private schedule: SchedulingService,
     private controller: HomeController,
-    ) {}
+    ) {
+      this.checkForNextTask()
+      //this.checkForProgress()
+    }
 
   ionViewDidLoad () {
     this.checkForNextTask()
+    this.checkForProgress()
     setInterval(() => {
       this.checkForNextTask()
+      //this.checkForProgress()
     }, 15000)
   }
 
@@ -59,6 +65,13 @@ export class HomePage {
         }
       })
     }
+  }
+
+  checkForProgress () {
+    this.controller.getTaskProgress().then((progress) => {
+      console.log(progress)
+      this.tasksProgress = progress
+    })
   }
 
   displayCalendar (requestDisplay:boolean) {

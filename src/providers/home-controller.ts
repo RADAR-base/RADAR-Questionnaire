@@ -2,12 +2,25 @@ import { Injectable } from '@angular/core';
 import { StorageService } from './storage-service'
 import { SchedulingService } from './scheduling-service'
 import { Task, TasksProgress } from '../models/task'
+import { Assessment } from '../models/assessment'
 
 @Injectable()
 export class HomeController {
 
   constructor(private storage: StorageService,
               private schedule: SchedulingService) {
+  }
+
+  getAssessment (task) {
+    return this.storage.getAssessment(task)
+  }
+
+  updateAssessmentIntroduction (assessment) {
+    if(assessment.showIntroduction){
+      var assessmentUpdated = assessment
+      assessmentUpdated.showIntroduction = false
+      this.storage.updateAssessment(assessmentUpdated)
+    }
   }
 
   getTaskProgress () {

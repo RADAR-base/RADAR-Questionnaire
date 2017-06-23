@@ -8,6 +8,8 @@ import { DefaultSettingsWeeklyReport } from '../assets/data/defaultConfig'
 import { DefaultSettingsSupportedLanguages } from '../assets/data/defaultConfig'
 import { DefaultScheduleVersion } from '../assets/data/defaultConfig'
 import { StorageKeys } from '../enums/storage'
+import { Task } from '../models/task'
+import { Assessment } from '../models/assessment'
 
 @Injectable()
 export class StorageService {
@@ -66,6 +68,31 @@ export class StorageService {
 
   getAllKeys() {
     return this.storage.keys()
+  }
+
+  getAssessment (task:Task) {
+    let key = StorageKeys.CONFIG_ASSESSMENTS
+    return this.storage.get(key.toString())
+                .then((assessments) => {
+                  for(var i = 0; i<assessments.length; i++){
+                    if(assessments[i].name == task.name) {
+                      return assessments[i]
+                    }
+                  }
+                })
+  }
+
+  updateAssessment (assessment:Assessment) {
+    let key = StorageKeys.CONFIG_ASSESSMENTS
+    this.storage.get(key.toString()).then((assessments) => {
+      var updatedAssessments = assessments
+      for(var i = 0; i<assessments.length;i++){
+        if(updatedAssessments[i].name == assessment.name){
+          updatedAssessments[i] = assessment
+        }
+      }
+      this.storage.set(key.toString(), updatedAssessments)
+    })
   }
 
   clearStorage() {

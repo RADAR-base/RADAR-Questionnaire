@@ -123,6 +123,7 @@ export class HomePage {
   openTaskSelectPage () {
     this.navCtrl.push(TaskSelectPage)
   }
+
   showCredits () {
     let buttons = [
       {

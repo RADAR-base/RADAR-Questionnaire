@@ -107,10 +107,6 @@ export class TaskInfoComponent implements OnChanges {
 
   constructor(private controller: HomeController) {
     this.applyAnimationKeys()
-    this.controller.getTaskProgress().then((progress) => {
-      this.progress = progress
-      this.updateProgress()
-    })
   }
 
   ngOnChanges (changes) {
@@ -125,13 +121,18 @@ export class TaskInfoComponent implements OnChanges {
     this.collapse.emit(this.expanded)
     this.expanded = this.expanded ? false : true
     this.applyAnimationKeys()
+    // TODO switching this on creates a rendering problem in iOS
+    //this.updateProgress()
   }
 
   updateProgress () {
-    if(this.progress){
-      this.max = this.progress.numberOfTasks
-      this.current = this.progress.completedTasks
-    }
+    this.controller.getTaskProgress().then((progress) => {
+      this.progress = progress
+      if(this.progress){
+        this.max = this.progress.numberOfTasks
+        this.current = this.progress.completedTasks
+      }
+    })
   }
 
   applyAnimationKeys () {

@@ -109,6 +109,7 @@ export class TaskInfoComponent implements OnChanges {
     this.applyAnimationKeys()
     this.controller.getTaskProgress().then((progress) => {
       this.progress = progress
+      this.updateProgress()
     })
   }
 
@@ -123,7 +124,6 @@ export class TaskInfoComponent implements OnChanges {
   expand () {
     this.collapse.emit(this.expanded)
     this.expanded = this.expanded ? false : true
-    this.updateProgress()
     this.applyAnimationKeys()
   }
 

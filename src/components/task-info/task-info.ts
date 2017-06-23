@@ -51,6 +51,18 @@ import { Task } from '../../models/task'
      transition('center => right', animate('400ms ease')),
      transition('right => center', animate('400ms ease'))
    ]),
+   trigger('moveInProgress', [
+     state('out', style({
+       opacity: '0',
+       transform: 'translate3d(-150%, 0, 0)'
+     })),
+     state('in', style({
+       opacity: '1',
+       transform: 'translate3d(0, 0, 0)'
+     })),
+     transition('out => in', animate('400ms ease')),
+     transition('in => out', animate('400ms ease'))
+   ]),
    trigger('alignCenterRightMetrics', [
      state('right', style({
        transform: 'translate3d(165%, 0, 0)'
@@ -72,8 +84,14 @@ export class TaskInfoComponent implements OnChanges {
   hasExtraInfo: Boolean = true
   displayTask: Boolean = false
   animateFade: String
+  animateMove: String
   animateScale: String
   animateCenterRight: String
+
+  max: number = 1
+  current: number = 0
+  radius: number = 40
+  stroke: number = 8
 
   animationKeys = {
     MIN: 'min',
@@ -105,10 +123,12 @@ export class TaskInfoComponent implements OnChanges {
   applyAnimationKeys () {
     if(this.expanded){
       this.animateFade = this.animationKeys.IN
+      this.animateMove = this.animationKeys.OUT
       this.animateScale = this.animationKeys.MAX
       this.animateCenterRight = this.animationKeys.CENTER
     } else {
       this.animateFade = this.animationKeys.OUT
+      this.animateMove = this.animationKeys.IN
       this.animateScale = this.animationKeys.MIN
       this.animateCenterRight = this.animationKeys.RIGHT
     }

@@ -38,14 +38,25 @@ export class HomePage {
     ) {}
 
   ionViewDidLoad () {
+    this.checkForNextTask()
+    setInterval(() => {
+      this.checkForNextTask()
+    }, 5000)
+  }
+
+  checkForNextTask () {
     this.schedule.getNextTask().then((data) => {
-      this.nextTask = data
+      if(data){
+        this.nextTask = data
+        this.displayCompleted(false)
+      } else {
+        this.nextTask = DefaultTask
+        this.displayCompleted(true)
+      }
     })
   }
 
-
   displayCalendar (requestDisplay:boolean) {
-    console.log(requestDisplay)
     this.showCalendar = requestDisplay
     this.elProgressHeight= this.elProgress.nativeElement.offsetHeight
     this.elFooterHeight= this.elFooter.nativeElement.offsetHeight
@@ -53,7 +64,6 @@ export class HomePage {
   }
 
   displayCompleted (requestDisplay:boolean) {
-    console.log(requestDisplay)
     this.showCompleted = requestDisplay
     this.elInfoHeight= this.elInfo.nativeElement.offsetHeight
     this.elFooterHeight= this.elFooter.nativeElement.offsetHeight

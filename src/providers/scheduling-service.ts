@@ -136,15 +136,17 @@ export class SchedulingService {
 
   buildTaskSchedule (assessments) {
     var schedule: Task[] = []
+    var scheduleLength = schedule.length
     for(var i = 0; i < assessments.length; i++){
-      let tmpSchedule = this.buildTasksForSingleAssessment(assessments[i])
+      let tmpSchedule = this.buildTasksForSingleAssessment(assessments[i], scheduleLength)
       schedule = schedule.concat(tmpSchedule)
+      scheduleLength = schedule.length
     }
     console.log('[√] Updated task schedule.')
     return Promise.resolve(schedule)
   }
 
-  buildTasksForSingleAssessment (assessment) {
+  buildTasksForSingleAssessment (assessment, indexOffset) {
     let repeatP = assessment.protocol.repeatProtocol
     let repeatQ = assessment.protocol.repeatQuestionnaire
 
@@ -158,7 +160,8 @@ export class SchedulingService {
       iterDate = this.advanceRepeat(iterDate, repeatP.unit, repeatP.amount)
       for(var i = 0; i < repeatQ.unitsFromZero.length; i++){
         let taskDate = this.advanceRepeat(iterDate, repeatQ.unit, repeatQ.unitsFromZero[i])
-        tmpSchedule.push(this.taskBuilder(tmpSchedule.length, assessment, taskDate))
+        let idx = indexOffset + tmpSchedule.length
+        tmpSchedule.push(this.taskBuilder(idx, assessment, taskDate))
       }
     }
     return tmpSchedule

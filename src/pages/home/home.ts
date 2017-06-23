@@ -39,17 +39,12 @@ export class HomePage {
     public alertCtrl: AlertController,
     private schedule: SchedulingService,
     private controller: HomeController,
-    ) {
-      this.checkForNextTask()
-      //this.checkForProgress()
-    }
+  ) {}
 
   ionViewDidLoad () {
     this.checkForNextTask()
-    this.checkForProgress()
     setInterval(() => {
       this.checkForNextTask()
-      //this.checkForProgress()
     }, 15000)
   }
 
@@ -65,13 +60,6 @@ export class HomePage {
         }
       })
     }
-  }
-
-  checkForProgress () {
-    this.controller.getTaskProgress().then((progress) => {
-      console.log(progress)
-      this.tasksProgress = progress
-    })
   }
 
   displayCalendar (requestDisplay:boolean) {

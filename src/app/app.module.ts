@@ -25,6 +25,7 @@ import { SettingsPage } from '../pages/settings/settings'
 import { StartPage } from '../pages/start/start'
 import { TaskSelectPage } from '../pages/taskselect/taskselect'
 import { QuestionsPage } from '../pages/questions/questions'
+import { HomeController } from '../providers/home-controller'
 import { AnswerService } from '../providers/answer-service'
 import { QuestionService } from '../providers/question-service'
 import { FirebaseService } from '../providers/firebase-service'
@@ -101,7 +102,8 @@ import { MyApp } from './app.component';
     FirebaseService,
     StorageService,
     SchedulingService,
-    AngularFireDatabaseModule
+    AngularFireDatabaseModule,
+    HomeController
   ]
 })
 export class AppModule {

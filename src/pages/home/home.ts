@@ -45,15 +45,17 @@ export class HomePage {
   }
 
   checkForNextTask () {
-    this.schedule.getNextTask().then((data) => {
-      if(data){
-        this.nextTask = data
-        this.displayCompleted(false)
-      } else {
-        this.nextTask = DefaultTask
-        this.displayCompleted(true)
-      }
-    })
+    if(!this.showCalendar){
+      this.schedule.getNextTask().then((data) => {
+        if(data){
+          this.nextTask = data
+          this.displayCompleted(false)
+        } else {
+          this.nextTask = DefaultTask
+          this.displayCompleted(true)
+        }
+      })
+    }
   }
 
   displayCalendar (requestDisplay:boolean) {

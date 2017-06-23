@@ -122,8 +122,19 @@ export class HomePage {
     this.navCtrl.push(SettingsPage)
   }
 
-  openTaskSelectPage () {
-    this.navCtrl.push(TaskSelectPage)
+  startQuestionnaire () {
+    this.controller.getAssessment(this.nextTask).then((assessment) => {
+      let title = assessment.name
+      let startText = assessment.startText
+      let endText = assessment.endText
+      let questions = assessment.questions
+      this.controller.updateAssessmentIntroduction(assessment)
+      this.navCtrl.push(StartPage, {"title": title,
+                                    "introduction": startText,
+                                    "endText": endText,
+                                    "questions": questions,
+                                    "associatedTask": this.nextTask})
+    })
   }
 
   showCredits () {

@@ -27,32 +27,36 @@ export class SchedulingService {
 
   getNextTask () {
     return this.getTasks().then((schedule) => {
-      let timestamp = Date.now()
-      var nextIdx = 0
-      var nextTimestamp = timestamp * 2
-      for(var i = 0; i < schedule.length; i++){
-        if(schedule[i].timestamp >= timestamp &&
-            schedule[i].timestamp < nextTimestamp){
-          nextTimestamp = schedule[i].timestamp
-          nextIdx = i
+      if(schedule) {
+        let timestamp = Date.now()
+        var nextIdx = 0
+        var nextTimestamp = timestamp * 2
+        for(var i = 0; i < schedule.length; i++){
+          if(schedule[i].timestamp >= timestamp &&
+              schedule[i].timestamp < nextTimestamp){
+            nextTimestamp = schedule[i].timestamp
+            nextIdx = i
+          }
         }
+        return schedule[nextIdx]
       }
-      return schedule[nextIdx]
     })
   }
 
   getTasksForDate (date) {
     return this.getTasks().then((schedule) => {
-      let startDate = this.setDateTimeToMidnight(date)
-      let endDate = this.advanceRepeat(startDate, 'day', 1)
-      var tasks: Task[] = []
-      for(var i = 0; i < schedule.length; i++){
-        if(schedule[i].timestamp < endDate.getTime() &&
-          schedule[i].timestamp > startDate.getTime()) {
-            tasks.push(schedule[i])
-          }
+      if(schedule) {
+        let startDate = this.setDateTimeToMidnight(date)
+        let endDate = this.advanceRepeat(startDate, 'day', 1)
+        var tasks: Task[] = []
+        for(var i = 0; i < schedule.length; i++){
+          if(schedule[i].timestamp < endDate.getTime() &&
+            schedule[i].timestamp > startDate.getTime()) {
+              tasks.push(schedule[i])
+            }
+        }
+        return tasks
       }
-      return tasks
     })
   }
 
@@ -63,17 +67,19 @@ export class SchedulingService {
 
   getCurrentReport () {
     return this.getReports().then((reports) => {
-      let now = new Date()
-      var delta = DefaultScheduleReportRepeat+1
-      var idx = 0
-      for(var i = 0; i<reports.length; i++){
-        let tmpDelta = now.getTime() - reports[i]['timestamp']
-        if(tmpDelta < delta && tmpDelta >= 0){
-          delta = tmpDelta
-          idx = i
+      if(reports){
+        let now = new Date()
+        var delta = DefaultScheduleReportRepeat+1
+        var idx = 0
+        for(var i = 0; i<reports.length; i++){
+          let tmpDelta = now.getTime() - reports[i]['timestamp']
+          if(tmpDelta < delta && tmpDelta >= 0){
+            delta = tmpDelta
+            idx = i
+          }
         }
+        return reports[idx]
       }
-      return reports[idx]
     })
   }
 

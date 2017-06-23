@@ -126,6 +126,14 @@ export class SchedulingService {
     return assessments
   }
 
+  insertTask (task) {
+    this.getTasks().then((tasks) => {
+      var updatedTasks = tasks
+      updatedTasks[task.index] = task
+      this.storage.set(StorageKeys.SCHEDULE_TASKS, updatedTasks)
+    })
+  }
+
   buildTaskSchedule (assessments) {
     var schedule: Task[] = []
     for(var i = 0; i < assessments.length; i++){

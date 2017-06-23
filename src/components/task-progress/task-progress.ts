@@ -1,6 +1,7 @@
-import { Component, ViewChild, ElementRef, EventEmitter, Output } from '@angular/core';
+import { Component, ViewChild, ElementRef, EventEmitter, Output, Input } from '@angular/core';
 import { HomeController } from '../../providers/home-controller'
 import { RoundProgressConfig } from 'angular-svg-round-progressbar';
+import { TasksProgress } from '../../models/task'
 
 
 @Component({
@@ -9,6 +10,7 @@ import { RoundProgressConfig } from 'angular-svg-round-progressbar';
 })
 export class TaskProgressComponent {
 
+  @Input() progress: TasksProgress
   @Output() completed: EventEmitter<Boolean> = new EventEmitter()
 
   text: string;
@@ -36,13 +38,20 @@ export class TaskProgressComponent {
       'animation': 'easeInOutQuart',
       'duration': this.duration
     })
-    this.controller.getTaskProgress()
-      .then((taskProgress) => this.updateProgress(taskProgress))
+    this.controller.getTaskProgress().then((progress) => {
+      this.progress = progress
+    })
   }
 
-  updateProgress (taskProgress) {
-    this.max = taskProgress.numberOfTasks
-    this.current = taskProgress.completedTasks
+  ngOnChanges() {
+    this.updateProgress()
+  }
+
+  updateProgress () {
+    if(this.progress){
+      this.max = this.progress.numberOfTasks
+      this.current = this.progress.completedTasks
+    }
   }
 
   increment () {

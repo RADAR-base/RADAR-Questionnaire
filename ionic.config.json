@@ -1,6 +1,5 @@
 {
   "name": "RADAR Questionnaire",
   "app_id": "8c49e8ec",
-  "v2": true,
-  "typescript": true
+  "type": "ionic-angular"
 }

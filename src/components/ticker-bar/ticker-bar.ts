@@ -1,9 +1,11 @@
-import { Component, Input, OnChanges } from '@angular/core'
+import { Component, Input, OnChanges,  } from '@angular/core'
+import { NavController } from 'ionic-angular'
 import { SchedulingService } from '../../providers/scheduling-service'
 import { StorageKeys } from '../../enums/storage'
 import { Task } from '../../models/task'
-import { ReportScheduling } from '../../models/report'
 import { TickerItem } from '../../models/ticker'
+import { ReportScheduling } from '../../models/report'
+import { ReportPage } from '../../pages/report/report'
 
 @Component({
   selector: 'ticker-bar',
@@ -22,7 +24,8 @@ export class TickerBarComponent implements OnChanges {
   tickerWeeklyReport: string
   newWeeklyReport: boolean = false
 
-  constructor(private schedule: SchedulingService) {
+  constructor(private schedule: SchedulingService,
+              private navCtrl: NavController) {
     this.schedule.getCurrentReport().then((report) => {
       this.report = report
     })
@@ -51,10 +54,9 @@ export class TickerBarComponent implements OnChanges {
   }
 
   openReport () {
-    //TODO hook-up to reports page
-    console.log('Navigate to report page')
     this.updateReport()
     this.updateTickerItems()
+    this.navCtrl.push(ReportPage)
   }
 
   updateReport () {

@@ -69,7 +69,7 @@ export class HomePage {
       this.elInfo.nativeElement.style.transform =
         `translateY(-${this.elProgressHeight}px)`
       this.elFooter.nativeElement.style.transform =
-        `translateY(${this.elFooterHeight}px)`
+        `translateY(${this.elFooterHeight}px) scale(0)`
     } else {
       this.elProgress.nativeElement.style.transform =
         'translateY(0px) scale(1)'
@@ -78,7 +78,7 @@ export class HomePage {
       this.elInfo.nativeElement.style.transform =
         'translateY(0px)'
         this.elFooter.nativeElement.style.transform =
-          'translateY(0px)'
+          'translateY(0px) scale(1)'
     }
   }
 
@@ -89,18 +89,18 @@ export class HomePage {
       this.elTicker.nativeElement.style.transform =
         `translateY(${this.elInfoHeight+this.elFooterHeight}px)`
       this.elInfo.nativeElement.style.transform =
-        `translateY(${this.elInfoHeight+this.elFooterHeight}px)`
+        `translateY(${this.elInfoHeight+this.elFooterHeight}px) scale(0)`
       this.elFooter.nativeElement.style.transform =
-        `translateY(${this.elInfoHeight+this.elFooterHeight}px)`
+        `translateY(${this.elInfoHeight+this.elFooterHeight}px) scale(0)`
     } else {
       this.elTicker.nativeElement.style.padding =
         '0 0 2px 0'
       this.elTicker.nativeElement.style.transform =
         'translateY(0px)'
       this.elInfo.nativeElement.style.transform =
-        'translateY(0px)'
+        'translateY(0px) scale(1)'
       this.elFooter.nativeElement.style.transform =
-        'translateY(0px)'
+        'translateY(0px) scale(1)'
     }
   }
 

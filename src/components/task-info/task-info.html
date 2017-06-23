@@ -1,7 +1,12 @@
 <div id="task-info-container" (click)="expand()" *ngIf="displayTask">
 
   <div class="info">
-    <round-progress [current]="1" [max]="2" [radius]="34"></round-progress>
+    <div id="questionnaire-progress" [@moveInProgress]="animateMove">
+      <round-progress [current]="current" [max]="max" [radius]="radius" [stroke]="stroke"></round-progress>
+      <div id="questionnaire-counter">
+        {{current}}
+      </div>
+    </div>
     <div id="questionnaire-metrics" [@alignCenterRightMetrics]="animateCenterRight">
       <img class="icon-padding icon-sm" src="assets/imgs/nTasks.png"/>{{task.nQuestions}}<span class="units">x</span>
       <br>

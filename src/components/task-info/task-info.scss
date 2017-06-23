@@ -1,5 +1,5 @@
 task-info {
-  
+
   #task-info-container {
     background-color: $cl-primary-40;
     padding: 7px 15px;
@@ -13,6 +13,17 @@ task-info {
 
   .units {
     font-size: 15px
+  }
+
+  #questionnaire-progress {
+    position: absolute;
+    top: 11px;
+  }
+
+  #questionnaire-counter {
+    text-align: center;
+    font-size: 38px;
+    margin-top: -63px
   }
 
   #questionnaire-metrics {

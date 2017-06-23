@@ -1,5 +1,7 @@
-import { Component, EventEmitter, Input, Output, trigger, state, style, transition, animate, keyframes, OnChanges } from '@angular/core'
-import { Task } from '../../models/task'
+import { Component, EventEmitter, Input, Output, trigger,
+  state, style, transition, animate, keyframes, OnChanges } from '@angular/core'
+import { Task, TasksProgress } from '../../models/task'
+import { HomeController} from '../../providers/home-controller'
 
 /**
  * Generated class for the TaskInfo component.
@@ -92,6 +94,7 @@ export class TaskInfoComponent implements OnChanges {
   current: number = 0
   radius: number = 40
   stroke: number = 8
+  progress: TasksProgress
 
   animationKeys = {
     MIN: 'min',
@@ -102,8 +105,11 @@ export class TaskInfoComponent implements OnChanges {
     RIGHT: 'right'
   }
 
-  constructor() {
+  constructor(private controller: HomeController) {
     this.applyAnimationKeys()
+    this.controller.getTaskProgress().then((progress) => {
+      this.progress = progress
+    })
   }
 
   ngOnChanges (changes) {
@@ -117,7 +123,15 @@ export class TaskInfoComponent implements OnChanges {
   expand () {
     this.collapse.emit(this.expanded)
     this.expanded = this.expanded ? false : true
+    this.updateProgress()
     this.applyAnimationKeys()
+  }
+
+  updateProgress () {
+    if(this.progress){
+      this.max = this.progress.numberOfTasks
+      this.current = this.progress.completedTasks
+    }
   }
 
   applyAnimationKeys () {

@@ -5,6 +5,7 @@ import { Task } from '../../models/task'
 import { NavController, AlertController } from 'ionic-angular'
 import { TaskSelectPage } from '../taskselect/taskselect'
 import { StartPage } from '../start/start'
+import { QuestionsPage } from '../questions/questions'
 import { SettingsPage } from '../settings/settings'
 import { DefaultTask } from '../../assets/data/defaultConfig'
 
@@ -124,16 +125,20 @@ export class HomePage {
 
   startQuestionnaire () {
     this.controller.getAssessment(this.nextTask).then((assessment) => {
-      let title = assessment.name
-      let startText = assessment.startText
-      let endText = assessment.endText
-      let questions = assessment.questions
+      console.log(assessment)
+      let params = {
+        "title": assessment.name,
+        "introduction": assessment.startText,
+        "endText": assessment.endText,
+        "questions": assessment.questions,
+        "associatedTask": this.nextTask
+      }
+      if(assessment.showIntroduction){
+        this.navCtrl.push(StartPage, params)
+      } else {
+        this.navCtrl.push(QuestionsPage, params)
+      }
       this.controller.updateAssessmentIntroduction(assessment)
-      this.navCtrl.push(StartPage, {"title": title,
-                                    "introduction": startText,
-                                    "endText": endText,
-                                    "questions": questions,
-                                    "associatedTask": this.nextTask})
     })
   }
 

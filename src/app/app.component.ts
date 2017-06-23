@@ -28,7 +28,6 @@ export class MyApp {
       splashScreen.hide()
       this.storage.init('12345')
       this.firebaseService.fetchConfigState()
-      this.schedule.generateSchedule()
     })
   }
 }

@@ -51,6 +51,7 @@ export class StorageService {
   setFetchedConfiguration(config) {
     this.set(StorageKeys.CONFIG_VERSION, config.version)
     this.set(StorageKeys.CONFIG_ASSESSMENTS, config.assessments)
+    return Promise.resolve(true)
   }
 
   get(key: StorageKeys) {

@@ -53,14 +53,9 @@ export class TaskProgressComponent {
       this.max = this.progress.numberOfTasks
       this.current = this.progress.completedTasks
     }
-  }
-
-  increment () {
-    if(this.current >= this.max-1){
-      this.current = this.max
+    if(this.current >= this.max){
       this.complete = true
     } else {
-      this.current += 1
       this.complete = false
     }
     this.transitionToComplete()

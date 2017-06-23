@@ -1,12 +1,11 @@
 <div id="task-info-container" (click)="expand()" *ngIf="displayTask">
 
   <div class="info">
+    <round-progress [current]="1" [max]="2" [radius]="34"></round-progress>
     <div id="questionnaire-metrics" [@alignCenterRightMetrics]="animateCenterRight">
       <img class="icon-padding icon-sm" src="assets/imgs/nTasks.png"/>{{task.nQuestions}}<span class="units">x</span>
       <br>
       <img class="icon-padding icon-sm" src="assets/imgs/stopwatch.png"/>{{task.estimatedCompletionTime}}<span class="units">min</span>
-    </div>
-    <div id="push2">
     </div>
     <div id="questionnaire-time" [@alignCenterRightTime]="animateCenterRight">
       <div id="hour">

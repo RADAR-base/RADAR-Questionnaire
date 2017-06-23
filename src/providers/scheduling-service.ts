@@ -18,8 +18,11 @@ export class SchedulingService {
   schedule: Task[]
   upToDate: Promise<Boolean>
   assessments: Promise<Assessment[]>
+  tzOffset: number
 
   constructor(private storage: StorageService) {
+    let now = new Date()
+    this.tzOffset = now.getTimezoneOffset()
   }
 
   getNextTask () {
@@ -98,6 +101,7 @@ export class SchedulingService {
       this.refTimestamp = data[2]
 
       if(data[0] != data[1]){
+        console.log('Updating schedule..')
         this.runScheduler()
       }
     })
@@ -105,7 +109,7 @@ export class SchedulingService {
 
   runScheduler () {
     this.getAssessments()
-    .then((assessments) => this.buildSchedule(assessments))
+    .then((assessments) => this.buildTaskSchedule(assessments))
     .then((schedule) => this.setSchedule(schedule))
     this.buildReportSchedule()
     .then((schedule) => this.setReportSchedule(schedule))
@@ -116,12 +120,13 @@ export class SchedulingService {
     return assessments
   }
 
-  buildSchedule (assessments) {
+  buildTaskSchedule (assessments) {
     var schedule: Task[] = []
     for(var i = 0; i < assessments.length; i++){
       let tmpSchedule = this.buildTasksForSingleAssessment(assessments[i])
       schedule = schedule.concat(tmpSchedule)
     }
+    console.log('[√] Updated task schedule.')
     return Promise.resolve(schedule)
   }
 
@@ -146,7 +151,14 @@ export class SchedulingService {
   }
 
   setDateTimeToMidnight (date) {
-    return new Date(date.setHours(0,0,0,0))
+    var resetDate: Date
+    if(this.tzOffset = date.getTimezoneOffset()) {
+      resetDate = new Date(date.setHours(1,0,0,0))
+    } else {
+      resetDate = new Date(date.setHours(0,0,0,0))
+    }
+    this.tzOffset = date.getTimezoneOffset()
+    return resetDate
   }
 
   advanceRepeat (date, unit, multiplier) {
@@ -205,6 +217,7 @@ export class SchedulingService {
       let report = this.reportBuilder(tmpSchedule.length, iterDate)
       tmpSchedule.push(report)
     }
+    console.log('[√] Updated report schedule.')
     return Promise.resolve(tmpSchedule)
   }
 

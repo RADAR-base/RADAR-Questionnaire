@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons left>
+      <button ion-button navPop icon-only>
+        <ion-icon ios="ios-arrow-back" md="md-arrow-back"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>
+      RADAR-CNS
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <div padding><h2>Tasks</h2></div>
+    <ion-list>
+        <ion-item no-lines (click)="handleOpenPage(0)">
+          <div text-center>
+            <div text-center>
+              <h4>Requires a quiet space</h4>
+              <h2>PHQ8</h2>
+              <h3>Complete before <b>13:30</b></h3>
+            </div>
+          </div>
+        </ion-item>
+        <ion-item no-lines (click)="handleOpenPage(1)">
+          <div text-center>
+            <h2>Other Inputs</h2>
+            <h3>Complete before <b>12:40</b></h3>
+          </div>
+        </ion-item>
+    </ion-list>
+</ion-content>

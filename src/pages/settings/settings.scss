@@ -1,0 +1,32 @@
+page-settings {
+  ion-header .toolbar-background {
+      background-color: $cl-secondary;
+  }
+  .toolbar-title {
+      color: $cl-font;
+  }
+  .bar-button {
+      color: $cl-font;
+  }
+  ion-footer .toolbar-background {
+      background-color: $cl-danger-60;
+  }
+  .info-value {
+    font-weight: bold;
+  }
+  .space-right {
+    padding-right: 0.3em;
+  }
+  ion-item.item {
+    background-color: $cl-primary-40;
+    margin-bottom: $item-separation-distance;
+  }
+  ion-item.item:last-child {
+    margin-bottom: 0
+  }
+  ion-item-divider.item-divider {
+    background-color: $cl-primary-10;
+    font-size: 2rem;
+    color: $cl-font-light;
+  }
+}

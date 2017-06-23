@@ -150,7 +150,7 @@ export class SchedulingService {
       iterDate = this.advanceRepeat(iterDate, repeatP.unit, repeatP.amount)
       for(var i = 0; i < repeatQ.unitsFromZero.length; i++){
         let taskDate = this.advanceRepeat(iterDate, repeatQ.unit, repeatQ.unitsFromZero[i])
-        tmpSchedule.push(this.taskBuilder(assessment, taskDate))
+        tmpSchedule.push(this.taskBuilder(tmpSchedule.length, assessment, taskDate))
       }
     }
     return tmpSchedule
@@ -195,8 +195,10 @@ export class SchedulingService {
     return returnDate
   }
 
-  taskBuilder (assessment, taskDate):Task {
+  taskBuilder (index, assessment, taskDate):Task {
     let task: Task = {
+      index: index,
+      completed: false,
       timestamp: taskDate.getTime(),
       name: assessment.name,
       reminderSettings: assessment.protocol.reminders,

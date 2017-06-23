@@ -36,6 +36,8 @@ export const DefaultSettingsWeeklyReport: WeeklyReportSubSettings[] = [
 
 // DEFAULT SETUP
 export const DefaultTask: Task = {
+  index: 0,
+  completed: false,
   timestamp: 0,
   name: 'DEFAULT',
   reminderSettings: {

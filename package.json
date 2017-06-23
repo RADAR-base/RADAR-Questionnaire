@@ -78,8 +78,7 @@
       "cordova-plugin-opensmile": {},
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-statusbar": {},
-      "ionic-plugin-keyboard": {},
-      "cordova-plugin-whitelist": {}
+      "ionic-plugin-keyboard": {}
     },
     "platforms": [
       "android"

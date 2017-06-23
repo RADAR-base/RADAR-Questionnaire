@@ -4,15 +4,15 @@ language: node_js
 node_js:
   - node
 
-install:
-  - npm i -g cordova ionic
-  - npm i
+cache:
+  yarn: true
 
 before_script:
+  - yarn global add cordova ionic
   - mkdir www
 
 script:
-  - npm run lint
-  - npm run lint:css
+  - yarn lint
+  - yarn lint:css
   - cordova prepare
-  - npm run build
+  - yarn build

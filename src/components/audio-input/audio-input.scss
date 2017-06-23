@@ -1,0 +1,32 @@
+@mixin my_button() {
+  @include font-large;
+
+  position: relative;
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 0 auto;
+  margin-top: 100%;
+  width: 100%;
+  height: $bt-height;
+  border: 2px solid white;
+  border-radius: $bt-height;
+  text-align: center;
+}
+
+audio-input {
+  button {
+    @include my_button;
+
+    background-color: $cl-primary-20;
+  }
+
+  button.click {
+    background-color: red;
+  }
+
+  audio {
+    text-align: center;
+  }
+}

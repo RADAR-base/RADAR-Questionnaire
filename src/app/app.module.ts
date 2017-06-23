@@ -3,7 +3,9 @@ import { HttpModule } from '@angular/http'
 import { BrowserModule } from '@angular/platform-browser'
 import { SplashScreen } from '@ionic-native/splash-screen'
 import { StatusBar } from '@ionic-native/status-bar'
+import { Device } from '@ionic-native/device'
 import { IonicApp, IonicModule } from 'ionic-angular'
+import { AudioInputComponent } from '../components/audio-input/audio-input'
 import { QuestionComponent } from '../components/question/question'
 import { RadioInputComponent } from '../components/radio-input/radio-input'
 import { RangeInputComponent } from '../components/range-input/range-input'
@@ -35,7 +37,8 @@ import { MyApp } from './app.component'
     QuestionComponent,
     RangeInputComponent,
     RadioInputComponent,
-    SliderInputComponent
+    SliderInputComponent,
+    AudioInputComponent
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -50,13 +53,15 @@ import { MyApp } from './app.component'
     QuestionComponent,
     RangeInputComponent,
     RadioInputComponent,
-    SliderInputComponent
+    SliderInputComponent,
+    AudioInputComponent
   ],
   providers: [
     StatusBar,
     SplashScreen,
     QuestionService,
-    AnswerService
+    AnswerService,
+    Device
   ]
 })
 export class AppModule {

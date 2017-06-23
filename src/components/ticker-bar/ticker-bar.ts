@@ -108,7 +108,7 @@ export class TickerBarComponent implements OnChanges {
 
   getTimeToNext (now, next) {
     var deltaStr = ''
-    let deltaMin = (next-now)/60000
+    let deltaMin = Math.round((next-now)/60000)
     let deltaHour = Math.round(deltaMin / 60)
     if(deltaMin > 59) {
       deltaStr = deltaHour > 1 ? String(deltaHour)+'hrs' : String(deltaHour)+'hr'

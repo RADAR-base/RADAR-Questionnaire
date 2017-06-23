@@ -40,6 +40,7 @@ export class TaskProgressComponent {
     })
     this.controller.getTaskProgress().then((progress) => {
       this.progress = progress
+      this.updateProgress()
     })
   }
 

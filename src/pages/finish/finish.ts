@@ -29,6 +29,8 @@ export class FinishPage {
 
   handleClosePage () {
     this.controller.updateTaskToComplete(this.navParams.data.associatedTask)
-    this.navCtrl.setRoot(HomePage)
+    setTimeout(() => {
+      this.navCtrl.setRoot(HomePage)
+    }, 5)
   }
 }

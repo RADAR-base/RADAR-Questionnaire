@@ -44,10 +44,8 @@ export class StorageService {
     return this.storage.ready()
   }
 
-  set(key: StorageKeys, value: any): Promise<any> {
-    return this.storage.set(key.toString(), value)
-      .then((res) => { return res })
-      .catch((error) => this.handleError(error))
+  set(key: StorageKeys, value: any) {
+    this.storage.set(key.toString(), value)
   }
 
   setFetchedConfiguration(config) {

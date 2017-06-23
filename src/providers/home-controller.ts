@@ -30,7 +30,6 @@ export class HomeController {
   }
 
   retrieveTaskProgress (tasks):TasksProgress {
-    console.log(tasks)
     var tasksProgress: TasksProgress = {
       numberOfTasks: 0,
       completedTasks: 0
@@ -77,6 +76,6 @@ export class HomeController {
   updateTaskToComplete (task) {
     var updatedTask = task
     updatedTask.completed = true
-    this.schedule.insertTask(updatedTask)
+    return this.schedule.insertTask(updatedTask)
   }
 }

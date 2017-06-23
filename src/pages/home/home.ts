@@ -41,7 +41,7 @@ export class HomePage {
     this.checkForNextTask()
     setInterval(() => {
       this.checkForNextTask()
-    }, 5000)
+    }, 15000)
   }
 
   checkForNextTask () {

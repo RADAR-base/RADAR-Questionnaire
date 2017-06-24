@@ -14,7 +14,7 @@
 
 <ion-content>
   <div  #progressBar class="size-dynamic">
-    <task-progress [progress]="tasksProgress "(completed)="displayCompleted($event)"></task-progress>
+    <task-progress [progress]="tasksProgress" [forceComplete]="showCompleted"></task-progress>
   </div>
 
   <div  #tickerBar class="size-static">

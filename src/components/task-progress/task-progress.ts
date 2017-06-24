@@ -11,6 +11,7 @@ import { TasksProgress } from '../../models/task'
 export class TaskProgressComponent {
 
   @Input() progress: TasksProgress
+  @Input() forceComplete: boolean = false
   @Output() completed: EventEmitter<Boolean> = new EventEmitter()
 
   text: string;
@@ -55,9 +56,12 @@ export class TaskProgressComponent {
     }
     if(this.current >= this.max){
       this.complete = true
-      this.displayFireworks(800, 1000)
+      this.displayFireworks(800, 980)
     } else {
       this.complete = false
+    }
+    if(this.forceComplete){
+      this.complete = true
     }
     this.transitionToComplete()
     this.completed.emit(this.complete)
@@ -74,10 +78,14 @@ export class TaskProgressComponent {
       this.elCounter.nativeElement.style.transform =
       'translate3d(0,250px,0)'
     } else {
+      this.elActive.nativeElement.style.transform =
+      'translate3d(0,0,0) scale(1)'
       this.elComplete.nativeElement.style.transform =
-      'scale(0.1)'
+      'translate3d(0,0,0) scale(0.1)'
       this.elCheckmark.nativeElement.style.transform =
       'scale(5)'
+      this.elCounter.nativeElement.style.transform =
+      'translate3d(0,0,0)'
     }
   }
 
@@ -92,7 +100,7 @@ export class TaskProgressComponent {
 
   easterEggFireworks() {
     if(this.current >= this.max){
-      this.displayFireworks(1, 1000)
+      this.displayFireworks(1, 980)
     }
   }
 

@@ -154,7 +154,7 @@ export class HomePage {
     ]
     this.showAlert({
       'title': 'Credits',
-      'message': 'The RADAR-CNS Questionnaire app was developed by the RADAR-CNS consortium. For more information click <a href="http://radar-cns.org">here</a>.',
+      'message': 'Made with &hearts; for you by the RADAR-CNS consortium. For more information click <a href="http://radar-cns.org">here</a>.',
       'buttons': buttons
     })
   }

@@ -18,6 +18,7 @@ export class TaskProgressComponent {
   current: number = 0
   duration: number = 800
   complete: boolean = false
+  showFireworks: boolean = false
 
   @ViewChild('progressActive')
   elActive: ElementRef
@@ -54,6 +55,7 @@ export class TaskProgressComponent {
     }
     if(this.current >= this.max){
       this.complete = true
+      this.displayFireworks(800, 1000)
     } else {
       this.complete = false
     }
@@ -76,6 +78,21 @@ export class TaskProgressComponent {
       'scale(0.1)'
       this.elCheckmark.nativeElement.style.transform =
       'scale(5)'
+    }
+  }
+
+  displayFireworks (milliDelay, milliDisplay) {
+    setTimeout(() => {
+      this.showFireworks = true
+      setTimeout(() => {
+        this.showFireworks = false
+      }, milliDisplay)
+    }, milliDelay)
+  }
+
+  easterEggFireworks() {
+    if(this.current >= this.max){
+      this.displayFireworks(1, 1000)
     }
   }
 

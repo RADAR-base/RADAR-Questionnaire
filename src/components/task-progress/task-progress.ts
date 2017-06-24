@@ -16,7 +16,6 @@ export class TaskProgressComponent {
   text: string;
   max: number = 1
   current: number = 0
-  radius: number = 120
   duration: number = 800
   complete: boolean = false
 

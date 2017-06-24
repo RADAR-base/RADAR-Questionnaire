@@ -11,32 +11,38 @@ task-progress {
   }
 
   #progress {
-    width: 240px;
+    width: 60vw;
     margin: auto;
     display: flex;
   }
 
   .progress-sub {
-    flex: 1 0 240px;
+    flex: 1 0 60vw;
     transition: transform 0.8s ease-in-out;
   }
 
   .completed {
-    width: 240px;
-    height: 240px;
+    width: 60vw;
+    height: 60vw;
     border-radius: 100%;
     background-color: map-get($colors, tertiary);
   }
 
   .checkmark {
     font-size: 220px;
-    padding-left: 35px;
+    padding-left: 10vw;
+    margin-top: 0vw;
     transition: transform 0.8s ease-in;
+    @media screen and (max-width: 320px) {
+      font-size: 200px;
+      padding-left: 6vw;
+      margin-top: -5vw;
+    }
   }
 
   .counter {
     text-align: center;
-    margin-top: -135px;
+    margin-top: -34vw;
     transition: transform 0.4s ease-in-out;
   }
 
@@ -50,11 +56,11 @@ task-progress {
     font-size: 18px;
   }
 
+  // Create the explosion...
   $particles: 50;
   $width: 500;
   $height: 500;
 
-  // Create the explosion...
   $box-shadow: ();
   $box-shadow2: ();
   @for $i from 0 through $particles {
@@ -126,11 +132,6 @@ task-progress {
     box-shadow: $box-shadow2;
     @include animation((1s bang ease-out infinite backwards, 1s gravity ease-in infinite backwards, 5s position linear infinite backwards));
   }
-
-  /*.pyro > .after {
-    @include animation-delay((1.25s, 1.25s, 1.25s));
-    @include animation-duration((1.25s, 1.25s, 6.25s));
-  }*/
 
   @include keyframes(bang) {
     to {

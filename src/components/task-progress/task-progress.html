@@ -1,7 +1,12 @@
-<div id="task-progress-container">
+<div id="task-progress-container" (click)="easterEggFireworks()">
 
   <div id="navigation">
     Today
+  </div>
+
+  <div class="pyro" *ngIf="showFireworks">
+    <div class="before"></div>
+    <div class="after"></div>
   </div>
 
   <div id="progress">

@@ -121,8 +121,7 @@ export class TaskInfoComponent implements OnChanges {
     this.collapse.emit(this.expanded)
     this.expanded = this.expanded ? false : true
     this.applyAnimationKeys()
-    // TODO switching this on creates a rendering problem in iOS
-    //this.updateProgress()
+    this.updateProgress()
   }
 
   updateProgress () {

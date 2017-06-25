@@ -53,11 +53,10 @@ export class EnrolmentPage {
   }
 
   authenticate (authObj) {
-
     let authString = authObj.text
     this.transitionStatuses()
     //TODO authenticate here
-    let patientId = '12345'
+    let patientId = authString
     this.storage.init(patientId)
     this.doAfterAuthentication()
   }

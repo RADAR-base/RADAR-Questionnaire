@@ -23,8 +23,7 @@ export class StorageService {
   init(patientId:String) {
     let allKeys = this.getAllKeys()
     allKeys.then((keys) => {
-      console.log(keys)
-      if(keys.length==0){
+      if(keys.length<=5){
         let today = new Date()
         //this.set(StorageKeys.REFERENCEDATE, today.getTime())
         this.set(StorageKeys.REFERENCEDATE, 1496952304184)
@@ -35,6 +34,7 @@ export class StorageService {
         this.set(StorageKeys.SETTINGS_LANGUAGES, DefaultSettingsSupportedLanguages)
         this.set(StorageKeys.SCHEDULE_VERSION, DefaultScheduleVersion)
       }
+      console.log(keys)
     }).catch((error) => {
       this.handleError(error)
     })

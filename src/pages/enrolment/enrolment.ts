@@ -1,4 +1,7 @@
 import { Component, ViewChild, ElementRef } from '@angular/core'
+import { FirebaseService } from '../../providers/firebase-service';
+import { StorageService } from '../../providers/storage-service'
+import { StorageKeys } from '../../enums/storage'
 import { NavController, Slides } from 'ionic-angular'
 import { WeeklyReportSubSettings } from '../../models/settings'
 import { DefaultSettingsWeeklyReport } from '../../assets/data/defaultConfig'
@@ -19,18 +22,15 @@ export class EnrolmentPage {
   elOutcome: ElementRef
   loading: boolean = false
   showOutcomeStatus: boolean = false
-  authString: String
   outcomeStatus: String
   reportSettings: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
 
   constructor (
     public navCtrl: NavController,
-    private scanner: BarcodeScanner
+    private scanner: BarcodeScanner,
+    private storage: StorageService,
+    private firebaseService: FirebaseService
   ) {
-
-    // TODO check for existing data
-    //this.navCtrl.setRoot(HomePage)
-
   }
 
   ionViewDidLoad () {
@@ -42,29 +42,39 @@ export class EnrolmentPage {
 
   scan () {
     this.loading = true
-    this.authenticate('1223')
     let scanOptions = {
       showFlipCameraButton: true,
       orientation: 'portrait',
       disableAnimations: true
     }
-    //this.scanner.scan(scanOptions).then((scannedObj) => this.authenticate(scannedObj))
+    this.scanner.scan(scanOptions).then((scannedObj) => this.authenticate(scannedObj))
+    //TODO remove when finished
+    //this.authenticate('1223')
   }
 
   authenticate (authObj) {
+
+    let authString = authObj.text
     this.transitionStatuses()
     //TODO authenticate here
+    let patientId = '12345'
+    this.storage.init(patientId)
+    this.doAfterAuthentication()
+  }
+
+  doAfterAuthentication(){
     setTimeout(() => {
-      this.authString = authObj.text
       this.loading = false
       this.showOutcomeStatus = true
+      this.firebaseService.fetchConfigState()
       this.setOutcomeStatus(this.showOutcomeStatus)
       this.transitionStatuses()
     }, 1000)
   }
 
-  weeklyReportChange () {
-    
+  weeklyReportChange(index) {
+    this.reportSettings[index].show != this.reportSettings[index].show
+    this.storage.set(StorageKeys.SETTINGS_WEEKLYREPORT, this.reportSettings)
   }
 
   setOutcomeStatus(status) {

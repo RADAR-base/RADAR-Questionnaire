@@ -11,6 +11,12 @@ export class HomeController {
               private schedule: SchedulingService) {
   }
 
+  evalEnrolement() {
+    return this.storage.getAllKeys().then((keys) => {
+      return keys.length <= 5
+    })
+  }
+
   getAssessment (task) {
     return this.storage.getAssessment(task)
   }

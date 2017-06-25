@@ -3,7 +3,7 @@ import { SchedulingService } from '../../providers/scheduling-service'
 import { HomeController } from '../../providers/home-controller'
 import { Task, TasksProgress } from '../../models/task'
 import { NavController, AlertController } from 'ionic-angular'
-import { TaskSelectPage } from '../taskselect/taskselect'
+import { EnrolmentPage } from '../enrolment/enrolment'
 import { StartPage } from '../start/start'
 import { QuestionsPage } from '../questions/questions'
 import { SettingsPage } from '../settings/settings'
@@ -39,7 +39,13 @@ export class HomePage {
     public alertCtrl: AlertController,
     private schedule: SchedulingService,
     private controller: HomeController,
-  ) {}
+  ) {
+    this.controller.evalEnrolement().then((evalEnrolement) => {
+      if(evalEnrolement){
+        this.navCtrl.push(EnrolmentPage)
+      }
+    })
+  }
 
   ionViewDidLoad () {
     this.checkForNextTask()

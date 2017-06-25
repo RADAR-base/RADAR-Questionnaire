@@ -5,7 +5,7 @@ import { Platform } from 'ionic-angular'
 import { FirebaseService } from '../providers/firebase-service';
 import { StorageService } from '../providers/storage-service'
 import { SchedulingService } from '../providers/scheduling-service'
-import { HomePage } from '../pages/home/home'
+import { EnrolmentPage } from '../pages/enrolment/enrolment'
 
 
 @Component({
@@ -13,7 +13,7 @@ import { HomePage } from '../pages/home/home'
   '<ion-nav [root]="rootPage"></ion-nav>'
 })
 export class MyApp {
-  rootPage = HomePage
+  rootPage = EnrolmentPage
 
   constructor(
     private platform: Platform,
@@ -26,8 +26,8 @@ export class MyApp {
     platform.ready().then(() => {
       statusBar.styleDefault()
       splashScreen.hide()
-      this.storage.init('12345')
-      this.firebaseService.fetchConfigState()
+      //this.storage.init('12345')
+      //this.firebaseService.fetchConfigState()
     })
   }
 }

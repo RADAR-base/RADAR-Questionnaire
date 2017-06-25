@@ -11,6 +11,7 @@ import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { IonicStorageModule } from '@ionic/storage';
 import { RoundProgressModule } from 'angular-svg-round-progressbar';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner'
 
 import { TaskProgressComponent } from '../components/task-progress/task-progress'
 import { TickerBarComponent } from '../components/ticker-bar/ticker-bar'
@@ -19,6 +20,7 @@ import { QuestionComponent } from '../components/question/question'
 import { RadioInputComponent } from '../components/radio-input/radio-input'
 import { RangeInputComponent } from '../components/range-input/range-input'
 import { SliderInputComponent } from '../components/slider-input/slider-input'
+import { EnrolmentPage } from '../pages/enrolment/enrolment'
 import { FinishPage } from '../pages/finish/finish'
 import { HomePage } from '../pages/home/home'
 import { SettingsPage } from '../pages/settings/settings'
@@ -58,6 +60,7 @@ import { MyApp } from './app.component';
     MyApp,
 
     // Pages
+    EnrolmentPage,
     HomePage,
     StartPage,
     QuestionsPage,
@@ -80,6 +83,7 @@ import { MyApp } from './app.component';
     MyApp,
 
     // Pages
+    EnrolmentPage,
     HomePage,
     StartPage,
     QuestionsPage,
@@ -107,6 +111,7 @@ import { MyApp } from './app.component';
     SchedulingService,
     AngularFireDatabaseModule,
     HomeController,
+    BarcodeScanner,
   ]
 })
 export class AppModule {

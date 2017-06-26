@@ -25,6 +25,10 @@
     <task-info [task]='nextTask' (collapse)="displayCalendar($event)"></task-info>
   </div>
 
+  <div #taskCalendar>
+    <task-calendar></task-calendar>
+  </div>
+
   <div #footer class="size-static bg" padding>
       <button ion-button class="bt bt--full" round full
         (click)="startQuestionnaire()">

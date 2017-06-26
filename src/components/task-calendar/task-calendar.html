@@ -1,3 +1,36 @@
 <div>
-  Test
+
+  <div class="date">
+    Today
+  </div>
+
+  <div class="layers">
+
+    <div #timeCurrent id="time-current">
+      <ion-row>
+        <ion-col col-2 class="time-current">
+        {{currentTime}}
+      </ion-col>
+        <ion-col>
+          <div class="time-current-division"></div>
+        </ion-col>
+      </ion-row>
+    </div>
+
+    <div id="time-slots">
+      <div class="time-slot" *ngFor="let time of times; let i of index">
+        <ion-row>
+          <ion-col col-2 class="pos-time">
+          {{time}}
+        </ion-col>
+          <ion-col>
+            <div class="time-slot-division"></div>
+            <div class="time-slot-division"></div>
+          </ion-col>
+        </ion-row>
+      </div>
+    </div>
+
+  </div>
+
 </div>

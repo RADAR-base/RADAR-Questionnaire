@@ -29,9 +29,13 @@ export class HomeController {
     }
   }
 
-  getTaskProgress () {
+  getTasksOfToday () {
     let now = new Date()
     return this.schedule.getTasksForDate(now)
+  }
+
+  getTaskProgress () {
+    return this.getTasksOfToday()
       .then((tasks:Task[]) => this.retrieveTaskProgress(tasks))
   }
 
@@ -52,8 +56,7 @@ export class HomeController {
   }
 
   getNextTask () {
-    let now = new Date()
-    return this.schedule.getTasksForDate(now)
+    return this.getTasksOfToday()
             .then((tasks:Task[]) => this.retrieveNextTask(tasks))
   }
 

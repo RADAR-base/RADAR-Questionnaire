@@ -13,6 +13,7 @@ import { IonicStorageModule } from '@ionic/storage';
 import { RoundProgressModule } from 'angular-svg-round-progressbar';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner'
 
+import { TaskCalendarComponent } from '../components/task-calendar/task-calendar'
 import { TaskProgressComponent } from '../components/task-progress/task-progress'
 import { TickerBarComponent } from '../components/ticker-bar/ticker-bar'
 import { TaskInfoComponent } from '../components/task-info/task-info'
@@ -70,6 +71,7 @@ import { MyApp } from './app.component';
     ReportPage,
 
     // Components
+    TaskCalendarComponent,
     TaskProgressComponent,
     TickerBarComponent,
     TaskInfoComponent,

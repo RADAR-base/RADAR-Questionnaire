@@ -12,7 +12,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content #content>
   <div  #progressBar class="size-dynamic">
     <task-progress [progress]="tasksProgress" [forceComplete]="showCompleted"></task-progress>
   </div>
@@ -26,7 +26,7 @@
   </div>
 
   <div #taskCalendar class="size-null">
-    <div padding><task-calendar></task-calendar> </div>
+    <div padding><task-calendar [scrollHeight]="calendarScrollHeight"></task-calendar> </div>
   </div>
 
   <div #footer class="size-static bg" padding>

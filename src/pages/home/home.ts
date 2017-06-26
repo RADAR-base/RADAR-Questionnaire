@@ -1,8 +1,8 @@
-import { Component, trigger, state, style, transition, animate, keyframes, ViewChild, ElementRef} from '@angular/core'
+import { Component, ViewChild, ElementRef} from '@angular/core'
+import { NavController, AlertController, Content } from 'ionic-angular'
 import { SchedulingService } from '../../providers/scheduling-service'
 import { HomeController } from '../../providers/home-controller'
 import { Task, TasksProgress } from '../../models/task'
-import { NavController, AlertController } from 'ionic-angular'
 import { EnrolmentPage } from '../enrolment/enrolment'
 import { StartPage } from '../start/start'
 import { QuestionsPage } from '../questions/questions'
@@ -16,11 +16,15 @@ import { DefaultTask } from '../../assets/data/defaultConfig'
 })
 export class HomePage {
 
+  @ViewChild('content')
+  elContent: Content
+  elContentHeight: number
   @ViewChild('progressBar')
   elProgress: ElementRef;
   elProgressHeight: number
   @ViewChild('tickerBar')
   elTicker: ElementRef;
+  elTickerHeight: number
   @ViewChild('taskInfo')
   elInfo: ElementRef;
   elInfoHeight: number
@@ -35,6 +39,7 @@ export class HomePage {
   showCalendar: boolean = false
   showCompleted: boolean = false
   tasksProgress: TasksProgress
+  calendarScrollHeight: number = 0
 
   constructor (
     public navCtrl: NavController,
@@ -47,6 +52,9 @@ export class HomePage {
         this.navCtrl.push(EnrolmentPage)
       }
     })
+  }
+
+  ngAfterViewInit(){
   }
 
   ionViewDidLoad () {
@@ -72,16 +80,22 @@ export class HomePage {
 
   displayCalendar (requestDisplay:boolean) {
     this.showCalendar = requestDisplay
-    this.elProgressHeight= this.elProgress.nativeElement.offsetHeight
-    this.elFooterHeight= this.elFooter.nativeElement.offsetHeight
+    this.getElementsAttributes()
     this.applyCalendarTransformations()
   }
 
   displayCompleted (requestDisplay:boolean) {
     this.showCompleted = requestDisplay
-    this.elInfoHeight= this.elInfo.nativeElement.offsetHeight
-    this.elFooterHeight= this.elFooter.nativeElement.offsetHeight
+    this.getElementsAttributes()
     this.applyCompletedTransformations()
+  }
+
+  getElementsAttributes () {
+    this.elContentHeight = this.elContent.contentHeight
+    this.elProgressHeight = this.elProgress.nativeElement.offsetHeight
+    this.elTickerHeight = this.elTicker.nativeElement.offsetHeight
+    this.elInfoHeight = this.elInfo.nativeElement.offsetHeight
+    this.elFooterHeight = this.elFooter.nativeElement.offsetHeight
   }
 
   applyCalendarTransformations () {
@@ -110,6 +124,19 @@ export class HomePage {
         'translateY(0px)'
       this.elCalendar.nativeElement.style.opacity = 0
     }
+    this.setCalendarScrollHeight(this.showCalendar)
+  }
+
+  setCalendarScrollHeight (show:boolean) {
+    if(show){
+      this.calendarScrollHeight = this.elContentHeight
+                                  - this.elTickerHeight
+                                  - this.elInfoHeight
+                                  - 80
+    } else {
+      this.calendarScrollHeight = 0
+    }
+
   }
 
   applyCompletedTransformations () {

@@ -17,7 +17,10 @@ page-home {
   }
 
   .size-null {
+    position: absolute;
+    bottom: 90px;
     height: 0px;
+    width: 100%;
     opacity: 0;
     transition: all 0.4s ease-in-out;
   }

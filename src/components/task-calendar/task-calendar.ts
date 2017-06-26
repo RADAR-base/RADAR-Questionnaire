@@ -1,4 +1,4 @@
-import { Component, OnChanges, ViewChild, ElementRef} from '@angular/core'
+import { Component, OnChanges, ViewChild, ElementRef, Input} from '@angular/core'
 import { NavController } from 'ionic-angular'
 import { HomeController } from '../../providers/home-controller'
 import { Task } from '../../models/task'
@@ -10,6 +10,8 @@ import { DefaultTask } from '../../assets/data/defaultConfig'
   templateUrl: 'task-calendar.html'
 })
 export class TaskCalendarComponent implements OnChanges {
+
+  @Input() scrollHeight: number = 0
 
   @ViewChild('timeCurrent')
   elCurrentTime: ElementRef;
@@ -34,7 +36,7 @@ export class TaskCalendarComponent implements OnChanges {
     }, 200)
   }
 
-  ngOnChanges (changes) {
+  ngOnChanges () {
   }
 
   setTaskTimes (tasks:Task[]) {

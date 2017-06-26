@@ -27,6 +27,8 @@ export class HomePage {
   @ViewChild('footer')
   elFooter: ElementRef;
   elFooterHeight: number
+  @ViewChild('taskCalendar')
+  elCalendar: ElementRef
 
   isOpenPageClicked: boolean = false
   nextTask: Task = DefaultTask
@@ -92,6 +94,9 @@ export class HomePage {
         `translateY(-${this.elProgressHeight}px)`
       this.elFooter.nativeElement.style.transform =
         `translateY(${this.elFooterHeight}px) scale(0)`
+      this.elCalendar.nativeElement.style.transform =
+        `translateY(-${this.elProgressHeight}px)`
+      this.elCalendar.nativeElement.style.opacity = 1
     } else {
       this.elProgress.nativeElement.style.transform =
         'translateY(0px) scale(1)'
@@ -99,8 +104,11 @@ export class HomePage {
         'translateY(0px)'
       this.elInfo.nativeElement.style.transform =
         'translateY(0px)'
-        this.elFooter.nativeElement.style.transform =
-          'translateY(0px) scale(1)'
+      this.elFooter.nativeElement.style.transform =
+        'translateY(0px) scale(1)'
+      this.elCalendar.nativeElement.style.transform =
+        'translateY(0px)'
+      this.elCalendar.nativeElement.style.opacity = 0
     }
   }
 

@@ -31,12 +31,10 @@ export class TaskCalendarComponent implements OnChanges {
         this.setTaskTimes(tasks)
       }
     })
-    setTimeout(() => {
-      this.setCurrentTime()
-    }, 200)
   }
 
   ngOnChanges () {
+    this.setCurrentTime()
   }
 
   setTaskTimes (tasks:Task[]) {

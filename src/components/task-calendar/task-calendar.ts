@@ -28,7 +28,7 @@ export class TaskCalendarComponent implements OnChanges {
   constructor(private controller: HomeController){
     this.controller.getTasksOfToday().then((tasks) => {
       if(tasks){
-        this.setTaskTimes(tasks)
+        this.tasks = tasks
       }
     })
   }
@@ -37,22 +37,29 @@ export class TaskCalendarComponent implements OnChanges {
     this.setCurrentTime()
   }
 
-  setTaskTimes (tasks:Task[]) {
-
+  setTaskTime (task:Task) {
+    let date = new Date(task.timestamp)
+    let offsetPixels = this.setTimePixel(date) - 5
+    return offsetPixels
   }
 
   setCurrentTime () {
     let now = new Date()
-    this.currentMinutes = this.computeMinutesIntoDay(now)
     this.currentTime = this.formatTime(now)
-    let offsetPixels = Math.round((this.currentMinutes/60)*this.hourPixHeight)
-                          -this.startOfDayMinutes/2
-                          +this.hourPixHeight
+    let offsetPixels = this.setTimePixel(now)
     this.elCurrentTime.nativeElement.style.transform =
       `translateY(${offsetPixels}px)`
     if(offsetPixels > 0 && offsetPixels < this.hourPixHeight*18){
       this.elCurrentTime.nativeElement.style.opacity = 1
     }
+  }
+
+  setTimePixel (date:Date) {
+    let min = this.computeMinutesIntoDay(date)
+    let offsetPixels = Math.round((min/60)*this.hourPixHeight)
+                          -this.startOfDayMinutes/2
+                          +this.hourPixHeight
+    return offsetPixels
   }
 
   computeMinutesIntoDay (date) {

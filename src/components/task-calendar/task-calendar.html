@@ -17,6 +17,19 @@
         </ion-row>
       </div>
 
+      <div id="time-entries" *ngFor="let task of tasks; let i of index">
+        <ion-row>
+          <ion-col col-2></ion-col>
+          <ion-col>
+            <div class="time-entry" [style.margin-top.px]="setTaskTime(task)">
+              <div class="entry-completed" *ngIf="task.completed">
+                <span class="entry-completed-text">Completed</span>
+                <ion-icon class="checkmark" name="checkmark"></ion-icon></div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </div>
+
       <div id="time-slots">
         <div class="time-slot" *ngFor="let time of times; let i of index">
           <ion-row>

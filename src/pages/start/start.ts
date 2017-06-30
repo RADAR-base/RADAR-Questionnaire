@@ -6,6 +6,7 @@ import { QuestionService } from '../../providers/question-service'
 import { Question } from '../../models/question'
 import { Assessment } from '../../models/assessment'
 import { AnswerService } from '../../providers/answer-service'
+import { TimeStampService } from '../../providers/timestamp-service'
 
 @Component({
   selector: 'page-start',
@@ -34,30 +35,32 @@ export class StartPage {
   }
   iconClose: string = this.iconValues.close
 
-  constructor (
+  constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public loadingCtrl: LoadingController,
     private questionService: QuestionService,
-    private answerService: AnswerService
+    private answerService: AnswerService,
+    private timestampService: TimeStampService
   ) {
   }
 
-  ionViewDidLoad () {
+  ionViewDidLoad() {
     this.assessmentIndex = this.navParams.data.assessmentIndex
     this.questionService.get()
       .delay(0)
       .subscribe(
-        assessments => this.serviceReady(assessments),
-        error => this.handleError(error)
+      assessments => this.serviceReady(assessments),
+      error => this.handleError(error)
       )
   }
 
-  ionViewDidEnter () {
+  ionViewDidEnter() {
     this.answerService.reset()
+    this.timestampService.reset()
   }
 
-  handleOpenPage () {
+  handleOpenPage() {
     this.isOpenPageClicked = true
 
     if (this.isLoading) {
@@ -67,11 +70,11 @@ export class StartPage {
     }
   }
 
-  handleClosePage () {
+  handleClosePage() {
     this.navCtrl.pop()
   }
 
-  handleError (error) {
+  handleError(error) {
     console.error(error)
 
     if (this.loader) {
@@ -79,19 +82,19 @@ export class StartPage {
     }
   }
 
-  serviceReady (assessments) {
+  serviceReady(assessments) {
     this.readyAssessment(assessments[this.assessmentIndex])
     this.readyQuestions(assessments[this.assessmentIndex])
   }
 
-  readyAssessment (assessment) {
+  readyAssessment(assessment) {
     // need to resolve this with async pipe properly
     this.assessment = assessment
     this.introduction = assessment.startText
     this.title = assessment.name
   }
 
-  readyQuestions (assessment) {
+  readyQuestions(assessment) {
     this.questions = assessment.questions
     this.isLoading = false
     if (this.isOpenPageClicked) {
@@ -99,14 +102,14 @@ export class StartPage {
     }
   }
 
-  startLoader () {
+  startLoader() {
     this.loader = this.loadingCtrl.create({
       content: 'Please wait...',
       dismissOnPageChange: true
     }).present()
   }
 
-  openPage () {
-    this.navCtrl.push(QuestionsPage, {'questions':this.questions, 'endText':this.assessment.endText})
+  openPage() {
+    this.navCtrl.push(QuestionsPage, { 'questions': this.questions, 'endText': this.assessment.endText })
   }
 }

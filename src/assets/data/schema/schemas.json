@@ -1,0 +1,74 @@
+{
+	"schemas": [{
+		"aRMT_phq8_Export_KeySchema":{
+					  "namespace": "org.radarcns.key",
+					  "type": "record",
+					  "name": "MeasurementKey",
+					  "doc": "Measurement key in the RADAR-CNS project",
+					  "fields": [
+					    {"name": "userId", "type": "string", "doc": "user ID"},
+					    {"name": "sourceId", "type": "string", "doc": "device source ID"}
+					  ]
+					},
+	"aRMT_phq8_Export_ValueSchema": {
+			"namespace": "org.radarcns.questionnaire",
+			"type": "record",
+			"name": "Questionnaire",
+			"doc": "General schema for questionnaire. Check the specification folder to see how the questionnaire has been defined. For each QuestionnaireType there is a JSON file reporting the questions set and possible answers if available",
+			"fields": [{
+					"name": "type",
+					"type": {
+						"name": "QuestionnaireType",
+						"type": "enum",
+						"symbols": ["PHQ8", "ESM", "UNKNOWN"]
+					},
+					"doc": "Questionnaire names",
+					"default": "UNKNOWN"
+				},
+				{
+					"name": "version",
+					"type": "double",
+					"doc": "Questionnaire version useful to support possible update"
+				},
+				{
+					"name": "answers",
+					"type": {
+						"type": "array",
+						"items": {
+							"name": "Answer",
+							"type": "record",
+							"doc": "Questionnaire answer",
+							"fields": [{
+									"name": "value",
+									"type": ["int", "string", "double"],
+									"doc": "Subject answer"
+								},
+								{
+									"name": "startTime",
+									"type": "double",
+									"doc": "timestamp in UTC (s) when the question is shown"
+								},
+								{
+									"name": "endTime",
+									"type": "double",
+									"doc": "timestamp in UTC (s)  when the question is answered"
+								}
+							]
+						}
+					},
+					"doc": "Answers List"
+				},
+				{
+					"name": "startTime",
+					"type": "double",
+					"doc": "timestamp in UTC (s) when the questionnaire is submitted to the subject"
+				},
+				{
+					"name": "endTime",
+					"type": "double",
+					"doc": "timestamp in UTC (s) when the questionnaire is sent out to the platform"
+				}
+			]
+		}
+	}]
+}

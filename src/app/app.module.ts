@@ -3,6 +3,7 @@ import { HttpModule } from '@angular/http'
 import { MomentModule } from 'angular2-moment'
 import { BrowserModule } from '@angular/platform-browser'
 import { SplashScreen } from '@ionic-native/splash-screen'
+import { Device } from '@ionic-native/device'
 import { StatusBar } from '@ionic-native/status-bar'
 import { IonicApp, IonicModule } from 'ionic-angular'
 import { AngularFireModule } from 'angularfire2';
@@ -27,6 +28,8 @@ import { FirebaseService } from '../providers/firebase-service'
 import { StorageService } from '../providers/storage-service'
 import { SchedulingService } from '../providers/scheduling-service'
 import { FirebaseConfig } from '../assets/data/defaultConfig'
+import { KafkaService }  from '../providers/kafka-service'
+import { Utility } from '../utilities/util'
 import { MyApp } from './app.component';
 
 
@@ -40,7 +43,7 @@ import { MyApp } from './app.component';
     }),
     IonicStorageModule.forRoot({
       name: '__appdb',
-         driverOrder: ['sqlite','indexeddb', 'websql']
+      driverOrder: ['sqlite', 'indexeddb', 'websql']
     }),
     AngularFireModule.initializeApp(FirebaseConfig),
     AngularFireDatabaseModule, // imports firebase/database, only needed for database features
@@ -82,14 +85,17 @@ import { MyApp } from './app.component';
     SliderInputComponent
   ],
   providers: [
+    Device,
     StatusBar,
     SplashScreen,
     QuestionService,
     AnswerService,
     FirebaseService,
     StorageService,
+    AngularFireDatabaseModule,
+    KafkaService,
+    Utility,
     SchedulingService,
-    AngularFireDatabaseModule
   ]
 })
 export class AppModule {

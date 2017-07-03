@@ -26,6 +26,7 @@ import { AnswerService } from '../providers/answer-service'
 import { QuestionService } from '../providers/question-service'
 import { FirebaseService } from '../providers/firebase-service'
 import { StorageService } from '../providers/storage-service'
+import { SchedulingService } from '../providers/scheduling-service'
 import { FirebaseConfig } from '../assets/data/defaultConfig'
 import { KafkaService }  from '../providers/kafka-service'
 import { Utility } from '../utilities/util'
@@ -93,7 +94,8 @@ import { MyApp } from './app.component';
     StorageService,
     AngularFireDatabaseModule,
     KafkaService,
-    Utility
+    Utility,
+    SchedulingService,
   ]
 })
 export class AppModule {

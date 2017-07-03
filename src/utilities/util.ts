@@ -6,16 +6,12 @@ import { Observable } from 'rxjs/Observable'
 import 'rxjs/add/operator/map'
 import { Http, Response } from '@angular/http'
 
-import { StorageService } from '../providers/storage-service'
-import { StorageKeys } from '../enums/storage'
-
 @Injectable()
 export class Utility {
 
   constructor(
     private http: Http,
-    private device: Device,
-    private storage: StorageService
+    private device: Device
   ) {
   }
   private schemaUrl = 'assets/data/schema/schemas.json'

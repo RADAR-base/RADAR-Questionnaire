@@ -5,7 +5,7 @@ import { StatusBar } from '@ionic-native/status-bar'
 import { Platform } from 'ionic-angular'
 import { FirebaseService } from '../providers/firebase-service';
 import { StorageService } from '../providers/storage-service'
-import { NotificationSettings } from '../models/settings'
+import { SchedulingService } from '../providers/scheduling-service'
 import { HomePage } from '../pages/home/home'
 
 
@@ -23,13 +23,14 @@ export class MyApp {
     private splashScreen: SplashScreen,
     private firebaseService: FirebaseService,
     public storage: StorageService,
+    public schedule: SchedulingService
   ) {
     platform.ready().then(() => {
       statusBar.styleDefault()
       splashScreen.hide()
       this.storage.init('12345')
       this.firebaseService.fetchConfigState()
-
+      this.schedule.generateSchedule()
     })
   }
 }

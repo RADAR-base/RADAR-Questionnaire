@@ -6,5 +6,6 @@ export interface Assessment {
   protocol: Protocol,
   startText: string,
   endText: string,
+  showIntroduction: boolean,
   questions: Question[]
 }

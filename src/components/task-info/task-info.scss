@@ -1,0 +1,70 @@
+task-info {
+
+  #task-info-container {
+    background-color: $cl-primary-40;
+    padding: 7px 15px;
+    font-size: 22px;
+  }
+
+  .info {
+    overflow: hidden;
+    padding-bottom: 5px
+  }
+
+  .units {
+    font-size: 15px
+  }
+
+  #questionnaire-progress {
+    position: absolute;
+    top: 11px;
+  }
+
+  #questionnaire-counter {
+    text-align: center;
+    font-size: 38px;
+    margin-top: -63px
+  }
+
+  #questionnaire-metrics {
+    float: left;
+    padding-top: 5px;
+    padding-left: 5px;
+  }
+
+  #questionnaire-time {
+    float: right;
+  }
+
+  #hour {
+    font-size: 62px;
+    margin-top: -7px;
+    float: left;
+  }
+
+  #minutes {
+    font-size: 62px;
+    margin-top: -7px;
+    float: left;
+  }
+
+  .extra-info {
+    text-align: center;
+    margin-top: -7px;
+    font-size: 18px
+  }
+
+  .extra-info-icon {
+    height: 15px;
+
+  }
+
+  .icon-padding {
+    padding-right: 5px;
+  }
+
+  .icon-sm {
+    height: 18px
+  }
+
+}

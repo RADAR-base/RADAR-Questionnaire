@@ -1,5 +1,6 @@
 import { Component } from '@angular/core'
 import { NavController, NavParams } from 'ionic-angular'
+import { HomeController } from '../../providers/home-controller'
 import { AnswerService } from '../../providers/answer-service'
 import { HomePage } from '../home/home'
 
@@ -29,16 +30,14 @@ export class FinishPage {
     private answerService: AnswerService,
     private kafkaService: KafkaService,
     private storage: StorageService,
-    private util: Utility
+    private util: Utility,
+    private controller: HomeController,
   ) {
 
   }
 
-  ionViewDidLoad() {
-
+  ionViewDidLoad () {
     console.log(this.answerService.answers)
-
-    // resolve observable with async properly
     this.content = this.navParams.data.endText
 
     // Before submitting data to kafka, fetch config version and Patient ID
@@ -129,5 +128,4 @@ export class FinishPage {
   handleClosePage() {
     this.navCtrl.setRoot(HomePage)
   }
-
 }

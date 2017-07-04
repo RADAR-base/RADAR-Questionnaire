@@ -39,7 +39,7 @@ export class TaskCalendarComponent implements OnChanges {
 
   setTaskTime (task:Task) {
     let date = new Date(task.timestamp)
-    let offsetPixels = this.setTimePixel(date) - 5
+    let offsetPixels = this.setTimePixel(date) - 5 + 25
     return offsetPixels
   }
 

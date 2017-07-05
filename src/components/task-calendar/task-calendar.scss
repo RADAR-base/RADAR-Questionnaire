@@ -1,0 +1,100 @@
+task-calendar {
+
+  $timeSlotHeight: 50px;
+
+  .date {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .layers {
+    position: relative;
+  }
+
+  #time-current {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 2;
+    opacity: 0;
+  }
+
+  #time-entries {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+  }
+
+  #time-slots {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 0;
+  }
+
+  .time-slot {
+    height: $timeSlotHeight;
+  }
+
+  .time-slot-division {
+    width: 100%;
+    height: 1px;
+    margin-bottom: $timeSlotHeight/2-1px;
+    background-color: $cl-light;
+  }
+
+  .pos-time {
+    margin-top: -4px;
+  }
+
+  .time-current-division {
+    width: 100%;
+    height: 2px;
+    margin-top: 8px;
+    background-color: $cl-warning;
+  }
+
+  .time-current {
+    color: $cl-warning;
+    font-weight: bold;
+  }
+
+  .test {
+    background-color: $cl-danger
+  }
+
+  .time-entry {
+    height: 20px;
+    width: 100%;
+    border-radius: 10px;
+    border-width: medium;
+    border-style: solid;
+    margin-top: -8px;
+    border-color: map-get($colors, tertiary);
+    background-color: $cl-primary-40;
+  }
+
+  .entry-completed {
+    width: inherit;
+    height: inherit;
+    border-radius: 6px;
+    background-color: map-get($colors, tertiary);
+  }
+
+  .checkmark {
+    float: right;
+    margin-top: -8px;
+    padding-right: 5px;
+    font-size: 26px;
+  }
+
+  .entry-completed-text {
+    padding-left: 5px;
+    font-size: 16px;
+  }
+}

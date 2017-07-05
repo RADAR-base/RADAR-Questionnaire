@@ -126,6 +126,8 @@ export class FinishPage {
 
 
   handleClosePage() {
+    this.controller.updateTaskToComplete(this.navParams.data.associatedTask).then(() => {
     this.navCtrl.setRoot(HomePage)
+    })
   }
 }

@@ -3,19 +3,19 @@ info-screen {
   width: 100%;
 
   .info-card {
-      background-color: $cl-primary-20;
-      height: 80%;
-      padding: 10px 10px 0px 10px;
-      margin: 8px;
-      -webkit-border-radius: 5px;
-	    border-radius: 5px;
+    background-color: $cl-primary-20;
+    height: 80%;
+    padding: 10px 10px 0;
+    margin: 8px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
   }
 
   .info-heading {
-      color: $cl-light-60;
+    color: $cl-light-60;
   }
 
   .info-content {
-      height: 80%;
+    height: 80%;
   }
 }

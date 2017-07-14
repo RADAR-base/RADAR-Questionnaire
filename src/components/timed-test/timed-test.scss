@@ -3,19 +3,19 @@ timed-test {
   width: 100%;
 
   .test-card {
-      background-color: $cl-primary-20;
-      height: 80%;
-      padding: 10px;
-      margin: 8px;
-      -webkit-border-radius: 5px;
-      border-radius: 5px;
-      text-align: center;
+    background-color: $cl-primary-20;
+    height: 80%;
+    padding: 10px;
+    margin: 8px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    text-align: center;
   }
-    
+  
   .heading {
-      padding-top: 10px;
-      padding-bottom: 10px;
-      font-size: 24px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 24px;
   }
 
   .timer {

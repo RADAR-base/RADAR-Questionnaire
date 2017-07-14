@@ -22,6 +22,8 @@ import { QuestionComponent } from '../components/question/question'
 import { RadioInputComponent } from '../components/radio-input/radio-input'
 import { RangeInputComponent } from '../components/range-input/range-input'
 import { SliderInputComponent } from '../components/slider-input/slider-input'
+import { TimedTestComponent } from '../components/timed-test/timed-test'
+import { InfoScreenComponent } from '../components/info-screen/info-screen'
 import { EnrolmentPage } from '../pages/enrolment/enrolment'
 import { FinishPage } from '../pages/finish/finish'
 import { HomePage } from '../pages/home/home'
@@ -81,7 +83,9 @@ import { MyApp } from './app.component';
     QuestionComponent,
     RangeInputComponent,
     RadioInputComponent,
-    SliderInputComponent
+    SliderInputComponent,
+    TimedTestComponent,
+    InfoScreenComponent
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -104,7 +108,9 @@ import { MyApp } from './app.component';
     QuestionComponent,
     RangeInputComponent,
     RadioInputComponent,
-    SliderInputComponent
+    SliderInputComponent,
+    TimedTestComponent,
+    InfoScreenComponent
   ],
   providers: [
     Device,

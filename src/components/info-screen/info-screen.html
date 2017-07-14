@@ -1,0 +1,14 @@
+
+<div class="info-card">
+  <div *ngFor="let item of items">
+    <p class="info-heading">{{item.heading}}</p>
+    <div class="info-content">
+      <h2>{{item.content}}</h2>
+    </div>
+  </div>
+</div>
+
+<!-- TODO: implement the necessary logic for activating the Next button. 
+  Currently having a workaround where the selection of the radio button  
+  will trigger an event that will enable the Next button. -->
+<input type="radio" value="" (change)="onInputChange($event)">

@@ -25,3 +25,19 @@
   </slider-input>
 </div>
 
+<div *ngIf="question.type === 'info'">
+  <info-screen
+    [sections]="question.sections"
+    (valueChange)="onValueChange($event)">
+  </info-screen>
+</div>
+
+<div *ngIf="question.type === 'timed'">
+  <timed-test
+    [heading]="question.heading"
+    [image]="question.image"
+    [timer]="question.timer"
+    (valueChange)="onValueChange($event)">
+  </timed-test>
+</div>
+

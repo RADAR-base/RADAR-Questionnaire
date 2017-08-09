@@ -25,7 +25,7 @@ export class EnrolmentPage {
   outcomeStatus: String
   reportSettings: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
 
-  constructor (
+  constructor(
     public navCtrl: NavController,
     private scanner: BarcodeScanner,
     private storage: StorageService,
@@ -33,26 +33,26 @@ export class EnrolmentPage {
   ) {
   }
 
-  ionViewDidLoad () {
+  ionViewDidLoad() {
     this.slides.lockSwipes(true)
   }
 
-  ionViewDidEnter () {
+  ionViewDidEnter() {
   }
 
-  scan () {
+  scan() {
     this.loading = true
     let scanOptions = {
       showFlipCameraButton: true,
       orientation: 'portrait',
       disableAnimations: true
     }
-    this.scanner.scan(scanOptions).then((scannedObj) => this.authenticate(scannedObj))
+    //this.scanner.scan(scanOptions).then((scannedObj) => this.authenticate(scannedObj))
     //TODO remove when finished
     //this.authenticate('1223')
   }
 
-  authenticate (authObj) {
+  authenticate(authObj) {
     let authString = authObj.text
     this.transitionStatuses()
     //TODO authenticate here
@@ -61,7 +61,7 @@ export class EnrolmentPage {
     this.doAfterAuthentication()
   }
 
-  doAfterAuthentication(){
+  doAfterAuthentication() {
     setTimeout(() => {
       this.loading = false
       this.showOutcomeStatus = true
@@ -77,7 +77,7 @@ export class EnrolmentPage {
   }
 
   setOutcomeStatus(status) {
-    if(status) {
+    if (status) {
       this.outcomeStatus = "Success"
       this.next()
     } else {
@@ -85,26 +85,26 @@ export class EnrolmentPage {
     }
   }
 
-  transitionStatuses () {
-    if(this.loading){
+  transitionStatuses() {
+    if (this.loading) {
       this.elLoading.nativeElement.style.opacity = 1
     }
-    if(this.showOutcomeStatus) {
+    if (this.showOutcomeStatus) {
       this.elOutcome.nativeElement.style.transform =
-      'translate3d(-100%,0,0)'
+        'translate3d(-100%,0,0)'
       this.elOutcome.nativeElement.style.opacity = 1
       this.elLoading.nativeElement.style.opacity = 0
     }
   }
 
-  next () {
+  next() {
     this.slides.lockSwipes(false)
     let slideIndex = this.slides.getActiveIndex() + 1
     this.slides.slideTo(slideIndex, 500)
     this.slides.lockSwipes(true)
   }
 
-  navigateToHome () {
+  navigateToHome() {
     this.navCtrl.setRoot(HomePage)
   }
 }

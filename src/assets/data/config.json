@@ -1,12 +1,12 @@
 {
-  "version": 0.2,
+  "version": 0.339,
   "assessments":[
     {
       "name": "PHQ8",
       "protocol": {
         "repeatProtocol": {
-          "unit": "months",
-          "amount": 1
+          "unit": "day",
+          "amount": 3
         },
         "repeatQuestionnaire": {
           "unit": "min",
@@ -20,8 +20,10 @@
           "repeat": 2
         }
       },
+      "showIntroduction": "true",
       "startText": "This questionnaire is known as the PHQ8. Clinicians use it to assess current depression in patients. Please note that none of your answers will be collected today. Thank you for taking part in this focus group.",
       "endText": "In light of this focus group, none of your answers were saved.",
+      "estimatedCompletionTime": 7,
       "questions": [
         {
           "id": "PHQ8-0",
@@ -110,19 +112,17 @@
       ]
     },
     {
-      "name": "Other Inputs",
+      "name": "DEMO",
       "protocol": {
         "repeatProtocol": {
-          "unit": "weeks",
-          "amount": 2
+          "unit": "day",
+          "amount": 1
         },
         "repeatQuestionnaire": {
           "unit": "min",
           "unitsFromZero": [
-            450,
-            600,
-            1890,
-            2004
+            870,
+            880
           ]
         },
         "reminders": {
@@ -131,11 +131,25 @@
           "repeat": 1
         }
       },
-      "startText": "Here you can test some other input types. Please note that none of your answers will be collected today.",
-      "endText": "In light of this focus group, none of your answers were saved.",
+      "showIntroduction": "true",
+      "startText": "This questionnaire allows you to test all available input types.",
+      "endText": "Thanks for giving it a try! Feel free to tell us about your app experience.",
+      "estimatedCompletionTime": 2,
       "questions": [
         {
           "id": "Test-0",
+          "lead": "Over the past two weeks, how often have you been bothered by any of the following problems?",
+          "content": "Little interest or pleasure in doing things.",
+          "responses": [
+            {"response": "Not at all", "score": 0},
+            {"response": "Several days", "score": 1},
+            {"response": "More than half the days", "score": 2},
+            {"response": "Nearly every day", "score": 3}
+          ],
+          "type": "radio"
+        },
+        {
+          "id": "Test-1",
           "lead": "Some other input types.",
           "content": "The slider as fine-grained input.",
           "range": {

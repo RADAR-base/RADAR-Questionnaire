@@ -1,10 +1,9 @@
 import { Component } from '@angular/core'
 import { NavController, NavParams } from 'ionic-angular'
+import { HomeController } from '../../providers/home-controller'
 import { HomePage } from '../home/home'
-
 import { AnswerService } from '../../providers/answer-service'
 import { KafkaService }  from '../../providers/kafka-service'
-
 import { TimeStampService } from '../../providers/timestamp-service'
 import { PrepareDataService} from '../../providers/preparedata-service'
 
@@ -24,14 +23,16 @@ export class FinishPage {
     private answerService: AnswerService,
     private kafkaService: KafkaService,
     private timestampService: TimeStampService,
-    private prepareDataService: PrepareDataService
+    private prepareDataService: PrepareDataService,
+    private storage: StorageService,
+    private util: Utility,
+    private controller: HomeController
   ) {
 
   }
 
   ionViewDidLoad() {
 
-    // resolve observable with async properly
     this.content = this.navParams.data.endText
 
     console.log(this.answerService.answers)
@@ -54,7 +55,8 @@ export class FinishPage {
 
 
   handleClosePage() {
-    this.navCtrl.setRoot(HomePage)
+    this.controller.updateTaskToComplete(this.navParams.data.associatedTask).then(() => {
+      this.navCtrl.setRoot(HomePage)
+    })
   }
-
 }

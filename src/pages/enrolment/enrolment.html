@@ -1,0 +1,77 @@
+<ion-content>
+  <ion-slides pager="false">
+
+    <ion-slide id="intro">
+      <div id="logo-container">
+        <img id="logo" src="assets/imgs/radar-logo.svg" alias="RADAR LOGO" />
+      </div>
+      <div class="text">
+        <div class="text-lg">Welcome</div>
+        to RADAR-CNS
+        <div class="padding text-justify">
+          Thank you for taking part in this study. Let's start the enrolment process to get you set up.
+        </div>
+      </div>
+      <div padding class="bottom">
+        <button ion-button class="bt bt--full" round full
+          (click)="next()">
+          Enrol
+        </button>
+      </div>
+    </ion-slide>
+
+    <ion-slide id="qr-registration">
+      <div class="registration">
+        <div class="text text-lg">
+          Registration
+        </div>
+        <div class="text text-justify">
+          Before you can start using the app, we need to register it first. Click the 'Scan' button and point the camera onto the QR code, given by your doctor. An example QR code is below.
+        </div>
+      </div>
+      <div class="qr-code">
+        <img src="assets/imgs/radar-qr-code.png" />
+      </div>
+      <div id="status">
+        <div #loading id="loading"><div class="padding-text">Loading...</div></div>
+        <div #outcome id="outcome"><div class="padding-text">{{outcomeStatus}}</div></div>
+      </div>
+      <div padding class="bottom">
+        <button ion-button class="bt bt--full" round full
+          (click)="scan()">
+          Scan
+        </button>
+      </div>
+    </ion-slide>
+
+    <ion-slide id="preference-report pos-above">
+
+      <div class="text text-lg">
+        Preferences
+      </div>
+      <div class="pref-icon">
+        <img src="assets/imgs/MobileAnalytics-neg.png" />
+      </div>
+      <div class="text text-justify">
+        We will send you weekly summaries about the data you'll be sending us. Feel free to select as many topics you would like to receive information on.
+      </div>
+
+      <ion-item-group id="settings">
+        <ion-item no-lines *ngFor="let subSetting of reportSettings; let i = index">
+          <ion-label>
+            {{subSetting.name}}
+          </ion-label>
+          <ion-toggle item-right [(ngModel)]="subSetting.show" (ionChange)="weeklyReportChange(i)"></ion-toggle>
+        </ion-item>
+      </ion-item-group>
+
+      <div padding class="bottom">
+        <button ion-button class="bt bt--full" round full
+          (click)="navigateToHome()">
+          Finish enrolment
+        </button>
+      </div>
+    </ion-slide>
+
+  </ion-slides>
+</ion-content>

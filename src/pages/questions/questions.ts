@@ -94,7 +94,12 @@ export class QuestionsPage {
 
       this.setNextDisabled()
     } else if (finish) {
-      this.navCtrl.push(FinishPage, { 'endText': this.navParams.data.endText })
+
+      this.navCtrl.push(FinishPage, {
+        'endText': this.navParams.data.endText,
+        'associatedTask': this.navParams.data.associatedTask
+      })
+
       this.navCtrl.removeView(this.viewCtrl)
     } else if (back) {
       this.navCtrl.pop()

@@ -1,0 +1,49 @@
+<div>
+
+  <div class="date">
+    Today
+  </div>
+
+  <ion-scroll scrollY="true" padding-horizontal class="layers" [style.height.px]="scrollHeight">
+
+      <div #timeCurrent id="time-current">
+        <ion-row>
+          <ion-col col-2 class="time-current">
+          {{currentTime}}
+        </ion-col>
+          <ion-col>
+            <div class="time-current-division"></div>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <div id="time-entries" *ngFor="let task of tasks; let i of index">
+        <ion-row>
+          <ion-col col-2></ion-col>
+          <ion-col>
+            <div class="time-entry" [style.margin-top.px]="setTaskTime(task)">
+              <div class="entry-completed" *ngIf="task.completed">
+                <span class="entry-completed-text">Completed</span>
+                <ion-icon class="checkmark" name="checkmark"></ion-icon></div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <div id="time-slots">
+        <div class="time-slot" *ngFor="let time of times; let i of index">
+          <ion-row>
+            <ion-col col-2 class="pos-time">
+            {{time}}
+          </ion-col>
+            <ion-col>
+              <div class="time-slot-division"></div>
+              <div class="time-slot-division"></div>
+            </ion-col>
+          </ion-row>
+        </div>
+      </div>
+
+  </ion-scroll>
+
+</div>

@@ -10,6 +10,8 @@ $colors: (
   secondary-light: #9bb5bc,
   danger: #f53d3d,
   success: #3FC380,
+  warning: #FFFF88,
+  tertiary: #7FCDBB,
   light: white,
   dark: #222
 );
@@ -41,6 +43,13 @@ $cl-danger-20: rgba(map_get($colors, danger), 0.2);
 $cl-danger-40: rgba(map_get($colors, danger), 0.4);
 $cl-danger-60: rgba(map_get($colors, danger), 0.6);
 $cl-danger-80: rgba(map_get($colors, danger), 0.8);
+
+$cl-warning: map_get($colors, warning);
+$cl-warning-10: rgba(map_get($colors, warning), 0.1);
+$cl-warning-20: rgba(map_get($colors, warning), 0.2);
+$cl-warning-40: rgba(map_get($colors, warning), 0.4);
+$cl-warning-60: rgba(map_get($colors, warning), 0.6);
+$cl-warning-80: rgba(map_get($colors, warning), 0.8);
 
 // Checkmark
 $cl-checkmark: #9ad1c3;

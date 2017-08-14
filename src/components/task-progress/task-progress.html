@@ -1,0 +1,29 @@
+<div id="task-progress-container" (click)="easterEggFireworks()">
+
+  <div id="navigation">
+    Today
+  </div>
+
+  <div class="pyro" *ngIf="showFireworks">
+    <div class="before"></div>
+    <div class="after"></div>
+  </div>
+
+  <div id="progress">
+    <div #progressActive class="progress-sub">
+      <round-progress id="prog-lg" [current]="current" [max]="max" [responsive]="true"></round-progress>
+    </div>
+    <div #progressComplete class="progress-sub">
+      <div class="completed">
+        <ion-icon #checkmark class="checkmark" name="checkmark"></ion-icon>
+      </div>
+    </div>
+  </div>
+
+  <div #counter class="counter">
+    <span class="large">{{ current }}</span>
+    <br>
+    <span class="small">Completed</span>
+  </div>
+
+</div>

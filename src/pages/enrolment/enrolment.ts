@@ -47,9 +47,9 @@ export class EnrolmentPage {
       orientation: 'portrait',
       disableAnimations: true
     }
-    //this.scanner.scan(scanOptions).then((scannedObj) => this.authenticate(scannedObj))
+    this.scanner.scan(scanOptions).then((scannedObj) => this.authenticate(scannedObj))
     //TODO remove when finished
-    //this.authenticate('1223')
+    this.authenticate('1223')
   }
 
   authenticate(authObj) {

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { HttpModule } from '@angular/http'
 import { MomentModule } from 'angular2-moment'
+import { DatePipe } from '@angular/common'
 import { BrowserModule } from '@angular/platform-browser'
 import { SplashScreen } from '@ionic-native/splash-screen'
 import { Device } from '@ionic-native/device'
@@ -38,6 +39,8 @@ import { StorageService } from '../providers/storage-service'
 import { SchedulingService } from '../providers/scheduling-service'
 import { FirebaseConfig } from '../assets/data/defaultConfig'
 import { KafkaService }  from '../providers/kafka-service'
+import { TimeStampService } from '../providers/timestamp-service'
+import { PrepareDataService} from '../providers/preparedata-service'
 import { Utility } from '../utilities/util'
 import { MyApp } from './app.component';
 
@@ -110,17 +113,20 @@ import { MyApp } from './app.component';
     Device,
     StatusBar,
     SplashScreen,
+    DatePipe,
     QuestionService,
     AnswerService,
     FirebaseService,
     StorageService,
     AngularFireDatabaseModule,
     KafkaService,
+    TimeStampService,
+    PrepareDataService,
     Utility,
     SchedulingService,
     AngularFireDatabaseModule,
     HomeController,
-    BarcodeScanner,
+    BarcodeScanner
   ]
 })
 export class AppModule {

@@ -3,6 +3,7 @@ import { App, Content, NavController, NavParams, ViewController } from 'ionic-an
 
 import { Question } from '../../models/question'
 import { AnswerService } from '../../providers/answer-service'
+import { TimeStampService } from '../../providers/timestamp-service'
 import { FinishPage } from '../finish/finish'
 
 @Component({
@@ -22,6 +23,10 @@ export class QuestionsPage {
   currentQuestion = 0
   questions: Question[]
 
+  //timestamps
+  startTime: number
+  endTime: number
+
   // TODO: gather text variables in one place. get values from server?
   txtValues = {
     next: 'NEXT',
@@ -40,22 +45,27 @@ export class QuestionsPage {
   }
   iconPrevious: string = this.iconValues.close
 
-  constructor (
+  constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public viewCtrl: ViewController,
     public appCtrl: App,
-    private answerService: AnswerService
+    private answerService: AnswerService,
+    private timestampService: TimeStampService
   ) {
   }
 
-  ionViewDidLoad () {
+  ionViewDidLoad() {
     this.questions = this.navParams.data.questions
     this.questionsContainerEl = this.questionsContainerRef.nativeElement
     this.setCurrentQuestion()
   }
 
-  setCurrentQuestion (value = 0) {
+  setCurrentQuestion(value = 0) {
+
+    // record start time when question is shown
+    this.startTime = this.timestampService.getTimeStamp() // returns : milliseconds / 1000
+
     const min = !(this.currentQuestion + value < 0)
     const max = !(this.currentQuestion + value >= this.questions.length)
     const finish = (this.currentQuestion + value === this.questions.length)
@@ -84,43 +94,66 @@ export class QuestionsPage {
 
       this.setNextDisabled()
     } else if (finish) {
-      this.navCtrl.push(FinishPage, {'endText': this.navParams.data.endText,
-                                      'associatedTask': this.navParams.data.associatedTask})
+
+      this.navCtrl.push(FinishPage, {
+        'endText': this.navParams.data.endText,
+        'associatedTask': this.navParams.data.associatedTask
+      })
+
       this.navCtrl.removeView(this.viewCtrl)
     } else if (back) {
       this.navCtrl.pop()
     }
   }
 
-  setProgress () {
+  setProgress() {
     const tick = Math.ceil(100 / this.questions.length)
     const percent = Math.ceil(this.currentQuestion * 100 / this.questions.length)
     this.progress = percent + tick
   }
 
-  checkAnswer () {
+  checkAnswer() {
     const id = this.questions[this.currentQuestion].id
     return this.answerService.check(id)
   }
 
-  setNextDisabled () {
+  setNextDisabled() {
     this.isNextBtDisabled = !this.checkAnswer()
   }
 
-  nextQuestion () {
+  nextQuestion() {
     if (this.checkAnswer()) {
+
+      // record end time when pressed "Next"
+      this.endTime = this.timestampService.getTimeStamp() // returns : milliseconds / 1000
+
+      //take current question id to record timestamp
+      const id = this.questions[this.currentQuestion].id
+      this.recordTimeStamp(id)
+
       this.setCurrentQuestion(1)
     }
   }
 
-  onAnswer (event) {
+  recordTimeStamp(questionId) {
+
+    this.timestampService.add({
+      "id": questionId,
+      "value": {
+        "startTime": this.startTime,
+        "endTime": this.endTime
+      }
+    })
+  }
+
+  onAnswer(event) {
     if (event.id) {
       this.answerService.add(event)
       this.setNextDisabled()
     }
   }
 
-  previousQuestion () {
+  previousQuestion() {
     this.setCurrentQuestion(-1)
   }
 }

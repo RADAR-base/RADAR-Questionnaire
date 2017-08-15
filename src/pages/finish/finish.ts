@@ -24,8 +24,6 @@ export class FinishPage {
     private kafkaService: KafkaService,
     private timestampService: TimeStampService,
     private prepareDataService: PrepareDataService,
-    private storage: StorageService,
-    private util: Utility,
     private controller: HomeController
   ) {
 

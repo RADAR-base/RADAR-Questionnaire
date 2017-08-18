@@ -183,7 +183,10 @@
           "content": "This test helps us assess your balancing skills in a still position.",
           "heading": "Keep your eyes open", 
           "image": "assets/imgs/eyesopen.png", 
-          "timer": 12, 
+          "timer": { 
+            "start":20, 
+            "end":10
+          }, 
           "unit": "sec" ,
           "type": "timed"
         },
@@ -193,7 +196,10 @@
           "content": "This test helps us assess your balancing skills in a still position.",
           "heading": "Close your eyes", 
           "image": "assets/imgs/eyesclosed.png", 
-          "timer": 8, 
+          "timer": {
+            "start":10, 
+            "end":0
+          }, 
           "unit": "sec",
           "type": "timed"
         }

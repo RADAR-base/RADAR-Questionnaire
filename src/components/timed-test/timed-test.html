@@ -2,10 +2,7 @@
 <div class="test-card">
     <h2 class="heading">{{heading}}</h2>
     <img src="{{image}}" alt="mockreport">
-    <p class="timer">{{timer}}</p>
+    <p class="timer">{{itimer.displayTime}}</p>
 </div>
 
-<!-- TODO: implement the necessary logic for activating the Next button. 
-  Currently having a workaround where the selection of the radio button  
-  will trigger an event that will enable the Next button. -->
-<input type="radio" value="" (change)="onInputChange($event)">
+<button ion-button *ngIf="!hasStarted()" (click)="start()">Start</button>

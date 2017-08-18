@@ -32,10 +32,10 @@ export class InfoScreenComponent implements OnInit {
             heading: item.heading,
             content: item.content
           })
-        })    
+        })  
+    
+    // activate the next button
+    this.valueChange.emit(1)
   }
-
-  onInputChange (event) {
-    this.valueChange.emit(+event.target.value)
-  }
+  
 }

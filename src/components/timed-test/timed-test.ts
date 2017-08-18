@@ -2,6 +2,20 @@ import { Component, EventEmitter, Input, Output } from '@angular/core'
 
 let uniqueID = 0
 
+export interface Timer {
+  start: number
+  end: number
+}
+
+export interface ITimer {
+  seconds: number
+  secondsRemaining: number
+  runTimer: boolean
+  hasStarted: boolean
+  hasFinished: boolean
+  displayTime: string
+}
+
 @Component({
   selector: 'timed-test',
   templateUrl: 'timed-test.html'
@@ -12,11 +26,85 @@ export class TimedTestComponent {
 
   @Input() heading: string
   @Input() image: string
-  @Input() timer: number
+  @Input() timer: Timer
+  public itimer: ITimer
 
-  value: number = null
-  
-  onInputChange (event) {
-    this.valueChange.emit(+event.target.value)
+  ngOnInit() {
+      this.initTimer();
+  }
+
+  start() {
+    if(this.itimer.hasStarted) {
+        this.resumeTimer()
+      }
+      else {
+        setTimeout(() => {
+          this.startTimer()
+        }, 1000)
+      }
+  }
+
+  hasFinished() {
+        return this.itimer.hasFinished
+    }
+
+  hasStarted() {
+    return this.itimer.hasStarted
+  }
+ 
+  initTimer() {
+      if(!this.timer) { 
+          this.timer.start = 0
+        }
+
+      this.itimer = <ITimer>{
+          seconds: this.timer.start,
+          runTimer: false,
+          hasStarted: false,
+          hasFinished: false,
+          secondsRemaining: this.timer.start
+      };
+
+      this.itimer.displayTime = this.itimer.secondsRemaining.toString()
+  }
+
+  startTimer() {
+      this.itimer.hasStarted = true
+      this.itimer.runTimer = true
+      this.timerTick()
+  }
+
+  pauseTimer() {
+      this.itimer.runTimer = false
+  }
+
+  resumeTimer() {
+      this.startTimer()
+  }
+
+  timerTick() {
+      setTimeout(() => {
+
+        // TODO: check that the counter can go down first
+          if (!this.itimer.runTimer) { return }
+          this.itimer.secondsRemaining--
+          this.itimer.displayTime = this.itimer.secondsRemaining.toString()
+          if (this.itimer.secondsRemaining > this.timer.end) {
+              this.timerTick()
+          }
+          else {
+
+              // TODO: beep
+
+              if (this.timer.end == 0) {
+                this.itimer.hasFinished = true
+              }
+              else {
+                this.pauseTimer()
+              }
+              // activate the next button
+              this.valueChange.emit(1);
+          }
+      }, 1000)
   }
 }

@@ -102,8 +102,8 @@ export class TimedTestComponent {
               else {
                 this.pauseTimer()
               }
-              // activate the next button
-              this.valueChange.emit(1);
+              // save timestamp (epoch) and activate the next button
+              this.valueChange.emit((new Date).getTime())
           }
       }, 1000)
   }

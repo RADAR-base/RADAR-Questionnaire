@@ -30,7 +30,7 @@ export class QuestionComponent {
 
       case QuestionType.timed:
       case QuestionType.info:
-        // TODO: do we need to send any info?
+        this.value = event
         break
     }
 

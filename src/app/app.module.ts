@@ -13,6 +13,7 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 import { IonicStorageModule } from '@ionic/storage';
 import { RoundProgressModule } from 'angular-svg-round-progressbar';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner'
+import { Dialogs } from '@ionic-native/dialogs'
 
 import { TaskCalendarComponent } from '../components/task-calendar/task-calendar'
 import { TaskProgressComponent } from '../components/task-progress/task-progress'
@@ -127,6 +128,7 @@ import { MyApp } from './app.component';
     AngularFireDatabaseModule,
     HomeController,
     BarcodeScanner,
+    Dialogs,
   ]
 })
 export class AppModule {

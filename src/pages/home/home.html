@@ -1,16 +1,38 @@
-<ion-content padding>
-  <img class="icons-big"
-    src="assets/imgs/radar-logo.svg" alt="RADAR_CNS Logo">
-  <h2 text-center>
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid beatae
-    consequatur, delectus deleniti deserunt doloribus est exercitationem harum
-    iste, magni quam quis, quisquam quo tempora veritatis. Aliquam aperiam
-    ipsum magnam!
-  </h2>
-  <div class="pos-bottom" padding>
-    <button ion-button class="bt bt--full" round full
-      (click)="handleOpenPage()">
-      Start
-    </button>
+<ion-header>
+  <ion-toolbar>
+      <button class="logo-small" ion-button menuToggle left (click)="showCredits()">
+        <img class="logo-small" src="assets/imgs/radar-logo.svg" alt="Logo">
+      </button>
+      <button ion-button menuToggle right (click)="openSettingsPage()">
+        <ion-icon name="cog"></ion-icon>
+      </button>
+      <ion-title text-center>
+        RADAR-CNS
+      </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content #content>
+  <div  #progressBar class="size-dynamic">
+    <task-progress [progress]="tasksProgress" [forceComplete]="showCompleted"></task-progress>
+  </div>
+
+  <div  #tickerBar class="size-static">
+    <ticker-bar [task]='nextTask' [showAffirmation]="showCompleted"></ticker-bar>
+  </div>
+
+  <div  #taskInfo class="size-static">
+    <task-info [task]='nextTask' (collapse)="displayCalendar($event)"></task-info>
+  </div>
+
+  <div #taskCalendar class="size-null">
+    <div padding><task-calendar [scrollHeight]="calendarScrollHeight"></task-calendar> </div>
+  </div>
+
+  <div #footer class="size-static bg" padding>
+      <button ion-button class="bt bt--full" round full
+        (click)="startQuestionnaire()">
+        Start
+      </button>
   </div>
 </ion-content>

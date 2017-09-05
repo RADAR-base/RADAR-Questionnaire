@@ -1,2 +1,55 @@
 page-home {
+
+  .scroll-content {
+    display: flex;
+    flex-flow: column;
+  }
+
+  .size-static {
+    flex-basis: auto;
+    padding-bottom: 2px;
+    transition: transform 0.4s ease-in-out;
+  }
+
+  .size-dynamic {
+    flex-grow: 1;
+    transition: transform 0.4s ease-in-out;
+  }
+
+  .size-null {
+    position: absolute;
+    bottom: 90px;
+    height: 0px;
+    width: 100%;
+    opacity: 0;
+    transition: all 0.4s ease-in-out;
+  }
+
+  ion-header .toolbar-background {
+      background-color: $cl-secondary;
+  }
+  .toolbar-title {
+      color: $cl-font;
+  }
+  .bar-button {
+    color: $cl-font;
+  }
+
+  .icon-small-75 {
+    height: 75%;
+  }
+  .icon-small-50 {
+    height: 50%;
+  }
+  .logo-small {
+    height: 40px;
+  }
+
+  .bg {
+    background-color: $cl-primary-40;
+  }
+
+  .notification {
+      width: 99%;
+  }
 }

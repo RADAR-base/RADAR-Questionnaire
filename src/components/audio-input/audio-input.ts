@@ -3,19 +3,15 @@ import { Device } from '@ionic-native/device'
 import * as opensmile from '../../../plugins/cordova-plugin-opensmile/www/opensmile' //file path to opensmile.js; Adding opensmile plugin
 import { AnswerService } from '../../providers/answer-service'
 import { QuestionsPage } from '../../pages/questions/questions'
+import { AudioRecordService } from '../../providers/audiorecord-service'
+
 declare var cordova: any
 declare var window: any
 
-/*
-  Generated class for the AudioInput component.
-
-  See https://angular.io/docs/ts/latest/api/core/index/ComponentMetadata-class.html
-  for more info on Angular 2 Components.
-*/
 
 @Component({
-    selector: 'audio-input',
-    templateUrl: 'audio-input.html'
+  selector: 'audio-input',
+  templateUrl: 'audio-input.html'
 })
 export class AudioInputComponent implements OnInit {
   @Output() valueChange: EventEmitter<string> = new EventEmitter<string>()
@@ -23,9 +19,9 @@ export class AudioInputComponent implements OnInit {
   @Input() compressionLevel: number = 0
   @Input() qid: string = ''
   text: string
-  fname: string
+  filename: string
   name: string
-  fpath: string
+  filepath: string
   recording: boolean
   value: string = null
   configfile: string
@@ -49,18 +45,19 @@ export class AudioInputComponent implements OnInit {
     }
   }
 
-  constructor(public questions: QuestionsPage, private answerService: AnswerService, private device: Device) {
-    //Checking platform is android or not. If platform is not android audio question won't be shown to users
-    if (this.device.platform == 'Android') {
-      this.text = 'Start Recording'
-      const fs: string = cordova.file.externalDataDirectory;
-      var path: string = fs
-      path = path.substring(7, (path.length - 1))
-      this.fpath = path
-      this.recording = false
-      this.platform = true
-    } else {
-    }
+  constructor(
+    public questions: QuestionsPage,
+    private answerService: AnswerService,
+    private audioRecordService: AudioRecordService,
+    private device: Device) {
+
+    this.text = 'Start Recording'
+    const fileSystem: string = cordova.file.externalDataDirectory;
+    var path: string = fileSystem
+    path = path.substring(7, (path.length - 1))
+    this.filepath = path
+    this.recording = false
+    this.platform = true
   }
 
   success(message) {
@@ -70,31 +67,31 @@ export class AudioInputComponent implements OnInit {
     alert('Error calling OpenSmile Plugin')
   }
 
-  setRecordStatus(){
-    this.questions.setAudioRecordStatus(this.recording)
+  setRecordStatus() {
+    this.audioRecordService.setAudioRecordStatus(this.recording)
   }
 
   start() {
-    this.recording = this.questions.getAudioRecordStatus()
-    this.questions.setQuestionID(this.qid)
+    this.recording = this.audioRecordService.getAudioRecordStatus()
+    this.audioRecordService.setQuestionID(this.qid)
     //Getting permission status from questions page
-    this.permission = this.questions.getPermission()
+    this.permission = true // access from utils page later
     //Checking for platform and permission. If both are not true, code won't run
-    if (this.platform && this.permission == true) {
+    if (this.permission == true) {
       if (this.recording == false) {
         this.recording = true
         this.setRecordStatus()
         this.text = 'Stop Recording'
-        this.fname = 'audio-opensmile.bin'
-        this.questions.setFileName(this.fname)
-        opensmile.start(this.fname, this.configFile, this.success, this.failure)
+        this.filename = 'audio-opensmile.bin'
+        this.audioRecordService.setFileName(this.filename)
+        opensmile.start(this.filename, this.configFile, this.success, this.failure)
       } else if (this.recording == true) {
-        this.value = this.fpath + "/" + this.fname
+        this.value = this.filepath + "/" + this.filename
         this.recording = false
         this.setRecordStatus()
         this.text = 'Start Recording'
         opensmile.stop('Stop', this.success, this.failure)
-		    this.readFile(this.fname)
+        this.readFile(this.filename)
       }
     } else {
       this.value = 'Permission not granted'
@@ -107,7 +104,7 @@ export class AudioInputComponent implements OnInit {
   readFile(file_name) {
     var ans_b64 = null
     window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory + '/' + file_name, (fileEntry) => {
-      fileEntry.file( (file) => {
+      fileEntry.file((file) => {
         var reader = new FileReader()
         reader.onloadend = (e: any) => {
           ans_b64 = e.target.result
@@ -123,11 +120,11 @@ export class AudioInputComponent implements OnInit {
   }
 
   isRecording() {
-    return this.questions.getAudioRecordStatus()
+    return this.audioRecordService.getAudioRecordStatus()
   }
 
   setText() {
-    if (this.questions.getAudioRecordStatus()) {
+    if (this.audioRecordService.getAudioRecordStatus()) {
       return 'Stop Recording'
     } else {
       return 'Start Recording'

@@ -1,10 +1,14 @@
-import 'rxjs/add/operator/delay'
-import { Component } from '@angular/core'
-import { LoadingController, NavController } from 'ionic-angular'
+import { Component, ViewChild, ElementRef } from '@angular/core'
+import { NavController, AlertController, Content } from 'ionic-angular'
+import { SchedulingService } from '../../providers/scheduling-service'
+import { HomeController } from '../../providers/home-controller'
+import { Task, TasksProgress } from '../../models/task'
+import { EnrolmentPage } from '../enrolment/enrolment'
+import { StartPage } from '../start/start'
 import { QuestionsPage } from '../questions/questions'
-import { QuestionService } from '../../providers/question-service'
-import { Question } from '../../models/question'
-import { AnswerService } from '../../providers/answer-service'
+import { SettingsPage } from '../settings/settings'
+import { DefaultTask } from '../../assets/data/defaultConfig'
+
 
 @Component({
   selector: 'page-home',
@@ -12,68 +16,204 @@ import { AnswerService } from '../../providers/answer-service'
 })
 export class HomePage {
 
-  loader
-  questions: Question[]
-  isLoading: Boolean = true
-  isOpenPageClicked: Boolean = false
+  @ViewChild('content')
+  elContent: Content
+  elContentHeight: number
+  @ViewChild('progressBar')
+  elProgress: ElementRef;
+  elProgressHeight: number
+  @ViewChild('tickerBar')
+  elTicker: ElementRef;
+  elTickerHeight: number
+  @ViewChild('taskInfo')
+  elInfo: ElementRef;
+  elInfoHeight: number
+  @ViewChild('footer')
+  elFooter: ElementRef;
+  elFooterHeight: number
+  @ViewChild('taskCalendar')
+  elCalendar: ElementRef
 
-  constructor (
+  isOpenPageClicked: boolean = false
+  nextTask: Task = DefaultTask
+  showCalendar: boolean = false
+  showCompleted: boolean = false
+  tasksProgress: TasksProgress
+  calendarScrollHeight: number = 0
+
+  constructor(
     public navCtrl: NavController,
-    public loadingCtrl: LoadingController,
-    private questionService: QuestionService,
-    private answerService: AnswerService
+    public alertCtrl: AlertController,
+    private schedule: SchedulingService,
+    private controller: HomeController,
   ) {
+    this.controller.evalEnrolement().then((evalEnrolement) => {
+      if (evalEnrolement) {
+        this.navCtrl.push(EnrolmentPage)
+      }
+    })
   }
 
-  ionViewDidLoad () {
-    this.questionService.get()
-      .delay(2000)
-      .subscribe(
-        questions => this.serviceReady(questions),
-        error => this.handleError(error)
-      )
+  ngAfterViewInit() {
   }
 
-  ionViewDidEnter () {
-    this.answerService.reset()
+  ionViewDidLoad() {
+    this.checkForNextTask()
+    setInterval(() => {
+      this.checkForNextTask()
+    }, 10000)
   }
 
-  handleOpenPage () {
-    this.isOpenPageClicked = true
+  checkForNextTask() {
+    if (!this.showCalendar) {
+      this.controller.getNextTask().then((task) => {
+        if (task) {
+          this.nextTask = task
+          this.displayCompleted(false)
+        } else {
+          this.nextTask = DefaultTask
+          this.displayCompleted(true)
+        }
+      })
+    }
+  }
 
-    if (this.isLoading) {
-      this.startLoader()
+  displayCalendar(requestDisplay: boolean) {
+    this.showCalendar = requestDisplay
+    this.getElementsAttributes()
+    this.applyCalendarTransformations()
+  }
+
+  displayCompleted(requestDisplay: boolean) {
+    this.showCompleted = requestDisplay
+    this.getElementsAttributes()
+    this.applyCompletedTransformations()
+  }
+
+  getElementsAttributes() {
+    this.elContentHeight = this.elContent.contentHeight
+    this.elProgressHeight = this.elProgress.nativeElement.offsetHeight
+    this.elTickerHeight = this.elTicker.nativeElement.offsetHeight
+    this.elInfoHeight = this.elInfo.nativeElement.offsetHeight
+    this.elFooterHeight = this.elFooter.nativeElement.offsetHeight
+  }
+
+  applyCalendarTransformations() {
+    if (this.showCalendar) {
+      this.elProgress.nativeElement.style.transform =
+        `translateY(-${this.elProgressHeight}px) scale(0.5)`
+      this.elTicker.nativeElement.style.transform =
+        `translateY(-${this.elProgressHeight}px)`
+      this.elInfo.nativeElement.style.transform =
+        `translateY(-${this.elProgressHeight}px)`
+      this.elFooter.nativeElement.style.transform =
+        `translateY(${this.elFooterHeight}px) scale(0)`
+      this.elCalendar.nativeElement.style.transform =
+        `translateY(-${this.elProgressHeight}px)`
+      this.elCalendar.nativeElement.style.opacity = 1
     } else {
-      this.openPage()
+      this.elProgress.nativeElement.style.transform =
+        'translateY(0px) scale(1)'
+      this.elTicker.nativeElement.style.transform =
+        'translateY(0px)'
+      this.elInfo.nativeElement.style.transform =
+        'translateY(0px)'
+      this.elFooter.nativeElement.style.transform =
+        'translateY(0px) scale(1)'
+      this.elCalendar.nativeElement.style.transform =
+        'translateY(0px)'
+      this.elCalendar.nativeElement.style.opacity = 0
+    }
+    this.setCalendarScrollHeight(this.showCalendar)
+  }
+
+  setCalendarScrollHeight(show: boolean) {
+    if (show) {
+      this.calendarScrollHeight = this.elContentHeight
+        - this.elTickerHeight
+        - this.elInfoHeight
+        - 80
+    } else {
+      this.calendarScrollHeight = 0
+    }
+
+  }
+
+  applyCompletedTransformations() {
+    if (this.showCompleted) {
+      this.elTicker.nativeElement.style.padding =
+        `0`
+      this.elTicker.nativeElement.style.transform =
+        `translateY(${this.elInfoHeight + this.elFooterHeight}px)`
+      this.elInfo.nativeElement.style.transform =
+        `translateY(${this.elInfoHeight + this.elFooterHeight}px) scale(0)`
+      this.elFooter.nativeElement.style.transform =
+        `translateY(${this.elInfoHeight + this.elFooterHeight}px) scale(0)`
+    } else {
+      this.elTicker.nativeElement.style.padding =
+        '0 0 2px 0'
+      this.elTicker.nativeElement.style.transform =
+        'translateY(0px)'
+      this.elInfo.nativeElement.style.transform =
+        'translateY(0px) scale(1)'
+      this.elFooter.nativeElement.style.transform =
+        'translateY(0px) scale(1)'
     }
   }
 
-  handleError (error) {
-    console.error(error)
+  openSettingsPage() {
+    this.navCtrl.push(SettingsPage)
+  }
 
-    if (this.loader) {
-      this.loader.dismissAll()
+  startQuestionnaire() {
+    this.controller.getAssessment(this.nextTask).then((assessment) => {
+      console.log(assessment)
+      let params = {
+        "title": assessment.name,
+        "introduction": assessment.startText,
+        "endText": assessment.endText,
+        "questions": assessment.questions,
+        "associatedTask": this.nextTask
+      }
+      if (assessment.showIntroduction) {
+        this.navCtrl.push(StartPage, params)
+      } else {
+        this.navCtrl.push(QuestionsPage, params)
+      }
+      this.controller.updateAssessmentIntroduction(assessment)
+    })
+  }
+
+  showCredits() {
+    let buttons = [
+      {
+        text: 'Okay',
+        handler: () => {
+          console.log('Okay clicked');
+        }
+      }
+    ]
+    this.showAlert({
+      'title': 'Credits',
+      'message': 'Made with &hearts; for you by the RADAR-CNS consortium. For more information click <a href="http://radar-cns.org">here</a>.',
+      'buttons': buttons
+    })
+  }
+
+  showAlert(parameters) {
+    let alert = this.alertCtrl.create({
+      title: parameters.title,
+      buttons: parameters.buttons
+    })
+    if (parameters.message) {
+      alert.setMessage(parameters.message)
     }
-  }
-
-  serviceReady (questions) {
-    this.questions = questions
-    this.isLoading = false
-
-    if (this.isOpenPageClicked) {
-      this.openPage()
+    if (parameters.inputs) {
+      for (var i = 0; i < parameters.inputs.length; i++) {
+        alert.addInput(parameters.inputs[i])
+      }
     }
-  }
-
-  startLoader () {
-    this.loader = this.loadingCtrl.create({
-      content: 'Please wait...',
-      dismissOnPageChange: true
-    }).present()
-  }
-
-  openPage () {
-    this.navCtrl.push(QuestionsPage, this.questions)
+    alert.present()
   }
 
 }

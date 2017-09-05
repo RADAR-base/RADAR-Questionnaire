@@ -11,25 +11,25 @@ export class QuestionService {
 
   questions: Question[]
 
-  private url = 'assets/data/questions.json'
+  private url = 'assets/data/config.json'
 
-  constructor (
+  constructor(
     private http: Http
   ) {
   }
 
-  get (): Observable<Question[]> {
+  get(): Observable<Question[]> {
     return this.http.get(this.url)
       .map(this.extractData)
       .catch(this.handleError)
   }
 
-  private extractData (res: Response) {
+  private extractData(res: Response) {
     const body = res.json()
-    return body.questions || []
+    return body.assessments || []
   }
 
-  private handleError (error: Response | any) {
+  private handleError(error: Response | any) {
     let errMsg: string
 
     if (error instanceof Response) {

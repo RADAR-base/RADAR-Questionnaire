@@ -16,11 +16,9 @@ export class TaskCalendarComponent implements OnChanges {
   @ViewChild('timeCurrent')
   elCurrentTime: ElementRef;
 
-  times: String[] = ['06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00']
   currentTime: String = '06:00'
-  currentMinutes: number = 0
-  hourPixHeight: number = 25
-  startOfDayMinutes: number = 360 // 6am
+  taskHeightStart = 40
+  taskHeight = 42
 
   tasks: Task[] = [DefaultTask]
   tasksTimes = []
@@ -28,7 +26,7 @@ export class TaskCalendarComponent implements OnChanges {
   constructor(private controller: HomeController){
     this.controller.getTasksOfToday().then((tasks) => {
       if(tasks){
-        this.tasks = tasks
+        this.tasks = tasks.sort(this.compareTasks)
       }
     })
   }
@@ -37,35 +35,30 @@ export class TaskCalendarComponent implements OnChanges {
     this.setCurrentTime()
   }
 
-  setTaskTime (task:Task) {
+  getStartTime (task:Task) {
     let date = new Date(task.timestamp)
-    let offsetPixels = this.setTimePixel(date) - 5 + 25
-    return offsetPixels
+    return this.formatTime(date)
   }
 
-  setCurrentTime () {
+  setCurrentTime() {
     let now = new Date()
     this.currentTime = this.formatTime(now)
     let offsetPixels = this.setTimePixel(now)
     this.elCurrentTime.nativeElement.style.transform =
       `translateY(${offsetPixels}px)`
-    if(offsetPixels > 0 && offsetPixels < this.hourPixHeight*18){
-      this.elCurrentTime.nativeElement.style.opacity = 1
+  }
+
+  setTimePixel(date:Date) {
+    var tasksPassed = 0
+    for(let task of this.tasks) {
+      if(date.getTime() <= task.timestamp) {
+         return this.taskHeightStart+tasksPassed*this.taskHeight
+      }
+      else {
+        tasksPassed += 1
+      }
     }
-  }
-
-  setTimePixel (date:Date) {
-    let min = this.computeMinutesIntoDay(date)
-    let offsetPixels = Math.round((min/60)*this.hourPixHeight)
-                          -this.startOfDayMinutes/2
-                          +this.hourPixHeight
-    return offsetPixels
-  }
-
-  computeMinutesIntoDay (date) {
-    let hour = date.getHours()
-    let min = date.getMinutes()
-    return hour*60 + min
+    return this.taskHeightStart+tasksPassed*this.taskHeight
   }
 
   formatTime(date){
@@ -74,6 +67,15 @@ export class TaskCalendarComponent implements OnChanges {
     let hourStr = date.getHours() < 10 ? '0'+String(hour) : String(hour)
     let minStr = date.getMinutes() < 10 ? '0'+String(min) : String(min)
     return hourStr + ':' + minStr
+  }
+
+  // Define the order of the tasks - whether it is based on index or timestamp
+  compareTasks(a:Task,b:Task) {
+    if (a.timestamp < b.timestamp)
+      return -1;
+    if (a.timestamp > b.timestamp)
+      return 1;
+    return 0;
   }
 
 }

@@ -1,11 +1,7 @@
 task-calendar {
 
-  $timeSlotHeight: 50px;
-
   .date {
-    font-size: 24px;
-    text-align: center;
-    margin-bottom: 10px;
+    font-size: 20px;
   }
 
   .layers {
@@ -18,38 +14,6 @@ task-calendar {
     left: 0;
     width: 100%;
     z-index: 2;
-    opacity: 0;
-  }
-
-  #time-entries {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1;
-  }
-
-  #time-slots {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 0;
-  }
-
-  .time-slot {
-    height: $timeSlotHeight;
-  }
-
-  .time-slot-division {
-    width: 100%;
-    height: 1px;
-    margin-bottom: $timeSlotHeight/2-1px;
-    background-color: $cl-light;
-  }
-
-  .pos-time {
-    margin-top: -4px;
   }
 
   .time-current-division {
@@ -60,41 +24,52 @@ task-calendar {
   }
 
   .time-current {
-    color: $cl-warning;
-    font-weight: bold;
+    text-align: center;
   }
 
-  .test {
-    background-color: $cl-danger
-  }
-
-  .time-entry {
-    height: 20px;
-    width: 100%;
-    border-radius: 10px;
-    border-width: medium;
-    border-style: solid;
-    margin-top: -8px;
-    border-color: map-get($colors, tertiary);
+  #task-item {
     background-color: $cl-primary-40;
+    padding: 3px 9px;
+    font-size: 18px;
+    text-align: center;
+    display: block;
+    margin-bottom: 3px;
+    padding-bottom: 0px;
   }
 
-  .entry-completed {
-    width: inherit;
-    height: inherit;
-    border-radius: 6px;
-    background-color: map-get($colors, tertiary);
+  .units {
+    font-size: 12px
   }
 
-  .checkmark {
-    float: right;
-    margin-top: -8px;
+  .icon-padding {
     padding-right: 5px;
-    font-size: 26px;
+    padding-left: 5px;
   }
 
-  .entry-completed-text {
-    padding-left: 5px;
-    font-size: 16px;
+  .icon-xsm {
+    height: 14px
   }
+
+  .task-info-right {
+    float: right;
+  }
+
+  .task-info-left {
+    float: left;
+  }
+  
+  .status-div {
+    float: right;
+  }
+
+  .status {
+      font-size: 28px;
+      margin-top: -8px;
+      margin-bottom: -8px;
+      padding-left: 10px;
+      padding-right: 0px;
+      padding-top: 2px;
+      color: map-get($colors, tertiary);
+  }
+
 }

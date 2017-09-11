@@ -15,6 +15,8 @@ import { IonicStorageModule } from '@ionic/storage';
 import { RoundProgressModule } from 'angular-svg-round-progressbar';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner'
 import { AndroidPermissions } from '@ionic-native/android-permissions';
+import { File } from '@ionic-native/file';
+
 
 import { TaskCalendarComponent } from '../components/task-calendar/task-calendar'
 import { TaskProgressComponent } from '../components/task-progress/task-progress'
@@ -116,25 +118,29 @@ import { MyApp } from './app.component';
     AudioInputComponent
   ],
   providers: [
+
+    //ionic modules
     Device,
     StatusBar,
     SplashScreen,
     DatePipe,
     AndroidPermissions,
+    File,
+    AngularFireDatabaseModule,
+    BarcodeScanner,
+
+    //Custom modules
     QuestionService,
     AnswerService,
     FirebaseService,
     StorageService,
-    AngularFireDatabaseModule,
     KafkaService,
     TimeStampService,
     PrepareDataService,
     Utility,
     SchedulingService,
     AudioRecordService,
-    AngularFireDatabaseModule,
     HomeController,
-    BarcodeScanner,
     AndroidPermissionUtility
   ]
 })

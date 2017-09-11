@@ -3,6 +3,8 @@ import { Device } from '@ionic-native/device'
 import { SplashScreen } from '@ionic-native/splash-screen'
 import { StatusBar } from '@ionic-native/status-bar'
 import { Platform } from 'ionic-angular'
+import { File } from '@ionic-native/file';
+
 import { HomePage } from '../pages/home/home'
 import { FirebaseService } from '../providers/firebase-service'
 import { AndroidPermissionUtility } from '../utilities/android-permission'
@@ -20,7 +22,8 @@ export class MyApp {
     private statusBar: StatusBar,
     private splashScreen: SplashScreen,
     private firebaseService: FirebaseService,
-    private androidPermission: AndroidPermissionUtility
+    private androidPermission: AndroidPermissionUtility,
+    private file: File
   ) {
     platform.ready().then(() => {
       statusBar.styleDefault()

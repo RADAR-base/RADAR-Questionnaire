@@ -5,7 +5,9 @@
   for more info on Angular 2 Components.
 -->
 <div class="audio">
-    <button class="button" [class.click]="isRecording()" (click)='start()'>
+    <button class="button"
+    [class.click]="isRecording()"
+    (click)='start()'>
         {{setText()}}
     </button>
 </div>

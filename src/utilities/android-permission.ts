@@ -1,4 +1,3 @@
-
 import { AndroidPermissions } from '@ionic-native/android-permissions';
 import { Injectable } from '@angular/core'
 import { Device } from '@ionic-native/device'
@@ -7,12 +6,16 @@ import 'rxjs/add/operator/map'
 import { Http, Response } from '@angular/http'
 import { Utility } from './util'
 
+declare var cordova: any
+
 @Injectable()
 export class AndroidPermissionUtility {
 
   util: any
-  permissionStatus: Boolean
-
+  permissionState: any
+  permissionGrantedList = []
+  permissionDeniedList = []
+  permissionCheckedCount: number = 0
 
 
   constructor(
@@ -21,55 +24,67 @@ export class AndroidPermissionUtility {
     private utility: Utility,
     private androidPermissions: AndroidPermissions
   ) {
-
-    // device.platform holds both platforms, ios and android
-    // currently permissions are taken only on android
-    // TODO: incase "IOS" add respective permissions
-
-    /*this.util = utility.getDevice()
-    if (this.util.device.platform === 'Android') {
-      this.AuthorizePermissions()
-    }*/
   }
 
-  permissionList: string[] = [
-    this.androidPermissions.PERMISSION.CAMERA,
+  // Add required permissions to this list
+  androidPermissionList: string[] = [
     this.androidPermissions.PERMISSION.RECORD_AUDIO,
     this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE
   ]
 
   AuthorizePermissions() {
-    // check permissions at first
-    this.permissionList.forEach(permission => {
-      this.checkPermission(permission)
+
+    // device.platform holds both platforms, ios and android
+    // currently permissions are taken only on android
+    // TODO: incase "IOS" add respective permission
+
+    this.androidPermissions.requestPermissions(this.androidPermissionList).then((success) => {
+      console.log(success)
+      this.checkPermissions()
+    }, (error) => {
+      console.log(error)
     })
   }
 
 
+  checkPermissions(): Promise<any> {
 
-  fetchPermission(permission) {
-    this.androidPermissions.requestPermissions(permission).then(
-      function(success) {
-        this.permissionStatus = true;
-        console.log('Permissions obtained')
-      }, function(err) {
-        this.permissionStatus = false;
-        console.log('Permissions denied')
-      }
-    )
+    return new Promise((resolve, reject) => {
+      this.permissionGrantedList = []
+      this.permissionDeniedList = []
+
+      this.androidPermissionList.forEach(permission => {
+
+        this.androidPermissions.checkPermission(permission).then(
+          success => {
+            console.log("count:" + this.permissionCheckedCount)
+            if (success.hasPermission == true) {
+              this.permissionGrantedList.push(permission)
+            } else {
+              this.permissionDeniedList.push(permission)
+            }
+          },
+          err => {
+            reject(err)
+            console.log(err)
+          }
+        )
+      })
+      resolve(true)
+    })
   }
 
   getPermissionStatus() {
-    return this.permissionStatus
+    if (this.permissionDeniedList.length == 0) {
+      return true
+    } else {
+      return false
+    }
   }
 
-  checkPermission(permission: string) {
-    this.androidPermissions.checkPermission(permission).then(
-      success => console.log(permission + ': Permission obtained'),
-      error => {
-        this.fetchPermission(permission)
-      }
-    )
+
+  checkIndividualPermission(permission) {
+
   }
 
 

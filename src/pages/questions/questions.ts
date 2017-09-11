@@ -73,14 +73,6 @@ export class QuestionsPage {
     this.questions = this.navParams.data.questions
     this.questionsContainerEl = this.questionsContainerRef.nativeElement
     var i = 0
-    //Checking whether questionnaire contains any audio-type questions
-    while (i < this.questions.length) {
-      if (this.questions[i].type == 'audio') {
-        this.audio = true
-        break
-      }
-      i = i + 1
-    }
 
     this.setCurrentQuestion()
   }
@@ -89,6 +81,11 @@ export class QuestionsPage {
 
     // record start time when question is shown
     this.startTime = this.timestampService.getTimeStamp() // returns : milliseconds / 1000
+
+    // for Audio type questions checking if audio is being recorded or not
+    if ((this.questions[this.currentQuestion].type == 'audio')) {
+      this.audioRecordService.stopAudioRecording()
+    }
 
     const min = !(this.currentQuestion + value < 0)
     const max = !(this.currentQuestion + value >= this.questions.length)
@@ -131,10 +128,6 @@ export class QuestionsPage {
     this.progress = percent + tick
   }
 
-  getPermission() {
-    return this.permission
-  }
-
   checkAnswer() {
     const id = this.questions[this.currentQuestion].id
     return this.answerService.check(id)
@@ -143,6 +136,7 @@ export class QuestionsPage {
   setNextDisabled() {
     this.isNextBtDisabled = !this.checkAnswer()
   }
+
   recordTimeStamp(questionId) {
 
     this.timestampService.add({
@@ -153,6 +147,7 @@ export class QuestionsPage {
       }
     })
   }
+
   nextQuestion() {
     if (this.checkAnswer()) {
 

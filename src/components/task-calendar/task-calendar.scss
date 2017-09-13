@@ -60,16 +60,23 @@ task-calendar {
   
   .status-div {
     float: right;
+    padding-left: 10px;
   }
 
   .status {
       font-size: 28px;
       margin-top: -8px;
       margin-bottom: -8px;
-      padding-left: 10px;
       padding-right: 0px;
       padding-top: 2px;
       color: map-get($colors, tertiary);
   }
 
+  .status-checked {
+    border-radius: 50%;
+    width: 6vw;
+    height: 6vw;
+    background-color: map-get($colors, tertiary);
+    font-size: 22px;
+  }
 }

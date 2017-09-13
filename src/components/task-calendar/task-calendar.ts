@@ -20,6 +20,9 @@ export class TaskCalendarComponent implements OnChanges {
   taskHeightStart = 40
   taskHeight = 42
 
+  // TODO: handle logic for checking whether the tasks have extra info
+  hasExtraInfo: Boolean = true
+
   tasks: Task[] = [DefaultTask]
   tasksTimes = []
 

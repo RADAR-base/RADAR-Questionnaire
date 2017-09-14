@@ -13,18 +13,13 @@ export class TaskCalendarComponent implements OnChanges {
 
   @Input() scrollHeight: number = 0
 
-  @ViewChild('timeCurrent')
-  elCurrentTime: ElementRef;
-
   currentTime: String = '06:00'
-  taskHeightStart = 40
-  taskHeight = 42
+  timeIndex = 0
 
   // TODO: handle logic for checking whether the tasks have extra info
   hasExtraInfo: Boolean = true
 
   tasks: Task[] = [DefaultTask]
-  tasksTimes = []
 
   constructor(private controller: HomeController){
     this.controller.getTasksOfToday().then((tasks) => {
@@ -46,22 +41,22 @@ export class TaskCalendarComponent implements OnChanges {
   setCurrentTime() {
     let now = new Date()
     this.currentTime = this.formatTime(now)
-    let offsetPixels = this.setTimePixel(now)
-    this.elCurrentTime.nativeElement.style.transform =
-      `translateY(${offsetPixels}px)`
+    this.timeIndex = this.getCurrentTimeIndex(now)
   }
 
-  setTimePixel(date:Date) {
+  // Compare current time with the start times of the tasks and find
+  // out in between which tasks it should be shown in the interface
+  getCurrentTimeIndex(date:Date) {
     var tasksPassed = 0
     for(let task of this.tasks) {
       if(date.getTime() <= task.timestamp) {
-         return this.taskHeightStart+tasksPassed*this.taskHeight
+         return tasksPassed
       }
       else {
         tasksPassed += 1
       }
     }
-    return this.taskHeightStart+tasksPassed*this.taskHeight
+    return tasksPassed
   }
 
   formatTime(date){

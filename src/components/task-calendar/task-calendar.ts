@@ -4,7 +4,6 @@ import { HomeController } from '../../providers/home-controller'
 import { Task } from '../../models/task'
 import { DefaultTask } from '../../assets/data/defaultConfig'
 
-
 @Component({
   selector: 'task-calendar',
   templateUrl: 'task-calendar.html'
@@ -21,9 +20,9 @@ export class TaskCalendarComponent implements OnChanges {
 
   tasks: Task[] = [DefaultTask]
 
-  constructor(private controller: HomeController){
+  constructor (private controller: HomeController) {
     this.controller.getTasksOfToday().then((tasks) => {
-      if(tasks){
+      if(tasks) {
         this.tasks = tasks.sort(this.compareTasks)
       }
     })
@@ -33,12 +32,12 @@ export class TaskCalendarComponent implements OnChanges {
     this.setCurrentTime()
   }
 
-  getStartTime (task:Task) {
+  getStartTime (task: Task) {
     let date = new Date(task.timestamp)
     return this.formatTime(date)
   }
 
-  setCurrentTime() {
+  setCurrentTime () {
     let now = new Date()
     this.currentTime = this.formatTime(now)
     this.timeIndex = this.getCurrentTimeIndex(now)
@@ -46,20 +45,19 @@ export class TaskCalendarComponent implements OnChanges {
 
   // Compare current time with the start times of the tasks and find
   // out in between which tasks it should be shown in the interface
-  getCurrentTimeIndex(date:Date) {
+  getCurrentTimeIndex (date: Date) {
     var tasksPassed = 0
     for(let task of this.tasks) {
       if(date.getTime() <= task.timestamp) {
-         return tasksPassed
-      }
-      else {
+        return tasksPassed
+      } else {
         tasksPassed += 1
       }
     }
     return tasksPassed
   }
 
-  formatTime(date){
+  formatTime (date) {
     let hour = date.getHours()
     let min = date.getMinutes()
     let hourStr = date.getHours() < 10 ? '0'+String(hour) : String(hour)
@@ -68,11 +66,13 @@ export class TaskCalendarComponent implements OnChanges {
   }
 
   // Define the order of the tasks - whether it is based on index or timestamp
-  compareTasks(a:Task,b:Task) {
-    if (a.timestamp < b.timestamp)
-      return -1;
-    if (a.timestamp > b.timestamp)
+  compareTasks (a: Task, b: Task) {
+    if (a.timestamp < b.timestamp) {
+      return -1
+    }
+    if (a.timestamp > b.timestamp) {
       return 1;
+    }
     return 0;
   }
 

@@ -14,6 +14,8 @@ export class AudioRecordService {
   questionID: string = null
   audioRecordStatus: boolean = false;
   recording: boolean = false
+  recordTime: number = 45000
+  recordTimer: any
 
   answer = {
     id: null,
@@ -64,16 +66,17 @@ export class AudioRecordService {
       opensmile.stop('Stop', this.success, this.failure)
       this.setAudioRecordStatus(false)
       this.readAudioFile(this.filename)
+      clearTimeout(this.recordTimer)
     }
   }
 
   setRecordTimer() {
     if (this.recording == true) {
-      setTimeout(() => {
+      this.recordTimer = setTimeout(() => {
         console.log("Time up for recording")
         this.recording = false
         this.stopAudioRecording()
-      }, 45000);
+      }, this.recordTime);
     }
   }
 

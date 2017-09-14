@@ -72,6 +72,10 @@
   dependencies:
     tsickle "^0.21.0"
 
+"@ionic-native/android-permissions@^4.2.1":
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/@ionic-native/android-permissions/-/android-permissions-4.2.1.tgz#b211372bb7f51c5bf214cb296b789667429482fe"
+
 "@ionic-native/barcode-scanner@^3.12.1":
   version "3.14.0"
   resolved "https://registry.yarnpkg.com/@ionic-native/barcode-scanner/-/barcode-scanner-3.14.0.tgz#d89075c606aa4d69651e5965674e4911e585375d"
@@ -83,6 +87,10 @@
 "@ionic-native/device@^3.12.1":
   version "3.14.0"
   resolved "https://registry.yarnpkg.com/@ionic-native/device/-/device-3.14.0.tgz#5568a594d935a87bd9a7a8a7dbc5f3c3e74921a5"
+
+"@ionic-native/file@^4.2.1":
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/@ionic-native/file/-/file-4.2.1.tgz#3992d3a8d7cc7973afd59a70d28d9f9875582fd5"
 
 "@ionic-native/splash-screen@^3.12.1":
   version "3.14.0"
@@ -1524,6 +1532,10 @@ cordova-sqlite-storage@^2.0.4:
   resolved "https://registry.yarnpkg.com/cordova-sqlite-storage/-/cordova-sqlite-storage-2.0.4.tgz#8b5ce65c63b46b0415ca7012cc57bf2711b20371"
   dependencies:
     cordova-sqlite-storage-dependencies "1.0.4"
+
+cordova.plugins.diagnostic@^3.6.7:
+  version "3.6.7"
+  resolved "https://registry.yarnpkg.com/cordova.plugins.diagnostic/-/cordova.plugins.diagnostic-3.6.7.tgz#5f69ee0900d5f9b23dc307d205c1b2e0ddbe03ee"
 
 core-js@^2.4.0:
   version "2.4.1"

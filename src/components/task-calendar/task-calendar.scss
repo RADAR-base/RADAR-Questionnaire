@@ -43,11 +43,11 @@ task-calendar {
     text-align: center;
     display: block;
     margin-bottom: 3px;
-    padding-bottom: 0px;
+    padding-bottom: 0;
   }
 
   .units {
-    font-size: 12px
+    font-size: 12px;
   }
 
   .icon-padding {
@@ -56,7 +56,7 @@ task-calendar {
   }
 
   .icon-xsm {
-    height: 14px
+    height: 14px;
   }
 
   .task-info-right {
@@ -66,7 +66,7 @@ task-calendar {
   .task-info-left {
     float: left;
   }
-  
+
   .status-div {
     float: right;
     padding-left: 10px;
@@ -76,7 +76,7 @@ task-calendar {
     font-size: 28px;
     margin-top: -8px;
     margin-bottom: -8px;
-    padding-right: 0px;
+    padding-right: 0;
     padding-top: 2px;
     color: map-get($colors, tertiary);
   }

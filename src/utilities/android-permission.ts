@@ -26,7 +26,8 @@ export class AndroidPermissionUtility {
   ) {
   }
 
-  // Add required permissions to this list
+  // Add on load required permissions to this list
+  // Run time permissions need be to asked individually wherever required by using the below methods
   androidPermissionList: string[] = [
     this.androidPermissions.PERMISSION.RECORD_AUDIO,
     this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE
@@ -83,9 +84,51 @@ export class AndroidPermissionUtility {
   }
 
 
-  checkIndividualPermission(permission) {
-
+  //Returns a promise with an object containing "hasPermission" boolean value
+  fetchPermission(permission): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.androidPermissions.requestPermission(permission).then((success) => {
+        console.log(success)
+        this.checkPermission(permission).then((success) => {
+          resolve(success)
+        }, (error) => {
+          reject(error)
+        })
+      }, (error) => {
+        console.log(error)
+        reject(error)
+      })
+    })
   }
 
+  checkPermission(permission): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.androidPermissions.checkPermission(permission).then((success) => {
+        if (success.hasPermission == true) {
+          resolve(true)
+        } else {
+          reject(false)
+        }
+      }, (error) => {
+        reject(error)
+      })
+    })
+  }
+
+  // For Run time permissions use these below methods at the required pages
+
+  getCamera_Permission() {
+    return this.fetchPermission(this.androidPermissions.PERMISSION.CAMERA)
+  }
+
+  getRecordAudio_Permission() {
+    return this.fetchPermission(this.androidPermissions.PERMISSION.RECORD_AUDIO)
+  }
+
+  getWriteExternalStorage_permission() {
+    return this.fetchPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE)
+  }
+
+  // Add required permissions as above
 
 }

@@ -48,6 +48,7 @@ export class AudioRecordService {
 
     if (this.recording == false) {
       this.recording = true
+      this.setRecordTimer()
       this.setAudioRecordStatus(this.recording)
       opensmile.start(this.filename, configFile, this.success, this.failure)
     } else if (this.recording == true) {
@@ -58,12 +59,21 @@ export class AudioRecordService {
     }
   }
 
-
   stopAudioRecording() {
     if (this.getAudioRecordStatus()) {
       opensmile.stop('Stop', this.success, this.failure)
       this.setAudioRecordStatus(false)
       this.readAudioFile(this.filename)
+    }
+  }
+
+  setRecordTimer() {
+    if (this.recording == true) {
+      setTimeout(() => {
+        console.log("Time up for recording")
+        this.recording = false
+        this.stopAudioRecording()
+      }, 45000);
     }
   }
 
@@ -80,7 +90,7 @@ export class AudioRecordService {
   }
 
   readAudioFile(filename) {
-    let filePath = getPath()
+    let filePath = this.getPath()
     console.log(filePath)
     this.file.readAsDataURL(filePath, filename).then((base64) => {
       console.log(base64)

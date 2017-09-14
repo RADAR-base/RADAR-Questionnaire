@@ -41,7 +41,7 @@ export class AudioInputComponent implements OnInit {
       //Adding default answer for audio recording
       if (!this.answerService.check(this.qid)) {
         this.answer.id = this.qid
-        this.answer.value = 'Not Recorded yet'
+        this.answer.value = 'No Audio Recording'
         this.answerService.add(this.answer)
         this.valueChange.emit(this.answer.value) // add this at the end
       }
@@ -79,13 +79,12 @@ export class AudioInputComponent implements OnInit {
   }
 
   start() {
-    if (this.permissionUtil.getPermissionStatus() == true) {
-      this.audioRecordService.startAudioRecording(this.qid, this.configFile)
-    } else {
-      this.permissionUtil.AuthorizePermissions()
-    }
+    this.permissionUtil.getRecordAudio_Permission().then((success) => {
+      if (success == true) {
+        this.audioRecordService.startAudioRecording(this.qid, this.configFile)
+      }
+    })
   }
-
 
 
   isRecording() {

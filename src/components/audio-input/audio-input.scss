@@ -1,4 +1,4 @@
-@mixin my_button() {
+@mixin recordingButton() {
   @include font-large;
 
   height: $bt-height;
@@ -12,14 +12,15 @@
   justify-content: flex-start;
   width: 100%;
   margin: 0 auto;
-  margin-top: 100%;
+  margin-bottom:50%;
+
 }
 
 audio-input {
   button {
-    @include my_button;
-
+    @include recordingButton;
     background-color: $cl-primary-20;
+    margin-bottom: 12px;
   }
   button.click {
     background-color: red;

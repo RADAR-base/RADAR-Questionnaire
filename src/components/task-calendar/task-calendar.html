@@ -6,21 +6,17 @@
     Today's tasks
   </div>
 
-  <div #timeCurrent id="time-current">
-    <ion-row>
-      <ion-col>
-        <div class="time-current-division"></div>
-      </ion-col>
-      <ion-col col-2 class="time-current">
-      {{currentTime}}
-      </ion-col>
-      <ion-col>
-        <div class="time-current-division"></div>
-      </ion-col>
-    </ion-row>
-  </div>
-
-  <div id="task-item" *ngFor="let task of tasks; let i of index">
+  <div *ngFor="let task of tasks; let i=index">
+    <div class="current-time-div" *ngIf="i==timeIndex">
+      <div id="time-current">
+        <ion-row>
+          <ion-col><div class="time-current-division left"></div></ion-col>
+          <ion-col col-2 class="time-current">{{currentTime}}</ion-col>
+          <ion-col><div class="time-current-division right"></div></ion-col>
+        </ion-row>
+      </div>
+    </div>
+    <div id="task-item">
     <ion-row>
       <ion-col>
         <div class="task-info-left">
@@ -35,7 +31,17 @@
         </div>
       </ion-col>
     </ion-row>
+    </div>
   </div>
+  <div class="current-time-div" *ngIf="timeIndex==tasks.length">
+      <div id="time-current">
+        <ion-row>
+          <ion-col><div class="time-current-division left"></div></ion-col>
+          <ion-col col-2 class="time-current">{{currentTime}}</ion-col>
+          <ion-col><div class="time-current-division right"></div></ion-col>
+        </ion-row>
+      </div>
+    </div>
 
   <div padding class="date">
     Tomorrow's tasks

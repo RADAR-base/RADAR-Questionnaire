@@ -12,7 +12,7 @@ import AvroSchema from 'avsc'
 @Injectable()
 export class KafkaService {
 
-  private KAFKA_CLIENT_URL = 'https://radararmt.ddns.net/kafka'
+  private KAFKA_CLIENT_URL = 'https://ec2-54-229-198-52.eu-west-1.compute.amazonaws.com/kafka'
   private TOPIC_NAME = 'active_questionnaire_phq8'
 
   private phq8ValueSchema: string

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { StorageService } from '../providers/storage-service'
+import { SchedulingService } from '../providers/scheduling-service'
 import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
 
 
@@ -14,7 +15,8 @@ export class FirebaseService {
   constructor(
     public http: Http,
     private fireDb: AngularFireDatabase,
-    private storage: StorageService
+    private storage: StorageService,
+    private schedule: SchedulingService,
   ) {
     // fetch config from firebase
     this.fetchConfigState()
@@ -32,7 +34,9 @@ export class FirebaseService {
       // this.fireDb.object('/') pulls all the child nodes
       // can be changed accordingly
       this.fireDb.object('/').subscribe(configData => {
-        this.storage.setFetchedConfiguration(configData)
+        this.storage.setFetchedConfiguration(configData).then(() => {
+          this.schedule.generateSchedule()
+        })
       })
     })
   }

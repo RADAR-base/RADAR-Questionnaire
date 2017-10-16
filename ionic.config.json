@@ -1,5 +1,8 @@
 {
   "name": "RADAR Questionnaire",
   "app_id": "8c49e8ec",
-  "type": "ionic-angular"
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
 }

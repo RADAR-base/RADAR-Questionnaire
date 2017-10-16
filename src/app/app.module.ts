@@ -8,9 +8,6 @@ import { SplashScreen } from '@ionic-native/splash-screen'
 import { Device } from '@ionic-native/device'
 import { StatusBar } from '@ionic-native/status-bar'
 import { IonicApp, IonicModule } from 'ionic-angular'
-import { AngularFireModule } from 'angularfire2';
-import { AngularFireDatabaseModule } from 'angularfire2/database';
-import { AngularFireAuthModule } from 'angularfire2/auth';
 import { IonicStorageModule } from '@ionic/storage';
 import { RoundProgressModule } from 'angular-svg-round-progressbar';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner'
@@ -34,10 +31,9 @@ import { ReportPage } from '../pages/report/report'
 import { HomeController } from '../providers/home-controller'
 import { AnswerService } from '../providers/answer-service'
 import { QuestionService } from '../providers/question-service'
-import { FirebaseService } from '../providers/firebase-service'
+import { ConfigService } from '../providers/config-service'
 import { StorageService } from '../providers/storage-service'
 import { SchedulingService } from '../providers/scheduling-service'
-import { FirebaseConfig } from '../assets/data/defaultConfig'
 import { KafkaService }  from '../providers/kafka-service'
 import { TimeStampService } from '../providers/timestamp-service'
 import { PrepareDataService} from '../providers/preparedata-service'
@@ -58,10 +54,7 @@ import { MyApp } from './app.component';
     IonicStorageModule.forRoot({
       name: '__appdb',
       driverOrder: ['sqlite', 'indexeddb', 'websql']
-    }),
-    AngularFireModule.initializeApp(FirebaseConfig),
-    AngularFireDatabaseModule, // imports firebase/database, only needed for database features
-    AngularFireAuthModule // imports firebase/auth, only needed for auth features
+    })
   ],
   declarations: [
     MyApp,
@@ -116,15 +109,13 @@ import { MyApp } from './app.component';
     DatePipe,
     QuestionService,
     AnswerService,
-    FirebaseService,
+    ConfigService,
     StorageService,
-    AngularFireDatabaseModule,
     KafkaService,
     TimeStampService,
     PrepareDataService,
     Utility,
     SchedulingService,
-    AngularFireDatabaseModule,
     HomeController,
     BarcodeScanner
   ]

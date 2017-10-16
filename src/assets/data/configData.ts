@@ -158,7 +158,7 @@ export const ConfigData = {
         "unit" : "min"
       },
       "repeatProtocol" : {
-        "amount" : 1,
+        "amount" : 2,
         "unit" : "day"
       },
       "repeatQuestionnaire" : {
@@ -246,5 +246,5 @@ export const ConfigData = {
     "showIntroduction" : "true",
     "startText" : "This questionnaire allows you to test all available input types."
   } ],
-  "version" : 0.43
+  "version" : 0.45
 }

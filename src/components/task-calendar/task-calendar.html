@@ -1,0 +1,90 @@
+<div>
+
+  <!--<ion-scroll scrollY="true" padding-horizontal class="layers" [style.height.px]="scrollHeight">-->
+
+  <div padding class="date">
+    Today's tasks
+  </div>
+
+  <div *ngFor="let task of tasks; let i=index">
+    <div class="current-time-div" *ngIf="i==timeIndex">
+      <div id="time-current">
+        <ion-row>
+          <ion-col><div class="time-current-division left"></div></ion-col>
+          <ion-col col-2 class="time-current">{{currentTime}}</ion-col>
+          <ion-col><div class="time-current-division right"></div></ion-col>
+        </ion-row>
+      </div>
+    </div>
+    <div id="task-item">
+    <ion-row>
+      <ion-col>
+        <div class="task-info-left">
+          {{getStartTime(task)}}
+          <img class="icon-padding extra-info-icon" *ngIf="hasExtraInfo" src="assets/imgs/warning.png"/>
+        </div>
+        <div class="task-info-right">
+          <img class="icon-padding icon-xsm" src="assets/imgs/stopwatch.png"/>{{task.estimatedCompletionTime}}<span class="units">min</span>
+          <img class="icon-padding icon-xsm" src="assets/imgs/nTasks.png"/>{{task.nQuestions}}<span class="units">x</span>
+          <div class="status-div" *ngIf="!task.completed"><ion-icon name="radio-button-off" class="status"></ion-icon></div>
+          <div class="status-div" *ngIf="task.completed"><ion-icon name="checkmark" class="status-checked"></ion-icon></div>
+        </div>
+      </ion-col>
+    </ion-row>
+    </div>
+  </div>
+  <div class="current-time-div" *ngIf="timeIndex==tasks.length">
+      <div id="time-current">
+        <ion-row>
+          <ion-col><div class="time-current-division left"></div></ion-col>
+          <ion-col col-2 class="time-current">{{currentTime}}</ion-col>
+          <ion-col><div class="time-current-division right"></div></ion-col>
+        </ion-row>
+      </div>
+    </div>
+
+  <div padding class="date">
+    Tomorrow's tasks
+  </div>
+
+  <div id="task-item" *ngFor="let task of tasks; let i of index">
+    <ion-row>
+      <ion-col>
+        <div class="task-info-left">
+          {{getStartTime(task)}}
+          <img class="icon-padding extra-info-icon" *ngIf="hasExtraInfo" src="assets/imgs/warning.png"/>
+        </div>
+        <div class="task-info-right">
+          <img class="icon-padding icon-xsm" src="assets/imgs/stopwatch.png"/>{{task.estimatedCompletionTime}}<span class="units">min</span>
+          <img class="icon-padding icon-xsm" src="assets/imgs/nTasks.png"/>{{task.nQuestions}}<span class="units">x</span>
+          <div class="status-div" *ngIf="!task.completed"><ion-icon name="radio-button-off" class="status"></ion-icon></div>
+          <div class="status-div" *ngIf="task.completed"><ion-icon name="checkmark" class="status-checked"></ion-icon></div>
+        </div>
+      </ion-col>
+    </ion-row>
+  </div>
+
+  <div padding class="date">
+    Day after tomorrow tasks
+  </div>
+
+  <div id="task-item" *ngFor="let task of tasks; let i of index">
+    <ion-row>
+      <ion-col>
+        <div class="task-info-left">
+          {{getStartTime(task)}}
+          <img class="icon-padding extra-info-icon" *ngIf="hasExtraInfo" src="assets/imgs/warning.png"/>
+        </div>
+        <div class="task-info-right">
+          <img class="icon-padding icon-xsm" src="assets/imgs/stopwatch.png"/>{{task.estimatedCompletionTime}}<span class="units">min</span>
+          <img class="icon-padding icon-xsm" src="assets/imgs/nTasks.png"/>{{task.nQuestions}}<span class="units">x</span>
+          <div class="status-div" *ngIf="!task.completed"><ion-icon name="radio-button-off" class="status"></ion-icon></div>
+          <div class="status-div" *ngIf="task.completed"><ion-icon name="checkmark" class="status-checked"></ion-icon></div>
+        </div>
+      </ion-col>
+    </ion-row>
+  </div>
+
+  <!--</ion-scroll>-->
+
+</div>

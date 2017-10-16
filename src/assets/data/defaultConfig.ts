@@ -1,5 +1,6 @@
 import { NotificationSettings } from '../../models/settings'
 import { WeeklyReportSubSettings } from '../../models/settings'
+import { Task } from '../../models/task'
 
 // FIREBASE SETUP
 export const FirebaseConfig = {
@@ -33,6 +34,21 @@ export const DefaultSettingsWeeklyReport: WeeklyReportSubSettings[] = [
     }
   ]
 
+// DEFAULT SETUP
+export const DefaultTask: Task = {
+  index: 0,
+  completed: false,
+  timestamp: 0,
+  name: 'DEFAULT',
+  reminderSettings: {
+    unit: 'hour',
+    amount: 1,
+    repeat: 1
+  },
+  nQuestions: 0,
+ estimatedCompletionTime: 0
+}
+
 export const DefaultSettingsSupportedLanguages: String[] = [
   'English',
   'Italian',
@@ -43,4 +59,6 @@ export const DefaultSettingsSupportedLanguages: String[] = [
 
 export const DefaultScheduleVersion: number = 0
 
-export const DefaultScheduleYearCoverage: number = 2
+export const DefaultScheduleYearCoverage: number = 2 //years
+
+export const DefaultScheduleReportRepeat: number = 7 //days

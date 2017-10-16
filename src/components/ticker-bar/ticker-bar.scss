@@ -1,0 +1,23 @@
+ticker-bar {
+  
+  #ticker-bar-container {
+    background-color: $cl-primary-40;
+    padding: 7px 0;
+    font-size: 18px;
+    text-align: center;
+    display: flex;
+  }
+
+  #report {
+    color: map_get($colors, warning);
+  }
+
+  .ticker-item {
+    flex: 1 0 100vw;
+    transition: transform 0.8s ease-in-out;
+  }
+
+  .bold {
+    font-weight: bold;
+  }
+}

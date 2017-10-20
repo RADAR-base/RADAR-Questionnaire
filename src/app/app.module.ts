@@ -24,6 +24,7 @@ import { RangeInputComponent } from '../components/range-input/range-input'
 import { SliderInputComponent } from '../components/slider-input/slider-input'
 import { TimedTestComponent } from '../components/timed-test/timed-test'
 import { InfoScreenComponent } from '../components/info-screen/info-screen'
+import { SplashPage } from '../pages/splash/splash'
 import { EnrolmentPage } from '../pages/enrolment/enrolment'
 import { FinishPage } from '../pages/finish/finish'
 import { HomePage } from '../pages/home/home'
@@ -64,6 +65,7 @@ import { MyApp } from './app.component';
     MyApp,
 
     // Pages
+    SplashPage,
     EnrolmentPage,
     HomePage,
     StartPage,
@@ -90,6 +92,7 @@ import { MyApp } from './app.component';
     MyApp,
 
     // Pages
+    SplashPage,
     EnrolmentPage,
     HomePage,
     StartPage,

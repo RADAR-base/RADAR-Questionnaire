@@ -46,13 +46,7 @@ export class HomePage {
     public alertCtrl: AlertController,
     private schedule: SchedulingService,
     private controller: HomeController,
-  ) {
-    this.controller.evalEnrolement().then((evalEnrolement) => {
-      if(evalEnrolement){
-        this.navCtrl.push(EnrolmentPage)
-      }
-    })
-  }
+  ) { }
 
   ngAfterViewInit(){
   }

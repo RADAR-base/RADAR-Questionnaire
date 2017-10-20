@@ -3,7 +3,7 @@ import { Device } from '@ionic-native/device'
 import { SplashScreen } from '@ionic-native/splash-screen'
 import { StatusBar } from '@ionic-native/status-bar'
 import { Platform } from 'ionic-angular'
-import { HomePage } from '../pages/home/home'
+import { SplashPage } from '../pages/splash/splash'
 import { ConfigService } from '../providers/config-service'
 
 
@@ -12,7 +12,7 @@ import { ConfigService } from '../providers/config-service'
   '<ion-nav [root]="rootPage"></ion-nav>'
 })
 export class MyApp {
-  rootPage = HomePage
+  rootPage = SplashPage
 
   constructor(
     private device: Device,

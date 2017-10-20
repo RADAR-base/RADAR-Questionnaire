@@ -46,7 +46,8 @@ export const DefaultTask: Task = {
     repeat: 1
   },
   nQuestions: 0,
- estimatedCompletionTime: 0
+  estimatedCompletionTime: 0,
+  warning: ''
 }
 
 export const DefaultSettingsSupportedLanguages: String[] = [

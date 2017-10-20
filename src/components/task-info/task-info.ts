@@ -83,7 +83,7 @@ export class TaskInfoComponent implements OnChanges {
   @Input() task: Task;
   @Output() collapse: EventEmitter<Boolean> = new EventEmitter()
   expanded: Boolean = true
-  hasExtraInfo: Boolean = true
+  hasExtraInfo: Boolean = false
   displayTask: Boolean = false
   animateFade: String
   animateMove: String
@@ -114,6 +114,11 @@ export class TaskInfoComponent implements OnChanges {
       this.displayTask = true
     } else {
       this.displayTask = false
+    }
+    if(this.task['warning'] != '') {
+      this.hasExtraInfo = true
+    } else {
+      this.hasExtraInfo = false
     }
   }
 

@@ -3,14 +3,14 @@ import { WeeklyReportSubSettings } from '../../models/settings'
 import { Task } from '../../models/task'
 
 // FIREBASE SETUP
-export const FirebaseConfig = {
+/*export const FirebaseConfig = {
   apiKey: "AIzaSyBTEYv6htFpRUXrp5G1cqnAcHT71Ed_lA0",
   authDomain: "radar-armt.firebaseapp.com",
   databaseURL: "https://radar-armt.firebaseio.com",
   projectId: "radar-armt",
   storageBucket: "radar-armt.appspot.com",
   messagingSenderId: "1044012430872"
-}
+}*/
 
 // DEFAULT SETTINGS
 export const DefaultSettingsNotifications: NotificationSettings = {

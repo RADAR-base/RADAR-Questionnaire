@@ -24,6 +24,7 @@ export class StorageService {
     let allKeys = this.getAllKeys()
     allKeys.then((keys) => {
       if(keys.length<=5){
+        console.log(patientId)
         let today = new Date()
         //this.set(StorageKeys.REFERENCEDATE, today.getTime())
         this.set(StorageKeys.REFERENCEDATE, 1496952304184)

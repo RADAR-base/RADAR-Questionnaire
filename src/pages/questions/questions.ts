@@ -37,7 +37,7 @@ export class QuestionsPage {
   nextBtTxt: string = this.txtValues.next
   previousBtTxt: string = this.txtValues.close
   isNextBtDisabled = true
-  isPreviousBtVisible = false
+  isPreviousBtDisabled = false
 
   iconValues = {
     previous: 'ios-arrow-back',
@@ -93,6 +93,13 @@ export class QuestionsPage {
         : this.txtValues.next
 
       this.setNextDisabled()
+
+      if(this.questions[this.currentQuestion].type == QuestionType.timed) {
+        this.setPreviousDisabled()
+      } else {
+        this.setPreviousEnabled()
+      }
+      
     } else if (finish) {
 
       this.navCtrl.push(FinishPage, {
@@ -121,6 +128,14 @@ export class QuestionsPage {
     this.isNextBtDisabled = !this.checkAnswer()
   }
 
+  setPreviousDisabled() {
+    this.isPreviousBtDisabled = true
+  }
+
+  setPreviousEnabled() {
+    this.isPreviousBtDisabled = false
+  }
+
   nextQuestion() {
     if (this.checkAnswer()) {
 
@@ -147,19 +162,18 @@ export class QuestionsPage {
   }
 
   onAnswer(event) {
-    console.log(event)
     if (event.id) {
       this.answerService.add(event)
-
-      if (event.type == QuestionType.timed){
-        this.nextQuestion()
-      }
-
       this.setNextDisabled()
+    }
+    if (event.type == QuestionType.timed){
+      this.nextQuestion()
     }
   }
 
   previousQuestion() {
-    this.setCurrentQuestion(-1)
+    if(this.isPreviousBtDisabled == false){
+      this.setCurrentQuestion(-1)
+    }
   }
 }

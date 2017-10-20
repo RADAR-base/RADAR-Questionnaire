@@ -15,6 +15,7 @@
     </div>
     <ion-buttons left>
       <button ion-button left icon-left
+        [class.disabled]="isPreviousBtDisabled"
         (click)="previousQuestion()">
         <ion-icon [name]="iconPrevious"></ion-icon>
         <div class="toolbar-label">{{previousBtTxt}}</div>

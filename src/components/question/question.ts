@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core'
+import { Component, EventEmitter, Input, Output, OnChanges } from '@angular/core'
 import { Question, QuestionType } from '../../models/question'
 import { Answer } from '../../models/answer'
 
@@ -6,12 +6,23 @@ import { Answer } from '../../models/answer'
   selector: 'question',
   templateUrl: 'question.html'
 })
-export class QuestionComponent {
+export class QuestionComponent implements OnChanges {
 
   @Input() question: Question
+  @Input() questionIndex: number
+  @Input() currentIndex: number
   @Output() answer: EventEmitter<Answer> = new EventEmitter<Answer>()
 
   value: number
+  currentlyShown: boolean = false
+
+  ngOnChanges() {
+    if(this.questionIndex == this.currentIndex) {
+      this.currentlyShown = true
+    } else {
+      this.currentlyShown = false
+    }
+  }
 
   onValueChange(event) {
     // on init the component fires the event once

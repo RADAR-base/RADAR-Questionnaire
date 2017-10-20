@@ -188,7 +188,7 @@ export const ConfigData = {
       "image" : "assets/imgs/eyesopen.png",
       "lead" : "Romberg's Test",
       "timer" : {
-        "end" : 10,
+        "end" : 11,
         "start" : 20
       },
       "type" : "timed",

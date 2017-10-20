@@ -147,12 +147,15 @@ export class QuestionsPage {
   }
 
   onAnswer(event) {
+    console.log(event)
     if (event.id) {
       this.answerService.add(event)
+
+      if (event.type == QuestionType.timed){
+        this.nextQuestion()
+      }
+
       this.setNextDisabled()
-    }
-    if (event.type == QuestionType.timed){
-      this.nextQuestion()
     }
   }
 

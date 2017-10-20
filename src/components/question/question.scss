@@ -1,12 +1,23 @@
 question {
-  p {
+  p.stdformat {
     margin-top: 8px;
     margin-bottom: 0;
     color: $cl-light-80;
   }
 
-  h2 {
+  p.taskformat {
+    font-size: 24px;
+    margin: 5px;
+  }
+
+  h2.stdformat {
     margin-top: 16px;
     margin-bottom: 24px;
+  }
+
+  h2.taskformat {
+    margin-top: 16px;
+    margin-bottom: 24px;
+    font-size: 16px;
   }
 }

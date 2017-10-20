@@ -11,6 +11,7 @@ import { IonicApp, IonicModule } from 'ionic-angular'
 import { IonicStorageModule } from '@ionic/storage';
 import { RoundProgressModule } from 'angular-svg-round-progressbar';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner'
+import { Dialogs } from '@ionic-native/dialogs'
 
 import { TaskCalendarComponent } from '../components/task-calendar/task-calendar'
 import { TaskProgressComponent } from '../components/task-progress/task-progress'
@@ -20,6 +21,8 @@ import { QuestionComponent } from '../components/question/question'
 import { RadioInputComponent } from '../components/radio-input/radio-input'
 import { RangeInputComponent } from '../components/range-input/range-input'
 import { SliderInputComponent } from '../components/slider-input/slider-input'
+import { TimedTestComponent } from '../components/timed-test/timed-test'
+import { InfoScreenComponent } from '../components/info-screen/info-screen'
 import { EnrolmentPage } from '../pages/enrolment/enrolment'
 import { FinishPage } from '../pages/finish/finish'
 import { HomePage } from '../pages/home/home'
@@ -77,7 +80,9 @@ import { MyApp } from './app.component';
     QuestionComponent,
     RangeInputComponent,
     RadioInputComponent,
-    SliderInputComponent
+    SliderInputComponent,
+    TimedTestComponent,
+    InfoScreenComponent
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -100,7 +105,9 @@ import { MyApp } from './app.component';
     QuestionComponent,
     RangeInputComponent,
     RadioInputComponent,
-    SliderInputComponent
+    SliderInputComponent,
+    TimedTestComponent,
+    InfoScreenComponent
   ],
   providers: [
     Device,
@@ -117,7 +124,8 @@ import { MyApp } from './app.component';
     Utility,
     SchedulingService,
     HomeController,
-    BarcodeScanner
+    BarcodeScanner,
+    Dialogs
   ]
 })
 export class AppModule {

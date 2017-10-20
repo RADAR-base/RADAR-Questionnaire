@@ -12,6 +12,8 @@ export class QuestionType {
   static range = 'range'
   static slider = 'slider'
   static audio = 'audio'
+  static timed = 'timed'
+  static info = 'info'
 }
 
 export interface Response {
@@ -23,4 +25,9 @@ export interface Range {
   min: number
   max: number
   step: number
+}
+
+export interface Section {
+  heading: string
+  content: string
 }

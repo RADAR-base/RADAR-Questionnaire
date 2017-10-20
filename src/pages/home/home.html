@@ -18,11 +18,11 @@
   </div>
 
   <div  #tickerBar class="size-static">
-    <ticker-bar [task]='nextTask' [showAffirmation]="showCompleted"></ticker-bar>
+    <ticker-bar [task]="nextTask" [showAffirmation]="showCompleted"></ticker-bar>
   </div>
 
   <div  #taskInfo class="size-static">
-    <task-info [task]='nextTask' (collapse)="displayCalendar($event)"></task-info>
+    <task-info [task]="nextTask" (collapse)="displayCalendar($event)"></task-info>
   </div>
 
   <div #taskCalendar class="size-null">

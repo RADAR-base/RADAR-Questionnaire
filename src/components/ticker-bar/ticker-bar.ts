@@ -26,9 +26,10 @@ export class TickerBarComponent implements OnChanges {
 
   constructor(private schedule: SchedulingService,
               private navCtrl: NavController) {
-    this.schedule.getCurrentReport().then((report) => {
+    // Gets ReportScheduling and adds to tickerItems
+    /*this.schedule.getCurrentReport().then((report) => {
       this.report = report
-    })
+    })*/
   }
 
   ngOnChanges (changes) {

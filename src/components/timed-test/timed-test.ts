@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core'
-import { Dialogs } from '@ionic-native/dialogs'
+import { Dialogs } from '@ionic-native/dialogs';
+import { Vibration } from '@ionic-native/vibration';
 
 let uniqueID = 0
 
@@ -29,8 +30,8 @@ export class TimedTestComponent {
   @Input() image: string
   @Input() timer: Timer
   public itimer: ITimer
-  
-  constructor(private dialogs: Dialogs) {
+
+  constructor(private dialogs: Dialogs, private vibration: Vibration) {
   }
 
   ngOnInit() {
@@ -55,9 +56,9 @@ export class TimedTestComponent {
   hasStarted() {
     return this.itimer.hasStarted
   }
- 
+
   initTimer() {
-      if(!this.timer) { 
+      if(!this.timer) {
           this.timer.start = 0
         }
 
@@ -98,6 +99,7 @@ export class TimedTestComponent {
             }
             else {
                 this.dialogs.beep(1)
+                this.vibration.vibrate(600)
 
                 if (this.timer.end == 0) {
                     this.itimer.hasFinished = true

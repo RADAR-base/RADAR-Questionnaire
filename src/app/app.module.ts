@@ -1,17 +1,18 @@
-import { NgModule } from '@angular/core'
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
-import { HttpModule } from '@angular/http'
-import { MomentModule } from 'angular2-moment'
-import { DatePipe } from '@angular/common'
-import { BrowserModule } from '@angular/platform-browser'
-import { SplashScreen } from '@ionic-native/splash-screen'
-import { Device } from '@ionic-native/device'
-import { StatusBar } from '@ionic-native/status-bar'
-import { IonicApp, IonicModule } from 'ionic-angular'
+import { NgModule } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpModule } from '@angular/http';
+import { MomentModule } from 'angular2-moment';
+import { DatePipe } from '@angular/common';
+import { BrowserModule } from '@angular/platform-browser';
+import { SplashScreen } from '@ionic-native/splash-screen';
+import { Device } from '@ionic-native/device';
+import { StatusBar } from '@ionic-native/status-bar';
+import { IonicApp, IonicModule } from 'ionic-angular';
 import { IonicStorageModule } from '@ionic/storage';
 import { RoundProgressModule } from 'angular-svg-round-progressbar';
-import { BarcodeScanner } from '@ionic-native/barcode-scanner'
-import { Dialogs } from '@ionic-native/dialogs'
+import { BarcodeScanner } from '@ionic-native/barcode-scanner';
+import { Dialogs } from '@ionic-native/dialogs';
+import { Vibration } from '@ionic-native/vibration';
 
 import { TaskCalendarComponent } from '../components/task-calendar/task-calendar'
 import { TaskProgressComponent } from '../components/task-progress/task-progress'
@@ -125,7 +126,8 @@ import { MyApp } from './app.component';
     SchedulingService,
     HomeController,
     BarcodeScanner,
-    Dialogs
+    Dialogs,
+    Vibration
   ]
 })
 export class AppModule {

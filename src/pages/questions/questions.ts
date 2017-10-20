@@ -1,7 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core'
 import { App, Content, NavController, NavParams, ViewController } from 'ionic-angular'
 
-import { Question } from '../../models/question'
+import { Question, QuestionType } from '../../models/question'
 import { AnswerService } from '../../providers/answer-service'
 import { TimeStampService } from '../../providers/timestamp-service'
 import { FinishPage } from '../finish/finish'
@@ -150,6 +150,9 @@ export class QuestionsPage {
     if (event.id) {
       this.answerService.add(event)
       this.setNextDisabled()
+    }
+    if (event.type == QuestionType.timed){
+      this.nextQuestion()
     }
   }
 

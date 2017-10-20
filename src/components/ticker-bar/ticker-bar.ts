@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges,  } from '@angular/core'
+import { Component, Input, OnChanges } from '@angular/core'
 import { NavController } from 'ionic-angular'
 import { SchedulingService } from '../../providers/scheduling-service'
 import { StorageKeys } from '../../enums/storage'

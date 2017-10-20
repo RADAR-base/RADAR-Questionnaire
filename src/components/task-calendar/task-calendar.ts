@@ -1,4 +1,4 @@
-import { Component, OnChanges, ViewChild, ElementRef, Input} from '@angular/core'
+import { Component, OnChanges, ViewChild, ElementRef, Input, Output, EventEmitter} from '@angular/core'
 import { NavController } from 'ionic-angular'
 import { HomeController } from '../../providers/home-controller'
 import { Task } from '../../models/task'

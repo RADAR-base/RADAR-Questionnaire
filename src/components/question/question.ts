@@ -36,9 +36,8 @@ export class QuestionComponent {
 
     this.answer.emit({
       id: this.question.id,
-      value: this.value
+      value: this.value,
+      type: this.question.type
     })
-
-
   }
 }

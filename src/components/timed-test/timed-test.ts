@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core'
+import { Component, EventEmitter, Input, Output, OnChanges } from '@angular/core'
 import { Dialogs } from '@ionic-native/dialogs';
 import { Vibration } from '@ionic-native/vibration';
 
@@ -22,13 +22,14 @@ export interface ITimer {
   selector: 'timed-test',
   templateUrl: 'timed-test.html'
 })
-export class TimedTestComponent {
+export class TimedTestComponent implements OnChanges {
 
   @Output() valueChange: EventEmitter<number> = new EventEmitter<number>()
 
   @Input() heading: string
   @Input() image: string
   @Input() timer: Timer
+  @Input() currentlyShown: boolean
   public itimer: ITimer
 
   constructor(private dialogs: Dialogs, private vibration: Vibration) {
@@ -36,6 +37,12 @@ export class TimedTestComponent {
 
   ngOnInit() {
       this.initTimer();
+  }
+
+  ngOnChanges() {
+    if(this.currentlyShown){
+      this.start()
+    }
   }
 
   start() {

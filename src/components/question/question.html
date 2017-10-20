@@ -1,5 +1,12 @@
-<p>{{question.lead}}</p>
-<h2>{{question.content}}</h2>
+<div *ngIf="question.type === 'info' || question.type === 'timed';then taskformat else stdformat"></div>
+<ng-template #stdformat>
+  <p class="stdformat">{{question.lead}}</p>
+  <h2 class="stdformat">{{question.content}}</h2>
+</ng-template>
+<ng-template #taskformat>
+  <p class="taskformat">{{question.lead}}</p>
+  <h2 class="taskformat">{{question.content}}</h2>
+</ng-template>
 
 <div *ngIf="question.type === 'radio'">
   <radio-input
@@ -23,5 +30,21 @@
     [step]="question.range.step"
     (valueChange)="onValueChange($event)">
   </slider-input>
+</div>
+
+<div *ngIf="question.type === 'info'">
+  <info-screen
+    [sections]="question.sections"
+    (valueChange)="onValueChange($event)">
+  </info-screen>
+</div>
+
+<div *ngIf="question.type === 'timed'">
+  <timed-test
+    [heading]="question.heading"
+    [image]="question.image"
+    [timer]="question.timer"
+    (valueChange)="onValueChange($event)">
+  </timed-test>
 </div>
 

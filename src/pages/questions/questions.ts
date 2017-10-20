@@ -99,7 +99,6 @@ export class QuestionsPage {
       } else {
         this.setPreviousEnabled()
       }
-      
     } else if (finish) {
 
       this.navCtrl.push(FinishPage, {

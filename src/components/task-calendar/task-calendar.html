@@ -21,7 +21,7 @@
       <ion-col>
         <div class="task-info-left">
           {{getStartTime(task)}}
-          <img class="icon-padding extra-info-icon" *ngIf="hasExtraInfo" src="assets/imgs/warning.png"/>
+          <img class="icon-padding extra-info-icon" *ngIf="hasExtraInfo(task.warning)" src="assets/imgs/warning.png"/>
         </div>
         <div class="task-info-right">
           <img class="icon-padding icon-xsm" src="assets/imgs/stopwatch.png"/>{{task.estimatedCompletionTime}}<span class="units">min</span>
@@ -42,7 +42,7 @@
         </ion-row>
       </div>
     </div>
-    
+
   </ion-scroll>
 
 </div>

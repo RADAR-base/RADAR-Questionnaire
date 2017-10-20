@@ -15,9 +15,6 @@ export class TaskCalendarComponent implements OnChanges {
   currentTime: String = '06:00'
   timeIndex = 0
 
-  // TODO: handle logic for checking whether the tasks have extra info
-  hasExtraInfo: Boolean = true
-
   tasks: Task[] = [DefaultTask]
 
   constructor (private controller: HomeController) {
@@ -74,6 +71,14 @@ export class TaskCalendarComponent implements OnChanges {
       return 1;
     }
     return 0;
+  }
+
+  hasExtraInfo(warningStr) {
+    //console.log(warningStr)
+    if(warningStr == '') {
+      return false
+    }
+    return true
   }
 
 }

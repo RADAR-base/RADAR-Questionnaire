@@ -214,7 +214,8 @@ export class SchedulingService {
       name: assessment.name,
       reminderSettings: assessment.protocol.reminders,
       nQuestions: assessment.questions.length,
-      estimatedCompletionTime: assessment.estimatedCompletionTime
+      estimatedCompletionTime: assessment.estimatedCompletionTime,
+      warning: assessment.warn
     }
     return task
   }

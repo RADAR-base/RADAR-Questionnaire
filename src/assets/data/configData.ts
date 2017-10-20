@@ -1,8 +1,12 @@
 export const ConfigData = {
+  "version" : 0.49,
   "assessments" : [ {
-    "endText" : "In light of this focus group, none of your answers were saved.",
-    "estimatedCompletionTime" : 7,
     "name" : "PHQ8",
+    "showIntroduction" : "true",
+    "startText" : "This questionnaire is known as the PHQ8. Clinicians use it to assess current depression in patients. Please note that none of your answers will be collected today. Thank you for taking part in this focus group.",
+    "endText" : "In light of this focus group, none of your answers were saved.",
+    "warn": "",
+    "estimatedCompletionTime" : 7,
     "protocol" : {
       "reminders" : {
         "amount" : 15,
@@ -10,12 +14,12 @@ export const ConfigData = {
         "unit" : "min"
       },
       "repeatProtocol" : {
-        "amount" : 3,
+        "amount" : 1,
         "unit" : "day"
       },
       "repeatQuestionnaire" : {
         "unit" : "min",
-        "unitsFromZero" : [ 600 ]
+        "unitsFromZero" : [ 600, 950, 1050 ]
       }
     },
     "questions" : [ {
@@ -145,12 +149,13 @@ export const ConfigData = {
       } ],
       "type" : "radio"
     } ],
-    "showIntroduction" : "true",
-    "startText" : "This questionnaire is known as the PHQ8. Clinicians use it to assess current depression in patients. Please note that none of your answers will be collected today. Thank you for taking part in this focus group."
   }, {
-    "endText" : "Thanks for giving it a try! Feel free to tell us about your app experience.",
-    "estimatedCompletionTime" : 2,
     "name" : "DEMO",
+    "showIntroduction" : "true",
+    "startText" : "This questionnaire allows you to test all available input types.",
+    "endText" : "Thanks for giving it a try! Feel free to tell us about your app experience.",
+    "warn": "Requires a quiet space",
+    "estimatedCompletionTime" : 2,
     "protocol" : {
       "reminders" : {
         "amount" : 15,
@@ -163,7 +168,7 @@ export const ConfigData = {
       },
       "repeatQuestionnaire" : {
         "unit" : "min",
-        "unitsFromZero" : [ 950, 910, 1300 ]
+        "unitsFromZero" : [ 920, 1100, 1300 ]
       }
     },
     "questions" : [ {
@@ -242,9 +247,6 @@ export const ConfigData = {
         "min" : 1
       },
       "type" : "range"
-    } ],
-    "showIntroduction" : "true",
-    "startText" : "This questionnaire allows you to test all available input types."
-  } ],
-  "version" : 0.45
+    } ]
+  } ]
 }

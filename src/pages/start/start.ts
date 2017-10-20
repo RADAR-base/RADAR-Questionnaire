@@ -3,6 +3,7 @@ import { Component } from '@angular/core'
 import { LoadingController, NavController, NavParams } from 'ionic-angular'
 import { QuestionsPage } from '../questions/questions'
 import { AnswerService } from '../../providers/answer-service'
+import { TimeStampService} from '../../providers/timestamp-service'
 import { Question } from '../../models/question'
 import { Assessment } from '../../models/assessment'
 import { Task } from '../../models/task'
@@ -19,10 +20,11 @@ export class StartPage {
   questions: Question[]
   endText: String
 
-  constructor (
+  constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private answerService: AnswerService
+    private answerService: AnswerService,
+    private timeStampService: TimeStampService
   ) {
     this.associatedTask = this.navParams.data.associatedTask
     this.title = this.navParams.data.title
@@ -31,20 +33,23 @@ export class StartPage {
     this.endText = this.navParams.data.endText
   }
 
-  ionViewDidLoad () {
+  ionViewDidLoad() {
   }
 
-  ionViewDidEnter () {
+  ionViewDidEnter() {
     this.answerService.reset()
+    this.timeStampService.reset()
   }
 
-  handleClosePage () {
+  handleClosePage() {
     this.navCtrl.pop()
   }
 
-  openPage () {
-    this.navCtrl.push(QuestionsPage, {'associatedTask': this.associatedTask,
-                                      'questions':this.questions,
-                                      'endText':this.endText})
+  openPage() {
+    this.navCtrl.push(QuestionsPage, {
+      'associatedTask': this.associatedTask,
+      'questions': this.questions,
+      'endText': this.endText
+    })
   }
 }

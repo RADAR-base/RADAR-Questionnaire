@@ -13,7 +13,7 @@ export class QuestionComponent {
 
   value: number
 
-  onValueChange (event) {
+  onValueChange(event) {
     // on init the component fires the event once
     if (event === undefined) return
 
@@ -38,5 +38,7 @@ export class QuestionComponent {
       id: this.question.id,
       value: this.value
     })
+
+
   }
 }

@@ -27,6 +27,11 @@ export class QuestionComponent {
       case QuestionType.audio:
         // TODO: add audio file reference to send
         break
+
+      case QuestionType.timed:
+      case QuestionType.info:
+        this.value = event
+        break
     }
 
     this.answer.emit({

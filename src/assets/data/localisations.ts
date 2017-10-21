@@ -217,7 +217,7 @@ export const Localisations = {
   },
   "LANGUAGE_ENGLISH": {
     "da":"",
-    "de":"",
+    "de":"Englisch",
     "en":"English",
     "es":"",
     "it":"",
@@ -225,7 +225,7 @@ export const Localisations = {
   },
   "LANGUAGE_SPANISH": {
     "da":"",
-    "de":"",
+    "de":"Spanisch",
     "en":"Spanish",
     "es":"",
     "it":"",
@@ -233,7 +233,7 @@ export const Localisations = {
   },
   "LANGUAGE_ITALIAN": {
     "da":"",
-    "de":"",
+    "de":"Italienisch",
     "en":"Italian",
     "es":"",
     "it":"",
@@ -241,7 +241,7 @@ export const Localisations = {
   },
   "LANGUAGE_GERMAN": {
     "da":"",
-    "de":"",
+    "de":"Deutsch",
     "en":"German",
     "es":"",
     "it":"",
@@ -249,7 +249,7 @@ export const Localisations = {
   },
   "LANGUAGE_DANISH": {
     "da":"",
-    "de":"",
+    "de":"Dänisch",
     "en":"Danish",
     "es":"",
     "it":"",
@@ -257,7 +257,7 @@ export const Localisations = {
   },
   "LANGUAGE_DUTCH": {
     "da":"",
-    "de":"",
+    "de":"Niederländisch",
     "en":"Dutch",
     "es":"",
     "it":"",

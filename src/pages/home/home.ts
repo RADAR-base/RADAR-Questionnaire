@@ -8,6 +8,8 @@ import { StartPage } from '../start/start'
 import { QuestionsPage } from '../questions/questions'
 import { SettingsPage } from '../settings/settings'
 import { DefaultTask } from '../../assets/data/defaultConfig'
+import { LocKeys } from '../../enums/localisations'
+import { TranslatePipe } from '../../pipes/translate/translate'
 
 
 @Component({
@@ -46,6 +48,7 @@ export class HomePage {
     public alertCtrl: AlertController,
     private schedule: SchedulingService,
     private controller: HomeController,
+    private translate: TranslatePipe
   ) { }
 
   ngAfterViewInit(){
@@ -181,15 +184,15 @@ export class HomePage {
   showCredits () {
     let buttons = [
       {
-        text: 'Okay',
+        text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
         handler: () => {
           console.log('Okay clicked');
         }
       }
     ]
     this.showAlert({
-      'title': 'Credits',
-      'message': 'Made with &hearts; for you by the RADAR-CNS consortium. For more information click <a href="http://radar-cns.org">here</a>.',
+      'title': this.translate.transform(LocKeys.CREDITS_TITLE.toString()),
+      'message': this.translate.transform(LocKeys.CREDITS_BODY.toString()),
       'buttons': buttons
     })
   }

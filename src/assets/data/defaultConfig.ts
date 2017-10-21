@@ -1,5 +1,7 @@
 import { NotificationSettings } from '../../models/settings'
 import { WeeklyReportSubSettings } from '../../models/settings'
+import { LanguageSetting } from '../../models/settings'
+import { LocKeys } from '../../enums/localisations'
 import { Task } from '../../models/task'
 
 // FIREBASE SETUP
@@ -21,15 +23,15 @@ export const DefaultSettingsNotifications: NotificationSettings = {
 
 export const DefaultSettingsWeeklyReport: WeeklyReportSubSettings[] = [
     {
-      name: 'Progress',
+      name: LocKeys.MEASURE_PROGRESS.toString(),
       show: false
     },
     {
-      name: 'Steps',
+      name: LocKeys.MEASURE_STEPS.toString(),
       show: false
     },
     {
-      name: 'Heart rate',
+      name: LocKeys.MEASURE_HEART_RATE.toString(),
       show: false
     }
   ]
@@ -50,12 +52,36 @@ export const DefaultTask: Task = {
   warning: ''
 }
 
-export const DefaultSettingsSupportedLanguages: String[] = [
-  'English',
-  'Italian',
-  'Spanish',
-  'Dutch',
-  'German'
+export const DefaultSettingsSelectedLanguage: LanguageSetting = {
+  label: "",
+  value: ""
+}
+
+export const DefaultSettingsSupportedLanguages: LanguageSetting[] = [
+  {
+    label: LocKeys.LANGUAGE_ENGLISH.toString(),
+    value: 'en'
+  },
+  {
+    label: LocKeys.LANGUAGE_ITALIAN.toString(),
+    value: 'it'
+  },
+  {
+    label: LocKeys.LANGUAGE_SPANISH.toString(),
+    value: 'es'
+  },
+  {
+    label: LocKeys.LANGUAGE_DUTCH.toString(),
+    value: 'nl'
+  },
+  {
+    label: LocKeys.LANGUAGE_DANISH.toString(),
+    value: 'da'
+  },
+  {
+    label: LocKeys.LANGUAGE_GERMAN.toString(),
+    value: 'de'
+  }
 ]
 
 export const DefaultScheduleVersion: number = 0

@@ -4,6 +4,7 @@ import { HttpModule } from '@angular/http';
 import { MomentModule } from 'angular2-moment';
 import { DatePipe } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
+import { PipesModule } from '../pipes/pipes.module';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Device } from '@ionic-native/device';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -13,6 +14,7 @@ import { RoundProgressModule } from 'angular-svg-round-progressbar';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Dialogs } from '@ionic-native/dialogs';
 import { Vibration } from '@ionic-native/vibration';
+import { Globalization } from '@ionic-native/globalization';
 
 import { TaskCalendarComponent } from '../components/task-calendar/task-calendar'
 import { TaskProgressComponent } from '../components/task-progress/task-progress'
@@ -44,6 +46,7 @@ import { TimeStampService } from '../providers/timestamp-service'
 import { PrepareDataService} from '../providers/preparedata-service'
 import { Utility } from '../utilities/util'
 import { MyApp } from './app.component';
+import { TranslatePipe } from '../pipes/translate/translate';
 
 
 @NgModule({
@@ -53,6 +56,7 @@ import { MyApp } from './app.component';
     BrowserModule,
     RoundProgressModule,
     BrowserAnimationsModule,
+    PipesModule,
     IonicModule.forRoot(MyApp, {
       mode: 'md'
     }),
@@ -130,7 +134,9 @@ import { MyApp } from './app.component';
     HomeController,
     BarcodeScanner,
     Dialogs,
-    Vibration
+    Vibration,
+    Globalization,
+    TranslatePipe
   ]
 })
 export class AppModule {

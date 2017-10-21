@@ -2,7 +2,7 @@
   <img class="icons-big"
     src="assets/imgs/checkmark-big.svg" alt="Completed">
   <h2 text-center>
-    Thank you for completing the questionnaire.
+    {{ "FINISH_THANKS" | translate }}
   </h2>
   <h2 text-center>
     {{ content }}
@@ -10,7 +10,7 @@
   <div class="pos-bottom" padding>
     <button ion-button class="bt bt--full" round full
       (click)="handleClosePage()">
-      Close
+      {{ "BTN_DONE" | translate }}
     </button>
   </div>
 </ion-content>

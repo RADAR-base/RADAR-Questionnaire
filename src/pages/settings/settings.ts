@@ -7,7 +7,7 @@ import { NotificationSettings } from '../../models/settings'
 import { WeeklyReportSubSettings } from '../../models/settings'
 import { DefaultSettingsNotifications } from '../../assets/data/defaultConfig'
 import { DefaultSettingsWeeklyReport } from '../../assets/data/defaultConfig'
-import { DefaultSettingsSelectedLanguage } from '../../assets/data/defaultConfig'
+import { DefaultSettingsSelectedLanguage, LanguageMap } from '../../assets/data/defaultConfig'
 import { StorageKeys } from '../../enums/storage'
 import { LocKeys } from '../../enums/localisations'
 import { TranslatePipe } from '../../pipes/translate/translate'
@@ -54,7 +54,6 @@ export class SettingsPage {
       this.referenceDate = referenceDate
     })
     this.storage.get(StorageKeys.LANGUAGE).then((language) => {
-      console.log(language)
       this.language = language
     })
     this.storage.get(StorageKeys.SETTINGS_NOTIFICATIONS).then((settingsNotifications) => {
@@ -91,16 +90,19 @@ export class SettingsPage {
       },
       {
         text: this.translate.transform(LocKeys.BTN_SET.toString()),
-        handler: (selectedLanguage) => {
-          this.storage.set(StorageKeys.LANGUAGE, selectedLanguage)
-          this.language = selectedLanguage
+        handler: (selectedLanguageVal) => {
+          let lang: LanguageSetting = {
+            "label": LanguageMap[selectedLanguageVal],
+            "value": selectedLanguageVal
+          }
+          this.storage.set(StorageKeys.LANGUAGE, lang)
+          this.language = lang
         }
       }
     ]
     var inputs = []
     for(var i=0; i<this.languagesSelectable.length; i++){
       var checked = false
-      console.log(this.languagesSelectable)
       if(this.languagesSelectable[i]["label"] == this.language) {
         checked = true
       }

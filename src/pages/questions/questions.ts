@@ -5,6 +5,9 @@ import { Question, QuestionType } from '../../models/question'
 import { AnswerService } from '../../providers/answer-service'
 import { TimeStampService } from '../../providers/timestamp-service'
 import { FinishPage } from '../finish/finish'
+import { LocKeys } from '../../enums/localisations'
+import { TranslatePipe } from '../../pipes/translate/translate'
+
 
 @Component({
   selector: 'page-questions',
@@ -29,10 +32,10 @@ export class QuestionsPage {
 
   // TODO: gather text variables in one place. get values from server?
   txtValues = {
-    next: 'NEXT',
-    previous: 'PREVIOUS',
-    finish: 'FINISH',
-    close: 'CLOSE'
+    next: this.translate.transform(LocKeys.BTN_NEXT.toString()),
+    previous: this.translate.transform(LocKeys.BTN_PREVIOUS.toString()),
+    finish: this.translate.transform(LocKeys.BTN_FINISH.toString()),
+    close: this.translate.transform(LocKeys.BTN_CLOSE.toString())
   }
   nextBtTxt: string = this.txtValues.next
   previousBtTxt: string = this.txtValues.close
@@ -51,7 +54,8 @@ export class QuestionsPage {
     public viewCtrl: ViewController,
     public appCtrl: App,
     private answerService: AnswerService,
-    private timestampService: TimeStampService
+    private timestampService: TimeStampService,
+    private translate: TranslatePipe,
   ) {
   }
 

@@ -7,6 +7,7 @@ import { WeeklyReportSubSettings } from '../../models/settings'
 import { DefaultSettingsWeeklyReport } from '../../assets/data/defaultConfig'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner'
 import { HomePage } from '../home/home'
+import { LocKeys } from '../../enums/localisations'
 
 @Component({
   selector: 'page-enrolment',
@@ -79,10 +80,10 @@ export class EnrolmentPage {
 
   setOutcomeStatus(status) {
     if (status) {
-      this.outcomeStatus = "Success"
+      this.outcomeStatus = LocKeys.STATUS_SUCCESS.value
       this.next()
     } else {
-      this.outcomeStatus = "Registration failure"
+      this.outcomeStatus = LocKeys.STATUS_FAILURE.value
     }
   }
 

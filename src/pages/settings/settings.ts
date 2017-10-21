@@ -2,11 +2,15 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AlertController } from 'ionic-angular'
 import { StorageService } from '../../providers/storage-service'
+import { LanguageSetting } from '../../models/settings'
 import { NotificationSettings } from '../../models/settings'
 import { WeeklyReportSubSettings } from '../../models/settings'
 import { DefaultSettingsNotifications } from '../../assets/data/defaultConfig'
 import { DefaultSettingsWeeklyReport } from '../../assets/data/defaultConfig'
+import { DefaultSettingsSelectedLanguage } from '../../assets/data/defaultConfig'
 import { StorageKeys } from '../../enums/storage'
+import { LocKeys } from '../../enums/localisations'
+import { TranslatePipe } from '../../pipes/translate/translate'
 
 @Component({
   selector: 'page-settings',
@@ -19,7 +23,7 @@ export class SettingsPage {
   scheduleVersion: String
   patientId: String
   referenceDate: Date
-  language: String
+  language: LanguageSetting = DefaultSettingsSelectedLanguage
   languagesSelectable: String[]
   notifications: NotificationSettings = DefaultSettingsNotifications
   weeklyReport: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
@@ -28,8 +32,9 @@ export class SettingsPage {
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     public alertCtrl: AlertController,
-    private storage: StorageService) {
-  }
+    private storage: StorageService,
+    private translate: TranslatePipe){
+    }
 
   ionViewDidLoad() {
     this.loadSettings()
@@ -49,6 +54,7 @@ export class SettingsPage {
       this.referenceDate = referenceDate
     })
     this.storage.get(StorageKeys.LANGUAGE).then((language) => {
+      console.log(language)
       this.language = language
     })
     this.storage.get(StorageKeys.SETTINGS_NOTIFICATIONS).then((settingsNotifications) => {
@@ -79,12 +85,12 @@ export class SettingsPage {
   showSelectLanguage() {
     let buttons = [
       {
-        text: 'Cancel',
+        text: this.translate.transform(LocKeys.BTN_CANCEL.toString()),
         handler: () => {
         }
       },
       {
-        text: 'Set',
+        text: this.translate.transform(LocKeys.BTN_SET.toString()),
         handler: (selectedLanguage) => {
           this.storage.set(StorageKeys.LANGUAGE, selectedLanguage)
           this.language = selectedLanguage
@@ -94,18 +100,19 @@ export class SettingsPage {
     var inputs = []
     for(var i=0; i<this.languagesSelectable.length; i++){
       var checked = false
-      if(this.languagesSelectable[i] == this.language) {
+      console.log(this.languagesSelectable)
+      if(this.languagesSelectable[i]["label"] == this.language) {
         checked = true
       }
       inputs.push({
         type: 'radio',
-        label: this.languagesSelectable[i],
-        value: this.languagesSelectable[i],
+        label: this.translate.transform(this.languagesSelectable[i]["label"]),
+        value: this.languagesSelectable[i]["value"],
         checked: checked
       })
     }
     this.showAlert({
-      'title': 'Select your Language',
+      'title': this.translate.transform(LocKeys.SETTINGS_LANGUAGE_ALERT.toString()),
       'buttons': buttons,
       'inputs': inputs
     })
@@ -114,13 +121,13 @@ export class SettingsPage {
   showInfoNightMode() {
     let buttons = [
       {
-        text: 'Okay',
+        text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
         handler: () => {}
       }
     ]
     this.showAlert({
-      'title': 'Night Mode',
-      'message': 'Night Mode suppresses all notifications between 10pm and 7:30am.',
+      'title': this.translate.transform(LocKeys.SETTINGS_NOTIFICATIONS_NIGHTMOD.toString()),
+      'message': this.translate.transform(LocKeys.SETTINGS_NOTIFICATIONS_NIGHTMOD_DESC.toString()),
       'buttons': buttons
     })
   }
@@ -128,13 +135,13 @@ export class SettingsPage {
   showConfirmReset() {
     let buttons = [
       {
-        text: 'Disagree',
+        text: this.translate.transform(LocKeys.BTN_DISAGREE.toString()),
         handler: () => {
           console.log('Reset cancel')
         }
       },
       {
-        text: 'Agree',
+        text: this.translate.transform(LocKeys.BTN_AGREE.toString()),
         handler: () => {
           this.storage.clearStorage()
           this.backToHome()
@@ -142,8 +149,8 @@ export class SettingsPage {
       }
     ]
     this.showAlert({
-      'title': 'Reset RADAR-CNS App',
-      'message': 'All saved information will be lost.',
+      'title': this.translate.transform(LocKeys.SETTINGS_RESET_ALERT.toString()),
+      'message': this.translate.transform(LocKeys.SETTINGS_RESET_ALERT_DESC.toString()),
       'buttons': buttons
     })
   }

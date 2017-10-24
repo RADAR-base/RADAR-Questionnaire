@@ -90,7 +90,7 @@ export const Localisations = {
   "SETTINGS_PATIENTID": {
     "da":"",
     "de":"",
-    "en":"Patient ID: ",
+    "en":"Patient ID",
     "es":"",
     "it":"",
     "nl":""
@@ -106,7 +106,7 @@ export const Localisations = {
   "SETTINGS_ENROL_DATE": {
     "da":"",
     "de":"",
-    "en":"Enrolment Date: ",
+    "en":"Enrolment Date",
     "es":"",
     "it":"",
     "nl":""
@@ -216,52 +216,52 @@ export const Localisations = {
     "nl":""
   },
   "LANGUAGE_ENGLISH": {
-    "da":"",
+    "da":"Engelsk",
     "de":"Englisch",
     "en":"English",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Inglés",
+    "it":"Inglese",
+    "nl":"Engels"
   },
   "LANGUAGE_SPANISH": {
-    "da":"",
+    "da":"Spansk",
     "de":"Spanisch",
     "en":"Spanish",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Español",
+    "it":"Spagnolo",
+    "nl":"Spaans"
   },
   "LANGUAGE_ITALIAN": {
-    "da":"",
+    "da":"Italiensk",
     "de":"Italienisch",
     "en":"Italian",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Italiano",
+    "it":"Italiano",
+    "nl":"Italiaans"
   },
   "LANGUAGE_GERMAN": {
-    "da":"",
+    "da":"Tysk",
     "de":"Deutsch",
     "en":"German",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Alemán",
+    "it":"Tedesco",
+    "nl":"Duits"
   },
   "LANGUAGE_DANISH": {
-    "da":"",
+    "da":"Dansk",
     "de":"Dänisch",
     "en":"Danish",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Danés",
+    "it":"Danese",
+    "nl":"Deens"
   },
   "LANGUAGE_DUTCH": {
-    "da":"",
+    "da":"Hollandsk",
     "de":"Niederländisch",
     "en":"Dutch",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Holandés",
+    "it":"Olandese",
+    "nl":"Nederlands"
   },
   "BTN_ENROL_ENROL": {
     "da":"",

@@ -7,6 +7,7 @@ import { StorageService } from '../../providers/storage-service'
 
 @Pipe({
   name: 'translate',
+  pure: false
 })
 export class TranslatePipe implements PipeTransform {
 
@@ -16,13 +17,17 @@ export class TranslatePipe implements PipeTransform {
   constructor(private storage: StorageService) {
     this.storage.get(StorageKeys.LANGUAGE).then((language) => {
       this.preferredLang = language.value
-      console.log(language)
+    })
+  }
+
+  reinit() {
+    this.storage.get(StorageKeys.LANGUAGE).then((language) => {
+      this.preferredLang = language.value
     })
   }
 
   transform(value: string): string {
     try {
-      console.log(value)
       return Localisations[value][this.preferredLang];
     } catch(e) {
       console.log(e)

@@ -11,6 +11,8 @@ import { DefaultSettingsSelectedLanguage, LanguageMap } from '../../assets/data/
 import { StorageKeys } from '../../enums/storage'
 import { LocKeys } from '../../enums/localisations'
 import { TranslatePipe } from '../../pipes/translate/translate'
+import { SplashPage } from '../splash/splash'
+
 
 @Component({
   selector: 'page-settings',
@@ -97,6 +99,7 @@ export class SettingsPage {
           }
           this.storage.set(StorageKeys.LANGUAGE, lang)
           this.language = lang
+          this.navCtrl.setRoot(SplashPage)
         }
       }
     ]

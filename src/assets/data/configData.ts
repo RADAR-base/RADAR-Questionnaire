@@ -163,7 +163,7 @@ export const ConfigData = {
         "unit" : "min"
       },
       "repeatProtocol" : {
-        "amount" : 2,
+        "amount" : 1,
         "unit" : "day"
       },
       "repeatQuestionnaire" : {

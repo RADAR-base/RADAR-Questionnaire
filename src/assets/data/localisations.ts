@@ -503,4 +503,108 @@ export const Localisations = {
     "it":"",
     "nl":""
   },
+  "TASK_CALENDAR_TITLE":{
+    "da":"",
+    "de":"",
+    "en":"Today's tasks",
+    "es":"",
+    "it":"",
+    "nl":""
+  },
+  "TASK_INFO_WARN": {
+    "da":"",
+    "de":"",
+    "en":"Requires a quiet space",
+    "es":"",
+    "it":"",
+    "nl":""
+  },
+  "TASK_PROGRESS_TITLE": {
+    "da":"",
+    "de":"",
+    "en":"Today",
+    "es":"",
+    "it":"",
+    "nl":""
+  },
+  "TASK_PROGRESS_COMPLETED": {
+    "da":"",
+    "de":"",
+    "en":"Completed",
+    "es":"",
+    "it":"",
+    "nl":""
+  },
+  "TASK_BAR_NEXT_TASK": {
+    "da":"",
+    "de":"",
+    "en":"Your next task starts in ",
+    "es":"",
+    "it":"",
+    "nl":""
+  },
+  "TASK_BAR_AFFIRMATION_1": {
+    "da":"",
+    "de":"",
+    "en":"Well done! ",
+    "es":"",
+    "it":"",
+    "nl":""
+  },
+  "TASK_BAR_AFFIRMATION_2": {
+    "da":"",
+    "de":"",
+    "en":"All tasks completed.",
+    "es":"",
+    "it":"",
+    "nl":""
+  },
+  "TASK_BAR_NO_TASK_1": {
+    "da":"",
+    "de":"",
+    "en":"Relax! ",
+    "es":"",
+    "it":"",
+    "nl":""
+  },
+  "TASK_BAR_NO_TASK_2": {
+    "da":"",
+    "de":"",
+    "en":"No tasks today.",
+    "es":"",
+    "it":"",
+    "nl":""
+  },
+  "TASK_TIME_HOUR_SINGLE": {
+    "da":"",
+    "de":"",
+    "en":"hr",
+    "es":"",
+    "it":"",
+    "nl":""
+  },
+  "TASK_TIME_HOUR_MULTIPLE": {
+    "da":"",
+    "de":"",
+    "en":"hrs",
+    "es":"",
+    "it":"",
+    "nl":""
+  },
+  "TASK_TIME_MINUTE_SINGLE": {
+    "da":"",
+    "de":"",
+    "en":"min",
+    "es":"",
+    "it":"",
+    "nl":""
+  },
+  "TASK_TIME_MINUTE_MULTIPLE": {
+    "da":"",
+    "de":"",
+    "en":"mins",
+    "es":"",
+    "it":"",
+    "nl":""
+  }
 }

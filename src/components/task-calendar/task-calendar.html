@@ -3,7 +3,7 @@
   <ion-scroll scrollY="true" class="layers" [style.height.px]="scrollHeight">
 
   <div padding class="date">
-    Today's tasks
+    {{ "TASK_CALENDAR_TITLE" | translate }}
   </div>
 
   <div *ngFor="let task of tasks; let i=index">

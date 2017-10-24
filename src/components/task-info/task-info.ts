@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, Output, trigger,
   state, style, transition, animate, keyframes, OnChanges } from '@angular/core'
 import { Task, TasksProgress } from '../../models/task'
 import { HomeController} from '../../providers/home-controller'
+import { LocKeys } from '../../enums/localisations'
+import { TranslatePipe } from '../../pipes/translate/translate'
 
 /**
  * Generated class for the TaskInfo component.
@@ -105,7 +107,7 @@ export class TaskInfoComponent implements OnChanges {
     RIGHT: 'right'
   }
 
-  constructor(private controller: HomeController) {
+  constructor(private controller: HomeController, private translate: TranslatePipe) {
     this.applyAnimationKeys()
   }
 
@@ -184,7 +186,7 @@ export class TaskInfoComponent implements OnChanges {
 
   getExtraInfo () {
     var info = ''
-    this.task['extraInfo'] = 'Requires a quiet space'
+    this.task['extraInfo'] = this.translate.transform(LocKeys.TASK_INFO_WARN.toString())
     info = this.task['extraInfo']
     this.hasExtraInfo = this.task['extraInfo'] != '' ? true : false
     return info

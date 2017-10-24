@@ -69,4 +69,17 @@ export class LocKeys {
     static MEASURE_HEART_RATE = new LocKeys('MEASURE_HEART_RATE');
     static CREDITS_TITLE = new LocKeys('CREDITS_TITLE');
     static CREDITS_BODY = new LocKeys('CREDITS_BODY');
+    static TASK_CALENDAR_TITLE = new LocKeys('TASK_CALENDAR_TITLE');
+    static TASK_INFO_WARN = new LocKeys('TASK_INFO_WARN');
+    static TASK_PROGRESS_COMPLETED = new LocKeys('TASK_PROGRESS_COMPLETED');
+    static TASK_PROGRESS_TITLE = new LocKeys('TASK_PROGRESS_TITLE');
+    static TASK_BAR_NEXT_TASK = new LocKeys('TASK_BAR_NEXT_TASK');
+    static TASK_BAR_AFFIRMATION_1 = new LocKeys('TASK_BAR_AFFIRMATION_1');
+    static TASK_BAR_AFFIRMATION_2 = new LocKeys('TASK_BAR_AFFIRMATION_2');
+    static TASK_BAR_NO_TASK_1 = new LocKeys('TASK_BAR_NO_TASK_1');
+    static TASK_BAR_NO_TASK_2 = new LocKeys('TASK_BAR_NO_TASK_2');
+    static TASK_TIME_HOUR_SINGLE = new LocKeys('TASK_TIME_HOUR_SINGLE');
+    static TASK_TIME_HOUR_MULTIPLE = new LocKeys('TASK_TIME_HOUR_MULTIPLE');
+    static TASK_TIME_MINUTE_SINGLE = new LocKeys('TASK_TIME_MINUTE_SINGLE');
+    static TASK_TIME_MINUTE_MULTIPLE = new LocKeys('TASK_TIME_MINUTE_MULTIPLE');
 }

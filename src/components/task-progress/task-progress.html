@@ -1,7 +1,7 @@
 <div id="task-progress-container" (click)="easterEggFireworks()">
 
   <div id="navigation">
-    Today
+    {{ "TASK_PROGRESS_TITLE" | translate }}
   </div>
 
   <div class="pyro" *ngIf="showFireworks">
@@ -23,7 +23,7 @@
   <div #counter class="counter">
     <span class="large">{{ current }}</span>
     <br>
-    <span class="small">{{ "COMPLETED" | translate }}</span>
+    <span class="small">{{ "TASK_PROGRESS_COMPLETED" | translate }}</span>
   </div>
 
 </div>

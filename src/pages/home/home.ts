@@ -10,6 +10,8 @@ import { SettingsPage } from '../settings/settings'
 import { DefaultTask } from '../../assets/data/defaultConfig'
 import { LocKeys } from '../../enums/localisations'
 import { TranslatePipe } from '../../pipes/translate/translate'
+import { StorageService } from '../../providers/storage-service'
+import { StorageKeys } from '../../enums/storage'
 
 
 @Component({
@@ -48,8 +50,9 @@ export class HomePage {
     public alertCtrl: AlertController,
     private schedule: SchedulingService,
     private controller: HomeController,
-    private translate: TranslatePipe
-  ) { }
+    private translate: TranslatePipe,
+    private storage: StorageService
+  ) {  }
 
   ngAfterViewInit(){
   }

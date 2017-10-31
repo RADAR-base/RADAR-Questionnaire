@@ -26,6 +26,9 @@ export class EnrolmentPage {
   outcomeStatus: String
   reportSettings: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
 
+  // AUTHENTICATION
+  authStr: string = "Auth TEST"
+
   constructor(
     public navCtrl: NavController,
     private scanner: BarcodeScanner,
@@ -48,29 +51,31 @@ export class EnrolmentPage {
       orientation: 'portrait',
       disableAnimations: true
     }
-    //this.scanner.scan(scanOptions).then((scannedObj) => this.authenticate(scannedObj))
+    this.scanner.scan(scanOptions).then((scannedObj) => this.authenticate(scannedObj))
     //TODO remove when finished
-    this.authenticate({text:'Test-1'})
+    //this.authenticate({text:'Test-1'})
   }
 
   authenticate(authObj) {
-    let authString = authObj.text
-    console.log(authString)
+    let auth = JSON.parse(authObj.text)
+    this.authStr = authObj.text
+
     this.transitionStatuses()
     //TODO authenticate here
-    let patientId = authString
+
+    let patientId = "TESTING"
     this.storage.init(patientId)
     this.doAfterAuthentication()
   }
 
   doAfterAuthentication() {
-    setTimeout(() => {
-      this.loading = false
-      this.showOutcomeStatus = true
-      this.configService.fetchConfigState()
-      this.setOutcomeStatus(this.showOutcomeStatus)
-      this.transitionStatuses()
-    }, 1000)
+    this.loading = false
+    this.showOutcomeStatus = true
+    this.configService.fetchConfigState()
+
+    // FOR AUTHENTICATION AUTTOMATIC TRANSITION OFF
+    //this.setOutcomeStatus(this.showOutcomeStatus)
+    //this.transitionStatuses()
   }
 
   weeklyReportChange(index) {

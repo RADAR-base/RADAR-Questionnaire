@@ -35,6 +35,12 @@
         <div #loading id="loading"><div class="padding-text">{{ "STATUS_LOADING" | translate}}</div></div>
         <div #outcome id="outcome"><div class="padding-text">{{outcomeStatus}}</div></div>
       </div>
+
+      <!-- AUTHENTICATION OUTPUT -->
+      <div padding>
+        {{ authStr }}
+      </div>
+
       <div padding class="bottom">
         <button ion-button class="bt bt--full" round full
           (click)="scan()">

@@ -47,6 +47,7 @@ import { PrepareDataService} from '../providers/preparedata-service'
 import { Utility } from '../utilities/util'
 import { MyApp } from './app.component';
 import { TranslatePipe } from '../pipes/translate/translate';
+import { AuthService } from '../providers/auth-service';
 
 
 @NgModule({
@@ -136,7 +137,8 @@ import { TranslatePipe } from '../pipes/translate/translate';
     Dialogs,
     Vibration,
     Globalization,
-    TranslatePipe
+    TranslatePipe,
+    AuthService
   ]
 })
 export class AppModule {

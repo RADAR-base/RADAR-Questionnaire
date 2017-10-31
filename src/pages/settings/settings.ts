@@ -1,17 +1,17 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { AlertController } from 'ionic-angular'
-import { StorageService } from '../../providers/storage-service'
-import { LanguageSetting } from '../../models/settings'
-import { NotificationSettings } from '../../models/settings'
-import { WeeklyReportSubSettings } from '../../models/settings'
-import { DefaultSettingsNotifications } from '../../assets/data/defaultConfig'
-import { DefaultSettingsWeeklyReport } from '../../assets/data/defaultConfig'
-import { DefaultSettingsSelectedLanguage, LanguageMap } from '../../assets/data/defaultConfig'
-import { StorageKeys } from '../../enums/storage'
-import { LocKeys } from '../../enums/localisations'
-import { TranslatePipe } from '../../pipes/translate/translate'
-import { MyApp } from '../../app/app.component'
+import { AlertController } from 'ionic-angular';
+import { StorageService } from '../../providers/storage-service';
+import { LanguageSetting } from '../../models/settings';
+import { NotificationSettings } from '../../models/settings';
+import { WeeklyReportSubSettings } from '../../models/settings';
+import { DefaultSettingsNotifications } from '../../assets/data/defaultConfig';
+import { DefaultSettingsWeeklyReport } from '../../assets/data/defaultConfig';
+import { DefaultSettingsSelectedLanguage, LanguageMap } from '../../assets/data/defaultConfig';
+import { StorageKeys } from '../../enums/storage';
+import { LocKeys } from '../../enums/localisations';
+import { TranslatePipe } from '../../pipes/translate/translate';
+import { MyApp } from '../../app/app.component';
 
 
 @Component({

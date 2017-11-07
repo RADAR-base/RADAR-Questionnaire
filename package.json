@@ -68,7 +68,7 @@
     "@ionic/cli-plugin-cordova": "1.6.2",
     "@ionic/cli-plugin-ionic-angular": "1.4.1",
     "codelyzer": "^3.0.1",
-    "ionic": "3.16.0",
+    "ionic": "3.17.0",
     "postcss": "^6.0.1",
     "postcss-cli": "^4.0.0",
     "postcss-scss": "^1.0.0",

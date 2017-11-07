@@ -53,23 +53,23 @@ export class EnrolmentPage {
       orientation: 'portrait',
       disableAnimations: true
     }
-    //this.scanner.scan(scanOptions).then((scannedObj) => this.authenticate(scannedObj))
+    this.scanner.scan(scanOptions).then((scannedObj) => this.authenticate(scannedObj))
     //TODO remove when finished
-    this.authenticate({'text':'{"refreshToken":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmMTczMWU3Zi1mYmUwLTRkOWMtYTU4Ni00ODQzM2E2NmJlYTkiLCJzb3VyY2VzIjpbXSwidXNlcl9uYW1lIjoiZjE3MzFlN2YtZmJlMC00ZDljLWE1ODYtNDg0MzNhNjZiZWE5Iiwicm9sZXMiOlsiUmFkYXItUGlsb3QtMDE6Uk9MRV9QQVJUSUNJUEFOVCJdLCJpc3MiOiJNYW5hZ2VtZW50UG9ydGFsIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9QQVJUSUNJUEFOVCJdLCJjbGllbnRfaWQiOiJhUk1UIiwiYXVkIjpbInJlc19NYW5hZ2VtZW50UG9ydGFsIl0sInNjb3BlIjpbIkRVTU1ZX1NDT1BFIl0sImF0aSI6IjdlMmI2Y2RhLWRlZmMtNDc5Zi1hZDI0LWU1MTg0NTM3MzJhZiIsImV4cCI6MTUxNTI1MjEwNSwiaWF0IjoxNTEwMDY4MTA1LCJqdGkiOiJjODgzZjYzYS0zMGYxLTQ1MmUtOWZiZS1lZGFmN2RlZmM2YmUifQ.CMgUx0RaKdvShnmoCndsJRgtC8cCqKbYbH9eyHY5LREdD286OkkHldGWelEJI740S5wTFWB3nDoluVIdF7kzveAXPHnPOOWSnVCdy5GrNu2s5Q3xUinfVCkZ7PB9vDx8SGm1oa7rQ_ZYdG-GfGJyhoMPEsVs-WeumwSfZnlz0dZcbln2StpaFOu8liqdD4n_yiybOlfZlaxVKp5-0hZlw1UGZfCk3VMKHknnqwxAR8r3trF7AEEJXPlOzWcCVHnFmwuEPGMOmoN8zhD5nhaE57CIKaIoYm-pYSy-4VcBmCXiHBIBqbNvQSZ0uayohwGavqR6PU-nIjOlBaW4vflmDrPuAExVcZ6iwYJObyEK8ZVYSFw_-6_gpAxemMS7hOd_qO4tLCwMoAAu7ky5U2Goxaple_ZLjliMsvjU6cUY8WIzd92oKgHDbdVgfgeNLmfY_3evnFsowe12-LLeprTkFUMetFwGUXRnim2Wp4Ss5Or0eDCYMltFSDh6riy781d3vZTY9GKo3FYqS706dHclMEcb96tHpwpvCvlZmb75L9kd7gixyllywXQoIZmjDqW0btKbNnrSDr8zgOfMugi5DZ_qCMm9iFOVs5nK-5uC4nQouEvNIjgjKA-bbR9YvOC8UxDjF4Dpk3S6uU77Im4dJuwMFpSxa2zy7Ko"}'})
+    //this.authenticate({'text':'{"refreshToken":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmMTczMWU3Zi1mYmUwLTRkOWMtYTU4Ni00ODQzM2E2NmJlYTkiLCJzb3VyY2VzIjpbXSwidXNlcl9uYW1lIjoiZjE3MzFlN2YtZmJlMC00ZDljLWE1ODYtNDg0MzNhNjZiZWE5Iiwicm9sZXMiOlsiUmFkYXItUGlsb3QtMDE6Uk9MRV9QQVJUSUNJUEFOVCJdLCJpc3MiOiJNYW5hZ2VtZW50UG9ydGFsIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9QQVJUSUNJUEFOVCJdLCJjbGllbnRfaWQiOiJhUk1UIiwiYXVkIjpbInJlc19NYW5hZ2VtZW50UG9ydGFsIl0sInNjb3BlIjpbIkRVTU1ZX1NDT1BFIl0sImF0aSI6IjdlMmI2Y2RhLWRlZmMtNDc5Zi1hZDI0LWU1MTg0NTM3MzJhZiIsImV4cCI6MTUxNTI1MjEwNSwiaWF0IjoxNTEwMDY4MTA1LCJqdGkiOiJjODgzZjYzYS0zMGYxLTQ1MmUtOWZiZS1lZGFmN2RlZmM2YmUifQ.CMgUx0RaKdvShnmoCndsJRgtC8cCqKbYbH9eyHY5LREdD286OkkHldGWelEJI740S5wTFWB3nDoluVIdF7kzveAXPHnPOOWSnVCdy5GrNu2s5Q3xUinfVCkZ7PB9vDx8SGm1oa7rQ_ZYdG-GfGJyhoMPEsVs-WeumwSfZnlz0dZcbln2StpaFOu8liqdD4n_yiybOlfZlaxVKp5-0hZlw1UGZfCk3VMKHknnqwxAR8r3trF7AEEJXPlOzWcCVHnFmwuEPGMOmoN8zhD5nhaE57CIKaIoYm-pYSy-4VcBmCXiHBIBqbNvQSZ0uayohwGavqR6PU-nIjOlBaW4vflmDrPuAExVcZ6iwYJObyEK8ZVYSFw_-6_gpAxemMS7hOd_qO4tLCwMoAAu7ky5U2Goxaple_ZLjliMsvjU6cUY8WIzd92oKgHDbdVgfgeNLmfY_3evnFsowe12-LLeprTkFUMetFwGUXRnim2Wp4Ss5Or0eDCYMltFSDh6riy781d3vZTY9GKo3FYqS706dHclMEcb96tHpwpvCvlZmb75L9kd7gixyllywXQoIZmjDqW0btKbNnrSDr8zgOfMugi5DZ_qCMm9iFOVs5nK-5uC4nQouEvNIjgjKA-bbR9YvOC8UxDjF4Dpk3S6uU77Im4dJuwMFpSxa2zy7Ko"}'})
   }
 
   authenticate(authObj) {
+    this.transitionStatuses()
     let auth = JSON.parse(authObj.text)
     this.authService.refresh(auth.refreshToken).then(() => {
       this.storage.get(StorageKeys.OAUTH_TOKENS).then((tokens) => {
-        console.log(tokens)
+        this.authStr = tokens.scope
         this.retrievePatientInformation()
       })
     })
   }
 
   retrievePatientInformation() {
-    this.transitionStatuses()
     //TODO authenticate here
     this.authService.getProjectInformation()
     let patientId = "TESTING"

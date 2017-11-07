@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpModule } from '@angular/http';
+import { HttpModule }from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { MomentModule } from 'angular2-moment';
 import { DatePipe } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
@@ -53,6 +54,7 @@ import { AuthService } from '../providers/auth-service';
 @NgModule({
   imports: [
     HttpModule,
+    HttpClientModule,
     MomentModule,
     BrowserModule,
     RoundProgressModule,

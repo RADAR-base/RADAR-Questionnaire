@@ -7,7 +7,7 @@ export class StorageKeys {
     }
     // values
     static REFERENCEDATE = new StorageKeys('REFERENCEDATE');
-    static AUTHENTICATION = new StorageKeys('AUTHENTICATION');
+    static OAUTH_TOKENS = new StorageKeys('OAUTH_TOKENS');
     static PATIENTID = new StorageKeys('PATIENTID');
     static LANGUAGE = new StorageKeys('LANGUAGE');
     static SETTINGS_NOTIFICATIONS = new StorageKeys('SETTINGS_NOTIFICATIONS');

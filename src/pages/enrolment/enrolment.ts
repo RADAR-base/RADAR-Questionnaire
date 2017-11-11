@@ -28,9 +28,6 @@ export class EnrolmentPage {
   outcomeStatus: String
   reportSettings: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
 
-  // AUTHENTICATION
-  authStr: string = "Auth TEST"
-
   constructor(
     public navCtrl: NavController,
     private scanner: BarcodeScanner,
@@ -85,7 +82,6 @@ xHLR0YLk"}'})
     let auth = JSON.parse(authObj.text)
     this.authService.refresh(auth.refreshToken).then(() => {
       this.storage.get(StorageKeys.OAUTH_TOKENS).then((tokens) => {
-        this.authStr = tokens.scope
         this.authService.registerAsSource().then(() => {
           this.retrieveSubjectInformation()
         })

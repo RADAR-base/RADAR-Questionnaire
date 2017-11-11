@@ -98,3 +98,5 @@ export const DefaultScheduleVersion: number = 0
 export const DefaultScheduleYearCoverage: number = 2 //years
 
 export const DefaultScheduleReportRepeat: number = 7 //days
+
+export const DefaultEndPoint: string = 'https://radar-cns-platform.rosalind.kcl.ac.uk/'

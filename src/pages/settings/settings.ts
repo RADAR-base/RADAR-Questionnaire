@@ -23,7 +23,8 @@ export class SettingsPage {
 
   configVersion: String
   scheduleVersion: String
-  patientId: String
+  participantId: String
+  projectName: String
   referenceDate: Date
   language: LanguageSetting = DefaultSettingsSelectedLanguage
   languagesSelectable: String[]
@@ -49,8 +50,11 @@ export class SettingsPage {
     this.storage.get(StorageKeys.SCHEDULE_VERSION).then((scheduleVersion) => {
       this.scheduleVersion = scheduleVersion
     })
-    this.storage.get(StorageKeys.PATIENTID).then((patientId) => {
-      this.patientId = patientId
+    this.storage.get(StorageKeys.PARTICIPANTID).then((participantId) => {
+      this.participantId = participantId
+    })
+    this.storage.get(StorageKeys.PROJECTNAME).then((projectName) => {
+      this.projectName = projectName
     })
     this.storage.get(StorageKeys.REFERENCEDATE).then((referenceDate) => {
       this.referenceDate = referenceDate

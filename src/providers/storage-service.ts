@@ -20,15 +20,16 @@ export class StorageService {
 
   }
 
-  init(patientId:String) {
+  init(participantId, projectName) {
     let allKeys = this.getAllKeys()
     allKeys.then((keys) => {
-      if(keys.length<=5){
-        console.log(patientId)
+      if(keys.length<=6){
+        console.log(participantId)
         let today = new Date()
-        //this.set(StorageKeys.REFERENCEDATE, today.getTime())
-        this.set(StorageKeys.REFERENCEDATE, 1496952304184)
-        this.set(StorageKeys.PATIENTID, patientId)
+        this.set(StorageKeys.REFERENCEDATE, today.getTime())
+        //this.set(StorageKeys.REFERENCEDATE, 1496952304184)
+        this.set(StorageKeys.PARTICIPANTID, participantId)
+        this.set(StorageKeys.PROJECTNAME, projectName)
         this.set(StorageKeys.LANGUAGE, DefaultSettingsSupportedLanguages[0])
         this.set(StorageKeys.SETTINGS_NOTIFICATIONS, DefaultSettingsNotifications)
         this.set(StorageKeys.SETTINGS_WEEKLYREPORT, DefaultSettingsWeeklyReport)

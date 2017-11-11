@@ -8,7 +8,8 @@ export class StorageKeys {
     // values
     static REFERENCEDATE = new StorageKeys('REFERENCEDATE');
     static OAUTH_TOKENS = new StorageKeys('OAUTH_TOKENS');
-    static PATIENTID = new StorageKeys('PATIENTID');
+    static PARTICIPANTID = new StorageKeys('PARTICIPANTID');
+    static PROJECTNAME = new StorageKeys('PROJECTNAME');
     static LANGUAGE = new StorageKeys('LANGUAGE');
     static SETTINGS_NOTIFICATIONS = new StorageKeys('SETTINGS_NOTIFICATIONS');
     static SETTINGS_LANGUAGES = new StorageKeys('SETTINGS_LANGUAGES');

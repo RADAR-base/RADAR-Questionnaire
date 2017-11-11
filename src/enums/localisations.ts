@@ -17,7 +17,8 @@ export class LocKeys {
     static HOME_RADAR_CNS = new LocKeys('HOME_RADAR_CNS');
     static FINISH_THANKS = new LocKeys('FINISH_THANKS');
     static SETTINGS_SETTINGS = new LocKeys('SETTINGS_SETTINGS');
-    static SETTINGS_PATIENTID = new LocKeys('SETTINGS_PATIENTID');
+    static SETTINGS_PARTICIPANTID = new LocKeys('SETTINGS_PARTICIPANTID');
+    static SETTINGS_PROJECTNAME = new LocKeys('SETTINGS_PROJECTNAME');
     static SETTINGS_USER_INFO = new LocKeys('SETTINGS_USER_INFO');
     static SETTINGS_ENROL_DATE = new LocKeys('SETTINGS_ENROL_DATE');
     static SETTINGS_LANGUAGE = new LocKeys('SETTINGS_LANGUAGE');

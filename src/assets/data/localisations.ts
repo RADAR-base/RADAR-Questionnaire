@@ -87,10 +87,18 @@ export const Localisations = {
     "it":"",
     "nl":""
   },
-  "SETTINGS_PATIENTID": {
+  "SETTINGS_PARTICIPANTID": {
     "da":"",
     "de":"",
-    "en":"Patient ID",
+    "en":"Participant ID",
+    "es":"",
+    "it":"",
+    "nl":""
+  },
+  "SETTINGS_PROJECTNAME": {
+    "da":"",
+    "de":"",
+    "en":"Project Name",
     "es":"",
     "it":"",
     "nl":""

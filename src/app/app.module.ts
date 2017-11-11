@@ -49,6 +49,7 @@ import { Utility } from '../utilities/util'
 import { MyApp } from './app.component';
 import { TranslatePipe } from '../pipes/translate/translate';
 import { AuthService } from '../providers/auth-service';
+import { JwtHelper } from 'angular2-jwt'
 
 
 @NgModule({
@@ -140,7 +141,8 @@ import { AuthService } from '../providers/auth-service';
     Vibration,
     Globalization,
     TranslatePipe,
-    AuthService
+    AuthService,
+    JwtHelper
   ]
 })
 export class AppModule {

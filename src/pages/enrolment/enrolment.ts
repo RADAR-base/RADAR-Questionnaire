@@ -90,13 +90,14 @@ xHLR0YLk"}'})
   }
 
   retrieveSubjectInformation() {
-    //TODO authenticate here
     this.authService.getSubjectInformation().then((res) => {
       let subjectInformation:any = res
       let participantId = subjectInformation.id
       let projectName = subjectInformation.project.projectName
-      this.storage.init(participantId, projectName)
-      this.doAfterAuthentication()
+      let createdDate = subjectInformation.createdDate
+      this.storage.init(participantId, projectName, createdDate).then(() => {
+        this.doAfterAuthentication()
+      })
     })
   }
 

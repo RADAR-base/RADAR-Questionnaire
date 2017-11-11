@@ -80,7 +80,7 @@ export class HomeController {
           nextIdx = i
         }
       }
-      if(passedAtLeastOnce){
+      if(passedAtLeastOnce) {
         return tasks[nextIdx]
       }
     }

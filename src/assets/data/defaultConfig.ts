@@ -100,3 +100,5 @@ export const DefaultScheduleYearCoverage: number = 2 //years
 export const DefaultScheduleReportRepeat: number = 7 //days
 
 export const DefaultEndPoint: string = 'https://radar-cns-platform.rosalind.kcl.ac.uk/'
+
+export const DefaultProtocolEndPoint: string = 'https://github.com/RADAR-CNS/RADAR-aRMT-protocols/tree/master/'

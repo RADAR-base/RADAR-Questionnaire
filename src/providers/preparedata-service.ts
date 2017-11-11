@@ -62,7 +62,7 @@ export class PrepareDataService {
   fetchFromStorage() {
 
     const configVersion = this.storage.get(StorageKeys.CONFIG_VERSION)
-    const patientID = this.storage.get(StorageKeys.PATIENTID)
+    const patientID = this.storage.get(StorageKeys.PARTICIPANTID)
 
     return Promise.all([configVersion, patientID]) // response are obtained by the order of promises
   }

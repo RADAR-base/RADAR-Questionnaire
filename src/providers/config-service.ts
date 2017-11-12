@@ -17,7 +17,6 @@ export class ConfigService {
     private schedule: SchedulingService,
   ) {}
 
-
   fetchConfigState() {
     this.storage.get(StorageKeys.CONFIG_VERSION)
     .then((version) => {

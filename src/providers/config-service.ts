@@ -29,6 +29,7 @@ export class ConfigService {
           this.storage.set(StorageKeys.CONFIG_VERSION, response.version)
           this.storage.set(StorageKeys.CONFIG_ASSESSMENTS, protocolFormated)
           .then(() =>{
+            this.pullQuestionnaires()
             this.schedule.generateSchedule()
           })
         } else {
@@ -75,13 +76,32 @@ export class ConfigService {
     .then((assessments) => {
       var assessmentsUpdate = assessments
       for(var i = 0; i < assessmentsUpdate.length; i++) {
-        // CONTINUE HERE
+        this.pullQuestionnaireLangs(assessmentsUpdate[i].questionnaire_URI)
+        .then((questionnaires) => {
+          assessmentsUpdate.questions = questionnaires
+          this.storage.set(StorageKeys.CONFIG_ASSESSMENTS, assessmentsUpdate)
+        })
       }
     })
   }
 
+  pullQuestionnaireLangs(qUriLangs) {
+    var langs = []
+    for(var key in qUriLangs) langs.push(key)
+    var promises = []
+    for(var val of langs) {
+      promises.push(this.getQuestionnairesOfLang(qUriLangs[val]))
+    }
+    return Promise.all(promises)
+    .then((qLangs) => {
+      var questionnaires = {}
+      for(var i = 0; i < langs.length; i++) questionnaires[langs[i]] = qLangs[i]
+      return questionnaires
+    })
+  }
+
   getQuestionnairesOfLang(URI) {
-    return this.http.get(URI)
+    return this.http.get(URI).toPromise()
   }
 
 }

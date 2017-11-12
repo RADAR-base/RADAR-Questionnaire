@@ -73,14 +73,18 @@ export class ConfigService {
   pullQuestionnaires() {
     this.storage.get(StorageKeys.CONFIG_ASSESSMENTS)
     .then((assessments) => {
-      var assessmentsUpdate = assessments
-      for(var i = 0; i < assessmentsUpdate.length; i++) {
-        this.pullQuestionnaireLangs(assessmentsUpdate[i].questionnaire_URI)
-        .then((questionnaires) => {
-          assessmentsUpdate.questions = questionnaires
-          this.storage.set(StorageKeys.CONFIG_ASSESSMENTS, assessmentsUpdate)
-        })
+      let promises = []
+      for(var i = 0; i < assessments.length; i++) {
+        promises.push(this.pullQuestionnaireLangs(assessments[i].questionnaire_URI))
       }
+      Promise.all(promises)
+      .then((res) => {
+        let assessmentUpdate = assessments
+        for(var i = 0; i < assessments.length; i++) {
+          assessmentUpdate[i].questions = res[i]
+        }
+        this.storage.set(StorageKeys.CONFIG_ASSESSMENTS, assessmentUpdate)
+      })
     })
   }
 

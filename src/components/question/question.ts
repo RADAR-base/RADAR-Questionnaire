@@ -28,7 +28,7 @@ export class QuestionComponent implements OnChanges {
     // on init the component fires the event once
     if (event === undefined) return
 
-    switch (this.question.type) {
+    switch (this.question.field_type) {
       case QuestionType.radio:
       case QuestionType.range:
       case QuestionType.slider:
@@ -46,9 +46,9 @@ export class QuestionComponent implements OnChanges {
     }
 
     this.answer.emit({
-      id: this.question.id,
+      id: this.question.field_name,
       value: this.value,
-      type: this.question.type
+      type: this.question.field_type
     })
   }
 }

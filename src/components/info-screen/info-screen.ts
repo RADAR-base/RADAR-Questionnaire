@@ -29,13 +29,13 @@ export class InfoScreenComponent implements OnInit {
     this.sections.map((item, i) => {
           this.items.push({
             id: `info-${this.uniqueID}-${i}`,
-            heading: item.heading,
-            content: item.content
+            heading: item.section_header,
+            content: item.field_label
           })
-        })  
-    
+        })
+
     // save timestamp (epoch) and activate the next button
     this.valueChange.emit((new Date).getTime())
   }
-  
+
 }

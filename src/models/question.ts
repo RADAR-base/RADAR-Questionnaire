@@ -1,10 +1,28 @@
 export interface Question {
-  id: string
-  lead: string
-  content: string
-  responses?: Response[]
-  range?: Range
-  type: string
+  branching_logic: string
+  custom_alignment: string
+  evaluated_logic: string
+  field_annotation: string
+  field_label: string
+  field_name: string
+  field_note: string
+  field_type: string
+  form_name: string
+  identifier: string
+  matrix_group_name: string
+  matrix_ranking: string
+  question_number: string
+  required_field: string
+  section_header: string
+  select_choices_or_calculations: SelectChoicesOrCalculations[]
+  text_validation_max: string
+  text_validation_min: string
+  text_validation_type_or_show_slider_number: string
+}
+
+export interface SelectChoicesOrCalculations {
+  code: string
+  label: string
 }
 
 export class QuestionType {
@@ -17,8 +35,8 @@ export class QuestionType {
 }
 
 export interface Response {
-  response: string
-  score: number
+  label: string
+  code: number
 }
 
 export interface Range {
@@ -28,6 +46,6 @@ export interface Range {
 }
 
 export interface Section {
-  heading: string
-  content: string
+  section_header: string
+  field_label: string
 }

@@ -14,8 +14,6 @@ export class Utility {
     private device: Device
   ) {
   }
-  private schemaUrl = 'assets/data/schema/schemas.json'
-
 
   getSchema(schemaUrl) {
     return this.http.get(schemaUrl)

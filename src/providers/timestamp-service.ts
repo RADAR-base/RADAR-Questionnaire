@@ -22,7 +22,7 @@ export class TimeStampService {
   getTimeStamp() {
     // timestamp used to record response time of questionnaires
     this.date = new Date()
-    return this.date.getUTCMilliseconds() / 1000
+    return this.date.getTime()
   }
 
   getCurrentTime() {

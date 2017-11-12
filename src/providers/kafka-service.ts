@@ -2,44 +2,43 @@ import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs/Observable'
 import 'rxjs/add/operator/map'
 import { Http, Response } from '@angular/http'
-
+import { StorageService } from './storage-service'
+import { StorageKeys } from '../enums/storage'
+import { AuthService } from './auth-service'
 import { AnswerValueExport } from '../models/answer'
 import { AnswerKeyExport } from '../models/answer'
 import { Utility } from  '../utilities/util'
+import { DefaultEndPoint } from '../assets/data/defaultConfig'
 import KafkaClient  from 'kafka-rest'
 import AvroSchema   from 'avsc'
 
 @Injectable()
 export class KafkaService {
 
-  private KAFKA_CLIENT_URL = 'https://radararmt.ddns.net/kafka'
+  private KAFKA_CLIENT_URL: string
+  private KAFKA_CLIENT_KAFKA: string = '/kafka'
   private TOPIC_NAME = 'active_questionnaire_phq8'
 
   private phq8ValueSchema: string
   private phq8KeySchema: string
 
   private schemaUrl = 'assets/data/schema/schemas.json'
-  private configUrl = 'assets/data/config/config.json'
 
 
   constructor(
     private http: Http,
-    private util: Utility
+    private util: Utility,
+    private storage: StorageService,
+    private AuthService: AuthService
   ) {
+    this.KAFKA_CLIENT_URL = DefaultEndPoint + this.KAFKA_CLIENT_KAFKA
   }
 
-  getKafkaInstance(): Promise<any> {
-    return new Promise((resolve, reject) => {
-      resolve(this.getKafkaConnection())
-    })
-  }
-
-
-  prepare_KafkaObject(data) {
+  prepareKafkaObject(questionnaireName, data) {
 
     //Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
     var Answer: AnswerValueExport = {
-      "type": "PHQ8",
+      "type": questionnaireName,
       "version": data.configVersion,
       "answers": data.answers,
       "startTime": data.answers[0].startTime,  // whole questionnaire startTime and endTime
@@ -88,7 +87,7 @@ export class KafkaService {
     var armt_exportValueSchema = AvroSchema.parse(this.phq8ValueSchema, { wrapUnions: true })
     var armt_exportKeySchema = AvroSchema.parse(this.phq8KeySchema, { wrapUnions: true })
 
-    // wraps all strings and ints to there type
+    // wraps all strings and ints to their type
     var key = armt_exportKeySchema.clone(kafkaData.key, { wrapUnions: true })
     var value = armt_exportValueSchema.clone(kafkaData.value, { wrapUnions: true });
 
@@ -97,10 +96,10 @@ export class KafkaService {
       "value": value
     }
 
-    this.send_toKafka(schema, payload)
+    this.sendToKafka(schema, payload)
   }
 
-  send_toKafka(schema, questionnaireData) {
+  sendToKafka(schema, questionnaireData) {
 
     this.getKafkaInstance().then(kafkaConnInstance => {
 
@@ -119,9 +118,22 @@ export class KafkaService {
     })
   }
 
+  getKafkaInstance(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      resolve(this.getKafkaConnection())
+    })
+  }
+
   getKafkaConnection() {
-    var kafka = new KafkaClient({ 'url': this.KAFKA_CLIENT_URL })
-    return kafka
+    return this.AuthService.refresh('')
+    .then(() => this.storage.get(StorageKeys.OAUTH_TOKENS))
+    .then((tokens) => {
+      var headers = {
+        'Authorization': 'Bearer ' + tokens.access_token
+      }
+      var kafka = new KafkaClient({ 'url': this.KAFKA_CLIENT_URL, 'headers': headers })
+      return kafka
+    })
   }
 
   storeQuestionareData(values) {

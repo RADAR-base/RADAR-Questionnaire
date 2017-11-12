@@ -172,8 +172,6 @@ export class HomePage {
     .then((res) => {
       let lang = res[0]
       let assessment = res[1]
-      console.log(lang)
-      console.log(assessment)
       let params = {
         "title": assessment.name,
         "introduction": assessment.startText[lang.value],

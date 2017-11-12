@@ -98,7 +98,7 @@ export class QuestionsPage {
 
       this.setNextDisabled()
 
-      if(this.questions[this.currentQuestion].type == QuestionType.timed) {
+      if(this.questions[this.currentQuestion].field_type == QuestionType.timed) {
         this.setPreviousDisabled()
       } else {
         this.setPreviousEnabled()
@@ -123,7 +123,7 @@ export class QuestionsPage {
   }
 
   checkAnswer() {
-    const id = this.questions[this.currentQuestion].id
+    const id = this.questions[this.currentQuestion].field_name
     return this.answerService.check(id)
   }
 
@@ -146,7 +146,7 @@ export class QuestionsPage {
       this.endTime = this.timestampService.getTimeStamp() // returns : milliseconds / 1000
 
       //take current question id to record timestamp
-      const id = this.questions[this.currentQuestion].id
+      const id = this.questions[this.currentQuestion].field_name
       this.recordTimeStamp(id)
 
       this.setCurrentQuestion(1)

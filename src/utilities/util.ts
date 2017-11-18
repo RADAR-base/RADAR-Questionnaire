@@ -78,17 +78,23 @@ export class Utility {
     let qVal = 'questionnaire_' + questionnaireName.toLowerCase() + '-value'
     return this.storage.get(StorageKeys.OAUTH_TOKENS)
     .then(tokens => {
-      let key = this.getLatestKafkaSchemaVersion(tokens.access_token, qKey)
-      let val = this.getLatestKafkaSchemaVersion(tokens.access_token, qVal)
-      return Promise.all([key, val])
+      let keys = this.getLatestKafkaSchemaVersion(tokens.access_token, qKey, '')
+      let vals = this.getLatestKafkaSchemaVersion(tokens.access_token, qVal, '')
+      return Promise.all([keys, vals]).then(versions => {
+        var versionReqKey, versionReqValue
+        for(let key in versions[0]) {versionReqKey = versions[0][key]}
+        for(let key in versions[1]) {versionReqValue = versions[1][key]}
+        let key = this.getLatestKafkaSchemaVersion(tokens.access_token, qKey, versionReqKey)
+        let val = this.getLatestKafkaSchemaVersion(tokens.access_token, qVal, versionReqValue)
+        return Promise.all([key, val])
+      })
     })
   }
 
-  getLatestKafkaSchemaVersion(accessToken, questionName) {
-    let uri = DefaultEndPoint + this.URI_schema + questionName + this.URI_version
-    var headers = new HttpHeaders()
-      .set('Authorization', 'Bearer ' + accessToken)
-    return this.httpClient.get(uri, { headers }).toPromise()
+  getLatestKafkaSchemaVersion(accessToken, questionName, version) {
+    let versionStr = this.URI_version + version
+    let uri = DefaultEndPoint + this.URI_schema + questionName + versionStr
+    return this.httpClient.get(uri).toPromise()
   }
 
 }

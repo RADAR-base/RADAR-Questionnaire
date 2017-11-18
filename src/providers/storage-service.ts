@@ -20,22 +20,23 @@ export class StorageService {
 
   }
 
-  init(participantId, projectName, createdDate) {
+  init(participantId, participantLogin, projectName, sourceId, createdDate) {
     let allKeys = this.getAllKeys()
     return allKeys.then((keys) => {
       if(keys.length <= 6){
         let today = new Date(createdDate)
-        let time = this.set(StorageKeys.REFERENCEDATE, today.getTime())
-        this.set(StorageKeys.REFERENCEDATE, 1496952304184)
+        let time = this.set(StorageKeys.REFERENCEDATE, today.getTime()-86400000)
         let pId = this.set(StorageKeys.PARTICIPANTID, participantId)
+        let pLogin = this.set(StorageKeys.PARTICIPANTLOGIN, participantLogin)
         let pName = this.set(StorageKeys.PROJECTNAME, projectName)
+        let sId = this.set(StorageKeys.SOURCEID, sourceId)
         let lang = this.set(StorageKeys.LANGUAGE, DefaultSettingsSupportedLanguages[0])
         let notif = this.set(StorageKeys.SETTINGS_NOTIFICATIONS, DefaultSettingsNotifications)
         let report = this.set(StorageKeys.SETTINGS_WEEKLYREPORT, DefaultSettingsWeeklyReport)
         let langs = this.set(StorageKeys.SETTINGS_LANGUAGES, DefaultSettingsSupportedLanguages)
         let version = this.set(StorageKeys.SCHEDULE_VERSION, DefaultScheduleVersion)
 
-        return Promise.all([pId, pName, lang, notif, report, langs, version])
+        return Promise.all([pId, pName, pLogin, sId,lang, notif, report, langs, version])
       }
     }).catch((error) => {
       this.handleError(error)

@@ -22,8 +22,8 @@ export class PrepareDataService {
       // fetch config version and Patient ID
       this.fetchFromStorage().then(resp => {
 
-        var configVersion = resp[0]
-        var participantId = resp[1].toString()
+        var configVersion = resp[0].toString()
+        var participantLogin = resp[1].toString()
 
         var keys = Object.keys(answers)
         var keylength = keys.length
@@ -43,7 +43,7 @@ export class PrepareDataService {
             var processedData = {
               "answers": values,
               "configVersion": configVersion,
-              "patientId": participantId
+              "patientId": participantLogin
             }
             resolve(processedData)
           }
@@ -62,9 +62,9 @@ export class PrepareDataService {
   fetchFromStorage() {
 
     const configVersion = this.storage.get(StorageKeys.CONFIG_VERSION)
-    const participantId = this.storage.get(StorageKeys.PARTICIPANTID)
+    const participantLogin = this.storage.get(StorageKeys.PARTICIPANTLOGIN)
 
-    return Promise.all([configVersion, participantId]) // response are obtained by the order of promises
+    return Promise.all([configVersion, participantLogin]) // response are obtained by the order of promises
   }
 
 }

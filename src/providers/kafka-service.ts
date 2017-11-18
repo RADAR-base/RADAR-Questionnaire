@@ -17,10 +17,14 @@ export class KafkaService {
 
   private KAFKA_CLIENT_URL: string
   private KAFKA_CLIENT_KAFKA: string = '/kafka'
-  private TOPIC_NAME = 'active_questionnaire_phq8'
+  private TOPIC_NAME = 'questionnaire_'
 
-  private phq8ValueSchema: string
-  private phq8KeySchema: string
+  private questionnaireName: string
+  private valueSchema: string
+  private keySchema: string
+
+  private schemaObjectKey: string
+  private schemaObjectVal: string
 
   private schemaUrl = 'assets/data/schema/schemas.json'
 
@@ -29,34 +33,36 @@ export class KafkaService {
     private http: Http,
     private util: Utility,
     private storage: StorageService,
-    private AuthService: AuthService
+    private authService: AuthService
   ) {
     this.KAFKA_CLIENT_URL = DefaultEndPoint + this.KAFKA_CLIENT_KAFKA
   }
 
   prepareKafkaObject(questionnaireName, data) {
 
+    this.questionnaireName = questionnaireName.toLowerCase()
     //Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
     var Answer: AnswerValueExport = {
-      "type": questionnaireName,
+      "name": questionnaireName,
       "version": data.configVersion,
       "answers": data.answers,
-      "startTime": data.answers[0].startTime,  // whole questionnaire startTime and endTime
-      "endTime": data.answers[data.answers.length - 1].endTime
+      "time": data.answers[0].startTime,  // whole questionnaire startTime and endTime
+      "timeCompleted": data.answers[data.answers.length - 1].endTime
     }
+    console.log(Answer)
 
     //Payload for kafka 2 : key Object which contains device information
-    var deviceInfo = this.util.getDevice()
+    this.util.getSourceId()
+    .then((sourceId) => {
+      console.log(data.patientId)
+      console.log(sourceId)
 
-    if (deviceInfo.isDeviceReady == true) {
-      var AnswerKey: AnswerKeyExport = { "userId": data.patientId, "sourceId": deviceInfo.device.uuid }
-    } else {
-      var AnswerKey: AnswerKeyExport = { "userId": data.patientId, "sourceId": "Device not known" }
-    }
+      var AnswerKey: AnswerKeyExport = { "userId": data.patientId, "sourceId": sourceId }
 
-    var kafkaObject = { "value": Answer, "key": AnswerKey }
+      var kafkaObject = { "value": Answer, "key": AnswerKey }
 
-    this.prepareExportSchema(kafkaObject)
+      this.prepareExportSchema(kafkaObject)
+    })
   }
 
 
@@ -64,17 +70,20 @@ export class KafkaService {
 
     this.util.getSchema(this.schemaUrl).subscribe(
       resp => {
-        this.phq8ValueSchema = resp.schemas[0].aRMT_phq8_Export_ValueSchema
-        this.phq8KeySchema = resp.schemas[0].aRMT_phq8_Export_KeySchema
+        this.keySchema = resp.schemas[0].questionnaire_key
+        this.valueSchema = resp.schemas[0].questionnaire_value
 
         // Avroschema object from kafkaClient
-        var aRMT_Key_Schema = new KafkaClient.AvroSchema(this.phq8KeySchema)
-        var aRMT_Value_Schema = new KafkaClient.AvroSchema(this.phq8ValueSchema)
+        var aRMT_Key_Schema = new KafkaClient.AvroSchema(this.keySchema)
+        var aRMT_Value_Schema = new KafkaClient.AvroSchema(this.valueSchema)
 
-        var schemaObject = {
-          "ID_Schema": aRMT_Key_Schema,
-          "Value_Schema": aRMT_Value_Schema
-        }
+        this.schemaObjectKey = "questionnaire_" + this.questionnaireName + "-key"
+        this.schemaObjectVal = "questionnaire_" + this.questionnaireName + "-value"
+
+        var schemaObject = {}
+        schemaObject[this.schemaObjectKey] = aRMT_Key_Schema
+        schemaObject[this.schemaObjectVal] = aRMT_Value_Schema
+        console.log(schemaObject)
         this.validateData(schemaObject, dataObject)
 
       }, error => {
@@ -83,14 +92,11 @@ export class KafkaService {
   }
 
   validateData(schema, kafkaData) {
-
-    var armt_exportValueSchema = AvroSchema.parse(this.phq8ValueSchema, { wrapUnions: true })
-    var armt_exportKeySchema = AvroSchema.parse(this.phq8KeySchema, { wrapUnions: true })
-
+    var armt_exportKeySchema = AvroSchema.parse(this.keySchema, { wrapUnions: true })
+    var armt_exportValueSchema = AvroSchema.parse(this.valueSchema, { wrapUnions: true })
     // wraps all strings and ints to their type
     var key = armt_exportKeySchema.clone(kafkaData.key, { wrapUnions: true })
     var value = armt_exportValueSchema.clone(kafkaData.value, { wrapUnions: true });
-
     var payload = {
       "key": key,
       "value": value
@@ -100,19 +106,26 @@ export class KafkaService {
   }
 
   sendToKafka(schema, questionnaireData) {
+    console.log(schema)
 
     this.getKafkaInstance().then(kafkaConnInstance => {
 
-      // kafka connection instance to submit to topic
-      kafkaConnInstance.topic(this.TOPIC_NAME).produce(schema.ID_Schema, schema.Value_Schema,
-        questionnaireData,
-        function(err, res) {
-          if (res) {
-            console.log(res)
-          } else if (err) {
-            console.log(err)
-          }
-        });
+      this.util.getLatestKafkaSchemaVersions(this.questionnaireName)
+      .then(schemaVersions => {
+        console.log(schemaVersions)
+        // kafka connection instance to submit to topic
+        var topic = this.TOPIC_NAME + this.questionnaireName
+        kafkaConnInstance.topic(topic).produce(
+          questionnaireData,
+          function(err, res) {
+            if (res) {
+              console.log(res)
+            } else if (err) {
+              console.log(err)
+            }
+          });
+      })
+
     }, error => {
       console.error("Could not initiate kafka connection " + JSON.stringify(error))
     })
@@ -125,7 +138,7 @@ export class KafkaService {
   }
 
   getKafkaConnection() {
-    return this.AuthService.refresh('')
+    return this.authService.refresh()
     .then(() => this.storage.get(StorageKeys.OAUTH_TOKENS))
     .then((tokens) => {
       var headers = {

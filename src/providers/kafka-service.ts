@@ -50,86 +50,19 @@ export class KafkaService {
       "time": data.answers[0].startTime,  // whole questionnaire startTime and endTime
       "timeCompleted": data.answers[data.answers.length - 1].endTime
     }
-    console.log(Answer)
-
+    
     //Payload for kafka 2 : key Object which contains device information
     this.util.getSourceId()
     .then((sourceId) => {
-      console.log(data.patientId)
-      console.log(sourceId)
-
       var AnswerKey: AnswerKeyExport = { "userId": data.patientId, "sourceId": sourceId }
-
       var kafkaObject = { "value": Answer, "key": AnswerKey }
-
-      //this.prepareExportSchema(kafkaObject)
       this.createPayload(kafkaObject)
     })
-  }
-
-
-  prepareExportSchema(dataObject) {
-
-    this.util.getSchema(this.schemaUrl).subscribe(
-      resp => {
-        this.keySchema = resp.schemas[0].questionnaire_key
-        this.valueSchema = resp.schemas[0].questionnaire_value
-
-        // Avroschema object from kafkaClient
-        var aRMT_Key_Schema = new KafkaClient.AvroSchema(this.keySchema)
-        var aRMT_Value_Schema = new KafkaClient.AvroSchema(this.valueSchema)
-
-        this.schemaObjectKey = "questionnaire_" + this.questionnaireName + "-key"
-        this.schemaObjectVal = "questionnaire_" + this.questionnaireName + "-value"
-
-        var schemaObject = {}
-        schemaObject[this.schemaObjectKey] = aRMT_Key_Schema
-        schemaObject[this.schemaObjectVal] = aRMT_Value_Schema
-        console.log(schemaObject)
-        this.validateData(schemaObject, dataObject)
-
-      }, error => {
-        console.log("Error at" + JSON.stringify(error))
-      })
-  }
-
-  validateData(schema, kafkaData) {
-    this.util.getLatestKafkaSchemaVersions(this.questionnaireName)
-    .then(schemaVersions => {
-      var payload = {}
-      console.log(schemaVersions)
-      payload['key_schema_id'] = schemaVersions[0]['id']
-      payload['value_schema_id'] = schemaVersions[1]['id']
-      //var armt_exportKeySchema = avro.parse(schema[this.schemaObjectKey], { wrapUnions: true })
-      //var armt_exportValueSchema = AvroSchema.parse(schema[this.schemaObjectVal], { wrapUnions: true })
-      // wraps all strings and ints to their type
-      //var key = armt_exportKeySchema.clone(kafkaData.key, { wrapUnions: true })
-      //var value = armt_exportValueSchema.clone(kafkaData.value, { wrapUnions: true });
-      //payload['records'] = [{
-      //  "key": key,
-      //  "value": value
-    //  }]
-
-      //this.sendToKafka(payload)
-    });
   }
 
   createPayload(kafkaObject) {
     this.util.getLatestKafkaSchemaVersions(this.questionnaireName)
     .then(schemaVersions => {
-      /*var payload = {}
-
-      let avroKey = AvroSchema.Type.forSchema(JSON.parse(schemaVersions[0]['schema']))
-      // ISSUE forValue: inferred from input, due to error when parsing schema
-      let avroVal = AvroSchema.Type.forValue(kafkaObject.value)
-      let bufferKey = avroKey.toBuffer(kafkaObject.key)
-      let bufferVal = avroVal.toBuffer(kafkaObject.value)
-
-      payload['key_schema_id'] = schemaVersions[0]['id']
-      payload['value_schema_id'] = schemaVersions[1]['id']
-      payload['records'] = [{ 'key': bufferKey, 'value': bufferVal }]
-
-      this.sendToKafka(payload)*/
       let avroKey = AvroSchema.parse(JSON.parse(schemaVersions[0]['schema']),  { wrapUnions: true })
       // ISSUE forValue: inferred from input, due to error when parsing schema
       let avroVal = AvroSchema.Type.forValue(kafkaObject.value, { wrapUnions: true })
@@ -142,10 +75,6 @@ export class KafkaService {
 
       let schemaId = new KafkaClient.AvroSchema(JSON.parse(schemaVersions[0]['schema']))
       let schemaInfo = new KafkaClient.AvroSchema(JSON.parse(schemaVersions[1]['schema']))
-      console.log(schemaId)
-      console.log(payload.key)
-      console.log(schemaInfo)
-      console.log(payload.value)
       this.sendToKafka(schemaId, schemaInfo, payload)
     });
 

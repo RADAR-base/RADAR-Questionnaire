@@ -5,7 +5,7 @@ import { AuthService } from '../../providers/auth-service';
 import { StorageKeys } from '../../enums/storage'
 import { NavController, Slides } from 'ionic-angular'
 import { WeeklyReportSubSettings } from '../../models/settings'
-import { DefaultSettingsWeeklyReport } from '../../assets/data/defaultConfig'
+import { DefaultSettingsWeeklyReport , DefaultDeviceTypeModel} from '../../assets/data/defaultConfig'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner'
 import { HomePage } from '../home/home'
 import { LocKeys } from '../../enums/localisations'
@@ -55,32 +55,32 @@ export class EnrolmentPage {
     //this.scanner.scan(scanOptions).then((scannedObj) => this.authenticate(scannedObj))
     //TODO remove when finished
     this.authenticate({'text':'{"refreshToken":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOi\
-I0ZmZkZDUwMy03NDljLTQ0ZjctOGJlMi0zMTNmNDdiZDlmYWUiLCJzb3VyY2VzIj\
-pbXSwidXNlcl9uYW1lIjoiNGZmZGQ1MDMtNzQ5Yy00NGY3LThiZTItMzEzZjQ3Ym\
-Q5ZmFlIiwicm9sZXMiOlsiUkFEQVItUGlsb3QtMDE6Uk9MRV9QQVJUSUNJUEFOVC\
+I5ODIzYjliNi1lZTE4LTRmNjctOTBlYS04NTFkNjAwZmVhY2MiLCJzb3VyY2VzIj\
+pbXSwidXNlcl9uYW1lIjoiOTgyM2I5YjYtZWUxOC00ZjY3LTkwZWEtODUxZDYwMG\
+ZlYWNjIiwicm9sZXMiOlsiUkFEQVItUGlsb3QtMDE6Uk9MRV9QQVJUSUNJUEFOVC\
 JdLCJpc3MiOiJNYW5hZ2VtZW50UG9ydGFsIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV\
 9QQVJUSUNJUEFOVCJdLCJjbGllbnRfaWQiOiJhUk1UIiwiYXVkIjpbInJlc19NYW\
-5hZ2VtZW50UG9ydGFsIl0sInNjb3BlIjpbIkRVTU1ZX1NDT1BFIl0sImF0aSI6Ij\
-k5Mjk3OGVjLTkwNzEtNDdkYi04YjgwLTk4Nzg4MjRmMzM3MCIsImV4cCI6MTUxNT\
-U4ODI4NiwiaWF0IjoxNTEwNDA0Mjg2LCJqdGkiOiJiMWE5YzNkNy0zMDRmLTQ5ZT\
-UtYjg4Zi01ZDZhYmUzNzJkMmYifQ.DtizhJ4-b9fsaf5V3uxTepR9HtVlu5c-2gh\
-L7HsDSDXqiFrNz0ewuI38cUJCS4vgfyz-wzDzbrr2b4g-zNjpOMW_VUbJqmMGUKB\
-p5cKU0_hlMNmyUTVRu-M4x6M4GOm-_hqu79bmN2w1vrMmXY4AtdCTVtJKwzJzkBx\
-dx7ibeDpqsNlT45IJ1QDhvZwGUGJ6trRJhI7Ujl_sxX7bryTAh6CM-5PgdhRFmYp\
-5gcl3gABsZTRz7Bps6S9d6RfG7qTH1uB8XVksEupEkLNJpyxkd6vwuwxIoVWFbi9\
-4nffbZ304lmVAUiXduuybU1Pgp2eVQAeWUlc_KVnj1asv207iNpLphQIirIz6MtH\
-3-mGIBXB_nOUxmr4mkPPOEdnDejHzqO5ZGS15lHyjCskVJOXFkWLMKniT2jEETMe\
-QAK24oEhiZh-XmMRcqdOwiP6uGjt4z2yEEMrRQdnbEqaHMaHG8sM2zrBu9MhPGsg\
-9u92fsJ7HS4_3FMruszTuXX5jw7JHk-uJsVRXWnYGF6NRpqflcYrT9YUj99Ndjw7\
-2amrinaTlrN1sJuNRXWJ_Ds0xI3_3FobqKBfr317rwXj5zZVvoBqwqAfdrj635A5\
-fDZbg3ey-M724VCGLtpJyPs7sQ1SM37pbO_4YRm0QANPUnkFsYKwVjXl2s1gu6W-\
-xHLR0YLk"}'})
+5hZ2VtZW50UG9ydGFsIl0sInNjb3BlIjpbIkRVTU1ZX1NDT1BFIl0sImF0aSI6Im\
+U2OTY3YTgwLWFmOTUtNDRjNy04YzJjLTllYzJhYTc0NGE0YyIsImV4cCI6MTUxNT\
+c1ODQyNiwiaWF0IjoxNTEwNTc0NDI2LCJqdGkiOiIyOWVkODUwMC1kMGRkLTRkMj\
+ktYmFiOC02N2M1YmMxYmE4OTgifQ.YIZ1SbnQ2uEllpOFmVX0HVs8f02xwkqw5F5\
+a59jvOvXXiWWWJk617wQpHy4ETHA8w1OhX7kHANd6ZzlQ68qmHY1PQR7uwsSPY0e\
+df3-o1UtDKzgv44ktGHe-LNJMzW6obfdG12GmdA-c-af7lC26JtolspqfpYCdCtp\
+tBKipF3S8n5mhWwBartGWJomNkWXo2aAoP1jfDQQoL8d8I8BXON4jS4uhQWY9Ain\
+taTUh6K9kiFhVF-UFmlgTNZzTXsfy1hSU3JQQB-15Jk09JGe2iKFbwXHyrPddupW\
+3lTeabCXZk3Wmi1ZZ6PwsHY4oCvuAT6h_c25Ga8VovQJndbRkgsyIQzm3FBz110p\
+C6xFkcIpr7Dr4ykilyR7YfQT-VqZtxjvQCjs7t5ipCyTTIGV2LSc_q6i2umwxdER\
+Jt5ttNSCs7Oq73iVfnTl-G0kNeAuCj_D1CqdTc3qIwRPD7-D_PKB_KTtCeefDbTa\
+EYybX_ieVoetJ7e8a7Jb2KJIDqCDOkl5hLsiniOo4R04kQQ9igwjUo9E0Bpw4PpI\
+i-PzW4j7hPO31v2E0h0ziGzybBWpCBwNxOpv89gIWH7ZuVIn_mFemo8hgf7YgLs1\
+kil0Xx3YMIbDpvPEGeoBMgTJ9a99699sNkmT3DVPkQWt38z4B6dniB85GFg_ghE9\
+4XNFLyEY"}'})
   }
 
   authenticate(authObj) {
     this.transitionStatuses()
     let auth = JSON.parse(authObj.text)
-    this.authService.refresh(auth.refreshToken).then(() => {
+    this.authService.registerToken(auth.refreshToken).then(() => {
       this.storage.get(StorageKeys.OAUTH_TOKENS).then((tokens) => {
         this.authService.registerAsSource().then(() => {
           this.retrieveSubjectInformation()
@@ -91,11 +91,19 @@ xHLR0YLk"}'})
 
   retrieveSubjectInformation() {
     this.authService.getSubjectInformation().then((res) => {
+      console.log(res)
       let subjectInformation:any = res
       let participantId = subjectInformation.id
+      let participantLogin = subjectInformation.login
       let projectName = subjectInformation.project.projectName
+      let sourceId = this.getSourceId(subjectInformation)
       let createdDate = subjectInformation.createdDate
-      this.storage.init(participantId, projectName, createdDate).then(() => {
+      this.storage.init(participantId,
+        participantLogin,
+        projectName,
+        sourceId,
+        createdDate)
+      .then(() => {
         this.doAfterAuthentication()
       })
     })
@@ -133,6 +141,16 @@ xHLR0YLk"}'})
       this.elOutcome.nativeElement.style.opacity = 1
       this.elLoading.nativeElement.style.opacity = 0
     }
+  }
+
+  getSourceId(response) {
+    let sources = response.sources
+    for(var i = 0; i < sources.length; i++) {
+      if(sources[i].deviceTypeModel == DefaultDeviceTypeModel) {
+        return sources[i].sourceId
+      }
+    }
+    return 'Device not available'
   }
 
   next() {

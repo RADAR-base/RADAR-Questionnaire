@@ -34,7 +34,6 @@ export class FinishPage {
     this.prepareDataService.process_QuestionnaireData(this.answerService.answers,
       this.timestampService.timestamps)
       .then(data => {
-        console.log(data)
         this.sendToKafka(questionnaireName, data)
       }, error => {
         console.log(JSON.stringify(error))

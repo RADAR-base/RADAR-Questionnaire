@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { StorageService } from './storage-service';
 import { StorageKeys } from '../enums/storage';
 import { JwtHelper } from 'angular2-jwt'
@@ -31,32 +31,29 @@ export class AuthService {
       this.URI_base = DefaultEndPoint + this.URI_managementPortal
   }
 
-  refresh(refreshToken='') {
-      if(refreshToken != '') {
-        return this.renewTokens(refreshToken)
-      } else {
-        return this.storage.get(StorageKeys.OAUTH_TOKENS).then((tokens) => {
-          return this.renewTokens(tokens.refresh_token)
-        })
-      }
-
+  refresh() {
+    return this.storage.get(StorageKeys.OAUTH_TOKENS)
+    .then((tokens) => {
+      let URI = this.URI_base + this.URI_refresh
+      let headers = this.getRegisterHeaders(this.CONTENTTYPE_urlencode)
+      let params = this.getRefreshParams(tokens.refresh_token)
+      let promise = this.createPostRequest(URI, '', {headers: headers, params: params})
+      .then((tokens) => {
+        return this.storage.set(StorageKeys.OAUTH_TOKENS, tokens)
+      })
+      return promise
+    })
   }
 
-  renewTokens(refreshToken) {
+  //TODO: test this
+  registerToken(registrationToken) {
     let URI = this.URI_base + this.URI_refresh
-    let refreshBody = this.BODY_refresh + refreshToken
-
-    let promise = new Promise((resolve, reject) => {
-      this.http.post(URI, refreshBody, {
-        headers: this.getRefreshHeaders(this.CONTENTTYPE_urlencode)
-      })
-      .toPromise()
-      .then(res => {
-        this.storage.set(StorageKeys.OAUTH_TOKENS, res)
-        resolve()
-      })
+    let refreshBody = this.BODY_refresh + registrationToken
+    let headers = this.getRegisterHeaders(this.CONTENTTYPE_urlencode)
+    let promise = this.createPostRequest(URI, refreshBody, {headers: headers})
+    return promise.then(res => {
+      return this.storage.set(StorageKeys.OAUTH_TOKENS, res)
     })
-    return promise
   }
 
   registerAsSource() {
@@ -64,15 +61,14 @@ export class AuthService {
       let decoded = this.jwtHelper.decodeToken(tokens.access_token)
       let headers = this.getAccessHeaders(tokens.access_token, this.CONTENTTYPE_json)
       let URI = this.URI_base + this.URI_subjects + decoded.sub + '/sources'
-      let promise = new Promise((resolve, reject) => {
-          this.http.post(URI, this.BODY_register, { headers })
-          .toPromise()
-          .then(res => {
-            resolve()
-          })
-      })
+      let promise = this.createPostRequest(URI, this.BODY_register, {headers: headers})
       return promise
     })
+  }
+
+  createPostRequest(uri, body, headers) {
+    return this.http.post(uri, body, headers)
+        .toPromise()
   }
 
   getSubjectInformation() {
@@ -84,7 +80,7 @@ export class AuthService {
     })
   }
 
-  getRefreshHeaders(contentType) {
+  getRegisterHeaders(contentType) {
     var headers = new HttpHeaders()
       .set('Authorization', 'Basic ' + btoa('aRMT:secret'))
       .set('Content-Type', contentType)
@@ -96,6 +92,13 @@ export class AuthService {
       .set('Authorization', 'Bearer ' + accessToken)
       .set('Content-Type', contentType)
     return headers
+  }
+
+  getRefreshParams(refreshToken) {
+    var params = new HttpParams()
+      .set('grant_type', 'refresh_token')
+      .set('refresh_token', refreshToken)
+    return params
   }
 
 }

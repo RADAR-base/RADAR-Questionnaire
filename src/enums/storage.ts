@@ -9,7 +9,9 @@ export class StorageKeys {
     static REFERENCEDATE = new StorageKeys('REFERENCEDATE');
     static OAUTH_TOKENS = new StorageKeys('OAUTH_TOKENS');
     static PARTICIPANTID = new StorageKeys('PARTICIPANTID');
+    static PARTICIPANTLOGIN = new StorageKeys('PARTICIPANTLOGIN');
     static PROJECTNAME = new StorageKeys('PROJECTNAME');
+    static SOURCEID = new StorageKeys('SOURCEID')
     static LANGUAGE = new StorageKeys('LANGUAGE');
     static SETTINGS_NOTIFICATIONS = new StorageKeys('SETTINGS_NOTIFICATIONS');
     static SETTINGS_LANGUAGES = new StorageKeys('SETTINGS_LANGUAGES');

@@ -8,6 +8,10 @@ import { StartPage } from '../start/start'
 import { QuestionsPage } from '../questions/questions'
 import { SettingsPage } from '../settings/settings'
 import { DefaultTask } from '../../assets/data/defaultConfig'
+import { LocKeys } from '../../enums/localisations'
+import { TranslatePipe } from '../../pipes/translate/translate'
+import { StorageService } from '../../providers/storage-service'
+import { StorageKeys } from '../../enums/storage'
 
 
 @Component({
@@ -46,13 +50,9 @@ export class HomePage {
     public alertCtrl: AlertController,
     private schedule: SchedulingService,
     private controller: HomeController,
-  ) {
-    this.controller.evalEnrolement().then((evalEnrolement) => {
-      if(evalEnrolement){
-        this.navCtrl.push(EnrolmentPage)
-      }
-    })
-  }
+    private translate: TranslatePipe,
+    private storage: StorageService
+  ) {  }
 
   ngAfterViewInit(){
   }
@@ -166,13 +166,17 @@ export class HomePage {
   }
 
   startQuestionnaire () {
-    this.controller.getAssessment(this.nextTask).then((assessment) => {
-      console.log(assessment)
+    let lang = this.storage.get(StorageKeys.LANGUAGE)
+    let nextAssessment = this.controller.getAssessment(this.nextTask)
+    Promise.all([lang, nextAssessment])
+    .then((res) => {
+      let lang = res[0]
+      let assessment = res[1]
       let params = {
         "title": assessment.name,
-        "introduction": assessment.startText,
-        "endText": assessment.endText,
-        "questions": assessment.questions,
+        "introduction": assessment.startText[lang.value],
+        "endText": assessment.endText[lang.value],
+        "questions": assessment.questions[lang.value],
         "associatedTask": this.nextTask
       }
       if(assessment.showIntroduction){
@@ -187,15 +191,15 @@ export class HomePage {
   showCredits () {
     let buttons = [
       {
-        text: 'Okay',
+        text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
         handler: () => {
           console.log('Okay clicked');
         }
       }
     ]
     this.showAlert({
-      'title': 'Credits',
-      'message': 'Made with &hearts; for you by the RADAR-CNS consortium. For more information click <a href="http://radar-cns.org">here</a>.',
+      'title': this.translate.transform(LocKeys.CREDITS_TITLE.toString()),
+      'message': this.translate.transform(LocKeys.CREDITS_BODY.toString()),
       'buttons': buttons
     })
   }

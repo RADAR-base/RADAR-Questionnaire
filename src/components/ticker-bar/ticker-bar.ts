@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges,  } from '@angular/core'
+import { Component, Input, OnChanges } from '@angular/core'
 import { NavController } from 'ionic-angular'
 import { SchedulingService } from '../../providers/scheduling-service'
 import { StorageKeys } from '../../enums/storage'
@@ -6,6 +6,8 @@ import { Task } from '../../models/task'
 import { TickerItem } from '../../models/ticker'
 import { ReportScheduling } from '../../models/report'
 import { ReportPage } from '../../pages/report/report'
+import { LocKeys } from '../../enums/localisations'
+import { TranslatePipe } from '../../pipes/translate/translate'
 
 @Component({
   selector: 'ticker-bar',
@@ -25,10 +27,12 @@ export class TickerBarComponent implements OnChanges {
   newWeeklyReport: boolean = false
 
   constructor(private schedule: SchedulingService,
-              private navCtrl: NavController) {
-    this.schedule.getCurrentReport().then((report) => {
+              private navCtrl: NavController,
+              private translate: TranslatePipe) {
+    // Gets ReportScheduling and adds to tickerItems
+    /*this.schedule.getCurrentReport().then((report) => {
       this.report = report
-    })
+    })*/
   }
 
   ngOnChanges (changes) {
@@ -94,17 +98,21 @@ export class TickerBarComponent implements OnChanges {
   addTask () {
     let now = new Date()
     let timeToNext = this.getTimeToNext(now.getTime(), this.task.timestamp)
-    let item = this.generateTickerItem('task', 'Your next task starts in ', timeToNext, '.')
+    let item = this.generateTickerItem('task', this.translate.transform(LocKeys.TASK_BAR_NEXT_TASK.toString()), timeToNext, '.')
     this.tickerItems.push(item)
   }
 
   addAffirmation () {
-    let item = this.generateTickerItem('affirmation', '', 'Well done! ', 'All tasks completed.')
+    let item = this.generateTickerItem('affirmation', '',
+      this.translate.transform(LocKeys.TASK_BAR_AFFIRMATION_1.toString()),
+      this.translate.transform(LocKeys.TASK_BAR_AFFIRMATION_2.toString()))
     this.tickerItems.push(item)
   }
 
   addTasksNone () {
-    let item = this.generateTickerItem('tasks-none', '', 'Timeout! ', 'No tasks today.')
+    let item = this.generateTickerItem('tasks-none', '',
+      this.translate.transform(LocKeys.TASK_BAR_NO_TASK_1.toString()),
+      this.translate.transform(LocKeys.TASK_BAR_NO_TASK_2.toString()))
     this.tickerItems.push(item)
   }
 
@@ -112,10 +120,12 @@ export class TickerBarComponent implements OnChanges {
     var deltaStr = ''
     let deltaMin = Math.round((next-now)/60000)
     let deltaHour = Math.round(deltaMin / 60)
+    let hour_str_single = this.translate.transform(LocKeys.TASK_TIME_HOUR_SINGLE.toString())
+    let hour_str_multiple = this.translate.transform(LocKeys.TASK_TIME_HOUR_MULTIPLE.toString())
     if(deltaMin > 59) {
-      deltaStr = deltaHour > 1 ? String(deltaHour)+'hrs' : String(deltaHour)+'hr'
+      deltaStr = deltaHour > 1 ? String(deltaHour)+hour_str_multiple : String(deltaHour)+hour_str_single
     } else {
-      deltaStr = String(deltaMin)+'min'
+      deltaStr = String(deltaMin)+this.translate.transform(LocKeys.TASK_TIME_MINUTE_SINGLE.toString())
     }
     return deltaStr
   }

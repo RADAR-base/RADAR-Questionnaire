@@ -34,6 +34,10 @@ export class HomeController {
     return this.schedule.getTasksForDate(now)
   }
 
+  getTasksOfDate (timestamp) {
+    return this.schedule.getTasksForDate(timestamp)
+  }
+
   getTaskProgress () {
     return this.getTasksOfToday()
       .then((tasks:Task[]) => this.retrieveTaskProgress(tasks))
@@ -76,7 +80,7 @@ export class HomeController {
           nextIdx = i
         }
       }
-      if(passedAtLeastOnce){
+      if(passedAtLeastOnce) {
         return tasks[nextIdx]
       }
     }

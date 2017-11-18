@@ -1,19 +1,21 @@
-import { NgModule } from '@angular/core'
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
-import { HttpModule } from '@angular/http'
-import { MomentModule } from 'angular2-moment'
-import { DatePipe } from '@angular/common'
-import { BrowserModule } from '@angular/platform-browser'
-import { SplashScreen } from '@ionic-native/splash-screen'
-import { Device } from '@ionic-native/device'
-import { StatusBar } from '@ionic-native/status-bar'
-import { IonicApp, IonicModule } from 'ionic-angular'
-import { AngularFireModule } from 'angularfire2';
-import { AngularFireDatabaseModule } from 'angularfire2/database';
-import { AngularFireAuthModule } from 'angularfire2/auth';
+import { NgModule } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpModule }from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
+import { MomentModule } from 'angular2-moment';
+import { DatePipe } from '@angular/common';
+import { BrowserModule } from '@angular/platform-browser';
+import { PipesModule } from '../pipes/pipes.module';
+import { SplashScreen } from '@ionic-native/splash-screen';
+import { Device } from '@ionic-native/device';
+import { StatusBar } from '@ionic-native/status-bar';
+import { IonicApp, IonicModule } from 'ionic-angular';
 import { IonicStorageModule } from '@ionic/storage';
 import { RoundProgressModule } from 'angular-svg-round-progressbar';
-import { BarcodeScanner } from '@ionic-native/barcode-scanner'
+import { BarcodeScanner } from '@ionic-native/barcode-scanner';
+import { Dialogs } from '@ionic-native/dialogs';
+import { Vibration } from '@ionic-native/vibration';
+import { Globalization } from '@ionic-native/globalization';
 
 import { TaskCalendarComponent } from '../components/task-calendar/task-calendar'
 import { TaskProgressComponent } from '../components/task-progress/task-progress'
@@ -23,6 +25,9 @@ import { QuestionComponent } from '../components/question/question'
 import { RadioInputComponent } from '../components/radio-input/radio-input'
 import { RangeInputComponent } from '../components/range-input/range-input'
 import { SliderInputComponent } from '../components/slider-input/slider-input'
+import { TimedTestComponent } from '../components/timed-test/timed-test'
+import { InfoScreenComponent } from '../components/info-screen/info-screen'
+import { SplashPage } from '../pages/splash/splash'
 import { EnrolmentPage } from '../pages/enrolment/enrolment'
 import { FinishPage } from '../pages/finish/finish'
 import { HomePage } from '../pages/home/home'
@@ -34,39 +39,41 @@ import { ReportPage } from '../pages/report/report'
 import { HomeController } from '../providers/home-controller'
 import { AnswerService } from '../providers/answer-service'
 import { QuestionService } from '../providers/question-service'
-import { FirebaseService } from '../providers/firebase-service'
+import { ConfigService } from '../providers/config-service'
 import { StorageService } from '../providers/storage-service'
 import { SchedulingService } from '../providers/scheduling-service'
-import { FirebaseConfig } from '../assets/data/defaultConfig'
 import { KafkaService }  from '../providers/kafka-service'
 import { TimeStampService } from '../providers/timestamp-service'
 import { PrepareDataService} from '../providers/preparedata-service'
 import { Utility } from '../utilities/util'
 import { MyApp } from './app.component';
+import { TranslatePipe } from '../pipes/translate/translate';
+import { AuthService } from '../providers/auth-service';
+import { JwtHelper } from 'angular2-jwt'
 
 
 @NgModule({
   imports: [
     HttpModule,
+    HttpClientModule,
     MomentModule,
     BrowserModule,
     RoundProgressModule,
     BrowserAnimationsModule,
+    PipesModule,
     IonicModule.forRoot(MyApp, {
       mode: 'md'
     }),
     IonicStorageModule.forRoot({
       name: '__appdb',
       driverOrder: ['sqlite', 'indexeddb', 'websql']
-    }),
-    AngularFireModule.initializeApp(FirebaseConfig),
-    AngularFireDatabaseModule, // imports firebase/database, only needed for database features
-    AngularFireAuthModule // imports firebase/auth, only needed for auth features
+    })
   ],
   declarations: [
     MyApp,
 
     // Pages
+    SplashPage,
     EnrolmentPage,
     HomePage,
     StartPage,
@@ -84,13 +91,16 @@ import { MyApp } from './app.component';
     QuestionComponent,
     RangeInputComponent,
     RadioInputComponent,
-    SliderInputComponent
+    SliderInputComponent,
+    TimedTestComponent,
+    InfoScreenComponent
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
 
     // Pages
+    SplashPage,
     EnrolmentPage,
     HomePage,
     StartPage,
@@ -107,7 +117,9 @@ import { MyApp } from './app.component';
     QuestionComponent,
     RangeInputComponent,
     RadioInputComponent,
-    SliderInputComponent
+    SliderInputComponent,
+    TimedTestComponent,
+    InfoScreenComponent
   ],
   providers: [
     Device,
@@ -116,17 +128,21 @@ import { MyApp } from './app.component';
     DatePipe,
     QuestionService,
     AnswerService,
-    FirebaseService,
+    ConfigService,
     StorageService,
-    AngularFireDatabaseModule,
     KafkaService,
     TimeStampService,
     PrepareDataService,
     Utility,
     SchedulingService,
-    AngularFireDatabaseModule,
     HomeController,
-    BarcodeScanner
+    BarcodeScanner,
+    Dialogs,
+    Vibration,
+    Globalization,
+    TranslatePipe,
+    AuthService,
+    JwtHelper
   ]
 })
 export class AppModule {

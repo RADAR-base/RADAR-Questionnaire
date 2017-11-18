@@ -29,8 +29,8 @@ export class RadioInputComponent implements OnInit {
     this.responses.map((item, i) => {
       this.items.push({
         id: `radio-${this.uniqueID}-${i}`,
-        response: item.response,
-        value: item.score
+        response: item.label,
+        value: item.code
       })
     })
   }

@@ -107,7 +107,7 @@ export class SchedulingService {
       this.refTimestamp = data[2]
 
       if(data[0] != data[1]){
-        console.log('Updating schedule..')
+        console.log('Changed protocol version detected. Updating schedule..')
         this.runScheduler()
       }
     })
@@ -126,7 +126,7 @@ export class SchedulingService {
     return assessments
   }
 
-  insertTask (task):Promise<any> {
+  insertTask (task): Promise<any> {
     return this.getTasks().then((tasks) => {
       var updatedTasks = tasks
       updatedTasks[task.index] = task
@@ -169,7 +169,7 @@ export class SchedulingService {
 
   setDateTimeToMidnight (date) {
     var resetDate: Date
-    if(this.tzOffset = date.getTimezoneOffset()) {
+    if(this.tzOffset == date.getTimezoneOffset()) {
       resetDate = new Date(date.setHours(1,0,0,0))
     } else {
       resetDate = new Date(date.setHours(0,0,0,0))
@@ -214,7 +214,8 @@ export class SchedulingService {
       name: assessment.name,
       reminderSettings: assessment.protocol.reminders,
       nQuestions: assessment.questions.length,
-      estimatedCompletionTime: assessment.estimatedCompletionTime
+      estimatedCompletionTime: assessment.estimatedCompletionTime,
+      warning: assessment.warn
     }
     return task
   }

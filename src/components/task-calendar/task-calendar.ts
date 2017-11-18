@@ -1,4 +1,4 @@
-import { Component, OnChanges, ViewChild, ElementRef, Input} from '@angular/core'
+import { Component, OnChanges, ViewChild, ElementRef, Input, Output, EventEmitter} from '@angular/core'
 import { NavController } from 'ionic-angular'
 import { HomeController } from '../../providers/home-controller'
 import { Task } from '../../models/task'
@@ -14,9 +14,6 @@ export class TaskCalendarComponent implements OnChanges {
 
   currentTime: String = '06:00'
   timeIndex = 0
-
-  // TODO: handle logic for checking whether the tasks have extra info
-  hasExtraInfo: Boolean = true
 
   tasks: Task[] = [DefaultTask]
 
@@ -74,6 +71,14 @@ export class TaskCalendarComponent implements OnChanges {
       return 1;
     }
     return 0;
+  }
+
+  hasExtraInfo(warningStr) {
+    //console.log(warningStr)
+    if(warningStr == '') {
+      return false
+    }
+    return true
   }
 
 }

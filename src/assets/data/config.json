@@ -165,6 +165,43 @@
             "min": 1, "max": 7
           },
           "type": "range"
+        },
+        {
+          "id": "Test-3",
+          "lead": "Romberg's Test",
+          "content": "This test helps us assess your balancing skills in a still position.",
+          "sections": [
+            {"heading": "Part 1", "content": "Make yourself comfortable, and in standing position. Your feet should be together and your hands by your side."},
+            {"heading": "Part 2", "content": "Press the start button. A timer will count down the seconds."},
+            {"heading": "Part 3", "content": "After 10 seconds, a beep will alert you to continue the exercise with your eyes closed."}
+          ],
+          "type": "info"
+        },
+        {
+          "id": "Test-4",
+          "lead": "Romberg's Test",
+          "content": "This test helps us assess your balancing skills in a still position.",
+          "heading": "Keep your eyes open", 
+          "image": "assets/imgs/eyesopen.png", 
+          "timer": { 
+            "start":20, 
+            "end":10
+          }, 
+          "unit": "sec" ,
+          "type": "timed"
+        },
+        {
+          "id": "Test-5",
+          "lead": "Romberg's Test",
+          "content": "This test helps us assess your balancing skills in a still position.",
+          "heading": "Close your eyes", 
+          "image": "assets/imgs/eyesclosed.png", 
+          "timer": {
+            "start":10, 
+            "end":0
+          }, 
+          "unit": "sec",
+          "type": "timed"
         }
       ]
     }

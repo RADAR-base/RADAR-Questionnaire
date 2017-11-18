@@ -16,7 +16,6 @@ export class FinishPage {
 
   content: string = ""
 
-
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -30,25 +29,20 @@ export class FinishPage {
   }
 
   ionViewDidLoad() {
-
     this.content = this.navParams.data.endText
-
-    console.log(this.answerService.answers)
-    console.log(this.timestampService.timestamps)
-
-
+    let questionnaireName: string = this.navParams.data.associatedTask.name
     this.prepareDataService.process_QuestionnaireData(this.answerService.answers,
       this.timestampService.timestamps)
       .then(data => {
-        this.sendToKafka(data)
+        this.sendToKafka(questionnaireName, data)
       }, error => {
         console.log(JSON.stringify(error))
       })
 
   }
 
-  sendToKafka(QuestionnaireData) {
-    this.kafkaService.prepare_KafkaObject(QuestionnaireData)  //submit data to kafka
+  sendToKafka(questionnaireName, questionnaireData) {
+    this.kafkaService.prepareKafkaObject(questionnaireName, questionnaireData)  //submit data to kafka
   }
 
 

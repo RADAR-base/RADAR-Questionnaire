@@ -1,7 +1,9 @@
 <ion-content>
   <div #questionsContainer class="questions-container">
-    <question *ngFor="let question of questions"
+    <question *ngFor="let question of questions; let i = index"
       [question]="question"
+      [questionIndex]="i"
+      [currentIndex]="currentQuestion"
       (answer)="onAnswer($event)"></question>
   </div>
 </ion-content>
@@ -13,6 +15,7 @@
     </div>
     <ion-buttons left>
       <button ion-button left icon-left
+        [class.disabled]="isPreviousBtDisabled"
         (click)="previousQuestion()">
         <ion-icon [name]="iconPrevious"></ion-icon>
         <div class="toolbar-label">{{previousBtTxt}}</div>

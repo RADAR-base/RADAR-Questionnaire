@@ -8,6 +8,7 @@ export interface Task {
  reminderSettings: Reminders
  nQuestions: number
  estimatedCompletionTime: number
+ warning: string
 }
 
 export interface TasksProgress {

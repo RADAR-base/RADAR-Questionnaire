@@ -1,6 +1,7 @@
 export interface Answer {
   id: string
   value: any
+  type: string
 }
 
 
@@ -13,11 +14,11 @@ export interface Response {
 }
 
 export interface AnswerValueExport {
-  type: any,
-  version: number,
+  name: any,
+  version: any,
   answers: Response[],
-  startTime: number,
-  endTime: number
+  time: number,
+  timeCompleted: number
 }
 
 export interface AnswerKeyExport {

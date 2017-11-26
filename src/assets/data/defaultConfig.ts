@@ -99,8 +99,17 @@ export const DefaultScheduleYearCoverage: number = 2 //years
 
 export const DefaultScheduleReportRepeat: number = 7 //days
 
-export const DefaultDeviceTypeModel: string = 'aRMT-App'
+export const DefaultSourceTypeModel: string = 'aRMT-App'
+
+export const DefaultSourceTypeRegistrationBody: any = {
+"deviceCatalogVersion": "v1",
+"deviceTypeModel": "aRMT-App",
+"deviceTypeProducer": "App"
+//"deviceTypeId": 1104
+}
 
 export const DefaultEndPoint: string = 'https://radar-cns-platform.rosalind.kcl.ac.uk/'
 
 export const DefaultProtocolEndPoint: string = 'https://raw.githubusercontent.com/RADAR-CNS/RADAR-aRMT-protocols/master/'
+
+export const DefaultSourceProducerAndSecret: string = 'aRMT:secret'

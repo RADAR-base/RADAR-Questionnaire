@@ -5,7 +5,7 @@ import { AuthService } from '../../providers/auth-service';
 import { StorageKeys } from '../../enums/storage'
 import { NavController, Slides } from 'ionic-angular'
 import { WeeklyReportSubSettings } from '../../models/settings'
-import { DefaultSettingsWeeklyReport , DefaultDeviceTypeModel} from '../../assets/data/defaultConfig'
+import { DefaultSettingsWeeklyReport , DefaultSourceTypeModel} from '../../assets/data/defaultConfig'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner'
 import { HomePage } from '../home/home'
 import { LocKeys } from '../../enums/localisations'
@@ -49,32 +49,33 @@ export class EnrolmentPage {
     this.loading = true
     let scanOptions = {
       showFlipCameraButton: true,
-      orientation: 'portrait',
-      disableAnimations: true
+      orientation: 'portrait'
+      //disableAnimations: true
     }
     this.scanner.scan(scanOptions).then((scannedObj) => this.authenticate(scannedObj))
+    /*
     //TODO remove when finished
-    /*this.authenticate({'text':'{"refreshToken":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOi\
-I5ODIzYjliNi1lZTE4LTRmNjctOTBlYS04NTFkNjAwZmVhY2MiLCJzb3VyY2VzIj\
-pbXSwidXNlcl9uYW1lIjoiOTgyM2I5YjYtZWUxOC00ZjY3LTkwZWEtODUxZDYwMG\
-ZlYWNjIiwicm9sZXMiOlsiUkFEQVItUGlsb3QtMDE6Uk9MRV9QQVJUSUNJUEFOVC\
-JdLCJpc3MiOiJNYW5hZ2VtZW50UG9ydGFsIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV\
-9QQVJUSUNJUEFOVCJdLCJjbGllbnRfaWQiOiJhUk1UIiwiYXVkIjpbInJlc19NYW\
-5hZ2VtZW50UG9ydGFsIl0sInNjb3BlIjpbIkRVTU1ZX1NDT1BFIl0sImF0aSI6Im\
-U2OTY3YTgwLWFmOTUtNDRjNy04YzJjLTllYzJhYTc0NGE0YyIsImV4cCI6MTUxNT\
-c1ODQyNiwiaWF0IjoxNTEwNTc0NDI2LCJqdGkiOiIyOWVkODUwMC1kMGRkLTRkMj\
-ktYmFiOC02N2M1YmMxYmE4OTgifQ.YIZ1SbnQ2uEllpOFmVX0HVs8f02xwkqw5F5\
-a59jvOvXXiWWWJk617wQpHy4ETHA8w1OhX7kHANd6ZzlQ68qmHY1PQR7uwsSPY0e\
-df3-o1UtDKzgv44ktGHe-LNJMzW6obfdG12GmdA-c-af7lC26JtolspqfpYCdCtp\
-tBKipF3S8n5mhWwBartGWJomNkWXo2aAoP1jfDQQoL8d8I8BXON4jS4uhQWY9Ain\
-taTUh6K9kiFhVF-UFmlgTNZzTXsfy1hSU3JQQB-15Jk09JGe2iKFbwXHyrPddupW\
-3lTeabCXZk3Wmi1ZZ6PwsHY4oCvuAT6h_c25Ga8VovQJndbRkgsyIQzm3FBz110p\
-C6xFkcIpr7Dr4ykilyR7YfQT-VqZtxjvQCjs7t5ipCyTTIGV2LSc_q6i2umwxdER\
-Jt5ttNSCs7Oq73iVfnTl-G0kNeAuCj_D1CqdTc3qIwRPD7-D_PKB_KTtCeefDbTa\
-EYybX_ieVoetJ7e8a7Jb2KJIDqCDOkl5hLsiniOo4R04kQQ9igwjUo9E0Bpw4PpI\
-i-PzW4j7hPO31v2E0h0ziGzybBWpCBwNxOpv89gIWH7ZuVIn_mFemo8hgf7YgLs1\
-kil0Xx3YMIbDpvPEGeoBMgTJ9a99699sNkmT3DVPkQWt38z4B6dniB85GFg_ghE9\
-4XNFLyEY"}'})*/
+    this.authenticate({'text':'{"refreshToken":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOi\
+JjM2U2NzZkNS05YzBlLTQxY2YtODljZC05M2U3NWU2YjM0YTQiLCJzb3VyY2VzIj\
+pbXSwidXNlcl9uYW1lIjoiYzNlNjc2ZDUtOWMwZS00MWNmLTg5Y2QtOTNlNzVlNm\
+IzNGE0Iiwicm9sZXMiOlsiUkFEQVItTURELXMxOlJPTEVfUEFSVElDSVBBTlQiXS\
+wiaXNzIjoiTWFuYWdlbWVudFBvcnRhbCIsImF1dGhvcml0aWVzIjpbIlJPTEVfUE\
+FSVElDSVBBTlQiXSwiY2xpZW50X2lkIjoiYVJNVCIsImF1ZCI6WyJyZXNfTWFuYW\
+dlbWVudFBvcnRhbCJdLCJzY29wZSI6WyJEVU1NWV9TQ09QRSJdLCJhdGkiOiJlYz\
+Q5OGMwYy0xYjc2LTRkZjktOTJlOS00MDIzODlhNzVjNjUiLCJleHAiOjE1MTY4OT\
+gwODQsImlhdCI6MTUxMTcxNDA4NCwianRpIjoiZDhiZjEzYTYtOWFmNi00NDdjLT\
+g1NjktNWQzMGNhYWViNjRlIn0.Zj7CR5d8Kt0Xc-p16Y3jnYsd_2CTE3EH2lyIgI\
+JlT8DkmfleTsCuDq-W3okh5wPBaUcert_ZNUTj7T9Q3CPEfCp5LqcG-L2awPdCos\
+vN6pSHhFXKYQ-5NbNed02ARhWfVhrpdh_5mJSWxOQOMAbB3FdxYKB0Hhjzvo4G6o\
+XbX-sXrz1N4Bad2nPA0INyIOfZpz-yBsHRIeRWaIcxmdRqVdtPsHrdvQRVwipZOL\
+50mZFNBLMmpSbaqKZe4ue64-PVT67D3KIeToyky7OANuvP7f5Hj0o4AW7WwQk-9b\
+YX5JZmNH0oHXXVBtuiRf7rWzfLBLrZ4ddY69eqCXT_XM7VhMWrgrUJBtkt2I_bsB\
+7VPqgEQ5wAUKKAbgxaVsfYrCmj2FvYjU6wuKIS3B0_ehPTdzezujbGK0LdrBs-iY\
+sTpmO3cs8pN0z-sL_fptzjS_X8-DezkaoJtGIy0XQbyZbwc5bA_uJdAONyoKxZWY\
+yEnLthsUVx86KTppGZJ11Em7B6od0gGqF88NF6lHko6Un2Kt6u2ViHNBi5NgsDoD\
+x9FRX9ZfrYiaBT3X3YdyS1ctk9e2mHfgygRtXd1JR9n8gVdTId2V2FcUNiNZl-z4\
+HuMDkz7HBd5l8fJcNGAoFoVKE7RfKGoewdTNsaRXnYDTk_JxmpOxZFVaTX6yo2D8\
+enrcg"}'})*/
   }
 
   authenticate(authObj) {
@@ -146,7 +147,7 @@ kil0Xx3YMIbDpvPEGeoBMgTJ9a99699sNkmT3DVPkQWt38z4B6dniB85GFg_ghE9\
   getSourceId(response) {
     let sources = response.sources
     for(var i = 0; i < sources.length; i++) {
-      if(sources[i].deviceTypeModel == DefaultDeviceTypeModel) {
+      if(sources[i].deviceTypeModel == DefaultSourceTypeModel) {
         return sources[i].sourceId
       }
     }

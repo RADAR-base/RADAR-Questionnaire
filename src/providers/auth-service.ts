@@ -3,7 +3,9 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { StorageService } from './storage-service';
 import { StorageKeys } from '../enums/storage';
 import { JwtHelper } from 'angular2-jwt'
-import { DefaultEndPoint } from '../assets/data/defaultConfig'
+import { DefaultEndPoint,
+  DefaultSourceProducerAndSecret,
+  DefaultSourceTypeRegistrationBody } from '../assets/data/defaultConfig'
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
@@ -18,12 +20,7 @@ export class AuthService {
   CONTENTTYPE_urlencode: string = 'application/x-www-form-urlencoded'
   CONTENTTYPE_json: string = 'application/json'
   BODY_refresh: string = 'grant_type=refresh_token&refresh_token='
-  BODY_register = {
-  "deviceCatalogVersion": "v1",
-  "deviceTypeModel": "aRMT App",
-  "deviceTypeProducer": "RADAR",
-  "deviceTypeId": 1303
-  }
+  BODY_register = DefaultSourceTypeRegistrationBody
 
   constructor(public http: HttpClient,
     private storage: StorageService,
@@ -82,7 +79,7 @@ export class AuthService {
 
   getRegisterHeaders(contentType) {
     var headers = new HttpHeaders()
-      .set('Authorization', 'Basic ' + btoa('aRMT:secret'))
+      .set('Authorization', 'Basic ' + btoa(DefaultSourceProducerAndSecret))
       .set('Content-Type', contentType)
     return headers
   }

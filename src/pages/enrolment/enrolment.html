@@ -8,8 +8,31 @@
       <div class="text">
         <div class="text-lg">{{ "ENROL_WELCOME_1" | translate}}</div>
         {{ "ENROL_WELCOME_2" | translate}}
-        <div class="padding text-justify">
-          {{ "ENROL_WELCOME_DESC" | translate}}</div>
+        <div class="padding text-justify extra-padding">
+          <ion-item no-lines>
+            <span class="info-value"> {{ language.label | translate }} </span>
+            <span item-right (click)="showSelectLanguage()"><ion-icon class="space-right" name="arrow-dropdown"></ion-icon>{{ "BTN_SELECT" | translate}}</span>
+          </ion-item>
+        </div>
+      </div>
+      <div padding class="bottom">
+        <button ion-button class="bt bt--full" round full
+          (click)="next()">
+          {{ "BTN_START" | translate }}
+        </button>
+      </div>
+    </ion-slide>
+
+    <ion-slide id="intro">
+      <div id="logo-container">
+        <img id="logo" src="assets/imgs/radar-logo.svg" alias="RADAR LOGO" />
+      </div>
+      <div class="text">
+        <div class="text-lg">{{ "ENROL_WELCOME_1" | translate}}</div>
+        {{ "ENROL_WELCOME_2" | translate}}
+        <div class="padding text-justify extra-padding">
+          {{ "ENROL_WELCOME_DESC" | translate}}
+        </div>
       </div>
       <div padding class="bottom">
         <button ion-button class="bt bt--full" round full

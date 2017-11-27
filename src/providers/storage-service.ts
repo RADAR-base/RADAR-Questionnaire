@@ -20,7 +20,7 @@ export class StorageService {
 
   }
 
-  init(participantId, participantLogin, projectName, sourceId, createdDate) {
+  init(participantId, participantLogin, projectName, sourceId, createdDate, language) {
     let allKeys = this.getAllKeys()
     return allKeys.then((keys) => {
       if(keys.length <= 6){
@@ -30,7 +30,7 @@ export class StorageService {
         let pLogin = this.set(StorageKeys.PARTICIPANTLOGIN, participantLogin)
         let pName = this.set(StorageKeys.PROJECTNAME, projectName)
         let sId = this.set(StorageKeys.SOURCEID, sourceId)
-        let lang = this.set(StorageKeys.LANGUAGE, DefaultSettingsSupportedLanguages[0])
+        let lang = this.set(StorageKeys.LANGUAGE, language)
         let notif = this.set(StorageKeys.SETTINGS_NOTIFICATIONS, DefaultSettingsNotifications)
         let report = this.set(StorageKeys.SETTINGS_WEEKLYREPORT, DefaultSettingsWeeklyReport)
         let langs = this.set(StorageKeys.SETTINGS_LANGUAGES, DefaultSettingsSupportedLanguages)

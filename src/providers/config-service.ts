@@ -10,6 +10,8 @@ import 'rxjs/add/operator/toPromise';
 export class ConfigService {
 
   URI_protocol: string = '/protocol.json'
+  URI_questionnaireType: string = '_armt'
+  URI_questionnaireFormat: string = '.json'
 
   constructor(
     public http: HttpClient,
@@ -22,19 +24,20 @@ export class ConfigService {
     .then((version) => {
       this.pullProtocol()
       .then((res) => {
-        let response: any = res
+        let response: any = JSON.parse(res)
         if(version != response.version) {
           let protocolFormated = this.formatPulledProcotol(response.protocols)
           this.storage.set(StorageKeys.CONFIG_VERSION, response.version)
           this.storage.set(StorageKeys.CONFIG_ASSESSMENTS, protocolFormated)
           .then(() =>{
+            console.log("Pulled questionnaire")
             this.pullQuestionnaires()
             this.schedule.generateSchedule()
           })
         } else {
           console.log('NO CONFIG UPDATE. Version of protocol.json has not changed.')
         }
-      })
+      }).catch(e => console.log(e))
     })
   }
 
@@ -42,7 +45,7 @@ export class ConfigService {
     return this.getProjectName().then((projectName) => {
       if(projectName){
         let URI = DefaultProtocolEndPoint + projectName + this.URI_protocol
-        return this.http.get(URI).toPromise()
+        return this.http.get(URI, { responseType: 'text'} ).toPromise()
       } else {
         console.error('Unknown project name. Cannot pull protocols.')
       }
@@ -53,13 +56,13 @@ export class ConfigService {
     return this.storage.get(StorageKeys.PROJECTNAME)
   }
 
-  formatPulledProcotol(protocol) {
-    var protocolFormated = protocol
-    for(var i = 0; i < protocolFormated.length; i++){
-      let langFormat = this.retrieveLanguageKeys(protocolFormated[i].questionnaire_URI)
-      protocolFormated[i].questions = langFormat
+  formatPulledProcotol(protocols) {
+    var protocolsFormated = protocols
+    for(var i = 0; i<protocolsFormated.length; i++){
+      protocolsFormated[i].questionnaire['type'] = this.URI_questionnaireType
+      protocolsFormated[i].questionnaire['format'] = this.URI_questionnaireFormat
     }
-    return protocolFormated
+    return protocolsFormated
   }
 
   retrieveLanguageKeys(questionnaire_URI) {
@@ -71,36 +74,47 @@ export class ConfigService {
   }
 
   pullQuestionnaires() {
-    this.storage.get(StorageKeys.CONFIG_ASSESSMENTS)
-    .then((assessments) => {
+    let assessments = this.storage.get(StorageKeys.CONFIG_ASSESSMENTS)
+    let lang = this.storage.get(StorageKeys.LANGUAGE)
+    Promise.all([assessments, lang])
+    .then((vars) => {
+      let assessments = vars[0]
+      let lang = vars[1]
+
       let promises = []
       for(var i = 0; i < assessments.length; i++) {
-        promises.push(this.pullQuestionnaireLangs(assessments[i].questionnaire_URI))
+        promises.push(this.pullQuestionnaireLang(assessments[i], lang))
       }
       Promise.all(promises)
       .then((res) => {
         let assessmentUpdate = assessments
         for(var i = 0; i < assessments.length; i++) {
-          assessmentUpdate[i].questions = res[i]
+          assessmentUpdate[i]['questions'] = res[i]
         }
+        console.log(assessmentUpdate)
         this.storage.set(StorageKeys.CONFIG_ASSESSMENTS, assessmentUpdate)
       })
     })
   }
 
-  pullQuestionnaireLangs(qUriLangs) {
-    var langs = []
-    for(var key in qUriLangs) langs.push(key)
-    var promises = []
-    for(var val of langs) {
-      promises.push(this.getQuestionnairesOfLang(qUriLangs[val]))
-    }
-    return Promise.all(promises)
-    .then((qLangs) => {
-      var questionnaires = {}
-      for(var i = 0; i < langs.length; i++) questionnaires[langs[i]] = qLangs[i]
-      return questionnaires
+  pullQuestionnaireLang(assessment, lang) {
+    let uri = this.formatQuestionnaireUri(assessment.questionnaire, lang.value)
+    return this.getQuestionnairesOfLang(uri)
+    .catch(e => {
+      let uri = this.formatQuestionnaireUri(assessment.questionnaire, '')
+      return this.getQuestionnairesOfLang(uri)
     })
+  }
+
+  formatQuestionnaireUri(questionnaireRepo, langVal) {
+    var uri = questionnaireRepo.repository + questionnaireRepo.name + '/'
+    uri += questionnaireRepo.name + questionnaireRepo.type
+    if(langVal != '') {
+      uri += '_' + langVal
+    }
+    uri += questionnaireRepo.format
+    console.log(uri)
+    return uri
   }
 
   getQuestionnairesOfLang(URI) {

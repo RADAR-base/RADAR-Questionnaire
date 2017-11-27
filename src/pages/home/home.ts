@@ -176,7 +176,7 @@ export class HomePage {
         "title": assessment.name,
         "introduction": assessment.startText[lang.value],
         "endText": assessment.endText[lang.value],
-        "questions": assessment.questions[lang.value],
+        "questions": assessment.questions,
         "associatedTask": this.nextTask
       }
       if(assessment.showIntroduction){

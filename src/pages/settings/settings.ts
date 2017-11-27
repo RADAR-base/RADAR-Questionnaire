@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AlertController } from 'ionic-angular';
 import { StorageService } from '../../providers/storage-service';
+import { ConfigService } from '../../providers/config-service';
 import { LanguageSetting } from '../../models/settings';
 import { NotificationSettings } from '../../models/settings';
 import { WeeklyReportSubSettings } from '../../models/settings';
@@ -36,6 +37,7 @@ export class SettingsPage {
     public navParams: NavParams,
     public alertCtrl: AlertController,
     private storage: StorageService,
+    private configService: ConfigService,
     private translate: TranslatePipe){
     }
 
@@ -102,6 +104,9 @@ export class SettingsPage {
             "value": selectedLanguageVal
           }
           this.storage.set(StorageKeys.LANGUAGE, lang)
+          .then(() => {
+            this.configService.pullQuestionnaires()
+          })
           this.language = lang
           this.navCtrl.setRoot(MyApp)
         }

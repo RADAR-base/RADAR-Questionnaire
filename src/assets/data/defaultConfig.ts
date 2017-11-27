@@ -102,9 +102,9 @@ export const DefaultScheduleReportRepeat: number = 7 //days
 export const DefaultSourceTypeModel: string = 'aRMT-App'
 
 export const DefaultSourceTypeRegistrationBody: any = {
-"deviceCatalogVersion": "v1",
-"deviceTypeModel": "aRMT-App",
-"deviceTypeProducer": "App"
+"sourceTypeCatalogVersion": "v1",
+"sourceTypeModel": "aRMT-App",
+"sourceTypeProducer": "App"
 //"deviceTypeId": 1104
 }
 
@@ -112,4 +112,4 @@ export const DefaultEndPoint: string = 'https://radar-cns-platform.rosalind.kcl.
 
 export const DefaultProtocolEndPoint: string = 'https://raw.githubusercontent.com/RADAR-CNS/RADAR-aRMT-protocols/master/'
 
-export const DefaultSourceProducerAndSecret: string = 'aRMT:secret'
+export const DefaultSourceProducerAndSecret: string = 'aRMT:open%DEGREE%forever'

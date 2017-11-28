@@ -17,9 +17,18 @@ export class QuestionComponent implements OnChanges {
   value: number
   currentlyShown: boolean = false
 
-  constructor(private answerService: AnswerService) {}
+  constructor(private answerService: AnswerService) {
+  }
 
   ngOnChanges() {
+    let min = this.question.select_choices_or_calculations[0].code
+    let max = this.question.select_choices_or_calculations[
+      this.question.select_choices_or_calculations.length-1
+    ].code
+    this.question['range'] = {
+      min: min,
+      max: max
+    }
     if(this.questionIndex == this.currentIndex) {
       this.currentlyShown = true
     } else {

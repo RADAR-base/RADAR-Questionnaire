@@ -1,4 +1,5 @@
 <div *ngIf="question.type === 'info' || question.type === 'timed';then taskformat else stdformat"></div>
+
 <ng-template #stdformat>
   <p class="stdformat">{{question.section_header}}</p>
   <h2 class="stdformat">{{question.field_label}}</h2>

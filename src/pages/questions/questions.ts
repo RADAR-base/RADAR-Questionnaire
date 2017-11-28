@@ -29,6 +29,9 @@ export class QuestionsPage {
   startTime: number
   endTime: number
 
+  //next question increment
+  nextQuestionIncrVal:number = 1
+
   // TODO: gather text variables in one place. get values from server?
   txtValues = {
     next: this.translate.transform(LocKeys.BTN_NEXT.toString()),
@@ -66,15 +69,6 @@ export class QuestionsPage {
 
   setCurrentQuestion(value = 0) {
 
-    if(this.questions[this.currentQuestion].evaluated_logic != ""){
-      let logic = this.questions[this.currentQuestion].evaluated_logic
-      let responses = this.answerService.answers
-      console.log(responses)
-      console.log(responses['esm_social_interact'])
-      console.log(responses['esm_social_interact'].indexOf("0") != -1)
-      console.log(logic)
-      console.log(eval(logic))
-    }
 
     // record start time when question is shown
     this.startTime = this.timestampService.getTimeStamp() // returns : milliseconds / 1000
@@ -157,8 +151,23 @@ export class QuestionsPage {
       const id = this.questions[this.currentQuestion].field_name
       this.recordTimeStamp(id)
 
-      this.setCurrentQuestion(1)
+      this.nextQuestionIncrVal = this.evalSkipNext()
+      this.setCurrentQuestion(this.nextQuestionIncrVal)
     }
+  }
+
+  evalSkipNext() {
+    if(this.currentQuestion+1 < this.questions.length) {
+      if(this.questions[this.currentQuestion+1].evaluated_logic != ""){
+        let logic = this.questions[this.currentQuestion+1].evaluated_logic
+        let responses = this.answerService.answers
+        //console.log(logic)
+        if(eval(logic) == false){
+          return 2
+        }
+      }
+    }
+    return 1
   }
 
   recordTimeStamp(questionId) {
@@ -184,7 +193,7 @@ export class QuestionsPage {
 
   previousQuestion() {
     if(this.isPreviousBtDisabled == false){
-      this.setCurrentQuestion(-1)
+      this.setCurrentQuestion(-this.nextQuestionIncrVal)
     }
   }
 }

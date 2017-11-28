@@ -111,8 +111,8 @@ export class TickerBarComponent implements OnChanges {
 
   addTasksNone () {
     let item = this.generateTickerItem('tasks-none', '',
-      this.translate.transform(LocKeys.TASK_BAR_NO_TASK_1.toString()),
-      this.translate.transform(LocKeys.TASK_BAR_NO_TASK_2.toString()))
+      this.translate.transform(LocKeys.TASK_BAR_TASK_LEFT_1.toString()),
+      this.translate.transform(LocKeys.TASK_BAR_TASK_LEFT_2.toString()))
     this.tickerItems.push(item)
   }
 

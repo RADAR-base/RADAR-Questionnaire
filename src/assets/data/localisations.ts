@@ -567,6 +567,22 @@ export const Localisations = {
     "it":"",
     "nl":""
   },
+  "TASK_BAR_TASK_LEFT_1": {
+    "da":"",
+    "de":"",
+    "en":"Hold on! ",
+    "es":"",
+    "it":"",
+    "nl":""
+  },
+  "TASK_BAR_TASK_LEFT_2": {
+    "da":"",
+    "de":"",
+    "en":"A few questionnaires are still left.",
+    "es":"",
+    "it":"",
+    "nl":""
+  },
   "TASK_BAR_NO_TASK_1": {
     "da":"",
     "de":"",

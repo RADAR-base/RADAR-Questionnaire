@@ -77,6 +77,8 @@ export class LocKeys {
     static TASK_BAR_NEXT_TASK = new LocKeys('TASK_BAR_NEXT_TASK');
     static TASK_BAR_AFFIRMATION_1 = new LocKeys('TASK_BAR_AFFIRMATION_1');
     static TASK_BAR_AFFIRMATION_2 = new LocKeys('TASK_BAR_AFFIRMATION_2');
+    static TASK_BAR_TASK_LEFT_1 = new LocKeys('TASK_BAR_TASK_LEFT_1');
+    static TASK_BAR_TASK_LEFT_2 = new LocKeys('TASK_BAR_TASK_LEFT_2');
     static TASK_BAR_NO_TASK_1 = new LocKeys('TASK_BAR_NO_TASK_1');
     static TASK_BAR_NO_TASK_2 = new LocKeys('TASK_BAR_NO_TASK_2');
     static TASK_TIME_HOUR_SINGLE = new LocKeys('TASK_TIME_HOUR_SINGLE');

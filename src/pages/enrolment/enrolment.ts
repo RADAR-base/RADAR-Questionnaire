@@ -168,7 +168,7 @@ Ld4dblcTsM"}'})
   getSourceId(response) {
     let sources = response.sources
     for(var i = 0; i < sources.length; i++) {
-      if(sources[i].deviceTypeModel == DefaultSourceTypeModel) {
+      if(sources[i].sourceTypeModel == DefaultSourceTypeModel) {
         return sources[i].sourceId
       }
     }

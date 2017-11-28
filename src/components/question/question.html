@@ -8,7 +8,7 @@
   <h2 class="taskformat">{{question.field_label}}</h2>
 </ng-template>
 
-<div *ngIf="question.field_type === 'radio'">
+<div *ngIf="question.field_type === 'radio' || question.field_type === 'checkbox'">
   <radio-input
     [responses]="question.select_choices_or_calculations"
     (valueChange)="onValueChange($event)">

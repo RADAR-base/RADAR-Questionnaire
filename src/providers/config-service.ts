@@ -32,7 +32,6 @@ export class ConfigService {
           .then(() =>{
             console.log("Pulled questionnaire")
             this.pullQuestionnaires()
-            this.schedule.generateSchedule()
           })
         } else {
           console.log('NO CONFIG UPDATE. Version of protocol.json has not changed.')
@@ -92,6 +91,7 @@ export class ConfigService {
           assessmentUpdate[i]['questions'] = this.formatQuestionsHeaders(res[i])
         }
         this.storage.set(StorageKeys.CONFIG_ASSESSMENTS, assessmentUpdate)
+        .then(() => this.schedule.generateSchedule())
       })
     })
   }

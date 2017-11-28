@@ -16,7 +16,7 @@
         </ion-row>
       </div>
     </div>
-    <div id="task-item">
+    <div id="task-item" (click)="clicked(task)">
     <ion-row>
       <ion-col>
         <div class="task-info-left">
@@ -34,14 +34,14 @@
     </div>
   </div>
   <div class="current-time-div" *ngIf="timeIndex==tasks.length">
-      <div id="time-current">
-        <ion-row>
-          <ion-col><div class="time-current-division left"></div></ion-col>
-          <ion-col col-2 class="time-current">{{currentTime}}</ion-col>
-          <ion-col><div class="time-current-division right"></div></ion-col>
-        </ion-row>
-      </div>
-    </div>
+  <div id="time-current">
+    <ion-row>
+      <ion-col><div class="time-current-division left"></div></ion-col>
+      <ion-col col-2 class="time-current">{{currentTime}}</ion-col>
+      <ion-col><div class="time-current-division right"></div></ion-col>
+    </ion-row>
+  </div>
+</div>
 
   </ion-scroll>
 

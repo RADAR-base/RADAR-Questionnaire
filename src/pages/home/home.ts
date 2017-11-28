@@ -165,7 +165,10 @@ export class HomePage {
     this.navCtrl.push(SettingsPage)
   }
 
-  startQuestionnaire () {
+  startQuestionnaire (task: Task) {
+    if(task){
+      this.nextTask = task
+    }
     let lang = this.storage.get(StorageKeys.LANGUAGE)
     let nextAssessment = this.controller.getAssessment(this.nextTask)
     Promise.all([lang, nextAssessment])

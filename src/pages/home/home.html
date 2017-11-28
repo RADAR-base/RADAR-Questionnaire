@@ -26,7 +26,7 @@
   </div>
 
   <div #taskCalendar class="size-null">
-    <task-calendar [scrollHeight]="calendarScrollHeight"></task-calendar>
+    <task-calendar [scrollHeight]="calendarScrollHeight" (task)="startQuestionnaire($event)"></task-calendar>
   </div>
 
   <div #footer class="size-static bg" padding>

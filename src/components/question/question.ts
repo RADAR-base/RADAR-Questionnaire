@@ -43,6 +43,7 @@ export class QuestionComponent implements OnChanges {
     switch (this.question.field_type) {
       case QuestionType.radio:
       case QuestionType.range:
+      case QuestionType.checkbox:
       case QuestionType.slider:
         this.value = event
         break

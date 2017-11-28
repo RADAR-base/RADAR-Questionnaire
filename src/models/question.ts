@@ -26,6 +26,7 @@ export interface SelectChoicesOrCalculations {
 }
 
 export class QuestionType {
+  static checkbox = 'checkbox'
   static radio = 'radio'
   static range = 'range'
   static slider = 'slider'

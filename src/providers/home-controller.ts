@@ -64,6 +64,13 @@ export class HomeController {
             .then((tasks:Task[]) => this.retrieveNextTask(tasks))
   }
 
+  areAllTasksComplete() {
+    return this.getTasksOfToday()
+    .then((tasks: Task[]) => {
+      return this.checkIfAllTasksComplete(tasks)
+    })
+  }
+
   retrieveNextTask (tasks):Task {
     if(tasks) {
       let now = new Date()
@@ -84,6 +91,16 @@ export class HomeController {
         return tasks[nextIdx]
       }
     }
+  }
+
+  checkIfAllTasksComplete(tasks: Task[]) {
+    var status = true
+    for(var i = 0; i<tasks.length; i++) {
+      if(tasks[i].completed == false) {
+        status = false
+      }
+    }
+    return status
   }
 
   updateTaskToComplete (task):Promise<any> {

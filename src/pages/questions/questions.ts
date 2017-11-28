@@ -194,6 +194,9 @@ export class QuestionsPage {
   previousQuestion() {
     if(this.isPreviousBtDisabled == false){
       this.setCurrentQuestion(-this.nextQuestionIncrVal)
+      if(this.previousBtTxt == this.txtValues.close) {
+        this.navCtrl.pop()
+      }
     }
   }
 }

@@ -71,8 +71,15 @@ export class HomePage {
           this.nextTask = task
           this.displayCompleted(false)
         } else {
-          this.nextTask = DefaultTask
-          this.displayCompleted(true)
+          this.controller.areAllTasksComplete().then((completed) => {
+            if(completed) {
+              this.nextTask = DefaultTask
+              this.displayCompleted(true)
+            } else {
+              this.nextTask = DefaultTask
+              this.displayCalendar(true)
+            }
+          })
         }
       })
     }
@@ -166,11 +173,14 @@ export class HomePage {
   }
 
   startQuestionnaire (task: Task) {
+    let startQuestionnaireTask = this.nextTask
     if(task){
-      this.nextTask = task
+      if(task.completed == false) {
+        startQuestionnaireTask = task
+      }
     }
     let lang = this.storage.get(StorageKeys.LANGUAGE)
-    let nextAssessment = this.controller.getAssessment(this.nextTask)
+    let nextAssessment = this.controller.getAssessment(startQuestionnaireTask)
     Promise.all([lang, nextAssessment])
     .then((res) => {
       let lang = res[0]
@@ -180,7 +190,7 @@ export class HomePage {
         "introduction": assessment.startText[lang.value],
         "endText": assessment.endText[lang.value],
         "questions": assessment.questions,
-        "associatedTask": this.nextTask
+        "associatedTask": startQuestionnaireTask
       }
       if(assessment.showIntroduction){
         this.navCtrl.push(StartPage, params)

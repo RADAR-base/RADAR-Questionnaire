@@ -11,6 +11,7 @@ import { DefaultTask } from '../../assets/data/defaultConfig'
 export class TaskCalendarComponent implements OnChanges {
 
   @Input() scrollHeight: number = 0
+  @Output() task: EventEmitter<Task> = new EventEmitter<Task>()
 
   currentTime: String = '06:00'
   timeIndex = 0
@@ -79,6 +80,10 @@ export class TaskCalendarComponent implements OnChanges {
       return false
     }
     return true
+  }
+
+  clicked(task) {
+    this.task.emit(task)
   }
 
 }

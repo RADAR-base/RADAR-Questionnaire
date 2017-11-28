@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output, OnChanges } from '@angular/core'
 import { Question, QuestionType } from '../../models/question'
 import { Answer } from '../../models/answer'
+import { AnswerService } from '../../providers/answer-service'
 
 @Component({
   selector: 'question',
@@ -15,6 +16,8 @@ export class QuestionComponent implements OnChanges {
 
   value: number
   currentlyShown: boolean = false
+
+  constructor(private answerService: AnswerService) {}
 
   ngOnChanges() {
     if(this.questionIndex == this.currentIndex) {
@@ -44,7 +47,6 @@ export class QuestionComponent implements OnChanges {
         this.value = event
         break
     }
-
     this.answer.emit({
       id: this.question.field_name,
       value: this.value,

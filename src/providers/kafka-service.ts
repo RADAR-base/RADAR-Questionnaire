@@ -50,7 +50,7 @@ export class KafkaService {
       "time": data.answers[0].startTime,  // whole questionnaire startTime and endTime
       "timeCompleted": data.answers[data.answers.length - 1].endTime
     }
-    
+
     //Payload for kafka 2 : key Object which contains device information
     this.util.getSourceId()
     .then((sourceId) => {

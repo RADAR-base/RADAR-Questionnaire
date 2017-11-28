@@ -1,6 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core'
 import { App, Content, NavController, NavParams, ViewController } from 'ionic-angular'
-
 import { Question, QuestionType } from '../../models/question'
 import { AnswerService } from '../../providers/answer-service'
 import { TimeStampService } from '../../providers/timestamp-service'
@@ -67,13 +66,22 @@ export class QuestionsPage {
 
   setCurrentQuestion(value = 0) {
 
+    if(this.questions[this.currentQuestion].evaluated_logic != ""){
+      let logic = this.questions[this.currentQuestion].evaluated_logic
+      let responses = this.answerService.answers
+      console.log(responses)
+      console.log(responses['esm_social_interact'])
+      console.log(responses['esm_social_interact'].indexOf("0") != -1)
+      console.log(logic)
+      console.log(eval(logic))
+    }
+
     // record start time when question is shown
     this.startTime = this.timestampService.getTimeStamp() // returns : milliseconds / 1000
-
     const min = !(this.currentQuestion + value < 0)
     const max = !(this.currentQuestion + value >= this.questions.length)
     const finish = (this.currentQuestion + value === this.questions.length)
-    const back = (this.currentQuestion + value === -1)
+    const back = (this.currentQuestion + value === -value)
 
     if (min && max) {
       this.content.scrollToTop(200)

@@ -26,12 +26,18 @@ export class QuestionComponent implements OnChanges {
 
   ngOnChanges() {
     let min = this.question.select_choices_or_calculations[0].code
+    let minLabel = this.question.select_choices_or_calculations[0].label
     let max = this.question.select_choices_or_calculations[
       this.question.select_choices_or_calculations.length-1
     ].code
+    let maxLabel = this.question.select_choices_or_calculations[
+      this.question.select_choices_or_calculations.length-1
+    ].label
     this.question['range'] = {
       min: min,
-      max: max
+      max: max,
+      labelLeft: minLabel,
+      labelRight: maxLabel
     }
     if(this.questionIndex == this.currentIndex) {
       this.currentlyShown = true

@@ -156,13 +156,13 @@ export class SchedulingService {
 
     var tmpSchedule: Task[] = []
     while(iterDate.getTime() <= endDate.getTime()){
-      iterDate = this.setDateTimeToMidnight(iterDate)
-      iterDate = this.advanceRepeat(iterDate, repeatP.unit, repeatP.amount)
       for(var i = 0; i < repeatQ.unitsFromZero.length; i++){
         let taskDate = this.advanceRepeat(iterDate, repeatQ.unit, repeatQ.unitsFromZero[i])
         let idx = indexOffset + tmpSchedule.length
         tmpSchedule.push(this.taskBuilder(idx, assessment, taskDate))
       }
+      iterDate = this.setDateTimeToMidnight(iterDate)
+      iterDate = this.advanceRepeat(iterDate, repeatP.unit, repeatP.amount)
     }
     return tmpSchedule
   }
@@ -221,6 +221,7 @@ export class SchedulingService {
   }
 
   setSchedule (schedule) {
+    console.log(schedule)
     this.storage.set(StorageKeys.SCHEDULE_TASKS, schedule)
     this.storage.set(StorageKeys.SCHEDULE_VERSION, this.configVersion)
   }

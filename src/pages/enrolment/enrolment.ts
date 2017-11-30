@@ -1,6 +1,7 @@
 import { Component, ViewChild, ElementRef } from '@angular/core'
 import { ConfigService } from '../../providers/config-service';
 import { StorageService } from '../../providers/storage-service';
+import { SchedulingService } from '../../providers/scheduling-service'
 import { AuthService } from '../../providers/auth-service';
 import { StorageKeys } from '../../enums/storage'
 import { NavController, Slides, AlertController } from 'ionic-angular'
@@ -45,6 +46,7 @@ export class EnrolmentPage {
     public navCtrl: NavController,
     private scanner: BarcodeScanner,
     private storage: StorageService,
+    private schedule: SchedulingService,
     private configService: ConfigService,
     private authService: AuthService,
     private translate: TranslatePipe,
@@ -76,30 +78,30 @@ export class EnrolmentPage {
     this.scanner.scan(scanOptions).then((scannedObj) => this.authenticate(scannedObj))
 
     //TODO remove when finished
-    /*this.authenticate({'text':'{"refreshToken":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOi\
-JmZjY4ZWYzMC0zNzQ3LTQyYjYtOWI4Ny1hYTM0OWFjMWRlOTkiLCJzb3VyY2VzIj\
-pbXSwidXNlcl9uYW1lIjoiZmY2OGVmMzAtMzc0Ny00MmI2LTliODctYWEzNDlhYz\
-FkZTk5Iiwicm9sZXMiOlsiUkFEQVItTURELUtDTC1zMTpST0xFX1BBUlRJQ0lQQU\
+    this.authenticate({'text':'{"refreshToken":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOi\
+JhMWIzNDhjOC1hYWEwLTQ1OTYtYTg1ZC04NjU1ZmE0M2M3MjIiLCJzb3VyY2VzIj\
+pbXSwidXNlcl9uYW1lIjoiYTFiMzQ4YzgtYWFhMC00NTk2LWE4NWQtODY1NWZhND\
+NjNzIyIiwicm9sZXMiOlsiUkFEQVItTURELUtDTC1zMTpST0xFX1BBUlRJQ0lQQU\
 5UIl0sImlzcyI6Ik1hbmFnZW1lbnRQb3J0YWwiLCJhdXRob3JpdGllcyI6WyJST0\
 xFX1BBUlRJQ0lQQU5UIl0sImNsaWVudF9pZCI6ImFSTVQiLCJhdWQiOlsicmVzX2\
 dhdGV3YXkiLCJyZXNfTWFuYWdlbWVudFBvcnRhbCJdLCJncmFudF90eXBlIjpudW\
 xsLCJzY29wZSI6WyJNRUFTVVJFTUVOVC5DUkVBVEUiLCJTVUJKRUNULlVQREFURS\
 IsIlNVQkpFQ1QuUkVBRCIsIlBST0pFQ1QuUkVBRCIsIlNPVVJDRVRZUEUuUkVBRC\
 IsIlNPVVJDRS5SRUFEIiwiU09VUkNFREFUQS5SRUFEIiwiVVNFUi5SRUFEIiwiUk\
-9MRS5SRUFEIl0sImF0aSI6IjE1NjU4ZGNmLTA4NjYtNDAxZS1hOGE2LWU5MzcwOW\
-YyZTkwOCIsImV4cCI6MTUxOTk0MTY0OSwiaWF0IjoxNTExOTkyODQ5LCJqdGkiOi\
-I4Zjg0NWM3ZS02MWI4LTQ2ZWQtYTMxNi03ZWFmNTRiOWI0ZjIifQ.Jo9BA4YSJYe\
-M2faZ_NDyHxmUEuUgcjUC3t03Ny425q4CoRdmXtLhWpXPSmaL6wdqGqOIouWbN5P\
-LU0ZncA6P9aLF9dkQj0gfeEUk0pL5wKfzi7vWwXqETuFHLiSush3F7a_e8mnjuKq\
-YKlvFMYv9kpgpmnEgYh2PgaiT-EpsUwDSiy9i0CZMpv6uK2uizWzwL2afZ5kZSkA\
-Xxq2QoraoxWEi2wH0DTkbOXbbDSnad8D891gHU83IWi6arNob9tSa8C9UEQulDmF\
-dlq0oTEto72CqdVUi1tUx2FUQX0ZZOa-vnDywAfxSQSNrCE4icuWKr-UXxIuHMLh\
-S06tihnyh8zymicSAAJgJYQmxjDPNt1BSKQ5vylw0YpXOCfw79uYdbgkwZ5lMRvG\
-iPmBFxigjnjHrwphkZ4V0z1JGDqA3jiJiiO1EQpMHEk15GJcBZpf5Ius2QAhe7jr\
-XRPhw0Xxs642WUWWoAOvjCuIclmaOZlQuPt15pcKOOrTX2xjUbB_JvegAWy-iRfW\
-RRhyqykW1bYImolDj6q86ScrcOezJhxPUbPbyAimw9-Nk0p6dXd10o5SAbgBsQOy\
-RTQEZuMIq18RxjqEkeGFr1FMsykeDZl6R7BhCQdHS8pLKthHg2TrZE_aAeGiuNgC\
-vidmMB9VHPO_g5A0C0sPBRVv-TX1e6p0"}'})*/
+9MRS5SRUFEIl0sImF0aSI6ImQwZmU5NTdmLWViODctNDBhNS1hNjgwLTQ4YWRhMD\
+A2M2ZlOCIsImV4cCI6MTUxOTk5MDY1NywiaWF0IjoxNTEyMDQxODU3LCJqdGkiOi\
+IyYjUwY2Q1OS1hOGJkLTQzZTEtYmM3NC00NDc5OGJjZGM2Y2EifQ.OoNZFMEzd4C\
+__vc1bgcJPWgFibBj21iO-cBmHrz0HiU2EFKRg-yNpXKn_6NkIS8XJJB7xFZ2c1w\
+j3TyUyzjajL28mrKvPMD-6BX1BhZEzSugeTui92zzLjRYelW-EhHaTXF2RcqGm2O\
+32OsZxsaQfJQfIZDQsbG9mHwZk8qhrO4Ci8gwLT1rJNNFgt4Yj1XJChp4YHaPqkt\
+SarrC3HcjiYzNkXMkPTGr1MHnHtychSL75YLit6LWLvGo7YQ-MUPWsPiEfbPFpgt\
+y9hUYF7-xT3n6WgI1iPwKSWmGROfsdAlTh50STGAa4z_xHdyXIhIw6Wyv4yOtBFj\
+mdF36-aHaevp7tHDNfMPeJVXyys1qTLd8OjggnWMub0Uaxr1rktpHn7jXF5R6Bmd\
+_gcYbEsh7nBLcMBPwWqfwiiLc7n1Ce_tJ1TuExXU0lu60mKyIk5uMrvY8OFtioPp\
+kB-EehMz3MIMGUXA-HHBREL8HGKXzv6EtzJl9Xsveq2P4HwQtYTBQsXNcIpwk2ln\
+HXVJWvWpWrOTcNSWGY6BgbfbOyvvfSSlwxFj1G7r4-s2myeZBcMSK-n3f6bExfjU\
+qADxl8TJ7z9Nu5uKdrMm5NLx3z6NKSB6KhHqVKontkYuBWTv8LnBn3g2_p5wwHz8\
+Ewe7dMocd0O_Yppth4MWWvSDzphkje9M"}'})
   }
 
   authenticate(authObj) {
@@ -122,11 +124,12 @@ vidmMB9VHPO_g5A0C0sPBRVv-TX1e6p0"}'})*/
       let projectName = subjectInformation.project.projectName
       let sourceId = this.getSourceId(subjectInformation)
       let createdDate = subjectInformation.createdDate
+      let createdDateMidnight = this.schedule.setDateTimeToMidnight(new Date(createdDate))
       this.storage.init(participantId,
         participantLogin,
         projectName,
         sourceId,
-        createdDate,
+        createdDateMidnight,
         this.language)
       .then(() => {
         this.doAfterAuthentication()

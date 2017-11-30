@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AlertController } from 'ionic-angular';
 import { StorageService } from '../../providers/storage-service';
+import { SchedulingService } from '../../providers/scheduling-service'
 import { ConfigService } from '../../providers/config-service';
 import { LanguageSetting } from '../../models/settings';
 import { NotificationSettings } from '../../models/settings';
@@ -37,12 +38,19 @@ export class SettingsPage {
     public navParams: NavParams,
     public alertCtrl: AlertController,
     private storage: StorageService,
+    private schedule: SchedulingService,
     private configService: ConfigService,
     private translate: TranslatePipe){
     }
 
   ionViewDidLoad() {
     this.loadSettings()
+
+    this.storage.get(StorageKeys.REFERENCEDATE)
+    .then((refDate) => {
+      let createdDateMidnight = this.schedule.setDateTimeToMidnight(new Date(refDate))
+      this.storage.set(StorageKeys.REFERENCEDATE, createdDateMidnight.getTime())
+    })
   }
 
   loadSettings() {

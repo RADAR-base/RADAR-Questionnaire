@@ -7,6 +7,7 @@ import { ReportScheduling } from '../models/report'
 import { Protocol, Reminders, RepeatProtocol } from '../models/protocol'
 import { DefaultScheduleYearCoverage } from '../assets/data/defaultConfig'
 import { DefaultScheduleReportRepeat } from '../assets/data/defaultConfig'
+import { LocalNotifications } from '@ionic-native/local-notifications';
 import 'rxjs/add/operator/map';
 
 @Injectable()
@@ -20,9 +21,14 @@ export class SchedulingService {
   assessments: Promise<Assessment[]>
   tzOffset: number
 
-  constructor(private storage: StorageService) {
+  constructor(private storage: StorageService, private localNotifications: LocalNotifications) {
     let now = new Date()
     this.tzOffset = now.getTimezoneOffset()
+  }
+
+
+  setNotification (task) {
+
   }
 
   getNextTask () {
@@ -221,7 +227,6 @@ export class SchedulingService {
   }
 
   setSchedule (schedule) {
-    console.log(schedule)
     this.storage.set(StorageKeys.SCHEDULE_TASKS, schedule)
     this.storage.set(StorageKeys.SCHEDULE_VERSION, this.configVersion)
   }

@@ -3,12 +3,14 @@ import { StorageService } from './storage-service'
 import { SchedulingService } from './scheduling-service'
 import { Task, TasksProgress } from '../models/task'
 import { Assessment } from '../models/assessment'
+import { NotificationService } from './notification-service'
 
 @Injectable()
 export class HomeController {
 
   constructor(private storage: StorageService,
-              private schedule: SchedulingService) {
+              private schedule: SchedulingService,
+              private notifications: NotificationService) {
   }
 
   evalEnrolement() {
@@ -41,6 +43,21 @@ export class HomeController {
   getTaskProgress () {
     return this.getTasksOfToday()
       .then((tasks:Task[]) => this.retrieveTaskProgress(tasks))
+  }
+
+  setNextNotificationsForXDays (periodInDays) {
+    let today = new Date().getTime()
+    let day = 86400000
+    var promises = []
+    for(var i = 0; i < periodInDays; i++) {
+      promises.push(this.getTasksOfDate(new Date(today + day*i)))
+    }
+    Promise.all(promises)
+    .then((tasks) => {
+      let mergedTasks = [].concat.apply([], tasks)
+      this.notifications.setNotifications(mergedTasks)
+    })
+
   }
 
   retrieveTaskProgress (tasks):TasksProgress {

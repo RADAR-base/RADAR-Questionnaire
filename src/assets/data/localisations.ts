@@ -447,10 +447,18 @@ export const Localisations = {
     "it":"",
     "nl":""
   },
-  "NOTIFICATION_REMINDER_NOW_DESC": {
+  "NOTIFICATION_REMINDER_NOW_DESC_1": {
     "da":"",
     "de":"",
-    "en":"Won\'t take longer than 5min.",
+    "en":"Won\'t take longer than",
+    "es":"",
+    "it":"",
+    "nl":""
+  },
+  "NOTIFICATION_REMINDER_NOW_DESC_2": {
+    "da":"",
+    "de":"",
+    "en":"min.",
     "es":"",
     "it":"",
     "nl":""

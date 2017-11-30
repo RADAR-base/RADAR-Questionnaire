@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="org.phidatalab.radar-armt" version="0.0.5" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="org.phidatalab.radar-armt" version="0.0.7" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>RADAR Questionnaire</name>
     <description>An application that collects active data for research.</description>
     <author email="info@radar-cns.org" href="http://radar-cns.org/">RADAR-CNS</author>
@@ -60,6 +60,7 @@
     <plugin name="cordova-plugin-dialogs" spec="^1.3.4" />
     <plugin name="cordova-plugin-file" spec="^4.3.3" />
     <plugin name="cordova-plugin-globalization" spec="^1.0.8" />
+    <plugin name="cordova-plugin-local-notification" spec="^0.9.0-beta.1" />
     <plugin name="cordova-plugin-opensmile" spec="^2.0.3" />
     <plugin name="cordova-plugin-splashscreen" spec="^4.1.0" />
     <plugin name="cordova-plugin-statusbar" spec="^2.3.0" />
@@ -68,5 +69,4 @@
     <plugin name="cordova-sqlite-storage" spec="^2.1.2" />
     <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
     <plugin name="phonegap-plugin-barcodescanner" spec="^7.0.0" />
-    <plugin name="cordova-plugin-local-notification" spec="^0.9.0-beta.1" />
 </widget>

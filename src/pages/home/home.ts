@@ -13,7 +13,6 @@ import { TranslatePipe } from '../../pipes/translate/translate'
 import { StorageService } from '../../providers/storage-service'
 import { StorageKeys } from '../../enums/storage'
 
-
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
@@ -62,6 +61,7 @@ export class HomePage {
     setInterval(() => {
       this.checkForNextTask()
     }, 10000)
+    this.controller.setNextNotificationsForXDays(43)
   }
 
   checkForNextTask () {

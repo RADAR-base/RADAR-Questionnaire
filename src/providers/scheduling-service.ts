@@ -226,6 +226,7 @@ export class SchedulingService {
   }
 
   setSchedule (schedule) {
+    console.log(schedule)
     this.storage.set(StorageKeys.SCHEDULE_TASKS, schedule)
     this.storage.set(StorageKeys.SCHEDULE_VERSION, this.configVersion)
   }

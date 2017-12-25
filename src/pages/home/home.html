@@ -14,7 +14,11 @@
 
 <ion-content #content>
   <div  #progressBar class="size-dynamic">
-    <task-progress [progress]="tasksProgress" [forceComplete]="showCompleted"></task-progress>
+    <task-progress
+      [progress]="tasksProgress"
+      [forceComplete]="showCompleted"
+      [noTasksToday]="showNoTasksToday">
+    </task-progress>
   </div>
 
   <div  #tickerBar class="size-static">

@@ -157,17 +157,23 @@ export class QuestionsPage {
   }
 
   evalSkipNext() {
-    if(this.currentQuestion+1 < this.questions.length) {
-      if(this.questions[this.currentQuestion+1].evaluated_logic != ""){
-        let logic = this.questions[this.currentQuestion+1].evaluated_logic
+    var increment = 1
+    var questionIdx = this.currentQuestion + 1
+    if(questionIdx < this.questions.length) {
+      while(this.questions[questionIdx].evaluated_logic != ""){
+        let logic = this.questions[questionIdx].evaluated_logic
         let responses = this.answerService.answers
         //console.log(logic)
         if(eval(logic) == false){
-          return 2
+          increment += 1
+          questionIdx += 1
+        } else {
+          return increment
         }
       }
+      return increment
     }
-    return 1
+    return increment
   }
 
   recordTimeStamp(questionId) {

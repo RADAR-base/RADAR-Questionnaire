@@ -41,6 +41,7 @@ export class HomePage {
   nextTask: Task = DefaultTask
   showCalendar: boolean = false
   showCompleted: boolean = false
+  showNoTasksToday: boolean = false
   tasksProgress: TasksProgress
   calendarScrollHeight: number = 0
 
@@ -75,6 +76,9 @@ export class HomePage {
             if(completed) {
               this.nextTask = DefaultTask
               this.displayCompleted(true)
+              if(!this.tasksProgress){
+                this.showNoTasksToday = true
+              }
             } else {
               this.nextTask = DefaultTask
               this.displayCalendar(true)

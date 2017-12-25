@@ -75,10 +75,10 @@ export class EnrolmentPage {
       orientation: 'portrait'
       //disableAnimations: true
     }
-    this.scanner.scan(scanOptions).then((scannedObj) => this.authenticate(scannedObj))
+    //this.scanner.scan(scanOptions).then((scannedObj) => this.authenticate(scannedObj))
 
     //TODO remove when finished
-    /*this.authenticate({'text':'{"refreshToken":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOi\
+    this.authenticate({'text':'{"refreshToken":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOi\
 JkYzAzMTM3Zi1kYTlhLTQzMzQtODdmNy1kYTE3MGEwMmJmMzUiLCJzb3VyY2VzIj\
 pbXSwidXNlcl9uYW1lIjoiZGMwMzEzN2YtZGE5YS00MzM0LTg3ZjctZGExNzBhMD\
 JiZjM1Iiwicm9sZXMiOlsiUkFEQVItTURELUtDTC1zMTpST0xFX1BBUlRJQ0lQQU\
@@ -101,18 +101,26 @@ Xz56sSpB_3Lxj2Yiagck57hxAqw9jda-C7CX97lszFnb4Eg9T8PSPLyE7Uo0n-9x\
 SiyDTZpvnl6ch4-VPbqd-bINmJcIRBzYczFFxL62vTN-T3dgRZxU1-hkwb08OYx5\
 5k3yoh0jpSMXwu7pLwWTjsFFy-t019FBHDSqhVgZ8iIvsNvaKNdvass-mhceg4WY\
 PU9L1o1Hab8AbbtB9s0bXx_vH4LEL5lQ5Ib90-o5v7aiJo2Q_NjDcZ785mkGRMoE\
-pYz35YAEIvZHZH2iBzc3mBV6SGFXqqpc"}'})*/
+pYz35YAEIvZHZH2iBzc3mBV6SGFXqqpc"}'})
   }
 
   authenticate(authObj) {
     this.transitionStatuses()
     let auth = JSON.parse(authObj.text)
-    this.authService.registerToken(auth.refreshToken).then(() => {
+    this.authService.registerToken(auth.refreshToken)
+    .then(() => {
       this.storage.get(StorageKeys.OAUTH_TOKENS).then((tokens) => {
-        this.authService.registerAsSource().then(() => {
+        this.authService.registerAsSource()
+        .then(() => {
           this.retrieveSubjectInformation()
         })
+        .catch((error) => {
+          this.displayErrorMessage(error)
+        })
       })
+    })
+    .catch((error) => {
+      this.displayErrorMessage(error)
     })
   }
 
@@ -141,22 +149,20 @@ pYz35YAEIvZHZH2iBzc3mBV6SGFXqqpc"}'})*/
     this.loading = false
     this.showOutcomeStatus = true
     this.configService.fetchConfigState()
-    this.setOutcomeStatus(this.showOutcomeStatus)
+    this.transitionStatuses()
+  }
+
+  displayErrorMessage (error) {
+    this.loading = false
+    this.showOutcomeStatus = true
+    let msg = error.statusText + ' (' + error.status + ')'
+    this.outcomeStatus = msg
     this.transitionStatuses()
   }
 
   weeklyReportChange(index) {
     this.reportSettings[index].show != this.reportSettings[index].show
     this.storage.set(StorageKeys.SETTINGS_WEEKLYREPORT, this.reportSettings)
-  }
-
-  setOutcomeStatus(status) {
-    if (status) {
-      this.outcomeStatus = LocKeys.STATUS_SUCCESS.value
-      this.next()
-    } else {
-      this.outcomeStatus = LocKeys.STATUS_FAILURE.value
-    }
   }
 
   transitionStatuses() {

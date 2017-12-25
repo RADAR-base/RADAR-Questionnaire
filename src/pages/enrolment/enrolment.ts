@@ -75,33 +75,33 @@ export class EnrolmentPage {
       orientation: 'portrait'
       //disableAnimations: true
     }
-    //this.scanner.scan(scanOptions).then((scannedObj) => this.authenticate(scannedObj))
+    this.scanner.scan(scanOptions).then((scannedObj) => this.authenticate(scannedObj))
 
     //TODO remove when finished
-    this.authenticate({'text':'{"refreshToken":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOi\
-JkYzAzMTM3Zi1kYTlhLTQzMzQtODdmNy1kYTE3MGEwMmJmMzUiLCJzb3VyY2VzIj\
-pbXSwidXNlcl9uYW1lIjoiZGMwMzEzN2YtZGE5YS00MzM0LTg3ZjctZGExNzBhMD\
-JiZjM1Iiwicm9sZXMiOlsiUkFEQVItTURELUtDTC1zMTpST0xFX1BBUlRJQ0lQQU\
-5UIl0sImlzcyI6Ik1hbmFnZW1lbnRQb3J0YWwiLCJhdXRob3JpdGllcyI6WyJST0\
-xFX1BBUlRJQ0lQQU5UIl0sImNsaWVudF9pZCI6ImFSTVQiLCJhdWQiOlsicmVzX2\
-dhdGV3YXkiLCJyZXNfTWFuYWdlbWVudFBvcnRhbCJdLCJncmFudF90eXBlIjpudW\
-xsLCJzY29wZSI6WyJNRUFTVVJFTUVOVC5DUkVBVEUiLCJTVUJKRUNULlVQREFURS\
-IsIlNVQkpFQ1QuUkVBRCIsIlBST0pFQ1QuUkVBRCIsIlNPVVJDRVRZUEUuUkVBRC\
-IsIlNPVVJDRS5SRUFEIiwiU09VUkNFREFUQS5SRUFEIiwiVVNFUi5SRUFEIiwiUk\
-9MRS5SRUFEIl0sImF0aSI6IjU1YzdjMzI1LTg2ZTMtNDVhMS04YTUwLTBlYmI2Mj\
-lkOWRjZCIsImV4cCI6MTUyMDAwMzMzOSwiaWF0IjoxNTEyMDU0NTM5LCJqdGkiOi\
-JkN2E2ODQ2YS00ZWI4LTQyNmQtODE1OC05ZTFjMjkzYzE0MmUifQ.KwuuFjlqBt-\
-50V7qLUqbAKGh6Bj_u3lmpJaevZF4DifS6kk6RHLCXVs_93PdnNrCr40r5oe8Cfj\
--5QtVdjm9lqWAFQoC3yXYv0kVwN-sb3F0Zl10nY3zg2xkOJb4wpcO8TQKQ2kyesd\
-QXy0svKJ0e_SA7RIaoYgdnKZVCJyMbjJSNpjFbhFsmi-9NY83yJMbwYpi2mD6opj\
-g-abaLbnEgVvoWxLNIvXLOwOcKNYV_9iIQEMAiKJRaKXJz5GOdYcZW59E0pSiFzr\
-TL1haHZJmWW9Yqa365ruk3g7km8pgnvOCjQh8VA_sfgFaMi0gkdyhF_zWji5kSIh\
-WSlgd1SufcxpmrtBSt-Go7ZDPpDNlitiSAK7iOAV59MWbmYLki9z-iYKJTEDtuLf\
-Xz56sSpB_3Lxj2Yiagck57hxAqw9jda-C7CX97lszFnb4Eg9T8PSPLyE7Uo0n-9x\
-SiyDTZpvnl6ch4-VPbqd-bINmJcIRBzYczFFxL62vTN-T3dgRZxU1-hkwb08OYx5\
-5k3yoh0jpSMXwu7pLwWTjsFFy-t019FBHDSqhVgZ8iIvsNvaKNdvass-mhceg4WY\
-PU9L1o1Hab8AbbtB9s0bXx_vH4LEL5lQ5Ib90-o5v7aiJo2Q_NjDcZ785mkGRMoE\
-pYz35YAEIvZHZH2iBzc3mBV6SGFXqqpc"}'})
+    /*this.authenticate({'text':'{"refreshToken":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOi\
+I2NzhkYTIyNy04NjY0LTQ5ZjAtOGMxMS1kMDM3NzU0NTYzODEiLCJzb3VyY2VzIj\
+pbXSwidXNlcl9uYW1lIjoiNjc4ZGEyMjctODY2NC00OWYwLThjMTEtZDAzNzc1ND\
+U2MzgxIiwicm9sZXMiOlsiVEVTVC1QUk9KRUNUMTpST0xFX1BBUlRJQ0lQQU5UIl\
+0sImlzcyI6Ik1hbmFnZW1lbnRQb3J0YWwiLCJhdXRob3JpdGllcyI6WyJST0xFX1\
+BBUlRJQ0lQQU5UIl0sImNsaWVudF9pZCI6ImFSTVQiLCJhdWQiOlsicmVzX2dhdG\
+V3YXkiLCJyZXNfTWFuYWdlbWVudFBvcnRhbCJdLCJncmFudF90eXBlIjpudWxsLC\
+JzY29wZSI6WyJNRUFTVVJFTUVOVC5DUkVBVEUiLCJTVUJKRUNULlVQREFURSIsIl\
+NVQkpFQ1QuUkVBRCIsIlBST0pFQ1QuUkVBRCIsIlNPVVJDRVRZUEUuUkVBRCIsIl\
+NPVVJDRS5SRUFEIiwiU09VUkNFREFUQS5SRUFEIiwiVVNFUi5SRUFEIiwiUk9MRS\
+5SRUFEIl0sImF0aSI6IjY0MzEwMTRjLTgwOTQtNGY5Yi04ZWEyLWE5YmQ5MWEzNm\
+M3NSIsImV4cCI6MTUyMjE2NzY4MSwiaWF0IjoxNTE0MjE4ODgxLCJqdGkiOiIzYT\
+I1NjAyYy02ODEzLTQ5MGMtYjAxOS0wZTA3MmNkYWVkZTEifQ.WxEvbn6I9hTyUVV\
+ETQiXh-mv_9KDirgOlZBiUSAwqWPjT7sIspozOqOwF3vy43LRZe8x1vapMqFSHkV\
+5-Ay4qOfWOGv76bmL1UyE9Wy36K96me11k0XLlWMq6fwr7bjoHXEfgZsEKFlJydM\
+vkNDoXNEyD4U9mi2kGgkZ73KfCI2G2PdwRk0fyneaHfiowTmkBgV6hdYnVBvHRol\
+vbQVwaOvcQHzbfzjnxjKR_H-mruYBKg3m7RKNxx_MGWEeM8BRXt8G4V824LDf4WZ\
+je7gQg4QaOKisfaPsZQPTfuqkAs5bqw-QpR8GVqGikq3rrHOisIyRmp_WZP8sHCk\
+1DIZG0_3dozkaVXV0c9-5MidUDZyqZZ7mnOMXcM414M5mTHkOE7RNsJ9om5jWJsU\
+z8jvDoZi0Y-e95yAF78kzdoDY_FpYu2tHTZMaux3zomZT4j9tVzbTCnr1Hrxjvon\
+ivMCTFAy-VaUQhYq_jcYUbklvcXbhydzw4OcuFLFajkDrkPUOaTELyH-7PPq6OT6\
+eyMCxq7y6rXlXmzaL3t_weaxxMQL1X_lj_fKiz1l-wNTOQrqSFFomNqa4ZQyUoc3\
+ldeqGyH92AUi39roUGFRUH3_qUChfMgxXG6zgBKxNse2MYy76m6DXSAjAYuh5RQV\
+w_gBPuh1puedNyBuE3Ao7irMEazQ"}'})*/
   }
 
   authenticate(authObj) {
@@ -146,10 +146,8 @@ pYz35YAEIvZHZH2iBzc3mBV6SGFXqqpc"}'})
   }
 
   doAfterAuthentication() {
-    this.loading = false
-    this.showOutcomeStatus = true
     this.configService.fetchConfigState()
-    this.transitionStatuses()
+    this.next()
   }
 
   displayErrorMessage (error) {

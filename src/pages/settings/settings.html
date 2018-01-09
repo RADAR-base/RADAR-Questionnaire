@@ -60,6 +60,11 @@
   </ion-item-group>
 
   <ion-item-group>
+    <ion-item-divider no-lines>{{ "SETTINGS_CACHE" | translate}}</ion-item-divider>
+    <ion-item no-lines>{{ "SETTINGS_CACHE_SIZE" | translate}}<span item-right class="info-value">{{ cacheSize }}</span></ion-item>
+  </ion-item-group>
+
+  <ion-item-group>
     <ion-item-divider no-lines>{{ "SETTINGS_VERSION" | translate}}</ion-item-divider>
     <ion-item no-lines>{{ "SETTINGS_CONFIGURATION" | translate}}<span item-right class="info-value">V{{ configVersion }}</span></ion-item>
     <ion-item no-lines>{{ "SETTINGS_SCHEDULE" | translate}}<span item-right class="info-value">V{{ scheduleVersion }}</span></ion-item>

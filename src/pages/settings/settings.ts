@@ -25,6 +25,7 @@ export class SettingsPage {
 
   configVersion: String
   scheduleVersion: String
+  cacheSize: number
   participantId: String
   projectName: String
   referenceDate: Date
@@ -81,6 +82,14 @@ export class SettingsPage {
     this.storage.get(StorageKeys.SETTINGS_WEEKLYREPORT).then((settingsWeeklyReport) => {
       this.weeklyReport = settingsWeeklyReport
     })
+    this.storage.get(StorageKeys.CACHE_ANSWERS).then((cache) => {
+      var size = 0
+      for(var key in cache) {
+        size += 1
+      }
+      this.cacheSize = size
+    })
+
   }
 
 

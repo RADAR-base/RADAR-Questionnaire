@@ -75,10 +75,10 @@ export class EnrolmentPage {
       orientation: 'portrait'
       //disableAnimations: true
     }
-    this.scanner.scan(scanOptions).then((scannedObj) => this.authenticate(scannedObj))
+    //this.scanner.scan(scanOptions).then((scannedObj) => this.authenticate(scannedObj))
 
     //TODO remove when finished
-    /*this.authenticate({'text':'{"refreshToken":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOi\
+    this.authenticate({'text':'{"refreshToken":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOi\
 I2NzhkYTIyNy04NjY0LTQ5ZjAtOGMxMS1kMDM3NzU0NTYzODEiLCJzb3VyY2VzIj\
 pbXSwidXNlcl9uYW1lIjoiNjc4ZGEyMjctODY2NC00OWYwLThjMTEtZDAzNzc1ND\
 U2MzgxIiwicm9sZXMiOlsiVEVTVC1QUk9KRUNUMTpST0xFX1BBUlRJQ0lQQU5UIl\
@@ -101,7 +101,7 @@ z8jvDoZi0Y-e95yAF78kzdoDY_FpYu2tHTZMaux3zomZT4j9tVzbTCnr1Hrxjvon\
 ivMCTFAy-VaUQhYq_jcYUbklvcXbhydzw4OcuFLFajkDrkPUOaTELyH-7PPq6OT6\
 eyMCxq7y6rXlXmzaL3t_weaxxMQL1X_lj_fKiz1l-wNTOQrqSFFomNqa4ZQyUoc3\
 ldeqGyH92AUi39roUGFRUH3_qUChfMgxXG6zgBKxNse2MYy76m6DXSAjAYuh5RQV\
-w_gBPuh1puedNyBuE3Ao7irMEazQ"}'})*/
+w_gBPuh1puedNyBuE3Ao7irMEazQ"}'})
   }
 
   authenticate(authObj) {

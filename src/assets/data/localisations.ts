@@ -223,6 +223,22 @@ export const Localisations = {
     "it":"",
     "nl":""
   },
+  "SETTINGS_CACHE": {
+    "da":"",
+    "de":"",
+    "en":"Cache",
+    "es":"",
+    "it":"",
+    "nl":""
+  },
+  "SETTINGS_CACHE_SIZE": {
+    "da":"",
+    "de":"",
+    "en":"Size",
+    "es":"",
+    "it":"",
+    "nl":""
+  },
   "LANGUAGE_ENGLISH": {
     "da":"Engelsk",
     "de":"Englisch",

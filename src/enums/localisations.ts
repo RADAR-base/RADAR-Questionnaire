@@ -34,6 +34,8 @@ export class LocKeys {
     static SETTINGS_SCHEDULE = new LocKeys('SETTINGS_SCHEDULE');
     static SETTINGS_RESET_ALERT = new LocKeys('SETTINGS_RESET_ALERT');
     static SETTINGS_RESET_ALERT_DESC = new LocKeys('SETTINGS_RESET_ALERT_DESC');
+    static SETTINGS_CACHE = new LocKeys('SETTINGS_CACHE');
+    static SETTINGS_CACHE_SIZE = new LocKeys('SETTINGS_CACHE_SIZE');
     static LANGUAGE_ENGLISH = new LocKeys('LANGUAGE_ENGLISH');
     static LANGUAGE_SPANISH = new LocKeys('LANGUAGE_SPANISH');
     static LANGUAGE_ITALIAN = new LocKeys('LANGUAGE_ITALIAN');

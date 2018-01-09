@@ -34,6 +34,7 @@ export class FinishPage {
     this.prepareDataService.process_QuestionnaireData(this.answerService.answers,
       this.timestampService.timestamps)
       .then(data => {
+        this.controller.updateTaskToComplete(this.navParams.data.associatedTask)
         this.sendToKafka(questionnaireName, data)
       }, error => {
         console.log(JSON.stringify(error))
@@ -47,8 +48,6 @@ export class FinishPage {
 
 
   handleClosePage() {
-    this.controller.updateTaskToComplete(this.navParams.data.associatedTask).then(() => {
-      this.navCtrl.setRoot(HomePage)
-    })
+    this.navCtrl.setRoot(HomePage)
   }
 }

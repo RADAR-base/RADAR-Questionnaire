@@ -16,7 +16,7 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Dialogs } from '@ionic-native/dialogs';
 import { Vibration } from '@ionic-native/vibration';
 import { Globalization } from '@ionic-native/globalization';
-import { LocalNotifications } from '@ionic-native/local-notifications';
+//import { LocalNotifications } from '@ionic-native/local-notifications';
 
 import { TaskCalendarComponent } from '../components/task-calendar/task-calendar'
 import { TaskProgressComponent } from '../components/task-progress/task-progress'
@@ -51,7 +51,7 @@ import { MyApp } from './app.component';
 import { TranslatePipe } from '../pipes/translate/translate';
 import { AuthService } from '../providers/auth-service';
 import { JwtHelper } from 'angular2-jwt'
-import { NotificationService } from '../providers/notification-service';
+//import { NotificationService } from '../providers/notification-service';
 
 
 @NgModule({
@@ -136,7 +136,7 @@ import { NotificationService } from '../providers/notification-service';
     TimeStampService,
     PrepareDataService,
     Utility,
-    LocalNotifications,
+    //LocalNotifications,
     SchedulingService,
     HomeController,
     BarcodeScanner,
@@ -146,7 +146,7 @@ import { NotificationService } from '../providers/notification-service';
     TranslatePipe,
     AuthService,
     JwtHelper,
-    NotificationService
+    //NotificationService
   ]
 })
 export class AppModule {

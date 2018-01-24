@@ -16,10 +16,13 @@
       <img class="icon-padding icon-sm" src="assets/imgs/stopwatch.png"/>{{task.estimatedCompletionTime}}<span class="units">min</span>
     </div>
     <div id="questionnaire-time" [@alignCenterRightTime]="animateCenterRight">
-      <div id="hour">
+      <div class="text-lg" *ngIf="isNow">
+        Now
+      </div>
+      <div class="text-lg" *ngIf="!isNow">
         {{ getHour() }}
       </div>
-      <div id="minutes" [@scaleMinutes]="animateScale">
+      <div class="text-sm" *ngIf="!isNow" [@scaleMinutes]="animateScale">
         <span [@fade]="animateFade">:</span>{{ getMinutes() }}
       </div>
     </div>

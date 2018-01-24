@@ -61,6 +61,7 @@ export class LocKeys {
     static STATUS_LOADING = new LocKeys('STATUS_LOADING');
     static STATUS_SUCCESS = new LocKeys('STATUS_SUCCESS');
     static STATUS_FAILURE = new LocKeys('STATUS_FAILURE');
+    static STATUS_NOW = new LocKeys('STATUS_NOW');
     static NOTIFICATION_REMINDER_SOON = new LocKeys('NOTIFICATION_REMINDER_SOON');
     static NOTIFICATION_REMINDER_SOON_DESC = new LocKeys('NOTIFICATION_REMINDER_SOON_DESC');
     static NOTIFICATION_REMINDER_NOW = new LocKeys('NOTIFICATION_REMINDER_NOW');
@@ -78,6 +79,7 @@ export class LocKeys {
     static TASK_PROGRESS_COMPLETED = new LocKeys('TASK_PROGRESS_COMPLETED');
     static TASK_PROGRESS_TITLE = new LocKeys('TASK_PROGRESS_TITLE');
     static TASK_BAR_NEXT_TASK = new LocKeys('TASK_BAR_NEXT_TASK');
+    static TASK_BAR_NOW_TASK = new LocKeys('TASK_BAR_NOW_TASK');
     static TASK_BAR_AFFIRMATION_1 = new LocKeys('TASK_BAR_AFFIRMATION_1');
     static TASK_BAR_AFFIRMATION_2 = new LocKeys('TASK_BAR_AFFIRMATION_2');
     static TASK_BAR_TASK_LEFT_1 = new LocKeys('TASK_BAR_TASK_LEFT_1');

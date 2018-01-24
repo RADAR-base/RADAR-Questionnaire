@@ -431,6 +431,14 @@ export const Localisations = {
     "it":"",
     "nl":""
   },
+  "STATUS_NOW": {
+    "da":"",
+    "de":"",
+    "en":"now",
+    "es":"",
+    "it":"",
+    "nl":""
+  },
   "STATUS_FAILURE": {
     "da":"",
     "de":"",
@@ -571,6 +579,14 @@ export const Localisations = {
     "da":"",
     "de":"",
     "en":"Your next task starts in ",
+    "es":"",
+    "it":"",
+    "nl":""
+  },
+  "TASK_BAR_NOW_TASK": {
+    "da":"",
+    "de":"",
+    "en":"Your task starts ",
     "es":"",
     "it":"",
     "nl":""

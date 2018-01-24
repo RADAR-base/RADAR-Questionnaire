@@ -27,7 +27,7 @@ export class NotificationService {
       .then(() => {
         for(var i = 0; i < tasks.length; i++) {
           let text = this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1.toString())
-          text += tasks[i].estimatedCompletionTime
+          text += " " + tasks[i].estimatedCompletionTime + " "
           text += this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2.toString());
           (<any>cordova).plugins.notification.local.schedule({
             id: i,

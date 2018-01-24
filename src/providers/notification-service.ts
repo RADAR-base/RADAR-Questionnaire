@@ -4,12 +4,8 @@ import { TranslatePipe } from '../pipes/translate/translate'
 import { LocalNotifications } from '@ionic-native/local-notifications';
 import { LocKeys } from '../enums/localisations';
 
-/*
-  Generated class for the NotificationProvider provider.
+declare var cordova;
 
-  See https://angular.io/docs/ts/latest/guide/dependency-injection.html
-  for more info on providers and Angular 2 DI.
-*/
 @Injectable()
 export class NotificationService {
 
@@ -18,10 +14,10 @@ export class NotificationService {
   }
 
   permissionCheck() {
-    this.localNotifications.hasPermission()
+    (<any>cordova).plugins.notification.local.hasPermission()
     .then((p) => {
       if(!p){
-        this.localNotifications.registerPermission()
+        (<any>cordova).plugins.notification.local.registerPermission()
       }
     })
   }
@@ -32,13 +28,14 @@ export class NotificationService {
         for(var i = 0; i < tasks.length; i++) {
           let text = this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1.toString())
           text += tasks[i].estimatedCompletionTime
-          text += this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2.toString())
-          this.localNotifications.schedule({
+          text += this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2.toString());
+          (<any>cordova).plugins.notification.local.schedule({
             id: i,
             title: this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW.toString()),
             text: text,
             at: new Date(tasks[i].timestamp),
             led: 'FF0000',
+            headsup: true,
             sound: "res://platform_default"
           })
         }

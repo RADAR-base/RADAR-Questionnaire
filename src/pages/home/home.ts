@@ -13,8 +13,6 @@ import { TranslatePipe } from '../../pipes/translate/translate'
 import { StorageService } from '../../providers/storage-service'
 import { StorageKeys } from '../../enums/storage'
 
-declare var cordova;
-
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
@@ -64,27 +62,7 @@ export class HomePage {
     setInterval(() => {
       this.checkForNextTask()
     }, 10000)
-    //this.controller.setNextNotificationsForXDays(43)
-
-    let date = new Date()
-    let millis = date.getTime() + 3000;
-    (<any>cordova).plugins.notification.local.schedule([{
-      id: 1,
-      priority: 1,
-      title: this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW.toString()),
-      text: "This is test",
-      at: new Date(millis),
-      headsup: true,
-      sound: "res://platform_default",
-    },{
-      id: 2,
-      title: this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW.toString()),
-      text: "This is test",
-      at: new Date(millis+10000),
-      led: 'FFFFFF',
-      sound: "res://platform_default",
-    }]);
-    console.log(new Date(millis+10000))
+    this.controller.setNextNotificationsForXDays(43)
   }
 
   checkForNextTask () {

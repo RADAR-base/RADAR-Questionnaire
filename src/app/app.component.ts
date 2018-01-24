@@ -6,6 +6,7 @@ import { Platform } from 'ionic-angular'
 import { SplashPage } from '../pages/splash/splash'
 import { ConfigService } from '../providers/config-service'
 import { KafkaService } from '../providers/kafka-service'
+import { NotificationService } from '../providers/notification-service'
 
 
 @Component({
@@ -21,12 +22,14 @@ export class MyApp {
     private statusBar: StatusBar,
     private splashScreen: SplashScreen,
     private configService: ConfigService,
-    private kafkaService: KafkaService
+    private kafkaService: KafkaService,
+    private notificationService: NotificationService,
   ) {
     platform.ready().then(() => {
       statusBar.styleDefault()
       splashScreen.hide()
       configService.fetchConfigState()
+      notificationService.permissionCheck()
     })
   }
 }

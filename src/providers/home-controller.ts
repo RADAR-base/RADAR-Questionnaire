@@ -91,7 +91,8 @@ export class HomeController {
   retrieveNextTask (tasks):Task {
     if(tasks) {
       let now = new Date()
-      let timestamp = Date.now()
+      let offsetTime = 1000 * 60 * 10 // 10 min
+      let timestamp = Date.now() - offsetTime
       var passedAtLeastOnce = false
       var nextIdx = 0
       var nextTimestamp = timestamp * 2

@@ -91,6 +91,7 @@ export class TaskInfoComponent implements OnChanges {
   animateMove: String
   animateScale: String
   animateCenterRight: String
+  isNow: boolean = false
 
   max: number = 1
   current: number = 0
@@ -109,6 +110,14 @@ export class TaskInfoComponent implements OnChanges {
 
   constructor(private controller: HomeController, private translate: TranslatePipe) {
     this.applyAnimationKeys()
+    setInterval(() => {
+      if(this.task.timestamp > Date.now()) {
+        this.isNow = false
+      } else {
+        this.isNow = true
+      }
+      console.log(this.isNow)
+    }, 10000);
   }
 
   ngOnChanges (changes) {

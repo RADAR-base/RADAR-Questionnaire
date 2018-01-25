@@ -3,7 +3,7 @@
     <name>RADAR Questionnaire</name>
     <description>An application that collects active data for research.</description>
     <author email="info@radar-cns.org" href="http://radar-cns.org/">RADAR-CNS</author>
-    <content original-src="index.html" src="http://10.40.177.195:8100" />
+    <content src="index.html" />
     <access origin="*" />
     <access origin="*" subdomains="true" />
     <allow-intent href="http://*/*" />

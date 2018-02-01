@@ -113,10 +113,12 @@ export class HomeController {
 
   checkIfAllTasksComplete(tasks: Task[]) {
     var status = true
-    for(var i = 0; i<tasks.length; i++) {
-      if(tasks[i].completed == false) {
-        status = false
-      }
+    if(tasks){
+      for(var i = 0; i<tasks.length; i++) {
+        if(tasks[i].completed == false) {
+          status = false
+        }
+      }  
     }
     return status
   }

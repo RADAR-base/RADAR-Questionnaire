@@ -23,9 +23,11 @@ export class NotificationService {
   }
 
   setNotifications (tasks) {
-      this.localNotifications.clearAll()
-      .then(() => {
-        for(var i = 0; i < tasks.length; i++) {
+    let now = new Date().getTime()
+    this.localNotifications.clearAll()
+    .then(() => {
+      for(var i = 0; i < tasks.length; i++) {
+        if(tasks[i].timestamp > now) {
           let text = this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1.toString())
           text += " " + tasks[i].estimatedCompletionTime + " "
           text += this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2.toString());
@@ -39,7 +41,8 @@ export class NotificationService {
             sound: "res://platform_default"
           })
         }
-      })
+      }
+    })
   }
 
 }

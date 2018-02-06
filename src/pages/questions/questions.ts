@@ -24,13 +24,14 @@ export class QuestionsPage {
   progress = 0
   currentQuestion = 0
   questions: Question[]
+  questionTitle: String
 
   //timestamps
   startTime: number
   endTime: number
 
   //next question increment
-  nextQuestionIncrVal:number = 1
+  nextQuestionIncrVal:number = 0
 
   // TODO: gather text variables in one place. get values from server?
   txtValues = {
@@ -62,9 +63,19 @@ export class QuestionsPage {
   }
 
   ionViewDidLoad() {
+    this.questionTitle = this.navParams.data.title
     this.questions = this.navParams.data.questions
     this.questionsContainerEl = this.questionsContainerRef.nativeElement
-    this.setCurrentQuestion()
+    this.nextQuestionIncrVal = this.evalIfFirstQuestionnaireToSkipSleepQuestion()
+    this.setCurrentQuestion(this.nextQuestionIncrVal)
+  }
+
+  evalIfFirstQuestionnaireToSkipSleepQuestion() {
+    let time = new Date()
+    if(time.getHours() > 8) {
+      return 1
+    }
+    return 0
   }
 
   setCurrentQuestion(value = 0) {

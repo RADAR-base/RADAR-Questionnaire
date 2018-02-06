@@ -71,7 +71,7 @@ export class QuestionsPage {
 
 
     // record start time when question is shown
-    this.startTime = this.timestampService.getTimeStamp() // returns : milliseconds / 1000
+    this.startTime = this.timestampService.getTimeStamp() / 1000
     const min = !(this.currentQuestion + value < 0)
     const max = !(this.currentQuestion + value >= this.questions.length)
     const finish = (this.currentQuestion + value === this.questions.length)
@@ -145,7 +145,7 @@ export class QuestionsPage {
     if (this.checkAnswer()) {
 
       // record end time when pressed "Next"
-      this.endTime = this.timestampService.getTimeStamp() // returns : milliseconds / 1000
+      this.endTime = this.timestampService.getTimeStamp() / 1000
 
       //take current question id to record timestamp
       const id = this.questions[this.currentQuestion].field_name

@@ -83,7 +83,15 @@ export class TaskCalendarComponent implements OnChanges {
   }
 
   clicked(task) {
-    this.task.emit(task)
+    if(task.name != "ESM" && !task.completed){
+      this.task.emit(task)
+    } else {
+      let now = new Date()
+      let taskTimestamp = new Date(task.timestamp)
+      if(taskTimestamp > now && !task.completed) {
+        this.task.emit(task)
+      }
+    }
   }
 
 }

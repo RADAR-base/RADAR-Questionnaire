@@ -89,7 +89,7 @@ export class KafkaService {
       // kafka connection instance to submit to topic
       var topic = this.TOPIC_NAME + this.questionnaireName
       kafkaConnInstance.topic(topic).produce(id, info, payload,
-        function(err, res) {
+        (err, res) => {
           if (res) {
             console.log(res)
             this.removeAnswersFromCache(cacheKey)

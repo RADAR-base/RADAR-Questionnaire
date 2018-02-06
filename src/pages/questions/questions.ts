@@ -66,13 +66,14 @@ export class QuestionsPage {
     this.questionTitle = this.navParams.data.title
     this.questions = this.navParams.data.questions
     this.questionsContainerEl = this.questionsContainerRef.nativeElement
-    this.nextQuestionIncrVal = this.evalIfFirstQuestionnaireToSkipSleepQuestion()
+    this.nextQuestionIncrVal = this.evalIfFirstQuestionnaireToSkipESMSleepQuestion()
     this.setCurrentQuestion(this.nextQuestionIncrVal)
   }
 
-  evalIfFirstQuestionnaireToSkipSleepQuestion() {
+  evalIfFirstQuestionnaireToSkipESMSleepQuestion() {
     let time = new Date()
-    if(time.getHours() > 8) {
+    console.log(this.questionTitle)
+    if(time.getHours() > 8 && this.questionTitle == 'ESM') {
       return 1
     }
     return 0

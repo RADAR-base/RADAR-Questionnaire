@@ -24,6 +24,7 @@ import { TickerBarComponent } from '../components/ticker-bar/ticker-bar'
 import { TaskInfoComponent } from '../components/task-info/task-info'
 import { QuestionComponent } from '../components/question/question'
 import { RadioInputComponent } from '../components/radio-input/radio-input'
+import { CheckboxInputComponent } from '../components/checkbox-input/checkbox-input'
 import { RangeInputComponent } from '../components/range-input/range-input'
 import { SliderInputComponent } from '../components/slider-input/slider-input'
 import { TimedTestComponent } from '../components/timed-test/timed-test'
@@ -95,7 +96,8 @@ import { NotificationService } from '../providers/notification-service';
     RadioInputComponent,
     SliderInputComponent,
     TimedTestComponent,
-    InfoScreenComponent
+    InfoScreenComponent,
+    CheckboxInputComponent
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -121,7 +123,8 @@ import { NotificationService } from '../providers/notification-service';
     RadioInputComponent,
     SliderInputComponent,
     TimedTestComponent,
-    InfoScreenComponent
+    InfoScreenComponent,
+    CheckboxInputComponent
   ],
   providers: [
     Device,

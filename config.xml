@@ -3,7 +3,7 @@
     <name>RADAR Questionnaire</name>
     <description>An application that collects active data for research.</description>
     <author email="info@radar-cns.org" href="http://radar-cns.org/">RADAR-CNS</author>
-    <content original-src="index.html" src="http://10.40.230.126:8100" />
+    <content src="index.html" />
     <access origin="*" />
     <access origin="*" subdomains="true" />
     <allow-intent href="http://*/*" />
@@ -57,7 +57,6 @@
     <allow-navigation href="http://10.40.140.19:8100" />
     <allow-navigation href="http://172.20.10.5:8100" />
     <allow-navigation href="http://10.41.163.140:8100" />
-    <allow-navigation href="http://10.40.230.126:8100" />
     <engine name="android" spec="^6.4.0" />
     <plugin name="cordova-plugin-android-permissions" spec="^0.11.0" />
     <plugin name="cordova-plugin-camera" spec="^3.0.0" />
@@ -75,4 +74,5 @@
     <plugin name="cordova-sqlite-storage" spec="^2.2.0" />
     <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
     <plugin name="phonegap-plugin-barcodescanner" spec="^7.0.2" />
+    <allow-navigation href="http://10.40.230.126:8100" />
 </widget>

@@ -11,6 +11,7 @@ import { DefaultTask } from '../../assets/data/defaultConfig'
 export class TaskCalendarComponent implements OnChanges {
 
   @Input() scrollHeight: number = 0
+  @Output() task: EventEmitter<Task> = new EventEmitter<Task>()
 
   currentTime: String = '06:00'
   timeIndex = 0
@@ -79,6 +80,18 @@ export class TaskCalendarComponent implements OnChanges {
       return false
     }
     return true
+  }
+
+  clicked(task) {
+    if(task.name != "ESM" && !task.completed){
+      this.task.emit(task)
+    } else {
+      let now = new Date()
+      let taskTimestamp = new Date(task.timestamp)
+      if(taskTimestamp > now && !task.completed) {
+        this.task.emit(task)
+      }
+    }
   }
 
 }

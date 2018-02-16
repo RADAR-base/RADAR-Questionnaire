@@ -42,7 +42,7 @@ export const Localisations = {
   "ENROL_REGISTRATION_DESC": {
     "da":"",
     "de":"",
-    "en":"Before you can start using the app, we need to register it first. Click the \"Scan\" button and point the camera onto the QR code, given by your doctor. An example QR code is below.",
+    "en":"Before you can start using the app, we need to register it first. Click the \'Scan\' button and point the camera onto the QR code, given by your researcher. An example QR code is below.",
     "es":"",
     "it":"",
     "nl":""
@@ -58,7 +58,7 @@ export const Localisations = {
   "ENROL_PREFERENCES_DESC": {
     "da":"",
     "de":"",
-    "en":"We will send you weekly summaries about the data you'll be sending us. Feel free to select as many topics you would like to receive information on.",
+    "en":"We will send you weekly summaries about the data you'll be sending us. Feel free to select as many topics you would like to receive information about.",
     "es":"",
     "it":"",
     "nl":""
@@ -90,7 +90,7 @@ export const Localisations = {
   "SETTINGS_PARTICIPANTID": {
     "da":"",
     "de":"",
-    "en":"Participant ID",
+    "en":"User ID",
     "es":"",
     "it":"",
     "nl":""
@@ -170,7 +170,7 @@ export const Localisations = {
   "SETTINGS_NOTIFICATIONS_NIGHTMOD_DESC": {
     "da":"",
     "de":"",
-    "en":"Night Mode suppresses all notifications between 10pm and 7:30am.",
+    "en":"Night Mode stops all notifications between 10pm and 07:30am.",
     "es":"",
     "it":"",
     "nl":""
@@ -218,7 +218,23 @@ export const Localisations = {
   "SETTINGS_RESET_ALERT_DESC": {
     "da":"",
     "de":"",
-    "en":"All saved information will be lost.",
+    "en":"All the information that has been saved will be deleted.",
+    "es":"",
+    "it":"",
+    "nl":""
+  },
+  "SETTINGS_CACHE": {
+    "da":"",
+    "de":"",
+    "en":"Cache",
+    "es":"",
+    "it":"",
+    "nl":""
+  },
+  "SETTINGS_CACHE_SIZE": {
+    "da":"",
+    "de":"",
+    "en":"Size",
     "es":"",
     "it":"",
     "nl":""
@@ -415,6 +431,14 @@ export const Localisations = {
     "it":"",
     "nl":""
   },
+  "STATUS_NOW": {
+    "da":"",
+    "de":"",
+    "en":"now",
+    "es":"",
+    "it":"",
+    "nl":""
+  },
   "STATUS_FAILURE": {
     "da":"",
     "de":"",
@@ -426,7 +450,7 @@ export const Localisations = {
   "NOTIFICATION_REMINDER_SOON": {
     "da":"",
     "de":"",
-    "en":"RADAR-CNS needs you tomorrow.",
+    "en":"A questionnaire needs to be completed tomorrow - please remember.",
     "es":"",
     "it":"",
     "nl":""
@@ -434,7 +458,7 @@ export const Localisations = {
   "NOTIFICATION_REMINDER_SOON_DESC": {
     "da":"",
     "de":"",
-    "en":"Remember to block time for a few questionnaires tomorrow.",
+    "en":"Remember to put some time aside for a few questionnaires tomorrow.",
     "es":"",
     "it":"",
     "nl":""
@@ -447,10 +471,18 @@ export const Localisations = {
     "it":"",
     "nl":""
   },
-  "NOTIFICATION_REMINDER_NOW_DESC": {
+  "NOTIFICATION_REMINDER_NOW_DESC_1": {
     "da":"",
     "de":"",
-    "en":"Won\'t take longer than 5min.",
+    "en":"Won\'t usually take longer than",
+    "es":"",
+    "it":"",
+    "nl":""
+  },
+  "NOTIFICATION_REMINDER_NOW_DESC_2": {
+    "da":"",
+    "de":"",
+    "en":"minutes.",
     "es":"",
     "it":"",
     "nl":""
@@ -466,7 +498,7 @@ export const Localisations = {
   "NOTIFICATION_REMINDER_FORGOTTEN_DESC": {
     "da":"",
     "de":"",
-    "en":"It seems you haven’t answered all of our questions. Can you help?",
+    "en":"It seems you haven’t answered all of your questions. Could you help?",
     "es":"",
     "it":"",
     "nl":""
@@ -551,6 +583,14 @@ export const Localisations = {
     "it":"",
     "nl":""
   },
+  "TASK_BAR_NOW_TASK": {
+    "da":"",
+    "de":"",
+    "en":"Your task starts ",
+    "es":"",
+    "it":"",
+    "nl":""
+  },
   "TASK_BAR_AFFIRMATION_1": {
     "da":"",
     "de":"",
@@ -563,6 +603,22 @@ export const Localisations = {
     "da":"",
     "de":"",
     "en":"All tasks completed.",
+    "es":"",
+    "it":"",
+    "nl":""
+  },
+  "TASK_BAR_TASK_LEFT_1": {
+    "da":"",
+    "de":"",
+    "en":"Hold on! ",
+    "es":"",
+    "it":"",
+    "nl":""
+  },
+  "TASK_BAR_TASK_LEFT_2": {
+    "da":"",
+    "de":"",
+    "en":"A few questionnaires are still left.",
     "es":"",
     "it":"",
     "nl":""

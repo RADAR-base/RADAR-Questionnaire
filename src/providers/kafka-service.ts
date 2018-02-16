@@ -36,6 +36,7 @@ export class KafkaService {
     private authService: AuthService
   ) {
     this.KAFKA_CLIENT_URL = DefaultEndPoint + this.KAFKA_CLIENT_KAFKA
+    this.sendAllAnswersInCache()
   }
 
   prepareKafkaObject(questionnaireName, data) {
@@ -50,7 +51,7 @@ export class KafkaService {
       "time": data.answers[0].startTime,  // whole questionnaire startTime and endTime
       "timeCompleted": data.answers[data.answers.length - 1].endTime
     }
-    
+
     //Payload for kafka 2 : key Object which contains device information
     this.util.getSourceId()
     .then((sourceId) => {
@@ -61,7 +62,7 @@ export class KafkaService {
   }
 
   createPayload(kafkaObject) {
-    this.util.getLatestKafkaSchemaVersions(this.questionnaireName)
+    return this.util.getLatestKafkaSchemaVersions(this.questionnaireName)
     .then(schemaVersions => {
       let avroKey = AvroSchema.parse(JSON.parse(schemaVersions[0]['schema']),  { wrapUnions: true })
       // ISSUE forValue: inferred from input, due to error when parsing schema
@@ -75,25 +76,66 @@ export class KafkaService {
 
       let schemaId = new KafkaClient.AvroSchema(JSON.parse(schemaVersions[0]['schema']))
       let schemaInfo = new KafkaClient.AvroSchema(JSON.parse(schemaVersions[1]['schema']))
-      this.sendToKafka(schemaId, schemaInfo, payload)
+      return this.sendToKafka(schemaId, schemaInfo, payload, kafkaObject.value.time)
+    })
+    .catch((error) => {
+      this.cacheAnswers(kafkaObject)
     });
 
   }
 
-  sendToKafka(id, info, payload) {
-    this.getKafkaInstance().then(kafkaConnInstance => {
+  sendToKafka(id, info, payload, cacheKey) {
+    return this.getKafkaInstance().then(kafkaConnInstance => {
       // kafka connection instance to submit to topic
       var topic = this.TOPIC_NAME + this.questionnaireName
       kafkaConnInstance.topic(topic).produce(id, info, payload,
-        function(err, res) {
+        (err, res) => {
           if (res) {
             console.log(res)
+            this.removeAnswersFromCache(cacheKey)
           } else if (err) {
             console.log(err)
           }
         })
     }, error => {
       console.error("Could not initiate kafka connection " + JSON.stringify(error))
+    })
+  }
+
+  cacheAnswers(kafkaObject) {
+    this.storage.get(StorageKeys.CACHE_ANSWERS)
+    .then((cache) => {
+      if(!cache[kafkaObject.value.time]){
+        console.log('KAFKA-SERVICE: Caching answers.')
+        cache[kafkaObject.value.time] = {
+          'questionnaireName': this.questionnaireName,
+          'cache': kafkaObject
+        }
+        this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
+      }
+    });
+  }
+
+  sendAllAnswersInCache(){
+    this.storage.get(StorageKeys.CACHE_ANSWERS)
+    .then((cache) => {
+      if(!cache){
+        this.storage.set(StorageKeys.CACHE_ANSWERS, {})
+      } else {
+        for(var answerKey in cache) {
+          this.questionnaireName = cache[answerKey].questionnaireName
+          this.createPayload(cache[answerKey].cache)
+        }
+      }
+      console.log(cache)
+    });
+  }
+
+  removeAnswersFromCache(cacheKey){
+    this.storage.get(StorageKeys.CACHE_ANSWERS)
+    .then((cache) => {
+      delete cache[cacheKey]
+      this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
     })
   }
 

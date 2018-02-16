@@ -21,4 +21,5 @@ export class StorageKeys {
     static SCHEDULE_VERSION = new StorageKeys('SCHEDULE_VERSION')
     static SCHEDULE_TASKS = new StorageKeys('SCHEDULE_TASKS')
     static SCHEDULE_REPORT = new StorageKeys('SCHEDULE_REPORT')
+    static CACHE_ANSWERS = new StorageKeys('CHACHE_ANSWERS')
 }

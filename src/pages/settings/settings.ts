@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AlertController } from 'ionic-angular';
 import { StorageService } from '../../providers/storage-service';
+import { SchedulingService } from '../../providers/scheduling-service'
 import { ConfigService } from '../../providers/config-service';
 import { LanguageSetting } from '../../models/settings';
 import { NotificationSettings } from '../../models/settings';
@@ -24,6 +25,7 @@ export class SettingsPage {
 
   configVersion: String
   scheduleVersion: String
+  cacheSize: number
   participantId: String
   projectName: String
   referenceDate: Date
@@ -37,12 +39,19 @@ export class SettingsPage {
     public navParams: NavParams,
     public alertCtrl: AlertController,
     private storage: StorageService,
+    private schedule: SchedulingService,
     private configService: ConfigService,
     private translate: TranslatePipe){
     }
 
   ionViewDidLoad() {
     this.loadSettings()
+
+    this.storage.get(StorageKeys.REFERENCEDATE)
+    .then((refDate) => {
+      let createdDateMidnight = this.schedule.setDateTimeToMidnight(new Date(refDate))
+      this.storage.set(StorageKeys.REFERENCEDATE, createdDateMidnight.getTime())
+    })
   }
 
   loadSettings() {
@@ -73,6 +82,14 @@ export class SettingsPage {
     this.storage.get(StorageKeys.SETTINGS_WEEKLYREPORT).then((settingsWeeklyReport) => {
       this.weeklyReport = settingsWeeklyReport
     })
+    this.storage.get(StorageKeys.CACHE_ANSWERS).then((cache) => {
+      var size = 0
+      for(var key in cache) {
+        size += 1
+      }
+      this.cacheSize = size
+    })
+
   }
 
 

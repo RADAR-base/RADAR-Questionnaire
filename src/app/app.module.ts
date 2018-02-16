@@ -16,6 +16,7 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Dialogs } from '@ionic-native/dialogs';
 import { Vibration } from '@ionic-native/vibration';
 import { Globalization } from '@ionic-native/globalization';
+import { LocalNotifications } from '@ionic-native/local-notifications';
 
 import { TaskCalendarComponent } from '../components/task-calendar/task-calendar'
 import { TaskProgressComponent } from '../components/task-progress/task-progress'
@@ -23,6 +24,7 @@ import { TickerBarComponent } from '../components/ticker-bar/ticker-bar'
 import { TaskInfoComponent } from '../components/task-info/task-info'
 import { QuestionComponent } from '../components/question/question'
 import { RadioInputComponent } from '../components/radio-input/radio-input'
+import { CheckboxInputComponent } from '../components/checkbox-input/checkbox-input'
 import { RangeInputComponent } from '../components/range-input/range-input'
 import { SliderInputComponent } from '../components/slider-input/slider-input'
 import { TimedTestComponent } from '../components/timed-test/timed-test'
@@ -50,6 +52,7 @@ import { MyApp } from './app.component';
 import { TranslatePipe } from '../pipes/translate/translate';
 import { AuthService } from '../providers/auth-service';
 import { JwtHelper } from 'angular2-jwt'
+import { NotificationService } from '../providers/notification-service';
 
 
 @NgModule({
@@ -93,7 +96,8 @@ import { JwtHelper } from 'angular2-jwt'
     RadioInputComponent,
     SliderInputComponent,
     TimedTestComponent,
-    InfoScreenComponent
+    InfoScreenComponent,
+    CheckboxInputComponent
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -119,7 +123,8 @@ import { JwtHelper } from 'angular2-jwt'
     RadioInputComponent,
     SliderInputComponent,
     TimedTestComponent,
-    InfoScreenComponent
+    InfoScreenComponent,
+    CheckboxInputComponent
   ],
   providers: [
     Device,
@@ -134,6 +139,7 @@ import { JwtHelper } from 'angular2-jwt'
     TimeStampService,
     PrepareDataService,
     Utility,
+    LocalNotifications,
     SchedulingService,
     HomeController,
     BarcodeScanner,
@@ -142,7 +148,8 @@ import { JwtHelper } from 'angular2-jwt'
     Globalization,
     TranslatePipe,
     AuthService,
-    JwtHelper
+    JwtHelper,
+    NotificationService
   ]
 })
 export class AppModule {

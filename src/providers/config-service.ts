@@ -32,7 +32,6 @@ export class ConfigService {
           .then(() =>{
             console.log("Pulled questionnaire")
             this.pullQuestionnaires()
-            this.schedule.generateSchedule()
           })
         } else {
           console.log('NO CONFIG UPDATE. Version of protocol.json has not changed.')
@@ -89,10 +88,10 @@ export class ConfigService {
       .then((res) => {
         let assessmentUpdate = assessments
         for(var i = 0; i < assessments.length; i++) {
-          assessmentUpdate[i]['questions'] = res[i]
+          assessmentUpdate[i]['questions'] = this.formatQuestionsHeaders(res[i])
         }
-        console.log(assessmentUpdate)
         this.storage.set(StorageKeys.CONFIG_ASSESSMENTS, assessmentUpdate)
+        .then(() => this.schedule.generateSchedule())
       })
     })
   }
@@ -119,6 +118,19 @@ export class ConfigService {
 
   getQuestionnairesOfLang(URI) {
     return this.http.get(URI).toPromise()
+  }
+
+  formatQuestionsHeaders(questions) {
+    var questionsFormated = questions
+    let sectionHeader = questionsFormated[0].section_header
+    for(var i = 0; i < questionsFormated.length; i++){
+      if(questionsFormated[i].section_header == "") {
+        questionsFormated[i].section_header = sectionHeader
+      } else {
+        sectionHeader = questionsFormated[i].section_header
+      }
+    }
+    return questionsFormated
   }
 
 }

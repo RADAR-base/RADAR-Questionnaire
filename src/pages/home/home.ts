@@ -13,7 +13,6 @@ import { TranslatePipe } from '../../pipes/translate/translate'
 import { StorageService } from '../../providers/storage-service'
 import { StorageKeys } from '../../enums/storage'
 
-
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
@@ -42,6 +41,7 @@ export class HomePage {
   nextTask: Task = DefaultTask
   showCalendar: boolean = false
   showCompleted: boolean = false
+  showNoTasksToday: boolean = false
   tasksProgress: TasksProgress
   calendarScrollHeight: number = 0
 
@@ -51,7 +51,7 @@ export class HomePage {
     private schedule: SchedulingService,
     private controller: HomeController,
     private translate: TranslatePipe,
-    private storage: StorageService
+    private storage: StorageService,
   ) {  }
 
   ngAfterViewInit(){
@@ -62,6 +62,7 @@ export class HomePage {
     setInterval(() => {
       this.checkForNextTask()
     }, 10000)
+    this.controller.setNextNotificationsForXDays(43)
   }
 
   checkForNextTask () {
@@ -71,8 +72,18 @@ export class HomePage {
           this.nextTask = task
           this.displayCompleted(false)
         } else {
-          this.nextTask = DefaultTask
-          this.displayCompleted(true)
+          this.controller.areAllTasksComplete().then((completed) => {
+            if(completed) {
+              this.nextTask = DefaultTask
+              this.displayCompleted(true)
+              if(!this.tasksProgress){
+                this.showNoTasksToday = true
+              }
+            } else {
+              this.nextTask = DefaultTask
+              this.displayCalendar(true)
+            }
+          })
         }
       })
     }
@@ -165,9 +176,15 @@ export class HomePage {
     this.navCtrl.push(SettingsPage)
   }
 
-  startQuestionnaire () {
+  startQuestionnaire (task: Task) {
+    let startQuestionnaireTask = this.nextTask
+    if(task){
+      if(task.completed == false) {
+        startQuestionnaireTask = task
+      }
+    }
     let lang = this.storage.get(StorageKeys.LANGUAGE)
-    let nextAssessment = this.controller.getAssessment(this.nextTask)
+    let nextAssessment = this.controller.getAssessment(startQuestionnaireTask)
     Promise.all([lang, nextAssessment])
     .then((res) => {
       let lang = res[0]
@@ -177,7 +194,7 @@ export class HomePage {
         "introduction": assessment.startText[lang.value],
         "endText": assessment.endText[lang.value],
         "questions": assessment.questions,
-        "associatedTask": this.nextTask
+        "associatedTask": startQuestionnaireTask
       }
       if(assessment.showIntroduction){
         this.navCtrl.push(StartPage, params)

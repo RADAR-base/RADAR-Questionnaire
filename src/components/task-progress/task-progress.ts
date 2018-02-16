@@ -12,6 +12,7 @@ export class TaskProgressComponent {
 
   @Input() progress: TasksProgress
   @Input() forceComplete: boolean = false
+  @Input() noTasksToday: boolean = false
   @Output() completed: EventEmitter<Boolean> = new EventEmitter()
 
   text: string;

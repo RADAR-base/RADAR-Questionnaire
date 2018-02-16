@@ -1,6 +1,9 @@
 import { Component, EventEmitter, Input, Output, OnChanges } from '@angular/core'
 import { Question, QuestionType } from '../../models/question'
 import { Answer } from '../../models/answer'
+import { AnswerService } from '../../providers/answer-service'
+import { Dialogs } from '@ionic-native/dialogs';
+import { Vibration } from '@ionic-native/vibration';
 
 @Component({
   selector: 'question',
@@ -16,12 +19,32 @@ export class QuestionComponent implements OnChanges {
   value: number
   currentlyShown: boolean = false
 
+  constructor(private answerService: AnswerService,
+    private vibration: Vibration,
+    private dialogs: Dialogs) {
+  }
+
   ngOnChanges() {
+    let min = this.question.select_choices_or_calculations[0].code
+    let minLabel = this.question.select_choices_or_calculations[0].label
+    let max = this.question.select_choices_or_calculations[
+      this.question.select_choices_or_calculations.length-1
+    ].code
+    let maxLabel = this.question.select_choices_or_calculations[
+      this.question.select_choices_or_calculations.length-1
+    ].label
+    this.question['range'] = {
+      min: min,
+      max: max,
+      labelLeft: minLabel,
+      labelRight: maxLabel
+    }
     if(this.questionIndex == this.currentIndex) {
       this.currentlyShown = true
     } else {
       this.currentlyShown = false
     }
+    this.evalBeep()
   }
 
   onValueChange(event) {
@@ -31,6 +54,7 @@ export class QuestionComponent implements OnChanges {
     switch (this.question.field_type) {
       case QuestionType.radio:
       case QuestionType.range:
+      case QuestionType.checkbox:
       case QuestionType.slider:
         this.value = event
         break
@@ -44,11 +68,18 @@ export class QuestionComponent implements OnChanges {
         this.value = event
         break
     }
-
     this.answer.emit({
       id: this.question.field_name,
       value: this.value,
       type: this.question.field_type
     })
+  }
+
+  evalBeep() {
+    if(this.currentlyShown && this.question.field_label.includes('beep')){
+      console.log("Beep!")
+      this.dialogs.beep(1)
+      this.vibration.vibrate(600)
+    }
   }
 }

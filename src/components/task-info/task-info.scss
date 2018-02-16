@@ -36,17 +36,25 @@ task-info {
     float: right;
   }
 
-  #hour {
+  .text-lg {
     font-size: 62px;
     margin-top: -7px;
     float: left;
   }
 
-  #minutes {
+  .text-md {
+    font-size: 55px;
+    margin-top: -3px;
+    padding-right: 10px;
+    float: left;
+  }
+
+  .text-sm {
     font-size: 62px;
     margin-top: -7px;
     float: left;
   }
+
 
   .non-warn-padding {
     width: 100%;

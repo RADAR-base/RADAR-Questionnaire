@@ -30,6 +30,10 @@ page-enrolment {
     margin-top: 3vh;
   }
 
+  .extra-padding {
+    margin-top: 8vh;
+  }
+
   #status {
     display: flex;
     width: 100%;
@@ -49,6 +53,7 @@ page-enrolment {
     flex: 1 0 100%;
     height: 34px;
     opacity: 0;
+    background-color: $cl-danger-40;
     transition: opacity 0.4s ease-in-out;
   }
 

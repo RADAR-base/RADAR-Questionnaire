@@ -53,6 +53,7 @@
         "cordova-plugin-file": "^4.3.3",
         "cordova-plugin-globalization": "^1.0.9",
         "cordova-plugin-local-notifications-db": "git+https://github.com/DavidBriglio/cordova-plugin-local-notifications.git",
+        "cordova-plugin-media-capture": "^3.0.1",
         "cordova-plugin-opensmile": "^2.0.3",
         "cordova-plugin-splashscreen": "^4.1.0",
         "cordova-plugin-statusbar": "^2.4.1",

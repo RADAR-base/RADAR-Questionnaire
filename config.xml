@@ -77,4 +77,5 @@
     <allow-navigation href="http://10.40.230.126:8100" />
     <plugin name="cordova-plugin-media-capture" spec="^3.0.1" />
     <allow-navigation href="http://10.40.149.14:8100" />
+    <allow-navigation href="http://10.40.149.14:8101" />
 </widget>

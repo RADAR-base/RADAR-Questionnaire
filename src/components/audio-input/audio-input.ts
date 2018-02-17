@@ -1,5 +1,5 @@
 
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core'
+import { Component, Input, OnInit, Output, EventEmitter, OnChanges } from '@angular/core'
 import { Device } from '@ionic-native/device'
 import { NavController, AlertController } from 'ionic-angular'
 import * as opensmile from '../../../plugins/cordova-plugin-opensmile/www/opensmile' //file path to opensmile.js; Adding opensmile plugin
@@ -7,6 +7,8 @@ import { AnswerService } from '../../providers/answer-service'
 import { QuestionsPage } from '../../pages/questions/questions'
 import { AudioRecordService } from '../../providers/audiorecord-service'
 import { AndroidPermissionUtility } from '../../utilities/android-permission'
+import { Answer } from '../../models/answer'
+import { Section } from '../../models/question'
 
 declare var cordova: any
 declare var window: any
@@ -16,38 +18,36 @@ declare var window: any
   templateUrl: 'audio-input.html'
 })
 
-export class AudioInputComponent implements OnInit {
+export class AudioInputComponent implements OnInit, OnChanges {
   @Output() valueChange: EventEmitter<any> = new EventEmitter<any>()
-  @Input() configFile: string = ''
-  @Input() compressionLevel: number = 0
-  @Input() qid: string = ''
-  text: string
+  @Input() sections: Section[]
+  @Input() currentlyShown: boolean
+
   filename: string
   name: string
   filepath: string
   recording: boolean
   value: string = null
-  configfile: string
-  compression: number
+  configFile: string = 'liveinput_android.conf'
+  compression: number = 1
   platform: boolean = false
   answer_b64: string = null
   permission: any
 
-  answer = {
+  answer: Answer = {
     id: null,
-    value: null
+    value: null,
+    type: 'audio'
   }
-  ngOnInit() {
-    if (this.device.platform == 'Android') {
-      //Adding default answer for audio recording
-      if (!this.answerService.check(this.qid)) {
-        this.answer.id = this.qid
-        this.answer.value = 'No Audio Recording'
-        this.answerService.add(this.answer)
-        this.valueChange.emit(this.answer.value) // add this at the end
-      }
-    }
 
+  ngOnInit() {
+
+  }
+
+  ngOnChanges() {
+    if(this.currentlyShown) {
+      this.startRecording()
+    }
   }
 
 
@@ -79,10 +79,10 @@ export class AudioInputComponent implements OnInit {
 
   }
 
-  start() {
+  startRecording() {
     this.permissionUtil.getRecordAudio_Permission().then((success) => {
       if (success == true) {
-        this.audioRecordService.startAudioRecording(this.qid, this.configFile)
+        this.audioRecordService.startAudioRecording(this.configFile)
       }
     })
   }

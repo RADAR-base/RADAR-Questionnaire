@@ -49,6 +49,14 @@
   </info-screen>
 </div>
 
+<div *ngIf="question.field_type === 'audio'">
+  <audio-input
+    [sections]="question.select_choices_or_calculations"
+    [currentlyShown]="currentlyShown"
+    (valueChange)="onValueChange($event)">
+  </audio-input>
+</div>
+
 <div *ngIf="question.field_type === 'timed'">
   <timed-test
     [heading]="question.heading"

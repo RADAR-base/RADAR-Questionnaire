@@ -1,8 +1,7 @@
-
-<div class="audio">
-    <button class="button"
-    [class.click]="isRecording()"
-    (click)='start()'>
-        {{setText()}}
-    </button>
+<div class="audio-card">
+  <div *ngFor="let section of sections">
+    <div class="audio-content">
+      <h2>{{section.label}}</h2>
+    </div>
+  </div>
 </div>

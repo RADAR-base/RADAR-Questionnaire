@@ -17,6 +17,8 @@ import { Dialogs } from '@ionic-native/dialogs';
 import { Vibration } from '@ionic-native/vibration';
 import { Globalization } from '@ionic-native/globalization';
 import { LocalNotifications } from '@ionic-native/local-notifications';
+import { AndroidPermissions } from '@ionic-native/android-permissions';
+import { File } from '@ionic-native/file'
 
 import { TaskCalendarComponent } from '../components/task-calendar/task-calendar'
 import { TaskProgressComponent } from '../components/task-progress/task-progress'
@@ -48,7 +50,9 @@ import { SchedulingService } from '../providers/scheduling-service'
 import { KafkaService }  from '../providers/kafka-service'
 import { TimeStampService } from '../providers/timestamp-service'
 import { PrepareDataService} from '../providers/preparedata-service'
+import { AudioRecordService } from '../providers/audiorecord-service'
 import { Utility } from '../utilities/util'
+import { AndroidPermissionUtility } from  '../utilities/android-permission'
 import { MyApp } from './app.component';
 import { TranslatePipe } from '../pipes/translate/translate';
 import { AuthService } from '../providers/auth-service';
@@ -127,7 +131,8 @@ import { AudioInputComponent } from '../components/audio-input/audio-input';
     SliderInputComponent,
     TimedTestComponent,
     InfoScreenComponent,
-    CheckboxInputComponent
+    CheckboxInputComponent,
+    AudioInputComponent
   ],
   providers: [
     Device,
@@ -152,7 +157,11 @@ import { AudioInputComponent } from '../components/audio-input/audio-input';
     TranslatePipe,
     AuthService,
     JwtHelper,
-    NotificationService
+    NotificationService,
+    AudioRecordService,
+    AndroidPermissionUtility,
+    AndroidPermissions,
+    File
   ]
 })
 export class AppModule {

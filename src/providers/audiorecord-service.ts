@@ -11,14 +11,10 @@ declare var window: any
 export class AudioRecordService {
 
   filename: string = 'audio-opensmile.bin'
-  questionID: string = null
+
   audioRecordStatus: boolean = false;
   recording: boolean = false
-
-  answer = {
-    id: null,
-    value: null
-  }
+  recordingTime: number = 45000
 
   constructor(
     private answerService: AnswerService,
@@ -30,10 +26,6 @@ export class AudioRecordService {
 
   }
 
-  setQuestionID(qid) {
-    this.questionID = qid
-  }
-
   setAudioRecordStatus(status) {
     this.audioRecordStatus = status
   }
@@ -41,10 +33,9 @@ export class AudioRecordService {
     return this.audioRecordStatus
   }
 
-  startAudioRecording(questionID, configFile) {
+  startAudioRecording(configFile) {
 
     this.recording = this.getAudioRecordStatus()
-    this.setQuestionID(questionID)
 
     if (this.recording == false) {
       this.recording = true
@@ -73,7 +64,7 @@ export class AudioRecordService {
         console.log("Time up for recording")
         this.recording = false
         this.stopAudioRecording()
-      }, 45000);
+      }, this.recordingTime);
     }
   }
 
@@ -82,11 +73,11 @@ export class AudioRecordService {
   }
 
   success(message) {
-    console.log(message)
+    console.log('OPENSMILE' + message)
   }
 
   failure(error) {
-    console.log('Error calling OpenSmile Plugin' + error)
+    console.log('OPENSMILE Error calling OpenSmile Plugin' + error)
   }
 
   readAudioFile(filename) {
@@ -94,9 +85,6 @@ export class AudioRecordService {
     console.log(filePath)
     this.file.readAsDataURL(filePath, filename).then((base64) => {
       console.log(base64)
-      this.answer.id = this.questionID
-      this.answer.value = base64
-      this.answerService.add(this.answer)
     }, (error) => {
       console.log(error)
     })

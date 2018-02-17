@@ -16,6 +16,10 @@ task-progress {
     display: flex;
   }
 
+  .noTasks-padding {
+    height: 15vh;
+  }
+
   .progress-sub {
     flex: 1 0 60vw;
     transition: transform 0.8s ease-in-out;

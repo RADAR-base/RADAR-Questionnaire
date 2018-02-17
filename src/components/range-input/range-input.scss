@@ -54,4 +54,16 @@ range-input {
   input[type=radio]:checked + label {
     background-color: $cl-primary;
   }
+
+  .padding {
+    margin-top: 10px
+  }
+
+  .labelLeft {
+    float: left;
+  }
+
+  .labelRight {
+    float: right;
+  }
 }

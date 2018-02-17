@@ -25,7 +25,6 @@ export interface ITimer {
 export class TimedTestComponent implements OnChanges {
 
   @Output() valueChange: EventEmitter<number> = new EventEmitter<number>()
-
   @Input() heading: string
   @Input() image: string
   @Input() timer: Timer
@@ -36,11 +35,12 @@ export class TimedTestComponent implements OnChanges {
   }
 
   ngOnInit() {
-      this.initTimer();
+    this.initTimer();
   }
 
   ngOnChanges() {
     if(this.currentlyShown){
+      console.log("Start")
       this.start()
     }
   }

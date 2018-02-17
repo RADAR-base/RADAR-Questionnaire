@@ -29,8 +29,8 @@ export class InfoScreenComponent implements OnInit {
     this.sections.map((item, i) => {
           this.items.push({
             id: `info-${this.uniqueID}-${i}`,
-            heading: item.section_header,
-            content: item.field_label
+            heading: item.code,
+            content: item.label
           })
         })
 

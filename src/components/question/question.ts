@@ -44,7 +44,7 @@ export class QuestionComponent implements OnChanges {
     } else {
       this.currentlyShown = false
     }
-    this.evalBeep()
+    //this.evalBeep()
   }
 
   onValueChange(event) {

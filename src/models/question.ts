@@ -47,6 +47,6 @@ export interface Range {
 }
 
 export interface Section {
-  section_header: string
-  field_label: string
+  code: string
+  label: string
 }

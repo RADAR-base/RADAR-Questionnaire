@@ -21,11 +21,11 @@ export class ConfigService {
 
   fetchConfigState() {
     this.storage.get(StorageKeys.CONFIG_VERSION)
-    .then((version) => {
+    .then((configVersion) => {
       this.pullProtocol()
       .then((res) => {
         let response: any = JSON.parse(res)
-        if(version != response.version) {
+        if(configVersion != response.version) {
           let protocolFormated = this.formatPulledProcotol(response.protocols)
           this.storage.set(StorageKeys.CONFIG_VERSION, response.version)
           this.storage.set(StorageKeys.CONFIG_ASSESSMENTS, protocolFormated)
@@ -35,6 +35,7 @@ export class ConfigService {
           })
         } else {
           console.log('NO CONFIG UPDATE. Version of protocol.json has not changed.')
+          this.schedule.generateSchedule()
         }
       }).catch(e => console.log(e))
     })
@@ -86,6 +87,7 @@ export class ConfigService {
       }
       Promise.all(promises)
       .then((res) => {
+        console.log(res)
         let assessmentUpdate = assessments
         for(var i = 0; i < assessments.length; i++) {
           assessmentUpdate[i]['questions'] = this.formatQuestionsHeaders(res[i])

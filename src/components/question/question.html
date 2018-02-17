@@ -59,9 +59,9 @@
 
 <div *ngIf="question.field_type === 'timed'">
   <timed-test
-    [heading]="question.heading"
-    [image]="question.image"
-    [timer]="question.timer"
+    [heading]="question.field_label"
+    [image]="question.field_annotation.image"
+    [timer]="question.field_annotation.timer"
     [currentlyShown]="currentlyShown"
     (valueChange)="onValueChange($event)">
   </timed-test>

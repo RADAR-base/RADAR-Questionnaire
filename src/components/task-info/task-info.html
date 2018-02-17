@@ -1,5 +1,8 @@
 <div id="task-info-container" (click)="expand()" *ngIf="displayTask">
 
+  <div class="non-warn-padding" *ngIf="!hasExtraInfo && !expanded">
+  </div>
+
   <div class="info">
     <div id="questionnaire-progress" [@moveInProgress]="animateMove">
       <round-progress id="prog-sm" [current]="current" [max]="max" [radius]="radius" [stroke]="stroke"></round-progress>
@@ -13,16 +16,19 @@
       <img class="icon-padding icon-sm" src="assets/imgs/stopwatch.png"/>{{task.estimatedCompletionTime}}<span class="units">min</span>
     </div>
     <div id="questionnaire-time" [@alignCenterRightTime]="animateCenterRight">
-      <div id="hour">
+      <div class="text-md" *ngIf="isNow">
+        {{ "STATUS_NOW" | translate }}
+      </div>
+      <div class="text-lg" *ngIf="!isNow">
         {{ getHour() }}
       </div>
-      <div id="minutes" [@scaleMinutes]="animateScale">
+      <div class="text-sm" *ngIf="!isNow" [@scaleMinutes]="animateScale">
         <span [@fade]="animateFade">:</span>{{ getMinutes() }}
       </div>
     </div>
   </div>
 
-  <div class="extra-info" *ngIf="hasExtraInfo" [@alignCenterRightExtraInfo]="animateCenterRight">
+  <div *ngIf="hasExtraInfo" class="extra-info" [@alignCenterRightExtraInfo]="animateCenterRight">
     <img class="icon-padding extra-info-icon" src="assets/imgs/warning.png"/>{{getExtraInfo()}}
   </div>
 

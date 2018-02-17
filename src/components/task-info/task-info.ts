@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, Output, trigger,
   state, style, transition, animate, keyframes, OnChanges } from '@angular/core'
 import { Task, TasksProgress } from '../../models/task'
 import { HomeController} from '../../providers/home-controller'
+import { LocKeys } from '../../enums/localisations'
+import { TranslatePipe } from '../../pipes/translate/translate'
 
 /**
  * Generated class for the TaskInfo component.
@@ -83,12 +85,13 @@ export class TaskInfoComponent implements OnChanges {
   @Input() task: Task;
   @Output() collapse: EventEmitter<Boolean> = new EventEmitter()
   expanded: Boolean = true
-  hasExtraInfo: Boolean = true
+  hasExtraInfo: Boolean = false
   displayTask: Boolean = false
   animateFade: String
   animateMove: String
   animateScale: String
   animateCenterRight: String
+  isNow: boolean = false
 
   max: number = 1
   current: number = 0
@@ -105,8 +108,16 @@ export class TaskInfoComponent implements OnChanges {
     RIGHT: 'right'
   }
 
-  constructor(private controller: HomeController) {
+  constructor(private controller: HomeController, private translate: TranslatePipe) {
     this.applyAnimationKeys()
+    setInterval(() => {
+      if(this.task.timestamp > Date.now()) {
+        this.isNow = false
+      } else {
+        this.isNow = true
+      }
+      console.log(this.isNow)
+    }, 10000);
   }
 
   ngOnChanges (changes) {
@@ -114,6 +125,11 @@ export class TaskInfoComponent implements OnChanges {
       this.displayTask = true
     } else {
       this.displayTask = false
+    }
+    if(this.task['warning'] != '') {
+      this.hasExtraInfo = true
+    } else {
+      this.hasExtraInfo = false
     }
   }
 
@@ -179,7 +195,7 @@ export class TaskInfoComponent implements OnChanges {
 
   getExtraInfo () {
     var info = ''
-    this.task['extraInfo'] = 'Requires a quiet space'
+    this.task['extraInfo'] = this.translate.transform(LocKeys.TASK_INFO_WARN.toString())
     info = this.task['extraInfo']
     this.hasExtraInfo = this.task['extraInfo'] != '' ? true : false
     return info

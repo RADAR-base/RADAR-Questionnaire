@@ -3,12 +3,14 @@ import { StorageService } from './storage-service'
 import { SchedulingService } from './scheduling-service'
 import { Task, TasksProgress } from '../models/task'
 import { Assessment } from '../models/assessment'
+import { NotificationService } from './notification-service'
 
 @Injectable()
 export class HomeController {
 
   constructor(private storage: StorageService,
-              private schedule: SchedulingService) {
+              private schedule: SchedulingService,
+              private notifications: NotificationService) {
   }
 
   evalEnrolement() {
@@ -34,9 +36,28 @@ export class HomeController {
     return this.schedule.getTasksForDate(now)
   }
 
+  getTasksOfDate (timestamp) {
+    return this.schedule.getTasksForDate(timestamp)
+  }
+
   getTaskProgress () {
     return this.getTasksOfToday()
       .then((tasks:Task[]) => this.retrieveTaskProgress(tasks))
+  }
+
+  setNextNotificationsForXDays (periodInDays) {
+    let today = new Date().getTime()
+    let day = 86400000
+    var promises = []
+    for(var i = 0; i < periodInDays; i++) {
+      promises.push(this.getTasksOfDate(new Date(today + day*i)))
+    }
+    Promise.all(promises)
+    .then((tasks) => {
+      let mergedTasks = [].concat.apply([], tasks)
+      this.notifications.setNotifications(mergedTasks)
+    })
+
   }
 
   retrieveTaskProgress (tasks):TasksProgress {
@@ -60,10 +81,18 @@ export class HomeController {
             .then((tasks:Task[]) => this.retrieveNextTask(tasks))
   }
 
+  areAllTasksComplete() {
+    return this.getTasksOfToday()
+    .then((tasks: Task[]) => {
+      return this.checkIfAllTasksComplete(tasks)
+    })
+  }
+
   retrieveNextTask (tasks):Task {
     if(tasks) {
       let now = new Date()
-      let timestamp = Date.now()
+      let offsetTime = 1000 * 60 * 10 // 10 min
+      let timestamp = Date.now() - offsetTime
       var passedAtLeastOnce = false
       var nextIdx = 0
       var nextTimestamp = timestamp * 2
@@ -76,10 +105,22 @@ export class HomeController {
           nextIdx = i
         }
       }
-      if(passedAtLeastOnce){
+      if(passedAtLeastOnce) {
         return tasks[nextIdx]
       }
     }
+  }
+
+  checkIfAllTasksComplete(tasks: Task[]) {
+    var status = true
+    if(tasks){
+      for(var i = 0; i<tasks.length; i++) {
+        if(tasks[i].completed == false) {
+          status = false
+        }
+      }  
+    }
+    return status
   }
 
   updateTaskToComplete (task):Promise<any> {

@@ -7,7 +7,11 @@ export class StorageKeys {
     }
     // values
     static REFERENCEDATE = new StorageKeys('REFERENCEDATE');
-    static PATIENTID = new StorageKeys('PATIENTID');
+    static OAUTH_TOKENS = new StorageKeys('OAUTH_TOKENS');
+    static PARTICIPANTID = new StorageKeys('PARTICIPANTID');
+    static PARTICIPANTLOGIN = new StorageKeys('PARTICIPANTLOGIN');
+    static PROJECTNAME = new StorageKeys('PROJECTNAME');
+    static SOURCEID = new StorageKeys('SOURCEID')
     static LANGUAGE = new StorageKeys('LANGUAGE');
     static SETTINGS_NOTIFICATIONS = new StorageKeys('SETTINGS_NOTIFICATIONS');
     static SETTINGS_LANGUAGES = new StorageKeys('SETTINGS_LANGUAGES');
@@ -17,4 +21,5 @@ export class StorageKeys {
     static SCHEDULE_VERSION = new StorageKeys('SCHEDULE_VERSION')
     static SCHEDULE_TASKS = new StorageKeys('SCHEDULE_TASKS')
     static SCHEDULE_REPORT = new StorageKeys('SCHEDULE_REPORT')
+    static CACHE_ANSWERS = new StorageKeys('CHACHE_ANSWERS')
 }

@@ -20,21 +20,24 @@ export class StorageService {
 
   }
 
-  init(patientId:String) {
+  init(participantId, participantLogin, projectName, sourceId, createdDate, language) {
     let allKeys = this.getAllKeys()
-    allKeys.then((keys) => {
-      if(keys.length<=5){
-        let today = new Date()
-        //this.set(StorageKeys.REFERENCEDATE, today.getTime())
-        this.set(StorageKeys.REFERENCEDATE, 1496952304184)
-        this.set(StorageKeys.PATIENTID, patientId)
-        this.set(StorageKeys.LANGUAGE, DefaultSettingsSupportedLanguages[0])
-        this.set(StorageKeys.SETTINGS_NOTIFICATIONS, DefaultSettingsNotifications)
-        this.set(StorageKeys.SETTINGS_WEEKLYREPORT, DefaultSettingsWeeklyReport)
-        this.set(StorageKeys.SETTINGS_LANGUAGES, DefaultSettingsSupportedLanguages)
-        this.set(StorageKeys.SCHEDULE_VERSION, DefaultScheduleVersion)
+    return allKeys.then((keys) => {
+      if(keys.length <= 6){
+        let today = new Date(createdDate)
+        let time = this.set(StorageKeys.REFERENCEDATE, today.getTime())
+        let pId = this.set(StorageKeys.PARTICIPANTID, participantId)
+        let pLogin = this.set(StorageKeys.PARTICIPANTLOGIN, participantLogin)
+        let pName = this.set(StorageKeys.PROJECTNAME, projectName)
+        let sId = this.set(StorageKeys.SOURCEID, sourceId)
+        let lang = this.set(StorageKeys.LANGUAGE, language)
+        let notif = this.set(StorageKeys.SETTINGS_NOTIFICATIONS, DefaultSettingsNotifications)
+        let report = this.set(StorageKeys.SETTINGS_WEEKLYREPORT, DefaultSettingsWeeklyReport)
+        let langs = this.set(StorageKeys.SETTINGS_LANGUAGES, DefaultSettingsSupportedLanguages)
+        let version = this.set(StorageKeys.SCHEDULE_VERSION, DefaultScheduleVersion)
+
+        return Promise.all([pId, pName, pLogin, sId,lang, notif, report, langs, version])
       }
-      console.log(keys)
     }).catch((error) => {
       this.handleError(error)
     })

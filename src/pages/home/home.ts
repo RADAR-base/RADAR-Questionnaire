@@ -8,7 +8,10 @@ import { StartPage } from '../start/start'
 import { QuestionsPage } from '../questions/questions'
 import { SettingsPage } from '../settings/settings'
 import { DefaultTask } from '../../assets/data/defaultConfig'
-
+import { LocKeys } from '../../enums/localisations'
+import { TranslatePipe } from '../../pipes/translate/translate'
+import { StorageService } from '../../providers/storage-service'
+import { StorageKeys } from '../../enums/storage'
 
 @Component({
   selector: 'page-home',
@@ -38,6 +41,7 @@ export class HomePage {
   nextTask: Task = DefaultTask
   showCalendar: boolean = false
   showCompleted: boolean = false
+  showNoTasksToday: boolean = false
   tasksProgress: TasksProgress
   calendarScrollHeight: number = 0
 
@@ -46,13 +50,9 @@ export class HomePage {
     public alertCtrl: AlertController,
     private schedule: SchedulingService,
     private controller: HomeController,
-  ) {
-    this.controller.evalEnrolement().then((evalEnrolement) => {
-      if(evalEnrolement){
-        this.navCtrl.push(EnrolmentPage)
-      }
-    })
-  }
+    private translate: TranslatePipe,
+    private storage: StorageService,
+  ) {  }
 
   ngAfterViewInit(){
   }
@@ -61,7 +61,8 @@ export class HomePage {
     this.checkForNextTask()
     setInterval(() => {
       this.checkForNextTask()
-    }, 10000)
+    }, 1000)
+    this.controller.setNextNotificationsForXDays(43)
   }
 
   checkForNextTask () {
@@ -71,8 +72,18 @@ export class HomePage {
           this.nextTask = task
           this.displayCompleted(false)
         } else {
-          this.nextTask = DefaultTask
-          this.displayCompleted(true)
+          this.controller.areAllTasksComplete().then((completed) => {
+            if(completed) {
+              this.nextTask = DefaultTask
+              this.displayCompleted(true)
+              if(!this.tasksProgress){
+                this.showNoTasksToday = true
+              }
+            } else {
+              this.nextTask = DefaultTask
+              this.displayCalendar(true)
+            }
+          })
         }
       })
     }
@@ -165,15 +176,25 @@ export class HomePage {
     this.navCtrl.push(SettingsPage)
   }
 
-  startQuestionnaire () {
-    this.controller.getAssessment(this.nextTask).then((assessment) => {
-      console.log(assessment)
+  startQuestionnaire (task: Task) {
+    let startQuestionnaireTask = this.nextTask
+    if(task){
+      if(task.completed == false) {
+        startQuestionnaireTask = task
+      }
+    }
+    let lang = this.storage.get(StorageKeys.LANGUAGE)
+    let nextAssessment = this.controller.getAssessment(startQuestionnaireTask)
+    Promise.all([lang, nextAssessment])
+    .then((res) => {
+      let lang = res[0]
+      let assessment = res[1]
       let params = {
         "title": assessment.name,
-        "introduction": assessment.startText,
-        "endText": assessment.endText,
+        "introduction": assessment.startText[lang.value],
+        "endText": assessment.endText[lang.value],
         "questions": assessment.questions,
-        "associatedTask": this.nextTask
+        "associatedTask": startQuestionnaireTask
       }
       if(assessment.showIntroduction){
         this.navCtrl.push(StartPage, params)
@@ -187,15 +208,15 @@ export class HomePage {
   showCredits () {
     let buttons = [
       {
-        text: 'Okay',
+        text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
         handler: () => {
           console.log('Okay clicked');
         }
       }
     ]
     this.showAlert({
-      'title': 'Credits',
-      'message': 'Made with &hearts; for you by the RADAR-CNS consortium. For more information click <a href="http://radar-cns.org">here</a>.',
+      'title': this.translate.transform(LocKeys.CREDITS_TITLE.toString()),
+      'message': this.translate.transform(LocKeys.CREDITS_BODY.toString()),
       'buttons': buttons
     })
   }

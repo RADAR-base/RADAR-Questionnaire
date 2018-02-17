@@ -17,6 +17,8 @@ export class RangeInputComponent implements OnInit {
 
   @Input() min = 1
   @Input() max = 10
+  @Input() labelLeft = ""
+  @Input() labelRight = ""
 
   value: number = null
   uniqueID: number = uniqueID++

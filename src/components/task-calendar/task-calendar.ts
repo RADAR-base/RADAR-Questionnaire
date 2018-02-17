@@ -1,9 +1,8 @@
-import { Component, OnChanges, ViewChild, ElementRef, Input} from '@angular/core'
+import { Component, OnChanges, ViewChild, ElementRef, Input, Output, EventEmitter} from '@angular/core'
 import { NavController } from 'ionic-angular'
 import { HomeController } from '../../providers/home-controller'
 import { Task } from '../../models/task'
 import { DefaultTask } from '../../assets/data/defaultConfig'
-
 
 @Component({
   selector: 'task-calendar',
@@ -12,23 +11,17 @@ import { DefaultTask } from '../../assets/data/defaultConfig'
 export class TaskCalendarComponent implements OnChanges {
 
   @Input() scrollHeight: number = 0
+  @Output() task: EventEmitter<Task> = new EventEmitter<Task>()
 
-  @ViewChild('timeCurrent')
-  elCurrentTime: ElementRef;
-
-  times: String[] = ['06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00']
   currentTime: String = '06:00'
-  currentMinutes: number = 0
-  hourPixHeight: number = 25
-  startOfDayMinutes: number = 360 // 6am
+  timeIndex = 0
 
   tasks: Task[] = [DefaultTask]
-  tasksTimes = []
 
-  constructor(private controller: HomeController){
+  constructor (private controller: HomeController) {
     this.controller.getTasksOfToday().then((tasks) => {
-      if(tasks){
-        this.tasks = tasks
+      if(tasks) {
+        this.tasks = tasks.sort(this.compareTasks)
       }
     })
   }
@@ -37,43 +30,68 @@ export class TaskCalendarComponent implements OnChanges {
     this.setCurrentTime()
   }
 
-  setTaskTime (task:Task) {
+  getStartTime (task: Task) {
     let date = new Date(task.timestamp)
-    let offsetPixels = this.setTimePixel(date) - 5 + 25
-    return offsetPixels
+    return this.formatTime(date)
   }
 
   setCurrentTime () {
     let now = new Date()
     this.currentTime = this.formatTime(now)
-    let offsetPixels = this.setTimePixel(now)
-    this.elCurrentTime.nativeElement.style.transform =
-      `translateY(${offsetPixels}px)`
-    if(offsetPixels > 0 && offsetPixels < this.hourPixHeight*18){
-      this.elCurrentTime.nativeElement.style.opacity = 1
+    this.timeIndex = this.getCurrentTimeIndex(now)
+  }
+
+  // Compare current time with the start times of the tasks and find
+  // out in between which tasks it should be shown in the interface
+  getCurrentTimeIndex (date: Date) {
+    var tasksPassed = 0
+    for(let task of this.tasks) {
+      if(date.getTime() <= task.timestamp) {
+        return tasksPassed
+      } else {
+        tasksPassed += 1
+      }
     }
+    return tasksPassed
   }
 
-  setTimePixel (date:Date) {
-    let min = this.computeMinutesIntoDay(date)
-    let offsetPixels = Math.round((min/60)*this.hourPixHeight)
-                          -this.startOfDayMinutes/2
-                          +this.hourPixHeight
-    return offsetPixels
-  }
-
-  computeMinutesIntoDay (date) {
-    let hour = date.getHours()
-    let min = date.getMinutes()
-    return hour*60 + min
-  }
-
-  formatTime(date){
+  formatTime (date) {
     let hour = date.getHours()
     let min = date.getMinutes()
     let hourStr = date.getHours() < 10 ? '0'+String(hour) : String(hour)
     let minStr = date.getMinutes() < 10 ? '0'+String(min) : String(min)
     return hourStr + ':' + minStr
+  }
+
+  // Define the order of the tasks - whether it is based on index or timestamp
+  compareTasks (a: Task, b: Task) {
+    if (a.timestamp < b.timestamp) {
+      return -1
+    }
+    if (a.timestamp > b.timestamp) {
+      return 1;
+    }
+    return 0;
+  }
+
+  hasExtraInfo(warningStr) {
+    //console.log(warningStr)
+    if(warningStr == '') {
+      return false
+    }
+    return true
+  }
+
+  clicked(task) {
+    if(task.name != "ESM" && !task.completed){
+      this.task.emit(task)
+    } else {
+      let now = new Date()
+      let taskTimestamp = new Date(task.timestamp)
+      if(taskTimestamp > now && !task.completed) {
+        this.task.emit(task)
+      }
+    }
   }
 
 }

@@ -1,3 +1,4 @@
+
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core'
 import { Device } from '@ionic-native/device'
 import { NavController, AlertController } from 'ionic-angular'
@@ -10,11 +11,11 @@ import { AndroidPermissionUtility } from '../../utilities/android-permission'
 declare var cordova: any
 declare var window: any
 
-
 @Component({
   selector: 'audio-input',
   templateUrl: 'audio-input.html'
 })
+
 export class AudioInputComponent implements OnInit {
   @Output() valueChange: EventEmitter<any> = new EventEmitter<any>()
   @Input() configFile: string = ''

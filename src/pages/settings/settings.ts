@@ -1,12 +1,20 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { AlertController } from 'ionic-angular'
-import { StorageService } from '../../providers/storage-service'
-import { NotificationSettings } from '../../models/settings'
-import { WeeklyReportSubSettings } from '../../models/settings'
-import { DefaultSettingsNotifications } from '../../assets/data/defaultConfig'
-import { DefaultSettingsWeeklyReport } from '../../assets/data/defaultConfig'
-import { StorageKeys } from '../../enums/storage'
+import { AlertController } from 'ionic-angular';
+import { StorageService } from '../../providers/storage-service';
+import { SchedulingService } from '../../providers/scheduling-service'
+import { ConfigService } from '../../providers/config-service';
+import { LanguageSetting } from '../../models/settings';
+import { NotificationSettings } from '../../models/settings';
+import { WeeklyReportSubSettings } from '../../models/settings';
+import { DefaultSettingsNotifications } from '../../assets/data/defaultConfig';
+import { DefaultSettingsWeeklyReport } from '../../assets/data/defaultConfig';
+import { DefaultSettingsSelectedLanguage, LanguageMap } from '../../assets/data/defaultConfig';
+import { StorageKeys } from '../../enums/storage';
+import { LocKeys } from '../../enums/localisations';
+import { TranslatePipe } from '../../pipes/translate/translate';
+import { MyApp } from '../../app/app.component';
+
 
 @Component({
   selector: 'page-settings',
@@ -17,9 +25,11 @@ export class SettingsPage {
 
   configVersion: String
   scheduleVersion: String
-  patientId: String
+  cacheSize: number
+  participantId: String
+  projectName: String
   referenceDate: Date
-  language: String
+  language: LanguageSetting = DefaultSettingsSelectedLanguage
   languagesSelectable: String[]
   notifications: NotificationSettings = DefaultSettingsNotifications
   weeklyReport: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
@@ -28,11 +38,20 @@ export class SettingsPage {
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     public alertCtrl: AlertController,
-    private storage: StorageService) {
-  }
+    private storage: StorageService,
+    private schedule: SchedulingService,
+    private configService: ConfigService,
+    private translate: TranslatePipe){
+    }
 
   ionViewDidLoad() {
     this.loadSettings()
+
+    this.storage.get(StorageKeys.REFERENCEDATE)
+    .then((refDate) => {
+      let createdDateMidnight = this.schedule.setDateTimeToMidnight(new Date(refDate))
+      this.storage.set(StorageKeys.REFERENCEDATE, createdDateMidnight.getTime())
+    })
   }
 
   loadSettings() {
@@ -42,8 +61,11 @@ export class SettingsPage {
     this.storage.get(StorageKeys.SCHEDULE_VERSION).then((scheduleVersion) => {
       this.scheduleVersion = scheduleVersion
     })
-    this.storage.get(StorageKeys.PATIENTID).then((patientId) => {
-      this.patientId = patientId
+    this.storage.get(StorageKeys.PARTICIPANTID).then((participantId) => {
+      this.participantId = participantId
+    })
+    this.storage.get(StorageKeys.PROJECTNAME).then((projectName) => {
+      this.projectName = projectName
     })
     this.storage.get(StorageKeys.REFERENCEDATE).then((referenceDate) => {
       this.referenceDate = referenceDate
@@ -60,6 +82,14 @@ export class SettingsPage {
     this.storage.get(StorageKeys.SETTINGS_WEEKLYREPORT).then((settingsWeeklyReport) => {
       this.weeklyReport = settingsWeeklyReport
     })
+    this.storage.get(StorageKeys.CACHE_ANSWERS).then((cache) => {
+      var size = 0
+      for(var key in cache) {
+        size += 1
+      }
+      this.cacheSize = size
+    })
+
   }
 
 
@@ -79,33 +109,41 @@ export class SettingsPage {
   showSelectLanguage() {
     let buttons = [
       {
-        text: 'Cancel',
+        text: this.translate.transform(LocKeys.BTN_CANCEL.toString()),
         handler: () => {
         }
       },
       {
-        text: 'Set',
-        handler: (selectedLanguage) => {
-          this.storage.set(StorageKeys.LANGUAGE, selectedLanguage)
-          this.language = selectedLanguage
+        text: this.translate.transform(LocKeys.BTN_SET.toString()),
+        handler: (selectedLanguageVal) => {
+          let lang: LanguageSetting = {
+            "label": LanguageMap[selectedLanguageVal],
+            "value": selectedLanguageVal
+          }
+          this.storage.set(StorageKeys.LANGUAGE, lang)
+          .then(() => {
+            this.configService.pullQuestionnaires()
+          })
+          this.language = lang
+          this.navCtrl.setRoot(MyApp)
         }
       }
     ]
     var inputs = []
     for(var i=0; i<this.languagesSelectable.length; i++){
       var checked = false
-      if(this.languagesSelectable[i] == this.language) {
+      if(this.languagesSelectable[i]["label"] == this.language) {
         checked = true
       }
       inputs.push({
         type: 'radio',
-        label: this.languagesSelectable[i],
-        value: this.languagesSelectable[i],
+        label: this.translate.transform(this.languagesSelectable[i]["label"]),
+        value: this.languagesSelectable[i]["value"],
         checked: checked
       })
     }
     this.showAlert({
-      'title': 'Select your Language',
+      'title': this.translate.transform(LocKeys.SETTINGS_LANGUAGE_ALERT.toString()),
       'buttons': buttons,
       'inputs': inputs
     })
@@ -114,13 +152,13 @@ export class SettingsPage {
   showInfoNightMode() {
     let buttons = [
       {
-        text: 'Okay',
+        text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
         handler: () => {}
       }
     ]
     this.showAlert({
-      'title': 'Night Mode',
-      'message': 'Night Mode suppresses all notifications between 10pm and 7:30am.',
+      'title': this.translate.transform(LocKeys.SETTINGS_NOTIFICATIONS_NIGHTMOD.toString()),
+      'message': this.translate.transform(LocKeys.SETTINGS_NOTIFICATIONS_NIGHTMOD_DESC.toString()),
       'buttons': buttons
     })
   }
@@ -128,13 +166,13 @@ export class SettingsPage {
   showConfirmReset() {
     let buttons = [
       {
-        text: 'Disagree',
+        text: this.translate.transform(LocKeys.BTN_DISAGREE.toString()),
         handler: () => {
           console.log('Reset cancel')
         }
       },
       {
-        text: 'Agree',
+        text: this.translate.transform(LocKeys.BTN_AGREE.toString()),
         handler: () => {
           this.storage.clearStorage()
           this.backToHome()
@@ -142,8 +180,8 @@ export class SettingsPage {
       }
     ]
     this.showAlert({
-      'title': 'Reset RADAR-CNS App',
-      'message': 'All saved information will be lost.',
+      'title': this.translate.transform(LocKeys.SETTINGS_RESET_ALERT.toString()),
+      'message': this.translate.transform(LocKeys.SETTINGS_RESET_ALERT_DESC.toString()),
       'buttons': buttons
     })
   }

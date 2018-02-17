@@ -27,6 +27,7 @@ import { RadioInputComponent } from '../components/radio-input/radio-input'
 import { CheckboxInputComponent } from '../components/checkbox-input/checkbox-input'
 import { RangeInputComponent } from '../components/range-input/range-input'
 import { SliderInputComponent } from '../components/slider-input/slider-input'
+import { AudioInput } from '../components/audio-input/audio-in'
 import { TimedTestComponent } from '../components/timed-test/timed-test'
 import { InfoScreenComponent } from '../components/info-screen/info-screen'
 import { SplashPage } from '../pages/splash/splash'
@@ -53,6 +54,7 @@ import { TranslatePipe } from '../pipes/translate/translate';
 import { AuthService } from '../providers/auth-service';
 import { JwtHelper } from 'angular2-jwt'
 import { NotificationService } from '../providers/notification-service';
+import { AudioInputComponent } from '../components/audio-input/audio-input';
 
 
 @NgModule({
@@ -97,7 +99,8 @@ import { NotificationService } from '../providers/notification-service';
     SliderInputComponent,
     TimedTestComponent,
     InfoScreenComponent,
-    CheckboxInputComponent
+    CheckboxInputComponent,
+    AudioInputComponent
   ],
   bootstrap: [IonicApp],
   entryComponents: [

@@ -75,4 +75,6 @@
     <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
     <plugin name="phonegap-plugin-barcodescanner" spec="^7.0.2" />
     <allow-navigation href="http://10.40.230.126:8100" />
+    <plugin name="cordova-plugin-media-capture" spec="^3.0.1" />
+    <allow-navigation href="http://10.40.149.14:8100" />
 </widget>

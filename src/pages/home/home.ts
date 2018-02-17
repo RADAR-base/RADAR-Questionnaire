@@ -61,7 +61,7 @@ export class HomePage {
     this.checkForNextTask()
     setInterval(() => {
       this.checkForNextTask()
-    }, 10000)
+    }, 1000)
     this.controller.setNextNotificationsForXDays(43)
   }
 

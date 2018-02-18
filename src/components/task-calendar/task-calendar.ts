@@ -3,6 +3,9 @@ import { NavController } from 'ionic-angular'
 import { HomeController } from '../../providers/home-controller'
 import { Task } from '../../models/task'
 import { DefaultTask } from '../../assets/data/defaultConfig'
+import { AlertController } from 'ionic-angular';
+import { LocKeys } from '../../enums/localisations';
+import { TranslatePipe } from '../../pipes/translate/translate';
 
 @Component({
   selector: 'task-calendar',
@@ -18,7 +21,9 @@ export class TaskCalendarComponent implements OnChanges {
 
   tasks: Task[] = [DefaultTask]
 
-  constructor (private controller: HomeController) {
+  constructor (private controller: HomeController,
+              private alertCtrl: AlertController,
+              private translate: TranslatePipe) {
     this.controller.getTasksOfToday().then((tasks) => {
       if(tasks) {
         this.tasks = tasks.sort(this.compareTasks)
@@ -90,8 +95,40 @@ export class TaskCalendarComponent implements OnChanges {
       let taskTimestamp = new Date(task.timestamp)
       if(taskTimestamp > now && !task.completed) {
         this.task.emit(task)
+      } else {
+        this.showESM_missedInfo()
       }
     }
+  }
+
+  showESM_missedInfo() {
+    let buttons = [
+      {
+        text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+        handler: () => {}
+      }
+    ]
+    this.showAlert({
+      'title': this.translate.transform(LocKeys.CALENDAR_ESM_MISSED_TITLE.toString()),
+      'message': this.translate.transform(LocKeys.CALENDAR_ESM_MISSED_DESC.toString()),
+      'buttons': buttons
+    })
+  }
+
+  showAlert(parameters) {
+    let alert = this.alertCtrl.create({
+      title: parameters.title,
+      buttons: parameters.buttons
+    })
+    if(parameters.message) {
+      alert.setMessage(parameters.message)
+    }
+    if(parameters.inputs) {
+      for(var i=0; i<parameters.inputs.length; i++){
+        alert.addInput(parameters.inputs[i])
+      }
+    }
+    alert.present()
   }
 
 }

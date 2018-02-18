@@ -79,6 +79,22 @@ export const Localisations = {
     "it":"",
     "nl":""
   },
+  "CALENDAR_ESM_MISSED_TITLE":{
+    "da":"",
+    "de":"",
+    "en":"Blocked",
+    "es":"",
+    "it":"",
+    "nl":""
+  },
+  "CALENDAR_ESM_MISSED_DESC":{
+    "da":"",
+    "de":"",
+    "en":"Unforunately, you can only answer this questionnaire at the notified time.",
+    "es":"",
+    "it":"",
+    "nl":""
+  },
   "SETTINGS_SETTINGS": {
     "da":"",
     "de":"",

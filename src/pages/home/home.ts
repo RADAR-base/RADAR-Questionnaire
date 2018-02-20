@@ -44,6 +44,7 @@ export class HomePage {
   showNoTasksToday: boolean = false
   tasksProgress: TasksProgress
   calendarScrollHeight: number = 0
+  hasClickedStartButton: boolean = true
 
   constructor (
     public navCtrl: NavController,
@@ -70,6 +71,7 @@ export class HomePage {
       this.controller.getNextTask().then((task) => {
         if(task){
           this.nextTask = task
+          this.hasClickedStartButton = false
           this.displayCompleted(false)
         } else {
           this.controller.areAllTasksComplete().then((completed) => {
@@ -177,6 +179,7 @@ export class HomePage {
   }
 
   startQuestionnaire (task: Task) {
+    this.hasClickedStartButton = true
     let startQuestionnaireTask = this.nextTask
     if(task){
       if(task.completed == false) {

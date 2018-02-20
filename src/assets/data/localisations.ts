@@ -315,7 +315,7 @@ export const Localisations = {
   },
   "BTN_ENROL_SCAN": {
     "da":"Scan",
-    "de":"Scan",
+    "de":"Scannen",
     "en":"Scan",
     "es":"Escanear",
     "it":"Scansione",
@@ -628,12 +628,12 @@ export const Localisations = {
     "nl":""
   },
   "TASK_BAR_AFFIRMATION_1": {
-    "da":"Godt klaret!",
-    "de":"Gut gemacht!",
+    "da":"Godt klaret! ",
+    "de":"Gut gemacht! ",
     "en":"Well done! ",
-    "es":"¡Muy bien!",
-    "it":"ben fatto!",
-    "nl":"Goed gedaan!"
+    "es":"¡Muy bien! ",
+    "it":"ben fatto! ",
+    "nl":"Goed gedaan! "
   },
   "TASK_BAR_AFFIRMATION_2": {
     "da":"Alle opgaver er gennemført",

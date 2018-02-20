@@ -34,9 +34,12 @@
   </div>
 
   <div #footer class="size-static bg" padding>
-      <button ion-button class="bt bt--full" round full
+      <button *ngIf="!hasClickedStartButton" ion-button class="bt bt--full" round full
         (click)="startQuestionnaire()">
         {{ "BTN_START" | translate }}
       </button>
+      <div *ngIf="hasClickedStartButton" class="spinner-center">
+        <ion-spinner name="dots"></ion-spinner>
+      </div>
   </div>
 </ion-content>

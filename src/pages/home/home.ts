@@ -73,6 +73,7 @@ export class HomePage {
           this.nextTask = task
           this.hasClickedStartButton = false
           this.displayCompleted(false)
+          this.displayEvalTransformations(false)
         } else {
           this.controller.areAllTasksComplete().then((completed) => {
             if(completed) {
@@ -83,7 +84,7 @@ export class HomePage {
               }
             } else {
               this.nextTask = DefaultTask
-              this.displayCalendar(true)
+              this.displayEvalTransformations(true)
             }
           })
         }
@@ -91,10 +92,10 @@ export class HomePage {
     }
   }
 
-  displayCalendar (requestDisplay:boolean) {
+  displayEvalTransformations (requestDisplay:boolean) {
     this.showCalendar = requestDisplay
     this.getElementsAttributes()
-    this.applyCalendarTransformations()
+    this.applyTransformations()
   }
 
   displayCompleted (requestDisplay:boolean) {
@@ -111,7 +112,7 @@ export class HomePage {
     this.elFooterHeight = this.elFooter.nativeElement.offsetHeight
   }
 
-  applyCalendarTransformations () {
+  applyTransformations () {
     if(this.showCalendar){
       this.elProgress.nativeElement.style.transform =
         `translateY(-${this.elProgressHeight}px) scale(0.5)`
@@ -125,19 +126,41 @@ export class HomePage {
         `translateY(-${this.elProgressHeight}px)`
       this.elCalendar.nativeElement.style.opacity = 1
     } else {
-      this.elProgress.nativeElement.style.transform =
-        'translateY(0px) scale(1)'
-      this.elTicker.nativeElement.style.transform =
-        'translateY(0px)'
-      this.elInfo.nativeElement.style.transform =
-        'translateY(0px)'
-      this.elFooter.nativeElement.style.transform =
-        'translateY(0px) scale(1)'
-      this.elCalendar.nativeElement.style.transform =
-        'translateY(0px)'
-      this.elCalendar.nativeElement.style.opacity = 0
+      if(this.isNextTaskESMandNotNow()){
+        this.elProgress.nativeElement.style.transform =
+          `translateY(${this.elFooterHeight}px)`
+        this.elTicker.nativeElement.style.transform =
+          `translateY(${this.elFooterHeight}px)`
+        this.elInfo.nativeElement.style.transform =
+          `translateY(${this.elFooterHeight}px)`
+        this.elFooter.nativeElement.style.transform =
+          `translateY(${this.elFooterHeight}px) scale(0)`
+        this.elCalendar.nativeElement.style.transform =
+          'translateY(0px)'
+        this.elCalendar.nativeElement.style.opacity = 0
+      } else {
+        this.elProgress.nativeElement.style.transform =
+          'translateY(0px) scale(1)'
+        this.elTicker.nativeElement.style.transform =
+          'translateY(0px)'
+        this.elInfo.nativeElement.style.transform =
+          'translateY(0px)'
+        this.elFooter.nativeElement.style.transform =
+          'translateY(0px) scale(1)'
+        this.elCalendar.nativeElement.style.transform =
+          'translateY(0px)'
+        this.elCalendar.nativeElement.style.opacity = 0
+      }
     }
     this.setCalendarScrollHeight(this.showCalendar)
+  }
+
+  isNextTaskESMandNotNow() {
+    let now = new Date().getTime()
+    if(this.nextTask.name == "ESM" && this.nextTask.timestamp > now){
+      return true
+    }
+    return false
   }
 
   setCalendarScrollHeight (show:boolean) {

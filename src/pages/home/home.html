@@ -6,7 +6,7 @@
       <button ion-button menuToggle right (click)="openSettingsPage()">
         <ion-icon name="cog"></ion-icon>
       </button>
-      <ion-title text-center>
+      <ion-title text-center (click)="test()">
         {{ "HOME_RADAR_CNS" | translate}}
       </ion-title>
   </ion-toolbar>
@@ -26,7 +26,7 @@
   </div>
 
   <div  #taskInfo class="size-static">
-    <task-info [task]="nextTask" (collapse)="displayCalendar($event)"></task-info>
+    <task-info [task]="nextTask" (collapse)="displayEvalTransformations($event)"></task-info>
   </div>
 
   <div #taskCalendar class="size-null">

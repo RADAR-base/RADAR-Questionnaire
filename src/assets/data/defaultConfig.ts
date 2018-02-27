@@ -109,6 +109,7 @@ export const DefaultSourceTypeRegistrationBody: any = {
 }
 
 export const DefaultEndPoint: string = 'https://radar-cns-platform.rosalind.kcl.ac.uk/'
+//export const DefaultEndPoint: string = 'https://radar-backend.co.uk/'
 
 export const DefaultProtocolEndPoint: string = 'https://raw.githubusercontent.com/RADAR-base/RADAR-aRMT-protocols/master/'
 

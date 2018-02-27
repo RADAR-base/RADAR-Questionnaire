@@ -35,7 +35,7 @@ export class FinishPage {
       this.timestampService.timestamps)
       .then(data => {
         this.controller.updateTaskToComplete(this.navParams.data.associatedTask)
-        this.sendToKafka(questionnaireName, data)
+        this.sendToKafka(this.navParams.data.associatedTask, data)
       }, error => {
         console.log(JSON.stringify(error))
       })

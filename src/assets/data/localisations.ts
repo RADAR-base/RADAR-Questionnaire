@@ -555,7 +555,7 @@ export const Localisations = {
     "en":"Heart rate",
     "es":"Ritmo cardíaco",
     "it":"Frequenza cardiaca",
-    "nl":"hartslagfrequentie"
+    "nl":"Hartslagfrequentie"
 
   },
   "CREDITS_TITLE": {
@@ -570,7 +570,7 @@ export const Localisations = {
     "da":"Lavet med &hearts; til dig af RADAR-CNS konsortiet. For mere information click <a href=\"http://radar-cns.org\">her</a>.",
     "de":"Made with &hearts; for you by the RADAR-CNS consortium. For more information click <a href=\"http://radar-cns.org\">here</a>.",
     "en":"Made with &hearts; for you by the RADAR-CNS consortium. For more information click <a href=\"http://radar-cns.org\">here</a>.",
-    "es":"Hecho con &hearts;  para usted por el consorcio RADAR-CNS. Para obtener más información, haga clic  en <a href=\"http://radar-cns.org\">here</a>.",
+    "es":"Hecho con &hearts;  para usted por el consorcio RADAR-CNS. Para obtener más información, haga clic  en <a href=\"http://radar-cns.org\">aquí</a>.",
     "it":"Fatto con il cuore; per voi dal consorzio RADAR-CNS. Per maggiori informazioni clicca <a href=\"http://radar-cns.org\">here</a>.",
     "nl":"Met &hearts voor u gemaakt door het RADAR-CNS consortium. Voor meer informatie klik <a href=\"http://radar-cns.org\">here</a>"
 

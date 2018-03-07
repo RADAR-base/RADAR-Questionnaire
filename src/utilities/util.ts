@@ -73,9 +73,9 @@ export class Utility {
   }
 
 
-  getLatestKafkaSchemaVersions(questionnaireName:string) {
-    let qKey = 'questionnaire_' + questionnaireName.toLowerCase() + '-key'
-    let qVal = 'questionnaire_' + questionnaireName.toLowerCase() + '-value'
+  getLatestKafkaSchemaVersions(specs) {
+    let qKey = specs.avsc + '_' + specs.name.toLowerCase() + '-key'
+    let qVal = specs.avsc + '_' + specs.name.toLowerCase() + '-value'
     return this.storage.get(StorageKeys.OAUTH_TOKENS)
     .then(tokens => {
       let keys = this.getLatestKafkaSchemaVersion(tokens.access_token, qKey, '')
@@ -86,7 +86,7 @@ export class Utility {
         for(let key in versions[1]) {versionReqValue = versions[1][key]}
         let key = this.getLatestKafkaSchemaVersion(tokens.access_token, qKey, versionReqKey)
         let val = this.getLatestKafkaSchemaVersion(tokens.access_token, qVal, versionReqValue)
-        return Promise.all([key, val])
+        return Promise.all([key, val, specs])
       })
     })
   }

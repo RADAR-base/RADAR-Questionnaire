@@ -83,6 +83,13 @@ export class StorageService {
                 })
   }
 
+  getAssessmentAvsc (task: Task) {
+    return this.getAssessment(task)
+      .then((assessment) => {
+        return assessment.questionnaire
+      })
+  }
+
   updateAssessment (assessment:Assessment) {
     let key = StorageKeys.CONFIG_ASSESSMENTS
     this.storage.get(key.toString()).then((assessments) => {

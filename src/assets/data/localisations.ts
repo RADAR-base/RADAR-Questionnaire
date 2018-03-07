@@ -8,232 +8,250 @@ export const Localisations = {
     "nl":""
   },
   "ENROL_WELCOME_1": {
-    "da":"",
-    "de":"",
+    "da":"Velkommen",
+    "de":"Herzlich willkommen",
     "en":"Welcome",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Bienvenido",
+    "it":"Benvenuto",
+    "nl":"Welkom"
   },
   "ENROL_WELCOME_2": {
-    "da":"",
-    "de":"",
+    "da":"til RADAR-CNS",
+    "de":"zu RADAR-CNS",
     "en":"to RADAR-CNS",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"a RADAR-CNS",
+    "it":"in RADAR-CNS",
+    "nl":"bij RADAR-CNS"
   },
   "ENROL_WELCOME_DESC": {
-    "da":"",
-    "de":"",
-    "en":"Thank you for taking part in this study. Let's start the enrolment process to get you set up.",
-    "es":"",
-    "it":"",
-    "nl":""
+    "da":"Tak fordi  du vil deltage i dette studie.  Lad os komme i gang med at opstarte registreringsprocessen.",
+    "de":"Danke, dass Sie an dieser Studie teilnehmen. Um loszulegen, lassen Sie uns den Registrierungsprozess starten.",
+    "en":"Thank you for taking part in this study. Let\"s start the enrolment process to get you set up.",
+    "es":"Gracias por tomar parte en este estudio. Comencemos el proceso de registro para configurarlo",
+    "it":"Grazie per aver preso parte al nostro studio. Iniziamo il processo di arruolamento.",
+    "nl":"Bedankt voor uw deelname aan dit onderzoek. Laten we starten met het registratie-proces."
+
   },
   "ENROL_REGISTRATION": {
-    "da":"",
-    "de":"",
+    "da":"Registrering",
+    "de":"Registrierung",
     "en":"Registration",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Registro",
+    "it":" Registrazione",
+    "nl":"Registratie"
   },
   "ENROL_REGISTRATION_DESC": {
-    "da":"",
-    "de":"",
-    "en":"Before you can start using the app, we need to register it first. Click the \'Scan\' button and point the camera onto the QR code, given by your researcher. An example QR code is below.",
-    "es":"",
-    "it":"",
-    "nl":""
+    "da":"Før du kan begynde at anvende app’en, skal vi registrere den først. Klik på \"Scan\" knappen og hold kameraet over QR-koden som du får udleveret af forskeren. Du kan se et eksempel på en QR-kode herunder.",
+    "de":"Bevor Sie die App verwenden können, müssen Sie sie zuerst registrieren. Klicken Sie auf die Schaltfläche \"Scannen\" und richten Sie die Kamera auf den von Ihrem Forscher angegebenen QR-Code. Ein Beispiel für einen QR-Code finden Sie unten.",
+    "en":"Before you can start using the app, we need to register it first. Click the \"Scan\" button and point the camera onto the QR code, given by your researcher. An example QR code is below.",
+    "es":"Antes de poder usar esta aplicación, debe registrarse. Presione el botón \"Escanear\" e ingrese el código QR que le dio el personal del estudio. A continuación puede ver un ejemplo de código QR",
+    "it":"Prima di poter usare questa app, deve registrarsi. Prema il pulsante \"Scan\" e inquadri il codice QR che le è stato dato dal personale dello studio. Qui sotto può vedere un esempio di QR.",
+    "nl":"Voordat u de app kunt gebruiken, moeten we de app eerst registreren. Klik op de \"Scan\" knop en richt de camera op de QR code die u heeft ontvangen van de onderzoeker. Hieronder staat een voorbeeld van een QR code afgebeeld."
   },
   "ENROL_PREFERENCES": {
-    "da":"",
-    "de":"",
-    "en":"Preferences",
-    "es":"",
-    "it":"",
-    "nl":""
+    "da":"Præferencer",
+   "de":"Einstellungen",
+   "en":"Preferences",
+   "es":"Preferencias",
+   "it":" Preferenze",
+   "nl":"Voorkeurs instellingen"
   },
   "ENROL_PREFERENCES_DESC": {
-    "da":"",
-    "de":"",
-    "en":"We will send you weekly summaries about the data you'll be sending us. Feel free to select as many topics you would like to receive information about.",
-    "es":"",
-    "it":"",
-    "nl":""
+    "da":"Vi sender dig en ugenlig opsummering om de data du har sendt til os.  Vælg lige så mange emner du ønsker at modtage information om.",
+    "de":"Wir senden Ihnen wöchentliche Zusammenfassungen über die Daten, die Sie uns senden. Wählen Sie beliebig viele Themen aus, zu denen Sie Informationen erhalten möchten.",
+    "en":"We will send you weekly summaries about the data you\"ll be sending us. Feel free to select as many topics you would like to receive information about.",
+    "es":"Le enviaremos cada semana un resumen de los datos que nos envía. Siéntase libre de seleccionar solo los temas sobre los cuales desea recibir información",
+    "it":"Le invieremo ogni settimana un riepilogo dei dati che ci invierà. Si senta libero di selezionar solo gli argomenti su cui vuole ricevere informazioni.",
+    "nl":"We zullen u wekelijks samenvattingen sturen over uw verzamelde gegevens. U kunt zelf de onderwerpen selecteren waarover uw informatie wilt ontvangen."
   },
   "HOME_RADAR_CNS": {
+    "da":"RADAR-CNS",
+    "de":"RADAR-CNS",
+    "en":"RADAR-CNS",
+    "es":"RADAR-CNS",
+    "it":" RADAR-CNS",
+    "nl":"RADAR-CNS"
+  },
+  "FINISH_THANKS":{
+    "da":"Tak fordi du udfyldte spørgeskemaet.",
+    "de":"Vielen Dank für Ihre Teilnahme.",
+    "en":"Thank you for completing the questionnaire.",
+    "es":"Gracias por completar el cuestionario",
+    "it":"Grazie per aver completato il questionario",
+    "nl":"Bedankt voor het invullen van de vragenlijst"
+  },
+  "CALENDAR_ESM_MISSED_TITLE":{
     "da":"",
     "de":"",
-    "en":"RADAR-CNS",
+    "en":"Blocked",
     "es":"",
     "it":"",
     "nl":""
   },
-  "FINISH_THANKS":{
+  "CALENDAR_ESM_MISSED_DESC":{
     "da":"",
     "de":"",
-    "en":"Thank you for completing the questionnaire.",
+    "en":"Unforunately, you can only answer this questionnaire at the notified time.",
     "es":"",
     "it":"",
     "nl":""
   },
   "SETTINGS_SETTINGS": {
-    "da":"",
-    "de":"",
+    "da":"Indstillinger",
+    "de":"Einstellungen",
     "en":"Settings",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Ajustes",
+    "it":"Settings",
+    "nl":"Settings"
+
   },
   "SETTINGS_PARTICIPANTID": {
-    "da":"",
-    "de":"",
-    "en":"User ID",
-    "es":"",
-    "it":"",
-    "nl":""
+    "da":"Bruger ID",
+    "de":"Benutzer ID: ",
+    "en":"User ID: ",
+    "es":"Código Usuario",
+    "it":"User ID:",
+    "nl":"Gebruikers ID"
   },
   "SETTINGS_PROJECTNAME": {
-    "da":"",
-    "de":"",
+    "da":"Projektnavn",
+    "de":"Projekt Name",
     "en":"Project Name",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Nombre del proyecto",
+    "it":"Nome del progetto",
+    "nl":"Project naam"
   },
   "SETTINGS_USER_INFO": {
-    "da":"",
-    "de":"",
-    "en":"User Info",
-    "es":"",
-    "it":"",
-    "nl":""
+    "da":"Bruger info",
+   "de":"Benutzerinformationen",
+   "en":"User Info",
+   "es":"Información para el usuario",
+   "it": "User Info",
+   "nl":"Gebruikersinformatie"
   },
   "SETTINGS_ENROL_DATE": {
-    "da":"",
-    "de":"",
-    "en":"Enrolment Date",
-    "es":"",
-    "it":"",
-    "nl":""
+    "da":"Registreringsdata: ",
+    "de":"Registrierungsdatum: ",
+    "en":"Enrolment Date: ",
+    "es":"Fecha de registro",
+    "it":"Data di arruolamento: ",
+    "nl":"Datum van inclusie: "
   },
   "SETTINGS_LANGUAGE": {
-    "da":"",
-    "de":"",
+    "da":"Sprog",
+    "de":"Sprache",
     "en":"Language",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Idioma",
+    "it":"Lingua",
+    "nl":"Taal"
   },
   "SETTINGS_LANGUAGE_ALERT": {
-    "da":"",
-    "de":"",
+    "da":"Vælg dit sprog",
+    "de":"Wählen Sie Ihre Sprache",
     "en":"Select your Language",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Seleccione su idioma",
+    "it":"Selezioni la lingua desiderata",
+    "nl":"Kies uw taal"
   },
   "SETTINGS_NOTIFICATIONS": {
-    "da":"",
-    "de":"",
-    "en":"Notifications",
-    "es":"",
-    "it":"",
-    "nl":""
+    "da":"Notifikationer",
+   "de":"Benachrichtigungen",
+   "en":"Notifications",
+   "es":"Notificaciones",
+   "it":"Notifiche",
+   "nl":"Notificaties"
   },
   "SETTINGS_NOTIFICATIONS_SOUND": {
-    "da":"",
-    "de":"",
+    "da":"Lyd",
+    "de":"Ton",
     "en":"Sound",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Sonido",
+    "it":"Suoneria",
+    "nl":"Geluid"
   },
   "SETTINGS_NOTIFICATIONS_VIBRATION": {
-    "da":"",
-    "de":"",
+    "da":"Vibration",
+    "de":"Vibration",
     "en":"Vibration",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Vibración",
+    "it":"Vibrazione",
+    "nl":"Trillen"
   },
   "SETTINGS_NOTIFICATIONS_NIGHTMOD": {
-    "da":"",
-    "de":"",
+    "da":"Nattilstand",
+    "de":"Nachtmodus",
     "en":"Night Mode",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Modalidad nocturna",
+    "it":"Modalità notte",
+    "nl":"Nachtmodus"
   },
   "SETTINGS_NOTIFICATIONS_NIGHTMOD_DESC": {
-    "da":"",
-    "de":"",
-    "en":"Night Mode stops all notifications between 10pm and 07:30am.",
-    "es":"",
-    "it":"",
-    "nl":""
+    "da":"Nattilstand stopper alle notifikationer imellem kl. 22:00 og 07:30.",
+    "de":"Der Nachtmodus stoppt alle Benachrichtigungen zwischen 22:00 und 07:30.",
+    "en":"Night Mode stops all notifications between 22:00 and 07:30.",
+    "es":"La modalidad nocturna detiene todas las notificaciones entre las  22 y las  7:30 horas",
+    "it":"La modalità notte bloccherà tutte le notifiche dell\"app tra le 22:00 e le 7:30.",
+    "nl":"De nachtmodus blokkeert alle notificaties tussen 22:00u en 7:30u."
   },
   "SETTINGS_REPORT": {
-    "da":"",
-    "de":"",
+    "da":"Ugentlig rapport",
+    "de":"Wochenberichte",
     "en":"Weekly Reports",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Informe semanal",
+    "it":"Report settimanale",
+    "nl":"Wekelijkse rapporten"
   },
   "SETTINGS_VERSION": {
-    "da":"",
-    "de":"",
+    "da":"Version",
+    "de":"Version",
     "en":"Version",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Versión",
+    "it":"Versione",
+    "nl":"Versie"
   },
   "SETTINGS_CONFIGURATION": {
-    "da":"",
-    "de":"",
+    "da":"Konfiguration",
+    "de":"Konfiguration",
     "en":"Configuration",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Configuración",
+    "it":"Configurazione",
+    "nl":"Configuratie"
   },
   "SETTINGS_SCHEDULE": {
-    "da":"",
-    "de":"",
+    "da":"Tidsplan",
+    "de":"Zeitplan",
     "en":"Schedule",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Programa",
+    "it":"Programma",
+    "nl":"Schema"
   },
   "SETTINGS_RESET_ALERT": {
-    "da":"",
-    "de":"",
+    "da":"Nulstil RADAR-CNS App",
+    "de":"RADAR-CNS App zurücksetzen",
     "en":"Reset RADAR-CNS App",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Restablecer la aplicación RADAR-CNS",
+    "it":"Reset RADAR-CNS app",
+    "nl":"Reset RADAR-CNS app"
   },
   "SETTINGS_RESET_ALERT_DESC": {
-    "da":"",
-    "de":"",
-    "en":"All the information that has been saved will be deleted.",
-    "es":"",
-    "it":"",
-    "nl":""
+    "da":"Nulstil RADAR-CNS App",
+    "de":"RADAR-CNS App zurücksetzen",
+    "en":"Reset RADAR-CNS App",
+    "es":"Restablecer la aplicación RADAR-CNS",
+    "it":"Reset RADAR-CNS app",
+    "nl":"Reset RADAR-CNS app"
   },
   "SETTINGS_CACHE": {
-    "da":"",
-    "de":"",
+    "da":"Cache",
+    "de":"Cache",
     "en":"Cache",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Cache",
+    "it":"Cache",
+    "nl":"Cache"
   },
   "SETTINGS_CACHE_SIZE": {
     "da":"",
-    "de":"",
+    "de":"Grösse",
     "en":"Size",
     "es":"",
     "it":"",
@@ -288,360 +306,382 @@ export const Localisations = {
     "nl":"Nederlands"
   },
   "BTN_ENROL_ENROL": {
-    "da":"",
-    "de":"",
+    "da":"Registrering",
+    "de":"Registrieren",
     "en":"Enrol",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Registro",
+    "it":"Registrazione",
+    "nl":"Registreren"
   },
   "BTN_ENROL_SCAN": {
-    "da":"",
-    "de":"",
+    "da":"Scan",
+    "de":"Scannen",
     "en":"Scan",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Escanear",
+    "it":"Scansione",
+    "nl":"Scan"
   },
   "BTN_FINISH": {
-    "da":"",
-    "de":"",
+    "da":"Afslut",
+    "de":"Fertig",
     "en":"Finish",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Terminar",
+    "it":"Fine",
+    "nl":"Voltooid"
   },
   "BTN_DONE": {
-    "da":"",
-    "de":"",
+    "da":"Færdig",
+    "de":"Fertig",
     "en":"Done",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Completar",
+    "it":"Fatto",
+    "nl":"Klaar"
   },
   "BTN_START": {
-    "da":"",
-    "de":"",
+    "da":"Start",
+    "de":"Start",
     "en":"Start",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Inicio",
+    "it":"Start",
+    "nl":"Start"
+
   },
   "BTN_RESET": {
-    "da":"",
-    "de":"",
+    "da":"Nulstil",
+    "de":"Zurücksetzen",
     "en":"Reset",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Restablecer",
+    "it":"Reset",
+    "nl":"Reset"
+
   },
   "BTN_AGREE": {
-    "da":"",
-    "de":"",
+    "da":"Enig.",
+    "de":"Ja",
     "en":"Agree",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Aceptar",
+    "it":"Accetto",
+    "nl":"Akkoord"
+
   },
   "BTN_DISAGREE": {
-    "da":"",
-    "de":"",
+    "da":"Uenig",
+    "de":"Nein",
     "en":"Disagree",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"No aceptar",
+    "it":"Non accetto",
+    "nl":"Niet akkoord"
+
   },
   "BTN_OKAY": {
-    "da":"",
+    "da":"Okay",
     "de":"",
     "en":"Okay",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"De acuerdo",
+    "it":"Okay",
+    "nl":"OK"
   },
   "BTN_SET": {
-    "da":"",
-    "de":"",
-    "en":"Set",
-    "es":"",
-    "it":"",
-    "nl":""
+  "da":"Indstil",
+   "de":"Festsetzen",
+   "en":"Set",
+   "es":"Conjunto",
+   "it":"Set",
+   "nl":"Set"
   },
   "BTN_CANCEL": {
-    "da":"",
-    "de":"",
+    "da":"Afbryd",
+    "de":"Abbrechen",
     "en":"Cancel",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Suprimir",
+    "it":"Elimina",
+    "nl":"Annuleren"
+
   },
   "BTN_BEGIN": {
-    "da":"",
-    "de":"",
+    "da":"Begynd",
+    "de":"Beginnen",
     "en":"Begin",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Inicio",
+    "it":"Inizio",
+    "nl":"Starten"
+
   },
   "BTN_NEXT": {
-    "da":"",
-    "de":"",
+    "da":"Næste",
+    "de":"Weiter",
     "en":"Next",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Siguiente",
+    "it":"Successivo",
+    "nl":"Volgende"
   },
   "BTN_PREVIOUS": {
-    "da":"",
-    "de":"",
+    "da":"Forrige",
+    "de":"Vorher",
     "en":"Previous",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Anterior",
+    "it":"Precedente",
+    "nl":"Vorige"
   },
   "BTN_CLOSE": {
-    "da":"",
-    "de":"",
+    "da":"Luk",
+    "de":"Beenden",
     "en":"Close",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Cerrar",
+    "it":"Chiudi",
+    "nl":"Sluiten"
+
   },
   "BTN_SELECT": {
-    "da":"",
-    "de":"",
+    "da":"Vælg",
+    "de":"Auswählen",
     "en":"Select",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Seleccione",
+    "it":"Seleziona",
+    "nl":"Selecteren"
+
   },
   "STATUS_LOADING": {
-    "da":"",
-    "de":"",
+    "da":"Indlæser...",
+    "de":"Lädt...",
     "en":"Loading...",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Cargando",
+    "it":"Caricamento...",
+    "nl":"Laden..."
+
   },
   "STATUS_SUCCESS": {
-    "da":"",
-    "de":"",
+    "da":"Success",
+    "de":"Erfolg",
     "en":"Success",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Completado",
+    "it":"Successo",
+    "nl":"Geslaagd"
   },
   "STATUS_NOW": {
     "da":"",
-    "de":"",
+    "de":"jetzt",
     "en":"now",
     "es":"",
     "it":"",
     "nl":""
   },
   "STATUS_FAILURE": {
-    "da":"",
-    "de":"",
+    "da":"Fejl",
+    "de":"Error",
     "en":"Failed",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Error",
+    "it":"Non riuscuto",
+    "nl":"Mislukt"
+
   },
   "NOTIFICATION_REMINDER_SOON": {
-    "da":"",
-    "de":"",
-    "en":"A questionnaire needs to be completed tomorrow - please remember.",
-    "es":"",
-    "it":"",
-    "nl":""
+    "da":"RADAR-CNS spørgsmålene skal være færdige imorgen, husk venligst på dette.",
+    "de":"Der RADAR-CNS Fragebogen muss morgen ausgefüllt werden – bitte denken Sie daran.",
+    "en":"RADAR-CNS questionnaire needs to be completed tomorrow – please remember.",
+    "es":"Recuerde que mañana tendrá que completar el cuestionario RADAR-CNS",
+    "it":"Le ricordiamo che domani dovrà compilare il questionario RADAR –CNS",
+    "nl":"Vergeet u s.v.p. niet om de RADAR-CNS vragenlijst uiterlijk morgen in te vullen?"
   },
   "NOTIFICATION_REMINDER_SOON_DESC": {
-    "da":"",
-    "de":"",
+    "da":"Husk at sætte lidt tid af imorgen, til at svare på et par spørgsmål.",
+    "de":"Denken Sie daran, morgen etwas Zeit für ein paar Fragebögen zu haben.",
     "en":"Remember to put some time aside for a few questionnaires tomorrow.",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Recuerde reservarse el tiempo mañana para contestar algunos cuestionarios",
+    "it":"Domani si ricordi di lasciarsi del tempo libero per rispondere a brevi questionari",
+    "nl":"Vergeet u niet om morgen wat tijd vrij te maken voor het invullen van enkele vragenlijsten?"
   },
   "NOTIFICATION_REMINDER_NOW": {
-    "da":"",
-    "de":"",
-    "en":"Questionnaire time",
-    "es":"",
-    "it":"",
-    "nl":""
+    "da":"Tid til at svare på spørgsmål",
+   "de":"Zeit für Fragebögen ",
+   "en":"Questionnaire time",
+   "es":"Momento para el cuestionario ",
+   "it":"E' il momento dei questionari",
+   "nl":"Tijd voor een vragenlijst"
   },
   "NOTIFICATION_REMINDER_NOW_DESC_1": {
-    "da":"",
-    "de":"",
-    "en":"Won\'t usually take longer than",
-    "es":"",
-    "it":"",
-    "nl":""
+    "da":"Det tager normalt ikke længere end",
+    "de":"Dauert in der Regel nicht länger als",
+    "en":"Won\"t usually take longer than",
+    "es":"No le llevará más tiempo de ",
+    "it":"Non richiederanno più di",
+    "nl":"Meestal duurt dit niet langer dan"
   },
   "NOTIFICATION_REMINDER_NOW_DESC_2": {
-    "da":"",
-    "de":"",
+    "da":"minutter",
+    "de":"minuten.",
     "en":"minutes.",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"minutos",
+    "it":"minuti.",
+    "nl":"minuten."
   },
   "NOTIFICATION_REMINDER_FORGOTTEN": {
-    "da":"",
-    "de":"",
+    "da":"Du mangler at svare på spørgsmål",
+    "de":"Haben Sie einen Fragebogen verpasst?",
     "en":"Missed a questionnaire?",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"¿Ha olvidado algún cuestionario?",
+    "it":"Ha dimenticato un questionario?",
+    "nl":"Heeft u een vragenlijst vergeten?"
   },
   "NOTIFICATION_REMINDER_FORGOTTEN_DESC": {
-    "da":"",
-    "de":"",
-    "en":"It seems you haven’t answered all of your questions. Could you help?",
-    "es":"",
-    "it":"",
-    "nl":""
+    "da":"Det ser ud til at du ikke har fået svaret på alle spørgsmålene. Kunne du gøre dette med det samme?",
+    "de":"Es scheint, Sie haben nicht alle unsere Fragen beantwortet. Könnten Sie dies bitte jetzt nachholen?",
+    "en":"It seems you haven\"t answered all of our questions. Could you please do that now?",
+    "es":"Parece que no ha respondido todas las preguntas. ¿Podría hacerlo ahora?",
+    "it":"Sembra che si sia dimenticato di rispondere ad alcune domande. Potrebbe farlo ora?",
+    "nl":"Het lijkt erop dat u niet alle vragen heeft beantwoord. Zou u dit nu alsnog willen doen?"
   },
   "MEASURE_PROGRESS": {
-    "da":"",
-    "de":"",
+    "da":"Fremgang",
+    "de":"Fortschritt",
     "en":"Progress",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Progreso",
+    "it":"Progresso",
+    "nl":"Voortgang"
+
   },
   "MEASURE_STEPS": {
-    "da":"",
-    "de":"",
+    "da":"Skridt",
+    "de":"Schritte",
     "en":"Steps",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Pasos",
+    "it":"Passi",
+    "nl":"Stappen"
+
   },
   "MEASURE_HEART_RATE": {
-    "da":"",
-    "de":"",
+    "da":"Hjertetryme",
+    "de":"Pulsrate",
     "en":"Heart rate",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Ritmo cardíaco",
+    "it":"Frequenza cardiaca",
+    "nl":"Hartslagfrequentie"
+
   },
   "CREDITS_TITLE": {
-    "da":"",
-    "de":"",
+    "da":"Anerkendelser",
+    "de":"Credits",
     "en":"Credits",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Créditos",
+    "it":"Crediti",
+    "nl":"Credits"
   },
   "CREDITS_BODY": {
-    "da":"",
-    "de":"",
+    "da":"Lavet med &hearts; til dig af RADAR-CNS konsortiet. For mere information click <a href=\"http://radar-cns.org\">her</a>.",
+    "de":"Made with &hearts; for you by the RADAR-CNS consortium. For more information click <a href=\"http://radar-cns.org\">here</a>.",
     "en":"Made with &hearts; for you by the RADAR-CNS consortium. For more information click <a href=\"http://radar-cns.org\">here</a>.",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Hecho con &hearts;  para usted por el consorcio RADAR-CNS. Para obtener más información, haga clic  en <a href=\"http://radar-cns.org\">aquí</a>.",
+    "it":"Fatto con il cuore; per voi dal consorzio RADAR-CNS. Per maggiori informazioni clicca <a href=\"http://radar-cns.org\">here</a>.",
+    "nl":"Met &hearts voor u gemaakt door het RADAR-CNS consortium. Voor meer informatie klik <a href=\"http://radar-cns.org\">here</a>"
+
   },
   "TASK_CALENDAR_TITLE":{
-    "da":"",
-    "de":"",
-    "en":"Today's tasks",
-    "es":"",
-    "it":"",
-    "nl":""
+    "da":"Dagens opgaver",
+    "de":"Heutige Aufgaben",
+    "en":"Today\'s tasks",
+    "es":"Las tareas de hoy ",
+    "it":"Le attività di oggi",
+    "nl":"Taken voor vandaag"
+
   },
   "TASK_INFO_WARN": {
-    "da":"",
-    "de":"",
+    "da":"Kræver rolige omgivelser",
+    "de":"Benötigt einen leisen Raum",
     "en":"Requires a quiet space",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Requiere un espacio tranquilo",
+    "it":"richiede un posto tranquillo",
+    "nl":"Vereist een rustige omgeving"
+
   },
   "TASK_PROGRESS_TITLE": {
-    "da":"",
-    "de":"",
+    "da":"I dag",
+    "de":"Heute",
     "en":"Today",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Hoy",
+    "it":"oggi",
+    "nl":"Vandaag"
   },
   "TASK_PROGRESS_COMPLETED": {
-    "da":"",
-    "de":"",
+    "da":"Gennemført",
+    "de":"Erledigt",
     "en":"Completed",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Completado",
+    "it":"completato",
+    "nl":"Voltooid"
+
   },
   "TASK_BAR_NEXT_TASK": {
-    "da":"",
-    "de":"",
+    "da":"Din næste opgave starter om ",
+    "de":"Ihre nächste Aufgabe started in ",
     "en":"Your next task starts in ",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"La próxima tarea comienza en ",
+    "it":"La prossima attività inizierà tra ",
+    "nl":"Uw volgende taak start over "
+
   },
   "TASK_BAR_NOW_TASK": {
     "da":"",
-    "de":"",
+    "de":"Deine Aufgabe started ",
     "en":"Your task starts ",
     "es":"",
     "it":"",
     "nl":""
   },
   "TASK_BAR_AFFIRMATION_1": {
-    "da":"",
-    "de":"",
+    "da":"Godt klaret! ",
+    "de":"Gut gemacht! ",
     "en":"Well done! ",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"¡Muy bien! ",
+    "it":"ben fatto! ",
+    "nl":"Goed gedaan! "
   },
   "TASK_BAR_AFFIRMATION_2": {
-    "da":"",
-    "de":"",
+    "da":"Alle opgaver er gennemført",
+    "de":"Alle Aufgaben komplett",
     "en":"All tasks completed.",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Todas las tareas han sido completadas",
+    "it":"Tutte le attività sono state completate",
+    "nl":"Alle taken voltooid"
+
   },
   "TASK_BAR_TASK_LEFT_1": {
-    "da":"",
-    "de":"",
+    "da":"Vent venligst! ",
+    "de":"Warte! ",
     "en":"Hold on! ",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Espere! ",
+    "it":"Resisti! ",
+    "nl":"Wacht! "
+
   },
   "TASK_BAR_TASK_LEFT_2": {
-    "da":"",
-    "de":"",
-    "en":"A few questionnaires are still left.",
-    "es":"",
-    "it":"",
-    "nl":""
+    "da":"Der er stadig et par spørgsmål tilbage",
+     "de":"Einige Aufgaben stehen noch aus",
+     "en":"A few questionnaires are still left.",
+     "es":"Todavía quedan algunos cuestionarios",
+     "it":"Mancano ancora pochi questionari",
+     "nl":"Er staan nog een paar vragenlijsten open"
+
   },
   "TASK_BAR_NO_TASK_1": {
-    "da":"",
-    "de":"",
-    "en":"Relax! ",
-    "es":"",
-    "it":"",
-    "nl":""
+    "da":"Tag det roligt!",
+    "de":"Relax!",
+    "en":"Relax!",
+    "es":"¡Relajese!",
+    "it":"Relax!",
+    "nl":"Ontspan!"
+
   },
   "TASK_BAR_NO_TASK_2": {
-    "da":"",
-    "de":"",
+    "da":"Der er ingen opgaver I dag.",
+    "de":"Keine Aufgaben für heute.",
     "en":"No tasks today.",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"No tiene tareas para hoy",
+    "it":"Nessuna attività oggi.",
+    "nl":"Geen taken vandaag."
   },
   "TASK_TIME_HOUR_SINGLE": {
     "da":"",
-    "de":"",
+    "de":"std",
     "en":"hr",
     "es":"",
     "it":"",
@@ -649,7 +689,7 @@ export const Localisations = {
   },
   "TASK_TIME_HOUR_MULTIPLE": {
     "da":"",
-    "de":"",
+    "de":"stdn",
     "en":"hrs",
     "es":"",
     "it":"",
@@ -657,7 +697,7 @@ export const Localisations = {
   },
   "TASK_TIME_MINUTE_SINGLE": {
     "da":"",
-    "de":"",
+    "de":"min",
     "en":"min",
     "es":"",
     "it":"",
@@ -665,7 +705,7 @@ export const Localisations = {
   },
   "TASK_TIME_MINUTE_MULTIPLE": {
     "da":"",
-    "de":"",
+    "de":"mins",
     "en":"mins",
     "es":"",
     "it":"",

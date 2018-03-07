@@ -1,0 +1,21 @@
+audio-input {
+  display: block;
+  width: 100%;
+
+  .audio-card {
+    background-color: $cl-primary-20;
+    height: 80%;
+    padding: 10px 10px 0;
+    margin: 8px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+  }
+
+  .audio-heading {
+    color: $cl-light-60;
+  }
+
+  .audio-content {
+    height: 80%;
+  }
+}

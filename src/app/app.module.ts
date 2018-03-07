@@ -17,6 +17,8 @@ import { Dialogs } from '@ionic-native/dialogs';
 import { Vibration } from '@ionic-native/vibration';
 import { Globalization } from '@ionic-native/globalization';
 import { LocalNotifications } from '@ionic-native/local-notifications';
+import { AndroidPermissions } from '@ionic-native/android-permissions';
+import { File } from '@ionic-native/file'
 
 import { TaskCalendarComponent } from '../components/task-calendar/task-calendar'
 import { TaskProgressComponent } from '../components/task-progress/task-progress'
@@ -27,6 +29,7 @@ import { RadioInputComponent } from '../components/radio-input/radio-input'
 import { CheckboxInputComponent } from '../components/checkbox-input/checkbox-input'
 import { RangeInputComponent } from '../components/range-input/range-input'
 import { SliderInputComponent } from '../components/slider-input/slider-input'
+import { AudioInput } from '../components/audio-input/audio-in'
 import { TimedTestComponent } from '../components/timed-test/timed-test'
 import { InfoScreenComponent } from '../components/info-screen/info-screen'
 import { SplashPage } from '../pages/splash/splash'
@@ -47,12 +50,15 @@ import { SchedulingService } from '../providers/scheduling-service'
 import { KafkaService }  from '../providers/kafka-service'
 import { TimeStampService } from '../providers/timestamp-service'
 import { PrepareDataService} from '../providers/preparedata-service'
+import { AudioRecordService } from '../providers/audiorecord-service'
 import { Utility } from '../utilities/util'
+import { AndroidPermissionUtility } from  '../utilities/android-permission'
 import { MyApp } from './app.component';
 import { TranslatePipe } from '../pipes/translate/translate';
 import { AuthService } from '../providers/auth-service';
 import { JwtHelper } from 'angular2-jwt'
 import { NotificationService } from '../providers/notification-service';
+import { AudioInputComponent } from '../components/audio-input/audio-input';
 
 
 @NgModule({
@@ -97,7 +103,8 @@ import { NotificationService } from '../providers/notification-service';
     SliderInputComponent,
     TimedTestComponent,
     InfoScreenComponent,
-    CheckboxInputComponent
+    CheckboxInputComponent,
+    AudioInputComponent
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -124,7 +131,8 @@ import { NotificationService } from '../providers/notification-service';
     SliderInputComponent,
     TimedTestComponent,
     InfoScreenComponent,
-    CheckboxInputComponent
+    CheckboxInputComponent,
+    AudioInputComponent
   ],
   providers: [
     Device,
@@ -149,7 +157,11 @@ import { NotificationService } from '../providers/notification-service';
     TranslatePipe,
     AuthService,
     JwtHelper,
-    NotificationService
+    NotificationService,
+    AudioRecordService,
+    AndroidPermissionUtility,
+    AndroidPermissions,
+    File
   ]
 })
 export class AppModule {

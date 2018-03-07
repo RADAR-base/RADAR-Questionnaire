@@ -7,6 +7,7 @@ import { StorageKeys } from '../enums/storage'
 import { AuthService } from './auth-service'
 import { AnswerValueExport } from '../models/answer'
 import { AnswerKeyExport } from '../models/answer'
+import { Task } from '../models/task'
 import { Utility } from  '../utilities/util'
 import { DefaultEndPoint } from '../assets/data/defaultConfig'
 import  KafkaClient from 'kafka-rest'
@@ -17,18 +18,7 @@ export class KafkaService {
 
   private KAFKA_CLIENT_URL: string
   private KAFKA_CLIENT_KAFKA: string = '/kafka'
-  private TOPIC_NAME = 'questionnaire_'
-
-  private questionnaireName: string
-  private valueSchema: string
-  private keySchema: string
-
-  private schemaObjectKey: string
-  private schemaObjectVal: string
-
-  private schemaUrl = 'assets/data/schema/schemas.json'
-
-
+  
   constructor(
     private http: Http,
     private util: Utility,
@@ -39,31 +29,31 @@ export class KafkaService {
     this.sendAllAnswersInCache()
   }
 
-  prepareKafkaObject(questionnaireName, data) {
-    this.questionnaireName = questionnaireName.toLowerCase()
-    this.schemaObjectKey = "questionnaire_" + this.questionnaireName + "-key"
-    this.schemaObjectVal = "questionnaire_" + this.questionnaireName + "-value"
+  prepareKafkaObject(task: Task, data) {
     //Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
     var Answer: AnswerValueExport = {
-      "name": questionnaireName,
+      "name": task.name,
       "version": data.configVersion,
       "answers": data.answers,
       "time": data.answers[0].startTime,  // whole questionnaire startTime and endTime
       "timeCompleted": data.answers[data.answers.length - 1].endTime
     }
 
-    //Payload for kafka 2 : key Object which contains device information
     this.util.getSourceId()
-    .then((sourceId) => {
-      var AnswerKey: AnswerKeyExport = { "userId": data.patientId, "sourceId": sourceId }
-      var kafkaObject = { "value": Answer, "key": AnswerKey }
-      this.createPayload(kafkaObject)
-    })
+      .then((sourceId) => {
+        console.log('SOURCEID ', sourceId)
+        //Payload for kafka 2 : key Object which contains device information
+        var AnswerKey: AnswerKeyExport = { "userId": data.patientId, "sourceId": sourceId }
+        var kafkaObject = { "value": Answer, "key": AnswerKey }
+        this.createPayload(task, kafkaObject)
+      })
   }
 
-  createPayload(kafkaObject) {
-    return this.util.getLatestKafkaSchemaVersions(this.questionnaireName)
-    .then(schemaVersions => {
+  createPayload(task:Task, kafkaObject) {
+    return this.storage.getAssessmentAvsc(task)
+    .then((specs) => this.util.getLatestKafkaSchemaVersions(specs))
+    .then((schemaVersions) => {
+      let specs = schemaVersions[2]['schema']
       let avroKey = AvroSchema.parse(JSON.parse(schemaVersions[0]['schema']),  { wrapUnions: true })
       // ISSUE forValue: inferred from input, due to error when parsing schema
       let avroVal = AvroSchema.Type.forValue(kafkaObject.value, { wrapUnions: true })
@@ -76,18 +66,18 @@ export class KafkaService {
 
       let schemaId = new KafkaClient.AvroSchema(JSON.parse(schemaVersions[0]['schema']))
       let schemaInfo = new KafkaClient.AvroSchema(JSON.parse(schemaVersions[1]['schema']))
-      return this.sendToKafka(schemaId, schemaInfo, payload, kafkaObject.value.time)
+      return this.sendToKafka(specs, schemaId, schemaInfo, payload, kafkaObject.value.time)
     })
     .catch((error) => {
-      this.cacheAnswers(kafkaObject)
+      this.cacheAnswers(task, kafkaObject)
     });
 
   }
 
-  sendToKafka(id, info, payload, cacheKey) {
+  sendToKafka(specs, id, info, payload, cacheKey) {
     return this.getKafkaInstance().then(kafkaConnInstance => {
       // kafka connection instance to submit to topic
-      var topic = this.TOPIC_NAME + this.questionnaireName
+      var topic = specs.avsc + "_" + specs.name
       kafkaConnInstance.topic(topic).produce(id, info, payload,
         (err, res) => {
           if (res) {
@@ -102,13 +92,13 @@ export class KafkaService {
     })
   }
 
-  cacheAnswers(kafkaObject) {
+  cacheAnswers(task:Task, kafkaObject) {
     this.storage.get(StorageKeys.CACHE_ANSWERS)
     .then((cache) => {
       if(!cache[kafkaObject.value.time]){
         console.log('KAFKA-SERVICE: Caching answers.')
         cache[kafkaObject.value.time] = {
-          'questionnaireName': this.questionnaireName,
+          'task': task,
           'cache': kafkaObject
         }
         this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
@@ -123,8 +113,7 @@ export class KafkaService {
         this.storage.set(StorageKeys.CACHE_ANSWERS, {})
       } else {
         for(var answerKey in cache) {
-          this.questionnaireName = cache[answerKey].questionnaireName
-          this.createPayload(cache[answerKey].cache)
+          this.createPayload(cache[answerKey].task, cache[answerKey].cache)
         }
       }
       console.log(cache)

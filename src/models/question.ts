@@ -2,7 +2,7 @@ export interface Question {
   branching_logic: string
   custom_alignment: string
   evaluated_logic: string
-  field_annotation: string
+  field_annotation: any
   field_label: string
   field_name: string
   field_note: string
@@ -47,6 +47,6 @@ export interface Range {
 }
 
 export interface Section {
-  section_header: string
-  field_label: string
+  code: string
+  label: string
 }

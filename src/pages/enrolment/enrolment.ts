@@ -79,7 +79,7 @@ export class EnrolmentPage {
 
     //TODO remove when finished
     // TESTING
-    /*this.authenticate({'text':'{"refreshToken":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOi\
+    this.authenticate({'text':'{"refreshToken":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOi\
 IzZTVhM2Q3ZC04MmQ0LTQyYWUtOGYxZS0yNzdhMzU4YTIxOWIiLCJzb3VyY2VzIj\
 pbXSwidXNlcl9uYW1lIjoiM2U1YTNkN2QtODJkNC00MmFlLThmMWUtMjc3YTM1OG\
 EyMTliIiwicm9sZXMiOlsiVEVTVC1QUk9KRUNUMTpST0xFX1BBUlRJQ0lQQU5UIl\
@@ -102,7 +102,7 @@ nrtEPAM0GHcXAAyqSacSLJvlI3-yf7HJ1Kzm43bZ5mBdOugVFNVdVeK0XAcyiMCl\
 zx0jrdZfGVHVFx1FDr-n6olUvlprVDZpe3BDBslIIloYGzxvWylu4aC9-hamIuFE\
 NeByeLf-ERneW6BH6OZgR90lMDrRRD1H8GUYS37ohuKHjRI1Gn64nJBivvVfu6tW\
 18SZhKIGGDnnxA6LceoLcOckhSfWCHJF08ZgDzsJORAbzhFxgiGZGXkp-9jIbsvF\
-z1y_tpOZDT7qq1756mwhhfNLVDmA"}'})*/
+z1y_tpOZDT7qq1756mwhhfNLVDmA"}'})
 //MDD
 /*this.authenticate({'text':'{"refreshToken":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOi\
 JlZDJjNDM5Yy1jNWUyLTRjODItOTYyZi1lYzk1ZWVlN2QwY2QiLCJzb3VyY2VzIj\

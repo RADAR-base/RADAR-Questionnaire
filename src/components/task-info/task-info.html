@@ -20,10 +20,13 @@
         {{ "STATUS_NOW" | translate }}
       </div>
       <div class="text-lg" *ngIf="!isNow">
-        {{ getHour() }}
+        <span *ngIf="task.name !=='ESM'">{{ getHour() }}</span>
+        <span *ngIf="task.name =='ESM'">{{ "TASK_BAR_NEXT_TASK_SOON" | translate }}</span>
       </div>
       <div class="text-sm" *ngIf="!isNow" [@scaleMinutes]="animateScale">
-        <span [@fade]="animateFade">:</span>{{ getMinutes() }}
+        <div *ngIf="task.name !=='ESM'">
+          <span [@fade]="animateFade">:</span>{{ getMinutes() }}
+        </div>
       </div>
     </div>
   </div>

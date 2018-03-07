@@ -21,7 +21,7 @@
     </task-progress>
   </div>
 
-  <div  #tickerBar class="size-static">
+  <div  #tickerBar class="size-static" *ngIf="nextTask.name !== 'ESM'">
     <ticker-bar [task]="nextTask" [showAffirmation]="showCompleted"></ticker-bar>
   </div>
 

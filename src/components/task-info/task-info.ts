@@ -134,10 +134,12 @@ export class TaskInfoComponent implements OnChanges {
   }
 
   expand () {
-    this.collapse.emit(this.expanded)
-    this.expanded = this.expanded ? false : true
-    this.applyAnimationKeys()
-    this.updateProgress()
+    if(this.task.name != 'ESM'){
+      this.collapse.emit(this.expanded)
+      this.expanded = this.expanded ? false : true
+      this.applyAnimationKeys()
+      this.updateProgress()
+    }
   }
 
   updateProgress () {

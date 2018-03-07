@@ -92,8 +92,9 @@ export class TaskCalendarComponent implements OnChanges {
       this.task.emit(task)
     } else {
       let now = new Date()
+      let nowPlusFifteen = new Date(now.getTime()+1000*60*15)
       let taskTimestamp = new Date(task.timestamp)
-      if(taskTimestamp > now && !task.completed) {
+      if(taskTimestamp > now && taskTimestamp < nowPlusFifteen && !task.completed) {
         this.task.emit(task)
       } else {
         this.showESM_missedInfo()

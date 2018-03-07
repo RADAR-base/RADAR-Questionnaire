@@ -627,6 +627,14 @@ export const Localisations = {
     "it":"",
     "nl":""
   },
+  "TASK_BAR_NEXT_TASK_SOON": {
+    "da":"snart",
+    "de":"bald",
+    "en":"soon",
+    "es":"pronto",
+    "it":"presto",
+    "nl":"spoedig"
+  },
   "TASK_BAR_AFFIRMATION_1": {
     "da":"Godt klaret! ",
     "de":"Gut gemacht! ",

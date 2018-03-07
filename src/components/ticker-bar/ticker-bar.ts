@@ -101,6 +101,8 @@ export class TickerBarComponent implements OnChanges {
     let item = this.generateTickerItem('task', this.translate.transform(LocKeys.TASK_BAR_NEXT_TASK.toString()), timeToNext, '.')
     if(timeToNext.includes('-')) {
       item = this.generateTickerItem('task', this.translate.transform(LocKeys.TASK_BAR_NOW_TASK.toString()), this.translate.transform(LocKeys.STATUS_NOW.toString()), '.')
+    } else if(this.task.name == 'ESM'){
+      item = this.generateTickerItem('task', this.translate.transform(LocKeys.TASK_BAR_NOW_TASK.toString()), this.translate.transform(LocKeys.TASK_BAR_NEXT_TASK_SOON.toString()), '.')
     }
     this.tickerItems.push(item)
   }

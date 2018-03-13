@@ -18,7 +18,8 @@ export class KafkaService {
 
   private KAFKA_CLIENT_URL: string
   private KAFKA_CLIENT_KAFKA: string = '/kafka'
-  
+  private specs = {}
+
   constructor(
     private http: Http,
     private util: Utility,
@@ -51,9 +52,11 @@ export class KafkaService {
 
   createPayload(task:Task, kafkaObject) {
     return this.storage.getAssessmentAvsc(task)
-    .then((specs) => this.util.getLatestKafkaSchemaVersions(specs))
+    .then((specs) => {
+      return this.util.getLatestKafkaSchemaVersions(specs)
+    })
     .then((schemaVersions) => {
-      let specs = schemaVersions[2]['schema']
+      let specs = schemaVersions[2]
       let avroKey = AvroSchema.parse(JSON.parse(schemaVersions[0]['schema']),  { wrapUnions: true })
       // ISSUE forValue: inferred from input, due to error when parsing schema
       let avroVal = AvroSchema.Type.forValue(kafkaObject.value, { wrapUnions: true })
@@ -66,9 +69,11 @@ export class KafkaService {
 
       let schemaId = new KafkaClient.AvroSchema(JSON.parse(schemaVersions[0]['schema']))
       let schemaInfo = new KafkaClient.AvroSchema(JSON.parse(schemaVersions[1]['schema']))
+
       return this.sendToKafka(specs, schemaId, schemaInfo, payload, kafkaObject.value.time)
     })
     .catch((error) => {
+      console.log(error)
       this.cacheAnswers(task, kafkaObject)
     });
 
@@ -78,6 +83,7 @@ export class KafkaService {
     return this.getKafkaInstance().then(kafkaConnInstance => {
       // kafka connection instance to submit to topic
       var topic = specs.avsc + "_" + specs.name
+      console.log("Sending to: " + topic)
       kafkaConnInstance.topic(topic).produce(id, info, payload,
         (err, res) => {
           if (res) {

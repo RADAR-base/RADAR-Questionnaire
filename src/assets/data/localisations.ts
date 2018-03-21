@@ -74,27 +74,27 @@ export const Localisations = {
   },
   "FINISH_THANKS":{
     "da":"Tak fordi du udfyldte spørgeskemaet.",
-    "de":"Vielen Dank für Ihre Teilnahme.",
+    "de":"Vielen Dank für das Ausfüllen des Fragebogens.",
     "en":"Thank you for completing the test.",
     "es":"Gracias por completar el cuestionario",
     "it":"Grazie per aver completato il questionario",
     "nl":"Bedankt voor het invullen van de vragenlijst"
   },
   "CALENDAR_ESM_MISSED_TITLE":{
-    "da":"",
-    "de":"",
+    "da":"Blokeret",
+    "de":"Nich erlaubt",
     "en":"Blocked",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Obstruido",
+    "it":"Bloccato",
+    "nl":"Geblokkeerd"
   },
   "CALENDAR_ESM_MISSED_DESC":{
-    "da":"",
-    "de":"",
-    "en":"Unforunately, you can only answer this questionnaire at the notified time.",
-    "es":"",
-    "it":"",
-    "nl":""
+    "da":"Desværre kan du kun besvare dette spørgeskema ved den anmeldte tid.",
+    "de":"Leider können Sie diesen Fragebogen nur zum angegebenen Zeitpunkt beantworten.",
+    "en":"Unfortunately, you can only answer this questionnaire at the notified time.",
+    "es":"Lamentablemente, solo puede responder este cuestionario en el momento de la notificación.",
+    "it":"Sfortunatamente, puoi rispondere a questo questionario solo al momento della notifica.",
+    "nl":"Helaas kunt u deze vragenlijst alleen op het aangegeven tijdstip beantwoorden."
   },
   "SETTINGS_SETTINGS": {
     "da":"Indstillinger",
@@ -115,7 +115,7 @@ export const Localisations = {
   },
   "SETTINGS_PROJECTNAME": {
     "da":"Projektnavn",
-    "de":"Projekt Name",
+    "de":"Projektname",
     "en":"Project Name",
     "es":"Nombre del proyecto",
     "it":"Nome del progetto",
@@ -250,12 +250,12 @@ export const Localisations = {
     "nl":"Cache"
   },
   "SETTINGS_CACHE_SIZE": {
-    "da":"",
+    "da":"Størrelse",
     "de":"Grösse",
     "en":"Size",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"Tamaño",
+    "it":"Dimensione",
+    "nl":"Grootte"
   },
   "LANGUAGE_ENGLISH": {
     "da":"Engelsk",
@@ -551,7 +551,7 @@ export const Localisations = {
   },
   "MEASURE_HEART_RATE": {
     "da":"Hjertetryme",
-    "de":"Pulsrate",
+    "de":"Puls",
     "en":"Heart rate",
     "es":"Ritmo cardíaco",
     "it":"Frequenza cardiaca",
@@ -568,7 +568,7 @@ export const Localisations = {
   },
   "CREDITS_BODY": {
     "da":"Lavet med &hearts; til dig af RADAR-CNS konsortiet. For mere information click <a href=\"http://radar-cns.org\">her</a>.",
-    "de":"Made with &hearts; for you by the RADAR-CNS consortium. For more information click <a href=\"http://radar-cns.org\">here</a>.",
+    "de":"Vom RADAR-CNS-Konsortium mit &hearts; für Sie gemacht. Für weitere Informationen klicken Sie <a href=\"http://radar-cns.org\">hier</a>",
     "en":"Made with &hearts; for you by the RADAR-CNS consortium. For more information click <a href=\"http://radar-cns.org\">here</a>.",
     "es":"Hecho con &hearts;  para usted por el consorcio RADAR-CNS. Para obtener más información, haga clic  en <a href=\"http://radar-cns.org\">aquí</a>.",
     "it":"Fatto con il cuore; per voi dal consorzio RADAR-CNS. Per maggiori informazioni clicca <a href=\"http://radar-cns.org\">here</a>.",
@@ -688,35 +688,35 @@ export const Localisations = {
     "nl":"Geen taken vandaag."
   },
   "TASK_TIME_HOUR_SINGLE": {
-    "da":"",
-    "de":"std",
+    "da":"time",
+    "de":"Std.",
     "en":"hr",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"hora",
+    "it":"ora",
+    "nl":"uur"
   },
   "TASK_TIME_HOUR_MULTIPLE": {
-    "da":"",
-    "de":"stdn",
+    "da":"timer",
+    "de":"Std.",
     "en":"hrs",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"horas",
+    "it":"ore",
+    "nl":"uren"
   },
   "TASK_TIME_MINUTE_SINGLE": {
-    "da":"",
-    "de":"min",
+    "da":"minuten",
+    "de":"Min.",
     "en":"min",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"minuto",
+    "it":"minuto",
+    "nl":"minuut"
   },
   "TASK_TIME_MINUTE_MULTIPLE": {
-    "da":"",
-    "de":"mins",
+    "da":"minutter",
+    "de":"Min.",
     "en":"mins",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"minutos",
+    "it":"minuti",
+    "nl":"minuten"
   }
 }

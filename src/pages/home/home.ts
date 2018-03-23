@@ -169,8 +169,8 @@ export class HomePage {
   }
 
   isNextTaskESMandNotNow() {
-    let now = new Date().getTime()
-    if(this.nextTask.name == "ESM" && this.nextTask.timestamp > now){
+    let nowMinus2 = new Date().getTime() - (1000 * 60 * 2)
+    if(this.nextTask.name == "ESM" && this.nextTask.timestamp > nowMinus2){
       return true
     }
     return false

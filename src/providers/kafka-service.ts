@@ -40,11 +40,13 @@ export class KafkaService {
       "timeCompleted": data.answers[data.answers.length - 1].endTime
     }
 
-    this.util.getSourceId()
-      .then((sourceId) => {
-        console.log('SOURCEID ', sourceId)
+    this.util.getSourceKeyInfo()
+      .then((keyInfo) => {
+        console.log('KeyInfo ', keyInfo)
+        let sourceId = keyInfo[0]
+        let projectId = keyInfo[1]
         //Payload for kafka 2 : key Object which contains device information
-        var AnswerKey: AnswerKeyExport = { "userId": data.patientId, "sourceId": sourceId }
+        var AnswerKey: AnswerKeyExport = { "userId": data.patientId, "sourceId": sourceId, "projectId": projectId }
         var kafkaObject = { "value": Answer, "key": AnswerKey }
         this.createPayload(task, kafkaObject)
       })
@@ -84,6 +86,7 @@ export class KafkaService {
       // kafka connection instance to submit to topic
       var topic = specs.avsc + "_" + specs.name
       console.log("Sending to: " + topic)
+
       kafkaConnInstance.topic(topic).produce(id, info, payload,
         (err, res) => {
           if (res) {

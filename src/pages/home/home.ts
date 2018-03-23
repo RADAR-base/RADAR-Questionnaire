@@ -45,6 +45,7 @@ export class HomePage {
   tasksProgress: TasksProgress
   calendarScrollHeight: number = 0
   hasClickedStartButton: boolean = true
+  environment = 'PROD'
 
   constructor (
     public navCtrl: NavController,
@@ -67,26 +68,38 @@ export class HomePage {
   }
 
   checkForNextTask () {
-    if(!this.showCalendar){
-      this.controller.getNextTask().then((task) => {
-        if(task){
-          this.nextTask = task
-          this.hasClickedStartButton = false
-          this.displayCompleted(false)
-          this.displayEvalTransformations(false)
+    if(this.environment == 'DEV'){
+      let d = new Date('March 14, 2018 07:07:01')
+      this.controller.getTasksOfDate(d).then((tasks) => {
+        this.checkForNextTaskGeneric(tasks[0])
+      })
+
+    } else {
+      if(!this.showCalendar){
+        this.controller.getNextTask().then((task) => {
+          this.checkForNextTaskGeneric(task)
+        })
+      }
+    }
+  }
+
+  checkForNextTaskGeneric(task) {
+    if(task){
+      this.nextTask = task
+      this.hasClickedStartButton = false
+      this.displayCompleted(false)
+      this.displayEvalTransformations(false)
+    } else {
+      this.controller.areAllTasksComplete().then((completed) => {
+        if(completed) {
+          this.nextTask = DefaultTask
+          this.displayCompleted(true)
+          if(!this.tasksProgress){
+            this.showNoTasksToday = true
+          }
         } else {
-          this.controller.areAllTasksComplete().then((completed) => {
-            if(completed) {
-              this.nextTask = DefaultTask
-              this.displayCompleted(true)
-              if(!this.tasksProgress){
-                this.showNoTasksToday = true
-              }
-            } else {
-              this.nextTask = DefaultTask
-              this.displayEvalTransformations(true)
-            }
-          })
+          this.nextTask = DefaultTask
+          this.displayEvalTransformations(true)
         }
       })
     }

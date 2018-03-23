@@ -23,7 +23,8 @@ export interface AnswerValueExport {
 
 export interface AnswerKeyExport {
   userId: string,
-  sourceId: string
+  sourceId: string,
+  projectId: string
 }
 
 // interface to submit answers to Kafka

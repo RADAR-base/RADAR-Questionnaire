@@ -46,6 +46,7 @@ export class HomePage {
   calendarScrollHeight: number = 0
   hasClickedStartButton: boolean = true
   environment = 'PROD'
+  hasClinicalTasks = false
 
   constructor (
     public navCtrl: NavController,
@@ -65,6 +66,7 @@ export class HomePage {
       this.checkForNextTask()
     }, 1000)
     this.controller.setNextNotificationsForXDays(43)
+    this.evalHasClinicalTasks()
   }
 
   checkForNextTask () {
@@ -103,6 +105,13 @@ export class HomePage {
         }
       })
     }
+  }
+
+  evalHasClinicalTasks () {
+    this.storage.get(StorageKeys.HAS_CLINICAL_TASKS)
+    .then((isClinical) => {
+      this.hasClinicalTasks = isClinical
+    })
   }
 
   displayEvalTransformations (requestDisplay:boolean) {
@@ -212,6 +221,10 @@ export class HomePage {
 
   openSettingsPage () {
     this.navCtrl.push(SettingsPage)
+  }
+
+  openClinicalTasksPage () {
+    console.log('Open ClinicalTasks Page')
   }
 
   startQuestionnaire (task: Task) {

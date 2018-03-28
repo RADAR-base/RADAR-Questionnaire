@@ -19,6 +19,9 @@
       [forceComplete]="showCompleted"
       [noTasksToday]="showNoTasksToday">
     </task-progress>
+    <div class="clinical" *ngIf="hasClinicalTasks" (click)="openClinicalTasksPage()">
+      <img src="assets/imgs/clinical.png" class="icon-clinical"/>
+    </div>
   </div>
 
   <div  #tickerBar class="size-static" *ngIf="nextTask.name !== 'ESM'">

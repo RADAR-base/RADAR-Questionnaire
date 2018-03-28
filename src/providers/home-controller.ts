@@ -4,6 +4,7 @@ import { SchedulingService } from './scheduling-service'
 import { Task, TasksProgress } from '../models/task'
 import { Assessment } from '../models/assessment'
 import { NotificationService } from './notification-service'
+import { StorageKeys } from '../enums/storage'
 
 @Injectable()
 export class HomeController {
@@ -43,6 +44,10 @@ export class HomeController {
   getTaskProgress () {
     return this.getTasksOfToday()
       .then((tasks:Task[]) => this.retrieveTaskProgress(tasks))
+  }
+
+  getClinicalTasks () {
+    return this.storage.get(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS)
   }
 
   setNextNotificationsForXDays (periodInDays) {
@@ -118,7 +123,7 @@ export class HomeController {
         if(tasks[i].completed == false) {
           status = false
         }
-      }  
+      }
     }
     return status
   }

@@ -82,9 +82,9 @@ export class QuestionsPage {
   evalIfLastQuestionnaireToShowESMRatingQuestion() {
     let time = new Date()
     if(time.getHours() > 19 && this.questionTitle == 'ESM') {
-      return 0
+      return 1
     }
-    return 1
+    return 0
   }
 
   setCurrentQuestion(value = 0) {

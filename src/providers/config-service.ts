@@ -26,9 +26,22 @@ export class ConfigService {
       .then((res) => {
         let response: any = JSON.parse(res)
         if(configVersion != response.version) {
+          this.storage.set(StorageKeys.HAS_CLINICAL_TASKS, false)
           let protocolFormated = this.formatPulledProcotol(response.protocols)
+          let scheduledAssessments = []
+          let clinicalAssessments = []
+          for(var i=0; i < protocolFormated.length; i++) {
+              let clinical = protocolFormated[i]['protocol']['clinicalProtocol']
+              if(clinical){
+                this.storage.set(StorageKeys.HAS_CLINICAL_TASKS, true)
+                clinicalAssessments.push(protocolFormated[i])
+              } else {
+                scheduledAssessments.push(protocolFormated[i])
+              }
+          }
           this.storage.set(StorageKeys.CONFIG_VERSION, response.version)
-          this.storage.set(StorageKeys.CONFIG_ASSESSMENTS, protocolFormated)
+          this.storage.set(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS, clinicalAssessments)
+          this.storage.set(StorageKeys.CONFIG_ASSESSMENTS, scheduledAssessments)
           .then(() =>{
             console.log("Pulled questionnaire")
             this.pullQuestionnaires()

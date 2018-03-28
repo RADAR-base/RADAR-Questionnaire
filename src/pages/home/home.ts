@@ -7,6 +7,7 @@ import { EnrolmentPage } from '../enrolment/enrolment'
 import { StartPage } from '../start/start'
 import { QuestionsPage } from '../questions/questions'
 import { SettingsPage } from '../settings/settings'
+import { ClinicalTasksPage } from '../clinical-tasks/clinical-tasks'
 import { DefaultTask } from '../../assets/data/defaultConfig'
 import { LocKeys } from '../../enums/localisations'
 import { TranslatePipe } from '../../pipes/translate/translate'
@@ -224,7 +225,7 @@ export class HomePage {
   }
 
   openClinicalTasksPage () {
-    console.log('Open ClinicalTasks Page')
+    this.navCtrl.push(ClinicalTasksPage)
   }
 
   startQuestionnaire (task: Task) {

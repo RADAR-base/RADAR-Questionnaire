@@ -36,6 +36,7 @@ import { SplashPage } from '../pages/splash/splash'
 import { EnrolmentPage } from '../pages/enrolment/enrolment'
 import { FinishPage } from '../pages/finish/finish'
 import { HomePage } from '../pages/home/home'
+import { ClinicalTasksPage } from '../pages/clinical-tasks/clinical-tasks'
 import { SettingsPage } from '../pages/settings/settings'
 import { StartPage } from '../pages/start/start'
 import { TaskSelectPage } from '../pages/taskselect/taskselect'
@@ -85,6 +86,7 @@ import { AudioInputComponent } from '../components/audio-input/audio-input';
     SplashPage,
     EnrolmentPage,
     HomePage,
+    ClinicalTasksPage,
     StartPage,
     QuestionsPage,
     FinishPage,
@@ -114,6 +116,7 @@ import { AudioInputComponent } from '../components/audio-input/audio-input';
     SplashPage,
     EnrolmentPage,
     HomePage,
+    ClinicalTasksPage,
     StartPage,
     QuestionsPage,
     FinishPage,

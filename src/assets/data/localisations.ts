@@ -96,6 +96,14 @@ export const Localisations = {
     "it":"Sfortunatamente, puoi rispondere a questo questionario solo al momento della notifica.",
     "nl":"Helaas kunt u deze vragenlijst alleen op het aangegeven tijdstip beantwoorden."
   },
+  "CLINICAL_TASKS": {
+    "da":"Clinical assessments",
+    "de":"Clinical assessments",
+    "en":"Clinical assessments",
+    "es":"Clinical assessments",
+    "it":"Clinical assessments",
+    "nl":"Clinical assessments"
+  },
   "SETTINGS_SETTINGS": {
     "da":"Indstillinger",
     "de":"Einstellungen",
@@ -103,7 +111,6 @@ export const Localisations = {
     "es":"Ajustes",
     "it":"Settings",
     "nl":"Settings"
-
   },
   "SETTINGS_PARTICIPANTID": {
     "da":"Bruger ID",

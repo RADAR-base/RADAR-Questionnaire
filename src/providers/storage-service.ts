@@ -83,6 +83,18 @@ export class StorageService {
                 })
   }
 
+  getClinicalAssessment (task:Task) {
+    let key = StorageKeys.CONFIG_CLINICAL_ASSESSMENTS
+    return this.storage.get(key.toString())
+                .then((assessments) => {
+                  for(var i = 0; i<assessments.length; i++){
+                    if(assessments[i].name == task.name) {
+                      return assessments[i]
+                    }
+                  }
+                })
+  }
+
   getAssessmentAvsc (task: Task) {
     return this.getAssessment(task)
       .then((assessment) => {

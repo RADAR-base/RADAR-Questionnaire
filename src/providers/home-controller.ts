@@ -24,6 +24,10 @@ export class HomeController {
     return this.storage.getAssessment(task)
   }
 
+  getClinicalAssessment (task) {
+    return this.storage.getClinicalAssessment(task)
+  }
+
   updateAssessmentIntroduction (assessment) {
     if(assessment.showIntroduction){
       var assessmentUpdated = assessment

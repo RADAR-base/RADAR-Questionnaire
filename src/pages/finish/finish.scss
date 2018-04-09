@@ -1,2 +1,13 @@
 page-finish {
+  ion-item.item {
+    background-color: $cl-primary-40;
+    margin-bottom: $item-separation-distance;
+  }
+  ion-item.item:last-child {
+    margin-bottom: 0
+  }
+
+  .pos-bottom-90 {
+    padding-bottom: 90px;
+  }
 }

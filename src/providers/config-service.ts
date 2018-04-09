@@ -108,7 +108,6 @@ export class ConfigService {
         for(var i = 0; i < assessments.length; i++) {
           assessmentUpdate[i]['questions'] = this.formatQuestionsHeaders(res[i])
         }
-        console.log(assessmentUpdate)
         this.storage.set(storageKey, assessmentUpdate)
         .then(() => this.schedule.generateSchedule())
       })

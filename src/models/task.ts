@@ -9,6 +9,7 @@ export interface Task {
  nQuestions: number
  estimatedCompletionTime: number
  warning: string
+ isClinical: boolean
 }
 
 export interface TasksProgress {

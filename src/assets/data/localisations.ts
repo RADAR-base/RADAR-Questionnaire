@@ -80,6 +80,14 @@ export const Localisations = {
     "it":"Grazie per aver completato il questionario",
     "nl":"Bedankt voor het invullen van de vragenlijst"
   },
+  "FINISH_COMPLETED_IN_CLINIC": {
+    "da":"Completed in clinic?",
+    "de":"Completed in clinic?",
+    "en":"Completed in clinic?",
+    "es":"Completed in clinic?",
+    "it":"Completed in clinic?",
+    "nl":"Completed in clinic?"
+  },
   "CALENDAR_ESM_MISSED_TITLE":{
     "da":"Blokeret",
     "de":"Nich erlaubt",

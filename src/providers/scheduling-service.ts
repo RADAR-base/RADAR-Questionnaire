@@ -66,8 +66,28 @@ export class SchedulingService {
   }
 
   getTasks () {
-    var schedule = this.storage.get(StorageKeys.SCHEDULE_TASKS)
-    return Promise.resolve(schedule)
+    var defaultTasks = this.getDefaultTasks()
+    let clinicalTasks = this.getClinicalTasks()
+    return Promise.resolve(Promise.all([defaultTasks, clinicalTasks])
+      .then((defaultAndClinicalTasks) => {
+        let tasks:Task[] = []
+        for(var i = 0; i < defaultAndClinicalTasks.length; i++){
+          if(defaultAndClinicalTasks[i]){
+            for(var j = 0; j < defaultAndClinicalTasks[i].length; j++){
+              tasks.push(defaultAndClinicalTasks[i][j])
+            }
+          }
+        }
+        return tasks
+      }))
+  }
+
+  getDefaultTasks () {
+    return this.storage.get(StorageKeys.SCHEDULE_TASKS)
+  }
+
+  getClinicalTasks () {
+    return this.storage.get(StorageKeys.SCHEDULE_TASKS_CLINICAL)
   }
 
   getCurrentReport () {
@@ -132,10 +152,18 @@ export class SchedulingService {
   }
 
   insertTask (task): Promise<any> {
-    return this.getTasks().then((tasks) => {
+    console.log(task)
+    let sKey = StorageKeys.SCHEDULE_TASKS
+    let taskPromise = this.getDefaultTasks()
+    if(task.isClinical){
+      sKey = StorageKeys.SCHEDULE_TASKS_CLINICAL
+      taskPromise = this.getClinicalTasks()
+    }
+    console.log('Update Task ' + sKey.toString())
+    return taskPromise.then((tasks) => {
       var updatedTasks = tasks
       updatedTasks[task.index] = task
-      return this.storage.set(StorageKeys.SCHEDULE_TASKS, updatedTasks)
+      return this.storage.set(sKey, updatedTasks)
     })
   }
 
@@ -220,7 +248,8 @@ export class SchedulingService {
       reminderSettings: assessment.protocol.reminders,
       nQuestions: assessment.questions.length,
       estimatedCompletionTime: assessment.estimatedCompletionTime,
-      warning: assessment.warn
+      warning: assessment.warn,
+      isClinical: false
     }
     return task
   }

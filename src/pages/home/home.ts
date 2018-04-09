@@ -63,26 +63,20 @@ export class HomePage {
 
   ionViewDidLoad () {
     this.checkForNextTask()
+    this.evalHasClinicalTasks()
     setInterval(() => {
       this.checkForNextTask()
     }, 1000)
-    this.controller.setNextNotificationsForXDays(43)
-    this.evalHasClinicalTasks()
+    setTimeout(() => {
+      this.controller.setNextNotificationsForXDays(43)
+    }, 1000)
   }
 
   checkForNextTask () {
-    if(this.environment == 'DEV'){
-      let d = new Date('March 14, 2018 07:07:01')
-      this.controller.getTasksOfDate(d).then((tasks) => {
-        this.checkForNextTaskGeneric(tasks[0])
+    if(!this.showCalendar){
+      this.controller.getNextTask().then((task) => {
+        this.checkForNextTaskGeneric(task)
       })
-
-    } else {
-      if(!this.showCalendar){
-        this.controller.getNextTask().then((task) => {
-          this.checkForNextTaskGeneric(task)
-        })
-      }
     }
   }
 

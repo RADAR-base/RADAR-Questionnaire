@@ -17,8 +17,12 @@
     <task-progress
       [progress]="tasksProgress"
       [forceComplete]="showCompleted"
-      [noTasksToday]="showNoTasksToday">
+      [noTasksToday]="showNoTasksToday"
+      *ngIf="!hasOnlyESMs">
     </task-progress>
+    <div class="container-esm" *ngIf="hasOnlyESMs">
+      <img src="assets/imgs/esm_questions.png" class="icon-esm"/>
+    </div>
     <div class="clinical-1" *ngIf="hasClinicalTasks && !showCalendar && !showCompleted" (click)="openClinicalTasksPage()">
       <img src="assets/imgs/clinical.png" class="icon-clinical"/>
     </div>

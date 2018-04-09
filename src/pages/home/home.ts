@@ -46,8 +46,8 @@ export class HomePage {
   tasksProgress: TasksProgress
   calendarScrollHeight: number = 0
   hasClickedStartButton: boolean = true
-  environment = 'PROD'
   hasClinicalTasks = false
+  hasOnlyESMs = false
 
   constructor (
     public navCtrl: NavController,
@@ -64,6 +64,7 @@ export class HomePage {
   ionViewDidLoad () {
     this.checkForNextTask()
     this.evalHasClinicalTasks()
+    this.checkIfOnlyESM()
     setInterval(() => {
       this.checkForNextTask()
     }, 1000)
@@ -100,6 +101,20 @@ export class HomePage {
         }
       })
     }
+  }
+
+  checkIfOnlyESM() {
+    this.controller.getTasksOfToday()
+      .then((tasks) => {
+        let tmpHasOnlyESMs = true
+        for(var i = 0; i < tasks.length; i++){
+          if(tasks[i].name != 'ESM'){
+            tmpHasOnlyESMs = false
+            break;
+          }
+        }
+        this.hasOnlyESMs = tmpHasOnlyESMs
+      })
   }
 
   evalHasClinicalTasks () {

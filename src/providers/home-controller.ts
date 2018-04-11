@@ -101,10 +101,10 @@ export class HomeController {
     if(tasks) {
       let now = new Date()
       let offsetTime = 1000 * 60 * 10 // 10 min
-      let timestamp = Date.now() - offsetTime
+      let timestamp = new Date().getTime() - offsetTime
       var passedAtLeastOnce = false
       var nextIdx = 0
-      var nextTimestamp = timestamp * 2
+      var nextTimestamp = timestamp + 1000 * 60 * 60 * 12
       for(var i = 0; i < tasks.length; i++){
         if(tasks[i].timestamp >= timestamp &&
             tasks[i].timestamp < nextTimestamp &&
@@ -115,6 +115,8 @@ export class HomeController {
         }
       }
       if(passedAtLeastOnce) {
+        console.log('NEXT TASK')
+        console.log(tasks[nextIdx])
         return tasks[nextIdx]
       }
     }

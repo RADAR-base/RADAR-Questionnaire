@@ -101,6 +101,7 @@ export class HomePage {
         }
       })
     }
+    console.log(this.nextTask)
   }
 
   checkIfOnlyESM() {
@@ -158,6 +159,7 @@ export class HomePage {
         `translateY(-${this.elProgressHeight}px)`
       this.elCalendar.nativeElement.style.opacity = 1
     } else {
+      console.log('NEXT TASK EVAL')
       if(this.isNextTaskESMandNotNow()){
         this.elProgress.nativeElement.style.transform =
           `translateY(${this.elFooterHeight}px)`
@@ -171,6 +173,7 @@ export class HomePage {
           'translateY(0px)'
         this.elCalendar.nativeElement.style.opacity = 0
       } else {
+        console.log('DISPLAY START BUTTON')
         this.elProgress.nativeElement.style.transform =
           'translateY(0px) scale(1)'
         this.elTicker.nativeElement.style.transform =
@@ -188,10 +191,12 @@ export class HomePage {
   }
 
   isNextTaskESMandNotNow() {
-    let nowMinus2 = new Date().getTime() - (1000 * 60 * 2)
-    if(this.nextTask.name == "ESM" && this.nextTask.timestamp > nowMinus2){
+    let now = new Date().getTime()
+    if(this.nextTask.name == "ESM" && this.nextTask.timestamp > now){
+      console.log('ESM - NOT NOW: true')
       return true
     }
+    console.log('ESM - NOT NOW: false')
     return false
   }
 

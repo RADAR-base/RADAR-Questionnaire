@@ -117,7 +117,7 @@ export class TaskInfoComponent implements OnChanges {
         this.isNow = true
       }
       console.log(this.isNow)
-    }, 10000);
+    }, 1000);
   }
 
   ngOnChanges (changes) {
@@ -197,9 +197,9 @@ export class TaskInfoComponent implements OnChanges {
 
   getExtraInfo () {
     var info = ''
-    this.task['extraInfo'] = this.translate.transform(LocKeys.TASK_INFO_WARN.toString())
-    info = this.task['extraInfo']
-    this.hasExtraInfo = this.task['extraInfo'] != '' ? true : false
+    //info = this.task['extraInfo'] != '' ? this.translate.transform(LocKeys.TASK_INFO_WARN.toString()) : ''
+    //this.hasExtraInfo = this.task['extraInfo'] != '' ? true : false
+    this.hasExtraInfo = false
     return info
   }
 }

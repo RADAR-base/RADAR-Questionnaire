@@ -7,6 +7,7 @@ import { EnrolmentPage } from '../enrolment/enrolment'
 import { StartPage } from '../start/start'
 import { QuestionsPage } from '../questions/questions'
 import { SettingsPage } from '../settings/settings'
+import { ClinicalTasksPage } from '../clinical-tasks/clinical-tasks'
 import { DefaultTask } from '../../assets/data/defaultConfig'
 import { LocKeys } from '../../enums/localisations'
 import { TranslatePipe } from '../../pipes/translate/translate'
@@ -45,6 +46,8 @@ export class HomePage {
   tasksProgress: TasksProgress
   calendarScrollHeight: number = 0
   hasClickedStartButton: boolean = true
+  hasClinicalTasks = false
+  hasOnlyESMs = false
 
   constructor (
     public navCtrl: NavController,
@@ -60,36 +63,66 @@ export class HomePage {
 
   ionViewDidLoad () {
     this.checkForNextTask()
+    this.evalHasClinicalTasks()
+    this.checkIfOnlyESM()
     setInterval(() => {
       this.checkForNextTask()
     }, 1000)
-    this.controller.setNextNotificationsForXDays(43)
+    setTimeout(() => {
+      this.controller.setNextNotificationsForXDays(43)
+    }, 1000)
   }
 
   checkForNextTask () {
     if(!this.showCalendar){
       this.controller.getNextTask().then((task) => {
-        if(task){
-          this.nextTask = task
-          this.hasClickedStartButton = false
-          this.displayCompleted(false)
-          this.displayEvalTransformations(false)
+        this.checkForNextTaskGeneric(task)
+      })
+    }
+  }
+
+  checkForNextTaskGeneric(task) {
+    if(task){
+      this.nextTask = task
+      this.hasClickedStartButton = false
+      this.displayCompleted(false)
+      this.displayEvalTransformations(false)
+    } else {
+      this.controller.areAllTasksComplete().then((completed) => {
+        if(completed) {
+          this.nextTask = DefaultTask
+          this.displayCompleted(true)
+          if(!this.tasksProgress){
+            this.showNoTasksToday = true
+          }
         } else {
-          this.controller.areAllTasksComplete().then((completed) => {
-            if(completed) {
-              this.nextTask = DefaultTask
-              this.displayCompleted(true)
-              if(!this.tasksProgress){
-                this.showNoTasksToday = true
-              }
-            } else {
-              this.nextTask = DefaultTask
-              this.displayEvalTransformations(true)
-            }
-          })
+          this.nextTask = DefaultTask
+          this.displayEvalTransformations(true)
         }
       })
     }
+    console.log(this.nextTask)
+  }
+
+  checkIfOnlyESM() {
+    this.controller.getTasksOfToday()
+      .then((tasks) => {
+        let tmpHasOnlyESMs = true
+        for(var i = 0; i < tasks.length; i++){
+          if(tasks[i].name != 'ESM'){
+            tmpHasOnlyESMs = false
+            break;
+          }
+        }
+        this.hasOnlyESMs = tmpHasOnlyESMs
+      })
+  }
+
+  evalHasClinicalTasks () {
+    this.storage.get(StorageKeys.HAS_CLINICAL_TASKS)
+    .then((isClinical) => {
+      this.hasClinicalTasks = isClinical
+    })
   }
 
   displayEvalTransformations (requestDisplay:boolean) {
@@ -126,6 +159,7 @@ export class HomePage {
         `translateY(-${this.elProgressHeight}px)`
       this.elCalendar.nativeElement.style.opacity = 1
     } else {
+      console.log('NEXT TASK EVAL')
       if(this.isNextTaskESMandNotNow()){
         this.elProgress.nativeElement.style.transform =
           `translateY(${this.elFooterHeight}px)`
@@ -139,6 +173,7 @@ export class HomePage {
           'translateY(0px)'
         this.elCalendar.nativeElement.style.opacity = 0
       } else {
+        console.log('DISPLAY START BUTTON')
         this.elProgress.nativeElement.style.transform =
           'translateY(0px) scale(1)'
         this.elTicker.nativeElement.style.transform =
@@ -158,8 +193,10 @@ export class HomePage {
   isNextTaskESMandNotNow() {
     let now = new Date().getTime()
     if(this.nextTask.name == "ESM" && this.nextTask.timestamp > now){
+      console.log('ESM - NOT NOW: true')
       return true
     }
+    console.log('ESM - NOT NOW: false')
     return false
   }
 
@@ -199,6 +236,10 @@ export class HomePage {
 
   openSettingsPage () {
     this.navCtrl.push(SettingsPage)
+  }
+
+  openClinicalTasksPage () {
+    this.navCtrl.push(ClinicalTasksPage)
   }
 
   startQuestionnaire (task: Task) {

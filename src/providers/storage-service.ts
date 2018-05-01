@@ -72,7 +72,23 @@ export class StorageService {
   }
 
   getAssessment (task:Task) {
-    let key = StorageKeys.CONFIG_ASSESSMENTS
+    let keyDefault = StorageKeys.CONFIG_ASSESSMENTS
+    let keyClinical = StorageKeys.CONFIG_CLINICAL_ASSESSMENTS
+    let defaultAssessment = this.storage.get(keyDefault.toString())
+    let clinicalAssesment = this.storage.get(keyClinical.toString())
+    return Promise.all([defaultAssessment, clinicalAssesment])
+      .then((assessments) => {
+        for(var i = 0; i<assessments.length; i++){
+          for(var j = 0; j<assessments[i].length; j++)
+            if(assessments[i][j].name == task.name) {
+              return assessments[i][j]
+            }
+        }
+      })
+  }
+
+  getClinicalAssessment (task:Task) {
+    let key = StorageKeys.CONFIG_CLINICAL_ASSESSMENTS
     return this.storage.get(key.toString())
                 .then((assessments) => {
                   for(var i = 0; i<assessments.length; i++){

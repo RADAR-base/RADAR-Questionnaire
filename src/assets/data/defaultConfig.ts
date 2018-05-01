@@ -3,6 +3,8 @@ import { WeeklyReportSubSettings } from '../../models/settings'
 import { LanguageSetting } from '../../models/settings'
 import { LocKeys } from '../../enums/localisations'
 import { Task } from '../../models/task'
+import { DefaultProtocolEndPointExport, DefaultSourceProducerAndSecretExport } from './secret'
+
 
 // FIREBASE SETUP
 /*export const FirebaseConfig = {
@@ -49,7 +51,8 @@ export const DefaultTask: Task = {
   },
   nQuestions: 0,
   estimatedCompletionTime: 0,
-  warning: ''
+  warning: '',
+  isClinical: false
 }
 
 export const DefaultSettingsSelectedLanguage: LanguageSetting = {
@@ -111,6 +114,6 @@ export const DefaultSourceTypeRegistrationBody: any = {
 export const DefaultEndPoint: string = 'https://radar-cns-platform.rosalind.kcl.ac.uk/'
 //export const DefaultEndPoint: string = 'https://radar-backend.co.uk/'
 
-export const DefaultProtocolEndPoint: string = 'https://raw.githubusercontent.com/RADAR-base/RADAR-aRMT-protocols/master/'
+export const DefaultProtocolEndPoint: string = DefaultProtocolEndPointExport
 
-export const DefaultSourceProducerAndSecret: string = 'aRMT:open%DEGREE%forever'
+export const DefaultSourceProducerAndSecret: string = DefaultSourceProducerAndSecretExport

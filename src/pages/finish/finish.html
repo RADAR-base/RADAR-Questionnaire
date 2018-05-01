@@ -1,4 +1,4 @@
-<ion-content padding>
+<ion-content>
   <img class="icons-big"
     src="assets/imgs/checkmark-big.svg" alt="Completed">
   <h2 text-center>
@@ -7,6 +7,14 @@
   <h2 text-center>
     {{ content }}
   </h2>
+  <ion-item-group class="pos-bottom pos-bottom-90" *ngIf="isClinicalTask">
+    <ion-item no-lines>
+      <ion-label>
+        {{ "FINISH_COMPLETED_IN_CLINIC" | translate}}
+      </ion-label>
+      <ion-toggle item-right [(ngModel)]="completedInClinic"></ion-toggle>
+    </ion-item>
+  </ion-item-group>
   <div class="pos-bottom" padding>
     <button ion-button class="bt bt--full" round full
       (click)="handleClosePage()">

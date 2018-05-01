@@ -26,12 +26,29 @@ export class ConfigService {
       .then((res) => {
         let response: any = JSON.parse(res)
         if(configVersion != response.version) {
+          this.storage.set(StorageKeys.HAS_CLINICAL_TASKS, false)
           let protocolFormated = this.formatPulledProcotol(response.protocols)
+          let scheduledAssessments = []
+          let clinicalAssessments = []
+          for(var i=0; i < protocolFormated.length; i++) {
+              let clinical = protocolFormated[i]['protocol']['clinicalProtocol']
+              if(clinical){
+                this.storage.set(StorageKeys.HAS_CLINICAL_TASKS, true)
+                clinicalAssessments.push(protocolFormated[i])
+              } else {
+                scheduledAssessments.push(protocolFormated[i])
+              }
+          }
           this.storage.set(StorageKeys.CONFIG_VERSION, response.version)
-          this.storage.set(StorageKeys.CONFIG_ASSESSMENTS, protocolFormated)
+          this.storage.set(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS, clinicalAssessments)
+          .then(() =>{
+            console.log("Pulled clinical questionnaire")
+            this.pullQuestionnaires(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS)
+          })
+          this.storage.set(StorageKeys.CONFIG_ASSESSMENTS, scheduledAssessments)
           .then(() =>{
             console.log("Pulled questionnaire")
-            this.pullQuestionnaires()
+            this.pullQuestionnaires(StorageKeys.CONFIG_ASSESSMENTS)
           })
         } else {
           console.log('NO CONFIG UPDATE. Version of protocol.json has not changed.')
@@ -73,8 +90,8 @@ export class ConfigService {
     return langsKeyValEmpty
   }
 
-  pullQuestionnaires() {
-    let assessments = this.storage.get(StorageKeys.CONFIG_ASSESSMENTS)
+  pullQuestionnaires(storageKey) {
+    let assessments = this.storage.get(storageKey)
     let lang = this.storage.get(StorageKeys.LANGUAGE)
     Promise.all([assessments, lang])
     .then((vars) => {
@@ -87,12 +104,11 @@ export class ConfigService {
       }
       Promise.all(promises)
       .then((res) => {
-        console.log(res)
         let assessmentUpdate = assessments
         for(var i = 0; i < assessments.length; i++) {
           assessmentUpdate[i]['questions'] = this.formatQuestionsHeaders(res[i])
         }
-        this.storage.set(StorageKeys.CONFIG_ASSESSMENTS, assessmentUpdate)
+        this.storage.set(storageKey, assessmentUpdate)
         .then(() => this.schedule.generateSchedule())
       })
     })

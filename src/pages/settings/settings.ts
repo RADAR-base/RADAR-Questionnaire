@@ -122,7 +122,8 @@ export class SettingsPage {
           }
           this.storage.set(StorageKeys.LANGUAGE, lang)
           .then(() => {
-            this.configService.pullQuestionnaires()
+            this.configService.pullQuestionnaires(StorageKeys.CONFIG_ASSESSMENTS)
+            this.configService.pullQuestionnaires(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS)
           })
           this.language = lang
           this.navCtrl.setRoot(MyApp)

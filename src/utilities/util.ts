@@ -68,8 +68,10 @@ export class Utility {
     return Observable.throw(errMsg)
   }
 
-  getSourceId() {
-    return this.storage.get(StorageKeys.SOURCEID)
+  getSourceKeyInfo() {
+    let sourceId = this.storage.get(StorageKeys.SOURCEID)
+    let projectId = this.storage.get(StorageKeys.PROJECTNAME)
+    return Promise.all([sourceId, projectId])
   }
 
 

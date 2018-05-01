@@ -24,15 +24,19 @@ export class TaskCalendarComponent implements OnChanges {
   constructor (private controller: HomeController,
               private alertCtrl: AlertController,
               private translate: TranslatePipe) {
+    this.getTasks()
+  }
+
+  ngOnChanges () {
+    this.setCurrentTime()
+  }
+
+  getTasks() {
     this.controller.getTasksOfToday().then((tasks) => {
       if(tasks) {
         this.tasks = tasks.sort(this.compareTasks)
       }
     })
-  }
-
-  ngOnChanges () {
-    this.setCurrentTime()
   }
 
   getStartTime (task: Task) {

@@ -80,6 +80,14 @@ export const Localisations = {
     "it":"Grazie per aver completato il questionario",
     "nl":"Bedankt voor het invullen van de vragenlijst"
   },
+  "FINISH_COMPLETED_IN_CLINIC": {
+    "da":"Completed in clinic?",
+    "de":"Completed in clinic?",
+    "en":"Completed in clinic?",
+    "es":"Completed in clinic?",
+    "it":"Completed in clinic?",
+    "nl":"Completed in clinic?"
+  },
   "CALENDAR_ESM_MISSED_TITLE":{
     "da":"Blokeret",
     "de":"Nich erlaubt",
@@ -96,6 +104,14 @@ export const Localisations = {
     "it":"Sfortunatamente, puoi rispondere a questo questionario solo al momento della notifica.",
     "nl":"Helaas kunt u deze vragenlijst alleen op het aangegeven tijdstip beantwoorden."
   },
+  "CLINICAL_TASKS": {
+    "da":"Clinical assessments",
+    "de":"Clinical assessments",
+    "en":"Clinical assessments",
+    "es":"Clinical assessments",
+    "it":"Clinical assessments",
+    "nl":"Clinical assessments"
+  },
   "SETTINGS_SETTINGS": {
     "da":"Indstillinger",
     "de":"Einstellungen",
@@ -103,7 +119,6 @@ export const Localisations = {
     "es":"Ajustes",
     "it":"Settings",
     "nl":"Settings"
-
   },
   "SETTINGS_PARTICIPANTID": {
     "da":"Bruger ID",

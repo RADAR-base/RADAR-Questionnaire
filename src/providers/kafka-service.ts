@@ -52,11 +52,17 @@ export class KafkaService {
 
   createPayload(task:Task, kafkaObject) {
     return this.storage.getAssessmentAvsc(task)
+<<<<<<< HEAD
     .then((specs) => {
       return this.util.getLatestKafkaSchemaVersions(specs)
     })
     .then((schemaVersions) => {
       let specs = schemaVersions[2]
+=======
+    .then((specs) => this.util.getLatestKafkaSchemaVersions(specs))
+    .then((schemaVersions) => {
+      let specs = schemaVersions[2]['schema']
+>>>>>>> ddea57fd7b1a3cf06f4e7786547845f0e3ebb3ce
       let avroKey = AvroSchema.parse(JSON.parse(schemaVersions[0]['schema']),  { wrapUnions: true })
       // ISSUE forValue: inferred from input, due to error when parsing schema
       let avroVal = AvroSchema.Type.forValue(kafkaObject.value, { wrapUnions: true })
@@ -69,11 +75,17 @@ export class KafkaService {
 
       let schemaId = new KafkaClient.AvroSchema(JSON.parse(schemaVersions[0]['schema']))
       let schemaInfo = new KafkaClient.AvroSchema(JSON.parse(schemaVersions[1]['schema']))
+<<<<<<< HEAD
 
       return this.sendToKafka(specs, schemaId, schemaInfo, payload, kafkaObject.value.time)
     })
     .catch((error) => {
       console.log(error)
+=======
+      return this.sendToKafka(specs, schemaId, schemaInfo, payload, kafkaObject.value.time)
+    })
+    .catch((error) => {
+>>>>>>> ddea57fd7b1a3cf06f4e7786547845f0e3ebb3ce
       this.cacheAnswers(task, kafkaObject)
     });
 
@@ -83,7 +95,10 @@ export class KafkaService {
     return this.getKafkaInstance().then(kafkaConnInstance => {
       // kafka connection instance to submit to topic
       var topic = specs.avsc + "_" + specs.name
+<<<<<<< HEAD
       console.log("Sending to: " + topic)
+=======
+>>>>>>> ddea57fd7b1a3cf06f4e7786547845f0e3ebb3ce
       kafkaConnInstance.topic(topic).produce(id, info, payload,
         (err, res) => {
           if (res) {

@@ -197,9 +197,9 @@ export class TaskInfoComponent implements OnChanges {
 
   getExtraInfo () {
     var info = ''
-    //info = this.task['extraInfo'] != '' ? this.translate.transform(LocKeys.TASK_INFO_WARN.toString()) : ''
-    //this.hasExtraInfo = this.task['extraInfo'] != '' ? true : false
-    this.hasExtraInfo = false
+    info = this.task['extraInfo'] != '' ? this.translate.transform(LocKeys.TASK_INFO_WARN.toString()) : ''
+    this.hasExtraInfo = this.task['extraInfo'] != '' ? true : false
+    //this.hasExtraInfo = false
     return info
   }
 }

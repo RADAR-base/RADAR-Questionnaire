@@ -48,6 +48,7 @@ export class HomePage {
   hasClickedStartButton: boolean = true
   hasClinicalTasks = false
   hasOnlyESMs = false
+  nextTaskIsESMandNotNow = false
 
   constructor (
     public navCtrl: NavController,
@@ -82,6 +83,8 @@ export class HomePage {
   }
 
   checkForNextTaskGeneric(task) {
+    this.nextTaskIsESMandNotNow = this.isNextTaskESMandNotNow()
+    console.log(this.nextTaskIsESMandNotNow)
     if(task){
       this.nextTask = task
       this.hasClickedStartButton = false
@@ -101,7 +104,6 @@ export class HomePage {
         }
       })
     }
-    console.log(this.nextTask)
   }
 
   checkIfOnlyESM() {
@@ -127,6 +129,7 @@ export class HomePage {
 
   displayEvalTransformations (requestDisplay:boolean) {
     this.showCalendar = requestDisplay
+    console.log("EVAL")
     this.getElementsAttributes()
     this.applyTransformations()
   }
@@ -139,10 +142,15 @@ export class HomePage {
 
   getElementsAttributes () {
     this.elContentHeight = this.elContent.contentHeight
+    console.log(this.elContent)
     this.elProgressHeight = this.elProgress.nativeElement.offsetHeight
+    console.log(this.elProgress)
     this.elTickerHeight = this.elTicker.nativeElement.offsetHeight
+    console.log(this.elTicker)
     this.elInfoHeight = this.elInfo.nativeElement.offsetHeight
+    console.log(this.elInfo)
     this.elFooterHeight = this.elFooter.nativeElement.offsetHeight
+    console.log(this.elFooter)
   }
 
   applyTransformations () {
@@ -159,7 +167,6 @@ export class HomePage {
         `translateY(-${this.elProgressHeight}px)`
       this.elCalendar.nativeElement.style.opacity = 1
     } else {
-      console.log('NEXT TASK EVAL')
       if(this.isNextTaskESMandNotNow()){
         this.elProgress.nativeElement.style.transform =
           `translateY(${this.elFooterHeight}px)`
@@ -173,7 +180,6 @@ export class HomePage {
           'translateY(0px)'
         this.elCalendar.nativeElement.style.opacity = 0
       } else {
-        console.log('DISPLAY START BUTTON')
         this.elProgress.nativeElement.style.transform =
           'translateY(0px) scale(1)'
         this.elTicker.nativeElement.style.transform =

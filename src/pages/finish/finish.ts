@@ -21,6 +21,7 @@ export class FinishPage {
   content: string = ""
   isClinicalTask: boolean = false
   completedInClinic: boolean = false
+  displayNextTaskReminder: boolean = true
 
   constructor(
     public navCtrl: NavController,
@@ -50,6 +51,14 @@ export class FinishPage {
         this.sendToKafka(this.navParams.data.associatedTask, data)
       }, error => {
         console.log(JSON.stringify(error))
+      })
+    this.controller.getNextTask()
+      .then((task) => {
+        if(task) {
+          this.displayNextTaskReminder = true
+        } else {
+          this.displayNextTaskReminder = false
+        }
       })
   }
 

@@ -80,6 +80,14 @@ export const Localisations = {
     "it":"Grazie per aver completato il questionario",
     "nl":"Bedankt voor het invullen van de vragenlijst"
   },
+  "FINISH_NEXT_TASK_REMINDER": {
+    "da":"Remember, you still have tasks outstanding!",
+    "de":"Remember, you still have tasks outstanding!",
+    "en":"Remember, you still have tasks outstanding!",
+    "es":"Remember, you still have tasks outstanding!",
+    "it":"Remember, you still have tasks outstanding!",
+    "nl":"Remember, you still have tasks outstanding!"
+  },
   "FINISH_COMPLETED_IN_CLINIC": {
     "da":"Completed in clinic?",
     "de":"Completed in clinic?",

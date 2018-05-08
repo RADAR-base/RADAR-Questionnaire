@@ -79,7 +79,7 @@ export class EnrolmentPage {
 
     //TODO remove when finished
     // TESTING
-    this.authenticate({'text':'{"refreshToken":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOi\
+    /*this.authenticate({'text':'{"refreshToken":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOi\
 I5NTA3ZThjZi1kOTdiLTQ1YWEtYjg3MC0yNTAxNDRiMDQ0ZjEiLCJzb3VyY2VzIj\
 pbXSwidXNlcl9uYW1lIjoiOTUwN2U4Y2YtZDk3Yi00NWFhLWI4NzAtMjUwMTQ0Yj\
 A0NGYxIiwicm9sZXMiOlsiVEVTVC1QUk9KRUNUMTpST0xFX1BBUlRJQ0lQQU5UIl\
@@ -102,7 +102,7 @@ S_XguE7GGel_FS7BGAlCg-Hxj7Pa6-aFAi5k9PLjpmLuxpqHhlt_6hHqLfMMrV4-\
 WJztmPTjba34UVmti1yYH3DGWkt_Bd8qYln0h2NmxVl81gh3ebKPnySvz2atxq7Y\
 1NWpsMP7yjlvV13Vsy0LvHCqSB4x5Tk-H7L3q_tQLxVl-Pme57PrA3uCGe9JLpsT\
 Et7lotPoMjY44bUVC_foz2NfavfMx_OnVcXJapd1lkGe-1N3-2ZCnAP8Oe5ganKR\
--jlFjFO4vJQx4Lytgv5uGdQtfMwY"}'})
+-jlFjFO4vJQx4Lytgv5uGdQtfMwY"}'})*/
 //MDD
 /*this.authenticate({'text':'{"refreshToken":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOi\
 JlYTYxZGIzMy1mYzkxLTRjMGItYWZmZS1lYjM5ZDE1NDE1NmUiLCJzb3VyY2VzIj\
@@ -129,7 +129,7 @@ yqcqZxIi4kulORTsObGe4qlZ6_euC0Q5nqmzfjyF-KQMVoVO7hw3dLvC74s42MlI\
 lqZaRsDBx9gks9CuYR1h2_wupoiOyjA9lOaaxRAPCIYBylHJdKnycHuKskVLrxl2\
 BMZQPfIVQWTPwcHgoG_dyzS421waS5bs"}'})*/
 //MS
-/*this.authenticate({'text':'{"refreshToken":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOi\
+this.authenticate({'text':'{"refreshToken":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOi\
 IxYzk2MDgwYS1iNzhiLTQ4NzItOTAxYi1mNTQwMDUzYTI3YzUiLCJzb3VyY2VzIj\
 pbXSwidXNlcl9uYW1lIjoiMWM5NjA4MGEtYjc4Yi00ODcyLTkwMWItZjU0MDA1M2\
 EyN2M1Iiwicm9sZXMiOlsiTVNfVEVTVDpST0xFX1BBUlRJQ0lQQU5UIl0sImlzcy\
@@ -152,7 +152,7 @@ QFNHTKIeSevvMMcs_2xYYqBfVwo_UJ9ovt9FyYtu0Cl8eealJTu5xQRtHr5UT50V\
 pmmptMEAOla5SpN_VtEsok0UrvWAbkeAkJJkqAaspQCuLlCxEjRn4S2DCupZtlfe\
 qoR04MN0d12gCtuBcaceNgSCULaQt-wJi5lSmjzNw7FKgFJL-Wlg1BvvkzWqMJ7T\
 Wqvi1_Qvi93lD8Xxv4BKy2nyYw-ZC0FN1WEQIzkaKIX6HmZmLRJKfJSr0Hom5Xs6\
-gxVhyVCq7i9Hfm41V7Oc"}'})*/
+gxVhyVCq7i9Hfm41V7Oc"}'})
 
 }
 

@@ -142,15 +142,15 @@ export class HomePage {
 
   getElementsAttributes () {
     this.elContentHeight = this.elContent.contentHeight
-    console.log(this.elContent)
+    //console.log(this.elContent)
     this.elProgressHeight = this.elProgress.nativeElement.offsetHeight
-    console.log(this.elProgress)
+    //console.log(this.elProgress)
     this.elTickerHeight = this.elTicker.nativeElement.offsetHeight
-    console.log(this.elTicker)
+    //console.log(this.elTicker)
     this.elInfoHeight = this.elInfo.nativeElement.offsetHeight
-    console.log(this.elInfo)
+    //console.log(this.elInfo)
     this.elFooterHeight = this.elFooter.nativeElement.offsetHeight
-    console.log(this.elFooter)
+    //console.log(this.elFooter)
   }
 
   applyTransformations () {

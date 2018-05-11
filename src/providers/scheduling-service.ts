@@ -243,6 +243,7 @@ export class SchedulingService {
     let task: Task = {
       index: index,
       completed: false,
+      reportedCompletion: false,
       timestamp: taskDate.getTime(),
       name: assessment.name,
       reminderSettings: assessment.protocol.reminders,

@@ -96,6 +96,7 @@ export class FinishPage {
       let clinicalTask: Task = {
         index: tasks.length + i,
         completed: false,
+        reportedCompletion: false,
         timestamp: ts,
         name: associatedTask['name'],
         reminderSettings: protocol['reminders'],

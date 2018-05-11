@@ -115,8 +115,8 @@ export class HomeController {
         }
       }
       if(passedAtLeastOnce) {
-        console.log('NEXT TASK')
-        console.log(tasks[nextIdx])
+        //console.log('NEXT TASK')
+        //console.log(tasks[nextIdx])
         return tasks[nextIdx]
       }
     }

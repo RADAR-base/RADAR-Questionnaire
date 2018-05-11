@@ -67,3 +67,4 @@ Add the following lines into `platforms/android/build.gradle` to solve the probl
 ### Customize the App
 
 You need to modify DefaultEndPoint, DefaultProtocolEndPoint and DefaultSourceProducerAndSecret in `src/assets/data/defaultConfig.ts` to make the app work with your project.
+You need to have different 'widget id' in `config.xml`.

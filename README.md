@@ -55,3 +55,15 @@ Run the app in an Android emulator:
 ```
 $ ionic cordova emulate android
 ```
+
+Add the following lines into `platforms/android/build.gradle` to solve the problem of 'resource android:attr/fontVariationSettings not found' when running 'cordova build'
+
+>configurations.all {
+>    resolutionStrategy {
+>        force 'com.android.support:support-v4:27.1.0'
+>    }
+>}
+
+### Customize the App
+
+You need to modify DefaultEndPoint, DefaultProtocolEndPoint and DefaultSourceProducerAndSecret in `src/assets/data/defaultConfig.ts` to make the app work with your project.

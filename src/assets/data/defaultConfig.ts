@@ -3,7 +3,7 @@ import { WeeklyReportSubSettings } from '../../models/settings'
 import { LanguageSetting } from '../../models/settings'
 import { LocKeys } from '../../enums/localisations'
 import { Task } from '../../models/task'
-import { DefaultProtocolEndPointExport, DefaultSourceProducerAndSecretExport } from './secret'
+//import { DefaultProtocolEndPointExport, DefaultSourceProducerAndSecretExport } from './secret'
 
 
 // FIREBASE SETUP
@@ -111,9 +111,15 @@ export const DefaultSourceTypeRegistrationBody: any = {
 //"deviceTypeId": 1104
 }
 
+// define your RADAR-base endpoint
 export const DefaultEndPoint: string = 'https://radar-cns-platform.rosalind.kcl.ac.uk/'
 //export const DefaultEndPoint: string = 'https://radar-backend.co.uk/'
 
-export const DefaultProtocolEndPoint: string = DefaultProtocolEndPointExport
+//protocol endpoint is where the file defining the regimen for your survey questionnaires is defined 
+//e.g. https://github.com/RADAR-base/RADAR-aRMT-protocols/blob/master/MS_TEST/protocol.json
+export const DefaultProtocolEndPoint: string = 'https://github.com/RADAR-base/RADAR-aRMT-protocols/blob/master/MS_TEST/protocol.json'
+//export const DefaultProtocolEndPoint: string = DefaultProtocolEndPointExport
 
-export const DefaultSourceProducerAndSecret: string = DefaultSourceProducerAndSecretExport
+//user_id and user_password for logging into managementportal (e.g. aRMT and aRMT_passwd, respectively)
+export const DefaultSourceProducerAndSecret: string = 'aRMT:aRMT_passwd'
+//export const DefaultSourceProducerAndSecret: string = DefaultSourceProducerAndSecretExport 

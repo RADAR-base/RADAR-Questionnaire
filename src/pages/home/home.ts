@@ -84,7 +84,6 @@ export class HomePage {
 
   checkForNextTaskGeneric(task) {
     this.nextTaskIsESMandNotNow = this.isNextTaskESMandNotNow()
-    console.log(this.nextTaskIsESMandNotNow)
     if(task){
       this.nextTask = task
       this.hasClickedStartButton = false
@@ -129,7 +128,6 @@ export class HomePage {
 
   displayEvalTransformations (requestDisplay:boolean) {
     this.showCalendar = requestDisplay
-    console.log("EVAL")
     this.getElementsAttributes()
     this.applyTransformations()
   }
@@ -199,10 +197,10 @@ export class HomePage {
   isNextTaskESMandNotNow() {
     let now = new Date().getTime()
     if(this.nextTask.name == "ESM" && this.nextTask.timestamp > now){
-      console.log('ESM - NOT NOW: true')
+      //console.log('ESM - NOT NOW: true')
       return true
     }
-    console.log('ESM - NOT NOW: false')
+    //console.log('ESM - NOT NOW: false')
     return false
   }
 

@@ -33,7 +33,7 @@ export class SettingsPage {
   languagesSelectable: String[]
   notifications: NotificationSettings = DefaultSettingsNotifications
   weeklyReport: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
-
+  showLoading: boolean = false
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
@@ -201,6 +201,15 @@ export class SettingsPage {
       }
     }
     alert.present()
+  }
+
+  reloadConfig() {
+    this.showLoading = true
+    this.configService.fetchConfigState()
+     .then(() => {
+       this.showLoading = false
+       this.loadSettings()
+     })
   }
 
 }

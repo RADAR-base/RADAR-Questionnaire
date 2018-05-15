@@ -20,7 +20,7 @@ export class ConfigService {
   ) {}
 
   fetchConfigState() {
-    this.storage.get(StorageKeys.CONFIG_VERSION)
+    return this.storage.get(StorageKeys.CONFIG_VERSION)
     .then((configVersion) => {
       this.pullProtocol()
       .then((res) => {

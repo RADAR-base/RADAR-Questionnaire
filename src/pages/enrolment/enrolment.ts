@@ -75,7 +75,7 @@ export class EnrolmentPage {
       orientation: 'portrait'
       //disableAnimations: true
     }
-    this.scanner.scan(scanOptions).then((scannedObj) => this.authenticate(scannedObj))
+    //this.scanner.scan(scanOptions).then((scannedObj) => this.authenticate(scannedObj))
 
     //TODO remove when finished
     // TESTING
@@ -128,7 +128,7 @@ qzEA6r2h6j8vE3Ed70U79J2GuwTCnxIN7UUiJFcJtaB5ASieoxqhjJV_blVmJg-b\
 yqcqZxIi4kulORTsObGe4qlZ6_euC0Q5nqmzfjyF-KQMVoVO7hw3dLvC74s42MlI\
 lqZaRsDBx9gks9CuYR1h2_wupoiOyjA9lOaaxRAPCIYBylHJdKnycHuKskVLrxl2\
 BMZQPfIVQWTPwcHgoG_dyzS421waS5bs"}'})*/
-//MS
+//MS Test
 this.authenticate({'text':'{"refreshToken":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOi\
 IxYzk2MDgwYS1iNzhiLTQ4NzItOTAxYi1mNTQwMDUzYTI3YzUiLCJzb3VyY2VzIj\
 pbXSwidXNlcl9uYW1lIjoiMWM5NjA4MGEtYjc4Yi00ODcyLTkwMWItZjU0MDA1M2\

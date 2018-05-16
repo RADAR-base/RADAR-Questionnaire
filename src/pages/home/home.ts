@@ -13,6 +13,8 @@ import { LocKeys } from '../../enums/localisations'
 import { TranslatePipe } from '../../pipes/translate/translate'
 import { StorageService } from '../../providers/storage-service'
 import { StorageKeys } from '../../enums/storage'
+import { NotificationService } from '../../providers/notification-service'
+
 
 @Component({
   selector: 'page-home',
@@ -57,6 +59,7 @@ export class HomePage {
     private controller: HomeController,
     private translate: TranslatePipe,
     private storage: StorageService,
+    private notification: NotificationService
   ) {  }
 
   ngAfterViewInit(){
@@ -66,12 +69,16 @@ export class HomePage {
     this.checkForNextTask()
     this.evalHasClinicalTasks()
     this.checkIfOnlyESM()
+
     setInterval(() => {
       this.checkForNextTask()
     }, 1000)
+
     setTimeout(() => {
       this.controller.setNextNotificationsForXDays(43)
-    }, 1000)
+    }, 1000);
+
+    this.notification.returnTaskCallback().then((task) => this.startQuestionnaire(task))
   }
 
   checkForNextTask () {
@@ -267,12 +274,12 @@ export class HomePage {
         "questions": assessment.questions,
         "associatedTask": startQuestionnaireTask
       }
+      this.controller.updateAssessmentIntroduction(assessment)
       if(assessment.showIntroduction){
         this.navCtrl.push(StartPage, params)
       } else {
         this.navCtrl.push(QuestionsPage, params)
       }
-      this.controller.updateAssessmentIntroduction(assessment)
     })
   }
 

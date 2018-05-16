@@ -50,7 +50,6 @@ export class HomePage {
   hasClickedStartButton: boolean = true
   hasClinicalTasks = false
   hasOnlyESMs = false
-  nextTaskIsESMandNotNow = false
 
   constructor (
     public navCtrl: NavController,
@@ -71,6 +70,7 @@ export class HomePage {
     this.checkIfOnlyESM()
 
     setInterval(() => {
+      this.isNextTaskESMandNotNow()
       this.checkForNextTask()
     }, 1000)
 
@@ -90,7 +90,6 @@ export class HomePage {
   }
 
   checkForNextTaskGeneric(task) {
-    this.nextTaskIsESMandNotNow = this.isNextTaskESMandNotNow()
     if(task){
       this.nextTask = task
       this.hasClickedStartButton = false
@@ -172,19 +171,6 @@ export class HomePage {
         `translateY(-${this.elProgressHeight}px)`
       this.elCalendar.nativeElement.style.opacity = 1
     } else {
-      if(this.isNextTaskESMandNotNow()){
-        this.elProgress.nativeElement.style.transform =
-          `translateY(${this.elFooterHeight}px)`
-        this.elTicker.nativeElement.style.transform =
-          `translateY(${this.elFooterHeight}px)`
-        this.elInfo.nativeElement.style.transform =
-          `translateY(${this.elFooterHeight}px)`
-        this.elFooter.nativeElement.style.transform =
-          `translateY(${this.elFooterHeight}px) scale(0)`
-        this.elCalendar.nativeElement.style.transform =
-          'translateY(0px)'
-        this.elCalendar.nativeElement.style.opacity = 0
-      } else {
         this.elProgress.nativeElement.style.transform =
           'translateY(0px) scale(1)'
         this.elTicker.nativeElement.style.transform =
@@ -196,7 +182,6 @@ export class HomePage {
         this.elCalendar.nativeElement.style.transform =
           'translateY(0px)'
         this.elCalendar.nativeElement.style.opacity = 0
-      }
     }
     this.setCalendarScrollHeight(this.showCalendar)
   }
@@ -204,11 +189,26 @@ export class HomePage {
   isNextTaskESMandNotNow() {
     let now = new Date().getTime()
     if(this.nextTask.name == "ESM" && this.nextTask.timestamp > now){
-      //console.log('ESM - NOT NOW: true')
-      return true
+      this.elProgress.nativeElement.style.transform =
+        `translateY(${this.elFooterHeight}px)`
+      this.elInfo.nativeElement.style.transform =
+        `translateY(${this.elFooterHeight}px)`
+      this.elFooter.nativeElement.style.transform =
+        `translateY(${this.elFooterHeight}px) scale(0)`
+      this.elCalendar.nativeElement.style.transform =
+        'translateY(0px)'
+      this.elCalendar.nativeElement.style.opacity = 0
+    } else {
+      this.elProgress.nativeElement.style.transform =
+        'translateY(0px) scale(1)'
+      this.elInfo.nativeElement.style.transform =
+        'translateY(0px)'
+      this.elFooter.nativeElement.style.transform =
+        'translateY(0px) scale(1)'
+      this.elCalendar.nativeElement.style.transform =
+        'translateY(0px)'
+      this.elCalendar.nativeElement.style.opacity = 0
     }
-    //console.log('ESM - NOT NOW: false')
-    return false
   }
 
   setCalendarScrollHeight (show:boolean) {

@@ -112,12 +112,14 @@ export const DefaultSourceTypeRegistrationBody: any = {
 }
 
 // define your RADAR-base endpoint
-export const DefaultEndPoint: string = 'https://radar-cns-platform.rosalind.kcl.ac.uk/'
-//export const DefaultEndPoint: string = 'https://radar-backend.co.uk/'
+//export const DefaultEndPoint: string = 'https://radar-cns-platform.rosalind.kcl.ac.uk/'
+export const DefaultEndPoint: string = 'https://radar-backend.co.uk/'
 
-//protocol endpoint is where the file defining the regimen for your survey questionnaires is defined 
-//e.g. https://github.com/RADAR-base/RADAR-aRMT-protocols/blob/master/MS_TEST/protocol.json
-export const DefaultProtocolEndPoint: string = 'https://github.com/RADAR-base/RADAR-aRMT-protocols/blob/master/MS_TEST/protocol.json'
+//DefaultProtocolEndPoint is the base URL for the json config (ie, protocol.json)
+//protocol.json is the file defining the regimen for your survey questionnaires
+//full path of protocol.json is DefaultProtocolEndPoint/Project_name/protocol.json
+//Project_name is defined in Management Portal
+export const DefaultProtocolEndPoint: string = 'https://raw.githubusercontent.com/RADAR-base/RADAR-aRMT-protocols/master/'
 //export const DefaultProtocolEndPoint: string = DefaultProtocolEndPointExport
 
 //user_id and user_password for logging into managementportal (e.g. aRMT and aRMT_passwd, respectively)

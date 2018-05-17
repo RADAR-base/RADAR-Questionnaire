@@ -123,5 +123,5 @@ export const DefaultProtocolEndPoint: string = 'https://raw.githubusercontent.co
 //export const DefaultProtocolEndPoint: string = DefaultProtocolEndPointExport
 
 //user_id and user_password for logging into managementportal (e.g. aRMT and aRMT_passwd, respectively)
-export const DefaultSourceProducerAndSecret: string = 'aRMT:aRMT_passwd'
+export const DefaultSourceProducerAndSecret: string = 'aRMT:open%DEGREE%forever'
 //export const DefaultSourceProducerAndSecret: string = DefaultSourceProducerAndSecretExport 

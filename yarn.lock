@@ -99,24 +99,24 @@
   resolved "https://registry.yarnpkg.com/@ionic-native/barcode-scanner/-/barcode-scanner-3.14.0.tgz#d89075c606aa4d69651e5965674e4911e585375d"
 
 "@ionic-native/core@^3.12.1":
-  version "3.12.1"
-  resolved "https://registry.yarnpkg.com/@ionic-native/core/-/core-3.12.1.tgz#5b7c7a4f5adfc8da0b9197e1843e5893acf66021"
+  version "3.14.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/core/-/core-3.14.0.tgz#796ea9fb1ad1188eb30205c7bca982c8271747be"
 
 "@ionic-native/device@^3.12.1":
   version "3.12.1"
   resolved "https://registry.yarnpkg.com/@ionic-native/device/-/device-3.12.1.tgz#9dbf4a63e40a12b614db58a4fe96038bbdcd1275"
 
 "@ionic-native/dialogs@^4.3.2":
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/@ionic-native/dialogs/-/dialogs-4.4.2.tgz#0340c3cc994d6683622d6d3cc36d9cd9ed4609dd"
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/dialogs/-/dialogs-4.7.0.tgz#87b46281606a0b3ff2d10e2d1ca9458b17858eb7"
 
 "@ionic-native/file@^4.5.3":
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/@ionic-native/file/-/file-4.7.0.tgz#9f3e0c3250320607d6a6259a92a4a3ff7ad7831c"
 
 "@ionic-native/globalization@^4.3.2":
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/@ionic-native/globalization/-/globalization-4.4.2.tgz#1559333475eda59a25950f700805fd83860fcb81"
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/globalization/-/globalization-4.7.0.tgz#134a1983fb9ca42021d021b10603aca101818ca0"
 
 "@ionic-native/local-notifications@^4.7.0":
   version "4.7.0"
@@ -135,8 +135,8 @@
   resolved "https://registry.yarnpkg.com/@ionic-native/status-bar/-/status-bar-3.12.1.tgz#5b2491b43a3d7e08d65ac0e9fdb1927493e32472"
 
 "@ionic-native/vibration@^4.3.2":
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/@ionic-native/vibration/-/vibration-4.4.2.tgz#2476448326146bd5ae6cd28bf5140ead3ca6357d"
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/vibration/-/vibration-4.7.0.tgz#816281f8c788e8e824ff139cda2e6db8872e9ed9"
 
 "@ionic/app-scripts@^1.3.7":
   version "1.3.7"
@@ -2780,8 +2780,8 @@ invert-kv@^1.0.0:
   resolved "https://registry.yarnpkg.com/invert-kv/-/invert-kv-1.0.0.tgz#104a8e4aaca6d3d8cd157a8ef8bfab2d7a3ffdb6"
 
 ionic-angular@^3.3.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/ionic-angular/-/ionic-angular-3.3.0.tgz#81cabbcb3bcc218ec9056cc4fdeaebc264db6f94"
+  version "3.9.2"
+  resolved "https://registry.yarnpkg.com/ionic-angular/-/ionic-angular-3.9.2.tgz#75053e4a422aaae7d7cd668cc92cfd5cb29d38cc"
 
 ionic-plugin-keyboard@^2.2.1:
   version "2.2.1"

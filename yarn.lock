@@ -2,108 +2,129 @@
 # yarn lockfile v1
 
 
-"@angular/animations@>=2.0.0":
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/@angular/animations/-/animations-5.0.3.tgz#f08b07007b149fa12679c346fa55820f544b19e0"
+"@angular/animations@^4.3.6":
+  version "4.4.7"
+  resolved "https://registry.yarnpkg.com/@angular/animations/-/animations-4.4.7.tgz#4d108e89cafe8d0d193385e7aa1b3b00e8199ade"
   dependencies:
     tslib "^1.7.1"
 
-"@angular/common@>=2.0.0":
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/@angular/common/-/common-5.0.3.tgz#9b0b874e0c8cb088d7c7de2af72c2c3f3ebd00bb"
+"@angular/common@^4.3.6":
+  version "4.4.7"
+  resolved "https://registry.yarnpkg.com/@angular/common/-/common-4.4.7.tgz#c2fd3e68a05f661c3d2a040fdad00af4119bb852"
   dependencies:
     tslib "^1.7.1"
 
-"@angular/common@^4.0.0":
-  version "4.2.2"
-  resolved "https://registry.yarnpkg.com/@angular/common/-/common-4.2.2.tgz#7c07c46897d5854271240790130077dc83a0a775"
+"@angular/common@^5.0.0":
+  version "5.2.10"
+  resolved "https://registry.yarnpkg.com/@angular/common/-/common-5.2.10.tgz#828308df8505a31f219a6895ff91dbb178ebac98"
   dependencies:
     tslib "^1.7.1"
 
-"@angular/compiler-cli@>=2.0.0":
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/@angular/compiler-cli/-/compiler-cli-5.0.3.tgz#820fe95f5653c1418ad9ac9ca9e819a879cce4ae"
+"@angular/compiler-cli@^4.3.6":
+  version "4.4.7"
+  resolved "https://registry.yarnpkg.com/@angular/compiler-cli/-/compiler-cli-4.4.7.tgz#18e698f6da6166e75df7f782bd26f1f0f34e39f9"
   dependencies:
-    chokidar "^1.4.2"
+    "@angular/tsc-wrapped" "4.4.7"
     minimist "^1.2.0"
     reflect-metadata "^0.1.2"
-    tsickle "^0.24.0"
 
-"@angular/compiler@>=2.0.0":
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-5.0.3.tgz#45817c9a32b1b103c0307b0f55660f530f4a06aa"
+"@angular/compiler@^4.3.6":
+  version "4.4.7"
+  resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-4.4.7.tgz#c90b0a8d450e1ea19a5a60309ca03b0925a2f269"
   dependencies:
     tslib "^1.7.1"
 
-"@angular/compiler@^4.0.0":
-  version "4.2.2"
-  resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-4.2.2.tgz#10c168f8a156397f07ae6ef83a0911e01ed264f8"
+"@angular/compiler@^5.0.0":
+  version "5.2.10"
+  resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-5.2.10.tgz#1cd9914436f0707957823531c4418ce5b7e6a130"
   dependencies:
     tslib "^1.7.1"
 
-"@angular/core@>=2.0.0":
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/@angular/core/-/core-5.0.3.tgz#2566400f6713bf1c39f7e00bc03a63280a87e66b"
+"@angular/core@^4.3.6":
+  version "4.4.7"
+  resolved "https://registry.yarnpkg.com/@angular/core/-/core-4.4.7.tgz#18bdc17bec7bdccb6424402fc90550e15a6d221b"
   dependencies:
     tslib "^1.7.1"
 
-"@angular/core@^4.0.0":
-  version "4.2.2"
-  resolved "https://registry.yarnpkg.com/@angular/core/-/core-4.2.2.tgz#af5587dda275935868709d8c186e2dc2a1d70a00"
+"@angular/core@^5.0.0":
+  version "5.2.10"
+  resolved "https://registry.yarnpkg.com/@angular/core/-/core-5.2.10.tgz#a6eba06cae7267efbd2666e3fa5e42b84c2261de"
   dependencies:
     tslib "^1.7.1"
 
-"@angular/forms@>=2.0.0":
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/@angular/forms/-/forms-5.0.3.tgz#207f92c2bd89660dda5858ef58d1eac1f2caf1a7"
+"@angular/forms@^4.3.6":
+  version "4.4.7"
+  resolved "https://registry.yarnpkg.com/@angular/forms/-/forms-4.4.7.tgz#f9503ad8f4bd77a7ba93714afea46c4944887758"
   dependencies:
     tslib "^1.7.1"
 
-"@angular/http@>=2.0.0":
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/@angular/http/-/http-5.0.3.tgz#a3b9a4247c4b77456e49549655d4c1d1859e075d"
+"@angular/http@^4.3.6":
+  version "4.4.7"
+  resolved "https://registry.yarnpkg.com/@angular/http/-/http-4.4.7.tgz#8fab2eb121cda38ad9c568e5268f7d69ab8b904e"
   dependencies:
     tslib "^1.7.1"
 
-"@angular/platform-browser-dynamic@>=2.0.0":
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-5.0.3.tgz#be6dcf03a04fa51c6a0484b40e5f1a7d7e54cc87"
+"@angular/platform-browser-dynamic@^4.3.6":
+  version "4.4.7"
+  resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-4.4.7.tgz#c10676f49de5ac604e326cba440ff6a6af6588fe"
   dependencies:
     tslib "^1.7.1"
 
-"@angular/platform-browser@>=2.0.0":
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/@angular/platform-browser/-/platform-browser-5.0.3.tgz#4ac872404a2a8162dd28a5b164238b76bf5e1261"
+"@angular/platform-browser@^4.3.6":
+  version "4.4.7"
+  resolved "https://registry.yarnpkg.com/@angular/platform-browser/-/platform-browser-4.4.7.tgz#76d5af9438d6a349ea0b5fe97bd8fbe1fdc216a9"
   dependencies:
     tslib "^1.7.1"
 
-"@angular/platform-server@>=2.0.0":
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/@angular/platform-server/-/platform-server-5.0.3.tgz#5f3175e5a59caff728597a071d4c5e163c13f29e"
+"@angular/platform-server@^4.3.6":
+  version "4.4.7"
+  resolved "https://registry.yarnpkg.com/@angular/platform-server/-/platform-server-4.4.7.tgz#59025a46bb561bd5aee14cdb2861c21250d8057e"
   dependencies:
-    domino "^1.0.29"
+    parse5 "^3.0.1"
     tslib "^1.7.1"
     xhr2 "^0.1.4"
+
+"@angular/tsc-wrapped@4.4.7":
+  version "4.4.7"
+  resolved "https://registry.yarnpkg.com/@angular/tsc-wrapped/-/tsc-wrapped-4.4.7.tgz#d4d9ffb0a689a9ce3009012446a5ae382941f06d"
+  dependencies:
+    tsickle "^0.21.0"
+
+"@ionic-native/android-permissions@^4.5.3":
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/android-permissions/-/android-permissions-4.7.0.tgz#3b7d86432725dec4f2fd83acd8181b52b31e3f3a"
 
 "@ionic-native/barcode-scanner@^3.12.1":
   version "3.14.0"
   resolved "https://registry.yarnpkg.com/@ionic-native/barcode-scanner/-/barcode-scanner-3.14.0.tgz#d89075c606aa4d69651e5965674e4911e585375d"
 
 "@ionic-native/core@^3.12.1":
-  version "3.12.1"
-  resolved "https://registry.yarnpkg.com/@ionic-native/core/-/core-3.12.1.tgz#5b7c7a4f5adfc8da0b9197e1843e5893acf66021"
+  version "3.14.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/core/-/core-3.14.0.tgz#796ea9fb1ad1188eb30205c7bca982c8271747be"
 
 "@ionic-native/device@^3.12.1":
   version "3.12.1"
   resolved "https://registry.yarnpkg.com/@ionic-native/device/-/device-3.12.1.tgz#9dbf4a63e40a12b614db58a4fe96038bbdcd1275"
 
 "@ionic-native/dialogs@^4.3.2":
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/@ionic-native/dialogs/-/dialogs-4.4.2.tgz#0340c3cc994d6683622d6d3cc36d9cd9ed4609dd"
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/dialogs/-/dialogs-4.7.0.tgz#87b46281606a0b3ff2d10e2d1ca9458b17858eb7"
+
+"@ionic-native/file@^4.5.3":
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/file/-/file-4.7.0.tgz#9f3e0c3250320607d6a6259a92a4a3ff7ad7831c"
 
 "@ionic-native/globalization@^4.3.2":
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/@ionic-native/globalization/-/globalization-4.4.2.tgz#1559333475eda59a25950f700805fd83860fcb81"
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/globalization/-/globalization-4.7.0.tgz#134a1983fb9ca42021d021b10603aca101818ca0"
+
+"@ionic-native/local-notifications@^4.7.0":
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/local-notifications/-/local-notifications-4.7.0.tgz#bac016a224468c3900eaeebd770fb727b1db6811"
+
+"@ionic-native/media-capture@^4.5.3":
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/media-capture/-/media-capture-4.7.0.tgz#ba6d682b21485c75fe56c31f0b687d2be9ab03db"
 
 "@ionic-native/splash-screen@^3.12.1":
   version "3.12.1"
@@ -114,8 +135,8 @@
   resolved "https://registry.yarnpkg.com/@ionic-native/status-bar/-/status-bar-3.12.1.tgz#5b2491b43a3d7e08d65ac0e9fdb1927493e32472"
 
 "@ionic-native/vibration@^4.3.2":
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/@ionic-native/vibration/-/vibration-4.4.2.tgz#2476448326146bd5ae6cd28bf5140ead3ca6357d"
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/vibration/-/vibration-4.7.0.tgz#816281f8c788e8e824ff139cda2e6db8872e9ed9"
 
 "@ionic/app-scripts@^1.3.7":
   version "1.3.7"
@@ -152,9 +173,9 @@
     ws "1.1.1"
     xml2js "^0.4.17"
 
-"@ionic/cli-framework@0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@ionic/cli-framework/-/cli-framework-0.1.2.tgz#5b094dc30ba045c8022de871e793965f1c9b1214"
+"@ionic/cli-framework@0.1.3":
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/@ionic/cli-framework/-/cli-framework-0.1.3.tgz#305ce75f39a3a88db17b969b5dfb323ef119d06c"
   dependencies:
     chalk "^2.3.0"
     ncp "^2.0.0"
@@ -180,11 +201,11 @@
     chalk "^2.0.0"
     tslib "^1.7.1"
 
-"@ionic/cli-utils@1.19.0":
-  version "1.19.0"
-  resolved "https://registry.yarnpkg.com/@ionic/cli-utils/-/cli-utils-1.19.0.tgz#80b1cfab7fee812d4415f518c12515dd4c1a7b80"
+"@ionic/cli-utils@1.19.2":
+  version "1.19.2"
+  resolved "https://registry.yarnpkg.com/@ionic/cli-utils/-/cli-utils-1.19.2.tgz#d130d468579a281e35bd8d2c0625b701335b807c"
   dependencies:
-    "@ionic/cli-framework" "0.1.2"
+    "@ionic/cli-framework" "0.1.3"
     "@ionic/discover" "0.4.0"
     archiver "^2.1.0"
     basic-auth "^1.1.0"
@@ -212,6 +233,7 @@
     tar "^4.0.2"
     tiny-lr "^1.0.5"
     tslib "^1.8.0"
+    untildify "^3.0.2"
     uuid "^3.0.1"
     wrap-ansi "^3.0.1"
     ws "^3.2.0"
@@ -257,6 +279,10 @@
 "@types/localforage@0.0.30":
   version "0.0.30"
   resolved "https://registry.yarnpkg.com/@types/localforage/-/localforage-0.0.30.tgz#3d60a6bf6dda38e3f8a469611598379f1f649509"
+
+"@types/node@*":
+  version "10.0.6"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.0.6.tgz#c0bce8e539bf34c1b850c13ff46bead2fecc2e58"
 
 JSONStream@^0.8.4:
   version "0.8.4"
@@ -326,16 +352,22 @@ amdefine@>=0.0.4:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
 
-angular-svg-round-progressbar@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/angular-svg-round-progressbar/-/angular-svg-round-progressbar-1.1.0.tgz#5a568353c74b93a50e8186d98d0fef864ba3d9dd"
+android-versions@^1.2.1:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/android-versions/-/android-versions-1.3.0.tgz#ce6f3eae2e165ce4ed49b89beb68014741093044"
   dependencies:
-    "@angular/common" "^4.0.0"
-    "@angular/compiler" "^4.0.0"
-    "@angular/core" "^4.0.0"
+    semver "^5.4.1"
+
+angular-svg-round-progressbar@^1.1.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/angular-svg-round-progressbar/-/angular-svg-round-progressbar-1.2.1.tgz#67c013c697fe761c120e15b3046cc43c9238a572"
+  dependencies:
+    "@angular/common" "^5.0.0"
+    "@angular/compiler" "^5.0.0"
+    "@angular/core" "^5.0.0"
     core-js "^2.4.1"
-    rxjs "^5.0.0"
-    zone.js "^0.8.4"
+    rxjs "^5.5.0"
+    zone.js "^0.8.12"
 
 angular2-jwt@^0.2.3:
   version "0.2.3"
@@ -1202,7 +1234,7 @@ chokidar@1.6.1, chokidar@^1.4.3, chokidar@^1.6.1:
   optionalDependencies:
     fsevents "^1.0.0"
 
-chokidar@^1.4.2, chokidar@^1.7.0:
+chokidar@^1.7.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-1.7.0.tgz#798e689778151c8076b4b360e5edd28cda2bb468"
   dependencies:
@@ -1428,20 +1460,21 @@ cookiejar@^2.0.6, cookiejar@^2.1.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/cookiejar/-/cookiejar-2.1.1.tgz#41ad57b1b555951ec171412a81942b1e8200d34a"
 
-cordova-android@^6.2.3:
-  version "6.2.3"
-  resolved "https://registry.yarnpkg.com/cordova-android/-/cordova-android-6.2.3.tgz#249f21b6ce5f1f1c847a7ab83b16909dbed5aa28"
+cordova-android@^6.4.0:
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/cordova-android/-/cordova-android-6.4.0.tgz#54ae8da5728a8d7e5efcc6172d3dcca17bc7fe7d"
   dependencies:
-    cordova-common "^2.0.1"
+    android-versions "^1.2.1"
+    cordova-common "^2.1.0"
     elementtree "0.1.6"
     nopt "^3.0.1"
     properties-parser "^0.2.3"
     q "^1.4.1"
     shelljs "^0.5.3"
 
-cordova-common@^2.0.1:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/cordova-common/-/cordova-common-2.0.3.tgz#2214ee04ae1c2ec012a52c7c185313e341a6fb38"
+cordova-common@^2.1.0:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/cordova-common/-/cordova-common-2.2.1.tgz#7009bc591729caa7285a588cfd6a7b54cd834f0c"
   dependencies:
     ansi "^0.3.1"
     bplist-parser "^0.1.0"
@@ -1461,63 +1494,86 @@ cordova-plugin-android-permissions@^0.11.0:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/cordova-plugin-android-permissions/-/cordova-plugin-android-permissions-0.11.0.tgz#74d4d3096161e742617ce1c2b94c2a9e694eb58b"
 
-cordova-plugin-compat@^1.1.0:
+cordova-plugin-app-event@>=1.1.0, "cordova-plugin-app-event@git+https://github.com/katzer/cordova-plugin-app-event.git":
+  version "1.2.1"
+  resolved "git+https://github.com/katzer/cordova-plugin-app-event.git#9e0f60af0222da4025ff4d19f836c61fe8f4ce9f"
+
+cordova-plugin-camera@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-camera/-/cordova-plugin-camera-3.0.0.tgz#9212ff0e2a211ee840d8a83f051d37d0dec0bd1f"
+
+cordova-plugin-compat@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-compat/-/cordova-plugin-compat-1.2.0.tgz#0bc65757276ebd920c012ce920e274177576373e"
+
+cordova-plugin-console@^1.1.0:
   version "1.1.0"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-compat/-/cordova-plugin-compat-1.1.0.tgz#92bdf169feb61205323dcc96a3ff8348e37e87fc"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-console/-/cordova-plugin-console-1.1.0.tgz#e2fbac10290179e44cb72c5fdbc410a531c1cd6d"
 
-cordova-plugin-console@^1.0.7:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-console/-/cordova-plugin-console-1.0.7.tgz#89b7a92ed1c335888dfc00d902dc417201cf3b0b"
+cordova-plugin-device@*:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-device/-/cordova-plugin-device-2.0.2.tgz#fc08f3722e67eef7b6c67bfc99a83df6add0baba"
 
-cordova-plugin-device@^1.1.6:
-  version "1.1.6"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-device/-/cordova-plugin-device-1.1.6.tgz#2d21764cad7c9b801523e4e09a30e024b249334b"
+cordova-plugin-device@^1.1.7:
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-device/-/cordova-plugin-device-1.1.7.tgz#fc94111be6932628c66868938ddf3dc82c9fbfe6"
 
-cordova-plugin-dialogs@^1.3.3:
+cordova-plugin-dialogs@^1.3.4:
   version "1.3.4"
   resolved "https://registry.yarnpkg.com/cordova-plugin-dialogs/-/cordova-plugin-dialogs-1.3.4.tgz#5cc966ee7c99b2f5b5b3ddf849002628b0da7157"
 
-cordova-plugin-file@^4.3.3:
-  version "4.3.3"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-file/-/cordova-plugin-file-4.3.3.tgz#012e97aa1afb91f84916e6341b548366d23de9b9"
+cordova-plugin-file@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-file/-/cordova-plugin-file-6.0.1.tgz#49606b8c15a5688d4728f92e4a7325a061de07f5"
 
-cordova-plugin-globalization@^1.0.7:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-globalization/-/cordova-plugin-globalization-1.0.8.tgz#faec53b495362ade9d70ab9048959fde26821b43"
+cordova-plugin-globalization@^1.0.9:
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-globalization/-/cordova-plugin-globalization-1.11.0.tgz#eac3158100298493afa30be8940e698f61efbcfe"
+
+"cordova-plugin-local-notifications-db@git+https://github.com/DavidBriglio/cordova-plugin-local-notifications.git":
+  version "0.8.4"
+  resolved "git+https://github.com/DavidBriglio/cordova-plugin-local-notifications.git#5e72ff895e59b493d7749751f177cf019f2a89d2"
+  dependencies:
+    cordova-plugin-app-event ">=1.1.0"
+    cordova-plugin-device "*"
+
+cordova-plugin-media-capture@^3.0.1:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-media-capture/-/cordova-plugin-media-capture-3.0.2.tgz#da657c2faadcfc7fdc2868e59d215ed83e700c3a"
 
 cordova-plugin-opensmile@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/cordova-plugin-opensmile/-/cordova-plugin-opensmile-2.0.3.tgz#c4a4ecf9b8dc9255e2294838bb7d873a357a53af"
 
-cordova-plugin-splashscreen@^4.0.3:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-splashscreen/-/cordova-plugin-splashscreen-4.0.3.tgz#773cd1363c1f3bacb9901663e9e3793dd3e0a19d"
+cordova-plugin-splashscreen@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-splashscreen/-/cordova-plugin-splashscreen-4.1.0.tgz#81028ab7643e615593d27f2ad02445611f1946b6"
 
-cordova-plugin-statusbar@^2.2.3:
-  version "2.2.3"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-statusbar/-/cordova-plugin-statusbar-2.2.3.tgz#51c5e02ad433bebd0b0dc977a446eb91dfee1502"
+cordova-plugin-statusbar@^2.4.1:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-statusbar/-/cordova-plugin-statusbar-2.4.2.tgz#fc1fbdc0d8d7033a7e8e1f1f7ff167ac9bd4faf6"
 
-cordova-plugin-vibration@^2.1.5:
+cordova-plugin-vibration@^2.1.6:
   version "2.1.6"
   resolved "https://registry.yarnpkg.com/cordova-plugin-vibration/-/cordova-plugin-vibration-2.1.6.tgz#e57295892cf15e44b0c99f8feb44774395cb4a3e"
 
-cordova-plugin-whitelist@^1.3.2:
-  version "1.3.2"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-whitelist/-/cordova-plugin-whitelist-1.3.2.tgz#5b6335feb9f5301f3c013b9096cb8885bdbd5076"
+cordova-plugin-whitelist@^1.3.3:
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-whitelist/-/cordova-plugin-whitelist-1.3.3.tgz#b5e85ecdbbfe5aeded40a1bf4ee2372e67d96fb4"
 
 cordova-registry-mapper@^1.1.8:
   version "1.1.15"
   resolved "https://registry.yarnpkg.com/cordova-registry-mapper/-/cordova-registry-mapper-1.1.15.tgz#e244b9185b8175473bff6079324905115f83dc7c"
 
-cordova-sqlite-storage-dependencies@1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/cordova-sqlite-storage-dependencies/-/cordova-sqlite-storage-dependencies-1.0.4.tgz#8279afc8d83b0161bfa7dd9c228a827f5dd8145e"
+cordova-sqlite-storage-dependencies@1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/cordova-sqlite-storage-dependencies/-/cordova-sqlite-storage-dependencies-1.2.0.tgz#2eb6b2fb84e813306b44639ac804a5c63bed7bcb"
 
-cordova-sqlite-storage@^2.0.4:
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/cordova-sqlite-storage/-/cordova-sqlite-storage-2.0.4.tgz#8b5ce65c63b46b0415ca7012cc57bf2711b20371"
+cordova-sqlite-storage@^2.2.0:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/cordova-sqlite-storage/-/cordova-sqlite-storage-2.3.1.tgz#392763df8a4b4534f90a3a4be01a63d191ba930c"
   dependencies:
-    cordova-sqlite-storage-dependencies "1.0.4"
+    cordova-sqlite-storage-dependencies "1.2.0"
 
 core-js@^2.4.0, core-js@^2.4.1:
   version "2.4.1"
@@ -1855,10 +1911,6 @@ doiuse@^2.4.1:
 domain-browser@^1.1.1:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/domain-browser/-/domain-browser-1.1.7.tgz#867aa4b093faa05f1de08c06f4d7b21fdf8698bc"
-
-domino@^1.0.29:
-  version "1.0.30"
-  resolved "https://registry.yarnpkg.com/domino/-/domino-1.0.30.tgz#54a4154ecae968616680f8feba3cedff355c71f4"
 
 duplexer2@0.0.2:
   version "0.0.2"
@@ -2728,19 +2780,19 @@ invert-kv@^1.0.0:
   resolved "https://registry.yarnpkg.com/invert-kv/-/invert-kv-1.0.0.tgz#104a8e4aaca6d3d8cd157a8ef8bfab2d7a3ffdb6"
 
 ionic-angular@^3.3.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/ionic-angular/-/ionic-angular-3.3.0.tgz#81cabbcb3bcc218ec9056cc4fdeaebc264db6f94"
+  version "3.9.2"
+  resolved "https://registry.yarnpkg.com/ionic-angular/-/ionic-angular-3.9.2.tgz#75053e4a422aaae7d7cd668cc92cfd5cb29d38cc"
 
 ionic-plugin-keyboard@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/ionic-plugin-keyboard/-/ionic-plugin-keyboard-2.2.1.tgz#f2a9e169bbe9b5522400347c9fd6d3467ee3fa12"
 
-ionic@3.19.0:
-  version "3.19.0"
-  resolved "https://registry.yarnpkg.com/ionic/-/ionic-3.19.0.tgz#e16a3389737292d7f751c50903009863fe3d181a"
+ionic@3.20.0:
+  version "3.20.0"
+  resolved "https://registry.yarnpkg.com/ionic/-/ionic-3.20.0.tgz#3ea2b56d37f1efbb0dc5cdde781fa914207c10fa"
   dependencies:
-    "@ionic/cli-framework" "0.1.2"
-    "@ionic/cli-utils" "1.19.0"
+    "@ionic/cli-framework" "0.1.3"
+    "@ionic/cli-utils" "1.19.2"
     chalk "^2.3.0"
     opn "^5.1.0"
     semver "^5.3.0"
@@ -3899,6 +3951,12 @@ parse-json@^2.2.0:
   dependencies:
     error-ex "^1.2.0"
 
+parse5@^3.0.1:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/parse5/-/parse5-3.0.3.tgz#042f792ffdd36851551cf4e9e066b3874ab45b5c"
+  dependencies:
+    "@types/node" "*"
+
 parseurl@~1.3.1:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/parseurl/-/parseurl-1.3.1.tgz#c8ab8c9223ba34888aa64a297b28853bec18da56"
@@ -3975,9 +4033,9 @@ performance-now@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-0.2.0.tgz#33ef30c5c77d4ea21c5a53869d91b56d8f2555e5"
 
-phonegap-plugin-barcodescanner@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/phonegap-plugin-barcodescanner/-/phonegap-plugin-barcodescanner-7.0.0.tgz#3868c21361489fa0edf86ba31d87bc1bde69554b"
+phonegap-plugin-barcodescanner@^7.0.2:
+  version "7.1.2"
+  resolved "https://registry.yarnpkg.com/phonegap-plugin-barcodescanner/-/phonegap-plugin-barcodescanner-7.1.2.tgz#100b909f2b2deeae96eb73b4f0dce19cb50cb3a3"
 
 pify@^2.0.0, pify@^2.3.0:
   version "2.3.0"
@@ -4612,11 +4670,17 @@ rx-lite@*, rx-lite@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/rx-lite/-/rx-lite-4.0.8.tgz#0b1e11af8bc44836f04a6407e92da42467b79444"
 
-rxjs@^5.0.0, rxjs@^5.4.0:
+rxjs@^5.4.0:
   version "5.4.0"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.4.0.tgz#a7db14ab157f9d7aac6a56e655e7a3860d39bf26"
   dependencies:
     symbol-observable "^1.0.1"
+
+rxjs@^5.5.0:
+  version "5.5.10"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.5.10.tgz#fde02d7a614f6c8683d0d1957827f492e09db045"
+  dependencies:
+    symbol-observable "1.0.1"
 
 safe-buffer@5.1.1, safe-buffer@~5.1.0:
   version "5.1.1"
@@ -5161,6 +5225,10 @@ sw-toolbox@^3.6.0:
     path-to-regexp "^1.0.1"
     serviceworker-cache-polyfill "^4.0.0"
 
+symbol-observable@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.0.1.tgz#8340fc4702c3122df5d22288f88283f513d3fdd4"
+
 symbol-observable@^1.0.1:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.0.4.tgz#29bf615d4aa7121bdd898b22d4b3f9bc4e2aa03d"
@@ -5301,9 +5369,9 @@ trim-right@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/trim-right/-/trim-right-1.0.1.tgz#cb2e1203067e0c8de1f614094b9fe45704ea6003"
 
-tsickle@^0.24.0:
-  version "0.24.1"
-  resolved "https://registry.yarnpkg.com/tsickle/-/tsickle-0.24.1.tgz#039343b205bf517a333b0703978892f80a7d848e"
+tsickle@^0.21.0:
+  version "0.21.6"
+  resolved "https://registry.yarnpkg.com/tsickle/-/tsickle-0.21.6.tgz#53b01b979c5c13fdb13afb3fb958177e5991588d"
   dependencies:
     minimist "^1.2.0"
     mkdirp "^0.5.1"
@@ -5466,6 +5534,10 @@ unreachable-branch-transform@^0.3.0:
     esmangle-evaluator "^1.0.0"
     recast "^0.10.1"
     through2 "^0.6.2"
+
+untildify@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/untildify/-/untildify-3.0.2.tgz#7f1f302055b3fea0f3e81dc78eb36766cb65e3f1"
 
 url@^0.11.0:
   version "0.11.0"
@@ -5826,6 +5898,6 @@ zip-stream@^1.2.0:
     lodash "^4.8.0"
     readable-stream "^2.0.0"
 
-zone.js@^0.8.12, zone.js@^0.8.4:
+zone.js@^0.8.12:
   version "0.8.12"
   resolved "https://registry.yarnpkg.com/zone.js/-/zone.js-0.8.12.tgz#86ff5053c98aec291a0bf4bbac501d694a05cfbb"

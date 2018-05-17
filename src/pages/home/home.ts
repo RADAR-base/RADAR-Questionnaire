@@ -78,7 +78,7 @@ export class HomePage {
       this.controller.setNextNotificationsForXDays(43)
     }, 1000);
 
-    this.notification.returnTaskCallback().then((task) => this.startQuestionnaire(task))
+    //this.notification.returnTaskCallback().then((task) => this.startQuestionnaire(task))
   }
 
   checkForNextTask () {

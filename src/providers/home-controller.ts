@@ -54,19 +54,29 @@ export class HomeController {
     return this.storage.get(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS)
   }
 
-  setNextNotificationsForXDays (periodInDays) {
+  setNextXNotifications (noOfNotifications) {
     let today = new Date().getTime()
     let day = 86400000
-    var promises = []
-    for(var i = 0; i < periodInDays; i++) {
-      promises.push(this.getTasksOfDate(new Date(today + day*i)))
-    }
-    Promise.all(promises)
-    .then((tasks) => {
-      let mergedTasks = [].concat.apply([], tasks)
-      this.notifications.setNotifications(mergedTasks)
-    })
+    var tasks = []
+    this.retrieveNTasks(noOfNotifications, 0, [])
+      .then((tasks) => {
+        this.notifications.setNotifications(tasks)
+      })
+  }
 
+  retrieveNTasks(noOfNotifications, offset, extractedTasks) {
+    let today = new Date().getTime()
+    let day = 86400000
+    let offsetIncr = offset + 1
+    return this.getTasksOfDate(new Date(today + day * offsetIncr))
+      .then((tasks) => {
+        let extractedTasksNew = extractedTasks.concat(tasks)
+        if(extractedTasksNew.length > noOfNotifications){
+          let extractedTasksReturn = extractedTasksNew.slice(0, noOfNotifications)
+          return Promise.resolve(extractedTasksReturn)
+        }
+        return this.retrieveNTasks(noOfNotifications, offsetIncr, extractedTasksNew)
+      })
   }
 
   retrieveTaskProgress (tasks):TasksProgress {

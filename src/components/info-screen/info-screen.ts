@@ -40,7 +40,8 @@ export class InfoScreenComponent implements OnInit {
         })
 
     // save timestamp (epoch) and activate the next button
-    this.valueChange.emit((new Date).getTime())
+    let epoch: number = (new Date).getTime()
+    this.valueChange.emit(epoch)
   }
 
 }

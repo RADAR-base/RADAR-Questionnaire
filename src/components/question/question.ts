@@ -16,7 +16,7 @@ export class QuestionComponent implements OnChanges {
   @Input() currentIndex: number
   @Output() answer: EventEmitter<Answer> = new EventEmitter<Answer>()
 
-  value: number
+  value: any
   currentlyShown: boolean = false
 
   constructor(private answerService: AnswerService,
@@ -39,7 +39,7 @@ export class QuestionComponent implements OnChanges {
         max: max,
         labelLeft: minLabel,
         labelRight: maxLabel
-      }  
+      }
     }
     if(this.questionIndex == this.currentIndex) {
       this.currentlyShown = true

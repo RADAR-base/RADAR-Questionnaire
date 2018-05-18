@@ -76,8 +76,8 @@ export class Utility {
 
 
   getLatestKafkaSchemaVersions(specs) {
-    let qKey = specs.avsc + '_' + specs.name.toLowerCase() + '-key'
-    let qVal = specs.avsc + '_' + specs.name.toLowerCase() + '-value'
+    let qKey = specs.avsc + '_' + specs.name + '-key'
+    let qVal = specs.avsc + '_' + specs.name + '-value'
     return this.storage.get(StorageKeys.OAUTH_TOKENS)
     .then(tokens => {
       let keys = this.getLatestKafkaSchemaVersion(tokens.access_token, qKey, '')

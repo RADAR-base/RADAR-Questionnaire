@@ -75,7 +75,7 @@ export class HomePage {
     }, 1000)
 
     setTimeout(() => {
-      this.controller.setNextXNotifications(30)
+      this.controller.setNextXNotifications(300)
     }, 1500);
 
     //this.notification.returnTaskCallback().then((task) => this.startQuestionnaire(task))
@@ -147,7 +147,7 @@ export class HomePage {
   getElementsAttributes () {
     this.elContentHeight = this.elContent.contentHeight
     //console.log(this.elContent)
-    this.elProgressHeight = this.elProgress.nativeElement.offsetHeight
+    this.elProgressHeight = this.elProgress.nativeElement.offsetHeight-15
     //console.log(this.elProgress)
     this.elTickerHeight = this.elTicker.nativeElement.offsetHeight
     //console.log(this.elTicker)
@@ -188,26 +188,28 @@ export class HomePage {
 
   isNextTaskESMandNotNow() {
     let now = new Date().getTime()
-    if(this.nextTask.name == "ESM" && this.nextTask.timestamp > now && !this.showCalendar){
-      this.elProgress.nativeElement.style.transform =
-        `translateY(${this.elFooterHeight}px)`
-      this.elInfo.nativeElement.style.transform =
-        `translateY(${this.elFooterHeight}px)`
-      this.elFooter.nativeElement.style.transform =
-        `translateY(${this.elFooterHeight}px) scale(0)`
-      this.elCalendar.nativeElement.style.transform =
-        'translateY(0px)'
-      this.elCalendar.nativeElement.style.opacity = 0
-    } else {
-      this.elProgress.nativeElement.style.transform =
-        'translateY(0px) scale(1)'
-      this.elInfo.nativeElement.style.transform =
-        'translateY(0px)'
-      this.elFooter.nativeElement.style.transform =
-        'translateY(0px) scale(1)'
-      this.elCalendar.nativeElement.style.transform =
-        'translateY(0px)'
-      this.elCalendar.nativeElement.style.opacity = 0
+    if(!this.showCalendar){
+      if(this.nextTask.name == "ESM" && this.nextTask.timestamp > now){
+        this.elProgress.nativeElement.style.transform =
+          `translateY(${this.elFooterHeight}px)`
+        this.elInfo.nativeElement.style.transform =
+          `translateY(${this.elFooterHeight}px)`
+        this.elFooter.nativeElement.style.transform =
+          `translateY(${this.elFooterHeight}px) scale(0)`
+        this.elCalendar.nativeElement.style.transform =
+          'translateY(0px)'
+        this.elCalendar.nativeElement.style.opacity = 0
+      } else {
+        this.elProgress.nativeElement.style.transform =
+          'translateY(0px) scale(1)'
+        this.elInfo.nativeElement.style.transform =
+          'translateY(0px)'
+        this.elFooter.nativeElement.style.transform =
+          'translateY(0px) scale(1)'
+        this.elCalendar.nativeElement.style.transform =
+          'translateY(0px)'
+        this.elCalendar.nativeElement.style.opacity = 0
+      }
     }
   }
 
@@ -216,7 +218,6 @@ export class HomePage {
       this.calendarScrollHeight = this.elContentHeight
                                   - this.elTickerHeight
                                   - this.elInfoHeight
-                                  - 80
     } else {
       this.calendarScrollHeight = 0
     }

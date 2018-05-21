@@ -108,7 +108,7 @@ export class FinishPage {
       clinicalTasks.push(clinicalTask)
     }
     this.storage.set(StorageKeys.SCHEDULE_TASKS_CLINICAL, clinicalTasks)
-      .then(() => this.controller.setNextXNotifications(30))
+      .then(() => this.controller.setNextXNotifications(300))
   }
 
   formatRepeatsAfterClinic (repeats) {

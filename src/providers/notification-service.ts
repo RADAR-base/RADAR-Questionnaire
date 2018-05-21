@@ -36,9 +36,9 @@ export class NotificationService {
           title: this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW.toString()),
           text: text,
           at: new Date(tasks[i].timestamp),
-          led: 'FF0000',
           headsup: true,
-          sound: "res://platform_default",
+          vibrate: true,
+          //sound: "file://assets/sounds/serious-strike.mp3",
           data: { task: tasks[i]}
         })
       }

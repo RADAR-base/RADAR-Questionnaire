@@ -45,7 +45,7 @@ export class EnrolmentPage {
   constructor(
     public navCtrl: NavController,
     private scanner: BarcodeScanner,
-    private storage: StorageService,
+    public storage: StorageService,
     private schedule: SchedulingService,
     private configService: ConfigService,
     private authService: AuthService,
@@ -75,7 +75,7 @@ export class EnrolmentPage {
       orientation: 'portrait'
       //disableAnimations: true
     }
-    //this.scanner.scan(scanOptions).then((scannedObj) => this.authenticate(scannedObj))
+    this.scanner.scan(scanOptions).then((scannedObj) => this.authenticate(scannedObj))
 
     //TODO remove when finished
     // TESTING

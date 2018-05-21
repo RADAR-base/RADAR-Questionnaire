@@ -11,6 +11,7 @@ export class NotificationService {
 
   constructor(
     private translate: TranslatePipe) {
+
   }
 
   permissionCheck() {
@@ -26,6 +27,7 @@ export class NotificationService {
     let now = new Date().getTime();
     for(var i = 0; i < tasks.length; i++) {
       if(tasks[i].timestamp > now) {
+        console.log("NOTIFICATION SET " + tasks[i].index)
         let text = this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1.toString())
         text += " " + tasks[i].estimatedCompletionTime + " "
         text += this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2.toString());
@@ -41,6 +43,7 @@ export class NotificationService {
         })
       }
     }
+    //(<any>cordova).plugins.notification.local.on("click", (notification) => {console.log("NOTIFICATION NAME: " + notification.data.task.name)})
   }
 
   returnTaskCallback() {

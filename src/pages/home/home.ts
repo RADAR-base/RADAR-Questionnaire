@@ -57,7 +57,7 @@ export class HomePage {
     private schedule: SchedulingService,
     private controller: HomeController,
     private translate: TranslatePipe,
-    private storage: StorageService,
+    public storage: StorageService,
     private notification: NotificationService
   ) {  }
 
@@ -75,8 +75,8 @@ export class HomePage {
     }, 1000)
 
     setTimeout(() => {
-      this.controller.setNextXNotifications(40)
-    }, 1000);
+      this.controller.setNextXNotifications(30)
+    }, 1500);
 
     //this.notification.returnTaskCallback().then((task) => this.startQuestionnaire(task))
   }
@@ -188,7 +188,7 @@ export class HomePage {
 
   isNextTaskESMandNotNow() {
     let now = new Date().getTime()
-    if(this.nextTask.name == "ESM" && this.nextTask.timestamp > now){
+    if(this.nextTask.name == "ESM" && this.nextTask.timestamp > now && !this.showCalendar){
       this.elProgress.nativeElement.style.transform =
         `translateY(${this.elFooterHeight}px)`
       this.elInfo.nativeElement.style.transform =

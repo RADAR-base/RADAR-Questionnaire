@@ -20,6 +20,8 @@ export class StorageService {
 
   }
 
+  global:any = {}
+
   init(participantId, participantLogin, projectName, sourceId, createdDate, language) {
     let allKeys = this.getAllKeys()
     return allKeys.then((keys) => {
@@ -48,6 +50,7 @@ export class StorageService {
   }
 
   set(key: StorageKeys, value: any):Promise<any> {
+    this.global[key.toString()] = value
     return this.storage.set(key.toString(), value)
   }
 
@@ -57,8 +60,16 @@ export class StorageService {
     return Promise.resolve(true)
   }
 
-  get(key: StorageKeys) {
-    return this.storage.get(key.toString())
+  get(key) {
+    console.log(this.global)
+    if(this.global[key.toString()] && key.toString()){
+      return Promise.resolve(this.global[key.toString()])
+    } else {
+      return this.storage.get(key.toString()).then((value) => {
+        this.global[key.toString()] = value
+        return Promise.resolve(value)
+      })
+    }
   }
 
   remove(key: StorageKeys) {
@@ -71,11 +82,26 @@ export class StorageService {
     return this.storage.keys()
   }
 
+  prepareStorage() {
+    let configVersion = this.get(StorageKeys.CONFIG_VERSION)
+    let scheduleVersion = this.get(StorageKeys.SCHEDULE_VERSION)
+    let participantId = this.get(StorageKeys.PARTICIPANTID)
+    let projectName = this.get(StorageKeys.PROJECTNAME)
+    let referenceDate = this.get(StorageKeys.REFERENCEDATE)
+    let language = this.get(StorageKeys.LANGUAGE)
+    let settingsNotification = this.get(StorageKeys.SETTINGS_NOTIFICATIONS)
+    let settingsLanguages = this.get(StorageKeys.SETTINGS_NOTIFICATIONS)
+    let settingsWeeklyReport = this.get(StorageKeys.SETTINGS_WEEKLYREPORT)
+    let cache = this.get(StorageKeys.CACHE_ANSWERS)
+    let settings = [configVersion, scheduleVersion, participantId, projectName,
+      referenceDate, language, settingsNotification, settingsLanguages, settingsWeeklyReport,
+      cache]
+    return Promise.all(settings)
+  }
+
   getAssessment (task:Task) {
-    let keyDefault = StorageKeys.CONFIG_ASSESSMENTS
-    let keyClinical = StorageKeys.CONFIG_CLINICAL_ASSESSMENTS
-    let defaultAssessment = this.storage.get(keyDefault.toString())
-    let clinicalAssesment = this.storage.get(keyClinical.toString())
+    let defaultAssessment = this.get(StorageKeys.CONFIG_ASSESSMENTS)
+    let clinicalAssesment = this.get(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS)
     return Promise.all([defaultAssessment, clinicalAssesment])
       .then((assessments) => {
         for(var i = 0; i<assessments.length; i++){
@@ -88,8 +114,7 @@ export class StorageService {
   }
 
   getClinicalAssessment (task:Task) {
-    let key = StorageKeys.CONFIG_CLINICAL_ASSESSMENTS
-    return this.storage.get(key.toString())
+    return this.get(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS)
                 .then((assessments) => {
                   for(var i = 0; i<assessments.length; i++){
                     if(assessments[i].name == task.name) {
@@ -108,18 +133,19 @@ export class StorageService {
 
   updateAssessment (assessment:Assessment) {
     let key = StorageKeys.CONFIG_ASSESSMENTS
-    this.storage.get(key.toString()).then((assessments) => {
+    this.get(key).then((assessments) => {
       var updatedAssessments = assessments
       for(var i = 0; i<assessments.length;i++){
         if(updatedAssessments[i].name == assessment.name){
           updatedAssessments[i] = assessment
         }
       }
-      this.storage.set(key.toString(), updatedAssessments)
+      this.set(key, updatedAssessments)
     })
   }
 
   clearStorage() {
+    this.global = {}
     return this.storage.clear()
   }
 

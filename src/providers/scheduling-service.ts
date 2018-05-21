@@ -20,7 +20,7 @@ export class SchedulingService {
   assessments: Promise<Assessment[]>
   tzOffset: number
 
-  constructor(private storage: StorageService) {
+  constructor(public storage: StorageService) {
     let now = new Date()
     this.tzOffset = now.getTimezoneOffset()
   }

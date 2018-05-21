@@ -11,7 +11,7 @@ import { StorageKeys } from '../enums/storage'
 export class PrepareDataService {
 
   constructor(
-    private storage: StorageService
+    public storage: StorageService
   ) {
   }
 

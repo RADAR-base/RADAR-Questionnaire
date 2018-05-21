@@ -9,7 +9,7 @@ import { StorageKeys } from '../enums/storage'
 @Injectable()
 export class HomeController {
 
-  constructor(private storage: StorageService,
+  constructor(public storage: StorageService,
               private schedule: SchedulingService,
               private notifications: NotificationService) {
   }
@@ -55,29 +55,21 @@ export class HomeController {
   }
 
   setNextXNotifications (noOfNotifications) {
+    let periodInDays = 40
     let today = new Date().getTime()
     let day = 86400000
-    var tasks = []
-    this.retrieveNTasks(noOfNotifications, 0, [])
-      .then((tasks) => {
-        this.notifications.setNotifications(tasks)
-      })
+    var promises = []
+    for(var i = 0; i < periodInDays; i++) {
+      promises.push(this.getTasksOfDate(new Date(today + day*i)))
+    }
+    Promise.all(promises)
+    .then((tasks) => {
+      let mergedTasks = [].concat.apply([], tasks)
+      let desiredSubset = mergedTasks.slice(0, noOfNotifications)
+      this.notifications.setNotifications(desiredSubset)
+    })
   }
 
-  retrieveNTasks(noOfNotifications, offset, extractedTasks) {
-    let today = new Date().getTime()
-    let day = 86400000
-    let offsetIncr = offset + 1
-    return this.getTasksOfDate(new Date(today + day * offsetIncr))
-      .then((tasks) => {
-        let extractedTasksNew = extractedTasks.concat(tasks)
-        if(extractedTasksNew.length > noOfNotifications){
-          let extractedTasksReturn = extractedTasksNew.slice(0, noOfNotifications)
-          return Promise.resolve(extractedTasksReturn)
-        }
-        return this.retrieveNTasks(noOfNotifications, offsetIncr, extractedTasksNew)
-      })
-  }
 
   retrieveTaskProgress (tasks):TasksProgress {
     var tasksProgress: TasksProgress = {

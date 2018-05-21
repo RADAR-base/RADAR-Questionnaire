@@ -38,7 +38,7 @@ export class SettingsPage {
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     public alertCtrl: AlertController,
-    private storage: StorageService,
+    public storage: StorageService,
     private schedule: SchedulingService,
     private configService: ConfigService,
     private translate: TranslatePipe){
@@ -55,43 +55,36 @@ export class SettingsPage {
   }
 
   loadSettings() {
-    this.storage.get(StorageKeys.CONFIG_VERSION).then((configVersion) => {
-      this.configVersion = configVersion
-    })
-    this.storage.get(StorageKeys.SCHEDULE_VERSION).then((scheduleVersion) => {
-      this.scheduleVersion = scheduleVersion
-    })
-    this.storage.get(StorageKeys.PARTICIPANTID).then((participantId) => {
-      this.participantId = participantId
-    })
-    this.storage.get(StorageKeys.PROJECTNAME).then((projectName) => {
-      this.projectName = projectName
-    })
-    this.storage.get(StorageKeys.REFERENCEDATE).then((referenceDate) => {
-      this.referenceDate = referenceDate
-    })
-    this.storage.get(StorageKeys.LANGUAGE).then((language) => {
-      this.language = language
-    })
-    this.storage.get(StorageKeys.SETTINGS_NOTIFICATIONS).then((settingsNotifications) => {
-      this.notifications = settingsNotifications
-    })
-    this.storage.get(StorageKeys.SETTINGS_LANGUAGES).then((settingsLanguages) => {
-      this.languagesSelectable = settingsLanguages
-    })
-    this.storage.get(StorageKeys.SETTINGS_WEEKLYREPORT).then((settingsWeeklyReport) => {
-      this.weeklyReport = settingsWeeklyReport
-    })
-    this.storage.get(StorageKeys.CACHE_ANSWERS).then((cache) => {
+    let configVersion = this.storage.get(StorageKeys.CONFIG_VERSION)
+    let scheduleVersion = this.storage.get(StorageKeys.SCHEDULE_VERSION)
+    let participantId = this.storage.get(StorageKeys.PARTICIPANTID)
+    let projectName = this.storage.get(StorageKeys.PROJECTNAME)
+    let referenceDate = this.storage.get(StorageKeys.REFERENCEDATE)
+    let language = this.storage.get(StorageKeys.LANGUAGE)
+    let settingsNotification = this.storage.get(StorageKeys.SETTINGS_NOTIFICATIONS)
+    let settingsLanguages = this.storage.get(StorageKeys.SETTINGS_NOTIFICATIONS)
+    let settingsWeeklyReport = this.storage.get(StorageKeys.SETTINGS_WEEKLYREPORT)
+    let cache = this.storage.get(StorageKeys.CACHE_ANSWERS)
+    let settings = [configVersion, scheduleVersion, participantId, projectName,
+      referenceDate, language, settingsNotification, settingsLanguages, settingsWeeklyReport,
+      cache]
+    Promise.all(settings).then((returns) => {
+      this.configVersion       = returns[0]
+      this.scheduleVersion     = returns[1]
+      this.participantId       = returns[2]
+      this.projectName         = returns[3]
+      this.referenceDate       = returns[4]
+      this.language            = returns[5]
+      this.notifications       = returns[6]
+      this.languagesSelectable = returns[7]
+      this.weeklyReport        = returns[8]
       var size = 0
-      for(var key in cache) {
+      for(var key in returns[9]) {
         size += 1
       }
       this.cacheSize = size
     })
-
   }
-
 
   backToHome() {
     this.navCtrl.pop()

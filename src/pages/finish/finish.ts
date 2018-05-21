@@ -31,7 +31,7 @@ export class FinishPage {
     private timestampService: TimeStampService,
     private prepareDataService: PrepareDataService,
     private controller: HomeController,
-    private storage: StorageService
+    public storage: StorageService
   ) {}
 
   ionViewDidLoad() {
@@ -108,7 +108,7 @@ export class FinishPage {
       clinicalTasks.push(clinicalTask)
     }
     this.storage.set(StorageKeys.SCHEDULE_TASKS_CLINICAL, clinicalTasks)
-      .then(() => this.controller.setNextXNotifications(40))
+      .then(() => this.controller.setNextXNotifications(30))
   }
 
   formatRepeatsAfterClinic (repeats) {

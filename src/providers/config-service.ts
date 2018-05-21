@@ -15,7 +15,7 @@ export class ConfigService {
 
   constructor(
     public http: HttpClient,
-    private storage: StorageService,
+    public storage: StorageService,
     private schedule: SchedulingService,
   ) {}
 

@@ -23,7 +23,7 @@ export class KafkaService {
   constructor(
     private http: Http,
     private util: Utility,
-    private storage: StorageService,
+    public storage: StorageService,
     private authService: AuthService
   ) {
     this.KAFKA_CLIENT_URL = DefaultEndPoint + this.KAFKA_CLIENT_KAFKA

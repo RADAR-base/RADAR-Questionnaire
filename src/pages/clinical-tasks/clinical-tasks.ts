@@ -18,7 +18,7 @@ export class ClinicalTasksPage {
   tasks: Task[] = [DefaultTask]
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-    private storage:StorageService, private controller: HomeController) {
+    public storage:StorageService, private controller: HomeController) {
   }
 
   ionViewDidLoad() {

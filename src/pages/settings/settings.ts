@@ -13,7 +13,7 @@ import { DefaultSettingsSelectedLanguage, LanguageMap } from '../../assets/data/
 import { StorageKeys } from '../../enums/storage';
 import { LocKeys } from '../../enums/localisations';
 import { TranslatePipe } from '../../pipes/translate/translate';
-import { MyApp } from '../../app/app.component';
+import { SplashPage } from '../splash/splash';
 
 
 @Component({
@@ -41,7 +41,7 @@ export class SettingsPage {
     public storage: StorageService,
     private schedule: SchedulingService,
     private configService: ConfigService,
-    private translate: TranslatePipe){
+    public translate: TranslatePipe){
     }
 
   ionViewDidLoad() {
@@ -62,7 +62,7 @@ export class SettingsPage {
     let referenceDate = this.storage.get(StorageKeys.REFERENCEDATE)
     let language = this.storage.get(StorageKeys.LANGUAGE)
     let settingsNotification = this.storage.get(StorageKeys.SETTINGS_NOTIFICATIONS)
-    let settingsLanguages = this.storage.get(StorageKeys.SETTINGS_NOTIFICATIONS)
+    let settingsLanguages = this.storage.get(StorageKeys.SETTINGS_LANGUAGES)
     let settingsWeeklyReport = this.storage.get(StorageKeys.SETTINGS_WEEKLYREPORT)
     let cache = this.storage.get(StorageKeys.CACHE_ANSWERS)
     let settings = [configVersion, scheduleVersion, participantId, projectName,
@@ -77,6 +77,7 @@ export class SettingsPage {
       this.language            = returns[5]
       this.notifications       = returns[6]
       this.languagesSelectable = returns[7]
+      console.log(this.languagesSelectable)
       this.weeklyReport        = returns[8]
       var size = 0
       for(var key in returns[9]) {
@@ -88,6 +89,10 @@ export class SettingsPage {
 
   backToHome() {
     this.navCtrl.pop()
+  }
+
+  backToSplash() {
+    this.navCtrl.setRoot(SplashPage)
   }
 
   notificationChange() {
@@ -119,7 +124,7 @@ export class SettingsPage {
             this.configService.pullQuestionnaires(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS)
           })
           this.language = lang
-          this.navCtrl.setRoot(MyApp)
+          this.navCtrl.setRoot(SplashPage)
         }
       }
     ]
@@ -169,7 +174,7 @@ export class SettingsPage {
         text: this.translate.transform(LocKeys.BTN_AGREE.toString()),
         handler: () => {
           this.storage.clearStorage()
-          this.backToHome()
+            .then(() => this.backToSplash())
         }
       }
     ]

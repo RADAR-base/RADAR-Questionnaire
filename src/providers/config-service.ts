@@ -22,7 +22,7 @@ export class ConfigService {
   fetchConfigState() {
     return this.storage.get(StorageKeys.CONFIG_VERSION)
     .then((configVersion) => {
-      this.pullProtocol()
+      return this.pullProtocol()
       .then((res) => {
         let response: any = JSON.parse(res)
         if(configVersion != response.version) {
@@ -46,7 +46,7 @@ export class ConfigService {
             this.pullQuestionnaires(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS)
           })
           this.storage.set(StorageKeys.CONFIG_ASSESSMENTS, scheduledAssessments)
-          .then(() =>{
+          .then(() => {
             console.log("Pulled questionnaire")
             this.pullQuestionnaires(StorageKeys.CONFIG_ASSESSMENTS)
           })

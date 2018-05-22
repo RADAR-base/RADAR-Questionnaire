@@ -37,7 +37,7 @@ export class NotificationService {
           text: text,
           at: new Date(tasks[i].timestamp),
           headsup: true,
-          vibrate: true,
+          vibration: true,
           //sound: "file://assets/sounds/serious-strike.mp3",
           data: { task: tasks[i]}
         })

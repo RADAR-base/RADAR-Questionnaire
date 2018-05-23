@@ -2,8 +2,8 @@ import { Component, EventEmitter, Input, Output, trigger,
   state, style, transition, animate, keyframes, OnChanges } from '@angular/core'
 import { Task, TasksProgress } from '../../models/task'
 import { HomeController} from '../../providers/home-controller'
-import { LocKeys } from '../../enums/localisations'
-import { TranslatePipe } from '../../pipes/translate/translate'
+import { StorageKeys } from '../../enums/storage'
+import { StorageService } from '../../providers/storage-service'
 
 /**
  * Generated class for the TaskInfo component.
@@ -108,7 +108,7 @@ export class TaskInfoComponent implements OnChanges {
     RIGHT: 'right'
   }
 
-  constructor(private controller: HomeController, private translate: TranslatePipe) {
+  constructor(private controller: HomeController, public storage: StorageService) {
     this.applyAnimationKeys()
     setInterval(() => {
       if(this.task.timestamp > Date.now()) {
@@ -196,10 +196,10 @@ export class TaskInfoComponent implements OnChanges {
   }
 
   getExtraInfo () {
-    var info = ''
-    info = this.task['extraInfo'] != '' ? this.translate.transform(LocKeys.TASK_INFO_WARN.toString()) : ''
-    this.hasExtraInfo = this.task['extraInfo'] != '' ? true : false
-    //this.hasExtraInfo = false
-    return info
+    return this.storage.get(StorageKeys.LANGUAGE).then((language) => {
+      let info = this.task.warning[language.value]
+      this.hasExtraInfo = info != '' ? true : false
+      return info
+    })
   }
 }

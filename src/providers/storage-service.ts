@@ -61,7 +61,7 @@ export class StorageService {
   }
 
   get(key) {
-    console.log(this.global)
+    //console.log(this.global)
     if(this.global[key.toString()] && key.toString()){
       return Promise.resolve(this.global[key.toString()])
     } else {

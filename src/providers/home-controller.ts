@@ -55,7 +55,7 @@ export class HomeController {
   }
 
   setNextXNotifications (noOfNotifications) {
-    let periodInDays = 40
+    let periodInDays = 50
     let today = new Date().getTime()
     let day = 86400000
     var promises = []

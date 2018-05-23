@@ -56,7 +56,9 @@ export class NotificationService {
     let date2 = new Date(task2.timestamp)
     let day1 = date1.getDay()
     let day2 = date2.getDay()
-    return day1 != day2
+    //TODO needs to be determined better
+    let isLastOfDay = false
+    return isLastOfDay
   }
 
   evalTaskTiming(data) {

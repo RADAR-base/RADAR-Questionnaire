@@ -68,17 +68,12 @@ export class HomePage {
     this.checkForNextTask()
     this.evalHasClinicalTasks()
     this.checkIfOnlyESM()
+    this.controller.setNextXNotifications(300)
 
     setInterval(() => {
       this.isNextTaskESMandNotNow()
       this.checkForNextTask()
     }, 1000)
-
-    setTimeout(() => {
-      this.controller.setNextXNotifications(300)
-    }, 1500);
-
-    //this.notification.returnTaskCallback().then((task) => this.startQuestionnaire(task))
   }
 
   checkForNextTask () {

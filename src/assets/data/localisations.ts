@@ -554,6 +554,22 @@ export const Localisations = {
     "it":"Sembra che si sia dimenticato di rispondere ad alcune domande. Potrebbe farlo ora?",
     "nl":"Het lijkt erop dat u niet alle vragen heeft beantwoord. Zou u dit nu alsnog willen doen?"
   },
+  "NOTIFICATION_REMINDER_FORGOTTEN_ALERT_DEFAULT_DESC": {
+    "da":"You've missed this one. Dont worry! The next quesionnaire will be due soon.",
+    "de":"You've missed this one. Dont worry! The next quesionnaire will be due soon.",
+    "en":"You've missed this one. Dont worry! The next quesionnaire will be due soon.",
+    "es":"You've missed this one. Dont worry! The next quesionnaire will be due soon.",
+    "it":"You've missed this one. Dont worry! The next quesionnaire will be due soon.",
+    "nl":"You've missed this one. Dont worry! The next quesionnaire will be due soon."
+  },
+  "NOTIFICATION_REMINDER_FORGOTTEN_ALERT_LASTOFNIGHT_DESC": {
+    "da":"You've missed the last one. Dont worry! Have a good night.",
+    "de":"You've missed the last one. Dont worry! Have a good night.",
+    "en":"You've missed the last one. Dont worry! Have a good night.",
+    "es":"You've missed the last one. Dont worry! Have a good night.",
+    "it":"You've missed the last one. Dont worry! Have a good night.",
+    "nl":"You've missed the last one. Dont worry! Have a good night."
+  },
   "MEASURE_PROGRESS": {
     "da":"Fremgang",
     "de":"Fortschritt",
@@ -594,8 +610,8 @@ export const Localisations = {
     "de":"Vom RADAR-CNS-Konsortium mit &hearts; für Sie gemacht. Für weitere Informationen klicken Sie <a href=\"http://radar-cns.org\">hier</a>",
     "en":"Made with &hearts; for you by the RADAR-CNS consortium. For more information click <a href=\"http://radar-cns.org\">here</a>.",
     "es":"Hecho con &hearts;  para usted por el consorcio RADAR-CNS. Para obtener más información, haga clic  en <a href=\"http://radar-cns.org\">aquí</a>.",
-    "it":"Fatto con il cuore; per voi dal consorzio RADAR-CNS. Per maggiori informazioni clicca <a href=\"http://radar-cns.org\">here</a>.",
-    "nl":"Met &hearts voor u gemaakt door het RADAR-CNS consortium. Voor meer informatie klik <a href=\"http://radar-cns.org\">here</a>"
+    "it":"Fatto con il &hearts; per voi dal consorzio RADAR-CNS. Per maggiori informazioni clicca <a href=\"http://radar-cns.org\">here</a>.",
+    "nl":"Met &hearts; voor u gemaakt door het RADAR-CNS consortium. Voor meer informatie klik <a href=\"http://radar-cns.org\">here</a>"
 
   },
   "TASK_CALENDAR_TITLE":{

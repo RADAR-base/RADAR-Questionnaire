@@ -8,6 +8,7 @@ export interface Answer {
 // interface to submit answers to Kafka
 
 export interface Response {
+  id: string,
   value: any,
   startTime: number,
   endTime: number

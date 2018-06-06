@@ -5,13 +5,15 @@ import { Task, TasksProgress } from '../models/task'
 import { Assessment } from '../models/assessment'
 import { NotificationService } from './notification-service'
 import { StorageKeys } from '../enums/storage'
+import { KafkaService } from './kafka-service'
 
 @Injectable()
 export class HomeController {
 
   constructor(public storage: StorageService,
               private schedule: SchedulingService,
-              private notifications: NotificationService) {
+              private notifications: NotificationService,
+              private kafka: KafkaService) {
   }
 
   evalEnrolement() {
@@ -136,9 +138,27 @@ export class HomeController {
     return status
   }
 
+
+  sendNonReportedTaskCompletion() {
+    this.schedule.getNonReportedCompletedTasks()
+      .then((nonReportedTasks) => {
+        for(var i = 0; i < nonReportedTasks.length; i++) {
+          this.kafka.prepareNonReportedTasksKafkaObject(nonReportedTasks[i])
+          this.updateTaskToReportedCompletion(nonReportedTasks[i])
+        }
+      })
+  }
+
   updateTaskToComplete (task):Promise<any> {
     var updatedTask = task
     updatedTask.completed = true
     return this.schedule.insertTask(updatedTask)
   }
+
+  updateTaskToReportedCompletion (task):Promise<any> {
+    var updatedTask = task
+    updatedTask.reportedCompletion = true
+    return this.schedule.insertTask(updatedTask)
+  }
+
 }

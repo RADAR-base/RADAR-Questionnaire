@@ -28,4 +28,10 @@ export interface AnswerKeyExport {
   projectId: string
 }
 
+export interface CompletionLogValueExport {
+  name: string,
+  time: number,
+  completionPercentage: number
+}
+
 // interface to submit answers to Kafka

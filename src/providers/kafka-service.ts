@@ -7,6 +7,7 @@ import { StorageKeys } from '../enums/storage'
 import { AuthService } from './auth-service'
 import { AnswerValueExport } from '../models/answer'
 import { AnswerKeyExport } from '../models/answer'
+import { CompletionLogValueExport } from '../models/answer'
 import { Task } from '../models/task'
 import { Utility } from  '../utilities/util'
 import { DefaultEndPoint } from '../assets/data/defaultConfig'
@@ -42,21 +43,48 @@ export class KafkaService {
 
     this.util.getSourceKeyInfo()
       .then((keyInfo) => {
-        console.log('KeyInfo ', keyInfo)
         let sourceId = keyInfo[0]
         let projectId = keyInfo[1]
+        let patientId = keyInfo[2].toString()
         //Payload for kafka 2 : key Object which contains device information
-        var AnswerKey: AnswerKeyExport = { "userId": data.patientId, "sourceId": sourceId, "projectId": projectId }
+        var AnswerKey: AnswerKeyExport = { "userId": patientId, "sourceId": sourceId, "projectId": projectId }
         var kafkaObject = { "value": Answer, "key": AnswerKey }
-        this.createPayload(task, kafkaObject)
+        this.getSpecs(task, kafkaObject)
+        .then((specs) => this.createPayload(specs, task, kafkaObject))
       })
   }
 
-  createPayload(task:Task, kafkaObject) {
-    return this.storage.getAssessmentAvsc(task)
-    .then((specs) => {
-      return this.util.getLatestKafkaSchemaVersions(specs)
-    })
+  prepareNonReportedTasksKafkaObject(task: Task) {
+    //Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
+    var CompletionLog: CompletionLogValueExport = {
+      "name": task.name.toString(),
+      "time": task.timestamp,
+      "completionPercentage": task.completed ? 100 : 0
+    }
+
+    this.util.getSourceKeyInfo()
+      .then((keyInfo) => {
+        let sourceId = keyInfo[0]
+        let projectId = keyInfo[1]
+        let patientId = keyInfo[2].toString()
+        var AnswerKey: AnswerKeyExport = { "userId": patientId, "sourceId": sourceId, "projectId": projectId }
+        var kafkaObject = { "value": CompletionLog, "key": AnswerKey }
+        this.getSpecs(task, kafkaObject)
+        .then((specs) => this.createPayload(specs, task, kafkaObject))
+      })
+  }
+
+  getSpecs(task:Task, kafkaObject) {
+    if(kafkaObject.value.completionPercentage != undefined) {
+      return Promise.resolve({"name":"completion_log", "avsc":"questionniare"})
+    } else {
+      return this.storage.getAssessmentAvsc(task)
+    }
+  }
+
+
+  createPayload(specs, task, kafkaObject) {
+    return this.util.getLatestKafkaSchemaVersions(specs)
     .then((schemaVersions) => {
       let specs = schemaVersions[2]
       let avroKey = AvroSchema.parse(JSON.parse(schemaVersions[0]['schema']),  { wrapUnions: true })
@@ -71,8 +99,8 @@ export class KafkaService {
 
       let schemaId = new KafkaClient.AvroSchema(JSON.parse(schemaVersions[0]['schema']))
       let schemaInfo = new KafkaClient.AvroSchema(JSON.parse(schemaVersions[1]['schema']))
-      console.log("PAYLOAD")
-      console.log(schemaId)
+      //console.log("PAYLOAD")
+      //console.log(schemaId)
       return this.sendToKafka(specs, schemaId, schemaInfo, payload, kafkaObject.value.time)
     })
     .catch((error) => {
@@ -87,6 +115,7 @@ export class KafkaService {
       // kafka connection instance to submit to topic
       var topic = specs.avsc + "_" + specs.name
       console.log("Sending to: " + topic)
+
 
       kafkaConnInstance.topic(topic).produce(id, info, payload,
         (err, res) => {
@@ -123,7 +152,8 @@ export class KafkaService {
         this.storage.set(StorageKeys.CACHE_ANSWERS, {})
       } else {
         for(var answerKey in cache) {
-          this.createPayload(cache[answerKey].task, cache[answerKey].cache)
+          this.getSpecs(cache[answerKey].task, cache[answerKey].cache)
+          .then((specs) => this.createPayload(specs, cache[answerKey].task, cache[answerKey].cache))
         }
       }
       console.log(cache)

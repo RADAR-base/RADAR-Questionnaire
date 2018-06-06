@@ -71,7 +71,8 @@ export class Utility {
   getSourceKeyInfo() {
     let sourceId = this.storage.get(StorageKeys.SOURCEID)
     let projectId = this.storage.get(StorageKeys.PROJECTNAME)
-    return Promise.all([sourceId, projectId])
+    let pariticipantId = this.storage.get(StorageKeys.PARTICIPANTLOGIN)
+    return Promise.all([sourceId, projectId, pariticipantId])
   }
 
 
@@ -96,6 +97,7 @@ export class Utility {
   getLatestKafkaSchemaVersion(accessToken, questionName, version) {
     let versionStr = this.URI_version + version
     let uri = DefaultEndPoint + this.URI_schema + questionName + versionStr
+
     return this.httpClient.get(uri).toPromise()
   }
 

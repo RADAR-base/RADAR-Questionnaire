@@ -90,6 +90,25 @@ export class SchedulingService {
     return this.storage.get(StorageKeys.SCHEDULE_TASKS_CLINICAL)
   }
 
+  getNonReportedCompletedTasks() {
+    var defaultTasks = this.getDefaultTasks()
+    let clinicalTasks = this.getClinicalTasks()
+    return Promise.resolve(Promise.all([defaultTasks, clinicalTasks])
+      .then((defaultAndClinicalTasks) => {
+        let tasks = defaultAndClinicalTasks[0].concat(defaultAndClinicalTasks[1])
+        let nonReportedTasks = []
+        let now = new Date().getTime()
+        let limit = 100
+        for(var i = 0; i < tasks.length; i++) {
+          if(tasks[i].reportedCompletion == false && tasks[i].timestamp < now && limit > 0) {
+            nonReportedTasks.push(tasks[i])
+            limit -= 1
+          }
+        }
+        return nonReportedTasks
+      }))
+  }
+
   getCurrentReport () {
     return this.getReports().then((reports) => {
       if(reports){

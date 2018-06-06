@@ -74,6 +74,8 @@ export class HomePage {
       this.isNextTaskESMandNotNow()
       this.checkForNextTask()
     }, 1000)
+
+    this.controller.sendNonReportedTaskCompletion()
   }
 
   checkForNextTask () {

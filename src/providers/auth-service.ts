@@ -23,7 +23,7 @@ export class AuthService {
   BODY_register = DefaultSourceTypeRegistrationBody
 
   constructor(public http: HttpClient,
-    private storage: StorageService,
+    public storage: StorageService,
     private jwtHelper: JwtHelper) {
       this.URI_base = DefaultEndPoint + this.URI_managementPortal
   }

@@ -11,7 +11,7 @@ import { StorageKeys } from '../enums/storage'
 export class PrepareDataService {
 
   constructor(
-    private storage: StorageService
+    public storage: StorageService
   ) {
   }
 
@@ -34,8 +34,9 @@ export class PrepareDataService {
         for (var key in answers) {
           answersProcessedCount++
           var answer = {
+            questionId: key.toString(),
             //int: implicit [int, double, string]
-            value: {int: answers[key]},
+            value: {string: answers[key].toString()},
             startTime: timestamps[key].startTime,
             endTime: timestamps[key].endTime
           }

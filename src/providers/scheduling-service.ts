@@ -20,7 +20,7 @@ export class SchedulingService {
   assessments: Promise<Assessment[]>
   tzOffset: number
 
-  constructor(private storage: StorageService) {
+  constructor(public storage: StorageService) {
     let now = new Date()
     this.tzOffset = now.getTimezoneOffset()
   }
@@ -88,6 +88,25 @@ export class SchedulingService {
 
   getClinicalTasks () {
     return this.storage.get(StorageKeys.SCHEDULE_TASKS_CLINICAL)
+  }
+
+  getNonReportedCompletedTasks() {
+    var defaultTasks = this.getDefaultTasks()
+    let clinicalTasks = this.getClinicalTasks()
+    return Promise.resolve(Promise.all([defaultTasks, clinicalTasks])
+      .then((defaultAndClinicalTasks) => {
+        let tasks = defaultAndClinicalTasks[0].concat(defaultAndClinicalTasks[1])
+        let nonReportedTasks = []
+        let now = new Date().getTime()
+        let limit = 100
+        for(var i = 0; i < tasks.length; i++) {
+          if(tasks[i].reportedCompletion == false && tasks[i].timestamp < now && limit > 0) {
+            nonReportedTasks.push(tasks[i])
+            limit -= 1
+          }
+        }
+        return nonReportedTasks
+      }))
   }
 
   getCurrentReport () {
@@ -243,6 +262,7 @@ export class SchedulingService {
     let task: Task = {
       index: index,
       completed: false,
+      reportedCompletion: false,
       timestamp: taskDate.getTime(),
       name: assessment.name,
       reminderSettings: assessment.protocol.reminders,

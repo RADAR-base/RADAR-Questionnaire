@@ -21,6 +21,7 @@ export class FinishPage {
   content: string = ""
   isClinicalTask: boolean = false
   completedInClinic: boolean = false
+  displayNextTaskReminder: boolean = true
 
   constructor(
     public navCtrl: NavController,
@@ -30,7 +31,7 @@ export class FinishPage {
     private timestampService: TimeStampService,
     private prepareDataService: PrepareDataService,
     private controller: HomeController,
-    private storage: StorageService
+    public storage: StorageService
   ) {}
 
   ionViewDidLoad() {
@@ -50,6 +51,14 @@ export class FinishPage {
         this.sendToKafka(this.navParams.data.associatedTask, data)
       }, error => {
         console.log(JSON.stringify(error))
+      })
+    this.controller.getNextTask()
+      .then((task) => {
+        if(task) {
+          this.displayNextTaskReminder = true
+        } else {
+          this.displayNextTaskReminder = false
+        }
       })
   }
 
@@ -87,6 +96,7 @@ export class FinishPage {
       let clinicalTask: Task = {
         index: tasks.length + i,
         completed: false,
+        reportedCompletion: false,
         timestamp: ts,
         name: associatedTask['name'],
         reminderSettings: protocol['reminders'],
@@ -98,7 +108,7 @@ export class FinishPage {
       clinicalTasks.push(clinicalTask)
     }
     this.storage.set(StorageKeys.SCHEDULE_TASKS_CLINICAL, clinicalTasks)
-      .then(() => this.controller.setNextNotificationsForXDays(43))
+      .then(() => this.controller.setNextXNotifications(300))
   }
 
   formatRepeatsAfterClinic (repeats) {

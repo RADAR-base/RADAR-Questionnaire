@@ -23,10 +23,15 @@ export class InfoScreenComponent implements OnInit {
   value: number = null
   uniqueID: number = uniqueID++
   name = `info-${this.uniqueID}`
+  isThincItReminder: boolean = false
   items: Item[] = Array()
 
   ngOnInit () {
     this.sections.map((item, i) => {
+          console.log(item.label)
+          if(item.label.includes('THINC-it')){
+            this.isThincItReminder = true
+          }
           this.items.push({
             id: `info-${this.uniqueID}-${i}`,
             heading: item.code,
@@ -35,7 +40,8 @@ export class InfoScreenComponent implements OnInit {
         })
 
     // save timestamp (epoch) and activate the next button
-    this.valueChange.emit((new Date).getTime())
+    let epoch: number = (new Date).getTime()
+    this.valueChange.emit(epoch)
   }
 
 }

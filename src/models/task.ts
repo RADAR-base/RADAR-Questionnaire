@@ -3,6 +3,7 @@ import { Reminders } from './protocol'
 export interface Task {
  index: number
  completed: boolean
+ reportedCompletion: boolean
  timestamp: number
  name: String
  reminderSettings: Reminders

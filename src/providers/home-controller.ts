@@ -5,13 +5,15 @@ import { Task, TasksProgress } from '../models/task'
 import { Assessment } from '../models/assessment'
 import { NotificationService } from './notification-service'
 import { StorageKeys } from '../enums/storage'
+import { KafkaService } from './kafka-service'
 
 @Injectable()
 export class HomeController {
 
-  constructor(private storage: StorageService,
+  constructor(public storage: StorageService,
               private schedule: SchedulingService,
-              private notifications: NotificationService) {
+              private notifications: NotificationService,
+              private kafka: KafkaService) {
   }
 
   evalEnrolement() {
@@ -54,7 +56,8 @@ export class HomeController {
     return this.storage.get(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS)
   }
 
-  setNextNotificationsForXDays (periodInDays) {
+  setNextXNotifications (noOfNotifications) {
+    let periodInDays = 50
     let today = new Date().getTime()
     let day = 86400000
     var promises = []
@@ -64,10 +67,11 @@ export class HomeController {
     Promise.all(promises)
     .then((tasks) => {
       let mergedTasks = [].concat.apply([], tasks)
-      this.notifications.setNotifications(mergedTasks)
+      let desiredSubset = mergedTasks.slice(0, noOfNotifications)
+      this.notifications.setNotifications(desiredSubset)
     })
-
   }
+
 
   retrieveTaskProgress (tasks):TasksProgress {
     var tasksProgress: TasksProgress = {
@@ -115,8 +119,8 @@ export class HomeController {
         }
       }
       if(passedAtLeastOnce) {
-        console.log('NEXT TASK')
-        console.log(tasks[nextIdx])
+        //console.log('NEXT TASK')
+        //console.log(tasks[nextIdx])
         return tasks[nextIdx]
       }
     }
@@ -134,9 +138,27 @@ export class HomeController {
     return status
   }
 
+
+  sendNonReportedTaskCompletion() {
+    this.schedule.getNonReportedCompletedTasks()
+      .then((nonReportedTasks) => {
+        for(var i = 0; i < nonReportedTasks.length; i++) {
+          this.kafka.prepareNonReportedTasksKafkaObject(nonReportedTasks[i])
+          this.updateTaskToReportedCompletion(nonReportedTasks[i])
+        }
+      })
+  }
+
   updateTaskToComplete (task):Promise<any> {
     var updatedTask = task
     updatedTask.completed = true
     return this.schedule.insertTask(updatedTask)
   }
+
+  updateTaskToReportedCompletion (task):Promise<any> {
+    var updatedTask = task
+    updatedTask.reportedCompletion = true
+    return this.schedule.insertTask(updatedTask)
+  }
+
 }

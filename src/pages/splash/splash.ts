@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { HomeController } from '../../providers/home-controller';
+import { StorageService} from '../../providers/storage-service';
 import { HomePage } from '../home/home';
 import { EnrolmentPage } from '../enrolment/enrolment';
 
@@ -15,13 +16,17 @@ export class SplashPage {
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
+    public storage: StorageService,
     private controller: HomeController) {
     this.controller.evalEnrolement().then((evalEnrolement) => {
-      if(evalEnrolement){
-        this.navCtrl.setRoot(EnrolmentPage)
-      } else {
-        this.navCtrl.setRoot(HomePage)
-      }
+      this.storage.prepareStorage()
+        .then(() => {
+        if(evalEnrolement){
+          this.navCtrl.setRoot(EnrolmentPage)
+        } else {
+          this.navCtrl.setRoot(HomePage)
+        }
+      })
     })
   }
 

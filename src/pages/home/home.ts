@@ -13,6 +13,8 @@ import { LocKeys } from '../../enums/localisations'
 import { TranslatePipe } from '../../pipes/translate/translate'
 import { StorageService } from '../../providers/storage-service'
 import { StorageKeys } from '../../enums/storage'
+import { NotificationService } from '../../providers/notification-service'
+
 
 @Component({
   selector: 'page-home',
@@ -55,7 +57,8 @@ export class HomePage {
     private schedule: SchedulingService,
     private controller: HomeController,
     private translate: TranslatePipe,
-    private storage: StorageService,
+    public storage: StorageService,
+    private notification: NotificationService
   ) {  }
 
   ngAfterViewInit(){
@@ -65,12 +68,14 @@ export class HomePage {
     this.checkForNextTask()
     this.evalHasClinicalTasks()
     this.checkIfOnlyESM()
+    this.controller.setNextXNotifications(300)
+
     setInterval(() => {
+      this.isNextTaskESMandNotNow()
       this.checkForNextTask()
     }, 1000)
-    setTimeout(() => {
-      this.controller.setNextNotificationsForXDays(43)
-    }, 1000)
+
+    this.controller.sendNonReportedTaskCompletion()
   }
 
   checkForNextTask () {
@@ -101,7 +106,6 @@ export class HomePage {
         }
       })
     }
-    console.log(this.nextTask)
   }
 
   checkIfOnlyESM() {
@@ -139,10 +143,15 @@ export class HomePage {
 
   getElementsAttributes () {
     this.elContentHeight = this.elContent.contentHeight
-    this.elProgressHeight = this.elProgress.nativeElement.offsetHeight
+    //console.log(this.elContent)
+    this.elProgressHeight = this.elProgress.nativeElement.offsetHeight-15
+    //console.log(this.elProgress)
     this.elTickerHeight = this.elTicker.nativeElement.offsetHeight
+    //console.log(this.elTicker)
     this.elInfoHeight = this.elInfo.nativeElement.offsetHeight
+    //console.log(this.elInfo)
     this.elFooterHeight = this.elFooter.nativeElement.offsetHeight
+    //console.log(this.elFooter)
   }
 
   applyTransformations () {
@@ -159,11 +168,26 @@ export class HomePage {
         `translateY(-${this.elProgressHeight}px)`
       this.elCalendar.nativeElement.style.opacity = 1
     } else {
-      console.log('NEXT TASK EVAL')
-      if(this.isNextTaskESMandNotNow()){
         this.elProgress.nativeElement.style.transform =
-          `translateY(${this.elFooterHeight}px)`
+          'translateY(0px) scale(1)'
         this.elTicker.nativeElement.style.transform =
+          'translateY(0px)'
+        this.elInfo.nativeElement.style.transform =
+          'translateY(0px)'
+        this.elFooter.nativeElement.style.transform =
+          'translateY(0px) scale(1)'
+        this.elCalendar.nativeElement.style.transform =
+          'translateY(0px)'
+        this.elCalendar.nativeElement.style.opacity = 0
+    }
+    this.setCalendarScrollHeight(this.showCalendar)
+  }
+
+  isNextTaskESMandNotNow() {
+    let now = new Date().getTime()
+    if(!this.showCalendar){
+      if(this.nextTask.name == "ESM" && this.nextTask.timestamp > now){
+        this.elProgress.nativeElement.style.transform =
           `translateY(${this.elFooterHeight}px)`
         this.elInfo.nativeElement.style.transform =
           `translateY(${this.elFooterHeight}px)`
@@ -173,11 +197,8 @@ export class HomePage {
           'translateY(0px)'
         this.elCalendar.nativeElement.style.opacity = 0
       } else {
-        console.log('DISPLAY START BUTTON')
         this.elProgress.nativeElement.style.transform =
           'translateY(0px) scale(1)'
-        this.elTicker.nativeElement.style.transform =
-          'translateY(0px)'
         this.elInfo.nativeElement.style.transform =
           'translateY(0px)'
         this.elFooter.nativeElement.style.transform =
@@ -187,17 +208,6 @@ export class HomePage {
         this.elCalendar.nativeElement.style.opacity = 0
       }
     }
-    this.setCalendarScrollHeight(this.showCalendar)
-  }
-
-  isNextTaskESMandNotNow() {
-    let now = new Date().getTime()
-    if(this.nextTask.name == "ESM" && this.nextTask.timestamp > now){
-      console.log('ESM - NOT NOW: true')
-      return true
-    }
-    console.log('ESM - NOT NOW: false')
-    return false
   }
 
   setCalendarScrollHeight (show:boolean) {
@@ -205,7 +215,6 @@ export class HomePage {
       this.calendarScrollHeight = this.elContentHeight
                                   - this.elTickerHeight
                                   - this.elInfoHeight
-                                  - 80
     } else {
       this.calendarScrollHeight = 0
     }
@@ -263,12 +272,12 @@ export class HomePage {
         "questions": assessment.questions,
         "associatedTask": startQuestionnaireTask
       }
+      this.controller.updateAssessmentIntroduction(assessment)
       if(assessment.showIntroduction){
         this.navCtrl.push(StartPage, params)
       } else {
         this.navCtrl.push(QuestionsPage, params)
       }
-      this.controller.updateAssessmentIntroduction(assessment)
     })
   }
 

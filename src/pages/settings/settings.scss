@@ -29,4 +29,13 @@ page-settings {
     font-size: 2rem;
     color: $cl-font-light;
   }
+
+  ion-spinner * {
+    width: 8px;
+    height: 28px;
+    padding-left: 8px;
+    stroke: #FFFFFF;
+    fill: #fff;
+    background-color: #fff;
+  }
 }

@@ -31,7 +31,7 @@ export interface AnswerKeyExport {
 export interface CompletionLogValueExport {
   name: string,
   time: number,
-  completionPercentage: number
+  completionPercentage: any
 }
 
 // interface to submit answers to Kafka

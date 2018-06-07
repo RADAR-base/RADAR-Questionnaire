@@ -59,7 +59,7 @@ export class KafkaService {
     var CompletionLog: CompletionLogValueExport = {
       "name": task.name.toString(),
       "time": task.timestamp,
-      "completionPercentage": task.completed ? 100 : 0
+      "completionPercentage": { double: task.completed ? 100 : 0}
     }
 
     this.util.getSourceKeyInfo()
@@ -76,7 +76,7 @@ export class KafkaService {
 
   getSpecs(task:Task, kafkaObject) {
     if(kafkaObject.value.completionPercentage != undefined) {
-      return Promise.resolve({"name":"completion_log", "avsc":"questionniare"})
+      return Promise.resolve({"name":"completion_log", "avsc":"questionnaire"})
     } else {
       return this.storage.getAssessmentAvsc(task)
     }

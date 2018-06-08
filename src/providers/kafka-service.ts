@@ -84,6 +84,7 @@ export class KafkaService {
 
 
   createPayload(specs, task, kafkaObject) {
+    console.log(specs)
     return this.util.getLatestKafkaSchemaVersions(specs)
     .then((schemaVersions) => {
       let specs = schemaVersions[2]['schema']

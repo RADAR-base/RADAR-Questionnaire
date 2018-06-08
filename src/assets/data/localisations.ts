@@ -482,12 +482,12 @@ export const Localisations = {
     "nl":"Geslaagd"
   },
   "STATUS_NOW": {
-    "da":"",
+    "da":"nu",
     "de":"jetzt",
     "en":"now",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"ahora",
+    "it":"adesso",
+    "nl":"nu"
   },
   "STATUS_FAILURE": {
     "da":"Fejl",

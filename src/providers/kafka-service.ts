@@ -84,10 +84,9 @@ export class KafkaService {
 
 
   createPayload(specs, task, kafkaObject) {
-    console.log(specs)
     return this.util.getLatestKafkaSchemaVersions(specs)
     .then((schemaVersions) => {
-      let specs = schemaVersions[2]['schema']
+      console.log(specs)
       let avroKey = AvroSchema.parse(JSON.parse(schemaVersions[0]['schema']),  { wrapUnions: true })
       // ISSUE forValue: inferred from input, due to error when parsing schema
       let avroVal = AvroSchema.Type.forValue(kafkaObject.value, { wrapUnions: true })

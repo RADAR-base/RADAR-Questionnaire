@@ -86,7 +86,6 @@ export class KafkaService {
   createPayload(specs, task, kafkaObject) {
     return this.util.getLatestKafkaSchemaVersions(specs)
     .then((schemaVersions) => {
-      console.log(specs)
       let avroKey = AvroSchema.parse(JSON.parse(schemaVersions[0]['schema']),  { wrapUnions: true })
       // ISSUE forValue: inferred from input, due to error when parsing schema
       let avroVal = AvroSchema.Type.forValue(kafkaObject.value, { wrapUnions: true })
@@ -116,11 +115,10 @@ export class KafkaService {
       var topic = specs.avsc + "_" + specs.name
       console.log("Sending to: " + topic)
 
-
       kafkaConnInstance.topic(topic).produce(id, info, payload,
         (err, res) => {
           if (res) {
-            console.log(res)
+            //console.log(res)
             this.removeAnswersFromCache(cacheKey)
           } else if (err) {
             console.log(err)
@@ -163,6 +161,7 @@ export class KafkaService {
   removeAnswersFromCache(cacheKey){
     this.storage.get(StorageKeys.CACHE_ANSWERS)
     .then((cache) => {
+      console.log("Deleting " + cacheKey)
       delete cache[cacheKey]
       this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
     })

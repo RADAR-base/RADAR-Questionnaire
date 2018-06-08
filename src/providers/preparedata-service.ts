@@ -34,7 +34,7 @@ export class PrepareDataService {
         for (var key in answers) {
           answersProcessedCount++
           var answer = {
-            questionId: key.toString(),
+            questionId: {string: key.toString()},
             //int: implicit [int, double, string]
             value: {string: answers[key].toString()},
             startTime: timestamps[key].startTime,

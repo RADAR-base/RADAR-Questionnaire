@@ -31,14 +31,19 @@ export class AuthService {
   refresh() {
     return this.storage.get(StorageKeys.OAUTH_TOKENS)
     .then((tokens) => {
-      let URI = this.URI_base + this.URI_refresh
-      let headers = this.getRegisterHeaders(this.CONTENTTYPE_urlencode)
-      let params = this.getRefreshParams(tokens.refresh_token)
-      let promise = this.createPostRequest(URI, '', {headers: headers, params: params})
-      .then((tokens) => {
-        return this.storage.set(StorageKeys.OAUTH_TOKENS, tokens)
-      })
-      return promise
+      let now = new Date().getTime()/1000
+      if((tokens.iat + tokens.expires_in) < now){
+        let URI = this.URI_base + this.URI_refresh
+        let headers = this.getRegisterHeaders(this.CONTENTTYPE_urlencode)
+        let params = this.getRefreshParams(tokens.refresh_token)
+        let promise = this.createPostRequest(URI, '', {headers: headers, params: params})
+        .then((tokens) => {
+          return this.storage.set(StorageKeys.OAUTH_TOKENS, tokens)
+        })
+        return promise
+      } else {
+        return Promise.resolve(tokens)
+      }
     })
   }
 

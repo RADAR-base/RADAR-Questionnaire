@@ -398,7 +398,7 @@ export const Localisations = {
   },
   "BTN_OKAY": {
     "da":"Okay",
-    "de":"",
+    "de":"Okay",
     "en":"Okay",
     "es":"De acuerdo",
     "it":"Okay",

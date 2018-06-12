@@ -208,7 +208,7 @@ bbGd2mgxfA9bhFAiM"}'})*/
   retrieveSubjectInformation() {
     this.authService.getSubjectInformation().then((res) => {
       let subjectInformation:any = res
-      let participantId = subjectInformation.id
+      let participantId = subjectInformation.externalId
       let participantLogin = subjectInformation.login
       let projectName = subjectInformation.project.projectName
       let sourceId = this.getSourceId(subjectInformation)

@@ -28,7 +28,7 @@ export class SettingsPage {
   cacheSize: number
   participantId: String
   projectName: String
-  referenceDate: Date
+  enrolmentDate: Date
   language: LanguageSetting = DefaultSettingsSelectedLanguage
   languagesSelectable: String[]
   notifications: NotificationSettings = DefaultSettingsNotifications
@@ -59,21 +59,21 @@ export class SettingsPage {
     let scheduleVersion = this.storage.get(StorageKeys.SCHEDULE_VERSION)
     let participantId = this.storage.get(StorageKeys.PARTICIPANTID)
     let projectName = this.storage.get(StorageKeys.PROJECTNAME)
-    let referenceDate = this.storage.get(StorageKeys.REFERENCEDATE)
+    let enrolmentDate = this.storage.get(StorageKeys.ENROLMENTDATE)
     let language = this.storage.get(StorageKeys.LANGUAGE)
     let settingsNotification = this.storage.get(StorageKeys.SETTINGS_NOTIFICATIONS)
     let settingsLanguages = this.storage.get(StorageKeys.SETTINGS_LANGUAGES)
     let settingsWeeklyReport = this.storage.get(StorageKeys.SETTINGS_WEEKLYREPORT)
     let cache = this.storage.get(StorageKeys.CACHE_ANSWERS)
     let settings = [configVersion, scheduleVersion, participantId, projectName,
-      referenceDate, language, settingsNotification, settingsLanguages, settingsWeeklyReport,
+      enrolmentDate, language, settingsNotification, settingsLanguages, settingsWeeklyReport,
       cache]
     Promise.all(settings).then((returns) => {
       this.configVersion       = returns[0]
       this.scheduleVersion     = returns[1]
       this.participantId       = returns[2]
       this.projectName         = returns[3]
-      this.referenceDate       = returns[4]
+      this.enrolmentDate       = returns[4]
       this.language            = returns[5]
       this.notifications       = returns[6]
       this.languagesSelectable = returns[7]

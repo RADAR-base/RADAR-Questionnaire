@@ -26,8 +26,9 @@ export class StorageService {
     let allKeys = this.getAllKeys()
     return allKeys.then((keys) => {
       if(keys.length <= 6){
-        let today = new Date(createdDate)
-        let time = this.set(StorageKeys.REFERENCEDATE, today.getTime())
+        let enrolmentDateTime = new Date(createdDate)
+        let referenceDate = this.set(StorageKeys.REFERENCEDATE, enrolmentDateTime.getTime())
+        let enrolmentDate = this.set(StorageKeys.ENROLMENTDATE, enrolmentDateTime.getTime())
         let pId = this.set(StorageKeys.PARTICIPANTID, participantId)
         let pLogin = this.set(StorageKeys.PARTICIPANTLOGIN, participantLogin)
         let pName = this.set(StorageKeys.PROJECTNAME, projectName)

@@ -81,20 +81,20 @@ export const Localisations = {
     "nl":"Bedankt voor het invullen van de vragenlijst"
   },
   "FINISH_NEXT_TASK_REMINDER": {
-    "da":"Remember, you still have tasks outstanding!",
-    "de":"Remember, you still have tasks outstanding!",
+    "da":"Husk, du har stadig udestående opgaver!",
+    "de":"Denken Sie daran, Sie haben noch Aufgaben ausstehend!",
     "en":"Remember, you still have tasks outstanding!",
-    "es":"Remember, you still have tasks outstanding!",
-    "it":"Remember, you still have tasks outstanding!",
-    "nl":"Remember, you still have tasks outstanding!"
+    "es":"Recuerda, todavía tiene tareas pendientes!",
+    "it":"Ricorda, hai ancora compiti eccezionali!",
+    "nl":"Denk eraan, je hebt nog steeds taken uitstekend!"
   },
   "FINISH_COMPLETED_IN_CLINIC": {
-    "da":"Completed in clinic?",
-    "de":"Completed in clinic?",
+    "da":"Afsluttet i klinik?",
+    "de":"In der Klinik abgeschlossen?",
     "en":"Completed in clinic?",
-    "es":"Completed in clinic?",
-    "it":"Completed in clinic?",
-    "nl":"Completed in clinic?"
+    "es":"Completado en la visita clínica",
+    "it":"Completato in clinica?",
+    "nl":"Voltooid in de kliniek?"
   },
   "CALENDAR_ESM_MISSED_TITLE":{
     "da":"Blokeret",
@@ -113,12 +113,12 @@ export const Localisations = {
     "nl":"Helaas kunt u deze vragenlijst alleen op het aangegeven tijdstip beantwoorden."
   },
   "CLINICAL_TASKS": {
-    "da":"Clinical assessments",
-    "de":"Clinical assessments",
+    "da":"Kliniske vurderinger",
+    "de":"Klinische Bewertungen",
     "en":"Clinical assessments",
-    "es":"Clinical assessments",
-    "it":"Clinical assessments",
-    "nl":"Clinical assessments"
+    "es":"Evaluaciones clínicas",
+    "it":"Valutazioni cliniche",
+    "nl":"Klinische beoordelingen"
   },
   "SETTINGS_SETTINGS": {
     "da":"Indstillinger",
@@ -555,20 +555,20 @@ export const Localisations = {
     "nl":"Het lijkt erop dat u niet alle vragen heeft beantwoord. Zou u dit nu alsnog willen doen?"
   },
   "NOTIFICATION_REMINDER_FORGOTTEN_ALERT_DEFAULT_DESC": {
-    "da":"You've missed this one. Dont worry! The next quesionnaire will be due soon.",
-    "de":"You've missed this one. Dont worry! The next quesionnaire will be due soon.",
+    "da":"Du har savnet dette. Du skal ikke bekymre dig! Den næste forespørgsel vil snart ske.",
+    "de":"Du hast die letzten Fragen verpasst. Mach dir keine Sorgen! Der nächste Fragebogen wird bald fällig.",
     "en":"You've missed this one. Dont worry! The next quesionnaire will be due soon.",
-    "es":"You've missed this one. Dont worry! The next quesionnaire will be due soon.",
-    "it":"You've missed this one. Dont worry! The next quesionnaire will be due soon.",
-    "nl":"You've missed this one. Dont worry! The next quesionnaire will be due soon."
+    "es":"No ha llegado a contestarlo, no se preocupe! El siguiente cuestionario aparecerá pronto.",
+    "it":"Hai perso questo. Non preoccuparti! Il prossimo quesionario sarà presto disponibile.",
+    "nl":"Je hebt deze gemist. Maak je geen zorgen! De volgende vragenlijst zal binnenkort verschijnen."
   },
   "NOTIFICATION_REMINDER_FORGOTTEN_ALERT_LASTOFNIGHT_DESC": {
-    "da":"You've missed the last one. Dont worry! Have a good night.",
-    "de":"You've missed the last one. Dont worry! Have a good night.",
+    "da":"Du har savnet den sidste. Du skal ikke bekymre dig! Hav en god aften.",
+    "de":"Du hast den letzten verpasst. Mach dir keine Sorgen! Gute Nacht.",
     "en":"You've missed the last one. Dont worry! Have a good night.",
-    "es":"You've missed the last one. Dont worry! Have a good night.",
-    "it":"You've missed the last one. Dont worry! Have a good night.",
-    "nl":"You've missed the last one. Dont worry! Have a good night."
+    "es":"No ha llegado a contestar el último. No se preocupe! Buenas noches!",
+    "it":"Hai perso l'ultimo. Non preoccuparti! Buonanotte.",
+    "nl":"Je hebt de laatste gemist. Maak je geen zorgen! Goede nacht."
   },
   "MEASURE_PROGRESS": {
     "da":"Fremgang",
@@ -659,18 +659,18 @@ export const Localisations = {
 
   },
   "TASK_BAR_NOW_TASK": {
-    "da":"",
+    "da":"Din opgave starter",
     "de":"Deine Aufgabe started ",
     "en":"Your task starts ",
-    "es":"",
-    "it":"",
-    "nl":""
+    "es":"La tarea comienza",
+    "it":"Il tuo compito inizia",
+    "nl":"Je taak begint"
   },
   "TASK_BAR_NEXT_TASK_SOON": {
     "da":"snart",
     "de":"bald",
     "en":"soon",
-    "es":"pronto",
+    "es":"En breve",
     "it":"presto",
     "nl":"spoedig"
   },

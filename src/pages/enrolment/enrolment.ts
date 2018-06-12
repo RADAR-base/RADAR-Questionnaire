@@ -212,14 +212,16 @@ bbGd2mgxfA9bhFAiM"}'})*/
       let participantLogin = subjectInformation.login
       let projectName = subjectInformation.project.projectName
       let sourceId = this.getSourceId(subjectInformation)
-      let createdDate = subjectInformation.createdDate
-      let createdDateMidnight = this.schedule.setDateTimeToMidnight(new Date(createdDate))
-      this.storage.init(participantId,
+      let createdDate = new Date(subjectInformation.createdDate)
+      let createdDateMidnight = this.schedule.setDateTimeToMidnight(createdDate)
+      this.storage.init(
+        participantId,
         participantLogin,
         projectName,
         sourceId,
-        createdDateMidnight,
-        this.language)
+        this.language,
+        createdDate,
+        createdDateMidnight)
       .then(() => {
         this.doAfterAuthentication()
       })

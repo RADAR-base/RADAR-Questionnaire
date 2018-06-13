@@ -57,16 +57,13 @@ export class HomeController {
   }
 
   setNextXNotifications (noOfNotifications) {
-    let periodInDays = 50
-    let day = 86400000
     let today = new Date().getTime()
-    let until = today + day*periodInDays
     var promises = []
     return this.schedule.getTasks()
     .then((tasks) => {
       let limitedTasks = {}
       for(var i = 0; i < tasks.length; i++) {
-        if(tasks[i].timestamp > today && tasks[i].timestamp < until){
+        if(tasks[i].timestamp > today){
           limitedTasks[tasks[i].timestamp] = tasks[i]
         }
       }
@@ -82,7 +79,11 @@ export class HomeController {
       for(var i = 0; i < noOfLtdNotifications; i++) {
         desiredSubset.push(limitedTasks[ltdTasksIdx[i]])
       }
-      return this.notifications.setNotifications(desiredSubset)
+      try {
+        return this.notifications.setNotifications(desiredSubset)
+      } catch(e) {
+        return Promise.resolve({})  
+      }
     })
   }
 

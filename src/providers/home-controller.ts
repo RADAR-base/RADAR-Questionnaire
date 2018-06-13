@@ -82,7 +82,7 @@ export class HomeController {
       try {
         return this.notifications.setNotifications(desiredSubset)
       } catch(e) {
-        return Promise.resolve({})  
+        return Promise.resolve({})
       }
     })
   }

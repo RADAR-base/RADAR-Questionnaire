@@ -154,7 +154,7 @@ J60U1xNZxDfvRjXuOQuCBk8CgK85EtqCJUYpgK-KSW-p5kz_gx5I4TTR3z8XKFm8\
 OkB5CscQQX-O7UcRhToESvBZs2xz01HBjXbw7fKH6SBCEQULt02BqFdlL6SO5_ja\
 08Xi8EYcC6b-Br-XsMys"}'})*/
 // STAGING_PROJECT
-/*this.authenticate({'text':'{"refreshToken":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOi\
+this.authenticate({'text':'{"refreshToken":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOi\
 JiOTU1OWQ4Ni05ZjU5LTQzZTktOGU2Ni1iZDA5NTFhNTE2ZmEiLCJzb3VyY2VzIj\
 pbIjhkMzczYTY1LWJiZjUtNDI5Mi1hZDAyLTcyOTYxZGY0MjY1ZSJdLCJ1c2VyX2\
 5hbWUiOiJiOTU1OWQ4Ni05ZjU5LTQzZTktOGU2Ni1iZDA5NTFhNTE2ZmEiLCJyb2\
@@ -178,7 +178,7 @@ KOOeB6wdn013yEB0mDas895TiryZcdP4NydzE7r3pMRdeDVAMDVRptiQKvLJY2me\
 7vwj7DlpF7WuNboojNF_ZB0i6QrW1S84tiAmE9R-CKPhNXEl4yHbhFhqlGM5ZaPK\
 kr1NFllIu5S58UzZTal6sS7huoYjMSkJDit4bMZFxO66qQAKUuTwXNhgya6F8RBn\
 s1a3p2_Jzn2oYybcIbgp_t8DPrPBmzzwFVMUQ2SZNaaFS9ZW51BFV1DfBR9XwH7T\
-bbGd2mgxfA9bhFAiM"}'})*/
+bbGd2mgxfA9bhFAiM"}'})
 
 }
 
@@ -213,7 +213,7 @@ bbGd2mgxfA9bhFAiM"}'})*/
       let projectName = subjectInformation.project.projectName
       let sourceId = this.getSourceId(subjectInformation)
       let createdDate = new Date(subjectInformation.createdDate)
-      let createdDateMidnight = this.schedule.setDateTimeToMidnight(createdDate)
+      let createdDateMidnight = this.schedule.setDateTimeToMidnight(new Date(subjectInformation.createdDate))
       this.storage.init(
         participantId,
         participantLogin,

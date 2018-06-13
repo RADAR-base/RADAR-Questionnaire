@@ -30,10 +30,12 @@ export class StorageService {
         let referenceDateTime = new Date(createdDateMidnight)
         let enrolmentDate = this.set(StorageKeys.ENROLMENTDATE, enrolmentDateTime.getTime())
         let referenceDate = this.set(StorageKeys.REFERENCEDATE, referenceDateTime.getTime())
+
         let pId = this.set(StorageKeys.PARTICIPANTID, participantId)
         let pLogin = this.set(StorageKeys.PARTICIPANTLOGIN, participantLogin)
         let pName = this.set(StorageKeys.PROJECTNAME, projectName)
         let sId = this.set(StorageKeys.SOURCEID, sourceId)
+
         let lang = this.set(StorageKeys.LANGUAGE, language)
         let notif = this.set(StorageKeys.SETTINGS_NOTIFICATIONS, DefaultSettingsNotifications)
         let report = this.set(StorageKeys.SETTINGS_WEEKLYREPORT, DefaultSettingsWeeklyReport)

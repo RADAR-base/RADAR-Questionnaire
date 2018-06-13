@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { HomeController } from '../../providers/home-controller';
 import { StorageService} from '../../providers/storage-service';
+import { KafkaService } from '../../providers/kafka-service';
 import { HomePage } from '../home/home';
 import { EnrolmentPage } from '../enrolment/enrolment';
 
@@ -14,39 +15,34 @@ import { EnrolmentPage } from '../enrolment/enrolment';
 
 export class SplashPage {
 
-  status: string = 'Retrieving storage...'
+  status: string = ''
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     public storage: StorageService,
-    private controller: HomeController) {
-    this.controller.evalEnrolement()
-      .then((evalEnrolement) => {
-        this.status = 'Updating notifications...'
-        return this.controller.setNextXNotifications(300)
-        .then(() => {
-          this.status = 'Done'
-          if(evalEnrolement){
-            this.navCtrl.setRoot(EnrolmentPage)
-          } else {
-            this.navCtrl.setRoot(HomePage)
-          }
-        })
+    private controller: HomeController,
+    private kafka: KafkaService) {
+    this.status = 'Updating notifications...'
+    this.controller.setNextXNotifications(300)
+    .then(() => {
+      this.status = 'Sending cached answers...'
+      return this.kafka.sendAllAnswersInCache()
+    })
+    .then(() => {
+      this.status = 'Retrieving storage...'
+      return this.controller.evalEnrolement()
+    })
+    .then((evalEnrolement) => {
+      if(evalEnrolement){
+        this.navCtrl.setRoot(EnrolmentPage)
+      } else {
+        this.navCtrl.setRoot(HomePage)
+      }
     })
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SplashPage');
-  }
-
-  setNotifications() {
-    try {
-      return this.controller.setNextXNotifications(300)
-    } catch(e) {
-      console.error(e)
-      console.log('TEST')
-      return Promise.resolve({})
-    }
   }
 
 }

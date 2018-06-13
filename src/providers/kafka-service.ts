@@ -28,7 +28,6 @@ export class KafkaService {
     private authService: AuthService
   ) {
     this.KAFKA_CLIENT_URL = DefaultEndPoint + this.KAFKA_CLIENT_KAFKA
-    this.sendAllAnswersInCache()
   }
 
   prepareKafkaObject(task: Task, data) {
@@ -144,14 +143,14 @@ export class KafkaService {
   }
 
   sendAllAnswersInCache(){
-    this.storage.get(StorageKeys.CACHE_ANSWERS)
+    return this.storage.get(StorageKeys.CACHE_ANSWERS)
     .then((cache) => {
       if(!cache){
-        this.storage.set(StorageKeys.CACHE_ANSWERS, {})
+        return this.storage.set(StorageKeys.CACHE_ANSWERS, {})
       } else {
         for(var answerKey in cache) {
-          this.getSpecs(cache[answerKey].task, cache[answerKey].cache)
-          .then((specs) => this.createPayload(specs, cache[answerKey].task, cache[answerKey].cache))
+          return this.getSpecs(cache[answerKey].task, cache[answerKey].cache)
+          .then((specs) => {return this.createPayload(specs, cache[answerKey].task, cache[answerKey].cache)})
         }
       }
       console.log(cache)

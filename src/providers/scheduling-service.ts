@@ -172,14 +172,12 @@ export class SchedulingService {
   }
 
   insertTask (task): Promise<any> {
-    console.log(task)
     let sKey = StorageKeys.SCHEDULE_TASKS
     let taskPromise = this.getDefaultTasks()
     if(task.isClinical){
       sKey = StorageKeys.SCHEDULE_TASKS_CLINICAL
       taskPromise = this.getClinicalTasks()
     }
-    console.log('Update Task ' + sKey.toString())
     return taskPromise.then((tasks) => {
       var updatedTasks = tasks
       updatedTasks[task.index] = task

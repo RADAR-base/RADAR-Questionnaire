@@ -22,6 +22,7 @@ export class FinishPage {
   isClinicalTask: boolean = false
   completedInClinic: boolean = false
   displayNextTaskReminder: boolean = true
+  hasClickedDoneButton: boolean = false
 
   constructor(
     public navCtrl: NavController,
@@ -68,6 +69,7 @@ export class FinishPage {
 
 
   handleClosePage() {
+    this.hasClickedDoneButton = !this.hasClickedDoneButton
     this.evalClinicalFollowUpTask()
     this.navCtrl.setRoot(HomePage)
   }

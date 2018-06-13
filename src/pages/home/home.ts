@@ -68,7 +68,6 @@ export class HomePage {
     this.checkForNextTask()
     this.evalHasClinicalTasks()
     this.checkIfOnlyESM()
-    this.controller.setNextXNotifications(300)
 
     setInterval(() => {
       this.isNextTaskESMandNotNow()

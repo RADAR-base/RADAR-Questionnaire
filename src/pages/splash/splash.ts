@@ -14,24 +14,39 @@ import { EnrolmentPage } from '../enrolment/enrolment';
 
 export class SplashPage {
 
+  status: string = 'Retrieving storage...'
+
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     public storage: StorageService,
     private controller: HomeController) {
-    this.controller.evalEnrolement().then((evalEnrolement) => {
-      this.storage.prepareStorage()
+    this.controller.evalEnrolement()
+      .then((evalEnrolement) => {
+        this.status = 'Updating notifications...'
+        return this.controller.setNextXNotifications(300)
         .then(() => {
-        if(evalEnrolement){
-          this.navCtrl.setRoot(EnrolmentPage)
-        } else {
-          this.navCtrl.setRoot(HomePage)
-        }
-      })
+          this.status = 'Done'
+          if(evalEnrolement){
+            this.navCtrl.setRoot(EnrolmentPage)
+          } else {
+            this.navCtrl.setRoot(HomePage)
+          }
+        })
     })
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SplashPage');
+  }
+
+  setNotifications() {
+    try {
+      return this.controller.setNextXNotifications(300)
+    } catch(e) {
+      console.error(e)
+      console.log('TEST')
+      return Promise.resolve({})
+    }
   }
 
 }

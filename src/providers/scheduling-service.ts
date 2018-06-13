@@ -23,6 +23,7 @@ export class SchedulingService {
   constructor(public storage: StorageService) {
     let now = new Date()
     this.tzOffset = now.getTimezoneOffset()
+    console.log(this.storage.global)
   }
 
 

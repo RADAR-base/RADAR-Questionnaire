@@ -14,13 +14,14 @@ import { Assessment } from '../models/assessment'
 @Injectable()
 export class StorageService {
 
+  global:any = {}
+
   constructor(
     private storage: Storage
   ) {
-
+    const setStoragePromise = this.prepareStorage()
+    Promise.resolve(setStoragePromise)
   }
-
-  global:any = {}
 
   init(participantId, participantLogin, projectName, sourceId, language, createdDate, createdDateMidnight) {
     let allKeys = this.getAllKeys()
@@ -65,7 +66,6 @@ export class StorageService {
   }
 
   get(key) {
-    //console.log(this.global)
     if(this.global[key.toString()] && key.toString()){
       return Promise.resolve(this.global[key.toString()])
     } else {
@@ -87,20 +87,22 @@ export class StorageService {
   }
 
   prepareStorage() {
-    let configVersion = this.get(StorageKeys.CONFIG_VERSION)
-    let scheduleVersion = this.get(StorageKeys.SCHEDULE_VERSION)
-    let participantId = this.get(StorageKeys.PARTICIPANTID)
-    let projectName = this.get(StorageKeys.PROJECTNAME)
-    let referenceDate = this.get(StorageKeys.REFERENCEDATE)
-    let language = this.get(StorageKeys.LANGUAGE)
-    let settingsNotification = this.get(StorageKeys.SETTINGS_NOTIFICATIONS)
-    let settingsLanguages = this.get(StorageKeys.SETTINGS_NOTIFICATIONS)
-    let settingsWeeklyReport = this.get(StorageKeys.SETTINGS_WEEKLYREPORT)
-    let cache = this.get(StorageKeys.CACHE_ANSWERS)
-    let settings = [configVersion, scheduleVersion, participantId, projectName,
-      referenceDate, language, settingsNotification, settingsLanguages, settingsWeeklyReport,
-      cache]
-    return Promise.all(settings)
+    return this.getAllKeys()
+      .then((keys) => {
+        let promises = []
+        promises.push(Promise.resolve(keys))
+        for (var i = 0; i < keys.length; i++){
+          promises.push(this.storage.get(keys[i]))
+        }
+        return Promise.all(promises)
+      })
+      .then((store) => {
+        const keys = store[0]
+        for(var i = 1; i < store.length; i++){
+          this.global[keys[(i-1)].toString()] = store[i]
+        }
+        return Promise.resolve("Store set")
+      })
   }
 
   getAssessment (task:Task) {

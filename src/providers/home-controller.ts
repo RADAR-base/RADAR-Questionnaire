@@ -58,17 +58,31 @@ export class HomeController {
 
   setNextXNotifications (noOfNotifications) {
     let periodInDays = 50
-    let today = new Date().getTime()
     let day = 86400000
+    let today = new Date().getTime()
+    let until = today + day*periodInDays
     var promises = []
-    for(var i = 0; i < periodInDays; i++) {
-      promises.push(this.getTasksOfDate(new Date(today + day*i)))
-    }
-    Promise.all(promises)
+    return this.schedule.getTasks()
     .then((tasks) => {
-      let mergedTasks = [].concat.apply([], tasks)
-      let desiredSubset = mergedTasks.slice(0, noOfNotifications)
-      this.notifications.setNotifications(desiredSubset)
+      let limitedTasks = {}
+      for(var i = 0; i < tasks.length; i++) {
+        if(tasks[i].timestamp > today && tasks[i].timestamp < until){
+          limitedTasks[tasks[i].timestamp] = tasks[i]
+        }
+      }
+      const ltdTasksIdx = Object.keys(limitedTasks)
+      ltdTasksIdx.sort()
+
+      let noOfLtdNotifications = noOfNotifications
+      if(noOfNotifications >= ltdTasksIdx.length) {
+        noOfLtdNotifications = ltdTasksIdx.length
+      }
+
+      let desiredSubset = []
+      for(var i = 0; i < noOfLtdNotifications; i++) {
+        desiredSubset.push(limitedTasks[ltdTasksIdx[i]])
+      }
+      return this.notifications.setNotifications(desiredSubset)
     })
   }
 
@@ -137,7 +151,6 @@ export class HomeController {
     }
     return status
   }
-
 
   sendNonReportedTaskCompletion() {
     this.schedule.getNonReportedCompletedTasks()

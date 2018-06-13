@@ -148,12 +148,19 @@ export class KafkaService {
       if(!cache){
         return this.storage.set(StorageKeys.CACHE_ANSWERS, {})
       } else {
+        let promises = []
+        let noOfTasks = 0
         for(var answerKey in cache) {
-          return this.getSpecs(cache[answerKey].task, cache[answerKey].cache)
-          .then((specs) => {return this.createPayload(specs, cache[answerKey].task, cache[answerKey].cache)})
+            promises.push(this.getSpecs(cache[answerKey].task, cache[answerKey].cache)
+            .then((specs) => {return this.createPayload(specs, cache[answerKey].task, cache[answerKey].cache)}))
+            noOfTasks += 1
+            if(noOfTasks == 30) {
+              break;
+            }
+
         }
+        return Promise.all(promises)
       }
-      console.log(cache)
     });
   }
 

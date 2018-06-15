@@ -75,9 +75,12 @@ export class KafkaService {
 
   getSpecs(task:Task, kafkaObject) {
     if(kafkaObject.value.completionPercentage != undefined) {
-      return Promise.resolve({"name":"completion_log", "avsc":"questionnaire"})
+      return Promise.resolve({"name":"completion_log", "avsc":"questionnaire", "task":task, "kafkaObject":kafkaObject})
     } else {
       return this.storage.getAssessmentAvsc(task)
+      .then((specs) => {
+        return Promise.resolve(Object.assign(specs, {"task":task, "kafkaObject":kafkaObject}))
+      })
     }
   }
 
@@ -104,6 +107,7 @@ export class KafkaService {
     .catch((error) => {
       console.log(error)
       this.cacheAnswers(task, kafkaObject)
+      return Promise.resolve({res: 'ERROR'})
     });
 
   }
@@ -114,17 +118,17 @@ export class KafkaService {
       var topic = specs.avsc + "_" + specs.name
       console.log("Sending to: " + topic)
 
-      kafkaConnInstance.topic(topic).produce(id, info, payload,
+      return kafkaConnInstance.topic(topic).produce(id, info, payload,
         (err, res) => {
-          if (res) {
-            //console.log(res)
-            this.removeAnswersFromCache(cacheKey)
-          } else if (err) {
+          if (err) {
             console.log(err)
+          } else {
+            return this.removeAnswersFromCache(cacheKey)
           }
         })
     }, error => {
       console.error("Could not initiate kafka connection " + JSON.stringify(error))
+      return Promise.resolve({res: 'ERROR'})
     })
   }
 
@@ -152,24 +156,30 @@ export class KafkaService {
         let noOfTasks = 0
         for(var answerKey in cache) {
             promises.push(this.getSpecs(cache[answerKey].task, cache[answerKey].cache)
-            .then((specs) => {return this.createPayload(specs, cache[answerKey].task, cache[answerKey].cache)}))
+            .then((specs) => {
+              return this.createPayload(specs, specs.task, specs.kafkaObject)
+            }))
             noOfTasks += 1
-            if(noOfTasks == 30) {
+            if(noOfTasks == 20) {
               break;
             }
 
         }
         return Promise.all(promises)
+          .then((res) => {
+            console.log(res)
+            return Promise.resolve(res)
+          })
       }
     });
   }
 
   removeAnswersFromCache(cacheKey){
-    this.storage.get(StorageKeys.CACHE_ANSWERS)
+    return this.storage.get(StorageKeys.CACHE_ANSWERS)
     .then((cache) => {
       console.log("Deleting " + cacheKey)
       delete cache[cacheKey]
-      this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
+      return this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
     })
   }
 

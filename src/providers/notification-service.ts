@@ -76,6 +76,19 @@ export class NotificationService {
     }
   }
 
+  cancelOverdueNotifications (){
+    (<any>cordova).plugins.notification.local.getIds()
+    .then(ids => {
+      console.log(ids)
+      const now = new Date().getTime()
+      ids.map(id => {
+        if(id < now) {
+          (<any>cordova).plugins.notification.local.cancel(id)
+        }
+      })
+    })
+  }
+
   showNotificationMissedInfo(task:Task, isLastOfDay:boolean) {
     let msgDefault = this.translate.transform(LocKeys.NOTIFICATION_REMINDER_FORGOTTEN_ALERT_DEFAULT_DESC.toString())
     let msgLastOfDay = this.translate.transform(LocKeys.NOTIFICATION_REMINDER_FORGOTTEN_ALERT_LASTOFNIGHT_DESC.toString())

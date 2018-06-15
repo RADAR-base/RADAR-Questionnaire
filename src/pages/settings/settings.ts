@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AlertController } from 'ionic-angular';
 import { StorageService } from '../../providers/storage-service';
-import { SchedulingService } from '../../providers/scheduling-service'
+import { SchedulingService } from '../../providers/scheduling-service';
+import { HomeController } from '../../providers/home-controller';
 import { ConfigService } from '../../providers/config-service';
 import { LanguageSetting } from '../../models/settings';
 import { NotificationSettings } from '../../models/settings';
@@ -41,6 +42,7 @@ export class SettingsPage {
     public storage: StorageService,
     private schedule: SchedulingService,
     private configService: ConfigService,
+    private controller: HomeController,
     public translate: TranslatePipe){
     }
 
@@ -77,7 +79,6 @@ export class SettingsPage {
       this.language            = returns[5]
       this.notifications       = returns[6]
       this.languagesSelectable = returns[7]
-      console.log(this.languagesSelectable)
       this.weeklyReport        = returns[8]
       var size = 0
       for(var key in returns[9]) {
@@ -205,8 +206,11 @@ export class SettingsPage {
     this.showLoading = true
     this.configService.fetchConfigState()
      .then(() => {
-       this.showLoading = false
        this.loadSettings()
+       this.controller.setNextXNotifications(300)
+       .then(() => {
+         this.showLoading = false
+       })
      })
   }
 

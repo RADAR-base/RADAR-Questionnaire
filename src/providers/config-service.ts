@@ -43,16 +43,16 @@ export class ConfigService {
           this.storage.set(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS, clinicalAssessments)
           .then(() =>{
             console.log("Pulled clinical questionnaire")
-            this.pullQuestionnaires(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS)
+            return this.pullQuestionnaires(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS)
           })
           this.storage.set(StorageKeys.CONFIG_ASSESSMENTS, scheduledAssessments)
           .then(() => {
             console.log("Pulled questionnaire")
-            this.pullQuestionnaires(StorageKeys.CONFIG_ASSESSMENTS)
+            return this.pullQuestionnaires(StorageKeys.CONFIG_ASSESSMENTS)
           })
         } else {
           console.log('NO CONFIG UPDATE. Version of protocol.json has not changed.')
-          this.schedule.generateSchedule()
+          return this.schedule.generateSchedule()
         }
       }).catch(e => console.log(e))
     })
@@ -93,7 +93,7 @@ export class ConfigService {
   pullQuestionnaires(storageKey) {
     let assessments = this.storage.get(storageKey)
     let lang = this.storage.get(StorageKeys.LANGUAGE)
-    Promise.all([assessments, lang])
+    return Promise.all([assessments, lang])
     .then((vars) => {
       let assessments = vars[0]
       let lang = vars[1]
@@ -102,14 +102,14 @@ export class ConfigService {
       for(var i = 0; i < assessments.length; i++) {
         promises.push(this.pullQuestionnaireLang(assessments[i], lang))
       }
-      Promise.all(promises)
+      return Promise.all(promises)
       .then((res) => {
         let assessmentUpdate = assessments
         for(var i = 0; i < assessments.length; i++) {
           assessmentUpdate[i]['questions'] = this.formatQuestionsHeaders(res[i])
         }
-        this.storage.set(storageKey, assessmentUpdate)
-        .then(() => this.schedule.generateSchedule())
+        return this.storage.set(storageKey, assessmentUpdate)
+        .then(() => {return this.schedule.generateSchedule()})
       })
     })
   }

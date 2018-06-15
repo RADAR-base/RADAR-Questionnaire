@@ -29,6 +29,7 @@ export class MyApp {
       statusBar.styleDefault()
       splashScreen.hide()
       configService.fetchConfigState()
+      configService.migrateToLatestVersion()
       notificationService.permissionCheck()
     })
   }

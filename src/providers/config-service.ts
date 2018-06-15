@@ -151,4 +151,16 @@ export class ConfigService {
     return questionsFormated
   }
 
+  migrateToLatestVersion() {
+    // migrate ENROLMENTDATE (from V0.3.1- to V0.3.2+)
+    let enrolmentDate = this.storage.get(StorageKeys.ENROLMENTDATE)
+    let referenceDate = this.storage.get(StorageKeys.REFERENCEDATE)
+    Promise.all([enrolmentDate, referenceDate])
+    .then((dates) => {
+      if(dates[0] == undefined) {
+        this.storage.set(StorageKeys.ENROLMENTDATE, referenceDate)
+      }
+    })
+  }
+
 }

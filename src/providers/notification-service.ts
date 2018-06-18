@@ -27,31 +27,32 @@ export class NotificationService {
   setNotifications (tasks) {
     console.log('NOTIFICATIONS ClearAll')
     let now = new Date().getTime();
-    (<any>cordova).plugins.notification.local.clearAll();
-    let notifications = []
-    for(var i = 0; i < tasks.length; i++) {
-      if(tasks[i].timestamp > now) {
-        let j = (i+1 < tasks.length ? i+1 : i)
-        let isLastOfDay = this.evalIsLastOfDay(tasks[i], tasks[j])
-          //console.log("NOTIFICATIONS SET " + tasks[i].index + " LastOfDay: " + isLastOfDay)
-        let text = this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1.toString())
-        text += " " + tasks[i].estimatedCompletionTime + " "
-        text += this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2.toString());
-        notifications.push({
-          id: tasks[i].index,
-          title: this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW.toString()),
-          text: text,
-          trigger: {at: new Date(tasks[i].timestamp)},
-          foreground: true,
-          vibrate: true,
-          sound: "file://assets/sounds/serious-strike.mp3",
-          data: { task: tasks[i], isLastOfDay: isLastOfDay }
-        })
+    (<any>cordova).plugins.notification.local.clearAll(() => {
+      let notifications = []
+      for(var i = 0; i < tasks.length; i++) {
+        if(tasks[i].timestamp > now) {
+          let j = (i+1 < tasks.length ? i+1 : i)
+          let isLastOfDay = this.evalIsLastOfDay(tasks[i], tasks[j])
+            //console.log("NOTIFICATIONS SET " + tasks[i].index + " LastOfDay: " + isLastOfDay)
+          let text = this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1.toString())
+          text += " " + tasks[i].estimatedCompletionTime + " "
+          text += this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2.toString());
+          notifications.push({
+            id: tasks[i].index,
+            title: this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW.toString()),
+            text: text,
+            trigger: {at: new Date(tasks[i].timestamp)},
+            foreground: true,
+            vibrate: true,
+            sound: "file://assets/sounds/serious-strike.mp3",
+            data: { task: tasks[i], isLastOfDay: isLastOfDay }
+          })
+        }
       }
-    }
-    console.log('NOTIFICATIONS Scheduleing notifications')
-    (<any>cordova).plugins.notification.local.schedule(notifications)
-    (<any>cordova).plugins.notification.local.on("click", (notification) => this.evalTaskTiming(notification.data))
+      console.log('NOTIFICATIONS Scheduleing notifications');
+      (<any>cordova).plugins.notification.local.schedule(notifications);
+      (<any>cordova).plugins.notification.local.on("click", (notification) => this.evalTaskTiming(notification.data));
+    });
     return Promise.resolve({})
   }
 
@@ -89,11 +90,31 @@ export class NotificationService {
   }
 
   consoleLogScheduledNotifications () {
-    (<any>cordova).plugins.notification.local.getScheduledIds()
-    .then((ids) => {
-      console.log("NOTIFICATIONS Scheduled Ids:")
-      console.log(ids)
-    })
+    (<any>cordova).plugins.notification.local.getScheduled(
+      (notifications) => {
+      let dailyNotifies = {}
+      for(var i = 0; i<notifications.length; i++){
+        const data = JSON.parse(notifications[i]['data'])
+        const trigger = new Date(notifications[i]['trigger']['at']).toString()
+        const key = trigger.substr(0,15)
+        const name = data['task']['name']
+        const id = notifications[i].id
+        const rendered = `${i} ID ${id} TIME ${trigger.substr(15)} NAME ${name}\n`
+
+        let tmp = dailyNotifies[key]
+        if(tmp == undefined) {
+          dailyNotifies[key] = `\nNOTIFICATIONS DATE ${key}\n` + rendered
+        } else {
+          dailyNotifies[key] += rendered
+        }
+      }
+      const keys = Object.keys(dailyNotifies)
+      console.log(`\n NOTIFICATIONS Scheduled Notifications (${notifications.length}):\n`)
+      for(var i = 0; i<keys.length; i++){
+        console.log(dailyNotifies[keys[i]])
+      }
+
+    });
   }
 
   showNotificationMissedInfo(task:Task, isLastOfDay:boolean) {

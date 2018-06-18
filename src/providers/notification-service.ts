@@ -27,7 +27,7 @@ export class NotificationService {
   setNotifications (tasks) {
     console.log('NOTIFICATIONS ClearAll')
     let now = new Date().getTime();
-    (<any>cordova).plugins.notification.local.clearAll(() => {
+    (<any>cordova).plugins.notification.local.cancelAll(() => {
       let notifications = []
       for(var i = 0; i < tasks.length; i++) {
         if(tasks[i].timestamp > now) {
@@ -96,7 +96,7 @@ export class NotificationService {
       for(var i = 0; i<notifications.length; i++){
         const data = JSON.parse(notifications[i]['data'])
         const trigger = new Date(notifications[i]['trigger']['at']).toString()
-        const key = trigger.substr(0,15)
+        const key = trigger.substr(4,11)
         const name = data['task']['name']
         const id = notifications[i].id
         const rendered = `${i} ID ${id} TIME ${trigger.substr(15)} NAME ${name}\n`
@@ -109,6 +109,7 @@ export class NotificationService {
         }
       }
       const keys = Object.keys(dailyNotifies)
+      keys.sort()
       console.log(`\n NOTIFICATIONS Scheduled Notifications (${notifications.length}):\n`)
       for(var i = 0; i<keys.length; i++){
         console.log(dailyNotifies[keys[i]])

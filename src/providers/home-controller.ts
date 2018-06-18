@@ -64,7 +64,8 @@ export class HomeController {
       let limitedTasks = {}
       for(var i = 0; i < tasks.length; i++) {
         if(tasks[i].timestamp > today){
-          limitedTasks[tasks[i].timestamp] = tasks[i]
+          const key = `${tasks[i].timestamp}-${tasks[i].name}`
+          limitedTasks[key] = tasks[i]
         }
       }
       const ltdTasksIdx = Object.keys(limitedTasks)
@@ -79,6 +80,7 @@ export class HomeController {
       for(var i = 0; i < noOfLtdNotifications; i++) {
         desiredSubset.push(limitedTasks[ltdTasksIdx[i]])
       }
+      console.log(`NOTIFICATIONS desiredSubset: ${desiredSubset.length}`)
       try {
         return this.notifications.setNotifications(desiredSubset)
       } catch(e) {

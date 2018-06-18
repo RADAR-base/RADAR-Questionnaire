@@ -80,7 +80,7 @@
         </div>
       </span>
     </ion-item>
-    <ion-item no-lines>
+    <ion-item no-lines (click)="consoleLogSchedule()">
       {{ "SETTINGS_SCHEDULE" | translate}}
       <span item-right class="info-value">
         <div *ngIf="!showLoading">V{{ scheduleVersion }}</div>

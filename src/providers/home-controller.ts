@@ -93,6 +93,25 @@ export class HomeController {
     this.notifications.consoleLogScheduledNotifications()
   }
 
+  consoleLogSchedule() {
+    console.log("SCHEDULE TEST 1")
+    this.schedule.getTasks()
+    .then((tasks) => {
+      console.log("SCHEDULE TEST 2")
+      let tasksKeys = []
+      for(var i = 0; i < tasks.length; i++) {
+        tasksKeys.push(`${tasks[i].timestamp}-${tasks[i].name}`)
+      }
+      tasksKeys.sort()
+      let rendered = `\nSCHEDULE Total (${tasksKeys.length})\n`
+      for(var i=(tasksKeys.length-10); i<tasksKeys.length; i++){
+        const dateName = tasksKeys[i].split("-")
+        rendered +=`${tasksKeys[i]} DATE ${new Date(parseInt(dateName[0])).toString()} NAME ${dateName[1]}\n`
+      }
+      console.log(rendered)
+    });
+  }
+
 
   retrieveTaskProgress (tasks):TasksProgress {
     var tasksProgress: TasksProgress = {

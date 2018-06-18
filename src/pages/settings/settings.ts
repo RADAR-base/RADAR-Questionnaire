@@ -167,6 +167,11 @@ export class SettingsPage {
     this.controller.consoleLogNotifications();
   }
 
+  consoleLogSchedule() {
+    console.log('SCHEDULE SETTINGS')
+    this.controller.consoleLogSchedule();
+  }
+
   showConfirmReset() {
     let buttons = [
       {

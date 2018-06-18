@@ -25,35 +25,34 @@ export class NotificationService {
   }
 
   setNotifications (tasks) {
-    //try{
-      let now = new Date().getTime();
-      (<any>cordova).plugins.notification.local.clearAll();
-      for(var i = 0; i < tasks.length; i++) {
-        if(tasks[i].timestamp > now) {
-          let j = (i+1 < tasks.length ? i+1 : i)
-          let isLastOfDay = this.evalIsLastOfDay(tasks[i], tasks[j])
-            console.log("NOTIFICATION SET " + tasks[i].index + " LastOfDay: " + isLastOfDay)
-          let text = this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1.toString())
-          text += " " + tasks[i].estimatedCompletionTime + " "
-          text += this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2.toString());
-          (<any>cordova).plugins.notification.local.schedule({
-            id: tasks[i].index,
-            title: this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW.toString()),
-            text: text,
-            trigger: {at: new Date(tasks[i].timestamp)},
-            foreground: true,
-            vibrate: true,
-            sound: "file://assets/sounds/serious-strike.mp3",
-            data: { task: tasks[i], isLastOfDay: isLastOfDay }
-          })
-        }
+    console.log('NOTIFICATIONS ClearAll')
+    let now = new Date().getTime();
+    (<any>cordova).plugins.notification.local.clearAll();
+    let notifications = []
+    for(var i = 0; i < tasks.length; i++) {
+      if(tasks[i].timestamp > now) {
+        let j = (i+1 < tasks.length ? i+1 : i)
+        let isLastOfDay = this.evalIsLastOfDay(tasks[i], tasks[j])
+          //console.log("NOTIFICATIONS SET " + tasks[i].index + " LastOfDay: " + isLastOfDay)
+        let text = this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1.toString())
+        text += " " + tasks[i].estimatedCompletionTime + " "
+        text += this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2.toString());
+        notifications.push({
+          id: tasks[i].index,
+          title: this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW.toString()),
+          text: text,
+          trigger: {at: new Date(tasks[i].timestamp)},
+          foreground: true,
+          vibrate: true,
+          sound: "file://assets/sounds/serious-strike.mp3",
+          data: { task: tasks[i], isLastOfDay: isLastOfDay }
+        })
       }
-      (<any>cordova).plugins.notification.local.on("click", (notification) => this.evalTaskTiming(notification.data))
-      return Promise.resolve({})
-    /*} catch(e) {
-      console.error(e)
-      return Promise.resolve({})
-    }*/
+    }
+    console.log('NOTIFICATIONS Scheduleing notifications')
+    (<any>cordova).plugins.notification.local.schedule(notifications)
+    (<any>cordova).plugins.notification.local.on("click", (notification) => this.evalTaskTiming(notification.data))
+    return Promise.resolve({})
   }
 
   evalIsLastOfDay(task1, task2) {

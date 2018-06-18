@@ -27,7 +27,7 @@
   </ion-item-group>
 
   <ion-item-group>
-    <ion-item-divider no-lines class="item-divider">{{ "SETTINGS_NOTIFICATIONS" | translate}}</ion-item-divider>
+    <ion-item-divider no-lines class="item-divider" (click)="consoleLogNotifications()">{{ "SETTINGS_NOTIFICATIONS" | translate}}</ion-item-divider>
     <ion-item no-lines>
       <ion-label>
         {{ "SETTINGS_NOTIFICATIONS_SOUND" | translate}}

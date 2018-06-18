@@ -163,6 +163,10 @@ export class SettingsPage {
     })
   }
 
+  consoleLogNotifications() {
+    this.controller.consoleLogNotifications();
+  }
+
   showConfirmReset() {
     let buttons = [
       {

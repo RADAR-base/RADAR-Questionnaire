@@ -87,6 +87,10 @@ export class HomeController {
     })
   }
 
+  consoleLogNotifications() {
+    this.notifications.consoleLogScheduledNotifications()
+  }
+
 
   retrieveTaskProgress (tasks):TasksProgress {
     var tasksProgress: TasksProgress = {

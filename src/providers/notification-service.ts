@@ -88,6 +88,14 @@ export class NotificationService {
     })
   }
 
+  consoleLogScheduledNotifications () {
+    (<any>cordova).plugins.notification.local.getScheduledIds()
+    .then((ids) => {
+      console.log("NOTIFICATIONS Scheduled Ids:")
+      console.log(ids)
+    })
+  }
+
   showNotificationMissedInfo(task:Task, isLastOfDay:boolean) {
     let msgDefault = this.translate.transform(LocKeys.NOTIFICATION_REMINDER_FORGOTTEN_ALERT_DEFAULT_DESC.toString())
     let msgLastOfDay = this.translate.transform(LocKeys.NOTIFICATION_REMINDER_FORGOTTEN_ALERT_LASTOFNIGHT_DESC.toString())

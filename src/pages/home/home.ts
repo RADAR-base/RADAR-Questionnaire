@@ -75,7 +75,7 @@ export class HomePage {
     }, 1000)
 
     this.controller.sendNonReportedTaskCompletion()
-    this.notification.cancelOverdueNotifications()
+    //this.notification.cancelOverdueNotifications()
   }
 
   checkForNextTask () {

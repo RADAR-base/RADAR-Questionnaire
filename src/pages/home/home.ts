@@ -1,9 +1,9 @@
 import { Component, ViewChild, ElementRef} from '@angular/core'
-import { NavController, AlertController, Content } from 'ionic-angular'
+import { NavController, AlertController, Content, Platform } from 'ionic-angular'
 import { SchedulingService } from '../../providers/scheduling-service'
 import { HomeController } from '../../providers/home-controller'
 import { Task, TasksProgress } from '../../models/task'
-import { EnrolmentPage } from '../enrolment/enrolment'
+import { SplashPage } from '../splash/splash'
 import { StartPage } from '../start/start'
 import { QuestionsPage } from '../questions/questions'
 import { SettingsPage } from '../settings/settings'
@@ -58,10 +58,16 @@ export class HomePage {
     private controller: HomeController,
     private translate: TranslatePipe,
     public storage: StorageService,
-    private notification: NotificationService
-  ) {  }
+    private notification: NotificationService,
+    private platform: Platform,
+  ) {
+    platform.resume.subscribe((result)=>{//Foreground
+      navCtrl.setRoot(SplashPage)
+    });
+  }
 
   ngAfterViewInit(){
+
   }
 
   ionViewDidLoad () {

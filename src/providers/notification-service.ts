@@ -41,6 +41,9 @@ export class NotificationService {
       }
       const ltdTasksIdx = Object.keys(limitedTasks)
       ltdTasksIdx.sort()
+      for(var i = 0; i < 10; i++) {
+        console.log(`NOTIFICATIONS ${ltdTasksIdx[i]}`)
+      }
 
       let noOfLtdNotifications = noOfNotifications
       if(noOfNotifications >= ltdTasksIdx.length) {
@@ -64,7 +67,6 @@ export class NotificationService {
         let j = (i+1 < tasks.length ? i+1 : i)
         let isLastScheduledNotification = i+1 == tasks.length ? true : false
         let isLastOfDay = this.evalIsLastOfDay(tasks[i], tasks[j])
-          //console.log("NOTIFICATIONS SET " + tasks[i].index + " LastOfDay: " + isLastOfDay)
         let text = this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1.toString())
         text += " " + tasks[i].estimatedCompletionTime + " "
         text += this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2.toString());
@@ -108,6 +110,7 @@ export class NotificationService {
     if(now > endScheduledTimestamp && task.name == 'ESM'){
       this.showNotificationMissedInfo(task, data.isLastOfDay)
     }
+    (<any>cordova).plugins.notification.local.clearAll()
   }
 
   evalLastTask(data) {
@@ -146,6 +149,9 @@ export class NotificationService {
       for(var i = 0; i<keys.length; i++){
         console.log(dailyNotifies[keys[i]])
       }
+      (<any>cordova).plugins.notification.local.cancelAll(() => {
+        this.evalLastTask({'isLastScheduledNotification': true})
+      });
     });
   }
 

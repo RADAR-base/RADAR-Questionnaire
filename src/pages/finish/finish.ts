@@ -10,6 +10,7 @@ import { StorageService } from '../../providers/storage-service'
 import { StorageKeys } from '../../enums/storage'
 import { Task } from '../../models/task'
 import { Reminders } from '../../models/protocol'
+import { DefaultNumberOfNotificationsToSchedule } from '../../assets/data/defaultConfig'
 
 
 @Component({
@@ -111,7 +112,7 @@ export class FinishPage {
       clinicalTasks.push(clinicalTask)
     }
     return this.storage.set(StorageKeys.SCHEDULE_TASKS_CLINICAL, clinicalTasks)
-      .then(() => {return this.controller.setNextXNotifications(300)})
+      .then(() => {return this.controller.setNextXNotifications(DefaultNumberOfNotificationsToSchedule)})
   }
 
   formatRepeatsAfterClinic (repeats) {

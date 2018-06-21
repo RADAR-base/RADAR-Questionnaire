@@ -17,6 +17,7 @@ export class SplashPage {
 
   status: string = ''
   forceLocalStorageLookUp: boolean = true
+  hasParentPage: boolean = false
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
@@ -26,7 +27,7 @@ export class SplashPage {
     private kafka: KafkaService) {
     const parentPage = this.navParams.data.parentPage
     if(parentPage){
-      this.forceLocalStorageLookUp = false
+      this.hasParentPage = true
     }
     this.status = 'Updating notifications...'
     this.controller.setNextXNotifications(100)
@@ -36,6 +37,10 @@ export class SplashPage {
     })
     .then(() => {
       this.status = 'Retrieving storage...'
+
+      if(this.hasParentPage) {
+        return Promise.resolve(true)
+      }
       return this.controller.evalEnrolment(this.forceLocalStorageLookUp)
     })
     .then((evalEnrolement) => {

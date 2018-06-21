@@ -27,7 +27,7 @@ export class NotificationService {
   setNotifications (tasks) {
     console.log('NOTIFICATIONS ClearAll')
     let now = new Date().getTime();
-    (<any>cordova).plugins.notification.local.cancelAll(() => {
+    return (<any>cordova).plugins.notification.local.cancelAll(() => {
       let notifications = []
       for(var i = 0; i < tasks.length; i++) {
         if(tasks[i].timestamp > now) {
@@ -50,10 +50,9 @@ export class NotificationService {
         }
       }
       console.log('NOTIFICATIONS Scheduleing notifications');
-      (<any>cordova).plugins.notification.local.schedule(notifications);
       (<any>cordova).plugins.notification.local.on("click", (notification) => this.evalTaskTiming(notification.data));
+      return (<any>cordova).plugins.notification.local.schedule(notifications, () => {return Promise.resolve({})});
     });
-    return Promise.resolve({})
   }
 
   evalIsLastOfDay(task1, task2) {

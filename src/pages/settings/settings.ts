@@ -24,6 +24,7 @@ import { SplashPage } from '../splash/splash';
 
 export class SettingsPage {
 
+  appVersion: String = '0.4.5'
   configVersion: String
   scheduleVersion: String
   cacheSize: number

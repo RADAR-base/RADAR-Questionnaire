@@ -99,9 +99,11 @@ export const LanguageMap = {
 
 export const DefaultScheduleVersion: number = 0
 
-export const DefaultScheduleYearCoverage: number = 2 //years
+export const DefaultScheduleYearCoverage: number = 2 // years
 
-export const DefaultScheduleReportRepeat: number = 7 //days
+export const DefaultScheduleReportRepeat: number = 7 // days
+
+export const DefaultNumberOfNotificationsToSchedule: number = 1 //
 
 export const DefaultSourceTypeModel: string = 'aRMT-App'
 

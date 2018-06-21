@@ -79,11 +79,6 @@ export class HomePage {
       this.checkForNextTask()
     }, 1000)
 
-    this.platform.resume.subscribe((result)=>{
-      //this.navCtrl.setRoot(SplashPage, {'parentPage':'HomePage'})
-      this.controller.setNextXNotifications(100)
-    });
-
     this.controller.sendNonReportedTaskCompletion()
   }
 

@@ -5,6 +5,7 @@ import { StorageService} from '../../providers/storage-service';
 import { KafkaService } from '../../providers/kafka-service';
 import { HomePage } from '../home/home';
 import { EnrolmentPage } from '../enrolment/enrolment';
+import { DefaultNumberOfNotificationsToSchedule } from '../../assets/data/defaultConfig';
 
 
 
@@ -31,7 +32,7 @@ export class SplashPage {
       this.hasParentPage = true
     }
     this.status = 'Updating notifications...'
-    this.controller.setNextXNotifications(100)
+    this.controller.setNextXNotifications(DefaultNumberOfNotificationsToSchedule)
     .then(() => {
       this.status = 'Sending cached answers...'
       return this.kafka.sendAllAnswersInCache()

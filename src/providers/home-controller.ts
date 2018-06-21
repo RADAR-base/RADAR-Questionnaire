@@ -59,27 +59,8 @@ export class HomeController {
   setNextXNotifications (noOfNotifications) {
     let today = new Date().getTime()
     var promises = []
-    return this.schedule.getTasks()
-    .then((tasks) => {
-      let limitedTasks = {}
-      for(var i = 0; i < tasks.length; i++) {
-        if(tasks[i].timestamp > today){
-          const key = `${tasks[i].timestamp}-${tasks[i].name}`
-          limitedTasks[key] = tasks[i]
-        }
-      }
-      const ltdTasksIdx = Object.keys(limitedTasks)
-      ltdTasksIdx.sort()
-
-      let noOfLtdNotifications = noOfNotifications
-      if(noOfNotifications >= ltdTasksIdx.length) {
-        noOfLtdNotifications = ltdTasksIdx.length
-      }
-
-      let desiredSubset = []
-      for(var i = 0; i < noOfLtdNotifications; i++) {
-        desiredSubset.push(limitedTasks[ltdTasksIdx[i]])
-      }
+    return this.notifications.generateNotificationSubsetForXTasks(noOfNotifications)
+    .then((desiredSubset) => {
       console.log(`NOTIFICATIONS desiredSubset: ${desiredSubset.length}`)
       try {
         return this.notifications.setNotifications(desiredSubset)
@@ -94,10 +75,8 @@ export class HomeController {
   }
 
   consoleLogSchedule() {
-    console.log("SCHEDULE TEST 1")
     this.schedule.getTasks()
     .then((tasks) => {
-      console.log("SCHEDULE TEST 2")
       let tasksKeys = []
       for(var i = 0; i < tasks.length; i++) {
         tasksKeys.push(`${tasks[i].timestamp}-${tasks[i].name}`)

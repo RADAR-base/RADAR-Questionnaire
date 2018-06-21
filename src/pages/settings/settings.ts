@@ -15,6 +15,7 @@ import { StorageKeys } from '../../enums/storage';
 import { LocKeys } from '../../enums/localisations';
 import { TranslatePipe } from '../../pipes/translate/translate';
 import { SplashPage } from '../splash/splash';
+import { DefaultNumberOfNotificationsToSchedule } from '../../assets/data/defaultConfig';
 
 
 @Component({
@@ -217,7 +218,7 @@ export class SettingsPage {
     this.configService.fetchConfigState()
      .then(() => {
        this.loadSettings()
-       this.controller.setNextXNotifications(100)
+       this.controller.setNextXNotifications(DefaultNumberOfNotificationsToSchedule)
        .then(() => {
          this.showLoading = false
        })

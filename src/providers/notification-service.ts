@@ -4,6 +4,8 @@ import 'rxjs/add/operator/map';
 import { TranslatePipe } from '../pipes/translate/translate'
 import { LocKeys } from '../enums/localisations';
 import { Task } from '../models/task'
+import { SchedulingService } from '../providers/scheduling-service';
+import { DefaultNumberOfNotificationsToSchedule } from '../assets/data/defaultConfig';
 
 declare var cordova;
 
@@ -12,7 +14,8 @@ export class NotificationService {
 
   constructor(
     private translate: TranslatePipe,
-    private alertCtrl: AlertController) {
+    private alertCtrl: AlertController,
+    private schedule: SchedulingService ) {
   }
 
   permissionCheck() {
@@ -24,35 +27,67 @@ export class NotificationService {
     })
   }
 
+  generateNotificationSubsetForXTasks(noOfNotifications) {
+    let today = new Date().getTime()
+    var promises = []
+    return this.schedule.getTasks()
+    .then((tasks) => {
+      let limitedTasks = {}
+      for(var i = 0; i < tasks.length; i++) {
+        if(tasks[i].timestamp > today){
+          const key = `${tasks[i].timestamp}-${tasks[i].name}`
+          limitedTasks[key] = tasks[i]
+        }
+      }
+      const ltdTasksIdx = Object.keys(limitedTasks)
+      ltdTasksIdx.sort()
+
+      let noOfLtdNotifications = noOfNotifications
+      if(noOfNotifications >= ltdTasksIdx.length) {
+        noOfLtdNotifications = ltdTasksIdx.length
+      }
+
+      let desiredSubset = []
+      for(var i = 0; i < noOfLtdNotifications; i++) {
+        desiredSubset.push(limitedTasks[ltdTasksIdx[i]])
+      }
+      return desiredSubset
+    })
+  }
+
   setNotifications (tasks) {
     console.log('NOTIFICATIONS ClearAll')
     let now = new Date().getTime();
-    return (<any>cordova).plugins.notification.local.cancelAll(() => {
-      let notifications = []
-      for(var i = 0; i < tasks.length; i++) {
-        if(tasks[i].timestamp > now) {
-          let j = (i+1 < tasks.length ? i+1 : i)
-          let isLastOfDay = this.evalIsLastOfDay(tasks[i], tasks[j])
-            //console.log("NOTIFICATIONS SET " + tasks[i].index + " LastOfDay: " + isLastOfDay)
-          let text = this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1.toString())
-          text += " " + tasks[i].estimatedCompletionTime + " "
-          text += this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2.toString());
-          notifications.push({
-            id: tasks[i].index,
-            title: this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW.toString()),
-            text: text,
-            trigger: {at: new Date(tasks[i].timestamp)},
-            foreground: true,
-            vibrate: true,
-            sound: "file://assets/sounds/serious-strike.mp3",
-            data: { task: tasks[i], isLastOfDay: isLastOfDay }
-          })
-        }
+    let notifications = []
+    for(var i = 0; i < tasks.length; i++) {
+      if(tasks[i].timestamp > now) {
+        let j = (i+1 < tasks.length ? i+1 : i)
+        let isLastScheduledNotification = i+1 == tasks.length ? true : false
+        let isLastOfDay = this.evalIsLastOfDay(tasks[i], tasks[j])
+          //console.log("NOTIFICATIONS SET " + tasks[i].index + " LastOfDay: " + isLastOfDay)
+        let text = this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1.toString())
+        text += " " + tasks[i].estimatedCompletionTime + " "
+        text += this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2.toString());
+        notifications.push({
+          id: tasks[i].index,
+          title: this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW.toString()),
+          text: text,
+          trigger: {at: new Date(tasks[i].timestamp)},
+          foreground: true,
+          vibrate: true,
+          sound: "file://assets/sounds/serious-strike.mp3",
+          data: {
+            task: tasks[i],
+            isLastOfDay: isLastOfDay,
+            isLastScheduledNotification: isLastScheduledNotification
+          }
+        })
       }
-      console.log('NOTIFICATIONS Scheduleing notifications');
-      (<any>cordova).plugins.notification.local.on("click", (notification) => this.evalTaskTiming(notification.data));
-      return (<any>cordova).plugins.notification.local.schedule(notifications, () => {return Promise.resolve({})});
-    });
+    }
+    console.log('NOTIFICATIONS Scheduleing notifications');
+    (<any>cordova).plugins.notification.local.on("click", (notification) => this.evalTaskTiming(notification.data));
+    (<any>cordova).plugins.notification.local.on("trigger", (notification) => this.evalLastTask(notification.data));
+    return (<any>cordova).plugins.notification.local.schedule(notifications, () => {return Promise.resolve({})});
   }
 
   evalIsLastOfDay(task1, task2) {
@@ -75,22 +110,20 @@ export class NotificationService {
     }
   }
 
-  cancelOverdueNotifications (){
-    (<any>cordova).plugins.notification.local.getIds()
-    .then(ids => {
-      console.log(ids)
-      const now = new Date().getTime()
-      ids.map(id => {
-        if(id < now) {
-          (<any>cordova).plugins.notification.local.cancel(id)
-        }
+  evalLastTask(data) {
+    if(data.isLastScheduledNotification) {
+      this.generateNotificationSubsetForXTasks(DefaultNumberOfNotificationsToSchedule)
+      .then((desiredSubset) => {
+        console.log("NOTIFICATION RESCHEDULE")
+        this.setNotifications(desiredSubset)
       })
-    })
+    }
   }
 
   consoleLogScheduledNotifications () {
     (<any>cordova).plugins.notification.local.getScheduled(
       (notifications) => {
+      console.log(`\nNOTIFICATIONS NUMBER ${notifications.length}\n`)
       let dailyNotifies = {}
       for(var i = 0; i<notifications.length; i++){
         const data = JSON.parse(notifications[i]['data'])
@@ -113,7 +146,6 @@ export class NotificationService {
       for(var i = 0; i<keys.length; i++){
         console.log(dailyNotifies[keys[i]])
       }
-
     });
   }
 

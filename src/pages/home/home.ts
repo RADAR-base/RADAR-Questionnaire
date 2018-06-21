@@ -61,8 +61,8 @@ export class HomePage {
     private notification: NotificationService,
     private platform: Platform,
   ) {
-    platform.resume.subscribe((result)=>{//Foreground
-      navCtrl.setRoot(SplashPage)
+    platform.resume.subscribe((result)=>{
+      navCtrl.setRoot(SplashPage, {'parentPage':'HomePage'})
     });
   }
 

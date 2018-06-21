@@ -82,8 +82,13 @@ export class StorageService {
       .catch((error) => this.handleError(error))
   }
 
-  getAllKeys() {
-    return this.storage.keys()
+  getAllKeys(forceLocal=false) {
+    const globalKeys = Object.keys(this.global)
+    let promise = Promise.resolve(globalKeys)
+    if(forceLocal) {
+      promise = this.storage.keys()
+    }
+    return promise
   }
 
   prepareStorage() {

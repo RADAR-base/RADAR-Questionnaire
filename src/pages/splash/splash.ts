@@ -16,21 +16,27 @@ import { EnrolmentPage } from '../enrolment/enrolment';
 export class SplashPage {
 
   status: string = ''
+  forceLocalStorageLookUp: boolean = true
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     public storage: StorageService,
     private controller: HomeController,
+
     private kafka: KafkaService) {
+    const parentPage = this.navParams.data.parentPage
+    if(parentPage){
+      this.forceLocalStorageLookUp = false
+    }
     this.status = 'Updating notifications...'
-    this.controller.setNextXNotifications(300)
+    this.controller.setNextXNotifications(100)
     .then(() => {
       this.status = 'Sending cached answers...'
       return this.kafka.sendAllAnswersInCache()
     })
     .then(() => {
       this.status = 'Retrieving storage...'
-      return this.controller.evalEnrolement()
+      return this.controller.evalEnrolment(this.forceLocalStorageLookUp)
     })
     .then((evalEnrolement) => {
       if(evalEnrolement){

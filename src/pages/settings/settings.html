@@ -72,6 +72,15 @@
       </span>
     </ion-item-divider>
     <ion-item no-lines>
+      App
+      <span item-right class="info-value">
+        <div *ngIf="!showLoading">V0.4.5</div>
+        <div *ngIf="showLoading" class="spinner-center">
+          <ion-spinner name="dots"></ion-spinner>
+        </div>
+      </span>
+    </ion-item>
+    <ion-item no-lines>
       {{ "SETTINGS_CONFIGURATION" | translate}}
       <span item-right class="info-value">
         <div *ngIf="!showLoading">V{{ configVersion }}</div>

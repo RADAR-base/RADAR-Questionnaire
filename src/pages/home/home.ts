@@ -61,9 +61,6 @@ export class HomePage {
     private notification: NotificationService,
     private platform: Platform,
   ) {
-    platform.resume.subscribe((result)=>{
-      navCtrl.setRoot(SplashPage, {'parentPage':'HomePage'})
-    });
   }
 
   ngAfterViewInit(){
@@ -71,6 +68,7 @@ export class HomePage {
   }
 
   ionViewDidLoad () {
+    console.log("VIEW view did load")
     this.checkForNextTask()
     this.evalHasClinicalTasks()
     this.checkIfOnlyESM()
@@ -81,7 +79,10 @@ export class HomePage {
     }, 1000)
 
     this.controller.sendNonReportedTaskCompletion()
-    //this.notification.cancelOverdueNotifications()
+
+    this.platform.resume.subscribe((result)=>{
+      this.navCtrl.setRoot(SplashPage, {'parentPage':'HomePage'})
+    });
   }
 
   checkForNextTask () {

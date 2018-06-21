@@ -16,8 +16,8 @@ export class HomeController {
               private kafka: KafkaService) {
   }
 
-  evalEnrolment(forceLocal) {
-    return this.storage.getAllKeys(forceLocal).then((keys) => {
+  evalEnrolment() {
+    return this.storage.getAllKeys().then((keys) => {
       return keys.length <= 5
     })
   }

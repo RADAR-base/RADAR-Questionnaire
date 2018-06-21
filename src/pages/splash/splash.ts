@@ -27,6 +27,7 @@ export class SplashPage {
     private kafka: KafkaService) {
     const parentPage = this.navParams.data.parentPage
     if(parentPage){
+      console.log(`VIEW ${parentPage}`)
       this.hasParentPage = true
     }
     this.status = 'Updating notifications...'
@@ -39,9 +40,9 @@ export class SplashPage {
       this.status = 'Retrieving storage...'
 
       if(this.hasParentPage) {
-        return Promise.resolve(true)
+        return Promise.resolve(false)
       }
-      return this.controller.evalEnrolment(this.forceLocalStorageLookUp)
+      return this.controller.evalEnrolment()
     })
     .then((evalEnrolement) => {
       if(evalEnrolement){

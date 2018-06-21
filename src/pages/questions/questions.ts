@@ -72,16 +72,18 @@ export class QuestionsPage {
 
   evalIfFirstQuestionnaireToSkipESMSleepQuestion() {
     let time = new Date()
-    console.log(this.questionTitle)
     if(time.getHours() > 8 && this.questionTitle == 'ESM') {
       return 1
     }
     return 0
   }
 
-  evalIfLastQuestionnaireToShowESMRatingQuestion() {
+  evalIfLastQuestionnaireToShowESMRatingQuestion(currentQuestionId) {
     let time = new Date()
-    if(time.getHours() > 19 && this.questionTitle == 'ESM') {
+    if(this.questionTitle == 'ESM' && currentQuestionId == 'esm_beep') {
+      if(time.getHours() >= 19){
+        return 0
+      }
       return 1
     }
     return 0
@@ -127,11 +129,7 @@ export class QuestionsPage {
       }
     } else if (finish) {
 
-      this.navCtrl.push(FinishPage, {
-        'endText': this.navParams.data.endText,
-        'associatedTask': this.navParams.data.associatedTask
-      })
-
+      this.navigateToFinishPage()
       this.navCtrl.removeView(this.viewCtrl)
     } else if (back) {
       this.navCtrl.pop()
@@ -172,10 +170,17 @@ export class QuestionsPage {
       this.recordTimeStamp(id)
 
       this.nextQuestionIncrVal = this.evalSkipNext()
-      this.nextQuestionIncrVal += this.evalIfLastQuestionnaireToShowESMRatingQuestion()
+      this.nextQuestionIncrVal += this.evalIfLastQuestionnaireToShowESMRatingQuestion(id)
       this.setCurrentQuestion(this.nextQuestionIncrVal)
     }
   }
+
+  navigateToFinishPage() {
+   this.navCtrl.push(FinishPage, {
+     'endText': this.navParams.data.endText,
+     'associatedTask': this.navParams.data.associatedTask
+   })
+ }
 
   evalSkipNext() {
     var increment = 1

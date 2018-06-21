@@ -216,7 +216,7 @@ export class SettingsPage {
     this.configService.fetchConfigState()
      .then(() => {
        this.loadSettings()
-       this.controller.setNextXNotifications(300)
+       this.controller.setNextXNotifications(100)
        .then(() => {
          this.showLoading = false
        })

@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef} from '@angular/core'
-import { NavController, AlertController, Content, Platform } from 'ionic-angular'
+import { NavController, NavParams, AlertController, Content, Platform } from 'ionic-angular'
 import { SchedulingService } from '../../providers/scheduling-service'
 import { HomeController } from '../../providers/home-controller'
 import { Task, TasksProgress } from '../../models/task'
@@ -53,6 +53,7 @@ export class HomePage {
 
   constructor (
     public navCtrl: NavController,
+    public navParams: NavParams,
     public alertCtrl: AlertController,
     private schedule: SchedulingService,
     private controller: HomeController,
@@ -68,7 +69,7 @@ export class HomePage {
   }
 
   ionViewDidLoad () {
-    console.log("VIEW view did load")
+    //const isFirstIonDidViewLoad = this.navParams.data.isFirstIonDidViewLoad
     this.checkForNextTask()
     this.evalHasClinicalTasks()
     this.checkIfOnlyESM()
@@ -78,11 +79,12 @@ export class HomePage {
       this.checkForNextTask()
     }, 1000)
 
-    this.controller.sendNonReportedTaskCompletion()
-
     this.platform.resume.subscribe((result)=>{
-      this.navCtrl.setRoot(SplashPage, {'parentPage':'HomePage'})
+      //this.navCtrl.setRoot(SplashPage, {'parentPage':'HomePage'})
+      this.controller.setNextXNotifications(100)
     });
+
+    this.controller.sendNonReportedTaskCompletion()
   }
 
   checkForNextTask () {

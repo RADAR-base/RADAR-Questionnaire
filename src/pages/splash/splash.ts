@@ -48,7 +48,11 @@ export class SplashPage {
       if(evalEnrolement){
         this.navCtrl.setRoot(EnrolmentPage)
       } else {
-        this.navCtrl.setRoot(HomePage)
+        let isFirstIonDidViewLoad = true
+        if(this.hasParentPage){
+          isFirstIonDidViewLoad = false
+        }
+        this.navCtrl.setRoot(HomePage, {'isFirstIonDidViewLoad': isFirstIonDidViewLoad})
       }
     })
   }

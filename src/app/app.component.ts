@@ -23,7 +23,7 @@ export class MyApp {
     private splashScreen: SplashScreen,
     private configService: ConfigService,
     private kafkaService: KafkaService,
-    private notificationService: NotificationService,
+    private notificationService: NotificationService
   ) {
     platform.ready().then(() => {
       statusBar.styleDefault()

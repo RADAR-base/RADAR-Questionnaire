@@ -205,15 +205,23 @@ export class SchedulingService {
     let yearsMillis = DefaultScheduleYearCoverage * 60000 * 60 * 24 * 365
     let endDate  = new Date(this.refTimestamp + yearsMillis)
 
-    var tmpSchedule: Task[] = []
+    var tmpScheduleAll: Task[] = []
     while(iterDate.getTime() <= endDate.getTime()){
       for(var i = 0; i < repeatQ.unitsFromZero.length; i++){
         let taskDate = this.advanceRepeat(iterDate, repeatQ.unit, repeatQ.unitsFromZero[i])
-        let idx = indexOffset + tmpSchedule.length
-        tmpSchedule.push(this.taskBuilder(idx, assessment, taskDate))
+        let idx = indexOffset + tmpScheduleAll.length
+        tmpScheduleAll.push(this.taskBuilder(idx, assessment, taskDate))
       }
       iterDate = this.setDateTimeToMidnight(iterDate)
       iterDate = this.advanceRepeat(iterDate, repeatP.unit, repeatP.amount)
+    }
+
+    var tmpSchedule: Task[] = []
+    const now = new Date().getTime()
+    for(var i = 0; i < tmpScheduleAll.length; i++) {
+      if(tmpScheduleAll[i].timestamp > now) {
+        tmpSchedule.push(tmpScheduleAll[i])
+      }
     }
     return tmpSchedule
   }

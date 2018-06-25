@@ -41,9 +41,6 @@ export class NotificationService {
       }
       const ltdTasksIdx = Object.keys(limitedTasks)
       ltdTasksIdx.sort()
-      for(var i = 0; i < 10; i++) {
-        console.log(`NOTIFICATIONS ${ltdTasksIdx[i]}`)
-      }
 
       let noOfLtdNotifications = noOfNotifications
       if(noOfNotifications >= ltdTasksIdx.length) {
@@ -59,7 +56,6 @@ export class NotificationService {
   }
 
   setNotifications (tasks) {
-    console.log('NOTIFICATIONS ClearAll')
     let now = new Date().getTime();
     let notifications = []
     for(var i = 0; i < tasks.length; i++) {
@@ -86,7 +82,7 @@ export class NotificationService {
         })
       }
     }
-    console.log('NOTIFICATIONS Scheduleing notifications');
+    console.log('NOTIFICATIONS Scheduleing notification');
     (<any>cordova).plugins.notification.local.on("click", (notification) => this.evalTaskTiming(notification.data));
     (<any>cordova).plugins.notification.local.on("trigger", (notification) => this.evalLastTask(notification.data));
     return (<any>cordova).plugins.notification.local.schedule(notifications, () => {return Promise.resolve({})});

@@ -9,7 +9,7 @@ import { LanguageSetting } from '../../models/settings';
 import { NotificationSettings } from '../../models/settings';
 import { WeeklyReportSubSettings } from '../../models/settings';
 import { DefaultSettingsNotifications } from '../../assets/data/defaultConfig';
-import { DefaultSettingsWeeklyReport } from '../../assets/data/defaultConfig';
+import { DefaultSettingsWeeklyReport, CurrentAppVersion } from '../../assets/data/defaultConfig';
 import { DefaultSettingsSelectedLanguage, LanguageMap } from '../../assets/data/defaultConfig';
 import { StorageKeys } from '../../enums/storage';
 import { LocKeys } from '../../enums/localisations';
@@ -25,7 +25,7 @@ import { DefaultNumberOfNotificationsToSchedule } from '../../assets/data/defaul
 
 export class SettingsPage {
 
-  appVersion: String = '0.4.5'
+  appVersion: String = CurrentAppVersion
   configVersion: String
   scheduleVersion: String
   cacheSize: number

@@ -14,6 +14,7 @@ import { TranslatePipe } from '../../pipes/translate/translate'
 import { StorageService } from '../../providers/storage-service'
 import { StorageKeys } from '../../enums/storage'
 import { NotificationService } from '../../providers/notification-service'
+import { KafkaService } from '../../providers/kafka-service'
 
 
 @Component({
@@ -61,6 +62,7 @@ export class HomePage {
     public storage: StorageService,
     private notification: NotificationService,
     private platform: Platform,
+    private kafka: KafkaService
   ) {
   }
 
@@ -78,6 +80,10 @@ export class HomePage {
       this.isNextTaskESMandNotNow()
       this.checkForNextTask()
     }, 1000)
+
+    this.platform.resume.subscribe((e) => {
+      this.kafka.sendAllAnswersInCache()
+    })
 
     this.controller.sendNonReportedTaskCompletion()
   }

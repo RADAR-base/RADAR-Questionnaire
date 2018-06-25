@@ -90,4 +90,5 @@
     <plugin name="phonegap-plugin-barcodescanner" spec="^7.0.2" />
     <plugin name="cordova-plugin-local-notification" spec="^0.9.0-beta.3" />
     <engine name="android" spec="^6.4.0" />
+    <plugin name="cordova-plugin-app-version" spec="^0.1.9" />
 </widget>

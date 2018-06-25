@@ -74,10 +74,7 @@
     <ion-item no-lines>
       App
       <span item-right class="info-value">
-        <div *ngIf="!showLoading">V{{appVersion}}</div>
-        <div *ngIf="showLoading" class="spinner-center">
-          <ion-spinner name="dots"></ion-spinner>
-        </div>
+        <div >V{{appVersionStr}}</div>
       </span>
     </ion-item>
     <ion-item no-lines>

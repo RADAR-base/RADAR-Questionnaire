@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { AppVersion } from '@ionic-native/app-version';
 import { AlertController } from 'ionic-angular';
 import { StorageService } from '../../providers/storage-service';
 import { SchedulingService } from '../../providers/scheduling-service';
@@ -9,7 +10,7 @@ import { LanguageSetting } from '../../models/settings';
 import { NotificationSettings } from '../../models/settings';
 import { WeeklyReportSubSettings } from '../../models/settings';
 import { DefaultSettingsNotifications } from '../../assets/data/defaultConfig';
-import { DefaultSettingsWeeklyReport, CurrentAppVersion } from '../../assets/data/defaultConfig';
+import { DefaultSettingsWeeklyReport } from '../../assets/data/defaultConfig';
 import { DefaultSettingsSelectedLanguage, LanguageMap } from '../../assets/data/defaultConfig';
 import { StorageKeys } from '../../enums/storage';
 import { LocKeys } from '../../enums/localisations';
@@ -25,7 +26,7 @@ import { DefaultNumberOfNotificationsToSchedule } from '../../assets/data/defaul
 
 export class SettingsPage {
 
-  appVersion: String = CurrentAppVersion
+  appVersionStr: String
   configVersion: String
   scheduleVersion: String
   cacheSize: number
@@ -42,6 +43,7 @@ export class SettingsPage {
     public navParams: NavParams,
     public alertCtrl: AlertController,
     public storage: StorageService,
+    private appVersion: AppVersion,
     private schedule: SchedulingService,
     private configService: ConfigService,
     private controller: HomeController,
@@ -59,6 +61,7 @@ export class SettingsPage {
   }
 
   loadSettings() {
+    let appVersionPromise = this.appVersion.getVersionNumber()
     let configVersion = this.storage.get(StorageKeys.CONFIG_VERSION)
     let scheduleVersion = this.storage.get(StorageKeys.SCHEDULE_VERSION)
     let participantId = this.storage.get(StorageKeys.PARTICIPANTID)
@@ -71,8 +74,9 @@ export class SettingsPage {
     let cache = this.storage.get(StorageKeys.CACHE_ANSWERS)
     let settings = [configVersion, scheduleVersion, participantId, projectName,
       enrolmentDate, language, settingsNotification, settingsLanguages, settingsWeeklyReport,
-      cache]
+      cache, appVersionPromise]
     Promise.all(settings).then((returns) => {
+      this.appVersionStr       = returns[10]
       this.configVersion       = returns[0]
       this.scheduleVersion     = returns[1]
       this.participantId       = returns[2]

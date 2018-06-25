@@ -7,8 +7,6 @@ import { DefaultProtocolEndPointExport, DefaultSourceProducerAndSecretExport } f
 
 
 // DEFAULT SETTINGS
-export const CurrentAppVersion: String = '0.4.6'
-
 export const DefaultSettingsNotifications: NotificationSettings = {
   sound: true,
   vibration: false,

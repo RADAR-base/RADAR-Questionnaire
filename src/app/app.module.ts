@@ -19,6 +19,7 @@ import { Globalization } from '@ionic-native/globalization';
 import { LocalNotifications } from '@ionic-native/local-notifications';
 import { AndroidPermissions } from '@ionic-native/android-permissions';
 import { File } from '@ionic-native/file'
+import { AppVersion } from '@ionic-native/app-version';
 
 import { TaskCalendarComponent } from '../components/task-calendar/task-calendar'
 import { TaskProgressComponent } from '../components/task-progress/task-progress'
@@ -164,7 +165,8 @@ import { AudioInputComponent } from '../components/audio-input/audio-input';
     AudioRecordService,
     AndroidPermissionUtility,
     AndroidPermissions,
-    File
+    File,
+    AppVersion
   ]
 })
 export class AppModule {

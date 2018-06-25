@@ -72,7 +72,10 @@ export class FinishPage {
   handleClosePage() {
     this.hasClickedDoneButton = !this.hasClickedDoneButton
     this.evalClinicalFollowUpTask()
-    .then(() => this.navCtrl.setRoot(HomePage))
+    .then(() => {
+      this.kafkaService.sendAllAnswersInCache()
+      this.navCtrl.setRoot(HomePage)
+    });
   }
 
   evalClinicalFollowUpTask() {

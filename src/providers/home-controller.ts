@@ -149,8 +149,10 @@ export class HomeController {
     var status = true
     if(tasks){
       for(var i = 0; i<tasks.length; i++) {
-        if(tasks[i].completed == false) {
-          status = false
+        if(tasks[i].name != 'ESM') {
+          if(tasks[i].completed == false) {
+            status = false
+          }
         }
       }
     }

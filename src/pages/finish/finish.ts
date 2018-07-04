@@ -57,7 +57,9 @@ export class FinishPage {
     this.controller.getNextTask()
       .then((task) => {
         if(task) {
-          this.displayNextTaskReminder = true
+          if(task.name != "ESM") {
+            this.displayNextTaskReminder = true
+          }
         } else {
           this.displayNextTaskReminder = false
         }

@@ -94,6 +94,7 @@ export const DefaultScheduleYearCoverage: number = 2 // years
 export const DefaultScheduleReportRepeat: number = 7 // days
 
 export const DefaultNumberOfNotificationsToSchedule: number = 1 //
+export const DefaultNumberOfNotificationsToRescue: number = 12 //
 
 export const DefaultSourceTypeModel: string = 'aRMT-App'
 

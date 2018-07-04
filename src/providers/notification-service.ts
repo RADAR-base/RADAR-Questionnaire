@@ -5,7 +5,7 @@ import { TranslatePipe } from '../pipes/translate/translate'
 import { LocKeys } from '../enums/localisations';
 import { Task } from '../models/task'
 import { SchedulingService } from '../providers/scheduling-service';
-import { DefaultNumberOfNotificationsToSchedule } from '../assets/data/defaultConfig';
+import { DefaultNumberOfNotificationsToSchedule, DefaultNumberOfNotificationsToRescue } from '../assets/data/defaultConfig';
 
 declare var cordova;
 
@@ -111,12 +111,23 @@ export class NotificationService {
 
   evalLastTask(data) {
     if(data.isLastScheduledNotification) {
-      this.generateNotificationSubsetForXTasks(DefaultNumberOfNotificationsToSchedule)
-      .then((desiredSubset) => {
-        console.log("NOTIFICATION RESCHEDULE")
-        this.setNotifications(desiredSubset)
-      })
+      this.scheduleNextNotification()
     }
+  }
+
+  scheduleNextNotification() {
+    this.generateNotificationSubsetForXTasks(DefaultNumberOfNotificationsToSchedule+DefaultNumberOfNotificationsToRescue)
+    .then((desiredSubset) => {
+      console.log("NOTIFICATION RESCHEDULE")
+      const immediateNotification = [desiredSubset[0]]
+      this.setNotifications(immediateNotification)
+      const nextdate = new Date(desiredSubset[desiredSubset.length-1].timestamp)
+      this.schedule.getTasksForDate(nextdate)
+      .then((tasks) => {
+        const rescueTasks = [tasks[0]]
+        this.setNotifications(rescueTasks)
+      })
+    })
   }
 
   consoleLogScheduledNotifications () {

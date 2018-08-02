@@ -205,6 +205,8 @@ export class SchedulingService {
     let yearsMillis = DefaultScheduleYearCoverage * 60000 * 60 * 24 * 365
     let endDate  = new Date(this.refTimestamp + yearsMillis)
 
+    console.log(assessment)
+
     var tmpScheduleAll: Task[] = []
     while(iterDate.getTime() <= endDate.getTime()){
       for(var i = 0; i < repeatQ.unitsFromZero.length; i++){

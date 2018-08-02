@@ -1,13 +1,17 @@
 import { Injectable } from '@angular/core';
 import { NavController, AlertController } from 'ionic-angular';
 import 'rxjs/add/operator/map';
+import { v4 as uuid } from 'uuid';
 import { TranslatePipe } from '../pipes/translate/translate'
 import { LocKeys } from '../enums/localisations';
 import { Task } from '../models/task'
 import { SchedulingService } from '../providers/scheduling-service';
-import { DefaultNumberOfNotificationsToSchedule, DefaultNumberOfNotificationsToRescue } from '../assets/data/defaultConfig';
+import { StorageService } from '../providers/storage-service';
+import { StorageKeys } from '../enums/storage';
+import { DefaultNumberOfNotificationsToSchedule, DefaultNumberOfNotificationsToRescue, FCMPluginProjectSenderId, DefaultNotificationType } from '../assets/data/defaultConfig';
 
 declare var cordova;
+declare var FCMPlugin;
 
 @Injectable()
 export class NotificationService {
@@ -15,7 +19,26 @@ export class NotificationService {
   constructor(
     private translate: TranslatePipe,
     private alertCtrl: AlertController,
-    private schedule: SchedulingService ) {
+    private schedule: SchedulingService,
+    public storage: StorageService) {
+
+    try {
+      FCMPlugin.setSenderId(FCMPluginProjectSenderId,
+      function() {
+          console.log('[NOTIFICATION SERVICE] Set sender id success');
+        }, function(error) {
+          console.log(error);
+          alert(error)
+      });
+
+      FCMPlugin.getToken(function(token) {
+          console.log('[NOTIFICATION SERVICE] Refresh token success');
+      });
+    }
+    catch(error) {
+      console.error(error);
+    }
+
   }
 
   permissionCheck() {
@@ -56,36 +79,92 @@ export class NotificationService {
   }
 
   setNotifications (tasks) {
-    let now = new Date().getTime();
-    let notifications = []
-    for(var i = 0; i < tasks.length; i++) {
-      if(tasks[i].timestamp > now) {
-        let j = (i+1 < tasks.length ? i+1 : i)
-        let isLastScheduledNotification = i+1 == tasks.length ? true : false
-        let isLastOfDay = this.evalIsLastOfDay(tasks[i], tasks[j])
-        let text = this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1.toString())
-        text += " " + tasks[i].estimatedCompletionTime + " "
-        text += this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2.toString());
-        notifications.push({
-          id: tasks[i].index,
-          title: this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW.toString()),
-          text: text,
-          trigger: {at: new Date(tasks[i].timestamp)},
-          foreground: true,
-          vibrate: true,
-          sound: "file://assets/sounds/serious-strike.mp3",
-          data: {
-            task: tasks[i],
-            isLastOfDay: isLastOfDay,
-            isLastScheduledNotification: isLastScheduledNotification
+    return this.storage.get(StorageKeys.SOURCEID)
+    .then((sourceId) => {
+      let now = new Date().getTime();
+      let localNotifications = []
+      let fcmNotifications = []
+      for(var i = 0; i < tasks.length; i++) {
+        if(tasks[i].timestamp > now) {
+          let j = (i+1 < tasks.length ? i+1 : i)
+          let isLastScheduledNotification = i+1 == tasks.length ? true : false
+          let isLastOfDay = this.evalIsLastOfDay(tasks[i], tasks[j])
+          let localNotification = this.formatLocalNotification(tasks[i], isLastScheduledNotification, isLastOfDay)
+          let fcmNotification = this.formatFCMNotification(tasks[i], sourceId)
+          localNotifications.push(localNotification);
+          fcmNotifications.push(fcmNotification);
+        }
+      }
+      if(DefaultNotificationType == "LOCAL"){
+        console.log('NOTIFICATIONS Scheduleing LOCAL notifications');
+        (<any>cordova).plugins.notification.local.on("click", (notification) => this.evalTaskTiming(notification.data));
+        (<any>cordova).plugins.notification.local.on("trigger", (notification) => this.evalLastTask(notification.data));
+        return (<any>cordova).plugins.notification.local.schedule(localNotifications[0], () => {return Promise.resolve({})});
+      }
+      if(DefaultNotificationType == "FCM"){
+        console.log('NOTIFICATIONS Scheduleing FCM notifications');
+        this.cancelNotificationPush(sourceId)
+        .then(() => {
+          for(let i = 0; i<fcmNotifications.length; i++) {
+            FCMPlugin.upstream(fcmNotifications[i],
+              function(succ) {
+                console.log(succ);
+              }, function(err) {
+                console.log(err);
+            });
           }
         })
       }
+    })
+  }
+
+  formatLocalNotification(task, isLastScheduledNotification, isLastOfDay) {
+    let text = this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1.toString())
+    text += " " + task.estimatedCompletionTime + " "
+    text += this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2.toString());
+    let notification = {
+      id: task.index,
+      title: this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW.toString()),
+      text: text,
+      trigger: {at: new Date(task.timestamp)},
+      foreground: true,
+      vibrate: true,
+      sound: "file://assets/sounds/serious-strike.mp3",
+      data: {
+        task: task,
+        isLastOfDay: isLastOfDay,
+        isLastScheduledNotification: isLastScheduledNotification
+      }
     }
-    console.log('NOTIFICATIONS Scheduleing notification');
-    (<any>cordova).plugins.notification.local.on("click", (notification) => this.evalTaskTiming(notification.data));
-    (<any>cordova).plugins.notification.local.on("trigger", (notification) => this.evalLastTask(notification.data));
-    return (<any>cordova).plugins.notification.local.schedule(notifications, () => {return Promise.resolve({})});
+    return notification
+  }
+
+  formatFCMNotification(task, sourceId) {
+    let text = this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1.toString())
+    text += " " + task.estimatedCompletionTime + " "
+    text += this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2.toString());
+    let expiry = task.name == 'ESM' ? 15 * 60 : 24 * 60 * 60;
+    let fcmNotification = {
+      eventId: uuid(),
+      action: 'SCHEDULE',
+      notificationTitle:this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW.toString()),
+      notificationMessage: TextEvent,
+      time: task.timestamp,
+      subjectId: sourceId,
+      ttlSeconds: expiry
+    }
+    return fcmNotification
+  }
+
+  cancelNotificationPush(sourceId) {
+    return new Promise(function(resolve,reject){
+      FCMPlugin.upstream({
+        eventId: uuid(),
+        action: 'CANCEL',
+        cancelType: 'all',
+        subjectId: sourceId
+      }, resolve, reject)
+    });
   }
 
   evalIsLastOfDay(task1, task2) {

@@ -93,11 +93,12 @@ export const DefaultScheduleYearCoverage: number = 2 // years
 
 export const DefaultScheduleReportRepeat: number = 7 // days
 
-export const DefaultNumberOfNotificationsToSchedule: number = 1 //
+export const DefaultNotificationType: string = 'FCM' // choose from 'FCM' or 'LOCAL'
+export const DefaultNumberOfNotificationsToSchedule: number = 100 //
 export const DefaultNumberOfNotificationsToRescue: number = 12 //
+export const FCMPluginProjectSenderId: string = '486403643787'
 
 export const DefaultSourceTypeModel: string = 'aRMT-App'
-
 export const DefaultSourceTypeRegistrationBody: any = {
 "sourceTypeCatalogVersion": "v1",
 "sourceTypeModel": "aRMT-App",

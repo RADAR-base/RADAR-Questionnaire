@@ -103,6 +103,7 @@ export class NotificationService {
       }
       if(DefaultNotificationType == "FCM"){
         console.log('NOTIFICATIONS Scheduleing FCM notifications');
+        console.log(fcmNotifications)
         this.cancelNotificationPush(sourceId)
         .then(() => {
           for(let i = 0; i<fcmNotifications.length; i++) {
@@ -148,7 +149,7 @@ export class NotificationService {
       eventId: uuid(),
       action: 'SCHEDULE',
       notificationTitle:this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW.toString()),
-      notificationMessage: TextEvent,
+      notificationMessage: text,
       time: task.timestamp,
       subjectId: sourceId,
       ttlSeconds: expiry

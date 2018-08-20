@@ -185,6 +185,7 @@ bbGd2mgxfA9bhFAiM"}'})*/
   authenticate(authObj) {
     this.transitionStatuses()
     let auth = JSON.parse(authObj.text)
+    //TODO: Implement Meta QR call here
     this.authService.registerToken(auth.refreshToken)
     .then(() => {
       this.storage.get(StorageKeys.OAUTH_TOKENS).then((tokens) => {

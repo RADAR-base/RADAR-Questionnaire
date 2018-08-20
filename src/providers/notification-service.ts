@@ -79,8 +79,8 @@ export class NotificationService {
   }
 
   setNotifications (tasks) {
-    return this.storage.get(StorageKeys.SOURCEID)
-    .then((sourceId) => {
+    return this.storage.get(StorageKeys.PARTICIPANTLOGIN)
+    .then((participantLogin) => {
       let now = new Date().getTime();
       let localNotifications = []
       let fcmNotifications = []
@@ -90,7 +90,7 @@ export class NotificationService {
           let isLastScheduledNotification = i+1 == tasks.length ? true : false
           let isLastOfDay = this.evalIsLastOfDay(tasks[i], tasks[j])
           let localNotification = this.formatLocalNotification(tasks[i], isLastScheduledNotification, isLastOfDay)
-          let fcmNotification = this.formatFCMNotification(tasks[i], sourceId)
+          let fcmNotification = this.formatFCMNotification(tasks[i], participantLogin)
           localNotifications.push(localNotification);
           fcmNotifications.push(fcmNotification);
         }
@@ -140,7 +140,7 @@ export class NotificationService {
     return notification
   }
 
-  formatFCMNotification(task, sourceId) {
+  formatFCMNotification(task, participantLogin) {
     let text = this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1.toString())
     text += " " + task.estimatedCompletionTime + " "
     text += this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2.toString());
@@ -151,7 +151,7 @@ export class NotificationService {
       notificationTitle:this.translate.transform(LocKeys.NOTIFICATION_REMINDER_NOW.toString()),
       notificationMessage: text,
       time: task.timestamp,
-      subjectId: sourceId,
+      subjectId: participantLogin,
       ttlSeconds: expiry
     }
     return fcmNotification

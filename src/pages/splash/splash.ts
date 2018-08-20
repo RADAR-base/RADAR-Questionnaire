@@ -37,6 +37,10 @@ export class SplashPage {
       this.status = 'Sending cached answers...'
       return this.kafka.sendAllAnswersInCache()
     })
+    .catch((error) => {
+      console.error(error)
+      console.log('[SPLASH] Cache could not be sent.')
+    })
     .then(() => {
       this.status = 'Retrieving storage...'
 

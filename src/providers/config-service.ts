@@ -54,6 +54,7 @@ export class ConfigService {
           console.log('NO CONFIG UPDATE. Version of protocol.json has not changed.')
           return this.schedule.generateSchedule()
         }
+        //TODO: send notifications to FCM / local
       }).catch(e => console.log(e))
     })
   }

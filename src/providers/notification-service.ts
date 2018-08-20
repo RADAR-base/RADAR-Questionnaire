@@ -104,7 +104,7 @@ export class NotificationService {
       if(DefaultNotificationType == "FCM"){
         console.log('NOTIFICATIONS Scheduleing FCM notifications');
         console.log(fcmNotifications)
-        this.cancelNotificationPush(sourceId)
+        this.cancelNotificationPush(participantLogin)
         .then(() => {
           for(let i = 0; i<fcmNotifications.length; i++) {
             FCMPlugin.upstream(fcmNotifications[i],
@@ -157,13 +157,13 @@ export class NotificationService {
     return fcmNotification
   }
 
-  cancelNotificationPush(sourceId) {
+  cancelNotificationPush(participantLogin) {
     return new Promise(function(resolve,reject){
       FCMPlugin.upstream({
         eventId: uuid(),
         action: 'CANCEL',
         cancelType: 'all',
-        subjectId: sourceId
+        subjectId: participantLogin
       }, resolve, reject)
     });
   }

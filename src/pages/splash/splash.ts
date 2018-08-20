@@ -60,6 +60,11 @@ export class SplashPage {
         this.navCtrl.setRoot(HomePage, {'isFirstIonDidViewLoad': isFirstIonDidViewLoad})
       }
     })
+    .catch((error) => {
+      console.log('[SPLASH] Error while sending cache.')
+      let isFirstIonDidViewLoad = false
+      this.navCtrl.setRoot(HomePage, {'isFirstIonDidViewLoad': isFirstIonDidViewLoad})
+    })
   }
 
   ionViewDidLoad() {

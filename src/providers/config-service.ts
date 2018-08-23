@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { StorageService } from '../providers/storage-service'
+import { HomeController } from '../providers/home-controller'
 import { StorageKeys } from '../enums/storage'
 import { SchedulingService } from '../providers/scheduling-service'
 import { DefaultProtocolEndPoint } from '../assets/data/defaultConfig'
+import { DefaultNumberOfNotificationsToSchedule } from '../assets/data/defaultConfig'
 import 'rxjs/add/operator/toPromise';
 
 @Injectable()
@@ -17,6 +19,7 @@ export class ConfigService {
     public http: HttpClient,
     public storage: StorageService,
     private schedule: SchedulingService,
+    private controller: HomeController
   ) {}
 
   fetchConfigState() {
@@ -54,7 +57,8 @@ export class ConfigService {
           console.log('NO CONFIG UPDATE. Version of protocol.json has not changed.')
           return this.schedule.generateSchedule()
         }
-        //TODO: send notifications to FCM / local
+        // set notificaition here too so scheduled after enrolment too.
+        this.controller.setNextXNotifications(DefaultNumberOfNotificationsToSchedule)
       }).catch(e => console.log(e))
     })
   }

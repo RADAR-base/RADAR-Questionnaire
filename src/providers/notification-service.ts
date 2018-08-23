@@ -104,17 +104,14 @@ export class NotificationService {
       if(DefaultNotificationType == "FCM"){
         console.log('NOTIFICATIONS Scheduleing FCM notifications');
         console.log(fcmNotifications)
-        this.cancelNotificationPush(participantLogin)
-        .then(() => {
-          for(let i = 0; i<fcmNotifications.length; i++) {
-            FCMPlugin.upstream(fcmNotifications[i],
-              function(succ) {
-                console.log(succ);
-              }, function(err) {
-                console.log(err);
-            });
-          }
-        })
+        for(let i = 0; i<fcmNotifications.length; i++) {
+          FCMPlugin.upstream(fcmNotifications[i],
+            function(succ) {
+              console.log(succ);
+            }, function(err) {
+              console.log(err);
+          });
+        }
       }
     })
   }

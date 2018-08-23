@@ -14,4 +14,18 @@ page-finish {
   .next-task-highlight {
     background-color: $cl-warning-20
   }
+
+  ion-spinner * {
+    margin-left: -15px;
+    width: 10px;
+    height: 30px;
+    padding-left: 10px;
+    stroke: #FFFFFF;
+    fill: #fff;
+    background-color: #fff;
+  }
+
+  .spinner-center {
+    margin-left: 50%;
+  }
 }

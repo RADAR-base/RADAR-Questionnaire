@@ -6,16 +6,6 @@ import { Task } from '../../models/task'
 import { DefaultProtocolEndPointExport, DefaultSourceProducerAndSecretExport } from './secret'
 
 
-// FIREBASE SETUP
-/*export const FirebaseConfig = {
-  apiKey: "AIzaSyBTEYv6htFpRUXrp5G1cqnAcHT71Ed_lA0",
-  authDomain: "radar-armt.firebaseapp.com",
-  databaseURL: "https://radar-armt.firebaseio.com",
-  projectId: "radar-armt",
-  storageBucket: "radar-armt.appspot.com",
-  messagingSenderId: "1044012430872"
-}*/
-
 // DEFAULT SETTINGS
 export const DefaultSettingsNotifications: NotificationSettings = {
   sound: true,
@@ -99,12 +89,16 @@ export const LanguageMap = {
 
 export const DefaultScheduleVersion: number = 0
 
-export const DefaultScheduleYearCoverage: number = 2 //years
+export const DefaultScheduleYearCoverage: number = 2 // years
 
-export const DefaultScheduleReportRepeat: number = 7 //days
+export const DefaultScheduleReportRepeat: number = 7 // days
+
+export const DefaultNotificationType: string = 'FCM' // choose from 'FCM' or 'LOCAL'
+export const DefaultNumberOfNotificationsToSchedule: number = 100 //
+export const DefaultNumberOfNotificationsToRescue: number = 12 //
+export const FCMPluginProjectSenderId: string = '486403643787'
 
 export const DefaultSourceTypeModel: string = 'aRMT-App'
-
 export const DefaultSourceTypeRegistrationBody: any = {
 "sourceTypeCatalogVersion": "v1",
 "sourceTypeModel": "aRMT-App",

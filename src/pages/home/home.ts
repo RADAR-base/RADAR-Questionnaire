@@ -1,9 +1,9 @@
 import { Component, ViewChild, ElementRef} from '@angular/core'
-import { NavController, AlertController, Content } from 'ionic-angular'
+import { NavController, NavParams, AlertController, Content, Platform } from 'ionic-angular'
 import { SchedulingService } from '../../providers/scheduling-service'
 import { HomeController } from '../../providers/home-controller'
 import { Task, TasksProgress } from '../../models/task'
-import { EnrolmentPage } from '../enrolment/enrolment'
+import { SplashPage } from '../splash/splash'
 import { StartPage } from '../start/start'
 import { QuestionsPage } from '../questions/questions'
 import { SettingsPage } from '../settings/settings'
@@ -14,6 +14,7 @@ import { TranslatePipe } from '../../pipes/translate/translate'
 import { StorageService } from '../../providers/storage-service'
 import { StorageKeys } from '../../enums/storage'
 import { NotificationService } from '../../providers/notification-service'
+import { KafkaService } from '../../providers/kafka-service'
 
 
 @Component({
@@ -53,27 +54,36 @@ export class HomePage {
 
   constructor (
     public navCtrl: NavController,
+    public navParams: NavParams,
     public alertCtrl: AlertController,
     private schedule: SchedulingService,
     private controller: HomeController,
     private translate: TranslatePipe,
     public storage: StorageService,
-    private notification: NotificationService
-  ) {  }
+    private notification: NotificationService,
+    private platform: Platform,
+    private kafka: KafkaService
+  ) {
+  }
 
   ngAfterViewInit(){
+
   }
 
   ionViewDidLoad () {
+    //const isFirstIonDidViewLoad = this.navParams.data.isFirstIonDidViewLoad
     this.checkForNextTask()
     this.evalHasClinicalTasks()
     this.checkIfOnlyESM()
-    this.controller.setNextXNotifications(300)
 
     setInterval(() => {
       this.isNextTaskESMandNotNow()
       this.checkForNextTask()
     }, 1000)
+
+    this.platform.resume.subscribe((e) => {
+      this.kafka.sendAllAnswersInCache()
+    })
 
     this.controller.sendNonReportedTaskCompletion()
   }

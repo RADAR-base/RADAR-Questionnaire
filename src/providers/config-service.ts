@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { StorageService } from '../providers/storage-service'
+import { HomeController } from '../providers/home-controller'
 import { StorageKeys } from '../enums/storage'
 import { SchedulingService } from '../providers/scheduling-service'
 import { DefaultProtocolEndPoint } from '../assets/data/defaultConfig'
+import { DefaultNumberOfNotificationsToSchedule } from '../assets/data/defaultConfig'
 import 'rxjs/add/operator/toPromise';
 
 @Injectable()
@@ -17,6 +19,7 @@ export class ConfigService {
     public http: HttpClient,
     public storage: StorageService,
     private schedule: SchedulingService,
+    private controller: HomeController
   ) {}
 
   fetchConfigState() {
@@ -43,17 +46,19 @@ export class ConfigService {
           this.storage.set(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS, clinicalAssessments)
           .then(() =>{
             console.log("Pulled clinical questionnaire")
-            this.pullQuestionnaires(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS)
+            return this.pullQuestionnaires(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS)
           })
           this.storage.set(StorageKeys.CONFIG_ASSESSMENTS, scheduledAssessments)
           .then(() => {
             console.log("Pulled questionnaire")
-            this.pullQuestionnaires(StorageKeys.CONFIG_ASSESSMENTS)
+            return this.pullQuestionnaires(StorageKeys.CONFIG_ASSESSMENTS)
           })
         } else {
           console.log('NO CONFIG UPDATE. Version of protocol.json has not changed.')
-          this.schedule.generateSchedule()
+          return this.schedule.generateSchedule()
         }
+        // set notificaition here too so scheduled after enrolment too.
+        this.controller.setNextXNotifications(DefaultNumberOfNotificationsToSchedule)
       }).catch(e => console.log(e))
     })
   }
@@ -93,7 +98,7 @@ export class ConfigService {
   pullQuestionnaires(storageKey) {
     let assessments = this.storage.get(storageKey)
     let lang = this.storage.get(StorageKeys.LANGUAGE)
-    Promise.all([assessments, lang])
+    return Promise.all([assessments, lang])
     .then((vars) => {
       let assessments = vars[0]
       let lang = vars[1]
@@ -102,14 +107,14 @@ export class ConfigService {
       for(var i = 0; i < assessments.length; i++) {
         promises.push(this.pullQuestionnaireLang(assessments[i], lang))
       }
-      Promise.all(promises)
+      return Promise.all(promises)
       .then((res) => {
         let assessmentUpdate = assessments
         for(var i = 0; i < assessments.length; i++) {
           assessmentUpdate[i]['questions'] = this.formatQuestionsHeaders(res[i])
         }
-        this.storage.set(storageKey, assessmentUpdate)
-        .then(() => this.schedule.generateSchedule())
+        return this.storage.set(storageKey, assessmentUpdate)
+        .then(() => {return this.schedule.generateSchedule()})
       })
     })
   }
@@ -149,6 +154,18 @@ export class ConfigService {
       }
     }
     return questionsFormated
+  }
+
+  migrateToLatestVersion() {
+    // migrate ENROLMENTDATE (from V0.3.1- to V0.3.2+)
+    let enrolmentDate = this.storage.get(StorageKeys.ENROLMENTDATE)
+    let referenceDate = this.storage.get(StorageKeys.REFERENCEDATE)
+    Promise.all([enrolmentDate, referenceDate])
+    .then((dates) => {
+      if(dates[0] == undefined) {
+        this.storage.set(StorageKeys.ENROLMENTDATE, referenceDate)
+      }
+    })
   }
 
 }

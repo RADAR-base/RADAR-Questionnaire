@@ -7,6 +7,7 @@ export class StorageKeys {
     }
     // values
     static REFERENCEDATE = new StorageKeys('REFERENCEDATE');
+    static ENROLMENTDATE = new StorageKeys('ENROLMENTDATE');
     static OAUTH_TOKENS = new StorageKeys('OAUTH_TOKENS');
     static PARTICIPANTID = new StorageKeys('PARTICIPANTID');
     static PARTICIPANTLOGIN = new StorageKeys('PARTICIPANTLOGIN');

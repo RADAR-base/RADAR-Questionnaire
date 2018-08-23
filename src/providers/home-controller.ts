@@ -16,7 +16,7 @@ export class HomeController {
               private kafka: KafkaService) {
   }
 
-  evalEnrolement() {
+  evalEnrolment() {
     return this.storage.getAllKeys().then((keys) => {
       return keys.length <= 5
     })
@@ -57,19 +57,38 @@ export class HomeController {
   }
 
   setNextXNotifications (noOfNotifications) {
-    let periodInDays = 50
     let today = new Date().getTime()
-    let day = 86400000
     var promises = []
-    for(var i = 0; i < periodInDays; i++) {
-      promises.push(this.getTasksOfDate(new Date(today + day*i)))
-    }
-    Promise.all(promises)
-    .then((tasks) => {
-      let mergedTasks = [].concat.apply([], tasks)
-      let desiredSubset = mergedTasks.slice(0, noOfNotifications)
-      this.notifications.setNotifications(desiredSubset)
+    return this.notifications.generateNotificationSubsetForXTasks(noOfNotifications)
+    .then((desiredSubset) => {
+      console.log(`NOTIFICATIONS desiredSubset: ${desiredSubset.length}`)
+      try {
+        return this.notifications.setNotifications(desiredSubset)
+      } catch(e) {
+        return Promise.resolve({})
+      }
     })
+  }
+
+  consoleLogNotifications() {
+    this.notifications.consoleLogScheduledNotifications()
+  }
+
+  consoleLogSchedule() {
+    this.schedule.getTasks()
+    .then((tasks) => {
+      let tasksKeys = []
+      for(var i = 0; i < tasks.length; i++) {
+        tasksKeys.push(`${tasks[i].timestamp}-${tasks[i].name}`)
+      }
+      tasksKeys.sort()
+      let rendered = `\nSCHEDULE Total (${tasksKeys.length})\n`
+      for(var i=(tasksKeys.length-10); i<tasksKeys.length; i++){
+        const dateName = tasksKeys[i].split("-")
+        rendered +=`${tasksKeys[i]} DATE ${new Date(parseInt(dateName[0])).toString()} NAME ${dateName[1]}\n`
+      }
+      console.log(rendered)
+    });
   }
 
 
@@ -130,14 +149,15 @@ export class HomeController {
     var status = true
     if(tasks){
       for(var i = 0; i<tasks.length; i++) {
-        if(tasks[i].completed == false) {
-          status = false
+        if(tasks[i].name != 'ESM') {
+          if(tasks[i].completed == false) {
+            status = false
+          }
         }
       }
     }
     return status
   }
-
 
   sendNonReportedTaskCompletion() {
     this.schedule.getNonReportedCompletedTasks()

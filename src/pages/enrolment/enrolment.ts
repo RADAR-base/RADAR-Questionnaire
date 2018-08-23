@@ -128,31 +128,31 @@ Et7lotPoMjY44bUVC_foz2NfavfMx_OnVcXJapd1lkGe-1N3-2ZCnAP8Oe5ganKR\
 >>>>>>> staging-app
 //MDD
 /*this.authenticate({'text':'{"refreshToken":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOi\
-JlYTYxZGIzMy1mYzkxLTRjMGItYWZmZS1lYjM5ZDE1NDE1NmUiLCJzb3VyY2VzIj\
-pbXSwidXNlcl9uYW1lIjoiZWE2MWRiMzMtZmM5MS00YzBiLWFmZmUtZWIzOWQxNT\
-QxNTZlIiwicm9sZXMiOlsiUkFEQVItTURELUtDTC1zMTpST0xFX1BBUlRJQ0lQQU\
+I5ZGI2NTBkZC1kNmQ3LTRmMjUtOWUyYS1iM2QyMTVlMDAyNjEiLCJzb3VyY2VzIj\
+pbXSwidXNlcl9uYW1lIjoiOWRiNjUwZGQtZDZkNy00ZjI1LTllMmEtYjNkMjE1ZT\
+AwMjYxIiwicm9sZXMiOlsiUkFEQVItTURELUtDTC1zMTpST0xFX1BBUlRJQ0lQQU\
 5UIl0sImlzcyI6Ik1hbmFnZW1lbnRQb3J0YWwiLCJhdXRob3JpdGllcyI6WyJST0\
 xFX1BBUlRJQ0lQQU5UIl0sImNsaWVudF9pZCI6ImFSTVQiLCJhdWQiOlsicmVzX2\
 dhdGV3YXkiLCJyZXNfTWFuYWdlbWVudFBvcnRhbCJdLCJncmFudF90eXBlIjpudW\
 xsLCJzY29wZSI6WyJNRUFTVVJFTUVOVC5DUkVBVEUiLCJTVUJKRUNULlVQREFURS\
 IsIlNVQkpFQ1QuUkVBRCIsIlBST0pFQ1QuUkVBRCIsIlNPVVJDRVRZUEUuUkVBRC\
 IsIlNPVVJDRS5SRUFEIiwiU09VUkNFREFUQS5SRUFEIiwiVVNFUi5SRUFEIiwiUk\
-9MRS5SRUFEIl0sImF0aSI6IjcwZTUzMzU4LWU1Y2EtNGQ3Yy04NzE2LWFmYWRmYj\
-BkOTgwMyIsImV4cCI6MTUyOTc2NzEyMCwiaWF0IjoxNTIxODE4MzIwLCJqdGkiOi\
-I2ZDg2Mzc5NS04NmIxLTRlMWQtOTUxOC0zNTNhMjIxYjM3NTAifQ.WPSIkWoceAn\
-VWdSOHEanN6NVDUyVgHzX8nJLbgLRUOHRmNSRLV5QXudSzF5cX8x0BZqMxQuMYAn\
-xJ7rDwrbGxsepXBE0cCzXJwHcDOk_NVMzUANzu6bEjgrQJIOonDdGvr5WR09rL3n\
-srgIpoeNiwGzJmRHL5tU7RzqlgYN6j2pL3RJQcEXNf76UTc8dbYAmnoTfSgYJ6kW\
-Y5vgEA2siAm_s-lWolYdm9ew9xkJeP6_Y1Y3DiiukmBE1wrkaScDluDxumkrzRE_\
-XzM2pnxO0aEs2U2gUbrKWAZgJxOKnwH8MHjJh-vKYxqdJ3-2rO95_CIJg-bbOTrT\
-9GVPp53-Qh0zMDQsx9hqnzoKNS7-JN2y6ZSziEU_OcbNqjIO9P09u42NQrkbW8_w\
-6siV-lX7nDH40fJcJlwO1fn2qHiuxtxl1e_c3Cyo9zePTict9zd3CoXzwPKiiWmZ\
-qzEA6r2h6j8vE3Ed70U79J2GuwTCnxIN7UUiJFcJtaB5ASieoxqhjJV_blVmJg-b\
-yqcqZxIi4kulORTsObGe4qlZ6_euC0Q5nqmzfjyF-KQMVoVO7hw3dLvC74s42MlI\
-lqZaRsDBx9gks9CuYR1h2_wupoiOyjA9lOaaxRAPCIYBylHJdKnycHuKskVLrxl2\
-BMZQPfIVQWTPwcHgoG_dyzS421waS5bs"}'})*/
+9MRS5SRUFEIl0sImF0aSI6IjhhN2ZhNzBhLTlkYzUtNDEzZC04ZGM0LWQzMGUxZj\
+VlNDFlNSIsImV4cCI6MTUzOTk0MDgxMywiaWF0IjoxNTMxOTkyMDEzLCJqdGkiOi\
+IyYWQ2YTEyYy1iZTg4LTRiODYtYTBmMC1hNjNiNTE4NGNlNmIifQ.NvA8nk93NU6\
+lZUDtLBUKQ_uo8P6Qguv06nSyxqQnqjyzJCoN23vCUFpSZZg4tCLZ6ACi8UJsJIp\
+1522lNFX8JLMgVxmA2acavwXchQdwPazK-E-IyFW7x0-VZ7vO-GvT6gAfFceu2uK\
+0pXr2cMTHrt75EbR5FbCwLmXzQPQMa-iS6rK8EbnECB1xU0hq1xqiPqcZJwKxuQ2\
+Na-EXVJtDweh7chmivpc3-ALeCVfK1SQH5NN_Mph4q0TKlwE_hyQuWiDSAwxDyuC\
+NnjDQz-cy-DtLWfpMqvlkEodwA4lHSt6Q7NWiuvEPVGCStt8XAGSSGUXhPPSrt2-\
+G5-IXSUFMK3BKYG2WjWuSHCxpINxrcH1Nin_33ge47RbwCywDmd1sjaExNbLGFsm\
+0DkcVU-IUhVN4iJdWP8knJ1slji9IQMYVZFkFdY23m58uvBsydKrrHgGF3Abk3Pw\
+3jJx1L9ueO-pHmQx8nnBIKUYR7rr2aumuaH41LImisHcjeVnPu7S5qyM9GAB4Mg2\
+rVeR-gFwYvm0sw62U0gXfB90aDnndbsd7cHvAoPsj0nxux9cwCqn-4nO_hEoSD4X\
+4DbmmPdUbGpEJXYK1vRLQ-yddAaxzO0eoiq_WNKAmK5_9BrUYAjPAE1GWJGLPeGa\
+uZ5gVfAxrIpeID3lQNjt_m4d7apXKyIg"}'})*/
 //MS Test
-this.authenticate({'text':'{"refreshToken":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOi\
+/*this.authenticate({'text':'{"refreshToken":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOi\
 JlYzJhYWZmMi1hZDcyLTRlMzQtYTBkNC1lNDdhN2IwYWYwM2QiLCJzb3VyY2VzIj\
 pbXSwidXNlcl9uYW1lIjoiZWMyYWFmZjItYWQ3Mi00ZTM0LWEwZDQtZTQ3YTdiMG\
 FmMDNkIiwicm9sZXMiOlsiTVNfVEVTVDpST0xFX1BBUlRJQ0lQQU5UIl0sImlzcy\
@@ -175,7 +175,7 @@ Ggab7g04WlELr5tAfwDCFPYq0bpn7cgQD2GliS9xT70mPlsUBPhLEzEMeyz3Tr5Q\
 OvcLlsanKInQnxtZWocrq2PCJ4WJPqAZiJLQE8VcW8yEbhjh4jeMdfau2F0sgivk\
 J60U1xNZxDfvRjXuOQuCBk8CgK85EtqCJUYpgK-KSW-p5kz_gx5I4TTR3z8XKFm8\
 OkB5CscQQX-O7UcRhToESvBZs2xz01HBjXbw7fKH6SBCEQULt02BqFdlL6SO5_ja\
-08Xi8EYcC6b-Br-XsMys"}'})
+08Xi8EYcC6b-Br-XsMys"}'})*/
 // STAGING_PROJECT
 /*this.authenticate({'text':'{"refreshToken":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOi\
 JiOTU1OWQ4Ni05ZjU5LTQzZTktOGU2Ni1iZDA5NTFhNTE2ZmEiLCJzb3VyY2VzIj\
@@ -208,6 +208,7 @@ bbGd2mgxfA9bhFAiM"}'})*/
   authenticate(authObj) {
     this.transitionStatuses()
     let auth = JSON.parse(authObj.text)
+    //TODO: Implement Meta QR call here
     this.authService.registerToken(auth.refreshToken)
     .then(() => {
       this.storage.get(StorageKeys.OAUTH_TOKENS).then((tokens) => {
@@ -231,18 +232,20 @@ bbGd2mgxfA9bhFAiM"}'})*/
   retrieveSubjectInformation() {
     this.authService.getSubjectInformation().then((res) => {
       let subjectInformation:any = res
-      let participantId = subjectInformation.id
+      let participantId = subjectInformation.externalId
       let participantLogin = subjectInformation.login
       let projectName = subjectInformation.project.projectName
       let sourceId = this.getSourceId(subjectInformation)
-      let createdDate = subjectInformation.createdDate
-      let createdDateMidnight = this.schedule.setDateTimeToMidnight(new Date(createdDate))
-      this.storage.init(participantId,
+      let createdDate = new Date(subjectInformation.createdDate)
+      let createdDateMidnight = this.schedule.setDateTimeToMidnight(new Date(subjectInformation.createdDate))
+      this.storage.init(
+        participantId,
         participantLogin,
         projectName,
         sourceId,
-        createdDateMidnight,
-        this.language)
+        this.language,
+        createdDate,
+        createdDateMidnight)
       .then(() => {
         this.doAfterAuthentication()
       })

@@ -22,8 +22,12 @@
   </ion-item-group>
   <div class="pos-bottom" padding>
     <button ion-button class="bt bt--full" round full
+      *ngIf="!hasClickedDoneButton"
       (click)="handleClosePage()">
       {{ "BTN_DONE" | translate }}
     </button>
+    <div *ngIf="hasClickedDoneButton" class="spinner-center">
+      <ion-spinner name="dots"></ion-spinner>
+    </div>
   </div>
 </ion-content>

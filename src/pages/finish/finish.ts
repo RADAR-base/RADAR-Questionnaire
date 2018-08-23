@@ -10,6 +10,7 @@ import { StorageService } from '../../providers/storage-service'
 import { StorageKeys } from '../../enums/storage'
 import { Task } from '../../models/task'
 import { Reminders } from '../../models/protocol'
+import { DefaultNumberOfNotificationsToSchedule } from '../../assets/data/defaultConfig'
 
 
 @Component({
@@ -22,6 +23,7 @@ export class FinishPage {
   isClinicalTask: boolean = false
   completedInClinic: boolean = false
   displayNextTaskReminder: boolean = true
+  hasClickedDoneButton: boolean = false
 
   constructor(
     public navCtrl: NavController,
@@ -55,7 +57,9 @@ export class FinishPage {
     this.controller.getNextTask()
       .then((task) => {
         if(task) {
-          this.displayNextTaskReminder = true
+          if(task.name != "ESM") {
+            this.displayNextTaskReminder = true
+          }
         } else {
           this.displayNextTaskReminder = false
         }
@@ -68,14 +72,20 @@ export class FinishPage {
 
 
   handleClosePage() {
+    this.hasClickedDoneButton = !this.hasClickedDoneButton
     this.evalClinicalFollowUpTask()
-    this.navCtrl.setRoot(HomePage)
+    .then(() => {
+      this.kafkaService.sendAllAnswersInCache()
+      this.navCtrl.setRoot(HomePage)
+    });
   }
 
   evalClinicalFollowUpTask() {
     if(this.completedInClinic) {
-      this.storage.get(StorageKeys.SCHEDULE_TASKS_CLINICAL)
+      return this.storage.get(StorageKeys.SCHEDULE_TASKS_CLINICAL)
       .then((tasks) => this.generateClinicalTasks(tasks))
+    } else {
+      return Promise.resolve({})
     }
   }
 
@@ -92,7 +102,6 @@ export class FinishPage {
     let now = new Date()
     for(var i = 0; i < repeatTimes.length; i++) {
       let ts = now.getTime() + repeatTimes[i]
-      console.log(tasks.length + i)
       let clinicalTask: Task = {
         index: tasks.length + i,
         completed: false,
@@ -107,8 +116,8 @@ export class FinishPage {
       }
       clinicalTasks.push(clinicalTask)
     }
-    this.storage.set(StorageKeys.SCHEDULE_TASKS_CLINICAL, clinicalTasks)
-      .then(() => this.controller.setNextXNotifications(300))
+    return this.storage.set(StorageKeys.SCHEDULE_TASKS_CLINICAL, clinicalTasks)
+      .then(() => {return this.controller.setNextXNotifications(DefaultNumberOfNotificationsToSchedule)})
   }
 
   formatRepeatsAfterClinic (repeats) {

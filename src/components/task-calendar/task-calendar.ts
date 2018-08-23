@@ -1,5 +1,5 @@
 import { Component, OnChanges, ViewChild, ElementRef, Input, Output, EventEmitter} from '@angular/core'
-import { NavController } from 'ionic-angular'
+import { NavController, Platform } from 'ionic-angular'
 import { HomeController } from '../../providers/home-controller'
 import { Task } from '../../models/task'
 import { DefaultTask } from '../../assets/data/defaultConfig'
@@ -23,8 +23,12 @@ export class TaskCalendarComponent implements OnChanges {
 
   constructor (private controller: HomeController,
               private alertCtrl: AlertController,
-              private translate: TranslatePipe) {
+              private translate: TranslatePipe,
+              private platform: Platform) {
     this.getTasks()
+    platform.resume.subscribe((e) => {
+      this.getTasks()
+    })
   }
 
   ngOnChanges () {

@@ -81,23 +81,24 @@ export class Utility {
     let qVal = specs.avsc + '_' + specs.name + '-value'
     return this.storage.get(StorageKeys.OAUTH_TOKENS)
     .then(tokens => {
-      let keys = this.getLatestKafkaSchemaVersion(tokens.access_token, qKey, '')
-      let vals = this.getLatestKafkaSchemaVersion(tokens.access_token, qVal, '')
-      return Promise.all([keys, vals]).then(versions => {
+      let keys = this.getLatestKafkaSchemaVersion(tokens.access_token, qKey, 'latest')
+      let vals = this.getLatestKafkaSchemaVersion(tokens.access_token, qVal, 'latest')
+      return Promise.all([keys, vals])
+      /*return Promise.all([keys, vals]).then(versions => {
         var versionReqKey, versionReqValue
         for(let key in versions[0]) {versionReqKey = versions[0][key]}
         for(let key in versions[1]) {versionReqValue = versions[1][key]}
         let key = this.getLatestKafkaSchemaVersion(tokens.access_token, qKey, versionReqKey)
         let val = this.getLatestKafkaSchemaVersion(tokens.access_token, qVal, versionReqValue)
         return Promise.all([key, val, specs])
-      })
+      })*/
     })
   }
 
   getLatestKafkaSchemaVersion(accessToken, questionName, version) {
     let versionStr = this.URI_version + version
     let uri = DefaultEndPoint + this.URI_schema + questionName + versionStr
-
+    console.log(uri)
     return this.httpClient.get(uri).toPromise()
   }
 

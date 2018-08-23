@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { AppVersion } from '@ionic-native/app-version';
 import { AlertController } from 'ionic-angular';
 import { StorageService } from '../../providers/storage-service';
-import { SchedulingService } from '../../providers/scheduling-service'
+import { SchedulingService } from '../../providers/scheduling-service';
+import { HomeController } from '../../providers/home-controller';
 import { ConfigService } from '../../providers/config-service';
 import { LanguageSetting } from '../../models/settings';
 import { NotificationSettings } from '../../models/settings';
@@ -14,6 +16,7 @@ import { StorageKeys } from '../../enums/storage';
 import { LocKeys } from '../../enums/localisations';
 import { TranslatePipe } from '../../pipes/translate/translate';
 import { SplashPage } from '../splash/splash';
+import { DefaultNumberOfNotificationsToSchedule } from '../../assets/data/defaultConfig';
 
 
 @Component({
@@ -23,12 +26,13 @@ import { SplashPage } from '../splash/splash';
 
 export class SettingsPage {
 
+  appVersionStr: String
   configVersion: String
   scheduleVersion: String
   cacheSize: number
   participantId: String
   projectName: String
-  referenceDate: Date
+  enrolmentDate: Date
   language: LanguageSetting = DefaultSettingsSelectedLanguage
   languagesSelectable: String[]
   notifications: NotificationSettings = DefaultSettingsNotifications
@@ -39,8 +43,10 @@ export class SettingsPage {
     public navParams: NavParams,
     public alertCtrl: AlertController,
     public storage: StorageService,
+    private appVersion: AppVersion,
     private schedule: SchedulingService,
     private configService: ConfigService,
+    private controller: HomeController,
     public translate: TranslatePipe){
     }
 
@@ -55,29 +61,30 @@ export class SettingsPage {
   }
 
   loadSettings() {
+    let appVersionPromise = this.appVersion.getVersionNumber()
     let configVersion = this.storage.get(StorageKeys.CONFIG_VERSION)
     let scheduleVersion = this.storage.get(StorageKeys.SCHEDULE_VERSION)
     let participantId = this.storage.get(StorageKeys.PARTICIPANTID)
     let projectName = this.storage.get(StorageKeys.PROJECTNAME)
-    let referenceDate = this.storage.get(StorageKeys.REFERENCEDATE)
+    let enrolmentDate = this.storage.get(StorageKeys.ENROLMENTDATE)
     let language = this.storage.get(StorageKeys.LANGUAGE)
     let settingsNotification = this.storage.get(StorageKeys.SETTINGS_NOTIFICATIONS)
     let settingsLanguages = this.storage.get(StorageKeys.SETTINGS_LANGUAGES)
     let settingsWeeklyReport = this.storage.get(StorageKeys.SETTINGS_WEEKLYREPORT)
     let cache = this.storage.get(StorageKeys.CACHE_ANSWERS)
     let settings = [configVersion, scheduleVersion, participantId, projectName,
-      referenceDate, language, settingsNotification, settingsLanguages, settingsWeeklyReport,
-      cache]
+      enrolmentDate, language, settingsNotification, settingsLanguages, settingsWeeklyReport,
+      cache, appVersionPromise]
     Promise.all(settings).then((returns) => {
+      this.appVersionStr       = returns[10]
       this.configVersion       = returns[0]
       this.scheduleVersion     = returns[1]
       this.participantId       = returns[2]
       this.projectName         = returns[3]
-      this.referenceDate       = returns[4]
+      this.enrolmentDate       = returns[4]
       this.language            = returns[5]
       this.notifications       = returns[6]
       this.languagesSelectable = returns[7]
-      console.log(this.languagesSelectable)
       this.weeklyReport        = returns[8]
       var size = 0
       for(var key in returns[9]) {
@@ -162,6 +169,15 @@ export class SettingsPage {
     })
   }
 
+  consoleLogNotifications() {
+    this.controller.consoleLogNotifications();
+  }
+
+  consoleLogSchedule() {
+    console.log('SCHEDULE SETTINGS')
+    this.controller.consoleLogSchedule();
+  }
+
   showConfirmReset() {
     let buttons = [
       {
@@ -205,8 +221,11 @@ export class SettingsPage {
     this.showLoading = true
     this.configService.fetchConfigState()
      .then(() => {
-       this.showLoading = false
        this.loadSettings()
+       this.controller.setNextXNotifications(DefaultNumberOfNotificationsToSchedule)
+       .then(() => {
+         this.showLoading = false
+       })
      })
   }
 

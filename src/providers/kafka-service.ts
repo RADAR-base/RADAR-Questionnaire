@@ -27,7 +27,10 @@ export class KafkaService {
     public storage: StorageService,
     private authService: AuthService
   ) {
-    this.KAFKA_CLIENT_URL = DefaultEndPoint + this.KAFKA_CLIENT_KAFKA
+    this.storage.get(StorageKeys.BASE_URI).then((uri) => {
+      var endPoint = uri ? uri : DefaultEndPoint
+      this.KAFKA_CLIENT_URL = endPoint + this.KAFKA_CLIENT_KAFKA
+    })
   }
 
   prepareKafkaObject(task: Task, data) {
@@ -163,7 +166,6 @@ export class KafkaService {
             if(noOfTasks == 20) {
               break;
             }
-
         }
         return Promise.all(promises)
           .then((res) => {

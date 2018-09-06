@@ -17,6 +17,7 @@ import { JwtHelper } from 'angular2-jwt'
 import { LanguageSetting } from '../../models/settings'
 import { TranslatePipe } from '../../pipes/translate/translate';
 import { MyApp } from '../../app/app.component';
+import { HttpClient, HttpHeaders } from '@angular/common/http'
 
 @Component({
   selector: 'page-enrolment',
@@ -184,26 +185,74 @@ bbGd2mgxfA9bhFAiM"}'})*/
 
   authenticate(authObj) {
     this.transitionStatuses()
-    let auth = JSON.parse(authObj.text)
-    //TODO: Implement Meta QR call here
-    this.authService.registerToken(auth.refreshToken)
-    .then(() => {
-      this.storage.get(StorageKeys.OAUTH_TOKENS).then((tokens) => {
-        this.authService.registerAsSource()
-        .then(() => {
-          this.retrieveSubjectInformation()
+
+    var authText = authObj.text
+    new Promise((resolve, reject) => {
+      var refreshToken = null;
+      if(this.validURL(authText)) {
+        // Meta Qr code
+        this.authService.getRefreshTokenFromUrl(authText).then((body : any) => {
+          refreshToken = body.refreshToken
+          if(body.baseUrl) {
+            this.storage.set(StorageKeys.BASE_URI, body.baseUrl)
+          }
+          console.debug('Refresh Token : ' + refreshToken + '\nBase URI : ' + body.baseUrl)
+          return refreshToken
         })
-        .catch((error) => {
-          let modifiedError = error
-          this.retrieveSubjectInformation()
-          modifiedError.statusText = "Reregistered an existing source "
-          this.displayErrorMessage(modifiedError)
+      } else {
+        // Normal QR codes: containing refresh token as JSON
+        let auth = JSON.parse(authText)
+        refreshToken = auth.refreshToken
+        console.debug('Refresh Token : ' + refreshToken)
+        return refreshToken
+      }
+    })
+    .catch((e) => {
+      console.error('Cannot Parse Refresh Token from the QR code. '
+        + 'Please make sure the QR code contains either a JSON or a URL pointing to this JSON', e)
+      this.displayErrorMessage('Error Parsing Refresh Token from QR code');
+    })
+    .then((refreshToken) => {
+      if(refreshToken === null) {
+        this.displayErrorMessage('Error Parsing Refresh Token from QR code');
+        throw new Error('refresh token cannot be null.')
+      }
+      this.authService.registerToken(refreshToken)
+      .then(() => {
+        this.storage.get(StorageKeys.OAUTH_TOKENS).then((tokens) => {
+          this.authService.registerAsSource()
+          .then(() => {
+            this.retrieveSubjectInformation()
+          })
+          .catch((error) => {
+            let modifiedError = error
+            this.retrieveSubjectInformation()
+            modifiedError.statusText = "Re-registered an existing source "
+            this.displayErrorMessage(modifiedError)
+          })
         })
       })
-    })
-    .catch((error) => {
+      .catch((error) => {
+        this.displayErrorMessage(error)
+      })
+    }).catch((error) => {
       this.displayErrorMessage(error)
     })
+  }
+
+  validURL(str) {
+    var pattern = new RegExp('^(https?:\/\/)?'+ // protocol
+      '((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|'+ // domain name
+      '((\d{1,3}\.){3}\d{1,3}))'+ // OR ip (v4) address
+      '(\:\d+)?(\/[-a-z\d%_.~+]*)*'+ // port and path
+      '(\?[;&a-z\d%_.~+=-]*)?'+ // query string
+      '(\#[-a-z\d_]*)?$','i'); // fragment locater
+    if(!pattern.test(str)) {
+        alert("Please enter a valid URL.");
+        return false;
+      } else {
+        return true;
+      }
   }
 
   retrieveSubjectInformation() {

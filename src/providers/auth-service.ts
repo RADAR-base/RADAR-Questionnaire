@@ -25,7 +25,10 @@ export class AuthService {
   constructor(public http: HttpClient,
     public storage: StorageService,
     private jwtHelper: JwtHelper) {
-      this.URI_base = DefaultEndPoint + this.URI_managementPortal
+      this.storage.get(StorageKeys.BASE_URI).then((uri) => {
+        var endPoint = uri ? uri : DefaultEndPoint
+        this.URI_base = endPoint + this.URI_managementPortal
+      })
   }
 
   refresh() {
@@ -66,6 +69,10 @@ export class AuthService {
       let promise = this.createPostRequest(URI, this.BODY_register, {headers: headers})
       return promise
     })
+  }
+
+  getRefreshTokenFromUrl(URI) {
+    return this.http.get(URI).toPromise()
   }
 
   createPostRequest(uri, body, headers) {

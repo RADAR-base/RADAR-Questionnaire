@@ -23,12 +23,13 @@ export class ConfigService {
   ) {}
 
   fetchConfigState() {
-    return this.storage.get(StorageKeys.CONFIG_VERSION)
-    .then((configVersion) => {
+    return Promise.all([this.storage.get(StorageKeys.CONFIG_VERSION),
+    this.storage.get(StorageKeys.SCHEDULE_VERSION)])
+    .then(([configVersion, scheduleVersion]) => {
       return this.pullProtocol()
       .then((res) => {
         let response: any = JSON.parse(res)
-        if(configVersion != response.version) {
+        if(configVersion != response.version || scheduleVersion != response.version) {
           this.storage.set(StorageKeys.HAS_CLINICAL_TASKS, false)
           let protocolFormated = this.formatPulledProcotol(response.protocols)
           let scheduledAssessments = []
@@ -48,17 +49,25 @@ export class ConfigService {
             console.log("Pulled clinical questionnaire")
             return this.pullQuestionnaires(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS)
           })
-          this.storage.set(StorageKeys.CONFIG_ASSESSMENTS, scheduledAssessments)
           .then(() => {
-            console.log("Pulled questionnaire")
-            return this.pullQuestionnaires(StorageKeys.CONFIG_ASSESSMENTS)
+            this.storage.set(StorageKeys.CONFIG_ASSESSMENTS, scheduledAssessments)
+            .then(() => {
+              console.log("Pulled questionnaire")
+              return this.pullQuestionnaires(StorageKeys.CONFIG_ASSESSMENTS)
+            })
           })
+          .then(() => // First cancel existing notifications as the version has changed.
+          this.controller.cancelNotifications())
+          .then(() => {
+             // set notificaition here too so scheduled everytime the schedule changes too.
+            this.controller.setNextXNotifications(DefaultNumberOfNotificationsToSchedule)
+                            .then(() => console.log("NOTIFICATIONS scheduled after config change"))
+                      }
+            )
         } else {
           console.log('NO CONFIG UPDATE. Version of protocol.json has not changed.')
           return this.schedule.generateSchedule()
         }
-        // set notificaition here too so scheduled after enrolment too.
-        this.controller.setNextXNotifications(DefaultNumberOfNotificationsToSchedule)
       }).catch(e => console.log(e))
     })
   }

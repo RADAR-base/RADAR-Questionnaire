@@ -26,4 +26,8 @@ export class StorageKeys {
     static CACHE_ANSWERS = new StorageKeys('CHACHE_ANSWERS')
     static HAS_CLINICAL_TASKS = new StorageKeys('HAS_CLINICAL_TASKS')
     static CONFIG_CLINICAL_ASSESSMENTS = new StorageKeys('CONFIG_CLINICAL_ASSESSMENTS')
+    static TIME_ZONE = new StorageKeys('TIME_ZONE')
+    static UTC_OFFSET = new StorageKeys('UTC_OFFSET')
+    static LAST_NOTIFICATION_UPDATE = new StorageKeys('LAST_NOTIFICATION_UPDATE')
+    static BASE_URI = new StorageKeys('BASE_URI')
 }

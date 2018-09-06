@@ -222,9 +222,13 @@ export class SettingsPage {
     this.configService.fetchConfigState()
      .then(() => {
        this.loadSettings()
-       this.controller.setNextXNotifications(DefaultNumberOfNotificationsToSchedule)
-       .then(() => {
-         this.showLoading = false
+       // First cancel and then reschedule notifications
+       this.controller.cancelNotifications()
+         .then(() => {
+         this.controller.setNextXNotifications(DefaultNumberOfNotificationsToSchedule)
+         .then(() => {
+           this.showLoading = false
+         })
        })
      })
   }

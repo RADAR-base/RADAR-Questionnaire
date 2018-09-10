@@ -39,6 +39,7 @@ export class SplashPage {
       this.globalization.getDatePattern( { formatLength: 'short', selector: 'date and time'} )
       .then((res) => {
         // cancel all notifications if timezone/utc_offset has changed
+        // TODO: Force fetch the config and re-schedule here generating a new schedule
         if(timeZone != res.timezone || utcOffset != res.utc_offset)
         {
           console.log('[SPLASH] Timezone has changed to '+ res.timezone + '. Cancelling notifications!')

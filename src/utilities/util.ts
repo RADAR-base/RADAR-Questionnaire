@@ -97,9 +97,12 @@ export class Utility {
 
   getLatestKafkaSchemaVersion(accessToken, questionName, version) {
     let versionStr = this.URI_version + version
-    let uri = DefaultEndPoint + this.URI_schema + questionName + versionStr
-    console.log(uri)
-    return this.httpClient.get(uri).toPromise()
+    return this.storage.get(StorageKeys.BASE_URI).then((baseuri) => {
+      var endPoint = baseuri ? baseuri : DefaultEndPoint
+      let uri = endPoint + this.URI_schema + questionName + versionStr
+      console.log(uri)
+      return this.httpClient.get(uri).toPromise()
+    })
   }
 
 }

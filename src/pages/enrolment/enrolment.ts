@@ -17,6 +17,7 @@ import { JwtHelper } from 'angular2-jwt'
 import { LanguageSetting } from '../../models/settings'
 import { TranslatePipe } from '../../pipes/translate/translate';
 import { MyApp } from '../../app/app.component';
+import { HttpClient, HttpHeaders } from '@angular/common/http'
 
 @Component({
   selector: 'page-enrolment',
@@ -183,27 +184,86 @@ bbGd2mgxfA9bhFAiM"}'})*/
 }
 
   authenticate(authObj) {
+    this.showOutcomeStatus = false
     this.transitionStatuses()
-    let auth = JSON.parse(authObj.text)
-    //TODO: Implement Meta QR call here
-    this.authService.registerToken(auth.refreshToken)
-    .then(() => {
-      this.storage.get(StorageKeys.OAUTH_TOKENS).then((tokens) => {
-        this.authService.registerAsSource()
-        .then(() => {
-          this.retrieveSubjectInformation()
+
+    var authText = authObj.text
+    new Promise((resolve, reject) => {
+      var refreshToken = null;
+      if(this.validURL(authText)) {
+        // Meta Qr code
+        // TODO :: Add a field to enter the short url+13char code manually
+        this.authService.getRefreshTokenFromUrl(authText).then((body : any) => {
+          refreshToken = body['refreshToken']
+          if(body['baseUrl']) {
+            this.storage.set(StorageKeys.BASE_URI, body['baseUrl'])
+            this.authService.updateURI()
+          }
+          resolve(refreshToken)
+        }).catch((e) => {
+          if(e.status === 410) {
+            e.statusText = 'URL expired. Regenerate the QR code.'
+          } else {
+            e.statusText = 'Error: Cannot get the refresh token from the URL'
+          }
+          console.log(e.statusText + ' - ' + e.status)
+          this.displayErrorMessage(e)
         })
-        .catch((error) => {
-          let modifiedError = error
-          this.retrieveSubjectInformation()
-          modifiedError.statusText = "Reregistered an existing source "
-          this.displayErrorMessage(modifiedError)
+      } else {
+        // Normal QR codes: containing refresh token as JSON
+        this.authService.updateURI().then(() => {
+        console.log('BASE URI : ' + this.storage.get(StorageKeys.BASE_URI))
+        let auth = JSON.parse(authText)
+        refreshToken = auth.refreshToken
+        resolve(refreshToken)
+      })
+      }
+    })
+    .catch((e) => {
+      console.error('Cannot Parse Refresh Token from the QR code. '
+        + 'Please make sure the QR code contains either a JSON or a URL pointing to this JSON ' + e)
+        e.statusText = 'Cannot Parse Refresh Token from the QR code.'
+      this.displayErrorMessage(e);
+    })
+    .then((refreshToken) => {
+      if(refreshToken === null) {
+        let error = new Error('refresh token cannot be null.')
+        this.displayErrorMessage(error);
+        throw error
+      }
+      this.authService.registerToken(refreshToken)
+      .then(() => {
+        this.storage.get(StorageKeys.OAUTH_TOKENS).then((tokens) => {
+          this.authService.registerAsSource()
+          .then(() => {
+            this.retrieveSubjectInformation()
+          })
+          .catch((error) => {
+            let modifiedError = error
+            this.retrieveSubjectInformation()
+            modifiedError.statusText = "Re-registered an existing source "
+            this.displayErrorMessage(modifiedError)
+          })
         })
       })
-    })
-    .catch((error) => {
+      .catch((error) => {
+        this.displayErrorMessage(error)
+      })
+    }).catch((error) => {
       this.displayErrorMessage(error)
     })
+  }
+
+  validURL(str){
+    var regexp =  /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
+          if (regexp.test(str))
+          {
+            return true;
+          }
+          else
+          {
+            return false;
+          }
   }
 
   retrieveSubjectInformation() {
@@ -215,6 +275,8 @@ bbGd2mgxfA9bhFAiM"}'})*/
       let sourceId = this.getSourceId(subjectInformation)
       let createdDate = new Date(subjectInformation.createdDate)
       let createdDateMidnight = this.schedule.setDateTimeToMidnight(new Date(subjectInformation.createdDate))
+      console.debug('Subject Info retrieved : ' + subjectInformation.text)
+      console.debug('Project Name: ' + projectName)
       this.storage.init(
         participantId,
         participantLogin,
@@ -230,7 +292,7 @@ bbGd2mgxfA9bhFAiM"}'})*/
   }
 
   doAfterAuthentication() {
-    this.configService.fetchConfigState()
+    this.configService.fetchConfigState(true)
     this.next()
   }
 
@@ -249,6 +311,7 @@ bbGd2mgxfA9bhFAiM"}'})*/
 
   transitionStatuses() {
     if (this.loading) {
+      this.elOutcome.nativeElement.style.opacity = 0
       this.elLoading.nativeElement.style.opacity = 1
     }
     if (this.showOutcomeStatus) {

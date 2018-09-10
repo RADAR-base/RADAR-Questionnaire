@@ -30,6 +30,7 @@ plugins/android.json
 plugins/ios.json
 www/*
 $RECYCLE.BIN/
+google-services.json
 
 .DS_Store
 Thumbs.db

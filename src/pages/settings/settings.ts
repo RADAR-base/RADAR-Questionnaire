@@ -219,14 +219,11 @@ export class SettingsPage {
 
   reloadConfig() {
     this.showLoading = true
-    this.configService.fetchConfigState()
+    this.configService.fetchConfigState(true)
      .then(() => {
        this.loadSettings()
-       this.controller.setNextXNotifications(DefaultNumberOfNotificationsToSchedule)
-       .then(() => {
-         this.showLoading = false
+          this.showLoading = false
        })
-     })
   }
 
 }

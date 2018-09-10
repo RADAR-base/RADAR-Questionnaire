@@ -97,7 +97,7 @@ export const DefaultNotificationType: string = 'FCM' // choose from 'FCM' or 'LO
 export const DefaultNumberOfNotificationsToSchedule: number = 100 //
 export const DefaultNumberOfNotificationsToRescue: number = 12 //
 export const FCMPluginProjectSenderId: string = '486403643787'
-export const DefaultNotificationRefreshTime: number = 1.8e+6 // 30 mins
+export const DefaultNotificationRefreshTime: number = 900000 // 15 mins in ms
 
 export const DefaultSourceTypeModel: string = 'aRMT-App'
 export const DefaultSourceTypeRegistrationBody: any = {

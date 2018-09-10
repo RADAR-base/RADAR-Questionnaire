@@ -63,7 +63,7 @@ export class SplashPage {
         } else {
           console.log('Not Scheduling Notifications as ' + timeElapsed
           + 'ms from last refresh is not greater' +
-          'than the default Refresh interval of ' + DefaultNumberOfNotificationsToSchedule)
+          'than the default Refresh interval of ' + DefaultNotificationRefreshTime)
         }
       })
     })

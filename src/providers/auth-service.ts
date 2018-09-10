@@ -95,6 +95,7 @@ export class AuthService {
   }
 
   getRegisterHeaders(contentType) {
+    // TODO:: Use empty client secret https://github.com/RADAR-base/RADAR-Questionnaire/issues/140
     var headers = new HttpHeaders()
       .set('Authorization', 'Basic ' + btoa(DefaultSourceProducerAndSecret))
       .set('Content-Type', contentType)

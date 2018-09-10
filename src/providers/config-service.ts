@@ -22,14 +22,14 @@ export class ConfigService {
     private controller: HomeController
   ) {}
 
-  fetchConfigState() {
+  fetchConfigState(force: boolean) {
     return Promise.all([this.storage.get(StorageKeys.CONFIG_VERSION),
     this.storage.get(StorageKeys.SCHEDULE_VERSION)])
     .then(([configVersion, scheduleVersion]) => {
       return this.pullProtocol()
       .then((res) => {
         let response: any = JSON.parse(res)
-        if(configVersion != response.version || scheduleVersion != response.version) {
+        if(configVersion != response.version || scheduleVersion != response.version || force) {
           this.storage.set(StorageKeys.HAS_CLINICAL_TASKS, false)
           let protocolFormated = this.formatPulledProcotol(response.protocols)
           let scheduledAssessments = []
@@ -44,29 +44,30 @@ export class ConfigService {
               }
           }
           this.storage.set(StorageKeys.CONFIG_VERSION, response.version)
-          this.storage.set(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS, clinicalAssessments)
-          .then(() =>{
+          return this.storage.set(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS, clinicalAssessments)
+          .then(() => {
             console.log("Pulled clinical questionnaire")
             return this.pullQuestionnaires(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS)
           })
           .then(() => {
-            this.storage.set(StorageKeys.CONFIG_ASSESSMENTS, scheduledAssessments)
+            return this.storage.set(StorageKeys.CONFIG_ASSESSMENTS, scheduledAssessments)
             .then(() => {
               console.log("Pulled questionnaire")
               return this.pullQuestionnaires(StorageKeys.CONFIG_ASSESSMENTS)
             })
           })
           .then(() => // First cancel existing notifications as the version has changed.
-          this.controller.cancelNotifications())
+           {
+           return this.controller.cancelNotifications()
           .then(() => {
              // set notificaition here too so scheduled everytime the schedule changes too.
-            this.controller.setNextXNotifications(DefaultNumberOfNotificationsToSchedule)
+            return this.controller.setNextXNotifications(DefaultNumberOfNotificationsToSchedule)
                             .then(() => console.log("NOTIFICATIONS scheduled after config change"))
-                      }
-            )
+                    }
+            )})
         } else {
           console.log('NO CONFIG UPDATE. Version of protocol.json has not changed.')
-          return this.schedule.generateSchedule()
+          return this.schedule.generateSchedule(false)
         }
       }).catch(e => console.log(e))
     })
@@ -78,7 +79,7 @@ export class ConfigService {
         let URI = DefaultProtocolEndPoint + projectName + this.URI_protocol
         return this.http.get(URI, { responseType: 'text'} ).toPromise()
       } else {
-        console.error('Unknown project name. Cannot pull protocols.')
+        console.error('Unknown project name : ' + projectName + '. Cannot pull protocols.')
       }
     })
   }
@@ -123,7 +124,7 @@ export class ConfigService {
           assessmentUpdate[i]['questions'] = this.formatQuestionsHeaders(res[i])
         }
         return this.storage.set(storageKey, assessmentUpdate)
-        .then(() => {return this.schedule.generateSchedule()})
+        .then(() => {return this.schedule.generateSchedule(true)})
       })
     })
   }

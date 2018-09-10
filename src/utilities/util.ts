@@ -97,7 +97,7 @@ export class Utility {
 
   getLatestKafkaSchemaVersion(accessToken, questionName, version) {
     let versionStr = this.URI_version + version
-    this.storage.get(StorageKeys.BASE_URI).then((baseuri) => {
+    return this.storage.get(StorageKeys.BASE_URI).then((baseuri) => {
       var endPoint = baseuri ? baseuri : DefaultEndPoint
       let uri = endPoint + this.URI_schema + questionName + versionStr
       console.log(uri)

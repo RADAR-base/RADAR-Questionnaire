@@ -27,6 +27,11 @@ export class KafkaService {
     public storage: StorageService,
     private authService: AuthService
   ) {
+      this.updateURI()
+  }
+
+
+  updateURI() {
     this.storage.get(StorageKeys.BASE_URI).then((uri) => {
       var endPoint = uri ? uri : DefaultEndPoint
       this.KAFKA_CLIENT_URL = endPoint + this.KAFKA_CLIENT_KAFKA

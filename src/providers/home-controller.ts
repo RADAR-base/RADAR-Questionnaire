@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core'
 import { StorageService } from './storage-service'
 import { SchedulingService } from './scheduling-service'
 import { Task, TasksProgress } from '../models/task'
@@ -10,13 +10,13 @@ import { KafkaService } from './kafka-service'
 @Injectable()
 export class HomeController {
 
-  constructor(public storage: StorageService,
+  constructor (public storage: StorageService,
               private schedule: SchedulingService,
               private notifications: NotificationService,
               private kafka: KafkaService) {
   }
 
-  evalEnrolment() {
+  evalEnrolment () {
     return this.storage.getAllKeys().then((keys) => {
       return keys.length <= 5
     })
@@ -31,15 +31,15 @@ export class HomeController {
   }
 
   updateAssessmentIntroduction (assessment) {
-    if(assessment.showIntroduction){
-      var assessmentUpdated = assessment
+    if (assessment.showIntroduction) {
+      const assessmentUpdated = assessment
       assessmentUpdated.showIntroduction = false
       this.storage.updateAssessment(assessmentUpdated)
     }
   }
 
   getTasksOfToday () {
-    let now = new Date()
+    const now = new Date()
     return this.schedule.getTasksForDate(now)
   }
 
@@ -49,7 +49,7 @@ export class HomeController {
 
   getTaskProgress () {
     return this.getTasksOfToday()
-      .then((tasks:Task[]) => this.retrieveTaskProgress(tasks))
+      .then((tasks: Task[]) => this.retrieveTaskProgress(tasks))
   }
 
   getClinicalTasks () {
@@ -57,14 +57,14 @@ export class HomeController {
   }
 
   setNextXNotifications (noOfNotifications) {
-    let today = new Date().getTime()
-    var promises = []
+    const today = new Date().getTime()
+    const promises = []
     return this.notifications.generateNotificationSubsetForXTasks(noOfNotifications)
     .then((desiredSubset) => {
       console.log(`NOTIFICATIONS desiredSubset: ${desiredSubset.length}`)
       try {
         return this.notifications.setNotifications(desiredSubset)
-      } catch(e) {
+      } catch (e) {
         return Promise.resolve({})
       }
     })
@@ -77,87 +77,100 @@ export class HomeController {
     } )
   }
 
-  consoleLogNotifications() {
+  consoleLogNotifications () {
     this.notifications.consoleLogScheduledNotifications()
   }
 
-  consoleLogSchedule() {
+  consoleLogSchedule () {
     this.schedule.getTasks()
     .then((tasks) => {
-      let tasksKeys = []
-      for(var i = 0; i < tasks.length; i++) {
+      const tasksKeys = []
+      for (let i = 0; i < tasks.length; i++) {
         tasksKeys.push(`${tasks[i].timestamp}-${tasks[i].name}`)
       }
       tasksKeys.sort()
       let rendered = `\nSCHEDULE Total (${tasksKeys.length})\n`
-      for(var i=(tasksKeys.length-10); i<tasksKeys.length; i++){
-        const dateName = tasksKeys[i].split("-")
-        rendered +=`${tasksKeys[i]} DATE ${new Date(parseInt(dateName[0])).toString()} NAME ${dateName[1]}\n`
+      for (let i = (tasksKeys.length - 10); i < tasksKeys.length; i++) {
+        const dateName = tasksKeys[i].split('-')
+        rendered += `${tasksKeys[i]} DATE ${new Date(parseInt(dateName[0])).toString()} NAME ${dateName[1]}\n`
       }
       console.log(rendered)
-    });
+    })
   }
 
-
-  retrieveTaskProgress (tasks):TasksProgress {
-    var tasksProgress: TasksProgress = {
+  retrieveTaskProgress (tasks): TasksProgress {
+    const tasksProgress: TasksProgress = {
       numberOfTasks: 0,
       completedTasks: 0
     }
-    if(tasks) {
+    if (tasks) {
       tasksProgress.numberOfTasks = tasks.length
-      for(var i = 0; i<tasks.length;i++){
-        if(tasks[i].completed){
-          tasksProgress.completedTasks +=1
+      for (let i = 0; i < tasks.length;i++) {
+        if (tasks[i].completed) {
+          tasksProgress.completedTasks += 1
         }
       }
-    return tasksProgress
+      return tasksProgress
     }
   }
 
   getNextTask () {
     return this.getTasksOfToday()
-            .then((tasks:Task[]) => this.retrieveNextTask(tasks))
+            .then((tasks: Task[]) => this.retrieveNextTask(tasks))
   }
 
-  areAllTasksComplete() {
+  areAllTasksComplete () {
     return this.getTasksOfToday()
     .then((tasks: Task[]) => {
       return this.checkIfAllTasksComplete(tasks)
     })
   }
 
-  retrieveNextTask (tasks):Task {
-    if(tasks) {
-      let now = new Date()
-      let offsetTime = 1000 * 60 * 10 // 10 min
-      let timestamp = new Date().getTime() - offsetTime
-      var passedAtLeastOnce = false
-      var nextIdx = 0
-      var nextTimestamp = timestamp + 1000 * 60 * 60 * 12
-      for(var i = 0; i < tasks.length; i++){
-        if(tasks[i].timestamp >= timestamp &&
+  retrieveNextTask (tasks): Task {
+    if (tasks) {
+      const now: Date = new Date()
+      const offsetTimeESM: number = 1000 * 60 * 10 // 10 min
+      let passedAtLeastOnce = false
+      let nextIdx = 0
+      let timestamp: number = now.getTime()
+      let nextTimestamp: number = timestamp
+      for (let i = 0; i < tasks.length; i++) {
+        switch (tasks[i].name) {
+          case 'ESM' :
+          //
+            timestamp = new Date().getTime() - offsetTimeESM
+            nextTimestamp = timestamp + 1000 * 60 * 60 * 12
+            break
+
+          default:
+          // Check from midnight for other tasks
+            now.setHours(0, 0, 0, 0)
+            timestamp = now.getTime()
+            nextTimestamp = tasks[i].timestamp + 1000 * 60 * 60 * 12
+        }
+
+        if (tasks[i].timestamp >= timestamp &&
             tasks[i].timestamp < nextTimestamp &&
-            tasks[i].completed == false){
+            tasks[i].completed === false) {
           passedAtLeastOnce = true
           nextTimestamp = tasks[i].timestamp
           nextIdx = i
         }
       }
-      if(passedAtLeastOnce) {
-        //console.log('NEXT TASK')
-        //console.log(tasks[nextIdx])
+      if (passedAtLeastOnce) {
+        // console.log('NEXT TASK')
+        // console.log(tasks[nextIdx])
         return tasks[nextIdx]
       }
     }
   }
 
-  checkIfAllTasksComplete(tasks: Task[]) {
-    var status = true
-    if(tasks){
-      for(var i = 0; i<tasks.length; i++) {
-        if(tasks[i].name != 'ESM') {
-          if(tasks[i].completed == false) {
+  checkIfAllTasksComplete (tasks: Task[]): boolean {
+    let status = true
+    if (tasks) {
+      for (let i = 0; i < tasks.length; i++) {
+        if (tasks[i].name !== 'ESM') {
+          if (tasks[i].completed === false) {
             status = false
           }
         }
@@ -166,24 +179,24 @@ export class HomeController {
     return status
   }
 
-  sendNonReportedTaskCompletion() {
+  sendNonReportedTaskCompletion () {
     this.schedule.getNonReportedCompletedTasks()
       .then((nonReportedTasks) => {
-        for(var i = 0; i < nonReportedTasks.length; i++) {
+        for (let i = 0; i < nonReportedTasks.length; i++) {
           this.kafka.prepareNonReportedTasksKafkaObject(nonReportedTasks[i])
           this.updateTaskToReportedCompletion(nonReportedTasks[i])
         }
       })
   }
 
-  updateTaskToComplete (task):Promise<any> {
-    var updatedTask = task
+  updateTaskToComplete (task): Promise<any> {
+    const updatedTask = task
     updatedTask.completed = true
     return this.schedule.insertTask(updatedTask)
   }
 
-  updateTaskToReportedCompletion (task):Promise<any> {
-    var updatedTask = task
+  updateTaskToReportedCompletion (task): Promise<any> {
+    const updatedTask = task
     updatedTask.reportedCompletion = true
     return this.schedule.insertTask(updatedTask)
   }

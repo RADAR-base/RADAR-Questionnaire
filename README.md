@@ -55,3 +55,27 @@ Run the app in an Android emulator:
 ```
 $ ionic cordova emulate android
 ```
+
+## Other Config Options
+
+Create a file in `src/assets/data/secret.ts` and add the following configuration -
+
+```ts
+// The End point where the protocols for the questionnaires scheduling is hosted
+export const DefaultProtocolEndPointExport: string = 'https://raw.githubusercontent.com/RADAR-base/RADAR-aRMT-protocols/master/'
+
+// The client credentials for OAuth authorisation with the Management Portal
+export const DefaultSourceProducerAndSecretExport: string = '<aRMT-client>:<aRMT-secret>'
+```
+
+Also if using FCM pull notifications instead of the local ones, please specify the FCM sender id (as mentioned in FCM settings) in `src/assets/data/defaultConfig.ts`
+
+```ts
+export const FCMPluginProjectSenderId: string = 'your-sender-id'
+```
+
+Also change the Default endpoint of where the RADAR-base platform is hosted.
+
+```ts
+export const DefaultEndPoint: string = 'https://your-hosted-radar-platform-base-url/'
+```

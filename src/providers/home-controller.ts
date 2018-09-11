@@ -163,12 +163,13 @@ export class HomeController {
             tasks[i].completed === false) {
           passedAtLeastOnce = true
           nextIdx = i
-          // break out of the loop as soon as the next task is found
+          // break out of the loop as soon as the next incomplete task is found
           break
         }
       }
       if (passedAtLeastOnce) {
-        console.log(`Task name: ${tasks[nextIdx].name}, Timestamp: ${tasks[nextIdx].timestamp}`)
+        console.log(`Next Task name: ${tasks[nextIdx].name},
+           Timestamp: ${tasks[nextIdx].timestamp}`)
         return tasks[nextIdx]
       }
     }

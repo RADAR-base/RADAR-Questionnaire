@@ -125,8 +125,13 @@ export class HomeController {
       return this.checkIfAllTasksComplete(tasks)
     })
   }
-
-  retrieveNextTask (tasks): Task {
+/**
+ * This function Retrieves the most current task from a list of tasks.
+ * @param tasks : The list of tasks to retrieve the next task from.
+ * @returns {@link Task} : The next task from the list. This essentially
+ *                         translates to what the `START` button on home page corresponds to.
+ */
+  retrieveNextTask (tasks: Task[]): Task {
     if (tasks) {
       const now: Date = new Date()
       const offsetTimeESM: number = 1000 * 60 * 10 // 10 min
@@ -137,7 +142,7 @@ export class HomeController {
       for (let i = 0; i < tasks.length; i++) {
         switch (tasks[i].name) {
           case 'ESM' :
-          //
+          // For ESM, just look from 10 mins before now
             timestamp = new Date().getTime() - offsetTimeESM
             nextTimestamp = timestamp + 1000 * 60 * 60 * 12
             break
@@ -155,11 +160,11 @@ export class HomeController {
           passedAtLeastOnce = true
           nextTimestamp = tasks[i].timestamp
           nextIdx = i
+          break
         }
       }
       if (passedAtLeastOnce) {
-        // console.log('NEXT TASK')
-        // console.log(tasks[nextIdx])
+        console.log(`Task name: ${tasks[nextIdx].name}, Timestamp: ${tasks[nextIdx].timestamp}`)
         return tasks[nextIdx]
       }
     }

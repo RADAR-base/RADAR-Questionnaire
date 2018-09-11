@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef} from '@angular/core'
+import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core'
 import { NavController, NavParams, AlertController, Content, Platform } from 'ionic-angular'
 import { SchedulingService } from '../../providers/scheduling-service'
 import { HomeController } from '../../providers/home-controller'
@@ -16,12 +16,11 @@ import { StorageKeys } from '../../enums/storage'
 import { NotificationService } from '../../providers/notification-service'
 import { KafkaService } from '../../providers/kafka-service'
 
-
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
-export class HomePage {
+export class HomePage implements AfterViewInit {
 
   @ViewChild('content')
   elContent: Content
@@ -194,7 +193,7 @@ export class HomePage {
   }
 
   // TODO: Rename to something appropriate
-  isNextTaskESMandNotNow () {
+  isNextTaskESMandNotNow (): void {
     const now = new Date().getTime()
     if (!this.showCalendar) {
       if (this.nextTask.name === 'ESM' && this.nextTask.timestamp > now) {
@@ -221,7 +220,7 @@ export class HomePage {
     }
   }
 
-  setCalendarScrollHeight (show: boolean) {
+  setCalendarScrollHeight (show: boolean): void {
     if (show) {
       this.calendarScrollHeight = this.elContentHeight
                                   - this.elTickerHeight
@@ -232,7 +231,7 @@ export class HomePage {
 
   }
 
-  applyCompletedTransformations () {
+  applyCompletedTransformations (): void {
     if (this.showCompleted) {
       this.elTicker.nativeElement.style.padding =
         `0`
@@ -254,15 +253,15 @@ export class HomePage {
     }
   }
 
-  openSettingsPage () {
+  openSettingsPage (): void {
     this.navCtrl.push(SettingsPage)
   }
 
-  openClinicalTasksPage () {
+  openClinicalTasksPage (): void {
     this.navCtrl.push(ClinicalTasksPage)
   }
 
-  startQuestionnaire (task: Task) {
+  startQuestionnaire (task: Task): void {
     this.hasClickedStartButton = true
     let startQuestionnaireTask = this.nextTask
     if (task) {
@@ -292,7 +291,7 @@ export class HomePage {
     })
   }
 
-  showCredits () {
+  showCredits (): void {
     const buttons = [
       {
         text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
@@ -308,7 +307,7 @@ export class HomePage {
     })
   }
 
-  showAlert (parameters) {
+  showAlert (parameters): void {
     const alert = this.alertCtrl.create({
       title: parameters.title,
       buttons: parameters.buttons

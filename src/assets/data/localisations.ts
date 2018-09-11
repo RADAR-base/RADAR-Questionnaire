@@ -74,7 +74,7 @@ export const Localisations = {
   },
   "FINISH_THANKS":{
     "da":"Tak fordi du udfyldte spørgeskemaet.",
-    "de":"Vielen Dank für Ihre Teilnahme.",
+    "de":"Vielen Dank für das Ausfüllen des Fragebogens.",
     "en":"Thank you for completing the questionnaire.",
     "es":"Gracias por completar el cuestionario",
     "it":"Grazie per aver completato il questionario",

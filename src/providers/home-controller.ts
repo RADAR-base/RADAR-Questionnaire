@@ -92,7 +92,7 @@ export class HomeController {
       let rendered = `\nSCHEDULE Total (${tasksKeys.length})\n`
       for (let i = (tasksKeys.length - 10); i < tasksKeys.length; i++) {
         const dateName = tasksKeys[i].split('-')
-        rendered += `${tasksKeys[i]} DATE ${new Date(parseInt(dateName[0])).toString()} NAME ${dateName[1]}\n`
+        rendered += `${tasksKeys[i]} DATE ${new Date(parseInt(dateName[0], 10)).toString()} NAME ${dateName[1]}\n`
       }
       console.log(rendered)
     })

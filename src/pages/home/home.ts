@@ -193,6 +193,7 @@ export class HomePage {
     this.setCalendarScrollHeight(this.showCalendar)
   }
 
+  // TODO: Rename to something appropriate
   isNextTaskESMandNotNow() {
     let now = new Date().getTime()
     if(!this.showCalendar){

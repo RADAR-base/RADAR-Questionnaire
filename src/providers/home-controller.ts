@@ -126,40 +126,44 @@ export class HomeController {
     })
   }
 /**
- * This function Retrieves the most current task from a list of tasks.
+ * This function Retrieves the most current next task from a list of tasks.
  * @param tasks : The list of tasks to retrieve the next task from.
- * @returns {@link Task} : The next task from the list. This essentially
- *                         translates to what the `START` button on home page corresponds to.
+ * @returns {@link Task} : The next incomplete task from the list. This essentially
+ *                         translates to which questionnaire the `START` button on home page corresponds to.
  */
   retrieveNextTask (tasks: Task[]): Task {
     if (tasks) {
+      // First sort the tasks based on timestamps so the first scheduled task in the list is returned first
+      tasks.sort((t1,t2) => {
+        return t1.timestamp - t2.timestamp
+      })
       const now: Date = new Date()
       const offsetTimeESM: number = 1000 * 60 * 10 // 10 min
       let passedAtLeastOnce = false
       let nextIdx = 0
-      let timestamp: number = now.getTime()
-      let nextTimestamp: number = timestamp
+      let lookFromTimestamp: number = now.getTime()
+      let lookToTimestamp: number = lookFromTimestamp
       for (let i = 0; i < tasks.length; i++) {
         switch (tasks[i].name) {
           case 'ESM' :
           // For ESM, just look from 10 mins before now
-            timestamp = new Date().getTime() - offsetTimeESM
-            nextTimestamp = timestamp + 1000 * 60 * 60 * 12
+            lookFromTimestamp = new Date().getTime() - offsetTimeESM
+            lookToTimestamp = lookFromTimestamp + 1000 * 60 * 60 * 12
             break
 
           default:
           // Check from midnight for other tasks
             now.setHours(0, 0, 0, 0)
-            timestamp = now.getTime()
-            nextTimestamp = tasks[i].timestamp + 1000 * 60 * 60 * 12
+            lookFromTimestamp = now.getTime()
+            lookToTimestamp = tasks[i].timestamp + 1000 * 60 * 60 * 12
         }
 
-        if (tasks[i].timestamp >= timestamp &&
-            tasks[i].timestamp < nextTimestamp &&
+        if (tasks[i].timestamp >= lookFromTimestamp &&
+            tasks[i].timestamp < lookToTimestamp &&
             tasks[i].completed === false) {
           passedAtLeastOnce = true
-          nextTimestamp = tasks[i].timestamp
           nextIdx = i
+          // break out of the loop as soon as the next task is found
           break
         }
       }

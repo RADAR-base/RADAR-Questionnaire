@@ -3,10 +3,11 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { HomeController } from '../../providers/home-controller';
 import { StorageService} from '../../providers/storage-service';
 import { KafkaService } from '../../providers/kafka-service';
+import { StorageKeys } from '../../enums/storage';
 import { HomePage } from '../home/home';
 import { EnrolmentPage } from '../enrolment/enrolment';
-import { DefaultNumberOfNotificationsToSchedule } from '../../assets/data/defaultConfig';
-
+import { DefaultNumberOfNotificationsToSchedule, DefaultNotificationRefreshTime } from '../../assets/data/defaultConfig';
+import { Globalization} from '@ionic-native/globalization';
 
 
 @Component({
@@ -24,7 +25,7 @@ export class SplashPage {
     public navParams: NavParams,
     public storage: StorageService,
     private controller: HomeController,
-
+    private globalization: Globalization,
     private kafka: KafkaService) {
     const parentPage = this.navParams.data.parentPage
     if(parentPage){
@@ -32,7 +33,41 @@ export class SplashPage {
       this.hasParentPage = true
     }
     this.status = 'Updating notifications...'
-    this.controller.setNextXNotifications(DefaultNumberOfNotificationsToSchedule)
+    Promise.all([this.storage.get(StorageKeys.TIME_ZONE),
+      this.storage.get(StorageKeys.UTC_OFFSET)])
+    .then(([timeZone, utcOffset]) => {
+      this.globalization.getDatePattern( { formatLength: 'short', selector: 'date and time'} )
+      .then((res) => {
+        // cancel all notifications if timezone/utc_offset has changed
+        // TODO: Force fetch the config and re-schedule here generating a new schedule
+        if(timeZone != res.timezone || utcOffset != res.utc_offset)
+        {
+          console.log('[SPLASH] Timezone has changed to '+ res.timezone + '. Cancelling notifications!')
+          this.storage.set(StorageKeys.TIME_ZONE, res.timezone)
+          this.storage.set(StorageKeys.UTC_OFFSET, res.utc_offset)
+          this.controller.cancelNotifications()
+        }
+        else {
+          console.log('[SPLASH] Current Timezone is ' + timeZone)
+        }
+      }
+    )})
+    .then(() => {
+      console.log('[SPLASH] Scheduling Notifications.')
+      //Only run this if not run in last DefaultNotificationRefreshTime
+      this.storage.get(StorageKeys.LAST_NOTIFICATION_UPDATE)
+      .then((lastUpdate) => {
+        var timeElapsed = Date.now() - lastUpdate
+        if((timeElapsed > DefaultNotificationRefreshTime) || !lastUpdate)  {
+          this.controller.setNextXNotifications(DefaultNumberOfNotificationsToSchedule)
+            .then(() => this.storage.set(StorageKeys.LAST_NOTIFICATION_UPDATE, Date.now()))
+        } else {
+          console.log('Not Scheduling Notifications as ' + timeElapsed
+          + 'ms from last refresh is not greater' +
+          'than the default Refresh interval of ' + DefaultNotificationRefreshTime)
+        }
+      })
+    })
     .then(() => {
       this.status = 'Sending cached answers...'
       return this.kafka.sendAllAnswersInCache()

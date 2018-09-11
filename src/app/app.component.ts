@@ -28,7 +28,7 @@ export class MyApp {
     platform.ready().then(() => {
       statusBar.styleDefault()
       splashScreen.hide()
-      configService.fetchConfigState()
+      configService.fetchConfigState(false)
       configService.migrateToLatestVersion()
       notificationService.permissionCheck()
     })

@@ -13,7 +13,7 @@ import 'rxjs/add/operator/toPromise';
 export class AuthService {
 
   URI_base: string
-  URI_managementPortal: string = '/managementportal'
+  URI_managementPortal: string = 'managementportal'
   URI_refresh: string = '/oauth/token'
   URI_subjects: string = '/api/subjects/'
 
@@ -25,7 +25,7 @@ export class AuthService {
   constructor(public http: HttpClient,
     public storage: StorageService,
     private jwtHelper: JwtHelper) {
-      this.URI_base = DefaultEndPoint + this.URI_managementPortal
+      this.updateURI()
   }
 
   refresh() {
@@ -47,9 +47,17 @@ export class AuthService {
     })
   }
 
+  updateURI() {
+    return this.storage.get(StorageKeys.BASE_URI).then((uri) => {
+      var endPoint = uri ? uri : DefaultEndPoint
+      this.URI_base = endPoint + this.URI_managementPortal
+    })
+  }
+
   //TODO: test this
   registerToken(registrationToken) {
     let URI = this.URI_base + this.URI_refresh
+    console.debug('URI : ' + URI)
     let refreshBody = this.BODY_refresh + registrationToken
     let headers = this.getRegisterHeaders(this.CONTENTTYPE_urlencode)
     let promise = this.createPostRequest(URI, refreshBody, {headers: headers})
@@ -68,6 +76,10 @@ export class AuthService {
     })
   }
 
+  getRefreshTokenFromUrl(URI) {
+    return this.http.get(URI).toPromise()
+  }
+
   createPostRequest(uri, body, headers) {
     return this.http.post(uri, body, headers)
         .toPromise()
@@ -83,6 +95,7 @@ export class AuthService {
   }
 
   getRegisterHeaders(contentType) {
+    // TODO:: Use empty client secret https://github.com/RADAR-base/RADAR-Questionnaire/issues/140
     var headers = new HttpHeaders()
       .set('Authorization', 'Basic ' + btoa(DefaultSourceProducerAndSecret))
       .set('Content-Type', contentType)

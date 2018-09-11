@@ -141,34 +141,38 @@ export class SchedulingService {
     })
   }
 
-  generateSchedule () {
+  generateSchedule (force: boolean) {
     var scheduleVProm= this.storage.get(StorageKeys.SCHEDULE_VERSION)
     var configVProm = this.storage.get(StorageKeys.CONFIG_VERSION)
     var refDate = this.storage.get(StorageKeys.REFERENCEDATE)
 
-    Promise.all([scheduleVProm, configVProm, refDate]).then((data) => {
+    return Promise.all([scheduleVProm, configVProm, refDate]).then((data) => {
       this.scheduleVersion = data[0]
       this.configVersion = data[1]
       this.refTimestamp = data[2]
 
-      if(data[0] != data[1]){
+      if((data[0] != data[1]) || force){
         console.log('Changed protocol version detected. Updating schedule..')
-        this.runScheduler()
+        return this.runScheduler()
       }
     })
   }
 
   runScheduler () {
-    this.getAssessments()
-    .then((assessments) => this.buildTaskSchedule(assessments))
-    .then((schedule) => this.setSchedule(schedule))
     this.buildReportSchedule()
     .then((schedule) => this.setReportSchedule(schedule))
+    .catch((e) => console.error(e))
+
+    return this.getAssessments()
+    .then((assessments) => this.buildTaskSchedule(assessments))
+    .catch((e) => console.error(e))
+    .then((schedule) => {
+      return this.setSchedule(schedule)})
+    .catch((e) => console.error(e))
   }
 
   getAssessments () {
-    var assessments = this.storage.get(StorageKeys.CONFIG_ASSESSMENTS)
-    return assessments
+    return this.storage.get(StorageKeys.CONFIG_ASSESSMENTS)
   }
 
   insertTask (task): Promise<any> {
@@ -285,8 +289,9 @@ export class SchedulingService {
 
   setSchedule (schedule) {
     //console.log(schedule)
-    this.storage.set(StorageKeys.SCHEDULE_TASKS, schedule)
-    this.storage.set(StorageKeys.SCHEDULE_VERSION, this.configVersion)
+    return this.storage.set(StorageKeys.SCHEDULE_TASKS, schedule).then(() => {
+      return this.storage.set(StorageKeys.SCHEDULE_VERSION, this.configVersion)
+    })
   }
 
   buildReportSchedule () {

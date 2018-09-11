@@ -70,6 +70,13 @@ export class HomeController {
     })
   }
 
+  cancelNotifications () {
+    return this.storage.get(StorageKeys.PARTICIPANTLOGIN)
+    .then((participantLogin) => {
+      return this.notifications.cancelNotificationPush(participantLogin)
+    } )
+  }
+
   consoleLogNotifications() {
     this.notifications.consoleLogScheduledNotifications()
   }

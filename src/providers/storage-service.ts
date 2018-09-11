@@ -26,7 +26,8 @@ export class StorageService {
   init(participantId, participantLogin, projectName, sourceId, language, createdDate, createdDateMidnight) {
     let allKeys = this.getAllKeys()
     return allKeys.then((keys) => {
-      if(keys.length <= 6){
+      // TODO: Find out why this is hard-coded?
+      if(keys.length <= 7){
         let enrolmentDateTime = new Date(createdDate)
         let referenceDateTime = new Date(createdDateMidnight)
         let enrolmentDate = this.set(StorageKeys.ENROLMENTDATE, enrolmentDateTime.getTime())

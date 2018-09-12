@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core'
+import { Component, ViewChild, ElementRef } from '@angular/core'
 import { NavController, NavParams, AlertController, Content, Platform } from 'ionic-angular'
 import { SchedulingService } from '../../providers/scheduling-service'
 import { HomeController } from '../../providers/home-controller'
@@ -20,7 +20,7 @@ import { KafkaService } from '../../providers/kafka-service'
   selector: 'page-home',
   templateUrl: 'home.html'
 })
-export class HomePage implements AfterViewInit {
+export class HomePage {
 
   @ViewChild('content')
   elContent: Content

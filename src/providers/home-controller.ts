@@ -116,7 +116,9 @@ export class HomeController {
 
   getNextTask () {
     return this.getTasksOfToday()
-            .then((tasks: Task[]) => this.retrieveNextTask(tasks))
+            .then((tasks: Task[]) => {
+              return this.retrieveNextTask(tasks)
+            })
   }
 
   areAllTasksComplete () {

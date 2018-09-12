@@ -25,7 +25,7 @@ export class FinishPage {
   displayNextTaskReminder: boolean = true
   hasClickedDoneButton: boolean = false
 
-  constructor(
+  constructor (
     public navCtrl: NavController,
     public navParams: NavParams,
     private answerService: AnswerService,
@@ -36,28 +36,34 @@ export class FinishPage {
     public storage: StorageService
   ) {}
 
-  ionViewDidLoad() {
+  ionViewDidLoad () {
     this.content = this.navParams.data.endText
-    let questionnaireName: string = this.navParams.data.associatedTask.name
-    try {
-      if(this.navParams.data['associatedTask']['protocol']['clinicalProtocol']) {
-        this.isClinicalTask = true
+    const questionnaireName: string = this.navParams.data.associatedTask.name
+    if (!questionnaireName.includes('DEMO')) {
+      try {
+        if (this.navParams.data['associatedTask']['protocol']['clinicalProtocol']) {
+          this.isClinicalTask = true
+        }
+      } catch (TypeError) {
+        console.log('INFO: Not in clinic task/questionnaire.')
       }
-    } catch (TypeError) {
-      console.log('INFO: Not in clinic task/questionnaire.')
+      this.prepareDataService.process_QuestionnaireData(this.answerService.answers,
+        this.timestampService.timestamps)
+        .then(data => {
+          this.controller.updateTaskToComplete(this.navParams.data.associatedTask)
+          this.sendToKafka(this.navParams.data.associatedTask, data)
+        }, error => {
+          console.log(JSON.stringify(error))
+        })
+    } else {
+      // This is a Demo Questionnaire. Just update to complete and do nothing else
+      this.controller.updateTaskToComplete(this.navParams.data.associatedTask)
     }
-    this.prepareDataService.process_QuestionnaireData(this.answerService.answers,
-      this.timestampService.timestamps)
-      .then(data => {
-        this.controller.updateTaskToComplete(this.navParams.data.associatedTask)
-        this.sendToKafka(this.navParams.data.associatedTask, data)
-      }, error => {
-        console.log(JSON.stringify(error))
-      })
+
     this.controller.getNextTask()
       .then((task) => {
-        if(task) {
-          if(task.name != "ESM") {
+        if (task) {
+          if (task.name !== 'ESM') {
             this.displayNextTaskReminder = true
           }
         } else {
@@ -66,8 +72,8 @@ export class FinishPage {
       })
   }
 
-  sendToKafka(questionnaireName, questionnaireData) {
-    this.kafkaService.prepareKafkaObject(questionnaireName, questionnaireData)  //submit data to kafka
+  sendToKafka (questionnaireName, questionnaireData) {
+    this.kafkaService.prepareKafkaObject(questionnaireName, questionnaireData)  // submit data to kafka
   }
 
 

@@ -63,6 +63,8 @@ export class QuestionsPage {
   }
 
   ionViewDidLoad() {
+    this.answerService.reset()
+    this.timestampService.reset()
     this.questionTitle = this.navParams.data.title
     this.questions = this.navParams.data.questions
     this.questionsContainerEl = this.questionsContainerRef.nativeElement

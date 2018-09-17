@@ -39,7 +39,7 @@ export class KafkaService {
   }
 
   prepareKafkaObject(task: Task, data) {
-    //Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
+    // Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
     var Answer: AnswerValueExport = {
       "name": task.name,
       "version": data.configVersion,
@@ -53,7 +53,7 @@ export class KafkaService {
         let sourceId = keyInfo[0]
         let projectId = keyInfo[1]
         let patientId = keyInfo[2].toString()
-        //Payload for kafka 2 : key Object which contains device information
+        // Payload for kafka 2 : key Object which contains device information
         var AnswerKey: AnswerKeyExport = { "userId": patientId, "sourceId": sourceId, "projectId": projectId }
         var kafkaObject = { "value": Answer, "key": AnswerKey }
         this.getSpecs(task, kafkaObject)

@@ -150,7 +150,6 @@ export class SchedulingService {
       this.scheduleVersion = data[0]
       this.configVersion = data[1]
       this.refTimestamp = data[2]
-
       if((data[0] != data[1]) || force){
         console.log('Changed protocol version detected. Updating schedule..')
         return this.runScheduler()
@@ -202,30 +201,30 @@ export class SchedulingService {
   }
 
   buildTasksForSingleAssessment (assessment, indexOffset) {
-    let repeatP = assessment.protocol.repeatProtocol
-    let repeatQ = assessment.protocol.repeatQuestionnaire
+    const repeatP = assessment.protocol.repeatProtocol
+    const repeatQ = assessment.protocol.repeatQuestionnaire
 
-    var iterDate = new Date(this.refTimestamp)
-    let yearsMillis = DefaultScheduleYearCoverage * 60000 * 60 * 24 * 365
-    let endDate  = new Date(this.refTimestamp + yearsMillis)
+    let iterDate = new Date(this.refTimestamp)
+    const yearsMillis = DefaultScheduleYearCoverage * 60000 * 60 * 24 * 365
+    const endDate = new Date(this.refTimestamp + yearsMillis)
 
     console.log(assessment)
 
-    var tmpScheduleAll: Task[] = []
-    while(iterDate.getTime() <= endDate.getTime()){
-      for(var i = 0; i < repeatQ.unitsFromZero.length; i++){
-        let taskDate = this.advanceRepeat(iterDate, repeatQ.unit, repeatQ.unitsFromZero[i])
-        let idx = indexOffset + tmpScheduleAll.length
+    const tmpScheduleAll: Task[] = []
+    while (iterDate.getTime() <= endDate.getTime()) {
+      for (let i = 0; i < repeatQ.unitsFromZero.length; i++) {
+        const taskDate = this.advanceRepeat(iterDate, repeatQ.unit, repeatQ.unitsFromZero[i])
+        const idx = indexOffset + tmpScheduleAll.length
         tmpScheduleAll.push(this.taskBuilder(idx, assessment, taskDate))
       }
       iterDate = this.setDateTimeToMidnight(iterDate)
       iterDate = this.advanceRepeat(iterDate, repeatP.unit, repeatP.amount)
     }
 
-    var tmpSchedule: Task[] = []
-    const now = new Date().getTime()
-    for(var i = 0; i < tmpScheduleAll.length; i++) {
-      if(tmpScheduleAll[i].timestamp > now) {
+    const tmpSchedule: Task[] = []
+    const today = this.setDateTimeToMidnight(new Date())
+    for (let i = 0; i < tmpScheduleAll.length; i++) {
+      if (tmpScheduleAll[i].timestamp > today.getTime()) {
         tmpSchedule.push(tmpScheduleAll[i])
       }
     }

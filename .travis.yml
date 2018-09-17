@@ -10,9 +10,10 @@ install:
 
 before_script:
   - mkdir www
+  - cp src/assets/data/secret.ts.template src/assets/data/secret.ts
 
 script:
-  - npm run lint
-  - npm run lint:css
+#  - npm run lint
+#  - npm run lint:css
   - cordova prepare
   - npm run build

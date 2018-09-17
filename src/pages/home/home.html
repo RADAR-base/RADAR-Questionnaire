@@ -1,63 +1,137 @@
 <ion-header>
   <ion-toolbar>
-      <button class="logo-small" ion-button menuToggle left (click)="showCredits()">
-        <img class="logo-small" src="assets/imgs/radar-logo.svg" alt="Logo">
-      </button>
-      <button ion-button menuToggle right (click)="openSettingsPage()">
-        <ion-icon name="cog"></ion-icon>
-      </button>
-      <ion-title text-center>
-        {{ "HOME_RADAR_CNS" | translate}}
-      </ion-title>
+    <button
+      class="logo-small"
+      ion-button
+      menuToggle
+      left
+      (click)="showCredits()"
+    >
+      <img
+        class="logo-small"
+        src="assets/imgs/radar-logo.svg"
+        alt="Logo"
+      >
+    </button>
+    <button
+      ion-button
+      menuToggle
+      right
+      (click)="openSettingsPage()"
+    >
+      <ion-icon name="cog"></ion-icon>
+    </button>
+    <ion-title text-center>{{ "HOME_RADAR_CNS" | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content #content>
-  <div  #progressBar class="size-dynamic">
+  <div
+    #progressBar
+    class="size-dynamic"
+  >
     <task-progress
       [progress]="tasksProgress"
       [forceComplete]="showCompleted"
       [noTasksToday]="showNoTasksToday"
-      *ngIf="!hasOnlyESMs">
+      *ngIf="!hasOnlyESMs"
+    >
     </task-progress>
-    <div class="container-esm" *ngIf="hasOnlyESMs">
-      <img src="assets/imgs/diary.png" class="icon-esm"/>
+    <div
+      class="container-esm"
+      *ngIf="hasOnlyESMs"
+    >
+      <img
+        src="assets/imgs/diary.png"
+        class="icon-esm"
+      >
     </div>
-    <div class="clinical-1" *ngIf="hasClinicalTasks && !showCalendar && !showCompleted" (click)="openClinicalTasksPage()">
-      <img src="assets/imgs/clinical.png" class="icon-clinical"/>
+    <div
+      class="clinical-1"
+      *ngIf="hasClinicalTasks && !showCalendar && !showCompleted"
+      (click)="openClinicalTasksPage()"
+    >
+      <img
+        src="assets/imgs/clinical.png"
+        class="icon-clinical"
+      >
     </div>
   </div>
 
-  <div class="clinical-2" *ngIf="hasClinicalTasks && showCalendar" (click)="openClinicalTasksPage()">
-    <img src="assets/imgs/clinical.png" class="icon-clinical"/>
+  <div
+    class="clinical-2"
+    *ngIf="hasClinicalTasks && showCalendar"
+    (click)="openClinicalTasksPage()"
+  >
+    <img
+      src="assets/imgs/clinical.png"
+      class="icon-clinical"
+    >
   </div>
 
-  <div class="clinical-3" *ngIf="hasClinicalTasks && !showCalendar && showCompleted" (click)="openClinicalTasksPage()">
-    <img src="assets/imgs/clinical.png" class="icon-clinical"/>
+  <div
+    class="clinical-3"
+    *ngIf="hasClinicalTasks && !showCalendar && showCompleted"
+    (click)="openClinicalTasksPage()"
+  >
+    <img
+      src="assets/imgs/clinical.png"
+      class="icon-clinical"
+    >
   </div>
 
-  <div  #tickerBar class="size-static" *ngIf="nextTask.name !== 'ESM'">
-    <ticker-bar [task]="nextTask" [showAffirmation]="showCompleted"></ticker-bar>
+  <div
+    #tickerBar
+    class="size-static"
+    *ngIf="nextTask.name !== 'ESM'"
+  >
+    <ticker-bar
+      [task]="nextTask"
+      [showAffirmation]="showCompleted"
+    ></ticker-bar>
   </div>
 
-  <div  #taskInfo class="size-static">
-    <task-info [task]="nextTask" (collapse)="displayEvalTransformations($event)"></task-info>
+  <div
+    #taskInfo
+    class="size-static"
+  >
+    <task-info
+      [task]="nextTask"
+      (collapse)="displayEvalTransformations($event)"
+    ></task-info>
   </div>
 
-  <div #taskCalendar class="size-null">
+  <div
+    #taskCalendar
+    class="size-null"
+  >
     <task-calendar
       [scrollHeight]="calendarScrollHeight"
-      (task)="startQuestionnaire($event)">
+      (task)="startQuestionnaire($event)"
+    >
     </task-calendar>
   </div>
 
-  <div #footer class="size-static bg" padding>
-      <button *ngIf="!hasClickedStartButton" ion-button class="bt bt--full" round full
-        (click)="startQuestionnaire()">
-        {{ "BTN_START" | translate }}
-      </button>
-      <div *ngIf="hasClickedStartButton" class="spinner-center">
-        <ion-spinner name="dots"></ion-spinner>
-      </div>
+  <div
+    #footer
+    class="size-static bg"
+    padding
+  >
+    <button
+      *ngIf="!hasClickedStartButton"
+      ion-button
+      class="bt bt--full"
+      round
+      full
+      (click)="startQuestionnaire()"
+    >
+      {{ "BTN_START" | translate }}
+    </button>
+    <div
+      *ngIf="hasClickedStartButton"
+      class="spinner-center"
+    >
+      <ion-spinner name="dots"></ion-spinner>
+    </div>
   </div>
 </ion-content>

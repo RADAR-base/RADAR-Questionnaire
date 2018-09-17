@@ -1,19 +1,24 @@
+import {
+  App,
+  Content,
+  NavController,
+  NavParams,
+  ViewController
+} from 'ionic-angular'
 import { Component, ElementRef, ViewChild } from '@angular/core'
-import { App, Content, NavController, NavParams, ViewController } from 'ionic-angular'
 import { Question, QuestionType } from '../../models/question'
+
 import { AnswerService } from '../../providers/answer-service'
-import { TimeStampService } from '../../providers/timestamp-service'
 import { FinishPage } from '../finish/finish'
 import { LocKeys } from '../../enums/localisations'
+import { TimeStampService } from '../../providers/timestamp-service'
 import { TranslatePipe } from '../../pipes/translate/translate'
-
 
 @Component({
   selector: 'page-questions',
   templateUrl: 'questions.html'
 })
 export class QuestionsPage {
-
   @ViewChild(Content)
   content: Content
 
@@ -26,12 +31,12 @@ export class QuestionsPage {
   questions: Question[]
   questionTitle: String
 
-  //timestamps
+  // timestamps
   startTime: number
   endTime: number
 
-  //next question increment
-  nextQuestionIncrVal:number = 0
+  // next question increment
+  nextQuestionIncrVal: number = 0
 
   // TODO: gather text variables in one place. get values from server?
   txtValues = {
@@ -58,9 +63,8 @@ export class QuestionsPage {
     public appCtrl: App,
     private answerService: AnswerService,
     private timestampService: TimeStampService,
-    private translate: TranslatePipe,
-  ) {
-  }
+    private translate: TranslatePipe
+  ) {}
 
   ionViewDidLoad() {
     this.answerService.reset()
@@ -73,17 +77,17 @@ export class QuestionsPage {
   }
 
   evalIfFirstQuestionnaireToSkipESMSleepQuestion() {
-    let time = new Date()
-    if(time.getHours() > 8 && this.questionTitle == 'ESM') {
+    const time = new Date()
+    if (time.getHours() > 8 && this.questionTitle === 'ESM') {
       return 1
     }
     return 0
   }
 
   evalIfLastQuestionnaireToShowESMRatingQuestion(currentQuestionId) {
-    let time = new Date()
-    if(this.questionTitle == 'ESM' && currentQuestionId == 'esm_beep') {
-      if(time.getHours() >= 19){
+    const time = new Date()
+    if (this.questionTitle === 'ESM' && currentQuestionId === 'esm_beep') {
+      if (time.getHours() >= 19) {
         return 0
       }
       return 1
@@ -92,14 +96,12 @@ export class QuestionsPage {
   }
 
   setCurrentQuestion(value = 0) {
-
-
     // record start time when question is shown
     this.startTime = this.timestampService.getTimeStamp() / 1000
     const min = !(this.currentQuestion + value < 0)
     const max = !(this.currentQuestion + value >= this.questions.length)
-    const finish = (this.currentQuestion + value === this.questions.length)
-    const back = (this.currentQuestion + value === -value)
+    const finish = this.currentQuestion + value === this.questions.length
+    const back = this.currentQuestion + value === -value
 
     if (min && max) {
       this.content.scrollToTop(200)
@@ -107,8 +109,8 @@ export class QuestionsPage {
       this.currentQuestion = this.currentQuestion + value
       this.setProgress()
 
-      this.questionsContainerEl.style.transform =
-        `translateX(-${this.currentQuestion * 100}%)`
+      this.questionsContainerEl.style.transform = `translateX(-${this
+        .currentQuestion * 100}%)`
 
       this.iconPrevious = !this.currentQuestion
         ? this.iconValues.close
@@ -118,19 +120,21 @@ export class QuestionsPage {
         ? this.txtValues.close
         : this.txtValues.previous
 
-      this.nextBtTxt = this.currentQuestion === this.questions.length - 1
-        ? this.txtValues.finish
-        : this.txtValues.next
+      this.nextBtTxt =
+        this.currentQuestion === this.questions.length - 1
+          ? this.txtValues.finish
+          : this.txtValues.next
 
       this.setNextDisabled()
 
-      if(this.questions[this.currentQuestion].field_type == QuestionType.timed) {
+      if (
+        this.questions[this.currentQuestion].field_type === QuestionType.timed
+      ) {
         this.setPreviousDisabled()
       } else {
         this.setPreviousEnabled()
       }
     } else if (finish) {
-
       this.navigateToFinishPage()
       this.navCtrl.removeView(this.viewCtrl)
     } else if (back) {
@@ -140,7 +144,9 @@ export class QuestionsPage {
 
   setProgress() {
     const tick = Math.ceil(100 / this.questions.length)
-    const percent = Math.ceil(this.currentQuestion * 100 / this.questions.length)
+    const percent = Math.ceil(
+      (this.currentQuestion * 100) / this.questions.length
+    )
     this.progress = percent + tick
   }
 
@@ -163,36 +169,38 @@ export class QuestionsPage {
 
   nextQuestion() {
     if (this.checkAnswer()) {
-
       // record end time when pressed "Next"
       this.endTime = this.timestampService.getTimeStamp() / 1000
 
-      //take current question id to record timestamp
+      // take current question id to record timestamp
       const id = this.questions[this.currentQuestion].field_name
       this.recordTimeStamp(id)
 
       this.nextQuestionIncrVal = this.evalSkipNext()
-      this.nextQuestionIncrVal += this.evalIfLastQuestionnaireToShowESMRatingQuestion(id)
+      this.nextQuestionIncrVal += this.evalIfLastQuestionnaireToShowESMRatingQuestion(
+        id
+      )
       this.setCurrentQuestion(this.nextQuestionIncrVal)
     }
   }
 
   navigateToFinishPage() {
-   this.navCtrl.push(FinishPage, {
-     'endText': this.navParams.data.endText,
-     'associatedTask': this.navParams.data.associatedTask
-   })
- }
+    this.navCtrl.push(FinishPage, {
+      endText: this.navParams.data.endText,
+      associatedTask: this.navParams.data.associatedTask
+    })
+  }
 
   evalSkipNext() {
-    var increment = 1
-    var questionIdx = this.currentQuestion + 1
-    if(questionIdx < this.questions.length) {
-      while(this.questions[questionIdx].evaluated_logic != ""){
-        let logic = this.questions[questionIdx].evaluated_logic
-        let responses = this.answerService.answers
-        //console.log(logic)
-        if(eval(logic) == false){
+    let increment = 1
+    let questionIdx = this.currentQuestion + 1
+    if (questionIdx < this.questions.length) {
+      while (this.questions[questionIdx].evaluated_logic !== '') {
+        const logic = this.questions[questionIdx].evaluated_logic
+        const responses = this.answerService.answers
+        // console.log(logic)
+        // tslint:disable-next-line:no-eval
+        if (eval(logic) === false) {
           increment += 1
           questionIdx += 1
         } else {
@@ -205,12 +213,11 @@ export class QuestionsPage {
   }
 
   recordTimeStamp(questionId) {
-
     this.timestampService.add({
-      "id": questionId,
-      "value": {
-        "startTime": this.startTime,
-        "endTime": this.endTime
+      id: questionId,
+      value: {
+        startTime: this.startTime,
+        endTime: this.endTime
       }
     })
   }
@@ -220,15 +227,15 @@ export class QuestionsPage {
       this.answerService.add(event)
       this.setNextDisabled()
     }
-    if (event.type == QuestionType.timed){
+    if (event.type === QuestionType.timed) {
       this.nextQuestion()
     }
   }
 
   previousQuestion() {
-    if(this.isPreviousBtDisabled == false){
+    if (this.isPreviousBtDisabled === false) {
       this.setCurrentQuestion(-this.nextQuestionIncrVal)
-      if(this.previousBtTxt == this.txtValues.close) {
+      if (this.previousBtTxt === this.txtValues.close) {
         this.navCtrl.pop()
       }
     }

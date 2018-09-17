@@ -1,49 +1,56 @@
-import { Component } from '@angular/core';
-import { Content, NavController, NavParams, ViewController } from 'ionic-angular'
-import { HomeController } from '../../providers/home-controller'
-import { Task } from '../../models/task'
+import {
+  Content,
+  NavController,
+  NavParams,
+  ViewController
+} from 'ionic-angular'
+
+import { Component } from '@angular/core'
 import { DefaultTask } from '../../assets/data/defaultConfig'
-import { StorageService } from '../../providers/storage-service'
-import { StorageKeys } from '../../enums/storage'
-import { StartPage } from '../start/start'
+import { HomeController } from '../../providers/home-controller'
 import { QuestionsPage } from '../questions/questions'
+import { StartPage } from '../start/start'
+import { StorageKeys } from '../../enums/storage'
+import { StorageService } from '../../providers/storage-service'
+import { Task } from '../../models/task'
 
 @Component({
   selector: 'page-clinical-tasks',
-  templateUrl: 'clinical-tasks.html',
+  templateUrl: 'clinical-tasks.html'
 })
 export class ClinicalTasksPage {
-
   scrollHeight: number = 500
   tasks: Task[] = [DefaultTask]
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,
-    public storage:StorageService, private controller: HomeController) {
-  }
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    public storage: StorageService,
+    private controller: HomeController
+  ) {}
 
   ionViewDidLoad() {
-    this.controller.getClinicalTasks()
-    .then((tasks) => {
+    this.controller.getClinicalTasks().then(tasks => {
       this.tasks = tasks
     })
   }
 
-  clicked (task) {
-    let lang = this.storage.get(StorageKeys.LANGUAGE)
-    let nextAssessment = this.controller.getClinicalAssessment(task)
-    Promise.all([lang, nextAssessment])
-    .then((res) => {
-      let lang = res[0]
-      let assessment = res[1]
+  clicked(task) {
+    const lang = this.storage.get(StorageKeys.LANGUAGE)
+    const nextAssessment = this.controller.getClinicalAssessment(task)
+    Promise.all([lang, nextAssessment]).then(res => {
+      // tslint:disable-next-line:no-shadowed-variable
+      const lang = res[0]
+      const assessment = res[1]
       console.log(assessment)
-      let params = {
-        "title": assessment.name,
-        "introduction": assessment.startText[lang.value],
-        "endText": assessment.endText[lang.value],
-        "questions": assessment.questions,
-        "associatedTask": task
+      const params = {
+        title: assessment.name,
+        introduction: assessment.startText[lang.value],
+        endText: assessment.endText[lang.value],
+        questions: assessment.questions,
+        associatedTask: task
       }
-      if(assessment.showIntroduction){
+      if (assessment.showIntroduction) {
         this.navCtrl.push(StartPage, params)
       } else {
         this.navCtrl.push(QuestionsPage, params)
@@ -51,5 +58,4 @@ export class ClinicalTasksPage {
       this.controller.updateAssessmentIntroduction(assessment)
     })
   }
-
 }

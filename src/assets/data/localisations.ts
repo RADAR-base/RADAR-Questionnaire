@@ -26,7 +26,7 @@ export const Localisations = {
   "ENROL_WELCOME_DESC": {
     "da":"Tak fordi  du vil deltage i dette studie.  Lad os komme i gang med at opstarte registreringsprocessen.",
     "de":"Danke, dass Sie an dieser Studie teilnehmen. Um loszulegen, lassen Sie uns den Registrierungsprozess starten.",
-    "en":"Thank you for taking part in this study. Let\"s start the enrolment process to get you set up.",
+    "en":"Thank you for taking part in this study. Let's start the enrolment process to get you set up.",
     "es":"Gracias por tomar parte en este estudio. Comencemos el proceso de registro para configurarlo",
     "it":"Grazie per aver preso parte al nostro studio. Iniziamo il processo di arruolamento.",
     "nl":"Bedankt voor uw deelname aan dit onderzoek. Laten we starten met het registratie-proces."
@@ -59,7 +59,7 @@ export const Localisations = {
   "ENROL_PREFERENCES_DESC": {
     "da":"Vi sender dig en ugenlig opsummering om de data du har sendt til os.  Vælg lige så mange emner du ønsker at modtage information om.",
     "de":"Wir senden Ihnen wöchentliche Zusammenfassungen über die Daten, die Sie uns senden. Wählen Sie beliebig viele Themen aus, zu denen Sie Informationen erhalten möchten.",
-    "en":"We will send you weekly summaries about the data you\"ll be sending us. Feel free to select as many topics you would like to receive information about.",
+    "en":"We will send you weekly summaries about the data you'll be sending us. Feel free to select as many topics you would like to receive information about.",
     "es":"Le enviaremos cada semana un resumen de los datos que nos envía. Siéntase libre de seleccionar solo los temas sobre los cuales desea recibir información",
     "it":"Le invieremo ogni settimana un riepilogo dei dati che ci invierà. Si senta libero di selezionar solo gli argomenti su cui vuole ricevere informazioni.",
     "nl":"We zullen u wekelijks samenvattingen sturen over uw verzamelde gegevens. U kunt zelf de onderwerpen selecteren waarover uw informatie wilt ontvangen."
@@ -74,7 +74,7 @@ export const Localisations = {
   },
   "FINISH_THANKS":{
     "da":"Tak fordi du udfyldte spørgeskemaet.",
-    "de":"Vielen Dank für das Ausfüllen des Fragebogens.",
+    "de":"Vielen Dank für Ihre Teilnahme.",
     "en":"Thank you for completing the questionnaire.",
     "es":"Gracias por completar el cuestionario",
     "it":"Grazie per aver completato il questionario",
@@ -525,7 +525,7 @@ export const Localisations = {
   "NOTIFICATION_REMINDER_NOW_DESC_1": {
     "da":"Det tager normalt ikke længere end",
     "de":"Dauert in der Regel nicht länger als",
-    "en":"Won\"t usually take longer than",
+    "en":"Won't usually take longer than",
     "es":"No le llevará más tiempo de ",
     "it":"Non richiederanno più di",
     "nl":"Meestal duurt dit niet langer dan"
@@ -549,7 +549,7 @@ export const Localisations = {
   "NOTIFICATION_REMINDER_FORGOTTEN_DESC": {
     "da":"Det ser ud til at du ikke har fået svaret på alle spørgsmålene. Kunne du gøre dette med det samme?",
     "de":"Es scheint, Sie haben nicht alle unsere Fragen beantwortet. Könnten Sie dies bitte jetzt nachholen?",
-    "en":"It seems you haven\"t answered all of our questions. Could you please do that now?",
+    "en":"It seems you haven't answered all of our questions. Could you please do that now?",
     "es":"Parece que no ha respondido todas las preguntas. ¿Podría hacerlo ahora?",
     "it":"Sembra che si sia dimenticato di rispondere ad alcune domande. Potrebbe farlo ora?",
     "nl":"Het lijkt erop dat u niet alle vragen heeft beantwoord. Zou u dit nu alsnog willen doen?"

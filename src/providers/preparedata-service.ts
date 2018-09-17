@@ -3,56 +3,53 @@
 ********/
 
 import { Injectable } from '@angular/core'
-
-import { StorageService } from '../providers/storage-service'
 import { StorageKeys } from '../enums/storage'
+import { StorageService } from '../providers/storage-service'
 
 @Injectable()
 export class PrepareDataService {
-
-  constructor(
-    public storage: StorageService
-  ) {
-  }
+  constructor(public storage: StorageService) {}
 
   process_QuestionnaireData(answers, timestamps): Promise<any> {
-
     return new Promise((resolve, reject) => {
-
       // fetch config version and Patient ID
-      this.fetchFromStorage().then(resp => {
+      this.fetchFromStorage().then(
+        resp => {
+          const configVersion = resp[0].toString()
+          const participantLogin = resp[1].toString()
 
-        var configVersion = resp[0].toString()
-        var participantLogin = resp[1].toString()
+          const keys = Object.keys(answers)
+          const keylength = keys.length
 
-        var keys = Object.keys(answers)
-        var keylength = keys.length
+          let answersProcessedCount = 0
+          const values = []
 
-        var answersProcessedCount = 0;
-        var values = []
-
-        for (var key in answers) {
-          answersProcessedCount++
-          var answer = {
-            questionId: {string: key.toString()},
-            //int: implicit [int, double, string]
-            value: {string: answers[key].toString()},
-            startTime: timestamps[key].startTime,
-            endTime: timestamps[key].endTime
-          }
-          values.push(answer)
-          if (answersProcessedCount == keylength) {
-            var processedData = {
-              "answers": values,
-              "configVersion": configVersion,
-              "patientId": participantLogin
+          for (const key in answers) {
+            if (key) {
+              answersProcessedCount++
+              const answer = {
+                questionId: { string: key.toString() },
+                // int: implicit [int, double, string]
+                value: { string: answers[key].toString() },
+                startTime: timestamps[key].startTime,
+                endTime: timestamps[key].endTime
+              }
+              values.push(answer)
+              if (answersProcessedCount === keylength) {
+                const processedData = {
+                  answers: values,
+                  configVersion: configVersion,
+                  patientId: participantLogin
+                }
+                resolve(processedData)
+              }
             }
-            resolve(processedData)
           }
+        },
+        error => {
+          reject(JSON.stringify(error))
         }
-      }, error => {
-        reject(JSON.stringify(error))
-      })
+      )
     })
   }
 
@@ -62,11 +59,9 @@ export class PrepareDataService {
   // local storage service get() returns a promise always
 
   fetchFromStorage() {
-
     const configVersion = this.storage.get(StorageKeys.CONFIG_VERSION)
     const participantLogin = this.storage.get(StorageKeys.PARTICIPANTLOGIN)
 
     return Promise.all([configVersion, participantLogin]) // response are obtained by the order of promises
   }
-
 }

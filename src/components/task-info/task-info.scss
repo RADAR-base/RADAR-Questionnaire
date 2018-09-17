@@ -1,18 +1,17 @@
 task-info {
-
   #task-info-container {
-    background-color: $cl-primary-40;
     padding: 7px 15px;
+    background-color: $cl-primary-40;
     font-size: 22px;
   }
 
   .info {
     overflow: hidden;
-    padding-bottom: 5px
+    padding-bottom: 5px;
   }
 
   .units {
-    font-size: 15px
+    font-size: 15px;
   }
 
   #questionnaire-progress {
@@ -21,9 +20,9 @@ task-info {
   }
 
   #questionnaire-counter {
+    margin-top: -63px;
     text-align: center;
     font-size: 38px;
-    margin-top: -63px
   }
 
   #questionnaire-metrics {
@@ -37,24 +36,23 @@ task-info {
   }
 
   .text-lg {
-    font-size: 55px;
-    margin-top: -7px;
     float: left;
+    margin-top: -7px;
+    font-size: 55px;
   }
 
   .text-md {
-    font-size: 55px;
+    float: left;
     margin-top: -3px;
     padding-right: 10px;
-    float: left;
+    font-size: 55px;
   }
 
   .text-sm {
-    font-size: 55px;
-    margin-top: -7px;
     float: left;
+    margin-top: -7px;
+    font-size: 55px;
   }
-
 
   .non-warn-padding {
     width: 100%;
@@ -62,14 +60,13 @@ task-info {
   }
 
   .extra-info {
-    text-align: center;
     margin-top: -7px;
+    text-align: center;
     font-size: 18px;
   }
 
   .extra-info-icon {
     height: 15px;
-
   }
 
   .icon-padding {
@@ -77,7 +74,6 @@ task-info {
   }
 
   .icon-sm {
-    height: 18px
+    height: 18px;
   }
-
 }

@@ -15,33 +15,33 @@ export interface Item {
   templateUrl: 'info-screen.html'
 })
 export class InfoScreenComponent implements OnInit {
+  @Output()
+  valueChange: EventEmitter<number> = new EventEmitter<number>()
 
-  @Output() valueChange: EventEmitter<number> = new EventEmitter<number>()
-
-  @Input() sections: Section[]
+  @Input()
+  sections: Section[]
 
   value: number = null
   uniqueID: number = uniqueID++
   name = `info-${this.uniqueID}`
-  isThincItReminder: boolean = false
+  isThincItReminder = false
   items: Item[] = Array()
 
-  ngOnInit () {
+  ngOnInit() {
     this.sections.map((item, i) => {
-          console.log(item.label)
-          if(item.label.includes('THINC-it')){
-            this.isThincItReminder = true
-          }
-          this.items.push({
-            id: `info-${this.uniqueID}-${i}`,
-            heading: item.code,
-            content: item.label
-          })
-        })
+      console.log(item.label)
+      if (item.label.includes('THINC-it')) {
+        this.isThincItReminder = true
+      }
+      this.items.push({
+        id: `info-${this.uniqueID}-${i}`,
+        heading: item.code,
+        content: item.label
+      })
+    })
 
     // save timestamp (epoch) and activate the next button
-    let epoch: number = (new Date).getTime()
+    const epoch: number = new Date().getTime()
     this.valueChange.emit(epoch)
   }
-
 }

@@ -3,12 +3,12 @@ audio-input {
   width: 100%;
 
   .audio-card {
-    background-color: $cl-primary-20;
-    height: 80%;
-    padding: 10px 10px 0;
     margin: 8px;
+    padding: 10px 10px 0;
+    height: 80%;
     -webkit-border-radius: 5px;
     border-radius: 5px;
+    background-color: $cl-primary-20;
   }
 
   .audio-heading {

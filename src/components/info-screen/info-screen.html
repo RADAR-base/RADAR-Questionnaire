@@ -1,12 +1,14 @@
-
 <div class="info-card">
   <div *ngIf="isThincItReminder">
-    <img src="assets/imgs/thincIt_app_icon.png" class="icon-thincIt"/>
+    <img
+      src="assets/imgs/thincIt_app_icon.png"
+      class="icon-thincIt"
+    >
   </div>
   <div *ngFor="let item of items">
-    <p class="info-heading">{{item.heading}}</p>
+    <p class="info-heading">{{ item.heading }}</p>
     <div class="info-content">
-      <h2>{{item.content}}</h2>
+      <h2>{{ item.content }}</h2>
     </div>
   </div>
 </div>

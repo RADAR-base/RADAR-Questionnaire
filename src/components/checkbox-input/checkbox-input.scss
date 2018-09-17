@@ -21,7 +21,7 @@ checkbox-input {
     border: none;
   }
 
-  ul li input[type=checkbox] {
+  ul li input[type='checkbox'] {
     position: absolute;
     visibility: hidden;
   }
@@ -40,7 +40,7 @@ checkbox-input {
     background-color: $cl-secondary;
   }
 
-  input[type=checkbox]:checked + label {
+  input[type='checkbox']:checked + label {
     background-color: $cl-primary;
   }
 }

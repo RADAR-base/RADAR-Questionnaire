@@ -1,11 +1,10 @@
 ticker-bar {
-  
   #ticker-bar-container {
-    background-color: $cl-primary-40;
-    padding: 7px 0;
-    font-size: 18px;
-    text-align: center;
     display: flex;
+    padding: 7px 0;
+    background-color: $cl-primary-40;
+    text-align: center;
+    font-size: 18px;
   }
 
   #report {

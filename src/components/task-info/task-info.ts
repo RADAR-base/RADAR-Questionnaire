@@ -1,5 +1,19 @@
-import { Component, EventEmitter, Input, Output, trigger,
-  state, style, transition, animate, keyframes, OnChanges } from '@angular/core'
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output
+} from '@angular/core'
+import {
+  trigger,
+  transition,
+  animate,
+  state,
+  style,
+  keyframes
+} from '@angular/animations'
+
 import { Task, TasksProgress } from '../../models/task'
 import { HomeController } from '../../providers/home-controller'
 import { StorageKeys } from '../../enums/storage'
@@ -15,75 +29,111 @@ import { StorageService } from '../../providers/storage-service'
   selector: 'task-info',
   templateUrl: 'task-info.html',
   animations: [
-   trigger('fade', [
-     state('out', style({
-       opacity: '0'
-     })),
-     state('in', style({
-       opacity: '1.0'
-     })),
-     transition('in => out', animate('400ms ease')),
-     transition('out => in', animate('400ms ease'))
-   ]),
-   trigger('scaleMinutes', [
-     state('min', style({
-       transform: 'translate3d(-25%, -15%, 0) scale(0.45)'
-     })),
-     state('max', style({
-       transform: 'translate3d(0, 0, 0) scale(1)'
-     })),
-     transition('max => min', animate('400ms ease')),
-     transition('min => max', animate('400ms ease'))
-   ]),
-   trigger('alignCenterRightExtraInfo', [
-     state('right', style({
-       transform: 'translate3d(15%, 0, 0)'
-     })),
-     state('center', style({
-       transform: 'translate3d(0, 0, 0)'
-     })),
-     transition('center => right', animate('400ms ease')),
-     transition('right => center', animate('400ms ease'))
-   ]),
-   trigger('alignCenterRightTime', [
-     state('right', style({
-       transform: 'translate3d(25%, 0, 0)'
-     })),
-     state('center', style({
-       transform: 'translate3d(0, 0, 0)'
-     })),
-     transition('center => right', animate('400ms ease')),
-     transition('right => center', animate('400ms ease'))
-   ]),
-   trigger('moveInProgress', [
-     state('out', style({
-       opacity: '0',
-       transform: 'translate3d(-150%, 0, 0)'
-     })),
-     state('in', style({
-       opacity: '1',
-       transform: 'translate3d(0, 0, 0)'
-     })),
-     transition('out => in', animate('400ms ease')),
-     transition('in => out', animate('400ms ease'))
-   ]),
+    trigger('fade', [
+      state(
+        'out',
+        style({
+          opacity: '0'
+        })
+      ),
+      state(
+        'in',
+        style({
+          opacity: '1.0'
+        })
+      ),
+      transition('in => out', animate('400ms ease')),
+      transition('out => in', animate('400ms ease'))
+    ]),
+    trigger('scaleMinutes', [
+      state(
+        'min',
+        style({
+          transform: 'translate3d(-25%, -15%, 0) scale(0.45)'
+        })
+      ),
+      state(
+        'max',
+        style({
+          transform: 'translate3d(0, 0, 0) scale(1)'
+        })
+      ),
+      transition('max => min', animate('400ms ease')),
+      transition('min => max', animate('400ms ease'))
+    ]),
+    trigger('alignCenterRightExtraInfo', [
+      state(
+        'right',
+        style({
+          transform: 'translate3d(15%, 0, 0)'
+        })
+      ),
+      state(
+        'center',
+        style({
+          transform: 'translate3d(0, 0, 0)'
+        })
+      ),
+      transition('center => right', animate('400ms ease')),
+      transition('right => center', animate('400ms ease'))
+    ]),
+    trigger('alignCenterRightTime', [
+      state(
+        'right',
+        style({
+          transform: 'translate3d(25%, 0, 0)'
+        })
+      ),
+      state(
+        'center',
+        style({
+          transform: 'translate3d(0, 0, 0)'
+        })
+      ),
+      transition('center => right', animate('400ms ease')),
+      transition('right => center', animate('400ms ease'))
+    ]),
+    trigger('moveInProgress', [
+      state(
+        'out',
+        style({
+          opacity: '0',
+          transform: 'translate3d(-150%, 0, 0)'
+        })
+      ),
+      state(
+        'in',
+        style({
+          opacity: '1',
+          transform: 'translate3d(0, 0, 0)'
+        })
+      ),
+      transition('out => in', animate('400ms ease')),
+      transition('in => out', animate('400ms ease'))
+    ]),
     trigger('alignCenterRightMetrics', [
-      state('right', style({
-        transform: 'translate3d(165%, 0, 0)'
-      })),
-      state('center', style({
-        transform: 'translate3d(0, 0, 0)'
-      })),
+      state(
+        'right',
+        style({
+          transform: 'translate3d(165%, 0, 0)'
+        })
+      ),
+      state(
+        'center',
+        style({
+          transform: 'translate3d(0, 0, 0)'
+        })
+      ),
       transition('center => right', animate('400ms ease')),
       transition('right => center', animate('400ms ease'))
     ])
   ]
 })
-
 export class TaskInfoComponent implements OnChanges {
-
-  @Input() task: Task;
-  @Output() collapse: EventEmitter<Boolean> = new EventEmitter()
+  @Input()
+  task: Task
+  @Output()
+  collapse: EventEmitter<Boolean> = new EventEmitter()
   expanded: Boolean = true
   hasExtraInfo: Boolean = false
   displayTask: Boolean = false
@@ -92,7 +142,7 @@ export class TaskInfoComponent implements OnChanges {
   animateScale: String
   animateCenterRight: String
   isNow: boolean = false
-  private language: string;
+  private language: string
 
   max: number = 1
   current: number = 0
@@ -109,7 +159,10 @@ export class TaskInfoComponent implements OnChanges {
     RIGHT: 'right'
   }
 
-  constructor (private controller: HomeController, public storage: StorageService) {
+  constructor(
+    private controller: HomeController,
+    public storage: StorageService
+  ) {
     this.applyAnimationKeys()
     setInterval(() => {
       if (this.task.timestamp > Date.now()) {
@@ -118,14 +171,14 @@ export class TaskInfoComponent implements OnChanges {
         this.isNow = true
       }
       console.log(this.isNow)
-    }, 1000);
+    }, 1000)
 
-    this.storage.get(StorageKeys.LANGUAGE).then((resLang) => {
+    this.storage.get(StorageKeys.LANGUAGE).then(resLang => {
       this.language = resLang.value
     })
   }
 
-  ngOnChanges (changes) {
+  ngOnChanges(changes) {
     if (this.task['timestamp'] > 0) {
       this.displayTask = true
     } else {
@@ -138,7 +191,7 @@ export class TaskInfoComponent implements OnChanges {
     }
   }
 
-  expand () {
+  expand() {
     if (this.task.name !== 'ESM') {
       this.collapse.emit(this.expanded)
       this.expanded = this.expanded ? false : true
@@ -147,8 +200,8 @@ export class TaskInfoComponent implements OnChanges {
     }
   }
 
-  updateProgress () {
-    this.controller.getTaskProgress().then((progress) => {
+  updateProgress() {
+    this.controller.getTaskProgress().then(progress => {
       this.progress = progress
       if (this.progress) {
         this.max = this.progress.numberOfTasks
@@ -157,7 +210,7 @@ export class TaskInfoComponent implements OnChanges {
     })
   }
 
-  applyAnimationKeys () {
+  applyAnimationKeys() {
     if (this.expanded) {
       this.animateFade = this.animationKeys.IN
       this.animateMove = this.animationKeys.OUT
@@ -171,36 +224,39 @@ export class TaskInfoComponent implements OnChanges {
     }
   }
 
-  getHour () {
+  getHour() {
     const date = new Date()
     date.setTime(this.task['timestamp'])
-    const hour = date.getHours();
+    const hour = date.getHours()
     // let hour12 = hour > 12 ? hour-12 : hour
     const formatedHour = this.formatSingleDigits(hour)
     return formatedHour
   }
 
-  getMinutes () {
+  getMinutes() {
     const date = new Date()
     date.setTime(this.task['timestamp'])
     const formatedMinutes = this.formatSingleDigits(date.getMinutes())
     return formatedMinutes
   }
 
-  getMeridiem () {
+  getMeridiem() {
     const date = new Date()
     date.setTime(this.task['timestamp'])
-    const hour = date.getHours();
-    const meridiem = hour >= 12 ? 'PM' : 'AM';
+    const hour = date.getHours()
+    const meridiem = hour >= 12 ? 'PM' : 'AM'
     return meridiem
   }
 
-  formatSingleDigits (numberToFormat) {
-    const format = numberToFormat < 10 ? ('0' + String(numberToFormat)) : String(numberToFormat)
+  formatSingleDigits(numberToFormat) {
+    const format =
+      numberToFormat < 10
+        ? '0' + String(numberToFormat)
+        : String(numberToFormat)
     return format
   }
 
-  getExtraInfo (): string {
+  getExtraInfo(): string {
     if (this.language) {
       const info = this.task.warning[this.language]
       this.hasExtraInfo = info !== '' ? true : false
@@ -210,5 +266,4 @@ export class TaskInfoComponent implements OnChanges {
       return ''
     }
   }
-
 }

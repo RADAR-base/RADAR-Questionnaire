@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, trigger,
   state, style, transition, animate, keyframes, OnChanges } from '@angular/core'
 import { Task, TasksProgress } from '../../models/task'
-import { HomeController} from '../../providers/home-controller'
+import { HomeController } from '../../providers/home-controller'
 import { StorageKeys } from '../../enums/storage'
 import { StorageService } from '../../providers/storage-service'
 
@@ -67,17 +67,17 @@ import { StorageService } from '../../providers/storage-service'
      transition('out => in', animate('400ms ease')),
      transition('in => out', animate('400ms ease'))
    ]),
-   trigger('alignCenterRightMetrics', [
-     state('right', style({
-       transform: 'translate3d(165%, 0, 0)'
-     })),
-     state('center', style({
-       transform: 'translate3d(0, 0, 0)'
-     })),
-     transition('center => right', animate('400ms ease')),
-     transition('right => center', animate('400ms ease'))
-   ])
- ]
+    trigger('alignCenterRightMetrics', [
+      state('right', style({
+        transform: 'translate3d(165%, 0, 0)'
+      })),
+      state('center', style({
+        transform: 'translate3d(0, 0, 0)'
+      })),
+      transition('center => right', animate('400ms ease')),
+      transition('right => center', animate('400ms ease'))
+    ])
+  ]
 })
 
 export class TaskInfoComponent implements OnChanges {
@@ -92,6 +92,7 @@ export class TaskInfoComponent implements OnChanges {
   animateScale: String
   animateCenterRight: String
   isNow: boolean = false
+  private language: string;
 
   max: number = 1
   current: number = 0
@@ -108,25 +109,29 @@ export class TaskInfoComponent implements OnChanges {
     RIGHT: 'right'
   }
 
-  constructor(private controller: HomeController, public storage: StorageService) {
+  constructor (private controller: HomeController, public storage: StorageService) {
     this.applyAnimationKeys()
     setInterval(() => {
-      if(this.task.timestamp > Date.now()) {
+      if (this.task.timestamp > Date.now()) {
         this.isNow = false
       } else {
         this.isNow = true
       }
       console.log(this.isNow)
     }, 1000);
+
+    this.storage.get(StorageKeys.LANGUAGE).then((resLang) => {
+      this.language = resLang.value
+    })
   }
 
   ngOnChanges (changes) {
-    if(this.task['timestamp'] > 0) {
+    if (this.task['timestamp'] > 0) {
       this.displayTask = true
     } else {
       this.displayTask = false
     }
-    if(this.task['warning'] != '') {
+    if (this.task['warning'] !== '') {
       this.hasExtraInfo = true
     } else {
       this.hasExtraInfo = false
@@ -134,7 +139,7 @@ export class TaskInfoComponent implements OnChanges {
   }
 
   expand () {
-    if(this.task.name != 'ESM'){
+    if (this.task.name !== 'ESM') {
       this.collapse.emit(this.expanded)
       this.expanded = this.expanded ? false : true
       this.applyAnimationKeys()
@@ -145,7 +150,7 @@ export class TaskInfoComponent implements OnChanges {
   updateProgress () {
     this.controller.getTaskProgress().then((progress) => {
       this.progress = progress
-      if(this.progress){
+      if (this.progress) {
         this.max = this.progress.numberOfTasks
         this.current = this.progress.completedTasks
       }
@@ -153,7 +158,7 @@ export class TaskInfoComponent implements OnChanges {
   }
 
   applyAnimationKeys () {
-    if(this.expanded){
+    if (this.expanded) {
       this.animateFade = this.animationKeys.IN
       this.animateMove = this.animationKeys.OUT
       this.animateScale = this.animationKeys.MAX
@@ -167,39 +172,43 @@ export class TaskInfoComponent implements OnChanges {
   }
 
   getHour () {
-    var date = new Date()
+    const date = new Date()
     date.setTime(this.task['timestamp'])
-    let hour = date.getHours();
-    //let hour12 = hour > 12 ? hour-12 : hour
-    let formatedHour = this.formatSingleDigits(hour)
+    const hour = date.getHours();
+    // let hour12 = hour > 12 ? hour-12 : hour
+    const formatedHour = this.formatSingleDigits(hour)
     return formatedHour
   }
 
   getMinutes () {
-    var date = new Date()
+    const date = new Date()
     date.setTime(this.task['timestamp'])
-    let formatedMinutes = this.formatSingleDigits(date.getMinutes())
+    const formatedMinutes = this.formatSingleDigits(date.getMinutes())
     return formatedMinutes
   }
 
   getMeridiem () {
-    var date = new Date()
+    const date = new Date()
     date.setTime(this.task['timestamp'])
-    let hour = date.getHours();
-    let meridiem = hour >= 12 ? "PM" : "AM";
+    const hour = date.getHours();
+    const meridiem = hour >= 12 ? 'PM' : 'AM';
     return meridiem
   }
 
-  formatSingleDigits (number) {
-    let format = number < 10 ? ('0'+String(number)) : String(number)
+  formatSingleDigits (numberToFormat) {
+    const format = numberToFormat < 10 ? ('0' + String(numberToFormat)) : String(numberToFormat)
     return format
   }
 
-  getExtraInfo () {
-    return this.storage.get(StorageKeys.LANGUAGE).then((language) => {
-      let info = this.task.warning[language.value]
-      this.hasExtraInfo = info != '' ? true : false
+  getExtraInfo (): string {
+    if (this.language) {
+      const info = this.task.warning[this.language]
+      this.hasExtraInfo = info !== '' ? true : false
       return info
-    })
+    } else {
+      this.hasExtraInfo = false
+      return ''
+    }
   }
+
 }

@@ -1,3 +1,4 @@
+import { Component, ElementRef, ViewChild } from '@angular/core'
 import {
   App,
   Content,
@@ -5,14 +6,13 @@ import {
   NavParams,
   ViewController
 } from 'ionic-angular'
-import { Component, ElementRef, ViewChild } from '@angular/core'
-import { Question, QuestionType } from '../../models/question'
 
-import { AnswerService } from '../../providers/answer-service'
-import { FinishPage } from '../finish/finish'
 import { LocKeys } from '../../enums/localisations'
-import { TimeStampService } from '../../providers/timestamp-service'
+import { Question, QuestionType } from '../../models/question'
 import { TranslatePipe } from '../../pipes/translate/translate'
+import { AnswerService } from '../../providers/answer-service'
+import { TimeStampService } from '../../providers/timestamp-service'
+import { FinishPage } from '../finish/finish'
 
 @Component({
   selector: 'page-questions',

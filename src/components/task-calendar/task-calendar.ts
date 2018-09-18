@@ -8,13 +8,13 @@ import {
   ViewChild
 } from '@angular/core'
 import { NavController, Platform } from 'ionic-angular'
-
 import { AlertController } from 'ionic-angular'
+
 import { DefaultTask } from '../../assets/data/defaultConfig'
-import { HomeController } from '../../providers/home-controller'
 import { LocKeys } from '../../enums/localisations'
 import { Task } from '../../models/task'
 import { TranslatePipe } from '../../pipes/translate/translate'
+import { HomeController } from '../../providers/home-controller'
 
 @Component({
   selector: 'task-calendar',

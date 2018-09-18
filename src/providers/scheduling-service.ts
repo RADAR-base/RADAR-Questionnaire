@@ -1,15 +1,15 @@
 import 'rxjs/add/operator/map'
 
-import { Protocol, Reminders, RepeatProtocol } from '../models/protocol'
+import { Injectable } from '@angular/core'
 
-import { Assessment } from '../models/assessment'
 import { DefaultScheduleReportRepeat } from '../assets/data/defaultConfig'
 import { DefaultScheduleYearCoverage } from '../assets/data/defaultConfig'
-import { Injectable } from '@angular/core'
-import { ReportScheduling } from '../models/report'
 import { StorageKeys } from '../enums/storage'
-import { StorageService } from './storage-service'
+import { Assessment } from '../models/assessment'
+import { Protocol, Reminders, RepeatProtocol } from '../models/protocol'
+import { ReportScheduling } from '../models/report'
 import { Task } from '../models/task'
+import { StorageService } from './storage-service'
 
 @Injectable()
 export class SchedulingService {

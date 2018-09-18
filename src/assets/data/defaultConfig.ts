@@ -1,13 +1,12 @@
+import { LocKeys } from '../../enums/localisations'
+import { LanguageSetting } from '../../models/settings'
+import { NotificationSettings } from '../../models/settings'
+import { WeeklyReportSubSettings } from '../../models/settings'
+import { Task } from '../../models/task'
 import {
   DefaultProtocolEndPointExport,
   DefaultSourceProducerAndSecretExport
 } from './secret'
-
-import { LanguageSetting } from '../../models/settings'
-import { LocKeys } from '../../enums/localisations'
-import { NotificationSettings } from '../../models/settings'
-import { Task } from '../../models/task'
-import { WeeklyReportSubSettings } from '../../models/settings'
 
 // DEFAULT SETTINGS
 export const DefaultSettingsNotifications: NotificationSettings = {

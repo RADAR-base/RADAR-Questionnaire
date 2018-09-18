@@ -1,10 +1,10 @@
+import { Injectable } from '@angular/core'
+import { File } from '@ionic-native/file'
 // file path to opensmile.js; Adding opensmile plugin
 import * as opensmile from 'cordova-plugin-opensmile/www/opensmile'
 
 import { AndroidPermissionUtility } from '../utilities/android-permission'
 import { AnswerService } from './answer-service'
-import { File } from '@ionic-native/file'
-import { Injectable } from '@angular/core'
 
 declare var cordova: any
 declare var window: any

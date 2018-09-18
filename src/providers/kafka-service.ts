@@ -1,20 +1,20 @@
 import 'rxjs/add/operator/map'
 
-import { Http, Response } from '@angular/http'
-
-import { AnswerKeyExport } from '../models/answer'
-import { AnswerValueExport } from '../models/answer'
-import { AuthService } from './auth-service'
-import AvroSchema from 'avsc'
-import { CompletionLogValueExport } from '../models/answer'
-import { DefaultEndPoint } from '../assets/data/defaultConfig'
 import { Injectable } from '@angular/core'
+import { Http, Response } from '@angular/http'
+import AvroSchema from 'avsc'
 import KafkaClient from 'kafka-rest'
 import { Observable } from 'rxjs/Observable'
+
+import { DefaultEndPoint } from '../assets/data/defaultConfig'
 import { StorageKeys } from '../enums/storage'
-import { StorageService } from './storage-service'
+import { AnswerKeyExport } from '../models/answer'
+import { AnswerValueExport } from '../models/answer'
+import { CompletionLogValueExport } from '../models/answer'
 import { Task } from '../models/task'
 import { Utility } from '../utilities/util'
+import { AuthService } from './auth-service'
+import { StorageService } from './storage-service'
 
 @Injectable()
 export class KafkaService {

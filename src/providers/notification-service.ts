@@ -1,21 +1,21 @@
 import 'rxjs/add/operator/map'
 
+import { Injectable } from '@angular/core'
 import { AlertController, NavController } from 'ionic-angular'
+import { v4 as uuid } from 'uuid'
+
 import {
   DefaultNotificationType,
   DefaultNumberOfNotificationsToRescue,
   DefaultNumberOfNotificationsToSchedule,
   FCMPluginProjectSenderId
 } from '../assets/data/defaultConfig'
-
-import { Injectable } from '@angular/core'
 import { LocKeys } from '../enums/localisations'
-import { SchedulingService } from '../providers/scheduling-service'
 import { StorageKeys } from '../enums/storage'
-import { StorageService } from '../providers/storage-service'
 import { Task } from '../models/task'
 import { TranslatePipe } from '../pipes/translate/translate'
-import { v4 as uuid } from 'uuid'
+import { SchedulingService } from '../providers/scheduling-service'
+import { StorageService } from '../providers/storage-service'
 
 declare var cordova
 declare var FCMPlugin

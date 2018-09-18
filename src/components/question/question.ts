@@ -5,12 +5,12 @@ import {
   OnChanges,
   Output
 } from '@angular/core'
-import { Question, QuestionType } from '../../models/question'
-
-import { Answer } from '../../models/answer'
-import { AnswerService } from '../../providers/answer-service'
 import { Dialogs } from '@ionic-native/dialogs'
 import { Vibration } from '@ionic-native/vibration'
+
+import { Answer } from '../../models/answer'
+import { Question, QuestionType } from '../../models/question'
+import { AnswerService } from '../../providers/answer-service'
 
 @Component({
   selector: 'question',

@@ -1,11 +1,11 @@
 import 'rxjs/add/operator/map'
 
+import { Injectable } from '@angular/core'
 import { Http, Response } from '@angular/http'
-
 import { AndroidPermissions } from '@ionic-native/android-permissions'
 import { Device } from '@ionic-native/device'
-import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs/Observable'
+
 import { Utility } from './util'
 
 declare var cordova: any

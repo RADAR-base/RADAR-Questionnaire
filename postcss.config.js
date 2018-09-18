@@ -1,56 +1,71 @@
 module.exports = {
   syntax: 'postcss-scss',
   plugins: {
-    'stylefmt': {
-      'configFile': '.stylelintrc'
+    stylefmt: {
+      configFile: '.stylelintrc'
     },
     'postcss-sorting': {
       'declaration-empty-line-before': [
-        true, {
-          'except': ['after-comment', 'after-declaration', 'first-nested'],
-          'ignore': ['after-comment', 'after-declaration']
+        true,
+        {
+          except: ['after-comment', 'after-declaration', 'first-nested'],
+          ignore: ['after-comment', 'after-declaration']
         }
       ],
       'custom-property-empty-line-before': [
-        true, {
-          'except': ['after-comment', 'after-custom-property', 'first-nested'],
-          'ignore': ['after-comment']
+        true,
+        {
+          except: ['after-comment', 'after-custom-property', 'first-nested'],
+          ignore: ['after-comment']
         }
       ],
       'dollar-variable-empty-line-before': [
-        true, {
-          'except': ['after-comment', 'after-dollar-variable', 'first-nested'],
-          'ignore': ['after-comment']
+        true,
+        {
+          except: ['after-comment', 'after-dollar-variable', 'first-nested'],
+          ignore: ['after-comment']
         }
       ],
       'comment-empty-line-before': [
-        true, {
-          'except': ['first-nested'],
-          'ignore': ['after-comment']
+        true,
+        {
+          except: ['first-nested'],
+          ignore: ['after-comment']
         }
       ],
       'rule-nested-empty-line-before': [
-        true, {
-          'except': ['first-nested'],
-          'ignore': ['after-comment']
+        true,
+        {
+          except: ['first-nested'],
+          ignore: ['after-comment']
         }
       ],
       'at-rule-nested-empty-line-before': [
-        true, {
-          'except': ['after-same-name', 'blockless-after-blockless', 'blockless-after-same-name-blockless', 'first-nested'],
-          'ignore': ['after-comment', 'blockless-after-blockless', 'blockless-after-same-name-blockless'],
-          'ignoreAtRules': ['import', 'if', 'else', 'array', 'of', 'at-rules']
+        true,
+        {
+          except: [
+            'after-same-name',
+            'blockless-after-blockless',
+            'blockless-after-same-name-blockless',
+            'first-nested'
+          ],
+          ignore: [
+            'after-comment',
+            'blockless-after-blockless',
+            'blockless-after-same-name-blockless'
+          ],
+          ignoreAtRules: ['import', 'if', 'else', 'array', 'of', 'at-rules']
         }
       ],
-      'order': [
+      order: [
         'custom-properties',
         'dollar-variables',
         'at-rules',
         'declarations',
         {
-          'type': 'at-rule',
-          'name': 'include',
-          'parameter': 'mq'
+          type: 'at-rule',
+          name: 'include',
+          parameter: 'mq'
         },
         'rules'
       ],
@@ -277,4 +292,3 @@ module.exports = {
     }
   }
 }
-

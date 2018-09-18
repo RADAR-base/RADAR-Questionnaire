@@ -1,13 +1,13 @@
 import 'rxjs/add/operator/toPromise'
 
 import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { Injectable } from '@angular/core'
 
 import { DefaultNumberOfNotificationsToSchedule } from '../assets/data/defaultConfig'
 import { DefaultProtocolEndPoint } from '../assets/data/defaultConfig'
-import { HomeController } from '../providers/home-controller'
-import { Injectable } from '@angular/core'
-import { SchedulingService } from '../providers/scheduling-service'
 import { StorageKeys } from '../enums/storage'
+import { HomeController } from '../providers/home-controller'
+import { SchedulingService } from '../providers/scheduling-service'
 import { StorageService } from '../providers/storage-service'
 
 @Injectable()
@@ -125,7 +125,9 @@ export class ConfigService {
   retrieveLanguageKeys(questionnaireURI) {
     const langs = []
     for (const key in questionnaireURI) {
-      if (key) { langs.push(key) }
+      if (key) {
+        langs.push(key)
+      }
     }
     const langsKeyValEmpty = {}
     for (const val of langs) {

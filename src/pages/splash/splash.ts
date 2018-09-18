@@ -1,17 +1,17 @@
+import { Component } from '@angular/core'
+import { Globalization } from '@ionic-native/globalization'
+import { IonicPage, NavController, NavParams } from 'ionic-angular'
+
 import {
   DefaultNotificationRefreshTime,
   DefaultNumberOfNotificationsToSchedule
 } from '../../assets/data/defaultConfig'
-import { IonicPage, NavController, NavParams } from 'ionic-angular'
-
-import { Component } from '@angular/core'
-import { EnrolmentPage } from '../enrolment/enrolment'
-import { Globalization } from '@ionic-native/globalization'
-import { HomeController } from '../../providers/home-controller'
-import { HomePage } from '../home/home'
-import { KafkaService } from '../../providers/kafka-service'
 import { StorageKeys } from '../../enums/storage'
+import { HomeController } from '../../providers/home-controller'
+import { KafkaService } from '../../providers/kafka-service'
 import { StorageService } from '../../providers/storage-service'
+import { EnrolmentPage } from '../enrolment/enrolment'
+import { HomePage } from '../home/home'
 
 @Component({
   selector: 'page-splash',

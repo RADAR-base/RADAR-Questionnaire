@@ -3,14 +3,14 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnChanges,
   Output,
-  ViewChild,
-  OnChanges
+  ViewChild
 } from '@angular/core'
-
-import { HomeController } from '../../providers/home-controller'
 import { RoundProgressConfig } from 'angular-svg-round-progressbar'
+
 import { TasksProgress } from '../../models/task'
+import { HomeController } from '../../providers/home-controller'
 
 @Component({
   selector: 'task-progress',

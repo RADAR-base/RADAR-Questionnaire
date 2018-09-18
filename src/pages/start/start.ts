@@ -1,14 +1,14 @@
 import 'rxjs/add/operator/delay'
 
+import { Component } from '@angular/core'
 import { LoadingController, NavController, NavParams } from 'ionic-angular'
 
-import { AnswerService } from '../../providers/answer-service'
 import { Assessment } from '../../models/assessment'
-import { Component } from '@angular/core'
 import { Question } from '../../models/question'
-import { QuestionsPage } from '../questions/questions'
 import { Task } from '../../models/task'
+import { AnswerService } from '../../providers/answer-service'
 import { TimeStampService } from '../../providers/timestamp-service'
+import { QuestionsPage } from '../questions/questions'
 
 @Component({
   selector: 'page-start',

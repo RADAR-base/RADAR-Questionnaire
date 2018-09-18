@@ -1,26 +1,26 @@
+import { Component } from '@angular/core'
+import { AppVersion } from '@ionic-native/app-version'
+import { IonicPage, NavController, NavParams } from 'ionic-angular'
+import { AlertController } from 'ionic-angular'
+
 import {
   DefaultSettingsSelectedLanguage,
   LanguageMap
 } from '../../assets/data/defaultConfig'
-import { IonicPage, NavController, NavParams } from 'ionic-angular'
-
-import { AlertController } from 'ionic-angular'
-import { AppVersion } from '@ionic-native/app-version'
-import { Component } from '@angular/core'
-import { ConfigService } from '../../providers/config-service'
+import { DefaultSettingsWeeklyReport } from '../../assets/data/defaultConfig'
 import { DefaultNumberOfNotificationsToSchedule } from '../../assets/data/defaultConfig'
 import { DefaultSettingsNotifications } from '../../assets/data/defaultConfig'
-import { DefaultSettingsWeeklyReport } from '../../assets/data/defaultConfig'
-import { HomeController } from '../../providers/home-controller'
-import { LanguageSetting } from '../../models/settings'
 import { LocKeys } from '../../enums/localisations'
-import { NotificationSettings } from '../../models/settings'
-import { SchedulingService } from '../../providers/scheduling-service'
-import { SplashPage } from '../splash/splash'
 import { StorageKeys } from '../../enums/storage'
-import { StorageService } from '../../providers/storage-service'
-import { TranslatePipe } from '../../pipes/translate/translate'
+import { LanguageSetting } from '../../models/settings'
+import { NotificationSettings } from '../../models/settings'
 import { WeeklyReportSubSettings } from '../../models/settings'
+import { TranslatePipe } from '../../pipes/translate/translate'
+import { ConfigService } from '../../providers/config-service'
+import { HomeController } from '../../providers/home-controller'
+import { SchedulingService } from '../../providers/scheduling-service'
+import { StorageService } from '../../providers/storage-service'
+import { SplashPage } from '../splash/splash'
 
 @Component({
   selector: 'page-settings',

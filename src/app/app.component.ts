@@ -3,15 +3,14 @@ import { Device } from '@ionic-native/device'
 import { SplashScreen } from '@ionic-native/splash-screen'
 import { StatusBar } from '@ionic-native/status-bar'
 import { Platform } from 'ionic-angular'
+
 import { SplashPage } from '../pages/splash/splash'
 import { ConfigService } from '../providers/config-service'
 import { KafkaService } from '../providers/kafka-service'
 import { NotificationService } from '../providers/notification-service'
 
-
 @Component({
-  template:
-  '<ion-nav [root]="rootPage"></ion-nav>'
+  template: '<ion-nav [root]="rootPage"></ion-nav>'
 })
 export class MyApp {
   rootPage = SplashPage

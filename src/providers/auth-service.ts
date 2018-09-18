@@ -1,15 +1,15 @@
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/toPromise'
 
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
+import { Injectable } from '@angular/core'
+import { JwtHelper } from 'angular2-jwt'
+
 import {
   DefaultEndPoint,
   DefaultSourceProducerAndSecret,
   DefaultSourceTypeRegistrationBody
 } from '../assets/data/defaultConfig'
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
-
-import { Injectable } from '@angular/core'
-import { JwtHelper } from 'angular2-jwt'
 import { StorageKeys } from '../enums/storage'
 import { StorageService } from './storage-service'
 

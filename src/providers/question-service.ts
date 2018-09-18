@@ -1,11 +1,11 @@
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/catch'
 
+import { Injectable } from '@angular/core'
 import { Http, Response } from '@angular/http'
+import { Observable } from 'rxjs/Observable'
 
 import { Assessment } from '../models/assessment'
-import { Injectable } from '@angular/core'
-import { Observable } from 'rxjs/Observable'
 
 @Injectable()
 export class QuestionService {

@@ -1,3 +1,4 @@
+import { Component } from '@angular/core'
 import {
   Content,
   NavController,
@@ -5,14 +6,13 @@ import {
   ViewController
 } from 'ionic-angular'
 
-import { Component } from '@angular/core'
 import { DefaultTask } from '../../assets/data/defaultConfig'
+import { StorageKeys } from '../../enums/storage'
+import { Task } from '../../models/task'
 import { HomeController } from '../../providers/home-controller'
+import { StorageService } from '../../providers/storage-service'
 import { QuestionsPage } from '../questions/questions'
 import { StartPage } from '../start/start'
-import { StorageKeys } from '../../enums/storage'
-import { StorageService } from '../../providers/storage-service'
-import { Task } from '../../models/task'
 
 @Component({
   selector: 'page-clinical-tasks',

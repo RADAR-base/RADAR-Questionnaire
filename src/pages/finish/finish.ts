@@ -1,17 +1,17 @@
+import { Component } from '@angular/core'
 import { NavController, NavParams } from 'ionic-angular'
 
-import { AnswerService } from '../../providers/answer-service'
-import { Component } from '@angular/core'
 import { DefaultNumberOfNotificationsToSchedule } from '../../assets/data/defaultConfig'
+import { StorageKeys } from '../../enums/storage'
+import { Reminders } from '../../models/protocol'
+import { Task } from '../../models/task'
+import { AnswerService } from '../../providers/answer-service'
 import { HomeController } from '../../providers/home-controller'
-import { HomePage } from '../home/home'
 import { KafkaService } from '../../providers/kafka-service'
 import { PrepareDataService } from '../../providers/preparedata-service'
-import { Reminders } from '../../models/protocol'
-import { StorageKeys } from '../../enums/storage'
 import { StorageService } from '../../providers/storage-service'
-import { Task } from '../../models/task'
 import { TimeStampService } from '../../providers/timestamp-service'
+import { HomePage } from '../home/home'
 
 @Component({
   selector: 'page-finish',

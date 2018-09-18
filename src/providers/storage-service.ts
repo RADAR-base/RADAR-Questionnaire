@@ -1,15 +1,16 @@
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/catch'
 
-import { Assessment } from '../models/assessment'
+import { Injectable } from '@angular/core'
+import { Storage } from '@ionic/storage'
+import { Observable } from 'rxjs/Observable'
+
 import { DefaultScheduleVersion } from '../assets/data/defaultConfig'
 import { DefaultSettingsNotifications } from '../assets/data/defaultConfig'
 import { DefaultSettingsSupportedLanguages } from '../assets/data/defaultConfig'
 import { DefaultSettingsWeeklyReport } from '../assets/data/defaultConfig'
-import { Injectable } from '@angular/core'
-import { Observable } from 'rxjs/Observable'
-import { Storage } from '@ionic/storage'
 import { StorageKeys } from '../enums/storage'
+import { Assessment } from '../models/assessment'
 import { Task } from '../models/task'
 
 @Injectable()

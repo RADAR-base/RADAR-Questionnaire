@@ -1,22 +1,22 @@
 import {
+  animate,
+  keyframes,
+  state,
+  style,
+  transition,
+  trigger
+} from '@angular/animations'
+import {
   Component,
   EventEmitter,
   Input,
   OnChanges,
   Output
 } from '@angular/core'
-import {
-  trigger,
-  transition,
-  animate,
-  state,
-  style,
-  keyframes
-} from '@angular/animations'
 
+import { StorageKeys } from '../../enums/storage'
 import { Task, TasksProgress } from '../../models/task'
 import { HomeController } from '../../providers/home-controller'
-import { StorageKeys } from '../../enums/storage'
 import { StorageService } from '../../providers/storage-service'
 
 /**

@@ -1,11 +1,11 @@
-import { Task, TasksProgress } from '../models/task'
-
-import { Assessment } from '../models/assessment'
 import { Injectable } from '@angular/core'
+
+import { StorageKeys } from '../enums/storage'
+import { Assessment } from '../models/assessment'
+import { Task, TasksProgress } from '../models/task'
 import { KafkaService } from './kafka-service'
 import { NotificationService } from './notification-service'
 import { SchedulingService } from './scheduling-service'
-import { StorageKeys } from '../enums/storage'
 import { StorageService } from './storage-service'
 
 @Injectable()

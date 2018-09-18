@@ -1,3 +1,4 @@
+import { Component, ElementRef, ViewChild } from '@angular/core'
 import {
   AlertController,
   Content,
@@ -5,23 +6,22 @@ import {
   NavParams,
   Platform
 } from 'ionic-angular'
-import { Component, ElementRef, ViewChild } from '@angular/core'
-import { Task, TasksProgress } from '../../models/task'
 
-import { ClinicalTasksPage } from '../clinical-tasks/clinical-tasks'
 import { DefaultTask } from '../../assets/data/defaultConfig'
+import { LocKeys } from '../../enums/localisations'
+import { StorageKeys } from '../../enums/storage'
+import { Task, TasksProgress } from '../../models/task'
+import { TranslatePipe } from '../../pipes/translate/translate'
 import { HomeController } from '../../providers/home-controller'
 import { KafkaService } from '../../providers/kafka-service'
-import { LocKeys } from '../../enums/localisations'
 import { NotificationService } from '../../providers/notification-service'
-import { QuestionsPage } from '../questions/questions'
 import { SchedulingService } from '../../providers/scheduling-service'
+import { StorageService } from '../../providers/storage-service'
+import { ClinicalTasksPage } from '../clinical-tasks/clinical-tasks'
+import { QuestionsPage } from '../questions/questions'
 import { SettingsPage } from '../settings/settings'
 import { SplashPage } from '../splash/splash'
 import { StartPage } from '../start/start'
-import { StorageKeys } from '../../enums/storage'
-import { StorageService } from '../../providers/storage-service'
-import { TranslatePipe } from '../../pipes/translate/translate'
 
 @Component({
   selector: 'page-home',

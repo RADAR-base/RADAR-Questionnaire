@@ -1,12 +1,12 @@
 import 'rxjs/add/operator/map'
 
-import { Http, Response } from '@angular/http'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { Injectable } from '@angular/core'
+import { Http, Response } from '@angular/http'
+import { Device } from '@ionic-native/device'
+import { Observable } from 'rxjs/Observable'
 
 import { DefaultEndPoint } from '../assets/data/defaultConfig'
-import { Device } from '@ionic-native/device'
-import { Injectable } from '@angular/core'
-import { Observable } from 'rxjs/Observable'
 import { StorageKeys } from '../enums/storage'
 import { StorageService } from '../providers/storage-service'
 

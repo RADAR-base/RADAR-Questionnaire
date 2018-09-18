@@ -1,26 +1,26 @@
-import { AlertController, NavController, Slides } from 'ionic-angular'
+import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Component, ElementRef, ViewChild } from '@angular/core'
+import { BarcodeScanner } from '@ionic-native/barcode-scanner'
+import { JwtHelper } from 'angular2-jwt'
+import { AlertController, NavController, Slides } from 'ionic-angular'
+
+import { MyApp } from '../../app/app.component'
 import {
   DefaultSettingsSupportedLanguages,
   DefaultSettingsWeeklyReport,
   DefaultSourceTypeModel,
   LanguageMap
 } from '../../assets/data/defaultConfig'
-import { HttpClient, HttpHeaders } from '@angular/common/http'
-
-import { AuthService } from '../../providers/auth-service'
-import { BarcodeScanner } from '@ionic-native/barcode-scanner'
-import { ConfigService } from '../../providers/config-service'
-import { HomePage } from '../home/home'
-import { JwtHelper } from 'angular2-jwt'
-import { LanguageSetting } from '../../models/settings'
 import { LocKeys } from '../../enums/localisations'
-import { MyApp } from '../../app/app.component'
-import { SchedulingService } from '../../providers/scheduling-service'
 import { StorageKeys } from '../../enums/storage'
-import { StorageService } from '../../providers/storage-service'
-import { TranslatePipe } from '../../pipes/translate/translate'
+import { LanguageSetting } from '../../models/settings'
 import { WeeklyReportSubSettings } from '../../models/settings'
+import { TranslatePipe } from '../../pipes/translate/translate'
+import { AuthService } from '../../providers/auth-service'
+import { ConfigService } from '../../providers/config-service'
+import { SchedulingService } from '../../providers/scheduling-service'
+import { StorageService } from '../../providers/storage-service'
+import { HomePage } from '../home/home'
 
 @Component({
   selector: 'page-enrolment',

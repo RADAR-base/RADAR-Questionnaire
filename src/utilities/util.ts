@@ -2,9 +2,8 @@ import 'rxjs/add/operator/map'
 
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { Http, Response } from '@angular/http'
 import { Device } from '@ionic-native/device'
-import { Observable } from 'rxjs/Observable'
+import { Observable, throwError as observableThrowError } from 'rxjs'
 
 import { DefaultEndPoint } from '../assets/data/defaultConfig'
 import { StorageKeys } from '../enums/storage'
@@ -16,8 +15,7 @@ export class Utility {
   URI_version: string = '/versions/'
 
   constructor(
-    private httpClient: HttpClient,
-    private http: Http,
+    private http: HttpClient,
     private device: Device,
     private storage: StorageService
   ) {}
@@ -43,24 +41,26 @@ export class Utility {
     }
   }
 
-  private extractData(res: Response) {
+  private extractData(res: any) {
     const body = res.json()
     return body || []
   }
 
-  private handleError(error: Response | any) {
+  private handleError(error: any) {
     let errMsg: string
 
-    if (error instanceof Response) {
-      const body = error.json() || ''
-      const err = body.error || JSON.stringify(body)
-      errMsg = `${error.status} - ${error.statusText || ''} ${err}`
-    } else {
-      errMsg = error.message ? error.message : error.toString()
-    }
+    // TODO: Fix types
+    // if (error instanceof any) {
+    //   const body = error.json() || ''
+    //   const err = body.error || JSON.stringify(body)
+    //   errMsg = `${error.status} - ${error.statusText || ''} ${err}`
+    // } else {
+    //   errMsg = error.message ? error.message : error.toString()
+    // }
+    errMsg = error.message ? error.message : error.toString()
 
     console.error(errMsg)
-    return Observable.throw(errMsg)
+    return observableThrowError(errMsg)
   }
 
   getSourceKeyInfo() {
@@ -102,7 +102,7 @@ export class Utility {
       const endPoint = baseuri ? baseuri : DefaultEndPoint
       const uri = endPoint + this.URI_schema + questionName + versionStr
       console.log(uri)
-      return this.httpClient.get(uri).toPromise()
+      return this.http.get(uri).toPromise()
     })
   }
 }

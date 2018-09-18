@@ -1,7 +1,6 @@
 import { DatePipe } from '@angular/common'
 import { HttpClientModule } from '@angular/common/http'
-import { NgModule } from '@angular/core'
-import { HttpModule } from '@angular/http'
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { JWT_OPTIONS, JwtModule } from '@auth0/angular-jwt'
@@ -65,7 +64,6 @@ import { MyApp } from './app.component'
 
 @NgModule({
   imports: [
-    HttpModule,
     HttpClientModule,
     MomentModule,
     BrowserModule,
@@ -173,6 +171,7 @@ import { MyApp } from './app.component'
     AndroidPermissions,
     File,
     AppVersion
-  ]
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {}

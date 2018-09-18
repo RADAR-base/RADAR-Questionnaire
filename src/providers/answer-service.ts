@@ -1,7 +1,7 @@
 import 'rxjs/add/operator/map'
 
+import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { Http } from '@angular/http'
 
 import { Answer } from '../models/answer'
 
@@ -9,7 +9,7 @@ import { Answer } from '../models/answer'
 export class AnswerService {
   answers = {}
 
-  constructor(public http: Http) {}
+  constructor(public http: HttpClient) {}
 
   add(value: Answer) {
     this.answers[value.id] = value.value

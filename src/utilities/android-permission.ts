@@ -1,7 +1,7 @@
 import 'rxjs/add/operator/map'
 
+import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { Http, Response } from '@angular/http'
 import { AndroidPermissions } from '@ionic-native/android-permissions'
 import { Device } from '@ionic-native/device'
 import { Observable } from 'rxjs/Observable'
@@ -26,7 +26,7 @@ export class AndroidPermissionUtility {
   ]
 
   constructor(
-    private http: Http,
+    private http: HttpClient,
     private device: Device,
     private utility: Utility,
     private androidPermissions: AndroidPermissions

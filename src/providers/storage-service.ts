@@ -3,7 +3,7 @@ import 'rxjs/add/operator/catch'
 
 import { Injectable } from '@angular/core'
 import { Storage } from '@ionic/storage'
-import { Observable } from 'rxjs/Observable'
+import { Observable, throwError as observableThrowError } from 'rxjs'
 
 import { DefaultScheduleVersion } from '../assets/data/defaultConfig'
 import { DefaultSettingsNotifications } from '../assets/data/defaultConfig'
@@ -207,6 +207,6 @@ export class StorageService {
       : error.status
         ? `${error.status} - ${error.statusText}`
         : 'error'
-    return Observable.throw(errMsg)
+    return observableThrowError(errMsg)
   }
 }

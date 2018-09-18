@@ -32,6 +32,7 @@ task-progress {
       @content;
     }
   }
+
   @mixin animation-delay($settings) {
     -moz-animation-delay: $settings;
     -webkit-animation-delay: $settings;
@@ -39,6 +40,7 @@ task-progress {
     -ms-animation-delay: $settings;
     animation-delay: $settings;
   }
+
   @mixin animation-duration($settings) {
     -moz-animation-duration: $settings;
     -webkit-animation-duration: $settings;
@@ -46,6 +48,7 @@ task-progress {
     -ms-animation-duration: $settings;
     animation-duration: $settings;
   }
+
   @mixin animation($settings) {
     -moz-animation: $settings;
     -webkit-animation: $settings;
@@ -53,6 +56,7 @@ task-progress {
     -ms-animation: $settings;
     animation: $settings;
   }
+
   @mixin transform($settings) {
     -moz-transform: $settings;
     -webkit-transform: $settings;
@@ -66,6 +70,7 @@ task-progress {
       box-shadow: $box-shadow;
     }
   }
+
   @include keyframes(gravity) {
     to {
       @include transform(translateY(350px));
@@ -73,6 +78,7 @@ task-progress {
       opacity: 0;
     }
   }
+
   @include keyframes(position) {
     0%,
     19.9% {

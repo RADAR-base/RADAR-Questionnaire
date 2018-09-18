@@ -34,7 +34,6 @@ import { TaskInfoComponent } from '../components/task-info/task-info'
 import { TaskProgressComponent } from '../components/task-progress/task-progress'
 import { TickerBarComponent } from '../components/ticker-bar/ticker-bar'
 import { TimedTestComponent } from '../components/timed-test/timed-test'
-import { StorageKeys } from '../enums/storage'
 import { ClinicalTasksPage } from '../pages/clinical-tasks/clinical-tasks'
 import { EnrolmentPage } from '../pages/enrolment/enrolment'
 import { FinishPage } from '../pages/finish/finish'
@@ -60,16 +59,10 @@ import { SchedulingService } from '../providers/scheduling-service'
 import { StorageService } from '../providers/storage-service'
 import { TimeStampService } from '../providers/timestamp-service'
 import { AndroidPermissionUtility } from '../utilities/android-permission'
+import { jwtOptionsFactory } from '../utilities/jwtOptionsFactory'
 import { Utility } from '../utilities/util'
 import { MyApp } from './app.component'
 
-export function jwtOptionsFactory(storage) {
-  return {
-    tokenGetter: () => {
-      return storage.get(StorageKeys.OAUTH_TOKENS)
-    }
-  }
-}
 @NgModule({
   imports: [
     HttpModule,
@@ -86,7 +79,6 @@ export function jwtOptionsFactory(storage) {
       name: '__appdb',
       driverOrder: ['sqlite', 'indexeddb', 'websql']
     }),
-    // JWT HttpClient interceptor
     JwtModule.forRoot({
       jwtOptionsProvider: {
         provide: JWT_OPTIONS,

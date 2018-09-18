@@ -117,16 +117,17 @@
     class="size-static bg"
     padding
   >
-    <button
-      *ngIf="!hasClickedStartButton"
-      ion-button
-      class="bt bt--full"
-      round
-      full
-      (click)="startQuestionnaire()"
-    >
-      {{ "BTN_START" | translate }}
-    </button>
+    <div *ngIf="!hasClickedStartButton">
+      <button
+        ion-button
+        class="bt bt--full"
+        round
+        full
+        (click)="startQuestionnaire()"
+      >
+        {{ "BTN_START" | translate }}
+      </button>
+    </div>
     <div
       *ngIf="hasClickedStartButton"
       class="spinner-center"

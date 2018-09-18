@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Component, ElementRef, ViewChild } from '@angular/core'
+import { JwtHelperService } from '@auth0/angular-jwt'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner'
-import { JwtHelper } from 'angular2-jwt'
 import { AlertController, NavController, Slides } from 'ionic-angular'
 
 import { MyApp } from '../../app/app.component'
@@ -53,7 +53,7 @@ export class EnrolmentPage {
     private configService: ConfigService,
     private authService: AuthService,
     private translate: TranslatePipe,
-    private jwtHelper: JwtHelper,
+    private jwtHelper: JwtHelperService,
     private alertCtrl: AlertController
   ) {}
 

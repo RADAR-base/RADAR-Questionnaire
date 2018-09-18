@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core'
 import { HttpModule } from '@angular/http'
 import { BrowserModule } from '@angular/platform-browser'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { JWT_OPTIONS, JwtModule } from '@auth0/angular-jwt'
 import { AndroidPermissions } from '@ionic-native/android-permissions'
 import { AppVersion } from '@ionic-native/app-version'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner'
@@ -15,9 +16,8 @@ import { LocalNotifications } from '@ionic-native/local-notifications'
 import { SplashScreen } from '@ionic-native/splash-screen'
 import { StatusBar } from '@ionic-native/status-bar'
 import { Vibration } from '@ionic-native/vibration'
-import { IonicStorageModule } from '@ionic/storage'
+import { IonicStorageModule, Storage } from '@ionic/storage'
 import { RoundProgressModule } from 'angular-svg-round-progressbar'
-import { JwtHelper } from 'angular2-jwt'
 import { MomentModule } from 'angular2-moment'
 import { IonicApp, IonicModule } from 'ionic-angular'
 
@@ -34,6 +34,7 @@ import { TaskInfoComponent } from '../components/task-info/task-info'
 import { TaskProgressComponent } from '../components/task-progress/task-progress'
 import { TickerBarComponent } from '../components/ticker-bar/ticker-bar'
 import { TimedTestComponent } from '../components/timed-test/timed-test'
+import { StorageKeys } from '../enums/storage'
 import { ClinicalTasksPage } from '../pages/clinical-tasks/clinical-tasks'
 import { EnrolmentPage } from '../pages/enrolment/enrolment'
 import { FinishPage } from '../pages/finish/finish'
@@ -62,6 +63,13 @@ import { AndroidPermissionUtility } from '../utilities/android-permission'
 import { Utility } from '../utilities/util'
 import { MyApp } from './app.component'
 
+export function jwtOptionsFactory(storage) {
+  return {
+    tokenGetter: () => {
+      return storage.get(StorageKeys.OAUTH_TOKENS)
+    }
+  }
+}
 @NgModule({
   imports: [
     HttpModule,
@@ -77,6 +85,14 @@ import { MyApp } from './app.component'
     IonicStorageModule.forRoot({
       name: '__appdb',
       driverOrder: ['sqlite', 'indexeddb', 'websql']
+    }),
+    // JWT HttpClient interceptor
+    JwtModule.forRoot({
+      jwtOptionsProvider: {
+        provide: JWT_OPTIONS,
+        useFactory: jwtOptionsFactory,
+        deps: [Storage]
+      }
     })
   ],
   declarations: [
@@ -159,7 +175,6 @@ import { MyApp } from './app.component'
     Globalization,
     TranslatePipe,
     AuthService,
-    JwtHelper,
     NotificationService,
     AudioRecordService,
     AndroidPermissionUtility,

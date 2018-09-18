@@ -18,7 +18,7 @@
     "lint:css": "stylelint \"src/**/*.scss\"",
     "lint:sort": "import-sort --list-different 'src/app/**/*.{js,ts}'",
     "fix:all": "npm run fix:sort && npm run fix:css && npm run fix:prettier",
-    "fix:css": "postcss \"src/**/*.scss\" --replace",
+    "fix:css": "stylelint --fix 'src/**/*.scss'",
     "fix:prettier": "prettier --write '**/*.{js,ts,json}'",
     "fix:sort": "import-sort --write 'src/**/*.{js,ts}'"
   },
@@ -60,12 +60,12 @@
     "@ionic-native/status-bar": "^4.13.0",
     "@ionic-native/vibration": "^4.13.0",
     "@ionic/storage": "^2.2.0",
-    "angular-svg-round-progressbar": "^1.0.7",
+    "angular-svg-round-progressbar": "^1.1.1",
     "angular2-moment": "^1.9.0",
     "autoprefixer": "^9.1.5",
     "avsc": "^5.0.4",
     "base64-js": "^1.2.1",
-    "cordova-android": "6.4.0",
+    "cordova-android": "^7.1.1",
     "cordova-android-support-gradle-release": "^1.4.4",
     "cordova-plugin-android-permissions": "^0.11.0",
     "cordova-plugin-app-event": "git+https://github.com/katzer/cordova-plugin-app-event.git",
@@ -96,7 +96,7 @@
     "rxjs": "^6.3.2",
     "rxjs-compat": "^6.3.2",
     "sw-toolbox": "^3.6.0",
-    "v4": "0.0.1",
+    "uuid": "^3.3.2",
     "zone.js": "^0.8.12"
   },
   "devDependencies": {

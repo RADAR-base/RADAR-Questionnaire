@@ -91,5 +91,5 @@
     <plugin name="cordova-plugin-app-version" spec="^0.1.9" />
     <plugin name="cordova-plugin-fcm" spec="git+https://github.com/yatharthranjan/cordova-plugin-fcm.git" />
     <plugin name="cordova-plugin-globalization" spec="^1.11.0" />
-    <engine name="android" spec="6.4.0" />
+    <engine name="android" spec="^7.1.1" />
 </widget>

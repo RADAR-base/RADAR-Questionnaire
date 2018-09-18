@@ -1,10 +1,13 @@
-import { NotificationSettings } from '../../models/settings'
-import { WeeklyReportSubSettings } from '../../models/settings'
+import {
+  DefaultProtocolEndPointExport,
+  DefaultSourceProducerAndSecretExport
+} from './secret'
+
 import { LanguageSetting } from '../../models/settings'
 import { LocKeys } from '../../enums/localisations'
+import { NotificationSettings } from '../../models/settings'
 import { Task } from '../../models/task'
-import { DefaultProtocolEndPointExport, DefaultSourceProducerAndSecretExport } from './secret'
-
+import { WeeklyReportSubSettings } from '../../models/settings'
 
 // DEFAULT SETTINGS
 export const DefaultSettingsNotifications: NotificationSettings = {
@@ -14,19 +17,19 @@ export const DefaultSettingsNotifications: NotificationSettings = {
 }
 
 export const DefaultSettingsWeeklyReport: WeeklyReportSubSettings[] = [
-    {
-      name: LocKeys.MEASURE_PROGRESS.toString(),
-      show: false
-    },
-    {
-      name: LocKeys.MEASURE_STEPS.toString(),
-      show: false
-    },
-    {
-      name: LocKeys.MEASURE_HEART_RATE.toString(),
-      show: false
-    }
-  ]
+  {
+    name: LocKeys.MEASURE_PROGRESS.toString(),
+    show: false
+  },
+  {
+    name: LocKeys.MEASURE_STEPS.toString(),
+    show: false
+  },
+  {
+    name: LocKeys.MEASURE_HEART_RATE.toString(),
+    show: false
+  }
+]
 
 // DEFAULT SETUP
 export const DefaultTask: Task = {
@@ -47,8 +50,8 @@ export const DefaultTask: Task = {
 }
 
 export const DefaultSettingsSelectedLanguage: LanguageSetting = {
-  label: "",
-  value: ""
+  label: '',
+  value: ''
 }
 
 export const DefaultSettingsSupportedLanguages: LanguageSetting[] = [
@@ -79,12 +82,12 @@ export const DefaultSettingsSupportedLanguages: LanguageSetting[] = [
 ]
 
 export const LanguageMap = {
-  'en': LocKeys.LANGUAGE_ENGLISH.toString(),
-  'it': LocKeys.LANGUAGE_ITALIAN.toString(),
-  'es': LocKeys.LANGUAGE_SPANISH.toString(),
-  'nl': LocKeys.LANGUAGE_DUTCH.toString(),
-  'da': LocKeys.LANGUAGE_DANISH.toString(),
-  'de': LocKeys.LANGUAGE_GERMAN.toString()
+  en: LocKeys.LANGUAGE_ENGLISH.toString(),
+  it: LocKeys.LANGUAGE_ITALIAN.toString(),
+  es: LocKeys.LANGUAGE_SPANISH.toString(),
+  nl: LocKeys.LANGUAGE_DUTCH.toString(),
+  da: LocKeys.LANGUAGE_DANISH.toString(),
+  de: LocKeys.LANGUAGE_GERMAN.toString()
 }
 
 export const DefaultScheduleVersion: number = 0
@@ -101,14 +104,15 @@ export const DefaultNotificationRefreshTime: number = 900000 // 15 mins in ms
 
 export const DefaultSourceTypeModel: string = 'aRMT-App'
 export const DefaultSourceTypeRegistrationBody: any = {
-"sourceTypeCatalogVersion": "1.2.0",
-"sourceTypeModel": "aRMT-App",
-"sourceTypeProducer": "RADAR"
-//"deviceTypeId": 1104
+  sourceTypeCatalogVersion: '1.2.0',
+  sourceTypeModel: 'aRMT-App',
+  sourceTypeProducer: 'RADAR'
+  // "deviceTypeId": 1104
 }
 
-export const DefaultEndPoint: string = 'https://radar-cns-platform.rosalind.kcl.ac.uk/'
-//export const DefaultEndPoint: string = 'https://radar-backend.co.uk/'
+export const DefaultEndPoint: string =
+  'https://radar-cns-platform.rosalind.kcl.ac.uk/'
+// export const DefaultEndPoint: string = 'https://radar-backend.co.uk/'
 
 export const DefaultProtocolEndPoint: string = DefaultProtocolEndPointExport
 

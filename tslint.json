@@ -1,6 +1,6 @@
 {
-  "rulesDirectory": ["node_modules/codelyzer"],
-  "extends": ["tslint-angular", "tslint-config-prettier"],
+  "extends": "tslint-config-prettier",
+  "rulesDirectory": ["node_modules/codelyzer", "node_modules/rxjs-tslint"],
   "rules": {
     "callable-types": true,
     "forin": true,

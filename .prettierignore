@@ -1,0 +1,6 @@
+www/
+resources/
+plugins/
+platforms/
+package.json
+package-lock.json

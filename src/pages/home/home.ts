@@ -56,6 +56,7 @@ export class HomePage {
   hasClickedStartButton: boolean = true
   hasClinicalTasks = false
   hasOnlyESMs = false
+  taskIsNow = false
 
   constructor(
     public navCtrl: NavController,
@@ -77,7 +78,7 @@ export class HomePage {
     this.checkIfOnlyESM()
 
     setInterval(() => {
-      this.isNextTaskESMandNotNow()
+      // this.isNextTaskESMandNotNow()
       this.checkForNextTask()
     }, 1000)
 
@@ -102,6 +103,11 @@ export class HomePage {
       this.hasClickedStartButton = false
       this.displayCompleted(false)
       this.displayEvalTransformations(false)
+      if (task.timestamp > Date.now()) {
+        this.taskIsNow = false
+      } else {
+        this.taskIsNow = true
+      }
     } else {
       this.controller.areAllTasksComplete().then(completed => {
         if (completed) {

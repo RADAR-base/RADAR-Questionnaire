@@ -81,7 +81,7 @@ import { StorageService } from '../../providers/storage-service'
       state(
         'right',
         style({
-          transform: 'translate3d(25%, 0, 0)'
+          transform: 'translate3d(5%, 0, 0)'
         })
       ),
       state(
@@ -115,7 +115,7 @@ import { StorageService } from '../../providers/storage-service'
       state(
         'right',
         style({
-          transform: 'translate3d(165%, 0, 0)'
+          transform: 'translate3d(150%, 0, 0)'
         })
       ),
       state(
@@ -146,7 +146,7 @@ export class TaskInfoComponent implements OnChanges {
 
   max: number = 1
   current: number = 0
-  radius: number = 40
+  radius: number = 38
   stroke: number = 8
   progress: TasksProgress
 

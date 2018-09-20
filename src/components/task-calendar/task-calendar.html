@@ -50,7 +50,21 @@
                 src="assets/imgs/warning.png"
               >
             </div>
-            <div class="task-info-right">
+            <div class="status-div">
+              <div *ngIf="!task.completed">
+                <ion-icon
+                  name="radio-button-off"
+                  class="status"
+                ></ion-icon>
+              </div>
+              <div *ngIf="task.completed">
+                <ion-icon
+                  name="checkmark"
+                  class="status-checked"
+                ></ion-icon>
+              </div>
+            </div>
+            <div class="metrics">
               <img
                 class="icon-padding icon-xsm"
                 src="assets/imgs/stopwatch.png"
@@ -63,24 +77,6 @@
               >
               {{ task.nQuestions }}
               <span class="units">x</span>
-              <div
-                class="status-div"
-                *ngIf="!task.completed"
-              >
-                <ion-icon
-                  name="radio-button-off"
-                  class="status"
-                ></ion-icon>
-              </div>
-              <div
-                class="status-div"
-                *ngIf="task.completed"
-              >
-                <ion-icon
-                  name="checkmark"
-                  class="status-checked"
-                ></ion-icon>
-              </div>
             </div>
           </ion-col>
         </ion-row>

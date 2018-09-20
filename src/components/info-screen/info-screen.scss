@@ -3,7 +3,10 @@ info-screen {
   width: 100%;
 
   .info-card {
+    position: fixed;
+    overflow: scroll;
     margin: 8px;
+    margin-right: 16px;
     padding: 10px 10px 0;
     height: 80%;
     -webkit-border-radius: 5px;

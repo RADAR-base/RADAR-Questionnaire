@@ -175,8 +175,8 @@ export class HomeController {
         }
       }
       if (passedAtLeastOnce) {
-        console.log(`Next Task name: ${tasks[nextIdx].name},
-           Timestamp: ${tasks[nextIdx].timestamp}`)
+        // console.log(`Next Task name: ${tasks[nextIdx].name},
+        //    Timestamp: ${tasks[nextIdx].timestamp}`)
         return tasks[nextIdx]
       }
     }

@@ -71,6 +71,12 @@ export class HomePage {
     private kafka: KafkaService
   ) {}
 
+  ionViewWillEnter() {
+    this.getElementsAttributes()
+    this.elProgressHeight += 15
+    this.applyTransformations()
+  }
+
   ionViewDidLoad() {
     // const isFirstIonDidViewLoad = this.navParams.data.isFirstIonDidViewLoad
     this.checkForNextTask()

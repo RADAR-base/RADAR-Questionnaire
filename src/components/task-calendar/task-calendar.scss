@@ -65,7 +65,7 @@ task-calendar {
 
   .metrics {
     float: left;
-    margin-left: 35%;
+    margin-left: 30%;
   }
 
   .status-div {
@@ -83,11 +83,11 @@ task-calendar {
   .status-checked {
     margin-left: 2px;
     padding-top: 2px;
-    width: 5.75vw;
-    height: 5.75vw;
+    width: 23px;
+    height: 23px;
     border-radius: 50%;
     background-color: map-get($colors, tertiary);
-    font-size: 22px;
+    font-size: 21px;
   }
 
   .current-time-div {

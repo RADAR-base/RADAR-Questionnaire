@@ -175,7 +175,7 @@ export class HomePage {
     if (this.showCalendar) {
       this.elProgress.nativeElement.style.transform = `translateY(-${
         this.elProgressHeight
-      }px) scale(0.5)`
+      }px) scale(1)`
       this.elTicker.nativeElement.style.transform = `translateY(-${
         this.elProgressHeight
       }px)`

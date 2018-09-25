@@ -7,7 +7,8 @@ task-progress {
   $box-shadow2: ();
 
   @for $i from 0 through $particles {
-    $box-shadow: $box-shadow, random($width) - $width / 2 + px, random($height) - $height / 1.2 + px, hsl(random(360), 100, 50);
+    $box-shadow: $box-shadow, random($width) - $width / 2 + px,
+      random($height) - $height / 1.2 + px, hsl(random(360), 100, 50);
     $box-shadow2: $box-shadow2, 0 0 #fff;
   }
 
@@ -113,7 +114,13 @@ task-progress {
 
   .pyro > .before,
   .pyro > .after {
-    @include animation(( 1s bang ease-out infinite backwards, 1s gravity ease-in infinite backwards, 5s position linear infinite backwards));
+    @include animation(
+      (
+        1s bang ease-out infinite backwards,
+        1s gravity ease-in infinite backwards,
+        5s position linear infinite backwards
+      )
+    );
 
     position: absolute;
     width: 10px;
@@ -180,7 +187,7 @@ task-progress {
   }
 
   .small {
-    margin-top: -20px;
+    padding-top: 48px;
     font-size: 18px;
   }
 }

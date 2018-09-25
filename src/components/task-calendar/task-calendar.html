@@ -43,12 +43,14 @@
         <ion-row>
           <ion-col>
             <div class="task-info-left">
-              {{ getStartTime(task) }}
-              <img
-                class="icon-padding extra-info-icon"
-                *ngIf="hasExtraInfo(task.warning)"
-                src="assets/imgs/warning.png"
-              >
+              <div class="start-time">{{ getStartTime(task) }}</div>
+              <div>
+                <img
+                  class="icon-padding extra-info-icon"
+                  *ngIf="hasExtraInfo(task.warning)"
+                  src="assets/imgs/warning.png"
+                >
+              </div>
             </div>
             <div class="status-div">
               <div *ngIf="!task.completed">

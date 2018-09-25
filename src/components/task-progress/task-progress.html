@@ -50,11 +50,10 @@
     class="counter"
   >
     <div *ngIf="!noTasksToday">
-      <span class="large">{{ current }}</span>
-      <br>
-      <span class="small">
+      <div class="large">{{ current }}</div>
+      <div class="small">
         {{ "TASK_PROGRESS_COMPLETED" | translate }}
-      </span>
+      </div>
     </div>
   </div>
 

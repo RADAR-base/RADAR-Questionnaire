@@ -50,6 +50,10 @@ task-calendar {
     font-size: 12px;
   }
 
+  .start-time {
+    width: 64px;
+  }
+
   .icon-padding {
     padding-right: 5px;
     padding-left: 5px;
@@ -60,6 +64,7 @@ task-calendar {
   }
 
   .task-info-left {
+    display: inline-flex;
     float: left;
   }
 

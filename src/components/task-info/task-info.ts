@@ -98,14 +98,14 @@ import { checkTaskIsNow } from '../../utilities/check-task-is-now'
       state(
         'out',
         style({
-          opacity: '0',
+          display: 'none',
           transform: 'translate3d(-150%, 0, 0)'
         })
       ),
       state(
         'in',
         style({
-          opacity: '1',
+          display: 'block',
           transform: 'translate3d(0, 0, 0)'
         })
       ),
@@ -200,8 +200,8 @@ export class TaskInfoComponent implements OnChanges {
     this.controller.getTaskProgress().then(progress => {
       this.progress = progress
       if (this.progress) {
-        this.max = this.progress.numberOfTasks
         this.current = this.progress.completedTasks
+        this.max = this.progress.numberOfTasks
       }
     })
   }

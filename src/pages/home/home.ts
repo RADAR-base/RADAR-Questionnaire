@@ -17,6 +17,7 @@ import { KafkaService } from '../../providers/kafka-service'
 import { NotificationService } from '../../providers/notification-service'
 import { SchedulingService } from '../../providers/scheduling-service'
 import { StorageService } from '../../providers/storage-service'
+import { checkTaskIsNow } from '../../utilities/check-task-is-now'
 import { ClinicalTasksPage } from '../clinical-tasks/clinical-tasks'
 import { QuestionsPage } from '../questions/questions'
 import { SettingsPage } from '../settings/settings'
@@ -109,11 +110,7 @@ export class HomePage {
       this.hasClickedStartButton = false
       this.displayCompleted(false)
       this.displayEvalTransformations(false)
-      if (task.timestamp > Date.now()) {
-        this.taskIsNow = false
-      } else {
-        this.taskIsNow = true
-      }
+      this.taskIsNow = checkTaskIsNow(task.timestamp)
     } else {
       this.controller.areAllTasksComplete().then(completed => {
         if (completed) {

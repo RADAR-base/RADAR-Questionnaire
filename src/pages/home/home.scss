@@ -6,7 +6,6 @@ page-home {
 
   .size-static {
     flex-basis: auto;
-    padding-bottom: 2px;
   }
 
   .size-dynamic {
@@ -47,7 +46,8 @@ page-home {
     height: 40px;
   }
 
-  .bg {
+  .footer {
+    margin-top: 2px;
     background-color: $cl-primary-40;
   }
 

@@ -147,7 +147,7 @@ export class QuestionsPage {
     const percent = Math.ceil(
       (this.currentQuestion * 100) / this.questions.length
     )
-    this.progress = percent + tick
+    this.progress = percent
   }
 
   checkAnswer() {

@@ -18,6 +18,7 @@ import { StorageKeys } from '../../enums/storage'
 import { Task, TasksProgress } from '../../models/task'
 import { HomeController } from '../../providers/home-controller'
 import { StorageService } from '../../providers/storage-service'
+import { checkTaskIsNow } from '../../utilities/check-task-is-now'
 
 /**
  * Generated class for the TaskInfo component.
@@ -165,12 +166,7 @@ export class TaskInfoComponent implements OnChanges {
   ) {
     this.applyAnimationKeys()
     setInterval(() => {
-      if (this.task.timestamp > Date.now()) {
-        this.isNow = false
-      } else {
-        this.isNow = true
-      }
-      console.log(this.isNow)
+      this.isNow = checkTaskIsNow(this.task.timestamp)
     }, 1000)
 
     this.storage.get(StorageKeys.LANGUAGE).then(resLang => {

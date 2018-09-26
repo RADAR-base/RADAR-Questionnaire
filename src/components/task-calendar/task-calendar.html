@@ -67,18 +67,22 @@
               </div>
             </div>
             <div class="metrics">
-              <img
-                class="icon-padding icon-xsm"
-                src="assets/imgs/stopwatch.png"
-              >
-              {{ task.estimatedCompletionTime }}
-              <span class="units">min</span>
-              <img
-                class="icon-padding icon-xsm"
-                src="assets/imgs/nTasks.png"
-              >
-              {{ task.nQuestions }}
-              <span class="units">x</span>
+              <div class="metric-time">
+                <img
+                  class="icon-padding icon-xsm"
+                  src="assets/imgs/stopwatch.png"
+                >
+                {{ task.estimatedCompletionTime }}
+                <span class="units">min</span>
+              </div>
+              <div class="metric-task">
+                <img
+                  class="icon-padding icon-xsm"
+                  src="assets/imgs/nTasks.png"
+                >
+                {{ task.nQuestions }}
+                <span class="units">x</span>
+              </div>
             </div>
           </ion-col>
         </ion-row>

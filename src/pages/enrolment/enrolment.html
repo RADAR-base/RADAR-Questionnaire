@@ -77,6 +77,95 @@
       <div class="registration">
         <div class="text text-lg">{{ "ENROL_REGISTRATION" | translate }}</div>
         <div class="text text-justify">
+          <!-- TODO: Remove manually written text and fix repetitive code -->
+          Before you can start using the app, we need to register it first. You can either
+          scan the QR code given by your researcher or enter the token name manually.
+        </div>
+      </div>
+      <div
+        padding
+        class="bottom"
+      >
+        <p>
+          <button
+            ion-button
+            class="bt bt--full"
+            round
+            full
+            (click)="next()"
+          >
+            {{ "BTN_ENROL_SCAN" | translate }}
+          </button>
+        </p>
+
+        <p>
+          <button
+            ion-button
+            class="bt bt--full"
+            round
+            full
+            (click)="enterTokenOption()"
+          >
+            Enter Token
+          </button>
+        </p>
+      </div>
+    </ion-slide>
+
+    <ion-slide
+      *ngIf="manualReg"
+      id="qr-registration"
+    >
+      <div class="registration">
+        <div class="text text-lg">{{ "ENROL_REGISTRATION" | translate }}</div>
+        <div class="text text-justify">
+          Enter the token given to you by your researcher.
+        </div>
+        <div class="token-input">
+          <ion-input
+            [(ngModel)]="tokenName"
+            type="text"
+            placeholder="Token"
+          ></ion-input>
+        </div>
+      </div>
+      <div id="status">
+        <div
+          #loading
+          id="loading"
+        >
+          <div class="padding-text">{{ "STATUS_LOADING" | translate }}</div>
+        </div>
+        <div
+          #outcome
+          id="outcome"
+        >
+          <div class="padding-text">{{ outcomeStatus }}</div>
+        </div>
+      </div>
+      <div
+        padding
+        class="bottom"
+      >
+        <button
+          ion-button
+          class="bt bt--full"
+          round
+          full
+          (click)="submitToken()"
+        >
+          Submit
+        </button>
+      </div>
+    </ion-slide>
+
+    <ion-slide
+      *ngIf="!manualReg"
+      id="qr-registration"
+    >
+      <div class="registration">
+        <div class="text text-lg">{{ "ENROL_REGISTRATION" | translate }}</div>
+        <div class="text text-justify">
           {{ "ENROL_REGISTRATION_DESC" | translate }}
         </div>
       </div>

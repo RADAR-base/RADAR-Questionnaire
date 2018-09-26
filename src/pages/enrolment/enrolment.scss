@@ -50,7 +50,7 @@ page-enrolment {
 
   #outcome {
     flex: 1 0 100%;
-    height: 34px;
+    height: auto;
     background-color: $cl-danger-40;
     opacity: 0;
     transition: opacity 0.4s ease-in-out;
@@ -103,5 +103,16 @@ page-enrolment {
   .pref-icon {
     margin: 2vh 0;
     height: 20vh;
+  }
+
+  .token-input {
+    margin: 24px auto;
+    width: 320px;
+    border-bottom: 1px solid white;
+  }
+
+  .scroll-content {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
   }
 }

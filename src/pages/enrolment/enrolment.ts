@@ -44,6 +44,8 @@ export class EnrolmentPage {
   }
 
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
+  manualReg = false
+  tokenName: string
 
   constructor(
     public navCtrl: NavController,
@@ -84,14 +86,14 @@ export class EnrolmentPage {
     this.showOutcomeStatus = false
     this.transitionStatuses()
 
-    const authText = authObj.text
+    // const authText = authObj.text ? authObj.text : authObj
     new Promise((resolve, reject) => {
       let refreshToken = null
-      if (this.validURL(authText)) {
+      if (!authObj.text) {
         // Meta Qr code
         // TODO :: Add a field to enter the short url+13char code manually
         this.authService
-          .getRefreshTokenFromUrl(authText)
+          .getRefreshTokenFromUrl(authObj)
           .then((body: any) => {
             refreshToken = body['refreshToken']
             if (body['baseUrl']) {
@@ -113,7 +115,7 @@ export class EnrolmentPage {
         // Normal QR codes: containing refresh token as JSON
         this.authService.updateURI().then(() => {
           console.log('BASE URI : ' + this.storage.get(StorageKeys.BASE_URI))
-          const auth = JSON.parse(authText)
+          const auth = JSON.parse(authObj.text)
           refreshToken = auth.refreshToken
           resolve(refreshToken)
         })
@@ -245,6 +247,15 @@ export class EnrolmentPage {
     const slideIndex = this.slides.getActiveIndex() + 1
     this.slides.slideTo(slideIndex, 500)
     this.slides.lockSwipes(true)
+  }
+
+  enterTokenOption() {
+    this.manualReg = true
+    this.next()
+  }
+
+  submitToken() {
+    this.authenticate(this.tokenName)
   }
 
   navigateToHome() {

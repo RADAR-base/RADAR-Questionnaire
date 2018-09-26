@@ -19,6 +19,7 @@ export class AuthService {
   URI_managementPortal: string = 'managementportal'
   URI_refresh: string = '/oauth/token'
   URI_subjects: string = '/api/subjects/'
+  URI_metatoken: string = '/api/meta-token/'
 
   CONTENTTYPE_urlencode: string = 'application/x-www-form-urlencoded'
   CONTENTTYPE_json: string = 'application/json'
@@ -91,8 +92,13 @@ export class AuthService {
     })
   }
 
-  getRefreshTokenFromUrl(URI) {
-    return this.http.get(URI).toPromise()
+  getRefreshTokenFromUrl(token) {
+    return this.http.get(this.getURLFromToken(token)).toPromise()
+  }
+
+  private getURLFromToken(token) {
+    const temp_URI_base = 'https://radar-backend.co.uk/managementportal'
+    return temp_URI_base + this.URI_metatoken + token
   }
 
   createPostRequest(uri, body, headers) {

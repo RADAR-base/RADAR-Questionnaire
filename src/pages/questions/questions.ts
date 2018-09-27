@@ -198,7 +198,6 @@ export class QuestionsPage {
       while (this.questions[questionIdx].evaluated_logic !== '') {
         const logic = this.questions[questionIdx].evaluated_logic
         const responses = this.answerService.answers
-        // console.log(logic)
         // tslint:disable-next-line:no-eval
         if (eval(logic) === false) {
           increment += 1

@@ -1,20 +1,26 @@
 import { Component } from '@angular/core'
 import { AppVersion } from '@ionic-native/app-version'
-import { IonicPage, NavController, NavParams } from 'ionic-angular'
-import { AlertController } from 'ionic-angular'
+import {
+  AlertController,
+  IonicPage,
+  NavController,
+  NavParams
+} from 'ionic-angular'
 
 import {
+  DefaultNumberOfNotificationsToSchedule,
+  DefaultSettingsNotifications,
   DefaultSettingsSelectedLanguage,
+  DefaultSettingsWeeklyReport,
   LanguageMap
 } from '../../assets/data/defaultConfig'
-import { DefaultSettingsNotifications } from '../../assets/data/defaultConfig'
-import { DefaultSettingsWeeklyReport } from '../../assets/data/defaultConfig'
-import { DefaultNumberOfNotificationsToSchedule } from '../../assets/data/defaultConfig'
 import { LocKeys } from '../../enums/localisations'
 import { StorageKeys } from '../../enums/storage'
-import { LanguageSetting } from '../../models/settings'
-import { NotificationSettings } from '../../models/settings'
-import { WeeklyReportSubSettings } from '../../models/settings'
+import {
+  LanguageSetting,
+  NotificationSettings,
+  WeeklyReportSubSettings
+} from '../../models/settings'
 import { TranslatePipe } from '../../pipes/translate/translate'
 import { ConfigService } from '../../providers/config-service'
 import { HomeController } from '../../providers/home-controller'

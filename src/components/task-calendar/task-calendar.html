@@ -13,7 +13,7 @@
       {{ "TASK_CALENDAR_TITLE" | translate }}
     </div>
 
-    <div *ngFor="let task of tasks; let i=index">
+    <ng-container *ngFor="let task of tasks; let i=index">
       <div
         class="current-time-div"
         *ngIf="i==timeIndex"
@@ -75,7 +75,7 @@
                 {{ task.estimatedCompletionTime }}
                 <span class="units">min</span>
               </div>
-              <div class="metric-task">
+              <div>
                 <img
                   class="icon-padding icon-xsm"
                   src="assets/imgs/nTasks.png"
@@ -87,7 +87,7 @@
           </ion-col>
         </ion-row>
       </div>
-    </div>
+    </ng-container>
     <div
       class="current-time-div"
       *ngIf="timeIndex==tasks.length"

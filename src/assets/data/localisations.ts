@@ -43,22 +43,44 @@ export const Localisations = {
     de: 'Registrierung',
     en: 'Registration',
     es: 'Registro',
-    it: ' Registrazione',
+    it: 'Registrazione',
     nl: 'Registratie'
   },
   ENROL_REGISTRATION_DESC: {
     da:
-      'Før du kan begynde at anvende app’en, skal vi registrere den først. Klik på "Scan" knappen og hold kameraet over QR-koden som du får udleveret af forskeren. Du kan se et eksempel på en QR-kode herunder.',
+      'Før du kan begynde at anvende app’en, skal vi registrere den først. Du kan enten scanne QR-koden eller indtaste symbolet.',
     de:
-      'Bevor Sie die App verwenden können, müssen Sie sie zuerst registrieren. Klicken Sie auf die Schaltfläche "Scannen" und richten Sie die Kamera auf den von Ihrem Forscher angegebenen QR-Code. Ein Beispiel für einen QR-Code finden Sie unten.',
+      'Bevor Sie die App verwenden können, müssen Sie sie zuerst registrieren. Sie können entweder den QR-Code scannen oder das Token eingeben.',
     en:
-      'Before you can start using the app, we need to register it first. Click the "Scan" button and point the camera onto the QR code, given by your researcher. An example QR code is below.',
+      'Before you can start using the app, we need to register it first. You can either scan the QR code or enter the token.',
     es:
-      'Antes de poder usar esta aplicación, debe registrarse. Presione el botón "Escanear" e ingrese el código QR que le dio el personal del estudio. A continuación puede ver un ejemplo de código QR',
+      'Antes de poder usar esta aplicación, debe registrarse. Puede escanear el código QR o ingresar el token.',
     it:
-      'Prima di poter usare questa app, deve registrarsi. Prema il pulsante "Scan" e inquadri il codice QR che le è stato dato dal personale dello studio. Qui sotto può vedere un esempio di QR.',
+      'Prima di poter usare questa app, deve registrarsi. Puoi scansionare il codice QR o inserire il token.',
     nl:
-      'Voordat u de app kunt gebruiken, moeten we de app eerst registreren. Klik op de "Scan" knop en richt de camera op de QR code die u heeft ontvangen van de onderzoeker. Hieronder staat een voorbeeld van een QR code afgebeeld.'
+      'Voordat u de app kunt gebruiken, moeten we de app eerst registreren. U kunt de QR code scannen of het token invoeren.'
+  },
+  ENROL_REGISTRATION_SCAN_DESC: {
+    da:
+      'Klik på "Scan" knappen og hold kameraet over QR-koden som du får udleveret af forskeren. Du kan se et eksempel på en QR-kode herunder.',
+    de:
+      'Klicken Sie auf die Schaltfläche "Scannen" und richten Sie die Kamera auf den von Ihrem Forscher angegebenen QR-Code. Ein Beispiel für einen QR-Code finden Sie unten.',
+    en:
+      'Click the "Scan" button and point the camera onto the QR code, given by your researcher. An example QR code is below.',
+    es:
+      'Presione el botón "Escanear" e ingrese el código QR que le dio el personal del estudio. A continuación puede ver un ejemplo de código QR',
+    it:
+      'Prema il pulsante "Scan" e inquadri il codice QR che le è stato dato dal personale dello studio. Qui sotto può vedere un esempio di QR.',
+    nl:
+      'Klik op de "Scan" knop en richt de camera op de QR code die u heeft ontvangen van de onderzoeker. Hieronder staat een voorbeeld van een QR code afgebeeld.'
+  },
+  ENROL_REGISTRATION_TOKEN_DESC: {
+    da: 'Indtast det tegn, du har fået af din forsker.',
+    de: 'Geben Sie den Token ein, den Sie von Ihrem Forscher erhalten haben.',
+    en: 'Enter the token given to you by your researcher.',
+    es: 'Ingrese el token que le dio el personal del estudio.',
+    it: 'Inserisci il token che ti è stato dato dal personale dello studio.',
+    nl: 'Voer het token dat u van uw onderzoeker.'
   },
   ENROL_PREFERENCES: {
     da: 'Præferencer',
@@ -369,6 +391,22 @@ export const Localisations = {
     es: 'Escanear',
     it: 'Scansione',
     nl: 'Scan'
+  },
+  BTN_ENROL_ENTER_TOKEN: {
+    da: 'Indtast Token',
+    de: 'Token Eingeben',
+    en: 'Enter Token',
+    es: 'Ingresar Token',
+    it: 'Inserisci Il Token',
+    nl: 'Token Invoeren'
+  },
+  BTN_SUBMIT: {
+    da: 'Indsend',
+    de: 'Einreichen',
+    en: 'Submit',
+    es: 'Enviar',
+    it: 'Sottoscrivi',
+    nl: 'Voorleggen'
   },
   BTN_FINISH: {
     da: 'Afslut',

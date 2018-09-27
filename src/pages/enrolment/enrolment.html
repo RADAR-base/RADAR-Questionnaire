@@ -77,9 +77,7 @@
       <div class="registration">
         <div class="text text-lg">{{ "ENROL_REGISTRATION" | translate }}</div>
         <div class="text text-justify">
-          <!-- TODO: Remove manually written text and fix repetitive code -->
-          Before you can start using the app, we need to register it first. You can either
-          scan the QR code given by your researcher or enter the token name manually.
+          {{ "ENROL_REGISTRATION_DESC" | translate }}
         </div>
       </div>
       <div
@@ -106,7 +104,7 @@
             full
             (click)="enterTokenOption()"
           >
-            Enter Token
+            {{ "BTN_ENROL_ENTER_TOKEN" | translate }}
           </button>
         </p>
       </div>
@@ -119,7 +117,7 @@
       <div class="registration">
         <div class="text text-lg">{{ "ENROL_REGISTRATION" | translate }}</div>
         <div class="text text-justify">
-          Enter the token given to you by your researcher.
+          {{ "ENROL_REGISTRATION_TOKEN_DESC" | translate }}
         </div>
         <div class="token-input">
           <ion-input
@@ -154,7 +152,7 @@
           full
           (click)="submitToken()"
         >
-          Submit
+          {{ "BTN_SUBMIT" | translate }}
         </button>
       </div>
     </ion-slide>
@@ -166,7 +164,7 @@
       <div class="registration">
         <div class="text text-lg">{{ "ENROL_REGISTRATION" | translate }}</div>
         <div class="text text-justify">
-          {{ "ENROL_REGISTRATION_DESC" | translate }}
+          {{ "ENROL_REGISTRATION_SCAN_DESC" | translate }}
         </div>
       </div>
       <div class="qr-code">

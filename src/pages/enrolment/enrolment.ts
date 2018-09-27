@@ -44,7 +44,7 @@ export class EnrolmentPage {
   }
 
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
-  manualReg = false
+  enterMetaQR = false
   tokenName: string
 
   constructor(
@@ -86,14 +86,13 @@ export class EnrolmentPage {
     this.showOutcomeStatus = false
     this.transitionStatuses()
 
-    // const authText = authObj.text ? authObj.text : authObj
+    const authText = this.enterMetaQR ? authObj : authObj.text
     new Promise((resolve, reject) => {
       let refreshToken = null
-      if (!authObj.text) {
-        // Meta Qr code
-        // TODO :: Add a field to enter the short url+13char code manually
+      if (this.enterMetaQR) {
+        // Meta QR code
         this.authService
-          .getRefreshTokenFromUrl(authObj)
+          .getRefreshTokenFromUrl(authText)
           .then((body: any) => {
             refreshToken = body['refreshToken']
             if (body['baseUrl']) {
@@ -115,7 +114,7 @@ export class EnrolmentPage {
         // Normal QR codes: containing refresh token as JSON
         this.authService.updateURI().then(() => {
           console.log('BASE URI : ' + this.storage.get(StorageKeys.BASE_URI))
-          const auth = JSON.parse(authObj.text)
+          const auth = JSON.parse(authText)
           refreshToken = auth.refreshToken
           resolve(refreshToken)
         })
@@ -215,8 +214,6 @@ export class EnrolmentPage {
   }
 
   weeklyReportChange(index) {
-    // TODO: Fix below
-    // this.reportSettings[index].show != this.reportSettings[index].show
     this.storage.set(StorageKeys.SETTINGS_WEEKLYREPORT, this.reportSettings)
   }
 
@@ -250,7 +247,7 @@ export class EnrolmentPage {
   }
 
   enterTokenOption() {
-    this.manualReg = true
+    this.enterMetaQR = true
     this.next()
   }
 

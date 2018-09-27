@@ -113,8 +113,8 @@
     </ion-slide>
 
     <ion-slide
-      *ngIf="manualReg"
-      id="qr-registration"
+      *ngIf="enterMetaQR"
+      id="qr-registration-token"
     >
       <div class="registration">
         <div class="text text-lg">{{ "ENROL_REGISTRATION" | translate }}</div>
@@ -160,8 +160,8 @@
     </ion-slide>
 
     <ion-slide
-      *ngIf="!manualReg"
-      id="qr-registration"
+      *ngIf="!enterMetaQR"
+      id="qr-registration-scan"
     >
       <div class="registration">
         <div class="text text-lg">{{ "ENROL_REGISTRATION" | translate }}</div>

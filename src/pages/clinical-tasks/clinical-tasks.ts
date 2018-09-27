@@ -39,14 +39,12 @@ export class ClinicalTasksPage {
     const lang = this.storage.get(StorageKeys.LANGUAGE)
     const nextAssessment = this.controller.getClinicalAssessment(task)
     Promise.all([lang, nextAssessment]).then(res => {
-      // tslint:disable-next-line:no-shadowed-variable
-      const lang = res[0]
+      const language = res[0].value
       const assessment = res[1]
-      console.log(assessment)
       const params = {
         title: assessment.name,
-        introduction: assessment.startText[lang.value],
-        endText: assessment.endText[lang.value],
+        introduction: assessment.startText[language],
+        endText: assessment.endText[language],
         questions: assessment.questions,
         associatedTask: task
       }

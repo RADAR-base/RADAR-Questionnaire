@@ -40,13 +40,11 @@ export class AuthService {
         const URI = this.URI_base + this.URI_refresh
         const headers = this.getRegisterHeaders(this.CONTENTTYPE_urlencode)
         const params = this.getRefreshParams(tokens.refresh_token)
-        // tslint:disable-next-line:no-shadowed-variable
         const promise = this.createPostRequest(URI, '', {
           headers: headers,
           params: params
-          // tslint:disable-next-line:no-shadowed-variable
-        }).then(tokens => {
-          return this.storage.set(StorageKeys.OAUTH_TOKENS, tokens)
+        }).then(newTokens => {
+          return this.storage.set(StorageKeys.OAUTH_TOKENS, newTokens)
         })
         return promise
       } else {

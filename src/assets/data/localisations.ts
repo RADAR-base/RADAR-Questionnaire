@@ -30,7 +30,7 @@ export const Localisations = {
     de:
       'Danke, dass Sie an dieser Studie teilnehmen. Um loszulegen, lassen Sie uns den Registrierungsprozess starten.',
     en:
-      'Thank you for taking part in this study. Let"s start the enrolment process to get you set up.',
+      "Thank you for taking part in this study. Let's start the enrolment process to get you set up.",
     es:
       'Gracias por tomar parte en este estudio. Comencemos el proceso de registro para configurarlo',
     it:
@@ -74,7 +74,7 @@ export const Localisations = {
     de:
       'Wir senden Ihnen wöchentliche Zusammenfassungen über die Daten, die Sie uns senden. Wählen Sie beliebig viele Themen aus, zu denen Sie Informationen erhalten möchten.',
     en:
-      'We will send you weekly summaries about the data you"ll be sending us. Feel free to select as many topics you would like to receive information about.',
+      "We will send you weekly summaries about the data you'll be sending us. Feel free to select as many topics you would like to receive information about.",
     es:
       'Le enviaremos cada semana un resumen de los datos que nos envía. Siéntase libre de seleccionar solo los temas sobre los cuales desea recibir información',
     it:
@@ -239,7 +239,7 @@ export const Localisations = {
     es:
       'La modalidad nocturna detiene todas las notificaciones entre las  22 y las  7:30 horas',
     it:
-      'La modalità notte bloccherà tutte le notifiche dell"app tra le 22:00 e le 7:30.',
+      "La modalità notte bloccherà tutte le notifiche dell'app tra le 22:00 e le 7:30.",
     nl: 'De nachtmodus blokkeert alle notificaties tussen 22:00u en 7:30u.'
   },
   SETTINGS_REPORT: {
@@ -548,7 +548,7 @@ export const Localisations = {
   NOTIFICATION_REMINDER_NOW_DESC_1: {
     da: 'Det tager normalt ikke længere end',
     de: 'Dauert in der Regel nicht länger als',
-    en: 'Won"t usually take longer than',
+    en: "Won't usually take longer than",
     es: 'No le llevará más tiempo de ',
     it: 'Non richiederanno più di',
     nl: 'Meestal duurt dit niet langer dan'
@@ -575,7 +575,7 @@ export const Localisations = {
     de:
       'Es scheint, Sie haben nicht alle unsere Fragen beantwortet. Könnten Sie dies bitte jetzt nachholen?',
     en:
-      'It seems you haven"t answered all of our questions. Could you please do that now?',
+      "It seems you haven't answered all of our questions. Could you please do that now?",
     es:
       'Parece que no ha respondido todas las preguntas. ¿Podría hacerlo ahora?',
     it:

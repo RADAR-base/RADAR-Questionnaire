@@ -7,9 +7,9 @@ import {
   DefaultSettingsSelectedLanguage,
   LanguageMap
 } from '../../assets/data/defaultConfig'
+import { DefaultNumberOfNotificationsToSchedule } from '../../assets/data/defaultConfig'
 import { DefaultSettingsNotifications } from '../../assets/data/defaultConfig'
 import { DefaultSettingsWeeklyReport } from '../../assets/data/defaultConfig'
-import { DefaultNumberOfNotificationsToSchedule } from '../../assets/data/defaultConfig'
 import { LocKeys } from '../../enums/localisations'
 import { StorageKeys } from '../../enums/storage'
 import { LanguageSetting } from '../../models/settings'

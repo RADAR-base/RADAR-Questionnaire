@@ -85,10 +85,8 @@ export class AndroidPermissionUtility {
   fetchPermission(permission): Promise<any> {
     return new Promise((resolve, reject) => {
       this.androidPermissions.requestPermission(permission).then(
-        success => {
-          console.log(success)
+        res => {
           this.checkPermission(permission).then(
-            // tslint:disable-next-line:no-shadowed-variable
             success => {
               resolve(success)
             },

@@ -95,8 +95,7 @@ export class AuthService {
   }
 
   private getURLFromToken(token) {
-    const temp_URI_base = 'https://radar-backend.co.uk/managementportal'
-    return temp_URI_base + this.URI_metatoken + token
+    return this.URI_base + this.URI_metatoken + token
   }
 
   createPostRequest(uri, body, headers) {

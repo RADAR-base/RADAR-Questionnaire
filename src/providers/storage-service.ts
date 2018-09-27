@@ -5,10 +5,12 @@ import { Injectable } from '@angular/core'
 import { Storage } from '@ionic/storage'
 import { Observable, throwError as observableThrowError } from 'rxjs'
 
-import { DefaultScheduleVersion } from '../assets/data/defaultConfig'
-import { DefaultSettingsNotifications } from '../assets/data/defaultConfig'
-import { DefaultSettingsSupportedLanguages } from '../assets/data/defaultConfig'
-import { DefaultSettingsWeeklyReport } from '../assets/data/defaultConfig'
+import {
+  DefaultScheduleVersion,
+  DefaultSettingsNotifications,
+  DefaultSettingsSupportedLanguages,
+  DefaultSettingsWeeklyReport
+} from '../assets/data/defaultConfig'
 import { StorageKeys } from '../enums/storage'
 import { Assessment } from '../models/assessment'
 import { Task } from '../models/task'

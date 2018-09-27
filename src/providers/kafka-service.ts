@@ -8,9 +8,11 @@ import { Observable } from 'rxjs/Observable'
 
 import { DefaultEndPoint } from '../assets/data/defaultConfig'
 import { StorageKeys } from '../enums/storage'
-import { AnswerKeyExport } from '../models/answer'
-import { AnswerValueExport } from '../models/answer'
-import { CompletionLogValueExport } from '../models/answer'
+import {
+  AnswerKeyExport,
+  AnswerValueExport,
+  CompletionLogValueExport
+} from '../models/answer'
 import { Task } from '../models/task'
 import { Utility } from '../utilities/util'
 import { AuthService } from './auth-service'

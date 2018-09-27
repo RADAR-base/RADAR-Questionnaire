@@ -3,8 +3,10 @@ import 'rxjs/add/operator/toPromise'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 
-import { DefaultNumberOfNotificationsToSchedule } from '../assets/data/defaultConfig'
-import { DefaultProtocolEndPoint } from '../assets/data/defaultConfig'
+import {
+  DefaultNumberOfNotificationsToSchedule,
+  DefaultProtocolEndPoint
+} from '../assets/data/defaultConfig'
 import { StorageKeys } from '../enums/storage'
 import { HomeController } from '../providers/home-controller'
 import { SchedulingService } from '../providers/scheduling-service'

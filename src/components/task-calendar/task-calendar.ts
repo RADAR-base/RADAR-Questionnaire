@@ -7,8 +7,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core'
-import { NavController, Platform } from 'ionic-angular'
-import { AlertController } from 'ionic-angular'
+import { AlertController, NavController, Platform } from 'ionic-angular'
 
 import { DefaultTask } from '../../assets/data/defaultConfig'
 import { LocKeys } from '../../enums/localisations'

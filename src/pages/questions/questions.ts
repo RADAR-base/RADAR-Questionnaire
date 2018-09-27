@@ -192,10 +192,8 @@ export class QuestionsPage {
   }
 
   evalSkipNext() {
-    console.log('eval')
     let increment = 1
     let questionIdx = this.currentQuestion + 1
-    console.log(this.questions[questionIdx])
     if (questionIdx < this.questions.length) {
       while (this.questions[questionIdx].evaluated_logic !== '') {
         const logic = this.questions[questionIdx].evaluated_logic
@@ -224,7 +222,6 @@ export class QuestionsPage {
   }
 
   onAnswer(event) {
-    console.log(event)
     if (event.id) {
       this.answerService.add(event)
       this.setNextDisabled()

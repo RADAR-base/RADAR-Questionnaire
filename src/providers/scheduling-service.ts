@@ -2,8 +2,10 @@ import 'rxjs/add/operator/map'
 
 import { Injectable } from '@angular/core'
 
-import { DefaultScheduleReportRepeat } from '../assets/data/defaultConfig'
-import { DefaultScheduleYearCoverage } from '../assets/data/defaultConfig'
+import {
+  DefaultScheduleReportRepeat,
+  DefaultScheduleYearCoverage
+} from '../assets/data/defaultConfig'
 import { StorageKeys } from '../enums/storage'
 import { Assessment } from '../models/assessment'
 import { Protocol, Reminders, RepeatProtocol } from '../models/protocol'

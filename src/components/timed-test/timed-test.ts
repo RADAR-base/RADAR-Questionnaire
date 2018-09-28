@@ -60,14 +60,14 @@ export class TimedTestComponent implements OnInit, OnChanges {
     if (this.itimer.hasStarted) {
       this.resumeTimer()
     } else {
-      this.emitStartTime()
+      this.emitTime(this.timeStart)
       this.startTimer()
     }
   }
 
-  emitStartTime() {
+  emitTime(emitter) {
     const epoch: number = new Date().getTime()
-    this.timeStart.emit(epoch)
+    emitter.emit(epoch)
   }
 
   hasFinished() {
@@ -128,8 +128,7 @@ export class TimedTestComponent implements OnInit, OnChanges {
             this.pauseTimer()
           }
           // save timestamp (epoch) and activate the next button
-          const epoch: number = new Date().getTime()
-          this.valueChange.emit(epoch)
+          this.emitTime(this.valueChange)
         }
       }
     }, 1000)

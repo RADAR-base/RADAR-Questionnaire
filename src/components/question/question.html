@@ -70,6 +70,7 @@
     [timer]="question.field_annotation.timer"
     [currentlyShown]="currentlyShown"
     (valueChange)="onValueChange($event)"
+    (timeStart)="timedTestStart($event)"
   >
   </timed-test>
 </div>

@@ -32,6 +32,8 @@ export interface ITimer {
 export class TimedTestComponent implements OnInit, OnChanges {
   @Output()
   valueChange: EventEmitter<number> = new EventEmitter<number>()
+  @Output()
+  timeStart: EventEmitter<number> = new EventEmitter<number>()
   @Input()
   heading: string
   @Input()
@@ -50,7 +52,6 @@ export class TimedTestComponent implements OnInit, OnChanges {
 
   ngOnChanges() {
     if (this.currentlyShown) {
-      console.log('Start')
       this.start()
     }
   }
@@ -59,10 +60,14 @@ export class TimedTestComponent implements OnInit, OnChanges {
     if (this.itimer.hasStarted) {
       this.resumeTimer()
     } else {
-      setTimeout(() => {
-        this.startTimer()
-      }, 1000)
+      this.emitStartTime()
+      this.startTimer()
     }
+  }
+
+  emitStartTime() {
+    const epoch: number = new Date().getTime()
+    this.timeStart.emit(epoch)
   }
 
   hasFinished() {

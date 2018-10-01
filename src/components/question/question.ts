@@ -28,7 +28,6 @@ export class QuestionComponent implements OnChanges {
 
   value: any
   currentlyShown = false
-  private _timedTestStart
 
   constructor(
     private answerService: AnswerService,
@@ -81,7 +80,7 @@ export class QuestionComponent implements OnChanges {
 
       case QuestionType.timed:
       case QuestionType.info:
-        this.value = { start: this._timedTestStart, end: event }
+        this.value = event
         break
     }
     this.answer.emit({
@@ -89,10 +88,6 @@ export class QuestionComponent implements OnChanges {
       value: this.value,
       type: this.question.field_type
     })
-  }
-
-  timedTestStart(event) {
-    this._timedTestStart = event
   }
 
   evalBeep() {

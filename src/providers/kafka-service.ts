@@ -13,6 +13,7 @@ import {
   AnswerValueExport,
   CompletionLogValueExport
 } from '../models/answer'
+import { QuestionType } from '../models/question'
 import { Task } from '../models/task'
 import { Utility } from '../utilities/util'
 import { AuthService } from './auth-service'
@@ -41,14 +42,19 @@ export class KafkaService {
   }
 
   prepareKafkaObject(task: Task, data) {
-    // Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
+    // NOTE: Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
     const Answer: AnswerValueExport = {
       name: task.name,
       version: data.configVersion,
       answers: data.answers,
-      time: data.answers[0].startTime, // whole questionnaire startTime and endTime
+      time:
+        task.questions[0].field_type == QuestionType.info // NOTE: Do not use info startTime
+          ? data.answers[1].startTime
+          : data.answers[0].startTime, // NOTE: whole questionnaire startTime and endTime
       timeCompleted: data.answers[data.answers.length - 1].endTime
     }
+
+    console.log(Answer)
 
     this.util.getSourceKeyInfo().then(keyInfo => {
       const sourceId = keyInfo[0]

@@ -32,8 +32,6 @@ export interface ITimer {
 export class TimedTestComponent implements OnInit, OnChanges {
   @Output()
   valueChange: EventEmitter<number> = new EventEmitter<number>()
-  @Output()
-  timeStart: EventEmitter<number> = new EventEmitter<number>()
   @Input()
   heading: string
   @Input()
@@ -60,7 +58,6 @@ export class TimedTestComponent implements OnInit, OnChanges {
     if (this.itimer.hasStarted) {
       this.resumeTimer()
     } else {
-      this.emitTime(this.timeStart)
       this.startTimer()
     }
   }
@@ -127,7 +124,7 @@ export class TimedTestComponent implements OnInit, OnChanges {
           } else {
             this.pauseTimer()
           }
-          // save timestamp (epoch) and activate the next button
+          // NOTE: save timestamp (epoch) and activate the next button
           this.emitTime(this.valueChange)
         }
       }

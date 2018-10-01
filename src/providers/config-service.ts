@@ -17,6 +17,9 @@ export class ConfigService {
   URI_PROTOCOL = '/protocol.json'
   URI_QUESTIONNAIRETYPE = '_armt'
   URI_QUESTIONNAIREFORMAT = '.json'
+  aRMTDef_Prod = 'master'
+  arMTDef_Test = 'test'
+  useTempARMTRepo = true
 
   constructor(
     public http: HttpClient,
@@ -175,7 +178,14 @@ export class ConfigService {
   }
 
   formatQuestionnaireUri(questionnaireRepo, langVal) {
-    let uri = questionnaireRepo.repository + questionnaireRepo.name + '/'
+    // NOTE: Using temp test repository for aRMT defs
+    const repository = this.useTempARMTRepo
+      ? questionnaireRepo.repository.replace(
+          this.aRMTDef_Prod,
+          this.arMTDef_Test
+        )
+      : questionnaireRepo.repository
+    let uri = repository + questionnaireRepo.name + '/'
     uri += questionnaireRepo.name + questionnaireRepo.type
     if (langVal !== '') {
       uri += '_' + langVal

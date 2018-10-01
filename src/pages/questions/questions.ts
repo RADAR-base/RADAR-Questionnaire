@@ -221,7 +221,6 @@ export class QuestionsPage {
   }
 
   onAnswer(event) {
-    console.log(event)
     if (event.id) {
       this.answerService.add(event)
       this.setNextDisabled()

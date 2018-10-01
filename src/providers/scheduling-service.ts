@@ -199,13 +199,7 @@ export class SchedulingService {
       taskPromise = this.getClinicalTasks()
     }
     return taskPromise.then(tasks => {
-      const updatedTasks = tasks.map(d => {
-        if (d.index == task.index) {
-          return task
-        } else {
-          return d
-        }
-      })
+      const updatedTasks = tasks.map(d => (d.index === task.index ? task : d))
       return this.storage.set(sKey, updatedTasks)
     })
   }

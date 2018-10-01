@@ -54,8 +54,6 @@ export class KafkaService {
       timeCompleted: data.answers[data.answers.length - 1].endTime
     }
 
-    console.log(Answer)
-
     this.util.getSourceKeyInfo().then(keyInfo => {
       const sourceId = keyInfo[0]
       const projectId = keyInfo[1]

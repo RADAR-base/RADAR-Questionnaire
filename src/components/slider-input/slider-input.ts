@@ -5,16 +5,19 @@ import { Component, EventEmitter, Input, Output } from '@angular/core'
   templateUrl: 'slider-input.html'
 })
 export class SliderInputComponent {
+  @Output()
+  valueChange: EventEmitter<number> = new EventEmitter<number>()
 
-  @Output() valueChange: EventEmitter<number> = new EventEmitter<number>()
-
-  @Input() min = 0
-  @Input() max = 100
-  @Input() step = 10
+  @Input()
+  min = 0
+  @Input()
+  max = 100
+  @Input()
+  step = 10
 
   value: number = null
 
-  onInputChange () {
+  onInputChange() {
     this.valueChange.emit(this.value)
   }
 }

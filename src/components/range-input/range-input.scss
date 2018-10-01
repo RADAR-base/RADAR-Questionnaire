@@ -17,7 +17,7 @@ range-input {
     align-content: stretch;
   }
 
-  ul li input[type=radio] {
+  ul li input[type='radio'] {
     position: absolute;
     visibility: hidden;
   }
@@ -51,12 +51,12 @@ range-input {
     background-color: $cl-secondary;
   }
 
-  input[type=radio]:checked + label {
+  input[type='radio']:checked + label {
     background-color: $cl-primary;
   }
 
   .padding {
-    margin-top: 10px
+    margin-top: 10px;
   }
 
   .labelLeft {

@@ -1,79 +1,80 @@
 page-report {
-    .toolbar-background {
-        background-color: $cl-secondary;
-    }
-    .toolbar-title {
-        color: $cl-font;
-    }
-    .bar-button {
-        color: $cl-font;
-    }
-    .item{
-        background-color: $cl-primary-40 !important;
-        margin-bottom: $item-separation-distance
-    }
-    .item:last-child {
-        margin-bottom: 0
-    }
-    .item:hover{
-        background-color: $cl-primary !important;
-        cursor:pointer;
-    }
+  .toolbar-background {
+    background-color: $cl-secondary;
+  }
 
-    .swiper-pagination-bullet-active
-    {
-        background: white !important;
-    }
+  .toolbar-title {
+    color: $cl-font;
+  }
 
-    .report-card {
-        background-color: $cl-primary-40;
-        //margin-left: 5%;
-        //margin-right: 5%;
-        height: 80%;
-    }
+  .bar-button {
+    color: $cl-font;
+  }
 
-    .report-dates {
-        padding-top: 10px;
-        padding-bottom: 10px;
-        font-size: 24px;
-    }
+  .item {
+    margin-bottom: $item-separation-distance;
+    background-color: $cl-primary-40 !important;
+  }
 
-    .report-line {
-        padding-top: 30px;
-        padding-bottom: 30px;
-    }
+  .item:last-child {
+    margin-bottom: 0;
+  }
 
-    .report-content {
-        height: 80%;
-    }
+  .item:hover {
+    background-color: $cl-primary !important;
+    cursor: pointer;
+  }
 
-    .report-chart {
-        width: 80%;
-        margin: auto;
-    }
+  .swiper-pagination-bullet-active {
+    background: white !important;
+  }
 
-    .report-message {
-        height: 60%;
-    }
+  .report-card {
+    height: 80%;
+    background-color: $cl-primary-40;
+  }
 
-    .line {
-        width: 40%;
-        font-size: 1px;
-        display: inline-block;
-        line-height: 1px;
+  .report-dates {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 24px;
+  }
 
-        background-color:white;
-        margin-top: -6px;
-        margin-bottom: 10px;
-    }
+  .report-line {
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
 
-    .report-summary-text {
-        color: $cl-light-80;
-        font-style: italic;
-        font-size: 20px;
-    }
+  .report-content {
+    height: 80%;
+  }
 
-    .slide-zoom {
-        height: 100%;
-    }
+  .report-chart {
+    margin: auto;
+    width: 80%;
+  }
+
+  .report-message {
+    height: 60%;
+  }
+
+  .line {
+    display: inline-block;
+    margin-top: -6px;
+    margin-bottom: 10px;
+    width: 40%;
+    background-color: white;
+    font-size: 1px;
+    line-height: 1px;
+  }
+
+  .report-summary-text {
+    color: $cl-light-80;
+    font-style: italic;
+    font-size: 20px;
+  }
+
+  .slide-zoom {
+    height: 100%;
+  }
 }

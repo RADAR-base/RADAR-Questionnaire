@@ -18,6 +18,8 @@ export interface Question {
   text_validation_max: string
   text_validation_min: string
   text_validation_type_or_show_slider_number: string
+  type?: string
+  range?: any
 }
 
 export interface SelectChoicesOrCalculations {

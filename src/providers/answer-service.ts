@@ -1,29 +1,25 @@
-import { Injectable } from '@angular/core'
-import { Http } from '@angular/http'
 import 'rxjs/add/operator/map'
+
+import { HttpClient } from '@angular/common/http'
+import { Injectable } from '@angular/core'
 
 import { Answer } from '../models/answer'
 
 @Injectable()
 export class AnswerService {
-
   answers = {}
 
-  constructor (
-    public http: Http
-  ) {
-  }
+  constructor(public http: HttpClient) {}
 
-  add (value: Answer) {
+  add(value: Answer) {
     this.answers[value.id] = value.value
   }
 
-  check (id: string) {
+  check(id: string) {
     return this.answers.hasOwnProperty(id)
   }
 
-  reset () {
+  reset() {
     this.answers = {}
   }
-
 }

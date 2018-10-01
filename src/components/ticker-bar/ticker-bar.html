@@ -1,8 +1,17 @@
 <!-- Generated template for the TickerBar component -->
-<div id="ticker-bar-container" (click)="openReport()">
-  <div *ngFor="let item of tickerItems" class="ticker-item" [style.transform]='showNextTickerItem()'>
-    <div id="{{item.id}}">
-      {{item.tickerText1}}<span class="bold">{{item.tickerText2}}</span>{{item.tickerText3}}
+<div
+  id="ticker-bar-container"
+  (click)="openReport()"
+>
+  <div
+    *ngFor="let item of tickerItems"
+    class="ticker-item"
+    [style.transform]="showNextTickerItem()"
+  >
+    <div id="{{ item.id }}">
+      {{ item.tickerText1 }}
+      <span class="bold">{{ item.tickerText2 }}</span>
+      {{ item.tickerText3 }}
     </div>
   </div>
 </div>

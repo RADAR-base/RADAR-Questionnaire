@@ -6,17 +6,9 @@ import { NavController } from 'ionic-angular'
   templateUrl: 'report.html'
 })
 export class ReportPage {
+  constructor(public navCtrl: NavController) {}
 
-  constructor (
-    public navCtrl: NavController,
-  ) {
-  }
+  ionViewDidLoad() {}
 
-  ionViewDidLoad () {
-  }
-
-  ionViewDidEnter () {
-
-  }
-
+  ionViewDidEnter() {}
 }

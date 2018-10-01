@@ -15,10 +15,11 @@ export interface Item {
   templateUrl: 'checkbox-input.html'
 })
 export class CheckboxInputComponent implements OnInit {
+  @Output()
+  valueChange: EventEmitter<number> = new EventEmitter<number>()
 
-  @Output() valueChange: EventEmitter<number> = new EventEmitter<number>()
-
-  @Input() responses: Response[]
+  @Input()
+  responses: Response[]
 
   value: number = null
   uniqueID: number = uniqueID++
@@ -26,9 +27,9 @@ export class CheckboxInputComponent implements OnInit {
   items: Item[] = Array()
   itemsSelected = {}
 
-  ngOnInit () {
+  ngOnInit() {
     this.responses.map((item, i) => {
-      let codeChecked = this.checkCode(item.code)
+      const codeChecked = this.checkCode(item.code)
       this.items.push({
         id: `check-${this.uniqueID}-${i}`,
         response: item.label,
@@ -38,7 +39,7 @@ export class CheckboxInputComponent implements OnInit {
   }
 
   checkCode(code) {
-    if(code.includes('\r')){
+    if (code.includes('\r')) {
       return code.substr(2)
     }
     return code
@@ -49,15 +50,15 @@ export class CheckboxInputComponent implements OnInit {
     console.log(this.itemsSelected)
   }
 
-  onInputChange (event) {
+  onInputChange(event) {
     this.logSelectedItems(event.target)
-    let selectedItems = this.retrieveSelectedItems().toString()
+    const selectedItems = this.retrieveSelectedItems().toString()
     console.log(selectedItems)
     this.valueChange.emit(+selectedItems)
   }
 
   logSelectedItems(item) {
-    if(!(item.id in this.itemsSelected)) {
+    if (!(item.id in this.itemsSelected)) {
       this.itemsSelected[item.id] = item.value
     } else {
       delete this.itemsSelected[item.id]
@@ -65,9 +66,11 @@ export class CheckboxInputComponent implements OnInit {
   }
 
   retrieveSelectedItems() {
-    let items = []
-    for(var key in this.itemsSelected) {
-      items.push(this.itemsSelected[key])
+    const items = []
+    for (const key in this.itemsSelected) {
+      if (key) {
+        items.push(this.itemsSelected[key])
+      }
     }
     return items
   }

@@ -1,22 +1,23 @@
 import 'rxjs/add/operator/delay'
+
 import { Component } from '@angular/core'
 import { LoadingController, NavController, NavParams } from 'ionic-angular'
-import { QuestionsPage } from '../questions/questions'
-import { AnswerService } from '../../providers/answer-service'
-import { TimeStampService} from '../../providers/timestamp-service'
-import { Question } from '../../models/question'
+
 import { Assessment } from '../../models/assessment'
+import { Question } from '../../models/question'
 import { Task } from '../../models/task'
+import { AnswerService } from '../../providers/answer-service'
+import { TimeStampService } from '../../providers/timestamp-service'
+import { QuestionsPage } from '../questions/questions'
 
 @Component({
   selector: 'page-start',
   templateUrl: 'start.html'
 })
 export class StartPage {
-
   associatedTask: Task
-  introduction: String = ""
-  title: String = ""
+  introduction: String = ''
+  title: String = ''
   questions: Question[]
   endText: String
 
@@ -33,8 +34,7 @@ export class StartPage {
     this.endText = this.navParams.data.endText
   }
 
-  ionViewDidLoad() {
-  }
+  ionViewDidLoad() {}
 
   ionViewDidEnter() {
     this.answerService.reset()
@@ -47,9 +47,9 @@ export class StartPage {
 
   openPage() {
     this.navCtrl.push(QuestionsPage, {
-      'associatedTask': this.associatedTask,
-      'questions': this.questions,
-      'endText': this.endText
+      associatedTask: this.associatedTask,
+      questions: this.questions,
+      endText: this.endText
     })
   }
 }

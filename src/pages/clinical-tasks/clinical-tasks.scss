@@ -1,9 +1,10 @@
 page-clinical-tasks {
   ion-header .toolbar-background {
-      background-color: $cl-secondary;
+    background-color: $cl-secondary;
   }
+
   .toolbar-title {
-      color: $cl-font;
+    color: $cl-font;
   }
 
   .date {
@@ -18,14 +19,14 @@ page-clinical-tasks {
   #time-current {
     top: 0;
     left: 0;
-    width: 100%;
     z-index: 2;
+    width: 100%;
   }
 
   .time-current-division {
+    margin-top: 10px;
     width: 100%;
     height: 2px;
-    margin-top: 10px;
     background-color: $cl-warning;
   }
 
@@ -38,19 +39,19 @@ page-clinical-tasks {
   }
 
   .time-current {
+    color: $cl-light-80;
     text-align: center;
     font-size: 18px;
-    color: $cl-light-80;
   }
 
   #task-item {
-    background-color: $cl-primary-40;
-    padding: 3px 9px;
-    font-size: 18px;
-    text-align: center;
     display: block;
     margin-bottom: 3px;
+    padding: 3px 9px;
     padding-bottom: 0;
+    background-color: $cl-primary-40;
+    text-align: center;
+    font-size: 18px;
   }
 
   .units {
@@ -80,18 +81,18 @@ page-clinical-tasks {
   }
 
   .status {
-    font-size: 28px;
     margin-top: -8px;
     margin-bottom: -8px;
-    padding-right: 0;
     padding-top: 2px;
+    padding-right: 0;
     color: map-get($colors, tertiary);
+    font-size: 28px;
   }
 
   .status-checked {
-    border-radius: 50%;
     width: 6vw;
     height: 6vw;
+    border-radius: 50%;
     background-color: map-get($colors, tertiary);
     font-size: 22px;
   }

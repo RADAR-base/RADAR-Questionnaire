@@ -1,71 +1,69 @@
-import { NgModule } from '@angular/core';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpModule }from '@angular/http';
-import { HttpClientModule } from '@angular/common/http';
-import { MomentModule } from 'angular2-moment';
-import { DatePipe } from '@angular/common';
-import { BrowserModule } from '@angular/platform-browser';
-import { PipesModule } from '../pipes/pipes.module';
-import { SplashScreen } from '@ionic-native/splash-screen';
-import { Device } from '@ionic-native/device';
-import { StatusBar } from '@ionic-native/status-bar';
-import { IonicApp, IonicModule } from 'ionic-angular';
-import { IonicStorageModule } from '@ionic/storage';
-import { RoundProgressModule } from 'angular-svg-round-progressbar';
-import { BarcodeScanner } from '@ionic-native/barcode-scanner';
-import { Dialogs } from '@ionic-native/dialogs';
-import { Vibration } from '@ionic-native/vibration';
-import { Globalization } from '@ionic-native/globalization';
-import { LocalNotifications } from '@ionic-native/local-notifications';
-import { AndroidPermissions } from '@ionic-native/android-permissions';
+import { DatePipe } from '@angular/common'
+import { HttpClientModule } from '@angular/common/http'
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core'
+import { BrowserModule } from '@angular/platform-browser'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { JWT_OPTIONS, JwtModule } from '@auth0/angular-jwt'
+import { AndroidPermissions } from '@ionic-native/android-permissions'
+import { AppVersion } from '@ionic-native/app-version'
+import { BarcodeScanner } from '@ionic-native/barcode-scanner'
+import { Device } from '@ionic-native/device'
+import { Dialogs } from '@ionic-native/dialogs'
 import { File } from '@ionic-native/file'
-import { AppVersion } from '@ionic-native/app-version';
+import { Globalization } from '@ionic-native/globalization'
+import { LocalNotifications } from '@ionic-native/local-notifications'
+import { SplashScreen } from '@ionic-native/splash-screen'
+import { StatusBar } from '@ionic-native/status-bar'
+import { Vibration } from '@ionic-native/vibration'
+import { IonicStorageModule, Storage } from '@ionic/storage'
+import { RoundProgressModule } from 'angular-svg-round-progressbar'
+import { MomentModule } from 'angular2-moment'
+import { IonicApp, IonicModule } from 'ionic-angular'
 
-import { TaskCalendarComponent } from '../components/task-calendar/task-calendar'
-import { TaskProgressComponent } from '../components/task-progress/task-progress'
-import { TickerBarComponent } from '../components/ticker-bar/ticker-bar'
-import { TaskInfoComponent } from '../components/task-info/task-info'
+import { AudioInput } from '../components/audio-input/audio-in'
+import { AudioInputComponent } from '../components/audio-input/audio-input'
+import { CheckboxInputComponent } from '../components/checkbox-input/checkbox-input'
+import { InfoScreenComponent } from '../components/info-screen/info-screen'
 import { QuestionComponent } from '../components/question/question'
 import { RadioInputComponent } from '../components/radio-input/radio-input'
-import { CheckboxInputComponent } from '../components/checkbox-input/checkbox-input'
 import { RangeInputComponent } from '../components/range-input/range-input'
 import { SliderInputComponent } from '../components/slider-input/slider-input'
-import { AudioInput } from '../components/audio-input/audio-in'
+import { TaskCalendarComponent } from '../components/task-calendar/task-calendar'
+import { TaskInfoComponent } from '../components/task-info/task-info'
+import { TaskProgressComponent } from '../components/task-progress/task-progress'
+import { TickerBarComponent } from '../components/ticker-bar/ticker-bar'
 import { TimedTestComponent } from '../components/timed-test/timed-test'
-import { InfoScreenComponent } from '../components/info-screen/info-screen'
-import { SplashPage } from '../pages/splash/splash'
+import { ClinicalTasksPage } from '../pages/clinical-tasks/clinical-tasks'
 import { EnrolmentPage } from '../pages/enrolment/enrolment'
 import { FinishPage } from '../pages/finish/finish'
 import { HomePage } from '../pages/home/home'
-import { ClinicalTasksPage } from '../pages/clinical-tasks/clinical-tasks'
-import { SettingsPage } from '../pages/settings/settings'
-import { StartPage } from '../pages/start/start'
-import { TaskSelectPage } from '../pages/taskselect/taskselect'
 import { QuestionsPage } from '../pages/questions/questions'
 import { ReportPage } from '../pages/report/report'
-import { HomeController } from '../providers/home-controller'
+import { SettingsPage } from '../pages/settings/settings'
+import { SplashPage } from '../pages/splash/splash'
+import { StartPage } from '../pages/start/start'
+import { TaskSelectPage } from '../pages/taskselect/taskselect'
+import { PipesModule } from '../pipes/pipes.module'
+import { TranslatePipe } from '../pipes/translate/translate'
 import { AnswerService } from '../providers/answer-service'
-import { QuestionService } from '../providers/question-service'
-import { ConfigService } from '../providers/config-service'
-import { StorageService } from '../providers/storage-service'
-import { SchedulingService } from '../providers/scheduling-service'
-import { KafkaService }  from '../providers/kafka-service'
-import { TimeStampService } from '../providers/timestamp-service'
-import { PrepareDataService} from '../providers/preparedata-service'
 import { AudioRecordService } from '../providers/audiorecord-service'
+import { AuthService } from '../providers/auth-service'
+import { ConfigService } from '../providers/config-service'
+import { HomeController } from '../providers/home-controller'
+import { KafkaService } from '../providers/kafka-service'
+import { NotificationService } from '../providers/notification-service'
+import { PrepareDataService } from '../providers/preparedata-service'
+import { QuestionService } from '../providers/question-service'
+import { SchedulingService } from '../providers/scheduling-service'
+import { StorageService } from '../providers/storage-service'
+import { TimeStampService } from '../providers/timestamp-service'
+import { AndroidPermissionUtility } from '../utilities/android-permission'
+import { jwtOptionsFactory } from '../utilities/jwtOptionsFactory'
 import { Utility } from '../utilities/util'
-import { AndroidPermissionUtility } from  '../utilities/android-permission'
-import { MyApp } from './app.component';
-import { TranslatePipe } from '../pipes/translate/translate';
-import { AuthService } from '../providers/auth-service';
-import { JwtHelper } from 'angular2-jwt'
-import { NotificationService } from '../providers/notification-service';
-import { AudioInputComponent } from '../components/audio-input/audio-input';
-
+import { MyApp } from './app.component'
 
 @NgModule({
   imports: [
-    HttpModule,
     HttpClientModule,
     MomentModule,
     BrowserModule,
@@ -78,6 +76,13 @@ import { AudioInputComponent } from '../components/audio-input/audio-input';
     IonicStorageModule.forRoot({
       name: '__appdb',
       driverOrder: ['sqlite', 'indexeddb', 'websql']
+    }),
+    JwtModule.forRoot({
+      jwtOptionsProvider: {
+        provide: JWT_OPTIONS,
+        useFactory: jwtOptionsFactory,
+        deps: [Storage]
+      }
     })
   ],
   declarations: [
@@ -160,14 +165,13 @@ import { AudioInputComponent } from '../components/audio-input/audio-input';
     Globalization,
     TranslatePipe,
     AuthService,
-    JwtHelper,
     NotificationService,
     AudioRecordService,
     AndroidPermissionUtility,
     AndroidPermissions,
     File,
     AppVersion
-  ]
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AppModule {
-}
+export class AppModule {}

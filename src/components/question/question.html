@@ -1,25 +1,27 @@
-<div *ngIf="question.type === 'info' || question.type === 'timed';then taskformat else stdformat"></div>
+<div *ngIf="question?.type === 'info' || question?.type === 'timed';then taskformat else stdformat"></div>
 
 <ng-template #stdformat>
-  <p class="stdformat">{{question.section_header}}</p>
-  <h2 class="stdformat">{{question.field_label}}</h2>
+  <p class="stdformat">{{ question.section_header }}</p>
+  <h2 class="stdformat">{{ question.field_label }}</h2>
 </ng-template>
 <ng-template #taskformat>
-  <p class="taskformat">{{question.section_header}}</p>
-  <h2 class="taskformat">{{question.field_label}}</h2>
+  <p class="taskformat">{{ question.section_header }}</p>
+  <h2 class="taskformat">{{ question.field_label }}</h2>
 </ng-template>
 
 <div *ngIf="question.field_type === 'radio'">
   <radio-input
     [responses]="question.select_choices_or_calculations"
-    (valueChange)="onValueChange($event)">
+    (valueChange)="onValueChange($event)"
+  >
   </radio-input>
 </div>
 
 <div *ngIf="question.field_type === 'checkbox'">
   <checkbox-input
     [responses]="question.select_choices_or_calculations"
-    (valueChange)="onValueChange($event)">
+    (valueChange)="onValueChange($event)"
+  >
   </checkbox-input>
 </div>
 
@@ -29,7 +31,8 @@
     [max]="question.range.max"
     [labelLeft]="question.range.labelLeft"
     [labelRight]="question.range.labelRight"
-    (valueChange)="onValueChange($event)">
+    (valueChange)="onValueChange($event)"
+  >
   </range-input>
 </div>
 
@@ -38,14 +41,16 @@
     [min]="question.range.min"
     [max]="question.range.max"
     [step]="question.range.step"
-    (valueChange)="onValueChange($event)">
+    (valueChange)="onValueChange($event)"
+  >
   </slider-input>
 </div>
 
 <div *ngIf="question.field_type === 'info'">
   <info-screen
     [sections]="question.select_choices_or_calculations"
-    (valueChange)="onValueChange($event)">
+    (valueChange)="onValueChange($event)"
+  >
   </info-screen>
 </div>
 
@@ -53,7 +58,8 @@
   <audio-input
     [sections]="question.select_choices_or_calculations"
     [currentlyShown]="currentlyShown"
-    (valueChange)="onValueChange($event)">
+    (valueChange)="onValueChange($event)"
+  >
   </audio-input>
 </div>
 
@@ -63,6 +69,7 @@
     [image]="question.field_annotation.image"
     [timer]="question.field_annotation.timer"
     [currentlyShown]="currentlyShown"
-    (valueChange)="onValueChange($event)">
+    (valueChange)="onValueChange($event)"
+  >
   </timed-test>
 </div>

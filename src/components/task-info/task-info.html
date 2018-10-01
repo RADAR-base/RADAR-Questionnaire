@@ -1,38 +1,89 @@
-<div id="task-info-container" (click)="expand()" *ngIf="displayTask">
+<div
+  id="task-info-container"
+  (click)="expand()"
+  *ngIf="displayTask"
+>
 
-  <div class="non-warn-padding" *ngIf="!hasExtraInfo && !expanded">
+  <div
+    class="non-warn-padding"
+    *ngIf="!hasExtraInfo && !expanded"
+  >
   </div>
 
   <div class="info">
-    <div id="questionnaire-progress" [@moveInProgress]="animateMove">
-      <round-progress id="prog-sm" [current]="current" [max]="max" [radius]="radius" [stroke]="stroke"></round-progress>
-      <div id="questionnaire-counter">
-        {{current}}
-      </div>
+    <div
+      id="questionnaire-progress"
+      [@moveInProgress]="animateMove"
+    >
+      <round-progress
+        id="prog-sm"
+        [current]="current"
+        [max]="max"
+        [radius]="radius"
+        [stroke]="stroke"
+      ></round-progress>
+      <div id="questionnaire-counter">{{ current }}</div>
     </div>
-    <div id="questionnaire-metrics" [@alignCenterRightMetrics]="animateCenterRight">
-      <img class="icon-padding icon-sm" src="assets/imgs/nTasks.png"/>{{task.nQuestions}}<span class="units">x</span>
+    <div
+      id="questionnaire-metrics"
+      [@alignCenterRightMetrics]="animateCenterRight"
+    >
+      <img
+        class="icon-padding icon-sm"
+        src="assets/imgs/nTasks.png"
+      >
+      {{ task.nQuestions }}
+      <span class="units">x</span>
       <br>
-      <img class="icon-padding icon-sm" src="assets/imgs/stopwatch.png"/>{{task.estimatedCompletionTime}}<span class="units">min</span>
+      <img
+        class="icon-padding icon-sm"
+        src="assets/imgs/stopwatch.png"
+      >
+      {{ task.estimatedCompletionTime }}
+      <span class="units">min</span>
     </div>
-    <div id="questionnaire-time" [@alignCenterRightTime]="animateCenterRight">
-      <div class="text-md" *ngIf="isNow">
+    <div
+      id="questionnaire-time"
+      [@alignCenterRightTime]="animateCenterRight"
+    >
+      <div
+        class="text-md"
+        *ngIf="isNow"
+      >
         {{ "STATUS_NOW" | translate }}
       </div>
-      <div class="text-lg" *ngIf="!isNow">
+      <div
+        class="text-lg"
+        *ngIf="!isNow"
+      >
         <span *ngIf="task.name !=='ESM'">{{ getHour() }}</span>
-        <span *ngIf="task.name =='ESM'">{{ "TASK_BAR_NEXT_TASK_SOON" | translate }}</span>
+        <span *ngIf="task.name =='ESM'">
+          {{ "TASK_BAR_NEXT_TASK_SOON" | translate }}
+        </span>
       </div>
-      <div class="text-sm" *ngIf="!isNow" [@scaleMinutes]="animateScale">
+      <div
+        class="text-sm"
+        *ngIf="!isNow"
+        [@scaleMinutes]="animateScale"
+      >
         <div *ngIf="task.name !=='ESM'">
-          <span [@fade]="animateFade">:</span>{{ getMinutes() }}
+          <span [@fade]="animateFade">:</span>
+          {{ getMinutes() }}
         </div>
       </div>
     </div>
   </div>
 
-  <div *ngIf="hasExtraInfo" class="extra-info" [@alignCenterRightExtraInfo]="animateCenterRight">
-    <img class="icon-padding extra-info-icon" src="assets/imgs/warning.png"/>{{getExtraInfo()}}
+  <div
+    *ngIf="hasExtraInfo"
+    class="extra-info"
+    [@alignCenterRightExtraInfo]="animateCenterRight"
+  >
+    <img
+      class="icon-padding extra-info-icon"
+      src="assets/imgs/warning.png"
+    >
+    {{ getExtraInfo() }}
   </div>
 
 </div>

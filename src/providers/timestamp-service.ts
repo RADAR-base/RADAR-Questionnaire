@@ -1,23 +1,19 @@
-import { Injectable } from '@angular/core'
 import { DatePipe } from '@angular/common'
+import { Injectable } from '@angular/core'
 
 import { Timestamp } from '../models/timestamp'
 
 @Injectable()
 export class TimeStampService {
-
   private date: Date
 
   // Change formats accordingly
-  private TIME_FORMAT: string = "HH:mm:ss"
-  private DATE_FORMAT: string = "dd-MM-yyyy"
+  private TIME_FORMAT: string = 'HH:mm:ss'
+  private DATE_FORMAT: string = 'dd-MM-yyyy'
 
   timestamps = {}
 
-  constructor(
-    private datepipe: DatePipe
-  ) {
-  }
+  constructor(private datepipe: DatePipe) {}
 
   getTimeStamp() {
     // timestamp used to record response time of questionnaires
@@ -38,8 +34,14 @@ export class TimeStampService {
   }
 
   getUTC() {
-    return new Date(this.date.getUTCFullYear(), this.date.getUTCMonth(),
-      this.date.getUTCDate(), this.date.getUTCHours(), this.date.getUTCMinutes(), this.date.getUTCSeconds())
+    return new Date(
+      this.date.getUTCFullYear(),
+      this.date.getUTCMonth(),
+      this.date.getUTCDate(),
+      this.date.getUTCHours(),
+      this.date.getUTCMinutes(),
+      this.date.getUTCSeconds()
+    )
   }
 
   reset() {

@@ -79,13 +79,11 @@ export class HomePage {
   }
 
   ionViewDidLoad() {
-    // const isFirstIonDidViewLoad = this.navParams.data.isFirstIonDidViewLoad
     this.checkForNextTask()
     this.evalHasClinicalTasks()
     this.checkIfOnlyESM()
 
     setInterval(() => {
-      // this.isNextTaskESMandNotNow()
       this.checkForNextTask()
     }, 1000)
 
@@ -160,15 +158,10 @@ export class HomePage {
 
   getElementsAttributes() {
     this.elContentHeight = this.elContent.contentHeight
-    // console.log(this.elContent)
     this.elProgressHeight = this.elProgress.nativeElement.offsetHeight - 15
-    // console.log(this.elProgress)
     this.elTickerHeight = this.elTicker.nativeElement.offsetHeight
-    // console.log(this.elTicker)
     this.elInfoHeight = this.elInfo.nativeElement.offsetHeight
-    // console.log(this.elInfo)
     this.elFooterHeight = this.elFooter.nativeElement.offsetHeight
-    // console.log(this.elFooter)
   }
 
   applyTransformations() {
@@ -217,10 +210,15 @@ export class HomePage {
         this.elCalendar.nativeElement.style.transform = 'translateY(0px)'
         this.elCalendar.nativeElement.style.opacity = 0
       } else {
-        this.elProgress.nativeElement.style.transform =
-          'translateY(0px) scale(1)'
-        this.elInfo.nativeElement.style.transform = 'translateY(0px)'
-        this.elFooter.nativeElement.style.transform = 'translateY(0px) scale(1)'
+        this.elProgress.nativeElement.style.transform = `translateY(${
+          this.elFooterHeight
+        }px)`
+        this.elInfo.nativeElement.style.transform = `translateY(${
+          this.elFooterHeight
+        }px)`
+        this.elFooter.nativeElement.style.transform = `translateY(${
+          this.elFooterHeight
+        }px) scale(0)`
         this.elCalendar.nativeElement.style.transform = 'translateY(0px)'
         this.elCalendar.nativeElement.style.opacity = 0
       }
@@ -294,9 +292,7 @@ export class HomePage {
     const buttons = [
       {
         text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
-        handler: () => {
-          console.log('Okay clicked')
-        }
+        handler: () => {}
       }
     ]
     this.showAlert({

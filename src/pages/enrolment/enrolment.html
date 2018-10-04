@@ -121,6 +121,13 @@
         </div>
         <div class="token-input">
           <ion-input
+            [(ngModel)]="baseURL"
+            type="text"
+            placeholder="Base URL"
+          ></ion-input>
+        </div>
+        <div class="token-input">
+          <ion-input
             [(ngModel)]="tokenName"
             type="text"
             placeholder="Token"
@@ -193,7 +200,7 @@
           class="bt bt--full"
           round
           full
-          (click)="scan()"
+          (click)="scanQR()"
         >
           {{ "BTN_ENROL_SCAN" | translate }}
         </button>

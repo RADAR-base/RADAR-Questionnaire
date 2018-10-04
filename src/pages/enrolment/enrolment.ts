@@ -6,10 +6,12 @@ import { AlertController, NavController, Slides } from 'ionic-angular'
 
 import { MyApp } from '../../app/app.component'
 import {
+  DefaultEndPoint,
   DefaultSettingsSupportedLanguages,
   DefaultSettingsWeeklyReport,
   DefaultSourceTypeModel,
-  LanguageMap
+  LanguageMap,
+  URI_managementPortal
 } from '../../assets/data/defaultConfig'
 import { LocKeys } from '../../enums/localisations'
 import { StorageKeys } from '../../enums/storage'
@@ -45,6 +47,7 @@ export class EnrolmentPage {
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
   enterMetaQR = false
   tokenName: string
+  baseURL = DefaultEndPoint + URI_managementPortal
 
   constructor(
     public navCtrl: NavController,
@@ -69,7 +72,7 @@ export class EnrolmentPage {
 
   ionViewDidEnter() {}
 
-  scan() {
+  scanQR() {
     this.loading = true
     const scanOptions = {
       showFlipCameraButton: true,
@@ -81,17 +84,25 @@ export class EnrolmentPage {
       .then(scannedObj => this.authenticate(scannedObj))
   }
 
+  submitToken() {
+    this.authenticate(
+      this.authService.getURLFromToken(
+        this.baseURL.trim(),
+        this.tokenName.trim()
+      )
+    )
+  }
+
   authenticate(authObj) {
     this.showOutcomeStatus = false
     this.transitionStatuses()
 
-    const authText = this.enterMetaQR ? authObj : authObj.text
     new Promise((resolve, reject) => {
       let refreshToken = null
-      if (this.enterMetaQR) {
-        // Meta QR code
+      if (this.validURL(authObj)) {
+        // NOTE: Meta QR code and new QR code
         this.authService
-          .getRefreshTokenFromUrl(authText)
+          .getRefreshTokenFromUrl(authObj)
           .then((body: any) => {
             refreshToken = body['refreshToken']
             if (body['baseUrl']) {
@@ -110,10 +121,10 @@ export class EnrolmentPage {
             this.displayErrorMessage(e)
           })
       } else {
-        // Normal QR codes: containing refresh token as JSON
+        // NOTE: Old QR codes: containing refresh token as JSON
         this.authService.updateURI().then(() => {
           console.log('BASE URI : ' + this.storage.get(StorageKeys.BASE_URI))
-          const auth = JSON.parse(authText)
+          const auth = JSON.parse(authObj.text)
           refreshToken = auth.refreshToken
           resolve(refreshToken)
         })
@@ -248,10 +259,6 @@ export class EnrolmentPage {
   enterTokenOption() {
     this.enterMetaQR = true
     this.next()
-  }
-
-  submitToken() {
-    this.authenticate(this.tokenName)
   }
 
   navigateToHome() {

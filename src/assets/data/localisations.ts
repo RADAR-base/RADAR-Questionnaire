@@ -75,12 +75,18 @@ export const Localisations = {
       'Klik op de "Scan" knop en richt de camera op de QR code die u heeft ontvangen van de onderzoeker. Hieronder staat een voorbeeld van een QR code afgebeeld.'
   },
   ENROL_REGISTRATION_TOKEN_DESC: {
-    da: 'Indtast det tegn, du har fået af din forsker.',
-    de: 'Geben Sie den Token ein, den Sie von Ihrem Forscher erhalten haben.',
-    en: 'Enter the token given to you by your researcher.',
-    es: 'Ingrese el token que le dio el personal del estudio.',
-    it: 'Inserisci il token che ti è stato dato dal personale dello studio.',
-    nl: 'Voer het token dat u van uw onderzoeker.'
+    da:
+      'Indtast token. Dette skal være tilgængeligt under QR-koden på Management Portal. Hvis ikke, skal du scanne QR-koden.',
+    de:
+      'Geben Sie das Token ein. Dies sollte unterhalb des QR-Codes im Management Portal verfügbar sein. Wenn nicht vorhanden, scannen Sie bitte den QR-Code.',
+    en:
+      'Enter the token. This should be available below the QR code on Management Portal. If not present, please scan the QR code.',
+    es:
+      'Introduzca el token. Esto debería estar disponible debajo del código QR en el Portal de administración. Si no está presente, escanee el código QR.',
+    it:
+      'Inserisci il token. Questo dovrebbe essere disponibile sotto il codice QR sul portale di gestione. Se non è presente, scansiona il codice QR.',
+    nl:
+      'Voer het token in. Dit moet beschikbaar zijn onder de QR-code op Management Portal. Indien niet aanwezig, scan de QR-code.'
   },
   ENROL_PREFERENCES: {
     da: 'Præferencer',

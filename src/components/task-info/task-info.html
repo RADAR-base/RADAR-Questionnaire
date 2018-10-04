@@ -57,7 +57,7 @@
         *ngIf="!isNow"
       >
         <span *ngIf="task.name !=='ESM'">{{ getHour() }}</span>
-        <span *ngIf="task.name =='ESM'">
+        <span *ngIf="task.name ==='ESM'">
           {{ "TASK_BAR_NEXT_TASK_SOON" | translate }}
         </span>
       </div>

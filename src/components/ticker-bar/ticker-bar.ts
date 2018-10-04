@@ -169,11 +169,12 @@ export class TickerBarComponent implements OnChanges {
     if (deltaMin > 59) {
       deltaStr =
         deltaHour > 1
-          ? String(deltaHour) + hour_str_multiple
-          : String(deltaHour) + hour_str_single
+          ? String(deltaHour) + ' ' + hour_str_multiple
+          : String(deltaHour) + ' ' + hour_str_single
     } else {
       deltaStr =
         String(deltaMin) +
+        ' ' +
         this.translate.transform(LocKeys.TASK_TIME_MINUTE_SINGLE.toString())
     }
     return deltaStr

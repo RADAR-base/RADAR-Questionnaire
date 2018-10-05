@@ -81,7 +81,7 @@ export class EnrolmentPage {
     }
     this.scanner
       .scan(scanOptions)
-      .then(scannedObj => this.authenticate(scannedObj))
+      .then(scannedObj => this.authenticate(scannedObj.text))
   }
 
   submitToken() {

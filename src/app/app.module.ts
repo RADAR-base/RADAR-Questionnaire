@@ -20,7 +20,7 @@ import { RoundProgressModule } from 'angular-svg-round-progressbar'
 import { MomentModule } from 'angular2-moment'
 import { IonicApp, IonicModule } from 'ionic-angular'
 
-import { MyApp } from './app.component'
+import { AppComponent } from './core/containers/app.component'
 import { ClinicalTasksPage } from './pages/clinical-tasks/clinical-tasks'
 import { EnrolmentPage } from './pages/enrolment/enrolment'
 import { FinishPage } from './pages/finish/finish'
@@ -69,7 +69,7 @@ import { Utility } from './shared/utilities/util'
     RoundProgressModule,
     BrowserAnimationsModule,
     PipesModule,
-    IonicModule.forRoot(MyApp, {
+    IonicModule.forRoot(AppComponent, {
       mode: 'md'
     }),
     IonicStorageModule.forRoot({
@@ -85,7 +85,7 @@ import { Utility } from './shared/utilities/util'
     })
   ],
   declarations: [
-    MyApp,
+    AppComponent,
 
     // Pages
     SplashPage,
@@ -115,7 +115,7 @@ import { Utility } from './shared/utilities/util'
   ],
   bootstrap: [IonicApp],
   entryComponents: [
-    MyApp,
+    AppComponent,
 
     // Pages
     SplashPage,

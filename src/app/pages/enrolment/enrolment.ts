@@ -12,7 +12,7 @@ import {
   LanguageMap,
   URI_managementPortal
 } from '../../../assets/data/defaultConfig'
-import { MyApp } from '../../app.component'
+import { AppComponent } from '../../core/containers/app.component'
 import { AuthService } from '../../providers/auth-service'
 import { ConfigService } from '../../providers/config-service'
 import { SchedulingService } from '../../providers/scheduling-service'
@@ -283,7 +283,7 @@ export class EnrolmentPage {
           }
           this.storage.set(StorageKeys.LANGUAGE, lang)
           this.language = lang
-          this.navCtrl.setRoot(MyApp)
+          this.navCtrl.setRoot(AppComponent)
         }
       }
     ]

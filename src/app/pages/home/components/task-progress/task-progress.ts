@@ -9,8 +9,8 @@ import {
 } from '@angular/core'
 import { RoundProgressConfig } from 'angular-svg-round-progressbar'
 
-import { HomeController } from '../../providers/home-controller'
-import { TasksProgress } from '../../shared/models/task'
+import { HomeController } from '../../../../providers/home-controller'
+import { TasksProgress } from '../../../../shared/models/task'
 
 @Component({
   selector: 'task-progress',

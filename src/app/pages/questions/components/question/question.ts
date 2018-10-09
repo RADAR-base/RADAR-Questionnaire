@@ -8,9 +8,9 @@ import {
 import { Dialogs } from '@ionic-native/dialogs'
 import { Vibration } from '@ionic-native/vibration'
 
-import { AnswerService } from '../../providers/answer-service'
-import { Answer } from '../../shared/models/answer'
-import { Question, QuestionType } from '../../shared/models/question'
+import { AnswerService } from '../../../../providers/answer-service'
+import { Answer } from '../../../../shared/models/answer'
+import { Question, QuestionType } from '../../../../shared/models/question'
 
 @Component({
   selector: 'question',

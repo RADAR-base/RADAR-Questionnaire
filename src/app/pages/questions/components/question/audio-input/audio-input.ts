@@ -10,13 +10,13 @@ import { Device } from '@ionic-native/device'
 import { AlertController, NavController } from 'ionic-angular'
 
 // file path to opensmile.js; Adding opensmile plugin
-import * as opensmile from '../../../../plugins/cordova-plugin-opensmile/www/opensmile'
-import { QuestionsPage } from '../../pages/questions/questions'
-import { AnswerService } from '../../providers/answer-service'
-import { AudioRecordService } from '../../providers/audiorecord-service'
-import { Answer } from '../../shared/models/answer'
-import { Section } from '../../shared/models/question'
-import { AndroidPermissionUtility } from '../../shared/utilities/android-permission'
+import * as opensmile from '../../../../../../../plugins/cordova-plugin-opensmile/www/opensmile'
+import { AnswerService } from '../../../../../providers/answer-service'
+import { AudioRecordService } from '../../../../../providers/audiorecord-service'
+import { Answer } from '../../../../../shared/models/answer'
+import { Section } from '../../../../../shared/models/question'
+import { AndroidPermissionUtility } from '../../../../../shared/utilities/android-permission'
+import { QuestionsPage } from '../../../questions'
 
 declare var cordova: any
 declare var window: any

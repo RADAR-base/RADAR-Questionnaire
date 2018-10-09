@@ -9,11 +9,11 @@ import {
 } from '@angular/core'
 import { AlertController, NavController, Platform } from 'ionic-angular'
 
-import { DefaultTask } from '../../../assets/data/defaultConfig'
-import { HomeController } from '../../providers/home-controller'
-import { LocKeys } from '../../shared/enums/localisations'
-import { Task } from '../../shared/models/task'
-import { TranslatePipe } from '../../shared/pipes/translate/translate'
+import { DefaultTask } from '../../../../../assets/data/defaultConfig'
+import { HomeController } from '../../../../providers/home-controller'
+import { LocKeys } from '../../../../shared/enums/localisations'
+import { Task } from '../../../../shared/models/task'
+import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
 
 @Component({
   selector: 'task-calendar',

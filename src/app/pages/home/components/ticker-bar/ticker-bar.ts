@@ -1,14 +1,14 @@
 import { Component, Input, OnChanges } from '@angular/core'
 import { NavController } from 'ionic-angular'
 
-import { ReportPage } from '../../pages/report/report'
-import { SchedulingService } from '../../providers/scheduling-service'
-import { LocKeys } from '../../shared/enums/localisations'
-import { StorageKeys } from '../../shared/enums/storage'
-import { ReportScheduling } from '../../shared/models/report'
-import { Task } from '../../shared/models/task'
-import { TickerItem } from '../../shared/models/ticker'
-import { TranslatePipe } from '../../shared/pipes/translate/translate'
+import { SchedulingService } from '../../../../providers/scheduling-service'
+import { LocKeys } from '../../../../shared/enums/localisations'
+import { StorageKeys } from '../../../../shared/enums/storage'
+import { ReportScheduling } from '../../../../shared/models/report'
+import { Task } from '../../../../shared/models/task'
+import { TickerItem } from '../../../../shared/models/ticker'
+import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
+import { ReportPage } from '../../../report/report'
 
 @Component({
   selector: 'ticker-bar',

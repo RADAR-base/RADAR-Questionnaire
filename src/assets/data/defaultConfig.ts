@@ -1,10 +1,10 @@
-import { LocKeys } from '../../enums/localisations'
+import { LocKeys } from '../../app/shared/enums/localisations'
 import {
   LanguageSetting,
   NotificationSettings,
   WeeklyReportSubSettings
-} from '../../models/settings'
-import { Task } from '../../models/task'
+} from '../../app/shared/models/settings'
+import { Task } from '../../app/shared/models/task'
 import {
   DefaultProtocolEndPointExport,
   DefaultSourceProducerAndSecretExport

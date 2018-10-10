@@ -8,11 +8,11 @@ import { ReportScheduling } from '../../../../shared/models/report'
 import { Task } from '../../../../shared/models/task'
 import { TickerItem } from '../../../../shared/models/ticker'
 import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
-import { ReportPage } from '../../../report/report'
+import { ReportPage } from '../../../report/report-page.component'
 
 @Component({
   selector: 'ticker-bar',
-  templateUrl: 'ticker-bar.html'
+  templateUrl: 'ticker-bar.component.html'
 })
 export class TickerBarComponent implements OnChanges {
   @Input()

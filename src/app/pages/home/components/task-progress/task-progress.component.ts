@@ -14,7 +14,7 @@ import { TasksProgress } from '../../../../shared/models/task'
 
 @Component({
   selector: 'task-progress',
-  templateUrl: 'task-progress.html'
+  templateUrl: 'task-progress.component.html'
 })
 export class TaskProgressComponent implements OnChanges {
   @Input()

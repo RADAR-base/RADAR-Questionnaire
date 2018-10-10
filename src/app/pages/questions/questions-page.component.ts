@@ -10,13 +10,13 @@ import {
 import { LocKeys } from '../../shared/enums/localisations'
 import { Question, QuestionType } from '../../shared/models/question'
 import { TranslatePipe } from '../../shared/pipes/translate/translate'
-import { FinishPage } from '../finish/finish'
+import { FinishPage } from '../finish/finish-page.component'
 import { AnswerService } from './services/answer.service'
 import { TimeStampService } from './services/timestamp.service'
 
 @Component({
   selector: 'page-questions',
-  templateUrl: 'questions.html'
+  templateUrl: 'questions-page.component.html'
 })
 export class QuestionsPage {
   @ViewChild(Content)

@@ -11,12 +11,12 @@ import { HomeController } from '../../core/services/home-controller.service'
 import { StorageService } from '../../core/services/storage.service'
 import { StorageKeys } from '../../shared/enums/storage'
 import { Task } from '../../shared/models/task'
-import { QuestionsPage } from '../questions/questions'
-import { StartPage } from '../start/start'
+import { QuestionsPage } from '../questions/questions-page.component'
+import { StartPage } from '../start/start-page.component'
 
 @Component({
   selector: 'page-clinical-tasks',
-  templateUrl: 'clinical-tasks.html'
+  templateUrl: 'clinical-tasks-page.component.html'
 })
 export class ClinicalTasksPage {
   scrollHeight: number = 500

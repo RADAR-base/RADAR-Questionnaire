@@ -7,12 +7,12 @@ import { KafkaService } from '../../core/services/kafka.service'
 import { StorageService } from '../../core/services/storage.service'
 import { StorageKeys } from '../../shared/enums/storage'
 import { Task } from '../../shared/models/task'
-import { HomePage } from '../home/home'
+import { HomePage } from '../home/home-page.component'
 import { PrepareDataService } from './services/preparedata.service'
 
 @Component({
   selector: 'page-finish',
-  templateUrl: 'finish.html'
+  templateUrl: 'finish-page.component.html'
 })
 export class FinishPage {
   content: string = ''

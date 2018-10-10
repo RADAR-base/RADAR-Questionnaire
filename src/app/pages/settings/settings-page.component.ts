@@ -26,11 +26,11 @@ import {
   WeeklyReportSubSettings
 } from '../../shared/models/settings'
 import { TranslatePipe } from '../../shared/pipes/translate/translate'
-import { SplashPage } from '../splash/splash'
+import { SplashPage } from '../splash/splash-page.component'
 
 @Component({
   selector: 'page-settings',
-  templateUrl: 'settings.html'
+  templateUrl: 'settings-page.component.html'
 })
 export class SettingsPage {
   appVersionStr: String

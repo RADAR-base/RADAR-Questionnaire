@@ -17,7 +17,7 @@ import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
 
 @Component({
   selector: 'task-calendar',
-  templateUrl: 'task-calendar.html'
+  templateUrl: 'task-calendar.component.html'
 })
 export class TaskCalendarComponent implements OnChanges {
   @Input()

@@ -12,7 +12,7 @@ export interface Item {
 
 @Component({
   selector: 'checkbox-input',
-  templateUrl: 'checkbox-input.html'
+  templateUrl: 'checkbox-input.component.html'
 })
 export class CheckboxInputComponent implements OnInit {
   @Output()

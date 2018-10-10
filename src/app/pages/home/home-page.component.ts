@@ -18,15 +18,15 @@ import { StorageKeys } from '../../shared/enums/storage'
 import { Task, TasksProgress } from '../../shared/models/task'
 import { TranslatePipe } from '../../shared/pipes/translate/translate'
 import { checkTaskIsNow } from '../../shared/utilities/check-task-is-now'
-import { ClinicalTasksPage } from '../clinical-tasks/clinical-tasks'
-import { QuestionsPage } from '../questions/questions'
-import { SettingsPage } from '../settings/settings'
-import { SplashPage } from '../splash/splash'
-import { StartPage } from '../start/start'
+import { ClinicalTasksPage } from '../clinical-tasks/clinical-tasks-page.component'
+import { QuestionsPage } from '../questions/questions-page.component'
+import { SettingsPage } from '../settings/settings-page.component'
+import { SplashPage } from '../splash/splash-page.component'
+import { StartPage } from '../start/start-page.component'
 
 @Component({
   selector: 'page-home',
-  templateUrl: 'home.html'
+  templateUrl: 'home-page.component.html'
 })
 export class HomePage {
   @ViewChild('content')

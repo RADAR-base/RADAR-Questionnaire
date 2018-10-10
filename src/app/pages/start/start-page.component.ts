@@ -6,11 +6,11 @@ import { LoadingController, NavController, NavParams } from 'ionic-angular'
 import { Assessment } from '../../shared/models/assessment'
 import { Question } from '../../shared/models/question'
 import { Task } from '../../shared/models/task'
-import { QuestionsPage } from '../questions/questions'
+import { QuestionsPage } from '../questions/questions-page.component'
 
 @Component({
   selector: 'page-start',
-  templateUrl: 'start.html'
+  templateUrl: 'start-page.component.html'
 })
 export class StartPage {
   associatedTask: Task

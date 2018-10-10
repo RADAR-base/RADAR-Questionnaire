@@ -12,7 +12,7 @@ export interface Item {
 
 @Component({
   selector: 'info-screen',
-  templateUrl: 'info-screen.html'
+  templateUrl: 'info-screen.component.html'
 })
 export class InfoScreenComponent implements OnInit {
   @Output()

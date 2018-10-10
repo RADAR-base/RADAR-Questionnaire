@@ -13,7 +13,7 @@ import { Question, QuestionType } from '../../../../shared/models/question'
 
 @Component({
   selector: 'question',
-  templateUrl: 'question.html'
+  templateUrl: 'question.component.html'
 })
 export class QuestionComponent implements OnChanges {
   @Input()

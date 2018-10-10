@@ -9,7 +9,7 @@ export interface Item {
 
 @Component({
   selector: 'range-input',
-  templateUrl: 'range-input.html'
+  templateUrl: 'range-input.component.html'
 })
 export class RangeInputComponent implements OnInit {
   @Output()

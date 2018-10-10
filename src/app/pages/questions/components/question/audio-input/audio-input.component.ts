@@ -14,7 +14,7 @@ import * as opensmile from '../../../../../../../plugins/cordova-plugin-opensmil
 import { Answer } from '../../../../../shared/models/answer'
 import { Section } from '../../../../../shared/models/question'
 import { AndroidPermissionUtility } from '../../../../../shared/utilities/android-permission'
-import { QuestionsPage } from '../../../questions'
+import { QuestionsPage } from '../../../questions-page.component'
 import { AudioRecordService } from '../../../services/audiorecord.service'
 
 declare var cordova: any
@@ -22,7 +22,7 @@ declare var window: any
 
 @Component({
   selector: 'audio-input',
-  templateUrl: 'audio-input.html'
+  templateUrl: 'audio-input.component.html'
 })
 export class AudioInputComponent implements OnInit, OnChanges {
   @Output()

@@ -10,12 +10,12 @@ import { HomeController } from '../../core/services/home-controller.service'
 import { KafkaService } from '../../core/services/kafka.service'
 import { StorageService } from '../../core/services/storage.service'
 import { StorageKeys } from '../../shared/enums/storage'
-import { EnrolmentPage } from '../enrolment/enrolment'
-import { HomePage } from '../home/home'
+import { EnrolmentPage } from '../enrolment/enrolment-page.component'
+import { HomePage } from '../home/home-page.component'
 
 @Component({
   selector: 'page-splash',
-  templateUrl: 'splash.html'
+  templateUrl: 'splash-page.component.html'
 })
 export class SplashPage {
   status: string = ''

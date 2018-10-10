@@ -12,7 +12,7 @@ export interface Item {
 
 @Component({
   selector: 'radio-input',
-  templateUrl: 'radio-input.html'
+  templateUrl: 'radio-input.component.html'
 })
 export class RadioInputComponent implements OnInit {
   @Output()

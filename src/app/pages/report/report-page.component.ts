@@ -3,7 +3,7 @@ import { NavController } from 'ionic-angular'
 
 @Component({
   selector: 'page-report',
-  templateUrl: 'report.html'
+  templateUrl: 'report-page.component.html'
 })
 export class ReportPage {
   constructor(public navCtrl: NavController) {}

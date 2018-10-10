@@ -23,12 +23,12 @@ import {
   WeeklyReportSubSettings
 } from '../../shared/models/settings'
 import { TranslatePipe } from '../../shared/pipes/translate/translate'
-import { HomePage } from '../home/home'
+import { HomePage } from '../home/home-page.component'
 import { AuthService } from './services/auth.service'
 
 @Component({
   selector: 'page-enrolment',
-  templateUrl: 'enrolment.html'
+  templateUrl: 'enrolment-page.component.html'
 })
 export class EnrolmentPage {
   @ViewChild(Slides)

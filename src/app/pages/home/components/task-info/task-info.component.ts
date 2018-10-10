@@ -28,7 +28,7 @@ import { checkTaskIsNow } from '../../../../shared/utilities/check-task-is-now'
  */
 @Component({
   selector: 'task-info',
-  templateUrl: 'task-info.html',
+  templateUrl: 'task-info.component.html',
   animations: [
     trigger('fade', [
       state(

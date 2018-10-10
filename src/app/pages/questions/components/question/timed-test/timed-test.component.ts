@@ -27,7 +27,7 @@ export interface ITimer {
 
 @Component({
   selector: 'timed-test',
-  templateUrl: 'timed-test.html'
+  templateUrl: 'timed-test.component.html'
 })
 export class TimedTestComponent implements OnInit, OnChanges {
   @Output()

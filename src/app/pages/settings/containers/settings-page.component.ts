@@ -26,13 +26,13 @@ import {
   WeeklyReportSubSettings
 } from '../../../shared/models/settings'
 import { TranslatePipe } from '../../../shared/pipes/translate/translate'
-import { SplashPage } from '../../splash/containers/splash-page.component'
+import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 
 @Component({
   selector: 'page-settings',
   templateUrl: 'settings-page.component.html'
 })
-export class SettingsPage {
+export class SettingsPageComponent {
   appVersionStr: String
   configVersion: String
   scheduleVersion: String
@@ -124,7 +124,7 @@ export class SettingsPage {
   }
 
   backToSplash() {
-    this.navCtrl.setRoot(SplashPage)
+    this.navCtrl.setRoot(SplashPageComponent)
   }
 
   notificationChange() {
@@ -158,7 +158,7 @@ export class SettingsPage {
             )
           })
           this.language = lang
-          this.navCtrl.setRoot(SplashPage)
+          this.navCtrl.setRoot(SplashPageComponent)
         }
       }
     ]

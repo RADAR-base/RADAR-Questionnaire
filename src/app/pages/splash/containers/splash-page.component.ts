@@ -10,14 +10,14 @@ import { HomeController } from '../../../core/services/home-controller.service'
 import { KafkaService } from '../../../core/services/kafka.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { StorageKeys } from '../../../shared/enums/storage'
-import { EnrolmentPage } from '../../auth/containers/enrolment-page.component'
-import { HomePage } from '../../home/containers/home-page.component'
+import { EnrolmentPageComponent } from '../../auth/containers/enrolment-page.component'
+import { HomePageComponent } from '../../home/containers/home-page.component'
 
 @Component({
   selector: 'page-splash',
   templateUrl: 'splash-page.component.html'
 })
-export class SplashPage {
+export class SplashPageComponent {
   status: string = ''
   forceLocalStorageLookUp: boolean = true
   hasParentPage: boolean = false
@@ -105,13 +105,13 @@ export class SplashPage {
       })
       .then(evalEnrolement => {
         if (evalEnrolement) {
-          this.navCtrl.setRoot(EnrolmentPage)
+          this.navCtrl.setRoot(EnrolmentPageComponent)
         } else {
           let isFirstIonDidViewLoad = true
           if (this.hasParentPage) {
             isFirstIonDidViewLoad = false
           }
-          this.navCtrl.setRoot(HomePage, {
+          this.navCtrl.setRoot(HomePageComponent, {
             isFirstIonDidViewLoad: isFirstIonDidViewLoad
           })
         }
@@ -119,7 +119,7 @@ export class SplashPage {
       .catch(error => {
         console.log('[SPLASH] Error while sending cache.')
         const isFirstIonDidViewLoad = false
-        this.navCtrl.setRoot(HomePage, {
+        this.navCtrl.setRoot(HomePageComponent, {
           isFirstIonDidViewLoad: isFirstIonDidViewLoad
         })
       })

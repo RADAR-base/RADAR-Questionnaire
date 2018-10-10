@@ -6,13 +6,13 @@ import { LoadingController, NavController, NavParams } from 'ionic-angular'
 import { Assessment } from '../../../shared/models/assessment'
 import { Question } from '../../../shared/models/question'
 import { Task } from '../../../shared/models/task'
-import { QuestionsPage } from '../../questions/containers/questions-page.component'
+import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
 
 @Component({
   selector: 'page-start',
   templateUrl: 'start-page.component.html'
 })
-export class StartPage {
+export class StartPageComponent {
   associatedTask: Task
   introduction: String = ''
   title: String = ''
@@ -32,7 +32,7 @@ export class StartPage {
   }
 
   openPage() {
-    this.navCtrl.push(QuestionsPage, {
+    this.navCtrl.push(QuestionsPageComponent, {
       associatedTask: this.associatedTask,
       questions: this.questions,
       endText: this.endText

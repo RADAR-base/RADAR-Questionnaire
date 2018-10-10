@@ -18,16 +18,16 @@ import { StorageKeys } from '../../../shared/enums/storage'
 import { Task, TasksProgress } from '../../../shared/models/task'
 import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { checkTaskIsNow } from '../../../shared/utilities/check-task-is-now'
-import { ClinicalTasksPage } from '../../clinical-tasks/containers/clinical-tasks-page.component'
-import { QuestionsPage } from '../../questions/containers/questions-page.component'
-import { SettingsPage } from '../../settings/containers/settings-page.component'
-import { StartPage } from '../../start/containers/start-page.component'
+import { ClinicalTasksPageComponent } from '../../clinical-tasks/containers/clinical-tasks-page.component'
+import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
+import { SettingsPageComponent } from '../../settings/containers/settings-page.component'
+import { StartPageComponent } from '../../start/containers/start-page.component'
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home-page.component.html'
 })
-export class HomePage {
+export class HomePageComponent {
   @ViewChild('content')
   elContent: Content
   elContentHeight: number
@@ -251,11 +251,11 @@ export class HomePage {
   }
 
   openSettingsPage() {
-    this.navCtrl.push(SettingsPage)
+    this.navCtrl.push(SettingsPageComponent)
   }
 
   openClinicalTasksPage() {
-    this.navCtrl.push(ClinicalTasksPage)
+    this.navCtrl.push(ClinicalTasksPageComponent)
   }
 
   startQuestionnaire(task: Task) {
@@ -280,9 +280,9 @@ export class HomePage {
       }
       this.controller.updateAssessmentIntroduction(assessment)
       if (assessment.showIntroduction) {
-        this.navCtrl.push(StartPage, params)
+        this.navCtrl.push(StartPageComponent, params)
       } else {
-        this.navCtrl.push(QuestionsPage, params)
+        this.navCtrl.push(QuestionsPageComponent, params)
       }
     })
   }

@@ -23,14 +23,14 @@ import {
   WeeklyReportSubSettings
 } from '../../../shared/models/settings'
 import { TranslatePipe } from '../../../shared/pipes/translate/translate'
-import { HomePage } from '../../home/containers/home-page.component'
+import { HomePageComponent } from '../../home/containers/home-page.component'
 import { AuthService } from '../services/auth.service'
 
 @Component({
   selector: 'page-enrolment',
   templateUrl: 'enrolment-page.component.html'
 })
-export class EnrolmentPage {
+export class EnrolmentPageComponent {
   @ViewChild(Slides)
   slides: Slides
   @ViewChild('loading')
@@ -265,7 +265,7 @@ export class EnrolmentPage {
   }
 
   navigateToHome() {
-    this.navCtrl.setRoot(HomePage)
+    this.navCtrl.setRoot(HomePageComponent)
   }
 
   showSelectLanguage() {

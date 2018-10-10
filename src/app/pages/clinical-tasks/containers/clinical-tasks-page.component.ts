@@ -11,14 +11,14 @@ import { HomeController } from '../../../core/services/home-controller.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { Task } from '../../../shared/models/task'
-import { QuestionsPage } from '../../questions/containers/questions-page.component'
-import { StartPage } from '../../start/containers/start-page.component'
+import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
+import { StartPageComponent } from '../../start/containers/start-page.component'
 
 @Component({
   selector: 'page-clinical-tasks',
   templateUrl: 'clinical-tasks-page.component.html'
 })
-export class ClinicalTasksPage {
+export class ClinicalTasksPageComponent {
   scrollHeight: number = 500
   tasks: Task[] = [DefaultTask]
 
@@ -49,9 +49,9 @@ export class ClinicalTasksPage {
         associatedTask: task
       }
       if (assessment.showIntroduction) {
-        this.navCtrl.push(StartPage, params)
+        this.navCtrl.push(StartPageComponent, params)
       } else {
-        this.navCtrl.push(QuestionsPage, params)
+        this.navCtrl.push(QuestionsPageComponent, params)
       }
       this.controller.updateAssessmentIntroduction(assessment)
     })

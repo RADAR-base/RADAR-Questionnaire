@@ -5,7 +5,7 @@ import { NavController } from 'ionic-angular'
   selector: 'page-report',
   templateUrl: 'report-page.component.html'
 })
-export class ReportPage {
+export class ReportPageComponent {
   constructor(public navCtrl: NavController) {}
 
   ionViewDidLoad() {}

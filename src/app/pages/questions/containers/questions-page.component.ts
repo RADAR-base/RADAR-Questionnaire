@@ -10,7 +10,7 @@ import {
 import { LocKeys } from '../../../shared/enums/localisations'
 import { Question, QuestionType } from '../../../shared/models/question'
 import { TranslatePipe } from '../../../shared/pipes/translate/translate'
-import { FinishPage } from '../../finish/containers/finish-page.component'
+import { FinishPageComponent } from '../../finish/containers/finish-page.component'
 import { AnswerService } from '../services/answer.service'
 import { TimeStampService } from '../services/timestamp.service'
 
@@ -18,7 +18,7 @@ import { TimeStampService } from '../services/timestamp.service'
   selector: 'page-questions',
   templateUrl: 'questions-page.component.html'
 })
-export class QuestionsPage {
+export class QuestionsPageComponent {
   @ViewChild(Content)
   content: Content
 
@@ -184,7 +184,7 @@ export class QuestionsPage {
   }
 
   navigateToFinishPage() {
-    this.navCtrl.push(FinishPage, {
+    this.navCtrl.push(FinishPageComponent, {
       endText: this.navParams.data.endText,
       associatedTask: this.navParams.data.associatedTask,
       answers: this.answerService.answers,

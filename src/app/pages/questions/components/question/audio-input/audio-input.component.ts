@@ -14,7 +14,7 @@ import * as opensmile from '../../../../../../../plugins/cordova-plugin-opensmil
 import { Answer } from '../../../../../shared/models/answer'
 import { Section } from '../../../../../shared/models/question'
 import { AndroidPermissionUtility } from '../../../../../shared/utilities/android-permission'
-import { QuestionsPage } from '../../../containers/questions-page.component'
+import { QuestionsPageComponent } from '../../../containers/questions-page.component'
 import { AudioRecordService } from '../../../services/audiorecord.service'
 
 declare var cordova: any
@@ -58,7 +58,7 @@ export class AudioInputComponent implements OnInit, OnChanges {
   }
 
   constructor(
-    public questions: QuestionsPage,
+    public questions: QuestionsPageComponent,
     private audioRecordService: AudioRecordService,
     private permissionUtil: AndroidPermissionUtility,
     public navCtrl: NavController,

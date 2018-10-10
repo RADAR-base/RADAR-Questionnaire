@@ -27,16 +27,16 @@ import { KafkaService } from './core/services/kafka.service'
 import { NotificationService } from './core/services/notification.service'
 import { SchedulingService } from './core/services/scheduling.service'
 import { StorageService } from './core/services/storage.service'
-import { EnrolmentPage } from './pages/auth/containers/enrolment-page.component'
+import { EnrolmentPageComponent } from './pages/auth/containers/enrolment-page.component'
 import { AuthService } from './pages/auth/services/auth.service'
-import { ClinicalTasksPage } from './pages/clinical-tasks/containers/clinical-tasks-page.component'
-import { FinishPage } from './pages/finish/containers/finish-page.component'
+import { ClinicalTasksPageComponent } from './pages/clinical-tasks/containers/clinical-tasks-page.component'
+import { FinishPageComponent } from './pages/finish/containers/finish-page.component'
 import { PrepareDataService } from './pages/finish/services/preparedata.service'
 import { TaskCalendarComponent } from './pages/home/components/task-calendar/task-calendar.component'
 import { TaskInfoComponent } from './pages/home/components/task-info/task-info.component'
 import { TaskProgressComponent } from './pages/home/components/task-progress/task-progress.component'
 import { TickerBarComponent } from './pages/home/components/ticker-bar/ticker-bar.component'
-import { HomePage } from './pages/home/containers/home-page.component'
+import { HomePageComponent } from './pages/home/containers/home-page.component'
 import { InfoScreenComponent } from './pages/questions/components/info-screen/info-screen.component'
 import { AudioInputComponent } from './pages/questions/components/question/audio-input/audio-input.component'
 import { CheckboxInputComponent } from './pages/questions/components/question/checkbox-input/checkbox-input.component'
@@ -45,14 +45,14 @@ import { RadioInputComponent } from './pages/questions/components/question/radio
 import { RangeInputComponent } from './pages/questions/components/question/range-input/range-input.component'
 import { SliderInputComponent } from './pages/questions/components/question/slider-input/slider-input.component'
 import { TimedTestComponent } from './pages/questions/components/question/timed-test/timed-test.component'
-import { QuestionsPage } from './pages/questions/containers/questions-page.component'
+import { QuestionsPageComponent } from './pages/questions/containers/questions-page.component'
 import { AnswerService } from './pages/questions/services/answer.service'
 import { AudioRecordService } from './pages/questions/services/audiorecord.service'
 import { TimeStampService } from './pages/questions/services/timestamp.service'
-import { ReportPage } from './pages/report/containers/report-page.component'
-import { SettingsPage } from './pages/settings/containers/settings-page.component'
-import { SplashPage } from './pages/splash/containers/splash-page.component'
-import { StartPage } from './pages/start/containers/start-page.component'
+import { ReportPageComponent } from './pages/report/containers/report-page.component'
+import { SettingsPageComponent } from './pages/settings/containers/settings-page.component'
+import { SplashPageComponent } from './pages/splash/containers/splash-page.component'
+import { StartPageComponent } from './pages/start/containers/start-page.component'
 import { PipesModule } from './shared/pipes/pipes.module'
 import { TranslatePipe } from './shared/pipes/translate/translate'
 import { AndroidPermissionUtility } from './shared/utilities/android-permission'
@@ -86,15 +86,15 @@ import { Utility } from './shared/utilities/util'
     AppComponent,
 
     // Pages
-    SplashPage,
-    EnrolmentPage,
-    HomePage,
-    ClinicalTasksPage,
-    StartPage,
-    QuestionsPage,
-    FinishPage,
-    SettingsPage,
-    ReportPage,
+    SplashPageComponent,
+    EnrolmentPageComponent,
+    HomePageComponent,
+    ClinicalTasksPageComponent,
+    StartPageComponent,
+    QuestionsPageComponent,
+    FinishPageComponent,
+    SettingsPageComponent,
+    ReportPageComponent,
 
     // Components
     TaskCalendarComponent,
@@ -115,15 +115,15 @@ import { Utility } from './shared/utilities/util'
     AppComponent,
 
     // Pages
-    SplashPage,
-    EnrolmentPage,
-    HomePage,
-    ClinicalTasksPage,
-    StartPage,
-    QuestionsPage,
-    FinishPage,
-    SettingsPage,
-    ReportPage,
+    SplashPageComponent,
+    EnrolmentPageComponent,
+    HomePageComponent,
+    ClinicalTasksPageComponent,
+    StartPageComponent,
+    QuestionsPageComponent,
+    FinishPageComponent,
+    SettingsPageComponent,
+    ReportPageComponent,
 
     // Components
     TaskProgressComponent,

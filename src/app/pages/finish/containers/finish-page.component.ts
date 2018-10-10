@@ -7,14 +7,14 @@ import { KafkaService } from '../../../core/services/kafka.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { Task } from '../../../shared/models/task'
-import { HomePage } from '../../home/containers/home-page.component'
+import { HomePageComponent } from '../../home/containers/home-page.component'
 import { PrepareDataService } from '../services/preparedata.service'
 
 @Component({
   selector: 'page-finish',
   templateUrl: 'finish-page.component.html'
 })
-export class FinishPage {
+export class FinishPageComponent {
   content: string = ''
   isClinicalTask: boolean = false
   completedInClinic: boolean = false
@@ -83,7 +83,7 @@ export class FinishPage {
     this.hasClickedDoneButton = !this.hasClickedDoneButton
     this.evalClinicalFollowUpTask().then(() => {
       this.kafkaService.sendAllAnswersInCache()
-      this.navCtrl.setRoot(HomePage)
+      this.navCtrl.setRoot(HomePageComponent)
     })
   }
 

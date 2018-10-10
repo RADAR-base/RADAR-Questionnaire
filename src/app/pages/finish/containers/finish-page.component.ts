@@ -1,14 +1,14 @@
 import { Component } from '@angular/core'
 import { NavController, NavParams } from 'ionic-angular'
 
-import { DefaultNumberOfNotificationsToSchedule } from '../../../assets/data/defaultConfig'
-import { HomeController } from '../../core/services/home-controller.service'
-import { KafkaService } from '../../core/services/kafka.service'
-import { StorageService } from '../../core/services/storage.service'
-import { StorageKeys } from '../../shared/enums/storage'
-import { Task } from '../../shared/models/task'
-import { HomePage } from '../home/home-page.component'
-import { PrepareDataService } from './services/preparedata.service'
+import { DefaultNumberOfNotificationsToSchedule } from '../../../../assets/data/defaultConfig'
+import { HomeController } from '../../../core/services/home-controller.service'
+import { KafkaService } from '../../../core/services/kafka.service'
+import { StorageService } from '../../../core/services/storage.service'
+import { StorageKeys } from '../../../shared/enums/storage'
+import { Task } from '../../../shared/models/task'
+import { HomePage } from '../../home/containers/home-page.component'
+import { PrepareDataService } from '../services/preparedata.service'
 
 @Component({
   selector: 'page-finish',

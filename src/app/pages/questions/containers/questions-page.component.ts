@@ -7,12 +7,12 @@ import {
   ViewController
 } from 'ionic-angular'
 
-import { LocKeys } from '../../shared/enums/localisations'
-import { Question, QuestionType } from '../../shared/models/question'
-import { TranslatePipe } from '../../shared/pipes/translate/translate'
-import { FinishPage } from '../finish/finish-page.component'
-import { AnswerService } from './services/answer.service'
-import { TimeStampService } from './services/timestamp.service'
+import { LocKeys } from '../../../shared/enums/localisations'
+import { Question, QuestionType } from '../../../shared/models/question'
+import { TranslatePipe } from '../../../shared/pipes/translate/translate'
+import { FinishPage } from '../../finish/containers/finish-page.component'
+import { AnswerService } from '../services/answer.service'
+import { TimeStampService } from '../services/timestamp.service'
 
 @Component({
   selector: 'page-questions',

@@ -5,13 +5,13 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular'
 import {
   DefaultNotificationRefreshTime,
   DefaultNumberOfNotificationsToSchedule
-} from '../../../assets/data/defaultConfig'
-import { HomeController } from '../../core/services/home-controller.service'
-import { KafkaService } from '../../core/services/kafka.service'
-import { StorageService } from '../../core/services/storage.service'
-import { StorageKeys } from '../../shared/enums/storage'
-import { EnrolmentPage } from '../enrolment/enrolment-page.component'
-import { HomePage } from '../home/home-page.component'
+} from '../../../../assets/data/defaultConfig'
+import { HomeController } from '../../../core/services/home-controller.service'
+import { KafkaService } from '../../../core/services/kafka.service'
+import { StorageService } from '../../../core/services/storage.service'
+import { StorageKeys } from '../../../shared/enums/storage'
+import { EnrolmentPage } from '../../auth/containers/enrolment-page.component'
+import { HomePage } from '../../home/containers/home-page.component'
 
 @Component({
   selector: 'page-splash',

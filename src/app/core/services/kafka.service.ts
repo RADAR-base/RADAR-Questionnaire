@@ -6,7 +6,7 @@ import AvroSchema from 'avsc'
 import KafkaClient from 'kafka-rest'
 
 import { DefaultEndPoint } from '../../../assets/data/defaultConfig'
-import { AuthService } from '../../pages/enrolment/services/auth.service'
+import { AuthService } from '../../pages/auth/services/auth.service'
 import { StorageKeys } from '../../shared/enums/storage'
 import {
   AnswerKeyExport,

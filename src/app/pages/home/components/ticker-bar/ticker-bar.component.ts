@@ -8,7 +8,7 @@ import { ReportScheduling } from '../../../../shared/models/report'
 import { Task } from '../../../../shared/models/task'
 import { TickerItem } from '../../../../shared/models/ticker'
 import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
-import { ReportPage } from '../../../report/report-page.component'
+import { ReportPage } from '../../../report/containers/report-page.component'
 
 @Component({
   selector: 'ticker-bar',

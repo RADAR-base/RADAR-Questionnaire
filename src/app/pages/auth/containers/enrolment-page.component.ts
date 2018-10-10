@@ -11,20 +11,20 @@ import {
   DefaultSourceTypeModel,
   LanguageMap,
   URI_managementPortal
-} from '../../../assets/data/defaultConfig'
-import { AppComponent } from '../../core/containers/app.component'
-import { ConfigService } from '../../core/services/config.service'
-import { SchedulingService } from '../../core/services/scheduling.service'
-import { StorageService } from '../../core/services/storage.service'
-import { LocKeys } from '../../shared/enums/localisations'
-import { StorageKeys } from '../../shared/enums/storage'
+} from '../../../../assets/data/defaultConfig'
+import { AppComponent } from '../../../core/containers/app.component'
+import { ConfigService } from '../../../core/services/config.service'
+import { SchedulingService } from '../../../core/services/scheduling.service'
+import { StorageService } from '../../../core/services/storage.service'
+import { LocKeys } from '../../../shared/enums/localisations'
+import { StorageKeys } from '../../../shared/enums/storage'
 import {
   LanguageSetting,
   WeeklyReportSubSettings
-} from '../../shared/models/settings'
-import { TranslatePipe } from '../../shared/pipes/translate/translate'
-import { HomePage } from '../home/home-page.component'
-import { AuthService } from './services/auth.service'
+} from '../../../shared/models/settings'
+import { TranslatePipe } from '../../../shared/pipes/translate/translate'
+import { HomePage } from '../../home/containers/home-page.component'
+import { AuthService } from '../services/auth.service'
 
 @Component({
   selector: 'page-enrolment',

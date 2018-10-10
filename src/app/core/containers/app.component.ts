@@ -4,7 +4,7 @@ import { SplashScreen } from '@ionic-native/splash-screen'
 import { StatusBar } from '@ionic-native/status-bar'
 import { Platform } from 'ionic-angular'
 
-import { SplashPage } from '../../pages/splash/splash-page.component'
+import { SplashPage } from '../../pages/splash/containers/splash-page.component'
 import { ConfigService } from '../services/config.service'
 import { KafkaService } from '../services/kafka.service'
 import { NotificationService } from '../services/notification.service'

@@ -13,20 +13,20 @@ import {
   DefaultSettingsSelectedLanguage,
   DefaultSettingsWeeklyReport,
   LanguageMap
-} from '../../../assets/data/defaultConfig'
-import { ConfigService } from '../../core/services/config.service'
-import { HomeController } from '../../core/services/home-controller.service'
-import { SchedulingService } from '../../core/services/scheduling.service'
-import { StorageService } from '../../core/services/storage.service'
-import { LocKeys } from '../../shared/enums/localisations'
-import { StorageKeys } from '../../shared/enums/storage'
+} from '../../../../assets/data/defaultConfig'
+import { ConfigService } from '../../../core/services/config.service'
+import { HomeController } from '../../../core/services/home-controller.service'
+import { SchedulingService } from '../../../core/services/scheduling.service'
+import { StorageService } from '../../../core/services/storage.service'
+import { LocKeys } from '../../../shared/enums/localisations'
+import { StorageKeys } from '../../../shared/enums/storage'
 import {
   LanguageSetting,
   NotificationSettings,
   WeeklyReportSubSettings
-} from '../../shared/models/settings'
-import { TranslatePipe } from '../../shared/pipes/translate/translate'
-import { SplashPage } from '../splash/splash-page.component'
+} from '../../../shared/models/settings'
+import { TranslatePipe } from '../../../shared/pipes/translate/translate'
+import { SplashPage } from '../../splash/containers/splash-page.component'
 
 @Component({
   selector: 'page-settings',

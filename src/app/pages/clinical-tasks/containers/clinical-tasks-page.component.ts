@@ -6,13 +6,13 @@ import {
   ViewController
 } from 'ionic-angular'
 
-import { DefaultTask } from '../../../assets/data/defaultConfig'
-import { HomeController } from '../../core/services/home-controller.service'
-import { StorageService } from '../../core/services/storage.service'
-import { StorageKeys } from '../../shared/enums/storage'
-import { Task } from '../../shared/models/task'
-import { QuestionsPage } from '../questions/questions-page.component'
-import { StartPage } from '../start/start-page.component'
+import { DefaultTask } from '../../../../assets/data/defaultConfig'
+import { HomeController } from '../../../core/services/home-controller.service'
+import { StorageService } from '../../../core/services/storage.service'
+import { StorageKeys } from '../../../shared/enums/storage'
+import { Task } from '../../../shared/models/task'
+import { QuestionsPage } from '../../questions/containers/questions-page.component'
+import { StartPage } from '../../start/containers/start-page.component'
 
 @Component({
   selector: 'page-clinical-tasks',

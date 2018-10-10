@@ -3,10 +3,10 @@ import 'rxjs/add/operator/delay'
 import { Component } from '@angular/core'
 import { LoadingController, NavController, NavParams } from 'ionic-angular'
 
-import { Assessment } from '../../shared/models/assessment'
-import { Question } from '../../shared/models/question'
-import { Task } from '../../shared/models/task'
-import { QuestionsPage } from '../questions/questions-page.component'
+import { Assessment } from '../../../shared/models/assessment'
+import { Question } from '../../../shared/models/question'
+import { Task } from '../../../shared/models/task'
+import { QuestionsPage } from '../../questions/containers/questions-page.component'
 
 @Component({
   selector: 'page-start',

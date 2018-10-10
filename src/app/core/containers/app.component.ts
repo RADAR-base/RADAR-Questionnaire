@@ -5,9 +5,9 @@ import { StatusBar } from '@ionic-native/status-bar'
 import { Platform } from 'ionic-angular'
 
 import { SplashPage } from '../../pages/splash/splash'
-import { ConfigService } from '../../providers/config-service'
-import { KafkaService } from '../../providers/kafka-service'
-import { NotificationService } from '../../providers/notification-service'
+import { ConfigService } from '../services/config.service'
+import { KafkaService } from '../services/kafka.service'
+import { NotificationService } from '../services/notification.service'
 
 @Component({
   template: '<ion-nav [root]="rootPage"></ion-nav>'

@@ -11,12 +11,11 @@ import { AlertController, NavController } from 'ionic-angular'
 
 // file path to opensmile.js; Adding opensmile plugin
 import * as opensmile from '../../../../../../../plugins/cordova-plugin-opensmile/www/opensmile'
-import { AnswerService } from '../../../../../providers/answer-service'
-import { AudioRecordService } from '../../../../../providers/audiorecord-service'
 import { Answer } from '../../../../../shared/models/answer'
 import { Section } from '../../../../../shared/models/question'
 import { AndroidPermissionUtility } from '../../../../../shared/utilities/android-permission'
 import { QuestionsPage } from '../../../questions'
+import { AudioRecordService } from '../../../services/audiorecord.service'
 
 declare var cordova: any
 declare var window: any
@@ -60,7 +59,6 @@ export class AudioInputComponent implements OnInit, OnChanges {
 
   constructor(
     public questions: QuestionsPage,
-    private answerService: AnswerService,
     private audioRecordService: AudioRecordService,
     private permissionUtil: AndroidPermissionUtility,
     public navCtrl: NavController,

@@ -13,10 +13,9 @@ import {
   URI_managementPortal
 } from '../../../assets/data/defaultConfig'
 import { AppComponent } from '../../core/containers/app.component'
-import { AuthService } from '../../providers/auth-service'
-import { ConfigService } from '../../providers/config-service'
-import { SchedulingService } from '../../providers/scheduling-service'
-import { StorageService } from '../../providers/storage-service'
+import { ConfigService } from '../../core/services/config.service'
+import { SchedulingService } from '../../core/services/scheduling.service'
+import { StorageService } from '../../core/services/storage.service'
 import { LocKeys } from '../../shared/enums/localisations'
 import { StorageKeys } from '../../shared/enums/storage'
 import {
@@ -25,6 +24,7 @@ import {
 } from '../../shared/models/settings'
 import { TranslatePipe } from '../../shared/pipes/translate/translate'
 import { HomePage } from '../home/home'
+import { AuthService } from './services/auth.service'
 
 @Component({
   selector: 'page-enrolment',

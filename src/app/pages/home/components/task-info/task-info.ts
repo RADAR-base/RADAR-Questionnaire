@@ -14,8 +14,8 @@ import {
   Output
 } from '@angular/core'
 
-import { HomeController } from '../../../../providers/home-controller'
-import { StorageService } from '../../../../providers/storage-service'
+import { HomeController } from '../../../../core/services/home-controller.service'
+import { StorageService } from '../../../../core/services/storage.service'
 import { StorageKeys } from '../../../../shared/enums/storage'
 import { Task, TasksProgress } from '../../../../shared/models/task'
 import { checkTaskIsNow } from '../../../../shared/utilities/check-task-is-now'

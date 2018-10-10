@@ -8,7 +8,6 @@ import {
 import { Dialogs } from '@ionic-native/dialogs'
 import { Vibration } from '@ionic-native/vibration'
 
-import { AnswerService } from '../../../../providers/answer-service'
 import { Answer } from '../../../../shared/models/answer'
 import { Question, QuestionType } from '../../../../shared/models/question'
 
@@ -29,11 +28,7 @@ export class QuestionComponent implements OnChanges {
   value: any
   currentlyShown = false
 
-  constructor(
-    private answerService: AnswerService,
-    private vibration: Vibration,
-    private dialogs: Dialogs
-  ) {}
+  constructor(private vibration: Vibration, private dialogs: Dialogs) {}
 
   ngOnChanges() {
     if (this.question.select_choices_or_calculations.length > 0) {

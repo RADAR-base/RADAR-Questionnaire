@@ -10,10 +10,10 @@ import {
   DefaultSettingsNotifications,
   DefaultSettingsSupportedLanguages,
   DefaultSettingsWeeklyReport
-} from '../../assets/data/defaultConfig'
-import { StorageKeys } from '../shared/enums/storage'
-import { Assessment } from '../shared/models/assessment'
-import { Task } from '../shared/models/task'
+} from '../../../assets/data/defaultConfig'
+import { StorageKeys } from '../../shared/enums/storage'
+import { Assessment } from '../../shared/models/assessment'
+import { Task } from '../../shared/models/task'
 
 @Injectable()
 export class StorageService {

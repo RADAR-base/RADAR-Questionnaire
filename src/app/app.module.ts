@@ -21,9 +21,17 @@ import { MomentModule } from 'angular2-moment'
 import { IonicApp, IonicModule } from 'ionic-angular'
 
 import { AppComponent } from './core/containers/app.component'
+import { ConfigService } from './core/services/config.service'
+import { HomeController } from './core/services/home-controller.service'
+import { KafkaService } from './core/services/kafka.service'
+import { NotificationService } from './core/services/notification.service'
+import { SchedulingService } from './core/services/scheduling.service'
+import { StorageService } from './core/services/storage.service'
 import { ClinicalTasksPage } from './pages/clinical-tasks/clinical-tasks'
 import { EnrolmentPage } from './pages/enrolment/enrolment'
+import { AuthService } from './pages/enrolment/services/auth.service'
 import { FinishPage } from './pages/finish/finish'
+import { PrepareDataService } from './pages/finish/services/preparedata.service'
 import { TaskCalendarComponent } from './pages/home/components/task-calendar/task-calendar'
 import { TaskInfoComponent } from './pages/home/components/task-info/task-info'
 import { TaskProgressComponent } from './pages/home/components/task-progress/task-progress'
@@ -38,23 +46,13 @@ import { RangeInputComponent } from './pages/questions/components/question/range
 import { SliderInputComponent } from './pages/questions/components/question/slider-input/slider-input'
 import { TimedTestComponent } from './pages/questions/components/question/timed-test/timed-test'
 import { QuestionsPage } from './pages/questions/questions'
+import { AnswerService } from './pages/questions/services/answer.service'
+import { AudioRecordService } from './pages/questions/services/audiorecord.service'
+import { TimeStampService } from './pages/questions/services/timestamp.service'
 import { ReportPage } from './pages/report/report'
 import { SettingsPage } from './pages/settings/settings'
 import { SplashPage } from './pages/splash/splash'
 import { StartPage } from './pages/start/start'
-import { TaskSelectPage } from './pages/taskselect/taskselect'
-import { AnswerService } from './providers/answer-service'
-import { AudioRecordService } from './providers/audiorecord-service'
-import { AuthService } from './providers/auth-service'
-import { ConfigService } from './providers/config-service'
-import { HomeController } from './providers/home-controller'
-import { KafkaService } from './providers/kafka-service'
-import { NotificationService } from './providers/notification-service'
-import { PrepareDataService } from './providers/preparedata-service'
-import { QuestionService } from './providers/question-service'
-import { SchedulingService } from './providers/scheduling-service'
-import { StorageService } from './providers/storage-service'
-import { TimeStampService } from './providers/timestamp-service'
 import { PipesModule } from './shared/pipes/pipes.module'
 import { TranslatePipe } from './shared/pipes/translate/translate'
 import { AndroidPermissionUtility } from './shared/utilities/android-permission'
@@ -96,7 +94,6 @@ import { Utility } from './shared/utilities/util'
     QuestionsPage,
     FinishPage,
     SettingsPage,
-    TaskSelectPage,
     ReportPage,
 
     // Components
@@ -126,7 +123,6 @@ import { Utility } from './shared/utilities/util'
     QuestionsPage,
     FinishPage,
     SettingsPage,
-    TaskSelectPage,
     ReportPage,
 
     // Components
@@ -147,7 +143,6 @@ import { Utility } from './shared/utilities/util'
     StatusBar,
     SplashScreen,
     DatePipe,
-    QuestionService,
     AnswerService,
     ConfigService,
     StorageService,

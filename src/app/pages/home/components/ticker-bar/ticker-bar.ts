@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges } from '@angular/core'
 import { NavController } from 'ionic-angular'
 
-import { SchedulingService } from '../../../../providers/scheduling-service'
+import { SchedulingService } from '../../../../core/services/scheduling.service'
 import { LocKeys } from '../../../../shared/enums/localisations'
 import { StorageKeys } from '../../../../shared/enums/storage'
 import { ReportScheduling } from '../../../../shared/models/report'

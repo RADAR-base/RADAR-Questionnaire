@@ -6,7 +6,7 @@ import { Device } from '@ionic-native/device'
 import { Observable, throwError as observableThrowError } from 'rxjs'
 
 import { DefaultEndPoint } from '../../../assets/data/defaultConfig'
-import { StorageService } from '../../providers/storage-service'
+import { StorageService } from '../../core/services/storage.service'
 import { StorageKeys } from '../enums/storage'
 
 @Injectable()

@@ -3,9 +3,6 @@ import { File } from '@ionic-native/file'
 // file path to opensmile.js; Adding opensmile plugin
 import * as opensmile from 'cordova-plugin-opensmile/www/opensmile'
 
-import { AndroidPermissionUtility } from '../shared/utilities/android-permission'
-import { AnswerService } from './answer-service'
-
 declare var cordova: any
 declare var window: any
 @Injectable()
@@ -16,11 +13,7 @@ export class AudioRecordService {
   recording: boolean = false
   recordingTime: number = 45000
 
-  constructor(
-    private answerService: AnswerService,
-    private permissionUtil: AndroidPermissionUtility,
-    private file: File
-  ) {
+  constructor(private file: File) {
     // kill recording on load
     this.stopAudioRecording()
   }

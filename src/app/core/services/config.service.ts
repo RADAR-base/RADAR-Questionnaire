@@ -6,11 +6,11 @@ import { Injectable } from '@angular/core'
 import {
   DefaultNumberOfNotificationsToSchedule,
   DefaultProtocolEndPoint
-} from '../../assets/data/defaultConfig'
-import { HomeController } from '../providers/home-controller'
-import { SchedulingService } from '../providers/scheduling-service'
-import { StorageService } from '../providers/storage-service'
-import { StorageKeys } from '../shared/enums/storage'
+} from '../../../assets/data/defaultConfig'
+import { StorageKeys } from '../../shared/enums/storage'
+import { HomeController } from './home-controller.service'
+import { SchedulingService } from './scheduling.service'
+import { StorageService } from './storage.service'
 
 @Injectable()
 export class ConfigService {

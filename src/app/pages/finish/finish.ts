@@ -2,16 +2,13 @@ import { Component } from '@angular/core'
 import { NavController, NavParams } from 'ionic-angular'
 
 import { DefaultNumberOfNotificationsToSchedule } from '../../../assets/data/defaultConfig'
-import { AnswerService } from '../../providers/answer-service'
-import { HomeController } from '../../providers/home-controller'
-import { KafkaService } from '../../providers/kafka-service'
-import { PrepareDataService } from '../../providers/preparedata-service'
-import { StorageService } from '../../providers/storage-service'
-import { TimeStampService } from '../../providers/timestamp-service'
+import { HomeController } from '../../core/services/home-controller.service'
+import { KafkaService } from '../../core/services/kafka.service'
+import { StorageService } from '../../core/services/storage.service'
 import { StorageKeys } from '../../shared/enums/storage'
-import { Reminders } from '../../shared/models/protocol'
 import { Task } from '../../shared/models/task'
 import { HomePage } from '../home/home'
+import { PrepareDataService } from './services/preparedata.service'
 
 @Component({
   selector: 'page-finish',
@@ -27,9 +24,7 @@ export class FinishPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private answerService: AnswerService,
     private kafkaService: KafkaService,
-    private timestampService: TimeStampService,
     private prepareDataService: PrepareDataService,
     private controller: HomeController,
     public storage: StorageService
@@ -50,8 +45,8 @@ export class FinishPage {
       }
       this.prepareDataService
         .process_QuestionnaireData(
-          this.answerService.answers,
-          this.timestampService.timestamps
+          this.navParams.data.answers,
+          this.navParams.data.timestamps
         )
         .then(
           data => {

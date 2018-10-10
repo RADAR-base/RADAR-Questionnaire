@@ -6,9 +6,9 @@ import {
   DefaultNotificationRefreshTime,
   DefaultNumberOfNotificationsToSchedule
 } from '../../../assets/data/defaultConfig'
-import { HomeController } from '../../providers/home-controller'
-import { KafkaService } from '../../providers/kafka-service'
-import { StorageService } from '../../providers/storage-service'
+import { HomeController } from '../../core/services/home-controller.service'
+import { KafkaService } from '../../core/services/kafka.service'
+import { StorageService } from '../../core/services/storage.service'
 import { StorageKeys } from '../../shared/enums/storage'
 import { EnrolmentPage } from '../enrolment/enrolment'
 import { HomePage } from '../home/home'

@@ -7,8 +7,8 @@ import {
 } from 'ionic-angular'
 
 import { DefaultTask } from '../../../assets/data/defaultConfig'
-import { HomeController } from '../../providers/home-controller'
-import { StorageService } from '../../providers/storage-service'
+import { HomeController } from '../../core/services/home-controller.service'
+import { StorageService } from '../../core/services/storage.service'
 import { StorageKeys } from '../../shared/enums/storage'
 import { Task } from '../../shared/models/task'
 import { QuestionsPage } from '../questions/questions'

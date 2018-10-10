@@ -10,7 +10,7 @@ import {
 import { AlertController, NavController, Platform } from 'ionic-angular'
 
 import { DefaultTask } from '../../../../../assets/data/defaultConfig'
-import { HomeController } from '../../../../providers/home-controller'
+import { HomeController } from '../../../../core/services/home-controller.service'
 import { LocKeys } from '../../../../shared/enums/localisations'
 import { Task } from '../../../../shared/models/task'
 import { TranslatePipe } from '../../../../shared/pipes/translate/translate'

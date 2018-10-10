@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common'
 import { Injectable } from '@angular/core'
 
-import { Timestamp } from '../shared/models/timestamp'
+import { Timestamp } from '../../../shared/models/timestamp'
 
 @Injectable()
 export class TimeStampService {

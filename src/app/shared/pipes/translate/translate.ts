@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core'
 
 import { Localisations } from '../../../../assets/data/localisations'
-import { StorageService } from '../../../providers/storage-service'
+import { StorageService } from '../../../core/services/storage.service'
 import { StorageKeys } from '../../enums/storage'
 
 // Solve Globalization error: plugin_not_installed

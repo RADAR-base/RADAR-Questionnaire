@@ -13,9 +13,9 @@ import {
   URI_metatoken,
   URI_refresh,
   URI_subjects
-} from '../../assets/data/defaultConfig'
-import { StorageKeys } from '../shared/enums/storage'
-import { StorageService } from './storage-service'
+} from '../../../../assets/data/defaultConfig'
+import { StorageService } from '../../../core/services/storage.service'
+import { StorageKeys } from '../../../shared/enums/storage'
 
 @Injectable()
 export class AuthService {

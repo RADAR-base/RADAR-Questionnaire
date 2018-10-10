@@ -4,19 +4,18 @@ import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import AvroSchema from 'avsc'
 import KafkaClient from 'kafka-rest'
-import { Observable } from 'rxjs/Observable'
 
-import { DefaultEndPoint } from '../../assets/data/defaultConfig'
-import { StorageKeys } from '../shared/enums/storage'
+import { DefaultEndPoint } from '../../../assets/data/defaultConfig'
+import { AuthService } from '../../pages/enrolment/services/auth.service'
+import { StorageKeys } from '../../shared/enums/storage'
 import {
   AnswerKeyExport,
   AnswerValueExport,
   CompletionLogValueExport
-} from '../shared/models/answer'
-import { Task } from '../shared/models/task'
-import { Utility } from '../shared/utilities/util'
-import { AuthService } from './auth-service'
-import { StorageService } from './storage-service'
+} from '../../shared/models/answer'
+import { Task } from '../../shared/models/task'
+import { Utility } from '../../shared/utilities/util'
+import { StorageService } from './storage.service'
 
 @Injectable()
 export class KafkaService {

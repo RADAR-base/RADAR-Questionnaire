@@ -3,8 +3,6 @@ import 'rxjs/add/operator/delay'
 import { Component } from '@angular/core'
 import { LoadingController, NavController, NavParams } from 'ionic-angular'
 
-import { AnswerService } from '../../providers/answer-service'
-import { TimeStampService } from '../../providers/timestamp-service'
 import { Assessment } from '../../shared/models/assessment'
 import { Question } from '../../shared/models/question'
 import { Task } from '../../shared/models/task'
@@ -21,24 +19,12 @@ export class StartPage {
   questions: Question[]
   endText: String
 
-  constructor(
-    public navCtrl: NavController,
-    public navParams: NavParams,
-    private answerService: AnswerService,
-    private timeStampService: TimeStampService
-  ) {
+  constructor(public navCtrl: NavController, public navParams: NavParams) {
     this.associatedTask = this.navParams.data.associatedTask
     this.title = this.navParams.data.title
     this.introduction = this.navParams.data.introduction
     this.questions = this.navParams.data.questions
     this.endText = this.navParams.data.endText
-  }
-
-  ionViewDidLoad() {}
-
-  ionViewDidEnter() {
-    this.answerService.reset()
-    this.timeStampService.reset()
   }
 
   handleClosePage() {

@@ -4,14 +4,15 @@
 
 import { Injectable } from '@angular/core'
 
-import { StorageService } from '../providers/storage-service'
-import { StorageKeys } from '../shared/enums/storage'
+import { StorageService } from '../../../core/services/storage.service'
+import { StorageKeys } from '../../../shared/enums/storage'
 
 @Injectable()
 export class PrepareDataService {
   constructor(public storage: StorageService) {}
 
   process_QuestionnaireData(answers, timestamps): Promise<any> {
+    console.log(answers)
     return new Promise((resolve, reject) => {
       // fetch config version and Patient ID
       this.fetchFromStorage().then(

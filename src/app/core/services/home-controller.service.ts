@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core'
 
-import { StorageKeys } from '../shared/enums/storage'
-import { Assessment } from '../shared/models/assessment'
-import { Task, TasksProgress } from '../shared/models/task'
-import { KafkaService } from './kafka-service'
-import { NotificationService } from './notification-service'
-import { SchedulingService } from './scheduling-service'
-import { StorageService } from './storage-service'
+import { StorageKeys } from '../../shared/enums/storage'
+import { Task, TasksProgress } from '../../shared/models/task'
+import { KafkaService } from './kafka.service'
+import { NotificationService } from './notification.service'
+import { SchedulingService } from './scheduling.service'
+import { StorageService } from './storage.service'
 
 @Injectable()
 export class HomeController {

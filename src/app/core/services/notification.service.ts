@@ -9,13 +9,13 @@ import {
   DefaultNumberOfNotificationsToRescue,
   DefaultNumberOfNotificationsToSchedule,
   FCMPluginProjectSenderId
-} from '../../assets/data/defaultConfig'
-import { SchedulingService } from '../providers/scheduling-service'
-import { StorageService } from '../providers/storage-service'
-import { LocKeys } from '../shared/enums/localisations'
-import { StorageKeys } from '../shared/enums/storage'
-import { Task } from '../shared/models/task'
-import { TranslatePipe } from '../shared/pipes/translate/translate'
+} from '../../../assets/data/defaultConfig'
+import { LocKeys } from '../../shared/enums/localisations'
+import { StorageKeys } from '../../shared/enums/storage'
+import { Task } from '../../shared/models/task'
+import { TranslatePipe } from '../../shared/pipes/translate/translate'
+import { SchedulingService } from './scheduling.service'
+import { StorageService } from './storage.service'
 
 declare var cordova
 declare var FCMPlugin

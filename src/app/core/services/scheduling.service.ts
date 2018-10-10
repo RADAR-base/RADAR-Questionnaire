@@ -5,13 +5,17 @@ import { Injectable } from '@angular/core'
 import {
   DefaultScheduleReportRepeat,
   DefaultScheduleYearCoverage
-} from '../../assets/data/defaultConfig'
-import { StorageKeys } from '../shared/enums/storage'
-import { Assessment } from '../shared/models/assessment'
-import { Protocol, Reminders, RepeatProtocol } from '../shared/models/protocol'
-import { ReportScheduling } from '../shared/models/report'
-import { Task } from '../shared/models/task'
-import { StorageService } from './storage-service'
+} from '../../../assets/data/defaultConfig'
+import { StorageKeys } from '../../shared/enums/storage'
+import { Assessment } from '../../shared/models/assessment'
+import {
+  Protocol,
+  Reminders,
+  RepeatProtocol
+} from '../../shared/models/protocol'
+import { ReportScheduling } from '../../shared/models/report'
+import { Task } from '../../shared/models/task'
+import { StorageService } from './storage.service'
 
 @Injectable()
 export class SchedulingService {

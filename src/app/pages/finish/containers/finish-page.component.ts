@@ -8,7 +8,7 @@ import { StorageService } from '../../../core/services/storage.service'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { Task } from '../../../shared/models/task'
 import { HomePageComponent } from '../../home/containers/home-page.component'
-import { PrepareDataService } from '../services/preparedata.service'
+import { PrepareDataService } from '../services/prepare-data.service'
 
 @Component({
   selector: 'page-finish',

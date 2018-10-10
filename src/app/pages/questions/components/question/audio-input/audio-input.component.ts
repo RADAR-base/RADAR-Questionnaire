@@ -15,7 +15,7 @@ import { Answer } from '../../../../../shared/models/answer'
 import { Section } from '../../../../../shared/models/question'
 import { AndroidPermissionUtility } from '../../../../../shared/utilities/android-permission'
 import { QuestionsPageComponent } from '../../../containers/questions-page.component'
-import { AudioRecordService } from '../../../services/audiorecord.service'
+import { AudioRecordService } from '../../../services/audio-record.service'
 
 declare var cordova: any
 declare var window: any

@@ -12,7 +12,7 @@ import { Question, QuestionType } from '../../../shared/models/question'
 import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { FinishPageComponent } from '../../finish/containers/finish-page.component'
 import { AnswerService } from '../services/answer.service'
-import { TimeStampService } from '../services/timestamp.service'
+import { TimestampService } from '../services/timestamp.service'
 
 @Component({
   selector: 'page-questions',
@@ -62,7 +62,7 @@ export class QuestionsPageComponent {
     public viewCtrl: ViewController,
     public appCtrl: App,
     private answerService: AnswerService,
-    private timestampService: TimeStampService,
+    private timestampService: TimestampService,
     private translate: TranslatePipe
   ) {}
 

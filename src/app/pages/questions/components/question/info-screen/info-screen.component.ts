@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
 
-import { Section } from '../../../../shared/models/question'
+import { Section } from '../../../../../shared/models/question'
 
 let uniqueID = 0
 

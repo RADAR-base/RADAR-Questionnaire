@@ -132,7 +132,7 @@ export class SettingsPageComponent {
   }
 
   weeklyReportChange(index) {
-    // this.weeklyReport[index].show !== this.weeklyReport[index].show
+    this.weeklyReport[index].show = !this.weeklyReport[index].show
     this.storage.set(StorageKeys.SETTINGS_WEEKLYREPORT, this.weeklyReport)
   }
 

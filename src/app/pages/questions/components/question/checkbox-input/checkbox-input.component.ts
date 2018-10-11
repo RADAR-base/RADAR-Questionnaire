@@ -45,15 +45,9 @@ export class CheckboxInputComponent implements OnInit {
     return code
   }
 
-  test(event) {
-    this.itemsSelected[event.target.id] = event.target.value
-    console.log(this.itemsSelected)
-  }
-
   onInputChange(event) {
     this.logSelectedItems(event.target)
     const selectedItems = this.retrieveSelectedItems().toString()
-    console.log(selectedItems)
     this.valueChange.emit(+selectedItems)
   }
 

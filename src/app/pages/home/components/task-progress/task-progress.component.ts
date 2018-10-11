@@ -9,8 +9,8 @@ import {
 } from '@angular/core'
 import { RoundProgressConfig } from 'angular-svg-round-progressbar'
 
-import { HomeController } from '../../../../core/services/home-controller.service'
 import { TasksProgress } from '../../../../shared/models/task'
+import { TasksService } from '../../services/tasks.service'
 
 @Component({
   selector: 'task-progress',
@@ -44,7 +44,7 @@ export class TaskProgressComponent implements OnChanges {
 
   constructor(
     private progConfig: RoundProgressConfig,
-    private controller: HomeController
+    private tasksService: TasksService
   ) {
     progConfig.setDefaults({
       color: '#7fcdbb',
@@ -53,7 +53,7 @@ export class TaskProgressComponent implements OnChanges {
       animation: 'easeInOutQuart',
       duration: this.duration
     })
-    this.controller.getTaskProgress().then(progress => {
+    this.tasksService.getTaskProgress().then(progress => {
       this.progress = progress
       this.updateProgress()
     })

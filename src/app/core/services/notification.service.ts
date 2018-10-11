@@ -326,4 +326,27 @@ export class NotificationService {
     }
     alert.present()
   }
+
+  setNextXNotifications(noOfNotifications) {
+    const today = new Date().getTime()
+    const promises = []
+    return this.generateNotificationSubsetForXTasks(noOfNotifications).then(
+      desiredSubset => {
+        console.log(`NOTIFICATIONS desiredSubset: ${desiredSubset.length}`)
+        try {
+          return this.setNotifications(desiredSubset)
+        } catch (e) {
+          return Promise.resolve({})
+        }
+      }
+    )
+  }
+
+  cancelNotifications() {
+    return this.storage
+      .get(StorageKeys.PARTICIPANTLOGIN)
+      .then(participantLogin => {
+        return this.cancelNotificationPush(participantLogin)
+      })
+  }
 }

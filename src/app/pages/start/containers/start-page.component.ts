@@ -7,6 +7,7 @@ import { Assessment } from '../../../shared/models/assessment'
 import { Question } from '../../../shared/models/question'
 import { Task } from '../../../shared/models/task'
 import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
+import { StartService } from '../services/start.service'
 
 @Component({
   selector: 'page-start',
@@ -18,13 +19,23 @@ export class StartPageComponent {
   title: String = ''
   questions: Question[]
   endText: String
+  assessment
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private startService: StartService
+  ) {
     this.associatedTask = this.navParams.data.associatedTask
     this.title = this.navParams.data.title
     this.introduction = this.navParams.data.introduction
     this.questions = this.navParams.data.questions
     this.endText = this.navParams.data.endText
+    this.assessment = this.navParams.data.assessment
+  }
+
+  ionViewDidEnter() {
+    this.startService.updateAssessmentIntroduction(this.assessment)
   }
 
   handleClosePage() {

@@ -10,10 +10,10 @@ import {
 import { AlertController, NavController, Platform } from 'ionic-angular'
 
 import { DefaultTask } from '../../../../../assets/data/defaultConfig'
-import { HomeController } from '../../../../core/services/home-controller.service'
 import { LocKeys } from '../../../../shared/enums/localisations'
 import { Task } from '../../../../shared/models/task'
 import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
+import { TasksService } from '../../services/tasks.service'
 
 @Component({
   selector: 'task-calendar',
@@ -31,7 +31,7 @@ export class TaskCalendarComponent implements OnChanges {
   tasks: Task[] = [DefaultTask]
 
   constructor(
-    private controller: HomeController,
+    private tasksService: TasksService,
     private alertCtrl: AlertController,
     private translate: TranslatePipe,
     private platform: Platform
@@ -47,7 +47,7 @@ export class TaskCalendarComponent implements OnChanges {
   }
 
   getTasks() {
-    this.controller.getTasksOfToday().then(tasks => {
+    this.tasksService.getTasksOfToday().then(tasks => {
       if (tasks) {
         this.tasks = tasks.sort(this.compareTasks)
       }

@@ -8,7 +8,6 @@ import {
 } from 'ionic-angular'
 
 import { DefaultTask } from '../../../../assets/data/defaultConfig'
-import { HomeController } from '../../../core/services/home-controller.service'
 import { KafkaService } from '../../../core/services/kafka.service'
 import { NotificationService } from '../../../core/services/notification.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
@@ -22,6 +21,7 @@ import { ClinicalTasksPageComponent } from '../../clinical-tasks/containers/clin
 import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
 import { SettingsPageComponent } from '../../settings/containers/settings-page.component'
 import { StartPageComponent } from '../../start/containers/start-page.component'
+import { TasksService } from '../services/tasks.service'
 
 @Component({
   selector: 'page-home',
@@ -63,7 +63,7 @@ export class HomePageComponent {
     public navParams: NavParams,
     public alertCtrl: AlertController,
     private schedule: SchedulingService,
-    private controller: HomeController,
+    private tasksService: TasksService,
     private translate: TranslatePipe,
     public storage: StorageService,
     private notification: NotificationService,
@@ -90,12 +90,12 @@ export class HomePageComponent {
       this.kafka.sendAllAnswersInCache()
     })
 
-    this.controller.sendNonReportedTaskCompletion()
+    this.tasksService.sendNonReportedTaskCompletion()
   }
 
   checkForNextTask() {
     if (!this.showCalendar) {
-      this.controller.getNextTask().then(task => {
+      this.tasksService.getNextTask().then(task => {
         this.checkForNextTaskGeneric(task)
       })
     }
@@ -109,7 +109,7 @@ export class HomePageComponent {
       this.displayEvalTransformations(false)
       this.taskIsNow = checkTaskIsNow(task.timestamp)
     } else {
-      this.controller.areAllTasksComplete().then(completed => {
+      this.tasksService.areAllTasksComplete().then(completed => {
         if (completed) {
           this.nextTask = DefaultTask
           this.displayCompleted(true)
@@ -125,7 +125,7 @@ export class HomePageComponent {
   }
 
   checkIfOnlyESM() {
-    this.controller.getTasksOfToday().then(tasks => {
+    this.tasksService.getTasksOfToday().then(tasks => {
       let tmpHasOnlyESMs = true
       for (let i = 0; i < tasks.length; i++) {
         if (tasks[i].name !== 'ESM') {
@@ -267,7 +267,9 @@ export class HomePageComponent {
       }
     }
     const lang = this.storage.get(StorageKeys.LANGUAGE)
-    const nextAssessment = this.controller.getAssessment(startQuestionnaireTask)
+    const nextAssessment = this.tasksService.getAssessment(
+      startQuestionnaireTask
+    )
     Promise.all([lang, nextAssessment]).then(res => {
       const language = res[0].value
       const assessment = res[1]
@@ -276,9 +278,15 @@ export class HomePageComponent {
         introduction: assessment.startText[language],
         endText: assessment.endText[language],
         questions: assessment.questions,
-        associatedTask: startQuestionnaireTask
+        associatedTask: startQuestionnaireTask,
+        assessment: assessment,
+        isLastTask: false
       }
-      this.controller.updateAssessmentIntroduction(assessment)
+
+      this.tasksService.isLastTask(startQuestionnaireTask).then(lastTask => {
+        if (lastTask) params.isLastTask = true
+      })
+
       if (assessment.showIntroduction) {
         this.navCtrl.push(StartPageComponent, params)
       } else {

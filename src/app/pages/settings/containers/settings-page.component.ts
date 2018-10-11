@@ -15,7 +15,7 @@ import {
   LanguageMap
 } from '../../../../assets/data/defaultConfig'
 import { ConfigService } from '../../../core/services/config.service'
-import { HomeController } from '../../../core/services/home-controller.service'
+import { NotificationService } from '../../../core/services/notification.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { LocKeys } from '../../../shared/enums/localisations'
@@ -54,7 +54,7 @@ export class SettingsPageComponent {
     private appVersion: AppVersion,
     private schedule: SchedulingService,
     private configService: ConfigService,
-    private controller: HomeController,
+    private notificationService: NotificationService,
     public translate: TranslatePipe
   ) {}
 
@@ -203,12 +203,12 @@ export class SettingsPageComponent {
   }
 
   consoleLogNotifications() {
-    this.controller.consoleLogNotifications()
+    this.notificationService.consoleLogScheduledNotifications()
   }
 
   consoleLogSchedule() {
     console.log('SCHEDULE SETTINGS')
-    this.controller.consoleLogSchedule()
+    this.schedule.consoleLogSchedule()
   }
 
   showConfirmReset() {
@@ -255,7 +255,7 @@ export class SettingsPageComponent {
     this.showLoading = true
     this.configService.fetchConfigState(true).then(() => {
       this.loadSettings()
-      this.controller
+      this.notificationService
         .setNextXNotifications(DefaultNumberOfNotificationsToSchedule)
         .then(() => {
           this.showLoading = false

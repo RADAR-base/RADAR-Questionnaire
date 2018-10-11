@@ -2,7 +2,6 @@ import { CommonModule, DatePipe } from '@angular/common'
 import { NgModule } from '@angular/core'
 
 import { ConfigService } from '../core/services/config.service'
-import { HomeController } from '../core/services/home-controller.service'
 import { KafkaService } from '../core/services/kafka.service'
 import { NotificationService } from '../core/services/notification.service'
 import { SchedulingService } from '../core/services/scheduling.service'
@@ -38,7 +37,6 @@ import { StartModule } from './start/start.module'
     AuthService,
     DatePipe,
     ConfigService,
-    HomeController,
     KafkaService,
     NotificationService,
     SchedulingService,

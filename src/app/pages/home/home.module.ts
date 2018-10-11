@@ -8,6 +8,7 @@ import { TaskInfoModule } from './components/task-info/task-info.module'
 import { TaskProgressModule } from './components/task-progress/task-progress.module'
 import { TickerBarModule } from './components/ticker-bar/ticker-bar.module'
 import { HomePageComponent } from './containers/home-page.component'
+import { TasksService } from './services/tasks.service'
 
 @NgModule({
   imports: [
@@ -19,6 +20,7 @@ import { HomePageComponent } from './containers/home-page.component'
     PipesModule,
     IonicModule.forRoot(HomePageComponent)
   ],
-  declarations: [HomePageComponent]
+  declarations: [HomePageComponent],
+  providers: [TasksService]
 })
 export class HomeModule {}

@@ -4,6 +4,7 @@ import { IonicModule } from 'ionic-angular'
 
 import { PipesModule } from '../../shared/pipes/pipes.module'
 import { SplashPageComponent } from './containers/splash-page.component'
+import { SplashService } from './services/splash.service'
 
 @NgModule({
   imports: [
@@ -11,6 +12,7 @@ import { SplashPageComponent } from './containers/splash-page.component'
     PipesModule,
     IonicModule.forRoot(SplashPageComponent)
   ],
-  declarations: [SplashPageComponent]
+  declarations: [SplashPageComponent],
+  providers: [SplashService]
 })
 export class SplashModule {}

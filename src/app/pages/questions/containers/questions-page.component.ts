@@ -188,7 +188,8 @@ export class QuestionsPageComponent {
       endText: this.navParams.data.endText,
       associatedTask: this.navParams.data.associatedTask,
       answers: this.answerService.answers,
-      timestamps: this.timestampService.timestamps
+      timestamps: this.timestampService.timestamps,
+      isLastTask: this.navParams.data.isLastTask
     })
   }
 

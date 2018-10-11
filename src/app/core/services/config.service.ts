@@ -8,7 +8,7 @@ import {
   DefaultProtocolEndPoint
 } from '../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../shared/enums/storage'
-import { HomeController } from './home-controller.service'
+import { NotificationService } from './notification.service'
 import { SchedulingService } from './scheduling.service'
 import { StorageService } from './storage.service'
 
@@ -22,7 +22,7 @@ export class ConfigService {
     public http: HttpClient,
     public storage: StorageService,
     private schedule: SchedulingService,
-    private controller: HomeController
+    private notificationService: NotificationService
   ) {}
 
   fetchConfigState(force: boolean) {
@@ -74,16 +74,20 @@ export class ConfigService {
                   })
               })
               .then(() => {
-                return this.controller.cancelNotifications().then(() => {
-                  // set notificaition here too so scheduled everytime the schedule changes too.
-                  return this.controller
-                    .setNextXNotifications(
-                      DefaultNumberOfNotificationsToSchedule
-                    )
-                    .then(() =>
-                      console.log('NOTIFICATIONS scheduled after config change')
-                    )
-                })
+                return this.notificationService
+                  .cancelNotifications()
+                  .then(() => {
+                    // set notificaition here too so scheduled everytime the schedule changes too.
+                    return this.notificationService
+                      .setNextXNotifications(
+                        DefaultNumberOfNotificationsToSchedule
+                      )
+                      .then(() =>
+                        console.log(
+                          'NOTIFICATIONS scheduled after config change'
+                        )
+                      )
+                  })
               })
           } else {
             console.log(

@@ -2,12 +2,13 @@ import { Component } from '@angular/core'
 import { NavController, NavParams } from 'ionic-angular'
 
 import { DefaultNumberOfNotificationsToSchedule } from '../../../../assets/data/defaultConfig'
-import { HomeController } from '../../../core/services/home-controller.service'
 import { KafkaService } from '../../../core/services/kafka.service'
+import { NotificationService } from '../../../core/services/notification.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { Task } from '../../../shared/models/task'
 import { HomePageComponent } from '../../home/containers/home-page.component'
+import { FinishTaskService } from '../services/finish-task.service'
 import { PrepareDataService } from '../services/prepare-data.service'
 
 @Component({
@@ -26,7 +27,8 @@ export class FinishPageComponent {
     public navParams: NavParams,
     private kafkaService: KafkaService,
     private prepareDataService: PrepareDataService,
-    private controller: HomeController,
+    private notificationService: NotificationService,
+    private finishTaskService: FinishTaskService,
     public storage: StorageService
   ) {}
 
@@ -50,7 +52,7 @@ export class FinishPageComponent {
         )
         .then(
           data => {
-            this.controller.updateTaskToComplete(
+            this.finishTaskService.updateTaskToComplete(
               this.navParams.data.associatedTask
             )
             this.sendToKafka(this.navParams.data.associatedTask, data)
@@ -61,18 +63,11 @@ export class FinishPageComponent {
         )
     } else {
       // This is a Demo Questionnaire. Just update to complete and do nothing else
-      this.controller.updateTaskToComplete(this.navParams.data.associatedTask)
+      this.finishTaskService.updateTaskToComplete(
+        this.navParams.data.associatedTask
+      )
     }
-
-    this.controller.getNextTask().then(task => {
-      if (task) {
-        if (task.name !== 'ESM') {
-          this.displayNextTaskReminder = true
-        }
-      } else {
-        this.displayNextTaskReminder = false
-      }
-    })
+    this.displayNextTaskReminder = !this.navParams.data.isLastTask
   }
 
   sendToKafka(questionnaireName, questionnaireData) {
@@ -129,7 +124,7 @@ export class FinishPageComponent {
     return this.storage
       .set(StorageKeys.SCHEDULE_TASKS_CLINICAL, clinicalTasks)
       .then(() => {
-        return this.controller.setNextXNotifications(
+        return this.notificationService.setNextXNotifications(
           DefaultNumberOfNotificationsToSchedule
         )
       })

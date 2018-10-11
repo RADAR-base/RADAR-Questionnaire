@@ -6,12 +6,13 @@ import {
   DefaultNotificationRefreshTime,
   DefaultNumberOfNotificationsToSchedule
 } from '../../../../assets/data/defaultConfig'
-import { HomeController } from '../../../core/services/home-controller.service'
 import { KafkaService } from '../../../core/services/kafka.service'
+import { NotificationService } from '../../../core/services/notification.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { EnrolmentPageComponent } from '../../auth/containers/enrolment-page.component'
 import { HomePageComponent } from '../../home/containers/home-page.component'
+import { SplashService } from '../services/splash.service'
 
 @Component({
   selector: 'page-splash',
@@ -26,7 +27,8 @@ export class SplashPageComponent {
     public navCtrl: NavController,
     public navParams: NavParams,
     public storage: StorageService,
-    private controller: HomeController,
+    private splashService: SplashService,
+    private notificationService: NotificationService,
     private globalization: Globalization,
     private kafka: KafkaService
   ) {
@@ -54,7 +56,7 @@ export class SplashPageComponent {
               )
               this.storage.set(StorageKeys.TIME_ZONE, res.timezone)
               this.storage.set(StorageKeys.UTC_OFFSET, res.utc_offset)
-              this.controller.cancelNotifications()
+              this.notificationService.cancelNotifications()
             } else {
               console.log('[SPLASH] Current Timezone is ' + timeZone)
             }
@@ -68,7 +70,7 @@ export class SplashPageComponent {
           .then(lastUpdate => {
             const timeElapsed = Date.now() - lastUpdate
             if (timeElapsed > DefaultNotificationRefreshTime || !lastUpdate) {
-              this.controller
+              this.notificationService
                 .setNextXNotifications(DefaultNumberOfNotificationsToSchedule)
                 .then(() =>
                   this.storage.set(
@@ -101,7 +103,7 @@ export class SplashPageComponent {
         if (this.hasParentPage) {
           return Promise.resolve(false)
         }
-        return this.controller.evalEnrolment()
+        return this.splashService.evalEnrolment()
       })
       .then(evalEnrolement => {
         if (evalEnrolement) {

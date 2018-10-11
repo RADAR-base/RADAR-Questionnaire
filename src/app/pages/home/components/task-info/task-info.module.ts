@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { NgModule } from '@angular/core'
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core'
 import { RoundProgressModule } from 'angular-svg-round-progressbar'
 import { IonicModule } from 'ionic-angular'
 
@@ -16,6 +16,7 @@ const COMPONENTS = [TaskInfoComponent]
     PipesModule
   ],
   declarations: COMPONENTS,
-  exports: COMPONENTS
+  exports: COMPONENTS,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class TaskInfoModule {}

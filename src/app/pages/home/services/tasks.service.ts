@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core'
 
-import { StorageKeys } from '../../shared/enums/storage'
-import { Task, TasksProgress } from '../../shared/models/task'
-import { KafkaService } from './kafka.service'
-import { NotificationService } from './notification.service'
-import { SchedulingService } from './scheduling.service'
-import { StorageService } from './storage.service'
+import { KafkaService } from '../../../core/services/kafka.service'
+import { NotificationService } from '../../../core/services/notification.service'
+import { SchedulingService } from '../../../core/services/scheduling.service'
+import { StorageService } from '../../../core/services/storage.service'
+import { StorageKeys } from '../../../shared/enums/storage'
+import { Task, TasksProgress } from '../../../shared/models/task'
 
 @Injectable()
-export class HomeController {
+export class TasksService {
   constructor(
     public storage: StorageService,
     private schedule: SchedulingService,
@@ -16,26 +16,8 @@ export class HomeController {
     private kafka: KafkaService
   ) {}
 
-  evalEnrolment() {
-    return this.storage.getAllKeys().then(keys => {
-      return keys.length <= 5
-    })
-  }
-
   getAssessment(task) {
     return this.storage.getAssessment(task)
-  }
-
-  getClinicalAssessment(task) {
-    return this.storage.getClinicalAssessment(task)
-  }
-
-  updateAssessmentIntroduction(assessment) {
-    if (assessment.showIntroduction) {
-      const assessmentUpdated = assessment
-      assessmentUpdated.showIntroduction = false
-      this.storage.updateAssessment(assessmentUpdated)
-    }
   }
 
   getTasksOfToday() {
@@ -51,55 +33,6 @@ export class HomeController {
     return this.getTasksOfToday().then((tasks: Task[]) =>
       this.retrieveTaskProgress(tasks)
     )
-  }
-
-  getClinicalTasks() {
-    return this.storage.get(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS)
-  }
-
-  setNextXNotifications(noOfNotifications) {
-    const today = new Date().getTime()
-    const promises = []
-    return this.notifications
-      .generateNotificationSubsetForXTasks(noOfNotifications)
-      .then(desiredSubset => {
-        console.log(`NOTIFICATIONS desiredSubset: ${desiredSubset.length}`)
-        try {
-          return this.notifications.setNotifications(desiredSubset)
-        } catch (e) {
-          return Promise.resolve({})
-        }
-      })
-  }
-
-  cancelNotifications() {
-    return this.storage
-      .get(StorageKeys.PARTICIPANTLOGIN)
-      .then(participantLogin => {
-        return this.notifications.cancelNotificationPush(participantLogin)
-      })
-  }
-
-  consoleLogNotifications() {
-    this.notifications.consoleLogScheduledNotifications()
-  }
-
-  consoleLogSchedule() {
-    this.schedule.getTasks().then(tasks => {
-      const tasksKeys = []
-      for (let i = 0; i < tasks.length; i++) {
-        tasksKeys.push(`${tasks[i].timestamp}-${tasks[i].name}`)
-      }
-      tasksKeys.sort()
-      let rendered = `\nSCHEDULE Total (${tasksKeys.length})\n`
-      for (let i = tasksKeys.length - 10; i < tasksKeys.length; i++) {
-        const dateName = tasksKeys[i].split('-')
-        rendered += `${tasksKeys[i]} DATE ${new Date(
-          parseInt(dateName[0], 10)
-        ).toString()} NAME ${dateName[1]}\n`
-      }
-      console.log(rendered)
-    })
   }
 
   retrieveTaskProgress(tasks): TasksProgress {
@@ -129,6 +62,39 @@ export class HomeController {
       return this.checkIfAllTasksComplete(tasks)
     })
   }
+
+  isLastTask(task) {
+    return this.getTasksOfToday().then((tasks: Task[]) => {
+      return this.checkIfLastTask(tasks, task)
+    })
+  }
+
+  checkIfAllTasksComplete(tasks: Task[]) {
+    if (tasks) {
+      for (let i = 0; i < tasks.length; i++) {
+        if (tasks[i].name !== 'ESM') {
+          if (tasks[i].completed === false) {
+            return false
+          }
+        }
+      }
+    }
+    return true
+  }
+
+  checkIfLastTask(tasks: Task[], task) {
+    if (tasks) {
+      for (let i = 0; i < tasks.length; i++) {
+        if (tasks[i].name !== 'ESM') {
+          if (tasks[i].completed === false && tasks[i].index !== task.index) {
+            return false
+          }
+        }
+      }
+    }
+    return true
+  }
+
   /**
    * This function Retrieves the most current next task from a list of tasks.
    * @param tasks : The list of tasks to retrieve the next task from.
@@ -179,20 +145,6 @@ export class HomeController {
     }
   }
 
-  checkIfAllTasksComplete(tasks: Task[]): boolean {
-    let status = true
-    if (tasks) {
-      for (let i = 0; i < tasks.length; i++) {
-        if (tasks[i].name !== 'ESM') {
-          if (tasks[i].completed === false) {
-            status = false
-          }
-        }
-      }
-    }
-    return status
-  }
-
   sendNonReportedTaskCompletion() {
     this.schedule.getNonReportedCompletedTasks().then(nonReportedTasks => {
       for (let i = 0; i < nonReportedTasks.length; i++) {
@@ -200,12 +152,6 @@ export class HomeController {
         this.updateTaskToReportedCompletion(nonReportedTasks[i])
       }
     })
-  }
-
-  updateTaskToComplete(task): Promise<any> {
-    const updatedTask = task
-    updatedTask.completed = true
-    return this.schedule.insertTask(updatedTask)
   }
 
   updateTaskToReportedCompletion(task): Promise<any> {

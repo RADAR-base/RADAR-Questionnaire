@@ -137,6 +137,7 @@ export class TaskInfoComponent implements OnChanges {
   animateCenterRight: String
   isNow: boolean = false
   private language: string
+  private extraTaskInfo: string
 
   max: number = 1
   current: number = 0
@@ -167,14 +168,26 @@ export class TaskInfoComponent implements OnChanges {
     })
   }
 
-  ngOnChanges(changes) {
+  ngOnChanges() {
+    this.checkDisplayTask()
+    this.checkHasExtraInfo()
+  }
+
+  checkDisplayTask() {
     if (this.task['timestamp'] > 0) {
       this.displayTask = true
     } else {
       this.displayTask = false
     }
+  }
+
+  checkHasExtraInfo() {
     if (this.task['warning'] !== '') {
       this.hasExtraInfo = true
+      if (this.language) {
+        this.extraTaskInfo = this.task.warning[this.language]
+        this.hasExtraInfo = this.extraTaskInfo ? true : false
+      }
     } else {
       this.hasExtraInfo = false
     }
@@ -245,14 +258,7 @@ export class TaskInfoComponent implements OnChanges {
     return format
   }
 
-  getExtraInfo(): string {
-    if (this.language) {
-      const info = this.task.warning[this.language]
-      this.hasExtraInfo = info !== '' ? true : false
-      return info
-    } else {
-      this.hasExtraInfo = false
-      return ''
-    }
+  getExtraInfo() {
+    return this.extraTaskInfo
   }
 }

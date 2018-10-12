@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core'
 
 import { KafkaService } from '../../../core/services/kafka.service'
-import { NotificationService } from '../../../core/services/notification.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
-import { StorageKeys } from '../../../shared/enums/storage'
 import { Task, TasksProgress } from '../../../shared/models/task'
 
 @Injectable()
@@ -12,7 +10,6 @@ export class TasksService {
   constructor(
     public storage: StorageService,
     private schedule: SchedulingService,
-    private notifications: NotificationService,
     private kafka: KafkaService
   ) {}
 

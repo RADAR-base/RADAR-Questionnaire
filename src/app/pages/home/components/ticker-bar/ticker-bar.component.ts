@@ -3,7 +3,6 @@ import { NavController } from 'ionic-angular'
 
 import { SchedulingService } from '../../../../core/services/scheduling.service'
 import { LocKeys } from '../../../../shared/enums/localisations'
-import { StorageKeys } from '../../../../shared/enums/storage'
 import { ReportScheduling } from '../../../../shared/models/report'
 import { Task } from '../../../../shared/models/task'
 import { TickerItem } from '../../../../shared/models/ticker'

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core'
 import { Globalization } from '@ionic-native/globalization'
-import { IonicPage, NavController, NavParams } from 'ionic-angular'
+import { NavController, NavParams } from 'ionic-angular'
 
 import {
   DefaultNotificationRefreshTime,

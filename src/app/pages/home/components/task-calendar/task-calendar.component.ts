@@ -1,13 +1,11 @@
 import {
   Component,
-  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
-  Output,
-  ViewChild
+  Output
 } from '@angular/core'
-import { AlertController, NavController, Platform } from 'ionic-angular'
+import { AlertController, Platform } from 'ionic-angular'
 
 import { DefaultTask } from '../../../../../assets/data/defaultConfig'
 import { LocKeys } from '../../../../shared/enums/localisations'

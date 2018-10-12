@@ -1,10 +1,5 @@
 import { Component } from '@angular/core'
-import {
-  Content,
-  NavController,
-  NavParams,
-  ViewController
-} from 'ionic-angular'
+import { NavController, NavParams } from 'ionic-angular'
 
 import { DefaultTask } from '../../../../assets/data/defaultConfig'
 import { StorageService } from '../../../core/services/storage.service'

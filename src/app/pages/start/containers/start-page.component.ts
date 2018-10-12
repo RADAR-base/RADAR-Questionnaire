@@ -1,7 +1,7 @@
 import 'rxjs/add/operator/delay'
 
 import { Component } from '@angular/core'
-import { LoadingController, NavController, NavParams } from 'ionic-angular'
+import { NavController, NavParams } from 'ionic-angular'
 
 import { Assessment } from '../../../shared/models/assessment'
 import { Question } from '../../../shared/models/question'
@@ -19,7 +19,7 @@ export class StartPageComponent {
   title: String = ''
   questions: Question[]
   endText: String
-  assessment
+  assessment: Assessment
 
   constructor(
     public navCtrl: NavController,

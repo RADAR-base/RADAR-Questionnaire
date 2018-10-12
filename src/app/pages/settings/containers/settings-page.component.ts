@@ -1,11 +1,6 @@
 import { Component } from '@angular/core'
 import { AppVersion } from '@ionic-native/app-version'
-import {
-  AlertController,
-  IonicPage,
-  NavController,
-  NavParams
-} from 'ionic-angular'
+import { AlertController, NavController, NavParams } from 'ionic-angular'
 
 import {
   DefaultNumberOfNotificationsToSchedule,

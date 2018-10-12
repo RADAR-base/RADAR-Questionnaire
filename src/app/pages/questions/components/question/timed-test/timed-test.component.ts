@@ -9,21 +9,7 @@ import {
 import { Dialogs } from '@ionic-native/dialogs'
 import { Vibration } from '@ionic-native/vibration'
 
-const uniqueID = 0
-
-export interface Timer {
-  start: number
-  end: number
-}
-
-export interface ITimer {
-  seconds: number
-  secondsRemaining: number
-  runTimer: boolean
-  hasStarted: boolean
-  hasFinished: boolean
-  displayTime: string
-}
+import { ITimer, Timer } from '../../../../../shared/models/timer'
 
 @Component({
   selector: 'timed-test',

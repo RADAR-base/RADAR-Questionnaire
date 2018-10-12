@@ -1,11 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
 
-let uniqueID = 0
+import { Item } from '../../../../../shared/models/question'
 
-export interface Item {
-  id: string
-  value: any
-}
+let uniqueID = 0
 
 @Component({
   selector: 'range-input',

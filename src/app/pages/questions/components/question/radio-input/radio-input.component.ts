@@ -1,14 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
 
-import { Response } from '../../../../../shared/models/question'
+import { Item, Response } from '../../../../../shared/models/question'
 
 let uniqueID = 0
-
-export interface Item {
-  id: string
-  response: string
-  value: any
-}
 
 @Component({
   selector: 'radio-input',

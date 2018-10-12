@@ -52,3 +52,15 @@ export interface Section {
   code: string
   label: string
 }
+
+export interface Item {
+  id: string
+  response?: string
+  value: any
+}
+
+export interface InfoItem {
+  id: string
+  heading: string
+  content: string
+}

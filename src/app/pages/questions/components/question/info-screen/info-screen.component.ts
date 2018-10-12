@@ -1,14 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
 
-import { Section } from '../../../../../shared/models/question'
+import { InfoItem, Section } from '../../../../../shared/models/question'
 
 let uniqueID = 0
-
-export interface Item {
-  id: string
-  heading: string
-  content: string
-}
 
 @Component({
   selector: 'info-screen',
@@ -25,7 +19,7 @@ export class InfoScreenComponent implements OnInit {
   uniqueID: number = uniqueID++
   name = `info-${this.uniqueID}`
   isThincItReminder = false
-  items: Item[] = Array()
+  items: InfoItem[] = Array()
 
   ngOnInit() {
     this.sections.map((item, i) => {

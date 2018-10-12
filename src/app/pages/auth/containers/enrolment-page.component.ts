@@ -1,6 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Component, ElementRef, ViewChild } from '@angular/core'
-import { JwtHelperService } from '@auth0/angular-jwt'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner'
 import { AlertController, NavController, Slides } from 'ionic-angular'
 
@@ -60,7 +58,6 @@ export class EnrolmentPageComponent {
     private configService: ConfigService,
     private authService: AuthService,
     private translate: TranslatePipe,
-    private jwtHelper: JwtHelperService,
     private alertCtrl: AlertController
   ) {}
 

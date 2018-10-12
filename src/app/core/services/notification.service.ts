@@ -1,7 +1,7 @@
 import 'rxjs/add/operator/map'
 
 import { Injectable } from '@angular/core'
-import { AlertController, NavController } from 'ionic-angular'
+import { AlertController } from 'ionic-angular'
 import { v4 as uuid } from 'uuid'
 
 import {

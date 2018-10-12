@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { AndroidPermissions } from '@ionic-native/android-permissions'
 import { Device } from '@ionic-native/device'
-import { Observable } from 'rxjs/Observable'
 
 import { Utility } from './util'
 

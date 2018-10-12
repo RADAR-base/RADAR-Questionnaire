@@ -1,6 +1,5 @@
 import 'rxjs/add/operator/map'
 
-import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import AvroSchema from 'avsc'
 import KafkaClient from 'kafka-rest'
@@ -24,7 +23,6 @@ export class KafkaService {
   private specs = {}
 
   constructor(
-    private http: HttpClient,
     private util: Utility,
     public storage: StorageService,
     private authService: AuthService

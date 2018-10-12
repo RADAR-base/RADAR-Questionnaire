@@ -3,7 +3,7 @@ import 'rxjs/add/operator/catch'
 
 import { Injectable } from '@angular/core'
 import { Storage } from '@ionic/storage'
-import { Observable, throwError as observableThrowError } from 'rxjs'
+import { throwError as observableThrowError } from 'rxjs'
 
 import {
   DefaultScheduleVersion,

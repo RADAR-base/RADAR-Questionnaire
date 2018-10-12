@@ -9,8 +9,6 @@ import {
 
 import { DefaultTask } from '../../../../assets/data/defaultConfig'
 import { KafkaService } from '../../../core/services/kafka.service'
-import { NotificationService } from '../../../core/services/notification.service'
-import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { StorageKeys } from '../../../shared/enums/storage'
@@ -62,11 +60,9 @@ export class HomePageComponent {
     public navCtrl: NavController,
     public navParams: NavParams,
     public alertCtrl: AlertController,
-    private schedule: SchedulingService,
     private tasksService: TasksService,
     private translate: TranslatePipe,
     public storage: StorageService,
-    private notification: NotificationService,
     private platform: Platform,
     private kafka: KafkaService
   ) {}

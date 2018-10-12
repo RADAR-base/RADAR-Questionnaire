@@ -46,7 +46,7 @@ export class TaskProgressComponent implements OnChanges {
     private progConfig: RoundProgressConfig,
     private tasksService: TasksService
   ) {
-    progConfig.setDefaults({
+    this.progConfig.setDefaults({
       color: '#7fcdbb',
       background: 'rgba(255,255,204,0.12)',
       stroke: 22,

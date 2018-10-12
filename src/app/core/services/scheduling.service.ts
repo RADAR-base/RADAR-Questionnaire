@@ -8,11 +8,6 @@ import {
 } from '../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../shared/enums/storage'
 import { Assessment } from '../../shared/models/assessment'
-import {
-  Protocol,
-  Reminders,
-  RepeatProtocol
-} from '../../shared/models/protocol'
 import { ReportScheduling } from '../../shared/models/report'
 import { Task } from '../../shared/models/task'
 import { StorageService } from './storage.service'
@@ -115,13 +110,15 @@ export class SchedulingService {
           const now = new Date().getTime()
           let limit = 100
           for (let i = 0; i < tasks.length; i++) {
-            if (
-              tasks[i].reportedCompletion === false &&
-              tasks[i].timestamp < now &&
-              limit > 0
-            ) {
-              nonReportedTasks.push(tasks[i])
-              limit -= 1
+            if (tasks[i]) {
+              if (
+                tasks[i].reportedCompletion === false &&
+                tasks[i].timestamp < now &&
+                limit > 0
+              ) {
+                nonReportedTasks.push(tasks[i])
+                limit -= 1
+              }
             }
           }
           return nonReportedTasks

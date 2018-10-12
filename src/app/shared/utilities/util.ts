@@ -1,9 +1,9 @@
 import 'rxjs/add/operator/map'
 
-import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Device } from '@ionic-native/device'
-import { Observable, throwError as observableThrowError } from 'rxjs'
+import { throwError as observableThrowError } from 'rxjs'
 
 import { DefaultEndPoint } from '../../../assets/data/defaultConfig'
 import { StorageService } from '../../core/services/storage.service'

@@ -94,10 +94,12 @@ page-clinical-tasks {
   }
 
   .status-checked {
-    width: 6vw;
-    height: 6vw;
+    margin-left: 2px;
+    padding-top: 2px;
+    width: 23px;
+    height: 23px;
     border-radius: 50%;
     background-color: map-get($colors, tertiary);
-    font-size: 22px;
+    font-size: 21px;
   }
 }

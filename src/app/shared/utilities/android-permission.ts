@@ -17,8 +17,8 @@ export class AndroidPermissionUtility {
   permissionDeniedList = []
   permissionCheckedCount: number = 0
 
-  // Add on load required permissions to this list
-  // Run time permissions need be to asked individually wherever required by using the below methods
+  // TODO: Add on load required permissions to this list
+  // NOTE: Run time permissions need be to asked individually wherever required by using the below methods
   androidPermissionList: string[] = [
     this.androidPermissions.PERMISSION.RECORD_AUDIO,
     this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE
@@ -32,9 +32,8 @@ export class AndroidPermissionUtility {
   ) {}
 
   AuthorizePermissions() {
-    // device.platform holds both platforms, ios and android
-    // currently permissions are taken only on android
-    // TODO: incase "IOS" add respective permission
+    // NOTE: Device.platform holds both platforms, ios and android, currently permissions are taken only on android
+    // TODO: Incase "IOS" add respective permission
 
     this.androidPermissions.requestPermissions(this.androidPermissionList).then(
       success => {
@@ -80,7 +79,7 @@ export class AndroidPermissionUtility {
     }
   }
 
-  // Returns a promise with an object containing "hasPermission" boolean value
+  // NOTE: Returns a promise with an object containing "hasPermission" boolean value
   fetchPermission(permission): Promise<any> {
     return new Promise((resolve, reject) => {
       this.androidPermissions.requestPermission(permission).then(
@@ -119,7 +118,7 @@ export class AndroidPermissionUtility {
     })
   }
 
-  // For Run time permissions use these below methods at the required pages
+  // NOTE: For Run time permissions use these below methods at the required pages
 
   getCamera_Permission() {
     return this.fetchPermission(this.androidPermissions.PERMISSION.CAMERA)
@@ -135,5 +134,5 @@ export class AndroidPermissionUtility {
     )
   }
 
-  // Add required permissions as above
+  // TODO: Add required permissions as above
 }

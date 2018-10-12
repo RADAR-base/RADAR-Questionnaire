@@ -56,7 +56,7 @@ export class QuestionComponent implements OnChanges {
   }
 
   onValueChange(event) {
-    // on init the component fires the event once
+    // NOTE: On init the component fires the event once
     if (event === undefined) {
       return
     }
@@ -70,7 +70,7 @@ export class QuestionComponent implements OnChanges {
         break
 
       case QuestionType.audio:
-        // TODO: add audio file reference to send
+        // TODO: Add audio file reference to send
         break
 
       case QuestionType.timed:

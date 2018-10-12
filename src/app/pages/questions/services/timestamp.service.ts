@@ -7,7 +7,7 @@ import { Timestamp } from '../../../shared/models/timestamp'
 export class TimestampService {
   private date: Date
 
-  // Change formats accordingly
+  // NOTE: Change formats accordingly
   private TIME_FORMAT: string = 'HH:mm:ss'
   private DATE_FORMAT: string = 'dd-MM-yyyy'
 
@@ -16,7 +16,7 @@ export class TimestampService {
   constructor(private datepipe: DatePipe) {}
 
   getTimeStamp() {
-    // timestamp used to record response time of questionnaires
+    // NOTE: Timestamp used to record response time of questionnaires
     this.date = new Date()
     return this.date.getTime()
   }

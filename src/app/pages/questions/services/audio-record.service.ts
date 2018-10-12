@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { File } from '@ionic-native/file'
-// file path to opensmile.js; Adding opensmile plugin
+// NOTE: File path to opensmile.js; Adding opensmile plugin
 import * as opensmile from 'cordova-plugin-opensmile/www/opensmile'
 
 declare var cordova: any
@@ -14,7 +14,7 @@ export class AudioRecordService {
   recordingTime: number = 45000
 
   constructor(private file: File) {
-    // kill recording on load
+    // NOTE: Kill recording on load
     this.stopAudioRecording()
   }
 

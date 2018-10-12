@@ -46,7 +46,7 @@ export class SplashPageComponent {
         this.globalization
           .getDatePattern({ formatLength: 'short', selector: 'date and time' })
           .then(res => {
-            // cancel all notifications if timezone/utc_offset has changed
+            // NOTE: Cancels all notifications if timezone/utc_offset has changed
             // TODO: Force fetch the config and re-schedule here generating a new schedule
             if (timeZone !== res.timezone || utcOffset !== res.utc_offset) {
               console.log(
@@ -64,7 +64,7 @@ export class SplashPageComponent {
       })
       .then(() => {
         console.log('[SPLASH] Scheduling Notifications.')
-        // Only run this if not run in last DefaultNotificationRefreshTime
+        // NOTE: Only run this if not run in last DefaultNotificationRefreshTime
         this.storage
           .get(StorageKeys.LAST_NOTIFICATION_UPDATE)
           .then(lastUpdate => {

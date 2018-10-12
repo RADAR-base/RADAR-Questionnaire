@@ -192,8 +192,6 @@ export class EnrolmentPageComponent {
       const createdDateMidnight = this.schedule.setDateTimeToMidnight(
         new Date(subjectInformation.createdDate)
       )
-      // console.debug('Subject Info retrieved : ' + subjectInformation.text)
-      // console.debug('Project Name: ' + projectName)
       this.storage
         .init(
           participantId,

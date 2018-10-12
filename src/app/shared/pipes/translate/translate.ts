@@ -4,7 +4,7 @@ import { Localisations } from '../../../../assets/data/localisations'
 import { StorageService } from '../../../core/services/storage.service'
 import { StorageKeys } from '../../enums/storage'
 
-// Solve Globalization error: plugin_not_installed
+// TODO: Solve Globalization error: plugin_not_installed
 
 @Pipe({
   name: 'translate',

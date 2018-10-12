@@ -108,7 +108,7 @@ export class TimedTestComponent implements OnInit, OnChanges {
           } else {
             this.pauseTimer()
           }
-          // save timestamp (epoch) and activate the next button
+          // NOTE: Save timestamp (epoch) and activate the next button
           const epoch: number = new Date().getTime()
           this.valueChange.emit(epoch)
         }

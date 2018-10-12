@@ -14,7 +14,7 @@ export class PrepareDataService {
   process_QuestionnaireData(answers, timestamps): Promise<any> {
     console.log(answers)
     return new Promise((resolve, reject) => {
-      // fetch config version and Patient ID
+      // NOTE: Fetches config version and Patient ID
       this.fetchFromStorage().then(
         resp => {
           const configVersion = resp[0].toString()
@@ -55,10 +55,10 @@ export class PrepareDataService {
     })
   }
 
-  // fetch patientID and config version from local storage
-  // include other items when required
-  // the values in response are in the same order as the promises
-  // local storage service get() returns a promise always
+  // NOTE: Fetch patientID and config version from local storage
+  // NOTE: Include other items when required
+  // NOTE: The values in response are in the same order as the promises
+  // NOTE: Local storage service get() returns a promise always
 
   fetchFromStorage() {
     const configVersion = this.storage.get(StorageKeys.CONFIG_VERSION)

@@ -9,7 +9,7 @@ import {
 import { Device } from '@ionic-native/device'
 import { AlertController, NavController } from 'ionic-angular'
 
-// file path to opensmile.js; Adding opensmile plugin
+// NOTE: File path to opensmile.js; Adding opensmile plugin
 import * as opensmile from '../../../../../../../plugins/cordova-plugin-opensmile/www/opensmile'
 import { Answer } from '../../../../../shared/models/answer'
 import { Section } from '../../../../../shared/models/question'
@@ -65,7 +65,7 @@ export class AudioInputComponent implements OnInit, OnChanges {
     public alertCtrl: AlertController,
     private device: Device
   ) {
-    // Stop audio recording when application is on pause / backbutton is pressed
+    // NOTE: Stop audio recording when application is on pause / backbutton is pressed
     document.addEventListener('pause', () => {
       console.log('on pause')
       // if (this.navCtrl.isActive(this.navCtrl.getActive()) == false) {

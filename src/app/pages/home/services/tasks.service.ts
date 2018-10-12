@@ -100,7 +100,7 @@ export class TasksService {
    */
   retrieveNextTask(tasks: Task[]): Task {
     if (tasks) {
-      // First sort the tasks based on timestamps so the first scheduled task in the list is returned first
+      // NOTE: First sort the tasks based on timestamps so the first scheduled task in the list is returned first
       tasks.sort((t1, t2) => {
         return t1.timestamp - t2.timestamp
       })
@@ -113,13 +113,13 @@ export class TasksService {
       for (let i = 0; i < tasks.length; i++) {
         switch (tasks[i].name) {
           case 'ESM':
-            // For ESM, just look from 10 mins before now
+            // NOTE: For ESM, just look from 10 mins before now
             lookFromTimestamp = new Date().getTime() - offsetTimeESM
             lookToTimestamp = lookFromTimestamp + 1000 * 60 * 60 * 12
             break
 
           default:
-            // Check from midnight for other tasks
+            // NOTE: Check from midnight for other tasks
             now.setHours(0, 0, 0, 0)
             lookFromTimestamp = now.getTime()
             lookToTimestamp = tasks[i].timestamp + 1000 * 60 * 60 * 12
@@ -132,7 +132,7 @@ export class TasksService {
         ) {
           passedAtLeastOnce = true
           nextIdx = i
-          // break out of the loop as soon as the next incomplete task is found
+          // NOTE: Break out of the loop as soon as the next incomplete task is found
           break
         }
       }

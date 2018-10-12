@@ -33,7 +33,7 @@ export class TickerBarComponent implements OnChanges {
     private navCtrl: NavController,
     private translate: TranslatePipe
   ) {
-    // Gets ReportScheduling and adds to tickerItems
+    // NOTE: Gets ReportScheduling and adds to tickerItems
     /*this.schedule.getCurrentReport().then((report) => {
       this.report = report
     })*/

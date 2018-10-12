@@ -77,7 +77,7 @@ export class ConfigService {
                 return this.notificationService
                   .cancelNotifications()
                   .then(() => {
-                    // set notificaition here too so scheduled everytime the schedule changes too.
+                    // NOTE: Set notification here too so scheduled everytime the schedule changes too.
                     return this.notificationService
                       .setNextXNotifications(
                         DefaultNumberOfNotificationsToSchedule
@@ -207,7 +207,7 @@ export class ConfigService {
   }
 
   migrateToLatestVersion() {
-    // migrate ENROLMENTDATE (from V0.3.1- to V0.3.2+)
+    // NOTE: Migrate ENROLMENTDATE (from V0.3.1- to V0.3.2+)
     const enrolmentDate = this.storage.get(StorageKeys.ENROLMENTDATE)
     const referenceDate = this.storage.get(StorageKeys.REFERENCEDATE)
     Promise.all([enrolmentDate, referenceDate]).then(dates => {

@@ -1,5 +1,4 @@
 export class LocKeys {
-  // values
   static DEFAULT_NONE = new LocKeys('DEFAULT_NONE')
   static ENROL_WELCOME_1 = new LocKeys('ENROL_WELCOME_1')
   static ENROL_WELCOME_2 = new LocKeys('ENROL_WELCOME_2')

@@ -63,8 +63,8 @@ export class TaskCalendarComponent implements OnChanges {
     this.timeIndex = this.getCurrentTimeIndex(now)
   }
 
-  // Compare current time with the start times of the tasks and find
-  // out in between which tasks it should be shown in the interface
+  // NOTE: Compare current time with the start times of the tasks and
+  // find out in between which tasks it should be shown in the interface
   getCurrentTimeIndex(date: Date) {
     let tasksPassed = 0
     for (const task of this.tasks) {
@@ -97,11 +97,7 @@ export class TaskCalendarComponent implements OnChanges {
   }
 
   hasExtraInfo(warningStr) {
-    // console.log(warningStr)
-    if (warningStr === '') {
-      return false
-    }
-    return true
+    return warningStr === '' ? false : true
   }
 
   clicked(task) {

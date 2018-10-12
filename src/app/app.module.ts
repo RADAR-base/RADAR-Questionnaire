@@ -53,7 +53,6 @@ import { Utility } from './shared/utilities/util'
     SplashScreen,
     Utility,
     LocalNotifications,
-
     BarcodeScanner,
     Dialogs,
     Vibration,

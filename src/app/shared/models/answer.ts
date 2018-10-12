@@ -4,7 +4,7 @@ export interface Answer {
   type: string
 }
 
-// interface to submit answers to Kafka
+// NOTE: Interface to submit answers to Kafka
 
 export interface Response {
   questionId: string
@@ -32,5 +32,3 @@ export interface CompletionLogValueExport {
   time: number
   completionPercentage: any
 }
-
-// interface to submit answers to Kafka

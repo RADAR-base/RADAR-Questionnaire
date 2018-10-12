@@ -38,12 +38,12 @@ export class KafkaService {
   }
 
   prepareKafkaObject(task: Task, data) {
-    // Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
+    // NOTE: Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
     const Answer: AnswerValueExport = {
       name: task.name,
       version: data.configVersion,
       answers: data.answers,
-      time: data.answers[0].startTime, // whole questionnaire startTime and endTime
+      time: data.answers[0].startTime, // NOTE: whole questionnaire startTime and endTime
       timeCompleted: data.answers[data.answers.length - 1].endTime
     }
 
@@ -51,7 +51,7 @@ export class KafkaService {
       const sourceId = keyInfo[0]
       const projectId = keyInfo[1]
       const patientId = keyInfo[2].toString()
-      // Payload for kafka 2 : key Object which contains device information
+      // NOTE: Payload for kafka 2 : key Object which contains device information
       const AnswerKey: AnswerKeyExport = {
         userId: patientId,
         sourceId: sourceId,
@@ -65,7 +65,7 @@ export class KafkaService {
   }
 
   prepareNonReportedTasksKafkaObject(task: Task) {
-    // Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
+    // NOTE: Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
     const CompletionLog: CompletionLogValueExport = {
       name: task.name.toString(),
       time: task.timestamp,
@@ -113,7 +113,7 @@ export class KafkaService {
           JSON.parse(schemaVersions[0]['schema']),
           { wrapUnions: true }
         )
-        // ISSUE forValue: inferred from input, due to error when parsing schema
+        // NOTE: Issue forValue: inferred from input, due to error when parsing schema
         const avroVal = AvroSchema.Type.forValue(kafkaObject.value, {
           wrapUnions: true
         })
@@ -130,8 +130,6 @@ export class KafkaService {
         const schemaInfo = new KafkaClient.AvroSchema(
           JSON.parse(schemaVersions[1]['schema'])
         )
-        // console.log("PAYLOAD")
-        // console.log(schemaId)
         return this.sendToKafka(
           specs,
           schemaId,
@@ -150,7 +148,7 @@ export class KafkaService {
   sendToKafka(specs, id, info, payload, cacheKey) {
     return this.getKafkaInstance().then(
       kafkaConnInstance => {
-        // kafka connection instance to submit to topic
+        // NOTE: Kafka connection instance to submit to topic
         const topic = specs.avsc + '_' + specs.name
         console.log('Sending to: ' + topic)
 

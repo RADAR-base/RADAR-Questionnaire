@@ -31,14 +31,12 @@ export class QuestionsPageComponent {
   questions: Question[]
   questionTitle: String
 
-  // timestamps
   startTime: number
   endTime: number
 
-  // next question increment
   nextQuestionIncrVal: number = 0
 
-  // TODO: gather text variables in one place. get values from server?
+  // TODO: Gather text variables in one place. get values from server?
   txtValues = {
     next: this.translate.transform(LocKeys.BTN_NEXT.toString()),
     previous: this.translate.transform(LocKeys.BTN_PREVIOUS.toString()),
@@ -95,9 +93,13 @@ export class QuestionsPageComponent {
     return 0
   }
 
+  getTime() {
+    return this.timestampService.getTimeStamp() / 1000
+  }
+
   setCurrentQuestion(value = 0) {
-    // record start time when question is shown
-    this.startTime = this.timestampService.getTimeStamp() / 1000
+    // NOTE: Record start time when question is shown
+    this.startTime = this.getTime()
     const min = !(this.currentQuestion + value < 0)
     const max = !(this.currentQuestion + value >= this.questions.length)
     const finish = this.currentQuestion + value === this.questions.length
@@ -168,10 +170,10 @@ export class QuestionsPageComponent {
 
   nextQuestion() {
     if (this.checkAnswer()) {
-      // record end time when pressed "Next"
-      this.endTime = this.timestampService.getTimeStamp() / 1000
+      // NOTE: Record end time when pressed "Next"
+      this.endTime = this.getTime()
 
-      // take current question id to record timestamp
+      // NOTE: Take current question id to record timestamp
       const id = this.questions[this.currentQuestion].field_name
       this.recordTimeStamp(id)
 

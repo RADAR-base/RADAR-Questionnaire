@@ -20,8 +20,5 @@
       }
     }
   },
-  "defaultProject": "radar-questionnaire",
-  "cli": {
-    "defaultCollection": "@ngrx/schematics"
-  }
+  "defaultProject": "radar-questionnaire"
 }

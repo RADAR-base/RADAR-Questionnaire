@@ -1,8 +1,8 @@
 import 'rxjs/add/operator/map'
 
 import { Injectable } from '@angular/core'
-import AvroSchema from 'avsc'
-import KafkaClient from 'kafka-rest'
+import * as AvroSchema from 'avsc'
+import * as KafkaRest from 'kafka-rest'
 
 import { DefaultEndPoint } from '../../../assets/data/defaultConfig'
 import { AuthService } from '../../pages/auth/services/auth.service'
@@ -111,8 +111,11 @@ export class KafkaService {
       .then(schemaVersions => {
         const avroKey = AvroSchema.parse(
           JSON.parse(schemaVersions[0]['schema']),
-          { wrapUnions: true }
+          {
+            wrapUnions: true
+          }
         )
+
         // NOTE: Issue forValue: inferred from input, due to error when parsing schema
         const avroVal = AvroSchema.Type.forValue(kafkaObject.value, {
           wrapUnions: true
@@ -124,12 +127,13 @@ export class KafkaService {
           value: bufferVal
         }
 
-        const schemaId = new KafkaClient.AvroSchema(
+        const schemaId = new KafkaRest.AvroSchema(
           JSON.parse(schemaVersions[0]['schema'])
         )
-        const schemaInfo = new KafkaClient.AvroSchema(
+        const schemaInfo = new KafkaRest.AvroSchema(
           JSON.parse(schemaVersions[1]['schema'])
         )
+
         return this.sendToKafka(
           specs,
           schemaId,
@@ -151,7 +155,6 @@ export class KafkaService {
         // NOTE: Kafka connection instance to submit to topic
         const topic = specs.avsc + '_' + specs.name
         console.log('Sending to: ' + topic)
-
         return kafkaConnInstance
           .topic(topic)
           .produce(id, info, payload, (err, res) => {
@@ -232,7 +235,7 @@ export class KafkaService {
       .then(() => this.storage.get(StorageKeys.OAUTH_TOKENS))
       .then(tokens => {
         const headers = { Authorization: 'Bearer ' + tokens.access_token }
-        return new KafkaClient({ url: this.KAFKA_CLIENT_URL, headers: headers })
+        return new KafkaRest({ url: this.KAFKA_CLIENT_URL, headers: headers })
       })
   }
 

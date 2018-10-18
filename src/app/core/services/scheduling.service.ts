@@ -230,6 +230,7 @@ export class SchedulingService {
 
     console.log(assessment)
 
+    const today = this.setDateTimeToMidnight(new Date())
     const tmpScheduleAll: Task[] = []
     while (iterDate.getTime() <= endDate.getTime()) {
       for (let i = 0; i < repeatQ.unitsFromZero.length; i++) {
@@ -239,20 +240,16 @@ export class SchedulingService {
           repeatQ.unitsFromZero[i]
         )
         const idx = indexOffset + tmpScheduleAll.length
-        tmpScheduleAll.push(this.taskBuilder(idx, assessment, taskDate))
+        const task = this.taskBuilder(idx, assessment, taskDate)
+        if (task.timestamp > today.getTime()) {
+          tmpScheduleAll.push(task)
+        }
       }
       iterDate = this.setDateTimeToMidnight(iterDate)
       iterDate = this.advanceRepeat(iterDate, repeatP.unit, repeatP.amount)
     }
 
-    const tmpSchedule: Task[] = []
-    const today = this.setDateTimeToMidnight(new Date())
-    for (let i = 0; i < tmpScheduleAll.length; i++) {
-      if (tmpScheduleAll[i].timestamp > today.getTime()) {
-        tmpSchedule.push(tmpScheduleAll[i])
-      }
-    }
-    return tmpSchedule
+    return tmpScheduleAll
   }
 
   setDateTimeToMidnight(date) {

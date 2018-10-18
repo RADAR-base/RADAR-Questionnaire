@@ -152,11 +152,13 @@ export class HomePageComponent {
   }
 
   getElementsAttributes() {
-    this.elContentHeight = this.elContent.contentHeight
-    this.elProgressHeight = this.elProgress.nativeElement.offsetHeight - 15
-    this.elTickerHeight = this.elTicker.nativeElement.offsetHeight
-    this.elInfoHeight = this.elInfo.nativeElement.offsetHeight
-    this.elFooterHeight = this.elFooter.nativeElement.offsetHeight
+    if (this.elContent._scroll) {
+      this.elContentHeight = this.elContent.contentHeight
+      this.elProgressHeight = this.elProgress.nativeElement.offsetHeight - 15
+      this.elTickerHeight = this.elTicker.nativeElement.offsetHeight
+      this.elInfoHeight = this.elInfo.nativeElement.offsetHeight
+      this.elFooterHeight = this.elFooter.nativeElement.offsetHeight
+    }
   }
 
   applyTransformations() {

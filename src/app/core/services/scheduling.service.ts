@@ -55,7 +55,7 @@ export class SchedulingService {
       if (schedule) {
         const startDate = this.setDateTimeToMidnight(date)
         const endDate = this.advanceRepeat(startDate, 'day', 1)
-        const tasks: Task[] = []
+        let tasks: Task[] = []
         for (let i = 0; i < schedule.length; i++) {
           if (
             schedule[i].timestamp < endDate.getTime() &&
@@ -64,9 +64,15 @@ export class SchedulingService {
             tasks.push(schedule[i])
           }
         }
+        tasks = tasks.sort(this.compareTasks)
         return tasks
       }
     })
+  }
+
+  // Define the order of the tasks - whether it is based on index or timestamp
+  compareTasks(a: Task, b: Task) {
+    return a.timestamp - b.timestamp
   }
 
   getTasks() {

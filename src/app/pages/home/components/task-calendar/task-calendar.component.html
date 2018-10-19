@@ -12,11 +12,11 @@
     >
       {{ "TASK_CALENDAR_TITLE" | translate }}
     </div>
-    <ng-container *ngIf="tasks">
-      <ng-container *ngFor="let task of tasks; let i=index">
+    <ng-container *ngIf="(tasks | async)!==null">
+      <ng-container *ngFor="let task of (tasks | async); let i=index">
         <div
           class="current-time-div"
-          *ngIf="i==timeIndex"
+          *ngIf="i==(timeIndex | async)"
         >
           <div id="time-current">
             <ion-row>
@@ -88,29 +88,28 @@
           </ion-row>
         </div>
       </ng-container>
-    </ng-container>
-    <div
-      class="current-time-div"
-      *ngIf="timeIndex==tasks.length"
-    >
-      <div id="time-current">
-        <ion-row>
-          <ion-col>
-            <div class="time-current-division left"></div>
-          </ion-col>
-          <ion-col
-            col-2
-            class="time-current"
-          >
-            {{ currentTime }}
-          </ion-col>
-          <ion-col>
-            <div class="time-current-division right"></div>
-          </ion-col>
-        </ion-row>
+      <div
+        class="current-time-div"
+        *ngIf="(timeIndex | async)==(tasks | async)?.length"
+      >
+        <div id="time-current">
+          <ion-row>
+            <ion-col>
+              <div class="time-current-division left"></div>
+            </ion-col>
+            <ion-col
+              col-2
+              class="time-current"
+            >
+              {{ currentTime }}
+            </ion-col>
+            <ion-col>
+              <div class="time-current-division right"></div>
+            </ion-col>
+          </ion-row>
+        </div>
       </div>
-    </div>
-
+    </ng-container>
   </ion-scroll>
 
 </div>

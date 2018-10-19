@@ -21,6 +21,7 @@ export class KafkaService {
   private KAFKA_CLIENT_URL: string
   private KAFKA_CLIENT_KAFKA: string = '/kafka'
   private specs = {}
+  private cacheSending = false
 
   constructor(
     private util: Utility,
@@ -188,6 +189,15 @@ export class KafkaService {
   }
 
   sendAllAnswersInCache() {
+    if (!this.cacheSending) {
+      this.cacheSending = !this.cacheSending
+      this.sendToKafkaFromCache().then(
+        () => (this.cacheSending = !this.cacheSending)
+      )
+    }
+  }
+
+  sendToKafkaFromCache() {
     return this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
       if (!cache) {
         return this.storage.set(StorageKeys.CACHE_ANSWERS, {})

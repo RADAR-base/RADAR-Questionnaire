@@ -156,22 +156,16 @@ task-progress {
   }
 
   .completed {
-    width: 60vw;
-    height: 60vw;
+    margin: auto;
+    width: 56vw;
+    height: 56vw;
     border-radius: 100%;
     background-color: map-get($colors, tertiary);
   }
 
   .checkmark {
-    @media screen and (max-width: 320px) {
-      margin-top: -5vw;
-      padding-left: 6vw;
-      font-size: 200px;
-    }
-
-    margin-top: 0;
-    padding-left: 10vw;
-    font-size: 220px;
+    padding: 2vw 0 0 8vw;
+    font-size: 56vw;
     transition: transform 0.8s ease-in;
   }
 
@@ -183,7 +177,7 @@ task-progress {
 
   .large {
     font-size: 100px;
-    line-height: 2px;
+    line-height: 0;
   }
 
   .small {

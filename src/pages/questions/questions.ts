@@ -143,7 +143,6 @@ export class QuestionsPage {
   }
 
   setProgress() {
-    const tick = Math.ceil(100 / this.questions.length)
     const percent = Math.ceil(
       (this.currentQuestion * 100) / this.questions.length
     )

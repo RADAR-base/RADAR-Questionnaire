@@ -4,8 +4,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 
 import {
+  ARMTDefBranchProd,
+  ARMTDefBranchTest,
   DefaultNumberOfNotificationsToSchedule,
-  DefaultProtocolEndPoint
+  DefaultProtocolEndPoint,
+  DefaultProtocolURI,
+  DefaultQuestionnaireFormatURI,
+  DefaultQuestionnaireTypeURI,
+  TEST_ARMT_DEF
 } from '../assets/data/defaultConfig'
 import { StorageKeys } from '../enums/storage'
 import { HomeController } from '../providers/home-controller'
@@ -14,13 +20,6 @@ import { StorageService } from '../providers/storage-service'
 
 @Injectable()
 export class ConfigService {
-  URI_PROTOCOL = '/protocol.json'
-  URI_QUESTIONNAIRETYPE = '_armt'
-  URI_QUESTIONNAIREFORMAT = '.json'
-  aRMTDef_Prod = 'master'
-  arMTDef_Test = 'test'
-  useTempARMTRepo = true
-
   constructor(
     public http: HttpClient,
     public storage: StorageService,
@@ -102,7 +101,7 @@ export class ConfigService {
   pullProtocol() {
     return this.getProjectName().then(projectName => {
       if (projectName) {
-        const URI = DefaultProtocolEndPoint + projectName + this.URI_PROTOCOL
+        const URI = DefaultProtocolEndPoint + projectName + DefaultProtocolURI
         return this.http.get(URI, { responseType: 'text' }).toPromise()
       } else {
         console.error(
@@ -119,10 +118,10 @@ export class ConfigService {
   formatPulledProcotol(protocols) {
     const protocolsFormated = protocols
     for (let i = 0; i < protocolsFormated.length; i++) {
-      protocolsFormated[i].questionnaire['type'] = this.URI_QUESTIONNAIRETYPE
+      protocolsFormated[i].questionnaire['type'] = DefaultQuestionnaireTypeURI
       protocolsFormated[i].questionnaire[
         'format'
-      ] = this.URI_QUESTIONNAIREFORMAT
+      ] = DefaultQuestionnaireFormatURI
     }
     return protocolsFormated
   }
@@ -179,10 +178,10 @@ export class ConfigService {
 
   formatQuestionnaireUri(questionnaireRepo, langVal) {
     // NOTE: Using temp test repository for aRMT defs
-    const repository = this.useTempARMTRepo
+    const repository = TEST_ARMT_DEF
       ? questionnaireRepo.repository.replace(
-          this.aRMTDef_Prod,
-          this.arMTDef_Test
+          ARMTDefBranchProd,
+          ARMTDefBranchTest
         )
       : questionnaireRepo.repository
     let uri = repository + questionnaireRepo.name + '/'

@@ -118,3 +118,12 @@ export const DefaultEndPoint: string =
 export const DefaultProtocolEndPoint: string = DefaultProtocolEndPointExport
 
 export const DefaultSourceProducerAndSecret: string = DefaultSourceProducerAndSecretExport
+
+// CONFIG SERVICE
+
+export const DefaultProtocolURI = '/protocol.json'
+export const DefaultQuestionnaireTypeURI = '_armt'
+export const DefaultQuestionnaireFormatURI = '.json'
+export const ARMTDefBranchProd = 'master'
+export const ARMTDefBranchTest = 'test'
+export const TEST_ARMT_DEF = true

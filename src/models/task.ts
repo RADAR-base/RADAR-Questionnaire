@@ -7,7 +7,6 @@ export interface Task {
   timestamp: number
   name: string
   nQuestions: number
-  questions?: any[]
   reminderSettings?: any
   estimatedCompletionTime: number
   warning: string

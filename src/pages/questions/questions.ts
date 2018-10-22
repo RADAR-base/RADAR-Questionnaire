@@ -56,6 +56,9 @@ export class QuestionsPage {
   }
   iconPrevious: string = this.iconValues.close
 
+  associatedTask
+  endText
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -74,6 +77,8 @@ export class QuestionsPage {
     this.questionsContainerEl = this.questionsContainerRef.nativeElement
     this.nextQuestionIncrVal = this.evalIfFirstQuestionnaireToSkipESMSleepQuestion()
     this.setCurrentQuestion(this.nextQuestionIncrVal)
+    this.associatedTask = this.navParams.data.associatedTask
+    this.endText = this.navParams.data.endText
   }
 
   evalIfFirstQuestionnaireToSkipESMSleepQuestion() {
@@ -185,8 +190,9 @@ export class QuestionsPage {
 
   navigateToFinishPage() {
     this.navCtrl.push(FinishPage, {
-      endText: this.navParams.data.endText,
-      associatedTask: this.navParams.data.associatedTask
+      endText: this.endText,
+      associatedTask: this.associatedTask,
+      questions: this.questions
     })
   }
 

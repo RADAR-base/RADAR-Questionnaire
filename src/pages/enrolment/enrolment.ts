@@ -124,7 +124,7 @@ export class EnrolmentPage {
         // NOTE: Old QR codes: containing refresh token as JSON
         this.authService.updateURI().then(() => {
           console.log('BASE URI : ' + this.storage.get(StorageKeys.BASE_URI))
-          const auth = JSON.parse(authObj.text)
+          const auth = JSON.parse(authObj)
           refreshToken = auth.refreshToken
           resolve(refreshToken)
         })

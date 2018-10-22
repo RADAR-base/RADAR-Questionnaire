@@ -2,9 +2,8 @@ import 'rxjs/add/operator/map'
 
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import AvroSchema from 'avsc'
-import KafkaClient from 'kafka-rest'
-import { Observable } from 'rxjs/Observable'
+import * as AvroSchema from 'avsc'
+import * as KafkaRest from 'kafka-rest'
 
 import { DefaultEndPoint } from '../assets/data/defaultConfig'
 import { StorageKeys } from '../enums/storage'
@@ -23,6 +22,7 @@ export class KafkaService {
   private KAFKA_CLIENT_URL: string
   private KAFKA_CLIENT_KAFKA: string = '/kafka'
   private specs = {}
+  private cacheSending = false
 
   constructor(
     private http: HttpClient,
@@ -41,12 +41,12 @@ export class KafkaService {
   }
 
   prepareKafkaObject(task: Task, data) {
-    // Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
+    // NOTE: Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
     const Answer: AnswerValueExport = {
       name: task.name,
       version: data.configVersion,
       answers: data.answers,
-      time: data.answers[0].startTime, // whole questionnaire startTime and endTime
+      time: data.answers[0].startTime, // NOTE: whole questionnaire startTime and endTime
       timeCompleted: data.answers[data.answers.length - 1].endTime
     }
 
@@ -54,7 +54,7 @@ export class KafkaService {
       const sourceId = keyInfo[0]
       const projectId = keyInfo[1]
       const patientId = keyInfo[2].toString()
-      // Payload for kafka 2 : key Object which contains device information
+      // NOTE: Payload for kafka 2 : key Object which contains device information
       const AnswerKey: AnswerKeyExport = {
         userId: patientId,
         sourceId: sourceId,
@@ -68,7 +68,7 @@ export class KafkaService {
   }
 
   prepareNonReportedTasksKafkaObject(task: Task) {
-    // Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
+    // NOTE: Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
     const CompletionLog: CompletionLogValueExport = {
       name: task.name.toString(),
       time: task.timestamp,
@@ -114,9 +114,12 @@ export class KafkaService {
       .then(schemaVersions => {
         const avroKey = AvroSchema.parse(
           JSON.parse(schemaVersions[0]['schema']),
-          { wrapUnions: true }
+          {
+            wrapUnions: true
+          }
         )
-        // ISSUE forValue: inferred from input, due to error when parsing schema
+
+        // NOTE: Issue forValue: inferred from input, due to error when parsing schema
         const avroVal = AvroSchema.Type.forValue(kafkaObject.value, {
           wrapUnions: true
         })
@@ -127,14 +130,13 @@ export class KafkaService {
           value: bufferVal
         }
 
-        const schemaId = new KafkaClient.AvroSchema(
+        const schemaId = new KafkaRest.AvroSchema(
           JSON.parse(schemaVersions[0]['schema'])
         )
-        const schemaInfo = new KafkaClient.AvroSchema(
+        const schemaInfo = new KafkaRest.AvroSchema(
           JSON.parse(schemaVersions[1]['schema'])
         )
-        // console.log("PAYLOAD")
-        // console.log(schemaId)
+
         return this.sendToKafka(
           specs,
           schemaId,
@@ -153,10 +155,9 @@ export class KafkaService {
   sendToKafka(specs, id, info, payload, cacheKey) {
     return this.getKafkaInstance().then(
       kafkaConnInstance => {
-        // kafka connection instance to submit to topic
+        // NOTE: Kafka connection instance to submit to topic
         const topic = specs.avsc + '_' + specs.name
         console.log('Sending to: ' + topic)
-
         return kafkaConnInstance
           .topic(topic)
           .produce(id, info, payload, (err, res) => {
@@ -190,6 +191,15 @@ export class KafkaService {
   }
 
   sendAllAnswersInCache() {
+    if (!this.cacheSending) {
+      this.cacheSending = !this.cacheSending
+      this.sendToKafkaFromCache().then(
+        () => (this.cacheSending = !this.cacheSending)
+      )
+    }
+  }
+
+  sendToKafkaFromCache() {
     return this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
       if (!cache) {
         return this.storage.set(StorageKeys.CACHE_ANSWERS, {})
@@ -237,7 +247,7 @@ export class KafkaService {
       .then(() => this.storage.get(StorageKeys.OAUTH_TOKENS))
       .then(tokens => {
         const headers = { Authorization: 'Bearer ' + tokens.access_token }
-        return new KafkaClient({ url: this.KAFKA_CLIENT_URL, headers: headers })
+        return new KafkaRest({ url: this.KAFKA_CLIENT_URL, headers: headers })
       })
   }
 

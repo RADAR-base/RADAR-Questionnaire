@@ -18,6 +18,7 @@ import { StorageKeys } from '../../enums/storage'
 import { Task, TasksProgress } from '../../models/task'
 import { HomeController } from '../../providers/home-controller'
 import { StorageService } from '../../providers/storage-service'
+import { checkTaskIsNow } from '../../utilities/check-task-is-now'
 
 /**
  * Generated class for the TaskInfo component.
@@ -81,7 +82,7 @@ import { StorageService } from '../../providers/storage-service'
       state(
         'right',
         style({
-          transform: 'translate3d(25%, 0, 0)'
+          transform: 'translate3d(5%, 0, 0)'
         })
       ),
       state(
@@ -97,14 +98,14 @@ import { StorageService } from '../../providers/storage-service'
       state(
         'out',
         style({
-          opacity: '0',
+          display: 'none',
           transform: 'translate3d(-150%, 0, 0)'
         })
       ),
       state(
         'in',
         style({
-          opacity: '1',
+          display: 'block',
           transform: 'translate3d(0, 0, 0)'
         })
       ),
@@ -115,7 +116,7 @@ import { StorageService } from '../../providers/storage-service'
       state(
         'right',
         style({
-          transform: 'translate3d(165%, 0, 0)'
+          transform: 'translate3d(150%, 0, 0)'
         })
       ),
       state(
@@ -146,7 +147,7 @@ export class TaskInfoComponent implements OnChanges {
 
   max: number = 1
   current: number = 0
-  radius: number = 40
+  radius: number = 38
   stroke: number = 8
   progress: TasksProgress
 
@@ -165,12 +166,7 @@ export class TaskInfoComponent implements OnChanges {
   ) {
     this.applyAnimationKeys()
     setInterval(() => {
-      if (this.task.timestamp > Date.now()) {
-        this.isNow = false
-      } else {
-        this.isNow = true
-      }
-      console.log(this.isNow)
+      this.isNow = checkTaskIsNow(this.task.timestamp)
     }, 1000)
 
     this.storage.get(StorageKeys.LANGUAGE).then(resLang => {
@@ -194,7 +190,7 @@ export class TaskInfoComponent implements OnChanges {
   expand() {
     if (this.task.name !== 'ESM') {
       this.collapse.emit(this.expanded)
-      this.expanded = this.expanded ? false : true
+      this.expanded = !this.expanded
       this.applyAnimationKeys()
       this.updateProgress()
     }
@@ -204,8 +200,8 @@ export class TaskInfoComponent implements OnChanges {
     this.controller.getTaskProgress().then(progress => {
       this.progress = progress
       if (this.progress) {
-        this.max = this.progress.numberOfTasks
         this.current = this.progress.completedTasks
+        this.max = this.progress.numberOfTasks
       }
     })
   }

@@ -114,10 +114,12 @@
 
   <div
     #footer
-    class="size-static bg"
-    padding
+    class="size-static footer"
   >
-    <div *ngIf="!hasClickedStartButton">
+    <div
+      *ngIf="taskIsNow"
+      padding
+    >
       <button
         ion-button
         class="bt bt--full"

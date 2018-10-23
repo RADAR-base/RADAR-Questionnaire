@@ -69,10 +69,12 @@ export class TickerBarComponent implements OnChanges {
   }
 
   updateReport() {
-    const now = new Date()
-    this.report['viewed'] = true
-    this.report['firstViewedOn'] = now.getTime()
-    this.schedule.updateReport(this.report)
+    if (this.report) {
+      const now = new Date()
+      this.report['viewed'] = true
+      this.report['firstViewedOn'] = now.getTime()
+      this.schedule.updateReport(this.report)
+    }
   }
 
   updateTickerItems() {
@@ -94,14 +96,16 @@ export class TickerBarComponent implements OnChanges {
   }
 
   addReportAvailable() {
-    if (this.report['viewed'] === false) {
-      const item = this.generateTickerItem(
-        'report',
-        '',
-        'Report available! ',
-        'Click to view.'
-      )
-      this.tickerItems.push(item)
+    if (this.report) {
+      if (this.report['viewed'] === false) {
+        const item = this.generateTickerItem(
+          'report',
+          '',
+          'Report available! ',
+          'Click to view.'
+        )
+        this.tickerItems.push(item)
+      }
     }
   }
 
@@ -165,11 +169,12 @@ export class TickerBarComponent implements OnChanges {
     if (deltaMin > 59) {
       deltaStr =
         deltaHour > 1
-          ? String(deltaHour) + hour_str_multiple
-          : String(deltaHour) + hour_str_single
+          ? String(deltaHour) + ' ' + hour_str_multiple
+          : String(deltaHour) + ' ' + hour_str_single
     } else {
       deltaStr =
         String(deltaMin) +
+        ' ' +
         this.translate.transform(LocKeys.TASK_TIME_MINUTE_SINGLE.toString())
     }
     return deltaStr

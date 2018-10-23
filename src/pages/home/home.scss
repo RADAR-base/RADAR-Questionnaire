@@ -6,8 +6,6 @@ page-home {
 
   .size-static {
     flex-basis: auto;
-    padding-bottom: 2px;
-    transition: transform 0.4s ease-in-out;
   }
 
   .size-dynamic {
@@ -16,7 +14,6 @@ page-home {
   }
 
   .size-null {
-    position: absolute;
     bottom: 90px;
     width: 100%;
     height: 0;
@@ -48,7 +45,8 @@ page-home {
     height: 40px;
   }
 
-  .bg {
+  .footer {
+    margin-top: 2px;
     background-color: $cl-primary-40;
   }
 

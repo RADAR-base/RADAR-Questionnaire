@@ -1,11 +1,19 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Component, ElementRef, ViewChild } from '@angular/core'
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  ValidatorFn,
+  Validators
+} from '@angular/forms'
 import { JwtHelperService } from '@auth0/angular-jwt'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner'
 import { AlertController, NavController, Slides } from 'ionic-angular'
 
 import { MyApp } from '../../app/app.component'
 import {
+  DefaultEnrolmentBaseURL,
   DefaultSettingsSupportedLanguages,
   DefaultSettingsWeeklyReport,
   DefaultSourceTypeModel,
@@ -37,12 +45,29 @@ export class EnrolmentPage {
   outcomeStatus: String
   reportSettings: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
 
+  URLRegEx = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?'
+
   language: LanguageSetting = {
     label: LocKeys.LANGUAGE_ENGLISH.toString(),
     value: 'en'
   }
-
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
+
+  enterMetaQR = false
+  metaQRForm: FormGroup = new FormGroup({
+    baseURL: new FormControl(DefaultEnrolmentBaseURL, [
+      Validators.required,
+      Validators.pattern(this.URLRegEx)
+    ]),
+    tokenName: new FormControl('', [Validators.required])
+  })
+
+  get tokenName() {
+    return this.metaQRForm.get('tokenName')
+  }
+  get baseURL() {
+    return this.metaQRForm.get('baseURL')
+  }
 
   constructor(
     public navCtrl: NavController,
@@ -67,7 +92,7 @@ export class EnrolmentPage {
 
   ionViewDidEnter() {}
 
-  scan() {
+  scanQRHandler() {
     this.loading = true
     const scanOptions = {
       showFlipCameraButton: true,
@@ -76,21 +101,36 @@ export class EnrolmentPage {
     }
     this.scanner
       .scan(scanOptions)
-      .then(scannedObj => this.authenticate(scannedObj))
+      .then(scannedObj => this.authenticate(scannedObj.text))
+  }
+
+  metaQRHandler() {
+    if (this.baseURL.errors) {
+      this.displayErrorMessage({ statusText: 'Invalid Base URL' })
+      return
+    }
+    if (this.tokenName.errors) {
+      this.displayErrorMessage({ statusText: 'Invalid Token Name' })
+      return
+    }
+    this.authenticate(
+      this.authService.getURLFromToken(
+        this.baseURL.value.trim(),
+        this.tokenName.value.trim()
+      )
+    )
   }
 
   authenticate(authObj) {
     this.showOutcomeStatus = false
     this.transitionStatuses()
 
-    const authText = authObj.text
     new Promise((resolve, reject) => {
       let refreshToken = null
-      if (this.validURL(authText)) {
-        // Meta Qr code
-        // TODO :: Add a field to enter the short url+13char code manually
+      if (this.validURL(authObj)) {
+        // NOTE: Meta QR code and new QR code
         this.authService
-          .getRefreshTokenFromUrl(authText)
+          .getRefreshTokenFromUrl(authObj)
           .then((body: any) => {
             refreshToken = body['refreshToken']
             if (body['baseUrl']) {
@@ -109,10 +149,10 @@ export class EnrolmentPage {
             this.displayErrorMessage(e)
           })
       } else {
-        // Normal QR codes: containing refresh token as JSON
+        // NOTE: Old QR codes: containing refresh token as JSON
         this.authService.updateURI().then(() => {
           console.log('BASE URI : ' + this.storage.get(StorageKeys.BASE_URI))
-          const auth = JSON.parse(authText)
+          const auth = JSON.parse(authObj)
           refreshToken = auth.refreshToken
           resolve(refreshToken)
         })
@@ -160,8 +200,7 @@ export class EnrolmentPage {
   }
 
   validURL(str) {
-    // tslint:disable-next-line:max-line-length
-    const regexp = /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/
+    const regexp = new RegExp(this.URLRegEx)
     if (regexp.test(str)) {
       return true
     } else {
@@ -212,8 +251,6 @@ export class EnrolmentPage {
   }
 
   weeklyReportChange(index) {
-    // TODO: Fix below
-    // this.reportSettings[index].show != this.reportSettings[index].show
     this.storage.set(StorageKeys.SETTINGS_WEEKLYREPORT, this.reportSettings)
   }
 
@@ -244,6 +281,11 @@ export class EnrolmentPage {
     const slideIndex = this.slides.getActiveIndex() + 1
     this.slides.slideTo(slideIndex, 500)
     this.slides.lockSwipes(true)
+  }
+
+  enterToken() {
+    this.enterMetaQR = true
+    this.next()
   }
 
   navigateToHome() {

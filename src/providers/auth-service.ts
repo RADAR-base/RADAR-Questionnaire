@@ -8,6 +8,7 @@ import { JwtHelperService } from '@auth0/angular-jwt'
 import {
   DefaultEndPoint,
   DefaultManagementPortalURI,
+  DefaultMetaTokenURI,
   DefaultRefreshTokenRequestBody,
   DefaultRefreshTokenURI,
   DefaultRequestEncodedContentType,
@@ -93,8 +94,12 @@ export class AuthService {
     })
   }
 
-  getRefreshTokenFromUrl(URI) {
-    return this.http.get(URI).toPromise()
+  getRefreshTokenFromUrl(url) {
+    return this.http.get(url).toPromise()
+  }
+
+  getURLFromToken(base, token) {
+    return base + DefaultMetaTokenURI + token
   }
 
   createPostRequest(uri, body, headers) {

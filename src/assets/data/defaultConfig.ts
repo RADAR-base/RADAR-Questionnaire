@@ -133,9 +133,13 @@ export const TEST_ARMT_DEF = true
 export const DefaultManagementPortalURI = 'managementportal'
 export const DefaultRefreshTokenURI = '/oauth/token'
 export const DefaultSubjectsURI = '/api/subjects/'
+export const DefaultMetaTokenURI: string = '/api/meta-token/'
 
 export const DefaultRequestEncodedContentType =
   'application/x-www-form-urlencoded'
 export const DefaultRequestJSONContentType = 'application/json'
 export const DefaultRefreshTokenRequestBody =
   'grant_type=refresh_token&refresh_token='
+
+export const DefaultEnrolmentBaseURL =
+  DefaultEndPoint + DefaultManagementPortalURI

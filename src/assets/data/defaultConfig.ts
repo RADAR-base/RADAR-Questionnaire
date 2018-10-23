@@ -126,7 +126,7 @@ export const DefaultQuestionnaireTypeURI = '_armt'
 export const DefaultQuestionnaireFormatURI = '.json'
 export const ARMTDefBranchProd = 'master'
 export const ARMTDefBranchTest = 'test'
-export const TEST_ARMT_DEF = true
+export const TEST_ARMT_DEF = false
 
 // AUTH SERVICE
 

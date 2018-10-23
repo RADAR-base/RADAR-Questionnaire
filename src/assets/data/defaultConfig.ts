@@ -118,3 +118,10 @@ export const DefaultEndPoint: string =
 export const DefaultProtocolEndPoint: string = DefaultProtocolEndPointExport
 
 export const DefaultSourceProducerAndSecret: string = DefaultSourceProducerAndSecretExport
+
+export const URI_managementPortal: string = 'managementportal'
+export const URI_refresh: string = '/oauth/token'
+export const URI_subjects: string = '/api/subjects/'
+export const URI_metatoken: string = '/api/meta-token/'
+
+export const DefaultEnrolmentBaseURL = DefaultEndPoint + URI_managementPortal

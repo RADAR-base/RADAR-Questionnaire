@@ -41,7 +41,7 @@ export class TaskCalendarComponent implements OnChanges {
   }
 
   ngOnChanges() {
-    this.setCurrentTime()
+    this.getTasks()
   }
 
   getTasks() {

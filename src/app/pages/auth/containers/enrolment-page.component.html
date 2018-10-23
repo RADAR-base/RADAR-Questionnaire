@@ -102,7 +102,7 @@
             class="bt bt--full"
             round
             full
-            (click)="enterTokenOption()"
+            (click)="enterToken()"
           >
             {{ "BTN_ENROL_ENTER_TOKEN" | translate }}
           </button>
@@ -114,54 +114,61 @@
       *ngIf="enterMetaQR"
       id="qr-registration-token"
     >
-      <div class="registration">
-        <div class="text text-lg">{{ "ENROL_REGISTRATION" | translate }}</div>
-        <div class="text text-justify">
-          {{ "ENROL_REGISTRATION_TOKEN_DESC" | translate }}
-        </div>
-        <div class="token-input">
-          <ion-input
-            [(ngModel)]="baseURL"
-            type="text"
-            placeholder="Base URL"
-          ></ion-input>
-        </div>
-        <div class="token-input">
-          <ion-input
-            [(ngModel)]="tokenName"
-            type="text"
-            placeholder="Token"
-          ></ion-input>
-        </div>
-      </div>
-      <div id="status">
-        <div
-          #loading
-          id="loading"
-        >
-          <div class="padding-text">{{ "STATUS_LOADING" | translate }}</div>
-        </div>
-        <div
-          #outcome
-          id="outcome"
-        >
-          <div class="padding-text">{{ outcomeStatus }}</div>
-        </div>
-      </div>
-      <div
-        padding
-        class="bottom"
+      <form
+        [formGroup]="metaQRForm"
+        (ngSubmit)="metaQRHandler()"
       >
-        <button
-          ion-button
-          class="bt bt--full"
-          round
-          full
-          (click)="submitToken()"
+        <div class="registration">
+          <div class="text text-lg">{{ "ENROL_REGISTRATION" | translate }}</div>
+          <div class="text text-justify">
+            {{ "ENROL_REGISTRATION_TOKEN_DESC" | translate }}
+          </div>
+          <div class="token-input">
+            <ion-input
+              required
+              formControlName="baseURL"
+              type="url"
+              placeholder="Base URL"
+            ></ion-input>
+          </div>
+          <div class="token-input">
+            <ion-input
+              required
+              formControlName="tokenName"
+              type="text"
+              placeholder="Token"
+            ></ion-input>
+          </div>
+        </div>
+        <div id="status">
+          <div
+            #loading
+            id="loading"
+          >
+            <div class="padding-text">{{ "STATUS_LOADING" | translate }}</div>
+          </div>
+          <div
+            #outcome
+            id="outcome"
+          >
+            <div class="padding-text">{{ outcomeStatus }}</div>
+          </div>
+        </div>
+        <div
+          padding
+          class="bottom"
         >
-          {{ "BTN_SUBMIT" | translate }}
-        </button>
-      </div>
+          <button
+            ion-button
+            class="bt bt--full"
+            round
+            full
+            type="submit"
+          >
+            {{ "BTN_SUBMIT" | translate }}
+          </button>
+        </div>
+      </form>
     </ion-slide>
 
     <ion-slide
@@ -200,7 +207,7 @@
           class="bt bt--full"
           round
           full
-          (click)="scanQR()"
+          (click)="scanQRHandler()"
         >
           {{ "BTN_ENROL_SCAN" | translate }}
         </button>

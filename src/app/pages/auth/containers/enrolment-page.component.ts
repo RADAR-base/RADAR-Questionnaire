@@ -1,14 +1,20 @@
 import { Component, ElementRef, ViewChild } from '@angular/core'
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  ValidatorFn,
+  Validators
+} from '@angular/forms'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner'
 import { AlertController, NavController, Slides } from 'ionic-angular'
 
 import {
-  DefaultEndPoint,
+  DefaultEnrolmentBaseURL,
   DefaultSettingsSupportedLanguages,
   DefaultSettingsWeeklyReport,
   DefaultSourceTypeModel,
-  LanguageMap,
-  URI_managementPortal
+  LanguageMap
 } from '../../../../assets/data/defaultConfig'
 import { AppComponent } from '../../../core/containers/app.component'
 import { ConfigService } from '../../../core/services/config.service'
@@ -40,15 +46,29 @@ export class EnrolmentPageComponent {
   outcomeStatus: String
   reportSettings: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
 
+  URLRegEx = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?'
+
   language: LanguageSetting = {
     label: LocKeys.LANGUAGE_ENGLISH.toString(),
     value: 'en'
   }
-
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
+
   enterMetaQR = false
-  tokenName: string
-  baseURL = DefaultEndPoint + URI_managementPortal
+  metaQRForm: FormGroup = new FormGroup({
+    baseURL: new FormControl(DefaultEnrolmentBaseURL, [
+      Validators.required,
+      Validators.pattern(this.URLRegEx)
+    ]),
+    tokenName: new FormControl('', [Validators.required])
+  })
+
+  get tokenName() {
+    return this.metaQRForm.get('tokenName')
+  }
+  get baseURL() {
+    return this.metaQRForm.get('baseURL')
+  }
 
   constructor(
     public navCtrl: NavController,
@@ -72,7 +92,7 @@ export class EnrolmentPageComponent {
 
   ionViewDidEnter() {}
 
-  scanQR() {
+  scanQRHandler() {
     this.loading = true
     const scanOptions = {
       showFlipCameraButton: true,
@@ -84,11 +104,19 @@ export class EnrolmentPageComponent {
       .then(scannedObj => this.authenticate(scannedObj.text))
   }
 
-  submitToken() {
+  metaQRHandler() {
+    if (this.baseURL.errors) {
+      this.displayErrorMessage({ statusText: 'Invalid Base URL' })
+      return
+    }
+    if (this.tokenName.errors) {
+      this.displayErrorMessage({ statusText: 'Invalid Token Name' })
+      return
+    }
     this.authenticate(
       this.authService.getURLFromToken(
-        this.baseURL.trim(),
-        this.tokenName.trim()
+        this.baseURL.value.trim(),
+        this.tokenName.value.trim()
       )
     )
   }
@@ -172,8 +200,7 @@ export class EnrolmentPageComponent {
   }
 
   validURL(str) {
-    // tslint:disable-next-line:max-line-length
-    const regexp = /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/
+    const regexp = new RegExp(this.URLRegEx)
     if (regexp.test(str)) {
       return true
     } else {
@@ -254,7 +281,7 @@ export class EnrolmentPageComponent {
     this.slides.lockSwipes(true)
   }
 
-  enterTokenOption() {
+  enterToken() {
     this.enterMetaQR = true
     this.next()
   }

@@ -21,7 +21,7 @@ export class FinishPageComponent {
   completedInClinic: boolean = false
   displayNextTaskReminder: boolean = true
   hasClickedDoneButton: boolean = false
-
+  associatedTask
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -33,6 +33,7 @@ export class FinishPageComponent {
   ) {}
 
   ionViewDidLoad() {
+    this.associatedTask = this.navParams.data.associatedTask
     this.content = this.navParams.data.endText
     const questionnaireName: string = this.navParams.data.associatedTask.name
     if (!questionnaireName.includes('DEMO')) {
@@ -52,10 +53,12 @@ export class FinishPageComponent {
         )
         .then(
           data => {
-            this.finishTaskService.updateTaskToComplete(
-              this.navParams.data.associatedTask
+            this.finishTaskService.updateTaskToComplete(this.associatedTask)
+            this.sendToKafka(
+              this.associatedTask,
+              data,
+              this.navParams.data.questions
             )
-            this.sendToKafka(this.navParams.data.associatedTask, data)
           },
           error => {
             console.log(JSON.stringify(error))
@@ -70,8 +73,8 @@ export class FinishPageComponent {
     this.displayNextTaskReminder = !this.navParams.data.isLastTask
   }
 
-  sendToKafka(questionnaireName, questionnaireData) {
-    this.kafkaService.prepareKafkaObject(questionnaireName, questionnaireData) // submit data to kafka
+  sendToKafka(task: Task, questionnaireData, questions) {
+    this.kafkaService.prepareKafkaObject(task, questionnaireData, questions) // submit data to kafka
   }
 
   handleClosePage() {

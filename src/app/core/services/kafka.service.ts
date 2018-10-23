@@ -1,8 +1,8 @@
 import 'rxjs/add/operator/map'
 
 import { Injectable } from '@angular/core'
-import AvroSchema from 'avsc'
-import KafkaClient from 'kafka-rest'
+import * as AvroSchema from 'avsc'
+import * as KafkaRest from 'kafka-rest'
 
 import { DefaultEndPoint } from '../../../assets/data/defaultConfig'
 import { AuthService } from '../../pages/auth/services/auth.service'
@@ -12,6 +12,7 @@ import {
   AnswerValueExport,
   CompletionLogValueExport
 } from '../../shared/models/answer'
+import { QuestionType } from '../../shared/models/question'
 import { Task } from '../../shared/models/task'
 import { Utility } from '../../shared/utilities/util'
 import { StorageService } from './storage.service'
@@ -21,6 +22,7 @@ export class KafkaService {
   private KAFKA_CLIENT_URL: string
   private KAFKA_CLIENT_KAFKA: string = '/kafka'
   private specs = {}
+  private cacheSending = false
 
   constructor(
     private util: Utility,
@@ -37,13 +39,16 @@ export class KafkaService {
     })
   }
 
-  prepareKafkaObject(task: Task, data) {
+  prepareKafkaObject(task: Task, data, questions) {
     // NOTE: Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
     const Answer: AnswerValueExport = {
       name: task.name,
       version: data.configVersion,
       answers: data.answers,
-      time: data.answers[0].startTime, // NOTE: whole questionnaire startTime and endTime
+      time:
+        questions[0].field_type == QuestionType.info // NOTE: Do not use info startTime
+          ? data.answers[1].startTime
+          : data.answers[0].startTime, // NOTE: whole questionnaire startTime and endTime
       timeCompleted: data.answers[data.answers.length - 1].endTime
     }
 
@@ -111,7 +116,9 @@ export class KafkaService {
       .then(schemaVersions => {
         const avroKey = AvroSchema.parse(
           JSON.parse(schemaVersions[0]['schema']),
-          { wrapUnions: true }
+          {
+            wrapUnions: true
+          }
         )
         // NOTE: Issue forValue: inferred from input, due to error when parsing schema
         const avroVal = AvroSchema.Type.forValue(kafkaObject.value, {
@@ -124,10 +131,10 @@ export class KafkaService {
           value: bufferVal
         }
 
-        const schemaId = new KafkaClient.AvroSchema(
+        const schemaId = new KafkaRest.AvroSchema(
           JSON.parse(schemaVersions[0]['schema'])
         )
-        const schemaInfo = new KafkaClient.AvroSchema(
+        const schemaInfo = new KafkaRest.AvroSchema(
           JSON.parse(schemaVersions[1]['schema'])
         )
         return this.sendToKafka(
@@ -151,7 +158,6 @@ export class KafkaService {
         // NOTE: Kafka connection instance to submit to topic
         const topic = specs.avsc + '_' + specs.name
         console.log('Sending to: ' + topic)
-
         return kafkaConnInstance
           .topic(topic)
           .produce(id, info, payload, (err, res) => {
@@ -185,6 +191,15 @@ export class KafkaService {
   }
 
   sendAllAnswersInCache() {
+    if (!this.cacheSending) {
+      this.cacheSending = !this.cacheSending
+      this.sendToKafkaFromCache().then(
+        () => (this.cacheSending = !this.cacheSending)
+      )
+    }
+  }
+
+  sendToKafkaFromCache() {
     return this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
       if (!cache) {
         return this.storage.set(StorageKeys.CACHE_ANSWERS, {})
@@ -232,7 +247,7 @@ export class KafkaService {
       .then(() => this.storage.get(StorageKeys.OAUTH_TOKENS))
       .then(tokens => {
         const headers = { Authorization: 'Bearer ' + tokens.access_token }
-        return new KafkaClient({ url: this.KAFKA_CLIENT_URL, headers: headers })
+        return new KafkaRest({ url: this.KAFKA_CLIENT_URL, headers: headers })
       })
   }
 

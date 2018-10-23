@@ -55,6 +55,7 @@ export class HomePageComponent {
   hasClinicalTasks = false
   hasOnlyESMs = false
   taskIsNow = false
+  elProgressOffset = 16
 
   constructor(
     public navCtrl: NavController,
@@ -69,7 +70,7 @@ export class HomePageComponent {
 
   ionViewWillEnter() {
     this.getElementsAttributes()
-    this.elProgressHeight += 15
+    this.elProgressHeight += this.elProgressOffset
     this.applyTransformations()
   }
 
@@ -154,7 +155,8 @@ export class HomePageComponent {
   getElementsAttributes() {
     if (this.elContent._scroll) {
       this.elContentHeight = this.elContent.contentHeight
-      this.elProgressHeight = this.elProgress.nativeElement.offsetHeight - 15
+      this.elProgressHeight =
+        this.elProgress.nativeElement.offsetHeight - this.elProgressOffset
       this.elTickerHeight = this.elTicker.nativeElement.offsetHeight
       this.elInfoHeight = this.elInfo.nativeElement.offsetHeight
       this.elFooterHeight = this.elFooter.nativeElement.offsetHeight

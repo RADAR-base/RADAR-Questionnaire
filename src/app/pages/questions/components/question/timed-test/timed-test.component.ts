@@ -36,7 +36,6 @@ export class TimedTestComponent implements OnInit, OnChanges {
 
   ngOnChanges() {
     if (this.currentlyShown) {
-      console.log('Start')
       this.start()
     }
   }
@@ -45,10 +44,13 @@ export class TimedTestComponent implements OnInit, OnChanges {
     if (this.itimer.hasStarted) {
       this.resumeTimer()
     } else {
-      setTimeout(() => {
-        this.startTimer()
-      }, 1000)
+      this.startTimer()
     }
+  }
+
+  emitTime(emitter) {
+    const epoch: number = new Date().getTime()
+    emitter.emit(epoch)
   }
 
   hasFinished() {
@@ -108,9 +110,8 @@ export class TimedTestComponent implements OnInit, OnChanges {
           } else {
             this.pauseTimer()
           }
-          // NOTE: Save timestamp (epoch) and activate the next button
-          const epoch: number = new Date().getTime()
-          this.valueChange.emit(epoch)
+          // NOTE: save timestamp (epoch) and activate the next button
+          this.emitTime(this.valueChange)
         }
       }
     }, 1000)

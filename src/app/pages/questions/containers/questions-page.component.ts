@@ -192,7 +192,7 @@ export class QuestionsPageComponent {
 
   navigateToFinishPage() {
     this.navCtrl.push(FinishPageComponent, {
-      endText: this.navParams.data.endText,
+      endText: this.endText,
       associatedTask: this.associatedTask,
       answers: this.answerService.answers,
       timestamps: this.timestampService.timestamps,

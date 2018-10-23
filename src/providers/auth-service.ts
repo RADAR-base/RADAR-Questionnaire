@@ -7,8 +7,14 @@ import { JwtHelperService } from '@auth0/angular-jwt'
 
 import {
   DefaultEndPoint,
+  DefaultManagementPortalURI,
+  DefaultRefreshTokenRequestBody,
+  DefaultRefreshTokenURI,
+  DefaultRequestEncodedContentType,
+  DefaultRequestJSONContentType,
   DefaultSourceProducerAndSecret,
-  DefaultSourceTypeRegistrationBody
+  DefaultSourceTypeRegistrationBody,
+  DefaultSubjectsURI
 } from '../assets/data/defaultConfig'
 import { StorageKeys } from '../enums/storage'
 import { StorageService } from './storage-service'
@@ -16,14 +22,6 @@ import { StorageService } from './storage-service'
 @Injectable()
 export class AuthService {
   URI_base: string
-  URI_managementPortal: string = 'managementportal'
-  URI_refresh: string = '/oauth/token'
-  URI_subjects: string = '/api/subjects/'
-
-  CONTENTTYPE_urlencode: string = 'application/x-www-form-urlencoded'
-  CONTENTTYPE_json: string = 'application/json'
-  BODY_refresh: string = 'grant_type=refresh_token&refresh_token='
-  BODY_register = DefaultSourceTypeRegistrationBody
 
   constructor(
     public http: HttpClient,
@@ -37,8 +35,10 @@ export class AuthService {
     return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
       const now = new Date().getTime() / 1000
       if (tokens.iat + tokens.expires_in < now) {
-        const URI = this.URI_base + this.URI_refresh
-        const headers = this.getRegisterHeaders(this.CONTENTTYPE_urlencode)
+        const URI = this.URI_base + DefaultRefreshTokenURI
+        const headers = this.getRegisterHeaders(
+          DefaultRequestEncodedContentType
+        )
         const params = this.getRefreshParams(tokens.refresh_token)
         const promise = this.createPostRequest(URI, '', {
           headers: headers,
@@ -56,16 +56,16 @@ export class AuthService {
   updateURI() {
     return this.storage.get(StorageKeys.BASE_URI).then(uri => {
       const endPoint = uri ? uri : DefaultEndPoint
-      this.URI_base = endPoint + this.URI_managementPortal
+      this.URI_base = endPoint + DefaultManagementPortalURI
     })
   }
 
   // TODO: test this
   registerToken(registrationToken) {
-    const URI = this.URI_base + this.URI_refresh
+    const URI = this.URI_base + DefaultRefreshTokenURI
     // console.debug('URI : ' + URI)
-    const refreshBody = this.BODY_refresh + registrationToken
-    const headers = this.getRegisterHeaders(this.CONTENTTYPE_urlencode)
+    const refreshBody = DefaultRefreshTokenRequestBody + registrationToken
+    const headers = this.getRegisterHeaders(DefaultRequestEncodedContentType)
     const promise = this.createPostRequest(URI, refreshBody, {
       headers: headers
     })
@@ -79,12 +79,16 @@ export class AuthService {
       const decoded = this.jwtHelper.decodeToken(tokens.access_token)
       const headers = this.getAccessHeaders(
         tokens.access_token,
-        this.CONTENTTYPE_json
+        DefaultRequestJSONContentType
       )
-      const URI = this.URI_base + this.URI_subjects + decoded.sub + '/sources'
-      const promise = this.createPostRequest(URI, this.BODY_register, {
-        headers: headers
-      })
+      const URI = this.URI_base + DefaultSubjectsURI + decoded.sub + '/sources'
+      const promise = this.createPostRequest(
+        URI,
+        DefaultSourceTypeRegistrationBody,
+        {
+          headers: headers
+        }
+      )
       return promise
     })
   }
@@ -102,9 +106,9 @@ export class AuthService {
       const decoded = this.jwtHelper.decodeToken(tokens.access_token)
       const headers = this.getAccessHeaders(
         tokens.access_token,
-        this.CONTENTTYPE_urlencode
+        DefaultRequestEncodedContentType
       )
-      const URI = this.URI_base + this.URI_subjects + decoded.sub
+      const URI = this.URI_base + DefaultSubjectsURI + decoded.sub
       return this.http.get(URI, { headers }).toPromise()
     })
   }

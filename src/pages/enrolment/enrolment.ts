@@ -113,14 +113,12 @@ export class EnrolmentPage {
       this.displayErrorMessage({ statusText: 'Invalid Token Name' })
       return
     }
-    if (!this.baseURL.errors && !this.tokenName.errors) {
-      this.authenticate(
-        this.authService.getURLFromToken(
-          this.baseURL.value.trim(),
-          this.tokenName.value.trim()
-        )
+    this.authenticate(
+      this.authService.getURLFromToken(
+        this.baseURL.value.trim(),
+        this.tokenName.value.trim()
       )
-    }
+    )
   }
 
   authenticate(authObj) {

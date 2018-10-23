@@ -119,9 +119,27 @@ export const DefaultProtocolEndPoint: string = DefaultProtocolEndPointExport
 
 export const DefaultSourceProducerAndSecret: string = DefaultSourceProducerAndSecretExport
 
-export const URI_managementPortal: string = 'managementportal'
-export const URI_refresh: string = '/oauth/token'
-export const URI_subjects: string = '/api/subjects/'
-export const URI_metatoken: string = '/api/meta-token/'
+// CONFIG SERVICE
 
-export const DefaultEnrolmentBaseURL = DefaultEndPoint + URI_managementPortal
+export const DefaultProtocolURI = '/protocol.json'
+export const DefaultQuestionnaireTypeURI = '_armt'
+export const DefaultQuestionnaireFormatURI = '.json'
+export const ARMTDefBranchProd = 'master'
+export const ARMTDefBranchTest = 'test'
+export const TEST_ARMT_DEF = true
+
+// AUTH SERVICE
+
+export const DefaultManagementPortalURI = 'managementportal'
+export const DefaultRefreshTokenURI = '/oauth/token'
+export const DefaultSubjectsURI = '/api/subjects/'
+export const DefaultMetaTokenURI: string = '/api/meta-token/'
+
+export const DefaultRequestEncodedContentType =
+  'application/x-www-form-urlencoded'
+export const DefaultRequestJSONContentType = 'application/json'
+export const DefaultRefreshTokenRequestBody =
+  'grant_type=refresh_token&refresh_token='
+
+export const DefaultEnrolmentBaseURL =
+  DefaultEndPoint + DefaultManagementPortalURI

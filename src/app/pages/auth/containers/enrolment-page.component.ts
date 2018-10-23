@@ -14,8 +14,7 @@ import {
   DefaultSettingsSupportedLanguages,
   DefaultSettingsWeeklyReport,
   DefaultSourceTypeModel,
-  LanguageMap,
-  URI_managementPortal
+  LanguageMap
 } from '../../../../assets/data/defaultConfig'
 import { AppComponent } from '../../../core/containers/app.component'
 import { ConfigService } from '../../../core/services/config.service'
@@ -114,14 +113,12 @@ export class EnrolmentPageComponent {
       this.displayErrorMessage({ statusText: 'Invalid Token Name' })
       return
     }
-    if (!this.baseURL.errors && !this.tokenName.errors) {
-      this.authenticate(
-        this.authService.getURLFromToken(
-          this.baseURL.value.trim(),
-          this.tokenName.value.trim()
-        )
+    this.authenticate(
+      this.authService.getURLFromToken(
+        this.baseURL.value.trim(),
+        this.tokenName.value.trim()
       )
-    }
+    )
   }
 
   authenticate(authObj) {

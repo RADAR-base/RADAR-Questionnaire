@@ -6,8 +6,8 @@ export interface Task {
   reportedCompletion: boolean
   timestamp: number
   name: string
-  reminderSettings: Reminders
   nQuestions: number
+  reminderSettings?: any
   estimatedCompletionTime: number
   warning: string
   isClinical: boolean

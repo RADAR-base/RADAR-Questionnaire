@@ -6,6 +6,7 @@ import {
   DefaultNotificationRefreshTime,
   DefaultNumberOfNotificationsToSchedule
 } from '../../../../assets/data/defaultConfig'
+import { ConfigService } from '../../../core/services/config.service'
 import { KafkaService } from '../../../core/services/kafka.service'
 import { NotificationService } from '../../../core/services/notification.service'
 import { StorageService } from '../../../core/services/storage.service'
@@ -30,7 +31,8 @@ export class SplashPageComponent {
     private splashService: SplashService,
     private notificationService: NotificationService,
     private globalization: Globalization,
-    private kafka: KafkaService
+    private kafka: KafkaService,
+    private configService: ConfigService
   ) {
     const parentPage = this.navParams.data.parentPage
     if (parentPage) {
@@ -43,41 +45,37 @@ export class SplashPageComponent {
       this.storage.get(StorageKeys.UTC_OFFSET)
     ])
       .then(([timeZone, utcOffset]) => {
-        this.globalization
+        return this.globalization
           .getDatePattern({ formatLength: 'short', selector: 'date and time' })
           .then(res => {
-            // NOTE: Cancels all notifications if timezone/utc_offset has changed
-            // TODO: Force fetch the config and re-schedule here generating a new schedule
+            // NOTE: Cancels all notifications and reschedule tasks if timezone has changed
             if (timeZone !== res.timezone || utcOffset !== res.utc_offset) {
               console.log(
                 '[SPLASH] Timezone has changed to ' +
                   res.timezone +
-                  '. Cancelling notifications!'
+                  '. Cancelling notifications! Rescheduling tasks! Scheduling new notifications!'
               )
               this.storage.set(StorageKeys.TIME_ZONE, res.timezone)
               this.storage.set(StorageKeys.UTC_OFFSET, res.utc_offset)
-              this.notificationService.cancelNotifications()
+              return this.notificationService.cancelNotifications().then(() => {
+                return this.configService.fetchConfigState(true)
+              })
             } else {
               console.log('[SPLASH] Current Timezone is ' + timeZone)
             }
           })
       })
       .then(() => {
-        console.log('[SPLASH] Scheduling Notifications.')
         // NOTE: Only run this if not run in last DefaultNotificationRefreshTime
         this.storage
           .get(StorageKeys.LAST_NOTIFICATION_UPDATE)
           .then(lastUpdate => {
             const timeElapsed = Date.now() - lastUpdate
             if (timeElapsed > DefaultNotificationRefreshTime || !lastUpdate) {
-              this.notificationService
-                .setNextXNotifications(DefaultNumberOfNotificationsToSchedule)
-                .then(() =>
-                  this.storage.set(
-                    StorageKeys.LAST_NOTIFICATION_UPDATE,
-                    Date.now()
-                  )
-                )
+              console.log('[SPLASH] Scheduling Notifications.')
+              this.notificationService.setNextXNotifications(
+                DefaultNumberOfNotificationsToSchedule
+              )
             } else {
               console.log(
                 'Not Scheduling Notifications as ' +
@@ -89,13 +87,13 @@ export class SplashPageComponent {
             }
           })
       })
+      .catch(error => {
+        console.error(error)
+        console.log('[SPLASH] Notifications error.')
+      })
       .then(() => {
         this.status = 'Sending cached answers...'
         return this.kafka.sendAllAnswersInCache()
-      })
-      .catch(error => {
-        console.error(error)
-        console.log('[SPLASH] Cache could not be sent.')
       })
       .then(() => {
         this.status = 'Retrieving storage...'

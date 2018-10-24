@@ -44,11 +44,11 @@ page-questions {
     left: 0;
     width: 100%;
     height: 4px;
-    background-color: $cl-primary-20;
+    background-color: $cl-secondary-light;
+  }
 
-    #{&}__bar {
-      height: 100%;
-      background-color: $cl-primary-20;
-    }
+  .toolbar-progress-bar {
+    height: 100%;
+    background-color: $cl-primary-60;
   }
 }

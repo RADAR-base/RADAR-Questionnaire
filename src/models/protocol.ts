@@ -1,21 +1,21 @@
 export interface Protocol {
-  repeatProtocol: RepeatProtocol,
-  repeatQuestionnaire: RepeatQuestionnaire,
+  repeatProtocol: RepeatProtocol
+  repeatQuestionnaire: RepeatQuestionnaire
   reminders: Reminders
 }
 
 export interface RepeatProtocol {
-  unit: string,
+  unit: string
   amount: number
 }
 
 export interface RepeatQuestionnaire {
-  unit: string,
+  unit: string
   unitFromZero: number[]
 }
 
 export interface Reminders {
-  unit: string,
-  amount: number,
+  unit: string
+  amount: number
   repeat: number
 }

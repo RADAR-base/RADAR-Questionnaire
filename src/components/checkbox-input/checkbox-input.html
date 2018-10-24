@@ -1,10 +1,12 @@
 <ul>
   <li *ngFor="let item of items">
-    <input type="checkbox"
+    <input
+      type="checkbox"
       [id]="item.id"
       [name]="name"
       [value]="item.value"
-      (change)="onInputChange($event)">
-    <label [attr.for]="item.id">{{item.response}}</label>
+      (change)="onInputChange($event)"
+    >
+    <label [attr.for]="item.id">{{ item.response }}</label>
   </li>
 </ul>

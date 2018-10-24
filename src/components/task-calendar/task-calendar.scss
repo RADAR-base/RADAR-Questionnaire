@@ -1,5 +1,4 @@
 task-calendar {
-
   .date {
     font-size: 20px;
   }
@@ -11,14 +10,14 @@ task-calendar {
   #time-current {
     top: 0;
     left: 0;
-    width: 100%;
     z-index: 2;
+    width: 100%;
   }
 
   .time-current-division {
+    margin-top: 10px;
     width: 100%;
     height: 2px;
-    margin-top: 10px;
     background-color: $cl-warning;
   }
 
@@ -31,23 +30,28 @@ task-calendar {
   }
 
   .time-current {
+    color: $cl-light-80;
     text-align: center;
     font-size: 18px;
-    color: $cl-light-80;
   }
 
   #task-item {
-    background-color: $cl-primary-40;
-    padding: 3px 9px;
-    font-size: 18px;
-    text-align: center;
     display: block;
     margin-bottom: 3px;
+    padding: 3px 9px;
     padding-bottom: 0;
+    background-color: $cl-primary-40;
+    text-align: center;
+    font-size: 18px;
   }
 
   .units {
+    margin-right: 2px;
     font-size: 12px;
+  }
+
+  .start-time {
+    width: 64px;
   }
 
   .icon-padding {
@@ -59,38 +63,46 @@ task-calendar {
     height: 14px;
   }
 
-  .task-info-right {
-    float: right;
+  .task-info-left {
+    display: inline-flex;
+    float: left;
   }
 
-  .task-info-left {
+  .metrics {
+    display: inline-flex;
     float: left;
+    margin-left: 40px;
+  }
+
+  .metric-time {
+    max-width: 80px;
+    width: 80px;
   }
 
   .status-div {
     float: right;
-    padding-left: 10px;
+    margin-top: -8px;
+    margin-bottom: -8px;
+    padding-top: 5px;
   }
 
   .status {
-    font-size: 28px;
-    margin-top: -8px;
-    margin-bottom: -8px;
-    padding-right: 0;
-    padding-top: 2px;
     color: map-get($colors, tertiary);
+    font-size: 28px;
   }
 
   .status-checked {
+    margin-left: 2px;
+    padding-top: 2px;
+    width: 23px;
+    height: 23px;
     border-radius: 50%;
-    width: 6vw;
-    height: 6vw;
     background-color: map-get($colors, tertiary);
-    font-size: 22px;
+    font-size: 21px;
   }
 
   .current-time-div {
-    height: 38px;
     padding-top: 2px;
+    height: 38px;
   }
 }

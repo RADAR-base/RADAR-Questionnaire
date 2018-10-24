@@ -1,18 +1,16 @@
 <ul>
   <li *ngFor="let item of items">
-    <input type="radio"
+    <input
+      type="radio"
       [id]="item.id"
       [name]="name"
       [value]="item.value"
-      (change)="onInputChange($event)">
-    <label [attr.for]="item.id">{{item.value}}</label>
+      (change)="onInputChange($event)"
+    >
+    <label [attr.for]="item.id">{{ item.value }}</label>
   </li>
 </ul>
 <div class="padding">
-  <div class="labelLeft">
-    {{labelLeft}}
-  </div>
-  <div class="labelRight">
-    {{labelRight}}
-  </div>
+  <div class="labelLeft">{{ labelLeft }}</div>
+  <div class="labelRight">{{ labelRight }}</div>
 </div>

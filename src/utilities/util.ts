@@ -1,88 +1,89 @@
+import 'rxjs/add/operator/map'
 
-
+import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Device } from '@ionic-native/device'
-import { Observable } from 'rxjs/Observable'
-import 'rxjs/add/operator/map'
-import { Http, Response } from '@angular/http'
-import { StorageService } from '../providers/storage-service'
-import { StorageKeys } from '../enums/storage'
-import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { Observable, throwError as observableThrowError } from 'rxjs'
+
 import { DefaultEndPoint } from '../assets/data/defaultConfig'
+import { StorageKeys } from '../enums/storage'
+import { StorageService } from '../providers/storage-service'
 
 @Injectable()
 export class Utility {
-
-  URI_schema:string = '/schema/subjects/'
-  URI_version:string = '/versions/'
+  URI_schema: string = '/schema/subjects/'
+  URI_version: string = '/versions/'
 
   constructor(
-    private httpClient: HttpClient,
-    private http: Http,
+    private http: HttpClient,
     private device: Device,
     private storage: StorageService
-  ) {
-  }
+  ) {}
 
   getSchema(schemaUrl) {
-    return this.http.get(schemaUrl)
+    return this.http
+      .get(schemaUrl)
       .map(this.extractData)
       .catch(this.handleError)
   }
 
-
   getDevice() {
-    if (this.device.platform == undefined || null) {
+    if (this.device.platform === undefined || null) {
       return {
-        "isDeviceReady": false,
-        "device": this.device
+        isDeviceReady: false,
+        device: this.device
       }
     } else {
       return {
-        "isDeviceReady": true,
-        "device": this.device
+        isDeviceReady: true,
+        device: this.device
       }
     }
   }
 
-  private extractData(res: Response) {
+  private extractData(res: any) {
     const body = res.json()
     return body || []
-
   }
 
-  private handleError(error: Response | any) {
+  private handleError(error: any) {
     let errMsg: string
 
-    if (error instanceof Response) {
-      const body = error.json() || ''
-      const err = body.error || JSON.stringify(body)
-      errMsg = `${error.status} - ${error.statusText || ''} ${err}`
-    } else {
-      errMsg = error.message
-        ? error.message
-        : error.toString()
-    }
+    // TODO: Fix types
+    // if (error instanceof any) {
+    //   const body = error.json() || ''
+    //   const err = body.error || JSON.stringify(body)
+    //   errMsg = `${error.status} - ${error.statusText || ''} ${err}`
+    // } else {
+    //   errMsg = error.message ? error.message : error.toString()
+    // }
+    errMsg = error.message ? error.message : error.toString()
 
     console.error(errMsg)
-    return Observable.throw(errMsg)
+    return observableThrowError(errMsg)
   }
 
   getSourceKeyInfo() {
-    let sourceId = this.storage.get(StorageKeys.SOURCEID)
-    let projectId = this.storage.get(StorageKeys.PROJECTNAME)
-    let pariticipantId = this.storage.get(StorageKeys.PARTICIPANTLOGIN)
+    const sourceId = this.storage.get(StorageKeys.SOURCEID)
+    const projectId = this.storage.get(StorageKeys.PROJECTNAME)
+    const pariticipantId = this.storage.get(StorageKeys.PARTICIPANTLOGIN)
     return Promise.all([sourceId, projectId, pariticipantId])
   }
 
-
   getLatestKafkaSchemaVersions(specs) {
-    let qKey = specs.avsc + '_' + specs.name + '-key'
-    let qVal = specs.avsc + '_' + specs.name + '-value'
-    return this.storage.get(StorageKeys.OAUTH_TOKENS)
-    .then(tokens => {
-      let keys = this.getLatestKafkaSchemaVersion(tokens.access_token, qKey, 'latest')
-      let vals = this.getLatestKafkaSchemaVersion(tokens.access_token, qVal, 'latest')
+    const qKey = specs.avsc + '_' + specs.name + '-key'
+    const qVal = specs.avsc + '_' + specs.name + '-value'
+    return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
+      const keys = this.getLatestKafkaSchemaVersion(
+        tokens.access_token,
+        qKey,
+        'latest'
+      )
+      const vals = this.getLatestKafkaSchemaVersion(
+        tokens.access_token,
+        qVal,
+        'latest'
+      )
       return Promise.all([keys, vals])
       /*return Promise.all([keys, vals]).then(versions => {
         var versionReqKey, versionReqValue
@@ -96,13 +97,12 @@ export class Utility {
   }
 
   getLatestKafkaSchemaVersion(accessToken, questionName, version) {
-    let versionStr = this.URI_version + version
-    return this.storage.get(StorageKeys.BASE_URI).then((baseuri) => {
-      var endPoint = baseuri ? baseuri : DefaultEndPoint
-      let uri = endPoint + this.URI_schema + questionName + versionStr
+    const versionStr = this.URI_version + version
+    return this.storage.get(StorageKeys.BASE_URI).then(baseuri => {
+      const endPoint = baseuri ? baseuri : DefaultEndPoint
+      const uri = endPoint + this.URI_schema + questionName + versionStr
       console.log(uri)
-      return this.httpClient.get(uri).toPromise()
+      return this.http.get(uri).toPromise()
     })
   }
-
 }

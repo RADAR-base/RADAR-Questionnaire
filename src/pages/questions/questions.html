@@ -1,31 +1,47 @@
 <ion-content>
-  <div #questionsContainer class="questions-container">
-    <question *ngFor="let question of questions; let i = index"
+  <div
+    #questionsContainer
+    class="questions-container"
+  >
+    <question
+      *ngFor="let question of questions; let i = index"
       [question]="question"
       [questionIndex]="i"
       [currentIndex]="currentQuestion"
-      (answer)="onAnswer($event)"></question>
+      (answer)="onAnswer($event)"
+    ></question>
   </div>
 </ion-content>
 
 <ion-footer>
   <ion-toolbar>
     <div class="toolbar-progress">
-      <div [style.width.%]="progress" class="toolbar-progress__bar"></div>
+      <div
+        class="toolbar-progress-bar"
+        [style.width]="progress+'%'"
+      ></div>
     </div>
     <ion-buttons left>
-      <button ion-button left icon-left
+      <button
+        ion-button
+        left
+        icon-left
         [class.disabled]="isPreviousBtDisabled"
-        (click)="previousQuestion()">
+        (click)="previousQuestion()"
+      >
         <ion-icon [name]="iconPrevious"></ion-icon>
-        <div class="toolbar-label">{{previousBtTxt}}</div>
+        <div class="toolbar-label">{{ previousBtTxt }}</div>
       </button>
     </ion-buttons>
     <ion-buttons right>
-      <button ion-button right icon-right
+      <button
+        ion-button
+        right
+        icon-right
         [class.disabled]="isNextBtDisabled"
-        (click)="nextQuestion()">
-        <div class="toolbar-label">{{nextBtTxt}}</div>
+        (click)="nextQuestion()"
+      >
+        <div class="toolbar-label">{{ nextBtTxt }}</div>
         <ion-icon name="ios-arrow-forward"></ion-icon>
       </button>
     </ion-buttons>

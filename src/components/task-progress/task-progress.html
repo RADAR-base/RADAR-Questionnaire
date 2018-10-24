@@ -1,33 +1,59 @@
-<div id="task-progress-container" (click)="easterEggFireworks()">
+<div
+  id="task-progress-container"
+  (click)="easterEggFireworks()"
+>
 
-  <div class="noTasks-padding" *ngIf="noTasksToday">
+  <div
+    class="noTasks-padding"
+    *ngIf="noTasksToday"
+  >
   </div>
 
-  <div id="navigation">
-    {{ "TASK_PROGRESS_TITLE" | translate }}
-  </div>
+  <div id="navigation">{{ "TASK_PROGRESS_TITLE" | translate }}</div>
 
-  <div class="pyro" *ngIf="showFireworks">
+  <div
+    class="pyro"
+    *ngIf="showFireworks"
+  >
     <div class="before"></div>
     <div class="after"></div>
   </div>
 
   <div id="progress">
-    <div #progressActive class="progress-sub">
-      <round-progress id="prog-lg" [current]="current" [max]="max" [responsive]="true"></round-progress>
+    <div
+      #progressActive
+      class="progress-sub"
+    >
+      <round-progress
+        id="prog-lg"
+        [current]="current"
+        [max]="max"
+        [responsive]="true"
+      ></round-progress>
     </div>
-    <div #progressComplete class="progress-sub">
+    <div
+      #progressComplete
+      class="progress-sub"
+    >
       <div class="completed">
-        <ion-icon #checkmark class="checkmark" name="checkmark"></ion-icon>
+        <ion-icon
+          #checkmark
+          class="checkmark"
+          name="checkmark"
+        ></ion-icon>
       </div>
     </div>
   </div>
 
-  <div #counter class="counter">
+  <div
+    #counter
+    class="counter"
+  >
     <div *ngIf="!noTasksToday">
-      <span class="large">{{ current }}</span>
-      <br>
-      <span class="small">{{ "TASK_PROGRESS_COMPLETED" | translate }}</span>
+      <div class="large">{{ current }}</div>
+      <div class="small">
+        {{ "TASK_PROGRESS_COMPLETED" | translate }}
+      </div>
     </div>
   </div>
 

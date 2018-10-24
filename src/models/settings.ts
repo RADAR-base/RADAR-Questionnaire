@@ -1,15 +1,15 @@
 export interface NotificationSettings {
-  sound: Boolean,
-  vibration: Boolean,
+  sound: Boolean
+  vibration: Boolean
   nightMode: Boolean
 }
 
 export interface WeeklyReportSubSettings {
-  name: String,
+  name: String
   show: Boolean
 }
 
 export interface LanguageSetting {
-  label: String,
+  label: String
   value: String
 }

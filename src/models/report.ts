@@ -1,5 +1,5 @@
 export interface ReportScheduling {
-  index:number
+  index: number
   timestamp: number
   viewed: boolean
   firstViewedOn: number

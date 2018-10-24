@@ -21,7 +21,7 @@ radio-input {
     border: none;
   }
 
-  ul li input[type=radio] {
+  ul li input[type='radio'] {
     position: absolute;
     visibility: hidden;
   }
@@ -40,7 +40,7 @@ radio-input {
     background-color: $cl-secondary;
   }
 
-  input[type=radio]:checked + label {
+  input[type='radio']:checked + label {
     background-color: $cl-primary;
   }
 }

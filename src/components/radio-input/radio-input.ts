@@ -15,19 +15,20 @@ export interface Item {
   templateUrl: 'radio-input.html'
 })
 export class RadioInputComponent implements OnInit {
+  @Output()
+  valueChange: EventEmitter<number> = new EventEmitter<number>()
 
-  @Output() valueChange: EventEmitter<number> = new EventEmitter<number>()
-
-  @Input() responses: Response[]
+  @Input()
+  responses: Response[]
 
   value: number = null
   uniqueID: number = uniqueID++
   name = `radio-input-${this.uniqueID}`
   items: Item[] = Array()
 
-  ngOnInit () {
+  ngOnInit() {
     this.responses.map((item, i) => {
-      let codeChecked = this.checkCode(item.code)
+      const codeChecked = this.checkCode(item.code)
       this.items.push({
         id: `radio-${this.uniqueID}-${i}`,
         response: item.label,
@@ -37,13 +38,13 @@ export class RadioInputComponent implements OnInit {
   }
 
   checkCode(code) {
-    if(code.includes('\r')){
+    if (code.includes('\r')) {
       return code.substr(2)
     }
     return code
   }
 
-  onInputChange (event) {
+  onInputChange(event) {
     this.valueChange.emit(+event.target.value)
   }
 }

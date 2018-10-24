@@ -3,12 +3,15 @@ info-screen {
   width: 100%;
 
   .info-card {
-    background-color: $cl-primary-20;
-    height: 80%;
-    padding: 10px 10px 0;
+    position: fixed;
+    overflow: scroll;
     margin: 8px;
+    margin-right: 16px;
+    padding: 10px 10px 0;
+    height: 80%;
     -webkit-border-radius: 5px;
     border-radius: 5px;
+    background-color: $cl-primary-20;
   }
 
   .info-heading {
@@ -20,8 +23,8 @@ info-screen {
   }
 
   .icon-thincIt {
-    width:30%;
     margin-top: 15px;
-    margin-left:35%
+    margin-left: 35%;
+    width: 30%;
   }
 }

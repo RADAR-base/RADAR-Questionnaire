@@ -1,9 +1,9 @@
 export interface Timestamp {
-  id: string,
+  id: string
   value: Timelog
 }
 
 export interface Timelog {
-  startTime: number,
+  startTime: number
   endTime: number
 }

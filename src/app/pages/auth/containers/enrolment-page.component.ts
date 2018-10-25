@@ -236,8 +236,7 @@ export class EnrolmentPageComponent {
   }
 
   doAfterAuthentication() {
-    this.configService.fetchConfigState(true)
-    this.next()
+    this.configService.fetchConfigState(true).then(() => this.next())
   }
 
   displayErrorMessage(error) {

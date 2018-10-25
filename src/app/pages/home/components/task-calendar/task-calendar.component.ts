@@ -34,10 +34,7 @@ export class TaskCalendarComponent implements OnChanges {
     private translate: TranslatePipe,
     private platform: Platform
   ) {
-    this.getTasks()
-    platform.resume.subscribe(e => {
-      this.getTasks()
-    })
+    platform.resume.subscribe(e => this.getTasks())
   }
 
   ngOnChanges() {

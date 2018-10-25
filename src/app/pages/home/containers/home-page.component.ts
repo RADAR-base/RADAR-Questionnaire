@@ -93,9 +93,9 @@ export class HomePageComponent {
 
   checkForNextTask() {
     if (!this.showCalendar) {
-      this.tasksService.getNextTask().then(task => {
-        this.checkForNextTaskGeneric(task)
-      })
+      this.tasksService
+        .getNextTask()
+        .then(task => this.checkForNextTaskGeneric(task))
     }
   }
 

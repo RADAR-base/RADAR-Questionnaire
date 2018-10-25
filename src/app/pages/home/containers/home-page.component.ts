@@ -66,7 +66,11 @@ export class HomePageComponent {
     public storage: StorageService,
     private platform: Platform,
     private kafka: KafkaService
-  ) {}
+  ) {
+    this.platform.resume.subscribe(e => {
+      this.kafka.sendAllAnswersInCache()
+    })
+  }
 
   ionViewWillEnter() {
     this.getElementsAttributes()
@@ -83,10 +87,6 @@ export class HomePageComponent {
     setInterval(() => {
       this.checkForNextTask()
     }, 1000)
-
-    this.platform.resume.subscribe(e => {
-      this.kafka.sendAllAnswersInCache()
-    })
 
     this.tasksService.sendNonReportedTaskCompletion()
   }

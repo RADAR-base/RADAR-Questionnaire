@@ -230,7 +230,6 @@ export class TaskInfoComponent implements OnChanges {
     const date = new Date()
     date.setTime(this.task['timestamp'])
     const hour = date.getHours()
-    // let hour12 = hour > 12 ? hour-12 : hour
     const formatedHour = this.formatSingleDigits(hour)
     return formatedHour
   }

@@ -58,9 +58,16 @@
     <ion-item-divider
       no-lines
       class="item-divider"
-      (click)="consoleLogNotifications()"
     >
-      {{ "SETTINGS_NOTIFICATIONS" | translate }}
+      <span (click)="consoleLogNotifications()">
+        {{ "SETTINGS_NOTIFICATIONS" | translate }}
+      </span>
+      <span>
+        <ion-icon
+          name="alarm"
+          (click)="testNotifications()"
+        ></ion-icon>
+      </span>
     </ion-item-divider>
     <ion-item no-lines>
       <ion-label>

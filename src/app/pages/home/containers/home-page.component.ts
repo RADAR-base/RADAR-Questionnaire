@@ -284,15 +284,18 @@ export class HomePageComponent {
         isLastTask: false
       }
 
-      this.tasksService.isLastTask(startQuestionnaireTask).then(lastTask => {
-        if (lastTask) params.isLastTask = true
-      })
-
-      if (assessment.showIntroduction) {
-        this.navCtrl.push(StartPageComponent, params)
-      } else {
-        this.navCtrl.push(QuestionsPageComponent, params)
-      }
+      this.tasksService
+        .isLastTask(startQuestionnaireTask)
+        .then(lastTask => {
+          return (params.isLastTask = lastTask ? true : false)
+        })
+        .then(() => {
+          if (assessment.showIntroduction) {
+            this.navCtrl.push(StartPageComponent, params)
+          } else {
+            this.navCtrl.push(QuestionsPageComponent, params)
+          }
+        })
     })
   }
 

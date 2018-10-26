@@ -217,23 +217,15 @@ export class QuestionsPageComponent {
             responses[questionFieldName] = this.answerService.answers[
               questionFieldName
             ][answerLength - 1]
-            if (eval(logic) === true) {
-              return increment
-            }
+            if (eval(logic) === true) return increment
             answerLength--
           }
-          increment += 1
-          questionIdx += 1
         } else {
-          if (eval(logic) === false) {
-            increment += 1
-            questionIdx += 1
-          } else {
-            return increment
-          }
+          if (eval(logic) === true) return increment
         }
+        increment += 1
+        questionIdx += 1
       }
-      return increment
     }
     return increment
   }

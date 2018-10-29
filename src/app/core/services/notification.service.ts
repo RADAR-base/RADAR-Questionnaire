@@ -153,9 +153,9 @@ export class NotificationService {
   }
 
   testFCMNotifications() {
-    const minute = 60000
+    const TWO_MINUTES = 2 * 60000
     const task = DefaultTask
-    task.timestamp = new Date().getTime() + minute
+    task.timestamp = new Date().getTime() + TWO_MINUTES
     const fcmNotification = this.formatFCMNotification(
       task,
       this.participantLogin

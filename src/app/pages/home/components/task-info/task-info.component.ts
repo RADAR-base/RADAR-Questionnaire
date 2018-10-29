@@ -75,7 +75,7 @@ import { TasksService } from '../../services/tasks.service'
       state(
         'right',
         style({
-          transform: 'translate3d(5%, 0, 0)'
+          transform: 'translate3d(15%, 0, 0) scale(0.8)'
         })
       ),
       state(
@@ -109,7 +109,7 @@ import { TasksService } from '../../services/tasks.service'
       state(
         'right',
         style({
-          transform: 'translate3d(150%, 0, 0)'
+          transform: 'translate3d(120%, 0, 0)'
         })
       ),
       state(
@@ -141,7 +141,7 @@ export class TaskInfoComponent implements OnChanges {
 
   max: number = 1
   current: number = 0
-  radius: number = 38
+  radius: number = 35
   stroke: number = 8
   progress: TasksProgress
 

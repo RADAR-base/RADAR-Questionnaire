@@ -21,9 +21,9 @@ export class TranslatePipe implements PipeTransform {
   }
 
   reinit() {
-    this.storage.get(StorageKeys.LANGUAGE).then(language => {
-      this.preferredLang = language.value
-    })
+    return this.storage
+      .get(StorageKeys.LANGUAGE)
+      .then(language => (this.preferredLang = language.value))
   }
 
   transform(value: string): string {

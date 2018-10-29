@@ -150,16 +150,11 @@ export class SettingsPageComponent {
             label: LanguageMap[selectedLanguageVal],
             value: selectedLanguageVal
           }
-          this.storage.set(StorageKeys.LANGUAGE, lang).then(() => {
-            this.configService.pullQuestionnaires(
-              StorageKeys.CONFIG_ASSESSMENTS
-            )
-            this.configService.pullQuestionnaires(
-              StorageKeys.CONFIG_CLINICAL_ASSESSMENTS
-            )
-          })
           this.language = lang
-          this.navCtrl.setRoot(SplashPageComponent)
+          this.storage
+            .set(StorageKeys.LANGUAGE, lang)
+            .then(() => this.translate.reinit().then(() => this.reloadConfig()))
+            .then(() => this.navCtrl.setRoot(SplashPageComponent))
         }
       }
     ]

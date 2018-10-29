@@ -124,6 +124,7 @@ export class EnrolmentPageComponent {
   authenticate(authObj) {
     this.showOutcomeStatus = false
     this.transitionStatuses()
+
     new Promise((resolve, reject) => {
       let refreshToken = null
       if (this.validURL(authObj)) {

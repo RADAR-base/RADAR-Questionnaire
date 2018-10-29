@@ -181,10 +181,10 @@ export const Localisations = {
   },
   SETTINGS_PARTICIPANTID: {
     da: 'Bruger ID',
-    de: 'Benutzer ID: ',
-    en: 'User ID: ',
+    de: 'Benutzer ID',
+    en: 'User ID',
     es: 'Código Usuario',
-    it: 'User ID:',
+    it: 'User ID',
     nl: 'Gebruikers ID'
   },
   SETTINGS_PROJECTNAME: {
@@ -204,12 +204,12 @@ export const Localisations = {
     nl: 'Gebruikersinformatie'
   },
   SETTINGS_ENROL_DATE: {
-    da: 'Registreringsdata: ',
-    de: 'Registrierungsdatum: ',
-    en: 'Enrolment Date: ',
+    da: 'Registreringsdata',
+    de: 'Registrierungsdatum',
+    en: 'Enrolment Date',
     es: 'Fecha de registro',
-    it: 'Data di arruolamento: ',
-    nl: 'Datum van inclusie: '
+    it: 'Data di arruolamento',
+    nl: 'Datum van inclusie'
   },
   SETTINGS_LANGUAGE: {
     da: 'Sprog',

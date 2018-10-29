@@ -211,14 +211,15 @@ export class SettingsPageComponent {
     this.notificationService.testFCMNotifications()
     const buttons = [
       {
-        text: 'Close App',
+        text: this.translate.transform(LocKeys.CLOSE_APP.toString()),
         handler: () => this.platform.exitApp()
       }
     ]
     this.showAlert({
-      title: 'Testing Notifications',
-      message:
-        'Now close the app and wait for 1 minute for the test notification.',
+      title: this.translate.transform(LocKeys.TESTING_NOTIFICATIONS.toString()),
+      message: this.translate.transform(
+        LocKeys.TESTING_NOTIFICATIONS_MESSAGE.toString()
+      ),
       buttons: buttons
     })
   }

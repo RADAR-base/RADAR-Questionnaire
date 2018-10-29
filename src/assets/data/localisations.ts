@@ -830,5 +830,31 @@ export const Localisations = {
     es: 'minutos',
     it: 'minuti',
     nl: 'minuten'
+  },
+  TESTING_NOTIFICATIONS: {
+    da: 'Testmeddelelser',
+    de: 'Benachrichtigungen Testen',
+    en: 'Testing Notifications',
+    es: 'Pruebas de Notificaciones',
+    it: 'Test delle Notifiche',
+    nl: 'Testen van Meldingen'
+  },
+  TESTING_NOTIFICATIONS_MESSAGE: {
+    da: 'Luk nu appen og vent i 1 minut for testmeddelelsen.',
+    de:
+      'Schließen Sie nun die App und warten Sie 1 Minute auf die Testbenachrichtigung.',
+    en: 'Now close the app and wait for 1 minute for the test notification.',
+    es:
+      'Ahora cierre la aplicación y espere 1 minuto para la notificación de prueba.',
+    it: "Ora chiudi l'app e attendi 1 minuto per la notifica del test.",
+    nl: 'Sluit nu de app en wacht 1 minuut op de testmelding.'
+  },
+  CLOSE_APP: {
+    da: 'Luk App',
+    de: 'Schließen Sie die App',
+    en: 'Close App',
+    es: 'Cerrar App',
+    it: 'Chiudi App',
+    nl: 'App Sluiten'
   }
 }

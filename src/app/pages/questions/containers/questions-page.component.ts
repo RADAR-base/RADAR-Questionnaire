@@ -55,7 +55,8 @@ export class QuestionsPageComponent {
   iconPrevious: string = this.iconValues.close
 
   associatedTask
-  endText
+  endText: string
+  isLastTask: boolean
 
   constructor(
     public navCtrl: NavController,
@@ -77,6 +78,7 @@ export class QuestionsPageComponent {
     this.setCurrentQuestion(this.nextQuestionIncrVal)
     this.associatedTask = this.navParams.data.associatedTask
     this.endText = this.navParams.data.endText
+    this.isLastTask = this.navParams.data.isLastTask
   }
 
   evalIfFirstQuestionnaireToSkipESMSleepQuestion() {
@@ -196,7 +198,7 @@ export class QuestionsPageComponent {
       associatedTask: this.associatedTask,
       answers: this.answerService.answers,
       timestamps: this.timestampService.timestamps,
-      isLastTask: this.navParams.data.isLastTask,
+      isLastTask: this.isLastTask,
       questions: this.questions
     })
   }

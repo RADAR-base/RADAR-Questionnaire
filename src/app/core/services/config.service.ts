@@ -76,6 +76,9 @@ export class ConfigService {
                   })
               })
               .then(() => {
+                return this.schedule.generateSchedule(true)
+              })
+              .then(() => {
                 return this.notificationService
                   .cancelNotifications()
                   .then(() => {
@@ -162,9 +165,7 @@ export class ConfigService {
         for (let i = 0; i < assessmentsResult.length; i++) {
           assessmentUpdate[i]['questions'] = this.formatQuestionsHeaders(res[i])
         }
-        return this.storage.set(storageKey, assessmentUpdate).then(() => {
-          return this.schedule.generateSchedule(true)
-        })
+        return this.storage.set(storageKey, assessmentUpdate)
       })
     })
   }

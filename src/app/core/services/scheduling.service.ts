@@ -17,7 +17,7 @@ export class SchedulingService {
   scheduleVersion: number
   configVersion: number
   refTimestamp: number
-  schedule: Task[]
+  prevSchedule: Task[]
   upToDate: Promise<Boolean>
   assessments: Promise<Assessment[]>
   tzOffset: number
@@ -165,19 +165,23 @@ export class SchedulingService {
   }
 
   generateSchedule(force: boolean) {
+    const schedule = this.storage.get(StorageKeys.SCHEDULE_TASKS)
     const scheduleVProm = this.storage.get(StorageKeys.SCHEDULE_VERSION)
     const configVProm = this.storage.get(StorageKeys.CONFIG_VERSION)
     const refDate = this.storage.get(StorageKeys.REFERENCEDATE)
 
-    return Promise.all([scheduleVProm, configVProm, refDate]).then(data => {
-      this.scheduleVersion = data[0]
-      this.configVersion = data[1]
-      this.refTimestamp = data[2]
-      if (data[0] !== data[1] || force) {
-        console.log('Changed protocol version detected. Updating schedule..')
-        return this.runScheduler()
+    return Promise.all([schedule, scheduleVProm, configVProm, refDate]).then(
+      data => {
+        this.prevSchedule = data[0]
+        this.scheduleVersion = data[1]
+        this.configVersion = data[2]
+        this.refTimestamp = data[3]
+        if (data[1] !== data[2] || force) {
+          console.log('Changed protocol version detected. Updating schedule..')
+          return this.runScheduler()
+        }
       }
-    })
+    )
   }
 
   runScheduler() {
@@ -188,9 +192,7 @@ export class SchedulingService {
     return this.getAssessments()
       .then(assessments => this.buildTaskSchedule(assessments))
       .catch(e => console.error(e))
-      .then(schedule => {
-        return this.setSchedule(schedule)
-      })
+      .then((schedule: Task[]) => this.setSchedule(schedule))
       .catch(e => console.error(e))
   }
 
@@ -245,9 +247,18 @@ export class SchedulingService {
           repeatQ.unit,
           repeatQ.unitsFromZero[i]
         )
-        const idx = indexOffset + tmpScheduleAll.length
-        const task = this.taskBuilder(idx, assessment, taskDate)
-        if (task.timestamp > today.getTime()) {
+
+        if (taskDate.getTime() > today.getTime()) {
+          const idx = indexOffset + tmpScheduleAll.length
+          const task = this.taskBuilder(
+            idx,
+            assessment,
+            taskDate,
+            this.prevSchedule ? this.prevSchedule[idx].completed : false,
+            this.prevSchedule
+              ? this.prevSchedule[idx].reportedCompletion
+              : false
+          )
           tmpScheduleAll.push(task)
         }
       }
@@ -303,11 +314,17 @@ export class SchedulingService {
     return returnDate
   }
 
-  taskBuilder(index, assessment, taskDate): Task {
+  taskBuilder(
+    index,
+    assessment,
+    taskDate,
+    completed,
+    reportedCompletion
+  ): Task {
     const task: Task = {
       index: index,
-      completed: false,
-      reportedCompletion: false,
+      completed: completed,
+      reportedCompletion: reportedCompletion,
       timestamp: taskDate.getTime(),
       name: assessment.name,
       reminderSettings: assessment.protocol.reminders,

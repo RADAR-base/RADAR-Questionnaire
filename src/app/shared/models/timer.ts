@@ -3,7 +3,7 @@ export interface Timer {
   end: number
 }
 
-export interface ITimer {
+export interface TaskTimer {
   seconds: number
   secondsRemaining: number
   runTimer: boolean

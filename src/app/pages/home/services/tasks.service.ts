@@ -56,40 +56,32 @@ export class TasksService {
 
   areAllTasksComplete() {
     return this.getTasksOfToday().then((tasks: Task[]) => {
-      return this.checkIfAllTasksComplete(tasks)
+      if (tasks) {
+        for (let i = 0; i < tasks.length; i++) {
+          if (tasks[i].name !== 'ESM') {
+            if (tasks[i].completed === false) {
+              return false
+            }
+          }
+        }
+      }
+      return true
     })
   }
 
   isLastTask(task) {
     return this.getTasksOfToday().then((tasks: Task[]) => {
-      return this.checkIfLastTask(tasks, task)
+      if (tasks) {
+        for (let i = 0; i < tasks.length; i++) {
+          if (tasks[i].name !== 'ESM') {
+            if (tasks[i].completed === false && tasks[i].index !== task.index) {
+              return false
+            }
+          }
+        }
+      }
+      return true
     })
-  }
-
-  checkIfAllTasksComplete(tasks: Task[]) {
-    if (tasks) {
-      for (let i = 0; i < tasks.length; i++) {
-        if (tasks[i].name !== 'ESM') {
-          if (tasks[i].completed === false) {
-            return false
-          }
-        }
-      }
-    }
-    return true
-  }
-
-  checkIfLastTask(tasks: Task[], task) {
-    if (tasks) {
-      for (let i = 0; i < tasks.length; i++) {
-        if (tasks[i].name !== 'ESM') {
-          if (tasks[i].completed === false && tasks[i].index !== task.index) {
-            return false
-          }
-        }
-      }
-    }
-    return true
   }
 
   /**

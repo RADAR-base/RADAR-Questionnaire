@@ -70,6 +70,8 @@ export class FinishPageComponent {
         this.navParams.data.associatedTask
       )
     }
+    this.displayNextTaskReminder =
+      !this.navParams.data.isLastTask && !this.isClinicalTask
   }
 
   sendToKafka(task: Task, questionnaireData, questions) {

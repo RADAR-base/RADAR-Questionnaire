@@ -39,7 +39,7 @@ export class KafkaService {
     })
   }
 
-  prepareKafkaObject(task: Task, data, questions) {
+  prepareKafkaObjectAndSend(task: Task, data, questions) {
     // NOTE: Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
     const Answer: AnswerValueExport = {
       name: task.name,

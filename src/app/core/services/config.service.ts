@@ -75,9 +75,7 @@ export class ConfigService {
                     )
                   })
               })
-              .then(() => {
-                return this.schedule.generateSchedule(true)
-              })
+              .then(() => this.schedule.generateSchedule(true))
               .then(() => {
                 return this.notificationService
                   .cancelNotifications()

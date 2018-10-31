@@ -75,7 +75,11 @@ export class FinishPageComponent {
   }
 
   sendToKafka(task: Task, questionnaireData, questions) {
-    this.kafkaService.prepareKafkaObject(task, questionnaireData, questions) // submit data to kafka
+    this.kafkaService.prepareKafkaObjectAndSend(
+      task,
+      questionnaireData,
+      questions
+    ) // submit data to kafka
   }
 
   handleClosePage() {
@@ -110,6 +114,8 @@ export class FinishPageComponent {
     )
     const now = new Date()
     for (let i = 0; i < repeatTimes.length; i++) {
+      console.log(repeatTimes[i])
+      console.log(now.getTime())
       const ts = now.getTime() + repeatTimes[i]
       const clinicalTask: Task = {
         index: tasks.length + i,
@@ -128,6 +134,7 @@ export class FinishPageComponent {
     return this.storage
       .set(StorageKeys.SCHEDULE_TASKS_CLINICAL, clinicalTasks)
       .then(() => {
+        console.log(clinicalTasks)
         return this.notificationService.setNextXNotifications(
           DefaultNumberOfNotificationsToSchedule
         )

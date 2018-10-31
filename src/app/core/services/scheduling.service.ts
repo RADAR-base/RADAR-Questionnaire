@@ -85,7 +85,10 @@ export class SchedulingService {
           for (let i = 0; i < defaultAndClinicalTasks.length; i++) {
             if (defaultAndClinicalTasks[i]) {
               for (let j = 0; j < defaultAndClinicalTasks[i].length; j++) {
-                tasks.push(defaultAndClinicalTasks[i][j])
+                const task = defaultAndClinicalTasks[i][j]
+                task.index =
+                  task.index < tasks.length ? tasks.length : task.index
+                tasks.push(task)
               }
             }
           }

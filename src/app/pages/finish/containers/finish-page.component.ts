@@ -4,11 +4,11 @@ import { NavController, NavParams } from 'ionic-angular'
 import { DefaultNumberOfNotificationsToSchedule } from '../../../../assets/data/defaultConfig'
 import { KafkaService } from '../../../core/services/kafka.service'
 import { NotificationService } from '../../../core/services/notification.service'
+import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { Task } from '../../../shared/models/task'
 import { HomePageComponent } from '../../home/containers/home-page.component'
-import { FinishTaskService } from '../services/finish-task.service'
 import { PrepareDataService } from '../services/prepare-data.service'
 
 @Component({
@@ -28,7 +28,7 @@ export class FinishPageComponent {
     private kafkaService: KafkaService,
     private prepareDataService: PrepareDataService,
     private notificationService: NotificationService,
-    private finishTaskService: FinishTaskService,
+    private schedule: SchedulingService,
     public storage: StorageService
   ) {}
 
@@ -53,7 +53,7 @@ export class FinishPageComponent {
         )
         .then(
           data => {
-            this.finishTaskService.updateTaskToComplete(this.associatedTask)
+            this.schedule.updateTaskToComplete(this.associatedTask)
             this.sendToKafka(
               this.associatedTask,
               data,
@@ -66,9 +66,7 @@ export class FinishPageComponent {
         )
     } else {
       // This is a Demo Questionnaire. Just update to complete and do nothing else
-      this.finishTaskService.updateTaskToComplete(
-        this.navParams.data.associatedTask
-      )
+      this.schedule.updateTaskToComplete(this.navParams.data.associatedTask)
     }
     this.displayNextTaskReminder =
       !this.navParams.data.isLastTask && !this.isClinicalTask
@@ -94,76 +92,19 @@ export class FinishPageComponent {
     if (this.completedInClinic) {
       return this.storage
         .get(StorageKeys.SCHEDULE_TASKS_CLINICAL)
-        .then(tasks => this.generateClinicalTasks(tasks))
+        .then(tasks =>
+          this.schedule.generateClinicalTasks(
+            tasks,
+            this.navParams.data.associatedTask
+          )
+        )
+        .then(() =>
+          this.notificationService.setNextXNotifications(
+            DefaultNumberOfNotificationsToSchedule
+          )
+        )
     } else {
       return Promise.resolve({})
     }
-  }
-
-  generateClinicalTasks(tasks) {
-    let clinicalTasks = []
-    if (tasks) {
-      clinicalTasks = tasks
-    } else {
-      tasks = []
-    }
-    const associatedTask = this.navParams.data['associatedTask']
-    const protocol = this.navParams.data['associatedTask']['protocol']
-    const repeatTimes = this.formatRepeatsAfterClinic(
-      protocol['clinicalProtocol']['repeatAfterClinicVisit']
-    )
-    const now = new Date()
-    for (let i = 0; i < repeatTimes.length; i++) {
-      console.log(repeatTimes[i])
-      console.log(now.getTime())
-      const ts = now.getTime() + repeatTimes[i]
-      const clinicalTask: Task = {
-        index: tasks.length + i,
-        completed: false,
-        reportedCompletion: false,
-        timestamp: ts,
-        name: associatedTask['name'],
-        reminderSettings: protocol['reminders'],
-        nQuestions: associatedTask['questions'].length,
-        estimatedCompletionTime: associatedTask['estimatedCompletionTime'],
-        warning: '',
-        isClinical: true
-      }
-      clinicalTasks.push(clinicalTask)
-    }
-    return this.storage
-      .set(StorageKeys.SCHEDULE_TASKS_CLINICAL, clinicalTasks)
-      .then(() => {
-        console.log(clinicalTasks)
-        return this.notificationService.setNextXNotifications(
-          DefaultNumberOfNotificationsToSchedule
-        )
-      })
-  }
-
-  formatRepeatsAfterClinic(repeats) {
-    const repeatsInMillis = []
-    const unit = repeats['unit']
-    for (let i = 0; i < repeats['unitsFromZero'].length; i++) {
-      const unitFromZero = repeats['unitsFromZero'][i]
-      switch (unit) {
-        case 'min': {
-          const formatted = unitFromZero * 1000 * 60
-          repeatsInMillis.push(formatted)
-          break
-        }
-        case 'hour': {
-          const formatted = unitFromZero * 1000 * 60 * 60
-          repeatsInMillis.push(formatted)
-          break
-        }
-        case 'day': {
-          const formatted = unitFromZero * 1000 * 60 * 60 * 24
-          repeatsInMillis.push(formatted)
-          break
-        }
-      }
-    }
-    return repeatsInMillis
   }
 }

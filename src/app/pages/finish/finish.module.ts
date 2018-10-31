@@ -4,7 +4,6 @@ import { IonicModule } from 'ionic-angular'
 
 import { PipesModule } from '../../shared/pipes/pipes.module'
 import { FinishPageComponent } from './containers/finish-page.component'
-import { FinishTaskService } from './services/finish-task.service'
 import { PrepareDataService } from './services/prepare-data.service'
 
 @NgModule({
@@ -14,6 +13,6 @@ import { PrepareDataService } from './services/prepare-data.service'
     IonicModule.forRoot(FinishPageComponent)
   ],
   declarations: [FinishPageComponent],
-  providers: [PrepareDataService, FinishTaskService]
+  providers: [PrepareDataService]
 })
 export class FinishModule {}

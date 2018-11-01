@@ -4,12 +4,21 @@ import { Injectable } from '@angular/core'
 import * as AvroSchema from 'avsc'
 import * as KafkaRest from 'kafka-rest'
 
-import { DefaultEndPoint } from '../../../assets/data/defaultConfig'
+import {
+  DefaultEndPoint,
+  KAFKA_ASSESSMENT,
+  KAFKA_CLIENT_KAFKA,
+  KAFKA_COMPLETION_LOG,
+  KAFKA_TIMEZONE,
+  MIN_SEC,
+  SEC_MILLISEC
+} from '../../../assets/data/defaultConfig'
 import { AuthService } from '../../pages/auth/services/auth.service'
 import { StorageKeys } from '../../shared/enums/storage'
 import {
   AnswerKeyExport,
   AnswerValueExport,
+  ApplicationTimeZoneValueExport,
   CompletionLogValueExport
 } from '../../shared/models/answer'
 import { QuestionType } from '../../shared/models/question'
@@ -20,8 +29,6 @@ import { StorageService } from './storage.service'
 @Injectable()
 export class KafkaService {
   private KAFKA_CLIENT_URL: string
-  private KAFKA_CLIENT_KAFKA: string = '/kafka'
-  private specs = {}
   private cacheSending = false
 
   constructor(
@@ -35,13 +42,13 @@ export class KafkaService {
   updateURI() {
     this.storage.get(StorageKeys.BASE_URI).then(uri => {
       const endPoint = uri ? uri : DefaultEndPoint
-      this.KAFKA_CLIENT_URL = endPoint + this.KAFKA_CLIENT_KAFKA
+      this.KAFKA_CLIENT_URL = endPoint + KAFKA_CLIENT_KAFKA
     })
   }
 
-  prepareKafkaObject(task: Task, data, questions) {
+  prepareAnswerKafkaObject(task: Task, data, questions) {
     // NOTE: Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
-    let Answer: AnswerValueExport = {
+    const Answer: AnswerValueExport = {
       name: task.name,
       version: data.configVersion,
       answers: data.answers,
@@ -49,74 +56,71 @@ export class KafkaService {
         questions[0].field_type == QuestionType.info // NOTE: Do not use info startTime
           ? data.answers[1].startTime
           : data.answers[0].startTime, // NOTE: whole questionnaire startTime and endTime
-      timeCompleted: data.answers[data.answers.length - 1].endTime
+      timeCompleted: data.answers[data.answers.length - 1].endTime,
+      timeNotification: task.timestamp / SEC_MILLISEC
     }
-    Answer = Object.assign(
-      Answer,
-      task.timestamp && {
-        timeNotification: task.timestamp
-      }
-    )
 
-    this.util.getSourceKeyInfo().then(keyInfo => {
-      const sourceId = keyInfo[0]
-      const projectId = keyInfo[1]
-      const patientId = keyInfo[2].toString()
-      // NOTE: Payload for kafka 2 : key Object which contains device information
-      const AnswerKey: AnswerKeyExport = {
-        userId: patientId,
-        sourceId: sourceId,
-        projectId: projectId
-      }
-      const kafkaObject = { value: Answer, key: AnswerKey }
-      this.getSpecs(task, kafkaObject).then(specs =>
-        this.createPayload(specs, task, kafkaObject)
-      )
-    })
+    return this.prepareKafkaObject(task, Answer, KAFKA_ASSESSMENT)
   }
 
   prepareNonReportedTasksKafkaObject(task: Task) {
     // NOTE: Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
     const CompletionLog: CompletionLogValueExport = {
       name: task.name.toString(),
-      time: task.timestamp,
+      time: task.timestamp / SEC_MILLISEC,
       completionPercentage: { double: task.completed ? 100 : 0 }
     }
+    return this.prepareKafkaObject(task, CompletionLog, KAFKA_COMPLETION_LOG)
+  }
 
-    this.util.getSourceKeyInfo().then(keyInfo => {
+  prepareTimeZoneKafkaObject() {
+    const ApplicationTimeZone: ApplicationTimeZoneValueExport = {
+      time: new Date().getTime() / SEC_MILLISEC,
+      offset: new Date().getTimezoneOffset() * MIN_SEC
+    }
+    return this.prepareKafkaObject([], ApplicationTimeZone, KAFKA_TIMEZONE)
+  }
+
+  getSpecs(task: Task, kafkaObject, type) {
+    switch (type) {
+      case KAFKA_ASSESSMENT:
+        return this.storage.getAssessmentAvsc(task).then(specs => {
+          return Promise.resolve(
+            Object.assign(specs, { task: task, kafkaObject: kafkaObject })
+          )
+        })
+      case KAFKA_COMPLETION_LOG:
+      case KAFKA_TIMEZONE:
+        return Promise.resolve({
+          name: type,
+          avsc: 'questionnaire',
+          task: task,
+          kafkaObject: kafkaObject
+        })
+      default:
+        break
+    }
+  }
+
+  prepareKafkaObject(task, value, type) {
+    return this.util.getSourceKeyInfo().then(keyInfo => {
       const sourceId = keyInfo[0]
       const projectId = keyInfo[1]
       const patientId = keyInfo[2].toString()
-      const AnswerKey: AnswerKeyExport = {
+      // NOTE: Payload for kafka 2 : key Object which contains device information
+      const answerKey: AnswerKeyExport = {
         userId: patientId,
         sourceId: sourceId,
         projectId: projectId
       }
-      const kafkaObject = { value: CompletionLog, key: AnswerKey }
-      this.getSpecs(task, kafkaObject).then(specs =>
-        this.createPayload(specs, task, kafkaObject)
+      const kafkaObject = { value: value, key: answerKey }
+      return this.getSpecs(task, kafkaObject, type).then(specs =>
+        this.createPayload(specs, task, kafkaObject, type)
       )
     })
   }
 
-  getSpecs(task: Task, kafkaObject) {
-    if (kafkaObject.value.completionPercentage !== undefined) {
-      return Promise.resolve({
-        name: 'completion_log',
-        avsc: 'questionnaire',
-        task: task,
-        kafkaObject: kafkaObject
-      })
-    } else {
-      return this.storage.getAssessmentAvsc(task).then(specs => {
-        return Promise.resolve(
-          Object.assign(specs, { task: task, kafkaObject: kafkaObject })
-        )
-      })
-    }
-  }
-
-  createPayload(specs, task, kafkaObject) {
+  createPayload(specs, task, kafkaObject, type) {
     return this.util
       .getLatestKafkaSchemaVersions(specs)
       .then(schemaVersions => {
@@ -153,7 +157,7 @@ export class KafkaService {
       })
       .catch(error => {
         console.log(error)
-        this.cacheAnswers(task, kafkaObject)
+        this.cacheAnswers(task, kafkaObject, type)
         return Promise.resolve({ res: 'ERROR' })
       })
   }
@@ -183,13 +187,14 @@ export class KafkaService {
     )
   }
 
-  cacheAnswers(task: Task, kafkaObject) {
+  cacheAnswers(task: Task, kafkaObject, type) {
     this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
       if (!cache[kafkaObject.value.time]) {
         console.log('KAFKA-SERVICE: Caching answers.')
         cache[kafkaObject.value.time] = {
           task: task,
-          cache: kafkaObject
+          cache: kafkaObject,
+          type: type
         }
         this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
       }
@@ -214,16 +219,20 @@ export class KafkaService {
         let noOfTasks = 0
         for (const answerKey in cache) {
           if (answerKey) {
+            const cacheObject = cache[answerKey]
             promises.push(
-              this.getSpecs(cache[answerKey].task, cache[answerKey].cache).then(
-                specs => {
-                  return this.createPayload(
-                    specs,
-                    specs.task,
-                    specs.kafkaObject
-                  )
-                }
-              )
+              this.getSpecs(
+                cacheObject.task,
+                cacheObject.cache,
+                cacheObject.type
+              ).then(specs => {
+                return this.createPayload(
+                  specs,
+                  specs.task,
+                  specs.kafkaObject,
+                  cacheObject.type
+                )
+              })
             )
             noOfTasks += 1
             if (noOfTasks === 20) {

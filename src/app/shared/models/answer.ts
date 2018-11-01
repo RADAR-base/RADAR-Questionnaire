@@ -19,6 +19,7 @@ export interface AnswerValueExport {
   answers: Response[]
   time: number
   timeCompleted: number
+  timeNotification?: number
 }
 
 export interface AnswerKeyExport {

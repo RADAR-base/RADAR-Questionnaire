@@ -17,15 +17,13 @@ export class AppComponent {
     private platform: Platform,
     private statusBar: StatusBar,
     private splashScreen: SplashScreen,
-    private configService: ConfigService,
-    private notificationService: NotificationService
+    private configService: ConfigService
   ) {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault()
       this.splashScreen.hide()
       this.configService.fetchConfigState(false)
       this.configService.migrateToLatestVersion()
-      this.notificationService.permissionCheck()
     })
   }
 }

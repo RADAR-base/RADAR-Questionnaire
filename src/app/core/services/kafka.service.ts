@@ -23,6 +23,7 @@ export class KafkaService {
   private KAFKA_CLIENT_KAFKA: string = '/kafka'
   private specs = {}
   private cacheSending = false
+  private MILLISECONDS = 1000
 
   constructor(
     private util: Utility,
@@ -73,7 +74,7 @@ export class KafkaService {
     // NOTE: Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
     const CompletionLog: CompletionLogValueExport = {
       name: task.name.toString(),
-      time: task.timestamp,
+      time: task.timestamp / this.MILLISECONDS,
       completionPercentage: { double: task.completed ? 100 : 0 }
     }
 

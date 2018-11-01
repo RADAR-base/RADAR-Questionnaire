@@ -41,7 +41,7 @@ export class KafkaService {
 
   prepareKafkaObject(task: Task, data, questions) {
     // NOTE: Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
-    const Answer: AnswerValueExport = {
+    let Answer: AnswerValueExport = {
       name: task.name,
       version: data.configVersion,
       answers: data.answers,
@@ -51,6 +51,12 @@ export class KafkaService {
           : data.answers[0].startTime, // NOTE: whole questionnaire startTime and endTime
       timeCompleted: data.answers[data.answers.length - 1].endTime
     }
+    Answer = Object.assign(
+      Answer,
+      task.timestamp && {
+        timeNotification: task.timestamp
+      }
+    )
 
     this.util.getSourceKeyInfo().then(keyInfo => {
       const sourceId = keyInfo[0]

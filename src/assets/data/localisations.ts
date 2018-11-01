@@ -176,8 +176,8 @@ export const Localisations = {
     de: 'Einstellungen',
     en: 'Settings',
     es: 'Ajustes',
-    it: 'Settings',
-    nl: 'Settings'
+    it: 'Impostazioni',
+    nl: 'Instellingen'
   },
   SETTINGS_PARTICIPANTID: {
     da: 'Bruger ID',
@@ -435,8 +435,8 @@ export const Localisations = {
     de: 'Start',
     en: 'Start',
     es: 'Inicio',
-    it: 'Start',
-    nl: 'Start'
+    it: 'Inizio',
+    nl: 'Begin'
   },
   BTN_RESET: {
     da: 'Nulstil',

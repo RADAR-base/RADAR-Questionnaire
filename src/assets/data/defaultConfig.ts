@@ -143,3 +143,16 @@ export const DefaultRefreshTokenRequestBody =
 
 export const DefaultEnrolmentBaseURL =
   DefaultEndPoint + DefaultManagementPortalURI
+
+// TIME CONVERSIONS
+
+export const SEC_MILLISEC = 1000
+export const HOUR_MIN = 60
+export const MIN_SEC = 60
+
+// KAFKA
+
+export const KAFKA_ASSESSMENT = 'assessment'
+export const KAFKA_COMPLETION_LOG = 'completion_log'
+export const KAFKA_TIMEZONE = 'timezone'
+export const KAFKA_CLIENT_KAFKA = '/kafka'

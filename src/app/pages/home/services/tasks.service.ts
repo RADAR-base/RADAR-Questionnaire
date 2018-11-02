@@ -4,6 +4,7 @@ import { KafkaService } from '../../../core/services/kafka.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { Task, TasksProgress } from '../../../shared/models/task'
+import { getMilliseconds } from '../../../shared/utilities/time'
 
 @Injectable()
 export class TasksService {
@@ -96,25 +97,26 @@ export class TasksService {
       tasks.sort((t1, t2) => {
         return t1.timestamp - t2.timestamp
       })
-      const now: Date = new Date()
-      const offsetTimeESM: number = 1000 * 60 * 10 // 10 min
+      const now = new Date()
+      const offsetTimeESM = getMilliseconds({ minutes: 10 })
       let passedAtLeastOnce = false
       let nextIdx = 0
-      let lookFromTimestamp: number = now.getTime()
-      let lookToTimestamp: number = lookFromTimestamp
+      let lookFromTimestamp = now.getTime()
+      let lookToTimestamp = lookFromTimestamp
       for (let i = 0; i < tasks.length; i++) {
         switch (tasks[i].name) {
           case 'ESM':
             // NOTE: For ESM, just look from 10 mins before now
             lookFromTimestamp = new Date().getTime() - offsetTimeESM
-            lookToTimestamp = lookFromTimestamp + 1000 * 60 * 60 * 12
+            lookToTimestamp = lookFromTimestamp + getMilliseconds({ hours: 12 })
             break
 
           default:
             // NOTE: Check from midnight for other tasks
             now.setHours(0, 0, 0, 0)
             lookFromTimestamp = now.getTime()
-            lookToTimestamp = tasks[i].timestamp + 1000 * 60 * 60 * 12
+            lookToTimestamp =
+              tasks[i].timestamp + getMilliseconds({ hours: 12 })
         }
 
         if (

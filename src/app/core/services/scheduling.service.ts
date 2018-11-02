@@ -10,6 +10,7 @@ import { StorageKeys } from '../../shared/enums/storage'
 import { Assessment } from '../../shared/models/assessment'
 import { ReportScheduling } from '../../shared/models/report'
 import { Task } from '../../shared/models/task'
+import { getMilliseconds } from '../../shared/utilities/time'
 import { StorageService } from './storage.service'
 
 @Injectable()
@@ -225,7 +226,8 @@ export class SchedulingService {
     const repeatQ = assessment.protocol.repeatQuestionnaire
 
     let iterDate = new Date(this.refTimestamp)
-    const yearsMillis = DefaultScheduleYearCoverage * 60000 * 60 * 24 * 365
+    const yearsMillis = getMilliseconds({ years: DefaultScheduleYearCoverage })
+
     const endDate = new Date(this.refTimestamp + yearsMillis)
 
     console.log(assessment)
@@ -270,30 +272,39 @@ export class SchedulingService {
     let returnDate = new Date(date.getTime())
     switch (unit) {
       case 'min':
-        returnDate = new Date(date.getTime() + multiplier * 60000)
+        returnDate = new Date(
+          date.getTime() + getMilliseconds({ minutes: multiplier })
+        )
         break
       case 'hour':
-        returnDate = new Date(date.getTime() + multiplier * 60000 * 60)
+        returnDate = new Date(
+          date.getTime() + getMilliseconds({ hours: multiplier })
+        )
         break
       case 'day':
-        returnDate = new Date(date.getTime() + multiplier * 60000 * 60 * 24)
+        returnDate = new Date(
+          date.getTime() + getMilliseconds({ days: multiplier })
+        )
         break
       case 'week':
-        returnDate = new Date(date.getTime() + multiplier * 60000 * 60 * 24 * 7)
+        returnDate = new Date(
+          date.getTime() + getMilliseconds({ weeks: multiplier })
+        )
         break
       case 'month':
         returnDate = new Date(
-          date.getTime() + multiplier * 60000 * 60 * 24 * 31
+          date.getTime() + getMilliseconds({ months: multiplier })
         )
         break
       case 'year':
         returnDate = new Date(
-          date.getTime() + multiplier * 60000 * 60 * 24 * 365
+          date.getTime() + getMilliseconds({ years: multiplier })
         )
         break
       default:
         returnDate = new Date(
-          date.getTime() + DefaultScheduleYearCoverage * 60000 * 60 * 24 * 365
+          date.getTime() +
+            getMilliseconds({ years: DefaultScheduleYearCoverage })
         )
         break
     }
@@ -325,7 +336,7 @@ export class SchedulingService {
   buildReportSchedule() {
     let iterDate = new Date(this.refTimestamp)
     iterDate = this.setDateTimeToMidnight(iterDate)
-    const yearsMillis = DefaultScheduleYearCoverage * 60000 * 60 * 24 * 365
+    const yearsMillis = getMilliseconds({ years: DefaultScheduleYearCoverage })
     const endDate = new Date(this.refTimestamp + yearsMillis)
     const tmpSchedule: ReportScheduling[] = []
 
@@ -350,7 +361,8 @@ export class SchedulingService {
       firstViewedOn: 0,
       range: {
         timestampStart:
-          reportDate.getTime() - DefaultScheduleReportRepeat * 60000 * 60 * 24,
+          reportDate.getTime() -
+          getMilliseconds({ days: DefaultScheduleReportRepeat }),
         timestampEnd: reportDate.getTime()
       }
     }

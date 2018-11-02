@@ -11,6 +11,7 @@ import { DefaultTask } from '../../../../../assets/data/defaultConfig'
 import { LocKeys } from '../../../../shared/enums/localisations'
 import { Task } from '../../../../shared/models/task'
 import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
+import { getMilliseconds } from '../../../../shared/utilities/time'
 import { TasksService } from '../../services/tasks.service'
 
 @Component({
@@ -23,7 +24,7 @@ export class TaskCalendarComponent implements OnChanges {
   @Output()
   task: EventEmitter<Task> = new EventEmitter<Task>()
 
-  currentTime: String = '06:00'
+  currentTime: String
   timeIndex = 0
 
   tasks: Task[] = [DefaultTask]
@@ -105,7 +106,9 @@ export class TaskCalendarComponent implements OnChanges {
       this.task.emit(task)
     } else {
       const now = new Date()
-      const nowPlusFifteen = new Date(now.getTime() + 1000 * 60 * 15)
+      const nowPlusFifteen = new Date(
+        now.getTime() + getMilliseconds({ minutes: 15 })
+      )
       const taskTimestamp = new Date(task.timestamp)
       if (
         taskTimestamp > now &&

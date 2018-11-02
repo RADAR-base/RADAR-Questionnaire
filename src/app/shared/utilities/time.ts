@@ -23,13 +23,15 @@ export function getMilliseconds(time: Time) {
 
 export function getSeconds(time: Time) {
   return (
-    time.years * YEAR_DAY * DAY_HOUR * HOUR_MIN * MIN_SEC +
-    time.months * MONTH_DAY * DAY_HOUR * HOUR_MIN * MIN_SEC +
-    time.weeks * WEEK_DAY * DAY_HOUR * HOUR_MIN * MIN_SEC +
-    time.days * DAY_HOUR * HOUR_MIN * MIN_SEC +
-    time.hours * HOUR_MIN * MIN_SEC +
-    time.minutes * MIN_SEC +
-    time.seconds +
-    time.milliseconds / SEC_MILLISEC
+    (time.years ? time.years * YEAR_DAY * DAY_HOUR * HOUR_MIN * MIN_SEC : 0) +
+    (time.months
+      ? time.months * MONTH_DAY * DAY_HOUR * HOUR_MIN * MIN_SEC
+      : 0) +
+    (time.weeks ? time.weeks * WEEK_DAY * DAY_HOUR * HOUR_MIN * MIN_SEC : 0) +
+    (time.days ? time.days * DAY_HOUR * HOUR_MIN * MIN_SEC : 0) +
+    (time.hours ? time.hours * HOUR_MIN * MIN_SEC : 0) +
+    (time.minutes ? time.minutes * MIN_SEC : 0) +
+    (time.seconds ? time.seconds : 0) +
+    (time.milliseconds ? time.milliseconds / SEC_MILLISEC : 0)
   )
 }

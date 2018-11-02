@@ -12,6 +12,7 @@ import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalyti
 import { LocKeys } from '../../../shared/enums/localisations'
 import { Question, QuestionType } from '../../../shared/models/question'
 import { TranslatePipe } from '../../../shared/pipes/translate/translate'
+import { getSeconds } from '../../../shared/utilities/time'
 import { FinishPageComponent } from '../../finish/containers/finish-page.component'
 import { AnswerService } from '../services/answer.service'
 import { TimestampService } from '../services/timestamp.service'
@@ -112,7 +113,7 @@ export class QuestionsPageComponent {
   }
 
   getTime() {
-    return this.timestampService.getTimeStamp() / 1000
+    return getSeconds({ milliseconds: this.timestampService.getTimeStamp() })
   }
 
   setCurrentQuestion(value = 0) {

@@ -11,6 +11,7 @@ import { NotificationService } from '../../../core/services/notification.service
 import { StorageService } from '../../../core/services/storage.service'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { Task } from '../../../shared/models/task'
+import { getMilliseconds } from '../../../shared/utilities/time'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { FinishTaskService } from '../services/finish-task.service'
 import { PrepareDataService } from '../services/prepare-data.service'
@@ -162,17 +163,17 @@ export class FinishPageComponent {
       const unitFromZero = repeats['unitsFromZero'][i]
       switch (unit) {
         case 'min': {
-          const formatted = unitFromZero * 1000 * 60
+          const formatted = getMilliseconds({ minutes: unitFromZero })
           repeatsInMillis.push(formatted)
           break
         }
         case 'hour': {
-          const formatted = unitFromZero * 1000 * 60 * 60
+          const formatted = getMilliseconds({ hours: unitFromZero })
           repeatsInMillis.push(formatted)
           break
         }
         case 'day': {
-          const formatted = unitFromZero * 1000 * 60 * 60 * 24
+          const formatted = getMilliseconds({ days: unitFromZero })
           repeatsInMillis.push(formatted)
           break
         }

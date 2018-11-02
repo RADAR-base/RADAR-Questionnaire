@@ -13,6 +13,7 @@ import { Assessment } from '../../shared/models/assessment'
 import { TimeInterval } from '../../shared/models/protocol'
 import { ReportScheduling } from '../../shared/models/report'
 import { Task } from '../../shared/models/task'
+import { getMilliseconds } from '../../shared/utilities/time'
 import { StorageService } from './storage.service'
 
 export const TIME_UNIT_MILLIS = {
@@ -292,7 +293,7 @@ export class SchedulingService {
     const repeatQ = assessment.protocol.repeatQuestionnaire
 
     let iterDate = this.setDateTimeToMidnight(new Date(this.enrolmentDate))
-    const yearsMillis = DefaultScheduleYearCoverage * 60000 * 60 * 24 * 365
+    const yearsMillis = getMilliseconds({ years: DefaultScheduleYearCoverage })
     const endDate = new Date(iterDate.getTime() + yearsMillis)
     const completionWindow = SchedulingService.computeCompletionWindow(
       assessment
@@ -405,7 +406,7 @@ export class SchedulingService {
 
   buildReportSchedule() {
     let iterDate = this.setDateTimeToMidnight(new Date(this.enrolmentDate))
-    const yearsMillis = DefaultScheduleYearCoverage * 60000 * 60 * 24 * 365
+    const yearsMillis = getMilliseconds({ years: DefaultScheduleYearCoverage })
     const endDate = new Date(iterDate.getTime() + yearsMillis)
     const tmpSchedule: ReportScheduling[] = []
 
@@ -430,7 +431,8 @@ export class SchedulingService {
       firstViewedOn: 0,
       range: {
         timestampStart:
-          reportDate.getTime() - DefaultScheduleReportRepeat * 60000 * 60 * 24,
+          reportDate.getTime() -
+          getMilliseconds({ days: DefaultScheduleReportRepeat }),
         timestampEnd: reportDate.getTime()
       }
     }

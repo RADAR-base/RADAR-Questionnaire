@@ -9,13 +9,13 @@ import {
   DefaultNumberOfNotificationsToRescue,
   DefaultNumberOfNotificationsToSchedule,
   DefaultTaskTest,
-  FCMPluginProjectSenderId,
-  SEC_MILLISEC
+  FCMPluginProjectSenderId
 } from '../../../assets/data/defaultConfig'
 import { LocKeys } from '../../shared/enums/localisations'
 import { StorageKeys } from '../../shared/enums/storage'
 import { Task } from '../../shared/models/task'
 import { TranslatePipe } from '../../shared/pipes/translate/translate'
+import { getMilliseconds, getSeconds } from '../../shared/utilities/time'
 import { SchedulingService } from './scheduling.service'
 import { StorageService } from './storage.service'
 
@@ -227,7 +227,7 @@ export class NotificationService {
       notificationMessage: notif.message,
       time: task.timestamp,
       subjectId: participantLogin,
-      ttlSeconds: task.completionWindow / SEC_MILLISEC
+      ttlSeconds: getSeconds({ milliseconds: task.completionWindow })
     }
     return fcmNotification
   }
@@ -261,7 +261,8 @@ export class NotificationService {
     const task = data.task
     const scheduledTimestamp = task.timestamp
     const now = new Date().getTime()
-    const endScheduledTimestamp = scheduledTimestamp + 1000 * 60 * 10
+    const endScheduledTimestamp =
+      scheduledTimestamp + getMilliseconds({ minutes: 10 })
     if (now > endScheduledTimestamp && task.name === 'ESM') {
       this.showNotificationMissedInfo(task, data.isLastOfDay)
     }

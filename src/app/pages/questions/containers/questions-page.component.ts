@@ -79,8 +79,6 @@ export class QuestionsPageComponent {
     this.associatedTask = this.navParams.data.associatedTask
     this.endText = this.navParams.data.endText
     this.isLastTask = this.navParams.data.isLastTask
-    this.answers = this.answerService.answers
-    this.timestamps = this.timestampService.timestamps
   }
 
   evalIfFirstQuestionnaireToSkipESMSleepQuestion() {
@@ -195,6 +193,8 @@ export class QuestionsPageComponent {
   }
 
   navigateToFinishPage() {
+    this.answers = this.answerService.answers
+    this.timestamps = this.timestampService.timestamps
     this.answerService.reset()
     this.timestampService.reset()
 

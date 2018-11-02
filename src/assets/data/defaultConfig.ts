@@ -105,7 +105,7 @@ export const DefaultNotificationRefreshTime: number = 900000 // 15 mins in ms
 
 export const DefaultSourceTypeModel: string = 'aRMT-App'
 export const DefaultSourceTypeRegistrationBody: any = {
-  sourceTypeCatalogVersion: '1.2.0',
+  sourceTypeCatalogVersion: '1.4.0',
   sourceTypeModel: 'aRMT-App',
   sourceTypeProducer: 'RADAR'
   // "deviceTypeId": 1104

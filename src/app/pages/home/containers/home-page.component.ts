@@ -286,9 +286,7 @@ export class HomePageComponent {
 
       this.tasksService
         .isLastTask(startQuestionnaireTask)
-        .then(lastTask => {
-          return (params.isLastTask = lastTask ? true : false)
-        })
+        .then(lastTask => (params.isLastTask = lastTask))
         .then(() => {
           if (assessment.showIntroduction) {
             this.navCtrl.push(StartPageComponent, params)

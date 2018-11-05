@@ -53,7 +53,7 @@ export class KafkaService {
       version: data.configVersion,
       answers: data.answers,
       time:
-        questions[0].field_type == QuestionType.info // NOTE: Do not use info startTime
+        questions[0].field_type == QuestionType.info && questions[1] // NOTE: Do not use info startTime
           ? data.answers[1].startTime
           : data.answers[0].startTime, // NOTE: whole questionnaire startTime and endTime
       timeCompleted: data.answers[data.answers.length - 1].endTime,

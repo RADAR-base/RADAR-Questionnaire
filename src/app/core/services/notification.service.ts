@@ -345,8 +345,9 @@ export class NotificationService {
   cancelNotifications() {
     return this.storage
       .get(StorageKeys.PARTICIPANTLOGIN)
-      .then(participantLogin => {
-        return this.cancelNotificationPush(participantLogin)
-      })
+      .then(
+        participantLogin =>
+          participantLogin && this.cancelNotificationPush(participantLogin)
+      )
   }
 }

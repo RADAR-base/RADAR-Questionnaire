@@ -72,6 +72,7 @@ export class HomePageComponent {
     this.getElementsAttributes()
     this.elProgressHeight += this.elProgressOffset
     this.applyTransformations()
+    this.showNoTasksToday = false
   }
 
   ionViewDidLoad() {
@@ -92,9 +93,9 @@ export class HomePageComponent {
 
   checkForNextTask() {
     if (!this.showCalendar) {
-      this.tasksService.getNextTask().then(task => {
-        this.checkForNextTaskGeneric(task)
-      })
+      this.tasksService
+        .getNextTask()
+        .then(task => this.checkForNextTaskGeneric(task))
     }
   }
 
@@ -153,12 +154,14 @@ export class HomePageComponent {
   }
 
   getElementsAttributes() {
-    this.elContentHeight = this.elContent.contentHeight
-    this.elProgressHeight =
-      this.elProgress.nativeElement.offsetHeight - this.elProgressOffset
-    this.elTickerHeight = this.elTicker.nativeElement.offsetHeight
-    this.elInfoHeight = this.elInfo.nativeElement.offsetHeight
-    this.elFooterHeight = this.elFooter.nativeElement.offsetHeight
+    if (this.elContent._scroll) {
+      this.elContentHeight = this.elContent.contentHeight
+      this.elProgressHeight =
+        this.elProgress.nativeElement.offsetHeight - this.elProgressOffset
+      this.elTickerHeight = this.elTicker.nativeElement.offsetHeight
+      this.elInfoHeight = this.elInfo.nativeElement.offsetHeight
+      this.elFooterHeight = this.elFooter.nativeElement.offsetHeight
+    }
   }
 
   applyTransformations() {
@@ -281,15 +284,16 @@ export class HomePageComponent {
         isLastTask: false
       }
 
-      this.tasksService.isLastTask(startQuestionnaireTask).then(lastTask => {
-        if (lastTask) params.isLastTask = true
-      })
-
-      if (assessment.showIntroduction) {
-        this.navCtrl.push(StartPageComponent, params)
-      } else {
-        this.navCtrl.push(QuestionsPageComponent, params)
-      }
+      this.tasksService
+        .isLastTask(startQuestionnaireTask)
+        .then(lastTask => (params.isLastTask = lastTask))
+        .then(() => {
+          if (assessment.showIntroduction) {
+            this.navCtrl.push(StartPageComponent, params)
+          } else {
+            this.navCtrl.push(QuestionsPageComponent, params)
+          }
+        })
     })
   }
 

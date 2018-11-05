@@ -250,11 +250,7 @@ export class SettingsPageComponent {
     this.showLoading = true
     this.configService.fetchConfigState(true).then(() => {
       this.loadSettings()
-      this.notificationService
-        .setNextXNotifications(DefaultNumberOfNotificationsToSchedule)
-        .then(() => {
-          this.showLoading = false
-        })
+      this.showLoading = false
     })
   }
 }

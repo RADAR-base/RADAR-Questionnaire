@@ -160,7 +160,9 @@ export class KafkaService {
           schemaId,
           schemaInfo,
           payload,
-          kafkaObject.value.time
+          task,
+          kafkaObject,
+          type
         )
       })
       .catch(error => {
@@ -170,17 +172,19 @@ export class KafkaService {
       })
   }
 
-  sendToKafka(specs, id, info, payload, cacheKey) {
+  sendToKafka(specs, id, info, payload, task, kafkaObject, type) {
     return this.getKafkaInstance().then(
       kafkaConnInstance => {
         // NOTE: Kafka connection instance to submit to topic
         const topic = specs.avsc + '_' + specs.name
+        const cacheKey = kafkaObject.value.time
         console.log('Sending to: ' + topic)
         return kafkaConnInstance
           .topic(topic)
           .produce(id, info, payload, (err, res) => {
             if (err) {
               console.log(err)
+              return this.cacheAnswers(task, kafkaObject, type)
             } else {
               return this.removeAnswersFromCache(cacheKey)
             }
@@ -212,9 +216,9 @@ export class KafkaService {
   sendAllAnswersInCache() {
     if (!this.cacheSending) {
       this.cacheSending = !this.cacheSending
-      this.sendToKafkaFromCache().then(
-        () => (this.cacheSending = !this.cacheSending)
-      )
+      this.sendToKafkaFromCache()
+        .then(() => (this.cacheSending = !this.cacheSending))
+        .catch(e => console.log('Cache could not be sent.'))
     }
   }
 

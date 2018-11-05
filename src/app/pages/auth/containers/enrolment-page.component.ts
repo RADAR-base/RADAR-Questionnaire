@@ -201,12 +201,9 @@ export class EnrolmentPageComponent {
   }
 
   validURL(str) {
-    const regexp = new RegExp(this.URLRegEx)
-    if (regexp.test(str)) {
-      return true
-    } else {
-      return false
-    }
+    return new FormControl(str, Validators.pattern(this.URLRegEx)).errors
+      ? false
+      : true
   }
 
   retrieveSubjectInformation() {

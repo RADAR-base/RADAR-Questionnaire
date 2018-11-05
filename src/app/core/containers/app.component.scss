@@ -1,0 +1,86 @@
+@import '../../../theme/mixins';
+
+// http://ionicframework.com/docs/v2/theming/
+
+// App Global Sass
+// --------------------------------------------------
+// Put style rules here that you want to apply globally. These
+// styles are for the entire app and not just one component.
+// Additionally, this file can be also used as an entry point
+// to import other Sass files to be included in the output CSS.
+//
+// Shared Sass variables, which can be used to adjust Ionic's
+// default Sass variables, belong in "theme/variables.scss".
+//
+// To declare rules for a specific mode, create a child rule
+// for the .md, .ios, or .wp mode classes. The mode class is
+// automatically applied to the <body> element in the app.
+
+// Application
+ion-app.md,
+ion-content {
+  background-color: $cl-secondary;
+  background-image: url('../assets/imgs/bg-mobile.png');
+  background-position: top center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+body {
+  background-color: $cl-secondary;
+}
+
+.icons-big {
+  margin-top: 7%;
+  margin-left: 35%;
+  width: 30%;
+}
+
+// Buttons
+.bt {
+  margin: 0;
+  box-shadow: none;
+
+  &--full {
+    @include button-round;
+  }
+
+  &.activated {
+    box-shadow: none;
+  }
+}
+
+// Fonts
+h1 {
+  @include font-title;
+
+  margin: 1em 8px;
+}
+
+h2 {
+  @include font-large;
+
+  margin: 1em 8px;
+}
+
+p {
+  @include font-body;
+
+  margin: 1em 8px;
+}
+
+// Utils
+.fill {
+  flex-grow: 1;
+}
+
+.pos-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+.alert-button-group {
+  height: 15%;
+}

@@ -1,10 +1,10 @@
-import { LocKeys } from '../../enums/localisations'
+import { LocKeys } from '../../app/shared/enums/localisations'
 import {
   LanguageSetting,
   NotificationSettings,
   WeeklyReportSubSettings
-} from '../../models/settings'
-import { Task } from '../../models/task'
+} from '../../app/shared/models/settings'
+import { Task } from '../../app/shared/models/task'
 import {
   DefaultProtocolEndPointExport,
   DefaultSourceProducerAndSecretExport
@@ -105,7 +105,7 @@ export const DefaultNotificationRefreshTime: number = 900000 // 15 mins in ms
 
 export const DefaultSourceTypeModel: string = 'aRMT-App'
 export const DefaultSourceTypeRegistrationBody: any = {
-  sourceTypeCatalogVersion: '1.2.0',
+  sourceTypeCatalogVersion: '1.4.0',
   sourceTypeModel: 'aRMT-App',
   sourceTypeProducer: 'RADAR'
   // "deviceTypeId": 1104

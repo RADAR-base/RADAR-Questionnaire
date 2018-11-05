@@ -75,8 +75,8 @@ export class FinishPageComponent {
   }
 
   sendToKafka(task: Task, questionnaireData, questions) {
-    this.kafkaService.prepareTimeZoneKafkaObject()
-    this.kafkaService.prepareAnswerKafkaObject(
+    this.kafkaService.prepareTimeZoneKafkaObjectAndSend()
+    this.kafkaService.prepareAnswerKafkaObjectAndSend(
       task,
       questionnaireData,
       questions

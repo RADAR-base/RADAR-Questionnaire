@@ -137,7 +137,9 @@ export class TasksService {
   sendNonReportedTaskCompletion() {
     this.schedule.getNonReportedCompletedTasks().then(nonReportedTasks => {
       for (let i = 0; i < nonReportedTasks.length; i++) {
-        this.kafka.prepareNonReportedTasksKafkaObject(nonReportedTasks[i])
+        this.kafka.prepareNonReportedTasksKafkaObjectAndSend(
+          nonReportedTasks[i]
+        )
         this.updateTaskToReportedCompletion(nonReportedTasks[i])
       }
     })

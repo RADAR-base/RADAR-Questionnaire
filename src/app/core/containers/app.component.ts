@@ -26,7 +26,8 @@ export class AppComponent {
       this.splashScreen.hide()
       this.configService.fetchConfigState(false)
       this.configService.migrateToLatestVersion()
-      if (DefaultNotificationType == 'LOCAL')
+
+      if (DefaultNotificationType === 'LOCAL')
         this.notificationService.permissionCheck()
     })
   }

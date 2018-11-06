@@ -34,14 +34,14 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
     - $HOME/.npm
-install:
+before_install:
   - nvm install 8
   - npm i -g cordova ionic
-  - npm i
 before_script:
   - mkdir www
   - cp src/assets/data/secret.ts.template src/assets/data/secret.ts
 script:
+  - npm install
   - npm run lint
   - npm run lint:css
   - cordova prepare
@@ -50,7 +50,7 @@ script:
   - cordova plugin ls
   - cordova platform ls
   - ionic cordova platform remove android
-  - ionic cordova platform add android
+  - ionic cordova platform add android@6.4.0
   - ionic cordova build android
 env:
   global:

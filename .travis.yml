@@ -41,7 +41,6 @@ install:
 before_script:
   - mkdir www
   - cp src/assets/data/secret.ts.template src/assets/data/secret.ts
-
 script:
   - npm run lint
   - npm run lint:css
@@ -53,3 +52,6 @@ script:
   - ionic cordova platform remove android
   - ionic cordova platform add android
   - ionic cordova build android
+env:
+  global:
+    - JAVA_HOME=/usr/lib/jvm/java-8-oracle

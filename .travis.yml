@@ -61,8 +61,8 @@ script:
   - npm install
   - npm run lint
   - npm run lint:css
-  - if [[ "$TRAVIS_BRANCH" != $TRAVIS_TAG ]]; then npm run build ; fi
-  - if [[ "$TRAVIS_BRANCH" == $TRAVIS_TAG ]] && [[ "$TRAVIS_TAG" == *alpha* ]]; then
+  - if [[ $TRAVIS_BRANCH != $TRAVIS_TAG ]]; then npm run build ; fi
+  - if [[ $TRAVIS_BRANCH == $TRAVIS_TAG ]] || [[ $TRAVIS_TAG == *alpha* ]]; then
     cordova prepare
     cordova plugin ls
     cordova platform ls

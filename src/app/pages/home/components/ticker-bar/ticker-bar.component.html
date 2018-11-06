@@ -1,0 +1,13 @@
+<div id="ticker-bar-container">
+  <div
+    *ngFor="let item of tickerItems"
+    class="ticker-item"
+    [style.transform]="showNextTickerItem()"
+  >
+    <div id="{{ item.id }}">
+      {{ item.tickerText1 }}
+      <span class="bold">{{ item.tickerText2 }}</span>
+      {{ item.tickerText3 }}
+    </div>
+  </div>
+</div>

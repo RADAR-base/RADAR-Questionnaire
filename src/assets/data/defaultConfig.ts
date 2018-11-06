@@ -1,10 +1,10 @@
-import { LocKeys } from '../../enums/localisations'
+import { LocKeys } from '../../app/shared/enums/localisations'
 import {
   LanguageSetting,
   NotificationSettings,
   WeeklyReportSubSettings
-} from '../../models/settings'
-import { Task } from '../../models/task'
+} from '../../app/shared/models/settings'
+import { Task } from '../../app/shared/models/task'
 import {
   DefaultProtocolEndPointExport,
   DefaultSourceProducerAndSecretExport
@@ -100,12 +100,12 @@ export const DefaultScheduleReportRepeat: number = 7 // days
 export const DefaultNotificationType: string = 'FCM' // choose from 'FCM' or 'LOCAL'
 export const DefaultNumberOfNotificationsToSchedule: number = 100 //
 export const DefaultNumberOfNotificationsToRescue: number = 12 //
-export const FCMPluginProjectSenderId: string = '486403643787'
+export const FCMPluginProjectSenderId: string = '430900191220'
 export const DefaultNotificationRefreshTime: number = 900000 // 15 mins in ms
 
 export const DefaultSourceTypeModel: string = 'aRMT-App'
 export const DefaultSourceTypeRegistrationBody: any = {
-  sourceTypeCatalogVersion: '1.2.0',
+  sourceTypeCatalogVersion: '1.4.0',
   sourceTypeModel: 'aRMT-App',
   sourceTypeProducer: 'RADAR'
   // "deviceTypeId": 1104
@@ -143,3 +143,16 @@ export const DefaultRefreshTokenRequestBody =
 
 export const DefaultEnrolmentBaseURL =
   DefaultEndPoint + DefaultManagementPortalURI
+
+// TIME CONVERSIONS
+
+export const SEC_MILLISEC = 1000
+export const HOUR_MIN = 60
+export const MIN_SEC = 60
+
+// KAFKA
+
+export const KAFKA_ASSESSMENT = 'assessment'
+export const KAFKA_COMPLETION_LOG = 'completion_log'
+export const KAFKA_TIMEZONE = 'timezone'
+export const KAFKA_CLIENT_KAFKA = '/kafka'

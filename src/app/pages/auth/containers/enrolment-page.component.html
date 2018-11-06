@@ -1,0 +1,260 @@
+<ion-content>
+  <ion-slides pager="false">
+
+    <ion-slide id="intro">
+      <div id="logo-container">
+        <img
+          id="logo"
+          src="assets/imgs/radar-logo.svg"
+          alias="RADAR LOGO"
+        >
+      </div>
+      <div class="text">
+        <div class="text-lg">{{ "ENROL_WELCOME_1" | translate }}</div>
+        {{ "ENROL_WELCOME_2" | translate }}
+        <div class="padding text-justify extra-padding">
+          <ion-item no-lines>
+            <span class="info-value">{{ language.label | translate }}</span>
+            <span
+              item-right
+              (click)="showSelectLanguage()"
+            >
+              <ion-icon
+                class="space-right"
+                name="arrow-dropdown"
+              ></ion-icon>
+              {{ "BTN_SELECT" | translate }}
+            </span>
+          </ion-item>
+        </div>
+      </div>
+      <div
+        padding
+        class="bottom"
+      >
+        <button
+          ion-button
+          class="bt bt--full"
+          round
+          full
+          (click)="next()"
+        >
+          {{ "BTN_START" | translate }}
+        </button>
+      </div>
+    </ion-slide>
+
+    <ion-slide id="intro">
+      <div id="logo-container">
+        <img
+          id="logo"
+          src="assets/imgs/radar-logo.svg"
+          alias="RADAR LOGO"
+        >
+      </div>
+      <div class="text">
+        <div class="text-lg">{{ "ENROL_WELCOME_1" | translate }}</div>
+        {{ "ENROL_WELCOME_2" | translate }}
+        <div class="padding text-justify extra-padding">{{ "ENROL_WELCOME_DESC" | translate }}</div>
+      </div>
+      <div
+        padding
+        class="bottom"
+      >
+        <button
+          ion-button
+          class="bt bt--full"
+          round
+          full
+          (click)="next()"
+        >
+          {{ "BTN_ENROL_ENROL" | translate }}
+        </button>
+      </div>
+    </ion-slide>
+
+    <ion-slide id="qr-registration">
+      <div class="registration">
+        <div class="text text-lg">{{ "ENROL_REGISTRATION" | translate }}</div>
+        <div class="text text-justify">
+          {{ "ENROL_REGISTRATION_DESC" | translate }}
+        </div>
+      </div>
+      <div
+        padding
+        class="bottom"
+      >
+        <p>
+          <button
+            ion-button
+            class="bt bt--full"
+            round
+            full
+            (click)="next()"
+          >
+            {{ "BTN_ENROL_SCAN" | translate }}
+          </button>
+        </p>
+
+        <p>
+          <button
+            ion-button
+            class="bt bt--full"
+            round
+            full
+            (click)="enterToken()"
+          >
+            {{ "BTN_ENROL_ENTER_TOKEN" | translate }}
+          </button>
+        </p>
+      </div>
+    </ion-slide>
+
+    <ion-slide
+      *ngIf="enterMetaQR"
+      id="qr-registration-token"
+    >
+      <form
+        [formGroup]="metaQRForm"
+        (ngSubmit)="metaQRHandler()"
+      >
+        <div class="registration">
+          <div class="text text-lg">{{ "ENROL_REGISTRATION" | translate }}</div>
+          <div class="text text-justify">
+            {{ "ENROL_REGISTRATION_TOKEN_DESC" | translate }}
+          </div>
+          <div class="token-input">
+            <ion-input
+              required
+              formControlName="baseURL"
+              type="url"
+              placeholder="Base URL"
+            ></ion-input>
+          </div>
+          <div class="token-input">
+            <ion-input
+              required
+              formControlName="tokenName"
+              type="text"
+              placeholder="Token"
+            ></ion-input>
+          </div>
+        </div>
+        <div id="status">
+          <div
+            #loading
+            id="loading"
+          >
+            <div class="padding-text">{{ "STATUS_LOADING" | translate }}</div>
+          </div>
+          <div
+            #outcome
+            id="outcome"
+          >
+            <div class="padding-text">{{ outcomeStatus }}</div>
+          </div>
+        </div>
+        <div
+          padding
+          class="bottom"
+          *ngIf="!authSuccess"
+        >
+          <button
+            ion-button
+            class="bt bt--full"
+            round
+            full
+            type="submit"
+          >
+            {{ "BTN_SUBMIT" | translate }}
+          </button>
+        </div>
+      </form>
+    </ion-slide>
+
+    <ion-slide
+      *ngIf="!enterMetaQR"
+      id="qr-registration-scan"
+    >
+      <div class="registration">
+        <div class="text text-lg">{{ "ENROL_REGISTRATION" | translate }}</div>
+        <div class="text text-justify">
+          {{ "ENROL_REGISTRATION_SCAN_DESC" | translate }}
+        </div>
+      </div>
+      <div class="qr-code">
+        <img src="assets/imgs/radar-qr-code.png">
+      </div>
+      <div id="status">
+        <div
+          #loading
+          id="loading"
+        >
+          <div class="padding-text">{{ "STATUS_LOADING" | translate }}</div>
+        </div>
+        <div
+          #outcome
+          id="outcome"
+        >
+          <div class="padding-text">{{ outcomeStatus }}</div>
+        </div>
+      </div>
+      <div
+        padding
+        class="bottom"
+        *ngIf="!authSuccess"
+      >
+        <button
+          ion-button
+          class="bt bt--full"
+          round
+          full
+          (click)="scanQRHandler()"
+        >
+          {{ "BTN_ENROL_SCAN" | translate }}
+        </button>
+      </div>
+    </ion-slide>
+
+    <ion-slide id="preference-report pos-above">
+
+      <div class="text text-lg">{{ "ENROL_PREFERENCES" | translate }}</div>
+      <div class="pref-icon">
+        <img src="assets/imgs/MobileAnalytics-neg.png">
+      </div>
+      <div class="text text-justify">
+        {{ "ENROL_PREFERENCES_DESC" | translate }}
+      </div>
+
+      <ion-item-group id="settings">
+        <ion-item
+          no-lines
+          *ngFor="let subSetting of reportSettings; let i = index"
+        >
+          <ion-label>{{ subSetting.name | translate }}</ion-label>
+          <ion-toggle
+            item-right
+            [(ngModel)]="subSetting.show"
+            (ionChange)="weeklyReportChange(i)"
+          ></ion-toggle>
+        </ion-item>
+      </ion-item-group>
+
+      <div
+        padding
+        class="bottom"
+      >
+        <button
+          ion-button
+          class="bt bt--full"
+          round
+          full
+          (click)="navigateToHome()"
+        >
+          {{ "BTN_FINISH" | translate }}
+        </button>
+      </div>
+    </ion-slide>
+
+  </ion-slides>
+</ion-content>

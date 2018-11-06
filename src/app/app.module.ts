@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common'
 import { HttpClientModule } from '@angular/common/http'
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
@@ -16,61 +15,21 @@ import { SplashScreen } from '@ionic-native/splash-screen'
 import { StatusBar } from '@ionic-native/status-bar'
 import { Vibration } from '@ionic-native/vibration'
 import { IonicStorageModule, Storage } from '@ionic/storage'
-import { RoundProgressModule } from 'angular-svg-round-progressbar'
-import { MomentModule } from 'angular2-moment'
 import { IonicApp, IonicModule } from 'ionic-angular'
 
-import { AudioInput } from '../components/audio-input/audio-in'
-import { AudioInputComponent } from '../components/audio-input/audio-input'
-import { CheckboxInputComponent } from '../components/checkbox-input/checkbox-input'
-import { InfoScreenComponent } from '../components/info-screen/info-screen'
-import { QuestionComponent } from '../components/question/question'
-import { RadioInputComponent } from '../components/radio-input/radio-input'
-import { RangeInputComponent } from '../components/range-input/range-input'
-import { SliderInputComponent } from '../components/slider-input/slider-input'
-import { TaskCalendarComponent } from '../components/task-calendar/task-calendar'
-import { TaskInfoComponent } from '../components/task-info/task-info'
-import { TaskProgressComponent } from '../components/task-progress/task-progress'
-import { TickerBarComponent } from '../components/ticker-bar/ticker-bar'
-import { TimedTestComponent } from '../components/timed-test/timed-test'
-import { ClinicalTasksPage } from '../pages/clinical-tasks/clinical-tasks'
-import { EnrolmentPage } from '../pages/enrolment/enrolment'
-import { FinishPage } from '../pages/finish/finish'
-import { HomePage } from '../pages/home/home'
-import { QuestionsPage } from '../pages/questions/questions'
-import { ReportPage } from '../pages/report/report'
-import { SettingsPage } from '../pages/settings/settings'
-import { SplashPage } from '../pages/splash/splash'
-import { StartPage } from '../pages/start/start'
-import { TaskSelectPage } from '../pages/taskselect/taskselect'
-import { PipesModule } from '../pipes/pipes.module'
-import { TranslatePipe } from '../pipes/translate/translate'
-import { AnswerService } from '../providers/answer-service'
-import { AudioRecordService } from '../providers/audiorecord-service'
-import { AuthService } from '../providers/auth-service'
-import { ConfigService } from '../providers/config-service'
-import { HomeController } from '../providers/home-controller'
-import { KafkaService } from '../providers/kafka-service'
-import { NotificationService } from '../providers/notification-service'
-import { PrepareDataService } from '../providers/preparedata-service'
-import { QuestionService } from '../providers/question-service'
-import { SchedulingService } from '../providers/scheduling-service'
-import { StorageService } from '../providers/storage-service'
-import { TimeStampService } from '../providers/timestamp-service'
-import { AndroidPermissionUtility } from '../utilities/android-permission'
-import { jwtOptionsFactory } from '../utilities/jwtOptionsFactory'
-import { Utility } from '../utilities/util'
-import { MyApp } from './app.component'
+import { AppComponent } from './core/containers/app.component'
+import { PagesModule } from './pages/pages.module'
+import { AndroidPermissionUtility } from './shared/utilities/android-permission'
+import { jwtOptionsFactory } from './shared/utilities/jwtOptionsFactory'
+import { Utility } from './shared/utilities/util'
 
 @NgModule({
   imports: [
+    PagesModule,
     HttpClientModule,
-    MomentModule,
     BrowserModule,
-    RoundProgressModule,
     BrowserAnimationsModule,
-    PipesModule,
-    IonicModule.forRoot(MyApp, {
+    IonicModule.forRoot(AppComponent, {
       mode: 'md'
     }),
     IonicStorageModule.forRoot({
@@ -85,88 +44,19 @@ import { MyApp } from './app.component'
       }
     })
   ],
-  declarations: [
-    MyApp,
-
-    // Pages
-    SplashPage,
-    EnrolmentPage,
-    HomePage,
-    ClinicalTasksPage,
-    StartPage,
-    QuestionsPage,
-    FinishPage,
-    SettingsPage,
-    TaskSelectPage,
-    ReportPage,
-
-    // Components
-    TaskCalendarComponent,
-    TaskProgressComponent,
-    TickerBarComponent,
-    TaskInfoComponent,
-    QuestionComponent,
-    RangeInputComponent,
-    RadioInputComponent,
-    SliderInputComponent,
-    TimedTestComponent,
-    InfoScreenComponent,
-    CheckboxInputComponent,
-    AudioInputComponent
-  ],
+  declarations: [AppComponent],
   bootstrap: [IonicApp],
-  entryComponents: [
-    MyApp,
-
-    // Pages
-    SplashPage,
-    EnrolmentPage,
-    HomePage,
-    ClinicalTasksPage,
-    StartPage,
-    QuestionsPage,
-    FinishPage,
-    SettingsPage,
-    TaskSelectPage,
-    ReportPage,
-
-    // Components
-    TaskProgressComponent,
-    TickerBarComponent,
-    TaskInfoComponent,
-    QuestionComponent,
-    RangeInputComponent,
-    RadioInputComponent,
-    SliderInputComponent,
-    TimedTestComponent,
-    InfoScreenComponent,
-    CheckboxInputComponent,
-    AudioInputComponent
-  ],
+  entryComponents: [AppComponent],
   providers: [
     Device,
     StatusBar,
     SplashScreen,
-    DatePipe,
-    QuestionService,
-    AnswerService,
-    ConfigService,
-    StorageService,
-    KafkaService,
-    TimeStampService,
-    PrepareDataService,
     Utility,
     LocalNotifications,
-    SchedulingService,
-    HomeController,
     BarcodeScanner,
     Dialogs,
     Vibration,
     Globalization,
-    TranslatePipe,
-    AuthService,
-    NotificationService,
-    AudioRecordService,
     AndroidPermissionUtility,
     AndroidPermissions,
     File,

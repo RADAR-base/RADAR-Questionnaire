@@ -8,7 +8,7 @@
   <h2 text-center>{{ content }}</h2>
   <ion-item-group class="pos-bottom pos-bottom-90">
     <div
-      *ngIf="!navParams.data.isLastTask"
+      *ngIf="displayNextTaskReminder"
       class="next-task-highlight"
     >
       <h2>

@@ -24,9 +24,9 @@ export class TaskCalendarComponent implements OnChanges {
   task: EventEmitter<Task> = new EventEmitter<Task>()
 
   currentTime: String = '06:00'
-  timeIndex: Promise<number>
+  timeIndex = 0
 
-  tasks: Promise<Task[]>
+  tasks: Task[] = [DefaultTask]
 
   constructor(
     private tasksService: TasksService,
@@ -34,16 +34,22 @@ export class TaskCalendarComponent implements OnChanges {
     private translate: TranslatePipe,
     private platform: Platform
   ) {
-    platform.resume.subscribe(e => this.getTasks())
+    this.getTasks()
+    platform.resume.subscribe(e => {
+      this.getTasks()
+    })
   }
 
   ngOnChanges() {
-    this.getTasks()
+    this.setCurrentTime()
   }
 
   getTasks() {
-    this.tasks = this.tasksService.getTasksOfToday()
-    this.setCurrentTime()
+    this.tasksService.getTasksOfToday().then(tasks => {
+      if (tasks) {
+        this.tasks = tasks.sort(this.compareTasks)
+      }
+    })
   }
 
   getStartTime(task: Task) {
@@ -61,18 +67,14 @@ export class TaskCalendarComponent implements OnChanges {
   // find out in between which tasks it should be shown in the interface
   getCurrentTimeIndex(date: Date) {
     let tasksPassed = 0
-    return Promise.resolve(
-      this.tasks.then(tasks => {
-        for (const task of tasks) {
-          if (date.getTime() <= task.timestamp) {
-            return tasksPassed
-          } else {
-            tasksPassed += 1
-          }
-        }
+    for (const task of this.tasks) {
+      if (date.getTime() <= task.timestamp) {
         return tasksPassed
-      })
-    )
+      } else {
+        tasksPassed += 1
+      }
+    }
+    return tasksPassed
   }
 
   formatTime(date) {
@@ -81,6 +83,17 @@ export class TaskCalendarComponent implements OnChanges {
     const hourStr = date.getHours() < 10 ? '0' + String(hour) : String(hour)
     const minStr = date.getMinutes() < 10 ? '0' + String(min) : String(min)
     return hourStr + ':' + minStr
+  }
+
+  // Define the order of the tasks - whether it is based on index or timestamp
+  compareTasks(a: Task, b: Task) {
+    if (a.timestamp < b.timestamp) {
+      return -1
+    }
+    if (a.timestamp > b.timestamp) {
+      return 1
+    }
+    return 0
   }
 
   hasExtraInfo(warningStr) {

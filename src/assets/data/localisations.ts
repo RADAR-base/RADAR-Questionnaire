@@ -93,7 +93,7 @@ export const Localisations = {
     de: 'Einstellungen',
     en: 'Preferences',
     es: 'Preferencias',
-    it: ' Preferenze',
+    it: 'Preferenze',
     nl: 'Voorkeurs instellingen'
   },
   ENROL_PREFERENCES_DESC: {
@@ -132,7 +132,7 @@ export const Localisations = {
     en: 'Remember, you still have tasks outstanding!',
     es: 'Recuerda, todavía tiene tareas pendientes!',
     it: 'Ricorda, hai ancora compiti eccezionali!',
-    nl: 'Denk eraan, je hebt nog steeds taken overblijvende!'
+    nl: 'Denk eraan, je hebt nog steeds taken openstaan!'
   },
   FINISH_COMPLETED_IN_CLINIC: {
     da: 'Afsluttet i klinik?',
@@ -747,9 +747,9 @@ export const Localisations = {
     da: 'snart',
     de: 'bald',
     en: 'soon',
-    es: 'En breve',
+    es: 'en breve',
     it: 'presto',
-    nl: 'spoedig'
+    nl: 'binnenkort'
   },
   TASK_BAR_AFFIRMATION_1: {
     da: 'Godt klaret!',

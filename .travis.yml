@@ -1,7 +1,7 @@
 env:
   global:
     - JAVA_HOME=/usr/lib/jvm/java-8-oracle
-    - APP_VERSION=57-alpha
+    - APP_VERSION=57-alpha-2
     - PACKAGE_NAME=org.phidatalab.radar_armt
     - PROJECT_NAME=RADAR-base/RADAR-Questionnaire
   matrix:

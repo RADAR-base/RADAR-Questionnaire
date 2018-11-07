@@ -9,7 +9,7 @@ import {
 import { Dialogs } from '@ionic-native/dialogs'
 import { Vibration } from '@ionic-native/vibration'
 
-import { ITimer, Timer } from '../../../../../shared/models/timer'
+import { TaskTimer, Timer } from '../../../../../shared/models/timer'
 
 @Component({
   selector: 'timed-test',
@@ -26,7 +26,7 @@ export class TimedTestComponent implements OnInit, OnChanges {
   timer: Timer
   @Input()
   currentlyShown: boolean
-  public itimer: ITimer
+  public taskTimer: TaskTimer
 
   constructor(private dialogs: Dialogs, private vibration: Vibration) {}
 
@@ -41,7 +41,7 @@ export class TimedTestComponent implements OnInit, OnChanges {
   }
 
   start() {
-    if (this.itimer.hasStarted) {
+    if (this.taskTimer.hasStarted) {
       this.resumeTimer()
     } else {
       this.startTimer()
@@ -54,11 +54,11 @@ export class TimedTestComponent implements OnInit, OnChanges {
   }
 
   hasFinished() {
-    return this.itimer.hasFinished
+    return this.taskTimer.hasFinished
   }
 
   hasStarted() {
-    return this.itimer.hasStarted
+    return this.taskTimer.hasStarted
   }
 
   initTimer() {
@@ -66,7 +66,7 @@ export class TimedTestComponent implements OnInit, OnChanges {
       this.timer.start = 0
     }
 
-    this.itimer = <ITimer>{
+    this.taskTimer = <TaskTimer>{
       seconds: this.timer.start,
       runTimer: false,
       hasStarted: false,
@@ -74,17 +74,17 @@ export class TimedTestComponent implements OnInit, OnChanges {
       secondsRemaining: this.timer.start
     }
 
-    this.itimer.displayTime = this.itimer.secondsRemaining.toString()
+    this.taskTimer.displayTime = this.taskTimer.secondsRemaining.toString()
   }
 
   startTimer() {
-    this.itimer.hasStarted = true
-    this.itimer.runTimer = true
+    this.taskTimer.hasStarted = true
+    this.taskTimer.runTimer = true
     this.timerTick()
   }
 
   pauseTimer() {
-    this.itimer.runTimer = false
+    this.taskTimer.runTimer = false
   }
 
   resumeTimer() {
@@ -93,20 +93,20 @@ export class TimedTestComponent implements OnInit, OnChanges {
 
   timerTick() {
     setTimeout(() => {
-      if (!this.itimer.runTimer) {
+      if (!this.taskTimer.runTimer) {
         return
       }
-      if (this.itimer.secondsRemaining > 0) {
-        this.itimer.secondsRemaining--
-        this.itimer.displayTime = this.itimer.secondsRemaining.toString()
-        if (this.itimer.secondsRemaining > this.timer.end) {
+      if (this.taskTimer.secondsRemaining > 0) {
+        this.taskTimer.secondsRemaining--
+        this.taskTimer.displayTime = this.taskTimer.secondsRemaining.toString()
+        if (this.taskTimer.secondsRemaining > this.timer.end) {
           this.timerTick()
         } else {
           this.dialogs.beep(1)
           this.vibration.vibrate(600)
 
           if (this.timer.end === 0) {
-            this.itimer.hasFinished = true
+            this.taskTimer.hasFinished = true
           } else {
             this.pauseTimer()
           }

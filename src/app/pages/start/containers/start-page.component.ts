@@ -20,6 +20,7 @@ export class StartPageComponent {
   questions: Question[]
   endText: String
   assessment: Assessment
+  isLastTask: boolean
 
   constructor(
     public navCtrl: NavController,
@@ -32,6 +33,7 @@ export class StartPageComponent {
     this.questions = this.navParams.data.questions
     this.endText = this.navParams.data.endText
     this.assessment = this.navParams.data.assessment
+    this.isLastTask = this.navParams.data.isLastTask
   }
 
   ionViewDidEnter() {
@@ -44,9 +46,11 @@ export class StartPageComponent {
 
   openPage() {
     this.navCtrl.push(QuestionsPageComponent, {
-      associatedTask: this.associatedTask,
+      endText: this.endText,
       questions: this.questions,
-      endText: this.endText
+      associatedTask: this.associatedTask,
+      assessment: this.assessment,
+      isLastTask: this.isLastTask
     })
   }
 }

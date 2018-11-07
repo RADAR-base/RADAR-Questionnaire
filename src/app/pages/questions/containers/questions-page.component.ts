@@ -56,7 +56,10 @@ export class QuestionsPageComponent {
   iconPrevious: string = this.iconValues.close
 
   associatedTask
-  endText
+  endText: string
+  isLastTask: boolean
+  answers
+  timestamps
 
   constructor(
     public navCtrl: NavController,
@@ -69,8 +72,6 @@ export class QuestionsPageComponent {
   ) {}
 
   ionViewDidLoad() {
-    this.answerService.reset()
-    this.timestampService.reset()
     this.questionTitle = this.navParams.data.title
     this.questions = this.navParams.data.questions
     this.questionsContainerEl = this.questionsContainerRef.nativeElement
@@ -78,6 +79,7 @@ export class QuestionsPageComponent {
     this.setCurrentQuestion(this.nextQuestionIncrVal)
     this.associatedTask = this.navParams.data.associatedTask
     this.endText = this.navParams.data.endText
+    this.isLastTask = this.navParams.data.isLastTask
   }
 
   evalIfFirstQuestionnaireToSkipESMSleepQuestion() {
@@ -192,12 +194,17 @@ export class QuestionsPageComponent {
   }
 
   navigateToFinishPage() {
+    this.answers = this.answerService.answers
+    this.timestamps = this.timestampService.timestamps
+    this.answerService.reset()
+    this.timestampService.reset()
+
     this.navCtrl.push(FinishPageComponent, {
       endText: this.endText,
       associatedTask: this.associatedTask,
-      answers: this.answerService.answers,
-      timestamps: this.timestampService.timestamps,
-      isLastTask: this.navParams.data.isLastTask,
+      answers: this.answers,
+      timestamps: this.timestamps,
+      isLastTask: this.isLastTask,
       questions: this.questions
     })
   }

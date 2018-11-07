@@ -19,6 +19,7 @@ export interface AnswerValueExport {
   answers: Response[]
   time: number
   timeCompleted: number
+  timeNotification: number
 }
 
 export interface AnswerKeyExport {
@@ -31,4 +32,9 @@ export interface CompletionLogValueExport {
   name: string
   time: number
   completionPercentage: any
+}
+
+export interface ApplicationTimeZoneValueExport {
+  time: number
+  offset: number
 }

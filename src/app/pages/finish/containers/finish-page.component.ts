@@ -70,10 +70,18 @@ export class FinishPageComponent {
         this.navParams.data.associatedTask
       )
     }
+    this.displayNextTaskReminder =
+      !this.navParams.data.isLastTask && !this.isClinicalTask
   }
 
   sendToKafka(task: Task, questionnaireData, questions) {
-    this.kafkaService.prepareKafkaObject(task, questionnaireData, questions) // submit data to kafka
+    this.kafkaService.prepareTimeZoneKafkaObjectAndSend()
+    this.kafkaService.prepareAnswerKafkaObjectAndSend(
+      task,
+      questionnaireData,
+      questions
+    )
+    // NOTE: Submit data to kafka
   }
 
   handleClosePage() {

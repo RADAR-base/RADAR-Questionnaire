@@ -31,26 +31,25 @@
         [responsive]="true"
       ></round-progress>
     </div>
-    <div *ngIf="complete">
-      <div
-        #progressComplete
-        class="progress-sub"
-      >
-        <div class="completed">
-          <ion-icon
-            #checkmark
-            class="checkmark"
-            name="checkmark"
-          ></ion-icon>
-        </div>
+    <div
+      #progressComplete
+      class="progress-sub"
+    >
+      <div class="completed">
+        <ion-icon
+          #checkmark
+          class="checkmark"
+          name="checkmark"
+        ></ion-icon>
       </div>
     </div>
   </div>
-  <div *ngIf="!noTasksToday">
-    <div
-      #counter
-      class="counter"
-    >
+
+  <div
+    #counter
+    class="counter"
+  >
+    <div *ngIf="!noTasksToday">
       <div class="large">{{ current }}</div>
       <div class="small">
         {{ "TASK_PROGRESS_COMPLETED" | translate }}

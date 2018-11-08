@@ -40,8 +40,8 @@ export class SplashPageComponent {
       this.hasParentPage = true
     }
 
-    this.splashService.evalEnrolment().then(evalEnrolement => {
-      if (evalEnrolement) {
+    this.splashService.evalEnrolment().then(participant => {
+      if (!participant) {
         this.navCtrl.setRoot(EnrolmentPageComponent)
       } else {
         this.status = 'Updating notifications...'

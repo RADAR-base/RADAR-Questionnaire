@@ -208,11 +208,17 @@ export class SettingsPageComponent {
   }
 
   testNotifications() {
-    this.notificationService.testFCMNotifications()
     const buttons = [
       {
+        text: this.translate.transform(LocKeys.BTN_CANCEL.toString()),
+        handler: () => {}
+      },
+      {
         text: this.translate.transform(LocKeys.CLOSE_APP.toString()),
-        handler: () => this.platform.exitApp()
+        handler: () => {
+          this.notificationService.testFCMNotifications()
+          this.platform.exitApp()
+        }
       }
     ]
     this.showAlert({

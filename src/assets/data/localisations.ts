@@ -334,6 +334,30 @@ export const Localisations = {
     it: 'Dimensione',
     nl: 'Grootte'
   },
+  SETTINGS_DEBUGGING: {
+    da: 'Debugging',
+    de: 'Debuggen',
+    en: 'Debugging',
+    es: 'Depuración',
+    it: 'Debug',
+    nl: 'Debugging'
+  },
+  SETTINGS_GENERATE_NOTIFS: {
+    da: 'Generer Testmeddelelse',
+    de: 'Testbenachrichtigung Generieren',
+    en: 'Generate Test Notifications',
+    es: 'Generar Notificación de Prueba',
+    it: 'Genera Notifica di Prova',
+    nl: 'Genereer Testmelding'
+  },
+  SETTINGS_LOG_NOTIFS: {
+    da: 'Logmeddelelser',
+    de: 'Protokollbenachrichtigungen',
+    en: 'Log Notifications',
+    es: 'Notificaciones de Registro',
+    it: 'Registra le Notifiche',
+    nl: 'Logmeldingen'
+  },
   LANGUAGE_ENGLISH: {
     da: 'Engelsk',
     de: 'Englisch',

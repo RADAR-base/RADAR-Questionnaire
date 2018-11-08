@@ -73,11 +73,13 @@ export class FinishPageComponent {
   }
 
   sendToKafka(task: Task, questionnaireData, questions) {
-    this.kafkaService.prepareKafkaObjectAndSend(
+    this.kafkaService.prepareTimeZoneKafkaObjectAndSend()
+    this.kafkaService.prepareAnswerKafkaObjectAndSend(
       task,
       questionnaireData,
       questions
-    ) // submit data to kafka
+    )
+    // NOTE: Submit data to kafka
   }
 
   handleClosePage() {

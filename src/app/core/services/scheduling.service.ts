@@ -53,7 +53,7 @@ export class SchedulingService {
       if (schedule) {
         const startDate = this.setDateTimeToMidnight(date)
         const endDate = this.advanceRepeat(startDate, 'day', 1)
-        const tasks: Task[] = []
+        let tasks: Task[] = []
         for (let i = 0; i < schedule.length; i++) {
           if (
             schedule[i].timestamp < endDate.getTime() &&
@@ -62,9 +62,15 @@ export class SchedulingService {
             tasks.push(schedule[i])
           }
         }
+        tasks = tasks.sort(this.compareTasks)
         return tasks
       }
     })
+  }
+
+  // Define the order of the tasks - whether it is based on index or timestamp
+  compareTasks(a: Task, b: Task) {
+    return a.timestamp - b.timestamp
   }
 
   getTasks() {
@@ -228,6 +234,7 @@ export class SchedulingService {
 
     console.log(assessment)
 
+    const today = this.setDateTimeToMidnight(new Date())
     const tmpScheduleAll: Task[] = []
     while (iterDate.getTime() <= endDate.getTime()) {
       for (let i = 0; i < repeatQ.unitsFromZero.length; i++) {
@@ -237,20 +244,16 @@ export class SchedulingService {
           repeatQ.unitsFromZero[i]
         )
         const idx = indexOffset + tmpScheduleAll.length
-        tmpScheduleAll.push(this.taskBuilder(idx, assessment, taskDate))
+        const task = this.taskBuilder(idx, assessment, taskDate)
+        if (task.timestamp > today.getTime()) {
+          tmpScheduleAll.push(task)
+        }
       }
       iterDate = this.setDateTimeToMidnight(iterDate)
       iterDate = this.advanceRepeat(iterDate, repeatP.unit, repeatP.amount)
     }
 
-    const tmpSchedule: Task[] = []
-    const today = this.setDateTimeToMidnight(new Date())
-    for (let i = 0; i < tmpScheduleAll.length; i++) {
-      if (tmpScheduleAll[i].timestamp > today.getTime()) {
-        tmpSchedule.push(tmpScheduleAll[i])
-      }
-    }
-    return tmpSchedule
+    return tmpScheduleAll
   }
 
   setDateTimeToMidnight(date) {

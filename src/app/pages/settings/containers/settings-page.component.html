@@ -68,15 +68,7 @@
       no-lines
       class="item-divider"
     >
-      <span (click)="consoleLogNotifications()">
-        {{ "SETTINGS_NOTIFICATIONS" | translate }}
-      </span>
-      <span>
-        <ion-icon
-          name="alarm"
-          (click)="testNotifications()"
-        ></ion-icon>
-      </span>
+      {{ "SETTINGS_NOTIFICATIONS" | translate }}
     </ion-item-divider>
     <ion-item no-lines>
       <ion-label>
@@ -194,6 +186,31 @@
           <ion-spinner name="dots"></ion-spinner>
         </div>
       </span>
+    </ion-item>
+  </ion-item-group>
+
+  <ion-item-group>
+    <ion-item-divider
+      no-lines
+      class="item-divider"
+    >
+      {{ "SETTINGS_DEBUGGING" | translate }}
+    </ion-item-divider>
+    <ion-item
+      no-lines
+      class="item-button"
+      (click)="testNotifications()"
+    >
+      <ion-label>
+        {{ "SETTINGS_GENERATE_NOTIFS" | translate }}
+      </ion-label>
+    </ion-item>
+    <ion-item
+      no-lines
+      class="item-button"
+      (click)="consoleLogNotifications()"
+    >
+      <ion-label>{{ "SETTINGS_LOG_NOTIFS" | translate }}</ion-label>
     </ion-item>
   </ion-item-group>
 

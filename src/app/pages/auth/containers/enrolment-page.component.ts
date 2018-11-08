@@ -62,6 +62,7 @@ export class EnrolmentPageComponent {
     ]),
     tokenName: new FormControl('', [Validators.required])
   })
+  authSuccess = false
 
   get tokenName() {
     return this.metaQRForm.get('tokenName')
@@ -200,15 +201,13 @@ export class EnrolmentPageComponent {
   }
 
   validURL(str) {
-    const regexp = new RegExp(this.URLRegEx)
-    if (regexp.test(str)) {
-      return true
-    } else {
-      return false
-    }
+    return new FormControl(str, Validators.pattern(this.URLRegEx)).errors
+      ? false
+      : true
   }
 
   retrieveSubjectInformation() {
+    this.authSuccess = true
     this.authService.getSubjectInformation().then(res => {
       const subjectInformation: any = res
       const participantId = subjectInformation.externalId
@@ -236,8 +235,7 @@ export class EnrolmentPageComponent {
   }
 
   doAfterAuthentication() {
-    this.configService.fetchConfigState(true)
-    this.next()
+    this.configService.fetchConfigState(true).then(() => this.next())
   }
 
   displayErrorMessage(error) {

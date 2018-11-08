@@ -111,7 +111,7 @@ export class NotificationService {
           }
         }
         if (DefaultNotificationType === 'LOCAL') {
-          console.log('NOTIFICATIONS Scheduleing LOCAL notifications')
+          console.log('NOTIFICATIONS Scheduling LOCAL notifications')
           ;(<any>cordova).plugins.notification.local.on('click', notification =>
             this.evalTaskTiming(notification.data)
           )
@@ -127,7 +127,7 @@ export class NotificationService {
           )
         }
         if (DefaultNotificationType === 'FCM') {
-          console.log('NOTIFICATIONS Scheduleing FCM notifications')
+          console.log('NOTIFICATIONS Scheduling FCM notifications')
           console.log(fcmNotifications)
           for (let i = 0; i < fcmNotifications.length; i++) {
             FCMPlugin.upstream(
@@ -141,6 +141,7 @@ export class NotificationService {
             )
           }
         }
+        this.storage.set(StorageKeys.LAST_NOTIFICATION_UPDATE, Date.now())
       })
   }
 

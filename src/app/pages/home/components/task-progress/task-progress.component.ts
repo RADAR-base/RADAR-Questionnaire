@@ -53,14 +53,13 @@ export class TaskProgressComponent implements OnChanges {
       animation: 'easeInOutQuart',
       duration: this.duration
     })
+  }
+
+  ngOnChanges() {
     this.tasksService.getTaskProgress().then(progress => {
       this.progress = progress
       this.updateProgress()
     })
-  }
-
-  ngOnChanges() {
-    this.updateProgress()
   }
 
   updateProgress() {
@@ -88,14 +87,13 @@ export class TaskProgressComponent implements OnChanges {
       this.elComplete.nativeElement.style.transform =
         'translate3d(-100%,0,0) scale(1)'
       this.elCheckmark.nativeElement.style.transform = 'scale(1)'
-      this.elCounter.nativeElement.style.transform = 'translate3d(0,250px,0)'
+      if (this.elCounter)
+        this.elCounter.nativeElement.style.transform = 'translate3d(0,250px,0)'
     } else {
       this.elActive.nativeElement.style.transform =
         'translate3d(0,0,0) scale(1)'
-      this.elComplete.nativeElement.style.transform =
-        'translate3d(0,0,0) scale(0.1)'
-      this.elCheckmark.nativeElement.style.transform = 'scale(5)'
-      this.elCounter.nativeElement.style.transform = 'translate3d(0,0,0)'
+      if (this.elCounter)
+        this.elCounter.nativeElement.style.transform = 'translate3d(0,0,0)'
     }
   }
 

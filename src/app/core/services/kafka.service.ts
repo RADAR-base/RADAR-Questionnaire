@@ -45,39 +45,47 @@ export class KafkaService {
     })
   }
 
-  prepareAnswerKafkaObject(task: Task, data, questions) {
+  prepareAnswerKafkaObjectAndSend(task: Task, data, questions) {
     // NOTE: Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
     const Answer: AnswerValueExport = {
       name: task.name,
       version: data.configVersion,
       answers: data.answers,
       time:
-        questions[0].field_type == QuestionType.info // NOTE: Do not use info startTime
+        questions[0].field_type == QuestionType.info && questions[1] // NOTE: Do not use info startTime
           ? data.answers[1].startTime
           : data.answers[0].startTime, // NOTE: whole questionnaire startTime and endTime
       timeCompleted: data.answers[data.answers.length - 1].endTime,
       timeNotification: getSeconds({ milliseconds: task.timestamp })
     }
 
-    return this.prepareKafkaObject(task, Answer, KAFKA_ASSESSMENT)
+    return this.prepareKafkaObjectAndSend(task, Answer, KAFKA_ASSESSMENT)
   }
 
-  prepareNonReportedTasksKafkaObject(task: Task) {
+  prepareNonReportedTasksKafkaObjectAndSend(task: Task) {
     // NOTE: Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
     const CompletionLog: CompletionLogValueExport = {
       name: task.name.toString(),
       time: getSeconds({ milliseconds: task.timestamp }),
       completionPercentage: { double: task.completed ? 100 : 0 }
     }
-    return this.prepareKafkaObject(task, CompletionLog, KAFKA_COMPLETION_LOG)
+    return this.prepareKafkaObjectAndSend(
+      task,
+      CompletionLog,
+      KAFKA_COMPLETION_LOG
+    )
   }
 
-  prepareTimeZoneKafkaObject() {
+  prepareTimeZoneKafkaObjectAndSend() {
     const ApplicationTimeZone: ApplicationTimeZoneValueExport = {
       time: getSeconds({ milliseconds: new Date().getTime() }),
       offset: getSeconds({ minutes: new Date().getTimezoneOffset() })
     }
-    return this.prepareKafkaObject([], ApplicationTimeZone, KAFKA_TIMEZONE)
+    return this.prepareKafkaObjectAndSend(
+      [],
+      ApplicationTimeZone,
+      KAFKA_TIMEZONE
+    )
   }
 
   getSpecs(task: Task, kafkaObject, type) {
@@ -101,7 +109,7 @@ export class KafkaService {
     }
   }
 
-  prepareKafkaObject(task, value, type) {
+  prepareKafkaObjectAndSend(task, value, type) {
     return this.util.getSourceKeyInfo().then(keyInfo => {
       const sourceId = keyInfo[0]
       const projectId = keyInfo[1]
@@ -114,12 +122,12 @@ export class KafkaService {
       }
       const kafkaObject = { value: value, key: answerKey }
       return this.getSpecs(task, kafkaObject, type).then(specs =>
-        this.createPayload(specs, task, kafkaObject, type)
+        this.createPayloadAndSend(specs, task, kafkaObject, type)
       )
     })
   }
 
-  createPayload(specs, task, kafkaObject, type) {
+  createPayloadAndSend(specs, task, kafkaObject, type) {
     return this.util
       .getLatestKafkaSchemaVersions(specs)
       .then(schemaVersions => {
@@ -151,7 +159,9 @@ export class KafkaService {
           schemaId,
           schemaInfo,
           payload,
-          kafkaObject.value.time
+          task,
+          kafkaObject,
+          type
         )
       })
       .catch(error => {
@@ -161,17 +171,19 @@ export class KafkaService {
       })
   }
 
-  sendToKafka(specs, id, info, payload, cacheKey) {
+  sendToKafka(specs, id, info, payload, task, kafkaObject, type) {
     return this.getKafkaInstance().then(
       kafkaConnInstance => {
         // NOTE: Kafka connection instance to submit to topic
         const topic = specs.avsc + '_' + specs.name
+        const cacheKey = kafkaObject.value.time
         console.log('Sending to: ' + topic)
         return kafkaConnInstance
           .topic(topic)
           .produce(id, info, payload, (err, res) => {
             if (err) {
               console.log(err)
+              return this.cacheAnswers(task, kafkaObject, type)
             } else {
               return this.removeAnswersFromCache(cacheKey)
             }
@@ -203,9 +215,9 @@ export class KafkaService {
   sendAllAnswersInCache() {
     if (!this.cacheSending) {
       this.cacheSending = !this.cacheSending
-      this.sendToKafkaFromCache().then(
-        () => (this.cacheSending = !this.cacheSending)
-      )
+      this.sendToKafkaFromCache()
+        .then(() => (this.cacheSending = !this.cacheSending))
+        .catch(e => console.log('Cache could not be sent.'))
     }
   }
 
@@ -225,7 +237,7 @@ export class KafkaService {
                 cacheObject.cache,
                 cacheObject.type
               ).then(specs => {
-                return this.createPayload(
+                return this.createPayloadAndSend(
                   specs,
                   specs.task,
                   specs.kafkaObject,

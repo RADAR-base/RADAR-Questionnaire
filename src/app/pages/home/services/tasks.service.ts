@@ -93,45 +93,31 @@ export class TasksService {
    */
   retrieveNextTask(tasks: Task[]): Task {
     if (tasks) {
-      // NOTE: First sort the tasks based on timestamps so the first scheduled task in the list is returned first
-      tasks.sort((t1, t2) => {
-        return t1.timestamp - t2.timestamp
-      })
       const now = new Date()
       const offsetTimeESM = getMilliseconds({ minutes: 10 })
-      let passedAtLeastOnce = false
-      let nextIdx = 0
-      let lookFromTimestamp = now.getTime()
-      let lookToTimestamp = lookFromTimestamp
+      const offsetForward = getMilliseconds({ hours: 12 })
+      let lookFromTimestamp, lookToTimestamp
       for (let i = 0; i < tasks.length; i++) {
         switch (tasks[i].name) {
           case 'ESM':
             // NOTE: For ESM, just look from 10 mins before now
             lookFromTimestamp = new Date().getTime() - offsetTimeESM
-            lookToTimestamp = lookFromTimestamp + getMilliseconds({ hours: 12 })
+            lookToTimestamp = lookFromTimestamp + offsetForward
             break
 
           default:
             // NOTE: Check from midnight for other tasks
             now.setHours(0, 0, 0, 0)
             lookFromTimestamp = now.getTime()
-            lookToTimestamp =
-              tasks[i].timestamp + getMilliseconds({ hours: 12 })
+            lookToTimestamp = tasks[i].timestamp + offsetForward
         }
-
+        // NOTE: Break out of the loop as soon as the next incomplete task is found
         if (
           tasks[i].timestamp >= lookFromTimestamp &&
           tasks[i].timestamp < lookToTimestamp &&
           tasks[i].completed === false
-        ) {
-          passedAtLeastOnce = true
-          nextIdx = i
-          // NOTE: Break out of the loop as soon as the next incomplete task is found
-          break
-        }
-      }
-      if (passedAtLeastOnce) {
-        return tasks[nextIdx]
+        )
+          return tasks[i]
       }
     }
   }
@@ -139,7 +125,9 @@ export class TasksService {
   sendNonReportedTaskCompletion() {
     this.schedule.getNonReportedCompletedTasks().then(nonReportedTasks => {
       for (let i = 0; i < nonReportedTasks.length; i++) {
-        this.kafka.prepareNonReportedTasksKafkaObject(nonReportedTasks[i])
+        this.kafka.prepareNonReportedTasksKafkaObjectAndSend(
+          nonReportedTasks[i]
+        )
         this.updateTaskToReportedCompletion(nonReportedTasks[i])
       }
     })

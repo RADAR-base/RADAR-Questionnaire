@@ -117,7 +117,7 @@
     class="size-static footer"
   >
     <div
-      *ngIf="taskIsNow"
+      *ngIf="taskIsNow && !hasClickedStartButton"
       padding
     >
       <button

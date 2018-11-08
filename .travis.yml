@@ -1,7 +1,7 @@
 env:
   global:
     - JAVA_HOME=/usr/lib/jvm/java-8-oracle
-    - APP_VERSION=57-alpha
+    - APP_VERSION=$TRAVIS_TAG
     - PACKAGE_NAME=org.phidatalab.radar_armt
     - PROJECT_NAME=RADAR-base/RADAR-Questionnaire
   matrix:
@@ -62,7 +62,7 @@ script:
   - npm run lint
   - npm run lint:css
   - if [[ $TRAVIS_BRANCH != $TRAVIS_TAG ]]; then npm run build ; fi
-  - if [[ $TRAVIS_BRANCH == "master" ]]; then cordova prepare;
+  - if [[ $TRAVIS_BRANCH == $TRAVIS_TAG ]]; then cordova prepare;
     cordova plugin ls;
     cordova platform ls;
     ionic cordova platform remove android;

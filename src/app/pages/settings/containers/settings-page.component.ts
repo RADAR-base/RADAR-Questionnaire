@@ -155,7 +155,7 @@ export class SettingsPageComponent {
             .set(StorageKeys.LANGUAGE, lang)
             .then(() =>
               this.translate
-                .reinit()
+                .init()
                 .then(() =>
                   this.reloadConfig().then(() =>
                     this.navCtrl.setRoot(SplashPageComponent)

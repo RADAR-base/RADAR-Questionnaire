@@ -11,19 +11,20 @@ import { StorageKeys } from '../../enums/storage'
   pure: false
 })
 export class TranslatePipe implements PipeTransform {
-  fallBackLang: string = 'en'
-  preferredLang: string = this.fallBackLang
+  fallBackLang = 'en'
+  preferredLang = this.fallBackLang
 
   constructor(private storage: StorageService) {
-    this.storage.get(StorageKeys.LANGUAGE).then(language => {
-      this.preferredLang = language.value
-    })
+    this.init()
   }
 
-  reinit() {
+  init() {
     return this.storage
       .get(StorageKeys.LANGUAGE)
-      .then(language => (this.preferredLang = language.value))
+      .then(
+        language =>
+          (this.preferredLang = language ? language.value : this.fallBackLang)
+      )
   }
 
   transform(value: string): string {

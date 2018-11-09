@@ -134,9 +134,13 @@ export class FinishPageComponent {
     return this.storage
       .set(StorageKeys.SCHEDULE_TASKS_CLINICAL, clinicalTasks)
       .then(() => {
-        return this.notificationService.setNextXNotifications(
-          DefaultNumberOfNotificationsToSchedule
-        )
+        return this.notificationService
+          .cancelNotifications()
+          .then(() =>
+            this.notificationService.setNextXNotifications(
+              DefaultNumberOfNotificationsToSchedule
+            )
+          )
       })
   }
 

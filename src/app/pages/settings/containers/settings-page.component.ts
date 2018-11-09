@@ -279,9 +279,11 @@ export class SettingsPageComponent {
 
   reloadConfig() {
     this.showLoading = true
-    return this.configService.fetchConfigState(true).then(() => {
-      this.loadSettings()
-      this.showLoading = false
-    })
+    return this.notificationService.cancelNotifications().then(() =>
+      this.configService.fetchConfigState(true).then(() => {
+        this.loadSettings()
+        this.showLoading = false
+      })
+    )
   }
 }

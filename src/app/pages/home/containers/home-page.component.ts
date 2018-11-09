@@ -56,6 +56,7 @@ export class HomePageComponent {
   hasOnlyESMs = false
   taskIsNow = false
   elProgressOffset = 16
+  tasks
 
   constructor(
     public navCtrl: NavController,
@@ -83,6 +84,7 @@ export class HomePageComponent {
     this.checkForNextTask()
     this.evalHasClinicalTasks()
     this.checkIfOnlyESM()
+    this.tasks = this.tasksService.getTasksOfToday()
 
     setInterval(() => {
       this.checkForNextTask()

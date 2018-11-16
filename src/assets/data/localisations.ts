@@ -19,7 +19,7 @@ export const Localisations = {
   ENROL_WELCOME_2: {
     da: 'til RADAR-CNS',
     de: 'zu RADAR-CNS',
-    en: 'to RADAR-CNS',
+    en: 'to MigHealth UK',
     es: 'a RADAR-CNS',
     it: 'in RADAR-CNS',
     nl: 'bij RADAR-CNS'
@@ -434,6 +434,14 @@ export const Localisations = {
     da: 'Start',
     de: 'Start',
     en: 'Start',
+    es: 'Inicio',
+    it: 'Start',
+    nl: 'Start'
+  },
+  BTN_JOINSTUDY: {
+    da: 'Start',
+    de: 'Start',
+    en: 'Join Study',
     es: 'Inicio',
     it: 'Start',
     nl: 'Start'

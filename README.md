@@ -21,6 +21,10 @@ In the project folder run `yarn` to install dependencies:
 ```
 $ yarn
 ```
+Create a directory named `www` under the root folder
+```
+$ mkdir www
+```
 
 Cordova provides a simple command to install the plugins and platforms set in `package.json` or `config.xml`.
 ```

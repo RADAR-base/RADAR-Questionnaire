@@ -17,7 +17,7 @@ export class SchedulingService {
   scheduleVersion: number
   configVersion: number
   refTimestamp: number
-  prevSchedule: Task[]
+  completedTasks = []
   upToDate: Promise<Boolean>
   assessments: Promise<Assessment[]>
   tzOffset: number
@@ -165,14 +165,16 @@ export class SchedulingService {
   }
 
   generateSchedule(force: boolean) {
-    const schedule = this.storage.get(StorageKeys.SCHEDULE_TASKS)
+    const completed = this.storage.get(StorageKeys.SCHEDULE_TASKS_COMPLETED)
     const scheduleVProm = this.storage.get(StorageKeys.SCHEDULE_VERSION)
     const configVProm = this.storage.get(StorageKeys.CONFIG_VERSION)
     const refDate = this.storage.get(StorageKeys.REFERENCEDATE)
 
-    return Promise.all([schedule, scheduleVProm, configVProm, refDate]).then(
+    return Promise.all([completed, scheduleVProm, configVProm, refDate]).then(
       data => {
-        this.prevSchedule = data[0]
+        if (data[0] == null)
+          this.storage.set(StorageKeys.SCHEDULE_TASKS_COMPLETED, [])
+        else this.completedTasks = data[0]
         this.scheduleVersion = data[1]
         this.configVersion = data[2]
         this.refTimestamp = data[3]
@@ -213,6 +215,10 @@ export class SchedulingService {
     })
   }
 
+  addToCompletedTasks(task) {
+    this.storage.push(StorageKeys.SCHEDULE_TASKS_COMPLETED, task)
+  }
+
   buildTaskSchedule(assessments) {
     let schedule: Task[] = []
     let scheduleLength = schedule.length
@@ -223,6 +229,11 @@ export class SchedulingService {
       )
       schedule = schedule.concat(tmpSchedule)
       scheduleLength = schedule.length
+    }
+    if (this.completedTasks.length) {
+      this.completedTasks.map(
+        d => (schedule[schedule.findIndex(s => s.timestamp == d.timestamp)] = d)
+      )
     }
     console.log('[√] Updated task schedule.')
     return Promise.resolve(schedule)
@@ -250,15 +261,7 @@ export class SchedulingService {
 
         if (taskDate.getTime() > today.getTime()) {
           const idx = indexOffset + tmpScheduleAll.length
-          const task = this.taskBuilder(
-            idx,
-            assessment,
-            taskDate,
-            this.prevSchedule ? this.prevSchedule[idx].completed : false,
-            this.prevSchedule
-              ? this.prevSchedule[idx].reportedCompletion
-              : false
-          )
+          const task = this.taskBuilder(idx, assessment, taskDate)
           tmpScheduleAll.push(task)
         }
       }
@@ -314,17 +317,11 @@ export class SchedulingService {
     return returnDate
   }
 
-  taskBuilder(
-    index,
-    assessment,
-    taskDate,
-    completed,
-    reportedCompletion
-  ): Task {
+  taskBuilder(index, assessment, taskDate): Task {
     const task: Task = {
       index: index,
-      completed: completed,
-      reportedCompletion: reportedCompletion,
+      completed: false,
+      reportedCompletion: false,
       timestamp: taskDate.getTime(),
       name: assessment.name,
       reminderSettings: assessment.protocol.reminders,

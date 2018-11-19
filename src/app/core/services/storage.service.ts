@@ -102,6 +102,12 @@ export class StorageService {
     return this.storage.set(key.toString(), value)
   }
 
+  push(key: StorageKeys, value: any): Promise<any> {
+    const current = this.global[key.toString()]
+    this.global[key.toString()] = current.push(value)
+    return this.storage.set(key.toString(), current)
+  }
+
   setFetchedConfiguration(config) {
     this.set(StorageKeys.CONFIG_VERSION, config.version)
     this.set(StorageKeys.CONFIG_ASSESSMENTS, config.assessments)

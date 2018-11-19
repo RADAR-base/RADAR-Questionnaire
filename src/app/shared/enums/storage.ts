@@ -15,6 +15,7 @@ export class StorageKeys {
   static SCHEDULE_VERSION = new StorageKeys('SCHEDULE_VERSION')
   static SCHEDULE_TASKS = new StorageKeys('SCHEDULE_TASKS')
   static SCHEDULE_TASKS_CLINICAL = new StorageKeys('SCHEDULE_TASKS_CLINICAL')
+  static SCHEDULE_TASKS_COMPLETED = new StorageKeys('SCHEDULE_TASKS_COMPLETED')
   static SCHEDULE_REPORT = new StorageKeys('SCHEDULE_REPORT')
   static CACHE_ANSWERS = new StorageKeys('CHACHE_ANSWERS')
   static HAS_CLINICAL_TASKS = new StorageKeys('HAS_CLINICAL_TASKS')

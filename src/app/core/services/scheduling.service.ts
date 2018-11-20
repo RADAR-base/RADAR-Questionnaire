@@ -21,6 +21,8 @@ export class SchedulingService {
   upToDate: Promise<Boolean>
   assessments: Promise<Assessment[]>
   tzOffset: number
+  utcOffset: number
+  utcOffsetPrev: number
 
   constructor(public storage: StorageService) {
     const now = new Date()
@@ -173,17 +175,28 @@ export class SchedulingService {
     const scheduleVProm = this.storage.get(StorageKeys.SCHEDULE_VERSION)
     const configVProm = this.storage.get(StorageKeys.CONFIG_VERSION)
     const refDate = this.storage.get(StorageKeys.REFERENCEDATE)
+    const utcOffset = this.storage.get(StorageKeys.UTC_OFFSET)
+    const utcOffsetPrev = this.storage.get(StorageKeys.UTC_OFFSET_PREV)
 
     return Promise.all([
       completedTasks,
       scheduleVProm,
       configVProm,
-      refDate
+      refDate,
+      utcOffset,
+      utcOffsetPrev
     ]).then(data => {
       this.completedTasks = data[0] ? data[0] : []
       this.scheduleVersion = data[1]
       this.configVersion = data[2]
       this.refTimestamp = data[3]
+      if (data[5]) {
+        console.log(data[5])
+        this.utcOffset = data[4]
+        this.utcOffsetPrev = data[5]
+        this.storage.remove(StorageKeys.UTC_OFFSET_PREV)
+        console.log(this.utcOffset)
+      }
       if (data[1] !== data[2] || force) {
         console.log('Changed protocol version detected. Updating schedule..')
         return this.runScheduler()
@@ -236,14 +249,39 @@ export class SchedulingService {
       scheduleLength = schedule.length
     }
     // NOTE: Check for completed tasks
-    this.completedTasks.map(
-      d =>
-        (schedule[
+    console.log(this.utcOffsetPrev)
+    if (this.utcOffsetPrev) {
+      this.completedTasks.map(d => {
+        console.log(d.timestamp)
+        const currentmidnight = new Date().setHours(0, 0, 0, 0)
+        const midnight = currentmidnight + this.utcOffsetPrev * 60000
+        console.log('midnight ' + midnight)
+        const hoursfrommid = d.timestamp - midnight
+
+        const utc = d.timestamp + this.utcOffsetPrev * 60000
+        const nd = utc + this.utcOffset * 60000
+        d.timestamp = nd
+        console.log(nd)
+        return (schedule[
           schedule.findIndex(
-            s => s.timestamp == d.timestamp && s.name == d.name && !s.isClinical
+            s =>
+              s.timestamp - currentmidnight == hoursfrommid &&
+              s.name == d.name &&
+              !s.isClinical
           )
         ] = d)
-    )
+      })
+    } else {
+      this.completedTasks.map(
+        d =>
+          (schedule[
+            schedule.findIndex(
+              s =>
+                s.timestamp == d.timestamp && s.name == d.name && !s.isClinical
+            )
+          ] = d)
+      )
+    }
     console.log('[√] Updated task schedule.')
     return Promise.resolve(schedule)
   }

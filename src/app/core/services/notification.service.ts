@@ -164,7 +164,7 @@ export class NotificationService {
     this.sendFCMNotification(fcmNotification)
   }
 
-  formatLocalNotification(task, isLastScheduledNotification, isLastOfDay) {
+  formatNotificationMessage(task) {
     let text = this.translate.transform(
       LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1.toString()
     )
@@ -172,6 +172,11 @@ export class NotificationService {
     text += this.translate.transform(
       LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2.toString()
     )
+    return text
+  }
+
+  formatLocalNotification(task, isLastScheduledNotification, isLastOfDay) {
+    const text = this.formatNotificationMessage(task)
     const notification = {
       id: task.index,
       title: this.translate.transform(
@@ -192,13 +197,7 @@ export class NotificationService {
   }
 
   formatFCMNotification(task, participantLogin) {
-    let text = this.translate.transform(
-      LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1.toString()
-    )
-    text += ' ' + task.estimatedCompletionTime + ' '
-    text += this.translate.transform(
-      LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2.toString()
-    )
+    const text = this.formatNotificationMessage(task)
     const expiry = task.name === 'ESM' ? 15 * 60 : 24 * 60 * 60
     const fcmNotification = {
       eventId: uuid(),

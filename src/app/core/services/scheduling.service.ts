@@ -103,6 +103,10 @@ export class SchedulingService {
     return this.storage.get(StorageKeys.SCHEDULE_TASKS_CLINICAL)
   }
 
+  getCompletedTasks() {
+    return this.storage.get(StorageKeys.SCHEDULE_TASKS_COMPLETED)
+  }
+
   getNonReportedCompletedTasks() {
     const defaultTasks = this.getDefaultTasks()
     const clinicalTasks = this.getClinicalTasks()
@@ -165,25 +169,26 @@ export class SchedulingService {
   }
 
   generateSchedule(force: boolean) {
-    const completed = this.storage.get(StorageKeys.SCHEDULE_TASKS_COMPLETED)
+    const completedTasks = this.getCompletedTasks()
     const scheduleVProm = this.storage.get(StorageKeys.SCHEDULE_VERSION)
     const configVProm = this.storage.get(StorageKeys.CONFIG_VERSION)
     const refDate = this.storage.get(StorageKeys.REFERENCEDATE)
 
-    return Promise.all([completed, scheduleVProm, configVProm, refDate]).then(
-      data => {
-        if (data[0] == null)
-          this.storage.set(StorageKeys.SCHEDULE_TASKS_COMPLETED, [])
-        else this.completedTasks = data[0]
-        this.scheduleVersion = data[1]
-        this.configVersion = data[2]
-        this.refTimestamp = data[3]
-        if (data[1] !== data[2] || force) {
-          console.log('Changed protocol version detected. Updating schedule..')
-          return this.runScheduler()
-        }
+    return Promise.all([
+      completedTasks,
+      scheduleVProm,
+      configVProm,
+      refDate
+    ]).then(data => {
+      this.completedTasks = data[0] ? data[0] : []
+      this.scheduleVersion = data[1]
+      this.configVersion = data[2]
+      this.refTimestamp = data[3]
+      if (data[1] !== data[2] || force) {
+        console.log('Changed protocol version detected. Updating schedule..')
+        return this.runScheduler()
       }
-    )
+    })
   }
 
   runScheduler() {
@@ -230,11 +235,15 @@ export class SchedulingService {
       schedule = schedule.concat(tmpSchedule)
       scheduleLength = schedule.length
     }
-    if (this.completedTasks.length) {
-      this.completedTasks.map(
-        d => (schedule[schedule.findIndex(s => s.timestamp == d.timestamp)] = d)
-      )
-    }
+    // NOTE: Check for completed tasks
+    this.completedTasks.map(
+      d =>
+        (schedule[
+          schedule.findIndex(
+            s => s.timestamp == d.timestamp && s.name == d.name && !s.isClinical
+          )
+        ] = d)
+    )
     console.log('[√] Updated task schedule.')
     return Promise.resolve(schedule)
   }

@@ -38,6 +38,21 @@ export const Localisations = {
     nl:
       'Bedankt voor uw deelname aan dit onderzoek. Laten we starten met het registratie-proces.'
   },
+  ENROL_ABOUT_HEADING: {
+    da: 'Velkommen',
+    de: 'Herzlich willkommen',
+    en: 'About this study',
+    es: 'Bienvenido',
+    it: 'Benvenuto',
+    nl: 'Welkom'
+  },
+  ENROL_HOW_STUDY_WORKS_HEADING: {
+    en: 'How this study works',
+  },
+
+  ENROL_ELIGIBILITY_HEADING: {
+    en: "Eligibility"
+  },
   ENROL_REGISTRATION: {
     da: 'Registrering',
     de: 'Registrierung',

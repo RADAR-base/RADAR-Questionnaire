@@ -130,7 +130,7 @@ export const Localisations = {
     da: 'Husk, du har stadig udestående opgaver!',
     de: 'Denken Sie daran, Sie haben noch Aufgaben ausstehend!',
     en: 'Remember, you still have tasks outstanding!',
-    es: 'Recuerda, todavía tiene tareas pendientes!',
+    es: 'Recuerde, todavía tiene tareas pendientes!',
     it: 'Ricorda, hai ancora compiti eccezionali!',
     nl: 'Denk eraan, je hebt nog steeds taken openstaan!'
   },
@@ -138,7 +138,7 @@ export const Localisations = {
     da: 'Afsluttet i klinik?',
     de: 'In der Klinik abgeschlossen?',
     en: 'Completed in clinic?',
-    es: 'Completado en la visita clínica',
+    es: 'Completado durante la visita clínica',
     it: 'Completato in clinica?',
     nl: 'Voltooid in de kliniek?'
   },
@@ -146,7 +146,7 @@ export const Localisations = {
     da: 'Blokeret',
     de: 'Nich erlaubt',
     en: 'Blocked',
-    es: 'Obstruido',
+    es: 'Bloqueado',
     it: 'Bloccato',
     nl: 'Geblokkeerd'
   },
@@ -306,7 +306,7 @@ export const Localisations = {
     da: 'Nulstil RADAR-CNS App',
     de: 'RADAR-CNS App zurücksetzen',
     en: 'Reset RADAR-CNS App',
-    es: 'Restablecer la aplicación RADAR-CNS',
+    es: 'Reiniciar, la aplicación RADAR-CNS',
     it: 'Reset RADAR-CNS app',
     nl: 'Reset RADAR-CNS app'
   },

@@ -56,6 +56,7 @@ export class HomePageComponent {
   hasOnlyESMs = false
   taskIsNow = false
   elProgressOffset = 16
+  tasks
 
   constructor(
     public navCtrl: NavController,
@@ -83,6 +84,7 @@ export class HomePageComponent {
     this.checkForNextTask()
     this.evalHasClinicalTasks()
     this.checkIfOnlyESM()
+    this.tasks = this.tasksService.getTasksOfToday()
 
     setInterval(() => {
       this.checkForNextTask()
@@ -260,12 +262,13 @@ export class HomePageComponent {
   }
 
   startQuestionnaire(task: Task) {
-    this.hasClickedStartButton = true
     let startQuestionnaireTask = this.nextTask
     if (task) {
       if (task.completed === false) {
         startQuestionnaireTask = task
       }
+    } else {
+      this.hasClickedStartButton = true
     }
     const lang = this.storage.get(StorageKeys.LANGUAGE)
     const nextAssessment = this.tasksService.getAssessment(

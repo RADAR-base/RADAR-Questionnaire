@@ -303,9 +303,7 @@ export class EnrolmentPageComponent {
           }
           this.storage.set(StorageKeys.LANGUAGE, lang).then(() => {
             this.language = lang
-            this.translate
-              .reinit()
-              .then(() => this.navCtrl.setRoot(AppComponent))
+            this.translate.init().then(() => this.navCtrl.setRoot(AppComponent))
           })
         }
       }

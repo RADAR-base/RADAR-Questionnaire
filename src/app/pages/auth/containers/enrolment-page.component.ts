@@ -154,7 +154,7 @@ export class EnrolmentPageComponent {
         this.authService.updateURI().then(() => {
           console.log('BASE URI : ' + this.storage.get(StorageKeys.BASE_URI))
           const auth = JSON.parse(authObj)
-          refreshToken = auth.refreshToken
+          refreshToken = auth['refreshToken']
           resolve(refreshToken)
         })
       }
@@ -176,21 +176,18 @@ export class EnrolmentPageComponent {
         }
         this.authService
           .registerToken(refreshToken)
-          .then(() => {
-            this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
-              this.authService
-                .registerAsSource()
-                .then(() => {
-                  this.retrieveSubjectInformation()
-                })
-                .catch(error => {
-                  const modifiedError = error
-                  this.retrieveSubjectInformation()
-                  modifiedError.statusText = 'Re-registered an existing source '
-                  this.displayErrorMessage(modifiedError)
-                })
-            })
-          })
+          .then(() =>
+            this.authService
+              .registerAsSource()
+              .then(() => this.authService.registerToken(refreshToken))
+              .then(() => this.retrieveSubjectInformation())
+              .catch(error => {
+                const modifiedError = error
+                this.retrieveSubjectInformation()
+                modifiedError.statusText = 'Re-registered an existing source '
+                this.displayErrorMessage(modifiedError)
+              })
+          )
           .catch(error => {
             this.displayErrorMessage(error)
           })

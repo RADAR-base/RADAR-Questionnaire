@@ -87,60 +87,63 @@ export class NotificationService {
     return this.storage
       .get(StorageKeys.PARTICIPANTLOGIN)
       .then(participantLogin => {
-        const now = new Date().getTime()
-        const localNotifications = []
-        const fcmNotifications = []
-        for (let i = 0; i < tasks.length; i++) {
-          if (tasks[i].timestamp > now) {
-            const j = i + 1 < tasks.length ? i + 1 : i
-            const isLastScheduledNotification =
-              i + 1 === tasks.length ? true : false
-            const isLastOfDay = this.evalIsLastOfDay(tasks[i], tasks[j])
-            const localNotification = this.formatLocalNotification(
-              tasks[i],
-              isLastScheduledNotification,
-              isLastOfDay
-            )
-            const fcmNotification = this.formatFCMNotification(
-              tasks[i],
-              participantLogin
-            )
-            localNotifications.push(localNotification)
-            fcmNotifications.push(fcmNotification)
-          }
-        }
-        if (DefaultNotificationType === 'LOCAL') {
-          console.log('NOTIFICATIONS Scheduling LOCAL notifications')
-          ;(<any>cordova).plugins.notification.local.on('click', notification =>
-            this.evalTaskTiming(notification.data)
-          )
-          ;(<any>cordova).plugins.notification.local.on(
-            'trigger',
-            notification => this.evalLastTask(notification.data)
-          )
-          return (<any>cordova).plugins.notification.local.schedule(
-            localNotifications[0],
-            () => {
-              return Promise.resolve({})
+        if (participantLogin) {
+          const now = new Date().getTime()
+          const localNotifications = []
+          const fcmNotifications = []
+          for (let i = 0; i < tasks.length; i++) {
+            if (tasks[i].timestamp > now) {
+              const j = i + 1 < tasks.length ? i + 1 : i
+              const isLastScheduledNotification =
+                i + 1 === tasks.length ? true : false
+              const isLastOfDay = this.evalIsLastOfDay(tasks[i], tasks[j])
+              const localNotification = this.formatLocalNotification(
+                tasks[i],
+                isLastScheduledNotification,
+                isLastOfDay
+              )
+              const fcmNotification = this.formatFCMNotification(
+                tasks[i],
+                participantLogin
+              )
+              localNotifications.push(localNotification)
+              fcmNotifications.push(fcmNotification)
             }
-          )
-        }
-        if (DefaultNotificationType === 'FCM') {
-          console.log('NOTIFICATIONS Scheduling FCM notifications')
-          console.log(fcmNotifications)
-          for (let i = 0; i < fcmNotifications.length; i++) {
-            FCMPlugin.upstream(
-              fcmNotifications[i],
-              function(succ) {
-                console.log(succ)
-              },
-              function(err) {
-                console.log(err)
+          }
+          if (DefaultNotificationType === 'LOCAL') {
+            console.log('NOTIFICATIONS Scheduling LOCAL notifications')
+            ;(<any>cordova).plugins.notification.local.on(
+              'click',
+              notification => this.evalTaskTiming(notification.data)
+            )
+            ;(<any>cordova).plugins.notification.local.on(
+              'trigger',
+              notification => this.evalLastTask(notification.data)
+            )
+            return (<any>cordova).plugins.notification.local.schedule(
+              localNotifications[0],
+              () => {
+                return Promise.resolve({})
               }
             )
           }
+          if (DefaultNotificationType === 'FCM') {
+            console.log('NOTIFICATIONS Scheduling FCM notifications')
+            console.log(fcmNotifications)
+            for (let i = 0; i < fcmNotifications.length; i++) {
+              FCMPlugin.upstream(
+                fcmNotifications[i],
+                function(succ) {
+                  console.log(succ)
+                },
+                function(err) {
+                  console.log(err)
+                }
+              )
+            }
+          }
+          this.storage.set(StorageKeys.LAST_NOTIFICATION_UPDATE, Date.now())
         }
-        this.storage.set(StorageKeys.LAST_NOTIFICATION_UPDATE, Date.now())
       })
   }
 
@@ -346,8 +349,9 @@ export class NotificationService {
   cancelNotifications() {
     return this.storage
       .get(StorageKeys.PARTICIPANTLOGIN)
-      .then(participantLogin => {
-        return this.cancelNotificationPush(participantLogin)
-      })
+      .then(
+        participantLogin =>
+          participantLogin && this.cancelNotificationPush(participantLogin)
+      )
   }
 }

@@ -98,7 +98,7 @@ export const Localisations = {
   },
   ENROL_PREFERENCES_DESC: {
     da:
-      'Vi sender dig en ugenlig opsummering om de data du har sendt til os.  Vælg lige så mange emner du ønsker at modtage information om.',
+      'Vi sender dig en ugentlig opsummering om de data du har sendt til os. Vælg lige så mange emner du ønsker at modtage information om.',
     de:
       'Wir senden Ihnen wöchentliche Zusammenfassungen über die Daten, die Sie uns senden. Wählen Sie beliebig viele Themen aus, zu denen Sie Informationen erhalten möchten.',
     en:
@@ -151,7 +151,7 @@ export const Localisations = {
     nl: 'Geblokkeerd'
   },
   CALENDAR_ESM_MISSED_DESC: {
-    da: 'Desværre kan du kun besvare dette spørgeskema ved den anmeldte tid.',
+    da: 'Spørgsmålet kan ikke besvares længere.',
     de:
       'Leider können Sie diesen Fragebogen nur zum angegebenen Zeitpunkt beantworten.',
     en:
@@ -196,7 +196,7 @@ export const Localisations = {
     nl: 'Project naam'
   },
   SETTINGS_USER_INFO: {
-    da: 'Bruger info',
+    da: 'Bruger information',
     de: 'Benutzerinformationen',
     en: 'User Info',
     es: 'Información para el usuario',
@@ -559,7 +559,7 @@ export const Localisations = {
     nl: 'Laden...'
   },
   STATUS_SUCCESS: {
-    da: 'Success',
+    da: 'Succes',
     de: 'Erfolg',
     en: 'Success',
     es: 'Completado',
@@ -595,7 +595,7 @@ export const Localisations = {
       'Vergeet u s.v.p. niet om de RADAR-CNS vragenlijst uiterlijk morgen in te vullen?'
   },
   NOTIFICATION_REMINDER_SOON_DESC: {
-    da: 'Husk at sætte lidt tid af imorgen, til at svare på et par spørgsmål.',
+    da: 'Husk at sætte lidt tid af i morgen, til at svare på et par spørgsmål.',
     de: 'Denken Sie daran, morgen etwas Zeit für ein paar Fragebögen zu haben.',
     en: 'Remember to put some time aside for a few questionnaires tomorrow.',
     es:
@@ -653,7 +653,7 @@ export const Localisations = {
   },
   NOTIFICATION_REMINDER_FORGOTTEN_ALERT_DEFAULT_DESC: {
     da:
-      'Du har savnet dette. Du skal ikke bekymre dig! Den næste forespørgsel vil snart ske.',
+      'Du har ikke nået at svare på dette. Ingen problemer! De næste spørgsmål kommer snart',
     de:
       'Du hast die letzten Fragen verpasst. Mach dir keine Sorgen! Der nächste Fragebogen wird bald fällig.',
     en:
@@ -666,7 +666,8 @@ export const Localisations = {
       'Je hebt deze gemist. Maak je geen zorgen! De volgende vragenlijst zal binnenkort verschijnen.'
   },
   NOTIFICATION_REMINDER_FORGOTTEN_ALERT_LASTOFNIGHT_DESC: {
-    da: 'Du har savnet den sidste. Du skal ikke bekymre dig! Hav en god aften.',
+    da:
+      'Du har ikke nået at svare på sidste spørgsmål. Ingen problemer! Hav en god aften.',
     de: 'Du hast den letzten verpasst. Mach dir keine Sorgen! Gute Nacht.',
     en: "You've missed the last one. Dont worry! Have a good night.",
     es: 'No ha llegado a contestar el último. No se preocupe! Buenas noches!',
@@ -690,7 +691,7 @@ export const Localisations = {
     nl: 'Stappen'
   },
   MEASURE_HEART_RATE: {
-    da: 'Hjertetryme',
+    da: 'Hjerterytme',
     de: 'Puls',
     en: 'Heart rate',
     es: 'Ritmo cardíaco',
@@ -840,7 +841,7 @@ export const Localisations = {
     nl: 'uren'
   },
   TASK_TIME_MINUTE_SINGLE: {
-    da: 'minuten',
+    da: 'minut',
     de: 'Min.',
     en: 'min',
     es: 'minuto',

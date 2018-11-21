@@ -126,6 +126,8 @@ import { TasksService } from '../../services/tasks.service'
 export class TaskInfoComponent implements OnChanges {
   @Input()
   task: Task
+  @Input()
+  isNow = false
   @Output()
   collapse: EventEmitter<Boolean> = new EventEmitter()
   expanded: Boolean = true
@@ -135,7 +137,7 @@ export class TaskInfoComponent implements OnChanges {
   animateMove: String
   animateScale: String
   animateCenterRight: String
-  isNow: boolean = false
+
   private language: string
   private extraTaskInfo: string
 
@@ -159,10 +161,6 @@ export class TaskInfoComponent implements OnChanges {
     public storage: StorageService
   ) {
     this.applyAnimationKeys()
-    setInterval(() => {
-      this.isNow = checkTaskIsNow(this.task.timestamp)
-    }, 1000)
-
     this.storage.get(StorageKeys.LANGUAGE).then(resLang => {
       this.language = resLang.value
     })

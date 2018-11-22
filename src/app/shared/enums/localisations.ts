@@ -112,6 +112,11 @@ export class LocKeys {
   static TASK_TIME_HOUR_MULTIPLE = new LocKeys('TASK_TIME_HOUR_MULTIPLE')
   static TASK_TIME_MINUTE_SINGLE = new LocKeys('TASK_TIME_MINUTE_SINGLE')
   static TASK_TIME_MINUTE_MULTIPLE = new LocKeys('TASK_TIME_MINUTE_MULTIPLE')
+  static TESTING_NOTIFICATIONS = new LocKeys('TESTING_NOTIFICATIONS')
+  static TESTING_NOTIFICATIONS_MESSAGE = new LocKeys(
+    'TESTING_NOTIFICATIONS_MESSAGE'
+  )
+  static CLOSE_APP = new LocKeys('CLOSE_APP')
 
   constructor(public value: string) {}
 

@@ -8,6 +8,7 @@ import {
   DefaultNotificationType,
   DefaultNumberOfNotificationsToRescue,
   DefaultNumberOfNotificationsToSchedule,
+  DefaultTask,
   FCMPluginProjectSenderId
 } from '../../../assets/data/defaultConfig'
 import { LocKeys } from '../../shared/enums/localisations'
@@ -22,6 +23,8 @@ declare var FCMPlugin
 
 @Injectable()
 export class NotificationService {
+  participantLogin
+
   constructor(
     private translate: TranslatePipe,
     private alertCtrl: AlertController,
@@ -88,6 +91,7 @@ export class NotificationService {
       .get(StorageKeys.PARTICIPANTLOGIN)
       .then(participantLogin => {
         if (participantLogin) {
+          this.participantLogin = participantLogin
           const now = new Date().getTime()
           const localNotifications = []
           const fcmNotifications = []
@@ -131,20 +135,36 @@ export class NotificationService {
             console.log('NOTIFICATIONS Scheduling FCM notifications')
             console.log(fcmNotifications)
             for (let i = 0; i < fcmNotifications.length; i++) {
-              FCMPlugin.upstream(
-                fcmNotifications[i],
-                function(succ) {
-                  console.log(succ)
-                },
-                function(err) {
-                  console.log(err)
-                }
-              )
+              this.sendFCMNotification(fcmNotifications[i])
             }
           }
           this.storage.set(StorageKeys.LAST_NOTIFICATION_UPDATE, Date.now())
         }
       })
+  }
+
+  sendFCMNotification(notification) {
+    FCMPlugin.upstream(
+      notification,
+      function(succ) {
+        console.log(succ)
+      },
+      function(err) {
+        console.log(err)
+      }
+    )
+  }
+
+  testFCMNotifications() {
+    const TWO_MINUTES = 2 * 60000
+    const task = DefaultTask
+    task.timestamp = new Date().getTime() + TWO_MINUTES
+    const fcmNotification = this.formatFCMNotification(
+      task,
+      this.participantLogin
+    )
+
+    this.sendFCMNotification(fcmNotification)
   }
 
   formatLocalNotification(task, isLastScheduledNotification, isLastOfDay) {

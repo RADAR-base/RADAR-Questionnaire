@@ -84,11 +84,7 @@ export class EnrolmentPageComponent {
 
   ionViewDidLoad() {
     this.slides.lockSwipes(true)
-    this.storage.get(StorageKeys.LANGUAGE).then(lang => {
-      if (lang != null) {
-        this.language = lang
-      }
-    })
+    this.translate.init()
   }
 
   ionViewDidEnter() {}

@@ -75,22 +75,8 @@ export class ConfigService {
                     )
                   })
               })
-              .then(() => {
-                return this.notificationService
-                  .cancelNotifications()
-                  .then(() => {
-                    // NOTE: Set notification here too so scheduled everytime the schedule changes too.
-                    return this.notificationService
-                      .setNextXNotifications(
-                        DefaultNumberOfNotificationsToSchedule
-                      )
-                      .then(() =>
-                        console.log(
-                          'NOTIFICATIONS scheduled after config change'
-                        )
-                      )
-                  })
-              })
+              .then(() => this.schedule.generateSchedule(true))
+              .then(() => this.rescheduleNotifications())
           } else {
             console.log(
               'NO CONFIG UPDATE. Version of protocol.json has not changed.'
@@ -100,6 +86,27 @@ export class ConfigService {
         })
         .catch(e => console.log(e))
     })
+  }
+
+  rescheduleNotifications() {
+    return this.notificationService.cancelNotifications().then(() => {
+      // NOTE: Set notification here too so scheduled everytime the schedule changes too.
+      return this.notificationService
+        .setNextXNotifications(DefaultNumberOfNotificationsToSchedule)
+        .then(() => console.log('NOTIFICATIONS scheduled after config change'))
+    })
+  }
+
+  updateConfigStateLang() {
+    return this.pullQuestionnaires(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS)
+      .then(() => this.pullQuestionnaires(StorageKeys.CONFIG_ASSESSMENTS))
+      .then(() => this.rescheduleNotifications())
+  }
+
+  updateConfigStateTimezone() {
+    return this.schedule
+      .generateSchedule(true)
+      .then(() => this.rescheduleNotifications())
   }
 
   pullProtocol() {
@@ -162,9 +169,7 @@ export class ConfigService {
         for (let i = 0; i < assessmentsResult.length; i++) {
           assessmentUpdate[i]['questions'] = this.formatQuestionsHeaders(res[i])
         }
-        return this.storage.set(storageKey, assessmentUpdate).then(() => {
-          return this.schedule.generateSchedule(true)
-        })
+        return this.storage.set(storageKey, assessmentUpdate)
       })
     })
   }

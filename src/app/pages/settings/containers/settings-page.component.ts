@@ -151,17 +151,14 @@ export class SettingsPageComponent {
             value: selectedLanguageVal
           }
           this.language = lang
-          this.storage
-            .set(StorageKeys.LANGUAGE, lang)
-            .then(() =>
-              this.translate
-                .init()
-                .then(() =>
-                  this.reloadConfig().then(() =>
-                    this.navCtrl.setRoot(SplashPageComponent)
-                  )
-                )
-            )
+          this.storage.set(StorageKeys.LANGUAGE, lang).then(() =>
+            this.translate.init().then(() => {
+              this.showLoading = true
+              return this.configService
+                .updateConfigStateLang()
+                .then(() => this.navCtrl.setRoot(SplashPageComponent))
+            })
+          )
         }
       }
     ]
@@ -279,11 +276,9 @@ export class SettingsPageComponent {
 
   reloadConfig() {
     this.showLoading = true
-    return this.notificationService.cancelNotifications().then(() =>
-      this.configService.fetchConfigState(true).then(() => {
-        this.loadSettings()
-        this.showLoading = false
-      })
-    )
+    return this.configService.fetchConfigState(true).then(() => {
+      this.loadSettings()
+      this.showLoading = false
+    })
   }
 }

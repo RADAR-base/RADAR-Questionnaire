@@ -1,5 +1,5 @@
-<ion-content>
-  <ion-slides pager>
+<ion-content >
+  <ion-slides pager direction="horizontal" >
 
     <ion-slide id="intro">
       <div id="logo-container">
@@ -32,15 +32,15 @@
         padding
         class="bottom"
       >
-        <button
-          ion-button
-          class="bt bt--full"
-          round
-          full
-          (click)="next()"
-        >
-          {{ "BTN_NEXT" | translate }}
-        </button>
+        <!--<button-->
+          <!--ion-button-->
+          <!--class="bt bt&#45;&#45;full"-->
+          <!--round-->
+          <!--full-->
+          <!--(click)="next()"-->
+        <!--&gt;-->
+          <!--{{ "BTN_NEXT" | translate }}-->
+        <!--</button>-->
       </div>
     </ion-slide>
 
@@ -78,15 +78,15 @@
         padding
         class="bottom"
       >
-        <button
-          ion-button
-          class="bt bt--full"
-          round
-          full
-          (click)="next()"
-        >
-          {{ "BTN_NEXT" | translate }}
-        </button>
+        <!--<button-->
+          <!--ion-button-->
+          <!--class="bt bt&#45;&#45;full"-->
+          <!--round-->
+          <!--full-->
+          <!--(click)="next()"-->
+        <!--&gt;-->
+          <!--{{ "BTN_NEXT" | translate }}-->
+        <!--</button>-->
       </div>
 
     </ion-slide>
@@ -176,6 +176,35 @@
         </button>
       </div>
 
+    </ion-slide>
+
+    <ion-slide id="to-keycloak">
+      <div id="logo-container">
+        <img
+                id="logo"
+                src="assets/imgs/ucl-logo-text.png"
+                alias="RADAR LOGO"
+        >
+      </div>
+      <div class="text">
+        <div class="text-lg">{{ "ENROL_WELCOME_1" | translate }}</div>
+        {{ "ENROL_WELCOME_2" | translate }}
+        <div class="padding text-justify extra-padding">{{ "ENROL_WELCOME_DESC" | translate }}</div>
+      </div>
+      <div
+              padding
+              class="bottom"
+      >
+        <button
+                ion-button
+                class="bt bt--full"
+                round
+                full
+                (click)="goToRegistration()"
+        >
+          Register
+        </button>
+      </div>
     </ion-slide>
 
     <ion-slide id="intro">

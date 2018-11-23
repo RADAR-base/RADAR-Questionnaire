@@ -1,3 +1,4 @@
+// tslint:disable:no-eval
 import { Component, ElementRef, ViewChild } from '@angular/core'
 import {
   App,
@@ -211,19 +212,27 @@ export class QuestionsPageComponent {
   evalSkipNext() {
     let increment = 1
     let questionIdx = this.currentQuestion + 1
+    const questionFieldName = this.questions[this.currentQuestion].field_name
+    let answerLength = this.answerService.answers[questionFieldName].length
+
     if (questionIdx < this.questions.length) {
       while (this.questions[questionIdx].evaluated_logic !== '') {
         const logic = this.questions[questionIdx].evaluated_logic
         const responses = this.answerService.answers
-        // tslint:disable-next-line:no-eval
-        if (eval(logic) === false) {
-          increment += 1
-          questionIdx += 1
+        if (answerLength) {
+          while (answerLength > 0) {
+            responses[questionFieldName] = this.answerService.answers[
+              questionFieldName
+            ][answerLength - 1]
+            if (eval(logic) === true) return increment
+            answerLength--
+          }
         } else {
-          return increment
+          if (eval(logic) === true) return increment
         }
+        increment += 1
+        questionIdx += 1
       }
-      return increment
     }
     return increment
   }

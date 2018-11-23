@@ -65,11 +65,9 @@ export class SplashPageComponent {
                   )
                   this.storage.set(StorageKeys.TIME_ZONE, res.timezone)
                   this.storage.set(StorageKeys.UTC_OFFSET, res.utc_offset)
-                  return this.notificationService
-                    .cancelNotifications()
-                    .then(() => {
-                      return this.configService.fetchConfigState(true)
-                    })
+                  return timeZone
+                    ? this.configService.updateConfigStateTimezone()
+                    : this.configService.fetchConfigState(true)
                 } else {
                   console.log('[SPLASH] Current Timezone is ' + timeZone)
                 }
@@ -86,7 +84,7 @@ export class SplashPageComponent {
                   !lastUpdate
                 ) {
                   console.log('[SPLASH] Scheduling Notifications.')
-                  this.notificationService.setNextXNotifications(
+                  return this.notificationService.setNextXNotifications(
                     DefaultNumberOfNotificationsToSchedule
                   )
                 } else {

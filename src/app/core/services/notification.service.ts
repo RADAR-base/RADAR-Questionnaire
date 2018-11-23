@@ -8,6 +8,7 @@ import {
   DefaultNotificationType,
   DefaultNumberOfNotificationsToRescue,
   DefaultNumberOfNotificationsToSchedule,
+  DefaultTask,
   FCMPluginProjectSenderId
 } from '../../../assets/data/defaultConfig'
 import { LocKeys } from '../../shared/enums/localisations'
@@ -22,6 +23,8 @@ declare var FCMPlugin
 
 @Injectable()
 export class NotificationService {
+  participantLogin
+
   constructor(
     private translate: TranslatePipe,
     private alertCtrl: AlertController,
@@ -88,6 +91,7 @@ export class NotificationService {
       .get(StorageKeys.PARTICIPANTLOGIN)
       .then(participantLogin => {
         if (participantLogin) {
+          this.participantLogin = participantLogin
           const now = new Date().getTime()
           const localNotifications = []
           const fcmNotifications = []
@@ -131,15 +135,7 @@ export class NotificationService {
             console.log('NOTIFICATIONS Scheduling FCM notifications')
             console.log(fcmNotifications)
             for (let i = 0; i < fcmNotifications.length; i++) {
-              FCMPlugin.upstream(
-                fcmNotifications[i],
-                function(succ) {
-                  console.log(succ)
-                },
-                function(err) {
-                  console.log(err)
-                }
-              )
+              this.sendFCMNotification(fcmNotifications[i])
             }
           }
           this.storage.set(StorageKeys.LAST_NOTIFICATION_UPDATE, Date.now())
@@ -147,7 +143,31 @@ export class NotificationService {
       })
   }
 
-  formatLocalNotification(task, isLastScheduledNotification, isLastOfDay) {
+  sendFCMNotification(notification) {
+    FCMPlugin.upstream(
+      notification,
+      function(succ) {
+        console.log(succ)
+      },
+      function(err) {
+        console.log(err)
+      }
+    )
+  }
+
+  testFCMNotifications() {
+    const TWO_MINUTES = 2 * 60000
+    const task = DefaultTask
+    task.timestamp = new Date().getTime() + TWO_MINUTES
+    const fcmNotification = this.formatFCMNotification(
+      task,
+      this.participantLogin
+    )
+
+    this.sendFCMNotification(fcmNotification)
+  }
+
+  formatNotificationMessage(task) {
     let text = this.translate.transform(
       LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1.toString()
     )
@@ -155,6 +175,11 @@ export class NotificationService {
     text += this.translate.transform(
       LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2.toString()
     )
+    return text
+  }
+
+  formatLocalNotification(task, isLastScheduledNotification, isLastOfDay) {
+    const text = this.formatNotificationMessage(task)
     const notification = {
       id: task.index,
       title: this.translate.transform(
@@ -175,13 +200,7 @@ export class NotificationService {
   }
 
   formatFCMNotification(task, participantLogin) {
-    let text = this.translate.transform(
-      LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1.toString()
-    )
-    text += ' ' + task.estimatedCompletionTime + ' '
-    text += this.translate.transform(
-      LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2.toString()
-    )
+    const text = this.formatNotificationMessage(task)
     const expiry = task.name === 'ESM' ? 15 * 60 : 24 * 60 * 60
     const fcmNotification = {
       eventId: uuid(),

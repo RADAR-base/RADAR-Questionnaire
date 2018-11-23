@@ -1,6 +1,11 @@
 import { Component } from '@angular/core'
 import { AppVersion } from '@ionic-native/app-version'
-import { AlertController, NavController, NavParams } from 'ionic-angular'
+import {
+  AlertController,
+  NavController,
+  NavParams,
+  Platform
+} from 'ionic-angular'
 
 import {
   DefaultNumberOfNotificationsToSchedule,
@@ -50,7 +55,8 @@ export class SettingsPageComponent {
     private schedule: SchedulingService,
     private configService: ConfigService,
     private notificationService: NotificationService,
-    public translate: TranslatePipe
+    public translate: TranslatePipe,
+    private platform: Platform
   ) {}
 
   ionViewDidLoad() {
@@ -199,6 +205,29 @@ export class SettingsPageComponent {
 
   consoleLogNotifications() {
     this.notificationService.consoleLogScheduledNotifications()
+  }
+
+  testNotifications() {
+    const buttons = [
+      {
+        text: this.translate.transform(LocKeys.BTN_CANCEL.toString()),
+        handler: () => {}
+      },
+      {
+        text: this.translate.transform(LocKeys.CLOSE_APP.toString()),
+        handler: () => {
+          this.notificationService.testFCMNotifications()
+          this.platform.exitApp()
+        }
+      }
+    ]
+    this.showAlert({
+      title: this.translate.transform(LocKeys.TESTING_NOTIFICATIONS.toString()),
+      message: this.translate.transform(
+        LocKeys.TESTING_NOTIFICATIONS_MESSAGE.toString()
+      ),
+      buttons: buttons
+    })
   }
 
   consoleLogSchedule() {

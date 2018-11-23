@@ -8,6 +8,7 @@ import {
   DefaultNotificationType,
   DefaultNumberOfNotificationsToRescue,
   DefaultNumberOfNotificationsToSchedule,
+  DefaultTask,
   FCMPluginProjectSenderId
 } from '../../../assets/data/defaultConfig'
 import { LocKeys } from '../../shared/enums/localisations'
@@ -22,6 +23,8 @@ declare var FCMPlugin
 
 @Injectable()
 export class NotificationService {
+  participantLogin
+
   constructor(
     private translate: TranslatePipe,
     private alertCtrl: AlertController,
@@ -87,61 +90,81 @@ export class NotificationService {
     return this.storage
       .get(StorageKeys.PARTICIPANTLOGIN)
       .then(participantLogin => {
-        const now = new Date().getTime()
-        const localNotifications = []
-        const fcmNotifications = []
-        for (let i = 0; i < tasks.length; i++) {
-          if (tasks[i].timestamp > now) {
-            const j = i + 1 < tasks.length ? i + 1 : i
-            const isLastScheduledNotification =
-              i + 1 === tasks.length ? true : false
-            const isLastOfDay = this.evalIsLastOfDay(tasks[i], tasks[j])
-            const localNotification = this.formatLocalNotification(
-              tasks[i],
-              isLastScheduledNotification,
-              isLastOfDay
-            )
-            const fcmNotification = this.formatFCMNotification(
-              tasks[i],
-              participantLogin
-            )
-            localNotifications.push(localNotification)
-            fcmNotifications.push(fcmNotification)
-          }
-        }
-        if (DefaultNotificationType === 'LOCAL') {
-          console.log('NOTIFICATIONS Scheduling LOCAL notifications')
-          ;(<any>cordova).plugins.notification.local.on('click', notification =>
-            this.evalTaskTiming(notification.data)
-          )
-          ;(<any>cordova).plugins.notification.local.on(
-            'trigger',
-            notification => this.evalLastTask(notification.data)
-          )
-          return (<any>cordova).plugins.notification.local.schedule(
-            localNotifications[0],
-            () => {
-              return Promise.resolve({})
+        if (participantLogin) {
+          this.participantLogin = participantLogin
+          const now = new Date().getTime()
+          const localNotifications = []
+          const fcmNotifications = []
+          for (let i = 0; i < tasks.length; i++) {
+            if (tasks[i].timestamp > now) {
+              const j = i + 1 < tasks.length ? i + 1 : i
+              const isLastScheduledNotification =
+                i + 1 === tasks.length ? true : false
+              const isLastOfDay = this.evalIsLastOfDay(tasks[i], tasks[j])
+              const localNotification = this.formatLocalNotification(
+                tasks[i],
+                isLastScheduledNotification,
+                isLastOfDay
+              )
+              const fcmNotification = this.formatFCMNotification(
+                tasks[i],
+                participantLogin
+              )
+              localNotifications.push(localNotification)
+              fcmNotifications.push(fcmNotification)
             }
-          )
-        }
-        if (DefaultNotificationType === 'FCM') {
-          console.log('NOTIFICATIONS Scheduling FCM notifications')
-          console.log(fcmNotifications)
-          for (let i = 0; i < fcmNotifications.length; i++) {
-            FCMPlugin.upstream(
-              fcmNotifications[i],
-              function(succ) {
-                console.log(succ)
-              },
-              function(err) {
-                console.log(err)
+          }
+          if (DefaultNotificationType === 'LOCAL') {
+            console.log('NOTIFICATIONS Scheduling LOCAL notifications')
+            ;(<any>cordova).plugins.notification.local.on(
+              'click',
+              notification => this.evalTaskTiming(notification.data)
+            )
+            ;(<any>cordova).plugins.notification.local.on(
+              'trigger',
+              notification => this.evalLastTask(notification.data)
+            )
+            return (<any>cordova).plugins.notification.local.schedule(
+              localNotifications[0],
+              () => {
+                return Promise.resolve({})
               }
             )
           }
+          if (DefaultNotificationType === 'FCM') {
+            console.log('NOTIFICATIONS Scheduling FCM notifications')
+            console.log(fcmNotifications)
+            for (let i = 0; i < fcmNotifications.length; i++) {
+              this.sendFCMNotification(fcmNotifications[i])
+            }
+          }
+          this.storage.set(StorageKeys.LAST_NOTIFICATION_UPDATE, Date.now())
         }
-        this.storage.set(StorageKeys.LAST_NOTIFICATION_UPDATE, Date.now())
       })
+  }
+
+  sendFCMNotification(notification) {
+    FCMPlugin.upstream(
+      notification,
+      function(succ) {
+        console.log(succ)
+      },
+      function(err) {
+        console.log(err)
+      }
+    )
+  }
+
+  testFCMNotifications() {
+    const TWO_MINUTES = 2 * 60000
+    const task = DefaultTask
+    task.timestamp = new Date().getTime() + TWO_MINUTES
+    const fcmNotification = this.formatFCMNotification(
+      task,
+      this.participantLogin
+    )
+
+    this.sendFCMNotification(fcmNotification)
   }
 
   formatLocalNotification(task, isLastScheduledNotification, isLastOfDay) {
@@ -346,8 +369,9 @@ export class NotificationService {
   cancelNotifications() {
     return this.storage
       .get(StorageKeys.PARTICIPANTLOGIN)
-      .then(participantLogin => {
-        return this.cancelNotificationPush(participantLogin)
-      })
+      .then(
+        participantLogin =>
+          participantLogin && this.cancelNotificationPush(participantLogin)
+      )
   }
 }

@@ -334,6 +334,30 @@ export const Localisations = {
     it: 'Dimensione',
     nl: 'Grootte'
   },
+  SETTINGS_DEBUGGING: {
+    da: 'Debugging',
+    de: 'Debuggen',
+    en: 'Debugging',
+    es: 'Depuración',
+    it: 'Debug',
+    nl: 'Debugging'
+  },
+  SETTINGS_GENERATE_NOTIFS: {
+    da: 'Generer Testmeddelelse',
+    de: 'Testbenachrichtigung Generieren',
+    en: 'Generate Test Notifications',
+    es: 'Generar Notificación de Prueba',
+    it: 'Genera Notifica di Prova',
+    nl: 'Genereer Testmelding'
+  },
+  SETTINGS_LOG_NOTIFS: {
+    da: 'Logmeddelelser',
+    de: 'Protokollbenachrichtigungen',
+    en: 'Log Notifications',
+    es: 'Notificaciones de Registro',
+    it: 'Registra le Notifiche',
+    nl: 'Logmeldingen'
+  },
   LANGUAGE_ENGLISH: {
     da: 'Engelsk',
     de: 'Englisch',
@@ -830,5 +854,31 @@ export const Localisations = {
     es: 'minutos',
     it: 'minuti',
     nl: 'minuten'
+  },
+  TESTING_NOTIFICATIONS: {
+    da: 'Testmeddelelser',
+    de: 'Benachrichtigungen Testen',
+    en: 'Testing Notifications',
+    es: 'Pruebas de Notificaciones',
+    it: 'Test delle Notifiche',
+    nl: 'Testen van Meldingen'
+  },
+  TESTING_NOTIFICATIONS_MESSAGE: {
+    da: 'Luk nu appen og vent i 2 minutter for testmeddelelsen.',
+    de:
+      'Schließen Sie nun die App und warten Sie 2 Minuten auf die Testbenachrichtigung.',
+    en: 'Now close the app and wait for 2 minutes for the test notification.',
+    es:
+      'Ahora cierre la aplicación y espere 2 minutos para la notificación de prueba.',
+    it: "Ora chiudi l'app e attendi 2 minuti per la notifica del test.",
+    nl: 'Sluit nu de app en wacht 2 minuten op de testmelding.'
+  },
+  CLOSE_APP: {
+    da: 'Luk App',
+    de: 'Schließen Sie die App',
+    en: 'Close App',
+    es: 'Cerrar App',
+    it: 'Chiudi App',
+    nl: 'App Sluiten'
   }
 }

@@ -10,7 +10,7 @@ let uniqueID = 0
 })
 export class CheckboxInputComponent implements OnInit {
   @Output()
-  valueChange: EventEmitter<number> = new EventEmitter<number>()
+  valueChange: EventEmitter<any> = new EventEmitter<any>()
 
   @Input()
   responses: Response[]
@@ -41,8 +41,7 @@ export class CheckboxInputComponent implements OnInit {
 
   onInputChange(event) {
     this.logSelectedItems(event.target)
-    const selectedItems = this.retrieveSelectedItems().toString()
-    this.valueChange.emit(+selectedItems)
+    this.valueChange.emit(this.retrieveSelectedItems())
   }
 
   logSelectedItems(item) {

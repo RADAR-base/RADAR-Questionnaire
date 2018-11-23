@@ -77,6 +77,9 @@ export class HomePageComponent {
     this.elProgressHeight += this.elProgressOffset
     this.applyTransformations()
     this.showNoTasksToday = false
+    this.tasksService
+      .getTaskProgress()
+      .then(progress => (this.tasksProgress = progress))
   }
 
   ionViewDidLoad() {

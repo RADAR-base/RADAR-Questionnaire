@@ -49,14 +49,16 @@ export class SplashPageComponent {
           .getDatePattern({ formatLength: 'short', selector: 'date and time' })
           .then(res => {
             // NOTE: Cancels all notifications and reschedule tasks if timezone has changed
-            if (timeZone !== res.timezone || utcOffset !== res.utc_offset) {
+            const offset = new Date().getTimezoneOffset()
+            if (timeZone !== res.timezone || utcOffset !== offset) {
               console.log(
                 '[SPLASH] Timezone has changed to ' +
                   res.timezone +
                   '. Cancelling notifications! Rescheduling tasks! Scheduling new notifications!'
               )
               this.storage.set(StorageKeys.TIME_ZONE, res.timezone)
-              this.storage.set(StorageKeys.UTC_OFFSET, res.utc_offset)
+              this.storage.set(StorageKeys.UTC_OFFSET, offset)
+              this.storage.set(StorageKeys.UTC_OFFSET_PREV, utcOffset)
               return this.notificationService.cancelNotifications().then(() => {
                 return this.configService.fetchConfigState(true)
               })

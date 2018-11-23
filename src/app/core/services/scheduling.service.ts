@@ -30,7 +30,7 @@ export class SchedulingService {
   }
 
   getNextTask() {
-    return this.getTasks().then(schedule => {
+    return this.getDefaultTasks().then(schedule => {
       if (schedule) {
         const timestamp = Date.now()
         let nextIdx = 0
@@ -50,7 +50,7 @@ export class SchedulingService {
   }
 
   getTasksForDate(date) {
-    return this.getTasks().then(schedule => {
+    return this.getDefaultTasks().then(schedule => {
       if (schedule) {
         const startDate = this.setDateTimeToMidnight(date)
         const endDate = this.advanceRepeat(startDate, 'day', 1)

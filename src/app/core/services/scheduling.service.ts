@@ -28,8 +28,6 @@ export class SchedulingService {
     console.log(this.storage.global)
   }
 
-  setNotification(task) {}
-
   getNextTask() {
     return this.getTasks().then(schedule => {
       if (schedule) {

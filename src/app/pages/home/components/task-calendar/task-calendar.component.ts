@@ -22,27 +22,20 @@ export class TaskCalendarComponent implements OnChanges {
   scrollHeight = 0
   @Output()
   task: EventEmitter<Task> = new EventEmitter<Task>()
+  @Input()
+  tasks
 
-  currentTime: String = '06:00'
+  currentTime
   timeIndex: Promise<number>
-
-  tasks: Promise<Task[]>
 
   constructor(
     private tasksService: TasksService,
     private alertCtrl: AlertController,
     private translate: TranslatePipe,
     private platform: Platform
-  ) {
-    platform.resume.subscribe(e => this.getTasks())
-  }
+  ) {}
 
   ngOnChanges() {
-    this.getTasks()
-  }
-
-  getTasks() {
-    this.tasks = this.tasksService.getTasksOfToday()
     this.setCurrentTime()
   }
 
@@ -84,7 +77,7 @@ export class TaskCalendarComponent implements OnChanges {
   }
 
   hasExtraInfo(warningStr) {
-    return warningStr === '' ? false : true
+    return warningStr !== ''
   }
 
   clicked(task) {

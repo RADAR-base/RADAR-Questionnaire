@@ -41,10 +41,10 @@ export class QuestionComponent implements OnChanges {
         this.question.select_choices_or_calculations.length - 1
       ].label
       this.question['range'] = {
-        min: min,
-        max: max,
-        labelLeft: minLabel,
-        labelRight: maxLabel
+        min: min.trim(),
+        max: max.trim(),
+        labelLeft: minLabel.trim(),
+        labelRight: maxLabel.trim()
       }
     }
     if (this.questionIndex === this.currentIndex) {

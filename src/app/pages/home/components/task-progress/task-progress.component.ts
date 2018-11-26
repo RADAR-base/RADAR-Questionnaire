@@ -28,7 +28,8 @@ export class TaskProgressComponent implements OnChanges {
   text: string
   max: number = 1
   current: number = 0
-  duration: number = 800
+  stroke = 22
+  animation = 'easeInOutQuart'
   complete: boolean = false
   showFireworks: boolean = false
 
@@ -41,10 +42,7 @@ export class TaskProgressComponent implements OnChanges {
   @ViewChild('counter')
   elCounter: ElementRef
 
-  constructor(
-    private tasksService: TasksService
-  ) {
-  }
+  constructor(private tasksService: TasksService) {}
 
   ngOnChanges() {
     this.tasksService.getTaskProgress().then(progress => {

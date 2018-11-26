@@ -7,7 +7,6 @@ import {
   Output,
   ViewChild
 } from '@angular/core'
-import { RoundProgressConfig } from 'angular-svg-round-progressbar'
 
 import { TasksProgress } from '../../../../shared/models/task'
 import { TasksService } from '../../services/tasks.service'

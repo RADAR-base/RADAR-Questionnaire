@@ -65,9 +65,7 @@ export class SplashPageComponent {
                   )
                   this.storage.set(StorageKeys.TIME_ZONE, res.timezone)
                   this.storage.set(StorageKeys.UTC_OFFSET, res.utc_offset)
-                  return timeZone
-                    ? this.configService.updateConfigStateTimezone()
-                    : this.configService.fetchConfigState(true)
+                  this.configService.updateConfigStateOnTimezoneChange()
                 } else {
                   console.log('[SPLASH] Current Timezone is ' + timeZone)
                 }

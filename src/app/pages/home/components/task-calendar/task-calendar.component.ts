@@ -77,7 +77,7 @@ export class TaskCalendarComponent implements OnChanges {
   }
 
   hasExtraInfo(warningStr) {
-    return warningStr === '' ? false : true
+    return warningStr !== ''
   }
 
   clicked(task) {

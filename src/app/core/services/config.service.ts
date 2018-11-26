@@ -34,54 +34,59 @@ export class ConfigService {
     ]).then(([configVersion, scheduleVersion]) => {
       return this.pullProtocol()
         .then(res => {
-          const response: any = JSON.parse(res)
-          if (
-            configVersion !== response.version ||
-            scheduleVersion !== response.version ||
-            force
-          ) {
-            this.storage.set(StorageKeys.HAS_CLINICAL_TASKS, false)
-            const protocolFormated = this.formatPulledProcotol(
-              response.protocols
-            )
-            const scheduledAssessments = []
-            const clinicalAssessments = []
-            for (let i = 0; i < protocolFormated.length; i++) {
-              const clinical =
-                protocolFormated[i]['protocol']['clinicalProtocol']
-              if (clinical) {
-                this.storage.set(StorageKeys.HAS_CLINICAL_TASKS, true)
-                clinicalAssessments.push(protocolFormated[i])
-              } else {
-                scheduledAssessments.push(protocolFormated[i])
+          if (res) {
+            const response: any = JSON.parse(res)
+            if (
+              configVersion !== response.version ||
+              scheduleVersion !== response.version ||
+              force
+            ) {
+              this.storage.set(StorageKeys.HAS_CLINICAL_TASKS, false)
+              const protocolFormated = this.formatPulledProcotol(
+                response.protocols
+              )
+              const scheduledAssessments = []
+              const clinicalAssessments = []
+              for (let i = 0; i < protocolFormated.length; i++) {
+                const clinical =
+                  protocolFormated[i]['protocol']['clinicalProtocol']
+                if (clinical) {
+                  this.storage.set(StorageKeys.HAS_CLINICAL_TASKS, true)
+                  clinicalAssessments.push(protocolFormated[i])
+                } else {
+                  scheduledAssessments.push(protocolFormated[i])
+                }
               }
-            }
-            this.storage.set(StorageKeys.CONFIG_VERSION, response.version)
-            return this.storage
-              .set(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS, clinicalAssessments)
-              .then(() => {
-                console.log('Pulled clinical questionnaire')
-                return this.pullQuestionnaires(
-                  StorageKeys.CONFIG_CLINICAL_ASSESSMENTS
+              this.storage.set(StorageKeys.CONFIG_VERSION, response.version)
+              return this.storage
+                .set(
+                  StorageKeys.CONFIG_CLINICAL_ASSESSMENTS,
+                  clinicalAssessments
                 )
-              })
-              .then(() => {
-                return this.storage
-                  .set(StorageKeys.CONFIG_ASSESSMENTS, scheduledAssessments)
-                  .then(() => {
-                    console.log('Pulled questionnaire')
-                    return this.pullQuestionnaires(
-                      StorageKeys.CONFIG_ASSESSMENTS
-                    )
-                  })
-              })
-              .then(() => this.schedule.generateSchedule(true))
-              .then(() => this.rescheduleNotifications())
-          } else {
-            console.log(
-              'NO CONFIG UPDATE. Version of protocol.json has not changed.'
-            )
-            return this.schedule.generateSchedule(false)
+                .then(() => {
+                  console.log('Pulled clinical questionnaire')
+                  return this.pullQuestionnaires(
+                    StorageKeys.CONFIG_CLINICAL_ASSESSMENTS
+                  )
+                })
+                .then(() => {
+                  return this.storage
+                    .set(StorageKeys.CONFIG_ASSESSMENTS, scheduledAssessments)
+                    .then(() => {
+                      console.log('Pulled questionnaire')
+                      return this.pullQuestionnaires(
+                        StorageKeys.CONFIG_ASSESSMENTS
+                      )
+                    })
+                })
+                .then(() => this.schedule.generateSchedule(true))
+                .then(() => this.rescheduleNotifications())
+            } else {
+              console.log(
+                'NO CONFIG UPDATE. Version of protocol.json has not changed.'
+              )
+              return this.schedule.generateSchedule(false)
+            }
           }
         })
         .catch(e => console.log(e))

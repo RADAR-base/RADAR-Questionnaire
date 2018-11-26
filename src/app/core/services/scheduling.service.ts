@@ -229,10 +229,38 @@ export class SchedulingService {
     return this.storage.push(StorageKeys.SCHEDULE_TASKS_COMPLETED, task)
   }
 
+  updateScheduleWithCompletedTasks(schedule) {
+    // NOTE: If utcOffsetPrev exists, timezone has changed
+    if (this.utcOffsetPrev) {
+      const currentMidnight = new Date().setHours(0, 0, 0, 0)
+      const prevMidnight =
+        new Date().setUTCHours(0, 0, 0, 0) + this.utcOffsetPrev * 60000
+      this.completedTasks.map(d => {
+        const index = schedule.findIndex(
+          s =>
+            s.timestamp - currentMidnight == d.timestamp - prevMidnight &&
+            s.name == d.name
+        )
+        if (index > -1) {
+          schedule[index].completed = true
+          return this.addToCompletedTasks(d)
+        }
+      })
+    } else {
+      this.completedTasks.map(d => {
+        if (
+          schedule[d.index].timestamp == d.timestamp &&
+          schedule[d.index].name == d.name
+        ) {
+          schedule[d.index].completed = true
+          return this.addToCompletedTasks(d)
+        }
+      })
+    }
+    return schedule
+  }
+
   buildTaskSchedule(assessments) {
-    const currentMidnight = new Date().setHours(0, 0, 0, 0)
-    const prevMidnight =
-      new Date().setUTCHours(0, 0, 0, 0) + this.utcOffsetPrev * 60000
     let schedule: Task[] = []
     let scheduleLength = schedule.length
     for (let i = 0; i < assessments.length; i++) {
@@ -244,20 +272,8 @@ export class SchedulingService {
       scheduleLength = schedule.length
     }
     // NOTE: Check for completed tasks
-    this.completedTasks.map(d => {
-      const index = schedule.findIndex(
-        s =>
-          ((this.utcOffsetPrev != null &&
-            s.timestamp - currentMidnight == d.timestamp - prevMidnight) ||
-            (this.utcOffsetPrev == null && s.timestamp == d.timestamp)) &&
-          s.name == d.name &&
-          !s.isClinical
-      )
-      if (index > -1) {
-        schedule[index].completed = true
-        return this.addToCompletedTasks(d)
-      }
-    })
+    schedule = this.updateScheduleWithCompletedTasks(schedule)
+
     console.log('[√] Updated task schedule.')
     return Promise.resolve(schedule)
   }

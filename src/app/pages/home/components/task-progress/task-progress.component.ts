@@ -43,16 +43,8 @@ export class TaskProgressComponent implements OnChanges {
   elCounter: ElementRef
 
   constructor(
-    private progConfig: RoundProgressConfig,
     private tasksService: TasksService
   ) {
-    this.progConfig.setDefaults({
-      color: '#7fcdbb',
-      background: 'rgba(255,255,204,0.12)',
-      stroke: 22,
-      animation: 'easeInOutQuart',
-      duration: this.duration
-    })
   }
 
   ngOnChanges() {

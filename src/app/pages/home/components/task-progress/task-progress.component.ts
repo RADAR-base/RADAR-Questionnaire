@@ -7,7 +7,6 @@ import {
   Output,
   ViewChild
 } from '@angular/core'
-import { RoundProgressConfig } from 'angular-svg-round-progressbar'
 
 import { TasksProgress } from '../../../../shared/models/task'
 import { TasksService } from '../../services/tasks.service'
@@ -43,16 +42,8 @@ export class TaskProgressComponent implements OnChanges {
   elCounter: ElementRef
 
   constructor(
-    private progConfig: RoundProgressConfig,
     private tasksService: TasksService
   ) {
-    this.progConfig.setDefaults({
-      color: '#7fcdbb',
-      background: 'rgba(255,255,204,0.12)',
-      stroke: 22,
-      animation: 'easeInOutQuart',
-      duration: this.duration
-    })
   }
 
   ngOnChanges() {

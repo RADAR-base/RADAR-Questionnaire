@@ -56,6 +56,7 @@ export class HomePageComponent {
   hasOnlyESMs = false
   taskIsNow = false
   elProgressOffset = 16
+  tasks
 
   constructor(
     public navCtrl: NavController,
@@ -69,6 +70,7 @@ export class HomePageComponent {
   ) {
     this.platform.resume.subscribe(e => {
       this.kafka.sendAllAnswersInCache()
+      this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
     })
   }
 
@@ -80,14 +82,12 @@ export class HomePageComponent {
   }
 
   ionViewDidLoad() {
-    this.checkForNextTask()
-    this.evalHasClinicalTasks()
-    this.checkIfOnlyESM()
-
     setInterval(() => {
       this.checkForNextTask()
     }, 1000)
-
+    this.evalHasClinicalTasks()
+    this.checkIfOnlyESM()
+    this.tasks = this.tasksService.getTasksOfToday()
     this.tasksService.sendNonReportedTaskCompletion()
   }
 
@@ -260,12 +260,13 @@ export class HomePageComponent {
   }
 
   startQuestionnaire(task: Task) {
-    this.hasClickedStartButton = true
     let startQuestionnaireTask = this.nextTask
     if (task) {
       if (task.completed === false) {
         startQuestionnaireTask = task
       }
+    } else {
+      this.hasClickedStartButton = true
     }
     const lang = this.storage.get(StorageKeys.LANGUAGE)
     const nextAssessment = this.tasksService.getAssessment(

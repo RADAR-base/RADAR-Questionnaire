@@ -129,6 +129,7 @@ export class StorageService {
     return this.storage
       .remove(key.toString())
       .then(res => {
+        this.global[key.toString()] = null
         return res
       })
       .catch(error => this.handleError(error))

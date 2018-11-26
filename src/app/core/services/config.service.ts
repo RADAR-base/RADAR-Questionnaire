@@ -97,13 +97,13 @@ export class ConfigService {
     })
   }
 
-  updateConfigStateLang() {
+  updateConfigStateOnLanguageChange() {
     return this.pullQuestionnaires(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS)
       .then(() => this.pullQuestionnaires(StorageKeys.CONFIG_ASSESSMENTS))
       .then(() => this.rescheduleNotifications())
   }
 
-  updateConfigStateTimezone() {
+  updateConfigStateOnTimezoneChange() {
     return this.schedule
       .generateSchedule(true)
       .then(() => this.rescheduleNotifications())

@@ -155,7 +155,7 @@ export class SettingsPageComponent {
             this.translate.init().then(() => {
               this.showLoading = true
               return this.configService
-                .updateConfigStateLang()
+                .updateConfigStateOnLanguageChange()
                 .then(() => this.navCtrl.setRoot(SplashPageComponent))
             })
           )

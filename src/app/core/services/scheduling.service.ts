@@ -187,10 +187,11 @@ export class SchedulingService {
       this.refTimestamp = data[3]
       this.utcOffsetPrev = data[4]
       if (data[1] !== data[2] || force) {
-        console.log('Changed protocol version detected. Updating schedule..')
-        this.storage.remove(StorageKeys.UTC_OFFSET_PREV)
-        this.storage.remove(StorageKeys.SCHEDULE_TASKS_COMPLETED)
-        return this.runScheduler()
+        console.log('Updating schedule..')
+        return this.storage
+          .remove(StorageKeys.UTC_OFFSET_PREV)
+          .then(() => this.storage.remove(StorageKeys.SCHEDULE_TASKS_COMPLETED))
+          .then(() => this.runScheduler())
       }
     })
   }
@@ -225,7 +226,7 @@ export class SchedulingService {
   }
 
   addToCompletedTasks(task) {
-    this.storage.push(StorageKeys.SCHEDULE_TASKS_COMPLETED, task)
+    return this.storage.push(StorageKeys.SCHEDULE_TASKS_COMPLETED, task)
   }
 
   buildTaskSchedule(assessments) {

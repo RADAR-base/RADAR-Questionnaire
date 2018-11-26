@@ -67,7 +67,10 @@ export class SplashPageComponent {
                   this.storage
                     .set(StorageKeys.TIME_ZONE, res.timezone)
                     .then(() =>
-                      this.storage.set(StorageKeys.UTC_OFFSET, res.utc_offset)
+                      this.storage.set(StorageKeys.UTC_OFFSET, offset)
+                    )
+                    .then(() =>
+                      this.storage.set(StorageKeys.UTC_OFFSET_PREV, utcOffset)
                     )
                     .then(() =>
                       this.configService.updateConfigStateOnTimezoneChange()

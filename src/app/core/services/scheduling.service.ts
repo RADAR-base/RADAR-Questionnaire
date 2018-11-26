@@ -243,7 +243,7 @@ export class SchedulingService {
         )
         if (index > -1) {
           schedule[index].completed = true
-          return this.addToCompletedTasks(d)
+          return this.addToCompletedTasks(schedule[index])
         }
       })
     } else {
@@ -253,7 +253,7 @@ export class SchedulingService {
           schedule[d.index].name == d.name
         ) {
           schedule[d.index].completed = true
-          return this.addToCompletedTasks(d)
+          return this.addToCompletedTasks(schedule[d.index])
         }
       })
     }

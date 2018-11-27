@@ -57,9 +57,9 @@ export class KafkaService {
           ? data.answers[1].startTime
           : data.answers[0].startTime, // NOTE: whole questionnaire startTime and endTime
       timeCompleted: data.answers[data.answers.length - 1].endTime,
-      timeNotification: {
-        double: task.timestamp ? task.timestamp / SEC_MILLISEC : 0
-      }
+      timeNotification: task.timestamp
+        ? { double: task.timestamp / SEC_MILLISEC }
+        : null
     }
 
     return this.prepareKafkaObjectAndSend(task, Answer, KAFKA_ASSESSMENT)

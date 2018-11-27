@@ -188,10 +188,7 @@ export class SchedulingService {
       this.utcOffsetPrev = data[4]
       if (data[1] !== data[2] || force) {
         console.log('Updating schedule..')
-        return this.storage
-          .remove(StorageKeys.UTC_OFFSET_PREV)
-          .then(() => this.storage.remove(StorageKeys.SCHEDULE_TASKS_COMPLETED))
-          .then(() => this.runScheduler())
+        return this.runScheduler()
       }
     })
   }
@@ -257,6 +254,9 @@ export class SchedulingService {
         }
       })
     }
+    this.storage.remove(StorageKeys.UTC_OFFSET_PREV)
+    this.storage.remove(StorageKeys.SCHEDULE_TASKS_COMPLETED)
+
     return schedule
   }
 

@@ -64,7 +64,7 @@ export class SplashPageComponent {
                       res.timezone +
                       '. Cancelling notifications! Rescheduling tasks! Scheduling new notifications!'
                   )
-                  this.storage
+                  return this.storage
                     .set(StorageKeys.TIME_ZONE, res.timezone)
                     .then(() =>
                       this.storage.set(StorageKeys.UTC_OFFSET, offset)

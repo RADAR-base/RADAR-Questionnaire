@@ -199,7 +199,6 @@ export class KafkaService {
     const kafkaObject = specs.kafkaObject
     this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
       console.log('KAFKA-SERVICE: Caching answers.')
-      console.log(specs)
       cache[kafkaObject.value.time] = specs
       this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
     })

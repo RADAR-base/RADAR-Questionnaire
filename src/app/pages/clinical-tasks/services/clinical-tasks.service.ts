@@ -14,4 +14,26 @@ export class ClinicalTasksService {
   getClinicalTasks() {
     return this.storage.get(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS)
   }
+
+  getClinicalTasksUpdated() {
+    const tasks = this.getClinicalTasks()
+    const completed = this.getCompletedClinicalTasks()
+    return Promise.all([tasks, completed]).then(res => {
+      const clinicalAssessments = res[0]
+      const completedTasks = res[1]
+      if (completedTasks) {
+        completedTasks.map(d => {
+          const index = clinicalAssessments.findIndex(s => s.name == d.name)
+          if (index > -1) {
+            clinicalAssessments[index].completed = true
+          }
+        })
+      }
+      return clinicalAssessments
+    })
+  }
+
+  getCompletedClinicalTasks() {
+    return this.storage.get(StorageKeys.SCHEDULE_TASKS_COMPLETED)
+  }
 }

@@ -11,7 +11,7 @@
     [style.height.px]="scrollHeight"
   >
 
-    <div *ngFor="let task of tasks; let i=index">
+    <div *ngFor="let task of (tasks | async); let i=index">
       <div
         id="task-item"
         (click)="clicked(task)"

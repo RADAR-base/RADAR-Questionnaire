@@ -15,7 +15,7 @@ import { ClinicalTasksService } from '../services/clinical-tasks.service'
 })
 export class ClinicalTasksPageComponent {
   scrollHeight: number = 500
-  tasks: Task[] = [DefaultTask]
+  tasks
 
   constructor(
     public navCtrl: NavController,
@@ -24,10 +24,8 @@ export class ClinicalTasksPageComponent {
     private clinicalTasksService: ClinicalTasksService
   ) {}
 
-  ionViewDidLoad() {
-    this.clinicalTasksService.getClinicalTasks().then(tasks => {
-      this.tasks = tasks
-    })
+  ionViewWillEnter() {
+    this.tasks = this.clinicalTasksService.getClinicalTasksUpdated()
   }
 
   clicked(task) {

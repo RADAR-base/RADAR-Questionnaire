@@ -8,7 +8,7 @@ import {
   DefaultNotificationType,
   DefaultNumberOfNotificationsToRescue,
   DefaultNumberOfNotificationsToSchedule,
-  DefaultTask,
+  DefaultTaskTest,
   FCMPluginProjectSenderId
 } from '../../../assets/data/defaultConfig'
 import { LocKeys } from '../../shared/enums/localisations'
@@ -157,7 +157,7 @@ export class NotificationService {
 
   testFCMNotifications() {
     const TWO_MINUTES = 2 * 60000
-    const task = DefaultTask
+    const task = DefaultTaskTest
     task.timestamp = new Date().getTime() + TWO_MINUTES
     const fcmNotification = this.formatFCMNotification(
       task,
@@ -195,20 +195,39 @@ export class NotificationService {
   }
 
   formatFCMNotification(task, participantLogin) {
-    let text = this.translate.transform(
-      LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1.toString()
-    )
-    text += ' ' + task.estimatedCompletionTime + ' '
-    text += this.translate.transform(
-      LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2.toString()
-    )
-    const expiry = task.name === 'ESM' ? 15 * 60 : 24 * 60 * 60
+    let text, title
+    let expiry = 24 * 60 * 60
+    switch (task.name) {
+      case 'TEST':
+        title = this.translate.transform(
+          LocKeys.NOTIFICATION_TEST_REMINDER_NOW.toString()
+        )
+        text = this.translate.transform(
+          LocKeys.NOTIFICATION_TEST_REMINDER_NOW_DESC.toString()
+        )
+        break
+      case 'ESM':
+        expiry = 15 * 60
+      default:
+        title = this.translate.transform(
+          LocKeys.NOTIFICATION_REMINDER_NOW.toString()
+        )
+        text =
+          this.translate.transform(
+            LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1.toString()
+          ) +
+          ' ' +
+          task.estimatedCompletionTime +
+          ' ' +
+          this.translate.transform(
+            LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2.toString()
+          )
+        break
+    }
     const fcmNotification = {
       eventId: uuid(),
       action: 'SCHEDULE',
-      notificationTitle: this.translate.transform(
-        LocKeys.NOTIFICATION_REMINDER_NOW.toString()
-      ),
+      notificationTitle: title,
       notificationMessage: text,
       time: task.timestamp,
       subjectId: participantLogin,

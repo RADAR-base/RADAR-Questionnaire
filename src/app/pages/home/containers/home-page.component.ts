@@ -56,6 +56,7 @@ export class HomePageComponent {
   hasOnlyESMs = false
   taskIsNow = false
   elProgressOffset = 16
+  tasks
 
   constructor(
     public navCtrl: NavController,
@@ -69,6 +70,7 @@ export class HomePageComponent {
   ) {
     this.platform.resume.subscribe(e => {
       this.kafka.sendAllAnswersInCache()
+      this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
     })
   }
 
@@ -83,14 +85,12 @@ export class HomePageComponent {
   }
 
   ionViewDidLoad() {
-    this.checkForNextTask()
-    this.evalHasClinicalTasks()
-    this.checkIfOnlyESM()
-
     setInterval(() => {
       this.checkForNextTask()
     }, 1000)
-
+    this.evalHasClinicalTasks()
+    this.checkIfOnlyESM()
+    this.tasks = this.tasksService.getTasksOfToday()
     this.tasksService.sendNonReportedTaskCompletion()
   }
 
@@ -157,14 +157,15 @@ export class HomePageComponent {
   }
 
   getElementsAttributes() {
-    if (this.elContent._scroll) {
-      this.elContentHeight = this.elContent.contentHeight
+    if (this.elContent) this.elContentHeight = this.elContent.contentHeight
+    if (this.elProgress)
       this.elProgressHeight =
         this.elProgress.nativeElement.offsetHeight - this.elProgressOffset
+    if (this.elTicker)
       this.elTickerHeight = this.elTicker.nativeElement.offsetHeight
-      this.elInfoHeight = this.elInfo.nativeElement.offsetHeight
+    if (this.elInfo) this.elInfoHeight = this.elInfo.nativeElement.offsetHeight
+    if (this.elFooter)
       this.elFooterHeight = this.elFooter.nativeElement.offsetHeight
-    }
   }
 
   applyTransformations() {
@@ -186,12 +187,19 @@ export class HomePageComponent {
       }px)`
       this.elCalendar.nativeElement.style.opacity = 1
     } else {
-      this.elProgress.nativeElement.style.transform = 'translateY(0px) scale(1)'
-      this.elTicker.nativeElement.style.transform = 'translateY(0px)'
-      this.elInfo.nativeElement.style.transform = 'translateY(0px)'
-      this.elFooter.nativeElement.style.transform = 'translateY(0px) scale(1)'
-      this.elCalendar.nativeElement.style.transform = 'translateY(0px)'
-      this.elCalendar.nativeElement.style.opacity = 0
+      if (this.elProgress)
+        this.elProgress.nativeElement.style.transform =
+          'translateY(0px) scale(1)'
+      if (this.elTicker)
+        this.elTicker.nativeElement.style.transform = 'translateY(0px)'
+      if (this.elInfo)
+        this.elInfo.nativeElement.style.transform = 'translateY(0px)'
+      if (this.elFooter)
+        this.elFooter.nativeElement.style.transform = 'translateY(0px) scale(1)'
+      if (this.elCalendar) {
+        this.elCalendar.nativeElement.style.transform = 'translateY(0px)'
+        this.elCalendar.nativeElement.style.opacity = 0
+      }
     }
     this.setCalendarScrollHeight(this.showCalendar)
   }
@@ -247,10 +255,14 @@ export class HomePageComponent {
       this.elFooter.nativeElement.style.transform = `translateY(${this
         .elInfoHeight + this.elFooterHeight}px) scale(0)`
     } else {
-      this.elTicker.nativeElement.style.padding = '0 0 2px 0'
-      this.elTicker.nativeElement.style.transform = 'translateY(0px)'
-      this.elInfo.nativeElement.style.transform = 'translateY(0px) scale(1)'
-      this.elFooter.nativeElement.style.transform = 'translateY(0px) scale(1)'
+      if (this.elTicker) {
+        this.elTicker.nativeElement.style.padding = '0 0 2px 0'
+        this.elTicker.nativeElement.style.transform = 'translateY(0px)'
+      }
+      if (this.elInfo)
+        this.elInfo.nativeElement.style.transform = 'translateY(0px) scale(1)'
+      if (this.elFooter)
+        this.elFooter.nativeElement.style.transform = 'translateY(0px) scale(1)'
     }
   }
 
@@ -263,12 +275,13 @@ export class HomePageComponent {
   }
 
   startQuestionnaire(task: Task) {
-    this.hasClickedStartButton = true
     let startQuestionnaireTask = this.nextTask
     if (task) {
       if (task.completed === false) {
         startQuestionnaireTask = task
       }
+    } else {
+      this.hasClickedStartButton = true
     }
     const lang = this.storage.get(StorageKeys.LANGUAGE)
     const nextAssessment = this.tasksService.getAssessment(

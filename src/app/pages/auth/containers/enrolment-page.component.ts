@@ -84,11 +84,7 @@ export class EnrolmentPageComponent {
 
   ionViewDidLoad() {
     this.slides.lockSwipes(true)
-    this.storage.get(StorageKeys.LANGUAGE).then(lang => {
-      if (lang != null) {
-        this.language = lang
-      }
-    })
+    this.translate.init()
   }
 
   ionViewDidEnter() {}
@@ -298,9 +294,10 @@ export class EnrolmentPageComponent {
             label: LanguageMap[selectedLanguageVal],
             value: selectedLanguageVal
           }
-          this.storage.set(StorageKeys.LANGUAGE, lang)
-          this.language = lang
-          this.navCtrl.setRoot(AppComponent)
+          this.storage.set(StorageKeys.LANGUAGE, lang).then(() => {
+            this.language = lang
+            this.translate.init().then(() => this.navCtrl.setRoot(AppComponent))
+          })
         }
       }
     ]

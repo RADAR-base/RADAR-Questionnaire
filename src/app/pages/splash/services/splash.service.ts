@@ -1,15 +1,13 @@
 import { Injectable } from '@angular/core'
 
 import { StorageService } from '../../../core/services/storage.service'
+import { StorageKeys } from '../../../shared/enums/storage'
 
 @Injectable()
 export class SplashService {
   constructor(public storage: StorageService) {}
 
   evalEnrolment() {
-    return this.storage.getAllKeys().then(keys => {
-      // TODO: Remove hardcoded number
-      return keys.length <= 5
-    })
+    return this.storage.get(StorageKeys.PARTICIPANTLOGIN)
   }
 }

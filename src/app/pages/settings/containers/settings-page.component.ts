@@ -150,16 +150,15 @@ export class SettingsPageComponent {
             label: LanguageMap[selectedLanguageVal],
             value: selectedLanguageVal
           }
-          this.storage.set(StorageKeys.LANGUAGE, lang).then(() => {
-            this.configService.pullQuestionnaires(
-              StorageKeys.CONFIG_ASSESSMENTS
-            )
-            this.configService.pullQuestionnaires(
-              StorageKeys.CONFIG_CLINICAL_ASSESSMENTS
-            )
-          })
           this.language = lang
-          this.navCtrl.setRoot(SplashPageComponent)
+          this.storage.set(StorageKeys.LANGUAGE, lang).then(() =>
+            this.translate.init().then(() => {
+              this.showLoading = true
+              return this.configService
+                .updateConfigStateOnLanguageChange()
+                .then(() => this.navCtrl.setRoot(SplashPageComponent))
+            })
+          )
         }
       }
     ]
@@ -277,7 +276,7 @@ export class SettingsPageComponent {
 
   reloadConfig() {
     this.showLoading = true
-    this.configService.fetchConfigState(true).then(() => {
+    return this.configService.fetchConfigState(true).then(() => {
       this.loadSettings()
       this.showLoading = false
     })

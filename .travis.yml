@@ -27,8 +27,6 @@ addons:
       - sourceline: deb http://dl.google.com/linux/chrome/deb/ stable main
         key_url: https://dl-ssl.google.com/linux/linux_signing_key.pub
     packages:
-      - oracle-java8-installer
-      - oracle-java8-set-default
       - yarn
       - jq
       - gradle
@@ -54,12 +52,13 @@ before_install:
     -in secrets.tar.enc -out secrets.tar -d
   - tar xvf secrets.tar
   - gem install fastlane
-  - yarn global add -g cordova ionic
+  - yarn global add cordova ionic
 before_script:
   - mkdir www
   - cp secret.ts src/assets/data/secret.ts
 script:
   - yarn install
+  - yarn add xtend@latest
   - yarn run lint
   - yarn run lint:css
   - if [[ $TRAVIS_BRANCH != $TRAVIS_TAG ]]; then yarn build ; fi

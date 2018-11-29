@@ -582,6 +582,22 @@ export const Localisations = {
     it: 'Non riuscuto',
     nl: 'Mislukt'
   },
+  NOTIFICATION_TEST_REMINDER_NOW: {
+    da: 'Testmeddelelse',
+    de: 'Testbenachrichtigung',
+    en: 'Test Notification',
+    es: 'Notificación de prueba',
+    it: 'Notifica di prova',
+    nl: 'Testmelding'
+  },
+  NOTIFICATION_TEST_REMINDER_NOW_DESC: {
+    da: 'Dette er en test anmeldelse.',
+    de: 'Dies ist eine Testbenachrichtigung.',
+    en: 'This is a test notification.',
+    es: 'Esta es una notificación de prueba.',
+    it: 'Questa è una notifica di prova.',
+    nl: 'Dit is een testmelding.'
+  },
   NOTIFICATION_REMINDER_SOON: {
     da:
       'RADAR-CNS spørgsmålene skal være færdige imorgen, husk venligst på dette.',
@@ -607,7 +623,7 @@ export const Localisations = {
   },
   NOTIFICATION_REMINDER_NOW: {
     da: 'Tid til at svare på spørgsmål',
-    de: 'Zeit für Fragebögen ',
+    de: 'Zeit für Fragebögen',
     en: 'Questionnaire time',
     es: 'Momento para el cuestionario ',
     it: "E' il momento dei questionari",

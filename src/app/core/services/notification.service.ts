@@ -167,20 +167,41 @@ export class NotificationService {
     this.sendFCMNotification(fcmNotification)
   }
 
+  formatNotifMessageAndTitle(task) {
+    if (task.name == 'TEST') {
+      return {
+        title: this.translate.transform(
+          LocKeys.NOTIFICATION_TEST_REMINDER_NOW.toString()
+        ),
+        message: this.translate.transform(
+          LocKeys.NOTIFICATION_TEST_REMINDER_NOW_DESC.toString()
+        )
+      }
+    } else {
+      return {
+        title: this.translate.transform(
+          LocKeys.NOTIFICATION_REMINDER_NOW.toString()
+        ),
+        message:
+          this.translate.transform(
+            LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1.toString()
+          ) +
+          ' ' +
+          task.estimatedCompletionTime +
+          ' ' +
+          this.translate.transform(
+            LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2.toString()
+          )
+      }
+    }
+  }
+
   formatLocalNotification(task, isLastScheduledNotification, isLastOfDay) {
-    let text = this.translate.transform(
-      LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1.toString()
-    )
-    text += ' ' + task.estimatedCompletionTime + ' '
-    text += this.translate.transform(
-      LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2.toString()
-    )
+    const notif = this.formatNotifMessageAndTitle(task)
     const notification = {
       id: task.index,
-      title: this.translate.transform(
-        LocKeys.NOTIFICATION_REMINDER_NOW.toString()
-      ),
-      text: text,
+      title: notif.title,
+      text: notif.message,
       trigger: { at: new Date(task.timestamp) },
       foreground: true,
       vibrate: true,
@@ -195,40 +216,13 @@ export class NotificationService {
   }
 
   formatFCMNotification(task, participantLogin) {
-    let text, title
-    let expiry = 24 * 60 * 60
-    switch (task.name) {
-      case 'TEST':
-        title = this.translate.transform(
-          LocKeys.NOTIFICATION_TEST_REMINDER_NOW.toString()
-        )
-        text = this.translate.transform(
-          LocKeys.NOTIFICATION_TEST_REMINDER_NOW_DESC.toString()
-        )
-        break
-      case 'ESM':
-        expiry = 15 * 60
-      default:
-        title = this.translate.transform(
-          LocKeys.NOTIFICATION_REMINDER_NOW.toString()
-        )
-        text =
-          this.translate.transform(
-            LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1.toString()
-          ) +
-          ' ' +
-          task.estimatedCompletionTime +
-          ' ' +
-          this.translate.transform(
-            LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2.toString()
-          )
-        break
-    }
+    const notif = this.formatNotifMessageAndTitle(task)
+    const expiry = task.name === 'ESM' ? 15 * 60 : 24 * 60 * 60
     const fcmNotification = {
       eventId: uuid(),
       action: 'SCHEDULE',
-      notificationTitle: title,
-      notificationMessage: text,
+      notificationTitle: notif.title,
+      notificationMessage: notif.message,
       time: task.timestamp,
       subjectId: participantLogin,
       ttlSeconds: expiry

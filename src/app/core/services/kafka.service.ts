@@ -240,9 +240,11 @@ export class KafkaService {
 
   removeAnswersFromCache(cacheKey) {
     return this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
-      console.log('Deleting ' + cacheKey)
-      delete cache[cacheKey]
-      return this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
+      if (cache) {
+        console.log('Deleting ' + cacheKey)
+        if (cache[cacheKey]) delete cache[cacheKey]
+        return this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
+      }
     })
   }
 

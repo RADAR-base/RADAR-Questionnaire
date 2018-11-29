@@ -9,7 +9,7 @@
   <ion-item-group>
     <ion-item-divider no-lines>{{ "SETTINGS_USER_INFO" | translate }}</ion-item-divider>
     <ion-item no-lines>
-      {{ "SETTINGS_PARTICIPANTID" | translate }}:
+      {{ "SETTINGS_PARTICIPANTID" | translate }}
       <span
         item-right
         class="info-value"
@@ -18,7 +18,7 @@
       </span>
     </ion-item>
     <ion-item no-lines>
-      {{ "SETTINGS_PROJECTNAME" | translate }}:
+      {{ "SETTINGS_PROJECTNAME" | translate }}
       <span
         item-right
         class="info-value"
@@ -27,7 +27,7 @@
       </span>
     </ion-item>
     <ion-item no-lines>
-      {{ "SETTINGS_ENROL_DATE" | translate }}:
+      {{ "SETTINGS_ENROL_DATE" | translate }}
       <span
         item-right
         class="info-value"
@@ -39,7 +39,10 @@
 
   <ion-item-group>
     <ion-item-divider no-lines>{{ "SETTINGS_LANGUAGE" | translate }}</ion-item-divider>
-    <ion-item no-lines>
+    <ion-item
+      no-lines
+      *ngIf="!showLoading"
+    >
       <span class="info-value">{{ language.label | translate }}</span>
       <span
         item-right
@@ -51,6 +54,12 @@
         ></ion-icon>
         {{ "BTN_SELECT" | translate }}
       </span>
+    </ion-item>
+    <ion-item
+      no-lines
+      *ngIf="showLoading"
+    >
+      <ion-spinner name="dots"></ion-spinner>
     </ion-item>
   </ion-item-group>
 

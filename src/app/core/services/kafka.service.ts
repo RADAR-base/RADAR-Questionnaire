@@ -66,7 +66,7 @@ export class KafkaService {
     return this.prepareKafkaObjectAndSend(task, Answer, KAFKA_ASSESSMENT)
   }
 
-  prepareNonReportedTasksKafkaObjectAndSend(task: Task) {
+  prepareCompletionLogKafkaObjectAndSend(task: Task) {
     // NOTE: Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
     const CompletionLog: CompletionLogValueExport = {
       name: task.name.toString(),

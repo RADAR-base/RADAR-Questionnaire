@@ -157,7 +157,8 @@ export class HomePageComponent {
   }
 
   getElementsAttributes() {
-    if (this.elContent) this.elContentHeight = this.elContent.contentHeight
+    if (this.elContent._scroll)
+      this.elContentHeight = this.elContent.contentHeight
     if (this.elProgress)
       this.elProgressHeight =
         this.elProgress.nativeElement.offsetHeight - this.elProgressOffset

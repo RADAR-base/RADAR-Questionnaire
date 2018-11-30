@@ -124,17 +124,9 @@ export class TasksService {
   sendNonReportedTaskCompletion() {
     this.schedule.getNonReportedCompletedTasks().then(nonReportedTasks => {
       for (let i = 0; i < nonReportedTasks.length; i++) {
-        this.kafka.prepareNonReportedTasksKafkaObjectAndSend(
-          nonReportedTasks[i]
-        )
-        this.updateTaskToReportedCompletion(nonReportedTasks[i])
+        this.kafka.prepareCompletionLogKafkaObjectAndSend(nonReportedTasks[i])
+        this.schedule.updateTaskToReportedCompletion(nonReportedTasks[i])
       }
     })
-  }
-
-  updateTaskToReportedCompletion(task): Promise<any> {
-    const updatedTask = task
-    updatedTask.reportedCompletion = true
-    return this.schedule.insertTask(updatedTask)
   }
 }

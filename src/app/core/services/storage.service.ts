@@ -102,6 +102,12 @@ export class StorageService {
     return this.storage.set(key.toString(), value)
   }
 
+  push(key: StorageKeys, value: any): Promise<any> {
+    if (this.global[key.toString()]) this.global[key.toString()].push(value)
+    else this.global[key.toString()] = [value]
+    return this.storage.set(key.toString(), this.global[key.toString()])
+  }
+
   setFetchedConfiguration(config) {
     this.set(StorageKeys.CONFIG_VERSION, config.version)
     this.set(StorageKeys.CONFIG_ASSESSMENTS, config.assessments)
@@ -123,6 +129,7 @@ export class StorageService {
     return this.storage
       .remove(key.toString())
       .then(res => {
+        this.global[key.toString()] = null
         return res
       })
       .catch(error => this.handleError(error))

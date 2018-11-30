@@ -57,17 +57,20 @@ export class ConfigService {
                   scheduledAssessments.push(protocolFormated[i])
                 }
               }
-              this.storage.set(StorageKeys.CONFIG_VERSION, response.version)
               return this.storage
-                .set(
-                  StorageKeys.CONFIG_CLINICAL_ASSESSMENTS,
-                  clinicalAssessments
-                )
+                .set(StorageKeys.CONFIG_VERSION, response.version)
                 .then(() => {
-                  console.log('Pulled clinical questionnaire')
-                  return this.pullQuestionnaires(
-                    StorageKeys.CONFIG_CLINICAL_ASSESSMENTS
-                  )
+                  return this.storage
+                    .set(
+                      StorageKeys.CONFIG_CLINICAL_ASSESSMENTS,
+                      clinicalAssessments
+                    )
+                    .then(() => {
+                      console.log('Pulled clinical questionnaire')
+                      return this.pullQuestionnaires(
+                        StorageKeys.CONFIG_CLINICAL_ASSESSMENTS
+                      )
+                    })
                 })
                 .then(() => {
                   return this.storage

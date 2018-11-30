@@ -70,7 +70,7 @@ export class HomePageComponent {
   ) {
     this.platform.resume.subscribe(e => {
       this.kafka.sendAllAnswersInCache()
-      this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
+      this.updateCurrentTask()
     })
   }
 
@@ -79,16 +79,24 @@ export class HomePageComponent {
     this.elProgressHeight += this.elProgressOffset
     this.applyTransformations()
     this.showNoTasksToday = false
+    this.tasksService
+      .getTaskProgress()
+      .then(progress => (this.tasksProgress = progress))
   }
 
   ionViewDidLoad() {
     setInterval(() => {
-      this.checkForNextTask()
+      this.updateCurrentTask()
     }, 1000)
     this.evalHasClinicalTasks()
     this.checkIfOnlyESM()
     this.tasks = this.tasksService.getTasksOfToday()
     this.tasksService.sendNonReportedTaskCompletion()
+  }
+
+  updateCurrentTask() {
+    this.checkForNextTask()
+    this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
   }
 
   checkForNextTask() {
@@ -105,7 +113,6 @@ export class HomePageComponent {
       this.hasClickedStartButton = false
       this.displayCompleted(false)
       this.displayEvalTransformations(false)
-      this.taskIsNow = checkTaskIsNow(task.timestamp)
     } else {
       this.tasksService.areAllTasksComplete().then(completed => {
         if (completed) {
@@ -154,14 +161,15 @@ export class HomePageComponent {
   }
 
   getElementsAttributes() {
-    if (this.elContent._scroll) {
-      this.elContentHeight = this.elContent.contentHeight
+    if (this.elContent) this.elContentHeight = this.elContent.contentHeight
+    if (this.elProgress)
       this.elProgressHeight =
         this.elProgress.nativeElement.offsetHeight - this.elProgressOffset
+    if (this.elTicker)
       this.elTickerHeight = this.elTicker.nativeElement.offsetHeight
-      this.elInfoHeight = this.elInfo.nativeElement.offsetHeight
+    if (this.elInfo) this.elInfoHeight = this.elInfo.nativeElement.offsetHeight
+    if (this.elFooter)
       this.elFooterHeight = this.elFooter.nativeElement.offsetHeight
-    }
   }
 
   applyTransformations() {
@@ -183,12 +191,19 @@ export class HomePageComponent {
       }px)`
       this.elCalendar.nativeElement.style.opacity = 1
     } else {
-      this.elProgress.nativeElement.style.transform = 'translateY(0px) scale(1)'
-      this.elTicker.nativeElement.style.transform = 'translateY(0px)'
-      this.elInfo.nativeElement.style.transform = 'translateY(0px)'
-      this.elFooter.nativeElement.style.transform = 'translateY(0px) scale(1)'
-      this.elCalendar.nativeElement.style.transform = 'translateY(0px)'
-      this.elCalendar.nativeElement.style.opacity = 0
+      if (this.elProgress)
+        this.elProgress.nativeElement.style.transform =
+          'translateY(0px) scale(1)'
+      if (this.elTicker)
+        this.elTicker.nativeElement.style.transform = 'translateY(0px)'
+      if (this.elInfo)
+        this.elInfo.nativeElement.style.transform = 'translateY(0px)'
+      if (this.elFooter)
+        this.elFooter.nativeElement.style.transform = 'translateY(0px) scale(1)'
+      if (this.elCalendar) {
+        this.elCalendar.nativeElement.style.transform = 'translateY(0px)'
+        this.elCalendar.nativeElement.style.opacity = 0
+      }
     }
     this.setCalendarScrollHeight(this.showCalendar)
   }
@@ -244,10 +259,14 @@ export class HomePageComponent {
       this.elFooter.nativeElement.style.transform = `translateY(${this
         .elInfoHeight + this.elFooterHeight}px) scale(0)`
     } else {
-      this.elTicker.nativeElement.style.padding = '0 0 2px 0'
-      this.elTicker.nativeElement.style.transform = 'translateY(0px)'
-      this.elInfo.nativeElement.style.transform = 'translateY(0px) scale(1)'
-      this.elFooter.nativeElement.style.transform = 'translateY(0px) scale(1)'
+      if (this.elTicker) {
+        this.elTicker.nativeElement.style.padding = '0 0 2px 0'
+        this.elTicker.nativeElement.style.transform = 'translateY(0px)'
+      }
+      if (this.elInfo)
+        this.elInfo.nativeElement.style.transform = 'translateY(0px) scale(1)'
+      if (this.elFooter)
+        this.elFooter.nativeElement.style.transform = 'translateY(0px) scale(1)'
     }
   }
 

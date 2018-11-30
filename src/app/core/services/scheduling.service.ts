@@ -17,10 +17,11 @@ export class SchedulingService {
   scheduleVersion: number
   configVersion: number
   refTimestamp: number
-  schedule: Task[]
+  completedTasks = []
   upToDate: Promise<Boolean>
   assessments: Promise<Assessment[]>
   tzOffset: number
+  utcOffsetPrev: number
 
   constructor(public storage: StorageService) {
     const now = new Date()
@@ -101,6 +102,10 @@ export class SchedulingService {
     return this.storage.get(StorageKeys.SCHEDULE_TASKS_CLINICAL)
   }
 
+  getCompletedTasks() {
+    return this.storage.get(StorageKeys.SCHEDULE_TASKS_COMPLETED)
+  }
+
   getNonReportedCompletedTasks() {
     const defaultTasks = this.getDefaultTasks()
     const clinicalTasks = this.getClinicalTasks()
@@ -163,16 +168,26 @@ export class SchedulingService {
   }
 
   generateSchedule(force: boolean) {
+    const completedTasks = this.getCompletedTasks()
     const scheduleVProm = this.storage.get(StorageKeys.SCHEDULE_VERSION)
     const configVProm = this.storage.get(StorageKeys.CONFIG_VERSION)
     const refDate = this.storage.get(StorageKeys.REFERENCEDATE)
+    const utcOffsetPrev = this.storage.get(StorageKeys.UTC_OFFSET_PREV)
 
-    return Promise.all([scheduleVProm, configVProm, refDate]).then(data => {
-      this.scheduleVersion = data[0]
-      this.configVersion = data[1]
-      this.refTimestamp = data[2]
-      if (data[0] !== data[1] || force) {
-        console.log('Changed protocol version detected. Updating schedule..')
+    return Promise.all([
+      completedTasks,
+      scheduleVProm,
+      configVProm,
+      refDate,
+      utcOffsetPrev
+    ]).then(data => {
+      this.completedTasks = data[0] ? data[0] : []
+      this.scheduleVersion = data[1]
+      this.configVersion = data[2]
+      this.refTimestamp = data[3]
+      this.utcOffsetPrev = data[4]
+      if (data[1] !== data[2] || force) {
+        console.log('Updating schedule..')
         return this.runScheduler()
       }
     })
@@ -186,9 +201,7 @@ export class SchedulingService {
     return this.getAssessments()
       .then(assessments => this.buildTaskSchedule(assessments))
       .catch(e => console.error(e))
-      .then(schedule => {
-        return this.setSchedule(schedule)
-      })
+      .then((schedule: Task[]) => this.setSchedule(schedule))
       .catch(e => console.error(e))
   }
 
@@ -209,6 +222,44 @@ export class SchedulingService {
     })
   }
 
+  addToCompletedTasks(task) {
+    return this.storage.push(StorageKeys.SCHEDULE_TASKS_COMPLETED, task)
+  }
+
+  updateScheduleWithCompletedTasks(schedule) {
+    // NOTE: If utcOffsetPrev exists, timezone has changed
+    if (this.utcOffsetPrev) {
+      const currentMidnight = new Date().setHours(0, 0, 0, 0)
+      const prevMidnight =
+        new Date().setUTCHours(0, 0, 0, 0) + this.utcOffsetPrev * 60000
+      this.completedTasks.map(d => {
+        const index = schedule.findIndex(
+          s =>
+            s.timestamp - currentMidnight == d.timestamp - prevMidnight &&
+            s.name == d.name
+        )
+        if (index > -1) {
+          schedule[index].completed = true
+          return this.addToCompletedTasks(schedule[index])
+        }
+      })
+    } else {
+      this.completedTasks.map(d => {
+        if (
+          schedule[d.index].timestamp == d.timestamp &&
+          schedule[d.index].name == d.name
+        ) {
+          schedule[d.index].completed = true
+          return this.addToCompletedTasks(schedule[d.index])
+        }
+      })
+    }
+    this.storage.remove(StorageKeys.UTC_OFFSET_PREV)
+    this.storage.remove(StorageKeys.SCHEDULE_TASKS_COMPLETED)
+
+    return schedule
+  }
+
   buildTaskSchedule(assessments) {
     let schedule: Task[] = []
     let scheduleLength = schedule.length
@@ -220,6 +271,9 @@ export class SchedulingService {
       schedule = schedule.concat(tmpSchedule)
       scheduleLength = schedule.length
     }
+    // NOTE: Check for completed tasks
+    schedule = this.updateScheduleWithCompletedTasks(schedule)
+
     console.log('[√] Updated task schedule.')
     return Promise.resolve(schedule)
   }
@@ -243,9 +297,10 @@ export class SchedulingService {
           repeatQ.unit,
           repeatQ.unitsFromZero[i]
         )
-        const idx = indexOffset + tmpScheduleAll.length
-        const task = this.taskBuilder(idx, assessment, taskDate)
-        if (task.timestamp > today.getTime()) {
+
+        if (taskDate.getTime() > today.getTime()) {
+          const idx = indexOffset + tmpScheduleAll.length
+          const task = this.taskBuilder(idx, assessment, taskDate)
           tmpScheduleAll.push(task)
         }
       }

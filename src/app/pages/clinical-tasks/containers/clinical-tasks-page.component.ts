@@ -14,8 +14,8 @@ import { ClinicalTasksService } from '../services/clinical-tasks.service'
   templateUrl: 'clinical-tasks-page.component.html'
 })
 export class ClinicalTasksPageComponent {
-  scrollHeight: number = 500
-  tasks
+  scrollHeight = 500
+  assessments
 
   constructor(
     public navCtrl: NavController,
@@ -25,21 +25,19 @@ export class ClinicalTasksPageComponent {
   ) {}
 
   ionViewWillEnter() {
-    this.tasks = this.clinicalTasksService.getClinicalTasksUpdated()
+    this.assessments = this.clinicalTasksService.getClinicalAssessments()
   }
 
-  clicked(task) {
+  clicked(assessment) {
     const lang = this.storage.get(StorageKeys.LANGUAGE)
-    const nextAssessment = this.clinicalTasksService.getClinicalAssessment(task)
-    Promise.all([lang, nextAssessment]).then(res => {
+    Promise.all([lang]).then(res => {
       const language = res[0].value
-      const assessment = res[1]
       const params = {
         title: assessment.name,
         introduction: assessment.startText[language],
         endText: assessment.endText[language],
         questions: assessment.questions,
-        associatedTask: task,
+        associatedTask: assessment,
         assessment: assessment
       }
       if (assessment.showIntroduction) {

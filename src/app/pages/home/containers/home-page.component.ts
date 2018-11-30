@@ -70,7 +70,7 @@ export class HomePageComponent {
   ) {
     this.platform.resume.subscribe(e => {
       this.kafka.sendAllAnswersInCache()
-      this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
+      this.updateCurrentTask()
     })
   }
 
@@ -86,12 +86,17 @@ export class HomePageComponent {
 
   ionViewDidLoad() {
     setInterval(() => {
-      this.checkForNextTask()
+      this.updateCurrentTask()
     }, 1000)
     this.evalHasClinicalTasks()
     this.checkIfOnlyESM()
     this.tasks = this.tasksService.getTasksOfToday()
     this.tasksService.sendNonReportedTaskCompletion()
+  }
+
+  updateCurrentTask() {
+    this.checkForNextTask()
+    this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
   }
 
   checkForNextTask() {
@@ -108,7 +113,6 @@ export class HomePageComponent {
       this.hasClickedStartButton = false
       this.displayCompleted(false)
       this.displayEvalTransformations(false)
-      this.taskIsNow = checkTaskIsNow(task.timestamp)
     } else {
       this.tasksService.areAllTasksComplete().then(completed => {
         if (completed) {

@@ -111,31 +111,26 @@ export class SchedulingService {
 
   getNonReportedCompletedTasks() {
     const defaultTasks = this.getDefaultTasks()
-    const clinicalTasks = this.getClinicalTasks()
     return Promise.resolve(
-      Promise.all([defaultTasks, clinicalTasks]).then(
-        defaultAndClinicalTasks => {
-          const tasks = defaultAndClinicalTasks[0].concat(
-            defaultAndClinicalTasks[1]
-          )
-          const nonReportedTasks = []
-          const now = new Date().getTime()
-          let limit = 100
-          for (let i = 0; i < tasks.length; i++) {
-            if (tasks[i]) {
-              if (
-                tasks[i].reportedCompletion === false &&
-                tasks[i].timestamp < now &&
-                limit > 0
-              ) {
-                nonReportedTasks.push(tasks[i])
-                limit -= 1
-              }
+      Promise.all([defaultTasks]).then(res => {
+        const tasks = res[0]
+        const nonReportedTasks = []
+        const now = new Date().getTime()
+        let limit = 100
+        for (let i = 0; i < tasks.length; i++) {
+          if (tasks[i]) {
+            if (
+              tasks[i].reportedCompletion === false &&
+              tasks[i].timestamp < now &&
+              limit > 0
+            ) {
+              nonReportedTasks.push(tasks[i])
+              limit -= 1
             }
           }
-          return nonReportedTasks
         }
-      )
+        return nonReportedTasks
+      })
     )
   }
 
@@ -315,6 +310,7 @@ export class SchedulingService {
   }
 
   setDateTimeToMidnight(date) {
+    // NOTE: This is causing task timestamps to be +1 hour.
     let resetDate: Date
     if (this.tzOffset === date.getTimezoneOffset()) {
       resetDate = new Date(date.setHours(1, 0, 0, 0))
@@ -438,33 +434,20 @@ export class SchedulingService {
     })
   }
 
-  generateClinicalTasks(tasks, associatedTask) {
-    let clinicalTasks = []
-    if (tasks) {
-      clinicalTasks = tasks
-    } else {
-      tasks = []
-    }
-    const protocol = associatedTask.protocol
-    const repeatTimes = this.formatRepeatsAfterClinic(
-      protocol['clinicalProtocol']['repeatAfterClinicVisit']
-    )
+  generateClinicalTasks(tasks, assessment) {
+    const clinicalTasks = tasks ? tasks : []
+    const protocol = assessment.protocol
+    const repeatTimes = protocol.clinicalProtocol.repeatAfterClinicVisit
+
     const now = this.setDateTimeToMidnight(new Date())
-    for (let i = 0; i < repeatTimes.length; i++) {
-      const ts = now.getTime() + repeatTimes[i]
-      const clinicalTask: Task = {
-        index: tasks.length + i,
-        completed: false,
-        reportedCompletion: false,
-        timestamp: ts,
-        name: associatedTask['name'],
-        reminderSettings: protocol['reminders'],
-        nQuestions: associatedTask['questions'].length,
-        estimatedCompletionTime: associatedTask['estimatedCompletionTime'],
-        warning: '',
-        isClinical: true
-      }
-      clinicalTasks.push(clinicalTask)
+    for (let i = 0; i < repeatTimes.unitsFromZero.length; i++) {
+      const taskDate = this.advanceRepeat(
+        now,
+        repeatTimes.unit,
+        repeatTimes.unitsFromZero[i]
+      )
+      const task = this.taskBuilder(tasks.length + i, assessment, taskDate)
+      clinicalTasks.push(task)
     }
     return this.storage.set(StorageKeys.SCHEDULE_TASKS_CLINICAL, clinicalTasks)
   }
@@ -499,6 +482,12 @@ export class SchedulingService {
     const updatedTask = task
     updatedTask.completed = true
     this.addToCompletedTasks(updatedTask)
+    return this.insertTask(updatedTask)
+  }
+
+  updateTaskToReportedCompletion(task): Promise<any> {
+    const updatedTask = task
+    updatedTask.reportedCompletion = true
     return this.insertTask(updatedTask)
   }
 }

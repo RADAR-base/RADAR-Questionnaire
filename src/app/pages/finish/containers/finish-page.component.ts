@@ -53,7 +53,8 @@ export class FinishPageComponent {
         )
         .then(
           data => {
-            this.schedule.updateTaskToComplete(this.associatedTask)
+            if (this.associatedTask.isClinical == false)
+              this.schedule.updateTaskToComplete(this.associatedTask)
             this.sendToKafka(
               this.associatedTask,
               data,
@@ -73,13 +74,17 @@ export class FinishPageComponent {
   }
 
   sendToKafka(task: Task, questionnaireData, questions) {
+    // NOTE: Submit data to kafka
     this.kafkaService.prepareTimeZoneKafkaObjectAndSend()
     this.kafkaService.prepareAnswerKafkaObjectAndSend(
       task,
       questionnaireData,
       questions
     )
-    // NOTE: Submit data to kafka
+    if (task.isClinical == false) {
+      this.kafkaService.prepareCompletionLogKafkaObjectAndSend(task)
+      this.schedule.updateTaskToReportedCompletion(task)
+    }
   }
 
   handleClosePage() {
@@ -96,7 +101,7 @@ export class FinishPageComponent {
         .get(StorageKeys.SCHEDULE_TASKS_CLINICAL)
         .then(tasks =>
           this.schedule.generateClinicalTasks(
-            tasks,
+            tasks ? tasks : [],
             this.navParams.data.associatedTask
           )
         )

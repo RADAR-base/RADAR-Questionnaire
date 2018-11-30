@@ -452,32 +452,6 @@ export class SchedulingService {
     return this.storage.set(StorageKeys.SCHEDULE_TASKS_CLINICAL, clinicalTasks)
   }
 
-  formatRepeatsAfterClinic(repeats) {
-    const repeatsInMillis = []
-    const unit = repeats['unit']
-    for (let i = 0; i < repeats['unitsFromZero'].length; i++) {
-      const unitFromZero = repeats['unitsFromZero'][i]
-      switch (unit) {
-        case 'min': {
-          const formatted = unitFromZero * 1000 * 60
-          repeatsInMillis.push(formatted)
-          break
-        }
-        case 'hour': {
-          const formatted = unitFromZero * 1000 * 60 * 60
-          repeatsInMillis.push(formatted)
-          break
-        }
-        case 'day': {
-          const formatted = unitFromZero * 1000 * 60 * 60 * 24
-          repeatsInMillis.push(formatted)
-          break
-        }
-      }
-    }
-    return repeatsInMillis
-  }
-
   updateTaskToComplete(task): Promise<any> {
     const updatedTask = task
     updatedTask.completed = true

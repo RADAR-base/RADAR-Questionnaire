@@ -108,11 +108,12 @@ export class HomePageComponent {
   }
 
   checkForNextTaskGeneric(task) {
-    if (task) {
+    if (task && task.isClinical == false) {
       this.nextTask = task
       this.hasClickedStartButton = false
       this.displayCompleted(false)
       this.displayEvalTransformations(false)
+      this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
     } else {
       this.tasksService.areAllTasksComplete().then(completed => {
         if (completed) {

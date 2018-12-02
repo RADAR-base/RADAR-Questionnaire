@@ -58,7 +58,7 @@ export class TasksService {
     return this.getTasksOfToday().then((tasks: Task[]) => {
       if (tasks) {
         for (let i = 0; i < tasks.length; i++) {
-          if (tasks[i].name !== 'ESM') {
+          if (tasks[i].name !== 'ESM' && tasks[i].isClinical == false) {
             if (tasks[i].completed === false) {
               return false
             }

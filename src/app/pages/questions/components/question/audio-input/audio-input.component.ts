@@ -32,22 +32,16 @@ export class AudioInputComponent implements OnInit, OnChanges {
   @Input()
   currentlyShown: boolean
 
-  filename: string
+  fileName = 'audio-opensmile.bin'
   name: string
   filepath: string
-  recording: boolean
   value: string = null
   configFile = 'liveinput_android.conf'
   compression = 1
   platform = false
   answer_b64: string = null
   permission: any
-
-  answer: Answer = {
-    id: null,
-    value: null,
-    type: 'audio'
-  }
+  recordingTime = 45000
 
   ngOnInit() {}
 
@@ -86,7 +80,17 @@ export class AudioInputComponent implements OnInit, OnChanges {
   startRecording() {
     this.permissionUtil.getRecordAudio_Permission().then(success => {
       if (success === true) {
-        this.audioRecordService.startAudioRecording(this.configFile)
+        this.audioRecordService.startAudioRecording(
+          this.fileName,
+          this.configFile
+        )
+        setTimeout(() => {
+          console.log('Time up for recording')
+          this.audioRecordService.stopAudioRecording()
+          this.audioRecordService
+            .readAudioFile(this.fileName)
+            .then(data => this.valueChange.emit(data))
+        }, this.recordingTime)
       }
     })
   }

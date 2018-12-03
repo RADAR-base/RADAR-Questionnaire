@@ -155,4 +155,5 @@ export const MIN_SEC = 60
 export const KAFKA_ASSESSMENT = 'assessment'
 export const KAFKA_COMPLETION_LOG = 'completion_log'
 export const KAFKA_TIMEZONE = 'timezone'
+export const KAFKA_AUDIO = 'audio'
 export const KAFKA_CLIENT_KAFKA = '/kafka'

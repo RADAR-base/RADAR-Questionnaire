@@ -29,6 +29,7 @@ import {
 import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { AuthService } from '../services/auth.service'
+import {KeycloakService} from "../services/keycloak.service";
 
 @Component({
   selector: 'page-enrolment',
@@ -346,8 +347,10 @@ export class EnrolmentPageComponent {
   }
 
   goToRegistration() {
-
-    window
-      .open(this.registrationUrl, '_self')
+      KeycloakService.init()
+          .then((success) => {
+              console.log("Success")
+          })
+          .catch((err) => console.error("Error initalizing Keycloak", err));
   }
 }

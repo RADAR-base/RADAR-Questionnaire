@@ -24,7 +24,6 @@ export class KeycloakService {
   */
   static init(): Promise<any> {
     // Create a new Keycloak Client Instance
-      console.log("Config", keycloakConfig);
     let keycloakAuth: any = new Keycloak({
         url: 'http://localhost:8080/auth',
         realm: 'mighealth',
@@ -34,7 +33,7 @@ export class KeycloakService {
       return new Promise((resolve, reject) => {
         keycloakAuth.init({ onLoad: 'login-required'}).success(() => {
             KeycloakService.auth.authz = keycloakAuth;
-            KeycloakService.auth.logoutUrl = keycloakAuth.authServerUrl + "/realms/" + keycloakConfig.realm + "/protocol/openid-connect/logout?redirect_uri=/";
+            KeycloakService.auth.logoutUrl = keycloakAuth.authServerUrl + "/realms/" + keycloakAuth.realm + "/protocol/openid-connect/logout?redirect_uri=/";
             resolve();
           }).error((err) => {
             reject(err);

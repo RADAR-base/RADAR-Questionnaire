@@ -87,7 +87,7 @@ export class EnrolmentPageComponent {
   ) {}
 
   ionViewDidLoad() {
-    this.slides.lockSwipes(true)
+    // this.slides.lockSwipes(true)
     this.translate.init()
   }
 

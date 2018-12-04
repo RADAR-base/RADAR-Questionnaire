@@ -92,4 +92,10 @@
     <plugin name="cordova-plugin-fcm" spec="git+https://github.com/yatharthranjan/cordova-plugin-fcm.git" />
     <plugin name="cordova-plugin-globalization" spec="^1.11.0" />
     <engine name="android" spec="6.4.0" />
+    <plugin name="ionic-plugin-deeplinks" spec="~1.0.17">
+        <variable name="URL_SCHEME" value="mymighealthapp" />
+        <variable name="DEEPLINK_SCHEME" value="hthttps" />
+        <variable name="DEEPLINK_HOST" value="exucl.ac.uk" />
+        <variable name="ANDROID_PATH_PREFIX" value="/" />
+    </plugin>
 </widget>

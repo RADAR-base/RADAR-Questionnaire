@@ -1,17 +1,17 @@
-<ion-content>
-  <ion-slides pager="false">
+<ion-content >
+  <ion-slides pager direction="horizontal" >
 
     <ion-slide id="intro">
       <div id="logo-container">
         <img
           id="logo"
-          src="assets/imgs/radar-logo.svg"
-          alias="RADAR LOGO"
+          src="assets/imgs/ucl-logo-text.png"
+          alias="UCL LOGO"
         >
       </div>
       <div class="text">
-        <div class="text-lg">{{ "ENROL_WELCOME_1" | translate }}</div>
-        {{ "ENROL_WELCOME_2" | translate }}
+        <div class="text-lg">{{ "ENROL_WELCOME_1" | translate }}{{ "ENROL_WELCOME_2" | translate }}</div>
+        A Research Study about the Health of New Residents to the UK
         <div class="padding text-justify extra-padding">
           <ion-item no-lines>
             <span class="info-value">{{ language.label | translate }}</span>
@@ -32,6 +32,92 @@
         padding
         class="bottom"
       >
+        <!--<button-->
+          <!--ion-button-->
+          <!--class="bt bt&#45;&#45;full"-->
+          <!--round-->
+          <!--full-->
+          <!--(click)="next()"-->
+        <!--&gt;-->
+          <!--{{ "BTN_NEXT" | translate }}-->
+        <!--</button>-->
+      </div>
+    </ion-slide>
+
+    <ion-slide id="about">
+
+        <div class="text-md">{{ "ENROL_ABOUT_HEADING" | translate }}</div>
+
+        <ion-scroll
+          scrollY="true"
+          style="height:550px"
+        >
+          <div class="text text-justify">
+            <span class="text">
+              The purpose of this study is to learn about the health of people who move to the United Kingdom to work, study, or join families.
+            </span>
+            <br>
+            <span class="text">
+             Through the use of survey questionnaires, we aim to collect information to better understand participants' health, welbeing and experiences following their migration to the UK.
+            </span>
+            <div class="text" style="font-size: 20px; padding-bottom: 5px; padding-top: 5px">
+              Background
+            </div>
+            <span class="text">
+              Importance of understand the health and larger determinants of health of migrants in the UK (some long text here).
+              <br>
+              Note that the "Available Online" and final date of publication may often be very different, but except in rare cases it is "Available Online" that you should care about because that is when people begin to be able to get your paper. However, some journals do not do all of the final proof correction until closer to the date of publication, but essentially just have your preprint up online for quite some time!
+              <br>
+              Note that the "Available Online" and final date of publication may often be very different, but except in rare cases it is "Available Online" that you should care about because that is when people begin to be able to get your paper. However, some journals do not do all of the final proof correction until closer to the date of publication, but essentially just have your preprint up online for quite some time!
+
+            </span>
+          </div>
+
+        </ion-scroll>
+      <div
+        padding
+        class="bottom"
+      >
+        <!--<button-->
+          <!--ion-button-->
+          <!--class="bt bt&#45;&#45;full"-->
+          <!--round-->
+          <!--full-->
+          <!--(click)="next()"-->
+        <!--&gt;-->
+          <!--{{ "BTN_NEXT" | translate }}-->
+        <!--</button>-->
+      </div>
+
+    </ion-slide>
+
+    <ion-slide id="how-study-works">
+
+      <div class="text-md">{{ "ENROL_HOW_STUDY_WORKS_HEADING" | translate }}</div>
+
+      <ion-scroll
+        scrollY="true"
+        style="height:550px"
+      >
+        <div class="text text-justify">
+          <span class="text">
+            To join participant in this study we will ask you to:
+          </span>
+          <br>
+          <section style="align-content: left">
+            <ul >
+              <li>List item</li>
+              <li>List item</li>
+            </ul>
+          </section>
+        </div>
+
+
+      </ion-scroll>
+      <div
+        padding
+        class="bottom"
+      >
         <button
           ion-button
           class="bt bt--full"
@@ -39,7 +125,84 @@
           full
           (click)="next()"
         >
-          {{ "BTN_START" | translate }}
+          {{ "BTN_NEXT" | translate }}
+        </button>
+      </div>
+
+    </ion-slide>
+
+    <ion-slide id="eligibility">
+
+      <div class="text-md">{{ "ENROL_ELIGIBILITY_HEADING" | translate }}</div>
+
+      <ion-scroll
+        scrollY="true"
+        style="height:550px"
+      >
+        <span>Eligibility criterion 1</span>
+        <br>
+        <span>
+          <tr>
+            <td>
+        <button ion-button
+                class="bt bt--block"
+                [block]="true"
+                [outline]="true"
+                large >Yes</button>
+              </td>
+            <td>
+        <button ion-button
+                class="bt bt--block"
+                [block]="true"
+                [outline]="true"
+                large >No</button>
+            </td>
+          </tr>
+        </span>
+
+      </ion-scroll>
+      <div
+        padding
+        class="bottom"
+      >
+        <button
+          ion-button
+          class="bt bt--full"
+          round
+          full
+          (click)="next()"
+        >
+          {{ "BTN_NEXT" | translate }}
+        </button>
+      </div>
+
+    </ion-slide>
+
+    <ion-slide id="to-keycloak">
+      <div id="logo-container">
+        <img
+                id="logo"
+                src="assets/imgs/ucl-logo-text.png"
+                alias="RADAR LOGO"
+        >
+      </div>
+      <div class="text">
+        <div class="text-lg">{{ "ENROL_WELCOME_1" | translate }}</div>
+        {{ "ENROL_WELCOME_2" | translate }}
+        <div class="padding text-justify extra-padding">{{ "ENROL_WELCOME_DESC" | translate }}</div>
+      </div>
+      <div
+              padding
+              class="bottom"
+      >
+        <button
+                ion-button
+                class="bt bt--full"
+                round
+                full
+                (click)="goToRegistration()"
+        >
+          Register
         </button>
       </div>
     </ion-slide>
@@ -48,7 +211,7 @@
       <div id="logo-container">
         <img
           id="logo"
-          src="assets/imgs/radar-logo.svg"
+          src="assets/imgs/ucl-logo-text.png"
           alias="RADAR LOGO"
         >
       </div>
@@ -257,4 +420,13 @@
     </ion-slide>
 
   </ion-slides>
+    <!--<button-->
+      <!--ion-button-->
+      <!--class="bt bt&#45;&#45;full"-->
+      <!--round-->
+      <!--full-->
+      <!--(click)="goToRegistration()"-->
+    <!--&gt;-->
+      <!--{{ "BTN_JOINSTUDY" | translate }}-->
+  <!--</button>-->
 </ion-content>

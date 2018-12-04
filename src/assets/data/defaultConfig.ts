@@ -111,9 +111,9 @@ export const DefaultSourceTypeRegistrationBody: any = {
   // "deviceTypeId": 1104
 }
 
-export const DefaultEndPoint: string =
-  'https://radar-cns-platform.rosalind.kcl.ac.uk/'
-// export const DefaultEndPoint: string = 'https://radar-backend.co.uk/'
+// export const DefaultEndPoint: string =
+//   'https://radar-cns-platform.rosalind.kcl.ac.uk/'
+export const DefaultEndPoint: string = 'https://radar-backend.co.uk/'
 
 export const DefaultProtocolEndPoint: string = DefaultProtocolEndPointExport
 

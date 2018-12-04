@@ -45,6 +45,10 @@ export class EnrolmentPageComponent {
   showOutcomeStatus: boolean = false
   outcomeStatus: String
   reportSettings: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
+  registrationUrl: string = 'http://localhost:8080/auth/realms/mighealth/protocol/openid-connect/auth?' +
+    'client_id=account' +
+    '&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fauth%2Frealms%2Fmighealth%2Faccount%2Flogin-redirect' +
+    '&state=0%2F90b4e79a-1333-4a4f-91b1-414f18942e82&response_type=code&scope=openid';
 
   URLRegEx = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?'
 
@@ -339,5 +343,11 @@ export class EnrolmentPageComponent {
       }
     }
     alert.present()
+  }
+
+  goToRegistration() {
+
+    window
+      .open(this.registrationUrl, '_self')
   }
 }

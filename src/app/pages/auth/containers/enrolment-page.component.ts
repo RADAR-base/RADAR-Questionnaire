@@ -29,7 +29,8 @@ import {
 import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { AuthService } from '../services/auth.service'
-import {KeycloakService} from "../services/keycloak.service";
+import { KeycloakService } from "../services/keycloak.service";
+import { Deeplinks} from '@ionic-native/deeplinks'
 
 @Component({
   selector: 'page-enrolment',
@@ -84,7 +85,8 @@ export class EnrolmentPageComponent {
     private configService: ConfigService,
     private authService: AuthService,
     private translate: TranslatePipe,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private deeplinks: Deeplinks
   ) {}
 
   ionViewDidLoad() {

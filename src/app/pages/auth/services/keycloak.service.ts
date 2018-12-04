@@ -27,7 +27,10 @@ export class KeycloakService {
     let keycloakAuth: any = new Keycloak({
         url: 'http://localhost:8080/auth',
         realm: 'mighealth',
-        clientId: 'armt'
+        clientId: 'armt',
+        adapter: 'cordova-native',
+        responseMode: 'query',
+        redirectUri: 'mighealthapp://ucl.ac.uk/'
     });
 
       return new Promise((resolve, reject) => {

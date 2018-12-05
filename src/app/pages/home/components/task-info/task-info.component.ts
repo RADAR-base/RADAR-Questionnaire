@@ -128,6 +128,8 @@ export class TaskInfoComponent implements OnChanges {
   task: Task
   @Input()
   isNow = false
+  @Input()
+  progress: TasksProgress
   @Output()
   collapse: EventEmitter<Boolean> = new EventEmitter()
   expanded: Boolean = true
@@ -145,7 +147,6 @@ export class TaskInfoComponent implements OnChanges {
   current: number = 0
   radius: number = 35
   stroke: number = 8
-  progress: TasksProgress
 
   animationKeys = {
     MIN: 'min',
@@ -201,13 +202,10 @@ export class TaskInfoComponent implements OnChanges {
   }
 
   updateProgress() {
-    this.tasksService.getTaskProgress().then(progress => {
-      this.progress = progress
-      if (this.progress) {
-        this.current = this.progress.completedTasks
-        this.max = this.progress.numberOfTasks
-      }
-    })
+    if (this.progress) {
+      this.current = this.progress.completedTasks
+      this.max = this.progress.numberOfTasks
+    }
   }
 
   applyAnimationKeys() {

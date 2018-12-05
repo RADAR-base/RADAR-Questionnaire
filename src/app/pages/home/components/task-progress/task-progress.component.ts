@@ -45,10 +45,7 @@ export class TaskProgressComponent implements OnChanges {
   constructor(private tasksService: TasksService) {}
 
   ngOnChanges() {
-    this.tasksService.getTaskProgress().then(progress => {
-      this.progress = progress
-      this.updateProgress()
-    })
+    this.updateProgress()
   }
 
   updateProgress() {

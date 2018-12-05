@@ -228,21 +228,24 @@ export class SchedulingService {
 
   updateScheduleWithCompletedTasks(schedule) {
     // NOTE: If utcOffsetPrev exists, timezone has changed
-    if (this.utcOffsetPrev) {
-      const currentMidnight = new Date().setHours(0, 0, 0, 0)
-      const prevMidnight =
-        new Date().setUTCHours(0, 0, 0, 0) + this.utcOffsetPrev * 60000
-      this.completedTasks.map(d => {
-        const index = schedule.findIndex(
-          s =>
-            s.timestamp - currentMidnight == d.timestamp - prevMidnight &&
-            s.name == d.name
-        )
-        if (index > -1) {
-          schedule[index].completed = true
-          return this.addToCompletedTasks(schedule[index])
-        }
+    if (this.utcOffsetPrev != null) {
+      this.storage.remove(StorageKeys.SCHEDULE_TASKS_COMPLETED).then(() => {
+        const currentMidnight = new Date().setHours(0, 0, 0, 0)
+        const prevMidnight =
+          new Date().setUTCHours(0, 0, 0, 0) + this.utcOffsetPrev * 60000
+        this.completedTasks.map(d => {
+          const index = schedule.findIndex(
+            s =>
+              s.timestamp - currentMidnight == d.timestamp - prevMidnight &&
+              s.name == d.name
+          )
+          if (index > -1) {
+            schedule[index].completed = true
+            this.addToCompletedTasks(schedule[index])
+          }
+        })
       })
+      this.storage.remove(StorageKeys.UTC_OFFSET_PREV)
     } else {
       this.completedTasks.map(d => {
         if (
@@ -250,13 +253,9 @@ export class SchedulingService {
           schedule[d.index].name == d.name
         ) {
           schedule[d.index].completed = true
-          return this.addToCompletedTasks(schedule[d.index])
         }
       })
     }
-    this.storage.remove(StorageKeys.UTC_OFFSET_PREV)
-    this.storage.remove(StorageKeys.SCHEDULE_TASKS_COMPLETED)
-
     return schedule
   }
 

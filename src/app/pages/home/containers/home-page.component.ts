@@ -75,22 +75,23 @@ export class HomePageComponent {
   }
 
   ionViewWillEnter() {
+    if (!this.tasks) this.tasks = this.tasksService.getTasksOfToday()
     this.getElementsAttributes()
     this.elProgressHeight += this.elProgressOffset
     this.applyTransformations()
     this.showNoTasksToday = false
-    this.tasksService
-      .getTaskProgress()
-      .then(progress => (this.tasksProgress = progress))
   }
 
   ionViewDidLoad() {
     setInterval(() => {
       this.updateCurrentTask()
     }, 1000)
+    this.tasks = this.tasksService.getTasksOfToday()
+    this.tasks.then(
+      tasks => (this.tasksProgress = this.tasksService.getTaskProgress(tasks))
+    )
     this.evalHasClinicalTasks()
     this.checkIfOnlyESM()
-    this.tasks = this.tasksService.getTasksOfToday()
     this.tasksService.sendNonReportedTaskCompletion()
   }
 
@@ -101,9 +102,9 @@ export class HomePageComponent {
 
   checkForNextTask() {
     if (!this.showCalendar) {
-      this.tasksService
-        .getNextTask()
-        .then(task => this.checkForNextTaskGeneric(task))
+      this.tasks.then(tasks =>
+        this.checkForNextTaskGeneric(this.tasksService.getNextTask(tasks))
+      )
     }
   }
 
@@ -131,7 +132,7 @@ export class HomePageComponent {
   }
 
   checkIfOnlyESM() {
-    this.tasksService.getTasksOfToday().then(tasks => {
+    this.tasks.then(tasks => {
       let tmpHasOnlyESMs = true
       for (let i = 0; i < tasks.length; i++) {
         if (tasks[i].name !== 'ESM') {

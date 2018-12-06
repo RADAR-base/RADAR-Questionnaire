@@ -26,13 +26,7 @@ export class TasksService {
     return this.schedule.getTasksForDate(timestamp)
   }
 
-  getTaskProgress() {
-    return this.getTasksOfToday().then((tasks: Task[]) =>
-      this.retrieveTaskProgress(tasks)
-    )
-  }
-
-  retrieveTaskProgress(tasks): TasksProgress {
+  getTaskProgress(tasks): TasksProgress {
     const tasksProgress: TasksProgress = {
       numberOfTasks: 0,
       completedTasks: 0
@@ -48,10 +42,8 @@ export class TasksService {
     }
   }
 
-  getNextTask() {
-    return this.getTasksOfToday().then((tasks: Task[]) => {
-      return this.retrieveNextTask(tasks)
-    })
+  getNextTask(tasks) {
+    return this.retrieveNextTask(tasks)
   }
 
   areAllTasksComplete() {

@@ -16,7 +16,7 @@ import { StorageService } from './storage.service'
 export class SchedulingService {
   scheduleVersion: number
   configVersion: number
-  refTimestamp: number
+  enrolmentDate: number
   completedTasks = []
   upToDate: Promise<Boolean>
   assessments: Promise<Assessment[]>
@@ -54,22 +54,18 @@ export class SchedulingService {
       if (schedule) {
         const startDate = this.setDateTimeToMidnight(date)
         const endDate = this.advanceRepeat(startDate, 'day', 1)
-        let tasks: Task[] = []
+        const tasks: Task[] = []
         for (let i = 0; i < schedule.length; i++) {
-          if (
-            schedule[i].timestamp < endDate.getTime() &&
-            schedule[i].timestamp > startDate.getTime()
-          ) {
+          if (schedule[i].timestamp > endDate.getTime()) break
+          if (schedule[i].timestamp > startDate.getTime())
             tasks.push(schedule[i])
-          }
         }
-        tasks = tasks.sort(this.compareTasks)
         return tasks
       }
     })
   }
 
-  // Define the order of the tasks - whether it is based on index or timestamp
+  // NOTE:Define the order of the tasks - whether it is based on index or timestamp
   compareTasks(a: Task, b: Task) {
     return a.timestamp - b.timestamp
   }
@@ -171,7 +167,7 @@ export class SchedulingService {
     const completedTasks = this.getCompletedTasks()
     const scheduleVProm = this.storage.get(StorageKeys.SCHEDULE_VERSION)
     const configVProm = this.storage.get(StorageKeys.CONFIG_VERSION)
-    const refDate = this.storage.get(StorageKeys.REFERENCEDATE)
+    const refDate = this.storage.get(StorageKeys.ENROLMENTDATE)
     const utcOffsetPrev = this.storage.get(StorageKeys.UTC_OFFSET_PREV)
 
     return Promise.all([
@@ -184,7 +180,7 @@ export class SchedulingService {
       this.completedTasks = data[0] ? data[0] : []
       this.scheduleVersion = data[1]
       this.configVersion = data[2]
-      this.refTimestamp = data[3]
+      this.enrolmentDate = data[3]
       this.utcOffsetPrev = data[4]
       if (data[1] !== data[2] || force) {
         console.log('Updating schedule..')
@@ -194,9 +190,10 @@ export class SchedulingService {
   }
 
   runScheduler() {
-    this.buildReportSchedule()
-      .then(schedule => this.setReportSchedule(schedule))
-      .catch(e => console.error(e))
+    // NOTE: Temporarily turn off build report schedule.
+    // this.buildReportSchedule()
+    //   .then(schedule => this.setReportSchedule(schedule))
+    //   .catch(e => console.error(e))
 
     return this.getAssessments()
       .then(assessments => this.buildTaskSchedule(assessments))
@@ -226,37 +223,38 @@ export class SchedulingService {
     return this.storage.push(StorageKeys.SCHEDULE_TASKS_COMPLETED, task)
   }
 
-  updateScheduleWithCompletedTasks(schedule) {
+  updateScheduleWithCompletedTasks(schedule): Task[] {
     // NOTE: If utcOffsetPrev exists, timezone has changed
-    if (this.utcOffsetPrev) {
-      const currentMidnight = new Date().setHours(0, 0, 0, 0)
-      const prevMidnight =
-        new Date().setUTCHours(0, 0, 0, 0) + this.utcOffsetPrev * 60000
-      this.completedTasks.map(d => {
-        const index = schedule.findIndex(
-          s =>
-            s.timestamp - currentMidnight == d.timestamp - prevMidnight &&
-            s.name == d.name
-        )
-        if (index > -1) {
-          schedule[index].completed = true
-          return this.addToCompletedTasks(schedule[index])
-        }
-      })
+    if (this.utcOffsetPrev != null) {
+      this.storage
+        .remove(StorageKeys.SCHEDULE_TASKS_COMPLETED)
+        .then(() => {
+          const currentMidnight = new Date().setHours(0, 0, 0, 0)
+          const prevMidnight =
+            new Date().setUTCHours(0, 0, 0, 0) + this.utcOffsetPrev * 60000
+          this.completedTasks.map(d => {
+            const index = schedule.findIndex(
+              s =>
+                s.timestamp - currentMidnight == d.timestamp - prevMidnight &&
+                s.name == d.name
+            )
+            if (index > -1) {
+              schedule[index].completed = true
+              return this.addToCompletedTasks(schedule[index])
+            }
+          })
+        })
+        .then(() => this.storage.remove(StorageKeys.UTC_OFFSET_PREV))
     } else {
       this.completedTasks.map(d => {
         if (
           schedule[d.index].timestamp == d.timestamp &&
           schedule[d.index].name == d.name
         ) {
-          schedule[d.index].completed = true
-          return this.addToCompletedTasks(schedule[d.index])
+          return (schedule[d.index].completed = true)
         }
       })
     }
-    this.storage.remove(StorageKeys.UTC_OFFSET_PREV)
-    this.storage.remove(StorageKeys.SCHEDULE_TASKS_COMPLETED)
-
     return schedule
   }
 
@@ -272,7 +270,8 @@ export class SchedulingService {
       scheduleLength = schedule.length
     }
     // NOTE: Check for completed tasks
-    schedule = this.updateScheduleWithCompletedTasks(schedule)
+    const updatedSchedule = this.updateScheduleWithCompletedTasks(schedule)
+    schedule = updatedSchedule.sort(this.compareTasks)
 
     console.log('[√] Updated task schedule.')
     return Promise.resolve(schedule)
@@ -282,9 +281,9 @@ export class SchedulingService {
     const repeatP = assessment.protocol.repeatProtocol
     const repeatQ = assessment.protocol.repeatQuestionnaire
 
-    let iterDate = new Date(this.refTimestamp)
+    let iterDate = this.setDateTimeToMidnight(new Date(this.enrolmentDate))
     const yearsMillis = DefaultScheduleYearCoverage * 60000 * 60 * 24 * 365
-    const endDate = new Date(this.refTimestamp + yearsMillis)
+    const endDate = new Date(iterDate.getTime() + yearsMillis)
 
     console.log(assessment)
 
@@ -379,10 +378,10 @@ export class SchedulingService {
   }
 
   buildReportSchedule() {
-    let iterDate = new Date(this.refTimestamp)
+    let iterDate = this.setDateTimeToMidnight(new Date(this.enrolmentDate))
     iterDate = this.setDateTimeToMidnight(iterDate)
     const yearsMillis = DefaultScheduleYearCoverage * 60000 * 60 * 24 * 365
-    const endDate = new Date(this.refTimestamp + yearsMillis)
+    const endDate = new Date(iterDate.getTime() + yearsMillis)
     const tmpSchedule: ReportScheduling[] = []
 
     while (iterDate.getTime() <= endDate.getTime()) {

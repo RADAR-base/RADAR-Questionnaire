@@ -62,7 +62,7 @@ import { Deeplinks} from '@ionic-native/deeplinks'
     AndroidPermissions,
     File,
     AppVersion,
-    Deeplinks
+    Deeplinks,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

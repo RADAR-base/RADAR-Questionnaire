@@ -2,8 +2,10 @@ declare var require: any
 import { Injectable } from '@angular/core';
 var keycloakConfig = require('../config/keycloak.json');
 import { AlertController } from 'ionic-angular';
+import universalLinks from 'cordova-plugin-deeplinks'
 
-declare var Keycloak: any;
+var Keycloak = require('./keycloak.js');
+// declare var Keycloak: any;
 
 @Injectable()
 /**
@@ -11,12 +13,14 @@ declare var Keycloak: any;
  */
 export class KeycloakService {
   static auth: any = {};
+  universalLinks: any;
 
   /**
   * @param alertCtrl The ionic alert controller
   */
   constructor(public alertCtrl: AlertController) {
     this.alertCtrl = alertCtrl;
+    this.universalLinks = universalLinks;
   }
 
   /**
@@ -25,16 +29,19 @@ export class KeycloakService {
   static init(): Promise<any> {
     // Create a new Keycloak Client Instance
     let keycloakAuth: any = new Keycloak({
-        url: 'http://localhost:8080/auth',
+        url: 'https://ucl-mighealth-dev.thehyve.net/auth/',
         realm: 'mighealth',
         clientId: 'armt',
-        adapter: 'cordova-native',
-        responseMode: 'query',
-        redirectUri: 'mighealthapp://ucl.ac.uk/'
+
     });
 
       return new Promise((resolve, reject) => {
-        keycloakAuth.init({ onLoad: 'login-required'}).success(() => {
+        keycloakAuth.init({
+            onLoad: 'login-required',
+            adapter: 'cordova-native',
+            responseMode: 'query',
+            redirectUri: 'android-app://org.phidatalab.radar_armt/https/ucl-mighealth-dev.thehyve.net/login'
+        }).success(() => {
             KeycloakService.auth.authz = keycloakAuth;
             KeycloakService.auth.logoutUrl = keycloakAuth.authServerUrl + "/realms/" + keycloakAuth.realm + "/protocol/openid-connect/logout?redirect_uri=/";
             resolve();

@@ -49,6 +49,7 @@
     <preference name="SplashScreenSpinnerColor" value="0xffffffff" />
     <preference name="SplashMaintainAspectRatio" value="true" />
     <preference name="SplashShowOnlyFirstTime" value="false" />
+    <preference name="AndroidLaunchMode" value="singleTask" />
     <allow-navigation href="*" />
     <allow-navigation href="http://10.40.189.168:8101" />
     <allow-navigation href="http://10.40.189.168:8100" />
@@ -91,11 +92,13 @@
     <plugin name="cordova-plugin-app-version" spec="^0.1.9" />
     <plugin name="cordova-plugin-fcm" spec="git+https://github.com/yatharthranjan/cordova-plugin-fcm.git" />
     <plugin name="cordova-plugin-globalization" spec="^1.11.0" />
+    <plugin name="cordova-plugin-browsertab" spec="0.2.0" />
+    <plugin name="cordova-plugin-inappbrowser" spec="3.0.0" />
+    <universal-links>
+        <host name="ucl-mighealth-dev.thehyve.net" scheme="https">
+            <path event="keycloak" url="/login" />
+        </host>
+    </universal-links>
+    <plugin name="cordova-plugin-deeplinks" spec="1.1.0" />
     <engine name="android" spec="6.4.0" />
-    <plugin name="ionic-plugin-deeplinks" spec="~1.0.17">
-        <variable name="URL_SCHEME" value="mymighealthapp" />
-        <variable name="DEEPLINK_SCHEME" value="hthttps" />
-        <variable name="DEEPLINK_HOST" value="exucl.ac.uk" />
-        <variable name="ANDROID_PATH_PREFIX" value="/" />
-    </plugin>
 </widget>

@@ -379,7 +379,6 @@ export class SchedulingService {
 
   buildReportSchedule() {
     let iterDate = this.setDateTimeToMidnight(new Date(this.enrolmentDate))
-    iterDate = this.setDateTimeToMidnight(iterDate)
     const yearsMillis = DefaultScheduleYearCoverage * 60000 * 60 * 24 * 365
     const endDate = new Date(iterDate.getTime() + yearsMillis)
     const tmpSchedule: ReportScheduling[] = []

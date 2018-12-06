@@ -99,7 +99,7 @@ export class SettingsPageComponent {
       cache,
       appVersionPromise
     ]
-    Promise.all(settings).then(returns => {
+    return Promise.all(settings).then(returns => {
       this.appVersionStr = returns[10]
       this.configVersion = returns[0]
       this.scheduleVersion = returns[1]
@@ -279,8 +279,8 @@ export class SettingsPageComponent {
     return this.configService
       .fetchConfigState(true)
       .then(() => {
-        this.loadSettings()
         this.showLoading = false
+        return this.loadSettings()
       })
       .then(() => this.backToSplash())
   }

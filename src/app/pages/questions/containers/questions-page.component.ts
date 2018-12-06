@@ -34,6 +34,7 @@ export class QuestionsPageComponent {
 
   startTime: number
   endTime: number
+  questionIncrements = []
 
   nextQuestionIncrVal: number = 0
 
@@ -84,7 +85,7 @@ export class QuestionsPageComponent {
 
   evalIfFirstQuestionnaireToSkipESMSleepQuestion() {
     const time = new Date()
-    if (time.getHours() > 8 && this.questionTitle === 'ESM') {
+    if (time.getHours() > 9 && this.questionTitle === 'ESM') {
       return 1
     }
     return 0
@@ -93,7 +94,7 @@ export class QuestionsPageComponent {
   evalIfLastQuestionnaireToShowESMRatingQuestion(currentQuestionId) {
     const time = new Date()
     if (this.questionTitle === 'ESM' && currentQuestionId === 'esm_beep') {
-      if (time.getHours() >= 19) {
+      if (time.getHours() >= 21) {
         return 0
       }
       return 1
@@ -190,6 +191,7 @@ export class QuestionsPageComponent {
         id
       )
       this.setCurrentQuestion(this.nextQuestionIncrVal)
+      this.questionIncrements.push(this.nextQuestionIncrVal)
     }
   }
 
@@ -213,15 +215,16 @@ export class QuestionsPageComponent {
     let increment = 1
     let questionIdx = this.currentQuestion + 1
     const questionFieldName = this.questions[this.currentQuestion].field_name
-    const responses = Object.assign({}, this.answerService.answers)
-    const answer = responses[questionFieldName]
-    let answerLength = answer.length
     if (questionIdx < this.questions.length) {
       while (this.questions[questionIdx].evaluated_logic !== '') {
+        const responses = Object.assign({}, this.answerService.answers)
         const logic = this.questions[questionIdx].evaluated_logic
+        const logicFieldName = this.getLogicFieldName(logic)
+        const answer = this.answerService.answers[logicFieldName]
+        let answerLength = answer.length
         if (answerLength) {
           while (answerLength > 0) {
-            responses[questionFieldName] = answer[answerLength - 1]
+            responses[logicFieldName] = answer[answerLength - 1]
             if (eval(logic) === true) return increment
             answerLength--
           }
@@ -233,6 +236,10 @@ export class QuestionsPageComponent {
       }
     }
     return increment
+  }
+
+  getLogicFieldName(logic) {
+    return logic.split("['")[1].split("']")[0]
   }
 
   recordTimeStamp(questionId) {
@@ -257,9 +264,13 @@ export class QuestionsPageComponent {
 
   previousQuestion() {
     if (this.isPreviousBtDisabled === false) {
-      this.setCurrentQuestion(-this.nextQuestionIncrVal)
-      if (this.previousBtTxt === this.txtValues.close) {
+      if (
+        this.previousBtTxt === this.txtValues.close ||
+        !this.questionIncrements.length
+      ) {
         this.navCtrl.pop()
+      } else {
+        this.setCurrentQuestion(-this.questionIncrements.pop())
       }
     }
   }

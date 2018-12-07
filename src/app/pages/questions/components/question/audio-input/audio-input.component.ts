@@ -11,6 +11,10 @@ import { AlertController, NavController } from 'ionic-angular'
 
 // NOTE: File path to opensmile.js; Adding opensmile plugin
 import * as opensmile from '../../../../../../../plugins/cordova-plugin-opensmile/www/opensmile'
+import {
+  MIN_SEC,
+  SEC_MILLISEC
+} from '../../../../../../assets/data/defaultConfig'
 import { Answer } from '../../../../../shared/models/answer'
 import { Section } from '../../../../../shared/models/question'
 import { AndroidPermissionUtility } from '../../../../../shared/utilities/android-permission'
@@ -41,7 +45,7 @@ export class AudioInputComponent implements OnInit, OnChanges {
   platform = false
   answer_b64: string = null
   permission: any
-  recordingTime = 45000
+  avgWordsPerMinute = 200
 
   ngOnInit() {}
 
@@ -90,9 +94,20 @@ export class AudioInputComponent implements OnInit, OnChanges {
           this.audioRecordService
             .readAudioFile(this.fileName)
             .then(data => this.valueChange.emit(data))
-        }, this.recordingTime)
+        }, this.getRecordingTime())
       }
     })
+  }
+
+  getRecordingTime() {
+    return (
+      (this.sections
+        .map(section => section.label)
+        .toString()
+        .split(' ').length /
+        this.avgWordsPerMinute) *
+      (MIN_SEC * SEC_MILLISEC)
+    )
   }
 
   isRecording() {

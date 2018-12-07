@@ -61,8 +61,8 @@ export class TasksService {
     })
   }
 
-  isLastTask(task) {
-    return this.getTasksOfToday().then((tasks: Task[]) => {
+  isLastTask(task, todaysTasks) {
+    return todaysTasks.then((tasks: Task[]) => {
       if (tasks) {
         for (let i = 0; i < tasks.length; i++) {
           if (tasks[i].name !== 'ESM') {

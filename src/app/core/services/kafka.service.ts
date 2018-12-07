@@ -75,8 +75,10 @@ export class KafkaService {
         timeNotification: timeNotification,
         mediaType: 'audio/wav',
         data: { string: data.answers[1].value },
-        reciteText: questions[1].select_choices_or_calculations
-          .map(d => d.label)
+        reciteText: questions
+          .filter(q => q.field_type == KAFKA_AUDIO)
+          .reduce(a => a)
+          .select_choices_or_calculations.map(text => text.label)
           .toString()
       }
       return this.prepareKafkaObjectAndSend(task, Answer, KAFKA_AUDIO)

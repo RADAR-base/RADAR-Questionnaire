@@ -94,7 +94,7 @@ export class QuestionsPageComponent {
   evalIfLastQuestionnaireToShowESMRatingQuestion(currentQuestionId) {
     const time = new Date()
     if (this.questionTitle === 'ESM' && currentQuestionId === 'esm_beep') {
-      if (time.getHours() >= 21) {
+      if (time.getHours() >= 19) {
         return 0
       }
       return 1

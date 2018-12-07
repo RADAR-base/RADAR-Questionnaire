@@ -360,4 +360,9 @@ export class EnrolmentPageComponent {
       //     })
       //     .catch((err) => console.error("Error initalizing Keycloak", err));
   }
+
+  goToRefresh() {
+    this.authService.refresh().then(success =>
+    alert(JSON.stringify(success)));
+  }
 }

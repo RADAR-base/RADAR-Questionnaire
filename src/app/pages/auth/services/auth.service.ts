@@ -19,13 +19,15 @@ import {
 import {StorageService} from '../../../core/services/storage.service'
 import {StorageKeys} from '../../../shared/enums/storage'
 import {InAppBrowser, InAppBrowserOptions} from '@ionic-native/in-app-browser';
+import {AccessToken, KeycloakToken} from "../model/token.model";
 
 const uuidv4 = require('uuid/v4');
 declare var window: any;
 
 @Injectable()
 export class AuthService {
-  URI_base: string
+  URI_base: string;
+  keycloakConfig: any;
 
   constructor(
     public http: HttpClient,
@@ -34,18 +36,17 @@ export class AuthService {
     private inAppBrowser: InAppBrowser
   ) {
     this.updateURI()
+    this.keycloakConfig = {
+      authServerUrl: 'https://ucl-mighealth-dev.thehyve.net/auth/',
+      realm: 'mighealth',
+      clientId: 'armt',
+      redirectUri: 'http://ucl-mighealth-app/callback/',
+    };
   }
 
   public keycloakLogin(): Promise<any> {
     return new Promise((resolve, reject) => {
-      const keycloakConfig = {
-        authServerUrl: 'https://ucl-mighealth-dev.thehyve.net/auth/',
-        realm: 'mighealth',
-        clientId: 'armt',
-        redirectUri: 'http://ucl-mighealth-app/callback/',
-      };
-
-      const url = this.createLoginUrl(keycloakConfig);
+      const url = this.createLoginUrl(this.keycloakConfig);
       console.log(url);
 
       const options: InAppBrowserOptions = {
@@ -59,16 +60,17 @@ export class AuthService {
       let listener = browser.on('loadstart').subscribe((event: any) => {
 
         //Check the redirect uri
-        if (event.url.indexOf(keycloakConfig.redirectUri) > -1) {
+        if (event.url.indexOf(this.keycloakConfig.redirectUri) > -1) {
           listener.unsubscribe();
           browser.close();
           const code = this.parseUrlParamsToObject(event.url);
-          this.getAccessToken(keycloakConfig, code);
-          resolve(event.url);
+          this.getAccessToken(this.keycloakConfig, code).then(
+            () => resolve(event.url),
+            () => reject("Count not login in to keycloak")
+          );
         } else {
           reject("Could not authenticate");
         }
-
       });
 
     });
@@ -112,7 +114,7 @@ export class AuthService {
 
   getAccessToken(kc: any, authorizationResponse: any) {
     alert('here');
-    const URI = this.getRealmUrl(kc) + '/protocol/openid-connect/token';
+    const URI = this.getTokenUrl(kc);
     const body = this.getAccessTokenParams(authorizationResponse.code, kc.clientId, kc.redirectUri);
 
     const headers = new HttpHeaders()
@@ -125,23 +127,27 @@ export class AuthService {
     }
     const promise = this.createPostRequest(URI,  body, {
       header: headers,
-    }).then(newTokens => {
-
+    }).then((newTokens: any) => {
+        newTokens.iat = (new Date().getTime() / 1000) - 10; // reduce 10 sec to for delay
+        this.storage.set(StorageKeys.OAUTH_TOKENS, newTokens);
         alert(JSON.stringify(newTokens));
     }, (error) => {
       alert(JSON.stringify(error))
     });
     return promise;
   }
+
   refresh() {
+
     return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
-      const now = new Date().getTime() / 1000
+      alert('Refreshing '+ JSON.stringify(tokens));
+      const now = new Date().getTime() /1000;
       if (tokens.iat + tokens.expires_in < now) {
-        const URI = this.URI_base + DefaultRefreshTokenURI
+        const URI = this.getTokenUrl(this.keycloakConfig);
         const headers = this.getRegisterHeaders(
           DefaultRequestEncodedContentType
         )
-        const params = this.getRefreshParams(tokens.refresh_token)
+        const params = this.getRefreshParams(tokens.refresh_token);
         const promise = this.createPostRequest(URI, '', {
           headers: headers,
           params: params
@@ -247,5 +253,9 @@ export class AuthService {
       .set('code', code)
       .set('client_id', encodeURIComponent(clientId))
       .set('redirect_uri', redirectUrl);
+  }
+
+  getTokenUrl(kc) {
+    return this.getRealmUrl(kc) + '/protocol/openid-connect/token';
   }
 }

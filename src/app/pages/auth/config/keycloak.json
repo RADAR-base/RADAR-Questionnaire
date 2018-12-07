@@ -1,6 +1,6 @@
 {
   "realm": "mighealth",
-  "auth-server-url": "http://localhost:8080/auth",
+  "authServerUrl": "http://localhost:8080/auth",
   "ssl-required": "external",
   "resource": "armt",
   "public-client": true,

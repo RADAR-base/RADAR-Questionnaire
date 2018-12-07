@@ -2,26 +2,27 @@ declare var require: any
 import { Injectable } from '@angular/core';
 var keycloakConfig = require('../config/keycloak.json');
 import { AlertController } from 'ionic-angular';
-import universalLinks from 'cordova-plugin-deeplinks'
 
 var Keycloak = require('./keycloak.js');
 // declare var Keycloak: any;
 
-@Injectable()
+
 /**
  * Contains properties of the Keycloak Service.
  */
+@Injectable()
 export class KeycloakService {
   static auth: any = {};
-  universalLinks: any;
 
   /**
   * @param alertCtrl The ionic alert controller
   */
   constructor(public alertCtrl: AlertController) {
     this.alertCtrl = alertCtrl;
-    this.universalLinks = universalLinks;
   }
+
+
+
 
   /**
   * Initialise the Keycloak Client Adapter
@@ -32,13 +33,13 @@ export class KeycloakService {
         url: 'https://ucl-mighealth-dev.thehyve.net/auth/',
         realm: 'mighealth',
         clientId: 'armt',
-
+        redirectUrl: ''
     });
 
       return new Promise((resolve, reject) => {
         keycloakAuth.init({
             onLoad: 'login-required',
-            adapter: 'cordova-native',
+            // adapter: 'cordova-native',
             responseMode: 'query',
             redirectUri: 'android-app://org.phidatalab.radar_armt/https/ucl-mighealth-dev.thehyve.net/login'
         }).success(() => {

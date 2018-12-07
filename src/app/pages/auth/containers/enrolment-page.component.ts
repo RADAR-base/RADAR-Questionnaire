@@ -348,17 +348,20 @@ export class EnrolmentPageComponent {
     alert.present()
   }
 
-  goToRegistration() {
-      this.authService.keycloakLogin().then(success => {
+  goToLogin() {
+      this.authService.keycloakLogin(true).then(success => {
           console.log('success', success)
       }, (error) => {
         console.log(error);
       });
-      // KeycloakService.init()
-      //     .then((success) => {
-      //         console.log("Success")
-      //     })
-      //     .catch((err) => console.error("Error initalizing Keycloak", err));
+  }
+
+  goToRegistration() {
+    this.authService.keycloakLogin(false).then(success => {
+      console.log('success', success)
+    }, (error) => {
+      console.log(error);
+    });
   }
 
   goToRefresh() {

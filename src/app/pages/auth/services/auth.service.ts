@@ -6,10 +6,8 @@ import {Injectable} from '@angular/core'
 import {JwtHelperService} from '@auth0/angular-jwt'
 import {
   DefaultEndPoint,
-  DefaultManagementPortalURI,
   DefaultMetaTokenURI,
   DefaultRefreshTokenRequestBody,
-  DefaultRefreshTokenURI,
   DefaultRequestEncodedContentType,
   DefaultRequestJSONContentType,
   DefaultSourceProducerAndSecret,
@@ -19,7 +17,6 @@ import {
 import {StorageService} from '../../../core/services/storage.service'
 import {StorageKeys} from '../../../shared/enums/storage'
 import {InAppBrowser, InAppBrowserOptions} from '@ionic-native/in-app-browser';
-import {AccessToken, KeycloakToken} from "../model/token.model";
 
 const uuidv4 = require('uuid/v4');
 declare var window: any;
@@ -35,18 +32,18 @@ export class AuthService {
     private jwtHelper: JwtHelperService,
     private inAppBrowser: InAppBrowser
   ) {
-    this.updateURI()
     this.keycloakConfig = {
       authServerUrl: 'https://ucl-mighealth-dev.thehyve.net/auth/',
       realm: 'mighealth',
       clientId: 'armt',
       redirectUri: 'http://ucl-mighealth-app/callback/',
     };
+    this.updateURI();
   }
 
-  public keycloakLogin(): Promise<any> {
+  public keycloakLogin(login: boolean): Promise<any> {
     return new Promise((resolve, reject) => {
-      const url = this.createLoginUrl(this.keycloakConfig);
+      const url = this.createLoginUrl(this.keycloakConfig, login);
       console.log(url);
 
       const options: InAppBrowserOptions = {
@@ -84,13 +81,13 @@ export class AuthService {
     }, {});
   }
 
-  createLoginUrl(keycloakConfig: any) {
+  createLoginUrl(keycloakConfig: any, isLogin: boolean) {
     const state = uuidv4();
     const nonce = uuidv4();
     const responseMode = 'query';
     const responseType = 'code';
     const scope = 'openid';
-    return this.getRealmUrl(keycloakConfig) + '/protocol/openid-connect/auth' +
+    return this.getUrl(keycloakConfig, isLogin) +
       '?client_id=' + encodeURIComponent(keycloakConfig.clientId) +
       '&state=' + encodeURIComponent(state) +
       '&redirect_uri=' + encodeURIComponent(keycloakConfig.redirectUri) +
@@ -100,59 +97,41 @@ export class AuthService {
       '&nonce=' + encodeURIComponent(nonce);
   }
 
-  getRealmUrl(kc: any) {
-    if (kc && kc.authServerUrl) {
-      if (kc.authServerUrl.charAt(kc.authServerUrl.length - 1) == '/') {
-        return kc.authServerUrl + 'realms/' + encodeURIComponent(kc.realm);
-      } else {
-        return kc.authServerUrl + '/realms/' + encodeURIComponent(kc.realm);
-      }
-    } else {
-      return undefined;
-    }
+  getUrl(keycloakConfig: any, isLogin: boolean) {
+    return isLogin ? this.getRealmUrl(keycloakConfig) + '/protocol/openid-connect/auth'
+      : this.getRealmUrl(keycloakConfig) + '/protocol/openid-connect/registrations';
+
   }
 
   getAccessToken(kc: any, authorizationResponse: any) {
-    alert('here');
-    const URI = this.getTokenUrl(kc);
+    const URI = this.getTokenUrl();
     const body = this.getAccessTokenParams(authorizationResponse.code, kc.clientId, kc.redirectUri);
+    const headers = this.getTokenRequestHeaders();
 
-    const headers = new HttpHeaders()
-      .set('Authorization', 'Basic ' + btoa(DefaultSourceProducerAndSecret))
-      .set('Content-Type', 'application/x-www-form-urlencoded');
-
-    const clientSecret = (kc.credentials || {}).secret;
-    if (kc.clientId && clientSecret) {
-      headers.set('Authorization', 'Basic ' + btoa(kc.clientId + ':' + clientSecret));
-    }
-    const promise = this.createPostRequest(URI,  body, {
+    return this.createPostRequest(URI,  body, {
       header: headers,
     }).then((newTokens: any) => {
-        newTokens.iat = (new Date().getTime() / 1000) - 10; // reduce 10 sec to for delay
-        this.storage.set(StorageKeys.OAUTH_TOKENS, newTokens);
-        alert(JSON.stringify(newTokens));
+      newTokens.iat = (new Date().getTime() / 1000) - 10; // reduce 10 sec to for delay
+      this.storage.set(StorageKeys.OAUTH_TOKENS, newTokens);
     }, (error) => {
-      alert(JSON.stringify(error))
+      console.log('Could not retrieve access tokens')
     });
-    return promise;
   }
 
   refresh() {
-
     return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
-      alert('Refreshing '+ JSON.stringify(tokens));
-      const now = new Date().getTime() /1000;
-      if (tokens.iat + tokens.expires_in < now) {
-        const URI = this.getTokenUrl(this.keycloakConfig);
-        const headers = this.getRegisterHeaders(
-          DefaultRequestEncodedContentType
-        )
-        const params = this.getRefreshParams(tokens.refresh_token);
-        const promise = this.createPostRequest(URI, '', {
+      if (tokens.iat + tokens.expires_in < (new Date().getTime() /1000)) {
+        const URI = this.getTokenUrl();
+        const headers = this.getTokenRequestHeaders();
+        const body = this.getRefreshParams(tokens.refresh_token, this.keycloakConfig.clientId);
+        const promise = this.createPostRequest(URI, body, {
           headers: headers,
-          params: params
-        }).then(newTokens => {
+        }).then((newTokens: any) => {
+          alert('New token ' + JSON.stringify(newTokens));
+          newTokens.iat = (new Date().getTime() / 1000) - 10;
           return this.storage.set(StorageKeys.OAUTH_TOKENS, newTokens)
+        }, (error) => {
+          alert('Error' + JSON.stringify(error));
         });
         return promise
       } else {
@@ -163,14 +142,13 @@ export class AuthService {
 
   updateURI() {
     return this.storage.get(StorageKeys.BASE_URI).then(uri => {
-      const endPoint = uri ? uri : DefaultEndPoint
-      this.URI_base = endPoint + DefaultManagementPortalURI
+      this.URI_base = this.keycloakConfig.authServerUrl;
     })
   }
 
   // TODO: test this
   registerToken(registrationToken) {
-    const URI = this.URI_base + DefaultRefreshTokenURI
+    const URI = this.getTokenUrl();
     // console.debug('URI : ' + URI)
     const refreshBody = DefaultRefreshTokenRequestBody + registrationToken
     const headers = this.getRegisterHeaders(DefaultRequestEncodedContentType)
@@ -240,11 +218,11 @@ export class AuthService {
     return headers
   }
 
-  getRefreshParams(refreshToken) {
-    const params = new HttpParams()
+  getRefreshParams(refreshToken, clientId) {
+    return new HttpParams()
       .set('grant_type', 'refresh_token')
       .set('refresh_token', refreshToken)
-    return params
+      .set('client_id', encodeURIComponent(clientId))
   }
 
   getAccessTokenParams(code , clientId, redirectUrl) {
@@ -255,7 +233,30 @@ export class AuthService {
       .set('redirect_uri', redirectUrl);
   }
 
-  getTokenUrl(kc) {
-    return this.getRealmUrl(kc) + '/protocol/openid-connect/token';
+  getTokenUrl() {
+    return this.getRealmUrl(this.keycloakConfig) + '/protocol/openid-connect/token';
+  }
+
+  getTokenRequestHeaders() {
+    const headers = new HttpHeaders()
+      .set('Content-Type', 'application/x-www-form-urlencoded');
+
+    const clientSecret = (this.keycloakConfig.credentials || {}).secret;
+    if (this.keycloakConfig.clientId && clientSecret) {
+      headers.set('Authorization', 'Basic ' + btoa(this.keycloakConfig.clientId + ':' + clientSecret));
+    }
+    return headers;
+  }
+
+  getRealmUrl(kc: any) {
+    if (kc && kc.authServerUrl) {
+      if (kc.authServerUrl.charAt(kc.authServerUrl.length - 1) == '/') {
+        return kc.authServerUrl + 'realms/' + encodeURIComponent(kc.realm);
+      } else {
+        return kc.authServerUrl + '/realms/' + encodeURIComponent(kc.realm);
+      }
+    } else {
+      return undefined;
+    }
   }
 }

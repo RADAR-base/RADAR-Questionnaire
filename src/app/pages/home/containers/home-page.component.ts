@@ -44,6 +44,7 @@ export class HomePageComponent {
   @ViewChild('taskCalendar')
   elCalendar: ElementRef
 
+  tasks: Promise<Task[]>
   isOpenPageClicked: boolean = false
   nextTask: Task = DefaultTask
   showCalendar: boolean = false
@@ -51,12 +52,12 @@ export class HomePageComponent {
   showNoTasksToday: boolean = false
   tasksProgress: TasksProgress
   calendarScrollHeight: number = 0
-  hasClickedStartButton: boolean = true
+  startingQuestionnaire: boolean = false
   hasClinicalTasks = false
   hasOnlyESMs = false
   taskIsNow = false
   elProgressOffset = 16
-  tasks
+  nextTaskIsLoading = true
 
   constructor(
     public navCtrl: NavController,
@@ -75,13 +76,15 @@ export class HomePageComponent {
   }
 
   ionViewWillEnter() {
+    this.tasks = this.tasksService.getTasksOfToday()
+    this.tasks.then(
+      tasks => (this.tasksProgress = this.tasksService.getTaskProgress(tasks))
+    )
     this.getElementsAttributes()
     this.elProgressHeight += this.elProgressOffset
     this.applyTransformations()
     this.showNoTasksToday = false
-    this.tasksService
-      .getTaskProgress()
-      .then(progress => (this.tasksProgress = progress))
+    this.startingQuestionnaire = false
   }
 
   ionViewDidLoad() {
@@ -90,7 +93,6 @@ export class HomePageComponent {
     }, 1000)
     this.evalHasClinicalTasks()
     this.checkIfOnlyESM()
-    this.tasks = this.tasksService.getTasksOfToday()
     this.tasksService.sendNonReportedTaskCompletion()
   }
 
@@ -101,16 +103,16 @@ export class HomePageComponent {
 
   checkForNextTask() {
     if (!this.showCalendar) {
-      this.tasksService
-        .getNextTask()
-        .then(task => this.checkForNextTaskGeneric(task))
+      this.nextTaskIsLoading = true
+      this.tasks.then(tasks =>
+        this.checkForNextTaskGeneric(this.tasksService.getNextTask(tasks))
+      )
     }
   }
 
   checkForNextTaskGeneric(task) {
     if (task && task.isClinical == false) {
       this.nextTask = task
-      this.hasClickedStartButton = false
       this.displayCompleted(false)
       this.displayEvalTransformations(false)
       this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
@@ -128,10 +130,11 @@ export class HomePageComponent {
         }
       })
     }
+    this.nextTaskIsLoading = false
   }
 
   checkIfOnlyESM() {
-    this.tasksService.getTasksOfToday().then(tasks => {
+    this.tasks.then(tasks => {
       let tmpHasOnlyESMs = true
       for (let i = 0; i < tasks.length; i++) {
         if (tasks[i].name !== 'ESM') {
@@ -279,14 +282,15 @@ export class HomePageComponent {
     this.navCtrl.push(ClinicalTasksPageComponent)
   }
 
-  startQuestionnaire(task: Task) {
+  startQuestionnaire(taskCalendarTask: Task) {
+    // NOTE: User can start questionnaire from task calendar or start button in home.
     let startQuestionnaireTask = this.nextTask
-    if (task) {
-      if (task.completed === false) {
-        startQuestionnaireTask = task
+    if (taskCalendarTask) {
+      if (taskCalendarTask.completed === false) {
+        startQuestionnaireTask = taskCalendarTask
       }
     } else {
-      this.hasClickedStartButton = true
+      this.startingQuestionnaire = true
     }
     const lang = this.storage.get(StorageKeys.LANGUAGE)
     const nextAssessment = this.tasksService.getAssessment(
@@ -306,7 +310,7 @@ export class HomePageComponent {
       }
 
       this.tasksService
-        .isLastTask(startQuestionnaireTask)
+        .isLastTask(startQuestionnaireTask, this.tasks)
         .then(lastTask => (params.isLastTask = lastTask))
         .then(() => {
           if (assessment.showIntroduction) {

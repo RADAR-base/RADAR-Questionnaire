@@ -58,7 +58,7 @@ export class KafkaService {
       ? { double: task.timestamp / SEC_MILLISEC }
       : null
     const timeCompleted = data.answers[data.answers.length - 1].endTime
-    if (task.name !== KAFKA_AUDIO) {
+    if (task.name.toLowerCase() !== KAFKA_AUDIO.toLowerCase()) {
       const Answer: AnswerValueExport = {
         time: time,
         timeCompleted: timeCompleted,
@@ -74,7 +74,7 @@ export class KafkaService {
         timeCompleted: timeCompleted,
         timeNotification: timeNotification,
         mediaType: 'audio/wav',
-        data: { string: data.answers[1].value },
+        data: data.answers[1].value.string,
         reciteText: questions
           .filter(q => q.field_type == KAFKA_AUDIO)
           .reduce(a => a)

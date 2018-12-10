@@ -94,7 +94,7 @@ export class QuestionsPageComponent {
   evalIfLastQuestionnaireToShowESMRatingQuestion(currentQuestionId) {
     const time = new Date()
     if (this.questionTitle === 'ESM' && currentQuestionId === 'esm_beep') {
-      if (time.getHours() >= 21) {
+      if (time.getHours() >= 19) {
         return 0
       }
       return 1
@@ -214,21 +214,16 @@ export class QuestionsPageComponent {
   evalSkipNext() {
     let increment = 1
     let questionIdx = this.currentQuestion + 1
-    const questionFieldName = this.questions[this.currentQuestion].field_name
     if (questionIdx < this.questions.length) {
       while (this.questions[questionIdx].evaluated_logic !== '') {
         const responses = Object.assign({}, this.answerService.answers)
         const logic = this.questions[questionIdx].evaluated_logic
         const logicFieldName = this.getLogicFieldName(logic)
-        const answer = this.answerService.answers[logicFieldName]
-        let answerLength = answer.length
-        if (answerLength) {
-          while (answerLength > 0) {
-            responses[logicFieldName] = answer[answerLength - 1]
-            if (eval(logic) === true) return increment
-            answerLength--
-          }
-        } else {
+        const answers = this.answerService.answers[logicFieldName]
+        const answerLength = answers.length
+        if (!answerLength) if (eval(logic) === true) return increment
+        for (const answer of answers) {
+          responses[logicFieldName] = answer
           if (eval(logic) === true) return increment
         }
         increment += 1
@@ -270,6 +265,7 @@ export class QuestionsPageComponent {
       ) {
         this.navCtrl.pop()
       } else {
+        this.answerService.pop()
         this.setCurrentQuestion(-this.questionIncrements.pop())
       }
     }

@@ -28,7 +28,9 @@ export class QuestionComponent implements OnChanges {
   value: any
   currentlyShown = false
 
-  constructor(private vibration: Vibration, private dialogs: Dialogs) {}
+  constructor(private vibration: Vibration, private dialogs: Dialogs) {
+    this.value = null
+  }
 
   ngOnChanges() {
     if (this.question.select_choices_or_calculations.length > 0) {
@@ -49,10 +51,19 @@ export class QuestionComponent implements OnChanges {
     }
     if (this.questionIndex === this.currentIndex) {
       this.currentlyShown = true
+      if (this.value) this.emitAnswer()
     } else {
       this.currentlyShown = false
     }
     // this.evalBeep()
+  }
+
+  emitAnswer() {
+    this.answer.emit({
+      id: this.question.field_name,
+      value: this.value,
+      type: this.question.field_type
+    })
   }
 
   onValueChange(event) {
@@ -61,11 +72,7 @@ export class QuestionComponent implements OnChanges {
       return
     }
     this.value = event
-    this.answer.emit({
-      id: this.question.field_name,
-      value: this.value,
-      type: this.question.field_type
-    })
+    this.emitAnswer()
   }
 
   evalBeep() {

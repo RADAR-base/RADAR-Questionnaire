@@ -30,6 +30,7 @@ import { StorageService } from './storage.service'
 export class KafkaService {
   private KAFKA_CLIENT_URL: string
   private cacheSending = false
+  private schemas = {}
 
   constructor(
     private util: Utility,
@@ -131,41 +132,52 @@ export class KafkaService {
   }
 
   createPayloadAndSend(specs) {
-    return this.util
-      .getLatestKafkaSchemaVersions(specs)
-      .then(schemaVersions => {
-        const avroKey = AvroSchema.parse(
-          JSON.parse(schemaVersions[0]['schema']),
-          {
-            wrapUnions: true
-          }
-        )
-        const avroVal = AvroSchema.parse(
-          JSON.parse(schemaVersions[1]['schema']),
-          {
-            wrapUnions: true
-          }
-        )
-        const kafkaObject = specs.kafkaObject
-        const bufferKey = avroKey.clone(kafkaObject.key, { wrapUnions: true })
-        const bufferVal = avroVal.clone(kafkaObject.value, { wrapUnions: true })
-        const payload = {
-          key: bufferKey,
-          value: bufferVal
+    let schemaVersions
+    switch (specs.name) {
+      case KAFKA_COMPLETION_LOG:
+        if (this.schemas[specs.name]) {
+          schemaVersions = this.schemas[specs.name]
+          break
         }
-        const schemaId = new KafkaRest.AvroSchema(
-          JSON.parse(schemaVersions[0]['schema'])
-        )
-        const schemaInfo = new KafkaRest.AvroSchema(
-          JSON.parse(schemaVersions[1]['schema'])
-        )
-        return this.sendToKafka(specs, schemaId, schemaInfo, payload)
-      })
-      .catch(error => {
-        console.log(error)
-        this.cacheAnswers(specs)
-        return Promise.resolve({ res: 'ERROR' })
-      })
+      default:
+        schemaVersions = this.util
+          .getLatestKafkaSchemaVersions(specs)
+          .catch(error => {
+            console.log(error)
+            this.cacheAnswers(specs)
+            return Promise.resolve()
+          })
+        this.schemas[specs.name] = schemaVersions
+    }
+    return Promise.all([schemaVersions]).then(data => {
+      schemaVersions = data[0]
+      const avroKey = AvroSchema.parse(
+        JSON.parse(schemaVersions[0]['schema']),
+        {
+          wrapUnions: true
+        }
+      )
+      const avroVal = AvroSchema.parse(
+        JSON.parse(schemaVersions[1]['schema']),
+        {
+          wrapUnions: true
+        }
+      )
+      const kafkaObject = specs.kafkaObject
+      const bufferKey = avroKey.clone(kafkaObject.key, { wrapUnions: true })
+      const bufferVal = avroVal.clone(kafkaObject.value, { wrapUnions: true })
+      const payload = {
+        key: bufferKey,
+        value: bufferVal
+      }
+      const schemaId = new KafkaRest.AvroSchema(
+        JSON.parse(schemaVersions[0]['schema'])
+      )
+      const schemaInfo = new KafkaRest.AvroSchema(
+        JSON.parse(schemaVersions[1]['schema'])
+      )
+      return this.sendToKafka(specs, schemaId, schemaInfo, payload)
+    })
   }
 
   sendToKafka(specs, id, info, payload) {
@@ -240,9 +252,11 @@ export class KafkaService {
 
   removeAnswersFromCache(cacheKey) {
     return this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
-      console.log('Deleting ' + cacheKey)
-      delete cache[cacheKey]
-      return this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
+      if (cache) {
+        console.log('Deleting ' + cacheKey)
+        if (cache[cacheKey]) delete cache[cacheKey]
+        return this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
+      }
     })
   }
 

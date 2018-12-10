@@ -75,7 +75,7 @@ import { TasksService } from '../../services/tasks.service'
       state(
         'right',
         style({
-          transform: 'translate3d(5%, 0, 0)'
+          transform: 'translate3d(15%, 0, 0) scale(0.8)'
         })
       ),
       state(
@@ -109,7 +109,7 @@ import { TasksService } from '../../services/tasks.service'
       state(
         'right',
         style({
-          transform: 'translate3d(150%, 0, 0)'
+          transform: 'translate3d(120%, 0, 0)'
         })
       ),
       state(
@@ -126,6 +126,10 @@ import { TasksService } from '../../services/tasks.service'
 export class TaskInfoComponent implements OnChanges {
   @Input()
   task: Task
+  @Input()
+  isNow = false
+  @Input()
+  progress: TasksProgress
   @Output()
   collapse: EventEmitter<Boolean> = new EventEmitter()
   expanded: Boolean = true
@@ -135,15 +139,14 @@ export class TaskInfoComponent implements OnChanges {
   animateMove: String
   animateScale: String
   animateCenterRight: String
-  isNow: boolean = false
+
   private language: string
   private extraTaskInfo: string
 
   max: number = 1
   current: number = 0
-  radius: number = 38
+  radius: number = 35
   stroke: number = 8
-  progress: TasksProgress
 
   animationKeys = {
     MIN: 'min',
@@ -159,10 +162,6 @@ export class TaskInfoComponent implements OnChanges {
     public storage: StorageService
   ) {
     this.applyAnimationKeys()
-    setInterval(() => {
-      this.isNow = checkTaskIsNow(this.task.timestamp)
-    }, 1000)
-
     this.storage.get(StorageKeys.LANGUAGE).then(resLang => {
       this.language = resLang.value
     })
@@ -203,13 +202,10 @@ export class TaskInfoComponent implements OnChanges {
   }
 
   updateProgress() {
-    this.tasksService.getTaskProgress().then(progress => {
-      this.progress = progress
-      if (this.progress) {
-        this.current = this.progress.completedTasks
-        this.max = this.progress.numberOfTasks
-      }
-    })
+    if (this.progress) {
+      this.current = this.progress.completedTasks
+      this.max = this.progress.numberOfTasks
+    }
   }
 
   applyAnimationKeys() {

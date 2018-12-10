@@ -26,13 +26,7 @@ export class TasksService {
     return this.schedule.getTasksForDate(timestamp)
   }
 
-  getTaskProgress() {
-    return this.getTasksOfToday().then((tasks: Task[]) =>
-      this.retrieveTaskProgress(tasks)
-    )
-  }
-
-  retrieveTaskProgress(tasks): TasksProgress {
+  getTaskProgress(tasks): TasksProgress {
     const tasksProgress: TasksProgress = {
       numberOfTasks: 0,
       completedTasks: 0
@@ -48,17 +42,15 @@ export class TasksService {
     }
   }
 
-  getNextTask() {
-    return this.getTasksOfToday().then((tasks: Task[]) => {
-      return this.retrieveNextTask(tasks)
-    })
+  getNextTask(tasks) {
+    return this.retrieveNextTask(tasks)
   }
 
   areAllTasksComplete() {
     return this.getTasksOfToday().then((tasks: Task[]) => {
       if (tasks) {
         for (let i = 0; i < tasks.length; i++) {
-          if (tasks[i].name !== 'ESM') {
+          if (tasks[i].name !== 'ESM' && tasks[i].isClinical == false) {
             if (tasks[i].completed === false) {
               return false
             }
@@ -69,8 +61,8 @@ export class TasksService {
     })
   }
 
-  isLastTask(task) {
-    return this.getTasksOfToday().then((tasks: Task[]) => {
+  isLastTask(task, todaysTasks) {
+    return todaysTasks.then((tasks: Task[]) => {
       if (tasks) {
         for (let i = 0; i < tasks.length; i++) {
           if (tasks[i].name !== 'ESM') {

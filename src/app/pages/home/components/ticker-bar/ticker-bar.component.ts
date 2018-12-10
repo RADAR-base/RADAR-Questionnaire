@@ -159,22 +159,24 @@ export class TickerBarComponent implements OnChanges {
     let deltaStr = ''
     const deltaMin = Math.round((next - now) / 60000)
     const deltaHour = Math.round(deltaMin / 60)
-    const hour_str_single = this.translate.transform(
-      LocKeys.TASK_TIME_HOUR_SINGLE.toString()
-    )
-    const hour_str_multiple = this.translate.transform(
-      LocKeys.TASK_TIME_HOUR_MULTIPLE.toString()
-    )
     if (deltaMin > 59) {
       deltaStr =
-        deltaHour > 1
-          ? String(deltaHour) + ' ' + hour_str_multiple
-          : String(deltaHour) + ' ' + hour_str_single
+        String(deltaHour) +
+        ' ' +
+        (deltaHour > 1
+          ? this.translate.transform(LocKeys.TASK_TIME_HOUR_MULTIPLE.toString())
+          : this.translate.transform(LocKeys.TASK_TIME_HOUR_SINGLE.toString()))
     } else {
       deltaStr =
         String(deltaMin) +
         ' ' +
-        this.translate.transform(LocKeys.TASK_TIME_MINUTE_SINGLE.toString())
+        (deltaMin > 1
+          ? this.translate.transform(
+              LocKeys.TASK_TIME_MINUTE_MULTIPLE.toString()
+            )
+          : this.translate.transform(
+              LocKeys.TASK_TIME_MINUTE_SINGLE.toString()
+            ))
     }
     return deltaStr
   }

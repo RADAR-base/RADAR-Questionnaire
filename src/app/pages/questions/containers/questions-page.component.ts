@@ -200,7 +200,6 @@ export class QuestionsPageComponent {
     this.timestamps = this.timestampService.timestamps
     this.answerService.reset()
     this.timestampService.reset()
-    console.log(this.answers)
 
     this.navCtrl.push(FinishPageComponent, {
       endText: this.endText,

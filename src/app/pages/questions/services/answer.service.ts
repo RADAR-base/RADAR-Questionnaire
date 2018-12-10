@@ -18,7 +18,7 @@ export class AnswerService {
   }
 
   pop() {
-    this.answers[this.lastAnswerKey] = null
+    delete this.answers[this.lastAnswerKey]
   }
 
   check(id: string) {

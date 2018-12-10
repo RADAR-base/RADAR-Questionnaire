@@ -49,10 +49,19 @@ export class QuestionComponent implements OnChanges {
     }
     if (this.questionIndex === this.currentIndex) {
       this.currentlyShown = true
+      if (this.value) this.emitAnswer()
     } else {
       this.currentlyShown = false
     }
     // this.evalBeep()
+  }
+
+  emitAnswer() {
+    this.answer.emit({
+      id: this.question.field_name,
+      value: this.value,
+      type: this.question.field_type
+    })
   }
 
   onValueChange(event) {
@@ -78,11 +87,7 @@ export class QuestionComponent implements OnChanges {
         this.value = event
         break
     }
-    this.answer.emit({
-      id: this.question.field_name,
-      value: this.value,
-      type: this.question.field_type
-    })
+    this.emitAnswer()
   }
 
   evalBeep() {

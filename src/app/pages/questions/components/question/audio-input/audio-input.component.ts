@@ -45,7 +45,7 @@ export class AudioInputComponent implements OnInit, OnChanges {
   platform = false
   answer_b64: string = null
   permission: any
-  avgWordsPerMinute = 200
+  avgWordsPerMinute = 100
 
   ngOnInit() {}
 

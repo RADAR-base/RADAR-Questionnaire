@@ -29,14 +29,16 @@ export class PrepareDataService {
           for (const key in answers) {
             if (key) {
               answersProcessedCount++
-              const answer = {
-                questionId: { string: key.toString() },
-                // int: implicit [int, double, string]
-                value: { string: answers[key].toString() },
-                startTime: timestamps[key].startTime,
-                endTime: timestamps[key].endTime
+              if (answers[key]) {
+                const answer = {
+                  questionId: { string: key.toString() },
+                  // int: implicit [int, double, string]
+                  value: { string: answers[key].toString() },
+                  startTime: timestamps[key].startTime,
+                  endTime: timestamps[key].endTime
+                }
+                values.push(answer)
               }
-              values.push(answer)
               if (answersProcessedCount === keylength) {
                 const processedData = {
                   answers: values,

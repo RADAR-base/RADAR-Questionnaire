@@ -14,6 +14,8 @@ import { StorageKeys } from '../../../shared/enums/storage'
 import { EnrolmentPageComponent } from '../../auth/containers/enrolment-page.component'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { SplashService } from '../services/splash.service'
+import {IntroPage} from "../../auth/components/welcome-page/intro";
+import {WelcomePageComponent} from "../../auth/components/welcome-page/welcome-page.component";
 
 @Component({
   selector: 'page-splash',
@@ -36,13 +38,13 @@ export class SplashPageComponent {
   ) {
     const parentPage = this.navParams.data.parentPage
     if (parentPage) {
-      console.log(`VIEW ${parentPage}`)
+      console.log('View', parentPage)
       this.hasParentPage = true
     }
 
     this.splashService.evalEnrolment().then(participant => {
       if (!participant) {
-        this.navCtrl.setRoot(EnrolmentPageComponent)
+        this.navCtrl.setRoot(WelcomePageComponent);
       } else {
         this.status = 'Updating notifications...'
         Promise.all([

@@ -87,7 +87,7 @@ export class AuthService {
     const responseMode = 'query';
     const responseType = 'code';
     const scope = 'openid';
-    return this.getUrl(keycloakConfig, isLogin) +
+    return this.getUrlForAction(keycloakConfig, isLogin) +
       '?client_id=' + encodeURIComponent(keycloakConfig.clientId) +
       '&state=' + encodeURIComponent(state) +
       '&redirect_uri=' + encodeURIComponent(keycloakConfig.redirectUri) +
@@ -97,10 +97,22 @@ export class AuthService {
       '&nonce=' + encodeURIComponent(nonce);
   }
 
-  getUrl(keycloakConfig: any, isLogin: boolean) {
+  getUrlForAction(keycloakConfig: any, isLogin: boolean) {
     return isLogin ? this.getRealmUrl(keycloakConfig) + '/protocol/openid-connect/auth'
       : this.getRealmUrl(keycloakConfig) + '/protocol/openid-connect/registrations';
+  }
 
+  loadUserInfo() {
+    return this.storage.get(StorageKeys.OAUTH_TOKENS).then( tokens => {
+      const url = this.getRealmUrl(this.keycloakConfig) + '/protocol/openid-connect/userinfo';
+      const headers = this.getAccessHeaders(tokens.access_token, DefaultRequestJSONContentType);
+      const promise = this.http.get(url, {headers: headers}).toPromise();
+      promise.then(
+        (success) => alert(JSON.stringify(success)),
+        (error) => alert('error ' + JSON.stringify(error))
+      );
+      return promise;
+    })
   }
 
   getAccessToken(kc: any, authorizationResponse: any) {
@@ -129,7 +141,7 @@ export class AuthService {
         }).then((newTokens: any) => {
           alert('New token ' + JSON.stringify(newTokens));
           newTokens.iat = (new Date().getTime() / 1000) - 10;
-          return this.storage.set(StorageKeys.OAUTH_TOKENS, newTokens)
+          this.storage.set(StorageKeys.OAUTH_TOKENS, newTokens)
         }, (error) => {
           alert('Error' + JSON.stringify(error));
         });
@@ -212,10 +224,9 @@ export class AuthService {
   }
 
   getAccessHeaders(accessToken, contentType) {
-    const headers = new HttpHeaders()
+    return new HttpHeaders()
       .set('Authorization', 'Bearer ' + accessToken)
-      .set('Content-Type', contentType)
-    return headers
+      .set('Content-Type', contentType);
   }
 
   getRefreshParams(refreshToken, clientId) {

@@ -29,7 +29,6 @@ import {
 import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { AuthService } from '../services/auth.service'
-import { KeycloakService } from "../services/keycloak.service";
 import { Deeplinks} from '@ionic-native/deeplinks'
 
 @Component({
@@ -46,11 +45,7 @@ export class EnrolmentPageComponent {
   loading: boolean = false
   showOutcomeStatus: boolean = false
   outcomeStatus: String
-  reportSettings: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
-  registrationUrl: string = 'http://localhost:8080/auth/realms/mighealth/protocol/openid-connect/auth?' +
-    'client_id=account' +
-    '&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fauth%2Frealms%2Fmighealth%2Faccount%2Flogin-redirect' +
-    '&state=0%2F90b4e79a-1333-4a4f-91b1-414f18942e82&response_type=code&scope=openid';
+  reportSettings: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport;
 
   URLRegEx = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?'
 
@@ -85,12 +80,12 @@ export class EnrolmentPageComponent {
     private configService: ConfigService,
     private authService: AuthService,
     private translate: TranslatePipe,
-    private alertCtrl: AlertController,
+
     private deeplinks: Deeplinks
   ) {}
 
   ionViewDidLoad() {
-    // this.slides.lockSwipes(true)
+    this.slides.lockSwipes(true)
     this.translate.init()
   }
 
@@ -288,65 +283,9 @@ export class EnrolmentPageComponent {
     this.navCtrl.setRoot(HomePageComponent)
   }
 
-  showSelectLanguage() {
-    const buttons = [
-      {
-        text: this.translate.transform(LocKeys.BTN_CANCEL.toString()),
-        handler: () => {}
-      },
-      {
-        text: this.translate.transform(LocKeys.BTN_SET.toString()),
-        handler: selectedLanguageVal => {
-          const lang: LanguageSetting = {
-            label: LanguageMap[selectedLanguageVal],
-            value: selectedLanguageVal
-          }
-          this.storage.set(StorageKeys.LANGUAGE, lang).then(() => {
-            this.language = lang
-            this.translate.init().then(() => this.navCtrl.setRoot(AppComponent))
-          })
-        }
-      }
-    ]
-    const inputs = []
-    for (let i = 0; i < this.languagesSelectable.length; i++) {
-      let checked = false
-      if (this.languagesSelectable[i]['label'] === this.language.label) {
-        checked = true
-      }
-      inputs.push({
-        type: 'radio',
-        label: this.translate.transform(
-          this.languagesSelectable[i]['label'].toString()
-        ),
-        value: this.languagesSelectable[i]['value'],
-        checked: checked
-      })
-    }
-    this.showAlert({
-      title: this.translate.transform(
-        LocKeys.SETTINGS_LANGUAGE_ALERT.toString()
-      ),
-      buttons: buttons,
-      inputs: inputs
-    })
-  }
 
-  showAlert(parameters) {
-    const alert = this.alertCtrl.create({
-      title: parameters.title,
-      buttons: parameters.buttons
-    })
-    if (parameters.message) {
-      alert.setMessage(parameters.message)
-    }
-    if (parameters.inputs) {
-      for (let i = 0; i < parameters.inputs.length; i++) {
-        alert.addInput(parameters.inputs[i])
-      }
-    }
-    alert.present()
-  }
+
+
 
   goToLogin() {
       this.authService.keycloakLogin(true).then(success => {
@@ -367,5 +306,11 @@ export class EnrolmentPageComponent {
   goToRefresh() {
     this.authService.refresh().then(success =>
     alert(JSON.stringify(success)));
+  }
+
+  loadUserInfo() {
+    this.authService.loadUserInfo().then(
+      user => alert(JSON.stringify(user))
+    )
   }
 }

@@ -27,6 +27,25 @@ export const Localisations = {
   ENROLE_STUDY_DESCRIPTION: {
     en: 'A Research Study by University College London about the Health of Migrants to the UK'
   },
+
+  ABOUT_STUDY_1: {
+    en: 'The purpose of this study is to learn about the health of international migrants who come to live in the United Kingdom. An international migrant is someone who was born outside of the UK, including people who come to work, study, or reunite their families or for refugee.'
+  },
+  ABOUT_STUDY_2: {
+    en: "Right now in the UK, we do not really know about the health of international migrants or how they use the UK's National Health Service. By asking survey questions on this application, we hope to collect information to better understand their health, wellbeing and experiences after moving to the UK. We believe that your data can help the UK better support the health of migrants"
+  },
+  ABOUT_HOW_THIS_STUDY_WORKS_Q: {
+    en: 'How this study works?'
+  },
+  ABOUT_HOW_THIS_STUDY_WORKS_ANS: {
+    en: 'TO be added'
+  },
+  ABOUT_WHO_IS_RUNNING_THIS_STUDY_Q: {
+    en: 'Who is running this study?'
+  },
+  ABOUT_WHO_IS_RUNNING_THIS_STUDY_ANS: {
+    en: 'TO be added'
+  },
   ENROL_WELCOME_DESC: {
     da:
       'Tak fordi  du vil deltage i dette studie.  Lad os komme i gang med at opstarte registreringsprocessen.',

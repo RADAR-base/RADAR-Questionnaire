@@ -29,6 +29,8 @@ import {
 import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { AuthService } from '../services/auth.service'
+import {AlertService} from "../../../core/services/alert.service";
+import {AlertInputOptions} from "ionic-angular/components/alert/alert-options";
 
 @Component({
   selector: 'page-enrolment',
@@ -79,7 +81,7 @@ export class EnrolmentPageComponent {
     private configService: ConfigService,
     private authService: AuthService,
     private translate: TranslatePipe,
-    private alertCtrl: AlertController
+    private alertService: AlertService,
   ) {}
 
   ionViewDidLoad() {
@@ -194,9 +196,7 @@ export class EnrolmentPageComponent {
   }
 
   validURL(str) {
-    return new FormControl(str, Validators.pattern(this.URLRegEx)).errors
-      ? false
-      : true
+    return !new FormControl(str, Validators.pattern(this.URLRegEx)).errors
   }
 
   retrieveSubjectInformation() {
@@ -301,43 +301,21 @@ export class EnrolmentPageComponent {
         }
       }
     ]
-    const inputs = []
-    for (let i = 0; i < this.languagesSelectable.length; i++) {
-      let checked = false
-      if (this.languagesSelectable[i]['label'] === this.language.label) {
-        checked = true
-      }
-      inputs.push({
+    const inputs = this.languagesSelectable.map(lang => ({
         type: 'radio',
         label: this.translate.transform(
-          this.languagesSelectable[i]['label'].toString()
+          lang.label,
         ),
-        value: this.languagesSelectable[i]['value'],
-        checked: checked
-      })
-    }
-    this.showAlert({
+        value: lang.value,
+        checked: lang.label === this.language.label,
+      }))
+
+    return this.alertService.showAlert({
       title: this.translate.transform(
         LocKeys.SETTINGS_LANGUAGE_ALERT.toString()
       ),
       buttons: buttons,
       inputs: inputs
     })
-  }
-
-  showAlert(parameters) {
-    const alert = this.alertCtrl.create({
-      title: parameters.title,
-      buttons: parameters.buttons
-    })
-    if (parameters.message) {
-      alert.setMessage(parameters.message)
-    }
-    if (parameters.inputs) {
-      for (let i = 0; i < parameters.inputs.length; i++) {
-        alert.addInput(parameters.inputs[i])
-      }
-    }
-    alert.present()
   }
 }

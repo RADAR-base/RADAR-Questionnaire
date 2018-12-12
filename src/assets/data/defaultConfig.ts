@@ -46,6 +46,7 @@ export const DefaultTask: Task = {
   },
   nQuestions: 0,
   estimatedCompletionTime: 0,
+  completionWindow: 0,
   warning: '',
   isClinical: false
 }

@@ -1,12 +1,20 @@
-export interface Protocol {
-  repeatProtocol: RepeatProtocol
-  repeatQuestionnaire: RepeatQuestionnaire
-  reminders: Reminders
+export interface ClinicalProtocol {
+  requiresInClinicCompletion?: boolean
+  repeatAfterClinicVisit: RepeatQuestionnaire
 }
 
-export interface RepeatProtocol {
-  unit: string
-  amount: number
+export interface Protocol {
+  notification?: Notification,
+  repeatProtocol: TimeInterval
+  repeatQuestionnaire: RepeatQuestionnaire
+  reminders?: Reminder[]
+  clinicalProtocol?: ClinicalProtocol
+  completionWindow?: TimeInterval
+}
+
+export interface TimeInterval {
+  unit?: string
+  amount?: number
 }
 
 export interface RepeatQuestionnaire {
@@ -14,8 +22,14 @@ export interface RepeatQuestionnaire {
   unitFromZero: number[]
 }
 
-export interface Reminders {
-  unit: string
-  amount: number
-  repeat: number
+export interface Reminder {
+  offset: TimeInterval
+  notification: Notification | null
+}
+
+export interface Notification {
+  title: string | null
+  text: string
+  vibrate: boolean
+  sound: boolean
 }

@@ -1,4 +1,3 @@
-import { Reminders } from './protocol'
 
 export interface Task {
   index: number
@@ -9,6 +8,7 @@ export interface Task {
   nQuestions: number
   reminderSettings?: any
   estimatedCompletionTime: number
+  completionWindow: number
   warning: string
   isClinical: boolean
 }

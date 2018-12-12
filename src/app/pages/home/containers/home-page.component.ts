@@ -20,6 +20,7 @@ import { QuestionsPageComponent } from '../../questions/containers/questions-pag
 import { SettingsPageComponent } from '../../settings/containers/settings-page.component'
 import { StartPageComponent } from '../../start/containers/start-page.component'
 import { TasksService } from '../services/tasks.service'
+import {AlertService} from "../../../core/services/alert.service";
 
 @Component({
   selector: 'page-home',
@@ -62,7 +63,7 @@ export class HomePageComponent {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public alertCtrl: AlertController,
+    public alertService: AlertService,
     private tasksService: TasksService,
     private translate: TranslatePipe,
     public storage: StorageService,
@@ -135,14 +136,7 @@ export class HomePageComponent {
 
   checkIfOnlyESM() {
     this.tasks.then(tasks => {
-      let tmpHasOnlyESMs = true
-      for (let i = 0; i < tasks.length; i++) {
-        if (tasks[i].name !== 'ESM') {
-          tmpHasOnlyESMs = false
-          break
-        }
-      }
-      this.hasOnlyESMs = tmpHasOnlyESMs
+      this.hasOnlyESMs = tasks.every(t => t.name === 'ESM')
     })
   }
 
@@ -292,13 +286,12 @@ export class HomePageComponent {
     } else {
       this.startingQuestionnaire = true
     }
-    const lang = this.storage.get(StorageKeys.LANGUAGE)
-    const nextAssessment = this.tasksService.getAssessment(
-      startQuestionnaireTask
-    )
-    Promise.all([lang, nextAssessment]).then(res => {
-      const language = res[0].value
-      const assessment = res[1]
+
+    Promise.all([
+      this.storage.get(StorageKeys.LANGUAGE),
+      this.tasksService.getAssessment(startQuestionnaireTask)
+    ]).then(([lang, assessment]) => {
+      const language = lang.value
       const params = {
         title: assessment.name,
         introduction: assessment.startText[language],
@@ -323,32 +316,15 @@ export class HomePageComponent {
   }
 
   showCredits() {
-    const buttons = [
-      {
-        text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
-        handler: () => {}
-      }
-    ]
-    this.showAlert({
+    return this.alertService.showAlert({
       title: this.translate.transform(LocKeys.CREDITS_TITLE.toString()),
       message: this.translate.transform(LocKeys.CREDITS_BODY.toString()),
-      buttons: buttons
+      buttons: [
+        {
+          text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+          handler: () => {}
+        }
+      ]
     })
-  }
-
-  showAlert(parameters) {
-    const alert = this.alertCtrl.create({
-      title: parameters.title,
-      buttons: parameters.buttons
-    })
-    if (parameters.message) {
-      alert.setMessage(parameters.message)
-    }
-    if (parameters.inputs) {
-      for (let i = 0; i < parameters.inputs.length; i++) {
-        alert.addInput(parameters.inputs[i])
-      }
-    }
-    alert.present()
   }
 }

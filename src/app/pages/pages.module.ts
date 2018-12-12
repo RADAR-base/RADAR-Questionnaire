@@ -18,6 +18,7 @@ import { ReportModule } from './report/report.module'
 import { SettingsModule } from './settings/settings.module'
 import { SplashModule } from './splash/splash.module'
 import { StartModule } from './start/start.module'
+import {AlertService} from "../core/services/alert.service";
 
 @NgModule({
   imports: [
@@ -34,6 +35,7 @@ import { StartModule } from './start/start.module'
     StartModule
   ],
   providers: [
+    AlertService,
     AuthService,
     DatePipe,
     ConfigService,

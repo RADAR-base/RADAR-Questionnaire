@@ -90,7 +90,7 @@
       </ng-container>
       <div
         class="current-time-div"
-        *ngIf="(timeIndex | async)==(tasks | async)?.length"
+        *ngIf="(timeIndex | async)==-1"
       >
         <div id="time-current">
           <ion-row>

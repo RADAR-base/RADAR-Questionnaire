@@ -102,13 +102,4 @@ export class AudioInputComponent implements OnInit, OnChanges {
       return 'Start Recording'
     }
   }
-
-  showAlert(title, message) {
-    const alert = this.alertCtrl.create({
-      title: title,
-      subTitle: message,
-      buttons: ['Dismiss']
-    })
-    alert.present()
-  }
 }

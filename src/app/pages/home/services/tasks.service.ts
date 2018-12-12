@@ -33,99 +33,61 @@ export class TasksService {
     }
     if (tasks) {
       tasksProgress.numberOfTasks = tasks.length
-      for (let i = 0; i < tasks.length; i++) {
-        if (tasks[i].completed) {
-          tasksProgress.completedTasks += 1
-        }
-      }
+      tasksProgress.completedTasks = tasks.reduce((num, t) => t.completed ? num + 1 : num, 0)
       return tasksProgress
     }
   }
 
-  getNextTask(tasks) {
-    return this.retrieveNextTask(tasks)
-  }
-
   areAllTasksComplete() {
     return this.getTasksOfToday().then((tasks: Task[]) => {
-      if (tasks) {
-        for (let i = 0; i < tasks.length; i++) {
-          if (tasks[i].name !== 'ESM' && tasks[i].isClinical == false) {
-            if (tasks[i].completed === false) {
-              return false
-            }
-          }
-        }
-      }
-      return true
+      return !tasks || tasks.every(t => t.name === 'ESM' || t.isClinical || t.completed)
     })
   }
 
   isLastTask(task, todaysTasks) {
     return todaysTasks.then((tasks: Task[]) => {
-      if (tasks) {
-        for (let i = 0; i < tasks.length; i++) {
-          if (tasks[i].name !== 'ESM') {
-            if (tasks[i].completed === false && tasks[i].index !== task.index) {
-              return false
-            }
-          }
-        }
-      }
-      return true
+      return !tasks || tasks.every(t => t.name === 'ESM' || t.completed || t.index === task.index)
     })
   }
 
   /**
    * This function Retrieves the most current next task from a list of tasks.
-   * @param tasks : The list of tasks to retrieve the next task from.
+   * @param tasks : list of tasks to retrieve the next task from.
    * @returns {@link Task} : The next incomplete task from the list. This essentially
    *                         translates to which questionnaire the `START` button on home page corresponds to.
    */
-  retrieveNextTask(tasks: Task[]): Task {
+  getNextTask(tasks: Task[]): Task | undefined {
     if (tasks) {
-      const now = new Date()
-      const offsetTimeESM = 1000 * 60 * 10 // 10 min
-      const offsetForward = 1000 * 60 * 60 * 12
-      let lookFromTimestamp, lookToTimestamp
-      for (let i = 0; i < tasks.length; i++) {
-        switch (tasks[i].name) {
+      const tenMinutesAgo = new Date().getTime() - 1000 * 60 * 10
+      const midnight = new Date()
+      midnight.setHours(0, 0, 0, 0)
+      const offsetForward = 1000 * 60 * 60 * 12 // 12 hours
+      return tasks.find(task => {
+        switch (task.name) {
           case 'ESM':
             // NOTE: For ESM, just look from 10 mins before now
-            lookFromTimestamp = new Date().getTime() - offsetTimeESM
-            lookToTimestamp = lookFromTimestamp + offsetForward
-            break
-
+            return task.timestamp >= tenMinutesAgo &&
+              task.timestamp < tenMinutesAgo + offsetForward &&
+              task.completed === false
           default:
-            // NOTE: Check from midnight for other tasks
-            now.setHours(0, 0, 0, 0)
-            lookFromTimestamp = now.getTime()
-            lookToTimestamp = tasks[i].timestamp + offsetForward
+            // NOTE: Break out of the loop as soon as the next incomplete task is found
+            return task.timestamp >= midnight.getTime() &&
+              task.completed === false
         }
-        // NOTE: Break out of the loop as soon as the next incomplete task is found
-        if (
-          tasks[i].timestamp >= lookFromTimestamp &&
-          tasks[i].timestamp < lookToTimestamp &&
-          tasks[i].completed === false
-        )
-          return tasks[i]
-      }
+      })
     }
   }
 
   sendNonReportedTaskCompletion() {
     this.schedule.getNonReportedCompletedTasks().then(nonReportedTasks => {
-      for (let i = 0; i < nonReportedTasks.length; i++) {
-        this.kafka.prepareNonReportedTasksKafkaObjectAndSend(
-          nonReportedTasks[i]
-        )
-        this.updateTaskToReportedCompletion(nonReportedTasks[i])
-      }
+      nonReportedTasks.forEach(t => {
+        this.kafka.prepareNonReportedTasksKafkaObjectAndSend(t)
+        this.updateTaskToReportedCompletion(t)
+      })
     })
   }
 
-  updateTaskToReportedCompletion(task): Promise<any> {
-    const updatedTask = task
+  updateTaskToReportedCompletion(updatedTask): Promise<any> {
     updatedTask.reportedCompletion = true
     return this.schedule.insertTask(updatedTask)
   }

@@ -27,6 +27,7 @@ import {
 } from '../../../shared/models/settings'
 import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { SplashPageComponent } from '../../splash/containers/splash-page.component'
+import {AlertService} from "../../../core/services/alert.service";
 
 @Component({
   selector: 'page-settings',
@@ -49,7 +50,7 @@ export class SettingsPageComponent {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public alertCtrl: AlertController,
+    public alertService: AlertService,
     public storage: StorageService,
     private appVersion: AppVersion,
     private schedule: SchedulingService,
@@ -175,7 +176,7 @@ export class SettingsPageComponent {
         checked: checked
       })
     }
-    this.showAlert({
+    return this.alertService.showAlert({
       title: this.translate.transform(
         LocKeys.SETTINGS_LANGUAGE_ALERT.toString()
       ),
@@ -191,7 +192,7 @@ export class SettingsPageComponent {
         handler: () => {}
       }
     ]
-    this.showAlert({
+    return this.alertService.showAlert({
       title: this.translate.transform(
         LocKeys.SETTINGS_NOTIFICATIONS_NIGHTMOD.toString()
       ),
@@ -220,7 +221,7 @@ export class SettingsPageComponent {
         }
       }
     ]
-    this.showAlert({
+    return this.alertService.showAlert({
       title: this.translate.transform(LocKeys.TESTING_NOTIFICATIONS.toString()),
       message: this.translate.transform(
         LocKeys.TESTING_NOTIFICATIONS_MESSAGE.toString()
@@ -249,29 +250,13 @@ export class SettingsPageComponent {
         }
       }
     ]
-    this.showAlert({
+    return this.alertService.showAlert({
       title: this.translate.transform(LocKeys.SETTINGS_RESET_ALERT.toString()),
       message: this.translate.transform(
         LocKeys.SETTINGS_RESET_ALERT_DESC.toString()
       ),
       buttons: buttons
     })
-  }
-
-  showAlert(parameters) {
-    const alert = this.alertCtrl.create({
-      title: parameters.title,
-      buttons: parameters.buttons
-    })
-    if (parameters.message) {
-      alert.setMessage(parameters.message)
-    }
-    if (parameters.inputs) {
-      for (let i = 0; i < parameters.inputs.length; i++) {
-        alert.addInput(parameters.inputs[i])
-      }
-    }
-    alert.present()
   }
 
   reloadConfig() {

@@ -10,6 +10,9 @@ import { Task } from '../../../shared/models/task'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { FinishTaskService } from '../services/finish-task.service'
 import { PrepareDataService } from '../services/prepare-data.service'
+import {Assessment} from "../../../shared/models/assessment";
+import {SchedulingService} from "../../../core/services/scheduling.service";
+import {RepeatQuestionnaire, TimeInterval} from "../../../shared/models/protocol";
 
 @Component({
   selector: 'page-finish',
@@ -103,34 +106,31 @@ export class FinishPageComponent {
   }
 
   generateClinicalTasks(tasks) {
-    let clinicalTasks = []
-    if (tasks) {
-      clinicalTasks = tasks
-    } else {
+    if (!tasks) {
       tasks = []
     }
-    const associatedTask = this.navParams.data['associatedTask']
-    const protocol = this.navParams.data['associatedTask']['protocol']
+    const associatedTask: Assessment = this.navParams.data.associatedTask
+    const protocol = associatedTask.protocol
     const repeatTimes = this.formatRepeatsAfterClinic(
-      protocol['clinicalProtocol']['repeatAfterClinicVisit']
+      protocol.clinicalProtocol.repeatAfterClinicVisit
     )
-    const now = new Date()
-    for (let i = 0; i < repeatTimes.length; i++) {
-      const ts = now.getTime() + repeatTimes[i]
-      const clinicalTask: Task = {
+    const now = new Date().getTime()
+    const clinicalTasks = tasks.concat(
+      repeatTimes.map((repeatTime, i) => ({
         index: tasks.length + i,
         completed: false,
         reportedCompletion: false,
-        timestamp: ts,
-        name: associatedTask['name'],
-        reminderSettings: protocol['reminders'],
-        nQuestions: associatedTask['questions'].length,
-        estimatedCompletionTime: associatedTask['estimatedCompletionTime'],
+        timestamp: now + repeatTime,
+        name: associatedTask.name,
+        reminderSettings: protocol.reminders,
+        nQuestions: associatedTask.questions.length,
+        estimatedCompletionTime: associatedTask.estimatedCompletionTime,
+        completionWindow: SchedulingService.timeIntervalToMillis(associatedTask.protocol.completionWindow),
         warning: '',
         isClinical: true
-      }
-      clinicalTasks.push(clinicalTask)
-    }
+      }))
+    )
+
     return this.storage
       .set(StorageKeys.SCHEDULE_TASKS_CLINICAL, clinicalTasks)
       .then(() =>
@@ -140,29 +140,11 @@ export class FinishPageComponent {
       )
   }
 
-  formatRepeatsAfterClinic(repeats) {
-    const repeatsInMillis = []
-    const unit = repeats['unit']
-    for (let i = 0; i < repeats['unitsFromZero'].length; i++) {
-      const unitFromZero = repeats['unitsFromZero'][i]
-      switch (unit) {
-        case 'min': {
-          const formatted = unitFromZero * 1000 * 60
-          repeatsInMillis.push(formatted)
-          break
-        }
-        case 'hour': {
-          const formatted = unitFromZero * 1000 * 60 * 60
-          repeatsInMillis.push(formatted)
-          break
-        }
-        case 'day': {
-          const formatted = unitFromZero * 1000 * 60 * 60 * 24
-          repeatsInMillis.push(formatted)
-          break
-        }
-      }
-    }
-    return repeatsInMillis
+  formatRepeatsAfterClinic(repeats: RepeatQuestionnaire) {
+    return repeats.unitFromZero.map(amount =>
+      SchedulingService.timeIntervalToMillis({
+        unit: repeats.unit,
+        amount
+      }))
   }
 }

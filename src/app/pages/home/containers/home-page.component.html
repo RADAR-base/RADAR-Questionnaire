@@ -83,7 +83,6 @@
     #tickerBar
     class="size-static"
     *ngIf="nextTask.name !== 'ESM'"
-    [@displayCalendar]="showCalendar"
   >
     <ticker-bar
       [task]="nextTask"
@@ -94,7 +93,6 @@
   <div
     #taskInfo
     class="size-static"
-    [@displayCalendar]="showCalendar"
   >
     <task-info
       [task]="nextTask"
@@ -111,7 +109,7 @@
     [@displayCalendar]="showCalendar"
   >
     <task-calendar
-      [scrollHeight]="calendarScrollHeight"
+      [show]="showCalendar"
       (task)="startQuestionnaire($event)"
       [tasks]="tasks"
     >
@@ -121,10 +119,9 @@
   <div
     #footer
     class="size-static footer"
-    [@displayCalendar]="showCalendar"
   >
     <div
-      *ngIf="taskIsNow && !startingQuestionnaire"
+      *ngIf="taskIsNow && !startingQuestionnaire && !showCompleted"
       padding
     >
       <button

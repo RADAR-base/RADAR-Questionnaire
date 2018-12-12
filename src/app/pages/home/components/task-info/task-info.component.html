@@ -14,17 +14,19 @@
       id="questionnaire-progress"
       [@moveInProgress]="expanded"
     >
-      <round-progress
-        id="prog-sm"
-        [current]="current"
-        [max]="max"
-        [radius]="radius"
-        [color]="'#7fcdbb'"
-        [background]="'rgba(255,255,204,0.12)'"
-        [stroke]="stroke"
-        [clockwise]="true"
-      ></round-progress>
-      <div id="questionnaire-counter">{{ current }}</div>
+      <ng-container *ngIf="!expanded">
+        <round-progress
+          id="prog-sm"
+          [current]="current"
+          [max]="max"
+          [radius]="radius"
+          [color]="'#7fcdbb'"
+          [background]="'rgba(255,255,204,0.12)'"
+          [stroke]="stroke"
+          [clockwise]="true"
+        ></round-progress>
+        <div id="questionnaire-counter">{{ current }}</div>
+      </ng-container>
     </div>
     <div
       id="questionnaire-metrics"

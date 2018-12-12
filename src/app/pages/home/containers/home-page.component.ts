@@ -1,5 +1,5 @@
 import { animate, state, style, transition, trigger } from '@angular/animations'
-import { Component, ElementRef, ViewChild } from '@angular/core'
+import { Component } from '@angular/core'
 import {
   AlertController,
   Content,
@@ -27,44 +27,23 @@ import { TasksService } from '../services/tasks.service'
   templateUrl: 'home-page.component.html',
   animations: [
     trigger('displayCalendar', [
-      state('true', style({ transform: 'translateY(0%)', opacity: 1 })),
-      state('false', style({ transform: 'translateY(100%)', opacity: 1 })),
-      transition('*=>*', animate('300ms ease'))
+      state('true', style({ transform: 'translateY(0%)' })),
+      state('false', style({ transform: 'translateY(100%)' })),
+      transition('*=>*', animate('300ms'))
     ])
   ]
 })
 export class HomePageComponent {
-  @ViewChild('content')
-  elContent: Content
-  elContentHeight: number
-  @ViewChild('progressBar')
-  elProgress: ElementRef
-  elProgressHeight: number
-  @ViewChild('tickerBar')
-  elTicker: ElementRef
-  elTickerHeight: number
-  @ViewChild('taskInfo')
-  elInfo: ElementRef
-  elInfoHeight: number
-  @ViewChild('footer')
-  elFooter: ElementRef
-  elFooterHeight: number
-  @ViewChild('taskCalendar')
-  elCalendar: ElementRef
-
   tasks: Promise<Task[]>
-  isOpenPageClicked: boolean = false
   nextTask: Task = DefaultTask
   showCalendar: boolean = false
   showCompleted: boolean = false
   showNoTasksToday: boolean = false
   tasksProgress: TasksProgress
-  calendarScrollHeight: number = 0
   startingQuestionnaire: boolean = false
   hasClinicalTasks = false
   hasOnlyESMs = false
   taskIsNow = false
-  elProgressOffset = 16
   nextTaskIsLoading = true
 
   constructor(
@@ -88,9 +67,6 @@ export class HomePageComponent {
     this.tasks.then(
       tasks => (this.tasksProgress = this.tasksService.getTaskProgress(tasks))
     )
-    this.getElementsAttributes()
-    this.elProgressHeight += this.elProgressOffset
-    // this.applyTransformations()
     this.showNoTasksToday = false
     this.startingQuestionnaire = false
   }
@@ -121,13 +97,12 @@ export class HomePageComponent {
   checkForNextTaskGeneric(task) {
     if (task && task.isClinical == false) {
       this.nextTask = task
-      this.displayCompleted(false)
       this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
     } else {
       this.tasksService.areAllTasksComplete().then(completed => {
         if (completed) {
           this.nextTask = DefaultTask
-          this.displayCompleted(true)
+          this.showCompleted = true
           if (!this.tasksProgress) {
             this.showNoTasksToday = true
           }
@@ -160,55 +135,6 @@ export class HomePageComponent {
 
   displayTaskCalendar() {
     this.showCalendar = !this.showCalendar
-    this.setCalendarScrollHeight(this.showCalendar)
-  }
-
-  displayCompleted(requestDisplay: boolean) {
-    this.showCompleted = requestDisplay
-    this.getElementsAttributes()
-    this.applyCompletedTransformations()
-  }
-
-  getElementsAttributes() {
-    if (this.elContent) this.elContentHeight = this.elContent.contentHeight
-    if (this.elProgress)
-      this.elProgressHeight =
-        this.elProgress.nativeElement.offsetHeight - this.elProgressOffset
-    if (this.elTicker)
-      this.elTickerHeight = this.elTicker.nativeElement.offsetHeight
-    if (this.elInfo) this.elInfoHeight = this.elInfo.nativeElement.offsetHeight
-    if (this.elFooter)
-      this.elFooterHeight = this.elFooter.nativeElement.offsetHeight
-  }
-
-  setCalendarScrollHeight(show: boolean) {
-    if (show) {
-      this.calendarScrollHeight =
-        this.elContentHeight - this.elTickerHeight - this.elInfoHeight
-    } else {
-      this.calendarScrollHeight = 0
-    }
-  }
-
-  applyCompletedTransformations() {
-    if (this.showCompleted) {
-      this.elTicker.nativeElement.style.padding = `0`
-      this.elTicker.nativeElement.style.transform = `translateY(${this
-        .elInfoHeight + this.elFooterHeight}px)`
-      this.elInfo.nativeElement.style.transform = `translateY(${this
-        .elInfoHeight + this.elFooterHeight}px) scale(0)`
-      this.elFooter.nativeElement.style.transform = `translateY(${this
-        .elInfoHeight + this.elFooterHeight}px) scale(0)`
-    } else {
-      if (this.elTicker) {
-        this.elTicker.nativeElement.style.padding = '0 0 2px 0'
-        this.elTicker.nativeElement.style.transform = 'translateY(0px)'
-      }
-      if (this.elInfo)
-        this.elInfo.nativeElement.style.transform = 'translateY(0px) scale(1)'
-      if (this.elFooter)
-        this.elFooter.nativeElement.style.transform = 'translateY(0px) scale(1)'
-    }
   }
 
   openSettingsPage() {

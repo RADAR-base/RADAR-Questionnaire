@@ -19,7 +19,7 @@ import { TasksService } from '../../services/tasks.service'
 })
 export class TaskCalendarComponent implements OnChanges {
   @Input()
-  scrollHeight = 0
+  show = false
   @Output()
   task: EventEmitter<Task> = new EventEmitter<Task>()
   @Input()
@@ -27,6 +27,7 @@ export class TaskCalendarComponent implements OnChanges {
 
   currentTime
   timeIndex: Promise<number>
+  height
 
   constructor(
     private tasksService: TasksService,
@@ -37,6 +38,7 @@ export class TaskCalendarComponent implements OnChanges {
 
   ngOnChanges() {
     this.setCurrentTime()
+    this.height = this.show ? 100 : 0
   }
 
   getStartTime(task: Task) {

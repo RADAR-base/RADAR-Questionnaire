@@ -61,7 +61,7 @@ export class TasksService {
     )
   }
 
-  isLastTask(task, tasks): boolean {
+  isLastTask(task, tasks) {
     return (
       !tasks ||
       tasks.every(
@@ -81,7 +81,7 @@ export class TasksService {
 
   /**
    * This function Retrieves the most current next task from a list of tasks.
-   * @param tasks : The list of tasks to retrieve the next task from.
+   * @param tasks : list of tasks to retrieve the next task from.
    * @returns {@link Task} : The next incomplete task from the list. This essentially
    *                         translates to which questionnaire the `START` button on home page corresponds to.
    */
@@ -96,7 +96,7 @@ export class TasksService {
             return (
               task.timestamp >= tenMinutesAgo &&
               task.timestamp < tenMinutesAgo + offsetForward &&
-              !task.completed
+              task.completed === false
             )
           default:
             // NOTE: Break out of the loop as soon as the next incomplete task is found

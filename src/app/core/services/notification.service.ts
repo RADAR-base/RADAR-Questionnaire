@@ -1,8 +1,7 @@
 import 'rxjs/add/operator/map'
 
 import { Injectable } from '@angular/core'
-import { AlertController } from 'ionic-angular'
-import { v4 as uuid } from 'uuid'
+import { uuid } from 'uuid'
 
 import {
   DefaultNotificationType,
@@ -18,6 +17,7 @@ import { TranslatePipe } from '../../shared/pipes/translate/translate'
 import { getMilliseconds, getSeconds } from '../../shared/utilities/time'
 import { SchedulingService } from './scheduling.service'
 import { StorageService } from './storage.service'
+import { AlertService } from './alert.service'
 
 declare var cordova
 declare var FCMPlugin
@@ -28,7 +28,7 @@ export class NotificationService {
 
   constructor(
     private translate: TranslatePipe,
-    private alertCtrl: AlertController,
+    private alertService: AlertService,
     private schedule: SchedulingService,
     public storage: StorageService
   ) {}
@@ -101,8 +101,7 @@ export class NotificationService {
           for (let i = 0; i < tasks.length; i++) {
             if (tasks[i].timestamp > now) {
               const j = i + 1 < tasks.length ? i + 1 : i
-              const isLastScheduledNotification =
-                i + 1 === tasks.length ? true : false
+              const isLastScheduledNotification = i + 1 === tasks.length
               const isLastOfDay = this.evalIsLastOfDay(tasks[i], tasks[j])
               const localNotification = this.formatLocalNotification(
                 tasks[i],
@@ -137,9 +136,7 @@ export class NotificationService {
           if (DefaultNotificationType === 'FCM') {
             console.log('NOTIFICATIONS Scheduling FCM notifications')
             console.log(fcmNotifications)
-            for (let i = 0; i < fcmNotifications.length; i++) {
-              this.sendFCMNotification(fcmNotifications[i])
-            }
+            fcmNotifications.forEach(this.sendFCMNotification)
           }
           this.storage.set(StorageKeys.LAST_NOTIFICATION_UPDATE, Date.now())
         }
@@ -149,12 +146,8 @@ export class NotificationService {
   sendFCMNotification(notification) {
     FCMPlugin.upstream(
       notification,
-      function(succ) {
-        console.log(succ)
-      },
-      function(err) {
-        console.log(err)
-      }
+      succ => console.log(succ),
+      err => console.log(err)
     )
   }
 
@@ -335,48 +328,28 @@ export class NotificationService {
     const msgLastOfDay = this.translate.transform(
       LocKeys.NOTIFICATION_REMINDER_FORGOTTEN_ALERT_LASTOFNIGHT_DESC.toString()
     )
-    const msg = isLastOfDay ? msgLastOfDay : msgDefault
-    const buttons = [
-      {
-        text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
-        handler: () => {}
-      }
-    ]
-    this.showAlert({
+    return this.alertService.showAlert({
       title: this.translate.transform(
         LocKeys.NOTIFICATION_REMINDER_FORGOTTEN.toString()
       ),
-      message: msg,
-      buttons: buttons
+      message: isLastOfDay ? msgLastOfDay : msgDefault,
+      buttons: [
+        {
+          text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+          handler: () => {}
+        }
+      ]
     })
-  }
-
-  showAlert(parameters) {
-    const alert = this.alertCtrl.create({
-      title: parameters.title,
-      buttons: parameters.buttons
-    })
-    if (parameters.message) {
-      alert.setMessage(parameters.message)
-    }
-    if (parameters.inputs) {
-      for (let i = 0; i < parameters.inputs.length; i++) {
-        alert.addInput(parameters.inputs[i])
-      }
-    }
-    alert.present()
   }
 
   setNextXNotifications(noOfNotifications) {
-    const today = new Date().getTime()
-    const promises = []
     return this.generateNotificationSubsetForXTasks(noOfNotifications).then(
       desiredSubset => {
         console.log(`NOTIFICATIONS desiredSubset: ${desiredSubset.length}`)
         try {
           return this.setNotifications(desiredSubset)
         } catch (e) {
-          return Promise.resolve({})
+          return Promise.reject(e)
         }
       }
     )

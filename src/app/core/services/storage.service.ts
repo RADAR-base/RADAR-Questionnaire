@@ -188,13 +188,7 @@ export class StorageService {
 
   getClinicalAssessment(task: Task) {
     return this.get(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS).then(
-      assessments => {
-        for (let i = 0; i < assessments.length; i++) {
-          if (assessments[i].name === task.name) {
-            return assessments[i]
-          }
-        }
-      }
+      assessments => assessments.find(a => a.name === task.name)
     )
   }
 

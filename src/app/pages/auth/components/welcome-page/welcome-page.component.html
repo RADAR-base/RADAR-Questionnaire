@@ -4,15 +4,17 @@
       <div id="logo-container">
         <img
             id="logo"
-            src="assets/imgs/ucl-logo-text.png"
+            src="assets/imgs/new-logo.png"
             alias="UCL LOGO"
         >
       </div>
       <div class="text">
-        <div class="text-lg">{{ "ENROL_WELCOME_1" | translate }}{{ "ENROL_WELCOME_2" |
+        <div class="text-lg">{{ "ENROL_WELCOME_1" | translate }} {{ "ENROL_WELCOME_2" |
           translate }}
         </div>
-        A Research Study about the Health of New Residents to the UK
+        <div class="text-md" style="font-size: 25px">
+          {{ "ENROLE_STUDY_DESCRIPTION" | translate }}
+        </div>
         <div class="padding text-justify extra-padding">
           <ion-item no-lines>
             <span class="info-value">{{ language.label | translate }}</span>
@@ -39,7 +41,7 @@
           scrollY="true"
           style="height:550px"
       >
-        <div class="text text-justify">
+        <div padding class="text text-justify">
             <span class="text">
               The purpose of this study is to learn about the health of people who move to the United Kingdom to work, study, or join families.
             </span>

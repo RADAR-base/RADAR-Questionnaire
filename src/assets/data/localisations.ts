@@ -19,10 +19,13 @@ export const Localisations = {
   ENROL_WELCOME_2: {
     da: 'til RADAR-CNS',
     de: 'zu RADAR-CNS',
-    en: 'to MigHealth UK',
+    en: 'to Health on the Move',
     es: 'a RADAR-CNS',
     it: 'in RADAR-CNS',
     nl: 'bij RADAR-CNS'
+  },
+  ENROLE_STUDY_DESCRIPTION: {
+    en: 'A Research Study by University College London about the Health of Migrants to the UK'
   },
   ENROL_WELCOME_DESC: {
     da:
@@ -44,7 +47,7 @@ export const Localisations = {
   },
 
   ENROL_ABORT_MESSAGE: {
-    en: "It seems you do not meet our eligibility criteria to participant in the study."
+    en: 'It seems you do not meet our eligibility criteria to participant in the study.'
   },
   ENROL_ABOUT_HEADING: {
     da: 'Velkommen',
@@ -59,7 +62,7 @@ export const Localisations = {
   },
 
   ENROL_ELIGIBILITY_HEADING: {
-    en: "Eligibility"
+    en: 'Eligibility'
   },
   ENROL_REGISTRATION: {
     da: 'Registrering',

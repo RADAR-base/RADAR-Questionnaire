@@ -11,6 +11,7 @@ import {AppComponent} from "../../../../core/containers/app.component";
 import {TranslatePipe} from "../../../../shared/pipes/translate/translate";
 import {StorageService} from "../../../../core/services/storage.service";
 import {EnrolmentPageComponent} from "../../containers/enrolment-page.component";
+import {AuthService} from "../../services/auth.service";
 
 /**
  * Generated class for the WelcomePage page.
@@ -38,7 +39,8 @@ export class WelcomePageComponent {
     private navCtrl: NavController,
     private navParams: NavParams,
     private translate: TranslatePipe,
-    public storage: StorageService,
+    private storage: StorageService,
+    private authService: AuthService,
     private alertCtrl: AlertController) {}
 
   ionViewDidLoad() {
@@ -108,7 +110,22 @@ export class WelcomePageComponent {
     alert.present()
   }
 
-  goToRegistration() {
+  joinStudy() {
     this.navCtrl.setRoot(EnrolmentPageComponent);
+  }
+
+  goToLogin() {
+    this.authService.keycloakLogin(true).then(success => {
+    }, (error) => {
+      this.alertCtrl.create({
+        title: "Something went wrong",
+        buttons: [{
+            text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+            handler: () => {}
+          }],
+        message: "Could not successfully redirect to login. Please try again later."
+      }).present();
+      console.log(error);
+    });
   }
 }

@@ -38,6 +38,14 @@ export const Localisations = {
     nl:
       'Bedankt voor uw deelname aan dit onderzoek. Laten we starten met het registratie-proces.'
   },
+  ENROL_ABORT_THANKYOU_1: {
+    en: 'Thank you for your time',
+    nl: 'Bedankt'
+  },
+
+  ENROL_ABORT_MESSAGE: {
+    en: "It seems you do not meet our eligibility criteria to participant in the study."
+  },
   ENROL_ABOUT_HEADING: {
     da: 'Velkommen',
     de: 'Herzlich willkommen',

@@ -30,6 +30,11 @@ page-enrolment {
     font-size: 30px;
   }
 
+  .text-sm {
+    margin-bottom: 2vh;
+    font-size: 20px;
+  }
+
   .padding {
     margin-top: 3vh;
   }
@@ -75,6 +80,21 @@ page-enrolment {
     position: fixed;
     bottom: 10px;
     width: 100%;
+  }
+
+  .center {
+    position:relative; /*it can be fixed too*/
+    left:0; right:0;
+    top:0; bottom:0;
+    margin:auto;
+  }
+
+  hr {
+    display: block;
+    height: 0px;
+    border: 2px solid $cl-light;
+    margin: 1em 0;
+    padding: 0;
   }
 
   ion-item.item {

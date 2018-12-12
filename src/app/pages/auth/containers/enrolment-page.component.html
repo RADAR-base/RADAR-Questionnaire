@@ -1,50 +1,79 @@
-<ion-content >
-  <ion-slides pager direction="horizontal" >
+<ion-content>
+  <ion-slides direction="horizontal">
 
     <ion-slide id="eligibility">
-
       <div class="text-md">{{ "ENROL_ELIGIBILITY_HEADING" | translate }}</div>
-
-      <ion-scroll
-        scrollY="true"
-        style="height:550px"
-      >
-        <span padding >Are you at least 18 years old?</span>
-        <br>
-        <span>
-          <tr>
-            <td>
-        <button ion-button
-                class="bt bt--block"
-                [block]="true"
-                [outline]="true"
-                style="padding-right: 30px; padding-bottom: "
-                large >Yes</button>
+      <div class="center">
+        <div>
+          <div>
+            <span class="text-sm padding">Are you at least 18 years old?</span>
+          </div>
+          <br>
+          <div>
+          <span>
+            <tr>
+              <td>
+                <div style="padding-right: 10px">
+                  <button ion-button
+                          class="bt bt--block"
+                          [block]="true"
+                          [outline]="true"
+                          (click)="isOlderThanEighteen(true)"
+                          large>Yes
+                  </button>
+                  </div>
+                </td>
+              <td>
+                <div style="padding-right: 10px">
+                  <button ion-button
+                          class="bt bt--block"
+                          [block]="true"
+                          [outline]="true"
+                          (click)="isOlderThanEighteen(false)"
+                          large>No</button>
+                </div>
               </td>
-            <td>
-        <button ion-button
-                class="bt bt--block"
-                [block]="true"
-                [outline]="true"
-                large >No</button>
-            </td>
-          </tr>
-        </span>
+            </tr>
+          </span>
+          </div>
 
-      </ion-scroll>
-      <div
-        padding
-        class="bottom"
-      >
-        <button
-          ion-button
-          class="bt bt--full"
-          round
-          full
-          (click)="next()"
-        >
-          {{ "BTN_NEXT" | translate }}
-        </button>
+
+          <div padding>
+            <hr/>
+          </div>
+
+          <div>
+            <span class="text-sm padding">Were you born outside of the United Kingdom? </span>
+          </div>
+          <br>
+          <div>
+          <span>
+            <tr>
+              <td>
+                <div style="padding-right: 10px">
+                  <button ion-button
+                          class="bt bt--block"
+                          [block]="true"
+                          [outline]="true"
+                          (click)="isBornInUnitedKingdom(true)"
+                          large>Yes
+                  </button>
+                  </div>
+                </td>
+              <td>
+                <div style="padding-right: 10px">
+                  <button ion-button
+                          class="bt bt--block"
+                          [block]="true"
+                          [outline]="true"
+                          (click)="isBornInUnitedKingdom(false)"
+                          large>No</button>
+                </div>
+              </td>
+            </tr>
+          </span>
+          </div>
+        </div>
       </div>
 
     </ion-slide>
@@ -52,9 +81,9 @@
     <ion-slide id="to-keycloak">
       <div id="logo-container">
         <img
-                id="logo"
-                src="assets/imgs/ucl-logo-text.png"
-                alias="RADAR LOGO"
+            id="logo"
+            src="assets/imgs/ucl-logo-text.png"
+            alias="RADAR LOGO"
         >
       </div>
       <div class="text">
@@ -63,47 +92,61 @@
         <div class="padding text-justify extra-padding">{{ "ENROL_WELCOME_DESC" | translate }}</div>
       </div>
       <div
-              padding
-              class="bottom"
+          padding
+          class="bottom"
       >
 
         <button
-                ion-button
-                class="bt bt--full"
-                round
-                full
-                (click)="goToRefresh()"
+            ion-button
+            class="bt bt--full"
+            round
+            full
+            (click)="goToRefresh()"
         >
           Refresh
         </button>
       </div>
     </ion-slide>
 
-      <ion-slide id="fetch-userinfo">
-          <div id="logo-container">
-              <img
-                      id="logo"
-                      src="assets/imgs/ucl-logo-text.png"
-                      alias="RADAR LOGO"
-              >
-          </div>
-          <button
-                  ion-button
-                  class="bt bt--full"
-                  round
-                  full
-                  (click)="loadUserInfo()"
-          >
-              Load user info
-          </button>
-      </ion-slide>
+    <ion-slide id="thankyou">
+      <div id="logo-container">
+        <img
+            id="logo"
+            src="assets/imgs/ucl-logo-text.png"
+            alias="RADAR LOGO"
+        >
+      </div>
+      <div class="text">
+        <div class="text-lg">{{ "ENROL_ABORT_THANKYOU_1" | translate }}</div>
+        <div class="text-md"> {{ "ENROL_ABORT_MESSAGE" | translate}}</div>
+      </div>
+    </ion-slide>
+
+    <ion-slide id="fetch-userinfo">
+      <div id="logo-container">
+        <img
+            id="logo"
+            src="assets/imgs/ucl-logo-text.png"
+            alias="RADAR LOGO"
+        >
+      </div>
+      <button
+          ion-button
+          class="bt bt--full"
+          round
+          full
+          (click)="loadUserInfo()"
+      >
+        Load user info
+      </button>
+    </ion-slide>
 
     <ion-slide id="intro">
       <div id="logo-container">
         <img
-          id="logo"
-          src="assets/imgs/ucl-logo-text.png"
-          alias="RADAR LOGO"
+            id="logo"
+            src="assets/imgs/ucl-logo-text.png"
+            alias="RADAR LOGO"
         >
       </div>
       <div class="text">
@@ -112,15 +155,15 @@
         <div class="padding text-justify extra-padding">{{ "ENROL_WELCOME_DESC" | translate }}</div>
       </div>
       <div
-        padding
-        class="bottom"
+          padding
+          class="bottom"
       >
         <button
-          ion-button
-          class="bt bt--full"
-          round
-          full
-          (click)="next()"
+            ion-button
+            class="bt bt--full"
+            round
+            full
+            (click)="next()"
         >
           {{ "BTN_ENROL_ENROL" | translate }}
         </button>
@@ -135,16 +178,16 @@
         </div>
       </div>
       <div
-        padding
-        class="bottom"
+          padding
+          class="bottom"
       >
         <p>
           <button
-            ion-button
-            class="bt bt--full"
-            round
-            full
-            (click)="next()"
+              ion-button
+              class="bt bt--full"
+              round
+              full
+              (click)="next()"
           >
             {{ "BTN_ENROL_SCAN" | translate }}
           </button>
@@ -152,11 +195,11 @@
 
         <p>
           <button
-            ion-button
-            class="bt bt--full"
-            round
-            full
-            (click)="enterToken()"
+              ion-button
+              class="bt bt--full"
+              round
+              full
+              (click)="enterToken()"
           >
             {{ "BTN_ENROL_ENTER_TOKEN" | translate }}
           </button>
@@ -165,12 +208,12 @@
     </ion-slide>
 
     <ion-slide
-      *ngIf="enterMetaQR"
-      id="qr-registration-token"
+        *ngIf="enterMetaQR"
+        id="qr-registration-token"
     >
       <form
-        [formGroup]="metaQRForm"
-        (ngSubmit)="metaQRHandler()"
+          [formGroup]="metaQRForm"
+          (ngSubmit)="metaQRHandler()"
       >
         <div class="registration">
           <div class="text text-lg">{{ "ENROL_REGISTRATION" | translate }}</div>
@@ -179,46 +222,46 @@
           </div>
           <div class="token-input">
             <ion-input
-              required
-              formControlName="baseURL"
-              type="url"
-              placeholder="Base URL"
+                required
+                formControlName="baseURL"
+                type="url"
+                placeholder="Base URL"
             ></ion-input>
           </div>
           <div class="token-input">
             <ion-input
-              required
-              formControlName="tokenName"
-              type="text"
-              placeholder="Token"
+                required
+                formControlName="tokenName"
+                type="text"
+                placeholder="Token"
             ></ion-input>
           </div>
         </div>
         <div id="status">
           <div
-            #loading
-            id="loading"
+              #loading
+              id="loading"
           >
             <div class="padding-text">{{ "STATUS_LOADING" | translate }}</div>
           </div>
           <div
-            #outcome
-            id="outcome"
+              #outcome
+              id="outcome"
           >
             <div class="padding-text">{{ outcomeStatus }}</div>
           </div>
         </div>
         <div
-          padding
-          class="bottom"
-          *ngIf="!authSuccess"
+            padding
+            class="bottom"
+            *ngIf="!authSuccess"
         >
           <button
-            ion-button
-            class="bt bt--full"
-            round
-            full
-            type="submit"
+              ion-button
+              class="bt bt--full"
+              round
+              full
+              type="submit"
           >
             {{ "BTN_SUBMIT" | translate }}
           </button>
@@ -227,8 +270,8 @@
     </ion-slide>
 
     <ion-slide
-      *ngIf="!enterMetaQR"
-      id="qr-registration-scan"
+        *ngIf="!enterMetaQR"
+        id="qr-registration-scan"
     >
       <div class="registration">
         <div class="text text-lg">{{ "ENROL_REGISTRATION" | translate }}</div>
@@ -241,29 +284,29 @@
       </div>
       <div id="status">
         <div
-          #loading
-          id="loading"
+            #loading
+            id="loading"
         >
           <div class="padding-text">{{ "STATUS_LOADING" | translate }}</div>
         </div>
         <div
-          #outcome
-          id="outcome"
+            #outcome
+            id="outcome"
         >
           <div class="padding-text">{{ outcomeStatus }}</div>
         </div>
       </div>
       <div
-        padding
-        class="bottom"
-        *ngIf="!authSuccess"
+          padding
+          class="bottom"
+          *ngIf="!authSuccess"
       >
         <button
-          ion-button
-          class="bt bt--full"
-          round
-          full
-          (click)="scanQRHandler()"
+            ion-button
+            class="bt bt--full"
+            round
+            full
+            (click)="scanQRHandler()"
         >
           {{ "BTN_ENROL_SCAN" | translate }}
         </button>
@@ -282,28 +325,28 @@
 
       <ion-item-group id="settings">
         <ion-item
-          no-lines
-          *ngFor="let subSetting of reportSettings; let i = index"
+            no-lines
+            *ngFor="let subSetting of reportSettings; let i = index"
         >
           <ion-label>{{ subSetting.name | translate }}</ion-label>
           <ion-toggle
-            item-right
-            [(ngModel)]="subSetting.show"
-            (ionChange)="weeklyReportChange(i)"
+              item-right
+              [(ngModel)]="subSetting.show"
+              (ionChange)="weeklyReportChange(i)"
           ></ion-toggle>
         </ion-item>
       </ion-item-group>
 
       <div
-        padding
-        class="bottom"
+          padding
+          class="bottom"
       >
         <button
-          ion-button
-          class="bt bt--full"
-          round
-          full
-          (click)="navigateToHome()"
+            ion-button
+            class="bt bt--full"
+            round
+            full
+            (click)="navigateToHome()"
         >
           {{ "BTN_FINISH" | translate }}
         </button>
@@ -311,13 +354,13 @@
     </ion-slide>
 
   </ion-slides>
-    <!--<button-->
-      <!--ion-button-->
-      <!--class="bt bt&#45;&#45;full"-->
-      <!--round-->
-      <!--full-->
-      <!--(click)="goToRegistration()"-->
-    <!--&gt;-->
-      <!--{{ "BTN_JOINSTUDY" | translate }}-->
+  <!--<button-->
+  <!--ion-button-->
+  <!--class="bt bt&#45;&#45;full"-->
+  <!--round-->
+  <!--full-->
+  <!--(click)="goToRegistration()"-->
+  <!--&gt;-->
+  <!--{{ "BTN_JOINSTUDY" | translate }}-->
   <!--</button>-->
 </ion-content>

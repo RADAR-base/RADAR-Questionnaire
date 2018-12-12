@@ -16,7 +16,6 @@ import {
   DefaultSourceTypeModel,
   LanguageMap
 } from '../../../../assets/data/defaultConfig'
-import { AppComponent } from '../../../core/containers/app.component'
 import { ConfigService } from '../../../core/services/config.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
@@ -42,6 +41,8 @@ export class EnrolmentPageComponent {
   elLoading: ElementRef
   @ViewChild('outcome')
   elOutcome: ElementRef
+  isEighteen: boolean = undefined;
+  isBornInUK: boolean = undefined;
   loading: boolean = false
   showOutcomeStatus: boolean = false
   outcomeStatus: String
@@ -85,12 +86,37 @@ export class EnrolmentPageComponent {
   ) {}
 
   ionViewDidLoad() {
-    this.slides.lockSwipes(true)
+    // this.slides.lockSwipes(true)
     this.translate.init()
   }
 
   ionViewDidEnter() {}
 
+  isOlderThanEighteen(res: boolean) {
+    console.log('before', this.isEighteen);
+    this.isEighteen = res;
+    console.log('after', this.isEighteen)
+    this.processEligibility();
+  }
+
+  isBornInUnitedKingdom(res: boolean) {
+    this.isBornInUK = res;
+    this.processEligibility();
+  }
+
+  processEligibility() {
+    console.log('18', this.isEighteen ,'UK', this.isBornInUK);
+    if(this.isBornInUK != undefined && this.isEighteen != undefined) {
+      if(this.isBornInUK === true && this.isEighteen == true){
+        console.log("Eligible")
+        this.slides.slideNext();
+      } else {
+        console.log('Not eligible')
+        this.slides.slideTo(2);
+      }
+      console.log("here")
+    }
+  }
   scanQRHandler() {
     this.loading = true
     const scanOptions = {

@@ -65,8 +65,6 @@ export class TaskInfoComponent implements OnChanges {
   progress: TasksProgress
   @Input()
   expanded = true
-  @Output()
-  collapse: EventEmitter<Boolean> = new EventEmitter()
   hasExtraInfo: Boolean = false
   displayTask: Boolean = false
 

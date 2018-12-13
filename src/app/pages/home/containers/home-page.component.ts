@@ -2,7 +2,9 @@ import { Component, ElementRef, ViewChild } from '@angular/core'
 import { Content, NavController, Platform } from 'ionic-angular'
 
 import { DefaultTask } from '../../../../assets/data/defaultConfig'
+import { AlertService } from '../../../core/services/alert.service'
 import { KafkaService } from '../../../core/services/kafka.service'
+import { LocalizationService } from '../../../core/services/localization.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { StorageKeys } from '../../../shared/enums/storage'
@@ -13,8 +15,6 @@ import { QuestionsPageComponent } from '../../questions/containers/questions-pag
 import { SettingsPageComponent } from '../../settings/containers/settings-page.component'
 import { StartPageComponent } from '../../start/containers/start-page.component'
 import { TasksService } from '../services/tasks.service'
-import { AlertService } from '../../../core/services/alert.service'
-import { LocalizationService } from '../../../core/services/localization.service'
 
 @Component({
   selector: 'page-home',

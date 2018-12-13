@@ -4,15 +4,15 @@ import { NavController, NavParams } from 'ionic-angular'
 import { DefaultNumberOfNotificationsToSchedule } from '../../../../assets/data/defaultConfig'
 import { KafkaService } from '../../../core/services/kafka.service'
 import { NotificationService } from '../../../core/services/notification.service'
+import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { StorageKeys } from '../../../shared/enums/storage'
+import { Assessment } from '../../../shared/models/assessment'
+import { RepeatQuestionnaire } from '../../../shared/models/protocol'
 import { Task } from '../../../shared/models/task'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { FinishTaskService } from '../services/finish-task.service'
 import { PrepareDataService } from '../services/prepare-data.service'
-import { Assessment } from '../../../shared/models/assessment'
-import { SchedulingService } from '../../../core/services/scheduling.service'
-import { RepeatQuestionnaire } from '../../../shared/models/protocol'
 
 @Component({
   selector: 'page-finish',
@@ -125,7 +125,9 @@ export class FinishPageComponent {
         reminderSettings: protocol.reminders,
         nQuestions: associatedTask.questions.length,
         estimatedCompletionTime: associatedTask.estimatedCompletionTime,
-        completionWindow: SchedulingService.timeIntervalToMillis(associatedTask.protocol.completionWindow),
+        completionWindow: SchedulingService.timeIntervalToMillis(
+          associatedTask.protocol.completionWindow
+        ),
         warning: '',
         isClinical: true
       }))
@@ -145,6 +147,7 @@ export class FinishPageComponent {
       SchedulingService.timeIntervalToMillis({
         unit: repeats.unit,
         amount
-      }))
+      })
+    )
   }
 }

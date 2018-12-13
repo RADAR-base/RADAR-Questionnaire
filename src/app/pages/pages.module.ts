@@ -1,8 +1,10 @@
 import { CommonModule, DatePipe } from '@angular/common'
 import { NgModule } from '@angular/core'
 
+import { AlertService } from '../core/services/alert.service'
 import { ConfigService } from '../core/services/config.service'
 import { KafkaService } from '../core/services/kafka.service'
+import { LocalizationService } from '../core/services/localization.service'
 import { NotificationService } from '../core/services/notification.service'
 import { SchedulingService } from '../core/services/scheduling.service'
 import { StorageService } from '../core/services/storage.service'
@@ -18,8 +20,6 @@ import { ReportModule } from './report/report.module'
 import { SettingsModule } from './settings/settings.module'
 import { SplashModule } from './splash/splash.module'
 import { StartModule } from './start/start.module'
-import { AlertService } from '../core/services/alert.service'
-import { LocalizationService } from '../core/services/localization.service'
 
 @NgModule({
   imports: [

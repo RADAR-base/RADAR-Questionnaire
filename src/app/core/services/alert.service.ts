@@ -3,9 +3,7 @@ import { AlertController, AlertOptions } from 'ionic-angular'
 
 @Injectable()
 export class AlertService {
-  constructor(
-    private alertCtrl: AlertController,
-  ) {}
+  constructor(private alertCtrl: AlertController) {}
 
   /**
    * Present the alert instance.

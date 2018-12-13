@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core'
+import moment from 'moment'
 
+import { AlertService } from '../../../../core/services/alert.service'
+import { LocalizationService } from '../../../../core/services/localization.service'
 import { LocKeys } from '../../../../shared/enums/localisations'
 import { Task } from '../../../../shared/models/task'
 import { TasksService } from '../../services/tasks.service'
-import { AlertService } from '../../../../core/services/alert.service'
-import { LocalizationService } from '../../../../core/services/localization.service'
-import moment from 'moment'
 
 @Component({
   selector: 'task-calendar',
@@ -34,7 +34,7 @@ export class TaskCalendarComponent implements OnChanges {
 
   setCurrentTime() {
     const now = new Date()
-    this.currentTime = moment().format('LT')  // locale time
+    this.currentTime = moment().format('LT') // locale time
     this.timeIndex = this.getCurrentTimeIndex(now)
   }
 
@@ -42,7 +42,8 @@ export class TaskCalendarComponent implements OnChanges {
   // find out in between which tasks it should be shown in the interface
   getCurrentTimeIndex(date: Date): Promise<number> {
     return this.tasks.then(tasks =>
-      tasks.findIndex(t => t.timestamp >= date.getTime()))
+      tasks.findIndex(t => t.timestamp >= date.getTime())
+    )
   }
 
   clicked(task) {
@@ -60,12 +61,8 @@ export class TaskCalendarComponent implements OnChanges {
 
   showMissedInfo() {
     return this.alertService.showAlert({
-      title: this.localization.translateKey(
-        LocKeys.CALENDAR_ESM_MISSED_TITLE
-      ),
-      message: this.localization.translateKey(
-        LocKeys.CALENDAR_ESM_MISSED_DESC
-      ),
+      title: this.localization.translateKey(LocKeys.CALENDAR_ESM_MISSED_TITLE),
+      message: this.localization.translateKey(LocKeys.CALENDAR_ESM_MISSED_DESC),
       buttons: [
         {
           text: this.localization.translateKey(LocKeys.BTN_OKAY),

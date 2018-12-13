@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 
 import { KafkaService } from '../../../core/services/kafka.service'
-import { SchedulingService } from '../../../core/services/scheduling.service'
+import { SchedulingService, TIME_UNIT_MILLIS } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { Task, TasksProgress } from '../../../shared/models/task'
 
@@ -33,20 +33,26 @@ export class TasksService {
     }
     if (tasks) {
       tasksProgress.numberOfTasks = tasks.length
-      tasksProgress.completedTasks = tasks.reduce((num, t) => t.completed ? num + 1 : num, 0)
+      tasksProgress.completedTasks = tasks.reduce((num, t) => (t.completed ? num + 1 : num), 0)
       return tasksProgress
     }
   }
 
   areAllTasksComplete() {
     return this.getTasksOfToday().then((tasks: Task[]) => {
-      return !tasks || tasks.every(t => t.name === 'ESM' || t.isClinical || t.completed)
+      return (
+        !tasks ||
+        tasks.every(t => t.name === 'ESM' || t.isClinical || t.completed)
+      )
     })
   }
 
   isLastTask(task, todaysTasks) {
     return todaysTasks.then((tasks: Task[]) => {
-      return !tasks || tasks.every(t => t.name === 'ESM' || t.completed || t.index === task.index)
+      return (
+        !tasks ||
+        tasks.every(t => t.name === 'ESM' || t.completed || t.index === task.index)
+      )
     })
   }
 
@@ -58,21 +64,24 @@ export class TasksService {
    */
   getNextTask(tasks: Task[]): Task | undefined {
     if (tasks) {
-      const tenMinutesAgo = new Date().getTime() - 1000 * 60 * 10
+      const tenMinutesAgo = new Date().getTime() - 10 * TIME_UNIT_MILLIS.min
       const midnight = new Date()
       midnight.setHours(0, 0, 0, 0)
-      const offsetForward = 1000 * 60 * 60 * 12 // 12 hours
+      const offsetForward = 12 * TIME_UNIT_MILLIS.hour
       return tasks.find(task => {
         switch (task.name) {
           case 'ESM':
             // NOTE: For ESM, just look from 10 mins before now
-            return task.timestamp >= tenMinutesAgo &&
+            return (
+              task.timestamp >= tenMinutesAgo &&
               task.timestamp < tenMinutesAgo + offsetForward &&
               task.completed === false
+            )
           default:
             // NOTE: Break out of the loop as soon as the next incomplete task is found
-            return task.timestamp >= midnight.getTime() &&
-              task.completed === false
+            return (
+              task.timestamp >= midnight.getTime() && task.completed === false
+            )
         }
       })
     }

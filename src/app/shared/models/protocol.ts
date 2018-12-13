@@ -6,7 +6,7 @@ export interface ClinicalProtocol {
 }
 
 export interface Protocol {
-  notification?: Notification,
+  notification?: Notification
   repeatProtocol: TimeInterval
   repeatQuestionnaire: RepeatQuestionnaire
   reminders?: Reminder[]

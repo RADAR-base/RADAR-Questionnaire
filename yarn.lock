@@ -2177,10 +2177,12 @@ copy-webpack-plugin@^4.5.1:
     p-limit "^1.0.0"
     serialize-javascript "^1.4.0"
 
-cordova-android-support-gradle-release@^1.4.4:
-  version "1.4.4"
-  resolved "https://registry.yarnpkg.com/cordova-android-support-gradle-release/-/cordova-android-support-gradle-release-1.4.4.tgz#6a64db69f36c332727d95b421d53c25dfe99684d"
+cordova-android-support-gradle-release@^1.4.7:
+  version "1.4.7"
+  resolved "https://registry.yarnpkg.com/cordova-android-support-gradle-release/-/cordova-android-support-gradle-release-1.4.7.tgz#25a31030e0c1abef737fac2ba8dd7827e34616e4"
+  integrity sha512-3hDS3mBjSAEzKM4gZBze8G02/aNQgcww1CyUneuYPOYvleTPk3Q4OYkjmHHuE4FEgr4v9EY6j6bJqoX9pMZHgg==
   dependencies:
+    semver "5.1.0"
     xml2js "~0.4.19"
 
 cordova-android@6.4.0:
@@ -2223,9 +2225,10 @@ cordova-plugin-app-version@^0.1.9:
   version "0.1.9"
   resolved "https://registry.yarnpkg.com/cordova-plugin-app-version/-/cordova-plugin-app-version-0.1.9.tgz#9db0607863337a710489302e5f50a904f1449bdb"
 
-cordova-plugin-badge@^0.8.7:
-  version "0.8.7"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-badge/-/cordova-plugin-badge-0.8.7.tgz#fe4942aa24af6822da85c01ccce6a831afff5931"
+cordova-plugin-badge@^0.8.8:
+  version "0.8.8"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-badge/-/cordova-plugin-badge-0.8.8.tgz#0924018699b48f92dd3b33615452737582144c96"
+  integrity sha512-RhIBtd5xhD/iLnxjt35jvOae28oNW/wtMZBOmQR3Rf0y4wirvA1bpAZEhBoFqL+rZGhsd6ddOdQXdex1T0DRyQ==
 
 cordova-plugin-camera@^3.0.0:
   version "3.0.0"
@@ -2291,9 +2294,10 @@ cordova-sqlite-storage-dependencies@1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/cordova-sqlite-storage-dependencies/-/cordova-sqlite-storage-dependencies-1.2.0.tgz#2eb6b2fb84e813306b44639ac804a5c63bed7bcb"
 
-cordova-sqlite-storage@^2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/cordova-sqlite-storage/-/cordova-sqlite-storage-2.4.0.tgz#904f6bc3a6236fd802ac055c9418ae07b34020a2"
+cordova-sqlite-storage@^2.5.2:
+  version "2.5.2"
+  resolved "https://registry.yarnpkg.com/cordova-sqlite-storage/-/cordova-sqlite-storage-2.5.2.tgz#408c88992f2680a5aa285dbb30358e1e4a955d5d"
+  integrity sha512-v9As2sH4Ua16z+1fc2DZHOzAt1z6YHhG340Eg2+THRtXi5vfxD/khu9ZT5M0e/v+0/2oO1ivB3o7YUXM/jk+8g==
   dependencies:
     cordova-sqlite-storage-dependencies "1.2.0"
 
@@ -7662,6 +7666,11 @@ semver-intersect@^1.1.2:
 "semver@2 || 3 || 4 || 5", semver@^5.0.1, semver@^5.3.0, semver@~5.3.0:
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.3.0.tgz#9b2ce5d3de02d17c6012ad326aa6b4d0cf54f94f"
+
+semver@5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-5.1.0.tgz#85f2cf8550465c4df000cf7d86f6b054106ab9e5"
+  integrity sha1-hfLPhVBGXE3wAM99hvawVBBqueU=
 
 semver@^5.4.1:
   version "5.4.1"

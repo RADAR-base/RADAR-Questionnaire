@@ -1,12 +1,12 @@
 import { Component, Input, OnChanges } from '@angular/core'
 import { NavController } from 'ionic-angular'
 
+import { LocalizationService } from '../../../../core/services/localization.service'
 import { SchedulingService } from '../../../../core/services/scheduling.service'
 import { LocKeys } from '../../../../shared/enums/localisations'
 import { ReportScheduling } from '../../../../shared/models/report'
 import { Task } from '../../../../shared/models/task'
 import { TickerItem } from '../../../../shared/models/ticker'
-import { LocalizationService } from '../../../../core/services/localization.service'
 
 @Component({
   selector: 'ticker-bar',
@@ -152,12 +152,8 @@ export class TickerBarComponent implements OnChanges {
         String(deltaMin) +
         ' ' +
         (deltaMin > 1
-          ? this.localization.translateKey(
-              LocKeys.TASK_TIME_MINUTE_MULTIPLE
-            )
-          : this.localization.translateKey(
-              LocKeys.TASK_TIME_MINUTE_SINGLE
-            ))
+          ? this.localization.translateKey(LocKeys.TASK_TIME_MINUTE_MULTIPLE)
+          : this.localization.translateKey(LocKeys.TASK_TIME_MINUTE_SINGLE))
     }
     return deltaStr
   }

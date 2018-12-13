@@ -13,7 +13,10 @@ export class PrepareDataService {
 
   process_QuestionnaireData(answers, timestamps): Promise<any> {
     console.log(answers)
-    return this.fetchFromStorage()
+    return Promise.all([
+        this.storage.get(StorageKeys.CONFIG_VERSION),
+        this.storage.get(StorageKeys.PARTICIPANTLOGIN),
+      ])
       .then(([configVersion, participantLogin]) => {
         const values = Object.entries(answers)
           .map(([key, value]) => ({
@@ -22,7 +25,7 @@ export class PrepareDataService {
             value: {string: value.toString()},
             startTime: timestamps[key].startTime,
             endTime: timestamps[key].endTime
-          }));
+          }))
 
         return {
           answers: values,
@@ -31,17 +34,5 @@ export class PrepareDataService {
         }
       })
       .catch(e => Promise.reject(JSON.stringify(e)))
-  }
-
-  // NOTE: Fetch patientID and config version from local storage
-  // NOTE: Include other items when required
-  // NOTE: The values in response are in the same order as the promises
-  // NOTE: Local storage service get() returns a promise always
-
-  fetchFromStorage() {
-    const configVersion = this.storage.get(StorageKeys.CONFIG_VERSION)
-    const participantLogin = this.storage.get(StorageKeys.PARTICIPANTLOGIN)
-
-    return Promise.all([configVersion, participantLogin]) // response are obtained by the order of promises
   }
 }

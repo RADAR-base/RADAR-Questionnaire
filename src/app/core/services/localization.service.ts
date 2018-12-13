@@ -1,15 +1,17 @@
-import { Injectable } from '@angular/core'
-import { StorageService } from './storage.service'
-import { LocKeys } from '../../shared/enums/localisations'
-import { StorageKeys } from '../../shared/enums/storage'
-import { Localisations } from '../../../assets/data/localisations'
-import { MultiLanguageText } from '../../shared/models/text'
-import moment from 'moment'
 import 'moment/locale/da'
 import 'moment/locale/de'
 import 'moment/locale/es'
 import 'moment/locale/it'
 import 'moment/locale/nl'
+
+import { Injectable } from '@angular/core'
+import moment from 'moment'
+
+import { Localisations } from '../../../assets/data/localisations'
+import { LocKeys } from '../../shared/enums/localisations'
+import { StorageKeys } from '../../shared/enums/storage'
+import { MultiLanguageText } from '../../shared/models/text'
+import { StorageService } from './storage.service'
 
 const DEFAULT_LANG = 'en'
 
@@ -17,18 +19,15 @@ const DEFAULT_LANG = 'en'
 export class LocalizationService {
   preferredLang?: string
 
-  constructor(
-    private storage: StorageService,
-  ) {
+  constructor(private storage: StorageService) {
     this.update()
   }
 
   update() {
-    return this.storage.get(StorageKeys.LANGUAGE)
-      .then(language => {
-        this.preferredLang = language ? language.value : DEFAULT_LANG
-        moment.locale(this.preferredLang)
-      })
+    return this.storage.get(StorageKeys.LANGUAGE).then(language => {
+      this.preferredLang = language ? language.value : DEFAULT_LANG
+      moment.locale(this.preferredLang)
+    })
   }
 
   translateKey(locKey: LocKeys) {
@@ -52,11 +51,11 @@ export class LocalizationService {
     translation = loc['default']
     if (translation !== undefined) {
       console.log('Using fallback language "default" for message ' + defaultValue)
-      return translation;
+      return translation
     }
-    const keys = Object.keys(loc);
+    const keys = Object.keys(loc)
     if (keys.length > 0) {
-      const lang = keys[0];
+      const lang = keys[0]
       console.log('Using fallback language "' + lang + '" for message ' + defaultValue)
       return loc[lang]
     } else {

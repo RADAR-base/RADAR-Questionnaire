@@ -1,3 +1,3 @@
 export interface MultiLanguageText {
-  [language: string]: string;
+  [language: string]: string
 }

@@ -13,10 +13,10 @@ import {
 import { LocKeys } from '../../shared/enums/localisations'
 import { StorageKeys } from '../../shared/enums/storage'
 import { Task } from '../../shared/models/task'
-import { SchedulingService, TIME_UNIT_MILLIS } from './scheduling.service'
-import { StorageService } from './storage.service'
 import { AlertService } from './alert.service'
 import { LocalizationService } from './localization.service'
+import { SchedulingService, TIME_UNIT_MILLIS } from './scheduling.service'
+import { StorageService } from './storage.service'
 
 declare var cordova
 declare var FCMPlugin
@@ -30,7 +30,7 @@ export class NotificationService {
     private localization: LocalizationService,
     private alertService: AlertService,
     private schedule: SchedulingService,
-    public storage: StorageService
+    public storage: StorageService,
   ) {
     try {
       FCMPlugin.setSenderId(
@@ -46,7 +46,7 @@ export class NotificationService {
     } catch (error) {
       console.error(error)
     }
-    this.localNotification = (<any>cordova).plugins.notification.local;
+    this.localNotification = (<any>cordova).plugins.notification.local
   }
 
   permissionCheck() {
@@ -112,15 +112,13 @@ export class NotificationService {
           }
           if (DefaultNotificationType === 'LOCAL') {
             console.log('NOTIFICATIONS Scheduling LOCAL notifications')
-            this.localNotification.on(
-              'click',
-              notification => this.evalTaskTiming(notification.data)
+            this.localNotification.on('click', notification =>
+              this.evalTaskTiming(notification.data)
             )
-            this.localNotification.on(
-              'trigger',
-              notification => this.evalLastTask(notification.data)
+            this.localNotification.on('trigger', notification =>
+              this.evalLastTask(notification.data)
             )
-            return (<any>cordova).plugins.notification.local.schedule(
+            return this.localNotification.schedule(
               localNotifications[0],
               () => {
                 return Promise.resolve({})
@@ -141,7 +139,7 @@ export class NotificationService {
     FCMPlugin.upstream(
       notification,
       succ => console.log(succ),
-      err => console.log(err),
+      err => console.log(err)
     )
   }
 
@@ -163,7 +161,11 @@ export class NotificationService {
     return text
   }
 
-  formatLocalNotification(task: Task, isLastScheduledNotification: boolean, isLastOfDay: boolean) {
+  formatLocalNotification(
+    task: Task,
+    isLastScheduledNotification: boolean,
+    isLastOfDay: boolean
+  ) {
     return {
       id: task.index,
       title: this.localization.translateKey(LocKeys.NOTIFICATION_REMINDER_NOW),
@@ -204,19 +206,14 @@ export class NotificationService {
           subjectId: participantLogin
         },
         resolve,
-        reject,
+        reject
       )
     })
   }
 
-  evalIsLastOfDay(task1, task2) {
-    const date1 = new Date(task1.timestamp)
-    const date2 = new Date(task2.timestamp)
-    const day1 = date1.getDay()
-    const day2 = date2.getDay()
+  evalIsLastOfDay(task1: Task, task2: Task) {
     // TODO: needs to be determined better
-    const isLastOfDay = false
-    return isLastOfDay
+    return false
   }
 
   evalTaskTiming(data) {
@@ -227,7 +224,7 @@ export class NotificationService {
     if (now > endScheduledTimestamp && task.name === 'ESM') {
       this.showNotificationMissedInfo(task, data.isLastOfDay)
     }
-    ;(<any>cordova).plugins.notification.local.clearAll()
+    this.localNotification.clearAll()
   }
 
   evalLastTask(data) {
@@ -255,14 +252,14 @@ export class NotificationService {
   }
 
   consoleLogScheduledNotifications() {
-    ;(<any>cordova).plugins.notification.local.getScheduled(notifications => {
+    this.localNotification.getScheduled(notifications => {
       console.log(`\nNOTIFICATIONS NUMBER ${notifications.length}\n`)
       const dailyNotifies = {}
       for (let i = 0; i < notifications.length; i++) {
-        const data = JSON.parse(notifications[i]['data'])
-        const trigger = new Date(notifications[i]['trigger']['at']).toString()
+        const data = JSON.parse(notifications[i].data)
+        const trigger = new Date(notifications[i].trigger.at).toString()
         const key = trigger.substr(4, 11)
-        const name = data['task']['name']
+        const name = data.task.name
         const id = notifications[i].id
         const rendered = `${i} ID ${id} TIME ${trigger.substr(
           15
@@ -283,7 +280,7 @@ export class NotificationService {
       for (let i = 0; i < keys.length; i++) {
         console.log(dailyNotifies[keys[i]])
       }
-      ;(<any>cordova).plugins.notification.local.cancelAll(() => {
+      this.localNotification.cancelAll(() => {
         this.evalLastTask({ isLastScheduledNotification: true })
       })
     })
@@ -291,11 +288,15 @@ export class NotificationService {
 
   showNotificationMissedInfo(task: Task, isLastOfDay: boolean) {
     const msgDefault = this.localization.translateKey(
-      LocKeys.NOTIFICATION_REMINDER_FORGOTTEN_ALERT_DEFAULT_DESC)
+      LocKeys.NOTIFICATION_REMINDER_FORGOTTEN_ALERT_DEFAULT_DESC
+    )
     const msgLastOfDay = this.localization.translateKey(
-      LocKeys.NOTIFICATION_REMINDER_FORGOTTEN_ALERT_LASTOFNIGHT_DESC)
+      LocKeys.NOTIFICATION_REMINDER_FORGOTTEN_ALERT_LASTOFNIGHT_DESC
+    )
     return this.alertService.showAlert({
-      title: this.localization.translateKey(LocKeys.NOTIFICATION_REMINDER_FORGOTTEN),
+      title: this.localization.translateKey(
+        LocKeys.NOTIFICATION_REMINDER_FORGOTTEN
+      ),
       message: isLastOfDay ? msgLastOfDay : msgDefault,
       buttons: [
         {

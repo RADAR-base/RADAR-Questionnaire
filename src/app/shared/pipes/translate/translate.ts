@@ -9,11 +9,7 @@ import { LocalizationService } from '../../../core/services/localization.service
   pure: false
 })
 export class TranslatePipe implements PipeTransform {
-
-  constructor(
-    private localization: LocalizationService,
-  ) {}
-
+  constructor(private localization: LocalizationService) {}
 
   transform(value: string): string {
     return this.localization.translate(value)

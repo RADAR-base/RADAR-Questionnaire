@@ -5,9 +5,9 @@ import { Platform } from 'ionic-angular'
 
 import { DefaultNotificationType } from '../../../assets/data/defaultConfig'
 import { SplashPageComponent } from '../../pages/splash/containers/splash-page.component'
+import { AlertService } from '../services/alert.service'
 import { ConfigService } from '../services/config.service'
 import { NotificationService } from '../services/notification.service'
-import { AlertService } from '../services/alert.service'
 
 @Component({
   template: '<ion-nav [root]="rootPage"></ion-nav>'
@@ -26,10 +26,9 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault()
       this.splashScreen.hide()
-      this.configService.fetchConfigState(false)
-        .catch(e => alertService.showAlert({
-
-        }))
+      this.configService
+        .fetchConfigState(false)
+        .catch(e => alertService.showAlert({}))
       this.configService.migrateToLatestVersion()
 
       if (DefaultNotificationType === 'LOCAL')

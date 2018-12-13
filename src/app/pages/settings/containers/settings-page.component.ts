@@ -8,7 +8,9 @@ import {
   DefaultSettingsWeeklyReport,
   LanguageMap,
 } from '../../../../assets/data/defaultConfig'
+import { AlertService } from '../../../core/services/alert.service'
 import { ConfigService } from '../../../core/services/config.service'
+import { LocalizationService } from '../../../core/services/localization.service'
 import { NotificationService } from '../../../core/services/notification.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
@@ -20,8 +22,6 @@ import {
   WeeklyReportSubSettings,
 } from '../../../shared/models/settings'
 import { SplashPageComponent } from '../../splash/containers/splash-page.component'
-import { AlertService } from '../../../core/services/alert.service'
-import { LocalizationService } from '../../../core/services/localization.service'
 
 @Component({
   selector: 'page-settings',
@@ -77,32 +77,36 @@ export class SettingsPageComponent {
       this.storage.get(StorageKeys.SETTINGS_LANGUAGES),
       this.storage.get(StorageKeys.SETTINGS_WEEKLYREPORT),
       this.storage.get(StorageKeys.CACHE_ANSWERS),
-      this.appVersion.getVersionNumber(),
-    ]).then(([
-      configVersion,
-      scheduleVersion,
-      participantId,
-      projectName,
-      enrolmentDate,
-      language,
-      settingsNotification,
-      settingsLanguages,
-      settingsWeeklyReport,
-      cache,
-      appVersionPromise
-    ]) => {
-      this.appVersionStr = appVersionPromise
-      this.configVersion = configVersion
-      this.scheduleVersion = scheduleVersion
-      this.participantId = participantId
-      this.projectName = projectName
-      this.enrolmentDate = enrolmentDate
-      this.language = language
-      this.notifications = settingsNotification
-      this.languagesSelectable = settingsLanguages
-      this.weeklyReport = settingsWeeklyReport
-      this.cacheSize = Object.keys(cache).reduce((size, k) => k ? size + 1 : size, 0)
-    })
+      this.appVersion.getVersionNumber()
+    ]).then(
+      ([
+        configVersion,
+        scheduleVersion,
+        participantId,
+        projectName,
+        enrolmentDate,
+        language,
+        settingsNotification,
+        settingsLanguages,
+        settingsWeeklyReport,
+        cache,
+        appVersionPromise,
+      ]) => {
+        this.appVersionStr = appVersionPromise
+        this.configVersion = configVersion
+        this.scheduleVersion = scheduleVersion
+        this.participantId = participantId
+        this.projectName = projectName
+        this.enrolmentDate = enrolmentDate
+        this.language = language
+        this.notifications = settingsNotification
+        this.languagesSelectable = settingsLanguages
+        this.weeklyReport = settingsWeeklyReport
+        this.cacheSize = Object.keys(cache).reduce(
+          (size, k) => (k ? size + 1 : size), 0
+        )
+      }
+    )
   }
 
   backToHome() {
@@ -147,18 +151,16 @@ export class SettingsPageComponent {
         }
       }
     ]
-    const inputs =  this.languagesSelectable.map(lang => ({
+    const inputs = this.languagesSelectable.map(lang => ({
       type: 'radio',
       label: this.localization.translate(lang.label),
       value: lang.value,
       checked: lang.value === this.language.value,
     }))
     return this.alertService.showAlert({
-      title: this.localization.translateKey(
-        LocKeys.SETTINGS_LANGUAGE_ALERT
-      ),
+      title: this.localization.translateKey(LocKeys.SETTINGS_LANGUAGE_ALERT),
       buttons: buttons,
-      inputs: inputs
+      inputs: inputs,
     })
   }
 
@@ -166,17 +168,13 @@ export class SettingsPageComponent {
     const buttons = [
       {
         text: this.localization.translateKey(LocKeys.BTN_OKAY),
-        handler: () => {}
+        handler: () => {},
       }
     ]
     return this.alertService.showAlert({
-      title: this.localization.translateKey(
-        LocKeys.SETTINGS_NOTIFICATIONS_NIGHTMOD
-      ),
-      message: this.localization.translateKey(
-        LocKeys.SETTINGS_NOTIFICATIONS_NIGHTMOD_DESC
-      ),
-      buttons: buttons
+      title: this.localization.translateKey(LocKeys.SETTINGS_NOTIFICATIONS_NIGHTMOD),
+      message: this.localization.translateKey(LocKeys.SETTINGS_NOTIFICATIONS_NIGHTMOD_DESC),
+      buttons: buttons,
     })
   }
 
@@ -195,15 +193,13 @@ export class SettingsPageComponent {
         handler: () => {
           this.notificationService.testFCMNotifications()
           this.platform.exitApp()
-        }
-      }
+        },
+      },
     ]
     return this.alertService.showAlert({
       title: this.localization.translateKey(LocKeys.TESTING_NOTIFICATIONS),
-      message: this.localization.translateKey(
-        LocKeys.TESTING_NOTIFICATIONS_MESSAGE
-      ),
-      buttons: buttons
+      message: this.localization.translateKey(LocKeys.TESTING_NOTIFICATIONS_MESSAGE),
+      buttons: buttons,
     })
   }
 
@@ -225,14 +221,12 @@ export class SettingsPageComponent {
         handler: () => {
           this.storage.clearStorage().then(() => this.backToSplash())
         }
-      }
+      },
     ]
     return this.alertService.showAlert({
       title: this.localization.translateKey(LocKeys.SETTINGS_RESET_ALERT),
-      message: this.localization.translateKey(
-        LocKeys.SETTINGS_RESET_ALERT_DESC
-      ),
-      buttons: buttons
+      message: this.localization.translateKey(LocKeys.SETTINGS_RESET_ALERT_DESC),
+      buttons: buttons,
     })
   }
 
@@ -254,7 +248,9 @@ export class SettingsPageComponent {
             },
             {
               text: this.localization.translateKey(LocKeys.BTN_RETRY),
-              handler: () => { this.reloadConfig() },
+              handler: () => {
+                this.reloadConfig()
+              },
             },
           ],
         })

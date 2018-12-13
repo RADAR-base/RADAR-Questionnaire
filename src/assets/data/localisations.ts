@@ -46,6 +46,42 @@ export const Localisations = {
   ABOUT_WHO_IS_RUNNING_THIS_STUDY_ANS: {
     en: 'TO be added'
   },
+  CONSENT_TITLE: {
+    en: 'Consent Process'
+  },
+  CONSENT_EXPLANATION_1: {
+    en: 'Please review the information below before you agree to participate in this study.'
+  },
+  CONSENT_TIME_COMMITMENT_INTRO: {
+    en: 'This survey questions will take you only 3 minutes every few weeks. Click to read more.'
+  },
+  CONSENT_TIME_COMMITMENT_DETAILS: {
+    en: "Every few weeks there will be a new set of questions about your health and wellbeing that should take you no more than 3 minutes to complete. Surverys will be should and sweet, but will provide us with meaningful information about your health and the health of people like you."
+  },
+  CONSENT_PRIVACY_POLICY_INTRO: {
+    en: 'This survey questions will take you only 3 minutes every few weeks. Click to read more.'
+  },
+  CONSENT_PRIVACY_POLICY_DETAILS: {
+    en: "Every few weeks there will be a new set of questions about your health and wellbeing that should take you no more than 3 minutes to complete. Surverys will be should and sweet, but will provide us with meaningful information about your health and the health of people like you."
+  },
+  CONSENT_WITHDRAWAL_INTRO: {
+    en: 'This survey questions will take you only 3 minutes every few weeks. Click to read more.'
+  },
+  CONSENT_WITHDRAWAL_DETAILS: {
+    en: "Every few weeks there will be a new set of questions about your health and wellbeing that should take you no more than 3 minutes to complete. Surverys will be should and sweet, but will provide us with meaningful information about your health and the health of people like you."
+  },
+  CONSENT_CONTACT_YOU_INTRO: {
+    en: 'This survey questions will take you only 3 minutes every few weeks. Click to read more.'
+  },
+  CONSENT_CONTACT_YOU_DETAILS: {
+    en: "Every few weeks there will be a new set of questions about your health and wellbeing that should take you no more than 3 minutes to complete. Surverys will be should and sweet, but will provide us with meaningful information about your health and the health of people like you."
+  },
+  CONSENT_PARTICIPATION: {
+    en: 'I consent to participate in the UCL Health on the Move Study.'
+  },
+  CONSENT_NHS_RECORD_ACCESS: {
+    en: 'I consent to allow the researchers to access my NHS electronic health records.'
+  },
   ENROL_WELCOME_DESC: {
     da:
       'Tak fordi  du vil deltage i dette studie.  Lad os komme i gang med at opstarte registreringsprocessen.',

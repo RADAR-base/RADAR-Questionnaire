@@ -1,9 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core'
 import {
-  AbstractControl,
   FormControl,
   FormGroup,
-  ValidatorFn,
   Validators
 } from '@angular/forms'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner'
@@ -14,7 +12,6 @@ import {
   DefaultSettingsSupportedLanguages,
   DefaultSettingsWeeklyReport,
   DefaultSourceTypeModel,
-  LanguageMap
 } from '../../../../assets/data/defaultConfig'
 import { ConfigService } from '../../../core/services/config.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
@@ -28,7 +25,6 @@ import {
 import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { AuthService } from '../services/auth.service'
-import { Deeplinks} from '@ionic-native/deeplinks'
 
 @Component({
   selector: 'page-enrolment',
@@ -43,6 +39,12 @@ export class EnrolmentPageComponent {
   elOutcome: ElementRef
   isEighteen: boolean = undefined;
   isBornInUK: boolean = undefined;
+  consentParticipation = undefined;
+  consentNHSRecordAccess = undefined;
+  showTimeCommitmentDetails = false;
+  showPrivacyPolicyDetails = false;
+  showWithdrawalDetails = false;
+  showContactYouDetails = false;
   loading: boolean = false
   showOutcomeStatus: boolean = false
   outcomeStatus: String
@@ -81,12 +83,11 @@ export class EnrolmentPageComponent {
     private configService: ConfigService,
     private authService: AuthService,
     private translate: TranslatePipe,
-
-    private deeplinks: Deeplinks
+    private alertCtrl: AlertController
   ) {}
 
   ionViewDidLoad() {
-    // this.slides.lockSwipes(true)
+    this.slides.lockSwipes(true);
     this.translate.init()
   }
 
@@ -104,17 +105,31 @@ export class EnrolmentPageComponent {
     this.processEligibility();
   }
 
+  processConsent() {
+    if (!this.consentParticipation) {
+      this.alertCtrl.create({
+        title: "Consent is required",
+        buttons: [{
+          text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+          handler: () => {}
+        }],
+        message: "Your consent to participate in the study is required."
+      }).present();
+    }
+    if(this.consentParticipation === true) {
+      this.goToRegistration();
+    }
+    if(this.consentNHSRecordAccess === true) {
+      this.storage.set(StorageKeys.CONSENT_ACCESS_NHS_RECORDS, true);
+    }
+  }
   processEligibility() {
-    console.log('18', this.isEighteen ,'UK', this.isBornInUK);
     if(this.isBornInUK != undefined && this.isEighteen != undefined) {
       if(this.isBornInUK === true && this.isEighteen == true){
-        console.log("Eligible")
-        this.slides.slideNext();
+        this.next();
       } else {
-        console.log('Not eligible')
-        this.slides.slideTo(2);
+        this.slideTo(2);
       }
-      console.log("here")
     }
   }
   scanQRHandler() {
@@ -300,6 +315,19 @@ export class EnrolmentPageComponent {
     this.slides.lockSwipes(true)
   }
 
+  goBack() {
+    this.slides.lockSwipes(false)
+    const slideIndex = this.slides.getActiveIndex() - 1
+    this.slides.slideTo(slideIndex, 500)
+    this.slides.lockSwipes(true)
+  }
+
+  slideTo(index: number) {
+    this.slides.lockSwipes(false)
+    this.slides.slideTo(index, 500)
+    this.slides.lockSwipes(true)
+  }
+
   enterToken() {
     this.enterMetaQR = true
     this.next()
@@ -308,9 +336,6 @@ export class EnrolmentPageComponent {
   navigateToHome() {
     this.navCtrl.setRoot(HomePageComponent)
   }
-
-
-
 
 
   goToLogin() {

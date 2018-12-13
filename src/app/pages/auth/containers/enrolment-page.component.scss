@@ -1,6 +1,5 @@
 page-enrolment {
   color: white;
-
   #logo {
     width: 200px;
   }
@@ -11,6 +10,9 @@ page-enrolment {
     width: 200px;
   }
 
+  .icon {
+    font-size: 36px;
+  }
   .text {
     margin: auto;
     width: 90vw;
@@ -28,11 +30,52 @@ page-enrolment {
   .text-md {
     margin-bottom: 2vh;
     font-size: 30px;
+    color: $cl-light;
+  }
+
+  .text-heading {
+    margin-bottom: 2vh;
+    font-size: 20px;
+    margin-top: 2vh;
+  }
+  .consent-topic {
+    @include font-body;
+  }
+
+  .scroll{
+    height: 80%
+  }
+
+
+  input[type='checkbox']:checked + label {
+    background-color: $cl-primary;
+  }
+
+  label {
+    border: 2px solid white;
+    background-color: $cl-primary-20;
+    position: relative;
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 4px 4px;
+  }
+
+  label:hover {
+    background-color: $cl-primary;
+  }
+
+  input[type='checkbox'] {
+    position: relative;
+    visibility: visible;
+    margin-right: 5px;
+    background-color: $cl-primary;
   }
 
   .text-sm {
     margin-bottom: 2vh;
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .padding {
@@ -82,6 +125,12 @@ page-enrolment {
     width: 100%;
   }
 
+  .top {
+    position: fixed;
+    top: 0px;
+    width: 100%;
+  }
+
   .center {
     position:relative; /*it can be fixed too*/
     left:0; right:0;
@@ -114,7 +163,7 @@ page-enrolment {
 
   ion-slide.swiper-slide {
     align-items: flex-start;
-    padding-top: 50px;
+    //padding-top: 50px;
   }
   .pos-above {
     margin-top: -50px;

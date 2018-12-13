@@ -30,6 +30,7 @@ export class StorageKeys {
   static UTC_OFFSET_PREV = new StorageKeys('UTC_OFFSET_PREV')
   static LAST_NOTIFICATION_UPDATE = new StorageKeys('LAST_NOTIFICATION_UPDATE')
   static BASE_URI = new StorageKeys('BASE_URI')
+  static CONSENT_ACCESS_NHS_RECORDS = new StorageKeys('CONSENT_ACCESS_NHS_RECORDS')
 
   constructor(public value: string) {}
 

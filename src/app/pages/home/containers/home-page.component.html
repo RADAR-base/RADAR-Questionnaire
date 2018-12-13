@@ -46,31 +46,13 @@
         class="icon-esm"
       >
     </div>
-    <div
-      class="clinical-1"
-      *ngIf="hasClinicalTasks && !showCalendar && !showCompleted"
-      (click)="openClinicalTasksPage()"
-    >
-      <img
-        src="assets/imgs/clinical.png"
-        class="icon-clinical"
-      >
-    </div>
-  </div>
-  <div
-    class="clinical-2"
-    *ngIf="hasClinicalTasks && showCalendar"
-    (click)="openClinicalTasksPage()"
-  >
-    <img
-      src="assets/imgs/clinical.png"
-      class="icon-clinical"
-    >
   </div>
 
   <div
-    class="clinical-3"
-    *ngIf="hasClinicalTasks && !showCalendar && showCompleted"
+    class="clinical"
+    [class.clinical-1]="hasClinicalTasks && !showCalendar && !showCompleted"
+    [class.clinical-2]="hasClinicalTasks && showCalendar"
+    [class.clinical-3]="hasClinicalTasks && !showCalendar && showCompleted"
     (click)="openClinicalTasksPage()"
   >
     <img

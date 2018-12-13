@@ -59,36 +59,27 @@ page-home {
     stroke: #fff;
   }
 
-  .clinical-1 {
+  .clinical {
     position: absolute;
     right: 20px;
-    bottom: 32vh;
     z-index: 100;
     width: 50px;
     height: 50px;
     border-radius: 50%;
+  }
+
+  .clinical-1 {
+    bottom: 34vh;
     background-color: $cl-primary-60;
   }
 
   .clinical-2 {
-    position: absolute;
-    right: 20px;
     bottom: 20px;
-    z-index: 100;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
     background-color: $cl-primary;
   }
 
   .clinical-3 {
-    position: absolute;
-    right: 20px;
     bottom: 18vw;
-    z-index: 100;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
     background-color: $cl-primary-60;
   }
 

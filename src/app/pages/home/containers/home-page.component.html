@@ -34,7 +34,7 @@
       [progress]="tasksProgress"
       [forceComplete]="showCompleted"
       [noTasksToday]="showNoTasksToday"
-      *ngIf="!hasOnlyESMs"
+      *ngIf="tasksProgress && !hasOnlyESMs && !showCalendar"
     >
     </task-progress>
     <div
@@ -57,7 +57,6 @@
       >
     </div>
   </div>
-
   <div
     class="clinical-2"
     *ngIf="hasClinicalTasks && showCalendar"
@@ -84,6 +83,7 @@
     #tickerBar
     class="size-static"
     *ngIf="nextTask.name !== 'ESM'"
+    [@displayCalendar]="showCalendar"
   >
     <ticker-bar
       [task]="nextTask"
@@ -94,21 +94,23 @@
   <div
     #taskInfo
     class="size-static"
+    [@displayCalendar]="showCalendar"
   >
     <task-info
       [task]="nextTask"
       [isNow]="taskIsNow"
       [progress]="tasksProgress"
-      (collapse)="displayEvalTransformations($event)"
+      [expanded]="!showCalendar"
+      (click)="displayTaskCalendar($event)"
     ></task-info>
   </div>
 
   <div
+    *ngIf="tasks"
     #taskCalendar
-    class="size-null"
+    [@displayCalendar]="showCalendar"
   >
     <task-calendar
-      *ngIf="tasks"
       [scrollHeight]="calendarScrollHeight"
       (task)="startQuestionnaire($event)"
       [tasks]="tasks"
@@ -119,6 +121,7 @@
   <div
     #footer
     class="size-static footer"
+    [@displayCalendar]="showCalendar"
   >
     <div
       *ngIf="taskIsNow && !startingQuestionnaire"

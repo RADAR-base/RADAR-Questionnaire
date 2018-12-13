@@ -1,3 +1,4 @@
+import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Component, ElementRef, ViewChild } from '@angular/core'
 import {
   AlertController,
@@ -23,7 +24,14 @@ import { TasksService } from '../services/tasks.service'
 
 @Component({
   selector: 'page-home',
-  templateUrl: 'home-page.component.html'
+  templateUrl: 'home-page.component.html',
+  animations: [
+    trigger('displayCalendar', [
+      state('true', style({ transform: 'translateY(0%)', opacity: 1 })),
+      state('false', style({ transform: 'translateY(100%)', opacity: 1 })),
+      transition('*=>*', animate('300ms ease'))
+    ])
+  ]
 })
 export class HomePageComponent {
   @ViewChild('content')
@@ -82,7 +90,7 @@ export class HomePageComponent {
     )
     this.getElementsAttributes()
     this.elProgressHeight += this.elProgressOffset
-    this.applyTransformations()
+    // this.applyTransformations()
     this.showNoTasksToday = false
     this.startingQuestionnaire = false
   }
@@ -114,7 +122,6 @@ export class HomePageComponent {
     if (task && task.isClinical == false) {
       this.nextTask = task
       this.displayCompleted(false)
-      this.displayEvalTransformations(false)
       this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
     } else {
       this.tasksService.areAllTasksComplete().then(completed => {
@@ -126,7 +133,6 @@ export class HomePageComponent {
           }
         } else {
           this.nextTask = DefaultTask
-          this.displayEvalTransformations(true)
         }
       })
     }
@@ -152,10 +158,9 @@ export class HomePageComponent {
     })
   }
 
-  displayEvalTransformations(requestDisplay: boolean) {
-    this.showCalendar = requestDisplay
-    this.getElementsAttributes()
-    this.applyTransformations()
+  displayTaskCalendar() {
+    this.showCalendar = !this.showCalendar
+    this.setCalendarScrollHeight(this.showCalendar)
   }
 
   displayCompleted(requestDisplay: boolean) {
@@ -174,74 +179,6 @@ export class HomePageComponent {
     if (this.elInfo) this.elInfoHeight = this.elInfo.nativeElement.offsetHeight
     if (this.elFooter)
       this.elFooterHeight = this.elFooter.nativeElement.offsetHeight
-  }
-
-  applyTransformations() {
-    if (this.showCalendar) {
-      this.elProgress.nativeElement.style.transform = `translateY(-${
-        this.elProgressHeight
-      }px) scale(1)`
-      this.elTicker.nativeElement.style.transform = `translateY(-${
-        this.elProgressHeight
-      }px)`
-      this.elInfo.nativeElement.style.transform = `translateY(-${
-        this.elProgressHeight
-      }px)`
-      this.elFooter.nativeElement.style.transform = `translateY(${
-        this.elFooterHeight
-      }px) scale(0)`
-      this.elCalendar.nativeElement.style.transform = `translateY(-${
-        this.elProgressHeight
-      }px)`
-      this.elCalendar.nativeElement.style.opacity = 1
-    } else {
-      if (this.elProgress)
-        this.elProgress.nativeElement.style.transform =
-          'translateY(0px) scale(1)'
-      if (this.elTicker)
-        this.elTicker.nativeElement.style.transform = 'translateY(0px)'
-      if (this.elInfo)
-        this.elInfo.nativeElement.style.transform = 'translateY(0px)'
-      if (this.elFooter)
-        this.elFooter.nativeElement.style.transform = 'translateY(0px) scale(1)'
-      if (this.elCalendar) {
-        this.elCalendar.nativeElement.style.transform = 'translateY(0px)'
-        this.elCalendar.nativeElement.style.opacity = 0
-      }
-    }
-    this.setCalendarScrollHeight(this.showCalendar)
-  }
-
-  // TODO: Rename to something appropriate
-  isNextTaskESMandNotNow() {
-    const now = new Date().getTime()
-    if (!this.showCalendar) {
-      if (this.nextTask.name === 'ESM' && this.nextTask.timestamp > now) {
-        this.elProgress.nativeElement.style.transform = `translateY(${
-          this.elFooterHeight
-        }px)`
-        this.elInfo.nativeElement.style.transform = `translateY(${
-          this.elFooterHeight
-        }px)`
-        this.elFooter.nativeElement.style.transform = `translateY(${
-          this.elFooterHeight
-        }px) scale(0)`
-        this.elCalendar.nativeElement.style.transform = 'translateY(0px)'
-        this.elCalendar.nativeElement.style.opacity = 0
-      } else {
-        this.elProgress.nativeElement.style.transform = `translateY(${
-          this.elFooterHeight
-        }px)`
-        this.elInfo.nativeElement.style.transform = `translateY(${
-          this.elFooterHeight
-        }px)`
-        this.elFooter.nativeElement.style.transform = `translateY(${
-          this.elFooterHeight
-        }px) scale(0)`
-        this.elCalendar.nativeElement.style.transform = 'translateY(0px)'
-        this.elCalendar.nativeElement.style.opacity = 0
-      }
-    }
   }
 
   setCalendarScrollHeight(show: boolean) {

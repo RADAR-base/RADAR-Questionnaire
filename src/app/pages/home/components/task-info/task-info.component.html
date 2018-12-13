@@ -1,6 +1,5 @@
 <div
   id="task-info-container"
-  (click)="expand()"
   *ngIf="displayTask"
 >
 
@@ -13,7 +12,7 @@
   <div class="info">
     <div
       id="questionnaire-progress"
-      [@moveInProgress]="animateMove"
+      [@moveInProgress]="expanded"
     >
       <round-progress
         id="prog-sm"
@@ -29,7 +28,7 @@
     </div>
     <div
       id="questionnaire-metrics"
-      [@alignCenterRightMetrics]="animateCenterRight"
+      [@alignCenterRightMetrics]="expanded"
     >
       <img
         class="icon-padding icon-sm"
@@ -49,7 +48,7 @@
       <div
         class="text-md"
         *ngIf="isNow"
-        [@alignCenterRightTime]="animateCenterRight"
+        [@alignCenterRightTime]="expanded"
       >
         {{ "STATUS_NOW" | translate }}
       </div>
@@ -65,10 +64,10 @@
         </div>
         <div
           class="text-sm"
-          [@scaleMinutes]="animateScale"
+          [@scaleMinutes]="expanded"
         >
           <div *ngIf="task.name !=='ESM'">
-            <span [@fade]="animateFade">:</span>
+            <span [@fade]="expanded">:</span>
             {{ getMinutes() }}
           </div>
         </div>
@@ -79,7 +78,7 @@
   <div
     *ngIf="hasExtraInfo"
     class="extra-info"
-    [@alignCenterRightExtraInfo]="animateCenterRight"
+    [@alignCenterRightExtraInfo]="expanded"
   >
     <img
       class="icon-padding extra-info-icon"

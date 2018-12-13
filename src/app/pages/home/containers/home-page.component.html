@@ -49,10 +49,12 @@
   </div>
 
   <div
+    *ngIf="hasClinicalTasks"
     class="clinical"
-    [class.clinical-1]="hasClinicalTasks && !showCalendar && !showCompleted"
-    [class.clinical-2]="hasClinicalTasks && showCalendar"
-    [class.clinical-3]="hasClinicalTasks && !showCalendar && showCompleted"
+    [class.clinical-1]="taskIsNow && !showCompleted"
+    [class.clinical-2]="showCalendar"
+    [class.clinical-3]="showCompleted"
+    [class.clinical-4]="!taskIsNow"
     (click)="openClinicalTasksPage()"
   >
     <img
@@ -64,10 +66,10 @@
   <div
     #tickerBar
     class="size-static"
-    *ngIf="nextTask.name !== 'ESM'"
   >
     <ticker-bar
       [task]="nextTask"
+      [isNow]="taskIsNow"
       [showAffirmation]="showCompleted"
     ></ticker-bar>
   </div>

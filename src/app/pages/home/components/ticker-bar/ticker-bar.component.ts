@@ -17,6 +17,8 @@ export class TickerBarComponent implements OnChanges {
   @Input()
   task: Task
   @Input()
+  isNow
+  @Input()
   items: TickerItem[] = []
   @Input()
   showAffirmation: boolean = false

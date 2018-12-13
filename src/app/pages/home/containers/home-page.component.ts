@@ -81,6 +81,7 @@ export class HomePageComponent {
   }
 
   updateCurrentTask() {
+    this.showCompleted
     this.checkForNextTask()
     this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
   }
@@ -134,7 +135,7 @@ export class HomePageComponent {
   }
 
   displayTaskCalendar() {
-    this.showCalendar = !this.showCalendar
+    if (this.nextTask.name !== 'ESM') this.showCalendar = !this.showCalendar
   }
 
   openSettingsPage() {

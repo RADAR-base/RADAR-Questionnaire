@@ -1,22 +1,22 @@
 import 'rxjs/add/operator/map'
 
-import {Injectable} from '@angular/core'
-import {uuid} from 'uuid'
+import { Injectable } from '@angular/core'
+import { uuid } from 'uuid'
 
 import {
   DefaultNotificationType,
   DefaultNumberOfNotificationsToRescue,
   DefaultNumberOfNotificationsToSchedule,
   DefaultTask,
-  FCMPluginProjectSenderId
+  FCMPluginProjectSenderId,
 } from '../../../assets/data/defaultConfig'
-import {LocKeys} from '../../shared/enums/localisations'
-import {StorageKeys} from '../../shared/enums/storage'
-import {Task} from '../../shared/models/task'
-import {TranslatePipe} from '../../shared/pipes/translate/translate'
-import {SchedulingService} from './scheduling.service'
-import {StorageService} from './storage.service'
-import {AlertService} from "./alert.service";
+import { LocKeys } from '../../shared/enums/localisations'
+import { StorageKeys } from '../../shared/enums/storage'
+import { Task } from '../../shared/models/task'
+import { SchedulingService, TIME_UNIT_MILLIS } from './scheduling.service'
+import { StorageService } from './storage.service'
+import { AlertService } from './alert.service'
+import { LocalizationService } from './localization.service'
 
 declare var cordova
 declare var FCMPlugin
@@ -24,9 +24,10 @@ declare var FCMPlugin
 @Injectable()
 export class NotificationService {
   participantLogin
+  localNotification
 
   constructor(
-    private translate: TranslatePipe,
+    private localization: LocalizationService,
     private alertService: AlertService,
     private schedule: SchedulingService,
     public storage: StorageService
@@ -34,34 +35,30 @@ export class NotificationService {
     try {
       FCMPlugin.setSenderId(
         FCMPluginProjectSenderId,
-        function() {
-          console.log('[NOTIFICATION SERVICE] Set sender id success')
-        },
-        function(error) {
+        () => console.log('[NOTIFICATION SERVICE] Set sender id success'),
+        error => {
           console.log(error)
           alert(error)
-        }
+        },
       )
 
-      FCMPlugin.getToken(function(token) {
-        console.log('[NOTIFICATION SERVICE] Refresh token success')
-      })
+      FCMPlugin.getToken(() => console.log('[NOTIFICATION SERVICE] Refresh token success'))
     } catch (error) {
       console.error(error)
     }
+    this.localNotification = (<any>cordova).plugins.notification.local;
   }
 
   permissionCheck() {
-    ;(<any>cordova).plugins.notification.local.hasPermission().then(p => {
+    this.localNotification.hasPermission().then(p => {
       if (!p) {
-        ;(<any>cordova).plugins.notification.local.registerPermission()
+        this.localNotification.registerPermission()
       }
     })
   }
 
   generateNotificationSubsetForXTasks(noOfNotifications) {
     const today = new Date().getTime()
-    const promises = []
     return this.schedule.getTasks().then(tasks => {
       const limitedTasks = {}
       for (let i = 0; i < tasks.length; i++) {
@@ -86,7 +83,7 @@ export class NotificationService {
     })
   }
 
-  setNotifications(tasks) {
+  setNotifications(tasks: Task[]) {
     return this.storage
       .get(StorageKeys.PARTICIPANTLOGIN)
       .then(participantLogin => {
@@ -115,11 +112,11 @@ export class NotificationService {
           }
           if (DefaultNotificationType === 'LOCAL') {
             console.log('NOTIFICATIONS Scheduling LOCAL notifications')
-            ;(<any>cordova).plugins.notification.local.on(
+            this.localNotification.on(
               'click',
               notification => this.evalTaskTiming(notification.data)
             )
-            ;(<any>cordova).plugins.notification.local.on(
+            this.localNotification.on(
               'trigger',
               notification => this.evalLastTask(notification.data)
             )
@@ -149,9 +146,8 @@ export class NotificationService {
   }
 
   testFCMNotifications() {
-    const TWO_MINUTES = 2 * 60000
     const task = DefaultTask
-    task.timestamp = new Date().getTime() + TWO_MINUTES
+    task.timestamp = new Date().getTime() + TIME_UNIT_MILLIS.min * 2
     const fcmNotification = this.formatFCMNotification(
       task,
       this.participantLogin
@@ -161,24 +157,17 @@ export class NotificationService {
   }
 
   formatNotificationMessage(task) {
-    let text = this.translate.transform(
-      LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1.toString()
-    )
+    let text = this.localization.translateKey(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1)
     text += ' ' + task.estimatedCompletionTime + ' '
-    text += this.translate.transform(
-      LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2.toString()
-    )
+    text += this.localization.translateKey(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2)
     return text
   }
 
-  formatLocalNotification(task, isLastScheduledNotification, isLastOfDay) {
-    const text = this.formatNotificationMessage(task)
+  formatLocalNotification(task: Task, isLastScheduledNotification: boolean, isLastOfDay: boolean) {
     return {
       id: task.index,
-      title: this.translate.transform(
-        LocKeys.NOTIFICATION_REMINDER_NOW.toString()
-      ),
-      text: text,
+      title: this.localization.translateKey(LocKeys.NOTIFICATION_REMINDER_NOW),
+      text: this.formatNotificationMessage(task),
       trigger: {at: new Date(task.timestamp)},
       foreground: true,
       vibrate: true,
@@ -191,23 +180,21 @@ export class NotificationService {
     }
   }
 
-  formatFCMNotification(task, participantLogin) {
-    const text = this.formatNotificationMessage(task)
-    const expiry = task.name === 'ESM' ? 15 * 60 : 24 * 60 * 60
+  formatFCMNotification(task: Task, participantLogin: string) {
     return {
       eventId: uuid(),
       action: 'SCHEDULE',
-      notificationTitle: this.translate.transform(
-        LocKeys.NOTIFICATION_REMINDER_NOW.toString()
+      notificationTitle: this.localization.translateKey(
+        LocKeys.NOTIFICATION_REMINDER_NOW
       ),
-      notificationMessage: text,
+      notificationMessage: this.formatNotificationMessage(task),
       time: task.timestamp,
       subjectId: participantLogin,
-      ttlSeconds: expiry
+      ttlSeconds: task.completionWindow / 1000,
     }
   }
 
-  cancelNotificationPush(participantLogin) {
+  cancelNotificationPush(participantLogin: string) {
     return new Promise(function(resolve, reject) {
       FCMPlugin.upstream(
         {
@@ -217,7 +204,7 @@ export class NotificationService {
           subjectId: participantLogin
         },
         resolve,
-        reject
+        reject,
       )
     })
   }
@@ -240,7 +227,7 @@ export class NotificationService {
     if (now > endScheduledTimestamp && task.name === 'ESM') {
       this.showNotificationMissedInfo(task, data.isLastOfDay)
     }
-    (<any>cordova).plugins.notification.local.clearAll()
+    ;(<any>cordova).plugins.notification.local.clearAll()
   }
 
   evalLastTask(data) {
@@ -303,21 +290,17 @@ export class NotificationService {
   }
 
   showNotificationMissedInfo(task: Task, isLastOfDay: boolean) {
-    const msgDefault = this.translate.transform(
-      LocKeys.NOTIFICATION_REMINDER_FORGOTTEN_ALERT_DEFAULT_DESC.toString()
-    )
-    const msgLastOfDay = this.translate.transform(
-      LocKeys.NOTIFICATION_REMINDER_FORGOTTEN_ALERT_LASTOFNIGHT_DESC.toString()
-    )
+    const msgDefault = this.localization.translateKey(
+      LocKeys.NOTIFICATION_REMINDER_FORGOTTEN_ALERT_DEFAULT_DESC)
+    const msgLastOfDay = this.localization.translateKey(
+      LocKeys.NOTIFICATION_REMINDER_FORGOTTEN_ALERT_LASTOFNIGHT_DESC)
     return this.alertService.showAlert({
-      title: this.translate.transform(
-        LocKeys.NOTIFICATION_REMINDER_FORGOTTEN.toString()
-      ),
+      title: this.localization.translateKey(LocKeys.NOTIFICATION_REMINDER_FORGOTTEN),
       message: isLastOfDay ? msgLastOfDay : msgDefault,
       buttons: [
         {
-          text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
-          handler: () => {}
+          text: this.localization.translateKey(LocKeys.BTN_OKAY),
+          handler: () => {},
         }
       ]
     })

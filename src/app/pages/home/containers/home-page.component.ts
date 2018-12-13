@@ -1,11 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core'
-import {
-  AlertController,
-  Content,
-  NavController,
-  NavParams,
-  Platform
-} from 'ionic-angular'
+import { Content, NavController, Platform } from 'ionic-angular'
 
 import { DefaultTask } from '../../../../assets/data/defaultConfig'
 import { KafkaService } from '../../../core/services/kafka.service'
@@ -13,14 +7,14 @@ import { StorageService } from '../../../core/services/storage.service'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { Task, TasksProgress } from '../../../shared/models/task'
-import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { checkTaskIsNow } from '../../../shared/utilities/check-task-is-now'
 import { ClinicalTasksPageComponent } from '../../clinical-tasks/containers/clinical-tasks-page.component'
 import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
 import { SettingsPageComponent } from '../../settings/containers/settings-page.component'
 import { StartPageComponent } from '../../start/containers/start-page.component'
 import { TasksService } from '../services/tasks.service'
-import {AlertService} from "../../../core/services/alert.service";
+import { AlertService } from '../../../core/services/alert.service'
+import { LocalizationService } from '../../../core/services/localization.service'
 
 @Component({
   selector: 'page-home',
@@ -46,7 +40,6 @@ export class HomePageComponent {
   elCalendar: ElementRef
 
   tasks: Promise<Task[]>
-  isOpenPageClicked: boolean = false
   nextTask: Task = DefaultTask
   showCalendar: boolean = false
   showCompleted: boolean = false
@@ -62,10 +55,9 @@ export class HomePageComponent {
 
   constructor(
     public navCtrl: NavController,
-    public navParams: NavParams,
     public alertService: AlertService,
     private tasksService: TasksService,
-    private translate: TranslatePipe,
+    private localization: LocalizationService,
     public storage: StorageService,
     private platform: Platform,
     private kafka: KafkaService
@@ -317,11 +309,11 @@ export class HomePageComponent {
 
   showCredits() {
     return this.alertService.showAlert({
-      title: this.translate.transform(LocKeys.CREDITS_TITLE.toString()),
-      message: this.translate.transform(LocKeys.CREDITS_BODY.toString()),
+      title: this.localization.translateKey(LocKeys.CREDITS_TITLE),
+      message: this.localization.translateKey(LocKeys.CREDITS_BODY),
       buttons: [
         {
-          text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+          text: this.localization.translateKey(LocKeys.BTN_OKAY),
           handler: () => {}
         }
       ]

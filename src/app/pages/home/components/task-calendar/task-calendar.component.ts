@@ -1,18 +1,11 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output
-} from '@angular/core'
-import { AlertController, Platform } from 'ionic-angular'
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core'
 
-import { DefaultTask } from '../../../../../assets/data/defaultConfig'
 import { LocKeys } from '../../../../shared/enums/localisations'
 import { Task } from '../../../../shared/models/task'
-import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
 import { TasksService } from '../../services/tasks.service'
-import {AlertService} from "../../../../core/services/alert.service";
+import { AlertService } from '../../../../core/services/alert.service'
+import { LocalizationService } from '../../../../core/services/localization.service'
+import moment from 'moment'
 
 @Component({
   selector: 'task-calendar',
@@ -32,21 +25,16 @@ export class TaskCalendarComponent implements OnChanges {
   constructor(
     private tasksService: TasksService,
     private alertService: AlertService,
-    private translate: TranslatePipe,
-    private platform: Platform
+    private localization: LocalizationService,
   ) {}
 
   ngOnChanges() {
     this.setCurrentTime()
   }
 
-  static getStartTime(task: Task) {
-    return TaskCalendarComponent.formatTime(new Date(task.timestamp))
-  }
-
   setCurrentTime() {
     const now = new Date()
-    this.currentTime = TaskCalendarComponent.formatTime(now)
+    this.currentTime = moment().format('LT')  // locale time
     this.timeIndex = this.getCurrentTimeIndex(now)
   }
 
@@ -55,18 +43,6 @@ export class TaskCalendarComponent implements OnChanges {
   getCurrentTimeIndex(date: Date): Promise<number> {
     return this.tasks.then(tasks =>
       tasks.findIndex(t => t.timestamp >= date.getTime()))
-  }
-
-  static formatTime(date) {
-    const hour = date.getHours()
-    const min = date.getMinutes()
-    const hourStr = hour < 10 ? '0' + String(hour) : String(hour)
-    const minStr = min < 10 ? '0' + String(min) : String(min)
-    return hourStr + ':' + minStr
-  }
-
-  static hasExtraInfo(warningStr) {
-    return warningStr !== ''
   }
 
   clicked(task) {
@@ -84,15 +60,15 @@ export class TaskCalendarComponent implements OnChanges {
 
   showMissedInfo() {
     return this.alertService.showAlert({
-      title: this.translate.transform(
-        LocKeys.CALENDAR_ESM_MISSED_TITLE.toString()
+      title: this.localization.translateKey(
+        LocKeys.CALENDAR_ESM_MISSED_TITLE
       ),
-      message: this.translate.transform(
-        LocKeys.CALENDAR_ESM_MISSED_DESC.toString()
+      message: this.localization.translateKey(
+        LocKeys.CALENDAR_ESM_MISSED_DESC
       ),
       buttons: [
         {
-          text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+          text: this.localization.translateKey(LocKeys.BTN_OKAY),
           handler: () => {}
         }
       ]

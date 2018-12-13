@@ -2,13 +2,10 @@ import { LocKeys } from '../../app/shared/enums/localisations'
 import {
   LanguageSetting,
   NotificationSettings,
-  WeeklyReportSubSettings
+  WeeklyReportSubSettings,
 } from '../../app/shared/models/settings'
 import { Task } from '../../app/shared/models/task'
-import {
-  DefaultProtocolEndPointExport,
-  DefaultSourceProducerAndSecretExport
-} from './secret'
+import { DefaultProtocolEndPointExport, DefaultSourceProducerAndSecretExport } from './secret'
 
 // DEFAULT SETTINGS
 export const DefaultSettingsNotifications: NotificationSettings = {

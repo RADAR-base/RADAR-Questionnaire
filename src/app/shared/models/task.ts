@@ -7,7 +7,7 @@ export interface Task {
   name: string
   nQuestions: number
   reminderSettings?: any
-  estimatedCompletionTime: number
+  estimatedCompletionTime?: number
   completionWindow: number
   warning: string
   isClinical: boolean

@@ -4,7 +4,7 @@ import { NavController, NavParams } from 'ionic-angular'
 
 import {
   DefaultNotificationRefreshTime,
-  DefaultNumberOfNotificationsToSchedule
+  DefaultNumberOfNotificationsToSchedule,
 } from '../../../../assets/data/defaultConfig'
 import { ConfigService } from '../../../core/services/config.service'
 import { KafkaService } from '../../../core/services/kafka.service'

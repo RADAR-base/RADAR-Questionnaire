@@ -1,16 +1,7 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output
-} from '@angular/core'
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core'
 import { Device } from '@ionic-native/device'
 import { AlertController, NavController } from 'ionic-angular'
-
 // NOTE: File path to opensmile.js; Adding opensmile plugin
-import * as opensmile from '../../../../../../../plugins/cordova-plugin-opensmile/www/opensmile'
 import { Answer } from '../../../../../shared/models/answer'
 import { Section } from '../../../../../shared/models/question'
 import { AndroidPermissionUtility } from '../../../../../shared/utilities/android-permission'

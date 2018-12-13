@@ -1,16 +1,9 @@
 import { animate, state, style, transition, trigger } from '@angular/animations'
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output
-} from '@angular/core'
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core'
 
 import { StorageService } from '../../../../core/services/storage.service'
 import { StorageKeys } from '../../../../shared/enums/storage'
 import { Task, TasksProgress } from '../../../../shared/models/task'
-import { checkTaskIsNow } from '../../../../shared/utilities/check-task-is-now'
 import { TasksService } from '../../services/tasks.service'
 
 /**

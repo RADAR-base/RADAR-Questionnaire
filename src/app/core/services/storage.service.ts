@@ -9,7 +9,7 @@ import {
   DefaultScheduleVersion,
   DefaultSettingsNotifications,
   DefaultSettingsSupportedLanguages,
-  DefaultSettingsWeeklyReport
+  DefaultSettingsWeeklyReport,
 } from '../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../shared/enums/storage'
 import { Assessment } from '../../shared/models/assessment'

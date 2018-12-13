@@ -1,19 +1,13 @@
 // tslint:disable:no-eval
 import { Component, ElementRef, ViewChild } from '@angular/core'
-import {
-  App,
-  Content,
-  NavController,
-  NavParams,
-  ViewController
-} from 'ionic-angular'
+import { Content, NavController, NavParams, ViewController } from 'ionic-angular'
 
 import { LocKeys } from '../../../shared/enums/localisations'
 import { Question, QuestionType } from '../../../shared/models/question'
-import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { FinishPageComponent } from '../../finish/containers/finish-page.component'
 import { AnswerService } from '../services/answer.service'
 import { TimestampService } from '../services/timestamp.service'
+import { LocalizationService } from '../../../core/services/localization.service'
 
 @Component({
   selector: 'page-questions',
@@ -40,10 +34,10 @@ export class QuestionsPageComponent {
 
   // TODO: Gather text variables in one place. get values from server?
   txtValues = {
-    next: this.translate.transform(LocKeys.BTN_NEXT.toString()),
-    previous: this.translate.transform(LocKeys.BTN_PREVIOUS.toString()),
-    finish: this.translate.transform(LocKeys.BTN_FINISH.toString()),
-    close: this.translate.transform(LocKeys.BTN_CLOSE.toString())
+    next: this.localization.translateKey(LocKeys.BTN_NEXT),
+    previous: this.localization.translateKey(LocKeys.BTN_PREVIOUS),
+    finish: this.localization.translateKey(LocKeys.BTN_FINISH),
+    close: this.localization.translateKey(LocKeys.BTN_CLOSE)
   }
   nextBtTxt: string = this.txtValues.next
   previousBtTxt: string = this.txtValues.close
@@ -66,10 +60,9 @@ export class QuestionsPageComponent {
     public navCtrl: NavController,
     public navParams: NavParams,
     public viewCtrl: ViewController,
-    public appCtrl: App,
     private answerService: AnswerService,
     private timestampService: TimestampService,
-    private translate: TranslatePipe
+    private localization: LocalizationService
   ) {}
 
   ionViewDidLoad() {

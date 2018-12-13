@@ -1,20 +1,14 @@
 import { Component, ElementRef, ViewChild } from '@angular/core'
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  ValidatorFn,
-  Validators
-} from '@angular/forms'
+import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner'
-import { AlertController, NavController, Slides } from 'ionic-angular'
+import { NavController, Slides } from 'ionic-angular'
 
 import {
   DefaultEnrolmentBaseURL,
   DefaultSettingsSupportedLanguages,
   DefaultSettingsWeeklyReport,
   DefaultSourceTypeModel,
-  LanguageMap
+  LanguageMap,
 } from '../../../../assets/data/defaultConfig'
 import { AppComponent } from '../../../core/containers/app.component'
 import { ConfigService } from '../../../core/services/config.service'
@@ -22,15 +16,11 @@ import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { StorageKeys } from '../../../shared/enums/storage'
-import {
-  LanguageSetting,
-  WeeklyReportSubSettings
-} from '../../../shared/models/settings'
-import { TranslatePipe } from '../../../shared/pipes/translate/translate'
+import { LanguageSetting, WeeklyReportSubSettings } from '../../../shared/models/settings'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { AuthService } from '../services/auth.service'
-import {AlertService} from "../../../core/services/alert.service";
-import {AlertInputOptions} from "ionic-angular/components/alert/alert-options";
+import { AlertService } from '../../../core/services/alert.service'
+import { LocalizationService } from '../../../core/services/localization.service'
 
 @Component({
   selector: 'page-enrolment',
@@ -80,13 +70,13 @@ export class EnrolmentPageComponent {
     private schedule: SchedulingService,
     private configService: ConfigService,
     private authService: AuthService,
-    private translate: TranslatePipe,
+    private localization: LocalizationService,
     private alertService: AlertService,
   ) {}
 
   ionViewDidLoad() {
     this.slides.lockSwipes(true)
-    this.translate.init()
+    return this.localization.update()
   }
 
   ionViewDidEnter() {}
@@ -284,11 +274,11 @@ export class EnrolmentPageComponent {
   showSelectLanguage() {
     const buttons = [
       {
-        text: this.translate.transform(LocKeys.BTN_CANCEL.toString()),
+        text: this.localization.translateKey(LocKeys.BTN_CANCEL),
         handler: () => {}
       },
       {
-        text: this.translate.transform(LocKeys.BTN_SET.toString()),
+        text: this.localization.translateKey(LocKeys.BTN_SET),
         handler: selectedLanguageVal => {
           const lang: LanguageSetting = {
             label: LanguageMap[selectedLanguageVal],
@@ -296,24 +286,21 @@ export class EnrolmentPageComponent {
           }
           this.storage.set(StorageKeys.LANGUAGE, lang).then(() => {
             this.language = lang
-            this.translate.init().then(() => this.navCtrl.setRoot(AppComponent))
+            this.localization.update()
+              .then(() => this.navCtrl.setRoot(AppComponent))
           })
         }
       }
     ]
     const inputs = this.languagesSelectable.map(lang => ({
         type: 'radio',
-        label: this.translate.transform(
-          lang.label,
-        ),
+        label: this.localization.translate(lang.label),
         value: lang.value,
-        checked: lang.label === this.language.label,
+        checked: lang.value === this.language.value,
       }))
 
     return this.alertService.showAlert({
-      title: this.translate.transform(
-        LocKeys.SETTINGS_LANGUAGE_ALERT.toString()
-      ),
+      title: this.localization.translateKey(LocKeys.SETTINGS_LANGUAGE_ALERT),
       buttons: buttons,
       inputs: inputs
     })

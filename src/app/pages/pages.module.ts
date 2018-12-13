@@ -18,7 +18,8 @@ import { ReportModule } from './report/report.module'
 import { SettingsModule } from './settings/settings.module'
 import { SplashModule } from './splash/splash.module'
 import { StartModule } from './start/start.module'
-import {AlertService} from "../core/services/alert.service";
+import { AlertService } from '../core/services/alert.service'
+import { LocalizationService } from '../core/services/localization.service'
 
 @NgModule({
   imports: [
@@ -40,6 +41,7 @@ import {AlertService} from "../core/services/alert.service";
     DatePipe,
     ConfigService,
     KafkaService,
+    LocalizationService,
     NotificationService,
     SchedulingService,
     StorageService,

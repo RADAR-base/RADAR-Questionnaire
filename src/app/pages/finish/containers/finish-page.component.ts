@@ -10,9 +10,9 @@ import { Task } from '../../../shared/models/task'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { FinishTaskService } from '../services/finish-task.service'
 import { PrepareDataService } from '../services/prepare-data.service'
-import {Assessment} from "../../../shared/models/assessment";
-import {SchedulingService} from "../../../core/services/scheduling.service";
-import {RepeatQuestionnaire, TimeInterval} from "../../../shared/models/protocol";
+import { Assessment } from '../../../shared/models/assessment'
+import { SchedulingService } from '../../../core/services/scheduling.service'
+import { RepeatQuestionnaire } from '../../../shared/models/protocol'
 
 @Component({
   selector: 'page-finish',

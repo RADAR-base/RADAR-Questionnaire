@@ -1,3 +1,5 @@
+import { MultiLanguageText } from './text'
+
 export interface ClinicalProtocol {
   requiresInClinicCompletion?: boolean
   repeatAfterClinicVisit: RepeatQuestionnaire
@@ -24,12 +26,12 @@ export interface RepeatQuestionnaire {
 
 export interface Reminder {
   offset: TimeInterval
-  notification: Notification | null
+  notification?: Notification
 }
 
 export interface Notification {
-  title: string | null
-  text: string
-  vibrate: boolean
-  sound: boolean
+  title?: MultiLanguageText
+  text: MultiLanguageText
+  vibrate?: boolean
+  sound?: boolean
 }

@@ -7,6 +7,7 @@ import { DefaultNotificationType } from '../../../assets/data/defaultConfig'
 import { SplashPageComponent } from '../../pages/splash/containers/splash-page.component'
 import { ConfigService } from '../services/config.service'
 import { NotificationService } from '../services/notification.service'
+import { AlertService } from '../services/alert.service'
 
 @Component({
   template: '<ion-nav [root]="rootPage"></ion-nav>'
@@ -19,12 +20,16 @@ export class AppComponent {
     private statusBar: StatusBar,
     private splashScreen: SplashScreen,
     private configService: ConfigService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private alertService: AlertService,
   ) {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault()
       this.splashScreen.hide()
       this.configService.fetchConfigState(false)
+        .catch(e => alertService.showAlert({
+
+        }))
       this.configService.migrateToLatestVersion()
 
       if (DefaultNotificationType === 'LOCAL')

@@ -11,7 +11,7 @@ import {
   KAFKA_COMPLETION_LOG,
   KAFKA_TIMEZONE,
   MIN_SEC,
-  SEC_MILLISEC
+  SEC_MILLISEC,
 } from '../../../assets/data/defaultConfig'
 import { AuthService } from '../../pages/auth/services/auth.service'
 import { StorageKeys } from '../../shared/enums/storage'
@@ -19,7 +19,7 @@ import {
   AnswerKeyExport,
   AnswerValueExport,
   ApplicationTimeZoneValueExport,
-  CompletionLogValueExport
+  CompletionLogValueExport,
 } from '../../shared/models/answer'
 import { QuestionType } from '../../shared/models/question'
 import { Task } from '../../shared/models/task'

@@ -1,5 +1,5 @@
-import {Injectable} from "@angular/core";
-import {AlertController, AlertOptions} from "ionic-angular";
+import { Injectable } from '@angular/core'
+import { AlertController, AlertOptions } from 'ionic-angular'
 
 @Injectable()
 export class AlertService {

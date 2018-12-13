@@ -6,8 +6,7 @@ import { LocKeys } from '../../../../shared/enums/localisations'
 import { ReportScheduling } from '../../../../shared/models/report'
 import { Task } from '../../../../shared/models/task'
 import { TickerItem } from '../../../../shared/models/ticker'
-import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
-import { ReportPageComponent } from '../../../report/containers/report-page.component'
+import { LocalizationService } from '../../../../core/services/localization.service'
 
 @Component({
   selector: 'ticker-bar',
@@ -25,13 +24,10 @@ export class TickerBarComponent implements OnChanges {
   report: ReportScheduling
 
   hasTask: boolean = true
-  tickerWeeklyReport: string
-  newWeeklyReport: boolean = false
-
   constructor(
     private schedule: SchedulingService,
     private navCtrl: NavController,
-    private translate: TranslatePipe
+    private localization: LocalizationService,
   ) {
     // NOTE: Gets ReportScheduling and adds to tickerItems
     /*this.schedule.getCurrentReport().then((report) => {
@@ -58,21 +54,6 @@ export class TickerBarComponent implements OnChanges {
     if (this.tickerIndex === this.tickerItems.length) {
       this.tickerIndex = 0
       this.updateTickerItems()
-    }
-  }
-
-  openReport() {
-    this.updateReport()
-    this.updateTickerItems()
-    this.navCtrl.push(ReportPageComponent)
-  }
-
-  updateReport() {
-    if (this.report) {
-      const now = new Date()
-      this.report['viewed'] = true
-      this.report['firstViewedOn'] = now.getTime()
-      this.schedule.updateReport(this.report)
     }
   }
 
@@ -113,22 +94,22 @@ export class TickerBarComponent implements OnChanges {
     const timeToNext = this.getTimeToNext(now.getTime(), this.task.timestamp)
     let item = this.generateTickerItem(
       'task',
-      this.translate.transform(LocKeys.TASK_BAR_NEXT_TASK.toString()),
+      this.localization.translateKey(LocKeys.TASK_BAR_NEXT_TASK),
       timeToNext,
       '.'
     )
     if (timeToNext.includes('-')) {
       item = this.generateTickerItem(
         'task',
-        this.translate.transform(LocKeys.TASK_BAR_NOW_TASK.toString()),
-        this.translate.transform(LocKeys.STATUS_NOW.toString()),
+        this.localization.translateKey(LocKeys.TASK_BAR_NOW_TASK),
+        this.localization.translateKey(LocKeys.STATUS_NOW),
         '.'
       )
     } else if (this.task.name === 'ESM') {
       item = this.generateTickerItem(
         'task',
-        this.translate.transform(LocKeys.TASK_BAR_NOW_TASK.toString()),
-        this.translate.transform(LocKeys.TASK_BAR_NEXT_TASK_SOON.toString()),
+        this.localization.translateKey(LocKeys.TASK_BAR_NOW_TASK),
+        this.localization.translateKey(LocKeys.TASK_BAR_NEXT_TASK_SOON),
         '.'
       )
     }
@@ -139,8 +120,8 @@ export class TickerBarComponent implements OnChanges {
     const item = this.generateTickerItem(
       'affirmation',
       '',
-      this.translate.transform(LocKeys.TASK_BAR_AFFIRMATION_1.toString()),
-      this.translate.transform(LocKeys.TASK_BAR_AFFIRMATION_2.toString())
+      this.localization.translateKey(LocKeys.TASK_BAR_AFFIRMATION_1),
+      this.localization.translateKey(LocKeys.TASK_BAR_AFFIRMATION_2)
     )
     this.tickerItems.push(item)
   }
@@ -149,8 +130,8 @@ export class TickerBarComponent implements OnChanges {
     const item = this.generateTickerItem(
       'tasks-none',
       '',
-      this.translate.transform(LocKeys.TASK_BAR_TASK_LEFT_1.toString()),
-      this.translate.transform(LocKeys.TASK_BAR_TASK_LEFT_2.toString())
+      this.localization.translateKey(LocKeys.TASK_BAR_TASK_LEFT_1),
+      this.localization.translateKey(LocKeys.TASK_BAR_TASK_LEFT_2)
     )
     this.tickerItems.push(item)
   }
@@ -164,18 +145,18 @@ export class TickerBarComponent implements OnChanges {
         String(deltaHour) +
         ' ' +
         (deltaHour > 1
-          ? this.translate.transform(LocKeys.TASK_TIME_HOUR_MULTIPLE.toString())
-          : this.translate.transform(LocKeys.TASK_TIME_HOUR_SINGLE.toString()))
+          ? this.localization.translateKey(LocKeys.TASK_TIME_HOUR_MULTIPLE)
+          : this.localization.translateKey(LocKeys.TASK_TIME_HOUR_SINGLE))
     } else {
       deltaStr =
         String(deltaMin) +
         ' ' +
         (deltaMin > 1
-          ? this.translate.transform(
-              LocKeys.TASK_TIME_MINUTE_MULTIPLE.toString()
+          ? this.localization.translateKey(
+              LocKeys.TASK_TIME_MINUTE_MULTIPLE
             )
-          : this.translate.transform(
-              LocKeys.TASK_TIME_MINUTE_SINGLE.toString()
+          : this.localization.translateKey(
+              LocKeys.TASK_TIME_MINUTE_SINGLE
             ))
     }
     return deltaStr

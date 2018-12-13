@@ -15,7 +15,7 @@ import {
   DefaultRequestJSONContentType,
   DefaultSourceProducerAndSecret,
   DefaultSourceTypeRegistrationBody,
-  DefaultSubjectsURI
+  DefaultSubjectsURI,
 } from '../../../../assets/data/defaultConfig'
 import { StorageService } from '../../../core/services/storage.service'
 import { StorageKeys } from '../../../shared/enums/storage'

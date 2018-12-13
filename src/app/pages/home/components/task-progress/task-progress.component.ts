@@ -5,7 +5,7 @@ import {
   Input,
   OnChanges,
   Output,
-  ViewChild
+  ViewChild,
 } from '@angular/core'
 
 import { TasksProgress } from '../../../../shared/models/task'

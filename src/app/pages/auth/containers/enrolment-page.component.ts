@@ -94,9 +94,7 @@ export class EnrolmentPageComponent {
   ionViewDidEnter() {}
 
   isOlderThanEighteen(res: boolean) {
-    console.log('before', this.isEighteen);
     this.isEighteen = res;
-    console.log('after', this.isEighteen)
     this.processEligibility();
   }
 

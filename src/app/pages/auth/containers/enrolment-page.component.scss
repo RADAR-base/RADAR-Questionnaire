@@ -1,14 +1,5 @@
 page-enrolment {
   color: white;
-  #logo {
-    width: 200px;
-  }
-
-  #logo-container {
-    margin: auto;
-    padding-bottom: 3vh;
-    width: 200px;
-  }
 
   .icon {
     font-size: 36px;
@@ -45,7 +36,6 @@ page-enrolment {
   .scroll{
     height: 80%
   }
-
 
   input[type='checkbox']:checked + label {
     background-color: $cl-primary;
@@ -112,13 +102,6 @@ page-enrolment {
   .padding-text {
     padding-top: 5px;
   }
-
-  .qr-code {
-    margin: auto;
-    padding-top: 3vh;
-    width: 170px;
-  }
-
   .bottom {
     position: fixed;
     bottom: 10px;

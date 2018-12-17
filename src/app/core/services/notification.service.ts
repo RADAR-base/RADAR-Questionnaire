@@ -85,54 +85,43 @@ export class NotificationService {
   }
 
   setNotifications(tasks: Task[]) {
-    return this.storage
-      .get(StorageKeys.PARTICIPANTLOGIN)
+    return this.storage.get(StorageKeys.PARTICIPANTLOGIN)
       .then(participantLogin => {
-        if (participantLogin) {
-          this.participantLogin = participantLogin
-          const now = new Date().getTime()
-          const localNotifications = []
-          const fcmNotifications = []
-          for (let i = 0; i < tasks.length; i++) {
-            if (tasks[i].timestamp > now) {
-              const j = i + 1 < tasks.length ? i + 1 : i
-              const isLastScheduledNotification = i + 1 === tasks.length
-              const isLastOfDay = this.evalIsLastOfDay(tasks[i], tasks[j])
-              const localNotification = this.formatLocalNotification(
-                tasks[i],
-                isLastScheduledNotification,
-                isLastOfDay
-              )
-              const fcmNotification = this.formatFCMNotification(
-                tasks[i],
-                participantLogin
-              )
-              localNotifications.push(localNotification)
-              fcmNotifications.push(fcmNotification)
-            }
-          }
-          if (DefaultNotificationType === 'LOCAL') {
-            console.log('NOTIFICATIONS Scheduling LOCAL notifications')
-            this.localNotification.on('click', notification =>
-              this.evalTaskTiming(notification.data)
-            )
-            this.localNotification.on('trigger', notification =>
-              this.evalLastTask(notification.data)
-            )
-            return this.localNotification.schedule(
-              localNotifications[0],
-              () => {
-                return Promise.resolve({})
-              }
-            )
-          }
-          if (DefaultNotificationType === 'FCM') {
-            console.log('NOTIFICATIONS Scheduling FCM notifications')
-            console.log(fcmNotifications)
-            fcmNotifications.forEach(this.sendFCMNotification)
-          }
-          this.storage.set(StorageKeys.LAST_NOTIFICATION_UPDATE, Date.now())
+        if (!participantLogin) {
+          return;
         }
+
+        this.participantLogin = participantLogin
+        const now = new Date().getTime()
+
+        const futureTasks = tasks.filter(t => t.timestamp > now);
+
+        if (DefaultNotificationType === 'LOCAL') {
+          const localNotification = this.formatLocalNotification(
+            futureTasks[0], futureTasks.length == 1, false)
+
+          console.log('NOTIFICATIONS Scheduling LOCAL notifications')
+          this.localNotification.on('click', notification =>
+            this.evalTaskTiming(notification.data)
+          )
+          this.localNotification.on('trigger', notification =>
+            this.evalLastTask(notification.data)
+          )
+          return this.localNotification.schedule(
+            localNotification,
+            () => Promise.resolve({}),
+          )
+        }
+        if (DefaultNotificationType === 'FCM') {
+          const fcmNotifications = tasks
+            .filter(t => t.timestamp > now)
+            .map(t => this.formatFCMNotification(t, participantLogin))
+
+          console.log('NOTIFICATIONS Scheduling FCM notifications')
+          console.log(fcmNotifications)
+          fcmNotifications.forEach(this.sendFCMNotification)
+        }
+        this.storage.set(StorageKeys.LAST_NOTIFICATION_UPDATE, Date.now())
       })
   }
 
@@ -209,17 +198,11 @@ export class NotificationService {
     })
   }
 
-  evalIsLastOfDay(task1: Task, task2: Task) {
-    // TODO: needs to be determined better
-    return false
-  }
-
   evalTaskTiming(data) {
     const task = data.task
     const scheduledTimestamp = task.timestamp
     const now = new Date().getTime()
-    const endScheduledTimestamp =
-      scheduledTimestamp + getMilliseconds({ minutes: 10 })
+    const endScheduledTimestamp = scheduledTimestamp + getMilliseconds({ minutes: 10 })
     if (now > endScheduledTimestamp && task.name === 'ESM') {
       this.showNotificationMissedInfo(task, data.isLastOfDay)
     }
@@ -240,13 +223,11 @@ export class NotificationService {
       console.log('NOTIFICATION RESCHEDULE')
       const immediateNotification = [desiredSubset[0]]
       this.setNotifications(immediateNotification)
-      const nextdate = new Date(
+      const nextDate = new Date(
         desiredSubset[desiredSubset.length - 1].timestamp
       )
-      this.schedule.getTasksForDate(nextdate).then(tasks => {
-        const rescueTasks = [tasks[0]]
-        this.setNotifications(rescueTasks)
-      })
+      this.schedule.getTasksForDate(nextDate)
+        .then(([rescueTasks]) => this.setNotifications([rescueTasks]))
     })
   }
 
@@ -293,9 +274,7 @@ export class NotificationService {
       LocKeys.NOTIFICATION_REMINDER_FORGOTTEN_ALERT_LASTOFNIGHT_DESC
     )
     return this.alertService.showAlert({
-      title: this.localization.translateKey(
-        LocKeys.NOTIFICATION_REMINDER_FORGOTTEN
-      ),
+      title: this.localization.translateKey(LocKeys.NOTIFICATION_REMINDER_FORGOTTEN),
       message: isLastOfDay ? msgLastOfDay : msgDefault,
       buttons: [
         {
@@ -307,24 +286,23 @@ export class NotificationService {
   }
 
   setNextXNotifications(noOfNotifications) {
-    return this.generateNotificationSubsetForXTasks(noOfNotifications).then(
-      desiredSubset => {
+    return this.generateNotificationSubsetForXTasks(noOfNotifications)
+      .then(desiredSubset => {
         console.log(`NOTIFICATIONS desiredSubset: ${desiredSubset.length}`)
         try {
           return this.setNotifications(desiredSubset)
         } catch (e) {
           return Promise.reject(e)
         }
-      }
-    )
+      })
   }
 
   cancelNotifications() {
-    return this.storage
-      .get(StorageKeys.PARTICIPANTLOGIN)
-      .then(
-        participantLogin =>
-          participantLogin && this.cancelNotificationPush(participantLogin)
-      )
+    return this.storage.get(StorageKeys.PARTICIPANTLOGIN)
+      .then(participantLogin => {
+        if (participantLogin) {
+          return this.cancelNotificationPush(participantLogin)
+        }
+      })
   }
 }

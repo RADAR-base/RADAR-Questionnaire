@@ -44,8 +44,6 @@ export class EnrolmentPageComponent {
   outcomeStatus: String
   reportSettings: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport;
 
-  URLRegEx = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?'
-
   language: LanguageSetting = {
     label: LocKeys.LANGUAGE_ENGLISH.toString(),
     value: 'en'
@@ -91,7 +89,7 @@ export class EnrolmentPageComponent {
           text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
           handler: () => {}
         }],
-        message: "Your consent to participate in the study is required."
+        message: "Your consent to participate in the study is at least required."
       }).present();
     }
     if(this.consentParticipation === true) {
@@ -110,111 +108,6 @@ export class EnrolmentPageComponent {
         this.slideTo(2);
       }
     }
-  }
-
-  authenticate(authObj) {
-    this.showOutcomeStatus = false
-    this.transitionStatuses()
-
-    new Promise((resolve, reject) => {
-      let refreshToken = null
-      // if (this.validURL(authObj)) {
-        // NOTE: Meta QR code and new QR code
-        this.authService
-          .getRefreshTokenFromUrl(authObj)
-          .then((body: any) => {
-            refreshToken = body['refreshToken']
-            if (body['baseUrl']) {
-              this.storage.set(StorageKeys.BASE_URI, body['baseUrl'])
-              this.authService.updateURI()
-            }
-            resolve(refreshToken)
-          })
-          .catch(e => {
-            if (e.status === 410) {
-              e.statusText = 'URL expired. Regenerate the QR code.'
-            } else {
-              e.statusText = 'Error: Cannot get the refresh token from the URL'
-            }
-            console.log(e.statusText + ' - ' + e.status)
-            this.displayErrorMessage(e)
-          })
-      // } else {
-      //   // NOTE: Old QR codes: containing refresh token as JSON
-      //   this.authService.updateURI().then(() => {
-      //     console.log('BASE URI : ' + this.storage.get(StorageKeys.BASE_URI))
-      //     const auth = JSON.parse(authObj)
-      //     refreshToken = auth['refreshToken']
-      //     resolve(refreshToken)
-      //   })
-      // }
-    })
-      .catch(e => {
-        console.error(
-          'Cannot Parse Refresh Token from the QR code. ' +
-            'Please make sure the QR code contains either a JSON or a URL pointing to this JSON ' +
-            e
-        )
-        e.statusText = 'Cannot Parse Refresh Token from the QR code.'
-        this.displayErrorMessage(e)
-      })
-      .then(refreshToken => {
-        if (refreshToken === null) {
-          const error = new Error('refresh token cannot be null.')
-          this.displayErrorMessage(error)
-          throw error
-        }
-        this.authService
-          .registerToken(refreshToken)
-          .then(() =>
-            this.authService
-              .registerAsSource()
-              .then(() => this.authService.registerToken(refreshToken))
-              .then(() => this.retrieveSubjectInformation())
-              .catch(error => {
-                const modifiedError = error
-                this.retrieveSubjectInformation()
-                modifiedError.statusText = 'Re-registered an existing source '
-                this.displayErrorMessage(modifiedError)
-              })
-          )
-          .catch(error => {
-            this.displayErrorMessage(error)
-          })
-      })
-      .catch(error => {
-        this.displayErrorMessage(error)
-      })
-  }
-
-
-  retrieveSubjectInformation() {
-    this.authSuccess = true
-    this.authService.getSubjectInformation().then(res => {
-
-      const subjectInformation: any = res
-      const participantId = subjectInformation.externalId
-      const participantLogin = subjectInformation.login
-      const projectName = subjectInformation.project.projectName
-      // const sourceId = this.getSourceId(subjectInformation)
-      const createdDate = new Date(subjectInformation.createdDate);
-      const createdDateMidnight = this.schedule.setDateTimeToMidnight(
-        createdDate
-      )
-      this.storage
-        .init(
-          participantId,
-          participantLogin,
-          projectName,
-          // sourceId,
-          this.language,
-          createdDate,
-          createdDateMidnight
-        )
-        .then(() => {
-          this.doAfterAuthentication();
-        })
-    })
   }
 
   doAfterAuthentication() {
@@ -286,9 +179,4 @@ export class EnrolmentPageComponent {
     });
   }
 
-  loadUserInfo() {
-    this.authService.loadUserInfo().then(
-      user => alert(JSON.stringify(user))
-    )
-  }
 }

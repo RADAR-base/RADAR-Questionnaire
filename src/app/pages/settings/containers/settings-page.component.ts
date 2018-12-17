@@ -57,12 +57,12 @@ export class SettingsPageComponent {
   ionViewDidLoad() {
     this.loadSettings()
 
-    this.storage.get(StorageKeys.REFERENCEDATE).then(refDate => {
-      const createdDateMidnight = this.schedule.setDateTimeToMidnight(
-        new Date(refDate)
-      )
-      this.storage.set(StorageKeys.REFERENCEDATE, createdDateMidnight.getTime())
-    })
+    // Update midnight to time zone of reference date.
+    this.storage.get(StorageKeys.REFERENCEDATE)
+      .then(refDate => {
+        const createdDateMidnight = this.schedule.setDateTimeToMidnight(new Date(refDate))
+        return this.storage.set(StorageKeys.REFERENCEDATE, createdDateMidnight.getTime())
+      })
   }
 
   loadSettings() {
@@ -212,14 +212,13 @@ export class SettingsPageComponent {
     const buttons = [
       {
         text: this.localization.translateKey(LocKeys.BTN_DISAGREE),
-        handler: () => {
-          console.log('Reset cancel')
-        }
+        handler: () => console.log('Reset cancel')
       },
       {
         text: this.localization.translateKey(LocKeys.BTN_AGREE),
         handler: () => {
-          this.storage.clearStorage().then(() => this.backToSplash())
+          this.storage.clearStorage()
+            .then(() => this.backToSplash())
         }
       },
     ]

@@ -28,7 +28,7 @@ export class StorageService {
     participantId,
     participantLogin,
     projectName,
-    sourceId,
+    // sourceId,
     language,
     createdDate,
     createdDateMidnight
@@ -37,7 +37,8 @@ export class StorageService {
     return allKeys
       .then(keys => {
         // TODO: Find out why this is hard-coded?
-        if (keys.length <= 7) {
+        if (keys.length >= 9) {
+
           const enrolmentDateTime = new Date(createdDate)
           const referenceDateTime = new Date(createdDateMidnight)
           const enrolmentDate = this.set(
@@ -55,7 +56,7 @@ export class StorageService {
             participantLogin
           )
           const pName = this.set(StorageKeys.PROJECTNAME, projectName)
-          const sId = this.set(StorageKeys.SOURCEID, sourceId)
+          // const sId = this.set(StorageKeys.SOURCEID, sourceId)
 
           const lang = this.set(StorageKeys.LANGUAGE, language)
           const notif = this.set(
@@ -75,17 +76,18 @@ export class StorageService {
             DefaultScheduleVersion
           )
 
-          return Promise.all([
+          const result = [
             pId,
             pName,
             pLogin,
-            sId,
+            // sId,
             lang,
             notif,
             report,
             langs,
             version
-          ])
+          ];
+          return Promise.all(result)
         }
       })
       .catch(error => {

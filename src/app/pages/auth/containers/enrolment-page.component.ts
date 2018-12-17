@@ -1,14 +1,8 @@
 import { Component, ElementRef, ViewChild } from '@angular/core'
-import {
-  FormControl,
-  FormGroup,
-  Validators
-} from '@angular/forms'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner'
 import { AlertController, NavController, Slides } from 'ionic-angular'
 
 import {
-  DefaultEnrolmentBaseURL,
   DefaultSettingsSupportedLanguages,
   DefaultSettingsWeeklyReport,
   DefaultSourceTypeModel,
@@ -58,22 +52,8 @@ export class EnrolmentPageComponent {
   }
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
 
-  enterMetaQR = false
-  metaQRForm: FormGroup = new FormGroup({
-    baseURL: new FormControl(DefaultEnrolmentBaseURL, [
-      Validators.required,
-      Validators.pattern(this.URLRegEx)
-    ]),
-    tokenName: new FormControl('', [Validators.required])
-  })
   authSuccess = false
 
-  get tokenName() {
-    return this.metaQRForm.get('tokenName')
-  }
-  get baseURL() {
-    return this.metaQRForm.get('baseURL')
-  }
 
   constructor(
     public navCtrl: NavController,
@@ -121,6 +101,7 @@ export class EnrolmentPageComponent {
       this.storage.set(StorageKeys.CONSENT_ACCESS_NHS_RECORDS, true);
     }
   }
+
   processEligibility() {
     if(this.isBornInUK != undefined && this.isEighteen != undefined) {
       if(this.isBornInUK === true && this.isEighteen == true){
@@ -130,34 +111,6 @@ export class EnrolmentPageComponent {
       }
     }
   }
-  scanQRHandler() {
-    this.loading = true
-    const scanOptions = {
-      showFlipCameraButton: true,
-      orientation: 'portrait'
-      // disableAnimations: true
-    }
-    this.scanner
-      .scan(scanOptions)
-      .then(scannedObj => this.authenticate(scannedObj.text))
-  }
-
-  metaQRHandler() {
-    if (this.baseURL.errors) {
-      this.displayErrorMessage({ statusText: 'Invalid Base URL' })
-      return
-    }
-    if (this.tokenName.errors) {
-      this.displayErrorMessage({ statusText: 'Invalid Token Name' })
-      return
-    }
-    this.authenticate(
-      this.authService.getURLFromToken(
-        this.baseURL.value.trim(),
-        this.tokenName.value.trim()
-      )
-    )
-  }
 
   authenticate(authObj) {
     this.showOutcomeStatus = false
@@ -165,7 +118,7 @@ export class EnrolmentPageComponent {
 
     new Promise((resolve, reject) => {
       let refreshToken = null
-      if (this.validURL(authObj)) {
+      // if (this.validURL(authObj)) {
         // NOTE: Meta QR code and new QR code
         this.authService
           .getRefreshTokenFromUrl(authObj)
@@ -186,15 +139,15 @@ export class EnrolmentPageComponent {
             console.log(e.statusText + ' - ' + e.status)
             this.displayErrorMessage(e)
           })
-      } else {
-        // NOTE: Old QR codes: containing refresh token as JSON
-        this.authService.updateURI().then(() => {
-          console.log('BASE URI : ' + this.storage.get(StorageKeys.BASE_URI))
-          const auth = JSON.parse(authObj)
-          refreshToken = auth['refreshToken']
-          resolve(refreshToken)
-        })
-      }
+      // } else {
+      //   // NOTE: Old QR codes: containing refresh token as JSON
+      //   this.authService.updateURI().then(() => {
+      //     console.log('BASE URI : ' + this.storage.get(StorageKeys.BASE_URI))
+      //     const auth = JSON.parse(authObj)
+      //     refreshToken = auth['refreshToken']
+      //     resolve(refreshToken)
+      //   })
+      // }
     })
       .catch(e => {
         console.error(
@@ -234,42 +187,38 @@ export class EnrolmentPageComponent {
       })
   }
 
-  validURL(str) {
-    return new FormControl(str, Validators.pattern(this.URLRegEx)).errors
-      ? false
-      : true
-  }
 
   retrieveSubjectInformation() {
     this.authSuccess = true
     this.authService.getSubjectInformation().then(res => {
+
       const subjectInformation: any = res
       const participantId = subjectInformation.externalId
       const participantLogin = subjectInformation.login
       const projectName = subjectInformation.project.projectName
-      const sourceId = this.getSourceId(subjectInformation)
-      const createdDate = new Date(subjectInformation.createdDate)
+      // const sourceId = this.getSourceId(subjectInformation)
+      const createdDate = new Date(subjectInformation.createdDate);
       const createdDateMidnight = this.schedule.setDateTimeToMidnight(
-        new Date(subjectInformation.createdDate)
+        createdDate
       )
       this.storage
         .init(
           participantId,
           participantLogin,
           projectName,
-          sourceId,
+          // sourceId,
           this.language,
           createdDate,
           createdDateMidnight
         )
         .then(() => {
-          this.doAfterAuthentication()
+          this.doAfterAuthentication();
         })
     })
   }
 
   doAfterAuthentication() {
-    this.configService.fetchConfigState(true).then(() => this.next())
+    this.configService.fetchConfigState(true).then(() => this.navigateToHome())
   }
 
   displayErrorMessage(error) {
@@ -326,35 +275,15 @@ export class EnrolmentPageComponent {
     this.slides.lockSwipes(true)
   }
 
-  enterToken() {
-    this.enterMetaQR = true
-    this.next()
-  }
-
   navigateToHome() {
     this.navCtrl.setRoot(HomePageComponent)
   }
 
-
-  goToLogin() {
-      this.authService.keycloakLogin(true).then(success => {
-          console.log('success', success)
-      }, (error) => {
-        console.log(error);
-      });
-  }
-
   goToRegistration() {
     this.authService.keycloakLogin(false).then(success => {
-      console.log('success', success)
     }, (error) => {
       console.log(error);
     });
-  }
-
-  goToRefresh() {
-    this.authService.refresh().then(success =>
-    alert(JSON.stringify(success)));
   }
 
   loadUserInfo() {

@@ -6,6 +6,7 @@ import {Injectable} from '@angular/core'
 import {JwtHelperService} from '@auth0/angular-jwt'
 import {
   DefaultEndPoint,
+  DefaultKeycloakURL,
   DefaultMetaTokenURI,
   DefaultRefreshTokenRequestBody,
   DefaultRequestEncodedContentType,
@@ -17,6 +18,7 @@ import {
 import {StorageService} from '../../../core/services/storage.service'
 import {StorageKeys} from '../../../shared/enums/storage'
 import {InAppBrowser, InAppBrowserOptions} from '@ionic-native/in-app-browser';
+import {SchedulingService} from "../../../core/services/scheduling.service";
 
 const uuidv4 = require('uuid/v4');
 declare var window: any;
@@ -29,16 +31,19 @@ export class AuthService {
   constructor(
     public http: HttpClient,
     public storage: StorageService,
+    private schedule: SchedulingService,
     private jwtHelper: JwtHelperService,
     private inAppBrowser: InAppBrowser
   ) {
-    this.keycloakConfig = {
-      authServerUrl: 'https://ucl-mighealth-dev.thehyve.net/auth/',
-      realm: 'mighealth',
-      clientId: 'armt',
-      redirectUri: 'http://ucl-mighealth-app/callback/',
-    };
-    this.updateURI();
+    this.updateURI().then(() => {
+      this.keycloakConfig = {
+        authServerUrl: this.URI_base,
+        realm: 'mighealth',
+        clientId: 'armt',
+        redirectUri: 'http://ucl-mighealth-app/callback/',
+      };
+    });
+
   }
 
   public keycloakLogin(login: boolean): Promise<any> {
@@ -54,19 +59,20 @@ export class AuthService {
       }
       const browser = this.inAppBrowser.create(url, '_blank', options);
 
-      let listener = browser.on('loadstart').subscribe((event: any) => {
-
+      const listener = browser.on('loadstart').subscribe((event: any) => {
+        const callback = encodeURI(event.url);
         //Check the redirect uri
-        if (event.url.indexOf(this.keycloakConfig.redirectUri) > -1) {
+        if (callback.indexOf(this.keycloakConfig.redirectUri) > -1) {
           listener.unsubscribe();
           browser.close();
           const code = this.parseUrlParamsToObject(event.url);
           this.getAccessToken(this.keycloakConfig, code).then(
-            () => resolve(event.url),
+            () => {
+              const token = this.storage.get(StorageKeys.OAUTH_TOKENS);
+              resolve(token);
+            },
             () => reject("Count not login in to keycloak")
           );
-        } else {
-          reject("Could not authenticate");
         }
       });
 
@@ -74,9 +80,9 @@ export class AuthService {
   }
 
   parseUrlParamsToObject(url: any) {
-    let hashes = url.slice(url.indexOf('?') + 1).split('&');
+    const hashes = url.slice(url.indexOf('?') + 1).split('&');
     return hashes.reduce((params, hash) => {
-      let [key, val] = hash.split('=');
+      const [key, val] = hash.split('=');
       return Object.assign(params, {[key]: decodeURIComponent(val)})
     }, {});
   }
@@ -102,16 +108,37 @@ export class AuthService {
       : this.getRealmUrl(keycloakConfig) + '/protocol/openid-connect/registrations';
   }
 
+  retrieveUserInformation(language) {
+    return new Promise((resolve, reject) => {
+      this.loadUserInfo().then(res => {
+        const subjectInformation: any = res
+        const participantId = subjectInformation.sub
+        const participantLogin = subjectInformation.username
+        const projectName = subjectInformation.project
+        const createdDate = new Date(subjectInformation.createdTimestamp);
+        const createdDateMidnight = this.schedule.setDateTimeToMidnight(
+          createdDate
+        );
+        resolve (
+          this.storage.init(
+            participantId,
+            participantLogin,
+            projectName,
+            language,
+            createdDate,
+            createdDateMidnight
+          ));
+      }).catch(reject);
+    });
+
+  }
+
+
   loadUserInfo() {
     return this.storage.get(StorageKeys.OAUTH_TOKENS).then( tokens => {
       const url = this.getRealmUrl(this.keycloakConfig) + '/protocol/openid-connect/userinfo';
       const headers = this.getAccessHeaders(tokens.access_token, DefaultRequestJSONContentType);
-      const promise = this.http.get(url, {headers: headers}).toPromise();
-      promise.then(
-        (success) => alert(JSON.stringify(success)),
-        (error) => alert('error ' + JSON.stringify(error))
-      );
-      return promise;
+      return this.http.get(url, {headers: headers}).toPromise();
     })
   }
 
@@ -125,26 +152,22 @@ export class AuthService {
     }).then((newTokens: any) => {
       newTokens.iat = (new Date().getTime() / 1000) - 10; // reduce 10 sec to for delay
       this.storage.set(StorageKeys.OAUTH_TOKENS, newTokens);
-    }, (error) => {
-      console.log('Could not retrieve access tokens')
     });
   }
 
   refresh() {
     return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
-      if (tokens.iat + tokens.expires_in < (new Date().getTime() /1000)) {
+      const decoded = this.jwtHelper.decodeToken(tokens.access_token)
+      if (decoded.iat + tokens.expires_in < (new Date().getTime() /1000)) {
         const URI = this.getTokenUrl();
         const headers = this.getTokenRequestHeaders();
         const body = this.getRefreshParams(tokens.refresh_token, this.keycloakConfig.clientId);
         const promise = this.createPostRequest(URI, body, {
           headers: headers,
         }).then((newTokens: any) => {
-          alert('New token ' + JSON.stringify(newTokens));
           newTokens.iat = (new Date().getTime() / 1000) - 10;
           this.storage.set(StorageKeys.OAUTH_TOKENS, newTokens)
-        }, (error) => {
-          alert('Error' + JSON.stringify(error));
-        });
+        }).catch((reason) => console.log(reason));
         return promise
       } else {
         return Promise.resolve(tokens)
@@ -153,9 +176,13 @@ export class AuthService {
   }
 
   updateURI() {
-    return this.storage.get(StorageKeys.BASE_URI).then(uri => {
-      this.URI_base = this.keycloakConfig.authServerUrl;
-    })
+    return new Promise((resolve, reject) => {
+      this.storage.get(StorageKeys.BASE_URI).then(uri => {
+        const endPoint = uri ? uri : DefaultEndPoint;
+        this.URI_base = endPoint + DefaultKeycloakURL;
+        resolve(this.URI_base);
+      });
+    });
   }
 
   // TODO: test this

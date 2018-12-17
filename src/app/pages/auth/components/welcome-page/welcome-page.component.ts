@@ -12,6 +12,8 @@ import {TranslatePipe} from "../../../../shared/pipes/translate/translate";
 import {StorageService} from "../../../../core/services/storage.service";
 import {EnrolmentPageComponent} from "../../containers/enrolment-page.component";
 import {AuthService} from "../../services/auth.service";
+import {ConfigService} from "../../../../core/services/config.service";
+import {HomePageComponent} from "../../../home/containers/home-page.component";
 
 /**
  * Generated class for the WelcomePage page.
@@ -40,11 +42,11 @@ export class WelcomePageComponent {
     private navParams: NavParams,
     private translate: TranslatePipe,
     private storage: StorageService,
+    private configService: ConfigService,
     private authService: AuthService,
     private alertCtrl: AlertController) {}
 
   ionViewDidLoad() {
-    // this.slides.lockSwipes(true)
     this.translate.init()
   }
 
@@ -115,17 +117,28 @@ export class WelcomePageComponent {
   }
 
   goToLogin() {
-    this.authService.keycloakLogin(true).then(success => {
-    }, (error) => {
-      this.alertCtrl.create({
-        title: "Something went wrong",
-        buttons: [{
+    this.authService.keycloakLogin(true)
+      .then(() => {
+        this.authService.retrieveUserInformation(this.language)
+          .then(() => {
+            this.configService.fetchConfigState(true)
+              .then(() => this.navigateToHome());
+          })
+      })
+      .catch( () => {
+        this.alertCtrl.create({
+          title: "Something went wrong",
+          buttons: [{
             text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
             handler: () => {}
           }],
-        message: "Could not successfully redirect to login. Please try again later."
-      }).present();
-      console.log(error);
-    });
+          message: "Could not successfully redirect to login. Please try again later."
+        }).present();
+      });
   }
+
+  navigateToHome() {
+    this.navCtrl.setRoot(HomePageComponent)
+  }
+
 }

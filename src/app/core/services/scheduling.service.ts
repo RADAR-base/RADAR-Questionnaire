@@ -11,18 +11,19 @@ import { Assessment } from '../../shared/models/assessment'
 import { TimeInterval } from '../../shared/models/protocol'
 import { ReportScheduling } from '../../shared/models/report'
 import { Task } from '../../shared/models/task'
+import { getMilliseconds } from '../../shared/utilities/time'
 import { StorageService } from './storage.service'
 
 export const TIME_UNIT_MILLIS = {
-  min: 60000,
-  hour: 60000 * 60,
-  day: 60000 * 60 * 24,
-  week: 60000 * 60 * 24 * 7,
-  month: 60000 * 60 * 24 * 7 * 31,
-  year: 60000 * 60 * 24 * 365,
+  min: getMilliseconds({minutes: 1}),
+  hour: getMilliseconds({hours: 1}),
+  day: getMilliseconds({days: 1}),
+  week: getMilliseconds({weeks: 1}),
+  month: getMilliseconds({months: 1}),
+  year: getMilliseconds({years: 1}),
 }
 
-const TIME_UNIT_MILLIS_DEFAULT = DefaultScheduleYearCoverage * TIME_UNIT_MILLIS.year
+const TIME_UNIT_MILLIS_DEFAULT = getMilliseconds({ years: DefaultScheduleYearCoverage })
 
 @Injectable()
 export class SchedulingService {
@@ -135,18 +136,12 @@ export class SchedulingService {
   }
 
   generateSchedule(force: boolean) {
-    const completedTasks = this.getCompletedTasks()
-    const scheduleVProm = this.storage.get(StorageKeys.SCHEDULE_VERSION)
-    const configVProm = this.storage.get(StorageKeys.CONFIG_VERSION)
-    const refDate = this.storage.get(StorageKeys.ENROLMENTDATE)
-    const utcOffsetPrev = this.storage.get(StorageKeys.UTC_OFFSET_PREV)
-
     return Promise.all([
-      completedTasks,
-      scheduleVProm,
-      configVProm,
-      refDate,
-      utcOffsetPrev
+      this.getCompletedTasks(),
+      this.storage.get(StorageKeys.SCHEDULE_VERSION),
+      this.storage.get(StorageKeys.CONFIG_VERSION),
+      this.storage.get(StorageKeys.ENROLMENTDATE),
+      this.storage.get(StorageKeys.UTC_OFFSET_PREV)
     ]).then(([completed, schedVersion, confVersion, enrolDate, offsetPrev]) => {
       this.completedTasks = completed ? completed : []
       this.scheduleVersion = schedVersion
@@ -169,10 +164,7 @@ export class SchedulingService {
     return Promise.all([
       this.storage.get(StorageKeys.CONFIG_ASSESSMENTS),
       this.storage.get(StorageKeys.LANGUAGE),
-    ])
-      .then(([assessments, language]) =>
-        this.buildTaskSchedule(assessments, language)
-      )
+    ]).then(([assessments, language]) => this.buildTaskSchedule(assessments, language))
       .catch(e => console.error(e))
       .then((schedule: Task[]) => this.setSchedule(schedule))
       .catch(e => console.error(e))
@@ -210,7 +202,7 @@ export class SchedulingService {
         .then(() => {
           const currentMidnight = new Date().setHours(0, 0, 0, 0)
           const prevMidnight =
-            new Date().setUTCHours(0, 0, 0, 0) + this.utcOffsetPrev * TIME_UNIT_MILLIS.min
+            new Date().setUTCHours(0, 0, 0, 0) + getMilliseconds({minutes: this.utcOffsetPrev})
 
           this.completedTasks.map(d => {
             const finishedToday = schedule.find(s =>
@@ -254,7 +246,8 @@ export class SchedulingService {
     const repeatQ = assessment.protocol.repeatQuestionnaire
 
     let iterDate = this.setDateTimeToMidnight(new Date(this.enrolmentDate))
-    const endDate = new Date(iterDate.getTime() + TIME_UNIT_MILLIS_DEFAULT)
+    const endDate = new Date(iterDate.getTime()
+      + getMilliseconds({ years: DefaultScheduleYearCoverage }))
 
     console.log(assessment)
 
@@ -343,7 +336,7 @@ export class SchedulingService {
 
   buildReportSchedule() {
     let iterDate = this.setDateTimeToMidnight(new Date(this.enrolmentDate))
-    const yearsMillis = DefaultScheduleYearCoverage * TIME_UNIT_MILLIS.year
+    const yearsMillis = getMilliseconds({ years: DefaultScheduleYearCoverage })
     const endDate = new Date(iterDate.getTime() + yearsMillis)
     const tmpSchedule: ReportScheduling[] = []
 
@@ -367,7 +360,7 @@ export class SchedulingService {
       viewed: false,
       firstViewedOn: 0,
       range: {
-        timestampStart: timestamp - DefaultScheduleReportRepeat * TIME_UNIT_MILLIS.day,
+        timestampStart: timestamp - getMilliseconds({days: DefaultScheduleReportRepeat}),
         timestampEnd: timestamp,
       },
     }

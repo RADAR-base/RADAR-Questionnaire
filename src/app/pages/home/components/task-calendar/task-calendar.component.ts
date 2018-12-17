@@ -19,7 +19,7 @@ export class TaskCalendarComponent implements OnChanges {
   @Input()
   tasks
 
-  currentTime
+  currentTime: String
   timeIndex: Promise<number>
 
   constructor(

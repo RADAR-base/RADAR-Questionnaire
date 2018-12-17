@@ -16,6 +16,7 @@ import { Task } from '../../shared/models/task'
 import { AlertService } from './alert.service'
 import { LocalizationService } from './localization.service'
 import { SchedulingService, TIME_UNIT_MILLIS } from './scheduling.service'
+import { getMilliseconds, getSeconds } from '../../shared/utilities/time'
 import { StorageService } from './storage.service'
 
 declare var cordova
@@ -155,10 +156,9 @@ export class NotificationService {
   }
 
   formatNotificationMessage(task) {
-    let text = this.localization.translateKey(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1)
-    text += ' ' + task.estimatedCompletionTime + ' '
-    text += this.localization.translateKey(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2)
-    return text
+    return this.localization.translateKey(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1)
+      + ' ' + task.estimatedCompletionTime + ' '
+      + this.localization.translateKey(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2)
   }
 
   formatLocalNotification(
@@ -186,13 +186,11 @@ export class NotificationService {
     return {
       eventId: uuid(),
       action: 'SCHEDULE',
-      notificationTitle: this.localization.translateKey(
-        LocKeys.NOTIFICATION_REMINDER_NOW
-      ),
+      notificationTitle: this.localization.translateKey(LocKeys.NOTIFICATION_REMINDER_NOW),
       notificationMessage: this.formatNotificationMessage(task),
       time: task.timestamp,
       subjectId: participantLogin,
-      ttlSeconds: task.completionWindow / 1000,
+      ttlSeconds: getSeconds({ milliseconds: task.completionWindow }),
     }
   }
 
@@ -220,7 +218,8 @@ export class NotificationService {
     const task = data.task
     const scheduledTimestamp = task.timestamp
     const now = new Date().getTime()
-    const endScheduledTimestamp = scheduledTimestamp + 1000 * 60 * 10
+    const endScheduledTimestamp =
+      scheduledTimestamp + getMilliseconds({ minutes: 10 })
     if (now > endScheduledTimestamp && task.name === 'ESM') {
       this.showNotificationMissedInfo(task, data.isLastOfDay)
     }

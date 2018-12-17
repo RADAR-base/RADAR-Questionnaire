@@ -4,6 +4,7 @@ import { KafkaService } from '../../../core/services/kafka.service'
 import { SchedulingService, TIME_UNIT_MILLIS } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { Task, TasksProgress } from '../../../shared/models/task'
+import { getMilliseconds } from '../../../shared/utilities/time'
 
 @Injectable()
 export class TasksService {
@@ -64,10 +65,10 @@ export class TasksService {
    */
   getNextTask(tasks: Task[]): Task | undefined {
     if (tasks) {
-      const tenMinutesAgo = new Date().getTime() - 10 * TIME_UNIT_MILLIS.min
+      const tenMinutesAgo = new Date().getTime() - getMilliseconds({ minutes: 10 })
       const midnight = new Date()
       midnight.setHours(0, 0, 0, 0)
-      const offsetForward = 12 * TIME_UNIT_MILLIS.hour
+      const offsetForward = getMilliseconds({ hours: 12 })
       return tasks.find(task => {
         switch (task.name) {
           case 'ESM':

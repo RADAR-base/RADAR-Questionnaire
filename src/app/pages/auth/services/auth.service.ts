@@ -19,6 +19,7 @@ import {
 } from '../../../../assets/data/defaultConfig'
 import { StorageService } from '../../../core/services/storage.service'
 import { StorageKeys } from '../../../shared/enums/storage'
+import { getSeconds } from '../../../shared/utilities/time'
 
 @Injectable()
 export class AuthService {
@@ -32,26 +33,20 @@ export class AuthService {
     this.updateURI()
   }
 
-  refresh() {
-    return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
-      const now = new Date().getTime() / 1000
-      if (tokens.iat + tokens.expires_in < now) {
-        const URI = this.URI_base + DefaultRefreshTokenURI
-        const headers = this.getRegisterHeaders(
-          DefaultRequestEncodedContentType
-        )
-        const params = this.getRefreshParams(tokens.refresh_token)
-        const promise = this.createPostRequest(URI, '', {
-          headers: headers,
-          params: params
-        }).then(newTokens => {
-          return this.storage.set(StorageKeys.OAUTH_TOKENS, newTokens)
-        })
-        return promise
-      } else {
-        return Promise.resolve(tokens)
-      }
-    })
+  refresh(): Promise<any> {
+    return this.storage.get(StorageKeys.OAUTH_TOKENS)
+      .then(tokens => {
+        const now = getSeconds({ milliseconds: new Date().getTime() })
+        if (tokens.iat + tokens.expires_in < now) {
+          const URI = this.URI_base + DefaultRefreshTokenURI
+          const headers = this.getRegisterHeaders(DefaultRequestEncodedContentType)
+          const params = this.getRefreshParams(tokens.refresh_token)
+          return this.createPostRequest(URI, '', {headers, params})
+            .then(newTokens => this.storage.set(StorageKeys.OAUTH_TOKENS, newTokens))
+        } else {
+          return tokens
+        }
+      })
   }
 
   updateURI() {
@@ -67,30 +62,16 @@ export class AuthService {
     // console.debug('URI : ' + URI)
     const refreshBody = DefaultRefreshTokenRequestBody + registrationToken
     const headers = this.getRegisterHeaders(DefaultRequestEncodedContentType)
-    const promise = this.createPostRequest(URI, refreshBody, {
-      headers: headers
-    })
-    return promise.then(res => {
-      return this.storage.set(StorageKeys.OAUTH_TOKENS, res)
-    })
+    return this.createPostRequest(URI, refreshBody, {headers})
+      .then(res => this.storage.set(StorageKeys.OAUTH_TOKENS, res))
   }
 
   registerAsSource() {
     return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
       const decoded = this.jwtHelper.decodeToken(tokens.access_token)
-      const headers = this.getAccessHeaders(
-        tokens.access_token,
-        DefaultRequestJSONContentType
-      )
+      const headers = this.getAccessHeaders(tokens.access_token, DefaultRequestJSONContentType)
       const URI = this.URI_base + DefaultSubjectsURI + decoded.sub + '/sources'
-      const promise = this.createPostRequest(
-        URI,
-        DefaultSourceTypeRegistrationBody,
-        {
-          headers: headers
-        }
-      )
-      return promise
+      return this.createPostRequest(URI, DefaultSourceTypeRegistrationBody,{headers})
     })
   }
 
@@ -120,23 +101,20 @@ export class AuthService {
 
   getRegisterHeaders(contentType) {
     // TODO:: Use empty client secret https://github.com/RADAR-base/RADAR-Questionnaire/issues/140
-    const headers = new HttpHeaders()
+    return new HttpHeaders()
       .set('Authorization', 'Basic ' + btoa(DefaultSourceProducerAndSecret))
       .set('Content-Type', contentType)
-    return headers
   }
 
   getAccessHeaders(accessToken, contentType) {
-    const headers = new HttpHeaders()
+    return new HttpHeaders()
       .set('Authorization', 'Bearer ' + accessToken)
       .set('Content-Type', contentType)
-    return headers
   }
 
   getRefreshParams(refreshToken) {
-    const params = new HttpParams()
+    return new HttpParams()
       .set('grant_type', 'refresh_token')
       .set('refresh_token', refreshToken)
-    return params
   }
 }

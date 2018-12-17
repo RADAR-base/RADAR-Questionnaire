@@ -5,6 +5,7 @@ import { Content, NavController, NavParams, ViewController } from 'ionic-angular
 import { LocalizationService } from '../../../core/services/localization.service'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { Question, QuestionType } from '../../../shared/models/question'
+import { getSeconds } from '../../../shared/utilities/time'
 import { FinishPageComponent } from '../../finish/containers/finish-page.component'
 import { AnswerService } from '../services/answer.service'
 import { TimestampService } from '../services/timestamp.service'
@@ -96,7 +97,7 @@ export class QuestionsPageComponent {
   }
 
   getTime() {
-    return this.timestampService.getTimeStamp() / 1000
+    return getSeconds({ milliseconds: this.timestampService.getTimeStamp() })
   }
 
   setCurrentQuestion(value = 0) {
@@ -147,10 +148,9 @@ export class QuestionsPageComponent {
   }
 
   setProgress() {
-    const percent = Math.ceil(
+    this.progress = Math.ceil(
       (this.currentQuestion * 100) / this.questions.length
     )
-    this.progress = percent
   }
 
   checkAnswer() {

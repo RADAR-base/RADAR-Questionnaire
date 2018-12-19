@@ -19,6 +19,7 @@ import { Assessment } from '../../shared/models/assessment'
 import { Utility } from '../../shared/utilities/util'
 import { Question } from '../../shared/models/question'
 import { NotificationService } from './notification.service'
+import { LocalizationService } from './localization.service'
 
 @Injectable()
 export class ConfigService {
@@ -28,6 +29,7 @@ export class ConfigService {
     private schedule: SchedulingService,
     private notifications: NotificationService,
     private util: Utility,
+    private localization: LocalizationService,
   ) {}
 
   fetchConfigState(force: boolean) {
@@ -117,26 +119,24 @@ export class ConfigService {
       })
   }
 
-  pullQuestionnaires(storageKey) {
-    return Promise.all([
-      this.storage.get(storageKey),
-      this.storage.get(StorageKeys.LANGUAGE),
-    ]).then(([assessments, lang]) => {
-      const localizedQuestionnaires = assessments
-        .map(a => this.pullQuestionnaireLang(a, lang))
+  pullQuestionnaires(storageKey): Promise<Assessment[]> {
+    return this.storage.get(storageKey)
+      .then(assessments => {
+        const localizedQuestionnaires = assessments
+          .map(a => this.pullQuestionnaireLang(a))
 
-      return Promise.all(localizedQuestionnaires)
-        .then(res => {
-          assessments.forEach((a, i) => {
-            a.questions = this.formatQuestionsHeaders(res[i])
-          });
-          return this.storage.set(storageKey, assessments)
-        })
-    })
+        return Promise.all(localizedQuestionnaires)
+          .then(res => {
+            assessments.forEach((a, i) => {
+              a.questions = this.formatQuestionsHeaders(res[i])
+            });
+            return this.storage.set(storageKey, assessments)
+          })
+      })
   }
 
-  pullQuestionnaireLang(assessment, lang): Promise<Object> {
-    const uri = this.formatQuestionnaireUri(assessment.questionnaire, lang.value)
+  pullQuestionnaireLang(assessment): Promise<Object> {
+    const uri = this.formatQuestionnaireUri(assessment.questionnaire, this.localization.getLanguage().value)
     return this.getQuestionnairesOfLang(uri)
       .catch(e => {
         const URI = this.formatQuestionnaireUri(assessment.questionnaire, '')
@@ -144,7 +144,7 @@ export class ConfigService {
       })
   }
 
-  formatQuestionnaireUri(questionnaireRepo, langVal) {
+  formatQuestionnaireUri(questionnaireRepo, langVal: string) {
     // NOTE: Using temp test repository for aRMT defs
     const repository = TEST_ARMT_DEF
       ? questionnaireRepo.repository.replace(ARMTDefBranchProd, ARMTDefBranchTest)

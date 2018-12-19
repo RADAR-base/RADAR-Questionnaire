@@ -12,24 +12,41 @@ import { LocKeys } from '../../shared/enums/localisations'
 import { StorageKeys } from '../../shared/enums/storage'
 import { MultiLanguageText } from '../../shared/models/text'
 import { StorageService } from './storage.service'
-
-const DEFAULT_LANG = 'en'
+import { LanguageSetting } from '../../shared/models/settings'
 
 @Injectable()
 export class LocalizationService {
-  preferredLang?: string
-  localeMoment: moment.Moment
+  readonly defaultLanguage: LanguageSetting = {
+    label: LocKeys.LANGUAGE_ENGLISH.toString(),
+    value: 'en'
+  }
+
+  private language: LanguageSetting = {...this.defaultLanguage}
+  private localeMoment: moment.Moment
 
   constructor(private storage: StorageService) {
+    this.localeMoment = moment()
     this.update()
   }
 
-  update() {
+  update(): Promise<LanguageSetting> {
     return this.storage.get(StorageKeys.LANGUAGE)
-      .then(language => {
-        this.preferredLang = language ? language.value : DEFAULT_LANG
-        this.localeMoment = moment().locale(this.preferredLang)
-      })
+      .then(language => this.updateLanguage(language))
+  }
+
+  setLanguage(language: LanguageSetting): Promise<LanguageSetting> {
+    return this.storage.set(StorageKeys.LANGUAGE, language)
+      .then(() => this.updateLanguage(language))
+  }
+
+  getLanguage(): LanguageSetting {
+    return this.language
+  }
+
+  private updateLanguage(language: LanguageSetting) {
+    this.language = language ? language : {...this.defaultLanguage}
+    this.localeMoment = moment().locale(this.language.value)
+    return this.language
   }
 
   translateKey(locKey: LocKeys) {
@@ -46,7 +63,7 @@ export class LocalizationService {
   }
 
   chooseText(loc: MultiLanguageText, defaultValue?: string) {
-    let translation = loc[this.preferredLang]
+    let translation = loc[this.language.value]
     if (translation !== undefined) {
       return translation
     }
@@ -68,7 +85,7 @@ export class LocalizationService {
 
   moment(time?: number | Date) {
     if (time !== undefined) {
-      return moment(time).locale(this.preferredLang)
+      return moment(time).locale(this.language.value)
     } else {
       return moment(this.localeMoment)
     }

@@ -43,7 +43,6 @@ export class SettingsPageComponent {
 
   constructor(
     public navCtrl: NavController,
-    public navParams: NavParams,
     public alertService: AlertService,
     public storage: StorageService,
     private appVersion: AppVersion,
@@ -51,7 +50,6 @@ export class SettingsPageComponent {
     private configService: ConfigService,
     private notificationGenerator: NotificationGeneratorService,
     public localization: LocalizationService,
-    private platform: Platform
   ) {}
 
   ionViewDidLoad() {
@@ -66,13 +64,14 @@ export class SettingsPageComponent {
   }
 
   loadSettings() {
+    this.language = this.localization.getLanguage()
+
     return Promise.all([
       this.storage.get(StorageKeys.CONFIG_VERSION),
       this.storage.get(StorageKeys.SCHEDULE_VERSION),
       this.storage.get(StorageKeys.PARTICIPANTID),
       this.storage.get(StorageKeys.PROJECTNAME),
       this.storage.get(StorageKeys.ENROLMENTDATE),
-      this.storage.get(StorageKeys.LANGUAGE),
       this.storage.get(StorageKeys.SETTINGS_NOTIFICATIONS),
       this.storage.get(StorageKeys.SETTINGS_LANGUAGES),
       this.storage.get(StorageKeys.SETTINGS_WEEKLYREPORT),
@@ -85,7 +84,6 @@ export class SettingsPageComponent {
         participantId,
         projectName,
         enrolmentDate,
-        language,
         settingsNotification,
         settingsLanguages,
         settingsWeeklyReport,
@@ -98,7 +96,6 @@ export class SettingsPageComponent {
         this.participantId = participantId
         this.projectName = projectName
         this.enrolmentDate = enrolmentDate
-        this.language = language
         this.notifications = settingsNotification
         this.languagesSelectable = settingsLanguages
         this.weeklyReport = settingsWeeklyReport
@@ -139,15 +136,13 @@ export class SettingsPageComponent {
             label: LanguageMap[selectedLanguageVal],
             value: selectedLanguageVal
           }
-          this.language = lang
-          this.storage.set(StorageKeys.LANGUAGE, lang).then(() =>
-            this.localization.update().then(() => {
+          this.localization.setLanguage(lang)
+            .then(() => {
+              this.language = lang
               this.showLoading = true
-              return this.configService
-                .updateConfigStateOnLanguageChange()
-                .then(() => this.backToSplash())
+              return this.configService.updateConfigStateOnLanguageChange()
             })
-          )
+            .then(() => this.backToSplash())
         }
       }
     ]

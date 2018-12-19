@@ -29,7 +29,6 @@ export class StorageService {
     participantLogin,
     projectName,
     sourceId,
-    language,
     createdDate,
     createdDateMidnight
   ) {
@@ -38,49 +37,26 @@ export class StorageService {
       .then(keys => {
         // TODO: Find out why this is hard-coded?
         if (keys.length <= 7) {
-          const enrolmentDateTime = new Date(createdDate)
-          const referenceDateTime = new Date(createdDateMidnight)
-          const enrolmentDate = this.set(
-            StorageKeys.ENROLMENTDATE,
-            enrolmentDateTime.getTime()
-          )
-          const referenceDate = this.set(
-            StorageKeys.REFERENCEDATE,
-            referenceDateTime.getTime()
-          )
+          const enrolmentDateTime = new Date(createdDate).getTime()
+          const referenceDateTime = new Date(createdDateMidnight).getTime()
+          this.set(StorageKeys.ENROLMENTDATE, enrolmentDateTime)
+          this.set(StorageKeys.REFERENCEDATE, referenceDateTime)
 
           const pId = this.set(StorageKeys.PARTICIPANTID, participantId)
-          const pLogin = this.set(
-            StorageKeys.PARTICIPANTLOGIN,
-            participantLogin
-          )
+          const pLogin = this.set(StorageKeys.PARTICIPANTLOGIN, participantLogin)
           const pName = this.set(StorageKeys.PROJECTNAME, projectName)
           const sId = this.set(StorageKeys.SOURCEID, sourceId)
 
-          const lang = this.set(StorageKeys.LANGUAGE, language)
-          const notif = this.set(
-            StorageKeys.SETTINGS_NOTIFICATIONS,
-            DefaultSettingsNotifications
-          )
-          const report = this.set(
-            StorageKeys.SETTINGS_WEEKLYREPORT,
-            DefaultSettingsWeeklyReport
-          )
-          const langs = this.set(
-            StorageKeys.SETTINGS_LANGUAGES,
-            DefaultSettingsSupportedLanguages
-          )
-          const version = this.set(
-            StorageKeys.SCHEDULE_VERSION,
-            DefaultScheduleVersion
-          )
+          const notif = this.set(StorageKeys.SETTINGS_NOTIFICATIONS, DefaultSettingsNotifications)
+          const report = this.set(StorageKeys.SETTINGS_WEEKLYREPORT, DefaultSettingsWeeklyReport)
+          const langs = this.set(StorageKeys.SETTINGS_LANGUAGES, DefaultSettingsSupportedLanguages)
+          const version = this.set(StorageKeys.SCHEDULE_VERSION, DefaultScheduleVersion)
 
           return Promise.all([
             pId,
             pName,
             pLogin,
             sId,
-            lang,
             notif,
             report,
             langs,

@@ -40,10 +40,7 @@ export class EnrolmentPageComponent {
 
   URLRegEx = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?'
 
-  language: LanguageSetting = {
-    label: LocKeys.LANGUAGE_ENGLISH.toString(),
-    value: 'en'
-  }
+  language?: LanguageSetting
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
 
   enterMetaQR = false
@@ -77,6 +74,7 @@ export class EnrolmentPageComponent {
   ionViewDidLoad() {
     this.slides.lockSwipes(true)
     return this.localization.update()
+      .then(lang => this.language = lang)
   }
 
   ionViewDidEnter() {}
@@ -207,7 +205,6 @@ export class EnrolmentPageComponent {
           participantLogin,
           projectName,
           sourceId,
-          this.language,
           createdDate,
           createdDateMidnight
         )
@@ -224,8 +221,7 @@ export class EnrolmentPageComponent {
   displayErrorMessage(error) {
     this.loading = false
     this.showOutcomeStatus = true
-    const msg = error.statusText + ' (' + error.status + ')'
-    this.outcomeStatus = msg
+    this.outcomeStatus = error.statusText + ' (' + error.status + ')'
     this.transitionStatuses()
   }
 
@@ -284,12 +280,11 @@ export class EnrolmentPageComponent {
             label: LanguageMap[selectedLanguageVal],
             value: selectedLanguageVal
           }
-          this.storage.set(StorageKeys.LANGUAGE, lang)
+          this.localization.setLanguage(lang)
             .then(() => {
               this.language = lang
-              return this.localization.update()
+              return this.navCtrl.setRoot(AppComponent)
             })
-            .then(() => this.navCtrl.setRoot(AppComponent))
         }
       }
     ]

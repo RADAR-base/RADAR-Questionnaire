@@ -36,16 +36,12 @@ export const DefaultTask: Task = {
   reportedCompletion: false,
   timestamp: 0,
   name: 'DEFAULT',
-  reminderSettings: {
-    unit: 'hour',
-    amount: 1,
-    repeat: 1
-  },
   nQuestions: 0,
   estimatedCompletionTime: 0,
   completionWindow: 0,
   warning: '',
-  isClinical: false
+  isClinical: false,
+  notifications: [],
 }
 
 export const DefaultSettingsSelectedLanguage: LanguageSetting = {

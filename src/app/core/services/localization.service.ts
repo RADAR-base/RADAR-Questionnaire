@@ -5,7 +5,7 @@ import 'moment/locale/it'
 import 'moment/locale/nl'
 
 import { Injectable } from '@angular/core'
-import moment from 'moment'
+import moment = require('moment')
 
 import { Localisations } from '../../../assets/data/localisations'
 import { LocKeys } from '../../shared/enums/localisations'
@@ -18,16 +18,18 @@ const DEFAULT_LANG = 'en'
 @Injectable()
 export class LocalizationService {
   preferredLang?: string
+  localeMoment: moment.Moment
 
   constructor(private storage: StorageService) {
     this.update()
   }
 
   update() {
-    return this.storage.get(StorageKeys.LANGUAGE).then(language => {
-      this.preferredLang = language ? language.value : DEFAULT_LANG
-      moment.locale(this.preferredLang)
-    })
+    return this.storage.get(StorageKeys.LANGUAGE)
+      .then(language => {
+        this.preferredLang = language ? language.value : DEFAULT_LANG
+        this.localeMoment = moment().locale(this.preferredLang)
+      })
   }
 
   translateKey(locKey: LocKeys) {
@@ -61,6 +63,14 @@ export class LocalizationService {
     } else {
       console.log('Missing localization ' + defaultValue)
       return defaultValue
+    }
+  }
+
+  moment(time?: number | Date) {
+    if (time !== undefined) {
+      return moment(time).locale(this.preferredLang)
+    } else {
+      return moment(this.localeMoment)
     }
   }
 }

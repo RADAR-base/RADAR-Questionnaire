@@ -69,7 +69,6 @@ export class HomePageComponent {
   }
 
   ionViewWillEnter() {
-    this.tasks = this.tasksService.getTasksOfToday()
     this.tasks.then(
       tasks => (this.tasksProgress = this.tasksService.getTaskProgress(tasks))
     )
@@ -81,6 +80,7 @@ export class HomePageComponent {
   }
 
   ionViewDidLoad() {
+    this.tasks = this.tasksService.getTasksOfToday()
     setInterval(() => {
       this.updateCurrentTask()
     }, 1000)

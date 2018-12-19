@@ -2,18 +2,15 @@ import { Component } from '@angular/core'
 import { Globalization } from '@ionic-native/globalization'
 import { NavController, NavParams } from 'ionic-angular'
 
-import {
-  DefaultNotificationRefreshTime,
-  DefaultNumberOfNotificationsToSchedule,
-} from '../../../../assets/data/defaultConfig'
+import { DefaultNotificationRefreshTime } from '../../../../assets/data/defaultConfig'
 import { ConfigService } from '../../../core/services/config.service'
 import { KafkaService } from '../../../core/services/kafka.service'
-import { NotificationService } from '../../../core/services/notification.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { EnrolmentPageComponent } from '../../auth/containers/enrolment-page.component'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { SplashService } from '../services/splash.service'
+import { NotificationService } from '../../../core/services/notification.service'
 
 @Component({
   selector: 'page-splash',
@@ -49,32 +46,27 @@ export class SplashPageComponent {
           this.storage.get(StorageKeys.TIME_ZONE),
           this.storage.get(StorageKeys.UTC_OFFSET)
         ])
-          .then(([timeZone, utcOffset]) => {
+          .then(([timeZone, prevUtcOffset]) => {
             return this.globalization
               .getDatePattern({
                 formatLength: 'short',
                 selector: 'date and time'
               })
               .then(res => {
-                const offset = new Date().getTimezoneOffset()
+                const utcOffset = new Date().getTimezoneOffset()
                 // NOTE: Cancels all notifications and reschedule tasks if timezone has changed
-                if (timeZone !== res.timezone || utcOffset !== offset) {
+                if (timeZone !== res.timezone || prevUtcOffset !== utcOffset) {
                   console.log(
                     '[SPLASH] Timezone has changed to ' +
                       res.timezone +
                       '. Cancelling notifications! Rescheduling tasks! Scheduling new notifications!'
                   )
-                  return this.storage
-                    .set(StorageKeys.TIME_ZONE, res.timezone)
-                    .then(() =>
-                      this.storage.set(StorageKeys.UTC_OFFSET, offset)
-                    )
-                    .then(() =>
-                      this.storage.set(StorageKeys.UTC_OFFSET_PREV, utcOffset)
-                    )
-                    .then(() =>
-                      this.configService.updateConfigStateOnTimezoneChange()
-                    )
+                  return Promise.all([
+                    this.storage.set(StorageKeys.TIME_ZONE, res.timezone),
+                    this.storage.set(StorageKeys.UTC_OFFSET, utcOffset),
+                    this.storage.set(StorageKeys.UTC_OFFSET_PREV, prevUtcOffset),
+                  ])
+                    .then(() => this.configService.updateConfigStateOnTimezoneChange())
                 } else {
                   console.log('[SPLASH] Current Timezone is ' + timeZone)
                 }
@@ -82,8 +74,7 @@ export class SplashPageComponent {
           })
           .then(() => {
             // NOTE: Only run this if not run in last DefaultNotificationRefreshTime
-            this.storage
-              .get(StorageKeys.LAST_NOTIFICATION_UPDATE)
+            this.storage.get(StorageKeys.LAST_NOTIFICATION_UPDATE)
               .then(lastUpdate => {
                 const timeElapsed = Date.now() - lastUpdate
                 if (
@@ -91,9 +82,7 @@ export class SplashPageComponent {
                   !lastUpdate
                 ) {
                   console.log('[SPLASH] Scheduling Notifications.')
-                  return this.notificationService.setNextXNotifications(
-                    DefaultNumberOfNotificationsToSchedule
-                  )
+                  return this.notificationService.publish()
                 } else {
                   console.log(
                     'Not Scheduling Notifications as ' +
@@ -112,13 +101,6 @@ export class SplashPageComponent {
           .then(() => {
             this.status = 'Sending cached answers...'
             return this.kafka.sendAllAnswersInCache()
-          })
-          .then(() => {
-            this.status = 'Retrieving storage...'
-
-            if (this.hasParentPage) {
-              return Promise.resolve(false)
-            }
           })
           .then(() => {
             let isFirstIonDidViewLoad = true

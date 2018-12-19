@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core'
-import moment from 'moment'
 
 import { AlertService } from '../../../../core/services/alert.service'
 import { LocalizationService } from '../../../../core/services/localization.service'
@@ -17,9 +16,9 @@ export class TaskCalendarComponent implements OnChanges {
   @Output()
   task: EventEmitter<Task> = new EventEmitter<Task>()
   @Input()
-  tasks
+  tasks: Promise<Task[]>
 
-  currentTime: String
+  currentTime: string
   timeIndex: Promise<number>
 
   constructor(
@@ -33,17 +32,15 @@ export class TaskCalendarComponent implements OnChanges {
   }
 
   setCurrentTime() {
-    const now = new Date()
-    this.currentTime = moment().format('LT') // locale time
-    this.timeIndex = this.getCurrentTimeIndex(now)
-  }
+    try {
+      this.currentTime = this.localization.moment().format('LT') // locale time
+    } catch (e) {
+      console.log(e)
+    }
 
-  // NOTE: Compare current time with the start times of the tasks and
-  // find out in between which tasks it should be shown in the interface
-  getCurrentTimeIndex(date: Date): Promise<number> {
-    return this.tasks.then(tasks =>
-      tasks.findIndex(t => t.timestamp >= date.getTime())
-    )
+    const now = new Date().getTime()
+    this.timeIndex = this.tasks
+      .then(tasks => tasks.findIndex(t => t.timestamp >= now))
   }
 
   clicked(task) {
@@ -70,5 +67,10 @@ export class TaskCalendarComponent implements OnChanges {
         }
       ]
     })
+  }
+
+  getStartTime(task: Task) {
+    return this.localization.moment(task.timestamp)
+      .format('LT')
   }
 }

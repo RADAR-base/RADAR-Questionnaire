@@ -123,7 +123,7 @@
     "prettier": "^1.13.7",
     "reflect-metadata": "^0.1.10",
     "rxjs-compat": "^6.3.2",
-    "rxjs-tslint": "^0.1.5",
+    "rxjs-tslint": "0.1.5",
     "stylefmt": "^6.0.0",
     "stylelint": "^7.10.1",
     "stylelint-config-standard": "^16.0.0",
@@ -131,7 +131,7 @@
     "tslint-angular": "^1.1.2",
     "tslint-config-prettier": "^1.15.0",
     "tslint-config-standard": "^5.0.2",
-    "typescript": "~2.7",
+    "typescript": "~2.7.0",
     "webpack": "^4.4.0",
     "webpack-sources": "^1.0.0"
   },

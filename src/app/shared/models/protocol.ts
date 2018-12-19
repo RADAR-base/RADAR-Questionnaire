@@ -6,10 +6,10 @@ export interface ClinicalProtocol {
 }
 
 export interface Protocol {
-  notification?: Notification
+  notification?: ProtocolNotification
   repeatProtocol: TimeInterval
   repeatQuestionnaire: RepeatQuestionnaire
-  reminders?: Reminder[]
+  reminders?: Reminder[] | Reminders
   clinicalProtocol?: ClinicalProtocol
   completionWindow?: TimeInterval
 }
@@ -21,17 +21,21 @@ export interface TimeInterval {
 
 export interface RepeatQuestionnaire {
   unit: string
-  unitFromZero: number[]
+  unitsFromZero: number[]
 }
 
 export interface Reminder {
   offset: TimeInterval
-  notification?: Notification
+  notification?: ProtocolNotification
 }
 
-export interface Notification {
+export interface Reminders extends TimeInterval{
+  repeat?: number
+}
+
+export interface ProtocolNotification {
   title?: MultiLanguageText
-  text: MultiLanguageText
+  text?: MultiLanguageText
   vibrate?: boolean
   sound?: boolean
 }

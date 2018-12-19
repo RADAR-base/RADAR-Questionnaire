@@ -98,8 +98,9 @@ export class StorageService {
   }
 
   set(key: StorageKeys, value: any): Promise<any> {
-    this.global[key.toString()] = value
-    return this.storage.set(key.toString(), value)
+    const k = key.toString()
+    this.global[k] = value
+    return this.storage.set(k, value)
   }
 
   push(key: StorageKeys, value: any): Promise<any> {

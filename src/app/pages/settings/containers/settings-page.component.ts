@@ -11,7 +11,6 @@ import {
 import { AlertService } from '../../../core/services/alert.service'
 import { ConfigService } from '../../../core/services/config.service'
 import { LocalizationService } from '../../../core/services/localization.service'
-import { NotificationService } from '../../../core/services/notification.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { LocKeys } from '../../../shared/enums/localisations'
@@ -22,6 +21,7 @@ import {
   WeeklyReportSubSettings,
 } from '../../../shared/models/settings'
 import { SplashPageComponent } from '../../splash/containers/splash-page.component'
+import { NotificationGeneratorService } from '../../../core/services/notification-generator.service'
 
 @Component({
   selector: 'page-settings',
@@ -49,7 +49,7 @@ export class SettingsPageComponent {
     private appVersion: AppVersion,
     private schedule: SchedulingService,
     private configService: ConfigService,
-    private notificationService: NotificationService,
+    private notificationGenerator: NotificationGeneratorService,
     public localization: LocalizationService,
     private platform: Platform
   ) {}
@@ -179,28 +179,8 @@ export class SettingsPageComponent {
   }
 
   consoleLogNotifications() {
-    this.notificationService.consoleLogScheduledNotifications()
-  }
-
-  testNotifications() {
-    const buttons = [
-      {
-        text: this.localization.translateKey(LocKeys.BTN_CANCEL),
-        handler: () => {}
-      },
-      {
-        text: this.localization.translateKey(LocKeys.CLOSE_APP),
-        handler: () => {
-          this.notificationService.testFCMNotifications()
-          this.platform.exitApp()
-        },
-      },
-    ]
-    return this.alertService.showAlert({
-      title: this.localization.translateKey(LocKeys.TESTING_NOTIFICATIONS),
-      message: this.localization.translateKey(LocKeys.TESTING_NOTIFICATIONS_MESSAGE),
-      buttons: buttons,
-    })
+    this.schedule.getTasks()
+      .then(tasks => this.notificationGenerator.consoleLogNotifications(tasks))
   }
 
   consoleLogSchedule() {

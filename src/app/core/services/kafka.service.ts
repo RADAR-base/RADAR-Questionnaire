@@ -33,7 +33,7 @@ export class KafkaService {
 
   constructor(
     private util: Utility,
-    public storage: StorageService,
+    private storage: StorageService,
     private authService: AuthService
   ) {
     this.updateURI()

@@ -6,7 +6,6 @@ import { Injectable } from '@angular/core'
 import {
   ARMTDefBranchProd,
   ARMTDefBranchTest,
-  DefaultNumberOfNotificationsToSchedule,
   DefaultProtocolEndPoint,
   DefaultProtocolURI,
   DefaultQuestionnaireFormatURI,
@@ -14,9 +13,12 @@ import {
   TEST_ARMT_DEF,
 } from '../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../shared/enums/storage'
-import { NotificationService } from './notification.service'
 import { SchedulingService } from './scheduling.service'
 import { StorageService } from './storage.service'
+import { Assessment } from '../../shared/models/assessment'
+import { Utility } from '../../shared/utilities/util'
+import { Question } from '../../shared/models/question'
+import { NotificationService } from './notification.service'
 
 @Injectable()
 export class ConfigService {
@@ -24,7 +26,8 @@ export class ConfigService {
     public http: HttpClient,
     public storage: StorageService,
     private schedule: SchedulingService,
-    private notificationService: NotificationService
+    private notifications: NotificationService,
+    private util: Utility,
   ) {}
 
   fetchConfigState(force: boolean) {
@@ -32,72 +35,49 @@ export class ConfigService {
       this.storage.get(StorageKeys.CONFIG_VERSION),
       this.storage.get(StorageKeys.SCHEDULE_VERSION),
       this.pullProtocol(),
-    ]).then(([configVersion, scheduleVersion, res]) => {
-      if (!res) {
+    ]).then(([configVersion, scheduleVersion, response]) => {
+      if (!response) {
         return Promise.reject({
           message: 'No response from server'
         })
       }
-      const response: any = JSON.parse(res)
+      const responseData: any = JSON.parse(response)
       if (
-        configVersion !== response.version ||
-        scheduleVersion !== response.version ||
+        configVersion !== responseData.version ||
+        scheduleVersion !== responseData.version ||
         force
       ) {
-        this.storage.set(StorageKeys.HAS_CLINICAL_TASKS, false)
-        const protocolFormated = this.formatPulledProcotol(response.protocols)
-        const scheduledAssessments = []
-        const clinicalAssessments = []
-        for (let i = 0; i < protocolFormated.length; i++) {
-          const clinical = protocolFormated[i]['protocol']['clinicalProtocol']
-          if (clinical) {
-            this.storage.set(StorageKeys.HAS_CLINICAL_TASKS, true)
-            clinicalAssessments.push(protocolFormated[i])
-          } else {
-            scheduledAssessments.push(protocolFormated[i])
-          }
-        }
-        return this.storage
-          .set(StorageKeys.CONFIG_VERSION, response.version)
-          .then(() => {
-            return this.storage
-              .set(
-                StorageKeys.CONFIG_CLINICAL_ASSESSMENTS,
-                clinicalAssessments
-              )
-              .then(() => {
-                console.log('Pulled clinical questionnaire')
-                return this.pullQuestionnaires(
-                  StorageKeys.CONFIG_CLINICAL_ASSESSMENTS
-                )
-              })
-          })
-          .then(() => {
-            return this.storage
-              .set(StorageKeys.CONFIG_ASSESSMENTS, scheduledAssessments)
-              .then(() => {
-                console.log('Pulled questionnaire')
-                return this.pullQuestionnaires(StorageKeys.CONFIG_ASSESSMENTS)
-              })
-          })
+        const assessments = this.formatPulledProcotol(responseData.protocols)
+        const {
+          negative: scheduledAssessments,
+          positive: clinicalAssessments
+        } = this.util.partition(assessments, a => a.protocol.clinicalProtocol)
+
+        this.storage.set(StorageKeys.HAS_CLINICAL_TASKS, clinicalAssessments.length > 0)
+
+        return Promise.all([
+            this.storage.set(StorageKeys.CONFIG_VERSION, responseData.version),
+            this.updateAssessments(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS, clinicalAssessments),
+            this.updateAssessments(StorageKeys.CONFIG_ASSESSMENTS, scheduledAssessments),
+          ])
           .then(() => this.schedule.generateSchedule(true))
           .then(() => this.rescheduleNotifications())
       } else {
-        console.log(
-          'NO CONFIG UPDATE. Version of protocol.json has not changed.'
-        )
+        console.log('NO CONFIG UPDATE. Version of protocol.json has not changed.')
         return this.schedule.generateSchedule(false)
       }
     })
   }
 
+  private updateAssessments(key: StorageKeys, assessments: Assessment[]) {
+    return this.storage.set(key, assessments)
+      .then(() => this.pullQuestionnaires(key))
+  }
+
   rescheduleNotifications() {
-    return this.notificationService.cancelNotifications().then(() => {
-      // NOTE: Set notification here too so scheduled everytime the schedule changes too.
-      return this.notificationService
-        .setNextXNotifications(DefaultNumberOfNotificationsToSchedule)
-        .then(() => console.log('NOTIFICATIONS scheduled after config change'))
-    })
+    return this.notifications.cancel()
+      .then(() => this.notifications.publish())
+      .then(() => console.log('NOTIFICATIONS scheduled after config change'))
   }
 
   updateConfigStateOnLanguageChange() {
@@ -113,88 +93,61 @@ export class ConfigService {
   }
 
   pullProtocol() {
-    return this.getProjectName().then(projectName => {
-      if (projectName) {
-        const URI = DefaultProtocolEndPoint + projectName + DefaultProtocolURI
-        return this.http.get(URI, { responseType: 'text' }).toPromise()
-      } else {
-        console.error(
-          'Unknown project name : ' + projectName + '. Cannot pull protocols.'
-        )
-      }
-    })
+    return this.getProjectName()
+      .then(projectName => {
+        if (projectName) {
+          const URI = DefaultProtocolEndPoint + projectName + DefaultProtocolURI
+          return this.http.get(URI, { responseType: 'text' }).toPromise()
+        } else {
+          console.error('Unknown project name : ' + projectName + '. Cannot pull protocols.')
+        }
+      })
   }
 
   getProjectName() {
     return this.storage.get(StorageKeys.PROJECTNAME)
   }
 
-  formatPulledProcotol(protocols) {
-    const protocolsFormated = protocols
-    for (let i = 0; i < protocolsFormated.length; i++) {
-      protocolsFormated[i].questionnaire['type'] = DefaultQuestionnaireTypeURI
-      protocolsFormated[i].questionnaire[
-        'format'
-      ] = DefaultQuestionnaireFormatURI
-    }
-    return protocolsFormated
-  }
-
-  retrieveLanguageKeys(questionnaireURI) {
-    const langs = []
-    for (const key in questionnaireURI) {
-      if (key) {
-        langs.push(key)
-      }
-    }
-    const langsKeyValEmpty = {}
-    for (const val of langs) {
-      langsKeyValEmpty[val] = ''
-    }
-    return langsKeyValEmpty
+  formatPulledProcotol(protocols: Assessment[]): Assessment[] {
+    return protocols
+      .map(p => {
+        p.questionnaire.type = DefaultQuestionnaireTypeURI
+        p.questionnaire.format = DefaultQuestionnaireFormatURI
+        return p
+      })
   }
 
   pullQuestionnaires(storageKey) {
-    const assessments = this.storage.get(storageKey)
-    const lang = this.storage.get(StorageKeys.LANGUAGE)
-    return Promise.all([assessments, lang]).then(vars => {
-      const assessmentsResult = vars[0]
-      const langResult = vars[1]
+    return Promise.all([
+      this.storage.get(storageKey),
+      this.storage.get(StorageKeys.LANGUAGE),
+    ]).then(([assessments, lang]) => {
+      const localizedQuestionnaires = assessments
+        .map(a => this.pullQuestionnaireLang(a, lang))
 
-      const promises = []
-      for (let i = 0; i < assessmentsResult.length; i++) {
-        promises.push(
-          this.pullQuestionnaireLang(assessmentsResult[i], langResult)
-        )
-      }
-      return Promise.all(promises).then(res => {
-        const assessmentUpdate = assessmentsResult
-        for (let i = 0; i < assessmentsResult.length; i++) {
-          assessmentUpdate[i]['questions'] = this.formatQuestionsHeaders(res[i])
-        }
-        return this.storage.set(storageKey, assessmentUpdate)
-      })
+      return Promise.all(localizedQuestionnaires)
+        .then(res => {
+          assessments.forEach((a, i) => {
+            a.questions = this.formatQuestionsHeaders(res[i])
+          });
+          return this.storage.set(storageKey, assessments)
+        })
     })
   }
 
-  pullQuestionnaireLang(assessment, lang) {
-    const uri = this.formatQuestionnaireUri(
-      assessment.questionnaire,
-      lang.value
-    )
-    return this.getQuestionnairesOfLang(uri).catch(e => {
-      const URI = this.formatQuestionnaireUri(assessment.questionnaire, '')
-      return this.getQuestionnairesOfLang(URI)
-    })
+  pullQuestionnaireLang(assessment, lang): Promise<Object> {
+    const uri = this.formatQuestionnaireUri(assessment.questionnaire, lang.value)
+    return this.getQuestionnairesOfLang(uri)
+      .catch(e => {
+        const URI = this.formatQuestionnaireUri(assessment.questionnaire, '')
+        return this.getQuestionnairesOfLang(URI)
+      })
   }
 
   formatQuestionnaireUri(questionnaireRepo, langVal) {
     // NOTE: Using temp test repository for aRMT defs
     const repository = TEST_ARMT_DEF
-      ? questionnaireRepo.repository.replace(
-          ARMTDefBranchProd,
-          ARMTDefBranchTest
-        )
+      ? questionnaireRepo.repository.replace(ARMTDefBranchProd, ARMTDefBranchTest)
       : questionnaireRepo.repository
     let uri = repository + questionnaireRepo.name + '/'
     uri += questionnaireRepo.name + questionnaireRepo.type
@@ -206,21 +159,25 @@ export class ConfigService {
     return uri
   }
 
-  getQuestionnairesOfLang(URI) {
-    return this.http.get(URI).toPromise()
+  getQuestionnairesOfLang(URI): Promise<Question[]> {
+    return (this.http.get(URI).toPromise()
+        .then(res => {
+          if (res instanceof Array) {
+            return Promise.resolve(res);
+          } else {
+            return Promise.reject({message: 'URL does not contain an array of questions'})
+          }
+        }) as Promise<Question[]>)
   }
 
   formatQuestionsHeaders(questions) {
-    const questionsFormated = questions
-    let sectionHeader = questionsFormated[0].section_header
-    for (let i = 0; i < questionsFormated.length; i++) {
-      if (questionsFormated[i].section_header === '') {
-        questionsFormated[i].section_header = sectionHeader
-      } else {
-        sectionHeader = questionsFormated[i].section_header
-      }
-    }
-    return questionsFormated
+    questions
+      .forEach((q, i) => {
+        if (!q.section_header && i > 0) {
+          q.section_header = questions[i - 1].section_header
+        }
+      })
+    return questions
   }
 
   migrateToLatestVersion() {

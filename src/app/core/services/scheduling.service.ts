@@ -2,17 +2,15 @@ import 'rxjs/add/operator/map'
 
 import { Injectable } from '@angular/core'
 
-import {
-  DefaultScheduleReportRepeat,
-  DefaultScheduleYearCoverage,
-} from '../../../assets/data/defaultConfig'
+import { DefaultScheduleYearCoverage } from '../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../shared/enums/storage'
 import { Assessment } from '../../shared/models/assessment'
 import { TimeInterval } from '../../shared/models/protocol'
-import { ReportScheduling } from '../../shared/models/report'
 import { Task } from '../../shared/models/task'
 import { getMilliseconds } from '../../shared/utilities/time'
 import { StorageService } from './storage.service'
+import { NotificationGeneratorService } from './notification-generator.service'
+import { LocalizationService } from './localization.service'
 
 export const TIME_UNIT_MILLIS = {
   min: getMilliseconds({minutes: 1}),
@@ -31,43 +29,31 @@ export class SchedulingService {
   configVersion: number
   enrolmentDate: number
   completedTasks = []
-  upToDate: Promise<Boolean>
   assessments: Promise<Assessment[]>
   tzOffset: number
   utcOffsetPrev: number
 
-  constructor(public storage: StorageService) {
+  constructor(
+    private storage: StorageService,
+    private notificationService: NotificationGeneratorService,
+    private localization: LocalizationService,
+  ) {
     const now = new Date()
     this.tzOffset = now.getTimezoneOffset()
     console.log(this.storage.global)
   }
 
-  getNextTask() {
-    return this.getTasks().then(schedule => {
-      if (schedule) {
-        const timestamp = Date.now()
-        return schedule
-          .filter(d => d.timestamp >= timestamp)
-          .reduce((a, b) => (a.timestamp <= b.timestamp ? a : b))
-      }
-    })
-  }
-
   getTasksForDate(date) {
-    return this.getTasks().then(schedule => {
-      if (schedule) {
-        const startDate = this.setDateTimeToMidnight(date)
-        const endDate = SchedulingService.advanceRepeat(startDate, {
-          unit: 'day',
-          amount: 1,
-        })
+    return this.getTasks()
+      .then(schedule => {
+        const startTime = this.setDateTimeToMidnight(date).getTime()
+        const endTime = startTime + getMilliseconds({days: 1})
         return schedule.filter(
           d =>
-            d.timestamp >= startDate.getTime() &&
-            d.timestamp < endDate.getTime()
+            d.timestamp >= startTime &&
+            d.timestamp < endTime
         )
-      }
-    })
+      })
   }
 
   getTasks(): Promise<Task[]> {
@@ -75,64 +61,37 @@ export class SchedulingService {
       this.getDefaultTasks(),
       this.getClinicalTasks(),
     ]).then(([defaultTasks, clinicalTasks]) => {
-      if (!defaultTasks) {
-        defaultTasks = []
-      }
-      if (!clinicalTasks) {
-        clinicalTasks = [];
-      }
-      return defaultTasks.concat(clinicalTasks);
+      const allTasks = (defaultTasks || []).concat(clinicalTasks || [])
+      allTasks.forEach(t => {
+        if (t.notifications === undefined) {
+          t.notifications = []
+        }
+      })
+      return allTasks
     })
   }
 
-  getDefaultTasks() {
+  getDefaultTasks(): Promise<Task[]> {
     return this.storage.get(StorageKeys.SCHEDULE_TASKS)
   }
 
-  getClinicalTasks() {
+  getClinicalTasks(): Promise<Task[]>  {
     return this.storage.get(StorageKeys.SCHEDULE_TASKS_CLINICAL)
   }
 
-  getCompletedTasks() {
+  getCompletedTasks(): Promise<Task[]>  {
     return this.storage.get(StorageKeys.SCHEDULE_TASKS_COMPLETED)
   }
 
-  getNonReportedCompletedTasks() {
-    return Promise.all([this.getDefaultTasks(), this.getClinicalTasks()]).then(
-      defaultAndClinicalTasks => {
-        const tasks = defaultAndClinicalTasks[0].concat(
-          defaultAndClinicalTasks[1]
-        )
+  getNonReportedCompletedTasks(): Promise<Task[]> {
+    return this.getTasks()
+      .then(tasks => {
         const now = new Date().getTime()
         return tasks
           .filter(d => d && d.reportedCompletion === false && d.timestamp < now)
           .slice(0, 100)
       }
     )
-  }
-
-  getCurrentReport() {
-    return this.getReports().then(reports => {
-      if (reports) {
-        const now = new Date().getTime()
-        const delta = DefaultScheduleReportRepeat + 1
-        return reports
-          .filter(d => d.timestamp <= now && d.timestamp + delta > now)
-          .reduce((a, b) => (a.timestamp >= b.timestamp ? a : b))
-      }
-    })
-  }
-
-  getReports() {
-    const schedule = this.storage.get(StorageKeys.SCHEDULE_REPORT)
-    return Promise.resolve(schedule)
-  }
-
-  updateReport(updatedReport) {
-    this.getReports().then(updatedReports => {
-      updatedReports[updatedReport.index] = updatedReport
-      this.setReportSchedule(updatedReports)
-    })
   }
 
   generateSchedule(force: boolean) {
@@ -156,22 +115,11 @@ export class SchedulingService {
   }
 
   runScheduler() {
-    // NOTE: Temporarily turn off build report schedule.
-    // this.buildReportSchedule()
-    //   .then(schedule => this.setReportSchedule(schedule))
-    //   .catch(e => console.error(e))
-
-    return Promise.all([
-      this.storage.get(StorageKeys.CONFIG_ASSESSMENTS),
-      this.storage.get(StorageKeys.LANGUAGE),
-    ]).then(([assessments, language]) => this.buildTaskSchedule(assessments, language))
-      .catch(e => console.error(e))
-      .then((schedule: Task[]) => this.setSchedule(schedule))
-      .catch(e => console.error(e))
-  }
-
-  getAssessments() {
     return this.storage.get(StorageKeys.CONFIG_ASSESSMENTS)
+      .then(assessments => this.buildTaskSchedule(assessments))
+      .catch(e => console.error(e))
+      .then((tasks: Task[]) => this.setSchedule(tasks))
+      .catch(e => console.error(e))
   }
 
   insertTask(task): Promise<any> {
@@ -194,20 +142,19 @@ export class SchedulingService {
     return this.storage.push(StorageKeys.SCHEDULE_TASKS_COMPLETED, task)
   }
 
-  updateScheduleWithCompletedTasks(schedule): Task[] {
+  updateScheduleWithCompletedTasks(schedule: Task[]): Task[] {
     // NOTE: If utcOffsetPrev exists, timezone has changed
     if (this.utcOffsetPrev != null) {
-      this.storage
-        .remove(StorageKeys.SCHEDULE_TASKS_COMPLETED)
+      this.storage.remove(StorageKeys.SCHEDULE_TASKS_COMPLETED)
         .then(() => {
           const currentMidnight = new Date().setHours(0, 0, 0, 0)
-          const prevMidnight =
-            new Date().setUTCHours(0, 0, 0, 0) + getMilliseconds({minutes: this.utcOffsetPrev})
+          const prevMidnight = new Date().setUTCHours(0, 0, 0, 0)
+            + getMilliseconds({minutes: this.utcOffsetPrev})
 
           this.completedTasks.map(d => {
             const finishedToday = schedule.find(s =>
-              s.timestamp - currentMidnight == d.timestamp - prevMidnight &&
-              s.name == d.name
+              s.timestamp - currentMidnight == d.timestamp - prevMidnight
+              && s.name == d.name
             )
             if (finishedToday !== undefined) {
               finishedToday.completed = true
@@ -227,10 +174,10 @@ export class SchedulingService {
     return schedule
   }
 
-  buildTaskSchedule(assessments, lang: string) {
+  buildTaskSchedule(assessments: Assessment[]): Promise<Task[]> {
     let schedule: Task[] = assessments.reduce(
       (list, assessment) =>
-        list.concat(this.buildTasksForSingleAssessment(assessment, list.length, lang)),
+        list.concat(this.buildTasksForSingleAssessment(assessment, list.length)),
       []
     )
     // NOTE: Check for completed tasks
@@ -241,33 +188,32 @@ export class SchedulingService {
     return Promise.resolve(schedule)
   }
 
-  buildTasksForSingleAssessment(assessment, indexOffset, lang: string) {
+  buildTasksForSingleAssessment(assessment: Assessment, indexOffset: number): Task[] {
     const repeatP = assessment.protocol.repeatProtocol
     const repeatQ = assessment.protocol.repeatQuestionnaire
 
-    let iterDate = this.setDateTimeToMidnight(new Date(this.enrolmentDate))
-    const endDate = new Date(iterDate.getTime()
-      + getMilliseconds({ years: DefaultScheduleYearCoverage }))
+    let iterTime = this.setDateTimeToMidnight(new Date(this.enrolmentDate)).getTime()
+    const endTime = iterTime + getMilliseconds({ years: DefaultScheduleYearCoverage })
 
     console.log(assessment)
 
     const today = this.setDateTimeToMidnight(new Date())
     const tmpScheduleAll: Task[] = []
-    while (iterDate.getTime() <= endDate.getTime()) {
+    while (iterTime <= endTime) {
       for (let i = 0; i < repeatQ.unitsFromZero.length; i++) {
-        const taskDate = SchedulingService.advanceRepeat(iterDate, {
+        const taskTime = SchedulingService.advanceRepeat(iterTime, {
           unit: repeatQ.unit,
           amount: repeatQ.unitsFromZero[i],
         })
 
-        if (taskDate.getTime() > today.getTime()) {
+        if (taskTime > today.getTime()) {
           const idx = indexOffset + tmpScheduleAll.length
-          const task = SchedulingService.taskBuilder(idx, assessment, taskDate, lang)
+          const task = this.taskBuilder(idx, assessment, taskTime)
           tmpScheduleAll.push(task)
         }
       }
-      iterDate = this.setDateTimeToMidnight(iterDate)
-      iterDate = SchedulingService.advanceRepeat(iterDate, repeatP)
+      iterTime = this.setDateTimeToMidnight(new Date(iterTime)).getTime()
+      iterTime = SchedulingService.advanceRepeat(iterTime, repeatP)
     }
 
     return tmpScheduleAll
@@ -284,8 +230,8 @@ export class SchedulingService {
     return resetDate
   }
 
-  static advanceRepeat(date: Date, interval: TimeInterval): Date {
-    return new Date(date.getTime() + this.timeIntervalToMillis(interval))
+  static advanceRepeat(timestamp: number, interval: TimeInterval): number {
+    return timestamp + this.timeIntervalToMillis(interval)
   }
 
   static timeIntervalToMillis(interval: TimeInterval): number {
@@ -297,90 +243,59 @@ export class SchedulingService {
     return amount * TIME_UNIT_MILLIS[unit]
   }
 
-  static taskBuilder(
+  taskBuilder(
     index,
     assessment: Assessment,
-    taskDate: Date,
-    language: string
+    timestamp: number,
   ): Task {
-    return {
-      index: index,
+    const task: Task = {
+      index,
+      timestamp,
       completed: false,
       reportedCompletion: false,
-      timestamp: taskDate.getTime(),
       name: assessment.name,
-      reminderSettings: assessment.protocol.reminders,
       nQuestions: assessment.questions.length,
       estimatedCompletionTime: assessment.estimatedCompletionTime,
       completionWindow: SchedulingService.computeCompletionWindow(assessment),
-      warning: assessment.warn[language],
-      isClinical: false
+      warning: this.localization.chooseText(assessment.warn),
+      isClinical: false,
     }
+    task.notifications = this.notificationService.createNotifications(assessment, task)
+    return task
   }
 
   static computeCompletionWindow(assessment: Assessment): number {
     if (assessment.protocol.completionWindow) {
       return this.timeIntervalToMillis(assessment.protocol.completionWindow)
     } else if (assessment.name === 'ESM') {
-      return TIME_UNIT_MILLIS.min * 15
+      return getMilliseconds({minutes: 15})
     } else {
-      return TIME_UNIT_MILLIS.day
+      return getMilliseconds({days: 1})
     }
   }
 
-  setSchedule(schedule) {
-    return this.storage.set(StorageKeys.SCHEDULE_TASKS, schedule).then(() => {
-      return this.storage.set(StorageKeys.SCHEDULE_VERSION, this.configVersion)
-    })
-  }
-
-  buildReportSchedule() {
-    let iterDate = this.setDateTimeToMidnight(new Date(this.enrolmentDate))
-    const yearsMillis = getMilliseconds({ years: DefaultScheduleYearCoverage })
-    const endDate = new Date(iterDate.getTime() + yearsMillis)
-    const tmpSchedule: ReportScheduling[] = []
-
-    while (iterDate.getTime() <= endDate.getTime()) {
-      iterDate = SchedulingService.advanceRepeat(iterDate, {
-        unit: 'day',
-        amount: DefaultScheduleReportRepeat,
-      })
-      const report = SchedulingService.reportBuilder(tmpSchedule.length, iterDate)
-      tmpSchedule.push(report)
-    }
-    console.log('[√] Updated report schedule.')
-    return Promise.resolve(tmpSchedule)
-  }
-
-  static reportBuilder(index: number, reportDate: Date): ReportScheduling {
-    const timestamp = reportDate.getTime()
-    return {
-      index: index,
-      timestamp: timestamp,
-      viewed: false,
-      firstViewedOn: 0,
-      range: {
-        timestampStart: timestamp - getMilliseconds({days: DefaultScheduleReportRepeat}),
-        timestampEnd: timestamp,
-      },
-    }
-  }
-
-  setReportSchedule(schedule) {
-    this.storage.set(StorageKeys.SCHEDULE_REPORT, schedule)
+  /**
+   * Store the current schedule.
+   * @param schedule tasks to store
+   * @return current configuration version
+   */
+  setSchedule(schedule: Task[]): Promise<number> {
+    return this.storage.set(StorageKeys.SCHEDULE_TASKS, schedule)
+      .then(() => this.storage.set(StorageKeys.SCHEDULE_VERSION, this.configVersion))
   }
 
   consoleLogSchedule() {
-    this.getTasks().then(tasks => {
-      let rendered = `\nSCHEDULE Total (${tasks.length})\n`
-      rendered += tasks
-        .sort(SchedulingService.compareTasks)
-        .slice(-10)
-        .map(t => `${t.timestamp}-${t.name} DATE ${new Date(t.timestamp)} NAME ${t.name}`)
-        .reduce((a, b) => a + '\n' + b)
+    this.getTasks()
+      .then(tasks => {
+        let rendered = `\nSCHEDULE Total (${tasks.length})\n`
+        rendered += tasks
+          .sort(SchedulingService.compareTasks)
+          .slice(-10)
+          .map(t => `${t.timestamp}-${t.name} DATE ${new Date(t.timestamp)} NAME ${t.name}`)
+          .reduce((a, b) => a + '\n' + b)
 
-      console.log(rendered)
-    })
+        console.log(rendered)
+      })
   }
 
   static compareTasks(a, b) {

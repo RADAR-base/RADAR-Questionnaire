@@ -284,12 +284,12 @@ export class EnrolmentPageComponent {
             label: LanguageMap[selectedLanguageVal],
             value: selectedLanguageVal
           }
-          this.storage.set(StorageKeys.LANGUAGE, lang).then(() => {
-            this.language = lang
-            this.localization
-              .update()
-              .then(() => this.navCtrl.setRoot(AppComponent))
-          })
+          this.storage.set(StorageKeys.LANGUAGE, lang)
+            .then(() => {
+              this.language = lang
+              return this.localization.update()
+            })
+            .then(() => this.navCtrl.setRoot(AppComponent))
         }
       }
     ]

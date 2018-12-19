@@ -279,32 +279,29 @@ export class HomePageComponent {
       this.startingQuestionnaire = true
     }
 
-    Promise.all([
-      this.storage.get(StorageKeys.LANGUAGE),
-      this.tasksService.getAssessment(startQuestionnaireTask)
-    ]).then(([lang, assessment]) => {
-      const language = lang.value
-      const params = {
-        title: assessment.name,
-        introduction: assessment.startText[language],
-        endText: assessment.endText[language],
-        questions: assessment.questions,
-        associatedTask: startQuestionnaireTask,
-        assessment: assessment,
-        isLastTask: false
-      }
+    return this.tasksService.getAssessment(startQuestionnaireTask)
+      .then(assessment => {
+        const params = {
+          title: assessment.name,
+          introduction: this.localization.chooseText(assessment.startText),
+          endText: this.localization.chooseText(assessment.endText),
+          questions: assessment.questions,
+          associatedTask: startQuestionnaireTask,
+          assessment: assessment,
+          isLastTask: false
+        }
 
-      this.tasksService
-        .isLastTask(startQuestionnaireTask, this.tasks)
-        .then(lastTask => (params.isLastTask = lastTask))
-        .then(() => {
-          if (assessment.showIntroduction) {
-            this.navCtrl.push(StartPageComponent, params)
-          } else {
-            this.navCtrl.push(QuestionsPageComponent, params)
-          }
-        })
-    })
+        this.tasksService
+          .isLastTask(startQuestionnaireTask, this.tasks)
+          .then(lastTask => (params.isLastTask = lastTask))
+          .then(() => {
+            if (assessment.showIntroduction) {
+              this.navCtrl.push(StartPageComponent, params)
+            } else {
+              this.navCtrl.push(QuestionsPageComponent, params)
+            }
+          })
+      })
   }
 
   showCredits() {

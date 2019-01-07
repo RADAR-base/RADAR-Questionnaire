@@ -114,7 +114,8 @@ export class AuthService {
         const subjectInformation: any = res
         const participantId = subjectInformation.sub
         const participantLogin = subjectInformation.username
-        const projectName = subjectInformation.project
+        const projectName = subjectInformation.project ? subjectInformation.project
+          : 'STAGING_PROJECT'; // TODO remove this condition. hardcoded check for testing purpose. Remove when firebase is enabled.
         const createdDate = new Date(subjectInformation.createdTimestamp);
         const createdDateMidnight = this.schedule.setDateTimeToMidnight(
           createdDate

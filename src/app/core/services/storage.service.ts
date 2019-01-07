@@ -37,7 +37,8 @@ export class StorageService {
     return allKeys
       .then(keys => {
         // TODO: Find out why this is hard-coded?
-        if (keys.length <= 7) {
+        if (keys.length <= 9) {
+
           const enrolmentDateTime = new Date(createdDate)
           const referenceDateTime = new Date(createdDateMidnight)
           const enrolmentDate = this.set(

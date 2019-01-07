@@ -173,10 +173,28 @@ export class EnrolmentPageComponent {
   }
 
   goToRegistration() {
-    this.authService.keycloakLogin(false).then(success => {
-    }, (error) => {
-      console.log(error);
-    });
+
+    this.authService.keycloakLogin(false)
+      .then(() => {
+        this.showOutcomeStatus = false
+        this.transitionStatuses()
+        this.authService.retrieveUserInformation(this.language)
+          .then(() => {
+            this.configService.fetchConfigState(true)
+              .then(() => this.navigateToHome());
+          })
+      })
+      .catch( () => {
+        this.loading = false;
+        this.alertCtrl.create({
+          title: "Something went wrong",
+          buttons: [{
+            text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+            handler: () => {}
+          }],
+          message: "Could not successfully register new participant. Please try again later."
+        }).present();
+      });
   }
 
 }

@@ -10,6 +10,7 @@ import { StorageKeys } from '../../shared/enums/storage'
 import { Assessment } from '../../shared/models/assessment'
 import { ReportScheduling } from '../../shared/models/report'
 import { Task } from '../../shared/models/task'
+import { getMilliseconds } from '../../shared/utilities/time'
 import { StorageService } from './storage.service'
 
 @Injectable()
@@ -282,7 +283,7 @@ export class SchedulingService {
     const repeatQ = assessment.protocol.repeatQuestionnaire
 
     let iterDate = this.setDateTimeToMidnight(new Date(this.enrolmentDate))
-    const yearsMillis = DefaultScheduleYearCoverage * 60000 * 60 * 24 * 365
+    const yearsMillis = getMilliseconds({ year: DefaultScheduleYearCoverage })
     const endDate = new Date(iterDate.getTime() + yearsMillis)
 
     console.log(assessment)
@@ -322,37 +323,15 @@ export class SchedulingService {
   }
 
   advanceRepeat(date, unit, multiplier) {
-    let returnDate = new Date(date.getTime())
-    switch (unit) {
-      case 'min':
-        returnDate = new Date(date.getTime() + multiplier * 60000)
-        break
-      case 'hour':
-        returnDate = new Date(date.getTime() + multiplier * 60000 * 60)
-        break
-      case 'day':
-        returnDate = new Date(date.getTime() + multiplier * 60000 * 60 * 24)
-        break
-      case 'week':
-        returnDate = new Date(date.getTime() + multiplier * 60000 * 60 * 24 * 7)
-        break
-      case 'month':
-        returnDate = new Date(
-          date.getTime() + multiplier * 60000 * 60 * 24 * 31
-        )
-        break
-      case 'year':
-        returnDate = new Date(
-          date.getTime() + multiplier * 60000 * 60 * 24 * 365
-        )
-        break
-      default:
-        returnDate = new Date(
-          date.getTime() + DefaultScheduleYearCoverage * 60000 * 60 * 24 * 365
-        )
-        break
-    }
-    return returnDate
+    const multiplierObj = {}
+    multiplierObj[unit] = multiplier
+    const forwardMillisec = getMilliseconds(multiplierObj)
+    return new Date(
+      date.getTime() +
+        (forwardMillisec
+          ? forwardMillisec
+          : getMilliseconds({ year: DefaultScheduleYearCoverage }))
+    )
   }
 
   taskBuilder(index, assessment, taskDate): Task {
@@ -379,7 +358,7 @@ export class SchedulingService {
 
   buildReportSchedule() {
     let iterDate = this.setDateTimeToMidnight(new Date(this.enrolmentDate))
-    const yearsMillis = DefaultScheduleYearCoverage * 60000 * 60 * 24 * 365
+    const yearsMillis = getMilliseconds({ year: DefaultScheduleYearCoverage })
     const endDate = new Date(iterDate.getTime() + yearsMillis)
     const tmpSchedule: ReportScheduling[] = []
 
@@ -404,7 +383,8 @@ export class SchedulingService {
       firstViewedOn: 0,
       range: {
         timestampStart:
-          reportDate.getTime() - DefaultScheduleReportRepeat * 60000 * 60 * 24,
+          reportDate.getTime() -
+          getMilliseconds({ day: DefaultScheduleReportRepeat }),
         timestampEnd: reportDate.getTime()
       }
     }

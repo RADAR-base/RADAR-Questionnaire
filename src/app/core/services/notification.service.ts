@@ -15,6 +15,7 @@ import { LocKeys } from '../../shared/enums/localisations'
 import { StorageKeys } from '../../shared/enums/storage'
 import { Task } from '../../shared/models/task'
 import { TranslatePipe } from '../../shared/pipes/translate/translate'
+import { getMilliseconds, getSeconds } from '../../shared/utilities/time'
 import { SchedulingService } from './scheduling.service'
 import { StorageService } from './storage.service'
 
@@ -201,7 +202,8 @@ export class NotificationService {
 
   formatFCMNotification(task, participantLogin) {
     const text = this.formatNotificationMessage(task)
-    const expiry = task.name === 'ESM' ? 15 * 60 : 24 * 60 * 60
+    const expiry =
+      task.name === 'ESM' ? getSeconds({ min: 15 }) : getSeconds({ hour: 24 })
     const fcmNotification = {
       eventId: uuid(),
       action: 'SCHEDULE',
@@ -245,7 +247,8 @@ export class NotificationService {
     const task = data.task
     const scheduledTimestamp = task.timestamp
     const now = new Date().getTime()
-    const endScheduledTimestamp = scheduledTimestamp + 1000 * 60 * 10
+    const endScheduledTimestamp =
+      scheduledTimestamp + getMilliseconds({ min: 10 })
     if (now > endScheduledTimestamp && task.name === 'ESM') {
       this.showNotificationMissedInfo(task, data.isLastOfDay)
     }

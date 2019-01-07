@@ -4,6 +4,7 @@ import { KafkaService } from '../../../core/services/kafka.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { Task, TasksProgress } from '../../../shared/models/task'
+import { getMilliseconds } from '../../../shared/utilities/time'
 
 @Injectable()
 export class TasksService {
@@ -85,8 +86,8 @@ export class TasksService {
   retrieveNextTask(tasks: Task[]): Task {
     if (tasks) {
       const now = new Date()
-      const offsetTimeESM = 1000 * 60 * 10 // 10 min
-      const offsetForward = 1000 * 60 * 60 * 12
+      const offsetTimeESM = getMilliseconds({ minutes: 10 })
+      const offsetForward = getMilliseconds({ hours: 12 })
       let lookFromTimestamp, lookToTimestamp
       for (let i = 0; i < tasks.length; i++) {
         switch (tasks[i].name) {

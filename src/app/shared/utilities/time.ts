@@ -9,14 +9,14 @@ export enum TimeConversion {
 }
 
 interface Time {
-  years?: number
-  months?: number
-  weeks?: number
-  days?: number
-  hours?: number
-  minutes?: number
-  seconds?: number
-  milliseconds?: number
+  year?: number
+  month?: number
+  week?: number
+  day?: number
+  hour?: number
+  min?: number
+  sec?: number
+  msec?: number
 }
 
 export function getMilliseconds(time: Time) {
@@ -25,39 +25,38 @@ export function getMilliseconds(time: Time) {
 
 export function getSeconds(time: Time) {
   let seconds = 0
-  if (time.years)
+  if (time.year)
     seconds +=
-      time.years *
+      time.year *
       TimeConversion['YEAR_TO_DAY'] *
       TimeConversion['DAY_TO_HOUR'] *
       TimeConversion['HOUR_TO_MIN'] *
       TimeConversion['MIN_TO_SEC']
-  if (time.months)
+  if (time.month)
     seconds +=
-      time.months *
+      time.month *
       TimeConversion['MONTH_TO_DAY'] *
       TimeConversion['DAY_TO_HOUR'] *
       TimeConversion['HOUR_TO_MIN'] *
       TimeConversion['MIN_TO_SEC']
-  if (time.weeks)
+  if (time.week)
     seconds +=
-      time.weeks *
+      time.week *
       TimeConversion['WEEK_TO_DAY'] *
       TimeConversion['DAY_TO_HOUR'] *
       TimeConversion['HOUR_TO_MIN'] *
       TimeConversion['MIN_TO_SEC']
-  if (time.days)
+  if (time.day)
     seconds +=
-      time.days *
+      time.day *
       TimeConversion['DAY_TO_HOUR'] *
       TimeConversion['HOUR_TO_MIN'] *
       TimeConversion['MIN_TO_SEC']
-  if (time.hours)
+  if (time.hour)
     seconds +=
-      time.hours * TimeConversion['HOUR_TO_MIN'] * TimeConversion['MIN_TO_SEC']
-  if (time.minutes) seconds += time.minutes * TimeConversion['MIN_TO_SEC']
-  if (time.seconds) seconds += time.seconds
-  if (time.milliseconds)
-    seconds += time.milliseconds / TimeConversion['SEC_TO_MILLISEC']
+      time.hour * TimeConversion['HOUR_TO_MIN'] * TimeConversion['MIN_TO_SEC']
+  if (time.min) seconds += time.min * TimeConversion['MIN_TO_SEC']
+  if (time.sec) seconds += time.sec
+  if (time.msec) seconds += time.msec / TimeConversion['SEC_TO_MILLISEC']
   return seconds
 }

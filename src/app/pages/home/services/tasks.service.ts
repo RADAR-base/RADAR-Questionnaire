@@ -86,8 +86,8 @@ export class TasksService {
   retrieveNextTask(tasks: Task[]): Task {
     if (tasks) {
       const now = new Date()
-      const offsetTimeESM = getMilliseconds({ minutes: 10 })
-      const offsetForward = getMilliseconds({ hours: 12 })
+      const offsetTimeESM = getMilliseconds({ min: 10 })
+      const offsetForward = getMilliseconds({ hour: 12 })
       let lookFromTimestamp, lookToTimestamp
       for (let i = 0; i < tasks.length; i++) {
         switch (tasks[i].name) {

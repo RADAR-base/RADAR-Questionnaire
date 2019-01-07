@@ -104,7 +104,7 @@ export class QuestionsPageComponent {
   }
 
   getTime() {
-    return getSeconds({ milliseconds: this.timestampService.getTimeStamp() })
+    return getSeconds({ msec: this.timestampService.getTimeStamp() })
   }
 
   setCurrentQuestion(value = 0) {

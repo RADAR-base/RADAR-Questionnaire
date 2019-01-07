@@ -148,17 +148,17 @@ export class FinishPageComponent {
       const unitFromZero = repeats['unitsFromZero'][i]
       switch (unit) {
         case 'min': {
-          const formatted = getMilliseconds({ minutes: unitFromZero })
+          const formatted = getMilliseconds({ min: unitFromZero })
           repeatsInMillis.push(formatted)
           break
         }
         case 'hour': {
-          const formatted = getMilliseconds({ hours: unitFromZero })
+          const formatted = getMilliseconds({ hour: unitFromZero })
           repeatsInMillis.push(formatted)
           break
         }
         case 'day': {
-          const formatted = getMilliseconds({ days: unitFromZero })
+          const formatted = getMilliseconds({ day: unitFromZero })
           repeatsInMillis.push(formatted)
           break
         }

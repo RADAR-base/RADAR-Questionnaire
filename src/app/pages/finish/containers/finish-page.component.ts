@@ -35,7 +35,7 @@ export class FinishPageComponent {
   ionViewDidLoad() {
     this.associatedTask = this.navParams.data.associatedTask
     this.content = this.navParams.data.endText
-    const questionnaireName: string = this.navParams.data.associatedTask.name
+    const questionnaireName = this.navParams.data.associatedTask.name
     if (!questionnaireName.includes('DEMO')) {
       try {
         if (
@@ -53,7 +53,6 @@ export class FinishPageComponent {
         )
         .then(
           data => {
-            this.finishTaskService.updateTaskToComplete(this.associatedTask)
             this.sendToKafka(
               this.associatedTask,
               data,
@@ -64,12 +63,8 @@ export class FinishPageComponent {
             console.log(JSON.stringify(error))
           }
         )
-    } else {
-      // This is a Demo Questionnaire. Just update to complete and do nothing else
-      this.finishTaskService.updateTaskToComplete(
-        this.navParams.data.associatedTask
-      )
     }
+    this.finishTaskService.updateTaskToComplete(this.associatedTask)
     this.displayNextTaskReminder =
       !this.navParams.data.isLastTask && !this.isClinicalTask
   }

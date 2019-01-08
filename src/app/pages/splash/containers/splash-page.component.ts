@@ -91,15 +91,12 @@ export class SplashPageComponent {
                   !lastUpdate
                 ) {
                   console.log('[SPLASH] Scheduling Notifications.')
-                  return this.notificationService.setNextXNotifications(
-                    DefaultNumberOfNotificationsToSchedule
-                  )
+                  return this.configService.rescheduleNotifications()
                 } else {
                   console.log(
                     'Not Scheduling Notifications as ' +
                       timeElapsed +
-                      'ms from last refresh is not greater' +
-                      'than the default Refresh interval of ' +
+                      'ms from last refresh is not greater than the default Refresh interval of ' +
                       DefaultNotificationRefreshTime
                   )
                 }

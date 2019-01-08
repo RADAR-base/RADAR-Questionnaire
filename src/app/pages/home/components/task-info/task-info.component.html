@@ -68,10 +68,7 @@
           class="text-sm"
           [@scaleMinutes]="expanded"
         >
-          <div *ngIf="task.name !=='ESM'">
-            <span [@fade]="expanded">:</span>
-            {{ getMinutes() }}
-          </div>
+          <div *ngIf="task.name !=='ESM'">: {{ getMinutes() }}</div>
         </div>
       </div>
     </div>

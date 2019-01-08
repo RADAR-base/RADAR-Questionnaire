@@ -55,6 +55,7 @@
     "@ionic-native/device": "^4.13.0",
     "@ionic-native/dialogs": "^4.13.0",
     "@ionic-native/file": "^4.13.0",
+    "@ionic-native/firebase": "^4.19.0",
     "@ionic-native/globalization": "^4.13.0",
     "@ionic-native/in-app-browser": "^4.18.0",
     "@ionic-native/local-notifications": "^4.13.0",

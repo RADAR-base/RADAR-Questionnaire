@@ -19,6 +19,7 @@ import {StorageService} from '../../../core/services/storage.service'
 import {StorageKeys} from '../../../shared/enums/storage'
 import {InAppBrowser, InAppBrowserOptions} from '@ionic-native/in-app-browser';
 import {SchedulingService} from "../../../core/services/scheduling.service";
+import {Firebase} from "@ionic-native/firebase";
 
 const uuidv4 = require('uuid/v4');
 declare var window: any;
@@ -33,7 +34,8 @@ export class AuthService {
     public storage: StorageService,
     private schedule: SchedulingService,
     private jwtHelper: JwtHelperService,
-    private inAppBrowser: InAppBrowser
+    private inAppBrowser: InAppBrowser,
+    private fireBase: Firebase
   ) {
     this.updateURI().then(() => {
       this.keycloakConfig = {
@@ -114,26 +116,44 @@ export class AuthService {
         const subjectInformation: any = res
         const participantId = subjectInformation.sub
         const participantLogin = subjectInformation.username
-        const projectName = subjectInformation.project ? subjectInformation.project
-          : 'STAGING_PROJECT'; // TODO remove this condition. hardcoded check for testing purpose. Remove when firebase is enabled.
         const createdDate = new Date(subjectInformation.createdTimestamp);
         const createdDateMidnight = this.schedule.setDateTimeToMidnight(
           createdDate
         );
-        resolve (
-          this.storage.init(
-            participantId,
-            participantLogin,
-            projectName,
-            language,
-            createdDate,
-            createdDateMidnight
-          ));
+        this.fetchProjectId().then((result) => {
+          const projectName = result;
+          resolve (
+            this.storage.init(
+              participantId,
+              participantLogin,
+              projectName,
+              language,
+              createdDate,
+              createdDateMidnight
+            ));
+        })
       }).catch(reject);
     });
 
   }
 
+  fetchProjectId() {
+    return new Promise((resolve, reject) => {
+      window.FirebasePlugin.fetch(600, function () {
+        window.FirebasePlugin.activateFetched(function (activated) {
+          window.FirebasePlugin.getValue('projectId', function (value) {
+            resolve(value);
+          }, function (error) {
+            console.log("FirebasePlugin.getValue error " + error);
+            reject(error);
+          });
+        }, function (error) {
+          console.error(error);
+          reject(error);
+        });
+      });
+    })
+  }
 
   loadUserInfo() {
     return this.storage.get(StorageKeys.OAUTH_TOKENS).then( tokens => {

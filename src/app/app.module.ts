@@ -24,6 +24,7 @@ import { jwtOptionsFactory } from './shared/utilities/jwtOptionsFactory'
 import { Utility } from './shared/utilities/util'
 import { Deeplinks} from '@ionic-native/deeplinks'
 import { InAppBrowser } from '@ionic-native/in-app-browser';
+import { Firebase } from "@ionic-native/firebase";
 
 @NgModule({
   imports: [
@@ -53,6 +54,7 @@ import { InAppBrowser } from '@ionic-native/in-app-browser';
     Device,
     StatusBar,
     SplashScreen,
+    Firebase,
     Utility,
     LocalNotifications,
     BarcodeScanner,

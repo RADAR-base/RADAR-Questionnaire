@@ -50,7 +50,7 @@
     "@ionic-native/android-permissions": "^4.13.0",
     "@ionic-native/app-version": "^4.13.0",
     "@ionic-native/barcode-scanner": "^4.13.0",
-    "@ionic-native/core": "^4.13.0",
+    "@ionic-native/core": "^4.19.0",
     "@ionic-native/device": "^4.13.0",
     "@ionic-native/dialogs": "^4.13.0",
     "@ionic-native/file": "^4.13.0",

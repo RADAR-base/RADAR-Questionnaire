@@ -100,5 +100,5 @@
     </universal-links>
     <plugin name="cordova-plugin-deeplinks" spec="1.1.0" />
     <plugin name="cordova-plugin-inappbrowser" spec="3.0.0" />
-    <engine name="android" spec="^6.4.0" />
+    <engine name="android" spec="6.4.0" />
 </widget>

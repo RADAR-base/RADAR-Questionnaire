@@ -42,12 +42,8 @@ export class TaskProgressComponent implements OnChanges {
   }
 
   updateProgress() {
-    if (this.forceComplete || this.current >= this.max) {
-      this.complete = true
-      this.displayFireworks(800, 980)
-    } else {
-      this.complete = false
-    }
+    this.complete = this.forceComplete || this.current >= this.max
+    if (this.complete) this.displayFireworks(800, 980)
   }
 
   displayFireworks(milliDelay, milliDisplay) {

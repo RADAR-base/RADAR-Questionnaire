@@ -173,11 +173,9 @@ export class EnrolmentPageComponent {
   }
 
   goToRegistration() {
-
+    this.loading = true;
     this.authService.keycloakLogin(false)
       .then(() => {
-        this.showOutcomeStatus = false
-        this.transitionStatuses()
         this.authService.retrieveUserInformation(this.language)
           .then(() => {
             this.configService.fetchConfigState(true)

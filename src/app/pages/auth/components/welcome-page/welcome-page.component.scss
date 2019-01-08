@@ -139,4 +139,18 @@ page-welcome {
     list-style-type: decimal;
     list-style-position: outside;
   }
+
+  .position-center {
+    margin-top: 80%;
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 10px;
+    width: 30px;
+    height: 30px;
+  }
+
+  .status-center {
+    margin-top: 15px;
+    text-align: center;
+  }
 }

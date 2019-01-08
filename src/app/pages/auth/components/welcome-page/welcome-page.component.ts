@@ -35,6 +35,7 @@ export class WelcomePageComponent {
     label: LocKeys.LANGUAGE_ENGLISH.toString(),
     value: 'en'
   }
+  loading: boolean = false
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages;
 
   constructor(
@@ -117,6 +118,7 @@ export class WelcomePageComponent {
   }
 
   goToLogin() {
+    this.loading = true;
     this.authService.keycloakLogin(true)
       .then(() => {
         this.authService.retrieveUserInformation(this.language)
@@ -126,6 +128,7 @@ export class WelcomePageComponent {
           })
       })
       .catch( () => {
+        this.loading = false;
         this.alertCtrl.create({
           title: "Something went wrong",
           buttons: [{

@@ -5133,9 +5133,10 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.3.6"
 
-"kafka-rest@git+https://github.com/mpgxvii/kafka-rest-node":
+kafka-rest@^0.0.5:
   version "0.0.5"
-  resolved "git+https://github.com/mpgxvii/kafka-rest-node#ee763b4ecfb8f3de6f62ee5818e82f5146549c78"
+  resolved "https://registry.yarnpkg.com/kafka-rest/-/kafka-rest-0.0.5.tgz#7b8ff99bd259e6b4b14c266884424d81a6ffdd9f"
+  integrity sha1-e4/5m9JZ5rSxTCZohEJNgab/3Z8=
   dependencies:
     async "~0.9.0"
 
@@ -9377,8 +9378,9 @@ ws@3.3.2:
     ultron "~1.1.0"
 
 ws@^6.0.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-6.1.0.tgz#119a9dbf92c54e190ec18d10e871d55c95cf9373"
+  version "6.1.2"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-6.1.2.tgz#3cc7462e98792f0ac679424148903ded3b9c3ad8"
+  integrity sha512-rfUqzvz0WxmSXtJpPMX2EeASXabOrSMk1ruMOV3JBTBjo4ac2lDjGGsbQSyxj8Odhw5fBib8ZKEjDNvgouNKYw==
   dependencies:
     async-limiter "~1.0.0"
 

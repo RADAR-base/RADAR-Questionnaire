@@ -5,13 +5,11 @@ import {
   OnChanges,
   Output
 } from '@angular/core'
-import { AlertController, Platform } from 'ionic-angular'
+import { AlertController } from 'ionic-angular'
 
-import { DefaultTask } from '../../../../../assets/data/defaultConfig'
 import { LocKeys } from '../../../../shared/enums/localisations'
 import { Task } from '../../../../shared/models/task'
 import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
-import { TasksService } from '../../services/tasks.service'
 
 @Component({
   selector: 'task-calendar',
@@ -27,18 +25,14 @@ export class TaskCalendarComponent implements OnChanges {
 
   currentTime
   timeIndex: Promise<number>
-  height
 
   constructor(
-    private tasksService: TasksService,
     private alertCtrl: AlertController,
-    private translate: TranslatePipe,
-    private platform: Platform
+    private translate: TranslatePipe
   ) {}
 
   ngOnChanges() {
     this.setCurrentTime()
-    this.height = this.show ? 100 : 0
   }
 
   getStartTime(task: Task) {

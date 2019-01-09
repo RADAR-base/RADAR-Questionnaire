@@ -16,12 +16,14 @@ import { PrepareDataService } from '../services/prepare-data.service'
   templateUrl: 'finish-page.component.html'
 })
 export class FinishPageComponent {
-  content: string = ''
-  isClinicalTask: boolean = false
-  completedInClinic: boolean = false
-  displayNextTaskReminder: boolean = true
-  hasClickedDoneButton: boolean = false
+  content = ''
+  isClinicalTask = false
+  completedInClinic = false
+  displayNextTaskReminder = true
+  hasClickedDoneButton = false
   associatedTask
+  questionnaireData
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -33,50 +35,45 @@ export class FinishPageComponent {
   ) {}
 
   ionViewDidLoad() {
-    this.associatedTask = this.navParams.data.associatedTask
-    this.content = this.navParams.data.endText
-    const questionnaireName = this.navParams.data.associatedTask.name
-    if (!questionnaireName.includes('DEMO')) {
-      try {
-        if (
-          this.navParams.data['associatedTask']['protocol']['clinicalProtocol']
-        ) {
-          this.isClinicalTask = true
-        }
-      } catch (TypeError) {
-        console.log('INFO: Not in clinic task/questionnaire.')
-      }
-      this.prepareDataService
-        .process_QuestionnaireData(
-          this.navParams.data.answers,
-          this.navParams.data.timestamps
-        )
-        .then(
-          data => {
-            this.sendToKafka(
-              this.associatedTask,
-              data,
-              this.navParams.data.questions
-            )
-          },
-          error => {
-            console.log(JSON.stringify(error))
-          }
-        )
-    }
+    this.questionnaireData = this.navParams.data
+    this.associatedTask = this.questionnaireData.associatedTask
+    this.content = this.questionnaireData.endText
+    this.isClinicalTask = this.associatedTask.isClinical
+    const questionnaireName = this.associatedTask.name
     this.finishTaskService.updateTaskToComplete(this.associatedTask)
     this.displayNextTaskReminder =
-      !this.navParams.data.isLastTask && !this.isClinicalTask
+      !this.questionnaireData.isLastTask && !this.isClinicalTask
+    !questionnaireName.includes('DEMO') && this.processDataAndSend()
+  }
+
+  processDataAndSend() {
+    return this.prepareDataService
+      .processQuestionnaireData(
+        this.questionnaireData.answers,
+        this.questionnaireData.timestamps
+      )
+      .then(
+        data => {
+          this.sendToKafka(
+            this.associatedTask,
+            data,
+            this.questionnaireData.questions
+          )
+        },
+        error => {
+          console.log(JSON.stringify(error))
+        }
+      )
   }
 
   sendToKafka(task: Task, questionnaireData, questions) {
+    // NOTE: Submit data to kafka
     this.kafkaService.prepareTimeZoneKafkaObjectAndSend()
     this.kafkaService.prepareAnswerKafkaObjectAndSend(
       task,
       questionnaireData,
       questions
     )
-    // NOTE: Submit data to kafka
   }
 
   handleClosePage() {
@@ -98,6 +95,7 @@ export class FinishPageComponent {
   }
 
   generateClinicalTasks(tasks) {
+    // TODO: To be refactored and moved in next PR.
     let clinicalTasks = []
     if (tasks) {
       clinicalTasks = tasks

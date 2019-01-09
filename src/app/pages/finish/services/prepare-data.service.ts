@@ -11,7 +11,7 @@ import { StorageKeys } from '../../../shared/enums/storage'
 export class PrepareDataService {
   constructor(public storage: StorageService) {}
 
-  process_QuestionnaireData(answers, timestamps): Promise<any> {
+  processQuestionnaireData(answers, timestamps): Promise<any> {
     console.log(answers)
     return new Promise((resolve, reject) => {
       // NOTE: Fetches config version and Patient ID

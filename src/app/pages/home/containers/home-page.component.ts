@@ -81,7 +81,6 @@ export class HomePageComponent {
   }
 
   updateCurrentTask() {
-    this.showCompleted
     this.checkForNextTask()
     this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
   }

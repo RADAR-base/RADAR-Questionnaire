@@ -24,9 +24,9 @@ export class TaskProgressComponent implements OnChanges {
   @Input()
   progress: TasksProgress
   @Input()
-  forceComplete: boolean = false
+  forceComplete = false
   @Input()
-  noTasksToday: boolean = false
+  noTasksToday = false
 
   max: number = 1
   current: number = 0
@@ -53,11 +53,5 @@ export class TaskProgressComponent implements OnChanges {
         this.showFireworks = false
       }, milliDisplay)
     }, milliDelay)
-  }
-
-  easterEggFireworks() {
-    if (this.current >= this.max) {
-      this.displayFireworks(800, 980)
-    }
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core'
+import { Component, Input, OnChanges, OnInit } from '@angular/core'
 import { NavController } from 'ionic-angular'
 
 import { SchedulingService } from '../../../../core/services/scheduling.service'
@@ -19,53 +19,23 @@ export class TickerBarComponent implements OnChanges {
   @Input()
   isNow
   @Input()
-  items: TickerItem[] = []
-  @Input()
-  showAffirmation: boolean = false
-  tickerItems: TickerItem[]
-  tickerIndex: number = 0
+  showAffirmation = false
+  tickerText: string
   report: ReportScheduling
-
-  hasTask: boolean = true
-  tickerWeeklyReport: string
-  newWeeklyReport: boolean = false
 
   constructor(
     private schedule: SchedulingService,
     private navCtrl: NavController,
     private translate: TranslatePipe
-  ) {
-    // NOTE: Gets ReportScheduling and adds to tickerItems
-    /*this.schedule.getCurrentReport().then((report) => {
-      this.report = report
-    })*/
-  }
+  ) {}
 
-  ngOnChanges(changes) {
-    this.updateTickerItems()
-    if (this.tickerItems.length > 2) {
-      setInterval(() => {
-        this.iterateIndex()
-      }, 7500)
-    }
-  }
-
-  showNextTickerItem() {
-    const style = `translateX(-${this.tickerIndex * 100}%)`
-    return style
-  }
-
-  iterateIndex() {
-    this.tickerIndex += 1
-    if (this.tickerIndex === this.tickerItems.length) {
-      this.tickerIndex = 0
-      this.updateTickerItems()
-    }
+  ngOnChanges() {
+    this.updateTickerItem()
   }
 
   openReport() {
     this.updateReport()
-    this.updateTickerItems()
+    this.updateTickerItem()
     this.navCtrl.push(ReportPageComponent)
   }
 
@@ -78,86 +48,71 @@ export class TickerBarComponent implements OnChanges {
     }
   }
 
-  updateTickerItems() {
-    this.tickerItems = []
-    if (this.report) {
-      this.addReportAvailable()
+  updateTickerItem() {
+    if (!this.tickerText) {
+      return this.addTasksNone()
     }
     if (this.showAffirmation) {
-      this.addAffirmation()
+      return this.addAffirmation()
     }
-    if (this.task['timestamp'] > 0) {
-      this.addTask()
+    if (this.task) {
+      return this.addTask()
     }
-    if (this.tickerItems.length === 0) {
-      this.addTasksNone()
+    if (this.report) {
+      return this.addReportAvailable()
     }
-    this.tickerItems = this.tickerItems.concat(this.items)
-    this.tickerItems.push(this.tickerItems[0])
   }
 
   addReportAvailable() {
     if (this.report) {
       if (this.report['viewed'] === false) {
-        const item = this.generateTickerItem(
-          'report',
-          '',
-          'Report available! ',
-          'Click to view.'
-        )
-        this.tickerItems.push(item)
+        this.tickerText = '<b>Report available!</b> Click to view.'
       }
     }
   }
 
   addTask() {
-    const now = new Date()
-    const timeToNext = this.getTimeToNext(now.getTime(), this.task.timestamp)
-    let item = this.generateTickerItem(
-      'task',
-      this.translate.transform(LocKeys.TASK_BAR_NEXT_TASK.toString()),
-      timeToNext,
-      '.'
-    )
-    if (timeToNext.includes('-')) {
-      item = this.generateTickerItem(
-        'task',
-        this.translate.transform(LocKeys.TASK_BAR_NOW_TASK.toString()),
-        this.translate.transform(LocKeys.STATUS_NOW.toString()),
-        '.'
-      )
-    } else if (this.task.name === 'ESM') {
-      item = this.generateTickerItem(
-        'task',
-        this.translate.transform(LocKeys.TASK_BAR_NOW_TASK.toString()),
-        this.translate.transform(LocKeys.TASK_BAR_NEXT_TASK_SOON.toString()),
-        '.'
-      )
+    if (this.isNow) {
+      this.tickerText =
+        this.translate.transform(LocKeys.TASK_BAR_NOW_TASK.toString()) +
+        '<b>' +
+        this.translate.transform(LocKeys.STATUS_NOW.toString()) +
+        '.</b>'
+    } else {
+      if (this.task.name === 'ESM') {
+        this.tickerText =
+          this.translate.transform(LocKeys.TASK_BAR_NOW_TASK.toString()) +
+          '<b>' +
+          this.translate.transform(LocKeys.TASK_BAR_NEXT_TASK_SOON.toString()) +
+          '.</b>'
+      } else {
+        this.tickerText =
+          this.translate.transform(LocKeys.TASK_BAR_NEXT_TASK.toString()) +
+          '<b>' +
+          this.getTimeToNext(this.task.timestamp) +
+          '.</b>'
+      }
     }
-    this.tickerItems.push(item)
   }
 
   addAffirmation() {
-    const item = this.generateTickerItem(
-      'affirmation',
-      '',
-      this.translate.transform(LocKeys.TASK_BAR_AFFIRMATION_1.toString()),
+    this.tickerText =
+      '<b>' +
+      this.translate.transform(LocKeys.TASK_BAR_AFFIRMATION_1.toString()) +
+      '</b>' +
       this.translate.transform(LocKeys.TASK_BAR_AFFIRMATION_2.toString())
-    )
-    this.tickerItems.push(item)
   }
 
   addTasksNone() {
-    const item = this.generateTickerItem(
-      'tasks-none',
-      '',
-      this.translate.transform(LocKeys.TASK_BAR_TASK_LEFT_1.toString()),
+    this.tickerText =
+      '<b>' +
+      this.translate.transform(LocKeys.TASK_BAR_TASK_LEFT_1.toString()) +
+      '</b>' +
       this.translate.transform(LocKeys.TASK_BAR_TASK_LEFT_2.toString())
-    )
-    this.tickerItems.push(item)
   }
 
-  getTimeToNext(now, next) {
+  getTimeToNext(next) {
+    const now = new Date().getTime()
     let deltaStr = ''
     const deltaMin = Math.round((next - now) / 60000)
     const deltaHour = Math.round(deltaMin / 60)
@@ -181,15 +136,5 @@ export class TickerBarComponent implements OnChanges {
             ))
     }
     return deltaStr
-  }
-
-  generateTickerItem(id, t1, t2, t3): TickerItem {
-    const item = {
-      id: String(id),
-      tickerText1: String(t1),
-      tickerText2: String(t2),
-      tickerText3: String(t3)
-    }
-    return item
   }
 }

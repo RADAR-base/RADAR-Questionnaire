@@ -2,9 +2,13 @@ import { Component } from '@angular/core'
 import { Globalization } from '@ionic-native/globalization'
 import { NavController, NavParams } from 'ionic-angular'
 
-import { DefaultNotificationRefreshTime } from '../../../../assets/data/defaultConfig'
+import {
+  DefaultNotificationRefreshTime,
+  DefaultNumberOfNotificationsToSchedule
+} from '../../../../assets/data/defaultConfig'
 import { ConfigService } from '../../../core/services/config.service'
 import { KafkaService } from '../../../core/services/kafka.service'
+import { NotificationService } from '../../../core/services/notification.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { EnrolmentPageComponent } from '../../auth/containers/enrolment-page.component'
@@ -23,6 +27,7 @@ export class SplashPageComponent {
     public navParams: NavParams,
     public storage: StorageService,
     private splashService: SplashService,
+    private notificationService: NotificationService,
     private globalization: Globalization,
     private kafka: KafkaService,
     private configService: ConfigService
@@ -94,7 +99,9 @@ export class SplashPageComponent {
         const timeElapsed = Date.now() - lastUpdate
         if (timeElapsed > DefaultNotificationRefreshTime || !lastUpdate) {
           console.log('[SPLASH] Scheduling Notifications.')
-          return this.configService.rescheduleNotifications()
+          return this.notificationService.setNextXNotifications(
+            DefaultNumberOfNotificationsToSchedule
+          )
         } else {
           console.log(
             'Not Scheduling Notifications as ' +

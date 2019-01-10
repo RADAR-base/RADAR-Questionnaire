@@ -1,11 +1,5 @@
 import { animate, state, style, transition, trigger } from '@angular/animations'
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output
-} from '@angular/core'
+import { Component, Input, OnChanges } from '@angular/core'
 
 import { StorageService } from '../../../../core/services/storage.service'
 import { StorageKeys } from '../../../../shared/enums/storage'
@@ -23,7 +17,7 @@ import { Task, TasksProgress } from '../../../../shared/models/task'
     trigger('scaleMinutes', [
       state(
         'false',
-        style({ transform: 'translate3d(-25%, -15%, 0) scale(0.45)' })
+        style({ transform: 'translate3d(-25%, -15%, 0) scale(0.4)' })
       ),
       state('true', style({ transform: 'translate3d(0, 0, 0) scale(1)' })),
       transition('* => *', animate('400ms ease'))
@@ -34,7 +28,7 @@ import { Task, TasksProgress } from '../../../../shared/models/task'
       transition('* => *', animate('400ms ease'))
     ]),
     trigger('alignCenterRightTime', [
-      state('false', style({ transform: 'translate3d(15%, 0, 0) scale(0.8)' })),
+      state('false', style({ transform: 'translate3d(8%, 0, 0) scale(0.8)' })),
       state('true', style({ transform: 'translate3d(0, 0, 0)' })),
       transition('* => *', animate('400ms ease'))
     ]),
@@ -65,11 +59,10 @@ export class TaskInfoComponent implements OnChanges {
   progress: TasksProgress
   @Input()
   expanded = true
-  hasExtraInfo: Boolean = false
-  displayTask: Boolean = false
+  hasExtraInfo: boolean
+  extraTaskInfo: string
 
   private language: string
-  private extraTaskInfo: string
 
   max: number = 1
   current: number = 0
@@ -83,29 +76,13 @@ export class TaskInfoComponent implements OnChanges {
   }
 
   ngOnChanges() {
-    this.checkDisplayTask()
     this.checkHasExtraInfo()
     this.updateProgress()
   }
 
-  checkDisplayTask() {
-    if (this.task['timestamp'] > 0) {
-      this.displayTask = true
-    } else {
-      this.displayTask = false
-    }
-  }
-
   checkHasExtraInfo() {
-    if (this.task['warning'] !== '') {
-      this.hasExtraInfo = true
-      if (this.language) {
-        this.extraTaskInfo = this.task.warning[this.language]
-        this.hasExtraInfo = this.extraTaskInfo ? true : false
-      }
-    } else {
-      this.hasExtraInfo = false
-    }
+    this.hasExtraInfo = !!this.task.warning[this.language]
+    this.extraTaskInfo = this.task.warning[this.language]
   }
 
   updateProgress() {
@@ -144,9 +121,5 @@ export class TaskInfoComponent implements OnChanges {
         ? '0' + String(numberToFormat)
         : String(numberToFormat)
     return format
-  }
-
-  getExtraInfo() {
-    return this.extraTaskInfo
   }
 }

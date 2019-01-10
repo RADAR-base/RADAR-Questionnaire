@@ -42,23 +42,17 @@ export class TasksService {
     }
   }
 
-  getNextTask(tasks) {
-    return this.retrieveNextTask(tasks)
-  }
-
-  areAllTasksComplete() {
-    return this.getTasksOfToday().then((tasks: Task[]) => {
-      if (tasks) {
-        for (let i = 0; i < tasks.length; i++) {
-          if (tasks[i].name !== 'ESM' && tasks[i].isClinical == false) {
-            if (tasks[i].completed === false) {
-              return false
-            }
+  areAllTasksComplete(tasks) {
+    if (tasks) {
+      for (let i = 0; i < tasks.length; i++) {
+        if (tasks[i].name !== 'ESM' && tasks[i].isClinical == false) {
+          if (tasks[i].completed === false) {
+            return false
           }
         }
       }
-      return true
-    })
+    }
+    return true
   }
 
   isLastTask(task, todaysTasks) {
@@ -82,7 +76,7 @@ export class TasksService {
    * @returns {@link Task} : The next incomplete task from the list. This essentially
    *                         translates to which questionnaire the `START` button on home page corresponds to.
    */
-  retrieveNextTask(tasks: Task[]): Task {
+  getNextTask(tasks: Task[]): Task {
     if (tasks) {
       const now = new Date()
       const offsetTimeESM = 1000 * 60 * 10 // 10 min

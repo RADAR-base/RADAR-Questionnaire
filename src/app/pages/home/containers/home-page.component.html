@@ -34,18 +34,9 @@
       [progress]="tasksProgress"
       [forceComplete]="showCompleted"
       [noTasksToday]="showNoTasksToday"
-      *ngIf="tasksProgress && !hasOnlyESMs && !showCalendar"
+      *ngIf="tasksProgress && !showCalendar"
     >
     </task-progress>
-    <div
-      class="container-esm"
-      *ngIf="hasOnlyESMs"
-    >
-      <img
-        src="assets/imgs/diary.png"
-        class="icon-esm"
-      >
-    </div>
   </div>
 
   <div
@@ -53,8 +44,8 @@
     class="clinical"
     [class.clinical-1]="taskIsNow && !showCompleted"
     [class.clinical-2]="showCalendar"
-    [class.clinical-3]="showCompleted"
-    [class.clinical-4]="!taskIsNow"
+    [class.clinical-3]="showCompleted || showNoTasksToday"
+    [class.clinical-4]="!taskIsNow && !showCompleted && !showCalendar"
     (click)="openClinicalTasksPage()"
   >
     <img
@@ -71,6 +62,7 @@
       [task]="nextTask"
       [isNow]="taskIsNow"
       [showAffirmation]="showCompleted"
+      [noTasksToday]="showNoTasksToday"
     ></ticker-bar>
   </div>
 
@@ -79,6 +71,7 @@
     class="size-static"
   >
     <task-info
+      *ngIf="nextTask"
       [task]="nextTask"
       [isNow]="taskIsNow"
       [progress]="tasksProgress"
@@ -119,7 +112,7 @@
       </button>
     </div>
     <div
-      *ngIf="startingQuestionnaire || nextTaskIsLoading"
+      *ngIf="startingQuestionnaire || (!nextTask && !showCompleted)"
       class="spinner-center"
     >
       <ion-spinner name="dots"></ion-spinner>

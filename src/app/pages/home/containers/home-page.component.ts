@@ -35,16 +35,15 @@ import { TasksService } from '../services/tasks.service'
 })
 export class HomePageComponent {
   tasks: Promise<Task[]>
-  nextTask: Task = DefaultTask
-  showCalendar: boolean = false
-  showCompleted: boolean = false
-  showNoTasksToday: boolean = false
-  tasksProgress: TasksProgress
-  startingQuestionnaire: boolean = false
+  nextTask: Task
+  showCalendar = false
+  showCompleted = false
+  showNoTasksToday = false
+  tasksProgress: TasksProgress = { numberOfTasks: 1, completedTasks: 0 }
+  startingQuestionnaire = false
   hasClinicalTasks = false
-  hasOnlyESMs = false
   taskIsNow = false
-  nextTaskIsLoading = true
+  checkTaskInterval
 
   constructor(
     public navCtrl: NavController,
@@ -58,73 +57,46 @@ export class HomePageComponent {
   ) {
     this.platform.resume.subscribe(e => {
       this.kafka.sendAllAnswersInCache()
-      this.updateCurrentTask()
+      this.checkForNextTask()
     })
   }
 
-  ionViewWillEnter() {
-    this.tasks = this.tasksService.getTasksOfToday()
-    this.tasks.then(
-      tasks => (this.tasksProgress = this.tasksService.getTaskProgress(tasks))
-    )
-    this.showNoTasksToday = false
-    this.startingQuestionnaire = false
-  }
-
   ionViewDidLoad() {
-    setInterval(() => {
-      this.updateCurrentTask()
-    }, 1000)
+    this.tasks = this.tasksService.getTasksOfToday()
+    this.tasks.then(tasks => {
+      this.checkTaskInterval = setInterval(() => {
+        this.checkForNextTask()
+      }, 1000)
+      this.tasksProgress = this.tasksService.getTaskProgress(tasks)
+      this.showNoTasksToday = this.tasksProgress.numberOfTasks == 0
+    })
+    this.startingQuestionnaire = false
     this.evalHasClinicalTasks()
-    this.checkIfOnlyESM()
     this.tasksService.sendNonReportedTaskCompletion()
   }
 
-  updateCurrentTask() {
-    this.checkForNextTask()
-    this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
-  }
-
   checkForNextTask() {
-    if (!this.showCalendar) {
-      this.nextTaskIsLoading = true
-      this.tasks.then(tasks =>
-        this.checkForNextTaskGeneric(this.tasksService.getNextTask(tasks))
-      )
-    }
+    this.tasks.then(tasks =>
+      this.checkForNextTaskGeneric(this.tasksService.getNextTask(tasks))
+    )
   }
 
   checkForNextTaskGeneric(task) {
     if (task && task.isClinical == false) {
       this.nextTask = task
       this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
+      this.showCompleted = !this.nextTask
     } else {
-      this.tasksService.areAllTasksComplete().then(completed => {
-        if (completed) {
-          this.nextTask = DefaultTask
-          this.showCompleted = true
-          if (!this.tasksProgress) {
-            this.showNoTasksToday = true
-          }
-        } else {
-          this.nextTask = DefaultTask
+      this.taskIsNow = false
+      this.nextTask = null
+      this.tasks.then(tasks => {
+        this.showCompleted = this.tasksService.areAllTasksComplete(tasks)
+        if (this.showCompleted) {
+          clearInterval(this.checkTaskInterval)
+          this.showCalendar = false
         }
       })
     }
-    this.nextTaskIsLoading = false
-  }
-
-  checkIfOnlyESM() {
-    this.tasks.then(tasks => {
-      let tmpHasOnlyESMs = true
-      for (let i = 0; i < tasks.length; i++) {
-        if (tasks[i].name !== 'ESM') {
-          tmpHasOnlyESMs = false
-          break
-        }
-      }
-      this.hasOnlyESMs = tmpHasOnlyESMs
-    })
   }
 
   evalHasClinicalTasks() {
@@ -134,7 +106,7 @@ export class HomePageComponent {
   }
 
   displayTaskCalendar() {
-    if (this.nextTask.name !== 'ESM') this.showCalendar = !this.showCalendar
+    this.showCalendar = !this.showCalendar
   }
 
   openSettingsPage() {

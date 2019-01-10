@@ -1,11 +1,10 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core'
+import { Component, Input, OnChanges } from '@angular/core'
 import { NavController } from 'ionic-angular'
 
 import { SchedulingService } from '../../../../core/services/scheduling.service'
 import { LocKeys } from '../../../../shared/enums/localisations'
 import { ReportScheduling } from '../../../../shared/models/report'
 import { Task } from '../../../../shared/models/task'
-import { TickerItem } from '../../../../shared/models/ticker'
 import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
 import { ReportPageComponent } from '../../../report/containers/report-page.component'
 
@@ -20,6 +19,8 @@ export class TickerBarComponent implements OnChanges {
   isNow
   @Input()
   showAffirmation = false
+  @Input()
+  noTasksToday = false
   tickerText: string
   report: ReportScheduling
 
@@ -49,18 +50,11 @@ export class TickerBarComponent implements OnChanges {
   }
 
   updateTickerItem() {
-    if (!this.tickerText) {
-      return this.addTasksNone()
-    }
-    if (this.showAffirmation) {
-      return this.addAffirmation()
-    }
-    if (this.task) {
-      return this.addTask()
-    }
-    if (this.report) {
-      return this.addReportAvailable()
-    }
+    if (!this.tickerText) return this.addTasksRemaining()
+    if (this.noTasksToday) return this.addTasksNone()
+    if (this.showAffirmation) return this.addAffirmation()
+    if (this.task) return this.addTask()
+    if (this.report) return this.addReportAvailable()
   }
 
   addReportAvailable() {
@@ -103,12 +97,20 @@ export class TickerBarComponent implements OnChanges {
       this.translate.transform(LocKeys.TASK_BAR_AFFIRMATION_2.toString())
   }
 
-  addTasksNone() {
+  addTasksRemaining() {
     this.tickerText =
       '<b>' +
       this.translate.transform(LocKeys.TASK_BAR_TASK_LEFT_1.toString()) +
       '</b>' +
       this.translate.transform(LocKeys.TASK_BAR_TASK_LEFT_2.toString())
+  }
+
+  addTasksNone() {
+    this.tickerText =
+      '<b>' +
+      this.translate.transform(LocKeys.TASK_BAR_NO_TASK_1.toString()) +
+      ' </b>' +
+      this.translate.transform(LocKeys.TASK_BAR_NO_TASK_2.toString())
   }
 
   getTimeToNext(next) {

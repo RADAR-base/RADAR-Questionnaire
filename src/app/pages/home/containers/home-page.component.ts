@@ -29,7 +29,7 @@ import { TasksService } from '../services/tasks.service'
     trigger('displayCalendar', [
       state('true', style({ transform: 'translateY(0%)' })),
       state('false', style({ transform: 'translateY(100%)' })),
-      transition('*=>*', animate('300ms'))
+      transition('*=>*', animate('300ms ease-out'))
     ])
   ]
 })

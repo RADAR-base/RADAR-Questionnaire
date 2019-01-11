@@ -199,6 +199,7 @@ export const Localisations = {
     it: ' RADAR-CNS',
     nl: 'RADAR-CNS'
   },
+
   FINISH_THANKS: {
     da: 'Tak fordi du udfyldte spørgeskemaet.',
     de: 'Vielen Dank für das Ausfüllen des Fragebogens.',
@@ -222,6 +223,9 @@ export const Localisations = {
     es: 'Completado en la visita clínica',
     it: 'Completato in clinica?',
     nl: 'Voltooid in de kliniek?'
+  },
+  SURVEYS_HEADING: {
+    en: 'Surveys'
   },
   CALENDAR_ESM_MISSED_TITLE: {
     da: 'Blokeret',

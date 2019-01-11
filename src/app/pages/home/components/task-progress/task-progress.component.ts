@@ -28,6 +28,7 @@ export class TaskProgressComponent implements OnChanges {
   text: string
   max: number = 1
   current: number = 0
+  currentPercentage: number = 0.1;
   stroke = 22
   animation = 'easeInOutQuart'
   complete: boolean = false
@@ -52,6 +53,7 @@ export class TaskProgressComponent implements OnChanges {
     if (this.progress) {
       this.max = this.progress.numberOfTasks
       this.current = this.progress.completedTasks
+      this.currentPercentage = (this.progress.completedTasks/this.progress.numberOfTasks)*100;
     }
     if (this.current >= this.max) {
       this.complete = true

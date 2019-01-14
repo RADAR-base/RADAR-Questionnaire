@@ -61,6 +61,10 @@ export class HomePageComponent {
     })
   }
 
+  ionViewWillEnter() {
+    this.startingQuestionnaire = false
+  }
+
   ionViewDidLoad() {
     this.tasks = this.tasksService.getTasksOfToday()
     this.tasks.then(tasks => {
@@ -70,7 +74,6 @@ export class HomePageComponent {
       this.tasksProgress = this.tasksService.getTaskProgress(tasks)
       this.showNoTasksToday = this.tasksProgress.numberOfTasks == 0
     })
-    this.startingQuestionnaire = false
     this.evalHasClinicalTasks()
     this.tasksService.sendNonReportedTaskCompletion()
   }

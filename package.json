@@ -60,6 +60,7 @@
     "@ionic-native/splash-screen": "^4.13.0",
     "@ionic-native/status-bar": "^4.13.0",
     "@ionic-native/vibration": "^4.13.0",
+    "@ionic-native/web-intent": "^4.19.0",
     "@ionic/storage": "^2.2.0",
     "angular-svg-round-progressbar": "^2.0.0",
     "autoprefixer": "^9.1.5",

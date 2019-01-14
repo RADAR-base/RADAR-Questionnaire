@@ -14,6 +14,7 @@ import { LocalNotifications } from '@ionic-native/local-notifications'
 import { SplashScreen } from '@ionic-native/splash-screen'
 import { StatusBar } from '@ionic-native/status-bar'
 import { Vibration } from '@ionic-native/vibration'
+import { WebIntent } from '@ionic-native/web-intent'
 import { IonicStorageModule, Storage } from '@ionic/storage'
 import { IonicApp, IonicModule } from 'ionic-angular'
 
@@ -60,7 +61,8 @@ import { Utility } from './shared/utilities/util'
     AndroidPermissionUtility,
     AndroidPermissions,
     File,
-    AppVersion
+    AppVersion,
+    WebIntent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

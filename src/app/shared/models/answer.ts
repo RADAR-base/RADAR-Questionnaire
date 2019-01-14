@@ -27,14 +27,3 @@ export interface AnswerKeyExport {
   sourceId: string
   projectId: string
 }
-
-export interface CompletionLogValueExport {
-  name: string
-  time: number
-  completionPercentage: any
-}
-
-export interface ApplicationTimeZoneValueExport {
-  time: number
-  offset: number
-}

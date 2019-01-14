@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core'
 
+import { KAFKA_COMPLETION_LOG } from '../../../../assets/data/defaultConfig'
 import { KafkaService } from '../../../core/services/kafka.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
@@ -110,9 +111,9 @@ export class TasksService {
   sendNonReportedTaskCompletion() {
     this.schedule.getNonReportedCompletedTasks().then(nonReportedTasks => {
       for (let i = 0; i < nonReportedTasks.length; i++) {
-        this.kafka.prepareNonReportedTasksKafkaObjectAndSend(
-          nonReportedTasks[i]
-        )
+        this.kafka.prepareKafkaObjectAndSend(KAFKA_COMPLETION_LOG, {
+          task: nonReportedTasks[i]
+        })
         this.updateTaskToReportedCompletion(nonReportedTasks[i])
       }
     })

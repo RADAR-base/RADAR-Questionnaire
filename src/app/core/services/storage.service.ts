@@ -33,64 +33,55 @@ export class StorageService {
     createdDate,
     createdDateMidnight
   ) {
-    const allKeys = this.getAllKeys()
-    return allKeys
-      .then(keys => {
-        // TODO: Find out why this is hard-coded?
-        if (keys.length <= 7) {
-          const enrolmentDateTime = new Date(createdDate)
-          const referenceDateTime = new Date(createdDateMidnight)
-          const enrolmentDate = this.set(
-            StorageKeys.ENROLMENTDATE,
-            enrolmentDateTime.getTime()
-          )
-          const referenceDate = this.set(
-            StorageKeys.REFERENCEDATE,
-            referenceDateTime.getTime()
-          )
+    const enrolmentDate = this.set(
+      StorageKeys.ENROLMENTDATE,
+      new Date(createdDate).getTime()
+    )
+    const referenceDate = this.set(
+      StorageKeys.REFERENCEDATE,
+      new Date(createdDateMidnight).getTime()
+    )
+    const pId = this.set(StorageKeys.PARTICIPANTID, participantId)
+    const pLogin = this.set(StorageKeys.PARTICIPANTLOGIN, participantLogin)
+    const pName = this.set(StorageKeys.PROJECTNAME, projectName)
+    const sId = this.set(StorageKeys.SOURCEID, sourceId)
+    const lang = this.set(StorageKeys.LANGUAGE, language)
+    const notif = this.set(
+      StorageKeys.SETTINGS_NOTIFICATIONS,
+      DefaultSettingsNotifications
+    )
+    const report = this.set(
+      StorageKeys.SETTINGS_WEEKLYREPORT,
+      DefaultSettingsWeeklyReport
+    )
+    const langs = this.set(
+      StorageKeys.SETTINGS_LANGUAGES,
+      DefaultSettingsSupportedLanguages
+    )
+    const version = this.set(
+      StorageKeys.SCHEDULE_VERSION,
+      DefaultScheduleVersion
+    )
+    const utc = this.set(StorageKeys.UTC_OFFSET, new Date().getTimezoneOffset())
+    const cache = this.set(StorageKeys.CACHE_ANSWERS, {})
 
-          const pId = this.set(StorageKeys.PARTICIPANTID, participantId)
-          const pLogin = this.set(
-            StorageKeys.PARTICIPANTLOGIN,
-            participantLogin
-          )
-          const pName = this.set(StorageKeys.PROJECTNAME, projectName)
-          const sId = this.set(StorageKeys.SOURCEID, sourceId)
-
-          const lang = this.set(StorageKeys.LANGUAGE, language)
-          const notif = this.set(
-            StorageKeys.SETTINGS_NOTIFICATIONS,
-            DefaultSettingsNotifications
-          )
-          const report = this.set(
-            StorageKeys.SETTINGS_WEEKLYREPORT,
-            DefaultSettingsWeeklyReport
-          )
-          const langs = this.set(
-            StorageKeys.SETTINGS_LANGUAGES,
-            DefaultSettingsSupportedLanguages
-          )
-          const version = this.set(
-            StorageKeys.SCHEDULE_VERSION,
-            DefaultScheduleVersion
-          )
-
-          return Promise.all([
-            pId,
-            pName,
-            pLogin,
-            sId,
-            lang,
-            notif,
-            report,
-            langs,
-            version
-          ])
-        }
-      })
-      .catch(error => {
-        this.handleError(error)
-      })
+    return Promise.all([
+      pId,
+      pName,
+      pLogin,
+      sId,
+      lang,
+      notif,
+      report,
+      langs,
+      version,
+      utc,
+      cache,
+      enrolmentDate,
+      referenceDate
+    ]).catch(error => {
+      this.handleError(error)
+    })
   }
 
   getStorageState() {

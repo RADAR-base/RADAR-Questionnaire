@@ -2,15 +2,14 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Component } from '@angular/core'
 import {
   AlertController,
-  Content,
   NavController,
   NavParams,
   Platform
 } from 'ionic-angular'
 
-import { DefaultTask } from '../../../../assets/data/defaultConfig'
 import { KafkaService } from '../../../core/services/kafka.service'
 import { StorageService } from '../../../core/services/storage.service'
+import { UsageService } from '../../../core/services/usage.service'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { Task, TasksProgress } from '../../../shared/models/task'
@@ -53,12 +52,15 @@ export class HomePageComponent {
     private translate: TranslatePipe,
     public storage: StorageService,
     private platform: Platform,
-    private kafka: KafkaService
+    private kafka: KafkaService,
+    private usage: UsageService
   ) {
-    this.platform.resume.subscribe(e => {
-      this.kafka.sendAllAnswersInCache()
-      this.checkForNextTask()
-    })
+    this.platform.resume.subscribe(() => this.onResume())
+  }
+
+  ionViewWillEnter() {
+    this.startingQuestionnaire = false
+    this.kafka.sendToKafkaFromCache()
   }
 
   ionViewDidLoad() {
@@ -70,9 +72,14 @@ export class HomePageComponent {
       this.tasksProgress = this.tasksService.getTaskProgress(tasks)
       this.showNoTasksToday = this.tasksProgress.numberOfTasks == 0
     })
-    this.startingQuestionnaire = false
     this.evalHasClinicalTasks()
     this.tasksService.sendNonReportedTaskCompletion()
+  }
+
+  onResume() {
+    this.usage.sendOpen(new Date().getTime() / 1000)
+    this.kafka.sendToKafkaFromCache()
+    this.checkForNextTask()
   }
 
   checkForNextTask() {

@@ -19,7 +19,7 @@ import { SchedulingService } from './scheduling.service'
 import { StorageService } from './storage.service'
 
 declare var cordova
-declare var FCMPlugin
+declare var FCMPlugin: any
 
 @Injectable()
 export class NotificationService {
@@ -31,23 +31,25 @@ export class NotificationService {
     private schedule: SchedulingService,
     public storage: StorageService
   ) {
-    try {
-      FCMPlugin.setSenderId(
-        FCMPluginProjectSenderId,
-        function() {
-          console.log('[NOTIFICATION SERVICE] Set sender id success')
-        },
-        function(error) {
-          console.log(error)
-          alert(error)
-        }
-      )
+    if (typeof FCMPlugin != typeof 'undefined') {
+      try {
+        FCMPlugin.setSenderId(
+          FCMPluginProjectSenderId,
+          function() {
+            console.log('[NOTIFICATION SERVICE] Set sender id success')
+          },
+          function(error) {
+            console.log(error)
+            alert(error)
+          }
+        )
 
-      FCMPlugin.getToken(function(token) {
-        console.log('[NOTIFICATION SERVICE] Refresh token success')
-      })
-    } catch (error) {
-      console.error(error)
+        FCMPlugin.getToken(function(token) {
+          console.log('[NOTIFICATION SERVICE] Refresh token success')
+        })
+      } catch (error) {
+        console.error(error)
+      }
     }
   }
 

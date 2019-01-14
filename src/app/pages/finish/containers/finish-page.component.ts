@@ -1,7 +1,11 @@
 import { Component } from '@angular/core'
 import { NavController, NavParams } from 'ionic-angular'
 
-import { DefaultNumberOfNotificationsToSchedule } from '../../../../assets/data/defaultConfig'
+import {
+  DefaultNumberOfNotificationsToSchedule,
+  KAFKA_ASSESSMENT,
+  KAFKA_TIMEZONE
+} from '../../../../assets/data/defaultConfig'
 import { KafkaService } from '../../../core/services/kafka.service'
 import { NotificationService } from '../../../core/services/notification.service'
 import { StorageService } from '../../../core/services/storage.service'
@@ -48,17 +52,10 @@ export class FinishPageComponent {
 
   processDataAndSend() {
     return this.prepareDataService
-      .processQuestionnaireData(
-        this.questionnaireData.answers,
-        this.questionnaireData.timestamps
-      )
+      .processQuestionnaireData(this.questionnaireData)
       .then(
-        data => {
-          this.sendToKafka(
-            this.associatedTask,
-            data,
-            this.questionnaireData.questions
-          )
+        processedAnswers => {
+          this.sendToKafka(processedAnswers, this.associatedTask)
         },
         error => {
           console.log(JSON.stringify(error))
@@ -66,21 +63,19 @@ export class FinishPageComponent {
       )
   }
 
-  sendToKafka(task: Task, questionnaireData, questions) {
+  sendToKafka(processedAnswers, task) {
     // NOTE: Submit data to kafka
-    this.kafkaService.prepareTimeZoneKafkaObjectAndSend()
-    this.kafkaService.prepareAnswerKafkaObjectAndSend(
-      task,
-      questionnaireData,
-      questions
-    )
+    this.kafkaService.prepareKafkaObjectAndSend(KAFKA_TIMEZONE, {})
+    this.kafkaService.prepareKafkaObjectAndSend(KAFKA_ASSESSMENT, {
+      task: task,
+      data: processedAnswers
+    })
   }
 
   handleClosePage() {
-    this.hasClickedDoneButton = !this.hasClickedDoneButton
     this.evalClinicalFollowUpTask().then(() => {
-      this.kafkaService.sendAllAnswersInCache()
-      this.navCtrl.setRoot(HomePageComponent)
+      this.hasClickedDoneButton = !this.hasClickedDoneButton
+      return this.navCtrl.setRoot(HomePageComponent)
     })
   }
 

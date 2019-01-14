@@ -5,7 +5,9 @@ import { ConfigService } from '../core/services/config.service'
 import { KafkaService } from '../core/services/kafka.service'
 import { NotificationService } from '../core/services/notification.service'
 import { SchedulingService } from '../core/services/scheduling.service'
+import { SchemaService } from '../core/services/schema.service'
 import { StorageService } from '../core/services/storage.service'
+import { UsageService } from '../core/services/usage.service'
 import { PipesModule } from '../shared/pipes/pipes.module'
 import { TranslatePipe } from '../shared/pipes/translate/translate'
 import { AuthModule } from './auth/auth.module'
@@ -41,7 +43,9 @@ import { StartModule } from './start/start.module'
     NotificationService,
     SchedulingService,
     StorageService,
-    TranslatePipe
+    TranslatePipe,
+    UsageService,
+    SchemaService
   ]
 })
 export class PagesModule {}

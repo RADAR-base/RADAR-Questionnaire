@@ -119,6 +119,8 @@ export const DefaultProtocolEndPoint: string = DefaultProtocolEndPointExport
 
 export const DefaultSourceProducerAndSecret: string = DefaultSourceProducerAndSecretExport
 
+export const DefaultPackageName = 'org.phidatalab.radar_armt'
+
 // CONFIG SERVICE
 
 export const DefaultProtocolURI = '/protocol.json'
@@ -155,4 +157,5 @@ export const MIN_SEC = 60
 export const KAFKA_ASSESSMENT = 'assessment'
 export const KAFKA_COMPLETION_LOG = 'completion_log'
 export const KAFKA_TIMEZONE = 'timezone'
+export const KAFKA_USAGE = 'usage'
 export const KAFKA_CLIENT_KAFKA = '/kafka'

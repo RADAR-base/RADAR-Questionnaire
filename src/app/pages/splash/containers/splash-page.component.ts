@@ -1,5 +1,4 @@
 import { Component } from '@angular/core'
-import { Globalization } from '@ionic-native/globalization'
 import { NavController, NavParams } from 'ionic-angular'
 
 import {
@@ -7,9 +6,9 @@ import {
   DefaultNumberOfNotificationsToSchedule
 } from '../../../../assets/data/defaultConfig'
 import { ConfigService } from '../../../core/services/config.service'
-import { KafkaService } from '../../../core/services/kafka.service'
 import { NotificationService } from '../../../core/services/notification.service'
 import { StorageService } from '../../../core/services/storage.service'
+import { UsageService } from '../../../core/services/usage.service'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { EnrolmentPageComponent } from '../../auth/containers/enrolment-page.component'
 import { HomePageComponent } from '../../home/containers/home-page.component'
@@ -28,9 +27,8 @@ export class SplashPageComponent {
     public storage: StorageService,
     private splashService: SplashService,
     private notificationService: NotificationService,
-    private globalization: Globalization,
-    private kafka: KafkaService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private usage: UsageService
   ) {
     this.splashService
       .evalEnrolment()
@@ -46,48 +44,32 @@ export class SplashPageComponent {
     this.status = 'Updating notifications...'
     return this.checkTimezoneChange()
       .then(() => this.notificationsRefresh())
-      .catch(error => {
-        console.error(error)
-        console.log('[SPLASH] Notifications error.')
-      })
+      .catch(e => console.log('[SPLASH] Notifications error.'))
       .then(() => {
-        this.status = 'Sending cached answers...'
-        return this.kafka.sendAllAnswersInCache()
+        this.status = 'Sending usage event...'
+        return this.usage.sendOpen(new Date().getTime() / 1000)
       })
-      .catch(e => console.log('Error sending cache'))
+      .catch(e => console.log('[SPLASH] Error sending data'))
       .then(() => this.navCtrl.setRoot(HomePageComponent))
   }
 
   checkTimezoneChange() {
-    return Promise.all([
-      this.storage.get(StorageKeys.TIME_ZONE),
-      this.storage.get(StorageKeys.UTC_OFFSET)
-    ]).then(([timezone, prevUtcOffset]) => {
-      return this.globalization
-        .getDatePattern({
-          formatLength: 'short',
-          selector: 'date and time'
-        })
-        .then(res => {
-          const utcOffset = new Date().getTimezoneOffset()
-          // NOTE: Cancels all notifications and reschedule tasks if timezone has changed
-          if (timezone !== res.timezone || prevUtcOffset !== utcOffset) {
-            console.log(
-              '[SPLASH] Timezone has changed to ' +
-                res.timezone +
-                '. Cancelling notifications! Rescheduling tasks! Scheduling new notifications!'
-            )
-            return Promise.all([
-              this.storage.set(StorageKeys.TIME_ZONE, res.timezone),
-              this.storage.set(StorageKeys.UTC_OFFSET, utcOffset),
-              this.storage.set(StorageKeys.UTC_OFFSET_PREV, prevUtcOffset)
-            ]).then(() =>
-              this.configService.updateConfigStateOnTimezoneChange()
-            )
-          } else {
-            console.log('[SPLASH] Current Timezone is ' + timezone)
-          }
-        })
+    return this.storage.get(StorageKeys.UTC_OFFSET).then(prevUtcOffset => {
+      const utcOffset = new Date().getTimezoneOffset()
+      // NOTE: Cancels all notifications and reschedule tasks if timezone has changed
+      if (prevUtcOffset !== utcOffset) {
+        console.log(
+          '[SPLASH] Timezone has changed to ' +
+            utcOffset +
+            '. Cancelling notifications! Rescheduling tasks! Scheduling new notifications!'
+        )
+        return Promise.all([
+          this.storage.set(StorageKeys.UTC_OFFSET, utcOffset),
+          this.storage.set(StorageKeys.UTC_OFFSET_PREV, prevUtcOffset)
+        ]).then(() => this.configService.updateConfigStateOnTimezoneChange())
+      } else {
+        console.log('[SPLASH] Current Timezone is ' + utcOffset)
+      }
     })
   }
 

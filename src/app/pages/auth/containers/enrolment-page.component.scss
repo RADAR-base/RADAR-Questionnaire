@@ -1,14 +1,14 @@
 page-enrolment {
-  color: $cl-light;
+  color: white;
 
   #logo {
-    width: 120px;
+    width: 200px;
   }
 
   #logo-container {
     margin: auto;
     padding-bottom: 3vh;
-    width: 120px;
+    width: 200px;
   }
 
   .text {
@@ -23,6 +23,11 @@ page-enrolment {
   .text-lg {
     margin-bottom: 2vh;
     font-size: 40px;
+  }
+
+  .text-md {
+    margin-bottom: 2vh;
+    font-size: 30px;
   }
 
   .padding {
@@ -87,6 +92,10 @@ page-enrolment {
     font-size: 2rem;
   }
 
+  ion-slide.swiper-slide {
+    align-items: flex-start;
+    padding-top: 50px;
+  }
   .pos-above {
     margin-top: -50px;
   }
@@ -115,4 +124,11 @@ page-enrolment {
     margin-bottom: 0 !important;
     padding-bottom: 0 !important;
   }
+
+  li {
+    padding-bottom:10px;
+    list-style-type: decimal;
+    list-style-position: outside;
+  }
+
 }

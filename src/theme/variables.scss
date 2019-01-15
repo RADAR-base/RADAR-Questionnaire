@@ -5,14 +5,14 @@
 
 // Main Map : map_get($colors, light)
 $colors: (
-  primary: #0b4a59,
-  secondary: #6d9aa5,
-  secondary-light: #9bb5bc,
+  primary: #ceeeff,
+  secondary: #f4f4f4,
+  secondary-light: #fbfffd,
   danger: #f53d3d,
   success: #3fc380,
   warning: #ff8,
   tertiary: #7fcdbb,
-  light: white,
+  light: #312d90,
   dark: #222
 );
 
@@ -55,7 +55,7 @@ $cl-checkmark: #9ad1c3;
 
 // Font
 $cl-font: $cl-light;
-$cl-font-light: $cl-light-80;
+$cl-font-light: $cl-light-20;
 
 // App Globals
 $bt-height: 56px;

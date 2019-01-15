@@ -19,7 +19,7 @@ export const Localisations = {
   ENROL_WELCOME_2: {
     da: 'til RADAR-CNS',
     de: 'zu RADAR-CNS',
-    en: 'to RADAR-CNS',
+    en: 'to MigHealth UK',
     es: 'a RADAR-CNS',
     it: 'in RADAR-CNS',
     nl: 'bij RADAR-CNS'
@@ -37,6 +37,21 @@ export const Localisations = {
       'Grazie per aver preso parte al nostro studio. Iniziamo il processo di arruolamento.',
     nl:
       'Bedankt voor uw deelname aan dit onderzoek. Laten we starten met het registratie-proces.'
+  },
+  ENROL_ABOUT_HEADING: {
+    da: 'Velkommen',
+    de: 'Herzlich willkommen',
+    en: 'About this study',
+    es: 'Bienvenido',
+    it: 'Benvenuto',
+    nl: 'Welkom'
+  },
+  ENROL_HOW_STUDY_WORKS_HEADING: {
+    en: 'How this study works',
+  },
+
+  ENROL_ELIGIBILITY_HEADING: {
+    en: "Eligibility"
   },
   ENROL_REGISTRATION: {
     da: 'Registrering',
@@ -434,6 +449,14 @@ export const Localisations = {
     da: 'Start',
     de: 'Start',
     en: 'Start',
+    es: 'Inicio',
+    it: 'Start',
+    nl: 'Start'
+  },
+  BTN_JOINSTUDY: {
+    da: 'Start',
+    de: 'Start',
+    en: 'Join Study',
     es: 'Inicio',
     it: 'Start',
     nl: 'Start'

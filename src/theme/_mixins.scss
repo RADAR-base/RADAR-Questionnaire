@@ -41,3 +41,13 @@
   border-radius: $bt-height;
   background-color: $cl-primary-20;
 }
+
+@mixin button-square() {
+  @include font-large;
+
+  padding: 8px 32px;
+  height: 100px;
+  width: 100px;
+  border: 2px solid $cl-light;
+  background-color: $cl-primary-20;
+}

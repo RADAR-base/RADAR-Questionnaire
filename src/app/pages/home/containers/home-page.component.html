@@ -97,6 +97,8 @@
   >
     <task-info
       [task]="nextTask"
+      [isNow]="taskIsNow"
+      [progress]="tasksProgress"
       (collapse)="displayEvalTransformations($event)"
     ></task-info>
   </div>
@@ -106,8 +108,10 @@
     class="size-null"
   >
     <task-calendar
+      *ngIf="tasks"
       [scrollHeight]="calendarScrollHeight"
       (task)="startQuestionnaire($event)"
+      [tasks]="tasks"
     >
     </task-calendar>
   </div>

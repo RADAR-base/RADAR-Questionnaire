@@ -19,10 +19,68 @@ export const Localisations = {
   ENROL_WELCOME_2: {
     da: 'til RADAR-CNS',
     de: 'zu RADAR-CNS',
-    en: 'to MigHealth UK',
+    en: 'to Health on the Move',
     es: 'a RADAR-CNS',
     it: 'in RADAR-CNS',
     nl: 'bij RADAR-CNS'
+  },
+  ENROLE_STUDY_DESCRIPTION: {
+    en: 'A Research Study by University College London about the Health of Migrants to the UK'
+  },
+
+  ABOUT_STUDY_1: {
+    en: 'The purpose of this study is to learn about the health of international migrants who come to live in the United Kingdom. An international migrant is someone who was born outside of the UK, including people who come to work, study, or reunite their families or for refugee.'
+  },
+  ABOUT_STUDY_2: {
+    en: "Right now in the UK, we do not really know about the health of international migrants or how they use the UK's National Health Service. By asking survey questions on this application, we hope to collect information to better understand their health, wellbeing and experiences after moving to the UK. We believe that your data can help the UK better support the health of migrants"
+  },
+  ABOUT_HOW_THIS_STUDY_WORKS_Q: {
+    en: 'How this study works?'
+  },
+  ABOUT_HOW_THIS_STUDY_WORKS_ANS: {
+    en: 'TO be added'
+  },
+  ABOUT_WHO_IS_RUNNING_THIS_STUDY_Q: {
+    en: 'Who is running this study?'
+  },
+  ABOUT_WHO_IS_RUNNING_THIS_STUDY_ANS: {
+    en: 'TO be added'
+  },
+  CONSENT_TITLE: {
+    en: 'Consent Process'
+  },
+  CONSENT_EXPLANATION_1: {
+    en: 'Please review the information below before you agree to participate in this study.'
+  },
+  CONSENT_TIME_COMMITMENT_INTRO: {
+    en: 'This survey questions will take you only 3 minutes every few weeks. Click to read more.'
+  },
+  CONSENT_TIME_COMMITMENT_DETAILS: {
+    en: "Every few weeks there will be a new set of questions about your health and wellbeing that should take you no more than 3 minutes to complete. Surverys will be should and sweet, but will provide us with meaningful information about your health and the health of people like you."
+  },
+  CONSENT_PRIVACY_POLICY_INTRO: {
+    en: 'This survey questions will take you only 3 minutes every few weeks. Click to read more.'
+  },
+  CONSENT_PRIVACY_POLICY_DETAILS: {
+    en: "Every few weeks there will be a new set of questions about your health and wellbeing that should take you no more than 3 minutes to complete. Surverys will be should and sweet, but will provide us with meaningful information about your health and the health of people like you."
+  },
+  CONSENT_WITHDRAWAL_INTRO: {
+    en: 'This survey questions will take you only 3 minutes every few weeks. Click to read more.'
+  },
+  CONSENT_WITHDRAWAL_DETAILS: {
+    en: "Every few weeks there will be a new set of questions about your health and wellbeing that should take you no more than 3 minutes to complete. Surverys will be should and sweet, but will provide us with meaningful information about your health and the health of people like you."
+  },
+  CONSENT_CONTACT_YOU_INTRO: {
+    en: 'This survey questions will take you only 3 minutes every few weeks. Click to read more.'
+  },
+  CONSENT_CONTACT_YOU_DETAILS: {
+    en: "Every few weeks there will be a new set of questions about your health and wellbeing that should take you no more than 3 minutes to complete. Surverys will be should and sweet, but will provide us with meaningful information about your health and the health of people like you."
+  },
+  CONSENT_PARTICIPATION: {
+    en: 'I consent to participate in the UCL Health on the Move Study.'
+  },
+  CONSENT_NHS_RECORD_ACCESS: {
+    en: 'I consent to allow the researchers to access my NHS electronic health records.'
   },
   ENROL_WELCOME_DESC: {
     da:
@@ -38,6 +96,14 @@ export const Localisations = {
     nl:
       'Bedankt voor uw deelname aan dit onderzoek. Laten we starten met het registratie-proces.'
   },
+  ENROL_ABORT_THANKYOU_1: {
+    en: 'Thank you for your time',
+    nl: 'Bedankt'
+  },
+
+  ENROL_ABORT_MESSAGE: {
+    en: 'It seems you do not meet our eligibility criteria to participant in the study.'
+  },
   ENROL_ABOUT_HEADING: {
     da: 'Velkommen',
     de: 'Herzlich willkommen',
@@ -51,7 +117,7 @@ export const Localisations = {
   },
 
   ENROL_ELIGIBILITY_HEADING: {
-    en: "Eligibility"
+    en: 'Eligibility'
   },
   ENROL_REGISTRATION: {
     da: 'Registrering',
@@ -191,15 +257,15 @@ export const Localisations = {
     de: 'Einstellungen',
     en: 'Settings',
     es: 'Ajustes',
-    it: 'Settings',
-    nl: 'Settings'
+    it: 'Impostazioni',
+    nl: 'Instellingen'
   },
   SETTINGS_PARTICIPANTID: {
     da: 'Bruger ID',
-    de: 'Benutzer ID: ',
-    en: 'User ID: ',
+    de: 'Benutzer ID',
+    en: 'User ID',
     es: 'Código Usuario',
-    it: 'User ID:',
+    it: 'User ID',
     nl: 'Gebruikers ID'
   },
   SETTINGS_PROJECTNAME: {
@@ -219,12 +285,12 @@ export const Localisations = {
     nl: 'Gebruikersinformatie'
   },
   SETTINGS_ENROL_DATE: {
-    da: 'Registreringsdata: ',
-    de: 'Registrierungsdatum: ',
-    en: 'Enrolment Date: ',
+    da: 'Registreringsdata',
+    de: 'Registrierungsdatum',
+    en: 'Enrolment Date',
     es: 'Fecha de registro',
-    it: 'Data di arruolamento: ',
-    nl: 'Datum van inclusie: '
+    it: 'Data di arruolamento',
+    nl: 'Datum van inclusie'
   },
   SETTINGS_LANGUAGE: {
     da: 'Sprog',
@@ -349,6 +415,30 @@ export const Localisations = {
     it: 'Dimensione',
     nl: 'Grootte'
   },
+  SETTINGS_DEBUGGING: {
+    da: 'Debugging',
+    de: 'Debuggen',
+    en: 'Debugging',
+    es: 'Depuración',
+    it: 'Debug',
+    nl: 'Debugging'
+  },
+  SETTINGS_GENERATE_NOTIFS: {
+    da: 'Generer Testmeddelelse',
+    de: 'Testbenachrichtigung Generieren',
+    en: 'Generate Test Notifications',
+    es: 'Generar Notificación de Prueba',
+    it: 'Genera Notifica di Prova',
+    nl: 'Genereer Testmelding'
+  },
+  SETTINGS_LOG_NOTIFS: {
+    da: 'Logmeddelelser',
+    de: 'Protokollbenachrichtigungen',
+    en: 'Log Notifications',
+    es: 'Notificaciones de Registro',
+    it: 'Registra le Notifiche',
+    nl: 'Logmeldingen'
+  },
   LANGUAGE_ENGLISH: {
     da: 'Engelsk',
     de: 'Englisch',
@@ -450,8 +540,8 @@ export const Localisations = {
     de: 'Start',
     en: 'Start',
     es: 'Inicio',
-    it: 'Start',
-    nl: 'Start'
+    it: 'Inizio',
+    nl: 'Begin'
   },
   BTN_JOINSTUDY: {
     da: 'Start',
@@ -853,5 +943,31 @@ export const Localisations = {
     es: 'minutos',
     it: 'minuti',
     nl: 'minuten'
+  },
+  TESTING_NOTIFICATIONS: {
+    da: 'Testmeddelelser',
+    de: 'Benachrichtigungen Testen',
+    en: 'Testing Notifications',
+    es: 'Pruebas de Notificaciones',
+    it: 'Test delle Notifiche',
+    nl: 'Testen van Meldingen'
+  },
+  TESTING_NOTIFICATIONS_MESSAGE: {
+    da: 'Luk nu appen og vent i 2 minutter for testmeddelelsen.',
+    de:
+      'Schließen Sie nun die App und warten Sie 2 Minuten auf die Testbenachrichtigung.',
+    en: 'Now close the app and wait for 2 minutes for the test notification.',
+    es:
+      'Ahora cierre la aplicación y espere 2 minutos para la notificación de prueba.',
+    it: "Ora chiudi l'app e attendi 2 minuti per la notifica del test.",
+    nl: 'Sluit nu de app en wacht 2 minuten op de testmelding.'
+  },
+  CLOSE_APP: {
+    da: 'Luk App',
+    de: 'Schließen Sie die App',
+    en: 'Close App',
+    es: 'Cerrar App',
+    it: 'Chiudi App',
+    nl: 'App Sluiten'
   }
 }

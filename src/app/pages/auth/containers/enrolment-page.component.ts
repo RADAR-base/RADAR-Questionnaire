@@ -1,22 +1,12 @@
 import { Component, ElementRef, ViewChild } from '@angular/core'
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  ValidatorFn,
-  Validators
-} from '@angular/forms'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner'
 import { AlertController, NavController, Slides } from 'ionic-angular'
 
 import {
-  DefaultEnrolmentBaseURL,
   DefaultSettingsSupportedLanguages,
   DefaultSettingsWeeklyReport,
   DefaultSourceTypeModel,
-  LanguageMap
 } from '../../../../assets/data/defaultConfig'
-import { AppComponent } from '../../../core/containers/app.component'
 import { ConfigService } from '../../../core/services/config.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
@@ -41,16 +31,18 @@ export class EnrolmentPageComponent {
   elLoading: ElementRef
   @ViewChild('outcome')
   elOutcome: ElementRef
+  isEighteen: boolean = undefined;
+  isBornInUK: boolean = undefined;
+  consentParticipation = undefined;
+  consentNHSRecordAccess = undefined;
+  showTimeCommitmentDetails = false;
+  showPrivacyPolicyDetails = false;
+  showWithdrawalDetails = false;
+  showContactYouDetails = false;
   loading: boolean = false
   showOutcomeStatus: boolean = false
   outcomeStatus: String
-  reportSettings: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
-  registrationUrl: string = 'http://localhost:8080/auth/realms/mighealth/protocol/openid-connect/auth?' +
-    'client_id=account' +
-    '&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fauth%2Frealms%2Fmighealth%2Faccount%2Flogin-redirect' +
-    '&state=0%2F90b4e79a-1333-4a4f-91b1-414f18942e82&response_type=code&scope=openid';
-
-  URLRegEx = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?'
+  reportSettings: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport;
 
   language: LanguageSetting = {
     label: LocKeys.LANGUAGE_ENGLISH.toString(),
@@ -58,22 +50,8 @@ export class EnrolmentPageComponent {
   }
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
 
-  enterMetaQR = false
-  metaQRForm: FormGroup = new FormGroup({
-    baseURL: new FormControl(DefaultEnrolmentBaseURL, [
-      Validators.required,
-      Validators.pattern(this.URLRegEx)
-    ]),
-    tokenName: new FormControl('', [Validators.required])
-  })
   authSuccess = false
 
-  get tokenName() {
-    return this.metaQRForm.get('tokenName')
-  }
-  get baseURL() {
-    return this.metaQRForm.get('baseURL')
-  }
 
   constructor(
     public navCtrl: NavController,
@@ -87,159 +65,53 @@ export class EnrolmentPageComponent {
   ) {}
 
   ionViewDidLoad() {
-    this.slides.lockSwipes(true)
-    this.storage.get(StorageKeys.LANGUAGE).then(lang => {
-      if (lang != null) {
-        this.language = lang
-      }
-    })
+    this.slides.lockSwipes(true);
+    this.translate.init()
   }
 
   ionViewDidEnter() {}
 
-  scanQRHandler() {
-    this.loading = true
-    const scanOptions = {
-      showFlipCameraButton: true,
-      orientation: 'portrait'
-      // disableAnimations: true
-    }
-    this.scanner
-      .scan(scanOptions)
-      .then(scannedObj => this.authenticate(scannedObj.text))
+  isOlderThanEighteen(res: boolean) {
+    this.isEighteen = res;
+    this.processEligibility();
   }
 
-  metaQRHandler() {
-    if (this.baseURL.errors) {
-      this.displayErrorMessage({ statusText: 'Invalid Base URL' })
-      return
-    }
-    if (this.tokenName.errors) {
-      this.displayErrorMessage({ statusText: 'Invalid Token Name' })
-      return
-    }
-    this.authenticate(
-      this.authService.getURLFromToken(
-        this.baseURL.value.trim(),
-        this.tokenName.value.trim()
-      )
-    )
+  isBornInUnitedKingdom(res: boolean) {
+    this.isBornInUK = res;
+    this.processEligibility();
   }
 
-  authenticate(authObj) {
-    this.showOutcomeStatus = false
-    this.transitionStatuses()
+  processConsent() {
+    if (!this.consentParticipation) {
+      this.alertCtrl.create({
+        title: "Consent is required",
+        buttons: [{
+          text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+          handler: () => {}
+        }],
+        message: "Your consent to participate in the study is at least required."
+      }).present();
+    }
+    if(this.consentParticipation === true) {
+      this.goToRegistration();
+    }
+    if(this.consentNHSRecordAccess === true) {
+      this.storage.set(StorageKeys.CONSENT_ACCESS_NHS_RECORDS, true);
+    }
+  }
 
-    new Promise((resolve, reject) => {
-      let refreshToken = null
-      if (this.validURL(authObj)) {
-        // NOTE: Meta QR code and new QR code
-        this.authService
-          .getRefreshTokenFromUrl(authObj)
-          .then((body: any) => {
-            refreshToken = body['refreshToken']
-            if (body['baseUrl']) {
-              this.storage.set(StorageKeys.BASE_URI, body['baseUrl'])
-              this.authService.updateURI()
-            }
-            resolve(refreshToken)
-          })
-          .catch(e => {
-            if (e.status === 410) {
-              e.statusText = 'URL expired. Regenerate the QR code.'
-            } else {
-              e.statusText = 'Error: Cannot get the refresh token from the URL'
-            }
-            console.log(e.statusText + ' - ' + e.status)
-            this.displayErrorMessage(e)
-          })
+  processEligibility() {
+    if(this.isBornInUK != undefined && this.isEighteen != undefined) {
+      if(this.isBornInUK === true && this.isEighteen == true){
+        this.next();
       } else {
-        // NOTE: Old QR codes: containing refresh token as JSON
-        this.authService.updateURI().then(() => {
-          console.log('BASE URI : ' + this.storage.get(StorageKeys.BASE_URI))
-          const auth = JSON.parse(authObj)
-          refreshToken = auth.refreshToken
-          resolve(refreshToken)
-        })
+        this.slideTo(2);
       }
-    })
-      .catch(e => {
-        console.error(
-          'Cannot Parse Refresh Token from the QR code. ' +
-            'Please make sure the QR code contains either a JSON or a URL pointing to this JSON ' +
-            e
-        )
-        e.statusText = 'Cannot Parse Refresh Token from the QR code.'
-        this.displayErrorMessage(e)
-      })
-      .then(refreshToken => {
-        if (refreshToken === null) {
-          const error = new Error('refresh token cannot be null.')
-          this.displayErrorMessage(error)
-          throw error
-        }
-        this.authService
-          .registerToken(refreshToken)
-          .then(() => {
-            this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
-              this.authService
-                .registerAsSource()
-                .then(() => {
-                  this.retrieveSubjectInformation()
-                })
-                .catch(error => {
-                  const modifiedError = error
-                  this.retrieveSubjectInformation()
-                  modifiedError.statusText = 'Re-registered an existing source '
-                  this.displayErrorMessage(modifiedError)
-                })
-            })
-          })
-          .catch(error => {
-            this.displayErrorMessage(error)
-          })
-      })
-      .catch(error => {
-        this.displayErrorMessage(error)
-      })
-  }
-
-  validURL(str) {
-    return new FormControl(str, Validators.pattern(this.URLRegEx)).errors
-      ? false
-      : true
-  }
-
-  retrieveSubjectInformation() {
-    this.authSuccess = true
-    this.authService.getSubjectInformation().then(res => {
-      const subjectInformation: any = res
-      const participantId = subjectInformation.externalId
-      const participantLogin = subjectInformation.login
-      const projectName = subjectInformation.project.projectName
-      const sourceId = this.getSourceId(subjectInformation)
-      const createdDate = new Date(subjectInformation.createdDate)
-      const createdDateMidnight = this.schedule.setDateTimeToMidnight(
-        new Date(subjectInformation.createdDate)
-      )
-      this.storage
-        .init(
-          participantId,
-          participantLogin,
-          projectName,
-          sourceId,
-          this.language,
-          createdDate,
-          createdDateMidnight
-        )
-        .then(() => {
-          this.doAfterAuthentication()
-        })
-    })
+    }
   }
 
   doAfterAuthentication() {
-    this.configService.fetchConfigState(true).then(() => this.next())
+    this.configService.fetchConfigState(true).then(() => this.navigateToHome())
   }
 
   displayErrorMessage(error) {
@@ -283,77 +155,46 @@ export class EnrolmentPageComponent {
     this.slides.lockSwipes(true)
   }
 
-  enterToken() {
-    this.enterMetaQR = true
-    this.next()
+  goBack() {
+    this.slides.lockSwipes(false)
+    const slideIndex = this.slides.getActiveIndex() - 1
+    this.slides.slideTo(slideIndex, 500)
+    this.slides.lockSwipes(true)
+  }
+
+  slideTo(index: number) {
+    this.slides.lockSwipes(false)
+    this.slides.slideTo(index, 500)
+    this.slides.lockSwipes(true)
   }
 
   navigateToHome() {
     this.navCtrl.setRoot(HomePageComponent)
   }
 
-  showSelectLanguage() {
-    const buttons = [
-      {
-        text: this.translate.transform(LocKeys.BTN_CANCEL.toString()),
-        handler: () => {}
-      },
-      {
-        text: this.translate.transform(LocKeys.BTN_SET.toString()),
-        handler: selectedLanguageVal => {
-          const lang: LanguageSetting = {
-            label: LanguageMap[selectedLanguageVal],
-            value: selectedLanguageVal
-          }
-          this.storage.set(StorageKeys.LANGUAGE, lang)
-          this.language = lang
-          this.navCtrl.setRoot(AppComponent)
-        }
-      }
-    ]
-    const inputs = []
-    for (let i = 0; i < this.languagesSelectable.length; i++) {
-      let checked = false
-      if (this.languagesSelectable[i]['label'] === this.language.label) {
-        checked = true
-      }
-      inputs.push({
-        type: 'radio',
-        label: this.translate.transform(
-          this.languagesSelectable[i]['label'].toString()
-        ),
-        value: this.languagesSelectable[i]['value'],
-        checked: checked
-      })
-    }
-    this.showAlert({
-      title: this.translate.transform(
-        LocKeys.SETTINGS_LANGUAGE_ALERT.toString()
-      ),
-      buttons: buttons,
-      inputs: inputs
-    })
-  }
-
-  showAlert(parameters) {
-    const alert = this.alertCtrl.create({
-      title: parameters.title,
-      buttons: parameters.buttons
-    })
-    if (parameters.message) {
-      alert.setMessage(parameters.message)
-    }
-    if (parameters.inputs) {
-      for (let i = 0; i < parameters.inputs.length; i++) {
-        alert.addInput(parameters.inputs[i])
-      }
-    }
-    alert.present()
-  }
-
   goToRegistration() {
 
-    window
-      .open(this.registrationUrl, '_self')
+    this.authService.keycloakLogin(false)
+      .then(() => {
+        this.showOutcomeStatus = false
+        this.transitionStatuses()
+        this.authService.retrieveUserInformation(this.language)
+          .then(() => {
+            this.configService.fetchConfigState(true)
+              .then(() => this.navigateToHome());
+          })
+      })
+      .catch( () => {
+        this.loading = false;
+        this.alertCtrl.create({
+          title: "Something went wrong",
+          buttons: [{
+            text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+            handler: () => {}
+          }],
+          message: "Could not successfully register new participant. Please try again later."
+        }).present();
+      });
   }
+
 }

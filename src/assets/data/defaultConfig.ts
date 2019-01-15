@@ -113,8 +113,8 @@ export const DefaultSourceTypeRegistrationBody: any = {
 
 // export const DefaultEndPoint: string =
 //   'https://radar-cns-platform.rosalind.kcl.ac.uk/'
-export const DefaultEndPoint: string = 'https://radar-backend.co.uk/'
-
+export const DefaultEndPoint: string = 'https://ucl-mighealth-dev.thehyve.net/'
+export const DefaultKeycloakURL = 'auth/';
 export const DefaultProtocolEndPoint: string = DefaultProtocolEndPointExport
 
 export const DefaultSourceProducerAndSecret: string = DefaultSourceProducerAndSecretExport

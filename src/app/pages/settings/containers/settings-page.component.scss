@@ -38,6 +38,10 @@ page-settings {
     font-size: 2rem;
   }
 
+  .item-button:active {
+    background-color: $cl-primary-80;
+  }
+
   ion-spinner * {
     padding-left: 8px;
     width: 8px;

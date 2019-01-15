@@ -1,12 +1,26 @@
-page-enrolment {
+page-welcome {
+
   color: white;
 
-  .icon {
-    font-size: 36px;
+  #logo {
+    width: 200px;
   }
+
+  #logo-container {
+    margin: auto;
+    padding-bottom: 3vh;
+    width: 200px;
+  }
+
   .text {
     margin: auto;
     width: 90vw;
+  }
+
+  .text-ques {
+    margin-bottom: 2vh;
+    font-size: 25px;
+    margin-top: 2vh;
   }
 
   .text-justify {
@@ -21,59 +35,16 @@ page-enrolment {
   .text-md {
     margin-bottom: 2vh;
     font-size: 30px;
-    color: $cl-light;
-  }
-
-  .text-heading {
-    margin-bottom: 2vh;
-    font-size: 20px;
-    margin-top: 2vh;
-  }
-  .consent-topic {
-    @include font-body;
-  }
-
-  .scroll{
-    height: 80%
-  }
-
-  input[type='checkbox']:checked + label {
-    background-color: $cl-primary;
-  }
-
-  label {
-    border: 2px solid white;
-    background-color: $cl-primary-20;
-    position: relative;
-    display: flex;
-    flex-grow: 1;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 4px 4px;
-  }
-
-  label:hover {
-    background-color: $cl-primary;
-  }
-
-  input[type='checkbox'] {
-    position: relative;
-    visibility: visible;
-    margin-right: 5px;
-    background-color: $cl-primary;
-  }
-
-  .text-sm {
-    margin-bottom: 2vh;
-    font-size: 18px;
   }
 
   .padding {
     margin-top: 3vh;
+    padding-bottom: 3px;
   }
 
   .extra-padding {
     margin-top: 8vh;
+
   }
 
   #status {
@@ -102,31 +73,17 @@ page-enrolment {
   .padding-text {
     padding-top: 5px;
   }
+
+  .qr-code {
+    margin: auto;
+    padding-top: 3vh;
+    width: 170px;
+  }
+
   .bottom {
     position: fixed;
     bottom: 10px;
     width: 100%;
-  }
-
-  .top {
-    position: fixed;
-    top: 0px;
-    width: 100%;
-  }
-
-  .center {
-    position:relative; /*it can be fixed too*/
-    left:0; right:0;
-    top:0; bottom:0;
-    margin:auto;
-  }
-
-  hr {
-    display: block;
-    height: 0px;
-    border: 2px solid $cl-light;
-    margin: 1em 0;
-    padding: 0;
   }
 
   ion-item.item {
@@ -146,7 +103,7 @@ page-enrolment {
 
   ion-slide.swiper-slide {
     align-items: flex-start;
-    //padding-top: 50px;
+    padding-top: 50px;
   }
   .pos-above {
     margin-top: -50px;
@@ -182,5 +139,4 @@ page-enrolment {
     list-style-type: decimal;
     list-style-position: outside;
   }
-
 }

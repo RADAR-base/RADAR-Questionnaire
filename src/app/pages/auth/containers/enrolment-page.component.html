@@ -1,353 +1,231 @@
 <ion-content>
-  <ion-slides pager>
+  <ion-slides direction="horizontal">
 
-    <ion-slide id="intro">
-      <div id="logo-container">
-        <img
-          id="logo"
-          src="assets/imgs/ucl-logo-text.png"
-          alias="UCL LOGO"
-        >
-      </div>
-      <div class="text">
-        <div class="text-lg">{{ "ENROL_WELCOME_1" | translate }}{{ "ENROL_WELCOME_2" | translate }}</div>
-        A Research Study about the Health of New Residents to the UK
-        <div class="padding text-justify extra-padding">
-          <ion-item no-lines>
-            <span class="info-value">{{ language.label | translate }}</span>
-            <span
-              item-right
-              (click)="showSelectLanguage()"
-            >
-              <ion-icon
-                class="space-right"
-                name="arrow-dropdown"
-              ></ion-icon>
-              {{ "BTN_SELECT" | translate }}
-            </span>
-          </ion-item>
-        </div>
-      </div>
-      <div
-        padding
-        class="bottom"
-      >
-        <button
-          ion-button
-          class="bt bt--full"
-          round
-          full
-          (click)="next()"
-        >
-          {{ "BTN_NEXT" | translate }}
-        </button>
-      </div>
-    </ion-slide>
-
-    <ion-slide id="about">
-
-        <div class="text-md">{{ "ENROL_ABOUT_HEADING" | translate }}</div>
-
-        <ion-scroll
-          scrollY="true"
-          style="height:550px"
-        >
-          <div class="text text-justify">
-            <span class="text">
-              The purpose of this study is to learn about the health of people who move to the United Kingdom to work, study, or join families.
-            </span>
-            <br>
-            <span class="text">
-             Through the use of survey questionnaires, we aim to collect information to better understand participants' health, welbeing and experiences following their migration to the UK.
-            </span>
-            <div class="text" style="font-size: 20px; padding-bottom: 5px; padding-top: 5px">
-              Background
-            </div>
-            <span class="text">
-              Importance of understand the health and larger determinants of health of migrants in the UK (some long text here).
-              <br>
-              Note that the "Available Online" and final date of publication may often be very different, but except in rare cases it is "Available Online" that you should care about because that is when people begin to be able to get your paper. However, some journals do not do all of the final proof correction until closer to the date of publication, but essentially just have your preprint up online for quite some time!
-              <br>
-              Note that the "Available Online" and final date of publication may often be very different, but except in rare cases it is "Available Online" that you should care about because that is when people begin to be able to get your paper. However, some journals do not do all of the final proof correction until closer to the date of publication, but essentially just have your preprint up online for quite some time!
-
-            </span>
-          </div>
-
-        </ion-scroll>
-      <div
-        padding
-        class="bottom"
-      >
-        <button
-          ion-button
-          class="bt bt--full"
-          round
-          full
-          (click)="next()"
-        >
-          {{ "BTN_NEXT" | translate }}
-        </button>
-      </div>
-
-    </ion-slide>
-
-    <ion-slide id="how-study-works">
-
-      <div class="text-md">{{ "ENROL_HOW_STUDY_WORKS_HEADING" | translate }}</div>
-
-      <ion-scroll
-        scrollY="true"
-        style="height:550px"
-      >
-        <div class="text text-justify">
-          <span class="text">
-            To join participant in this study we will ask you to:
-          </span>
-          <br>
-          <section style="align-content: left">
-            <ul >
-              <li>List item</li>
-              <li>List item</li>
-            </ul>
-          </section>
-        </div>
-
-
-      </ion-scroll>
-      <div
-        padding
-        class="bottom"
-      >
-        <button
-          ion-button
-          class="bt bt--full"
-          round
-          full
-          (click)="next()"
-        >
-          {{ "BTN_NEXT" | translate }}
-        </button>
-      </div>
-
-    </ion-slide>
-
-    <ion-slide id="eligibility">
-
+    <ion-slide padding id="eligibility">
       <div class="text-md">{{ "ENROL_ELIGIBILITY_HEADING" | translate }}</div>
-
-      <ion-scroll
-        scrollY="true"
-        style="height:550px"
-      >
-        <span>Eligibility criterion 1</span>
-        <br>
-        <span>
-          <tr>
-            <td>
-        <button ion-button
-                class="bt bt--block"
-                [block]="true"
-                [outline]="true"
-                large >Yes</button>
+      <div class="center">
+        <div>
+          <div>
+            <span class="text-sm padding">Are you at least 18 years old?</span>
+          </div>
+          <br>
+          <div>
+          <span>
+            <tr>
+              <td>
+                <div style="padding-right: 10px">
+                  <button ion-button
+                          class="bt bt--block"
+                          [block]="true"
+                          [outline]="true"
+                          (click)="isOlderThanEighteen(true)"
+                          large>Yes
+                  </button>
+                  </div>
+                </td>
+              <td>
+                <div style="padding-right: 10px">
+                  <button ion-button
+                          class="bt bt--block"
+                          [block]="true"
+                          [outline]="true"
+                          (click)="isOlderThanEighteen(false)"
+                          large>No</button>
+                </div>
               </td>
-            <td>
-        <button ion-button
-                class="bt bt--block"
-                [block]="true"
-                [outline]="true"
-                large >No</button>
-            </td>
-          </tr>
-        </span>
-
-      </ion-scroll>
-      <div
-        padding
-        class="bottom"
-      >
-        <button
-          ion-button
-          class="bt bt--full"
-          round
-          full
-          (click)="next()"
-        >
-          {{ "BTN_NEXT" | translate }}
-        </button>
+            </tr>
+          </span>
+          </div>
+          <div padding>
+            <hr/>
+          </div>
+          <div>
+            <span class="text-sm padding">Were you born outside of the United Kingdom? </span>
+          </div>
+          <br>
+          <div>
+          <span>
+            <tr>
+              <td>
+                <div style="padding-right: 10px">
+                  <button ion-button
+                          class="bt bt--block"
+                          [block]="true"
+                          [outline]="true"
+                          (click)="isBornInUnitedKingdom(true)"
+                          large>Yes
+                  </button>
+                  </div>
+                </td>
+              <td>
+                <div style="padding-right: 10px">
+                  <button ion-button
+                          class="bt bt--block"
+                          [block]="true"
+                          [outline]="true"
+                          (click)="isBornInUnitedKingdom(false)"
+                          large>No</button>
+                </div>
+              </td>
+            </tr>
+          </span>
+          </div>
+        </div>
       </div>
 
     </ion-slide>
 
-    <ion-slide id="intro">
+    <ion-slide id="consent-form">
+      <ion-item>
+        <ion-icon md="md-arrow-back" item-start (click)="goBack()"></ion-icon>
+        <ion-label class="text-md">{{ "CONSENT_TITLE" | translate }}</ion-label>
+      </ion-item>
+      <div class="text text-justify">
+        <div class="text-sm"> {{ "CONSENT_EXPLANATION_1" | translate }}</div>
+      </div>
+
+      <ion-scroll
+          scrollY="true"
+          style="height: 550px;"
+      >
+
+        <div class="text text-justify">
+          <ion-item-group>
+            <ion-item>
+              <ion-icon md="md-alarm" item-start></ion-icon>
+              <ion-label class="text-heading">Time Commitment</ion-label>
+              <ion-icon md="md-arrow-down" *ngIf="!showTimeCommitmentDetails" item-end
+                        (click)="showTimeCommitmentDetails =true"></ion-icon>
+              <ion-icon md="md-arrow-up" *ngIf="showTimeCommitmentDetails" item-end
+                        (click)="showTimeCommitmentDetails =false"></ion-icon>
+            </ion-item>
+            <ion-row *ngIf="!showTimeCommitmentDetails">
+              <div class="text-sm"> {{ "CONSENT_TIME_COMMITMENT_INTRO" | translate }}</div>
+            </ion-row>
+            <ion-row *ngIf="showTimeCommitmentDetails">
+              <div class="text-sm"> {{ "CONSENT_TIME_COMMITMENT_DETAILS" | translate }}</div>
+            </ion-row>
+
+            <ion-item>
+              <ion-icon md="md-lock" item-start></ion-icon>
+              <ion-label class="text-heading">Protecting Your Privacy</ion-label>
+              <ion-icon md="md-arrow-down" *ngIf="!showPrivacyPolicyDetails" item-end
+                        (click)="showPrivacyPolicyDetails =true"></ion-icon>
+              <ion-icon md="md-arrow-up" *ngIf="showPrivacyPolicyDetails" item-end
+                        (click)="showPrivacyPolicyDetails =false"></ion-icon>
+            </ion-item>
+            <ion-row *ngIf="!showPrivacyPolicyDetails">
+              <div class="text-sm"> {{ "CONSENT_PRIVACY_POLICY_INTRO" | translate }}</div>
+            </ion-row>
+            <ion-row *ngIf="showPrivacyPolicyDetails">
+              <div class="text-sm"> {{ "CONSENT_PRIVACY_POLICY_DETAILS" | translate }}</div>
+            </ion-row>
+
+            <ion-item>
+              <ion-icon md="md-alarm" item-start></ion-icon>
+              <ion-label class="text-heading">Withdrawing</ion-label>
+              <ion-icon md="md-arrow-down" *ngIf="!showWithdrawalDetails" item-end
+                        (click)="showWithdrawalDetails =true"></ion-icon>
+              <ion-icon md="md-arrow-up" *ngIf="showWithdrawalDetails" item-end
+                        (click)="showWithdrawalDetails =false"></ion-icon>
+            </ion-item>
+            <ion-row *ngIf="!showWithdrawalDetails">
+              <div class="text-sm"> {{ "CONSENT_WITHDRAWAL_INTRO" | translate }}</div>
+            </ion-row>
+            <ion-row *ngIf="showWithdrawalDetails">
+              <div class="text-sm"> {{ "CONSENT_WITHDRAWAL_DETAILS" | translate }}</div>
+            </ion-row>
+
+            <ion-item>
+              <ion-icon md="md-mail" item-start></ion-icon>
+              <ion-label class="text-heading">Contacting you</ion-label>
+              <ion-icon md="md-arrow-down" *ngIf="!showContactYouDetails" item-end
+                        (click)="showContactYouDetails =true"></ion-icon>
+              <ion-icon md="md-arrow-up" *ngIf="showContactYouDetails" item-end
+                        (click)="showContactYouDetails =false"></ion-icon>
+            </ion-item>
+            <ion-row *ngIf="!showContactYouDetails">
+              <div class="text-sm"> {{ "CONSENT_CONTACT_YOU_INTRO" | translate }}</div>
+            </ion-row>
+            <ion-row *ngIf="showContactYouDetails">
+              <div class="text-sm"> {{ "CONSENT_CONTACT_YOU_DETAILS" | translate }}</div>
+            </ion-row>
+          </ion-item-group>
+        </div>
+
+
+        <div
+            padding
+
+        >
+
+          <label  class="text-justify" for="consentParticipation">
+            <input required
+                   type="checkbox"
+                   id="consentParticipation"
+                   [(ngModel)]="consentParticipation"
+            >
+            {{"CONSENT_PARTICIPATION" | translate }}
+          </label>
+
+          <label  class="text-justify" for="consentNHSRecordAccess">
+            <input
+                type="checkbox"
+                id="consentNHSRecordAccess"
+                [(ngModel)]="consentNHSRecordAccess"
+            >
+            {{"CONSENT_NHS_RECORD_ACCESS" | translate }}
+          </label>
+        </div>
+
+        <div
+            padding
+        >
+          <button
+              ion-button
+              class="bt bt--full"
+              round
+              full
+              (click)="processConsent()"
+          >
+            Submit Consent
+          </button>
+        </div>
+
+      </ion-scroll>
+    </ion-slide>
+
+    <ion-slide id="thankyou">
       <div id="logo-container">
         <img
-          id="logo"
-          src="assets/imgs/ucl-logo-text.png"
-          alias="RADAR LOGO"
+            id="logo"
+            src="assets/imgs/new-logo.png"
+            alias="RADAR LOGO"
         >
       </div>
       <div class="text">
-        <div class="text-lg">{{ "ENROL_WELCOME_1" | translate }}</div>
-        {{ "ENROL_WELCOME_2" | translate }}
-        <div class="padding text-justify extra-padding">{{ "ENROL_WELCOME_DESC" | translate }}</div>
+        <div class="text-lg">{{ "ENROL_ABORT_THANKYOU_1" | translate }}</div>
+        <div class="text-md"> {{ "ENROL_ABORT_MESSAGE" | translate}}</div>
       </div>
-      <div
-        padding
-        class="bottom"
-      >
-        <button
+    </ion-slide>
+
+    <ion-slide id="fetch-userinfo">
+      <div id="logo-container">
+        <img
+            id="logo"
+            src="assets/imgs/ucl-logo-text.png"
+            alias="RADAR LOGO"
+        >
+      </div>
+      <button
           ion-button
           class="bt bt--full"
           round
           full
-          (click)="next()"
-        >
-          {{ "BTN_ENROL_ENROL" | translate }}
-        </button>
-      </div>
-    </ion-slide>
-
-    <ion-slide id="qr-registration">
-      <div class="registration">
-        <div class="text text-lg">{{ "ENROL_REGISTRATION" | translate }}</div>
-        <div class="text text-justify">
-          {{ "ENROL_REGISTRATION_DESC" | translate }}
-        </div>
-      </div>
-      <div
-        padding
-        class="bottom"
+          (click)="loadUserInfo()"
       >
-        <p>
-          <button
-            ion-button
-            class="bt bt--full"
-            round
-            full
-            (click)="next()"
-          >
-            {{ "BTN_ENROL_SCAN" | translate }}
-          </button>
-        </p>
-
-        <p>
-          <button
-            ion-button
-            class="bt bt--full"
-            round
-            full
-            (click)="enterToken()"
-          >
-            {{ "BTN_ENROL_ENTER_TOKEN" | translate }}
-          </button>
-        </p>
-      </div>
-    </ion-slide>
-
-    <ion-slide
-      *ngIf="enterMetaQR"
-      id="qr-registration-token"
-    >
-      <form
-        [formGroup]="metaQRForm"
-        (ngSubmit)="metaQRHandler()"
-      >
-        <div class="registration">
-          <div class="text text-lg">{{ "ENROL_REGISTRATION" | translate }}</div>
-          <div class="text text-justify">
-            {{ "ENROL_REGISTRATION_TOKEN_DESC" | translate }}
-          </div>
-          <div class="token-input">
-            <ion-input
-              required
-              formControlName="baseURL"
-              type="url"
-              placeholder="Base URL"
-            ></ion-input>
-          </div>
-          <div class="token-input">
-            <ion-input
-              required
-              formControlName="tokenName"
-              type="text"
-              placeholder="Token"
-            ></ion-input>
-          </div>
-        </div>
-        <div id="status">
-          <div
-            #loading
-            id="loading"
-          >
-            <div class="padding-text">{{ "STATUS_LOADING" | translate }}</div>
-          </div>
-          <div
-            #outcome
-            id="outcome"
-          >
-            <div class="padding-text">{{ outcomeStatus }}</div>
-          </div>
-        </div>
-        <div
-          padding
-          class="bottom"
-          *ngIf="!authSuccess"
-        >
-          <button
-            ion-button
-            class="bt bt--full"
-            round
-            full
-            type="submit"
-          >
-            {{ "BTN_SUBMIT" | translate }}
-          </button>
-        </div>
-      </form>
-    </ion-slide>
-
-    <ion-slide
-      *ngIf="!enterMetaQR"
-      id="qr-registration-scan"
-    >
-      <div class="registration">
-        <div class="text text-lg">{{ "ENROL_REGISTRATION" | translate }}</div>
-        <div class="text text-justify">
-          {{ "ENROL_REGISTRATION_SCAN_DESC" | translate }}
-        </div>
-      </div>
-      <div class="qr-code">
-        <img src="assets/imgs/radar-qr-code.png">
-      </div>
-      <div id="status">
-        <div
-          #loading
-          id="loading"
-        >
-          <div class="padding-text">{{ "STATUS_LOADING" | translate }}</div>
-        </div>
-        <div
-          #outcome
-          id="outcome"
-        >
-          <div class="padding-text">{{ outcomeStatus }}</div>
-        </div>
-      </div>
-      <div
-        padding
-        class="bottom"
-        *ngIf="!authSuccess"
-      >
-        <button
-          ion-button
-          class="bt bt--full"
-          round
-          full
-          (click)="scanQRHandler()"
-        >
-          {{ "BTN_ENROL_SCAN" | translate }}
-        </button>
-      </div>
+        Load user info
+      </button>
     </ion-slide>
 
     <ion-slide id="preference-report pos-above">
@@ -362,28 +240,28 @@
 
       <ion-item-group id="settings">
         <ion-item
-          no-lines
-          *ngFor="let subSetting of reportSettings; let i = index"
+            no-lines
+            *ngFor="let subSetting of reportSettings; let i = index"
         >
           <ion-label>{{ subSetting.name | translate }}</ion-label>
           <ion-toggle
-            item-right
-            [(ngModel)]="subSetting.show"
-            (ionChange)="weeklyReportChange(i)"
+              item-right
+              [(ngModel)]="subSetting.show"
+              (ionChange)="weeklyReportChange(i)"
           ></ion-toggle>
         </ion-item>
       </ion-item-group>
 
       <div
-        padding
-        class="bottom"
+          padding
+          class="bottom"
       >
         <button
-          ion-button
-          class="bt bt--full"
-          round
-          full
-          (click)="navigateToHome()"
+            ion-button
+            class="bt bt--full"
+            round
+            full
+            (click)="navigateToHome()"
         >
           {{ "BTN_FINISH" | translate }}
         </button>
@@ -391,13 +269,5 @@
     </ion-slide>
 
   </ion-slides>
-    <!--<button-->
-      <!--ion-button-->
-      <!--class="bt bt&#45;&#45;full"-->
-      <!--round-->
-      <!--full-->
-      <!--(click)="goToRegistration()"-->
-    <!--&gt;-->
-      <!--{{ "BTN_JOINSTUDY" | translate }}-->
-  <!--</button>-->
+
 </ion-content>

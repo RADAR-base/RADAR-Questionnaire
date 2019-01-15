@@ -27,8 +27,6 @@ addons:
       - sourceline: deb http://dl.google.com/linux/chrome/deb/ stable main
         key_url: https://dl-ssl.google.com/linux/linux_signing_key.pub
     packages:
-      - oracle-java8-installer
-      - oracle-java8-set-default
       - yarn
       - jq
       - gradle
@@ -37,36 +35,34 @@ licenses:
   - android-sdk-preview-license-.+
   - android-sdk-license-.+
   - google-gdk-license-.+
-before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -f  $HOME/.gradle/caches/transforms-1/transforms-1.lock
-  - rm -rf $HOME/.gradle/caches/3.5/fileHashes/
-  - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
 cache:
+  yarn: true
   directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
-    - $HOME/.npm
+    - $HOME/.gradle/caches/jars-1
+    - $HOME/.gradle/caches/jars-2
+    - $HOME/.gradle/caches/jars-3
+    - $HOME/.gradle/caches/modules-2/files-2.1/
+    - $HOME/.gradle/native
+    - $HOME/.gradle/wrapper
 before_install:
+  - nvm install 11
+  - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.12.3
+  - export PATH="$HOME/.yarn/bin:$PATH"
   - openssl aes-256-cbc -K $encrypted_b7f1c4c89cb5_key -iv $encrypted_b7f1c4c89cb5_iv
     -in secrets.tar.enc -out secrets.tar -d
   - tar xvf secrets.tar
-  - nvm install 8
   - gem install fastlane
-  - npm i -g cordova ionic
+  - yarn global add cordova ionic
 before_script:
   - mkdir www
   - cp secret.ts src/assets/data/secret.ts
 script:
-  - npm install
-  - npm run lint
-  - npm run lint:css
-  - if [[ $TRAVIS_BRANCH != $TRAVIS_TAG ]]; then npm run build ; fi
-  - if [[ $TRAVIS_BRANCH == $TRAVIS_TAG ]]; then cordova prepare;
-    cordova plugin ls;
-    cordova platform ls;
-    ionic cordova platform remove android;
-    ionic cordova platform add android@6.4.0;
+  - yarn install
+  - yarn run lint
+  - yarn run lint:css
+  - if [[ $TRAVIS_BRANCH != $TRAVIS_TAG ]]; then yarn build ; fi
+  - if [[ $TRAVIS_BRANCH == $TRAVIS_TAG ]]; then ionic cordova platform add android@6.4.0;
+    yarn install;
     ionic cordova build --release android;
     jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -storepass $storepass -keystore radar-armt-release-key.keystore $HOME/build/$PROJECT_NAME/platforms/android/build/outputs/apk/release/android-release-unsigned.apk alias_name;
     $ANDROID_HOME/build-tools/26.0.2/zipalign -v 4 $HOME/build/$PROJECT_NAME/platforms/android/build/outputs/apk/release/android-release-unsigned.apk $HOME/build/$PROJECT_NAME/platforms/android/build/outputs/apk/release/radar-armt-app-$APP_VERSION.apk;

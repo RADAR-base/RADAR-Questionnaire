@@ -15,7 +15,7 @@ import {
   DefaultRequestJSONContentType,
   DefaultSourceProducerAndSecret,
   DefaultSourceTypeRegistrationBody,
-  DefaultSubjectsURI,
+  DefaultSubjectsURI
 } from '../../../../assets/data/defaultConfig'
 import { StorageService } from '../../../core/services/storage.service'
 import { StorageKeys } from '../../../shared/enums/storage'
@@ -34,19 +34,21 @@ export class AuthService {
   }
 
   refresh(): Promise<any> {
-    return this.storage.get(StorageKeys.OAUTH_TOKENS)
-      .then(tokens => {
-        const now = getSeconds({ milliseconds: new Date().getTime() })
-        if (tokens.iat + tokens.expires_in < now) {
-          const URI = this.URI_base + DefaultRefreshTokenURI
-          const headers = this.getRegisterHeaders(DefaultRequestEncodedContentType)
-          const params = this.getRefreshParams(tokens.refresh_token)
-          return this.createPostRequest(URI, '', {headers, params})
-            .then(newTokens => this.storage.set(StorageKeys.OAUTH_TOKENS, newTokens))
-        } else {
-          return tokens
-        }
-      })
+    return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
+      const now = getSeconds({ milliseconds: new Date().getTime() })
+      if (tokens.iat + tokens.expires_in < now) {
+        const URI = this.URI_base + DefaultRefreshTokenURI
+        const headers = this.getRegisterHeaders(
+          DefaultRequestEncodedContentType
+        )
+        const params = this.getRefreshParams(tokens.refresh_token)
+        return this.createPostRequest(URI, '', { headers, params }).then(
+          newTokens => this.storage.set(StorageKeys.OAUTH_TOKENS, newTokens)
+        )
+      } else {
+        return tokens
+      }
+    })
   }
 
   updateURI() {
@@ -62,16 +64,22 @@ export class AuthService {
     // console.debug('URI : ' + URI)
     const refreshBody = DefaultRefreshTokenRequestBody + registrationToken
     const headers = this.getRegisterHeaders(DefaultRequestEncodedContentType)
-    return this.createPostRequest(URI, refreshBody, {headers})
-      .then(res => this.storage.set(StorageKeys.OAUTH_TOKENS, res))
+    return this.createPostRequest(URI, refreshBody, { headers }).then(res =>
+      this.storage.set(StorageKeys.OAUTH_TOKENS, res)
+    )
   }
 
   registerAsSource() {
     return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
       const decoded = this.jwtHelper.decodeToken(tokens.access_token)
-      const headers = this.getAccessHeaders(tokens.access_token, DefaultRequestJSONContentType)
+      const headers = this.getAccessHeaders(
+        tokens.access_token,
+        DefaultRequestJSONContentType
+      )
       const URI = this.URI_base + DefaultSubjectsURI + decoded.sub + '/sources'
-      return this.createPostRequest(URI, DefaultSourceTypeRegistrationBody,{headers})
+      return this.createPostRequest(URI, DefaultSourceTypeRegistrationBody, {
+        headers
+      })
     })
   }
 

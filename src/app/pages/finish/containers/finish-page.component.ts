@@ -1,6 +1,9 @@
 import { Component } from '@angular/core'
 import { NavController, NavParams } from 'ionic-angular'
+
 import { KafkaService } from '../../../core/services/kafka.service'
+import { NotificationGeneratorService } from '../../../core/services/notification-generator.service'
+import { NotificationService } from '../../../core/services/notification.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { StorageKeys } from '../../../shared/enums/storage'
@@ -10,20 +13,20 @@ import { Task } from '../../../shared/models/task'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { FinishTaskService } from '../services/finish-task.service'
 import { PrepareDataService } from '../services/prepare-data.service'
-import { NotificationGeneratorService } from '../../../core/services/notification-generator.service'
-import { NotificationService } from '../../../core/services/notification.service'
 
 @Component({
   selector: 'page-finish',
   templateUrl: 'finish-page.component.html'
 })
 export class FinishPageComponent {
-  content: string = ''
-  isClinicalTask: boolean = false
-  completedInClinic: boolean = false
-  displayNextTaskReminder: boolean = true
-  hasClickedDoneButton: boolean = false
+  content = ''
+  isClinicalTask = false
+  completedInClinic = false
+  displayNextTaskReminder = true
+  hasClickedDoneButton = false
   associatedTask
+  questionnaireData
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -36,55 +39,45 @@ export class FinishPageComponent {
   ) {}
 
   ionViewDidLoad() {
-    this.associatedTask = this.navParams.data.associatedTask
-    this.content = this.navParams.data.endText
-    const questionnaireName: string = this.navParams.data.associatedTask.name
-    if (!questionnaireName.includes('DEMO')) {
-      try {
-        if (
-          this.navParams.data['associatedTask']['protocol']['clinicalProtocol']
-        ) {
-          this.isClinicalTask = true
-        }
-      } catch (TypeError) {
-        console.log('INFO: Not in clinic task/questionnaire.')
-      }
-      this.prepareDataService
-        .process_QuestionnaireData(
-          this.navParams.data.answers,
-          this.navParams.data.timestamps
-        )
-        .then(
-          data => {
-            this.finishTaskService.updateTaskToComplete(this.associatedTask)
-            this.sendToKafka(
-              this.associatedTask,
-              data,
-              this.navParams.data.questions
-            )
-          },
-          error => {
-            console.log(JSON.stringify(error))
-          }
-        )
-    } else {
-      // This is a Demo Questionnaire. Just update to complete and do nothing else
-      this.finishTaskService.updateTaskToComplete(
-        this.navParams.data.associatedTask
-      )
-    }
+    this.questionnaireData = this.navParams.data
+    this.associatedTask = this.questionnaireData.associatedTask
+    this.content = this.questionnaireData.endText
+    this.isClinicalTask = this.associatedTask.isClinical
+    const questionnaireName = this.associatedTask.name
+    this.finishTaskService.updateTaskToComplete(this.associatedTask)
     this.displayNextTaskReminder =
-      !this.navParams.data.isLastTask && !this.isClinicalTask
+      !this.questionnaireData.isLastTask && !this.isClinicalTask
+    !questionnaireName.includes('DEMO') && this.processDataAndSend()
+  }
+
+  processDataAndSend() {
+    return this.prepareDataService
+      .processQuestionnaireData(
+        this.questionnaireData.answers,
+        this.questionnaireData.timestamps
+      )
+      .then(
+        data => {
+          this.sendToKafka(
+            this.associatedTask,
+            data,
+            this.questionnaireData.questions
+          )
+        },
+        error => {
+          console.log(JSON.stringify(error))
+        }
+      )
   }
 
   sendToKafka(task: Task, questionnaireData, questions) {
+    // NOTE: Submit data to kafka
     this.kafkaService.prepareTimeZoneKafkaObjectAndSend()
     this.kafkaService.prepareAnswerKafkaObjectAndSend(
       task,
       questionnaireData,
       questions
     )
-    // NOTE: Submit data to kafka
   }
 
   handleClosePage() {
@@ -117,27 +110,34 @@ export class FinishPageComponent {
     const now = new Date().getTime()
     const clinicalTasks: Task[] = tasks.concat(
       repeatTimes
-        .map((repeatTime, i) => ({
-          index: tasks.length + i,
-          completed: false,
-          reportedCompletion: false,
-          timestamp: now + repeatTime,
-          name: associatedTask.name,
-          nQuestions: associatedTask.questions.length,
-          estimatedCompletionTime: associatedTask.estimatedCompletionTime,
-          completionWindow: SchedulingService.timeIntervalToMillis(
-            associatedTask.protocol.completionWindow
-          ),
-          warning: '',
-          isClinical: true
-        } as Task))
+        .map(
+          (repeatTime, i) =>
+            ({
+              index: tasks.length + i,
+              completed: false,
+              reportedCompletion: false,
+              timestamp: now + repeatTime,
+              name: associatedTask.name,
+              nQuestions: associatedTask.questions.length,
+              estimatedCompletionTime: associatedTask.estimatedCompletionTime,
+              completionWindow: SchedulingService.timeIntervalToMillis(
+                associatedTask.protocol.completionWindow
+              ),
+              warning: '',
+              isClinical: true
+            } as Task)
+        )
         .map(t => {
-          t.notifications = this.notificationGenerator.createNotifications(associatedTask, t)
+          t.notifications = this.notificationGenerator.createNotifications(
+            associatedTask,
+            t
+          )
           return t
         })
     )
 
-    return this.storage.set(StorageKeys.SCHEDULE_TASKS_CLINICAL, clinicalTasks)
+    return this.storage
+      .set(StorageKeys.SCHEDULE_TASKS_CLINICAL, clinicalTasks)
       .then(() => this.storage.get(StorageKeys.PARTICIPANTLOGIN))
       .then(username => {
         if (username) {

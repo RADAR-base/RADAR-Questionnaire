@@ -17,7 +17,7 @@ import {
   AnswerKeyExport,
   AnswerValueExport,
   ApplicationTimeZoneValueExport,
-  CompletionLogValueExport,
+  CompletionLogValueExport
 } from '../../shared/models/answer'
 import { QuestionType } from '../../shared/models/question'
 import { Task } from '../../shared/models/task'
@@ -217,25 +217,22 @@ export class KafkaService {
       this.cacheSending = !this.cacheSending
       this.sendToKafkaFromCache()
         .then(() => (this.cacheSending = !this.cacheSending))
-        .catch(e => console.log('Cache could not be sent: ' + JSON.stringify(e)))
+        .catch(e =>
+          console.log('Cache could not be sent: ' + JSON.stringify(e))
+        )
     }
   }
 
   sendToKafkaFromCache() {
     return this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
-      if (!cache) {
-        return this.storage.set(StorageKeys.CACHE_ANSWERS, {})
-      } else {
-        const promises = Object.entries(cache)
-          .filter(([k, v]) => k)
-          .slice(0, 20)
-          .map(([k, v]) => this.createPayloadAndSend(v))
-        return Promise.all(promises)
-          .then(res => {
-            console.log(res)
-            return res
-          })
-      }
+      const promises = Object.entries(cache)
+        .filter(([k, v]) => k)
+        .slice(0, 20)
+        .map(([k, v]) => this.createPayloadAndSend(v))
+      return Promise.all(promises).then(res => {
+        console.log(res)
+        return res
+      })
     })
   }
 

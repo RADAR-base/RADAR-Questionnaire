@@ -6,6 +6,7 @@ export enum NotificationType {
   REMINDER,
   MISSED_SOON,
   MISSED,
+  TEST
 }
 
 export interface SingleNotification {

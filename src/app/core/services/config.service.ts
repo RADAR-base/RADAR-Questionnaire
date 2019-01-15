@@ -10,16 +10,16 @@ import {
   DefaultProtocolURI,
   DefaultQuestionnaireFormatURI,
   DefaultQuestionnaireTypeURI,
-  TEST_ARMT_DEF,
+  TEST_ARMT_DEF
 } from '../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../shared/enums/storage'
+import { Assessment } from '../../shared/models/assessment'
+import { Question } from '../../shared/models/question'
+import { Utility } from '../../shared/utilities/util'
+import { LocalizationService } from './localization.service'
+import { NotificationService } from './notification.service'
 import { SchedulingService } from './scheduling.service'
 import { StorageService } from './storage.service'
-import { Assessment } from '../../shared/models/assessment'
-import { Utility } from '../../shared/utilities/util'
-import { Question } from '../../shared/models/question'
-import { NotificationService } from './notification.service'
-import { LocalizationService } from './localization.service'
 
 @Injectable()
 export class ConfigService {
@@ -29,14 +29,14 @@ export class ConfigService {
     private schedule: SchedulingService,
     private notifications: NotificationService,
     private util: Utility,
-    private localization: LocalizationService,
+    private localization: LocalizationService
   ) {}
 
   fetchConfigState(force: boolean) {
     return Promise.all([
       this.storage.get(StorageKeys.CONFIG_VERSION),
       this.storage.get(StorageKeys.SCHEDULE_VERSION),
-      this.pullProtocol(),
+      this.pullProtocol()
     ]).then(([configVersion, scheduleVersion, response]) => {
       if (!response) {
         return Promise.reject({
@@ -55,29 +55,42 @@ export class ConfigService {
           positive: clinicalAssessments
         } = this.util.partition(assessments, a => a.protocol.clinicalProtocol)
 
-        this.storage.set(StorageKeys.HAS_CLINICAL_TASKS, clinicalAssessments.length > 0)
+        this.storage.set(
+          StorageKeys.HAS_CLINICAL_TASKS,
+          clinicalAssessments.length > 0
+        )
 
         return Promise.all([
-            this.storage.set(StorageKeys.CONFIG_VERSION, responseData.version),
-            this.updateAssessments(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS, clinicalAssessments),
-            this.updateAssessments(StorageKeys.CONFIG_ASSESSMENTS, scheduledAssessments),
-          ])
+          this.storage.set(StorageKeys.CONFIG_VERSION, responseData.version),
+          this.updateAssessments(
+            StorageKeys.CONFIG_CLINICAL_ASSESSMENTS,
+            clinicalAssessments
+          ),
+          this.updateAssessments(
+            StorageKeys.CONFIG_ASSESSMENTS,
+            scheduledAssessments
+          )
+        ])
           .then(() => this.schedule.generateSchedule(true))
           .then(() => this.rescheduleNotifications())
       } else {
-        console.log('NO CONFIG UPDATE. Version of protocol.json has not changed.')
+        console.log(
+          'NO CONFIG UPDATE. Version of protocol.json has not changed.'
+        )
         return this.schedule.generateSchedule(false)
       }
     })
   }
 
   private updateAssessments(key: StorageKeys, assessments: Assessment[]) {
-    return this.storage.set(key, assessments)
+    return this.storage
+      .set(key, assessments)
       .then(() => this.pullQuestionnaires(key))
   }
 
   rescheduleNotifications() {
-    return this.notifications.cancel()
+    return this.notifications
+      .cancel()
       .then(() => this.notifications.publish())
       .then(() => console.log('NOTIFICATIONS scheduled after config change'))
   }
@@ -95,15 +108,16 @@ export class ConfigService {
   }
 
   pullProtocol() {
-    return this.getProjectName()
-      .then(projectName => {
-        if (projectName) {
-          const URI = DefaultProtocolEndPoint + projectName + DefaultProtocolURI
-          return this.http.get(URI, { responseType: 'text' }).toPromise()
-        } else {
-          console.error('Unknown project name : ' + projectName + '. Cannot pull protocols.')
-        }
-      })
+    return this.getProjectName().then(projectName => {
+      if (projectName) {
+        const URI = DefaultProtocolEndPoint + projectName + DefaultProtocolURI
+        return this.http.get(URI, { responseType: 'text' }).toPromise()
+      } else {
+        console.error(
+          'Unknown project name : ' + projectName + '. Cannot pull protocols.'
+        )
+      }
+    })
   }
 
   getProjectName() {
@@ -111,43 +125,46 @@ export class ConfigService {
   }
 
   formatPulledProcotol(protocols: Assessment[]): Assessment[] {
-    return protocols
-      .map(p => {
-        p.questionnaire.type = DefaultQuestionnaireTypeURI
-        p.questionnaire.format = DefaultQuestionnaireFormatURI
-        return p
-      })
+    return protocols.map(p => {
+      p.questionnaire.type = DefaultQuestionnaireTypeURI
+      p.questionnaire.format = DefaultQuestionnaireFormatURI
+      return p
+    })
   }
 
   pullQuestionnaires(storageKey): Promise<Assessment[]> {
-    return this.storage.get(storageKey)
-      .then(assessments => {
-        const localizedQuestionnaires = assessments
-          .map(a => this.pullQuestionnaireLang(a))
+    return this.storage.get(storageKey).then(assessments => {
+      const localizedQuestionnaires = assessments.map(a =>
+        this.pullQuestionnaireLang(a)
+      )
 
-        return Promise.all(localizedQuestionnaires)
-          .then(res => {
-            assessments.forEach((a, i) => {
-              a.questions = this.formatQuestionsHeaders(res[i])
-            });
-            return this.storage.set(storageKey, assessments)
-          })
+      return Promise.all(localizedQuestionnaires).then(res => {
+        assessments.forEach((a, i) => {
+          a.questions = this.formatQuestionsHeaders(res[i])
+        })
+        return this.storage.set(storageKey, assessments)
       })
+    })
   }
 
   pullQuestionnaireLang(assessment): Promise<Object> {
-    const uri = this.formatQuestionnaireUri(assessment.questionnaire, this.localization.getLanguage().value)
-    return this.getQuestionnairesOfLang(uri)
-      .catch(e => {
-        const URI = this.formatQuestionnaireUri(assessment.questionnaire, '')
-        return this.getQuestionnairesOfLang(URI)
-      })
+    const uri = this.formatQuestionnaireUri(
+      assessment.questionnaire,
+      this.localization.getLanguage().value
+    )
+    return this.getQuestionnairesOfLang(uri).catch(e => {
+      const URI = this.formatQuestionnaireUri(assessment.questionnaire, '')
+      return this.getQuestionnairesOfLang(URI)
+    })
   }
 
   formatQuestionnaireUri(questionnaireRepo, langVal: string) {
     // NOTE: Using temp test repository for aRMT defs
     const repository = TEST_ARMT_DEF
-      ? questionnaireRepo.repository.replace(ARMTDefBranchProd, ARMTDefBranchTest)
+      ? questionnaireRepo.repository.replace(
+          ARMTDefBranchProd,
+          ARMTDefBranchTest
+        )
       : questionnaireRepo.repository
     let uri = repository + questionnaireRepo.name + '/'
     uri += questionnaireRepo.name + questionnaireRepo.type
@@ -160,23 +177,26 @@ export class ConfigService {
   }
 
   getQuestionnairesOfLang(URI): Promise<Question[]> {
-    return (this.http.get(URI).toPromise()
-        .then(res => {
-          if (res instanceof Array) {
-            return Promise.resolve(res);
-          } else {
-            return Promise.reject({message: 'URL does not contain an array of questions'})
-          }
-        }) as Promise<Question[]>)
+    return this.http
+      .get(URI)
+      .toPromise()
+      .then(res => {
+        if (res instanceof Array) {
+          return Promise.resolve(res)
+        } else {
+          return Promise.reject({
+            message: 'URL does not contain an array of questions'
+          })
+        }
+      }) as Promise<Question[]>
   }
 
   formatQuestionsHeaders(questions) {
-    questions
-      .forEach((q, i) => {
-        if (!q.section_header && i > 0) {
-          q.section_header = questions[i - 1].section_header
-        }
-      })
+    questions.forEach((q, i) => {
+      if (!q.section_header && i > 0) {
+        q.section_header = questions[i - 1].section_header
+      }
+    })
     return questions
   }
 

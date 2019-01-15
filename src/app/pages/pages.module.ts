@@ -3,8 +3,11 @@ import { NgModule } from '@angular/core'
 
 import { AlertService } from '../core/services/alert.service'
 import { ConfigService } from '../core/services/config.service'
+import { FcmNotificationService } from '../core/services/fcm-notification.service'
 import { KafkaService } from '../core/services/kafka.service'
 import { LocalizationService } from '../core/services/localization.service'
+import { NotificationGeneratorService } from '../core/services/notification-generator.service'
+import { NotificationService } from '../core/services/notification.service'
 import { SchedulingService } from '../core/services/scheduling.service'
 import { StorageService } from '../core/services/storage.service'
 import { PipesModule } from '../shared/pipes/pipes.module'
@@ -19,9 +22,6 @@ import { ReportModule } from './report/report.module'
 import { SettingsModule } from './settings/settings.module'
 import { SplashModule } from './splash/splash.module'
 import { StartModule } from './start/start.module'
-import { NotificationGeneratorService } from '../core/services/notification-generator.service'
-import { FcmNotificationService } from '../core/services/fcm-notification.service'
-import { NotificationService } from '../core/services/notification.service'
 
 @NgModule({
   imports: [
@@ -48,7 +48,7 @@ import { NotificationService } from '../core/services/notification.service'
     StorageService,
     TranslatePipe,
     NotificationGeneratorService,
-    { provide: NotificationService, useClass: FcmNotificationService },
+    { provide: NotificationService, useClass: FcmNotificationService }
   ]
 })
 export class PagesModule {}

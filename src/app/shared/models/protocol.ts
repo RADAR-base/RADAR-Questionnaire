@@ -29,7 +29,7 @@ export interface Reminder {
   notification?: ProtocolNotification
 }
 
-export interface Reminders extends TimeInterval{
+export interface Reminders extends TimeInterval {
   repeat?: number
 }
 

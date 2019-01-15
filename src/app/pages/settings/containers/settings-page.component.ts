@@ -1,16 +1,18 @@
 import { Component } from '@angular/core'
 import { AppVersion } from '@ionic-native/app-version'
-import { NavController, NavParams, Platform } from 'ionic-angular'
+import { NavController, Platform } from 'ionic-angular'
 
 import {
+  DefaultLanguage,
   DefaultSettingsNotifications,
-  DefaultSettingsSelectedLanguage,
   DefaultSettingsWeeklyReport,
-  LanguageMap,
+  LanguageMap
 } from '../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../core/services/alert.service'
 import { ConfigService } from '../../../core/services/config.service'
 import { LocalizationService } from '../../../core/services/localization.service'
+import { NotificationGeneratorService } from '../../../core/services/notification-generator.service'
+import { NotificationService } from '../../../core/services/notification.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { LocKeys } from '../../../shared/enums/localisations'
@@ -18,10 +20,9 @@ import { StorageKeys } from '../../../shared/enums/storage'
 import {
   LanguageSetting,
   NotificationSettings,
-  WeeklyReportSubSettings,
+  WeeklyReportSubSettings
 } from '../../../shared/models/settings'
 import { SplashPageComponent } from '../../splash/containers/splash-page.component'
-import { NotificationGeneratorService } from '../../../core/services/notification-generator.service'
 
 @Component({
   selector: 'page-settings',
@@ -35,7 +36,7 @@ export class SettingsPageComponent {
   participantId: string
   projectName: string
   enrolmentDate: Date
-  language: LanguageSetting = DefaultSettingsSelectedLanguage
+  language: LanguageSetting = DefaultLanguage
   languagesSelectable: LanguageSetting[]
   notifications: NotificationSettings = DefaultSettingsNotifications
   weeklyReport: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
@@ -49,18 +50,24 @@ export class SettingsPageComponent {
     private schedule: SchedulingService,
     private configService: ConfigService,
     private notificationGenerator: NotificationGeneratorService,
+    private notificationService: NotificationService,
     public localization: LocalizationService,
+    private platform: Platform
   ) {}
 
   ionViewDidLoad() {
     this.loadSettings()
 
     // Update midnight to time zone of reference date.
-    this.storage.get(StorageKeys.REFERENCEDATE)
-      .then(refDate => {
-        const createdDateMidnight = this.schedule.setDateTimeToMidnight(new Date(refDate))
-        return this.storage.set(StorageKeys.REFERENCEDATE, createdDateMidnight.getTime())
-      })
+    this.storage.get(StorageKeys.REFERENCEDATE).then(refDate => {
+      const createdDateMidnight = this.schedule.setDateTimeToMidnight(
+        new Date(refDate)
+      )
+      return this.storage.set(
+        StorageKeys.REFERENCEDATE,
+        createdDateMidnight.getTime()
+      )
+    })
   }
 
   loadSettings() {
@@ -88,7 +95,7 @@ export class SettingsPageComponent {
         settingsLanguages,
         settingsWeeklyReport,
         cache,
-        appVersionPromise,
+        appVersionPromise
       ]) => {
         this.appVersionStr = appVersionPromise
         this.configVersion = configVersion
@@ -100,7 +107,8 @@ export class SettingsPageComponent {
         this.languagesSelectable = settingsLanguages
         this.weeklyReport = settingsWeeklyReport
         this.cacheSize = Object.keys(cache).reduce(
-          (size, k) => (k ? size + 1 : size), 0
+          (size, k) => (k ? size + 1 : size),
+          0
         )
       }
     )
@@ -136,7 +144,8 @@ export class SettingsPageComponent {
             label: LanguageMap[selectedLanguageVal],
             value: selectedLanguageVal
           }
-          this.localization.setLanguage(lang)
+          this.localization
+            .setLanguage(lang)
             .then(() => {
               this.language = lang
               this.showLoading = true
@@ -150,12 +159,12 @@ export class SettingsPageComponent {
       type: 'radio',
       label: this.localization.translate(lang.label),
       value: lang.value,
-      checked: lang.value === this.language.value,
+      checked: lang.value === this.language.value
     }))
     return this.alertService.showAlert({
       title: this.localization.translateKey(LocKeys.SETTINGS_LANGUAGE_ALERT),
       buttons: buttons,
-      inputs: inputs,
+      inputs: inputs
     })
   }
 
@@ -163,18 +172,23 @@ export class SettingsPageComponent {
     const buttons = [
       {
         text: this.localization.translateKey(LocKeys.BTN_OKAY),
-        handler: () => {},
+        handler: () => {}
       }
     ]
     return this.alertService.showAlert({
-      title: this.localization.translateKey(LocKeys.SETTINGS_NOTIFICATIONS_NIGHTMOD),
-      message: this.localization.translateKey(LocKeys.SETTINGS_NOTIFICATIONS_NIGHTMOD_DESC),
-      buttons: buttons,
+      title: this.localization.translateKey(
+        LocKeys.SETTINGS_NOTIFICATIONS_NIGHTMOD
+      ),
+      message: this.localization.translateKey(
+        LocKeys.SETTINGS_NOTIFICATIONS_NIGHTMOD_DESC
+      ),
+      buttons: buttons
     })
   }
 
   consoleLogNotifications() {
-    this.schedule.getTasks()
+    this.schedule
+      .getTasks()
       .then(tasks => this.notificationGenerator.consoleLogNotifications(tasks))
   }
 
@@ -192,15 +206,16 @@ export class SettingsPageComponent {
       {
         text: this.localization.translateKey(LocKeys.BTN_AGREE),
         handler: () => {
-          this.storage.clearStorage()
-            .then(() => this.backToSplash())
+          this.storage.clearStorage().then(() => this.backToSplash())
         }
-      },
+      }
     ]
     return this.alertService.showAlert({
       title: this.localization.translateKey(LocKeys.SETTINGS_RESET_ALERT),
-      message: this.localization.translateKey(LocKeys.SETTINGS_RESET_ALERT_DESC),
-      buttons: buttons,
+      message: this.localization.translateKey(
+        LocKeys.SETTINGS_RESET_ALERT_DESC
+      ),
+      buttons: buttons
     })
   }
 
@@ -218,18 +233,40 @@ export class SettingsPageComponent {
           buttons: [
             {
               text: this.localization.translateKey(LocKeys.BTN_CANCEL),
-              handler: () => {},
+              handler: () => {}
             },
             {
               text: this.localization.translateKey(LocKeys.BTN_RETRY),
               handler: () => {
                 this.reloadConfig()
-              },
-            },
-          ],
+              }
+            }
+          ]
         })
         return Promise.reject(e)
       })
       .then(() => this.backToSplash())
+  }
+
+  generateTestNotification() {
+    this.alertService.showAlert({
+      title: this.localization.translateKey(LocKeys.TESTING_NOTIFICATIONS),
+      message: this.localization.translateKey(
+        LocKeys.TESTING_NOTIFICATIONS_MESSAGE
+      ),
+      buttons: [
+        {
+          text: this.localization.translateKey(LocKeys.BTN_CANCEL),
+          handler: () => {}
+        },
+        {
+          text: this.localization.translateKey(LocKeys.CLOSE_APP),
+          handler: () => {
+            this.notificationService.sendTestNotification()
+            this.platform.exitApp()
+          }
+        }
+      ]
+    })
   }
 }

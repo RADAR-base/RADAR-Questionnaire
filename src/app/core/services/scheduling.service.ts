@@ -8,20 +8,22 @@ import { Assessment } from '../../shared/models/assessment'
 import { TimeInterval } from '../../shared/models/protocol'
 import { Task } from '../../shared/models/task'
 import { getMilliseconds } from '../../shared/utilities/time'
-import { StorageService } from './storage.service'
-import { NotificationGeneratorService } from './notification-generator.service'
 import { LocalizationService } from './localization.service'
+import { NotificationGeneratorService } from './notification-generator.service'
+import { StorageService } from './storage.service'
 
 export const TIME_UNIT_MILLIS = {
-  min: getMilliseconds({minutes: 1}),
-  hour: getMilliseconds({hours: 1}),
-  day: getMilliseconds({days: 1}),
-  week: getMilliseconds({weeks: 1}),
-  month: getMilliseconds({months: 1}),
-  year: getMilliseconds({years: 1}),
+  min: getMilliseconds({ minutes: 1 }),
+  hour: getMilliseconds({ hours: 1 }),
+  day: getMilliseconds({ days: 1 }),
+  week: getMilliseconds({ weeks: 1 }),
+  month: getMilliseconds({ months: 1 }),
+  year: getMilliseconds({ years: 1 })
 }
 
-const TIME_UNIT_MILLIS_DEFAULT = getMilliseconds({ years: DefaultScheduleYearCoverage })
+const TIME_UNIT_MILLIS_DEFAULT = getMilliseconds({
+  years: DefaultScheduleYearCoverage
+})
 
 @Injectable()
 export class SchedulingService {
@@ -36,7 +38,7 @@ export class SchedulingService {
   constructor(
     private storage: StorageService,
     private notificationService: NotificationGeneratorService,
-    private localization: LocalizationService,
+    private localization: LocalizationService
   ) {
     const now = new Date()
     this.tzOffset = now.getTimezoneOffset()
@@ -44,54 +46,48 @@ export class SchedulingService {
   }
 
   getTasksForDate(date) {
-    return this.getTasks()
-      .then(schedule => {
-        const startTime = this.setDateTimeToMidnight(date).getTime()
-        const endTime = startTime + getMilliseconds({days: 1})
-        return schedule.filter(
-          d =>
-            d.timestamp >= startTime &&
-            d.timestamp < endTime
-        )
-      })
+    return this.getTasks().then(schedule => {
+      const startTime = this.setDateTimeToMidnight(date).getTime()
+      const endTime = startTime + getMilliseconds({ days: 1 })
+      return schedule.filter(
+        d => d.timestamp >= startTime && d.timestamp < endTime
+      )
+    })
   }
 
   getTasks(): Promise<Task[]> {
-    return Promise.all([
-      this.getDefaultTasks(),
-      this.getClinicalTasks(),
-    ]).then(([defaultTasks, clinicalTasks]) => {
-      const allTasks = (defaultTasks || []).concat(clinicalTasks || [])
-      allTasks.forEach(t => {
-        if (t.notifications === undefined) {
-          t.notifications = []
-        }
-      })
-      return allTasks
-    })
+    return Promise.all([this.getDefaultTasks(), this.getClinicalTasks()]).then(
+      ([defaultTasks, clinicalTasks]) => {
+        const allTasks = (defaultTasks || []).concat(clinicalTasks || [])
+        allTasks.forEach(t => {
+          if (t.notifications === undefined) {
+            t.notifications = []
+          }
+        })
+        return allTasks
+      }
+    )
   }
 
   getDefaultTasks(): Promise<Task[]> {
     return this.storage.get(StorageKeys.SCHEDULE_TASKS)
   }
 
-  getClinicalTasks(): Promise<Task[]>  {
+  getClinicalTasks(): Promise<Task[]> {
     return this.storage.get(StorageKeys.SCHEDULE_TASKS_CLINICAL)
   }
 
-  getCompletedTasks(): Promise<Task[]>  {
+  getCompletedTasks(): Promise<Task[]> {
     return this.storage.get(StorageKeys.SCHEDULE_TASKS_COMPLETED)
   }
 
   getNonReportedCompletedTasks(): Promise<Task[]> {
-    return this.getTasks()
-      .then(tasks => {
-        const now = new Date().getTime()
-        return tasks
-          .filter(d => d && d.reportedCompletion === false && d.timestamp < now)
-          .slice(0, 100)
-      }
-    )
+    return this.getTasks().then(tasks => {
+      const now = new Date().getTime()
+      return tasks
+        .filter(d => d && d.reportedCompletion === false && d.timestamp < now)
+        .slice(0, 100)
+    })
   }
 
   generateSchedule(force: boolean) {
@@ -107,6 +103,7 @@ export class SchedulingService {
       this.configVersion = confVersion
       this.enrolmentDate = enrolDate
       this.utcOffsetPrev = offsetPrev
+      console.log(this.utcOffsetPrev)
       if (schedVersion !== confVersion || force) {
         console.log('Updating schedule..')
         return this.runScheduler()
@@ -115,7 +112,8 @@ export class SchedulingService {
   }
 
   runScheduler() {
-    return this.storage.get(StorageKeys.CONFIG_ASSESSMENTS)
+    return this.storage
+      .get(StorageKeys.CONFIG_ASSESSMENTS)
       .then(assessments => this.buildTaskSchedule(assessments))
       .catch(e => console.error(e))
       .then((tasks: Task[]) => this.setSchedule(tasks))
@@ -143,19 +141,30 @@ export class SchedulingService {
   }
 
   updateScheduleWithCompletedTasks(schedule: Task[]): Task[] {
+    console.log(this.utcOffsetPrev)
     // NOTE: If utcOffsetPrev exists, timezone has changed
     if (this.utcOffsetPrev != null) {
-      this.storage.remove(StorageKeys.SCHEDULE_TASKS_COMPLETED)
+      this.storage
+        .remove(StorageKeys.SCHEDULE_TASKS_COMPLETED)
         .then(() => {
           const currentMidnight = new Date().setHours(0, 0, 0, 0)
-          const prevMidnight = new Date().setUTCHours(0, 0, 0, 0)
-            + getMilliseconds({minutes: this.utcOffsetPrev})
-
-          this.completedTasks.map(d => {
-            const finishedToday = schedule.find(s =>
-              s.timestamp - currentMidnight == d.timestamp - prevMidnight
-              && s.name == d.name
+          const prevMidnight =
+            new Date().setUTCHours(0, 0, 0, 0) +
+            getMilliseconds({ minutes: this.utcOffsetPrev })
+          console.log(prevMidnight)
+          console.log(
+            new Date().setUTCHours(0, 0, 0, 0) +
+              getMilliseconds({ minutes: this.utcOffsetPrev }) +
+              this.utcOffsetPrev * 60000
+          )
+          console.log(this.completedTasks)
+          return this.completedTasks.map(d => {
+            const finishedToday = schedule.find(
+              s =>
+                s.timestamp - currentMidnight == d.timestamp - prevMidnight &&
+                s.name == d.name
             )
+            console.log(finishedToday)
             if (finishedToday !== undefined) {
               finishedToday.completed = true
               return this.addToCompletedTasks(finishedToday)
@@ -164,6 +173,7 @@ export class SchedulingService {
         })
         .then(() => this.storage.remove(StorageKeys.UTC_OFFSET_PREV))
     } else {
+      console.log(this.completedTasks)
       this.completedTasks.forEach(d => {
         const task = schedule[d.index]
         if (task.timestamp == d.timestamp && task.name == d.name) {
@@ -177,7 +187,9 @@ export class SchedulingService {
   buildTaskSchedule(assessments: Assessment[]): Promise<Task[]> {
     let schedule: Task[] = assessments.reduce(
       (list, assessment) =>
-        list.concat(this.buildTasksForSingleAssessment(assessment, list.length)),
+        list.concat(
+          this.buildTasksForSingleAssessment(assessment, list.length)
+        ),
       []
     )
     // NOTE: Check for completed tasks
@@ -188,12 +200,18 @@ export class SchedulingService {
     return Promise.resolve(schedule)
   }
 
-  buildTasksForSingleAssessment(assessment: Assessment, indexOffset: number): Task[] {
+  buildTasksForSingleAssessment(
+    assessment: Assessment,
+    indexOffset: number
+  ): Task[] {
     const repeatP = assessment.protocol.repeatProtocol
     const repeatQ = assessment.protocol.repeatQuestionnaire
 
-    let iterTime = this.setDateTimeToMidnight(new Date(this.enrolmentDate)).getTime()
-    const endTime = iterTime + getMilliseconds({ years: DefaultScheduleYearCoverage })
+    let iterTime = this.setDateTimeToMidnight(
+      new Date(this.enrolmentDate)
+    ).getTime()
+    const endTime =
+      iterTime + getMilliseconds({ years: DefaultScheduleYearCoverage })
 
     console.log(assessment)
 
@@ -203,7 +221,7 @@ export class SchedulingService {
       for (let i = 0; i < repeatQ.unitsFromZero.length; i++) {
         const taskTime = SchedulingService.advanceRepeat(iterTime, {
           unit: repeatQ.unit,
-          amount: repeatQ.unitsFromZero[i],
+          amount: repeatQ.unitsFromZero[i]
         })
 
         if (taskTime > today.getTime()) {
@@ -243,11 +261,7 @@ export class SchedulingService {
     return amount * TIME_UNIT_MILLIS[unit]
   }
 
-  taskBuilder(
-    index,
-    assessment: Assessment,
-    timestamp: number,
-  ): Task {
+  taskBuilder(index, assessment: Assessment, timestamp: number): Task {
     const task: Task = {
       index,
       timestamp,
@@ -258,9 +272,12 @@ export class SchedulingService {
       estimatedCompletionTime: assessment.estimatedCompletionTime,
       completionWindow: SchedulingService.computeCompletionWindow(assessment),
       warning: this.localization.chooseText(assessment.warn),
-      isClinical: false,
+      isClinical: false
     }
-    task.notifications = this.notificationService.createNotifications(assessment, task)
+    task.notifications = this.notificationService.createNotifications(
+      assessment,
+      task
+    )
     return task
   }
 
@@ -268,9 +285,9 @@ export class SchedulingService {
     if (assessment.protocol.completionWindow) {
       return this.timeIntervalToMillis(assessment.protocol.completionWindow)
     } else if (assessment.name === 'ESM') {
-      return getMilliseconds({minutes: 15})
+      return getMilliseconds({ minutes: 15 })
     } else {
-      return getMilliseconds({days: 1})
+      return getMilliseconds({ days: 1 })
     }
   }
 
@@ -280,22 +297,29 @@ export class SchedulingService {
    * @return current configuration version
    */
   setSchedule(schedule: Task[]): Promise<number> {
-    return this.storage.set(StorageKeys.SCHEDULE_TASKS, schedule)
-      .then(() => this.storage.set(StorageKeys.SCHEDULE_VERSION, this.configVersion))
+    return this.storage
+      .set(StorageKeys.SCHEDULE_TASKS, schedule)
+      .then(() =>
+        this.storage.set(StorageKeys.SCHEDULE_VERSION, this.configVersion)
+      )
   }
 
   consoleLogSchedule() {
-    this.getTasks()
-      .then(tasks => {
-        let rendered = `\nSCHEDULE Total (${tasks.length})\n`
-        rendered += tasks
-          .sort(SchedulingService.compareTasks)
-          .slice(-10)
-          .map(t => `${t.timestamp}-${t.name} DATE ${new Date(t.timestamp)} NAME ${t.name}`)
-          .reduce((a, b) => a + '\n' + b)
+    this.getTasks().then(tasks => {
+      let rendered = `\nSCHEDULE Total (${tasks.length})\n`
+      rendered += tasks
+        .sort(SchedulingService.compareTasks)
+        .slice(-10)
+        .map(
+          t =>
+            `${t.timestamp}-${t.name} DATE ${new Date(t.timestamp)} NAME ${
+              t.name
+            }`
+        )
+        .reduce((a, b) => a + '\n' + b)
 
-        console.log(rendered)
-      })
+      console.log(rendered)
+    })
   }
 
   static compareTasks(a, b) {

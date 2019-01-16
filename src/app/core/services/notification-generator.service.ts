@@ -103,7 +103,15 @@ export class NotificationGeneratorService {
     type: NotificationType,
     protocolNotification?: ProtocolNotification
   ): SingleNotification | null {
-    const current: SingleNotification = { task, timestamp, type }
+    const current: SingleNotification = {
+      task: {
+        name: task.name,
+        timestamp: task.timestamp,
+        completionWindow: task.completionWindow
+      },
+      timestamp,
+      type
+    }
 
     // Set default content
     switch (type) {

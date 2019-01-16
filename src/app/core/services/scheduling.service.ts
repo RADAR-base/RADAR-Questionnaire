@@ -98,7 +98,7 @@ export class SchedulingService {
       this.storage.get(StorageKeys.ENROLMENTDATE),
       this.storage.get(StorageKeys.UTC_OFFSET_PREV)
     ]).then(([completed, schedVersion, confVersion, enrolDate, offsetPrev]) => {
-      this.completedTasks = completed ? completed : []
+      this.completedTasks = completed
       this.scheduleVersion = schedVersion
       this.configVersion = confVersion
       this.enrolmentDate = enrolDate
@@ -141,7 +141,6 @@ export class SchedulingService {
   }
 
   updateScheduleWithCompletedTasks(schedule: Task[]): Task[] {
-    console.log(this.utcOffsetPrev)
     // NOTE: If utcOffsetPrev exists, timezone has changed
     if (this.utcOffsetPrev != null) {
       this.storage
@@ -151,20 +150,12 @@ export class SchedulingService {
           const prevMidnight =
             new Date().setUTCHours(0, 0, 0, 0) +
             getMilliseconds({ minutes: this.utcOffsetPrev })
-          console.log(prevMidnight)
-          console.log(
-            new Date().setUTCHours(0, 0, 0, 0) +
-              getMilliseconds({ minutes: this.utcOffsetPrev }) +
-              this.utcOffsetPrev * 60000
-          )
-          console.log(this.completedTasks)
           return this.completedTasks.map(d => {
             const finishedToday = schedule.find(
               s =>
                 s.timestamp - currentMidnight == d.timestamp - prevMidnight &&
                 s.name == d.name
             )
-            console.log(finishedToday)
             if (finishedToday !== undefined) {
               finishedToday.completed = true
               return this.addToCompletedTasks(finishedToday)
@@ -173,7 +164,6 @@ export class SchedulingService {
         })
         .then(() => this.storage.remove(StorageKeys.UTC_OFFSET_PREV))
     } else {
-      console.log(this.completedTasks)
       this.completedTasks.forEach(d => {
         const task = schedule[d.index]
         if (task.timestamp == d.timestamp && task.name == d.name) {
@@ -193,8 +183,9 @@ export class SchedulingService {
       []
     )
     // NOTE: Check for completed tasks
-    const updatedSchedule = this.updateScheduleWithCompletedTasks(schedule)
-    schedule = updatedSchedule.sort((a, b) => a.timestamp - b.timestamp)
+    if (this.completedTasks)
+      schedule = this.updateScheduleWithCompletedTasks(schedule)
+    schedule = schedule.sort((a, b) => a.timestamp - b.timestamp)
 
     console.log('[√] Updated task schedule.')
     return Promise.resolve(schedule)

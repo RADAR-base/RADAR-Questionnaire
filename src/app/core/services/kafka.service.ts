@@ -11,7 +11,6 @@ import {
   KAFKA_COMPLETION_LOG,
   KAFKA_TIMEZONE
 } from '../../../assets/data/defaultConfig'
-import { AuthService } from '../../pages/auth/services/auth.service'
 import { StorageKeys } from '../../shared/enums/storage'
 import {
   AnswerKeyExport,
@@ -24,6 +23,7 @@ import { Task } from '../../shared/models/task'
 import { getSeconds } from '../../shared/utilities/time'
 import { Utility } from '../../shared/utilities/util'
 import { StorageService } from './storage.service'
+import { TokenService } from './token.service'
 
 @Injectable()
 export class KafkaService {
@@ -34,7 +34,7 @@ export class KafkaService {
   constructor(
     private util: Utility,
     private storage: StorageService,
-    private authService: AuthService
+    private token: TokenService
   ) {
     this.updateURI()
   }
@@ -245,7 +245,7 @@ export class KafkaService {
   }
 
   getKafkaInstance() {
-    return this.authService
+    return this.token
       .refresh()
       .then(() => this.storage.get(StorageKeys.OAUTH_TOKENS))
       .then(tokens => {

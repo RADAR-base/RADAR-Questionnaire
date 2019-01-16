@@ -41,6 +41,7 @@ export class AppComponent {
         })
       })
       this.configService.migrateToLatestVersion()
+      this.notificationService.init()
       return this.notificationService.permissionCheck()
     })
   }

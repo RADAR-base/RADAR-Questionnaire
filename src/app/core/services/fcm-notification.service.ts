@@ -24,22 +24,20 @@ export class FcmNotificationService extends NotificationService {
     private schedule: SchedulingService
   ) {
     super()
-    try {
-      FCMPlugin.setSenderId(
-        FCMPluginProjectSenderId,
-        () => console.log('[NOTIFICATION SERVICE] Set sender id success'),
-        error => {
-          console.log(error)
-          alert(error)
-        }
-      )
+  }
 
-      FCMPlugin.getToken(() =>
-        console.log('[NOTIFICATION SERVICE] Refresh token success')
-      )
-    } catch (error) {
-      console.error(error)
-    }
+  init() {
+    FCMPlugin.setSenderId(
+      FCMPluginProjectSenderId,
+      () => console.log('[NOTIFICATION SERVICE] Set sender id success'),
+      error => {
+        console.log(error)
+        alert(error)
+      }
+    )
+    FCMPlugin.getToken(() =>
+      console.log('[NOTIFICATION SERVICE] Refresh token success')
+    )
   }
 
   publish(

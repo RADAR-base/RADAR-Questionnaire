@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core'
 
 @Injectable()
 export class NotificationService {
+  init() {
+    return undefined
+  }
   cancel(): Promise<void> {
     return undefined
   }

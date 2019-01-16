@@ -210,7 +210,6 @@ export class KafkaService {
   cacheAnswers(specs) {
     const kafkaObject = specs.kafkaObject
     this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
-      if (!cache) cache = {}
       console.log('KAFKA-SERVICE: Caching answers.')
       cache[kafkaObject.value.time] = specs
       this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
@@ -221,33 +220,29 @@ export class KafkaService {
     if (!this.cacheSending) {
       this.cacheSending = !this.cacheSending
       this.sendToKafkaFromCache()
-        .then(() => (this.cacheSending = !this.cacheSending))
         .catch(e => console.log('Cache could not be sent.'))
+        .then(() => (this.cacheSending = !this.cacheSending))
     }
   }
 
   sendToKafkaFromCache() {
     return this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
-      if (!cache) {
-        return this.storage.set(StorageKeys.CACHE_ANSWERS, {})
-      } else {
-        const promises = []
-        let noOfTasks = 0
-        for (const answerKey in cache) {
-          if (answerKey) {
-            const cacheObject = cache[answerKey]
-            promises.push(this.createPayloadAndSend(cacheObject))
-            noOfTasks += 1
-            if (noOfTasks === 20) {
-              break
-            }
+      const promises = []
+      let noOfTasks = 0
+      for (const answerKey in cache) {
+        if (answerKey) {
+          const cacheObject = cache[answerKey]
+          promises.push(this.createPayloadAndSend(cacheObject))
+          noOfTasks += 1
+          if (noOfTasks === 20) {
+            break
           }
         }
-        return Promise.all(promises).then(res => {
-          console.log(res)
-          return Promise.resolve(res)
-        })
       }
+      return Promise.all(promises).then(res => {
+        console.log(res)
+        return Promise.resolve(res)
+      })
     })
   }
 

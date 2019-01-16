@@ -74,6 +74,11 @@ export class StorageService {
             StorageKeys.SCHEDULE_VERSION,
             DefaultScheduleVersion
           )
+          const utc = this.set(
+            StorageKeys.UTC_OFFSET,
+            new Date().getTimezoneOffset()
+          )
+          const cache = this.set(StorageKeys.CACHE_ANSWERS, {})
 
           return Promise.all([
             pId,
@@ -84,7 +89,11 @@ export class StorageService {
             notif,
             report,
             langs,
-            version
+            version,
+            utc,
+            cache,
+            enrolmentDate,
+            referenceDate
           ])
         }
       })

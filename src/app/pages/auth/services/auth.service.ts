@@ -13,7 +13,7 @@ import {
   DefaultRequestJSONContentType,
   DefaultSourceProducerAndSecret,
   DefaultSourceTypeRegistrationBody,
-  DefaultSubjectsURI
+  DefaultSubjectsURI,
 } from '../../../../assets/data/defaultConfig'
 import {StorageService} from '../../../core/services/storage.service'
 import {StorageKeys} from '../../../shared/enums/storage'
@@ -177,23 +177,25 @@ export class AuthService {
   }
 
   refresh() {
-    return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
-      const decoded = this.jwtHelper.decodeToken(tokens.access_token)
-      if (decoded.iat + tokens.expires_in < (new Date().getTime() /1000)) {
-        const URI = this.getTokenUrl();
-        const headers = this.getTokenRequestHeaders();
-        const body = this.getRefreshParams(tokens.refresh_token, this.keycloakConfig.clientId);
-        const promise = this.createPostRequest(URI, body, {
-          headers: headers,
-        }).then((newTokens: any) => {
-          newTokens.iat = (new Date().getTime() / 1000) - 10;
-          this.storage.set(StorageKeys.OAUTH_TOKENS, newTokens)
-        }).catch((reason) => console.log(reason));
-        return promise
-      } else {
-        return Promise.resolve(tokens)
-      }
-    })
+    return this.storage.get(StorageKeys.OAUTH_TOKENS)
+      .then(tokens => {
+        const decoded = this.jwtHelper.decodeToken(tokens.access_token)
+        if (decoded.iat + tokens.expires_in < (new Date().getTime() /1000)) {
+          const URI = this.getTokenUrl();
+          const headers = this.getTokenRequestHeaders();
+          const body = this.getRefreshParams(tokens.refresh_token, this.keycloakConfig.clientId);
+          return this.createPostRequest(URI, body, {
+            headers: headers
+          })
+        } else {
+          return tokens
+        }
+      })
+      .then(newTokens => {
+        newTokens.iat = (new Date().getTime() / 1000) - 10;
+        return this.storage.set(StorageKeys.OAUTH_TOKENS, newTokens)
+      })
+      .catch((reason) => console.log(reason))
   }
 
   updateURI() {
@@ -212,30 +214,16 @@ export class AuthService {
     // console.debug('URI : ' + URI)
     const refreshBody = DefaultRefreshTokenRequestBody + registrationToken
     const headers = this.getRegisterHeaders(DefaultRequestEncodedContentType)
-    const promise = this.createPostRequest(URI, refreshBody, {
-      headers: headers
-    })
-    return promise.then(res => {
-      return this.storage.set(StorageKeys.OAUTH_TOKENS, res)
-    })
+    return this.createPostRequest(URI, refreshBody, {headers})
+      .then(res => this.storage.set(StorageKeys.OAUTH_TOKENS, res))
   }
 
   registerAsSource() {
     return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
       const decoded = this.jwtHelper.decodeToken(tokens.access_token)
-      const headers = this.getAccessHeaders(
-        tokens.access_token,
-        DefaultRequestJSONContentType
-      )
+      const headers = this.getAccessHeaders(tokens.access_token, DefaultRequestJSONContentType)
       const URI = this.URI_base + DefaultSubjectsURI + decoded.sub + '/sources'
-      const promise = this.createPostRequest(
-        URI,
-        DefaultSourceTypeRegistrationBody,
-        {
-          headers: headers
-        }
-      )
-      return promise
+      return this.createPostRequest(URI, DefaultSourceTypeRegistrationBody,{headers})
     })
   }
 
@@ -265,10 +253,9 @@ export class AuthService {
 
   getRegisterHeaders(contentType) {
     // TODO:: Use empty client secret https://github.com/RADAR-base/RADAR-Questionnaire/issues/140
-    const headers = new HttpHeaders()
+    return new HttpHeaders()
       .set('Authorization', 'Basic ' + btoa(DefaultSourceProducerAndSecret))
       .set('Content-Type', contentType)
-    return headers
   }
 
   getAccessHeaders(accessToken, contentType) {

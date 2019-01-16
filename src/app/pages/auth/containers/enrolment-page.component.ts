@@ -1,22 +1,16 @@
 import { Component, ElementRef, ViewChild } from '@angular/core'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner'
-import { AlertController, NavController, Slides } from 'ionic-angular'
+import { NavController, Slides } from 'ionic-angular'
 
-import {
-  DefaultSettingsSupportedLanguages,
-  DefaultSettingsWeeklyReport,
-  DefaultSourceTypeModel,
-} from '../../../../assets/data/defaultConfig'
+import { DefaultSettingsWeeklyReport } from '../../../../assets/data/defaultConfig'
+import { AlertService } from '../../../core/services/alert.service'
 import { ConfigService } from '../../../core/services/config.service'
+import { LocalizationService } from '../../../core/services/localization.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { StorageKeys } from '../../../shared/enums/storage'
-import {
-  LanguageSetting,
-  WeeklyReportSubSettings
-} from '../../../shared/models/settings'
-import { TranslatePipe } from '../../../shared/pipes/translate/translate'
+import { LanguageSetting, WeeklyReportSubSettings } from '../../../shared/models/settings'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { AuthService } from '../services/auth.service'
 
@@ -41,17 +35,9 @@ export class EnrolmentPageComponent {
   showContactYouDetails = false;
   loading: boolean = false
   showOutcomeStatus: boolean = false
-  outcomeStatus: String
   reportSettings: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport;
 
-  language: LanguageSetting = {
-    label: LocKeys.LANGUAGE_ENGLISH.toString(),
-    value: 'en'
-  }
-  languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
-
-  authSuccess = false
-
+  language?: LanguageSetting
 
   constructor(
     public navCtrl: NavController,
@@ -60,13 +46,14 @@ export class EnrolmentPageComponent {
     private schedule: SchedulingService,
     private configService: ConfigService,
     private authService: AuthService,
-    private translate: TranslatePipe,
-    private alertCtrl: AlertController
+    private localization: LocalizationService,
+    private alertService: AlertService,
   ) {}
 
   ionViewDidLoad() {
-    this.slides.lockSwipes(true);
-    this.translate.init()
+    this.slides.lockSwipes(true)
+    return this.localization.update()
+      .then(lang => this.language = lang)
   }
 
   ionViewDidEnter() {}
@@ -83,14 +70,14 @@ export class EnrolmentPageComponent {
 
   processConsent() {
     if (!this.consentParticipation) {
-      this.alertCtrl.create({
+      this.alertService.showAlert({
         title: "Consent is required",
         buttons: [{
-          text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+          text: this.localization.translateKey(LocKeys.BTN_OKAY),
           handler: () => {}
         }],
         message: "Your consent to participate in the study is at least required."
-      }).present();
+      })
     }
     if(this.consentParticipation === true) {
       this.goToRegistration();
@@ -110,18 +97,6 @@ export class EnrolmentPageComponent {
     }
   }
 
-  doAfterAuthentication() {
-    this.configService.fetchConfigState(true).then(() => this.navigateToHome())
-  }
-
-  displayErrorMessage(error) {
-    this.loading = false
-    this.showOutcomeStatus = true
-    const msg = error.statusText + ' (' + error.status + ')'
-    this.outcomeStatus = msg
-    this.transitionStatuses()
-  }
-
   weeklyReportChange(index) {
     this.storage.set(StorageKeys.SETTINGS_WEEKLYREPORT, this.reportSettings)
   }
@@ -136,16 +111,6 @@ export class EnrolmentPageComponent {
       this.elOutcome.nativeElement.style.opacity = 1
       this.elLoading.nativeElement.style.opacity = 0
     }
-  }
-
-  getSourceId(response) {
-    const sources = response.sources
-    for (let i = 0; i < sources.length; i++) {
-      if (sources[i].sourceTypeModel === DefaultSourceTypeModel) {
-        return sources[i].sourceId
-      }
-    }
-    return 'Device not available'
   }
 
   next() {
@@ -176,23 +141,20 @@ export class EnrolmentPageComponent {
     this.loading = true;
     this.authService.keycloakLogin(false)
       .then(() => {
-        this.authService.retrieveUserInformation(this.language)
-          .then(() => {
-            this.configService.fetchConfigState(true)
-              .then(() => this.navigateToHome());
-          })
+        return this.authService.retrieveUserInformation(this.language)
       })
+      .then(() => this.configService.fetchConfigState(true))
+      .then(() => this.navigateToHome())
       .catch( () => {
         this.loading = false;
-        this.alertCtrl.create({
+        this.alertService.showAlert({
           title: "Something went wrong",
           buttons: [{
-            text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+            text: this.localization.translateKey(LocKeys.BTN_OKAY),
             handler: () => {}
           }],
           message: "Could not successfully register new participant. Please try again later."
-        }).present();
+        });
       });
   }
-
 }

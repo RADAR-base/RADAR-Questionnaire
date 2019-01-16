@@ -14,6 +14,7 @@ import {EnrolmentPageComponent} from "../../containers/enrolment-page.component"
 import {AuthService} from "../../services/auth.service";
 import {ConfigService} from "../../../../core/services/config.service";
 import {HomePageComponent} from "../../../home/containers/home-page.component";
+import { LocalizationService } from '../../../../core/services/localization.service'
 
 /**
  * Generated class for the WelcomePage page.
@@ -41,14 +42,14 @@ export class WelcomePageComponent {
   constructor(
     private navCtrl: NavController,
     private navParams: NavParams,
-    private translate: TranslatePipe,
+    private localization: LocalizationService,
     private storage: StorageService,
     private configService: ConfigService,
     private authService: AuthService,
     private alertCtrl: AlertController) {}
 
   ionViewDidLoad() {
-    this.translate.init()
+    this.localization.update()
   }
 
   ionViewDidEnter() {}
@@ -56,11 +57,11 @@ export class WelcomePageComponent {
   showSelectLanguage() {
     const buttons = [
       {
-        text: this.translate.transform(LocKeys.BTN_CANCEL.toString()),
+        text: this.localization.translateKey(LocKeys.BTN_CANCEL),
         handler: () => {}
       },
       {
-        text: this.translate.transform(LocKeys.BTN_SET.toString()),
+        text: this.localization.translateKey(LocKeys.BTN_SET),
         handler: selectedLanguageVal => {
           const lang: LanguageSetting = {
             label: LanguageMap[selectedLanguageVal],
@@ -68,7 +69,8 @@ export class WelcomePageComponent {
           }
           this.storage.set(StorageKeys.LANGUAGE, lang).then(() => {
             this.language = lang
-            this.translate.init().then(() => this.navCtrl.setRoot(AppComponent))
+            this.localization.update()
+              .then(() => this.navCtrl.setRoot(AppComponent))
           })
         }
       }
@@ -81,17 +83,13 @@ export class WelcomePageComponent {
       }
       inputs.push({
         type: 'radio',
-        label: this.translate.transform(
-          this.languagesSelectable[i]['label'].toString()
-        ),
-        value: this.languagesSelectable[i]['value'],
+        label: this.localization.translate(this.languagesSelectable[i].label),
+        value: this.languagesSelectable[i].value,
         checked: checked
       })
     }
     this.showAlert({
-      title: this.translate.transform(
-        LocKeys.SETTINGS_LANGUAGE_ALERT.toString()
-      ),
+      title: this.localization.translateKey(LocKeys.SETTINGS_LANGUAGE_ALERT),
       buttons: buttons,
       inputs: inputs
     })
@@ -120,19 +118,15 @@ export class WelcomePageComponent {
   goToLogin() {
     this.loading = true;
     this.authService.keycloakLogin(true)
-      .then(() => {
-        this.authService.retrieveUserInformation(this.language)
-          .then(() => {
-            this.configService.fetchConfigState(true)
-              .then(() => this.navigateToHome());
-          })
-      })
+      .then(() => this.authService.retrieveUserInformation(this.language))
+      .then(() => this.configService.fetchConfigState(true))
+      .then(() => this.navigateToHome())
       .catch( () => {
         this.loading = false;
         this.alertCtrl.create({
           title: "Something went wrong",
           buttons: [{
-            text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+            text: this.localization.translateKey(LocKeys.BTN_OKAY),
             handler: () => {}
           }],
           message: "Could not successfully redirect to login. Please try again later."

@@ -121,7 +121,7 @@
     class="size-static footer"
   >
     <div
-      *ngIf="taskIsNow && !hasClickedStartButton"
+      *ngIf="taskIsNow && !startingQuestionnaire"
       padding
     >
       <button
@@ -135,7 +135,7 @@
       </button>
     </div>
     <div
-      *ngIf="hasClickedStartButton"
+      *ngIf="startingQuestionnaire || nextTaskIsLoading"
       class="spinner-center"
     >
       <ion-spinner name="dots"></ion-spinner>

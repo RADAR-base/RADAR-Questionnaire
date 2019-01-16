@@ -1,19 +1,14 @@
 import { Component, ElementRef, ViewChild } from '@angular/core'
-import {
-  AlertController,
-  Content,
-  NavController,
-  NavParams,
-  Platform
-} from 'ionic-angular'
+import { Content, NavController, Platform } from 'ionic-angular'
 
 import { DefaultTask } from '../../../../assets/data/defaultConfig'
+import { AlertService } from '../../../core/services/alert.service'
 import { KafkaService } from '../../../core/services/kafka.service'
+import { LocalizationService } from '../../../core/services/localization.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { Task, TasksProgress } from '../../../shared/models/task'
-import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { checkTaskIsNow } from '../../../shared/utilities/check-task-is-now'
 import { ClinicalTasksPageComponent } from '../../clinical-tasks/containers/clinical-tasks-page.component'
 import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
@@ -44,26 +39,25 @@ export class HomePageComponent {
   @ViewChild('taskCalendar')
   elCalendar: ElementRef
 
-  isOpenPageClicked: boolean = false
+  tasks: Promise<Task[]>
   nextTask: Task = DefaultTask
   showCalendar: boolean = false
   showCompleted: boolean = false
   showNoTasksToday: boolean = false
   tasksProgress: TasksProgress
   calendarScrollHeight: number = 0
-  hasClickedStartButton: boolean = true
+  startingQuestionnaire: boolean = false
   hasClinicalTasks = false
   hasOnlyESMs = false
   taskIsNow = false
   elProgressOffset = 16
-  tasks
+  nextTaskIsLoading = true
 
   constructor(
     public navCtrl: NavController,
-    public navParams: NavParams,
-    public alertCtrl: AlertController,
+    public alertService: AlertService,
     private tasksService: TasksService,
-    private translate: TranslatePipe,
+    private localization: LocalizationService,
     public storage: StorageService,
     private platform: Platform,
     private kafka: KafkaService
@@ -75,21 +69,21 @@ export class HomePageComponent {
   }
 
   ionViewWillEnter() {
-    if (!this.tasks) this.tasks = this.tasksService.getTasksOfToday()
+    this.tasks.then(
+      tasks => (this.tasksProgress = this.tasksService.getTaskProgress(tasks))
+    )
     this.getElementsAttributes()
     this.elProgressHeight += this.elProgressOffset
     this.applyTransformations()
     this.showNoTasksToday = false
+    this.startingQuestionnaire = false
   }
 
   ionViewDidLoad() {
+    this.tasks = this.tasksService.getTasksOfToday()
     setInterval(() => {
       this.updateCurrentTask()
     }, 1000)
-    this.tasks = this.tasksService.getTasksOfToday()
-    this.tasks.then(
-      tasks => (this.tasksProgress = this.tasksService.getTaskProgress(tasks))
-    )
     this.evalHasClinicalTasks()
     this.checkIfOnlyESM()
     this.tasksService.sendNonReportedTaskCompletion()
@@ -102,6 +96,7 @@ export class HomePageComponent {
 
   checkForNextTask() {
     if (!this.showCalendar) {
+      this.nextTaskIsLoading = true
       this.tasks.then(tasks =>
         this.checkForNextTaskGeneric(this.tasksService.getNextTask(tasks))
       )
@@ -111,7 +106,6 @@ export class HomePageComponent {
   checkForNextTaskGeneric(task) {
     if (task && task.isClinical == false) {
       this.nextTask = task
-      this.hasClickedStartButton = false
       this.displayCompleted(false)
       this.displayEvalTransformations(false)
       this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
@@ -129,18 +123,12 @@ export class HomePageComponent {
         }
       })
     }
+    this.nextTaskIsLoading = false
   }
 
   checkIfOnlyESM() {
     this.tasks.then(tasks => {
-      let tmpHasOnlyESMs = true
-      for (let i = 0; i < tasks.length; i++) {
-        if (tasks[i].name !== 'ESM') {
-          tmpHasOnlyESMs = false
-          break
-        }
-      }
-      this.hasOnlyESMs = tmpHasOnlyESMs
+      this.hasOnlyESMs = tasks.every(t => t.name === 'ESM')
     })
   }
 
@@ -280,72 +268,52 @@ export class HomePageComponent {
     this.navCtrl.push(ClinicalTasksPageComponent)
   }
 
-  startQuestionnaire(task: Task) {
+  startQuestionnaire(taskCalendarTask: Task) {
+    // NOTE: User can start questionnaire from task calendar or start button in home.
     let startQuestionnaireTask = this.nextTask
-    if (task) {
-      if (task.completed === false) {
-        startQuestionnaireTask = task
+    if (taskCalendarTask) {
+      if (taskCalendarTask.completed === false) {
+        startQuestionnaireTask = taskCalendarTask
       }
     } else {
-      this.hasClickedStartButton = true
+      this.startingQuestionnaire = true
     }
-    const lang = this.storage.get(StorageKeys.LANGUAGE)
-    const nextAssessment = this.tasksService.getAssessment(
-      startQuestionnaireTask
-    )
-    Promise.all([lang, nextAssessment]).then(res => {
-      const language = res[0].value
-      const assessment = res[1]
-      const params = {
-        title: assessment.name,
-        introduction: assessment.startText[language],
-        endText: assessment.endText[language],
-        questions: assessment.questions,
-        associatedTask: startQuestionnaireTask,
-        assessment: assessment,
-        isLastTask: false
-      }
 
-      this.tasksService
-        .isLastTask(startQuestionnaireTask)
-        .then(lastTask => (params.isLastTask = lastTask))
-        .then(() => {
-          if (assessment.showIntroduction) {
-            this.navCtrl.push(StartPageComponent, params)
-          } else {
-            this.navCtrl.push(QuestionsPageComponent, params)
-          }
-        })
-    })
+    return this.tasksService.getAssessment(startQuestionnaireTask)
+      .then(assessment => {
+        const params = {
+          title: assessment.name,
+          introduction: this.localization.chooseText(assessment.startText),
+          endText: this.localization.chooseText(assessment.endText),
+          questions: assessment.questions,
+          associatedTask: startQuestionnaireTask,
+          assessment: assessment,
+          isLastTask: false
+        }
+
+        this.tasksService
+          .isLastTask(startQuestionnaireTask, this.tasks)
+          .then(lastTask => (params.isLastTask = lastTask))
+          .then(() => {
+            if (assessment.showIntroduction) {
+              this.navCtrl.push(StartPageComponent, params)
+            } else {
+              this.navCtrl.push(QuestionsPageComponent, params)
+            }
+          })
+      })
   }
 
   showCredits() {
-    const buttons = [
-      {
-        text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
-        handler: () => {}
-      }
-    ]
-    this.showAlert({
-      title: this.translate.transform(LocKeys.CREDITS_TITLE.toString()),
-      message: this.translate.transform(LocKeys.CREDITS_BODY.toString()),
-      buttons: buttons
+    return this.alertService.showAlert({
+      title: this.localization.translateKey(LocKeys.CREDITS_TITLE),
+      message: this.localization.translateKey(LocKeys.CREDITS_BODY),
+      buttons: [
+        {
+          text: this.localization.translateKey(LocKeys.BTN_OKAY),
+          handler: () => {}
+        }
+      ]
     })
-  }
-
-  showAlert(parameters) {
-    const alert = this.alertCtrl.create({
-      title: parameters.title,
-      buttons: parameters.buttons
-    })
-    if (parameters.message) {
-      alert.setMessage(parameters.message)
-    }
-    if (parameters.inputs) {
-      for (let i = 0; i < parameters.inputs.length; i++) {
-        alert.addInput(parameters.inputs[i])
-      }
-    }
-    alert.present()
   }
 }

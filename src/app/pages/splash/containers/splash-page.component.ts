@@ -1,5 +1,4 @@
 import { Component } from '@angular/core'
-import { Globalization } from '@ionic-native/globalization'
 import { NavController, NavParams } from 'ionic-angular'
 
 import { DefaultNotificationRefreshTime } from '../../../../assets/data/defaultConfig'
@@ -25,7 +24,6 @@ export class SplashPageComponent {
     public storage: StorageService,
     private splashService: SplashService,
     private notificationService: NotificationService,
-    private globalization: Globalization,
     private kafka: KafkaService,
     private configService: ConfigService
   ) {
@@ -56,35 +54,24 @@ export class SplashPageComponent {
   }
 
   checkTimezoneChange() {
-    return Promise.all([
-      this.storage.get(StorageKeys.TIME_ZONE),
-      this.storage.get(StorageKeys.UTC_OFFSET)
-    ]).then(([timezone, prevUtcOffset]) => {
-      return this.globalization
-        .getDatePattern({
-          formatLength: 'short',
-          selector: 'date and time'
-        })
-        .then(res => {
-          const utcOffset = new Date().getTimezoneOffset()
-          // NOTE: Cancels all notifications and reschedule tasks if timezone has changed
-          if (timezone !== res.timezone || prevUtcOffset !== utcOffset) {
-            console.log(
-              '[SPLASH] Timezone has changed to ' +
-                res.timezone +
-                '. Cancelling notifications! Rescheduling tasks! Scheduling new notifications!'
-            )
-            return Promise.all([
-              this.storage.set(StorageKeys.TIME_ZONE, res.timezone),
-              this.storage.set(StorageKeys.UTC_OFFSET, utcOffset),
-              this.storage.set(StorageKeys.UTC_OFFSET_PREV, prevUtcOffset)
-            ]).then(() =>
-              this.configService.updateConfigStateOnTimezoneChange()
-            )
-          } else {
-            console.log('[SPLASH] Current Timezone is ' + timezone)
-          }
-        })
+    return this.storage.get(StorageKeys.UTC_OFFSET).then(prevUtcOffset => {
+      const utcOffset = new Date().getTimezoneOffset()
+      // NOTE: Cancels all notifications and reschedule tasks if timezone has changed
+      if (prevUtcOffset !== utcOffset) {
+        console.log(
+          '[SPLASH] Timezone has changed to ' +
+            utcOffset +
+            '. Cancelling notifications! Rescheduling tasks! Scheduling new notifications!'
+        )
+        return this.storage
+          .set(StorageKeys.UTC_OFFSET, utcOffset)
+          .then(() =>
+            this.storage.set(StorageKeys.UTC_OFFSET_PREV, prevUtcOffset)
+          )
+          .then(() => this.configService.updateConfigStateOnTimezoneChange())
+      } else {
+        console.log('[SPLASH] Current Timezone is ' + utcOffset)
+      }
     })
   }
 

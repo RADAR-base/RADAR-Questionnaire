@@ -6,6 +6,7 @@ import { SchedulingService } from '../../../../core/services/scheduling.service'
 import { LocKeys } from '../../../../shared/enums/localisations'
 import { ReportScheduling } from '../../../../shared/models/report'
 import { Task } from '../../../../shared/models/task'
+import { getHours, getMinutes } from '../../../../shared/utilities/time'
 
 @Component({
   selector: 'ticker-bar',
@@ -100,8 +101,8 @@ export class TickerBarComponent implements OnChanges {
   getTimeToNext(next) {
     const now = new Date().getTime()
     let deltaStr = ''
-    const deltaMin = Math.round((next - now) / 60000)
-    const deltaHour = Math.round(deltaMin / 60)
+    const deltaMin = Math.round(getMinutes({ milliseconds: next - now }))
+    const deltaHour = Math.round(getHours({ minutes: deltaMin }))
     if (deltaMin > 59) {
       deltaStr =
         String(deltaHour) +

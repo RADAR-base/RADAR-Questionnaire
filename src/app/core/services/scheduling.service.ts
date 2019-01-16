@@ -103,7 +103,6 @@ export class SchedulingService {
       this.configVersion = confVersion
       this.enrolmentDate = enrolDate
       this.utcOffsetPrev = offsetPrev
-      console.log(this.utcOffsetPrev)
       if (schedVersion !== confVersion || force) {
         console.log('Updating schedule..')
         return this.runScheduler()

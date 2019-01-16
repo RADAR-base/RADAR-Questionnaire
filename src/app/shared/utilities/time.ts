@@ -61,3 +61,11 @@ export function getSeconds(time: Time) {
     seconds += time.milliseconds / TimeConversion.SEC_TO_MILLISEC
   return seconds
 }
+
+export function getMinutes(time: Time) {
+  return getSeconds(time) / TimeConversion.MIN_TO_SEC
+}
+
+export function getHours(time: Time) {
+  return getMinutes(time) / TimeConversion.HOUR_TO_MIN
+}

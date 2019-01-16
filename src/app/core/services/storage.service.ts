@@ -35,13 +35,15 @@ export class StorageService {
     const allKeys = this.getAllKeys()
     return allKeys
       .then(keys => {
-        // TODO: Find out why this is hard-coded?
         if (keys.length <= 7) {
-          const enrolmentDateTime = new Date(createdDate).getTime()
-          const referenceDateTime = new Date(createdDateMidnight).getTime()
-          this.set(StorageKeys.ENROLMENTDATE, enrolmentDateTime)
-          this.set(StorageKeys.REFERENCEDATE, referenceDateTime)
-
+          const enrolmentDate = this.set(
+            StorageKeys.ENROLMENTDATE,
+            new Date(createdDate).getTime()
+          )
+          const referenceDate = this.set(
+            StorageKeys.REFERENCEDATE,
+            new Date(createdDateMidnight).getTime()
+          )
           const pId = this.set(StorageKeys.PARTICIPANTID, participantId)
           const pLogin = this.set(
             StorageKeys.PARTICIPANTLOGIN,
@@ -66,6 +68,10 @@ export class StorageService {
             StorageKeys.SCHEDULE_VERSION,
             DefaultScheduleVersion
           )
+          const utc = this.set(
+            StorageKeys.UTC_OFFSET,
+            new Date().getTimezoneOffset()
+          )
           const cache = this.set(StorageKeys.CACHE_ANSWERS, {})
 
           return Promise.all([
@@ -77,7 +83,10 @@ export class StorageService {
             report,
             langs,
             version,
-            cache
+            utc,
+            cache,
+            enrolmentDate,
+            referenceDate
           ])
         }
       })

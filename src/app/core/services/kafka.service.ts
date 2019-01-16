@@ -216,10 +216,8 @@ export class KafkaService {
     if (!this.cacheSending) {
       this.cacheSending = !this.cacheSending
       this.sendToKafkaFromCache()
+        .catch(e => console.log('Cache could not be sent.'))
         .then(() => (this.cacheSending = !this.cacheSending))
-        .catch(e =>
-          console.log('Cache could not be sent: ' + JSON.stringify(e))
-        )
     }
   }
 

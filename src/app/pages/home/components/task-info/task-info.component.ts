@@ -1,17 +1,11 @@
 import { animate, state, style, transition, trigger } from '@angular/animations'
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output
-} from '@angular/core'
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core'
 
 import { StorageService } from '../../../../core/services/storage.service'
 import { StorageKeys } from '../../../../shared/enums/storage'
 import { Task, TasksProgress } from '../../../../shared/models/task'
-import { checkTaskIsNow } from '../../../../shared/utilities/check-task-is-now'
 import { TasksService } from '../../services/tasks.service'
+import { LocalizationService } from '../../../../core/services/localization.service'
 
 /**
  * Generated class for the TaskInfo component.
@@ -132,16 +126,15 @@ export class TaskInfoComponent implements OnChanges {
   progress: TasksProgress
   @Output()
   collapse: EventEmitter<Boolean> = new EventEmitter()
-  expanded: Boolean = true
-  hasExtraInfo: Boolean = false
-  displayTask: Boolean = false
-  animateFade: String
-  animateMove: String
-  animateScale: String
-  animateCenterRight: String
+  expanded: boolean = true
+  hasExtraInfo: boolean = false
+  displayTask: boolean = false
+  animateFade: string
+  animateMove: string
+  animateScale: string
+  animateCenterRight: string
 
-  private language: string
-  private extraTaskInfo: string
+  extraTaskInfo?: string
 
   max: number = 1
   current: number = 0
@@ -159,12 +152,10 @@ export class TaskInfoComponent implements OnChanges {
 
   constructor(
     private tasksService: TasksService,
-    public storage: StorageService
+    private storage: StorageService,
+    private localization: LocalizationService,
   ) {
     this.applyAnimationKeys()
-    this.storage.get(StorageKeys.LANGUAGE).then(resLang => {
-      this.language = resLang.value
-    })
   }
 
   ngOnChanges() {
@@ -181,15 +172,8 @@ export class TaskInfoComponent implements OnChanges {
   }
 
   checkHasExtraInfo() {
-    if (this.task['warning'] !== '') {
-      this.hasExtraInfo = true
-      if (this.language) {
-        this.extraTaskInfo = this.task.warning[this.language]
-        this.hasExtraInfo = this.extraTaskInfo ? true : false
-      }
-    } else {
-      this.hasExtraInfo = false
-    }
+    this.extraTaskInfo = this.task.warning
+    this.hasExtraInfo = !!this.extraTaskInfo
   }
 
   expand() {
@@ -223,34 +207,13 @@ export class TaskInfoComponent implements OnChanges {
   }
 
   getHour() {
-    const date = new Date()
-    date.setTime(this.task['timestamp'])
-    const hour = date.getHours()
-    const formatedHour = this.formatSingleDigits(hour)
-    return formatedHour
+    return this.localization.moment(this.task.timestamp)
+      .format('HH')
   }
 
   getMinutes() {
-    const date = new Date()
-    date.setTime(this.task['timestamp'])
-    const formatedMinutes = this.formatSingleDigits(date.getMinutes())
-    return formatedMinutes
-  }
-
-  getMeridiem() {
-    const date = new Date()
-    date.setTime(this.task['timestamp'])
-    const hour = date.getHours()
-    const meridiem = hour >= 12 ? 'PM' : 'AM'
-    return meridiem
-  }
-
-  formatSingleDigits(numberToFormat) {
-    const format =
-      numberToFormat < 10
-        ? '0' + String(numberToFormat)
-        : String(numberToFormat)
-    return format
+    return this.localization.moment(this.task.timestamp)
+      .format('mm')
   }
 
   getExtraInfo() {

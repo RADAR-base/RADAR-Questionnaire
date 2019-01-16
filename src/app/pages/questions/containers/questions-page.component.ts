@@ -1,16 +1,11 @@
 // tslint:disable:no-eval
 import { Component, ElementRef, ViewChild } from '@angular/core'
-import {
-  App,
-  Content,
-  NavController,
-  NavParams,
-  ViewController
-} from 'ionic-angular'
+import { Content, NavController, NavParams, ViewController } from 'ionic-angular'
 
+import { LocalizationService } from '../../../core/services/localization.service'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { Question, QuestionType } from '../../../shared/models/question'
-import { TranslatePipe } from '../../../shared/pipes/translate/translate'
+import { getSeconds } from '../../../shared/utilities/time'
 import { FinishPageComponent } from '../../finish/containers/finish-page.component'
 import { AnswerService } from '../services/answer.service'
 import { TimestampService } from '../services/timestamp.service'
@@ -34,15 +29,16 @@ export class QuestionsPageComponent {
 
   startTime: number
   endTime: number
+  questionIncrements = []
 
   nextQuestionIncrVal: number = 0
 
   // TODO: Gather text variables in one place. get values from server?
   txtValues = {
-    next: this.translate.transform(LocKeys.BTN_NEXT.toString()),
-    previous: this.translate.transform(LocKeys.BTN_PREVIOUS.toString()),
-    finish: this.translate.transform(LocKeys.BTN_FINISH.toString()),
-    close: this.translate.transform(LocKeys.BTN_CLOSE.toString())
+    next: this.localization.translateKey(LocKeys.BTN_NEXT),
+    previous: this.localization.translateKey(LocKeys.BTN_PREVIOUS),
+    finish: this.localization.translateKey(LocKeys.BTN_FINISH),
+    close: this.localization.translateKey(LocKeys.BTN_CLOSE)
   }
   nextBtTxt: string = this.txtValues.next
   previousBtTxt: string = this.txtValues.close
@@ -65,10 +61,9 @@ export class QuestionsPageComponent {
     public navCtrl: NavController,
     public navParams: NavParams,
     public viewCtrl: ViewController,
-    public appCtrl: App,
     private answerService: AnswerService,
     private timestampService: TimestampService,
-    private translate: TranslatePipe
+    private localization: LocalizationService
   ) {}
 
   ionViewDidLoad() {
@@ -84,7 +79,7 @@ export class QuestionsPageComponent {
 
   evalIfFirstQuestionnaireToSkipESMSleepQuestion() {
     const time = new Date()
-    if (time.getHours() > 8 && this.questionTitle === 'ESM') {
+    if (time.getHours() > 9 && this.questionTitle === 'ESM') {
       return 1
     }
     return 0
@@ -102,7 +97,7 @@ export class QuestionsPageComponent {
   }
 
   getTime() {
-    return this.timestampService.getTimeStamp() / 1000
+    return getSeconds({ milliseconds: this.timestampService.getTimeStamp() })
   }
 
   setCurrentQuestion(value = 0) {
@@ -153,10 +148,9 @@ export class QuestionsPageComponent {
   }
 
   setProgress() {
-    const percent = Math.ceil(
+    this.progress = Math.ceil(
       (this.currentQuestion * 100) / this.questions.length
     )
-    this.progress = percent
   }
 
   checkAnswer() {
@@ -190,6 +184,7 @@ export class QuestionsPageComponent {
         id
       )
       this.setCurrentQuestion(this.nextQuestionIncrVal)
+      this.questionIncrements.push(this.nextQuestionIncrVal)
     }
   }
 
@@ -212,20 +207,16 @@ export class QuestionsPageComponent {
   evalSkipNext() {
     let increment = 1
     let questionIdx = this.currentQuestion + 1
-    const questionFieldName = this.questions[this.currentQuestion].field_name
-    const responses = Object.assign({}, this.answerService.answers)
-    const answer = responses[questionFieldName]
-    let answerLength = answer.length
     if (questionIdx < this.questions.length) {
       while (this.questions[questionIdx].evaluated_logic !== '') {
+        const responses = Object.assign({}, this.answerService.answers)
         const logic = this.questions[questionIdx].evaluated_logic
-        if (answerLength) {
-          while (answerLength > 0) {
-            responses[questionFieldName] = answer[answerLength - 1]
-            if (eval(logic) === true) return increment
-            answerLength--
-          }
-        } else {
+        const logicFieldName = this.getLogicFieldName(logic)
+        const answers = this.answerService.answers[logicFieldName]
+        const answerLength = answers.length
+        if (!answerLength) if (eval(logic) === true) return increment
+        for (const answer of answers) {
+          responses[logicFieldName] = answer
           if (eval(logic) === true) return increment
         }
         increment += 1
@@ -233,6 +224,10 @@ export class QuestionsPageComponent {
       }
     }
     return increment
+  }
+
+  getLogicFieldName(logic) {
+    return logic.split("['")[1].split("']")[0]
   }
 
   recordTimeStamp(questionId) {
@@ -257,9 +252,14 @@ export class QuestionsPageComponent {
 
   previousQuestion() {
     if (this.isPreviousBtDisabled === false) {
-      this.setCurrentQuestion(-this.nextQuestionIncrVal)
-      if (this.previousBtTxt === this.txtValues.close) {
+      if (
+        this.previousBtTxt === this.txtValues.close ||
+        !this.questionIncrements.length
+      ) {
         this.navCtrl.pop()
+      } else {
+        this.answerService.pop()
+        this.setCurrentQuestion(-this.questionIncrements.pop())
       }
     }
   }

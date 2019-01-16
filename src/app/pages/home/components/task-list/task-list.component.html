@@ -1,0 +1,23 @@
+
+<div>
+
+  <div padding>
+
+    <div class="text-heading" style="text-b"> {{ "TODO_LIST_TITLE" | translate }}</div>
+    <div class="text-medium"> {{ "TODO_SELECT_INFO" | translate }}</div>
+    <div class="text-medium"> {{ "TODO_TIME_ESTIMATE_NOTICE" | translate }}</div>
+  </div>
+
+  <div id="task-container">
+      <ion-scroll scrollX style="height:150px;">
+        <div class="scroll-item">
+          <ion-col col-33 *ngFor="let task of (tasks | async); let i=index">
+            <div *ngIf="!task.completed" class="card" (click)="clicked(task)">
+              <ion-icon name="walk"></ion-icon>
+              <div class="text-medium"> {{ task.name }}</div>
+            </div>
+          </ion-col>
+        </div>
+      </ion-scroll>
+  </div>
+</div>

@@ -129,4 +129,13 @@ export class TasksService {
     updatedTask.reportedCompletion = true
     return this.schedule.insertTask(updatedTask)
   }
+
+
+  formatTime(date) {
+    const hour = date.getHours()
+    const min = date.getMinutes()
+    const hourStr = date.getHours() < 10 ? '0' + String(hour) : String(hour)
+    const minStr = date.getMinutes() < 10 ? '0' + String(min) : String(min)
+    return hourStr + ':' + minStr
+  }
 }

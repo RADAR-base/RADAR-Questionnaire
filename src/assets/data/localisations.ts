@@ -227,6 +227,15 @@ export const Localisations = {
   SURVEYS_HEADING: {
     en: 'Surveys'
   },
+  TODO_LIST_TITLE: {
+    en: 'TODO List'
+  },
+  TODO_TIME_ESTIMATE_NOTICE: {
+    en: 'Estimated time for each survey: 3 minutes'
+  },
+  TODO_SELECT_INFO: {
+    en: 'Select a survey to complete'
+  },
   CALENDAR_ESM_MISSED_TITLE: {
     da: 'Blokeret',
     de: 'Nich erlaubt',

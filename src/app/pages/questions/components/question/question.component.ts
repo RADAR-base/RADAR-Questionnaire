@@ -40,9 +40,9 @@ export class QuestionComponent implements OnChanges {
       const maxLabel = this.question.select_choices_or_calculations[
         this.question.select_choices_or_calculations.length - 1
       ].label
-      this.question['range'] = {
-        min: min.trim(),
-        max: max.trim(),
+      this.question.range = {
+        min: parseInt(min.trim()),
+        max: parseInt(max.trim()),
         labelLeft: minLabel.trim(),
         labelRight: maxLabel.trim()
       }

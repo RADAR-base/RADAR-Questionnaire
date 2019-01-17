@@ -49,9 +49,7 @@ export class TaskProgressComponent implements OnChanges {
   displayFireworks(milliDelay, milliDisplay) {
     setTimeout(() => {
       this.showFireworks = true
-      setTimeout(() => {
-        this.showFireworks = false
-      }, milliDisplay)
+      setTimeout(() => (this.showFireworks = false), milliDisplay)
     }, milliDelay)
   }
 }

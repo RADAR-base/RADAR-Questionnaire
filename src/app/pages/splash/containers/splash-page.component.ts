@@ -1,10 +1,7 @@
 import { Component } from '@angular/core'
 import { NavController, NavParams } from 'ionic-angular'
 
-import {
-  DefaultNotificationRefreshTime,
-  DefaultNumberOfNotificationsToSchedule
-} from '../../../../assets/data/defaultConfig'
+import { DefaultNotificationRefreshTime } from '../../../../assets/data/defaultConfig'
 import { ConfigService } from '../../../core/services/config.service'
 import { KafkaService } from '../../../core/services/kafka.service'
 import { NotificationService } from '../../../core/services/notification.service'
@@ -86,9 +83,7 @@ export class SplashPageComponent {
         const timeElapsed = Date.now() - lastUpdate
         if (timeElapsed > DefaultNotificationRefreshTime || !lastUpdate) {
           console.log('[SPLASH] Scheduling Notifications.')
-          return this.notificationService.setNextXNotifications(
-            DefaultNumberOfNotificationsToSchedule
-          )
+          return this.notificationService.publish()
         } else {
           console.log(
             'Not Scheduling Notifications as ' +

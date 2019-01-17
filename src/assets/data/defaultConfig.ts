@@ -39,15 +39,12 @@ export const DefaultTask: Task = {
   reportedCompletion: false,
   timestamp: 0,
   name: 'DEFAULT',
-  reminderSettings: {
-    unit: 'hour',
-    amount: 1,
-    repeat: 1
-  },
   nQuestions: 0,
   estimatedCompletionTime: 0,
+  completionWindow: 0,
   warning: '',
-  isClinical: false
+  isClinical: false,
+  notifications: []
 }
 
 export const DefaultTaskTest: Task = {
@@ -56,14 +53,15 @@ export const DefaultTaskTest: Task = {
   reportedCompletion: false,
   timestamp: 0,
   name: 'TEST',
-  reminderSettings: {},
   nQuestions: 0,
   estimatedCompletionTime: 0,
+  completionWindow: 0,
   warning: '',
-  isClinical: false
+  isClinical: false,
+  notifications: []
 }
 
-export const DefaultSettingsSelectedLanguage: LanguageSetting = {
+export const DefaultLanguage: LanguageSetting = {
   label: '',
   value: ''
 }
@@ -156,12 +154,6 @@ export const DefaultRefreshTokenRequestBody =
 
 export const DefaultEnrolmentBaseURL =
   DefaultEndPoint + DefaultManagementPortalURI
-
-// TIME CONVERSIONS
-
-export const SEC_MILLISEC = 1000
-export const HOUR_MIN = 60
-export const MIN_SEC = 60
 
 // KAFKA
 

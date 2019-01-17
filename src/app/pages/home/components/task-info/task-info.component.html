@@ -2,7 +2,7 @@
 
   <div
     class="non-warn-padding"
-    *ngIf="!hasExtraInfo && !expanded"
+    *ngIf="!task.warning && !expanded"
   >
   </div>
 
@@ -82,7 +82,7 @@
   </div>
 
   <div
-    *ngIf="hasExtraInfo"
+    *ngIf="task.warning"
     class="extra-info"
     [@alignCenterRightExtraInfo]="expanded"
   >
@@ -90,7 +90,7 @@
       class="extra-info-icon"
       src="assets/imgs/warning.png"
     >
-    {{  extraTaskInfo }}
+    {{  task.warning }}
   </div>
 
 </div>

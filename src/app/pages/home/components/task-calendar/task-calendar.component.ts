@@ -46,8 +46,8 @@ export class TaskCalendarComponent implements OnChanges {
   clicked(task) {
     const now = new Date().getTime()
     if (
-      task.timestamp >= now &&
-      task.timestamp < now + task.completionWindow &&
+      task.timestamp <= now &&
+      task.timestamp + task.completionWindow > now &&
       !task.completed
     ) {
       this.task.emit(task)

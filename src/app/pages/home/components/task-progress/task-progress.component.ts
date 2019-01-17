@@ -53,7 +53,7 @@ export class TaskProgressComponent implements OnChanges {
     if (this.progress) {
       this.max = this.progress.numberOfTasks
       this.current = this.progress.completedTasks
-      this.currentPercentage = (this.progress.completedTasks/this.progress.numberOfTasks)*100;
+      this.currentPercentage = Math.round((this.progress.completedTasks/this.progress.numberOfTasks)*100);
     }
     if (this.current >= this.max) {
       this.complete = true

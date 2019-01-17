@@ -9,7 +9,7 @@
   >
   </div>
 
-  <div id="navigation">{{ "TASK_PROGRESS_TITLE" | translate }}</div>
+  <!--<div id="navigation">{{ "TASK_PROGRESS_TITLE" | translate }}</div>-->
 
   <div
     class="pyro"
@@ -26,7 +26,7 @@
     >
       <round-progress
         id="prog-lg"
-        [current]="currentPercentage"
+        [current]="current"
         [max]="max"
         [responsive]="true"
         [color]="'#48459f'"
@@ -55,7 +55,7 @@
       #counter
       class="counter"
     >
-      <div class="large">{{ current }}</div>
+      <div class="large">{{ currentPercentage }}%</div>
       <div class="small">
         {{ "TASK_PROGRESS_COMPLETED" | translate }}
       </div>

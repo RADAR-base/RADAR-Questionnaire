@@ -21,6 +21,20 @@ page-home {
     transition: all 0.4s ease-in-out;
   }
 
+  ion-footer .toolbar-title {
+    font-size: 15px;
+  }
+
+  ion-segment-button {
+    min-height: 10rem;
+  }
+
+  .segment-md .segment-button ion-icon {
+    font-size: 4rem;
+    line-height: 4rem;
+    color: $cl-font;
+  }
+
   ion-header .toolbar-background {
     background-color: $cl-secondary;
   }
@@ -47,7 +61,8 @@ page-home {
 
   .footer {
     margin-top: 2px;
-    background-color: $cl-primary-40;
+    height: 12rem;
+    border-top: 3px solid $cl-light;
   }
 
   .notification {

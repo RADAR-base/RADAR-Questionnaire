@@ -2,14 +2,13 @@
 <div>
 
   <div padding>
-
-    <div class="text-heading" > {{ "TODO_LIST_TITLE" | translate }}</div>
-    <div class="text-medium"> {{ "TODO_SELECT_INFO" | translate }}</div>
-    <div padding class="text-medium"> {{ "TODO_TIME_ESTIMATE_NOTICE" | translate }}</div>
+    <div class="text-medium" > {{ "TODO_LIST_TITLE" | translate }}</div>
+    <div class="text-sm"> {{ "TODO_SELECT_INFO" | translate }}</div>
+    <div class="text-sm"> {{ "TODO_TIME_ESTIMATE_NOTICE" | translate }}</div>
   </div>
 
   <div id="task-container">
-      <ion-scroll scrollX style="height:150px;">
+      <ion-scroll scrollX style="height:150px;" *ngIf="(tasks | async) !== null">
         <div class="scroll-item">
           <ion-col col-33 *ngFor="let task of (tasks | async); let i=index">
             <div *ngIf="!task.completed" class="card" (click)="clicked(task)">
@@ -17,6 +16,10 @@
               <div class="text-medium"> {{ task.name }}</div>
             </div>
           </ion-col>
+        </div>
+
+        <div *ngIf="(tasks | async ) === null">
+          <div class="text-heading" > {{ "NO_SURVEYS_AVAILABLE" | translate }}</div>
         </div>
       </ion-scroll>
   </div>

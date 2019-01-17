@@ -18,6 +18,25 @@ export class TasksService {
     return this.storage.getAssessment(task)
   }
 
+  getTasksOfNow() {
+    const now = new Date().getTime()
+    return this.schedule.getTasks()
+      .then((tasks: Task[]) => {
+        return tasks.filter(t => t.timestamp <= now && t.timestamp + t.completionWindow > now)
+      })
+  }
+
+  getUncompletedTasksOfNow() {
+    const now = new Date().getTime()
+    return this.schedule.getTasks()
+      .then((tasks: Task[]) => {
+        return tasks.filter(t =>
+          t.timestamp <= now &&
+          t.timestamp + t.completionWindow > now &&
+          !t.completed)
+      })
+  }
+
   getTasksOfToday() {
     const now = new Date()
     return this.schedule.getTasksForDate(now)

@@ -224,6 +224,9 @@ export const Localisations = {
     it: 'Completato in clinica?',
     nl: 'Voltooid in de kliniek?'
   },
+  LEARN_HEADING: {
+    en: 'Learn'
+  },
   SURVEYS_HEADING: {
     en: 'Surveys'
   },
@@ -235,6 +238,9 @@ export const Localisations = {
   },
   TODO_SELECT_INFO: {
     en: 'Select a survey to complete'
+  },
+  NO_SURVEYS_AVAILABLE: {
+    en: 'You have no surveys currently available.'
   },
   CALENDAR_ESM_MISSED_TITLE: {
     da: 'Blokeret',

@@ -120,6 +120,17 @@ export class WelcomePageComponent {
     this.authService.keycloakLogin(true)
       .then(() => this.authService.retrieveUserInformation(this.language))
       .then(() => this.configService.fetchConfigState(true))
+      .catch( () => {
+        this.loading = false;
+        this.alertCtrl.create({
+          title: "Could not retrieve configuration",
+          buttons: [{
+            text: this.localization.translateKey(LocKeys.BTN_OKAY),
+            handler: () => {}
+          }],
+          message: "Could not retrieve questionnaire configuration. Please try again later."
+        }).present();
+      })
       .then(() => this.navigateToHome())
       .catch( () => {
         this.loading = false;

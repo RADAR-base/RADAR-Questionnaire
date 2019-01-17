@@ -21,11 +21,25 @@
     >
       <ion-icon name="cog"></ion-icon>
     </button>
-    <ion-title text-center>{{ "HOME_RADAR_CNS" | translate }}</ion-title>
+    <ion-title text-center>{{ "SURVEYS_HEADING" | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content #content>
+
+  <div
+    #taskList
+    class="size-static"
+  >
+    <task-list
+      *ngIf="tasks"
+      (task)="startQuestionnaire($event)"
+      [tasks]="tasks"
+    >
+
+    </task-list>
+  </div>
+
   <div
     #progressBar
     class="size-dynamic"
@@ -37,108 +51,27 @@
       *ngIf="!hasOnlyESMs"
     >
     </task-progress>
-    <div
-      class="container-esm"
-      *ngIf="hasOnlyESMs"
-    >
-      <img
-        src="assets/imgs/diary.png"
-        class="icon-esm"
-      >
-    </div>
-    <div
-      class="clinical-1"
-      *ngIf="hasClinicalTasks && !showCalendar && !showCompleted"
-      (click)="openClinicalTasksPage()"
-    >
-      <img
-        src="assets/imgs/clinical.png"
-        class="icon-clinical"
-      >
-    </div>
   </div>
 
-  <div
-    class="clinical-2"
-    *ngIf="hasClinicalTasks && showCalendar"
-    (click)="openClinicalTasksPage()"
-  >
-    <img
-      src="assets/imgs/clinical.png"
-      class="icon-clinical"
-    >
-  </div>
 
-  <div
-    class="clinical-3"
-    *ngIf="hasClinicalTasks && !showCalendar && showCompleted"
-    (click)="openClinicalTasksPage()"
-  >
-    <img
-      src="assets/imgs/clinical.png"
-      class="icon-clinical"
-    >
-  </div>
-
-  <div
-    #tickerBar
-    class="size-static"
-    *ngIf="nextTask.name !== 'ESM'"
-  >
-    <ticker-bar
-      [task]="nextTask"
-      [showAffirmation]="showCompleted"
-    ></ticker-bar>
-  </div>
-
-  <div
-    #taskInfo
-    class="size-static"
-  >
-    <task-info
-      [task]="nextTask"
-      [isNow]="taskIsNow"
-      [progress]="tasksProgress"
-      (collapse)="displayEvalTransformations($event)"
-    ></task-info>
-  </div>
-
-  <div
-    #taskCalendar
-    class="size-null"
-  >
-    <task-calendar
-      *ngIf="tasks"
-      [scrollHeight]="calendarScrollHeight"
-      (task)="startQuestionnaire($event)"
-      [tasks]="tasks"
-    >
-    </task-calendar>
-  </div>
-
-  <div
-    #footer
-    class="size-static footer"
-  >
-    <div
-      *ngIf="taskIsNow && !startingQuestionnaire"
-      padding
-    >
-      <button
-        ion-button
-        class="bt bt--full"
-        round
-        full
-        (click)="startQuestionnaire()"
-      >
-        {{ "BTN_START" | translate }}
-      </button>
-    </div>
-    <div
-      *ngIf="startingQuestionnaire || nextTaskIsLoading"
-      class="spinner-center"
-    >
-      <ion-spinner name="dots"></ion-spinner>
-    </div>
-  </div>
 </ion-content>
+
+<ion-footer>
+    <ion-segment padding [(ngModel)]="pageSelection">
+
+      <ion-segment-button value="Paid">
+        <ion-icon name="create"></ion-icon>
+        <ion-title text-center>{{ "SURVEYS_HEADING" | translate }}</ion-title>
+      </ion-segment-button>
+
+      <ion-segment-button value="Free">
+        <ion-icon name="book"></ion-icon>
+        <ion-title text-center>{{ "LEARN_HEADING" | translate }}</ion-title>
+      </ion-segment-button>
+
+      <ion-segment-button value="Top">
+        <ion-icon name="cog"></ion-icon>
+        <ion-title text-center>{{ "SETTINGS_SETTINGS" | translate }}</ion-title>
+      </ion-segment-button>
+    </ion-segment>
+</ion-footer>

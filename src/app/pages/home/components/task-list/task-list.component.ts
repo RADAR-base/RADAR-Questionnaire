@@ -3,15 +3,14 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  Output, SimpleChanges
+  Output
 } from '@angular/core'
-import { AlertController, Platform } from 'ionic-angular'
 
-import { DefaultTask } from '../../../../../assets/data/defaultConfig'
 import { LocKeys } from '../../../../shared/enums/localisations'
 import { Task } from '../../../../shared/models/task'
-import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
 import { TasksService } from '../../services/tasks.service'
+import {AlertService} from "../../../../core/services/alert.service";
+import {LocalizationService} from "../../../../core/services/localization.service";
 
 @Component({
   selector: 'task-list',
@@ -30,62 +29,62 @@ export class TaskListComponent implements OnChanges {
 
   constructor(
     private tasksService: TasksService,
-    private alertCtrl: AlertController,
-    private translate: TranslatePipe,
-    private platform: Platform
+    private alertService: AlertService,
+    private localization: LocalizationService,
   ) {}
 
   ionViewDidLoad() {
     console.log('taskListloaded')
     this.tasks.then((result) => {
-      console.log('tasks here ', result);
+      alert('tasks here '+ JSON.stringify( result));
     })
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges() {
     this.setCurrentTime()
   }
 
+  setCurrentTime() {
+    try {
+      this.currentTime = this.localization.moment().format('LT') // locale time
+    } catch (e) {
+      console.log(e)
+    }
+
+    const now = new Date().getTime()
+    this.timeIndex = this.tasks
+      .then(tasks => tasks.findIndex(t => t.timestamp >= now))
+  }
 
   clicked(task) {
-    if ( !task.completed) {
+    const now = new Date().getTime()
+    if (
+      task.timestamp <= now &&
+      task.timestamp + task.completionWindow > now &&
+      !task.completed
+    ) {
       this.task.emit(task)
     } else {
-      const now = new Date()
-      const nowPlusFifteen = new Date(now.getTime() + 1000 * 60 * 15)
-      const taskTimestamp = new Date(task.timestamp)
-      if (
-        taskTimestamp > now &&
-        taskTimestamp < nowPlusFifteen &&
-        !task.completed
-      ) {
-        this.task.emit(task)
-      }
+      return this.showMissedInfo()
     }
   }
 
-  // NOTE: Compare current time with the start times of the tasks and
-  // find out in between which tasks it should be shown in the interface
-  getCurrentTimeIndex(date: Date) {
-    let tasksPassed = 0
-    return Promise.resolve(
-      this.tasks.then(tasks => {
-        for (const task of tasks) {
-          if (date.getTime() <= task.timestamp) {
-            return tasksPassed
-          } else {
-            tasksPassed += 1
-          }
+  showMissedInfo() {
+    return this.alertService.showAlert({
+      title: this.localization.translateKey(LocKeys.CALENDAR_ESM_MISSED_TITLE),
+      message: this.localization.translateKey(LocKeys.CALENDAR_ESM_MISSED_DESC),
+      buttons: [
+        {
+          text: this.localization.translateKey(LocKeys.BTN_OKAY),
+          handler: () => {}
         }
-        return tasksPassed
-      })
-    )
+      ]
+    })
   }
 
-  setCurrentTime() {
-    const now = new Date()
-    this.currentTime = this.tasksService.formatTime(now)
-    this.timeIndex = this.getCurrentTimeIndex(now)
+  getStartTime(task: Task) {
+    return this.localization.moment(task.timestamp)
+      .format('LT')
   }
 
 }

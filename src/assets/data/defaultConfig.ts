@@ -42,6 +42,7 @@ export const DefaultTask: Task = {
   warning: '',
   isClinical: false,
   notifications: [],
+  imageUrl: ''
 }
 
 export const DefaultSettingsSelectedLanguage: LanguageSetting = {

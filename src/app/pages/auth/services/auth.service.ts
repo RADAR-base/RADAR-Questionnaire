@@ -1,23 +1,20 @@
-import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/toPromise'
 
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
+import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { JwtHelperService } from '@auth0/angular-jwt'
 
 import {
   DefaultEndPoint,
   DefaultManagementPortalURI,
   DefaultMetaTokenURI,
   DefaultRefreshTokenRequestBody,
-  DefaultRefreshTokenURI,
   DefaultRequestEncodedContentType,
   DefaultRequestJSONContentType,
-  DefaultSourceProducerAndSecret,
   DefaultSourceTypeRegistrationBody,
   DefaultSubjectsURI
 } from '../../../../assets/data/defaultConfig'
 import { StorageService } from '../../../core/services/storage.service'
+import { TokenService } from '../../../core/services/token.service'
 import { StorageKeys } from '../../../shared/enums/storage'
 
 @Injectable()
@@ -27,71 +24,20 @@ export class AuthService {
   constructor(
     public http: HttpClient,
     public storage: StorageService,
-    private jwtHelper: JwtHelperService
+    private token: TokenService
   ) {
     this.updateURI()
   }
 
-  refresh() {
-    return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
-      const now = new Date().getTime() / 1000
-      if (tokens.iat + tokens.expires_in < now) {
-        const URI = this.URI_base + DefaultRefreshTokenURI
-        const headers = this.getRegisterHeaders(
-          DefaultRequestEncodedContentType
-        )
-        const params = this.getRefreshParams(tokens.refresh_token)
-        const promise = this.createPostRequest(URI, '', {
-          headers: headers,
-          params: params
-        }).then(newTokens => {
-          return this.storage.set(StorageKeys.OAUTH_TOKENS, newTokens)
-        })
-        return promise
-      } else {
-        return Promise.resolve(tokens)
-      }
-    })
-  }
-
   updateURI() {
     return this.storage.get(StorageKeys.BASE_URI).then(uri => {
-      const endPoint = uri ? uri : DefaultEndPoint
-      this.URI_base = endPoint + DefaultManagementPortalURI
+      this.URI_base = (uri ? uri : DefaultEndPoint) + DefaultManagementPortalURI
     })
   }
 
-  // TODO: test this
   registerToken(registrationToken) {
-    const URI = this.URI_base + DefaultRefreshTokenURI
-    // console.debug('URI : ' + URI)
     const refreshBody = DefaultRefreshTokenRequestBody + registrationToken
-    const headers = this.getRegisterHeaders(DefaultRequestEncodedContentType)
-    const promise = this.createPostRequest(URI, refreshBody, {
-      headers: headers
-    })
-    return promise.then(res => {
-      return this.storage.set(StorageKeys.OAUTH_TOKENS, res)
-    })
-  }
-
-  registerAsSource() {
-    return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
-      const decoded = this.jwtHelper.decodeToken(tokens.access_token)
-      const headers = this.getAccessHeaders(
-        tokens.access_token,
-        DefaultRequestJSONContentType
-      )
-      const URI = this.URI_base + DefaultSubjectsURI + decoded.sub + '/sources'
-      const promise = this.createPostRequest(
-        URI,
-        DefaultSourceTypeRegistrationBody,
-        {
-          headers: headers
-        }
-      )
-      return promise
-    })
+    return this.token.register(refreshBody)
   }
 
   getRefreshTokenFromUrl(url) {
@@ -102,41 +48,33 @@ export class AuthService {
     return base + DefaultMetaTokenURI + token
   }
 
-  createPostRequest(uri, body, headers) {
-    return this.http.post(uri, body, headers).toPromise()
+  getSubjectURI(subject) {
+    return this.URI_base + DefaultSubjectsURI + subject
   }
 
   getSubjectInformation() {
-    return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
-      const decoded = this.jwtHelper.decodeToken(tokens.access_token)
-      const headers = this.getAccessHeaders(
-        tokens.access_token,
-        DefaultRequestEncodedContentType
-      )
-      const URI = this.URI_base + DefaultSubjectsURI + decoded.sub
-      return this.http.get(URI, { headers }).toPromise()
-    })
+    return Promise.all([
+      this.token.getAccessHeaders(DefaultRequestEncodedContentType),
+      this.token.getDecodedSubject()
+    ]).then(([headers, subject]) =>
+      this.http.get(this.getSubjectURI(subject), { headers }).toPromise()
+    )
   }
 
-  getRegisterHeaders(contentType) {
-    // TODO:: Use empty client secret https://github.com/RADAR-base/RADAR-Questionnaire/issues/140
-    const headers = new HttpHeaders()
-      .set('Authorization', 'Basic ' + btoa(DefaultSourceProducerAndSecret))
-      .set('Content-Type', contentType)
-    return headers
-  }
-
-  getAccessHeaders(accessToken, contentType) {
-    const headers = new HttpHeaders()
-      .set('Authorization', 'Bearer ' + accessToken)
-      .set('Content-Type', contentType)
-    return headers
-  }
-
-  getRefreshParams(refreshToken) {
-    const params = new HttpParams()
-      .set('grant_type', 'refresh_token')
-      .set('refresh_token', refreshToken)
-    return params
+  registerAsSource() {
+    return Promise.all([
+      this.token.getAccessHeaders(DefaultRequestJSONContentType),
+      this.token.getDecodedSubject()
+    ]).then(([headers, subject]) =>
+      this.http
+        .post(
+          this.getSubjectURI(subject) + '/sources',
+          DefaultSourceTypeRegistrationBody,
+          {
+            headers
+          }
+        )
+        .toPromise()
+    )
   }
 }

@@ -52,7 +52,6 @@ export class SchemaService {
   }
 
   getKafkaObjectValue(type, payload) {
-    let value
     switch (type) {
       case KAFKA_ASSESSMENT:
         const Answer: AnswerValueExport = {
@@ -65,23 +64,20 @@ export class SchemaService {
             ? { double: payload.task.timestamp / SEC_MILLISEC }
             : null
         }
-        value = Answer
-        break
+        return Answer
       case KAFKA_COMPLETION_LOG:
         const CompletionLog: CompletionLogValueExport = {
           name: payload.task.name.toString(),
           time: payload.task.timestamp / SEC_MILLISEC,
           completionPercentage: { double: payload.task.completed ? 100 : 0 }
         }
-        value = CompletionLog
-        break
+        return CompletionLog
       case KAFKA_TIMEZONE:
         const ApplicationTimeZone: ApplicationTimeZoneValueExport = {
           time: new Date().getTime() / SEC_MILLISEC,
           offset: new Date().getTimezoneOffset() * MIN_SEC
         }
-        value = ApplicationTimeZone
-        break
+        return ApplicationTimeZone
       case KAFKA_USAGE:
         const Event: UsageEventValueExport = {
           time: payload.time,
@@ -90,10 +86,13 @@ export class SchemaService {
           categoryName: payload.categoryName,
           eventType: payload.eventType
         }
-        value = Event
-        break
+        return Event
     }
-    return value
+  }
+
+  getAvroObject(schema, value) {
+    const options = { wrapUnions: true }
+    return AvroSchema.parse(schema, options).clone(value, options)
   }
 
   convertToAvro(kafkaObject, specs) {
@@ -101,36 +100,20 @@ export class SchemaService {
       this.schemas[specs.name] = this.util
         .getLatestKafkaSchemaVersions(specs)
         .catch(error => {
+          // TODO: add fallback for error
           console.log(error)
           return Promise.resolve()
         })
     }
-    return Promise.all([this.schemas[specs.name]]).then(data => {
-      const schemaVersions = data[0]
-      const avroKey = AvroSchema.parse(
-        JSON.parse(schemaVersions[0]['schema']),
-        {
-          wrapUnions: true
-        }
-      )
-      const avroVal = AvroSchema.parse(
-        JSON.parse(schemaVersions[1]['schema']),
-        {
-          wrapUnions: true
-        }
-      )
-      const bufferKey = avroKey.clone(kafkaObject.key, { wrapUnions: true })
-      const bufferVal = avroVal.clone(kafkaObject.value, { wrapUnions: true })
+    return this.schemas[specs.name].then(([keyData, valData]) => {
+      const key = JSON.parse(keyData['schema'])
+      const value = JSON.parse(valData['schema'])
+      const schemaId = new KafkaRest.AvroSchema(key)
+      const schemaInfo = new KafkaRest.AvroSchema(value)
       const payload = {
-        key: bufferKey,
-        value: bufferVal
+        key: this.getAvroObject(key, kafkaObject.key),
+        value: this.getAvroObject(value, kafkaObject.value)
       }
-      const schemaId = new KafkaRest.AvroSchema(
-        JSON.parse(schemaVersions[0]['schema'])
-      )
-      const schemaInfo = new KafkaRest.AvroSchema(
-        JSON.parse(schemaVersions[1]['schema'])
-      )
       return { schemaId, schemaInfo, payload }
     })
   }

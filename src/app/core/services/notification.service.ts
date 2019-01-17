@@ -8,7 +8,7 @@ import {
   DefaultNotificationType,
   DefaultNumberOfNotificationsToRescue,
   DefaultNumberOfNotificationsToSchedule,
-  DefaultTask,
+  DefaultTaskTest,
   FCMPluginProjectSenderId
 } from '../../../assets/data/defaultConfig'
 import { LocKeys } from '../../shared/enums/localisations'
@@ -159,7 +159,7 @@ export class NotificationService {
 
   testFCMNotifications() {
     const TWO_MINUTES = 2 * 60000
-    const task = DefaultTask
+    const task = DefaultTaskTest
     task.timestamp = new Date().getTime() + TWO_MINUTES
     const fcmNotification = this.formatFCMNotification(
       task,
@@ -169,25 +169,41 @@ export class NotificationService {
     this.sendFCMNotification(fcmNotification)
   }
 
-  formatNotificationMessage(task) {
-    let text = this.translate.transform(
-      LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1.toString()
-    )
-    text += ' ' + task.estimatedCompletionTime + ' '
-    text += this.translate.transform(
-      LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2.toString()
-    )
-    return text
+  formatNotifMessageAndTitle(task) {
+    if (task.name == 'TEST') {
+      return {
+        title: this.translate.transform(
+          LocKeys.NOTIFICATION_TEST_REMINDER_NOW.toString()
+        ),
+        message: this.translate.transform(
+          LocKeys.NOTIFICATION_TEST_REMINDER_NOW_DESC.toString()
+        )
+      }
+    } else {
+      return {
+        title: this.translate.transform(
+          LocKeys.NOTIFICATION_REMINDER_NOW.toString()
+        ),
+        message:
+          this.translate.transform(
+            LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1.toString()
+          ) +
+          ' ' +
+          task.estimatedCompletionTime +
+          ' ' +
+          this.translate.transform(
+            LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2.toString()
+          )
+      }
+    }
   }
 
   formatLocalNotification(task, isLastScheduledNotification, isLastOfDay) {
-    const text = this.formatNotificationMessage(task)
+    const notif = this.formatNotifMessageAndTitle(task)
     const notification = {
       id: task.index,
-      title: this.translate.transform(
-        LocKeys.NOTIFICATION_REMINDER_NOW.toString()
-      ),
-      text: text,
+      title: notif.title,
+      text: notif.message,
       trigger: { at: new Date(task.timestamp) },
       foreground: true,
       vibrate: true,
@@ -202,15 +218,13 @@ export class NotificationService {
   }
 
   formatFCMNotification(task, participantLogin) {
-    const text = this.formatNotificationMessage(task)
+    const notif = this.formatNotifMessageAndTitle(task)
     const expiry = task.name === 'ESM' ? 15 * 60 : 24 * 60 * 60
     const fcmNotification = {
       eventId: uuid(),
       action: 'SCHEDULE',
-      notificationTitle: this.translate.transform(
-        LocKeys.NOTIFICATION_REMINDER_NOW.toString()
-      ),
-      notificationMessage: text,
+      notificationTitle: notif.title,
+      notificationMessage: notif.message,
       time: task.timestamp,
       subjectId: participantLogin,
       ttlSeconds: expiry

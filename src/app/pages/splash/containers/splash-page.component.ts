@@ -63,10 +63,12 @@ export class SplashPageComponent {
             utcOffset +
             '. Cancelling notifications! Rescheduling tasks! Scheduling new notifications!'
         )
-        return Promise.all([
-          this.storage.set(StorageKeys.UTC_OFFSET, utcOffset),
-          this.storage.set(StorageKeys.UTC_OFFSET_PREV, prevUtcOffset)
-        ]).then(() => this.configService.updateConfigStateOnTimezoneChange())
+        return this.storage
+          .set(StorageKeys.UTC_OFFSET, utcOffset)
+          .then(() =>
+            this.storage.set(StorageKeys.UTC_OFFSET_PREV, prevUtcOffset)
+          )
+          .then(() => this.configService.updateConfigStateOnTimezoneChange())
       } else {
         console.log('[SPLASH] Current Timezone is ' + utcOffset)
       }

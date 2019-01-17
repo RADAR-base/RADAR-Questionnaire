@@ -94,31 +94,31 @@ task-progress {
     0%,
     19.9% {
       margin-top: 10%;
-      margin-left: 40%;
+      margin-left: 50%;
     }
 
     20%,
     39.9% {
       margin-top: 40%;
-      margin-left: 30%;
+      margin-left: 40%;
     }
 
     40%,
     59.9% {
       margin-top: 20%;
-      margin-left: 70%;
+      margin-left: 80%;
     }
 
     60%,
     79.9% {
       margin-top: 30%;
-      margin-left: 20%;
+      margin-left: 30%;
     }
 
     80%,
     99.9% {
       margin-top: 30%;
-      margin-left: 80%;
+      margin-left: 90%;
     }
   }
 
@@ -193,5 +193,9 @@ task-progress {
   .small {
     padding-top: 48px;
     font-size: 18px;
+  }
+
+  .container-diary {
+    margin-top: 8vh;
   }
 }

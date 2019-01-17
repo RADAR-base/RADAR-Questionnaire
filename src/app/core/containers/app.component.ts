@@ -22,7 +22,7 @@ export class AppComponent {
     private notificationService: NotificationService
   ) {
     this.platform.ready().then(() => {
-      this.statusBar.styleDefault()
+      this.statusBar.hide()
       this.splashScreen.hide()
       this.configService.fetchConfigState(false)
       this.configService.migrateToLatestVersion()

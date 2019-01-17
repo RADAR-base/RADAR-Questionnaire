@@ -1,4 +1,5 @@
-import { Component, ElementRef, ViewChild } from '@angular/core'
+import { animate, state, style, transition, trigger } from '@angular/animations'
+import { Component } from '@angular/core'
 import {
   AlertController,
   Content,
@@ -23,41 +24,26 @@ import { TasksService } from '../services/tasks.service'
 
 @Component({
   selector: 'page-home',
-  templateUrl: 'home-page.component.html'
+  templateUrl: 'home-page.component.html',
+  animations: [
+    trigger('displayCalendar', [
+      state('true', style({ transform: 'translateY(0%)' })),
+      state('false', style({ transform: 'translateY(100%)' })),
+      transition('*=>*', animate('300ms ease-out'))
+    ])
+  ]
 })
 export class HomePageComponent {
-  @ViewChild('content')
-  elContent: Content
-  elContentHeight: number
-  @ViewChild('progressBar')
-  elProgress: ElementRef
-  elProgressHeight: number
-  @ViewChild('tickerBar')
-  elTicker: ElementRef
-  elTickerHeight: number
-  @ViewChild('taskInfo')
-  elInfo: ElementRef
-  elInfoHeight: number
-  @ViewChild('footer')
-  elFooter: ElementRef
-  elFooterHeight: number
-  @ViewChild('taskCalendar')
-  elCalendar: ElementRef
-
   tasks: Promise<Task[]>
-  isOpenPageClicked: boolean = false
-  nextTask: Task = DefaultTask
-  showCalendar: boolean = false
-  showCompleted: boolean = false
-  showNoTasksToday: boolean = false
-  tasksProgress: TasksProgress
-  calendarScrollHeight: number = 0
-  startingQuestionnaire: boolean = false
+  nextTask: Task
+  showCalendar = false
+  showCompleted = false
+  showNoTasksToday = false
+  tasksProgress: TasksProgress = { numberOfTasks: 1, completedTasks: 0 }
+  startingQuestionnaire = false
   hasClinicalTasks = false
-  hasOnlyESMs = false
   taskIsNow = false
-  elProgressOffset = 16
-  nextTaskIsLoading = true
+  checkTaskInterval
 
   constructor(
     public navCtrl: NavController,
@@ -71,79 +57,49 @@ export class HomePageComponent {
   ) {
     this.platform.resume.subscribe(e => {
       this.kafka.sendAllAnswersInCache()
-      this.updateCurrentTask()
+      this.checkForNextTask()
     })
   }
 
   ionViewWillEnter() {
-    this.tasks = this.tasksService.getTasksOfToday()
-    this.tasks.then(
-      tasks => (this.tasksProgress = this.tasksService.getTaskProgress(tasks))
-    )
-    this.getElementsAttributes()
-    this.elProgressHeight += this.elProgressOffset
-    this.applyTransformations()
-    this.showNoTasksToday = false
     this.startingQuestionnaire = false
   }
 
   ionViewDidLoad() {
-    setInterval(() => {
-      this.updateCurrentTask()
-    }, 1000)
+    this.tasks = this.tasksService.getTasksOfToday()
+    this.tasks.then(tasks => {
+      this.checkTaskInterval = setInterval(() => {
+        this.checkForNextTask()
+      }, 1000)
+      this.tasksProgress = this.tasksService.getTaskProgress(tasks)
+      this.showNoTasksToday = this.tasksProgress.numberOfTasks == 0
+    })
     this.evalHasClinicalTasks()
-    this.checkIfOnlyESM()
     this.tasksService.sendNonReportedTaskCompletion()
   }
 
-  updateCurrentTask() {
-    this.checkForNextTask()
-    this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
-  }
-
   checkForNextTask() {
-    if (!this.showCalendar) {
-      this.nextTaskIsLoading = true
-      this.tasks.then(tasks =>
-        this.checkForNextTaskGeneric(this.tasksService.getNextTask(tasks))
-      )
-    }
+    this.tasks.then(tasks =>
+      this.checkForNextTaskGeneric(this.tasksService.getNextTask(tasks))
+    )
   }
 
   checkForNextTaskGeneric(task) {
     if (task && task.isClinical == false) {
       this.nextTask = task
-      this.displayCompleted(false)
-      this.displayEvalTransformations(false)
       this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
+      this.showCompleted = !this.nextTask
     } else {
-      this.tasksService.areAllTasksComplete().then(completed => {
-        if (completed) {
-          this.nextTask = DefaultTask
-          this.displayCompleted(true)
-          if (!this.tasksProgress) {
-            this.showNoTasksToday = true
-          }
-        } else {
-          this.nextTask = DefaultTask
-          this.displayEvalTransformations(true)
+      this.taskIsNow = false
+      this.nextTask = null
+      this.tasks.then(tasks => {
+        this.showCompleted = this.tasksService.areAllTasksComplete(tasks)
+        if (this.showCompleted) {
+          clearInterval(this.checkTaskInterval)
+          this.showCalendar = false
         }
       })
     }
-    this.nextTaskIsLoading = false
-  }
-
-  checkIfOnlyESM() {
-    this.tasks.then(tasks => {
-      let tmpHasOnlyESMs = true
-      for (let i = 0; i < tasks.length; i++) {
-        if (tasks[i].name !== 'ESM') {
-          tmpHasOnlyESMs = false
-          break
-        }
-      }
-      this.hasOnlyESMs = tmpHasOnlyESMs
-    })
   }
 
   evalHasClinicalTasks() {
@@ -152,126 +108,8 @@ export class HomePageComponent {
     })
   }
 
-  displayEvalTransformations(requestDisplay: boolean) {
-    this.showCalendar = requestDisplay
-    this.getElementsAttributes()
-    this.applyTransformations()
-  }
-
-  displayCompleted(requestDisplay: boolean) {
-    this.showCompleted = requestDisplay
-    this.getElementsAttributes()
-    this.applyCompletedTransformations()
-  }
-
-  getElementsAttributes() {
-    if (this.elContent) this.elContentHeight = this.elContent.contentHeight
-    if (this.elProgress)
-      this.elProgressHeight =
-        this.elProgress.nativeElement.offsetHeight - this.elProgressOffset
-    if (this.elTicker)
-      this.elTickerHeight = this.elTicker.nativeElement.offsetHeight
-    if (this.elInfo) this.elInfoHeight = this.elInfo.nativeElement.offsetHeight
-    if (this.elFooter)
-      this.elFooterHeight = this.elFooter.nativeElement.offsetHeight
-  }
-
-  applyTransformations() {
-    if (this.showCalendar) {
-      this.elProgress.nativeElement.style.transform = `translateY(-${
-        this.elProgressHeight
-      }px) scale(1)`
-      this.elTicker.nativeElement.style.transform = `translateY(-${
-        this.elProgressHeight
-      }px)`
-      this.elInfo.nativeElement.style.transform = `translateY(-${
-        this.elProgressHeight
-      }px)`
-      this.elFooter.nativeElement.style.transform = `translateY(${
-        this.elFooterHeight
-      }px) scale(0)`
-      this.elCalendar.nativeElement.style.transform = `translateY(-${
-        this.elProgressHeight
-      }px)`
-      this.elCalendar.nativeElement.style.opacity = 1
-    } else {
-      if (this.elProgress)
-        this.elProgress.nativeElement.style.transform =
-          'translateY(0px) scale(1)'
-      if (this.elTicker)
-        this.elTicker.nativeElement.style.transform = 'translateY(0px)'
-      if (this.elInfo)
-        this.elInfo.nativeElement.style.transform = 'translateY(0px)'
-      if (this.elFooter)
-        this.elFooter.nativeElement.style.transform = 'translateY(0px) scale(1)'
-      if (this.elCalendar) {
-        this.elCalendar.nativeElement.style.transform = 'translateY(0px)'
-        this.elCalendar.nativeElement.style.opacity = 0
-      }
-    }
-    this.setCalendarScrollHeight(this.showCalendar)
-  }
-
-  // TODO: Rename to something appropriate
-  isNextTaskESMandNotNow() {
-    const now = new Date().getTime()
-    if (!this.showCalendar) {
-      if (this.nextTask.name === 'ESM' && this.nextTask.timestamp > now) {
-        this.elProgress.nativeElement.style.transform = `translateY(${
-          this.elFooterHeight
-        }px)`
-        this.elInfo.nativeElement.style.transform = `translateY(${
-          this.elFooterHeight
-        }px)`
-        this.elFooter.nativeElement.style.transform = `translateY(${
-          this.elFooterHeight
-        }px) scale(0)`
-        this.elCalendar.nativeElement.style.transform = 'translateY(0px)'
-        this.elCalendar.nativeElement.style.opacity = 0
-      } else {
-        this.elProgress.nativeElement.style.transform = `translateY(${
-          this.elFooterHeight
-        }px)`
-        this.elInfo.nativeElement.style.transform = `translateY(${
-          this.elFooterHeight
-        }px)`
-        this.elFooter.nativeElement.style.transform = `translateY(${
-          this.elFooterHeight
-        }px) scale(0)`
-        this.elCalendar.nativeElement.style.transform = 'translateY(0px)'
-        this.elCalendar.nativeElement.style.opacity = 0
-      }
-    }
-  }
-
-  setCalendarScrollHeight(show: boolean) {
-    if (show) {
-      this.calendarScrollHeight =
-        this.elContentHeight - this.elTickerHeight - this.elInfoHeight
-    } else {
-      this.calendarScrollHeight = 0
-    }
-  }
-
-  applyCompletedTransformations() {
-    if (this.showCompleted) {
-      this.elTicker.nativeElement.style.padding = `0`
-      this.elTicker.nativeElement.style.transform = `translateY(${this
-        .elInfoHeight + this.elFooterHeight}px)`
-      this.elInfo.nativeElement.style.transform = `translateY(${this
-        .elInfoHeight + this.elFooterHeight}px) scale(0)`
-      this.elFooter.nativeElement.style.transform = `translateY(${this
-        .elInfoHeight + this.elFooterHeight}px) scale(0)`
-    } else {
-      if (this.elTicker) {
-        this.elTicker.nativeElement.style.padding = '0 0 2px 0'
-        this.elTicker.nativeElement.style.transform = 'translateY(0px)'
-      }
-      if (this.elInfo)
-        this.elInfo.nativeElement.style.transform = 'translateY(0px) scale(1)'
-      if (this.elFooter)
-        this.elFooter.nativeElement.style.transform = 'translateY(0px) scale(1)'
-    }
+  displayTaskCalendar() {
+    this.showCalendar = !this.showCalendar
   }
 
   openSettingsPage() {

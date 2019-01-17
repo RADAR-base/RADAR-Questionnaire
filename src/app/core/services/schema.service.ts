@@ -6,15 +6,14 @@ import {
   KAFKA_ASSESSMENT,
   KAFKA_COMPLETION_LOG,
   KAFKA_TIMEZONE,
-  KAFKA_USAGE,
-  MIN_SEC,
-  SEC_MILLISEC
+  KAFKA_USAGE
 } from '../../../assets/data/defaultConfig'
 import { AnswerKeyExport, AnswerValueExport } from '../../shared/models/answer'
 import { CompletionLogValueExport } from '../../shared/models/completion-log'
 import { Task } from '../../shared/models/task'
 import { ApplicationTimeZoneValueExport } from '../../shared/models/timezone'
 import { UsageEventValueExport } from '../../shared/models/usage-event'
+import { getSeconds } from '../../shared/utilities/time'
 import { Utility } from '../../shared/utilities/util'
 import { StorageService } from './storage.service'
 
@@ -60,22 +59,20 @@ export class SchemaService {
           answers: payload.data.answers,
           time: payload.data.time,
           timeCompleted: payload.data.timeCompleted,
-          timeNotification: payload.task.timestamp
-            ? { double: payload.task.timestamp / SEC_MILLISEC }
-            : null
+          timeNotification: getSeconds({ milliseconds: payload.task.timestamp })
         }
         return Answer
       case KAFKA_COMPLETION_LOG:
         const CompletionLog: CompletionLogValueExport = {
           name: payload.task.name.toString(),
-          time: payload.task.timestamp / SEC_MILLISEC,
+          time: getSeconds({ milliseconds: payload.task.timestamp }),
           completionPercentage: { double: payload.task.completed ? 100 : 0 }
         }
         return CompletionLog
       case KAFKA_TIMEZONE:
         const ApplicationTimeZone: ApplicationTimeZoneValueExport = {
-          time: new Date().getTime() / SEC_MILLISEC,
-          offset: new Date().getTimezoneOffset() * MIN_SEC
+          time: getSeconds({ milliseconds: new Date().getTime() }),
+          offset: getSeconds({ minutes: new Date().getTimezoneOffset() })
         }
         return ApplicationTimeZone
       case KAFKA_USAGE:

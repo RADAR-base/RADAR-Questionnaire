@@ -17,7 +17,7 @@ import { Task } from '../../shared/models/task'
 
 @Injectable()
 export class StorageService {
-  global: any = {}
+  global: { [key: string]: any } = {}
 
   constructor(private storage: Storage) {
     const setStoragePromise = this.prepareStorage()
@@ -29,7 +29,6 @@ export class StorageService {
     participantLogin,
     projectName,
     sourceId,
-    language,
     createdDate,
     createdDateMidnight
   ) {
@@ -45,7 +44,6 @@ export class StorageService {
     const pLogin = this.set(StorageKeys.PARTICIPANTLOGIN, participantLogin)
     const pName = this.set(StorageKeys.PROJECTNAME, projectName)
     const sId = this.set(StorageKeys.SOURCEID, sourceId)
-    const lang = this.set(StorageKeys.LANGUAGE, language)
     const notif = this.set(
       StorageKeys.SETTINGS_NOTIFICATIONS,
       DefaultSettingsNotifications
@@ -70,7 +68,6 @@ export class StorageService {
       pName,
       pLogin,
       sId,
-      lang,
       notif,
       report,
       langs,
@@ -89,8 +86,9 @@ export class StorageService {
   }
 
   set(key: StorageKeys, value: any): Promise<any> {
-    this.global[key.toString()] = value
-    return this.storage.set(key.toString(), value)
+    const k = key.toString()
+    this.global[k] = value
+    return this.storage.set(k, value)
   }
 
   push(key: StorageKeys, value: any): Promise<any> {
@@ -105,48 +103,42 @@ export class StorageService {
     return Promise.resolve(true)
   }
 
-  get(key) {
-    if (this.global[key.toString()] && key.toString()) {
-      return Promise.resolve(this.global[key.toString()])
+  get(key: StorageKeys) {
+    const k = key.toString()
+    const local = this.global[k]
+    if (local !== undefined) {
+      return Promise.resolve(local)
     } else {
-      return this.storage.get(key.toString()).then(value => {
-        this.global[key.toString()] = value
-        return Promise.resolve(value)
+      return this.storage.get(k).then(value => {
+        this.global[k] = value
+        return value
       })
     }
   }
 
   remove(key: StorageKeys) {
+    const k = key.toString()
     return this.storage
-      .remove(key.toString())
+      .remove(k)
       .then(res => {
-        this.global[key.toString()] = null
+        this.global[k] = null
         return res
       })
       .catch(error => this.handleError(error))
   }
 
-  getAllKeys() {
+  getAllKeys(): Promise<string[]> {
     return this.storage.keys()
   }
 
   prepareStorage() {
     return this.getAllKeys()
-      .then(keys => {
-        const promises = []
-        promises.push(Promise.resolve(keys))
-        for (let i = 0; i < keys.length; i++) {
-          promises.push(this.storage.get(keys[i]))
-        }
-        return Promise.all(promises)
-      })
-      .then(store => {
-        const keys = store[0]
-        for (let i = 1; i < store.length; i++) {
-          this.global[keys[i - 1].toString()] = store[i]
-        }
-        return Promise.resolve('Store set')
-      })
+      .then(keys =>
+        Promise.all(
+          keys.map(k => this.storage.get(k).then(v => (this.global[k] = v)))
+        )
+      )
+      .then(() => 'Store set')
   }
 
   getAssessment(task: Task) {
@@ -166,14 +158,8 @@ export class StorageService {
   }
 
   getClinicalAssessment(task: Task) {
-    return this.get(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS).then(
-      assessments => {
-        for (let i = 0; i < assessments.length; i++) {
-          if (assessments[i].name === task.name) {
-            return assessments[i]
-          }
-        }
-      }
+    return this.get(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS).then(assessments =>
+      assessments.find(a => a.name === task.name)
     )
   }
 

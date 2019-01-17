@@ -57,9 +57,7 @@ export class SplashService {
         const timeElapsed = Date.now() - lastUpdate
         if (timeElapsed > DefaultNotificationRefreshTime || !lastUpdate) {
           console.log('[SPLASH] Scheduling Notifications.')
-          return this.notificationService.setNextXNotifications(
-            DefaultNumberOfNotificationsToSchedule
-          )
+          return this.notificationService.publish()
         } else {
           console.log(
             'Not Scheduling Notifications as ' +

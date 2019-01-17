@@ -5,18 +5,18 @@ import {
   DefaultEndPoint,
   KAFKA_CLIENT_KAFKA
 } from '../../../assets/data/defaultConfig'
-import { AuthService } from '../../pages/auth/services/auth.service'
 import { StorageKeys } from '../../shared/enums/storage'
 import { SchemaService } from './schema.service'
 import { StorageService } from './storage.service'
+import { TokenService } from './token.service'
 
 @Injectable()
 export class KafkaService {
   private KAFKA_CLIENT_URL: string
 
   constructor(
-    public storage: StorageService,
-    private authService: AuthService,
+    private storage: StorageService,
+    private token: TokenService,
     private schema: SchemaService
   ) {
     this.updateURI()
@@ -27,16 +27,6 @@ export class KafkaService {
       const endPoint = uri ? uri : DefaultEndPoint
       this.KAFKA_CLIENT_URL = endPoint + KAFKA_CLIENT_KAFKA
     })
-  }
-
-  getKafkaInstance() {
-    return this.authService
-      .refresh()
-      .then(() => this.storage.get(StorageKeys.OAUTH_TOKENS))
-      .then(tokens => {
-        const headers = { Authorization: 'Bearer ' + tokens.access_token }
-        return new KafkaRest({ url: this.KAFKA_CLIENT_URL, headers: headers })
-      })
   }
 
   prepareKafkaObjectAndSend(type, payload) {
@@ -113,5 +103,15 @@ export class KafkaService {
         return this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
       }
     })
+  }
+
+  getKafkaInstance() {
+    return this.token
+      .refresh()
+      .then(() => this.storage.get(StorageKeys.OAUTH_TOKENS))
+      .then(tokens => {
+        const headers = { Authorization: 'Bearer ' + tokens.access_token }
+        return new KafkaRest({ url: this.KAFKA_CLIENT_URL, headers: headers })
+      })
   }
 }

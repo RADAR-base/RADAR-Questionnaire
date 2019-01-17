@@ -10,7 +10,6 @@ import { Device } from '@ionic-native/device'
 import { Dialogs } from '@ionic-native/dialogs'
 import { File } from '@ionic-native/file'
 import { Globalization } from '@ionic-native/globalization'
-import { LocalNotifications } from '@ionic-native/local-notifications'
 import { SplashScreen } from '@ionic-native/splash-screen'
 import { StatusBar } from '@ionic-native/status-bar'
 import { Vibration } from '@ionic-native/vibration'
@@ -53,7 +52,6 @@ import { Utility } from './shared/utilities/util'
     StatusBar,
     SplashScreen,
     Utility,
-    LocalNotifications,
     BarcodeScanner,
     Dialogs,
     Vibration,

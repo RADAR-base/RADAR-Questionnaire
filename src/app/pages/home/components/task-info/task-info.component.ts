@@ -1,8 +1,7 @@
 import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Component, Input, OnChanges } from '@angular/core'
 
-import { StorageService } from '../../../../core/services/storage.service'
-import { StorageKeys } from '../../../../shared/enums/storage'
+import { LocalizationService } from '../../../../core/services/localization.service'
 import { Task, TasksProgress } from '../../../../shared/models/task'
 
 @Component({
@@ -59,30 +58,16 @@ export class TaskInfoComponent implements OnChanges {
   progress: TasksProgress
   @Input()
   expanded = true
-  hasExtraInfo: boolean
-  extraTaskInfo: string
-
-  private language: string
 
   max: number = 1
   current: number = 0
   radius: number = 35
   stroke: number = 8
 
-  constructor(public storage: StorageService) {
-    this.storage.get(StorageKeys.LANGUAGE).then(resLang => {
-      this.language = resLang.value
-    })
-  }
+  constructor(private localization: LocalizationService) {}
 
   ngOnChanges() {
-    this.checkHasExtraInfo()
     this.updateProgress()
-  }
-
-  checkHasExtraInfo() {
-    this.hasExtraInfo = !!this.task.warning[this.language]
-    this.extraTaskInfo = this.task.warning[this.language]
   }
 
   updateProgress() {
@@ -93,18 +78,11 @@ export class TaskInfoComponent implements OnChanges {
   }
 
   getHour() {
-    const date = new Date()
-    date.setTime(this.task['timestamp'])
-    const hour = date.getHours()
-    const formatedHour = this.formatSingleDigits(hour)
-    return formatedHour
+    return this.localization.moment(this.task.timestamp).format('HH')
   }
 
   getMinutes() {
-    const date = new Date()
-    date.setTime(this.task['timestamp'])
-    const formatedMinutes = this.formatSingleDigits(date.getMinutes())
-    return formatedMinutes
+    return this.localization.moment(this.task.timestamp).format('mm')
   }
 
   getMeridiem() {
@@ -113,13 +91,5 @@ export class TaskInfoComponent implements OnChanges {
     const hour = date.getHours()
     const meridiem = hour >= 12 ? 'PM' : 'AM'
     return meridiem
-  }
-
-  formatSingleDigits(numberToFormat) {
-    const format =
-      numberToFormat < 10
-        ? '0' + String(numberToFormat)
-        : String(numberToFormat)
-    return format
   }
 }

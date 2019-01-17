@@ -1,23 +1,20 @@
 import { Component, ElementRef, ViewChild } from '@angular/core'
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  ValidatorFn,
-  Validators
-} from '@angular/forms'
+import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner'
-import { AlertController, NavController, Slides } from 'ionic-angular'
+import { NavController, Slides } from 'ionic-angular'
 
 import {
   DefaultEnrolmentBaseURL,
+  DefaultLanguage,
   DefaultSettingsSupportedLanguages,
   DefaultSettingsWeeklyReport,
   DefaultSourceTypeModel,
   LanguageMap
 } from '../../../../assets/data/defaultConfig'
 import { AppComponent } from '../../../core/containers/app.component'
+import { AlertService } from '../../../core/services/alert.service'
 import { ConfigService } from '../../../core/services/config.service'
+import { LocalizationService } from '../../../core/services/localization.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { LocKeys } from '../../../shared/enums/localisations'
@@ -26,7 +23,6 @@ import {
   LanguageSetting,
   WeeklyReportSubSettings
 } from '../../../shared/models/settings'
-import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 import { AuthService } from '../services/auth.service'
 
@@ -48,10 +44,7 @@ export class EnrolmentPageComponent {
 
   URLRegEx = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?'
 
-  language: LanguageSetting = {
-    label: LocKeys.LANGUAGE_ENGLISH.toString(),
-    value: 'en'
-  }
+  language?: LanguageSetting = DefaultLanguage
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
 
   enterMetaQR = false
@@ -78,13 +71,13 @@ export class EnrolmentPageComponent {
     private schedule: SchedulingService,
     private configService: ConfigService,
     private authService: AuthService,
-    private translate: TranslatePipe,
-    private alertCtrl: AlertController
+    private localization: LocalizationService,
+    private alertService: AlertService
   ) {}
 
   ionViewDidLoad() {
     this.slides.lockSwipes(true)
-    this.translate.init()
+    return this.localization.update().then(lang => (this.language = lang))
   }
 
   scanQRHandler() {
@@ -192,9 +185,7 @@ export class EnrolmentPageComponent {
   }
 
   validURL(str) {
-    return new FormControl(str, Validators.pattern(this.URLRegEx)).errors
-      ? false
-      : true
+    return !new FormControl(str, Validators.pattern(this.URLRegEx)).errors
   }
 
   retrieveSubjectInformation() {
@@ -215,7 +206,6 @@ export class EnrolmentPageComponent {
           participantLogin,
           projectName,
           sourceId,
-          this.language,
           createdDate,
           createdDateMidnight
         )
@@ -232,8 +222,7 @@ export class EnrolmentPageComponent {
   displayErrorMessage(error) {
     this.loading = false
     this.showOutcomeStatus = true
-    const msg = error.statusText + ' (' + error.status + ')'
-    this.outcomeStatus = msg
+    this.outcomeStatus = error.statusText + ' (' + error.status + ')'
     this.transitionStatuses()
   }
 
@@ -282,60 +271,34 @@ export class EnrolmentPageComponent {
   showSelectLanguage() {
     const buttons = [
       {
-        text: this.translate.transform(LocKeys.BTN_CANCEL.toString()),
+        text: this.localization.translateKey(LocKeys.BTN_CANCEL),
         handler: () => {}
       },
       {
-        text: this.translate.transform(LocKeys.BTN_SET.toString()),
+        text: this.localization.translateKey(LocKeys.BTN_SET),
         handler: selectedLanguageVal => {
           const lang: LanguageSetting = {
             label: LanguageMap[selectedLanguageVal],
             value: selectedLanguageVal
           }
-          this.storage.set(StorageKeys.LANGUAGE, lang).then(() => {
+          this.localization.setLanguage(lang).then(() => {
             this.language = lang
-            this.translate.init().then(() => this.navCtrl.setRoot(AppComponent))
+            return this.navCtrl.setRoot(AppComponent)
           })
         }
       }
     ]
-    const inputs = []
-    for (let i = 0; i < this.languagesSelectable.length; i++) {
-      let checked = false
-      if (this.languagesSelectable[i]['label'] === this.language.label) {
-        checked = true
-      }
-      inputs.push({
-        type: 'radio',
-        label: this.translate.transform(
-          this.languagesSelectable[i]['label'].toString()
-        ),
-        value: this.languagesSelectable[i]['value'],
-        checked: checked
-      })
-    }
-    this.showAlert({
-      title: this.translate.transform(
-        LocKeys.SETTINGS_LANGUAGE_ALERT.toString()
-      ),
+    const inputs = this.languagesSelectable.map(lang => ({
+      type: 'radio',
+      label: this.localization.translate(lang.label),
+      value: lang.value,
+      checked: lang.value === this.language.value
+    }))
+
+    return this.alertService.showAlert({
+      title: this.localization.translateKey(LocKeys.SETTINGS_LANGUAGE_ALERT),
       buttons: buttons,
       inputs: inputs
     })
-  }
-
-  showAlert(parameters) {
-    const alert = this.alertCtrl.create({
-      title: parameters.title,
-      buttons: parameters.buttons
-    })
-    if (parameters.message) {
-      alert.setMessage(parameters.message)
-    }
-    if (parameters.inputs) {
-      for (let i = 0; i < parameters.inputs.length; i++) {
-        alert.addInput(parameters.inputs[i])
-      }
-    }
-    alert.present()
   }
 }

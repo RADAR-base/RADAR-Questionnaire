@@ -9,11 +9,8 @@ import {
   KAFKA_ASSESSMENT,
   KAFKA_CLIENT_KAFKA,
   KAFKA_COMPLETION_LOG,
-  KAFKA_TIMEZONE,
-  MIN_SEC,
-  SEC_MILLISEC
+  KAFKA_TIMEZONE
 } from '../../../assets/data/defaultConfig'
-import { AuthService } from '../../pages/auth/services/auth.service'
 import { StorageKeys } from '../../shared/enums/storage'
 import {
   AnswerKeyExport,
@@ -23,8 +20,10 @@ import {
 } from '../../shared/models/answer'
 import { QuestionType } from '../../shared/models/question'
 import { Task } from '../../shared/models/task'
+import { getSeconds } from '../../shared/utilities/time'
 import { Utility } from '../../shared/utilities/util'
 import { StorageService } from './storage.service'
+import { TokenService } from './token.service'
 
 @Injectable()
 export class KafkaService {
@@ -34,8 +33,8 @@ export class KafkaService {
 
   constructor(
     private util: Utility,
-    public storage: StorageService,
-    private authService: AuthService
+    private storage: StorageService,
+    private token: TokenService
   ) {
     this.updateURI()
   }
@@ -58,9 +57,7 @@ export class KafkaService {
           ? data.answers[1].startTime
           : data.answers[0].startTime, // NOTE: whole questionnaire startTime and endTime
       timeCompleted: data.answers[data.answers.length - 1].endTime,
-      timeNotification: task.timestamp
-        ? { double: task.timestamp / SEC_MILLISEC }
-        : null
+      timeNotification: getSeconds({ milliseconds: task.timestamp })
     }
 
     return this.prepareKafkaObjectAndSend(task, Answer, KAFKA_ASSESSMENT)
@@ -70,7 +67,7 @@ export class KafkaService {
     // NOTE: Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
     const CompletionLog: CompletionLogValueExport = {
       name: task.name.toString(),
-      time: task.timestamp / SEC_MILLISEC,
+      time: getSeconds({ milliseconds: task.timestamp }),
       completionPercentage: { double: task.completed ? 100 : 0 }
     }
     return this.prepareKafkaObjectAndSend(
@@ -82,8 +79,8 @@ export class KafkaService {
 
   prepareTimeZoneKafkaObjectAndSend() {
     const ApplicationTimeZone: ApplicationTimeZoneValueExport = {
-      time: new Date().getTime() / SEC_MILLISEC,
-      offset: new Date().getTimezoneOffset() * MIN_SEC
+      time: getSeconds({ milliseconds: new Date().getTime() }),
+      offset: getSeconds({ minutes: new Date().getTimezoneOffset() })
     }
     return this.prepareKafkaObjectAndSend(
       [],
@@ -145,7 +142,6 @@ export class KafkaService {
           .catch(error => {
             console.log(error)
             this.cacheAnswers(specs)
-            return Promise.resolve()
           })
         this.schemas[specs.name] = schemaVersions
     }
@@ -220,33 +216,21 @@ export class KafkaService {
     if (!this.cacheSending) {
       this.cacheSending = !this.cacheSending
       this.sendToKafkaFromCache()
-        .then(() => (this.cacheSending = !this.cacheSending))
         .catch(e => console.log('Cache could not be sent.'))
+        .then(() => (this.cacheSending = !this.cacheSending))
     }
   }
 
   sendToKafkaFromCache() {
     return this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
-      if (!cache) {
-        return this.storage.set(StorageKeys.CACHE_ANSWERS, {})
-      } else {
-        const promises = []
-        let noOfTasks = 0
-        for (const answerKey in cache) {
-          if (answerKey) {
-            const cacheObject = cache[answerKey]
-            promises.push(this.createPayloadAndSend(cacheObject))
-            noOfTasks += 1
-            if (noOfTasks === 20) {
-              break
-            }
-          }
-        }
-        return Promise.all(promises).then(res => {
-          console.log(res)
-          return Promise.resolve(res)
-        })
-      }
+      const promises = Object.entries(cache)
+        .filter(([k, v]) => k)
+        .slice(0, 20)
+        .map(([k, v]) => this.createPayloadAndSend(v))
+      return Promise.all(promises).then(res => {
+        console.log(res)
+        return res
+      })
     })
   }
 
@@ -261,7 +245,7 @@ export class KafkaService {
   }
 
   getKafkaInstance() {
-    return this.authService
+    return this.token
       .refresh()
       .then(() => this.storage.get(StorageKeys.OAUTH_TOKENS))
       .then(tokens => {

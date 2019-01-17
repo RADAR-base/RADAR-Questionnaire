@@ -1,15 +1,6 @@
 import { Component } from '@angular/core'
 import { NavController, NavParams } from 'ionic-angular'
 
-import {
-  DefaultNotificationRefreshTime,
-  DefaultNumberOfNotificationsToSchedule
-} from '../../../../assets/data/defaultConfig'
-import { ConfigService } from '../../../core/services/config.service'
-import { NotificationService } from '../../../core/services/notification.service'
-import { StorageService } from '../../../core/services/storage.service'
-import { UsageService } from '../../../core/services/usage.service'
-import { StorageKeys } from '../../../shared/enums/storage'
 import { EnrolmentPageComponent } from '../../auth/containers/enrolment-page.component'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { SplashService } from '../services/splash.service'
@@ -24,13 +15,9 @@ export class SplashPageComponent {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public storage: StorageService,
-    private splashService: SplashService,
-    private notificationService: NotificationService,
-    private configService: ConfigService,
-    private usage: UsageService
+    private splash: SplashService
   ) {
-    this.splashService
+    this.splash
       .evalEnrolment()
       .then(
         participant =>
@@ -42,58 +29,15 @@ export class SplashPageComponent {
 
   onStart() {
     this.status = 'Updating notifications...'
-    return this.checkTimezoneChange()
-      .then(() => this.notificationsRefresh())
+    return this.splash
+      .checkTimezoneChange()
+      .then(() => this.splash.notificationsRefresh())
       .catch(e => console.log('[SPLASH] Notifications error.'))
       .then(() => {
         this.status = 'Sending usage event...'
-        return this.usage.sendOpen(new Date().getTime() / 1000)
+        return this.splash.sendOpenEvent()
       })
       .catch(e => console.log('[SPLASH] Error sending data'))
       .then(() => this.navCtrl.setRoot(HomePageComponent))
-  }
-
-  checkTimezoneChange() {
-    return this.storage.get(StorageKeys.UTC_OFFSET).then(prevUtcOffset => {
-      const utcOffset = new Date().getTimezoneOffset()
-      // NOTE: Cancels all notifications and reschedule tasks if timezone has changed
-      if (prevUtcOffset !== utcOffset) {
-        console.log(
-          '[SPLASH] Timezone has changed to ' +
-            utcOffset +
-            '. Cancelling notifications! Rescheduling tasks! Scheduling new notifications!'
-        )
-        return this.storage
-          .set(StorageKeys.UTC_OFFSET, utcOffset)
-          .then(() =>
-            this.storage.set(StorageKeys.UTC_OFFSET_PREV, prevUtcOffset)
-          )
-          .then(() => this.configService.updateConfigStateOnTimezoneChange())
-      } else {
-        console.log('[SPLASH] Current Timezone is ' + utcOffset)
-      }
-    })
-  }
-
-  notificationsRefresh() {
-    // NOTE: Only run this if not run in last DefaultNotificationRefreshTime
-    return this.storage
-      .get(StorageKeys.LAST_NOTIFICATION_UPDATE)
-      .then(lastUpdate => {
-        const timeElapsed = Date.now() - lastUpdate
-        if (timeElapsed > DefaultNotificationRefreshTime || !lastUpdate) {
-          console.log('[SPLASH] Scheduling Notifications.')
-          return this.notificationService.setNextXNotifications(
-            DefaultNumberOfNotificationsToSchedule
-          )
-        } else {
-          console.log(
-            'Not Scheduling Notifications as ' +
-              timeElapsed +
-              'ms from last refresh is not greater than the default Refresh interval of ' +
-              DefaultNotificationRefreshTime
-          )
-        }
-      })
   }
 }

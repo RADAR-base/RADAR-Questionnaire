@@ -3,7 +3,7 @@
   <ion-scroll
     scrollY="true"
     class="layers"
-    [style.height.px]="scrollHeight"
+    [style.height.%]="show? 100 : 0"
   >
 
     <div
@@ -23,12 +23,7 @@
               <ion-col>
                 <div class="time-current-division left"></div>
               </ion-col>
-              <ion-col
-                col-2
-                class="time-current"
-              >
-                {{ currentTime }}
-              </ion-col>
+              <ion-col col-auto>{{ currentTime }}</ion-col>
               <ion-col>
                 <div class="time-current-division right"></div>
               </ion-col>
@@ -43,11 +38,11 @@
           <ion-row>
             <ion-col>
               <div class="task-info-left">
-                <div class="start-time">{{ getStartTime(task) }}</div>
+                <div>{{ getStartTime(task) }}</div>
                 <div>
                   <img
-                    class="icon-padding extra-info-icon"
-                    *ngIf="hasExtraInfo(task.warning)"
+                    class="extra-info-icon"
+                    *ngIf="task.warning"
                     src="assets/imgs/warning.png"
                   >
                 </div>
@@ -88,27 +83,6 @@
           </ion-row>
         </div>
       </ng-container>
-      <div
-        class="current-time-div"
-        *ngIf="(timeIndex | async)==(tasks | async)?.length"
-      >
-        <div id="time-current">
-          <ion-row>
-            <ion-col>
-              <div class="time-current-division left"></div>
-            </ion-col>
-            <ion-col
-              col-2
-              class="time-current"
-            >
-              {{ currentTime }}
-            </ion-col>
-            <ion-col>
-              <div class="time-current-division right"></div>
-            </ion-col>
-          </ion-row>
-        </div>
-      </div>
     </ng-container>
   </ion-scroll>
 

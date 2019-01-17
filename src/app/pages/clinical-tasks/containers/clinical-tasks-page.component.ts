@@ -2,8 +2,7 @@ import { Component } from '@angular/core'
 import { NavController, NavParams } from 'ionic-angular'
 
 import { DefaultTask } from '../../../../assets/data/defaultConfig'
-import { StorageService } from '../../../core/services/storage.service'
-import { StorageKeys } from '../../../shared/enums/storage'
+import { LocalizationService } from '../../../core/services/localization.service'
 import { Task } from '../../../shared/models/task'
 import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
 import { StartPageComponent } from '../../start/containers/start-page.component'
@@ -18,10 +17,9 @@ export class ClinicalTasksPageComponent {
   tasks: Task[] = [DefaultTask]
 
   constructor(
-    public navCtrl: NavController,
-    public navParams: NavParams,
-    public storage: StorageService,
-    private clinicalTasksService: ClinicalTasksService
+    private navCtrl: NavController,
+    private clinicalTasksService: ClinicalTasksService,
+    private localization: LocalizationService
   ) {}
 
   ionViewDidLoad() {
@@ -31,15 +29,11 @@ export class ClinicalTasksPageComponent {
   }
 
   clicked(task) {
-    const lang = this.storage.get(StorageKeys.LANGUAGE)
-    const nextAssessment = this.clinicalTasksService.getClinicalAssessment(task)
-    Promise.all([lang, nextAssessment]).then(res => {
-      const language = res[0].value
-      const assessment = res[1]
+    this.clinicalTasksService.getClinicalAssessment(task).then(assessment => {
       const params = {
         title: assessment.name,
-        introduction: assessment.startText[language],
-        endText: assessment.endText[language],
+        introduction: this.localization.chooseText(assessment.startText),
+        endText: this.localization.chooseText(assessment.endText),
         questions: assessment.questions,
         associatedTask: task,
         assessment: assessment

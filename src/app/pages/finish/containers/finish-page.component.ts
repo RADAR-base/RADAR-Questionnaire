@@ -1,11 +1,14 @@
 import { Component } from '@angular/core'
 import { NavController, NavParams } from 'ionic-angular'
 
-import { DefaultNumberOfNotificationsToSchedule } from '../../../../assets/data/defaultConfig'
 import { KafkaService } from '../../../core/services/kafka.service'
+import { NotificationGeneratorService } from '../../../core/services/notification-generator.service'
 import { NotificationService } from '../../../core/services/notification.service'
+import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { StorageKeys } from '../../../shared/enums/storage'
+import { Assessment } from '../../../shared/models/assessment'
+import { RepeatQuestionnaire } from '../../../shared/models/protocol'
 import { Task } from '../../../shared/models/task'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { FinishTaskService } from '../services/finish-task.service'
@@ -16,72 +19,65 @@ import { PrepareDataService } from '../services/prepare-data.service'
   templateUrl: 'finish-page.component.html'
 })
 export class FinishPageComponent {
-  content: string = ''
-  isClinicalTask: boolean = false
-  completedInClinic: boolean = false
-  displayNextTaskReminder: boolean = true
-  hasClickedDoneButton: boolean = false
+  content = ''
+  isClinicalTask = false
+  completedInClinic = false
+  displayNextTaskReminder = true
+  hasClickedDoneButton = false
   associatedTask
+  questionnaireData
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private kafkaService: KafkaService,
     private prepareDataService: PrepareDataService,
+    private notificationGenerator: NotificationGeneratorService,
     private notificationService: NotificationService,
     private finishTaskService: FinishTaskService,
     public storage: StorageService
   ) {}
 
   ionViewDidLoad() {
-    this.associatedTask = this.navParams.data.associatedTask
-    this.content = this.navParams.data.endText
-    const questionnaireName: string = this.navParams.data.associatedTask.name
-    if (!questionnaireName.includes('DEMO')) {
-      try {
-        if (
-          this.navParams.data['associatedTask']['protocol']['clinicalProtocol']
-        ) {
-          this.isClinicalTask = true
-        }
-      } catch (TypeError) {
-        console.log('INFO: Not in clinic task/questionnaire.')
-      }
-      this.prepareDataService
-        .process_QuestionnaireData(
-          this.navParams.data.answers,
-          this.navParams.data.timestamps
-        )
-        .then(
-          data => {
-            this.finishTaskService.updateTaskToComplete(this.associatedTask)
-            this.sendToKafka(
-              this.associatedTask,
-              data,
-              this.navParams.data.questions
-            )
-          },
-          error => {
-            console.log(JSON.stringify(error))
-          }
-        )
-    } else {
-      // This is a Demo Questionnaire. Just update to complete and do nothing else
-      this.finishTaskService.updateTaskToComplete(
-        this.navParams.data.associatedTask
-      )
-    }
+    this.questionnaireData = this.navParams.data
+    this.associatedTask = this.questionnaireData.associatedTask
+    this.content = this.questionnaireData.endText
+    this.isClinicalTask = this.associatedTask.isClinical
+    const questionnaireName = this.associatedTask.name
+    this.finishTaskService.updateTaskToComplete(this.associatedTask)
     this.displayNextTaskReminder =
-      !this.navParams.data.isLastTask && !this.isClinicalTask
+      !this.questionnaireData.isLastTask && !this.isClinicalTask
+    !questionnaireName.includes('DEMO') && this.processDataAndSend()
+  }
+
+  processDataAndSend() {
+    return this.prepareDataService
+      .processQuestionnaireData(
+        this.questionnaireData.answers,
+        this.questionnaireData.timestamps
+      )
+      .then(
+        data => {
+          this.sendToKafka(
+            this.associatedTask,
+            data,
+            this.questionnaireData.questions
+          )
+        },
+        error => {
+          console.log(JSON.stringify(error))
+        }
+      )
   }
 
   sendToKafka(task: Task, questionnaireData, questions) {
+    // NOTE: Submit data to kafka
     this.kafkaService.prepareTimeZoneKafkaObjectAndSend()
     this.kafkaService.prepareAnswerKafkaObjectAndSend(
       task,
       questionnaireData,
       questions
     )
-    // NOTE: Submit data to kafka
   }
 
   handleClosePage() {
@@ -103,66 +99,59 @@ export class FinishPageComponent {
   }
 
   generateClinicalTasks(tasks) {
-    let clinicalTasks = []
-    if (tasks) {
-      clinicalTasks = tasks
-    } else {
+    if (!tasks) {
       tasks = []
     }
-    const associatedTask = this.navParams.data['associatedTask']
-    const protocol = this.navParams.data['associatedTask']['protocol']
+    const associatedTask: Assessment = this.navParams.data.associatedTask
+    const protocol = associatedTask.protocol
     const repeatTimes = this.formatRepeatsAfterClinic(
-      protocol['clinicalProtocol']['repeatAfterClinicVisit']
+      protocol.clinicalProtocol.repeatAfterClinicVisit
     )
-    const now = new Date()
-    for (let i = 0; i < repeatTimes.length; i++) {
-      const ts = now.getTime() + repeatTimes[i]
-      const clinicalTask: Task = {
-        index: tasks.length + i,
-        completed: false,
-        reportedCompletion: false,
-        timestamp: ts,
-        name: associatedTask['name'],
-        reminderSettings: protocol['reminders'],
-        nQuestions: associatedTask['questions'].length,
-        estimatedCompletionTime: associatedTask['estimatedCompletionTime'],
-        warning: '',
-        isClinical: true
-      }
-      clinicalTasks.push(clinicalTask)
-    }
+    const now = new Date().getTime()
+    const clinicalTasks: Task[] = tasks.concat(
+      repeatTimes
+        .map(
+          (repeatTime, i) =>
+            ({
+              index: tasks.length + i,
+              completed: false,
+              reportedCompletion: false,
+              timestamp: now + repeatTime,
+              name: associatedTask.name,
+              nQuestions: associatedTask.questions.length,
+              estimatedCompletionTime: associatedTask.estimatedCompletionTime,
+              completionWindow: SchedulingService.timeIntervalToMillis(
+                associatedTask.protocol.completionWindow
+              ),
+              warning: '',
+              isClinical: true
+            } as Task)
+        )
+        .map(t => {
+          t.notifications = this.notificationGenerator.createNotifications(
+            associatedTask,
+            t
+          )
+          return t
+        })
+    )
+
     return this.storage
       .set(StorageKeys.SCHEDULE_TASKS_CLINICAL, clinicalTasks)
-      .then(() =>
-        this.notificationService.setNextXNotifications(
-          DefaultNumberOfNotificationsToSchedule
-        )
-      )
+      .then(() => this.storage.get(StorageKeys.PARTICIPANTLOGIN))
+      .then(username => {
+        if (username) {
+          return this.notificationService.publish(username)
+        }
+      })
   }
 
-  formatRepeatsAfterClinic(repeats) {
-    const repeatsInMillis = []
-    const unit = repeats['unit']
-    for (let i = 0; i < repeats['unitsFromZero'].length; i++) {
-      const unitFromZero = repeats['unitsFromZero'][i]
-      switch (unit) {
-        case 'min': {
-          const formatted = unitFromZero * 1000 * 60
-          repeatsInMillis.push(formatted)
-          break
-        }
-        case 'hour': {
-          const formatted = unitFromZero * 1000 * 60 * 60
-          repeatsInMillis.push(formatted)
-          break
-        }
-        case 'day': {
-          const formatted = unitFromZero * 1000 * 60 * 60 * 24
-          repeatsInMillis.push(formatted)
-          break
-        }
-      }
-    }
-    return repeatsInMillis
+  formatRepeatsAfterClinic(repeats: RepeatQuestionnaire) {
+    return repeats.unitsFromZero.map(amount =>
+      SchedulingService.timeIntervalToMillis({
+        unit: repeats.unit,
+        amount
+      })
+    )
   }
 }

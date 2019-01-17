@@ -93,7 +93,7 @@ export class TickerBarComponent implements OnChanges {
     this.tickerText =
       '<b>' +
       this.translate.transform(LocKeys.TASK_BAR_AFFIRMATION_1.toString()) +
-      '</b>' +
+      '</b> ' +
       this.translate.transform(LocKeys.TASK_BAR_AFFIRMATION_2.toString())
   }
 

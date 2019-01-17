@@ -441,8 +441,8 @@ export const Localisations = {
   BTN_FINISH: {
     da: 'Afslut',
     de: 'Fertig',
-    en: 'Finalizado',
-    es: 'Terminar',
+    en: 'Finish',
+    es: 'Finalizado',
     it: 'Fine',
     nl: 'Voltooid'
   },

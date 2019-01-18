@@ -129,7 +129,8 @@ export class FinishPageComponent {
             associatedTask.protocol.completionWindow
           ),
           warning: '',
-          isClinical: true
+          isClinical: true,
+          iconInfo: ''
         } as Task))
         .map(t => {
           t.notifications = this.notificationGenerator.createNotifications(associatedTask, t)

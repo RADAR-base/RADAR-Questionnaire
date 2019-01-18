@@ -12,7 +12,7 @@
         <div class="scroll-item">
           <ion-col col-33 *ngFor="let task of (tasks | async); let i=index">
             <div *ngIf="!task.completed" class="card" (click)="clicked(task)">
-              <ion-icon name="walk"></ion-icon>
+              <ion-icon [name]="task.iconInfo"></ion-icon>
               <div class="text-medium"> {{ task.name }}</div>
             </div>
           </ion-col>

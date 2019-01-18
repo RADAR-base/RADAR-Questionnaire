@@ -33,13 +33,6 @@ export class TaskListComponent implements OnChanges {
     private localization: LocalizationService,
   ) {}
 
-  ionViewDidLoad() {
-    console.log('taskListloaded')
-    this.tasks.then((result) => {
-      alert('tasks here '+ JSON.stringify( result));
-    })
-  }
-
   ngOnChanges() {
     this.setCurrentTime()
   }

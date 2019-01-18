@@ -12,6 +12,7 @@ export interface Task {
   warning: string
   isClinical: boolean
   notifications?: SingleNotification[],
+  iconInfo: string
 }
 
 export interface TasksProgress {

@@ -9,6 +9,7 @@ import { NotificationService } from '../../../core/services/notification.service
 import { StorageService } from '../../../core/services/storage.service'
 import { UsageService } from '../../../core/services/usage.service'
 import { StorageKeys } from '../../../shared/enums/storage'
+import { getSeconds } from '../../../shared/utilities/time'
 
 @Injectable()
 export class SplashService {
@@ -24,7 +25,9 @@ export class SplashService {
   }
 
   sendOpenEvent() {
-    return this.usage.sendOpen(new Date().getTime() / 1000)
+    return this.usage.sendOpen(
+      getSeconds({ milliseconds: new Date().getTime() })
+    )
   }
 
   checkTimezoneChange() {

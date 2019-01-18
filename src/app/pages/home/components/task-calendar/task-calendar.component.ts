@@ -6,9 +6,7 @@ import {
   Output
 } from '@angular/core'
 
-import { AlertService } from '../../../../core/services/alert.service'
 import { LocalizationService } from '../../../../core/services/localization.service'
-import { LocKeys } from '../../../../shared/enums/localisations'
 import { Task } from '../../../../shared/models/task'
 
 @Component({
@@ -26,10 +24,7 @@ export class TaskCalendarComponent implements OnChanges {
   currentTime: string
   timeIndex: Promise<number>
 
-  constructor(
-    private alertService: AlertService,
-    private localization: LocalizationService
-  ) {}
+  constructor(private localization: LocalizationService) {}
 
   ngOnChanges() {
     this.setCurrentTime()
@@ -49,29 +44,7 @@ export class TaskCalendarComponent implements OnChanges {
   }
 
   clicked(task) {
-    const now = new Date().getTime()
-    if (
-      task.timestamp <= now &&
-      task.timestamp + task.completionWindow > now &&
-      !task.completed
-    ) {
-      this.task.emit(task)
-    } else {
-      return this.showMissedInfo()
-    }
-  }
-
-  showMissedInfo() {
-    return this.alertService.showAlert({
-      title: this.localization.translateKey(LocKeys.CALENDAR_ESM_MISSED_TITLE),
-      message: this.localization.translateKey(LocKeys.CALENDAR_ESM_MISSED_DESC),
-      buttons: [
-        {
-          text: this.localization.translateKey(LocKeys.BTN_OKAY),
-          handler: () => {}
-        }
-      ]
-    })
+    this.task.emit(task)
   }
 
   getStartTime(task: Task) {

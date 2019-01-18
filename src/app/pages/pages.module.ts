@@ -23,7 +23,6 @@ import { QuestionsModule } from './questions/questions.module'
 import { ReportModule } from './report/report.module'
 import { SettingsModule } from './settings/settings.module'
 import { SplashModule } from './splash/splash.module'
-import { StartModule } from './start/start.module'
 
 @NgModule({
   imports: [
@@ -36,8 +35,7 @@ import { StartModule } from './start/start.module'
     QuestionsModule,
     ReportModule,
     SettingsModule,
-    SplashModule,
-    StartModule
+    SplashModule
   ],
   providers: [
     AlertService,

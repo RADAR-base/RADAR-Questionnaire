@@ -2,10 +2,8 @@ import { Component } from '@angular/core'
 import { NavController, NavParams } from 'ionic-angular'
 
 import { DefaultTask } from '../../../../assets/data/defaultConfig'
-import { LocalizationService } from '../../../core/services/localization.service'
 import { Task } from '../../../shared/models/task'
 import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
-import { StartPageComponent } from '../../start/containers/start-page.component'
 import { ClinicalTasksService } from '../services/clinical-tasks.service'
 
 @Component({
@@ -18,8 +16,7 @@ export class ClinicalTasksPageComponent {
 
   constructor(
     private navCtrl: NavController,
-    private clinicalTasksService: ClinicalTasksService,
-    private localization: LocalizationService
+    private clinicalTasksService: ClinicalTasksService
   ) {}
 
   ionViewDidLoad() {
@@ -29,20 +26,8 @@ export class ClinicalTasksPageComponent {
   }
 
   clicked(task) {
-    this.clinicalTasksService.getClinicalAssessment(task).then(assessment => {
-      const params = {
-        title: assessment.name,
-        introduction: this.localization.chooseText(assessment.startText),
-        endText: this.localization.chooseText(assessment.endText),
-        questions: assessment.questions,
-        associatedTask: task,
-        assessment: assessment
-      }
-      if (assessment.showIntroduction) {
-        this.navCtrl.push(StartPageComponent, params)
-      } else {
-        this.navCtrl.push(QuestionsPageComponent, params)
-      }
-    })
+    this.clinicalTasksService
+      .getClinicalTaskPayload(task)
+      .then(payload => this.navCtrl.push(QuestionsPageComponent, payload))
   }
 }

@@ -41,7 +41,7 @@
   </div>
 
   <div
-    *ngIf="hasClinicalTasks"
+    *ngIf="hasClinicalTasks | async"
     class="clinical"
     [class.clinical-1]="taskIsNow && !showCompleted"
     [class.clinical-2]="showCalendar"

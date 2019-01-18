@@ -105,17 +105,30 @@ export class SchedulingService {
       this.utcOffsetPrev = offsetPrev
       if (schedVersion !== confVersion || force) {
         console.log('Updating schedule..')
-        return this.runScheduler()
+        return this.runScheduler(StorageKeys.SCHEDULE_TASKS)
       }
     })
   }
 
-  runScheduler() {
-    return this.storage
-      .get(StorageKeys.CONFIG_ASSESSMENTS)
-      .then(assessments => this.buildTaskSchedule(assessments))
-      .catch(e => console.error(e))
-      .then((tasks: Task[]) => this.setSchedule(tasks))
+  generateClinicalSchedule(assessment) {
+    return this.runScheduler(StorageKeys.SCHEDULE_TASKS_CLINICAL, assessment)
+  }
+
+  runScheduler(key, assessment?) {
+    // NOTE: Check if clinical or not
+    const tasksPromise =
+      key == StorageKeys.SCHEDULE_TASKS
+        ? this.storage
+            .get(StorageKeys.CONFIG_ASSESSMENTS)
+            .then(assessments => this.buildTaskSchedule(assessments))
+            .catch(e => console.error(e))
+        : this.storage
+            .get(key)
+            .then(tasks =>
+              this.buildTasksForSingleAssessment(tasks, assessment, true)
+            )
+    return tasksPromise
+      .then((tasks: Task[]) => this.setSchedule(tasks, key))
       .catch(e => console.error(e))
   }
 
@@ -192,10 +205,13 @@ export class SchedulingService {
 
   buildTasksForSingleAssessment(
     assessment: Assessment,
-    indexOffset: number
+    indexOffset: number,
+    isClinical?
   ): Task[] {
-    const repeatP = assessment.protocol.repeatProtocol
-    const repeatQ = assessment.protocol.repeatQuestionnaire
+    const repeatP = !isClinical ? assessment.protocol.repeatProtocol : {}
+    const repeatQ = !isClinical
+      ? assessment.protocol.repeatQuestionnaire
+      : assessment.protocol.clinicalProtocol.repeatAfterClinicVisit
 
     let iterTime = this.setDateTimeToMidnight(
       new Date(this.enrolmentDate)
@@ -236,6 +252,16 @@ export class SchedulingService {
     }
     this.tzOffset = date.getTimezoneOffset()
     return resetDate
+  }
+
+  updateTaskToReportedCompletion(updatedTask): Promise<any> {
+    updatedTask.reportedCompletion = true
+    return this.insertTask(updatedTask)
+  }
+
+  updateTaskToComplete(updatedTask): Promise<any> {
+    updatedTask.completed = true
+    return this.insertTask(updatedTask)
   }
 
   static advanceRepeat(timestamp: number, interval: TimeInterval): number {
@@ -286,9 +312,9 @@ export class SchedulingService {
    * @param schedule tasks to store
    * @return current configuration version
    */
-  setSchedule(schedule: Task[]): Promise<number> {
+  setSchedule(schedule: Task[], key): Promise<number> {
     return this.storage
-      .set(StorageKeys.SCHEDULE_TASKS, schedule)
+      .set(key, schedule)
       .then(() =>
         this.storage.set(StorageKeys.SCHEDULE_VERSION, this.configVersion)
       )

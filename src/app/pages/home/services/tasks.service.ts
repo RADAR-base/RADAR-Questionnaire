@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core'
 
-import { KAFKA_COMPLETION_LOG } from '../../../../assets/data/defaultConfig'
-import { KafkaService } from '../../../core/services/kafka.service'
+import { LocalizationService } from '../../../core/services/localization.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
+import { StorageKeys } from '../../../shared/enums/storage'
 import { Task, TasksProgress } from '../../../shared/models/task'
 import { getMilliseconds } from '../../../shared/utilities/time'
 
@@ -12,20 +12,33 @@ export class TasksService {
   constructor(
     public storage: StorageService,
     private schedule: SchedulingService,
-    private kafka: KafkaService
+    private localization: LocalizationService
   ) {}
 
   getAssessment(task) {
     return this.storage.getAssessment(task)
   }
 
+  getQuestionnairePayload(task) {
+    return this.getAssessment(task).then(assessment => {
+      return {
+        title: assessment.name,
+        introduction: this.localization.chooseText(assessment.startText),
+        endText: this.localization.chooseText(assessment.endText),
+        questions: assessment.questions,
+        associatedTask: task,
+        assessment: assessment
+      }
+    })
+  }
+
+  evalHasClinicalTasks() {
+    return this.storage.get(StorageKeys.HAS_CLINICAL_TASKS)
+  }
+
   getTasksOfToday() {
     const now = new Date()
     return this.schedule.getTasksForDate(now)
-  }
-
-  getTasksOfDate(timestamp) {
-    return this.schedule.getTasksForDate(timestamp)
   }
 
   getTaskProgress(tasks): TasksProgress {
@@ -50,15 +63,26 @@ export class TasksService {
     )
   }
 
-  isLastTask(task, todaysTasks) {
-    return todaysTasks.then((tasks: Task[]) => {
-      return (
-        !tasks ||
-        tasks.every(
-          t => t.name === 'ESM' || t.completed || t.index === task.index
-        )
+  isLastTask(task, tasks) {
+    return (
+      !tasks ||
+      tasks.every(
+        t => t.name === 'ESM' || t.completed || t.index === task.index
       )
-    })
+    )
+  }
+
+  isTaskValid(task) {
+    const now = new Date().getTime()
+    if (
+      task.timestamp <= now &&
+      task.timestamp + task.completionWindow > now &&
+      !task.completed
+    ) {
+      return true
+    } else {
+      return false
+    }
   }
 
   /**
@@ -91,21 +115,5 @@ export class TasksService {
         }
       })
     }
-  }
-
-  sendNonReportedTaskCompletion() {
-    this.schedule.getNonReportedCompletedTasks().then(nonReportedTasks => {
-      nonReportedTasks.forEach(t => {
-        this.kafka.prepareKafkaObjectAndSend(KAFKA_COMPLETION_LOG, {
-          task: t
-        })
-        this.updateTaskToReportedCompletion(t)
-      })
-    })
-  }
-
-  updateTaskToReportedCompletion(updatedTask): Promise<any> {
-    updatedTask.reportedCompletion = true
-    return this.schedule.insertTask(updatedTask)
   }
 }

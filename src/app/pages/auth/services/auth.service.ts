@@ -42,7 +42,11 @@ export class AuthService {
     return (this.validURL(authObj)
       ? this.URLAuth(authObj)
       : this.nonURLAuth(authObj)
-    ).then(refreshToken => this.enrol(refreshToken))
+    ).then(refreshToken => {
+      return this.registerToken(refreshToken)
+        .then(() => this.registerAsSource())
+        .then(() => this.registerToken(refreshToken))
+    })
   }
 
   URLAuth(authObj) {
@@ -65,13 +69,10 @@ export class AuthService {
     })
   }
 
-  enrol(refreshToken) {
-    return this.registerToken(refreshToken)
-      .then(() => this.registerAsSource())
-      .then(() => this.registerToken(refreshToken))
-      .catch()
-      .then(() => this.initSubjectInformation())
-      .then(() => this.config.fetchConfigState(true))
+  enrol() {
+    return this.initSubjectInformation().then(() =>
+      this.config.fetchConfigState(true)
+    )
   }
 
   updateURI() {

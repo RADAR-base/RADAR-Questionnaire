@@ -129,6 +129,7 @@
               formControlName="baseURL"
               type="url"
               placeholder="Base URL"
+              (ionFocus)="clearStatus()"
             ></ion-input>
           </div>
           <div class="token-input">
@@ -137,6 +138,7 @@
               formControlName="tokenName"
               type="text"
               placeholder="Token"
+              (ionFocus)="clearStatus()"
             ></ion-input>
           </div>
         </div>

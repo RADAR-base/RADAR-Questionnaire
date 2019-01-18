@@ -100,11 +100,13 @@ export class EnrolmentPageComponent {
     this.transitionStatuses()
     this.auth
       .authenticate(authObj)
+      .catch(e => this.handleError(e))
+      .then(() => this.auth.enrol())
       .then(() => {
         this.authSuccess = true
-        this.next()
+        return this.next()
       })
-      .catch(e => this.handleError(e))
+      .catch(e => this.handleError({ status: 0 }))
       .then(() => (this.loading = false))
   }
 
@@ -112,6 +114,7 @@ export class EnrolmentPageComponent {
     e.statusText = 'Error: Cannot get the refresh token from the URL'
     if (e.status == 410) e.statusText = 'URL expired. Regenerate the QR code.'
     if (e.status == 409) e.statusText = 'Re-registered an existing source'
+    if (e.status == 0) e.statusText = 'Initializing data error'
     console.log(e.statusText + ' - ' + e.status)
     this.showOutcomeStatus = true
     this.outcomeStatus = e.statusText + ' (' + e.status + ')'
@@ -127,7 +130,14 @@ export class EnrolmentPageComponent {
       this.elOutcome.nativeElement.style.transform = 'translate3d(-100%,0,0)'
       this.elOutcome.nativeElement.style.opacity = 1
       this.elLoading.nativeElement.style.opacity = 0
+    } else {
+      this.elOutcome.nativeElement.style.opacity = 0
     }
+  }
+
+  clearStatus() {
+    this.showOutcomeStatus = false
+    this.transitionStatuses()
   }
 
   next() {

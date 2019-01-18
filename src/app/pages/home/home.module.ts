@@ -10,6 +10,7 @@ import { TickerBarModule } from './components/ticker-bar/ticker-bar.module'
 import { HomePageComponent } from './containers/home-page.component'
 import { TasksService } from './services/tasks.service'
 import {TaskListModule} from "./components/task-list/task-list.module";
+import {FooterNavbarModule} from "../footer-navbar/footer-navbar.module";
 
 @NgModule({
   imports: [
@@ -20,6 +21,7 @@ import {TaskListModule} from "./components/task-list/task-list.module";
     TickerBarModule,
     TaskListModule,
     PipesModule,
+    FooterNavbarModule,
     IonicModule.forRoot(HomePageComponent)
   ],
   declarations: [HomePageComponent],

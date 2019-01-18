@@ -260,10 +260,6 @@ export class HomePageComponent {
     }
   }
 
-  openSettingsPage() {
-    this.navCtrl.push(SettingsPageComponent)
-  }
-
   openClinicalTasksPage() {
     this.navCtrl.push(ClinicalTasksPageComponent)
   }

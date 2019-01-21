@@ -42,7 +42,7 @@ export const DefaultTask: Task = {
   warning: '',
   isClinical: false,
   notifications: [],
-  imageUrl: ''
+  iconInfo: 'checkbox-outline'
 }
 
 export const DefaultSettingsSelectedLanguage: LanguageSetting = {

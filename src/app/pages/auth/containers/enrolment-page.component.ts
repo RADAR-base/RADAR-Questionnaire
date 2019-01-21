@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core'
+import { Component, ViewChild } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner'
 import { NavController, Slides } from 'ionic-angular'
@@ -28,31 +28,17 @@ import { AuthService } from '../services/auth.service'
 export class EnrolmentPageComponent {
   @ViewChild(Slides)
   slides: Slides
-  @ViewChild('loading')
-  elLoading: ElementRef
-  @ViewChild('outcome')
-  elOutcome: ElementRef
   loading: boolean = false
   showOutcomeStatus: boolean = false
   outcomeStatus: String
-  reportSettings: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
-
-  language?: LanguageSetting = DefaultLanguage
-  languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
-
   enterMetaQR = false
   metaQRForm: FormGroup = new FormGroup({
     baseURL: new FormControl(DefaultEnrolmentBaseURL, this.auth.URLValidators),
     tokenName: new FormControl('', [Validators.required])
   })
-  authSuccess = false
-
-  get tokenName() {
-    return this.metaQRForm.get('tokenName')
-  }
-  get baseURL() {
-    return this.metaQRForm.get('baseURL')
-  }
+  reportSettings: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
+  language?: LanguageSetting = DefaultLanguage
+  languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
 
   constructor(
     public navCtrl: NavController,
@@ -64,7 +50,19 @@ export class EnrolmentPageComponent {
 
   ionViewDidLoad() {
     this.slides.lockSwipes(true)
-    return this.localization.update().then(lang => (this.language = lang))
+    this.localization.update().then(lang => (this.language = lang))
+  }
+
+  next() {
+    this.slides.lockSwipes(false)
+    const slideIndex = this.slides.getActiveIndex() + 1
+    this.slides.slideTo(slideIndex, 500)
+    this.slides.lockSwipes(true)
+  }
+
+  enterToken() {
+    this.enterMetaQR = true
+    this.next()
   }
 
   scanQRHandler() {
@@ -78,17 +76,12 @@ export class EnrolmentPageComponent {
       .then(scannedObj => this.authenticate(scannedObj.text))
   }
 
-  enterToken() {
-    this.enterMetaQR = true
-    this.next()
-  }
-
   metaQRHandler() {
     if (this.metaQRForm.valid)
       this.authenticate(
         this.auth.getURLFromToken(
-          this.baseURL.value.trim(),
-          this.tokenName.value.trim()
+          this.metaQRForm.get('baseURL').value.trim(),
+          this.metaQRForm.get('tokenName').value.trim()
         )
       )
     else this.handleError(new Error())
@@ -97,13 +90,11 @@ export class EnrolmentPageComponent {
   authenticate(authObj) {
     this.showOutcomeStatus = false
     this.loading = true
-    this.transitionStatuses()
     this.auth
       .authenticate(authObj)
       .catch(e => this.handleError(e))
       .then(() => this.auth.enrol())
       .then(() => {
-        this.authSuccess = true
         return this.next()
       })
       .catch(e => this.handleError({ status: 0 }))
@@ -118,33 +109,10 @@ export class EnrolmentPageComponent {
     console.log(e.statusText + ' - ' + e.status)
     this.showOutcomeStatus = true
     this.outcomeStatus = e.statusText + ' (' + e.status + ')'
-    this.transitionStatuses()
-  }
-
-  transitionStatuses() {
-    if (this.loading) {
-      this.elOutcome.nativeElement.style.opacity = 0
-      this.elLoading.nativeElement.style.opacity = 1
-    }
-    if (this.showOutcomeStatus) {
-      this.elOutcome.nativeElement.style.transform = 'translate3d(-100%,0,0)'
-      this.elOutcome.nativeElement.style.opacity = 1
-      this.elLoading.nativeElement.style.opacity = 0
-    } else {
-      this.elOutcome.nativeElement.style.opacity = 0
-    }
   }
 
   clearStatus() {
     this.showOutcomeStatus = false
-    this.transitionStatuses()
-  }
-
-  next() {
-    this.slides.lockSwipes(false)
-    const slideIndex = this.slides.getActiveIndex() + 1
-    this.slides.slideTo(slideIndex, 500)
-    this.slides.lockSwipes(true)
   }
 
   navigateToHome() {
@@ -177,7 +145,6 @@ export class EnrolmentPageComponent {
       value: lang.value,
       checked: lang.value === this.language.value
     }))
-
     return this.alertService.showAlert({
       title: this.localization.translateKey(LocKeys.SETTINGS_LANGUAGE_ALERT),
       buttons: buttons,

@@ -25,7 +25,6 @@ import { setDateTimeToMidnight } from '../../../shared/utilities/time'
 export class AuthService {
   URI_base: string
   URLRegEx = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?'
-
   URLValidators = [Validators.required, Validators.pattern(this.URLRegEx)]
 
   constructor(

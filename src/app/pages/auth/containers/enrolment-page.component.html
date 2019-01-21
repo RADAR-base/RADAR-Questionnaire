@@ -144,14 +144,14 @@
         </div>
         <div id="status">
           <div
-            #loading
             id="loading"
+            *ngIf="loading && !showOutcomeStatus"
           >
             <div class="padding-text">{{ "STATUS_LOADING" | translate }}</div>
           </div>
           <div
-            #outcome
             id="outcome"
+            *ngIf="showOutcomeStatus && !loading"
           >
             <div class="padding-text">{{ outcomeStatus }}</div>
           </div>
@@ -159,7 +159,7 @@
         <div
           padding
           class="bottom"
-          *ngIf="!authSuccess"
+          *ngIf="!loading"
         >
           <button
             ion-button
@@ -189,14 +189,14 @@
       </div>
       <div id="status">
         <div
-          #loading
           id="loading"
+          *ngIf="loading && !showOutcomeStatus"
         >
           <div class="padding-text">{{ "STATUS_LOADING" | translate }}</div>
         </div>
         <div
-          #outcome
           id="outcome"
+          *ngIf="showOutcomeStatus && !loading"
         >
           <div class="padding-text">{{ outcomeStatus }}</div>
         </div>
@@ -204,7 +204,7 @@
       <div
         padding
         class="bottom"
-        *ngIf="!authSuccess"
+        *ngIf="!loading"
       >
         <button
           ion-button

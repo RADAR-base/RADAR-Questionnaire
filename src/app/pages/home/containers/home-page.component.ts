@@ -1,20 +1,22 @@
-import { Component, ElementRef, ViewChild } from '@angular/core'
-import { Content, NavController, Platform } from 'ionic-angular'
+import {Component, ElementRef, ViewChild} from '@angular/core'
+import {Content, NavController, Platform} from 'ionic-angular'
 
-import { DefaultTask } from '../../../../assets/data/defaultConfig'
-import { AlertService } from '../../../core/services/alert.service'
-import { KafkaService } from '../../../core/services/kafka.service'
-import { LocalizationService } from '../../../core/services/localization.service'
-import { StorageService } from '../../../core/services/storage.service'
-import { LocKeys } from '../../../shared/enums/localisations'
-import { StorageKeys } from '../../../shared/enums/storage'
-import { Task, TasksProgress } from '../../../shared/models/task'
-import { checkTaskIsNow } from '../../../shared/utilities/check-task-is-now'
-import { ClinicalTasksPageComponent } from '../../clinical-tasks/containers/clinical-tasks-page.component'
-import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
-import { SettingsPageComponent } from '../../settings/containers/settings-page.component'
-import { StartPageComponent } from '../../start/containers/start-page.component'
-import { TasksService } from '../services/tasks.service'
+import {DefaultTask} from '../../../../assets/data/defaultConfig'
+import {AlertService} from '../../../core/services/alert.service'
+import {KafkaService} from '../../../core/services/kafka.service'
+import {LocalizationService} from '../../../core/services/localization.service'
+import {StorageService} from '../../../core/services/storage.service'
+import {LocKeys} from '../../../shared/enums/localisations'
+import {StorageKeys} from '../../../shared/enums/storage'
+import {Task, TasksProgress} from '../../../shared/models/task'
+import {checkTaskIsNow} from '../../../shared/utilities/check-task-is-now'
+import {ClinicalTasksPageComponent} from '../../clinical-tasks/containers/clinical-tasks-page.component'
+import {QuestionsPageComponent} from '../../questions/containers/questions-page.component'
+import {SettingsPageComponent} from '../../settings/containers/settings-page.component'
+import {StartPageComponent} from '../../start/containers/start-page.component'
+import {TasksService} from '../services/tasks.service'
+
+enum Page {Settings = 'settings', Learn = 'learn', Home = 'home' }
 
 @Component({
   selector: 'page-home',
@@ -39,7 +41,9 @@ export class HomePageComponent {
   @ViewChild('taskCalendar')
   elCalendar: ElementRef
 
+  selectedPage: Page;
   tasks: Promise<Task[]>
+  uncompletedTasks: Promise<Task[]>
   nextTask: Task = DefaultTask
   showCalendar: boolean = false
   showCompleted: boolean = false
@@ -52,6 +56,7 @@ export class HomePageComponent {
   taskIsNow = false
   elProgressOffset = 16
   nextTaskIsLoading = true
+  learnItems: any
 
   constructor(
     public navCtrl: NavController,
@@ -62,13 +67,26 @@ export class HomePageComponent {
     private platform: Platform,
     private kafka: KafkaService
   ) {
+    this.selectedPage = Page.Home;
     this.platform.resume.subscribe(e => {
       this.kafka.sendAllAnswersInCache()
       this.updateCurrentTask()
     })
+    this.learnItems = [
+      {
+        name: 'Privacy Policy',
+        icon: 'eye'
+      },
+      {
+        name: 'About the Study',
+        icon: 'stats'
+      }
+    ]
+
   }
 
   ionViewWillEnter() {
+    this.uncompletedTasks.then((res) => console.log('uncompleted ', res))
     this.tasks.then(
       tasks => (this.tasksProgress = this.tasksService.getTaskProgress(tasks))
     )
@@ -81,6 +99,7 @@ export class HomePageComponent {
 
   ionViewDidLoad() {
     this.tasks = this.tasksService.getTasksOfNow()
+    this.uncompletedTasks = this.tasksService.getUncompletedTasksOfNow();
     setInterval(() => {
       this.updateCurrentTask()
     }, 1000)
@@ -260,6 +279,9 @@ export class HomePageComponent {
     }
   }
 
+  onFooterChange() {
+    console.log( 'on footer segment change')
+  }
   openSettingsPage() {
     this.navCtrl.push(SettingsPageComponent)
   }
@@ -315,5 +337,10 @@ export class HomePageComponent {
         }
       ]
     })
+  }
+
+
+  getLearnItems(type: any) {
+    return this.learnItems[type];
   }
 }

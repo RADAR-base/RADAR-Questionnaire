@@ -240,7 +240,7 @@ export const Localisations = {
     en: 'Select a survey to complete'
   },
   NO_SURVEYS_AVAILABLE: {
-    en: 'You have no surveys currently available.'
+    en: 'Well done! You have completed 100% of your surveys'
   },
   CALENDAR_ESM_MISSED_TITLE: {
     da: 'Blokeret',

@@ -1,77 +1,70 @@
 <ion-header>
   <ion-toolbar>
-    <button
-      class="logo-small"
-      ion-button
-      menuToggle
-      left
-      (click)="showCredits()"
-    >
-      <img
-        class="logo-small"
-        src="assets/imgs/radar-logo.svg"
-        alt="Logo"
-      >
-    </button>
-    <button
-      ion-button
-      menuToggle
-      right
-      (click)="openSettingsPage()"
-    >
-      <ion-icon name="cog"></ion-icon>
-    </button>
-    <ion-title text-center>{{ "SURVEYS_HEADING" | translate }}</ion-title>
+    <ion-title *ngIf="selectedPage === 'home'" text-center>{{ "SURVEYS_HEADING" | translate }}</ion-title>
+    <ion-title *ngIf="selectedPage === 'learn'"  text-center>{{ "LEARN_HEADING" | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content #content>
+<ion-content #content >
 
-  <div
-    #taskList
-    class="size-static"
-  >
-    <task-list
-      *ngIf="tasks"
-      (task)="startQuestionnaire($event)"
-      [tasks]="tasks"
+  <div *ngIf="selectedPage === 'home'">
+    <div
+      #taskList
+      class="size-static"
     >
+      <task-list
+        *ngIf="uncompletedTasks"
+        (task)="startQuestionnaire($event)"
+        [tasks]="uncompletedTasks"
+      >
+      </task-list>
+    </div>
 
-    </task-list>
+    <div
+      #progressBar
+      class="size-dynamic"
+    >
+      <task-progress
+        [progress]="tasksProgress"
+        [forceComplete]="showCompleted"
+        [noTasksToday]="showNoTasksToday"
+      >
+      </task-progress>
+    </div>
   </div>
 
-  <div
-    #progressBar
-    class="size-dynamic"
-  >
-    <task-progress
-      [progress]="tasksProgress"
-      [forceComplete]="showCompleted"
-      [noTasksToday]="showNoTasksToday"
-      *ngIf="!hasOnlyESMs"
-    >
-    </task-progress>
-  </div>
+  <div padding *ngIf="selectedPage === 'learn'">
+    <div> Learn page </div>
+    <div> TO come when design finalized  </div>
 
+    <ion-list >
+      <button ion-item *ngFor="let sItem of learnItems">
+        <ion-icon item-start [name]="sItem.icon"></ion-icon>
+        {{ sItem.name }}
+        <ion-icon item-end name="arrow-forward"></ion-icon>
+      </button>
+    </ion-list>
+  </div>
 
 </ion-content>
 
 <ion-footer>
-    <ion-segment padding [(ngModel)]="pageSelection">
+  <ion-segment padding [(ngModel)]="selectedPage" onchange="onFooterChange()">
 
-      <ion-segment-button value="Paid">
-        <ion-icon name="create"></ion-icon>
-        <ion-title text-center>{{ "SURVEYS_HEADING" | translate }}</ion-title>
-      </ion-segment-button>
+    <ion-segment-button value="home" >
+      <ion-icon name="create" ></ion-icon>
+      <ion-title text-center>{{ "SURVEYS_HEADING" | translate }}</ion-title>
+    </ion-segment-button>
 
-      <ion-segment-button value="Free">
-        <ion-icon name="book"></ion-icon>
-        <ion-title text-center>{{ "LEARN_HEADING" | translate }}</ion-title>
-      </ion-segment-button>
+    <ion-segment-button value="learn">
+      <ion-icon name="book" ></ion-icon>
+      <ion-title text-center>{{ "LEARN_HEADING" | translate }}</ion-title>
+    </ion-segment-button>
 
-      <ion-segment-button value="Top">
-        <ion-icon name="cog"></ion-icon>
-        <ion-title text-center>{{ "SETTINGS_SETTINGS" | translate }}</ion-title>
-      </ion-segment-button>
-    </ion-segment>
+    <ion-segment-button (ionSelect)="openSettingsPage()">
+      <ion-icon name="cog" ></ion-icon>
+      <ion-title text-center>{{ "SETTINGS_SETTINGS" | translate }}</ion-title>
+    </ion-segment-button>
+  </ion-segment>
 </ion-footer>
+

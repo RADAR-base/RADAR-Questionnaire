@@ -1,5 +1,26 @@
 <ion-header>
   <ion-toolbar>
+    <button
+      class="logo-small"
+      ion-button
+      menuToggle
+      left
+      (click)="showCredits()"
+    >
+      <img
+        class="logo-small"
+        src="assets/imgs/radar-logo.svg"
+        alt="Logo"
+      >
+    </button>
+    <button
+      ion-button
+      menuToggle
+      right
+      (click)="openSettingsPage()"
+    >
+      <ion-icon name="cog"></ion-icon>
+    </button>
     <ion-title text-center>{{ "SURVEYS_HEADING" | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -35,4 +56,22 @@
 
 </ion-content>
 
-<footer-navbar></footer-navbar>
+<ion-footer>
+    <ion-segment padding [(ngModel)]="pageSelection">
+
+      <ion-segment-button value="Paid">
+        <ion-icon name="create"></ion-icon>
+        <ion-title text-center>{{ "SURVEYS_HEADING" | translate }}</ion-title>
+      </ion-segment-button>
+
+      <ion-segment-button value="Free">
+        <ion-icon name="book"></ion-icon>
+        <ion-title text-center>{{ "LEARN_HEADING" | translate }}</ion-title>
+      </ion-segment-button>
+
+      <ion-segment-button value="Top">
+        <ion-icon name="cog"></ion-icon>
+        <ion-title text-center>{{ "SETTINGS_SETTINGS" | translate }}</ion-title>
+      </ion-segment-button>
+    </ion-segment>
+</ion-footer>

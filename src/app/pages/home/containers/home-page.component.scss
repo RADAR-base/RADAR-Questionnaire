@@ -13,16 +13,34 @@ page-home {
     transition: transform 0.4s ease-in-out;
   }
 
-  .toolbar-title {
-    color: $cl-font;
-  }
-
   .size-null {
     bottom: 90px;
     width: 100%;
     height: 0;
     opacity: 0;
     transition: all 0.4s ease-in-out;
+  }
+
+  ion-footer .toolbar-title {
+    font-size: 15px;
+  }
+
+  ion-segment-button {
+    min-height: 10rem;
+  }
+
+  .segment-md .segment-button ion-icon {
+    font-size: 4rem;
+    line-height: 4rem;
+    color: $cl-font;
+  }
+
+  ion-header .toolbar-background {
+    background-color: $cl-secondary;
+  }
+
+  .toolbar-title {
+    color: $cl-font;
   }
 
   .bar-button {
@@ -39,6 +57,12 @@ page-home {
 
   .logo-small {
     height: 40px;
+  }
+
+  .footer {
+    margin-top: 2px;
+    height: 12rem;
+    border-top: 3px solid $cl-light;
   }
 
   .notification {

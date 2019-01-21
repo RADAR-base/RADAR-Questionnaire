@@ -22,8 +22,6 @@ import { StartModule } from './start/start.module'
 import { NotificationGeneratorService } from '../core/services/notification-generator.service'
 import { FcmNotificationService } from '../core/services/fcm-notification.service'
 import { NotificationService } from '../core/services/notification.service'
-import {LearnModule} from "./learn/learn.module";
-import {FooterNavbarModule} from "./footer-navbar/footer-navbar.module";
 
 @NgModule({
   imports: [
@@ -37,9 +35,7 @@ import {FooterNavbarModule} from "./footer-navbar/footer-navbar.module";
     ReportModule,
     SettingsModule,
     SplashModule,
-    StartModule,
-    LearnModule,
-    FooterNavbarModule
+    StartModule
   ],
   providers: [
     AlertService,

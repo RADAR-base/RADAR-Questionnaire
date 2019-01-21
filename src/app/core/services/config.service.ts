@@ -15,6 +15,7 @@ import {
 import { StorageKeys } from '../../shared/enums/storage'
 import { Assessment } from '../../shared/models/assessment'
 import { Question } from '../../shared/models/question'
+import { setDateTimeToMidnight } from '../../shared/utilities/time'
 import { Utility } from '../../shared/utilities/util'
 import { LocalizationService } from './localization.service'
 import { NotificationService } from './notification.service'
@@ -102,8 +103,16 @@ export class ConfigService {
   }
 
   updateConfigStateOnTimezoneChange() {
-    return this.schedule
-      .generateSchedule(true)
+    // NOTE: Update midnight to time zone of reference date.
+    return this.storage
+      .get(StorageKeys.ENROLMENTDATE)
+      .then(enrolmentDate =>
+        this.storage.set(
+          StorageKeys.REFERENCEDATE,
+          setDateTimeToMidnight(new Date(enrolmentDate)).getTime()
+        )
+      )
+      .then(() => this.schedule.generateSchedule(true))
       .then(() => this.rescheduleNotifications())
   }
 

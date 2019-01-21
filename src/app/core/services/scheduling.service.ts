@@ -7,7 +7,10 @@ import { StorageKeys } from '../../shared/enums/storage'
 import { Assessment } from '../../shared/models/assessment'
 import { TimeInterval } from '../../shared/models/protocol'
 import { Task } from '../../shared/models/task'
-import { getMilliseconds } from '../../shared/utilities/time'
+import {
+  getMilliseconds,
+  setDateTimeToMidnight
+} from '../../shared/utilities/time'
 import { LocalizationService } from './localization.service'
 import { NotificationGeneratorService } from './notification-generator.service'
 import { StorageService } from './storage.service'
@@ -29,7 +32,7 @@ const TIME_UNIT_MILLIS_DEFAULT = getMilliseconds({
 export class SchedulingService {
   scheduleVersion: number
   configVersion: number
-  enrolmentDate: number
+  refTimestamp: number
   completedTasks = []
   assessments: Promise<Assessment[]>
   tzOffset: number
@@ -47,7 +50,7 @@ export class SchedulingService {
 
   getTasksForDate(date) {
     return this.getTasks().then(schedule => {
-      const startTime = this.setDateTimeToMidnight(date).getTime()
+      const startTime = setDateTimeToMidnight(date).getTime()
       const endTime = startTime + getMilliseconds({ days: 1 })
       return schedule.filter(
         d => d.timestamp >= startTime && d.timestamp < endTime
@@ -95,13 +98,13 @@ export class SchedulingService {
       this.getCompletedTasks(),
       this.storage.get(StorageKeys.SCHEDULE_VERSION),
       this.storage.get(StorageKeys.CONFIG_VERSION),
-      this.storage.get(StorageKeys.ENROLMENTDATE),
+      this.storage.get(StorageKeys.REFERENCEDATE),
       this.storage.get(StorageKeys.UTC_OFFSET_PREV)
-    ]).then(([completed, schedVersion, confVersion, enrolDate, offsetPrev]) => {
+    ]).then(([completed, schedVersion, confVersion, refDate, offsetPrev]) => {
       this.completedTasks = completed
       this.scheduleVersion = schedVersion
       this.configVersion = confVersion
-      this.enrolmentDate = enrolDate
+      this.refTimestamp = refDate
       this.utcOffsetPrev = offsetPrev
       if (schedVersion !== confVersion || force) {
         console.log('Updating schedule..')
@@ -130,22 +133,6 @@ export class SchedulingService {
     return tasksPromise
       .then((tasks: Task[]) => this.setSchedule(tasks, key))
       .catch(e => console.error(e))
-  }
-
-  insertTask(task): Promise<any> {
-    let sKey: StorageKeys
-    let taskPromise: Promise<any>
-    if (task.isClinical) {
-      sKey = StorageKeys.SCHEDULE_TASKS_CLINICAL
-      taskPromise = this.getClinicalTasks()
-    } else {
-      sKey = StorageKeys.SCHEDULE_TASKS
-      taskPromise = this.getDefaultTasks()
-    }
-    return taskPromise.then(tasks => {
-      const updatedTasks = tasks.map(d => (d.index === task.index ? task : d))
-      return this.storage.set(sKey, updatedTasks)
-    })
   }
 
   addToCompletedTasks(task) {
@@ -213,15 +200,13 @@ export class SchedulingService {
       ? assessment.protocol.repeatQuestionnaire
       : assessment.protocol.clinicalProtocol.repeatAfterClinicVisit
 
-    let iterTime = this.setDateTimeToMidnight(
-      new Date(this.enrolmentDate)
-    ).getTime()
+    let iterTime = this.refTimestamp
     const endTime =
       iterTime + getMilliseconds({ years: DefaultScheduleYearCoverage })
 
     console.log(assessment)
 
-    const today = this.setDateTimeToMidnight(new Date())
+    const today = setDateTimeToMidnight(new Date())
     const tmpScheduleAll: Task[] = []
     while (iterTime <= endTime) {
       for (let i = 0; i < repeatQ.unitsFromZero.length; i++) {
@@ -236,22 +221,27 @@ export class SchedulingService {
           tmpScheduleAll.push(task)
         }
       }
-      iterTime = this.setDateTimeToMidnight(new Date(iterTime)).getTime()
+      iterTime = setDateTimeToMidnight(new Date(iterTime)).getTime()
       iterTime = SchedulingService.advanceRepeat(iterTime, repeatP)
     }
 
     return tmpScheduleAll
   }
 
-  setDateTimeToMidnight(date: Date): Date {
-    let resetDate: Date
-    if (this.tzOffset === date.getTimezoneOffset()) {
-      resetDate = new Date(date.setHours(1, 0, 0, 0))
+  insertTask(task): Promise<any> {
+    let sKey: StorageKeys
+    let taskPromise: Promise<any>
+    if (task.isClinical) {
+      sKey = StorageKeys.SCHEDULE_TASKS_CLINICAL
+      taskPromise = this.getClinicalTasks()
     } else {
-      resetDate = new Date(date.setHours(0, 0, 0, 0))
+      sKey = StorageKeys.SCHEDULE_TASKS
+      taskPromise = this.getDefaultTasks()
     }
-    this.tzOffset = date.getTimezoneOffset()
-    return resetDate
+    return taskPromise.then(tasks => {
+      const updatedTasks = tasks.map(d => (d.index === task.index ? task : d))
+      return this.storage.set(sKey, updatedTasks)
+    })
   }
 
   updateTaskToReportedCompletion(updatedTask): Promise<any> {

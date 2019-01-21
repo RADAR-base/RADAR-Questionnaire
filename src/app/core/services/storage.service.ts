@@ -32,13 +32,10 @@ export class StorageService {
     createdDate,
     createdDateMidnight
   ) {
-    const enrolmentDate = this.set(
-      StorageKeys.ENROLMENTDATE,
-      new Date(createdDate).getTime()
-    )
+    const enrolmentDate = this.set(StorageKeys.ENROLMENTDATE, createdDate)
     const referenceDate = this.set(
       StorageKeys.REFERENCEDATE,
-      new Date(createdDateMidnight).getTime()
+      createdDateMidnight
     )
     const pId = this.set(StorageKeys.PARTICIPANTID, participantId)
     const pLogin = this.set(StorageKeys.PARTICIPANTLOGIN, participantLogin)

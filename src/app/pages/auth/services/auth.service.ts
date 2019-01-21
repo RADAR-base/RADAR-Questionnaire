@@ -16,10 +16,10 @@ import {
   DefaultSubjectsURI
 } from '../../../../assets/data/defaultConfig'
 import { ConfigService } from '../../../core/services/config.service'
-import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { TokenService } from '../../../core/services/token.service'
 import { StorageKeys } from '../../../shared/enums/storage'
+import { setDateTimeToMidnight } from '../../../shared/utilities/time'
 
 @Injectable()
 export class AuthService {
@@ -32,7 +32,6 @@ export class AuthService {
     public http: HttpClient,
     public storage: StorageService,
     private token: TokenService,
-    private schedule: SchedulingService,
     private config: ConfigService
   ) {
     this.updateURI()
@@ -114,10 +113,10 @@ export class AuthService {
       const participantLogin = subjectInformation.login
       const projectName = subjectInformation.project.projectName
       const sourceId = this.getSourceId(subjectInformation)
-      const createdDate = new Date(subjectInformation.createdDate)
-      const createdDateMidnight = this.schedule.setDateTimeToMidnight(
+      const createdDate = new Date(subjectInformation.createdDate).getTime()
+      const createdDateMidnight = setDateTimeToMidnight(
         new Date(subjectInformation.createdDate)
-      )
+      ).getTime()
 
       return this.storage.init(
         participantId,

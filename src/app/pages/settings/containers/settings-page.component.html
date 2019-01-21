@@ -14,7 +14,7 @@
         item-right
         class="info-value"
       >
-        {{ participantId }}
+        {{ settings.participantID }}
       </span>
     </ion-item>
     <ion-item no-lines>
@@ -23,7 +23,7 @@
         item-right
         class="info-value"
       >
-        {{ projectName }}
+        {{ settings.projectName }}
       </span>
     </ion-item>
     <ion-item no-lines>
@@ -32,7 +32,7 @@
         item-right
         class="info-value"
       >
-        {{ enrolmentDate | amCalendar }}
+        {{ settings.enrolmentDate | amCalendar }}
       </span>
     </ion-item>
   </ion-item-group>
@@ -43,7 +43,9 @@
       no-lines
       *ngIf="!showLoading"
     >
-      <span class="info-value">{{ language.label | translate }}</span>
+      <span class="info-value">
+        {{ settings.language?.label | translate }}
+      </span>
       <span
         item-right
         (click)="showSelectLanguage()"
@@ -76,7 +78,7 @@
       </ion-label>
       <ion-toggle
         item-right
-        [(ngModel)]="notifications.sound"
+        [(ngModel)]="notificationSettings.sound"
         (ionChange)="notificationChange()"
       ></ion-toggle>
     </ion-item>
@@ -86,7 +88,7 @@
       </ion-label>
       <ion-toggle
         item-right
-        [(ngModel)]="notifications.vibration"
+        [(ngModel)]="notificationSettings.vibration"
         (ionChange)="notificationChange()"
       ></ion-toggle>
     </ion-item>
@@ -100,7 +102,7 @@
       </ion-label>
       <ion-toggle
         item-right
-        [(ngModel)]="notifications.nightMode"
+        [(ngModel)]="notificationSettings.nightMode"
         (ionChange)="notificationChange()"
       ></ion-toggle>
     </ion-item>
@@ -151,7 +153,7 @@
         item-right
         class="info-value"
       >
-        <div>V{{ appVersionStr }}</div>
+        <div>V{{ settings.appVersion }}</div>
       </span>
     </ion-item>
     <ion-item no-lines>
@@ -160,7 +162,7 @@
         item-right
         class="info-value"
       >
-        <div *ngIf="!showLoading">V{{ configVersion }}</div>
+        <div *ngIf="!showLoading">V{{ settings.configVersion }}</div>
         <div
           *ngIf="showLoading"
           class="spinner-center"
@@ -169,16 +171,13 @@
         </div>
       </span>
     </ion-item>
-    <ion-item
-      no-lines
-      (click)="consoleLogSchedule()"
-    >
+    <ion-item no-lines>
       {{ "SETTINGS_SCHEDULE" | translate }}
       <span
         item-right
         class="info-value"
       >
-        <div *ngIf="!showLoading">V{{ scheduleVersion }}</div>
+        <div *ngIf="!showLoading">V{{ settings.scheduleVersion }}</div>
         <div
           *ngIf="showLoading"
           class="spinner-center"
@@ -199,7 +198,7 @@
     <ion-item
       no-lines
       class="item-button"
-      (click)="generateTestNotification()"
+      (click)="showGenerateTestNotification()"
     >
       <ion-label>
         {{ "SETTINGS_GENERATE_NOTIFS" | translate }}
@@ -208,7 +207,6 @@
     <ion-item
       no-lines
       class="item-button"
-      (click)="consoleLogNotifications()"
     >
       <ion-label>{{ "SETTINGS_LOG_NOTIFS" | translate }}</ion-label>
     </ion-item>

@@ -69,3 +69,15 @@ export function getMinutes(time: Time) {
 export function getHours(time: Time) {
   return getMinutes(time) / TimeConversion.HOUR_TO_MIN
 }
+
+export function setDateTimeToMidnight(date: Date): Date {
+  // NOTE: To be fixed
+  let resetDate: Date
+  if (this.tzOffset === date.getTimezoneOffset()) {
+    resetDate = new Date(date.setHours(1, 0, 0, 0))
+  } else {
+    resetDate = new Date(date.setHours(0, 0, 0, 0))
+  }
+  this.tzOffset = date.getTimezoneOffset()
+  return resetDate
+}

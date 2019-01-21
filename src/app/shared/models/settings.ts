@@ -1,3 +1,16 @@
+export interface Settings {
+  appVersion?: string
+  cache?: any
+  configVersion?: string
+  scheduleVersion?: string
+  participantID?: string
+  projectName?: string
+  enrolmentDate?: string
+  language?: LanguageSetting
+  languagesSelectable?: LanguageSetting[]
+  notificationSettings?: NotificationSettings
+  weeklyReport?: WeeklyReportSubSettings[]
+}
 export interface NotificationSettings {
   sound: boolean
   vibration: boolean

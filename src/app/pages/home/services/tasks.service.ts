@@ -49,11 +49,14 @@ export class TasksService {
   getTaskProgress(tasks): TasksProgress {
     const tasksProgress: TasksProgress = {
       numberOfTasks: 0,
-      completedTasks: 0
+      completedTasks: 0,
+      completedPercentage: 0,
     }
     if (tasks) {
       tasksProgress.numberOfTasks = tasks.length
       tasksProgress.completedTasks = tasks.reduce((num, t) => (t.completed ? num + 1 : num), 0)
+      tasksProgress.completedPercentage = tasksProgress.numberOfTasks === 0 ? 0
+        : Math.round((tasksProgress.completedTasks/tasksProgress.numberOfTasks)*100);
       return tasksProgress
     }
   }

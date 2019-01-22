@@ -18,4 +18,5 @@ export interface Task {
 export interface TasksProgress {
   numberOfTasks: number
   completedTasks: number
+  completedPercentage: number
 }

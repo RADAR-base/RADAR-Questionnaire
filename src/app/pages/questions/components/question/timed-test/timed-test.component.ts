@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core'
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output
+} from '@angular/core'
 import { Dialogs } from '@ionic-native/dialogs'
 import { Vibration } from '@ionic-native/vibration'
 

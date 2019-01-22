@@ -8,6 +8,7 @@ import { throwError as observableThrowError } from 'rxjs'
 import { DefaultEndPoint } from '../../../assets/data/defaultConfig'
 import { StorageService } from '../../core/services/storage.service'
 import { StorageKeys } from '../enums/storage'
+import { ObservationKey, SchemaMetadata } from '../models/kafka'
 
 @Injectable()
 export class Utility {
@@ -63,47 +64,47 @@ export class Utility {
     return observableThrowError(errMsg)
   }
 
-  getSourceKeyInfo() {
-    const sourceId = this.storage.get(StorageKeys.SOURCEID)
-    const projectId = this.storage.get(StorageKeys.PROJECTNAME)
-    const pariticipantId = this.storage.get(StorageKeys.PARTICIPANTLOGIN)
-    return Promise.all([sourceId, projectId, pariticipantId])
+  getObservationKey(): Promise<ObservationKey> {
+    return Promise.all([
+      this.storage.get(StorageKeys.SOURCEID),
+      this.storage.get(StorageKeys.PROJECTNAME),
+      this.storage.get(StorageKeys.PARTICIPANTLOGIN)
+    ]).then(([sourceId, projectName, participantName]) => ({
+      sourceId,
+      userId: participantName.toString(),
+      projectId: projectName,
+    }))
   }
 
-  getLatestKafkaSchemaVersions(specs) {
-    const qKey = specs.avsc + '_' + specs.name + '-key'
-    const qVal = specs.avsc + '_' + specs.name + '-value'
-    return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
-      const keys = this.getLatestKafkaSchemaVersion(
-        tokens.access_token,
-        qKey,
-        'latest'
-      )
-      const vals = this.getLatestKafkaSchemaVersion(
-        tokens.access_token,
-        qVal,
-        'latest'
-      )
-      return Promise.all([keys, vals])
-      /*return Promise.all([keys, vals]).then(versions => {
-        var versionReqKey, versionReqValue
-        for(let key in versions[0]) {versionReqKey = versions[0][key]}
-        for(let key in versions[1]) {versionReqValue = versions[1][key]}
-        let key = this.getLatestKafkaSchemaVersion(tokens.access_token, qKey, versionReqKey)
-        let val = this.getLatestKafkaSchemaVersion(tokens.access_token, qVal, versionReqValue)
-        return Promise.all([key, val, specs])
-      })*/
-    })
+  getLatestKafkaSchemaVersions(specs): Promise<[SchemaMetadata, SchemaMetadata]> {
+    const topic = specs.avsc + '_' + specs.name
+
+    return this.storage.get(StorageKeys.OAUTH_TOKENS)
+      .then(tokens => {
+        return Promise.all([
+          this.getLatestKafkaSchemaVersion(
+            tokens.access_token,
+            topic + '-key',
+            'latest'
+          ),
+          this.getLatestKafkaSchemaVersion(
+            tokens.access_token,
+            topic + '-value',
+            'latest'
+          )])
+      })
   }
 
-  getLatestKafkaSchemaVersion(accessToken, questionName, version) {
+  getLatestKafkaSchemaVersion(accessToken, questionName, version): Promise<SchemaMetadata> {
     const versionStr = this.URI_version + version
-    return this.storage.get(StorageKeys.BASE_URI).then(baseuri => {
-      const endPoint = baseuri ? baseuri : DefaultEndPoint
-      const uri = endPoint + this.URI_schema + questionName + versionStr
-      console.log(uri)
-      return this.http.get(uri).toPromise()
-    })
+    return this.storage.get(StorageKeys.BASE_URI)
+      .then(baseuri => {
+        const endPoint = baseuri ? baseuri : DefaultEndPoint
+        const uri = endPoint + this.URI_schema + questionName + versionStr
+        console.log(uri)
+        return this.http.get(uri).toPromise()
+      })
+      .then(obj => obj as SchemaMetadata)
   }
 
   /**
@@ -112,14 +113,20 @@ export class Utility {
    * @param partitionBy partitioning function, if it returns false it goes to partition negative,
    * otherwise a value goes into partition positive
    */
-  partition<T>(array: T[], partitionBy: (T) => boolean): {negative: T[], positive: T[]} {
-    return array.reduce((part, value) => {
-      if (partitionBy(value)) {
-        part.positive.push(value)
-      } else {
-        part.negative.push(value)
-      }
-      return part
-    }, {negative: [], positive: []})
+  partition<T>(
+    array: T[],
+    partitionBy: (T) => boolean
+  ): { negative: T[]; positive: T[] } {
+    return array.reduce(
+      (part, value) => {
+        if (partitionBy(value)) {
+          part.positive.push(value)
+        } else {
+          part.negative.push(value)
+        }
+        return part
+      },
+      { negative: [], positive: [] }
+    )
   }
 }

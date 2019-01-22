@@ -2,10 +2,13 @@ import { LocKeys } from '../../app/shared/enums/localisations'
 import {
   LanguageSetting,
   NotificationSettings,
-  WeeklyReportSubSettings,
+  WeeklyReportSubSettings
 } from '../../app/shared/models/settings'
 import { Task } from '../../app/shared/models/task'
-import { DefaultProtocolEndPointExport, DefaultSourceProducerAndSecretExport } from './secret'
+import {
+  DefaultProtocolEndPointExport,
+  DefaultSourceProducerAndSecretExport
+} from './secret'
 
 // DEFAULT SETTINGS
 export const DefaultSettingsNotifications: NotificationSettings = {
@@ -41,10 +44,24 @@ export const DefaultTask: Task = {
   completionWindow: 0,
   warning: '',
   isClinical: false,
-  notifications: [],
+  notifications: []
 }
 
-export const DefaultSettingsSelectedLanguage: LanguageSetting = {
+export const DefaultTaskTest: Task = {
+  index: 0,
+  completed: false,
+  reportedCompletion: false,
+  timestamp: 0,
+  name: 'TEST',
+  nQuestions: 0,
+  estimatedCompletionTime: 0,
+  completionWindow: 0,
+  warning: '',
+  isClinical: false,
+  notifications: []
+}
+
+export const DefaultLanguage: LanguageSetting = {
   label: '',
   value: ''
 }

@@ -11,30 +11,31 @@ import {
   KAFKA_COMPLETION_LOG,
   KAFKA_TIMEZONE
 } from '../../../assets/data/defaultConfig'
-import { AuthService } from '../../pages/auth/services/auth.service'
 import { StorageKeys } from '../../shared/enums/storage'
 import {
   AnswerKeyExport,
   AnswerValueExport,
   ApplicationTimeZoneValueExport,
-  CompletionLogValueExport,
+  CompletionLogValueExport
 } from '../../shared/models/answer'
 import { QuestionType } from '../../shared/models/question'
 import { Task } from '../../shared/models/task'
 import { getSeconds } from '../../shared/utilities/time'
 import { Utility } from '../../shared/utilities/util'
 import { StorageService } from './storage.service'
+import { TokenService } from './token.service'
+import { SchemaMetadata } from '../../shared/models/kafka'
 
 @Injectable()
 export class KafkaService {
   private KAFKA_CLIENT_URL: string
   private cacheSending = false
-  private schemas = {}
+  private schemas: {[key: string]: Promise<[SchemaMetadata, SchemaMetadata]>} = {}
 
   constructor(
     private util: Utility,
     private storage: StorageService,
-    private authService: AuthService
+    private token: TokenService
   ) {
     this.updateURI()
   }
@@ -111,146 +112,120 @@ export class KafkaService {
   }
 
   prepareKafkaObjectAndSend(task, value, type) {
-    return this.util.getSourceKeyInfo().then(keyInfo => {
-      const sourceId = keyInfo[0]
-      const projectId = keyInfo[1]
-      const patientId = keyInfo[2].toString()
-      // NOTE: Payload for kafka 2 : key Object which contains device information
-      const answerKey: AnswerKeyExport = {
-        userId: patientId,
-        sourceId: sourceId,
-        projectId: projectId
-      }
-      const kafkaObject = { value: value, key: answerKey }
-      return this.getSpecs(task, kafkaObject, type).then(specs =>
-        this.createPayloadAndSend(specs)
-      )
-    })
+    return this.util.getObservationKey()
+      .then(observationKey => {
+        // NOTE: Payload for kafka 2 : key Object which contains device information
+        const kafkaObject = {key: observationKey as AnswerKeyExport, value}
+        return this.getSpecs(task, kafkaObject, type)
+      })
+      .then(specs => this.createPayloadAndSend(specs))
   }
 
   createPayloadAndSend(specs) {
     let schemaVersions
-    switch (specs.name) {
-      case KAFKA_COMPLETION_LOG:
-        if (this.schemas[specs.name]) {
-          schemaVersions = this.schemas[specs.name]
-          break
-        }
-      default:
-        schemaVersions = this.util
-          .getLatestKafkaSchemaVersions(specs)
-          .catch(error => {
-            console.log(error)
-            this.cacheAnswers(specs)
-          })
-        this.schemas[specs.name] = schemaVersions
+    if (specs.name == KAFKA_COMPLETION_LOG && this.schemas[KAFKA_COMPLETION_LOG]) {
+      schemaVersions = this.schemas[KAFKA_COMPLETION_LOG]
+    } else {
+      schemaVersions = this.util
+        .getLatestKafkaSchemaVersions(specs)
+        .catch(error => {
+          console.log(error)
+          return this.cacheAnswers(specs)
+        })
+      this.schemas[specs.name] = schemaVersions
     }
-    return Promise.all([schemaVersions]).then(data => {
-      schemaVersions = data[0]
-      const avroKey = AvroSchema.parse(
-        JSON.parse(schemaVersions[0]['schema']),
-        {
-          wrapUnions: true
+    return schemaVersions
+      .then(([keySchemaMetadata, valueSchemaMetadata]) => {
+        const keySchema = JSON.parse(keySchemaMetadata.schema)
+        const valueSchema = JSON.parse(valueSchemaMetadata.schema)
+
+        const avroKey = AvroSchema.parse(keySchema, { wrapUnions: true })
+        const avroVal = AvroSchema.parse(valueSchema, { wrapUnions: true })
+
+        const kafkaObject = specs.kafkaObject
+        const bufferKey = avroKey.clone(kafkaObject.key, { wrapUnions: true })
+        const bufferVal = avroVal.clone(kafkaObject.value, { wrapUnions: true })
+        const payload = {
+          key: bufferKey,
+          value: bufferVal
         }
-      )
-      const avroVal = AvroSchema.parse(
-        JSON.parse(schemaVersions[1]['schema']),
-        {
-          wrapUnions: true
-        }
-      )
-      const kafkaObject = specs.kafkaObject
-      const bufferKey = avroKey.clone(kafkaObject.key, { wrapUnions: true })
-      const bufferVal = avroVal.clone(kafkaObject.value, { wrapUnions: true })
-      const payload = {
-        key: bufferKey,
-        value: bufferVal
-      }
-      const schemaId = new KafkaRest.AvroSchema(
-        JSON.parse(schemaVersions[0]['schema'])
-      )
-      const schemaInfo = new KafkaRest.AvroSchema(
-        JSON.parse(schemaVersions[1]['schema'])
-      )
-      return this.sendToKafka(specs, schemaId, schemaInfo, payload)
-    })
+        const parsedKeySchema = new KafkaRest.AvroSchema(keySchema)
+        const parsedValueSchema = new KafkaRest.AvroSchema(valueSchema)
+        return this.sendToKafka(specs, parsedKeySchema, parsedValueSchema, payload)
+      })
   }
 
-  sendToKafka(specs, id, info, payload) {
-    return this.getKafkaInstance().then(
-      kafkaConnInstance => {
-        // NOTE: Kafka connection instance to submit to topic
-        const topic = specs.avsc + '_' + specs.name
-        console.log('Sending to: ' + topic)
-        return kafkaConnInstance
-          .topic(topic)
-          .produce(id, info, payload, (err, res) => {
-            if (err) {
-              console.log(err)
-              return this.cacheAnswers(specs)
-            } else {
-              const cacheKey = specs.kafkaObject.value.time
-              return this.removeAnswersFromCache(cacheKey)
-            }
-          })
-      },
-      error => {
-        console.error(
-          'Could not initiate kafka connection ' + JSON.stringify(error)
-        )
-        return Promise.resolve({ res: 'ERROR' })
-      }
-    )
+  sendToKafka(specs, keySchema, valueSchema, payload) {
+    return this.getKafkaInstance()
+      .then(kafka => new Promise((resolve, reject) => {
+          // NOTE: Kafka connection instance to submit to topic
+          const topic = specs.avsc + '_' + specs.name
+          console.log('Sending to: ' + topic)
+          return kafka
+            .topic(topic)
+            .produce(keySchema, valueSchema, payload, (err, res) => {
+              if (err) {
+                reject(err)
+              } else {
+                resolve(res)
+              }
+            })
+      }))
+      .then(() => this.removeAnswersFromCache(specs.kafkaObject.value.time))
+      .catch(error => {
+        console.error('Could not initiate kafka connection ' + JSON.stringify(error))
+        return this.cacheAnswers(specs)
+          .then(() => ({res: 'ERROR'}))
+      });
   }
 
   cacheAnswers(specs) {
     const kafkaObject = specs.kafkaObject
-    this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
-      console.log('KAFKA-SERVICE: Caching answers.')
-      cache[kafkaObject.value.time] = specs
-      this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
-    })
+    return this.storage.get(StorageKeys.CACHE_ANSWERS)
+      .then(cache => {
+        console.log('KAFKA-SERVICE: Caching answers.')
+        cache[kafkaObject.value.time] = specs
+        return this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
+      })
   }
 
   sendAllAnswersInCache() {
     if (!this.cacheSending) {
       this.cacheSending = !this.cacheSending
       this.sendToKafkaFromCache()
+        .catch(e => console.log('Cache could not be sent.'))
         .then(() => (this.cacheSending = !this.cacheSending))
-        .catch(e => console.log('Cache could not be sent: ' + JSON.stringify(e)))
     }
   }
 
   sendToKafkaFromCache() {
     return this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
-      if (!cache) {
-        return this.storage.set(StorageKeys.CACHE_ANSWERS, {})
-      } else {
-        const promises = Object.entries(cache)
-          .filter(([k, v]) => k)
-          .slice(0, 20)
-          .map(([k, v]) => this.createPayloadAndSend(v))
-        return Promise.all(promises)
-          .then(res => {
-            console.log(res)
-            return res
-          })
-      }
+      const promises = Object.entries(cache)
+        .filter(([k, v]) => k)
+        .slice(0, 20)
+        .map(([k, v]) => this.createPayloadAndSend(v))
+      return Promise.all(promises).then(res => {
+        console.log(res)
+        return res
+      })
     })
   }
 
   removeAnswersFromCache(cacheKey) {
-    return this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
-      if (cache) {
-        console.log('Deleting ' + cacheKey)
-        if (cache[cacheKey]) delete cache[cacheKey]
-        return this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
-      }
-    })
+    return this.storage.get(StorageKeys.CACHE_ANSWERS)
+      .then(cache => {
+        if (cache) {
+          console.log('Deleting ' + cacheKey)
+          if (cache[cacheKey]) {
+            delete cache[cacheKey]
+          }
+          return this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
+        }
+      })
   }
 
   getKafkaInstance() {
-    return this.authService
+    return this.token
       .refresh()
       .then(() => this.storage.get(StorageKeys.OAUTH_TOKENS))
       .then(tokens => {

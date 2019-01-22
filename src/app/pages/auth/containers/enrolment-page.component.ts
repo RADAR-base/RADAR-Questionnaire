@@ -2,7 +2,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner'
 import { NavController, Slides } from 'ionic-angular'
 
-import { DefaultSettingsWeeklyReport } from '../../../../assets/data/defaultConfig'
+import { DefaultSettingsWeeklyReport} from '../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../core/services/alert.service'
 import { ConfigService } from '../../../core/services/config.service'
 import { LocalizationService } from '../../../core/services/localization.service'
@@ -10,7 +10,10 @@ import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { StorageKeys } from '../../../shared/enums/storage'
-import { LanguageSetting, WeeklyReportSubSettings } from '../../../shared/models/settings'
+import {
+  LanguageSetting,
+  WeeklyReportSubSettings
+} from '../../../shared/models/settings'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { AuthService } from '../services/auth.service'
 
@@ -47,13 +50,13 @@ export class EnrolmentPageComponent {
     private configService: ConfigService,
     private authService: AuthService,
     private localization: LocalizationService,
-    private alertService: AlertService,
+    private alertService: AlertService
   ) {}
 
   ionViewDidLoad() {
     this.slides.lockSwipes(true)
     return this.localization.update()
-      .then(lang => this.language = lang)
+      .then(lang => (this.language = lang))
   }
 
   ionViewDidEnter() {}

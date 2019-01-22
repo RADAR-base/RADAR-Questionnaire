@@ -1,10 +1,15 @@
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core'
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output
+} from '@angular/core'
 
 import { AlertService } from '../../../../core/services/alert.service'
 import { LocalizationService } from '../../../../core/services/localization.service'
 import { LocKeys } from '../../../../shared/enums/localisations'
 import { Task } from '../../../../shared/models/task'
-import { TasksService } from '../../services/tasks.service'
 
 @Component({
   selector: 'task-calendar',
@@ -12,7 +17,7 @@ import { TasksService } from '../../services/tasks.service'
 })
 export class TaskCalendarComponent implements OnChanges {
   @Input()
-  scrollHeight = 0
+  show = false
   @Output()
   task: EventEmitter<Task> = new EventEmitter<Task>()
   @Input()
@@ -22,9 +27,8 @@ export class TaskCalendarComponent implements OnChanges {
   timeIndex: Promise<number>
 
   constructor(
-    private tasksService: TasksService,
     private alertService: AlertService,
-    private localization: LocalizationService,
+    private localization: LocalizationService
   ) {}
 
   ngOnChanges() {
@@ -32,22 +36,23 @@ export class TaskCalendarComponent implements OnChanges {
   }
 
   setCurrentTime() {
+    const now = new Date().getTime()
     try {
-      this.currentTime = this.localization.moment().format('LT') // locale time
+      this.currentTime = this.localization.moment(now).format('LT') // locale time
     } catch (e) {
       console.log(e)
     }
-
-    const now = new Date().getTime()
-    this.timeIndex = this.tasks
-      .then(tasks => tasks.findIndex(t => t.timestamp >= now))
+    this.timeIndex = this.tasks.then(tasks => {
+      const index = tasks.findIndex(t => t.timestamp >= now)
+      return index > -1 ? index : tasks.length - 1
+    })
   }
 
   clicked(task) {
     const now = new Date().getTime()
     if (
-      task.timestamp >= now &&
-      task.timestamp < now + task.completionWindow &&
+      task.timestamp <= now &&
+      task.timestamp + task.completionWindow > now &&
       !task.completed
     ) {
       this.task.emit(task)
@@ -70,7 +75,6 @@ export class TaskCalendarComponent implements OnChanges {
   }
 
   getStartTime(task: Task) {
-    return this.localization.moment(task.timestamp)
-      .format('LT')
+    return this.localization.moment(task.timestamp).format('HH:mm')
   }
 }

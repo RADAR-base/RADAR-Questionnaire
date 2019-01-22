@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core'
 
 import { KafkaService } from '../../../core/services/kafka.service'
-import { SchedulingService, TIME_UNIT_MILLIS } from '../../../core/services/scheduling.service'
+import {
+  SchedulingService,
+  TIME_UNIT_MILLIS
+} from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { Task, TasksProgress } from '../../../shared/models/task'
 import { getMilliseconds } from '../../../shared/utilities/time'
@@ -34,25 +37,28 @@ export class TasksService {
     }
     if (tasks) {
       tasksProgress.numberOfTasks = tasks.length
-      tasksProgress.completedTasks = tasks.reduce((num, t) => (t.completed ? num + 1 : num), 0)
+      tasksProgress.completedTasks = tasks.reduce(
+        (num, t) => (t.completed ? num + 1 : num),
+        0
+      )
       return tasksProgress
     }
   }
 
-  areAllTasksComplete() {
-    return this.getTasksOfToday().then((tasks: Task[]) => {
-      return (
-        !tasks ||
-        tasks.every(t => t.name === 'ESM' || t.isClinical || t.completed)
-      )
-    })
+  areAllTasksComplete(tasks) {
+    return (
+      !tasks ||
+      tasks.every(t => t.name === 'ESM' || t.isClinical || t.completed)
+    )
   }
 
   isLastTask(task, todaysTasks) {
     return todaysTasks.then((tasks: Task[]) => {
       return (
         !tasks ||
-        tasks.every(t => t.name === 'ESM' || t.completed || t.index === task.index)
+        tasks.every(
+          t => t.name === 'ESM' || t.completed || t.index === task.index
+        )
       )
     })
   }
@@ -65,7 +71,8 @@ export class TasksService {
    */
   getNextTask(tasks: Task[]): Task | undefined {
     if (tasks) {
-      const tenMinutesAgo = new Date().getTime() - getMilliseconds({ minutes: 10 })
+      const tenMinutesAgo =
+        new Date().getTime() - getMilliseconds({ minutes: 10 })
       const midnight = new Date()
       midnight.setHours(0, 0, 0, 0)
       const offsetForward = getMilliseconds({ hours: 12 })

@@ -52,7 +52,7 @@
     "@ionic-native/barcode-scanner": "^4.13.0",
     "@ionic-native/core": "^4.13.0",
     "@ionic-native/device": "^4.13.0",
-    "@ionic-native/dialogs": "^4.13.0",
+    "@ionic-native/dialogs": "^4.20.0",
     "@ionic-native/file": "^4.13.0",
     "@ionic-native/globalization": "^4.13.0",
     "@ionic-native/local-notifications": "^4.13.0",

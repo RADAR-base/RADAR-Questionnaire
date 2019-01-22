@@ -320,9 +320,10 @@
   version "4.14.0"
   resolved "https://registry.yarnpkg.com/@ionic-native/device/-/device-4.14.0.tgz#24ff7ed8baaef45cd8d5170974be39b1e2780d94"
 
-"@ionic-native/dialogs@^4.13.0":
-  version "4.14.0"
-  resolved "https://registry.yarnpkg.com/@ionic-native/dialogs/-/dialogs-4.14.0.tgz#56e0ae742678a17487a4046f3bed515bc81b66b2"
+"@ionic-native/dialogs@^4.20.0":
+  version "4.20.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/dialogs/-/dialogs-4.20.0.tgz#9d9bef60e1a761d91f76aae85df175f8b1da67b0"
+  integrity sha512-YOBZaG+Y0pRlTgzmZ0e7I1cvPGZRWc+lfw2Ajwkyo02HB2QudOnBepvlsOMVLVIOteNRgmOdk8/DfM/VGPa10Q==
 
 "@ionic-native/file@^4.13.0":
   version "4.14.0"

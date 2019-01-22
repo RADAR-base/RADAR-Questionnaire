@@ -1,10 +1,6 @@
 import { Component } from '@angular/core'
 import { AppVersion } from '@ionic-native/app-version'
-<<<<<<< HEAD
-import { NavController } from 'ionic-angular'
-=======
 import { NavController, Platform } from 'ionic-angular'
->>>>>>> enable-reminders
 
 import {
   DefaultLanguage,

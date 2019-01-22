@@ -23,8 +23,8 @@ import { Task } from '../../shared/models/task'
 import { getSeconds } from '../../shared/utilities/time'
 import { Utility } from '../../shared/utilities/util'
 import { StorageService } from './storage.service'
-import { TokenService } from './token.service'
 import { SchemaMetadata } from '../../shared/models/kafka'
+import {AuthService} from "../../pages/auth/services/auth.service";
 
 @Injectable()
 export class KafkaService {
@@ -35,7 +35,7 @@ export class KafkaService {
   constructor(
     private util: Utility,
     private storage: StorageService,
-    private token: TokenService
+    private authService: AuthService
   ) {
     this.updateURI()
   }
@@ -225,7 +225,7 @@ export class KafkaService {
   }
 
   getKafkaInstance() {
-    return this.token
+    return this.authService
       .refresh()
       .then(() => this.storage.get(StorageKeys.OAUTH_TOKENS))
       .then(tokens => {

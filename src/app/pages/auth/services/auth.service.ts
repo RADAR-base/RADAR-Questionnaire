@@ -209,6 +209,9 @@ export class AuthService {
     });
   }
 
+  createPostRequest(uri, body, headers) {
+    return this.http.post(uri, body, headers).toPromise()
+  }
   registerToken(registrationToken) {
     const refreshBody = DefaultRefreshTokenRequestBody + registrationToken
     return this.token.register(refreshBody)

@@ -8,7 +8,6 @@ import {
 } from "../../../../../assets/data/defaultConfig";
 import {StorageKeys} from "../../../../shared/enums/storage";
 import {AppComponent} from "../../../../core/containers/app.component";
-import {TranslatePipe} from "../../../../shared/pipes/translate/translate";
 import {StorageService} from "../../../../core/services/storage.service";
 import {EnrolmentPageComponent} from "../../containers/enrolment-page.component";
 import {AuthService} from "../../services/auth.service";
@@ -49,7 +48,7 @@ export class WelcomePageComponent {
     private alertCtrl: AlertController) {}
 
   ionViewDidLoad() {
-    this.localization.update()
+    return this.localization.update()
   }
 
   ionViewDidEnter() {}

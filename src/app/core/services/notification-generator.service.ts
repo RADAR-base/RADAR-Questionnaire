@@ -96,7 +96,7 @@ export class NotificationGeneratorService {
         current.vibrate = true
         current.title = this.localization.translateKey(LocKeys.NOTIFICATION_REMINDER_NOW)
         current.text = this.localization.translateKey(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1)
-            + ' ' + task.completionWindow + ' '
+            + ' ' + task.estimatedCompletionTime + ' '
             + this.localization.translateKey(LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2)
         break
       case NotificationType.MISSED:

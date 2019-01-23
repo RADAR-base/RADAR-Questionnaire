@@ -131,7 +131,7 @@
     "tslint-config-prettier": "^1.15.0",
     "tslint-config-standard": "^5.0.2",
     "typescript": "~2.7",
-    "webpack": "^4.4.0",
+    "webpack": "^4.29.0",
     "webpack-sources": "^1.0.0"
   },
   "cordova": {

@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output
+} from '@angular/core'
 
 import { InfoItem, Section } from '../../../../../shared/models/question'
 
@@ -8,12 +15,14 @@ let uniqueID = 0
   selector: 'info-screen',
   templateUrl: 'info-screen.component.html'
 })
-export class InfoScreenComponent implements OnInit {
+export class InfoScreenComponent implements OnInit, OnChanges {
   @Output()
   valueChange: EventEmitter<number> = new EventEmitter<number>()
 
   @Input()
   sections: Section[]
+  @Input()
+  currentlyShown: boolean
 
   value: number = null
   uniqueID: number = uniqueID++
@@ -33,9 +42,13 @@ export class InfoScreenComponent implements OnInit {
         content: item.label
       })
     })
+  }
 
-    // NOTE: Save timestamp (epoch) and activate the next button
-    const epoch: number = new Date().getTime()
-    this.valueChange.emit(epoch)
+  ngOnChanges() {
+    if (this.currentlyShown) {
+      // NOTE: Save timestamp (epoch) and activate the next button
+      const epoch: number = new Date().getTime()
+      this.valueChange.emit(epoch)
+    }
   }
 }

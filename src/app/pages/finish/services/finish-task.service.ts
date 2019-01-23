@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core'
 
 import {
   KAFKA_ASSESSMENT,
+  KAFKA_COMPLETION_LOG,
   KAFKA_TIMEZONE
 } from '../../../../assets/data/defaultConfig'
 import { KafkaService } from '../../../core/services/kafka.service'
@@ -17,12 +18,13 @@ export class FinishTaskService {
     private schedule: SchedulingService,
     private usage: UsageService,
     private prepare: PrepareDataService,
-    private kafkaService: KafkaService,
+    private kafka: KafkaService,
     private notifications: NotificationService
   ) {}
 
   updateTaskToComplete(task) {
     this.schedule.updateTaskToComplete(task)
+    this.schedule.updateTaskToReportedCompletion(task)
     if (!task.isClinical) this.schedule.addToCompletedTasks(task)
   }
 
@@ -45,8 +47,8 @@ export class FinishTaskService {
 
   sendToKafka(processedAnswers, task) {
     // NOTE: Submit data to kafka
-    this.kafkaService.prepareKafkaObjectAndSend(KAFKA_TIMEZONE, {})
-    this.kafkaService.prepareKafkaObjectAndSend(KAFKA_ASSESSMENT, {
+    this.kafka.prepareKafkaObjectAndSend(KAFKA_TIMEZONE, {})
+    this.kafka.prepareKafkaObjectAndSend(KAFKA_ASSESSMENT, {
       task: task,
       data: processedAnswers
     })

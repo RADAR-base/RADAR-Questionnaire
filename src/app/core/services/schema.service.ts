@@ -65,8 +65,8 @@ export class SchemaService {
       case KAFKA_COMPLETION_LOG:
         const CompletionLog: CompletionLogValueExport = {
           name: payload.task.name.toString(),
-          time: getSeconds({ milliseconds: payload.task.timestamp }),
-          completionPercentage: { double: payload.task.completed ? 100 : 0 }
+          time: getSeconds({ milliseconds: payload.time }),
+          completionPercentage: { double: payload.percentage }
         }
         return CompletionLog
       case KAFKA_TIMEZONE:

@@ -49,6 +49,7 @@
 <div *ngIf="question.field_type === 'info'">
   <info-screen
     [sections]="question.select_choices_or_calculations"
+    [currentlyShown]="currentlyShown"
     (valueChange)="onValueChange($event)"
   >
   </info-screen>

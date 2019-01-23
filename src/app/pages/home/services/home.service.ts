@@ -30,15 +30,4 @@ export class HomeService {
   emptyCache() {
     this.kafka.sendToKafkaFromCache()
   }
-
-  sendCompetionLogs() {
-    this.schedule.getNonReportedCompletedTasks().then(nonReportedTasks => {
-      nonReportedTasks.forEach(t => {
-        this.kafka.prepareKafkaObjectAndSend(KAFKA_COMPLETION_LOG, {
-          task: t
-        })
-        this.schedule.updateTaskToReportedCompletion(t)
-      })
-    })
-  }
 }

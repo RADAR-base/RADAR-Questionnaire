@@ -8,17 +8,18 @@ import { Answer } from '../../../shared/models/answer'
 @Injectable()
 export class AnswerService {
   answers = {}
+  keys = []
   lastAnswerKey: string
 
   constructor(public http: HttpClient) {}
 
   add(value: Answer) {
     this.answers[value.id] = value.value
-    this.lastAnswerKey = value.id
+    this.keys.push(value.id)
   }
 
   pop() {
-    delete this.answers[this.lastAnswerKey]
+    this.keys.pop()
   }
 
   check(id: string) {
@@ -27,5 +28,6 @@ export class AnswerService {
 
   reset() {
     this.answers = {}
+    this.keys = []
   }
 }

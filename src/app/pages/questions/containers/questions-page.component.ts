@@ -1,12 +1,7 @@
 // tslint:disable:no-eval
 import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Component, ElementRef, ViewChild } from '@angular/core'
-import {
-  Content,
-  NavController,
-  NavParams,
-  ViewController
-} from 'ionic-angular'
+import { Content, NavController, NavParams, Platform } from 'ionic-angular'
 
 import { LocalizationService } from '../../../core/services/localization.service'
 import { LocKeys } from '../../../shared/enums/localisations'
@@ -72,14 +67,20 @@ export class QuestionsPageComponent {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public viewCtrl: ViewController,
     private localization: LocalizationService,
-    private questionsService: QuestionsService
-  ) {}
+    private questionsService: QuestionsService,
+    private platform: Platform
+  ) {
+    this.onClose()
+  }
 
   ionViewDidLoad() {
     this.init()
     this.questionsService.reset()
+  }
+
+  ionViewDidLeave() {
+    this.sendCompletionLog()
   }
 
   init() {
@@ -87,16 +88,28 @@ export class QuestionsPageComponent {
     this.introduction = this.navParams.data.introduction
     this.showIntroduction = this.navParams.data.assessment.showIntroduction
     this.questionTitle = this.navParams.data.title
-    this.questions = this.navParams.data.questions
     this.questionsContainerEl = this.questionsContainerRef.nativeElement
-    this.nextQuestionIncr = this.questionsService.skipESMSleepQuestion(
-      this.questionTitle
+    this.questions = this.questionsService.getQuestions(
+      this.title,
+      this.navParams.data.questions
     )
     this.setCurrentQuestion(this.nextQuestionIncr)
     this.associatedTask = this.navParams.data.associatedTask
     this.endText = this.navParams.data.endText
     this.isLastTask = this.navParams.data.isLastTask
     this.assessment = this.navParams.data.assessment
+  }
+
+  onClose() {
+    this.platform.resume.subscribe(() => this.sendCompletionLog())
+    this.platform.registerBackButtonAction(() => {
+      this.sendCompletionLog()
+      this.platform.exitApp()
+    })
+  }
+
+  sendCompletionLog() {
+    this.questionsService.sendCompletionLog(this.questions, this.associatedTask)
   }
 
   hideIntro() {
@@ -121,15 +134,15 @@ export class QuestionsPageComponent {
       .currentQuestion * 100}%)`
   }
 
-  moveToLastQuestion(value) {
+  willMoveToFinish(value) {
     return this.currentQuestion + value === this.questions.length
   }
 
-  moveToPrevQuestion(value) {
+  willExitQuestionnaire(value) {
     return this.currentQuestion + value === -value
   }
 
-  moveToValidQuestion(value) {
+  willMoveToValidQuestion(value) {
     return (
       !(this.currentQuestion + value < 0) &&
       !(this.currentQuestion + value >= this.questions.length)
@@ -145,7 +158,7 @@ export class QuestionsPageComponent {
   setCurrentQuestion(value = 0) {
     // NOTE: Record start time when question is shown
     this.startTime = this.questionsService.getTime()
-    if (this.moveToValidQuestion(value)) {
+    if (this.willMoveToValidQuestion(value)) {
       this.currentQuestion = this.currentQuestion + value
       this.setButtons()
       this.setProgress()
@@ -155,12 +168,11 @@ export class QuestionsPageComponent {
         this.questions[this.currentQuestion].field_type === QuestionType.timed
       return
     }
-    if (this.moveToLastQuestion(value)) {
+    if (this.willMoveToFinish(value)) {
       this.navigateToFinishPage()
-      this.navCtrl.removeView(this.viewCtrl)
       return
     }
-    if (this.moveToPrevQuestion(value)) {
+    if (this.willExitQuestionnaire(value)) {
       this.navCtrl.pop()
       return
     }
@@ -203,8 +215,7 @@ export class QuestionsPageComponent {
       )
       this.nextQuestionIncr = this.questionsService.getNextQuestion(
         this.questions,
-        this.currentQuestion,
-        this.questionTitle
+        this.currentQuestion
       )
       this.setCurrentQuestion(this.nextQuestionIncr)
       this.questionIncrements.push(this.nextQuestionIncr)
@@ -227,13 +238,17 @@ export class QuestionsPageComponent {
 
   navigateToFinishPage() {
     const data = this.questionsService.getData()
-    this.navCtrl.push(FinishPageComponent, {
-      endText: this.endText,
-      associatedTask: this.associatedTask,
-      answers: data.answers,
-      timestamps: data.timestamps,
-      isLastTask: this.isLastTask,
-      questions: this.questions
-    })
+    this.navCtrl.setRoot(
+      FinishPageComponent,
+      {
+        endText: this.endText,
+        associatedTask: this.associatedTask,
+        answers: data.answers,
+        timestamps: data.timestamps,
+        isLastTask: this.isLastTask,
+        questions: this.questions
+      },
+      { animate: true, direction: 'forward' }
+    )
   }
 }

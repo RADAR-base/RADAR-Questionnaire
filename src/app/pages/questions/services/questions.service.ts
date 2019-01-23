@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core'
 
+import { KAFKA_COMPLETION_LOG } from '../../../../assets/data/defaultConfig'
+import { KafkaService } from '../../../core/services/kafka.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { getSeconds } from '../../../shared/utilities/time'
 import { AnswerService } from './answer.service'
@@ -10,7 +12,8 @@ export class QuestionsService {
   constructor(
     public storage: StorageService,
     private answerService: AnswerService,
-    private timestampService: TimestampService
+    private timestampService: TimestampService,
+    private kafka: KafkaService
   ) {}
 
   reset() {
@@ -28,9 +31,27 @@ export class QuestionsService {
 
   getData() {
     return {
-      answers: this.answerService.answers,
+      answers: this.getAnswers(),
       timestamps: this.timestampService.timestamps
     }
+  }
+
+  getAttemptedAnswers() {
+    return this.answerService.answers
+  }
+
+  getAnswers() {
+    const answers = {}
+    this.answerService.keys.map(
+      d => (answers[d] = this.answerService.answers[d])
+    )
+    return answers
+  }
+
+  getCompletionPercent(questions) {
+    return (
+      (100 * Object.keys(this.getAttemptedAnswers()).length) / questions.length
+    )
   }
 
   getTime() {
@@ -45,25 +66,29 @@ export class QuestionsService {
     }
   }
 
-  skipESMSleepQuestion(questionTitle) {
+  showESMSleepQuestion() {
     // Note: First ESM will show sleep question
-    const time = new Date()
-    if (time.getHours() > 9 && questionTitle === 'ESM') {
-      return 1
-    }
-    return 0
+    return new Date().getHours() <= 9
   }
 
-  showESMRatingQuestion(questionTitle, currentQuestionId) {
+  showESMRatingQuestion() {
     // Note: Last ESM will show rating question
-    const time = new Date()
-    if (questionTitle === 'ESM' && currentQuestionId === 'esm_beep') {
-      if (time.getHours() >= 19) {
-        return 0
-      }
-      return 1
+    // TODO: Fix hardcoded values
+    return new Date().getHours() >= 19
+  }
+
+  isESM(title) {
+    return title === 'ESM'
+  }
+
+  getQuestions(title, questions: any[]) {
+    if (this.isESM(title)) {
+      const length = questions.length
+      const first = this.showESMSleepQuestion() ? 0 : 1
+      const last = this.showESMRatingQuestion() ? length - 1 : length - 2
+      return questions.slice(first, last)
     }
-    return 0
+    return questions
   }
 
   checkAnswer(id) {
@@ -97,11 +122,8 @@ export class QuestionsService {
     return logic.split("['")[1].split("']")[0]
   }
 
-  getNextQuestion(questions, currentQuestion, questionTitle) {
-    const id = questions[currentQuestion].field_name
-    let nextQuestionIncrVal = this.evalSkipNext(questions, currentQuestion)
-    nextQuestionIncrVal += this.showESMRatingQuestion(questionTitle, id)
-    return nextQuestionIncrVal
+  getNextQuestion(questions, currentQuestion) {
+    return this.evalSkipNext(questions, currentQuestion)
   }
 
   recordTimeStamp(questionId, startTime) {
@@ -111,6 +133,14 @@ export class QuestionsService {
         startTime: startTime,
         endTime: this.getTime()
       }
+    })
+  }
+
+  sendCompletionLog(questions, task) {
+    this.kafka.prepareKafkaObjectAndSend(KAFKA_COMPLETION_LOG, {
+      task: task,
+      percentage: this.getCompletionPercent(questions),
+      time: new Date().getTime()
     })
   }
 }

@@ -60,7 +60,6 @@ export class HomePageComponent {
 
   ionViewDidLoad() {
     this.init()
-    this.home.sendCompetionLogs()
   }
 
   init() {
@@ -105,9 +104,9 @@ export class HomePageComponent {
   startQuestionnaire(taskCalendarTask: Task) {
     // NOTE: User can start questionnaire from task calendar or start button in home.
     const task = taskCalendarTask ? taskCalendarTask : this.nextTask
-    this.startingQuestionnaire = true
 
     if (this.tasksService.isTaskValid(task)) {
+      this.startingQuestionnaire = true
       this.home.sendStartEvent()
       return this.tasksService
         .getQuestionnairePayload(task)

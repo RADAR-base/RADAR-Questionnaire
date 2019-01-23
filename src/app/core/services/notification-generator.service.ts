@@ -2,20 +2,22 @@ import 'rxjs/add/operator/map'
 
 import { Injectable } from '@angular/core'
 
-import { Task } from '../../shared/models/task'
-import { LocalizationService } from './localization.service'
-import { NotificationType, SingleNotification } from '../../shared/models/notification-handler'
-import { Assessment } from '../../shared/models/assessment'
-import { ProtocolNotification } from '../../shared/models/protocol'
-import { SchedulingService } from './scheduling.service'
+import { DefaultTaskTest } from '../../../assets/data/defaultConfig'
 import { LocKeys } from '../../shared/enums/localisations'
+import { Assessment } from '../../shared/models/assessment'
+import {
+  NotificationType,
+  SingleNotification
+} from '../../shared/models/notification-handler'
+import { ProtocolNotification } from '../../shared/models/protocol'
+import { Task } from '../../shared/models/task'
+import { getMilliseconds } from '../../shared/utilities/time'
+import { LocalizationService } from './localization.service'
+import { SchedulingService } from './scheduling.service'
 
 @Injectable()
 export class NotificationGeneratorService {
-  constructor(
-    private localization: LocalizationService,
-  ) {
-  }
+  constructor(private localization: LocalizationService) {}
 
   futureNotifications(tasks: Task[], limit: number): SingleNotification[] {
     const now = new Date().getTime()
@@ -36,38 +38,50 @@ export class NotificationGeneratorService {
     console.log(rendered)
   }
 
-  createNotifications(assessment: Assessment, task: Task): SingleNotification[] {
+  createNotifications(
+    assessment: Assessment,
+    task: Task
+  ): SingleNotification[] {
     let notifications: SingleNotification[] = []
-    notifications.push(this.createNotification(
-      task,
-      task.timestamp,
-      NotificationType.NOW,
-      assessment.protocol.notification,
-    ))
+    notifications.push(
+      this.createNotification(
+        task,
+        task.timestamp,
+        NotificationType.NOW,
+        assessment.protocol.notification
+      )
+    )
     const reminders = assessment.protocol.reminders
 
     if (reminders) {
       if (reminders instanceof Array) {
         notifications = notifications.concat(
-          reminders.map(r => this.createNotification(
-            task,
-            SchedulingService.advanceRepeat(task.timestamp, r.offset),
-            NotificationType.REMINDER,
-            r.notification,
+          reminders.map(r =>
+            this.createNotification(
+              task,
+              SchedulingService.advanceRepeat(task.timestamp, r.offset),
+              NotificationType.REMINDER,
+              r.notification
             )
           )
         )
       } else {
-        const repetitions = reminders.repeat === undefined ? 1 : reminders.repeat
+        const repetitions =
+          reminders.repeat === undefined ? 1 : reminders.repeat
         let currentTimestamp = task.timestamp
         for (let i = 0; i < repetitions; i++) {
-          currentTimestamp = SchedulingService.advanceRepeat(currentTimestamp, reminders)
-          notifications.push(this.createNotification(
-            task,
+          currentTimestamp = SchedulingService.advanceRepeat(
             currentTimestamp,
-            NotificationType.REMINDER,
-            null,
-          ))
+            reminders
+          )
+          notifications.push(
+            this.createNotification(
+              task,
+              currentTimestamp,
+              NotificationType.REMINDER,
+              null
+            )
+          )
         }
       }
     }
@@ -75,21 +89,41 @@ export class NotificationGeneratorService {
     return notifications.filter(n => n)
   }
 
+  createTestNotification() {
+    return this.createNotification(
+      DefaultTaskTest,
+      new Date().getTime() + getMilliseconds({ minutes: 2 }),
+      NotificationType.TEST
+    )
+  }
+
   private createNotification(
-      task: Task,
-      timestamp: number,
-      type: NotificationType,
-      protocolNotification?: ProtocolNotification,
+    task: Task,
+    timestamp: number,
+    type: NotificationType,
+    protocolNotification?: ProtocolNotification
   ): SingleNotification | null {
-    const current: SingleNotification = {task, timestamp, type}
+    const current: SingleNotification = {
+      task: {
+        name: task.name,
+        timestamp: task.timestamp,
+        completionWindow: task.completionWindow
+      },
+      timestamp,
+      type
+    }
 
     // Set default content
     switch (type) {
       case NotificationType.REMINDER:
         current.sound = false
         current.vibrate = true
-        current.title = this.localization.translateKey(LocKeys.NOTIFICATION_REMINDER_FORGOTTEN)
-        current.text = this.localization.translateKey(LocKeys.NOTIFICATION_REMINDER_FORGOTTEN_DESC)
+        current.title = this.localization.translateKey(
+          LocKeys.NOTIFICATION_REMINDER_FORGOTTEN
+        )
+        current.text = this.localization.translateKey(
+          LocKeys.NOTIFICATION_REMINDER_FORGOTTEN_DESC
+        )
         break
       case NotificationType.NOW:
         current.sound = true
@@ -102,20 +136,42 @@ export class NotificationGeneratorService {
       case NotificationType.MISSED:
         current.sound = false
         current.vibrate = false
-        current.title = this.localization.translateKey(LocKeys.NOTIFICATION_REMINDER_FORGOTTEN)
-        current.text = this.localization.translateKey(LocKeys.NOTIFICATION_REMINDER_FORGOTTEN_ALERT_DEFAULT_DESC)
+        current.title = this.localization.translateKey(
+          LocKeys.NOTIFICATION_REMINDER_FORGOTTEN
+        )
+        current.text = this.localization.translateKey(
+          LocKeys.NOTIFICATION_REMINDER_FORGOTTEN_ALERT_DEFAULT_DESC
+        )
         break
       case NotificationType.SOON:
         current.sound = false
         current.vibrate = false
-        current.title = this.localization.translateKey(LocKeys.NOTIFICATION_REMINDER_SOON)
-        current.text = this.localization.translateKey(LocKeys.NOTIFICATION_REMINDER_SOON_DESC)
+        current.title = this.localization.translateKey(
+          LocKeys.NOTIFICATION_REMINDER_SOON
+        )
+        current.text = this.localization.translateKey(
+          LocKeys.NOTIFICATION_REMINDER_SOON_DESC
+        )
         break
       case NotificationType.MISSED_SOON:
         current.sound = false
         current.vibrate = false
-        current.title = this.localization.translateKey(LocKeys.NOTIFICATION_REMINDER_SOON)
-        current.text = this.localization.translateKey(LocKeys.NOTIFICATION_REMINDER_SOON_DESC)
+        current.title = this.localization.translateKey(
+          LocKeys.NOTIFICATION_REMINDER_SOON
+        )
+        current.text = this.localization.translateKey(
+          LocKeys.NOTIFICATION_REMINDER_SOON_DESC
+        )
+        break
+      case NotificationType.TEST:
+        current.sound = false
+        current.vibrate = false
+        current.title = this.localization.translateKey(
+          LocKeys.NOTIFICATION_TEST_REMINDER_NOW
+        )
+        current.text = this.localization.translateKey(
+          LocKeys.NOTIFICATION_TEST_REMINDER_NOW_DESC
+        )
         break
       default:
         console.log('Unknown notification type ' + type)

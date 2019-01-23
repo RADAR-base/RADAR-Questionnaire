@@ -9,7 +9,7 @@ import {
   DefaultScheduleVersion,
   DefaultSettingsNotifications,
   DefaultSettingsSupportedLanguages,
-  DefaultSettingsWeeklyReport,
+  DefaultSettingsWeeklyReport
 } from '../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../shared/enums/storage'
 import { Assessment } from '../../shared/models/assessment'
@@ -35,32 +35,47 @@ export class StorageService {
     const allKeys = this.getAllKeys()
     return allKeys
       .then(keys => {
-        // TODO: Find out why this is hard-coded?
-        if (keys.length <= 9) {
-
-          const enrolmentDateTime = new Date(createdDate)
-          const referenceDateTime = new Date(createdDateMidnight)
+        if (keys.length <= 7) {
           const enrolmentDate = this.set(
             StorageKeys.ENROLMENTDATE,
-            enrolmentDateTime.getTime()
+            new Date(createdDate).getTime()
           )
           const referenceDate = this.set(
             StorageKeys.REFERENCEDATE,
-            referenceDateTime.getTime()
+            new Date(createdDateMidnight).getTime()
           )
-
           const pId = this.set(StorageKeys.PARTICIPANTID, participantId)
-          const pLogin = this.set(StorageKeys.PARTICIPANTLOGIN, participantLogin)
+          const pLogin = this.set(
+            StorageKeys.PARTICIPANTLOGIN,
+            participantLogin
+          )
           const pName = this.set(StorageKeys.PROJECTNAME, projectName)
           // const sId = this.set(StorageKeys.SOURCEID, sourceId)
 
           const lang = this.set(StorageKeys.LANGUAGE, language)
-          const notif = this.set(StorageKeys.SETTINGS_NOTIFICATIONS, DefaultSettingsNotifications)
-          const report = this.set(StorageKeys.SETTINGS_WEEKLYREPORT, DefaultSettingsWeeklyReport)
-          const langs = this.set(StorageKeys.SETTINGS_LANGUAGES, DefaultSettingsSupportedLanguages)
-          const version = this.set(StorageKeys.SCHEDULE_VERSION, DefaultScheduleVersion)
+          const notif = this.set(
+            StorageKeys.SETTINGS_NOTIFICATIONS,
+            DefaultSettingsNotifications
+          )
+          const report = this.set(
+            StorageKeys.SETTINGS_WEEKLYREPORT,
+            DefaultSettingsWeeklyReport
+          )
+          const langs = this.set(
+            StorageKeys.SETTINGS_LANGUAGES,
+            DefaultSettingsSupportedLanguages
+          )
+          const version = this.set(
+            StorageKeys.SCHEDULE_VERSION,
+            DefaultScheduleVersion
+          )
+          const utc = this.set(
+            StorageKeys.UTC_OFFSET,
+            new Date().getTimezoneOffset()
+          )
+          const cache = this.set(StorageKeys.CACHE_ANSWERS, {})
 
-          const result = [
+          return Promise.all([
             pId,
             pName,
             pLogin,
@@ -68,9 +83,12 @@ export class StorageService {
             notif,
             report,
             langs,
-            version
-          ];
-          return Promise.all(result)
+            version,
+            utc,
+            cache,
+            enrolmentDate,
+            referenceDate,
+          ]);
         }
       })
       .catch(error => {
@@ -106,11 +124,10 @@ export class StorageService {
     if (local !== undefined) {
       return Promise.resolve(local)
     } else {
-      return this.storage.get(k)
-        .then(value => {
-          this.global[k] = value
-          return value
-        })
+      return this.storage.get(k).then(value => {
+        this.global[k] = value
+        return value
+      })
     }
   }
 
@@ -131,10 +148,9 @@ export class StorageService {
 
   prepareStorage() {
     return this.getAllKeys()
-      .then(keys => Promise.all(
-          keys.map(k => this.storage.get(k)
-            .then(v => this.global[k] = v)
-          )
+      .then(keys =>
+        Promise.all(
+          keys.map(k => this.storage.get(k).then(v => (this.global[k] = v)))
         )
       )
       .then(() => 'Store set')
@@ -157,8 +173,9 @@ export class StorageService {
   }
 
   getClinicalAssessment(task: Task) {
-    return this.get(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS)
-      .then(assessments => assessments.find(a => a.name === task.name))
+    return this.get(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS).then(assessments =>
+      assessments.find(a => a.name === task.name)
+    )
   }
 
   getAssessmentAvsc(task: Task) {

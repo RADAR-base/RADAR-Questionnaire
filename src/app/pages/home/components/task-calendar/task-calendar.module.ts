@@ -11,7 +11,7 @@ const COMPONENTS = [TaskCalendarComponent]
   imports: [
     CommonModule,
     IonicModule.forRoot(TaskCalendarComponent),
-    PipesModule,
+    PipesModule
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS

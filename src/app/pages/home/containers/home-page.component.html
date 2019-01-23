@@ -6,7 +6,6 @@
 </ion-header>
 
 <ion-content #content >
-
   <div *ngIf="selectedPage === 'home'">
     <div
       #taskList
@@ -23,11 +22,13 @@
     <div
       #progressBar
       class="size-dynamic"
+      [@moveProgress]="showCalendar"
     >
       <task-progress
         [progress]="tasksProgress"
         [forceComplete]="showCompleted"
         [noTasksToday]="showNoTasksToday"
+        *ngIf="tasksProgress && !showCalendar"
       >
       </task-progress>
     </div>
@@ -37,7 +38,7 @@
     <div> Learn page </div>
     <div> TO come when design finalized  </div>
 
-    <ion-list >
+    <ion-list>
       <button ion-item *ngFor="let sItem of learnItems">
         <ion-icon item-start [name]="sItem.icon"></ion-icon>
         {{ sItem.name }}

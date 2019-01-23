@@ -1,6 +1,11 @@
 // tslint:disable:no-eval
 import { Component, ElementRef, ViewChild } from '@angular/core'
-import { Content, NavController, NavParams, ViewController } from 'ionic-angular'
+import {
+  Content,
+  NavController,
+  NavParams,
+  ViewController
+} from 'ionic-angular'
 
 import { LocalizationService } from '../../../core/services/localization.service'
 import { LocKeys } from '../../../shared/enums/localisations'
@@ -75,6 +80,8 @@ export class QuestionsPageComponent {
     this.associatedTask = this.navParams.data.associatedTask
     this.endText = this.navParams.data.endText
     this.isLastTask = this.navParams.data.isLastTask
+    this.answerService.reset()
+    this.timestampService.reset()
   }
 
   evalIfFirstQuestionnaireToSkipESMSleepQuestion() {
@@ -191,8 +198,6 @@ export class QuestionsPageComponent {
   navigateToFinishPage() {
     this.answers = this.answerService.answers
     this.timestamps = this.timestampService.timestamps
-    this.answerService.reset()
-    this.timestampService.reset()
 
     this.navCtrl.push(FinishPageComponent, {
       endText: this.endText,

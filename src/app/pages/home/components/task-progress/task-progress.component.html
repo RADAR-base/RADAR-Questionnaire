@@ -1,44 +1,51 @@
-<div
-  id="task-progress-container"
-  (click)="easterEggFireworks()"
->
-
+<div id="task-progress-container">
   <div
-    class="noTasks-padding"
+    [@enterAnimation]
+    class="noTasks-padding container-diary"
     *ngIf="noTasksToday"
   >
+    <img
+      src="assets/imgs/diary.png"
+      class="icon-esm"
+    >
   </div>
 
+  <div *ngIf="!noTasksToday">
   <!--<div id="navigation">{{ "TASK_PROGRESS_TITLE" | translate }}</div>-->
 
-  <div
-    class="pyro"
-    *ngIf="showFireworks"
-  >
-    <div class="before"></div>
-    <div class="after"></div>
-  </div>
-
-  <div id="progress">
     <div
-      #progressActive
-      class="progress-sub"
+      class="pyro"
+      *ngIf="showFireworks"
     >
-      <round-progress
-        id="prog-lg"
-        [current]="current"
-        [max]="max"
-        [responsive]="true"
-        [color]="'#48459f'"
-        [background]="'rgba(206,238,255,0.5)'"
-        [animation]="animation"
-        [stroke]="stroke"
-      ></round-progress>
+      <div class="before"></div>
+      <div class="after"></div>
     </div>
-    <div *ngIf="complete">
+
+    <div
+      *ngIf="progress"
+      id="progress"
+    >
+      <div
+        #progressActive
+        class="progress-sub"
+        *ngIf="!complete"
+      >
+        <round-progress
+          id="prog-lg"
+          [current]="current"
+          [max]="max"
+          [responsive]="true"
+          [color]="'#48459f'"
+          [background]="'rgba(206,238,255,0.5)'"
+          [animation]="animation"
+          [stroke]="stroke"
+        ></round-progress>
+      </div>
       <div
         #progressComplete
         class="progress-sub"
+        *ngIf="complete"
+        [@enterAnimation]
       >
         <div class="completed">
           <ion-icon
@@ -49,11 +56,10 @@
         </div>
       </div>
     </div>
-  </div>
-  <div *ngIf="!noTasksToday">
     <div
       #counter
       class="counter"
+      [@translateY]="complete"
     >
       <div class="large">{{ currentPercentage }}%</div>
       <div class="small">

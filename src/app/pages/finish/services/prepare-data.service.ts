@@ -11,21 +11,20 @@ import { StorageKeys } from '../../../shared/enums/storage'
 export class PrepareDataService {
   constructor(public storage: StorageService) {}
 
-  process_QuestionnaireData(answers, timestamps): Promise<any> {
+  processQuestionnaireData(answers, timestamps): Promise<any> {
     console.log(answers)
     return Promise.all([
-        this.storage.get(StorageKeys.CONFIG_VERSION),
-        this.storage.get(StorageKeys.PARTICIPANTLOGIN),
-      ])
+      this.storage.get(StorageKeys.CONFIG_VERSION),
+      this.storage.get(StorageKeys.PARTICIPANTLOGIN)
+    ])
       .then(([configVersion, participantLogin]) => {
-        const values = Object.entries(answers)
-          .map(([key, value]) => ({
-            questionId: {string: key.toString()},
-            // int: implicit [int, double, string]
-            value: {string: value.toString()},
-            startTime: timestamps[key].startTime,
-            endTime: timestamps[key].endTime
-          }))
+        const values = Object.entries(answers).map(([key, value]) => ({
+          questionId: { string: key.toString() },
+          // int: implicit [int, double, string]
+          value: { string: value.toString() },
+          startTime: timestamps[key].startTime,
+          endTime: timestamps[key].endTime
+        }))
 
         return {
           answers: values,

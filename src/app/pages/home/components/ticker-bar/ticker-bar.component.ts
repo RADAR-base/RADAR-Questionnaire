@@ -6,7 +6,7 @@ import { SchedulingService } from '../../../../core/services/scheduling.service'
 import { LocKeys } from '../../../../shared/enums/localisations'
 import { ReportScheduling } from '../../../../shared/models/report'
 import { Task } from '../../../../shared/models/task'
-import { TickerItem } from '../../../../shared/models/ticker'
+import { getHours, getMinutes } from '../../../../shared/utilities/time'
 
 @Component({
   selector: 'ticker-bar',
@@ -16,126 +16,93 @@ export class TickerBarComponent implements OnChanges {
   @Input()
   task: Task
   @Input()
-  items: TickerItem[] = []
+  isNow
   @Input()
-  showAffirmation: boolean = false
-  tickerItems: TickerItem[]
-  tickerIndex: number = 0
+  showAffirmation = false
+  @Input()
+  noTasksToday = false
+  tickerText: string
   report: ReportScheduling
 
-  hasTask: boolean = true
   constructor(
     private schedule: SchedulingService,
     private navCtrl: NavController,
-    private localization: LocalizationService,
-  ) {
+    private localization: LocalizationService
+  ) {}
+
+  ngOnChanges() {
+    this.updateTickerItem()
   }
 
-  ngOnChanges(changes) {
-    this.updateTickerItems()
-    if (this.tickerItems.length > 2) {
-      setInterval(() => {
-        this.iterateIndex()
-      }, 7500)
-    }
-  }
-
-  showNextTickerItem() {
-    const style = `translateX(-${this.tickerIndex * 100}%)`
-    return style
-  }
-
-  iterateIndex() {
-    this.tickerIndex += 1
-    if (this.tickerIndex === this.tickerItems.length) {
-      this.tickerIndex = 0
-      this.updateTickerItems()
-    }
-  }
-
-  updateTickerItems() {
-    this.tickerItems = []
-    if (this.report) {
-      this.addReportAvailable()
-    }
-    if (this.showAffirmation) {
-      this.addAffirmation()
-    }
-    if (this.task['timestamp'] > 0) {
-      this.addTask()
-    }
-    if (this.tickerItems.length === 0) {
-      this.addTasksNone()
-    }
-    this.tickerItems = this.tickerItems.concat(this.items)
-    this.tickerItems.push(this.tickerItems[0])
+  updateTickerItem() {
+    if (!this.tickerText) return this.addTasksRemaining()
+    if (this.noTasksToday) return this.addTasksNone()
+    if (this.showAffirmation) return this.addAffirmation()
+    if (this.task) return this.addTask()
+    if (this.report) return this.addReportAvailable()
   }
 
   addReportAvailable() {
     if (this.report) {
       if (this.report['viewed'] === false) {
-        const item = this.generateTickerItem(
-          'report',
-          '',
-          'Report available! ',
-          'Click to view.'
-        )
-        this.tickerItems.push(item)
+        this.tickerText = '<b>Report available!</b> Click to view.'
       }
     }
   }
 
   addTask() {
-    const now = new Date()
-    const timeToNext = this.getTimeToNext(now.getTime(), this.task.timestamp)
-    let item = this.generateTickerItem(
-      'task',
-      this.localization.translateKey(LocKeys.TASK_BAR_NEXT_TASK),
-      timeToNext,
-      '.'
-    )
-    if (timeToNext.includes('-')) {
-      item = this.generateTickerItem(
-        'task',
-        this.localization.translateKey(LocKeys.TASK_BAR_NOW_TASK),
-        this.localization.translateKey(LocKeys.STATUS_NOW),
-        '.'
-      )
-    } else if (this.task.name === 'ESM') {
-      item = this.generateTickerItem(
-        'task',
-        this.localization.translateKey(LocKeys.TASK_BAR_NOW_TASK),
-        this.localization.translateKey(LocKeys.TASK_BAR_NEXT_TASK_SOON),
-        '.'
-      )
+    if (this.isNow) {
+      this.tickerText =
+        this.localization.translateKey(LocKeys.TASK_BAR_NOW_TASK) +
+        '<b>' +
+        this.localization.translateKey(LocKeys.STATUS_NOW) +
+        '.</b>'
+    } else {
+      if (this.task.name === 'ESM') {
+        this.tickerText =
+          this.localization.translateKey(LocKeys.TASK_BAR_NOW_TASK) +
+          '<b>' +
+          this.localization.translateKey(LocKeys.TASK_BAR_NEXT_TASK_SOON) +
+          '.</b>'
+      } else {
+        this.tickerText =
+          this.localization.translateKey(LocKeys.TASK_BAR_NEXT_TASK) +
+          '<b>' +
+          this.getTimeToNext(this.task.timestamp) +
+          '.</b>'
+      }
     }
-    this.tickerItems.push(item)
   }
 
   addAffirmation() {
-    const item = this.generateTickerItem(
-      'affirmation',
-      '',
-      this.localization.translateKey(LocKeys.TASK_BAR_AFFIRMATION_1),
+    this.tickerText =
+      '<b>' +
+      this.localization.translateKey(LocKeys.TASK_BAR_AFFIRMATION_1) +
+      '</b> ' +
       this.localization.translateKey(LocKeys.TASK_BAR_AFFIRMATION_2)
-    )
-    this.tickerItems.push(item)
+  }
+
+  addTasksRemaining() {
+    this.tickerText =
+      '<b>' +
+      this.localization.translateKey(LocKeys.TASK_BAR_TASK_LEFT_1) +
+      '</b>' +
+      this.localization.translateKey(LocKeys.TASK_BAR_TASK_LEFT_2)
   }
 
   addTasksNone() {
-    const item = this.generateTickerItem(
-      'tasks-none',
-      '',
-      this.localization.translateKey(LocKeys.TASK_BAR_TASK_LEFT_1),
-      this.localization.translateKey(LocKeys.TASK_BAR_TASK_LEFT_2)
-    )
-    this.tickerItems.push(item)
+    this.tickerText =
+      '<b>' +
+      this.localization.translateKey(LocKeys.TASK_BAR_NO_TASK_1) +
+      ' </b>' +
+      this.localization.translateKey(LocKeys.TASK_BAR_NO_TASK_2)
   }
 
-  getTimeToNext(now, next) {
+  getTimeToNext(next) {
+    const now = new Date().getTime()
     let deltaStr = ''
-    const deltaMin = Math.round((next - now) / 60000)
-    const deltaHour = Math.round(deltaMin / 60)
+    const deltaMin = Math.round(getMinutes({ milliseconds: next - now }))
+    const deltaHour = Math.round(getHours({ minutes: deltaMin }))
     if (deltaMin > 59) {
       deltaStr =
         String(deltaHour) +
@@ -152,15 +119,5 @@ export class TickerBarComponent implements OnChanges {
           : this.localization.translateKey(LocKeys.TASK_TIME_MINUTE_SINGLE))
     }
     return deltaStr
-  }
-
-  generateTickerItem(id, t1, t2, t3): TickerItem {
-    const item = {
-      id: String(id),
-      tickerText1: String(t1),
-      tickerText2: String(t2),
-      tickerText3: String(t3)
-    }
-    return item
   }
 }

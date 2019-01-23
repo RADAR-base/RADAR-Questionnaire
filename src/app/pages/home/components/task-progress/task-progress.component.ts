@@ -39,6 +39,7 @@ export class TaskProgressComponent implements OnChanges {
   ngOnChanges() {
     this.current = this.progress.completedTasks
     this.max = this.progress.numberOfTasks
+    this.currentPercentage = this.progress.completedPercentage
     this.updateProgress()
   }
 

@@ -41,12 +41,13 @@ export class HomePageComponent {
   showCalendar = false
   showCompleted = false
   showNoTasksToday = false
-  tasksProgress: TasksProgress = { numberOfTasks: 1, completedTasks: 0 }
+  tasksProgress: TasksProgress = { numberOfTasks: 1, completedTasks: 0, completedPercentage: 0}
   startingQuestionnaire = false
   hasClinicalTasks = false
   taskIsNow = false
   checkTaskInterval
   learnItems: any
+  selectedPage: Page
 
   constructor(
     public navCtrl: NavController,

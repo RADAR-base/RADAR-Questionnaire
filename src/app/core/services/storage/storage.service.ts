@@ -1,6 +1,3 @@
-import 'rxjs/add/operator/map'
-import 'rxjs/add/operator/catch'
-
 import { Injectable } from '@angular/core'
 import { Storage } from '@ionic/storage'
 import { throwError as observableThrowError } from 'rxjs'
@@ -10,10 +7,10 @@ import {
   DefaultSettingsNotifications,
   DefaultSettingsSupportedLanguages,
   DefaultSettingsWeeklyReport
-} from '../../../assets/data/defaultConfig'
-import { StorageKeys } from '../../shared/enums/storage'
-import { Assessment } from '../../shared/models/assessment'
-import { Task } from '../../shared/models/task'
+} from '../../../../assets/data/defaultConfig'
+import { StorageKeys } from '../../../shared/enums/storage'
+import { Assessment } from '../../../shared/models/assessment'
+import { Task } from '../../../shared/models/task'
 
 @Injectable()
 export class StorageService {
@@ -22,6 +19,7 @@ export class StorageService {
   constructor(private storage: Storage) {
     const setStoragePromise = this.prepareStorage()
     Promise.resolve(setStoragePromise)
+    console.log(this.global)
   }
 
   init(

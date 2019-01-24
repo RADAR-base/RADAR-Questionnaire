@@ -5,14 +5,14 @@ import { Injectable } from '@angular/core'
 import {
   DefaultNumberOfNotificationsToSchedule,
   FCMPluginProjectSenderId
-} from '../../../assets/data/defaultConfig'
-import { StorageKeys } from '../../shared/enums/storage'
-import { SingleNotification } from '../../shared/models/notification-handler'
-import { getSeconds } from '../../shared/utilities/time'
+} from '../../../../assets/data/defaultConfig'
+import { StorageKeys } from '../../../shared/enums/storage'
+import { SingleNotification } from '../../../shared/models/notification-handler'
+import { getSeconds } from '../../../shared/utilities/time'
+import { ScheduleService } from '../schedule/schedule.service'
+import { StorageService } from '../storage/storage.service'
 import { NotificationGeneratorService } from './notification-generator.service'
 import { NotificationService } from './notification.service'
-import { SchedulingService } from './scheduling.service'
-import { StorageService } from './storage.service'
 
 declare var FCMPlugin
 
@@ -21,7 +21,7 @@ export class FcmNotificationService extends NotificationService {
   constructor(
     private notifications: NotificationGeneratorService,
     private storage: StorageService,
-    private schedule: SchedulingService
+    private schedule: ScheduleService
   ) {
     super()
   }

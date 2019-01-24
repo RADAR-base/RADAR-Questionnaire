@@ -2,18 +2,18 @@ import { Injectable } from '@angular/core'
 import { AppVersion } from '@ionic-native/app-version'
 
 import { LanguageMap } from '../../../../assets/data/defaultConfig'
-import { ConfigService } from '../../../core/services/config.service'
-import { LocalizationService } from '../../../core/services/localization.service'
-import { NotificationGeneratorService } from '../../../core/services/notification-generator.service'
-import { NotificationService } from '../../../core/services/notification.service'
-import { SchedulingService } from '../../../core/services/scheduling.service'
-import { StorageService } from '../../../core/services/storage.service'
+import { ConfigService } from '../../../core/services/config/config.service'
+import { LocalizationService } from '../../../core/services/misc/localization.service'
+import { NotificationGeneratorService } from '../../../core/services/notifications/notification-generator.service'
+import { NotificationService } from '../../../core/services/notifications/notification.service'
+import { ScheduleService } from '../../../core/services/schedule/schedule.service'
+import { StorageService } from '../../../core/services/storage/storage.service'
 import { StorageKeys } from '../../../shared/enums/storage'
 
 @Injectable()
 export class SettingsService {
   constructor(
-    private schedule: SchedulingService,
+    private schedule: ScheduleService,
     private storage: StorageService,
     private appVersion: AppVersion,
     private notificationGenerator: NotificationGeneratorService,

@@ -15,9 +15,9 @@ import {
   DefaultSourceTypeRegistrationBody,
   DefaultSubjectsURI
 } from '../../../../assets/data/defaultConfig'
-import { ConfigService } from '../../../core/services/config.service'
-import { StorageService } from '../../../core/services/storage.service'
-import { TokenService } from '../../../core/services/token.service'
+import { ConfigService } from '../../../core/services/config/config.service'
+import { StorageService } from '../../../core/services/storage/storage.service'
+import { TokenService } from '../../../core/services/token/token.service'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { setDateTimeToMidnight } from '../../../shared/utilities/time'
 

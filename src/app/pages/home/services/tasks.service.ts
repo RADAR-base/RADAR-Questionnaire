@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core'
 
-import { LocalizationService } from '../../../core/services/localization.service'
-import { SchedulingService } from '../../../core/services/scheduling.service'
-import { StorageService } from '../../../core/services/storage.service'
+import { LocalizationService } from '../../../core/services/misc/localization.service'
+import { ScheduleService } from '../../../core/services/schedule/schedule.service'
+import { StorageService } from '../../../core/services/storage/storage.service'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { Task, TasksProgress } from '../../../shared/models/task'
 import { getMilliseconds } from '../../../shared/utilities/time'
@@ -11,7 +11,7 @@ import { getMilliseconds } from '../../../shared/utilities/time'
 export class TasksService {
   constructor(
     public storage: StorageService,
-    private schedule: SchedulingService,
+    private schedule: ScheduleService,
     private localization: LocalizationService
   ) {}
 

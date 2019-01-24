@@ -1,7 +1,7 @@
 import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Component, Input, OnChanges } from '@angular/core'
 
-import { LocalizationService } from '../../../../core/services/localization.service'
+import { LocalizationService } from '../../../../core/services/misc/localization.service'
 import { Task, TasksProgress } from '../../../../shared/models/task'
 
 @Component({

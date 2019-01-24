@@ -28,10 +28,9 @@ export class SplashPageComponent {
   }
 
   onStart() {
-    this.status = 'Updating notifications...'
+    this.status = 'Updating notifications and schedule...'
     return this.splash
-      .checkTimezoneChange()
-      .then(() => this.splash.notificationsRefresh())
+      .loadConfig()
       .catch(e => console.log('[SPLASH] Notifications error.'))
       .then(() => {
         this.status = 'Sending usage event...'

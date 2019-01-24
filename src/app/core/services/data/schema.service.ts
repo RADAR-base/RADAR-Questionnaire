@@ -7,16 +7,19 @@ import {
   KAFKA_COMPLETION_LOG,
   KAFKA_TIMEZONE,
   KAFKA_USAGE
-} from '../../../assets/data/defaultConfig'
-import { AnswerKeyExport, AnswerValueExport } from '../../shared/models/answer'
-import { CompletionLogValueExport } from '../../shared/models/completion-log'
-import { SchemaMetadata } from '../../shared/models/kafka'
-import { Task } from '../../shared/models/task'
-import { ApplicationTimeZoneValueExport } from '../../shared/models/timezone'
-import { UsageEventValueExport } from '../../shared/models/usage-event'
-import { getSeconds } from '../../shared/utilities/time'
-import { Utility } from '../../shared/utilities/util'
-import { StorageService } from './storage.service'
+} from '../../../../assets/data/defaultConfig'
+import {
+  AnswerKeyExport,
+  AnswerValueExport
+} from '../../../shared/models/answer'
+import { CompletionLogValueExport } from '../../../shared/models/completion-log'
+import { SchemaMetadata } from '../../../shared/models/kafka'
+import { Task } from '../../../shared/models/task'
+import { ApplicationTimeZoneValueExport } from '../../../shared/models/timezone'
+import { UsageEventValueExport } from '../../../shared/models/usage-event'
+import { getSeconds } from '../../../shared/utilities/time'
+import { Utility } from '../../../shared/utilities/util'
+import { StorageService } from '../storage/storage.service'
 
 @Injectable()
 export class SchemaService {

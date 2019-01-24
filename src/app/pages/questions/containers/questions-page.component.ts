@@ -3,7 +3,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Component, ElementRef, ViewChild } from '@angular/core'
 import { Content, NavController, NavParams, Platform } from 'ionic-angular'
 
-import { LocalizationService } from '../../../core/services/localization.service'
+import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { Question, QuestionType } from '../../../shared/models/question'
 import { FinishPageComponent } from '../../finish/containers/finish-page.component'

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core'
 
 import { KAFKA_COMPLETION_LOG } from '../../../../assets/data/defaultConfig'
-import { KafkaService } from '../../../core/services/kafka.service'
-import { StorageService } from '../../../core/services/storage.service'
+import { KafkaService } from '../../../core/services/data/kafka.service'
+import { StorageService } from '../../../core/services/storage/storage.service'
 import { getSeconds } from '../../../shared/utilities/time'
 import { AnswerService } from './answer.service'
 import { TimestampService } from './timestamp.service'

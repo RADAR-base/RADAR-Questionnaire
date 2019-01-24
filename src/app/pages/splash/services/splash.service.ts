@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core'
 
-import {
-  DefaultNotificationRefreshTime,
-  DefaultNumberOfNotificationsToSchedule
-} from '../../../../assets/data/defaultConfig'
-import { ConfigService } from '../../../core/services/config.service'
-import { NotificationService } from '../../../core/services/notification.service'
-import { StorageService } from '../../../core/services/storage.service'
-import { UsageService } from '../../../core/services/usage.service'
+import { ConfigService } from '../../../core/services/config/config.service'
+import { UsageService } from '../../../core/services/data/usage.service'
+import { AlertService } from '../../../core/services/misc/alert.service'
+import { LocalizationService } from '../../../core/services/misc/localization.service'
+import { StorageService } from '../../../core/services/storage/storage.service'
+import { LocKeys } from '../../../shared/enums/localisations'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { getSeconds } from '../../../shared/utilities/time'
 
@@ -15,9 +13,10 @@ import { getSeconds } from '../../../shared/utilities/time'
 export class SplashService {
   constructor(
     public storage: StorageService,
-    private notificationService: NotificationService,
+    private alertService: AlertService,
     private configService: ConfigService,
-    private usage: UsageService
+    private usage: UsageService,
+    private localization: LocalizationService
   ) {}
 
   evalEnrolment() {
@@ -30,45 +29,21 @@ export class SplashService {
     )
   }
 
-  checkTimezoneChange() {
-    return this.storage.get(StorageKeys.UTC_OFFSET).then(prevUtcOffset => {
-      const utcOffset = new Date().getTimezoneOffset()
-      // NOTE: Cancels all notifications and reschedule tasks if timezone has changed
-      if (prevUtcOffset !== utcOffset) {
-        console.log(
-          '[SPLASH] Timezone has changed to ' +
-            utcOffset +
-            '. Cancelling notifications! Rescheduling tasks! Scheduling new notifications!'
-        )
-        return this.storage
-          .set(StorageKeys.UTC_OFFSET, utcOffset)
-          .then(() =>
-            this.storage.set(StorageKeys.UTC_OFFSET_PREV, prevUtcOffset)
-          )
-          .then(() => this.configService.updateConfigStateOnTimezoneChange())
-      } else {
-        console.log('[SPLASH] Current Timezone is ' + utcOffset)
-      }
-    })
-  }
-
-  notificationsRefresh() {
-    // NOTE: Only run this if not run in last DefaultNotificationRefreshTime
-    return this.storage
-      .get(StorageKeys.LAST_NOTIFICATION_UPDATE)
-      .then(lastUpdate => {
-        const timeElapsed = Date.now() - lastUpdate
-        if (timeElapsed > DefaultNotificationRefreshTime || !lastUpdate) {
-          console.log('[SPLASH] Scheduling Notifications.')
-          return this.notificationService.publish()
-        } else {
-          console.log(
-            'Not Scheduling Notifications as ' +
-              timeElapsed +
-              'ms from last refresh is not greater than the default Refresh interval of ' +
-              DefaultNotificationRefreshTime
-          )
-        }
+  loadConfig() {
+    return this.configService
+      .fetchConfigState()
+      .catch(e => {
+        console.log(e)
+        return this.alertService.showAlert({
+          title: this.localization.translateKey(LocKeys.STATUS_FAILURE),
+          message: e.message,
+          buttons: [
+            {
+              text: this.localization.translateKey(LocKeys.BTN_OKAY)
+            }
+          ]
+        })
       })
+      .then(() => this.configService.migrateToLatestVersion())
   }
 }

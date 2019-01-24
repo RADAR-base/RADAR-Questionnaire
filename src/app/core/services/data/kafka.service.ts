@@ -4,11 +4,11 @@ import * as KafkaRest from 'kafka-rest'
 import {
   DefaultEndPoint,
   KAFKA_CLIENT_KAFKA
-} from '../../../assets/data/defaultConfig'
-import { StorageKeys } from '../../shared/enums/storage'
+} from '../../../../assets/data/defaultConfig'
+import { StorageKeys } from '../../../shared/enums/storage'
+import { StorageService } from '../storage/storage.service'
+import { TokenService } from '../token/token.service'
 import { SchemaService } from './schema.service'
-import { StorageService } from './storage.service'
-import { TokenService } from './token.service'
 
 @Injectable()
 export class KafkaService {

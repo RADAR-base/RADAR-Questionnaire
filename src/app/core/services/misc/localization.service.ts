@@ -6,12 +6,12 @@ import 'moment/locale/nl'
 
 import { Injectable } from '@angular/core'
 
-import { Localisations } from '../../../assets/data/localisations'
-import { LocKeys } from '../../shared/enums/localisations'
-import { StorageKeys } from '../../shared/enums/storage'
-import { LanguageSetting } from '../../shared/models/settings'
-import { MultiLanguageText } from '../../shared/models/text'
-import { StorageService } from './storage.service'
+import { Localisations } from '../../../../assets/data/localisations'
+import { LocKeys } from '../../../shared/enums/localisations'
+import { StorageKeys } from '../../../shared/enums/storage'
+import { LanguageSetting } from '../../../shared/models/settings'
+import { MultiLanguageText } from '../../../shared/models/text'
+import { StorageService } from '../storage/storage.service'
 
 import moment = require('moment')
 

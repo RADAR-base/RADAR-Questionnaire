@@ -6,7 +6,7 @@ import {
   Output
 } from '@angular/core'
 
-import { LocalizationService } from '../../../../core/services/localization.service'
+import { LocalizationService } from '../../../../core/services/misc/localization.service'
 import { Task } from '../../../../shared/models/task'
 
 @Component({

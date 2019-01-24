@@ -11,8 +11,8 @@ import {
   LanguageMap
 } from '../../../../assets/data/defaultConfig'
 import { AppComponent } from '../../../core/containers/app.component'
-import { AlertService } from '../../../core/services/alert.service'
-import { LocalizationService } from '../../../core/services/localization.service'
+import { AlertService } from '../../../core/services/misc/alert.service'
+import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { LocKeys } from '../../../shared/enums/localisations'
 import {
   LanguageSetting,

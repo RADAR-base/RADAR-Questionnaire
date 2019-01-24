@@ -2,20 +2,19 @@ import { Injectable } from '@angular/core'
 
 import {
   KAFKA_ASSESSMENT,
-  KAFKA_COMPLETION_LOG,
   KAFKA_TIMEZONE
 } from '../../../../assets/data/defaultConfig'
-import { KafkaService } from '../../../core/services/kafka.service'
-import { NotificationService } from '../../../core/services/notification.service'
-import { SchedulingService } from '../../../core/services/scheduling.service'
-import { UsageService } from '../../../core/services/usage.service'
+import { KafkaService } from '../../../core/services/data/kafka.service'
+import { UsageService } from '../../../core/services/data/usage.service'
+import { NotificationService } from '../../../core/services/notifications/notification.service'
+import { ScheduleService } from '../../../core/services/schedule/schedule.service'
 import { getSeconds } from '../../../shared/utilities/time'
 import { PrepareDataService } from './prepare-data.service'
 
 @Injectable()
 export class FinishTaskService {
   constructor(
-    private schedule: SchedulingService,
+    private schedule: ScheduleService,
     private usage: UsageService,
     private prepare: PrepareDataService,
     private kafka: KafkaService,

@@ -10,10 +10,10 @@ import {
   DefaultRefreshTokenURI,
   DefaultRequestEncodedContentType,
   DefaultSourceProducerAndSecret
-} from '../../../assets/data/defaultConfig'
-import { StorageKeys } from '../../shared/enums/storage'
-import { getSeconds } from '../../shared/utilities/time'
-import { StorageService } from './storage.service'
+} from '../../../../assets/data/defaultConfig'
+import { StorageKeys } from '../../../shared/enums/storage'
+import { getSeconds } from '../../../shared/utilities/time'
+import { StorageService } from '../storage/storage.service'
 
 @Injectable()
 export class TokenService {

@@ -4,8 +4,8 @@ import { WebIntent } from '@ionic-native/web-intent'
 import {
   DefaultPackageName,
   KAFKA_USAGE
-} from '../../../assets/data/defaultConfig'
-import { UsageEventType } from '../../shared/models/usage-event'
+} from '../../../../assets/data/defaultConfig'
+import { UsageEventType } from '../../../shared/models/usage-event'
 import { KafkaService } from './kafka.service'
 
 @Injectable()

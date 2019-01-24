@@ -4,7 +4,7 @@
 
 import { Injectable } from '@angular/core'
 
-import { StorageService } from '../../../core/services/storage.service'
+import { StorageService } from '../../../core/services/storage/storage.service'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { QuestionType } from '../../../shared/models/question'
 

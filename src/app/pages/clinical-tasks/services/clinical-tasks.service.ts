@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 
-import { LocalizationService } from '../../../core/services/localization.service'
-import { StorageService } from '../../../core/services/storage.service'
+import { LocalizationService } from '../../../core/services/misc/localization.service'
+import { StorageService } from '../../../core/services/storage/storage.service'
 import { StorageKeys } from '../../../shared/enums/storage'
 
 @Injectable()

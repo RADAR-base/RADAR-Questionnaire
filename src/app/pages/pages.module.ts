@@ -1,18 +1,21 @@
 import { CommonModule, DatePipe } from '@angular/common'
 import { NgModule } from '@angular/core'
 
-import { AlertService } from '../core/services/alert.service'
-import { ConfigService } from '../core/services/config.service'
-import { FcmNotificationService } from '../core/services/fcm-notification.service'
-import { KafkaService } from '../core/services/kafka.service'
-import { LocalizationService } from '../core/services/localization.service'
-import { NotificationGeneratorService } from '../core/services/notification-generator.service'
-import { NotificationService } from '../core/services/notification.service'
-import { SchedulingService } from '../core/services/scheduling.service'
-import { SchemaService } from '../core/services/schema.service'
-import { StorageService } from '../core/services/storage.service'
-import { TokenService } from '../core/services/token.service'
-import { UsageService } from '../core/services/usage.service'
+import { ConfigService } from '../core/services/config/config.service'
+import { ProtocolService } from '../core/services/config/protocol.service'
+import { QuestionnaireService } from '../core/services/config/questionnaire.service'
+import { KafkaService } from '../core/services/data/kafka.service'
+import { SchemaService } from '../core/services/data/schema.service'
+import { UsageService } from '../core/services/data/usage.service'
+import { AlertService } from '../core/services/misc/alert.service'
+import { LocalizationService } from '../core/services/misc/localization.service'
+import { FcmNotificationService } from '../core/services/notifications/fcm-notification.service'
+import { NotificationGeneratorService } from '../core/services/notifications/notification-generator.service'
+import { NotificationService } from '../core/services/notifications/notification.service'
+import { ScheduleGeneratorService } from '../core/services/schedule/schedule-generator.service'
+import { ScheduleService } from '../core/services/schedule/schedule.service'
+import { StorageService } from '../core/services/storage/storage.service'
+import { TokenService } from '../core/services/token/token.service'
 import { PipesModule } from '../shared/pipes/pipes.module'
 import { TranslatePipe } from '../shared/pipes/translate/translate'
 import { AuthModule } from './auth/auth.module'
@@ -41,10 +44,13 @@ import { SplashModule } from './splash/splash.module'
     AlertService,
     DatePipe,
     ConfigService,
+    ProtocolService,
+    QuestionnaireService,
     TokenService,
     KafkaService,
     LocalizationService,
-    SchedulingService,
+    ScheduleService,
+    ScheduleGeneratorService,
     StorageService,
     TranslatePipe,
     UsageService,

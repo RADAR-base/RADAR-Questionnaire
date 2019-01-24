@@ -2,6 +2,7 @@ import 'rxjs/add/operator/toPromise'
 
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
+import { AppVersion } from '@ionic-native/app-version'
 
 import {
   ARMTDefBranchProd,
@@ -24,76 +25,83 @@ export class ConfigService {
     public http: HttpClient,
     public storage: StorageService,
     private schedule: SchedulingService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private appVersion: AppVersion
   ) {}
 
   fetchConfigState(force: boolean) {
     return Promise.all([
       this.storage.get(StorageKeys.CONFIG_VERSION),
-      this.storage.get(StorageKeys.SCHEDULE_VERSION)
-    ]).then(([configVersion, scheduleVersion]) => {
-      return this.pullProtocol()
-        .then(res => {
-          if (res) {
-            const response: any = JSON.parse(res)
-            if (
-              configVersion !== response.version ||
-              scheduleVersion !== response.version ||
-              force
-            ) {
-              this.storage.set(StorageKeys.HAS_CLINICAL_TASKS, false)
-              const protocolFormated = this.formatPulledProcotol(
-                response.protocols
-              )
-              const scheduledAssessments = []
-              const clinicalAssessments = []
-              for (let i = 0; i < protocolFormated.length; i++) {
-                const clinical =
-                  protocolFormated[i]['protocol']['clinicalProtocol']
-                if (clinical) {
-                  this.storage.set(StorageKeys.HAS_CLINICAL_TASKS, true)
-                  clinicalAssessments.push(protocolFormated[i])
-                } else {
-                  scheduledAssessments.push(protocolFormated[i])
+      this.storage.get(StorageKeys.SCHEDULE_VERSION),
+      this.storage.get(StorageKeys.APP_VERSION),
+      this.appVersion.getVersionNumber()
+    ]).then(
+      ([configVersion, scheduleVersion, storedAppVersion, appVersion]) => {
+        return this.pullProtocol()
+          .then(res => {
+            if (res) {
+              const response: any = JSON.parse(res)
+              if (
+                configVersion !== response.version ||
+                scheduleVersion !== response.version ||
+                storedAppVersion !== appVersion ||
+                force
+              ) {
+                this.storage.set(StorageKeys.APP_VERSION, appVersion)
+                this.storage.set(StorageKeys.HAS_CLINICAL_TASKS, false)
+                const protocolFormated = this.formatPulledProcotol(
+                  response.protocols
+                )
+                const scheduledAssessments = []
+                const clinicalAssessments = []
+                for (let i = 0; i < protocolFormated.length; i++) {
+                  const clinical =
+                    protocolFormated[i]['protocol']['clinicalProtocol']
+                  if (clinical) {
+                    this.storage.set(StorageKeys.HAS_CLINICAL_TASKS, true)
+                    clinicalAssessments.push(protocolFormated[i])
+                  } else {
+                    scheduledAssessments.push(protocolFormated[i])
+                  }
                 }
+                return this.storage
+                  .set(StorageKeys.CONFIG_VERSION, response.version)
+                  .then(() => {
+                    return this.storage
+                      .set(
+                        StorageKeys.CONFIG_CLINICAL_ASSESSMENTS,
+                        clinicalAssessments
+                      )
+                      .then(() => {
+                        console.log('Pulled clinical questionnaire')
+                        return this.pullQuestionnaires(
+                          StorageKeys.CONFIG_CLINICAL_ASSESSMENTS
+                        )
+                      })
+                  })
+                  .then(() => {
+                    return this.storage
+                      .set(StorageKeys.CONFIG_ASSESSMENTS, scheduledAssessments)
+                      .then(() => {
+                        console.log('Pulled questionnaire')
+                        return this.pullQuestionnaires(
+                          StorageKeys.CONFIG_ASSESSMENTS
+                        )
+                      })
+                  })
+                  .then(() => this.schedule.generateSchedule(true))
+                  .then(() => this.rescheduleNotifications())
+              } else {
+                console.log(
+                  'NO CONFIG UPDATE. Version of protocol.json has not changed.'
+                )
+                return this.schedule.generateSchedule(false)
               }
-              return this.storage
-                .set(StorageKeys.CONFIG_VERSION, response.version)
-                .then(() => {
-                  return this.storage
-                    .set(
-                      StorageKeys.CONFIG_CLINICAL_ASSESSMENTS,
-                      clinicalAssessments
-                    )
-                    .then(() => {
-                      console.log('Pulled clinical questionnaire')
-                      return this.pullQuestionnaires(
-                        StorageKeys.CONFIG_CLINICAL_ASSESSMENTS
-                      )
-                    })
-                })
-                .then(() => {
-                  return this.storage
-                    .set(StorageKeys.CONFIG_ASSESSMENTS, scheduledAssessments)
-                    .then(() => {
-                      console.log('Pulled questionnaire')
-                      return this.pullQuestionnaires(
-                        StorageKeys.CONFIG_ASSESSMENTS
-                      )
-                    })
-                })
-                .then(() => this.schedule.generateSchedule(true))
-                .then(() => this.rescheduleNotifications())
-            } else {
-              console.log(
-                'NO CONFIG UPDATE. Version of protocol.json has not changed.'
-              )
-              return this.schedule.generateSchedule(false)
             }
-          }
-        })
-        .catch(e => console.log(e))
-    })
+          })
+          .catch(e => console.log(e))
+      }
+    )
   }
 
   rescheduleNotifications() {

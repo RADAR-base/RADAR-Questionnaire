@@ -2,6 +2,7 @@ import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/catch'
 
 import { Injectable } from '@angular/core'
+import { AppVersion } from '@ionic-native/app-version'
 import { Storage } from '@ionic/storage'
 import { throwError as observableThrowError } from 'rxjs'
 
@@ -19,7 +20,7 @@ import { Task } from '../../shared/models/task'
 export class StorageService {
   global: any = {}
 
-  constructor(private storage: Storage) {
+  constructor(private storage: Storage, private appVersion: AppVersion) {
     const setStoragePromise = this.prepareStorage()
     Promise.resolve(setStoragePromise)
   }
@@ -33,9 +34,8 @@ export class StorageService {
     createdDate,
     createdDateMidnight
   ) {
-    const allKeys = this.getAllKeys()
-    return allKeys
-      .then(keys => {
+    return Promise.all([this.getAllKeys(), this.getAppVersion()])
+      .then(([keys, appV]) => {
         // TODO: Find out why this is hard-coded?
         if (keys.length <= 7) {
           const enrolmentDateTime = new Date(createdDate)
@@ -79,6 +79,7 @@ export class StorageService {
             new Date().getTimezoneOffset()
           )
           const cache = this.set(StorageKeys.CACHE_ANSWERS, {})
+          const appVersion = this.set(StorageKeys.APP_VERSION, appV)
 
           return Promise.all([
             pId,
@@ -93,7 +94,8 @@ export class StorageService {
             utc,
             cache,
             enrolmentDate,
-            referenceDate
+            referenceDate,
+            appVersion
           ])
         }
       })
@@ -146,6 +148,10 @@ export class StorageService {
 
   getAllKeys() {
     return this.storage.keys()
+  }
+
+  getAppVersion() {
+    return this.appVersion.getVersionNumber()
   }
 
   prepareStorage() {

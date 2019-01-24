@@ -125,9 +125,10 @@ export class KafkaService {
         projectId: projectId
       }
       const kafkaObject = { value: value, key: answerKey }
-      return this.getSpecs(task, kafkaObject, type).then(specs =>
-        this.createPayloadAndSend(specs)
-      )
+      return this.getSpecs(task, kafkaObject, type).then(specs => {
+        this.cacheAnswers(specs)
+        return this.createPayloadAndSend(specs)
+      })
     })
   }
 
@@ -199,6 +200,7 @@ export class KafkaService {
           })
       },
       error => {
+        this.cacheAnswers(specs)
         console.error(
           'Could not initiate kafka connection ' + JSON.stringify(error)
         )

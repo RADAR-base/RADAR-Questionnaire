@@ -71,7 +71,7 @@ export class SettingsPageComponent {
   }
 
   loadSettings() {
-    const appVersionPromise = this.appVersion.getVersionNumber()
+    const appVersionPromise = this.storage.get(StorageKeys.APP_VERSION)
     const configVersion = this.storage.get(StorageKeys.CONFIG_VERSION)
     const scheduleVersion = this.storage.get(StorageKeys.SCHEDULE_VERSION)
     const participantId = this.storage.get(StorageKeys.PARTICIPANTID)

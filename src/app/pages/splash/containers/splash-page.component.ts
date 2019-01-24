@@ -42,7 +42,10 @@ export class SplashPageComponent {
 
   onStart() {
     this.status = 'Updating notifications...'
-    return this.checkTimezoneChange()
+    this.configService.migrateToLatestVersion()
+    return this.configService
+      .fetchConfigState(false)
+      .then(() => this.checkTimezoneChange())
       .then(() => this.notificationsRefresh())
       .catch(error => {
         console.error(error)

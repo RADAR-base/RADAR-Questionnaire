@@ -24,7 +24,6 @@ export class PrepareDataService {
       .then(([configVersion, participantLogin]) => {
         const values = Object.entries(answers).map(([key, value]) => ({
           questionId: { string: key.toString() },
-          // int: implicit [int, double, string]
           value: { string: value.toString() },
           startTime: timestamps[key].startTime,
           endTime: timestamps[key].endTime
@@ -42,6 +41,7 @@ export class PrepareDataService {
   }
 
   getTimeStart(questions, answers) {
+    // TODO: Fix this to get proper start time from protocol
     return questions[0].field_type == QuestionType.info && questions[1] // NOTE: Do not use info startTime
       ? answers[1].startTime
       : answers[0].startTime // NOTE: whole questionnaire startTime and endTime

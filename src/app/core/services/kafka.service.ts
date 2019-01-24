@@ -70,38 +70,38 @@ export class KafkaService {
     )
   }
 
-  sendToKafka(specs, id, info, payload, cacheKey) {
-    return this.getKafkaInstance().then(
-      kafkaConnInstance => {
-        // NOTE: Kafka connection instance to submit to topic
-        const topic = specs.avsc + '_' + specs.name
-        console.log('Sending to: ' + topic)
-        return kafkaConnInstance
-          .topic(topic)
-          .produce(id, info, payload, (err, res) => {
-            if (err) {
-              console.log(err)
-            } else {
-              return this.removeDataFromCache(cacheKey)
-            }
+  sendToKafka(specs, keySchema, valueSchema, payload, cacheKey) {
+    return this.getKafkaInstance()
+      .then(
+        kafka =>
+          new Promise((resolve, reject) => {
+            // NOTE: Kafka connection instance to submit to topic
+            const topic = specs.avsc + '_' + specs.name
+            console.log('Sending to: ' + topic)
+            return kafka
+              .topic(topic)
+              .produce(
+                keySchema,
+                valueSchema,
+                payload,
+                (err, res) => (err ? reject(err) : resolve(res))
+              )
           })
-      },
-      error => {
+      )
+      .then(() => this.removeDataFromCache(cacheKey))
+      .catch(error => {
         console.error(
           'Could not initiate kafka connection ' + JSON.stringify(error)
         )
         return Promise.resolve({ res: 'ERROR' })
-      }
-    )
+      })
   }
 
   removeDataFromCache(cacheKey) {
     return this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
-      if (cache) {
-        console.log('Deleting ' + cacheKey)
-        if (cache[cacheKey]) delete cache[cacheKey]
-        return this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
-      }
+      console.log('Deleting ' + cacheKey)
+      if (cache[cacheKey]) delete cache[cacheKey]
+      return this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
     })
   }
 

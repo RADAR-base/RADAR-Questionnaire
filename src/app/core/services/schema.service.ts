@@ -10,6 +10,7 @@ import {
 } from '../../../assets/data/defaultConfig'
 import { AnswerKeyExport, AnswerValueExport } from '../../shared/models/answer'
 import { CompletionLogValueExport } from '../../shared/models/completion-log'
+import { SchemaMetadata } from '../../shared/models/kafka'
 import { Task } from '../../shared/models/task'
 import { ApplicationTimeZoneValueExport } from '../../shared/models/timezone'
 import { UsageEventValueExport } from '../../shared/models/usage-event'
@@ -19,7 +20,9 @@ import { StorageService } from './storage.service'
 
 @Injectable()
 export class SchemaService {
-  private schemas = {}
+  private schemas: {
+    [key: string]: Promise<[SchemaMetadata, SchemaMetadata]>
+  } = {}
 
   constructor(private util: Utility, public storage: StorageService) {}
 
@@ -36,18 +39,9 @@ export class SchemaService {
   }
 
   getKafkaObjectKey() {
-    return this.util.getSourceKeyInfo().then(keyInfo => {
-      const sourceId = keyInfo[0]
-      const projectId = keyInfo[1]
-      const patientId = keyInfo[2].toString()
-      // NOTE: Payload for kafka 2 : key Object which contains device information
-      const answerKey: AnswerKeyExport = {
-        userId: patientId,
-        sourceId: sourceId,
-        projectId: projectId
-      }
-      return answerKey
-    })
+    return this.util
+      .getObservationKey()
+      .then(observationKey => observationKey as AnswerKeyExport)
   }
 
   getKafkaObjectValue(type, payload) {
@@ -99,19 +93,21 @@ export class SchemaService {
         .catch(error => {
           // TODO: add fallback for error
           console.log(error)
-          return Promise.resolve()
+          return Promise.resolve({} as [SchemaMetadata, SchemaMetadata])
         })
     }
-    return this.schemas[specs.name].then(([keyData, valData]) => {
-      const key = JSON.parse(keyData['schema'])
-      const value = JSON.parse(valData['schema'])
-      const schemaId = new KafkaRest.AvroSchema(key)
-      const schemaInfo = new KafkaRest.AvroSchema(value)
-      const payload = {
-        key: this.getAvroObject(key, kafkaObject.key),
-        value: this.getAvroObject(value, kafkaObject.value)
+    return this.schemas[specs.name].then(
+      ([keySchemaMetadata, valueSchemaMetadata]) => {
+        const key = JSON.parse(keySchemaMetadata.schema)
+        const value = JSON.parse(valueSchemaMetadata.schema)
+        const schemaId = new KafkaRest.AvroSchema(key)
+        const schemaInfo = new KafkaRest.AvroSchema(value)
+        const payload = {
+          key: this.getAvroObject(key, kafkaObject.key),
+          value: this.getAvroObject(value, kafkaObject.value)
+        }
+        return { schemaId, schemaInfo, payload }
       }
-      return { schemaId, schemaInfo, payload }
-    })
+    )
   }
 }

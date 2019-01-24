@@ -136,7 +136,7 @@ export class NotificationGeneratorService {
             LocKeys.NOTIFICATION_REMINDER_NOW_DESC_1
           ) +
           ' ' +
-          task.completionWindow +
+          task.estimatedCompletionTime +
           ' ' +
           this.localization.translateKey(
             LocKeys.NOTIFICATION_REMINDER_NOW_DESC_2

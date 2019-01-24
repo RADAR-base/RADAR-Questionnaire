@@ -125,10 +125,9 @@ export class KafkaService {
         projectId: projectId
       }
       const kafkaObject = { value: value, key: answerKey }
-      return this.getSpecs(task, kafkaObject, type).then(specs => {
-        this.cacheAnswers(specs)
-        return this.createPayloadAndSend(specs)
-      })
+      return this.getSpecs(task, kafkaObject, type).then(specs =>
+        this.cacheAnswers(specs).then(() => this.createPayloadAndSend)
+      )
     })
   }
 
@@ -211,10 +210,10 @@ export class KafkaService {
 
   cacheAnswers(specs) {
     const kafkaObject = specs.kafkaObject
-    this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
+    return this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
       console.log('KAFKA-SERVICE: Caching answers.')
       cache[kafkaObject.value.time] = specs
-      this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
+      return this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
     })
   }
 

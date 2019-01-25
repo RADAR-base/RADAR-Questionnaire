@@ -126,7 +126,7 @@ export class KafkaService {
       }
       const kafkaObject = { value: value, key: answerKey }
       return this.getSpecs(task, kafkaObject, type).then(specs =>
-        this.cacheAnswers(specs).then(() => this.createPayloadAndSend)
+        this.cacheAnswers(specs).then(() => this.createPayloadAndSend(specs))
       )
     })
   }

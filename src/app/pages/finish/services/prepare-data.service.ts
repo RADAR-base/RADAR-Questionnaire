@@ -17,6 +17,7 @@ export class PrepareDataService {
     const timestamps = data.timestamps
     const questions = data.questions
     console.log(answers)
+    console.log(timestamps)
     return Promise.all([
       this.storage.get(StorageKeys.CONFIG_VERSION),
       this.storage.get(StorageKeys.PARTICIPANTLOGIN)

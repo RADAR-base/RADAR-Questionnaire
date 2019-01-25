@@ -1,5 +1,4 @@
 // tslint:disable:no-eval
-import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Component, ElementRef, ViewChild } from '@angular/core'
 import { Content, NavController, NavParams, Platform } from 'ionic-angular'
 
@@ -8,17 +7,12 @@ import { LocKeys } from '../../../shared/enums/localisations'
 import { Question, QuestionType } from '../../../shared/models/question'
 import { FinishPageComponent } from '../../finish/containers/finish-page.component'
 import { QuestionsService } from '../services/questions.service'
+import { QuestionsPageAnimations } from './questions-page.animation'
 
 @Component({
   selector: 'page-questions',
   templateUrl: 'questions-page.component.html',
-  animations: [
-    trigger('enterQuestions', [
-      state('true', style({ transform: 'translateY(100%)' })),
-      state('false', style({ transform: 'translateY(0%)' })),
-      transition('*=>*', animate('200ms ease-out'))
-    ])
-  ]
+  animations: QuestionsPageAnimations
 })
 export class QuestionsPageComponent {
   @ViewChild(Content)
@@ -28,14 +22,10 @@ export class QuestionsPageComponent {
   questionsContainerRef: ElementRef
   questionsContainerEl: HTMLElement
 
+  startTime: number
   progress = 0
   currentQuestion = 0
-  questions: Question[]
-  questionTitle: String
-
-  startTime: number
   questionIncrements = []
-
   nextQuestionIncr: number = 0
 
   // TODO: Gather text variables in one place. get values from server?
@@ -49,17 +39,17 @@ export class QuestionsPageComponent {
   previousButtonText = this.localization.translateKey(LocKeys.BTN_NEXT)
   isNextBtDisabled = true
   isPreviousBtDisabled = false
-
   iconValues = {
     previous: 'ios-arrow-back',
     close: 'close-circle'
   }
   iconPrevious: string = this.iconValues.close
 
-  associatedTask
+  task
+  questions: Question[]
+  questionTitle: String
   endText: string
   isLastTask: boolean
-  title
   introduction
   assessment
   showIntroduction = true
@@ -76,28 +66,28 @@ export class QuestionsPageComponent {
 
   ionViewDidLoad() {
     this.init()
-    this.questionsService.reset()
   }
 
   ionViewDidLeave() {
     this.sendCompletionLog()
+    this.questionsService.sendQuestionnaireCloseEvent()
+    this.questionsService.reset()
   }
 
   init() {
-    this.title = this.navParams.data.title
+    this.questionTitle = this.navParams.data.title
     this.introduction = this.navParams.data.introduction
     this.showIntroduction = this.navParams.data.assessment.showIntroduction
-    this.questionTitle = this.navParams.data.title
     this.questionsContainerEl = this.questionsContainerRef.nativeElement
     this.questions = this.questionsService.getQuestions(
-      this.title,
+      this.questionTitle,
       this.navParams.data.questions
     )
-    this.setCurrentQuestion(this.nextQuestionIncr)
-    this.associatedTask = this.navParams.data.associatedTask
+    this.task = this.navParams.data.task
     this.endText = this.navParams.data.endText
     this.isLastTask = this.navParams.data.isLastTask
     this.assessment = this.navParams.data.assessment
+    this.setCurrentQuestion(this.nextQuestionIncr)
   }
 
   onClose() {
@@ -109,7 +99,7 @@ export class QuestionsPageComponent {
   }
 
   sendCompletionLog() {
-    this.questionsService.sendCompletionLog(this.questions, this.associatedTask)
+    this.questionsService.sendCompletionLog(this.task, this.questions.length)
   }
 
   hideIntro() {
@@ -195,8 +185,8 @@ export class QuestionsPageComponent {
   }
 
   setProgress() {
-    this.progress = Math.ceil(
-      (this.currentQuestion * 100) / this.questions.length
+    this.progress = this.questionsService.getAnswerProgress(
+      this.questions.length
     )
   }
 
@@ -242,10 +232,10 @@ export class QuestionsPageComponent {
       FinishPageComponent,
       {
         endText: this.endText,
-        associatedTask: this.associatedTask,
+        task: this.task,
+        isLastTask: this.isLastTask,
         answers: data.answers,
         timestamps: data.timestamps,
-        isLastTask: this.isLastTask,
         questions: this.questions
       },
       { animate: true, direction: 'forward' }

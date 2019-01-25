@@ -14,7 +14,7 @@ export class FinishPageComponent {
   completedInClinic = false
   displayNextTaskReminder = true
   hasClickedDoneButton = false
-  associatedTask
+  task
   questionnaireData
 
   constructor(
@@ -30,22 +30,22 @@ export class FinishPageComponent {
 
   init() {
     this.questionnaireData = this.navParams.data
-    this.associatedTask = this.questionnaireData.associatedTask
+    this.task = this.navParams.data.task
     this.content = this.questionnaireData.endText
-    this.isClinicalTask = this.associatedTask.isClinical
+    this.isClinicalTask = this.task.isClinical
     this.displayNextTaskReminder =
       !this.questionnaireData.isLastTask && !this.isClinicalTask
   }
 
   onComplete() {
     this.finish.sendCompletedEvent()
-    this.finish.updateTaskToComplete(this.associatedTask)
-    this.finish.processDataAndSend(this.questionnaireData, this.associatedTask)
+    this.finish.updateTaskToComplete(this.task)
+    this.finish.processDataAndSend(this.questionnaireData, this.task)
   }
 
   handleClosePage() {
     const res = this.completedInClinic
-      ? this.finish.evalClinicalFollowUpTask(this.associatedTask)
+      ? this.finish.evalClinicalFollowUpTask(this.task)
       : Promise.resolve()
     res.then(() => {
       this.hasClickedDoneButton = !this.hasClickedDoneButton

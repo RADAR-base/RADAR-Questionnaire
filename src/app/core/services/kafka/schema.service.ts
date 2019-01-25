@@ -61,8 +61,13 @@ export class SchemaService {
         return Answer
       case KAFKA_COMPLETION_LOG:
         const CompletionLog: CompletionLogValueExport = {
-          name: payload.task.name.toString(),
-          time: getSeconds({ milliseconds: payload.time }),
+          name: payload.name,
+          time: getSeconds({
+            milliseconds: new Date().getTime()
+          }),
+          timeNotification: getSeconds({
+            milliseconds: payload.timeNotification
+          }),
           completionPercentage: { double: payload.percentage }
         }
         return CompletionLog
@@ -74,10 +79,7 @@ export class SchemaService {
         return ApplicationTimeZone
       case KAFKA_USAGE:
         const Event: UsageEventValueExport = {
-          time: payload.time,
-          timeReceived: payload.time,
-          packageName: payload.packageName,
-          categoryName: payload.categoryName,
+          time: getSeconds({ milliseconds: new Date().getTime() }),
           eventType: payload.eventType
         }
         return Event

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core'
+import { AppVersion } from '@ionic-native/app-version'
 
 import { DefaultNotificationRefreshTime } from '../../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../../shared/enums/storage'
@@ -18,27 +19,28 @@ export class ConfigService {
     private notifications: NotificationService,
     private util: Utility,
     private protocol: ProtocolService,
-    private questionnaire: QuestionnaireService
+    private questionnaire: QuestionnaireService,
+    private appVersion: AppVersion
   ) {}
 
   fetchConfigState(force?: boolean) {
     return Promise.all([
-      this.checkProtocolChange(),
+      this.checkProtocolChange(force),
+      this.checkAppVersionChange(),
       this.checkTimezoneChange(),
       this.checkNotificationsExpired()
-    ]).then(([newProtocol, newTimezone, newNotifications]) => {
-      if (newProtocol || force)
+    ]).then(([newProtocol, newAppVersion, newTimezone, newNotifications]) => {
+      if (newProtocol)
         return this.updateConfigStateOnProtocolChange(newProtocol)
+      if (newAppVersion)
+        return this.updateConfigStateOnAppVersionChange(newAppVersion)
       if (newTimezone)
-        return this.updateConfigStateOnTimezoneChange(
-          newTimezone.prevUtcOffset,
-          newTimezone.utcOffset
-        )
+        return this.updateConfigStateOnTimezoneChange(newTimezone)
       if (newNotifications) return this.rescheduleNotifications(false)
     })
   }
 
-  checkProtocolChange() {
+  checkProtocolChange(force?) {
     return Promise.all([
       this.storage.get(StorageKeys.CONFIG_VERSION),
       this.storage.get(StorageKeys.SCHEDULE_VERSION),
@@ -48,15 +50,12 @@ export class ConfigService {
         const parsedProtocol = JSON.parse(protocol)
         if (
           configVersion !== parsedProtocol.version ||
-          scheduleVersion !== parsedProtocol.version
+          scheduleVersion !== parsedProtocol.version ||
+          force
         )
           return parsedProtocol
-        else return null
       })
-      .catch(() => {
-        Promise.reject({ message: 'No response from server' })
-        return null
-      })
+      .catch(() => Promise.reject({ message: 'No response from server' }))
   }
 
   checkTimezoneChange() {
@@ -75,6 +74,16 @@ export class ConfigService {
         return null
       }
     })
+  }
+
+  checkAppVersionChange() {
+    return Promise.all([
+      this.storage.get(StorageKeys.APP_VERSION),
+      this.appVersion.getVersionNumber()
+    ]).then(
+      ([storedAppVersion, appVersion]) =>
+        storedAppVersion !== appVersion ? appVersion : null
+    )
   }
 
   checkNotificationsExpired() {
@@ -123,7 +132,13 @@ export class ConfigService {
       .then(() => this.rescheduleNotifications(true))
   }
 
-  updateConfigStateOnTimezoneChange(prevUtcOffset, utcOffset) {
+  updateConfigStateOnAppVersionChange(version) {
+    return this.storage
+      .set(StorageKeys.APP_VERSION, version)
+      .then(() => this.regenerateSchedule())
+  }
+
+  updateConfigStateOnTimezoneChange({ prevUtcOffset, utcOffset }) {
     // NOTE: Update midnight to time zone of reference date.
     return this.storage
       .get(StorageKeys.ENROLMENTDATE)
@@ -139,13 +154,9 @@ export class ConfigService {
   }
 
   rescheduleNotifications(cancel?: boolean) {
-    return cancel
-      ? this.notifications.cancel()
-      : Promise.resolve()
-          .then(() => this.notifications.publish())
-          .then(() =>
-            console.log('NOTIFICATIONS scheduled after config change')
-          )
+    return (cancel ? this.notifications.cancel() : Promise.resolve())
+      .then(() => this.notifications.publish())
+      .then(() => console.log('NOTIFICATIONS scheduled after config change'))
   }
 
   regenerateSchedule() {

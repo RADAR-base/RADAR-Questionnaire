@@ -4,11 +4,10 @@ import {
   KAFKA_ASSESSMENT,
   KAFKA_TIMEZONE
 } from '../../../../assets/data/defaultConfig'
-import { KafkaService } from '../../../core/services/data/kafka.service'
-import { UsageService } from '../../../core/services/data/usage.service'
+import { KafkaService } from '../../../core/services/kafka/kafka.service'
+import { UsageService } from '../../../core/services/kafka/usage.service'
 import { NotificationService } from '../../../core/services/notifications/notification.service'
 import { ScheduleService } from '../../../core/services/schedule/schedule.service'
-import { getSeconds } from '../../../shared/utilities/time'
 import { PrepareDataService } from './prepare-data.service'
 
 @Injectable()
@@ -24,19 +23,18 @@ export class FinishTaskService {
   updateTaskToComplete(task) {
     this.schedule.updateTaskToComplete(task)
     this.schedule.updateTaskToReportedCompletion(task)
-    if (!task.isClinical) this.schedule.addToCompletedTasks(task)
+    if (task.isClinical == false) this.schedule.addToCompletedTasks(task)
   }
 
   sendCompletedEvent() {
-    this.usage.sendQuestionnaireCompleted(
-      getSeconds({ milliseconds: new Date().getTime() })
-    )
+    this.usage.sendQuestionnaireCompleted()
   }
 
   processDataAndSend(data, task) {
     return this.prepare.processQuestionnaireData(data).then(
       processedAnswers => {
-        this.sendToKafka(processedAnswers, task)
+        console.log(processedAnswers)
+        return this.sendToKafka(processedAnswers, task)
       },
       error => {
         console.log(JSON.stringify(error))

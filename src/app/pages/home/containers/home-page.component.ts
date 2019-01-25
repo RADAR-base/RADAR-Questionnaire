@@ -1,4 +1,3 @@
-import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Component } from '@angular/core'
 import { NavController, Platform } from 'ionic-angular'
 
@@ -12,22 +11,12 @@ import { QuestionsPageComponent } from '../../questions/containers/questions-pag
 import { SettingsPageComponent } from '../../settings/containers/settings-page.component'
 import { HomeService } from '../services/home.service'
 import { TasksService } from '../services/tasks.service'
+import { HomePageAnimations } from './home-page.animation'
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home-page.component.html',
-  animations: [
-    trigger('displayCalendar', [
-      state('true', style({ transform: 'translateY(0%)' })),
-      state('false', style({ transform: 'translateY(100%)' })),
-      transition('*=>*', animate('300ms ease-out'))
-    ]),
-    trigger('moveProgress', [
-      state('true', style({ transform: 'translateY(-100%)' })),
-      state('false', style({ transform: 'translateY(0%)' })),
-      transition('*=>*', animate('300ms ease-out'))
-    ])
-  ]
+  animations: HomePageAnimations
 })
 export class HomePageComponent {
   tasks: Promise<Task[]>
@@ -60,6 +49,7 @@ export class HomePageComponent {
 
   ionViewDidLoad() {
     this.init()
+    this.home.sendNonReportedCompletionLogs()
   }
 
   init() {

@@ -63,7 +63,12 @@ export class ScheduleService {
     return this.getTasks().then(tasks => {
       const now = new Date().getTime()
       return tasks
-        .filter(d => d && d.reportedCompletion === false && d.timestamp < now)
+        .filter(
+          d =>
+            d &&
+            d.reportedCompletion === false &&
+            d.timestamp + d.completionWindow < now
+        )
         .slice(0, 100)
     })
   }

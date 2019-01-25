@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 
-import { KAFKA_COMPLETION_LOG } from '../../../../assets/data/defaultConfig'
-import { KafkaService } from '../../../core/services/data/kafka.service'
+import { KafkaService } from '../../../core/services/kafka/kafka.service'
+import { UsageService } from '../../../core/services/kafka/usage.service'
 import { StorageService } from '../../../core/services/storage/storage.service'
 import { getSeconds } from '../../../shared/utilities/time'
 import { AnswerService } from './answer.service'
@@ -13,7 +13,7 @@ export class QuestionsService {
     public storage: StorageService,
     private answerService: AnswerService,
     private timestampService: TimestampService,
-    private kafka: KafkaService
+    private usage: UsageService
   ) {}
 
   reset() {
@@ -46,12 +46,6 @@ export class QuestionsService {
       d => (answers[d] = this.answerService.answers[d])
     )
     return answers
-  }
-
-  getCompletionPercent(questions) {
-    return (
-      (100 * Object.keys(this.getAttemptedAnswers()).length) / questions.length
-    )
   }
 
   getTime() {
@@ -126,6 +120,16 @@ export class QuestionsService {
     return this.evalSkipNext(questions, currentQuestion)
   }
 
+  getAnswerProgress(totalQuestions) {
+    return Math.ceil((this.answerService.keys.length * 100) / totalQuestions)
+  }
+
+  getAttemptProgress(totalQuestions) {
+    return Math.ceil(
+      (Object.keys(this.answerService.answers).length * 100) / totalQuestions
+    )
+  }
+
   recordTimeStamp(questionId, startTime) {
     this.timestampService.add({
       id: questionId,
@@ -136,11 +140,11 @@ export class QuestionsService {
     })
   }
 
-  sendCompletionLog(questions, task) {
-    this.kafka.prepareKafkaObjectAndSend(KAFKA_COMPLETION_LOG, {
-      task: task,
-      percentage: this.getCompletionPercent(questions),
-      time: new Date().getTime()
-    })
+  sendCompletionLog(task, totalQuestions) {
+    this.usage.sendCompletionLog(task, this.getAttemptProgress(totalQuestions))
+  }
+
+  sendQuestionnaireCloseEvent() {
+    this.usage.sendQuestionnaireClosed()
   }
 }

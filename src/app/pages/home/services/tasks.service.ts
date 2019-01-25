@@ -26,7 +26,7 @@ export class TasksService {
         introduction: this.localization.chooseText(assessment.startText),
         endText: this.localization.chooseText(assessment.endText),
         questions: assessment.questions,
-        associatedTask: task,
+        task: task,
         assessment: assessment
       }
     })
@@ -54,6 +54,14 @@ export class TasksService {
       )
       return tasksProgress
     }
+  }
+
+  getIncompleteTasks() {
+    return this.schedule.getNonReportedCompletedTasks()
+  }
+
+  updateTaskToReportedCompletion(task) {
+    this.schedule.updateTaskToReportedCompletion(task)
   }
 
   areAllTasksComplete(tasks) {

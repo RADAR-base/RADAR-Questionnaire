@@ -26,7 +26,7 @@ export class ClinicalTasksService {
         introduction: this.localization.chooseText(assessment.startText),
         endText: this.localization.chooseText(assessment.endText),
         questions: assessment.questions,
-        associatedTask: task,
+        task: task,
         assessment: assessment
       }
     })

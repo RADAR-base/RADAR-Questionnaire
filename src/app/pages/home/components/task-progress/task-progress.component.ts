@@ -1,24 +1,12 @@
-import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Component, Input, OnChanges } from '@angular/core'
 
 import { TasksProgress } from '../../../../shared/models/task'
+import { TaskProgressAnimations } from './task-progress.animation'
 
 @Component({
   selector: 'task-progress',
   templateUrl: 'task-progress.component.html',
-  animations: [
-    trigger('enterAnimation', [
-      transition(':enter', [
-        style({ transform: 'translateX(100%)', opacity: 0 }),
-        animate('500ms', style({ transform: 'translateX(0)', opacity: 1 }))
-      ])
-    ]),
-    trigger('translateY', [
-      state('true', style({ transform: 'translateY(32vh)', opacity: 1 })),
-      state('false', style({ transform: 'translateY(0)', opacity: 1 })),
-      transition('true <=> false', animate('1s linear'))
-    ])
-  ]
+  animations: TaskProgressAnimations
 })
 export class TaskProgressComponent implements OnChanges {
   @Input()

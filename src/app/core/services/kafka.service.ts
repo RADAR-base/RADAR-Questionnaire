@@ -24,7 +24,7 @@ import { getSeconds } from '../../shared/utilities/time'
 import { Utility } from '../../shared/utilities/util'
 import { StorageService } from './storage.service'
 import { SchemaMetadata } from '../../shared/models/kafka'
-import {AuthService} from "../../pages/auth/services/auth.service";
+import { AuthService } from "../../pages/auth/services/auth.service";
 
 @Injectable()
 export class KafkaService {
@@ -227,10 +227,20 @@ export class KafkaService {
   getKafkaInstance() {
     return this.authService
       .refresh()
-      .then(() => this.storage.get(StorageKeys.OAUTH_TOKENS))
-      .then(tokens => {
-        const headers = { Authorization: 'Bearer ' + tokens.access_token }
+      .then(() => this.prepareHeaders())
+      .then(headers => {
         return new KafkaRest({ url: this.KAFKA_CLIENT_URL, headers: headers })
+      })
+  }
+
+  prepareHeaders() {
+    return Promise.all( [this.storage.get(StorageKeys.OAUTH_TOKENS), this.storage.get(StorageKeys.PROJECTNAME)])
+      .then( ([token, projectName]) => {
+        const headers = {
+          Authorization: 'Bearer ' + token.access_token,
+          'RADAR-Project': projectName
+        }
+        return headers
       })
   }
 

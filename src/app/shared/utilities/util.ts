@@ -67,7 +67,7 @@ export class Utility {
   getObservationKey(): Promise<ObservationKey> {
     return Promise.all([
       this.storage.get(StorageKeys.PROJECTNAME),
-      this.storage.get(StorageKeys.PARTICIPANTLOGIN)
+      this.storage.get(StorageKeys.PARTICIPANTID)
     ]).then(([projectName, participantName]) => ({
       sourceId: '',
       userId: participantName.toString(),

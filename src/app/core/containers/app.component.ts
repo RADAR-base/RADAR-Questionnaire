@@ -5,7 +5,6 @@ import { Platform } from 'ionic-angular'
 
 import { DefaultNotificationType } from '../../../assets/data/defaultConfig'
 import { SplashPageComponent } from '../../pages/splash/containers/splash-page.component'
-import { ConfigService } from '../services/config.service'
 import { NotificationService } from '../services/notification.service'
 
 @Component({
@@ -18,15 +17,11 @@ export class AppComponent {
     private platform: Platform,
     private statusBar: StatusBar,
     private splashScreen: SplashScreen,
-    private configService: ConfigService,
     private notificationService: NotificationService
   ) {
     this.platform.ready().then(() => {
-      this.statusBar.styleDefault()
+      this.statusBar.hide()
       this.splashScreen.hide()
-      this.configService.fetchConfigState(false)
-      this.configService.migrateToLatestVersion()
-
       if (DefaultNotificationType === 'LOCAL')
         this.notificationService.permissionCheck()
     })

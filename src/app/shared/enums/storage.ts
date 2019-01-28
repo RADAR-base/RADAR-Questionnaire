@@ -1,4 +1,5 @@
 export class StorageKeys {
+  static APP_VERSION = new StorageKeys('APP_VERSION')
   static REFERENCEDATE = new StorageKeys('REFERENCEDATE')
   static ENROLMENTDATE = new StorageKeys('ENROLMENTDATE')
   static OAUTH_TOKENS = new StorageKeys('OAUTH_TOKENS')

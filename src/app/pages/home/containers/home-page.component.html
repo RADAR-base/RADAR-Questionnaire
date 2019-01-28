@@ -29,49 +29,24 @@
   <div
     #progressBar
     class="size-dynamic"
+    [@moveProgress]="showCalendar"
   >
     <task-progress
       [progress]="tasksProgress"
       [forceComplete]="showCompleted"
       [noTasksToday]="showNoTasksToday"
-      *ngIf="!hasOnlyESMs"
+      *ngIf="tasksProgress && !showCalendar"
     >
     </task-progress>
-    <div
-      class="container-esm"
-      *ngIf="hasOnlyESMs"
-    >
-      <img
-        src="assets/imgs/diary.png"
-        class="icon-esm"
-      >
-    </div>
-    <div
-      class="clinical-1"
-      *ngIf="hasClinicalTasks && !showCalendar && !showCompleted"
-      (click)="openClinicalTasksPage()"
-    >
-      <img
-        src="assets/imgs/clinical.png"
-        class="icon-clinical"
-      >
-    </div>
   </div>
 
   <div
-    class="clinical-2"
-    *ngIf="hasClinicalTasks && showCalendar"
-    (click)="openClinicalTasksPage()"
-  >
-    <img
-      src="assets/imgs/clinical.png"
-      class="icon-clinical"
-    >
-  </div>
-
-  <div
-    class="clinical-3"
-    *ngIf="hasClinicalTasks && !showCalendar && showCompleted"
+    *ngIf="hasClinicalTasks"
+    class="clinical"
+    [class.clinical-1]="taskIsNow && !showCompleted"
+    [class.clinical-2]="showCalendar"
+    [class.clinical-3]="showCompleted || showNoTasksToday"
+    [class.clinical-4]="!taskIsNow && !showCompleted && !showCalendar"
     (click)="openClinicalTasksPage()"
   >
     <img
@@ -83,11 +58,12 @@
   <div
     #tickerBar
     class="size-static"
-    *ngIf="nextTask.name !== 'ESM'"
   >
     <ticker-bar
       [task]="nextTask"
+      [isNow]="taskIsNow"
       [showAffirmation]="showCompleted"
+      [noTasksToday]="showNoTasksToday"
     ></ticker-bar>
   </div>
 
@@ -96,20 +72,22 @@
     class="size-static"
   >
     <task-info
+      *ngIf="nextTask"
       [task]="nextTask"
       [isNow]="taskIsNow"
       [progress]="tasksProgress"
-      (collapse)="displayEvalTransformations($event)"
+      [expanded]="!showCalendar"
+      (click)="displayTaskCalendar()"
     ></task-info>
   </div>
 
   <div
+    *ngIf="tasks"
     #taskCalendar
-    class="size-null"
+    [@displayCalendar]="showCalendar"
   >
     <task-calendar
-      *ngIf="tasks"
-      [scrollHeight]="calendarScrollHeight"
+      [show]="showCalendar"
       (task)="startQuestionnaire($event)"
       [tasks]="tasks"
     >
@@ -121,7 +99,7 @@
     class="size-static footer"
   >
     <div
-      *ngIf="taskIsNow && !startingQuestionnaire"
+      *ngIf="taskIsNow && !startingQuestionnaire && !showCompleted"
       padding
     >
       <button
@@ -135,7 +113,7 @@
       </button>
     </div>
     <div
-      *ngIf="startingQuestionnaire || nextTaskIsLoading"
+      *ngIf="startingQuestionnaire || (!nextTask && !showCompleted)"
       class="spinner-center"
     >
       <ion-spinner name="dots"></ion-spinner>

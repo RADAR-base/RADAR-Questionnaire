@@ -50,6 +50,19 @@ export const DefaultTask: Task = {
   isClinical: false
 }
 
+export const DefaultTaskTest: Task = {
+  index: 0,
+  completed: false,
+  reportedCompletion: false,
+  timestamp: 0,
+  name: 'TEST',
+  reminderSettings: {},
+  nQuestions: 0,
+  estimatedCompletionTime: 0,
+  warning: '',
+  isClinical: false
+}
+
 export const DefaultSettingsSelectedLanguage: LanguageSetting = {
   label: '',
   value: ''

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { NavController, NavParams } from 'ionic-angular'
+import { NavController } from 'ionic-angular'
 
 import { DefaultTask } from '../../../../assets/data/defaultConfig'
 import { Task } from '../../../shared/models/task'

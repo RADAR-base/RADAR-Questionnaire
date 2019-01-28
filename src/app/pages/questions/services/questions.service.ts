@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core'
 
-import { KafkaService } from '../../../core/services/kafka/kafka.service'
 import { UsageService } from '../../../core/services/kafka/usage.service'
 import { StorageService } from '../../../core/services/storage/storage.service'
 import { getSeconds } from '../../../shared/utilities/time'

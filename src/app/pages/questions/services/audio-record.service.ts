@@ -3,8 +3,6 @@ import { File } from '@ionic-native/file'
 // NOTE: File path to opensmile.js; Adding opensmile plugin
 import * as opensmile from 'cordova-plugin-opensmile/www/opensmile'
 
-declare var cordova: any
-declare var window: any
 @Injectable()
 export class AudioRecordService {
   audioRecordStatus: boolean = false
@@ -23,6 +21,7 @@ export class AudioRecordService {
   }
 
   startAudioRecording(fileName, configFile) {
+    this.file.createFile(this.getPath(), fileName, true)
     const recording = this.getAudioRecordStatus()
     if (recording === false) {
       this.setAudioRecordStatus(true)

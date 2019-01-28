@@ -79,7 +79,6 @@
     <plugin name="cordova-plugin-device" spec="^1.1.7" />
     <plugin name="cordova-plugin-dialogs" spec="^1.3.4" />
     <plugin name="cordova-plugin-media-capture" spec="^3.0.1" />
-    <plugin name="cordova-plugin-opensmile" spec="^2.0.3" />
     <plugin name="cordova-plugin-splashscreen" spec="^4.1.0" />
     <plugin name="cordova-plugin-statusbar" spec="^2.4.2" />
     <plugin name="cordova-plugin-vibration" spec="^2.1.6" />
@@ -91,5 +90,6 @@
     <plugin name="cordova-plugin-app-version" spec="^0.1.9" />
     <plugin name="cordova-plugin-fcm" spec="git+https://github.com/yatharthranjan/cordova-plugin-fcm.git" />
     <plugin name="cordova-plugin-globalization" spec="^1.11.0" />
-    <engine name="android" spec="6.4.0" />
+    <plugin name="cordova-plugin-opensmile" spec="https://github.com/RADAR-base/RADAR-Cordova-OpenSmile-Plugin.git#6988e41fd1a3af708f8fbbb21706db671cc26eda" />
+    <engine name="android" spec="^6.4.0" />
 </widget>

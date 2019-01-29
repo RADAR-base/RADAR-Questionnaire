@@ -126,7 +126,7 @@ export class KafkaService {
       }
       const kafkaObject = { value: value, key: answerKey }
       return this.getSpecs(task, kafkaObject, type).then(specs =>
-        this.cacheAnswers(specs).then(() => this.createPayloadAndSend(specs))
+        this.cacheAnswers(specs).then(() => this.sendAllAnswersInCache())
       )
     })
   }
@@ -144,7 +144,6 @@ export class KafkaService {
           .getLatestKafkaSchemaVersions(specs)
           .catch(error => {
             console.log(error)
-            this.cacheAnswers(specs)
             return Promise.resolve()
           })
         this.schemas[specs.name] = schemaVersions
@@ -191,7 +190,6 @@ export class KafkaService {
           .produce(id, info, payload, (err, res) => {
             if (err) {
               console.log(err)
-              return this.cacheAnswers(specs)
             } else {
               const cacheKey = specs.kafkaObject.value.time
               return this.removeAnswersFromCache(cacheKey)
@@ -199,7 +197,6 @@ export class KafkaService {
           })
       },
       error => {
-        this.cacheAnswers(specs)
         console.error(
           'Could not initiate kafka connection ' + JSON.stringify(error)
         )
@@ -220,7 +217,7 @@ export class KafkaService {
   sendAllAnswersInCache() {
     if (!this.cacheSending) {
       this.cacheSending = !this.cacheSending
-      this.sendToKafkaFromCache()
+      return this.sendToKafkaFromCache()
         .catch(e => console.log('Cache could not be sent.'))
         .then(() => (this.cacheSending = !this.cacheSending))
     }
@@ -258,6 +255,7 @@ export class KafkaService {
   }
 
   getKafkaInstance() {
+    this.updateURI()
     return this.authService
       .refresh()
       .then(() => this.storage.get(StorageKeys.OAUTH_TOKENS))

@@ -190,11 +190,6 @@ export class SchedulingService {
   }
 
   runScheduler() {
-    // NOTE: Temporarily turn off build report schedule.
-    // this.buildReportSchedule()
-    //   .then(schedule => this.setReportSchedule(schedule))
-    //   .catch(e => console.error(e))
-
     return this.getAssessments()
       .then(assessments => this.buildTaskSchedule(assessments))
       .catch(e => console.error(e))
@@ -322,37 +317,25 @@ export class SchedulingService {
   }
 
   advanceRepeat(date, unit, multiplier) {
-    let returnDate = new Date(date.getTime())
+    const returnDate = new Date(date)
     switch (unit) {
       case 'min':
-        returnDate = new Date(date.getTime() + multiplier * 60000)
-        break
+        return new Date(returnDate.setMinutes(date.getMinutes() + multiplier))
       case 'hour':
-        returnDate = new Date(date.getTime() + multiplier * 60000 * 60)
-        break
+        return new Date(returnDate.setHours(date.getHours() + multiplier))
       case 'day':
-        returnDate = new Date(date.getTime() + multiplier * 60000 * 60 * 24)
-        break
+        return new Date(returnDate.setDate(date.getDate() + multiplier))
       case 'week':
-        returnDate = new Date(date.getTime() + multiplier * 60000 * 60 * 24 * 7)
-        break
+        return new Date(returnDate.setDate(date.getDate() + multiplier * 7))
       case 'month':
-        returnDate = new Date(
-          date.getTime() + multiplier * 60000 * 60 * 24 * 31
-        )
-        break
+        return new Date(returnDate.setMonth(date.getMonth() + multiplier))
       case 'year':
-        returnDate = new Date(
-          date.getTime() + multiplier * 60000 * 60 * 24 * 365
-        )
-        break
+        return new Date(returnDate.setFullYear(date.getFullYear() + multiplier))
       default:
-        returnDate = new Date(
-          date.getTime() + DefaultScheduleYearCoverage * 60000 * 60 * 24 * 365
+        return new Date(
+          date.setFullYear(date.getFullYear() + DefaultScheduleYearCoverage)
         )
-        break
     }
-    return returnDate
   }
 
   taskBuilder(index, assessment, taskDate): Task {

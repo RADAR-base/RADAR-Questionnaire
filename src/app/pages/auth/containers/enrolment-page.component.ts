@@ -211,7 +211,7 @@ export class EnrolmentPageComponent {
       const createdDateMidnight = this.schedule.setDateTimeToMidnight(
         new Date(subjectInformation.createdDate)
       )
-      this.storage
+      return this.storage
         .init(
           participantId,
           participantLogin,
@@ -221,9 +221,7 @@ export class EnrolmentPageComponent {
           createdDate,
           createdDateMidnight
         )
-        .then(() => {
-          this.doAfterAuthentication()
-        })
+        .then(() => this.doAfterAuthentication())
     })
   }
 

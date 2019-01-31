@@ -78,10 +78,9 @@ export class FinishPageComponent {
 
   handleClosePage() {
     this.hasClickedDoneButton = !this.hasClickedDoneButton
-    this.evalClinicalFollowUpTask().then(() => {
-      this.kafkaService.sendAllAnswersInCache()
+    this.evalClinicalFollowUpTask().then(() =>
       this.navCtrl.setRoot(HomePageComponent)
-    })
+    )
   }
 
   evalClinicalFollowUpTask() {

@@ -38,6 +38,7 @@ export class KafkaService {
     private authService: AuthService
   ) {
     this.updateURI()
+    this.authService.refresh()
   }
 
   updateURI() {

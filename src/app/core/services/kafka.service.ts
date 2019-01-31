@@ -192,7 +192,9 @@ export class KafkaService {
               console.log(err)
             } else {
               const cacheKey = specs.kafkaObject.value.time
-              return this.removeAnswersFromCache(cacheKey)
+              return this.removeAnswersFromCache(cacheKey).then(() =>
+                this.setLastUploadDate()
+              )
             }
           })
       },
@@ -203,6 +205,10 @@ export class KafkaService {
         return Promise.resolve({ res: 'ERROR' })
       }
     )
+  }
+
+  setLastUploadDate() {
+    return this.storage.set(StorageKeys.LAST_UPLOAD_DATE, Date.now())
   }
 
   cacheAnswers(specs) {

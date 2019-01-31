@@ -91,7 +91,7 @@ export class QuestionsPageComponent {
   }
 
   onClose() {
-    this.platform.resume.subscribe(() => this.sendCompletionLog())
+    this.platform.pause.subscribe(() => this.sendCompletionLog())
     this.platform.registerBackButtonAction(() => {
       this.sendCompletionLog()
       this.platform.exitApp()

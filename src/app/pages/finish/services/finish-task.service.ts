@@ -13,4 +13,10 @@ export class FinishTaskService {
       this.schedule.addToCompletedTasks(updatedTask)
     return this.schedule.insertTask(updatedTask)
   }
+
+  updateTaskToReportedCompletion(task): Promise<any> {
+    const updatedTask = task
+    updatedTask.reportedCompletion = true
+    return this.schedule.insertTask(updatedTask)
+  }
 }

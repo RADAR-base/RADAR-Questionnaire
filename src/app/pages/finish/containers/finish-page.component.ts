@@ -74,6 +74,9 @@ export class FinishPageComponent {
       questionnaireData,
       questions
     )
+    this.kafkaService
+      .prepareNonReportedTasksKafkaObjectAndSend(task)
+      .then(() => this.finishTaskService.updateTaskToReportedCompletion(task))
   }
 
   handleClosePage() {

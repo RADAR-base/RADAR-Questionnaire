@@ -31,6 +31,7 @@ export interface AnswerKeyExport {
 export interface CompletionLogValueExport {
   name: string
   time: number
+  timeNotification: Object
   completionPercentage: any
 }
 

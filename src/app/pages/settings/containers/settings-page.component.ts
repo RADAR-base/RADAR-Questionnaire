@@ -1,5 +1,4 @@
 import { Component } from '@angular/core'
-import { AppVersion } from '@ionic-native/app-version'
 import { NavController, Platform } from 'ionic-angular'
 
 import {

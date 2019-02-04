@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core'
 
 import { KafkaService } from '../../../core/services/kafka.service'
-import {
-  SchedulingService,
-  TIME_UNIT_MILLIS
-} from '../../../core/services/scheduling.service'
+import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { Task, TasksProgress } from '../../../shared/models/task'
 import { getMilliseconds } from '../../../shared/utilities/time'

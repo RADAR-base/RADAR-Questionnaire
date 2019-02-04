@@ -25,6 +25,7 @@ export class AppComponent {
     private alertService: AlertService,
     private localization: LocalizationService
   ) {
+
     this.platform.ready().then(() => {
       this.statusBar.hide()
       this.splashScreen.hide()

@@ -3,9 +3,9 @@ import { NgModule } from '@angular/core'
 import { IonicModule } from 'ionic-angular'
 
 import { PipesModule } from '../../shared/pipes/pipes.module'
+import { WelcomePageComponent } from "./components/welcome-page/welcome-page.component";
 import { EnrolmentPageComponent } from './containers/enrolment-page.component'
 import { AuthService } from './services/auth.service'
-import {WelcomePageComponent} from "./components/welcome-page/welcome-page.component";
 
 @NgModule({
   imports: [

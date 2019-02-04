@@ -4,6 +4,7 @@ page-enrolment {
   .icon {
     font-size: 36px;
   }
+
   .text {
     margin: auto;
     width: 90vw;
@@ -29,6 +30,7 @@ page-enrolment {
     font-size: 20px;
     margin-top: 2vh;
   }
+
   .consent-topic {
     @include font-body;
   }
@@ -102,6 +104,7 @@ page-enrolment {
   .padding-text {
     padding-top: 5px;
   }
+
   .bottom {
     position: fixed;
     bottom: 10px;
@@ -148,6 +151,7 @@ page-enrolment {
     align-items: flex-start;
     //padding-top: 50px;
   }
+
   .pos-above {
     margin-top: -50px;
   }

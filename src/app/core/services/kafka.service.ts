@@ -11,6 +11,7 @@ import {
   KAFKA_COMPLETION_LOG,
   KAFKA_TIMEZONE
 } from '../../../assets/data/defaultConfig'
+import { AuthService } from "../../pages/auth/services/auth.service";
 import { StorageKeys } from '../../shared/enums/storage'
 import {
   AnswerKeyExport,
@@ -18,13 +19,12 @@ import {
   ApplicationTimeZoneValueExport,
   CompletionLogValueExport
 } from '../../shared/models/answer'
+import { SchemaMetadata } from '../../shared/models/kafka'
 import { QuestionType } from '../../shared/models/question'
 import { Task } from '../../shared/models/task'
 import { getSeconds } from '../../shared/utilities/time'
 import { Utility } from '../../shared/utilities/util'
 import { StorageService } from './storage.service'
-import { SchemaMetadata } from '../../shared/models/kafka'
-import { AuthService } from "../../pages/auth/services/auth.service";
 
 @Injectable()
 export class KafkaService {
@@ -173,7 +173,7 @@ export class KafkaService {
       }))
       .then(() => this.removeAnswersFromCache(specs.kafkaObject.value.time))
       .catch(error => {
-        console.error('Could not initiate kafka connection ' + JSON.stringify(error))
+        console.error('Could not initiate kafka connection ' + JSON.stringify(error, Object.getOwnPropertyNames(error)))
         return this.cacheAnswers(specs)
           .then(() => ({res: 'ERROR'}))
       });
@@ -225,6 +225,7 @@ export class KafkaService {
   }
 
   getKafkaInstance() {
+    this.updateURI();
     return this.authService
       .refresh()
       .then(() => this.prepareHeaders())

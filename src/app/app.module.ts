@@ -6,10 +6,13 @@ import { JWT_OPTIONS, JwtModule } from '@auth0/angular-jwt'
 import { AndroidPermissions } from '@ionic-native/android-permissions'
 import { AppVersion } from '@ionic-native/app-version'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner'
+import { Deeplinks } from '@ionic-native/deeplinks'
 import { Device } from '@ionic-native/device'
 import { Dialogs } from '@ionic-native/dialogs'
 import { File } from '@ionic-native/file'
+import { Firebase } from "@ionic-native/firebase";
 import { Globalization } from '@ionic-native/globalization'
+import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { SplashScreen } from '@ionic-native/splash-screen'
 import { StatusBar } from '@ionic-native/status-bar'
 import { Vibration } from '@ionic-native/vibration'
@@ -21,9 +24,6 @@ import { PagesModule } from './pages/pages.module'
 import { AndroidPermissionUtility } from './shared/utilities/android-permission'
 import { jwtOptionsFactory } from './shared/utilities/jwtOptionsFactory'
 import { Utility } from './shared/utilities/util'
-import { Deeplinks} from '@ionic-native/deeplinks'
-import { InAppBrowser } from '@ionic-native/in-app-browser';
-import { Firebase } from "@ionic-native/firebase";
 
 @NgModule({
   imports: [

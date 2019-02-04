@@ -7,10 +7,10 @@ import { KafkaService } from '../../../core/services/kafka.service'
 import { NotificationService } from '../../../core/services/notification.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { StorageKeys } from '../../../shared/enums/storage'
+import { IntroPage } from "../../auth/components/welcome-page/intro";
+import { WelcomePageComponent } from "../../auth/components/welcome-page/welcome-page.component";
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { SplashService } from '../services/splash.service'
-import {IntroPage} from "../../auth/components/welcome-page/intro";
-import {WelcomePageComponent} from "../../auth/components/welcome-page/welcome-page.component";
 
 @Component({
   selector: 'page-splash',

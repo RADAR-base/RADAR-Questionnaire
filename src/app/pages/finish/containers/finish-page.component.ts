@@ -1,5 +1,6 @@
 import { Component } from '@angular/core'
 import { NavController, NavParams } from 'ionic-angular'
+
 import { KafkaService } from '../../../core/services/kafka.service'
 import { NotificationGeneratorService } from '../../../core/services/notification-generator.service'
 import { NotificationService } from '../../../core/services/notification.service'

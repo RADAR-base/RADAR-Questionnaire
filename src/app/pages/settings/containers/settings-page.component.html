@@ -134,6 +134,15 @@
         {{ cacheSize }}
       </span>
     </ion-item>
+    <ion-item no-lines>
+      {{ "SETTINGS_LAST_UPLOAD_TO_SERVER" | translate }}
+      <span
+        item-right
+        class="info-value"
+      >
+        {{ lastUploadDate | amCalendar }}
+      </span>
+    </ion-item>
   </ion-item-group>
 
   <ion-item-group>

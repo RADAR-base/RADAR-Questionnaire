@@ -9,6 +9,7 @@ import { checkTaskIsNow } from '../../../shared/utilities/check-task-is-now'
 import { ClinicalTasksPageComponent } from '../../clinical-tasks/containers/clinical-tasks-page.component'
 import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
 import { SettingsPageComponent } from '../../settings/containers/settings-page.component'
+import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 import { HomeService } from '../services/home.service'
 import { TasksService } from '../services/tasks.service'
 import { HomePageAnimations } from './home-page.animation'
@@ -20,6 +21,7 @@ import { HomePageAnimations } from './home-page.animation'
 })
 export class HomePageComponent {
   tasks: Promise<Task[]>
+  tasksDate: Date
   nextTask: Task
   showCalendar = false
   showCompleted = false
@@ -68,6 +70,14 @@ export class HomePageComponent {
   onResume() {
     this.home.sendOpenEvent()
     this.home.emptyCache()
+    this.checkForNewDate()
+  }
+
+  checkForNewDate() {
+    if (new Date().getDate() !== this.tasksDate.getDate()) {
+      this.tasksDate = new Date()
+      this.navCtrl.setRoot(SplashPageComponent)
+    }
   }
 
   checkForNextTask(tasks) {

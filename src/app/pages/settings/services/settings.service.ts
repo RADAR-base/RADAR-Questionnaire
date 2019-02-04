@@ -47,7 +47,8 @@ export class SettingsService {
       weeklyReport: this.storage.get(StorageKeys.SETTINGS_WEEKLYREPORT),
       cache: this.storage.get(StorageKeys.CACHE_ANSWERS),
       appVersion: this.appVersion.getVersionNumber(),
-      language: Promise.resolve(this.getLanguage())
+      language: Promise.resolve(this.getLanguage()),
+      lastUploadDate: this.storage.get(StorageKeys.LAST_UPLOAD_DATE)
     }
   }
 

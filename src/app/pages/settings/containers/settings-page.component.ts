@@ -40,10 +40,6 @@ export class SettingsPageComponent {
   ) {}
 
   ionViewWillEnter() {
-    this.init()
-  }
-
-  init() {
     this.loadSettings()
   }
 

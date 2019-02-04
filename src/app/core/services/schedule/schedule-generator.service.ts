@@ -196,8 +196,28 @@ export class ScheduleGeneratorService {
     return this.storage.push(StorageKeys.SCHEDULE_TASKS_COMPLETED, task)
   }
 
-  static advanceRepeat(timestamp: number, interval: TimeInterval): number {
-    return timestamp + this.timeIntervalToMillis(interval)
+  static advanceRepeat(timestamp: number, interval: TimeInterval) {
+    const date = new Date(timestamp)
+    const returnDate = new Date(timestamp)
+    switch (interval.unit) {
+      case 'min':
+        return returnDate.setMinutes(date.getMinutes() + interval.amount)
+      case 'hour':
+        return returnDate.setHours(date.getHours() + interval.amount)
+      case 'day':
+        return returnDate.setDate(date.getDate() + interval.amount)
+      case 'week':
+        const ONE_WEEK = 7
+        return returnDate.setDate(date.getDate() + interval.amount * ONE_WEEK)
+      case 'month':
+        return returnDate.setMonth(date.getMonth() + interval.amount)
+      case 'year':
+        return returnDate.setFullYear(date.getFullYear() + interval.amount)
+      default:
+        return returnDate.setFullYear(
+          date.getFullYear() + DefaultScheduleYearCoverage
+        )
+    }
   }
 
   static timeIntervalToMillis(interval: TimeInterval): number {

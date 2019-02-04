@@ -57,7 +57,11 @@ export class FcmNotificationService extends NotificationService {
         )
         console.log('NOTIFICATIONS Scheduling FCM notifications')
         console.log(fcmNotifications)
-        return Promise.all(fcmNotifications.map(this.sendNotification))
+        return Promise.all(
+          fcmNotifications
+            .map(this.sendNotification)
+            .concat([this.setLastNotificationUpdate()])
+        )
       })
     })
   }
@@ -117,5 +121,9 @@ export class FcmNotificationService extends NotificationService {
 
   sendTestNotification(): Promise<void> {
     return this.sendNotification(this.notifications.createTestNotification())
+  }
+
+  setLastNotificationUpdate(): Promise<void> {
+    return this.storage.set(StorageKeys.LAST_NOTIFICATION_UPDATE, Date.now())
   }
 }

@@ -10,6 +10,7 @@ export interface Settings {
   languagesSelectable?: LanguageSetting[]
   notificationSettings?: NotificationSettings
   weeklyReport?: WeeklyReportSubSettings[]
+  lastUploadDate?: Date
 }
 export interface NotificationSettings {
   sound: boolean

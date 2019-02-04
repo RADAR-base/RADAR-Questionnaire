@@ -56,4 +56,10 @@ export class FinishTaskService {
       .generateClinicalSchedule(assessment)
       .then(() => this.notifications.publish())
   }
+
+  updateTaskToReportedCompletion(task): Promise<any> {
+    const updatedTask = task
+    updatedTask.reportedCompletion = true
+    return this.schedule.insertTask(updatedTask)
+  }
 }

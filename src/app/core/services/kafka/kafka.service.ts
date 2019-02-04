@@ -13,6 +13,7 @@ import { SchemaService } from './schema.service'
 @Injectable()
 export class KafkaService {
   private KAFKA_CLIENT_URL: string
+  private isCacheSending: boolean
 
   constructor(
     private storage: StorageService,
@@ -20,6 +21,7 @@ export class KafkaService {
     private schema: SchemaService
   ) {
     this.updateURI()
+    this.token.refresh()
   }
 
   updateURI() {
@@ -35,39 +37,49 @@ export class KafkaService {
     const specsPromise = this.schema.getSpecs(type, payload.task)
     return Promise.all([keyPromise, specsPromise]).then(([key, specs]) => {
       const kafkaObject = { key: key, value: value }
-      return this.sendToCache(kafkaObject, specs)
+      return this.sendToCache(kafkaObject, specs).then(() =>
+        this.sendToKafkaFromCache()
+      )
     })
   }
 
   sendToCache(kafkaObject, specs) {
-    this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
+    return this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
       console.log('KAFKA-SERVICE: Caching answers.')
       cache[kafkaObject.value.time] = { kafkaObject: kafkaObject, specs: specs }
-      this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
+      return this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
     })
   }
 
   sendToKafkaFromCache() {
-    return this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache =>
-      Object.entries(cache)
-        .filter(([k, v]) => k)
-        .slice(0, 20)
-        .map(([k, v]) =>
-          this.schema
-            .convertToAvro(v['kafkaObject'], v['specs'])
-            .then(
-              data =>
-                data &&
-                this.sendToKafka(
-                  v['specs'],
-                  data.schemaId,
-                  data.schemaInfo,
-                  data.payload,
-                  k
-                )
-            )
-        )
-    )
+    if (!this.isCacheSending) {
+      this.setCacheSending(true)
+      this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
+        const promises = Object.entries(cache)
+          .filter(([k]) => k)
+          .slice(0, 20)
+          .map(([k, v]: any) =>
+            this.schema
+              .convertToAvro(v.kafkaObject, v.specs)
+              .then(
+                data =>
+                  data &&
+                  this.sendToKafka(
+                    v.specs,
+                    data.schemaId,
+                    data.schemaInfo,
+                    data.payload,
+                    k
+                  )
+              )
+          )
+        Promise.all(promises).then(() => this.setCacheSending(false))
+      })
+    }
+  }
+
+  setCacheSending(val: boolean) {
+    this.isCacheSending = val
   }
 
   sendToKafka(specs, keySchema, valueSchema, payload, cacheKey) {
@@ -89,12 +101,17 @@ export class KafkaService {
           })
       )
       .then(() => this.removeDataFromCache(cacheKey))
+      .then(() => this.setLastUploadDate())
       .catch(error => {
         console.error(
           'Could not initiate kafka connection ' + JSON.stringify(error)
         )
         return Promise.resolve({ res: 'ERROR' })
       })
+  }
+
+  setLastUploadDate() {
+    return this.storage.set(StorageKeys.LAST_UPLOAD_DATE, Date.now())
   }
 
   removeDataFromCache(cacheKey) {
@@ -106,8 +123,7 @@ export class KafkaService {
   }
 
   getKafkaInstance() {
-    return this.token
-      .refresh()
+    return Promise.all([this.updateURI(), this.token.refresh()])
       .then(() => this.storage.get(StorageKeys.OAUTH_TOKENS))
       .then(tokens => {
         const headers = { Authorization: 'Bearer ' + tokens.access_token }

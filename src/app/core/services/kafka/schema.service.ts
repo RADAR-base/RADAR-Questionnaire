@@ -63,7 +63,7 @@ export class SchemaService {
         const CompletionLog: CompletionLogValueExport = {
           name: payload.name,
           time: getSeconds({
-            milliseconds: new Date().getTime()
+            milliseconds: new Date().getTime() + Math.random()
           }),
           timeNotification: getSeconds({
             milliseconds: payload.timeNotification

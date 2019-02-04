@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core'
+import { AppVersion } from '@ionic-native/app-version'
 import { Storage } from '@ionic/storage'
 import { throwError as observableThrowError } from 'rxjs'
 
@@ -16,7 +17,7 @@ import { Task } from '../../../shared/models/task'
 export class StorageService {
   global: { [key: string]: any } = {}
 
-  constructor(private storage: Storage) {
+  constructor(private storage: Storage, private appVersion: AppVersion) {
     const setStoragePromise = this.prepareStorage()
     Promise.resolve(setStoragePromise)
     console.log(this.global)
@@ -124,6 +125,10 @@ export class StorageService {
 
   getAllKeys(): Promise<string[]> {
     return this.storage.keys()
+  }
+
+  getAppVersion() {
+    return this.appVersion.getVersionNumber()
   }
 
   prepareStorage() {

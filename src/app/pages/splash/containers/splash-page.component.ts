@@ -2,10 +2,13 @@ import { Component } from '@angular/core'
 import { NavController, NavParams } from 'ionic-angular'
 
 import { DefaultNotificationRefreshTime } from '../../../../assets/data/defaultConfig'
+import { AlertService } from '../../../core/services/alert.service'
 import { ConfigService } from '../../../core/services/config.service'
 import { KafkaService } from '../../../core/services/kafka.service'
+import { LocalizationService } from '../../../core/services/localization.service'
 import { NotificationService } from '../../../core/services/notification.service'
 import { StorageService } from '../../../core/services/storage.service'
+import { LocKeys } from '../../../shared/enums/localisations'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { EnrolmentPageComponent } from '../../auth/containers/enrolment-page.component'
 import { HomePageComponent } from '../../home/containers/home-page.component'
@@ -25,7 +28,9 @@ export class SplashPageComponent {
     private splashService: SplashService,
     private notificationService: NotificationService,
     private kafka: KafkaService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private alertService: AlertService,
+    private localization: LocalizationService
   ) {
     this.splashService
       .evalEnrolment()
@@ -39,7 +44,11 @@ export class SplashPageComponent {
 
   onStart() {
     this.status = 'Updating notifications...'
-    return this.checkTimezoneChange()
+    this.configService.migrateToLatestVersion()
+    return this.configService
+      .fetchConfigState(false)
+      .catch(e => this.showFetchConfigFail(e))
+      .then(() => this.checkTimezoneChange())
       .then(() => this.notificationsRefresh())
       .catch(error => {
         console.error(error)
@@ -51,6 +60,18 @@ export class SplashPageComponent {
       })
       .catch(e => console.log('Error sending cache'))
       .then(() => this.navCtrl.setRoot(HomePageComponent))
+  }
+
+  showFetchConfigFail(e) {
+    return this.alertService.showAlert({
+      title: this.localization.translateKey(LocKeys.STATUS_FAILURE),
+      message: e.message,
+      buttons: [
+        {
+          text: this.localization.translateKey(LocKeys.BTN_OKAY)
+        }
+      ]
+    })
   }
 
   checkTimezoneChange() {

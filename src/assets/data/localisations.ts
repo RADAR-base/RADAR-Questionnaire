@@ -334,6 +334,14 @@ export const Localisations = {
     it: 'Dimensione',
     nl: 'Grootte'
   },
+  SETTINGS_LAST_UPLOAD_TO_SERVER: {
+    da: 'Sidste upload til server',
+    de: 'Letzter Upload zum Server',
+    en: 'Last Upload to Server',
+    es: 'Última carga al servidor',
+    it: 'Ultimo caricamento sul server',
+    nl: 'Laatste upload naar server'
+  },
   SETTINGS_DEBUGGING: {
     da: 'Debugging',
     de: 'Debuggen',

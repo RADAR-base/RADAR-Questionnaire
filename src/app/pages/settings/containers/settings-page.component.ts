@@ -36,6 +36,7 @@ export class SettingsPageComponent {
   participantId: string
   projectName: string
   enrolmentDate: Date
+  lastUploadDate: Date
   language: LanguageSetting = DefaultLanguage
   languagesSelectable: LanguageSetting[]
   notifications: NotificationSettings = DefaultSettingsNotifications
@@ -46,7 +47,6 @@ export class SettingsPageComponent {
     public navCtrl: NavController,
     public alertService: AlertService,
     public storage: StorageService,
-    private appVersion: AppVersion,
     private schedule: SchedulingService,
     private configService: ConfigService,
     private notificationGenerator: NotificationGeneratorService,
@@ -72,7 +72,6 @@ export class SettingsPageComponent {
 
   loadSettings() {
     this.language = this.localization.getLanguage()
-
     return Promise.all([
       this.storage.get(StorageKeys.CONFIG_VERSION),
       this.storage.get(StorageKeys.SCHEDULE_VERSION),
@@ -83,7 +82,8 @@ export class SettingsPageComponent {
       this.storage.get(StorageKeys.SETTINGS_LANGUAGES),
       this.storage.get(StorageKeys.SETTINGS_WEEKLYREPORT),
       this.storage.get(StorageKeys.CACHE_ANSWERS),
-      this.appVersion.getVersionNumber()
+      this.storage.get(StorageKeys.APP_VERSION),
+      this.storage.get(StorageKeys.LAST_UPLOAD_DATE)
     ]).then(
       ([
         configVersion,
@@ -95,7 +95,8 @@ export class SettingsPageComponent {
         settingsLanguages,
         settingsWeeklyReport,
         cache,
-        appVersionPromise
+        appVersionPromise,
+        lastUpload
       ]) => {
         this.appVersionStr = appVersionPromise
         this.configVersion = configVersion
@@ -106,6 +107,7 @@ export class SettingsPageComponent {
         this.notifications = settingsNotification
         this.languagesSelectable = settingsLanguages
         this.weeklyReport = settingsWeeklyReport
+        this.lastUploadDate = lastUpload
         this.cacheSize = Object.keys(cache).reduce(
           (size, k) => (k ? size + 1 : size),
           0

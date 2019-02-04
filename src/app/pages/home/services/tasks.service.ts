@@ -97,10 +97,11 @@ export class TasksService {
 
   sendNonReportedTaskCompletion() {
     this.schedule.getNonReportedCompletedTasks().then(nonReportedTasks => {
-      nonReportedTasks.forEach(t => {
-        this.kafka.prepareNonReportedTasksKafkaObjectAndSend(t)
-        this.updateTaskToReportedCompletion(t)
-      })
+      nonReportedTasks.forEach(t =>
+        this.kafka
+          .prepareNonReportedTasksKafkaObjectAndSend(t)
+          .then(() => this.updateTaskToReportedCompletion(t))
+      )
     })
   }
 

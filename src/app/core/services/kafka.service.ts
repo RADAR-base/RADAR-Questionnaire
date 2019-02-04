@@ -18,19 +18,21 @@ import {
   ApplicationTimeZoneValueExport,
   CompletionLogValueExport
 } from '../../shared/models/answer'
+import { SchemaMetadata } from '../../shared/models/kafka'
 import { QuestionType } from '../../shared/models/question'
 import { Task } from '../../shared/models/task'
 import { getSeconds } from '../../shared/utilities/time'
 import { Utility } from '../../shared/utilities/util'
 import { StorageService } from './storage.service'
 import { TokenService } from './token.service'
-import { SchemaMetadata } from '../../shared/models/kafka'
 
 @Injectable()
 export class KafkaService {
   private KAFKA_CLIENT_URL: string
   private cacheSending = false
-  private schemas: {[key: string]: Promise<[SchemaMetadata, SchemaMetadata]>} = {}
+  private schemas: {
+    [key: string]: Promise<[SchemaMetadata, SchemaMetadata]>
+  } = {}
 
   constructor(
     private util: Utility,
@@ -38,6 +40,7 @@ export class KafkaService {
     private token: TokenService
   ) {
     this.updateURI()
+    this.token.refresh()
   }
 
   updateURI() {
@@ -68,7 +71,8 @@ export class KafkaService {
     // NOTE: Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
     const CompletionLog: CompletionLogValueExport = {
       name: task.name.toString(),
-      time: getSeconds({ milliseconds: task.timestamp }),
+      time: getSeconds({ milliseconds: new Date().getTime() + Math.random() }),
+      timeNotification: getSeconds({ milliseconds: task.timestamp }),
       completionPercentage: { double: task.completed ? 100 : 0 }
     }
     return this.prepareKafkaObjectAndSend(
@@ -112,10 +116,11 @@ export class KafkaService {
   }
 
   prepareKafkaObjectAndSend(task, value, type) {
-    return this.util.getObservationKey()
+    return this.util
+      .getObservationKey()
       .then(observationKey => {
         // NOTE: Payload for kafka 2 : key Object which contains device information
-        const kafkaObject = {key: observationKey as AnswerKeyExport, value}
+        const kafkaObject = { key: observationKey as AnswerKeyExport, value }
         return this.getSpecs(task, kafkaObject, type)
       })
       .then(specs => this.createPayloadAndSend(specs))
@@ -123,7 +128,10 @@ export class KafkaService {
 
   createPayloadAndSend(specs) {
     let schemaVersions
-    if (specs.name == KAFKA_COMPLETION_LOG && this.schemas[KAFKA_COMPLETION_LOG]) {
+    if (
+      specs.name == KAFKA_COMPLETION_LOG &&
+      this.schemas[KAFKA_COMPLETION_LOG]
+    ) {
       schemaVersions = this.schemas[KAFKA_COMPLETION_LOG]
     } else {
       schemaVersions = this.util
@@ -134,65 +142,77 @@ export class KafkaService {
         })
       this.schemas[specs.name] = schemaVersions
     }
-    return schemaVersions
-      .then(([keySchemaMetadata, valueSchemaMetadata]) => {
-        const keySchema = JSON.parse(keySchemaMetadata.schema)
-        const valueSchema = JSON.parse(valueSchemaMetadata.schema)
+    return schemaVersions.then(([keySchemaMetadata, valueSchemaMetadata]) => {
+      const keySchema = JSON.parse(keySchemaMetadata.schema)
+      const valueSchema = JSON.parse(valueSchemaMetadata.schema)
 
-        const avroKey = AvroSchema.parse(keySchema, { wrapUnions: true })
-        const avroVal = AvroSchema.parse(valueSchema, { wrapUnions: true })
+      const avroKey = AvroSchema.parse(keySchema, { wrapUnions: true })
+      const avroVal = AvroSchema.parse(valueSchema, { wrapUnions: true })
 
-        const kafkaObject = specs.kafkaObject
-        const bufferKey = avroKey.clone(kafkaObject.key, { wrapUnions: true })
-        const bufferVal = avroVal.clone(kafkaObject.value, { wrapUnions: true })
-        const payload = {
-          key: bufferKey,
-          value: bufferVal
-        }
-        const parsedKeySchema = new KafkaRest.AvroSchema(keySchema)
-        const parsedValueSchema = new KafkaRest.AvroSchema(valueSchema)
-        return this.sendToKafka(specs, parsedKeySchema, parsedValueSchema, payload)
-      })
+      const kafkaObject = specs.kafkaObject
+      const bufferKey = avroKey.clone(kafkaObject.key, { wrapUnions: true })
+      const bufferVal = avroVal.clone(kafkaObject.value, { wrapUnions: true })
+      const payload = {
+        key: bufferKey,
+        value: bufferVal
+      }
+      const parsedKeySchema = new KafkaRest.AvroSchema(keySchema)
+      const parsedValueSchema = new KafkaRest.AvroSchema(valueSchema)
+      return this.sendToKafka(
+        specs,
+        parsedKeySchema,
+        parsedValueSchema,
+        payload
+      )
+    })
   }
 
   sendToKafka(specs, keySchema, valueSchema, payload) {
     return this.getKafkaInstance()
-      .then(kafka => new Promise((resolve, reject) => {
-          // NOTE: Kafka connection instance to submit to topic
-          const topic = specs.avsc + '_' + specs.name
-          console.log('Sending to: ' + topic)
-          return kafka
-            .topic(topic)
-            .produce(keySchema, valueSchema, payload, (err, res) => {
-              if (err) {
-                reject(err)
-              } else {
-                resolve(res)
-              }
-            })
-      }))
+      .then(
+        kafka =>
+          new Promise((resolve, reject) => {
+            // NOTE: Kafka connection instance to submit to topic
+            const topic = specs.avsc + '_' + specs.name
+            console.log('Sending to: ' + topic)
+            return kafka
+              .topic(topic)
+              .produce(keySchema, valueSchema, payload, (err, res) => {
+                if (err) {
+                  reject(err)
+                } else {
+                  resolve(res)
+                }
+              })
+          })
+      )
       .then(() => this.removeAnswersFromCache(specs.kafkaObject.value.time))
+      .then(() => this.setLastUploadDate())
       .catch(error => {
-        console.error('Could not initiate kafka connection ' + JSON.stringify(error))
-        return this.cacheAnswers(specs)
-          .then(() => ({res: 'ERROR'}))
-      });
+        console.error(
+          'Could not initiate kafka connection ' + JSON.stringify(error)
+        )
+        return this.cacheAnswers(specs).then(() => ({ res: 'ERROR' }))
+      })
+  }
+
+  setLastUploadDate() {
+    return this.storage.set(StorageKeys.LAST_UPLOAD_DATE, Date.now())
   }
 
   cacheAnswers(specs) {
     const kafkaObject = specs.kafkaObject
-    return this.storage.get(StorageKeys.CACHE_ANSWERS)
-      .then(cache => {
-        console.log('KAFKA-SERVICE: Caching answers.')
-        cache[kafkaObject.value.time] = specs
-        return this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
-      })
+    return this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
+      console.log('KAFKA-SERVICE: Caching answers.')
+      cache[kafkaObject.value.time] = specs
+      return this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
+    })
   }
 
   sendAllAnswersInCache() {
     if (!this.cacheSending) {
       this.cacheSending = !this.cacheSending
-      this.sendToKafkaFromCache()
+      return this.sendToKafkaFromCache()
         .catch(e => console.log('Cache could not be sent.'))
         .then(() => (this.cacheSending = !this.cacheSending))
     }
@@ -212,21 +232,19 @@ export class KafkaService {
   }
 
   removeAnswersFromCache(cacheKey) {
-    return this.storage.get(StorageKeys.CACHE_ANSWERS)
-      .then(cache => {
-        if (cache) {
-          console.log('Deleting ' + cacheKey)
-          if (cache[cacheKey]) {
-            delete cache[cacheKey]
-          }
-          return this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
+    return this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
+      if (cache) {
+        console.log('Deleting ' + cacheKey)
+        if (cache[cacheKey]) {
+          delete cache[cacheKey]
         }
-      })
+        return this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
+      }
+    })
   }
 
   getKafkaInstance() {
-    return this.token
-      .refresh()
+    return Promise.all([this.updateURI(), this.token.refresh()])
       .then(() => this.storage.get(StorageKeys.OAUTH_TOKENS))
       .then(tokens => {
         const headers = { Authorization: 'Bearer ' + tokens.access_token }

@@ -13,6 +13,7 @@ import { checkTaskIsNow } from '../../../shared/utilities/check-task-is-now'
 import { ClinicalTasksPageComponent } from '../../clinical-tasks/containers/clinical-tasks-page.component'
 import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
 import { SettingsPageComponent } from '../../settings/containers/settings-page.component'
+import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 import { StartPageComponent } from '../../start/containers/start-page.component'
 import { TasksService } from '../services/tasks.service'
 
@@ -34,6 +35,7 @@ import { TasksService } from '../services/tasks.service'
 })
 export class HomePageComponent {
   tasks: Promise<Task[]>
+  tasksDate: Date
   nextTask: Task
   showCalendar = false
   showCompleted = false
@@ -56,6 +58,7 @@ export class HomePageComponent {
     this.platform.resume.subscribe(e => {
       this.kafka.sendAllAnswersInCache()
       this.checkForNextTask()
+      this.checkForNewDate()
     })
   }
 
@@ -72,8 +75,16 @@ export class HomePageComponent {
       this.tasksProgress = this.tasksService.getTaskProgress(tasks)
       this.showNoTasksToday = this.tasksProgress.numberOfTasks == 0
     })
+    this.tasksDate = new Date()
     this.evalHasClinicalTasks()
     this.tasksService.sendNonReportedTaskCompletion()
+  }
+
+  checkForNewDate() {
+    if (new Date().getDate() !== this.tasksDate.getDate()) {
+      this.tasksDate = new Date()
+      this.navCtrl.setRoot(SplashPageComponent)
+    }
   }
 
   checkForNextTask() {

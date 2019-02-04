@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="515" id="org.phidatalab.radar_armt" version="0.5.10-alpha" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="517" id="org.phidatalab.radar_armt" version="0.5.10.2-alpha" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>RADAR Questionnaire</name>
     <description>An application that collects active data for research.</description>
     <author email="info@radar-cns.org" href="http://radar-cns.org/">RADAR-CNS</author>

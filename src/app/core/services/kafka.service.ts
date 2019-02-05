@@ -38,6 +38,7 @@ export class KafkaService {
     private authService: AuthService
   ) {
     this.updateURI()
+    this.authService.refresh()
   }
 
   updateURI() {
@@ -70,7 +71,11 @@ export class KafkaService {
     // NOTE: Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
     const CompletionLog: CompletionLogValueExport = {
       name: task.name.toString(),
-      time: task.timestamp / SEC_MILLISEC,
+      // NOTE: Added random floating point [0,1) to make this unique
+      time: (new Date().getTime() + Math.random()) / SEC_MILLISEC,
+      timeNotification: task.timestamp
+        ? { double: task.timestamp / SEC_MILLISEC }
+        : null,
       completionPercentage: { double: task.completed ? 100 : 0 }
     }
     return this.prepareKafkaObjectAndSend(
@@ -126,7 +131,7 @@ export class KafkaService {
       }
       const kafkaObject = { value: value, key: answerKey }
       return this.getSpecs(task, kafkaObject, type).then(specs =>
-        this.cacheAnswers(specs).then(() => this.createPayloadAndSend(specs))
+        this.cacheAnswers(specs).then(() => this.sendAllAnswersInCache())
       )
     })
   }
@@ -144,7 +149,6 @@ export class KafkaService {
           .getLatestKafkaSchemaVersions(specs)
           .catch(error => {
             console.log(error)
-            this.cacheAnswers(specs)
             return Promise.resolve()
           })
         this.schemas[specs.name] = schemaVersions
@@ -191,21 +195,25 @@ export class KafkaService {
           .produce(id, info, payload, (err, res) => {
             if (err) {
               console.log(err)
-              return this.cacheAnswers(specs)
             } else {
               const cacheKey = specs.kafkaObject.value.time
-              return this.removeAnswersFromCache(cacheKey)
+              return this.removeAnswersFromCache(cacheKey).then(() =>
+                this.setLastUploadDate()
+              )
             }
           })
       },
       error => {
-        this.cacheAnswers(specs)
         console.error(
           'Could not initiate kafka connection ' + JSON.stringify(error)
         )
         return Promise.resolve({ res: 'ERROR' })
       }
     )
+  }
+
+  setLastUploadDate() {
+    return this.storage.set(StorageKeys.LAST_UPLOAD_DATE, Date.now())
   }
 
   cacheAnswers(specs) {
@@ -220,7 +228,7 @@ export class KafkaService {
   sendAllAnswersInCache() {
     if (!this.cacheSending) {
       this.cacheSending = !this.cacheSending
-      this.sendToKafkaFromCache()
+      return this.sendToKafkaFromCache()
         .catch(e => console.log('Cache could not be sent.'))
         .then(() => (this.cacheSending = !this.cacheSending))
     }
@@ -258,6 +266,7 @@ export class KafkaService {
   }
 
   getKafkaInstance() {
+    this.updateURI()
     return this.authService
       .refresh()
       .then(() => this.storage.get(StorageKeys.OAUTH_TOKENS))

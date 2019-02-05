@@ -71,6 +71,7 @@ export class KafkaService {
     // NOTE: Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
     const CompletionLog: CompletionLogValueExport = {
       name: task.name.toString(),
+      // NOTE: Added random floating point [0,1) to make this unique
       time: (new Date().getTime() + Math.random()) / SEC_MILLISEC,
       timeNotification: task.timestamp
         ? { double: task.timestamp / SEC_MILLISEC }

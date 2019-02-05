@@ -157,7 +157,7 @@ export const DefaultRefreshTokenRequestBody =
 export const DefaultEnrolmentBaseURL =
   DefaultEndPoint + DefaultManagementPortalURI
 
-  export const DefaultTokenRefreshTime = 1800000 // 30 minutes in ms
+export const DefaultTokenRefreshTime = 1800000 // 30 minutes in ms
 
 // TIME CONVERSIONS
 

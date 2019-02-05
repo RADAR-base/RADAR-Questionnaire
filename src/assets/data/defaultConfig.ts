@@ -155,6 +155,8 @@ export const DefaultRefreshTokenRequestBody =
 export const DefaultEnrolmentBaseURL =
   DefaultEndPoint + DefaultManagementPortalURI
 
+export const DefaultTokenRefreshTime = 1800000 // 30 minutes in ms
+
 // KAFKA
 
 export const KAFKA_ASSESSMENT = 'assessment'

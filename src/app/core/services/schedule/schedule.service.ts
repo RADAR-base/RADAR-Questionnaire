@@ -23,16 +23,6 @@ export class ScheduleService {
     private schedule: ScheduleGeneratorService
   ) {}
 
-  getTasksForDate(date) {
-    return this.getTasks().then(schedule => {
-      const startTime = setDateTimeToMidnight(date).getTime()
-      const endTime = startTime + getMilliseconds({ days: 1 })
-      return schedule.filter(
-        d => d.timestamp >= startTime && d.timestamp < endTime
-      )
-    })
-  }
-
   getTasks(): Promise<Task[]> {
     return Promise.all([this.getDefaultTasks(), this.getClinicalTasks()]).then(
       ([defaultTasks, clinicalTasks]) => {
@@ -45,6 +35,18 @@ export class ScheduleService {
         return allTasks
       }
     )
+  }
+
+  getTasksForDate(date) {
+    return this.getTasks().then(schedule => {
+      const startTime = setDateTimeToMidnight(date).getTime()
+      const endTime = startTime + getMilliseconds({ days: 1 })
+      return schedule.filter(d => {
+        return (
+          d.timestamp + d.completionWindow > startTime && d.timestamp < endTime
+        )
+      })
+    })
   }
 
   getDefaultTasks(): Promise<Task[]> {

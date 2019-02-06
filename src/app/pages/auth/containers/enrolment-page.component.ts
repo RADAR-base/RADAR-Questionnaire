@@ -29,6 +29,7 @@ import {
 import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { AuthService } from '../services/auth.service'
+import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 
 @Component({
   selector: 'page-enrolment',
@@ -79,7 +80,8 @@ export class EnrolmentPageComponent {
     private configService: ConfigService,
     private authService: AuthService,
     private translate: TranslatePipe,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private firebaseAnalytics: FirebaseAnalyticsService
   ) {}
 
   ionViewDidLoad() {
@@ -87,7 +89,11 @@ export class EnrolmentPageComponent {
     this.translate.init()
   }
 
-  ionViewDidEnter() {}
+  ionViewDidEnter() {
+    this.firebaseAnalytics.setCurrentScreen('enrolment-page')
+    .then((res) => console.log('enrolment-page: ' + res))
+    .catch((err) => console.log('enrolment-page: ' + err))
+  }
 
   scanQRHandler() {
     this.loading = true
@@ -98,7 +104,13 @@ export class EnrolmentPageComponent {
     }
     this.scanner
       .scan(scanOptions)
-      .then(scannedObj => this.authenticate(scannedObj.text))
+      .then(scannedObj => {
+        this.firebaseAnalytics.logEvent('qr_code_scanned', {
+          date: new Date().toString(),
+          text: scannedObj.text
+        })
+        return this.authenticate(scannedObj.text)
+      })
   }
 
   metaQRHandler() {
@@ -226,7 +238,11 @@ export class EnrolmentPageComponent {
   }
 
   doAfterAuthentication() {
-    this.configService.fetchConfigState(true).then(() => this.next())
+    this.configService.fetchConfigState(true)
+    .then(() => this.firebaseAnalytics.logEvent("sign_up", {
+            date: new Date().toString()
+          }))
+    .then(() => this.next())
   }
 
   displayErrorMessage(error) {
@@ -235,6 +251,11 @@ export class EnrolmentPageComponent {
     const msg = error.statusText + ' (' + error.status + ')'
     this.outcomeStatus = msg
     this.transitionStatuses()
+    this.firebaseAnalytics.logEvent('sign_up_failed', {
+      date: new Date().toString(),
+      error: String(error),
+      message: String(msg)
+    })
   }
 
   weeklyReportChange(index) {

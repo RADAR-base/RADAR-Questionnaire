@@ -18,6 +18,7 @@ import { ReportModule } from './report/report.module'
 import { SettingsModule } from './settings/settings.module'
 import { SplashModule } from './splash/splash.module'
 import { StartModule } from './start/start.module'
+import { FirebaseAnalyticsService } from '../core/services/firebaseAnalytics.service'
 
 @NgModule({
   imports: [
@@ -41,7 +42,8 @@ import { StartModule } from './start/start.module'
     NotificationService,
     SchedulingService,
     StorageService,
-    TranslatePipe
+    TranslatePipe,
+    FirebaseAnalyticsService
   ]
 })
 export class PagesModule {}

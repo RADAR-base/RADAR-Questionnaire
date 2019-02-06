@@ -14,6 +14,7 @@ import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { FinishPageComponent } from '../../finish/containers/finish-page.component'
 import { AnswerService } from '../services/answer.service'
 import { TimestampService } from '../services/timestamp.service'
+import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 
 @Component({
   selector: 'page-questions',
@@ -69,7 +70,8 @@ export class QuestionsPageComponent {
     public appCtrl: App,
     private answerService: AnswerService,
     private timestampService: TimestampService,
-    private translate: TranslatePipe
+    private translate: TranslatePipe,
+    private firebaseAnalytics: FirebaseAnalyticsService
   ) {}
 
   ionViewDidLoad() {
@@ -83,6 +85,12 @@ export class QuestionsPageComponent {
     this.isLastTask = this.navParams.data.isLastTask
     this.answerService.reset()
     this.timestampService.reset()
+    this.firebaseAnalytics.logEvent('questionnaire_started', {
+      questionnaire_timestamp: this.associatedTask.timestamp,
+      time: new Date(),
+      type: this.associatedTask.name
+    })
+    this.firebaseAnalytics.setCurrentScreen('questions-page')
   }
 
   evalIfFirstQuestionnaireToSkipESMSleepQuestion() {

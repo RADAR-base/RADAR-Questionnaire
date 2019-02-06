@@ -22,6 +22,7 @@ import { PagesModule } from './pages/pages.module'
 import { AndroidPermissionUtility } from './shared/utilities/android-permission'
 import { jwtOptionsFactory } from './shared/utilities/jwtOptionsFactory'
 import { Utility } from './shared/utilities/util'
+import { FirebaseAnalytics } from '@ionic-native/firebase-analytics/ngx'
 
 @NgModule({
   imports: [
@@ -60,7 +61,8 @@ import { Utility } from './shared/utilities/util'
     AndroidPermissionUtility,
     AndroidPermissions,
     File,
-    AppVersion
+    AppVersion,
+    FirebaseAnalytics
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

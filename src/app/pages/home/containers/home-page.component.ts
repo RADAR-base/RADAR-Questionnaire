@@ -52,10 +52,12 @@ export class HomePageComponent {
   ionViewDidLoad() {
     this.init()
     this.home.sendNonReportedCompletionLogs()
+    this.home.sendOpenEvent()
   }
 
   init() {
     this.tasks = this.tasksService.getTasksOfToday()
+    this.tasksDate = new Date()
     this.tasks.then(tasks => {
       this.checkTaskInterval = setInterval(() => {
         this.checkForNextTask(tasks)
@@ -82,7 +84,7 @@ export class HomePageComponent {
 
   checkForNextTask(tasks) {
     const task = this.tasksService.getNextTask(tasks)
-    if (task && task.isClinical == false) {
+    if (task) {
       this.nextTask = task
       this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
       this.showCompleted = !this.nextTask

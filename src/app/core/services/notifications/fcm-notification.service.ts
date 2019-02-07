@@ -8,7 +8,9 @@ import {
 } from '../../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { SingleNotification } from '../../../shared/models/notification-handler'
+import { TaskType } from '../../../shared/utilities/task-type'
 import { getSeconds } from '../../../shared/utilities/time'
+import { SubjectConfigService } from '../config/subject-config.service'
 import { ScheduleService } from '../schedule/schedule.service'
 import { StorageService } from '../storage/storage.service'
 import { NotificationGeneratorService } from './notification-generator.service'
@@ -18,10 +20,15 @@ declare var FCMPlugin
 
 @Injectable()
 export class FcmNotificationService extends NotificationService {
+  private readonly NOTIFICATION_STORAGE = {
+    LAST_NOTIFICATION_UPDATE: StorageKeys.LAST_NOTIFICATION_UPDATE
+  }
+
   constructor(
     private notifications: NotificationGeneratorService,
     private storage: StorageService,
-    private schedule: ScheduleService
+    private schedule: ScheduleService,
+    private config: SubjectConfigService
   ) {
     super()
   }
@@ -43,11 +50,11 @@ export class FcmNotificationService extends NotificationService {
   publish(
     limit: number = DefaultNumberOfNotificationsToSchedule
   ): Promise<void[]> {
-    return this.storage.get(StorageKeys.PARTICIPANTLOGIN).then(username => {
+    return this.config.getParticipantLogin().then(username => {
       if (!username) {
         return Promise.resolve([])
       }
-      return this.schedule.getTasks().then(tasks => {
+      return this.schedule.getTasks(TaskType.ALL).then(tasks => {
         const notifications = this.notifications.futureNotifications(
           tasks,
           limit
@@ -96,7 +103,7 @@ export class FcmNotificationService extends NotificationService {
   }
 
   cancel(): Promise<void> {
-    return this.storage.get(StorageKeys.PARTICIPANTLOGIN).then(username => {
+    return this.config.getParticipantLogin().then(username => {
       if (!username) {
         return Promise.resolve()
       }
@@ -124,6 +131,13 @@ export class FcmNotificationService extends NotificationService {
   }
 
   setLastNotificationUpdate(): Promise<void> {
-    return this.storage.set(StorageKeys.LAST_NOTIFICATION_UPDATE, Date.now())
+    return this.storage.set(
+      this.NOTIFICATION_STORAGE.LAST_NOTIFICATION_UPDATE,
+      Date.now()
+    )
+  }
+
+  getLastNotificationUpdate() {
+    return this.storage.get(this.NOTIFICATION_STORAGE.LAST_NOTIFICATION_UPDATE)
   }
 }

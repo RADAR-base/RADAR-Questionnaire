@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core'
 import { ConfigService } from '../core/services/config/config.service'
 import { ProtocolService } from '../core/services/config/protocol.service'
 import { QuestionnaireService } from '../core/services/config/questionnaire.service'
+import { SubjectConfigService } from '../core/services/config/subject-config.service'
 import { KafkaService } from '../core/services/kafka/kafka.service'
 import { SchemaService } from '../core/services/kafka/schema.service'
 import { UsageService } from '../core/services/kafka/usage.service'
@@ -44,6 +45,7 @@ import { SplashModule } from './splash/splash.module'
     AlertService,
     DatePipe,
     ConfigService,
+    SubjectConfigService,
     ProtocolService,
     QuestionnaireService,
     TokenService,

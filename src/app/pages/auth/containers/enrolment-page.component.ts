@@ -92,12 +92,13 @@ export class EnrolmentPageComponent {
     this.loading = true
     this.auth
       .authenticate(authObj)
-      .catch(e => this.handleError(e))
-      .then(() => this.auth.enrol())
-      .then(() => {
-        return this.next()
+      .catch(e => {
+        this.handleError(e)
+        if (e.status !== 409) Promise.reject([])
       })
-      .catch(e => this.handleError({ status: 0 }))
+      .then(() => this.auth.enrol())
+      .then(() => this.next())
+      .catch(e => this.handleError(e))
       .then(() => (this.loading = false))
   }
 

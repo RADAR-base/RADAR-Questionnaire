@@ -2,7 +2,6 @@ import { Component } from '@angular/core'
 import { NavController, Platform } from 'ionic-angular'
 
 import {
-  DefaultLanguage,
   DefaultSettingsNotifications,
   DefaultSettingsWeeklyReport
 } from '../../../../assets/data/defaultConfig'
@@ -23,14 +22,6 @@ export class SettingsPageComponent {
   weeklyReport = DefaultSettingsWeeklyReport
   showLoading = false
 
-  get cacheSize() {
-    if (this.settings.cache)
-      return Object.keys(this.settings.cache).reduce(
-        (s, k) => (k ? s + 1 : s),
-        0
-      )
-  }
-
   constructor(
     public navCtrl: NavController,
     public alertService: AlertService,
@@ -44,7 +35,7 @@ export class SettingsPageComponent {
   }
 
   loadSettings() {
-    Object.entries(this.settingsService.get()).map(([k, v]) =>
+    Object.entries(this.settingsService.getSettings()).map(([k, v]) =>
       v.then(val => (this.settings[k] = val))
     )
   }

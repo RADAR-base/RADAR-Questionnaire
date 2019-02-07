@@ -13,7 +13,7 @@ export class FinishPageComponent {
   isClinicalTask = false
   completedInClinic = false
   displayNextTaskReminder = true
-  hasClickedDoneButton = false
+  showDoneButton = false
   task
   questionnaireData
 
@@ -25,7 +25,7 @@ export class FinishPageComponent {
 
   ionViewDidLoad() {
     this.init()
-    this.onComplete()
+    this.onComplete().then(() => this.showDone())
   }
 
   init() {
@@ -38,9 +38,15 @@ export class FinishPageComponent {
   }
 
   onComplete() {
-    this.finish.sendCompletedEvent()
-    this.finish.updateTaskToComplete(this.task)
-    this.finish.processDataAndSend(this.questionnaireData, this.task)
+    return Promise.all([
+      this.finish.sendCompletedEvent(),
+      this.finish.updateTaskToComplete(this.task),
+      this.finish.processDataAndSend(this.questionnaireData, this.task)
+    ])
+  }
+
+  showDone() {
+    this.showDoneButton = true
   }
 
   handleClosePage() {
@@ -48,7 +54,7 @@ export class FinishPageComponent {
       ? this.finish.evalClinicalFollowUpTask(this.task)
       : Promise.resolve()
     res.then(() => {
-      this.hasClickedDoneButton = !this.hasClickedDoneButton
+      this.showDoneButton = false
       return this.navCtrl.setRoot(HomePageComponent)
     })
   }

@@ -17,6 +17,10 @@ import { StorageService } from '../storage/storage.service'
 
 @Injectable()
 export class TokenService {
+  private readonly TOKEN_STORE = {
+    OAUTH_TOKENS: StorageKeys.OAUTH_TOKENS,
+    BASE_URI: StorageKeys.BASE_URI
+  }
   URI_base: string
 
   constructor(
@@ -25,44 +29,59 @@ export class TokenService {
     private jwtHelper: JwtHelperService
   ) {}
 
-  get() {
-    return this.storage.get(StorageKeys.OAUTH_TOKENS)
+  getTokens() {
+    return this.storage.get(this.TOKEN_STORE.OAUTH_TOKENS)
+  }
+
+  getURI() {
+    return this.storage
+      .get(this.TOKEN_STORE.BASE_URI)
+      .then(uri => (uri ? uri : DefaultEndPoint))
+  }
+
+  setTokens(tokens) {
+    return this.storage.set(this.TOKEN_STORE.OAUTH_TOKENS, tokens)
+  }
+
+  setURI(uri) {
+    return this.storage.set(this.TOKEN_STORE.BASE_URI, uri)
   }
 
   register(refreshBody?, params?) {
-    return this.storage.get(StorageKeys.BASE_URI).then(uri => {
-      const URI =
-        (uri ? uri : DefaultEndPoint) +
-        DefaultManagementPortalURI +
-        DefaultRefreshTokenURI
+    return this.getURI().then(uri => {
+      const URI = uri + DefaultManagementPortalURI + DefaultRefreshTokenURI
       const headers = this.getRegisterHeaders(DefaultRequestEncodedContentType)
       return this.http
         .post(URI, refreshBody, { headers })
         .toPromise()
-        .then(res => this.storage.set(StorageKeys.OAUTH_TOKENS, res))
+        .then(res => this.setTokens(res))
     })
   }
 
   refresh(): Promise<any> {
-    return this.get().then(tokens => {
-      const now = getSeconds({ milliseconds: new Date().getTime() })
-      if (tokens.iat + tokens.expires_in < now) {
-        const params = this.getRefreshParams(tokens.refresh_token)
-        return this.register('', params)
+    return this.getTokens().then(tokens => {
+      if (tokens) {
+        const now = getSeconds({ milliseconds: new Date().getTime() })
+        if (tokens.iat + tokens.expires_in < now) {
+          const params = this.getRefreshParams(tokens.refresh_token)
+          return this.register('', params)
+        } else {
+          return tokens
+        }
       } else {
-        return tokens
+        return Promise.reject([])
       }
     })
   }
 
   getDecodedSubject() {
-    return this.get().then(
+    return this.getTokens().then(
       tokens => this.jwtHelper.decodeToken(tokens.access_token)['sub']
     )
   }
 
   getAccessHeaders(contentType) {
-    return this.get().then(tokens =>
+    return this.getTokens().then(tokens =>
       new HttpHeaders()
         .set('Authorization', 'Bearer ' + tokens.access_token)
         .set('Content-Type', contentType)

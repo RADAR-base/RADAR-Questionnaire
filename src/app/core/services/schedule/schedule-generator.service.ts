@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core'
 
 import { DefaultScheduleYearCoverage } from '../../../../assets/data/defaultConfig'
-import { StorageKeys } from '../../../shared/enums/storage'
 import { Assessment } from '../../../shared/models/assessment'
 import { TimeInterval } from '../../../shared/models/protocol'
 import { Task } from '../../../shared/models/task'
+import { TaskType } from '../../../shared/utilities/task-type'
 import { getMilliseconds } from '../../../shared/utilities/time'
+import { QuestionnaireService } from '../config/questionnaire.service'
 import { LocalizationService } from '../misc/localization.service'
 import { NotificationGeneratorService } from '../notifications/notification-generator.service'
-import { StorageService } from '../storage/storage.service'
 
 export const TIME_UNIT_MILLIS = {
   min: getMilliseconds({ minutes: 1 }),
@@ -28,39 +28,42 @@ export class ScheduleGeneratorService {
   tzOffset: number
 
   constructor(
-    private storage: StorageService,
     private notificationService: NotificationGeneratorService,
-    private localization: LocalizationService
+    private localization: LocalizationService,
+    private questionnaire: QuestionnaireService
   ) {
     this.tzOffset = new Date().getTimezoneOffset()
   }
 
-  runScheduler(key, refTimestamp, completedTasks, utcOffsetPrev, assessment?) {
-    // NOTE: Check if clinical or not
-    const schedule =
-      key == StorageKeys.SCHEDULE_TASKS
-        ? this.storage
-            .get(StorageKeys.CONFIG_ASSESSMENTS)
-            .then(assessments =>
-              this.buildTaskSchedule(
-                assessments,
-                completedTasks,
-                refTimestamp,
-                utcOffsetPrev
-              )
+  runScheduler(type, refTimestamp, completedTasks, utcOffsetPrev, assessment?) {
+    // NOTE: Check if clinical or regular
+    switch (type) {
+      case TaskType.NON_CLINICAL:
+        return this.questionnaire
+          .getAssessments(type)
+          .then(assessments =>
+            this.buildTaskSchedule(
+              assessments,
+              completedTasks,
+              refTimestamp,
+              utcOffsetPrev
             )
-            .catch(e => console.error(e))
-        : this.storage
-            .get(key)
-            .then(tasks =>
-              this.buildTasksForSingleAssessment(
-                tasks,
-                assessment,
-                refTimestamp,
-                true
-              )
-            )
-    return schedule
+          )
+          .catch(e => console.error(e))
+      case TaskType.CLINICAL:
+        return this.questionnaire.getAssessments(type).then(tasks =>
+          Promise.resolve({
+            schedule: this.buildTasksForSingleAssessment(
+              tasks,
+              assessment,
+              refTimestamp,
+              TaskType.CLINICAL
+            ),
+            completed: [] as Task[]
+          })
+        )
+    }
+    return Promise.reject([])
   }
 
   buildTaskSchedule(
@@ -68,42 +71,54 @@ export class ScheduleGeneratorService {
     completedTasks,
     refTimestamp,
     utcOffsetPrev
-  ): Promise<Task[]> {
+  ): Promise<{ schedule: Task[]; completed: Task[] }> {
     let schedule: Task[] = assessments.reduce(
       (list, assessment) =>
         list.concat(
           this.buildTasksForSingleAssessment(
             assessment,
             list.length,
-            refTimestamp
+            refTimestamp,
+            TaskType.NON_CLINICAL
           )
         ),
       []
     )
     // NOTE: Check for completed tasks
-    if (completedTasks)
-      schedule = this.updateScheduleWithCompletedTasks(
-        schedule,
-        completedTasks,
-        utcOffsetPrev
-      )
-    schedule = schedule.sort((a, b) => a.timestamp - b.timestamp)
+    const res = this.updateScheduleWithCompletedTasks(
+      schedule,
+      completedTasks,
+      utcOffsetPrev
+    )
+    schedule = res.schedule.sort((a, b) => a.timestamp - b.timestamp)
 
     console.log('[√] Updated task schedule.')
-    return Promise.resolve(schedule)
+    return Promise.resolve({ schedule, completed: res.updatedCompletedTasks })
+  }
+
+  getRepeatProtocol(protocol, type) {
+    let repeatP, repeatQ
+    switch (type) {
+      case TaskType.CLINICAL:
+        repeatP = {}
+        repeatQ = protocol.clinicalProtocol.repeatAfterClinicVisit
+      default:
+        repeatP = protocol.repeatProtocol
+        repeatQ = protocol.repeatQuestionnaire
+    }
+    return { repeatP, repeatQ }
   }
 
   buildTasksForSingleAssessment(
     assessment: Assessment,
     indexOffset: number,
     refTimestamp,
-    isClinical?
+    type: TaskType
   ): Task[] {
-    const repeatP = !isClinical ? assessment.protocol.repeatProtocol : {}
-    const repeatQ = !isClinical
-      ? assessment.protocol.repeatQuestionnaire
-      : assessment.protocol.clinicalProtocol.repeatAfterClinicVisit
-
+    const { repeatP, repeatQ } = this.getRepeatProtocol(
+      assessment.protocol,
+      type
+    )
     let iterTime = refTimestamp
     const endTime =
       iterTime + getMilliseconds({ years: DefaultScheduleYearCoverage })
@@ -145,7 +160,7 @@ export class ScheduleGeneratorService {
         assessment
       ),
       warning: this.localization.chooseText(assessment.warn),
-      isClinical: false
+      isClinical: assessment.protocol.clinicalProtocol ? true : false
     }
     task.notifications = this.notificationService.createNotifications(
       assessment,
@@ -158,42 +173,37 @@ export class ScheduleGeneratorService {
     schedule: Task[],
     completedTasks,
     utcOffsetPrev?
-  ): Task[] {
-    // NOTE: If utcOffsetPrev exists, timezone has changed
-    if (utcOffsetPrev != null) {
-      this.storage
-        .remove(StorageKeys.SCHEDULE_TASKS_COMPLETED)
-        .then(() => {
-          const currentMidnight = new Date().setHours(0, 0, 0, 0)
-          const prevMidnight =
-            new Date().setUTCHours(0, 0, 0, 0) +
-            getMilliseconds({ minutes: utcOffsetPrev })
-          return completedTasks.map(d => {
-            const finishedToday = schedule.find(
-              s =>
-                s.timestamp - currentMidnight == d.timestamp - prevMidnight &&
-                s.name == d.name
-            )
-            if (finishedToday !== undefined) {
-              finishedToday.completed = true
-              return this.addToCompletedTasks(finishedToday)
-            }
-          })
+  ) {
+    let completed = []
+    if (completedTasks) {
+      // NOTE: If utcOffsetPrev exists, timezone has changed
+      if (utcOffsetPrev != null) {
+        const currentMidnight = new Date().setHours(0, 0, 0, 0)
+        const prevMidnight =
+          new Date().setUTCHours(0, 0, 0, 0) +
+          getMilliseconds({ minutes: utcOffsetPrev })
+        return completedTasks.map(d => {
+          const finishedToday = schedule.find(
+            s =>
+              s.timestamp - currentMidnight == d.timestamp - prevMidnight &&
+              s.name == d.name
+          )
+          if (finishedToday !== undefined) {
+            finishedToday.completed = true
+            return completed.push(finishedToday)
+          }
         })
-        .then(() => this.storage.remove(StorageKeys.UTC_OFFSET_PREV))
-    } else {
-      completedTasks.forEach(d => {
-        const task = schedule[d.index]
-        if (task.timestamp == d.timestamp && task.name == d.name) {
-          task.completed = true
-        }
-      })
+      } else {
+        completedTasks.forEach(d => {
+          const task = schedule[d.index]
+          if (task.timestamp == d.timestamp && task.name == d.name) {
+            task.completed = true
+          }
+        })
+        completed = completedTasks
+      }
     }
-    return schedule
-  }
-
-  addToCompletedTasks(task) {
-    return this.storage.push(StorageKeys.SCHEDULE_TASKS_COMPLETED, task)
+    return { schedule, completed }
   }
 
   static advanceRepeat(timestamp: number, interval: TimeInterval) {

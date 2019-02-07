@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core'
 
 import { StorageKeys } from '../../../shared/enums/storage'
 import { Task } from '../../../shared/models/task'
+import { TaskType, getTaskType } from '../../../shared/utilities/task-type'
 import {
   getMilliseconds,
   setDateTimeToMidnight
@@ -13,32 +14,41 @@ import { ScheduleGeneratorService } from './schedule-generator.service'
 
 @Injectable()
 export class ScheduleService {
-  configVersion: number
-  refTimestamp: number
-  completedTasks = []
-  utcOffsetPrev: number
+  private readonly SCHEDULE_STORE = {
+    SCHEDULE_TASKS: StorageKeys.SCHEDULE_TASKS,
+    SCHEDULE_TASKS_CLINICAL: StorageKeys.SCHEDULE_TASKS_CLINICAL,
+    SCHEDULE_TASKS_COMPLETED: StorageKeys.SCHEDULE_TASKS_COMPLETED
+  }
 
   constructor(
     private storage: StorageService,
     private schedule: ScheduleGeneratorService
   ) {}
 
-  getTasks(): Promise<Task[]> {
-    return Promise.all([this.getDefaultTasks(), this.getClinicalTasks()]).then(
-      ([defaultTasks, clinicalTasks]) => {
-        const allTasks = (defaultTasks || []).concat(clinicalTasks || [])
-        allTasks.forEach(t => {
-          if (t.notifications === undefined) {
-            t.notifications = []
-          }
+  getTasks(type: TaskType): Promise<Task[]> {
+    switch (type) {
+      case TaskType.NON_CLINICAL:
+        return this.getNonClinicalTasks()
+      case TaskType.CLINICAL:
+        return this.getClinicalTasks()
+      case TaskType.ALL:
+        return Promise.all([
+          this.getNonClinicalTasks(),
+          this.getClinicalTasks()
+        ]).then(([defaultTasks, clinicalTasks]) => {
+          const allTasks = (defaultTasks || []).concat(clinicalTasks || [])
+          allTasks.forEach(t => {
+            if (t.notifications === undefined) {
+              t.notifications = []
+            }
+          })
+          return allTasks
         })
-        return allTasks
-      }
-    )
+    }
   }
 
-  getTasksForDate(date) {
-    return this.getTasks().then(schedule => {
+  getTasksForDate(date: Date, type: TaskType) {
+    return this.getTasks(type).then(schedule => {
       const startTime = setDateTimeToMidnight(date).getTime()
       const endTime = startTime + getMilliseconds({ days: 1 })
       return schedule.filter(d => {
@@ -49,100 +59,88 @@ export class ScheduleService {
     })
   }
 
-  getDefaultTasks(): Promise<Task[]> {
-    return this.storage.get(StorageKeys.SCHEDULE_TASKS)
+  getNonClinicalTasks(): Promise<Task[]> {
+    return this.storage.get(this.SCHEDULE_STORE.SCHEDULE_TASKS)
   }
 
   getClinicalTasks(): Promise<Task[]> {
-    return this.storage.get(StorageKeys.SCHEDULE_TASKS_CLINICAL)
+    return this.storage.get(this.SCHEDULE_STORE.SCHEDULE_TASKS_CLINICAL)
   }
 
   getCompletedTasks(): Promise<Task[]> {
-    return this.storage.get(StorageKeys.SCHEDULE_TASKS_COMPLETED)
+    return this.storage.get(this.SCHEDULE_STORE.SCHEDULE_TASKS_COMPLETED)
   }
 
-  getNonReportedCompletedTasks(): Promise<Task[]> {
-    return this.getTasks().then(tasks => {
+  getIncompleteTasks(): Promise<Task[]> {
+    return this.getTasks(TaskType.ALL).then(tasks => {
       const now = new Date().getTime()
       return tasks
         .filter(
           d =>
-            d &&
-            d.reportedCompletion === false &&
-            d.timestamp + d.completionWindow < now
+            d && d.completed === false && d.timestamp + d.completionWindow < now
         )
         .slice(0, 100)
     })
   }
 
-  generateSchedule() {
+  setTasks(type: TaskType, tasks): Promise<void> {
+    switch (type) {
+      case TaskType.NON_CLINICAL:
+        return this.setNonClinicalTasks(tasks)
+      case TaskType.CLINICAL:
+        return this.setClinicalTasks(tasks)
+    }
+  }
+
+  setClinicalTasks(tasks) {
+    return this.storage.set(this.SCHEDULE_STORE.SCHEDULE_TASKS_CLINICAL, tasks)
+  }
+
+  setNonClinicalTasks(tasks) {
+    return this.storage.set(this.SCHEDULE_STORE.SCHEDULE_TASKS, tasks)
+  }
+
+  setCompletedTasks(tasks) {
+    return this.storage.set(this.SCHEDULE_STORE.SCHEDULE_TASKS_COMPLETED, tasks)
+  }
+
+  addToCompletedTasks(task) {
+    return this.storage.push(this.SCHEDULE_STORE.SCHEDULE_TASKS_COMPLETED, task)
+  }
+
+  generateSchedule(referenceDate, utcOffsetPrev) {
+    console.log(referenceDate)
     console.log('Updating schedule..')
-    return Promise.all([
-      this.getCompletedTasks(),
-      this.storage.get(StorageKeys.CONFIG_VERSION),
-      this.storage.get(StorageKeys.REFERENCEDATE),
-      this.storage.get(StorageKeys.UTC_OFFSET_PREV)
-    ])
-      .then(([completedTasks, confVersion, refDate, utcOffsetPrev]) => {
-        this.configVersion = confVersion
-        this.refTimestamp = refDate
+    return this.getCompletedTasks()
+      .then(completedTasks => {
         return this.schedule.runScheduler(
-          StorageKeys.SCHEDULE_TASKS,
-          this.refTimestamp,
+          TaskType.NON_CLINICAL,
+          referenceDate,
           completedTasks,
           utcOffsetPrev
         )
       })
-      .then((tasks: Task[]) =>
-        this.setSchedule(tasks, StorageKeys.SCHEDULE_TASKS)
+      .catch(e => e)
+      .then(res =>
+        Promise.all([
+          this.setTasks(TaskType.NON_CLINICAL, res.schedule),
+          this.setCompletedTasks(res.crompleted)
+        ])
       )
-      .catch(e => console.error(e))
   }
 
-  generateClinicalSchedule(assessment) {
+  generateClinicalSchedule(assessment, referenceDate) {
     return this.schedule
-      .runScheduler(
-        StorageKeys.SCHEDULE_TASKS_CLINICAL,
-        this.refTimestamp,
-        [],
-        assessment
-      )
-      .then((tasks: Task[]) =>
-        this.setSchedule(tasks, StorageKeys.SCHEDULE_TASKS_CLINICAL)
-      )
-      .catch(e => console.error(e))
-  }
-
-  /**
-   * Store the current schedule.
-   * @param schedule tasks to store
-   * @return current configuration version
-   */
-  setSchedule(schedule: Task[], key): Promise<number> {
-    return this.storage
-      .set(key, schedule)
-      .then(() =>
-        this.storage.set(StorageKeys.SCHEDULE_VERSION, this.configVersion)
-      )
-  }
-
-  addToCompletedTasks(task) {
-    return this.schedule.addToCompletedTasks(task)
+      .runScheduler(TaskType.CLINICAL, referenceDate, [], assessment)
+      .catch(e => e)
+      .then(res => this.setTasks(TaskType.CLINICAL, res.schedule))
   }
 
   insertTask(task): Promise<any> {
-    let sKey: StorageKeys
-    let taskPromise: Promise<any>
-    if (task.isClinical) {
-      sKey = StorageKeys.SCHEDULE_TASKS_CLINICAL
-      taskPromise = this.getClinicalTasks()
-    } else {
-      sKey = StorageKeys.SCHEDULE_TASKS
-      taskPromise = this.getDefaultTasks()
-    }
-    return taskPromise.then(tasks => {
+    const type = getTaskType(task)
+    return this.getTasks(type).then(tasks => {
       const updatedTasks = tasks.map(d => (d.index === task.index ? task : d))
-      return this.storage.set(sKey, updatedTasks)
+      return this.setTasks(type, updatedTasks)
     })
   }
 
@@ -157,7 +155,7 @@ export class ScheduleService {
   }
 
   consoleLogSchedule() {
-    this.getTasks().then(tasks => {
+    this.getTasks(TaskType.ALL).then(tasks => {
       let rendered = `\nSCHEDULE Total (${tasks.length})\n`
       rendered += tasks
         .sort(ScheduleService.compareTasks)

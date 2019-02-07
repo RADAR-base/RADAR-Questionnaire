@@ -1,6 +1,6 @@
 export interface Settings {
   appVersion?: string
-  cache?: any
+  cacheSize?: number
   configVersion?: string
   scheduleVersion?: string
   participantID?: string

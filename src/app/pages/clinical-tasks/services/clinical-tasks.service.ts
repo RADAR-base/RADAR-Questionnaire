@@ -1,22 +1,22 @@
 import { Injectable } from '@angular/core'
 
+import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
-import { StorageService } from '../../../core/services/storage/storage.service'
-import { StorageKeys } from '../../../shared/enums/storage'
+import { TaskType } from '../../../shared/utilities/task-type'
 
 @Injectable()
 export class ClinicalTasksService {
   constructor(
-    public storage: StorageService,
+    public questionnaire: QuestionnaireService,
     private localization: LocalizationService
   ) {}
 
   getClinicalAssessment(task) {
-    return this.storage.getClinicalAssessment(task)
+    return this.questionnaire.getAssessment(TaskType.CLINICAL, task)
   }
 
   getClinicalTasks() {
-    return this.storage.get(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS)
+    return this.questionnaire.getAssessments(TaskType.CLINICAL)
   }
 
   getClinicalTaskPayload(task) {

@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core'
 import { WebIntent } from '@ionic-native/web-intent'
 
-import {
-  KAFKA_COMPLETION_LOG,
-  KAFKA_USAGE
-} from '../../../../assets/data/defaultConfig'
+import { SchemaType } from '../../../shared/models/kafka'
 import { UsageEventType } from '../../../shared/models/usage-event'
 import { KafkaService } from './kafka.service'
 
@@ -12,9 +9,12 @@ import { KafkaService } from './kafka.service'
 export class UsageService {
   constructor(private webIntent: WebIntent, private kafka: KafkaService) {}
 
+  sendUsageEvent(payload) {
+    return this.kafka.prepareKafkaObjectAndSend(SchemaType.USAGE, payload)
+  }
   sendOpen() {
     return this.webIntent.getIntent().then(intent =>
-      this.kafka.prepareKafkaObjectAndSend(KAFKA_USAGE, {
+      this.sendUsageEvent({
         eventType: intent.extras
           ? UsageEventType.APP_OPEN_DIRECTLY
           : UsageEventType.APP_OPEN_DIRECTLY
@@ -23,25 +23,25 @@ export class UsageService {
   }
 
   sendQuestionnaireStart() {
-    return this.kafka.prepareKafkaObjectAndSend(KAFKA_USAGE, {
+    return this.sendUsageEvent({
       eventType: UsageEventType.QUESTIONNAIRE_STARTED
     })
   }
 
   sendQuestionnaireCompleted() {
-    return this.kafka.prepareKafkaObjectAndSend(KAFKA_USAGE, {
+    return this.sendUsageEvent({
       eventType: UsageEventType.QUESTIONNAIRE_COMPLETED
     })
   }
 
   sendQuestionnaireClosed() {
-    return this.kafka.prepareKafkaObjectAndSend(KAFKA_USAGE, {
+    return this.sendUsageEvent({
       eventType: UsageEventType.QUESTIONNARE_CLOSED
     })
   }
 
   sendCompletionLog(task, percent) {
-    return this.kafka.prepareKafkaObjectAndSend(KAFKA_COMPLETION_LOG, {
+    return this.kafka.prepareKafkaObjectAndSend(SchemaType.COMPLETION_LOG, {
       name: task.name,
       percentage: percent,
       timeNotification: task.timestamp

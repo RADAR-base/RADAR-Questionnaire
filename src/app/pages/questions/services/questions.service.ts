@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 
+import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
 import { UsageService } from '../../../core/services/kafka/usage.service'
-import { StorageService } from '../../../core/services/storage/storage.service'
 import { getSeconds } from '../../../shared/utilities/time'
 import { AnswerService } from './answer.service'
 import { TimestampService } from './timestamp.service'
@@ -9,7 +9,7 @@ import { TimestampService } from './timestamp.service'
 @Injectable()
 export class QuestionsService {
   constructor(
-    public storage: StorageService,
+    public questionnaire: QuestionnaireService,
     private answerService: AnswerService,
     private timestampService: TimestampService,
     private usage: UsageService
@@ -51,11 +51,10 @@ export class QuestionsService {
     return getSeconds({ milliseconds: this.timestampService.getTimeStamp() })
   }
 
-  updateAssessmentIntroduction(assessment) {
+  updateAssessmentIntroduction(assessment, taskType) {
     if (assessment.showIntroduction) {
-      const assessmentUpdated = assessment
-      assessmentUpdated.showIntroduction = false
-      this.storage.updateAssessment(assessmentUpdated)
+      assessment.showIntroduction = false
+      this.questionnaire.updateAssessment(taskType, assessment)
     }
   }
 
@@ -89,7 +88,7 @@ export class QuestionsService {
   }
 
   evalSkipNext(questions, currentQuestion) {
-    // Note: Evaluates branching logic
+    // NOTE: Evaluates branching logic
     let increment = 1
     let questionIdx = currentQuestion + 1
     if (questionIdx < questions.length) {

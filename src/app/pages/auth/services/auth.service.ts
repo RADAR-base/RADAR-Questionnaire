@@ -5,7 +5,6 @@ import { Injectable } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
 
 import {
-  DefaultEndPoint,
   DefaultManagementPortalURI,
   DefaultMetaTokenURI,
   DefaultRefreshTokenRequestBody,
@@ -15,11 +14,8 @@ import {
   DefaultSourceTypeRegistrationBody,
   DefaultSubjectsURI
 } from '../../../../assets/data/defaultConfig'
-import { setDateTimeToMidnight } from '.././../../shared/utilities/time'
 import { ConfigService } from '../../../core/services/config/config.service'
-import { StorageService } from '../../../core/services/storage/storage.service'
 import { TokenService } from '../../../core/services/token/token.service'
-import { StorageKeys } from '../../../shared/enums/storage'
 
 @Injectable()
 export class AuthService {
@@ -29,12 +25,9 @@ export class AuthService {
 
   constructor(
     public http: HttpClient,
-    public storage: StorageService,
     private token: TokenService,
     private config: ConfigService
-  ) {
-    this.updateURI()
-  }
+  ) {}
 
   authenticate(authObj) {
     return (this.validURL(authObj)
@@ -50,32 +43,34 @@ export class AuthService {
   URLAuth(authObj) {
     // NOTE: Meta QR code and new QR code
     return this.getRefreshTokenFromUrl(authObj).then((body: any) => {
-      const refreshToken = body['refreshToken']
-      if (body['baseUrl']) {
-        this.storage.set(StorageKeys.BASE_URI, body['baseUrl'])
-        this.updateURI()
-      }
-      return refreshToken
+      const refreshToken = body.refreshToken
+      return body.baseURL
+        ? this.token.setURI(body.baseURL)
+        : Promise.resolve()
+            .then(() => this.updateURI())
+            .then(() => refreshToken)
     })
   }
 
   nonURLAuth(authObj) {
     // NOTE: Old QR codes: containing refresh token as JSON
     return this.updateURI().then(() => {
-      const refreshToken = JSON.parse(authObj)['refreshToken']
+      const refreshToken = JSON.parse(authObj).refreshToken
       return refreshToken
     })
   }
 
   enrol() {
-    return this.initSubjectInformation().then(() =>
-      this.config.fetchConfigState(true)
-    )
+    return this.initSubjectInformation()
+      .then(() => this.config.fetchConfigState(true))
+      .catch(e => {
+        throw { status: 0 }
+      })
   }
 
   updateURI() {
-    return this.storage.get(StorageKeys.BASE_URI).then(uri => {
-      this.URI_base = (uri ? uri : DefaultEndPoint) + DefaultManagementPortalURI
+    return this.token.getURI().then(uri => {
+      this.URI_base = uri + DefaultManagementPortalURI
     })
   }
 
@@ -106,6 +101,7 @@ export class AuthService {
   }
 
   initSubjectInformation() {
+    console.log('initing subjectinfo')
     return this.getSubjectInformation().then(res => {
       const subjectInformation: any = res
       const participantId = subjectInformation.externalId
@@ -113,17 +109,12 @@ export class AuthService {
       const projectName = subjectInformation.project.projectName
       const sourceId = this.getSourceId(subjectInformation)
       const createdDate = new Date(subjectInformation.createdDate).getTime()
-      const createdDateMidnight = setDateTimeToMidnight(
-        new Date(subjectInformation.createdDate)
-      ).getTime()
-
-      return this.storage.init(
+      return this.config.setAll(
         participantId,
         participantLogin,
         projectName,
         sourceId,
-        createdDate,
-        createdDateMidnight
+        createdDate
       )
     })
   }

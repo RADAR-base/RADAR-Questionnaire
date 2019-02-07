@@ -3,23 +3,18 @@ import * as AvroSchema from 'avsc'
 import * as KafkaRest from 'kafka-rest'
 
 import {
-  KAFKA_ASSESSMENT,
-  KAFKA_COMPLETION_LOG,
-  KAFKA_TIMEZONE,
-  KAFKA_USAGE
-} from '../../../../assets/data/defaultConfig'
-import {
   AnswerKeyExport,
   AnswerValueExport
 } from '../../../shared/models/answer'
 import { CompletionLogValueExport } from '../../../shared/models/completion-log'
-import { SchemaMetadata } from '../../../shared/models/kafka'
+import { SchemaMetadata, SchemaType } from '../../../shared/models/kafka'
 import { Task } from '../../../shared/models/task'
 import { ApplicationTimeZoneValueExport } from '../../../shared/models/timezone'
 import { UsageEventValueExport } from '../../../shared/models/usage-event'
+import { getTaskType } from '../../../shared/utilities/task-type'
 import { getSeconds } from '../../../shared/utilities/time'
 import { Utility } from '../../../shared/utilities/util'
-import { StorageService } from '../storage/storage.service'
+import { QuestionnaireService } from '../config/questionnaire.service'
 
 @Injectable()
 export class SchemaService {
@@ -27,18 +22,27 @@ export class SchemaService {
     [key: string]: Promise<[SchemaMetadata, SchemaMetadata]>
   } = {}
 
-  constructor(private util: Utility, public storage: StorageService) {}
+  constructor(
+    private util: Utility,
+    public questionnaire: QuestionnaireService
+  ) {}
 
   getSpecs(type, task?: Task) {
     // NOTE: Specs { avsc: string, name: string }
     switch (type) {
-      case KAFKA_ASSESSMENT:
-        return this.storage.getAssessmentAvsc(task).then(specs => {
-          return Promise.resolve(specs)
-        })
+      case SchemaType.ASSESSMENT:
+        return this.getAssessmentAvro(task)
       default:
         return Promise.resolve({ name: type, avsc: 'questionnaire' })
     }
+  }
+
+  getAssessmentAvro(task: Task) {
+    return this.questionnaire
+      .getAssessment(getTaskType(task), task)
+      .then(assessment => {
+        return assessment.questionnaire
+      })
   }
 
   getKafkaObjectKey() {
@@ -49,7 +53,7 @@ export class SchemaService {
 
   getKafkaObjectValue(type, payload) {
     switch (type) {
-      case KAFKA_ASSESSMENT:
+      case SchemaType.ASSESSMENT:
         const Answer: AnswerValueExport = {
           name: payload.task.name,
           version: payload.data.configVersion,
@@ -59,27 +63,25 @@ export class SchemaService {
           timeNotification: getSeconds({ milliseconds: payload.task.timestamp })
         }
         return Answer
-      case KAFKA_COMPLETION_LOG:
+      case SchemaType.COMPLETION_LOG:
         const CompletionLog: CompletionLogValueExport = {
           name: payload.name,
-          time: getSeconds({
-            milliseconds: new Date().getTime() + Math.random()
-          }),
+          time: getSeconds({ milliseconds: this.getUniqueTimeNow() }),
           timeNotification: getSeconds({
             milliseconds: payload.timeNotification
           }),
           completionPercentage: { double: payload.percentage }
         }
         return CompletionLog
-      case KAFKA_TIMEZONE:
+      case SchemaType.TIMEZONE:
         const ApplicationTimeZone: ApplicationTimeZoneValueExport = {
-          time: getSeconds({ milliseconds: new Date().getTime() }),
+          time: getSeconds({ milliseconds: this.getUniqueTimeNow() }),
           offset: getSeconds({ minutes: new Date().getTimezoneOffset() })
         }
         return ApplicationTimeZone
-      case KAFKA_USAGE:
+      case SchemaType.USAGE:
         const Event: UsageEventValueExport = {
-          time: getSeconds({ milliseconds: new Date().getTime() }),
+          time: getSeconds({ milliseconds: this.getUniqueTimeNow() }),
           eventType: payload.eventType
         }
         return Event
@@ -114,5 +116,9 @@ export class SchemaService {
         return { schemaId, schemaInfo, payload }
       }
     )
+  }
+
+  getUniqueTimeNow() {
+    return new Date().getTime() + Math.random()
   }
 }

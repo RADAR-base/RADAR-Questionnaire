@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core'
 
-import {
-  KAFKA_ASSESSMENT,
-  KAFKA_TIMEZONE
-} from '../../../../assets/data/defaultConfig'
+import { ConfigService } from '../../../core/services/config/config.service'
 import { KafkaService } from '../../../core/services/kafka/kafka.service'
 import { UsageService } from '../../../core/services/kafka/usage.service'
 import { NotificationService } from '../../../core/services/notifications/notification.service'
 import { ScheduleService } from '../../../core/services/schedule/schedule.service'
+import { SchemaType } from '../../../shared/models/kafka'
+import { TaskType, getTaskType } from '../../../shared/utilities/task-type'
 import { PrepareDataService } from './prepare-data.service'
 
 @Injectable()
@@ -17,24 +16,29 @@ export class FinishTaskService {
     private usage: UsageService,
     private prepare: PrepareDataService,
     private kafka: KafkaService,
-    private notifications: NotificationService
+    private notifications: NotificationService,
+    private config: ConfigService
   ) {}
 
   updateTaskToComplete(task) {
-    this.schedule.updateTaskToComplete(task)
-    this.schedule.updateTaskToReportedCompletion(task)
-    if (task.isClinical == false) this.schedule.addToCompletedTasks(task)
+    return getTaskType(task) == TaskType.NON_CLINICAL
+      ? Promise.all([
+          this.schedule.updateTaskToComplete(task),
+          this.schedule.updateTaskToReportedCompletion(task),
+          this.schedule.addToCompletedTasks(task)
+        ])
+      : Promise.resolve([])
   }
 
   sendCompletedEvent() {
-    this.usage.sendQuestionnaireCompleted()
+    return this.usage.sendQuestionnaireCompleted()
   }
 
   processDataAndSend(data, task) {
     return this.prepare.processQuestionnaireData(data).then(
       processedAnswers => {
         console.log(processedAnswers)
-        return this.sendToKafka(processedAnswers, task)
+        return this.sendAnswersToKafka(processedAnswers, task)
       },
       error => {
         console.log(JSON.stringify(error))
@@ -42,24 +46,21 @@ export class FinishTaskService {
     )
   }
 
-  sendToKafka(processedAnswers, task) {
+  sendAnswersToKafka(processedAnswers, task) {
     // NOTE: Submit data to kafka
-    this.kafka.prepareKafkaObjectAndSend(KAFKA_TIMEZONE, {})
-    this.kafka.prepareKafkaObjectAndSend(KAFKA_ASSESSMENT, {
-      task: task,
-      data: processedAnswers
-    })
+    return Promise.all([
+      this.kafka.prepareKafkaObjectAndSend(SchemaType.TIMEZONE, {}),
+      this.kafka.prepareKafkaObjectAndSend(SchemaType.ASSESSMENT, {
+        task: task,
+        data: processedAnswers
+      })
+    ])
   }
 
   evalClinicalFollowUpTask(assessment): Promise<any> {
-    return this.schedule
-      .generateClinicalSchedule(assessment)
+    return this.config
+      .getReferenceDate()
+      .then(date => this.schedule.generateClinicalSchedule(assessment, date))
       .then(() => this.notifications.publish())
-  }
-
-  updateTaskToReportedCompletion(task): Promise<any> {
-    const updatedTask = task
-    updatedTask.reportedCompletion = true
-    return this.schedule.insertTask(updatedTask)
   }
 }

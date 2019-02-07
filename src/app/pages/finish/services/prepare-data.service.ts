@@ -4,23 +4,26 @@
 
 import { Injectable } from '@angular/core'
 
-import { StorageService } from '../../../core/services/storage/storage.service'
-import { StorageKeys } from '../../../shared/enums/storage'
+import { ConfigService } from '../../../core/services/config/config.service'
+import { SubjectConfigService } from '../../../core/services/config/subject-config.service'
 import { QuestionType } from '../../../shared/models/question'
 
 @Injectable()
 export class PrepareDataService {
-  constructor(public storage: StorageService) {}
+  constructor(
+    private config: ConfigService,
+    private subjectConfig: SubjectConfigService
+  ) {}
 
   processQuestionnaireData(data): Promise<any> {
     const answers = data.answers
     const timestamps = data.timestamps
     const questions = data.questions
     console.log(answers)
-    console.log(timestamps)
+
     return Promise.all([
-      this.storage.get(StorageKeys.CONFIG_VERSION),
-      this.storage.get(StorageKeys.PARTICIPANTLOGIN)
+      this.config.getConfigVersion(),
+      this.subjectConfig.getParticipantLogin()
     ])
       .then(([configVersion, participantLogin]) => {
         const values = Object.entries(answers).map(([key, value]) => ({

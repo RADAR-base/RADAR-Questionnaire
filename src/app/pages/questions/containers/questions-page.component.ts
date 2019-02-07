@@ -5,6 +5,7 @@ import { Content, NavController, NavParams, Platform } from 'ionic-angular'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { Question, QuestionType } from '../../../shared/models/question'
+import { TaskType } from '../../../shared/utilities/task-type'
 import { FinishPageComponent } from '../../finish/containers/finish-page.component'
 import { QuestionsService } from '../services/questions.service'
 import { QuestionsPageAnimations } from './questions-page.animation'
@@ -46,6 +47,7 @@ export class QuestionsPageComponent {
   iconPrevious: string = this.iconValues.close
 
   task
+  taskType: TaskType
   questions: Question[]
   questionTitle: String
   endText: string
@@ -87,6 +89,7 @@ export class QuestionsPageComponent {
     this.endText = this.navParams.data.endText
     this.isLastTask = this.navParams.data.isLastTask
     this.assessment = this.navParams.data.assessment
+    this.taskType = this.navParams.data.taskType
     this.setCurrentQuestion(this.nextQuestionIncr)
   }
 
@@ -104,7 +107,10 @@ export class QuestionsPageComponent {
 
   hideIntro() {
     this.showIntroduction = false
-    this.questionsService.updateAssessmentIntroduction(this.assessment)
+    this.questionsService.updateAssessmentIntroduction(
+      this.assessment,
+      this.taskType
+    )
   }
 
   onAnswer(event) {

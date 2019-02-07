@@ -1,80 +1,16 @@
 import { Injectable } from '@angular/core'
-import { AppVersion } from '@ionic-native/app-version'
 import { Storage } from '@ionic/storage'
 import { throwError as observableThrowError } from 'rxjs'
 
-import {
-  DefaultScheduleVersion,
-  DefaultSettingsNotifications,
-  DefaultSettingsSupportedLanguages,
-  DefaultSettingsWeeklyReport
-} from '../../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../../shared/enums/storage'
-import { Assessment } from '../../../shared/models/assessment'
-import { Task } from '../../../shared/models/task'
 
 @Injectable()
 export class StorageService {
   global: { [key: string]: any } = {}
 
-  constructor(private storage: Storage, private appVersion: AppVersion) {
-    const setStoragePromise = this.prepareStorage()
-    Promise.resolve(setStoragePromise)
+  constructor(private storage: Storage) {
+    Promise.resolve(this.prepareStorage())
     console.log(this.global)
-  }
-
-  init(
-    participantId,
-    participantLogin,
-    projectName,
-    sourceId,
-    createdDate,
-    createdDateMidnight
-  ) {
-    const enrolmentDate = this.set(StorageKeys.ENROLMENTDATE, createdDate)
-    const referenceDate = this.set(
-      StorageKeys.REFERENCEDATE,
-      createdDateMidnight
-    )
-    const pId = this.set(StorageKeys.PARTICIPANTID, participantId)
-    const pLogin = this.set(StorageKeys.PARTICIPANTLOGIN, participantLogin)
-    const pName = this.set(StorageKeys.PROJECTNAME, projectName)
-    const sId = this.set(StorageKeys.SOURCEID, sourceId)
-    const notif = this.set(
-      StorageKeys.SETTINGS_NOTIFICATIONS,
-      DefaultSettingsNotifications
-    )
-    const report = this.set(
-      StorageKeys.SETTINGS_WEEKLYREPORT,
-      DefaultSettingsWeeklyReport
-    )
-    const langs = this.set(
-      StorageKeys.SETTINGS_LANGUAGES,
-      DefaultSettingsSupportedLanguages
-    )
-    const version = this.set(
-      StorageKeys.SCHEDULE_VERSION,
-      DefaultScheduleVersion
-    )
-    const utc = this.set(StorageKeys.UTC_OFFSET, new Date().getTimezoneOffset())
-    const cache = this.set(StorageKeys.CACHE_ANSWERS, {})
-
-    return Promise.all([
-      pId,
-      pName,
-      pLogin,
-      sId,
-      notif,
-      report,
-      langs,
-      version,
-      utc,
-      cache,
-      enrolmentDate,
-      referenceDate
-    ]).catch(error => {
-      this.handleError(error)
-    })
   }
 
   getStorageState() {
@@ -127,10 +63,6 @@ export class StorageService {
     return this.storage.keys()
   }
 
-  getAppVersion() {
-    return this.appVersion.getVersionNumber()
-  }
-
   prepareStorage() {
     return this.getAllKeys()
       .then(keys =>
@@ -139,47 +71,6 @@ export class StorageService {
         )
       )
       .then(() => 'Store set')
-  }
-
-  getAssessment(task: Task) {
-    const defaultAssessment = this.get(StorageKeys.CONFIG_ASSESSMENTS)
-    const clinicalAssesment = this.get(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS)
-    return Promise.all([defaultAssessment, clinicalAssesment]).then(
-      assessments => {
-        for (let i = 0; i < assessments.length; i++) {
-          for (let j = 0; j < assessments[i].length; j++) {
-            if (assessments[i][j].name === task.name) {
-              return assessments[i][j]
-            }
-          }
-        }
-      }
-    )
-  }
-
-  getClinicalAssessment(task: Task) {
-    return this.get(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS).then(assessments =>
-      assessments.find(a => a.name === task.name)
-    )
-  }
-
-  getAssessmentAvsc(task: Task) {
-    return this.getAssessment(task).then(assessment => {
-      return assessment.questionnaire
-    })
-  }
-
-  updateAssessment(assessment: Assessment) {
-    const key = StorageKeys.CONFIG_ASSESSMENTS
-    this.get(key).then(assessments => {
-      const updatedAssessments = assessments
-      for (let i = 0; i < assessments.length; i++) {
-        if (updatedAssessments[i].name === assessment.name) {
-          updatedAssessments[i] = assessment
-        }
-      }
-      this.set(key, updatedAssessments)
-    })
   }
 
   clearStorage() {

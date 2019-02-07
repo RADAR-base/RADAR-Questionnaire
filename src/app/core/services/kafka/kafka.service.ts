@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core'
 import * as KafkaRest from 'kafka-rest'
 
-import {
-  DefaultEndPoint,
-  KAFKA_CLIENT_KAFKA
-} from '../../../../assets/data/defaultConfig'
+import { DefaultKafkaURI } from '../../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { StorageService } from '../storage/storage.service'
 import { TokenService } from '../token/token.service'
@@ -12,6 +9,10 @@ import { SchemaService } from './schema.service'
 
 @Injectable()
 export class KafkaService {
+  private readonly KAFKA_STORE = {
+    LAST_UPLOAD_DATE: StorageKeys.LAST_UPLOAD_DATE,
+    CACHE_ANSWERS: StorageKeys.CACHE_ANSWERS
+  }
   private KAFKA_CLIENT_URL: string
   private isCacheSending: boolean
 
@@ -20,14 +21,16 @@ export class KafkaService {
     private token: TokenService,
     private schema: SchemaService
   ) {
-    this.updateURI()
     this.token.refresh()
   }
 
+  init() {
+    return this.setCache({})
+  }
+
   updateURI() {
-    this.storage.get(StorageKeys.BASE_URI).then(uri => {
-      const endPoint = uri ? uri : DefaultEndPoint
-      this.KAFKA_CLIENT_URL = endPoint + KAFKA_CLIENT_KAFKA
+    this.token.getURI().then(uri => {
+      this.KAFKA_CLIENT_URL = uri + DefaultKafkaURI
     })
   }
 
@@ -44,17 +47,17 @@ export class KafkaService {
   }
 
   sendToCache(kafkaObject, specs) {
-    return this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
+    return this.getCache().then(cache => {
       console.log('KAFKA-SERVICE: Caching answers.')
       cache[kafkaObject.value.time] = { kafkaObject: kafkaObject, specs: specs }
-      return this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
+      return this.setCache(cache)
     })
   }
 
   sendToKafkaFromCache() {
     if (!this.isCacheSending) {
       this.setCacheSending(true)
-      this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
+      this.getCache().then(cache => {
         const promises = Object.entries(cache)
           .filter(([k]) => k)
           .slice(0, 20)
@@ -76,10 +79,6 @@ export class KafkaService {
         Promise.all(promises).then(() => this.setCacheSending(false))
       })
     }
-  }
-
-  setCacheSending(val: boolean) {
-    this.isCacheSending = val
   }
 
   sendToKafka(specs, keySchema, valueSchema, payload, cacheKey) {
@@ -110,24 +109,46 @@ export class KafkaService {
       })
   }
 
-  setLastUploadDate() {
-    return this.storage.set(StorageKeys.LAST_UPLOAD_DATE, Date.now())
-  }
-
   removeDataFromCache(cacheKey) {
-    return this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
+    return this.getCache().then(cache => {
       console.log('Deleting ' + cacheKey)
       if (cache[cacheKey]) delete cache[cacheKey]
-      return this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
+      return this.setCache(cache)
     })
   }
 
   getKafkaInstance() {
     return Promise.all([this.updateURI(), this.token.refresh()])
-      .then(() => this.storage.get(StorageKeys.OAUTH_TOKENS))
+      .then(() => this.token.getTokens())
       .then(tokens => {
         const headers = { Authorization: 'Bearer ' + tokens.access_token }
         return new KafkaRest({ url: this.KAFKA_CLIENT_URL, headers: headers })
       })
+  }
+
+  setCache(cache) {
+    return this.storage.set(this.KAFKA_STORE.CACHE_ANSWERS, cache)
+  }
+
+  setCacheSending(val: boolean) {
+    this.isCacheSending = val
+  }
+
+  setLastUploadDate() {
+    return this.storage.set(this.KAFKA_STORE.LAST_UPLOAD_DATE, Date.now())
+  }
+
+  getCache() {
+    return this.storage.get(this.KAFKA_STORE.CACHE_ANSWERS)
+  }
+
+  getLastUploadDate() {
+    return this.storage.get(this.KAFKA_STORE.LAST_UPLOAD_DATE)
+  }
+
+  getCacheSize() {
+    return this.storage
+      .get(this.KAFKA_STORE.CACHE_ANSWERS)
+      .then(cache => Object.keys(cache).reduce((s, k) => (k ? s + 1 : s), 0))
   }
 }

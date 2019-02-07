@@ -1,44 +1,41 @@
 import { Injectable } from '@angular/core'
 
+import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { ScheduleService } from '../../../core/services/schedule/schedule.service'
-import { StorageService } from '../../../core/services/storage/storage.service'
-import { StorageKeys } from '../../../shared/enums/storage'
 import { Task, TasksProgress } from '../../../shared/models/task'
+import { TaskType, getTaskType } from '../../../shared/utilities/task-type'
 import { getMilliseconds } from '../../../shared/utilities/time'
 
 @Injectable()
 export class TasksService {
   constructor(
-    public storage: StorageService,
     private schedule: ScheduleService,
-    private localization: LocalizationService
+    private localization: LocalizationService,
+    private questionnaire: QuestionnaireService
   ) {}
 
-  getAssessment(task) {
-    return this.storage.getAssessment(task)
-  }
-
   getQuestionnairePayload(task) {
-    return this.getAssessment(task).then(assessment => {
+    const type = getTaskType(task)
+    return this.questionnaire.getAssessment(type, task).then(assessment => {
       return {
         title: assessment.name,
         introduction: this.localization.chooseText(assessment.startText),
         endText: this.localization.chooseText(assessment.endText),
         questions: assessment.questions,
         task: task,
-        assessment: assessment
+        assessment: assessment,
+        type: type
       }
     })
   }
 
   evalHasClinicalTasks() {
-    return this.storage.get(StorageKeys.HAS_CLINICAL_TASKS)
+    return this.questionnaire.getHasClinicalTasks()
   }
 
   getTasksOfToday() {
-    const now = new Date()
-    return this.schedule.getTasksForDate(now)
+    return this.schedule.getTasksForDate(new Date(), TaskType.NON_CLINICAL)
   }
 
   getTaskProgress(tasks): TasksProgress {
@@ -57,7 +54,7 @@ export class TasksService {
   }
 
   getIncompleteTasks() {
-    return this.schedule.getNonReportedCompletedTasks()
+    return this.schedule.getIncompleteTasks()
   }
 
   updateTaskToReportedCompletion(task) {
@@ -65,10 +62,7 @@ export class TasksService {
   }
 
   areAllTasksComplete(tasks) {
-    return (
-      !tasks ||
-      tasks.every(t => t.name === 'ESM' || t.isClinical || t.completed)
-    )
+    return !tasks || tasks.every(t => t.name === 'ESM' || t.completed)
   }
 
   isLastTask(task, tasks) {

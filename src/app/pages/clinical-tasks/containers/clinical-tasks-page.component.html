@@ -10,7 +10,6 @@
     class="layers"
     [style.height.px]="scrollHeight"
   >
-
     <div *ngFor="let task of tasks; let i=index">
       <div
         id="task-item"
@@ -26,24 +25,6 @@
               >
               {{ task.estimatedCompletionTime }}
               <span class="units">min</span>
-              <div
-                class="status-div"
-                *ngIf="!task.completed"
-              >
-                <ion-icon
-                  name="radio-button-off"
-                  class="status"
-                ></ion-icon>
-              </div>
-              <div
-                class="status-div"
-                *ngIf="task.completed"
-              >
-                <ion-icon
-                  name="checkmark"
-                  class="status-checked"
-                ></ion-icon>
-              </div>
             </div>
           </ion-col>
         </ion-row>

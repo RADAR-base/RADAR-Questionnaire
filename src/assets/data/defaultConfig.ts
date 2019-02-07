@@ -159,8 +159,4 @@ export const DefaultEnrolmentBaseURL =
 
 // KAFKA
 
-export const KAFKA_ASSESSMENT = 'assessment'
-export const KAFKA_COMPLETION_LOG = 'completion_log'
-export const KAFKA_TIMEZONE = 'timezone'
-export const KAFKA_USAGE = 'usage'
-export const KAFKA_CLIENT_KAFKA = '/kafka'
+export const DefaultKafkaURI = '/kafka'

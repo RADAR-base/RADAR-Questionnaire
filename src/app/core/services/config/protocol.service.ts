@@ -7,16 +7,15 @@ import {
   DefaultQuestionnaireFormatURI,
   DefaultQuestionnaireTypeURI
 } from '../../../../assets/data/defaultConfig'
-import { StorageKeys } from '../../../shared/enums/storage'
 import { Assessment } from '../../../shared/models/assessment'
-import { StorageService } from '../storage/storage.service'
+import { SubjectConfigService } from './subject-config.service'
 
 @Injectable()
 export class ProtocolService {
-  constructor(private storage: StorageService, private http: HttpClient) {}
+  constructor(private config: SubjectConfigService, private http: HttpClient) {}
 
   pull() {
-    return this.getProjectName().then(projectName => {
+    return this.config.getProjectName().then(projectName => {
       if (projectName) {
         const URI = DefaultProtocolEndPoint + projectName + DefaultProtocolURI
         return this.http.get(URI, { responseType: 'text' }).toPromise()
@@ -34,9 +33,5 @@ export class ProtocolService {
       p.questionnaire.format = DefaultQuestionnaireFormatURI
       return p
     })
-  }
-
-  getProjectName() {
-    return this.storage.get(StorageKeys.PROJECTNAME)
   }
 }

@@ -31,17 +31,19 @@ export class TaskProgressComponent implements OnChanges {
   max: number = 1
   current: number = 0
   stroke = 22
-  animation = 'easeInOutQuart'
+  animation = 'easeOutCubic'
   complete = false
   showFireworks: boolean = false
 
   ngOnChanges() {
-    this.current = this.progress.completedTasks
-    this.max = this.progress.numberOfTasks
     this.updateProgress()
   }
 
   updateProgress() {
+    if (this.progress) {
+      this.current = this.progress.completedTasks
+      this.max = this.progress.numberOfTasks
+    }
     this.complete = this.forceComplete || this.current >= this.max
     if (this.complete) this.displayFireworks(800, 980)
   }

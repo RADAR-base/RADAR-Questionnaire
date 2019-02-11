@@ -3,17 +3,32 @@ import 'rxjs/add/operator/map'
 import { Injectable } from '@angular/core'
 
 import {
+  DefaultESMCompletionWindow,
   DefaultScheduleReportRepeat,
   DefaultScheduleYearCoverage,
+  DefaultTaskCompletionWindow,
   HOUR_MIN,
   MIN_SEC,
   SEC_MILLISEC
 } from '../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../shared/enums/storage'
 import { Assessment } from '../../shared/models/assessment'
+import { TimeInterval } from '../../shared/models/protocol'
 import { ReportScheduling } from '../../shared/models/report'
 import { Task } from '../../shared/models/task'
 import { StorageService } from './storage.service'
+
+export const TIME_UNIT_MILLIS = {
+  min: 60000,
+  hour: 60000 * 60,
+  day: 60000 * 60 * 24,
+  week: 60000 * 60 * 24 * 7,
+  month: 60000 * 60 * 24 * 7 * 31,
+  year: 60000 * 60 * 24 * 365
+}
+
+const TIME_UNIT_MILLIS_DEFAULT =
+  DefaultScheduleYearCoverage * TIME_UNIT_MILLIS.year
 
 @Injectable()
 export class SchedulingService {
@@ -54,24 +69,31 @@ export class SchedulingService {
   }
 
   getTasksForDate(date) {
-    return this.getTasks().then(schedule => {
-      if (schedule) {
-        const startDate = this.setDateTimeToMidnight(date)
-        const endDate = this.advanceRepeat(startDate, 'day', 1)
-        const tasks: Task[] = []
-        for (let i = 0; i < schedule.length; i++) {
-          if (schedule[i].timestamp > endDate.getTime()) break
-          if (schedule[i].timestamp > startDate.getTime())
-            tasks.push(schedule[i])
-        }
-        return tasks
-      }
-    })
+    const startTime = this.setDateTimeToMidnight(date).getTime()
+    const endTime = startTime + TIME_UNIT_MILLIS.day
+    return this.getTasks().then(schedule =>
+      schedule.filter(
+        d =>
+          d.timestamp + d.completionWindow >= startTime && d.timestamp < endTime
+      )
+    )
   }
 
-  // NOTE:Define the order of the tasks - whether it is based on index or timestamp
-  compareTasks(a: Task, b: Task) {
-    return a.timestamp - b.timestamp
+  getNonClinicalTasksForDate(date) {
+    return this.getDefaultTasks().then(schedule => {
+      const tasks: Task[] = []
+      if (schedule) {
+        const startTime = this.setDateTimeToMidnight(date).getTime()
+        const endTime = startTime + TIME_UNIT_MILLIS.day
+        for (let i = 0; i < schedule.length; i++) {
+          const task = schedule[i]
+          if (task.timestamp > endTime) break
+          if (task.timestamp + task.completionWindow >= startTime)
+            tasks.push(task)
+        }
+      }
+      return tasks
+    })
   }
 
   getTasks() {
@@ -270,7 +292,7 @@ export class SchedulingService {
     }
     // NOTE: Check for completed tasks
     const updatedSchedule = this.updateScheduleWithCompletedTasks(schedule)
-    schedule = updatedSchedule.sort(this.compareTasks)
+    schedule = updatedSchedule.sort(SchedulingService.compareTasks)
 
     console.log('[√] Updated task schedule.')
     return Promise.resolve(schedule)
@@ -342,6 +364,15 @@ export class SchedulingService {
     }
   }
 
+  static timeIntervalToMillis(interval: TimeInterval): number {
+    if (!interval) {
+      return TIME_UNIT_MILLIS_DEFAULT
+    }
+    const unit = interval.unit in TIME_UNIT_MILLIS ? interval.unit : 'day'
+    const amount = interval.amount ? interval.amount : 1
+    return amount * TIME_UNIT_MILLIS[unit]
+  }
+
   taskBuilder(index, assessment, taskDate): Task {
     const task: Task = {
       index: index,
@@ -352,10 +383,21 @@ export class SchedulingService {
       reminderSettings: assessment.protocol.reminders,
       nQuestions: assessment.questions.length,
       estimatedCompletionTime: assessment.estimatedCompletionTime,
+      completionWindow: SchedulingService.computeCompletionWindow(assessment),
       warning: assessment.warn,
       isClinical: false
     }
     return task
+  }
+
+  static computeCompletionWindow(assessment: Assessment): number {
+    if (assessment.protocol.completionWindow) {
+      return this.timeIntervalToMillis(assessment.protocol.completionWindow)
+    } else if (assessment.name === 'ESM') {
+      return DefaultESMCompletionWindow
+    } else {
+      return DefaultTaskCompletionWindow
+    }
   }
 
   setSchedule(schedule) {
@@ -418,5 +460,22 @@ export class SchedulingService {
       }
       console.log(rendered)
     })
+  }
+
+  // NOTE: Define the order of the tasks - whether it is based on index or timestamp
+  static compareTasks(a, b) {
+    const diff = a.timestamp - b.timestamp
+    if (diff != 0) {
+      return diff
+    }
+    const aName = a.name.toUpperCase()
+    const bName = b.name.toUpperCase()
+    if (aName < bName) {
+      return -1
+    } else if (aName > bName) {
+      return 1
+    } else {
+      return 0
+    }
   }
 }

@@ -34,7 +34,7 @@
     <task-progress
       [progress]="tasksProgress"
       [forceComplete]="showCompleted"
-      [noTasksToday]="showNoTasksToday"
+      [noTasksToday]="tasksProgress.numberOfTasks == 0"
       *ngIf="tasksProgress && !showCalendar"
     >
     </task-progress>
@@ -45,7 +45,7 @@
     class="clinical"
     [class.clinical-1]="taskIsNow && !showCompleted"
     [class.clinical-2]="showCalendar"
-    [class.clinical-3]="showCompleted || showNoTasksToday"
+    [class.clinical-3]="showCompleted || tasksProgress .numberOfTasks == 0"
     [class.clinical-4]="!taskIsNow && !showCompleted && !showCalendar"
     (click)="openClinicalTasksPage()"
   >
@@ -63,7 +63,7 @@
       [task]="nextTask"
       [isNow]="taskIsNow"
       [showAffirmation]="showCompleted"
-      [noTasksToday]="showNoTasksToday"
+      [noTasksToday]="tasksProgress.numberOfTasks == 0"
     ></ticker-bar>
   </div>
 
@@ -89,7 +89,7 @@
     <task-calendar
       [show]="showCalendar"
       (task)="startQuestionnaire($event)"
-      [tasks]="tasks"
+      [tasks]="sortedTasks"
     >
     </task-calendar>
   </div>
@@ -99,7 +99,7 @@
     class="size-static footer"
   >
     <div
-      *ngIf="taskIsNow && !startingQuestionnaire && !showCompleted"
+      *ngIf="taskIsNow && !startingQuestionnaire && !showCompleted && !showCalendar"
       padding
     >
       <button

@@ -579,7 +579,7 @@ export const Localisations = {
     de: 'jetzt',
     en: 'now',
     es: 'ahora',
-    it: 'adesso',
+    it: 'ora',
     nl: 'nu'
   },
   STATUS_FAILURE: {
@@ -744,13 +744,21 @@ export const Localisations = {
     nl:
       'Met &hearts; voor u gemaakt door het RADAR-CNS consortium. Voor meer informatie klik <a href="http://radar-cns.org">here</a>'
   },
-  TASK_CALENDAR_TITLE: {
+  TASK_CALENDAR_TITLE_TODAY: {
     da: 'Dagens opgaver',
     de: 'Heutige Aufgaben',
     en: "Today's tasks",
     es: 'Las tareas de hoy',
     it: 'Le attività di oggi',
     nl: 'Taken voor vandaag'
+  },
+  TASK_CALENDAR_TITLE_PENDING: {
+    da: 'Afventer opgaver',
+    de: 'Ausstehende Aufgaben',
+    en: 'Pending tasks',
+    es: 'Tareas pendientes',
+    it: 'Attività in sospeso',
+    nl: 'In afwachting van taken'
   },
   TASK_INFO_WARN: {
     da: 'Kræver rolige omgivelser',

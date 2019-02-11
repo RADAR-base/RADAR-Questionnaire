@@ -44,7 +44,7 @@ import { Task, TasksProgress } from '../../../../shared/models/task'
       transition('* => *', animate('400ms ease'))
     ]),
     trigger('alignCenterRightMetrics', [
-      state('false', style({ transform: 'translate3d(120%, 0, 0)' })),
+      state('false', style({ transform: 'translate3d(110%, 0, 0)' })),
       state('true', style({ transform: 'translate3d(0, 0, 0)' })),
       transition('* => *', animate('400ms ease'))
     ])

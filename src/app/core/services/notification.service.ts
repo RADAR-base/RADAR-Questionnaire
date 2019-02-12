@@ -30,7 +30,9 @@ export class NotificationService {
     private alertCtrl: AlertController,
     private schedule: SchedulingService,
     public storage: StorageService
-  ) {
+  ) {}
+
+  init() {
     try {
       FCMPlugin.setSenderId(
         FCMPluginProjectSenderId,

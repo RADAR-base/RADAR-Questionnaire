@@ -1,6 +1,6 @@
 import { Component } from '@angular/core'
-import { SplashScreen } from '@ionic-native/splash-screen'
-import { StatusBar } from '@ionic-native/status-bar'
+import { SplashScreen } from '@ionic-native/splash-screen/ngx'
+import { StatusBar } from '@ionic-native/status-bar/ngx'
 import { Platform } from 'ionic-angular'
 
 import { DefaultNotificationType } from '../../../assets/data/defaultConfig'
@@ -22,6 +22,7 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.statusBar.hide()
       this.splashScreen.hide()
+      this.notificationService.init()
       if (DefaultNotificationType === 'LOCAL')
         this.notificationService.permissionCheck()
     })

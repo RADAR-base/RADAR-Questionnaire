@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core'
 
+import {
+  DefaultESMCompletionWindow,
+  DefaultTaskCompletionWindow
+} from '../../../../assets/data/defaultConfig'
 import { KafkaService } from '../../../core/services/kafka.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
@@ -45,16 +49,10 @@ export class TasksService {
   }
 
   areAllTasksComplete(tasks) {
-    if (tasks) {
-      for (let i = 0; i < tasks.length; i++) {
-        if (tasks[i].name !== 'ESM' && tasks[i].isClinical == false) {
-          if (tasks[i].completed === false) {
-            return false
-          }
-        }
-      }
-    }
-    return true
+    return (
+      !tasks ||
+      tasks.every(t => t.name === 'ESM' || t.isClinical || t.completed)
+    )
   }
 
   isLastTask(task, tasks): boolean {
@@ -83,14 +81,22 @@ export class TasksService {
    */
   getNextTask(tasks: Task[]): Task | undefined {
     if (tasks) {
+      const tenMinutesAgo = new Date().getTime() - DefaultESMCompletionWindow
+      const midnight = new Date()
+      midnight.setHours(0, 0, 0, 0)
+      const offsetForward = DefaultTaskCompletionWindow
       return tasks.find(task => {
         switch (task.name) {
           case 'ESM':
             // NOTE: For ESM, just look from 10 mins before now
-            return this.isTaskValid(task)
+            return (
+              task.timestamp >= tenMinutesAgo &&
+              task.timestamp < tenMinutesAgo + offsetForward &&
+              !task.completed
+            )
           default:
             // NOTE: Break out of the loop as soon as the next incomplete task is found
-            return !task.completed
+            return task.timestamp >= midnight.getTime() && !task.completed
         }
       })
     }

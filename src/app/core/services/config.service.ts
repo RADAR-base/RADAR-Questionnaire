@@ -2,7 +2,7 @@ import 'rxjs/add/operator/toPromise'
 
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { AppVersion } from '@ionic-native/app-version'
+import { AppVersion } from '@ionic-native/app-version/ngx'
 
 import {
   ARMTDefBranchProd,

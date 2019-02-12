@@ -26,14 +26,14 @@ import { TasksService } from '../services/tasks.service'
   templateUrl: 'home-page.component.html',
   animations: [
     trigger('displayCalendar', [
-      state('true', style({ transform: 'translateY(0%)' })),
+      state('true', style({ transform: 'translateY(0)' })),
       state('false', style({ transform: 'translateY(100%)' })),
       transition('*=>*', animate('300ms ease'))
     ]),
     trigger('moveProgress', [
       state('true', style({ transform: 'translateY(-100%)' })),
-      state('false', style({ transform: 'translateY(0%)' })),
-      transition('*=>*', animate('300ms ease-out'))
+      state('false', style({ transform: 'translateY(0)' })),
+      transition('true=>false', animate('300ms ease-out'))
     ])
   ]
 })
@@ -44,7 +44,7 @@ export class HomePageComponent {
   nextTask: Task
   showCalendar = false
   showCompleted = false
-  tasksProgress: TasksProgress = { numberOfTasks: 1, completedTasks: 0 }
+  tasksProgress: TasksProgress
   startingQuestionnaire = false
   hasClinicalTasks = false
   taskIsNow = false
@@ -96,7 +96,6 @@ export class HomePageComponent {
     if (task) {
       this.nextTask = task
       this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
-      this.showCompleted = !this.nextTask
     } else {
       this.taskIsNow = false
       this.nextTask = null

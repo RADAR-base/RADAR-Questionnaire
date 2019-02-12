@@ -34,7 +34,7 @@
     <task-progress
       [progress]="tasksProgress"
       [forceComplete]="showCompleted"
-      [noTasksToday]="tasksProgress.numberOfTasks == 0"
+      [noTasksToday]="tasksProgress?.numberOfTasks == 0"
       *ngIf="tasksProgress && !showCalendar"
     >
     </task-progress>
@@ -45,7 +45,7 @@
     class="clinical"
     [class.clinical-1]="taskIsNow && !showCompleted"
     [class.clinical-2]="showCalendar"
-    [class.clinical-3]="showCompleted || tasksProgress .numberOfTasks == 0"
+    [class.clinical-3]="showCompleted || tasksProgress?.numberOfTasks == 0"
     [class.clinical-4]="!taskIsNow && !showCompleted && !showCalendar"
     (click)="openClinicalTasksPage()"
   >
@@ -63,7 +63,7 @@
       [task]="nextTask"
       [isNow]="taskIsNow"
       [showAffirmation]="showCompleted"
-      [noTasksToday]="tasksProgress.numberOfTasks == 0"
+      [noTasksToday]="tasksProgress?.numberOfTasks == 0"
     ></ticker-bar>
   </div>
 

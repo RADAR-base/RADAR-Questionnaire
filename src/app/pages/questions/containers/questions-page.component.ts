@@ -8,13 +8,13 @@ import {
   ViewController
 } from 'ionic-angular'
 
+import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { Question, QuestionType } from '../../../shared/models/question'
 import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { FinishPageComponent } from '../../finish/containers/finish-page.component'
 import { AnswerService } from '../services/answer.service'
 import { TimestampService } from '../services/timestamp.service'
-import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 
 @Component({
   selector: 'page-questions',

@@ -24,8 +24,8 @@ import {
 import { QuestionType } from '../../shared/models/question'
 import { Task } from '../../shared/models/task'
 import { Utility } from '../../shared/utilities/util'
-import { StorageService } from './storage.service'
 import { FirebaseAnalyticsService } from './firebaseAnalytics.service'
+import { StorageService } from './storage.service'
 
 @Injectable()
 export class KafkaService {
@@ -207,14 +207,14 @@ export class KafkaService {
             } else {
               const cacheKey = specs.kafkaObject.value.time
               return this.removeAnswersFromCache(cacheKey).then(() =>
-                this.setLastUploadDate()
-                .then(() => this.firebaseAnalytics.logEvent('send_success', {
-                              date: new Date(),
-                              topic: topic,
-                              name: specs.name,
-                              questionnaire_timestamp: specs.task.timestamp
-                          })
-                        )
+                this.setLastUploadDate().then(() =>
+                  this.firebaseAnalytics.logEvent('send_success', {
+                    date: new Date(),
+                    topic: topic,
+                    name: specs.name,
+                    questionnaire_timestamp: specs.task.timestamp
+                  })
+                )
               )
             }
           })

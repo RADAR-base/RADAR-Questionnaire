@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { File } from '@ionic-native/file'
+import { File } from '@ionic-native/file/ngx'
 // NOTE: File path to opensmile.js; Adding opensmile plugin
 import * as opensmile from 'cordova-plugin-opensmile/www/opensmile'
 

@@ -2,6 +2,7 @@ import { Component } from '@angular/core'
 import { NavController, NavParams } from 'ionic-angular'
 
 import { DefaultNumberOfNotificationsToSchedule } from '../../../../assets/data/defaultConfig'
+import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { KafkaService } from '../../../core/services/kafka.service'
 import { NotificationService } from '../../../core/services/notification.service'
 import { StorageService } from '../../../core/services/storage.service'
@@ -10,7 +11,6 @@ import { Task } from '../../../shared/models/task'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { FinishTaskService } from '../services/finish-task.service'
 import { PrepareDataService } from '../services/prepare-data.service'
-import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 
 @Component({
   selector: 'page-finish',

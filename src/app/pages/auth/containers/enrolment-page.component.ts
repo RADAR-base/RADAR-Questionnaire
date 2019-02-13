@@ -6,7 +6,7 @@ import {
   ValidatorFn,
   Validators
 } from '@angular/forms'
-import { BarcodeScanner } from '@ionic-native/barcode-scanner'
+import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx'
 import { AlertController, NavController, Slides } from 'ionic-angular'
 
 import {
@@ -18,6 +18,7 @@ import {
 } from '../../../../assets/data/defaultConfig'
 import { AppComponent } from '../../../core/containers/app.component'
 import { ConfigService } from '../../../core/services/config.service'
+import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { LocKeys } from '../../../shared/enums/localisations'
@@ -29,7 +30,6 @@ import {
 import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { AuthService } from '../services/auth.service'
-import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 
 @Component({
   selector: 'page-enrolment',
@@ -90,9 +90,10 @@ export class EnrolmentPageComponent {
   }
 
   ionViewDidEnter() {
-    this.firebaseAnalytics.setCurrentScreen('enrolment-page')
-    .then((res) => console.log('enrolment-page: ' + res))
-    .catch((err) => console.log('enrolment-page: ' + err))
+    this.firebaseAnalytics
+      .setCurrentScreen('enrolment-page')
+      .then(res => console.log('enrolment-page: ' + res))
+      .catch(err => console.log('enrolment-page: ' + err))
   }
 
   scanQRHandler() {
@@ -102,15 +103,13 @@ export class EnrolmentPageComponent {
       orientation: 'portrait'
       // disableAnimations: true
     }
-    this.scanner
-      .scan(scanOptions)
-      .then(scannedObj => {
-        this.firebaseAnalytics.logEvent('qr_code_scanned', {
-          date: new Date().toString(),
-          text: scannedObj.text
-        })
-        return this.authenticate(scannedObj.text)
+    this.scanner.scan(scanOptions).then(scannedObj => {
+      this.firebaseAnalytics.logEvent('qr_code_scanned', {
+        date: new Date().toString(),
+        text: scannedObj.text
       })
+      return this.authenticate(scannedObj.text)
+    })
   }
 
   metaQRHandler() {
@@ -238,11 +237,14 @@ export class EnrolmentPageComponent {
   }
 
   doAfterAuthentication() {
-    this.configService.fetchConfigState(true)
-    .then(() => this.firebaseAnalytics.logEvent("sign_up", {
-            date: new Date().toString()
-          }))
-    .then(() => this.next())
+    this.configService
+      .fetchConfigState(true)
+      .then(() =>
+        this.firebaseAnalytics.logEvent('sign_up', {
+          date: new Date().toString()
+        })
+      )
+      .then(() => this.next())
   }
 
   displayErrorMessage(error) {

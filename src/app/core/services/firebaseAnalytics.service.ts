@@ -1,24 +1,23 @@
 import { Injectable } from '@angular/core'
-import { FirebaseAnalytics } from '@ionic-native/firebase-analytics/ngx';
-import { User } from '../../shared/models/user'
+import { FirebaseAnalytics } from '@ionic-native/firebase-analytics/ngx'
 
-declare var cordova
+import { User } from '../../shared/models/user'
 
 @Injectable()
 export class FirebaseAnalyticsService {
-
-  constructor(private firebaseAnalytics: FirebaseAnalytics) { }
+  constructor(private firebaseAnalytics: FirebaseAnalytics) {}
 
   logEvent(event: string, params): Promise<any> {
-    return cordova.plugins.firebase.analytics.logEvent(event, params)
-    .then((res: any) => {
-      console.log('firebase analytics service: ' + res)
-      return Promise.resolve(res) }
-    )
-    .catch((error: any) => {
-      console.log('firebase analytics service: ' + error)
-      return Promise.reject(error)
-    })
+    return this.firebaseAnalytics
+      .logEvent(event, params)
+      .then((res: any) => {
+        console.log('firebase analytics service: ' + res)
+        return Promise.resolve(res)
+      })
+      .catch((error: any) => {
+        console.log('firebase analytics service: ' + error)
+        return Promise.reject(error)
+      })
   }
 
   /**
@@ -50,17 +49,20 @@ export class FirebaseAnalyticsService {
    */
 
   setUserProperties(userProperties: User): Promise<any> {
-    return Promise.resolve(Object.entries(userProperties).filter(([k,v]) => k)
-    .forEach(([key, value]) =>
-          cordova.plugins.firebase.analytics.setUserProperty(key, value)))
+    return Promise.resolve(
+      Object.entries(userProperties)
+        .filter(([k, v]) => k)
+        .forEach(([key, value]) =>
+          this.firebaseAnalytics.setUserProperty(key, value)
+        )
+    )
   }
 
   setUserId(userId: string): Promise<any> {
-    return cordova.plugins.firebase.analytics.setUserId(userId)
+    return this.firebaseAnalytics.setUserId(userId)
   }
 
   setCurrentScreen(screenName: string): Promise<any> {
-    return cordova.plugins.firebase.analytics.setCurrentScreen(screenName)
+    return this.firebaseAnalytics.setCurrentScreen(screenName)
   }
-
 }

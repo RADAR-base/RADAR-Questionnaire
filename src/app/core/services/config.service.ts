@@ -2,7 +2,7 @@ import 'rxjs/add/operator/toPromise'
 
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { AppVersion } from '@ionic-native/app-version'
+import { AppVersion } from '@ionic-native/app-version/ngx'
 
 import {
   ARMTDefBranchProd,
@@ -15,10 +15,10 @@ import {
   TEST_ARMT_DEF
 } from '../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../shared/enums/storage'
+import { FirebaseAnalyticsService } from './firebaseAnalytics.service'
 import { NotificationService } from './notification.service'
 import { SchedulingService } from './scheduling.service'
 import { StorageService } from './storage.service'
-import { FirebaseAnalyticsService } from './firebaseAnalytics.service'
 
 @Injectable()
 export class ConfigService {
@@ -93,28 +93,38 @@ export class ConfigService {
                   })
                   .then(() => this.schedule.generateSchedule(true))
                   .then(() => this.rescheduleNotifications())
-                  .then(() => Promise.all([
+                  .then(() =>
+                    Promise.all([
                       this.storage.get(StorageKeys.PARTICIPANTLOGIN),
                       this.getProjectName(),
                       this.storage.get(StorageKeys.SOURCEID),
                       this.storage.get(StorageKeys.ENROLMENTDATE),
                       this.storage.get(StorageKeys.PARTICIPANTID)
-                    ]).then(([subjectId, projectId, sourceId, enrolmentDate, humanReadableId]) =>
-                      this.firebaseAnalytics.setUserProperties({
-                      subjectId: subjectId,
-                      projectId: projectId,
-                      sourceId: sourceId,
-                      enrolmentDate: enrolmentDate,
-                      humanReadableId: humanReadableId
-                    })
+                    ]).then(
+                      ([
+                        subjectId,
+                        projectId,
+                        sourceId,
+                        enrolmentDate,
+                        humanReadableId
+                      ]) =>
+                        this.firebaseAnalytics.setUserProperties({
+                          subjectId: subjectId,
+                          projectId: projectId,
+                          sourceId: sourceId,
+                          enrolmentDate: enrolmentDate,
+                          humanReadableId: humanReadableId
+                        })
                     )
                   )
-                  .then(() => this.firebaseAnalytics.logEvent("config_update", {
-                    config_version: String(configVersion),
-                    schedule_version: String(scheduleVersion),
-                    app_version: appVersion,
-                    date : new Date()
-                   }))
+                  .then(() =>
+                    this.firebaseAnalytics.logEvent('config_update', {
+                      config_version: String(configVersion),
+                      schedule_version: String(scheduleVersion),
+                      app_version: appVersion,
+                      date: new Date()
+                    })
+                  )
               } else {
                 console.log(
                   'NO CONFIG UPDATE. Version of protocol.json has not changed.'
@@ -134,7 +144,11 @@ export class ConfigService {
       return this.notificationService
         .setNextXNotifications(DefaultNumberOfNotificationsToSchedule)
         .then(() => console.log('NOTIFICATIONS scheduled after config change'))
-        .then(() => this.firebaseAnalytics.logEvent("notification_rescheduled", { date : new Date() }))
+        .then(() =>
+          this.firebaseAnalytics.logEvent('notification_rescheduled', {
+            date: new Date()
+          })
+        )
     })
   }
 

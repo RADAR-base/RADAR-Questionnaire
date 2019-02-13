@@ -2,6 +2,7 @@ import { CommonModule, DatePipe } from '@angular/common'
 import { NgModule } from '@angular/core'
 
 import { ConfigService } from '../core/services/config.service'
+import { FirebaseAnalyticsService } from '../core/services/firebaseAnalytics.service'
 import { KafkaService } from '../core/services/kafka.service'
 import { NotificationService } from '../core/services/notification.service'
 import { SchedulingService } from '../core/services/scheduling.service'
@@ -18,7 +19,6 @@ import { ReportModule } from './report/report.module'
 import { SettingsModule } from './settings/settings.module'
 import { SplashModule } from './splash/splash.module'
 import { StartModule } from './start/start.module'
-import { FirebaseAnalyticsService } from '../core/services/firebaseAnalytics.service'
 
 @NgModule({
   imports: [

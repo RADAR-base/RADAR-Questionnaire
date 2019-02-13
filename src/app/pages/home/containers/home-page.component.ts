@@ -8,6 +8,7 @@ import {
   Platform
 } from 'ionic-angular'
 
+import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { KafkaService } from '../../../core/services/kafka.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { LocKeys } from '../../../shared/enums/localisations'
@@ -21,7 +22,6 @@ import { SettingsPageComponent } from '../../settings/containers/settings-page.c
 import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 import { StartPageComponent } from '../../start/containers/start-page.component'
 import { TasksService } from '../services/tasks.service'
-import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 
 @Component({
   selector: 'page-home',
@@ -128,22 +128,22 @@ export class HomePageComponent {
   }
 
   displayTaskCalendar() {
-    this.firebaseAnalytics.logEvent('click', { button: 'show_task_calendar'})
+    this.firebaseAnalytics.logEvent('click', { button: 'show_task_calendar' })
     this.showCalendar = !this.showCalendar
   }
 
   openSettingsPage() {
-    this.firebaseAnalytics.logEvent('click', { button: 'open_settings'})
+    this.firebaseAnalytics.logEvent('click', { button: 'open_settings' })
     this.navCtrl.push(SettingsPageComponent)
   }
 
   openClinicalTasksPage() {
-    this.firebaseAnalytics.logEvent('click', { button: 'open_clinical_tasks'})
+    this.firebaseAnalytics.logEvent('click', { button: 'open_clinical_tasks' })
     this.navCtrl.push(ClinicalTasksPageComponent)
   }
 
   startQuestionnaire(taskCalendarTask: Task) {
-    this.firebaseAnalytics.logEvent('click', { button: 'start_questionnaire'})
+    this.firebaseAnalytics.logEvent('click', { button: 'start_questionnaire' })
     // NOTE: User can start questionnaire from task calendar or start button in home.
     let startQuestionnaireTask = this.nextTask
     if (taskCalendarTask) {
@@ -184,7 +184,7 @@ export class HomePageComponent {
   }
 
   showCredits() {
-    this.firebaseAnalytics.logEvent('click', { button: 'show_credits'})
+    this.firebaseAnalytics.logEvent('click', { button: 'show_credits' })
     const buttons = [
       {
         text: this.translate.transform(LocKeys.BTN_OKAY.toString()),

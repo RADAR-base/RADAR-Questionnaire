@@ -105,7 +105,6 @@ export class EnrolmentPageComponent {
     }
     this.scanner.scan(scanOptions).then(scannedObj => {
       this.firebaseAnalytics.logEvent('qr_code_scanned', {
-        date: String(Date.now()),
         text: scannedObj.text
       })
       return this.authenticate(scannedObj.text)
@@ -240,9 +239,7 @@ export class EnrolmentPageComponent {
     this.configService
       .fetchConfigState(true)
       .then(() =>
-        this.firebaseAnalytics.logEvent('sign_up', {
-          date: String(Date.now())
-        })
+        this.firebaseAnalytics.logEvent('sign_up', {})
       )
       .then(() => this.next())
   }
@@ -254,7 +251,6 @@ export class EnrolmentPageComponent {
     this.outcomeStatus = msg
     this.transitionStatuses()
     this.firebaseAnalytics.logEvent('sign_up_failed', {
-      date: String(Date.now()),
       error: JSON.stringify(error),
       message: String(msg)
     })

@@ -121,8 +121,7 @@ export class ConfigService {
                     this.firebaseAnalytics.logEvent('config_update', {
                       config_version: String(configVersion),
                       schedule_version: String(scheduleVersion),
-                      app_version: appVersion,
-                      date: String(Date.now())
+                      app_version: appVersion
                     })
                   )
               } else {
@@ -145,9 +144,7 @@ export class ConfigService {
         .setNextXNotifications(DefaultNumberOfNotificationsToSchedule)
         .then(() => console.log('NOTIFICATIONS scheduled after config change'))
         .then(() =>
-          this.firebaseAnalytics.logEvent('notification_rescheduled', {
-            date: String(Date.now())
-          })
+          this.firebaseAnalytics.logEvent('notification_rescheduled', {})
         )
     })
   }

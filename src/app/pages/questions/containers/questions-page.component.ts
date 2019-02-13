@@ -86,8 +86,8 @@ export class QuestionsPageComponent {
     this.answerService.reset()
     this.timestampService.reset()
     this.firebaseAnalytics.logEvent('questionnaire_started', {
-      questionnaire_timestamp: this.associatedTask.timestamp,
-      time: new Date(),
+      questionnaire_timestamp: String(this.associatedTask.timestamp),
+      time: String(Date.now()),
       type: this.associatedTask.name
     })
     this.firebaseAnalytics.setCurrentScreen('questions-page')

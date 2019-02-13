@@ -198,21 +198,21 @@ export class KafkaService {
             if (err) {
               console.log(err)
               this.firebaseAnalytics.logEvent('send_error', {
-                date: new Date(),
+                date: String(Date.now()),
                 error: String(err),
                 topic: topic,
                 name: specs.name,
-                questionnaire_timestamp: specs.task.timestamp
+                questionnaire_timestamp: String(specs.task.timestamp)
               })
             } else {
               const cacheKey = specs.kafkaObject.value.time
               return this.removeAnswersFromCache(cacheKey).then(() =>
                 this.setLastUploadDate().then(() =>
                   this.firebaseAnalytics.logEvent('send_success', {
-                    date: new Date(),
+                    date: String(Date.now()),
                     topic: topic,
                     name: specs.name,
-                    questionnaire_timestamp: specs.task.timestamp
+                    questionnaire_timestamp: String(specs.task.timestamp)
                   })
                 )
               )
@@ -224,10 +224,10 @@ export class KafkaService {
           'Could not initiate kafka connection ' + JSON.stringify(error)
         )
         this.firebaseAnalytics.logEvent('send_error', {
-          date: new Date(),
+          date: String(Date.now()),
           error: String(error),
           name: specs.name,
-          questionnaire_timestamp: specs.task.timestamp
+          questionnaire_timestamp: String(specs.task.timestamp)
         })
         return Promise.resolve({ res: 'ERROR' })
       }

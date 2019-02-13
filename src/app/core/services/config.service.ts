@@ -112,7 +112,7 @@ export class ConfigService {
                           subjectId: subjectId,
                           projectId: projectId,
                           sourceId: sourceId,
-                          enrolmentDate: enrolmentDate,
+                          enrolmentDate: String(enrolmentDate),
                           humanReadableId: humanReadableId
                         })
                     )
@@ -122,7 +122,7 @@ export class ConfigService {
                       config_version: String(configVersion),
                       schedule_version: String(scheduleVersion),
                       app_version: appVersion,
-                      date: new Date()
+                      date: String(Date.now())
                     })
                   )
               } else {
@@ -146,7 +146,7 @@ export class ConfigService {
         .then(() => console.log('NOTIFICATIONS scheduled after config change'))
         .then(() =>
           this.firebaseAnalytics.logEvent('notification_rescheduled', {
-            date: new Date()
+            date: String(Date.now())
           })
         )
     })

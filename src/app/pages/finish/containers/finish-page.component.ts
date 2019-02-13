@@ -48,8 +48,8 @@ export class FinishPageComponent {
     !questionnaireName.includes('DEMO') && this.processDataAndSend()
     this.firebaseAnalytics.setCurrentScreen('finish-page')
     this.firebaseAnalytics.logEvent('questionnaire_finished', {
-      questionnaire_timestamp: this.associatedTask.timestamp,
-      time: new Date(),
+      questionnaire_timestamp: String(this.associatedTask.timestamp),
+      time: String(Date.now()),
       type: this.associatedTask.name
     })
   }

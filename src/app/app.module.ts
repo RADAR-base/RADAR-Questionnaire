@@ -9,6 +9,7 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx'
 import { Device } from '@ionic-native/device/ngx'
 import { Dialogs } from '@ionic-native/dialogs/ngx'
 import { File } from '@ionic-native/file/ngx'
+import { FirebaseAnalytics } from '@ionic-native/firebase-analytics/ngx'
 import { Globalization } from '@ionic-native/globalization/ngx'
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx'
 import { SplashScreen } from '@ionic-native/splash-screen/ngx'
@@ -60,7 +61,8 @@ import { Utility } from './shared/utilities/util'
     AndroidPermissionUtility,
     AndroidPermissions,
     File,
-    AppVersion
+    AppVersion,
+    FirebaseAnalytics
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

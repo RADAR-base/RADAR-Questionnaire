@@ -35,7 +35,7 @@
       [progress]="tasksProgress"
       [forceComplete]="showCompleted"
       [noTasksToday]="tasksProgress?.numberOfTasks == 0"
-      *ngIf="tasksProgress && !showCalendar"
+      *ngIf="tasksProgress?.numberOfTasks && !showCalendar"
     >
     </task-progress>
   </div>

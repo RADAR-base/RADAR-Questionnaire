@@ -15,6 +15,7 @@ import {
   TEST_ARMT_DEF
 } from '../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../shared/enums/storage'
+import { FirebaseAnalyticsService } from './firebaseAnalytics.service'
 import { NotificationService } from './notification.service'
 import { SchedulingService } from './scheduling.service'
 import { StorageService } from './storage.service'
@@ -26,7 +27,8 @@ export class ConfigService {
     public storage: StorageService,
     private schedule: SchedulingService,
     private notificationService: NotificationService,
-    private appVersion: AppVersion
+    private appVersion: AppVersion,
+    private firebaseAnalytics: FirebaseAnalyticsService
   ) {}
 
   fetchConfigState(force: boolean) {
@@ -91,6 +93,38 @@ export class ConfigService {
                   })
                   .then(() => this.schedule.generateSchedule(true))
                   .then(() => this.rescheduleNotifications())
+                  .then(() =>
+                    Promise.all([
+                      this.storage.get(StorageKeys.PARTICIPANTLOGIN),
+                      this.getProjectName(),
+                      this.storage.get(StorageKeys.SOURCEID),
+                      this.storage.get(StorageKeys.ENROLMENTDATE),
+                      this.storage.get(StorageKeys.PARTICIPANTID)
+                    ]).then(
+                      ([
+                        subjectId,
+                        projectId,
+                        sourceId,
+                        enrolmentDate,
+                        humanReadableId
+                      ]) =>
+                        this.firebaseAnalytics.setUserProperties({
+                          subjectId: subjectId,
+                          projectId: projectId,
+                          sourceId: sourceId,
+                          enrolmentDate: String(enrolmentDate),
+                          humanReadableId: humanReadableId
+                        })
+                    )
+                  )
+                  .then(() =>
+                    this.firebaseAnalytics.logEvent('config_update', {
+                      config_version: String(configVersion),
+                      schedule_version: String(scheduleVersion),
+                      app_version: appVersion,
+                      date: String(Date.now())
+                    })
+                  )
               } else {
                 console.log(
                   'NO CONFIG UPDATE. Version of protocol.json has not changed.'
@@ -110,6 +144,11 @@ export class ConfigService {
       return this.notificationService
         .setNextXNotifications(DefaultNumberOfNotificationsToSchedule)
         .then(() => console.log('NOTIFICATIONS scheduled after config change'))
+        .then(() =>
+          this.firebaseAnalytics.logEvent('notification_rescheduled', {
+            date: String(Date.now())
+          })
+        )
     })
   }
 

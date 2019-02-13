@@ -5,6 +5,7 @@ import {
   DefaultNumberOfNotificationsToSchedule,
   DefaultTaskCompletionWindow
 } from '../../../../assets/data/defaultConfig'
+import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { KafkaService } from '../../../core/services/kafka.service'
 import { NotificationService } from '../../../core/services/notification.service'
 import { StorageService } from '../../../core/services/storage.service'
@@ -34,7 +35,8 @@ export class FinishPageComponent {
     private prepareDataService: PrepareDataService,
     private notificationService: NotificationService,
     private finishTaskService: FinishTaskService,
-    public storage: StorageService
+    public storage: StorageService,
+    private firebaseAnalytics: FirebaseAnalyticsService
   ) {}
 
   ionViewDidLoad() {
@@ -46,6 +48,12 @@ export class FinishPageComponent {
     this.displayNextTaskReminder =
       !this.questionnaireData.isLastTask && !this.isClinicalTask
     !questionnaireName.includes('DEMO') && this.processDataAndSend()
+    this.firebaseAnalytics.setCurrentScreen('finish-page')
+    this.firebaseAnalytics.logEvent('questionnaire_finished', {
+      questionnaire_timestamp: String(this.associatedTask.timestamp),
+      time: String(Date.now()),
+      type: this.associatedTask.name
+    })
   }
 
   processDataAndSend() {
@@ -64,10 +72,8 @@ export class FinishPageComponent {
       .then(() =>
         this.finishTaskService.updateTaskToComplete(this.associatedTask)
       )
+      .catch(e => console.log(e))
       .then(() => (this.showDoneButton = true))
-      .catch(e => {
-        console.log(e)
-      })
   }
 
   sendToKafka(task: Task, questionnaireData, questions) {

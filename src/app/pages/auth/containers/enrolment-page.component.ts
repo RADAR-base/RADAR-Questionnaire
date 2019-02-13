@@ -12,6 +12,7 @@ import {
 } from '../../../../assets/data/defaultConfig'
 import { AppComponent } from '../../../core/containers/app.component'
 import { ConfigService } from '../../../core/services/config.service'
+import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { LocKeys } from '../../../shared/enums/localisations'
@@ -73,7 +74,8 @@ export class EnrolmentPageComponent {
     private configService: ConfigService,
     private authService: AuthService,
     private translate: TranslatePipe,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private firebaseAnalytics: FirebaseAnalyticsService
   ) {}
 
   ionViewDidLoad() {
@@ -81,7 +83,12 @@ export class EnrolmentPageComponent {
     this.translate.init()
   }
 
-  ionViewDidEnter() {}
+  ionViewDidEnter() {
+    this.firebaseAnalytics
+      .setCurrentScreen('enrolment-page')
+      .then(res => console.log('enrolment-page: ' + res))
+      .catch(err => console.log('enrolment-page: ' + err))
+  }
 
   scanQRHandler() {
     this.loading = true
@@ -90,9 +97,13 @@ export class EnrolmentPageComponent {
       orientation: 'portrait'
       // disableAnimations: true
     }
-    this.scanner
-      .scan(scanOptions)
-      .then(scannedObj => this.authenticate(scannedObj.text))
+    this.scanner.scan(scanOptions).then(scannedObj => {
+      this.firebaseAnalytics.logEvent('qr_code_scanned', {
+        date: String(Date.now()),
+        text: scannedObj.text
+      })
+      return this.authenticate(scannedObj.text)
+    })
   }
 
   metaQRHandler() {
@@ -220,7 +231,14 @@ export class EnrolmentPageComponent {
   }
 
   doAfterAuthentication() {
-    this.configService.fetchConfigState(true).then(() => this.next())
+    this.configService
+      .fetchConfigState(true)
+      .then(() =>
+        this.firebaseAnalytics.logEvent('sign_up', {
+          date: String(Date.now())
+        })
+      )
+      .then(() => this.next())
   }
 
   displayErrorMessage(error) {
@@ -229,6 +247,11 @@ export class EnrolmentPageComponent {
     const msg = error.statusText + ' (' + error.status + ')'
     this.outcomeStatus = msg
     this.transitionStatuses()
+    this.firebaseAnalytics.logEvent('sign_up_failed', {
+      date: String(Date.now()),
+      error: JSON.stringify(error),
+      message: String(msg)
+    })
   }
 
   weeklyReportChange(index) {

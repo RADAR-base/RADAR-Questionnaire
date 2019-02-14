@@ -1,7 +1,10 @@
 import { Component } from '@angular/core'
 import { NavController, NavParams } from 'ionic-angular'
 
-import { DefaultNumberOfNotificationsToSchedule } from '../../../../assets/data/defaultConfig'
+import {
+  DefaultNumberOfNotificationsToSchedule,
+  DefaultTaskCompletionWindow
+} from '../../../../assets/data/defaultConfig'
 import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { KafkaService } from '../../../core/services/kafka.service'
 import { NotificationService } from '../../../core/services/notification.service'
@@ -129,6 +132,7 @@ export class FinishPageComponent {
         reminderSettings: protocol['reminders'],
         nQuestions: associatedTask['questions'].length,
         estimatedCompletionTime: associatedTask['estimatedCompletionTime'],
+        completionWindow: DefaultTaskCompletionWindow,
         warning: '',
         isClinical: true
       }

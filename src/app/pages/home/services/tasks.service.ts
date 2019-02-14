@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core'
 
+import {
+  DefaultESMCompletionWindow,
+  DefaultTaskCompletionWindow
+} from '../../../../assets/data/defaultConfig'
 import { KafkaService } from '../../../core/services/kafka.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
@@ -18,56 +22,55 @@ export class TasksService {
   }
 
   getTasksOfToday() {
-    const now = new Date()
-    return this.schedule.getTasksForDate(now)
+    return this.schedule.getNonClinicalTasksForDate(new Date())
+  }
+
+  getSortedTasksOfToday(): Promise<Map<number, Task[]>> {
+    return this.getTasksOfToday().then(tasks => {
+      const sortedTasks = new Map()
+      tasks.forEach(t => {
+        const midnight = new Date(t.timestamp).setUTCHours(0, 0, 0, 0)
+        if (sortedTasks.has(midnight)) sortedTasks.get(midnight).push(t)
+        else sortedTasks.set(midnight, [t])
+      })
+      return sortedTasks
+    })
   }
 
   getTasksOfDate(timestamp) {
-    return this.schedule.getTasksForDate(timestamp)
+    return this.schedule.getNonClinicalTasksForDate(timestamp)
   }
 
   getTaskProgress(tasks): TasksProgress {
-    const tasksProgress: TasksProgress = {
-      numberOfTasks: 0,
-      completedTasks: 0
-    }
-    if (tasks) {
-      tasksProgress.numberOfTasks = tasks.length
-      for (let i = 0; i < tasks.length; i++) {
-        if (tasks[i].completed) {
-          tasksProgress.completedTasks += 1
-        }
-      }
-      return tasksProgress
+    return {
+      numberOfTasks: tasks.length,
+      completedTasks: tasks.filter(d => d.completed).length
     }
   }
 
   areAllTasksComplete(tasks) {
-    if (tasks) {
-      for (let i = 0; i < tasks.length; i++) {
-        if (tasks[i].name !== 'ESM' && tasks[i].isClinical == false) {
-          if (tasks[i].completed === false) {
-            return false
-          }
-        }
-      }
-    }
-    return true
+    return (
+      !tasks ||
+      tasks.every(t => t.name === 'ESM' || t.isClinical || t.completed)
+    )
   }
 
-  isLastTask(task, todaysTasks) {
-    return todaysTasks.then((tasks: Task[]) => {
-      if (tasks) {
-        for (let i = 0; i < tasks.length; i++) {
-          if (tasks[i].name !== 'ESM') {
-            if (tasks[i].completed === false && tasks[i].index !== task.index) {
-              return false
-            }
-          }
-        }
-      }
-      return true
-    })
+  isLastTask(task, tasks): boolean {
+    return (
+      !tasks ||
+      tasks.every(
+        t => t.name === 'ESM' || t.completed || t.index === task.index
+      )
+    )
+  }
+
+  isTaskValid(task) {
+    const now = new Date().getTime()
+    return (
+      task.timestamp <= now &&
+      task.timestamp + task.completionWindow > now &&
+      !task.completed
+    )
   }
 
   /**
@@ -76,34 +79,26 @@ export class TasksService {
    * @returns {@link Task} : The next incomplete task from the list. This essentially
    *                         translates to which questionnaire the `START` button on home page corresponds to.
    */
-  getNextTask(tasks: Task[]): Task {
+  getNextTask(tasks: Task[]): Task | undefined {
     if (tasks) {
-      const now = new Date()
-      const offsetTimeESM = 1000 * 60 * 10 // 10 min
-      const offsetForward = 1000 * 60 * 60 * 12
-      let lookFromTimestamp, lookToTimestamp
-      for (let i = 0; i < tasks.length; i++) {
-        switch (tasks[i].name) {
+      const tenMinutesAgo = new Date().getTime() - DefaultESMCompletionWindow
+      const midnight = new Date()
+      midnight.setHours(0, 0, 0, 0)
+      const offsetForward = DefaultTaskCompletionWindow
+      return tasks.find(task => {
+        switch (task.name) {
           case 'ESM':
             // NOTE: For ESM, just look from 10 mins before now
-            lookFromTimestamp = new Date().getTime() - offsetTimeESM
-            lookToTimestamp = lookFromTimestamp + offsetForward
-            break
-
+            return (
+              task.timestamp >= tenMinutesAgo &&
+              task.timestamp < tenMinutesAgo + offsetForward &&
+              !task.completed
+            )
           default:
-            // NOTE: Check from midnight for other tasks
-            now.setHours(0, 0, 0, 0)
-            lookFromTimestamp = now.getTime()
-            lookToTimestamp = tasks[i].timestamp + offsetForward
+            // NOTE: Break out of the loop as soon as the next incomplete task is found
+            return task.timestamp >= midnight.getTime() && !task.completed
         }
-        // NOTE: Break out of the loop as soon as the next incomplete task is found
-        if (
-          tasks[i].timestamp >= lookFromTimestamp &&
-          tasks[i].timestamp < lookToTimestamp &&
-          tasks[i].completed === false
-        )
-          return tasks[i]
-      }
+      })
     }
   }
 

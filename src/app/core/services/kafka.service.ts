@@ -268,10 +268,7 @@ export class KafkaService {
           }
         }
       }
-      return Promise.all(promises).then(res => {
-        console.log(res)
-        return Promise.resolve(res)
-      })
+      return Promise.all(promises)
     })
   }
 

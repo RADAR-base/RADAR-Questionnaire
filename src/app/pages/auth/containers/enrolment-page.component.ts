@@ -1,11 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core'
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  ValidatorFn,
-  Validators
-} from '@angular/forms'
+import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx'
 import { AlertController, NavController, Slides } from 'ionic-angular'
 

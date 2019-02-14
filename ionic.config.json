@@ -4,5 +4,7 @@
     "cordova": {}
   },
   "type": "ionic-angular",
-  "pro_id": "8c49e8ec"
+  "yarn": true,
+  "npmClient": "yarn",
+  "id": "8c49e8ec"
 }

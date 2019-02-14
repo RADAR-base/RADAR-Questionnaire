@@ -24,6 +24,7 @@ import {
 import { QuestionType } from '../../shared/models/question'
 import { Task } from '../../shared/models/task'
 import { Utility } from '../../shared/utilities/util'
+import { FirebaseAnalyticsService } from './firebaseAnalytics.service'
 import { StorageService } from './storage.service'
 
 @Injectable()
@@ -35,7 +36,8 @@ export class KafkaService {
   constructor(
     private util: Utility,
     public storage: StorageService,
-    private authService: AuthService
+    private authService: AuthService,
+    private firebaseAnalytics: FirebaseAnalyticsService
   ) {
     this.updateURI()
     this.authService.refresh()
@@ -195,10 +197,22 @@ export class KafkaService {
           .produce(id, info, payload, (err, res) => {
             if (err) {
               console.log(err)
+              this.firebaseAnalytics.logEvent('send_error', {
+                error: String(err),
+                topic: topic,
+                name: specs.name,
+                questionnaire_timestamp: String(specs.task.timestamp)
+              })
             } else {
               const cacheKey = specs.kafkaObject.value.time
               return this.removeAnswersFromCache(cacheKey).then(() =>
-                this.setLastUploadDate()
+                this.setLastUploadDate().then(() =>
+                  this.firebaseAnalytics.logEvent('send_success', {
+                    topic: topic,
+                    name: specs.name,
+                    questionnaire_timestamp: String(specs.task.timestamp)
+                  })
+                )
               )
             }
           })
@@ -207,6 +221,11 @@ export class KafkaService {
         console.error(
           'Could not initiate kafka connection ' + JSON.stringify(error)
         )
+        this.firebaseAnalytics.logEvent('send_error', {
+          error: String(error),
+          name: specs.name,
+          questionnaire_timestamp: String(specs.task.timestamp)
+        })
         return Promise.resolve({ res: 'ERROR' })
       }
     )
@@ -216,6 +235,7 @@ export class KafkaService {
     return this.storage.set(StorageKeys.LAST_UPLOAD_DATE, Date.now())
   }
 
+  // TODO: Add logging of firebase events for adding to cache
   cacheAnswers(specs) {
     const kafkaObject = specs.kafkaObject
     return this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
@@ -255,6 +275,7 @@ export class KafkaService {
     })
   }
 
+  // TODO: Add logging of firebase events for removing to cache
   removeAnswersFromCache(cacheKey) {
     return this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
       if (cache) {

@@ -51,7 +51,6 @@ export class FinishPageComponent {
     this.firebaseAnalytics.setCurrentScreen('finish-page')
     this.firebaseAnalytics.logEvent('questionnaire_finished', {
       questionnaire_timestamp: String(this.associatedTask.timestamp),
-      time: String(Date.now()),
       type: this.associatedTask.name
     })
   }

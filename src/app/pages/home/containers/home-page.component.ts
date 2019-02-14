@@ -3,6 +3,7 @@ import { Component } from '@angular/core'
 import { NavController, Platform } from 'ionic-angular'
 
 import { AlertService } from '../../../core/services/alert.service'
+import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { KafkaService } from '../../../core/services/kafka.service'
 import { LocalizationService } from '../../../core/services/localization.service'
 import { StorageService } from '../../../core/services/storage.service'
@@ -22,25 +23,25 @@ import { TasksService } from '../services/tasks.service'
   templateUrl: 'home-page.component.html',
   animations: [
     trigger('displayCalendar', [
-      state('true', style({ transform: 'translateY(0%)' })),
+      state('true', style({ transform: 'translateY(0)' })),
       state('false', style({ transform: 'translateY(100%)' })),
-      transition('*=>*', animate('300ms ease-out'))
+      transition('*=>*', animate('400ms ease'))
     ]),
     trigger('moveProgress', [
       state('true', style({ transform: 'translateY(-100%)' })),
-      state('false', style({ transform: 'translateY(0%)' })),
-      transition('*=>*', animate('300ms ease-out'))
+      state('false', style({ transform: 'translateY(0)' })),
+      transition('true=>false', animate('300ms ease-out'))
     ])
   ]
 })
 export class HomePageComponent {
+  sortedTasks: Promise<Map<any, any>>
   tasks: Promise<Task[]>
   tasksDate: Date
   nextTask: Task
   showCalendar = false
   showCompleted = false
-  showNoTasksToday = false
-  tasksProgress: TasksProgress = { numberOfTasks: 1, completedTasks: 0 }
+  tasksProgress: TasksProgress
   startingQuestionnaire = false
   hasClinicalTasks = false
   taskIsNow = false
@@ -53,12 +54,13 @@ export class HomePageComponent {
     private localization: LocalizationService,
     public storage: StorageService,
     private platform: Platform,
-    private kafka: KafkaService
+    private kafka: KafkaService,
+    private firebaseAnalytics: FirebaseAnalyticsService
   ) {
     this.platform.resume.subscribe(e => {
       this.kafka.sendAllAnswersInCache()
-      this.checkForNextTask()
       this.checkForNewDate()
+      this.firebaseAnalytics.logEvent('resumed', {})
     })
   }
 
@@ -67,17 +69,18 @@ export class HomePageComponent {
   }
 
   ionViewDidLoad() {
+    this.sortedTasks = this.tasksService.getSortedTasksOfToday()
     this.tasks = this.tasksService.getTasksOfToday()
     this.tasks.then(tasks => {
       this.checkTaskInterval = setInterval(() => {
-        this.checkForNextTask()
+        this.checkForNextTask(tasks)
       }, 1000)
       this.tasksProgress = this.tasksService.getTaskProgress(tasks)
-      this.showNoTasksToday = this.tasksProgress.numberOfTasks == 0
     })
     this.tasksDate = new Date()
     this.evalHasClinicalTasks()
     this.tasksService.sendNonReportedTaskCompletion()
+    this.firebaseAnalytics.setCurrentScreen('home-page')
   }
 
   checkForNewDate() {
@@ -87,27 +90,19 @@ export class HomePageComponent {
     }
   }
 
-  checkForNextTask() {
-    this.tasks.then(tasks =>
-      this.checkForNextTaskGeneric(this.tasksService.getNextTask(tasks))
-    )
-  }
-
-  checkForNextTaskGeneric(task) {
-    if (task && task.isClinical == false) {
+  checkForNextTask(tasks) {
+    const task = this.tasksService.getNextTask(tasks)
+    if (task) {
       this.nextTask = task
       this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
-      this.showCompleted = !this.nextTask
     } else {
       this.taskIsNow = false
       this.nextTask = null
-      this.tasks.then(tasks => {
-        this.showCompleted = this.tasksService.areAllTasksComplete(tasks)
-        if (this.showCompleted) {
-          clearInterval(this.checkTaskInterval)
-          this.showCalendar = false
-        }
-      })
+      this.showCompleted = this.tasksService.areAllTasksComplete(tasks)
+      if (this.showCompleted) {
+        clearInterval(this.checkTaskInterval)
+        this.showCalendar = false
+      }
     }
   }
 
@@ -118,43 +113,40 @@ export class HomePageComponent {
   }
 
   displayTaskCalendar() {
+    this.firebaseAnalytics.logEvent('click', { button: 'show_task_calendar' })
     this.showCalendar = !this.showCalendar
   }
 
   openSettingsPage() {
+    this.firebaseAnalytics.logEvent('click', { button: 'open_settings' })
     this.navCtrl.push(SettingsPageComponent)
   }
 
   openClinicalTasksPage() {
+    this.firebaseAnalytics.logEvent('click', { button: 'open_clinical_tasks' })
     this.navCtrl.push(ClinicalTasksPageComponent)
   }
 
   startQuestionnaire(taskCalendarTask: Task) {
+    this.firebaseAnalytics.logEvent('click', { button: 'start_questionnaire' })
     // NOTE: User can start questionnaire from task calendar or start button in home.
-    let startQuestionnaireTask = this.nextTask
-    if (taskCalendarTask) {
-      if (taskCalendarTask.completed === false) {
-        startQuestionnaireTask = taskCalendarTask
-      }
-    } else {
+    const task = taskCalendarTask ? taskCalendarTask : this.nextTask
+    if (this.tasksService.isTaskValid(task)) {
       this.startingQuestionnaire = true
-    }
 
-    return this.tasksService
-      .getAssessment(startQuestionnaireTask)
-      .then(assessment => {
+      return this.tasksService.getAssessment(task).then(assessment => {
         const params = {
           title: assessment.name,
           introduction: this.localization.chooseText(assessment.startText),
           endText: this.localization.chooseText(assessment.endText),
           questions: assessment.questions,
-          associatedTask: startQuestionnaireTask,
+          associatedTask: task,
           assessment: assessment,
           isLastTask: false
         }
 
         this.tasksService
-          .isLastTask(startQuestionnaireTask, this.tasks)
+          .isLastTask(task, this.tasks)
           .then(lastTask => (params.isLastTask = lastTask))
           .then(() => {
             if (assessment.showIntroduction) {
@@ -164,12 +156,28 @@ export class HomePageComponent {
             }
           })
       })
+    } else {
+      this.showMissedInfo()
+    }
   }
 
   showCredits() {
     return this.alertService.showAlert({
       title: this.localization.translateKey(LocKeys.CREDITS_TITLE),
       message: this.localization.translateKey(LocKeys.CREDITS_BODY),
+      buttons: [
+        {
+          text: this.localization.translateKey(LocKeys.BTN_OKAY),
+          handler: () => {}
+        }
+      ]
+    })
+  }
+
+  showMissedInfo() {
+    return this.alertService.showAlert({
+      title: this.localization.translateKey(LocKeys.CALENDAR_ESM_MISSED_TITLE),
+      message: this.localization.translateKey(LocKeys.CALENDAR_ESM_MISSED_DESC),
       buttons: [
         {
           text: this.localization.translateKey(LocKeys.BTN_OKAY),

@@ -2,7 +2,11 @@ import 'rxjs/add/operator/map'
 
 import { Injectable } from '@angular/core'
 
-import { DefaultScheduleYearCoverage } from '../../../assets/data/defaultConfig'
+import {
+  DefaultESMCompletionWindow,
+  DefaultScheduleYearCoverage,
+  DefaultTaskCompletionWindow
+} from '../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../shared/enums/storage'
 import { Assessment } from '../../shared/models/assessment'
 import { TimeInterval } from '../../shared/models/protocol'
@@ -67,6 +71,23 @@ export class SchedulingService {
         return allTasks
       }
     )
+  }
+
+  getNonClinicalTasksForDate(date) {
+    return this.getDefaultTasks().then(schedule => {
+      const tasks: Task[] = []
+      if (schedule) {
+        const startTime = this.setDateTimeToMidnight(date).getTime()
+        const endTime = startTime + TIME_UNIT_MILLIS.day
+        for (let i = 0; i < schedule.length; i++) {
+          const task = schedule[i]
+          if (task.timestamp > endTime) break
+          if (task.timestamp + task.completionWindow >= startTime)
+            tasks.push(task)
+        }
+      }
+      return tasks
+    })
   }
 
   getDefaultTasks(): Promise<Task[]> {
@@ -182,9 +203,8 @@ export class SchedulingService {
       []
     )
     // NOTE: Check for completed tasks
-    if (this.completedTasks)
-      schedule = this.updateScheduleWithCompletedTasks(schedule)
-    schedule = schedule.sort((a, b) => a.timestamp - b.timestamp)
+    const updatedSchedule = this.updateScheduleWithCompletedTasks(schedule)
+    schedule = updatedSchedule.sort(SchedulingService.compareTasks)
 
     console.log('[√] Updated task schedule.')
     return Promise.resolve(schedule)
@@ -295,9 +315,9 @@ export class SchedulingService {
     if (assessment.protocol.completionWindow) {
       return this.timeIntervalToMillis(assessment.protocol.completionWindow)
     } else if (assessment.name === 'ESM') {
-      return getMilliseconds({ minutes: 15 })
+      return DefaultESMCompletionWindow
     } else {
-      return getMilliseconds({ days: 1 })
+      return DefaultTaskCompletionWindow
     }
   }
 

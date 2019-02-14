@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core'
 import { AlertService } from '../core/services/alert.service'
 import { ConfigService } from '../core/services/config.service'
 import { FcmNotificationService } from '../core/services/fcm-notification.service'
+import { FirebaseAnalyticsService } from '../core/services/firebaseAnalytics.service'
 import { KafkaService } from '../core/services/kafka.service'
 import { LocalizationService } from '../core/services/localization.service'
 import { NotificationGeneratorService } from '../core/services/notification-generator.service'
@@ -48,7 +49,8 @@ import { StartModule } from './start/start.module'
     StorageService,
     TranslatePipe,
     NotificationGeneratorService,
-    { provide: NotificationService, useClass: FcmNotificationService }
+    { provide: NotificationService, useClass: FcmNotificationService },
+    FirebaseAnalyticsService
   ]
 })
 export class PagesModule {}

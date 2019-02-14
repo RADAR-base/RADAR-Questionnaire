@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
-import { BarcodeScanner } from '@ionic-native/barcode-scanner'
+import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx'
 import { NavController, Slides } from 'ionic-angular'
 
 import {
@@ -14,6 +14,7 @@ import {
 import { AppComponent } from '../../../core/containers/app.component'
 import { AlertService } from '../../../core/services/alert.service'
 import { ConfigService } from '../../../core/services/config.service'
+import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { LocalizationService } from '../../../core/services/localization.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
@@ -72,7 +73,8 @@ export class EnrolmentPageComponent {
     private configService: ConfigService,
     private authService: AuthService,
     private localization: LocalizationService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private firebaseAnalytics: FirebaseAnalyticsService
   ) {}
 
   ionViewDidLoad() {
@@ -80,7 +82,12 @@ export class EnrolmentPageComponent {
     return this.localization.update().then(lang => (this.language = lang))
   }
 
-  ionViewDidEnter() {}
+  ionViewDidEnter() {
+    this.firebaseAnalytics
+      .setCurrentScreen('enrolment-page')
+      .then(res => console.log('enrolment-page: ' + res))
+      .catch(err => console.log('enrolment-page: ' + err))
+  }
 
   scanQRHandler() {
     this.loading = true
@@ -89,9 +96,12 @@ export class EnrolmentPageComponent {
       orientation: 'portrait'
       // disableAnimations: true
     }
-    this.scanner
-      .scan(scanOptions)
-      .then(scannedObj => this.authenticate(scannedObj.text))
+    this.scanner.scan(scanOptions).then(scannedObj => {
+      this.firebaseAnalytics.logEvent('qr_code_scanned', {
+        text: scannedObj.text
+      })
+      return this.authenticate(scannedObj.text)
+    })
   }
 
   metaQRHandler() {
@@ -216,7 +226,10 @@ export class EnrolmentPageComponent {
   }
 
   doAfterAuthentication() {
-    return this.configService.fetchConfigState(true).then(() => this.next())
+    return this.configService
+      .fetchConfigState(true)
+      .then(() => this.firebaseAnalytics.logEvent('sign_up', {}))
+      .then(() => this.next())
   }
 
   displayErrorMessage(error) {
@@ -224,6 +237,10 @@ export class EnrolmentPageComponent {
     this.showOutcomeStatus = true
     this.outcomeStatus = error.statusText + ' (' + error.status + ')'
     this.transitionStatuses()
+    this.firebaseAnalytics.logEvent('sign_up_failed', {
+      error: JSON.stringify(error),
+      message: String(this.outcomeStatus)
+    })
   }
 
   weeklyReportChange(index) {

@@ -49,6 +49,7 @@ export class LocalizationService {
   private updateLanguage(language: LanguageSetting) {
     this.language = language ? language : { ...this.defaultLanguage }
     this.localeMoment = moment().locale(this.language.value)
+    moment.locale(this.language.value)
     return this.language
   }
 

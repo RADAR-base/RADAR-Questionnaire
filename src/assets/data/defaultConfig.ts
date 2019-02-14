@@ -33,6 +33,9 @@ export const DefaultSettingsWeeklyReport: WeeklyReportSubSettings[] = [
 ]
 
 // DEFAULT SETUP
+export const DefaultTaskCompletionWindow = 86400000 // 24 hours in ms
+export const DefaultESMCompletionWindow = 600000 // 10 mins in ms
+
 export const DefaultTask: Task = {
   index: 0,
   completed: false,
@@ -41,7 +44,7 @@ export const DefaultTask: Task = {
   name: 'DEFAULT',
   nQuestions: 0,
   estimatedCompletionTime: 0,
-  completionWindow: 0,
+  completionWindow: DefaultTaskCompletionWindow,
   warning: '',
   isClinical: false,
   notifications: []
@@ -55,7 +58,7 @@ export const DefaultTaskTest: Task = {
   name: 'TEST',
   nQuestions: 0,
   estimatedCompletionTime: 0,
-  completionWindow: 0,
+  completionWindow: DefaultTaskCompletionWindow,
   warning: '',
   isClinical: false,
   notifications: []

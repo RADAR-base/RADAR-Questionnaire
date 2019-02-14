@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core'
 
+import {
+  DefaultESMCompletionWindow,
+  DefaultTaskCompletionWindow
+} from '../../../../assets/data/defaultConfig'
 import { KafkaService } from '../../../core/services/kafka.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { Task, TasksProgress } from '../../../shared/models/task'
-import { getMilliseconds } from '../../../shared/utilities/time'
 
 @Injectable()
 export class TasksService {
@@ -19,26 +22,29 @@ export class TasksService {
   }
 
   getTasksOfToday() {
-    const now = new Date()
-    return this.schedule.getTasksForDate(now)
+    return this.schedule.getNonClinicalTasksForDate(new Date())
+  }
+
+  getSortedTasksOfToday(): Promise<Map<number, Task[]>> {
+    return this.getTasksOfToday().then(tasks => {
+      const sortedTasks = new Map()
+      tasks.forEach(t => {
+        const midnight = new Date(t.timestamp).setUTCHours(0, 0, 0, 0)
+        if (sortedTasks.has(midnight)) sortedTasks.get(midnight).push(t)
+        else sortedTasks.set(midnight, [t])
+      })
+      return sortedTasks
+    })
   }
 
   getTasksOfDate(timestamp) {
-    return this.schedule.getTasksForDate(timestamp)
+    return this.schedule.getNonClinicalTasksForDate(timestamp)
   }
 
   getTaskProgress(tasks): TasksProgress {
-    const tasksProgress: TasksProgress = {
-      numberOfTasks: 0,
-      completedTasks: 0
-    }
-    if (tasks) {
-      tasksProgress.numberOfTasks = tasks.length
-      tasksProgress.completedTasks = tasks.reduce(
-        (num, t) => (t.completed ? num + 1 : num),
-        0
-      )
-      return tasksProgress
+    return {
+      numberOfTasks: tasks.length,
+      completedTasks: tasks.filter(d => d.completed).length
     }
   }
 
@@ -60,6 +66,15 @@ export class TasksService {
     })
   }
 
+  isTaskValid(task) {
+    const now = new Date().getTime()
+    return (
+      task.timestamp <= now &&
+      task.timestamp + task.completionWindow > now &&
+      !task.completed
+    )
+  }
+
   /**
    * This function Retrieves the most current next task from a list of tasks.
    * @param tasks : list of tasks to retrieve the next task from.
@@ -68,11 +83,10 @@ export class TasksService {
    */
   getNextTask(tasks: Task[]): Task | undefined {
     if (tasks) {
-      const tenMinutesAgo =
-        new Date().getTime() - getMilliseconds({ minutes: 10 })
+      const tenMinutesAgo = new Date().getTime() - DefaultESMCompletionWindow
       const midnight = new Date()
       midnight.setHours(0, 0, 0, 0)
-      const offsetForward = getMilliseconds({ hours: 12 })
+      const offsetForward = DefaultTaskCompletionWindow
       return tasks.find(task => {
         switch (task.name) {
           case 'ESM':

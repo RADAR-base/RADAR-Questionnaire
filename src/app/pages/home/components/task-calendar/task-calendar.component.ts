@@ -6,9 +6,7 @@ import {
   Output
 } from '@angular/core'
 
-import { AlertService } from '../../../../core/services/alert.service'
 import { LocalizationService } from '../../../../core/services/localization.service'
-import { LocKeys } from '../../../../shared/enums/localisations'
 import { Task } from '../../../../shared/models/task'
 
 @Component({
@@ -21,15 +19,13 @@ export class TaskCalendarComponent implements OnChanges {
   @Output()
   task: EventEmitter<Task> = new EventEmitter<Task>()
   @Input()
-  tasks: Promise<Task[]>
+  tasks: Promise<Map<any, any>>
 
   currentTime: string
+  currentDate = new Date().setUTCHours(0, 0, 0, 0)
   timeIndex: Promise<number>
 
-  constructor(
-    private alertService: AlertService,
-    private localization: LocalizationService
-  ) {}
+  constructor(private localization: LocalizationService) {}
 
   ngOnChanges() {
     this.setCurrentTime()
@@ -43,35 +39,14 @@ export class TaskCalendarComponent implements OnChanges {
       console.log(e)
     }
     this.timeIndex = this.tasks.then(tasks => {
-      const index = tasks.findIndex(t => t.timestamp >= now)
-      return index > -1 ? index : tasks.length - 1
+      const todaysTasks = tasks.get(new Date().setUTCHours(0, 0, 0, 0))
+      const index = todaysTasks.findIndex(t => t.timestamp >= now)
+      return index > -1 ? index : todaysTasks.length - 1
     })
   }
 
   clicked(task) {
-    const now = new Date().getTime()
-    if (
-      task.timestamp <= now &&
-      task.timestamp + task.completionWindow > now &&
-      !task.completed
-    ) {
-      this.task.emit(task)
-    } else {
-      return this.showMissedInfo()
-    }
-  }
-
-  showMissedInfo() {
-    return this.alertService.showAlert({
-      title: this.localization.translateKey(LocKeys.CALENDAR_ESM_MISSED_TITLE),
-      message: this.localization.translateKey(LocKeys.CALENDAR_ESM_MISSED_DESC),
-      buttons: [
-        {
-          text: this.localization.translateKey(LocKeys.BTN_OKAY),
-          handler: () => {}
-        }
-      ]
-    })
+    this.task.emit(task)
   }
 
   getStartTime(task: Task) {

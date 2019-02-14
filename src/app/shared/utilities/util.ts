@@ -2,7 +2,7 @@ import 'rxjs/add/operator/map'
 
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { Device } from '@ionic-native/device'
+import { Device } from '@ionic-native/device/ngx'
 import { throwError as observableThrowError } from 'rxjs'
 
 import { DefaultEndPoint } from '../../../assets/data/defaultConfig'

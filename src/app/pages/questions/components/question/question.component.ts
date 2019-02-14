@@ -5,8 +5,8 @@ import {
   OnChanges,
   Output
 } from '@angular/core'
-import { Dialogs } from '@ionic-native/dialogs'
-import { Vibration } from '@ionic-native/vibration'
+import { Dialogs } from '@ionic-native/dialogs/ngx'
+import { Vibration } from '@ionic-native/vibration/ngx'
 
 import { Answer } from '../../../../shared/models/answer'
 import { Question, QuestionType } from '../../../../shared/models/question'

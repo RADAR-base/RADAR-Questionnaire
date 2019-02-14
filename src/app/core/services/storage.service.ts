@@ -2,7 +2,7 @@ import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/catch'
 
 import { Injectable } from '@angular/core'
-import { AppVersion } from '@ionic-native/app-version'
+import { AppVersion } from '@ionic-native/app-version/ngx'
 import { Storage } from '@ionic/storage'
 import { throwError as observableThrowError } from 'rxjs'
 

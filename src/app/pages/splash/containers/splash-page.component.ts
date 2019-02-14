@@ -102,7 +102,11 @@ export class SplashPageComponent {
       .get(StorageKeys.LAST_NOTIFICATION_UPDATE)
       .then(lastUpdate => {
         const timeElapsed = Date.now() - lastUpdate
-        if (timeElapsed > DefaultNotificationRefreshTime || !lastUpdate) {
+        if (
+          timeElapsed > DefaultNotificationRefreshTime ||
+          !lastUpdate ||
+          timeElapsed < 0
+        ) {
           console.log('[SPLASH] Scheduling Notifications.')
           return this.notificationService.publish()
         } else {

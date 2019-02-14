@@ -2,7 +2,7 @@ import 'rxjs/add/operator/toPromise'
 
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { AppVersion } from '@ionic-native/app-version'
+import { AppVersion } from '@ionic-native/app-version/ngx'
 
 import {
   ARMTDefBranchProd,
@@ -17,6 +17,7 @@ import { StorageKeys } from '../../shared/enums/storage'
 import { Assessment } from '../../shared/models/assessment'
 import { Question } from '../../shared/models/question'
 import { Utility } from '../../shared/utilities/util'
+import { FirebaseAnalyticsService } from './firebaseAnalytics.service'
 import { LocalizationService } from './localization.service'
 import { NotificationService } from './notification.service'
 import { SchedulingService } from './scheduling.service'
@@ -31,7 +32,8 @@ export class ConfigService {
     private appVersion: AppVersion,
     private notifications: NotificationService,
     private util: Utility,
-    private localization: LocalizationService
+    private localization: LocalizationService,
+    private firebaseAnalytics: FirebaseAnalyticsService
   ) {}
 
   fetchConfigState(force: boolean) {
@@ -86,6 +88,14 @@ export class ConfigService {
           ])
             .then(() => this.schedule.generateSchedule(true))
             .then(() => this.rescheduleNotifications())
+            .then(() => this.setFirebaseUserProperties())
+            .then(() =>
+              this.firebaseAnalytics.logEvent('config_update', {
+                config_version: String(configVersion),
+                schedule_version: String(scheduleVersion),
+                app_version: appVersion
+              })
+            )
         } else {
           console.log(
             'NO CONFIG UPDATE. Version of protocol.json has not changed.'
@@ -102,11 +112,33 @@ export class ConfigService {
       .then(() => this.pullQuestionnaires(key))
   }
 
+  setFirebaseUserProperties() {
+    return Promise.all([
+      this.storage.get(StorageKeys.PARTICIPANTLOGIN),
+      this.getProjectName(),
+      this.storage.get(StorageKeys.SOURCEID),
+      this.storage.get(StorageKeys.ENROLMENTDATE),
+      this.storage.get(StorageKeys.PARTICIPANTID)
+    ]).then(
+      ([subjectId, projectId, sourceId, enrolmentDate, humanReadableId]) =>
+        this.firebaseAnalytics.setUserProperties({
+          subjectId: subjectId,
+          projectId: projectId,
+          sourceId: sourceId,
+          enrolmentDate: String(enrolmentDate),
+          humanReadableId: humanReadableId
+        })
+    )
+  }
+
   rescheduleNotifications() {
     return this.notifications
       .cancel()
       .then(() => this.notifications.publish())
       .then(() => console.log('NOTIFICATIONS scheduled after config change'))
+      .then(() =>
+        this.firebaseAnalytics.logEvent('notification_rescheduled', {})
+      )
   }
 
   updateConfigStateOnLanguageChange() {

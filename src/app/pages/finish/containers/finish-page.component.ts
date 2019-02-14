@@ -40,7 +40,7 @@ export class FinishPageComponent {
     this.questionnaireData = this.navParams.data
     this.associatedTask = this.questionnaireData.associatedTask
     this.content = this.questionnaireData.endText
-    this.isClinicalTask = this.associatedTask.isClinical
+    this.isClinicalTask = this.associatedTask.isClinical !== false
     const questionnaireName = this.associatedTask.name
     this.displayNextTaskReminder =
       !this.questionnaireData.isLastTask && !this.isClinicalTask

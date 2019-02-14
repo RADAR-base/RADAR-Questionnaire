@@ -2,6 +2,7 @@ import { Component } from '@angular/core'
 import { NavController, NavParams } from 'ionic-angular'
 
 import { DefaultNumberOfNotificationsToSchedule } from '../../../../assets/data/defaultConfig'
+import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { KafkaService } from '../../../core/services/kafka.service'
 import { NotificationService } from '../../../core/services/notification.service'
 import { StorageService } from '../../../core/services/storage.service'
@@ -20,7 +21,7 @@ export class FinishPageComponent {
   isClinicalTask = false
   completedInClinic = false
   displayNextTaskReminder = true
-  hasClickedDoneButton = false
+  showDoneButton = false
   associatedTask
   questionnaireData
 
@@ -31,19 +32,24 @@ export class FinishPageComponent {
     private prepareDataService: PrepareDataService,
     private notificationService: NotificationService,
     private finishTaskService: FinishTaskService,
-    public storage: StorageService
+    public storage: StorageService,
+    private firebaseAnalytics: FirebaseAnalyticsService
   ) {}
 
   ionViewDidLoad() {
     this.questionnaireData = this.navParams.data
     this.associatedTask = this.questionnaireData.associatedTask
     this.content = this.questionnaireData.endText
-    this.isClinicalTask = this.associatedTask.isClinical
+    this.isClinicalTask = this.associatedTask.isClinical !== false
     const questionnaireName = this.associatedTask.name
-    this.finishTaskService.updateTaskToComplete(this.associatedTask)
     this.displayNextTaskReminder =
       !this.questionnaireData.isLastTask && !this.isClinicalTask
     !questionnaireName.includes('DEMO') && this.processDataAndSend()
+    this.firebaseAnalytics.setCurrentScreen('finish-page')
+    this.firebaseAnalytics.logEvent('questionnaire_finished', {
+      questionnaire_timestamp: String(this.associatedTask.timestamp),
+      type: this.associatedTask.name
+    })
   }
 
   processDataAndSend() {
@@ -52,35 +58,37 @@ export class FinishPageComponent {
         this.questionnaireData.answers,
         this.questionnaireData.timestamps
       )
-      .then(
-        data => {
-          this.sendToKafka(
-            this.associatedTask,
-            data,
-            this.questionnaireData.questions
-          )
-        },
-        error => {
-          console.log(JSON.stringify(error))
-        }
+      .then(data =>
+        this.sendToKafka(
+          this.associatedTask,
+          data,
+          this.questionnaireData.questions
+        )
       )
+      .then(() =>
+        this.finishTaskService.updateTaskToComplete(this.associatedTask)
+      )
+      .catch(e => console.log(e))
+      .then(() => (this.showDoneButton = true))
   }
 
   sendToKafka(task: Task, questionnaireData, questions) {
     // NOTE: Submit data to kafka
-    this.kafkaService.prepareTimeZoneKafkaObjectAndSend()
-    this.kafkaService.prepareAnswerKafkaObjectAndSend(
-      task,
-      questionnaireData,
-      questions
-    )
-    this.kafkaService
-      .prepareNonReportedTasksKafkaObjectAndSend(task)
-      .then(() => this.finishTaskService.updateTaskToReportedCompletion(task))
+    return Promise.all([
+      this.kafkaService.prepareTimeZoneKafkaObjectAndSend(),
+      this.kafkaService.prepareAnswerKafkaObjectAndSend(
+        task,
+        questionnaireData,
+        questions
+      ),
+      this.kafkaService
+        .prepareNonReportedTasksKafkaObjectAndSend(task)
+        .then(() => this.finishTaskService.updateTaskToReportedCompletion(task))
+    ])
   }
 
   handleClosePage() {
-    this.hasClickedDoneButton = !this.hasClickedDoneButton
+    this.showDoneButton = false
     this.evalClinicalFollowUpTask().then(() =>
       this.navCtrl.setRoot(HomePageComponent)
     )

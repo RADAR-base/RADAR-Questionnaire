@@ -8,6 +8,7 @@ import {
   ViewController
 } from 'ionic-angular'
 
+import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { Question, QuestionType } from '../../../shared/models/question'
 import { TranslatePipe } from '../../../shared/pipes/translate/translate'
@@ -69,7 +70,8 @@ export class QuestionsPageComponent {
     public appCtrl: App,
     private answerService: AnswerService,
     private timestampService: TimestampService,
-    private translate: TranslatePipe
+    private translate: TranslatePipe,
+    private firebaseAnalytics: FirebaseAnalyticsService
   ) {}
 
   ionViewDidLoad() {
@@ -83,6 +85,11 @@ export class QuestionsPageComponent {
     this.isLastTask = this.navParams.data.isLastTask
     this.answerService.reset()
     this.timestampService.reset()
+    this.firebaseAnalytics.logEvent('questionnaire_started', {
+      questionnaire_timestamp: String(this.associatedTask.timestamp),
+      type: this.associatedTask.name
+    })
+    this.firebaseAnalytics.setCurrentScreen('questions-page')
   }
 
   evalIfFirstQuestionnaireToSkipESMSleepQuestion() {

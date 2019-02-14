@@ -450,7 +450,7 @@ export const Localisations = {
     da: 'Afslut',
     de: 'Fertig',
     en: 'Finish',
-    es: 'Finalizado',
+    es: 'Finalizar',
     it: 'Fine',
     nl: 'Voltooid'
   },
@@ -546,7 +546,7 @@ export const Localisations = {
     da: 'Luk',
     de: 'Beenden',
     en: 'Close',
-    es: 'Cierre',
+    es: 'Cerrar',
     it: 'Chiudi',
     nl: 'Sluiten'
   },

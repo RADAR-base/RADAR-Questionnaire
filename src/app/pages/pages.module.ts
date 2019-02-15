@@ -7,7 +7,6 @@ import { QuestionnaireService } from '../core/services/config/questionnaire.serv
 import { SubjectConfigService } from '../core/services/config/subject-config.service'
 import { KafkaService } from '../core/services/kafka/kafka.service'
 import { SchemaService } from '../core/services/kafka/schema.service'
-import { UsageService } from '../core/services/kafka/usage.service'
 import { AlertService } from '../core/services/misc/alert.service'
 import { LocalizationService } from '../core/services/misc/localization.service'
 import { FcmNotificationService } from '../core/services/notifications/fcm-notification.service'
@@ -17,6 +16,8 @@ import { ScheduleGeneratorService } from '../core/services/schedule/schedule-gen
 import { ScheduleService } from '../core/services/schedule/schedule.service'
 import { StorageService } from '../core/services/storage/storage.service'
 import { TokenService } from '../core/services/token/token.service'
+import { FirebaseAnalyticsService } from '../core/services/usage/firebaseAnalytics.service'
+import { UsageService } from '../core/services/usage/usage.service'
 import { PipesModule } from '../shared/pipes/pipes.module'
 import { TranslatePipe } from '../shared/pipes/translate/translate'
 import { AuthModule } from './auth/auth.module'
@@ -58,7 +59,8 @@ import { SplashModule } from './splash/splash.module'
     UsageService,
     SchemaService,
     NotificationGeneratorService,
-    { provide: NotificationService, useClass: FcmNotificationService }
+    { provide: NotificationService, useClass: FcmNotificationService },
+    FirebaseAnalyticsService
   ]
 })
 export class PagesModule {}

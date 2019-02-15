@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core'
-import { WebIntent } from '@ionic-native/web-intent'
+import { WebIntent } from '@ionic-native/web-intent/ngx'
 
 import { SchemaType } from '../../../shared/models/kafka'
 import { UsageEventType } from '../../../shared/models/usage-event'
-import { KafkaService } from './kafka.service'
+import { KafkaService } from '../kafka/kafka.service'
 
 @Injectable()
 export class UsageService {

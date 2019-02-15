@@ -19,9 +19,10 @@ export class TaskCalendarComponent implements OnChanges {
   @Output()
   task: EventEmitter<Task> = new EventEmitter<Task>()
   @Input()
-  tasks: Promise<Task[]>
+  tasks: Promise<Map<any, any>>
 
   currentTime: string
+  currentDate = new Date().setUTCHours(0, 0, 0, 0)
   timeIndex: Promise<number>
 
   constructor(private localization: LocalizationService) {}
@@ -38,8 +39,9 @@ export class TaskCalendarComponent implements OnChanges {
       console.log(e)
     }
     this.timeIndex = this.tasks.then(tasks => {
-      const index = tasks.findIndex(t => t.timestamp >= now)
-      return index > -1 ? index : tasks.length - 1
+      const todaysTasks = tasks.get(new Date().setUTCHours(0, 0, 0, 0))
+      const index = todaysTasks.findIndex(t => t.timestamp >= now)
+      return index > -1 ? index : todaysTasks.length - 1
     })
   }
 

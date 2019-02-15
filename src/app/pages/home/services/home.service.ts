@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 
 import { KafkaService } from '../../../core/services/kafka/kafka.service'
-import { UsageService } from '../../../core/services/kafka/usage.service'
+import { UsageService } from '../../../core/services/usage/usage.service'
 import { TasksService } from './tasks.service'
 
 @Injectable()

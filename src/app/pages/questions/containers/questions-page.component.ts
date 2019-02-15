@@ -3,6 +3,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core'
 import { Content, NavController, NavParams, Platform } from 'ionic-angular'
 
 import { LocalizationService } from '../../../core/services/misc/localization.service'
+import { FirebaseAnalyticsService } from '../../../core/services/usage/firebaseAnalytics.service'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { Question, QuestionType } from '../../../shared/models/question'
 import { TaskType } from '../../../shared/utilities/task-type'
@@ -61,6 +62,7 @@ export class QuestionsPageComponent {
     public navParams: NavParams,
     private localization: LocalizationService,
     private questionsService: QuestionsService,
+    private firebaseAnalytics: FirebaseAnalyticsService,
     private platform: Platform
   ) {
     this.onClose()
@@ -68,6 +70,11 @@ export class QuestionsPageComponent {
 
   ionViewDidLoad() {
     this.init()
+    this.firebaseAnalytics.logEvent('questionnaire_started', {
+      questionnaire_timestamp: String(this.task.timestamp),
+      type: this.task.name
+    })
+    this.firebaseAnalytics.setCurrentScreen('questions-page')
   }
 
   ionViewDidLeave() {
@@ -79,7 +86,7 @@ export class QuestionsPageComponent {
   init() {
     this.questionTitle = this.navParams.data.title
     this.introduction = this.navParams.data.introduction
-    this.showIntroduction = this.navParams.data.assessment.showIntroduction
+    // this.showIntroduction = this.navParams.data.assessment.showIntroduction
     this.questionsContainerEl = this.questionsContainerRef.nativeElement
     this.questions = this.questionsService.getQuestions(
       this.questionTitle,

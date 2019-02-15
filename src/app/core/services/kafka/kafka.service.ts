@@ -5,6 +5,7 @@ import { DefaultKafkaURI } from '../../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { StorageService } from '../storage/storage.service'
 import { TokenService } from '../token/token.service'
+import { FirebaseAnalyticsService } from '../usage/firebaseAnalytics.service'
 import { SchemaService } from './schema.service'
 
 @Injectable()
@@ -14,14 +15,17 @@ export class KafkaService {
     CACHE_ANSWERS: StorageKeys.CACHE_ANSWERS
   }
   private KAFKA_CLIENT_URL: string
+  private BASE_URI: string
   private isCacheSending: boolean
 
   constructor(
     private storage: StorageService,
     private token: TokenService,
-    private schema: SchemaService
+    private schema: SchemaService,
+    private firebaseAnalytics: FirebaseAnalyticsService
   ) {
     this.token.refresh()
+    this.updateURI()
   }
 
   init() {
@@ -30,6 +34,7 @@ export class KafkaService {
 
   updateURI() {
     this.token.getURI().then(uri => {
+      this.BASE_URI = uri
       this.KAFKA_CLIENT_URL = uri + DefaultKafkaURI
     })
   }
@@ -61,34 +66,49 @@ export class KafkaService {
         const promises = Object.entries(cache)
           .filter(([k]) => k)
           .slice(0, 20)
-          .map(([k, v]: any) =>
-            this.schema
-              .convertToAvro(v.kafkaObject, v.specs)
-              .then(
-                data =>
-                  data &&
-                  this.sendToKafka(
-                    v.specs,
-                    data.schemaId,
-                    data.schemaInfo,
-                    data.payload,
-                    k
-                  )
+          .map(([k, v]: any) => {
+            const timestamp = v.specs.task ? v.specs.task.timestamp : Date.now()
+            return this.schema
+              .convertToAvro(v.kafkaObject, v.specs, this.BASE_URI)
+              .then(data =>
+                this.sendToKafka(
+                  v.specs,
+                  data.schemaId,
+                  data.schemaInfo,
+                  data.payload,
+                  k
+                )
               )
-          )
-        Promise.all(promises).then(() => this.setCacheSending(false))
+              .then(() =>
+                this.firebaseAnalytics.logEvent('send_success', {
+                  name: v.specs.name,
+                  questionnaire_timestamp: String(timestamp)
+                })
+              )
+              .catch(error =>
+                this.firebaseAnalytics.logEvent('send_error', {
+                  error: JSON.stringify(error),
+                  name: v.specs.name,
+                  questionnaire_timestamp: String(timestamp)
+                })
+              )
+          })
+        this.setCacheSending(false)
+        return Promise.all(promises)
       })
+    } else {
+      Promise.resolve()
     }
   }
 
   sendToKafka(specs, keySchema, valueSchema, payload, cacheKey) {
+    const topic = specs.avsc + '_' + specs.name
+    console.log('Sending to: ' + topic)
     return this.getKafkaInstance()
       .then(
         kafka =>
           new Promise((resolve, reject) => {
             // NOTE: Kafka connection instance to submit to topic
-            const topic = specs.avsc + '_' + specs.name
-            console.log('Sending to: ' + topic)
             return kafka
               .topic(topic)
               .produce(
@@ -105,7 +125,7 @@ export class KafkaService {
         console.error(
           'Could not initiate kafka connection ' + JSON.stringify(error)
         )
-        return Promise.resolve({ res: 'ERROR' })
+        return Promise.reject(error)
       })
   }
 

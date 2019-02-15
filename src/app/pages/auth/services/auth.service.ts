@@ -43,12 +43,14 @@ export class AuthService {
   URLAuth(authObj) {
     // NOTE: Meta QR code and new QR code
     return this.getRefreshTokenFromUrl(authObj).then((body: any) => {
+      console.log(body)
+      console.log(body.baseUrl)
       const refreshToken = body.refreshToken
-      return body.baseURL
-        ? this.token.setURI(body.baseURL)
-        : Promise.resolve()
-            .then(() => this.updateURI())
-            .then(() => refreshToken)
+      return this.token
+        .setURI(body.baseUrl)
+        .catch()
+        .then(() => this.updateURI())
+        .then(() => refreshToken)
     })
   }
 

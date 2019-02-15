@@ -57,6 +57,10 @@ export class SubjectConfigService {
     return this.storage.get(this.SUBJECT_CONFIG_STORE.PROJECTNAME)
   }
 
+  getSourceID() {
+    return this.storage.get(this.SUBJECT_CONFIG_STORE.SOURCEID)
+  }
+
   getParticipantLogin() {
     return this.storage.get(this.SUBJECT_CONFIG_STORE.PARTICIPANTLOGIN)
   }

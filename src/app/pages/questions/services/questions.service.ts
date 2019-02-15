@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
-import { UsageService } from '../../../core/services/kafka/usage.service'
+import { UsageService } from '../../../core/services/usage/usage.service'
 import { getSeconds } from '../../../shared/utilities/time'
 import { AnswerService } from './answer.service'
 import { TimestampService } from './timestamp.service'

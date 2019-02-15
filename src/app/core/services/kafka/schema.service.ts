@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import * as AvroSchema from 'avsc'
 import * as KafkaRest from 'kafka-rest'
@@ -13,18 +14,21 @@ import { ApplicationTimeZoneValueExport } from '../../../shared/models/timezone'
 import { UsageEventValueExport } from '../../../shared/models/usage-event'
 import { getTaskType } from '../../../shared/utilities/task-type'
 import { getSeconds } from '../../../shared/utilities/time'
-import { Utility } from '../../../shared/utilities/util'
 import { QuestionnaireService } from '../config/questionnaire.service'
+import { SubjectConfigService } from '../config/subject-config.service'
 
 @Injectable()
 export class SchemaService {
+  URI_schema: string = '/schema/subjects/'
+  URI_version: string = '/versions/'
   private schemas: {
-    [key: string]: Promise<[SchemaMetadata, SchemaMetadata]>
+    [key: string]: [Promise<SchemaMetadata>, Promise<SchemaMetadata>]
   } = {}
 
   constructor(
-    private util: Utility,
-    public questionnaire: QuestionnaireService
+    public questionnaire: QuestionnaireService,
+    private config: SubjectConfigService,
+    private http: HttpClient
   ) {}
 
   getSpecs(type, task?: Task) {
@@ -46,8 +50,16 @@ export class SchemaService {
   }
 
   getKafkaObjectKey() {
-    return this.util
-      .getObservationKey()
+    return Promise.all([
+      this.config.getSourceID(),
+      this.config.getProjectName(),
+      this.config.getParticipantLogin()
+    ])
+      .then(([sourceId, projectName, participantName]) => ({
+        sourceId,
+        userId: participantName.toString(),
+        projectId: projectName
+      }))
       .then(observationKey => observationKey as AnswerKeyExport)
   }
 
@@ -93,29 +105,55 @@ export class SchemaService {
     return AvroSchema.parse(schema, options).clone(value, options)
   }
 
-  convertToAvro(kafkaObject, specs) {
+  convertToAvro(kafkaObject, specs, baseURI) {
     if (!this.schemas[specs.name]) {
-      this.schemas[specs.name] = this.util
-        .getLatestKafkaSchemaVersions(specs)
-        .catch(error => {
-          // TODO: add fallback for error
-          console.log(error)
-          return Promise.resolve({} as [SchemaMetadata, SchemaMetadata])
-        })
+      const topic = specs.avsc + '_' + specs.name
+      const schemaKeyAndValue: [
+        Promise<SchemaMetadata>,
+        Promise<SchemaMetadata>
+      ] = [
+        this.getLatestKafkaSchemaVersion(topic + '-key', 'latest', baseURI),
+        this.getLatestKafkaSchemaVersion(topic + '-value', 'latest', baseURI)
+      ]
+      this.schemas[specs.name] = schemaKeyAndValue
     }
-    return this.schemas[specs.name].then(
+    return Promise.all(this.schemas[specs.name]).then(
       ([keySchemaMetadata, valueSchemaMetadata]) => {
-        const key = JSON.parse(keySchemaMetadata.schema)
-        const value = JSON.parse(valueSchemaMetadata.schema)
-        const schemaId = new KafkaRest.AvroSchema(key)
-        const schemaInfo = new KafkaRest.AvroSchema(value)
-        const payload = {
-          key: this.getAvroObject(key, kafkaObject.key),
-          value: this.getAvroObject(value, kafkaObject.value)
+        if (keySchemaMetadata && valueSchemaMetadata) {
+          console.log(keySchemaMetadata)
+          console.log(valueSchemaMetadata)
+          const key = JSON.parse(keySchemaMetadata.schema)
+          const value = JSON.parse(valueSchemaMetadata.schema)
+          const schemaId = new KafkaRest.AvroSchema(key)
+          const schemaInfo = new KafkaRest.AvroSchema(value)
+          const payload = {
+            key: this.getAvroObject(key, kafkaObject.key),
+            value: this.getAvroObject(value, kafkaObject.value)
+          }
+          return { schemaId, schemaInfo, payload }
+        } else {
+          Promise.reject()
         }
-        return { schemaId, schemaInfo, payload }
       }
     )
+  }
+
+  getLatestKafkaSchemaVersion(
+    questionName,
+    version,
+    endPoint
+  ): Promise<SchemaMetadata> {
+    const versionStr = this.URI_version + version
+    const uri = endPoint + this.URI_schema + questionName + versionStr
+
+    return this.http
+      .get(uri)
+      .toPromise()
+      .catch(e =>
+        // TODO: add fallback for error
+        console.log(e)
+      )
+      .then(obj => obj as SchemaMetadata)
   }
 
   getUniqueTimeNow() {

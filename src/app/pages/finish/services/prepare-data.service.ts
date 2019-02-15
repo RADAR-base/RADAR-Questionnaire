@@ -4,44 +4,30 @@
 
 import { Injectable } from '@angular/core'
 
-import { ConfigService } from '../../../core/services/config/config.service'
-import { SubjectConfigService } from '../../../core/services/config/subject-config.service'
 import { QuestionType } from '../../../shared/models/question'
 
 @Injectable()
 export class PrepareDataService {
-  constructor(
-    private config: ConfigService,
-    private subjectConfig: SubjectConfigService
-  ) {}
+  constructor() {}
 
-  processQuestionnaireData(data): Promise<any> {
+  processQuestionnaireData(data, configVersion) {
     const answers = data.answers
     const timestamps = data.timestamps
     const questions = data.questions
     console.log(answers)
 
-    return Promise.all([
-      this.config.getConfigVersion(),
-      this.subjectConfig.getParticipantLogin()
-    ])
-      .then(([configVersion, participantLogin]) => {
-        const values = Object.entries(answers).map(([key, value]) => ({
-          questionId: { string: key.toString() },
-          value: { string: value.toString() },
-          startTime: timestamps[key].startTime,
-          endTime: timestamps[key].endTime
-        }))
-
-        return {
-          answers: values,
-          configVersion: configVersion,
-          patientId: participantLogin,
-          time: this.getTimeStart(questions, values),
-          timeCompleted: this.getTimeCompleted(values)
-        }
-      })
-      .catch(e => Promise.reject(JSON.stringify(e)))
+    const values = Object.entries(answers).map(([key, value]) => ({
+      questionId: { string: key.toString() },
+      value: { string: value.toString() },
+      startTime: timestamps[key].startTime,
+      endTime: timestamps[key].endTime
+    }))
+    return {
+      answers: values,
+      configVersion: configVersion,
+      time: this.getTimeStart(questions, values),
+      timeCompleted: this.getTimeCompleted(values)
+    }
   }
 
   getTimeStart(questions, answers) {

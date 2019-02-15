@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
-import { BarcodeScanner } from '@ionic-native/barcode-scanner'
+import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx'
 import { NavController, Slides } from 'ionic-angular'
 
 import {
@@ -13,6 +13,7 @@ import {
 import { AppComponent } from '../../../core/containers/app.component'
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
+import { FirebaseAnalyticsService } from '../../../core/services/usage/firebaseAnalytics.service'
 import { LocKeys } from '../../../shared/enums/localisations'
 import {
   LanguageSetting,
@@ -45,12 +46,17 @@ export class EnrolmentPageComponent {
     private scanner: BarcodeScanner,
     private auth: AuthService,
     private localization: LocalizationService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private firebaseAnalytics: FirebaseAnalyticsService
   ) {}
 
   ionViewDidLoad() {
     this.slides.lockSwipes(true)
     this.localization.update().then(lang => (this.language = lang))
+    this.firebaseAnalytics
+      .setCurrentScreen('enrolment-page')
+      .then(res => console.log('enrolment-page: ' + res))
+      .catch(err => console.log('enrolment-page: ' + err))
   }
 
   next() {
@@ -71,9 +77,12 @@ export class EnrolmentPageComponent {
       showFlipCameraButton: true,
       orientation: 'portrait'
     }
-    this.scanner
-      .scan(scanOptions)
-      .then(scannedObj => this.authenticate(scannedObj.text))
+    this.scanner.scan(scanOptions).then(scannedObj => {
+      this.firebaseAnalytics.logEvent('qr_code_scanned', {
+        text: scannedObj.text
+      })
+      return this.authenticate(scannedObj.text)
+    })
   }
 
   metaQRHandler() {
@@ -97,6 +106,7 @@ export class EnrolmentPageComponent {
         if (e.status !== 409) Promise.reject([])
       })
       .then(() => this.auth.enrol())
+      .then(() => this.firebaseAnalytics.logEvent('sign_up', {}))
       .then(() => this.next())
       .catch(e => this.handleError(e))
       .then(() => (this.loading = false))
@@ -110,6 +120,10 @@ export class EnrolmentPageComponent {
     console.log(e.statusText + ' - ' + e.status)
     this.showOutcomeStatus = true
     this.outcomeStatus = e.statusText + ' (' + e.status + ')'
+    this.firebaseAnalytics.logEvent('sign_up_failed', {
+      error: JSON.stringify(e),
+      message: String(this.outcomeStatus)
+    })
   }
 
   clearStatus() {

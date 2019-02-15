@@ -3,6 +3,7 @@ import { NavController, Platform } from 'ionic-angular'
 
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
+import { FirebaseAnalyticsService } from '../../../core/services/usage/firebaseAnalytics.service'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { Task, TasksProgress } from '../../../shared/models/task'
 import { checkTaskIsNow } from '../../../shared/utilities/check-task-is-now'
@@ -20,13 +21,13 @@ import { HomePageAnimations } from './home-page.animation'
   animations: HomePageAnimations
 })
 export class HomePageComponent {
+  sortedTasks: Promise<Map<any, any>>
   tasks: Promise<Task[]>
   tasksDate: Date
   nextTask: Task
   showCalendar = false
   showCompleted = false
-  showNoTasksToday = false
-  tasksProgress: TasksProgress = { numberOfTasks: 1, completedTasks: 0 }
+  tasksProgress: TasksProgress
   startingQuestionnaire = false
   hasClinicalTasks: Promise<boolean>
   taskIsNow = false
@@ -39,9 +40,13 @@ export class HomePageComponent {
     private tasksService: TasksService,
     private localization: LocalizationService,
     private platform: Platform,
+    private firebaseAnalytics: FirebaseAnalyticsService,
     private home: HomeService
   ) {
-    this.platform.resume.subscribe(() => this.onResume())
+    this.platform.resume.subscribe(() => {
+      this.firebaseAnalytics.logEvent('resumed', {})
+      this.onResume()
+    })
   }
 
   ionViewWillEnter() {
@@ -53,9 +58,11 @@ export class HomePageComponent {
     this.init()
     this.home.sendNonReportedCompletionLogs()
     this.home.sendOpenEvent()
+    this.firebaseAnalytics.setCurrentScreen('home-page')
   }
 
   init() {
+    this.sortedTasks = this.tasksService.getSortedTasksOfToday()
     this.tasks = this.tasksService.getTasksOfToday()
     this.tasksDate = new Date()
     this.tasks.then(tasks => {
@@ -63,7 +70,6 @@ export class HomePageComponent {
         this.checkForNextTask(tasks)
       }, 1000)
       this.tasksProgress = this.tasksService.getTaskProgress(tasks)
-      this.showNoTasksToday = this.tasksProgress.numberOfTasks == 0
       this.lastTaskIndex = tasks[tasks.length - 1].index
     })
     this.hasClinicalTasks = this.tasksService.evalHasClinicalTasks()
@@ -87,7 +93,6 @@ export class HomePageComponent {
     if (task) {
       this.nextTask = task
       this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
-      this.showCompleted = !this.nextTask
     } else {
       this.taskIsNow = false
       this.nextTask = null
@@ -100,10 +105,22 @@ export class HomePageComponent {
   }
 
   displayTaskCalendar() {
+    this.firebaseAnalytics.logEvent('click', { button: 'show_task_calendar' })
     this.showCalendar = !this.showCalendar
   }
 
+  openSettingsPage() {
+    this.firebaseAnalytics.logEvent('click', { button: 'open_settings' })
+    this.navCtrl.push(SettingsPageComponent)
+  }
+
+  openClinicalTasksPage() {
+    this.firebaseAnalytics.logEvent('click', { button: 'open_clinical_tasks' })
+    this.navCtrl.push(ClinicalTasksPageComponent)
+  }
+
   startQuestionnaire(taskCalendarTask: Task) {
+    this.firebaseAnalytics.logEvent('click', { button: 'start_questionnaire' })
     // NOTE: User can start questionnaire from task calendar or start button in home.
     const task = taskCalendarTask ? taskCalendarTask : this.nextTask
 
@@ -142,13 +159,5 @@ export class HomePageComponent {
         }
       ]
     })
-  }
-
-  openSettingsPage() {
-    this.navCtrl.push(SettingsPageComponent)
-  }
-
-  openClinicalTasksPage() {
-    this.navCtrl.push(ClinicalTasksPageComponent)
   }
 }

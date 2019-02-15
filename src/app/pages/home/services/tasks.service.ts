@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core'
 
+import {
+  DefaultESMCompletionWindow,
+  DefaultTaskCompletionWindow
+} from '../../../../assets/data/defaultConfig'
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { ScheduleService } from '../../../core/services/schedule/schedule.service'
@@ -38,18 +42,22 @@ export class TasksService {
     return this.schedule.getTasksForDate(new Date(), TaskType.NON_CLINICAL)
   }
 
+  getSortedTasksOfToday(): Promise<Map<number, Task[]>> {
+    return this.getTasksOfToday().then(tasks => {
+      const sortedTasks = new Map()
+      tasks.forEach(t => {
+        const midnight = new Date(t.timestamp).setUTCHours(0, 0, 0, 0)
+        if (sortedTasks.has(midnight)) sortedTasks.get(midnight).push(t)
+        else sortedTasks.set(midnight, [t])
+      })
+      return sortedTasks
+    })
+  }
+
   getTaskProgress(tasks): TasksProgress {
-    const tasksProgress: TasksProgress = {
-      numberOfTasks: 0,
-      completedTasks: 0
-    }
-    if (tasks) {
-      tasksProgress.numberOfTasks = tasks.length
-      tasksProgress.completedTasks = tasks.reduce(
-        (num, t) => (t.completed ? num + 1 : num),
-        0
-      )
-      return tasksProgress
+    return {
+      numberOfTasks: tasks.length,
+      completedTasks: tasks.filter(d => d.completed).length
     }
   }
 
@@ -76,15 +84,11 @@ export class TasksService {
 
   isTaskValid(task) {
     const now = new Date().getTime()
-    if (
+    return (
       task.timestamp <= now &&
       task.timestamp + task.completionWindow > now &&
       !task.completed
-    ) {
-      return true
-    } else {
-      return false
-    }
+    )
   }
 
   /**
@@ -95,11 +99,10 @@ export class TasksService {
    */
   getNextTask(tasks: Task[]): Task | undefined {
     if (tasks) {
-      const tenMinutesAgo =
-        new Date().getTime() - getMilliseconds({ minutes: 10 })
+      const tenMinutesAgo = new Date().getTime() - DefaultESMCompletionWindow
       const midnight = new Date()
       midnight.setHours(0, 0, 0, 0)
-      const offsetForward = getMilliseconds({ hours: 12 })
+      const offsetForward = DefaultTaskCompletionWindow
       return tasks.find(task => {
         switch (task.name) {
           case 'ESM':

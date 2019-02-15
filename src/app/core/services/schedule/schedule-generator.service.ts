@@ -1,9 +1,14 @@
 import { Injectable } from '@angular/core'
 
-import { DefaultScheduleYearCoverage } from '../../../../assets/data/defaultConfig'
+import {
+  DefaultESMCompletionWindow,
+  DefaultScheduleYearCoverage,
+  DefaultTaskCompletionWindow
+} from '../../../../assets/data/defaultConfig'
 import { Assessment } from '../../../shared/models/assessment'
 import { TimeInterval } from '../../../shared/models/protocol'
 import { Task } from '../../../shared/models/task'
+import { compareTasks } from '../../../shared/utilities/compare-tasks'
 import { TaskType } from '../../../shared/utilities/task-type'
 import { getMilliseconds } from '../../../shared/utilities/time'
 import { QuestionnaireService } from '../config/questionnaire.service'
@@ -90,7 +95,7 @@ export class ScheduleGeneratorService {
       completedTasks,
       utcOffsetPrev
     )
-    schedule = res.schedule.sort((a, b) => a.timestamp - b.timestamp)
+    schedule = res.schedule.sort(compareTasks)
 
     console.log('[√] Updated task schedule.')
     return Promise.resolve({ schedule, completed: res.updatedCompletedTasks })
@@ -243,9 +248,9 @@ export class ScheduleGeneratorService {
     if (assessment.protocol.completionWindow) {
       return this.timeIntervalToMillis(assessment.protocol.completionWindow)
     } else if (assessment.name === 'ESM') {
-      return getMilliseconds({ minutes: 15 })
+      return DefaultESMCompletionWindow
     } else {
-      return getMilliseconds({ days: 1 })
+      return DefaultTaskCompletionWindow
     }
   }
 

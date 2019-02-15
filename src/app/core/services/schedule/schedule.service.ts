@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core'
 
 import { StorageKeys } from '../../../shared/enums/storage'
 import { Task } from '../../../shared/models/task'
+import { compareTasks } from '../../../shared/utilities/compare-tasks'
 import { TaskType, getTaskType } from '../../../shared/utilities/task-type'
 import {
   getMilliseconds,
@@ -158,7 +159,7 @@ export class ScheduleService {
     this.getTasks(TaskType.ALL).then(tasks => {
       let rendered = `\nSCHEDULE Total (${tasks.length})\n`
       rendered += tasks
-        .sort(ScheduleService.compareTasks)
+        .sort(compareTasks)
         .slice(-10)
         .map(
           t =>
@@ -170,21 +171,5 @@ export class ScheduleService {
 
       console.log(rendered)
     })
-  }
-
-  static compareTasks(a, b) {
-    const diff = a.timestamp - b.timestamp
-    if (diff != 0) {
-      return diff
-    }
-    const aName = a.name.toUpperCase()
-    const bName = b.name.toUpperCase()
-    if (aName < bName) {
-      return -1
-    } else if (aName > bName) {
-      return 1
-    } else {
-      return 0
-    }
   }
 }

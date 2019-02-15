@@ -2,8 +2,8 @@ import 'rxjs/add/operator/map'
 
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { AndroidPermissions } from '@ionic-native/android-permissions'
-import { Device } from '@ionic-native/device'
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx'
+import { Device } from '@ionic-native/device/ngx'
 
 import { Utility } from './util'
 

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core'
-import { SplashScreen } from '@ionic-native/splash-screen'
-import { StatusBar } from '@ionic-native/status-bar'
+import { SplashScreen } from '@ionic-native/splash-screen/ngx'
+import { StatusBar } from '@ionic-native/status-bar/ngx'
 import { Platform } from 'ionic-angular'
 
 import { SplashPageComponent } from '../../pages/splash/containers/splash-page.component'

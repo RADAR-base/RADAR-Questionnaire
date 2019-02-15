@@ -9,7 +9,8 @@ import {
   DefaultManagementPortalURI,
   DefaultRefreshTokenURI,
   DefaultRequestEncodedContentType,
-  DefaultSourceProducerAndSecret
+  DefaultSourceProducerAndSecret,
+  DefaultTokenRefreshTime
 } from '../../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { getSeconds } from '../../../shared/utilities/time'
@@ -61,8 +62,10 @@ export class TokenService {
   refresh(): Promise<any> {
     return this.getTokens().then(tokens => {
       if (tokens) {
-        const now = getSeconds({ milliseconds: new Date().getTime() })
-        if (tokens.iat + tokens.expires_in < now) {
+        const limit = getSeconds({
+          milliseconds: new Date().getTime() - DefaultTokenRefreshTime
+        })
+        if (tokens.iat + tokens.expires_in < limit) {
           const params = this.getRefreshParams(tokens.refresh_token)
           return this.register('', params)
         } else {

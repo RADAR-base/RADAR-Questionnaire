@@ -205,15 +205,14 @@ export class KafkaService {
               })
             } else {
               const cacheKey = specs.kafkaObject.value.time
-              return this.removeAnswersFromCache(cacheKey).then(() =>
-                this.setLastUploadDate().then(() =>
-                  this.firebaseAnalytics.logEvent('send_success', {
-                    topic: topic,
-                    name: specs.name,
-                    questionnaire_timestamp: String(specs.task.timestamp)
-                  })
-                )
-              )
+              return this.removeAnswersFromCache(cacheKey).then(() => {
+                this.setLastUploadDate(specs)
+                return this.firebaseAnalytics.logEvent('send_success', {
+                  topic: topic,
+                  name: specs.name,
+                  questionnaire_timestamp: String(specs.task.timestamp)
+                })
+              })
             }
           })
       },
@@ -231,8 +230,12 @@ export class KafkaService {
     )
   }
 
-  setLastUploadDate() {
-    return this.storage.set(StorageKeys.LAST_UPLOAD_DATE, Date.now())
+  setLastUploadDate(specs) {
+    if (specs.name !== KAFKA_COMPLETION_LOG && specs.name !== KAFKA_TIMEZONE) {
+      return this.storage.set(StorageKeys.LAST_UPLOAD_DATE, Date.now())
+    } else {
+      return Promise.resolve()
+    }
   }
 
   // TODO: Add logging of firebase events for adding to cache

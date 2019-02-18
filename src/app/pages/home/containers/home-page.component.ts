@@ -1,5 +1,5 @@
 import { animate, state, style, transition, trigger } from '@angular/animations'
-import { Component } from '@angular/core'
+import { Component, OnDestroy } from '@angular/core'
 import {
   AlertController,
   Content,
@@ -7,6 +7,7 @@ import {
   NavParams,
   Platform
 } from 'ionic-angular'
+import { Subscription } from 'rxjs'
 
 import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { KafkaService } from '../../../core/services/kafka.service'
@@ -39,7 +40,7 @@ import { TasksService } from '../services/tasks.service'
     ])
   ]
 })
-export class HomePageComponent {
+export class HomePageComponent implements OnDestroy {
   tasks: Promise<Task[]>
   tasksDate: Date
   nextTask: Task
@@ -51,6 +52,7 @@ export class HomePageComponent {
   hasClinicalTasks = false
   taskIsNow = false
   checkTaskInterval
+  resumeListener: Subscription = new Subscription()
 
   constructor(
     public navCtrl: NavController,
@@ -63,12 +65,16 @@ export class HomePageComponent {
     private kafka: KafkaService,
     private firebaseAnalytics: FirebaseAnalyticsService
   ) {
-    this.platform.resume.subscribe(e => {
+    this.resumeListener = this.platform.resume.subscribe(e => {
       this.kafka.sendAllAnswersInCache()
       this.checkForNextTask()
       this.checkForNewDate()
       this.firebaseAnalytics.logEvent('resumed', {})
     })
+  }
+
+  ngOnDestroy() {
+    this.resumeListener.unsubscribe()
   }
 
   ionViewWillEnter() {

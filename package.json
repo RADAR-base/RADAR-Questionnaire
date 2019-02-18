@@ -105,7 +105,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.13.1",
-    "@angular/cli": "^6.0.8",
+    "@angular/cli": "^7.3.1",
     "@angular/compiler-cli": "^6.1.7",
     "@ionic/app-scripts": "^3.2.2",
     "@types/node": "^10.10.1",

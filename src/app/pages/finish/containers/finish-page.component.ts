@@ -54,6 +54,7 @@ export class FinishPageComponent {
   }
 
   processDataAndSend() {
+    this.finishTaskService.updateTaskToComplete(this.associatedTask)
     return this.prepareDataService
       .processQuestionnaireData(
         this.questionnaireData.answers,
@@ -65,9 +66,6 @@ export class FinishPageComponent {
           data,
           this.questionnaireData.questions
         )
-      )
-      .then(() =>
-        this.finishTaskService.updateTaskToComplete(this.associatedTask)
       )
       .catch(e => console.log(e))
       .then(() => (this.showDoneButton = true))

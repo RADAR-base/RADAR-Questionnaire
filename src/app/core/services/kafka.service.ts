@@ -133,7 +133,11 @@ export class KafkaService {
       }
       const kafkaObject = { value: value, key: answerKey }
       return this.getSpecs(task, kafkaObject, type).then(specs =>
-        this.cacheAnswers(specs).then(() => this.sendAllAnswersInCache())
+        this.cacheAnswers(specs).then(() =>
+          this.sendAllAnswersInCache().catch(() =>
+            console.log('Cache already sending')
+          )
+        )
       )
     })
   }
@@ -254,6 +258,8 @@ export class KafkaService {
       return this.sendToKafkaFromCache()
         .catch(e => console.log('Cache could not be sent.'))
         .then(() => (this.cacheSending = !this.cacheSending))
+    } else {
+      return Promise.reject({})
     }
   }
 
@@ -282,6 +288,8 @@ export class KafkaService {
         console.log('Deleting ' + cacheKey)
         if (cache[cacheKey]) delete cache[cacheKey]
         return this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
+      } else {
+        return Promise.resolve({})
       }
     })
   }

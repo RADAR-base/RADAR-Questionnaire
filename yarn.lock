@@ -5555,9 +5555,10 @@ next-tick@1:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.0.0.tgz#ca86d1fe8828169b0120208e3dc8424b9db8342c"
 
-ngx-moment@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/ngx-moment/-/ngx-moment-3.1.0.tgz#41380b4dd8b68e7bd6d17cc6fe7f703ae506dc3a"
+ngx-moment@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/ngx-moment/-/ngx-moment-3.3.0.tgz#54176d8d24cf0f0d90fbbb8a6e6185cbd0d55324"
+  integrity sha512-6fpllpJqLfjRWboOhphgeEYt+rzIA9O29rG5QWCebRt2X0uNk4P93sLEb0S8lbDF0dEp2NOC3UOD+xoCVlJQhA==
   dependencies:
     tslib "^1.9.0"
 
@@ -8273,15 +8274,7 @@ tsickle@^0.32.1:
     source-map "^0.6.0"
     source-map-support "^0.5.0"
 
-tslib@^1.0.0, tslib@^1.7.1:
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.7.1.tgz#bc8004164691923a79fe8378bbeb3da2017538ec"
-
-tslib@^1.8.0:
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.8.0.tgz#dc604ebad64bcbf696d613da6c954aa0e7ea1eb6"
-
-tslib@^1.8.1, tslib@^1.9.0:
+tslib@^1.0.0, tslib@^1.7.1, tslib@^1.8.0, tslib@^1.8.1, tslib@^1.9.0:
   version "1.9.3"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.9.3.tgz#d7e4dd79245d85428c4d7e4822a79917954ca286"
 

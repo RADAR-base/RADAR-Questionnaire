@@ -50,6 +50,7 @@ export class FinishPageComponent {
       questionnaire_timestamp: String(this.associatedTask.timestamp),
       type: this.associatedTask.name
     })
+    setTimeout(() => (this.showDoneButton = true), 15000)
   }
 
   processDataAndSend() {

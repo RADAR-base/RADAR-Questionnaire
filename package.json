@@ -123,7 +123,7 @@
     "postcss-scss": "^2.0.0",
     "postcss-sorting": "^4.0.1",
     "prettier": "^1.16.4",
-    "reflect-metadata": "^0.1.10",
+    "reflect-metadata": "^0.1.13",
     "rxjs-compat": "^6.3.2",
     "rxjs-tslint": "^0.1.5",
     "stylefmt": "^6.0.3",

@@ -46,7 +46,7 @@
     "@angular/platform-server": "^6.1.7",
     "@angular/router": "^6.1.7",
     "@angular/tsc-wrapped": "^4.4.6",
-    "@auth0/angular-jwt": "^2.0.0",
+    "@auth0/angular-jwt": "^2.1.0",
     "@ionic-native/android-permissions": "^5.0.0",
     "@ionic-native/app-version": "^5.0.0",
     "@ionic-native/barcode-scanner": "^5.0.0",

@@ -73,15 +73,14 @@ export class EnrolmentPageComponent {
     private translate: TranslatePipe,
     private alertCtrl: AlertController,
     private firebaseAnalytics: FirebaseAnalyticsService
-  ) {}
+  ) {
+    this.translate
+      .init()
+      .then(() => (this.language = this.translate.getLanguage()))
+  }
 
   ionViewDidLoad() {
     this.slides.lockSwipes(true)
-    this.translate.init()
-    this.language = this.translate.getLanguage()
-  }
-
-  ionViewDidEnter() {
     this.firebaseAnalytics
       .setCurrentScreen('enrolment-page')
       .then(res => console.log('enrolment-page: ' + res))

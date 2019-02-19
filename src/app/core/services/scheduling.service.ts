@@ -219,7 +219,9 @@ export class SchedulingService {
     return this.getAssessments()
       .then(assessments => this.buildTaskSchedule(assessments))
       .catch(e => console.error(e))
-      .then((schedule: Task[]) => this.setSchedule(schedule))
+      .then((schedule: Task[]) =>
+        this.setSchedule(schedule.sort(SchedulingService.compareTasks))
+      )
       .catch(e => console.error(e))
   }
 
@@ -244,39 +246,31 @@ export class SchedulingService {
     return this.storage.push(StorageKeys.SCHEDULE_TASKS_COMPLETED, task)
   }
 
-  updateScheduleWithCompletedTasks(schedule): Task[] {
+  updateScheduleWithCompletedTasks(schedule): Promise<Task[]> {
     // NOTE: If utcOffsetPrev exists, timezone has changed
-    if (this.utcOffsetPrev != null) {
-      this.storage
-        .remove(StorageKeys.SCHEDULE_TASKS_COMPLETED)
-        .then(() => {
-          const currentMidnight = new Date().setHours(0, 0, 0, 0)
-          const prevMidnight =
-            new Date().setUTCHours(0, 0, 0, 0) + this.utcOffsetPrev * 60000
-          this.completedTasks.map(d => {
-            const index = schedule.findIndex(
-              s =>
-                s.timestamp - currentMidnight == d.timestamp - prevMidnight &&
-                s.name == d.name
-            )
-            if (index > -1) {
-              schedule[index].completed = true
-              return this.addToCompletedTasks(schedule[index])
-            }
-          })
-        })
-        .then(() => this.storage.remove(StorageKeys.UTC_OFFSET_PREV))
-    } else {
+    return Promise.all([
+      this.storage.remove(StorageKeys.SCHEDULE_TASKS_COMPLETED),
+      this.storage.remove(StorageKeys.UTC_OFFSET_PREV)
+    ]).then(() => {
+      const currentMidnight = new Date().setHours(0, 0, 0, 0)
+      const prevMidnight =
+        new Date().setUTCHours(0, 0, 0, 0) + this.utcOffsetPrev * 60000
       this.completedTasks.map(d => {
-        if (
-          schedule[d.index].timestamp == d.timestamp &&
-          schedule[d.index].name == d.name
-        ) {
-          return (schedule[d.index].completed = true)
+        const index = schedule.findIndex(
+          s =>
+            ((this.utcOffsetPrev != null &&
+              s.timestamp - currentMidnight == d.timestamp - prevMidnight) ||
+              (this.utcOffsetPrev == null && s.timestamp == d.timestamp)) &&
+            s.name == d.name
+        )
+        if (index > -1 && !schedule[index].completed) {
+          schedule[index].completed = true
+          schedule[index].reportedCompletion = d.reportedCompletion
+          return this.addToCompletedTasks(schedule[index])
         }
       })
-    }
-    return schedule
+      return schedule
+    })
   }
 
   buildTaskSchedule(assessments) {
@@ -292,10 +286,9 @@ export class SchedulingService {
     }
     // NOTE: Check for completed tasks
     const updatedSchedule = this.updateScheduleWithCompletedTasks(schedule)
-    schedule = updatedSchedule.sort(SchedulingService.compareTasks)
 
     console.log('[√] Updated task schedule.')
-    return Promise.resolve(schedule)
+    return updatedSchedule
   }
 
   buildTasksForSingleAssessment(assessment, indexOffset) {

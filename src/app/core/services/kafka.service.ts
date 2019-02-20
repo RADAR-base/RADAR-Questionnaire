@@ -195,7 +195,7 @@ export class KafkaService {
           })
       )
       .then(() => this.removeAnswersFromCache(specs.kafkaObject.value.time))
-      .then(() => this.setLastUploadDate())
+      .then(() => this.setLastUploadDate(specs))
       .catch(error => {
         console.error(
           'Could not initiate kafka connection ' + JSON.stringify(error)
@@ -208,8 +208,12 @@ export class KafkaService {
       })
   }
 
-  setLastUploadDate() {
-    return this.storage.set(StorageKeys.LAST_UPLOAD_DATE, Date.now())
+  setLastUploadDate(specs) {
+    if (specs.name !== KAFKA_COMPLETION_LOG && specs.name !== KAFKA_TIMEZONE) {
+      return this.storage.set(StorageKeys.LAST_UPLOAD_DATE, Date.now())
+    } else {
+      return Promise.resolve()
+    }
   }
 
   // TODO: Add logging of firebase events for adding to cache
@@ -228,6 +232,8 @@ export class KafkaService {
       return this.sendToKafkaFromCache()
         .catch(e => console.log('Cache could not be sent.'))
         .then(() => (this.cacheSending = !this.cacheSending))
+    } else {
+      return Promise.resolve({})
     }
   }
 
@@ -250,6 +256,8 @@ export class KafkaService {
           delete cache[cacheKey]
         }
         return this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
+      } else {
+        return Promise.resolve({})
       }
     })
   }

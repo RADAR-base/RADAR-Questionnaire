@@ -11,7 +11,6 @@ import {
   DefaultSourceTypeModel,
   LanguageMap
 } from '../../../../assets/data/defaultConfig'
-import { AppComponent } from '../../../core/containers/app.component'
 import { AlertService } from '../../../core/services/alert.service'
 import { ConfigService } from '../../../core/services/config.service'
 import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
@@ -25,6 +24,7 @@ import {
   WeeklyReportSubSettings
 } from '../../../shared/models/settings'
 import { HomePageComponent } from '../../home/containers/home-page.component'
+import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 import { AuthService } from '../services/auth.service'
 
 @Component({
@@ -75,11 +75,12 @@ export class EnrolmentPageComponent {
     private localization: LocalizationService,
     private alertService: AlertService,
     private firebaseAnalytics: FirebaseAnalyticsService
-  ) {}
+  ) {
+    this.localization.update().then(lang => (this.language = lang))
+  }
 
   ionViewDidLoad() {
     this.slides.lockSwipes(true)
-    return this.localization.update().then(lang => (this.language = lang))
   }
 
   ionViewDidEnter() {
@@ -298,10 +299,9 @@ export class EnrolmentPageComponent {
             label: LanguageMap[selectedLanguageVal],
             value: selectedLanguageVal
           }
-          this.localization.setLanguage(lang).then(() => {
-            this.language = lang
-            return this.navCtrl.setRoot(AppComponent)
-          })
+          this.storage
+            .set(StorageKeys.LANGUAGE, lang)
+            .then(() => this.navCtrl.setRoot(SplashPageComponent))
         }
       }
     ]

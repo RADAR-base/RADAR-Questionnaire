@@ -1,6 +1,7 @@
 import { animate, state, style, transition, trigger } from '@angular/animations'
-import { Component } from '@angular/core'
+import { Component, OnDestroy } from '@angular/core'
 import { NavController, Platform } from 'ionic-angular'
+import { Subscription } from 'rxjs'
 
 import { AlertService } from '../../../core/services/alert.service'
 import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
@@ -34,7 +35,7 @@ import { TasksService } from '../services/tasks.service'
     ])
   ]
 })
-export class HomePageComponent {
+export class HomePageComponent implements OnDestroy {
   sortedTasks: Promise<Map<any, any>>
   tasks: Promise<Task[]>
   tasksDate: Date
@@ -46,6 +47,7 @@ export class HomePageComponent {
   hasClinicalTasks = false
   taskIsNow = false
   checkTaskInterval
+  resumeListener: Subscription = new Subscription()
 
   constructor(
     public navCtrl: NavController,
@@ -57,11 +59,15 @@ export class HomePageComponent {
     private kafka: KafkaService,
     private firebaseAnalytics: FirebaseAnalyticsService
   ) {
-    this.platform.resume.subscribe(e => {
+    this.resumeListener = this.platform.resume.subscribe(e => {
       this.kafka.sendAllAnswersInCache()
       this.checkForNewDate()
       this.firebaseAnalytics.logEvent('resumed', {})
     })
+  }
+
+  ngOnDestroy() {
+    this.resumeListener.unsubscribe()
   }
 
   ionViewWillEnter() {
@@ -134,7 +140,10 @@ export class HomePageComponent {
     if (this.tasksService.isTaskValid(task)) {
       this.startingQuestionnaire = true
 
-      return this.tasksService.getAssessment(task).then(assessment => {
+      return Promise.all([
+        this.tasksService.getAssessment(task),
+        this.tasksService.isLastTask(task, this.tasks)
+      ]).then(([assessment, lastTask]) => {
         const params = {
           title: assessment.name,
           introduction: this.localization.chooseText(assessment.startText),
@@ -142,19 +151,14 @@ export class HomePageComponent {
           questions: assessment.questions,
           associatedTask: task,
           assessment: assessment,
-          isLastTask: false
+          isLastTask: lastTask
         }
 
-        this.tasksService
-          .isLastTask(task, this.tasks)
-          .then(lastTask => (params.isLastTask = lastTask))
-          .then(() => {
-            if (assessment.showIntroduction) {
-              this.navCtrl.push(StartPageComponent, params)
-            } else {
-              this.navCtrl.push(QuestionsPageComponent, params)
-            }
-          })
+        if (assessment.showIntroduction) {
+          this.navCtrl.push(StartPageComponent, params)
+        } else {
+          this.navCtrl.push(QuestionsPageComponent, params)
+        }
       })
     } else {
       this.showMissedInfo()

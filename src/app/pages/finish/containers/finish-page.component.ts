@@ -55,9 +55,11 @@ export class FinishPageComponent {
       questionnaire_timestamp: String(this.associatedTask.timestamp),
       type: this.associatedTask.name
     })
+    setTimeout(() => (this.showDoneButton = true), 15000)
   }
 
   processDataAndSend() {
+    this.finishTaskService.updateTaskToComplete(this.associatedTask)
     return this.prepareDataService
       .processQuestionnaireData(
         this.questionnaireData.answers,
@@ -69,9 +71,6 @@ export class FinishPageComponent {
           data,
           this.questionnaireData.questions
         )
-      )
-      .then(() =>
-        this.finishTaskService.updateTaskToComplete(this.associatedTask)
       )
       .catch(e => console.log(e))
       .then(() => (this.showDoneButton = true))

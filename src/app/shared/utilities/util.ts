@@ -72,32 +72,39 @@ export class Utility {
     ]).then(([sourceId, projectName, participantName]) => ({
       sourceId,
       userId: participantName.toString(),
-      projectId: projectName,
+      projectId: projectName
     }))
   }
 
-  getLatestKafkaSchemaVersions(specs): Promise<[SchemaMetadata, SchemaMetadata]> {
+  getLatestKafkaSchemaVersions(
+    specs
+  ): Promise<[SchemaMetadata, SchemaMetadata]> {
     const topic = specs.avsc + '_' + specs.name
 
-    return this.storage.get(StorageKeys.OAUTH_TOKENS)
-      .then(tokens => {
-        return Promise.all([
-          this.getLatestKafkaSchemaVersion(
-            tokens.access_token,
-            topic + '-key',
-            'latest'
-          ),
-          this.getLatestKafkaSchemaVersion(
-            tokens.access_token,
-            topic + '-value',
-            'latest'
-          )])
-      })
+    return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
+      return Promise.all([
+        this.getLatestKafkaSchemaVersion(
+          tokens.access_token,
+          topic + '-key',
+          'latest'
+        ),
+        this.getLatestKafkaSchemaVersion(
+          tokens.access_token,
+          topic + '-value',
+          'latest'
+        )
+      ])
+    })
   }
 
-  getLatestKafkaSchemaVersion(accessToken, questionName, version): Promise<SchemaMetadata> {
+  getLatestKafkaSchemaVersion(
+    accessToken,
+    questionName,
+    version
+  ): Promise<SchemaMetadata> {
     const versionStr = this.URI_version + version
-    return this.storage.get(StorageKeys.BASE_URI)
+    return this.storage
+      .get(StorageKeys.BASE_URI)
       .then(baseuri => {
         const endPoint = baseuri ? baseuri : DefaultEndPoint
         const uri = endPoint + this.URI_schema + questionName + versionStr

@@ -81,9 +81,6 @@ export class EnrolmentPageComponent {
 
   ionViewDidLoad() {
     this.slides.lockSwipes(true)
-  }
-
-  ionViewDidEnter() {
     this.firebaseAnalytics
       .setCurrentScreen('enrolment-page')
       .then(res => console.log('enrolment-page: ' + res))

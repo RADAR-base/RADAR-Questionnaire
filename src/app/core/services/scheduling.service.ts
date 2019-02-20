@@ -168,25 +168,23 @@ export class SchedulingService {
       this.storage.remove(StorageKeys.SCHEDULE_TASKS_COMPLETED),
       this.storage.remove(StorageKeys.UTC_OFFSET_PREV)
     ]).then(() => {
-      if (this.completedTasks) {
-        const currentMidnight = new Date().setHours(0, 0, 0, 0)
-        const prevMidnight =
-          new Date().setUTCHours(0, 0, 0, 0) + this.utcOffsetPrev * 60000
-        this.completedTasks.map(d => {
-          const index = schedule.findIndex(
-            s =>
-              ((this.utcOffsetPrev != null &&
-                s.timestamp - currentMidnight == d.timestamp - prevMidnight) ||
-                (this.utcOffsetPrev == null && s.timestamp == d.timestamp)) &&
-              s.name == d.name
-          )
-          if (index > -1 && !schedule[index].completed) {
-            schedule[index].completed = true
-            schedule[index].reportedCompletion = d.reportedCompletion
-            return this.addToCompletedTasks(schedule[index])
-          }
-        })
-      }
+      const currentMidnight = new Date().setHours(0, 0, 0, 0)
+      const prevMidnight =
+        new Date().setUTCHours(0, 0, 0, 0) + this.utcOffsetPrev * 60000
+      this.completedTasks.map(d => {
+        const index = schedule.findIndex(
+          s =>
+            ((this.utcOffsetPrev != null &&
+              s.timestamp - currentMidnight == d.timestamp - prevMidnight) ||
+              (this.utcOffsetPrev == null && s.timestamp == d.timestamp)) &&
+            s.name == d.name
+        )
+        if (index > -1 && !schedule[index].completed) {
+          schedule[index].completed = true
+          schedule[index].reportedCompletion = d.reportedCompletion
+          return this.addToCompletedTasks(schedule[index])
+        }
+      })
       return schedule
     })
   }

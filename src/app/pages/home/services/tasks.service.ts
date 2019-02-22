@@ -82,8 +82,6 @@ export class TasksService {
   getNextTask(tasks: Task[]): Task | undefined {
     if (tasks) {
       const tenMinutesAgo = new Date().getTime() - DefaultESMCompletionWindow
-      const midnight = new Date()
-      midnight.setHours(0, 0, 0, 0)
       const offsetForward = DefaultTaskCompletionWindow
       return tasks.find(task => {
         switch (task.name) {
@@ -96,7 +94,10 @@ export class TasksService {
             )
           default:
             // NOTE: Break out of the loop as soon as the next incomplete task is found
-            return task.timestamp >= midnight.getTime() && !task.completed
+            return (
+              task.timestamp + task.completionWindow >= Date.now() &&
+              !task.completed
+            )
         }
       })
     }

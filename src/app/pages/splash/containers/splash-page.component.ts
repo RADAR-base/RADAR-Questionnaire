@@ -43,7 +43,6 @@ export class SplashPageComponent {
   }
 
   onStart() {
-    this.status = 'Updating notifications...'
     this.configService.migrateToLatestVersion()
     return this.configService
       .fetchConfigState(false)
@@ -70,6 +69,7 @@ export class SplashPageComponent {
       const utcOffset = new Date().getTimezoneOffset()
       // NOTE: Cancels all notifications and reschedule tasks if timezone has changed
       if (prevUtcOffset !== utcOffset) {
+        this.status = 'Timezone has changed! Updating schedule...'
         console.log(
           '[SPLASH] Timezone has changed to ' +
             utcOffset +
@@ -98,6 +98,7 @@ export class SplashPageComponent {
           !lastUpdate ||
           timeElapsed < 0
         ) {
+          this.status = 'Updating notifications...'
           console.log('[SPLASH] Scheduling Notifications.')
           return this.notificationService.setNextXNotifications(
             DefaultNumberOfNotificationsToSchedule
@@ -115,11 +116,14 @@ export class SplashPageComponent {
 
   sendNonReportedTaskCompletion() {
     const promises = []
+    setTimeout(
+      () => (this.status = `You've missed quite a few tasks...`),
+      30000
+    )
     return this.schedule
       .getNonReportedCompletedTasks()
       .then(nonReportedTasks => {
         const length = nonReportedTasks.length
-        this.status = 'This may take around a minute...'
         for (let i = 0; i < length; i++) {
           promises.push(
             this.kafka
@@ -130,7 +134,10 @@ export class SplashPageComponent {
           )
         }
       })
-      .then(() => Promise.all(promises))
+      .then(() => {
+        this.status = 'This may take a few seconds...'
+        return Promise.all(promises)
+      })
   }
 
   updateTaskToReportedCompletion(task): Promise<any> {

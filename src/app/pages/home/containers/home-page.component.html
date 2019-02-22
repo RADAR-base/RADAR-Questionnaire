@@ -27,12 +27,12 @@
 
 <ion-content #content>
   <div
-    *ngIf="(tasksProgress|async) && !showCalendar"
     #progressBar
     class="size-dynamic"
     [@moveProgress]="showCalendar"
   >
     <task-progress
+      *ngIf="(tasksProgress|async)"
       [progress]="(tasksProgress|async)"
       [forceComplete]="showCompleted"
       [noTasksToday]="(tasksProgress|async)?.numberOfTasks == 0"
@@ -67,11 +67,11 @@
   </div>
 
   <div
-    *ngIf="(sortedTasks|async)?.size"
     #taskCalendar
     [@displayCalendar]="showCalendar"
   >
     <task-calendar
+      *ngIf="(sortedTasks|async)?.size"
       [show]="showCalendar"
       (task)="startQuestionnaire($event)"
       [tasks]="sortedTasks|async"

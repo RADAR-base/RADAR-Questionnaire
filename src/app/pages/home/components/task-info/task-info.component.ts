@@ -2,8 +2,10 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Component, Input, OnChanges } from '@angular/core'
 
 import { StorageService } from '../../../../core/services/storage.service'
+import { LocKeys } from '../../../../shared/enums/localisations'
 import { StorageKeys } from '../../../../shared/enums/storage'
 import { Task, TasksProgress } from '../../../../shared/models/task'
+import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
 
 @Component({
   selector: 'task-info',
@@ -61,6 +63,8 @@ export class TaskInfoComponent implements OnChanges {
   expanded = true
   hasExtraInfo: boolean
   extraTaskInfo: string
+  nextTaskStatus
+  statusSize
 
   private language: string
 
@@ -69,7 +73,10 @@ export class TaskInfoComponent implements OnChanges {
   radius: number = 35
   stroke: number = 8
 
-  constructor(public storage: StorageService) {
+  constructor(
+    public storage: StorageService,
+    private translate: TranslatePipe
+  ) {
     this.storage.get(StorageKeys.LANGUAGE).then(resLang => {
       this.language = resLang.value
     })
@@ -78,6 +85,7 @@ export class TaskInfoComponent implements OnChanges {
   ngOnChanges() {
     this.checkHasExtraInfo()
     this.updateProgress()
+    this.updateNextTaskStatus()
   }
 
   checkHasExtraInfo() {
@@ -91,6 +99,8 @@ export class TaskInfoComponent implements OnChanges {
       this.max = this.progress.numberOfTasks
     }
   }
+
+  getStatusScale() {}
 
   getHour() {
     const date = new Date()
@@ -121,5 +131,18 @@ export class TaskInfoComponent implements OnChanges {
         ? '0' + String(numberToFormat)
         : String(numberToFormat)
     return format
+  }
+
+  updateNextTaskStatus() {
+    this.nextTaskStatus = this.translate.transform(
+      this.isNow
+        ? LocKeys.STATUS_NOW.toString()
+        : this.task.name !== 'ESM'
+          ? ''
+          : LocKeys.TASK_BAR_NEXT_TASK_SOON.toString()
+    )
+    if (this.nextTaskStatus.length > 10) return (this.statusSize = 8)
+    if (this.nextTaskStatus.length > 5) return (this.statusSize = 11)
+    return (this.statusSize = 14)
   }
 }

@@ -298,6 +298,9 @@ export class SchedulingService {
     let iterDate = this.setDateTimeToMidnight(new Date(this.enrolmentDate))
     const yearsMillis = DefaultScheduleYearCoverage * 60000 * 60 * 24 * 365
     const endDate = new Date(iterDate.getTime() + yearsMillis)
+    const completionWindow = SchedulingService.computeCompletionWindow(
+      assessment
+    )
 
     console.log(assessment)
 
@@ -311,9 +314,14 @@ export class SchedulingService {
           repeatQ.unitsFromZero[i]
         )
 
-        if (taskDate.getTime() > today.getTime()) {
+        if (taskDate.getTime() + completionWindow > today.getTime()) {
           const idx = indexOffset + tmpScheduleAll.length
-          const task = this.taskBuilder(idx, assessment, taskDate)
+          const task = this.taskBuilder(
+            idx,
+            assessment,
+            taskDate,
+            completionWindow
+          )
           tmpScheduleAll.push(task)
         }
       }
@@ -366,7 +374,7 @@ export class SchedulingService {
     return amount * TIME_UNIT_MILLIS[unit]
   }
 
-  taskBuilder(index, assessment, taskDate): Task {
+  taskBuilder(index, assessment, taskDate, completionWindow): Task {
     const task: Task = {
       index: index,
       completed: false,
@@ -376,7 +384,7 @@ export class SchedulingService {
       reminderSettings: assessment.protocol.reminders,
       nQuestions: assessment.questions.length,
       estimatedCompletionTime: assessment.estimatedCompletionTime,
-      completionWindow: SchedulingService.computeCompletionWindow(assessment),
+      completionWindow: completionWindow,
       warning: assessment.warn,
       isClinical: false
     }

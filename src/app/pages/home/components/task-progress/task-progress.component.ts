@@ -31,9 +31,9 @@ export class TaskProgressComponent implements OnChanges {
   max: number = 1
   current: number = 0
   stroke = 22
-  animation = 'easeOutQuart'
-  animationDelay = 200
-  duration = 400
+  animation = 'easeInQuart'
+  animationDelay = 100
+  duration = 300
   complete = false
   showFireworks: boolean = false
 

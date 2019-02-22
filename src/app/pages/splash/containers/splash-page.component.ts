@@ -8,6 +8,7 @@ import {
 import { ConfigService } from '../../../core/services/config.service'
 import { KafkaService } from '../../../core/services/kafka.service'
 import { NotificationService } from '../../../core/services/notification.service'
+import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { EnrolmentPageComponent } from '../../auth/containers/enrolment-page.component'
@@ -28,7 +29,8 @@ export class SplashPageComponent {
     private splashService: SplashService,
     private notificationService: NotificationService,
     private kafka: KafkaService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private schedule: SchedulingService
   ) {
     this.splashService
       .evalEnrolment()
@@ -50,6 +52,10 @@ export class SplashPageComponent {
       .catch(error => {
         console.error(error)
         console.log('[SPLASH] Notifications error.')
+      })
+      .then(() => {
+        this.status = 'Sending missed completion logs...'
+        return this.sendNonReportedTaskCompletion()
       })
       .then(() => {
         this.status = 'Sending cached answers...'
@@ -105,5 +111,31 @@ export class SplashPageComponent {
           )
         }
       })
+  }
+
+  sendNonReportedTaskCompletion() {
+    const promises = []
+    return this.schedule
+      .getNonReportedCompletedTasks()
+      .then(nonReportedTasks => {
+        const length = nonReportedTasks.length
+        this.status = 'This may take around a minute...'
+        for (let i = 0; i < length; i++) {
+          promises.push(
+            this.kafka
+              .prepareNonReportedTasksKafkaObjectAndSend(nonReportedTasks[i])
+              .then(() =>
+                this.updateTaskToReportedCompletion(nonReportedTasks[i])
+              )
+          )
+        }
+      })
+      .then(() => Promise.all(promises))
+  }
+
+  updateTaskToReportedCompletion(task): Promise<any> {
+    const updatedTask = task
+    updatedTask.reportedCompletion = true
+    return this.schedule.insertTask(updatedTask)
   }
 }

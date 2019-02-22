@@ -27,15 +27,15 @@
 
 <ion-content #content>
   <div
+    *ngIf="(tasksProgress|async) && !showCalendar"
     #progressBar
     class="size-dynamic"
     [@moveProgress]="showCalendar"
   >
     <task-progress
-      [progress]="tasksProgress"
+      [progress]="(tasksProgress|async)"
       [forceComplete]="showCompleted"
-      [noTasksToday]="tasksProgress?.numberOfTasks == 0"
-      *ngIf="tasksProgress?.numberOfTasks && !showCalendar"
+      [noTasksToday]="(tasksProgress|async)?.numberOfTasks == 0"
     >
     </task-progress>
   </div>
@@ -48,7 +48,7 @@
       [task]="nextTask"
       [isNow]="taskIsNow"
       [showAffirmation]="showCompleted"
-      [noTasksToday]="tasksProgress?.numberOfTasks == 0"
+      [noTasksToday]="(tasksProgress|async)?.numberOfTasks == 0"
     ></ticker-bar>
   </div>
 
@@ -60,21 +60,21 @@
       *ngIf="nextTask"
       [task]="nextTask"
       [isNow]="taskIsNow"
-      [progress]="tasksProgress"
+      [progress]="(tasksProgress|async)"
       [expanded]="!showCalendar"
       (click)="displayTaskCalendar()"
     ></task-info>
   </div>
 
   <div
-    *ngIf="tasks"
+    *ngIf="(sortedTasks|async)?.size"
     #taskCalendar
     [@displayCalendar]="showCalendar"
   >
     <task-calendar
       [show]="showCalendar"
       (task)="startQuestionnaire($event)"
-      [tasks]="sortedTasks"
+      [tasks]="sortedTasks|async"
     >
     </task-calendar>
   </div>
@@ -84,7 +84,7 @@
     class="size-static footer"
   >
     <div
-      *ngIf="taskIsNow && !startingQuestionnaire && !showCompleted && !showCalendar"
+      *ngIf="taskIsNow && !startingQuestionnaire && !showCompleted && !showCalendar && (sortedTasks|async)?.size"
       padding
     >
       <button
@@ -98,7 +98,7 @@
       </button>
     </div>
     <div
-      *ngIf="startingQuestionnaire || (!nextTask && !showCompleted)"
+      *ngIf="startingQuestionnaire || (!nextTask && !showCompleted) || !(sortedTasks|async)?.size"
       class="spinner-center"
     >
       <ion-spinner name="dots"></ion-spinner>
@@ -111,7 +111,7 @@
   class="clinical"
   [class.clinical-1]="taskIsNow && !showCompleted"
   [class.clinical-2]="showCalendar"
-  [class.clinical-3]="showCompleted || tasksProgress?.numberOfTasks == 0"
+  [class.clinical-3]="showCompleted || (tasksProgress|async)?.numberOfTasks == 0"
   [class.clinical-4]="!taskIsNow && !showCompleted && !showCalendar"
   (click)="openClinicalTasksPage()"
 >

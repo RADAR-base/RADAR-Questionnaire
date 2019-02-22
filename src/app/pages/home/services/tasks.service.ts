@@ -4,7 +4,6 @@ import {
   DefaultESMCompletionWindow,
   DefaultTaskCompletionWindow
 } from '../../../../assets/data/defaultConfig'
-import { KafkaService } from '../../../core/services/kafka.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { Task, TasksProgress } from '../../../shared/models/task'
@@ -13,8 +12,7 @@ import { Task, TasksProgress } from '../../../shared/models/task'
 export class TasksService {
   constructor(
     public storage: StorageService,
-    private schedule: SchedulingService,
-    private kafka: KafkaService
+    private schedule: SchedulingService
   ) {}
 
   getAssessment(task) {
@@ -41,11 +39,13 @@ export class TasksService {
     return this.schedule.getNonClinicalTasksForDate(timestamp)
   }
 
-  getTaskProgress(tasks): TasksProgress {
-    return {
-      numberOfTasks: tasks.length,
-      completedTasks: tasks.filter(d => d.completed).length
-    }
+  getTaskProgress(): Promise<TasksProgress> {
+    return this.getTasksOfToday().then(tasks => {
+      return {
+        numberOfTasks: tasks.length,
+        completedTasks: tasks.filter(d => d.completed).length
+      }
+    })
   }
 
   areAllTasksComplete(tasks) {
@@ -100,21 +100,5 @@ export class TasksService {
         }
       })
     }
-  }
-
-  sendNonReportedTaskCompletion() {
-    this.schedule.getNonReportedCompletedTasks().then(nonReportedTasks => {
-      for (let i = 0; i < nonReportedTasks.length; i++) {
-        this.kafka
-          .prepareNonReportedTasksKafkaObjectAndSend(nonReportedTasks[i])
-          .then(() => this.updateTaskToReportedCompletion(nonReportedTasks[i]))
-      }
-    })
-  }
-
-  updateTaskToReportedCompletion(task): Promise<any> {
-    const updatedTask = task
-    updatedTask.reportedCompletion = true
-    return this.schedule.insertTask(updatedTask)
   }
 }

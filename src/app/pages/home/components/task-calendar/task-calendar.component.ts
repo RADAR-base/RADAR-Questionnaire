@@ -18,16 +18,16 @@ export class TaskCalendarComponent implements OnChanges {
   @Output()
   task: EventEmitter<Task> = new EventEmitter<Task>()
   @Input()
-  tasks
+  tasks: Map<number, Task[]>
 
   currentTime
   currentDate = new Date().setUTCHours(0, 0, 0, 0)
-  timeIndex: Promise<number>
+  timeIndex: number
 
   constructor() {}
 
   ngOnChanges() {
-    this.setCurrentTime()
+    if (this.tasks) this.setCurrentTime()
   }
 
   getStartTime(task: Task) {
@@ -41,12 +41,9 @@ export class TaskCalendarComponent implements OnChanges {
 
     // NOTE: Compare current time with the start times of the tasks and
     // find out in between which tasks it should be shown in the interface
-    this.timeIndex = this.tasks.then(tasks => {
-      const index = tasks
-        .get(new Date().setUTCHours(0, 0, 0, 0))
-        .findIndex(t => t.timestamp >= now.getTime())
-      return index > -1 ? index : tasks.length - 1
-    })
+    const todaysTasks = this.tasks.get(new Date().setUTCHours(0, 0, 0, 0))
+    const index = todaysTasks.findIndex(t => t.timestamp >= now.getTime())
+    this.timeIndex = index > -1 ? index : todaysTasks.length - 1
   }
 
   formatTime(date) {

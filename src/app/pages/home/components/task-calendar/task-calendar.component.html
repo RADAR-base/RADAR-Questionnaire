@@ -6,8 +6,8 @@
     [style.height.%]="show? 100 : 0"
   >
 
-    <ng-container *ngIf="(tasks | async)!==null">
-      <ng-container *ngFor="let sortedTasks of (tasks | async) | keyvalue">
+    <ng-container *ngIf="(tasks)">
+      <ng-container *ngFor="let sortedTasks of (tasks) | keyvalue">
         <div
           *ngIf="sortedTasks.key == currentDate"
           padding
@@ -25,7 +25,7 @@
         <ng-container *ngFor="let task of sortedTasks.value; let i=index">
           <div
             class="current-time-div"
-            *ngIf="i==(timeIndex | async) && sortedTasks.key == currentDate "
+            *ngIf="i==(timeIndex) && sortedTasks.key == currentDate "
           >
             <div id="time-current">
               <ion-row>

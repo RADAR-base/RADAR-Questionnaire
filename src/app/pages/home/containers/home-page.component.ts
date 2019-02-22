@@ -46,7 +46,7 @@ export class HomePageComponent implements OnDestroy {
   nextTask: Task
   showCalendar = false
   showCompleted = false
-  tasksProgress: TasksProgress
+  tasksProgress: Promise<TasksProgress>
   startingQuestionnaire = false
   hasClinicalTasks = false
   taskIsNow = false
@@ -82,15 +82,15 @@ export class HomePageComponent implements OnDestroy {
   ionViewDidLoad() {
     this.sortedTasks = this.tasksService.getSortedTasksOfToday()
     this.tasks = this.tasksService.getTasksOfToday()
-    this.tasks.then(tasks => {
-      this.checkTaskInterval = setInterval(() => {
-        this.checkForNextTask(tasks)
-      }, 1000)
-      this.tasksProgress = this.tasksService.getTaskProgress(tasks)
-    })
+    this.tasksProgress = this.tasksService.getTaskProgress()
+    this.tasks.then(
+      tasks =>
+        (this.checkTaskInterval = setInterval(() => {
+          this.checkForNextTask(tasks)
+        }, 1000))
+    )
     this.tasksDate = new Date()
     this.evalHasClinicalTasks()
-    this.tasksService.sendNonReportedTaskCompletion()
     this.firebaseAnalytics.setCurrentScreen('home-page')
   }
 

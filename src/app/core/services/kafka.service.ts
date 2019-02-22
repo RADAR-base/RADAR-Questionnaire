@@ -182,51 +182,49 @@ export class KafkaService {
       const schemaInfo = new KafkaRest.AvroSchema(
         JSON.parse(schemaVersions[1]['schema'])
       )
-      return this.sendToKafka(specs, schemaId, schemaInfo, payload)
+      return this.sendToKafka(specs, schemaId, schemaInfo, payload).catch(
+        error => {
+          console.error(
+            'Could not initiate kafka connection ' + JSON.stringify(error)
+          )
+          this.firebaseAnalytics.logEvent('send_error', {
+            error: String(error),
+            name: specs.name,
+            questionnaire_timestamp: String(specs.task.timestamp)
+          })
+          return Promise.resolve({ res: 'ERROR' })
+        }
+      )
     })
   }
 
   sendToKafka(specs, id, info, payload) {
     return this.getKafkaInstance().then(
-      kafkaConnInstance => {
-        // NOTE: Kafka connection instance to submit to topic
-        const topic = specs.avsc + '_' + specs.name
-        console.log('Sending to: ' + topic)
-        return kafkaConnInstance
-          .topic(topic)
-          .produce(id, info, payload, (err, res) => {
-            if (err) {
-              console.log(err)
-              this.firebaseAnalytics.logEvent('send_error', {
-                error: String(err),
-                topic: topic,
-                name: specs.name,
-                questionnaire_timestamp: String(specs.task.timestamp)
-              })
-            } else {
-              const cacheKey = specs.kafkaObject.value.time
-              return this.removeAnswersFromCache(cacheKey).then(() => {
-                this.setLastUploadDate(specs)
-                return this.firebaseAnalytics.logEvent('send_success', {
-                  topic: topic,
-                  name: specs.name,
-                  questionnaire_timestamp: String(specs.task.timestamp)
+      kafkaConnInstance =>
+        new Promise((resolve, reject) => {
+          // NOTE: Kafka connection instance to submit to topic
+          const topic = specs.avsc + '_' + specs.name
+          console.log('Sending to: ' + topic)
+          return kafkaConnInstance
+            .topic(topic)
+            .produce(id, info, payload, (err, res) => {
+              if (err) {
+                console.log(err)
+                return reject(err)
+              } else {
+                const cacheKey = specs.kafkaObject.value.time
+                return this.removeAnswersFromCache(cacheKey).then(() => {
+                  this.setLastUploadDate(specs)
+                  this.firebaseAnalytics.logEvent('send_success', {
+                    topic: topic,
+                    name: specs.name,
+                    questionnaire_timestamp: String(specs.task.timestamp)
+                  })
+                  return resolve(res)
                 })
-              })
-            }
-          })
-      },
-      error => {
-        console.error(
-          'Could not initiate kafka connection ' + JSON.stringify(error)
-        )
-        this.firebaseAnalytics.logEvent('send_error', {
-          error: String(error),
-          name: specs.name,
-          questionnaire_timestamp: String(specs.task.timestamp)
+              }
+            })
         })
-        return Promise.resolve({ res: 'ERROR' })
-      }
     )
   }
 

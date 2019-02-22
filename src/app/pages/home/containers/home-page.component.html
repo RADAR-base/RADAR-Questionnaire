@@ -98,7 +98,7 @@
       </button>
     </div>
     <div
-      *ngIf="startingQuestionnaire || (!nextTask && !showCompleted) || !(sortedTasks|async)?.size"
+      *ngIf="startingQuestionnaire || (!nextTask && !showCompleted) || (!(sortedTasks|async)?.size && (tasksProgress|async)?.numberOfTasks)"
       class="spinner-center"
     >
       <ion-spinner name="dots"></ion-spinner>

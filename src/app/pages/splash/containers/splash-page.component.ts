@@ -116,10 +116,6 @@ export class SplashPageComponent {
 
   sendNonReportedTaskCompletion() {
     const promises = []
-    setTimeout(
-      () => (this.status = `You've missed quite a few tasks...`),
-      30000
-    )
     return this.schedule
       .getNonReportedCompletedTasks()
       .then(nonReportedTasks => {
@@ -134,10 +130,7 @@ export class SplashPageComponent {
           )
         }
       })
-      .then(() => {
-        this.status = 'This may take a few seconds...'
-        return Promise.all(promises)
-      })
+      .then(() => Promise.all(promises))
   }
 
   updateTaskToReportedCompletion(task): Promise<any> {

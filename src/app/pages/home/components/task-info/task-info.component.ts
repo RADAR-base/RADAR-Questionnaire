@@ -141,8 +141,8 @@ export class TaskInfoComponent implements OnChanges {
           ? ''
           : LocKeys.TASK_BAR_NEXT_TASK_SOON.toString()
     )
-    if (this.nextTaskStatus.length > 10) return (this.statusSize = 8)
-    if (this.nextTaskStatus.length > 5) return (this.statusSize = 11)
+    if (this.nextTaskStatus.length > 7) return (this.statusSize = 8)
+    if (this.nextTaskStatus.length > 4) return (this.statusSize = 11)
     return (this.statusSize = 14)
   }
 }

@@ -113,7 +113,7 @@
     "eslint": "^5.6.0",
     "eslint-scope": "^4.0.0",
     "import-sort-cli": "^6.0.0",
-    "import-sort-parser-babylon": "^5.2.0",
+    "import-sort-parser-babylon": "^6.0.0",
     "import-sort-parser-typescript": "^5.0.0",
     "import-sort-style-module": "^5.0.0",
     "ionic": "^4.10.2",

@@ -129,7 +129,7 @@
     "stylefmt": "^6.0.3",
     "stylelint": "^7.13.0",
     "stylelint-config-standard": "^16.0.0",
-    "tslint": "^5.11.0",
+    "tslint": "^5.13.0",
     "tslint-angular": "^1.1.2",
     "tslint-config-prettier": "^1.15.0",
     "tslint-config-standard": "^5.0.2",

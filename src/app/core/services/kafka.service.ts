@@ -251,6 +251,8 @@ export class KafkaService {
       return this.sendToKafkaFromCache()
         .catch(e => console.log('Cache could not be sent.'))
         .then(() => (this.cacheSending = !this.cacheSending))
+    } else {
+      return Promise.resolve({})
     }
   }
 
@@ -282,6 +284,8 @@ export class KafkaService {
         console.log('Deleting ' + cacheKey)
         if (cache[cacheKey]) delete cache[cacheKey]
         return this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
+      } else {
+        return Promise.resolve({})
       }
     })
   }

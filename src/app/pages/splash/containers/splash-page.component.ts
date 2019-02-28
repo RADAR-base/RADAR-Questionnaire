@@ -57,7 +57,7 @@ export class SplashPageComponent {
       })
       .then(() => {
         this.status = 'Sending missed completion logs...'
-        return this.sendNonReportedTaskCompletion()
+        this.sendNonReportedTaskCompletion()
       })
       .catch(e => console.log('Error sending cache'))
       .then(() => this.navCtrl.setRoot(HomePageComponent))

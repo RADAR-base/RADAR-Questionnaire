@@ -170,7 +170,8 @@ export class SchedulingService {
     ]).then(() => {
       const currentMidnight = new Date().setHours(0, 0, 0, 0)
       const prevMidnight =
-        new Date().setUTCHours(0, 0, 0, 0) + this.utcOffsetPrev * 60000
+        new Date().setUTCHours(0, 0, 0, 0) +
+        getMilliseconds({ minutes: this.utcOffsetPrev })
       this.completedTasks.map(d => {
         const index = schedule.findIndex(
           s =>

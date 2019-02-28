@@ -54,7 +54,7 @@ export class SplashPageComponent {
       })
       .then(() => {
         this.status = 'Sending missed completion logs...'
-        return this.sendNonReportedTaskCompletion()
+        this.sendNonReportedTaskCompletion()
       })
       .then(() => {
         this.status = 'Sending cached answers...'

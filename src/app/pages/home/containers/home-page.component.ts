@@ -24,14 +24,14 @@ import { TasksService } from '../services/tasks.service'
   templateUrl: 'home-page.component.html',
   animations: [
     trigger('displayCalendar', [
-      state('true', style({ transform: 'translateY(0)' })),
-      state('false', style({ transform: 'translateY(100%)' })),
-      transition('*=>*', animate('400ms ease'))
+      state('true', style({ transform: 'translateY(0)', opacity: 1 })),
+      state('false', style({ transform: 'translateY(100%)', opacity: 0 })),
+      transition('*=>*', animate('350ms 50ms ease'))
     ]),
     trigger('moveProgress', [
-      state('true', style({ transform: 'translateY(-100%)' })),
+      state('true', style({ transform: 'translateY(-100%)', display: 'none' })),
       state('false', style({ transform: 'translateY(0)' })),
-      transition('true=>false', animate('300ms ease-out'))
+      transition('true=>false', animate('400ms ease'))
     ])
   ]
 })
@@ -42,7 +42,7 @@ export class HomePageComponent implements OnDestroy {
   nextTask: Task
   showCalendar = false
   showCompleted = false
-  tasksProgress: TasksProgress
+  tasksProgress: Promise<TasksProgress>
   startingQuestionnaire = false
   hasClinicalTasks = false
   taskIsNow = false
@@ -77,15 +77,15 @@ export class HomePageComponent implements OnDestroy {
   ionViewDidLoad() {
     this.sortedTasks = this.tasksService.getSortedTasksOfToday()
     this.tasks = this.tasksService.getTasksOfToday()
-    this.tasks.then(tasks => {
-      this.checkTaskInterval = setInterval(() => {
-        this.checkForNextTask(tasks)
-      }, 1000)
-      this.tasksProgress = this.tasksService.getTaskProgress(tasks)
-    })
+    this.tasksProgress = this.tasksService.getTaskProgress()
+    this.tasks.then(
+      tasks =>
+        (this.checkTaskInterval = setInterval(() => {
+          this.checkForNextTask(tasks)
+        }, 1000))
+    )
     this.tasksDate = new Date()
     this.evalHasClinicalTasks()
-    this.tasksService.sendNonReportedTaskCompletion()
     this.firebaseAnalytics.setCurrentScreen('home-page')
   }
 

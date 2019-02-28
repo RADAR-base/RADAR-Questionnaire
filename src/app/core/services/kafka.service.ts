@@ -130,7 +130,7 @@ export class KafkaService {
       )
   }
 
-  createPayloadAndSend(specs) {
+  createPayloadAndSend(specs, kafkaConnInstance) {
     let schemaVersions
     if (
       specs.name == KAFKA_COMPLETION_LOG &&
@@ -161,42 +161,14 @@ export class KafkaService {
       }
       const parsedKeySchema = new KafkaRest.AvroSchema(keySchema)
       const parsedValueSchema = new KafkaRest.AvroSchema(valueSchema)
+
       return this.sendToKafka(
         specs,
         parsedKeySchema,
         parsedValueSchema,
-        payload
-      )
-    })
-  }
-
-  sendToKafka(specs, keySchema, valueSchema, payload) {
-    return this.getKafkaInstance()
-      .then(
-        kafka =>
-          new Promise((resolve, reject) => {
-            // NOTE: Kafka connection instance to submit to topic
-            const topic = specs.avsc + '_' + specs.name
-            console.log('Sending to: ' + topic)
-            return kafka
-              .topic(topic)
-              .produce(keySchema, valueSchema, payload, (err, res) => {
-                if (err) {
-                  reject(err)
-                } else {
-                  this.firebaseAnalytics.logEvent('send_success', {
-                    topic: topic,
-                    name: specs.name,
-                    questionnaire_timestamp: String(specs.task.timestamp)
-                  })
-                  resolve(res)
-                }
-              })
-          })
-      )
-      .then(() => this.removeAnswersFromCache(specs.kafkaObject.value.time))
-      .then(() => this.setLastUploadDate(specs))
-      .catch(error => {
+        payload,
+        kafkaConnInstance
+      ).catch(error => {
         console.error(
           'Could not initiate kafka connection ' + JSON.stringify(error)
         )
@@ -205,7 +177,34 @@ export class KafkaService {
           name: specs.name,
           questionnaire_timestamp: String(specs.task.timestamp)
         })
+        return Promise.resolve()
       })
+    })
+  }
+
+  sendToKafka(specs, id, info, payload, kafkaConnInstance) {
+    return new Promise((resolve, reject) => {
+      // NOTE: Kafka connection instance to submit to topic
+      const topic = specs.avsc + '_' + specs.name
+      console.log('Sending to: ' + topic)
+      return kafkaConnInstance
+        .topic(topic)
+        .produce(id, info, payload, (err, res) => {
+          if (err) {
+            console.log(err)
+            return reject(err)
+          } else {
+            const cacheKey = specs.kafkaObject.value.time
+            this.setLastUploadDate(specs)
+            this.firebaseAnalytics.logEvent('send_success', {
+              topic: topic,
+              name: specs.name,
+              questionnaire_timestamp: String(specs.task.timestamp)
+            })
+            return resolve(cacheKey)
+          }
+        })
+    })
   }
 
   setLastUploadDate(specs) {
@@ -239,22 +238,30 @@ export class KafkaService {
 
   sendToKafkaFromCache() {
     return this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
-      const promises = Object.entries(cache)
-        .filter(([k, v]) => k)
-        .slice(0, 20)
-        .map(([k, v]) => this.createPayloadAndSend(v))
-      return Promise.all(promises)
+      const cacheEntries = Object.entries(cache)
+      if (!cacheEntries.length) return
+      return this.getKafkaInstance().then(kafkaConnInstance => {
+        const promises = cacheEntries
+          .filter(([k, v]) => k)
+          .slice(0, 20)
+          .map(([k, v]) => this.createPayloadAndSend(v, kafkaConnInstance))
+        return Promise.all(promises).then(keys =>
+          this.removeAnswersFromCache(keys.filter(k => k))
+        )
+      })
     })
   }
 
   // TODO: Add logging of firebase events for removing to cache
-  removeAnswersFromCache(cacheKey) {
+  removeAnswersFromCache(cacheKeys: number[]) {
     return this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
       if (cache) {
-        console.log('Deleting ' + cacheKey)
-        if (cache[cacheKey]) {
-          delete cache[cacheKey]
-        }
+        cacheKeys.map(cacheKey => {
+          if (cache[cacheKey]) {
+            console.log('Deleting ' + cacheKey)
+            delete cache[cacheKey]
+          }
+        })
         return this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
       } else {
         return Promise.resolve({})

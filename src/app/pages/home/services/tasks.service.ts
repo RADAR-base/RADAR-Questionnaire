@@ -4,7 +4,6 @@ import {
   DefaultESMCompletionWindow,
   DefaultTaskCompletionWindow
 } from '../../../../assets/data/defaultConfig'
-import { KafkaService } from '../../../core/services/kafka.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { Task, TasksProgress } from '../../../shared/models/task'
@@ -13,8 +12,7 @@ import { Task, TasksProgress } from '../../../shared/models/task'
 export class TasksService {
   constructor(
     public storage: StorageService,
-    private schedule: SchedulingService,
-    private kafka: KafkaService
+    private schedule: SchedulingService
   ) {}
 
   getAssessment(task) {
@@ -41,11 +39,13 @@ export class TasksService {
     return this.schedule.getNonClinicalTasksForDate(timestamp)
   }
 
-  getTaskProgress(tasks): TasksProgress {
-    return {
-      numberOfTasks: tasks.length,
-      completedTasks: tasks.filter(d => d.completed).length
-    }
+  getTaskProgress(): Promise<TasksProgress> {
+    return this.getTasksOfToday().then(tasks => {
+      return {
+        numberOfTasks: tasks.length,
+        completedTasks: tasks.filter(d => d.completed).length
+      }
+    })
   }
 
   areAllTasksComplete(tasks) {
@@ -84,8 +84,6 @@ export class TasksService {
   getNextTask(tasks: Task[]): Task | undefined {
     if (tasks) {
       const tenMinutesAgo = new Date().getTime() - DefaultESMCompletionWindow
-      const midnight = new Date()
-      midnight.setHours(0, 0, 0, 0)
       const offsetForward = DefaultTaskCompletionWindow
       return tasks.find(task => {
         switch (task.name) {
@@ -99,25 +97,11 @@ export class TasksService {
           default:
             // NOTE: Break out of the loop as soon as the next incomplete task is found
             return (
-              task.timestamp >= midnight.getTime() && task.completed === false
+              task.timestamp + task.completionWindow >= Date.now() &&
+              task.completed === false
             )
         }
       })
     }
-  }
-
-  sendNonReportedTaskCompletion() {
-    this.schedule.getNonReportedCompletedTasks().then(nonReportedTasks => {
-      nonReportedTasks.forEach(t =>
-        this.kafka
-          .prepareNonReportedTasksKafkaObjectAndSend(t)
-          .then(() => this.updateTaskToReportedCompletion(t))
-      )
-    })
-  }
-
-  updateTaskToReportedCompletion(updatedTask): Promise<any> {
-    updatedTask.reportedCompletion = true
-    return this.schedule.insertTask(updatedTask)
   }
 }

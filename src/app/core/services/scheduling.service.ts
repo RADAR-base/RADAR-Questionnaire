@@ -216,7 +216,9 @@ export class SchedulingService {
     ).getTime()
     const endTime =
       iterTime + getMilliseconds({ years: DefaultScheduleYearCoverage })
-
+    const completionWindow = SchedulingService.computeCompletionWindow(
+      assessment
+    )
     console.log(assessment)
 
     const today = this.setDateTimeToMidnight(new Date())
@@ -228,9 +230,14 @@ export class SchedulingService {
           amount: repeatQ.unitsFromZero[i]
         })
 
-        if (taskTime > today.getTime()) {
+        if (taskTime + completionWindow > today.getTime()) {
           const idx = indexOffset + tmpScheduleAll.length
-          const task = this.taskBuilder(idx, assessment, taskTime)
+          const task = this.taskBuilder(
+            idx,
+            assessment,
+            taskTime,
+            completionWindow
+          )
           tmpScheduleAll.push(task)
         }
       }
@@ -285,7 +292,12 @@ export class SchedulingService {
     return amount * TIME_UNIT_MILLIS[unit]
   }
 
-  taskBuilder(index, assessment: Assessment, timestamp: number): Task {
+  taskBuilder(
+    index,
+    assessment: Assessment,
+    timestamp: number,
+    completionWindow: number
+  ): Task {
     const task: Task = {
       index,
       timestamp,
@@ -294,7 +306,7 @@ export class SchedulingService {
       name: assessment.name,
       nQuestions: assessment.questions.length,
       estimatedCompletionTime: assessment.estimatedCompletionTime,
-      completionWindow: SchedulingService.computeCompletionWindow(assessment),
+      completionWindow: completionWindow,
       warning: this.localization.chooseText(assessment.warn),
       isClinical: false
     }

@@ -7,6 +7,7 @@ import { ConfigService } from '../../../core/services/config.service'
 import { KafkaService } from '../../../core/services/kafka.service'
 import { LocalizationService } from '../../../core/services/localization.service'
 import { NotificationService } from '../../../core/services/notification.service'
+import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { StorageKeys } from '../../../shared/enums/storage'
@@ -30,7 +31,8 @@ export class SplashPageComponent {
     private kafka: KafkaService,
     private configService: ConfigService,
     private alertService: AlertService,
-    private localization: LocalizationService
+    private localization: LocalizationService,
+    private schedule: SchedulingService
   ) {
     this.splashService
       .evalEnrolment()
@@ -43,7 +45,6 @@ export class SplashPageComponent {
   }
 
   onStart() {
-    this.status = 'Updating notifications...'
     this.configService.migrateToLatestVersion()
     return this.configService
       .fetchConfigState(false)
@@ -55,8 +56,8 @@ export class SplashPageComponent {
         console.log('[SPLASH] Notifications error.')
       })
       .then(() => {
-        this.status = 'Sending cached answers...'
-        return this.kafka.sendAllAnswersInCache()
+        this.status = 'Sending missed completion logs...'
+        return this.sendNonReportedTaskCompletion()
       })
       .catch(e => console.log('Error sending cache'))
       .then(() => this.navCtrl.setRoot(HomePageComponent))
@@ -79,6 +80,7 @@ export class SplashPageComponent {
       const utcOffset = new Date().getTimezoneOffset()
       // NOTE: Cancels all notifications and reschedule tasks if timezone has changed
       if (prevUtcOffset !== utcOffset) {
+        this.status = 'Timezone has changed! Updating schedule...'
         console.log(
           '[SPLASH] Timezone has changed to ' +
             utcOffset +
@@ -107,6 +109,7 @@ export class SplashPageComponent {
           !lastUpdate ||
           timeElapsed < 0
         ) {
+          this.status = 'Updating notifications...'
           console.log('[SPLASH] Scheduling Notifications.')
           return this.notificationService.publish()
         } else {
@@ -118,5 +121,30 @@ export class SplashPageComponent {
           )
         }
       })
+  }
+
+  sendNonReportedTaskCompletion() {
+    const promises = []
+    return this.schedule
+      .getNonReportedCompletedTasks()
+      .then(nonReportedTasks => {
+        const length = nonReportedTasks.length
+        for (let i = 0; i < length; i++) {
+          promises.push(
+            this.kafka
+              .prepareNonReportedTasksKafkaObjectAndSend(nonReportedTasks[i])
+              .then(() =>
+                this.updateTaskToReportedCompletion(nonReportedTasks[i])
+              )
+          )
+        }
+      })
+      .then(() => Promise.all(promises))
+  }
+
+  updateTaskToReportedCompletion(task): Promise<any> {
+    const updatedTask = task
+    updatedTask.reportedCompletion = true
+    return this.schedule.insertTask(updatedTask)
   }
 }

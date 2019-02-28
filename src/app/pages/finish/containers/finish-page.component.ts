@@ -1,7 +1,10 @@
 import { Component } from '@angular/core'
 import { NavController, NavParams } from 'ionic-angular'
 
-import { DefaultNumberOfNotificationsToSchedule } from '../../../../assets/data/defaultConfig'
+import {
+  DefaultNumberOfNotificationsToSchedule,
+  DefaultTaskCompletionWindow
+} from '../../../../assets/data/defaultConfig'
 import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { KafkaService } from '../../../core/services/kafka.service'
 import { NotificationService } from '../../../core/services/notification.service'
@@ -41,10 +44,9 @@ export class FinishPageComponent {
     this.associatedTask = this.questionnaireData.associatedTask
     this.content = this.questionnaireData.endText
     this.isClinicalTask = this.associatedTask.isClinical !== false
-    const questionnaireName = this.associatedTask.name
     this.displayNextTaskReminder =
       !this.questionnaireData.isLastTask && !this.isClinicalTask
-    !questionnaireName.includes('DEMO') && this.processDataAndSend()
+    this.processDataAndSend()
     this.firebaseAnalytics.setCurrentScreen('finish-page')
     this.firebaseAnalytics.logEvent('questionnaire_finished', {
       questionnaire_timestamp: String(this.associatedTask.timestamp),
@@ -55,20 +57,22 @@ export class FinishPageComponent {
 
   processDataAndSend() {
     this.finishTaskService.updateTaskToComplete(this.associatedTask)
-    return this.prepareDataService
-      .processQuestionnaireData(
-        this.questionnaireData.answers,
-        this.questionnaireData.timestamps
-      )
-      .then(data =>
-        this.sendToKafka(
-          this.associatedTask,
-          data,
-          this.questionnaireData.questions
+    if (!this.associatedTask.name.includes('DEMO'))
+      return this.prepareDataService
+        .processQuestionnaireData(
+          this.questionnaireData.answers,
+          this.questionnaireData.timestamps
         )
-      )
-      .catch(e => console.log(e))
-      .then(() => (this.showDoneButton = true))
+        .then(data =>
+          this.sendToKafka(
+            this.associatedTask,
+            data,
+            this.questionnaireData.questions
+          )
+        )
+        .catch(e => console.log(e))
+        .then(() => (this.showDoneButton = true))
+    else this.showDoneButton = true
   }
 
   sendToKafka(task: Task, questionnaireData, questions) {
@@ -128,6 +132,7 @@ export class FinishPageComponent {
         reminderSettings: protocol['reminders'],
         nQuestions: associatedTask['questions'].length,
         estimatedCompletionTime: associatedTask['estimatedCompletionTime'],
+        completionWindow: DefaultTaskCompletionWindow,
         warning: '',
         isClinical: true
       }

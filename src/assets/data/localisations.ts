@@ -579,7 +579,7 @@ export const Localisations = {
     de: 'jetzt',
     en: 'now',
     es: 'ahora',
-    it: 'adesso',
+    it: 'ora',
     nl: 'nu'
   },
   STATUS_FAILURE: {

@@ -1,11 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core'
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  ValidatorFn,
-  Validators
-} from '@angular/forms'
+import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx'
 import { AlertController, NavController, Slides } from 'ionic-angular'
 
@@ -16,7 +10,6 @@ import {
   DefaultSourceTypeModel,
   LanguageMap
 } from '../../../../assets/data/defaultConfig'
-import { AppComponent } from '../../../core/containers/app.component'
 import { ConfigService } from '../../../core/services/config.service'
 import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
@@ -29,6 +22,7 @@ import {
 } from '../../../shared/models/settings'
 import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { HomePageComponent } from '../../home/containers/home-page.component'
+import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 import { AuthService } from '../services/auth.service'
 
 @Component({
@@ -49,10 +43,7 @@ export class EnrolmentPageComponent {
 
   URLRegEx = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?'
 
-  language: LanguageSetting = {
-    label: LocKeys.LANGUAGE_ENGLISH.toString(),
-    value: 'en'
-  }
+  language: LanguageSetting
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
 
   enterMetaQR = false
@@ -82,14 +73,14 @@ export class EnrolmentPageComponent {
     private translate: TranslatePipe,
     private alertCtrl: AlertController,
     private firebaseAnalytics: FirebaseAnalyticsService
-  ) {}
+  ) {
+    this.translate
+      .init()
+      .then(() => (this.language = this.translate.getLanguage()))
+  }
 
   ionViewDidLoad() {
     this.slides.lockSwipes(true)
-    this.translate.init()
-  }
-
-  ionViewDidEnter() {
     this.firebaseAnalytics
       .setCurrentScreen('enrolment-page')
       .then(res => console.log('enrolment-page: ' + res))
@@ -227,7 +218,6 @@ export class EnrolmentPageComponent {
           participantLogin,
           projectName,
           sourceId,
-          this.language,
           createdDate,
           createdDateMidnight
         )
@@ -238,9 +228,7 @@ export class EnrolmentPageComponent {
   doAfterAuthentication() {
     this.configService
       .fetchConfigState(true)
-      .then(() =>
-        this.firebaseAnalytics.logEvent('sign_up', {})
-      )
+      .then(() => this.firebaseAnalytics.logEvent('sign_up', {}))
       .then(() => this.next())
   }
 
@@ -311,10 +299,9 @@ export class EnrolmentPageComponent {
             label: LanguageMap[selectedLanguageVal],
             value: selectedLanguageVal
           }
-          this.storage.set(StorageKeys.LANGUAGE, lang).then(() => {
-            this.language = lang
-            this.translate.init().then(() => this.navCtrl.setRoot(AppComponent))
-          })
+          this.storage
+            .set(StorageKeys.LANGUAGE, lang)
+            .then(() => this.navCtrl.setRoot(SplashPageComponent))
         }
       }
     ]

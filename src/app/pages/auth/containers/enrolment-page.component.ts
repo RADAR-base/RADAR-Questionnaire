@@ -10,7 +10,6 @@ import {
   DefaultSettingsWeeklyReport,
   LanguageMap
 } from '../../../../assets/data/defaultConfig'
-import { AppComponent } from '../../../core/containers/app.component'
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { FirebaseAnalyticsService } from '../../../core/services/usage/firebaseAnalytics.service'
@@ -48,11 +47,12 @@ export class EnrolmentPageComponent {
     private localization: LocalizationService,
     private alertService: AlertService,
     private firebaseAnalytics: FirebaseAnalyticsService
-  ) {}
+  ) {
+    this.localization.update().then(lang => (this.language = lang))
+  }
 
   ionViewDidLoad() {
     this.slides.lockSwipes(true)
-    this.localization.update().then(lang => (this.language = lang))
     this.firebaseAnalytics
       .setCurrentScreen('enrolment-page')
       .then(res => console.log('enrolment-page: ' + res))
@@ -149,7 +149,7 @@ export class EnrolmentPageComponent {
           }
           this.localization.setLanguage(lang).then(() => {
             this.language = lang
-            return this.navCtrl.setRoot(AppComponent)
+            return this.navCtrl.setRoot(SplashPageComponent)
           })
         }
       }

@@ -19,16 +19,16 @@ export class TaskCalendarComponent implements OnChanges {
   @Output()
   task: EventEmitter<Task> = new EventEmitter<Task>()
   @Input()
-  tasks: Promise<Map<any, any>>
+  tasks: Map<number, Task[]>
 
   currentTime: string
   currentDate = new Date().setUTCHours(0, 0, 0, 0)
-  timeIndex: Promise<number>
+  timeIndex: number
 
   constructor(private localization: LocalizationService) {}
 
   ngOnChanges() {
-    this.setCurrentTime()
+    if (this.tasks) this.setCurrentTime()
   }
 
   setCurrentTime() {
@@ -38,11 +38,9 @@ export class TaskCalendarComponent implements OnChanges {
     } catch (e) {
       console.log(e)
     }
-    this.timeIndex = this.tasks.then(tasks => {
-      const todaysTasks = tasks.get(new Date().setUTCHours(0, 0, 0, 0))
-      const index = todaysTasks.findIndex(t => t.timestamp >= now)
-      return index > -1 ? index : todaysTasks.length - 1
-    })
+    const todaysTasks = this.tasks.get(new Date().setUTCHours(0, 0, 0, 0))
+    const index = todaysTasks.findIndex(t => t.timestamp >= now)
+    this.timeIndex = index > -1 ? index : todaysTasks.length - 1
   }
 
   clicked(task) {

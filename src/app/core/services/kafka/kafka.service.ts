@@ -63,77 +63,93 @@ export class KafkaService {
     if (!this.isCacheSending) {
       this.setCacheSending(true)
       this.getCache().then(cache => {
-        const promises = Object.entries(cache)
-          .filter(([k]) => k)
-          .slice(0, 20)
-          .map(([k, v]: any) => {
-            const timestamp = v.specs.task ? v.specs.task.timestamp : Date.now()
-            return this.schema
-              .convertToAvro(v.kafkaObject, v.specs, this.BASE_URI)
-              .then(data =>
-                this.sendToKafka(
-                  v.specs,
-                  data.schemaId,
-                  data.schemaInfo,
-                  data.payload,
-                  k
-                )
-              )
-              .then(() =>
-                this.firebaseAnalytics.logEvent('send_success', {
-                  name: v.specs.name,
-                  questionnaire_timestamp: String(timestamp)
-                })
-              )
-              .catch(error =>
-                this.firebaseAnalytics.logEvent('send_error', {
-                  error: JSON.stringify(error),
-                  name: v.specs.name,
-                  questionnaire_timestamp: String(timestamp)
-                })
-              )
+        const cacheEntries = Object.entries(cache)
+        if (!cacheEntries.length) return Promise.resolve({})
+        else
+          return this.getKafkaInstance().then(kafka => {
+            const promises = !cacheEntries.length
+              ? [Promise.resolve()]
+              : this.startSending(cacheEntries, kafka)
+            this.setCacheSending(false)
+            return Promise.all(promises).then(keys => {
+              this.removeDataFromCache(keys.filter(k => k))
+              return this.setLastUploadDate()
+            })
           })
-        this.setCacheSending(false)
-        return Promise.all(promises)
       })
     } else {
       Promise.resolve()
     }
   }
 
-  sendToKafka(specs, keySchema, valueSchema, payload, cacheKey) {
-    const topic = specs.avsc + '_' + specs.name
-    console.log('Sending to: ' + topic)
-    return this.getKafkaInstance()
-      .then(
-        kafka =>
-          new Promise((resolve, reject) => {
-            // NOTE: Kafka connection instance to submit to topic
-            return kafka
-              .topic(topic)
-              .produce(
-                keySchema,
-                valueSchema,
-                payload,
-                (err, res) => (err ? reject(err) : resolve(res))
-              )
+  startSending(entries, kafka): Promise<any>[] {
+    return entries
+      .filter(([k]) => k)
+      .slice(0, 20)
+      .map(([k, v]: any) => {
+        const timestamp = v.specs.task ? v.specs.task.timestamp : Date.now()
+        return this.schema
+          .convertToAvro(v.kafkaObject, v.specs, this.BASE_URI)
+          .then(data =>
+            this.sendToKafka(
+              v.specs,
+              data.schemaId,
+              data.schemaInfo,
+              data.payload,
+              k,
+              kafka
+            )
+          )
+          .then(key => {
+            this.firebaseAnalytics.logEvent('send_success', {
+              name: v.specs.name,
+              questionnaire_timestamp: String(timestamp)
+            })
+            return Promise.resolve(key)
           })
-      )
-      .then(() => this.removeDataFromCache(cacheKey))
-      .then(() => this.setLastUploadDate())
-      .catch(error => {
-        console.error(
-          'Could not initiate kafka connection ' + JSON.stringify(error)
-        )
-        return Promise.reject(error)
+          .catch(error => {
+            console.error(
+              'Could not initiate kafka connection ' + JSON.stringify(error)
+            )
+            this.firebaseAnalytics.logEvent('send_error', {
+              error: JSON.stringify(error),
+              name: v.specs.name,
+              questionnaire_timestamp: String(timestamp)
+            })
+            return Promise.resolve(0)
+          })
       })
   }
 
-  removeDataFromCache(cacheKey) {
+  sendToKafka(specs, keySchema, valueSchema, payload, cacheKey, kafka) {
+    const topic = specs.avsc + '_' + specs.name
+    console.log('Sending to: ' + topic)
+    return new Promise((resolve, reject) => {
+      // NOTE: Kafka connection instance to submit to topic
+      return kafka
+        .topic(topic)
+        .produce(
+          keySchema,
+          valueSchema,
+          payload,
+          err => (err ? reject(err) : resolve(cacheKey))
+        )
+    }).then(() => this.removeDataFromCache(cacheKey))
+  }
+
+  removeDataFromCache(cacheKeys: number[]) {
     return this.getCache().then(cache => {
-      console.log('Deleting ' + cacheKey)
-      if (cache[cacheKey]) delete cache[cacheKey]
-      return this.setCache(cache)
+      if (cache) {
+        cacheKeys.map(cacheKey => {
+          if (cache[cacheKey]) {
+            console.log('Deleting ' + cacheKey)
+            delete cache[cacheKey]
+          }
+        })
+        return this.setCache(cache)
+      } else {
+        return Promise.resolve()
+      }
     })
   }
 

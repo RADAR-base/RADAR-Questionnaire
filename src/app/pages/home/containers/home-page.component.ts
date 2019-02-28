@@ -1,5 +1,6 @@
-import { Component } from '@angular/core'
+import { Component, OnDestroy } from '@angular/core'
 import { NavController, Platform } from 'ionic-angular'
+import { Subscription } from 'rxjs'
 
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
@@ -20,19 +21,19 @@ import { HomePageAnimations } from './home-page.animation'
   templateUrl: 'home-page.component.html',
   animations: HomePageAnimations
 })
-export class HomePageComponent {
+export class HomePageComponent implements OnDestroy {
   sortedTasks: Promise<Map<any, any>>
   tasks: Promise<Task[]>
   tasksDate: Date
   nextTask: Task
   showCalendar = false
   showCompleted = false
-  tasksProgress: TasksProgress
+  tasksProgress: Promise<TasksProgress>
   startingQuestionnaire = false
   hasClinicalTasks: Promise<boolean>
   taskIsNow = false
   checkTaskInterval
-  lastTaskIndex: number
+  resumeListener: Subscription = new Subscription()
 
   constructor(
     public navCtrl: NavController,
@@ -43,20 +44,23 @@ export class HomePageComponent {
     private firebaseAnalytics: FirebaseAnalyticsService,
     private home: HomeService
   ) {
-    this.platform.resume.subscribe(() => {
+    this.resumeListener = this.platform.resume.subscribe(e => {
+      this.checkForNewDate()
       this.firebaseAnalytics.logEvent('resumed', {})
       this.onResume()
     })
   }
 
+  ngOnDestroy() {
+    this.resumeListener.unsubscribe()
+  }
+
   ionViewWillEnter() {
     this.startingQuestionnaire = false
-    this.home.emptyCache()
   }
 
   ionViewDidLoad() {
     this.init()
-    this.home.sendNonReportedCompletionLogs()
     this.home.sendOpenEvent()
     this.firebaseAnalytics.setCurrentScreen('home-page')
   }
@@ -65,12 +69,11 @@ export class HomePageComponent {
     this.sortedTasks = this.tasksService.getSortedTasksOfToday()
     this.tasks = this.tasksService.getTasksOfToday()
     this.tasksDate = new Date()
+    this.tasksProgress = this.tasksService.getTaskProgress()
     this.tasks.then(tasks => {
       this.checkTaskInterval = setInterval(() => {
         this.checkForNextTask(tasks)
       }, 1000)
-      this.tasksProgress = this.tasksService.getTaskProgress(tasks)
-      this.lastTaskIndex = tasks[tasks.length - 1].index
     })
     this.hasClinicalTasks = this.tasksService.evalHasClinicalTasks()
   }

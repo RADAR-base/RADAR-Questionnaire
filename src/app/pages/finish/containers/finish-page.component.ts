@@ -42,14 +42,16 @@ export class FinishPageComponent {
       questionnaire_timestamp: String(this.task.timestamp),
       type: this.task.name
     })
+    setTimeout(() => (this.showDoneButton = true), 15000)
   }
 
   onComplete() {
+    this.finish.updateTaskToComplete(this.task)
     return Promise.all([
       this.finish.sendCompletedEvent(),
-      this.finish
-        .processDataAndSend(this.questionnaireData, this.task)
-        .then(() => this.finish.updateTaskToComplete(this.task))
+      !this.task.name.includes('DEMO')
+        ? this.finish.processDataAndSend(this.questionnaireData, this.task)
+        : Promise.resolve()
     ])
   }
 

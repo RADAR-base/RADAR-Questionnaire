@@ -9,7 +9,6 @@ import { LocalizationService } from '../../../core/services/misc/localization.se
 import { ScheduleService } from '../../../core/services/schedule/schedule.service'
 import { Task, TasksProgress } from '../../../shared/models/task'
 import { TaskType, getTaskType } from '../../../shared/utilities/task-type'
-import { getMilliseconds } from '../../../shared/utilities/time'
 
 @Injectable()
 export class TasksService {
@@ -21,7 +20,10 @@ export class TasksService {
 
   getQuestionnairePayload(task) {
     const type = getTaskType(task)
-    return this.questionnaire.getAssessment(type, task).then(assessment => {
+    return Promise.all([
+      this.questionnaire.getAssessment(type, task),
+      this.isLastTask(task)
+    ]).then(([assessment, isLastTask]) => {
       return {
         title: assessment.name,
         introduction: this.localization.chooseText(assessment.startText),
@@ -29,7 +31,8 @@ export class TasksService {
         questions: assessment.questions,
         task: task,
         assessment: assessment,
-        type: type
+        type: type,
+        isLastTask: isLastTask
       }
     })
   }
@@ -54,11 +57,11 @@ export class TasksService {
     })
   }
 
-  getTaskProgress(tasks): TasksProgress {
-    return {
+  getTaskProgress(): Promise<TasksProgress> {
+    return this.getTasksOfToday().then(tasks => ({
       numberOfTasks: tasks.length,
       completedTasks: tasks.filter(d => d.completed).length
-    }
+    }))
   }
 
   getIncompleteTasks() {
@@ -73,12 +76,13 @@ export class TasksService {
     return !tasks || tasks.every(t => t.name === 'ESM' || t.completed)
   }
 
-  isLastTask(task, tasks) {
-    return (
-      !tasks ||
-      tasks.every(
-        t => t.name === 'ESM' || t.completed || t.index === task.index
-      )
+  isLastTask(task) {
+    return this.getTasksOfToday().then(
+      tasks =>
+        !tasks ||
+        tasks.every(
+          t => t.name === 'ESM' || t.completed || t.index === task.index
+        )
     )
   }
 
@@ -100,8 +104,6 @@ export class TasksService {
   getNextTask(tasks: Task[]): Task | undefined {
     if (tasks) {
       const tenMinutesAgo = new Date().getTime() - DefaultESMCompletionWindow
-      const midnight = new Date()
-      midnight.setHours(0, 0, 0, 0)
       const offsetForward = DefaultTaskCompletionWindow
       return tasks.find(task => {
         switch (task.name) {
@@ -115,7 +117,8 @@ export class TasksService {
           default:
             // NOTE: Break out of the loop as soon as the next incomplete task is found
             return (
-              task.timestamp >= midnight.getTime() && task.completed === false
+              task.timestamp + task.completionWindow >= Date.now() &&
+              task.completed === false
             )
         }
       })

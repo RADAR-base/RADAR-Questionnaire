@@ -127,7 +127,9 @@ export class ScheduleGeneratorService {
     let iterTime = refTimestamp
     const endTime =
       iterTime + getMilliseconds({ years: DefaultScheduleYearCoverage })
-
+    const completionWindow = ScheduleGeneratorService.computeCompletionWindow(
+      assessment
+    )
     console.log(assessment)
 
     const today = this.setDateTimeToMidnight(new Date())
@@ -139,9 +141,14 @@ export class ScheduleGeneratorService {
           amount: repeatQ.unitsFromZero[i]
         })
 
-        if (taskTime > today.getTime()) {
+        if (taskTime + completionWindow > today.getTime()) {
           const idx = indexOffset + tmpScheduleAll.length
-          const task = this.taskBuilder(idx, assessment, taskTime)
+          const task = this.taskBuilder(
+            idx,
+            assessment,
+            taskTime,
+            completionWindow
+          )
           tmpScheduleAll.push(task)
         }
       }
@@ -152,7 +159,12 @@ export class ScheduleGeneratorService {
     return tmpScheduleAll
   }
 
-  taskBuilder(index, assessment: Assessment, timestamp: number): Task {
+  taskBuilder(
+    index,
+    assessment: Assessment,
+    timestamp: number,
+    completionWindow
+  ): Task {
     const task: Task = {
       index,
       timestamp,
@@ -161,9 +173,7 @@ export class ScheduleGeneratorService {
       name: assessment.name,
       nQuestions: assessment.questions.length,
       estimatedCompletionTime: assessment.estimatedCompletionTime,
-      completionWindow: ScheduleGeneratorService.computeCompletionWindow(
-        assessment
-      ),
+      completionWindow: completionWindow,
       warning: this.localization.chooseText(assessment.warn),
       isClinical: assessment.protocol.clinicalProtocol ? true : false
     }
@@ -179,34 +189,27 @@ export class ScheduleGeneratorService {
     completedTasks,
     utcOffsetPrev?
   ) {
-    let completed = []
+    const completed = []
     if (completedTasks) {
       // NOTE: If utcOffsetPrev exists, timezone has changed
-      if (utcOffsetPrev != null) {
-        const currentMidnight = new Date().setHours(0, 0, 0, 0)
-        const prevMidnight =
-          new Date().setUTCHours(0, 0, 0, 0) +
-          getMilliseconds({ minutes: utcOffsetPrev })
-        return completedTasks.map(d => {
-          const finishedToday = schedule.find(
-            s =>
-              s.timestamp - currentMidnight == d.timestamp - prevMidnight &&
-              s.name == d.name
-          )
-          if (finishedToday !== undefined) {
-            finishedToday.completed = true
-            return completed.push(finishedToday)
-          }
-        })
-      } else {
-        completedTasks.forEach(d => {
-          const task = schedule[d.index]
-          if (task.timestamp == d.timestamp && task.name == d.name) {
-            task.completed = true
-          }
-        })
-        completed = completedTasks
-      }
+      const currentMidnight = new Date().setHours(0, 0, 0, 0)
+      const prevMidnight =
+        new Date().setUTCHours(0, 0, 0, 0) +
+        getMilliseconds({ minutes: utcOffsetPrev })
+      return completedTasks.map(d => {
+        const finishedToday = schedule.find(
+          s =>
+            ((utcOffsetPrev != null &&
+              s.timestamp - currentMidnight == d.timestamp - prevMidnight) ||
+              (utcOffsetPrev == null && s.timestamp == d.timestamp)) &&
+            s.name == d.name
+        )
+        if (finishedToday !== undefined) {
+          finishedToday.completed = true
+          finishedToday.reportedCompletion = d.reportedCompletion
+          return completed.push(finishedToday)
+        }
+      })
     }
     return { schedule, completed }
   }

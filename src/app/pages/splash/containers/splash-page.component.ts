@@ -63,4 +63,29 @@ export class SplashPageComponent {
   enrol() {
     this.splash.reset().then(() => this.navCtrl.setRoot(EnrolmentPageComponent))
   }
+
+  // sendNonReportedTaskCompletion() {
+  //   const promises = []
+  //   return this.schedule
+  //     .getNonReportedCompletedTasks()
+  //     .then(nonReportedTasks => {
+  //       const length = nonReportedTasks.length
+  //       for (let i = 0; i < length; i++) {
+  //         promises.push(
+  //           this.kafka
+  //             .prepareNonReportedTasksKafkaObjectAndSend(nonReportedTasks[i])
+  //             .then(() =>
+  //               this.updateTaskToReportedCompletion(nonReportedTasks[i])
+  //             )
+  //         )
+  //       }
+  //     })
+  //     .then(() => Promise.all(promises))
+  // }
+
+  // updateTaskToReportedCompletion(task): Promise<any> {
+  //   const updatedTask = task
+  //   updatedTask.reportedCompletion = true
+  //   return this.schedule.insertTask(updatedTask)
+  // }
 }

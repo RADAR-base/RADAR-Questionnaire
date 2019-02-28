@@ -53,7 +53,7 @@ export class TokenService {
       const URI = uri + DefaultManagementPortalURI + DefaultRefreshTokenURI
       const headers = this.getRegisterHeaders(DefaultRequestEncodedContentType)
       return this.http
-        .post(URI, refreshBody, { headers })
+        .post(URI, refreshBody, { headers: headers, params: params })
         .toPromise()
         .then(res => this.setTokens(res))
     })
@@ -98,7 +98,7 @@ export class TokenService {
       .set('Content-Type', contentType)
   }
 
-  getRefreshParams(refreshToken) {
+  getRefreshParams(refreshToken): HttpParams {
     return new HttpParams()
       .set('grant_type', 'refresh_token')
       .set('refresh_token', refreshToken)

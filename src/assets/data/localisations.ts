@@ -579,7 +579,7 @@ export const Localisations = {
     de: 'jetzt',
     en: 'now',
     es: 'ahora',
-    it: 'adesso',
+    it: 'ora',
     nl: 'nu'
   },
   STATUS_FAILURE: {
@@ -900,7 +900,7 @@ export const Localisations = {
   },
   CLOSE_APP: {
     da: 'Luk App',
-    de: 'Schließen Sie die App',
+    de: 'Schließen',
     en: 'Close App',
     es: 'Cierre App',
     it: 'Chiudi App',

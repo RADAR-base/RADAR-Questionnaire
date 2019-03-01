@@ -10,6 +10,6 @@ export interface WeeklyReportSubSettings {
 }
 
 export interface LanguageSetting {
-  label: String
-  value: String
+  label: string
+  value: string
 }

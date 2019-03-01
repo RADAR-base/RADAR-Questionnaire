@@ -33,6 +33,9 @@ export const DefaultSettingsWeeklyReport: WeeklyReportSubSettings[] = [
 ]
 
 // DEFAULT SETUP
+export const DefaultTaskCompletionWindow = 259200000 // 3 days in ms
+export const DefaultESMCompletionWindow = 600000 // 10 mins in ms
+
 export const DefaultTask: Task = {
   index: 0,
   completed: false,
@@ -46,6 +49,7 @@ export const DefaultTask: Task = {
   },
   nQuestions: 0,
   estimatedCompletionTime: 0,
+  completionWindow: DefaultTaskCompletionWindow,
   warning: '',
   isClinical: false
 }
@@ -59,6 +63,7 @@ export const DefaultTaskTest: Task = {
   reminderSettings: {},
   nQuestions: 0,
   estimatedCompletionTime: 0,
+  completionWindow: DefaultTaskCompletionWindow,
   warning: '',
   isClinical: false
 }
@@ -111,9 +116,9 @@ export const DefaultScheduleYearCoverage: number = 2 // years
 export const DefaultScheduleReportRepeat: number = 7 // days
 
 export const DefaultNotificationType: string = 'FCM' // choose from 'FCM' or 'LOCAL'
-export const DefaultNumberOfNotificationsToSchedule: number = 100 //
+export const DefaultNumberOfNotificationsToSchedule: number = 80 //
 export const DefaultNumberOfNotificationsToRescue: number = 12 //
-export const FCMPluginProjectSenderId: string = '486403643787'
+export const FCMPluginProjectSenderId: string = '430900191220'
 export const DefaultNotificationRefreshTime: number = 900000 // 15 mins in ms
 
 export const DefaultSourceTypeModel: string = 'aRMT-App'

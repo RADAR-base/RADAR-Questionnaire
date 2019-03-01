@@ -16,14 +16,23 @@ task-info {
   }
 
   #questionnaire-progress {
-    position: absolute;
-    top: 6.5vh;
+    position: relative;
+    float: left;
   }
 
   #questionnaire-counter {
-    margin-top: -15vw;
+    position: absolute;
+    top: 20%;
     text-align: center;
     font-size: 10vw;
+  }
+
+  .counter-extra-info {
+    left: 30%;
+  }
+
+  .counter {
+    left: 35%;
   }
 
   #questionnaire-metrics {
@@ -33,10 +42,11 @@ task-info {
 
   #questionnaire-time {
     float: right;
+    margin-top: 3px;
   }
 
   .time-expanded {
-    margin-right: -12vw;
+    margin-right: -14vw;
   }
 
   .time {
@@ -58,16 +68,24 @@ task-info {
   .text-sm {
     float: left;
     margin-top: -7px;
-    font-size: 14vw;
+    font-size: 10vw;
+  }
+
+  .text-v-sm {
+    float: left;
+    margin-top: -7px;
+    font-size: 6vw;
   }
 
   .non-warn-padding {
-    width: 100%;
-    height: 15px;
+    padding-bottom: 12px;
+    width: 32px;
+    height: 12px;
   }
 
   .extra-info {
-    margin-top: -7px;
+    margin-top: -12px;
+    margin-left: 20%;
     text-align: center;
     font-size: 2vh;
   }

@@ -42,8 +42,7 @@ export class TaskCalendarComponent implements OnChanges {
     // NOTE: Compare current time with the start times of the tasks and
     // find out in between which tasks it should be shown in the interface
     const todaysTasks = this.tasks.get(new Date().setUTCHours(0, 0, 0, 0))
-    const index = todaysTasks.findIndex(t => t.timestamp >= now.getTime())
-    this.timeIndex = index > -1 ? index : todaysTasks.length - 1
+    this.timeIndex = todaysTasks.findIndex(t => t.timestamp >= now.getTime())
   }
 
   formatTime(date) {

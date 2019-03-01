@@ -900,7 +900,7 @@ export const Localisations = {
   },
   CLOSE_APP: {
     da: 'Luk App',
-    de: 'Schließen Sie die App',
+    de: 'Schließen',
     en: 'Close App',
     es: 'Cierre App',
     it: 'Chiudi App',

@@ -39,8 +39,7 @@ export class TaskCalendarComponent implements OnChanges {
       console.log(e)
     }
     const todaysTasks = this.tasks.get(new Date().setUTCHours(0, 0, 0, 0))
-    const index = todaysTasks.findIndex(t => t.timestamp >= now)
-    this.timeIndex = index > -1 ? index : todaysTasks.length - 1
+    this.timeIndex = todaysTasks.findIndex(t => t.timestamp >= now)
   }
 
   clicked(task) {

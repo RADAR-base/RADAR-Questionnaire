@@ -73,7 +73,16 @@ export class TasksService {
   }
 
   areAllTasksComplete(tasks) {
-    return !tasks || tasks.every(t => t.name === 'ESM' || t.completed)
+    return (
+      !tasks ||
+      tasks.every(
+        t =>
+          t.name === 'ESM' ||
+          t.isClinical ||
+          t.completed ||
+          !this.isTaskValid(t)
+      )
+    )
   }
 
   isLastTask(task) {

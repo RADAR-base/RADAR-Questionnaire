@@ -37,13 +37,13 @@
       class="bt bt--full"
       round
       full
-      *ngIf="!hasClickedDoneButton"
+      *ngIf="showDoneButton"
       (click)="handleClosePage()"
     >
       {{ "BTN_DONE" | translate }}
     </button>
     <div
-      *ngIf="hasClickedDoneButton"
+      *ngIf="!showDoneButton"
       class="spinner-center"
     >
       <ion-spinner name="dots"></ion-spinner>

@@ -2,6 +2,12 @@ export interface Protocol {
   repeatProtocol: RepeatProtocol
   repeatQuestionnaire: RepeatQuestionnaire
   reminders: Reminders
+  completionWindow: TimeInterval
+}
+
+export interface TimeInterval {
+  unit?: string
+  amount?: number
 }
 
 export interface RepeatProtocol {

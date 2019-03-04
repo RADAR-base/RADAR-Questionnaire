@@ -334,6 +334,14 @@ export const Localisations = {
     it: 'Dimensione',
     nl: 'Grootte'
   },
+  SETTINGS_LAST_UPLOAD_TO_SERVER: {
+    da: 'Sidste upload til server',
+    de: 'Letzter Upload zum Server',
+    en: 'Last Upload to Server',
+    es: 'Última carga al servidor',
+    it: 'Ultimo caricamento sul server',
+    nl: 'Laatste upload naar server'
+  },
   SETTINGS_DEBUGGING: {
     da: 'Debugging',
     de: 'Debuggen',
@@ -442,7 +450,7 @@ export const Localisations = {
     da: 'Afslut',
     de: 'Fertig',
     en: 'Finish',
-    es: 'Finalizado',
+    es: 'Finalizar',
     it: 'Fine',
     nl: 'Voltooid'
   },
@@ -538,7 +546,7 @@ export const Localisations = {
     da: 'Luk',
     de: 'Beenden',
     en: 'Close',
-    es: 'Cierre',
+    es: 'Cerrar',
     it: 'Chiudi',
     nl: 'Sluiten'
   },
@@ -571,7 +579,7 @@ export const Localisations = {
     de: 'jetzt',
     en: 'now',
     es: 'ahora',
-    it: 'adesso',
+    it: 'ora',
     nl: 'nu'
   },
   STATUS_FAILURE: {
@@ -892,7 +900,7 @@ export const Localisations = {
   },
   CLOSE_APP: {
     da: 'Luk App',
-    de: 'Schließen Sie die App',
+    de: 'Schließen',
     en: 'Close App',
     es: 'Cierre App',
     it: 'Chiudi App',

@@ -6,7 +6,7 @@ import {
   OnInit,
   Output
 } from '@angular/core'
-import { Device } from '@ionic-native/device'
+import { Device } from '@ionic-native/device/ngx'
 import { AlertController, NavController } from 'ionic-angular'
 
 // NOTE: File path to opensmile.js; Adding opensmile plugin

@@ -9,7 +9,8 @@ import {
   DefaultNumberOfNotificationsToRescue,
   DefaultNumberOfNotificationsToSchedule,
   DefaultTaskTest,
-  FCMPluginProjectSenderId
+  FCMPluginProjectSenderId,
+  SEC_MILLISEC
 } from '../../../assets/data/defaultConfig'
 import { LocKeys } from '../../shared/enums/localisations'
 import { StorageKeys } from '../../shared/enums/storage'
@@ -30,7 +31,9 @@ export class NotificationService {
     private alertCtrl: AlertController,
     private schedule: SchedulingService,
     public storage: StorageService
-  ) {
+  ) {}
+
+  init() {
     try {
       FCMPlugin.setSenderId(
         FCMPluginProjectSenderId,
@@ -217,7 +220,6 @@ export class NotificationService {
 
   formatFCMNotification(task, participantLogin) {
     const notif = this.formatNotifMessageAndTitle(task)
-    const expiry = task.name === 'ESM' ? 15 * 60 : 24 * 60 * 60
     const fcmNotification = {
       eventId: uuid(),
       action: 'SCHEDULE',
@@ -225,7 +227,7 @@ export class NotificationService {
       notificationMessage: notif.message,
       time: task.timestamp,
       subjectId: participantLogin,
-      ttlSeconds: expiry
+      ttlSeconds: task.completionWindow / SEC_MILLISEC
     }
     return fcmNotification
   }

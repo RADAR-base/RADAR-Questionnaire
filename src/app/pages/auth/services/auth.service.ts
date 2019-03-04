@@ -15,7 +15,8 @@ import {
   DefaultRequestJSONContentType,
   DefaultSourceProducerAndSecret,
   DefaultSourceTypeRegistrationBody,
-  DefaultSubjectsURI
+  DefaultSubjectsURI,
+  DefaultTokenRefreshTime
 } from '../../../../assets/data/defaultConfig'
 import { StorageService } from '../../../core/services/storage.service'
 import { StorageKeys } from '../../../shared/enums/storage'
@@ -34,8 +35,8 @@ export class AuthService {
 
   refresh() {
     return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
-      const now = new Date().getTime() / 1000
-      if (tokens.iat + tokens.expires_in < now) {
+      const limit = (new Date().getTime() - DefaultTokenRefreshTime) / 1000
+      if (tokens.iat + tokens.expires_in < limit) {
         const URI = this.URI_base + DefaultRefreshTokenURI
         const headers = this.getRegisterHeaders(
           DefaultRequestEncodedContentType

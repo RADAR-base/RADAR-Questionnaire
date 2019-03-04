@@ -1,5 +1,4 @@
 import { Component } from '@angular/core'
-import { AppVersion } from '@ionic-native/app-version'
 import {
   AlertController,
   NavController,
@@ -8,7 +7,6 @@ import {
 } from 'ionic-angular'
 
 import {
-  DefaultNumberOfNotificationsToSchedule,
   DefaultSettingsNotifications,
   DefaultSettingsSelectedLanguage,
   DefaultSettingsWeeklyReport,
@@ -40,6 +38,7 @@ export class SettingsPageComponent {
   participantId: String
   projectName: String
   enrolmentDate: Date
+  lastUploadDate: Date
   language: LanguageSetting = DefaultSettingsSelectedLanguage
   languagesSelectable: String[]
   notifications: NotificationSettings = DefaultSettingsNotifications
@@ -51,7 +50,6 @@ export class SettingsPageComponent {
     public navParams: NavParams,
     public alertCtrl: AlertController,
     public storage: StorageService,
-    private appVersion: AppVersion,
     private schedule: SchedulingService,
     private configService: ConfigService,
     private notificationService: NotificationService,
@@ -71,7 +69,7 @@ export class SettingsPageComponent {
   }
 
   loadSettings() {
-    const appVersionPromise = this.storage.get(StorageKeys.APP_VERSION)
+    const appVersion = this.storage.get(StorageKeys.APP_VERSION)
     const configVersion = this.storage.get(StorageKeys.CONFIG_VERSION)
     const scheduleVersion = this.storage.get(StorageKeys.SCHEDULE_VERSION)
     const participantId = this.storage.get(StorageKeys.PARTICIPANTID)
@@ -86,6 +84,7 @@ export class SettingsPageComponent {
       StorageKeys.SETTINGS_WEEKLYREPORT
     )
     const cache = this.storage.get(StorageKeys.CACHE_ANSWERS)
+    const lastUpload = this.storage.get(StorageKeys.LAST_UPLOAD_DATE)
     const settings = [
       configVersion,
       scheduleVersion,
@@ -97,7 +96,8 @@ export class SettingsPageComponent {
       settingsLanguages,
       settingsWeeklyReport,
       cache,
-      appVersionPromise
+      appVersion,
+      lastUpload
     ]
     return Promise.all(settings).then(returns => {
       this.appVersionStr = returns[10]
@@ -110,6 +110,7 @@ export class SettingsPageComponent {
       this.notifications = returns[6]
       this.languagesSelectable = returns[7]
       this.weeklyReport = returns[8]
+      this.lastUploadDate = returns[11]
       let size = 0
       for (const key in returns[9]) {
         if (key) {

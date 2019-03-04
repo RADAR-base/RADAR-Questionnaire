@@ -102,5 +102,6 @@
         <variable name="FIREBASE_CORE_VERSION" value="16.0.+" />
     </plugin>
     <plugin name="phonegap-plugin-mobile-accessibility" spec="^1.0.5" />
+    <plugin name="cordova-plugin-media" spec="^5.0.2" />
     <engine name="android" spec="^7.1.4" />
 </widget>

@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core'
 import { File } from '@ionic-native/file/ngx'
-// NOTE: File path to opensmile.js; Adding opensmile plugin
-import * as opensmile from 'cordova-plugin-opensmile/www/opensmile'
+import { Media, MediaObject } from '@ionic-native/media/ngx'
 
-declare var cordova: any
-declare var window: any
 @Injectable()
 export class AudioRecordService {
   audioRecordStatus: boolean = false
+  audio: MediaObject
+  fileName = 'audio.mp3'
 
-  constructor(private file: File) {
+  constructor(private file: File, private media: Media) {
     // NOTE: Kill recording on load
     this.stopAudioRecording()
   }
@@ -22,21 +21,25 @@ export class AudioRecordService {
     return this.audioRecordStatus
   }
 
-  startAudioRecording(fileName, configFile) {
+  startAudioRecording() {
+    this.audio = this.media.create(this.getPath() + this.fileName)
+    this.audio.onSuccess.subscribe(() => this.success())
+    this.audio.onError.subscribe(error => this.failure(error))
+
     const recording = this.getAudioRecordStatus()
     if (recording === false) {
       this.setAudioRecordStatus(true)
-      opensmile.start(fileName, configFile, this.success, this.failure)
+      this.audio.startRecord()
     } else if (recording === true) {
       this.setAudioRecordStatus(false)
-      opensmile.stop('Stop', this.success, this.failure)
-      this.readAudioFile(fileName)
+      this.audio.stopRecord()
+      this.readAudioFile()
     }
   }
 
   stopAudioRecording() {
     if (this.getAudioRecordStatus()) {
-      opensmile.stop('Stop', this.success, this.failure)
+      this.audio.stopRecord()
       this.setAudioRecordStatus(false)
     }
   }
@@ -45,15 +48,19 @@ export class AudioRecordService {
     return this.file.externalDataDirectory
   }
 
-  success(message) {
-    console.log('OPENSMILE' + message)
+  success() {
+    console.log('Action is successful')
   }
 
   failure(error) {
-    console.log('OPENSMILE Error calling OpenSmile Plugin' + error)
+    console.log('Error! ' + error)
   }
 
-  readAudioFile(filename) {
-    return this.file.readAsDataURL(this.getPath(), filename)
+  readAudioFile() {
+    return this.file.readAsDataURL(this.getPath(), this.fileName)
+  }
+
+  destroy() {
+    if (this.audio) this.audio.release()
   }
 }

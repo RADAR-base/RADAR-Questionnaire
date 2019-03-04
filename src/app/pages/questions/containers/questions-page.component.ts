@@ -148,7 +148,9 @@ export class QuestionsPageComponent {
       this.setNextDisabled()
 
       if (
-        this.questions[this.currentQuestion].field_type === QuestionType.timed
+        this.questions[this.currentQuestion].field_type ===
+          QuestionType.timed ||
+        this.questions[this.currentQuestion].field_type === QuestionType.audio
       ) {
         this.setPreviousDisabled()
       } else {

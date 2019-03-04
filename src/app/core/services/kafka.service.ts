@@ -76,7 +76,7 @@ export class KafkaService {
         time: time,
         timeCompleted: timeCompleted,
         timeNotification: timeNotification,
-        mediaType: 'audio/wav',
+        mediaType: 'audio/mpeg',
         data: data.answers[1].value.string,
         reciteText: questions
           .filter(q => q.field_type == KAFKA_AUDIO)

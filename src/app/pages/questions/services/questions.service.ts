@@ -142,7 +142,11 @@ export class QuestionsService {
     this.usage.sendCompletionLog(task, this.getAttemptProgress(totalQuestions))
   }
 
-  sendQuestionnaireCloseEvent() {
+  sendCloseEvent() {
     this.usage.sendQuestionnaireClosed()
+  }
+
+  sendStartEvent(task) {
+    this.usage.sendQuestionnaireStart(task)
   }
 }

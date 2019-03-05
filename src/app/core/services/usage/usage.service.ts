@@ -4,14 +4,20 @@ import { WebIntent } from '@ionic-native/web-intent/ngx'
 import { SchemaType } from '../../../shared/models/kafka'
 import { UsageEventType } from '../../../shared/models/usage-event'
 import { KafkaService } from '../kafka/kafka.service'
+import { FirebaseAnalyticsService } from './firebaseAnalytics.service'
 
 @Injectable()
 export class UsageService {
-  constructor(private webIntent: WebIntent, private kafka: KafkaService) {}
+  constructor(
+    private webIntent: WebIntent,
+    private kafka: KafkaService,
+    private firebaseAnalytics: FirebaseAnalyticsService
+  ) {}
 
   sendUsageEvent(payload) {
     return this.kafka.prepareKafkaObjectAndSend(SchemaType.USAGE, payload)
   }
+
   sendOpen() {
     return this.webIntent.getIntent().then(intent =>
       this.sendUsageEvent({
@@ -22,13 +28,21 @@ export class UsageService {
     )
   }
 
-  sendQuestionnaireStart() {
+  sendQuestionnaireStart(task) {
+    this.firebaseAnalytics.logEvent('questionnaire_started', {
+      questionnaire_timestamp: String(task.timestamp),
+      type: task.name
+    })
     return this.sendUsageEvent({
       eventType: UsageEventType.QUESTIONNAIRE_STARTED
     })
   }
 
-  sendQuestionnaireCompleted() {
+  sendQuestionnaireCompleted(task) {
+    this.firebaseAnalytics.logEvent('questionnaire_finished', {
+      questionnaire_timestamp: String(task.timestamp),
+      type: task.name
+    })
     return this.sendUsageEvent({
       eventType: UsageEventType.QUESTIONNAIRE_COMPLETED
     })
@@ -38,6 +52,25 @@ export class UsageService {
     return this.sendUsageEvent({
       eventType: UsageEventType.QUESTIONNARE_CLOSED
     })
+  }
+
+  sendConfigChangeEvent(type, prevVer?, newVer?) {
+    this.firebaseAnalytics.logEvent(type, {
+      prev_version: String(prevVer),
+      new_version: String(newVer)
+    })
+  }
+
+  sendKafkaEvent(type, name, time, error?) {
+    this.firebaseAnalytics.logEvent(type, {
+      name: name,
+      questionnaire_timestamp: String(time),
+      error: JSON.stringify(error)
+    })
+  }
+
+  sendClick(button) {
+    this.firebaseAnalytics.logEvent('click', { button: button })
   }
 
   sendCompletionLog(task, percent) {

@@ -905,5 +905,13 @@ export const Localisations = {
     es: 'Cierre App',
     it: 'Chiudi App',
     nl: 'App Sluiten'
+  },
+  WARNING_DO_NOT_CLOSE_APP: {
+    da: 'Luk ikke appen',
+    de: 'Schließen Sie die App nicht',
+    en: 'Do not close the app',
+    es: 'No cierres la aplicación',
+    it: `Non chiudere l'app`,
+    nl: 'Sluit de app niet'
   }
 }

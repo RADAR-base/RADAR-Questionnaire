@@ -63,13 +63,14 @@ export class FinishPageComponent {
           this.questionnaireData.answers,
           this.questionnaireData.timestamps
         )
-        .then(data =>
-          this.sendToKafka(
+        .then(data => {
+          this.firebaseAnalytics.logEvent('processed_questionnaire_data', {})
+          return this.sendToKafka(
             this.associatedTask,
             data,
             this.questionnaireData.questions
           )
-        )
+        })
         .catch(e => console.log(e))
         .then(() => (this.showDoneButton = true))
     else this.showDoneButton = true

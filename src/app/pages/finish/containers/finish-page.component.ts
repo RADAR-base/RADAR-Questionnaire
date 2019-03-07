@@ -64,7 +64,10 @@ export class FinishPageComponent {
           this.questionnaireData.timestamps
         )
         .then(data => {
-          this.firebaseAnalytics.logEvent('processed_questionnaire_data', {})
+          this.firebaseAnalytics.logEvent('processed_questionnaire_data', {
+            questionnaire_timestamp: String(Date.now()),
+            type: this.associatedTask.name
+          })
           return this.sendToKafka(
             this.associatedTask,
             data,

@@ -25,7 +25,7 @@ import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
       transition('* => *', animate('400ms ease'))
     ]),
     trigger('alignCenterRightExtraInfo', [
-      state('false', style({ transform: 'translate3d(15%, 0, 0)' })),
+      state('false', style({ transform: 'translate3d(22%, 0, 0)' })),
       state('true', style({ transform: 'translate3d(0, 0, 0)' })),
       transition('* => *', animate('400ms ease'))
     ]),
@@ -138,8 +138,8 @@ export class TaskInfoComponent implements OnChanges {
       this.isNow
         ? LocKeys.STATUS_NOW.toString()
         : this.task.name !== 'ESM'
-          ? ''
-          : LocKeys.TASK_BAR_NEXT_TASK_SOON.toString()
+        ? ''
+        : LocKeys.TASK_BAR_NEXT_TASK_SOON.toString()
     )
     if (this.nextTaskStatus.length > 7) return (this.statusSize = 8)
     if (this.nextTaskStatus.length > 4) return (this.statusSize = 11)

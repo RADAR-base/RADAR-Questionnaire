@@ -141,6 +141,10 @@ export class KafkaService {
   }
 
   prepareKafkaObjectAndSend(task, value, type) {
+    this.firebaseAnalytics.logEvent('prepared_kafka_object', {
+      name: task.name,
+      questionnaire_timestamp: String(task.timestamp)
+    })
     return this.util.getSourceKeyInfo().then(keyInfo => {
       const sourceId = keyInfo[0]
       const projectId = keyInfo[1]
@@ -261,6 +265,10 @@ export class KafkaService {
     return this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
       console.log('KAFKA-SERVICE: Caching answers.')
       cache[kafkaObject.value.time] = specs
+      this.firebaseAnalytics.logEvent('send_to_cache', {
+        name: specs.name,
+        questionnaire_timestamp: String(specs.task.timestamp)
+      })
       return this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
     })
   }

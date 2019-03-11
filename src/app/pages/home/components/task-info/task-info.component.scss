@@ -18,21 +18,13 @@ task-info {
   #questionnaire-progress {
     position: relative;
     float: left;
+    padding-bottom: 4vw;
   }
 
   #questionnaire-counter {
-    position: absolute;
-    top: 20%;
+    margin-top: -15vw;
     text-align: center;
-    font-size: 10vw;
-  }
-
-  .counter-extra-info {
-    left: 30%;
-  }
-
-  .counter {
-    left: 35%;
+    font-size: 9.5vw;
   }
 
   #questionnaire-metrics {
@@ -85,7 +77,6 @@ task-info {
 
   .extra-info {
     margin-top: -12px;
-    margin-left: 20%;
     text-align: center;
     font-size: 2vh;
   }

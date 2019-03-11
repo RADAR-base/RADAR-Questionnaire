@@ -6,10 +6,7 @@ import {
   DefaultESMCompletionWindow,
   DefaultScheduleReportRepeat,
   DefaultScheduleYearCoverage,
-  DefaultTaskCompletionWindow,
-  HOUR_MIN,
-  MIN_SEC,
-  SEC_MILLISEC
+  DefaultTaskCompletionWindow
 } from '../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../shared/enums/storage'
 import { Assessment } from '../../shared/models/assessment'
@@ -40,7 +37,6 @@ export class SchedulingService {
   assessments: Promise<Assessment[]>
   tzOffset: number
   utcOffsetPrev: number
-  ONE_DAY = 24 * HOUR_MIN * MIN_SEC * SEC_MILLISEC
 
   constructor(public storage: StorageService) {
     const now = new Date()
@@ -144,7 +140,7 @@ export class SchedulingService {
             if (tasks[i]) {
               if (
                 tasks[i].reportedCompletion === false &&
-                tasks[i].timestamp + this.ONE_DAY < now &&
+                tasks[i].timestamp + tasks[i].completionWindow < now &&
                 limit > 0
               ) {
                 nonReportedTasks.push(tasks[i])

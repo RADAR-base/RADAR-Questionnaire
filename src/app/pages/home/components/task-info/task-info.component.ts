@@ -14,7 +14,7 @@ import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
     trigger('fade', [
       state('false', style({ opacity: '0' })),
       state('true', style({ opacity: '1.0' })),
-      transition('* => *', animate('400ms ease'))
+      transition('* => *', animate('350ms 50ms ease'))
     ]),
     trigger('scaleMinutes', [
       state(
@@ -22,17 +22,17 @@ import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
         style({ transform: 'translate3d(-25%, -15%, 0) scale(0.4)' })
       ),
       state('true', style({ transform: 'translate3d(0, 0, 0) scale(1)' })),
-      transition('* => *', animate('400ms ease'))
+      transition('* => *', animate('350ms 50ms ease'))
     ]),
     trigger('alignCenterRightExtraInfo', [
       state('false', style({ transform: 'translate3d(22%, 0, 0)' })),
       state('true', style({ transform: 'translate3d(0, 0, 0)' })),
-      transition('* => *', animate('400ms ease'))
+      transition('* => *', animate('350ms 50ms ease'))
     ]),
     trigger('alignCenterRightTime', [
       state('false', style({ transform: 'translate3d(8%, 0, 0) scale(0.8)' })),
       state('true', style({ transform: 'translate3d(0, 0, 0)' })),
-      transition('* => *', animate('400ms ease'))
+      transition('* => *', animate('350ms 50ms ease'))
     ]),
     trigger('moveInProgress', [
       state(
@@ -43,12 +43,12 @@ import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
         'false',
         style({ display: 'block', transform: 'translate3d(0, 0, 0)' })
       ),
-      transition('* => *', animate('400ms ease'))
+      transition('* => *', animate('350ms 50ms ease'))
     ]),
     trigger('alignCenterRightMetrics', [
       state('false', style({ transform: 'translate3d(110%, 0, 0)' })),
       state('true', style({ transform: 'translate3d(0, 0, 0)' })),
-      transition('* => *', animate('400ms ease'))
+      transition('* => *', animate('350ms 50ms ease'))
     ])
   ]
 })
@@ -141,7 +141,6 @@ export class TaskInfoComponent implements OnChanges {
         ? ''
         : LocKeys.TASK_BAR_NEXT_TASK_SOON.toString()
     )
-    if (this.nextTaskStatus.length > 7) return (this.statusSize = 8)
     if (this.nextTaskStatus.length > 4) return (this.statusSize = 11)
     return (this.statusSize = 14)
   }

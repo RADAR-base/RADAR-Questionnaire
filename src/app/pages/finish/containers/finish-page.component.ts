@@ -57,41 +57,45 @@ export class FinishPageComponent {
 
   processDataAndSend() {
     this.finishTaskService.updateTaskToComplete(this.associatedTask)
-    if (!this.associatedTask.name.includes('DEMO'))
-      return this.prepareDataService
-        .processQuestionnaireData(
-          this.questionnaireData.answers,
-          this.questionnaireData.timestamps
-        )
-        .then(data => {
-          this.firebaseAnalytics.logEvent('processed_questionnaire_data', {
-            questionnaire_timestamp: String(Date.now()),
-            type: this.associatedTask.name
-          })
-          return this.sendToKafka(
-            this.associatedTask,
-            data,
-            this.questionnaireData.questions
-          )
-        })
+    if (!this.associatedTask.name.includes('DEMO')) {
+      const data = this.prepareDataService.processQuestionnaireData(
+        this.questionnaireData.answers,
+        this.questionnaireData.timestamps
+      )
+      this.firebaseAnalytics.logEvent('processed_questionnaire_data', {
+        questionnaire_timestamp: String(Date.now()),
+        type: this.associatedTask.name
+      })
+      return this.sendToKafka(
+        this.associatedTask,
+        data,
+        this.questionnaireData.questions
+      )
         .catch(e => console.log(e))
         .then(() => (this.showDoneButton = true))
-    else this.showDoneButton = true
+    } else this.showDoneButton = true
   }
 
-  sendToKafka(task: Task, questionnaireData, questions) {
+  sendToKafka(task: Task, data, questions) {
     // NOTE: Submit data to kafka
-    return Promise.all([
-      this.kafkaService.prepareTimeZoneKafkaObjectAndSend(),
-      this.kafkaService.prepareAnswerKafkaObjectAndSend(
-        task,
-        questionnaireData,
-        questions
-      ),
-      this.kafkaService
-        .prepareNonReportedTasksKafkaObjectAndSend(task)
-        .then(() => this.finishTaskService.updateTaskToReportedCompletion(task))
-    ])
+    return this.storage.get(StorageKeys.CONFIG_VERSION).then(configVersion =>
+      Promise.all([
+        this.kafkaService.prepareTimeZoneKafkaObjectAndSend(),
+        this.kafkaService.prepareAnswerKafkaObjectAndSend(
+          task,
+          {
+            answers: data,
+            configVersion: configVersion
+          },
+          questions
+        ),
+        this.kafkaService
+          .prepareNonReportedTasksKafkaObjectAndSend(task)
+          .then(() =>
+            this.finishTaskService.updateTaskToReportedCompletion(task)
+          )
+      ])
+    )
   }
 
   handleClosePage() {

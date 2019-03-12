@@ -123,7 +123,8 @@ export class KafkaService {
   prepareKafkaObjectAndSend(task, value, type) {
     this.firebaseAnalytics.logEvent('prepared_kafka_object', {
       name: task.name,
-      questionnaire_timestamp: String(task.timestamp)
+      questionnaire_timestamp: String(task.timestamp),
+      type: type
     })
     return this.util.getSourceKeyInfo().then(keyInfo => {
       const sourceId = keyInfo[0]

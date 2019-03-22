@@ -5,13 +5,6 @@
       [@moveInProgress]="expanded"
     >
       <ng-container *ngIf="!expanded">
-        <div
-          id="questionnaire-counter"
-          [class.counter-extra-info]="hasExtraInfo"
-          [class.counter]="!hasExtraInfo"
-        >
-          {{ current }}
-        </div>
         <round-progress
           id="prog-sm"
           [current]="current"
@@ -22,6 +15,7 @@
           [stroke]="stroke"
           [clockwise]="true"
         ></round-progress>
+        <div id="questionnaire-counter">{{ current }}</div>
       </ng-container>
     </div>
     <div
@@ -47,7 +41,7 @@
         <span
           class="text-md"
           [style.padding-left.px]="(20-statusSize)"
-          [style.font-size.vw]="statusSize"
+          [style.margin-top.px]="(11-statusSize)"
           [@alignCenterRightTime]="expanded"
         >
           {{ nextTaskStatus }}

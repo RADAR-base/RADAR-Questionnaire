@@ -3,6 +3,7 @@ import { NavController, NavParams } from 'ionic-angular'
 
 import {
   DefaultNotificationRefreshTime,
+  DefaultNumberOfCompletionLogsToSend,
   DefaultNumberOfNotificationsToSchedule
 } from '../../../../assets/data/defaultConfig'
 import { ConfigService } from '../../../core/services/config.service'
@@ -34,11 +35,10 @@ export class SplashPageComponent {
   ) {
     this.splashService
       .evalEnrolment()
-      .then(
-        participant =>
-          participant
-            ? this.onStart()
-            : this.navCtrl.setRoot(EnrolmentPageComponent)
+      .then(participant =>
+        participant
+          ? this.onStart()
+          : this.navCtrl.setRoot(EnrolmentPageComponent)
       )
   }
 
@@ -54,12 +54,9 @@ export class SplashPageComponent {
       })
       .then(() => {
         this.status = 'Sending missed completion logs...'
-        this.sendNonReportedTaskCompletion()
+        return this.sendNonReportedTaskCompletion()
       })
-      .then(() => {
-        this.status = 'Sending cached answers...'
-        return this.kafka.sendAllAnswersInCache()
-      })
+      .then(() => (this.status = 'Sending cached answers...'))
       .catch(e => console.log('Error sending cache'))
       .then(() => this.navCtrl.setRoot(HomePageComponent))
   }
@@ -119,7 +116,10 @@ export class SplashPageComponent {
     return this.schedule
       .getNonReportedCompletedTasks()
       .then(nonReportedTasks => {
-        const length = nonReportedTasks.length
+        const length = Math.min(
+          nonReportedTasks.length,
+          DefaultNumberOfCompletionLogsToSend
+        )
         for (let i = 0; i < length; i++) {
           promises.push(
             this.kafka

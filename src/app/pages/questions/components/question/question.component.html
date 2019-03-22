@@ -12,6 +12,7 @@
 <div *ngIf="question.field_type === 'radio'">
   <radio-input
     [responses]="question.select_choices_or_calculations"
+    [currentlyShown]="currentlyShown"
     (valueChange)="onValueChange($event)"
   >
   </radio-input>
@@ -20,6 +21,7 @@
 <div *ngIf="question.field_type === 'checkbox'">
   <checkbox-input
     [responses]="question.select_choices_or_calculations"
+    [currentlyShown]="currentlyShown"
     (valueChange)="onValueChange($event)"
   >
   </checkbox-input>
@@ -31,6 +33,7 @@
     [max]="question.range.max"
     [labelLeft]="question.range.labelLeft"
     [labelRight]="question.range.labelRight"
+    [currentlyShown]="currentlyShown"
     (valueChange)="onValueChange($event)"
   >
   </range-input>

@@ -33,7 +33,7 @@ export const DefaultSettingsWeeklyReport: WeeklyReportSubSettings[] = [
 ]
 
 // DEFAULT SETUP
-export const DefaultTaskCompletionWindow = 259200000 // 3 days in ms
+export const DefaultTaskCompletionWindow = 86400000 // 1 day in ms
 export const DefaultESMCompletionWindow = 600000 // 10 mins in ms
 
 export const DefaultTask: Task = {
@@ -176,3 +176,5 @@ export const KAFKA_ASSESSMENT = 'assessment'
 export const KAFKA_COMPLETION_LOG = 'completion_log'
 export const KAFKA_TIMEZONE = 'timezone'
 export const KAFKA_CLIENT_KAFKA = '/kafka'
+
+export const DefaultNumberOfCompletionLogsToSend = 10

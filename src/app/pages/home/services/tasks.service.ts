@@ -20,7 +20,13 @@ export class TasksService {
   }
 
   getTasksOfToday() {
-    return this.schedule.getNonClinicalTasksForDate(new Date())
+    return this.schedule
+      .getNonClinicalTasksForDate(new Date())
+      .then(tasks =>
+        tasks.filter(
+          t => !t.completed || (t.completed && this.isToday(t.timeCompleted))
+        )
+      )
   }
 
   getSortedTasksOfToday(): Promise<Map<number, Task[]>> {
@@ -46,6 +52,12 @@ export class TasksService {
         completedTasks: tasks.filter(d => d.completed).length
       }
     })
+  }
+
+  isToday(date) {
+    return (
+      new Date(date).setHours(0, 0, 0, 0) == new Date().setHours(0, 0, 0, 0)
+    )
   }
 
   areAllTasksComplete(tasks) {

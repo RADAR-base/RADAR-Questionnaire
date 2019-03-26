@@ -24,7 +24,9 @@ export class TasksService {
       .getNonClinicalTasksForDate(new Date())
       .then(tasks =>
         tasks.filter(
-          t => !t.completed || (t.completed && this.isToday(t.timeCompleted))
+          t =>
+            this.isTaskValid(t) ||
+            (t.completed && this.isToday(t.timeCompleted))
         )
       )
   }
@@ -33,7 +35,7 @@ export class TasksService {
     return this.getTasksOfToday().then(tasks => {
       const sortedTasks = new Map()
       tasks.forEach(t => {
-        const midnight = new Date(t.timestamp).setUTCHours(0, 0, 0, 0)
+        const midnight = new Date(t.timestamp).setHours(0, 0, 0, 0)
         if (sortedTasks.has(midnight)) sortedTasks.get(midnight).push(t)
         else sortedTasks.set(midnight, [t])
       })
@@ -68,7 +70,7 @@ export class TasksService {
           t.name === 'ESM' ||
           t.isClinical ||
           t.completed ||
-          !this.isTaskValid(t)
+          !this.isTaskStartable(t)
       )
     )
   }
@@ -82,11 +84,13 @@ export class TasksService {
     )
   }
 
+  isTaskStartable(task) {
+    return task.timestamp <= new Date().getTime() && this.isTaskValid(task)
+  }
+
   isTaskValid(task) {
-    const now = new Date().getTime()
     return (
-      task.timestamp <= now &&
-      task.timestamp + task.completionWindow > now &&
+      task.timestamp + task.completionWindow > new Date().getTime() &&
       !task.completed
     )
   }
@@ -112,10 +116,7 @@ export class TasksService {
             )
           default:
             // NOTE: Break out of the loop as soon as the next incomplete task is found
-            return (
-              task.timestamp + task.completionWindow >= Date.now() &&
-              !task.completed
-            )
+            return this.isTaskValid(task)
         }
       })
     }

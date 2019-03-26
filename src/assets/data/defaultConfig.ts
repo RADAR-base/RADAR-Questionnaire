@@ -97,7 +97,7 @@ export const DefaultScheduleYearCoverage: number = 2 // years
 
 export const DefaultScheduleReportRepeat: number = 7 // days
 
-export const DefaultNotificationType: string = 'FCM' // choose from 'FCM' or 'LOCAL'
+export const DefaultNotificationType: string = 'LOCAL' // choose from 'FCM' or 'LOCAL'
 export const DefaultNumberOfNotificationsToSchedule: number = 100 //
 export const DefaultNumberOfNotificationsToRescue: number = 12 //
 export const FCMPluginProjectSenderId: string = '430900191220'

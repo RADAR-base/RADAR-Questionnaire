@@ -67,6 +67,7 @@
     "base64-js": "^1.2.1",
     "cordova-android": "6.4.0",
     "cordova-android-support-gradle-release": "^1.4.4",
+    "cordova-ios": "4.5.5",
     "cordova-plugin-android-permissions": "^0.11.0",
     "cordova-plugin-app-event": "git+https://github.com/katzer/cordova-plugin-app-event.git",
     "cordova-plugin-app-version": "^0.1.9",

@@ -29,65 +29,26 @@
   <div
     #progressBar
     class="size-dynamic"
+    [@moveProgress]="showCalendar"
   >
     <task-progress
-      [progress]="tasksProgress"
+      *ngIf="(tasksProgress|async)"
+      [progress]="(tasksProgress|async)"
       [forceComplete]="showCompleted"
-      [noTasksToday]="showNoTasksToday"
-      *ngIf="!hasOnlyESMs"
+      [noTasksToday]="(tasksProgress|async)?.numberOfTasks == 0"
     >
     </task-progress>
-    <div
-      class="container-esm"
-      *ngIf="hasOnlyESMs"
-    >
-      <img
-        src="assets/imgs/diary.png"
-        class="icon-esm"
-      >
-    </div>
-    <div
-      class="clinical-1"
-      *ngIf="hasClinicalTasks && !showCalendar && !showCompleted"
-      (click)="openClinicalTasksPage()"
-    >
-      <img
-        src="assets/imgs/clinical.png"
-        class="icon-clinical"
-      >
-    </div>
-  </div>
-
-  <div
-    class="clinical-2"
-    *ngIf="hasClinicalTasks && showCalendar"
-    (click)="openClinicalTasksPage()"
-  >
-    <img
-      src="assets/imgs/clinical.png"
-      class="icon-clinical"
-    >
-  </div>
-
-  <div
-    class="clinical-3"
-    *ngIf="hasClinicalTasks && !showCalendar && showCompleted"
-    (click)="openClinicalTasksPage()"
-  >
-    <img
-      src="assets/imgs/clinical.png"
-      class="icon-clinical"
-    >
   </div>
 
   <div
     #tickerBar
     class="size-static"
-    *ngIf="nextTask.name !== 'ESM'"
   >
     <ticker-bar
       [task]="nextTask"
+      [isNow]="taskIsNow"
       [showAffirmation]="showCompleted"
+      [noTasksToday]="(tasksProgress|async)?.numberOfTasks == 0"
     ></ticker-bar>
   </div>
 
@@ -96,22 +57,24 @@
     class="size-static"
   >
     <task-info
+      *ngIf="nextTask"
       [task]="nextTask"
       [isNow]="taskIsNow"
-      [progress]="tasksProgress"
-      (collapse)="displayEvalTransformations($event)"
+      [progress]="(tasksProgress|async)"
+      [expanded]="!showCalendar"
+      (click)="displayTaskCalendar()"
     ></task-info>
   </div>
 
   <div
     #taskCalendar
-    class="size-null"
+    [@displayCalendar]="showCalendar"
   >
     <task-calendar
-      *ngIf="tasks"
-      [scrollHeight]="calendarScrollHeight"
+      *ngIf="(sortedTasks|async)?.size"
+      [show]="showCalendar"
       (task)="startQuestionnaire($event)"
-      [tasks]="tasks"
+      [tasks]="sortedTasks|async"
     >
     </task-calendar>
   </div>
@@ -121,7 +84,7 @@
     class="size-static footer"
   >
     <div
-      *ngIf="taskIsNow && !hasClickedStartButton"
+      *ngIf="taskIsNow && !startingQuestionnaire && !showCompleted && !showCalendar && (sortedTasks|async)?.size"
       padding
     >
       <button
@@ -135,10 +98,25 @@
       </button>
     </div>
     <div
-      *ngIf="hasClickedStartButton"
+      *ngIf="startingQuestionnaire || (!nextTask && !showCompleted) || (!(sortedTasks|async)?.size && (tasksProgress|async)?.numberOfTasks)"
       class="spinner-center"
     >
       <ion-spinner name="dots"></ion-spinner>
     </div>
   </div>
 </ion-content>
+
+<div
+  *ngIf="hasClinicalTasks"
+  class="clinical"
+  [class.clinical-1]="taskIsNow && !showCompleted"
+  [class.clinical-2]="showCalendar"
+  [class.clinical-3]="showCompleted || (tasksProgress|async)?.numberOfTasks == 0"
+  [class.clinical-4]="!taskIsNow && !showCompleted && !showCalendar"
+  (click)="openClinicalTasksPage()"
+>
+  <img
+    src="assets/imgs/clinical.png"
+    class="icon-clinical"
+  >
+</div>

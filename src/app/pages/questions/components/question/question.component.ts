@@ -5,8 +5,8 @@ import {
   OnChanges,
   Output
 } from '@angular/core'
-import { Dialogs } from '@ionic-native/dialogs'
-import { Vibration } from '@ionic-native/vibration'
+import { Dialogs } from '@ionic-native/dialogs/ngx'
+import { Vibration } from '@ionic-native/vibration/ngx'
 
 import { Answer } from '../../../../shared/models/answer'
 import { Question, QuestionType } from '../../../../shared/models/question'
@@ -28,7 +28,9 @@ export class QuestionComponent implements OnChanges {
   value: any
   currentlyShown = false
 
-  constructor(private vibration: Vibration, private dialogs: Dialogs) {}
+  constructor(private vibration: Vibration, private dialogs: Dialogs) {
+    this.value = null
+  }
 
   ngOnChanges() {
     if (this.question.select_choices_or_calculations.length > 0) {
@@ -49,10 +51,19 @@ export class QuestionComponent implements OnChanges {
     }
     if (this.questionIndex === this.currentIndex) {
       this.currentlyShown = true
+      if (this.value) this.emitAnswer()
     } else {
       this.currentlyShown = false
     }
     // this.evalBeep()
+  }
+
+  emitAnswer() {
+    this.answer.emit({
+      id: this.question.field_name,
+      value: this.value,
+      type: this.question.field_type
+    })
   }
 
   onValueChange(event) {
@@ -60,29 +71,8 @@ export class QuestionComponent implements OnChanges {
     if (event === undefined) {
       return
     }
-
-    switch (this.question.field_type) {
-      case QuestionType.radio:
-      case QuestionType.range:
-      case QuestionType.checkbox:
-      case QuestionType.slider:
-        this.value = event
-        break
-
-      case QuestionType.audio:
-        // TODO: Add audio file reference to send
-        break
-
-      case QuestionType.timed:
-      case QuestionType.info:
-        this.value = event
-        break
-    }
-    this.answer.emit({
-      id: this.question.field_name,
-      value: this.value,
-      type: this.question.field_type
-    })
+    this.value = event
+    this.emitAnswer()
   }
 
   evalBeep() {

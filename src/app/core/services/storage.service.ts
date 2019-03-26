@@ -2,6 +2,7 @@ import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/catch'
 
 import { Injectable } from '@angular/core'
+import { AppVersion } from '@ionic-native/app-version/ngx'
 import { Storage } from '@ionic/storage'
 import { throwError as observableThrowError } from 'rxjs'
 
@@ -19,7 +20,7 @@ import { Task } from '../../shared/models/task'
 export class StorageService {
   global: any = {}
 
-  constructor(private storage: Storage) {
+  constructor(private storage: Storage, private appVersion: AppVersion) {
     const setStoragePromise = this.prepareStorage()
     Promise.resolve(setStoragePromise)
   }
@@ -29,13 +30,11 @@ export class StorageService {
     participantLogin,
     projectName,
     sourceId,
-    language,
     createdDate,
     createdDateMidnight
   ) {
-    const allKeys = this.getAllKeys()
-    return allKeys
-      .then(keys => {
+    return Promise.all([this.getAllKeys(), this.getAppVersion()])
+      .then(([keys, appV]) => {
         // TODO: Find out why this is hard-coded?
         if (keys.length <= 7) {
           const enrolmentDateTime = new Date(createdDate)
@@ -57,7 +56,6 @@ export class StorageService {
           const pName = this.set(StorageKeys.PROJECTNAME, projectName)
           const sId = this.set(StorageKeys.SOURCEID, sourceId)
 
-          const lang = this.set(StorageKeys.LANGUAGE, language)
           const notif = this.set(
             StorageKeys.SETTINGS_NOTIFICATIONS,
             DefaultSettingsNotifications
@@ -74,17 +72,27 @@ export class StorageService {
             StorageKeys.SCHEDULE_VERSION,
             DefaultScheduleVersion
           )
+          const utc = this.set(
+            StorageKeys.UTC_OFFSET,
+            new Date().getTimezoneOffset()
+          )
+          const cache = this.set(StorageKeys.CACHE_ANSWERS, {})
+          const appVersion = this.set(StorageKeys.APP_VERSION, appV)
 
           return Promise.all([
             pId,
             pName,
             pLogin,
             sId,
-            lang,
             notif,
             report,
             langs,
-            version
+            version,
+            utc,
+            cache,
+            enrolmentDate,
+            referenceDate,
+            appVersion
           ])
         }
       })
@@ -137,6 +145,10 @@ export class StorageService {
 
   getAllKeys() {
     return this.storage.keys()
+  }
+
+  getAppVersion() {
+    return this.appVersion.getVersionNumber()
   }
 
   prepareStorage() {

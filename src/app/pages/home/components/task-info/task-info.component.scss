@@ -1,5 +1,6 @@
 task-info {
   #task-info-container {
+    margin-bottom: 2px;
     padding: 7px 15px;
     background-color: $cl-primary-40;
     font-size: 22px;
@@ -15,14 +16,15 @@ task-info {
   }
 
   #questionnaire-progress {
-    position: absolute;
-    top: 11px;
+    position: relative;
+    float: left;
+    padding-bottom: 4vw;
   }
 
   #questionnaire-counter {
     margin-top: -15vw;
     text-align: center;
-    font-size: 10vw;
+    font-size: 9.5vw;
   }
 
   #questionnaire-metrics {
@@ -32,10 +34,15 @@ task-info {
 
   #questionnaire-time {
     float: right;
+    margin-top: 3px;
   }
 
   .time-expanded {
-    margin-right: -40px;
+    margin-right: -14vw;
+  }
+
+  .time {
+    margin-right: -5vw;
   }
 
   .text-lg {
@@ -47,29 +54,35 @@ task-info {
   .text-md {
     float: left;
     margin-top: -2vw;
-    padding-right: 3vw;
     font-size: 14vw;
   }
 
   .text-sm {
     float: left;
     margin-top: -7px;
-    font-size: 14vw;
+    font-size: 10vw;
+  }
+
+  .text-v-sm {
+    float: left;
+    margin-top: -7px;
+    font-size: 6vw;
   }
 
   .non-warn-padding {
-    width: 100%;
-    height: 15px;
+    padding-bottom: 12px;
+    width: 32px;
+    height: 12px;
   }
 
   .extra-info {
-    margin-top: -7px;
+    margin-top: -12px;
     text-align: center;
-    font-size: 18px;
+    font-size: 2vh;
   }
 
   .extra-info-icon {
-    height: 15px;
+    height: 1.5vh;
   }
 
   .icon-padding {
@@ -78,5 +91,19 @@ task-info {
 
   .icon-sm {
     height: 18px;
+  }
+
+  .meridiem {
+    margin-top: 6px;
+    margin-left: -4vw;
+    writing-mode: vertical-rl;
+    font-size: 2.5vh;
+    text-orientation: upright;
+  }
+
+  .min-merid {
+    margin-top: -5vw;
+    margin-bottom: -14vw;
+    width: 30vw;
   }
 }

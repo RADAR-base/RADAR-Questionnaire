@@ -1,7 +1,11 @@
 import { Component } from '@angular/core'
 import { NavController, NavParams } from 'ionic-angular'
 
-import { DefaultNumberOfNotificationsToSchedule } from '../../../../assets/data/defaultConfig'
+import {
+  DefaultNumberOfNotificationsToSchedule,
+  DefaultTaskCompletionWindow
+} from '../../../../assets/data/defaultConfig'
+import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { KafkaService } from '../../../core/services/kafka.service'
 import { NotificationService } from '../../../core/services/notification.service'
 import { StorageService } from '../../../core/services/storage.service'
@@ -16,12 +20,14 @@ import { PrepareDataService } from '../services/prepare-data.service'
   templateUrl: 'finish-page.component.html'
 })
 export class FinishPageComponent {
-  content: string = ''
-  isClinicalTask: boolean = false
-  completedInClinic: boolean = false
-  displayNextTaskReminder: boolean = true
-  hasClickedDoneButton: boolean = false
+  content = ''
+  isClinicalTask = false
+  completedInClinic = false
+  displayNextTaskReminder = true
+  showDoneButton = false
   associatedTask
+  questionnaireData
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -29,67 +35,74 @@ export class FinishPageComponent {
     private prepareDataService: PrepareDataService,
     private notificationService: NotificationService,
     private finishTaskService: FinishTaskService,
-    public storage: StorageService
+    public storage: StorageService,
+    private firebaseAnalytics: FirebaseAnalyticsService
   ) {}
 
   ionViewDidLoad() {
-    this.associatedTask = this.navParams.data.associatedTask
-    this.content = this.navParams.data.endText
-    const questionnaireName: string = this.navParams.data.associatedTask.name
-    if (!questionnaireName.includes('DEMO')) {
-      try {
-        if (
-          this.navParams.data['associatedTask']['protocol']['clinicalProtocol']
-        ) {
-          this.isClinicalTask = true
-        }
-      } catch (TypeError) {
-        console.log('INFO: Not in clinic task/questionnaire.')
-      }
-      this.prepareDataService
-        .process_QuestionnaireData(
-          this.navParams.data.answers,
-          this.navParams.data.timestamps
-        )
-        .then(
-          data => {
-            this.finishTaskService.updateTaskToComplete(this.associatedTask)
-            this.sendToKafka(
-              this.associatedTask,
-              data,
-              this.navParams.data.questions
-            )
-          },
-          error => {
-            console.log(JSON.stringify(error))
-          }
-        )
-    } else {
-      // This is a Demo Questionnaire. Just update to complete and do nothing else
-      this.finishTaskService.updateTaskToComplete(
-        this.navParams.data.associatedTask
-      )
-    }
+    this.questionnaireData = this.navParams.data
+    this.associatedTask = this.questionnaireData.associatedTask
+    this.content = this.questionnaireData.endText
+    this.isClinicalTask = this.associatedTask.isClinical !== false
     this.displayNextTaskReminder =
-      !this.navParams.data.isLastTask && !this.isClinicalTask
+      !this.questionnaireData.isLastTask && !this.isClinicalTask
+    this.processDataAndSend()
+    this.firebaseAnalytics.setCurrentScreen('finish-page')
+    this.firebaseAnalytics.logEvent('questionnaire_finished', {
+      questionnaire_timestamp: String(this.associatedTask.timestamp),
+      type: this.associatedTask.name
+    })
+    setTimeout(() => (this.showDoneButton = true), 15000)
   }
 
-  sendToKafka(task: Task, questionnaireData, questions) {
-    this.kafkaService.prepareTimeZoneKafkaObjectAndSend()
-    this.kafkaService.prepareAnswerKafkaObjectAndSend(
-      task,
-      questionnaireData,
-      questions
-    )
+  processDataAndSend() {
+    this.finishTaskService.updateTaskToComplete(this.associatedTask)
+    if (!this.associatedTask.name.includes('DEMO')) {
+      const data = this.prepareDataService.processQuestionnaireData(
+        this.questionnaireData.answers,
+        this.questionnaireData.timestamps
+      )
+      this.firebaseAnalytics.logEvent('processed_questionnaire_data', {
+        questionnaire_timestamp: String(Date.now()),
+        type: this.associatedTask.name
+      })
+      return this.sendToKafka(
+        this.associatedTask,
+        data,
+        this.questionnaireData.questions
+      )
+        .catch(e => console.log(e))
+        .then(() => (this.showDoneButton = true))
+    } else this.showDoneButton = true
+  }
+
+  sendToKafka(task: Task, data, questions) {
     // NOTE: Submit data to kafka
+    return this.storage.get(StorageKeys.CONFIG_VERSION).then(configVersion =>
+      Promise.all([
+        this.kafkaService.prepareTimeZoneKafkaObjectAndSend(),
+        this.kafkaService.prepareAnswerKafkaObjectAndSend(
+          task,
+          {
+            answers: data,
+            configVersion: configVersion
+          },
+          questions
+        ),
+        this.kafkaService
+          .prepareNonReportedTasksKafkaObjectAndSend(task)
+          .then(() =>
+            this.finishTaskService.updateTaskToReportedCompletion(task)
+          )
+      ])
+    )
   }
 
   handleClosePage() {
-    this.hasClickedDoneButton = !this.hasClickedDoneButton
-    this.evalClinicalFollowUpTask().then(() => {
-      this.kafkaService.sendAllAnswersInCache()
+    this.showDoneButton = false
+    this.evalClinicalFollowUpTask().then(() =>
       this.navCtrl.setRoot(HomePageComponent)
-    })
+    )
   }
 
   evalClinicalFollowUpTask() {
@@ -103,6 +116,7 @@ export class FinishPageComponent {
   }
 
   generateClinicalTasks(tasks) {
+    // TODO: To be refactored and moved in next PR.
     let clinicalTasks = []
     if (tasks) {
       clinicalTasks = tasks
@@ -126,6 +140,7 @@ export class FinishPageComponent {
         reminderSettings: protocol['reminders'],
         nQuestions: associatedTask['questions'].length,
         estimatedCompletionTime: associatedTask['estimatedCompletionTime'],
+        completionWindow: DefaultTaskCompletionWindow,
         warning: '',
         isClinical: true
       }

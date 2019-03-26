@@ -1,6 +1,7 @@
 <ul>
   <li *ngFor="let item of items">
     <input
+      [disabled]="!currentlyShown"
       type="checkbox"
       [id]="item.id"
       [name]="name"

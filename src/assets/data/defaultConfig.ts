@@ -33,6 +33,9 @@ export const DefaultSettingsWeeklyReport: WeeklyReportSubSettings[] = [
 ]
 
 // DEFAULT SETUP
+export const DefaultTaskCompletionWindow = 86400000 // 1 day in ms
+export const DefaultESMCompletionWindow = 600000 // 10 mins in ms
+
 export const DefaultTask: Task = {
   index: 0,
   completed: false,
@@ -46,6 +49,21 @@ export const DefaultTask: Task = {
   },
   nQuestions: 0,
   estimatedCompletionTime: 0,
+  completionWindow: DefaultTaskCompletionWindow,
+  warning: '',
+  isClinical: false
+}
+
+export const DefaultTaskTest: Task = {
+  index: 0,
+  completed: false,
+  reportedCompletion: false,
+  timestamp: 0,
+  name: 'TEST',
+  reminderSettings: {},
+  nQuestions: 0,
+  estimatedCompletionTime: 0,
+  completionWindow: DefaultTaskCompletionWindow,
   warning: '',
   isClinical: false
 }
@@ -144,6 +162,8 @@ export const DefaultRefreshTokenRequestBody =
 export const DefaultEnrolmentBaseURL =
   DefaultEndPoint + DefaultManagementPortalURI
 
+export const DefaultTokenRefreshTime = 1800000 // 30 minutes in ms
+
 // TIME CONVERSIONS
 
 export const SEC_MILLISEC = 1000
@@ -155,4 +175,7 @@ export const MIN_SEC = 60
 export const KAFKA_ASSESSMENT = 'assessment'
 export const KAFKA_COMPLETION_LOG = 'completion_log'
 export const KAFKA_TIMEZONE = 'timezone'
+export const KAFKA_AUDIO = 'audio'
 export const KAFKA_CLIENT_KAFKA = '/kafka'
+
+export const DefaultNumberOfCompletionLogsToSend = 10

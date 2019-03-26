@@ -1,12 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core'
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  ValidatorFn,
-  Validators
-} from '@angular/forms'
-import { BarcodeScanner } from '@ionic-native/barcode-scanner'
+import { FormControl, FormGroup, Validators } from '@angular/forms'
+import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx'
 import { AlertController, NavController, Slides } from 'ionic-angular'
 
 import {
@@ -16,8 +10,8 @@ import {
   DefaultSourceTypeModel,
   LanguageMap
 } from '../../../../assets/data/defaultConfig'
-import { AppComponent } from '../../../core/containers/app.component'
 import { ConfigService } from '../../../core/services/config.service'
+import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { LocKeys } from '../../../shared/enums/localisations'
@@ -28,6 +22,7 @@ import {
 } from '../../../shared/models/settings'
 import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { HomePageComponent } from '../../home/containers/home-page.component'
+import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 import { AuthService } from '../services/auth.service'
 
 @Component({
@@ -48,10 +43,7 @@ export class EnrolmentPageComponent {
 
   URLRegEx = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?'
 
-  language: LanguageSetting = {
-    label: LocKeys.LANGUAGE_ENGLISH.toString(),
-    value: 'en'
-  }
+  language: LanguageSetting
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
 
   enterMetaQR = false
@@ -79,15 +71,21 @@ export class EnrolmentPageComponent {
     private configService: ConfigService,
     private authService: AuthService,
     private translate: TranslatePipe,
-    private alertCtrl: AlertController
-  ) {}
+    private alertCtrl: AlertController,
+    private firebaseAnalytics: FirebaseAnalyticsService
+  ) {
+    this.translate
+      .init()
+      .then(() => (this.language = this.translate.getLanguage()))
+  }
 
   ionViewDidLoad() {
     this.slides.lockSwipes(true)
-    this.translate.init()
+    this.firebaseAnalytics
+      .setCurrentScreen('enrolment-page')
+      .then(res => console.log('enrolment-page: ' + res))
+      .catch(err => console.log('enrolment-page: ' + err))
   }
-
-  ionViewDidEnter() {}
 
   scanQRHandler() {
     this.loading = true
@@ -96,9 +94,12 @@ export class EnrolmentPageComponent {
       orientation: 'portrait'
       // disableAnimations: true
     }
-    this.scanner
-      .scan(scanOptions)
-      .then(scannedObj => this.authenticate(scannedObj.text))
+    this.scanner.scan(scanOptions).then(scannedObj => {
+      this.firebaseAnalytics.logEvent('qr_code_scanned', {
+        text: scannedObj.text
+      })
+      return this.authenticate(scannedObj.text)
+    })
   }
 
   metaQRHandler() {
@@ -211,24 +212,24 @@ export class EnrolmentPageComponent {
       const createdDateMidnight = this.schedule.setDateTimeToMidnight(
         new Date(subjectInformation.createdDate)
       )
-      this.storage
+      return this.storage
         .init(
           participantId,
           participantLogin,
           projectName,
           sourceId,
-          this.language,
           createdDate,
           createdDateMidnight
         )
-        .then(() => {
-          this.doAfterAuthentication()
-        })
+        .then(() => this.doAfterAuthentication())
     })
   }
 
   doAfterAuthentication() {
-    this.configService.fetchConfigState(true).then(() => this.next())
+    this.configService
+      .fetchConfigState(true)
+      .then(() => this.firebaseAnalytics.logEvent('sign_up', {}))
+      .then(() => this.next())
   }
 
   displayErrorMessage(error) {
@@ -237,6 +238,10 @@ export class EnrolmentPageComponent {
     const msg = error.statusText + ' (' + error.status + ')'
     this.outcomeStatus = msg
     this.transitionStatuses()
+    this.firebaseAnalytics.logEvent('sign_up_failed', {
+      error: JSON.stringify(error),
+      message: String(msg)
+    })
   }
 
   weeklyReportChange(index) {
@@ -294,10 +299,9 @@ export class EnrolmentPageComponent {
             label: LanguageMap[selectedLanguageVal],
             value: selectedLanguageVal
           }
-          this.storage.set(StorageKeys.LANGUAGE, lang).then(() => {
-            this.language = lang
-            this.translate.init().then(() => this.navCtrl.setRoot(AppComponent))
-          })
+          this.storage
+            .set(StorageKeys.LANGUAGE, lang)
+            .then(() => this.navCtrl.setRoot(SplashPageComponent))
         }
       }
     ]

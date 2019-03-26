@@ -1,13 +1,14 @@
-import { Component, ElementRef, ViewChild } from '@angular/core'
+import { animate, state, style, transition, trigger } from '@angular/animations'
+import { Component, OnDestroy } from '@angular/core'
 import {
   AlertController,
-  Content,
   NavController,
   NavParams,
   Platform
 } from 'ionic-angular'
+import { Subscription } from 'rxjs'
 
-import { DefaultTask } from '../../../../assets/data/defaultConfig'
+import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { KafkaService } from '../../../core/services/kafka.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { LocKeys } from '../../../shared/enums/localisations'
@@ -18,45 +19,39 @@ import { checkTaskIsNow } from '../../../shared/utilities/check-task-is-now'
 import { ClinicalTasksPageComponent } from '../../clinical-tasks/containers/clinical-tasks-page.component'
 import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
 import { SettingsPageComponent } from '../../settings/containers/settings-page.component'
+import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 import { StartPageComponent } from '../../start/containers/start-page.component'
 import { TasksService } from '../services/tasks.service'
 
 @Component({
   selector: 'page-home',
-  templateUrl: 'home-page.component.html'
+  templateUrl: 'home-page.component.html',
+  animations: [
+    trigger('displayCalendar', [
+      state('true', style({ transform: 'translateY(0)', opacity: 1 })),
+      state('false', style({ transform: 'translateY(100%)', opacity: 0 })),
+      transition('*=>*', animate('350ms 50ms ease'))
+    ]),
+    trigger('moveProgress', [
+      state('true', style({ transform: 'translateY(-100%)', display: 'none' })),
+      state('false', style({ transform: 'translateY(0)' })),
+      transition('true=>false', animate('400ms ease'))
+    ])
+  ]
 })
-export class HomePageComponent {
-  @ViewChild('content')
-  elContent: Content
-  elContentHeight: number
-  @ViewChild('progressBar')
-  elProgress: ElementRef
-  elProgressHeight: number
-  @ViewChild('tickerBar')
-  elTicker: ElementRef
-  elTickerHeight: number
-  @ViewChild('taskInfo')
-  elInfo: ElementRef
-  elInfoHeight: number
-  @ViewChild('footer')
-  elFooter: ElementRef
-  elFooterHeight: number
-  @ViewChild('taskCalendar')
-  elCalendar: ElementRef
-
-  isOpenPageClicked: boolean = false
-  nextTask: Task = DefaultTask
-  showCalendar: boolean = false
-  showCompleted: boolean = false
-  showNoTasksToday: boolean = false
-  tasksProgress: TasksProgress
-  calendarScrollHeight: number = 0
-  hasClickedStartButton: boolean = true
+export class HomePageComponent implements OnDestroy {
+  sortedTasks: Promise<Map<any, any>>
+  tasks: Promise<Task[]>
+  tasksDate: Date
+  nextTask: Task
+  showCalendar = false
+  showCompleted = false
+  tasksProgress: Promise<TasksProgress>
+  startingQuestionnaire = false
   hasClinicalTasks = false
-  hasOnlyESMs = false
   taskIsNow = false
-  elProgressOffset = 16
-  tasks
+  checkTaskInterval
+  resumeListener: Subscription = new Subscription()
 
   constructor(
     public navCtrl: NavController,
@@ -66,82 +61,60 @@ export class HomePageComponent {
     private translate: TranslatePipe,
     public storage: StorageService,
     private platform: Platform,
-    private kafka: KafkaService
+    private kafka: KafkaService,
+    private firebaseAnalytics: FirebaseAnalyticsService
   ) {
-    this.platform.resume.subscribe(e => {
+    this.resumeListener = this.platform.resume.subscribe(e => {
       this.kafka.sendAllAnswersInCache()
-      this.updateCurrentTask()
+      this.checkForNewDate()
+      this.firebaseAnalytics.logEvent('resumed', {})
     })
+  }
+
+  ngOnDestroy() {
+    this.resumeListener.unsubscribe()
   }
 
   ionViewWillEnter() {
-    if (!this.tasks) this.tasks = this.tasksService.getTasksOfToday()
-    this.getElementsAttributes()
-    this.elProgressHeight += this.elProgressOffset
-    this.applyTransformations()
-    this.showNoTasksToday = false
+    this.startingQuestionnaire = false
   }
 
   ionViewDidLoad() {
-    setInterval(() => {
-      this.updateCurrentTask()
-    }, 1000)
+    this.sortedTasks = this.tasksService.getSortedTasksOfToday()
     this.tasks = this.tasksService.getTasksOfToday()
+    this.tasksProgress = this.tasksService.getTaskProgress()
     this.tasks.then(
-      tasks => (this.tasksProgress = this.tasksService.getTaskProgress(tasks))
+      tasks =>
+        (this.checkTaskInterval = setInterval(() => {
+          this.checkForNextTask(tasks)
+        }, 1000))
     )
+    this.tasksDate = new Date()
     this.evalHasClinicalTasks()
-    this.checkIfOnlyESM()
-    this.tasksService.sendNonReportedTaskCompletion()
+    this.firebaseAnalytics.setCurrentScreen('home-page')
   }
 
-  updateCurrentTask() {
-    this.checkForNextTask()
-    this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
-  }
-
-  checkForNextTask() {
-    if (!this.showCalendar) {
-      this.tasks.then(tasks =>
-        this.checkForNextTaskGeneric(this.tasksService.getNextTask(tasks))
-      )
+  checkForNewDate() {
+    if (new Date().getDate() !== this.tasksDate.getDate()) {
+      this.tasksDate = new Date()
+      this.navCtrl.setRoot(SplashPageComponent)
     }
   }
 
-  checkForNextTaskGeneric(task) {
-    if (task && task.isClinical == false) {
+  checkForNextTask(tasks) {
+    const task = this.tasksService.getNextTask(tasks)
+    if (task) {
       this.nextTask = task
-      this.hasClickedStartButton = false
-      this.displayCompleted(false)
-      this.displayEvalTransformations(false)
       this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
     } else {
-      this.tasksService.areAllTasksComplete().then(completed => {
-        if (completed) {
-          this.nextTask = DefaultTask
-          this.displayCompleted(true)
-          if (!this.tasksProgress) {
-            this.showNoTasksToday = true
-          }
-        } else {
-          this.nextTask = DefaultTask
-          this.displayEvalTransformations(true)
-        }
-      })
-    }
-  }
-
-  checkIfOnlyESM() {
-    this.tasks.then(tasks => {
-      let tmpHasOnlyESMs = true
-      for (let i = 0; i < tasks.length; i++) {
-        if (tasks[i].name !== 'ESM') {
-          tmpHasOnlyESMs = false
-          break
-        }
+      this.taskIsNow = false
+      this.nextTask = null
+      this.showCompleted = this.tasksService.areAllTasksComplete(tasks)
+      if (this.showCompleted) {
+        clearInterval(this.checkTaskInterval)
+        this.showCalendar = false
       }
-      this.hasOnlyESMs = tmpHasOnlyESMs
-    })
+    }
   }
 
   evalHasClinicalTasks() {
@@ -150,176 +123,60 @@ export class HomePageComponent {
     })
   }
 
-  displayEvalTransformations(requestDisplay: boolean) {
-    this.showCalendar = requestDisplay
-    this.getElementsAttributes()
-    this.applyTransformations()
-  }
-
-  displayCompleted(requestDisplay: boolean) {
-    this.showCompleted = requestDisplay
-    this.getElementsAttributes()
-    this.applyCompletedTransformations()
-  }
-
-  getElementsAttributes() {
-    if (this.elContent) this.elContentHeight = this.elContent.contentHeight
-    if (this.elProgress)
-      this.elProgressHeight =
-        this.elProgress.nativeElement.offsetHeight - this.elProgressOffset
-    if (this.elTicker)
-      this.elTickerHeight = this.elTicker.nativeElement.offsetHeight
-    if (this.elInfo) this.elInfoHeight = this.elInfo.nativeElement.offsetHeight
-    if (this.elFooter)
-      this.elFooterHeight = this.elFooter.nativeElement.offsetHeight
-  }
-
-  applyTransformations() {
-    if (this.showCalendar) {
-      this.elProgress.nativeElement.style.transform = `translateY(-${
-        this.elProgressHeight
-      }px) scale(1)`
-      this.elTicker.nativeElement.style.transform = `translateY(-${
-        this.elProgressHeight
-      }px)`
-      this.elInfo.nativeElement.style.transform = `translateY(-${
-        this.elProgressHeight
-      }px)`
-      this.elFooter.nativeElement.style.transform = `translateY(${
-        this.elFooterHeight
-      }px) scale(0)`
-      this.elCalendar.nativeElement.style.transform = `translateY(-${
-        this.elProgressHeight
-      }px)`
-      this.elCalendar.nativeElement.style.opacity = 1
-    } else {
-      if (this.elProgress)
-        this.elProgress.nativeElement.style.transform =
-          'translateY(0px) scale(1)'
-      if (this.elTicker)
-        this.elTicker.nativeElement.style.transform = 'translateY(0px)'
-      if (this.elInfo)
-        this.elInfo.nativeElement.style.transform = 'translateY(0px)'
-      if (this.elFooter)
-        this.elFooter.nativeElement.style.transform = 'translateY(0px) scale(1)'
-      if (this.elCalendar) {
-        this.elCalendar.nativeElement.style.transform = 'translateY(0px)'
-        this.elCalendar.nativeElement.style.opacity = 0
-      }
-    }
-    this.setCalendarScrollHeight(this.showCalendar)
-  }
-
-  // TODO: Rename to something appropriate
-  isNextTaskESMandNotNow() {
-    const now = new Date().getTime()
-    if (!this.showCalendar) {
-      if (this.nextTask.name === 'ESM' && this.nextTask.timestamp > now) {
-        this.elProgress.nativeElement.style.transform = `translateY(${
-          this.elFooterHeight
-        }px)`
-        this.elInfo.nativeElement.style.transform = `translateY(${
-          this.elFooterHeight
-        }px)`
-        this.elFooter.nativeElement.style.transform = `translateY(${
-          this.elFooterHeight
-        }px) scale(0)`
-        this.elCalendar.nativeElement.style.transform = 'translateY(0px)'
-        this.elCalendar.nativeElement.style.opacity = 0
-      } else {
-        this.elProgress.nativeElement.style.transform = `translateY(${
-          this.elFooterHeight
-        }px)`
-        this.elInfo.nativeElement.style.transform = `translateY(${
-          this.elFooterHeight
-        }px)`
-        this.elFooter.nativeElement.style.transform = `translateY(${
-          this.elFooterHeight
-        }px) scale(0)`
-        this.elCalendar.nativeElement.style.transform = 'translateY(0px)'
-        this.elCalendar.nativeElement.style.opacity = 0
-      }
-    }
-  }
-
-  setCalendarScrollHeight(show: boolean) {
-    if (show) {
-      this.calendarScrollHeight =
-        this.elContentHeight - this.elTickerHeight - this.elInfoHeight
-    } else {
-      this.calendarScrollHeight = 0
-    }
-  }
-
-  applyCompletedTransformations() {
-    if (this.showCompleted) {
-      this.elTicker.nativeElement.style.padding = `0`
-      this.elTicker.nativeElement.style.transform = `translateY(${this
-        .elInfoHeight + this.elFooterHeight}px)`
-      this.elInfo.nativeElement.style.transform = `translateY(${this
-        .elInfoHeight + this.elFooterHeight}px) scale(0)`
-      this.elFooter.nativeElement.style.transform = `translateY(${this
-        .elInfoHeight + this.elFooterHeight}px) scale(0)`
-    } else {
-      if (this.elTicker) {
-        this.elTicker.nativeElement.style.padding = '0 0 2px 0'
-        this.elTicker.nativeElement.style.transform = 'translateY(0px)'
-      }
-      if (this.elInfo)
-        this.elInfo.nativeElement.style.transform = 'translateY(0px) scale(1)'
-      if (this.elFooter)
-        this.elFooter.nativeElement.style.transform = 'translateY(0px) scale(1)'
-    }
+  displayTaskCalendar() {
+    this.firebaseAnalytics.logEvent('click', { button: 'show_task_calendar' })
+    this.showCalendar = !this.showCalendar
   }
 
   openSettingsPage() {
+    this.firebaseAnalytics.logEvent('click', { button: 'open_settings' })
     this.navCtrl.push(SettingsPageComponent)
   }
 
   openClinicalTasksPage() {
+    this.firebaseAnalytics.logEvent('click', { button: 'open_clinical_tasks' })
     this.navCtrl.push(ClinicalTasksPageComponent)
   }
 
-  startQuestionnaire(task: Task) {
-    let startQuestionnaireTask = this.nextTask
-    if (task) {
-      if (task.completed === false) {
-        startQuestionnaireTask = task
-      }
-    } else {
-      this.hasClickedStartButton = true
-    }
-    const lang = this.storage.get(StorageKeys.LANGUAGE)
-    const nextAssessment = this.tasksService.getAssessment(
-      startQuestionnaireTask
-    )
-    Promise.all([lang, nextAssessment]).then(res => {
-      const language = res[0].value
-      const assessment = res[1]
-      const params = {
-        title: assessment.name,
-        introduction: assessment.startText[language],
-        endText: assessment.endText[language],
-        questions: assessment.questions,
-        associatedTask: startQuestionnaireTask,
-        assessment: assessment,
-        isLastTask: false
-      }
+  startQuestionnaire(taskCalendarTask: Task) {
+    this.firebaseAnalytics.logEvent('click', { button: 'start_questionnaire' })
+    // NOTE: User can start questionnaire from task calendar or start button in home.
+    const task = taskCalendarTask ? taskCalendarTask : this.nextTask
+    if (this.tasksService.isTaskValid(task)) {
+      this.startingQuestionnaire = true
+      const lang = this.storage.get(StorageKeys.LANGUAGE)
+      const nextAssessment = this.tasksService.getAssessment(task)
+      Promise.all([lang, nextAssessment]).then(res => {
+        const language = res[0].value
+        const assessment = res[1]
+        const params = {
+          title: assessment.name,
+          introduction: assessment.startText[language],
+          endText: assessment.endText[language],
+          questions: assessment.questions,
+          associatedTask: task,
+          assessment: assessment,
+          isLastTask: false
+        }
 
-      this.tasksService
-        .isLastTask(startQuestionnaireTask)
-        .then(lastTask => (params.isLastTask = lastTask))
-        .then(() => {
-          if (assessment.showIntroduction) {
-            this.navCtrl.push(StartPageComponent, params)
-          } else {
-            this.navCtrl.push(QuestionsPageComponent, params)
-          }
-        })
-    })
+        this.tasks
+          .then(tasks => this.tasksService.isLastTask(task, tasks))
+          .then(lastTask => (params.isLastTask = lastTask))
+          .then(() => {
+            if (assessment.showIntroduction) {
+              this.navCtrl.push(StartPageComponent, params)
+            } else {
+              this.navCtrl.push(QuestionsPageComponent, params)
+            }
+          })
+      })
+    } else {
+      this.showMissedInfo()
+    }
   }
 
   showCredits() {
+    this.firebaseAnalytics.logEvent('click', { button: 'show_credits' })
     const buttons = [
       {
         text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
@@ -330,6 +187,23 @@ export class HomePageComponent {
       title: this.translate.transform(LocKeys.CREDITS_TITLE.toString()),
       message: this.translate.transform(LocKeys.CREDITS_BODY.toString()),
       buttons: buttons
+    })
+  }
+
+  showMissedInfo() {
+    return this.showAlert({
+      title: this.translate.transform(
+        LocKeys.CALENDAR_ESM_MISSED_TITLE.toString()
+      ),
+      message: this.translate.transform(
+        LocKeys.CALENDAR_ESM_MISSED_DESC.toString()
+      ),
+      buttons: [
+        {
+          text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+          handler: () => {}
+        }
+      ]
     })
   }
 

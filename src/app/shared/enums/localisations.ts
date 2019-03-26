@@ -41,6 +41,9 @@ export class LocKeys {
   static SETTINGS_RESET_ALERT_DESC = new LocKeys('SETTINGS_RESET_ALERT_DESC')
   static SETTINGS_CACHE = new LocKeys('SETTINGS_CACHE')
   static SETTINGS_CACHE_SIZE = new LocKeys('SETTINGS_CACHE_SIZE')
+  static SETTINGS_LAST_UPLOAD_TO_SERVER = new LocKeys(
+    'SETTINGS_LAST_UPLOAD_TO_SERVER'
+  )
   static LANGUAGE_ENGLISH = new LocKeys('LANGUAGE_ENGLISH')
   static LANGUAGE_SPANISH = new LocKeys('LANGUAGE_SPANISH')
   static LANGUAGE_ITALIAN = new LocKeys('LANGUAGE_ITALIAN')
@@ -67,6 +70,12 @@ export class LocKeys {
   static STATUS_SUCCESS = new LocKeys('STATUS_SUCCESS')
   static STATUS_FAILURE = new LocKeys('STATUS_FAILURE')
   static STATUS_NOW = new LocKeys('STATUS_NOW')
+  static NOTIFICATION_TEST_REMINDER_NOW = new LocKeys(
+    'NOTIFICATION_TEST_REMINDER_NOW'
+  )
+  static NOTIFICATION_TEST_REMINDER_NOW_DESC = new LocKeys(
+    'NOTIFICATION_TEST_REMINDER_NOW_DESC'
+  )
   static NOTIFICATION_REMINDER_SOON = new LocKeys('NOTIFICATION_REMINDER_SOON')
   static NOTIFICATION_REMINDER_SOON_DESC = new LocKeys(
     'NOTIFICATION_REMINDER_SOON_DESC'
@@ -117,6 +126,7 @@ export class LocKeys {
     'TESTING_NOTIFICATIONS_MESSAGE'
   )
   static CLOSE_APP = new LocKeys('CLOSE_APP')
+  static WARNING_DO_NOT_CLOSE_APP = new LocKeys('WARNING_DO_NOT_CLOSE_APP')
 
   constructor(public value: string) {}
 

@@ -10,15 +10,6 @@ page-home {
 
   .size-dynamic {
     flex-grow: 1;
-    transition: transform 0.4s ease-in-out;
-  }
-
-  .size-null {
-    bottom: 90px;
-    width: 100%;
-    height: 0;
-    opacity: 0;
-    transition: all 0.4s ease-in-out;
   }
 
   ion-header .toolbar-background {
@@ -46,7 +37,6 @@ page-home {
   }
 
   .footer {
-    margin-top: 2px;
     background-color: $cl-primary-40;
   }
 
@@ -68,37 +58,31 @@ page-home {
     stroke: #fff;
   }
 
-  .clinical-1 {
-    position: absolute;
+  .clinical {
+    position: fixed;
     right: 20px;
-    bottom: 20px;
     z-index: 100;
     width: 50px;
     height: 50px;
     border-radius: 50%;
     background-color: $cl-primary-60;
+  }
+
+  .clinical-1 {
+    bottom: 34vh;
   }
 
   .clinical-2 {
-    position: absolute;
-    right: 20px;
-    bottom: 20px;
-    z-index: 100;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: $cl-primary;
+    position: fixed;
+    bottom: 3vh;
   }
 
   .clinical-3 {
-    position: absolute;
-    right: 20px;
-    bottom: 18vw;
-    z-index: 100;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: $cl-primary-60;
+    bottom: 8vh;
+  }
+
+  .clinical-4 {
+    bottom: 20vh;
   }
 
   .icon-clinical {
@@ -107,14 +91,5 @@ page-home {
     margin-left: 9px;
     width: 32px;
     height: 32px;
-  }
-
-  .icon-esm {
-    width: 80%;
-  }
-
-  .container-esm {
-    margin-top: 50px;
-    margin-left: 16%;
   }
 }

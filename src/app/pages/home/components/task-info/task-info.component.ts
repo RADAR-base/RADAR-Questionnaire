@@ -1,125 +1,54 @@
 import { animate, state, style, transition, trigger } from '@angular/animations'
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output
-} from '@angular/core'
+import { Component, Input, OnChanges } from '@angular/core'
 
 import { StorageService } from '../../../../core/services/storage.service'
+import { LocKeys } from '../../../../shared/enums/localisations'
 import { StorageKeys } from '../../../../shared/enums/storage'
 import { Task, TasksProgress } from '../../../../shared/models/task'
-import { checkTaskIsNow } from '../../../../shared/utilities/check-task-is-now'
-import { TasksService } from '../../services/tasks.service'
+import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
 
-/**
- * Generated class for the TaskInfo component.
- *
- * See https://angular.io/docs/ts/latest/api/core/index/ComponentMetadata-class.html
- * for more info on Angular Components.
- */
 @Component({
   selector: 'task-info',
   templateUrl: 'task-info.component.html',
   animations: [
     trigger('fade', [
-      state(
-        'out',
-        style({
-          opacity: '0'
-        })
-      ),
-      state(
-        'in',
-        style({
-          opacity: '1.0'
-        })
-      ),
-      transition('in => out', animate('400ms ease')),
-      transition('out => in', animate('400ms ease'))
+      state('false', style({ opacity: '0' })),
+      state('true', style({ opacity: '1.0' })),
+      transition('* => *', animate('350ms 50ms ease'))
     ]),
     trigger('scaleMinutes', [
       state(
-        'min',
-        style({
-          transform: 'translate3d(-25%, -15%, 0) scale(0.45)'
-        })
+        'false',
+        style({ transform: 'translate3d(-25%, -15%, 0) scale(0.4)' })
       ),
-      state(
-        'max',
-        style({
-          transform: 'translate3d(0, 0, 0) scale(1)'
-        })
-      ),
-      transition('max => min', animate('400ms ease')),
-      transition('min => max', animate('400ms ease'))
+      state('true', style({ transform: 'translate3d(0, 0, 0) scale(1)' })),
+      transition('* => *', animate('350ms 50ms ease'))
     ]),
     trigger('alignCenterRightExtraInfo', [
-      state(
-        'right',
-        style({
-          transform: 'translate3d(15%, 0, 0)'
-        })
-      ),
-      state(
-        'center',
-        style({
-          transform: 'translate3d(0, 0, 0)'
-        })
-      ),
-      transition('center => right', animate('400ms ease')),
-      transition('right => center', animate('400ms ease'))
+      state('false', style({ transform: 'translate3d(22%, 0, 0)' })),
+      state('true', style({ transform: 'translate3d(0, 0, 0)' })),
+      transition('* => *', animate('350ms 50ms ease'))
     ]),
     trigger('alignCenterRightTime', [
-      state(
-        'right',
-        style({
-          transform: 'translate3d(15%, 0, 0) scale(0.8)'
-        })
-      ),
-      state(
-        'center',
-        style({
-          transform: 'translate3d(0, 0, 0)'
-        })
-      ),
-      transition('center => right', animate('400ms ease')),
-      transition('right => center', animate('400ms ease'))
+      state('false', style({ transform: 'translate3d(8%, 0, 0) scale(0.8)' })),
+      state('true', style({ transform: 'translate3d(0, 0, 0)' })),
+      transition('* => *', animate('350ms 50ms ease'))
     ]),
     trigger('moveInProgress', [
       state(
-        'out',
-        style({
-          display: 'none',
-          transform: 'translate3d(-150%, 0, 0)'
-        })
+        'true',
+        style({ display: 'none', transform: 'translate3d(-150%, 0, 0)' })
       ),
       state(
-        'in',
-        style({
-          display: 'block',
-          transform: 'translate3d(0, 0, 0)'
-        })
+        'false',
+        style({ display: 'block', transform: 'translate3d(0, 0, 0)' })
       ),
-      transition('out => in', animate('400ms ease')),
-      transition('in => out', animate('400ms ease'))
+      transition('* => *', animate('350ms 50ms ease'))
     ]),
     trigger('alignCenterRightMetrics', [
-      state(
-        'right',
-        style({
-          transform: 'translate3d(120%, 0, 0)'
-        })
-      ),
-      state(
-        'center',
-        style({
-          transform: 'translate3d(0, 0, 0)'
-        })
-      ),
-      transition('center => right', animate('400ms ease')),
-      transition('right => center', animate('400ms ease'))
+      state('false', style({ transform: 'translate3d(110%, 0, 0)' })),
+      state('true', style({ transform: 'translate3d(0, 0, 0)' })),
+      transition('* => *', animate('350ms 50ms ease'))
     ])
   ]
 })
@@ -130,75 +59,38 @@ export class TaskInfoComponent implements OnChanges {
   isNow = false
   @Input()
   progress: TasksProgress
-  @Output()
-  collapse: EventEmitter<Boolean> = new EventEmitter()
-  expanded: Boolean = true
-  hasExtraInfo: Boolean = false
-  displayTask: Boolean = false
-  animateFade: String
-  animateMove: String
-  animateScale: String
-  animateCenterRight: String
+  @Input()
+  expanded = true
+  hasExtraInfo: boolean
+  extraTaskInfo: string
+  nextTaskStatus
+  statusSize
 
   private language: string
-  private extraTaskInfo: string
 
   max: number = 1
   current: number = 0
   radius: number = 35
   stroke: number = 8
 
-  animationKeys = {
-    MIN: 'min',
-    MAX: 'max',
-    IN: 'in',
-    OUT: 'out',
-    CENTER: 'center',
-    RIGHT: 'right'
-  }
-
   constructor(
-    private tasksService: TasksService,
-    public storage: StorageService
+    public storage: StorageService,
+    private translate: TranslatePipe
   ) {
-    this.applyAnimationKeys()
     this.storage.get(StorageKeys.LANGUAGE).then(resLang => {
       this.language = resLang.value
     })
   }
 
   ngOnChanges() {
-    this.checkDisplayTask()
     this.checkHasExtraInfo()
-  }
-
-  checkDisplayTask() {
-    if (this.task['timestamp'] > 0) {
-      this.displayTask = true
-    } else {
-      this.displayTask = false
-    }
+    this.updateProgress()
+    this.updateNextTaskStatus()
   }
 
   checkHasExtraInfo() {
-    if (this.task['warning'] !== '') {
-      this.hasExtraInfo = true
-      if (this.language) {
-        this.extraTaskInfo = this.task.warning[this.language]
-        this.hasExtraInfo = this.extraTaskInfo ? true : false
-      }
-    } else {
-      this.hasExtraInfo = false
-    }
-  }
-
-  expand() {
-    if (this.task.name !== 'ESM') {
-      this.collapse.emit(this.expanded)
-      this.expanded = !this.expanded
-      this.applyAnimationKeys()
-      this.updateProgress()
-    }
+    this.hasExtraInfo = !!this.task.warning[this.language]
+    this.extraTaskInfo = this.task.warning[this.language]
   }
 
   updateProgress() {
@@ -208,19 +100,7 @@ export class TaskInfoComponent implements OnChanges {
     }
   }
 
-  applyAnimationKeys() {
-    if (this.expanded) {
-      this.animateFade = this.animationKeys.IN
-      this.animateMove = this.animationKeys.OUT
-      this.animateScale = this.animationKeys.MAX
-      this.animateCenterRight = this.animationKeys.CENTER
-    } else {
-      this.animateFade = this.animationKeys.OUT
-      this.animateMove = this.animationKeys.IN
-      this.animateScale = this.animationKeys.MIN
-      this.animateCenterRight = this.animationKeys.RIGHT
-    }
-  }
+  getStatusScale() {}
 
   getHour() {
     const date = new Date()
@@ -253,7 +133,15 @@ export class TaskInfoComponent implements OnChanges {
     return format
   }
 
-  getExtraInfo() {
-    return this.extraTaskInfo
+  updateNextTaskStatus() {
+    this.nextTaskStatus = this.translate.transform(
+      this.isNow
+        ? LocKeys.STATUS_NOW.toString()
+        : this.task.name !== 'ESM'
+        ? ''
+        : LocKeys.TASK_BAR_NEXT_TASK_SOON.toString()
+    )
+    if (this.nextTaskStatus.length > 4) return (this.statusSize = 11)
+    return (this.statusSize = 14)
   }
 }

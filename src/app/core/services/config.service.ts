@@ -2,6 +2,7 @@ import 'rxjs/add/operator/toPromise'
 
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
+import { AppVersion } from '@ionic-native/app-version/ngx'
 
 import {
   ARMTDefBranchProd,
@@ -14,6 +15,7 @@ import {
   TEST_ARMT_DEF
 } from '../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../shared/enums/storage'
+import { FirebaseAnalyticsService } from './firebaseAnalytics.service'
 import { NotificationService } from './notification.service'
 import { SchedulingService } from './scheduling.service'
 import { StorageService } from './storage.service'
@@ -24,76 +26,115 @@ export class ConfigService {
     public http: HttpClient,
     public storage: StorageService,
     private schedule: SchedulingService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private appVersion: AppVersion,
+    private firebaseAnalytics: FirebaseAnalyticsService
   ) {}
 
   fetchConfigState(force: boolean) {
     return Promise.all([
       this.storage.get(StorageKeys.CONFIG_VERSION),
-      this.storage.get(StorageKeys.SCHEDULE_VERSION)
-    ]).then(([configVersion, scheduleVersion]) => {
-      return this.pullProtocol()
-        .then(res => {
-          if (res) {
-            const response: any = JSON.parse(res)
-            if (
-              configVersion !== response.version ||
-              scheduleVersion !== response.version ||
-              force
-            ) {
-              this.storage.set(StorageKeys.HAS_CLINICAL_TASKS, false)
-              const protocolFormated = this.formatPulledProcotol(
-                response.protocols
-              )
-              const scheduledAssessments = []
-              const clinicalAssessments = []
-              for (let i = 0; i < protocolFormated.length; i++) {
-                const clinical =
-                  protocolFormated[i]['protocol']['clinicalProtocol']
-                if (clinical) {
-                  this.storage.set(StorageKeys.HAS_CLINICAL_TASKS, true)
-                  clinicalAssessments.push(protocolFormated[i])
-                } else {
-                  scheduledAssessments.push(protocolFormated[i])
+      this.storage.get(StorageKeys.SCHEDULE_VERSION),
+      this.storage.get(StorageKeys.APP_VERSION),
+      this.appVersion.getVersionNumber()
+    ]).then(
+      ([configVersion, scheduleVersion, storedAppVersion, appVersion]) => {
+        return this.pullProtocol()
+          .then(res => {
+            if (res) {
+              const response: any = JSON.parse(res)
+              if (
+                configVersion !== response.version ||
+                scheduleVersion !== response.version ||
+                storedAppVersion !== appVersion ||
+                force
+              ) {
+                this.storage.set(StorageKeys.APP_VERSION, appVersion)
+                this.storage.set(StorageKeys.HAS_CLINICAL_TASKS, false)
+                const protocolFormated = this.formatPulledProcotol(
+                  response.protocols
+                )
+                const scheduledAssessments = []
+                const clinicalAssessments = []
+                for (let i = 0; i < protocolFormated.length; i++) {
+                  const clinical =
+                    protocolFormated[i]['protocol']['clinicalProtocol']
+                  if (clinical) {
+                    this.storage.set(StorageKeys.HAS_CLINICAL_TASKS, true)
+                    clinicalAssessments.push(protocolFormated[i])
+                  } else {
+                    scheduledAssessments.push(protocolFormated[i])
+                  }
                 }
-              }
-              return this.storage
-                .set(StorageKeys.CONFIG_VERSION, response.version)
-                .then(() => {
-                  return this.storage
-                    .set(
-                      StorageKeys.CONFIG_CLINICAL_ASSESSMENTS,
-                      clinicalAssessments
+                return this.storage
+                  .set(StorageKeys.CONFIG_VERSION, response.version)
+                  .then(() => {
+                    return this.storage
+                      .set(
+                        StorageKeys.CONFIG_CLINICAL_ASSESSMENTS,
+                        clinicalAssessments
+                      )
+                      .then(() => {
+                        console.log('Pulled clinical questionnaire')
+                        return this.pullQuestionnaires(
+                          StorageKeys.CONFIG_CLINICAL_ASSESSMENTS
+                        )
+                      })
+                  })
+                  .then(() => {
+                    return this.storage
+                      .set(StorageKeys.CONFIG_ASSESSMENTS, scheduledAssessments)
+                      .then(() => {
+                        console.log('Pulled questionnaire')
+                        return this.pullQuestionnaires(
+                          StorageKeys.CONFIG_ASSESSMENTS
+                        )
+                      })
+                  })
+                  .then(() => this.schedule.generateSchedule(true))
+                  .then(() => this.rescheduleNotifications())
+                  .then(() =>
+                    Promise.all([
+                      this.storage.get(StorageKeys.PARTICIPANTLOGIN),
+                      this.getProjectName(),
+                      this.storage.get(StorageKeys.SOURCEID),
+                      this.storage.get(StorageKeys.ENROLMENTDATE),
+                      this.storage.get(StorageKeys.PARTICIPANTID)
+                    ]).then(
+                      ([
+                        subjectId,
+                        projectId,
+                        sourceId,
+                        enrolmentDate,
+                        humanReadableId
+                      ]) =>
+                        this.firebaseAnalytics.setUserProperties({
+                          subjectId: subjectId,
+                          projectId: projectId,
+                          sourceId: sourceId,
+                          enrolmentDate: String(enrolmentDate),
+                          humanReadableId: humanReadableId
+                        })
                     )
-                    .then(() => {
-                      console.log('Pulled clinical questionnaire')
-                      return this.pullQuestionnaires(
-                        StorageKeys.CONFIG_CLINICAL_ASSESSMENTS
-                      )
+                  )
+                  .then(() =>
+                    this.firebaseAnalytics.logEvent('config_update', {
+                      config_version: String(configVersion),
+                      schedule_version: String(scheduleVersion),
+                      app_version: appVersion
                     })
-                })
-                .then(() => {
-                  return this.storage
-                    .set(StorageKeys.CONFIG_ASSESSMENTS, scheduledAssessments)
-                    .then(() => {
-                      console.log('Pulled questionnaire')
-                      return this.pullQuestionnaires(
-                        StorageKeys.CONFIG_ASSESSMENTS
-                      )
-                    })
-                })
-                .then(() => this.schedule.generateSchedule(true))
-                .then(() => this.rescheduleNotifications())
-            } else {
-              console.log(
-                'NO CONFIG UPDATE. Version of protocol.json has not changed.'
-              )
-              return this.schedule.generateSchedule(false)
+                  )
+              } else {
+                console.log(
+                  'NO CONFIG UPDATE. Version of protocol.json has not changed.'
+                )
+                return this.schedule.generateSchedule(false)
+              }
             }
-          }
-        })
-        .catch(e => console.log(e))
-    })
+          })
+          .catch(e => console.log(e))
+      }
+    )
   }
 
   rescheduleNotifications() {
@@ -102,6 +143,9 @@ export class ConfigService {
       return this.notificationService
         .setNextXNotifications(DefaultNumberOfNotificationsToSchedule)
         .then(() => console.log('NOTIFICATIONS scheduled after config change'))
+        .then(() =>
+          this.firebaseAnalytics.logEvent('notification_rescheduled', {})
+        )
     })
   }
 

@@ -45,7 +45,7 @@ export class AudioRecordService {
   }
 
   getPath() {
-    return this.file.externalDataDirectory
+    return this.file.dataDirectory
   }
 
   success() {

@@ -35,8 +35,8 @@ export class SplashPageComponent {
   ) {
     this.splashService
       .evalEnrolment()
-      .then(participant =>
-        participant
+      .then(valid =>
+        valid
           ? this.onStart()
           : this.storage
               .clearStorage()

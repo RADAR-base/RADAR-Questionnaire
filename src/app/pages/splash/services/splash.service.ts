@@ -9,8 +9,10 @@ export class SplashService {
   constructor(public storage: StorageService, private auth: AuthService) {}
 
   evalEnrolment() {
-    return this.auth.isRefreshTokenExpired().then(expired => {
-      return expired ? false : this.storage.get(StorageKeys.PARTICIPANTLOGIN)
-    })
+    return this.storage
+      .get(StorageKeys.PARTICIPANTLOGIN)
+      .then(participant =>
+        participant ? !this.auth.isRefreshTokenExpired() : false
+      )
   }
 }

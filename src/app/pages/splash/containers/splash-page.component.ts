@@ -38,7 +38,9 @@ export class SplashPageComponent {
       .then(participant =>
         participant
           ? this.onStart()
-          : this.navCtrl.setRoot(EnrolmentPageComponent)
+          : this.storage
+              .clearStorage()
+              .then(() => this.navCtrl.setRoot(EnrolmentPageComponent))
       )
   }
 

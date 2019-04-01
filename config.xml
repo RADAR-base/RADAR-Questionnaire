@@ -1,138 +1,141 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="521" id="org.phidatalab.radar_armt" version="0.5.11.1-alpha" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>RADAR Questionnaire</name>
-    <description>An application that collects active data for research.</description>
-    <author email="info@radar-cns.org" href="http://radar-cns.org/">RADAR-CNS</author>
-    <content src="index.html" />
-    <access origin="*" />
-    <access origin="*" subdomains="true" />
-    <allow-intent href="http://*/*" />
-    <allow-intent href="https://*/*" />
-    <allow-intent href="tel:*" />
-    <allow-intent href="sms:*" />
-    <allow-intent href="mailto:*" />
-    <allow-intent href="geo:*" />
-    <icon src="resources/android/icon/drawable-xhdpi-icon.png" />
-    <preference name="DisallowOverscroll" value="true" />
-    <preference name="BackgroundColor" value="0xff6d9aa5" />
-    <preference name="Orientation" value="portrait" />
-    <platform name="android">
-        <hook src="scripts/patch-android-studio-check.js" type="before_plugin_install" />
-        <hook src="scripts/patch-android-studio-check.js" type="before_plugin_add" />
-        <hook src="scripts/patch-android-studio-check.js" type="before_build" />
-        <hook src="scripts/patch-android-studio-check.js" type="before_run" />
-        <hook src="scripts/patch-android-studio-check.js" type="before_plugin_rm" />
-        <allow-intent href="market:*" />
-        <preference name="android-minSdkVersion" value="21" />
-        <preference name="AndroidLaunchMode" value="singleTop" />
-        <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
-        <icon density="mdpi" src="resources/android/icon/drawable-mdpi-icon.png" />
-        <icon density="hdpi" src="resources/android/icon/drawable-hdpi-icon.png" />
-        <icon density="xhdpi" src="resources/android/icon/drawable-xhdpi-icon.png" />
-        <icon density="xxhdpi" src="resources/android/icon/drawable-xxhdpi-icon.png" />
-        <icon density="xxxhdpi" src="resources/android/icon/drawable-xxxhdpi-icon.png" />
-        <splash density="land-ldpi" src="resources/android/splash/drawable-land-ldpi-screen.png" />
-        <splash density="land-mdpi" src="resources/android/splash/drawable-land-mdpi-screen.png" />
-        <splash density="land-hdpi" src="resources/android/splash/drawable-land-hdpi-screen.png" />
-        <splash density="land-xhdpi" src="resources/android/splash/drawable-land-xhdpi-screen.png" />
-        <splash density="land-xxhdpi" src="resources/android/splash/drawable-land-xxhdpi-screen.png" />
-        <splash density="land-xxxhdpi" src="resources/android/splash/drawable-land-xxxhdpi-screen.png" />
-        <splash density="port-ldpi" src="resources/android/splash/drawable-port-ldpi-screen.png" />
-        <splash density="port-mdpi" src="resources/android/splash/drawable-port-mdpi-screen.png" />
-        <splash density="port-hdpi" src="resources/android/splash/drawable-port-hdpi-screen.png" />
-        <splash density="port-xhdpi" src="resources/android/splash/drawable-port-xhdpi-screen.png" />
-        <splash density="port-xxhdpi" src="resources/android/splash/drawable-port-xxhdpi-screen.png" />
-        <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
-    </platform>
-    <platform name="ios">
-        <edit-config file="*-Info.plist" mode="merge" target="NSCameraUsageDescription">
-            <string>Used to scan barcodes</string>
-        </edit-config>
-        <preference name="Suppresses3DTouchGesture" value="false" />
-        <preference name="SuppressesLongPressGesture" value="false" />
-        <icon height="180" src="resources/ios/icon/icon-60@3x.png" width="180" />
-        <icon height="60" src="resources/ios/icon/icon-60.png" width="60" />
-        <icon height="120" src="resources/ios/icon/icon-60@2x.png" width="120" />
-        <icon height="76" src="resources/ios/icon/icon-76.png" width="76" />
-        <icon height="152" src="resources/ios/icon/icon-76@2x.png" width="152" />
-        <icon height="40" src="resources/ios/icon/icon-40.png" width="40" />
-        <icon height="80" src="resources/ios/icon/icon-40@2x.png" width="80" />
-        <icon height="57" src="resources/ios/icon/icon.png" width="57" />
-        <icon height="114" src="resources/ios/icon/icon@2x.png" width="114" />
-        <icon height="72" src="resources/ios/icon/icon-72.png" width="72" />
-        <icon height="144" src="resources/ios/icon/icon-72@2x.png" width="144" />
-        <icon height="29" src="resources/ios/icon/icon-small.png" width="29" />
-        <icon height="58" src="resources/ios/icon/icon-small@2x.png" width="58" />
-        <icon height="50" src="resources/ios/icon/icon-50.png" width="50" />
-        <icon height="100" src="resources/ios/icon/icon-50@2x.png" width="100" />
-        <splash height="480" src="resources/ios/splash/Default~iphone.png" width="320" />
-        <splash height="960" src="resources/ios/splash/Default@2x~iphone.png" width="640" />
-        <splash height="1024" src="resources/ios/splash/Default-Portrait~ipad.png" width="768" />
-        <splash height="2048" src="resources/ios/splash/Default-Portrait@2x~ipad.png" width="1536" />
-        <splash height="768" src="resources/ios/splash/Default-Landscape~ipad.png" width="1024" />
-        <splash height="1536" src="resources/ios/splash/Default-Landscape@2x~ipad.png" width="2048" />
-        <splash height="1136" src="resources/ios/splash/Default-568h@2x~iphone.png" width="640" />
-        <splash height="1334" src="resources/ios/splash/Default-667h.png" width="750" />
-        <splash height="2208" src="resources/ios/splash/Default-736h.png" width="1242" />
-        <splash height="1242" src="resources/ios/splash/Default-Landscape-736h.png" width="2208" />
-    </platform>
-    <preference name="SplashScreen" value="screen" />
-    <preference name="SplashScreenBackgroundColor" value="0xff6d9aa5" />
-    <preference name="FadeSplashScreen" value="true" />
-    <preference name="FadeSplashScreenDuration" value="1000" />
-    <preference name="SplashScreenDelay" value="3000" />
-    <preference name="AutoHideSplashScreen" value="false" />
-    <preference name="ShowSplashScreenSpinner" value="false" />
-    <preference name="SplashScreenSpinnerColor" value="0xffffffff" />
-    <preference name="SplashMaintainAspectRatio" value="true" />
-    <preference name="SplashShowOnlyFirstTime" value="false" />
-    <allow-navigation href="*" />
-    <allow-navigation href="http://10.40.189.168:8101" />
-    <allow-navigation href="http://10.40.189.168:8100" />
-    <allow-navigation href="http://10.40.177.195:8101" />
-    <allow-navigation href="http://10.40.177.195:8100" />
-    <allow-navigation href="http://10.40.140.19:8100" />
-    <allow-navigation href="http://172.20.10.5:8100" />
-    <allow-navigation href="http://10.41.163.140:8100" />
-    <allow-navigation href="http://10.40.230.126:8100" />
-    <allow-navigation href="http://10.40.149.14:8100" />
-    <allow-navigation href="http://10.40.149.14:8101" />
-    <allow-navigation href="http://172.20.10.5:8101" />
-    <allow-navigation href="http://10.236.23.88:8100" />
-    <allow-navigation href="http://172.20.20.20:8100" />
-    <allow-navigation href="http://10.0.0.150:8100" />
-    <allow-navigation href="http://10.35.12.253:8100" />
-    <allow-navigation href="http://10.35.12.253:8101" />
-    <allow-navigation href="http://169.254.164.7:8100" />
-    <allow-navigation href="http://10.131.139.253:8101" />
-    <allow-navigation href="http://10.131.139.253:8100" />
-    <allow-navigation href="http://10.40.221.18:8101" />
-    <plugin name="cordova-android-support-gradle-release" spec="^1.4.7">
-        <variable name="ANDROID_SUPPORT_VERSION" value="27.+" />
-    </plugin>
-    <plugin name="cordova-plugin-android-permissions" spec="^1.0.0" />
-    <plugin name="cordova-plugin-camera" spec="^3.0.0" />
-    <plugin name="cordova-plugin-device" spec="^2.0.2" />
-    <plugin name="cordova-plugin-dialogs" spec="^2.0.1" />
-    <plugin name="cordova-plugin-media" spec="^5.0.2" />
-    <plugin name="cordova-plugin-media-capture" spec="^3.0.2" />
-    <plugin name="cordova-plugin-splashscreen" spec="^4.1.0" />
-    <plugin name="cordova-plugin-statusbar" spec="^2.4.2" />
-    <plugin name="cordova-plugin-vibration" spec="^3.1.0" />
-    <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
-    <plugin name="cordova-sqlite-storage" spec="^2.6.0" />
-    <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
-    <plugin name="phonegap-plugin-barcodescanner" spec="^7.1.2">
-        <variable name="CAMERA_USAGE_DESCRIPTION" value="27.+" />
-        <variable name="ANDROID_SUPPORT_V4_VERSION" value="27.+" />
-    </plugin>
-    <plugin name="cordova-plugin-local-notification" spec="^0.9.0-beta.3" />
-    <plugin name="cordova-plugin-app-version" spec="^0.1.9" />
-    <plugin name="cordova-plugin-globalization" spec="^1.11.0" />
-    <plugin name="cordova-plugin-firebase-analytics" spec="^1.0.1">
-        <variable name="FIREBASE_CORE_VERSION" value="16.0.+" />
-    </plugin>
-    <plugin name="phonegap-plugin-mobile-accessibility" spec="^1.0.5" />
-    <engine name="android" spec="^7.1.4" />
-    <engine name="ios" spec="^4.5.5" />
+<widget android-versionCode="521" id="org.phidatalab.radar_armt" version="0.5.11.1-alpha"
+  xmlns="http://www.w3.org/ns/widgets"
+  xmlns:cdv="http://cordova.apache.org/ns/1.0">
+  <name>RADAR Questionnaire</name>
+  <description>An application that collects active data for research.</description>
+  <author email="info@radar-cns.org" href="http://radar-cns.org/">RADAR-CNS</author>
+  <content src="index.html" />
+  <access origin="*" />
+  <access origin="*" subdomains="true" />
+  <allow-intent href="http://*/*" />
+  <allow-intent href="https://*/*" />
+  <allow-intent href="tel:*" />
+  <allow-intent href="sms:*" />
+  <allow-intent href="mailto:*" />
+  <allow-intent href="geo:*" />
+  <icon src="resources/android/icon/drawable-xhdpi-icon.png" />
+  <preference name="DisallowOverscroll" value="true" />
+  <preference name="BackgroundColor" value="0xff6d9aa5" />
+  <preference name="Orientation" value="portrait" />
+  <platform name="android">
+    <hook src="scripts/patch-android-studio-check.js" type="before_plugin_install" />
+    <hook src="scripts/patch-android-studio-check.js" type="before_plugin_add" />
+    <hook src="scripts/patch-android-studio-check.js" type="before_build" />
+    <hook src="scripts/patch-android-studio-check.js" type="before_run" />
+    <hook src="scripts/patch-android-studio-check.js" type="before_plugin_rm" />
+    <allow-intent href="market:*" />
+    <preference name="android-minSdkVersion" value="21" />
+    <preference name="AndroidLaunchMode" value="singleTop" />
+    <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
+    <icon density="mdpi" src="resources/android/icon/drawable-mdpi-icon.png" />
+    <icon density="hdpi" src="resources/android/icon/drawable-hdpi-icon.png" />
+    <icon density="xhdpi" src="resources/android/icon/drawable-xhdpi-icon.png" />
+    <icon density="xxhdpi" src="resources/android/icon/drawable-xxhdpi-icon.png" />
+    <icon density="xxxhdpi" src="resources/android/icon/drawable-xxxhdpi-icon.png" />
+    <splash density="land-ldpi" src="resources/android/splash/drawable-land-ldpi-screen.png" />
+    <splash density="land-mdpi" src="resources/android/splash/drawable-land-mdpi-screen.png" />
+    <splash density="land-hdpi" src="resources/android/splash/drawable-land-hdpi-screen.png" />
+    <splash density="land-xhdpi" src="resources/android/splash/drawable-land-xhdpi-screen.png" />
+    <splash density="land-xxhdpi" src="resources/android/splash/drawable-land-xxhdpi-screen.png" />
+    <splash density="land-xxxhdpi" src="resources/android/splash/drawable-land-xxxhdpi-screen.png" />
+    <splash density="port-ldpi" src="resources/android/splash/drawable-port-ldpi-screen.png" />
+    <splash density="port-mdpi" src="resources/android/splash/drawable-port-mdpi-screen.png" />
+    <splash density="port-hdpi" src="resources/android/splash/drawable-port-hdpi-screen.png" />
+    <splash density="port-xhdpi" src="resources/android/splash/drawable-port-xhdpi-screen.png" />
+    <splash density="port-xxhdpi" src="resources/android/splash/drawable-port-xxhdpi-screen.png" />
+    <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
+  </platform>
+  <platform name="ios">
+    <edit-config file="*-Info.plist" mode="merge" target="NSCameraUsageDescription">
+      <string>Used to scan barcodes</string>
+    </edit-config>
+    <preference name="Suppresses3DTouchGesture" value="false" />
+    <preference name="SuppressesLongPressGesture" value="false" />
+    <icon height="180" src="resources/ios/icon/icon-60@3x.png" width="180" />
+    <icon height="60" src="resources/ios/icon/icon-60.png" width="60" />
+    <icon height="120" src="resources/ios/icon/icon-60@2x.png" width="120" />
+    <icon height="76" src="resources/ios/icon/icon-76.png" width="76" />
+    <icon height="152" src="resources/ios/icon/icon-76@2x.png" width="152" />
+    <icon height="40" src="resources/ios/icon/icon-40.png" width="40" />
+    <icon height="80" src="resources/ios/icon/icon-40@2x.png" width="80" />
+    <icon height="57" src="resources/ios/icon/icon.png" width="57" />
+    <icon height="114" src="resources/ios/icon/icon@2x.png" width="114" />
+    <icon height="72" src="resources/ios/icon/icon-72.png" width="72" />
+    <icon height="144" src="resources/ios/icon/icon-72@2x.png" width="144" />
+    <icon height="29" src="resources/ios/icon/icon-small.png" width="29" />
+    <icon height="58" src="resources/ios/icon/icon-small@2x.png" width="58" />
+    <icon height="50" src="resources/ios/icon/icon-50.png" width="50" />
+    <icon height="100" src="resources/ios/icon/icon-50@2x.png" width="100" />
+    <splash height="480" src="resources/ios/splash/Default~iphone.png" width="320" />
+    <splash height="960" src="resources/ios/splash/Default@2x~iphone.png" width="640" />
+    <splash height="1024" src="resources/ios/splash/Default-Portrait~ipad.png" width="768" />
+    <splash height="2048" src="resources/ios/splash/Default-Portrait@2x~ipad.png" width="1536" />
+    <splash height="768" src="resources/ios/splash/Default-Landscape~ipad.png" width="1024" />
+    <splash height="1536" src="resources/ios/splash/Default-Landscape@2x~ipad.png" width="2048" />
+    <splash height="1136" src="resources/ios/splash/Default-568h@2x~iphone.png" width="640" />
+    <splash height="1334" src="resources/ios/splash/Default-667h.png" width="750" />
+    <splash height="2208" src="resources/ios/splash/Default-736h.png" width="1242" />
+    <splash height="1242" src="resources/ios/splash/Default-Landscape-736h.png" width="2208" />
+  </platform>
+  <preference name="SplashScreen" value="screen" />
+  <preference name="SplashScreenBackgroundColor" value="0xff6d9aa5" />
+  <preference name="FadeSplashScreen" value="true" />
+  <preference name="FadeSplashScreenDuration" value="1000" />
+  <preference name="SplashScreenDelay" value="3000" />
+  <preference name="AutoHideSplashScreen" value="false" />
+  <preference name="ShowSplashScreenSpinner" value="false" />
+  <preference name="SplashScreenSpinnerColor" value="0xffffffff" />
+  <preference name="SplashMaintainAspectRatio" value="true" />
+  <preference name="SplashShowOnlyFirstTime" value="false" />
+  <allow-navigation href="*" />
+  <allow-navigation href="http://10.40.189.168:8101" />
+  <allow-navigation href="http://10.40.189.168:8100" />
+  <allow-navigation href="http://10.40.177.195:8101" />
+  <allow-navigation href="http://10.40.177.195:8100" />
+  <allow-navigation href="http://10.40.140.19:8100" />
+  <allow-navigation href="http://172.20.10.5:8100" />
+  <allow-navigation href="http://10.41.163.140:8100" />
+  <allow-navigation href="http://10.40.230.126:8100" />
+  <allow-navigation href="http://10.40.149.14:8100" />
+  <allow-navigation href="http://10.40.149.14:8101" />
+  <allow-navigation href="http://172.20.10.5:8101" />
+  <allow-navigation href="http://10.236.23.88:8100" />
+  <allow-navigation href="http://172.20.20.20:8100" />
+  <allow-navigation href="http://10.0.0.150:8100" />
+  <allow-navigation href="http://10.35.12.253:8100" />
+  <allow-navigation href="http://10.35.12.253:8101" />
+  <allow-navigation href="http://169.254.164.7:8100" />
+  <allow-navigation href="http://10.131.139.253:8101" />
+  <allow-navigation href="http://10.131.139.253:8100" />
+  <allow-navigation href="http://10.40.221.18:8101" />
+  <plugin name="cordova-android-support-gradle-release" spec="^1.4.7">
+    <variable name="ANDROID_SUPPORT_VERSION" value="27.+" />
+  </plugin>
+  <plugin name="cordova-plugin-android-permissions" spec="^1.0.0" />
+  <plugin name="cordova-plugin-camera" spec="^3.0.0" />
+  <plugin name="cordova-plugin-device" spec="^2.0.2" />
+  <plugin name="cordova-plugin-dialogs" spec="^2.0.1" />
+  <plugin name="cordova-plugin-media" spec="^5.0.2" />
+  <plugin name="cordova-plugin-media-capture" spec="^3.0.2" />
+  <plugin name="cordova-plugin-splashscreen" spec="^4.1.0" />
+  <plugin name="cordova-plugin-statusbar" spec="^2.4.2" />
+  <plugin name="cordova-plugin-vibration" spec="^3.1.0" />
+  <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
+  <plugin name="cordova-sqlite-storage" spec="^2.6.0" />
+  <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
+  <plugin name="phonegap-plugin-barcodescanner" spec="^7.1.2">
+    <variable name="CAMERA_USAGE_DESCRIPTION" value="27.+" />
+    <variable name="ANDROID_SUPPORT_V4_VERSION" value="27.+" />
+  </plugin>
+  <plugin name="cordova-plugin-local-notification" spec="^0.9.0-beta.3" />
+  <plugin name="cordova-plugin-app-version" spec="^0.1.9" />
+  <plugin name="cordova-plugin-globalization" spec="^1.11.0" />
+  <plugin name="cordova-plugin-firebase-analytics" spec="^1.0.1">
+    <variable name="FIREBASE_CORE_VERSION" value="16.0.+" />
+  </plugin>
+  <plugin name="phonegap-plugin-mobile-accessibility" spec="^1.0.5" />
+  <plugin name="cordova-media-with-compression" spec="^2.1.2" />
+  <engine name="android" spec="^7.1.4" />
+  <engine name="ios" spec="^4.5.5" />
 </widget>

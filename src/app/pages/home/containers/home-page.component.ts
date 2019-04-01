@@ -129,8 +129,8 @@ export class HomePageComponent implements OnDestroy {
   }
 
   openSettingsPage() {
-    this.firebaseAnalytics.logEvent('click', { button: 'open_settings' })
     this.navCtrl.push(SettingsPageComponent)
+    this.firebaseAnalytics.logEvent('click', { button: 'open_settings' })
   }
 
   openClinicalTasksPage() {
@@ -139,7 +139,7 @@ export class HomePageComponent implements OnDestroy {
   }
 
   startQuestionnaire(taskCalendarTask: Task) {
-    this.firebaseAnalytics.logEvent('click', { button: 'start_questionnaire' })
+
     // NOTE: User can start questionnaire from task calendar or start button in home.
     const task = taskCalendarTask ? taskCalendarTask : this.nextTask
     if (this.tasksService.isTaskValid(task)) {
@@ -170,6 +170,9 @@ export class HomePageComponent implements OnDestroy {
             }
           })
       })
+      if(this.firebaseAnalytics) {
+        this.firebaseAnalytics.logEvent('click', {button: 'start_questionnaire'})
+      }
     } else {
       this.showMissedInfo()
     }

@@ -7,6 +7,7 @@ import { AppVersion } from '@ionic-native/app-version/ngx'
 import {
   ARMTDefBranchProd,
   ARMTDefBranchTest,
+  DefaultAppVersion,
   DefaultNumberOfNotificationsToSchedule,
   DefaultProtocolEndPoint,
   DefaultProtocolURI,
@@ -27,7 +28,7 @@ export class ConfigService {
     public storage: StorageService,
     private schedule: SchedulingService,
     private notificationService: NotificationService,
-    private appVersion: AppVersion,
+    private appVersionPlugin: AppVersion,
     private firebaseAnalytics: FirebaseAnalyticsService
   ) {}
 
@@ -35,10 +36,14 @@ export class ConfigService {
     return Promise.all([
       this.storage.get(StorageKeys.CONFIG_VERSION),
       this.storage.get(StorageKeys.SCHEDULE_VERSION),
-      this.storage.get(StorageKeys.APP_VERSION),
-      this.appVersion.getVersionNumber()
+      this.storage.get(StorageKeys.APP_VERSION)
     ]).then(
-      ([configVersion, scheduleVersion, storedAppVersion, appVersion]) => {
+      ([configVersion, scheduleVersion, storedAppVersion]) => {
+        let appVersion = DefaultAppVersion;
+        this.appVersionPlugin.getVersionNumber().then(
+          (res) => appVersion = res
+        );
+        console.log('fetching with app version ', appVersion);
         return this.pullProtocol()
           .then(res => {
             if (res) {

@@ -109,6 +109,8 @@ export const LanguageMap = {
   de: LocKeys.LANGUAGE_GERMAN.toString()
 }
 
+export const DefaultAppVersion: string = '0.5.11.1-alpha'
+
 export const DefaultScheduleVersion: number = 0
 
 export const DefaultScheduleYearCoverage: number = 2 // years
@@ -130,7 +132,7 @@ export const DefaultSourceTypeRegistrationBody: any = {
 }
 
 export const DefaultEndPoint: string =
-  'https://radar-cns-platform.rosalind.kcl.ac.uk/'
+  'https://radar-test.thehyve.net/'
 // export const DefaultEndPoint: string = 'https://radar-backend.co.uk/'
 
 export const DefaultProtocolEndPoint: string = DefaultProtocolEndPointExport

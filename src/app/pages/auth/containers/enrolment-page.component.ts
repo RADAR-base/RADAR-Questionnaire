@@ -222,6 +222,7 @@ export class EnrolmentPageComponent {
           createdDateMidnight
         )
         .then(() => this.doAfterAuthentication())
+        .catch((err) => console.log('Init failed', err))
     })
   }
 
@@ -230,18 +231,21 @@ export class EnrolmentPageComponent {
       .fetchConfigState(true)
       .then(() => this.firebaseAnalytics.logEvent('sign_up', {}))
       .then(() => this.next())
+      .catch(() => this.next()) // navigate if firebase fails
   }
 
-  displayErrorMessage(error) {
+  displayErrorMessage(error: any) {
     this.loading = false
     this.showOutcomeStatus = true
     const msg = error.statusText + ' (' + error.status + ')'
     this.outcomeStatus = msg
     this.transitionStatuses()
-    this.firebaseAnalytics.logEvent('sign_up_failed', {
-      error: JSON.stringify(error),
-      message: String(msg)
-    })
+    if(this.firebaseAnalytics) {
+      this.firebaseAnalytics.logEvent('sign_up_failed', {
+        error: JSON.stringify(error),
+        message: String(msg)
+      })
+    }
   }
 
   weeklyReportChange(index) {

@@ -15,6 +15,7 @@ import { StorageKeys } from '../../../shared/enums/storage'
 import { EnrolmentPageComponent } from '../../auth/containers/enrolment-page.component'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { SplashService } from '../services/splash.service'
+import { FirebaseAnalytics } from '@ionic-native/firebase-analytics/ngx'
 
 @Component({
   selector: 'page-splash',
@@ -31,7 +32,8 @@ export class SplashPageComponent {
     private notificationService: NotificationService,
     private kafka: KafkaService,
     private configService: ConfigService,
-    private schedule: SchedulingService
+    private schedule: SchedulingService,
+    private firebaseAnalytics: FirebaseAnalytics
   ) {
     this.splashService
       .evalEnrolment()
@@ -99,6 +101,7 @@ export class SplashPageComponent {
         ) {
           this.status = 'Updating notifications...'
           console.log('[SPLASH] Scheduling Notifications.')
+          this.firebaseAnalytics.logEvent('notification_rescheduled', {})
           return this.notificationService.setNextXNotifications(
             DefaultNumberOfNotificationsToSchedule
           )

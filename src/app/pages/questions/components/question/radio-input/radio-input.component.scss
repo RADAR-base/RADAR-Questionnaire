@@ -11,10 +11,13 @@ radio-input {
     list-style: none;
   }
 
+  li {
+    padding: 0;
+  }
+
   ul li {
     display: flex;
     align-content: stretch;
-    margin-bottom: 12px;
   }
 
   ul li:last-child {
@@ -23,7 +26,6 @@ radio-input {
 
   ul li ion-radio {
     position: absolute;
-    list-style-type: none;
   }
 
   ul li ion-label {
@@ -37,10 +39,14 @@ radio-input {
   }
 
   ul li:hover ion-label {
-    background-color: $cl-secondary;
+    background-color: $cl-primary;
   }
 
   ion-radio:checked + ion-label {
-    background-color: $cl-primary;
+    background-color: $cl-secondary;
+  }
+
+  .radio-icon {
+    display: none !important;
   }
 }

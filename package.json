@@ -159,8 +159,8 @@
       "cordova-plugin-globalization": {},
       "cordova-plugin-camera": {},
       "phonegap-plugin-barcodescanner": {
-        "ANDROID_SUPPORT_V4_VERSION": "27.+",
-        "CAMERA_USAGE_DESCRIPTION": "27.+"
+        "CAMERA_USAGE_DESCRIPTION": "27.+",
+        "ANDROID_SUPPORT_V4_VERSION": "27.+"
       },
       "cordova-plugin-media-capture": {},
       "cordova-android-support-gradle-release": {
@@ -173,7 +173,9 @@
         "FIREBASE_CORE_VERSION": "16.0.+"
       },
       "phonegap-plugin-mobile-accessibility": {},
-      "cordova-plugin-media": {}
+      "cordova-plugin-media": {
+        "KEEP_AVAUDIOSESSION_ALWAYS_ACTIVE": "NO"
+      }
     }
   },
   "ionic_enable_lint": false

@@ -50,6 +50,9 @@ $cl-warning-40: rgba(map_get($colors, warning), 0.4);
 $cl-warning-60: rgba(map_get($colors, warning), 0.6);
 $cl-warning-80: rgba(map_get($colors, warning), 0.8);
 
+$radio-md-color-on: $cl-light;
+$radio-md-color-off: $cl-light-60;
+
 // Checkmark
 $cl-checkmark: #9ad1c3;
 

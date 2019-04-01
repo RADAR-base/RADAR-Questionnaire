@@ -21,12 +21,12 @@ radio-input {
     border: none;
   }
 
-  ul li input[type='radio'] {
+  ul li ion-radio {
     position: absolute;
-    visibility: hidden;
+    list-style-type: none;
   }
 
-  ul li label {
+  ul li ion-label {
     @include button-round;
 
     position: relative;
@@ -36,11 +36,11 @@ radio-input {
     justify-content: flex-start;
   }
 
-  ul li:hover label {
+  ul li:hover ion-label {
     background-color: $cl-secondary;
   }
 
-  input[type='radio']:checked + label {
+  ion-radio:checked + ion-label {
     background-color: $cl-primary;
   }
 }

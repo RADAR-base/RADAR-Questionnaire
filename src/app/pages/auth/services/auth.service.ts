@@ -140,4 +140,10 @@ export class AuthService {
       .set('refresh_token', refreshToken)
     return params
   }
+
+  isRefreshTokenExpired() {
+    return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
+      return this.jwtHelper.isTokenExpired(tokens.refresh_token)
+    })
+  }
 }

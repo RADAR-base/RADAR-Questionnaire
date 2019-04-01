@@ -35,10 +35,12 @@ export class SplashPageComponent {
   ) {
     this.splashService
       .evalEnrolment()
-      .then(participant =>
-        participant
+      .then(valid =>
+        valid
           ? this.onStart()
-          : this.navCtrl.setRoot(EnrolmentPageComponent)
+          : this.storage
+              .clearStorage()
+              .then(() => this.navCtrl.setRoot(EnrolmentPageComponent))
       )
   }
 

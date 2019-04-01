@@ -12,7 +12,9 @@ export class SplashService {
     return this.storage
       .get(StorageKeys.PARTICIPANTLOGIN)
       .then(participant =>
-        participant ? !this.auth.isRefreshTokenExpired() : false
+        participant
+          ? this.auth.isRefreshTokenExpired().then(expired => !expired)
+          : false
       )
   }
 }

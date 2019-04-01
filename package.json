@@ -71,6 +71,7 @@
     "cordova-android": "^7.1.4",
     "cordova-android-support-gradle-release": "^1.4.7",
     "cordova-ios": "^4.5.5",
+    "cordova-media-with-compression": "^2.1.2",
     "cordova-plugin-android-permissions": "^1.0.0",
     "cordova-plugin-app-event": "git+https://github.com/katzer/cordova-plugin-app-event.git",
     "cordova-plugin-app-version": "^0.1.9",
@@ -173,7 +174,9 @@
         "FIREBASE_CORE_VERSION": "16.0.+"
       },
       "phonegap-plugin-mobile-accessibility": {},
-      "cordova-plugin-media": {}
+      "cordova-plugin-media": {},
+      "cordova-media-with-compression": {},
+      "cordova-plugin-file": {}
     }
   },
   "ionic_enable_lint": false

@@ -10,10 +10,12 @@ range-input {
     list-style: none;
   }
 
-  ul li {
+  ul li,
+  .item-md {
     display: flex;
     flex: 1 0 8px;
     align-content: stretch;
+    margin: -18px;
   }
 
   ul li ion-radio {
@@ -47,11 +49,11 @@ range-input {
   }
 
   ul li:hover ion-label {
-    background-color: $cl-secondary;
+    background-color: $cl-primary;
   }
 
   ion-radio:checked + ion-label {
-    background-color: $cl-primary;
+    background-color: $cl-secondary;
   }
 
   .padding {

@@ -11,22 +11,24 @@ radio-input {
     list-style: none;
   }
 
+  li {
+    padding: 0;
+  }
+
   ul li {
     display: flex;
     align-content: stretch;
-    margin-bottom: 12px;
   }
 
   ul li:last-child {
     border: none;
   }
 
-  ul li input[type='radio'] {
+  ul li ion-radio {
     position: absolute;
-    visibility: hidden;
   }
 
-  ul li label {
+  ul li ion-label {
     @include button-round;
 
     position: relative;
@@ -36,11 +38,15 @@ radio-input {
     justify-content: flex-start;
   }
 
-  ul li:hover label {
+  ul li:hover ion-label {
+    background-color: $cl-primary;
+  }
+
+  ion-radio:checked + ion-label {
     background-color: $cl-secondary;
   }
 
-  input[type='radio']:checked + label {
-    background-color: $cl-primary;
+  .radio-icon {
+    display: none !important;
   }
 }

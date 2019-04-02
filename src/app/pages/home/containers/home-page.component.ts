@@ -124,20 +124,25 @@ export class HomePageComponent implements OnDestroy {
   }
 
   displayTaskCalendar() {
-    this.firebaseAnalytics.logEvent('click', { button: 'show_task_calendar' })
+    this.logEvent('click', { button: 'show_task_calendar' })
     this.showCalendar = !this.showCalendar
   }
 
   openSettingsPage() {
     this.navCtrl.push(SettingsPageComponent)
-    this.firebaseAnalytics.logEvent('click', { button: 'open_settings' })
+    this.logEvent('click', { button: 'open_settings' })
   }
 
   openClinicalTasksPage() {
-    this.firebaseAnalytics.logEvent('click', { button: 'open_clinical_tasks' })
     this.navCtrl.push(ClinicalTasksPageComponent)
+    this.logEvent('click', { button: 'open_clinical_tasks' })
   }
 
+  logEvent(event: string, params: any) {
+    if (this.firebaseAnalytics) {
+      this.firebaseAnalytics.logEvent(event, params);
+    }
+  }
   startQuestionnaire(taskCalendarTask: Task) {
 
     // NOTE: User can start questionnaire from task calendar or start button in home.

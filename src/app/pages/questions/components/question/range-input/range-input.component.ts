@@ -38,6 +38,6 @@ export class RangeInputComponent implements OnInit {
   }
 
   onInputChange(event) {
-    this.valueChange.emit(+event.target.value)
+    this.valueChange.emit(event)
   }
 }

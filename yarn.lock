@@ -2354,7 +2354,9 @@ cordova-plugin-media-capture@^3.0.2:
 
 "cordova-plugin-network-information@git+https://github.com/apache/cordova-plugin-network-information.git":
   version "2.0.2-dev"
-  resolved "git+https://github.com/apache/cordova-plugin-network-information.git#5158556df0059dd3823eac3010806792e449bc54"
+  uid "0cd2771b5e909401ce8871e1ee3e6b1ba488e612"
+  resolved "git+https://github.com/apache/cordova-plugin-network-information.git#0cd2771b5e909401ce8871e1ee3e6b1ba488e612"
+
 
 cordova-plugin-opensmile@^2.0.3:
   version "2.0.3"
@@ -4140,9 +4142,10 @@ globby@^7.1.1:
     pify "^3.0.0"
     slash "^1.0.0"
 
-globby@^8.0.0:
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/globby/-/globby-8.0.1.tgz#b5ad48b8aa80b35b814fc1281ecc851f1d2b5b50"
+globby@^8.0.1:
+  version "8.0.2"
+  resolved "https://registry.yarnpkg.com/globby/-/globby-8.0.2.tgz#5697619ccd95c5275dbb2d6faa42087c1a941d8d"
+  integrity sha512-yTzMmKygLp8RUpG1Ymu2VXPSJQZjNAZPD4ywgYEaG7e4tBJeUQBO8OpXrf1RCNcEs5alsoJYPAMiIHP0cmeC7w==
   dependencies:
     array-union "^1.0.1"
     dir-glob "^2.0.0"
@@ -6899,17 +6902,17 @@ posix-character-classes@^0.1.0:
   resolved "https://registry.yarnpkg.com/posix-character-classes/-/posix-character-classes-0.1.1.tgz#01eac0fe3b5af71a2a6c02feabb8c1fef7e00eab"
   integrity sha1-AerA/jta9xoqbAL+q7jB/vfgDqs=
 
-postcss-cli@^6.1.1:
-  version "6.1.1"
-  resolved "https://registry.yarnpkg.com/postcss-cli/-/postcss-cli-6.1.1.tgz#2214bbcfb804724d7f8331c2b220a2da34336560"
-  integrity sha512-18PQO4qCDWY6vggnG3k+i5zrUnRc4I6P4MpKQWGbNyTfWBaRgu/nScunw6VH5QnUKtRu0NuPF5SpxhcYzWVXDg==
+postcss-cli@^6.1.2:
+  version "6.1.2"
+  resolved "https://registry.yarnpkg.com/postcss-cli/-/postcss-cli-6.1.2.tgz#9c24174614f4d2f6b5b6de8676fed992766173bc"
+  integrity sha512-jIWfIkqt8cTThSpH8DBaNxHlBf99OKSem2RseRpfVPqWayxHKQB0IWdS/IF5XSGeFU5QslSDTdVHnw6qggXGkA==
   dependencies:
     chalk "^2.1.0"
     chokidar "^2.0.0"
     dependency-graph "^0.8.0"
     fs-extra "^7.0.0"
     get-stdin "^6.0.0"
-    globby "^8.0.0"
+    globby "^9.0.0"
     postcss "^7.0.0"
     postcss-load-config "^2.0.0"
     postcss-reporter "^6.0.0"
@@ -8056,6 +8059,11 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
 slash@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/slash/-/slash-1.0.0.tgz#c41f2f6c39fc16d1cd17ad4b5d896114ae470d55"
+
+slash@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/slash/-/slash-2.0.0.tgz#de552851a1759df3a8f206535442f5ec4ddeab44"
+  integrity sha512-ZYKh3Wh2z1PpEXWr0MpSBZ0V6mZHAQfYevttO11c51CaWjGTaadiKZ+wVt1PbMlDV5qhMFslpZCemhwOK7C89A==
 
 slash@^2.0.0:
   version "2.0.0"

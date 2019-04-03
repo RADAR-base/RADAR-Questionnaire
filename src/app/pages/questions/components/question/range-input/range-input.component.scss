@@ -10,18 +10,20 @@ range-input {
     list-style: none;
   }
 
-  ul li {
+  ul li,
+  .item-md {
     display: flex;
     flex: 1 0 8px;
     align-content: stretch;
+    margin: -18px;
   }
 
-  ul li input[type='radio'] {
+  ul li ion-radio {
     position: absolute;
-    visibility: hidden;
+    //visibility: hidden;
   }
 
-  ul li label {
+  ul li ion-label {
     @include font-large;
 
     position: relative;
@@ -35,23 +37,23 @@ range-input {
     background-color: $cl-primary-20;
   }
 
-  ul li:first-child label {
+  ul li:first-child ion-label {
     border-top-left-radius: 8px;
     border-bottom-left-radius: 8px;
   }
 
-  ul li:last-child label {
+  ul li:last-child ion-label {
     border-right: 2px solid white;
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
   }
 
-  ul li:hover label {
-    background-color: $cl-secondary;
+  ul li:hover ion-label {
+    background-color: $cl-primary;
   }
 
-  input[type='radio']:checked + label {
-    background-color: $cl-primary;
+  ion-radio:checked + ion-label {
+    background-color: $cl-secondary;
   }
 
   .padding {
@@ -64,5 +66,9 @@ range-input {
 
   .labelRight {
     float: right;
+  }
+
+  .radio-icon {
+    display: none !important;
   }
 }

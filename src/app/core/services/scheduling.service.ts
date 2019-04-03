@@ -329,7 +329,7 @@ export class SchedulingService {
   }
 
   setDateTimeToMidnight(date) {
-    return new Date(new Date(date).setHours(0, 0, 0, 0))
+    return new Date(new Date(date).setHours(1, 0, 0, 0))
   }
 
   advanceRepeat(date, unit, multiplier) {

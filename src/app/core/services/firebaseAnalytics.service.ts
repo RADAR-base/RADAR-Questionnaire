@@ -9,7 +9,7 @@ export class FirebaseAnalyticsService {
 
   logEvent(event: string, params): Promise<any> {
     console.log('Event', event)
-    if(this.firebaseAnalytics) {
+    if (this.firebaseAnalytics) {
       return this.firebaseAnalytics
         .logEvent(event, params)
         .then((res: any) => {

@@ -67,7 +67,7 @@ export class HomePageComponent implements OnDestroy {
     this.resumeListener = this.platform.resume.subscribe(e => {
       this.kafka.sendAllAnswersInCache()
       this.checkForNewDate()
-      this.firebaseAnalytics.logEvent('resumed', {})
+      this.logEvent('resumed', {})
     })
   }
 
@@ -175,16 +175,15 @@ export class HomePageComponent implements OnDestroy {
             }
           })
       })
-      if(this.firebaseAnalytics) {
-        this.firebaseAnalytics.logEvent('click', {button: 'start_questionnaire'})
-      }
+      this.logEvent('click', {button: 'start_questionnaire'})
+
     } else {
       this.showMissedInfo()
     }
   }
 
   showCredits() {
-    this.firebaseAnalytics.logEvent('click', { button: 'show_credits' })
+    this.logEvent('click', { button: 'show_credits' })
     const buttons = [
       {
         text: this.translate.transform(LocKeys.BTN_OKAY.toString()),

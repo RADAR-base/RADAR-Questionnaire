@@ -2,8 +2,10 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Component, Input, OnChanges } from '@angular/core'
 
 import { StorageService } from '../../../../core/services/storage.service'
+import { LocKeys } from '../../../../shared/enums/localisations'
 import { StorageKeys } from '../../../../shared/enums/storage'
 import { Task, TasksProgress } from '../../../../shared/models/task'
+import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
 
 @Component({
   selector: 'task-info',
@@ -12,7 +14,7 @@ import { Task, TasksProgress } from '../../../../shared/models/task'
     trigger('fade', [
       state('false', style({ opacity: '0' })),
       state('true', style({ opacity: '1.0' })),
-      transition('* => *', animate('400ms ease'))
+      transition('* => *', animate('350ms 50ms ease'))
     ]),
     trigger('scaleMinutes', [
       state(
@@ -20,17 +22,17 @@ import { Task, TasksProgress } from '../../../../shared/models/task'
         style({ transform: 'translate3d(-25%, -15%, 0) scale(0.4)' })
       ),
       state('true', style({ transform: 'translate3d(0, 0, 0) scale(1)' })),
-      transition('* => *', animate('400ms ease'))
+      transition('* => *', animate('350ms 50ms ease'))
     ]),
     trigger('alignCenterRightExtraInfo', [
-      state('false', style({ transform: 'translate3d(15%, 0, 0)' })),
+      state('false', style({ transform: 'translate3d(22%, 0, 0)' })),
       state('true', style({ transform: 'translate3d(0, 0, 0)' })),
-      transition('* => *', animate('400ms ease'))
+      transition('* => *', animate('350ms 50ms ease'))
     ]),
     trigger('alignCenterRightTime', [
       state('false', style({ transform: 'translate3d(8%, 0, 0) scale(0.8)' })),
       state('true', style({ transform: 'translate3d(0, 0, 0)' })),
-      transition('* => *', animate('400ms ease'))
+      transition('* => *', animate('350ms 50ms ease'))
     ]),
     trigger('moveInProgress', [
       state(
@@ -41,12 +43,12 @@ import { Task, TasksProgress } from '../../../../shared/models/task'
         'false',
         style({ display: 'block', transform: 'translate3d(0, 0, 0)' })
       ),
-      transition('* => *', animate('400ms ease'))
+      transition('* => *', animate('350ms 50ms ease'))
     ]),
     trigger('alignCenterRightMetrics', [
-      state('false', style({ transform: 'translate3d(120%, 0, 0)' })),
+      state('false', style({ transform: 'translate3d(110%, 0, 0)' })),
       state('true', style({ transform: 'translate3d(0, 0, 0)' })),
-      transition('* => *', animate('400ms ease'))
+      transition('* => *', animate('350ms 50ms ease'))
     ])
   ]
 })
@@ -61,6 +63,8 @@ export class TaskInfoComponent implements OnChanges {
   expanded = true
   hasExtraInfo: boolean
   extraTaskInfo: string
+  nextTaskStatus
+  statusSize
 
   private language: string
 
@@ -69,7 +73,10 @@ export class TaskInfoComponent implements OnChanges {
   radius: number = 35
   stroke: number = 8
 
-  constructor(public storage: StorageService) {
+  constructor(
+    public storage: StorageService,
+    private translate: TranslatePipe
+  ) {
     this.storage.get(StorageKeys.LANGUAGE).then(resLang => {
       this.language = resLang.value
     })
@@ -78,6 +85,7 @@ export class TaskInfoComponent implements OnChanges {
   ngOnChanges() {
     this.checkHasExtraInfo()
     this.updateProgress()
+    this.updateNextTaskStatus()
   }
 
   checkHasExtraInfo() {
@@ -91,6 +99,8 @@ export class TaskInfoComponent implements OnChanges {
       this.max = this.progress.numberOfTasks
     }
   }
+
+  getStatusScale() {}
 
   getHour() {
     const date = new Date()
@@ -121,5 +131,17 @@ export class TaskInfoComponent implements OnChanges {
         ? '0' + String(numberToFormat)
         : String(numberToFormat)
     return format
+  }
+
+  updateNextTaskStatus() {
+    this.nextTaskStatus = this.translate.transform(
+      this.isNow
+        ? LocKeys.STATUS_NOW.toString()
+        : this.task.name !== 'ESM'
+        ? ''
+        : LocKeys.TASK_BAR_NEXT_TASK_SOON.toString()
+    )
+    if (this.nextTaskStatus.length > 4) return (this.statusSize = 11)
+    return (this.statusSize = 14)
   }
 }

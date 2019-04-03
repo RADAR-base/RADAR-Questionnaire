@@ -59,7 +59,7 @@ page-home {
   }
 
   .clinical {
-    position: absolute;
+    position: fixed;
     right: 20px;
     z-index: 100;
     width: 50px;
@@ -73,6 +73,7 @@ page-home {
   }
 
   .clinical-2 {
+    position: fixed;
     bottom: 3vh;
   }
 

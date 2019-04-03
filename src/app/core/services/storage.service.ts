@@ -30,7 +30,6 @@ export class StorageService {
     participantLogin,
     projectName,
     sourceId,
-    language,
     createdDate,
     createdDateMidnight
   ) {
@@ -57,7 +56,6 @@ export class StorageService {
           const pName = this.set(StorageKeys.PROJECTNAME, projectName)
           const sId = this.set(StorageKeys.SOURCEID, sourceId)
 
-          const lang = this.set(StorageKeys.LANGUAGE, language)
           const notif = this.set(
             StorageKeys.SETTINGS_NOTIFICATIONS,
             DefaultSettingsNotifications
@@ -86,7 +84,6 @@ export class StorageService {
             pName,
             pLogin,
             sId,
-            lang,
             notif,
             report,
             langs,

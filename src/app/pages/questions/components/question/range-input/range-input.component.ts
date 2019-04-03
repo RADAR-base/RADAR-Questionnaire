@@ -20,6 +20,8 @@ export class RangeInputComponent implements OnInit {
   labelLeft = ''
   @Input()
   labelRight = ''
+  @Input()
+  currentlyShown
 
   value: number = null
   uniqueID: number = uniqueID++

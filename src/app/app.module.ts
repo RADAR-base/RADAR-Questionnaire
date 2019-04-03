@@ -12,6 +12,7 @@ import { File } from '@ionic-native/file/ngx'
 import { FirebaseAnalytics } from '@ionic-native/firebase-analytics/ngx'
 import { Globalization } from '@ionic-native/globalization/ngx'
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx'
+import { MobileAccessibility } from '@ionic-native/mobile-accessibility/ngx'
 import { SplashScreen } from '@ionic-native/splash-screen/ngx'
 import { StatusBar } from '@ionic-native/status-bar/ngx'
 import { Vibration } from '@ionic-native/vibration/ngx'
@@ -62,7 +63,8 @@ import { Utility } from './shared/utilities/util'
     AndroidPermissions,
     File,
     AppVersion,
-    FirebaseAnalytics
+    FirebaseAnalytics,
+    MobileAccessibility
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

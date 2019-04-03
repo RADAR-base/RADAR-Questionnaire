@@ -2317,6 +2317,7 @@ cordova-ios@^4.5.5:
     xcode "0.9.3"
     xml-escape "1.1.0"
     xmlbuilder "8.2.2"
+
 cordova-media-with-compression@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/cordova-media-with-compression/-/cordova-media-with-compression-2.1.2.tgz#a2cf06414a57b88860b9632473d9c966ee0e9989"
@@ -2356,10 +2357,6 @@ cordova-plugin-dialogs@^2.0.1:
   resolved "https://registry.yarnpkg.com/cordova-plugin-dialogs/-/cordova-plugin-dialogs-2.0.1.tgz#37fef1512596c8d5df9543fb78724590f767dcf3"
   integrity sha1-N/7xUSWWyNXflUP7eHJFkPdn3PM=
 
-"cordova-plugin-fcm@git+https://github.com/yatharthranjan/cordova-plugin-fcm.git":
-  version "2.1.2"
-  resolved "git+https://github.com/yatharthranjan/cordova-plugin-fcm.git#5e74aaddc1f60fd2469ee4b25a87d601b8575119"
-
 cordova-plugin-file@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/cordova-plugin-file/-/cordova-plugin-file-6.0.1.tgz#49606b8c15a5688d4728f92e4a7325a061de07f5"
@@ -2384,11 +2381,6 @@ cordova-plugin-media-capture@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/cordova-plugin-media-capture/-/cordova-plugin-media-capture-3.0.2.tgz#da657c2faadcfc7fdc2868e59d215ed83e700c3a"
   integrity sha1-2mV8L6rc/H/cKGjlnSFe2D5wDDo=
-
-cordova-plugin-media@^5.0.2:
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-media/-/cordova-plugin-media-5.0.2.tgz#3345769c07e6a46a71c97e1bb434dacca5c8d80b"
-  integrity sha1-M0V2nAfmpGpxyX4btDTazKXI2As=
 
 "cordova-plugin-network-information@git+https://github.com/apache/cordova-plugin-network-information.git":
   version "2.0.2-dev"

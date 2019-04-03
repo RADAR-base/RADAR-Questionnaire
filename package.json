@@ -76,7 +76,6 @@
     "cordova-plugin-app-version": "^0.1.9",
     "cordova-plugin-badge": "^0.8.8",
     "cordova-plugin-camera": "^3.0.0",
-    "cordova-plugin-console": "^1.1.0",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-dialogs": "^2.0.1",
     "cordova-plugin-fcm": "git+https://github.com/yatharthranjan/cordova-plugin-fcm.git",
@@ -84,7 +83,6 @@
     "cordova-plugin-firebase-analytics": "^1.0.1",
     "cordova-plugin-globalization": "^1.11.0",
     "cordova-plugin-local-notification": "^0.9.0-beta.3",
-    "cordova-plugin-media": "^5.0.2",
     "cordova-plugin-media-capture": "^3.0.2",
     "cordova-plugin-network-information": "git+https://github.com/apache/cordova-plugin-network-information.git",
     "cordova-plugin-splashscreen": "^4.1.0",
@@ -147,7 +145,6 @@
       "android"
     ],
     "plugins": {
-      "cordova-plugin-console": {},
       "cordova-plugin-device": {},
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-statusbar": {},
@@ -173,7 +170,6 @@
         "FIREBASE_CORE_VERSION": "16.0.+"
       },
       "phonegap-plugin-mobile-accessibility": {},
-      "cordova-plugin-media": {},
       "cordova-media-with-compression": {},
       "cordova-plugin-file": {}
     }

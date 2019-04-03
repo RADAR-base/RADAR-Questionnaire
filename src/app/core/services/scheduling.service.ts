@@ -329,14 +329,7 @@ export class SchedulingService {
   }
 
   setDateTimeToMidnight(date) {
-    let resetDate: Date
-    if (this.tzOffset === date.getTimezoneOffset()) {
-      resetDate = new Date(date.setHours(1, 0, 0, 0))
-    } else {
-      resetDate = new Date(date.setHours(0, 0, 0, 0))
-    }
-    this.tzOffset = date.getTimezoneOffset()
-    return resetDate
+    return new Date(new Date(date).setHours(0, 0, 0, 0))
   }
 
   advanceRepeat(date, unit, multiplier) {

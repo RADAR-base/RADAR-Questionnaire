@@ -33,7 +33,7 @@ export const DefaultSettingsWeeklyReport: WeeklyReportSubSettings[] = [
 ]
 
 // DEFAULT SETUP
-export const DefaultTaskCompletionWindow = 86400000 // 24 hours in ms
+export const DefaultTaskCompletionWindow = 86400000 // 1 day in ms
 export const DefaultESMCompletionWindow = 600000 // 10 mins in ms
 
 export const DefaultTask: Task = {
@@ -116,7 +116,7 @@ export const DefaultScheduleYearCoverage: number = 2 // years
 export const DefaultScheduleReportRepeat: number = 7 // days
 
 export const DefaultNotificationType: string = 'FCM' // choose from 'FCM' or 'LOCAL'
-export const DefaultNumberOfNotificationsToSchedule: number = 100 //
+export const DefaultNumberOfNotificationsToSchedule: number = 80 //
 export const DefaultNumberOfNotificationsToRescue: number = 12 //
 export const FCMPluginProjectSenderId: string = '430900191220'
 export const DefaultNotificationRefreshTime: number = 900000 // 15 mins in ms
@@ -176,3 +176,5 @@ export const KAFKA_ASSESSMENT = 'assessment'
 export const KAFKA_COMPLETION_LOG = 'completion_log'
 export const KAFKA_TIMEZONE = 'timezone'
 export const KAFKA_CLIENT_KAFKA = '/kafka'
+
+export const DefaultNumberOfCompletionLogsToSend = 10

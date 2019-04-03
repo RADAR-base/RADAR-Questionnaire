@@ -3,6 +3,7 @@ import { NavController, NavParams } from 'ionic-angular'
 
 import {
   DefaultNotificationRefreshTime,
+  DefaultNumberOfCompletionLogsToSend,
   DefaultNumberOfNotificationsToSchedule
 } from '../../../../assets/data/defaultConfig'
 import { ConfigService } from '../../../core/services/config.service'
@@ -14,6 +15,7 @@ import { StorageKeys } from '../../../shared/enums/storage'
 import { EnrolmentPageComponent } from '../../auth/containers/enrolment-page.component'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { SplashService } from '../services/splash.service'
+import { FirebaseAnalytics } from '@ionic-native/firebase-analytics/ngx'
 
 @Component({
   selector: 'page-splash',
@@ -30,15 +32,17 @@ export class SplashPageComponent {
     private notificationService: NotificationService,
     private kafka: KafkaService,
     private configService: ConfigService,
-    private schedule: SchedulingService
+    private schedule: SchedulingService,
+    private firebaseAnalytics: FirebaseAnalytics
   ) {
     this.splashService
       .evalEnrolment()
-      .then(
-        participant =>
-          participant
-            ? this.onStart()
-            : this.navCtrl.setRoot(EnrolmentPageComponent)
+      .then(valid =>
+        valid
+          ? this.onStart()
+          : this.storage
+              .clearStorage()
+              .then(() => this.navCtrl.setRoot(EnrolmentPageComponent))
       )
   }
 
@@ -56,10 +60,7 @@ export class SplashPageComponent {
         this.status = 'Sending missed completion logs...'
         return this.sendNonReportedTaskCompletion()
       })
-      .then(() => {
-        this.status = 'Sending cached answers...'
-        return this.kafka.sendAllAnswersInCache()
-      })
+      .then(() => (this.status = 'Sending cached answers...'))
       .catch(e => console.log('Error sending cache'))
       .then(() => this.navCtrl.setRoot(HomePageComponent))
   }
@@ -100,6 +101,7 @@ export class SplashPageComponent {
         ) {
           this.status = 'Updating notifications...'
           console.log('[SPLASH] Scheduling Notifications.')
+          this.firebaseAnalytics.logEvent('notification_rescheduled', {})
           return this.notificationService.setNextXNotifications(
             DefaultNumberOfNotificationsToSchedule
           )
@@ -119,7 +121,10 @@ export class SplashPageComponent {
     return this.schedule
       .getNonReportedCompletedTasks()
       .then(nonReportedTasks => {
-        const length = nonReportedTasks.length
+        const length = Math.min(
+          nonReportedTasks.length,
+          DefaultNumberOfCompletionLogsToSend
+        )
         for (let i = 0; i < length; i++) {
           promises.push(
             this.kafka

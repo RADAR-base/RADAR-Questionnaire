@@ -126,6 +126,7 @@ export class LocKeys {
     'TESTING_NOTIFICATIONS_MESSAGE'
   )
   static CLOSE_APP = new LocKeys('CLOSE_APP')
+  static WARNING_DO_NOT_CLOSE_APP = new LocKeys('WARNING_DO_NOT_CLOSE_APP')
 
   constructor(public value: string) {}
 

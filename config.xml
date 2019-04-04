@@ -120,6 +120,7 @@
     </plugin>
     <plugin name="cordova-plugin-local-notification" spec="^0.9.0-beta.3" />
     <plugin name="cordova-plugin-app-version" spec="^0.1.9" />
+    <plugin name="cordova-plugin-fcm" spec="git+https://github.com/yatharthranjan/cordova-plugin-fcm.git" />
     <plugin name="cordova-plugin-globalization" spec="^1.11.0" />
     <plugin name="cordova-plugin-firebase-analytics" spec="^1.0.1">
         <variable name="FIREBASE_CORE_VERSION" value="16.0.+" />

@@ -132,7 +132,7 @@ export const DefaultSourceTypeRegistrationBody: any = {
 }
 
 export const DefaultEndPoint: string =
-  'https://radar-test.thehyve.net/'
+  'https://radar-cns-platform.rosalind.kcl.ac.uk/'
 // export const DefaultEndPoint: string = 'https://radar-backend.co.uk/'
 
 export const DefaultProtocolEndPoint: string = DefaultProtocolEndPointExport

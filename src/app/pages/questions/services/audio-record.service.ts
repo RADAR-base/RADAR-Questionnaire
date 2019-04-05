@@ -1,51 +1,60 @@
 import { Injectable } from '@angular/core'
+import { Device } from '@ionic-native/device/ngx'
 import { File } from '@ionic-native/file/ngx'
+import { isTrueProperty } from 'ionic-angular/umd/util/util'
 
 declare var Media: any // stops errors w/ cordova-plugin-media-with-compression types
 
 @Injectable()
 export class AudioRecordService {
-  audioRecordStatus: boolean = false
+  isRecording: boolean = false
   audio
   fileName = 'audio.m4a'
+  recordingTimeout
 
-  constructor(private file: File) {
+  constructor(private file: File, private device: Device) {
     // NOTE: Kill recording on load
     this.stopAudioRecording()
   }
 
-  setAudioRecordStatus(status) {
-    this.audioRecordStatus = status
-  }
+  startAudioRecording(length): Promise<any> {
+    return new Promise((resolve, reject) => {
+      if (!this.isRecording) this.isRecording = true
+      else return reject()
 
-  getAudioRecordStatus() {
-    return this.audioRecordStatus
-  }
-
-  startAudioRecording() {
-    this.audio = new Media(this.getPath() + this.fileName)
-    const options = { SampleRate: 16000, NumberOfChannels: 1 }
-    const recording = this.getAudioRecordStatus()
-
-    if (recording === false) {
-      this.setAudioRecordStatus(true)
-      this.audio.startRecordWithCompression(options)
-    } else if (recording === true) {
-      this.setAudioRecordStatus(false)
-      this.audio.stopRecord()
-      this.readAudioFile()
-    }
+      this.audio = new Media(this.getFilePath(), this.success, this.failure)
+      const options = { SampleRate: 16000, NumberOfChannels: 1 }
+      if (this.isRecording) {
+        this.audio.startRecordWithCompression(options)
+        this.recordingTimeout = setTimeout(() => {
+          console.log('Time up for recording')
+          this.stopAudioRecording()
+          return resolve(this.readAudioFile())
+        }, length)
+      } else {
+        return reject()
+      }
+    })
   }
 
   stopAudioRecording() {
-    if (this.getAudioRecordStatus()) {
+    if (this.isRecording) {
       this.audio.stopRecord()
-      this.setAudioRecordStatus(false)
+      this.isRecording = false
+      clearTimeout(this.recordingTimeout)
     }
   }
 
-  getPath() {
-    return this.file.dataDirectory
+  getFilePath() {
+    return this.device.platform == 'Android'
+      ? this.getDir() + this.fileName
+      : this.fileName
+  }
+
+  getDir() {
+    return this.device.platform == 'Android'
+      ? this.file.dataDirectory
+      : this.file.tempDirectory
   }
 
   success() {
@@ -54,10 +63,11 @@ export class AudioRecordService {
 
   failure(error) {
     console.log('Error! ' + error)
+    this.stopAudioRecording()
   }
 
   readAudioFile() {
-    return this.file.readAsDataURL(this.getPath(), this.fileName)
+    return this.file.readAsDataURL(this.getDir(), this.fileName)
   }
 
   destroy() {

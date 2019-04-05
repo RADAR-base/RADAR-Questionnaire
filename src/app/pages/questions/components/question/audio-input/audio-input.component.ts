@@ -36,7 +36,6 @@ export class AudioInputComponent implements OnChanges, OnDestroy, OnInit {
   alertShown = false
   resumeListener
   pauseListener
-  recordingTimeout
 
   constructor(
     private audioRecordService: AudioRecordService,
@@ -84,21 +83,18 @@ export class AudioInputComponent implements OnChanges, OnDestroy, OnInit {
   startRecording() {
     this.permissionUtil.getRecordAudio_Permission().then(success => {
       if (success) {
-        this.audioRecordService.startAudioRecording()
-        this.recordingTimeout = setTimeout(() => {
-          console.log('Time up for recording')
-          this.stopRecording()
-          this.audioRecordService
-            .readAudioFile()
-            .then(data => this.valueChange.emit(data))
-        }, this.getRecordingTime())
+        this.audioRecordService
+          .startAudioRecording(this.getRecordingTime())
+          .then(data => this.valueChange.emit(data))
+          .catch(e => this.showTaskInterruptedAlert())
+      } else {
+        this.showTaskInterruptedAlert()
       }
     })
   }
 
   stopRecording() {
     this.audioRecordService.stopAudioRecording()
-    clearTimeout(this.recordingTimeout)
   }
 
   getRecordingTime() {
@@ -110,10 +106,6 @@ export class AudioInputComponent implements OnChanges, OnDestroy, OnInit {
         this.avgWordsPerMinute) *
       (MIN_SEC * SEC_MILLISEC)
     )
-  }
-
-  isRecording() {
-    return this.audioRecordService.getAudioRecordStatus()
   }
 
   showTaskInterruptedAlert() {

@@ -57,7 +57,6 @@
     "@ionic-native/firebase-analytics": "^5.2.0",
     "@ionic-native/globalization": "^5.2.0",
     "@ionic-native/local-notifications": "^5.2.0",
-    "@ionic-native/media": "^5.2.0",
     "@ionic-native/media-capture": "^5.2.0",
     "@ionic-native/mobile-accessibility": "5.2.0",
     "@ionic-native/splash-screen": "^5.2.0",

@@ -20,7 +20,7 @@ export class AudioRecordService {
   startAudioRecording(length): Promise<any> {
     return new Promise((resolve, reject) => {
       if (!this.isRecording) this.isRecording = true
-      else return reject()
+      else reject()
 
       this.audio = new Media(this.getFilePath(), this.success, this.failure)
       const options = { SampleRate: 16000, NumberOfChannels: 1 }
@@ -29,10 +29,10 @@ export class AudioRecordService {
         this.recordingTimeout = setTimeout(() => {
           console.log('Time up for recording')
           this.stopAudioRecording()
-          return resolve(this.readAudioFile())
+          resolve(this.readAudioFile())
         }, length)
       } else {
-        return reject()
+        reject()
       }
     })
   }

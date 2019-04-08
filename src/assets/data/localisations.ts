@@ -921,5 +921,13 @@ export const Localisations = {
     es: 'Falla de tirón del protocolo. Reintentar?',
     it: 'Protocollo fallito. Riprovare?',
     nl: 'Protocol pull mislukt. Opnieuw?'
+  },
+  NOTIFICATION_ERROR_DESC: {
+    da: 'Meddelelser omlægge fejl. Prøve igen?',
+    de: 'Neuplanen von Benachrichtigungen schlagen fehl. Wiederholen?',
+    en: 'Notifications reschedule fail. Retry?',
+    es: 'Las notificaciones reprograman fallas. ¿Procesar de nuevo?',
+    it: 'Le notifiche riprogrammano non riescono. Riprovare?',
+    nl: 'Herberekening van meldingen mislukt. Opnieuw?'
   }
 }

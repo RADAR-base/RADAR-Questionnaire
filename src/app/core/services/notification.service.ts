@@ -347,6 +347,7 @@ export class NotificationService {
       desiredSubset => {
         console.log(`NOTIFICATIONS desiredSubset: ${desiredSubset.length}`)
         try {
+          if (!desiredSubset.length) return Promise.reject()
           return this.setNotifications(desiredSubset)
         } catch (e) {
           return Promise.reject(e)

@@ -19,9 +19,10 @@ export class TaskCalendarComponent implements OnChanges {
   task: EventEmitter<Task> = new EventEmitter<Task>()
   @Input()
   tasks: Map<number, Task[]>
+  @Input()
+  currentDate: number
 
   currentTime
-  currentDate = new Date().setUTCHours(0, 0, 0, 0)
   timeIndex: number
 
   constructor() {}
@@ -41,7 +42,7 @@ export class TaskCalendarComponent implements OnChanges {
 
     // NOTE: Compare current time with the start times of the tasks and
     // find out in between which tasks it should be shown in the interface
-    const todaysTasks = this.tasks.get(new Date().setUTCHours(0, 0, 0, 0))
+    const todaysTasks = this.tasks.get(this.currentDate)
     this.timeIndex = todaysTasks.findIndex(t => t.timestamp >= now.getTime())
   }
 

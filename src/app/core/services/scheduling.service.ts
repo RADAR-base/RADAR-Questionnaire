@@ -236,7 +236,7 @@ export class SchedulingService {
 
   buildTaskSchedule(assessments) {
     const schedule: Task[] = assessments.reduce(
-      (a, b) => a.concat(this.buildTasksForSingleAssessment(b, a.length())),
+      (a, b) => a.concat(this.buildTasksForSingleAssessment(b, a.length)),
       []
     )
     // NOTE: Check for completed tasks

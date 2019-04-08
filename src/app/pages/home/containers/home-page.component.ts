@@ -42,7 +42,7 @@ import { TasksService } from '../services/tasks.service'
 export class HomePageComponent implements OnDestroy {
   sortedTasks: Promise<Map<any, any>>
   tasks: Promise<Task[]>
-  tasksDate: Date
+  currentDate: Date
   nextTask: Task
   showCalendar = false
   showCompleted = false
@@ -89,14 +89,14 @@ export class HomePageComponent implements OnDestroy {
           this.checkForNextTask(tasks)
         }, 1000))
     )
-    this.tasksDate = new Date()
+    this.currentDate = this.tasksService.getCurrentDateMidnight()
     this.evalHasClinicalTasks()
     this.firebaseAnalytics.setCurrentScreen('home-page')
   }
 
   checkForNewDate() {
-    if (new Date().getDate() !== this.tasksDate.getDate()) {
-      this.tasksDate = new Date()
+    if (new Date().getDate() !== this.currentDate.getDate()) {
+      this.currentDate = this.tasksService.getCurrentDateMidnight()
       this.navCtrl.setRoot(SplashPageComponent)
     }
   }

@@ -329,7 +329,7 @@ export class SchedulingService {
   }
 
   setDateTimeToMidnight(date) {
-    return new Date(new Date(date).setHours(1, 0, 0, 0))
+    return new Date(new Date(date).setHours(0, 0, 0, 0))
   }
 
   advanceRepeat(date, unit, multiplier) {
@@ -368,7 +368,7 @@ export class SchedulingService {
       index: index,
       completed: false,
       reportedCompletion: false,
-      timestamp: taskDate.getTime(),
+      timestamp: taskDate.setHours(taskDate.getHours() + 1),
       name: assessment.name,
       reminderSettings: assessment.protocol.reminders,
       nQuestions: assessment.questions.length,

@@ -143,7 +143,7 @@ export class HomePageComponent implements OnDestroy {
     this.firebaseAnalytics.logEvent('click', { button: 'start_questionnaire' })
     // NOTE: User can start questionnaire from task calendar or start button in home.
     const task = taskCalendarTask ? taskCalendarTask : this.nextTask
-    if (this.tasksService.isTaskValid(task)) {
+    if (this.tasksService.isTaskStartable(task)) {
       this.startingQuestionnaire = true
 
       Promise.all([

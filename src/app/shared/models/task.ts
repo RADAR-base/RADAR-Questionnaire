@@ -10,6 +10,7 @@ export interface Task {
   completionWindow: number
   warning: string
   isClinical: boolean
+  timeCompleted?: number
 }
 
 export interface TasksProgress {

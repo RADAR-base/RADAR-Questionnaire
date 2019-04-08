@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core'
 import { Device } from '@ionic-native/device/ngx'
 import { File } from '@ionic-native/file/ngx'
-import { isTrueProperty } from 'ionic-angular/umd/util/util'
 
 declare var Media: any // stops errors w/ cordova-plugin-media-with-compression types
 

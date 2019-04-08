@@ -187,8 +187,8 @@ export class StorageService {
   }
 
   getClinicalAssessment(task: Task) {
-    return this.get(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS).then(
-      assessments => assessments.find(a => a.name === task.name)
+    return this.get(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS).then(assessments =>
+      assessments.find(a => a.name === task.name)
     )
   }
 
@@ -220,8 +220,8 @@ export class StorageService {
     const errMsg = error.message
       ? error.message
       : error.status
-        ? `${error.status} - ${error.statusText}`
-        : 'error'
+      ? `${error.status} - ${error.statusText}`
+      : 'error'
     return observableThrowError(errMsg)
   }
 }

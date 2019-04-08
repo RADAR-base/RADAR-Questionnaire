@@ -1,23 +1,24 @@
 import { Component } from '@angular/core'
-import { NavController, NavParams, AlertController } from 'ionic-angular'
+import { FirebaseAnalytics } from '@ionic-native/firebase-analytics/ngx'
+import { NavController, NavParams } from 'ionic-angular'
 
 import {
   DefaultNotificationRefreshTime,
   DefaultNumberOfCompletionLogsToSend,
   DefaultNumberOfNotificationsToSchedule
 } from '../../../../assets/data/defaultConfig'
+import { AlertService } from '../../../core/services/alert.service'
 import { ConfigService } from '../../../core/services/config.service'
 import { KafkaService } from '../../../core/services/kafka.service'
 import { NotificationService } from '../../../core/services/notification.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
+import { LocKeys } from '../../../shared/enums/localisations'
 import { StorageKeys } from '../../../shared/enums/storage'
+import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { EnrolmentPageComponent } from '../../auth/containers/enrolment-page.component'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { SplashService } from '../services/splash.service'
-import { FirebaseAnalytics } from '@ionic-native/firebase-analytics/ngx'
-import { TranslatePipe } from '../../../shared/pipes/translate/translate'
-import { LocKeys } from '../../../shared/enums/localisations'
 
 @Component({
   selector: 'page-splash',
@@ -37,7 +38,7 @@ export class SplashPageComponent {
     private schedule: SchedulingService,
     private firebaseAnalytics: FirebaseAnalytics,
     private translate: TranslatePipe,
-    private alertCtrl: AlertController
+    private alertService: AlertService
   ) {
     this.splashService
       .evalEnrolment()
@@ -158,26 +159,10 @@ export class SplashPageComponent {
         }
       }
     ]
-    this.showAlert({
+    return this.alertService.showAlert({
       title: this.translate.transform(LocKeys.STATUS_FAILURE.toString()),
       message: this.translate.transform(LocKeys.PROTOCOL_ERROR_DESC.toString()),
       buttons: buttons
     })
-  }
-
-  showAlert(parameters) {
-    const alert = this.alertCtrl.create({
-      title: parameters.title,
-      buttons: parameters.buttons
-    })
-    if (parameters.message) {
-      alert.setMessage(parameters.message)
-    }
-    if (parameters.inputs) {
-      for (let i = 0; i < parameters.inputs.length; i++) {
-        alert.addInput(parameters.inputs[i])
-      }
-    }
-    alert.present()
   }
 }

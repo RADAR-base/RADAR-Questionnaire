@@ -1,4 +1,3 @@
-
 export interface Task {
   index: number
   completed: boolean

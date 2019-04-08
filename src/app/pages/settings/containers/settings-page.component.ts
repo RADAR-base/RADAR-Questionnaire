@@ -12,6 +12,7 @@ import {
   DefaultSettingsWeeklyReport,
   LanguageMap
 } from '../../../../assets/data/defaultConfig'
+import { AlertService } from '../../../core/services/alert.service'
 import { ConfigService } from '../../../core/services/config.service'
 import { NotificationService } from '../../../core/services/notification.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
@@ -25,7 +26,6 @@ import {
 } from '../../../shared/models/settings'
 import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { SplashPageComponent } from '../../splash/containers/splash-page.component'
-import {AlertService} from "../../../core/services/alert.service";
 
 @Component({
   selector: 'page-settings',
@@ -281,7 +281,7 @@ export class SettingsPageComponent {
         }
       }
     ]
-    this.showAlert({
+    return this.alertService.showAlert({
       title: this.translate.transform(LocKeys.STATUS_FAILURE.toString()),
       message: this.translate.transform(LocKeys.PROTOCOL_ERROR_DESC.toString()),
       buttons: buttons

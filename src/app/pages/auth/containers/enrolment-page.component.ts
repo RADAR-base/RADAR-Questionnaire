@@ -10,6 +10,7 @@ import {
   DefaultSourceTypeModel,
   LanguageMap
 } from '../../../../assets/data/defaultConfig'
+import { AlertService } from '../../../core/services/alert.service'
 import { ConfigService } from '../../../core/services/config.service'
 import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
@@ -24,7 +25,6 @@ import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 import { AuthService } from '../services/auth.service'
-import { AlertService } from '../../../core/services/alert.service'
 
 @Component({
   selector: 'page-enrolment',
@@ -241,7 +241,7 @@ export class EnrolmentPageComponent {
         }
       }
     ]
-    this.showAlert({
+    return this.alertService.showAlert({
       title: this.translate.transform(LocKeys.STATUS_FAILURE.toString()),
       message: this.translate.transform(LocKeys.PROTOCOL_ERROR_DESC.toString()),
       buttons: buttons

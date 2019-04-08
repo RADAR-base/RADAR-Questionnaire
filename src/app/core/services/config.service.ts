@@ -19,6 +19,7 @@ import { FirebaseAnalyticsService } from './firebaseAnalytics.service'
 import { NotificationService } from './notification.service'
 import { SchedulingService } from './scheduling.service'
 import { StorageService } from './storage.service'
+
 @Injectable()
 export class ConfigService {
   constructor(

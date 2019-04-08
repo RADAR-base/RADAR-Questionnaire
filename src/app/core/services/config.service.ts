@@ -19,7 +19,9 @@ import { FirebaseAnalyticsService } from './firebaseAnalytics.service'
 import { NotificationService } from './notification.service'
 import { SchedulingService } from './scheduling.service'
 import { StorageService } from './storage.service'
-
+import { AlertController } from 'ionic-angular'
+import { TranslatePipe } from '../../shared/pipes/translate/translate'
+import { LocKeys } from '../../shared/enums/localisations'
 @Injectable()
 export class ConfigService {
   constructor(
@@ -28,7 +30,9 @@ export class ConfigService {
     private schedule: SchedulingService,
     private notificationService: NotificationService,
     private appVersion: AppVersion,
-    private firebaseAnalytics: FirebaseAnalyticsService
+    private firebaseAnalytics: FirebaseAnalyticsService,
+    private alertCtrl: AlertController,
+    private translate: TranslatePipe
   ) {}
 
   fetchConfigState(force: boolean) {
@@ -132,9 +136,44 @@ export class ConfigService {
               }
             }
           })
-          .catch(e => console.log(e))
+          .catch(e => {
+            console.log(e)
+            return this.showConfigError()
+          })
       }
     )
+  }
+
+  showConfigError() {
+    const buttons = [
+      {
+        text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+        handler: () => {
+          this.fetchConfigState(true)
+        }
+      }
+    ]
+    this.showAlert({
+      title: this.translate.transform(LocKeys.STATUS_FAILURE.toString()),
+      message: this.translate.transform(LocKeys.PROTOCOL_ERROR_DESC.toString()),
+      buttons: buttons
+    })
+  }
+
+  showAlert(parameters) {
+    const alert = this.alertCtrl.create({
+      title: parameters.title,
+      buttons: parameters.buttons
+    })
+    if (parameters.message) {
+      alert.setMessage(parameters.message)
+    }
+    if (parameters.inputs) {
+      for (let i = 0; i < parameters.inputs.length; i++) {
+        alert.addInput(parameters.inputs[i])
+      }
+    }
+    alert.present()
   }
 
   rescheduleNotifications() {

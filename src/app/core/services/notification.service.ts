@@ -1,7 +1,7 @@
 import 'rxjs/add/operator/map'
 
 import { Injectable } from '@angular/core'
-import { uuid } from 'uuid'
+import { v4 as uuid } from 'uuid'
 
 import {
   DefaultNotificationType,

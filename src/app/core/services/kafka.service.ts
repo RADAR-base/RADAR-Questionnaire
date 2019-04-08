@@ -9,9 +9,7 @@ import {
   KAFKA_ASSESSMENT,
   KAFKA_CLIENT_KAFKA,
   KAFKA_COMPLETION_LOG,
-  KAFKA_TIMEZONE,
-  MIN_SEC,
-  SEC_MILLISEC
+  KAFKA_TIMEZONE
 } from '../../../assets/data/defaultConfig'
 import { AuthService } from '../../pages/auth/services/auth.service'
 import { StorageKeys } from '../../shared/enums/storage'
@@ -23,6 +21,7 @@ import {
 } from '../../shared/models/answer'
 import { QuestionType } from '../../shared/models/question'
 import { Task } from '../../shared/models/task'
+import { getSeconds } from '../../shared/utilities/time'
 import { Utility } from '../../shared/utilities/util'
 import { FirebaseAnalyticsService } from './firebaseAnalytics.service'
 import { StorageService } from './storage.service'
@@ -61,9 +60,7 @@ export class KafkaService {
           ? data.answers[1].startTime
           : data.answers[0].startTime, // NOTE: whole questionnaire startTime and endTime
       timeCompleted: data.answers[data.answers.length - 1].endTime,
-      timeNotification: task.timestamp
-        ? { double: task.timestamp / SEC_MILLISEC }
-        : null
+      timeNotification: getSeconds({ milliseconds: task.timestamp })
     }
 
     return this.prepareKafkaObjectAndSend(task, Answer, KAFKA_ASSESSMENT)
@@ -73,11 +70,8 @@ export class KafkaService {
     // NOTE: Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
     const CompletionLog: CompletionLogValueExport = {
       name: task.name.toString(),
-      // NOTE: Added random floating point [0,1) to make this unique
-      time: (new Date().getTime() + Math.random()) / SEC_MILLISEC,
-      timeNotification: task.timestamp
-        ? { double: task.timestamp / SEC_MILLISEC }
-        : null,
+      time: getSeconds({ milliseconds: new Date().getTime() + Math.random() }),
+      timeNotification: getSeconds({ milliseconds: task.timestamp }),
       completionPercentage: { double: task.completed ? 100 : 0 }
     }
     return this.prepareKafkaObjectAndSend(
@@ -89,8 +83,8 @@ export class KafkaService {
 
   prepareTimeZoneKafkaObjectAndSend() {
     const ApplicationTimeZone: ApplicationTimeZoneValueExport = {
-      time: new Date().getTime() / SEC_MILLISEC,
-      offset: new Date().getTimezoneOffset() * MIN_SEC
+      time: getSeconds({ milliseconds: new Date().getTime() }),
+      offset: getSeconds({ minutes: new Date().getTimezoneOffset() })
     }
     return this.prepareKafkaObjectAndSend(
       [],

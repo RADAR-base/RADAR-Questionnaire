@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { NavController, NavParams } from 'ionic-angular'
+import { NavController, NavParams, AlertController } from 'ionic-angular'
 
 import {
   DefaultNotificationRefreshTime,
@@ -16,6 +16,8 @@ import { EnrolmentPageComponent } from '../../auth/containers/enrolment-page.com
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { SplashService } from '../services/splash.service'
 import { FirebaseAnalytics } from '@ionic-native/firebase-analytics/ngx'
+import { TranslatePipe } from '../../../shared/pipes/translate/translate'
+import { LocKeys } from '../../../shared/enums/localisations'
 
 @Component({
   selector: 'page-splash',
@@ -33,7 +35,9 @@ export class SplashPageComponent {
     private kafka: KafkaService,
     private configService: ConfigService,
     private schedule: SchedulingService,
-    private firebaseAnalytics: FirebaseAnalytics
+    private firebaseAnalytics: FirebaseAnalytics,
+    private translate: TranslatePipe,
+    private alertCtrl: AlertController
   ) {
     this.splashService
       .evalEnrolment()
@@ -50,6 +54,7 @@ export class SplashPageComponent {
     this.configService.migrateToLatestVersion()
     return this.configService
       .fetchConfigState(false)
+      .catch(e => this.showConfigError())
       .then(() => this.checkTimezoneChange())
       .then(() => this.notificationsRefresh())
       .catch(error => {
@@ -142,5 +147,37 @@ export class SplashPageComponent {
     const updatedTask = task
     updatedTask.reportedCompletion = true
     return this.schedule.insertTask(updatedTask)
+  }
+
+  showConfigError() {
+    const buttons = [
+      {
+        text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+        handler: () => {
+          this.onStart()
+        }
+      }
+    ]
+    this.showAlert({
+      title: this.translate.transform(LocKeys.STATUS_FAILURE.toString()),
+      message: this.translate.transform(LocKeys.PROTOCOL_ERROR_DESC.toString()),
+      buttons: buttons
+    })
+  }
+
+  showAlert(parameters) {
+    const alert = this.alertCtrl.create({
+      title: parameters.title,
+      buttons: parameters.buttons
+    })
+    if (parameters.message) {
+      alert.setMessage(parameters.message)
+    }
+    if (parameters.inputs) {
+      for (let i = 0; i < parameters.inputs.length; i++) {
+        alert.addInput(parameters.inputs[i])
+      }
+    }
+    alert.present()
   }
 }

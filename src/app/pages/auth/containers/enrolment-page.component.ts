@@ -228,8 +228,25 @@ export class EnrolmentPageComponent {
   doAfterAuthentication() {
     this.configService
       .fetchConfigState(true)
+      .catch(e => this.showConfigError())
       .then(() => this.firebaseAnalytics.logEvent('sign_up', {}))
       .then(() => this.next())
+  }
+
+  showConfigError() {
+    const buttons = [
+      {
+        text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+        handler: () => {
+          this.doAfterAuthentication()
+        }
+      }
+    ]
+    this.showAlert({
+      title: this.translate.transform(LocKeys.STATUS_FAILURE.toString()),
+      message: this.translate.transform(LocKeys.PROTOCOL_ERROR_DESC.toString()),
+      buttons: buttons
+    })
   }
 
   displayErrorMessage(error) {

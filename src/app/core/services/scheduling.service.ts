@@ -1,5 +1,3 @@
-import 'rxjs/add/operator/map'
-
 import { Injectable } from '@angular/core'
 
 import {
@@ -33,14 +31,10 @@ export class SchedulingService {
   configVersion: number
   enrolmentDate: number
   completedTasks = []
-  upToDate: Promise<Boolean>
   assessments: Promise<Assessment[]>
-  tzOffset: number
   utcOffsetPrev: number
 
   constructor(public storage: StorageService) {
-    const now = new Date()
-    this.tzOffset = now.getTimezoneOffset()
     console.log(this.storage.global)
   }
 

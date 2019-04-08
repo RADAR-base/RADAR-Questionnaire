@@ -35,7 +35,9 @@ export class TasksService {
     return this.getTasksOfToday().then(tasks => {
       const sortedTasks = new Map()
       tasks.forEach(t => {
-        const midnight = new Date(t.timestamp).setHours(0, 0, 0, 0)
+        const midnight = this.schedule
+          .setDateTimeToMidnight(t.timestamp)
+          .getTime()
         if (sortedTasks.has(midnight)) sortedTasks.get(midnight).push(t)
         else sortedTasks.set(midnight, [t])
       })
@@ -120,5 +122,9 @@ export class TasksService {
         }
       })
     }
+  }
+
+  getCurrentDateMidnight() {
+    return this.schedule.setDateTimeToMidnight(new Date())
   }
 }

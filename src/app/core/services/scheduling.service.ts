@@ -1,5 +1,3 @@
-import 'rxjs/add/operator/map'
-
 import { Injectable } from '@angular/core'
 
 import {
@@ -33,14 +31,10 @@ export class SchedulingService {
   configVersion: number
   enrolmentDate: number
   completedTasks = []
-  upToDate: Promise<Boolean>
   assessments: Promise<Assessment[]>
-  tzOffset: number
   utcOffsetPrev: number
 
   constructor(public storage: StorageService) {
-    const now = new Date()
-    this.tzOffset = now.getTimezoneOffset()
     console.log(this.storage.global)
   }
 
@@ -329,14 +323,7 @@ export class SchedulingService {
   }
 
   setDateTimeToMidnight(date) {
-    let resetDate: Date
-    if (this.tzOffset === date.getTimezoneOffset()) {
-      resetDate = new Date(date.setHours(1, 0, 0, 0))
-    } else {
-      resetDate = new Date(date.setHours(0, 0, 0, 0))
-    }
-    this.tzOffset = date.getTimezoneOffset()
-    return resetDate
+    return new Date(new Date(date).setHours(0, 0, 0, 0))
   }
 
   advanceRepeat(date, unit, multiplier) {
@@ -375,7 +362,7 @@ export class SchedulingService {
       index: index,
       completed: false,
       reportedCompletion: false,
-      timestamp: taskDate.getTime(),
+      timestamp: taskDate.setHours(taskDate.getHours() + 1),
       name: assessment.name,
       reminderSettings: assessment.protocol.reminders,
       nQuestions: assessment.questions.length,

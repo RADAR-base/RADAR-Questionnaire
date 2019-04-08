@@ -913,5 +913,13 @@ export const Localisations = {
     es: 'No cierres la aplicación',
     it: `Non chiudere l'app`,
     nl: 'Sluit de app niet'
+  },
+  PROTOCOL_ERROR_DESC: {
+    da: 'Protokoltræk fejler. Prøv igen?',
+    de: 'Protokoll Pull fehlgeschlagen Wiederholen?',
+    en: 'Protocol pull fail. Retry?',
+    es: 'Falla de tirón del protocolo. Reintentar?',
+    it: 'Protocollo fallito. Riprovare?',
+    nl: 'Protocol pull mislukt. Opnieuw?'
   }
 }

@@ -75,6 +75,7 @@
       [show]="showCalendar"
       (task)="startQuestionnaire($event)"
       [tasks]="sortedTasks|async"
+      [currentDate]="currentDate.getTime()"
     >
     </task-calendar>
   </div>

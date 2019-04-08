@@ -15,9 +15,9 @@ import { StorageKeys } from '../../shared/enums/storage'
 import { Task } from '../../shared/models/task'
 import { TranslatePipe } from '../../shared/pipes/translate/translate'
 import { getMilliseconds, getSeconds } from '../../shared/utilities/time'
+import { AlertService } from './alert.service'
 import { SchedulingService } from './scheduling.service'
 import { StorageService } from './storage.service'
-import { AlertService } from './alert.service'
 
 declare var cordova
 declare var FCMPlugin

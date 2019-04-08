@@ -10,11 +10,11 @@ import {
 } from '../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../shared/enums/storage'
 import { Assessment } from '../../shared/models/assessment'
+import { TimeInterval } from '../../shared/models/protocol'
 import { ReportScheduling } from '../../shared/models/report'
 import { Task } from '../../shared/models/task'
-import { StorageService } from './storage.service'
-import { TimeInterval } from '../../shared/models/protocol'
 import { getMilliseconds } from '../../shared/utilities/time'
+import { StorageService } from './storage.service'
 
 export const TIME_UNIT_MILLIS = {
   min: 60000,

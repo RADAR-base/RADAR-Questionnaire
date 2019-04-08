@@ -10,6 +10,7 @@ import {
   DefaultSourceTypeModel,
   LanguageMap
 } from '../../../../assets/data/defaultConfig'
+import { AlertService } from '../../../core/services/alert.service'
 import { ConfigService } from '../../../core/services/config.service'
 import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
@@ -24,7 +25,6 @@ import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 import { AuthService } from '../services/auth.service'
-import { AlertService } from '../../../core/services/alert.service'
 
 @Component({
   selector: 'page-enrolment',

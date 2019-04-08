@@ -8,6 +8,7 @@ import {
 } from 'ionic-angular'
 import { Subscription } from 'rxjs'
 
+import { AlertService } from '../../../core/services/alert.service'
 import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { KafkaService } from '../../../core/services/kafka.service'
 import { StorageService } from '../../../core/services/storage.service'
@@ -22,7 +23,6 @@ import { SettingsPageComponent } from '../../settings/containers/settings-page.c
 import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 import { StartPageComponent } from '../../start/containers/start-page.component'
 import { TasksService } from '../services/tasks.service'
-import { AlertService } from '../../../core/services/alert.service'
 
 @Component({
   selector: 'page-home',

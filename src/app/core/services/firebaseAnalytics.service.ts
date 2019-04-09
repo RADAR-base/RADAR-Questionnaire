@@ -2,28 +2,29 @@ import { Injectable } from '@angular/core'
 import { FirebaseAnalytics } from '@ionic-native/firebase-analytics/ngx'
 
 import { User } from '../../shared/models/user'
+import { Utility } from '../../shared/utilities/util'
 
 @Injectable()
 export class FirebaseAnalyticsService {
-  constructor(private firebaseAnalytics: FirebaseAnalytics) {}
+  constructor(
+    private firebaseAnalytics: FirebaseAnalytics,
+    private utility: Utility
+  ) {}
 
   logEvent(event: string, params): Promise<any> {
     console.log('Event', event)
-    if (this.firebaseAnalytics) {
-      return this.firebaseAnalytics
-        .logEvent(event, params)
-        .then((res: any) => {
-          console.log('firebase analytics service: ' + res)
-          return Promise.resolve(res)
-        })
-        .catch((error: any) => {
-          console.log('firebase analytics service: ' + error)
-          return Promise.reject(error)
-        })
-    } else {
-      Promise.resolve("Could not load firebase")
-    }
-
+    if (this.utility.isPlatformBrowser)
+      return Promise.resolve('Could not load firebase')
+    return this.firebaseAnalytics
+      .logEvent(event, params)
+      .then((res: any) => {
+        console.log('firebase analytics service: ' + res)
+        return Promise.resolve(res)
+      })
+      .catch((error: any) => {
+        console.log('firebase analytics service: ' + error)
+        return Promise.reject(error)
+      })
   }
 
   /**

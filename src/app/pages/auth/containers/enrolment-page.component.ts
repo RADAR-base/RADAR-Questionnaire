@@ -95,7 +95,7 @@ export class EnrolmentPageComponent {
       // disableAnimations: true
     }
     this.scanner.scan(scanOptions).then(scannedObj => {
-      this.logEventToFirebase('qr_code_scanned', {
+      this.firebaseAnalytics.logEvent('qr_code_scanned', {
         text: scannedObj.text
       })
       return this.authenticate(scannedObj.text)
@@ -222,14 +222,14 @@ export class EnrolmentPageComponent {
           createdDateMidnight
         )
         .then(() => this.doAfterAuthentication())
-        .catch((err) => console.log('Init failed', err))
+        .catch(err => console.log('Init failed', err))
     })
   }
 
   doAfterAuthentication() {
     this.configService
       .fetchConfigState(true)
-      .then(() => this.logEventToFirebase('sign_up', {}))
+      .then(() => this.firebaseAnalytics.logEvent('sign_up', {}))
       .then(() => this.next())
       .catch(() => this.next()) // navigate if firebase fails
   }
@@ -240,17 +240,10 @@ export class EnrolmentPageComponent {
     const msg = error.statusText + ' (' + error.status + ')'
     this.outcomeStatus = msg
     this.transitionStatuses()
-    this.logEventToFirebase('sign_up_failed', {
+    this.firebaseAnalytics.logEvent('sign_up_failed', {
       error: JSON.stringify(error),
       message: String(msg)
     })
-
-  }
-
-  logEventToFirebase(event: string, params: any) {
-    if (this.firebaseAnalytics) {
-      this.firebaseAnalytics.logEvent(event, params);
-    }
   }
 
   weeklyReportChange(index) {

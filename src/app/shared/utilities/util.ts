@@ -8,6 +8,7 @@ import { throwError as observableThrowError } from 'rxjs'
 import { DefaultEndPoint } from '../../../assets/data/defaultConfig'
 import { StorageService } from '../../core/services/storage.service'
 import { StorageKeys } from '../enums/storage'
+import { Platform } from 'ionic-angular'
 
 @Injectable()
 export class Utility {
@@ -17,7 +18,8 @@ export class Utility {
   constructor(
     private http: HttpClient,
     private device: Device,
-    private storage: StorageService
+    private storage: StorageService,
+    private platform: Platform
   ) {}
 
   getSchema(schemaUrl) {
@@ -39,6 +41,10 @@ export class Utility {
         device: this.device
       }
     }
+  }
+
+  isPlatformBrowser() {
+    return this.platform.is('core') || this.platform.is('mobileweb')
   }
 
   private extractData(res: any) {

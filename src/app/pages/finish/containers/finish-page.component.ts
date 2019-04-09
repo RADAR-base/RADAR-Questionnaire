@@ -48,17 +48,11 @@ export class FinishPageComponent {
       !this.questionnaireData.isLastTask && !this.isClinicalTask
     this.processDataAndSend()
     this.firebaseAnalytics.setCurrentScreen('finish-page')
-    this.logEventToFirebase('questionnaire_finished', {
+    this.firebaseAnalytics.logEvent('questionnaire_finished', {
       questionnaire_timestamp: String(this.associatedTask.timestamp),
       type: this.associatedTask.name
     })
     setTimeout(() => (this.showDoneButton = true), 15000)
-  }
-
-  logEventToFirebase(event: string, params: any) {
-    if (this.firebaseAnalytics) {
-      this.firebaseAnalytics.logEvent(event, params);
-    }
   }
 
   processDataAndSend() {
@@ -68,7 +62,7 @@ export class FinishPageComponent {
         this.questionnaireData.answers,
         this.questionnaireData.timestamps
       )
-      this.logEventToFirebase('processed_questionnaire_data', {
+      this.firebaseAnalytics.logEvent('processed_questionnaire_data', {
         questionnaire_timestamp: String(Date.now()),
         type: this.associatedTask.name
       })

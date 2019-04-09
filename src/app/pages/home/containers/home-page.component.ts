@@ -67,7 +67,7 @@ export class HomePageComponent implements OnDestroy {
     this.resumeListener = this.platform.resume.subscribe(e => {
       this.kafka.sendAllAnswersInCache()
       this.checkForNewDate()
-      this.logEvent('resumed', {})
+      this.firebaseAnalytics.logEvent('resumed', {})
     })
   }
 
@@ -124,27 +124,21 @@ export class HomePageComponent implements OnDestroy {
   }
 
   displayTaskCalendar() {
-    this.logEvent('click', { button: 'show_task_calendar' })
+    this.firebaseAnalytics.logEvent('click', { button: 'show_task_calendar' })
     this.showCalendar = !this.showCalendar
   }
 
   openSettingsPage() {
     this.navCtrl.push(SettingsPageComponent)
-    this.logEvent('click', { button: 'open_settings' })
+    this.firebaseAnalytics.logEvent('click', { button: 'open_settings' })
   }
 
   openClinicalTasksPage() {
     this.navCtrl.push(ClinicalTasksPageComponent)
-    this.logEvent('click', { button: 'open_clinical_tasks' })
+    this.firebaseAnalytics.logEvent('click', { button: 'open_clinical_tasks' })
   }
 
-  logEvent(event: string, params: any) {
-    if (this.firebaseAnalytics) {
-      this.firebaseAnalytics.logEvent(event, params);
-    }
-  }
   startQuestionnaire(taskCalendarTask: Task) {
-
     // NOTE: User can start questionnaire from task calendar or start button in home.
     const task = taskCalendarTask ? taskCalendarTask : this.nextTask
     if (this.tasksService.isTaskValid(task)) {
@@ -175,15 +169,16 @@ export class HomePageComponent implements OnDestroy {
             }
           })
       })
-      this.logEvent('click', {button: 'start_questionnaire'})
-
+      this.firebaseAnalytics.logEvent('click', {
+        button: 'start_questionnaire'
+      })
     } else {
       this.showMissedInfo()
     }
   }
 
   showCredits() {
-    this.logEvent('click', { button: 'show_credits' })
+    this.firebaseAnalytics.logEvent('click', { button: 'show_credits' })
     const buttons = [
       {
         text: this.translate.transform(LocKeys.BTN_OKAY.toString()),

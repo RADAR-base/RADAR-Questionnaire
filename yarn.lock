@@ -417,13 +417,6 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/media@^5.2.0":
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/@ionic-native/media/-/media-5.2.0.tgz#3e8a8293f615059f4c7855ba2bd5a4b46233c7b4"
-  integrity sha512-rhyOuQMc7Yyrq4PkSXj8/0FiWQQVNm5UPQurYtKaOMcba/UfAxMv0Z41T6TrEEu1R1DNjDrkdVv3uGwsUcpUhg==
-  dependencies:
-    "@types/cordova" latest
-
 "@ionic-native/mobile-accessibility@5.2.0":
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/@ionic-native/mobile-accessibility/-/mobile-accessibility-5.2.0.tgz#636000acc8c64581964f265ca767ae197689a354"
@@ -2257,7 +2250,7 @@ cordova-android-support-gradle-release@^1.4.7:
     semver "5.1.0"
     xml2js "~0.4.19"
 
-cordova-android@7.1.4:
+cordova-android@^7.1.4:
   version "7.1.4"
   resolved "https://registry.yarnpkg.com/cordova-android/-/cordova-android-7.1.4.tgz#25261ad66cc64f42a30b70be005901fa30e2430e"
   integrity sha512-Rtvu002I83uzfVyCsE6p2krFKVHt9TSAqZUATes+zH+o9cdxYGrLHY+PKCQo4SLCdSMdrkIHCDnQPTYTp/d7+g==
@@ -2357,10 +2350,9 @@ cordova-plugin-dialogs@^2.0.1:
   resolved "https://registry.yarnpkg.com/cordova-plugin-dialogs/-/cordova-plugin-dialogs-2.0.1.tgz#37fef1512596c8d5df9543fb78724590f767dcf3"
   integrity sha1-N/7xUSWWyNXflUP7eHJFkPdn3PM=
 
-cordova-plugin-file@^6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-file/-/cordova-plugin-file-6.0.1.tgz#49606b8c15a5688d4728f92e4a7325a061de07f5"
-  integrity sha1-SWBrjBWlaI1HKPkuSnMloGHeB/U=
+"cordova-plugin-fcm@git+https://github.com/yatharthranjan/cordova-plugin-fcm.git":
+  version "2.1.2"
+  resolved "git+https://github.com/yatharthranjan/cordova-plugin-fcm.git#5e74aaddc1f60fd2469ee4b25a87d601b8575119"
 
 cordova-plugin-firebase-analytics@^1.1.1:
   version "1.1.1"
@@ -2376,11 +2368,6 @@ cordova-plugin-local-notification@^0.9.0-beta.3:
   version "0.9.0-beta.3"
   resolved "https://registry.yarnpkg.com/cordova-plugin-local-notification/-/cordova-plugin-local-notification-0.9.0-beta.3.tgz#f63d49b90ea9cdf1a5de53e7eb478a09bb236f93"
   integrity sha512-L3Z1velxrkm9nHFcvLnMgBPZjKFt6hwM6hn1lA+JFwIR26Yw6UF72z+/lRMBclAcOxBIDYCqeaLgvezmajjuEg==
-
-cordova-plugin-media-capture@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-media-capture/-/cordova-plugin-media-capture-3.0.2.tgz#da657c2faadcfc7fdc2868e59d215ed83e700c3a"
-  integrity sha1-2mV8L6rc/H/cKGjlnSFe2D5wDDo=
 
 "cordova-plugin-network-information@git+https://github.com/apache/cordova-plugin-network-information.git":
   version "2.0.2-dev"

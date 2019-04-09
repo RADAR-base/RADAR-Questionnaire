@@ -21,9 +21,7 @@ import { Task } from '../../shared/models/task'
 export class StorageService {
   global: any = {}
 
-  constructor(
-    private storage: Storage,
-    private appVersionPlugin: AppVersion) {
+  constructor(private storage: Storage, private appVersionPlugin: AppVersion) {
     const setStoragePromise = this.prepareStorage()
     Promise.resolve(setStoragePromise)
   }
@@ -80,10 +78,13 @@ export class StorageService {
             new Date().getTimezoneOffset()
           )
           const cache = this.set(StorageKeys.CACHE_ANSWERS, {})
-          let appVersion = DefaultAppVersion;
-          this.appVersionPlugin.getVersionNumber().then((apV) => {
-            appVersion = apV;
-          }).catch((err) => console.log("Cannot retrieve app version ", err))
+          let appVersion = DefaultAppVersion
+          this.appVersionPlugin
+            .getVersionNumber()
+            .then(apV => {
+              appVersion = apV
+            })
+            .catch(err => console.log('Cannot retrieve app version ', err))
 
           this.set(StorageKeys.APP_VERSION, appVersion)
 
@@ -234,8 +235,8 @@ export class StorageService {
     const errMsg = error.message
       ? error.message
       : error.status
-        ? `${error.status} - ${error.statusText}`
-        : 'error'
+      ? `${error.status} - ${error.statusText}`
+      : 'error'
     return observableThrowError(errMsg)
   }
 }

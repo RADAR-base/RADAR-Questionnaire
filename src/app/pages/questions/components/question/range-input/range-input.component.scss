@@ -15,12 +15,11 @@ range-input {
     display: flex;
     flex: 1 0 8px;
     align-content: stretch;
-    margin: -18px;
+    margin: 0 -15px -12px;
   }
 
   ul li ion-radio {
     position: absolute;
-    //visibility: hidden;
   }
 
   ul li ion-label {
@@ -57,7 +56,7 @@ range-input {
   }
 
   .padding {
-    margin-top: 10px;
+    margin: 10px 3px;
   }
 
   .labelLeft {
@@ -66,6 +65,14 @@ range-input {
 
   .labelRight {
     float: right;
+  }
+
+  ion-label {
+    color: white !important;
+  }
+
+  .item-radio-checked ion-label {
+    background-color: $cl-primary !important;
   }
 
   .radio-icon {

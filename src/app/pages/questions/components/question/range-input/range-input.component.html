@@ -4,13 +4,15 @@
       *ngFor="let item of items"
       class="item-md"
     >
-      <ion-label [attr.for]="item.id">{{ item.value }}</ion-label>
-      <ion-radio
-        [value]="item.value"
-        [disabled]="!currentlyShown"
-        [id]="item.id"
-        (ionSelect)="onInputChange($event)"
-      ></ion-radio>
+      <ion-item no-lines>
+        <ion-label [attr.for]="item.id">{{ item.value }}</ion-label>
+        <ion-radio
+          [value]="item.value"
+          [disabled]="!currentlyShown"
+          [id]="item.id"
+          (ionSelect)="onInputChange($event)"
+        ></ion-radio>
+      </ion-item>
     </li>
   </ul>
 </ion-list>

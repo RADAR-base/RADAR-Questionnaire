@@ -1,5 +1,6 @@
 radio-input {
   display: block;
+  margin-left: -5px;
   width: 100%;
 
   ul {
@@ -38,15 +39,20 @@ radio-input {
     justify-content: flex-start;
   }
 
-  ul li:hover ion-label {
-    background-color: $cl-primary;
+  ion-label {
+    color: white !important;
   }
 
-  ion-radio:checked + ion-label {
-    background-color: $cl-secondary;
+  .item-radio-checked ion-label {
+    background-color: $cl-primary !important;
   }
 
   .radio-icon {
     display: none !important;
+    margin: 0;
+  }
+
+  .input-wrapper {
+    margin: 0 -20px -12px 0;
   }
 }

@@ -125,8 +125,8 @@
     </plugin>
     <plugin name="phonegap-plugin-mobile-accessibility" spec="^1.0.5" />
     <plugin name="cordova-media-with-compression" spec="^2.1.2" />
-    <engine name="android" spec="^7.1.4" />
-    <engine name="ios" spec="4.5.5" />
     <plugin name="cordova-plugin-fcm" spec="https://github.com/yatharthranjan/cordova-plugin-fcm.git" />
     <plugin name="cordova-plugin-file" spec="~6.0.1" />
+    <engine name="android" spec="^7.1.4" />
+    <engine name="ios" spec="4.5.5" />
 </widget>

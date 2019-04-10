@@ -42,7 +42,7 @@ export class CheckboxInputComponent implements OnInit {
   }
 
   onInputChange(event) {
-    this.logSelectedItems(event.target)
+    this.logSelectedItems(event)
     this.valueChange.emit(this.retrieveSelectedItems())
   }
 

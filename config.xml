@@ -104,5 +104,6 @@
     <variable name="FIREBASE_CORE_VERSION" value="16.0.+" />
   </plugin>
   <plugin name="phonegap-plugin-mobile-accessibility" spec="^1.0.5" />
+  <plugin name="cordova-plugin-insomnia" spec="^4.3.0" />
   <engine name="android" spec="^7.1.4" />
 </widget>

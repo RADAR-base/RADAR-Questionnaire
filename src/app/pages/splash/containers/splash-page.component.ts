@@ -108,10 +108,11 @@ export class SplashPageComponent {
         ) {
           this.status = 'Updating notifications...'
           console.log('[SPLASH] Scheduling Notifications.')
-          this.firebaseAnalytics.logEvent('notification_rescheduled', {})
-          return this.notificationService.setNextXNotifications(
-            DefaultNumberOfNotificationsToSchedule
-          )
+          return this.notificationService
+            .setNextXNotifications(DefaultNumberOfNotificationsToSchedule)
+            .then(() =>
+              this.firebaseAnalytics.logEvent('notification_rescheduled', {})
+            )
         } else {
           console.log(
             'Not Scheduling Notifications as ' +

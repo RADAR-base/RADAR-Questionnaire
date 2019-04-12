@@ -61,3 +61,11 @@ export function getSeconds(time: Time) {
     seconds += time.milliseconds / TimeConversion['SEC_TO_MILLISEC']
   return seconds
 }
+
+export function formatTime(date) {
+  const hour = date.getHours()
+  const min = date.getMinutes()
+  const hourStr = hour < 10 ? '0' + String(hour) : String(hour)
+  const minStr = min < 10 ? '0' + String(min) : String(min)
+  return hourStr + ':' + minStr
+}

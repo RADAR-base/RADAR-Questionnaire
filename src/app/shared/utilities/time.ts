@@ -20,7 +20,7 @@ interface Time {
 }
 
 export function getMilliseconds(time: Time) {
-  return getSeconds(time) * TimeConversion['SEC_TO_MILLISEC']
+  return getSeconds(time) * TimeConversion.SEC_TO_MILLISEC
 }
 
 export function getSeconds(time: Time) {
@@ -28,37 +28,37 @@ export function getSeconds(time: Time) {
   if (time.years)
     seconds +=
       time.years *
-      TimeConversion['YEAR_TO_DAY'] *
-      TimeConversion['DAY_TO_HOUR'] *
-      TimeConversion['HOUR_TO_MIN'] *
-      TimeConversion['MIN_TO_SEC']
+      TimeConversion.YEAR_TO_DAY *
+      TimeConversion.DAY_TO_HOUR *
+      TimeConversion.HOUR_TO_MIN *
+      TimeConversion.MIN_TO_SEC
   if (time.months)
     seconds +=
       time.months *
-      TimeConversion['MONTH_TO_DAY'] *
-      TimeConversion['DAY_TO_HOUR'] *
-      TimeConversion['HOUR_TO_MIN'] *
-      TimeConversion['MIN_TO_SEC']
+      TimeConversion.MONTH_TO_DAY *
+      TimeConversion.DAY_TO_HOUR *
+      TimeConversion.HOUR_TO_MIN *
+      TimeConversion.MIN_TO_SEC
   if (time.weeks)
     seconds +=
       time.weeks *
-      TimeConversion['WEEK_TO_DAY'] *
-      TimeConversion['DAY_TO_HOUR'] *
-      TimeConversion['HOUR_TO_MIN'] *
-      TimeConversion['MIN_TO_SEC']
+      TimeConversion.WEEK_TO_DAY *
+      TimeConversion.DAY_TO_HOUR *
+      TimeConversion.HOUR_TO_MIN *
+      TimeConversion.MIN_TO_SEC
   if (time.days)
     seconds +=
       time.days *
-      TimeConversion['DAY_TO_HOUR'] *
-      TimeConversion['HOUR_TO_MIN'] *
-      TimeConversion['MIN_TO_SEC']
+      TimeConversion.DAY_TO_HOUR *
+      TimeConversion.HOUR_TO_MIN *
+      TimeConversion.MIN_TO_SEC
   if (time.hours)
     seconds +=
-      time.hours * TimeConversion['HOUR_TO_MIN'] * TimeConversion['MIN_TO_SEC']
-  if (time.minutes) seconds += time.minutes * TimeConversion['MIN_TO_SEC']
+      time.hours * TimeConversion.HOUR_TO_MIN * TimeConversion.MIN_TO_SEC
+  if (time.minutes) seconds += time.minutes * TimeConversion.MIN_TO_SEC
   if (time.seconds) seconds += time.seconds
   if (time.milliseconds)
-    seconds += time.milliseconds / TimeConversion['SEC_TO_MILLISEC']
+    seconds += time.milliseconds / TimeConversion.SEC_TO_MILLISEC
   return seconds
 }
 

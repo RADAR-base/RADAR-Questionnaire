@@ -85,10 +85,8 @@ export class SchedulingService {
   }
 
   getTasks() {
-    const defaultTasks = this.getDefaultTasks()
-    const clinicalTasks = this.getClinicalTasks()
-    return Promise.all([defaultTasks, clinicalTasks]).then(tasks =>
-      tasks.filter(d => d).reduce((a, b) => a.concat(b))
+    return Promise.all([this.getDefaultTasks(), this.getClinicalTasks()]).then(
+      tasks => tasks.filter(d => d).reduce((a, b) => a.concat(b))
     )
   }
 
@@ -106,10 +104,8 @@ export class SchedulingService {
 
   getNonReportedCompletedTasks() {
     return Promise.all([this.getDefaultTasks(), this.getClinicalTasks()]).then(
-      defaultAndClinicalTasks => {
-        const tasks = defaultAndClinicalTasks[0].concat(
-          defaultAndClinicalTasks[1]
-        )
+      ([defaultTasks, clinicalTasks]) => {
+        const tasks = defaultTasks.concat(clinicalTasks)
         const now = new Date().getTime()
         return tasks
           .filter(

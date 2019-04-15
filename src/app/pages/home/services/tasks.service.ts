@@ -19,7 +19,7 @@ export class TasksService {
     return this.storage.getAssessment(task)
   }
 
-  getTasksOfToday() {
+  getNonClinicalTasksOfToday() {
     return this.schedule
       .getNonClinicalTasksForDate(new Date())
       .then(tasks =>
@@ -31,8 +31,8 @@ export class TasksService {
       )
   }
 
-  getSortedTasksOfToday(): Promise<Map<number, Task[]>> {
-    return this.getTasksOfToday().then(tasks => {
+  getSortedNonClinicalTasksOfToday(): Promise<Map<number, Task[]>> {
+    return this.getNonClinicalTasksOfToday().then(tasks => {
       const sortedTasks = new Map()
       tasks.forEach(t => {
         const midnight = this.schedule
@@ -50,7 +50,7 @@ export class TasksService {
   }
 
   getTaskProgress(): Promise<TasksProgress> {
-    return this.getTasksOfToday().then(tasks => {
+    return this.getNonClinicalTasksOfToday().then(tasks => {
       return {
         numberOfTasks: tasks.length,
         completedTasks: tasks.filter(d => d.completed).length
@@ -65,32 +65,20 @@ export class TasksService {
   }
 
   areAllTasksComplete(tasks) {
-    return (
-      !tasks ||
-      tasks.every(
-        t =>
-          t.name === 'ESM' ||
-          t.isClinical ||
-          t.completed ||
-          !this.isTaskStartable(t)
-      )
-    )
+    return !tasks || tasks.every(t => t.completed || !this.isTaskStartable(t))
   }
 
   isLastTask(task, tasks) {
-    return (
-      !tasks ||
-      tasks.every(
-        t => t.name === 'ESM' || t.completed || t.index === task.index
-      )
-    )
+    return !tasks || tasks.every(t => t.completed || t.index === task.index)
   }
 
   isTaskStartable(task) {
+    // NOTE: This checks if the task timestamp has passed and if task is valid
     return task.timestamp <= new Date().getTime() && this.isTaskValid(task)
   }
 
   isTaskValid(task) {
+    // NOTE: This checks if completion window has not passed and task is incomplete
     return (
       task.timestamp + task.completionWindow > new Date().getTime() &&
       !task.completed
@@ -105,22 +93,7 @@ export class TasksService {
    */
   getNextTask(tasks: Task[]): Task | undefined {
     if (tasks) {
-      const tenMinutesAgo = new Date().getTime() - DefaultESMCompletionWindow
-      const offsetForward = DefaultTaskCompletionWindow
-      return tasks.find(task => {
-        switch (task.name) {
-          case 'ESM':
-            // NOTE: For ESM, just look from 10 mins before now
-            return (
-              task.timestamp >= tenMinutesAgo &&
-              task.timestamp < tenMinutesAgo + offsetForward &&
-              !task.completed
-            )
-          default:
-            // NOTE: Break out of the loop as soon as the next incomplete task is found
-            return this.isTaskValid(task)
-        }
-      })
+      return tasks.find(task => this.isTaskValid(task))
     }
   }
 

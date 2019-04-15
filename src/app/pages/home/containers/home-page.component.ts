@@ -81,8 +81,8 @@ export class HomePageComponent implements OnDestroy {
   }
 
   ionViewDidLoad() {
-    this.sortedTasks = this.tasksService.getSortedTasksOfToday()
-    this.tasks = this.tasksService.getTasksOfToday()
+    this.sortedTasks = this.tasksService.getSortedNonClinicalTasksOfToday()
+    this.tasks = this.tasksService.getNonClinicalTasksOfToday()
     this.tasksProgress = this.tasksService.getTaskProgress()
     this.tasks.then(
       tasks =>

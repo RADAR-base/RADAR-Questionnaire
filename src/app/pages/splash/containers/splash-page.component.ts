@@ -18,7 +18,7 @@ import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { EnrolmentPageComponent } from '../../auth/containers/enrolment-page.component'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { SplashService } from '../services/splash.service'
-import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service';
+import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 
 @Component({
   selector: 'page-splash',
@@ -111,7 +111,7 @@ export class SplashPageComponent {
           return this.notificationService
             .setNextXNotifications(DefaultNumberOfNotificationsToSchedule)
             .then(() =>
-              this.firebaseAnalytics.logEvent('notification_rescheduled', {})
+              this.firebaseAnalytics.logEvent('notification_refreshed', {})
             )
         } else {
           console.log(

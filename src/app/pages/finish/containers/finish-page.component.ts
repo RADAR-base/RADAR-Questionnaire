@@ -8,12 +8,12 @@ import {
 import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { KafkaService } from '../../../core/services/kafka.service'
 import { NotificationService } from '../../../core/services/notification.service'
-import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { Assessment } from '../../../shared/models/assessment'
 import { RepeatQuestionnaire } from '../../../shared/models/protocol'
 import { Task } from '../../../shared/models/task'
+import { timeIntervalToMillis } from '../../../shared/utilities/time'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { FinishTaskService } from '../services/finish-task.service'
 import { PrepareDataService } from '../services/prepare-data.service'
@@ -155,7 +155,7 @@ export class FinishPageComponent {
 
   formatRepeatsAfterClinic(repeats: RepeatQuestionnaire) {
     return repeats.unitFromZero.map(amount =>
-      SchedulingService.timeIntervalToMillis({
+      timeIntervalToMillis({
         unit: repeats.unit,
         amount
       })

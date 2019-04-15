@@ -254,8 +254,7 @@ export class NotificationService {
     const task = data.task
     const scheduledTimestamp = task.timestamp
     const now = new Date().getTime()
-    const endScheduledTimestamp =
-      scheduledTimestamp + getMilliseconds({ minutes: 10 })
+    const endScheduledTimestamp = scheduledTimestamp + task.completionWindow
     if (now > endScheduledTimestamp && task.name === 'ESM') {
       this.showNotificationMissedInfo(task, data.isLastOfDay)
     }

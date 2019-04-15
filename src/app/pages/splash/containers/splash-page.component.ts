@@ -1,5 +1,4 @@
 import { Component } from '@angular/core'
-import { FirebaseAnalytics } from '@ionic-native/firebase-analytics/ngx'
 import { NavController, NavParams } from 'ionic-angular'
 
 import {
@@ -19,6 +18,7 @@ import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { EnrolmentPageComponent } from '../../auth/containers/enrolment-page.component'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { SplashService } from '../services/splash.service'
+import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service';
 
 @Component({
   selector: 'page-splash',
@@ -36,7 +36,7 @@ export class SplashPageComponent {
     private kafka: KafkaService,
     private configService: ConfigService,
     private schedule: SchedulingService,
-    private firebaseAnalytics: FirebaseAnalytics,
+    private firebaseAnalytics: FirebaseAnalyticsService,
     private translate: TranslatePipe,
     private alertService: AlertService
   ) {

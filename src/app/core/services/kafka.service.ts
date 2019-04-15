@@ -70,7 +70,7 @@ export class KafkaService {
     // NOTE: Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
     const CompletionLog: CompletionLogValueExport = {
       name: task.name.toString(),
-      time: getSeconds({ milliseconds: task.timestamp }),
+      time: getSeconds({ milliseconds: new Date().getTime() + Math.random() }),
       timeNotification: getSeconds({ milliseconds: task.timestamp }),
       completionPercentage: { double: task.completed ? 100 : 0 }
     }

@@ -55,13 +55,12 @@ export class SplashPageComponent {
     this.configService.migrateToLatestVersion()
     return this.configService
       .fetchConfigState(false)
-      .catch(e => this.showConfigError(LocKeys.PROTOCOL_ERROR_DESC))
       .then(() => this.checkTimezoneChange())
       .then(() => this.notificationsRefresh())
       .catch(error => {
         console.error(error)
-        console.log('[SPLASH] Notifications error.')
-        this.showConfigError(LocKeys.NOTIFICATION_ERROR_DESC)
+        console.log('[SPLASH] Notifications/config error.')
+        this.showConfigError()
       })
       .then(() => {
         this.status = 'Sending missed completion logs...'
@@ -152,8 +151,12 @@ export class SplashPageComponent {
     return this.schedule.insertTask(updatedTask)
   }
 
-  showConfigError(error) {
+  showConfigError() {
     const buttons = [
+      {
+        text: this.translate.transform(LocKeys.BTN_CANCEL.toString()),
+        handler: () => {}
+      },
       {
         text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
         handler: () => {
@@ -163,7 +166,7 @@ export class SplashPageComponent {
     ]
     return this.alertService.showAlert({
       title: this.translate.transform(LocKeys.STATUS_FAILURE.toString()),
-      message: this.translate.transform(error.toString()),
+      message: this.translate.transform(LocKeys.CONFIG_ERROR_DESC.toString()),
       buttons: buttons
     })
   }

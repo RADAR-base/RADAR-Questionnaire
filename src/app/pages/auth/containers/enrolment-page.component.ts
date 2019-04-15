@@ -235,6 +235,10 @@ export class EnrolmentPageComponent {
   showConfigError() {
     const buttons = [
       {
+        text: this.translate.transform(LocKeys.BTN_CANCEL.toString()),
+        handler: () => {}
+      },
+      {
         text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
         handler: () => {
           this.doAfterAuthentication()
@@ -243,7 +247,7 @@ export class EnrolmentPageComponent {
     ]
     return this.alertService.showAlert({
       title: this.translate.transform(LocKeys.STATUS_FAILURE.toString()),
-      message: this.translate.transform(LocKeys.PROTOCOL_ERROR_DESC.toString()),
+      message: this.translate.transform(LocKeys.CONFIG_ERROR_DESC.toString()),
       buttons: buttons
     })
   }

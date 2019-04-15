@@ -2290,10 +2290,10 @@ cordova-plugin-badge@^0.8.8:
   resolved "https://registry.yarnpkg.com/cordova-plugin-badge/-/cordova-plugin-badge-0.8.8.tgz#0924018699b48f92dd3b33615452737582144c96"
   integrity sha512-RhIBtd5xhD/iLnxjt35jvOae28oNW/wtMZBOmQR3Rf0y4wirvA1bpAZEhBoFqL+rZGhsd6ddOdQXdex1T0DRyQ==
 
-cordova-plugin-camera@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-camera/-/cordova-plugin-camera-3.0.0.tgz#9212ff0e2a211ee840d8a83f051d37d0dec0bd1f"
-  integrity sha1-khL/DiohHuhA2Kg/BR030N7AvR8=
+cordova-plugin-camera@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-camera/-/cordova-plugin-camera-4.0.3.tgz#7373a5938318c86ccfd84e3713e2382d10fe076b"
+  integrity sha1-c3Olk4MYyGzP2E43E+I4LRD+B2s=
 
 cordova-plugin-console@^1.1.0:
   version "1.1.0"

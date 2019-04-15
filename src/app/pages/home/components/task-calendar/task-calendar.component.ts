@@ -7,6 +7,7 @@ import {
 } from '@angular/core'
 
 import { Task } from '../../../../shared/models/task'
+import { formatTime } from '../../../../shared/utilities/time'
 
 @Component({
   selector: 'task-calendar',
@@ -31,26 +32,17 @@ export class TaskCalendarComponent implements OnChanges {
   }
 
   getStartTime(task: Task) {
-    const date = new Date(task.timestamp)
-    return this.formatTime(date)
+    return formatTime(new Date(task.timestamp))
   }
 
   setCurrentTime() {
     const now = new Date()
-    this.currentTime = this.formatTime(now)
+    this.currentTime = formatTime(now)
 
     // NOTE: Compare current time with the start times of the tasks and
     // find out in between which tasks it should be shown in the interface
     const todaysTasks = this.tasks.get(new Date().setUTCHours(0, 0, 0, 0))
     this.timeIndex = todaysTasks.findIndex(t => t.timestamp >= now.getTime())
-  }
-
-  formatTime(date) {
-    const hour = date.getHours()
-    const min = date.getMinutes()
-    const hourStr = date.getHours() < 10 ? '0' + String(hour) : String(hour)
-    const minStr = date.getMinutes() < 10 ? '0' + String(min) : String(min)
-    return hourStr + ':' + minStr
   }
 
   hasExtraInfo(warningStr) {

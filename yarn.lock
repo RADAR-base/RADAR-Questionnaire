@@ -4425,13 +4425,12 @@ import-sort-parser-babylon@^5.2.0:
     "@babel/types" "^7.0.0-beta.54"
     find-line-column "^0.5.2"
 
-import-sort-parser-typescript@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/import-sort-parser-typescript/-/import-sort-parser-typescript-5.0.0.tgz#2f5ab77649f11a9b60ac1cb61f6d00818f39165b"
-  integrity sha1-L1q3dknxGptgrBy2H20AgY85Fls=
+import-sort-parser-typescript@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/import-sort-parser-typescript/-/import-sort-parser-typescript-6.0.0.tgz#98e73cef9e077d073e798722ed59e215b51c17e2"
+  integrity sha512-pgxnr3I156DonupQriNsgDb2zJN9TxrqCCIN1rwT/6SDO1rkJb+a0fjqshCjlgacTSA92oPAp1eAwmQUeZi3dw==
   dependencies:
-    core-js "^2.5.7"
-    typescript "^2.9.2"
+    typescript "^3.2.4"
 
 import-sort-parser@^5.0.0:
   version "5.0.0"
@@ -8968,10 +8967,15 @@ typescript@3.2.4:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.2.4.tgz#c585cb952912263d915b462726ce244ba510ef3d"
   integrity sha512-0RNDbSdEokBeEAkgNbxJ+BLwSManFy9TeXz8uW+48j/xhEXv1ePME60olyzw2XzUqUBNAYFeJadIqAgNqIACwg==
 
-"typescript@>=2.6.2 <2.10", typescript@^2.8.3, typescript@^2.9.2:
+"typescript@>=2.6.2 <2.10", typescript@^2.8.3:
   version "2.9.2"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.9.2.tgz#1cbf61d05d6b96269244eb6a3bce4bd914e0f00c"
   integrity sha512-Gr4p6nFNaoufRIY4NMdpQRNmgxVIGMs4Fcu/ujdYk3nAZqk7supzBE9idmvfZIlH/Cuj//dvi+019qEue9lV0w==
+
+typescript@^3.2.4:
+  version "3.4.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.4.3.tgz#0eb320e4ace9b10eadf5bc6103286b0f8b7c224f"
+  integrity sha512-FFgHdPt4T/duxx6Ndf7hwgMZZjZpB+U0nMNGVCYPq0rEzWKjEDobm4J6yb3CS7naZ0yURFqdw9Gwc7UOh/P9oQ==
 
 typescript@~2.6.1:
   version "2.6.2"

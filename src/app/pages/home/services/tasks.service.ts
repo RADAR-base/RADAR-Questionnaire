@@ -114,7 +114,7 @@ export class TasksService {
             return (
               task.timestamp >= tenMinutesAgo &&
               task.timestamp < tenMinutesAgo + offsetForward &&
-              task.completed === false
+              !task.completed
             )
           default:
             // NOTE: Break out of the loop as soon as the next incomplete task is found

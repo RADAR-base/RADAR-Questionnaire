@@ -11,20 +11,11 @@ import { Assessment } from '../../shared/models/assessment'
 import { TimeInterval } from '../../shared/models/protocol'
 import { ReportScheduling } from '../../shared/models/report'
 import { Task } from '../../shared/models/task'
-import { getMilliseconds } from '../../shared/utilities/time'
+import {
+  getMilliseconds,
+  timeIntervalToMillis
+} from '../../shared/utilities/time'
 import { StorageService } from './storage.service'
-
-export const TIME_UNIT_MILLIS = {
-  min: 60000,
-  hour: 60000 * 60,
-  day: 60000 * 60 * 24,
-  week: 60000 * 60 * 24 * 7,
-  month: 60000 * 60 * 24 * 7 * 31,
-  year: 60000 * 60 * 24 * 365
-}
-
-const TIME_UNIT_MILLIS_DEFAULT =
-  DefaultScheduleYearCoverage * TIME_UNIT_MILLIS.year
 
 @Injectable()
 export class SchedulingService {
@@ -52,7 +43,7 @@ export class SchedulingService {
 
   getTasksForDate(date) {
     const startTime = this.setDateTimeToMidnight(date).getTime()
-    const endTime = startTime + TIME_UNIT_MILLIS.day
+    const endTime = startTime + getMilliseconds({ days: 1 })
     return this.getTasks().then(schedule =>
       schedule.filter(
         d =>
@@ -66,7 +57,7 @@ export class SchedulingService {
       const tasks: Task[] = []
       if (schedule) {
         const startTime = this.setDateTimeToMidnight(date).getTime()
-        const endTime = startTime + TIME_UNIT_MILLIS.day
+        const endTime = startTime + getMilliseconds({ days: 1 })
         for (let i = 0; i < schedule.length; i++) {
           const task = schedule[i]
           if (task.timestamp > endTime) break
@@ -79,10 +70,8 @@ export class SchedulingService {
   }
 
   getTasks() {
-    const defaultTasks = this.getDefaultTasks()
-    const clinicalTasks = this.getClinicalTasks()
-    return Promise.all([defaultTasks, clinicalTasks]).then(tasks =>
-      tasks.filter(d => d).reduce((a, b) => a.concat(b))
+    return Promise.all([this.getDefaultTasks(), this.getClinicalTasks()]).then(
+      tasks => tasks.filter(d => d).reduce((a, b) => a.concat(b))
     )
   }
 
@@ -100,10 +89,8 @@ export class SchedulingService {
 
   getNonReportedCompletedTasks() {
     return Promise.all([this.getDefaultTasks(), this.getClinicalTasks()]).then(
-      defaultAndClinicalTasks => {
-        const tasks = defaultAndClinicalTasks[0].concat(
-          defaultAndClinicalTasks[1]
-        )
+      ([defaultTasks, clinicalTasks]) => {
+        const tasks = defaultTasks.concat(clinicalTasks)
         const now = new Date().getTime()
         return tasks
           .filter(
@@ -245,7 +232,10 @@ export class SchedulingService {
     const repeatQ = assessment.protocol.repeatQuestionnaire
 
     let iterDate = this.setDateTimeToMidnight(new Date(this.enrolmentDate))
-    const endDate = new Date(iterDate.getTime() + TIME_UNIT_MILLIS_DEFAULT)
+    const endDate = new Date(
+      iterDate.getTime() +
+        getMilliseconds({ years: DefaultScheduleYearCoverage })
+    )
     const completionWindow = SchedulingService.computeCompletionWindow(
       assessment
     )
@@ -306,15 +296,6 @@ export class SchedulingService {
     }
   }
 
-  static timeIntervalToMillis(interval: TimeInterval): number {
-    if (!interval) {
-      return TIME_UNIT_MILLIS_DEFAULT
-    }
-    const unit = interval.unit in TIME_UNIT_MILLIS ? interval.unit : 'day'
-    const amount = interval.amount ? interval.amount : 1
-    return amount * TIME_UNIT_MILLIS[unit]
-  }
-
   static taskBuilder(
     index,
     assessment: Assessment,
@@ -339,7 +320,7 @@ export class SchedulingService {
 
   static computeCompletionWindow(assessment: Assessment): number {
     if (assessment.protocol.completionWindow) {
-      return this.timeIntervalToMillis(assessment.protocol.completionWindow)
+      return timeIntervalToMillis(assessment.protocol.completionWindow)
     } else if (assessment.name === 'ESM') {
       return DefaultESMCompletionWindow
     } else {
@@ -383,7 +364,7 @@ export class SchedulingService {
       firstViewedOn: 0,
       range: {
         timestampStart:
-          timestamp - DefaultScheduleReportRepeat * TIME_UNIT_MILLIS.day,
+          timestamp - getMilliseconds({ days: DefaultScheduleReportRepeat }),
         timestampEnd: timestamp
       }
     }

@@ -8,6 +8,7 @@ import {
 } from 'ionic-angular'
 import { Subscription } from 'rxjs'
 
+import { AlertService } from '../../../core/services/alert.service'
 import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { KafkaService } from '../../../core/services/kafka.service'
 import { StorageService } from '../../../core/services/storage.service'
@@ -56,7 +57,7 @@ export class HomePageComponent implements OnDestroy {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public alertCtrl: AlertController,
+    public alertService: AlertService,
     private tasksService: TasksService,
     private translate: TranslatePipe,
     public storage: StorageService,
@@ -144,11 +145,12 @@ export class HomePageComponent implements OnDestroy {
     const task = taskCalendarTask ? taskCalendarTask : this.nextTask
     if (this.tasksService.isTaskValid(task)) {
       this.startingQuestionnaire = true
-      const lang = this.storage.get(StorageKeys.LANGUAGE)
-      const nextAssessment = this.tasksService.getAssessment(task)
-      Promise.all([lang, nextAssessment]).then(res => {
-        const language = res[0].value
-        const assessment = res[1]
+
+      Promise.all([
+        this.storage.get(StorageKeys.LANGUAGE),
+        this.tasksService.getAssessment(task)
+      ]).then(([lang, assessment]) => {
+        const language = lang.value
         const params = {
           title: assessment.name,
           introduction: assessment.startText[language],
@@ -177,21 +179,20 @@ export class HomePageComponent implements OnDestroy {
 
   showCredits() {
     this.firebaseAnalytics.logEvent('click', { button: 'show_credits' })
-    const buttons = [
-      {
-        text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
-        handler: () => {}
-      }
-    ]
-    this.showAlert({
+    return this.alertService.showAlert({
       title: this.translate.transform(LocKeys.CREDITS_TITLE.toString()),
       message: this.translate.transform(LocKeys.CREDITS_BODY.toString()),
-      buttons: buttons
+      buttons: [
+        {
+          text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+          handler: () => {}
+        }
+      ]
     })
   }
 
   showMissedInfo() {
-    return this.showAlert({
+    return this.alertService.showAlert({
       title: this.translate.transform(
         LocKeys.CALENDAR_ESM_MISSED_TITLE.toString()
       ),
@@ -205,21 +206,5 @@ export class HomePageComponent implements OnDestroy {
         }
       ]
     })
-  }
-
-  showAlert(parameters) {
-    const alert = this.alertCtrl.create({
-      title: parameters.title,
-      buttons: parameters.buttons
-    })
-    if (parameters.message) {
-      alert.setMessage(parameters.message)
-    }
-    if (parameters.inputs) {
-      for (let i = 0; i < parameters.inputs.length; i++) {
-        alert.addInput(parameters.inputs[i])
-      }
-    }
-    alert.present()
   }
 }

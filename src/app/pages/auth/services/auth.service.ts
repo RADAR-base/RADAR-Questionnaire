@@ -20,6 +20,7 @@ import {
 } from '../../../../assets/data/defaultConfig'
 import { StorageService } from '../../../core/services/storage.service'
 import { StorageKeys } from '../../../shared/enums/storage'
+import { getSeconds } from '../../../shared/utilities/time'
 
 @Injectable()
 export class AuthService {
@@ -35,7 +36,9 @@ export class AuthService {
 
   refresh() {
     return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
-      const limit = (new Date().getTime() - DefaultTokenRefreshTime) / 1000
+      const limit = getSeconds({
+        milliseconds: new Date().getTime() - DefaultTokenRefreshTime
+      })
       if (tokens.iat + tokens.expires_in < limit) {
         const URI = this.URI_base + DefaultRefreshTokenURI
         const headers = this.getRegisterHeaders(

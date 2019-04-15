@@ -1,5 +1,3 @@
-import { Reminders } from './protocol'
-
 export interface Task {
   index: number
   completed: boolean

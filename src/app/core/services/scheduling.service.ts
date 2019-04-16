@@ -8,7 +8,7 @@ import {
 } from '../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../shared/enums/storage'
 import { Assessment } from '../../shared/models/assessment'
-import { TimeInterval } from '../../shared/models/protocol'
+import { RepeatQuestionnaire, TimeInterval } from '../../shared/models/protocol'
 import { ReportScheduling } from '../../shared/models/report'
 import { Task } from '../../shared/models/task'
 import {
@@ -45,28 +45,14 @@ export class SchedulingService {
     const startTime = this.setDateTimeToMidnight(date).getTime()
     const endTime = startTime + getMilliseconds({ days: 1 })
     return this.getTasks().then(schedule =>
-      schedule.filter(
-        d =>
-          d.timestamp + d.completionWindow >= startTime && d.timestamp < endTime
-      )
+      schedule
+        .filter(
+          d =>
+            d.timestamp + d.completionWindow >= startTime &&
+            d.timestamp < endTime
+        )
+        .sort(SchedulingService.compareTasks)
     )
-  }
-
-  getNonClinicalTasksForDate(date) {
-    return this.getDefaultTasks().then(schedule => {
-      const tasks: Task[] = []
-      if (schedule) {
-        const startTime = this.setDateTimeToMidnight(date).getTime()
-        const endTime = startTime + getMilliseconds({ days: 1 })
-        for (let i = 0; i < schedule.length; i++) {
-          const task = schedule[i]
-          if (task.timestamp > endTime) break
-          if (task.timestamp + task.completionWindow >= startTime)
-            tasks.push(task)
-        }
-      }
-      return tasks
-    })
   }
 
   getTasks() {
@@ -406,5 +392,47 @@ export class SchedulingService {
     } else {
       return 0
     }
+  }
+
+  generateClinicalTasks(task) {
+    return this.getClinicalTasks().then(tasks => {
+      if (!tasks) {
+        tasks = []
+      }
+      const protocol = task.protocol
+      const repeatTimes = this.formatRepeatsAfterClinic(
+        protocol.clinicalProtocol.repeatAfterClinicVisit
+      )
+      const now = new Date().getTime()
+      const clinicalTasks = tasks.concat(
+        repeatTimes.map((repeatTime, i) => ({
+          index: tasks.length + i,
+          completed: false,
+          reportedCompletion: false,
+          timestamp: now + repeatTime,
+          name: task.name,
+          reminderSettings: protocol.reminders,
+          nQuestions: task.questions.length,
+          estimatedCompletionTime: task.estimatedCompletionTime,
+          completionWindow: DefaultTaskCompletionWindow,
+          warning: '',
+          isClinical: true
+        }))
+      )
+
+      return this.storage.set(
+        StorageKeys.SCHEDULE_TASKS_CLINICAL,
+        clinicalTasks
+      )
+    })
+  }
+
+  formatRepeatsAfterClinic(repeats: RepeatQuestionnaire) {
+    return repeats.unitsFromZero.map(amount =>
+      timeIntervalToMillis({
+        unit: repeats.unit,
+        amount
+      })
+    )
   }
 }

@@ -1,19 +1,11 @@
 import { Component } from '@angular/core'
 import { NavController, NavParams } from 'ionic-angular'
 
-import {
-  DefaultNumberOfNotificationsToSchedule,
-  DefaultTaskCompletionWindow
-} from '../../../../assets/data/defaultConfig'
 import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { KafkaService } from '../../../core/services/kafka.service'
-import { NotificationService } from '../../../core/services/notification.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { StorageKeys } from '../../../shared/enums/storage'
-import { Assessment } from '../../../shared/models/assessment'
-import { RepeatQuestionnaire } from '../../../shared/models/protocol'
 import { Task } from '../../../shared/models/task'
-import { timeIntervalToMillis } from '../../../shared/utilities/time'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { FinishTaskService } from '../services/finish-task.service'
 import { PrepareDataService } from '../services/prepare-data.service'
@@ -36,7 +28,6 @@ export class FinishPageComponent {
     public navParams: NavParams,
     private kafkaService: KafkaService,
     private prepareDataService: PrepareDataService,
-    private notificationService: NotificationService,
     private finishTaskService: FinishTaskService,
     public storage: StorageService,
     private firebaseAnalytics: FirebaseAnalyticsService
@@ -110,55 +101,11 @@ export class FinishPageComponent {
 
   evalClinicalFollowUpTask() {
     if (this.completedInClinic) {
-      return this.storage
-        .get(StorageKeys.SCHEDULE_TASKS_CLINICAL)
-        .then(tasks => this.generateClinicalTasks(tasks))
+      return this.finishTaskService.scheduleClinicalTasks(
+        this.navParams.data.associatedTask
+      )
     } else {
       return Promise.resolve({})
     }
-  }
-
-  generateClinicalTasks(tasks) {
-    if (!tasks) {
-      tasks = []
-    }
-    const associatedTask: Assessment = this.navParams.data.associatedTask
-    const protocol = associatedTask.protocol
-    const repeatTimes = this.formatRepeatsAfterClinic(
-      protocol.clinicalProtocol.repeatAfterClinicVisit
-    )
-    const now = new Date().getTime()
-    const clinicalTasks = tasks.concat(
-      repeatTimes.map((repeatTime, i) => ({
-        index: tasks.length + i,
-        completed: false,
-        reportedCompletion: false,
-        timestamp: now + repeatTime,
-        name: associatedTask.name,
-        reminderSettings: protocol.reminders,
-        nQuestions: associatedTask.questions.length,
-        estimatedCompletionTime: associatedTask.estimatedCompletionTime,
-        completionWindow: DefaultTaskCompletionWindow,
-        warning: '',
-        isClinical: true
-      }))
-    )
-
-    return this.storage
-      .set(StorageKeys.SCHEDULE_TASKS_CLINICAL, clinicalTasks)
-      .then(() =>
-        this.notificationService.setNextXNotifications(
-          DefaultNumberOfNotificationsToSchedule
-        )
-      )
-  }
-
-  formatRepeatsAfterClinic(repeats: RepeatQuestionnaire) {
-    return repeats.unitsFromZero.map(amount =>
-      timeIntervalToMillis({
-        unit: repeats.unit,
-        amount
-      })
-    )
   }
 }

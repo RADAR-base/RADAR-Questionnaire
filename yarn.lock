@@ -2653,6 +2653,11 @@ cordova-lib@^9.0.1:
     shebang-command "^1.2.0"
     underscore "^1.9.1"
 
+cordova-media-with-compression@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/cordova-media-with-compression/-/cordova-media-with-compression-2.1.2.tgz#a2cf06414a57b88860b9632473d9c966ee0e9989"
+  integrity sha512-pzJ+iKkfGQ3XwKc2V+4k/wqNIMaxQR4b+qJAp07Uy/cV8NoiBQF3J2ycqTvuzewUwzgBh5VLvA2ztqxD1KnIUg==
+
 cordova-plugin-android-permissions@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/cordova-plugin-android-permissions/-/cordova-plugin-android-permissions-1.0.0.tgz#9e7c116be668eb7dfa41491b13d8d47da9548149"
@@ -2710,15 +2715,6 @@ cordova-plugin-local-notification@^0.9.0-beta.3:
   version "0.9.0-beta.3"
   resolved "https://registry.yarnpkg.com/cordova-plugin-local-notification/-/cordova-plugin-local-notification-0.9.0-beta.3.tgz#f63d49b90ea9cdf1a5de53e7eb478a09bb236f93"
   integrity sha512-L3Z1velxrkm9nHFcvLnMgBPZjKFt6hwM6hn1lA+JFwIR26Yw6UF72z+/lRMBclAcOxBIDYCqeaLgvezmajjuEg==
-
-"cordova-plugin-network-information@git+https://github.com/apache/cordova-plugin-network-information.git":
-  version "2.0.2-dev"
-  resolved "git+https://github.com/apache/cordova-plugin-network-information.git#27b0e397bc899f420e6af9e7fefe444c36a3c67a"
-
-cordova-plugin-media@^5.0.2:
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-media/-/cordova-plugin-media-5.0.2.tgz#3345769c07e6a46a71c97e1bb434dacca5c8d80b"
-  integrity sha1-M0V2nAfmpGpxyX4btDTazKXI2As=
 
 "cordova-plugin-network-information@git+https://github.com/apache/cordova-plugin-network-information.git":
   version "2.0.2-dev"
@@ -7575,11 +7571,6 @@ picomatch@^2.0.3:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.0.4.tgz#b972630d6ba532d905a4d6524c095d0d2140b4ed"
   integrity sha512-lN1llt2d+xBz96Vp+yj0qMUVMyDsqvNSecdRDIEuh72kQi1N6ttkxPJ7zDVwKR4ehD2R3WhMKqdp/5LeRfc+PA==
-
-phonegap-plugin-mobile-accessibility@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/phonegap-plugin-mobile-accessibility/-/phonegap-plugin-mobile-accessibility-1.0.5.tgz#95a8754d127508bc6e1ae259a53ce765836eac03"
-  integrity sha1-lah1TRJ1CLxuGuJZpTznZYNurAM=
 
 pify@^2.0.0, pify@^2.3.0:
   version "2.3.0"

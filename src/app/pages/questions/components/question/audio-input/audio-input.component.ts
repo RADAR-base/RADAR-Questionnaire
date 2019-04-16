@@ -7,12 +7,13 @@ import {
   OnInit,
   Output
 } from '@angular/core'
-import { AlertController, NavController, Platform } from 'ionic-angular'
+import { NavController, Platform } from 'ionic-angular'
 
 import {
   MIN_SEC,
   SEC_MILLISEC
 } from '../../../../../../assets/data/defaultConfig'
+import { AlertService } from '../../../../../core/services/alert.service'
 import { LocKeys } from '../../../../../shared/enums/localisations'
 import { Section } from '../../../../../shared/models/question'
 import { TranslatePipe } from '../../../../../shared/pipes/translate/translate'
@@ -41,7 +42,7 @@ export class AudioInputComponent implements OnChanges, OnDestroy, OnInit {
     private audioRecordService: AudioRecordService,
     private permissionUtil: AndroidPermissionUtility,
     public navCtrl: NavController,
-    public alertCtrl: AlertController,
+    public alertService: AlertService,
     private platform: Platform,
     private translate: TranslatePipe
   ) {
@@ -118,28 +119,12 @@ export class AudioInputComponent implements OnChanges, OnDestroy, OnInit {
           }
         }
       ]
-      this.showAlert({
+      this.alertService.showAlert({
         title: 'Audio task interrupted',
         message: 'Task has been interrupted. Restart task.',
         buttons: buttons
       })
       this.alertShown = true
     }
-  }
-
-  showAlert(parameters) {
-    const alert = this.alertCtrl.create({
-      title: parameters.title,
-      buttons: parameters.buttons
-    })
-    if (parameters.message) {
-      alert.setMessage(parameters.message)
-    }
-    if (parameters.inputs) {
-      for (let i = 0; i < parameters.inputs.length; i++) {
-        alert.addInput(parameters.inputs[i])
-      }
-    }
-    alert.present()
   }
 }

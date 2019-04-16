@@ -19,15 +19,25 @@ export class TasksService {
     return this.storage.getAssessment(task)
   }
 
-  getTasksOfToday() {
-    return this.schedule.getNonClinicalTasksForDate(new Date())
+  getNonClinicalTasksOfToday() {
+    return this.schedule
+      .getNonClinicalTasksForDate(new Date())
+      .then(tasks =>
+        tasks.filter(
+          t =>
+            this.isTaskValid(t) ||
+            (t.completed && this.isToday(t.timeCompleted))
+        )
+      )
   }
 
-  getSortedTasksOfToday(): Promise<Map<number, Task[]>> {
-    return this.getTasksOfToday().then(tasks => {
+  getSortedNonClinicalTasksOfToday(): Promise<Map<number, Task[]>> {
+    return this.getNonClinicalTasksOfToday().then(tasks => {
       const sortedTasks = new Map()
       tasks.forEach(t => {
-        const midnight = new Date(t.timestamp).setUTCHours(0, 0, 0, 0)
+        const midnight = this.schedule
+          .setDateTimeToMidnight(t.timestamp)
+          .getTime()
         if (sortedTasks.has(midnight)) sortedTasks.get(midnight).push(t)
         else sortedTasks.set(midnight, [t])
       })
@@ -40,7 +50,7 @@ export class TasksService {
   }
 
   getTaskProgress(): Promise<TasksProgress> {
-    return this.getTasksOfToday().then(tasks => {
+    return this.getNonClinicalTasksOfToday().then(tasks => {
       return {
         numberOfTasks: tasks.length,
         completedTasks: tasks.filter(d => d.completed).length
@@ -48,64 +58,46 @@ export class TasksService {
     })
   }
 
-  areAllTasksComplete(tasks) {
+  isToday(date) {
     return (
-      !tasks ||
-      tasks.every(
-        t =>
-          t.name === 'ESM' ||
-          t.isClinical ||
-          t.completed ||
-          !this.isTaskValid(t)
-      )
+      new Date(date).setHours(0, 0, 0, 0) == new Date().setHours(0, 0, 0, 0)
     )
   }
 
-  isLastTask(task, tasks): boolean {
-    return (
-      !tasks ||
-      tasks.every(
-        t => t.name === 'ESM' || t.completed || t.index === task.index
-      )
-    )
+  areAllTasksComplete(tasks) {
+    return !tasks || tasks.every(t => t.completed || !this.isTaskStartable(t))
+  }
+
+  isLastTask(task, tasks) {
+    return !tasks || tasks.every(t => t.completed || t.index === task.index)
+  }
+
+  isTaskStartable(task) {
+    // NOTE: This checks if the task timestamp has passed and if task is valid
+    return task.timestamp <= new Date().getTime() && this.isTaskValid(task)
   }
 
   isTaskValid(task) {
-    const now = new Date().getTime()
+    // NOTE: This checks if completion window has not passed and task is incomplete
     return (
-      task.timestamp <= now &&
-      task.timestamp + task.completionWindow > now &&
+      task.timestamp + task.completionWindow > new Date().getTime() &&
       !task.completed
     )
   }
 
   /**
    * This function Retrieves the most current next task from a list of tasks.
-   * @param tasks : The list of tasks to retrieve the next task from.
+   * @param tasks : list of tasks to retrieve the next task from.
    * @returns {@link Task} : The next incomplete task from the list. This essentially
    *                         translates to which questionnaire the `START` button on home page corresponds to.
    */
   getNextTask(tasks: Task[]): Task | undefined {
     if (tasks) {
-      const tenMinutesAgo = new Date().getTime() - DefaultESMCompletionWindow
-      const offsetForward = DefaultTaskCompletionWindow
-      return tasks.find(task => {
-        switch (task.name) {
-          case 'ESM':
-            // NOTE: For ESM, just look from 10 mins before now
-            return (
-              task.timestamp >= tenMinutesAgo &&
-              task.timestamp < tenMinutesAgo + offsetForward &&
-              !task.completed
-            )
-          default:
-            // NOTE: Break out of the loop as soon as the next incomplete task is found
-            return (
-              task.timestamp + task.completionWindow >= Date.now() &&
-              !task.completed
-            )
-        }
-      })
+      return tasks.find(task => this.isTaskValid(task))
     }
+  }
+
+  getCurrentDateMidnight() {
+    return this.schedule.setDateTimeToMidnight(new Date())
   }
 }

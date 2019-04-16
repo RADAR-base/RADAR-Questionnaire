@@ -12,6 +12,7 @@ import {
   DefaultSettingsWeeklyReport,
   LanguageMap
 } from '../../../../assets/data/defaultConfig'
+import { AlertService } from '../../../core/services/alert.service'
 import { ConfigService } from '../../../core/services/config.service'
 import { NotificationService } from '../../../core/services/notification.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
@@ -48,7 +49,7 @@ export class SettingsPageComponent {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public alertCtrl: AlertController,
+    public alertService: AlertService,
     public storage: StorageService,
     private schedule: SchedulingService,
     private configService: ConfigService,
@@ -176,7 +177,7 @@ export class SettingsPageComponent {
         checked: checked
       })
     }
-    this.showAlert({
+    return this.alertService.showAlert({
       title: this.translate.transform(
         LocKeys.SETTINGS_LANGUAGE_ALERT.toString()
       ),
@@ -192,7 +193,7 @@ export class SettingsPageComponent {
         handler: () => {}
       }
     ]
-    this.showAlert({
+    return this.alertService.showAlert({
       title: this.translate.transform(
         LocKeys.SETTINGS_NOTIFICATIONS_NIGHTMOD.toString()
       ),
@@ -221,7 +222,7 @@ export class SettingsPageComponent {
         }
       }
     ]
-    this.showAlert({
+    return this.alertService.showAlert({
       title: this.translate.transform(LocKeys.TESTING_NOTIFICATIONS.toString()),
       message: this.translate.transform(
         LocKeys.TESTING_NOTIFICATIONS_MESSAGE.toString()
@@ -250,7 +251,7 @@ export class SettingsPageComponent {
         }
       }
     ]
-    this.showAlert({
+    return this.alertService.showAlert({
       title: this.translate.transform(LocKeys.SETTINGS_RESET_ALERT.toString()),
       message: this.translate.transform(
         LocKeys.SETTINGS_RESET_ALERT_DESC.toString()
@@ -259,30 +260,35 @@ export class SettingsPageComponent {
     })
   }
 
-  showAlert(parameters) {
-    const alert = this.alertCtrl.create({
-      title: parameters.title,
-      buttons: parameters.buttons
-    })
-    if (parameters.message) {
-      alert.setMessage(parameters.message)
-    }
-    if (parameters.inputs) {
-      for (let i = 0; i < parameters.inputs.length; i++) {
-        alert.addInput(parameters.inputs[i])
-      }
-    }
-    alert.present()
-  }
-
   reloadConfig() {
     this.showLoading = true
     return this.configService
       .fetchConfigState(true)
+      .catch(e => this.showConfigError())
       .then(() => {
         this.showLoading = false
         return this.loadSettings()
       })
       .then(() => this.backToSplash())
+  }
+
+  showConfigError() {
+    const buttons = [
+      {
+        text: this.translate.transform(LocKeys.BTN_CANCEL.toString()),
+        handler: () => {}
+      },
+      {
+        text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+        handler: () => {
+          this.reloadConfig()
+        }
+      }
+    ]
+    return this.alertService.showAlert({
+      title: this.translate.transform(LocKeys.STATUS_FAILURE.toString()),
+      message: this.translate.transform(LocKeys.CONFIG_ERROR_DESC.toString()),
+      buttons: buttons
+    })
   }
 }

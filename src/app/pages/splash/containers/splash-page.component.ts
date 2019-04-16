@@ -1,4 +1,5 @@
 import { Component } from '@angular/core'
+import { FirebaseAnalytics } from '@ionic-native/firebase-analytics/ngx'
 import { NavController, NavParams } from 'ionic-angular'
 
 import {
@@ -15,7 +16,6 @@ import { StorageKeys } from '../../../shared/enums/storage'
 import { EnrolmentPageComponent } from '../../auth/containers/enrolment-page.component'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { SplashService } from '../services/splash.service'
-import { FirebaseAnalytics } from '@ionic-native/firebase-analytics/ngx'
 
 @Component({
   selector: 'page-splash',

@@ -108,7 +108,7 @@
     "@angular/platform-server": "^7.2.13",
     "@ionic/app-scripts": "^3.2.3",
     "@types/node": "^11.13.4",
-    "codelyzer": "^4.5.0",
+    "codelyzer": "^5.0.0",
     "eslint": "^5.6.0",
     "eslint-scope": "^4.0.0",
     "import-sort-cli": "^6.0.0",

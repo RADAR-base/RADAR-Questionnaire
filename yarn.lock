@@ -7517,10 +7517,10 @@ performance-now@^2.1.0:
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
   integrity sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
 
-phonegap-plugin-barcodescanner@^7.1.2:
-  version "7.1.2"
-  resolved "https://registry.yarnpkg.com/phonegap-plugin-barcodescanner/-/phonegap-plugin-barcodescanner-7.1.2.tgz#100b909f2b2deeae96eb73b4f0dce19cb50cb3a3"
-  integrity sha512-9jxhXptCUPkD8dnNEjjQTClKrpXc4LjDOGpBuqwxJTSIiVsgv00P8pfmWGNYfyJD9N3yBYYra/X0UexbUKWxtw==
+phonegap-plugin-barcodescanner@^8.0.1:
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/phonegap-plugin-barcodescanner/-/phonegap-plugin-barcodescanner-8.0.1.tgz#829348e7e2e4353b39ea1ef15fed08b4617f683a"
+  integrity sha512-s+wY33+FPgfl/Yc81mIKoPuBX9yhRow0ARGpFZkmiwNplNs8eEwS+XnAzUlYCn77yvyiSymRmSMjjQdbvyHDuQ==
 
 phonegap-plugin-mobile-accessibility@^1.0.5:
   version "1.0.5"

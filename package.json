@@ -92,7 +92,7 @@
     "kafka-rest": "^0.0.5",
     "moment": "^2.22.2",
     "ngx-moment": "^3.3.0",
-    "phonegap-plugin-barcodescanner": "^7.1.2",
+    "phonegap-plugin-barcodescanner": "^8.0.1",
     "phonegap-plugin-mobile-accessibility": "^1.0.5",
     "rxjs": "^6.3.0",
     "uuid": "^3.3.2",

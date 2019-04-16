@@ -154,7 +154,7 @@ export class FinishPageComponent {
   }
 
   formatRepeatsAfterClinic(repeats: RepeatQuestionnaire) {
-    return repeats.unitFromZero.map(amount =>
+    return repeats.unitsFromZero.map(amount =>
       timeIntervalToMillis({
         unit: repeats.unit,
         amount

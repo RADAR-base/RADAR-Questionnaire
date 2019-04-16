@@ -914,20 +914,12 @@ export const Localisations = {
     it: `Non chiudere l'app`,
     nl: 'Sluit de app niet'
   },
-  PROTOCOL_ERROR_DESC: {
-    da: 'Protokoltræk fejler. Prøv igen?',
-    de: 'Protokoll Pull fehlgeschlagen Wiederholen?',
-    en: 'Protocol pull fail. Retry?',
-    es: 'Falla de tirón del protocolo. Reintentar?',
-    it: 'Protocollo fallito. Riprovare?',
-    nl: 'Protocol pull mislukt. Opnieuw?'
-  },
-  NOTIFICATION_ERROR_DESC: {
-    da: 'Meddelelser omlægge fejl. Prøve igen?',
-    de: 'Neuplanen von Benachrichtigungen schlagen fehl. Wiederholen?',
-    en: 'Notifications reschedule fail. Retry?',
-    es: 'Las notificaciones reprograman fallas. ¿Procesar de nuevo?',
-    it: 'Le notifiche riprogrammano non riescono. Riprovare?',
-    nl: 'Herberekening van meldingen mislukt. Opnieuw?'
+  CONFIG_ERROR_DESC: {
+    da: 'Config opdatering mislykkes. Prøve igen?',
+    de: 'Config Update fehlgeschlagen. Wiederholen?',
+    en: 'Config update fail. Retry?',
+    es: 'La actualización de configuración falla. ¿Procesar de nuevo?',
+    it: `Errore nell'aggiornamento della configurazione. Riprovare?`,
+    nl: 'Config-update mislukt. Opnieuw?'
   }
 }

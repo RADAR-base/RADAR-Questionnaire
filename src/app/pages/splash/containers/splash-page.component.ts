@@ -8,6 +8,7 @@ import {
 } from '../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../core/services/alert.service'
 import { ConfigService } from '../../../core/services/config.service'
+import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { KafkaService } from '../../../core/services/kafka.service'
 import { NotificationService } from '../../../core/services/notification.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
@@ -18,7 +19,6 @@ import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { EnrolmentPageComponent } from '../../auth/containers/enrolment-page.component'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { SplashService } from '../services/splash.service'
-import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service';
 
 @Component({
   selector: 'page-splash',
@@ -55,13 +55,12 @@ export class SplashPageComponent {
     this.configService.migrateToLatestVersion()
     return this.configService
       .fetchConfigState(false)
-      .catch(e => this.showConfigError(LocKeys.PROTOCOL_ERROR_DESC))
       .then(() => this.checkTimezoneChange())
       .then(() => this.notificationsRefresh())
       .catch(error => {
         console.error(error)
-        console.log('[SPLASH] Notifications error.')
-        this.showConfigError(LocKeys.NOTIFICATION_ERROR_DESC)
+        console.log('[SPLASH] Notifications/config error.')
+        this.showConfigError()
       })
       .then(() => {
         this.status = 'Sending missed completion logs...'
@@ -111,7 +110,7 @@ export class SplashPageComponent {
           return this.notificationService
             .setNextXNotifications(DefaultNumberOfNotificationsToSchedule)
             .then(() =>
-              this.firebaseAnalytics.logEvent('notification_rescheduled', {})
+              this.firebaseAnalytics.logEvent('notification_refreshed', {})
             )
         } else {
           console.log(
@@ -152,8 +151,12 @@ export class SplashPageComponent {
     return this.schedule.insertTask(updatedTask)
   }
 
-  showConfigError(error) {
+  showConfigError() {
     const buttons = [
+      {
+        text: this.translate.transform(LocKeys.BTN_CANCEL.toString()),
+        handler: () => {}
+      },
       {
         text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
         handler: () => {
@@ -163,7 +166,7 @@ export class SplashPageComponent {
     ]
     return this.alertService.showAlert({
       title: this.translate.transform(LocKeys.STATUS_FAILURE.toString()),
-      message: this.translate.transform(error.toString()),
+      message: this.translate.transform(LocKeys.CONFIG_ERROR_DESC.toString()),
       buttons: buttons
     })
   }

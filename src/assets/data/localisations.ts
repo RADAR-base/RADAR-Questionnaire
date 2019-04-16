@@ -470,6 +470,14 @@ export const Localisations = {
     it: 'Inizio',
     nl: 'Begin'
   },
+  BTN_STOP: {
+    da: 'Stoppe',
+    de: 'Stoppen',
+    en: 'Stop',
+    es: 'Detener',
+    it: 'Fermare',
+    nl: 'Stoppen'
+  },
   BTN_RESET: {
     da: 'Nulstil',
     de: 'Zurücksetzen',

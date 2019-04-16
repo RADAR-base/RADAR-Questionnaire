@@ -22,4 +22,8 @@ audio-input {
   .audio-content {
     height: 80%;
   }
+
+  .bt-stop {
+    background-color: $cl-danger-40;
+  }
 }

@@ -32,7 +32,6 @@ export class AudioInputComponent implements OnChanges, OnDestroy, OnInit {
   @Input()
   currentlyShown: boolean
 
-  avgWordsPerMinute = 100
   alertShown = false
   resumeListener
   pauseListener
@@ -54,13 +53,12 @@ export class AudioInputComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   ngOnChanges() {
-    if (this.currentlyShown) this.startRecording()
+    // if (this.currentlyShown) this.startRecording()
   }
 
   ngOnDestroy() {
     this.resumeListener.unsubscribe()
     this.pauseListener.unsubscribe()
-    this.audioRecordService.destroy()
   }
 
   onResume() {
@@ -84,8 +82,7 @@ export class AudioInputComponent implements OnChanges, OnDestroy, OnInit {
     this.permissionUtil.getRecordAudio_Permission().then(success => {
       if (success) {
         this.audioRecordService
-          .startAudioRecording(this.getRecordingTime())
-          .then(data => this.valueChange.emit(data))
+          .startAudioRecording()
           .catch(e => this.showTaskInterruptedAlert())
       } else {
         this.showTaskInterruptedAlert()
@@ -94,18 +91,18 @@ export class AudioInputComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   stopRecording() {
-    this.audioRecordService.stopAudioRecording()
+    this.audioRecordService
+      .stopAudioRecording()
+      .then(data => {
+        console.log(data)
+        return this.valueChange.emit(data)
+      })
+      .catch(e => this.showTaskInterruptedAlert())
+    this.audioRecordService.destroy()
   }
 
-  getRecordingTime() {
-    return (
-      (this.sections
-        .map(section => section.label)
-        .toString()
-        .split(' ').length /
-        this.avgWordsPerMinute) *
-      (MIN_SEC * SEC_MILLISEC)
-    )
+  isRecording() {
+    return this.audioRecordService.isRecording
   }
 
   showTaskInterruptedAlert() {

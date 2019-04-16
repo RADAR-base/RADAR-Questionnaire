@@ -9,14 +9,13 @@ export class AudioRecordService {
   isRecording: boolean = false
   audio
   fileName = 'audio.m4a'
-  recordingTimeout
 
   constructor(private file: File, private device: Device) {
     // NOTE: Kill recording on load
     this.stopAudioRecording()
   }
 
-  startAudioRecording(length): Promise<any> {
+  startAudioRecording(): Promise<any> {
     return new Promise((resolve, reject) => {
       if (!this.isRecording) this.isRecording = true
       else reject()
@@ -24,24 +23,19 @@ export class AudioRecordService {
       this.audio = new Media(this.getFilePath(), this.success, this.failure)
       const options = { SampleRate: 16000, NumberOfChannels: 1 }
       if (this.isRecording) {
-        this.audio.startRecordWithCompression(options)
-        this.recordingTimeout = setTimeout(() => {
-          console.log('Time up for recording')
-          this.stopAudioRecording()
-          resolve(this.readAudioFile())
-        }, length)
+        return this.audio.startRecordWithCompression(options)
       } else {
         reject()
       }
     })
   }
 
-  stopAudioRecording() {
+  stopAudioRecording(): Promise<any> {
     if (this.isRecording) {
       this.audio.stopRecord()
       this.isRecording = false
-      clearTimeout(this.recordingTimeout)
-    }
+      return this.readAudioFile()
+    } else return Promise.reject()
   }
 
   getFilePath() {

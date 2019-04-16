@@ -306,8 +306,7 @@ export class SchedulingService {
       index: index,
       completed: false,
       reportedCompletion: false,
-      // NOTE: Plus one hour added for consistency, but must be fixed in protocol.
-      timestamp: taskDate.getTime() + getMilliseconds({ hours: 1 }),
+      timestamp: taskDate.getTime(),
       name: assessment.name,
       reminderSettings: assessment.protocol.reminders,
       nQuestions: assessment.questions.length,

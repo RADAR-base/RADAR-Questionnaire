@@ -2,6 +2,8 @@ import { Protocol } from './protocol'
 import { Question } from './question'
 
 export interface Assessment {
+  warn?: string
+  estimatedCompletionTime?: number
   name: string
   protocol: Protocol
   startText: string

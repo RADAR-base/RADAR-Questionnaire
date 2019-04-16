@@ -1,5 +1,3 @@
-import { Reminders } from './protocol'
-
 export interface Task {
   index: number
   completed: boolean
@@ -12,6 +10,7 @@ export interface Task {
   completionWindow: number
   warning: string
   isClinical: boolean
+  timeCompleted?: number
 }
 
 export interface TasksProgress {

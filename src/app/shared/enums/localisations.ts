@@ -128,6 +128,7 @@ export class LocKeys {
   )
   static CLOSE_APP = new LocKeys('CLOSE_APP')
   static WARNING_DO_NOT_CLOSE_APP = new LocKeys('WARNING_DO_NOT_CLOSE_APP')
+  static CONFIG_ERROR_DESC = new LocKeys('CONFIG_ERROR_DESC')
 
   constructor(public value: string) {}
 

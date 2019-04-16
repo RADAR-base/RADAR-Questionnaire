@@ -1,5 +1,4 @@
 import { Component } from '@angular/core'
-import { FirebaseAnalytics } from '@ionic-native/firebase-analytics/ngx'
 import { NavController, NavParams } from 'ionic-angular'
 
 import {
@@ -7,12 +6,16 @@ import {
   DefaultNumberOfCompletionLogsToSend,
   DefaultNumberOfNotificationsToSchedule
 } from '../../../../assets/data/defaultConfig'
+import { AlertService } from '../../../core/services/alert.service'
 import { ConfigService } from '../../../core/services/config.service'
+import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { KafkaService } from '../../../core/services/kafka.service'
 import { NotificationService } from '../../../core/services/notification.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
+import { LocKeys } from '../../../shared/enums/localisations'
 import { StorageKeys } from '../../../shared/enums/storage'
+import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { EnrolmentPageComponent } from '../../auth/containers/enrolment-page.component'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { SplashService } from '../services/splash.service'
@@ -33,7 +36,9 @@ export class SplashPageComponent {
     private kafka: KafkaService,
     private configService: ConfigService,
     private schedule: SchedulingService,
-    private firebaseAnalytics: FirebaseAnalytics
+    private firebaseAnalytics: FirebaseAnalyticsService,
+    private translate: TranslatePipe,
+    private alertService: AlertService
   ) {
     this.splashService
       .evalEnrolment()
@@ -54,7 +59,8 @@ export class SplashPageComponent {
       .then(() => this.notificationsRefresh())
       .catch(error => {
         console.error(error)
-        console.log('[SPLASH] Notifications error.')
+        console.log('[SPLASH] Notifications/config error.')
+        this.showConfigError()
       })
       .then(() => {
         this.status = 'Sending missed completion logs...'
@@ -101,10 +107,11 @@ export class SplashPageComponent {
         ) {
           this.status = 'Updating notifications...'
           console.log('[SPLASH] Scheduling Notifications.')
-          this.firebaseAnalytics.logEvent('notification_rescheduled', {})
-          return this.notificationService.setNextXNotifications(
-            DefaultNumberOfNotificationsToSchedule
-          )
+          return this.notificationService
+            .setNextXNotifications(DefaultNumberOfNotificationsToSchedule)
+            .then(() =>
+              this.firebaseAnalytics.logEvent('notification_refreshed', {})
+            )
         } else {
           console.log(
             'Not Scheduling Notifications as ' +
@@ -142,5 +149,25 @@ export class SplashPageComponent {
     const updatedTask = task
     updatedTask.reportedCompletion = true
     return this.schedule.insertTask(updatedTask)
+  }
+
+  showConfigError() {
+    const buttons = [
+      {
+        text: this.translate.transform(LocKeys.BTN_CANCEL.toString()),
+        handler: () => {}
+      },
+      {
+        text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+        handler: () => {
+          this.onStart()
+        }
+      }
+    ]
+    return this.alertService.showAlert({
+      title: this.translate.transform(LocKeys.STATUS_FAILURE.toString()),
+      message: this.translate.transform(LocKeys.CONFIG_ERROR_DESC.toString()),
+      buttons: buttons
+    })
   }
 }

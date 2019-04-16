@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core'
 
-import {
-  DefaultESMCompletionWindow,
-  DefaultTaskCompletionWindow
-} from '../../../../assets/data/defaultConfig'
 import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { Task, TasksProgress } from '../../../shared/models/task'
@@ -19,9 +15,9 @@ export class TasksService {
     return this.storage.getAssessment(task)
   }
 
-  getNonClinicalTasksOfToday() {
+  getTasksOfToday() {
     return this.schedule
-      .getNonClinicalTasksForDate(new Date())
+      .getTasksForDate(new Date())
       .then(tasks =>
         tasks.filter(
           t =>
@@ -31,8 +27,8 @@ export class TasksService {
       )
   }
 
-  getSortedNonClinicalTasksOfToday(): Promise<Map<number, Task[]>> {
-    return this.getNonClinicalTasksOfToday().then(tasks => {
+  getSortedTasksOfToday(): Promise<Map<number, Task[]>> {
+    return this.getTasksOfToday().then(tasks => {
       const sortedTasks = new Map()
       tasks.forEach(t => {
         const midnight = this.schedule
@@ -45,12 +41,8 @@ export class TasksService {
     })
   }
 
-  getTasksOfDate(timestamp) {
-    return this.schedule.getNonClinicalTasksForDate(timestamp)
-  }
-
   getTaskProgress(): Promise<TasksProgress> {
-    return this.getNonClinicalTasksOfToday().then(tasks => {
+    return this.getTasksOfToday().then(tasks => {
       return {
         numberOfTasks: tasks.length,
         completedTasks: tasks.filter(d => d.completed).length

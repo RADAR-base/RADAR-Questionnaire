@@ -19,7 +19,7 @@ export interface TimeInterval {
 
 export interface RepeatQuestionnaire {
   unit: string
-  unitFromZero: number[]
+  unitsFromZero: number[]
 }
 
 export interface Reminder {

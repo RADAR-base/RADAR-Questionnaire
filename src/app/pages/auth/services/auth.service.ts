@@ -1,9 +1,6 @@
-import 'rxjs/add/operator/map'
-import 'rxjs/add/operator/toPromise'
-
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { JwtHelperService } from '@auth0/angular-jwt'
+import { HTTP } from '@ionic-native/http/ngx'
 
 import {
   DefaultEndPoint,
@@ -27,7 +24,7 @@ export class AuthService {
   URI_base: string
 
   constructor(
-    public http: HttpClient,
+    private http: HTTP,
     public storage: StorageService,
     private jwtHelper: JwtHelperService
   ) {
@@ -68,13 +65,11 @@ export class AuthService {
   // TODO: test this
   registerToken(registrationToken) {
     const URI = this.URI_base + DefaultRefreshTokenURI
+    console.log(registrationToken)
     // console.debug('URI : ' + URI)
-    const refreshBody = DefaultRefreshTokenRequestBody + registrationToken
+    const refreshBody = this.getRefreshParams(registrationToken)
     const headers = this.getRegisterHeaders(DefaultRequestEncodedContentType)
-    const promise = this.createPostRequest(URI, refreshBody, {
-      headers: headers
-    })
-    return promise.then(res => {
+    return this.createPostRequest(URI, refreshBody, headers).then(res => {
       return this.storage.set(StorageKeys.OAUTH_TOKENS, res)
     })
   }
@@ -90,16 +85,16 @@ export class AuthService {
       const promise = this.createPostRequest(
         URI,
         DefaultSourceTypeRegistrationBody,
-        {
-          headers: headers
-        }
+        headers
       )
       return promise
     })
   }
 
   getRefreshTokenFromUrl(url) {
-    return this.http.get(url).toPromise()
+    return this.http.get(url, {}, {}).then(res => {
+      return JSON.parse(res.data)
+    })
   }
 
   getURLFromToken(base, token) {
@@ -107,7 +102,7 @@ export class AuthService {
   }
 
   createPostRequest(uri, body, headers) {
-    return this.http.post(uri, body, headers).toPromise()
+    return this.http.post(uri, body, headers).then(res => JSON.parse(res.data))
   }
 
   getSubjectInformation() {
@@ -118,29 +113,30 @@ export class AuthService {
         DefaultRequestEncodedContentType
       )
       const URI = this.URI_base + DefaultSubjectsURI + decoded.sub
-      return this.http.get(URI, { headers }).toPromise()
+      return this.http.get(URI, {}, headers).then(res => JSON.parse(res.data))
     })
   }
 
   getRegisterHeaders(contentType) {
     // TODO:: Use empty client secret https://github.com/RADAR-base/RADAR-Questionnaire/issues/140
-    const headers = new HttpHeaders()
-      .set('Authorization', 'Basic ' + btoa(DefaultSourceProducerAndSecret))
-      .set('Content-Type', contentType)
+    const headers = {
+      Authorization: 'Basic ' + btoa(DefaultSourceProducerAndSecret),
+      'Content-Type': contentType
+    }
     return headers
   }
 
   getAccessHeaders(accessToken, contentType) {
-    const headers = new HttpHeaders()
-      .set('Authorization', 'Bearer ' + accessToken)
-      .set('Content-Type', contentType)
+    const headers = {
+      Authorization: 'Bearer ' + accessToken,
+      'Content-Type': contentType
+    }
     return headers
   }
 
   getRefreshParams(refreshToken) {
-    const params = new HttpParams()
-      .set('grant_type', 'refresh_token')
-      .set('refresh_token', refreshToken)
+    // NOTE: Default refresh token request body
+    const params = { grant_type: 'refresh_token', refresh_token: refreshToken }
     return params
   }
 

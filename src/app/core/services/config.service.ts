@@ -1,8 +1,6 @@
-import 'rxjs/add/operator/toPromise'
-
-import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { AppVersion } from '@ionic-native/app-version/ngx'
+import { HTTP } from '@ionic-native/http/ngx'
 
 import {
   ARMTDefBranchProd,
@@ -23,7 +21,7 @@ import { StorageService } from './storage.service'
 @Injectable()
 export class ConfigService {
   constructor(
-    public http: HttpClient,
+    private http: HTTP,
     public storage: StorageService,
     private schedule: SchedulingService,
     private notificationService: NotificationService,
@@ -39,9 +37,8 @@ export class ConfigService {
       this.appVersion.getVersionNumber()
     ]).then(
       ([configVersion, scheduleVersion, storedAppVersion, appVersion]) => {
-        return this.pullProtocol().then(res => {
-          if (res) {
-            const response: any = JSON.parse(res)
+        return this.pullProtocol().then(response => {
+          if (response) {
             if (
               configVersion !== response.version ||
               scheduleVersion !== response.version ||
@@ -163,7 +160,9 @@ export class ConfigService {
     return this.getProjectName().then(projectName => {
       if (projectName) {
         const URI = DefaultProtocolEndPoint + projectName + DefaultProtocolURI
-        return this.http.get(URI, { responseType: 'text' }).toPromise()
+        return this.http
+          .get(URI, { responseType: 'text' }, {})
+          .then(res => JSON.parse(res.data))
       } else {
         console.error(
           'Unknown project name : ' + projectName + '. Cannot pull protocols.'
@@ -231,7 +230,10 @@ export class ConfigService {
     )
     return this.getQuestionnairesOfLang(uri).catch(e => {
       const URI = this.formatQuestionnaireUri(assessment.questionnaire, '')
-      return this.getQuestionnairesOfLang(URI)
+      return this.getQuestionnairesOfLang(URI).then(res => {
+        console.log(res)
+        return res
+      })
     })
   }
 
@@ -254,7 +256,7 @@ export class ConfigService {
   }
 
   getQuestionnairesOfLang(URI) {
-    return this.http.get(URI).toPromise()
+    return this.http.get(URI, {}, {}).then(res => JSON.parse(res.data))
   }
 
   formatQuestionsHeaders(questions) {

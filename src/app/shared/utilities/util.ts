@@ -1,8 +1,8 @@
 import 'rxjs/add/operator/map'
 
-import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Device } from '@ionic-native/device/ngx'
+import { HTTP } from '@ionic-native/http/ngx'
 import { throwError as observableThrowError } from 'rxjs'
 
 import { DefaultEndPoint } from '../../../assets/data/defaultConfig'
@@ -15,15 +15,15 @@ export class Utility {
   URI_version: string = '/versions/'
 
   constructor(
-    private http: HttpClient,
+    private http: HTTP,
     private device: Device,
     private storage: StorageService
   ) {}
 
   getSchema(schemaUrl) {
     return this.http
-      .get(schemaUrl)
-      .map(this.extractData)
+      .get(schemaUrl, {}, {})
+      .then(res => JSON.parse(res.data))
       .catch(this.handleError)
   }
 
@@ -39,11 +39,6 @@ export class Utility {
         device: this.device
       }
     }
-  }
-
-  private extractData(res: any) {
-    const body = res.json()
-    return body || []
   }
 
   private handleError(error: any) {
@@ -102,7 +97,7 @@ export class Utility {
       const endPoint = baseuri ? baseuri : DefaultEndPoint
       const uri = endPoint + this.URI_schema + questionName + versionStr
       console.log(uri)
-      return this.http.get(uri).toPromise()
+      return this.http.get(uri, {}, {}).then(res => JSON.parse(res.data))
     })
   }
 }

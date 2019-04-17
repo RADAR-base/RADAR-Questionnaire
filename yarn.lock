@@ -414,6 +414,13 @@
   dependencies:
     "@types/cordova" latest
 
+"@ionic-native/http@^5.4.0":
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/http/-/http-5.4.0.tgz#3f63d724dd881fa153c5779dc8f92e555f464d64"
+  integrity sha512-pMkRUH2gxb9zwQIWX7T0LEZtXAoFhoH9ozDXspsSLP8ERiVrwN2b6m0/2fsNnHMf48NWRYrC6e2d6resT9YpCg==
+  dependencies:
+    "@types/cordova" latest
+
 "@ionic-native/local-notifications@^5.4.0":
   version "5.4.0"
   resolved "https://registry.yarnpkg.com/@ionic-native/local-notifications/-/local-notifications-5.4.0.tgz#b8310dafb53bae509af57f5b153095a0ca2063c3"
@@ -2652,6 +2659,11 @@ cordova-lib@^9.0.1:
     semver "^5.6.0"
     shebang-command "^1.2.0"
     underscore "^1.9.1"
+
+cordova-plugin-advanced-http@^2.0.9:
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-advanced-http/-/cordova-plugin-advanced-http-2.0.9.tgz#f255aca67a6c4d100115a47e82dae4bbf85c512b"
+  integrity sha512-JCaDg5+mn+6vv/TAjFb+8PVOPgdx+qN6slrIeukAmxbL/QEO8x1fvHffPd1AAWrgnrn6FVvrbLA14rlKpBKVqg==
 
 cordova-plugin-android-permissions@^1.0.0:
   version "1.0.0"

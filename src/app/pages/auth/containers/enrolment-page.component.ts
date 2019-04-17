@@ -124,17 +124,18 @@ export class EnrolmentPageComponent {
     this.showOutcomeStatus = false
     this.transitionStatuses()
 
-    new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       let refreshToken = null
       if (this.validURL(authObj)) {
         // NOTE: Meta QR code and new QR code
         this.authService
           .getRefreshTokenFromUrl(authObj)
-          .then((body: any) => {
+          .then(body => {
             refreshToken = body['refreshToken']
             if (body['baseUrl']) {
-              this.storage.set(StorageKeys.BASE_URI, body['baseUrl'])
-              this.authService.updateURI()
+              this.storage
+                .set(StorageKeys.BASE_URI, body['baseUrl'])
+                .then(() => this.authService.updateURI())
             }
             resolve(refreshToken)
           })
@@ -172,6 +173,7 @@ export class EnrolmentPageComponent {
           this.displayErrorMessage(error)
           throw error
         }
+        console.log('registering token')
         this.authService
           .registerToken(refreshToken)
           .then(() =>

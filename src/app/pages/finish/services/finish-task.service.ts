@@ -9,6 +9,7 @@ export class FinishTaskService {
   updateTaskToComplete(task): Promise<any> {
     const updatedTask = task
     updatedTask.completed = true
+    updatedTask.timeCompleted = new Date().getTime()
     if (updatedTask.isClinical == false)
       this.schedule.addToCompletedTasks(updatedTask)
     return this.schedule.insertTask(updatedTask)

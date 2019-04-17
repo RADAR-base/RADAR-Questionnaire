@@ -913,5 +913,13 @@ export const Localisations = {
     es: 'No cierres la aplicación',
     it: `Non chiudere l'app`,
     nl: 'Sluit de app niet'
+  },
+  CONFIG_ERROR_DESC: {
+    da: 'Config opdatering mislykkes. Prøve igen?',
+    de: 'Config Update fehlgeschlagen. Wiederholen?',
+    en: 'Config update fail. Retry?',
+    es: 'La actualización de configuración falla. ¿Procesar de nuevo?',
+    it: `Errore nell'aggiornamento della configurazione. Riprovare?`,
+    nl: 'Config-update mislukt. Opnieuw?'
   }
 }

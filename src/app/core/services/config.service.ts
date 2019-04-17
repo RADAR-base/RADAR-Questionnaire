@@ -41,100 +41,98 @@ export class ConfigService {
       let appVersion = DefaultAppVersion
       this.appVersionPlugin.getVersionNumber().then(res => (appVersion = res))
       console.log('fetching with app version ', appVersion)
-      return this.pullProtocol()
-        .then(res => {
-          if (res) {
-            const response: any = JSON.parse(res)
-            if (
-              configVersion !== response.version ||
-              scheduleVersion !== response.version ||
-              storedAppVersion !== appVersion ||
-              force
-            ) {
-              this.storage.set(StorageKeys.APP_VERSION, appVersion)
-              this.storage.set(StorageKeys.HAS_CLINICAL_TASKS, false)
-              const protocolFormated = this.formatPulledProcotol(
-                response.protocols
-              )
-              const scheduledAssessments = []
-              const clinicalAssessments = []
-              for (let i = 0; i < protocolFormated.length; i++) {
-                const clinical =
-                  protocolFormated[i]['protocol']['clinicalProtocol']
-                if (clinical) {
-                  this.storage.set(StorageKeys.HAS_CLINICAL_TASKS, true)
-                  clinicalAssessments.push(protocolFormated[i])
-                } else {
-                  scheduledAssessments.push(protocolFormated[i])
-                }
+      return this.pullProtocol().then(res => {
+        if (res) {
+          const response: any = JSON.parse(res)
+          if (
+            configVersion !== response.version ||
+            scheduleVersion !== response.version ||
+            storedAppVersion !== appVersion ||
+            force
+          ) {
+            this.storage.set(StorageKeys.APP_VERSION, appVersion)
+            this.storage.set(StorageKeys.HAS_CLINICAL_TASKS, false)
+            const protocolFormated = this.formatPulledProcotol(
+              response.protocols
+            )
+            const scheduledAssessments = []
+            const clinicalAssessments = []
+            for (let i = 0; i < protocolFormated.length; i++) {
+              const clinical =
+                protocolFormated[i]['protocol']['clinicalProtocol']
+              if (clinical) {
+                this.storage.set(StorageKeys.HAS_CLINICAL_TASKS, true)
+                clinicalAssessments.push(protocolFormated[i])
+              } else {
+                scheduledAssessments.push(protocolFormated[i])
               }
-              return this.storage
-                .set(StorageKeys.CONFIG_VERSION, response.version)
-                .then(() => {
-                  return this.storage
-                    .set(
-                      StorageKeys.CONFIG_CLINICAL_ASSESSMENTS,
-                      clinicalAssessments
-                    )
-                    .then(() => {
-                      console.log('Pulled clinical questionnaire')
-                      return this.pullQuestionnaires(
-                        StorageKeys.CONFIG_CLINICAL_ASSESSMENTS
-                      )
-                    })
-                })
-                .then(() => {
-                  return this.storage
-                    .set(StorageKeys.CONFIG_ASSESSMENTS, scheduledAssessments)
-                    .then(() => {
-                      console.log('Pulled questionnaire')
-                      return this.pullQuestionnaires(
-                        StorageKeys.CONFIG_ASSESSMENTS
-                      )
-                    })
-                })
-                .then(() => this.schedule.generateSchedule(true))
-                .then(() => this.rescheduleNotifications())
-                .then(() =>
-                  Promise.all([
-                    this.storage.get(StorageKeys.PARTICIPANTLOGIN),
-                    this.getProjectName(),
-                    this.storage.get(StorageKeys.SOURCEID),
-                    this.storage.get(StorageKeys.ENROLMENTDATE),
-                    this.storage.get(StorageKeys.PARTICIPANTID)
-                  ]).then(
-                    ([
-                      subjectId,
-                      projectId,
-                      sourceId,
-                      enrolmentDate,
-                      humanReadableId
-                    ]) =>
-                      this.firebaseAnalytics.setUserProperties({
-                        subjectId: subjectId,
-                        projectId: projectId,
-                        sourceId: sourceId,
-                        enrolmentDate: String(enrolmentDate),
-                        humanReadableId: humanReadableId
-                      })
-                  )
-                )
-                .then(() =>
-                  this.firebaseAnalytics.logEvent('config_update', {
-                    config_version: String(configVersion),
-                    schedule_version: String(scheduleVersion),
-                    app_version: appVersion
-                  })
-                )
-            } else {
-              console.log(
-                'NO CONFIG UPDATE. Version of protocol.json has not changed.'
-              )
-              return this.schedule.generateSchedule(false)
             }
+            return this.storage
+              .set(StorageKeys.CONFIG_VERSION, response.version)
+              .then(() => {
+                return this.storage
+                  .set(
+                    StorageKeys.CONFIG_CLINICAL_ASSESSMENTS,
+                    clinicalAssessments
+                  )
+                  .then(() => {
+                    console.log('Pulled clinical questionnaire')
+                    return this.pullQuestionnaires(
+                      StorageKeys.CONFIG_CLINICAL_ASSESSMENTS
+                    )
+                  })
+              })
+              .then(() => {
+                return this.storage
+                  .set(StorageKeys.CONFIG_ASSESSMENTS, scheduledAssessments)
+                  .then(() => {
+                    console.log('Pulled questionnaire')
+                    return this.pullQuestionnaires(
+                      StorageKeys.CONFIG_ASSESSMENTS
+                    )
+                  })
+              })
+              .then(() => this.schedule.generateSchedule(true))
+              .then(() => this.rescheduleNotifications())
+              .then(() =>
+                Promise.all([
+                  this.storage.get(StorageKeys.PARTICIPANTLOGIN),
+                  this.getProjectName(),
+                  this.storage.get(StorageKeys.SOURCEID),
+                  this.storage.get(StorageKeys.ENROLMENTDATE),
+                  this.storage.get(StorageKeys.PARTICIPANTID)
+                ]).then(
+                  ([
+                    subjectId,
+                    projectId,
+                    sourceId,
+                    enrolmentDate,
+                    humanReadableId
+                  ]) =>
+                    this.firebaseAnalytics.setUserProperties({
+                      subjectId: subjectId,
+                      projectId: projectId,
+                      sourceId: sourceId,
+                      enrolmentDate: String(enrolmentDate),
+                      humanReadableId: humanReadableId
+                    })
+                )
+              )
+              .then(() =>
+                this.firebaseAnalytics.logEvent('config_update', {
+                  config_version: String(configVersion),
+                  schedule_version: String(scheduleVersion),
+                  app_version: appVersion
+                })
+              )
+          } else {
+            console.log(
+              'NO CONFIG UPDATE. Version of protocol.json has not changed.'
+            )
+            return this.schedule.generateSchedule(false)
           }
-        })
-        .catch(e => console.log(e))
+        }
+      })
     })
   }
 

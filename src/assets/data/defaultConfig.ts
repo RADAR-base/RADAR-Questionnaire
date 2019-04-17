@@ -172,6 +172,8 @@ export const SEC_MILLISEC = 1000
 export const HOUR_MIN = 60
 export const MIN_SEC = 60
 
+export const DefaultTimeInterval = { unit: 'day', amount: 1 }
+
 // KAFKA
 
 export const KAFKA_ASSESSMENT = 'assessment'

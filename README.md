@@ -1,5 +1,6 @@
 ## RADAR-Questionnaire
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/cccda70b98d040a09addbcc2b772f6f8)](https://app.codacy.com/app/yatharthranjan89/RADAR-Questionnaire?utm_source=github.com&utm_medium=referral&utm_content=RADAR-base/RADAR-Questionnaire&utm_campaign=Badge_Grade_Settings)
 [![bitHound Dependencies](https://www.bithound.io/github/RADAR-CNS/RADAR-Questionnaire/badges/dependencies.svg)](https://www.bithound.io/github/RADAR-CNS/RADAR-Questionnaire/develop/dependencies/npm) [![bitHound Dev Dependencies](https://www.bithound.io/github/RADAR-CNS/RADAR-Questionnaire/badges/devDependencies.svg)](https://www.bithound.io/github/RADAR-CNS/RADAR-Questionnaire/develop/dependencies/npm)
 
 Hybrid mobile application to actively capture data for the RADAR-CNS Platform.

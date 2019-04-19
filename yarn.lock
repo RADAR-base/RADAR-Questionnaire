@@ -7849,13 +7849,13 @@ postcss-sorting@^2.1.0:
     lodash "^4.17.4"
     postcss "^5.2.17"
 
-postcss-sorting@^4.0.1:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/postcss-sorting/-/postcss-sorting-4.1.0.tgz#a107f0bf3852977fa64e4442bc340c88d5aacdb3"
-  integrity sha512-r4T2oQd1giURJdHQ/RMb72dKZCuLOdWx2B/XhXN1Y1ZdnwXsKH896Qz6vD4tFy9xSjpKNYhlZoJmWyhH/7JUQw==
+postcss-sorting@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/postcss-sorting/-/postcss-sorting-5.0.0.tgz#4e4ce0a554c17d78d4287f08f792db8992bf62b5"
+  integrity sha512-m25mKLNq0fPAyZFElQ1hngRDFQDMlc+9ZwoWsL8oix6i1GsBzIxyke6sDeY9BXee7L86z4tex01fcH/9wTj3Jg==
   dependencies:
-    lodash "^4.17.4"
-    postcss "^7.0.0"
+    lodash "^4.17.11"
+    postcss "^7.0.14"
 
 postcss-syntax@^0.36.2:
   version "0.36.2"

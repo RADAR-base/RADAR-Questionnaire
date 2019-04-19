@@ -120,7 +120,7 @@
     "postcss": "^7.0.14",
     "postcss-cli": "^6.1.2",
     "postcss-scss": "^2.0.0",
-    "postcss-sorting": "^4.0.1",
+    "postcss-sorting": "^5.0.0",
     "prettier": "^1.16.4",
     "reflect-metadata": "^0.1.13",
     "rxjs-compat": "^6.4.0",

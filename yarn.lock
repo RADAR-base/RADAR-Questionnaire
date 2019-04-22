@@ -400,10 +400,10 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/firebase-analytics@^5.4.0":
-  version "5.4.0"
-  resolved "https://registry.yarnpkg.com/@ionic-native/firebase-analytics/-/firebase-analytics-5.4.0.tgz#f04243648af10299c3e0b7c4a2bc8bc500cbd77d"
-  integrity sha512-C8oLfJKn/O60+pqw4MJNyRwrIXJx0NF7N5l4bARxAg6/UjTQ19aK0lhcyJ3pIzlvEOnfuZoonlflyul1xbiLuw==
+"@ionic-native/firebase-analytics@^5.5.0":
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/firebase-analytics/-/firebase-analytics-5.5.0.tgz#bbb4eb9ab5cf4830f0e47b4ecc89fcd8564fb4a3"
+  integrity sha512-CePLUdLkrApAcWtkTe6vUYZTE832eQYMAmwcv+xQzfgZYf03jJEIENtFjlT8WlMYUQDKvZqzXbv47ylk3g3s3w==
   dependencies:
     "@types/cordova" latest
 

@@ -47,7 +47,7 @@
     "@ionic-native/barcode-scanner": "^5.4.0",
     "@ionic-native/core": "^5.4.0",
     "@ionic-native/device": "^5.4.0",
-    "@ionic-native/dialogs": "^5.4.0",
+    "@ionic-native/dialogs": "^5.5.0",
     "@ionic-native/file": "^5.4.0",
     "@ionic-native/firebase-analytics": "^5.4.0",
     "@ionic-native/globalization": "^5.4.0",

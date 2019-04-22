@@ -386,10 +386,10 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/dialogs@^5.4.0":
-  version "5.4.0"
-  resolved "https://registry.yarnpkg.com/@ionic-native/dialogs/-/dialogs-5.4.0.tgz#650357eb0c3ea444eabfaa12cae34fba555d284d"
-  integrity sha512-8JlLXsGjvWmLWjVJJUnfKaR1jFQD5qK5gqKcoylkQRakUBpuzTB/fFAMwOyBcHZcioXWkKDInELq2h2fu5T+WA==
+"@ionic-native/dialogs@^5.5.0":
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/dialogs/-/dialogs-5.5.0.tgz#32a58e40647e848fbf12a4dca5225e0f344e3f22"
+  integrity sha512-1tzmPUEjUswmNN7V70ogvAkbo8V3fSmKyDKgCKyTfxLPzmioBRclwZdRK0v/hLSycRjYmFcZUkfodzIv/xQKiA==
   dependencies:
     "@types/cordova" latest
 

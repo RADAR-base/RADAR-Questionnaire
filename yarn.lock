@@ -414,10 +414,10 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/local-notifications@^5.4.0":
-  version "5.4.0"
-  resolved "https://registry.yarnpkg.com/@ionic-native/local-notifications/-/local-notifications-5.4.0.tgz#b8310dafb53bae509af57f5b153095a0ca2063c3"
-  integrity sha512-xKpcljk4mOFhe/6BzsL8AkPPZyB6WloqUcu1jp61ADEKfkeqr4uTzpADfZ/pzlw/aL05waHwvPZRgpQM/uUHlA==
+"@ionic-native/local-notifications@^5.5.0":
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/local-notifications/-/local-notifications-5.5.0.tgz#d48ba7a6cd623328f3731886b69a36b3991ed051"
+  integrity sha512-oqoxltbbvv40vpHNvHTo/dCUjWcwXb/Adaa57mPD8O5ZGkae3CuUBkSGWyiYGBOq7QYs/1ieFIC7saIdWmRjvQ==
   dependencies:
     "@types/cordova" latest
 

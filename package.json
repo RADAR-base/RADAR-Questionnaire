@@ -42,7 +42,7 @@
     "@angular/forms": "^7.2.13",
     "@angular/router": "^7.2.13",
     "@auth0/angular-jwt": "^2.1.0",
-    "@ionic-native/android-permissions": "^5.4.0",
+    "@ionic-native/android-permissions": "^5.5.0",
     "@ionic-native/app-version": "^5.4.0",
     "@ionic-native/barcode-scanner": "^5.4.0",
     "@ionic-native/core": "^5.4.0",

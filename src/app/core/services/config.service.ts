@@ -5,6 +5,7 @@ import { HTTP } from '@ionic-native/http/ngx'
 import {
   ARMTDefBranchProd,
   ARMTDefBranchTest,
+  DefaultAppVersion,
   DefaultNumberOfNotificationsToSchedule,
   DefaultProtocolEndPoint,
   DefaultProtocolURI,
@@ -160,9 +161,9 @@ export class ConfigService {
     return this.getProjectName().then(projectName => {
       if (projectName) {
         const URI = DefaultProtocolEndPoint + projectName + DefaultProtocolURI
-        return this.http
-          .get(URI, { responseType: 'text' }, {})
-          .then(res => JSON.parse(res.data))
+        return this.http.get(URI, { responseType: 'text' }, '').then(res => {
+          return JSON.parse(res.data)
+        })
       } else {
         console.error(
           'Unknown project name : ' + projectName + '. Cannot pull protocols.'
@@ -256,7 +257,9 @@ export class ConfigService {
   }
 
   getQuestionnairesOfLang(URI) {
-    return this.http.get(URI, {}, {}).then(res => JSON.parse(res.data))
+    return this.http.get(URI, {}, '').then(res => {
+      return JSON.parse(res.data)
+    })
   }
 
   formatQuestionsHeaders(questions) {

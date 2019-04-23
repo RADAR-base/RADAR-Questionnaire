@@ -65,8 +65,6 @@ export class AuthService {
   // TODO: test this
   registerToken(registrationToken) {
     const URI = this.URI_base + DefaultRefreshTokenURI
-    console.log(registrationToken)
-    // console.debug('URI : ' + URI)
     const refreshBody = this.getRefreshParams(registrationToken)
     const headers = this.getRegisterHeaders(DefaultRequestEncodedContentType)
     return this.createPostRequest(URI, refreshBody, headers).then(res => {
@@ -82,17 +80,16 @@ export class AuthService {
         DefaultRequestJSONContentType
       )
       const URI = this.URI_base + DefaultSubjectsURI + decoded.sub + '/sources'
-      const promise = this.createPostRequest(
+      return this.createPostRequest(
         URI,
         DefaultSourceTypeRegistrationBody,
-        headers
+        JSON.stringify(headers)
       )
-      return promise
     })
   }
 
   getRefreshTokenFromUrl(url) {
-    return this.http.get(url, {}, {}).then(res => {
+    return this.http.get(url, '', '').then(res => {
       return JSON.parse(res.data)
     })
   }
@@ -102,7 +99,9 @@ export class AuthService {
   }
 
   createPostRequest(uri, body, headers) {
-    return this.http.post(uri, body, headers).then(res => JSON.parse(res.data))
+    return this.http.post(uri, body, headers).then(res => {
+      return JSON.parse(res.data)
+    })
   }
 
   getSubjectInformation() {
@@ -113,7 +112,9 @@ export class AuthService {
         DefaultRequestEncodedContentType
       )
       const URI = this.URI_base + DefaultSubjectsURI + decoded.sub
-      return this.http.get(URI, {}, headers).then(res => JSON.parse(res.data))
+      return this.http.get(URI, {}, headers).then(res => {
+        return JSON.parse(res.data)
+      })
     })
   }
 

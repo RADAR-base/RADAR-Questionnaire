@@ -107,7 +107,7 @@
     "@angular/platform-browser-dynamic": "^7.2.13",
     "@angular/platform-server": "^7.2.13",
     "@ionic/app-scripts": "^3.2.3",
-    "@types/node": "^11.13.5",
+    "@types/node": "^11.13.7",
     "codelyzer": "^5.0.0",
     "eslint": "^5.6.0",
     "eslint-scope": "^4.0.0",

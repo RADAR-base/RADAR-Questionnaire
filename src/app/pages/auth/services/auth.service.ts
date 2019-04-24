@@ -42,13 +42,9 @@ export class AuthService {
           DefaultRequestEncodedContentType
         )
         const params = this.getRefreshParams(tokens.refresh_token)
-        const promise = this.createPostRequest(URI, '', {
-          headers: headers,
-          params: params
-        }).then(newTokens => {
-          return this.storage.set(StorageKeys.OAUTH_TOKENS, newTokens)
-        })
-        return promise
+        return this.createPostRequest(URI, params, headers).then(newTokens =>
+          this.storage.set(StorageKeys.OAUTH_TOKENS, newTokens)
+        )
       } else {
         return Promise.resolve(tokens)
       }
@@ -143,7 +139,7 @@ export class AuthService {
 
   isRefreshTokenExpired() {
     return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
-      return this.jwtHelper.isTokenExpired(tokens.refresh_token)
+      return tokens ? this.jwtHelper.isTokenExpired(tokens.refresh_token) : true
     })
   }
 }

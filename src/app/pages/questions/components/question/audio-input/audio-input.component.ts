@@ -50,27 +50,9 @@ export class AudioInputComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   ngOnInit() {
-    this.onResume()
-    this.onClose()
-  }
-
-  ngOnChanges() {
-    if (this.currentlyShown) this.startRecording()
-  }
-
-  ngOnDestroy() {
-    this.resumeListener.unsubscribe()
-    this.pauseListener.unsubscribe()
-    this.audioRecordService.destroy()
-  }
-
-  onResume() {
     this.resumeListener = this.platform.resume.subscribe(() =>
       this.showTaskInterruptedAlert()
     )
-  }
-
-  onClose() {
     // NOTE: Stop audio recording when application is on pause / backbutton is pressed
     this.pauseListener = this.platform.pause.subscribe(() =>
       this.stopRecording()
@@ -79,6 +61,16 @@ export class AudioInputComponent implements OnChanges, OnDestroy, OnInit {
       this.stopRecording()
       this.platform.exitApp()
     })
+  }
+
+  ngOnDestroy() {
+    this.resumeListener.unsubscribe()
+    this.pauseListener.unsubscribe()
+    this.audioRecordService.destroy()
+  }
+
+  ngOnChanges() {
+    if (this.currentlyShown) this.startRecording()
   }
 
   startRecording() {

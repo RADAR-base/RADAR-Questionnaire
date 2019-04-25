@@ -414,6 +414,13 @@
   dependencies:
     "@types/cordova" latest
 
+"@ionic-native/insomnia@^5.5.0":
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/insomnia/-/insomnia-5.5.0.tgz#d6200f9868a94c83a0dee9bc4bd231764d159c5e"
+  integrity sha512-igN76H5QxXp5D/iVuMt1qFQ9CnOkZfYFdcOYyyCUGt5xQyRgjuOFjX3MH2klTyDCxLwdoR5rAWH6EDkiv82nmg==
+  dependencies:
+    "@types/cordova" latest
+
 "@ionic-native/local-notifications@^5.5.0":
   version "5.5.0"
   resolved "https://registry.yarnpkg.com/@ionic-native/local-notifications/-/local-notifications-5.5.0.tgz#d48ba7a6cd623328f3731886b69a36b3991ed051"
@@ -2710,6 +2717,11 @@ cordova-plugin-globalization@^1.11.0:
   version "1.11.0"
   resolved "https://registry.yarnpkg.com/cordova-plugin-globalization/-/cordova-plugin-globalization-1.11.0.tgz#eac3158100298493afa30be8940e698f61efbcfe"
   integrity sha1-6sMVgQAphJOvowvolA5pj2HvvP4=
+
+cordova-plugin-insomnia@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-insomnia/-/cordova-plugin-insomnia-4.3.0.tgz#832a33f6d763f0b80273bdf761b35b678c43b957"
+  integrity sha1-gyoz9tdj8LgCc733YbNbZ4xDuVc=
 
 cordova-plugin-local-notification@^0.9.0-beta.3:
   version "0.9.0-beta.3"

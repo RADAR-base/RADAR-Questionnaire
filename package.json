@@ -51,6 +51,7 @@
     "@ionic-native/file": "^5.5.0",
     "@ionic-native/firebase-analytics": "^5.5.0",
     "@ionic-native/globalization": "^5.5.0",
+    "@ionic-native/insomnia": "^5.5.0",
     "@ionic-native/local-notifications": "^5.5.0",
     "@ionic-native/mobile-accessibility": "5.5.0",
     "@ionic-native/splash-screen": "^5.5.0",
@@ -75,6 +76,7 @@
     "cordova-plugin-file": "^6.0.1",
     "cordova-plugin-firebase-analytics": "^1.0.1",
     "cordova-plugin-globalization": "^1.11.0",
+    "cordova-plugin-insomnia": "^4.3.0",
     "cordova-plugin-local-notification": "^0.9.0-beta.3",
     "cordova-plugin-network-information": "git+https://github.com/apache/cordova-plugin-network-information.git",
     "cordova-plugin-opensmile": "^2.0.3",
@@ -165,7 +167,8 @@
       "cordova-plugin-firebase-analytics": {
         "FIREBASE_CORE_VERSION": "16.0.+"
       },
-      "phonegap-plugin-mobile-accessibility": {}
+      "phonegap-plugin-mobile-accessibility": {},
+      "cordova-plugin-insomnia": {}
     }
   },
   "ionic_enable_lint": false

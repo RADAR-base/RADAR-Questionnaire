@@ -2,25 +2,11 @@ audio-input {
   display: block;
   width: 100%;
 
-  .audio-card {
+  .audio-bottom {
     position: fixed;
-    overflow: scroll;
+    bottom: 16px;
     margin: 8px;
-    margin-right: 16px;
-    padding: 10px 10px 0;
     width: 88%;
-    height: 80%;
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
-    background-color: $cl-primary-20;
-  }
-
-  .audio-heading {
-    color: $cl-light-60;
-  }
-
-  .audio-content {
-    height: 80%;
   }
 
   .bt-stop {

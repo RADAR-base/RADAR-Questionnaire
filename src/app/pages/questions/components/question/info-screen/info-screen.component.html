@@ -1,4 +1,7 @@
-<div class="info-card">
+<div
+  class="info-card"
+  [class.info-card-sm]="hasFieldLabel"
+>
   <div *ngIf="isThincItReminder">
     <img
       src="assets/imgs/thincIt_app_icon.png"

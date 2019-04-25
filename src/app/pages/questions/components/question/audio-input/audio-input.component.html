@@ -1,31 +1,25 @@
-<!-- <div class="audio-card">
-  <div *ngFor="let section of sections">
-    <div class="audio-content">
-      <h2>{{ section.label }}</h2>
-    </div>
-  </div>
-</div> -->
+<div class="audio-bottom">
+  <ng-container *ngIf="!isRecording()">
+    <button
+      ion-button
+      class="bt bt--full"
+      round
+      full
+      (click)="startRecording()"
+    >
+      {{ "BTN_START" | translate }}
+    </button>
+  </ng-container>
 
-<ng-container *ngIf="!isRecording()">
-  <button
-    ion-button
-    class="bt bt--full"
-    round
-    full
-    (click)="startRecording()"
-  >
-    {{ "BTN_START" | translate }}
-  </button>
-</ng-container>
-
-<ng-container *ngIf="isRecording()">
-  <button
-    ion-button
-    class="bt bt--full bt-stop"
-    round
-    full
-    (click)="stopRecording()"
-  >
-    {{ "BTN_STOP" | translate }}
-  </button>
-</ng-container>
+  <ng-container *ngIf="isRecording()">
+    <button
+      ion-button
+      class="bt bt--full bt-stop"
+      round
+      full
+      (click)="stopRecording()"
+    >
+      {{ "BTN_STOP" | translate }}
+    </button>
+  </ng-container>
+</div>

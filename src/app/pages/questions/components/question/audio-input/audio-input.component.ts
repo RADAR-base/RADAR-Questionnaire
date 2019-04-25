@@ -2,17 +2,12 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,
   OnDestroy,
   OnInit,
   Output
 } from '@angular/core'
 import { NavController, Platform } from 'ionic-angular'
 
-import {
-  MIN_SEC,
-  SEC_MILLISEC
-} from '../../../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../../../core/services/alert.service'
 import { LocKeys } from '../../../../../shared/enums/localisations'
 import { Section } from '../../../../../shared/models/question'
@@ -25,7 +20,7 @@ import { AudioRecordService } from '../../../services/audio-record.service'
   selector: 'audio-input',
   templateUrl: 'audio-input.component.html'
 })
-export class AudioInputComponent implements OnChanges, OnDestroy, OnInit {
+export class AudioInputComponent implements OnDestroy, OnInit {
   @Output()
   valueChange: EventEmitter<any> = new EventEmitter<any>()
   @Input()
@@ -53,10 +48,6 @@ export class AudioInputComponent implements OnChanges, OnDestroy, OnInit {
     this.onClose()
   }
 
-  ngOnChanges() {
-    // if (this.currentlyShown) this.startRecording()
-  }
-
   ngOnDestroy() {
     this.resumeListener.unsubscribe()
     this.pauseListener.unsubscribe()
@@ -79,6 +70,11 @@ export class AudioInputComponent implements OnChanges, OnDestroy, OnInit {
     })
   }
 
+  handleRecording() {
+    if (!this.isRecording()) this.startRecording()
+    else this.stopRecording()
+  }
+
   startRecording() {
     this.permissionUtil.getRecordAudio_Permission().then(success => {
       if (success) {
@@ -99,11 +95,18 @@ export class AudioInputComponent implements OnChanges, OnDestroy, OnInit {
         return this.valueChange.emit(data)
       })
       .catch(e => this.showTaskInterruptedAlert())
-    this.audioRecordService.destroy()
   }
 
   isRecording() {
-    return this.audioRecordService.isRecording
+    return this.audioRecordService.getIsRecording()
+  }
+
+  getRecordingButtonText() {
+    return this.translate.transform(
+      this.isRecording()
+        ? LocKeys.BTN_STOP.toString()
+        : LocKeys.BTN_START.toString()
+    )
   }
 
   showTaskInterruptedAlert() {

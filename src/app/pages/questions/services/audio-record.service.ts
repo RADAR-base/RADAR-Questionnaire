@@ -12,7 +12,7 @@ export class AudioRecordService {
 
   constructor(private file: File, private device: Device) {
     // NOTE: Kill recording on load
-    this.stopAudioRecording()
+    this.destroy()
   }
 
   startAudioRecording(): Promise<any> {
@@ -34,7 +34,10 @@ export class AudioRecordService {
     if (this.isRecording) {
       this.audio.stopRecord()
       this.isRecording = false
-      return this.readAudioFile()
+      return this.readAudioFile().then(data => {
+        this.destroy()
+        return data
+      })
     } else return Promise.reject()
   }
 
@@ -48,6 +51,10 @@ export class AudioRecordService {
     return this.device.platform == 'Android'
       ? this.file.dataDirectory
       : this.file.tempDirectory
+  }
+
+  getIsRecording() {
+    return this.isRecording
   }
 
   success() {
@@ -65,5 +72,6 @@ export class AudioRecordService {
 
   destroy() {
     if (this.audio) this.audio.release()
+    this.isRecording = false
   }
 }

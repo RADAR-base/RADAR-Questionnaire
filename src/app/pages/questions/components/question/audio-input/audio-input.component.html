@@ -1,25 +1,14 @@
 <div class="audio-bottom">
-  <ng-container *ngIf="!isRecording()">
+  <ng-container>
     <button
       ion-button
       class="bt bt--full"
+      [class.bt-stop]="isRecording()"
       round
       full
-      (click)="startRecording()"
+      (click)="handleRecording()"
     >
-      {{ "BTN_START" | translate }}
-    </button>
-  </ng-container>
-
-  <ng-container *ngIf="isRecording()">
-    <button
-      ion-button
-      class="bt bt--full bt-stop"
-      round
-      full
-      (click)="stopRecording()"
-    >
-      {{ "BTN_STOP" | translate }}
+      {{ getRecordingButtonText() }}
     </button>
   </ng-container>
 </div>

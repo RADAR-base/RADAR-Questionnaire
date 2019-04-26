@@ -3,28 +3,29 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output
 } from '@angular/core'
-import { Device } from '@ionic-native/device/ngx'
-import { AlertController, NavController } from 'ionic-angular'
+import { NavController, Platform } from 'ionic-angular'
 
-// NOTE: File path to opensmile.js; Adding opensmile plugin
-import * as opensmile from '../../../../../../../plugins/cordova-plugin-opensmile/www/opensmile'
-import { Answer } from '../../../../../shared/models/answer'
+import {
+  MIN_SEC,
+  SEC_MILLISEC
+} from '../../../../../../assets/data/defaultConfig'
+import { AlertService } from '../../../../../core/services/alert.service'
+import { LocKeys } from '../../../../../shared/enums/localisations'
 import { Section } from '../../../../../shared/models/question'
+import { TranslatePipe } from '../../../../../shared/pipes/translate/translate'
 import { AndroidPermissionUtility } from '../../../../../shared/utilities/android-permission'
-import { QuestionsPageComponent } from '../../../containers/questions-page.component'
+import { HomePageComponent } from '../../../../home/containers/home-page.component'
 import { AudioRecordService } from '../../../services/audio-record.service'
-
-declare var cordova: any
-declare var window: any
 
 @Component({
   selector: 'audio-input',
   templateUrl: 'audio-input.component.html'
 })
-export class AudioInputComponent implements OnInit, OnChanges {
+export class AudioInputComponent implements OnChanges, OnDestroy, OnInit {
   @Output()
   valueChange: EventEmitter<any> = new EventEmitter<any>()
   @Input()
@@ -32,74 +33,92 @@ export class AudioInputComponent implements OnInit, OnChanges {
   @Input()
   currentlyShown: boolean
 
-  filename: string
-  name: string
-  filepath: string
-  recording: boolean
-  value: string = null
-  configFile = 'liveinput_android.conf'
-  compression = 1
-  platform = false
-  answer_b64: string = null
-  permission: any
-
-  answer: Answer = {
-    id: null,
-    value: null,
-    type: 'audio'
-  }
-
-  ngOnInit() {}
-
-  ngOnChanges() {
-    if (this.currentlyShown) {
-      this.startRecording()
-    }
-  }
+  avgWordsPerMinute = 100
+  alertShown = false
+  resumeListener
+  pauseListener
 
   constructor(
-    public questions: QuestionsPageComponent,
     private audioRecordService: AudioRecordService,
     private permissionUtil: AndroidPermissionUtility,
     public navCtrl: NavController,
-    public alertCtrl: AlertController,
-    private device: Device
+    public alertService: AlertService,
+    private platform: Platform,
+    private translate: TranslatePipe
   ) {
-    // NOTE: Stop audio recording when application is on pause / backbutton is pressed
-    document.addEventListener('pause', () => {
-      console.log('on pause')
-      // if (this.navCtrl.isActive(this.navCtrl.getActive()) == false) {
-      this.audioRecordService.stopAudioRecording()
-      // }
-    })
-
-    document.addEventListener('backbutton', () => {
-      console.log('on backbutton')
-      // if (this.navCtrl.isActive(this.navCtrl.getActive()) == false) {
-      this.audioRecordService.stopAudioRecording()
-      // }
-    })
-
     this.permissionUtil.checkPermissions()
+  }
+
+  ngOnInit() {
+    this.resumeListener = this.platform.resume.subscribe(() =>
+      this.showTaskInterruptedAlert()
+    )
+    // NOTE: Stop audio recording when application is on pause / backbutton is pressed
+    this.pauseListener = this.platform.pause.subscribe(() =>
+      this.stopRecording()
+    )
+    this.platform.registerBackButtonAction(() => {
+      this.stopRecording()
+      this.platform.exitApp()
+    })
+  }
+
+  ngOnDestroy() {
+    this.resumeListener.unsubscribe()
+    this.pauseListener.unsubscribe()
+    this.audioRecordService.destroy()
+  }
+
+  ngOnChanges() {
+    if (this.currentlyShown) this.startRecording()
   }
 
   startRecording() {
     this.permissionUtil.getRecordAudio_Permission().then(success => {
-      if (success === true) {
-        this.audioRecordService.startAudioRecording(this.configFile)
+      if (success) {
+        this.audioRecordService
+          .startAudioRecording(this.getRecordingTime())
+          .then(data => this.valueChange.emit(data))
+          .catch(e => this.showTaskInterruptedAlert())
+      } else {
+        this.showTaskInterruptedAlert()
       }
     })
   }
 
-  isRecording() {
-    return this.audioRecordService.getAudioRecordStatus()
+  stopRecording() {
+    this.audioRecordService.stopAudioRecording()
   }
 
-  setText() {
-    if (this.audioRecordService.getAudioRecordStatus()) {
-      return 'Stop Recording'
-    } else {
-      return 'Start Recording'
+  getRecordingTime() {
+    return (
+      (this.sections
+        .map(section => section.label)
+        .toString()
+        .split(' ').length /
+        this.avgWordsPerMinute) *
+      (MIN_SEC * SEC_MILLISEC)
+    )
+  }
+
+  showTaskInterruptedAlert() {
+    if (!this.alertShown) {
+      const buttons = [
+        {
+          text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+          handler: () => {
+            this.navCtrl.setRoot(HomePageComponent)
+          }
+        }
+      ]
+      this.alertService.showAlert({
+        title: this.translate.transform(LocKeys.AUDIO_TASK_ALERT.toString()),
+        message: this.translate.transform(
+          LocKeys.AUDIO_TASK_ALERT_DESC.toString()
+        ),
+        buttons: buttons
+      })
+      this.alertShown = true
     }
   }
 }

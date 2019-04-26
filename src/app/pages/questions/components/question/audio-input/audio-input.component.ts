@@ -112,8 +112,10 @@ export class AudioInputComponent implements OnChanges, OnDestroy, OnInit {
         }
       ]
       this.alertService.showAlert({
-        title: 'Audio task interrupted',
-        message: 'Task has been interrupted. Restart task.',
+        title: this.translate.transform(LocKeys.AUDIO_TASK_ALERT.toString()),
+        message: this.translate.transform(
+          LocKeys.AUDIO_TASK_ALERT_DESC.toString()
+        ),
         buttons: buttons
       })
       this.alertShown = true

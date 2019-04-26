@@ -100,6 +100,7 @@
   <plugin name="phonegap-plugin-mobile-accessibility" spec="^1.0.5" />
   <plugin name="cordova-media-with-compression" spec="^2.1.2" />
   <plugin name="cordova-plugin-file" spec="^6.0.1" />
+  <plugin name="cordova-plugin-insomnia" spec="^4.3.0" />
   <plugin name="phonegap-plugin-barcodescanner" spec="^8.0.1">
     <variable name="ANDROID_SUPPORT_V4_VERSION" value="27.+" />
   </plugin>

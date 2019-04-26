@@ -11,6 +11,7 @@ import { Dialogs } from '@ionic-native/dialogs/ngx'
 import { File } from '@ionic-native/file/ngx'
 import { FirebaseAnalytics } from '@ionic-native/firebase-analytics/ngx'
 import { Globalization } from '@ionic-native/globalization/ngx'
+import { Insomnia } from '@ionic-native/insomnia/ngx'
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx'
 import { MobileAccessibility } from '@ionic-native/mobile-accessibility/ngx'
 import { SplashScreen } from '@ionic-native/splash-screen/ngx'
@@ -64,7 +65,8 @@ import { Utility } from './shared/utilities/util'
     File,
     AppVersion,
     FirebaseAnalytics,
-    MobileAccessibility
+    MobileAccessibility,
+    Insomnia
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

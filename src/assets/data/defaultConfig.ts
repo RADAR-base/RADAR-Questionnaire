@@ -181,3 +181,7 @@ export const KAFKA_AUDIO = 'audio'
 export const KAFKA_CLIENT_KAFKA = '/kafka'
 
 export const DefaultNumberOfCompletionLogsToSend = 10
+
+// AUDIO TASK
+
+export const DefaultNumberofAudioAttempts = 5

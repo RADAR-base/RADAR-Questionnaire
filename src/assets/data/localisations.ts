@@ -922,6 +922,22 @@ export const Localisations = {
     it: `Non chiudere l'app`,
     nl: 'Sluit de app niet'
   },
+  AUDIO_TASK_ALERT: {
+    da: 'Lydopgave afbrudt',
+    de: 'Audio-Task unterbrochen',
+    en: 'Audio task interrupted',
+    es: 'Tarea de audio interrumpida',
+    it: 'Attività audio interrotta',
+    nl: 'Audiotaak onderbroken'
+  },
+  AUDIO_TASK_ALERT_DESC: {
+    da: 'Opgaven er afbrudt. Genstart opgaven.',
+    de: 'Die Aufgabe wurde unterbrochen. Task neu starten.',
+    en: 'Task has been interrupted. Restart task.',
+    es: 'La tarea ha sido interrumpida. Tarea de reinicio.',
+    it: `L'attività è stata interrotta. Riavvia il compito.`,
+    nl: 'Taak is onderbroken. Start de taak opnieuw.'
+  },
   CONFIG_ERROR_DESC: {
     da: 'Config opdatering mislykkes. Prøve igen?',
     de: 'Config Update fehlgeschlagen. Wiederholen?',

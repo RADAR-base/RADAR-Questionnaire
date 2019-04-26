@@ -8,6 +8,7 @@ import {
 } from '@angular/core'
 import { NavController, Platform } from 'ionic-angular'
 
+import { DefaultNumberofAudioAttempts } from '../../../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../../../core/services/alert.service'
 import { LocKeys } from '../../../../../shared/enums/localisations'
 import { Section } from '../../../../../shared/models/question'
@@ -29,6 +30,7 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   currentlyShown: boolean
 
   alertShown = false
+  recordAttempts = 0
   resumeListener
   pauseListener
 
@@ -44,22 +46,9 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
-    this.onResume()
-    this.onClose()
-  }
-
-  ngOnDestroy() {
-    this.resumeListener.unsubscribe()
-    this.pauseListener.unsubscribe()
-  }
-
-  onResume() {
     this.resumeListener = this.platform.resume.subscribe(() =>
       this.showTaskInterruptedAlert()
     )
-  }
-
-  onClose() {
     // NOTE: Stop audio recording when application is on pause / backbutton is pressed
     this.pauseListener = this.platform.pause.subscribe(() =>
       this.stopRecording()
@@ -71,8 +60,17 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   }
 
   handleRecording() {
-    if (!this.isRecording()) this.startRecording()
-    else this.stopRecording()
+    if (!this.isRecording()) {
+      if (this.recordAttempts < DefaultNumberofAudioAttempts) {
+        this.startRecording()
+        this.recordAttempts++
+      }
+    } else this.stopRecording()
+  }
+
+  ngOnDestroy() {
+    this.resumeListener.unsubscribe()
+    this.pauseListener.unsubscribe()
   }
 
   startRecording() {
@@ -120,8 +118,10 @@ export class AudioInputComponent implements OnDestroy, OnInit {
         }
       ]
       this.alertService.showAlert({
-        title: 'Audio task interrupted',
-        message: 'Task has been interrupted. Restart task.',
+        title: this.translate.transform(LocKeys.AUDIO_TASK_ALERT.toString()),
+        message: this.translate.transform(
+          LocKeys.AUDIO_TASK_ALERT_DESC.toString()
+        ),
         buttons: buttons
       })
       this.alertShown = true

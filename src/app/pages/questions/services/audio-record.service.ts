@@ -31,14 +31,12 @@ export class AudioRecordService {
   }
 
   stopAudioRecording(): Promise<any> {
-    if (this.isRecording) {
-      this.audio.stopRecord()
-      this.isRecording = false
-      return this.readAudioFile().then(data => {
-        this.destroy()
-        return data
-      })
-    } else return Promise.reject()
+    this.audio.stopRecord()
+    this.isRecording = false
+    return this.readAudioFile().then(data => {
+      this.destroy()
+      return data
+    })
   }
 
   getFilePath() {

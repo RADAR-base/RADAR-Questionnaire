@@ -60,7 +60,7 @@
     "@ionic/storage": "^2.2.0",
     "angular-svg-round-progressbar": "^2.0.0",
     "autoprefixer": "^9.1.5",
-    "avsc": "^5.4.7",
+    "avsc": "^5.4.9",
     "base64-js": "^1.2.1",
     "cordova-android": "^7.1.4",
     "cordova-android-support-gradle-release": "^3.0.0",

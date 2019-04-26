@@ -19,8 +19,7 @@ import { AlertService } from './alert.service'
 import { SchedulingService } from './scheduling.service'
 import { StorageService } from './storage.service'
 
-declare var cordova
-declare var FCMPlugin
+declare var FirebasePlugin
 
 @Injectable()
 export class NotificationService {
@@ -35,7 +34,7 @@ export class NotificationService {
 
   init() {
     try {
-      FCMPlugin.setSenderId(
+      FirebasePlugin.setSenderId(
         FCMPluginProjectSenderId,
         function() {
           console.log('[NOTIFICATION SERVICE] Set sender id success')
@@ -46,7 +45,7 @@ export class NotificationService {
         }
       )
 
-      FCMPlugin.getToken(function(token) {
+      FirebasePlugin.getToken(function(token) {
         console.log('[NOTIFICATION SERVICE] Refresh token success')
       })
     } catch (error) {
@@ -144,7 +143,7 @@ export class NotificationService {
   }
 
   sendFCMNotification(notification) {
-    FCMPlugin.upstream(
+    FirebasePlugin.upstream(
       notification,
       succ => console.log(succ),
       err => console.log(err)
@@ -227,7 +226,7 @@ export class NotificationService {
 
   cancelNotificationPush(participantLogin) {
     return new Promise(function(resolve, reject) {
-      FCMPlugin.upstream(
+      FirebasePlugin.upstream(
         {
           eventId: uuid(),
           action: 'CANCEL',

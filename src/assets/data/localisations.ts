@@ -938,6 +938,14 @@ export const Localisations = {
     it: `L'attività è stata interrotta. Riavvia il compito.`,
     nl: 'Taak is onderbroken. Start de taak opnieuw.'
   },
+  AUDIO_TASK_ATTEMPT_ALERT: {
+    da: 'Forsøg tilbageværende',
+    de: 'Verbleibende Versuche',
+    en: 'Attempts remaining',
+    es: 'Intentos restantes',
+    it: 'Tentativi rimanenti',
+    nl: 'Pogingen blijven'
+  },
   CONFIG_ERROR_DESC: {
     da: 'Config opdatering mislykkes. Prøve igen?',
     de: 'Config Update fehlgeschlagen. Wiederholen?',

@@ -6,14 +6,11 @@ declare var Media: any // stops errors w/ cordova-plugin-media-with-compression 
 
 @Injectable()
 export class AudioRecordService {
-  isRecording: boolean = false
+  isRecording: boolean
   audio
   fileName = 'audio.m4a'
 
-  constructor(private file: File, private device: Device) {
-    // NOTE: Kill recording on load
-    this.destroy()
-  }
+  constructor(private file: File, private device: Device) {}
 
   startAudioRecording(): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -60,8 +57,7 @@ export class AudioRecordService {
   }
 
   failure(error) {
-    console.log('Error! ' + error)
-    this.stopAudioRecording()
+    console.log('Error! ' + JSON.stringify(error))
   }
 
   readAudioFile() {

@@ -8,7 +8,10 @@ import {
 } from '@angular/core'
 import { NavController, Platform } from 'ionic-angular'
 
-import { DefaultNumberofAudioAttempts } from '../../../../../../assets/data/defaultConfig'
+import {
+  DefaultAudioAttemptThreshold,
+  DefaultNumberofAudioAttempts
+} from '../../../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../../../core/services/alert.service'
 import { LocKeys } from '../../../../../shared/enums/localisations'
 import { Section } from '../../../../../shared/models/question'
@@ -29,10 +32,10 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   @Input()
   currentlyShown: boolean
 
-  alertShown = false
   recordAttempts = 0
   resumeListener
   pauseListener
+  showRecordButton = true
 
   constructor(
     private audioRecordService: AudioRecordService,
@@ -43,6 +46,7 @@ export class AudioInputComponent implements OnDestroy, OnInit {
     private translate: TranslatePipe
   ) {
     this.permissionUtil.checkPermissions()
+    this.audioRecordService.destroy()
   }
 
   ngOnInit() {
@@ -59,18 +63,24 @@ export class AudioInputComponent implements OnDestroy, OnInit {
     })
   }
 
-  handleRecording() {
-    if (!this.isRecording()) {
-      if (this.recordAttempts < DefaultNumberofAudioAttempts) {
-        this.startRecording()
-        this.recordAttempts++
-      }
-    } else this.stopRecording()
-  }
-
   ngOnDestroy() {
     this.resumeListener.unsubscribe()
     this.pauseListener.unsubscribe()
+  }
+
+  handleRecording() {
+    if (!this.isRecording()) {
+      this.recordAttempts++
+      if (this.recordAttempts <= DefaultNumberofAudioAttempts) {
+        if (this.recordAttempts > DefaultAudioAttemptThreshold)
+          this.showAttemptAlert()
+        this.startRecording()
+      }
+    } else {
+      this.stopRecording()
+      if (this.recordAttempts == DefaultNumberofAudioAttempts)
+        this.showRecordButton = false
+    }
   }
 
   startRecording() {
@@ -108,8 +118,12 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   }
 
   showTaskInterruptedAlert() {
-    if (!this.alertShown) {
-      const buttons = [
+    this.alertService.showAlert({
+      title: this.translate.transform(LocKeys.AUDIO_TASK_ALERT.toString()),
+      message: this.translate.transform(
+        LocKeys.AUDIO_TASK_ALERT_DESC.toString()
+      ),
+      buttons: [
         {
           text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
           handler: () => {
@@ -117,14 +131,22 @@ export class AudioInputComponent implements OnDestroy, OnInit {
           }
         }
       ]
-      this.alertService.showAlert({
-        title: this.translate.transform(LocKeys.AUDIO_TASK_ALERT.toString()),
-        message: this.translate.transform(
-          LocKeys.AUDIO_TASK_ALERT_DESC.toString()
-        ),
-        buttons: buttons
-      })
-      this.alertShown = true
-    }
+    })
+  }
+
+  showAttemptAlert() {
+    const attemptsLeft = DefaultNumberofAudioAttempts - this.recordAttempts
+    this.alertService.showAlert({
+      title:
+        this.translate.transform(LocKeys.AUDIO_TASK_ATTEMPT_ALERT.toString()) +
+        ': ' +
+        attemptsLeft,
+      buttons: [
+        {
+          text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+          handler: () => {}
+        }
+      ]
+    })
   }
 }

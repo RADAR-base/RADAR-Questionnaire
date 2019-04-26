@@ -143,8 +143,8 @@ export const DefaultProtocolURI = '/protocol.json'
 export const DefaultQuestionnaireTypeURI = '_armt'
 export const DefaultQuestionnaireFormatURI = '.json'
 export const ARMTDefBranchProd = 'master'
-export const ARMTDefBranchTest = 'test'
-export const TEST_ARMT_DEF = false
+export const ARMTDefBranchTest = 'audio-test'
+export const TEST_ARMT_DEF = true
 
 // AUTH SERVICE
 
@@ -184,4 +184,5 @@ export const DefaultNumberOfCompletionLogsToSend = 10
 
 // AUDIO TASK
 
-export const DefaultNumberofAudioAttempts = 5
+export const DefaultNumberofAudioAttempts = 15
+export const DefaultAudioAttemptThreshold = 10

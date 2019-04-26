@@ -131,6 +131,7 @@ export class LocKeys {
   static CONFIG_ERROR_DESC = new LocKeys('CONFIG_ERROR_DESC')
   static AUDIO_TASK_ALERT = new LocKeys('AUDIO_TASK_ALERT')
   static AUDIO_TASK_ALERT_DESC = new LocKeys('AUDIO_TASK_ALERT_DESC')
+  static AUDIO_TASK_ATTEMPT_ALERT = new LocKeys('AUDIO_TASK_ATTEMPT_ALERT')
 
   constructor(public value: string) {}
 

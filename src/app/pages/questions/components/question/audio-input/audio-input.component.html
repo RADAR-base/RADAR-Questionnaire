@@ -1,6 +1,7 @@
 <div class="audio-bottom">
-  <ng-container *ngIf="showRecordButton">
+  <ng-container *ngIf="buttonShown">
     <button
+      [disabled]="buttonDisabled"
       ion-button
       class="bt bt--full"
       [class.bt-stop]="isRecording()"

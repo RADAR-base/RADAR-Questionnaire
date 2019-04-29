@@ -7,6 +7,8 @@ import {
   Output
 } from '@angular/core'
 import { NavController, Platform } from 'ionic-angular'
+import { animate, state, style, transition, trigger } from '@angular/animations'
+
 
 import {
   DefaultAudioAttemptThreshold,
@@ -33,9 +35,11 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   currentlyShown: boolean
 
   recordAttempts = 0
+  buttonShown = true
+  buttonDisabled = false
+  buttonTransitionDelay = 1000
   resumeListener
   pauseListener
-  showRecordButton = true
 
   constructor(
     private audioRecordService: AudioRecordService,
@@ -74,13 +78,19 @@ export class AudioInputComponent implements OnDestroy, OnInit {
       if (this.recordAttempts <= DefaultNumberofAudioAttempts) {
         if (this.recordAttempts > DefaultAudioAttemptThreshold)
           this.showAttemptAlert()
+        this.transitionButton()
         this.startRecording()
       }
     } else {
       this.stopRecording()
       if (this.recordAttempts == DefaultNumberofAudioAttempts)
-        this.showRecordButton = false
+        this.buttonShown = false
     }
+  }
+
+  transitionButton(){
+    this.buttonDisabled = true
+    setTimeout(() => (this.buttonDisabled = false), this.buttonTransitionDelay)
   }
 
   startRecording() {

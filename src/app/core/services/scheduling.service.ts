@@ -208,6 +208,7 @@ export class SchedulingService {
         if (index > -1 && !schedule[index].completed) {
           schedule[index].completed = true
           schedule[index].reportedCompletion = d.reportedCompletion
+          schedule[index].timeCompleted = d.timeCompleted
           return this.addToCompletedTasks(schedule[index])
         }
       })

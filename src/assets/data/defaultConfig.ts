@@ -186,3 +186,7 @@ export const DefaultNumberOfCompletionLogsToSend = 10
 
 export const DefaultNumberofAudioAttempts = 15
 export const DefaultAudioAttemptThreshold = 10
+export const DefaultAudioRecordOptions = {
+  SampleRate: 16000,
+  NumberOfChannels: 1
+}

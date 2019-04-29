@@ -7,6 +7,7 @@ import {
   Output
 } from '@angular/core'
 import { NavController, Platform } from 'ionic-angular'
+import { Subscription } from 'rxjs'
 
 import {
   DefaultAudioAttemptThreshold,
@@ -36,8 +37,8 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   buttonShown = true
   buttonDisabled = false
   buttonTransitionDelay = 1000
-  resumeListener
-  pauseListener
+  resumeListener: Subscription
+  pauseListener: Subscription
 
   constructor(
     private audioRecordService: AudioRecordService,

@@ -2668,6 +2668,11 @@ cordova-lib@^9.0.1:
     shebang-command "^1.2.0"
     underscore "^1.9.1"
 
+cordova-media-with-compression@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/cordova-media-with-compression/-/cordova-media-with-compression-2.1.2.tgz#a2cf06414a57b88860b9632473d9c966ee0e9989"
+  integrity sha512-pzJ+iKkfGQ3XwKc2V+4k/wqNIMaxQR4b+qJAp07Uy/cV8NoiBQF3J2ycqTvuzewUwzgBh5VLvA2ztqxD1KnIUg==
+
 cordova-plugin-android-permissions@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/cordova-plugin-android-permissions/-/cordova-plugin-android-permissions-1.0.0.tgz#9e7c116be668eb7dfa41491b13d8d47da9548149"
@@ -2733,12 +2738,7 @@ cordova-plugin-local-notification@^0.9.0-beta.3:
 
 "cordova-plugin-network-information@git+https://github.com/apache/cordova-plugin-network-information.git":
   version "2.0.2-dev"
-  resolved "git+https://github.com/apache/cordova-plugin-network-information.git#27b0e397bc899f420e6af9e7fefe444c36a3c67a"
-
-cordova-plugin-opensmile@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-opensmile/-/cordova-plugin-opensmile-2.0.3.tgz#c4a4ecf9b8dc9255e2294838bb7d873a357a53af"
-  integrity sha1-xKTs+bjcklXiKUg4u32HOjV6U68=
+  resolved "git+https://github.com/apache/cordova-plugin-network-information.git#0cd2771b5e909401ce8871e1ee3e6b1ba488e612"
 
 cordova-plugin-splashscreen@^5.0.2:
   version "5.0.2"

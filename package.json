@@ -63,6 +63,7 @@
     "avsc": "^5.4.10",
     "base64-js": "^1.2.1",
     "cordova-android": "^7.1.4",
+    "cordova-media-with-compression": "^2.1.2",
     "cordova-android-support-gradle-release": "^3.0.0",
     "cordova-lib": "^9.0.1",
     "cordova-plugin-android-permissions": "^1.0.0",
@@ -79,7 +80,6 @@
     "cordova-plugin-insomnia": "^4.3.0",
     "cordova-plugin-local-notification": "^0.9.0-beta.3",
     "cordova-plugin-network-information": "git+https://github.com/apache/cordova-plugin-network-information.git",
-    "cordova-plugin-opensmile": "^2.0.3",
     "cordova-plugin-splashscreen": "^5.0.2",
     "cordova-plugin-statusbar": "^2.4.2",
     "cordova-plugin-vibration": "^3.1.0",
@@ -151,7 +151,6 @@
       "cordova-sqlite-storage": {},
       "cordova-plugin-dialogs": {},
       "cordova-plugin-android-permissions": {},
-      "cordova-plugin-opensmile": {},
       "cordova-plugin-vibration": {},
       "cordova-plugin-globalization": {},
       "cordova-plugin-camera": {},
@@ -168,6 +167,8 @@
         "FIREBASE_CORE_VERSION": "16.0.+"
       },
       "phonegap-plugin-mobile-accessibility": {},
+      "cordova-media-with-compression": {},
+      "cordova-plugin-file": {},
       "cordova-plugin-insomnia": {}
     }
   },

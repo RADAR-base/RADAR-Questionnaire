@@ -84,7 +84,6 @@
   <plugin name="cordova-plugin-camera" spec="^4.0.3" />
   <plugin name="cordova-plugin-device" spec="^2.0.2" />
   <plugin name="cordova-plugin-dialogs" spec="^2.0.1" />
-  <plugin name="cordova-plugin-opensmile" spec="^2.0.3" />
   <plugin name="cordova-plugin-splashscreen" spec="^5.0.2" />
   <plugin name="cordova-plugin-statusbar" spec="^2.4.2" />
   <plugin name="cordova-plugin-vibration" spec="^3.1.0" />
@@ -99,6 +98,8 @@
     <variable name="FIREBASE_CORE_VERSION" value="16.0.+" />
   </plugin>
   <plugin name="phonegap-plugin-mobile-accessibility" spec="^1.0.5" />
+  <plugin name="cordova-media-with-compression" spec="^2.1.2" />
+  <plugin name="cordova-plugin-file" spec="^6.0.1" />
   <plugin name="cordova-plugin-insomnia" spec="^4.3.0" />
   <plugin name="phonegap-plugin-barcodescanner" spec="^8.0.1">
     <variable name="ANDROID_SUPPORT_V4_VERSION" value="27.+" />

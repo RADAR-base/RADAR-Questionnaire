@@ -50,7 +50,7 @@
     "@ionic-native/dialogs": "^5.5.0",
     "@ionic-native/file": "^5.5.0",
     "@ionic-native/firebase-analytics": "^5.5.0",
-    "@ionic-native/globalization": "^5.5.0",
+    "@ionic-native/globalization": "^5.5.1",
     "@ionic-native/insomnia": "^5.5.0",
     "@ionic-native/local-notifications": "^5.5.0",
     "@ionic-native/mobile-accessibility": "5.5.0",

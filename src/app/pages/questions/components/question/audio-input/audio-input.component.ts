@@ -8,6 +8,7 @@ import {
   Output
 } from '@angular/core'
 import { NavController, Platform } from 'ionic-angular'
+import { Subscription } from 'rxjs'
 
 import {
   MIN_SEC,
@@ -35,8 +36,8 @@ export class AudioInputComponent implements OnChanges, OnDestroy, OnInit {
 
   avgWordsPerMinute = 100
   alertShown = false
-  resumeListener
-  pauseListener
+  resumeListener: Subscription
+  pauseListener: Subscription
 
   constructor(
     private audioRecordService: AudioRecordService,

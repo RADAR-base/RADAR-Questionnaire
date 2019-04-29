@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core'
 import { Device } from '@ionic-native/device/ngx'
 import { File } from '@ionic-native/file/ngx'
 
+import { DefaultAudioRecordOptions } from '../../../../assets/data/defaultConfig'
+
 declare var Media: any // stops errors w/ cordova-plugin-media-with-compression types
 
 @Injectable()
@@ -22,9 +24,8 @@ export class AudioRecordService {
       else reject()
 
       this.audio = new Media(this.getFilePath(), this.success, this.failure)
-      const options = { SampleRate: 16000, NumberOfChannels: 1 }
       if (this.isRecording) {
-        this.audio.startRecordWithCompression(options)
+        this.audio.startRecordWithCompression(DefaultAudioRecordOptions)
         this.recordingTimeout = setTimeout(() => {
           console.log('Time up for recording')
           this.stopAudioRecording()

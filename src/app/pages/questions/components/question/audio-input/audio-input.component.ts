@@ -1,3 +1,4 @@
+import { animate, state, style, transition, trigger } from '@angular/animations'
 import {
   Component,
   EventEmitter,
@@ -7,8 +8,6 @@ import {
   Output
 } from '@angular/core'
 import { NavController, Platform } from 'ionic-angular'
-import { animate, state, style, transition, trigger } from '@angular/animations'
-
 
 import {
   DefaultAudioAttemptThreshold,
@@ -79,40 +78,35 @@ export class AudioInputComponent implements OnDestroy, OnInit {
         if (this.recordAttempts > DefaultAudioAttemptThreshold)
           this.showAttemptAlert()
         this.transitionButton()
-        this.startRecording()
+        this.startRecording().catch(e => this.showTaskInterruptedAlert())
       }
     } else {
-      this.stopRecording()
+      this.stopRecording().catch(e => this.showTaskInterruptedAlert())
       if (this.recordAttempts == DefaultNumberofAudioAttempts)
         this.buttonShown = false
     }
   }
 
-  transitionButton(){
+  transitionButton() {
     this.buttonDisabled = true
     setTimeout(() => (this.buttonDisabled = false), this.buttonTransitionDelay)
   }
 
   startRecording() {
-    this.permissionUtil.getRecordAudio_Permission().then(success => {
-      if (success) {
-        this.audioRecordService
-          .startAudioRecording()
-          .catch(e => this.showTaskInterruptedAlert())
-      } else {
-        this.showTaskInterruptedAlert()
-      }
-    })
+    return this.permissionUtil
+      .getRecordAudio_Permission()
+      .then(success =>
+        success
+          ? this.audioRecordService.startAudioRecording()
+          : Promise.reject()
+      )
   }
 
   stopRecording() {
-    this.audioRecordService
-      .stopAudioRecording()
-      .then(data => {
-        console.log(data)
-        return this.valueChange.emit(data)
-      })
-      .catch(e => this.showTaskInterruptedAlert())
+    return this.audioRecordService.stopAudioRecording().then(data => {
+      console.log(data)
+      return this.valueChange.emit(data)
+    })
   }
 
   isRecording() {

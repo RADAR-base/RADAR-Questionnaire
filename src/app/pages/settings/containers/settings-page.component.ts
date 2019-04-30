@@ -219,8 +219,10 @@ export class SettingsPageComponent {
       {
         text: this.translate.transform(LocKeys.CLOSE_APP.toString()),
         handler: () => {
-          this.notificationService.testFCMNotifications()
-          this.platform.exitApp()
+          this.notificationService.sendTestFCMNotification().then(() => {
+            this.firebaseAnalytics.logEvent('notification_test', {})
+            this.platform.exitApp()
+          })
         }
       }
     ]

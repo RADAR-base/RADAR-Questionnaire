@@ -24,8 +24,6 @@ declare var FCMPlugin
 
 @Injectable()
 export class NotificationService {
-  participantLogin
-
   constructor(
     private translate: TranslatePipe,
     private alertService: AlertService,
@@ -94,7 +92,6 @@ export class NotificationService {
       .get(StorageKeys.PARTICIPANTLOGIN)
       .then(participantLogin => {
         if (participantLogin) {
-          this.participantLogin = participantLogin
           const now = new Date().getTime()
           const localNotifications = []
           const fcmNotifications = []
@@ -139,28 +136,33 @@ export class NotificationService {
             fcmNotifications.forEach(this.sendFCMNotification)
           }
           this.storage.set(StorageKeys.LAST_NOTIFICATION_UPDATE, Date.now())
-        }
+        } else Promise.reject()
       })
   }
 
   sendFCMNotification(notification) {
-    FCMPlugin.upstream(
+    return FCMPlugin.upstream(
       notification,
       succ => console.log(succ),
       err => console.log(err)
     )
   }
 
-  testFCMNotifications() {
-    const TWO_MINUTES = 2 * 60000
-    const task = DefaultTaskTest
-    task.timestamp = new Date().getTime() + TWO_MINUTES
-    const fcmNotification = this.formatFCMNotification(
-      task,
-      this.participantLogin
-    )
-
-    this.sendFCMNotification(fcmNotification)
+  sendTestFCMNotification() {
+    return this.storage
+      .get(StorageKeys.PARTICIPANTLOGIN)
+      .then(participantLogin => {
+        if (participantLogin) {
+          const TWO_MINUTES = 2 * 60000
+          const task = DefaultTaskTest
+          task.timestamp = new Date().getTime() + TWO_MINUTES
+          const fcmNotification = this.formatFCMNotification(
+            task,
+            participantLogin
+          )
+          return this.sendFCMNotification(fcmNotification)
+        } else Promise.reject()
+      })
   }
 
   formatNotifMessageAndTitle(task) {

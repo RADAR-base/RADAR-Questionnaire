@@ -24,8 +24,6 @@ declare var FCMPlugin
 
 @Injectable()
 export class NotificationService {
-  participantLogin
-
   constructor(
     private translate: TranslatePipe,
     private alertService: AlertService,
@@ -94,7 +92,6 @@ export class NotificationService {
       .get(StorageKeys.PARTICIPANTLOGIN)
       .then(participantLogin => {
         if (participantLogin) {
-          this.participantLogin = participantLogin
           const now = new Date().getTime()
           const localNotifications = []
           const fcmNotifications = []
@@ -136,31 +133,44 @@ export class NotificationService {
           if (DefaultNotificationType === 'FCM') {
             console.log('NOTIFICATIONS Scheduling FCM notifications')
             console.log(fcmNotifications)
-            fcmNotifications.forEach(this.sendFCMNotification)
+            return Promise.all(
+              fcmNotifications.map(n => this.sendFCMNotification(n))
+            ).then(() =>
+              this.storage.set(StorageKeys.LAST_NOTIFICATION_UPDATE, Date.now())
+            )
           }
-          this.storage.set(StorageKeys.LAST_NOTIFICATION_UPDATE, Date.now())
-        }
+        } else Promise.reject()
       })
   }
 
   sendFCMNotification(notification) {
-    FCMPlugin.upstream(
-      notification,
-      succ => console.log(succ),
-      err => console.log(err)
+    return new Promise((resolve, reject) =>
+      FCMPlugin.upstream(
+        notification,
+        succ => {
+          console.log(succ)
+          resolve()
+        },
+        err => reject()
+      )
     )
   }
 
-  testFCMNotifications() {
-    const TWO_MINUTES = 2 * 60000
-    const task = DefaultTaskTest
-    task.timestamp = new Date().getTime() + TWO_MINUTES
-    const fcmNotification = this.formatFCMNotification(
-      task,
-      this.participantLogin
-    )
-
-    this.sendFCMNotification(fcmNotification)
+  sendTestFCMNotification() {
+    return this.storage
+      .get(StorageKeys.PARTICIPANTLOGIN)
+      .then(participantLogin => {
+        if (participantLogin) {
+          const task = DefaultTaskTest
+          task.timestamp =
+            new Date().getTime() + getMilliseconds({ minutes: 2 })
+          const fcmNotification = this.formatFCMNotification(
+            task,
+            participantLogin
+          )
+          return this.sendFCMNotification(fcmNotification)
+        } else Promise.reject()
+      })
   }
 
   formatNotifMessageAndTitle(task) {
@@ -226,7 +236,7 @@ export class NotificationService {
   }
 
   cancelNotificationPush(participantLogin) {
-    return new Promise(function(resolve, reject) {
+    return new Promise((resolve, reject) =>
       FCMPlugin.upstream(
         {
           eventId: uuid(),
@@ -237,7 +247,7 @@ export class NotificationService {
         resolve,
         reject
       )
-    })
+    )
   }
 
   evalIsLastOfDay(task1, task2) {

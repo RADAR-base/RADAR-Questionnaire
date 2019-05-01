@@ -28,13 +28,9 @@ export class AudioRecordService {
     })
   }
 
-  stopAudioRecording(): Promise<any> {
+  stopAudioRecording() {
     this.audio.stopRecord()
     this.isRecording = false
-    return this.readAudioFile().then(data => {
-      this.destroy()
-      return data
-    })
   }
 
   getFilePath() {
@@ -62,7 +58,10 @@ export class AudioRecordService {
   }
 
   readAudioFile() {
-    return this.file.readAsDataURL(this.getDir(), this.fileName)
+    return this.file.readAsDataURL(this.getDir(), this.fileName).then(data => {
+      this.destroy()
+      return data
+    })
   }
 
   destroy() {

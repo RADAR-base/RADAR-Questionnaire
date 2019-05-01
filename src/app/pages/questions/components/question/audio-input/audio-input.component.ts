@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs'
 
 import {
   DefaultAudioAttemptThreshold,
-  DefaultNumberofAudioAttempts
+  DefaultMaxAudioAttemptsAllowed
 } from '../../../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../../../core/services/alert.service'
 import { LocKeys } from '../../../../../shared/enums/localisations'
@@ -58,10 +58,10 @@ export class AudioInputComponent implements OnDestroy, OnInit {
     )
     // NOTE: Stop audio recording when application is on pause / backbutton is pressed
     this.pauseListener = this.platform.pause.subscribe(() =>
-      this.stopRecording()
+      this.stopAndGetRecording()
     )
     this.platform.registerBackButtonAction(() => {
-      this.stopRecording()
+      this.stopAndGetRecording()
       this.platform.exitApp()
     })
   }
@@ -74,15 +74,15 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   handleRecording() {
     if (!this.isRecording()) {
       this.recordAttempts++
-      if (this.recordAttempts <= DefaultNumberofAudioAttempts) {
+      if (this.recordAttempts <= DefaultMaxAudioAttemptsAllowed) {
         if (this.recordAttempts > DefaultAudioAttemptThreshold)
           this.showAttemptAlert()
         this.transitionButton()
         this.startRecording().catch(e => this.showTaskInterruptedAlert())
       }
     } else {
-      this.stopRecording().catch(e => this.showTaskInterruptedAlert())
-      if (this.recordAttempts == DefaultNumberofAudioAttempts)
+      this.stopAndGetRecording().catch(e => this.showTaskInterruptedAlert())
+      if (this.recordAttempts == DefaultMaxAudioAttemptsAllowed)
         this.buttonShown = false
     }
   }
@@ -102,8 +102,9 @@ export class AudioInputComponent implements OnDestroy, OnInit {
       )
   }
 
-  stopRecording() {
-    return this.audioRecordService.stopAudioRecording().then(data => {
+  stopAndGetRecording() {
+    this.audioRecordService.stopAudioRecording()
+    return this.audioRecordService.readAudioFile().then(data => {
       console.log(data)
       return this.valueChange.emit(data)
     })
@@ -139,7 +140,7 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   }
 
   showAttemptAlert() {
-    const attemptsLeft = DefaultNumberofAudioAttempts - this.recordAttempts
+    const attemptsLeft = DefaultMaxAudioAttemptsAllowed - this.recordAttempts
     this.alertService.showAlert({
       title:
         this.translate.transform(LocKeys.AUDIO_TASK_ATTEMPT_ALERT.toString()) +

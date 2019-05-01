@@ -52,6 +52,7 @@
 <div *ngIf="question.field_type === 'info'">
   <info-screen
     [sections]="question.select_choices_or_calculations"
+    [hasFieldLabel]="question.field_label.length > 0"
     (valueChange)="onValueChange($event)"
   >
   </info-screen>

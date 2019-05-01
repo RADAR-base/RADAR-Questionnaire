@@ -45,14 +45,15 @@ export class HomePageComponent implements OnDestroy {
   tasks: Promise<Task[]>
   currentDate: Date
   nextTask: Task
+  tasksProgress: Promise<TasksProgress>
+  resumeListener: Subscription = new Subscription()
+
   showCalendar = false
   showCompleted = false
-  tasksProgress: Promise<TasksProgress>
   startingQuestionnaire = false
   hasClinicalTasks = false
   taskIsNow = false
   checkTaskInterval
-  resumeListener: Subscription = new Subscription()
 
   constructor(
     public navCtrl: NavController,
@@ -70,6 +71,22 @@ export class HomePageComponent implements OnDestroy {
       this.checkForNewDate()
       this.firebaseAnalytics.logEvent('resumed', {})
     })
+  }
+
+  getIsLoadingSpinnerShown() {
+    return (
+      (this.startingQuestionnaire && !this.showCalendar) ||
+      (!this.nextTask && !this.showCompleted)
+    )
+  }
+
+  getIsStartButtonShown() {
+    return (
+      this.taskIsNow &&
+      !this.startingQuestionnaire &&
+      !this.showCompleted &&
+      !this.showCalendar
+    )
   }
 
   ngOnDestroy() {

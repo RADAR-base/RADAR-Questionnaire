@@ -2,7 +2,6 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,
   OnDestroy,
   OnInit,
   Output
@@ -11,8 +10,8 @@ import { NavController, Platform } from 'ionic-angular'
 import { Subscription } from 'rxjs'
 
 import {
-  MIN_SEC,
-  SEC_MILLISEC
+  DefaultAudioAttemptThreshold,
+  DefaultMaxAudioAttemptsAllowed
 } from '../../../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../../../core/services/alert.service'
 import { LocKeys } from '../../../../../shared/enums/localisations'
@@ -26,7 +25,7 @@ import { AudioRecordService } from '../../../services/audio-record.service'
   selector: 'audio-input',
   templateUrl: 'audio-input.component.html'
 })
-export class AudioInputComponent implements OnChanges, OnDestroy, OnInit {
+export class AudioInputComponent implements OnDestroy, OnInit {
   @Output()
   valueChange: EventEmitter<any> = new EventEmitter<any>()
   @Input()
@@ -34,8 +33,10 @@ export class AudioInputComponent implements OnChanges, OnDestroy, OnInit {
   @Input()
   currentlyShown: boolean
 
-  avgWordsPerMinute = 100
-  alertShown = false
+  recordAttempts = 0
+  buttonShown = true
+  buttonDisabled = false
+  buttonTransitionDelay = 1000
   resumeListener: Subscription
   pauseListener: Subscription
 
@@ -48,6 +49,7 @@ export class AudioInputComponent implements OnChanges, OnDestroy, OnInit {
     private translate: TranslatePipe
   ) {
     this.permissionUtil.checkPermissions()
+    this.audioRecordService.destroy()
   }
 
   ngOnInit() {
@@ -56,10 +58,10 @@ export class AudioInputComponent implements OnChanges, OnDestroy, OnInit {
     )
     // NOTE: Stop audio recording when application is on pause / backbutton is pressed
     this.pauseListener = this.platform.pause.subscribe(() =>
-      this.stopRecording()
+      this.stopAndGetRecording()
     )
     this.platform.registerBackButtonAction(() => {
-      this.stopRecording()
+      this.stopAndGetRecording()
       this.platform.exitApp()
     })
   }
@@ -67,44 +69,66 @@ export class AudioInputComponent implements OnChanges, OnDestroy, OnInit {
   ngOnDestroy() {
     this.resumeListener.unsubscribe()
     this.pauseListener.unsubscribe()
-    this.audioRecordService.destroy()
   }
 
-  ngOnChanges() {
-    if (this.currentlyShown) this.startRecording()
+  handleRecording() {
+    if (!this.isRecording()) {
+      this.recordAttempts++
+      if (this.recordAttempts <= DefaultMaxAudioAttemptsAllowed) {
+        if (this.recordAttempts > DefaultAudioAttemptThreshold)
+          this.showAttemptAlert()
+        this.transitionButton()
+        this.startRecording().catch(e => this.showTaskInterruptedAlert())
+      }
+    } else {
+      this.stopAndGetRecording().catch(e => this.showTaskInterruptedAlert())
+      if (this.recordAttempts == DefaultMaxAudioAttemptsAllowed)
+        this.buttonShown = false
+    }
+  }
+
+  transitionButton() {
+    this.buttonDisabled = true
+    setTimeout(() => (this.buttonDisabled = false), this.buttonTransitionDelay)
   }
 
   startRecording() {
-    this.permissionUtil.getRecordAudio_Permission().then(success => {
-      if (success) {
-        this.audioRecordService
-          .startAudioRecording(this.getRecordingTime())
-          .then(data => this.valueChange.emit(data))
-          .catch(e => this.showTaskInterruptedAlert())
-      } else {
-        this.showTaskInterruptedAlert()
-      }
+    return this.permissionUtil
+      .getRecordAudio_Permission()
+      .then(success =>
+        success
+          ? this.audioRecordService.startAudioRecording()
+          : Promise.reject()
+      )
+  }
+
+  stopAndGetRecording() {
+    this.audioRecordService.stopAudioRecording()
+    return this.audioRecordService.readAudioFile().then(data => {
+      console.log(data)
+      return this.valueChange.emit(data)
     })
   }
 
-  stopRecording() {
-    this.audioRecordService.stopAudioRecording()
+  isRecording() {
+    return this.audioRecordService.getIsRecording()
   }
 
-  getRecordingTime() {
-    return (
-      (this.sections
-        .map(section => section.label)
-        .toString()
-        .split(' ').length /
-        this.avgWordsPerMinute) *
-      (MIN_SEC * SEC_MILLISEC)
+  getRecordingButtonText() {
+    return this.translate.transform(
+      this.isRecording()
+        ? LocKeys.BTN_STOP.toString()
+        : LocKeys.BTN_START.toString()
     )
   }
 
   showTaskInterruptedAlert() {
-    if (!this.alertShown) {
-      const buttons = [
+    this.alertService.showAlert({
+      title: this.translate.transform(LocKeys.AUDIO_TASK_ALERT.toString()),
+      message: this.translate.transform(
+        LocKeys.AUDIO_TASK_ALERT_DESC.toString()
+      ),
+      buttons: [
         {
           text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
           handler: () => {
@@ -112,14 +136,22 @@ export class AudioInputComponent implements OnChanges, OnDestroy, OnInit {
           }
         }
       ]
-      this.alertService.showAlert({
-        title: this.translate.transform(LocKeys.AUDIO_TASK_ALERT.toString()),
-        message: this.translate.transform(
-          LocKeys.AUDIO_TASK_ALERT_DESC.toString()
-        ),
-        buttons: buttons
-      })
-      this.alertShown = true
-    }
+    })
+  }
+
+  showAttemptAlert() {
+    const attemptsLeft = DefaultMaxAudioAttemptsAllowed - this.recordAttempts
+    this.alertService.showAlert({
+      title:
+        this.translate.transform(LocKeys.AUDIO_TASK_ATTEMPT_ALERT.toString()) +
+        ': ' +
+        attemptsLeft,
+      buttons: [
+        {
+          text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+          handler: () => {}
+        }
+      ]
+    })
   }
 }

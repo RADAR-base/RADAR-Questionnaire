@@ -85,7 +85,7 @@
     class="size-static footer"
   >
     <div
-      *ngIf="taskIsNow && !startingQuestionnaire && !showCompleted && !showCalendar && (sortedTasks|async)?.size"
+      *ngIf="getIsStartButtonShown() && (sortedTasks|async)?.size"
       padding
     >
       <button
@@ -99,7 +99,7 @@
       </button>
     </div>
     <div
-      *ngIf="startingQuestionnaire && !showCalendar || (!nextTask && !showCompleted) || (!(sortedTasks|async)?.size && (tasksProgress|async)?.numberOfTasks)"
+      *ngIf="getIsLoadingSpinnerShown() || (!(sortedTasks|async)?.size && (tasksProgress|async)?.numberOfTasks)"
       class="spinner-center"
     >
       <ion-spinner name="dots"></ion-spinner>

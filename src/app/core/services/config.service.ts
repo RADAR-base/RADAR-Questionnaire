@@ -5,6 +5,7 @@ import { HTTP } from '@ionic-native/http/ngx'
 import {
   ARMTDefBranchProd,
   ARMTDefBranchTest,
+  DefaultAppVersion,
   DefaultNumberOfNotificationsToSchedule,
   DefaultProtocolEndPoint,
   DefaultProtocolURI,

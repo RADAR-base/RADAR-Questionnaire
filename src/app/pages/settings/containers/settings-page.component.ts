@@ -161,6 +161,7 @@ export class SettingsPageComponent {
               return this.configService
                 .updateConfigStateOnLanguageChange()
                 .then(() => this.backToSplash())
+                .catch(() => this.showConfigError())
             })
           )
         }

@@ -52,7 +52,10 @@
   <preference name="FadeSplashScreenDuration" value="1000" />
   <preference name="SplashScreenDelay" value="3000" />
   <preference name="AutoHideSplashScreen" value="false" />
+  <<<<<<< HEAD
   <preference name="LoadUrlTimeoutValue" value="700000" />
+=======
+>>>>>>> parent of b60b73a... feat: use cordova http plugin instead of angular http
   <preference name="ShowSplashScreenSpinner" value="false" />
   <preference name="SplashScreenSpinnerColor" value="0xffffffff" />
   <preference name="SplashMaintainAspectRatio" value="true" />
@@ -98,7 +101,6 @@
   <plugin name="cordova-media-with-compression" spec="^2.1.2" />
   <plugin name="cordova-plugin-file" spec="^6.0.1" />
   <plugin name="cordova-plugin-insomnia" spec="^4.3.0" />
-  <plugin name="cordova-plugin-advanced-http" spec="^2.0.9" />
   <plugin name="phonegap-plugin-barcodescanner" spec="^8.0.1">
     <variable name="ANDROID_SUPPORT_V4_VERSION" value="27.+" />
   </plugin>

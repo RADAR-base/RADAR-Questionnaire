@@ -1,6 +1,8 @@
+import 'rxjs/add/operator/toPromise'
+
+import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { AppVersion } from '@ionic-native/app-version/ngx'
-import { HTTP } from '@ionic-native/http/ngx'
 
 import {
   ARMTDefBranchProd,
@@ -21,7 +23,7 @@ import { StorageService } from './storage.service'
 @Injectable()
 export class ConfigService {
   constructor(
-    private http: HTTP,
+    public http: HttpClient,
     public storage: StorageService,
     private schedule: SchedulingService,
     private notificationService: NotificationService,
@@ -37,8 +39,9 @@ export class ConfigService {
       this.appVersion.getVersionNumber()
     ]).then(
       ([configVersion, scheduleVersion, storedAppVersion, appVersion]) => {
-        return this.pullProtocol().then(response => {
-          if (!response) return Promise.reject()
+        return this.pullProtocol().then(res => {
+          if (!res) return Promise.reject()
+          const response = JSON.parse(res)
           if (
             configVersion !== response.version ||
             scheduleVersion !== response.version ||
@@ -157,16 +160,15 @@ export class ConfigService {
 
   pullProtocol() {
     return this.getProjectName().then(projectName => {
-      if (!projectName) {
+      if (projectName) {
+        const URI = DefaultProtocolEndPoint + projectName + DefaultProtocolURI
+        return this.http.get(URI, { responseType: 'text' }).toPromise()
+      } else {
         console.error(
           'Unknown project name : ' + projectName + '. Cannot pull protocols.'
         )
         return Promise.reject()
       }
-      const URI = DefaultProtocolEndPoint + projectName + DefaultProtocolURI
-      return this.http
-        .get(URI, { responseType: 'text' }, {})
-        .then(res => JSON.parse(res.data))
     })
   }
 
@@ -229,10 +231,7 @@ export class ConfigService {
     )
     return this.getQuestionnairesOfLang(uri).catch(e => {
       const URI = this.formatQuestionnaireUri(assessment.questionnaire, '')
-      return this.getQuestionnairesOfLang(URI).then(res => {
-        console.log(res)
-        return res
-      })
+      return this.getQuestionnairesOfLang(URI)
     })
   }
 
@@ -255,7 +254,7 @@ export class ConfigService {
   }
 
   getQuestionnairesOfLang(URI) {
-    return this.http.get(URI, {}, {}).then(res => JSON.parse(res.data))
+    return this.http.get(URI).toPromise()
   }
 
   formatQuestionsHeaders(questions) {

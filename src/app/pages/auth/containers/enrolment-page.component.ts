@@ -123,13 +123,13 @@ export class EnrolmentPageComponent {
     this.showOutcomeStatus = false
     this.transitionStatuses()
 
-    return new Promise((resolve, reject) => {
+    new Promise((resolve, reject) => {
       let refreshToken = null
       if (this.validURL(authObj)) {
         // NOTE: Meta QR code and new QR code
         this.authService
           .getRefreshTokenFromUrl(authObj)
-          .then(body => {
+          .then((body: any) => {
             refreshToken = body['refreshToken']
             if (body['baseUrl']) {
               this.storage
@@ -172,7 +172,6 @@ export class EnrolmentPageComponent {
           this.displayErrorMessage(error)
           throw error
         }
-        console.log('registering token')
         this.authService
           .registerToken(refreshToken)
           .then(() =>

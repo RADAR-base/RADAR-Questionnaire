@@ -50,7 +50,6 @@
     "@ionic-native/dialogs": "^5.5.1",
     "@ionic-native/file": "^5.5.1",
     "@ionic-native/globalization": "^5.5.1",
-    "@ionic-native/http": "^5.5.1",
     "@ionic-native/insomnia": "^5.5.1",
     "@ionic-native/local-notifications": "^5.5.1",
     "@ionic-native/mobile-accessibility": "5.5.1",
@@ -66,7 +65,6 @@
     "cordova-android-support-gradle-release": "^3.0.0",
     "cordova-lib": "^9.0.1",
     "cordova-media-with-compression": "^2.1.2",
-    "cordova-plugin-advanced-http": "^2.0.9",
     "cordova-plugin-android-permissions": "^1.0.0",
     "cordova-plugin-app-event": "git+https://github.com/katzer/cordova-plugin-app-event.git",
     "cordova-plugin-app-version": "^0.1.9",
@@ -165,7 +163,6 @@
       "cordova-media-with-compression": {},
       "cordova-plugin-file": {},
       "cordova-plugin-insomnia": {},
-      "cordova-plugin-advanced-http": {},
       "cordova-plugin-firebase": {}
     }
   },

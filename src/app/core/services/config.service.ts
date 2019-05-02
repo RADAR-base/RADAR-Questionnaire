@@ -160,15 +160,14 @@ export class ConfigService {
 
   pullProtocol() {
     return this.getProjectName().then(projectName => {
-      if (projectName) {
-        const URI = DefaultProtocolEndPoint + projectName + DefaultProtocolURI
-        return this.http.get(URI, { responseType: 'text' }).toPromise()
-      } else {
+      if (!projectName) {
         console.error(
           'Unknown project name : ' + projectName + '. Cannot pull protocols.'
         )
         return Promise.reject()
       }
+      const URI = DefaultProtocolEndPoint + projectName + DefaultProtocolURI
+      return this.http.get(URI, { responseType: 'text' }).toPromise()
     })
   }
 

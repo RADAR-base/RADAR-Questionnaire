@@ -1,5 +1,6 @@
 // tslint:disable:no-eval
 import { Component, ElementRef, ViewChild } from '@angular/core'
+import { Insomnia } from '@ionic-native/insomnia/ngx'
 import {
   App,
   Content,
@@ -7,7 +8,6 @@ import {
   NavParams,
   ViewController
 } from 'ionic-angular'
-import { Insomnia } from '@ionic-native/insomnia/ngx'
 
 import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { LocKeys } from '../../../shared/enums/localisations'

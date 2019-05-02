@@ -14,6 +14,8 @@ export class InfoScreenComponent implements OnInit {
 
   @Input()
   sections: Section[]
+  @Input()
+  hasFieldLabel: boolean
 
   value: number = null
   uniqueID: number = uniqueID++

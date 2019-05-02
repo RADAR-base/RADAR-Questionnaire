@@ -29,7 +29,7 @@ export class TaskCalendarComponent implements OnChanges {
   constructor() {}
 
   ngOnChanges() {
-    if (this.tasks) this.setCurrentTime()
+    if (this.tasks && this.tasks.size) this.setCurrentTime()
   }
 
   getStartTime(task: Task) {

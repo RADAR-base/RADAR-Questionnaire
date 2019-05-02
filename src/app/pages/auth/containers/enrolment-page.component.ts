@@ -23,7 +23,6 @@ import {
 } from '../../../shared/models/settings'
 import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { HomePageComponent } from '../../home/containers/home-page.component'
-import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 import { AuthService } from '../services/auth.service'
 
 @Component({
@@ -323,7 +322,7 @@ export class EnrolmentPageComponent {
           }
           this.storage
             .set(StorageKeys.LANGUAGE, lang)
-            .then(() => this.navCtrl.setRoot(SplashPageComponent))
+            .then(() => this.navCtrl.setRoot(EnrolmentPageComponent))
         }
       }
     ]

@@ -46,7 +46,7 @@
       <span class="info-value">{{ language.label | translate }}</span>
       <span
         item-right
-        (click)="showSelectLanguage()"
+        (tap)="showSelectLanguage()"
       >
         <ion-icon
           class="space-right"
@@ -94,7 +94,7 @@
       <ion-label>
         {{ "SETTINGS_NOTIFICATIONS_NIGHTMOD" | translate }}
         <ion-icon
-          (click)="showInfoNightMode()"
+          (tap)="showInfoNightMode()"
           name="information-circle"
         ></ion-icon>
       </ion-label>
@@ -149,7 +149,7 @@
       <span>
         <ion-icon
           name="repeat"
-          (click)="reloadConfig()"
+          (tap)="reloadConfig()"
           *ngIf="!showLoading"
         ></ion-icon>
       </span>
@@ -180,7 +180,7 @@
     </ion-item>
     <ion-item
       no-lines
-      (click)="consoleLogSchedule()"
+      (tap)="consoleLogSchedule()"
     >
       {{ "SETTINGS_SCHEDULE" | translate }}
       <span
@@ -208,7 +208,7 @@
     <ion-item
       no-lines
       class="item-button"
-      (click)="testNotifications()"
+      (tap)="testNotifications()"
     >
       <ion-label>
         {{ "SETTINGS_GENERATE_NOTIFS" | translate }}
@@ -217,7 +217,7 @@
     <ion-item
       no-lines
       class="item-button"
-      (click)="consoleLogNotifications()"
+      (tap)="consoleLogNotifications()"
     >
       <ion-label>{{ "SETTINGS_LOG_NOTIFS" | translate }}</ion-label>
     </ion-item>
@@ -232,7 +232,7 @@
       class="bt bt--full"
       round
       full
-      (click)="showConfirmReset()"
+      (tap)="showConfirmReset()"
     >
       {{ "BTN_RESET" | translate }}
     </button>

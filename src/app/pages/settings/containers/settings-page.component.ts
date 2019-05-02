@@ -222,7 +222,7 @@ export class SettingsPageComponent {
         handler: () => {
           this.notificationService.sendTestFCMNotification().then(() => {
             this.firebaseAnalytics.logEvent('notification_test', {})
-            this.platform.exitApp()
+            if (this.platform.is('Android')) this.platform.exitApp()
           })
         }
       }

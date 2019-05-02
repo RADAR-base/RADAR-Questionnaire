@@ -77,9 +77,7 @@ export class KafkaService {
         data: data.answers[1].value.string,
         reciteText: questions
           .filter(q => q.field_type == KAFKA_AUDIO)
-          .reduce(a => a)
-          .select_choices_or_calculations.map(text => text.label)
-          .toString()
+          .reduce(a => a).field_label
       }
       return this.prepareKafkaObjectAndSend(task, Answer, KAFKA_AUDIO)
     }

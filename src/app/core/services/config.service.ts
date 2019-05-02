@@ -164,7 +164,9 @@ export class ConfigService {
         return Promise.reject()
       }
       const URI = DefaultProtocolEndPoint + projectName + DefaultProtocolURI
-      return this.http.get(URI, { responseType: 'text' }).toPromise()
+      return this.http.get(URI, { responseType: 'text' }, '').then(res => {
+        return JSON.parse(res.data)
+      })
     })
   }
 

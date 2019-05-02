@@ -52,10 +52,7 @@
   <preference name="FadeSplashScreenDuration" value="1000" />
   <preference name="SplashScreenDelay" value="3000" />
   <preference name="AutoHideSplashScreen" value="false" />
-  <<<<<<< HEAD
   <preference name="LoadUrlTimeoutValue" value="700000" />
-=======
->>>>>>> parent of b60b73a... feat: use cordova http plugin instead of angular http
   <preference name="ShowSplashScreenSpinner" value="false" />
   <preference name="SplashScreenSpinnerColor" value="0xffffffff" />
   <preference name="SplashMaintainAspectRatio" value="true" />

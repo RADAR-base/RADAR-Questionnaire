@@ -3,6 +3,10 @@ radio-input {
   margin-left: -5px;
   width: 100%;
 
+  ion-label {
+    color: white !important;
+  }
+
   ul {
     display: flex;
     flex-direction: column;
@@ -37,10 +41,6 @@ radio-input {
     flex-grow: 1;
     align-items: center;
     justify-content: flex-start;
-  }
-
-  ion-label {
-    color: white !important;
   }
 
   .item-radio-checked ion-label {

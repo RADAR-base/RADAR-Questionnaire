@@ -2,6 +2,10 @@ range-input {
   display: block;
   width: 100%;
 
+  ion-label {
+    color: white !important;
+  }
+
   ul {
     display: flex;
     margin: 0;
@@ -36,6 +40,14 @@ range-input {
     background-color: $cl-primary-20;
   }
 
+  .item-radio-checked ion-label {
+    background-color: $cl-primary !important;
+  }
+
+  ion-radio:checked + ion-label {
+    background-color: $cl-secondary;
+  }
+
   ul li:first-child ion-label {
     border-top-left-radius: 8px;
     border-bottom-left-radius: 8px;
@@ -51,10 +63,6 @@ range-input {
     background-color: $cl-primary;
   }
 
-  ion-radio:checked + ion-label {
-    background-color: $cl-secondary;
-  }
-
   .padding {
     margin: 10px 3px;
   }
@@ -65,14 +73,6 @@ range-input {
 
   .labelRight {
     float: right;
-  }
-
-  ion-label {
-    color: white !important;
-  }
-
-  .item-radio-checked ion-label {
-    background-color: $cl-primary !important;
   }
 
   .radio-icon {

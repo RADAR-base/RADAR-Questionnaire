@@ -470,6 +470,14 @@ export const Localisations = {
     it: 'Inizio',
     nl: 'Begin'
   },
+  BTN_STOP: {
+    da: 'Stoppe',
+    de: 'Stoppen',
+    en: 'Stop',
+    es: 'Detener',
+    it: 'Fermare',
+    nl: 'Stoppen'
+  },
   BTN_RESET: {
     da: 'Nulstil',
     de: 'Zurücksetzen',
@@ -913,6 +921,30 @@ export const Localisations = {
     es: 'No cierres la aplicación',
     it: `Non chiudere l'app`,
     nl: 'Sluit de app niet'
+  },
+  AUDIO_TASK_ALERT: {
+    da: 'Lydopgave afbrudt',
+    de: 'Audio-Task unterbrochen',
+    en: 'Audio task interrupted',
+    es: 'Tarea de audio interrumpida',
+    it: 'Attività audio interrotta',
+    nl: 'Audiotaak onderbroken'
+  },
+  AUDIO_TASK_ALERT_DESC: {
+    da: 'Opgaven er afbrudt. Genstart opgaven.',
+    de: 'Die Aufgabe wurde unterbrochen. Task neu starten.',
+    en: 'Task has been interrupted. Restart task.',
+    es: 'La tarea ha sido interrumpida. Tarea de reinicio.',
+    it: `L'attività è stata interrotta. Riavvia il compito.`,
+    nl: 'Taak is onderbroken. Start de taak opnieuw.'
+  },
+  AUDIO_TASK_ATTEMPT_ALERT: {
+    da: 'Forsøg tilbageværende',
+    de: 'Verbleibende Versuche',
+    en: 'Attempts remaining',
+    es: 'Intentos restantes',
+    it: 'Tentativi rimanenti',
+    nl: 'Pogingen blijven'
   },
   CONFIG_ERROR_DESC: {
     da: 'Config opdatering mislykkes. Prøve igen?',

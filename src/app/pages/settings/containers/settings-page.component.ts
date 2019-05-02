@@ -14,6 +14,7 @@ import {
 } from '../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../core/services/alert.service'
 import { ConfigService } from '../../../core/services/config.service'
+import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { NotificationService } from '../../../core/services/notification.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
@@ -55,7 +56,8 @@ export class SettingsPageComponent {
     private configService: ConfigService,
     private notificationService: NotificationService,
     public translate: TranslatePipe,
-    private platform: Platform
+    private platform: Platform,
+    private firebaseAnalytics: FirebaseAnalyticsService
   ) {}
 
   ionViewDidLoad() {
@@ -159,6 +161,7 @@ export class SettingsPageComponent {
               return this.configService
                 .updateConfigStateOnLanguageChange()
                 .then(() => this.backToSplash())
+                .catch(() => this.showConfigError())
             })
           )
         }
@@ -217,8 +220,10 @@ export class SettingsPageComponent {
       {
         text: this.translate.transform(LocKeys.CLOSE_APP.toString()),
         handler: () => {
-          this.notificationService.testFCMNotifications()
-          this.platform.exitApp()
+          this.notificationService.sendTestFCMNotification().then(() => {
+            this.firebaseAnalytics.logEvent('notification_test', {})
+            this.platform.exitApp()
+          })
         }
       }
     ]
@@ -247,6 +252,7 @@ export class SettingsPageComponent {
       {
         text: this.translate.transform(LocKeys.BTN_AGREE.toString()),
         handler: () => {
+          this.firebaseAnalytics.logEvent('app_reset', {})
           this.storage.clearStorage().then(() => this.backToSplash())
         }
       }

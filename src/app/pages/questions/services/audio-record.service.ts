@@ -2,34 +2,26 @@ import { Injectable } from '@angular/core'
 import { Device } from '@ionic-native/device/ngx'
 import { File } from '@ionic-native/file/ngx'
 
+import { DefaultAudioRecordOptions } from '../../../../assets/data/defaultConfig'
+
 declare var Media: any // stops errors w/ cordova-plugin-media-with-compression types
 
 @Injectable()
 export class AudioRecordService {
-  isRecording: boolean = false
+  isRecording: boolean
   audio
   fileName = 'audio.m4a'
-  recordingTimeout
 
-  constructor(private file: File, private device: Device) {
-    // NOTE: Kill recording on load
-    this.stopAudioRecording()
-  }
+  constructor(private file: File, private device: Device) {}
 
-  startAudioRecording(length): Promise<any> {
+  startAudioRecording(): Promise<any> {
     return new Promise((resolve, reject) => {
       if (!this.isRecording) this.isRecording = true
       else reject()
 
       this.audio = new Media(this.getFilePath(), this.success, this.failure)
-      const options = { SampleRate: 16000, NumberOfChannels: 1 }
       if (this.isRecording) {
-        this.audio.startRecordWithCompression(options)
-        this.recordingTimeout = setTimeout(() => {
-          console.log('Time up for recording')
-          this.stopAudioRecording()
-          resolve(this.readAudioFile())
-        }, length)
+        return this.audio.startRecordWithCompression(DefaultAudioRecordOptions)
       } else {
         reject()
       }
@@ -37,11 +29,8 @@ export class AudioRecordService {
   }
 
   stopAudioRecording() {
-    if (this.isRecording) {
-      this.audio.stopRecord()
-      this.isRecording = false
-      clearTimeout(this.recordingTimeout)
-    }
+    this.audio.stopRecord()
+    this.isRecording = false
   }
 
   getFilePath() {
@@ -56,20 +45,27 @@ export class AudioRecordService {
       : this.file.tempDirectory
   }
 
+  getIsRecording() {
+    return this.isRecording
+  }
+
   success() {
     console.log('Action is successful')
   }
 
   failure(error) {
-    console.log('Error! ' + error)
-    this.stopAudioRecording()
+    console.log('Error! ' + JSON.stringify(error))
   }
 
   readAudioFile() {
-    return this.file.readAsDataURL(this.getDir(), this.fileName)
+    return this.file.readAsDataURL(this.getDir(), this.fileName).then(data => {
+      this.destroy()
+      return data
+    })
   }
 
   destroy() {
     if (this.audio) this.audio.release()
+    this.isRecording = false
   }
 }

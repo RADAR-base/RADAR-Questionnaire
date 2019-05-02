@@ -36,14 +36,15 @@ export class ConfigService {
     return Promise.all([
       this.storage.get(StorageKeys.CONFIG_VERSION),
       this.storage.get(StorageKeys.SCHEDULE_VERSION),
-      this.storage.get(StorageKeys.APP_VERSION)
-    ]).then(([configVersion, scheduleVersion, storedAppVersion]) => {
-      let appVersion = DefaultAppVersion
-      this.appVersionPlugin.getVersionNumber().then(res => (appVersion = res))
-      console.log('fetching with app version ', appVersion)
-      return this.pullProtocol().then(res => {
-        if (res) {
-          const response: any = JSON.parse(res)
+      this.storage.get(StorageKeys.APP_VERSION),
+    ]).then(
+      ([configVersion, scheduleVersion, storedAppVersion]) => {
+        let appVersion = DefaultAppVersion
+        this.appVersionPlugin.getVersionNumber().then(res => (appVersion = res))
+        console.log('fetching with app version ', appVersion)
+        return this.pullProtocol().then(res => {
+          if (!res) return Promise.reject()
+          const response = JSON.parse(res)
           if (
             configVersion !== response.version ||
             scheduleVersion !== response.version ||
@@ -162,14 +163,14 @@ export class ConfigService {
 
   pullProtocol() {
     return this.getProjectName().then(projectName => {
-      if (projectName) {
-        const URI = DefaultProtocolEndPoint + projectName + DefaultProtocolURI
-        return this.http.get(URI, { responseType: 'text' }).toPromise()
-      } else {
+      if (!projectName) {
         console.error(
           'Unknown project name : ' + projectName + '. Cannot pull protocols.'
         )
+        return Promise.reject()
       }
+      const URI = DefaultProtocolEndPoint + projectName + DefaultProtocolURI
+      return this.http.get(URI, { responseType: 'text' }).toPromise()
     })
   }
 

@@ -1,30 +1,29 @@
 import { Injectable } from '@angular/core'
-import { FirebaseAnalytics } from '@ionic-native/firebase-analytics/ngx'
 
 import { User } from '../../shared/models/user'
 import { Utility } from '../../shared/utilities/util'
 
+declare var FirebasePlugin
 @Injectable()
 export class FirebaseAnalyticsService {
-  constructor(
-    private firebaseAnalytics: FirebaseAnalytics,
-    private utility: Utility
-  ) {}
+  constructor(private utility: Utility) {}
 
   logEvent(event: string, params): Promise<any> {
     console.log('Event', event)
     if (this.utility.isPlatformBrowser)
       return Promise.resolve('Could not load firebase')
-    return this.firebaseAnalytics
-      .logEvent(event, params)
-      .then((res: any) => {
+    return FirebasePlugin.logEvent(
+      event,
+      params,
+      (res: any) => {
         console.log('firebase analytics service: ' + res)
         return Promise.resolve(res)
-      })
-      .catch((error: any) => {
+      },
+      (error: any) => {
         console.log('firebase analytics service: ' + error)
         return Promise.reject(error)
-      })
+      }
+    )
   }
 
   /**
@@ -59,17 +58,15 @@ export class FirebaseAnalyticsService {
     return Promise.resolve(
       Object.entries(userProperties)
         .filter(([k, v]) => k)
-        .forEach(([key, value]) =>
-          this.firebaseAnalytics.setUserProperty(key, value)
-        )
+        .forEach(([key, value]) => FirebasePlugin.setUserProperty(key, value))
     )
   }
 
   setUserId(userId: string): Promise<any> {
-    return this.firebaseAnalytics.setUserId(userId)
+    return FirebasePlugin.setUserId(userId)
   }
 
   setCurrentScreen(screenName: string): Promise<any> {
-    return this.firebaseAnalytics.setCurrentScreen(screenName)
+    return FirebasePlugin.setScreenName(screenName)
   }
 }

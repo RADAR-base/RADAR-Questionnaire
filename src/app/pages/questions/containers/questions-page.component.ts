@@ -1,5 +1,6 @@
 // tslint:disable:no-eval
 import { Component, ElementRef, ViewChild } from '@angular/core'
+import { Insomnia } from '@ionic-native/insomnia/ngx'
 import {
   App,
   Content,
@@ -72,10 +73,12 @@ export class QuestionsPageComponent {
     private answerService: AnswerService,
     private timestampService: TimestampService,
     private translate: TranslatePipe,
-    private firebaseAnalytics: FirebaseAnalyticsService
+    private firebaseAnalytics: FirebaseAnalyticsService,
+    private insomnia: Insomnia
   ) {}
 
   ionViewDidLoad() {
+    this.insomnia.keepAwake()
     this.questionTitle = this.navParams.data.title
     this.questions = this.navParams.data.questions
     this.questionsContainerEl = this.questionsContainerRef.nativeElement
@@ -91,6 +94,10 @@ export class QuestionsPageComponent {
       type: this.associatedTask.name
     })
     this.firebaseAnalytics.setCurrentScreen('questions-page')
+  }
+
+  ionViewDidLeave() {
+    this.insomnia.allowSleepAgain()
   }
 
   evalIfFirstQuestionnaireToSkipESMSleepQuestion() {

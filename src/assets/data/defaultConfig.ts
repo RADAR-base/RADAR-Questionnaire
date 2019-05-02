@@ -170,11 +170,23 @@ export const SEC_MILLISEC = 1000
 export const HOUR_MIN = 60
 export const MIN_SEC = 60
 
+export const DefaultTimeInterval = { unit: 'day', amount: 1 }
+
 // KAFKA
 
 export const KAFKA_ASSESSMENT = 'assessment'
 export const KAFKA_COMPLETION_LOG = 'completion_log'
 export const KAFKA_TIMEZONE = 'timezone'
+export const KAFKA_AUDIO = 'audio'
 export const KAFKA_CLIENT_KAFKA = '/kafka'
 
 export const DefaultNumberOfCompletionLogsToSend = 10
+
+// AUDIO TASK
+
+export const DefaultMaxAudioAttemptsAllowed = 15
+export const DefaultAudioAttemptThreshold = 10
+export const DefaultAudioRecordOptions = {
+  SampleRate: 16000,
+  NumberOfChannels: 1
+}

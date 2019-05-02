@@ -7,11 +7,10 @@ import * as KafkaRest from 'kafka-rest'
 import {
   DefaultEndPoint,
   KAFKA_ASSESSMENT,
+  KAFKA_AUDIO,
   KAFKA_CLIENT_KAFKA,
   KAFKA_COMPLETION_LOG,
-  KAFKA_TIMEZONE,
-  MIN_SEC,
-  SEC_MILLISEC
+  KAFKA_TIMEZONE
 } from '../../../assets/data/defaultConfig'
 import { AuthService } from '../../pages/auth/services/auth.service'
 import { StorageKeys } from '../../shared/enums/storage'
@@ -23,6 +22,7 @@ import {
 } from '../../shared/models/answer'
 import { QuestionType } from '../../shared/models/question'
 import { Task } from '../../shared/models/task'
+import { getSeconds } from '../../shared/utilities/time'
 import { Utility } from '../../shared/utilities/util'
 import { FirebaseAnalyticsService } from './firebaseAnalytics.service'
 import { StorageService } from './storage.service'
@@ -52,32 +52,43 @@ export class KafkaService {
 
   prepareAnswerKafkaObjectAndSend(task: Task, data, questions) {
     // NOTE: Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
-    const Answer: AnswerValueExport = {
-      name: task.name,
-      version: data.configVersion,
-      answers: data.answers,
-      time:
-        questions[0].field_type == QuestionType.info && questions[1] // NOTE: Do not use info startTime
-          ? data.answers[1].startTime
-          : data.answers[0].startTime, // NOTE: whole questionnaire startTime and endTime
-      timeCompleted: data.answers[data.answers.length - 1].endTime,
-      timeNotification: task.timestamp
-        ? { double: task.timestamp / SEC_MILLISEC }
-        : null
+    const time =
+      questions[0].field_type == QuestionType.info && questions[1] // NOTE: Do not use info startTime
+        ? data.answers[1].startTime
+        : data.answers[0].startTime // NOTE: whole questionnaire startTime and endTime
+    const timeNotification = getSeconds({ milliseconds: task.timestamp })
+    const timeCompleted = data.answers[data.answers.length - 1].endTime
+    if (task.name.toLowerCase() !== KAFKA_AUDIO.toLowerCase()) {
+      const Answer: AnswerValueExport = {
+        time: time,
+        timeCompleted: timeCompleted,
+        timeNotification: timeNotification,
+        name: task.name,
+        version: data.configVersion,
+        answers: data.answers
+      }
+      return this.prepareKafkaObjectAndSend(task, Answer, KAFKA_ASSESSMENT)
+    } else {
+      const Answer = {
+        time: time,
+        timeCompleted: timeCompleted,
+        timeNotification: timeNotification,
+        mediaType: 'audio/m4a',
+        data: data.answers[1].value.string,
+        reciteText: questions
+          .filter(q => q.field_type == KAFKA_AUDIO)
+          .reduce(a => a).field_label
+      }
+      return this.prepareKafkaObjectAndSend(task, Answer, KAFKA_AUDIO)
     }
-
-    return this.prepareKafkaObjectAndSend(task, Answer, KAFKA_ASSESSMENT)
   }
 
   prepareNonReportedTasksKafkaObjectAndSend(task: Task) {
     // NOTE: Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
     const CompletionLog: CompletionLogValueExport = {
       name: task.name.toString(),
-      // NOTE: Added random floating point [0,1) to make this unique
-      time: (new Date().getTime() + Math.random()) / SEC_MILLISEC,
-      timeNotification: task.timestamp
-        ? { double: task.timestamp / SEC_MILLISEC }
-        : null,
+      time: getSeconds({ milliseconds: new Date().getTime() + Math.random() }),
+      timeNotification: getSeconds({ milliseconds: task.timestamp }),
       completionPercentage: { double: task.completed ? 100 : 0 }
     }
     return this.prepareKafkaObjectAndSend(
@@ -89,8 +100,8 @@ export class KafkaService {
 
   prepareTimeZoneKafkaObjectAndSend() {
     const ApplicationTimeZone: ApplicationTimeZoneValueExport = {
-      time: new Date().getTime() / SEC_MILLISEC,
-      offset: new Date().getTimezoneOffset() * MIN_SEC
+      time: getSeconds({ milliseconds: new Date().getTime() }),
+      offset: getSeconds({ minutes: new Date().getTimezoneOffset() })
     }
     return this.prepareKafkaObjectAndSend(
       [],
@@ -102,6 +113,7 @@ export class KafkaService {
   getSpecs(task: Task, kafkaObject, type) {
     switch (type) {
       case KAFKA_ASSESSMENT:
+      case KAFKA_AUDIO:
         return this.storage.getAssessmentAvsc(task).then(specs => {
           return Promise.resolve(
             Object.assign({}, { task: task, kafkaObject: kafkaObject }, specs)

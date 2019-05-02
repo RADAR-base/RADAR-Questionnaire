@@ -1,5 +1,6 @@
 // tslint:disable:no-eval
 import { Component, ElementRef, ViewChild } from '@angular/core'
+import { Insomnia } from '@ionic-native/insomnia/ngx'
 import {
   App,
   Content,
@@ -12,6 +13,7 @@ import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalyti
 import { LocKeys } from '../../../shared/enums/localisations'
 import { Question, QuestionType } from '../../../shared/models/question'
 import { TranslatePipe } from '../../../shared/pipes/translate/translate'
+import { getSeconds } from '../../../shared/utilities/time'
 import { FinishPageComponent } from '../../finish/containers/finish-page.component'
 import { AnswerService } from '../services/answer.service'
 import { TimestampService } from '../services/timestamp.service'
@@ -71,10 +73,12 @@ export class QuestionsPageComponent {
     private answerService: AnswerService,
     private timestampService: TimestampService,
     private translate: TranslatePipe,
-    private firebaseAnalytics: FirebaseAnalyticsService
+    private firebaseAnalytics: FirebaseAnalyticsService,
+    private insomnia: Insomnia
   ) {}
 
   ionViewDidLoad() {
+    this.insomnia.keepAwake()
     this.questionTitle = this.navParams.data.title
     this.questions = this.navParams.data.questions
     this.questionsContainerEl = this.questionsContainerRef.nativeElement
@@ -90,6 +94,10 @@ export class QuestionsPageComponent {
       type: this.associatedTask.name
     })
     this.firebaseAnalytics.setCurrentScreen('questions-page')
+  }
+
+  ionViewDidLeave() {
+    this.insomnia.allowSleepAgain()
   }
 
   evalIfFirstQuestionnaireToSkipESMSleepQuestion() {
@@ -112,7 +120,7 @@ export class QuestionsPageComponent {
   }
 
   getTime() {
-    return this.timestampService.getTimeStamp() / 1000
+    return getSeconds({ milliseconds: this.timestampService.getTimeStamp() })
   }
 
   setCurrentQuestion(value = 0) {
@@ -148,7 +156,9 @@ export class QuestionsPageComponent {
       this.setNextDisabled()
 
       if (
-        this.questions[this.currentQuestion].field_type === QuestionType.timed
+        this.questions[this.currentQuestion].field_type ===
+          QuestionType.timed ||
+        this.questions[this.currentQuestion].field_type === QuestionType.audio
       ) {
         this.setPreviousDisabled()
       } else {

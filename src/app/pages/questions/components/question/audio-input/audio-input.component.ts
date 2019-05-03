@@ -9,10 +9,7 @@ import {
 import { NavController, Platform } from 'ionic-angular'
 import { Subscription } from 'rxjs'
 
-import {
-  DefaultAudioAttemptThreshold,
-  DefaultMaxAudioAttemptsAllowed
-} from '../../../../../../assets/data/defaultConfig'
+import { DefaultMaxAudioAttemptsAllowed } from '../../../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../../../core/services/alert.service'
 import { LocKeys } from '../../../../../shared/enums/localisations'
 import { Section } from '../../../../../shared/models/question'
@@ -39,6 +36,7 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   buttonTransitionDelay = 1000
   resumeListener: Subscription
   pauseListener: Subscription
+  audioData: string
 
   constructor(
     private audioRecordService: AudioRecordService,
@@ -75,16 +73,20 @@ export class AudioInputComponent implements OnDestroy, OnInit {
     if (!this.isRecording()) {
       this.recordAttempts++
       if (this.recordAttempts <= DefaultMaxAudioAttemptsAllowed) {
-        if (this.recordAttempts > DefaultAudioAttemptThreshold)
-          this.showAttemptAlert()
         this.transitionButton()
         this.startRecording().catch(e => this.showTaskInterruptedAlert())
       }
     } else {
       this.stopAndGetRecording().catch(e => this.showTaskInterruptedAlert())
       if (this.recordAttempts == DefaultMaxAudioAttemptsAllowed)
-        this.buttonShown = false
+        this.finishRecording()
+      this.showAfterAttemptAlert()
     }
+  }
+
+  finishRecording() {
+    this.buttonShown = false
+    setTimeout(() => this.valueChange.emit(this.audioData), 500)
   }
 
   transitionButton() {
@@ -107,7 +109,7 @@ export class AudioInputComponent implements OnDestroy, OnInit {
     this.audioRecordService.stopAudioRecording()
     return this.audioRecordService.readAudioFile().then(data => {
       console.log(data)
-      return this.valueChange.emit(data)
+      return (this.audioData = data)
     })
   }
 
@@ -140,7 +142,32 @@ export class AudioInputComponent implements OnDestroy, OnInit {
     })
   }
 
-  showAttemptAlert() {
+  showAfterAttemptAlert() {
+    this.alertService.showAlert({
+      title: this.translate.transform(
+        LocKeys.AUDIO_TASK_HAPPY_ALERT.toString()
+      ),
+      buttons: [
+        {
+          text: this.translate.transform(LocKeys.BTN_YES.toString()),
+          handler: () => {
+            this.finishRecording()
+          }
+        },
+        {
+          text:
+            this.translate.transform(LocKeys.BTN_NO.toString()) +
+            ', ' +
+            this.translate.transform(LocKeys.BTN_TRY_AGAIN.toString()),
+          handler: () => {
+            this.showAttemptsRemainingAlert()
+          }
+        }
+      ]
+    })
+  }
+
+  showAttemptsRemainingAlert() {
     const attemptsLeft = DefaultMaxAudioAttemptsAllowed - this.recordAttempts
     this.alertService.showAlert({
       title:

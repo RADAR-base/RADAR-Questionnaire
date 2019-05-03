@@ -2709,7 +2709,8 @@ cordova-plugin-dialogs@^2.0.1:
 
 "cordova-plugin-fcm@git+https://github.com/yatharthranjan/cordova-plugin-fcm.git":
   version "2.1.2"
-  resolved "git+https://github.com/yatharthranjan/cordova-plugin-fcm.git#5e74aaddc1f60fd2469ee4b25a87d601b8575119"
+  uid "03783b3e7ab1c2400ab5d99ff5c897bde2afee3b"
+  resolved "git+https://github.com/yatharthranjan/cordova-plugin-fcm.git#03783b3e7ab1c2400ab5d99ff5c897bde2afee3b"
 
 cordova-plugin-file@^6.0.1:
   version "6.0.1"

@@ -93,13 +93,14 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   }
 
   startRecording() {
-    return this.permissionUtil
-      .getRecordAudio_Permission()
-      .then(success =>
-        success
-          ? this.audioRecordService.startAudioRecording()
-          : Promise.reject()
-      )
+    return Promise.all([
+      this.permissionUtil.getRecordAudio_Permission(),
+      this.permissionUtil.getWriteExternalStorage_permission()
+    ]).then(res =>
+      res[0] && res[1]
+        ? this.audioRecordService.startAudioRecording()
+        : Promise.reject()
+    )
   }
 
   stopAndGetRecording() {

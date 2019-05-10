@@ -8,6 +8,11 @@
       [value]="item.value"
       (change)="onInputChange($event)"
     >
-    <label [attr.for]="item.id">{{ item.response }}</label>
+    <label
+      [attr.for]="item.id"
+      (click)="showDescription(item.description)"
+    >
+      {{ item.response }}
+    </label>
   </li>
 </ul>

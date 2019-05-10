@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
+import { ToastController } from 'ionic-angular'
 
 import { Item, Response } from '../../../../../shared/models/question'
 
@@ -22,13 +23,16 @@ export class RadioInputComponent implements OnInit {
   name = `radio-input-${this.uniqueID}`
   items: Item[] = Array()
 
+  constructor(public toastController: ToastController) {}
+
   ngOnInit() {
     this.responses.map((item, i) => {
       const codeChecked = this.checkCode(item.code)
       this.items.push({
         id: `radio-${this.uniqueID}-${i}`,
         response: item.label,
-        value: codeChecked
+        value: codeChecked,
+        description: item.description
       })
     })
   }
@@ -42,5 +46,13 @@ export class RadioInputComponent implements OnInit {
 
   onInputChange(event) {
     this.valueChange.emit(+event.target.value)
+  }
+
+  showDescription(text) {
+    const toast = this.toastController.create({
+      message: text,
+      duration: 4000
+    })
+    toast.present()
   }
 }

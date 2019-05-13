@@ -2,69 +2,8 @@ range-info-input {
   display: block;
   width: 100%;
 
-  ul {
-    display: flex;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    list-style: none;
-  }
-
-  ul li {
-    display: flex;
-    flex: 1 0 8px;
-    align-content: stretch;
-  }
-
-  ul li input[type='radio'] {
-    position: absolute;
-    visibility: hidden;
-  }
-
-  ul li label {
-    @include font-large;
-
-    position: relative;
-    display: flex;
-    flex-grow: 1;
-    align-items: center;
-    justify-content: center;
-    height: $bt-height;
-    border: 2px solid white;
-    border-right: none;
-    background-color: $cl-primary-20;
-  }
-
-  ul li:first-child label {
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
-  }
-
-  ul li:last-child label {
-    border-right: 2px solid white;
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-  }
-
-  ul li:hover label {
-    background-color: $cl-secondary;
-  }
-
-  input[type='radio']:checked + label {
-    background-color: $cl-primary;
-  }
-
-  .padding {
-    margin-top: 10px;
+  range-input {
     margin-bottom: 32px;
-  }
-
-  .labelLeft {
-    float: left;
-  }
-
-  .labelRight {
-    float: right;
   }
 
   .info-card {

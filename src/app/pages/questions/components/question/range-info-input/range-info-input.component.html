@@ -1,22 +1,10 @@
-<ul>
-  <li *ngFor="let item of items">
-    <input
-      [disabled]="!currentlyShown"
-      type="radio"
-      [id]="item.id"
-      [name]="name"
-      [value]="item.value"
-      (change)="onInputChange($event)"
-    >
-    <label
-      [attr.for]="item.id"
-      (click)="showDescription(item.value)"
-    >
-      {{ item.value }}
-    </label>
-  </li>
-</ul>
-<div class="padding"></div>
+<range-input
+  [min]="min"
+  [max]="max"
+  [currentlyShown]="currentlyShown"
+  (valueChange)="onInputChange($event)"
+>
+</range-input>
 
 <div class="info-card">
   <div>

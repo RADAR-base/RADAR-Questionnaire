@@ -10108,10 +10108,10 @@ tslib@^1.0.0, tslib@^1.7.1, tslib@^1.8.0, tslib@^1.8.1, tslib@^1.9.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.9.3.tgz#d7e4dd79245d85428c4d7e4822a79917954ca286"
   integrity sha512-4krF8scpejhaOgqzBEcGM7yDIEfi0/8+8zDRZhNZZ2kjmHJ4hv3zCbQWxoJGz1iw5U0Jl0nma13xzHXcncMavQ==
 
-tslint-angular@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/tslint-angular/-/tslint-angular-2.0.2.tgz#22c95a2d976627b9aa55876ca2c3f16584406662"
-  integrity sha512-UmEuLX4TsXALjgK8eAW5/zS6eB0lLck0y/T4tn/6W+HRHgPJC8OG0C49ZWKKEXIeqOQEfJZulTBrcQvKVy8UQw==
+tslint-angular@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/tslint-angular/-/tslint-angular-2.0.3.tgz#a8e187c951683d32ec56d4d981a7efd2dd9b6faf"
+  integrity sha512-Ml2RDWx/kTyilJbnH013fNiWlYka9AbaYomyMxx/BS1A6Cq3XTEDKF1eZqAe8rwfLnaJzpNd/8IUcLMmpxXPLg==
 
 tslint-config-prettier@^1.15.0:
   version "1.18.0"

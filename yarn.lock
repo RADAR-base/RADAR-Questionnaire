@@ -2697,10 +2697,10 @@ cordova-plugin-file@^6.0.1:
   resolved "https://registry.yarnpkg.com/cordova-plugin-file/-/cordova-plugin-file-6.0.1.tgz#49606b8c15a5688d4728f92e4a7325a061de07f5"
   integrity sha1-SWBrjBWlaI1HKPkuSnMloGHeB/U=
 
-cordova-plugin-firebase-analytics@^1.0.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-firebase-analytics/-/cordova-plugin-firebase-analytics-1.1.1.tgz#a2601cb298a2ceff19618f8ff1d1618bf2eba31f"
-  integrity sha512-YXGdo38f9E2/eQ2cNaGUdUmShRL8IpnbhNKM467YK0ImLMEGgTiJUMlD24CJjanL4UNA0xv/e72O/Y+Px7XT8A==
+cordova-plugin-firebase-analytics@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-firebase-analytics/-/cordova-plugin-firebase-analytics-2.0.0.tgz#f457753b14e949ae951ad0c7a607e8fb9988271c"
+  integrity sha512-oQD2TBtBh+3l5FFEfVyiutce8Jhmn2Pv4QngqoWG3PopbQnQOWnMceULenU101tzf+kYsJvqDTPphYxNBAU/Tg==
 
 cordova-plugin-globalization@^1.11.0:
   version "1.11.0"

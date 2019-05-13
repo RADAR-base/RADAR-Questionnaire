@@ -10,6 +10,7 @@ import { Dialogs } from '@ionic-native/dialogs/ngx'
 import { Vibration } from '@ionic-native/vibration/ngx'
 
 import { TaskTimer, Timer } from '../../../../../shared/models/timer'
+import { getSeconds } from '../../../../../shared/utilities/time'
 
 @Component({
   selector: 'timed-test',
@@ -26,7 +27,10 @@ export class TimedTestComponent implements OnInit, OnChanges {
   timer: Timer
   @Input()
   currentlyShown: boolean
+
   public taskTimer: TaskTimer
+  startTime
+  endTime
 
   constructor(private dialogs: Dialogs, private vibration: Vibration) {}
 
@@ -36,21 +40,8 @@ export class TimedTestComponent implements OnInit, OnChanges {
 
   ngOnChanges() {
     if (this.currentlyShown) {
-      this.start()
-    }
-  }
-
-  start() {
-    if (this.taskTimer.hasStarted) {
-      this.resumeTimer()
-    } else {
       this.startTimer()
     }
-  }
-
-  emitTime(emitter) {
-    const epoch: number = new Date().getTime()
-    emitter.emit(epoch)
   }
 
   hasFinished() {
@@ -66,54 +57,48 @@ export class TimedTestComponent implements OnInit, OnChanges {
       this.timer.start = 0
     }
 
-    this.taskTimer = <TaskTimer>{
-      seconds: this.timer.start,
-      runTimer: false,
+    this.taskTimer = {
       hasStarted: false,
       hasFinished: false,
-      secondsRemaining: this.timer.start
+      secondsElapsed: 0,
+      secondsRemaining: this.timer.start,
+      duration: this.timer.start - this.timer.end,
+      displayTime: this.timer.start
     }
-
-    this.taskTimer.displayTime = this.taskTimer.secondsRemaining.toString()
   }
 
   startTimer() {
     this.taskTimer.hasStarted = true
-    this.taskTimer.runTimer = true
+    this.startTime = Date.now()
+    this.endTime = this.startTime + this.taskTimer.duration * 1000
     this.timerTick()
   }
 
-  pauseTimer() {
-    this.taskTimer.runTimer = false
-  }
-
-  resumeTimer() {
-    this.startTimer()
+  updateCountdown() {
+    this.taskTimer.secondsElapsed = Math.floor(
+      getSeconds({
+        milliseconds: Date.now() - this.startTime
+      })
+    )
+    this.taskTimer.displayTime =
+      this.timer.start - this.taskTimer.secondsElapsed
   }
 
   timerTick() {
+    if (!this.taskTimer.hasStarted) {
+      return
+    }
     setTimeout(() => {
-      if (!this.taskTimer.runTimer) {
-        return
-      }
-      if (this.taskTimer.secondsRemaining > 0) {
-        this.taskTimer.secondsRemaining--
-        this.taskTimer.displayTime = this.taskTimer.secondsRemaining.toString()
-        if (this.taskTimer.secondsRemaining > this.timer.end) {
-          this.timerTick()
-        } else {
-          this.dialogs.beep(1)
-          this.vibration.vibrate(600)
+      this.updateCountdown()
+      if (this.endTime - Date.now()) this.timerTick()
+      else this.finishTimer()
+    }, 500)
+  }
 
-          if (this.timer.end === 0) {
-            this.taskTimer.hasFinished = true
-          } else {
-            this.pauseTimer()
-          }
-          // NOTE: save timestamp (epoch) and activate the next button
-          this.emitTime(this.valueChange)
-        }
-      }
-    }, 1000)
+  finishTimer() {
+    this.dialogs.beep(1)
+    this.vibration.vibrate(500)
+    this.taskTimer.hasFinished = true
+    this.valueChange.emit(Date.now())
   }
 }

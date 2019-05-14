@@ -5,6 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { JWT_OPTIONS, JwtModule } from '@auth0/angular-jwt'
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx'
 import { AppVersion } from '@ionic-native/app-version/ngx'
+import { BackgroundMode } from '@ionic-native/background-mode/ngx'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx'
 import { Device } from '@ionic-native/device/ngx'
 import { Dialogs } from '@ionic-native/dialogs/ngx'
@@ -66,7 +67,8 @@ import { Utility } from './shared/utilities/util'
     AppVersion,
     FirebaseAnalytics,
     MobileAccessibility,
-    Insomnia
+    Insomnia,
+    BackgroundMode
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

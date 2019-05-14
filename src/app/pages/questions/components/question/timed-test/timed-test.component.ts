@@ -3,9 +3,11 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output
 } from '@angular/core'
+import { BackgroundMode } from '@ionic-native/background-mode/ngx'
 import { Dialogs } from '@ionic-native/dialogs/ngx'
 import { Vibration } from '@ionic-native/vibration/ngx'
 
@@ -16,7 +18,7 @@ import { getSeconds } from '../../../../../shared/utilities/time'
   selector: 'timed-test',
   templateUrl: 'timed-test.component.html'
 })
-export class TimedTestComponent implements OnInit, OnChanges {
+export class TimedTestComponent implements OnInit, OnChanges, OnDestroy {
   @Output()
   valueChange: EventEmitter<number> = new EventEmitter<number>()
   @Input()
@@ -32,10 +34,19 @@ export class TimedTestComponent implements OnInit, OnChanges {
   startTime
   endTime
 
-  constructor(private dialogs: Dialogs, private vibration: Vibration) {}
+  constructor(
+    private dialogs: Dialogs,
+    private vibration: Vibration,
+    private background: BackgroundMode
+  ) {}
 
   ngOnInit() {
+    this.background.enable()
     this.initTimer()
+  }
+
+  ngOnDestroy() {
+    this.background.disable()
   }
 
   ngOnChanges() {
@@ -90,12 +101,13 @@ export class TimedTestComponent implements OnInit, OnChanges {
     }
     setTimeout(() => {
       this.updateCountdown()
-      if (this.endTime - Date.now()) this.timerTick()
+      if (this.endTime - Date.now() > 0) this.timerTick()
       else this.finishTimer()
     }, 500)
   }
 
   finishTimer() {
+    this.background.moveToForeground()
     this.dialogs.beep(1)
     this.vibration.vibrate(500)
     this.taskTimer.hasFinished = true

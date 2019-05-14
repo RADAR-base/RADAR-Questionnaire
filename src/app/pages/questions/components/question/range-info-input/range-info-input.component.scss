@@ -1,6 +1,10 @@
-info-screen {
+range-info-input {
   display: block;
   width: 100%;
+
+  range-input {
+    margin-bottom: 32px;
+  }
 
   .info-card {
     position: fixed;
@@ -9,27 +13,13 @@ info-screen {
     margin-right: 16px;
     padding: 10px 10px 0;
     width: 88%;
-    height: 74vh;
+    height: 48vh;
     -webkit-border-radius: 5px;
     border-radius: 5px;
     background-color: $cl-primary-20;
   }
 
-  .info-card-sm {
-    height: 69vh !important;
-  }
-
-  .info-heading {
-    color: $cl-light-60;
-  }
-
-  .info-content {
-    height: 80%;
-  }
-
-  .icon-thincIt {
-    margin-top: 15px;
-    margin-left: 35%;
-    width: 30%;
+  h2 {
+    @include font-body;
   }
 }

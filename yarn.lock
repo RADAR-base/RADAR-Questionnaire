@@ -2651,10 +2651,6 @@ cordova-plugin-android-permissions@^1.0.0:
   resolved "https://registry.yarnpkg.com/cordova-plugin-android-permissions/-/cordova-plugin-android-permissions-1.0.0.tgz#9e7c116be668eb7dfa41491b13d8d47da9548149"
   integrity sha1-nnwRa+Zo6336QUkbE9jUfalUgUk=
 
-"cordova-plugin-app-event@git+https://github.com/katzer/cordova-plugin-app-event.git":
-  version "1.2.1"
-  resolved "git+https://github.com/katzer/cordova-plugin-app-event.git#9e0f60af0222da4025ff4d19f836c61fe8f4ce9f"
-
 cordova-plugin-app-version@^0.1.9:
   version "0.1.9"
   resolved "https://registry.yarnpkg.com/cordova-plugin-app-version/-/cordova-plugin-app-version-0.1.9.tgz#9db0607863337a710489302e5f50a904f1449bdb"

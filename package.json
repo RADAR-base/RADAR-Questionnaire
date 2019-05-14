@@ -66,7 +66,6 @@
     "cordova-lib": "^9.0.1",
     "cordova-media-with-compression": "^2.1.2",
     "cordova-plugin-android-permissions": "^1.0.0",
-    "cordova-plugin-app-event": "git+https://github.com/katzer/cordova-plugin-app-event.git",
     "cordova-plugin-app-version": "^0.1.9",
     "cordova-plugin-badge": "^0.8.8",
     "cordova-plugin-camera": "^4.0.3",

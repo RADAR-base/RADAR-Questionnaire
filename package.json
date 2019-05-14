@@ -90,7 +90,7 @@
     "core-js": "^2.6.5",
     "ionic-angular": "^3.9.5",
     "ionic-plugin-keyboard": "^2.2.1",
-    "ionicons": "^4.5.6",
+    "ionicons": "^4.5.8",
     "kafka-rest": "^0.0.5",
     "moment": "^2.22.2",
     "ngx-moment": "^3.3.0",

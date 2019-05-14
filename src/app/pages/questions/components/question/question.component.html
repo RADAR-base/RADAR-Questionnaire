@@ -1,4 +1,8 @@
-<div *ngIf="question?.type === 'info' || question?.type === 'timed';then taskformat else stdformat"></div>
+<div *ngIf="
+    question?.type === 'info' || question?.type === 'timed';
+    then taskformat;
+    else stdformat
+  "></div>
 
 <ng-template #stdformat>
   <p class="stdformat">{{ question.section_header }}</p>
@@ -37,6 +41,17 @@
     (valueChange)="onValueChange($event)"
   >
   </range-input>
+</div>
+
+<div *ngIf="question.field_type === 'range-info'">
+  <range-info-input
+    [min]="question.range.min"
+    [max]="question.range.max"
+    [responses]="question.select_choices_or_calculations"
+    [currentlyShown]="currentlyShown"
+    (valueChange)="onValueChange($event)"
+  >
+  </range-info-input>
 </div>
 
 <div *ngIf="question.field_type === 'slider'">

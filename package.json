@@ -73,7 +73,7 @@
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-dialogs": "^2.0.1",
     "cordova-plugin-file": "^6.0.1",
-    "cordova-plugin-firebase": "git+https://github.com/mpgxvii/cordova-plugin-firebase.git#upstream",
+    "cordova-plugin-firebase-with-upstream-messaging": "^1.0.0",
     "cordova-plugin-globalization": "^1.11.0",
     "cordova-plugin-insomnia": "^4.3.0",
     "cordova-plugin-local-notification": "^0.9.0-beta.3",
@@ -165,7 +165,7 @@
       "cordova-media-with-compression": {},
       "cordova-plugin-file": {},
       "cordova-plugin-insomnia": {},
-      "cordova-plugin-firebase": {}
+      "cordova-plugin-firebase-with-upstream-messaging": {}
     }
   },
   "ionic_enable_lint": false

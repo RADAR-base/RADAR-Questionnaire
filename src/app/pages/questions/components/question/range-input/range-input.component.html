@@ -6,7 +6,7 @@
       [id]="item.id"
       [name]="name"
       [value]="item.value"
-      (change)="onInputChange($event)"
+      (change)="onInputChange(item.value)"
     >
     <label [attr.for]="item.id">{{ item.value }}</label>
   </li>

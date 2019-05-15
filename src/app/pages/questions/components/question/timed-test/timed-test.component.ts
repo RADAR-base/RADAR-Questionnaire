@@ -12,7 +12,10 @@ import { Dialogs } from '@ionic-native/dialogs/ngx'
 import { Vibration } from '@ionic-native/vibration/ngx'
 
 import { TaskTimer, Timer } from '../../../../../shared/models/timer'
-import { getSeconds } from '../../../../../shared/utilities/time'
+import {
+  getSeconds,
+  getMilliseconds
+} from '../../../../../shared/utilities/time'
 
 @Component({
   selector: 'timed-test',
@@ -31,8 +34,8 @@ export class TimedTestComponent implements OnInit, OnChanges, OnDestroy {
   currentlyShown: boolean
 
   public taskTimer: TaskTimer
-  startTime
-  endTime
+  startTime: number
+  endTime: number
 
   constructor(
     private dialogs: Dialogs,
@@ -81,7 +84,8 @@ export class TimedTestComponent implements OnInit, OnChanges, OnDestroy {
   startTimer() {
     this.taskTimer.hasStarted = true
     this.startTime = Date.now()
-    this.endTime = this.startTime + this.taskTimer.duration * 1000
+    this.endTime =
+      this.startTime + getMilliseconds({ seconds: this.taskTimer.duration })
     this.timerTick()
   }
 

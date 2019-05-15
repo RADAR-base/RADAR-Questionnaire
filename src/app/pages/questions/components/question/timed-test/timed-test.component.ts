@@ -103,18 +103,19 @@ export class TimedTestComponent implements OnInit, OnChanges, OnDestroy {
     if (!this.taskTimer.hasStarted) {
       return
     }
-    setTimeout(() => {
-      this.updateCountdown()
-      if (this.endTime - Date.now() > 0) this.timerTick()
-      else this.finishTimer()
-    }, 500)
+    this.updateCountdown()
+    if (this.endTime - Date.now() > 0)
+      setTimeout(() => {
+        this.timerTick()
+      }, 500)
+    else this.stopTimer()
   }
 
-  finishTimer() {
+  stopTimer() {
     this.background.moveToForeground()
     this.dialogs.beep(1)
     this.vibration.vibrate(500)
     this.taskTimer.hasFinished = true
-    this.valueChange.emit(Date.now())
+    this.valueChange.emit(this.endTime)
   }
 }

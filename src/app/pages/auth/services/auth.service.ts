@@ -37,7 +37,7 @@ export class AuthService {
   refresh() {
     return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
       const limit = getSeconds({
-        milliseconds: new Date().getTime() - DefaultTokenRefreshTime
+        milliseconds: new Date().getTime() + DefaultTokenRefreshTime
       })
       if (tokens.iat + tokens.expires_in < limit) {
         const URI = this.URI_base + DefaultRefreshTokenURI

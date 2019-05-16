@@ -351,101 +351,101 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
-"@ionic-native/android-permissions@^5.5.1":
-  version "5.5.1"
-  resolved "https://registry.yarnpkg.com/@ionic-native/android-permissions/-/android-permissions-5.5.1.tgz#fed3e9b85c0022f5eb6df14dd2965b5a5a22dbdb"
-  integrity sha512-zK5ZwzhkpJQQNf9UekbZIVTUlg1+9/QiD8nzsfvv2znRc+AJ4/P4v0qm85SYJAiFmXZyjcfLRer5idimLOq1nw==
+"@ionic-native/android-permissions@^5.6.0":
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/android-permissions/-/android-permissions-5.6.0.tgz#2bb6e29ba09c7c143eb42e9a0098e15f1310e6f2"
+  integrity sha512-OLZZFEt+n62dj1xzpgRHk+9BtnlhoSI4OYK+PWS5n1CaFxVXJS3YwHgqFhZjXp0OzG2DGxc70Z/EcKtbIyA4Jg==
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/app-version@^5.5.1":
-  version "5.5.1"
-  resolved "https://registry.yarnpkg.com/@ionic-native/app-version/-/app-version-5.5.1.tgz#cf45ab2ef85d063181b7a64014c78c86a910e70f"
-  integrity sha512-M58b7TwZlJ2lOYRx7qlIRbqHJ46s3u+jdXBd9MdqaIfPjNBEWhwFbWeOge/xSS/aWHlQPVCE2DAFTe4/hLg5QQ==
+"@ionic-native/app-version@^5.6.0":
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/app-version/-/app-version-5.6.0.tgz#5165c46bcfe7c1e22f2ff8d8964a5f1a929df183"
+  integrity sha512-Jh7R3M3hqISvsTx3etDRF3hGIiEW29Q7xk57DS5XwpQKgG3Qqg8ZXw2wkZYnFs2QxAwtpjraTRFDD+NJCO0XYQ==
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/barcode-scanner@^5.5.1":
-  version "5.5.1"
-  resolved "https://registry.yarnpkg.com/@ionic-native/barcode-scanner/-/barcode-scanner-5.5.1.tgz#12f813134a6d61fba4e371e0cd516e543fdabcaf"
-  integrity sha512-u3JxJgrTI/JH17nxovik2AqUCxTMOSTWREpbJ8vFXqmDEFrf9E2f0CuJq8I5KJv2at3P3MlryLq8U+FbXfgKUw==
+"@ionic-native/barcode-scanner@^5.6.0":
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/barcode-scanner/-/barcode-scanner-5.6.0.tgz#54433212422be34afdb58ef63c8af5c5a0ab7545"
+  integrity sha512-zga7ScJv6B05uKCu7YvdYoVQCMg0+3vgebynMX0ViEp68R5g6Ro9etmtWPUes/vNBWGGgv/YCATrlGzdYH8tcA==
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/core@^5.5.1":
-  version "5.5.1"
-  resolved "https://registry.yarnpkg.com/@ionic-native/core/-/core-5.5.1.tgz#d24c06d8b607761b824035044151b36867afe3b9"
-  integrity sha512-M7ECkZZtAgluVo8rPCyUgnV0Z2SQIcKUk97p6fw+z/ETWU2VRERH8cUpw1v1KpZB8bTlBgYhVmlxwkZo5L3TeQ==
+"@ionic-native/core@^5.6.0":
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/core/-/core-5.6.0.tgz#719c6911141fa2e25d0f2e8866db6d3112954e56"
+  integrity sha512-TLjKKdhzldwd5wk3es+tZqtLhSoYR+o1e7BBkfEW6Ky890kSTkuhBf4aswbMa9626/oI+BUjRV6A5zrNcExtEg==
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/device@^5.5.1":
-  version "5.5.1"
-  resolved "https://registry.yarnpkg.com/@ionic-native/device/-/device-5.5.1.tgz#e3c3146bef8a704882cdeb14c1a84ad7ffffa5ea"
-  integrity sha512-w3Zv0eM76I9IQcKyXXiAZ3lnDnYsLXtXgGKMC0t404VMEBarVfYanM6XUueYrOAUuqoUgXKij6u4QArMuK5Jlg==
+"@ionic-native/device@^5.6.0":
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/device/-/device-5.6.0.tgz#e08a492b56e92701124ce197b84dd8a0a661de58"
+  integrity sha512-bdLqmaXIdPiYNX+BUin4ByplgFJIyvUArZrVw2cWJS19Ry6FwQ1Z2OkF4BRxSKw06ppRM3OKERe3AeyqN2VuZA==
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/dialogs@^5.5.1":
-  version "5.5.1"
-  resolved "https://registry.yarnpkg.com/@ionic-native/dialogs/-/dialogs-5.5.1.tgz#73ad4850d69713db3eec2d9ad1be82731493381a"
-  integrity sha512-4SSjlZiJQkoi/GI7vXFk+6tFEZOfXGw44npcAo4VIrFKElPaBu6SCnfxo87aXQC7Sk8gXwJdkzkQ/aKfvaDJ1Q==
+"@ionic-native/dialogs@^5.6.0":
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/dialogs/-/dialogs-5.6.0.tgz#12d820c4d2a1736469e38e2e512fb52a33c7bb12"
+  integrity sha512-2Xi5Y65hplnKoZbrMzmGu966rcMw4CMF8es++5C1gqDq1RIgLKVC2W+/tGUl3Z+EEFZYkDyzeeowhviW2vO4mA==
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/file@^5.5.1":
-  version "5.5.1"
-  resolved "https://registry.yarnpkg.com/@ionic-native/file/-/file-5.5.1.tgz#5251f004849a4bb742d6c2e7132550bbec812001"
-  integrity sha512-Dn/X604VnimUTt85uzHodO8y12tvKGaDJHVF0PZUC/Pcj7aZswsgk9Blubzp9K6G6aLw7YATbB6hdh6Npq+mNQ==
+"@ionic-native/file@^5.6.0":
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/file/-/file-5.6.0.tgz#06d729d67120c5024e34d8ee19747ba0e9add23c"
+  integrity sha512-3BUMYsUpUCG0yA4iIiFUF3GeMTtpgQiuclTBkBUFyEAiLYQ5pXoa1X5QtyGDAbgMPlSfBGVm+Mp8cY2BQelQ7g==
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/globalization@^5.5.1":
-  version "5.5.1"
-  resolved "https://registry.yarnpkg.com/@ionic-native/globalization/-/globalization-5.5.1.tgz#8f3ce6205dbab41ea22a39394e5d5b54546b3f98"
-  integrity sha512-DbKGebcaDTKSaljtWWKAgd5RJrNT6cxCErBf52iGJUIUCSS2ob50sxiDXYkmnaJzjWzOIHqmYT9nT+a9o/YgTg==
+"@ionic-native/globalization@^5.6.0":
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/globalization/-/globalization-5.6.0.tgz#43162ca8f0a5185070ad6887b024936b0d28bb5c"
+  integrity sha512-gxqsbsk+CSrqb+Ae7qo+Ytv5yrWAM66jicJzKQqO7UeCt8v1ye+8YbkQ4FsLJslUJ3ia0K3eaILy8eItdHWddQ==
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/insomnia@^5.5.1":
-  version "5.5.1"
-  resolved "https://registry.yarnpkg.com/@ionic-native/insomnia/-/insomnia-5.5.1.tgz#463eebfeb6f2e522fe32aaaad7c721b7b3f768e5"
-  integrity sha512-njFrZYo7xcysLncj0bOA/psgq4C72sASOJLHttlw2OJ7W+UPB4ou/vuvgyL3Ovm8LCxLzUF8PgIbWNQDv2V/qg==
+"@ionic-native/insomnia@^5.6.0":
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/insomnia/-/insomnia-5.6.0.tgz#047ebf163abb5b1630971b78fe3f58f806aa3ca9"
+  integrity sha512-IH8htUCiSNhqfP+vCj9G1quNkWv/pULN57ZXbvjY39eOcaKdWRQKA+dV1O1g/0AibNxQTBbzEjQSpxLTF/9UAw==
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/local-notifications@^5.5.1":
-  version "5.5.1"
-  resolved "https://registry.yarnpkg.com/@ionic-native/local-notifications/-/local-notifications-5.5.1.tgz#8a1f3474bc831a9dbfa16b10a390910c655586f1"
-  integrity sha512-L3RbUH3Py1A0ooXKN2zzE2kFk3kOLM1Iw+2N+0GoRsQhAjBQqLiC0KXec0ecRIK1KN21PNsZmA0iYY1h4xHA4w==
+"@ionic-native/local-notifications@^5.6.0":
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/local-notifications/-/local-notifications-5.6.0.tgz#e4c41f9560ae9059d761fcc3ed7deba7b4c972c2"
+  integrity sha512-PvOOqK3xh7GnHq6UB4WvETY4nq7OL+5JmgUWi2loAPXqpX1a+0g3D91YejCrVLjTxx2kK25UJsuGTw+gs9vdmQ==
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/mobile-accessibility@5.5.1":
-  version "5.5.1"
-  resolved "https://registry.yarnpkg.com/@ionic-native/mobile-accessibility/-/mobile-accessibility-5.5.1.tgz#0e21dd2db78696c3d4cb4d809114f7723b853843"
-  integrity sha512-xGf1asDX6qBdDVXIns8GzfAsmZOO6KVcRJ4nVD69ROe+8rt0VlczVLEIpyw324TRiL3oEZ5O472JLVpFD6d5bg==
+"@ionic-native/mobile-accessibility@5.6.0":
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/mobile-accessibility/-/mobile-accessibility-5.6.0.tgz#e4dff2b5a3e0fd391e60803afdf4e40caef9f088"
+  integrity sha512-Ovpd9x/HcVO8kSPmEFizo4/YXR1mMmyxLB4syqwxIcLfQFq8tz9npG20Kjfl6kL27XDsWGzKH9dOn0+reFzcgw==
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/splash-screen@^5.5.1":
-  version "5.5.1"
-  resolved "https://registry.yarnpkg.com/@ionic-native/splash-screen/-/splash-screen-5.5.1.tgz#173cc0e8b3109fd8d9861b1226abee165d5ff2e8"
-  integrity sha512-w+EZZsMsuHyD2zkqQrUqyb+RKfnRX7oSlg0gDa2VbAqgqGBG3MGhxmyekjvo6HIImkfRYvZbmgGBLsVw4XILlA==
+"@ionic-native/splash-screen@^5.6.0":
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/splash-screen/-/splash-screen-5.6.0.tgz#da139ef9e36d88cf94547ae0a2ad9af71eb0a831"
+  integrity sha512-O6F4djIy4o+sUZYIed4y1JnF5y01hXJaPnjQsAg18F9l/VtpJ1u/tlVl1DhQ+KDXOj0KsDkzbzrPr/21g/VW3Q==
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/status-bar@^5.5.1":
-  version "5.5.1"
-  resolved "https://registry.yarnpkg.com/@ionic-native/status-bar/-/status-bar-5.5.1.tgz#f53cbe67661346fa3f0a65551d4762d5fec639a0"
-  integrity sha512-oD+qpggnGDtYe7dq6x0bqgDFyRiCTKx4r+gQGj/RCkMys5RSDAXl9clwJ12XzhFqwpwgy5B1RS3AHGtrK1R6iw==
+"@ionic-native/status-bar@^5.6.0":
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/status-bar/-/status-bar-5.6.0.tgz#700893304828844b3e176508a580c7cd8425ac61"
+  integrity sha512-6vIOYtaqQWykIYe/FE8fKmCRkUZbsI8CxE2Biwmpp5GhGP6m2Ox2OY+T1Zz4OvKDeJF/fTOE6lyptaowVozQbw==
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/vibration@^5.5.1":
-  version "5.5.1"
-  resolved "https://registry.yarnpkg.com/@ionic-native/vibration/-/vibration-5.5.1.tgz#98678a35f7a2326e1c8d11e5122382519cb946ef"
-  integrity sha512-9a/+3Q9UmIP9XFbbREywc6dKjLNDai7ki+tvlLnxbe5QR7jm0mGSWKMasMCHx70dyolFD+/BuJf99iffiuO1rQ==
+"@ionic-native/vibration@^5.6.0":
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/vibration/-/vibration-5.6.0.tgz#18455cbb0c461c9fc2feed5029ecf5086fb6a7f6"
+  integrity sha512-Yv8q1jBB2Gf7ZACbvOhG//NFw673kEIbSFRznWkmiUlIywKxn/S/3f1D+tuYujhkRO8eSfWloAvwYeOqn3KoSw==
   dependencies:
     "@types/cordova" latest
 
@@ -675,10 +675,10 @@
   resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.3.tgz#3dca0e3f33b200fc7d1139c0cd96c1268cadfd9d"
   integrity sha512-tHq6qdbT9U1IRSGf14CL0pUlULksvY9OZ+5eEgl1N7t+OA3tGvNpxJCzuKQlsNgCVwbAs670L1vcVQi8j9HjnA==
 
-"@types/node@*", "@types/node@^12.0.1":
-  version "12.0.1"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.0.1.tgz#3dde31f8da274dfeb90e96abf55038fef46285f0"
-  integrity sha512-7sy7DKVJrCTbaAERJZq/CU12bzdmpjRr321/Ne9QmzhB3iZ//L16Cizcni5hHNbANxDbxwMb9EFoWkM8KPkp0A==
+"@types/node@*", "@types/node@^12.0.2":
+  version "12.0.2"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.0.2.tgz#3452a24edf9fea138b48fad4a0a028a683da1e40"
+  integrity sha512-5tabW/i+9mhrfEOUcLDu2xBPsHJ+X5Orqy9FKpale3SjDA17j5AEpYq5vfy3oAeAHGcvANRCO3NV3d2D6q3NiA==
 
 "@types/node@^8.0.7":
   version "8.10.45"
@@ -1046,7 +1046,7 @@ JSONStream@^1.3.4:
     jsonparse "^1.2.0"
     through ">=2.2.7 <3"
 
-abbrev@1:
+abbrev@*, abbrev@1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
   integrity sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==
@@ -1220,7 +1220,7 @@ ansi-styles@^3.2.0, ansi-styles@^3.2.1:
   dependencies:
     color-convert "^1.9.0"
 
-ansi@^0.3.1:
+ansi@*, ansi@^0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/ansi/-/ansi-0.3.1.tgz#0c42d4fb17160d5a9af1e484bace1c66922c1b21"
   integrity sha1-DELU+xcWDVqa8eSEus4cZpIsGyE=
@@ -1584,15 +1584,15 @@ bail@^1.0.0:
   resolved "https://registry.yarnpkg.com/bail/-/bail-1.0.3.tgz#63cfb9ddbac829b02a3128cd53224be78e6c21a3"
   integrity sha512-1X8CnjFVQ+a+KW36uBNMTU5s8+v5FzeqrP7hTG5aTb4aPreSbZJlhwPon9VKMuEVgV++JM+SQrALY3kr7eswdg==
 
+balanced-match@*, balanced-match@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
+  integrity sha1-ibTRmasr7kneFk6gK4nORi1xt2c=
+
 balanced-match@^0.4.0:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-0.4.2.tgz#cb3f3e3c732dc0f01ee70b403f302e61d7709838"
   integrity sha1-yz8+PHMtwPAe5wtAPzAuYddwmDg=
-
-balanced-match@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
-  integrity sha1-ibTRmasr7kneFk6gK4nORi1xt2c=
 
 base64-js@1.2.0:
   version "1.2.0"
@@ -1717,14 +1717,14 @@ boxen@^1.2.1:
     term-size "^1.2.0"
     widest-line "^2.0.0"
 
-bplist-parser@^0.1.0:
+bplist-parser@*, bplist-parser@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/bplist-parser/-/bplist-parser-0.1.1.tgz#d60d5dcc20cba6dc7e1f299b35d3e1f95dafbae6"
   integrity sha1-1g1dzCDLptx+HymbNdPh+V2vuuY=
   dependencies:
     big-integer "^1.6.7"
 
-brace-expansion@^1.1.7:
+brace-expansion@*, brace-expansion@^1.1.7:
   version "1.1.11"
   resolved "https://registry.yarnpkg.com/brace-expansion/-/brace-expansion-1.1.11.tgz#3c7fcbf529d87226f3d2f52b966ff5271eb441dd"
   integrity sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==
@@ -2403,7 +2403,7 @@ compression@^1.5.2, compression@^1.6.0:
     safe-buffer "5.1.2"
     vary "~1.1.2"
 
-concat-map@0.0.1:
+concat-map@*, concat-map@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
   integrity sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=
@@ -2681,10 +2681,10 @@ cordova-plugin-file@^6.0.1:
   resolved "https://registry.yarnpkg.com/cordova-plugin-file/-/cordova-plugin-file-6.0.1.tgz#49606b8c15a5688d4728f92e4a7325a061de07f5"
   integrity sha1-SWBrjBWlaI1HKPkuSnMloGHeB/U=
 
-cordova-plugin-firebase-with-upstream-messaging@^1.0.0:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-firebase-with-upstream-messaging/-/cordova-plugin-firebase-with-upstream-messaging-1.0.2.tgz#e2bc159a3f354f3885d30af4ec4d914f3ea0e37a"
-  integrity sha512-NUA0/xAS8+DFKn6j2wXwMPJl6xGkq+j/gzm7oXcloXDVxt4OjMWLbhC2GtwZX4gslJfjVzj1KgwdKJXdUslUkw==
+cordova-plugin-firebase-with-upstream-messaging@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-firebase-with-upstream-messaging/-/cordova-plugin-firebase-with-upstream-messaging-1.0.3.tgz#f7da87f574393420bc2abb0587a180104247629c"
+  integrity sha512-FleKQdhgruU0ff9ihXl0IOhrbHgK7VnppnEgDvbR94punGUREjr+Oc0bJ7QAz8D7HJWt2VmewpqrQWET3eTBTg==
 
 cordova-plugin-globalization@^1.11.0:
   version "1.11.0"
@@ -2725,7 +2725,7 @@ cordova-plugin-whitelist@^1.3.3:
   resolved "https://registry.yarnpkg.com/cordova-plugin-whitelist/-/cordova-plugin-whitelist-1.3.3.tgz#b5e85ecdbbfe5aeded40a1bf4ee2372e67d96fb4"
   integrity sha1-tehezbv+Wu3tQKG/TuI3LmfZb7Q=
 
-cordova-registry-mapper@^1.1.8:
+cordova-registry-mapper@*, cordova-registry-mapper@^1.1.8:
   version "1.1.15"
   resolved "https://registry.yarnpkg.com/cordova-registry-mapper/-/cordova-registry-mapper-1.1.15.tgz#e244b9185b8175473bff6079324905115f83dc7c"
   integrity sha1-4kS5GFuBdUc7/2B5MkkFEV+D3Hw=
@@ -5088,7 +5088,7 @@ indexof@0.0.1:
   resolved "https://registry.yarnpkg.com/indexof/-/indexof-0.0.1.tgz#82dc336d232b9062179d05ab3293a66059fd435d"
   integrity sha1-gtwzbSMrkGIXnQWrMpOmYFn9Q10=
 
-inflight@^1.0.4:
+inflight@*, inflight@^1.0.4:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/inflight/-/inflight-1.0.6.tgz#49bd6331d7d02d0c09bc910a1075ba8165b56df9"
   integrity sha1-Sb1jMdfQLQwJvJEKEHW6gWW1bfk=
@@ -5096,7 +5096,7 @@ inflight@^1.0.4:
     once "^1.3.0"
     wrappy "1"
 
-inherits@2, inherits@2.0.3, inherits@^2.0.1, inherits@^2.0.3, inherits@~2.0.0, inherits@~2.0.1, inherits@~2.0.3:
+inherits@*, inherits@2, inherits@2.0.3, inherits@^2.0.1, inherits@^2.0.3, inherits@~2.0.0, inherits@~2.0.1, inherits@~2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/inherits/-/inherits-2.0.3.tgz#633c2c83e3da42a502f52466022480f4208261de"
   integrity sha1-Yzwsg+PaQqUC9SRmAiSA9CCCYd4=
@@ -6564,7 +6564,7 @@ minimalistic-crypto-utils@^1.0.0, minimalistic-crypto-utils@^1.0.1:
   resolved "https://registry.yarnpkg.com/minimalistic-crypto-utils/-/minimalistic-crypto-utils-1.0.1.tgz#f6c00c1c0b082246e5c4d99dfb8c7c083b2b582a"
   integrity sha1-9sAMHAsIIkblxNmd+4x8CDsrWCo=
 
-"minimatch@2 || 3", minimatch@3.0.4, minimatch@^3.0.0, minimatch@^3.0.2, minimatch@^3.0.4, minimatch@~3.0.2:
+minimatch@*, "minimatch@2 || 3", minimatch@3.0.4, minimatch@^3.0.0, minimatch@^3.0.2, minimatch@^3.0.4, minimatch@~3.0.2:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.0.4.tgz#5166e286457f03306064be5497e8dbb0c3d32083"
   integrity sha512-yJHVQEhyqPLUTgt9B83PXu6W3rx4MvvHvSUvToogpwoGDOUQ+yDrR0HRot+yOCdCO7u4hX3pWft6kWBBcqh0UA==
@@ -7104,7 +7104,7 @@ on-headers@~1.0.2:
   resolved "https://registry.yarnpkg.com/on-headers/-/on-headers-1.0.2.tgz#772b0ae6aaa525c399e489adfad90c403eb3c28f"
   integrity sha512-pZAE+FJLoyITytdqK0U5s+FIpjN0JP3OzFi/u8Rx+EV5/W+JTWGXG8xFzevE7AjBfDqHv/8vL8qQsIhHnqRkrA==
 
-once@^1.3.0, once@^1.3.1, once@^1.4.0:
+once@*, once@^1.3.0, once@^1.3.1, once@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/once/-/once-1.4.0.tgz#583b1aa775961d4b113ac17d9c50baef9dd76bd1"
   integrity sha1-WDsap3WWHUsROsF9nFC6753Xa9E=
@@ -10248,15 +10248,15 @@ ultron@~1.1.0:
   resolved "https://registry.yarnpkg.com/ultron/-/ultron-1.1.1.tgz#9fe1536a10a664a65266a1e3ccf85fd36302bc9c"
   integrity sha512-UIEXBNeYmKptWH6z8ZnqTeS8fV74zG0/eRU9VGkpzz+LIJNs8W/zM/L+7ctCkRrgbNnnR0xxw4bKOr0cW0N0Og==
 
+underscore@*, underscore@^1.8.3, underscore@^1.9.1:
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.9.1.tgz#06dce34a0e68a7babc29b365b8e74b8925203961"
+  integrity sha512-5/4etnCkd9c8gwgowi5/om/mYO5ajCaOgdzj/oW+0eQV9WxKBDZw5+ycmKmeaTXjInS/W0BzpGLo2xR2aBwZdg==
+
 underscore@1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.2.1.tgz#fc5c6b0765673d92a2d4ac8b4dc0aa88702e2bd4"
   integrity sha1-/FxrB2VnPZKi1KyLTcCqiHAuK9Q=
-
-underscore@^1.8.3, underscore@^1.9.1:
-  version "1.9.1"
-  resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.9.1.tgz#06dce34a0e68a7babc29b365b8e74b8925203961"
-  integrity sha512-5/4etnCkd9c8gwgowi5/om/mYO5ajCaOgdzj/oW+0eQV9WxKBDZw5+ycmKmeaTXjInS/W0BzpGLo2xR2aBwZdg==
 
 unherit@^1.0.4:
   version "1.1.1"
@@ -10359,7 +10359,7 @@ universalify@^0.1.0:
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.2.tgz#b646f69be3942dabcecc9d6639c80dc105efaa66"
   integrity sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==
 
-unorm@^1.3.3:
+unorm@*, unorm@^1.3.3:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/unorm/-/unorm-1.5.0.tgz#01fa9b76f1c60f7916834605c032aa8962c3f00a"
   integrity sha512-sMfSWoiRaXXeDZSXC+YRZ23H4xchQpwxjpw1tmfR+kgbBCaOgln4NI0LXejJIhnBuKINrB3WRn+ZI8IWssirVw==
@@ -10872,7 +10872,7 @@ wrap-ansi@^4.0.0:
     string-width "^2.1.1"
     strip-ansi "^4.0.0"
 
-wrappy@1:
+wrappy@*, wrappy@1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
   integrity sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=
@@ -10954,7 +10954,7 @@ xmlbuilder@^9.0.7, xmlbuilder@~9.0.1:
   resolved "https://registry.yarnpkg.com/xmlbuilder/-/xmlbuilder-9.0.7.tgz#132ee63d2ec5565c557e20f4c22df9aca686b10d"
   integrity sha1-Ey7mPS7FVlxVfiD0wi35rKaGsQ0=
 
-xmldom@0.1.x:
+xmldom@*, xmldom@0.1.x:
   version "0.1.27"
   resolved "https://registry.yarnpkg.com/xmldom/-/xmldom-0.1.27.tgz#d501f97b3bdb403af8ef9ecc20573187aadac0e9"
   integrity sha1-1QH5ezvbQDr4757MIFcxh6rawOk=

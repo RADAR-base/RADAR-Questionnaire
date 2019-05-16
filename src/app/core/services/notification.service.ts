@@ -143,16 +143,15 @@ export class NotificationService {
   }
 
   sendFCMNotification(notification) {
-    return new Promise((resolve, reject) =>
-      FirebasePlugin.upstream(
-        notification,
-        succ => {
-          console.log(succ)
-          resolve()
-        },
-        err => reject()
-      )
+    FirebasePlugin.upstream(
+      notification,
+      succ => console.log(succ),
+      err => {
+        console.log(err)
+        this.sendFCMNotification(notification)
+      }
     )
+    return Promise.resolve()
   }
 
   sendTestFCMNotification() {
@@ -235,18 +234,12 @@ export class NotificationService {
   }
 
   cancelNotificationPush(participantLogin) {
-    return new Promise((resolve, reject) =>
-      FirebasePlugin.upstream(
-        {
-          eventId: uuid(),
-          action: 'CANCEL',
-          cancelType: 'all',
-          subjectId: participantLogin
-        },
-        resolve,
-        reject
-      )
-    )
+    return this.sendFCMNotification({
+      eventId: uuid(),
+      action: 'CANCEL',
+      cancelType: 'all',
+      subjectId: participantLogin
+    })
   }
 
   evalIsLastOfDay(task1, task2) {

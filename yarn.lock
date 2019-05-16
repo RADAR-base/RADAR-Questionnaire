@@ -358,10 +358,10 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/app-version@^5.5.1":
-  version "5.5.1"
-  resolved "https://registry.yarnpkg.com/@ionic-native/app-version/-/app-version-5.5.1.tgz#cf45ab2ef85d063181b7a64014c78c86a910e70f"
-  integrity sha512-M58b7TwZlJ2lOYRx7qlIRbqHJ46s3u+jdXBd9MdqaIfPjNBEWhwFbWeOge/xSS/aWHlQPVCE2DAFTe4/hLg5QQ==
+"@ionic-native/app-version@^5.6.0":
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/app-version/-/app-version-5.6.0.tgz#5165c46bcfe7c1e22f2ff8d8964a5f1a929df183"
+  integrity sha512-Jh7R3M3hqISvsTx3etDRF3hGIiEW29Q7xk57DS5XwpQKgG3Qqg8ZXw2wkZYnFs2QxAwtpjraTRFDD+NJCO0XYQ==
   dependencies:
     "@types/cordova" latest
 

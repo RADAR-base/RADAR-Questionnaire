@@ -393,10 +393,10 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/file@^5.5.1":
-  version "5.5.1"
-  resolved "https://registry.yarnpkg.com/@ionic-native/file/-/file-5.5.1.tgz#5251f004849a4bb742d6c2e7132550bbec812001"
-  integrity sha512-Dn/X604VnimUTt85uzHodO8y12tvKGaDJHVF0PZUC/Pcj7aZswsgk9Blubzp9K6G6aLw7YATbB6hdh6Npq+mNQ==
+"@ionic-native/file@^5.6.0":
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/file/-/file-5.6.0.tgz#06d729d67120c5024e34d8ee19747ba0e9add23c"
+  integrity sha512-3BUMYsUpUCG0yA4iIiFUF3GeMTtpgQiuclTBkBUFyEAiLYQ5pXoa1X5QtyGDAbgMPlSfBGVm+Mp8cY2BQelQ7g==
   dependencies:
     "@types/cordova" latest
 

@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core'
 import { v4 as uuid } from 'uuid'
 
 import {
+  DefaultMaxUpstreamResends,
   DefaultNotificationType,
   DefaultNumberOfNotificationsToRescue,
   DefaultNumberOfNotificationsToSchedule,
@@ -23,6 +24,8 @@ declare var FirebasePlugin
 
 @Injectable()
 export class NotificationService {
+  upstreamResendAttempts: number
+
   constructor(
     private translate: TranslatePipe,
     private alertService: AlertService,
@@ -132,6 +135,7 @@ export class NotificationService {
           if (DefaultNotificationType === 'FCM') {
             console.log('NOTIFICATIONS Scheduling FCM notifications')
             console.log(fcmNotifications)
+            this.upstreamResendAttempts = 0
             return Promise.all(
               fcmNotifications.map(n => this.sendFCMNotification(n))
             ).then(() =>
@@ -147,8 +151,10 @@ export class NotificationService {
       notification,
       succ => console.log(succ),
       err => {
-        console.log(err)
-        this.sendFCMNotification(notification)
+        if (this.upstreamResendAttempts++ < DefaultMaxUpstreamResends) {
+          console.log(err)
+          this.sendFCMNotification(notification)
+        }
       }
     )
     return Promise.resolve()

@@ -107,7 +107,7 @@ export class TimedTestComponent implements OnInit, OnChanges, OnDestroy {
     if (this.endTime - Date.now() > 0)
       setTimeout(() => {
         this.timerTick()
-      }, 500)
+      }, 1000)
     else this.stopTimer()
   }
 

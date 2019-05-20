@@ -5,14 +5,11 @@ import { Injectable } from '@angular/core'
 import { AppVersion } from '@ionic-native/app-version/ngx'
 
 import {
-  ARMTDefBranchProd,
-  ARMTDefBranchTest,
   DefaultNumberOfNotificationsToSchedule,
   DefaultProtocolEndPoint,
   DefaultProtocolURI,
   DefaultQuestionnaireFormatURI,
-  DefaultQuestionnaireTypeURI,
-  TEST_ARMT_DEF
+  DefaultQuestionnaireTypeURI
 } from '../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../shared/enums/storage'
 import { FirebaseAnalyticsService } from './firebaseAnalytics.service'
@@ -235,14 +232,7 @@ export class ConfigService {
   }
 
   formatQuestionnaireUri(questionnaireRepo, langVal) {
-    // NOTE: Using temp test repository for aRMT defs
-    const repository = TEST_ARMT_DEF
-      ? questionnaireRepo.repository.replace(
-          ARMTDefBranchProd,
-          ARMTDefBranchTest
-        )
-      : questionnaireRepo.repository
-    let uri = repository + questionnaireRepo.name + '/'
+    let uri = questionnaireRepo.repository + questionnaireRepo.name + '/'
     uri += questionnaireRepo.name + questionnaireRepo.type
     if (langVal !== '') {
       uri += '_' + langVal

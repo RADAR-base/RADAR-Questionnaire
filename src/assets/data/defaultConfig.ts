@@ -123,8 +123,8 @@ export const FCMPluginProjectSenderId: string = '430900191220'
 export const DefaultNotificationRefreshTime: number = 900000 // 15 mins in ms
 
 export const DefaultSourceTypeModel: string = 'aRMT-App'
-export const DefaultSourceTypeRegistrationBody: any = {
-  sourceTypeCatalogVersion: '1.4.0',
+export const DefaultSourceTypeRegistrationBody = {
+  sourceTypeCatalogVersion: '1.4.3',
   sourceTypeModel: 'aRMT-App',
   sourceTypeProducer: 'RADAR'
   // "deviceTypeId": 1104
@@ -133,6 +133,15 @@ export const DefaultSourceTypeRegistrationBody: any = {
 export const DefaultEndPoint: string =
   'https://radar-cns-platform.rosalind.kcl.ac.uk/'
 // export const DefaultEndPoint: string = 'https://radar-backend.co.uk/'
+
+export const DefaultSchemaEndpoint =
+  'https://raw.githubusercontent.com/RADAR-base/RADAR-Schemas/add-audio/'
+export const DefaultSchemaSpecExtension = '.yml'
+export const DefaultSchemaSpecEndpoint =
+  DefaultSchemaEndpoint +
+  'specifications/active/aRMT-' +
+  DefaultSourceTypeRegistrationBody.sourceTypeCatalogVersion +
+  DefaultSchemaSpecExtension
 
 export const DefaultProtocolEndPoint: string = DefaultProtocolEndPointExport
 
@@ -143,9 +152,6 @@ export const DefaultSourceProducerAndSecret: string = DefaultSourceProducerAndSe
 export const DefaultProtocolURI = '/protocol.json'
 export const DefaultQuestionnaireTypeURI = '_armt'
 export const DefaultQuestionnaireFormatURI = '.json'
-export const ARMTDefBranchProd = 'master'
-export const ARMTDefBranchTest = 'test'
-export const TEST_ARMT_DEF = false
 
 // AUTH SERVICE
 

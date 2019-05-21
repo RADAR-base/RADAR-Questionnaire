@@ -2765,10 +2765,10 @@ cordova-support-android-plugin@^1.0.1:
   resolved "https://registry.yarnpkg.com/cordova-support-android-plugin/-/cordova-support-android-plugin-1.0.1.tgz#ff3010596dd66dc7e0f3ca9c0942dc55a3309089"
   integrity sha512-m/ciZFl2kPsdA1jFp0By2txF0aOqnVvhNqQhM04fFNjD2tlcFNsaIqOpkCfDzCYVy9mVH0BupwePmRMTgEIoMw==
 
-core-js@^2.4.0, core-js@^2.6.6:
-  version "2.6.6"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.6.tgz#00eb6d6bf815471cc16d8563edd7d38786dec50b"
-  integrity sha512-Mt/LaAym54NXnrjEMdo918cT2h70tqb/Yl7T3uPHQHRm5SxVoqlKmerUy4mL11k8saSBDWQ7ULIHxmeFyT3pfg==
+core-js@^2.4.0, core-js@^2.6.7:
+  version "2.6.7"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.7.tgz#c2b19af9b50ec49c356ee087d6155632a889e968"
+  integrity sha512-ydmsQxDVH7lDpYoirXft8S83ddKKfdsrsmWhtyj7xafXVLbLhKOyfD7kAi2ueFfeP7m9rNavjW59O3hLLzzC5A==
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
@@ -5212,10 +5212,10 @@ invert-kv@^2.0.0:
   resolved "https://registry.yarnpkg.com/invert-kv/-/invert-kv-2.0.0.tgz#7393f5afa59ec9ff5f67a27620d11c226e3eec02"
   integrity sha512-wPVv/y/QQ/Uiirj/vh3oP+1Ww+AWehmi1g5fFWGPF6IpCBCDVrhgHRMvrLfdYcwDh3QJbGXDW4JAuzxElLSqKA==
 
-ionic-angular@^3.9.5:
-  version "3.9.5"
-  resolved "https://registry.yarnpkg.com/ionic-angular/-/ionic-angular-3.9.5.tgz#911951583ca676397799e8da11ff05a451a4ed80"
-  integrity sha512-BkAwwpKU4Gd2D9FOGmjodQDyQu/tKe0TCMvD1Dq8jeju7ueyasM1Z0G/oHr373ueDaGXDNLlMNspvK3vlWX2wg==
+ionic-angular@^3.9.6:
+  version "3.9.6"
+  resolved "https://registry.yarnpkg.com/ionic-angular/-/ionic-angular-3.9.6.tgz#2e23cdd78d0a3765ba647cf347ab478b5d694b5b"
+  integrity sha512-rUmRQHtupbB+oyUm4UusguUtop3QSZq2I7+gKWXIFYrT/x6+pp0vteH2ayIeBmWDsL2zRv+/iQaz+Kx6KnkaUg==
 
 ionic-plugin-keyboard@^2.2.1:
   version "2.2.1"
@@ -10105,10 +10105,10 @@ tslib@^1.0.0, tslib@^1.7.1, tslib@^1.8.0, tslib@^1.8.1, tslib@^1.9.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.9.3.tgz#d7e4dd79245d85428c4d7e4822a79917954ca286"
   integrity sha512-4krF8scpejhaOgqzBEcGM7yDIEfi0/8+8zDRZhNZZ2kjmHJ4hv3zCbQWxoJGz1iw5U0Jl0nma13xzHXcncMavQ==
 
-tslint-angular@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/tslint-angular/-/tslint-angular-2.0.3.tgz#a8e187c951683d32ec56d4d981a7efd2dd9b6faf"
-  integrity sha512-Ml2RDWx/kTyilJbnH013fNiWlYka9AbaYomyMxx/BS1A6Cq3XTEDKF1eZqAe8rwfLnaJzpNd/8IUcLMmpxXPLg==
+tslint-angular@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/tslint-angular/-/tslint-angular-3.0.1.tgz#9f711bca628f333adc28771432ca683d3eafc3df"
+  integrity sha512-tujN36aUgeqAHE59mKUAjVHvN4jPFBcg/VXlqx6TnsN0DJUfNi0FUSErqoBuLLA0Trt19w9lxyhECKUTrI6SqA==
 
 tslint-config-prettier@^1.15.0:
   version "1.18.0"
@@ -10732,10 +10732,10 @@ webpack@4.29.0:
     watchpack "^1.5.0"
     webpack-sources "^1.3.0"
 
-webpack@^4.31.0:
-  version "4.31.0"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.31.0.tgz#ae201d45f0571336e42d1c2b5c8ab56c4d3b0c63"
-  integrity sha512-n6RVO3X0LbbipoE62akME9K/JI7qYrwwufs20VvgNNpqUoH4860KkaxJTbGq5bgkVZF9FqyyTG/0WPLH3PVNJA==
+webpack@^4.32.0:
+  version "4.32.0"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.32.0.tgz#d8726fe73bb362e0e48171990f362df5e747747b"
+  integrity sha512-ofFq9jjAn4HRzlmkcZZrjijbRZcqDw+mM9KrjKd0r6lS0qxyZ7jzICzhphGafXL62dGdjP7TgMK9mZeMLUgZgw==
   dependencies:
     "@webassemblyjs/ast" "1.8.5"
     "@webassemblyjs/helper-module-context" "1.8.5"

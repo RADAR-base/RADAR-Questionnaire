@@ -400,6 +400,13 @@
   dependencies:
     "@types/cordova" latest
 
+"@ionic-native/firebase@^5.6.0":
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/firebase/-/firebase-5.6.0.tgz#3d61d8c66ad834c5725878fdfcd16c2db75745a3"
+  integrity sha512-8awqGzCT0Nx9b+PANMSM5jwpd2yz3GCdoRwK9zxwSq/mFSvZMeA1wfe0JTfo2bzq/g13X/2BCJR+Zm/W4KZ6Vw==
+  dependencies:
+    "@types/cordova" latest
+
 "@ionic-native/globalization@^5.6.0":
   version "5.6.0"
   resolved "https://registry.yarnpkg.com/@ionic-native/globalization/-/globalization-5.6.0.tgz#43162ca8f0a5185070ad6887b024936b0d28bb5c"

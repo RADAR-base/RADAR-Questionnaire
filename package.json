@@ -49,6 +49,7 @@
     "@ionic-native/device": "^5.6.0",
     "@ionic-native/dialogs": "^5.6.0",
     "@ionic-native/file": "^5.6.0",
+    "@ionic-native/firebase": "^5.6.0",
     "@ionic-native/globalization": "^5.6.0",
     "@ionic-native/insomnia": "^5.6.0",
     "@ionic-native/local-notifications": "^5.6.0",

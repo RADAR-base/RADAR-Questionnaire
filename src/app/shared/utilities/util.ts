@@ -76,9 +76,10 @@ export class Utility {
 
   getKafkaTopic(type) {
     return this.http
-      .get(DefaultSchemaSpecEndpoint, { responseType: 'text' })
+      .get(DefaultSchemaSpecEndpoint)
       .toPromise()
       .then(res => {
+        res = atob(res['content'])
         const schemaSpecs = YAML.parse(res).data
         type = type.toLowerCase()
         return schemaSpecs.find(t => t.type.toLowerCase() == type).topic

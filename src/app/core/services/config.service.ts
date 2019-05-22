@@ -7,7 +7,7 @@ import { AppVersion } from '@ionic-native/app-version/ngx'
 import {
   DefaultNumberOfNotificationsToSchedule,
   DefaultProtocolEndPoint,
-  DefaultProtocolURI,
+  DefaultProtocolPath,
   DefaultQuestionnaireFormatURI,
   DefaultQuestionnaireTypeURI
 } from '../../../assets/data/defaultConfig'
@@ -163,8 +163,15 @@ export class ConfigService {
         )
         return Promise.reject()
       }
-      const URI = DefaultProtocolEndPoint + projectName + DefaultProtocolURI
-      return this.http.get(URI, { responseType: 'text' }).toPromise()
+      const URI = [
+        DefaultProtocolEndPoint,
+        projectName,
+        DefaultProtocolPath
+      ].join('/')
+      return this.http
+        .get(URI)
+        .toPromise()
+        .then(res => atob(res['content']))
     })
   }
 

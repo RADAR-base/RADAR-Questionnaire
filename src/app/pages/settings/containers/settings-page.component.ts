@@ -212,19 +212,13 @@ export class SettingsPageComponent {
   }
 
   testNotifications() {
+    this.notificationService
+      .sendTestFCMNotification()
+      .then(() => this.firebaseAnalytics.logEvent('notification_test', {}))
     const buttons = [
       {
-        text: this.translate.transform(LocKeys.BTN_CANCEL.toString()),
+        text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
         handler: () => {}
-      },
-      {
-        text: this.translate.transform(LocKeys.CLOSE_APP.toString()),
-        handler: () => {
-          this.notificationService.sendTestFCMNotification().then(() => {
-            this.firebaseAnalytics.logEvent('notification_test', {})
-            this.platform.exitApp()
-          })
-        }
       }
     ]
     return this.alertService.showAlert({

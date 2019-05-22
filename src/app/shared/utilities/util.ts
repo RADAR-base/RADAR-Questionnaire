@@ -80,6 +80,7 @@ export class Utility {
       .toPromise()
       .then(res => {
         const schemaSpecs = YAML.parse(res).data
+        type = type.toLowerCase()
         return schemaSpecs.find(t => t.type.toLowerCase() == type).topic
       })
   }

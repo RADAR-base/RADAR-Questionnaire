@@ -297,8 +297,8 @@ export class KafkaService {
               }
             }
           }
-          return Promise.all(promises).then(keys =>
-            this.removeAnswersFromCache(keys.filter(k => k))
+          return Promise.all(promises.map(p => p.catch(() => undefined))).then(
+            keys => this.removeAnswersFromCache(keys.filter(k => k))
           )
         })
       return

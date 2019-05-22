@@ -140,7 +140,7 @@ export class KafkaService {
   }
 
   createPayloadAndSend(specs, kafkaConnInstance) {
-    return this.util.getKafkaTopic(specs.name).then(topic => {
+    return this.util.getKafkaTopic(specs).then(topic => {
       let schemaVersions
       switch (specs.name) {
         case KAFKA_COMPLETION_LOG:

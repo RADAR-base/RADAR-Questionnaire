@@ -74,15 +74,19 @@ export class Utility {
     return Promise.all([sourceId, projectId, pariticipantId])
   }
 
-  getKafkaTopic(type) {
+  getKafkaTopic(specs) {
+    const type = specs.name.toLowerCase()
+    const defaultTopic = `${specs.avsc}_${specs.name}`
     return this.http
       .get(DefaultSchemaSpecEndpoint, { responseType: 'text' })
       .toPromise()
       .then(res => {
         const schemaSpecs = YAML.parse(res).data
-        type = type.toLowerCase()
-        return schemaSpecs.find(t => t.type.toLowerCase() == type).topic
+        const topic = schemaSpecs.find(t => t.type.toLowerCase() == type).topic
+        if (topic) return topic
+        else Promise.reject()
       })
+      .catch(e => defaultTopic)
   }
 
   getLatestKafkaSchemaVersions(topic) {

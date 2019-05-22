@@ -222,6 +222,7 @@ export class SettingsPageComponent {
         handler: () => {
           this.notificationService.sendTestFCMNotification().then(() => {
             this.firebaseAnalytics.logEvent('notification_test', {})
+            // NOTE: iOS does not support exitApp()
             this.platform.exitApp()
           })
         }

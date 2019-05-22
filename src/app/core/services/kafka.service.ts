@@ -7,7 +7,6 @@ import * as KafkaRest from 'kafka-rest'
 import {
   DefaultEndPoint,
   KAFKA_ASSESSMENT,
-  KAFKA_AUDIO,
   KAFKA_CLIENT_KAFKA,
   KAFKA_COMPLETION_LOG,
   KAFKA_TIMEZONE
@@ -58,29 +57,15 @@ export class KafkaService {
         : data.answers[0].startTime // NOTE: whole questionnaire startTime and endTime
     const timeNotification = getSeconds({ milliseconds: task.timestamp })
     const timeCompleted = data.answers[data.answers.length - 1].endTime
-    if (task.name.toLowerCase() !== KAFKA_AUDIO.toLowerCase()) {
-      const Answer: AnswerValueExport = {
-        time: time,
-        timeCompleted: timeCompleted,
-        timeNotification: timeNotification,
-        name: task.name,
-        version: data.configVersion,
-        answers: data.answers
-      }
-      return this.prepareKafkaObjectAndSend(task, Answer, KAFKA_ASSESSMENT)
-    } else {
-      const Answer = {
-        time: time,
-        timeCompleted: timeCompleted,
-        timeNotification: timeNotification,
-        mediaType: 'audio/m4a',
-        data: data.answers[1].value.string,
-        reciteText: questions
-          .filter(q => q.field_type == KAFKA_AUDIO)
-          .reduce(a => a).field_label
-      }
-      return this.prepareKafkaObjectAndSend(task, Answer, KAFKA_AUDIO)
+    const Answer: AnswerValueExport = {
+      time: time,
+      timeCompleted: timeCompleted,
+      timeNotification: timeNotification,
+      name: task.name,
+      version: data.configVersion,
+      answers: data.answers
     }
+    return this.prepareKafkaObjectAndSend(task, Answer, KAFKA_ASSESSMENT)
   }
 
   prepareNonReportedTasksKafkaObjectAndSend(task: Task) {
@@ -113,7 +98,6 @@ export class KafkaService {
   getSpecs(task: Task, kafkaObject, type) {
     switch (type) {
       case KAFKA_ASSESSMENT:
-      case KAFKA_AUDIO:
         return this.storage.getAssessmentAvsc(task).then(specs => {
           return Promise.resolve(
             Object.assign({}, { task: task, kafkaObject: kafkaObject }, specs)

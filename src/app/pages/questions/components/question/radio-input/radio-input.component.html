@@ -1,7 +1,4 @@
-<ion-list
-  radio-group
-  (ionChange)="onInputChange($event)"
->
+<ion-list radio-group>
   <ul>
     <li *ngFor="let item of items">
       <ion-item no-lines>
@@ -9,6 +6,7 @@
           [value]="item.value"
           [disabled]="!currentlyShown"
           [id]="item.id"
+          (ionSelect)="onInputChange(item.value)"
         ></ion-radio>
         <ion-label>{{ item.response }}</ion-label>
       </ion-item>

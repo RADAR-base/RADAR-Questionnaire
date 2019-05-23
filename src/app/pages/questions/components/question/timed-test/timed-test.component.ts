@@ -108,7 +108,14 @@ export class TimedTestComponent implements OnInit, OnChanges, OnDestroy {
       setTimeout(() => {
         this.timerTick()
       }, 1000)
-    else this.stopTimer()
+     let timerId = setInterval(() => {
+        this.updateCountdown()
+        
+        if (this.endTime - Date.now() < 0) {
+           clearInterval(timerId)
+           this.stopTimer()
+        }
+      }, 1000)
   }
 
   stopTimer() {

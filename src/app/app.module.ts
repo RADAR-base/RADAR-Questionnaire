@@ -9,7 +9,7 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx'
 import { Device } from '@ionic-native/device/ngx'
 import { Dialogs } from '@ionic-native/dialogs/ngx'
 import { File } from '@ionic-native/file/ngx'
-import { FirebaseAnalytics } from '@ionic-native/firebase-analytics/ngx'
+import { Firebase } from '@ionic-native/firebase/ngx'
 import { Globalization } from '@ionic-native/globalization/ngx'
 import { Insomnia } from '@ionic-native/insomnia/ngx'
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx'
@@ -64,9 +64,9 @@ import { Utility } from './shared/utilities/util'
     AndroidPermissions,
     File,
     AppVersion,
-    FirebaseAnalytics,
     MobileAccessibility,
-    Insomnia
+    Insomnia,
+    Firebase
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

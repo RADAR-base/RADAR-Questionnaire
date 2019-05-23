@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core'
-import { FirebaseAnalytics } from '@ionic-native/firebase-analytics/ngx'
+import { Firebase } from '@ionic-native/firebase/ngx'
 
 import { User } from '../../shared/models/user'
 
 @Injectable()
 export class FirebaseAnalyticsService {
-  constructor(private firebaseAnalytics: FirebaseAnalytics) {}
+  constructor(private firebase: Firebase) {}
 
   logEvent(event: string, params): Promise<any> {
-    return this.firebaseAnalytics
+    return this.firebase
       .logEvent(event, params)
       .then((res: any) => {
         console.log('firebase analytics service: ' + res)
@@ -52,17 +52,15 @@ export class FirebaseAnalyticsService {
     return Promise.resolve(
       Object.entries(userProperties)
         .filter(([k, v]) => k)
-        .forEach(([key, value]) =>
-          this.firebaseAnalytics.setUserProperty(key, value)
-        )
+        .forEach(([key, value]) => this.firebase.setUserProperty(key, value))
     )
   }
 
   setUserId(userId: string): Promise<any> {
-    return this.firebaseAnalytics.setUserId(userId)
+    return this.firebase.setUserId(userId)
   }
 
   setCurrentScreen(screenName: string): Promise<any> {
-    return this.firebaseAnalytics.setCurrentScreen(screenName)
+    return this.firebase.setScreenName(screenName)
   }
 }

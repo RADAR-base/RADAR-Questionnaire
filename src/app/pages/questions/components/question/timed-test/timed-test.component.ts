@@ -13,8 +13,8 @@ import { Vibration } from '@ionic-native/vibration/ngx'
 
 import { TaskTimer, Timer } from '../../../../../shared/models/timer'
 import {
-  getSeconds,
-  getMilliseconds
+  getMilliseconds,
+  getSeconds
 } from '../../../../../shared/utilities/time'
 
 @Component({

@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Device } from '@ionic-native/device/ngx'
 import { throwError as observableThrowError } from 'rxjs'
+import * as YAML from 'yamljs'
 
 import {
   DefaultEndPoint,
@@ -11,7 +12,6 @@ import {
 } from '../../../assets/data/defaultConfig'
 import { StorageService } from '../../core/services/storage.service'
 import { StorageKeys } from '../enums/storage'
-import * as YAML from 'yamljs'
 
 @Injectable()
 export class Utility {

@@ -921,12 +921,14 @@ export const Localisations = {
     nl: 'Testen van Meldingen'
   },
   TESTING_NOTIFICATIONS_MESSAGE: {
-    da: 'Vent nu i 2 minutter til testmeddelelsen.',
-    de: 'Warten Sie nun 2 Minuten auf die Testbenachrichtigung.',
-    en: 'Now, wait for 2 minutes for the test notification.',
-    es: 'Ahora, espere 2 minutos para la notificación de prueba.',
-    it: 'Vent nu i 2 minutter til testmeddelelsen.',
-    nl: 'Ahora, espere 2 minutos para la notificación de prueba.'
+    da: 'Luk nu appen og vent i 2 minutter for testmeddelelsen.',
+    de:
+      'Schließen Sie nun die App und warten Sie 2 Minuten auf die Testbenachrichtigung.',
+    en: 'Now close the app and wait for 2 minutes for the test notification.',
+    es:
+      'Ahora cierre la aplicación y espere 2 minutos para la notificación de prueba.',
+    it: "Ora chiudi l'app e attendi 2 minuti per la notifica del test.",
+    nl: 'Sluit nu de app en wacht 2 minuten op de testmelding.'
   },
   CLOSE_APP: {
     da: 'Luk App',

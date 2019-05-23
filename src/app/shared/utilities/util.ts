@@ -78,10 +78,10 @@ export class Utility {
     const type = specs.name.toLowerCase()
     const defaultTopic = `${specs.avsc}_${specs.name}`
     return this.http
-      .get(DefaultSchemaSpecEndpoint, { responseType: 'text' })
+      .get(DefaultSchemaSpecEndpoint)
       .toPromise()
       .then(res => {
-        const schemaSpecs = YAML.parse(res).data
+        const schemaSpecs = YAML.parse(atob(res['content'])).data
         const topic = schemaSpecs.find(t => t.type.toLowerCase() == type).topic
         if (topic) return topic
         else Promise.reject()

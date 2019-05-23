@@ -5,10 +5,7 @@ import {
   WeeklyReportSubSettings
 } from '../../app/shared/models/settings'
 import { Task } from '../../app/shared/models/task'
-import {
-  DefaultProtocolEndPointExport,
-  DefaultSourceProducerAndSecretExport
-} from './secret'
+import { DefaultSourceProducerAndSecretExport } from './secret'
 
 // DEFAULT SETTINGS
 export const DefaultSettingsNotifications: NotificationSettings = {
@@ -122,34 +119,52 @@ export const DefaultNumberOfNotificationsToRescue: number = 12 //
 export const FCMPluginProjectSenderId: string = '430900191220'
 export const DefaultNotificationRefreshTime: number = 900000 // 15 mins in ms
 
-export const DefaultSourceTypeModel: string = 'aRMT-App'
+export const DefaultSourcePrefix = 'aRMT'
+export const DefaultSourceTypeModel: string = `${DefaultSourcePrefix}-App`
 export const DefaultSourceTypeRegistrationBody = {
   sourceTypeCatalogVersion: '1.4.3',
-  sourceTypeModel: 'aRMT-App',
+  sourceTypeModel: DefaultSourceTypeModel,
   sourceTypeProducer: 'RADAR'
   // "deviceTypeId": 1104
 }
 
 export const DefaultEndPoint: string =
   'https://radar-cns-platform.rosalind.kcl.ac.uk/'
-// export const DefaultEndPoint: string = 'https://radar-backend.co.uk/'
 
-export const DefaultSchemaEndpoint =
-  'https://raw.githubusercontent.com/RADAR-base/RADAR-Schemas/add-audio/'
-export const DefaultSchemaSpecExtension = '.yml'
-export const DefaultSchemaSpecEndpoint =
-  DefaultSchemaEndpoint +
-  'specifications/active/aRMT-' +
-  DefaultSourceTypeRegistrationBody.sourceTypeCatalogVersion +
-  DefaultSchemaSpecExtension
+// GITHUB SOURCES
 
-export const DefaultProtocolEndPoint: string = DefaultProtocolEndPointExport
+export const GIT_API_URI = 'https://api.github.com/repos'
+export const DefaultOrganisation = 'RADAR-Base'
 
-export const DefaultSourceProducerAndSecret: string = DefaultSourceProducerAndSecretExport
+export const DefaultProtocolRepo = 'RADAR-aRMT-protocols'
+// NOTE: Change branch to master when merged
+export const DefaultProtocolBranch = 'test'
+export const DefaultProtocolPath = `protocol.json?ref=${DefaultProtocolBranch}`
+export const DefaultProtocolEndPoint = [
+  GIT_API_URI,
+  DefaultOrganisation,
+  DefaultProtocolRepo,
+  'contents'
+].join('/')
+
+export const DefaultSchemaRepo = 'RADAR-Schemas'
+// NOTE: Change branch to master when merged
+export const DefaultSchemaBranch = 'add-audio'
+export const DefaultSchemaSpecPath = `specifications/active/${DefaultSourcePrefix}-${
+  DefaultSourceTypeRegistrationBody.sourceTypeCatalogVersion
+}.yml?ref=${DefaultSchemaBranch}`
+export const DefaultSchemaSpecEndpoint = [
+  GIT_API_URI,
+  DefaultOrganisation,
+  DefaultSchemaRepo,
+  'contents',
+  DefaultSchemaSpecPath
+].join('/')
+
+export const DefaultSourceProducerAndSecret = DefaultSourceProducerAndSecretExport
 
 // CONFIG SERVICE
 
-export const DefaultProtocolURI = '/protocol.json'
 export const DefaultQuestionnaireTypeURI = '_armt'
 export const DefaultQuestionnaireFormatURI = '.json'
 
@@ -184,7 +199,6 @@ export const DefaultTimeInterval = { unit: 'day', amount: 1 }
 export const KAFKA_ASSESSMENT = 'assessment'
 export const KAFKA_COMPLETION_LOG = 'completion_log'
 export const KAFKA_TIMEZONE = 'timezone'
-export const KAFKA_AUDIO = 'audio'
 export const KAFKA_CLIENT_KAFKA = '/kafka'
 
 export const DefaultNumberOfCompletionLogsToSend = 10

@@ -407,10 +407,10 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/firebase-analytics@^5.6.0":
+"@ionic-native/firebase@^5.6.0":
   version "5.6.0"
-  resolved "https://registry.yarnpkg.com/@ionic-native/firebase-analytics/-/firebase-analytics-5.6.0.tgz#e395c4d0fe98a8b4c0c007f6166eca50066c0567"
-  integrity sha512-vqLAzRZ3IXVyVCA0J3Bsmo5y8BG4qFEXaycRtUjP3GZ/iPj5YswLL6VchNTGR0cWe54PDBMCoJhh5A3kHUalQA==
+  resolved "https://registry.yarnpkg.com/@ionic-native/firebase/-/firebase-5.6.0.tgz#3d61d8c66ad834c5725878fdfcd16c2db75745a3"
+  integrity sha512-8awqGzCT0Nx9b+PANMSM5jwpd2yz3GCdoRwK9zxwSq/mFSvZMeA1wfe0JTfo2bzq/g13X/2BCJR+Zm/W4KZ6Vw==
   dependencies:
     "@types/cordova" latest
 
@@ -2671,10 +2671,6 @@ cordova-plugin-android-permissions@^1.0.0:
   resolved "https://registry.yarnpkg.com/cordova-plugin-android-permissions/-/cordova-plugin-android-permissions-1.0.0.tgz#9e7c116be668eb7dfa41491b13d8d47da9548149"
   integrity sha1-nnwRa+Zo6336QUkbE9jUfalUgUk=
 
-"cordova-plugin-app-event@git+https://github.com/katzer/cordova-plugin-app-event.git":
-  version "1.2.1"
-  resolved "git+https://github.com/katzer/cordova-plugin-app-event.git#9e0f60af0222da4025ff4d19f836c61fe8f4ce9f"
-
 cordova-plugin-app-version@^0.1.9:
   version "0.1.9"
   resolved "https://registry.yarnpkg.com/cordova-plugin-app-version/-/cordova-plugin-app-version-0.1.9.tgz#9db0607863337a710489302e5f50a904f1449bdb"
@@ -2705,19 +2701,15 @@ cordova-plugin-dialogs@^2.0.1:
   resolved "https://registry.yarnpkg.com/cordova-plugin-dialogs/-/cordova-plugin-dialogs-2.0.1.tgz#37fef1512596c8d5df9543fb78724590f767dcf3"
   integrity sha1-N/7xUSWWyNXflUP7eHJFkPdn3PM=
 
-"cordova-plugin-fcm@git+https://github.com/yatharthranjan/cordova-plugin-fcm.git":
-  version "2.1.2"
-  resolved "git+https://github.com/yatharthranjan/cordova-plugin-fcm.git#03783b3e7ab1c2400ab5d99ff5c897bde2afee3b"
-
 cordova-plugin-file@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/cordova-plugin-file/-/cordova-plugin-file-6.0.1.tgz#49606b8c15a5688d4728f92e4a7325a061de07f5"
   integrity sha1-SWBrjBWlaI1HKPkuSnMloGHeB/U=
 
-cordova-plugin-firebase-analytics@^1.0.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-firebase-analytics/-/cordova-plugin-firebase-analytics-1.1.1.tgz#a2601cb298a2ceff19618f8ff1d1618bf2eba31f"
-  integrity sha512-YXGdo38f9E2/eQ2cNaGUdUmShRL8IpnbhNKM467YK0ImLMEGgTiJUMlD24CJjanL4UNA0xv/e72O/Y+Px7XT8A==
+cordova-plugin-firebase-with-upstream-messaging@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-firebase-with-upstream-messaging/-/cordova-plugin-firebase-with-upstream-messaging-2.1.0.tgz#753dd7b74b2e4ef4a42f5059127a2992252e0dad"
+  integrity sha512-EV8RsKKKJANmcBtut6pohGNml2Rri4i1bSmOiPbJ+jbLaNHL31wqxvogTDfSqz5ROC6GdXrjVkjEyPnZOuHYtg==
 
 cordova-plugin-globalization@^1.11.0:
   version "1.11.0"
@@ -2791,15 +2783,15 @@ cordova-support-android-plugin@^1.0.1:
   resolved "https://registry.yarnpkg.com/cordova-support-android-plugin/-/cordova-support-android-plugin-1.0.1.tgz#ff3010596dd66dc7e0f3ca9c0942dc55a3309089"
   integrity sha512-m/ciZFl2kPsdA1jFp0By2txF0aOqnVvhNqQhM04fFNjD2tlcFNsaIqOpkCfDzCYVy9mVH0BupwePmRMTgEIoMw==
 
-cordova-support-google-services@^1.2.1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/cordova-support-google-services/-/cordova-support-google-services-1.3.1.tgz#6ab047db0625f572d42345b9a431fdd02fbcb677"
-  integrity sha512-YbFWYBSkbErZh/moothPZG/p1p79ytXTc0iR4YHypBXg9TSDp7M7wm5eKk0f6wV4Ugv6a7UgBvAEtq2nllI8UA==
+core-js@^2.4.0:
+  version "2.6.7"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.7.tgz#c2b19af9b50ec49c356ee087d6155632a889e968"
+  integrity sha512-ydmsQxDVH7lDpYoirXft8S83ddKKfdsrsmWhtyj7xafXVLbLhKOyfD7kAi2ueFfeP7m9rNavjW59O3hLLzzC5A==
 
-core-js@^2.4.0, core-js@^2.6.6:
-  version "2.6.6"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.6.tgz#00eb6d6bf815471cc16d8563edd7d38786dec50b"
-  integrity sha512-Mt/LaAym54NXnrjEMdo918cT2h70tqb/Yl7T3uPHQHRm5SxVoqlKmerUy4mL11k8saSBDWQ7ULIHxmeFyT3pfg==
+core-js@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.1.2.tgz#2549a2cfb3ca1a5d851c9f7838e8b282cef2f3ba"
+  integrity sha512-3poRGjbu56leCtZCZCzCgQ7GcKOflDFnjWIepaPFUsM0IXUBrne10sl3aa2Bkcz3+FjRdIxBe9dAMhIJmEnQNA==
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
@@ -4567,7 +4559,7 @@ glob@7.1.3:
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
-glob@^7.0.0, glob@^7.0.3, glob@^7.1.1, glob@^7.1.2, glob@^7.1.3, glob@~7.1.1, glob@~7.1.3:
+glob@^7.0.0, glob@^7.0.3, glob@^7.0.5, glob@^7.1.1, glob@^7.1.2, glob@^7.1.3, glob@~7.1.1, glob@~7.1.3:
   version "7.1.4"
   resolved "https://registry.yarnpkg.com/glob/-/glob-7.1.4.tgz#aa608a2f6c577ad357e1ae5a5c26d9a8d1969255"
   integrity sha512-hkLPepehmnKk41pUGm3sYxoFs/umurYfYJCerbXEyFIWcAzvpipAgVkBqqT9RBKMGjnq6kMuyYwha6csxbiM1A==
@@ -5254,10 +5246,10 @@ invert-kv@^2.0.0:
   resolved "https://registry.yarnpkg.com/invert-kv/-/invert-kv-2.0.0.tgz#7393f5afa59ec9ff5f67a27620d11c226e3eec02"
   integrity sha512-wPVv/y/QQ/Uiirj/vh3oP+1Ww+AWehmi1g5fFWGPF6IpCBCDVrhgHRMvrLfdYcwDh3QJbGXDW4JAuzxElLSqKA==
 
-ionic-angular@^3.9.5:
-  version "3.9.5"
-  resolved "https://registry.yarnpkg.com/ionic-angular/-/ionic-angular-3.9.5.tgz#911951583ca676397799e8da11ff05a451a4ed80"
-  integrity sha512-BkAwwpKU4Gd2D9FOGmjodQDyQu/tKe0TCMvD1Dq8jeju7ueyasM1Z0G/oHr373ueDaGXDNLlMNspvK3vlWX2wg==
+ionic-angular@^3.9.6:
+  version "3.9.6"
+  resolved "https://registry.yarnpkg.com/ionic-angular/-/ionic-angular-3.9.6.tgz#2e23cdd78d0a3765ba647cf347ab478b5d694b5b"
+  integrity sha512-rUmRQHtupbB+oyUm4UusguUtop3QSZq2I7+gKWXIFYrT/x6+pp0vteH2ayIeBmWDsL2zRv+/iQaz+Kx6KnkaUg==
 
 ionic-plugin-keyboard@^2.2.1:
   version "2.2.1"
@@ -10784,10 +10776,10 @@ webpack@4.29.0:
     watchpack "^1.5.0"
     webpack-sources "^1.3.0"
 
-webpack@^4.31.0:
-  version "4.31.0"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.31.0.tgz#ae201d45f0571336e42d1c2b5c8ab56c4d3b0c63"
-  integrity sha512-n6RVO3X0LbbipoE62akME9K/JI7qYrwwufs20VvgNNpqUoH4860KkaxJTbGq5bgkVZF9FqyyTG/0WPLH3PVNJA==
+webpack@^4.32.2:
+  version "4.32.2"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.32.2.tgz#3639375364a617e84b914ddb2c770aed511e5bc8"
+  integrity sha512-F+H2Aa1TprTQrpodRAWUMJn7A8MgDx82yQiNvYMaj3d1nv3HetKU0oqEulL9huj8enirKi8KvEXQ3QtuHF89Zg==
   dependencies:
     "@webassemblyjs/ast" "1.8.5"
     "@webassemblyjs/helper-module-context" "1.8.5"
@@ -11064,6 +11056,14 @@ yallist@^3.0.0, yallist@^3.0.2:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-3.0.3.tgz#b4b049e314be545e3ce802236d6cd22cd91c3de9"
   integrity sha512-S+Zk8DEWE6oKpV+vI3qWkaK+jSbIK86pCwe2IF/xwIpQ8jEuxpw9NyaGjmp9+BoJv5FV2piqCDcoCtStppiq2A==
+
+yamljs@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/yamljs/-/yamljs-0.3.0.tgz#dc060bf267447b39f7304e9b2bfbe8b5a7ddb03b"
+  integrity sha512-C/FsVVhht4iPQYXOInoxUM/1ELSf9EsgKH34FofQOp6hwCPrW4vG4w5++TED3xRUo8gD7l0P1J1dLlDYzODsTQ==
+  dependencies:
+    argparse "^1.0.7"
+    glob "^7.0.5"
 
 yargs-parser@^10.0.0, yargs-parser@^10.1.0:
   version "10.1.0"

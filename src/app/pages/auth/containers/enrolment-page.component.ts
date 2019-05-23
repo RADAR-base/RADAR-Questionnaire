@@ -132,8 +132,9 @@ export class EnrolmentPageComponent {
           .then((body: any) => {
             refreshToken = body['refreshToken']
             if (body['baseUrl']) {
-              this.storage.set(StorageKeys.BASE_URI, body['baseUrl'])
-              this.authService.updateURI()
+              this.storage
+                .set(StorageKeys.BASE_URI, body['baseUrl'])
+                .then(() => this.authService.updateURI())
             }
             resolve(refreshToken)
           })

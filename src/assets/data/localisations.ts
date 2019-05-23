@@ -566,6 +566,30 @@ export const Localisations = {
     it: 'Seleziona',
     nl: 'Selecteren'
   },
+  BTN_YES: {
+    da: 'Ja',
+    de: 'Ja',
+    en: 'Yes',
+    es: 'Sí',
+    it: 'sì',
+    nl: 'Ja'
+  },
+  BTN_NO: {
+    da: 'Ingen',
+    de: 'Nein',
+    en: 'No',
+    es: 'No',
+    it: 'No',
+    nl: 'Nee'
+  },
+  BTN_TRY_AGAIN: {
+    da: 'Prøv igen',
+    de: 'Versuchen Sie es nochmal',
+    en: 'Try again',
+    es: 'Inténtalo de nuevo',
+    it: 'Riprova',
+    nl: 'Probeer het opnieuw'
+  },
   STATUS_LOADING: {
     da: 'Indlæser...',
     de: 'Lädt...',
@@ -945,6 +969,14 @@ export const Localisations = {
     es: 'Intentos restantes',
     it: 'Tentativi rimanenti',
     nl: 'Pogingen blijven'
+  },
+  AUDIO_TASK_HAPPY_ALERT: {
+    da: 'Er du tilfreds med din optagelse?',
+    de: 'Bist du mit deiner Aufnahme zufrieden?',
+    en: 'Are you happy with your recording?',
+    es: '¿Estás contento con tu grabación?',
+    it: 'Sei felice della tua registrazione?',
+    nl: 'Ben je blij met je opname?'
   },
   CONFIG_ERROR_DESC: {
     da: 'Config opdatering mislykkes. Prøve igen?',

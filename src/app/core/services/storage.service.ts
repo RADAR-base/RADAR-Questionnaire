@@ -180,19 +180,12 @@ export class StorageService {
   }
 
   getAssessment(task: Task) {
-    const defaultAssessment = this.get(StorageKeys.CONFIG_ASSESSMENTS)
-    const clinicalAssesment = this.get(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS)
-    return Promise.all([defaultAssessment, clinicalAssesment]).then(
-      assessments => {
-        for (let i = 0; i < assessments.length; i++) {
-          for (let j = 0; j < assessments[i].length; j++) {
-            if (assessments[i][j].name === task.name) {
-              return assessments[i][j]
-            }
-          }
-        }
-      }
-    )
+    return Promise.all([
+      this.get(StorageKeys.CONFIG_ASSESSMENTS),
+      this.get(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS)
+    ]).then(([nonClinical, clinical]) => {
+      return nonClinical.concat(clinical).find(a => a.name == task.name)
+    })
   }
 
   getClinicalAssessment(task: Task) {

@@ -5,8 +5,12 @@ import { Injectable } from '@angular/core'
 import { Device } from '@ionic-native/device/ngx'
 import { Platform } from 'ionic-angular'
 import { throwError as observableThrowError } from 'rxjs'
+import * as YAML from 'yamljs'
 
-import { DefaultEndPoint } from '../../../assets/data/defaultConfig'
+import {
+  DefaultEndPoint,
+  DefaultSchemaSpecEndpoint
+} from '../../../assets/data/defaultConfig'
 import { StorageService } from '../../core/services/storage.service'
 import { StorageKeys } from '../enums/storage'
 
@@ -76,9 +80,24 @@ export class Utility {
     return Promise.all([sourceId, projectId, pariticipantId])
   }
 
-  getLatestKafkaSchemaVersions(specs) {
-    const qKey = specs.avsc + '_' + specs.name + '-key'
-    const qVal = specs.avsc + '_' + specs.name + '-value'
+  getKafkaTopic(specs) {
+    const type = specs.name.toLowerCase()
+    const defaultTopic = `${specs.avsc}_${specs.name}`
+    return this.http
+      .get(DefaultSchemaSpecEndpoint)
+      .toPromise()
+      .then(res => {
+        const schemaSpecs = YAML.parse(atob(res['content'])).data
+        const topic = schemaSpecs.find(t => t.type.toLowerCase() == type).topic
+        if (topic) return topic
+        else Promise.reject()
+      })
+      .catch(e => defaultTopic)
+  }
+
+  getLatestKafkaSchemaVersions(topic) {
+    const qKey = topic + '-key'
+    const qVal = topic + '-value'
     return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
       const keys = this.getLatestKafkaSchemaVersion(
         tokens.access_token,
@@ -91,14 +110,6 @@ export class Utility {
         'latest'
       )
       return Promise.all([keys, vals])
-      /*return Promise.all([keys, vals]).then(versions => {
-        var versionReqKey, versionReqValue
-        for(let key in versions[0]) {versionReqKey = versions[0][key]}
-        for(let key in versions[1]) {versionReqValue = versions[1][key]}
-        let key = this.getLatestKafkaSchemaVersion(tokens.access_token, qKey, versionReqKey)
-        let val = this.getLatestKafkaSchemaVersion(tokens.access_token, qVal, versionReqValue)
-        return Promise.all([key, val, specs])
-      })*/
     })
   }
 

@@ -3,8 +3,8 @@ audio-input {
   width: 100%;
 
   .audio-bottom {
-    position: fixed;
-    bottom: 16px;
+    position: absolute;
+    top: 77vh;
     margin: 8px;
     width: 88%;
   }

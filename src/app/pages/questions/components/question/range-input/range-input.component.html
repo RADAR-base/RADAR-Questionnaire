@@ -10,7 +10,7 @@
           [value]="item.value"
           [disabled]="!currentlyShown"
           [id]="item.id"
-          (ionSelect)="onInputChange($event)"
+          (ionSelect)="onInputChange(item.value)"
         ></ion-radio>
       </ion-item>
     </li>

@@ -119,42 +119,43 @@ export const DefaultNumberOfNotificationsToRescue: number = 12 //
 export const FCMPluginProjectSenderId: string = '430900191220'
 export const DefaultNotificationRefreshTime: number = 900000 // 15 mins in ms
 
-export const DefaultSourceTypeModel: string = 'aRMT-App'
+export const DefaultSourcePrefix = 'aRMT'
+export const DefaultSourceTypeModel: string = `${DefaultSourcePrefix}-App`
 export const DefaultSourceTypeRegistrationBody = {
-  sourceTypeCatalogVersion: '1.4.0',
-  sourceTypeModel: 'aRMT-App',
+  sourceTypeCatalogVersion: '1.4.3',
+  sourceTypeModel: DefaultSourceTypeModel,
   sourceTypeProducer: 'RADAR'
   // "deviceTypeId": 1104
 }
 
 export const DefaultEndPoint: string =
   'https://radar-cns-platform.rosalind.kcl.ac.uk/'
-// export const DefaultEndPoint: string = 'https://radar-backend.co.uk/'
 
 // GITHUB SOURCES
 
 export const GIT_API_URI = 'https://api.github.com/repos'
-export const DefaultProject = 'RADAR-Base'
+export const DefaultOrganisation = 'RADAR-Base'
 
 export const DefaultProtocolRepo = 'RADAR-aRMT-protocols'
-// NOTE: Remove branch when merged
-export const DefaultProtocolBranch = '?ref=test'
-export const DefaultProtocolPath = 'protocol.json' + DefaultProtocolBranch
+// NOTE: Change branch to master when merged
+export const DefaultProtocolBranch = 'test'
+export const DefaultProtocolPath = `protocol.json?ref=${DefaultProtocolBranch}`
 export const DefaultProtocolEndPoint = [
   GIT_API_URI,
-  DefaultProject,
+  DefaultOrganisation,
   DefaultProtocolRepo,
   'contents'
 ].join('/')
 
 export const DefaultSchemaRepo = 'RADAR-Schemas'
-// NOTE: Remove branch when merged
-export const DefaultSchemaBranch = '?ref=add-audio'
-export const DefaultSchemaSpecPath =
-  'specifications/active/aRMT-1.4.3.yml' + DefaultSchemaBranch
+// NOTE: Change branch to master when merged
+export const DefaultSchemaBranch = 'add-audio'
+export const DefaultSchemaSpecPath = `specifications/active/${DefaultSourcePrefix}-${
+  DefaultSourceTypeRegistrationBody.sourceTypeCatalogVersion
+}.yml?ref=${DefaultSchemaBranch}`
 export const DefaultSchemaSpecEndpoint = [
   GIT_API_URI,
-  DefaultProject,
+  DefaultOrganisation,
   DefaultSchemaRepo,
   'contents',
   DefaultSchemaSpecPath

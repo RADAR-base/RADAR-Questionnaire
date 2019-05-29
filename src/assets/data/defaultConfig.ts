@@ -203,7 +203,7 @@ export const DefaultNumberOfCompletionLogsToSend = 10
 
 // AUDIO TASK
 
-export const DefaultMaxAudioAttemptsAllowed = 15
+export const DefaultMaxAudioAttemptsAllowed = 5
 export const DefaultAudioRecordOptions = {
   SampleRate: 16000,
   NumberOfChannels: 1

@@ -24,6 +24,9 @@ checkbox-input {
     flex-grow: 1;
     align-items: center;
     justify-content: flex-start;
+    padding: 16px 24px;
+    height: inherit;
+    white-space: normal;
   }
 
   .item-checkbox-checked ion-label {

@@ -28,7 +28,7 @@ export class CheckboxInputComponent implements OnInit {
       this.items.push({
         id: `check-${this.uniqueID}-${i}`,
         response: item.label,
-        value: Number(item.code)
+        value: item.code
       })
     })
   }

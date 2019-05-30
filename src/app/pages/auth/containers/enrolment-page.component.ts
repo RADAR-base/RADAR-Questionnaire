@@ -131,12 +131,13 @@ export class EnrolmentPageComponent {
           .getRefreshTokenFromUrl(authObj)
           .then((body: any) => {
             refreshToken = body['refreshToken']
-            if (body['baseUrl']) {
-              this.storage
-                .set(StorageKeys.BASE_URI, body['baseUrl'])
-                .then(() => this.authService.updateURI())
-            }
-            resolve(refreshToken)
+            const newBaseURL = body['baseUrl']
+            const promise = newBaseURL
+              ? this.storage
+                  .set(StorageKeys.BASE_URI, newBaseURL)
+                  .then(() => this.authService.updateURI())
+              : Promise.resolve()
+            promise.then(() => resolve(refreshToken))
           })
           .catch(e => {
             if (e.status === 410) {

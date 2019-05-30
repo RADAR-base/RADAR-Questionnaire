@@ -140,15 +140,21 @@ export class AudioInputComponent implements OnDestroy, OnInit {
             this.navCtrl.setRoot(HomePageComponent)
           }
         }
-      ]
+      ],
+      enableBackdropDismiss: false
     })
   }
 
   showAfterAttemptAlert() {
+    const attemptsLeft = DefaultMaxAudioAttemptsAllowed - this.recordAttempts
     this.alertService.showAlert({
       title: this.translate.transform(
         LocKeys.AUDIO_TASK_HAPPY_ALERT.toString()
       ),
+      message:
+        this.translate.transform(LocKeys.AUDIO_TASK_ATTEMPT_ALERT.toString()) +
+        ': ' +
+        attemptsLeft,
       buttons: [
         {
           text: this.translate.transform(LocKeys.BTN_YES.toString()),
@@ -161,24 +167,6 @@ export class AudioInputComponent implements OnDestroy, OnInit {
             this.translate.transform(LocKeys.BTN_NO.toString()) +
             ', ' +
             this.translate.transform(LocKeys.BTN_TRY_AGAIN.toString()),
-          handler: () => {
-            this.showAttemptsRemainingAlert()
-          }
-        }
-      ]
-    })
-  }
-
-  showAttemptsRemainingAlert() {
-    const attemptsLeft = DefaultMaxAudioAttemptsAllowed - this.recordAttempts
-    this.alertService.showAlert({
-      title:
-        this.translate.transform(LocKeys.AUDIO_TASK_ATTEMPT_ALERT.toString()) +
-        ': ' +
-        attemptsLeft,
-      buttons: [
-        {
-          text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
           handler: () => {}
         }
       ]

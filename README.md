@@ -76,7 +76,7 @@ export const DefaultSourceProducerAndSecretExport: string =
   '<aRMT-client>:<aRMT-secret>'
 ```
 
-Also if using FCM pull notifications instead of the local ones, please specify the FCM sender id (as mentioned in FCM settings) in `src/assets/data/defaultConfig.ts`
+Also if using FCM pull notifications instead of the local ones, please specify the FCM sender id (as mentioned in FCM settings) in `src/assets/data/defaultConfig.ts`. Don't forget to add the app's `google-services.json` (Android) or `GoogleService-Info.plist` (iOS) file to the root of your project.
 
 ```ts
 export const FCMPluginProjectSenderId: string = 'your-sender-id'

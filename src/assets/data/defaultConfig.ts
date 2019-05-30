@@ -139,8 +139,7 @@ export const GIT_API_URI = 'https://api.github.com/repos'
 export const DefaultOrganisation = 'RADAR-Base'
 
 export const DefaultProtocolRepo = 'RADAR-aRMT-protocols'
-// NOTE: Change branch to master when merged
-export const DefaultProtocolBranch = 'test'
+export const DefaultProtocolBranch = 'master'
 export const DefaultProtocolPath = `protocol.json?ref=${DefaultProtocolBranch}`
 export const DefaultProtocolEndPoint = [
   GIT_API_URI,
@@ -150,8 +149,7 @@ export const DefaultProtocolEndPoint = [
 ].join('/')
 
 export const DefaultSchemaRepo = 'RADAR-Schemas'
-// NOTE: Change branch to master when merged
-export const DefaultSchemaBranch = 'add-audio'
+export const DefaultSchemaBranch = 'master'
 export const DefaultSchemaSpecPath = `specifications/active/${DefaultSourcePrefix}-${
   DefaultSourceTypeRegistrationBody.sourceTypeCatalogVersion
 }.yml?ref=${DefaultSchemaBranch}`
@@ -207,7 +205,7 @@ export const DefaultNumberOfCompletionLogsToSend = 10
 
 // AUDIO TASK
 
-export const DefaultMaxAudioAttemptsAllowed = 15
+export const DefaultMaxAudioAttemptsAllowed = 5
 export const DefaultAudioRecordOptions = {
   SampleRate: 16000,
   NumberOfChannels: 1

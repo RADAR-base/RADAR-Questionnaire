@@ -2,16 +2,30 @@
   class="info-card"
   [class.info-card-sm]="hasFieldLabel"
 >
-  <div *ngIf="isThincItReminder">
-    <img
-      src="assets/imgs/thincIt_app_icon.png"
-      class="icon-thincIt"
-    >
-  </div>
-  <div *ngFor="let item of items">
-    <p class="info-heading">{{ item.heading }}</p>
-    <div class="info-content">
-      <h2>{{ item.content }}</h2>
+  <span
+    item-right
+    (tap)="scrollDown()"
+    class="icon"
+    [class.icon-sm]="hasFieldLabel"
+  >
+    <ion-icon name="arrow-dropdown-circle"></ion-icon>
+  </span>
+
+  <ion-content>
+    <div *ngIf="isThincItReminder">
+      <img
+        src="assets/imgs/thincIt_app_icon.png"
+        class="icon-thincIt"
+      >
     </div>
-  </div>
+    <div class="items">
+      <div *ngFor="let item of items">
+        <p class="info-heading">{{ item.heading }}</p>
+        <div class="info-content">
+          <h2>{{ item.content }}</h2>
+        </div>
+      </div>
+    </div>
+  </ion-content>
+
 </div>

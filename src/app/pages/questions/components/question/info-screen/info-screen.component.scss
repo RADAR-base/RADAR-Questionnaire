@@ -4,7 +4,6 @@ info-screen {
 
   .info-card {
     position: fixed;
-    overflow: scroll;
     margin: 8px;
     margin-right: 16px;
     padding: 10px 10px 0;
@@ -13,6 +12,22 @@ info-screen {
     -webkit-border-radius: 5px;
     border-radius: 5px;
     background-color: $cl-primary-20;
+  }
+
+  ion-content {
+    background: none;
+    mask-image:
+      -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        from(rgba(0, 0, 0, 1)),
+        to(rgba(0, 0, 0, 0.25))
+      );
+  }
+
+  .items {
+    padding-bottom: 32%;
   }
 
   .info-card-sm {
@@ -31,5 +46,22 @@ info-screen {
     margin-top: 15px;
     margin-left: 35%;
     width: 30%;
+  }
+
+  .icon-sm {
+    top: 26vh !important;
+  }
+
+  .icon {
+    position: absolute;
+    top: 31vh;
+    right: 8px;
+    z-index: 100;
+    margin: 8px;
+  }
+
+  ion-icon {
+    color: $cl-light-40;
+    font-size: 40px;
   }
 }

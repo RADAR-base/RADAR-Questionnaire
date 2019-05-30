@@ -45,10 +45,6 @@ export class TaskCalendarComponent implements OnChanges {
     this.timeIndex = todaysTasks.findIndex(t => t.timestamp >= now)
   }
 
-  hasExtraInfo(warningStr) {
-    return warningStr !== ''
-  }
-
   clicked(task) {
     this.task.emit(task)
   }

@@ -231,7 +231,6 @@ export class EnrolmentPageComponent {
       .catch(e => this.showConfigError())
       .then(() => this.firebaseAnalytics.logEvent('sign_up', {}))
       .then(() => this.next())
-      .catch(() => this.next()) // navigate if firebase fails
   }
 
   showConfigError() {

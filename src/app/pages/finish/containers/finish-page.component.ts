@@ -6,12 +6,12 @@ import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalyti
 import { KafkaService } from '../../../core/services/kafka.service'
 import { NotificationGeneratorService } from '../../../core/services/notification-generator.service'
 import { NotificationService } from '../../../core/services/notification.service'
-import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { Assessment } from '../../../shared/models/assessment'
 import { RepeatQuestionnaire } from '../../../shared/models/protocol'
 import { Task } from '../../../shared/models/task'
+import { timeIntervalToMillis } from '../../../shared/utilities/time'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { FinishTaskService } from '../services/finish-task.service'
 import { PrepareDataService } from '../services/prepare-data.service'
@@ -59,37 +59,45 @@ export class FinishPageComponent {
 
   processDataAndSend() {
     this.finishTaskService.updateTaskToComplete(this.associatedTask)
-    if (!this.associatedTask.name.includes('DEMO'))
-      return this.prepareDataService
-        .processQuestionnaireData(
-          this.questionnaireData.answers,
-          this.questionnaireData.timestamps
-        )
-        .then(data =>
-          this.sendToKafka(
-            this.associatedTask,
-            data,
-            this.questionnaireData.questions
-          )
-        )
+    if (!this.associatedTask.name.includes('DEMO')) {
+      const data = this.prepareDataService.processQuestionnaireData(
+        this.questionnaireData.answers,
+        this.questionnaireData.timestamps
+      )
+      this.firebaseAnalytics.logEvent('processed_questionnaire_data', {
+        questionnaire_timestamp: String(Date.now()),
+        type: this.associatedTask.name
+      })
+      return this.sendToKafka(
+        this.associatedTask,
+        data,
+        this.questionnaireData.questions
+      )
         .catch(e => console.log(e))
         .then(() => (this.showDoneButton = true))
-    else this.showDoneButton = true
+    } else this.showDoneButton = true
   }
 
-  sendToKafka(task: Task, questionnaireData, questions) {
+  sendToKafka(task: Task, data, questions) {
     // NOTE: Submit data to kafka
-    return Promise.all([
-      this.kafkaService.prepareTimeZoneKafkaObjectAndSend(),
-      this.kafkaService.prepareAnswerKafkaObjectAndSend(
-        task,
-        questionnaireData,
-        questions
-      ),
-      this.kafkaService
-        .prepareNonReportedTasksKafkaObjectAndSend(task)
-        .then(() => this.finishTaskService.updateTaskToReportedCompletion(task))
-    ])
+    return this.storage.get(StorageKeys.CONFIG_VERSION).then(configVersion =>
+      Promise.all([
+        this.kafkaService.prepareTimeZoneKafkaObjectAndSend(),
+        this.kafkaService.prepareAnswerKafkaObjectAndSend(
+          task,
+          {
+            answers: data,
+            configVersion: configVersion
+          },
+          questions
+        ),
+        this.kafkaService
+          .prepareNonReportedTasksKafkaObjectAndSend(task)
+          .then(() =>
+            this.finishTaskService.updateTaskToReportedCompletion(task)
+          )
+      ])
+    )
   }
 
   handleClosePage() {
@@ -157,7 +165,7 @@ export class FinishPageComponent {
 
   formatRepeatsAfterClinic(repeats: RepeatQuestionnaire) {
     return repeats.unitsFromZero.map(amount =>
-      SchedulingService.timeIntervalToMillis({
+      timeIntervalToMillis({
         unit: repeats.unit,
         amount
       })

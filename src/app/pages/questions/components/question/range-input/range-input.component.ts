@@ -20,6 +20,8 @@ export class RangeInputComponent implements OnInit {
   labelLeft = ''
   @Input()
   labelRight = ''
+  @Input()
+  currentlyShown
 
   value: number = null
   uniqueID: number = uniqueID++
@@ -35,7 +37,7 @@ export class RangeInputComponent implements OnInit {
     }
   }
 
-  onInputChange(event) {
-    this.valueChange.emit(+event.target.value)
+  onInputChange(value) {
+    this.valueChange.emit(value)
   }
 }

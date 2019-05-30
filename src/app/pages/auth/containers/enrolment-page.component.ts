@@ -24,7 +24,6 @@ import {
   WeeklyReportSubSettings
 } from '../../../shared/models/settings'
 import { HomePageComponent } from '../../home/containers/home-page.component'
-import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 import { AuthService } from '../services/auth.service'
 
 @Component({
@@ -132,8 +131,9 @@ export class EnrolmentPageComponent {
           .then((body: any) => {
             refreshToken = body['refreshToken']
             if (body['baseUrl']) {
-              this.storage.set(StorageKeys.BASE_URI, body['baseUrl'])
-              this.authService.updateURI()
+              this.storage
+                .set(StorageKeys.BASE_URI, body['baseUrl'])
+                .then(() => this.authService.updateURI())
             }
             resolve(refreshToken)
           })
@@ -220,14 +220,36 @@ export class EnrolmentPageComponent {
           createdDateMidnight
         )
         .then(() => this.doAfterAuthentication())
+        .catch(err => console.log('Init failed', err))
     })
   }
 
   doAfterAuthentication() {
     return this.configService
       .fetchConfigState(true)
+      .catch(e => this.showConfigError())
       .then(() => this.firebaseAnalytics.logEvent('sign_up', {}))
       .then(() => this.next())
+  }
+
+  showConfigError() {
+    const buttons = [
+      {
+        text: this.localization.translateKey(LocKeys.BTN_CANCEL),
+        handler: () => {}
+      },
+      {
+        text: this.localization.translateKey(LocKeys.BTN_OKAY),
+        handler: () => {
+          this.doAfterAuthentication()
+        }
+      }
+    ]
+    return this.alertService.showAlert({
+      title: this.localization.translateKey(LocKeys.STATUS_FAILURE),
+      message: this.localization.translateKey(LocKeys.CONFIG_ERROR_DESC),
+      buttons: buttons
+    })
   }
 
   displayErrorMessage(error) {
@@ -298,7 +320,7 @@ export class EnrolmentPageComponent {
           }
           this.localization.setLanguage(lang).then(() => {
             this.language = lang
-            return this.navCtrl.setRoot(SplashPageComponent)
+            return this.navCtrl.setRoot(EnrolmentPageComponent)
           })
         }
       }

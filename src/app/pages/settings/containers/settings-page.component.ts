@@ -11,6 +11,7 @@ import { AlertService } from '../../../core/services/alert.service'
 import { ConfigService } from '../../../core/services/config.service'
 import { LocalizationService } from '../../../core/services/localization.service'
 import { NotificationGeneratorService } from '../../../core/services/notification-generator.service'
+import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { NotificationService } from '../../../core/services/notification.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
@@ -51,7 +52,8 @@ export class SettingsPageComponent {
     private notificationGenerator: NotificationGeneratorService,
     private notificationService: NotificationService,
     public localization: LocalizationService,
-    private platform: Platform
+    private platform: Platform,
+    private firebaseAnalytics: FirebaseAnalyticsService
   ) {}
 
   ionViewDidLoad() {
@@ -150,7 +152,10 @@ export class SettingsPageComponent {
             .then(() => {
               this.language = lang
               this.showLoading = true
-              return this.configService.updateConfigStateOnLanguageChange()
+              return this.configService
+                .updateConfigStateOnLanguageChange()
+                .then(() => this.backToSplash())
+                .catch(() => this.showConfigError())
             })
             .then(() => this.backToSplash())
         }
@@ -207,6 +212,7 @@ export class SettingsPageComponent {
       {
         text: this.localization.translateKey(LocKeys.BTN_AGREE),
         handler: () => {
+          this.firebaseAnalytics.logEvent('app_reset', {})
           this.storage.clearStorage().then(() => this.backToSplash())
         }
       }
@@ -224,6 +230,7 @@ export class SettingsPageComponent {
     this.showLoading = true
     return this.configService
       .fetchConfigState(true)
+      .catch(e => this.showConfigError())
       .then(() => {
         this.showLoading = false
         return this.loadSettings()
@@ -263,11 +270,34 @@ export class SettingsPageComponent {
         {
           text: this.localization.translateKey(LocKeys.CLOSE_APP),
           handler: () => {
-            this.notificationService.sendTestNotification()
-            this.platform.exitApp()
+            this.notificationService.sendTestNotification().then(() => {
+              this.firebaseAnalytics.logEvent('notification_test', {})
+              // NOTE: iOS does not support exitApp()
+              if (this.platform.is('android')) this.platform.exitApp()
+            })
           }
         }
       ]
+    })
+  }
+
+  showConfigError() {
+    const buttons = [
+      {
+        text: this.localization.translateKey(LocKeys.BTN_CANCEL),
+        handler: () => {}
+      },
+      {
+        text: this.localization.translateKey(LocKeys.BTN_OKAY),
+        handler: () => {
+          this.reloadConfig()
+        }
+      }
+    ]
+    return this.alertService.showAlert({
+      title: this.localization.translateKey(LocKeys.STATUS_FAILURE),
+      message: this.localization.translateKey(LocKeys.CONFIG_ERROR_DESC),
+      buttons: buttons
     })
   }
 }

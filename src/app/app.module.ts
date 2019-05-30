@@ -5,12 +5,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { JWT_OPTIONS, JwtModule } from '@auth0/angular-jwt'
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx'
 import { AppVersion } from '@ionic-native/app-version/ngx'
+import { BackgroundMode } from '@ionic-native/background-mode/ngx'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx'
 import { Device } from '@ionic-native/device/ngx'
 import { Dialogs } from '@ionic-native/dialogs/ngx'
 import { File } from '@ionic-native/file/ngx'
-import { FirebaseAnalytics } from '@ionic-native/firebase-analytics/ngx'
+import { Firebase } from '@ionic-native/firebase/ngx'
 import { Globalization } from '@ionic-native/globalization/ngx'
+import { Insomnia } from '@ionic-native/insomnia/ngx'
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx'
 import { MobileAccessibility } from '@ionic-native/mobile-accessibility/ngx'
 import { SplashScreen } from '@ionic-native/splash-screen/ngx'
 import { StatusBar } from '@ionic-native/status-bar/ngx'
@@ -61,8 +64,11 @@ import { Utility } from './shared/utilities/util'
     AndroidPermissions,
     File,
     AppVersion,
-    FirebaseAnalytics,
-    MobileAccessibility
+    MobileAccessibility,
+    Insomnia,
+    BackgroundMode,
+    Firebase,
+    LocalNotifications
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

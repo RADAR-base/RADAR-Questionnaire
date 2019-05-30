@@ -54,18 +54,20 @@ export class KafkaService {
 
   prepareAnswerKafkaObjectAndSend(task: Task, data, questions) {
     // NOTE: Payload for kafka 1 : value Object which contains individual questionnaire response with timestamps
+    const time =
+      questions[0].field_type == QuestionType.info && questions[1] // NOTE: Do not use info startTime
+        ? data.answers[1].startTime
+        : data.answers[0].startTime // NOTE: whole questionnaire startTime and endTime
+    const timeNotification = getSeconds({ milliseconds: task.timestamp })
+    const timeCompleted = data.answers[data.answers.length - 1].endTime
     const Answer: AnswerValueExport = {
+      time: time,
+      timeCompleted: timeCompleted,
+      timeNotification: timeNotification,
       name: task.name,
       version: data.configVersion,
-      answers: data.answers,
-      time:
-        questions[0].field_type == QuestionType.info && questions[1] // NOTE: Do not use info startTime
-          ? data.answers[1].startTime
-          : data.answers[0].startTime, // NOTE: whole questionnaire startTime and endTime
-      timeCompleted: data.answers[data.answers.length - 1].endTime,
-      timeNotification: getSeconds({ milliseconds: task.timestamp })
+      answers: data.answers
     }
-
     return this.prepareKafkaObjectAndSend(task, Answer, KAFKA_ASSESSMENT)
   }
 
@@ -118,6 +120,11 @@ export class KafkaService {
   }
 
   prepareKafkaObjectAndSend(task, value, type) {
+    this.firebaseAnalytics.logEvent('prepared_kafka_object', {
+      name: task.name,
+      questionnaire_timestamp: String(task.timestamp),
+      type: type
+    })
     return this.util
       .getObservationKey()
       .then(observationKey => {
@@ -131,61 +138,65 @@ export class KafkaService {
   }
 
   createPayloadAndSend(specs, kafkaConnInstance) {
-    let schemaVersions
-    if (
-      specs.name == KAFKA_COMPLETION_LOG &&
-      this.schemas[KAFKA_COMPLETION_LOG]
-    ) {
-      schemaVersions = this.schemas[KAFKA_COMPLETION_LOG]
-    } else {
-      schemaVersions = this.util
-        .getLatestKafkaSchemaVersions(specs)
-        .catch(error => {
-          console.log(error)
-        })
-      this.schemas[specs.name] = schemaVersions
-    }
-    return schemaVersions.then(([keySchemaMetadata, valueSchemaMetadata]) => {
-      const keySchema = JSON.parse(keySchemaMetadata.schema)
-      const valueSchema = JSON.parse(valueSchemaMetadata.schema)
-
-      const avroKey = AvroSchema.parse(keySchema, { wrapUnions: true })
-      const avroVal = AvroSchema.parse(valueSchema, { wrapUnions: true })
-
-      const kafkaObject = specs.kafkaObject
-      const bufferKey = avroKey.clone(kafkaObject.key, { wrapUnions: true })
-      const bufferVal = avroVal.clone(kafkaObject.value, { wrapUnions: true })
-      const payload = {
-        key: bufferKey,
-        value: bufferVal
+    return this.util.getKafkaTopic(specs).then(topic => {
+      let schemaVersions
+      switch (specs.name) {
+        case KAFKA_COMPLETION_LOG:
+          if (this.schemas[specs.name]) {
+            schemaVersions = this.schemas[specs.name]
+            break
+          }
+        default:
+          schemaVersions = this.util
+            .getLatestKafkaSchemaVersions(topic)
+            .catch(error => {
+              console.log(error)
+              return Promise.resolve()
+            })
+          this.schemas[specs.name] = schemaVersions
       }
-      const parsedKeySchema = new KafkaRest.AvroSchema(keySchema)
-      const parsedValueSchema = new KafkaRest.AvroSchema(valueSchema)
+      return schemaVersions.then(([keySchemaMetadata, valueSchemaMetadata]) => {
+        const keySchema = JSON.parse(keySchemaMetadata.schema)
+        const valueSchema = JSON.parse(valueSchemaMetadata.schema)
 
-      return this.sendToKafka(
-        specs,
-        parsedKeySchema,
-        parsedValueSchema,
-        payload,
-        kafkaConnInstance
-      ).catch(error => {
-        console.error(
-          'Could not initiate kafka connection ' + JSON.stringify(error)
-        )
-        this.firebaseAnalytics.logEvent('send_error', {
-          error: JSON.stringify(error),
-          name: specs.name,
-          questionnaire_timestamp: String(specs.task.timestamp)
+        const avroKey = AvroSchema.parse(keySchema, { wrapUnions: true })
+        const avroVal = AvroSchema.parse(valueSchema, { wrapUnions: true })
+
+        const kafkaObject = specs.kafkaObject
+        const bufferKey = avroKey.clone(kafkaObject.key, { wrapUnions: true })
+        const bufferVal = avroVal.clone(kafkaObject.value, { wrapUnions: true })
+        const payload = {
+          key: bufferKey,
+          value: bufferVal
+        }
+        const parsedKeySchema = new KafkaRest.AvroSchema(keySchema)
+        const parsedValueSchema = new KafkaRest.AvroSchema(valueSchema)
+
+        return this.sendToKafka(
+          specs,
+          parsedKeySchema,
+          parsedValueSchema,
+          payload,
+          kafkaConnInstance,
+          topic
+        ).catch(error => {
+          console.error(
+            'Could not initiate kafka connection ' + JSON.stringify(error)
+          )
+          this.firebaseAnalytics.logEvent('send_error', {
+            error: String(error),
+            name: specs.name,
+            questionnaire_timestamp: String(specs.task.timestamp)
+          })
+          return Promise.resolve()
         })
-        return Promise.resolve()
       })
     })
   }
 
-  sendToKafka(specs, id, info, payload, kafkaConnInstance) {
+  sendToKafka(specs, id, info, payload, kafkaConnInstance, topic) {
     return new Promise((resolve, reject) => {
       // NOTE: Kafka connection instance to submit to topic
-      const topic = specs.avsc + '_' + specs.name
       console.log('Sending to: ' + topic)
       return kafkaConnInstance
         .topic(topic)
@@ -221,6 +232,10 @@ export class KafkaService {
     return this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
       console.log('KAFKA-SERVICE: Caching answers.')
       cache[kafkaObject.value.time] = specs
+      this.firebaseAnalytics.logEvent('send_to_cache', {
+        name: specs.name,
+        questionnaire_timestamp: String(specs.task.timestamp)
+      })
       return this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
     })
   }
@@ -245,8 +260,8 @@ export class KafkaService {
           .filter(([k, v]) => k)
           .slice(0, 20)
           .map(([k, v]) => this.createPayloadAndSend(v, kafkaConnInstance))
-        return Promise.all(promises).then(keys =>
-          this.removeAnswersFromCache(keys.filter(k => k))
+        return Promise.all(promises.map(p => p.catch(() => undefined))).then(
+          keys => this.removeAnswersFromCache(keys.filter(k => k))
         )
       })
     })
@@ -276,9 +291,5 @@ export class KafkaService {
         const headers = { Authorization: 'Bearer ' + tokens.access_token }
         return new KafkaRest({ url: this.KAFKA_CLIENT_URL, headers: headers })
       })
-  }
-
-  storeQuestionareData(values) {
-    // TODO: Decide on whether to save Questionare data locally or send it to server
   }
 }

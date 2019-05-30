@@ -5,13 +5,11 @@ import { Injectable } from '@angular/core'
 import { AppVersion } from '@ionic-native/app-version/ngx'
 
 import {
-  ARMTDefBranchProd,
-  ARMTDefBranchTest,
+  DefaultAppVersion,
   DefaultProtocolEndPoint,
-  DefaultProtocolURI,
+  DefaultProtocolPath,
   DefaultQuestionnaireFormatURI,
-  DefaultQuestionnaireTypeURI,
-  TEST_ARMT_DEF
+  DefaultQuestionnaireTypeURI
 } from '../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../shared/enums/storage'
 import { Assessment } from '../../shared/models/assessment'
@@ -29,10 +27,10 @@ export class ConfigService {
     public http: HttpClient,
     public storage: StorageService,
     private schedule: SchedulingService,
-    private appVersion: AppVersion,
     private notifications: NotificationService,
     private util: Utility,
     private localization: LocalizationService,
+    private appVersionPlugin: AppVersion,
     private firebaseAnalytics: FirebaseAnalyticsService
   ) {}
 
@@ -41,69 +39,64 @@ export class ConfigService {
       this.storage.get(StorageKeys.CONFIG_VERSION),
       this.storage.get(StorageKeys.SCHEDULE_VERSION),
       this.storage.get(StorageKeys.APP_VERSION),
-      this.appVersion.getVersionNumber(),
       this.pullProtocol()
-    ]).then(
-      ([
-        configVersion,
-        scheduleVersion,
-        storedAppVersion,
-        appVersion,
-        response
-      ]) => {
-        if (!response) {
-          return Promise.reject({
-            message: 'No response from server'
-          })
-        }
-        const responseData: any = JSON.parse(response)
-        if (
-          configVersion !== responseData.version ||
-          scheduleVersion !== responseData.version ||
-          storedAppVersion !== appVersion ||
-          force
-        ) {
-          const assessments = this.formatPulledProcotol(responseData.protocols)
-          const {
-            negative: scheduledAssessments,
-            positive: clinicalAssessments
-          } = this.util.partition(assessments, a => a.protocol.clinicalProtocol)
-
-          this.storage.set(
-            StorageKeys.HAS_CLINICAL_TASKS,
-            clinicalAssessments.length > 0
-          )
-
-          return Promise.all([
-            this.storage.set(StorageKeys.APP_VERSION, appVersion),
-            this.storage.set(StorageKeys.CONFIG_VERSION, responseData.version),
-            this.updateAssessments(
-              StorageKeys.CONFIG_CLINICAL_ASSESSMENTS,
-              clinicalAssessments
-            ),
-            this.updateAssessments(
-              StorageKeys.CONFIG_ASSESSMENTS,
-              scheduledAssessments
-            )
-          ])
-            .then(() => this.schedule.generateSchedule(true))
-            .then(() => this.rescheduleNotifications())
-            .then(() => this.setFirebaseUserProperties())
-            .then(() =>
-              this.firebaseAnalytics.logEvent('config_update', {
-                config_version: String(configVersion),
-                schedule_version: String(scheduleVersion),
-                app_version: appVersion
-              })
-            )
-        } else {
-          console.log(
-            'NO CONFIG UPDATE. Version of protocol.json has not changed.'
-          )
-          return this.schedule.generateSchedule(false)
-        }
+    ]).then(([configVersion, scheduleVersion, storedAppVersion, response]) => {
+      if (!response) {
+        return Promise.reject({
+          message: 'No response from server'
+        })
       }
-    )
+      let appVersion = DefaultAppVersion
+      this.appVersionPlugin.getVersionNumber().then(res => (appVersion = res))
+      console.log('Fetching with app version ', appVersion)
+
+      const responseData: any = JSON.parse(response)
+      if (
+        configVersion !== responseData.version ||
+        scheduleVersion !== responseData.version ||
+        storedAppVersion !== appVersion ||
+        force
+      ) {
+        const assessments = this.formatPulledProcotol(responseData.protocols)
+        const {
+          negative: scheduledAssessments,
+          positive: clinicalAssessments
+        } = this.util.partition(assessments, a => a.protocol.clinicalProtocol)
+
+        this.storage.set(
+          StorageKeys.HAS_CLINICAL_TASKS,
+          clinicalAssessments.length > 0
+        )
+
+        return Promise.all([
+          this.storage.set(StorageKeys.APP_VERSION, appVersion),
+          this.storage.set(StorageKeys.CONFIG_VERSION, responseData.version),
+          this.updateAssessments(
+            StorageKeys.CONFIG_CLINICAL_ASSESSMENTS,
+            clinicalAssessments
+          ),
+          this.updateAssessments(
+            StorageKeys.CONFIG_ASSESSMENTS,
+            scheduledAssessments
+          )
+        ])
+          .then(() => this.schedule.generateSchedule(true))
+          .then(() => this.rescheduleNotifications())
+          .then(() => this.setFirebaseUserProperties())
+          .then(() =>
+            this.firebaseAnalytics.logEvent('config_update', {
+              config_version: String(configVersion),
+              schedule_version: String(scheduleVersion),
+              app_version: appVersion
+            })
+          )
+      } else {
+        console.log(
+          'NO CONFIG UPDATE. Version of protocol.json has not changed.'
+        )
+        return this.schedule.generateSchedule(false)
+      }
+    })
   }
 
   private updateAssessments(key: StorageKeys, assessments: Assessment[]) {
@@ -155,14 +148,21 @@ export class ConfigService {
 
   pullProtocol() {
     return this.getProjectName().then(projectName => {
-      if (projectName) {
-        const URI = DefaultProtocolEndPoint + projectName + DefaultProtocolURI
-        return this.http.get(URI, { responseType: 'text' }).toPromise()
-      } else {
+      if (!projectName) {
         console.error(
           'Unknown project name : ' + projectName + '. Cannot pull protocols.'
         )
+        return Promise.reject()
       }
+      const URI = [
+        DefaultProtocolEndPoint,
+        projectName,
+        DefaultProtocolPath
+      ].join('/')
+      return this.http
+        .get(URI)
+        .toPromise()
+        .then(res => atob(res['content']))
     })
   }
 
@@ -205,14 +205,7 @@ export class ConfigService {
   }
 
   formatQuestionnaireUri(questionnaireRepo, langVal: string) {
-    // NOTE: Using temp test repository for aRMT defs
-    const repository = TEST_ARMT_DEF
-      ? questionnaireRepo.repository.replace(
-          ARMTDefBranchProd,
-          ARMTDefBranchTest
-        )
-      : questionnaireRepo.repository
-    let uri = repository + questionnaireRepo.name + '/'
+    let uri = questionnaireRepo.repository + questionnaireRepo.name + '/'
     uri += questionnaireRepo.name + questionnaireRepo.type
     if (langVal !== '') {
       uri += '_' + langVal

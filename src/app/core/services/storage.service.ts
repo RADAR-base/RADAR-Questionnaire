@@ -7,6 +7,7 @@ import { Storage } from '@ionic/storage'
 import { throwError as observableThrowError } from 'rxjs'
 
 import {
+  DefaultAppVersion,
   DefaultScheduleVersion,
   DefaultSettingsNotifications,
   DefaultSettingsSupportedLanguages,
@@ -20,7 +21,7 @@ import { Task } from '../../shared/models/task'
 export class StorageService {
   global: { [key: string]: any } = {}
 
-  constructor(private storage: Storage, private appVersion: AppVersion) {
+  constructor(private storage: Storage, private appVersionPlugin: AppVersion) {
     const setStoragePromise = this.prepareStorage()
     Promise.resolve(setStoragePromise)
   }
@@ -33,8 +34,9 @@ export class StorageService {
     createdDate,
     createdDateMidnight
   ) {
-    return Promise.all([this.getAllKeys(), this.getAppVersion()])
-      .then(([keys, appV]) => {
+    return this.getAllKeys()
+      .then(keys => {
+        // TODO: Find out why this is hard-coded?
         if (keys.length <= 7) {
           const enrolmentDate = this.set(
             StorageKeys.ENROLMENTDATE,
@@ -73,7 +75,14 @@ export class StorageService {
             new Date().getTimezoneOffset()
           )
           const cache = this.set(StorageKeys.CACHE_ANSWERS, {})
-          const appVersion = this.set(StorageKeys.APP_VERSION, appV)
+          let appVersion = DefaultAppVersion
+          this.getAppVersion()
+            .then(apV => {
+              appVersion = apV
+            })
+            .catch(err => console.log('Cannot retrieve app version ', err))
+
+          this.set(StorageKeys.APP_VERSION, appVersion)
 
           return Promise.all([
             pId,
@@ -148,7 +157,7 @@ export class StorageService {
   }
 
   getAppVersion() {
-    return this.appVersion.getVersionNumber()
+    return this.appVersionPlugin.getVersionNumber()
   }
 
   prepareStorage() {
@@ -162,19 +171,12 @@ export class StorageService {
   }
 
   getAssessment(task: Task) {
-    const defaultAssessment = this.get(StorageKeys.CONFIG_ASSESSMENTS)
-    const clinicalAssesment = this.get(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS)
-    return Promise.all([defaultAssessment, clinicalAssesment]).then(
-      assessments => {
-        for (let i = 0; i < assessments.length; i++) {
-          for (let j = 0; j < assessments[i].length; j++) {
-            if (assessments[i][j].name === task.name) {
-              return assessments[i][j]
-            }
-          }
-        }
-      }
-    )
+    return Promise.all([
+      this.get(StorageKeys.CONFIG_ASSESSMENTS),
+      this.get(StorageKeys.CONFIG_CLINICAL_ASSESSMENTS)
+    ]).then(([nonClinical, clinical]) => {
+      return nonClinical.concat(clinical).find(a => a.name == task.name)
+    })
   }
 
   getClinicalAssessment(task: Task) {
@@ -211,8 +213,8 @@ export class StorageService {
     const errMsg = error.message
       ? error.message
       : error.status
-        ? `${error.status} - ${error.statusText}`
-        : 'error'
+      ? `${error.status} - ${error.statusText}`
+      : 'error'
     return observableThrowError(errMsg)
   }
 }

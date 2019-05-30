@@ -12,7 +12,7 @@ import { Task, TasksProgress } from '../../../../shared/models/task'
     trigger('fade', [
       state('false', style({ opacity: '0' })),
       state('true', style({ opacity: '1.0' })),
-      transition('* => *', animate('400ms ease'))
+      transition('* => *', animate('350ms 50ms ease'))
     ]),
     trigger('scaleMinutes', [
       state(
@@ -20,17 +20,17 @@ import { Task, TasksProgress } from '../../../../shared/models/task'
         style({ transform: 'translate3d(-25%, -15%, 0) scale(0.4)' })
       ),
       state('true', style({ transform: 'translate3d(0, 0, 0) scale(1)' })),
-      transition('* => *', animate('400ms ease'))
+      transition('* => *', animate('350ms 50ms ease'))
     ]),
     trigger('alignCenterRightExtraInfo', [
-      state('false', style({ transform: 'translate3d(15%, 0, 0)' })),
+      state('false', style({ transform: 'translate3d(22%, 0, 0)' })),
       state('true', style({ transform: 'translate3d(0, 0, 0)' })),
-      transition('* => *', animate('400ms ease'))
+      transition('* => *', animate('350ms 50ms ease'))
     ]),
     trigger('alignCenterRightTime', [
       state('false', style({ transform: 'translate3d(8%, 0, 0) scale(0.8)' })),
       state('true', style({ transform: 'translate3d(0, 0, 0)' })),
-      transition('* => *', animate('400ms ease'))
+      transition('* => *', animate('350ms 50ms ease'))
     ]),
     trigger('moveInProgress', [
       state(
@@ -41,12 +41,12 @@ import { Task, TasksProgress } from '../../../../shared/models/task'
         'false',
         style({ display: 'block', transform: 'translate3d(0, 0, 0)' })
       ),
-      transition('* => *', animate('400ms ease'))
+      transition('* => *', animate('350ms 50ms ease'))
     ]),
     trigger('alignCenterRightMetrics', [
       state('false', style({ transform: 'translate3d(110%, 0, 0)' })),
       state('true', style({ transform: 'translate3d(0, 0, 0)' })),
-      transition('* => *', animate('400ms ease'))
+      transition('* => *', animate('350ms 50ms ease'))
     ])
   ]
 })
@@ -105,10 +105,8 @@ export class TaskInfoComponent implements OnChanges {
     this.nextTaskStatus = this.isNow
       ? this.localization.translateKey(LocKeys.STATUS_NOW)
       : this.task.name !== 'ESM'
-        ? ''
-        : this.localization.translateKey(LocKeys.TASK_BAR_NEXT_TASK_SOON)
-
-    if (this.nextTaskStatus.length > 7) return (this.statusSize = 8)
+      ? ''
+      : this.localization.translateKey(LocKeys.TASK_BAR_NEXT_TASK_SOON)
     if (this.nextTaskStatus.length > 4) return (this.statusSize = 11)
     return (this.statusSize = 14)
   }

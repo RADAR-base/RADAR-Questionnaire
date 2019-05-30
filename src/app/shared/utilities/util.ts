@@ -3,9 +3,14 @@ import 'rxjs/add/operator/map'
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Device } from '@ionic-native/device/ngx'
+import { Platform } from 'ionic-angular'
 import { throwError as observableThrowError } from 'rxjs'
+import * as YAML from 'yamljs'
 
-import { DefaultEndPoint } from '../../../assets/data/defaultConfig'
+import {
+  DefaultEndPoint,
+  DefaultSchemaSpecEndpoint
+} from '../../../assets/data/defaultConfig'
 import { StorageService } from '../../core/services/storage.service'
 import { StorageKeys } from '../enums/storage'
 import { ObservationKey, SchemaMetadata } from '../models/kafka'
@@ -18,7 +23,8 @@ export class Utility {
   constructor(
     private http: HttpClient,
     private device: Device,
-    private storage: StorageService
+    private storage: StorageService,
+    private platform: Platform
   ) {}
 
   getSchema(schemaUrl) {
@@ -40,6 +46,10 @@ export class Utility {
         device: this.device
       }
     }
+  }
+
+  isPlatformBrowser() {
+    return this.platform.is('core') || this.platform.is('mobileweb')
   }
 
   private extractData(res: any) {
@@ -76,11 +86,24 @@ export class Utility {
     }))
   }
 
-  getLatestKafkaSchemaVersions(
-    specs
-  ): Promise<[SchemaMetadata, SchemaMetadata]> {
-    const topic = specs.avsc + '_' + specs.name
+  getKafkaTopic(specs) {
+    const type = specs.name.toLowerCase()
+    const defaultTopic = `${specs.avsc}_${specs.name}`
+    return this.http
+      .get(DefaultSchemaSpecEndpoint)
+      .toPromise()
+      .then(res => {
+        const schemaSpecs = YAML.parse(atob(res['content'])).data
+        const topic = schemaSpecs.find(t => t.type.toLowerCase() == type).topic
+        if (topic) return topic
+        else Promise.reject()
+      })
+      .catch(e => defaultTopic)
+  }
 
+  getLatestKafkaSchemaVersions(
+    topic
+  ): Promise<[SchemaMetadata, SchemaMetadata]> {
     return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
       return Promise.all([
         this.getLatestKafkaSchemaVersion(

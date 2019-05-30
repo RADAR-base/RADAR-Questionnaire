@@ -1,9 +1,14 @@
 import { Component } from '@angular/core'
 import { NavController, NavParams } from 'ionic-angular'
 
-import { DefaultNotificationRefreshTime } from '../../../../assets/data/defaultConfig'
+import {
+  DefaultNotificationRefreshTime,
+  DefaultNumberOfCompletionLogsToSend,
+  DefaultNumberOfNotificationsToSchedule
+} from '../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../core/services/alert.service'
 import { ConfigService } from '../../../core/services/config.service'
+import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { KafkaService } from '../../../core/services/kafka.service'
 import { LocalizationService } from '../../../core/services/localization.service'
 import { NotificationService } from '../../../core/services/notification.service'
@@ -11,6 +16,7 @@ import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { StorageKeys } from '../../../shared/enums/storage'
+import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { EnrolmentPageComponent } from '../../auth/containers/enrolment-page.component'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { SplashService } from '../services/splash.service'
@@ -32,15 +38,17 @@ export class SplashPageComponent {
     private configService: ConfigService,
     private alertService: AlertService,
     private localization: LocalizationService,
-    private schedule: SchedulingService
+    private schedule: SchedulingService,
+    private firebaseAnalytics: FirebaseAnalyticsService
   ) {
     this.splashService
       .evalEnrolment()
-      .then(
-        participant =>
-          participant
-            ? this.onStart()
-            : this.navCtrl.setRoot(EnrolmentPageComponent)
+      .then(valid =>
+        valid
+          ? this.onStart()
+          : this.storage
+              .clearStorage()
+              .then(() => this.navCtrl.setRoot(EnrolmentPageComponent))
       )
   }
 
@@ -48,31 +56,20 @@ export class SplashPageComponent {
     this.configService.migrateToLatestVersion()
     return this.configService
       .fetchConfigState(false)
-      .catch(e => this.showFetchConfigFail(e))
       .then(() => this.checkTimezoneChange())
       .then(() => this.notificationsRefresh())
       .catch(error => {
         console.error(error)
-        console.log('[SPLASH] Notifications error.')
+        console.log('[SPLASH] Notifications/config error.')
+        this.showConfigError()
       })
       .then(() => {
         this.status = 'Sending missed completion logs...'
-        this.sendNonReportedTaskCompletion()
+        return this.sendNonReportedTaskCompletion()
       })
+      .then(() => (this.status = 'Sending cached answers...'))
       .catch(e => console.log('Error sending cache'))
       .then(() => this.navCtrl.setRoot(HomePageComponent))
-  }
-
-  showFetchConfigFail(e) {
-    return this.alertService.showAlert({
-      title: this.localization.translateKey(LocKeys.STATUS_FAILURE),
-      message: e.message,
-      buttons: [
-        {
-          text: this.localization.translateKey(LocKeys.BTN_OKAY)
-        }
-      ]
-    })
   }
 
   checkTimezoneChange() {
@@ -111,7 +108,11 @@ export class SplashPageComponent {
         ) {
           this.status = 'Updating notifications...'
           console.log('[SPLASH] Scheduling Notifications.')
-          return this.notificationService.publish()
+          return this.notificationService
+            .publish()
+            .then(() =>
+              this.firebaseAnalytics.logEvent('notification_refreshed', {})
+            )
         } else {
           console.log(
             'Not Scheduling Notifications as ' +
@@ -128,7 +129,10 @@ export class SplashPageComponent {
     return this.schedule
       .getNonReportedCompletedTasks()
       .then(nonReportedTasks => {
-        const length = nonReportedTasks.length
+        const length = Math.min(
+          nonReportedTasks.length,
+          DefaultNumberOfCompletionLogsToSend
+        )
         for (let i = 0; i < length; i++) {
           promises.push(
             this.kafka
@@ -146,5 +150,25 @@ export class SplashPageComponent {
     const updatedTask = task
     updatedTask.reportedCompletion = true
     return this.schedule.insertTask(updatedTask)
+  }
+
+  showConfigError() {
+    const buttons = [
+      {
+        text: this.localization.translateKey(LocKeys.BTN_CANCEL),
+        handler: () => {}
+      },
+      {
+        text: this.localization.translateKey(LocKeys.BTN_OKAY),
+        handler: () => {
+          this.onStart()
+        }
+      }
+    ]
+    return this.alertService.showAlert({
+      title: this.localization.translateKey(LocKeys.STATUS_FAILURE),
+      message: this.localization.translateKey(LocKeys.CONFIG_ERROR_DESC),
+      buttons: buttons
+    })
   }
 }

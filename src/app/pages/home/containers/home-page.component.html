@@ -5,7 +5,7 @@
       ion-button
       menuToggle
       left
-      (click)="showCredits()"
+      (tap)="showCredits()"
     >
       <img
         class="logo-small"
@@ -17,7 +17,7 @@
       ion-button
       menuToggle
       right
-      (click)="openSettingsPage()"
+      (tap)="openSettingsPage()"
     >
       <ion-icon name="cog"></ion-icon>
     </button>
@@ -62,7 +62,7 @@
       [isNow]="taskIsNow"
       [progress]="(tasksProgress|async)"
       [expanded]="!showCalendar"
-      (click)="displayTaskCalendar()"
+      (tap)="displayTaskCalendar()"
     ></task-info>
   </div>
 
@@ -75,6 +75,7 @@
       [show]="showCalendar"
       (task)="startQuestionnaire($event)"
       [tasks]="sortedTasks|async"
+      [currentDate]="currentDate.getTime()"
     >
     </task-calendar>
   </div>
@@ -84,7 +85,7 @@
     class="size-static footer"
   >
     <div
-      *ngIf="taskIsNow && !startingQuestionnaire && !showCompleted && !showCalendar && (sortedTasks|async)?.size"
+      *ngIf="getIsStartButtonShown() && (sortedTasks|async)?.size"
       padding
     >
       <button
@@ -92,13 +93,13 @@
         class="bt bt--full"
         round
         full
-        (click)="startQuestionnaire()"
+        (tap)="startQuestionnaire()"
       >
         {{ "BTN_START" | translate }}
       </button>
     </div>
     <div
-      *ngIf="startingQuestionnaire || (!nextTask && !showCompleted) || (!(sortedTasks|async)?.size && (tasksProgress|async)?.numberOfTasks)"
+      *ngIf="getIsLoadingSpinnerShown() || (!(sortedTasks|async)?.size && (tasksProgress|async)?.numberOfTasks)"
       class="spinner-center"
     >
       <ion-spinner name="dots"></ion-spinner>
@@ -113,7 +114,7 @@
   [class.clinical-2]="showCalendar"
   [class.clinical-3]="showCompleted || (tasksProgress|async)?.numberOfTasks == 0"
   [class.clinical-4]="!taskIsNow && !showCompleted && !showCalendar"
-  (click)="openClinicalTasksPage()"
+  (tap)="openClinicalTasksPage()"
 >
   <img
     src="assets/imgs/clinical.png"

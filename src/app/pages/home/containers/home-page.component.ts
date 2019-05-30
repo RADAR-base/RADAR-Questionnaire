@@ -38,16 +38,17 @@ import { TasksService } from '../services/tasks.service'
 export class HomePageComponent implements OnDestroy {
   sortedTasks: Promise<Map<any, any>>
   tasks: Promise<Task[]>
-  tasksDate: Date
+  currentDate: Date
   nextTask: Task
+  tasksProgress: Promise<TasksProgress>
+  resumeListener: Subscription = new Subscription()
+
   showCalendar = false
   showCompleted = false
-  tasksProgress: Promise<TasksProgress>
   startingQuestionnaire = false
   hasClinicalTasks = false
   taskIsNow = false
   checkTaskInterval
-  resumeListener: Subscription = new Subscription()
 
   constructor(
     public navCtrl: NavController,
@@ -66,6 +67,22 @@ export class HomePageComponent implements OnDestroy {
     })
   }
 
+  getIsLoadingSpinnerShown() {
+    return (
+      (this.startingQuestionnaire && !this.showCalendar) ||
+      (!this.nextTask && !this.showCompleted)
+    )
+  }
+
+  getIsStartButtonShown() {
+    return (
+      this.taskIsNow &&
+      !this.startingQuestionnaire &&
+      !this.showCompleted &&
+      !this.showCalendar
+    )
+  }
+
   ngOnDestroy() {
     this.resumeListener.unsubscribe()
   }
@@ -75,8 +92,8 @@ export class HomePageComponent implements OnDestroy {
   }
 
   ionViewDidLoad() {
-    this.sortedTasks = this.tasksService.getSortedTasksOfToday()
-    this.tasks = this.tasksService.getTasksOfToday()
+    this.sortedTasks = this.tasksService.getSortedNonClinicalTasksOfToday()
+    this.tasks = this.tasksService.getNonClinicalTasksOfToday()
     this.tasksProgress = this.tasksService.getTaskProgress()
     this.tasks.then(
       tasks =>
@@ -84,14 +101,14 @@ export class HomePageComponent implements OnDestroy {
           this.checkForNextTask(tasks)
         }, 1000))
     )
-    this.tasksDate = new Date()
+    this.currentDate = this.tasksService.getCurrentDateMidnight()
     this.evalHasClinicalTasks()
     this.firebaseAnalytics.setCurrentScreen('home-page')
   }
 
   checkForNewDate() {
-    if (new Date().getDate() !== this.tasksDate.getDate()) {
-      this.tasksDate = new Date()
+    if (new Date().getDate() !== this.currentDate.getDate()) {
+      this.currentDate = this.tasksService.getCurrentDateMidnight()
       this.navCtrl.setRoot(SplashPageComponent)
     }
   }
@@ -124,26 +141,22 @@ export class HomePageComponent implements OnDestroy {
   }
 
   openSettingsPage() {
-    this.firebaseAnalytics.logEvent('click', { button: 'open_settings' })
     this.navCtrl.push(SettingsPageComponent)
+    this.firebaseAnalytics.logEvent('click', { button: 'open_settings' })
   }
 
   openClinicalTasksPage() {
-    this.firebaseAnalytics.logEvent('click', { button: 'open_clinical_tasks' })
     this.navCtrl.push(ClinicalTasksPageComponent)
+    this.firebaseAnalytics.logEvent('click', { button: 'open_clinical_tasks' })
   }
 
   startQuestionnaire(taskCalendarTask: Task) {
-    this.firebaseAnalytics.logEvent('click', { button: 'start_questionnaire' })
     // NOTE: User can start questionnaire from task calendar or start button in home.
     const task = taskCalendarTask ? taskCalendarTask : this.nextTask
-    if (this.tasksService.isTaskValid(task)) {
+    if (this.tasksService.isTaskStartable(task)) {
       this.startingQuestionnaire = true
 
-      return Promise.all([
-        this.tasksService.getAssessment(task),
-        this.tasksService.isLastTask(task, this.tasks)
-      ]).then(([assessment, lastTask]) => {
+      return this.tasksService.getAssessment(task).then(assessment => {
         const params = {
           title: assessment.name,
           introduction: this.localization.chooseText(assessment.startText),
@@ -151,14 +164,22 @@ export class HomePageComponent implements OnDestroy {
           questions: assessment.questions,
           associatedTask: task,
           assessment: assessment,
-          isLastTask: lastTask
+          isLastTask: false
         }
 
-        if (assessment.showIntroduction) {
-          this.navCtrl.push(StartPageComponent, params)
-        } else {
-          this.navCtrl.push(QuestionsPageComponent, params)
-        }
+        this.firebaseAnalytics.logEvent('click', {
+          button: 'start_questionnaire'
+        })
+        this.tasks
+          .then(tasks => this.tasksService.isLastTask(task, tasks))
+          .then(lastTask => (params.isLastTask = lastTask))
+          .then(() => {
+            if (assessment.showIntroduction) {
+              this.navCtrl.push(StartPageComponent, params)
+            } else {
+              this.navCtrl.push(QuestionsPageComponent, params)
+            }
+          })
       })
     } else {
       this.showMissedInfo()
@@ -166,6 +187,7 @@ export class HomePageComponent implements OnDestroy {
   }
 
   showCredits() {
+    this.firebaseAnalytics.logEvent('click', { button: 'show_credits' })
     return this.alertService.showAlert({
       title: this.localization.translateKey(LocKeys.CREDITS_TITLE),
       message: this.localization.translateKey(LocKeys.CREDITS_BODY),

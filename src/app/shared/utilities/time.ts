@@ -1,3 +1,9 @@
+import {
+  DefaultScheduleYearCoverage,
+  DefaultTimeInterval
+} from '../../../assets/data/defaultConfig'
+import { TimeInterval } from '../../shared/models/protocol'
+
 export enum TimeConversion {
   SEC_TO_MILLISEC = 1000,
   HOUR_TO_MIN = 60,
@@ -17,6 +23,15 @@ interface Time {
   minutes?: number
   seconds?: number
   milliseconds?: number
+}
+
+export const TIME_UNIT_MILLIS = {
+  min: getMilliseconds({ minutes: 1 }),
+  hour: getMilliseconds({ hours: 1 }),
+  day: getMilliseconds({ days: 1 }),
+  week: getMilliseconds({ weeks: 1 }),
+  month: getMilliseconds({ months: 1 }),
+  year: getMilliseconds({ years: 1 })
 }
 
 export function getMilliseconds(time: Time) {
@@ -68,4 +83,14 @@ export function getMinutes(time: Time) {
 
 export function getHours(time: Time) {
   return getMinutes(time) / TimeConversion.HOUR_TO_MIN
+}
+
+export function timeIntervalToMillis(interval: TimeInterval): number {
+  if (!interval) {
+    return getMilliseconds({ years: DefaultScheduleYearCoverage })
+  }
+  const unit =
+    interval.unit in TIME_UNIT_MILLIS ? interval.unit : DefaultTimeInterval.unit
+  const amount = interval.amount ? interval.amount : DefaultTimeInterval.amount
+  return amount * TIME_UNIT_MILLIS[unit]
 }

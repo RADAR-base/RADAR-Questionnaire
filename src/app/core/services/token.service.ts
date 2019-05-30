@@ -47,7 +47,7 @@ export class TokenService {
   refresh(): Promise<any> {
     return this.get().then(tokens => {
       const limit = getSeconds({
-        milliseconds: new Date().getTime() - DefaultTokenRefreshTime
+        milliseconds: new Date().getTime() + DefaultTokenRefreshTime
       })
       if (tokens.iat + tokens.expires_in < limit) {
         const params = this.getRefreshParams(tokens.refresh_token)
@@ -83,5 +83,11 @@ export class TokenService {
     return new HttpParams()
       .set('grant_type', 'refresh_token')
       .set('refresh_token', refreshToken)
+  }
+
+  isRefreshTokenExpired() {
+    return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
+      return this.jwtHelper.isTokenExpired(tokens.refresh_token)
+    })
   }
 }

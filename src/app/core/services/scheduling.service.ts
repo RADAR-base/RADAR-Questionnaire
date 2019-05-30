@@ -1,5 +1,3 @@
-import 'rxjs/add/operator/map'
-
 import { Injectable } from '@angular/core'
 
 import {
@@ -11,23 +9,13 @@ import { StorageKeys } from '../../shared/enums/storage'
 import { Assessment } from '../../shared/models/assessment'
 import { TimeInterval } from '../../shared/models/protocol'
 import { Task } from '../../shared/models/task'
-import { getMilliseconds } from '../../shared/utilities/time'
+import {
+  getMilliseconds,
+  timeIntervalToMillis
+} from '../../shared/utilities/time'
+import { StorageService } from './storage.service'
 import { LocalizationService } from './localization.service'
 import { NotificationGeneratorService } from './notification-generator.service'
-import { StorageService } from './storage.service'
-
-export const TIME_UNIT_MILLIS = {
-  min: getMilliseconds({ minutes: 1 }),
-  hour: getMilliseconds({ hours: 1 }),
-  day: getMilliseconds({ days: 1 }),
-  week: getMilliseconds({ weeks: 1 }),
-  month: getMilliseconds({ months: 1 }),
-  year: getMilliseconds({ years: 1 })
-}
-
-const TIME_UNIT_MILLIS_DEFAULT = getMilliseconds({
-  years: DefaultScheduleYearCoverage
-})
 
 @Injectable()
 export class SchedulingService {
@@ -36,27 +24,14 @@ export class SchedulingService {
   enrolmentDate: number
   completedTasks = []
   assessments: Promise<Assessment[]>
-  tzOffset: number
   utcOffsetPrev: number
 
   constructor(
     private storage: StorageService,
-    private notificationService: NotificationGeneratorService,
-    private localization: LocalizationService
+    private localization: LocalizationService,
+    private notificationService: NotificationGeneratorService
   ) {
-    const now = new Date()
-    this.tzOffset = now.getTimezoneOffset()
     console.log(this.storage.global)
-  }
-
-  getTasksForDate(date) {
-    return this.getTasks().then(schedule => {
-      const startTime = this.setDateTimeToMidnight(date).getTime()
-      const endTime = startTime + getMilliseconds({ days: 1 })
-      return schedule.filter(
-        d => d.timestamp >= startTime && d.timestamp < endTime
-      )
-    })
   }
 
   getTasks(): Promise<Task[]> {
@@ -73,12 +48,34 @@ export class SchedulingService {
     )
   }
 
+  getNextTask() {
+    return this.getTasks().then(schedule => {
+      if (schedule) {
+        const timestamp = Date.now()
+        return schedule
+          .filter(d => d.timestamp >= timestamp)
+          .reduce((a, b) => (a.timestamp <= b.timestamp ? a : b))
+      }
+    })
+  }
+
+  getTasksForDate(date) {
+    const startTime = this.setDateTimeToMidnight(date).getTime()
+    const endTime = startTime + getMilliseconds({ days: 1 })
+    return this.getTasks().then(schedule =>
+      schedule.filter(
+        d =>
+          d.timestamp + d.completionWindow >= startTime && d.timestamp < endTime
+      )
+    )
+  }
+
   getNonClinicalTasksForDate(date) {
     return this.getDefaultTasks().then(schedule => {
       const tasks: Task[] = []
       if (schedule) {
         const startTime = this.setDateTimeToMidnight(date).getTime()
-        const endTime = startTime + TIME_UNIT_MILLIS.day
+        const endTime = startTime + getMilliseconds({ days: 1 })
         for (let i = 0; i < schedule.length; i++) {
           const task = schedule[i]
           if (task.timestamp > endTime) break
@@ -106,7 +103,12 @@ export class SchedulingService {
     return this.getTasks().then(tasks => {
       const now = new Date().getTime()
       return tasks
-        .filter(d => d && d.reportedCompletion === false && d.timestamp < now)
+        .filter(
+          d =>
+            d &&
+            d.reportedCompletion === false &&
+            d.timestamp + d.completionWindow < now
+        )
         .slice(0, 100)
     })
   }
@@ -119,7 +121,7 @@ export class SchedulingService {
       this.storage.get(StorageKeys.ENROLMENTDATE),
       this.storage.get(StorageKeys.UTC_OFFSET_PREV)
     ]).then(([completed, schedVersion, confVersion, enrolDate, offsetPrev]) => {
-      this.completedTasks = completed
+      this.completedTasks = completed || []
       this.scheduleVersion = schedVersion
       this.configVersion = confVersion
       this.enrolmentDate = enrolDate
@@ -183,6 +185,7 @@ export class SchedulingService {
         if (index > -1 && !schedule[index].completed) {
           schedule[index].completed = true
           schedule[index].reportedCompletion = d.reportedCompletion
+          schedule[index].timeCompleted = d.timeCompleted
           return this.addToCompletedTasks(schedule[index])
         }
       })
@@ -250,14 +253,7 @@ export class SchedulingService {
   }
 
   setDateTimeToMidnight(date: Date): Date {
-    let resetDate: Date
-    if (this.tzOffset === date.getTimezoneOffset()) {
-      resetDate = new Date(date.setHours(1, 0, 0, 0))
-    } else {
-      resetDate = new Date(date.setHours(0, 0, 0, 0))
-    }
-    this.tzOffset = date.getTimezoneOffset()
-    return resetDate
+    return new Date(new Date(date).setHours(0, 0, 0, 0))
   }
 
   static advanceRepeat(timestamp: number, interval: TimeInterval) {
@@ -282,15 +278,6 @@ export class SchedulingService {
           date.getFullYear() + DefaultScheduleYearCoverage
         )
     }
-  }
-
-  static timeIntervalToMillis(interval: TimeInterval): number {
-    if (!interval) {
-      return TIME_UNIT_MILLIS_DEFAULT
-    }
-    const unit = interval.unit in TIME_UNIT_MILLIS ? interval.unit : 'day'
-    const amount = interval.amount ? interval.amount : 1
-    return amount * TIME_UNIT_MILLIS[unit]
   }
 
   taskBuilder(
@@ -320,7 +307,7 @@ export class SchedulingService {
 
   static computeCompletionWindow(assessment: Assessment): number {
     if (assessment.protocol.completionWindow) {
-      return this.timeIntervalToMillis(assessment.protocol.completionWindow)
+      return timeIntervalToMillis(assessment.protocol.completionWindow)
     } else if (assessment.name === 'ESM') {
       return DefaultESMCompletionWindow
     } else {

@@ -1,4 +1,8 @@
-<div *ngIf="question?.type === 'info' || question?.type === 'timed';then taskformat else stdformat"></div>
+<div *ngIf="
+    question?.type === 'info' || question?.type === 'timed';
+    then taskformat;
+    else stdformat
+  "></div>
 
 <ng-template #stdformat>
   <p class="stdformat">{{ question.section_header }}</p>
@@ -12,6 +16,7 @@
 <div *ngIf="question.field_type === 'radio'">
   <radio-input
     [responses]="question.select_choices_or_calculations"
+    [currentlyShown]="currentlyShown"
     (valueChange)="onValueChange($event)"
   >
   </radio-input>
@@ -20,6 +25,7 @@
 <div *ngIf="question.field_type === 'checkbox'">
   <checkbox-input
     [responses]="question.select_choices_or_calculations"
+    [currentlyShown]="currentlyShown"
     (valueChange)="onValueChange($event)"
   >
   </checkbox-input>
@@ -31,9 +37,21 @@
     [max]="question.range.max"
     [labelLeft]="question.range.labelLeft"
     [labelRight]="question.range.labelRight"
+    [currentlyShown]="currentlyShown"
     (valueChange)="onValueChange($event)"
   >
   </range-input>
+</div>
+
+<div *ngIf="question.field_type === 'range-info'">
+  <range-info-input
+    [min]="question.range.min"
+    [max]="question.range.max"
+    [responses]="question.select_choices_or_calculations"
+    [currentlyShown]="currentlyShown"
+    (valueChange)="onValueChange($event)"
+  >
+  </range-info-input>
 </div>
 
 <div *ngIf="question.field_type === 'slider'">
@@ -49,6 +67,7 @@
 <div *ngIf="question.field_type === 'info'">
   <info-screen
     [sections]="question.select_choices_or_calculations"
+    [hasFieldLabel]="question.field_label.length > 0"
     (valueChange)="onValueChange($event)"
   >
   </info-screen>

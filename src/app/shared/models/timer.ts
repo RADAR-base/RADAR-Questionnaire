@@ -4,10 +4,10 @@ export interface Timer {
 }
 
 export interface TaskTimer {
-  seconds: number
+  duration: number
+  secondsElapsed: number
   secondsRemaining: number
-  runTimer: boolean
   hasStarted: boolean
   hasFinished: boolean
-  displayTime: string
+  displayTime: number
 }

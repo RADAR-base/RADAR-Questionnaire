@@ -28,10 +28,15 @@ export class QuestionComponent implements OnChanges {
   value: any
   currentlyShown = false
 
-  constructor(private vibration: Vibration, private dialogs: Dialogs) {}
+  constructor(private vibration: Vibration, private dialogs: Dialogs) {
+    this.value = null
+  }
 
   ngOnChanges() {
-    if (this.question.select_choices_or_calculations.length > 0) {
+    if (
+      this.question.select_choices_or_calculations &&
+      this.question.select_choices_or_calculations.length > 0
+    ) {
       const min = this.question.select_choices_or_calculations[0].code
       const minLabel = this.question.select_choices_or_calculations[0].label
       const max = this.question.select_choices_or_calculations[
@@ -64,29 +69,12 @@ export class QuestionComponent implements OnChanges {
     })
   }
 
-  onValueChange(event) {
+  onValueChange(event: any) {
     // NOTE: On init the component fires the event once
     if (event === undefined) {
       return
     }
-
-    switch (this.question.field_type) {
-      case QuestionType.radio:
-      case QuestionType.range:
-      case QuestionType.checkbox:
-      case QuestionType.slider:
-        this.value = event
-        break
-
-      case QuestionType.audio:
-        // TODO: Add audio file reference to send
-        break
-
-      case QuestionType.timed:
-      case QuestionType.info:
-        this.value = event
-        break
-    }
+    this.value = event
     this.emitAnswer()
   }
 

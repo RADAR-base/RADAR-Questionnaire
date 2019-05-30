@@ -17,7 +17,7 @@
             <span class="info-value">{{ language.label | translate }}</span>
             <span
               item-right
-              (click)="showSelectLanguage()"
+              (tap)="showSelectLanguage()"
             >
               <ion-icon
                 class="space-right"
@@ -37,7 +37,7 @@
           class="bt bt--full"
           round
           full
-          (click)="next()"
+          (tap)="next()"
         >
           {{ "BTN_START" | translate }}
         </button>
@@ -66,7 +66,7 @@
           class="bt bt--full"
           round
           full
-          (click)="next()"
+          (tap)="next()"
         >
           {{ "BTN_ENROL_ENROL" | translate }}
         </button>
@@ -90,7 +90,7 @@
             class="bt bt--full"
             round
             full
-            (click)="next()"
+            (tap)="next()"
           >
             {{ "BTN_ENROL_SCAN" | translate }}
           </button>
@@ -102,7 +102,7 @@
             class="bt bt--full"
             round
             full
-            (click)="enterToken()"
+            (tap)="enterToken()"
           >
             {{ "BTN_ENROL_ENTER_TOKEN" | translate }}
           </button>
@@ -209,7 +209,7 @@
           class="bt bt--full"
           round
           full
-          (click)="scanQRHandler()"
+          (tap)="scanQRHandler()"
         >
           {{ "BTN_ENROL_SCAN" | translate }}
         </button>
@@ -249,7 +249,7 @@
           class="bt bt--full"
           round
           full
-          (click)="navigateToHome()"
+          (tap)="navigateToHome()"
         >
           {{ "BTN_FINISH" | translate }}
         </button>

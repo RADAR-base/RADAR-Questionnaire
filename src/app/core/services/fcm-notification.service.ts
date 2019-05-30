@@ -4,7 +4,8 @@ import { Injectable } from '@angular/core'
 
 import {
   DefaultNumberOfNotificationsToSchedule,
-  FCMPluginProjectSenderId
+  FCMPluginProjectSenderId,
+  DefaultMaxUpstreamResends
 } from '../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../shared/enums/storage'
 import { SingleNotification } from '../../shared/models/notification-handler'
@@ -14,10 +15,12 @@ import { NotificationService } from './notification.service'
 import { SchedulingService } from './scheduling.service'
 import { StorageService } from './storage.service'
 
-declare var FCMPlugin
+declare var FirebasePlugin
 
 @Injectable()
 export class FcmNotificationService extends NotificationService {
+  upstreamResends: number
+
   constructor(
     private notifications: NotificationGeneratorService,
     private storage: StorageService,
@@ -27,7 +30,7 @@ export class FcmNotificationService extends NotificationService {
   }
 
   init() {
-    FCMPlugin.setSenderId(
+    FirebasePlugin.setSenderId(
       FCMPluginProjectSenderId,
       () => console.log('[NOTIFICATION SERVICE] Set sender id success'),
       error => {
@@ -35,7 +38,7 @@ export class FcmNotificationService extends NotificationService {
         alert(error)
       }
     )
-    FCMPlugin.getToken(() =>
+    FirebasePlugin.getToken(() =>
       console.log('[NOTIFICATION SERVICE] Refresh token success')
     )
   }
@@ -43,6 +46,7 @@ export class FcmNotificationService extends NotificationService {
   publish(
     limit: number = DefaultNumberOfNotificationsToSchedule
   ): Promise<void[]> {
+    this.resetResends()
     return this.storage.get(StorageKeys.PARTICIPANTLOGIN).then(username => {
       if (!username) {
         return Promise.resolve([])
@@ -67,11 +71,16 @@ export class FcmNotificationService extends NotificationService {
   }
 
   private sendNotification(notification): Promise<void> {
-    return FCMPlugin.upstream(
+    FirebasePlugin.upstream(
       notification,
       succ => console.log(succ),
-      err => console.log(err)
+      err => {
+        console.log(err)
+        if (this.upstreamResends++ < DefaultMaxUpstreamResends)
+          this.sendNotification(notification)
+      }
     )
+    return Promise.resolve()
   }
 
   private format(notification: SingleNotification, participantLogin: string) {
@@ -100,17 +109,11 @@ export class FcmNotificationService extends NotificationService {
       if (!username) {
         return Promise.resolve()
       }
-      return new Promise<void>(function(resolve, reject) {
-        FCMPlugin.upstream(
-          {
-            eventId: uuid(),
-            action: 'CANCEL',
-            cancelType: 'all',
-            subjectId: username
-          },
-          resolve,
-          reject
-        )
+      return this.sendNotification({
+        eventId: uuid(),
+        action: 'CANCEL',
+        cancelType: 'all',
+        subjectId: username
       })
     })
   }
@@ -125,5 +128,9 @@ export class FcmNotificationService extends NotificationService {
 
   setLastNotificationUpdate(): Promise<void> {
     return this.storage.set(StorageKeys.LAST_NOTIFICATION_UPDATE, Date.now())
+  }
+
+  resetResends() {
+    this.upstreamResends = 0
   }
 }

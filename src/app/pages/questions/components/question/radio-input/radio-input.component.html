@@ -4,7 +4,6 @@
       <ion-item no-lines>
         <ion-radio
           [value]="item.value"
-          [disabled]="!currentlyShown"
           [id]="item.id"
           (ionSelect)="onInputChange(item.value)"
         ></ion-radio>

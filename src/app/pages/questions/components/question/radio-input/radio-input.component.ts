@@ -14,8 +14,6 @@ export class RadioInputComponent implements OnInit {
 
   @Input()
   responses: Response[]
-  @Input()
-  currentlyShown
 
   value: number = null
   uniqueID: number = uniqueID++

@@ -27,6 +27,7 @@ export class QuestionComponent implements OnChanges {
 
   value: any
   currentlyShown = false
+  previouslyShown = false
 
   constructor(private vibration: Vibration, private dialogs: Dialogs) {
     this.value = null
@@ -56,6 +57,9 @@ export class QuestionComponent implements OnChanges {
       this.currentlyShown = true
       if (this.value) this.emitAnswer()
     } else {
+      if (Math.abs(this.questionIndex - this.currentIndex) == 1)
+        this.previouslyShown = true
+      else this.previouslyShown = false
       this.currentlyShown = false
     }
     // this.evalBeep()

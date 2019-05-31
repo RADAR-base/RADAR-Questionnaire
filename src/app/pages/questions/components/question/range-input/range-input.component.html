@@ -8,7 +8,6 @@
         <ion-label [attr.for]="item.id">{{ item.value }}</ion-label>
         <ion-radio
           [value]="item.value"
-          [disabled]="!currentlyShown"
           [id]="item.id"
           (ionSelect)="onInputChange(item.value)"
         ></ion-radio>

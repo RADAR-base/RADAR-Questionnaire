@@ -7,7 +7,6 @@ import * as KafkaRest from 'kafka-rest'
 import {
   DefaultEndPoint,
   KAFKA_ASSESSMENT,
-  KAFKA_AUDIO,
   KAFKA_CLIENT_KAFKA,
   KAFKA_COMPLETION_LOG,
   KAFKA_TIMEZONE
@@ -58,29 +57,15 @@ export class KafkaService {
         : data.answers[0].startTime // NOTE: whole questionnaire startTime and endTime
     const timeNotification = getSeconds({ milliseconds: task.timestamp })
     const timeCompleted = data.answers[data.answers.length - 1].endTime
-    if (task.name.toLowerCase() !== KAFKA_AUDIO.toLowerCase()) {
-      const Answer: AnswerValueExport = {
-        time: time,
-        timeCompleted: timeCompleted,
-        timeNotification: timeNotification,
-        name: task.name,
-        version: data.configVersion,
-        answers: data.answers
-      }
-      return this.prepareKafkaObjectAndSend(task, Answer, KAFKA_ASSESSMENT)
-    } else {
-      const Answer = {
-        time: time,
-        timeCompleted: timeCompleted,
-        timeNotification: timeNotification,
-        mediaType: 'audio/m4a',
-        data: data.answers[1].value.string,
-        reciteText: questions
-          .filter(q => q.field_type == KAFKA_AUDIO)
-          .reduce(a => a).field_label
-      }
-      return this.prepareKafkaObjectAndSend(task, Answer, KAFKA_AUDIO)
+    const Answer: AnswerValueExport = {
+      time: time,
+      timeCompleted: timeCompleted,
+      timeNotification: timeNotification,
+      name: task.name,
+      version: data.configVersion,
+      answers: data.answers
     }
+    return this.prepareKafkaObjectAndSend(task, Answer, KAFKA_ASSESSMENT)
   }
 
   prepareNonReportedTasksKafkaObjectAndSend(task: Task) {
@@ -113,7 +98,6 @@ export class KafkaService {
   getSpecs(task: Task, kafkaObject, type) {
     switch (type) {
       case KAFKA_ASSESSMENT:
-      case KAFKA_AUDIO:
         return this.storage.getAssessmentAvsc(task).then(specs => {
           return Promise.resolve(
             Object.assign({}, { task: task, kafkaObject: kafkaObject }, specs)
@@ -156,73 +140,75 @@ export class KafkaService {
   }
 
   createPayloadAndSend(specs, kafkaConnInstance) {
-    let schemaVersions
-    switch (specs.name) {
-      case KAFKA_COMPLETION_LOG:
-        if (this.schemas[specs.name]) {
-          schemaVersions = this.schemas[specs.name]
-          break
-        }
-      default:
-        schemaVersions = this.util
-          .getLatestKafkaSchemaVersions(specs)
-          .catch(error => {
-            console.log(error)
-            return Promise.resolve()
-          })
-        this.schemas[specs.name] = schemaVersions
-    }
-    return Promise.all([schemaVersions]).then(data => {
-      schemaVersions = data[0]
-      const avroKey = AvroSchema.parse(
-        JSON.parse(schemaVersions[0]['schema']),
-        {
-          wrapUnions: true
-        }
-      )
-      const avroVal = AvroSchema.parse(
-        JSON.parse(schemaVersions[1]['schema']),
-        {
-          wrapUnions: true
-        }
-      )
-      const kafkaObject = specs.kafkaObject
-      const bufferKey = avroKey.clone(kafkaObject.key, { wrapUnions: true })
-      const bufferVal = avroVal.clone(kafkaObject.value, { wrapUnions: true })
-      const payload = {
-        key: bufferKey,
-        value: bufferVal
+    return this.util.getKafkaTopic(specs).then(topic => {
+      let schemaVersions
+      switch (specs.name) {
+        case KAFKA_COMPLETION_LOG:
+          if (this.schemas[specs.name]) {
+            schemaVersions = this.schemas[specs.name]
+            break
+          }
+        default:
+          schemaVersions = this.util
+            .getLatestKafkaSchemaVersions(topic)
+            .catch(error => {
+              console.log(error)
+              return Promise.resolve()
+            })
+          this.schemas[specs.name] = schemaVersions
       }
-      const schemaId = new KafkaRest.AvroSchema(
-        JSON.parse(schemaVersions[0]['schema'])
-      )
-      const schemaInfo = new KafkaRest.AvroSchema(
-        JSON.parse(schemaVersions[1]['schema'])
-      )
-      return this.sendToKafka(
-        specs,
-        schemaId,
-        schemaInfo,
-        payload,
-        kafkaConnInstance
-      ).catch(error => {
-        console.error(
-          'Could not initiate kafka connection ' + JSON.stringify(error)
+      return Promise.all([schemaVersions]).then(data => {
+        schemaVersions = data[0]
+        const avroKey = AvroSchema.parse(
+          JSON.parse(schemaVersions[0]['schema']),
+          {
+            wrapUnions: true
+          }
         )
-        this.firebaseAnalytics.logEvent('send_error', {
-          error: String(error),
-          name: specs.name,
-          questionnaire_timestamp: String(specs.task.timestamp)
+        const avroVal = AvroSchema.parse(
+          JSON.parse(schemaVersions[1]['schema']),
+          {
+            wrapUnions: true
+          }
+        )
+        const kafkaObject = specs.kafkaObject
+        const bufferKey = avroKey.clone(kafkaObject.key, { wrapUnions: true })
+        const bufferVal = avroVal.clone(kafkaObject.value, { wrapUnions: true })
+        const payload = {
+          key: bufferKey,
+          value: bufferVal
+        }
+        const schemaId = new KafkaRest.AvroSchema(
+          JSON.parse(schemaVersions[0]['schema'])
+        )
+        const schemaInfo = new KafkaRest.AvroSchema(
+          JSON.parse(schemaVersions[1]['schema'])
+        )
+        return this.sendToKafka(
+          specs,
+          schemaId,
+          schemaInfo,
+          payload,
+          kafkaConnInstance,
+          topic
+        ).catch(error => {
+          console.error(
+            'Could not initiate kafka connection ' + JSON.stringify(error)
+          )
+          this.firebaseAnalytics.logEvent('send_error', {
+            error: String(error),
+            name: specs.name,
+            questionnaire_timestamp: String(specs.task.timestamp)
+          })
+          return Promise.resolve()
         })
-        return Promise.resolve()
       })
     })
   }
 
-  sendToKafka(specs, id, info, payload, kafkaConnInstance) {
+  sendToKafka(specs, id, info, payload, kafkaConnInstance, topic) {
     return new Promise((resolve, reject) => {
       // NOTE: Kafka connection instance to submit to topic
-      const topic = specs.avsc + '_' + specs.name
       console.log('Sending to: ' + topic)
       return kafkaConnInstance
         .topic(topic)
@@ -295,8 +281,8 @@ export class KafkaService {
               }
             }
           }
-          return Promise.all(promises).then(keys =>
-            this.removeAnswersFromCache(keys.filter(k => k))
+          return Promise.all(promises.map(p => p.catch(() => undefined))).then(
+            keys => this.removeAnswersFromCache(keys.filter(k => k))
           )
         })
       return

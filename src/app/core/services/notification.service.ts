@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core'
 import { v4 as uuid } from 'uuid'
 
 import {
+  DefaultMaxUpstreamResends,
   DefaultNotificationType,
   DefaultNumberOfNotificationsToRescue,
   DefaultNumberOfNotificationsToSchedule,
@@ -19,11 +20,12 @@ import { AlertService } from './alert.service'
 import { SchedulingService } from './scheduling.service'
 import { StorageService } from './storage.service'
 
-declare var cordova
-declare var FCMPlugin
+declare var FirebasePlugin
 
 @Injectable()
 export class NotificationService {
+  upstreamResendAttempts: number
+
   constructor(
     private translate: TranslatePipe,
     private alertService: AlertService,
@@ -33,7 +35,7 @@ export class NotificationService {
 
   init() {
     try {
-      FCMPlugin.setSenderId(
+      FirebasePlugin.setSenderId(
         FCMPluginProjectSenderId,
         function() {
           console.log('[NOTIFICATION SERVICE] Set sender id success')
@@ -44,7 +46,7 @@ export class NotificationService {
         }
       )
 
-      FCMPlugin.getToken(function(token) {
+      FirebasePlugin.getToken(function(token) {
         console.log('[NOTIFICATION SERVICE] Refresh token success')
       })
     } catch (error) {
@@ -133,6 +135,7 @@ export class NotificationService {
           if (DefaultNotificationType === 'FCM') {
             console.log('NOTIFICATIONS Scheduling FCM notifications')
             console.log(fcmNotifications)
+            this.upstreamResendAttempts = 0
             return Promise.all(
               fcmNotifications.map(n => this.sendFCMNotification(n))
             ).then(() =>
@@ -144,16 +147,17 @@ export class NotificationService {
   }
 
   sendFCMNotification(notification) {
-    return new Promise((resolve, reject) =>
-      FCMPlugin.upstream(
-        notification,
-        succ => {
-          console.log(succ)
-          resolve()
-        },
-        err => reject()
-      )
+    FirebasePlugin.upstream(
+      notification,
+      succ => console.log(succ),
+      err => {
+        if (this.upstreamResendAttempts++ < DefaultMaxUpstreamResends) {
+          console.log(err)
+          this.sendFCMNotification(notification)
+        }
+      }
     )
+    return Promise.resolve()
   }
 
   sendTestFCMNotification() {
@@ -236,18 +240,12 @@ export class NotificationService {
   }
 
   cancelNotificationPush(participantLogin) {
-    return new Promise((resolve, reject) =>
-      FCMPlugin.upstream(
-        {
-          eventId: uuid(),
-          action: 'CANCEL',
-          cancelType: 'all',
-          subjectId: participantLogin
-        },
-        resolve,
-        reject
-      )
-    )
+    return this.sendFCMNotification({
+      eventId: uuid(),
+      action: 'CANCEL',
+      cancelType: 'all',
+      subjectId: participantLogin
+    })
   }
 
   evalIsLastOfDay(task1, task2) {

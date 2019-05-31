@@ -9,6 +9,7 @@ import { CheckboxInputComponent } from './checkbox-input/checkbox-input.componen
 import { InfoScreenComponent } from './info-screen/info-screen.component'
 import { QuestionComponent } from './question.component'
 import { RadioInputComponent } from './radio-input/radio-input.component'
+import { RangeInfoInputComponent } from './range-info-input/range-info-input.component'
 import { RangeInputComponent } from './range-input/range-input.component'
 import { SliderInputComponent } from './slider-input/slider-input.component'
 import { TimedTestComponent } from './timed-test/timed-test.component'
@@ -21,7 +22,8 @@ const COMPONENTS = [
   RangeInputComponent,
   SliderInputComponent,
   TimedTestComponent,
-  InfoScreenComponent
+  InfoScreenComponent,
+  RangeInfoInputComponent
 ]
 
 @NgModule({

@@ -3,16 +3,17 @@ import { Firebase } from '@ionic-native/firebase/ngx'
 
 import { User } from '../../shared/models/user'
 import { Utility } from '../../shared/utilities/util'
+import { Device } from '@ionic-native/device/ngx'
 
 @Injectable()
 export class FirebaseAnalyticsService {
-  constructor(private firebase: Firebase, private utility: Utility) {}
+  constructor(private firebase: Firebase, private device: Device) {}
 
   logEvent(event: string, params): Promise<any> {
     console.log('Event', event)
-    if (this.utility.isPlatformBrowser)
+    if (!this.device.platform) {
       return Promise.resolve('Could not load firebase')
-
+    }
     return this.firebase
       .logEvent(event, params)
       .then((res: any) => {

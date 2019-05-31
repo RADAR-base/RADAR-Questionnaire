@@ -47,10 +47,6 @@ export class Utility {
     }
   }
 
-  isPlatformBrowser() {
-    return this.platform.is('core') || this.platform.is('mobileweb')
-  }
-
   private extractData(res: any) {
     const body = res.json()
     return body || []

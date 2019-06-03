@@ -29,6 +29,7 @@
   <div
     #progressBar
     class="size-dynamic"
+    [class.hidden]="showCalendar"
     [@moveProgress]="showCalendar"
   >
     <task-progress

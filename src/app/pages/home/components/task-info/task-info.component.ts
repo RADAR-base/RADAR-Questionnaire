@@ -35,14 +35,8 @@ import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
       transition('* => *', animate('350ms 50ms ease'))
     ]),
     trigger('moveInProgress', [
-      state(
-        'true',
-        style({ display: 'none', transform: 'translate3d(-150%, 0, 0)' })
-      ),
-      state(
-        'false',
-        style({ display: 'block', transform: 'translate3d(0, 0, 0)' })
-      ),
+      state('true', style({ transform: 'translate3d(-150%, 0, 0)' })),
+      state('false', style({ transform: 'translate3d(0, 0, 0)' })),
       transition('* => *', animate('350ms 50ms ease'))
     ]),
     trigger('alignCenterRightMetrics', [

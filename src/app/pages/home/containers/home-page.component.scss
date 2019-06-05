@@ -58,31 +58,27 @@ page-home {
     stroke: #fff;
   }
 
-  .clinical {
-    position: fixed;
-    right: 20px;
-    z-index: 100;
+  .clinical-icon {
     width: 50px;
     height: 50px;
     border-radius: 50%;
     background-color: $cl-primary-60;
   }
 
-  .clinical-1 {
-    bottom: 34vh;
+  .clinical-container {
+    position: relative;
   }
 
-  .clinical-2 {
+  .clinical-button {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    z-index: 10;
+  }
+
+  .clinical-button-bottom {
     position: fixed;
     bottom: 3vh;
-  }
-
-  .clinical-3 {
-    bottom: 8vh;
-  }
-
-  .clinical-4 {
-    bottom: 20vh;
   }
 
   .icon-clinical {
@@ -91,5 +87,9 @@ page-home {
     margin-left: 9px;
     width: 32px;
     height: 32px;
+  }
+
+  .hidden {
+    display: none;
   }
 }

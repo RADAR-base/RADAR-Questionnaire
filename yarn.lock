@@ -6834,6 +6834,11 @@ next-tick@^1.0.0:
   resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.0.0.tgz#ca86d1fe8828169b0120208e3dc8424b9db8342c"
   integrity sha1-yobR/ogoFpsBICCOPchCS524NCw=
 
+ng2-fittext@^1.2.6:
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/ng2-fittext/-/ng2-fittext-1.2.6.tgz#34bcb60a93b5c2c6d9065f7a4aac8c43d507ad86"
+  integrity sha512-g61tP5kMNbGV/olYRW3qXN40s1HhjBgyyOt9l1T2VpAYWCGhzFiB9xA48N5/GVvsW3MdZyJ9Hdl+1lpb+bmbGg==
+
 ngx-moment@^3.3.0:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/ngx-moment/-/ngx-moment-3.4.0.tgz#53bd64557e552c612b0f68b975d1c7ed34f28dfc"

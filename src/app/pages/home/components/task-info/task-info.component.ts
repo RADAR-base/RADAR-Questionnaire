@@ -1,12 +1,11 @@
 import { animate, state, style, transition, trigger } from '@angular/animations'
-import { Component, Input, OnChanges } from '@angular/core'
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core'
 
 import { StorageService } from '../../../../core/services/storage.service'
 import { LocKeys } from '../../../../shared/enums/localisations'
 import { StorageKeys } from '../../../../shared/enums/storage'
 import { Task, TasksProgress } from '../../../../shared/models/task'
 import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
-
 @Component({
   selector: 'task-info',
   templateUrl: 'task-info.component.html',
@@ -14,41 +13,42 @@ import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
     trigger('fade', [
       state('false', style({ opacity: '0' })),
       state('true', style({ opacity: '1.0' })),
-      transition('* => *', animate('350ms 50ms ease'))
+      transition('* => *', animate('350ms ease'))
     ]),
     trigger('scaleMinutes', [
       state(
         'false',
-        style({ transform: 'translate3d(-25%, -15%, 0) scale(0.4)' })
+        style({ transform: 'translate3d(48%, -15%, 0) scale(0.45)' })
       ),
-      state('true', style({ transform: 'translate3d(0, 0, 0) scale(1)' })),
-      transition('* => *', animate('350ms 50ms ease'))
+      transition('* => *', animate('350ms ease'))
+    ]),
+    trigger('rotateMeridiem', [
+      state('true', style({ transform: 'rotate(90deg)' })),
+      state('false', style({ transform: 'translate3d(-20%, 28%, 0)' })),
+      transition('* => *', animate('350ms ease'))
+    ]),
+    trigger('moveHour', [
+      state('false', style({ transform: 'translate3d(90%, 0, 0)' })),
+      transition('* => *', animate('350ms ease'))
     ]),
     trigger('alignCenterRightExtraInfo', [
-      state('false', style({ transform: 'translate3d(22%, 0, 0)' })),
+      state('false', style({ transform: 'translate3d(8vw, 0, 0) scale(0.8)' })),
       state('true', style({ transform: 'translate3d(0, 0, 0)' })),
-      transition('* => *', animate('350ms 50ms ease'))
+      transition('* => *', animate('350ms ease'))
     ]),
-    trigger('alignCenterRightTime', [
-      state('false', style({ transform: 'translate3d(8%, 0, 0) scale(0.8)' })),
-      state('true', style({ transform: 'translate3d(0, 0, 0)' })),
-      transition('* => *', animate('350ms 50ms ease'))
+    trigger('scaleStatus', [
+      state('false', style({ transform: 'scale(0.9)' })),
+      transition('* => *', animate('400ms ease'))
     ]),
     trigger('moveInProgress', [
-      state(
-        'true',
-        style({ display: 'none', transform: 'translate3d(-150%, 0, 0)' })
-      ),
-      state(
-        'false',
-        style({ display: 'block', transform: 'translate3d(0, 0, 0)' })
-      ),
-      transition('* => *', animate('350ms 50ms ease'))
+      state('true', style({ transform: 'translate3d(-150%, 0, 0)' })),
+      state('false', style({ transform: 'translate3d(0, 0, 0)' })),
+      transition('* => *', animate('350ms ease'))
     ]),
     trigger('alignCenterRightMetrics', [
-      state('false', style({ transform: 'translate3d(110%, 0, 0)' })),
+      state('false', style({ transform: 'translate3d(105%, 0, 0)' })),
       state('true', style({ transform: 'translate3d(0, 0, 0)' })),
-      transition('* => *', animate('350ms 50ms ease'))
+      transition('* => *', animate('400ms ease'))
     ])
   ]
 })
@@ -60,11 +60,11 @@ export class TaskInfoComponent implements OnChanges {
   @Input()
   progress: TasksProgress
   @Input()
-  expanded = true
+  expanded
   hasExtraInfo: boolean
   extraTaskInfo: string
   nextTaskStatus
-  statusSize
+  statusChanges: SimpleChanges
 
   private language: string
 
@@ -82,10 +82,11 @@ export class TaskInfoComponent implements OnChanges {
     })
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     this.checkHasExtraInfo()
     this.updateProgress()
     this.updateNextTaskStatus()
+    this.statusChanges = changes
   }
 
   checkHasExtraInfo() {
@@ -99,8 +100,6 @@ export class TaskInfoComponent implements OnChanges {
       this.max = this.progress.numberOfTasks
     }
   }
-
-  getStatusScale() {}
 
   getHour() {
     const date = new Date()
@@ -141,7 +140,5 @@ export class TaskInfoComponent implements OnChanges {
         ? ''
         : LocKeys.TASK_BAR_NEXT_TASK_SOON.toString()
     )
-    if (this.nextTaskStatus.length > 4) return (this.statusSize = 11)
-    return (this.statusSize = 14)
   }
 }

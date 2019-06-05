@@ -8,7 +8,7 @@ info-screen {
     margin-right: 16px;
     padding: 10px 10px 0;
     width: 88%;
-    height: 74vh;
+    height: calc(100vh - 184px);
     -webkit-border-radius: 5px;
     border-radius: 5px;
     background-color: $cl-primary-20;
@@ -31,7 +31,7 @@ info-screen {
   }
 
   .info-card-sm {
-    height: 69vh !important;
+    height: calc(94vh - 184px);
   }
 
   .info-heading {
@@ -48,15 +48,10 @@ info-screen {
     width: 30%;
   }
 
-  .icon-sm {
-    top: 26vh !important;
-  }
-
   .icon {
     position: absolute;
-    top: 31vh;
-    right: 8px;
-    z-index: 100;
+    right: 0;
+    bottom: 0;
     margin: 8px;
   }
 

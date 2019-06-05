@@ -42,6 +42,24 @@
   </div>
 
   <div
+    *ngIf="hasClinicalTasks"
+    class="clinical-container"
+    (click)="openClinicalTasksPage()"
+  >
+    <div
+      class="clinical-1"
+      [class.clinical-bottom]="showCalendar"
+    >
+      <div class="clinical-icon">
+        <img
+          src="assets/imgs/clinical.png"
+          class="icon-clinical"
+        >
+      </div>
+    </div>
+  </div>
+
+  <div
     #tickerBar
     class="size-static"
   >
@@ -107,18 +125,3 @@
     </div>
   </div>
 </ion-content>
-
-<div
-  *ngIf="hasClinicalTasks"
-  class="clinical"
-  [class.clinical-1]="taskIsNow && !showCompleted"
-  [class.clinical-2]="showCalendar"
-  [class.clinical-3]="showCompleted || (tasksProgress|async)?.numberOfTasks == 0"
-  [class.clinical-4]="!taskIsNow && !showCompleted && !showCalendar"
-  (click)="openClinicalTasksPage()"
->
-  <img
-    src="assets/imgs/clinical.png"
-    class="icon-clinical"
-  >
-</div>

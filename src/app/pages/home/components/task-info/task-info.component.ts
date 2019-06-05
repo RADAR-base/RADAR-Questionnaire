@@ -46,7 +46,7 @@ import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
       transition('* => *', animate('350ms ease'))
     ]),
     trigger('alignCenterRightMetrics', [
-      state('false', style({ transform: 'translate3d(100%, 0, 0)' })),
+      state('false', style({ transform: 'translate3d(105%, 0, 0)' })),
       state('true', style({ transform: 'translate3d(0, 0, 0)' })),
       transition('* => *', animate('400ms ease'))
     ])

@@ -1,23 +1,23 @@
 <div id="task-info-container">
-  <div class="info">
-    <div
-      id="questionnaire-progress"
-      [@moveInProgress]="expanded"
-    >
-      <ng-container *ngIf="!expanded">
-        <round-progress
-          id="prog-sm"
-          [current]="current"
-          [max]="max"
-          [radius]="radius"
-          [color]="'#7fcdbb'"
-          [background]="'rgba(255,255,204,0.12)'"
-          [stroke]="stroke"
-          [clockwise]="true"
-        ></round-progress>
-        <div id="questionnaire-counter">{{ current }}</div>
-      </ng-container>
-    </div>
+  <div
+    id="questionnaire-progress"
+    [@moveInProgress]="expanded"
+  >
+    <ng-container *ngIf="!expanded">
+      <round-progress
+        id="prog-sm"
+        [current]="current"
+        [max]="max"
+        [radius]="radius"
+        [color]="'#7fcdbb'"
+        [background]="'rgba(255,255,204,0.12)'"
+        [stroke]="stroke"
+        [clockwise]="true"
+      ></round-progress>
+      <div id="questionnaire-counter">{{ current }}</div>
+    </ng-container>
+  </div>
+  <div class="right-info">
     <div
       id="questionnaire-metrics"
       [@alignCenterRightMetrics]="expanded"
@@ -37,52 +37,56 @@
       <span class="units">min</span>
     </div>
     <div id="questionnaire-time">
-      <div>
-        <span
-          class="text-md"
-          [style.padding-left.px]="(20-statusSize)"
-          [style.margin-top.px]="(11-statusSize)"
-          [@alignCenterRightTime]="expanded"
-        >
-          {{ nextTaskStatus }}
-        </span>
-      </div>
+      <span
+        class="text-md"
+        [style.padding-left.px]="(20-statusSize)"
+        [style.margin-top.px]="(11-statusSize)"
+        [@alignCenterRightTime]="expanded"
+      >
+        {{ nextTaskStatus }}
+      </span>
       <div
-        *ngIf="!isNow"
-        [class.time-expanded]="!expanded"
+        *ngIf="!isNow && task.name !=='ESM'"
+        class="text-md"
       >
         <div
           class="time"
-          *ngIf="task.name !=='ESM'"
+          [@moveHour]="expanded"
         >
-          <span class="text-md">{{ getHour() }}</span>
-          <span
-            class="text-md"
-            [class.min-merid]="!expanded"
-            [@scaleMinutes]="expanded"
-          >
-            :{{ getMinutes() }}
-            <span [class.meridiem]="expanded">{{ getMeridiem() }}</span>
-          </span>
+          {{ getHour() }}
         </div>
+        <div
+          class="time"
+          [@scaleMinutes]="expanded"
+        >
+          <span
+            class="time-colon"
+            [@fade]="expanded"
+          >
+            :
+          </span>
+          <span>{{ getMinutes() }}</span>
+        </div>
+        <div
+          [@rotateMeridiem]="expanded"
+          class="time meridiem"
+        >
+          {{ getMeridiem() }}
+        </div>
+
       </div>
     </div>
-  </div>
-
-  <div
-    class="extra-info"
-    [@alignCenterRightExtraInfo]="expanded"
-  >
-    <ng-container *ngIf="!hasExtraInfo">
-      <div class="non-warn-padding"></div>
-    </ng-container>
-    <ng-container *ngIf="hasExtraInfo">
+    <div
+      *ngIf="hasExtraInfo"
+      class="extra-info"
+      [@alignCenterRightExtraInfo]="expanded"
+    >
       <img
         class="extra-info-icon"
         src="assets/imgs/warning.png"
       >
       {{  extraTaskInfo }}
-    </ng-container>
-  </div>
+    </div>
 
+  </div>
 </div>

@@ -18,6 +18,7 @@ task-info {
 
   #questionnaire-counter {
     margin-top: -54px;
+    margin-bottom: 12px;
     text-align: center;
     font-size: 1.5em;
   }
@@ -25,20 +26,19 @@ task-info {
   #questionnaire-metrics {
     float: left;
     margin: auto;
-    margin-right: 64px;
   }
 
   .right-info {
-    margin-top: 12px;
+    margin-top: 8px;
     width: 100%;
   }
 
   #questionnaire-time {
     float: right;
-  }
-
-  .time-expanded {
-    margin-right: -64px;
+    margin: auto;
+    max-width: 72%;
+    white-space: nowrap;
+    line-height: 2.5em;
   }
 
   .text-md {
@@ -71,16 +71,19 @@ task-info {
   }
 
   .meridiem {
-    margin-top: 24px;
     margin-left: -8px;
     font-size: 2.5vh;
   }
 
-  .time {
+  .time-container {
     float: left;
   }
 
   .time-colon {
     margin-right: -16px;
+  }
+
+  .status-collapsed {
+    max-width: 42% !important;
   }
 }

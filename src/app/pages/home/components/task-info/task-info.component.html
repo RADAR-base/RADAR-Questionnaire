@@ -5,7 +5,6 @@
   >
     <ng-container *ngIf="!expanded">
       <round-progress
-        id="prog-sm"
         [current]="current"
         [max]="max"
         [radius]="radius"
@@ -36,27 +35,35 @@
       {{ task.estimatedCompletionTime }}
       <span class="units">min</span>
     </div>
-    <div id="questionnaire-time">
+    <div
+      id="questionnaire-time"
+      [class.status-collapsed]="!expanded"
+      [@scaleStatus]="expanded"
+      #status
+    >
       <span
+        [fittext]="true"
+        [maxFontSize]="60"
+        [container]="status"
+        [modelToWatch]="statusChanges"
         class="text-md"
-        [style.padding-left.px]="(20-statusSize)"
-        [style.margin-top.px]="(11-statusSize)"
-        [@alignCenterRightTime]="expanded"
       >
         {{ nextTaskStatus }}
       </span>
+    </div>
+    <div id="questionnaire-time">
       <div
         *ngIf="!isNow && task.name !=='ESM'"
         class="text-md"
       >
         <div
-          class="time"
+          class="time-container"
           [@moveHour]="expanded"
         >
           {{ getHour() }}
         </div>
         <div
-          class="time"
+          class="time-container"
           [@scaleMinutes]="expanded"
         >
           <span
@@ -69,7 +76,7 @@
         </div>
         <div
           [@rotateMeridiem]="expanded"
-          class="time meridiem"
+          class="time-container meridiem"
         >
           {{ getMeridiem() }}
         </div>

@@ -36,7 +36,7 @@ import { TasksService } from '../services/tasks.service'
     trigger('moveProgress', [
       state('true', style({ transform: 'translateY(-100%)' })),
       state('false', style({ transform: 'translateY(0)' })),
-      transition('true=>false', animate('300ms'))
+      transition('true=>false', animate('300ms ease-in-out'))
     ])
   ]
 })

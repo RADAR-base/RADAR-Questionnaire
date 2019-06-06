@@ -1,12 +1,13 @@
 info-screen {
   display: flex;
   width: 100%;
+  height: 100%;
 
   .info-card {
     margin: 8px;
     padding: 10px;
     width: inherit;
-    height: calc(100vh - 184px);
+    height: calc(100% - 88px);
     -webkit-border-radius: 5px;
     border-radius: 5px;
     background-color: $cl-primary-20;
@@ -29,7 +30,7 @@ info-screen {
   }
 
   .info-card-sm {
-    height: calc(95vh - 184px);
+    height: calc(94% - 88px);
   }
 
   .info-heading {
@@ -37,7 +38,7 @@ info-screen {
   }
 
   .info-content {
-    margin-bottom: 64%;
+    padding-bottom: 70%;
   }
 
   .icon-thincIt {

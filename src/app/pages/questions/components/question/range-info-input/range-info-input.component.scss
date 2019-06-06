@@ -10,10 +10,9 @@ range-info-input {
     position: fixed;
     overflow: scroll;
     margin: 8px;
-    margin-right: 16px;
     padding: 10px 10px 0;
     width: 88%;
-    height: 32vh;
+    height: calc(100vh - 450px);
     -webkit-border-radius: 5px;
     border-radius: 5px;
     background-color: $cl-primary-20;

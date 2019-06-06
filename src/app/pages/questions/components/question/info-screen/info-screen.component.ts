@@ -32,6 +32,7 @@ export class InfoScreenComponent implements OnInit {
   name = `info-${this.uniqueID}`
   isThincItReminder = false
   items: InfoItem[] = Array()
+  showScrollButton: boolean
 
   ngOnInit() {
     this.sections.map((item, i) => {
@@ -49,12 +50,12 @@ export class InfoScreenComponent implements OnInit {
     // NOTE: Save timestamp (epoch) and activate the next button
     const epoch: number = new Date().getTime()
     this.valueChange.emit(epoch)
+    this.showScrollButton = this.sections.length > 1
   }
 
   scrollDown() {
     const dimensions = this.content.getContentDimensions()
-    console.log(dimensions)
-    const position = dimensions.scrollTop + dimensions.contentHeight
-    this.content.scrollTo(0, position, 1500)
+    const position = dimensions.scrollTop + dimensions.contentHeight / 2
+    this.content.scrollTo(0, position, 1000)
   }
 }

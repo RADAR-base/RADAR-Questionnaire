@@ -269,7 +269,10 @@ export class QuestionsPageComponent {
       this.answerService.add(event)
       this.setNextDisabled()
     }
-    if (event.type === QuestionType.timed) {
+    if (
+      event.type === QuestionType.timed ||
+      event.type === QuestionType.audio
+    ) {
       this.nextQuestion()
     }
   }

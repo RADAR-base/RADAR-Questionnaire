@@ -2,15 +2,6 @@
   class="info-card"
   [class.info-card-sm]="hasFieldLabel"
 >
-  <span
-    item-right
-    (tap)="scrollDown()"
-    class="icon"
-    [class.icon-sm]="hasFieldLabel"
-  >
-    <ion-icon name="arrow-dropdown-circle"></ion-icon>
-  </span>
-
   <ion-content>
     <div *ngIf="isThincItReminder">
       <img
@@ -27,5 +18,11 @@
       </div>
     </div>
   </ion-content>
-
+  <span
+    *ngIf="showScrollButton"
+    (tap)="scrollDown()"
+    class="icon"
+  >
+    <ion-icon name="arrow-dropdown-circle"></ion-icon>
+  </span>
 </div>

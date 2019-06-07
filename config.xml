@@ -49,8 +49,6 @@
     <edit-config file="*-Info.plist" mode="merge" target="NSMicrophoneUsageDescription">
       <string>Used for audio input tasks</string>
     </edit-config>
-    <preference name="Suppresses3DTouchGesture" value="false" />
-    <preference name="SuppressesLongPressGesture" value="false" />
     <icon height="180" src="resources/ios/icon/icon-60@3x.png" width="180" />
     <icon height="60" src="resources/ios/icon/icon-60.png" width="60" />
     <icon height="120" src="resources/ios/icon/icon-60@2x.png" width="120" />

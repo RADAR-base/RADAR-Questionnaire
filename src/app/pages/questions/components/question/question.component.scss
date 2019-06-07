@@ -1,6 +1,5 @@
 question {
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
   width: 100% !important;
 
   p.stdformat {
@@ -27,5 +26,15 @@ question {
 
   .rangeformat {
     height: 30vh;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .fade {
+    display: block;
+    opacity: 0.2;
+    pointer-events: none;
   }
 }

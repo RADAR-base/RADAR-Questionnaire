@@ -3,7 +3,6 @@
     <li *ngFor="let item of items">
       <ion-item no-lines>
         <ion-checkbox
-          [disabled]="!currentlyShown"
           [id]="item.id"
           name="name"
           value="item.value"

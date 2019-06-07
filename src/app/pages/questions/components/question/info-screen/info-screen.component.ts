@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core'
+import { Content } from 'ionic-angular'
 
 import { InfoItem, Section } from '../../../../../shared/models/question'
 
@@ -9,6 +17,8 @@ let uniqueID = 0
   templateUrl: 'info-screen.component.html'
 })
 export class InfoScreenComponent implements OnInit {
+  @ViewChild(Content) content: Content
+
   @Output()
   valueChange: EventEmitter<number> = new EventEmitter<number>()
 
@@ -22,6 +32,7 @@ export class InfoScreenComponent implements OnInit {
   name = `info-${this.uniqueID}`
   isThincItReminder = false
   items: InfoItem[] = Array()
+  showScrollButton: boolean
 
   ngOnInit() {
     this.sections.map((item, i) => {
@@ -39,5 +50,12 @@ export class InfoScreenComponent implements OnInit {
     // NOTE: Save timestamp (epoch) and activate the next button
     const epoch: number = new Date().getTime()
     this.valueChange.emit(epoch)
+    this.showScrollButton = this.sections.length > 1
+  }
+
+  scrollDown() {
+    const dimensions = this.content.getContentDimensions()
+    const position = dimensions.scrollTop + dimensions.contentHeight / 2
+    this.content.scrollTo(0, position, 1000)
   }
 }

@@ -14,8 +14,6 @@ export class CheckboxInputComponent implements OnInit {
 
   @Input()
   responses: Response[]
-  @Input()
-  currentlyShown
 
   value: number = null
   uniqueID: number = uniqueID++
@@ -28,7 +26,7 @@ export class CheckboxInputComponent implements OnInit {
       this.items.push({
         id: `check-${this.uniqueID}-${i}`,
         response: item.label,
-        value: Number(item.code)
+        value: item.code
       })
     })
   }

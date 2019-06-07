@@ -979,12 +979,12 @@ export const Localisations = {
     nl: 'Pogingen blijven'
   },
   AUDIO_TASK_HAPPY_ALERT: {
-    da: 'Er du tilfreds med din optagelse?',
-    de: 'Bist du mit deiner Aufnahme zufrieden?',
-    en: 'Are you happy with your recording?',
-    es: '¿Estás contento con tu grabación?',
-    it: 'Sei felice della tua registrazione?',
-    nl: 'Ben je blij met je opname?'
+    da: 'Indsend optagelse?',
+    de: 'Aufnahme einreichen?',
+    en: 'Submit recording?',
+    es: '¿Enviar grabación?',
+    it: 'Invia la registrazione?',
+    nl: 'Opname verzenden?'
   },
   CONFIG_ERROR_DESC: {
     da: 'Config opdatering mislykkes. Prøve igen?',

@@ -11,8 +11,9 @@ range-info-input {
     overflow: scroll;
     margin: 8px;
     padding: 10px;
+    max-height: calc(100% - 360px);
     width: initial;
-    height: calc(100% - 360px);
+    height: calc(100vh - 450px);
     -webkit-border-radius: 5px;
     border-radius: 5px;
     background-color: $cl-primary-20;

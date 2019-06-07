@@ -6,8 +6,9 @@ info-screen {
   .info-card {
     margin: 8px;
     padding: 10px;
+    max-height: calc(100% - 88px);
     width: inherit;
-    height: calc(100% - 88px);
+    height: calc(100vh - 184px);
     -webkit-border-radius: 5px;
     border-radius: 5px;
     background-color: $cl-primary-20;
@@ -30,7 +31,8 @@ info-screen {
   }
 
   .info-card-sm {
-    height: calc(94% - 88px);
+    max-height: calc(94% - 88px);
+    height: calc(95vh - 184px);
   }
 
   .info-heading {
@@ -38,7 +40,7 @@ info-screen {
   }
 
   .info-content {
-    padding-bottom: 70%;
+    padding-bottom: 64%;
   }
 
   .icon-thincIt {

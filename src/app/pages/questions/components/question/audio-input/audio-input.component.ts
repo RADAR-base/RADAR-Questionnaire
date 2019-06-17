@@ -37,6 +37,7 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   resumeListener: Subscription
   pauseListener: Subscription
   audioData: string
+  interruptedAlertShown: boolean
 
   constructor(
     private audioRecordService: AudioRecordService,
@@ -128,21 +129,24 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   }
 
   showTaskInterruptedAlert() {
-    this.alertService.showAlert({
-      title: this.translate.transform(LocKeys.AUDIO_TASK_ALERT.toString()),
-      message: this.translate.transform(
-        LocKeys.AUDIO_TASK_ALERT_DESC.toString()
-      ),
-      buttons: [
-        {
-          text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
-          handler: () => {
-            this.navCtrl.setRoot(HomePageComponent)
+    if (!this.interruptedAlertShown) {
+      this.interruptedAlertShown = true
+      this.alertService.showAlert({
+        title: this.translate.transform(LocKeys.AUDIO_TASK_ALERT.toString()),
+        message: this.translate.transform(
+          LocKeys.AUDIO_TASK_ALERT_DESC.toString()
+        ),
+        buttons: [
+          {
+            text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+            handler: () => {
+              this.navCtrl.setRoot(HomePageComponent)
+            }
           }
-        }
-      ],
-      enableBackdropDismiss: false
-    })
+        ],
+        enableBackdropDismiss: false
+      })
+    }
   }
 
   showAfterAttemptAlert() {

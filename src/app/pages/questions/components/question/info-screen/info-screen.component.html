@@ -2,7 +2,7 @@
   class="info-card"
   [class.info-card-sm]="hasFieldLabel"
 >
-  <ion-content>
+  <ion-content (ionScroll)="onScroll($event)">
     <div *ngIf="isThincItReminder">
       <img
         src="assets/imgs/thincIt_app_icon.png"

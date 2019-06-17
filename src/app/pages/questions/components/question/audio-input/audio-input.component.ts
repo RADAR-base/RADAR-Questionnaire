@@ -31,13 +31,13 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   currentlyShown: boolean
 
   recordAttempts = 0
+  buttonTransitionDelay = 1000
   buttonShown = true
   buttonDisabled = false
-  buttonTransitionDelay = 1000
+  interruptedAlertShown = false
   resumeListener: Subscription
   pauseListener: Subscription
   audioData: string
-  interruptedAlertShown: boolean
 
   constructor(
     private audioRecordService: AudioRecordService,

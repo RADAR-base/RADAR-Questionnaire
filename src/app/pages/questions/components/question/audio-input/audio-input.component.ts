@@ -34,7 +34,6 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   buttonTransitionDelay = 1000
   buttonShown = true
   buttonDisabled = false
-  interruptedAlertShown = false
   resumeListener: Subscription
   pauseListener: Subscription
   audioData: string
@@ -52,9 +51,9 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
-    this.resumeListener = this.platform.resume.subscribe(() =>
-      this.showTaskInterruptedAlert()
-    )
+    this.resumeListener = this.platform.resume.subscribe(() => {
+      if (this.currentlyShown) this.showTaskInterruptedAlert()
+    })
     // NOTE: Stop audio recording when application is on pause / backbutton is pressed
     this.pauseListener = this.platform.pause.subscribe(() =>
       this.stopAndGetRecording()
@@ -129,24 +128,21 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   }
 
   showTaskInterruptedAlert() {
-    if (!this.interruptedAlertShown) {
-      this.interruptedAlertShown = true
-      this.alertService.showAlert({
-        title: this.translate.transform(LocKeys.AUDIO_TASK_ALERT.toString()),
-        message: this.translate.transform(
-          LocKeys.AUDIO_TASK_ALERT_DESC.toString()
-        ),
-        buttons: [
-          {
-            text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
-            handler: () => {
-              this.navCtrl.setRoot(HomePageComponent)
-            }
+    this.alertService.showAlert({
+      title: this.translate.transform(LocKeys.AUDIO_TASK_ALERT.toString()),
+      message: this.translate.transform(
+        LocKeys.AUDIO_TASK_ALERT_DESC.toString()
+      ),
+      buttons: [
+        {
+          text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+          handler: () => {
+            this.navCtrl.setRoot(HomePageComponent)
           }
-        ],
-        enableBackdropDismiss: false
-      })
-    }
+        }
+      ],
+      enableBackdropDismiss: false
+    })
   }
 
   showAfterAttemptAlert() {

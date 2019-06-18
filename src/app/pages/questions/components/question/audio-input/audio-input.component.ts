@@ -27,6 +27,8 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   valueChange: EventEmitter<any> = new EventEmitter<any>()
   @Input()
   sections: Section[]
+  @Input()
+  currentlyShown: boolean
 
   recordAttempts = 0
   buttonTransitionDelay = 1000

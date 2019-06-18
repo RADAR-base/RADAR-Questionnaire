@@ -29,9 +29,9 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   sections: Section[]
 
   recordAttempts = 0
+  buttonTransitionDelay = 1000
   buttonShown = true
   buttonDisabled = false
-  buttonTransitionDelay = 1000
   resumeListener: Subscription
   pauseListener: Subscription
   audioData: string
@@ -49,9 +49,9 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
-    this.resumeListener = this.platform.resume.subscribe(() =>
-      this.showTaskInterruptedAlert()
-    )
+    this.resumeListener = this.platform.resume.subscribe(() => {
+      if (this.currentlyShown) this.showTaskInterruptedAlert()
+    })
     // NOTE: Stop audio recording when application is on pause / backbutton is pressed
     this.pauseListener = this.platform.pause.subscribe(() =>
       this.stopAndGetRecording()

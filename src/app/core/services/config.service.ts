@@ -39,7 +39,7 @@ export class ConfigService {
       this.appVersionPlugin.getVersionNumber().then(res => (appVersion = res))
       console.log('fetching with app version ', appVersion)
       return this.pullProtocol().then(res => {
-        if (!res) return Promise.reject()
+        if (!res) return Promise.reject('Protocol pull failed')
         const response = JSON.parse(res)
         if (
           configVersion !== response.version ||

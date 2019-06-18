@@ -3,7 +3,6 @@ import 'rxjs/add/operator/map'
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Device } from '@ionic-native/device/ngx'
-import { Platform } from 'ionic-angular'
 import { throwError as observableThrowError } from 'rxjs'
 import * as YAML from 'yamljs'
 
@@ -22,8 +21,7 @@ export class Utility {
   constructor(
     private http: HttpClient,
     private device: Device,
-    private storage: StorageService,
-    private platform: Platform
+    private storage: StorageService
   ) {}
 
   getSchema(schemaUrl) {

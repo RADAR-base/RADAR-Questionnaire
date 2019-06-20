@@ -2775,8 +2775,9 @@ cordova-plugin-local-notification@^0.9.0-beta.3:
   integrity sha512-L3Z1velxrkm9nHFcvLnMgBPZjKFt6hwM6hn1lA+JFwIR26Yw6UF72z+/lRMBclAcOxBIDYCqeaLgvezmajjuEg==
 
 "cordova-plugin-network-information@git+https://github.com/apache/cordova-plugin-network-information.git":
-  version "2.0.2-dev"
-  resolved "git+https://github.com/apache/cordova-plugin-network-information.git#27b0e397bc899f420e6af9e7fefe444c36a3c67a"
+  version "2.0.3-dev"
+  uid b8ee23d99c8c0f280184a799d53add6dba8870c0
+  resolved "git+https://github.com/apache/cordova-plugin-network-information.git#b8ee23d99c8c0f280184a799d53add6dba8870c0"
 
 cordova-plugin-splashscreen@^5.0.2:
   version "5.0.2"

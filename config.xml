@@ -98,6 +98,8 @@
   <plugin name="phonegap-plugin-barcodescanner" spec="^8.0.1">
     <variable name="ANDROID_SUPPORT_V4_VERSION" value="27.+" />
   </plugin>
-  <plugin name="cordova-plugin-background-mode" spec="^0.7.2" />
-  <engine name="android" spec="^7.1.4" />
+  <plugin name="cordova-plugin-androidx" spec="^1.0.2" />
+  <plugin name="cordova-plugin-androidx-adapter" spec="^1.0.2" />
+  <plugin name="cordova-plugin-background-mode-fixes" spec="^0.7.4" />
+  <engine name="android" spec="^8.0.0" />
 </widget>

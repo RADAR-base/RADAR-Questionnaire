@@ -1534,10 +1534,10 @@ autoprefixer@^9.5.1, autoprefixer@^9.6.0:
     postcss "^7.0.16"
     postcss-value-parser "^3.3.1"
 
-avsc@^5.4.10:
-  version "5.4.10"
-  resolved "https://registry.yarnpkg.com/avsc/-/avsc-5.4.10.tgz#18f82d93d92ed6842d9e61cff25b51c284c3e932"
-  integrity sha512-6/s4d/o0EshemF2UlVbdMabOQ3Mavcd2okWmhfQlfOFVMq1kFaGtIlIYK4WPtc69EfkdcjElIti951bdRLdBNA==
+avsc@^5.4.11:
+  version "5.4.11"
+  resolved "https://registry.yarnpkg.com/avsc/-/avsc-5.4.11.tgz#64dfd764182a3997cf7d5b9b388d9c3634527933"
+  integrity sha512-8fE5XplaZwuKIvFHo15uEL6xStT+nuugD4orWem85WuovJeZw7G1dhY1HJVsYKT68OPbIjBjnuwFSruEUVLGrw==
 
 aws-sign2@~0.7.0:
   version "0.7.0"
@@ -2705,10 +2705,10 @@ cordova-plugin-app-version@^0.1.9:
   resolved "https://registry.yarnpkg.com/cordova-plugin-app-version/-/cordova-plugin-app-version-0.1.9.tgz#9db0607863337a710489302e5f50a904f1449bdb"
   integrity sha1-nbBgeGMzenEEiTAuX1CpBPFEm9s=
 
-cordova-plugin-background-mode@^0.7.2:
-  version "0.7.2"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-background-mode/-/cordova-plugin-background-mode-0.7.2.tgz#eaf5639c065a87231b3ecf757a6e28b101d0332f"
-  integrity sha1-6vVjnAZahyMbPs91em4osQHQMy8=
+cordova-plugin-background-mode-fixes@^0.7.4:
+  version "0.7.4"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-background-mode-fixes/-/cordova-plugin-background-mode-fixes-0.7.4.tgz#d2048e3fddf9861ef800018a996903f7765a76fe"
+  integrity sha512-8vcSSY/KZu2JjDTyFPlh/mj26dVpyEm5P4cOFmEhq7yQClNKdtRk9y8Djyy4C26emTFOSikvqzPOVDEMOqV4mA==
 
 cordova-plugin-badge@^0.8.8:
   version "0.8.8"

@@ -53,12 +53,12 @@ export class InfoScreenComponent implements OnInit {
 
   scrollDown() {
     const dimensions = this.content.getContentDimensions()
-    const position = dimensions.scrollTop + dimensions.contentHeight
+    const position = dimensions.scrollTop + dimensions.contentHeight / 2
     this.content.scrollTo(0, position, 1000)
   }
 
   onScroll(event) {
-    if (event.scrollTop >= event.scrollHeight - event.contentHeight) {
+    if (event.scrollTop >= (event.scrollHeight - event.contentHeight) * 0.8) {
       this.emitTimestamp()
       this.showScrollButton = false
     } else this.showScrollButton = true

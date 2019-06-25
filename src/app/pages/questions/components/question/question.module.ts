@@ -13,6 +13,7 @@ import { RangeInfoInputComponent } from './range-info-input/range-info-input.com
 import { RangeInputComponent } from './range-input/range-input.component'
 import { SliderInputComponent } from './slider-input/slider-input.component'
 import { TimedTestComponent } from './timed-test/timed-test.component'
+import { Ng2FittextModule } from 'ng2-fittext'
 
 const COMPONENTS = [
   QuestionComponent,
@@ -28,6 +29,7 @@ const COMPONENTS = [
 
 @NgModule({
   imports: [
+    Ng2FittextModule,
     CommonModule,
     PipesModule,
     FormsModule,

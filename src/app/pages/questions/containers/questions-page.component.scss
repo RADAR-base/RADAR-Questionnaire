@@ -7,7 +7,7 @@ page-questions {
   question {
     flex: 1 0 100vw;
     padding: 16px;
-    height: 100%;
+    max-height: initial;
   }
 
   .toolbar {

@@ -2555,10 +2555,10 @@ cordova-plugin-android-permissions@^1.0.0:
   resolved "https://registry.yarnpkg.com/cordova-plugin-android-permissions/-/cordova-plugin-android-permissions-1.0.0.tgz#9e7c116be668eb7dfa41491b13d8d47da9548149"
   integrity sha1-nnwRa+Zo6336QUkbE9jUfalUgUk=
 
-cordova-plugin-androidx-adapter@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-androidx-adapter/-/cordova-plugin-androidx-adapter-1.0.2.tgz#b214e25f6a042f8d152e2575219deb6ee82f6cbb"
-  integrity sha512-ajeH7KdjXC/QR3QflYZbhgrEeMW/s7UFUOuRqDB/KLRB1DScbRBzAO8UyJexfVMDh8tgjwgU0Lg6cMhfB7SlEg==
+cordova-plugin-androidx-adapter@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-androidx-adapter/-/cordova-plugin-androidx-adapter-1.1.0.tgz#5696f0c972242ded2ecbd73bd6dadfdb42d6e274"
+  integrity sha512-V09W27ViYnh54fR2eilswXt10DrQ1P23fo+3JdbrHqU5HkNfufWojK9dWPzDYQ6xKQkOkUJcEh6tLWxg5hQdgg==
   dependencies:
     performance-now "^2.1.0"
     q "^1.4.1"

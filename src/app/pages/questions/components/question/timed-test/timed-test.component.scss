@@ -3,13 +3,20 @@ timed-test {
   width: 100%;
 
   .test-card {
+    position: fixed;
     margin: 8px;
-    padding: 10px;
-    height: 80%;
+    margin-right: 16px;
+    padding: 10px 10px 0;
+    width: 88%;
+    height: calc(94vh - 184px);
     -webkit-border-radius: 5px;
     border-radius: 5px;
     background-color: $cl-primary-20;
     text-align: center;
+  }
+
+  ion-content {
+    background: none;
   }
 
   .heading {

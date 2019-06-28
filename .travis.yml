@@ -14,8 +14,8 @@ android:
     - tools
     - platform-tools
     - tools
-    - build-tools-27.0.2
-    - android-27
+    - build-tools-28.0.3
+    - android-28
     - extra-google-google_play_services
     - extra-google-m2repository
     - extra-android-m2repository
@@ -69,7 +69,7 @@ script:
     yarn install;
     ionic cordova build --release android;
     jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -storepass $storepass -keystore radar-armt-release-key.keystore $HOME/build/$PROJECT_NAME/platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk alias_name;
-    $ANDROID_HOME/build-tools/27.0.2/zipalign -v 4 $HOME/build/$PROJECT_NAME/platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk $HOME/build/$PROJECT_NAME/platforms/android/app/build/outputs/apk/release/radar-armt-app-$APP_VERSION.apk;
+    $ANDROID_HOME/build-tools/28.0.3/zipalign -v 4 $HOME/build/$PROJECT_NAME/platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk $HOME/build/$PROJECT_NAME/platforms/android/app/build/outputs/apk/release/radar-armt-app-$APP_VERSION.apk;
     fastlane supply --apk $HOME/build/$PROJECT_NAME/platforms/android/app/build/outputs/apk/release/radar-armt-app-$APP_VERSION.apk --track alpha --json_key service-api.json --package_name $PACKAGE_NAME
     ; fi
 #

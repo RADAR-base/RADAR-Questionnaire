@@ -7438,10 +7438,13 @@ performance-now@^2.1.0:
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
   integrity sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
 
-phonegap-plugin-barcodescanner@^8.0.1:
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/phonegap-plugin-barcodescanner/-/phonegap-plugin-barcodescanner-8.0.1.tgz#829348e7e2e4353b39ea1ef15fed08b4617f683a"
-  integrity sha512-s+wY33+FPgfl/Yc81mIKoPuBX9yhRow0ARGpFZkmiwNplNs8eEwS+XnAzUlYCn77yvyiSymRmSMjjQdbvyHDuQ==
+phonegap-plugin-barcodescanner@^8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/phonegap-plugin-barcodescanner/-/phonegap-plugin-barcodescanner-8.1.0.tgz#e0d53e4e850699205e915a4b91c2f202d31f8311"
+  integrity sha512-WQCDCoH9EQ9WEn2bce+B95jbNJduilAn2Vtske8KfcYAeGu7bdFqRD7zGCLCQao62VwoEwlX0cUvbQ/am12Jwg==
+  dependencies:
+    nopt "^4.0.1"
+    shelljs "^0.8.3"
 
 phonegap-plugin-mobile-accessibility@^1.0.5:
   version "1.0.5"
@@ -8905,7 +8908,7 @@ shelljs@^0.5.3:
   resolved "https://registry.yarnpkg.com/shelljs/-/shelljs-0.5.3.tgz#c54982b996c76ef0c1e6b59fbdc5825f5b713113"
   integrity sha1-xUmCuZbHbvDB5rWfvcWCX1txMRM=
 
-shelljs@^0.8.1:
+shelljs@^0.8.1, shelljs@^0.8.3:
   version "0.8.3"
   resolved "https://registry.yarnpkg.com/shelljs/-/shelljs-0.8.3.tgz#a7f3319520ebf09ee81275b2368adb286659b097"
   integrity sha512-fc0BKlAWiLpwZljmOvAOTE/gXawtCoNrP5oaY7KIaQbbyHeQVg01pSEuEGvGh3HEdBU4baCD7wQBwADmM/7f7A==

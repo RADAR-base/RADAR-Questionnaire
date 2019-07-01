@@ -26,8 +26,7 @@
     ".ts": {
       "parser": "typescript",
       "style": "module"
-    }
-  },
+    },
   "dependencies": {
     "@angular/animations": "^7.2.13",
     "@angular/cdk": "^7.2.13",

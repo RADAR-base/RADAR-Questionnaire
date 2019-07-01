@@ -1383,10 +1383,10 @@ autoprefixer@^9.5.1, autoprefixer@^9.6.0:
     postcss "^7.0.16"
     postcss-value-parser "^3.3.1"
 
-avsc@^5.4.11:
-  version "5.4.11"
-  resolved "https://registry.yarnpkg.com/avsc/-/avsc-5.4.11.tgz#64dfd764182a3997cf7d5b9b388d9c3634527933"
-  integrity sha512-8fE5XplaZwuKIvFHo15uEL6xStT+nuugD4orWem85WuovJeZw7G1dhY1HJVsYKT68OPbIjBjnuwFSruEUVLGrw==
+avsc@^5.4.12:
+  version "5.4.12"
+  resolved "https://registry.yarnpkg.com/avsc/-/avsc-5.4.12.tgz#a999227f57c210a883d3633149924e4b4519bffc"
+  integrity sha512-57jftdKwEnH9e9d9rdxp7ge3SMpDg1UsR10wZdKrCgghXjc0KGUSzY6ZHXnwDEdXcYyxMjfUgQodap+gzQXRqw==
 
 aws-sign2@~0.7.0:
   version "0.7.0"

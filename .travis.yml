@@ -54,8 +54,8 @@ before_install:
     -in secrets.tar.enc -out secrets.tar -d
   - tar xvf secrets.tar
   - gem install fastlane
-  - yarn global add cordova@^8.1.2
-  - yarn global add ionic@^4.12.0
+  - yarn global add cordova
+  - yarn global add ionic
 before_script:
   - mkdir www
   - cp secret.ts src/assets/data/secret.ts

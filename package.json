@@ -91,7 +91,7 @@
     "core-js": "^3.1.4",
     "ionic-angular": "^3.9.6",
     "ionic-plugin-keyboard": "^2.2.1",
-    "ionicons": "^4.5.8",
+    "ionicons": "^4.6.1",
     "kafka-rest": "^0.0.5",
     "moment": "^2.22.2",
     "ng2-fittext": "^1.2.6",
@@ -105,7 +105,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.800.4",
-    "@angular/cli": "^8.0.4",
+    "@angular/cli": "^8.0.6",
     "@angular/compiler-cli": "^8.0.2",
     "@angular/http": "^7.2.13",
     "@angular/platform-browser": "^7.2.13",

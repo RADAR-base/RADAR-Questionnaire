@@ -33,10 +33,7 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   recordAttempts = 0
   buttonTransitionDelay = 1000
   buttonShown = true
-  buttonDisabled = false
-  resumeListener: Subscription
   pauseListener: Subscription
-  audioData: string
 
   constructor(
     private audioRecordService: AudioRecordService,
@@ -51,21 +48,21 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
-    this.resumeListener = this.platform.resume.subscribe(() => {
-      if (this.currentlyShown) this.showTaskInterruptedAlert()
-    })
     // NOTE: Stop audio recording when application is on pause / backbutton is pressed
-    this.pauseListener = this.platform.pause.subscribe(() =>
-      this.stopAndGetRecording()
-    )
+    this.pauseListener = this.platform.pause.subscribe(() => {
+      if (this.currentlyShown && this.isRecording()) {
+        this.stopRecording()
+        this.showTaskInterruptedAlert()
+      }
+    })
     this.platform.registerBackButtonAction(() => {
-      this.stopAndGetRecording()
+      this.stopRecording()
       this.platform.exitApp()
     })
+    this.enableNextButton()
   }
 
   ngOnDestroy() {
-    this.resumeListener.unsubscribe()
     this.pauseListener.unsubscribe()
   }
 
@@ -73,27 +70,25 @@ export class AudioInputComponent implements OnDestroy, OnInit {
     if (!this.isRecording()) {
       this.recordAttempts++
       if (this.recordAttempts <= DefaultMaxAudioAttemptsAllowed) {
-        this.transitionButton()
         this.startRecording().catch(e => this.showTaskInterruptedAlert())
       }
     } else {
-      this.stopAndGetRecording().catch(e => this.showTaskInterruptedAlert())
-      if (this.recordAttempts == DefaultMaxAudioAttemptsAllowed) {
-        this.finishRecording()
-        return
-      }
+      this.stopRecording()
+      if (this.recordAttempts == DefaultMaxAudioAttemptsAllowed)
+        this.finishRecording().catch(e => this.showTaskInterruptedAlert())
       this.showAfterAttemptAlert()
     }
   }
 
   finishRecording() {
     this.buttonShown = false
-    setTimeout(() => this.valueChange.emit(this.audioData), 500)
+    return this.audioRecordService
+      .readAudioFile()
+      .then(data => this.valueChange.emit(data))
   }
 
-  transitionButton() {
-    this.buttonDisabled = true
-    setTimeout(() => (this.buttonDisabled = false), this.buttonTransitionDelay)
+  enableNextButton() {
+    this.valueChange.emit('')
   }
 
   startRecording() {
@@ -107,12 +102,8 @@ export class AudioInputComponent implements OnDestroy, OnInit {
     )
   }
 
-  stopAndGetRecording() {
+  stopRecording() {
     this.audioRecordService.stopAudioRecording()
-    return this.audioRecordService.readAudioFile().then(data => {
-      console.log(data)
-      return (this.audioData = data)
-    })
   }
 
   isRecording() {
@@ -169,7 +160,8 @@ export class AudioInputComponent implements OnDestroy, OnInit {
             this.translate.transform(LocKeys.BTN_TRY_AGAIN.toString()),
           handler: () => {}
         }
-      ]
+      ],
+      enableBackdropDismiss: false
     })
   }
 }

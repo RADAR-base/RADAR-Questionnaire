@@ -53,7 +53,7 @@
     "@ionic-native/status-bar": "^5.8.0",
     "@ionic-native/vibration": "^5.8.0",
     "@ionic/storage": "^2.2.0",
-    "angular-svg-round-progressbar": "^2.0.0",
+    "angular-svg-round-progressbar": "^3.0.1",
     "autoprefixer": "^9.6.0",
     "avsc": "^5.4.12",
     "base64-js": "^1.2.1",
@@ -131,7 +131,7 @@
     "tslint-angular": "^3.0.2",
     "tslint-config-prettier": "^1.15.0",
     "tslint-config-standard": "^8.0.1",
-    "typescript": "^3.5.2",
+    "typescript": "~3.4.5",
     "webpack": "^4.35.0",
     "webpack-sources": "^1.3.0"
   },

@@ -2449,10 +2449,10 @@ copy-webpack-plugin@5.0.2:
     serialize-javascript "^1.4.0"
     webpack-log "^2.0.0"
 
-cordova-android-support-gradle-release@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/cordova-android-support-gradle-release/-/cordova-android-support-gradle-release-3.0.0.tgz#c5a0180e1fcd7d58d41f84e864c0fac4cd4ed3a0"
-  integrity sha512-vyiqQ6N9Qb+4xRizWSpUX/LyJ1HaDN0piWc8xoS9Hx9YodIS3vyi1UpQyfLQmCixoeLVcRieKXjuSMXnUrv1dw==
+cordova-android-support-gradle-release@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/cordova-android-support-gradle-release/-/cordova-android-support-gradle-release-3.0.1.tgz#4f0b7d715280c9bb77785203d410fbe580b210ab"
+  integrity sha512-RSW55DkSckmqhX/kjj+a1YeVdy7s/AtlZn6Qa5XMQmmA4Iogq+IF2jvInZqzCF19DbI5YE95AP7VDbRk+DdDRw==
   dependencies:
     q "^1.4.1"
     semver "5.6.0"

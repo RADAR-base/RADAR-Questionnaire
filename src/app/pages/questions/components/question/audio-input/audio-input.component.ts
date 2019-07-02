@@ -27,8 +27,6 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   valueChange: EventEmitter<any> = new EventEmitter<any>()
   @Input()
   sections: Section[]
-  @Input()
-  currentlyShown: boolean
 
   recordAttempts = 0
   buttonShown = true
@@ -49,7 +47,7 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   ngOnInit() {
     // NOTE: Stop audio recording when application is on pause / backbutton is pressed
     this.pauseListener = this.platform.pause.subscribe(() => {
-      if (this.currentlyShown && this.isRecording()) {
+      if (this.isRecording()) {
         this.stopRecording()
         this.showTaskInterruptedAlert()
       }

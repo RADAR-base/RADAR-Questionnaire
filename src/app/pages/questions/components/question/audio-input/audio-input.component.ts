@@ -75,7 +75,7 @@ export class AudioInputComponent implements OnDestroy, OnInit {
       this.stopRecording()
       if (this.recordAttempts == DefaultMaxAudioAttemptsAllowed)
         this.finishRecording().catch(e => this.showTaskInterruptedAlert())
-      this.showAfterAttemptAlert()
+      else this.showAfterAttemptAlert()
     }
   }
 

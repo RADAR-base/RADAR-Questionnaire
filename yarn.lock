@@ -399,10 +399,10 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
-"@ionic-native/android-permissions@^5.8.0":
-  version "5.8.0"
-  resolved "https://registry.yarnpkg.com/@ionic-native/android-permissions/-/android-permissions-5.8.0.tgz#b1df2db0ed24c911abc98e498850454235aefd96"
-  integrity sha512-02VOlzmYmYl07f2XqLt7itCUBrS/kO8XP/0+b0R4p3ozZBxnEp/DKCjJoswiZpa++fmf9b3PfpJnPBGTyC/U0Q==
+"@ionic-native/android-permissions@^5.9.0":
+  version "5.9.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/android-permissions/-/android-permissions-5.9.0.tgz#7caa48425e44dfc14b95bf71a7f0aa033f8f108c"
+  integrity sha512-JfIl5oEgbLWQm/4Of02boo1npQSL3KVRbZVcwj8s/G/Kxbj8KpD8+f7GA+uv06lloKGTHsMRs6DTTiMnQWMZiw==
   dependencies:
     "@types/cordova" latest
 

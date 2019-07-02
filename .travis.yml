@@ -54,8 +54,8 @@ before_install:
     -in secrets.tar.enc -out secrets.tar -d
   - tar xvf secrets.tar
   - gem install fastlane
-  - yarn global add cordova@^8.1.2
-  - yarn global add ionic@^4.12.0
+  - yarn global add cordova
+  - yarn global add ionic
 before_script:
   - mkdir www
   - cp secret.ts src/assets/data/secret.ts
@@ -65,7 +65,6 @@ script:
   - yarn run lint:css
   - if [[ $TRAVIS_BRANCH != $TRAVIS_TAG ]]; then yarn build ; fi
   - if [[ $TRAVIS_BRANCH == $TRAVIS_TAG ]]; then cordova prepare;
-    yarn add rxjs;
     yarn install;
     ionic cordova build --release android;
     jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -storepass $storepass -keystore radar-armt-release-key.keystore $HOME/build/$PROJECT_NAME/platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk alias_name;

@@ -2616,10 +2616,10 @@ cordova-plugin-splashscreen@^5.0.2:
   resolved "https://registry.yarnpkg.com/cordova-plugin-splashscreen/-/cordova-plugin-splashscreen-5.0.2.tgz#747e74f56e201cd585bc62d14bca19f6867ff1ed"
   integrity sha1-dH509W4gHNWFvGLRS8oZ9oZ/8e0=
 
-cordova-plugin-statusbar@^2.4.2:
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-statusbar/-/cordova-plugin-statusbar-2.4.2.tgz#fc1fbdc0d8d7033a7e8e1f1f7ff167ac9bd4faf6"
-  integrity sha1-/B+9wNjXAzp+jh8ff/FnrJvU+vY=
+cordova-plugin-statusbar@^2.4.3:
+  version "2.4.3"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-statusbar/-/cordova-plugin-statusbar-2.4.3.tgz#cc557aef66c27484e0f7f045004040d03321f82d"
+  integrity sha512-ThmXzl6QIKWFXf4wWw7Q/zpB+VKkz3VM958+5A0sXD4jmR++u7KnGttLksXshVwWr6lvGwUebLYtIyXwS4Ovcg==
 
 cordova-plugin-vibration@^3.1.0:
   version "3.1.0"

@@ -99,7 +99,7 @@
     },
     "devDependencies": {
         "@angular-devkit/build-angular": "^0.800.6",
-        "@angular/cli": "^8.0.6",
+        "@angular/cli": "^8.1.0",
         "@angular/compiler-cli": "^8.0.3",
         "@angular/http": "^7.2.13",
         "@angular/platform-browser": "^7.2.13",

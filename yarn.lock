@@ -2621,10 +2621,10 @@ cordova-plugin-statusbar@^2.4.2:
   resolved "https://registry.yarnpkg.com/cordova-plugin-statusbar/-/cordova-plugin-statusbar-2.4.2.tgz#fc1fbdc0d8d7033a7e8e1f1f7ff167ac9bd4faf6"
   integrity sha1-/B+9wNjXAzp+jh8ff/FnrJvU+vY=
 
-cordova-plugin-vibration@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-vibration/-/cordova-plugin-vibration-3.1.0.tgz#63e57a1de72e318b0944ef727d7c4eff13ca2c93"
-  integrity sha1-Y+V6HecuMYsJRO9yfXxO/xPKLJM=
+cordova-plugin-vibration@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-vibration/-/cordova-plugin-vibration-3.1.1.tgz#38fcdd9a7675cfb44d86339c1b2cb129017e9e00"
+  integrity sha512-qgv67Rueo4Pydfant3TwnXeFiN9dl+6lKMM6h5jYg9XewiGAGOr8vfWsTvQssC3m3xMKGS1ap3xPNH+BzZ4RMA==
 
 cordova-plugin-whitelist@^1.3.3:
   version "1.3.3"

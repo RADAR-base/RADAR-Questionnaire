@@ -1,5 +1,6 @@
 question {
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   width: 100% !important;
 
   p.stdformat {
@@ -22,6 +23,10 @@ question {
     margin-top: 16px;
     margin-bottom: 24px;
     font-size: 16px;
+  }
+
+  .field-container {
+    max-height: 56vh !important;
   }
 
   .rangeformat {

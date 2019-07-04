@@ -47,15 +47,25 @@ export class InfoScreenComponent implements OnInit {
       })
     })
 
-    // NOTE: Save timestamp (epoch) and activate the next button
-    const epoch: number = new Date().getTime()
-    this.valueChange.emit(epoch)
-    this.showScrollButton = this.sections.length > 1
+    if (this.sections.length > 1) this.showScrollButton = true
+    else this.emitTimestamp()
   }
 
   scrollDown() {
     const dimensions = this.content.getContentDimensions()
     const position = dimensions.scrollTop + dimensions.contentHeight / 2
     this.content.scrollTo(0, position, 1000)
+  }
+
+  onScroll(event) {
+    if (event.scrollTop >= (event.scrollHeight - event.contentHeight) * 0.8) {
+      this.emitTimestamp()
+      this.showScrollButton = false
+    } else this.showScrollButton = true
+  }
+
+  emitTimestamp() {
+    // NOTE: Save timestamp (epoch) and activate the next button
+    this.valueChange.emit(new Date().getTime())
   }
 }

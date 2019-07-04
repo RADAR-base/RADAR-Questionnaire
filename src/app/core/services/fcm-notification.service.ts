@@ -63,7 +63,9 @@ export class FcmNotificationService extends NotificationService {
         console.log(fcmNotifications)
         return Promise.all(
           fcmNotifications
-            .map(this.sendNotification)
+            .map(n => {
+              return this.sendNotification(n)
+            })
             .concat([this.setLastNotificationUpdate()])
         )
       })

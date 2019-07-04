@@ -10,7 +10,15 @@
 
   <ng-template #stdformat>
     <p class="stdformat">{{ question.section_header }}</p>
-    <h2 class="stdformat">{{ question.field_label }}</h2>
+    <div class="field-container">
+      <h2
+        [fittext]="true"
+        [maxFontSize]="18"
+        [modelToWatch]="question"
+      >
+        {{ question.field_label }}
+      </h2>
+    </div>
   </ng-template>
   <ng-template #taskformat>
     <p class="taskformat">{{ question.section_header }}</p>

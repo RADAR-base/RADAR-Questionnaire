@@ -154,14 +154,10 @@ export class QuestionsPageComponent {
       this.setNextDisabled()
 
       if (
-        this.questions[this.currentQuestion].field_type ===
-          QuestionType.timed ||
-        this.questions[this.currentQuestion].field_type === QuestionType.audio
-      ) {
+        this.questions[this.currentQuestion].field_type === QuestionType.timed
+      )
         this.setPreviousDisabled()
-      } else {
-        this.setPreviousEnabled()
-      }
+      else this.setPreviousEnabled()
     } else if (finish) {
       this.navigateToFinishPage()
       this.navCtrl.removeView(this.viewCtrl)

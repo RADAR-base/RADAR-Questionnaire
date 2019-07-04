@@ -108,5 +108,6 @@
     <plugin name="cordova-plugin-androidx" spec="^1.0.2" />
     <plugin name="cordova-plugin-androidx-adapter" spec="^1.1.0" />
     <plugin name="cordova-plugin-background-mode-fixes" spec="^0.7.4" />
+    <engine name="android" spec="^8.0.0" />
     <engine name="ios" spec="^5.0.0" />
 </widget>

@@ -59,6 +59,7 @@
         "base64-js": "^1.2.1",
         "cordova-android": "^8.0.0",
         "cordova-android-support-gradle-release": "^3.0.1",
+        "cordova-ios": "5.0.1",
         "cordova-lib": "^9.0.1",
         "cordova-media-with-compression": "^2.1.2",
         "cordova-plugin-android-permissions": "^1.0.0",
@@ -137,7 +138,8 @@
     },
     "cordova": {
         "platforms": [
-            "android"
+            "android",
+            "ios"
         ],
         "plugins": {
             "cordova-plugin-device": {},

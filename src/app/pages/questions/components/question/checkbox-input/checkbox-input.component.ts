@@ -14,8 +14,6 @@ export class CheckboxInputComponent implements OnInit {
 
   @Input()
   responses: Response[]
-  @Input()
-  currentlyShown
 
   value: number = null
   uniqueID: number = uniqueID++
@@ -34,7 +32,7 @@ export class CheckboxInputComponent implements OnInit {
   }
 
   onInputChange(event) {
-    this.logSelectedItems(event.target)
+    this.logSelectedItems(event)
     this.valueChange.emit(this.retrieveSelectedItems())
   }
 

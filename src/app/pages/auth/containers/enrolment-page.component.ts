@@ -222,6 +222,7 @@ export class EnrolmentPageComponent {
           createdDateMidnight
         )
         .then(() => this.doAfterAuthentication())
+        .catch(err => console.log('Init failed', err))
     })
   }
 

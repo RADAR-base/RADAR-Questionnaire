@@ -106,6 +106,8 @@ export const LanguageMap = {
   de: LocKeys.LANGUAGE_GERMAN.toString()
 }
 
+export const DefaultAppVersion: string = '0.5.11.1-alpha'
+
 export const DefaultScheduleVersion: number = 0
 
 export const DefaultScheduleYearCoverage: number = 2 // years

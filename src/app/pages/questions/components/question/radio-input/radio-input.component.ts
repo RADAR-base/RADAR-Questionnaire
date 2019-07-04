@@ -14,8 +14,6 @@ export class RadioInputComponent implements OnInit {
 
   @Input()
   responses: Response[]
-  @Input()
-  currentlyShown
 
   value: number = null
   uniqueID: number = uniqueID++
@@ -33,6 +31,6 @@ export class RadioInputComponent implements OnInit {
   }
 
   onInputChange(event) {
-    this.valueChange.emit(+event.target.value)
+    this.valueChange.emit(event)
   }
 }

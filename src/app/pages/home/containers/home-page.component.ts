@@ -147,17 +147,16 @@ export class HomePageComponent implements OnDestroy {
   }
 
   openSettingsPage() {
-    this.firebaseAnalytics.logEvent('click', { button: 'open_settings' })
     this.navCtrl.push(SettingsPageComponent)
+    this.firebaseAnalytics.logEvent('click', { button: 'open_settings' })
   }
 
   openClinicalTasksPage() {
-    this.firebaseAnalytics.logEvent('click', { button: 'open_clinical_tasks' })
     this.navCtrl.push(ClinicalTasksPageComponent)
+    this.firebaseAnalytics.logEvent('click', { button: 'open_clinical_tasks' })
   }
 
   startQuestionnaire(taskCalendarTask: Task) {
-    this.firebaseAnalytics.logEvent('click', { button: 'start_questionnaire' })
     // NOTE: User can start questionnaire from task calendar or start button in home.
     const task = taskCalendarTask ? taskCalendarTask : this.nextTask
     if (this.tasksService.isTaskStartable(task)) {
@@ -188,6 +187,9 @@ export class HomePageComponent implements OnDestroy {
               this.navCtrl.push(QuestionsPageComponent, params)
             }
           })
+      })
+      this.firebaseAnalytics.logEvent('click', {
+        button: 'start_questionnaire'
       })
     } else {
       this.showMissedInfo()

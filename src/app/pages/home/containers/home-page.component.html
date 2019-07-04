@@ -5,7 +5,7 @@
       ion-button
       menuToggle
       left
-      (click)="showCredits()"
+      (tap)="showCredits()"
     >
       <img
         class="logo-small"
@@ -17,7 +17,7 @@
       ion-button
       menuToggle
       right
-      (click)="openSettingsPage()"
+      (tap)="openSettingsPage()"
     >
       <ion-icon name="cog"></ion-icon>
     </button>
@@ -44,7 +44,7 @@
   <div
     *ngIf="hasClinicalTasks"
     class="clinical-container"
-    (click)="openClinicalTasksPage()"
+    (tap)="openClinicalTasksPage()"
   >
     <div
       class="clinical-button"
@@ -81,7 +81,7 @@
       [isNow]="taskIsNow"
       [progress]="(tasksProgress|async)"
       [expanded]="!showCalendar"
-      (click)="displayTaskCalendar()"
+      (tap)="displayTaskCalendar()"
     ></task-info>
   </div>
 
@@ -112,7 +112,7 @@
         class="bt bt--full"
         round
         full
-        (click)="startQuestionnaire()"
+        (tap)="startQuestionnaire()"
       >
         {{ "BTN_START" | translate }}
       </button>

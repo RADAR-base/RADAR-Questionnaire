@@ -1,13 +1,16 @@
-<ul>
-  <li *ngFor="let item of items">
-    <input
-      [disabled]="!currentlyShown"
-      type="checkbox"
-      [id]="item.id"
-      [name]="name"
-      [value]="item.value"
-      (change)="onInputChange($event)"
-    >
-    <label [attr.for]="item.id">{{ item.response }}</label>
-  </li>
-</ul>
+<ion-list>
+  <ul>
+    <li *ngFor="let item of items">
+      <ion-item no-lines>
+        <ion-checkbox
+          [id]="item.id"
+          name="name"
+          value="item.value"
+          (ionChange)="onInputChange(item)"
+        >
+        </ion-checkbox>
+        <ion-label>{{ item.response }}</ion-label>
+      </ion-item>
+    </li>
+  </ul>
+</ion-list>

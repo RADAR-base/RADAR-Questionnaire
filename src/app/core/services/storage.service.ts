@@ -7,6 +7,7 @@ import { Storage } from '@ionic/storage'
 import { throwError as observableThrowError } from 'rxjs'
 
 import {
+  DefaultAppVersion,
   DefaultScheduleVersion,
   DefaultSettingsNotifications,
   DefaultSettingsSupportedLanguages,
@@ -20,7 +21,7 @@ import { Task } from '../../shared/models/task'
 export class StorageService {
   global: any = {}
 
-  constructor(private storage: Storage, private appVersion: AppVersion) {
+  constructor(private storage: Storage, private appVersionPlugin: AppVersion) {
     const setStoragePromise = this.prepareStorage()
     Promise.resolve(setStoragePromise)
   }
@@ -33,8 +34,8 @@ export class StorageService {
     createdDate,
     createdDateMidnight
   ) {
-    return Promise.all([this.getAllKeys(), this.getAppVersion()])
-      .then(([keys, appV]) => {
+    return Promise.all([this.getAllKeys()])
+      .then(([keys]) => {
         // TODO: Find out why this is hard-coded?
         if (keys.length <= 7) {
           const enrolmentDateTime = new Date(createdDate)
@@ -77,7 +78,15 @@ export class StorageService {
             new Date().getTimezoneOffset()
           )
           const cache = this.set(StorageKeys.CACHE_ANSWERS, {})
-          const appVersion = this.set(StorageKeys.APP_VERSION, appV)
+          let appVersion = DefaultAppVersion
+          this.appVersionPlugin
+            .getVersionNumber()
+            .then(apV => {
+              appVersion = apV
+            })
+            .catch(err => console.log('Cannot retrieve app version ', err))
+
+          this.set(StorageKeys.APP_VERSION, appVersion)
 
           return Promise.all([
             pId,
@@ -148,7 +157,7 @@ export class StorageService {
   }
 
   getAppVersion() {
-    return this.appVersion.getVersionNumber()
+    return this.appVersionPlugin.getVersionNumber()
   }
 
   prepareStorage() {

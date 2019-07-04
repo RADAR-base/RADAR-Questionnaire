@@ -19,7 +19,7 @@ import { Task } from '../../shared/models/task'
 
 @Injectable()
 export class StorageService {
-  global: any = {}
+  global: { [key: string]: any } = {}
 
   constructor(private storage: Storage, private appVersionPlugin: AppVersion) {
     const setStoragePromise = this.prepareStorage()
@@ -34,21 +34,18 @@ export class StorageService {
     createdDate,
     createdDateMidnight
   ) {
-    return Promise.all([this.getAllKeys()])
-      .then(([keys]) => {
+    return this.getAllKeys()
+      .then(keys => {
         // TODO: Find out why this is hard-coded?
         if (keys.length <= 7) {
-          const enrolmentDateTime = new Date(createdDate)
-          const referenceDateTime = new Date(createdDateMidnight)
           const enrolmentDate = this.set(
             StorageKeys.ENROLMENTDATE,
-            enrolmentDateTime.getTime()
+            new Date(createdDate).getTime()
           )
           const referenceDate = this.set(
             StorageKeys.REFERENCEDATE,
-            referenceDateTime.getTime()
+            new Date(createdDateMidnight).getTime()
           )
-
           const pId = this.set(StorageKeys.PARTICIPANTID, participantId)
           const pLogin = this.set(
             StorageKeys.PARTICIPANTLOGIN,
@@ -79,8 +76,7 @@ export class StorageService {
           )
           const cache = this.set(StorageKeys.CACHE_ANSWERS, {})
           let appVersion = DefaultAppVersion
-          this.appVersionPlugin
-            .getVersionNumber()
+          this.getAppVersion()
             .then(apV => {
               appVersion = apV
             })
@@ -115,8 +111,9 @@ export class StorageService {
   }
 
   set(key: StorageKeys, value: any): Promise<any> {
-    this.global[key.toString()] = value
-    return this.storage.set(key.toString(), value)
+    const k = key.toString()
+    this.global[k] = value
+    return this.storage.set(k, value)
   }
 
   push(key: StorageKeys, value: any): Promise<any> {
@@ -131,28 +128,31 @@ export class StorageService {
     return Promise.resolve(true)
   }
 
-  get(key) {
-    if (this.global[key.toString()] && key.toString()) {
-      return Promise.resolve(this.global[key.toString()])
+  get(key: StorageKeys) {
+    const k = key.toString()
+    const local = this.global[k]
+    if (local !== undefined) {
+      return Promise.resolve(local)
     } else {
-      return this.storage.get(key.toString()).then(value => {
-        this.global[key.toString()] = value
-        return Promise.resolve(value)
+      return this.storage.get(k).then(value => {
+        this.global[k] = value
+        return value
       })
     }
   }
 
   remove(key: StorageKeys) {
+    const k = key.toString()
     return this.storage
-      .remove(key.toString())
+      .remove(k)
       .then(res => {
-        this.global[key.toString()] = null
+        this.global[k] = null
         return res
       })
       .catch(error => this.handleError(error))
   }
 
-  getAllKeys() {
+  getAllKeys(): Promise<string[]> {
     return this.storage.keys()
   }
 
@@ -162,21 +162,12 @@ export class StorageService {
 
   prepareStorage() {
     return this.getAllKeys()
-      .then(keys => {
-        const promises = []
-        promises.push(Promise.resolve(keys))
-        for (let i = 0; i < keys.length; i++) {
-          promises.push(this.storage.get(keys[i]))
-        }
-        return Promise.all(promises)
-      })
-      .then(store => {
-        const keys = store[0]
-        for (let i = 1; i < store.length; i++) {
-          this.global[keys[i - 1].toString()] = store[i]
-        }
-        return Promise.resolve('Store set')
-      })
+      .then(keys =>
+        Promise.all(
+          keys.map(k => this.storage.get(k).then(v => (this.global[k] = v)))
+        )
+      )
+      .then(() => 'Store set')
   }
 
   getAssessment(task: Task) {

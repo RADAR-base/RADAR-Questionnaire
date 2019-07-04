@@ -6,8 +6,8 @@ import {
   Output
 } from '@angular/core'
 
+import { LocalizationService } from '../../../../core/services/localization.service'
 import { Task } from '../../../../shared/models/task'
-import { formatTime } from '../../../../shared/utilities/time'
 
 @Component({
   selector: 'task-calendar',
@@ -26,31 +26,30 @@ export class TaskCalendarComponent implements OnChanges {
   currentTime
   timeIndex: number
 
-  constructor() {}
+  constructor(private localization: LocalizationService) {}
 
   ngOnChanges() {
     if (this.tasks && this.tasks.size) this.setCurrentTime()
   }
 
-  getStartTime(task: Task) {
-    return formatTime(new Date(task.timestamp))
-  }
-
   setCurrentTime() {
-    const now = new Date()
-    this.currentTime = formatTime(now)
-
+    const now = new Date().getTime()
+    try {
+      this.currentTime = this.localization.moment(now).format('LT') // locale time
+    } catch (e) {
+      console.log(e)
+    }
     // NOTE: Compare current time with the start times of the tasks and
     // find out in between which tasks it should be shown in the interface
     const todaysTasks = this.tasks.get(this.currentDate)
-    this.timeIndex = todaysTasks.findIndex(t => t.timestamp >= now.getTime())
-  }
-
-  hasExtraInfo(warningStr) {
-    return warningStr !== ''
+    this.timeIndex = todaysTasks.findIndex(t => t.timestamp >= now)
   }
 
   clicked(task) {
     this.task.emit(task)
+  }
+
+  getStartTime(task: Task) {
+    return this.localization.moment(task.timestamp).format('HH:mm')
   }
 }

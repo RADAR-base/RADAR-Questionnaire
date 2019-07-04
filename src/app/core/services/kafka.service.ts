@@ -11,7 +11,6 @@ import {
   KAFKA_COMPLETION_LOG,
   KAFKA_TIMEZONE
 } from '../../../assets/data/defaultConfig'
-import { AuthService } from '../../pages/auth/services/auth.service'
 import { StorageKeys } from '../../shared/enums/storage'
 import {
   AnswerKeyExport,
@@ -19,27 +18,31 @@ import {
   ApplicationTimeZoneValueExport,
   CompletionLogValueExport
 } from '../../shared/models/answer'
+import { SchemaMetadata } from '../../shared/models/kafka'
 import { QuestionType } from '../../shared/models/question'
 import { Task } from '../../shared/models/task'
 import { getSeconds } from '../../shared/utilities/time'
 import { Utility } from '../../shared/utilities/util'
 import { FirebaseAnalyticsService } from './firebaseAnalytics.service'
 import { StorageService } from './storage.service'
+import { TokenService } from './token.service'
 
 @Injectable()
 export class KafkaService {
   private KAFKA_CLIENT_URL: string
   private cacheSending = false
-  private schemas = {}
+  private schemas: {
+    [key: string]: Promise<[SchemaMetadata, SchemaMetadata]>
+  } = {}
 
   constructor(
     private util: Utility,
-    public storage: StorageService,
-    private authService: AuthService,
+    private storage: StorageService,
+    private token: TokenService,
     private firebaseAnalytics: FirebaseAnalyticsService
   ) {
     this.updateURI()
-    this.authService.refresh()
+    this.token.refresh()
   }
 
   updateURI() {
@@ -122,21 +125,16 @@ export class KafkaService {
       questionnaire_timestamp: String(task.timestamp),
       type: type
     })
-    return this.util.getSourceKeyInfo().then(keyInfo => {
-      const sourceId = keyInfo[0]
-      const projectId = keyInfo[1]
-      const patientId = keyInfo[2].toString()
-      // NOTE: Payload for kafka 2 : key Object which contains device information
-      const answerKey: AnswerKeyExport = {
-        userId: patientId,
-        sourceId: sourceId,
-        projectId: projectId
-      }
-      const kafkaObject = { value: value, key: answerKey }
-      return this.getSpecs(task, kafkaObject, type).then(specs =>
+    return this.util
+      .getObservationKey()
+      .then(observationKey => {
+        // NOTE: Payload for kafka 2 : key Object which contains device information
+        const kafkaObject = { key: observationKey as AnswerKeyExport, value }
+        return this.getSpecs(task, kafkaObject, type)
+      })
+      .then(specs =>
         this.cacheAnswers(specs).then(() => this.sendAllAnswersInCache())
       )
-    })
   }
 
   createPayloadAndSend(specs, kafkaConnInstance) {
@@ -157,20 +155,13 @@ export class KafkaService {
             })
           this.schemas[specs.name] = schemaVersions
       }
-      return Promise.all([schemaVersions]).then(data => {
-        schemaVersions = data[0]
-        const avroKey = AvroSchema.parse(
-          JSON.parse(schemaVersions[0]['schema']),
-          {
-            wrapUnions: true
-          }
-        )
-        const avroVal = AvroSchema.parse(
-          JSON.parse(schemaVersions[1]['schema']),
-          {
-            wrapUnions: true
-          }
-        )
+      return schemaVersions.then(([keySchemaMetadata, valueSchemaMetadata]) => {
+        const keySchema = JSON.parse(keySchemaMetadata.schema)
+        const valueSchema = JSON.parse(valueSchemaMetadata.schema)
+
+        const avroKey = AvroSchema.parse(keySchema, { wrapUnions: true })
+        const avroVal = AvroSchema.parse(valueSchema, { wrapUnions: true })
+
         const kafkaObject = specs.kafkaObject
         const bufferKey = avroKey.clone(kafkaObject.key, { wrapUnions: true })
         const bufferVal = avroVal.clone(kafkaObject.value, { wrapUnions: true })
@@ -178,16 +169,13 @@ export class KafkaService {
           key: bufferKey,
           value: bufferVal
         }
-        const schemaId = new KafkaRest.AvroSchema(
-          JSON.parse(schemaVersions[0]['schema'])
-        )
-        const schemaInfo = new KafkaRest.AvroSchema(
-          JSON.parse(schemaVersions[1]['schema'])
-        )
+        const parsedKeySchema = new KafkaRest.AvroSchema(keySchema)
+        const parsedValueSchema = new KafkaRest.AvroSchema(valueSchema)
+
         return this.sendToKafka(
           specs,
-          schemaId,
-          schemaInfo,
+          parsedKeySchema,
+          parsedValueSchema,
           payload,
           kafkaConnInstance,
           topic
@@ -265,27 +253,17 @@ export class KafkaService {
 
   sendToKafkaFromCache() {
     return this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
-      const promises = []
-      let noOfTasks = 0
-      if (Object.keys(cache).length)
-        return this.getKafkaInstance().then(kafkaConnInstance => {
-          for (const answerKey in cache) {
-            if (answerKey) {
-              const cacheObject = cache[answerKey]
-              promises.push(
-                this.createPayloadAndSend(cacheObject, kafkaConnInstance)
-              )
-              noOfTasks += 1
-              if (noOfTasks === 20) {
-                break
-              }
-            }
-          }
-          return Promise.all(promises.map(p => p.catch(() => undefined))).then(
-            keys => this.removeAnswersFromCache(keys.filter(k => k))
-          )
-        })
-      return
+      const cacheEntries = Object.entries(cache)
+      if (!cacheEntries.length) return
+      return this.getKafkaInstance().then(kafkaConnInstance => {
+        const promises = cacheEntries
+          .filter(([k, v]) => k)
+          .slice(0, 20)
+          .map(([k, v]) => this.createPayloadAndSend(v, kafkaConnInstance))
+        return Promise.all(promises.map(p => p.catch(() => undefined))).then(
+          keys => this.removeAnswersFromCache(keys.filter(k => k))
+        )
+      })
     })
   }
 
@@ -307,17 +285,11 @@ export class KafkaService {
   }
 
   getKafkaInstance() {
-    this.updateURI()
-    return this.authService
-      .refresh()
+    return Promise.all([this.updateURI(), this.token.refresh()])
       .then(() => this.storage.get(StorageKeys.OAUTH_TOKENS))
       .then(tokens => {
         const headers = { Authorization: 'Bearer ' + tokens.access_token }
         return new KafkaRest({ url: this.KAFKA_CLIENT_URL, headers: headers })
       })
-  }
-
-  storeQuestionareData(values) {
-    // TODO: Decide on whether to save Questionare data locally or send it to server
   }
 }

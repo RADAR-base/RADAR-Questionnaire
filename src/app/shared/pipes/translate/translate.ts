@@ -1,10 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core'
 
-import { Localisations } from '../../../../assets/data/localisations'
-import { StorageService } from '../../../core/services/storage.service'
-import { LocKeys } from '../../../shared/enums/localisations'
-import { StorageKeys } from '../../enums/storage'
-import { LanguageSetting } from '../../models/settings'
+import { LocalizationService } from '../../../core/services/localization.service'
 
 // TODO: Solve Globalization error: plugin_not_installed
 
@@ -13,37 +9,9 @@ import { LanguageSetting } from '../../models/settings'
   pure: false
 })
 export class TranslatePipe implements PipeTransform {
-  language: LanguageSetting = {
-    label: LocKeys.LANGUAGE_ENGLISH.toString(),
-    value: 'en'
-  }
-  preferredLang = this.language.value
-
-  constructor(private storage: StorageService) {
-    this.init()
-  }
-
-  init() {
-    return this.storage.get(StorageKeys.LANGUAGE).then(language => {
-      if (language) {
-        this.language = language
-        this.preferredLang = language.value
-      } else {
-        this.storage.set(StorageKeys.LANGUAGE, this.language)
-      }
-    })
-  }
-
-  getLanguage() {
-    return this.language
-  }
+  constructor(private localization: LocalizationService) {}
 
   transform(value: string): string {
-    try {
-      return Localisations[value][this.preferredLang]
-    } catch (e) {
-      console.log(e)
-    }
-    return ''
+    return this.localization.translate(value)
   }
 }

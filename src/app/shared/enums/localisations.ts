@@ -57,6 +57,7 @@ export class LocKeys {
   static BTN_START = new LocKeys('BTN_START')
   static BTN_STOP = new LocKeys('BTN_STOP')
   static BTN_RESET = new LocKeys('BTN_RESET')
+  static BTN_RETRY = new LocKeys('BTN_RETRY')
   static BTN_AGREE = new LocKeys('BTN_AGREE')
   static BTN_DISAGREE = new LocKeys('BTN_DISAGREE')
   static BTN_OKAY = new LocKeys('BTN_OKAY')

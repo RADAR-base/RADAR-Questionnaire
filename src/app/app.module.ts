@@ -56,7 +56,6 @@ import { Utility } from './shared/utilities/util'
     StatusBar,
     SplashScreen,
     Utility,
-    LocalNotifications,
     BarcodeScanner,
     Dialogs,
     Vibration,
@@ -68,7 +67,8 @@ import { Utility } from './shared/utilities/util'
     MobileAccessibility,
     Insomnia,
     BackgroundMode,
-    Firebase
+    Firebase,
+    LocalNotifications
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

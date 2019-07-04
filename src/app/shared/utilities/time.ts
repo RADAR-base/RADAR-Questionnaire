@@ -25,6 +25,15 @@ interface Time {
   milliseconds?: number
 }
 
+export const TIME_UNIT_MILLIS = {
+  min: getMilliseconds({ minutes: 1 }),
+  hour: getMilliseconds({ hours: 1 }),
+  day: getMilliseconds({ days: 1 }),
+  week: getMilliseconds({ weeks: 1 }),
+  month: getMilliseconds({ months: 1 }),
+  year: getMilliseconds({ years: 1 })
+}
+
 export function getMilliseconds(time: Time) {
   return getSeconds(time) * TimeConversion.SEC_TO_MILLISEC
 }
@@ -68,12 +77,12 @@ export function getSeconds(time: Time) {
   return seconds
 }
 
-export function formatTime(date) {
-  const hour = date.getHours()
-  const min = date.getMinutes()
-  const hourStr = hour < 10 ? '0' + String(hour) : String(hour)
-  const minStr = min < 10 ? '0' + String(min) : String(min)
-  return hourStr + ':' + minStr
+export function getMinutes(time: Time) {
+  return getSeconds(time) / TimeConversion.MIN_TO_SEC
+}
+
+export function getHours(time: Time) {
+  return getMinutes(time) / TimeConversion.HOUR_TO_MIN
 }
 
 export function timeIntervalToMillis(interval: TimeInterval): number {
@@ -84,13 +93,4 @@ export function timeIntervalToMillis(interval: TimeInterval): number {
     interval.unit in TIME_UNIT_MILLIS ? interval.unit : DefaultTimeInterval.unit
   const amount = interval.amount ? interval.amount : DefaultTimeInterval.amount
   return amount * TIME_UNIT_MILLIS[unit]
-}
-
-export const TIME_UNIT_MILLIS = {
-  min: getMilliseconds({ minutes: 1 }),
-  hour: getMilliseconds({ hours: 1 }),
-  day: getMilliseconds({ days: 1 }),
-  week: getMilliseconds({ weeks: 1 }),
-  month: getMilliseconds({ months: 1 }),
-  year: getMilliseconds({ years: 1 })
 }

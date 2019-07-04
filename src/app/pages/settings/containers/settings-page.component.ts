@@ -1,19 +1,16 @@
 import { Component } from '@angular/core'
-import {
-  AlertController,
-  NavController,
-  NavParams,
-  Platform
-} from 'ionic-angular'
+import { NavController, Platform } from 'ionic-angular'
 
 import {
+  DefaultLanguage,
   DefaultSettingsNotifications,
-  DefaultSettingsSelectedLanguage,
   DefaultSettingsWeeklyReport,
   LanguageMap
 } from '../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../core/services/alert.service'
 import { ConfigService } from '../../../core/services/config.service'
+import { LocalizationService } from '../../../core/services/localization.service'
+import { NotificationGeneratorService } from '../../../core/services/notification-generator.service'
 import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { NotificationService } from '../../../core/services/notification.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
@@ -25,7 +22,6 @@ import {
   NotificationSettings,
   WeeklyReportSubSettings
 } from '../../../shared/models/settings'
-import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 
 @Component({
@@ -33,29 +29,29 @@ import { SplashPageComponent } from '../../splash/containers/splash-page.compone
   templateUrl: 'settings-page.component.html'
 })
 export class SettingsPageComponent {
-  appVersionStr: String
-  configVersion: String
-  scheduleVersion: String
+  appVersionStr: string
+  configVersion: string
+  scheduleVersion: string
   cacheSize: number
-  participantId: String
-  projectName: String
+  participantId: string
+  projectName: string
   enrolmentDate: Date
   lastUploadDate: Date
-  language: LanguageSetting = DefaultSettingsSelectedLanguage
-  languagesSelectable: String[]
+  language: LanguageSetting = DefaultLanguage
+  languagesSelectable: LanguageSetting[]
   notifications: NotificationSettings = DefaultSettingsNotifications
   weeklyReport: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
   showLoading = false
 
   constructor(
     public navCtrl: NavController,
-    public navParams: NavParams,
     public alertService: AlertService,
     public storage: StorageService,
     private schedule: SchedulingService,
     private configService: ConfigService,
+    private notificationGenerator: NotificationGeneratorService,
     private notificationService: NotificationService,
-    public translate: TranslatePipe,
+    public localization: LocalizationService,
     private platform: Platform,
     private firebaseAnalytics: FirebaseAnalyticsService
   ) {}
@@ -63,65 +59,62 @@ export class SettingsPageComponent {
   ionViewDidLoad() {
     this.loadSettings()
 
+    // Update midnight to time zone of reference date.
     this.storage.get(StorageKeys.REFERENCEDATE).then(refDate => {
       const createdDateMidnight = this.schedule.setDateTimeToMidnight(
         new Date(refDate)
       )
-      this.storage.set(StorageKeys.REFERENCEDATE, createdDateMidnight.getTime())
+      return this.storage.set(
+        StorageKeys.REFERENCEDATE,
+        createdDateMidnight.getTime()
+      )
     })
   }
 
   loadSettings() {
-    const appVersion = this.storage.get(StorageKeys.APP_VERSION)
-    const configVersion = this.storage.get(StorageKeys.CONFIG_VERSION)
-    const scheduleVersion = this.storage.get(StorageKeys.SCHEDULE_VERSION)
-    const participantId = this.storage.get(StorageKeys.PARTICIPANTID)
-    const projectName = this.storage.get(StorageKeys.PROJECTNAME)
-    const enrolmentDate = this.storage.get(StorageKeys.ENROLMENTDATE)
-    const language = this.storage.get(StorageKeys.LANGUAGE)
-    const settingsNotification = this.storage.get(
-      StorageKeys.SETTINGS_NOTIFICATIONS
-    )
-    const settingsLanguages = this.storage.get(StorageKeys.SETTINGS_LANGUAGES)
-    const settingsWeeklyReport = this.storage.get(
-      StorageKeys.SETTINGS_WEEKLYREPORT
-    )
-    const cache = this.storage.get(StorageKeys.CACHE_ANSWERS)
-    const lastUpload = this.storage.get(StorageKeys.LAST_UPLOAD_DATE)
-    const settings = [
-      configVersion,
-      scheduleVersion,
-      participantId,
-      projectName,
-      enrolmentDate,
-      language,
-      settingsNotification,
-      settingsLanguages,
-      settingsWeeklyReport,
-      cache,
-      appVersion,
-      lastUpload
-    ]
-    return Promise.all(settings).then(returns => {
-      this.appVersionStr = returns[10]
-      this.configVersion = returns[0]
-      this.scheduleVersion = returns[1]
-      this.participantId = returns[2]
-      this.projectName = returns[3]
-      this.enrolmentDate = returns[4]
-      this.language = returns[5]
-      this.notifications = returns[6]
-      this.languagesSelectable = returns[7]
-      this.weeklyReport = returns[8]
-      this.lastUploadDate = returns[11]
-      let size = 0
-      for (const key in returns[9]) {
-        if (key) {
-          size += 1
-        }
+    this.language = this.localization.getLanguage()
+    return Promise.all([
+      this.storage.get(StorageKeys.CONFIG_VERSION),
+      this.storage.get(StorageKeys.SCHEDULE_VERSION),
+      this.storage.get(StorageKeys.PARTICIPANTID),
+      this.storage.get(StorageKeys.PROJECTNAME),
+      this.storage.get(StorageKeys.ENROLMENTDATE),
+      this.storage.get(StorageKeys.SETTINGS_NOTIFICATIONS),
+      this.storage.get(StorageKeys.SETTINGS_LANGUAGES),
+      this.storage.get(StorageKeys.SETTINGS_WEEKLYREPORT),
+      this.storage.get(StorageKeys.CACHE_ANSWERS),
+      this.storage.get(StorageKeys.APP_VERSION),
+      this.storage.get(StorageKeys.LAST_UPLOAD_DATE)
+    ]).then(
+      ([
+        configVersion,
+        scheduleVersion,
+        participantId,
+        projectName,
+        enrolmentDate,
+        settingsNotification,
+        settingsLanguages,
+        settingsWeeklyReport,
+        cache,
+        appVersionPromise,
+        lastUpload
+      ]) => {
+        this.appVersionStr = appVersionPromise
+        this.configVersion = configVersion
+        this.scheduleVersion = scheduleVersion
+        this.participantId = participantId
+        this.projectName = projectName
+        this.enrolmentDate = enrolmentDate
+        this.notifications = settingsNotification
+        this.languagesSelectable = settingsLanguages
+        this.weeklyReport = settingsWeeklyReport
+        this.lastUploadDate = lastUpload
+        this.cacheSize = Object.keys(cache).reduce(
+          (size, k) => (k ? size + 1 : size),
+          0
+        )
       }
-      this.cacheSize = size
-    })
+    )
   }
 
   backToHome() {
@@ -144,46 +137,38 @@ export class SettingsPageComponent {
   showSelectLanguage() {
     const buttons = [
       {
-        text: this.translate.transform(LocKeys.BTN_CANCEL.toString()),
+        text: this.localization.translateKey(LocKeys.BTN_CANCEL),
         handler: () => {}
       },
       {
-        text: this.translate.transform(LocKeys.BTN_SET.toString()),
+        text: this.localization.translateKey(LocKeys.BTN_SET),
         handler: selectedLanguageVal => {
           const lang: LanguageSetting = {
             label: LanguageMap[selectedLanguageVal],
             value: selectedLanguageVal
           }
-          this.language = lang
-          this.storage.set(StorageKeys.LANGUAGE, lang).then(() =>
-            this.translate.init().then(() => {
+          this.localization
+            .setLanguage(lang)
+            .then(() => {
+              this.language = lang
               this.showLoading = true
               return this.configService
                 .updateConfigStateOnLanguageChange()
                 .then(() => this.backToSplash())
                 .catch(() => this.showConfigError())
             })
-          )
+            .then(() => this.backToSplash())
         }
       }
     ]
-    const inputs = []
-    for (let i = 0; i < this.languagesSelectable.length; i++) {
-      let checked = false
-      if (this.languagesSelectable[i]['label'] === this.language) {
-        checked = true
-      }
-      inputs.push({
-        type: 'radio',
-        label: this.translate.transform(this.languagesSelectable[i]['label']),
-        value: this.languagesSelectable[i]['value'],
-        checked: checked
-      })
-    }
+    const inputs = this.languagesSelectable.map(lang => ({
+      type: 'radio',
+      label: this.localization.translate(lang.label),
+      value: lang.value,
+      checked: lang.value === this.language.value
+    }))
     return this.alertService.showAlert({
-      title: this.translate.transform(
-        LocKeys.SETTINGS_LANGUAGE_ALERT.toString()
-      ),
+      title: this.localization.translateKey(LocKeys.SETTINGS_LANGUAGE_ALERT),
       buttons: buttons,
       inputs: inputs
     })
@@ -192,49 +177,25 @@ export class SettingsPageComponent {
   showInfoNightMode() {
     const buttons = [
       {
-        text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+        text: this.localization.translateKey(LocKeys.BTN_OKAY),
         handler: () => {}
       }
     ]
     return this.alertService.showAlert({
-      title: this.translate.transform(
-        LocKeys.SETTINGS_NOTIFICATIONS_NIGHTMOD.toString()
+      title: this.localization.translateKey(
+        LocKeys.SETTINGS_NOTIFICATIONS_NIGHTMOD
       ),
-      message: this.translate.transform(
-        LocKeys.SETTINGS_NOTIFICATIONS_NIGHTMOD_DESC.toString()
+      message: this.localization.translateKey(
+        LocKeys.SETTINGS_NOTIFICATIONS_NIGHTMOD_DESC
       ),
       buttons: buttons
     })
   }
 
   consoleLogNotifications() {
-    this.notificationService.consoleLogScheduledNotifications()
-  }
-
-  testNotifications() {
-    const buttons = [
-      {
-        text: this.translate.transform(LocKeys.BTN_CANCEL.toString()),
-        handler: () => {}
-      },
-      {
-        text: this.translate.transform(LocKeys.CLOSE_APP.toString()),
-        handler: () => {
-          this.notificationService.sendTestFCMNotification().then(() => {
-            this.firebaseAnalytics.logEvent('notification_test', {})
-            // NOTE: iOS does not support exitApp()
-            if (this.platform.is('android')) this.platform.exitApp()
-          })
-        }
-      }
-    ]
-    return this.alertService.showAlert({
-      title: this.translate.transform(LocKeys.TESTING_NOTIFICATIONS.toString()),
-      message: this.translate.transform(
-        LocKeys.TESTING_NOTIFICATIONS_MESSAGE.toString()
-      ),
-      buttons: buttons
-    })
+    this.schedule
+      .getTasks()
+      .then(tasks => this.notificationGenerator.consoleLogNotifications(tasks))
   }
 
   consoleLogSchedule() {
@@ -245,13 +206,11 @@ export class SettingsPageComponent {
   showConfirmReset() {
     const buttons = [
       {
-        text: this.translate.transform(LocKeys.BTN_DISAGREE.toString()),
-        handler: () => {
-          console.log('Reset cancel')
-        }
+        text: this.localization.translateKey(LocKeys.BTN_DISAGREE),
+        handler: () => console.log('Reset cancel')
       },
       {
-        text: this.translate.transform(LocKeys.BTN_AGREE.toString()),
+        text: this.localization.translateKey(LocKeys.BTN_AGREE),
         handler: () => {
           this.firebaseAnalytics.logEvent('app_reset', {})
           this.storage.clearStorage().then(() => this.backToSplash())
@@ -259,9 +218,9 @@ export class SettingsPageComponent {
       }
     ]
     return this.alertService.showAlert({
-      title: this.translate.transform(LocKeys.SETTINGS_RESET_ALERT.toString()),
-      message: this.translate.transform(
-        LocKeys.SETTINGS_RESET_ALERT_DESC.toString()
+      title: this.localization.translateKey(LocKeys.SETTINGS_RESET_ALERT),
+      message: this.localization.translateKey(
+        LocKeys.SETTINGS_RESET_ALERT_DESC
       ),
       buttons: buttons
     })
@@ -276,25 +235,68 @@ export class SettingsPageComponent {
         this.showLoading = false
         return this.loadSettings()
       })
+      .catch(e => {
+        this.alertService.showAlert({
+          title: this.localization.translateKey(LocKeys.STATUS_FAILURE),
+          buttons: [
+            {
+              text: this.localization.translateKey(LocKeys.BTN_CANCEL),
+              handler: () => {}
+            },
+            {
+              text: this.localization.translateKey(LocKeys.BTN_RETRY),
+              handler: () => {
+                this.reloadConfig()
+              }
+            }
+          ]
+        })
+        return Promise.reject(e)
+      })
       .then(() => this.backToSplash())
+  }
+
+  generateTestNotification() {
+    this.alertService.showAlert({
+      title: this.localization.translateKey(LocKeys.TESTING_NOTIFICATIONS),
+      message: this.localization.translateKey(
+        LocKeys.TESTING_NOTIFICATIONS_MESSAGE
+      ),
+      buttons: [
+        {
+          text: this.localization.translateKey(LocKeys.BTN_CANCEL),
+          handler: () => {}
+        },
+        {
+          text: this.localization.translateKey(LocKeys.CLOSE_APP),
+          handler: () => {
+            this.notificationService.sendTestNotification().then(() => {
+              this.firebaseAnalytics.logEvent('notification_test', {})
+              // NOTE: iOS does not support exitApp()
+              if (this.platform.is('android')) this.platform.exitApp()
+            })
+          }
+        }
+      ]
+    })
   }
 
   showConfigError() {
     const buttons = [
       {
-        text: this.translate.transform(LocKeys.BTN_CANCEL.toString()),
+        text: this.localization.translateKey(LocKeys.BTN_CANCEL),
         handler: () => {}
       },
       {
-        text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+        text: this.localization.translateKey(LocKeys.BTN_OKAY),
         handler: () => {
           this.reloadConfig()
         }
       }
     ]
     return this.alertService.showAlert({
-      title: this.translate.transform(LocKeys.STATUS_FAILURE.toString()),
-      message: this.translate.transform(LocKeys.CONFIG_ERROR_DESC.toString()),
+      title: this.localization.translateKey(LocKeys.STATUS_FAILURE),
+      message: this.localization.translateKey(LocKeys.CONFIG_ERROR_DESC),
       buttons: buttons
     })
   }

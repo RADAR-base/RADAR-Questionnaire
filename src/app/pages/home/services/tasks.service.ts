@@ -36,7 +36,7 @@ export class TasksService {
       const sortedTasks = new Map()
       tasks.forEach(t => {
         const midnight = this.schedule
-          .setDateTimeToMidnight(t.timestamp)
+          .setDateTimeToMidnight(new Date(t.timestamp))
           .getTime()
         if (sortedTasks.has(midnight)) sortedTasks.get(midnight).push(t)
         else sortedTasks.set(midnight, [t])

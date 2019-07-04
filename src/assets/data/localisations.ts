@@ -486,6 +486,14 @@ export const Localisations = {
     it: 'Reset',
     nl: 'Reset'
   },
+  BTN_RETRY: {
+    da: 'Prøve igen',
+    de: 'Wiederholen',
+    en: 'Retry',
+    es: 'REintentar',
+    it: 'Riprovare',
+    nl: 'Probeer opnieuw'
+  },
   BTN_AGREE: {
     da: 'Enig.',
     de: 'Ja',

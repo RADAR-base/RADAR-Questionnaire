@@ -1,21 +1,16 @@
 import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Component, OnDestroy } from '@angular/core'
-import {
-  AlertController,
-  NavController,
-  NavParams,
-  Platform
-} from 'ionic-angular'
+import { NavController, Platform } from 'ionic-angular'
 import { Subscription } from 'rxjs'
 
 import { AlertService } from '../../../core/services/alert.service'
 import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { KafkaService } from '../../../core/services/kafka.service'
+import { LocalizationService } from '../../../core/services/localization.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { Task, TasksProgress } from '../../../shared/models/task'
-import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { checkTaskIsNow } from '../../../shared/utilities/check-task-is-now'
 import { ClinicalTasksPageComponent } from '../../clinical-tasks/containers/clinical-tasks-page.component'
 import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
@@ -57,10 +52,9 @@ export class HomePageComponent implements OnDestroy {
 
   constructor(
     public navCtrl: NavController,
-    public navParams: NavParams,
     public alertService: AlertService,
     private tasksService: TasksService,
-    private translate: TranslatePipe,
+    private localization: LocalizationService,
     public storage: StorageService,
     private platform: Platform,
     private kafka: KafkaService,
@@ -162,21 +156,20 @@ export class HomePageComponent implements OnDestroy {
     if (this.tasksService.isTaskStartable(task)) {
       this.startingQuestionnaire = true
 
-      Promise.all([
-        this.storage.get(StorageKeys.LANGUAGE),
-        this.tasksService.getAssessment(task)
-      ]).then(([lang, assessment]) => {
-        const language = lang.value
+      return this.tasksService.getAssessment(task).then(assessment => {
         const params = {
           title: assessment.name,
-          introduction: assessment.startText[language],
-          endText: assessment.endText[language],
+          introduction: this.localization.chooseText(assessment.startText),
+          endText: this.localization.chooseText(assessment.endText),
           questions: assessment.questions,
           associatedTask: task,
           assessment: assessment,
           isLastTask: false
         }
 
+        this.firebaseAnalytics.logEvent('click', {
+          button: 'start_questionnaire'
+        })
         this.tasks
           .then(tasks => this.tasksService.isLastTask(task, tasks))
           .then(lastTask => (params.isLastTask = lastTask))
@@ -188,9 +181,6 @@ export class HomePageComponent implements OnDestroy {
             }
           })
       })
-      this.firebaseAnalytics.logEvent('click', {
-        button: 'start_questionnaire'
-      })
     } else {
       this.showMissedInfo()
     }
@@ -199,11 +189,11 @@ export class HomePageComponent implements OnDestroy {
   showCredits() {
     this.firebaseAnalytics.logEvent('click', { button: 'show_credits' })
     return this.alertService.showAlert({
-      title: this.translate.transform(LocKeys.CREDITS_TITLE.toString()),
-      message: this.translate.transform(LocKeys.CREDITS_BODY.toString()),
+      title: this.localization.translateKey(LocKeys.CREDITS_TITLE),
+      message: this.localization.translateKey(LocKeys.CREDITS_BODY),
       buttons: [
         {
-          text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+          text: this.localization.translateKey(LocKeys.BTN_OKAY),
           handler: () => {}
         }
       ]
@@ -212,15 +202,11 @@ export class HomePageComponent implements OnDestroy {
 
   showMissedInfo() {
     return this.alertService.showAlert({
-      title: this.translate.transform(
-        LocKeys.CALENDAR_ESM_MISSED_TITLE.toString()
-      ),
-      message: this.translate.transform(
-        LocKeys.CALENDAR_ESM_MISSED_DESC.toString()
-      ),
+      title: this.localization.translateKey(LocKeys.CALENDAR_ESM_MISSED_TITLE),
+      message: this.localization.translateKey(LocKeys.CALENDAR_ESM_MISSED_DESC),
       buttons: [
         {
-          text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+          text: this.localization.translateKey(LocKeys.BTN_OKAY),
           handler: () => {}
         }
       ]

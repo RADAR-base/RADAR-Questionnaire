@@ -5,6 +5,7 @@ import { NavController, Slides } from 'ionic-angular'
 
 import {
   DefaultEnrolmentBaseURL,
+  DefaultLanguage,
   DefaultSettingsSupportedLanguages,
   DefaultSettingsWeeklyReport,
   DefaultSourceTypeModel,
@@ -13,6 +14,7 @@ import {
 import { AlertService } from '../../../core/services/alert.service'
 import { ConfigService } from '../../../core/services/config.service'
 import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
+import { LocalizationService } from '../../../core/services/localization.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { LocKeys } from '../../../shared/enums/localisations'
@@ -21,7 +23,6 @@ import {
   LanguageSetting,
   WeeklyReportSubSettings
 } from '../../../shared/models/settings'
-import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { AuthService } from '../services/auth.service'
 
@@ -43,7 +44,7 @@ export class EnrolmentPageComponent {
 
   URLRegEx = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?'
 
-  language: LanguageSetting
+  language?: LanguageSetting = DefaultLanguage
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
 
   enterMetaQR = false
@@ -70,13 +71,11 @@ export class EnrolmentPageComponent {
     private schedule: SchedulingService,
     private configService: ConfigService,
     private authService: AuthService,
-    private translate: TranslatePipe,
+    private localization: LocalizationService,
     private alertService: AlertService,
     private firebaseAnalytics: FirebaseAnalyticsService
   ) {
-    this.translate
-      .init()
-      .then(() => (this.language = this.translate.getLanguage()))
+    this.localization.update().then(lang => (this.language = lang))
   }
 
   ionViewDidLoad() {
@@ -227,7 +226,7 @@ export class EnrolmentPageComponent {
   }
 
   doAfterAuthentication() {
-    this.configService
+    return this.configService
       .fetchConfigState(true)
       .catch(e => this.showConfigError())
       .then(() => this.firebaseAnalytics.logEvent('sign_up', {}))
@@ -237,19 +236,19 @@ export class EnrolmentPageComponent {
   showConfigError() {
     const buttons = [
       {
-        text: this.translate.transform(LocKeys.BTN_CANCEL.toString()),
+        text: this.localization.translateKey(LocKeys.BTN_CANCEL),
         handler: () => {}
       },
       {
-        text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+        text: this.localization.translateKey(LocKeys.BTN_OKAY),
         handler: () => {
           this.doAfterAuthentication()
         }
       }
     ]
     return this.alertService.showAlert({
-      title: this.translate.transform(LocKeys.STATUS_FAILURE.toString()),
-      message: this.translate.transform(LocKeys.CONFIG_ERROR_DESC.toString()),
+      title: this.localization.translateKey(LocKeys.STATUS_FAILURE),
+      message: this.localization.translateKey(LocKeys.CONFIG_ERROR_DESC),
       buttons: buttons
     })
   }
@@ -257,12 +256,11 @@ export class EnrolmentPageComponent {
   displayErrorMessage(error) {
     this.loading = false
     this.showOutcomeStatus = true
-    const msg = error.statusText + ' (' + error.status + ')'
-    this.outcomeStatus = msg
+    this.outcomeStatus = error.statusText + ' (' + error.status + ')'
     this.transitionStatuses()
     this.firebaseAnalytics.logEvent('sign_up_failed', {
       error: JSON.stringify(error),
-      message: String(msg)
+      message: String(this.outcomeStatus)
     })
   }
 
@@ -311,33 +309,32 @@ export class EnrolmentPageComponent {
   showSelectLanguage() {
     const buttons = [
       {
-        text: this.translate.transform(LocKeys.BTN_CANCEL.toString()),
+        text: this.localization.translateKey(LocKeys.BTN_CANCEL),
         handler: () => {}
       },
       {
-        text: this.translate.transform(LocKeys.BTN_SET.toString()),
+        text: this.localization.translateKey(LocKeys.BTN_SET),
         handler: selectedLanguageVal => {
           const lang: LanguageSetting = {
             label: LanguageMap[selectedLanguageVal],
             value: selectedLanguageVal
           }
-          this.storage
-            .set(StorageKeys.LANGUAGE, lang)
-            .then(() => this.navCtrl.setRoot(EnrolmentPageComponent))
+          this.localization.setLanguage(lang).then(() => {
+            this.language = lang
+            return this.navCtrl.setRoot(EnrolmentPageComponent)
+          })
         }
       }
     ]
     const inputs = this.languagesSelectable.map(lang => ({
       type: 'radio',
-      label: this.translate.transform(lang.label),
+      label: this.localization.translate(lang.label),
       value: lang.value,
-      checked: lang.label === this.language.label
+      checked: lang.value === this.language.value
     }))
 
     return this.alertService.showAlert({
-      title: this.translate.transform(
-        LocKeys.SETTINGS_LANGUAGE_ALERT.toString()
-      ),
+      title: this.localization.translateKey(LocKeys.SETTINGS_LANGUAGE_ALERT),
       buttons: buttons,
       inputs: inputs
     })

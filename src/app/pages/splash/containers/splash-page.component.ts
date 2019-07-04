@@ -10,6 +10,7 @@ import { AlertService } from '../../../core/services/alert.service'
 import { ConfigService } from '../../../core/services/config.service'
 import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
 import { KafkaService } from '../../../core/services/kafka.service'
+import { LocalizationService } from '../../../core/services/localization.service'
 import { NotificationService } from '../../../core/services/notification.service'
 import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
@@ -35,10 +36,10 @@ export class SplashPageComponent {
     private notificationService: NotificationService,
     private kafka: KafkaService,
     private configService: ConfigService,
+    private alertService: AlertService,
+    private localization: LocalizationService,
     private schedule: SchedulingService,
-    private firebaseAnalytics: FirebaseAnalyticsService,
-    private translate: TranslatePipe,
-    private alertService: AlertService
+    private firebaseAnalytics: FirebaseAnalyticsService
   ) {
     this.splashService
       .evalEnrolment()
@@ -108,7 +109,7 @@ export class SplashPageComponent {
           this.status = 'Updating notifications...'
           console.log('[SPLASH] Scheduling Notifications.')
           return this.notificationService
-            .setNextXNotifications(DefaultNumberOfNotificationsToSchedule)
+            .publish()
             .then(() =>
               this.firebaseAnalytics.logEvent('notification_refreshed', {})
             )
@@ -154,19 +155,19 @@ export class SplashPageComponent {
   showConfigError() {
     const buttons = [
       {
-        text: this.translate.transform(LocKeys.BTN_CANCEL.toString()),
+        text: this.localization.translateKey(LocKeys.BTN_CANCEL),
         handler: () => {}
       },
       {
-        text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+        text: this.localization.translateKey(LocKeys.BTN_OKAY),
         handler: () => {
           this.onStart()
         }
       }
     ]
     return this.alertService.showAlert({
-      title: this.translate.transform(LocKeys.STATUS_FAILURE.toString()),
-      message: this.translate.transform(LocKeys.CONFIG_ERROR_DESC.toString()),
+      title: this.localization.translateKey(LocKeys.STATUS_FAILURE),
+      message: this.localization.translateKey(LocKeys.CONFIG_ERROR_DESC),
       buttons: buttons
     })
   }

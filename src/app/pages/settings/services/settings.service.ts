@@ -1,7 +1,6 @@
-import { Injectable } from '@angular/core'
-
-import { LanguageMap } from '../../../../assets/data/defaultConfig'
 import { ConfigService } from '../../../core/services/config/config.service'
+import { Injectable } from '@angular/core'
+import { LanguageMap } from '../../../../assets/data/defaultConfig'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { NotificationService } from '../../../core/services/notifications/notification.service'
 

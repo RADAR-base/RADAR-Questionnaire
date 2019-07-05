@@ -1,14 +1,12 @@
-import { LocKeys } from '../../app/shared/enums/localisations'
 import {
   LanguageSetting,
   NotificationSettings,
   WeeklyReportSubSettings
 } from '../../app/shared/models/settings'
+
+import { DefaultSourceProducerAndSecretExport } from './secret'
+import { LocKeys } from '../../app/shared/enums/localisations'
 import { Task } from '../../app/shared/models/task'
-import {
-  DefaultProtocolEndPointExport,
-  DefaultSourceProducerAndSecretExport
-} from './secret'
 
 // DEFAULT SETTINGS
 export const DefaultSettingsNotifications: NotificationSettings = {
@@ -33,7 +31,7 @@ export const DefaultSettingsWeeklyReport: WeeklyReportSubSettings[] = [
 ]
 
 // DEFAULT SETUP
-export const DefaultTaskCompletionWindow = 259200000 // 3 days in ms
+export const DefaultTaskCompletionWindow = 86400000 // 1 day in ms
 export const DefaultESMCompletionWindow = 600000 // 10 mins in ms
 
 export const DefaultTask: Task = {
@@ -105,6 +103,8 @@ export const LanguageMap = {
   de: LocKeys.LANGUAGE_GERMAN.toString()
 }
 
+export const DefaultAppVersion: string = '0.5.11.1-alpha'
+
 export const DefaultScheduleVersion: number = 0
 
 export const DefaultScheduleYearCoverage: number = 2 // years
@@ -112,37 +112,59 @@ export const DefaultScheduleYearCoverage: number = 2 // years
 export const DefaultScheduleReportRepeat: number = 7 // days
 
 export const DefaultNotificationType: string = 'FCM' // choose from 'FCM' or 'LOCAL'
-export const DefaultNumberOfNotificationsToSchedule: number = 80 //
+export const DefaultMaxUpstreamResends = 100
+export const DefaultNumberOfNotificationsToSchedule: number = 100 //
 export const DefaultNumberOfNotificationsToRescue: number = 12 //
 export const FCMPluginProjectSenderId: string = '430900191220'
 export const DefaultNotificationRefreshTime: number = 900000 // 15 mins in ms
 
-export const DefaultSourceTypeModel: string = 'aRMT-App'
-export const DefaultSourceTypeRegistrationBody: any = {
-  sourceTypeCatalogVersion: '1.4.0',
-  sourceTypeModel: 'aRMT-App',
+export const DefaultSourcePrefix = 'aRMT'
+export const DefaultSourceTypeModel: string = `${DefaultSourcePrefix}-App`
+export const DefaultSourceTypeRegistrationBody = {
+  sourceTypeCatalogVersion: '1.4.3',
+  sourceTypeModel: DefaultSourceTypeModel,
   sourceTypeProducer: 'RADAR'
   // "deviceTypeId": 1104
 }
 
 export const DefaultEndPoint: string =
   'https://radar-cns-platform.rosalind.kcl.ac.uk/'
-// export const DefaultEndPoint: string = 'https://radar-backend.co.uk/'
 
-export const DefaultProtocolEndPoint: string = DefaultProtocolEndPointExport
+// GITHUB SOURCES
 
-export const DefaultSourceProducerAndSecret: string = DefaultSourceProducerAndSecretExport
+export const GIT_API_URI = 'https://api.github.com/repos'
+export const DefaultOrganisation = 'RADAR-Base'
+
+export const DefaultProtocolRepo = 'RADAR-aRMT-protocols'
+export const DefaultProtocolBranch = 'master'
+export const DefaultProtocolPath = `protocol.json?ref=${DefaultProtocolBranch}`
+export const DefaultProtocolEndPoint = [
+  GIT_API_URI,
+  DefaultOrganisation,
+  DefaultProtocolRepo,
+  'contents'
+].join('/')
+
+export const DefaultSchemaRepo = 'RADAR-Schemas'
+export const DefaultSchemaBranch = 'master'
+// tslint:disable-next-line: max-line-length
+export const DefaultSchemaSpecPath = `specifications/active/${DefaultSourcePrefix}-${DefaultSourceTypeRegistrationBody.sourceTypeCatalogVersion}.yml?ref=${DefaultSchemaBranch}`
+export const DefaultSchemaSpecEndpoint = [
+  GIT_API_URI,
+  DefaultOrganisation,
+  DefaultSchemaRepo,
+  'contents',
+  DefaultSchemaSpecPath
+].join('/')
+
+export const DefaultSourceProducerAndSecret = DefaultSourceProducerAndSecretExport
 
 export const DefaultPackageName = 'org.phidatalab.radar_armt'
 
 // CONFIG SERVICE
 
-export const DefaultProtocolURI = '/protocol.json'
 export const DefaultQuestionnaireTypeURI = '_armt'
 export const DefaultQuestionnaireFormatURI = '.json'
-export const ARMTDefBranchProd = 'master'
-export const ARMTDefBranchTest = 'test'
-export const TEST_ARMT_DEF = false
 
 // AUTH SERVICE
 
@@ -162,6 +184,18 @@ export const DefaultEnrolmentBaseURL =
 
 export const DefaultTokenRefreshTime = 1800000 // 30 minutes in ms
 
+export const DefaultTimeInterval = { unit: 'day', amount: 1 }
+
 // KAFKA
 
 export const DefaultKafkaURI = '/kafka'
+
+export const DefaultNumberOfCompletionLogsToSend = 10
+
+// AUDIO TASK
+
+export const DefaultMaxAudioAttemptsAllowed = 5
+export const DefaultAudioRecordOptions = {
+  SampleRate: 16000,
+  NumberOfChannels: 1
+}

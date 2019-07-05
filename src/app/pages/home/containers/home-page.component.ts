@@ -1,20 +1,20 @@
 import { Component, OnDestroy } from '@angular/core'
 import { NavController, Platform } from 'ionic-angular'
-import { Subscription } from 'rxjs'
+import { Task, TasksProgress } from '../../../shared/models/task'
 
 import { AlertService } from '../../../core/services/misc/alert.service'
-import { LocalizationService } from '../../../core/services/misc/localization.service'
-import { FirebaseAnalyticsService } from '../../../core/services/usage/firebaseAnalytics.service'
-import { LocKeys } from '../../../shared/enums/localisations'
-import { Task, TasksProgress } from '../../../shared/models/task'
-import { checkTaskIsNow } from '../../../shared/utilities/check-task-is-now'
 import { ClinicalTasksPageComponent } from '../../clinical-tasks/containers/clinical-tasks-page.component'
+import { FirebaseAnalyticsService } from '../../../core/services/usage/firebaseAnalytics.service'
+import { HomePageAnimations } from './home-page.animation'
+import { HomeService } from '../services/home.service'
+import { LocKeys } from '../../../shared/enums/localisations'
+import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
 import { SettingsPageComponent } from '../../settings/containers/settings-page.component'
 import { SplashPageComponent } from '../../splash/containers/splash-page.component'
-import { HomeService } from '../services/home.service'
+import { Subscription } from 'rxjs'
 import { TasksService } from '../services/tasks.service'
-import { HomePageAnimations } from './home-page.animation'
+import { checkTaskIsNow } from '../../../shared/utilities/check-task-is-now'
 
 @Component({
   selector: 'page-home',
@@ -24,16 +24,17 @@ import { HomePageAnimations } from './home-page.animation'
 export class HomePageComponent implements OnDestroy {
   sortedTasks: Promise<Map<any, any>>
   tasks: Promise<Task[]>
-  tasksDate: Date
+  currentDate: Date
   nextTask: Task
+  tasksProgress: Promise<TasksProgress>
+  resumeListener: Subscription = new Subscription()
+
   showCalendar = false
   showCompleted = false
-  tasksProgress: Promise<TasksProgress>
   startingQuestionnaire = false
   hasClinicalTasks: Promise<boolean>
   taskIsNow = false
   checkTaskInterval
-  resumeListener: Subscription = new Subscription()
 
   constructor(
     public navCtrl: NavController,
@@ -49,6 +50,22 @@ export class HomePageComponent implements OnDestroy {
       this.firebaseAnalytics.logEvent('resumed', {})
       this.onResume()
     })
+  }
+
+  getIsLoadingSpinnerShown() {
+    return (
+      (this.startingQuestionnaire && !this.showCalendar) ||
+      (!this.nextTask && !this.showCompleted)
+    )
+  }
+
+  getIsStartButtonShown() {
+    return (
+      this.taskIsNow &&
+      !this.startingQuestionnaire &&
+      !this.showCompleted &&
+      !this.showCalendar
+    )
   }
 
   ngOnDestroy() {
@@ -68,7 +85,7 @@ export class HomePageComponent implements OnDestroy {
   init() {
     this.sortedTasks = this.tasksService.getSortedTasksOfToday()
     this.tasks = this.tasksService.getTasksOfToday()
-    this.tasksDate = new Date()
+    this.currentDate = this.tasksService.getCurrentDateMidnight()
     this.tasksProgress = this.tasksService.getTaskProgress()
     this.tasks.then(tasks => {
       this.checkTaskInterval = setInterval(() => {
@@ -85,8 +102,8 @@ export class HomePageComponent implements OnDestroy {
   }
 
   checkForNewDate() {
-    if (new Date().getDate() !== this.tasksDate.getDate()) {
-      this.tasksDate = new Date()
+    if (new Date().getDate() !== this.currentDate.getDate()) {
+      this.currentDate = this.tasksService.getCurrentDateMidnight()
       this.navCtrl.setRoot(SplashPageComponent)
     }
   }
@@ -113,23 +130,25 @@ export class HomePageComponent implements OnDestroy {
   }
 
   openSettingsPage() {
-    this.firebaseAnalytics.logEvent('click', { button: 'open_settings' })
     this.navCtrl.push(SettingsPageComponent)
+    this.firebaseAnalytics.logEvent('click', { button: 'open_settings' })
   }
 
   openClinicalTasksPage() {
-    this.firebaseAnalytics.logEvent('click', { button: 'open_clinical_tasks' })
     this.navCtrl.push(ClinicalTasksPageComponent)
+    this.firebaseAnalytics.logEvent('click', { button: 'open_clinical_tasks' })
   }
 
   startQuestionnaire(taskCalendarTask: Task) {
-    this.firebaseAnalytics.logEvent('click', { button: 'start_questionnaire' })
     // NOTE: User can start questionnaire from task calendar or start button in home.
     const task = taskCalendarTask ? taskCalendarTask : this.nextTask
 
-    if (this.tasksService.isTaskValid(task)) {
+    if (this.tasksService.isTaskStartable(task)) {
+      this.firebaseAnalytics.logEvent('click', {
+        button: 'start_questionnaire'
+      })
       this.startingQuestionnaire = true
-      this.home.sendStartEvent()
+      this.home.sendStartEvent(task)
       return this.tasksService
         .getQuestionnairePayload(task)
         .then(payload => this.navCtrl.push(QuestionsPageComponent, payload))
@@ -139,6 +158,7 @@ export class HomePageComponent implements OnDestroy {
   }
 
   showCredits() {
+    this.firebaseAnalytics.logEvent('click', { button: 'show_credits' })
     return this.alertService.showAlert({
       title: this.localization.translateKey(LocKeys.CREDITS_TITLE),
       message: this.localization.translateKey(LocKeys.CREDITS_BODY),

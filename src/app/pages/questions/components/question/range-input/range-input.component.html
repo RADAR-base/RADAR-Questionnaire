@@ -1,15 +1,20 @@
-<ul>
-  <li *ngFor="let item of items">
-    <input
-      type="radio"
-      [id]="item.id"
-      [name]="name"
-      [value]="item.value"
-      (change)="onInputChange($event)"
+<ion-list radio-group>
+  <ul>
+    <li
+      *ngFor="let item of items"
+      class="item-md"
     >
-    <label [attr.for]="item.id">{{ item.value }}</label>
-  </li>
-</ul>
+      <ion-item no-lines>
+        <ion-label [attr.for]="item.id">{{ item.value }}</ion-label>
+        <ion-radio
+          [value]="item.value"
+          [id]="item.id"
+          (ionSelect)="onInputChange(item.value)"
+        ></ion-radio>
+      </ion-item>
+    </li>
+  </ul>
+</ion-list>
 <div class="padding">
   <div class="labelLeft">{{ labelLeft }}</div>
   <div class="labelRight">{{ labelRight }}</div>

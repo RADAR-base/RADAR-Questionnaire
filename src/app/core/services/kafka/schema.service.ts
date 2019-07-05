@@ -1,21 +1,24 @@
-import { HttpClient } from '@angular/common/http'
-import { Injectable } from '@angular/core'
 import * as AvroSchema from 'avsc'
 import * as KafkaRest from 'kafka-rest'
+import * as YAML from 'yamljs'
 
 import {
   AnswerKeyExport,
   AnswerValueExport
 } from '../../../shared/models/answer'
-import { CompletionLogValueExport } from '../../../shared/models/completion-log'
 import { SchemaMetadata, SchemaType } from '../../../shared/models/kafka'
-import { Task } from '../../../shared/models/task'
+
 import { ApplicationTimeZoneValueExport } from '../../../shared/models/timezone'
-import { UsageEventValueExport } from '../../../shared/models/usage-event'
-import { getTaskType } from '../../../shared/utilities/task-type'
-import { getSeconds } from '../../../shared/utilities/time'
+import { CompletionLogValueExport } from '../../../shared/models/completion-log'
+import { DefaultSchemaSpecEndpoint } from '../../../../assets/data/defaultConfig'
+import { HttpClient } from '@angular/common/http'
+import { Injectable } from '@angular/core'
 import { QuestionnaireService } from '../config/questionnaire.service'
 import { SubjectConfigService } from '../config/subject-config.service'
+import { Task } from '../../../shared/models/task'
+import { UsageEventValueExport } from '../../../shared/models/usage-event'
+import { getSeconds } from '../../../shared/utilities/time'
+import { getTaskType } from '../../../shared/utilities/task-type'
 
 @Injectable()
 export class SchemaService {
@@ -105,9 +108,8 @@ export class SchemaService {
     return AvroSchema.parse(schema, options).clone(value, options)
   }
 
-  convertToAvro(kafkaObject, specs, baseURI) {
-    if (!this.schemas[specs.name]) {
-      const topic = specs.avsc + '_' + specs.name
+  convertToAvro(kafkaObject, topic, baseURI) {
+    if (!this.schemas[topic]) {
       const schemaKeyAndValue: [
         Promise<SchemaMetadata>,
         Promise<SchemaMetadata>
@@ -115,13 +117,11 @@ export class SchemaService {
         this.getLatestKafkaSchemaVersion(topic + '-key', 'latest', baseURI),
         this.getLatestKafkaSchemaVersion(topic + '-value', 'latest', baseURI)
       ]
-      this.schemas[specs.name] = schemaKeyAndValue
+      this.schemas[topic] = schemaKeyAndValue
     }
-    return Promise.all(this.schemas[specs.name]).then(
+    return Promise.all(this.schemas[topic]).then(
       ([keySchemaMetadata, valueSchemaMetadata]) => {
         if (keySchemaMetadata && valueSchemaMetadata) {
-          console.log(keySchemaMetadata)
-          console.log(valueSchemaMetadata)
           const key = JSON.parse(keySchemaMetadata.schema)
           const value = JSON.parse(valueSchemaMetadata.schema)
           const schemaId = new KafkaRest.AvroSchema(key)
@@ -136,6 +136,21 @@ export class SchemaService {
         }
       }
     )
+  }
+
+  getKafkaTopic(name, avsc) {
+    const type = name.toLowerCase()
+    const defaultTopic = `${avsc}_${name}`
+    return this.http
+      .get(DefaultSchemaSpecEndpoint)
+      .toPromise()
+      .then(res => {
+        const schemaSpecs = YAML.parse(atob(res['content'])).data
+        const topic = schemaSpecs.find(t => t.type.toLowerCase() == type).topic
+        if (topic) return topic
+        else Promise.reject()
+      })
+      .catch(e => defaultTopic)
   }
 
   getLatestKafkaSchemaVersion(

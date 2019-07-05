@@ -1,11 +1,10 @@
 import { Component } from '@angular/core'
 import { MobileAccessibility } from '@ionic-native/mobile-accessibility/ngx'
+import { NotificationService } from '../services/notifications/notification.service'
+import { Platform } from 'ionic-angular'
+import { SplashPageComponent } from '../../pages/splash/containers/splash-page.component'
 import { SplashScreen } from '@ionic-native/splash-screen/ngx'
 import { StatusBar } from '@ionic-native/status-bar/ngx'
-import { Platform } from 'ionic-angular'
-
-import { SplashPageComponent } from '../../pages/splash/containers/splash-page.component'
-import { NotificationService } from '../services/notifications/notification.service'
 
 @Component({
   template: '<ion-nav [root]="rootPage"></ion-nav>'

@@ -1,9 +1,9 @@
-import { Component } from '@angular/core'
 import { NavController, NavParams } from 'ionic-angular'
 
+import { Component } from '@angular/core'
+import { FinishTaskService } from '../services/finish-task.service'
 import { FirebaseAnalyticsService } from '../../../core/services/usage/firebaseAnalytics.service'
 import { HomePageComponent } from '../../home/containers/home-page.component'
-import { FinishTaskService } from '../services/finish-task.service'
 
 @Component({
   selector: 'page-finish',
@@ -48,7 +48,7 @@ export class FinishPageComponent {
   onComplete() {
     this.finish.updateTaskToComplete(this.task)
     return Promise.all([
-      this.finish.sendCompletedEvent(),
+      this.finish.sendCompletedEvent(this.task),
       !this.task.name.includes('DEMO')
         ? this.finish.processDataAndSend(this.questionnaireData, this.task)
         : Promise.resolve()

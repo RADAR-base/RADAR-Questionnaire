@@ -1,12 +1,12 @@
-import { Injectable } from '@angular/core'
 import * as KafkaRest from 'kafka-rest'
 
 import { DefaultKafkaURI } from '../../../../assets/data/defaultConfig'
+import { FirebaseAnalyticsService } from '../usage/firebaseAnalytics.service'
+import { Injectable } from '@angular/core'
+import { SchemaService } from './schema.service'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { StorageService } from '../storage/storage.service'
 import { TokenService } from '../token/token.service'
-import { FirebaseAnalyticsService } from '../usage/firebaseAnalytics.service'
-import { SchemaService } from './schema.service'
 
 @Injectable()
 export class KafkaService {
@@ -54,7 +54,7 @@ export class KafkaService {
   sendToCache(kafkaObject, specs) {
     return this.getCache().then(cache => {
       console.log('KAFKA-SERVICE: Caching answers.')
-      cache[kafkaObject.value.time] = { kafkaObject: kafkaObject, specs: specs }
+      cache[kafkaObject.value.time] = Object.assign({}, specs, { kafkaObject })
       return this.setCache(cache)
     })
   }
@@ -71,10 +71,14 @@ export class KafkaService {
               ? [Promise.resolve()]
               : this.startSending(cacheEntries, kafka)
             this.setCacheSending(false)
-            return Promise.all(promises).then(keys => {
-              this.removeDataFromCache(keys.filter(k => k))
-              return this.setLastUploadDate()
-            })
+
+            return Promise.all(
+              promises.map(p => p.catch(() => undefined))
+            ).then(keys =>
+              this.removeDataFromCache(keys.filter(k => k)).then(() =>
+                this.setLastUploadDate()
+              )
+            )
           })
       })
     } else {
@@ -87,23 +91,26 @@ export class KafkaService {
       .filter(([k]) => k)
       .slice(0, 20)
       .map(([k, v]: any) => {
-        const timestamp = v.specs.task ? v.specs.task.timestamp : Date.now()
         return this.schema
-          .convertToAvro(v.kafkaObject, v.specs, this.BASE_URI)
-          .then(data =>
-            this.sendToKafka(
-              v.specs,
-              data.schemaId,
-              data.schemaInfo,
-              data.payload,
-              k,
-              kafka
-            )
+          .getKafkaTopic(v.name, v.avsc)
+          .then(topic =>
+            this.schema
+              .convertToAvro(v.kafkaObject, topic, this.BASE_URI)
+              .then(data =>
+                this.sendToKafka(
+                  topic,
+                  data.schemaId,
+                  data.schemaInfo,
+                  data.payload,
+                  k,
+                  kafka
+                )
+              )
           )
           .then(key => {
             this.firebaseAnalytics.logEvent('send_success', {
-              name: v.specs.name,
-              questionnaire_timestamp: String(timestamp)
+              name: v.name,
+              questionnaire_timestamp: String(v.kafkaObject.time)
             })
             return Promise.resolve(key)
           })
@@ -113,28 +120,24 @@ export class KafkaService {
             )
             this.firebaseAnalytics.logEvent('send_error', {
               error: JSON.stringify(error),
-              name: v.specs.name,
-              questionnaire_timestamp: String(timestamp)
+              name: v.name,
+              questionnaire_timestamp: String(v.kafkaObject.time)
             })
             return Promise.resolve(0)
           })
       })
   }
 
-  sendToKafka(specs, keySchema, valueSchema, payload, cacheKey, kafka) {
-    const topic = specs.avsc + '_' + specs.name
+  sendToKafka(topic, keySchema, valueSchema, payload, cacheKey, kafka) {
     console.log('Sending to: ' + topic)
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) =>
       // NOTE: Kafka connection instance to submit to topic
-      return kafka
+      kafka
         .topic(topic)
-        .produce(
-          keySchema,
-          valueSchema,
-          payload,
-          err => (err ? reject(err) : resolve(cacheKey))
+        .produce(keySchema, valueSchema, payload, err =>
+          err ? reject(err) : resolve(cacheKey)
         )
-    }).then(() => this.removeDataFromCache(cacheKey))
+    )
   }
 
   removeDataFromCache(cacheKeys: number[]) {

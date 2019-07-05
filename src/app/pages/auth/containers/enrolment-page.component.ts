@@ -1,8 +1,4 @@
 import { Component, ViewChild } from '@angular/core'
-import { FormControl, FormGroup, Validators } from '@angular/forms'
-import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx'
-import { NavController, Slides } from 'ionic-angular'
-
 import {
   DefaultEnrolmentBaseURL,
   DefaultLanguage,
@@ -10,16 +6,20 @@ import {
   DefaultSettingsWeeklyReport,
   LanguageMap
 } from '../../../../assets/data/defaultConfig'
-import { AlertService } from '../../../core/services/misc/alert.service'
-import { LocalizationService } from '../../../core/services/misc/localization.service'
-import { FirebaseAnalyticsService } from '../../../core/services/usage/firebaseAnalytics.service'
-import { LocKeys } from '../../../shared/enums/localisations'
+import { FormControl, FormGroup, Validators } from '@angular/forms'
 import {
   LanguageSetting,
   WeeklyReportSubSettings
 } from '../../../shared/models/settings'
-import { SplashPageComponent } from '../../splash/containers/splash-page.component'
+import { NavController, Slides } from 'ionic-angular'
+
+import { AlertService } from '../../../core/services/misc/alert.service'
 import { AuthService } from '../services/auth.service'
+import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx'
+import { FirebaseAnalyticsService } from '../../../core/services/usage/firebaseAnalytics.service'
+import { LocKeys } from '../../../shared/enums/localisations'
+import { LocalizationService } from '../../../core/services/misc/localization.service'
+import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 
 @Component({
   selector: 'page-enrolment',
@@ -130,7 +130,7 @@ export class EnrolmentPageComponent {
     this.showOutcomeStatus = false
   }
 
-  navigateToHome() {
+  navigateToSplash() {
     this.navCtrl.setRoot(SplashPageComponent)
   }
 
@@ -149,7 +149,7 @@ export class EnrolmentPageComponent {
           }
           this.localization.setLanguage(lang).then(() => {
             this.language = lang
-            return this.navCtrl.setRoot(SplashPageComponent)
+            return this.navCtrl.setRoot(EnrolmentPageComponent)
           })
         }
       }

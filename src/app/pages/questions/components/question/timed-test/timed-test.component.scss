@@ -1,15 +1,21 @@
 timed-test {
-  display: block;
+  display: flex;
   width: 100%;
 
   .test-card {
     margin: 8px;
     padding: 10px;
-    height: 80%;
+    max-height: calc(94% - 88px);
+    width: inherit;
+    height: calc(95vh - 184px);
     -webkit-border-radius: 5px;
     border-radius: 5px;
     background-color: $cl-primary-20;
     text-align: center;
+  }
+
+  ion-content {
+    background: none;
   }
 
   .heading {

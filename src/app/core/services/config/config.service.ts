@@ -1,24 +1,25 @@
-import { Injectable } from '@angular/core'
-import { AppVersion } from '@ionic-native/app-version/ngx'
-
 import {
+  DefaultAppVersion,
   DefaultNotificationRefreshTime,
   DefaultScheduleVersion,
   DefaultSettingsNotifications,
   DefaultSettingsWeeklyReport
 } from '../../../../assets/data/defaultConfig'
-import { StorageKeys } from '../../../shared/enums/storage'
-import { TaskType } from '../../../shared/utilities/task-type'
-import { setDateTimeToMidnight } from '../../../shared/utilities/time'
+
+import { AppVersion } from '@ionic-native/app-version/ngx'
+import { FirebaseAnalyticsService } from '../usage/firebaseAnalytics.service'
+import { Injectable } from '@angular/core'
 import { KafkaService } from '../kafka/kafka.service'
 import { LocalizationService } from '../misc/localization.service'
 import { NotificationService } from '../notifications/notification.service'
-import { ScheduleService } from '../schedule/schedule.service'
-import { StorageService } from '../storage/storage.service'
-import { FirebaseAnalyticsService } from '../usage/firebaseAnalytics.service'
 import { ProtocolService } from './protocol.service'
 import { QuestionnaireService } from './questionnaire.service'
+import { ScheduleService } from '../schedule/schedule.service'
+import { StorageKeys } from '../../../shared/enums/storage'
+import { StorageService } from '../storage/storage.service'
 import { SubjectConfigService } from './subject-config.service'
+import { TaskType } from '../../../shared/utilities/task-type'
+import { setDateTimeToMidnight } from '../../../shared/utilities/time'
 
 @Injectable()
 export class ConfigService {
@@ -120,6 +121,7 @@ export class ConfigService {
   }
 
   checkAppVersionChange() {
+    if (!this.appVersion) return Promise.resolve(DefaultAppVersion)
     return Promise.all([
       this.getAppVersion(),
       this.appVersion.getVersionNumber()
@@ -187,7 +189,9 @@ export class ConfigService {
       .then(() => this.notifications.publish())
       .then(() => console.log('NOTIFICATIONS scheduled after config change'))
       .then(() =>
-        this.firebaseAnalytics.logEvent('notification_rescheduled', {})
+        cancel
+          ? this.firebaseAnalytics.logEvent('notification_rescheduled', {})
+          : this.firebaseAnalytics.logEvent('notification_refreshed', {})
       )
   }
 

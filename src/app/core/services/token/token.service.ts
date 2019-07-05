@@ -1,9 +1,5 @@
 import 'rxjs/add/operator/toPromise'
 
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
-import { Injectable } from '@angular/core'
-import { JwtHelperService } from '@auth0/angular-jwt'
-
 import {
   DefaultEndPoint,
   DefaultManagementPortalURI,
@@ -12,9 +8,13 @@ import {
   DefaultSourceProducerAndSecret,
   DefaultTokenRefreshTime
 } from '../../../../assets/data/defaultConfig'
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
+
+import { Injectable } from '@angular/core'
+import { JwtHelperService } from '@auth0/angular-jwt'
 import { StorageKeys } from '../../../shared/enums/storage'
-import { getSeconds } from '../../../shared/utilities/time'
 import { StorageService } from '../storage/storage.service'
+import { getSeconds } from '../../../shared/utilities/time'
 
 @Injectable()
 export class TokenService {
@@ -63,7 +63,7 @@ export class TokenService {
     return this.getTokens().then(tokens => {
       if (tokens) {
         const limit = getSeconds({
-          milliseconds: new Date().getTime() - DefaultTokenRefreshTime
+          milliseconds: new Date().getTime() + DefaultTokenRefreshTime
         })
         if (tokens.iat + tokens.expires_in < limit) {
           const params = this.getRefreshParams(tokens.refresh_token)
@@ -102,5 +102,11 @@ export class TokenService {
     return new HttpParams()
       .set('grant_type', 'refresh_token')
       .set('refresh_token', refreshToken)
+  }
+
+  isValid() {
+    return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
+      return !this.jwtHelper.isTokenExpired(tokens.refresh_token)
+    })
   }
 }

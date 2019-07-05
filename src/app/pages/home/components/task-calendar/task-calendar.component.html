@@ -46,8 +46,8 @@
           </div>
           <div
             id="task-item"
-            (click)="clicked(task)"
-            *ngIf="task.name !== 'ESM' && task.isClinical == false"
+            (tap)="clicked(task)"
+            *ngIf="task.name !== 'ESM'"
           >
             <ion-row>
               <ion-col>

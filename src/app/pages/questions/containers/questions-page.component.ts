@@ -1,15 +1,18 @@
 // tslint:disable:no-eval
 import { Component, ElementRef, ViewChild } from '@angular/core'
 import { Content, NavController, NavParams, Platform } from 'ionic-angular'
-
-import { LocalizationService } from '../../../core/services/misc/localization.service'
-import { FirebaseAnalyticsService } from '../../../core/services/usage/firebaseAnalytics.service'
-import { LocKeys } from '../../../shared/enums/localisations'
 import { Question, QuestionType } from '../../../shared/models/question'
-import { TaskType } from '../../../shared/utilities/task-type'
+
+import { Assessment } from '../../../shared/models/assessment'
 import { FinishPageComponent } from '../../finish/containers/finish-page.component'
-import { QuestionsService } from '../services/questions.service'
+import { FirebaseAnalyticsService } from '../../../core/services/usage/firebaseAnalytics.service'
+import { Insomnia } from '@ionic-native/insomnia/ngx'
+import { LocKeys } from '../../../shared/enums/localisations'
+import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { QuestionsPageAnimations } from './questions-page.animation'
+import { QuestionsService } from '../services/questions.service'
+import { Task } from '../../../shared/models/task'
+import { TaskType } from '../../../shared/utilities/task-type'
 
 @Component({
   selector: 'page-questions',
@@ -47,15 +50,15 @@ export class QuestionsPageComponent {
   }
   iconPrevious: string = this.iconValues.close
 
-  task
+  task: Task
   taskType: TaskType
   questions: Question[]
   questionTitle: String
   endText: string
   isLastTask: boolean
-  introduction
-  assessment
-  showIntroduction = true
+  introduction: string
+  assessment: Assessment
+  showIntroduction: boolean
 
   constructor(
     public navCtrl: NavController,
@@ -63,7 +66,8 @@ export class QuestionsPageComponent {
     private localization: LocalizationService,
     private questionsService: QuestionsService,
     private firebaseAnalytics: FirebaseAnalyticsService,
-    private platform: Platform
+    private platform: Platform,
+    private insomnia: Insomnia
   ) {
     this.onClose()
   }
@@ -75,20 +79,21 @@ export class QuestionsPageComponent {
       type: this.task.name
     })
     this.firebaseAnalytics.setCurrentScreen('questions-page')
+    this.insomnia.keepAwake()
   }
 
   ionViewDidLeave() {
     this.sendCompletionLog()
-    this.questionsService.sendQuestionnaireCloseEvent()
+    this.questionsService.sendCloseEvent()
     this.questionsService.reset()
   }
 
   init() {
     this.questionTitle = this.navParams.data.title
     this.introduction = this.navParams.data.introduction
-    // this.showIntroduction = this.navParams.data.assessment.showIntroduction
+    this.showIntroduction = this.navParams.data.assessment.showIntroduction
     this.questionsContainerEl = this.questionsContainerRef.nativeElement
-    this.questions = this.questionsService.getQuestions(
+    this.questions = this.questionsService.processQuestions(
       this.questionTitle,
       this.navParams.data.questions
     )
@@ -125,7 +130,10 @@ export class QuestionsPageComponent {
       this.questionsService.submitAnswer(event)
       this.setNextDisabled()
     }
-    if (event.type === QuestionType.timed) {
+    if (
+      event.type === QuestionType.timed ||
+      event.type === QuestionType.audio
+    ) {
       this.nextQuestion()
     }
   }
@@ -199,6 +207,7 @@ export class QuestionsPageComponent {
 
   setProgress() {
     this.progress = this.questionsService.getAnswerProgress(
+      this.currentQuestion,
       this.questions.length
     )
   }
@@ -233,7 +242,7 @@ export class QuestionsPageComponent {
       ) {
         this.navCtrl.pop()
       } else {
-        this.questionsService.deleteLastAnswer()
+        if (!this.isNextBtDisabled) this.questionsService.deleteLastAnswer()
         this.setCurrentQuestion(-this.questionIncrements.pop())
       }
     }

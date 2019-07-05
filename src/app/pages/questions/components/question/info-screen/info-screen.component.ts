@@ -2,12 +2,13 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,
   OnInit,
-  Output
+  Output,
+  ViewChild
 } from '@angular/core'
-
 import { InfoItem, Section } from '../../../../../shared/models/question'
+
+import { Content } from 'ionic-angular'
 
 let uniqueID = 0
 
@@ -15,20 +16,23 @@ let uniqueID = 0
   selector: 'info-screen',
   templateUrl: 'info-screen.component.html'
 })
-export class InfoScreenComponent implements OnInit, OnChanges {
+export class InfoScreenComponent implements OnInit {
+  @ViewChild(Content) content: Content
+
   @Output()
   valueChange: EventEmitter<number> = new EventEmitter<number>()
 
   @Input()
   sections: Section[]
   @Input()
-  currentlyShown: boolean
+  hasFieldLabel: boolean
 
   value: number = null
   uniqueID: number = uniqueID++
   name = `info-${this.uniqueID}`
   isThincItReminder = false
   items: InfoItem[] = Array()
+  showScrollButton: boolean
 
   ngOnInit() {
     this.sections.map((item, i) => {
@@ -42,13 +46,25 @@ export class InfoScreenComponent implements OnInit, OnChanges {
         content: item.label
       })
     })
+    if (this.sections.length > 1) this.showScrollButton = true
+    else this.emitTimestamp()
   }
 
-  ngOnChanges() {
-    if (this.currentlyShown) {
-      // NOTE: Save timestamp (epoch) and activate the next button
-      const epoch: number = new Date().getTime()
-      this.valueChange.emit(epoch)
-    }
+  scrollDown() {
+    const dimensions = this.content.getContentDimensions()
+    const position = dimensions.scrollTop + dimensions.contentHeight / 2
+    this.content.scrollTo(0, position, 1000)
+  }
+
+  onScroll(event) {
+    if (event.scrollTop >= (event.scrollHeight - event.contentHeight) * 0.8) {
+      this.emitTimestamp()
+      this.showScrollButton = false
+    } else this.showScrollButton = true
+  }
+
+  emitTimestamp() {
+    // NOTE: Save timestamp (epoch) and activate the next button
+    this.valueChange.emit(new Date().getTime())
   }
 }

@@ -1,29 +1,28 @@
 import 'rxjs/add/operator/map'
 
+import { Answer } from '../../../shared/models/answer'
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-
-import { Answer } from '../../../shared/models/answer'
 
 @Injectable()
 export class AnswerService {
   answers = {}
   keys = []
-  lastAnswerKey: string
 
   constructor(public http: HttpClient) {}
 
   add(value: Answer) {
     this.answers[value.id] = value.value
-    this.keys.push(value.id)
+    if (!this.check(value.id)) this.keys.push(value.id)
   }
 
   pop() {
+    console.log(this.keys)
     this.keys.pop()
   }
 
   check(id: string) {
-    return this.answers.hasOwnProperty(id)
+    return this.keys.includes(id)
   }
 
   reset() {

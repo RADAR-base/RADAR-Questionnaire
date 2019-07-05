@@ -1,10 +1,9 @@
+import { AnswerService } from './answer.service'
 import { Injectable } from '@angular/core'
-
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
+import { TimestampService } from './timestamp.service'
 import { UsageService } from '../../../core/services/usage/usage.service'
 import { getSeconds } from '../../../shared/utilities/time'
-import { AnswerService } from './answer.service'
-import { TimestampService } from './timestamp.service'
 
 @Injectable()
 export class QuestionsService {
@@ -73,7 +72,7 @@ export class QuestionsService {
     return title === 'ESM'
   }
 
-  getQuestions(title, questions: any[]) {
+  processQuestions(title, questions: any[]) {
     if (this.isESM(title)) {
       const length = questions.length
       const first = this.showESMSleepQuestion() ? 0 : 1
@@ -118,13 +117,13 @@ export class QuestionsService {
     return this.evalSkipNext(questions, currentQuestion)
   }
 
-  getAnswerProgress(totalQuestions) {
-    return Math.ceil((this.answerService.keys.length * 100) / totalQuestions)
+  getAnswerProgress(current, total) {
+    return Math.ceil((current * 100) / total)
   }
 
-  getAttemptProgress(totalQuestions) {
+  getAttemptProgress(total) {
     return Math.ceil(
-      (Object.keys(this.answerService.answers).length * 100) / totalQuestions
+      (Object.keys(this.answerService.answers).length * 100) / total
     )
   }
 

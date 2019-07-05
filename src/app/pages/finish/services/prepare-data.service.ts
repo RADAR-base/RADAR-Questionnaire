@@ -3,38 +3,32 @@
 ********/
 
 import { Injectable } from '@angular/core'
-
 import { QuestionType } from '../../../shared/models/question'
 
 @Injectable()
 export class PrepareDataService {
   constructor() {}
 
-  processQuestionnaireData(data, configVersion) {
-    const answers = data.answers
-    const timestamps = data.timestamps
-    const questions = data.questions
-    console.log(answers)
-
-    const values = Object.entries(answers).map(([key, value]) => ({
+  processQuestionnaireData(data) {
+    console.log(data.answers)
+    const values = Object.entries(data.answers).map(([key, value]) => ({
       questionId: { string: key.toString() },
       value: { string: value.toString() },
-      startTime: timestamps[key].startTime,
-      endTime: timestamps[key].endTime
+      startTime: data.timestamps[key].startTime,
+      endTime: data.timestamps[key].endTime
     }))
     return {
       answers: values,
-      configVersion: configVersion,
-      time: this.getTimeStart(questions, values),
+      configVersion: '',
+      time: this.getTimeStart(data.questions, values),
       timeCompleted: this.getTimeCompleted(values)
     }
   }
 
   getTimeStart(questions, answers) {
-    // TODO: Fix this to get proper start time from protocol
-    return questions[0].field_type == QuestionType.info && questions[1] // NOTE: Do not use info startTime
-      ? answers[1].startTime
-      : answers[0].startTime // NOTE: whole questionnaire startTime and endTime
+    // NOTE: Do not include info screen as start time
+    const index = questions.findIndex(q => q.field_type !== QuestionType.info)
+    return index > -1 ? answers[index].startTime : answers[0].startTime
   }
 
   getTimeCompleted(answers) {

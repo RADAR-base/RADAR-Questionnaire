@@ -1,8 +1,8 @@
-import { Component, Input, OnChanges } from '@angular/core'
-
-import { LocalizationService } from '../../../../core/services/misc/localization.service'
-import { LocKeys } from '../../../../shared/enums/localisations'
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core'
 import { Task, TasksProgress } from '../../../../shared/models/task'
+
+import { LocKeys } from '../../../../shared/enums/localisations'
+import { LocalizationService } from '../../../../core/services/misc/localization.service'
 import { TaskInfoAnimations } from './task-info.animation'
 
 @Component({
@@ -18,11 +18,11 @@ export class TaskInfoComponent implements OnChanges {
   @Input()
   progress: TasksProgress
   @Input()
-  expanded = true
+  expanded
   hasExtraInfo: boolean
   extraTaskInfo: string
   nextTaskStatus
-  statusSize
+  statusChanges: SimpleChanges
 
   max: number = 1
   current: number = 0
@@ -31,9 +31,10 @@ export class TaskInfoComponent implements OnChanges {
 
   constructor(private localization: LocalizationService) {}
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     this.updateProgress()
     this.updateNextTaskStatus()
+    this.statusChanges = changes
   }
 
   updateProgress() {
@@ -42,8 +43,6 @@ export class TaskInfoComponent implements OnChanges {
       this.max = this.progress.numberOfTasks
     }
   }
-
-  getStatusScale() {}
 
   getHour() {
     return this.localization.moment(this.task.timestamp).format('HH')
@@ -65,11 +64,7 @@ export class TaskInfoComponent implements OnChanges {
     this.nextTaskStatus = this.isNow
       ? this.localization.translateKey(LocKeys.STATUS_NOW)
       : this.task.name !== 'ESM'
-        ? ''
-        : this.localization.translateKey(LocKeys.TASK_BAR_NEXT_TASK_SOON)
-
-    if (this.nextTaskStatus.length > 7) return (this.statusSize = 8)
-    if (this.nextTaskStatus.length > 4) return (this.statusSize = 11)
-    return (this.statusSize = 14)
+      ? ''
+      : this.localization.translateKey(LocKeys.TASK_BAR_NEXT_TASK_SOON)
   }
 }

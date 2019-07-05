@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
-
 import { Item, Response } from '../../../../../shared/models/question'
 
 let uniqueID = 0
@@ -22,23 +21,15 @@ export class RadioInputComponent implements OnInit {
 
   ngOnInit() {
     this.responses.map((item, i) => {
-      const codeChecked = this.checkCode(item.code)
       this.items.push({
         id: `radio-${this.uniqueID}-${i}`,
         response: item.label,
-        value: codeChecked
+        value: item.code
       })
     })
   }
 
-  checkCode(code) {
-    if (code.includes('\r')) {
-      return code.substr(2)
-    }
-    return code
-  }
-
   onInputChange(event) {
-    this.valueChange.emit(+event.target.value)
+    this.valueChange.emit(event)
   }
 }

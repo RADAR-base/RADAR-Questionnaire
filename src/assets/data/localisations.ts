@@ -470,6 +470,14 @@ export const Localisations = {
     it: 'Inizio',
     nl: 'Begin'
   },
+  BTN_STOP: {
+    da: 'Stoppe',
+    de: 'Stoppen',
+    en: 'Stop',
+    es: 'Detener',
+    it: 'Fermare',
+    nl: 'Stoppen'
+  },
   BTN_RESET: {
     da: 'Nulstil',
     de: 'Zurücksetzen',
@@ -565,6 +573,30 @@ export const Localisations = {
     es: 'Seleccione',
     it: 'Seleziona',
     nl: 'Selecteren'
+  },
+  BTN_YES: {
+    da: 'Ja',
+    de: 'Ja',
+    en: 'Yes',
+    es: 'Sí',
+    it: 'sì',
+    nl: 'Ja'
+  },
+  BTN_NO: {
+    da: 'Ingen',
+    de: 'Nein',
+    en: 'No',
+    es: 'No',
+    it: 'No',
+    nl: 'Nee'
+  },
+  BTN_TRY_AGAIN: {
+    da: 'Prøv igen',
+    de: 'Versuchen Sie es nochmal',
+    en: 'Try again',
+    es: 'Inténtalo de nuevo',
+    it: 'Riprova',
+    nl: 'Probeer het opnieuw'
   },
   STATUS_LOADING: {
     da: 'Indlæser...',
@@ -913,5 +945,53 @@ export const Localisations = {
     es: 'Cierre App',
     it: 'Chiudi App',
     nl: 'App Sluiten'
+  },
+  WARNING_DO_NOT_CLOSE_APP: {
+    da: 'Luk ikke appen',
+    de: 'Schließen Sie die App nicht',
+    en: 'Do not close the app',
+    es: 'No cierres la aplicación',
+    it: `Non chiudere l'app`,
+    nl: 'Sluit de app niet'
+  },
+  AUDIO_TASK_ALERT: {
+    da: 'Lydopgave afbrudt',
+    de: 'Audio-Task unterbrochen',
+    en: 'Audio task interrupted',
+    es: 'Tarea de audio interrumpida',
+    it: 'Attività audio interrotta',
+    nl: 'Audiotaak onderbroken'
+  },
+  AUDIO_TASK_ALERT_DESC: {
+    da: 'Opgaven er afbrudt. Genstart opgaven.',
+    de: 'Die Aufgabe wurde unterbrochen. Task neu starten.',
+    en: 'Task has been interrupted. Restart task.',
+    es: 'La tarea ha sido interrumpida. Tarea de reinicio.',
+    it: `L'attività è stata interrotta. Riavvia il compito.`,
+    nl: 'Taak is onderbroken. Start de taak opnieuw.'
+  },
+  AUDIO_TASK_ATTEMPT_ALERT: {
+    da: 'Forsøg tilbageværende',
+    de: 'Verbleibende Versuche',
+    en: 'Attempts remaining',
+    es: 'Intentos restantes',
+    it: 'Tentativi rimanenti',
+    nl: 'Pogingen blijven'
+  },
+  AUDIO_TASK_HAPPY_ALERT: {
+    da: 'Indsend optagelse?',
+    de: 'Aufnahme einreichen?',
+    en: 'Submit recording?',
+    es: '¿Enviar grabación?',
+    it: 'Invia la registrazione?',
+    nl: 'Opname verzenden?'
+  },
+  CONFIG_ERROR_DESC: {
+    da: 'Config opdatering mislykkes. Prøve igen?',
+    de: 'Config Update fehlgeschlagen. Wiederholen?',
+    en: 'Config update fail. Retry?',
+    es: 'La actualización de configuración falla. ¿Procesar de nuevo?',
+    it: `Errore nell'aggiornamento della configurazione. Riprovare?`,
+    nl: 'Config-update mislukt. Opnieuw?'
   }
 }

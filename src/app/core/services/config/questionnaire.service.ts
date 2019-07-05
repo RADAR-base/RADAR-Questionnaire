@@ -1,19 +1,13 @@
+import { Assessment } from '../../../shared/models/assessment'
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-
-import {
-  ARMTDefBranchProd,
-  ARMTDefBranchTest,
-  TEST_ARMT_DEF
-} from '../../../../assets/data/defaultConfig'
-import { StorageKeys } from '../../../shared/enums/storage'
-import { Assessment } from '../../../shared/models/assessment'
+import { LocalizationService } from '../misc/localization.service'
 import { Question } from '../../../shared/models/question'
+import { StorageKeys } from '../../../shared/enums/storage'
+import { StorageService } from '../storage/storage.service'
 import { Task } from '../../../shared/models/task'
 import { TaskType } from '../../../shared/utilities/task-type'
 import { Utility } from '../../../shared/utilities/util'
-import { LocalizationService } from '../misc/localization.service'
-import { StorageService } from '../storage/storage.service'
 
 @Injectable()
 export class QuestionnaireService {
@@ -56,14 +50,7 @@ export class QuestionnaireService {
   }
 
   formatQuestionnaireUri(questionnaireRepo, langVal: string) {
-    // NOTE: Using temp test repository for aRMT defs
-    const repository = TEST_ARMT_DEF
-      ? questionnaireRepo.repository.replace(
-          ARMTDefBranchProd,
-          ARMTDefBranchTest
-        )
-      : questionnaireRepo.repository
-    let uri = repository + questionnaireRepo.name + '/'
+    let uri = questionnaireRepo.repository + questionnaireRepo.name + '/'
     uri += questionnaireRepo.name + questionnaireRepo.type
     if (langVal !== '') {
       uri += '_' + langVal

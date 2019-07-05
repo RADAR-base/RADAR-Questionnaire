@@ -1,13 +1,11 @@
-import { Injectable } from '@angular/core'
-
-import { ConfigService } from '../../../core/services/config/config.service'
-import { KafkaService } from '../../../core/services/kafka/kafka.service'
-import { NotificationService } from '../../../core/services/notifications/notification.service'
-import { ScheduleService } from '../../../core/services/schedule/schedule.service'
-import { UsageService } from '../../../core/services/usage/usage.service'
-import { SchemaType } from '../../../shared/models/kafka'
 import { TaskType, getTaskType } from '../../../shared/utilities/task-type'
+
+import { Injectable } from '@angular/core'
+import { KafkaService } from '../../../core/services/kafka/kafka.service'
 import { PrepareDataService } from './prepare-data.service'
+import { ScheduleService } from '../../../core/services/schedule/schedule.service'
+import { SchemaType } from '../../../shared/models/kafka'
+import { UsageService } from '../../../core/services/usage/usage.service'
 
 @Injectable()
 export class FinishTaskService {
@@ -15,12 +13,10 @@ export class FinishTaskService {
     private schedule: ScheduleService,
     private usage: UsageService,
     private prepare: PrepareDataService,
-    private kafka: KafkaService,
-    private notifications: NotificationService,
-    private config: ConfigService
+    private kafka: KafkaService
   ) {}
 
-  updateTaskToComplete(task) {
+  updateTaskToComplete(task): Promise<any> {
     return getTaskType(task) == TaskType.NON_CLINICAL
       ? Promise.all([
           this.schedule.updateTaskToComplete(task),
@@ -30,20 +26,18 @@ export class FinishTaskService {
       : Promise.resolve([])
   }
 
-  sendCompletedEvent() {
-    return this.usage.sendQuestionnaireCompleted()
+  sendCompletedEvent(task) {
+    return this.usage.sendQuestionnaireCompleted(task)
   }
 
   processDataAndSend(data, task) {
-    return this.config.getConfigVersion().then(version => {
-      this.sendAnswersToKafka(
-        this.prepare.processQuestionnaireData(data, version),
-        task
-      )
-    })
+    return this.sendAnswersToKafka(
+      this.prepare.processQuestionnaireData(data),
+      task
+    )
   }
 
-  sendAnswersToKafka(processedAnswers, task) {
+  sendAnswersToKafka(processedAnswers, task): Promise<any> {
     // NOTE: Submit data to kafka
     return Promise.all([
       this.kafka.prepareKafkaObjectAndSend(SchemaType.TIMEZONE, {}),
@@ -55,9 +49,7 @@ export class FinishTaskService {
   }
 
   evalClinicalFollowUpTask(assessment): Promise<any> {
-    return this.config
-      .getReferenceDate()
-      .then(date => this.schedule.generateClinicalSchedule(assessment, date))
-      .then(() => this.notifications.publish())
+    return this.schedule.generateClinicalSchedule(assessment, Date.now())
+    // TODO: Fix notification scheduling right after generating clinic schedule
   }
 }

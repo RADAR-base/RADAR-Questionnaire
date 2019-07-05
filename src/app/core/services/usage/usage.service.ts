@@ -1,10 +1,9 @@
+import { FirebaseAnalyticsService } from './firebaseAnalytics.service'
 import { Injectable } from '@angular/core'
-import { WebIntent } from '@ionic-native/web-intent/ngx'
-
+import { KafkaService } from '../kafka/kafka.service'
 import { SchemaType } from '../../../shared/models/kafka'
 import { UsageEventType } from '../../../shared/models/usage-event'
-import { KafkaService } from '../kafka/kafka.service'
-import { FirebaseAnalyticsService } from './firebaseAnalytics.service'
+import { WebIntent } from '@ionic-native/web-intent/ngx'
 
 @Injectable()
 export class UsageService {
@@ -15,7 +14,7 @@ export class UsageService {
   ) {}
 
   sendUsageEvent(payload) {
-    return this.kafka.prepareKafkaObjectAndSend(SchemaType.USAGE, payload)
+    // return this.kafka.prepareKafkaObjectAndSend(SchemaType.USAGE, payload)
   }
 
   sendOpen() {

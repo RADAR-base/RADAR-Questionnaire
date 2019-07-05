@@ -21,19 +21,14 @@
         (answer)="onAnswer($event)"
       ></question>
     </ng-container>
-
   </div>
-
 </ion-content>
 
 <ng-container *ngIf="!showIntroduction">
   <ion-footer>
     <ion-toolbar>
       <div class="toolbar-progress">
-        <div
-          class="toolbar-progress-bar"
-          [style.width]="progress+'%'"
-        ></div>
+        <div class="toolbar-progress-bar" [style.width]="progress + '%'"></div>
       </div>
       <ion-buttons left>
         <button
@@ -41,7 +36,7 @@
           left
           icon-left
           [class.disabled]="isPreviousBtDisabled"
-          (click)="previousQuestion()"
+          (tap)="previousQuestion()"
         >
           <ion-icon [name]="iconPrevious"></ion-icon>
           <div class="toolbar-label">{{ previousButtonText }}</div>

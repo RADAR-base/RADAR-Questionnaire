@@ -1,9 +1,5 @@
 import 'rxjs/add/operator/toPromise'
 
-import { HttpClient } from '@angular/common/http'
-import { Injectable } from '@angular/core'
-import { FormControl, Validators } from '@angular/forms'
-
 import {
   DefaultManagementPortalURI,
   DefaultMetaTokenURI,
@@ -14,7 +10,11 @@ import {
   DefaultSourceTypeRegistrationBody,
   DefaultSubjectsURI
 } from '../../../../assets/data/defaultConfig'
+import { FormControl, Validators } from '@angular/forms'
+
 import { ConfigService } from '../../../core/services/config/config.service'
+import { HttpClient } from '@angular/common/http'
+import { Injectable } from '@angular/core'
 import { TokenService } from '../../../core/services/token/token.service'
 
 @Injectable()
@@ -63,11 +63,9 @@ export class AuthService {
   }
 
   enrol() {
-    return this.initSubjectInformation()
-      .then(() => this.config.fetchConfigState(true))
-      .catch(e => {
-        throw { status: 0 }
-      })
+    return this.initSubjectInformation().catch(e => {
+      throw { status: 0 }
+    })
   }
 
   updateURI() {

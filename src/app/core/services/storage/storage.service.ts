@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core'
 import { Storage } from '@ionic/storage'
-import { throwError as observableThrowError } from 'rxjs'
-
 import { StorageKeys } from '../../../shared/enums/storage'
+import { throwError as observableThrowError } from 'rxjs'
 
 @Injectable()
 export class StorageService {
@@ -82,8 +81,8 @@ export class StorageService {
     const errMsg = error.message
       ? error.message
       : error.status
-        ? `${error.status} - ${error.statusText}`
-        : 'error'
+      ? `${error.status} - ${error.statusText}`
+      : 'error'
     return observableThrowError(errMsg)
   }
 }

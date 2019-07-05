@@ -1,11 +1,11 @@
-import { Component } from '@angular/core'
 import { NavController, NavParams } from 'ionic-angular'
 
 import { AlertService } from '../../../core/services/misc/alert.service'
-import { LocalizationService } from '../../../core/services/misc/localization.service'
-import { LocKeys } from '../../../shared/enums/localisations'
+import { Component } from '@angular/core'
 import { EnrolmentPageComponent } from '../../auth/containers/enrolment-page.component'
 import { HomePageComponent } from '../../home/containers/home-page.component'
+import { LocKeys } from '../../../shared/enums/localisations'
+import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { SplashService } from '../services/splash.service'
 
 @Component({
@@ -24,19 +24,24 @@ export class SplashPageComponent {
   ) {
     this.splash
       .evalEnrolment()
-      .then(() => this.onStart())
-      .catch(e => this.enrol())
+      .then(valid => (valid ? this.onStart() : this.enrol()))
   }
 
   onStart() {
     this.status = 'Updating notifications and schedule...'
-    return this.splash
-      .loadConfig()
-      .then(() => this.navCtrl.setRoot(HomePageComponent))
-      .catch(e => {
-        console.log('[SPLASH] Notifications error.')
-        return this.showFetchConfigFail(e)
-      })
+    return (
+      this.splash
+        .loadConfig()
+        // .then(() => {
+        //   this.status = 'Sending missed questionnaire logs..'
+        //   return this.splash.sendMissedQuestionnaireLogs()
+        // })
+        .then(() => this.navCtrl.setRoot(HomePageComponent))
+        .catch(e => {
+          console.log('[SPLASH] Notifications error.')
+          return this.showFetchConfigFail(e)
+        })
+    )
   }
 
   showFetchConfigFail(e) {
@@ -63,29 +68,4 @@ export class SplashPageComponent {
   enrol() {
     this.splash.reset().then(() => this.navCtrl.setRoot(EnrolmentPageComponent))
   }
-
-  // sendNonReportedTaskCompletion() {
-  //   const promises = []
-  //   return this.schedule
-  //     .getNonReportedCompletedTasks()
-  //     .then(nonReportedTasks => {
-  //       const length = nonReportedTasks.length
-  //       for (let i = 0; i < length; i++) {
-  //         promises.push(
-  //           this.kafka
-  //             .prepareNonReportedTasksKafkaObjectAndSend(nonReportedTasks[i])
-  //             .then(() =>
-  //               this.updateTaskToReportedCompletion(nonReportedTasks[i])
-  //             )
-  //         )
-  //       }
-  //     })
-  //     .then(() => Promise.all(promises))
-  // }
-
-  // updateTaskToReportedCompletion(task): Promise<any> {
-  //   const updatedTask = task
-  //   updatedTask.reportedCompletion = true
-  //   return this.schedule.insertTask(updatedTask)
-  // }
 }

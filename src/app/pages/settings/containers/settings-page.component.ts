@@ -1,16 +1,17 @@
-import { Component } from '@angular/core'
-import { NavController, Platform } from 'ionic-angular'
-
 import {
   DefaultSettingsNotifications,
   DefaultSettingsWeeklyReport
 } from '../../../../assets/data/defaultConfig'
+import { NavController, Platform } from 'ionic-angular'
+
 import { AlertService } from '../../../core/services/misc/alert.service'
-import { LocalizationService } from '../../../core/services/misc/localization.service'
+import { Component } from '@angular/core'
+import { FirebaseAnalyticsService } from '../../../core/services/usage/firebaseAnalytics.service'
 import { LocKeys } from '../../../shared/enums/localisations'
+import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { Settings } from '../../../shared/models/settings'
-import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 import { SettingsService } from '../services/settings.service'
+import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 
 @Component({
   selector: 'page-settings',
@@ -27,7 +28,8 @@ export class SettingsPageComponent {
     public alertService: AlertService,
     public localization: LocalizationService,
     private platform: Platform,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private firebaseAnalytics: FirebaseAnalyticsService
   ) {}
 
   ionViewWillEnter() {
@@ -94,10 +96,13 @@ export class SettingsPageComponent {
       {
         text: this.localization.translateKey(LocKeys.BTN_SET),
         handler: selectedLanguageVal => {
-          this.settingsService.changeLanguage(selectedLanguageVal).then(() => {
-            this.settings.language = this.settingsService.getLanguage()
-            return this.backToSplash()
-          })
+          this.settingsService
+            .changeLanguage(selectedLanguageVal)
+            .then(() => {
+              this.settings.language = this.settingsService.getLanguage()
+              return this.backToSplash()
+            })
+            .catch(e => this.showFailAlert())
         }
       }
     ]
@@ -168,8 +173,10 @@ export class SettingsPageComponent {
         {
           text: this.localization.translateKey(LocKeys.CLOSE_APP),
           handler: () => {
+            this.firebaseAnalytics.logEvent('notification_test', {})
             this.settingsService.generateTestNotif()
-            this.platform.exitApp()
+            // NOTE: iOS does not support exitApp()
+            if (this.platform.is('android')) this.platform.exitApp()
           }
         }
       ]

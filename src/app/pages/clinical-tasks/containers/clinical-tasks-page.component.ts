@@ -1,10 +1,9 @@
-import { Component } from '@angular/core'
-import { NavController } from 'ionic-angular'
-
-import { DefaultTask } from '../../../../assets/data/defaultConfig'
-import { Task } from '../../../shared/models/task'
-import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
 import { ClinicalTasksService } from '../services/clinical-tasks.service'
+import { Component } from '@angular/core'
+import { DefaultTask } from '../../../../assets/data/defaultConfig'
+import { NavController } from 'ionic-angular'
+import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
+import { Task } from '../../../shared/models/task'
 
 @Component({
   selector: 'page-clinical-tasks',

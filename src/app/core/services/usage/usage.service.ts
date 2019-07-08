@@ -14,7 +14,7 @@ export class UsageService {
   ) {}
 
   sendUsageEvent(payload) {
-    // return this.kafka.prepareKafkaObjectAndSend(SchemaType.USAGE, payload)
+    return this.kafka.prepareKafkaObjectAndSend(SchemaType.USAGE, payload, true)
   }
 
   sendOpen() {
@@ -73,10 +73,15 @@ export class UsageService {
   }
 
   sendCompletionLog(task, percent) {
-    return this.kafka.prepareKafkaObjectAndSend(SchemaType.COMPLETION_LOG, {
-      name: task.name,
-      percentage: percent,
-      timeNotification: task.timestamp
-    })
+    const keepInCache = percent == 0
+    return this.kafka.prepareKafkaObjectAndSend(
+      SchemaType.COMPLETION_LOG,
+      {
+        name: task.name,
+        percentage: percent,
+        timeNotification: task.timestamp
+      },
+      keepInCache
+    )
   }
 }

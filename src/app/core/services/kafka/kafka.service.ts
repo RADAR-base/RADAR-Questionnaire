@@ -39,15 +39,15 @@ export class KafkaService {
     })
   }
 
-  prepareKafkaObjectAndSend(type, payload) {
+  prepareKafkaObjectAndSend(type, payload, keepInCache?) {
     const value = this.schema.getKafkaObjectValue(type, payload)
     const keyPromise = this.schema.getKafkaObjectKey()
     const specsPromise = this.schema.getSpecs(type, payload.task)
     return Promise.all([keyPromise, specsPromise]).then(([key, specs]) => {
       const kafkaObject = { key: key, value: value }
-      return this.sendToCache(kafkaObject, specs).then(() =>
-        this.sendToKafkaFromCache()
-      )
+      return this.sendToCache(kafkaObject, specs).then(() => {
+        return keepInCache ? Promise.resolve() : this.sendToKafkaFromCache()
+      })
     })
   }
 
@@ -62,7 +62,7 @@ export class KafkaService {
   sendToKafkaFromCache() {
     if (!this.isCacheSending) {
       this.setCacheSending(true)
-      this.getCache().then(cache => {
+      return this.getCache().then(cache => {
         const cacheEntries = Object.entries(cache)
         if (!cacheEntries.length) return Promise.resolve({})
         else
@@ -89,7 +89,6 @@ export class KafkaService {
   startSending(entries, kafka): Promise<any>[] {
     return entries
       .filter(([k]) => k)
-      .slice(0, 20)
       .map(([k, v]: any) => {
         return this.schema
           .getKafkaTopic(v.name, v.avsc)

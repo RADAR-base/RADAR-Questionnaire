@@ -97,7 +97,6 @@ export class HomePageComponent implements OnDestroy {
 
   onResume() {
     this.home.sendOpenEvent()
-    this.home.emptyCache()
     this.checkForNewDate()
   }
 

@@ -83,9 +83,8 @@ export class QuestionsPageComponent {
   }
 
   ionViewDidLeave() {
-    this.sendCompletionLog()
-    this.questionsService.sendCloseEvent()
     this.questionsService.reset()
+    this.insomnia.allowSleepAgain()
   }
 
   init() {
@@ -240,12 +239,18 @@ export class QuestionsPageComponent {
         this.previousButtonText === this.textValues.close ||
         !this.questionIncrements.length
       ) {
-        this.navCtrl.pop()
+        this.exitQuestionnaire()
       } else {
         if (!this.isNextBtDisabled) this.questionsService.deleteLastAnswer()
         this.setCurrentQuestion(-this.questionIncrements.pop())
       }
     }
+  }
+
+  exitQuestionnaire() {
+    this.sendCompletionLog()
+    this.questionsService.sendCloseEvent()
+    this.navCtrl.pop()
   }
 
   navigateToFinishPage() {

@@ -27,7 +27,7 @@ export class SplashService {
   }
 
   sendMissedQuestionnaireLogs() {
-    this.schedule
+    return this.schedule
       .getIncompleteTasks()
       .then(tasks =>
         Promise.all(

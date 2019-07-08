@@ -29,19 +29,17 @@ export class SplashPageComponent {
 
   onStart() {
     this.status = 'Updating notifications and schedule...'
-    return (
-      this.splash
-        .loadConfig()
-        // .then(() => {
-        //   this.status = 'Sending missed questionnaire logs..'
-        //   return this.splash.sendMissedQuestionnaireLogs()
-        // })
-        .then(() => this.navCtrl.setRoot(HomePageComponent))
-        .catch(e => {
-          console.log('[SPLASH] Notifications error.')
-          return this.showFetchConfigFail(e)
-        })
-    )
+    return this.splash
+      .loadConfig()
+      .then(() => {
+        this.status = 'Sending missed questionnaire logs..'
+        return this.splash.sendMissedQuestionnaireLogs()
+      })
+      .then(() => this.navCtrl.setRoot(HomePageComponent))
+      .catch(e => {
+        console.log('[SPLASH] Notifications error.')
+        return this.showFetchConfigFail(e)
+      })
   }
 
   showFetchConfigFail(e) {

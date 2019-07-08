@@ -70,76 +70,55 @@
       </div>
     </ion-slide>
 
-    <ion-slide *ngIf="enterMetaQR" id="qr-registration-token">
-      <form [formGroup]="metaQRForm" (ngSubmit)="metaQRHandler()">
-        <div class="registration-qr">
+    <ion-slide id="qr-registration">
+      <ng-container *ngIf="enterMetaQR">
+        <token-form
+          (data)="metaQRHandler($event)"
+          (focus)="clearStatus()"
+          (errors)="handleError($event)"
+        ></token-form
+      ></ng-container>
+      <ng-container *ngIf="!enterMetaQR">
+        <div class="registration">
           <div class="text text-lg">{{ 'ENROL_REGISTRATION' | translate }}</div>
           <div class="text text-justify">
-            {{ 'ENROL_REGISTRATION_TOKEN_DESC' | translate }}
-          </div>
-          <div class="token-input">
-            <ion-input
-              required
-              formControlName="baseURL"
-              type="url"
-              placeholder="Base URL"
-              (ionFocus)="clearStatus()"
-            ></ion-input>
-          </div>
-          <div class="token-input">
-            <ion-input
-              required
-              formControlName="tokenName"
-              type="text"
-              placeholder="Token"
-              (ionFocus)="clearStatus()"
-            ></ion-input>
+            {{ 'ENROL_REGISTRATION_SCAN_DESC' | translate }}
           </div>
         </div>
-        <div id="status">
-          <div id="loading" *ngIf="loading && !showOutcomeStatus">
-            <div class="padding-text">{{ 'STATUS_LOADING' | translate }}</div>
-          </div>
-          <div id="outcome" *ngIf="showOutcomeStatus && !loading">
-            <div class="padding-text">{{ outcomeStatus }}</div>
-          </div>
+        <div class="qr-code">
+          <img src="assets/imgs/radar-qr-code.png" />
         </div>
-        <div padding class="bottom" *ngIf="!loading">
-          <button ion-button class="bt bt--full" round full type="submit">
+      </ng-container>
+      <div id="outcome" *ngIf="showOutcomeStatus">
+        <div class="padding-text">{{ outcomeStatus }}</div>
+      </div>
+      <div class="bottom">
+        <div padding *ngIf="!loading">
+          <button
+            *ngIf="!enterMetaQR"
+            ion-button
+            class="bt bt--full"
+            round
+            full
+            (tap)="scanQRHandler()"
+          >
+            {{ 'BTN_ENROL_SCAN' | translate }}
+          </button>
+          <button
+            *ngIf="enterMetaQR"
+            form="tokenForm"
+            ion-button
+            class="bt bt--full"
+            round
+            full
+            type="submit"
+          >
             {{ 'BTN_SUBMIT' | translate }}
           </button>
         </div>
-      </form>
-    </ion-slide>
-
-    <ion-slide *ngIf="!enterMetaQR" id="qr-registration-scan">
-      <div class="registration">
-        <div class="text text-lg">{{ 'ENROL_REGISTRATION' | translate }}</div>
-        <div class="text text-justify">
-          {{ 'ENROL_REGISTRATION_SCAN_DESC' | translate }}
+        <div id="loading" *ngIf="loading">
+          {{ 'STATUS_LOADING' | translate }}
         </div>
-      </div>
-      <div class="qr-code">
-        <img src="assets/imgs/radar-qr-code.png" />
-      </div>
-      <div id="status">
-        <div id="loading" *ngIf="loading && !showOutcomeStatus">
-          <div class="padding-text">{{ 'STATUS_LOADING' | translate }}</div>
-        </div>
-        <div id="outcome" *ngIf="showOutcomeStatus && !loading">
-          <div class="padding-text">{{ outcomeStatus }}</div>
-        </div>
-      </div>
-      <div padding class="bottom" *ngIf="!loading">
-        <button
-          ion-button
-          class="bt bt--full"
-          round
-          full
-          (tap)="scanQRHandler()"
-        >
-          {{ 'BTN_ENROL_SCAN' | translate }}
-        </button>
       </div>
     </ion-slide>
 

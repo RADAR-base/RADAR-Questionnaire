@@ -10,18 +10,16 @@ import {
   DefaultSourceTypeRegistrationBody,
   DefaultSubjectsURI
 } from '../../../../assets/data/defaultConfig'
-import { FormControl, Validators } from '@angular/forms'
 
 import { ConfigService } from '../../../core/services/config/config.service'
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { TokenService } from '../../../core/services/token/token.service'
+import { isValidURL } from '../../../shared/utilities/form-validators'
 
 @Injectable()
 export class AuthService {
   URI_base: string
-  URLRegEx = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?'
-  URLValidators = [Validators.required, Validators.pattern(this.URLRegEx)]
 
   constructor(
     public http: HttpClient,
@@ -30,7 +28,7 @@ export class AuthService {
   ) {}
 
   authenticate(authObj) {
-    return (this.validURL(authObj)
+    return (isValidURL(authObj)
       ? this.URLAuth(authObj)
       : this.nonURLAuth(authObj)
     ).then(refreshToken => {
@@ -59,12 +57,6 @@ export class AuthService {
     return this.updateURI().then(() => {
       const refreshToken = JSON.parse(authObj).refreshToken
       return refreshToken
-    })
-  }
-
-  enrol() {
-    return this.initSubjectInformation().catch(e => {
-      throw { status: 0 }
     })
   }
 
@@ -144,9 +136,5 @@ export class AuthService {
         )
         .toPromise()
     )
-  }
-
-  validURL(str) {
-    return !new FormControl(str, Validators.pattern(this.URLRegEx)).errors
   }
 }

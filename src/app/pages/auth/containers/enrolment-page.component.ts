@@ -1,12 +1,10 @@
 import { Component, ViewChild } from '@angular/core'
 import {
-  DefaultEnrolmentBaseURL,
   DefaultLanguage,
   DefaultSettingsSupportedLanguages,
   DefaultSettingsWeeklyReport,
   LanguageMap
 } from '../../../../assets/data/defaultConfig'
-import { FormControl, FormGroup, Validators } from '@angular/forms'
 import {
   LanguageSetting,
   WeeklyReportSubSettings
@@ -32,10 +30,6 @@ export class EnrolmentPageComponent {
   showOutcomeStatus: boolean = false
   outcomeStatus: String
   enterMetaQR = false
-  metaQRForm: FormGroup = new FormGroup({
-    baseURL: new FormControl(DefaultEnrolmentBaseURL, this.auth.URLValidators),
-    tokenName: new FormControl('', [Validators.required])
-  })
   reportSettings: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
   language?: LanguageSetting = DefaultLanguage
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
@@ -53,10 +47,7 @@ export class EnrolmentPageComponent {
 
   ionViewDidLoad() {
     this.slides.lockSwipes(true)
-    this.firebaseAnalytics
-      .setCurrentScreen('enrolment-page')
-      .then(res => console.log('enrolment-page: ' + res))
-      .catch(err => console.log('enrolment-page: ' + err))
+    this.firebaseAnalytics.setCurrentScreen('enrolment-page')
   }
 
   next() {
@@ -72,7 +63,6 @@ export class EnrolmentPageComponent {
   }
 
   scanQRHandler() {
-    this.loading = true
     const scanOptions = {
       showFlipCameraButton: true,
       orientation: 'portrait'
@@ -85,15 +75,8 @@ export class EnrolmentPageComponent {
     })
   }
 
-  metaQRHandler() {
-    if (this.metaQRForm.valid)
-      this.authenticate(
-        this.auth.getURLFromToken(
-          this.metaQRForm.get('baseURL').value.trim(),
-          this.metaQRForm.get('tokenName').value.trim()
-        )
-      )
-    else this.handleError(new Error())
+  metaQRHandler([baseURL, tokenName]) {
+    this.authenticate(this.auth.getURLFromToken(baseURL, tokenName))
   }
 
   authenticate(authObj) {
@@ -101,28 +84,32 @@ export class EnrolmentPageComponent {
     this.loading = true
     this.auth
       .authenticate(authObj)
-      .catch(e => {
-        this.handleError(e)
-        if (e.status !== 409) Promise.reject([])
-      })
-      .then(() => this.auth.enrol())
+      .catch(
+        e =>
+          new Promise((resolve, reject) => {
+            if (e.status !== 409) reject(e)
+            this.handleError(e)
+            resolve()
+          })
+      )
+      .then(() => this.auth.initSubjectInformation())
       .then(() => this.firebaseAnalytics.logEvent('sign_up', {}))
       .then(() => this.next())
-      .catch(e => this.handleError(e))
-      .then(() => (this.loading = false))
+      .catch(e => {
+        this.handleError(e)
+        this.loading = false
+      })
   }
 
   handleError(e) {
-    e.statusText = 'Error: Cannot get the refresh token from the URL'
-    if (e.status == 410) e.statusText = 'URL expired. Regenerate the QR code.'
-    if (e.status == 409) e.statusText = 'Re-registered an existing source'
-    if (e.status == 0) e.statusText = 'Initializing data error'
-    console.log(e.statusText + ' - ' + e.status)
+    console.log(e)
     this.showOutcomeStatus = true
-    this.outcomeStatus = e.statusText + ' (' + e.status + ')'
+    this.outcomeStatus = e.error.message
+      ? e.error.message
+      : e.statusText + ' (' + e.status + ')'
     this.firebaseAnalytics.logEvent('sign_up_failed', {
-      error: JSON.stringify(e),
-      message: String(this.outcomeStatus)
+      error: e.status,
+      message: e.statusText
     })
   }
 

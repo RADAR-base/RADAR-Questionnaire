@@ -54,7 +54,7 @@
         "@ionic-native/vibration": "^5.9.0",
         "@ionic/storage": "^2.2.0",
         "angular-svg-round-progressbar": "^3.0.1",
-        "autoprefixer": "^9.6.0",
+        "autoprefixer": "^9.6.1",
         "avsc": "^5.4.12",
         "base64-js": "^1.2.1",
         "cordova-android": "^8.0.0",

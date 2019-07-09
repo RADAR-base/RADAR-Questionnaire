@@ -26,8 +26,9 @@ export class QuestionnaireService {
 
   pullQuestionnaires(type: TaskType): Promise<Assessment[]> {
     return this.getAssessments(type).then(assessments => {
+      const language = this.localization.getLanguage().value
       const localizedQuestionnaires = assessments.map(a =>
-        this.pullQuestionnaireLang(a)
+        this.pullQuestionnaireLang(a, language)
       )
       return Promise.all(localizedQuestionnaires).then(res => {
         assessments.forEach((a, i) => {
@@ -38,11 +39,8 @@ export class QuestionnaireService {
     })
   }
 
-  pullQuestionnaireLang(assessment): Promise<Object> {
-    const uri = this.formatQuestionnaireUri(
-      assessment.questionnaire,
-      this.localization.getLanguage().value
-    )
+  pullQuestionnaireLang(assessment, language: string): Promise<Object> {
+    const uri = this.formatQuestionnaireUri(assessment.questionnaire, language)
     return this.getQuestionnairesOfLang(uri).catch(e => {
       const URI = this.formatQuestionnaireUri(assessment.questionnaire, '')
       return this.getQuestionnairesOfLang(URI)

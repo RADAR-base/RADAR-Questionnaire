@@ -263,7 +263,8 @@ export class QuestionsPageComponent {
         isLastTask: this.isLastTask,
         answers: data.answers,
         timestamps: data.timestamps,
-        questions: this.questions
+        questions: this.questions,
+        assessment: this.assessment
       },
       { animate: true, direction: 'forward' }
     )

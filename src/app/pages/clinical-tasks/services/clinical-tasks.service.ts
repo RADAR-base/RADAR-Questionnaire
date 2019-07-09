@@ -2,30 +2,35 @@ import { Injectable } from '@angular/core'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
 import { TaskType } from '../../../shared/utilities/task-type'
+import { ScheduleService } from '../../../core/services/schedule/schedule.service'
 
 @Injectable()
 export class ClinicalTasksService {
   constructor(
     public questionnaire: QuestionnaireService,
-    private localization: LocalizationService
+    private localization: LocalizationService,
+    private schedule: ScheduleService
   ) {}
 
-  getClinicalAssessment(task) {
-    return this.questionnaire.getAssessment(TaskType.CLINICAL, task)
+  getClinicalTask(assessment) {
+    return this.schedule.getClinicalTasks().then(tasks => {
+      if (tasks) return tasks.find(t => t.name == assessment.name)
+    })
   }
 
-  getClinicalTasks() {
+  getClinicalAssessments() {
     return this.questionnaire.getAssessments(TaskType.CLINICAL)
   }
 
-  getClinicalTaskPayload(task) {
-    return this.getClinicalAssessment(task).then(assessment => {
+  getClinicalTaskPayload(assessment) {
+    return this.getClinicalTask(assessment).then(task => {
+      console.log(task)
       return {
         title: assessment.name,
         introduction: this.localization.chooseText(assessment.startText),
         endText: this.localization.chooseText(assessment.endText),
         questions: assessment.questions,
-        task: task,
+        task: task ? task : assessment,
         assessment: assessment
       }
     })

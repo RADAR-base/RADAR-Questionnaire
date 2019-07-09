@@ -3,7 +3,7 @@ import { Component } from '@angular/core'
 import { DefaultTask } from '../../../../assets/data/defaultConfig'
 import { NavController } from 'ionic-angular'
 import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
-import { Task } from '../../../shared/models/task'
+import { Assessment } from '../../../shared/models/assessment'
 
 @Component({
   selector: 'page-clinical-tasks',
@@ -11,7 +11,7 @@ import { Task } from '../../../shared/models/task'
 })
 export class ClinicalTasksPageComponent {
   scrollHeight: number = 500
-  tasks: Task[] = [DefaultTask]
+  assessments: Assessment[]
 
   constructor(
     private navCtrl: NavController,
@@ -19,8 +19,8 @@ export class ClinicalTasksPageComponent {
   ) {}
 
   ionViewDidLoad() {
-    this.clinicalTasksService.getClinicalTasks().then(tasks => {
-      this.tasks = tasks
+    this.clinicalTasksService.getClinicalAssessments().then(assessments => {
+      this.assessments = assessments
     })
   }
 

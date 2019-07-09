@@ -51,7 +51,7 @@ export class ConfigService {
     return Promise.all([
       this.setNotificationSettings(DefaultSettingsNotifications),
       this.setReportSettings(DefaultSettingsWeeklyReport),
-      this.setAppVersion(),
+      this.setAppVersion(DefaultAppVersion),
       this.setScheduleVersion(DefaultScheduleVersion),
       this.setUTCOffset(new Date().getTimezoneOffset()),
       this.setReferenceDate()
@@ -67,7 +67,8 @@ export class ConfigService {
     ]).then(([newProtocol, newAppVersion, newTimezone, newNotifications]) => {
       if (newProtocol)
         return this.updateConfigStateOnProtocolChange(newProtocol)
-      if (newAppVersion) return this.updateConfigStateOnAppVersionChange()
+      if (newAppVersion)
+        return this.updateConfigStateOnAppVersionChange(newAppVersion)
       if (newTimezone)
         return this.updateConfigStateOnTimezoneChange(newTimezone)
       if (newNotifications) return this.rescheduleNotifications(false)
@@ -121,19 +122,17 @@ export class ConfigService {
   }
 
   checkAppVersionChange() {
-    if (!this.appVersion) return Promise.resolve(DefaultAppVersion)
-    return Promise.all([
-      this.getAppVersion(),
-      this.appVersion.getVersionNumber()
-    ]).then(([storedAppVersion, appVersion]) => {
-      if (storedAppVersion !== appVersion) {
-        this.firebaseAnalytics.logEvent('app_version_change', {
-          prev_version: String(storedAppVersion),
-          new_version: String(appVersion)
-        })
-        return appVersion
+    return Promise.all([this.getStoredAppVersion(), this.getAppVersion()]).then(
+      ([storedAppVersion, appVersion]) => {
+        if (storedAppVersion !== appVersion) {
+          this.firebaseAnalytics.logEvent('app_version_change', {
+            prev_version: String(storedAppVersion),
+            new_version: String(appVersion)
+          })
+          return appVersion
+        }
       }
-    })
+    )
   }
 
   checkNotificationsExpired() {
@@ -172,8 +171,8 @@ export class ConfigService {
     ]).then(() => this.rescheduleNotifications(true))
   }
 
-  updateConfigStateOnAppVersionChange() {
-    return this.setAppVersion().then(() => this.regenerateSchedule())
+  updateConfigStateOnAppVersionChange(version) {
+    return this.setAppVersion(version).then(() => this.regenerateSchedule())
   }
 
   updateConfigStateOnTimezoneChange({ prevUtcOffset, utcOffset }) {
@@ -204,6 +203,10 @@ export class ConfigService {
   }
 
   getAppVersion() {
+    return this.appVersion.getVersionNumber().catch(() => DefaultAppVersion)
+  }
+
+  getStoredAppVersion() {
     return this.storage.get(this.CONFIG_STORE.APP_VERSION)
   }
 
@@ -243,10 +246,8 @@ export class ConfigService {
     return this.storage.set(this.CONFIG_STORE.SETTINGS_WEEKLYREPORT, settings)
   }
 
-  setAppVersion() {
-    return this.appVersion
-      .getVersionNumber()
-      .then(version => this.storage.set(this.CONFIG_STORE.APP_VERSION, version))
+  setAppVersion(version) {
+    return this.storage.set(this.CONFIG_STORE.APP_VERSION, version)
   }
 
   setConfigVersion(version) {

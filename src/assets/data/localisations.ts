@@ -599,12 +599,12 @@ export const Localisations = {
     nl: 'Probeer het opnieuw'
   },
   STATUS_LOADING: {
-    da: 'Indlæser...',
-    de: 'Lädt...',
-    en: 'Loading...',
+    da: 'Indlæser',
+    de: 'Lädt',
+    en: 'Loading',
     es: 'Cargando',
-    it: 'Caricamento...',
-    nl: 'Laden...'
+    it: 'Caricamento',
+    nl: 'Laden'
   },
   STATUS_SUCCESS: {
     da: 'Succes',

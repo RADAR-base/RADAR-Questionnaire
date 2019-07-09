@@ -27,7 +27,14 @@ export class ScheduleGeneratorService {
     private questionnaire: QuestionnaireService
   ) {}
 
-  runScheduler(type, refTimestamp, completedTasks, utcOffsetPrev, assessment?) {
+  runScheduler(
+    type,
+    refTimestamp,
+    completedTasks,
+    utcOffsetPrev,
+    assessment?,
+    indexOffset?
+  ) {
     // NOTE: Check if clinical or regular
     switch (type) {
       case TaskType.NON_CLINICAL:
@@ -43,19 +50,17 @@ export class ScheduleGeneratorService {
           )
           .catch(e => console.error(e))
       case TaskType.CLINICAL:
-        return this.questionnaire.getAssessments(type).then(tasks =>
-          Promise.resolve({
-            schedule: this.buildTasksForSingleAssessment(
-              tasks,
-              assessment,
-              refTimestamp,
-              TaskType.CLINICAL
-            ),
-            completed: [] as Task[]
-          })
-        )
+        return Promise.resolve({
+          schedule: this.buildTasksForSingleAssessment(
+            assessment,
+            indexOffset,
+            refTimestamp,
+            TaskType.CLINICAL
+          ),
+          completed: [] as Task[]
+        })
     }
-    return Promise.reject([])
+    return Promise.resolve()
   }
 
   buildTaskSchedule(
@@ -92,8 +97,8 @@ export class ScheduleGeneratorService {
     let repeatP, repeatQ
     switch (type) {
       case TaskType.CLINICAL:
-        repeatP = {}
         repeatQ = protocol.clinicalProtocol.repeatAfterClinicVisit
+        break
       default:
         repeatP = protocol.repeatProtocol
         repeatQ = protocol.repeatQuestionnaire
@@ -117,8 +122,6 @@ export class ScheduleGeneratorService {
     const completionWindow = ScheduleGeneratorService.computeCompletionWindow(
       assessment
     )
-    console.log(assessment)
-
     const today = setDateTimeToMidnight(new Date())
     const tmpScheduleAll: Task[] = []
     while (iterTime <= endTime) {
@@ -140,6 +143,7 @@ export class ScheduleGeneratorService {
         }
       }
       iterTime = setDateTimeToMidnight(new Date(iterTime)).getTime()
+      if (!repeatP) break
       iterTime = advanceRepeat(iterTime, repeatP)
     }
 

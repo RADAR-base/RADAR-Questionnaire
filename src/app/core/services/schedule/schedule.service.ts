@@ -131,10 +131,21 @@ export class ScheduleService {
   }
 
   generateClinicalSchedule(assessment, referenceDate) {
-    return this.schedule
-      .runScheduler(TaskType.CLINICAL, referenceDate, [], assessment)
-      .catch(e => e)
-      .then(res => this.setTasks(TaskType.CLINICAL, res.schedule))
+    console.log(assessment)
+    return this.getClinicalTasks().then((tasks: Task[]) =>
+      this.schedule
+        .runScheduler(
+          TaskType.CLINICAL,
+          referenceDate,
+          [],
+          null,
+          assessment,
+          tasks ? tasks.length : 0
+        )
+        .then((res: any) =>
+          this.setTasks(TaskType.CLINICAL, tasks.concat(res.schedule))
+        )
+    )
   }
 
   insertTask(task): Promise<any> {

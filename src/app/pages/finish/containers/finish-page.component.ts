@@ -4,6 +4,8 @@ import { Component } from '@angular/core'
 import { FinishTaskService } from '../services/finish-task.service'
 import { FirebaseAnalyticsService } from '../../../core/services/usage/firebaseAnalytics.service'
 import { HomePageComponent } from '../../home/containers/home-page.component'
+import { Task } from '../../../shared/models/task'
+import { Assessment } from '../../../shared/models/assessment'
 
 @Component({
   selector: 'page-finish',
@@ -15,8 +17,9 @@ export class FinishPageComponent {
   completedInClinic = false
   displayNextTaskReminder = true
   showDoneButton = false
-  task
+  task: Task
   questionnaireData
+  assessment: Assessment
 
   constructor(
     public navCtrl: NavController,
@@ -33,7 +36,8 @@ export class FinishPageComponent {
 
   init() {
     this.questionnaireData = this.navParams.data
-    this.task = this.navParams.data.task
+    this.task = this.questionnaireData.task
+    this.assessment = this.questionnaireData.assessment
     this.content = this.questionnaireData.endText
     this.isClinicalTask = this.task.isClinical !== false
     this.displayNextTaskReminder =
@@ -42,6 +46,7 @@ export class FinishPageComponent {
       questionnaire_timestamp: String(this.task.timestamp),
       type: this.task.name
     })
+
     setTimeout(() => (this.showDoneButton = true), 15000)
   }
 
@@ -61,7 +66,7 @@ export class FinishPageComponent {
 
   handleClosePage() {
     const res = this.completedInClinic
-      ? this.finish.evalClinicalFollowUpTask(this.task)
+      ? this.finish.evalClinicalFollowUpTask(this.assessment)
       : Promise.resolve()
     res.then(() => {
       this.showDoneButton = false

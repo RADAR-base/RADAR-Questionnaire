@@ -7,6 +7,7 @@ import { HomePageComponent } from '../../home/containers/home-page.component'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { SplashService } from '../services/splash.service'
+import { Device } from '@ionic-native/device/ngx'
 
 @Component({
   selector: 'page-splash',
@@ -20,7 +21,8 @@ export class SplashPageComponent {
     public navParams: NavParams,
     private splash: SplashService,
     private alertService: AlertService,
-    private localization: LocalizationService
+    private localization: LocalizationService,
+    private device: Device
   ) {
     this.splash
       .evalEnrolment()
@@ -35,11 +37,11 @@ export class SplashPageComponent {
         this.status = 'Sending missed questionnaire logs..'
         return this.splash.sendMissedQuestionnaireLogs()
       })
-      .then(() => this.navCtrl.setRoot(HomePageComponent))
       .catch(e => {
         console.log('[SPLASH] Notifications error.')
-        return this.showFetchConfigFail(e)
+        if (this.device.platform) return this.showFetchConfigFail(e)
       })
+      .then(() => this.navCtrl.setRoot(HomePageComponent))
   }
 
   showFetchConfigFail(e) {

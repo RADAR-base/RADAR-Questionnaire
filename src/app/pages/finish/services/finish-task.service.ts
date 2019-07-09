@@ -17,13 +17,13 @@ export class FinishTaskService {
   ) {}
 
   updateTaskToComplete(task): Promise<any> {
-    return getTaskType(task) == TaskType.NON_CLINICAL
-      ? Promise.all([
-          this.schedule.updateTaskToComplete(task),
-          this.schedule.updateTaskToReportedCompletion(task),
-          this.schedule.addToCompletedTasks(task)
-        ])
-      : Promise.resolve([])
+    return Promise.all([
+      this.schedule.updateTaskToComplete(task),
+      this.schedule.updateTaskToReportedCompletion(task),
+      getTaskType(task) == TaskType.NON_CLINICAL
+        ? this.schedule.addToCompletedTasks(task)
+        : Promise.resolve()
+    ])
   }
 
   sendCompletedEvent(task) {
@@ -49,6 +49,7 @@ export class FinishTaskService {
   }
 
   evalClinicalFollowUpTask(assessment): Promise<any> {
+    console.log('evaluating')
     return this.schedule.generateClinicalSchedule(assessment, Date.now())
     // TODO: Fix notification scheduling right after generating clinic schedule
   }

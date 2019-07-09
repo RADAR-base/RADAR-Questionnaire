@@ -104,9 +104,10 @@ export class EnrolmentPageComponent {
   handleError(e) {
     console.log(e)
     this.showOutcomeStatus = true
-    this.outcomeStatus = e.error.message
-      ? e.error.message
-      : e.statusText + ' (' + e.status + ')'
+    this.outcomeStatus =
+      e.error && e.error.message
+        ? e.error.message
+        : e.statusText + ' (' + e.status + ')'
     this.firebaseAnalytics.logEvent('sign_up_failed', {
       error: e.status,
       message: e.statusText

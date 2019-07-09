@@ -60,10 +60,10 @@ export class ConfigService {
 
   fetchConfigState(force?: boolean) {
     return Promise.all([
-      this.checkProtocolChange(force),
-      this.checkAppVersionChange(),
-      this.checkTimezoneChange(),
-      this.checkNotificationsExpired()
+      this.hasProtocolChanged(force),
+      this.hasAppVersionChanged(),
+      this.hasTimezoneChanged(),
+      this.hasNotificationsExpired()
     ]).then(([newProtocol, newAppVersion, newTimezone, newNotifications]) => {
       if (newProtocol)
         return this.updateConfigStateOnProtocolChange(newProtocol)
@@ -75,7 +75,7 @@ export class ConfigService {
     })
   }
 
-  checkProtocolChange(force?) {
+  hasProtocolChanged(force?) {
     return Promise.all([
       this.getConfigVersion(),
       this.getScheduleVersion(),
@@ -99,7 +99,7 @@ export class ConfigService {
       .catch(() => Promise.reject({ message: 'No response from server' }))
   }
 
-  checkTimezoneChange() {
+  hasTimezoneChanged() {
     return this.getUTCOffset().then(prevUtcOffset => {
       const utcOffset = new Date().getTimezoneOffset()
       // NOTE: Cancels all notifications and reschedule tasks if timezone has changed
@@ -121,7 +121,7 @@ export class ConfigService {
     })
   }
 
-  checkAppVersionChange() {
+  hasAppVersionChanged() {
     return Promise.all([this.getStoredAppVersion(), this.getAppVersion()]).then(
       ([storedAppVersion, appVersion]) => {
         if (storedAppVersion !== appVersion) {
@@ -135,7 +135,7 @@ export class ConfigService {
     )
   }
 
-  checkNotificationsExpired() {
+  hasNotificationsExpired() {
     // NOTE: Only run this if not run in last DefaultNotificationRefreshTime
     return this.notifications.getLastNotificationUpdate().then(lastUpdate => {
       const timeElapsed = Date.now() - lastUpdate

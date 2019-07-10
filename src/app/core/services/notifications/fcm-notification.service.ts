@@ -131,7 +131,9 @@ export class FcmNotificationService extends NotificationService {
   }
 
   sendTestNotification(): Promise<void> {
-    return this.sendNotification(this.notifications.createTestNotification())
+    return this.sendNotification(
+      this.format(this.notifications.createTestNotification(), '')
+    )
   }
 
   setLastNotificationUpdate(): Promise<void> {

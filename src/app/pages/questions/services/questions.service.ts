@@ -4,7 +4,7 @@ import { QuestionnaireService } from '../../../core/services/config/questionnair
 import { TimestampService } from './timestamp.service'
 import { UsageService } from '../../../core/services/usage/usage.service'
 import { getSeconds } from '../../../shared/utilities/time'
-
+import { UsageEventType } from '../../../shared/enums/events'
 @Injectable()
 export class QuestionsService {
   constructor(
@@ -141,11 +141,10 @@ export class QuestionsService {
     this.usage.sendCompletionLog(task, this.getAttemptProgress(totalQuestions))
   }
 
-  sendCloseEvent() {
-    this.usage.sendQuestionnaireClosed()
-  }
-
-  sendStartEvent(task) {
-    this.usage.sendQuestionnaireStart(task)
+  sendCloseEvent(task) {
+    this.usage.sendQuestionnaireEvent(
+      UsageEventType.QUESTIONNAIRE_STARTED,
+      task
+    )
   }
 }

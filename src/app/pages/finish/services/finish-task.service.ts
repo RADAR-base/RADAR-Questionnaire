@@ -6,6 +6,7 @@ import { PrepareDataService } from './prepare-data.service'
 import { ScheduleService } from '../../../core/services/schedule/schedule.service'
 import { SchemaType } from '../../../shared/models/kafka'
 import { UsageService } from '../../../core/services/usage/usage.service'
+import { UsageEventType } from '../../../shared/enums/events'
 
 @Injectable()
 export class FinishTaskService {
@@ -26,8 +27,11 @@ export class FinishTaskService {
     ])
   }
 
-  sendCompletedEvent(task) {
-    return this.usage.sendQuestionnaireCompleted(task)
+  sendFinishedEvent(task) {
+    return this.usage.sendQuestionnaireEvent(
+      UsageEventType.QUESTIONNAIRE_FINISHED,
+      task
+    )
   }
 
   processDataAndSend(data, task) {

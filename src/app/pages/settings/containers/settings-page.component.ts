@@ -6,12 +6,13 @@ import { NavController, Platform } from 'ionic-angular'
 
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { Component } from '@angular/core'
-import { FirebaseAnalyticsService } from '../../../core/services/usage/firebaseAnalytics.service'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { Settings } from '../../../shared/models/settings'
 import { SettingsService } from '../services/settings.service'
 import { SplashPageComponent } from '../../splash/containers/splash-page.component'
+import { UsageService } from '../../../core/services/usage/usage.service'
+import { NotificationEventType } from '../../../shared/enums/events'
 
 @Component({
   selector: 'page-settings',
@@ -27,9 +28,8 @@ export class SettingsPageComponent {
     public navCtrl: NavController,
     public alertService: AlertService,
     public localization: LocalizationService,
-    private platform: Platform,
     private settingsService: SettingsService,
-    private firebaseAnalytics: FirebaseAnalyticsService
+    private usage: UsageService
   ) {}
 
   ionViewWillEnter() {
@@ -167,16 +167,10 @@ export class SettingsPageComponent {
       ),
       buttons: [
         {
-          text: this.localization.translateKey(LocKeys.BTN_CANCEL),
-          handler: () => {}
-        },
-        {
-          text: this.localization.translateKey(LocKeys.CLOSE_APP),
+          text: this.localization.translateKey(LocKeys.BTN_OKAY),
           handler: () => {
-            this.firebaseAnalytics.logEvent('notification_test', {})
+            this.usage.sendGeneralEvent(NotificationEventType.TEST)
             this.settingsService.generateTestNotif()
-            // NOTE: iOS does not support exitApp()
-            if (this.platform.is('android')) this.platform.exitApp()
           }
         }
       ]

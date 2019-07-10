@@ -5,7 +5,6 @@ import { Question, QuestionType } from '../../../shared/models/question'
 
 import { Assessment } from '../../../shared/models/assessment'
 import { FinishPageComponent } from '../../finish/containers/finish-page.component'
-import { FirebaseAnalyticsService } from '../../../core/services/usage/firebaseAnalytics.service'
 import { Insomnia } from '@ionic-native/insomnia/ngx'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
@@ -13,6 +12,8 @@ import { QuestionsPageAnimations } from './questions-page.animation'
 import { QuestionsService } from '../services/questions.service'
 import { Task } from '../../../shared/models/task'
 import { TaskType } from '../../../shared/utilities/task-type'
+import { UsageEventType } from '../../../shared/enums/events'
+import { UsageService } from '../../../core/services/usage/usage.service'
 
 @Component({
   selector: 'page-questions',
@@ -65,7 +66,7 @@ export class QuestionsPageComponent {
     public navParams: NavParams,
     private localization: LocalizationService,
     private questionsService: QuestionsService,
-    private firebaseAnalytics: FirebaseAnalyticsService,
+    private usage: UsageService,
     private platform: Platform,
     private insomnia: Insomnia
   ) {
@@ -74,11 +75,11 @@ export class QuestionsPageComponent {
 
   ionViewDidLoad() {
     this.init()
-    this.firebaseAnalytics.logEvent('questionnaire_started', {
-      questionnaire_timestamp: String(this.task.timestamp),
-      type: this.task.name
-    })
-    this.firebaseAnalytics.setCurrentScreen('questions-page')
+    this.usage.sendQuestionnaireEvent(
+      UsageEventType.QUESTIONNAIRE_STARTED,
+      this.task
+    )
+    this.usage.setPage(this.constructor.name)
     this.insomnia.keepAwake()
   }
 
@@ -249,7 +250,7 @@ export class QuestionsPageComponent {
 
   exitQuestionnaire() {
     this.sendCompletionLog()
-    this.questionsService.sendCloseEvent()
+    this.questionsService.sendCloseEvent(this.task)
     this.navCtrl.pop()
   }
 

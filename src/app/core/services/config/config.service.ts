@@ -1,14 +1,7 @@
-import {
-  DefaultAppVersion,
-  DefaultNotificationRefreshTime,
-  DefaultScheduleVersion,
-  DefaultSettingsNotifications,
-  DefaultSettingsWeeklyReport
-} from '../../../../assets/data/defaultConfig'
-
-import { AppVersion } from '@ionic-native/app-version/ngx'
-import { FirebaseAnalyticsService } from '../usage/firebaseAnalytics.service'
 import { Injectable } from '@angular/core'
+import { AppVersion } from '@ionic-native/app-version/ngx'
+
+import { FirebaseAnalyticsService } from '../usage/firebase-analytics.service'
 import { KafkaService } from '../kafka/kafka.service'
 import { LocalizationService } from '../misc/localization.service'
 import { NotificationService } from '../notifications/notification.service'
@@ -20,6 +13,18 @@ import { StorageService } from '../storage/storage.service'
 import { SubjectConfigService } from './subject-config.service'
 import { TaskType } from '../../../shared/utilities/task-type'
 import { setDateTimeToMidnight } from '../../../shared/utilities/time'
+import { UsageService } from '../usage/usage.service'
+import {
+  ConfigEventType,
+  NotificationEventType
+} from '../../../shared/enums/events'
+import {
+  DefaultAppVersion,
+  DefaultNotificationRefreshTime,
+  DefaultScheduleVersion,
+  DefaultSettingsNotifications,
+  DefaultSettingsWeeklyReport
+} from '../../../../assets/data/defaultConfig'
 
 @Injectable()
 export class ConfigService {
@@ -44,7 +49,8 @@ export class ConfigService {
     private subjectConfig: SubjectConfigService,
     private kafka: KafkaService,
     private localization: LocalizationService,
-    private firebaseAnalytics: FirebaseAnalyticsService
+    private firebaseAnalytics: FirebaseAnalyticsService,
+    private usage: UsageService
   ) {}
 
   init() {
@@ -89,10 +95,11 @@ export class ConfigService {
           scheduleVersion !== parsedProtocol.version ||
           force
         ) {
-          this.firebaseAnalytics.logEvent('protocol_change', {
-            prev_version: configVersion,
-            new_version: parsedProtocol.version
-          })
+          this.usage.sendConfigChangeEvent(
+            ConfigEventType.PROTOCOL_CHANGE,
+            configVersion,
+            parsedProtocol.version
+          )
           return parsedProtocol
         }
       })
@@ -104,18 +111,17 @@ export class ConfigService {
       const utcOffset = new Date().getTimezoneOffset()
       // NOTE: Cancels all notifications and reschedule tasks if timezone has changed
       if (prevUtcOffset !== utcOffset) {
-        this.firebaseAnalytics.logEvent('timezone_change', {
-          prev_version: String(prevUtcOffset),
-          new_version: String(utcOffset)
-        })
+        this.usage.sendConfigChangeEvent(
+          ConfigEventType.TIMEZONE_CHANGE,
+          prevUtcOffset,
+          utcOffset
+        )
         console.log(
-          '[SPLASH] Timezone has changed to ' +
-            utcOffset +
-            '. Cancelling notifications! Rescheduling tasks! Scheduling new notifications!'
+          `[SPLASH] Timezone has changed to  ${utcOffset} Refreshing config..`
         )
         return { prevUtcOffset, utcOffset }
       } else {
-        console.log('[SPLASH] Current Timezone is ' + utcOffset)
+        console.log(`[SPLASH] Current Timezone is ${utcOffset}`)
         return null
       }
     })
@@ -125,10 +131,11 @@ export class ConfigService {
     return Promise.all([this.getStoredAppVersion(), this.getAppVersion()]).then(
       ([storedAppVersion, appVersion]) => {
         if (storedAppVersion !== appVersion) {
-          this.firebaseAnalytics.logEvent('app_version_change', {
-            prev_version: String(storedAppVersion),
-            new_version: String(appVersion)
-          })
+          this.usage.sendConfigChangeEvent(
+            ConfigEventType.APP_VERSION_CHANGE,
+            storedAppVersion,
+            appVersion
+          )
           return appVersion
         }
       }
@@ -189,8 +196,8 @@ export class ConfigService {
       .then(() => console.log('NOTIFICATIONS scheduled after config change'))
       .then(() =>
         cancel
-          ? this.firebaseAnalytics.logEvent('notification_rescheduled', {})
-          : this.firebaseAnalytics.logEvent('notification_refreshed', {})
+          ? this.usage.sendGeneralEvent(NotificationEventType.RESCHEDULED)
+          : this.usage.sendGeneralEvent(NotificationEventType.REFRESHED)
       )
   }
 

@@ -1,10 +1,10 @@
 import { Component, OnDestroy } from '@angular/core'
 import { NavController, Platform } from 'ionic-angular'
-import { Task, TasksProgress } from '../../../shared/models/task'
+import { Subscription } from 'rxjs'
 
+import { Task, TasksProgress } from '../../../shared/models/task'
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { ClinicalTasksPageComponent } from '../../clinical-tasks/containers/clinical-tasks-page.component'
-import { FirebaseAnalyticsService } from '../../../core/services/usage/firebaseAnalytics.service'
 import { HomePageAnimations } from './home-page.animation'
 import { HomeService } from '../services/home.service'
 import { LocKeys } from '../../../shared/enums/localisations'
@@ -12,9 +12,10 @@ import { LocalizationService } from '../../../core/services/misc/localization.se
 import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
 import { SettingsPageComponent } from '../../settings/containers/settings-page.component'
 import { SplashPageComponent } from '../../splash/containers/splash-page.component'
-import { Subscription } from 'rxjs'
 import { TasksService } from '../services/tasks.service'
 import { checkTaskIsNow } from '../../../shared/utilities/check-task-is-now'
+import { UsageService } from '../../../core/services/usage/usage.service'
+import { UsageEventType } from '../../../shared/enums/events'
 
 @Component({
   selector: 'page-home',
@@ -42,12 +43,12 @@ export class HomePageComponent implements OnDestroy {
     private tasksService: TasksService,
     private localization: LocalizationService,
     private platform: Platform,
-    private firebaseAnalytics: FirebaseAnalyticsService,
+    private usage: UsageService,
     private home: HomeService
   ) {
     this.resumeListener = this.platform.resume.subscribe(e => {
       this.checkForNewDate()
-      this.firebaseAnalytics.logEvent('resumed', {})
+      this.usage.sendGeneralEvent(UsageEventType.RESUMED)
       this.onResume()
     })
   }
@@ -79,7 +80,7 @@ export class HomePageComponent implements OnDestroy {
   ionViewDidLoad() {
     this.init()
     this.home.sendOpenEvent()
-    this.firebaseAnalytics.setCurrentScreen('home-page')
+    this.usage.setPage(this.constructor.name)
   }
 
   init() {
@@ -124,18 +125,18 @@ export class HomePageComponent implements OnDestroy {
   }
 
   displayTaskCalendar() {
-    this.firebaseAnalytics.logEvent('click', { button: 'show_task_calendar' })
+    this.usage.sendClickEvent('show_task_calendar')
     this.showCalendar = !this.showCalendar
   }
 
   openSettingsPage() {
     this.navCtrl.push(SettingsPageComponent)
-    this.firebaseAnalytics.logEvent('click', { button: 'open_settings' })
+    this.usage.sendClickEvent('open_settings')
   }
 
   openClinicalTasksPage() {
     this.navCtrl.push(ClinicalTasksPageComponent)
-    this.firebaseAnalytics.logEvent('click', { button: 'open_clinical_tasks' })
+    this.usage.sendClickEvent('open_clinical_tasks')
   }
 
   startQuestionnaire(taskCalendarTask: Task) {
@@ -143,9 +144,7 @@ export class HomePageComponent implements OnDestroy {
     const task = taskCalendarTask ? taskCalendarTask : this.nextTask
 
     if (this.tasksService.isTaskStartable(task)) {
-      this.firebaseAnalytics.logEvent('click', {
-        button: 'start_questionnaire'
-      })
+      this.usage.sendClickEvent('start_questionnaire')
       this.startingQuestionnaire = true
       this.home.sendStartEvent(task)
       return this.tasksService
@@ -157,7 +156,7 @@ export class HomePageComponent implements OnDestroy {
   }
 
   showCredits() {
-    this.firebaseAnalytics.logEvent('click', { button: 'show_credits' })
+    this.usage.sendClickEvent('show_credits')
     return this.alertService.showAlert({
       title: this.localization.translateKey(LocKeys.CREDITS_TITLE),
       message: this.localization.translateKey(LocKeys.CREDITS_BODY),

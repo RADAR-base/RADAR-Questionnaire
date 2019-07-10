@@ -2,10 +2,10 @@ import { NavController, NavParams } from 'ionic-angular'
 
 import { Component } from '@angular/core'
 import { FinishTaskService } from '../services/finish-task.service'
-import { FirebaseAnalyticsService } from '../../../core/services/usage/firebaseAnalytics.service'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { Task } from '../../../shared/models/task'
 import { Assessment } from '../../../shared/models/assessment'
+import { UsageService } from '../../../core/services/usage/usage.service'
 
 @Component({
   selector: 'page-finish',
@@ -25,11 +25,11 @@ export class FinishPageComponent {
     public navCtrl: NavController,
     public navParams: NavParams,
     private finish: FinishTaskService,
-    private firebaseAnalytics: FirebaseAnalyticsService
+    private usage: UsageService
   ) {}
 
   ionViewDidLoad() {
-    this.firebaseAnalytics.setCurrentScreen('finish-page')
+    this.usage.setPage(this.constructor.name)
     this.init()
     this.onComplete().then(() => this.showDone())
   }
@@ -42,18 +42,13 @@ export class FinishPageComponent {
     this.isClinicalTask = this.task.isClinical !== false
     this.displayNextTaskReminder =
       !this.questionnaireData.isLastTask && !this.isClinicalTask
-    this.firebaseAnalytics.logEvent('questionnaire_finished', {
-      questionnaire_timestamp: String(this.task.timestamp),
-      type: this.task.name
-    })
-
     setTimeout(() => (this.showDoneButton = true), 15000)
   }
 
   onComplete() {
     this.finish.updateTaskToComplete(this.task)
     return Promise.all([
-      this.finish.sendCompletedEvent(this.task),
+      this.finish.sendFinishedEvent(this.task),
       !this.task.name.includes('DEMO')
         ? this.finish.processDataAndSend(this.questionnaireData, this.task)
         : Promise.resolve()

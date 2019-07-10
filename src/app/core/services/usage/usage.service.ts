@@ -1,8 +1,8 @@
-import { FirebaseAnalyticsService } from './firebaseAnalytics.service'
+import { FirebaseAnalyticsService } from './firebase-analytics.service'
 import { Injectable } from '@angular/core'
 import { KafkaService } from '../kafka/kafka.service'
 import { SchemaType } from '../../../shared/models/kafka'
-import { UsageEventType } from '../../../shared/models/usage-event'
+import { UsageEventType } from '../../../shared/enums/events'
 import { WebIntent } from '@ionic-native/web-intent/ngx'
 
 @Injectable()
@@ -13,50 +13,37 @@ export class UsageService {
     private firebaseAnalytics: FirebaseAnalyticsService
   ) {}
 
-  sendUsageEvent(payload) {
-    return this.kafka.prepareKafkaObjectAndSend(SchemaType.USAGE, payload, true)
+  sendEvent(payload) {
+    // return this.kafka.prepareKafkaObjectAndSend(SchemaType.USAGE, payload, true)
   }
 
-  sendOpen() {
-    return this.webIntent.getIntent().then(intent =>
-      this.sendUsageEvent({
+  sendOpenEvent() {
+    return this.webIntent.getIntent().then(intent => {
+      console.log(intent)
+      this.sendEvent({
         eventType: intent.extras
           ? UsageEventType.APP_OPEN_NOTIFICATION
           : UsageEventType.APP_OPEN_DIRECTLY
       })
-    )
-  }
-
-  sendQuestionnaireStart(task) {
-    this.firebaseAnalytics.logEvent('questionnaire_started', {
-      questionnaire_timestamp: String(task.timestamp),
-      type: task.name
-    })
-    return this.sendUsageEvent({
-      eventType: UsageEventType.QUESTIONNAIRE_STARTED
     })
   }
 
-  sendQuestionnaireCompleted(task) {
-    this.firebaseAnalytics.logEvent('questionnaire_finished', {
-      questionnaire_timestamp: String(task.timestamp),
-      type: task.name
-    })
-    return this.sendUsageEvent({
-      eventType: UsageEventType.QUESTIONNAIRE_COMPLETED
-    })
-  }
-
-  sendQuestionnaireClosed() {
-    return this.sendUsageEvent({
-      eventType: UsageEventType.QUESTIONNARE_CLOSED
-    })
-  }
-
-  sendConfigChangeEvent(type, prevVer?, newVer?) {
+  sendQuestionnaireEvent(type, task) {
     this.firebaseAnalytics.logEvent(type, {
-      prev_version: String(prevVer),
-      new_version: String(newVer)
+      questionnaire_timestamp: task.timestamp
+        ? String(task.timestamp)
+        : Date.now(),
+      type: task.name
+    })
+    return this.sendEvent({
+      eventType: type
+    })
+  }
+
+  sendConfigChangeEvent(type, previous?, current?) {
+    this.firebaseAnalytics.logEvent(type, {
+      previous: String(previous),
+      current: String(current)
     })
   }
 
@@ -68,8 +55,12 @@ export class UsageService {
     })
   }
 
-  sendClick(button) {
-    this.firebaseAnalytics.logEvent('click', { button: button })
+  sendGeneralEvent(type, payload?) {
+    this.firebaseAnalytics.logEvent(type, payload ? payload : {})
+  }
+
+  sendClickEvent(button) {
+    this.firebaseAnalytics.logEvent(UsageEventType.CLICK, { button: button })
   }
 
   sendCompletionLog(task, percent) {
@@ -83,5 +74,11 @@ export class UsageService {
       },
       keepInCache
     )
+  }
+
+  setPage(component) {
+    let page = component.split(/(?=[A-Z])/)
+    page.pop()
+    page = this.firebaseAnalytics.setCurrentScreen(page.join('-').toLowerCase())
   }
 }

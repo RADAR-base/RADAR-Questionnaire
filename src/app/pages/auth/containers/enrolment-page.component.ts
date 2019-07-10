@@ -14,10 +14,11 @@ import { NavController, Slides } from 'ionic-angular'
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { AuthService } from '../services/auth.service'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx'
-import { FirebaseAnalyticsService } from '../../../core/services/usage/firebaseAnalytics.service'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { SplashPageComponent } from '../../splash/containers/splash-page.component'
+import { UsageEventType } from '../../../shared/enums/events'
+import { UsageService } from '../../../core/services/usage/usage.service'
 
 @Component({
   selector: 'page-enrolment',
@@ -40,14 +41,14 @@ export class EnrolmentPageComponent {
     private auth: AuthService,
     private localization: LocalizationService,
     private alertService: AlertService,
-    private firebaseAnalytics: FirebaseAnalyticsService
+    private usage: UsageService
   ) {
     this.localization.update().then(lang => (this.language = lang))
   }
 
   ionViewDidLoad() {
     this.slides.lockSwipes(true)
-    this.firebaseAnalytics.setCurrentScreen('enrolment-page')
+    this.usage.setPage(this.constructor.name)
   }
 
   next() {
@@ -67,11 +68,11 @@ export class EnrolmentPageComponent {
       showFlipCameraButton: true,
       orientation: 'portrait'
     }
-    this.scanner.scan(scanOptions).then(scannedObj => {
-      this.firebaseAnalytics.logEvent('qr_code_scanned', {
-        text: scannedObj.text
+    this.scanner.scan(scanOptions).then(res => {
+      this.usage.sendGeneralEvent(UsageEventType.QR_SCANNED, {
+        text: res.text
       })
-      return this.authenticate(scannedObj.text)
+      return this.authenticate(res.text)
     })
   }
 
@@ -93,8 +94,10 @@ export class EnrolmentPageComponent {
           })
       )
       .then(() => this.auth.initSubjectInformation())
-      .then(() => this.firebaseAnalytics.logEvent('sign_up', {}))
-      .then(() => this.next())
+      .then(() => {
+        this.usage.sendGeneralEvent(UsageEventType.SIGN_UP)
+        this.next()
+      })
       .catch(e => {
         this.handleError(e)
         this.loading = false
@@ -108,9 +111,8 @@ export class EnrolmentPageComponent {
       e.error && e.error.message
         ? e.error.message
         : e.statusText + ' (' + e.status + ')'
-    this.firebaseAnalytics.logEvent('sign_up_failed', {
-      error: e.status,
-      message: e.statusText
+    this.usage.sendGeneralEvent(UsageEventType.SIGN_UP_FAIL, {
+      error: this.outcomeStatus
     })
   }
 

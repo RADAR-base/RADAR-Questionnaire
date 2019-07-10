@@ -13,7 +13,7 @@ export class FirebaseAnalyticsService {
       return Promise.resolve('Could not load firebase')
     }
     return this.firebase
-      .logEvent(event, params)
+      .logEvent(event.toLowerCase(), params)
       .then((res: any) => {
         console.log('firebase analytics service: ' + res)
         return Promise.resolve(res)

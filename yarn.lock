@@ -544,10 +544,10 @@
     ws "3.3.2"
     xml2js "^0.4.19"
 
-"@ionic/cli-framework@2.1.1":
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/@ionic/cli-framework/-/cli-framework-2.1.1.tgz#b0b15c1adc7fe9a9014c458a4dbda6678a7efc1d"
-  integrity sha512-2CMTAgX9Xu8SBdp72mZkgHGbmqdYrX7yL1R37V6FRzjjeVqF13/m7OMGbDz4PugJ5FDI48y/O97bL4PpKhQV4Q==
+"@ionic/cli-framework@2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@ionic/cli-framework/-/cli-framework-2.1.2.tgz#a2deb15f1c91284e3083f5a8b3207cf36dba852f"
+  integrity sha512-PQZ5+T2ccVHTA3tnuGOarQhjB6lkeU9SaVzbkgyUHzBxadfenLFffEyLz7WHaLVQfR2po19NIJ2Hy8dIFKepig==
   dependencies:
     "@ionic/utils-array" "1.0.1"
     "@ionic/utils-fs" "2.0.3"
@@ -5190,12 +5190,12 @@ ionic-plugin-keyboard@^2.2.1:
   resolved "https://registry.yarnpkg.com/ionic-plugin-keyboard/-/ionic-plugin-keyboard-2.2.1.tgz#f2a9e169bbe9b5522400347c9fd6d3467ee3fa12"
   integrity sha1-8qnhabvptVIkADR8n9bTRn7j+hI=
 
-ionic@^5.2.1:
-  version "5.2.1"
-  resolved "https://registry.yarnpkg.com/ionic/-/ionic-5.2.1.tgz#dfd51e5621461d877908330d5f761954b3b61653"
-  integrity sha512-BEsJ5jraMgeqGiGjBhw4hJ5IK135wS4i3zRDda7OtMDyJKb77LHF3P8jyLgH1Yf+/yt7O8Qb5OE0/6bTRiZJaA==
+ionic@^5.2.2:
+  version "5.2.2"
+  resolved "https://registry.yarnpkg.com/ionic/-/ionic-5.2.2.tgz#ac277b5d6f78c89901de2fc715761c9b885974c6"
+  integrity sha512-sTPHEGOp0Od+b3d6vfRshjQm24xwOCK0ZNNfVCobUhFpi1/dosfGK8RRQfWKbWSIW3dLL9QwNgcoW+GymDtcCw==
   dependencies:
-    "@ionic/cli-framework" "2.1.1"
+    "@ionic/cli-framework" "2.1.2"
     "@ionic/discover" "2.0.2"
     "@ionic/utils-array" "1.0.1"
     "@ionic/utils-fs" "2.0.3"

@@ -186,7 +186,11 @@ export class KafkaService {
           this.firebaseAnalytics.logEvent('send_error', {
             error: String(error),
             name: specs.name,
-            questionnaire_timestamp: String(specs.task.timestamp)
+            questionnaire_timestamp: specs.task
+              ? specs.task.timestamp
+                ? String(specs.task.timestamp)
+                : Date.now()
+              : Date.now()
           })
           return Promise.resolve()
         })
@@ -210,7 +214,11 @@ export class KafkaService {
             this.firebaseAnalytics.logEvent('send_success', {
               topic: topic,
               name: specs.name,
-              questionnaire_timestamp: String(specs.task.timestamp)
+              questionnaire_timestamp: specs.task
+                ? specs.task.timestamp
+                  ? String(specs.task.timestamp)
+                  : Date.now()
+                : Date.now()
             })
             return resolve(cacheKey)
           }
@@ -234,7 +242,11 @@ export class KafkaService {
       cache[kafkaObject.value.time] = specs
       this.firebaseAnalytics.logEvent('send_to_cache', {
         name: specs.name,
-        questionnaire_timestamp: String(specs.task.timestamp)
+        questionnaire_timestamp: specs.task
+          ? specs.task.timestamp
+            ? String(specs.task.timestamp)
+            : Date.now()
+          : Date.now()
       })
       return this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
     })

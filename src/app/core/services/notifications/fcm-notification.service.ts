@@ -54,17 +54,11 @@ export class FcmNotificationService extends NotificationService {
   ): Promise<void[]> {
     this.resetResends()
     return this.config.getParticipantLogin().then(username => {
-      if (!username) {
-        return Promise.resolve([])
-      }
+      if (!username) return Promise.resolve([])
       return this.schedule.getTasks(TaskType.ALL).then(tasks => {
-        const notifications = this.notifications.futureNotifications(
-          tasks,
-          limit
-        )
-        const fcmNotifications = notifications.map(t =>
-          this.format(t, username)
-        )
+        const fcmNotifications = this.notifications
+          .futureNotifications(tasks, limit)
+          .map(t => this.format(t, username))
         console.log('NOTIFICATIONS Scheduling FCM notifications')
         console.log(fcmNotifications)
         return Promise.all(

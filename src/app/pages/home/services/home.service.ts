@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
-import { UsageService } from '../../../core/services/usage/usage.service'
 import { UsageEventType } from '../../../shared/enums/events'
+import { UsageService } from '../../../core/services/usage/usage.service'
 
 @Injectable()
 export class HomeService {

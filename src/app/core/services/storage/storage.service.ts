@@ -8,7 +8,7 @@ export class StorageService {
   global: { [key: string]: any } = {}
 
   constructor(private storage: Storage) {
-    Promise.resolve(this.prepareStorage())
+    Promise.resolve(this.prepare())
     console.log(this.global)
   }
 
@@ -62,7 +62,7 @@ export class StorageService {
     return this.storage.keys()
   }
 
-  prepareStorage() {
+  prepare() {
     return this.getAllKeys()
       .then(keys =>
         Promise.all(
@@ -72,7 +72,7 @@ export class StorageService {
       .then(() => 'Store set')
   }
 
-  clearStorage() {
+  clear() {
     this.global = {}
     return this.storage.clear()
   }

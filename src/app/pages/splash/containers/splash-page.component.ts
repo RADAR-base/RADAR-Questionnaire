@@ -1,3 +1,4 @@
+import { Device } from '@ionic-native/device/ngx'
 import { NavController, NavParams } from 'ionic-angular'
 
 import { AlertService } from '../../../core/services/misc/alert.service'
@@ -7,7 +8,6 @@ import { HomePageComponent } from '../../home/containers/home-page.component'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { SplashService } from '../services/splash.service'
-import { Device } from '@ionic-native/device/ngx'
 
 @Component({
   selector: 'page-splash',

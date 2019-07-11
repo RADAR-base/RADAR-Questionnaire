@@ -1,68 +1,34 @@
-import { Injectable } from '@angular/core'
-import { AppVersion } from '@ionic-native/app-version/ngx'
+import {
+  ConfigEventType,
+  NotificationEventType
+} from '../../../shared/enums/events'
 
+import { AppConfigService } from './app-config.service'
+import { DefaultNotificationRefreshTime } from '../../../../assets/data/defaultConfig'
 import { FirebaseAnalyticsService } from '../usage/firebase-analytics.service'
+import { Injectable } from '@angular/core'
 import { KafkaService } from '../kafka/kafka.service'
 import { LocalizationService } from '../misc/localization.service'
 import { NotificationService } from '../notifications/notification.service'
 import { ProtocolService } from './protocol.service'
 import { QuestionnaireService } from './questionnaire.service'
 import { ScheduleService } from '../schedule/schedule.service'
-import { StorageKeys } from '../../../shared/enums/storage'
-import { StorageService } from '../storage/storage.service'
 import { SubjectConfigService } from './subject-config.service'
 import { TaskType } from '../../../shared/utilities/task-type'
-import { setDateTimeToMidnight } from '../../../shared/utilities/time'
-import { UsageService } from '../usage/usage.service'
-import {
-  ConfigEventType,
-  NotificationEventType
-} from '../../../shared/enums/events'
-import {
-  DefaultAppVersion,
-  DefaultNotificationRefreshTime,
-  DefaultScheduleVersion,
-  DefaultSettingsNotifications,
-  DefaultSettingsWeeklyReport
-} from '../../../../assets/data/defaultConfig'
 
 @Injectable()
 export class ConfigService {
-  private readonly CONFIG_STORE = {
-    CONFIG_VERSION: StorageKeys.CONFIG_VERSION,
-    SCHEDULE_VERSION: StorageKeys.SCHEDULE_VERSION,
-    APP_VERSION: StorageKeys.APP_VERSION,
-    UTC_OFFSET: StorageKeys.UTC_OFFSET,
-    UTC_OFFSET_PREV: StorageKeys.UTC_OFFSET_PREV,
-    REFERENCEDATE: StorageKeys.REFERENCEDATE,
-    SETTINGS_NOTIFICATIONS: StorageKeys.SETTINGS_NOTIFICATIONS,
-    SETTINGS_WEEKLYREPORT: StorageKeys.SETTINGS_WEEKLYREPORT
-  }
-
   constructor(
-    public storage: StorageService,
     private schedule: ScheduleService,
     private notifications: NotificationService,
     private protocol: ProtocolService,
     private questionnaire: QuestionnaireService,
-    private appVersion: AppVersion,
+    private appConfig: AppConfigService,
     private subjectConfig: SubjectConfigService,
     private kafka: KafkaService,
     private localization: LocalizationService,
-    private firebaseAnalytics: FirebaseAnalyticsService,
-    private usage: UsageService
+    private firebaseAnalytics: FirebaseAnalyticsService
   ) {}
-
-  init() {
-    return Promise.all([
-      this.setNotificationSettings(DefaultSettingsNotifications),
-      this.setReportSettings(DefaultSettingsWeeklyReport),
-      this.setAppVersion(DefaultAppVersion),
-      this.setScheduleVersion(DefaultScheduleVersion),
-      this.setUTCOffset(new Date().getTimezoneOffset()),
-      this.setReferenceDate()
-    ])
-  }
 
   fetchConfigState(force?: boolean) {
     return Promise.all([
@@ -71,6 +37,8 @@ export class ConfigService {
       this.hasTimezoneChanged(),
       this.hasNotificationsExpired()
     ]).then(([newProtocol, newAppVersion, newTimezone, newNotifications]) => {
+      if (newProtocol && newAppVersion && newTimezone)
+        this.subjectConfig.getEnrolmentDate().then(d => this.appConfig.init(d))
       if (newProtocol)
         return this.updateConfigStateOnProtocolChange(newProtocol)
       if (newAppVersion)
@@ -83,8 +51,8 @@ export class ConfigService {
 
   hasProtocolChanged(force?) {
     return Promise.all([
-      this.getConfigVersion(),
-      this.getScheduleVersion(),
+      this.appConfig.getConfigVersion(),
+      this.appConfig.getScheduleVersion(),
       this.protocol.pull()
     ])
       .then(([configVersion, scheduleVersion, protocol]) => {
@@ -95,7 +63,7 @@ export class ConfigService {
           scheduleVersion !== parsedProtocol.version ||
           force
         ) {
-          this.usage.sendConfigChangeEvent(
+          this.sendConfigChangeEvent(
             ConfigEventType.PROTOCOL_CHANGE,
             configVersion,
             parsedProtocol.version
@@ -107,11 +75,11 @@ export class ConfigService {
   }
 
   hasTimezoneChanged() {
-    return this.getUTCOffset().then(prevUtcOffset => {
+    return this.appConfig.getUTCOffset().then(prevUtcOffset => {
       const utcOffset = new Date().getTimezoneOffset()
       // NOTE: Cancels all notifications and reschedule tasks if timezone has changed
       if (prevUtcOffset !== utcOffset) {
-        this.usage.sendConfigChangeEvent(
+        this.sendConfigChangeEvent(
           ConfigEventType.TIMEZONE_CHANGE,
           prevUtcOffset,
           utcOffset
@@ -128,18 +96,19 @@ export class ConfigService {
   }
 
   hasAppVersionChanged() {
-    return Promise.all([this.getStoredAppVersion(), this.getAppVersion()]).then(
-      ([storedAppVersion, appVersion]) => {
-        if (storedAppVersion !== appVersion) {
-          this.usage.sendConfigChangeEvent(
-            ConfigEventType.APP_VERSION_CHANGE,
-            storedAppVersion,
-            appVersion
-          )
-          return appVersion
-        }
+    return Promise.all([
+      this.appConfig.getStoredAppVersion(),
+      this.appConfig.getAppVersion()
+    ]).then(([storedAppVersion, appVersion]) => {
+      if (storedAppVersion !== appVersion) {
+        this.sendConfigChangeEvent(
+          ConfigEventType.APP_VERSION_CHANGE,
+          storedAppVersion,
+          appVersion
+        )
+        return appVersion
       }
-    )
+    })
   }
 
   hasNotificationsExpired() {
@@ -164,11 +133,11 @@ export class ConfigService {
     const assessments = this.protocol.format(protocol.protocols)
     console.log(assessments)
     return Promise.all([
-      this.setConfigVersion(protocol.version),
+      this.appConfig.setConfigVersion(protocol.version),
       this.questionnaire.updateAssessments(TaskType.ALL, assessments)
     ])
       .then(() => this.regenerateSchedule())
-      .then(() => this.setScheduleVersion(protocol.version))
+      .then(() => this.appConfig.setScheduleVersion(protocol.version))
   }
 
   updateConfigStateOnLanguageChange() {
@@ -179,14 +148,18 @@ export class ConfigService {
   }
 
   updateConfigStateOnAppVersionChange(version) {
-    return this.setAppVersion(version).then(() => this.regenerateSchedule())
+    return this.appConfig
+      .setAppVersion(version)
+      .then(() => this.regenerateSchedule())
   }
 
   updateConfigStateOnTimezoneChange({ prevUtcOffset, utcOffset }) {
     // NOTE: Update midnight to time zone of reference date.
-    return this.setReferenceDate()
-      .then(() => this.setUTCOffset(utcOffset))
-      .then(() => this.setPrevUTCOffset(prevUtcOffset))
+    return this.subjectConfig
+      .getEnrolmentDate()
+      .then(enrolment => this.appConfig.setReferenceDate(enrolment))
+      .then(() => this.appConfig.setUTCOffset(utcOffset))
+      .then(() => this.appConfig.setPrevUTCOffset(prevUtcOffset))
       .then(() => this.regenerateSchedule())
   }
 
@@ -196,96 +169,32 @@ export class ConfigService {
       .then(() => console.log('NOTIFICATIONS scheduled after config change'))
       .then(() =>
         cancel
-          ? this.usage.sendGeneralEvent(NotificationEventType.RESCHEDULED)
-          : this.usage.sendGeneralEvent(NotificationEventType.REFRESHED)
+          ? this.sendConfigChangeEvent(NotificationEventType.RESCHEDULED)
+          : this.sendConfigChangeEvent(NotificationEventType.REFRESHED)
       )
   }
 
   regenerateSchedule() {
-    return Promise.all([this.getReferenceDate(), this.getPrevUTCOffset()])
+    return Promise.all([
+      this.appConfig.getReferenceDate(),
+      this.appConfig.getPrevUTCOffset()
+    ])
       .then(([refDate, prevUTCOffset]) =>
         this.schedule.generateSchedule(refDate, prevUTCOffset)
       )
       .then(() => this.rescheduleNotifications(true))
   }
 
-  getAppVersion() {
-    return this.appVersion.getVersionNumber().catch(() => DefaultAppVersion)
+  resetAll() {
+    return this.subjectConfig.reset()
   }
 
-  getStoredAppVersion() {
-    return this.storage.get(this.CONFIG_STORE.APP_VERSION)
-  }
-
-  getConfigVersion() {
-    return this.storage.get(this.CONFIG_STORE.CONFIG_VERSION)
-  }
-
-  getScheduleVersion() {
-    return this.storage.get(this.CONFIG_STORE.SCHEDULE_VERSION)
-  }
-
-  getNotificationSettings() {
-    return this.storage.get(this.CONFIG_STORE.SETTINGS_NOTIFICATIONS)
-  }
-
-  getReportSettings() {
-    return this.storage.get(this.CONFIG_STORE.SETTINGS_WEEKLYREPORT)
-  }
-
-  getUTCOffset() {
-    return this.storage.get(this.CONFIG_STORE.UTC_OFFSET)
-  }
-
-  getPrevUTCOffset() {
-    return this.storage.get(this.CONFIG_STORE.UTC_OFFSET_PREV)
-  }
-
-  getReferenceDate() {
-    return this.storage.get(this.CONFIG_STORE.REFERENCEDATE)
-  }
-
-  setNotificationSettings(settings) {
-    return this.storage.set(this.CONFIG_STORE.SETTINGS_NOTIFICATIONS, settings)
-  }
-
-  setReportSettings(settings) {
-    return this.storage.set(this.CONFIG_STORE.SETTINGS_WEEKLYREPORT, settings)
-  }
-
-  setAppVersion(version) {
-    return this.storage.set(this.CONFIG_STORE.APP_VERSION, version)
-  }
-
-  setConfigVersion(version) {
-    return this.storage.set(this.CONFIG_STORE.CONFIG_VERSION, version)
-  }
-
-  setScheduleVersion(version) {
-    return this.storage.set(this.CONFIG_STORE.SCHEDULE_VERSION, version)
-  }
-
-  setUTCOffset(offset) {
-    return this.storage.set(this.CONFIG_STORE.UTC_OFFSET, offset)
-  }
-
-  setPrevUTCOffset(offset) {
-    return this.storage.set(this.CONFIG_STORE.UTC_OFFSET_PREV, offset)
-  }
-
-  setReferenceDate() {
-    return this.subjectConfig
-      .getEnrolmentDate()
-      .then(enrolment =>
-        this.storage.set(
-          this.CONFIG_STORE.REFERENCEDATE,
-          setDateTimeToMidnight(new Date(enrolment)).getTime()
-        )
-      )
-  }
-
-  reset() {
-    return this.storage.clearStorage()
+  resetConfig() {
+    return Promise.all([
+      this.appConfig.reset(),
+      this.questionnaire.reset(),
+      this.kafka.reset()
+    ])
   }
 
   setAll(participantId, participantLogin, projectName, sourceId, createdDate) {
@@ -303,11 +212,11 @@ export class ConfigService {
             subjectId: participantLogin,
             projectId: projectName,
             sourceId: sourceId,
-            enrolmentDate: String(createdDate),
+            enrolmentDate: String(),
             humanReadableId: participantId
           })
         )
-        .then(() => this.init()),
+        .then(() => this.appConfig.init(createdDate)),
       this.localization.init(),
       this.kafka.init()
     ])
@@ -318,15 +227,26 @@ export class ConfigService {
       participantID: this.subjectConfig.getParticipantID(),
       projectName: this.subjectConfig.getProjectName(),
       enrolmentDate: this.subjectConfig.getEnrolmentDate(),
-      configVersion: this.getConfigVersion(),
-      scheduleVersion: this.getScheduleVersion(),
-      notificationSettings: this.getNotificationSettings(),
-      weeklyReport: this.getReportSettings(),
-      appVersion: this.getAppVersion(),
+      configVersion: this.appConfig.getConfigVersion(),
+      scheduleVersion: this.appConfig.getScheduleVersion(),
+      notificationSettings: this.appConfig.getNotificationSettings(),
+      weeklyReport: this.appConfig.getReportSettings(),
+      appVersion: this.appConfig.getAppVersion(),
       languagesSelectable: this.localization.getLanguageSettings(),
       language: Promise.resolve(this.localization.getLanguage()),
       cacheSize: this.kafka.getCacheSize(),
       lastUploadDate: this.kafka.getLastUploadDate()
     }
+  }
+
+  sendConfigChangeEvent(type, previous?, current?) {
+    this.firebaseAnalytics.logEvent(type, {
+      previous: String(previous),
+      current: String(current)
+    })
+  }
+
+  updateSettings(settings) {
+    // TODO: Fix settings
   }
 }

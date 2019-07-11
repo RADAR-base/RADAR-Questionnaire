@@ -13,14 +13,14 @@ export class UsageService {
     private firebaseAnalytics: FirebaseAnalyticsService
   ) {}
 
-  sendEvent(payload) {
-    // return this.kafka.prepareKafkaObjectAndSend(SchemaType.USAGE, payload, true)
+  sendEventToKafka(payload) {
+    return this.kafka.prepareKafkaObjectAndSend(SchemaType.USAGE, payload, true)
   }
 
   sendOpenEvent() {
     return this.webIntent.getIntent().then(intent => {
       console.log(intent)
-      this.sendEvent({
+      this.sendEventToKafka({
         eventType: intent.extras
           ? UsageEventType.APP_OPEN_NOTIFICATION
           : UsageEventType.APP_OPEN_DIRECTLY
@@ -35,23 +35,8 @@ export class UsageService {
         : Date.now(),
       type: task.name
     })
-    return this.sendEvent({
+    return this.sendEventToKafka({
       eventType: type
-    })
-  }
-
-  sendConfigChangeEvent(type, previous?, current?) {
-    this.firebaseAnalytics.logEvent(type, {
-      previous: String(previous),
-      current: String(current)
-    })
-  }
-
-  sendKafkaEvent(type, name, time, error?) {
-    this.firebaseAnalytics.logEvent(type, {
-      name: name,
-      questionnaire_timestamp: String(time),
-      error: JSON.stringify(error)
     })
   }
 

@@ -93,7 +93,6 @@ export class AuthService {
   }
 
   initSubjectInformation() {
-    console.log('initing subjectinfo')
     return this.getSubjectInformation().then(res => {
       const subjectInformation: any = res
       const participantId = subjectInformation.externalId

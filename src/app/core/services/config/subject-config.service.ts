@@ -63,4 +63,8 @@ export class SubjectConfigService {
   getParticipantLogin() {
     return this.storage.get(this.SUBJECT_CONFIG_STORE.PARTICIPANTLOGIN)
   }
+
+  reset() {
+    return this.storage.clear()
+  }
 }

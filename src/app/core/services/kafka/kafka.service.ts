@@ -3,6 +3,7 @@ import * as KafkaRest from 'kafka-rest'
 import { DefaultKafkaURI } from '../../../../assets/data/defaultConfig'
 import { FirebaseAnalyticsService } from '../usage/firebase-analytics.service'
 import { Injectable } from '@angular/core'
+import { KafkaEventType } from '../../../shared/enums/events'
 import { SchemaService } from './schema.service'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { StorageService } from '../storage/storage.service'
@@ -73,19 +74,22 @@ export class KafkaService {
                   .filter(([k]) => k)
                   .map(([k, v]: any) => this.sendToKafka(k, v, kafka))
             this.setCacheSending(false)
-
             return Promise.all(
-              promises.map(p => p.catch(() => undefined))
-            ).then(keys =>
-              this.removeFromCache(keys.filter(k => k)).then(() =>
-                this.setLastUploadDate()
+              promises.map(p =>
+                p.catch(e => {
+                  console.log(e)
+                  return undefined
+                })
               )
-            )
+            ).then(keys => {
+              console.log(keys)
+              return this.removeFromCache(keys.filter(k => k)).then(() =>
+                this.setLastUploadDate(Date.now())
+              )
+            })
           })
       })
-    } else {
-      Promise.resolve()
-    }
+    } else Promise.resolve()
   }
 
   sendToKafka(k, v, kafka): Promise<any> {
@@ -98,28 +102,15 @@ export class KafkaService {
             kafka
               .topic(topic)
               .produce(data.schemaId, data.schemaInfo, data.payload, e =>
-                e ? Promise.reject(e) : Promise.resolve(k)
+                e ? Promise.reject(e) : Promise.resolve()
               )
           )
       )
-      .then(key => {
-        this.firebaseAnalytics.logEvent('send_success', {
-          name: v.name,
-          questionnaire_timestamp: String(v.kafkaObject.time)
-        })
-        return Promise.resolve(key)
-      })
-      .catch(error => {
-        console.error(
-          'Could not initiate kafka connection ' + JSON.stringify(error)
-        )
-        this.firebaseAnalytics.logEvent('send_error', {
-          error: JSON.stringify(error),
-          name: v.name,
-          questionnaire_timestamp: String(v.kafkaObject.time)
-        })
-        return Promise.resolve(0)
-      })
+      .then(() => this.sendKafkaEvent(KafkaEventType.SEND_SUCCESS, v))
+      .then(() => k)
+      .catch(error =>
+        this.sendKafkaEvent(KafkaEventType.SEND_ERROR, v, JSON.stringify(error))
+      )
   }
 
   removeFromCache(cacheKeys: number[]) {
@@ -155,8 +146,8 @@ export class KafkaService {
     this.isCacheSending = val
   }
 
-  setLastUploadDate() {
-    return this.storage.set(this.KAFKA_STORE.LAST_UPLOAD_DATE, Date.now())
+  setLastUploadDate(date) {
+    return this.storage.set(this.KAFKA_STORE.LAST_UPLOAD_DATE, date)
   }
 
   getCache() {
@@ -171,5 +162,17 @@ export class KafkaService {
     return this.storage
       .get(this.KAFKA_STORE.CACHE_ANSWERS)
       .then(cache => Object.keys(cache).reduce((s, k) => (k ? s + 1 : s), 0))
+  }
+
+  sendKafkaEvent(type, cacheValue, error?) {
+    this.firebaseAnalytics.logEvent(type, {
+      name: cacheValue.name,
+      questionnaire_timestamp: String(cacheValue.kafkaObject.time),
+      error: JSON.stringify(error)
+    })
+  }
+
+  reset() {
+    return Promise.all([this.setCache({}), this.setLastUploadDate(null)])
   }
 }

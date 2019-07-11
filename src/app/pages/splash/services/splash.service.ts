@@ -23,7 +23,7 @@ export class SplashService {
   }
 
   reset() {
-    return this.config.reset()
+    return this.config.resetAll()
   }
 
   sendMissedQuestionnaireLogs() {

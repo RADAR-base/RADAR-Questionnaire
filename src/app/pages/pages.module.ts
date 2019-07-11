@@ -1,6 +1,7 @@
 import { CommonModule, DatePipe } from '@angular/common'
 
 import { AlertService } from '../core/services/misc/alert.service'
+import { AppConfigService } from '../core/services/config/app-config.service'
 import { AuthModule } from './auth/auth.module'
 import { ClinicalTasksModule } from './clinical-tasks/clinical-tasks.module'
 import { ConfigService } from '../core/services/config/config.service'
@@ -46,6 +47,7 @@ import { UsageService } from '../core/services/usage/usage.service'
     AlertService,
     DatePipe,
     ConfigService,
+    AppConfigService,
     SubjectConfigService,
     ProtocolService,
     QuestionnaireService,

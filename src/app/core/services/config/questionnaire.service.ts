@@ -141,4 +141,11 @@ export class QuestionnaireService {
   getHasClinicalTasks() {
     return this.storage.get(this.QUESTIONNAIRE_STORE.HAS_CLINICAL_TASKS)
   }
+
+  reset() {
+    return Promise.all([
+      this.setAssessments(TaskType.CLINICAL, {}),
+      this.setAssessments(TaskType.NON_CLINICAL, {})
+    ])
+  }
 }

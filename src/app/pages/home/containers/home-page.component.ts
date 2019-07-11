@@ -3,6 +3,7 @@ import { NavController, Platform } from 'ionic-angular'
 import { Subscription } from 'rxjs'
 
 import { Task, TasksProgress } from '../../../shared/models/task'
+
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { ClinicalTasksPageComponent } from '../../clinical-tasks/containers/clinical-tasks-page.component'
 import { HomePageAnimations } from './home-page.animation'
@@ -13,9 +14,9 @@ import { QuestionsPageComponent } from '../../questions/containers/questions-pag
 import { SettingsPageComponent } from '../../settings/containers/settings-page.component'
 import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 import { TasksService } from '../services/tasks.service'
-import { checkTaskIsNow } from '../../../shared/utilities/check-task-is-now'
-import { UsageService } from '../../../core/services/usage/usage.service'
 import { UsageEventType } from '../../../shared/enums/events'
+import { UsageService } from '../../../core/services/usage/usage.service'
+import { checkTaskIsNow } from '../../../shared/utilities/check-task-is-now'
 
 @Component({
   selector: 'page-home',

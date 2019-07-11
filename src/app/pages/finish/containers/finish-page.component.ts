@@ -1,10 +1,10 @@
-import { NavController, NavParams } from 'ionic-angular'
-
 import { Component } from '@angular/core'
+
+import { NavController, NavParams } from 'ionic-angular'
+import { Assessment } from '../../../shared/models/assessment'
 import { FinishTaskService } from '../services/finish-task.service'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { Task } from '../../../shared/models/task'
-import { Assessment } from '../../../shared/models/assessment'
 import { UsageService } from '../../../core/services/usage/usage.service'
 
 @Component({

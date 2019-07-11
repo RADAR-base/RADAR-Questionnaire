@@ -2,17 +2,17 @@ import {
   DefaultSettingsNotifications,
   DefaultSettingsWeeklyReport
 } from '../../../../assets/data/defaultConfig'
-import { NavController, Platform } from 'ionic-angular'
+import { NavController } from 'ionic-angular'
 
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { Component } from '@angular/core'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
+import { NotificationEventType } from '../../../shared/enums/events'
 import { Settings } from '../../../shared/models/settings'
 import { SettingsService } from '../services/settings.service'
 import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 import { UsageService } from '../../../core/services/usage/usage.service'
-import { NotificationEventType } from '../../../shared/enums/events'
 
 @Component({
   selector: 'page-settings',
@@ -146,7 +146,7 @@ export class SettingsPageComponent {
       {
         text: this.localization.translateKey(LocKeys.BTN_AGREE),
         handler: () => {
-          return this.settingsService.reset().then(() => this.backToSplash())
+          return this.showResetOptions()
         }
       }
     ]
@@ -154,6 +154,29 @@ export class SettingsPageComponent {
       title: this.localization.translateKey(LocKeys.SETTINGS_RESET_ALERT),
       message: this.localization.translateKey(
         LocKeys.SETTINGS_RESET_ALERT_DESC
+      ),
+      buttons: buttons
+    })
+  }
+
+  showResetOptions() {
+    const buttons = [
+      {
+        text: this.localization.translateKey(LocKeys.BTN_ENROL_ENROL),
+        handler: () => {
+          this.settingsService.resetAuth().then(() => this.backToSplash())
+        }
+      },
+      {
+        text: this.localization.translateKey(LocKeys.SETTINGS_CONFIGURATION),
+        handler: () =>
+          this.settingsService.reset().then(() => this.backToSplash())
+      }
+    ]
+    return this.alertService.showAlert({
+      title: this.localization.translateKey(LocKeys.SETTINGS_RESET_ALERT),
+      message: this.localization.translateKey(
+        LocKeys.SETTINGS_RESET_ALERT_OPTION_DESC
       ),
       buttons: buttons
     })

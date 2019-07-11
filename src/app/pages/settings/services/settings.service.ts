@@ -17,19 +17,23 @@ export class SettingsService {
   }
 
   setNotifSettings(notificationSettings) {
-    return this.config.setNotificationSettings(notificationSettings)
+    return this.config.updateSettings(notificationSettings)
   }
 
   setReportSettings(reportSettings) {
-    return this.config.setReportSettings(reportSettings)
+    return this.config.updateSettings(reportSettings)
   }
 
   generateTestNotif() {
     return this.notifications.sendTestNotification()
   }
 
+  resetAuth() {
+    return this.config.resetAll()
+  }
+
   reset() {
-    return this.config.reset()
+    return this.config.resetConfig()
   }
 
   getLanguage() {

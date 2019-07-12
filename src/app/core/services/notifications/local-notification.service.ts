@@ -60,7 +60,8 @@ export class LocalNotificationService extends NotificationService {
       trigger: { at: new Date(notification.timestamp) },
       foreground: true,
       vibrate: true,
-      sound: 'file://assets/sounds/serious-strike.mp3'
+      sound: 'file://assets/sounds/serious-strike.mp3',
+      smallIcon: 'res://mipmap-ldpi/ic_launcher.png'
     }
   }
 

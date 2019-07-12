@@ -83,7 +83,7 @@
         "cordova-sqlite-storage": "^3.2.1",
         "cordova-support-android-plugin": "^1.0.1",
         "core-js": "^3.1.4",
-        "ionic-angular": "^3.9.6",
+        "ionic-angular": "^3.9.8",
         "ionic-plugin-keyboard": "^2.2.1",
         "ionicons": "^4.6.1",
         "kafka-rest": "^0.0.5",

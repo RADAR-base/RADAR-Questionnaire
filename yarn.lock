@@ -5180,10 +5180,10 @@ invert-kv@^2.0.0:
   resolved "https://registry.yarnpkg.com/invert-kv/-/invert-kv-2.0.0.tgz#7393f5afa59ec9ff5f67a27620d11c226e3eec02"
   integrity sha512-wPVv/y/QQ/Uiirj/vh3oP+1Ww+AWehmi1g5fFWGPF6IpCBCDVrhgHRMvrLfdYcwDh3QJbGXDW4JAuzxElLSqKA==
 
-ionic-angular@^3.9.6:
-  version "3.9.6"
-  resolved "https://registry.yarnpkg.com/ionic-angular/-/ionic-angular-3.9.6.tgz#2e23cdd78d0a3765ba647cf347ab478b5d694b5b"
-  integrity sha512-rUmRQHtupbB+oyUm4UusguUtop3QSZq2I7+gKWXIFYrT/x6+pp0vteH2ayIeBmWDsL2zRv+/iQaz+Kx6KnkaUg==
+ionic-angular@^3.9.8:
+  version "3.9.8"
+  resolved "https://registry.yarnpkg.com/ionic-angular/-/ionic-angular-3.9.8.tgz#2b00e46a94b753afe8e22182eefdbaa0612be84e"
+  integrity sha512-PVo5mii3nqdEIBP5aVQMn58iIH8VkLDEuGnnMtJi1le4nwzfep2V4jOcru9zDKhCclsD5lqSRBpuQHfoHdRBgQ==
 
 ionic-plugin-keyboard@^2.2.1:
   version "2.2.1"

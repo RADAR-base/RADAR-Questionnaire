@@ -2611,10 +2611,10 @@ cordova-plugin-dialogs@^2.0.2:
   resolved "https://registry.yarnpkg.com/cordova-plugin-dialogs/-/cordova-plugin-dialogs-2.0.2.tgz#ac3ce8b73bc885ff847078d5b533e7a4ed418a2f"
   integrity sha512-FUHI6eEVeoz2VkxbF0P56QlUQLGzXcvw3i4xuXyM9gEct6Y+FA3Xzgl2pJTZcTg5wRqLWzN08kgNoHPkom15pw==
 
-cordova-plugin-file@^6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-file/-/cordova-plugin-file-6.0.1.tgz#49606b8c15a5688d4728f92e4a7325a061de07f5"
-  integrity sha1-SWBrjBWlaI1HKPkuSnMloGHeB/U=
+cordova-plugin-file@^6.0.2:
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-file/-/cordova-plugin-file-6.0.2.tgz#f3911479f8357e9aacb5576674f8d95b31a1fb20"
+  integrity sha512-m7cughw327CjONN/qjzsTpSesLaeybksQh420/gRuSXJX5Zt9NfgsSbqqKDon6jnQ9Mm7h7imgyO2uJ34XMBtA==
 
 cordova-plugin-firebase-with-upstream-messaging@^2.1.1:
   version "2.1.1"

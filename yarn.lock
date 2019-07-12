@@ -6119,7 +6119,7 @@ lodash.tail@^4.1.1:
   resolved "https://registry.yarnpkg.com/lodash.tail/-/lodash.tail-4.1.1.tgz#d2333a36d9e7717c8ad2f7cacafec7c32b444664"
   integrity sha1-0jM6NtnncXyK0vfKyv7HwytERmQ=
 
-lodash@^4.0.0, lodash@^4.1.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.4, lodash@^4.17.5, lodash@~4.17.10:
+lodash@^4.0.0, lodash@^4.1.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.14, lodash@^4.17.4, lodash@^4.17.5, lodash@~4.17.10:
   version "4.17.14"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.14.tgz#9ce487ae66c96254fe20b599f21b6816028078ba"
   integrity sha512-mmKYbW3GLuJeX+iGP+Y7Gp1AiGHGbXHCOh/jZmrawMmsE7MS4znI3RL2FsjbqOyMayHInjOeykW7PEajUk1/xw==
@@ -7770,13 +7770,13 @@ postcss-sorting@^2.1.0:
     lodash "^4.17.4"
     postcss "^5.2.17"
 
-postcss-sorting@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/postcss-sorting/-/postcss-sorting-5.0.0.tgz#4e4ce0a554c17d78d4287f08f792db8992bf62b5"
-  integrity sha512-m25mKLNq0fPAyZFElQ1hngRDFQDMlc+9ZwoWsL8oix6i1GsBzIxyke6sDeY9BXee7L86z4tex01fcH/9wTj3Jg==
+postcss-sorting@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/postcss-sorting/-/postcss-sorting-5.0.1.tgz#10d5d0059eea8334dacc820c0121864035bc3f11"
+  integrity sha512-Y9fUFkIhfrm6i0Ta3n+89j56EFqaNRdUKqXyRp6kvTcSXnmgEjaVowCXH+JBe9+YKWqd4nc28r2sgwnzJalccA==
   dependencies:
-    lodash "^4.17.11"
-    postcss "^7.0.14"
+    lodash "^4.17.14"
+    postcss "^7.0.17"
 
 postcss-syntax@^0.36.2:
   version "0.36.2"

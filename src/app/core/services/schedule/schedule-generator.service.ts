@@ -125,12 +125,11 @@ export class ScheduleGeneratorService {
     const today = setDateTimeToMidnight(new Date())
     const tmpScheduleAll: Task[] = []
     while (iterTime <= endTime) {
-      for (let i = 0; i < repeatQ.unitsFromZero.length; i++) {
+      repeatQ.unitsFromZero.map(amount => {
         const taskTime = advanceRepeat(iterTime, {
           unit: repeatQ.unit,
-          amount: repeatQ.unitsFromZero[i]
+          amount: amount
         })
-
         if (taskTime + completionWindow > today.getTime()) {
           const idx = indexOffset + tmpScheduleAll.length
           const task = this.taskBuilder(
@@ -141,12 +140,11 @@ export class ScheduleGeneratorService {
           )
           tmpScheduleAll.push(task)
         }
-      }
+      })
       iterTime = setDateTimeToMidnight(new Date(iterTime)).getTime()
       if (!repeatP) break
       iterTime = advanceRepeat(iterTime, repeatP)
     }
-
     return tmpScheduleAll
   }
 

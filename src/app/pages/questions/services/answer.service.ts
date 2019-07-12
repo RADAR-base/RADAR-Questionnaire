@@ -17,7 +17,6 @@ export class AnswerService {
   }
 
   pop() {
-    console.log(this.keys)
     this.keys.pop()
   }
 

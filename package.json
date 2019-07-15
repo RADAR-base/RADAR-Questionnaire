@@ -43,7 +43,7 @@
         "@ionic-native/core": "^5.9.0",
         "@ionic-native/device": "^5.9.0",
         "@ionic-native/dialogs": "^5.9.0",
-        "@ionic-native/file": "^5.9.0",
+        "@ionic-native/file": "^5.10.0",
         "@ionic-native/firebase": "^5.9.0",
         "@ionic-native/globalization": "^5.9.0",
         "@ionic-native/insomnia": "^5.9.0",

@@ -32,14 +32,14 @@ export class ConfigService {
 
   fetchConfigState(force?: boolean) {
     return Promise.all([
-      this.hasProtocolChanged(force),
+      this.hasProtocolChanged(),
       this.hasAppVersionChanged(),
       this.hasTimezoneChanged(),
       this.hasNotificationsExpired()
     ]).then(([newProtocol, newAppVersion, newTimezone, newNotifications]) => {
       if (newProtocol && newAppVersion && newTimezone)
         this.subjectConfig.getEnrolmentDate().then(d => this.appConfig.init(d))
-      if (newProtocol)
+      if (newProtocol || force)
         return this.updateConfigStateOnProtocolChange(newProtocol)
       if (newAppVersion)
         return this.updateConfigStateOnAppVersionChange(newAppVersion)
@@ -49,23 +49,18 @@ export class ConfigService {
     })
   }
 
-  hasProtocolChanged(force?) {
+  hasProtocolChanged() {
     return Promise.all([
-      this.appConfig.getConfigVersion(),
       this.appConfig.getScheduleVersion(),
       this.protocol.pull()
     ])
-      .then(([configVersion, scheduleVersion, protocol]) => {
+      .then(([scheduleVersion, protocol]) => {
         const parsedProtocol = JSON.parse(protocol)
         console.log(parsedProtocol)
-        if (
-          configVersion !== parsedProtocol.version ||
-          scheduleVersion !== parsedProtocol.version ||
-          force
-        ) {
+        if (scheduleVersion !== parsedProtocol.version) {
           this.sendConfigChangeEvent(
             ConfigEventType.PROTOCOL_CHANGE,
-            configVersion,
+            scheduleVersion,
             parsedProtocol.version
           )
           return parsedProtocol
@@ -132,10 +127,8 @@ export class ConfigService {
   updateConfigStateOnProtocolChange(protocol) {
     const assessments = this.protocol.format(protocol.protocols)
     console.log(assessments)
-    return Promise.all([
-      this.appConfig.setConfigVersion(protocol.version),
-      this.questionnaire.updateAssessments(TaskType.ALL, assessments)
-    ])
+    return this.questionnaire
+      .updateAssessments(TaskType.ALL, assessments)
       .then(() => this.regenerateSchedule())
       .then(() => this.appConfig.setScheduleVersion(protocol.version))
   }
@@ -227,7 +220,6 @@ export class ConfigService {
       participantID: this.subjectConfig.getParticipantID(),
       projectName: this.subjectConfig.getProjectName(),
       enrolmentDate: this.subjectConfig.getEnrolmentDate(),
-      configVersion: this.appConfig.getConfigVersion(),
       scheduleVersion: this.appConfig.getScheduleVersion(),
       notificationSettings: this.appConfig.getNotificationSettings(),
       weeklyReport: this.appConfig.getReportSettings(),

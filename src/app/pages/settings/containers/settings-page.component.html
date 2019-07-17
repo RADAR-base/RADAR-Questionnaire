@@ -137,15 +137,6 @@
       </span>
     </ion-item>
     <ion-item no-lines>
-      {{ 'SETTINGS_CONFIGURATION' | translate }}
-      <span item-right class="info-value">
-        <div *ngIf="!showLoading">V{{ settings.configVersion }}</div>
-        <div *ngIf="showLoading" class="spinner-center">
-          <ion-spinner name="dots"></ion-spinner>
-        </div>
-      </span>
-    </ion-item>
-    <ion-item no-lines>
       {{ 'SETTINGS_SCHEDULE' | translate }}
       <span item-right class="info-value">
         <div *ngIf="!showLoading">V{{ settings.scheduleVersion }}</div>

@@ -14,7 +14,6 @@ import { setDateTimeToMidnight } from '../../../shared/utilities/time'
 @Injectable()
 export class AppConfigService {
   private readonly CONFIG_STORE = {
-    CONFIG_VERSION: StorageKeys.CONFIG_VERSION,
     SCHEDULE_VERSION: StorageKeys.SCHEDULE_VERSION,
     APP_VERSION: StorageKeys.APP_VERSION,
     UTC_OFFSET: StorageKeys.UTC_OFFSET,
@@ -31,7 +30,6 @@ export class AppConfigService {
       this.setNotificationSettings(DefaultSettingsNotifications),
       this.setReportSettings(DefaultSettingsWeeklyReport),
       this.setAppVersion(DefaultAppVersion),
-      this.setScheduleVersion(DefaultScheduleVersion),
       this.setUTCOffset(new Date().getTimezoneOffset()),
       this.setReferenceDate(enrolmentDate)
     ])
@@ -43,10 +41,6 @@ export class AppConfigService {
 
   getStoredAppVersion() {
     return this.storage.get(this.CONFIG_STORE.APP_VERSION)
-  }
-
-  getConfigVersion() {
-    return this.storage.get(this.CONFIG_STORE.CONFIG_VERSION)
   }
 
   getScheduleVersion() {
@@ -85,10 +79,6 @@ export class AppConfigService {
     return this.storage.set(this.CONFIG_STORE.APP_VERSION, version)
   }
 
-  setConfigVersion(version) {
-    return this.storage.set(this.CONFIG_STORE.CONFIG_VERSION, version)
-  }
-
   setScheduleVersion(version) {
     return this.storage.set(this.CONFIG_STORE.SCHEDULE_VERSION, version)
   }
@@ -110,7 +100,6 @@ export class AppConfigService {
 
   reset() {
     return Promise.all([
-      this.setConfigVersion(null),
       this.setScheduleVersion(null),
       this.setAppVersion(null),
       this.setUTCOffset(null),

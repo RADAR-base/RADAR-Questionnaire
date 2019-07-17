@@ -28,12 +28,6 @@ export class StorageService {
     return this.storage.set(key.toString(), this.global[key.toString()])
   }
 
-  setFetchedConfiguration(config) {
-    this.set(StorageKeys.CONFIG_VERSION, config.version)
-    this.set(StorageKeys.CONFIG_ASSESSMENTS, config.assessments)
-    return Promise.resolve(true)
-  }
-
   get(key: StorageKeys) {
     const k = key.toString()
     const local = this.global[k]

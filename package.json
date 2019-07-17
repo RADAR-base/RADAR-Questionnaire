@@ -114,7 +114,7 @@
         "import-sort-parser-babylon": "^6.0.0",
         "import-sort-parser-typescript": "^6.0.0",
         "import-sort-style-module": "^6.0.0",
-        "ionic": "^5.2.2",
+        "ionic": "^5.2.3",
         "node-sass": "^4.12.0",
         "postcss": "^7.0.17",
         "postcss-cli": "^6.1.3",

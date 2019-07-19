@@ -235,10 +235,10 @@
   dependencies:
     tslib "^1.9.0"
 
-"@auth0/angular-jwt@^2.1.2":
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/@auth0/angular-jwt/-/angular-jwt-2.1.2.tgz#0da5a22812323f115b8ccec3bc8e06e1cff1fe64"
-  integrity sha512-/ldNAqTmaX07PiabFZ7RZNT4Qdpt44/PxY9yoAcvmbGHhETpuKkBvcN11EC+4fKkO+J+KtTSxMGkcSIq0Wv5Ag==
+"@auth0/angular-jwt@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@auth0/angular-jwt/-/angular-jwt-3.0.0.tgz#c484af3d6faadfa1b3b4beb0646b60a562ceed8e"
+  integrity sha512-Ky8hghnEx+CtCd097YXji08/LvLTG98IAEX/j1UgnutRDhQ31eczOohDn98v3i3MHNfLjfI3HdyxPK1Qc0IkZw==
   dependencies:
     url "^0.11.0"
 

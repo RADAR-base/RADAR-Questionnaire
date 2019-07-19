@@ -6,9 +6,11 @@ import {
   FCMPluginProjectSenderId
 } from '../../../../assets/data/defaultConfig'
 
+import { Firebase } from '@ionic-native/firebase/ngx'
 import { Injectable } from '@angular/core'
 import { NotificationGeneratorService } from './notification-generator.service'
 import { NotificationService } from './notification.service'
+import { Platform } from 'ionic-angular'
 import { ScheduleService } from '../schedule/schedule.service'
 import { SingleNotification } from '../../../shared/models/notification-handler'
 import { StorageKeys } from '../../../shared/enums/storage'
@@ -30,7 +32,9 @@ export class FcmNotificationService extends NotificationService {
     private notifications: NotificationGeneratorService,
     private storage: StorageService,
     private schedule: ScheduleService,
-    private config: SubjectConfigService
+    private config: SubjectConfigService,
+    private firebase: Firebase,
+    private platform: Platform
   ) {
     super()
   }
@@ -121,7 +125,15 @@ export class FcmNotificationService extends NotificationService {
   }
 
   permissionCheck(): Promise<void> {
-    return Promise.resolve()
+    if (!this.platform.is('ios')) return Promise.resolve()
+    return this.firebase.hasPermission().then(data => {
+      console.log('permission check')
+      this.firebase.logEvent('PushNotificationPermissions', data)
+      if (data.isEnabled) {
+        return true
+      }
+      return this.firebase.grantPermission()
+    })
   }
 
   sendTestNotification(): Promise<void> {

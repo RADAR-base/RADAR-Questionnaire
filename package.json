@@ -125,7 +125,7 @@
     "import-sort-parser-typescript": "^5.0.0",
     "import-sort-style-module": "^5.0.0",
     "ionic": "^4.1.2",
-    "node-sass": "^4.9.0",
+    "node-sass": "^4.12.0",
     "postcss": "^6.0.1",
     "postcss-cli": "^6.0.1",
     "postcss-scss": "^2.0.0",
@@ -144,6 +144,10 @@
     "typescript": "~2.7.0",
     "webpack": "^4.4.0",
     "webpack-sources": "^1.0.0"
+  },
+  "resolutions": {
+    "fsevents": "1.2.9",
+    "node-sass": "4.12.0"
   },
   "cordova": {
     "platforms": [

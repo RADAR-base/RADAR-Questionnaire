@@ -108,7 +108,7 @@
         "@ionic/app-scripts": "^3.2.4",
         "@types/node": "^12.6.8",
         "codelyzer": "^5.1.0",
-        "eslint": "^6.0.1",
+        "eslint": "^6.1.0",
         "eslint-scope": "^4.0.0",
         "import-sort-cli": "^6.0.0",
         "import-sort-parser-babylon": "^6.0.0",

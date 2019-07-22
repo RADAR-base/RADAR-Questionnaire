@@ -109,7 +109,7 @@
         "@types/node": "^12.6.8",
         "codelyzer": "^5.1.0",
         "eslint": "^6.1.0",
-        "eslint-scope": "^4.0.0",
+        "eslint-scope": "^5.0.0",
         "import-sort-cli": "^6.0.0",
         "import-sort-parser-babylon": "^6.0.0",
         "import-sort-parser-typescript": "^6.0.0",

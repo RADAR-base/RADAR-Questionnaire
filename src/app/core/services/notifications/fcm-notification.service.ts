@@ -126,14 +126,9 @@ export class FcmNotificationService extends NotificationService {
 
   permissionCheck(): Promise<void> {
     if (!this.platform.is('ios')) return Promise.resolve()
-    return this.firebase.hasPermission().then(data => {
-      console.log('permission check')
-      this.firebase.logEvent('PushNotificationPermissions', data)
-      if (data.isEnabled) {
-        return true
-      }
-      return this.firebase.grantPermission()
-    })
+    return this.firebase
+      .hasPermission()
+      .then(res => (res.isEnabled ? true : this.firebase.grantPermission()))
   }
 
   sendTestNotification(): Promise<void> {

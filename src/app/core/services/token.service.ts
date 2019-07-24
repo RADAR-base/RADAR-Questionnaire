@@ -21,6 +21,7 @@ import {
   RemoteConfigService,
 } from './remote-config.service'
 import { ConfigKeys } from '../../shared/enums/config'
+import { OAuthToken } from '../../shared/models/token'
 
 @Injectable()
 export class TokenService {
@@ -49,7 +50,7 @@ export class TokenService {
       })
   }
 
-  get() {
+  get(): Promise<OAuthToken> {
     return this.storage.get(StorageKeys.OAUTH_TOKENS)
   }
 
@@ -58,17 +59,18 @@ export class TokenService {
   }
 
   register(refreshBody?, params?) {
-    return this.storage.get(StorageKeys.BASE_URI).then(uri => {
-      const URI =
-        (uri ? uri : DefaultEndPoint) +
-        DefaultManagementPortalURI +
-        DefaultRefreshTokenURI
-      const headers = this.getRegisterHeaders(DefaultRequestEncodedContentType)
-      return this.http
-        .post(URI, refreshBody, { headers: headers, params: params })
-        .toPromise()
-        .then(res => this.storage.set(StorageKeys.OAUTH_TOKENS, res))
-    })
+    return this.storage.get(StorageKeys.BASE_URI)
+      .then(uri => {
+        const URI =
+          (uri ? uri : DefaultEndPoint) +
+          DefaultManagementPortalURI +
+          DefaultRefreshTokenURI
+        const headers = this.getRegisterHeaders(DefaultRequestEncodedContentType)
+        return this.http
+          .post(URI, refreshBody, { headers: headers, params: params })
+          .toPromise()
+      })
+      .then(res => this.storage.set(StorageKeys.OAUTH_TOKENS, res))
   }
 
   refresh(): Promise<any> {
@@ -85,21 +87,21 @@ export class TokenService {
     })
   }
 
-  getDecodedSubject() {
-    return this.get().then(
-      tokens => this.jwtHelper.decodeToken(tokens.access_token)['sub']
-    )
+  getDecodedSubject(): Promise<string> {
+    return this.get()
+      .then(tokens => this.jwtHelper.decodeToken(tokens.access_token)['sub'])
   }
 
-  getAccessHeaders(contentType) {
-    return this.get().then(tokens =>
-      new HttpHeaders()
-        .set('Authorization', 'Bearer ' + tokens.access_token)
-        .set('Content-Type', contentType)
-    )
+  getAccessHeaders(contentType): Promise<HttpHeaders> {
+    return this.get()
+      .then(tokens =>
+        new HttpHeaders()
+          .set('Authorization', 'Bearer ' + tokens.access_token)
+          .set('Content-Type', contentType)
+      )
   }
 
-  getRegisterHeaders(contentType) {
+  getRegisterHeaders(contentType): HttpHeaders {
     return new HttpHeaders()
       .set('Authorization', this.clientCredentials)
       .set('Content-Type', contentType)
@@ -111,7 +113,7 @@ export class TokenService {
       .set('refresh_token', refreshToken)
   }
 
-  isRefreshTokenExpired() {
+  isRefreshTokenExpired(): Promise<boolean> {
     return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
       return this.jwtHelper.isTokenExpired(tokens.refresh_token)
     })

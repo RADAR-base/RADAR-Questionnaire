@@ -61,9 +61,14 @@ export class FirebaseRemoteConfigService implements RemoteConfigService {
   }
 
   private fetch(timeoutMillis: number) {
+    console.log("Fetching Firebase Remote Config")
     return this.firebase.fetch(timeoutMillis)
-      .then(() => this.firebase.activateFetched())
+      .then(() => {
+        console.log("Activating Firebase Remote Config")
+        return this.firebase.activateFetched()
+      })
       .then((activated) => {
+        console.log("New Firebase Remote Config did activate", activated)
         const conf = new FirebaseRemoteConfig(this.firebase)
         if (activated) {
           this.configSubject.next(conf)

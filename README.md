@@ -86,7 +86,7 @@ Copy `src/assets/data/secret.ts.template` to `src/assets/data/secret.ts` and add
 
 ```ts
 // The client secret for OAuth authorisation with the Management Portal
-export const DefaultOAuthClientSecretExport: string = '<aRMT-secret>'
+export const DefaultSourceProducerAndSecretExport: string = 'aRMT:<aRMT-secret>'
 ```
 
 In `src/assets/data/defaultConfig.ts` the following settings can be changed:

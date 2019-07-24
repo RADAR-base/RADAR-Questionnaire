@@ -5,7 +5,7 @@ import {
   WeeklyReportSubSettings
 } from '../../app/shared/models/settings'
 import { Task } from '../../app/shared/models/task'
-import { DefaultOAuthClientSecretExport } from './secret'
+import { DefaultSourceProducerAndSecretExport } from './secret'
 
 // DEFAULT SETTINGS
 export const DefaultSettingsNotifications: NotificationSettings = {
@@ -154,9 +154,11 @@ export const DefaultSchemaSpecEndpoint = [
   DefaultSchemaSpecPath
 ].join('/')
 
-export const DefaultOAuthClientId = 'aRMT'
-// TODO:: Use empty client secret https://github.com/RADAR-base/RADAR-Questionnaire/issues/140
-export const DefaultOAuthClientSecret = DefaultOAuthClientSecretExport
+const oauthParts = DefaultSourceProducerAndSecretExport.split(':')
+
+export const DefaultOAuthClientId = oauthParts.shift()
+// TODO: Use empty client secret https://github.com/RADAR-base/RADAR-Questionnaire/issues/140
+export const DefaultOAuthClientSecret = oauthParts.join(':')
 
 // CONFIG SERVICE
 

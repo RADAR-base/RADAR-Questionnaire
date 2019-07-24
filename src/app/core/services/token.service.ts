@@ -1,33 +1,60 @@
 import 'rxjs/add/operator/toPromise'
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
-import { Injectable } from '@angular/core'
+import { Inject, Injectable } from '@angular/core'
 import { JwtHelperService } from '@auth0/angular-jwt'
 
 import {
   DefaultEndPoint,
   DefaultManagementPortalURI,
+  DefaultOAuthClientId,
+  DefaultOAuthClientSecret,
   DefaultRefreshTokenURI,
   DefaultRequestEncodedContentType,
-  DefaultSourceProducerAndSecret,
-  DefaultTokenRefreshTime
+  DefaultTokenRefreshSeconds,
 } from '../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../shared/enums/storage'
 import { getSeconds } from '../../shared/utilities/time'
 import { StorageService } from './storage.service'
+import {
+  REMOTE_CONFIG_SERVICE,
+  RemoteConfigService,
+} from './remote-config.service'
+import { ConfigKeys } from '../../shared/enums/config'
 
 @Injectable()
 export class TokenService {
   URI_base: string
+  private tokenRefreshMillis: number = DefaultTokenRefreshSeconds
+  private clientCredentials = TokenService.basicCredentials(DefaultOAuthClientId, DefaultOAuthClientSecret)
 
   constructor(
     public http: HttpClient,
     public storage: StorageService,
-    private jwtHelper: JwtHelperService
-  ) {}
+    private jwtHelper: JwtHelperService,
+    @Inject(REMOTE_CONFIG_SERVICE) private remoteConfig: RemoteConfigService,
+  ) {
+    remoteConfig.subject()
+      .subscribe(config => {
+        config.getOrDefault(ConfigKeys.OAUTH_REFRESH_SECONDS, DefaultTokenRefreshSeconds)
+          .then(refreshTime => this.tokenRefreshMillis = Number(refreshTime) * 1000)
+
+        Promise.all([
+            config.getOrDefault(ConfigKeys.OAUTH_CLIENT_ID, DefaultOAuthClientId),
+            config.getOrDefault(ConfigKeys.OAUTH_CLIENT_SECRET, DefaultOAuthClientSecret)
+          ])
+          .then(([clientId, clientSecret]) =>
+            this.clientCredentials = TokenService.basicCredentials(clientId, clientSecret)
+          )
+      })
+  }
 
   get() {
     return this.storage.get(StorageKeys.OAUTH_TOKENS)
+  }
+
+  static basicCredentials(user: string, password: string): string {
+    return "Basic " + btoa(`${user}:${password}`)
   }
 
   register(refreshBody?, params?) {
@@ -47,7 +74,7 @@ export class TokenService {
   refresh(): Promise<any> {
     return this.get().then(tokens => {
       const limit = getSeconds({
-        milliseconds: new Date().getTime() + DefaultTokenRefreshTime
+        milliseconds: new Date().getTime() + this.tokenRefreshMillis
       })
       if (tokens.iat + tokens.expires_in < limit) {
         const params = this.getRefreshParams(tokens.refresh_token)
@@ -73,9 +100,8 @@ export class TokenService {
   }
 
   getRegisterHeaders(contentType) {
-    // TODO:: Use empty client secret https://github.com/RADAR-base/RADAR-Questionnaire/issues/140
     return new HttpHeaders()
-      .set('Authorization', 'Basic ' + btoa(DefaultSourceProducerAndSecret))
+      .set('Authorization', this.clientCredentials)
       .set('Content-Type', contentType)
   }
 

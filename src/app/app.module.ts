@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http'
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core'
+import { CUSTOM_ELEMENTS_SCHEMA, InjectionToken, NgModule } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { JWT_OPTIONS, JwtModule } from '@auth0/angular-jwt'
@@ -26,6 +26,7 @@ import { PagesModule } from './pages/pages.module'
 import { AndroidPermissionUtility } from './shared/utilities/android-permission'
 import { jwtOptionsFactory } from './shared/utilities/jwtOptionsFactory'
 import { Utility } from './shared/utilities/util'
+import { FirebaseRemoteConfigService, REMOTE_CONFIG_SERVICE} from './core/services/remote-config.service'
 
 @NgModule({
   imports: [
@@ -68,7 +69,8 @@ import { Utility } from './shared/utilities/util'
     Insomnia,
     BackgroundMode,
     Firebase,
-    LocalNotifications
+    LocalNotifications,
+    { provide: REMOTE_CONFIG_SERVICE, useClass: FirebaseRemoteConfigService }
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

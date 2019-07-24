@@ -66,23 +66,38 @@ Run the app in an Android emulator:
 $ ionic cordova emulate android
 ```
 
+## Firebase remote config
+
+Certain values can be overriden using Firebase Remote Config. Specifically, the following variables are supported:
+
+| Parameter | Description | Default value |
+|---|---|---|
+| `oauth_client_id` | Client ID to connect to the ManagementPortal with | `aRMT` |
+| `oauth_client_secret` | Client secret to connect to the ManagementPortal with | Value set in `secret.ts` |
+| `oauth_refresh_seconds` | After how many seconds to refresh the OAuth token | `1800` (=30 minutes) |
+| `protocol_base_url` | Base URL where the protocol definitions are located. | https://api.github.com/repos/RADAR-base/RADAR-aRMT-protocols/contents |
+| `protocol_branch` | Github branch where the protocol definitions should be read from | `master` |
+| `protocol_path` | Path inside a project name that should be read for a protocol | `protocol.json` |
+| `kafka_specification_url` | URL of the Kafka topic specification | https://api.github.com/repos/RADAR-base/radar-schemas/contents/specifications/active/aRMT-App_1.4.3.yml?ref=master |
+
 ## Other Config Options
 
-Create a file in `src/assets/data/secret.ts` and add the following configuration -
+Copy `src/assets/data/secret.ts.template` to `src/assets/data/secret.ts` and add the following configuration -
 
 ```ts
-// The client credentials for OAuth authorisation with the Management Portal
-export const DefaultSourceProducerAndSecretExport: string =
-  '<aRMT-client>:<aRMT-secret>'
+// The client secret for OAuth authorisation with the Management Portal
+export const DefaultOAuthClientSecretExport: string = '<aRMT-secret>'
 ```
 
-Also if using FCM pull notifications instead of the local ones, please specify the FCM sender id (as mentioned in FCM settings) in `src/assets/data/defaultConfig.ts`. Don't forget to add the app's `google-services.json` (Android) or `GoogleService-Info.plist` (iOS) file to the root of your project.
+In `src/assets/data/defaultConfig.ts` the following settings can be changed:
+
+If using FCM pull notifications instead of the local ones, please specify the FCM sender id (as mentioned in FCM settings) in `src/assets/data/defaultConfig.ts`. Don't forget to add the app's `google-services.json` (Android) or `GoogleService-Info.plist` (iOS) file to the root of your project.
 
 ```ts
 export const FCMPluginProjectSenderId: string = 'your-sender-id'
 ```
 
-Also change the Default endpoint of where the RADAR-base platform is hosted.
+The Default endpoint of where the RADAR-base platform is hosted.
 
 ```ts
 export const DefaultEndPoint: string =
@@ -92,17 +107,14 @@ export const DefaultEndPoint: string =
 Also change the Default Github source details where the questionnaire scheduling protocols and questionnaire schemas are hosted.
 
 ```ts
-// The owner or organisation of the repositories where the protocols and schemas are located
-export const DefaultOrganisation = 'YOUR-ORGANISATION'
-
-// The name of the repository where the protocols are located
-export const DefaultProtocolRepo = 'RADAR-aRMT-protocols'
+// The Github repository where the protocols are located
+export const DefaultProtocolGithubRepo = 'RADAR-Base/RADAR-aRMT-protocols'
 
 // The name of the branch in the protocol repository
 export const DefaultProtocolBranch = 'master'
 
 // The name of the repository where the questionnaire schemas are located
-export const DefaultSchemaRepo = 'RADAR-Schemas'
+export const DefaultSchemaGithubRepo = 'RADAR-Base/RADAR-Schemas'
 
 // The name of the branch in the schema repository
 export const DefaultSchemaBranch = 'master'

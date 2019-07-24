@@ -4,7 +4,6 @@ import { NavController, NavParams } from 'ionic-angular'
 import {
   DefaultNotificationRefreshTime,
   DefaultNumberOfCompletionLogsToSend,
-  DefaultNumberOfNotificationsToSchedule
 } from '../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../core/services/alert.service'
 import { ConfigService } from '../../../core/services/config.service'
@@ -16,7 +15,6 @@ import { SchedulingService } from '../../../core/services/scheduling.service'
 import { StorageService } from '../../../core/services/storage.service'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { StorageKeys } from '../../../shared/enums/storage'
-import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { EnrolmentPageComponent } from '../../auth/containers/enrolment-page.component'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { SplashService } from '../services/splash.service'
@@ -27,7 +25,6 @@ import { SplashService } from '../services/splash.service'
 })
 export class SplashPageComponent {
   status = 'Checking enrolment...'
-
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,

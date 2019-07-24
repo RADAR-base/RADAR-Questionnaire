@@ -1,15 +1,15 @@
 import 'rxjs/add/operator/toPromise'
 
 import { HttpClient } from '@angular/common/http'
-import { Injectable } from '@angular/core'
+import { Inject, Injectable } from '@angular/core'
 import { AppVersion } from '@ionic-native/app-version/ngx'
 
 import {
-  DefaultAppVersion,
+  DefaultAppVersion, DefaultProtocolBranch,
   DefaultProtocolEndPoint,
   DefaultProtocolPath,
   DefaultQuestionnaireFormatURI,
-  DefaultQuestionnaireTypeURI
+  DefaultQuestionnaireTypeURI,
 } from '../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../shared/enums/storage'
 import { Assessment } from '../../shared/models/assessment'
@@ -20,6 +20,8 @@ import { LocalizationService } from './localization.service'
 import { NotificationService } from './notification.service'
 import { SchedulingService } from './scheduling.service'
 import { StorageService } from './storage.service'
+import { REMOTE_CONFIG_SERVICE, RemoteConfigService } from './remote-config.service'
+import { ConfigKeys } from '../../shared/enums/config'
 
 @Injectable()
 export class ConfigService {
@@ -31,7 +33,8 @@ export class ConfigService {
     private util: Utility,
     private localization: LocalizationService,
     private appVersionPlugin: AppVersion,
-    private firebaseAnalytics: FirebaseAnalyticsService
+    private firebaseAnalytics: FirebaseAnalyticsService,
+    @Inject(REMOTE_CONFIG_SERVICE) private remoteConfig: RemoteConfigService,
   ) {}
 
   fetchConfigState(force: boolean) {
@@ -57,7 +60,7 @@ export class ConfigService {
         storedAppVersion !== appVersion ||
         force
       ) {
-        const assessments = this.formatPulledProcotol(responseData.protocols)
+        const assessments = this.formatPulledProtocol(responseData.protocols)
         const {
           negative: scheduledAssessments,
           positive: clinicalAssessments
@@ -111,13 +114,15 @@ export class ConfigService {
       this.getProjectName(),
       this.storage.get(StorageKeys.SOURCEID),
       this.storage.get(StorageKeys.ENROLMENTDATE),
-      this.storage.get(StorageKeys.PARTICIPANTID)
+      this.storage.get(StorageKeys.PARTICIPANTID),
+      this.storage.get(StorageKeys.BASE_URI)
     ]).then(
-      ([subjectId, projectId, sourceId, enrolmentDate, humanReadableId]) =>
+      ([subjectId, projectId, sourceId, enrolmentDate, humanReadableId, baseUri]) =>
         this.firebaseAnalytics.setUserProperties({
           subjectId: subjectId,
           projectId: projectId,
           sourceId: sourceId,
+          baseUrl: baseUri,
           enrolmentDate: String(enrolmentDate),
           humanReadableId: humanReadableId
         })
@@ -147,30 +152,40 @@ export class ConfigService {
   }
 
   pullProtocol() {
-    return this.getProjectName().then(projectName => {
-      if (!projectName) {
-        console.error(
-          'Unknown project name : ' + projectName + '. Cannot pull protocols.'
-        )
-        return Promise.reject()
-      }
-      const URI = [
-        DefaultProtocolEndPoint,
-        projectName,
-        DefaultProtocolPath
-      ].join('/')
-      return this.http
-        .get(URI)
-        .toPromise()
-        .then(res => atob(res['content']))
-    })
+    return this.remoteConfig.read()
+      .catch(e => {
+        console.error("Failed to fetch Firebase config, using empty config instead", e)
+        throw e;
+      })
+      .then(cfg => Promise.all([
+        this.getProjectName(),
+        cfg.getOrDefault(ConfigKeys.PROTOCOL_BASE_URL, DefaultProtocolEndPoint),
+        cfg.getOrDefault(ConfigKeys.PROTOCOL_PATH, DefaultProtocolPath),
+        cfg.getOrDefault(ConfigKeys.PROTOCOL_BRANCH, DefaultProtocolBranch)]))
+      .then(([projectName, path, baseUrl, branch]) => {
+        if (!projectName) {
+          console.error(
+            'Unknown project name : ' + projectName + '. Cannot pull protocols.'
+          )
+          return Promise.reject()
+        }
+        const URI = [
+          baseUrl,
+          projectName,
+          `${path}?ref=${branch}`,
+        ].join('/')
+        return this.http
+          .get(URI)
+          .toPromise()
+          .then(res => atob(res['content']))
+      })
   }
 
   getProjectName() {
     return this.storage.get(StorageKeys.PROJECTNAME)
   }
 
-  formatPulledProcotol(protocols: Assessment[]): Assessment[] {
+  formatPulledProtocol(protocols: Assessment[]): Assessment[] {
     return protocols.map(p => {
       p.questionnaire.type = DefaultQuestionnaireTypeURI
       p.questionnaire.format = DefaultQuestionnaireFormatURI

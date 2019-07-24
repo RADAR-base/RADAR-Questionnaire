@@ -78,7 +78,7 @@ Certain values can be overriden using Firebase Remote Config. Specifically, the 
 | `protocol_base_url` | Base URL where the protocol definitions are located. | https://api.github.com/repos/RADAR-base/RADAR-aRMT-protocols/contents |
 | `protocol_branch` | Github branch where the protocol definitions should be read from | `master` |
 | `protocol_path` | Path inside a project name that should be read for a protocol | `protocol.json` |
-| `kafka_specification_url` | URL of the Kafka topic specification | https://api.github.com/repos/RADAR-base/radar-schemas/contents/specifications/active/aRMT-App_1.4.3.yml?ref=master |
+| `kafka_specification_url` | URL of the Kafka topic specification | https://api.github.com/repos/RADAR-base/radar-schemas/contents/specifications/active/aRMT_1.4.3.yml?ref=master |
 
 ## Other Config Options
 

@@ -33,7 +33,7 @@ export class SchedulingService {
     private notificationService: NotificationGeneratorService,
     private logger: LogService,
   ) {
-    this.logger.log(this.storage.global))
+    this.logger.log(this.storage.global)
   }
 
   getTasks(): Promise<Task[]> {

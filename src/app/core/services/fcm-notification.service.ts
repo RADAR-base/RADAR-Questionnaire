@@ -16,6 +16,7 @@ import { SingleNotification } from '../../shared/models/notification-handler'
 import { StorageKeys } from '../../shared/enums/storage'
 import { StorageService } from './storage.service'
 import { getSeconds } from '../../shared/utilities/time'
+import { LogService } from './log.service'
 
 declare var FirebasePlugin
 
@@ -28,7 +29,8 @@ export class FcmNotificationService extends NotificationService {
     private storage: StorageService,
     private schedule: SchedulingService,
     private platform: Platform,
-    private firebase: Firebase
+    private firebase: Firebase,
+    private logger: LogService,
   ) {
     super()
   }
@@ -38,7 +40,7 @@ export class FcmNotificationService extends NotificationService {
       FCMPluginProjectSenderId,
       () => console.log('[NOTIFICATION SERVICE] Set sender id success'),
       error => {
-        console.log(error)
+        this.logger.error("Failed to set sender ID", error)
         alert(error)
       }
     )
@@ -63,8 +65,8 @@ export class FcmNotificationService extends NotificationService {
         const fcmNotifications = notifications.map(t =>
           this.format(t, username)
         )
-        console.log('NOTIFICATIONS Scheduling FCM notifications')
-        console.log(fcmNotifications)
+        this.logger.log('NOTIFICATIONS Scheduling FCM notifications')
+        this.logger.log(fcmNotifications)
         return Promise.all(
           fcmNotifications
             .map(n => {
@@ -81,7 +83,7 @@ export class FcmNotificationService extends NotificationService {
       notification,
       succ => console.log(succ),
       err => {
-        console.log(err)
+        this.logger.error('Failed to send notification', err)
         if (this.upstreamResends++ < DefaultMaxUpstreamResends)
           this.sendNotification(notification)
       }

@@ -37,6 +37,7 @@ export class TokenService {
   ) {
     remoteConfig.subject()
       .subscribe(config => {
+        console.log("Updating Token config")
         config.getOrDefault(ConfigKeys.OAUTH_REFRESH_SECONDS, DefaultTokenRefreshSeconds)
           .then(refreshTime => this.tokenRefreshMillis = Number(refreshTime) * 1000)
 
@@ -66,6 +67,7 @@ export class TokenService {
           DefaultManagementPortalURI +
           DefaultRefreshTokenURI
         const headers = this.getRegisterHeaders(DefaultRequestEncodedContentType)
+        console.log(`"Registering with ${URI} using client credentials ${this.clientCredentials}`)
         return this.http
           .post(URI, refreshBody, { headers: headers, params: params })
           .toPromise()

@@ -27,6 +27,7 @@ import { AndroidPermissionUtility } from './shared/utilities/android-permission'
 import { jwtOptionsFactory } from './shared/utilities/jwtOptionsFactory'
 import { Utility } from './shared/utilities/util'
 import { FirebaseRemoteConfigService, REMOTE_CONFIG_SERVICE} from './core/services/remote-config.service'
+import { LogService } from './core/services/log.service'
 
 @NgModule({
   imports: [
@@ -70,6 +71,7 @@ import { FirebaseRemoteConfigService, REMOTE_CONFIG_SERVICE} from './core/servic
     BackgroundMode,
     Firebase,
     LocalNotifications,
+    LogService,
     { provide: REMOTE_CONFIG_SERVICE, useClass: FirebaseRemoteConfigService }
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

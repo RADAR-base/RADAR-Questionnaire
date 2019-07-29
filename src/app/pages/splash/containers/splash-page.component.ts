@@ -51,14 +51,13 @@ export class SplashPageComponent {
 
   onStart() {
     this.configService.migrateToLatestVersion()
-    return this.configService
-      .fetchConfigState(false)
+      .then(() => this.configService.fetchConfigState(false))
       .then(() => this.checkTimezoneChange())
       .then(() => this.notificationsRefresh())
       .catch(error => {
         console.error(error)
         console.log('[SPLASH] Notifications/config error.')
-        this.showConfigError()
+        return this.showConfigError()
       })
       .then(() => {
         this.status = 'Sending missed completion logs...'

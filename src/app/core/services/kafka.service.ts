@@ -26,6 +26,7 @@ import { Utility } from '../../shared/utilities/util'
 import { FirebaseAnalyticsService } from './firebaseAnalytics.service'
 import { StorageService } from './storage.service'
 import { TokenService } from './token.service'
+import { LogService } from './log.service'
 
 @Injectable()
 export class KafkaService {
@@ -39,7 +40,8 @@ export class KafkaService {
     private util: Utility,
     private storage: StorageService,
     private token: TokenService,
-    private firebaseAnalytics: FirebaseAnalyticsService
+    private firebaseAnalytics: FirebaseAnalyticsService,
+    private logger: LogService,
   ) {
     this.updateURI()
     this.token.refresh()
@@ -140,21 +142,17 @@ export class KafkaService {
   createPayloadAndSend(specs, kafkaConnInstance) {
     return this.util.getKafkaTopic(specs).then(topic => {
       let schemaVersions
-      switch (specs.name) {
-        case KAFKA_COMPLETION_LOG:
-          if (this.schemas[specs.name]) {
-            schemaVersions = this.schemas[specs.name]
-            break
-          }
-        default:
-          schemaVersions = this.util
-            .getLatestKafkaSchemaVersions(topic)
-            .catch(error => {
-              console.log(error)
-              return Promise.resolve()
-            })
-          this.schemas[specs.name] = schemaVersions
+      if (specs.name == KAFKA_COMPLETION_LOG && this.schemas[KAFKA_COMPLETION_LOG]) {
+        schemaVersions = this.schemas[specs.name]
+      } else {
+        schemaVersions = this.util
+          .getLatestKafkaSchemaVersions(topic)
+          .catch(error => {
+            this.logger.error('Failed to get latest Kafka schema versions', error.json())
+          })
+        this.schemas[specs.name] = schemaVersions
       }
+
       return schemaVersions.then(([keySchemaMetadata, valueSchemaMetadata]) => {
         const keySchema = JSON.parse(keySchemaMetadata.schema)
         const valueSchema = JSON.parse(valueSchemaMetadata.schema)
@@ -180,9 +178,7 @@ export class KafkaService {
           kafkaConnInstance,
           topic
         ).catch(error => {
-          console.error(
-            'Could not initiate kafka connection ' + JSON.stringify(error)
-          )
+          this.logger.error('Could not initiate kafka connection', error)
           this.firebaseAnalytics.logEvent('send_error', {
             error: String(error),
             name: specs.name,
@@ -192,7 +188,6 @@ export class KafkaService {
                 : Date.now()
               : Date.now()
           })
-          return Promise.resolve()
         })
       })
     })
@@ -206,24 +201,20 @@ export class KafkaService {
         .topic(topic)
         .produce(id, info, payload, (err, res) => {
           if (err) {
-            console.log(err)
-            return reject(err)
+            return reject(this.logger.error('Failed to send to kafka', err))
           } else {
-            const cacheKey = specs.kafkaObject.value.time
-            this.setLastUploadDate(specs)
-            this.firebaseAnalytics.logEvent('send_success', {
-              topic: topic,
-              name: specs.name,
-              questionnaire_timestamp: specs.task
-                ? specs.task.timestamp
-                  ? String(specs.task.timestamp)
-                  : Date.now()
-                : Date.now()
-            })
-            return resolve(cacheKey)
+            return resolve()
           }
         })
     })
+      .then(() => Promise.all([
+        this.setLastUploadDate(specs),
+        this.firebaseAnalytics.logEvent('send_success', {
+          topic: topic,
+          name: specs.name,
+          questionnaire_timestamp: specs.task && specs.task.timestamp ? String(specs.task.timestamp) : Date.now(),
+        })]))
+      .then(() => specs.kafkaObject.value.time)
   }
 
   setLastUploadDate(specs) {

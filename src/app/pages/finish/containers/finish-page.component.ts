@@ -15,6 +15,7 @@ import { timeIntervalToMillis } from '../../../shared/utilities/time'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { FinishTaskService } from '../services/finish-task.service'
 import { PrepareDataService } from '../services/prepare-data.service'
+import { LogService } from '../../../core/services/log.service'
 
 @Component({
   selector: 'page-finish',
@@ -38,7 +39,8 @@ export class FinishPageComponent {
     private notificationService: NotificationService,
     private finishTaskService: FinishTaskService,
     public storage: StorageService,
-    private firebaseAnalytics: FirebaseAnalyticsService
+    private firebaseAnalytics: FirebaseAnalyticsService,
+    private logger: LogService,
   ) {}
 
   ionViewDidLoad() {
@@ -50,10 +52,10 @@ export class FinishPageComponent {
       !this.questionnaireData.isLastTask && !this.isClinicalTask
     this.processDataAndSend()
     this.firebaseAnalytics.setCurrentScreen('finish-page')
-    this.firebaseAnalytics.logEvent('questionnaire_finished', {
-      questionnaire_timestamp: String(this.associatedTask.timestamp),
-      type: this.associatedTask.name
-    })
+      .then(() => this.firebaseAnalytics.logEvent('questionnaire_finished', {
+        questionnaire_timestamp: String(this.associatedTask.timestamp),
+        type: this.associatedTask.name
+      }))
     setTimeout(() => (this.showDoneButton = true), 15000)
   }
 
@@ -73,7 +75,7 @@ export class FinishPageComponent {
         data,
         this.questionnaireData.questions
       )
-        .catch(e => console.log(e))
+        .catch(e => this.logger.error("Failed to send questionnaire to Kafka", e))
         .then(() => (this.showDoneButton = true))
     } else this.showDoneButton = true
   }

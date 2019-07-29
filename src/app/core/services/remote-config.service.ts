@@ -4,6 +4,7 @@ import { Firebase } from '@ionic-native/firebase/ngx'
 import { BehaviorSubject, Observable, from } from 'rxjs'
 import { ConfigKeys } from '../../shared/enums/config'
 import 'rxjs/add/operator/mergeMap'
+import { LogService } from './log.service'
 
 export const REMOTE_CONFIG_SERVICE = new InjectionToken<RemoteConfig>('RemoteConfig');
 
@@ -22,6 +23,7 @@ export interface RemoteConfig {
 class FirebaseRemoteConfig implements RemoteConfig {
   constructor(
     private firebase: Firebase,
+    private logger: LogService,
   ) {}
 
   get(key: ConfigKeys): Promise<string | null> {
@@ -33,7 +35,7 @@ class FirebaseRemoteConfig implements RemoteConfig {
     return this.firebase.getValue(key.value, '')
       .then((val: string) => val.length == 0 ? defaultValue : val)
       .catch(e => {
-        console.log(`Failed to retrieve ${key.value} (using default ${defaultValue})`, e)
+        this.logger.error(`Failed to retrieve ${key.value} (using default ${defaultValue})`, e)
         return defaultValue
       })
   }
@@ -47,8 +49,9 @@ export class FirebaseRemoteConfigService implements RemoteConfigService {
 
   constructor(
     private firebase: Firebase,
+    private logger: LogService,
   ) {
-    this.configSubject = new BehaviorSubject(new FirebaseRemoteConfig(this.firebase))
+    this.configSubject = new BehaviorSubject(new FirebaseRemoteConfig(this.firebase, this.logger))
   }
 
   setCacheExpiration(timeoutMillis: number) {
@@ -76,7 +79,7 @@ export class FirebaseRemoteConfigService implements RemoteConfigService {
       })
       .then((activated) => {
         console.log("New Firebase Remote Config did activate", activated)
-        const conf = new FirebaseRemoteConfig(this.firebase)
+        const conf = new FirebaseRemoteConfig(this.firebase, this.logger)
         if (activated) {
           this.configSubject.next(conf)
         }

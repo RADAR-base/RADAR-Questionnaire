@@ -18,11 +18,11 @@ export class FirebaseAnalyticsService {
       .logEvent(event, params)
       .then((res: any) => {
         console.log('firebase analytics service: ' + res)
-        return Promise.resolve(res)
+        return res;
       })
       .catch((error: any) => {
         console.log('firebase analytics service: ' + error)
-        return Promise.reject(error)
+        throw error;
       })
   }
 

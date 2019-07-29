@@ -25,6 +25,7 @@ import {
 } from '../../../shared/models/settings'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { AuthService } from '../services/auth.service'
+import { LogService } from '../../../core/services/log.service'
 
 @Component({
   selector: 'page-enrolment',
@@ -73,7 +74,8 @@ export class EnrolmentPageComponent {
     private authService: AuthService,
     private localization: LocalizationService,
     private alertService: AlertService,
-    private firebaseAnalytics: FirebaseAnalyticsService
+    private firebaseAnalytics: FirebaseAnalyticsService,
+    private logger: LogService,
   ) {
     this.localization.update().then(lang => (this.language = lang))
   }
@@ -82,8 +84,8 @@ export class EnrolmentPageComponent {
     this.slides.lockSwipes(true)
     this.firebaseAnalytics
       .setCurrentScreen('enrolment-page')
-      .then(res => console.log('enrolment-page: ' + res))
-      .catch(err => console.log('enrolment-page: ' + err))
+      .then(res => this.logger.log('enrolment-page', res))
+      .catch(err => this.logger.error('enrolment-page', err))
   }
 
   scanQRHandler() {
@@ -131,8 +133,13 @@ export class EnrolmentPageComponent {
         if (refreshToken === null) {
           throw new Error('refresh token cannot be null.')
         }
+
+        console.log("Retrieved refresh token")
         return this.authService.registerToken(refreshToken)
-          .then(() => this.authService.registerAsSource())
+          .then(() => {
+            console.log("Registered token")
+            return this.authService.registerAsSource()
+          })
           .catch(error => {
             error.statusText = 'Re-registered an existing source '
             throw error
@@ -221,7 +228,7 @@ export class EnrolmentPageComponent {
         )
       })
       .then(() => this.doAfterAuthentication())
-      .catch(err => console.log('Init failed', err.json()))
+      .catch(err => { this.logger.error('Init failed', err) })
   }
 
   doAfterAuthentication(): Promise<void> {
@@ -251,7 +258,7 @@ export class EnrolmentPageComponent {
   }
 
   displayErrorMessage(error) {
-    console.log(error.json())
+    this.logger.error("Failed to log in", error)
     this.loading = false
     this.showOutcomeStatus = true
     this.outcomeStatus = error.statusText + ' (' + error.status + ')'

@@ -4,6 +4,7 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core'
 import { LocalizationService } from '../../../../core/services/localization.service'
 import { LocKeys } from '../../../../shared/enums/localisations'
 import { Task, TasksProgress } from '../../../../shared/models/task'
+import { LogService } from '../../../../core/services/log.service'
 @Component({
   selector: 'task-info',
   templateUrl: 'task-info.component.html',
@@ -69,10 +70,13 @@ export class TaskInfoComponent implements OnChanges {
   radius: number = 35
   stroke: number = 8
 
-  constructor(private localization: LocalizationService) {}
+  constructor(
+    private localization: LocalizationService,
+    private logger: LogService,
+  ) {}
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(this.task)
+    this.logger.log(this.task)
     this.updateProgress()
     this.updateNextTaskStatus()
     this.statusChanges = changes

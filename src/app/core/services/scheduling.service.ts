@@ -16,6 +16,7 @@ import {
 import { StorageService } from './storage.service'
 import { LocalizationService } from './localization.service'
 import { NotificationGeneratorService } from './notification-generator.service'
+import { LogService } from './log.service'
 
 @Injectable()
 export class SchedulingService {
@@ -29,9 +30,10 @@ export class SchedulingService {
   constructor(
     private storage: StorageService,
     private localization: LocalizationService,
-    private notificationService: NotificationGeneratorService
+    private notificationService: NotificationGeneratorService,
+    private logger: LogService,
   ) {
-    console.log(this.storage.global)
+    this.logger.log(this.storage.global))
   }
 
   getTasks(): Promise<Task[]> {
@@ -223,7 +225,7 @@ export class SchedulingService {
     const completionWindow = SchedulingService.computeCompletionWindow(
       assessment
     )
-    console.log(assessment)
+    this.logger.log(assessment)
 
     const today = this.setDateTimeToMidnight(new Date())
     const tmpScheduleAll: Task[] = []
@@ -342,7 +344,7 @@ export class SchedulingService {
         )
         .reduce((a, b) => a + '\n' + b)
 
-      console.log(rendered)
+      this.logger.log(rendered)
     })
   }
 

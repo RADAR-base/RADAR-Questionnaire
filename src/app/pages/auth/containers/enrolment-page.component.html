@@ -1,12 +1,12 @@
 <ion-content>
   <ion-slides pager="false">
 
-    <ion-slide id="intro">
-      <div id="logo-container">
+    <ion-slide id="intro-language">
+      <div class="logo-container">
         <img
-          id="logo"
+          class="logo"
           src="assets/imgs/radar-logo.svg"
-          alias="RADAR LOGO"
+          alt="RADAR LOGO"
         >
       </div>
       <div class="text">
@@ -45,11 +45,11 @@
     </ion-slide>
 
     <ion-slide id="intro">
-      <div id="logo-container">
+      <div class="logo-container">
         <img
-          id="logo"
+          class="logo"
           src="assets/imgs/radar-logo.svg"
-          alias="RADAR LOGO"
+          alt="RADAR LOGO"
         >
       </div>
       <div class="text">
@@ -140,17 +140,11 @@
             ></ion-input>
           </div>
         </div>
-        <div id="status">
-          <div
-            #loading
-            id="loading"
-          >
+        <div class="status">
+          <div class="loading" [class.active]="loading">
             <div class="padding-text">{{ "STATUS_LOADING" | translate }}</div>
           </div>
-          <div
-            #outcome
-            id="outcome"
-          >
+          <div class="outcome" [class.active]="showOutcomeStatus">
             <div class="padding-text">{{ outcomeStatus }}</div>
           </div>
         </div>
@@ -183,19 +177,13 @@
         </div>
       </div>
       <div class="qr-code">
-        <img src="assets/imgs/radar-qr-code.png">
+        <img src="assets/imgs/radar-qr-code.png" alt="RADAR QR Code">
       </div>
-      <div id="status">
-        <div
-          #loading
-          id="loading"
-        >
+      <div class="status">
+        <div class="loading" [class.active]="loading">
           <div class="padding-text">{{ "STATUS_LOADING" | translate }}</div>
         </div>
-        <div
-          #outcome
-          id="outcome"
-        >
+        <div class="outcome" [class.active]="showOutcomeStatus">
           <div class="padding-text">{{ outcomeStatus }}</div>
         </div>
       </div>
@@ -220,7 +208,7 @@
 
       <div class="text text-lg">{{ "ENROL_PREFERENCES" | translate }}</div>
       <div class="pref-icon">
-        <img src="assets/imgs/MobileAnalytics-neg.png">
+        <img src="assets/imgs/MobileAnalytics-neg.png" alt="App preferences">
       </div>
       <div class="text text-justify">
         {{ "ENROL_PREFERENCES_DESC" | translate }}

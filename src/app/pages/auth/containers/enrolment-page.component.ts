@@ -33,10 +33,6 @@ import { AuthService } from '../services/auth.service'
 export class EnrolmentPageComponent {
   @ViewChild(Slides)
   slides: Slides
-  @ViewChild('loading')
-  elLoading: ElementRef
-  @ViewChild('outcome')
-  elOutcome: ElementRef
   loading: boolean = false
   showOutcomeStatus: boolean = false
   outcomeStatus: String
@@ -120,7 +116,6 @@ export class EnrolmentPageComponent {
 
   authenticate(authObj) {
     this.showOutcomeStatus = false
-    this.transitionStatuses()
 
     new Promise((resolve, reject) => {
       let refreshToken = null
@@ -257,7 +252,6 @@ export class EnrolmentPageComponent {
     this.loading = false
     this.showOutcomeStatus = true
     this.outcomeStatus = error.statusText + ' (' + error.status + ')'
-    this.transitionStatuses()
     this.firebaseAnalytics.logEvent('sign_up_failed', {
       error: JSON.stringify(error),
       message: String(this.outcomeStatus)
@@ -266,18 +260,6 @@ export class EnrolmentPageComponent {
 
   weeklyReportChange(index) {
     this.storage.set(StorageKeys.SETTINGS_WEEKLYREPORT, this.reportSettings)
-  }
-
-  transitionStatuses() {
-    if (this.loading) {
-      this.elOutcome.nativeElement.style.opacity = 0
-      this.elLoading.nativeElement.style.opacity = 1
-    }
-    if (this.showOutcomeStatus) {
-      this.elOutcome.nativeElement.style.transform = 'translate3d(-100%,0,0)'
-      this.elOutcome.nativeElement.style.opacity = 1
-      this.elLoading.nativeElement.style.opacity = 0
-    }
   }
 
   getSourceId(response) {

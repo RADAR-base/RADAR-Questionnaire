@@ -148,8 +148,13 @@ export class EnrolmentPageComponent {
   }
 
   private updateBaseUrl(url): Promise<void> {
+    let lastSlashIndex = url.length
+    while (lastSlashIndex > 0 && url[lastSlashIndex - 1] == '/') {
+      lastSlashIndex--;
+    }
+
     return this.storage
-      .set(StorageKeys.BASE_URI, url)
+      .set(StorageKeys.BASE_URI, url.substring(0, lastSlashIndex))
       .then(() => this.authService.updateURI())
   }
 

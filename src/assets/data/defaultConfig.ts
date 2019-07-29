@@ -127,7 +127,7 @@ export const DefaultSourceTypeRegistrationBody = {
 }
 
 export const DefaultEndPoint: string =
-  'https://radar-cns-platform.rosalind.kcl.ac.uk/'
+  'https://radar-cns-platform.rosalind.kcl.ac.uk'
 
 // GITHUB SOURCES
 
@@ -167,7 +167,7 @@ export const DefaultQuestionnaireFormatURI = '.json'
 
 // AUTH SERVICE
 
-export const DefaultManagementPortalURI = 'managementportal'
+export const DefaultManagementPortalURI = '/managementportal'
 export const DefaultRefreshTokenURI = '/oauth/token'
 export const DefaultSubjectsURI = '/api/subjects/'
 export const DefaultMetaTokenURI: string = '/api/meta-token/'

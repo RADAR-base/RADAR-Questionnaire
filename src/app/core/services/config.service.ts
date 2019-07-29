@@ -162,7 +162,7 @@ export class ConfigService {
         cfg.getOrDefault(ConfigKeys.PROTOCOL_BASE_URL, DefaultProtocolEndPoint),
         cfg.getOrDefault(ConfigKeys.PROTOCOL_PATH, DefaultProtocolPath),
         cfg.getOrDefault(ConfigKeys.PROTOCOL_BRANCH, DefaultProtocolBranch)]))
-      .then(([projectName, path, baseUrl, branch]) => {
+      .then(([projectName, baseUrl, path, branch]) => {
         if (!projectName) {
           console.error(
             'Unknown project name : ' + projectName + '. Cannot pull protocols.'

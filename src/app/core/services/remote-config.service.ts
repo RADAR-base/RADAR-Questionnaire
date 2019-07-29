@@ -1,18 +1,28 @@
-import { Injectable, InjectionToken } from '@angular/core'
+import { Injectable } from '@angular/core'
 import { Firebase } from '@ionic-native/firebase/ngx'
 
-import { BehaviorSubject, Observable, from } from 'rxjs'
+import { BehaviorSubject, from, Observable } from 'rxjs'
 import { ConfigKeys } from '../../shared/enums/config'
 import 'rxjs/add/operator/mergeMap'
 import { LogService } from './log.service'
 
-export const REMOTE_CONFIG_SERVICE = new InjectionToken<RemoteConfig>('RemoteConfig');
+@Injectable()
+export class RemoteConfigService {
+  setCacheExpiration(timeoutMillis: number) {
+    throw new Error("RemoteConfigService method not implemented")
+  }
 
-export interface RemoteConfigService {
-  setCacheExpiration(timeoutMillis: number)
-  read(): Promise<RemoteConfig>
-  forceFetch(): Promise<RemoteConfig>
-  subject(): Observable<RemoteConfig>
+  read(): Promise<RemoteConfig> {
+    throw new Error("RemoteConfigService method not implemented")
+  }
+
+  forceFetch(): Promise<RemoteConfig> {
+    throw new Error("RemoteConfigService method not implemented")
+  }
+
+  subject(): Observable<RemoteConfig> {
+    throw new Error("RemoteConfigService method not implemented")
+  }
 }
 
 export interface RemoteConfig {
@@ -42,7 +52,7 @@ class FirebaseRemoteConfig implements RemoteConfig {
 }
 
 @Injectable()
-export class FirebaseRemoteConfigService implements RemoteConfigService {
+export class FirebaseRemoteConfigService extends RemoteConfigService {
   private timeoutMillis = 14_400_000;  // 3 hours
   private lastFetch: number = 0;
   private readonly configSubject: BehaviorSubject<RemoteConfig>
@@ -51,6 +61,7 @@ export class FirebaseRemoteConfigService implements RemoteConfigService {
     private firebase: Firebase,
     private logger: LogService,
   ) {
+    super()
     this.configSubject = new BehaviorSubject(new FirebaseRemoteConfig(this.firebase, this.logger))
   }
 

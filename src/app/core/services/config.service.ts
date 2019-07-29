@@ -1,11 +1,12 @@
 import 'rxjs/add/operator/toPromise'
 
 import { HttpClient } from '@angular/common/http'
-import { Inject, Injectable } from '@angular/core'
+import { Injectable } from '@angular/core'
 import { AppVersion } from '@ionic-native/app-version/ngx'
 
 import {
-  DefaultAppVersion, DefaultProtocolBranch,
+  DefaultAppVersion,
+  DefaultProtocolBranch,
   DefaultProtocolEndPoint,
   DefaultProtocolPath,
   DefaultQuestionnaireFormatURI,
@@ -20,7 +21,7 @@ import { LocalizationService } from './localization.service'
 import { NotificationService } from './notification.service'
 import { SchedulingService } from './scheduling.service'
 import { StorageService } from './storage.service'
-import { REMOTE_CONFIG_SERVICE, RemoteConfigService } from './remote-config.service'
+import { RemoteConfigService } from './remote-config.service'
 import { ConfigKeys } from '../../shared/enums/config'
 import { LogService } from './log.service'
 
@@ -36,7 +37,7 @@ export class ConfigService {
     private appVersionPlugin: AppVersion,
     private firebaseAnalytics: FirebaseAnalyticsService,
     private logger: LogService,
-    @Inject(REMOTE_CONFIG_SERVICE) private remoteConfig: RemoteConfigService,
+    private remoteConfig: RemoteConfigService,
   ) {}
 
   fetchConfigState(force: boolean) {

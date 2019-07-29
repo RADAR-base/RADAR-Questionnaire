@@ -1,7 +1,7 @@
 import 'rxjs/add/operator/toPromise'
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
-import { Inject, Injectable } from '@angular/core'
+import { Injectable } from '@angular/core'
 import { JwtHelperService } from '@auth0/angular-jwt'
 
 import {
@@ -16,10 +16,7 @@ import {
 import { StorageKeys } from '../../shared/enums/storage'
 import { getSeconds } from '../../shared/utilities/time'
 import { StorageService } from './storage.service'
-import {
-  REMOTE_CONFIG_SERVICE,
-  RemoteConfigService,
-} from './remote-config.service'
+import { RemoteConfigService } from './remote-config.service'
 import { ConfigKeys } from '../../shared/enums/config'
 import { OAuthToken } from '../../shared/models/token'
 
@@ -33,7 +30,7 @@ export class TokenService {
     public http: HttpClient,
     public storage: StorageService,
     private jwtHelper: JwtHelperService,
-    @Inject(REMOTE_CONFIG_SERVICE) private remoteConfig: RemoteConfigService,
+    private remoteConfig: RemoteConfigService,
   ) {
     remoteConfig.subject()
       .subscribe(config => {

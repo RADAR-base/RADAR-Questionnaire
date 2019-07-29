@@ -1,22 +1,16 @@
 import 'rxjs/add/operator/map'
 
 import { HttpClient } from '@angular/common/http'
-import { Inject, Injectable } from '@angular/core'
+import { Injectable } from '@angular/core'
 import { Device } from '@ionic-native/device/ngx'
 import { throwError as observableThrowError } from 'rxjs'
 import * as YAML from 'yamljs'
 
-import {
-  DefaultEndPoint,
-  DefaultSchemaSpecEndpoint
-} from '../../../assets/data/defaultConfig'
+import { DefaultEndPoint, DefaultSchemaSpecEndpoint } from '../../../assets/data/defaultConfig'
 import { StorageService } from '../../core/services/storage.service'
 import { StorageKeys } from '../enums/storage'
 import { ObservationKey, SchemaMetadata } from '../models/kafka'
-import {
-  REMOTE_CONFIG_SERVICE,
-  RemoteConfigService,
-} from '../../core/services/remote-config.service'
+import { RemoteConfigService } from '../../core/services/remote-config.service'
 import { ConfigKeys } from '../enums/config'
 
 @Injectable()
@@ -28,7 +22,7 @@ export class Utility {
     private http: HttpClient,
     private device: Device,
     private storage: StorageService,
-    @Inject(REMOTE_CONFIG_SERVICE) private remoteConfig: RemoteConfigService,
+    private remoteConfig: RemoteConfigService,
   ) {}
 
   getSchema(schemaUrl) {

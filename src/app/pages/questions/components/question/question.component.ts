@@ -34,25 +34,7 @@ export class QuestionComponent implements OnChanges {
   }
 
   ngOnChanges() {
-    if (
-      this.question.select_choices_or_calculations &&
-      this.question.select_choices_or_calculations.length > 0
-    ) {
-      const min = this.question.select_choices_or_calculations[0].code
-      const minLabel = this.question.select_choices_or_calculations[0].label
-      const max = this.question.select_choices_or_calculations[
-        this.question.select_choices_or_calculations.length - 1
-      ].code
-      const maxLabel = this.question.select_choices_or_calculations[
-        this.question.select_choices_or_calculations.length - 1
-      ].label
-      this.question.range = {
-        min: parseInt(min.trim()),
-        max: parseInt(max.trim()),
-        labelLeft: minLabel.trim(),
-        labelRight: maxLabel.trim()
-      }
-    }
+    this.initRange()
     if (this.questionIndex === this.currentIndex) {
       this.currentlyShown = true
       if (this.value) this.emitAnswer()
@@ -87,6 +69,28 @@ export class QuestionComponent implements OnChanges {
       console.log('Beep!')
       this.dialogs.beep(1)
       this.vibration.vibrate(600)
+    }
+  }
+
+  initRange() {
+    if (
+      this.question.select_choices_or_calculations &&
+      this.question.select_choices_or_calculations.length > 0
+    ) {
+      const min = this.question.select_choices_or_calculations[0].code
+      const minLabel = this.question.select_choices_or_calculations[0].label
+      const max = this.question.select_choices_or_calculations[
+        this.question.select_choices_or_calculations.length - 1
+      ].code
+      const maxLabel = this.question.select_choices_or_calculations[
+        this.question.select_choices_or_calculations.length - 1
+      ].label
+      this.question.range = {
+        min: parseInt(min.trim()),
+        max: parseInt(max.trim()),
+        labelLeft: minLabel.trim(),
+        labelRight: maxLabel.trim()
+      }
     }
   }
 }

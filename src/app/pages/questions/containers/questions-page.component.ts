@@ -34,7 +34,6 @@ export class QuestionsPageComponent {
   questionIncrements = []
   nextQuestionIncr: number = 0
 
-  // TODO: Gather text variables in one place. get values from server?
   textValues = {
     next: this.localization.translateKey(LocKeys.BTN_NEXT),
     previous: this.localization.translateKey(LocKeys.BTN_PREVIOUS),

@@ -6,7 +6,8 @@
           [id]="item.id"
           name="name"
           value="item.value"
-          (ionChange)="onInputChange(item)"
+          (tap)="onInputChange(item)"
+          [checked]="item.checked"
         >
         </ion-checkbox>
         <ion-label>{{ item.response }}</ion-label>

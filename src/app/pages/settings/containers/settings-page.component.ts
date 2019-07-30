@@ -2,12 +2,12 @@ import {
   DefaultSettingsNotifications,
   DefaultSettingsWeeklyReport
 } from '../../../../assets/data/defaultConfig'
-import { NavController } from 'ionic-angular'
 
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { Component } from '@angular/core'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
+import { NavController } from 'ionic-angular'
 import { NotificationEventType } from '../../../shared/enums/events'
 import { Settings } from '../../../shared/models/settings'
 import { SettingsService } from '../services/settings.service'
@@ -65,7 +65,6 @@ export class SettingsPageComponent {
   }
 
   weeklyReportChange(index) {
-    this.weeklyReport[index].show = !this.weeklyReport[index].show
     this.settingsService.setReportSettings(this.weeklyReport)
   }
 

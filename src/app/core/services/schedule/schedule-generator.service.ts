@@ -179,7 +179,7 @@ export class ScheduleGeneratorService {
     utcOffsetPrev?
   ) {
     const completed = []
-    if (completedTasks) {
+    if (completedTasks && completedTasks.length > 0) {
       // NOTE: If utcOffsetPrev exists, timezone has changed
       const currentMidnight = new Date().setHours(0, 0, 0, 0)
       const prevMidnight =

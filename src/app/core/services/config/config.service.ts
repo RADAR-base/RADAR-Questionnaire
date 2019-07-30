@@ -186,7 +186,8 @@ export class ConfigService {
     return Promise.all([
       this.appConfig.reset(),
       this.questionnaire.reset(),
-      this.kafka.reset()
+      this.kafka.reset(),
+      this.schedule.reset()
     ])
   }
 

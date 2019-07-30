@@ -167,6 +167,14 @@ export class ScheduleService {
     return this.insertTask(updatedTask)
   }
 
+  reset() {
+    return Promise.all([
+      this.setClinicalTasks([]),
+      this.setNonClinicalTasks([]),
+      this.setCompletedTasks([])
+    ])
+  }
+
   consoleLogSchedule() {
     this.getTasks(TaskType.ALL).then(tasks => {
       let rendered = `\nSCHEDULE Total (${tasks.length})\n`

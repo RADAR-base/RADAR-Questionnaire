@@ -32,18 +32,15 @@ export class CheckboxInputComponent implements OnInit {
   }
 
   onInputChange(event) {
+    event.checked = !event.checked
     this.logSelectedItems(event)
     this.valueChange.emit(this.retrieveSelectedItems())
   }
 
   logSelectedItems(item) {
-    if (!(item.id in this.itemsSelected)) {
+    if (!(item.id in this.itemsSelected) && item.checked)
       this.itemsSelected[item.id] = item.value
-      item.checked = true
-    } else {
-      delete this.itemsSelected[item.id]
-      item.checked = false
-    }
+    else delete this.itemsSelected[item.id]
   }
 
   retrieveSelectedItems() {

@@ -7,10 +7,11 @@
           name="name"
           value="item.value"
           (tap)="onInputChange(item)"
-          [checked]="item.checked"
         >
         </ion-checkbox>
-        <ion-label>{{ item.response }}</ion-label>
+        <ion-label [class.checked]="item.checked">{{
+          item.response
+        }}</ion-label>
       </ion-item>
     </li>
   </ul>

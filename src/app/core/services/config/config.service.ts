@@ -32,14 +32,14 @@ export class ConfigService {
 
   fetchConfigState(force?: boolean) {
     return Promise.all([
-      this.hasProtocolChanged(),
+      this.hasProtocolChanged(force),
       this.hasAppVersionChanged(),
       this.hasTimezoneChanged(),
       this.hasNotificationsExpired()
     ]).then(([newProtocol, newAppVersion, newTimezone, newNotifications]) => {
       if (newProtocol && newAppVersion && newTimezone)
         this.subjectConfig.getEnrolmentDate().then(d => this.appConfig.init(d))
-      if (newProtocol || force)
+      if (newProtocol)
         return this.updateConfigStateOnProtocolChange(newProtocol)
       if (newAppVersion)
         return this.updateConfigStateOnAppVersionChange(newAppVersion)
@@ -49,7 +49,7 @@ export class ConfigService {
     })
   }
 
-  hasProtocolChanged() {
+  hasProtocolChanged(force?) {
     return Promise.all([
       this.appConfig.getScheduleVersion(),
       this.protocol.pull()
@@ -57,7 +57,7 @@ export class ConfigService {
       .then(([scheduleVersion, protocol]) => {
         const parsedProtocol = JSON.parse(protocol)
         console.log(parsedProtocol)
-        if (scheduleVersion !== parsedProtocol.version) {
+        if (scheduleVersion !== parsedProtocol.version || force) {
           this.sendConfigChangeEvent(
             ConfigEventType.PROTOCOL_CHANGE,
             scheduleVersion,

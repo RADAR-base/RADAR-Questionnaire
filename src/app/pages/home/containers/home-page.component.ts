@@ -1,18 +1,16 @@
 import { Component, OnDestroy } from '@angular/core'
 import { NavController, Platform } from 'ionic-angular'
-import { Subscription } from 'rxjs'
-
 import { Task, TasksProgress } from '../../../shared/models/task'
 
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { ClinicalTasksPageComponent } from '../../clinical-tasks/containers/clinical-tasks-page.component'
 import { HomePageAnimations } from './home-page.animation'
-import { HomeService } from '../services/home.service'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
 import { SettingsPageComponent } from '../../settings/containers/settings-page.component'
 import { SplashPageComponent } from '../../splash/containers/splash-page.component'
+import { Subscription } from 'rxjs'
 import { TasksService } from '../services/tasks.service'
 import { UsageEventType } from '../../../shared/enums/events'
 import { UsageService } from '../../../core/services/usage/usage.service'
@@ -44,8 +42,7 @@ export class HomePageComponent implements OnDestroy {
     private tasksService: TasksService,
     private localization: LocalizationService,
     private platform: Platform,
-    private usage: UsageService,
-    private home: HomeService
+    private usage: UsageService
   ) {
     this.resumeListener = this.platform.resume.subscribe(e => {
       this.checkForNewDate()
@@ -80,7 +77,7 @@ export class HomePageComponent implements OnDestroy {
 
   ionViewDidLoad() {
     this.init()
-    this.home.sendOpenEvent()
+    this.usage.sendOpenEvent()
     this.usage.setPage(this.constructor.name)
   }
 
@@ -98,7 +95,7 @@ export class HomePageComponent implements OnDestroy {
   }
 
   onResume() {
-    this.home.sendOpenEvent()
+    this.usage.sendOpenEvent()
     this.checkForNewDate()
   }
 
@@ -146,8 +143,11 @@ export class HomePageComponent implements OnDestroy {
 
     if (this.tasksService.isTaskStartable(task)) {
       this.usage.sendClickEvent('start_questionnaire')
+      this.usage.sendQuestionnaireEvent(
+        UsageEventType.QUESTIONNAIRE_STARTED,
+        task
+      )
       this.startingQuestionnaire = true
-      this.home.sendStartEvent(task)
       return this.tasksService
         .getQuestionnairePayload(task)
         .then(payload => this.navCtrl.push(QuestionsPageComponent, payload))

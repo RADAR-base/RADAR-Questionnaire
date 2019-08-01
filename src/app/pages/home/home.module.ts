@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common'
 import { HomePageComponent } from './containers/home-page.component'
-import { HomeService } from './services/home.service'
 import { IonicModule } from 'ionic-angular'
 import { NgModule } from '@angular/core'
 import { PipesModule } from '../../shared/pipes/pipes.module'
@@ -21,6 +20,6 @@ import { TickerBarModule } from './components/ticker-bar/ticker-bar.module'
     IonicModule.forRoot(HomePageComponent)
   ],
   declarations: [HomePageComponent],
-  providers: [TasksService, HomeService]
+  providers: [TasksService]
 })
 export class HomeModule {}

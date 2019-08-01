@@ -1,7 +1,3 @@
-import {
-  DefaultESMCompletionWindow,
-  DefaultTaskCompletionWindow
-} from '../../../../assets/data/defaultConfig'
 import { Task, TasksProgress } from '../../../shared/models/task'
 import { TaskType, getTaskType } from '../../../shared/utilities/task-type'
 

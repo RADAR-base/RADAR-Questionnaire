@@ -25,6 +25,7 @@ import {
 } from '../../../shared/models/settings'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { AuthService } from '../services/auth.service'
+import { LogService } from '../../../core/services/log.service'
 
 @Component({
   selector: 'page-enrolment',
@@ -73,7 +74,8 @@ export class EnrolmentPageComponent {
     private authService: AuthService,
     private localization: LocalizationService,
     private alertService: AlertService,
-    private firebaseAnalytics: FirebaseAnalyticsService
+    private firebaseAnalytics: FirebaseAnalyticsService,
+    private logger: LogService,
   ) {
     this.localization.update().then(lang => (this.language = lang))
   }
@@ -82,8 +84,8 @@ export class EnrolmentPageComponent {
     this.slides.lockSwipes(true)
     this.firebaseAnalytics
       .setCurrentScreen('enrolment-page')
-      .then(res => console.log('enrolment-page: ' + res))
-      .catch(err => console.log('enrolment-page: ' + err))
+      .then(res => this.logger.log('enrolment-page', res))
+      .catch(err => this.logger.error('enrolment-page', err))
   }
 
   scanQRHandler() {
@@ -122,76 +124,80 @@ export class EnrolmentPageComponent {
     this.showOutcomeStatus = false
     this.transitionStatuses()
 
-    new Promise((resolve, reject) => {
-      let refreshToken = null
-      if (this.validURL(authObj)) {
-        // NOTE: Meta QR code and new QR code
-        this.authService
-          .getRefreshTokenFromUrl(authObj)
-          .then((body: any) => {
-            refreshToken = body['refreshToken']
-            const newBaseURL = body['baseUrl']
-            const promise = newBaseURL
-              ? this.storage
-                  .set(StorageKeys.BASE_URI, newBaseURL)
-                  .then(() => this.authService.updateURI())
-              : Promise.resolve()
-            promise.then(() => resolve(refreshToken))
-          })
-          .catch(e => {
-            if (e.status === 410) {
-              e.statusText = 'URL expired. Regenerate the QR code.'
-            } else {
-              e.statusText = 'Error: Cannot get the refresh token from the URL'
-            }
-            console.log(e.statusText + ' - ' + e.status)
-            this.displayErrorMessage(e)
-          })
-      } else {
-        // NOTE: Old QR codes: containing refresh token as JSON
-        this.authService.updateURI().then(() => {
-          console.log('BASE URI : ' + this.storage.get(StorageKeys.BASE_URI))
-          const auth = JSON.parse(authObj)
-          refreshToken = auth['refreshToken']
-          resolve(refreshToken)
-        })
-      }
-    })
-      .catch(e => {
-        console.error(
-          'Cannot Parse Refresh Token from the QR code. ' +
-            'Please make sure the QR code contains either a JSON or a URL pointing to this JSON ' +
-            e
-        )
-        e.statusText = 'Cannot Parse Refresh Token from the QR code.'
-        this.displayErrorMessage(e)
-      })
+    const refreshTokenPromise: Promise<string> = (this.validURL(authObj)
+      ? this.resolveMetaToken(authObj)
+      : this.resolveRefreshToken(authObj));
+
+    return refreshTokenPromise
       .then(refreshToken => {
         if (refreshToken === null) {
-          const error = new Error('refresh token cannot be null.')
-          this.displayErrorMessage(error)
-          throw error
+          throw new Error('refresh token cannot be null.')
         }
-        this.authService
-          .registerToken(refreshToken)
-          .then(() =>
-            this.authService
-              .registerAsSource()
-              .then(() => this.authService.registerToken(refreshToken))
-              .then(() => this.retrieveSubjectInformation())
-              .catch(error => {
-                const modifiedError = error
-                this.retrieveSubjectInformation()
-                modifiedError.statusText = 'Re-registered an existing source '
-                this.displayErrorMessage(modifiedError)
-              })
-          )
-          .catch(error => {
-            this.displayErrorMessage(error)
+
+        console.log("Retrieved refresh token")
+        return this.authService.registerToken(refreshToken)
+          .then(() => {
+            console.log("Registered token")
+            return this.authService.registerAsSource()
           })
+          .catch(error => {
+            error.statusText = 'Re-registered an existing source '
+            throw error
+          })
+          .then(() => this.authService.registerToken(refreshToken))
       })
       .catch(error => {
         this.displayErrorMessage(error)
+      })
+      .then(() =>
+        this.retrieveSubjectInformation()
+      )
+  }
+
+  private updateBaseUrl(url): Promise<void> {
+    let lastSlashIndex = url.length
+    while (lastSlashIndex > 0 && url[lastSlashIndex - 1] == '/') {
+      lastSlashIndex--;
+    }
+
+    return this.storage
+      .set(StorageKeys.BASE_URI, url.substring(0, lastSlashIndex))
+      .then(() => this.authService.updateURI())
+  }
+
+  resolveMetaToken(metaToken: string): Promise<string> {
+    return this.authService
+      .getRefreshTokenFromUrl(metaToken)
+      .then((body: any) => {
+        return this.updateBaseUrl(body.baseUrl)
+          .then(() => body.refreshToken)
+      })
+      .catch(e => {
+        if (e.status === 410) {
+          e.statusText = 'URL expired. Regenerate the QR code.'
+        } else {
+          e.statusText = 'Error: Cannot get the refresh token from the URL'
+        }
+        throw e
+      })
+  }
+
+  resolveRefreshToken(refreshToken: string): Promise<string> {
+    // NOTE: Old QR codes: containing refresh token as JSON
+    return this.authService.updateURI()
+      .then(() => {
+        console.log('BASE URI : ' + this.storage.get(StorageKeys.BASE_URI))
+        const auth = JSON.parse(refreshToken)
+        return auth['refreshToken']
+      })
+      .catch(e => {
+        console.error(
+          'Cannot Parse Refresh Token from the QR code. ' +
+          'Please make sure the QR code contains either a JSON or a URL pointing to this JSON ' +
+          e
+        )
+        e.statusText = 'Cannot Parse Refresh Token from the QR code.'
+        throw e
       })
   }
 
@@ -199,20 +205,20 @@ export class EnrolmentPageComponent {
     return !new FormControl(str, Validators.pattern(this.URLRegEx)).errors
   }
 
-  retrieveSubjectInformation() {
+  retrieveSubjectInformation(): Promise<void> {
     this.authSuccess = true
-    this.authService.getSubjectInformation().then(res => {
-      const subjectInformation: any = res
-      const participantId = subjectInformation.externalId
-      const participantLogin = subjectInformation.login
-      const projectName = subjectInformation.project.projectName
-      const sourceId = this.getSourceId(subjectInformation)
-      const createdDate = new Date(subjectInformation.createdDate)
-      const createdDateMidnight = this.schedule.setDateTimeToMidnight(
-        new Date(subjectInformation.createdDate)
-      )
-      return this.storage
-        .init(
+    return this.authService.getSubjectInformation()
+      .then(res => {
+        const subjectInformation: any = res
+        const participantId = subjectInformation.externalId
+        const participantLogin = subjectInformation.login
+        const projectName = subjectInformation.project.projectName
+        const sourceId = this.getSourceId(subjectInformation)
+        const createdDate = new Date(subjectInformation.createdDate)
+        const createdDateMidnight = this.schedule.setDateTimeToMidnight(
+          new Date(subjectInformation.createdDate)
+        )
+        return this.storage.init(
           participantId,
           participantLogin,
           projectName,
@@ -220,12 +226,12 @@ export class EnrolmentPageComponent {
           createdDate,
           createdDateMidnight
         )
-        .then(() => this.doAfterAuthentication())
-        .catch(err => console.log('Init failed', err))
-    })
+      })
+      .then(() => this.doAfterAuthentication())
+      .catch(err => { this.logger.error('Init failed', err) })
   }
 
-  doAfterAuthentication() {
+  doAfterAuthentication(): Promise<void> {
     return this.configService
       .fetchConfigState(true)
       .catch(e => this.showConfigError())
@@ -241,9 +247,7 @@ export class EnrolmentPageComponent {
       },
       {
         text: this.localization.translateKey(LocKeys.BTN_OKAY),
-        handler: () => {
-          this.doAfterAuthentication()
-        }
+        handler: () => this.doAfterAuthentication()
       }
     ]
     return this.alertService.showAlert({
@@ -254,6 +258,7 @@ export class EnrolmentPageComponent {
   }
 
   displayErrorMessage(error) {
+    this.logger.error("Failed to log in", error)
     this.loading = false
     this.showOutcomeStatus = true
     this.outcomeStatus = error.statusText + ' (' + error.status + ')'
@@ -265,7 +270,7 @@ export class EnrolmentPageComponent {
   }
 
   weeklyReportChange(index) {
-    this.storage.set(StorageKeys.SETTINGS_WEEKLYREPORT, this.reportSettings)
+    return this.storage.set(StorageKeys.SETTINGS_WEEKLYREPORT, this.reportSettings)
   }
 
   transitionStatuses() {

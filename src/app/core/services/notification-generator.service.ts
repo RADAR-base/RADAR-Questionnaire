@@ -14,10 +14,14 @@ import { Task } from '../../shared/models/task'
 import { getMilliseconds } from '../../shared/utilities/time'
 import { LocalizationService } from './localization.service'
 import { SchedulingService } from './scheduling.service'
+import { LogService } from './log.service'
 
 @Injectable()
 export class NotificationGeneratorService {
-  constructor(private localization: LocalizationService) {}
+  constructor(
+    private localization: LocalizationService,
+    private logger: LogService,
+  ) {}
 
   futureNotifications(tasks: Task[], limit: number): SingleNotification[] {
     const now = new Date().getTime()
@@ -35,7 +39,7 @@ export class NotificationGeneratorService {
       .map(n => `DATE ${new Date(n.timestamp)} NAME ${n.task.name}`)
       .reduce((a, b) => a + '\n' + b)
 
-    console.log(rendered)
+    this.logger.log(rendered)
   }
 
   createNotifications(

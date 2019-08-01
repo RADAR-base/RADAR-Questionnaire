@@ -16,6 +16,7 @@ import {
 import { StorageService } from '../../../core/services/storage.service'
 import { TokenService } from '../../../core/services/token.service'
 import { StorageKeys } from '../../../shared/enums/storage'
+import { MetaToken } from '../../../shared/models/token'
 
 @Injectable()
 export class AuthService {
@@ -35,12 +36,12 @@ export class AuthService {
     })
   }
 
-  registerToken(registrationToken) {
+  registerToken(registrationToken): Promise<void> {
     const refreshBody = DefaultRefreshTokenRequestBody + registrationToken
     return this.token.register(refreshBody)
   }
 
-  getRefreshTokenFromUrl(url) {
+  getRefreshTokenFromUrl(url): Promise<MetaToken> {
     return this.http.get(url).toPromise()
   }
 

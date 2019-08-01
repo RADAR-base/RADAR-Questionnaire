@@ -6,13 +6,12 @@ import { Device } from '@ionic-native/device/ngx'
 import { throwError as observableThrowError } from 'rxjs'
 import * as YAML from 'yamljs'
 
-import {
-  DefaultEndPoint,
-  DefaultSchemaSpecEndpoint
-} from '../../../assets/data/defaultConfig'
+import { DefaultEndPoint, DefaultSchemaSpecEndpoint } from '../../../assets/data/defaultConfig'
 import { StorageService } from '../../core/services/storage.service'
 import { StorageKeys } from '../enums/storage'
 import { ObservationKey, SchemaMetadata } from '../models/kafka'
+import { RemoteConfigService } from '../../core/services/remote-config.service'
+import { ConfigKeys } from '../enums/config'
 
 @Injectable()
 export class Utility {
@@ -22,7 +21,8 @@ export class Utility {
   constructor(
     private http: HttpClient,
     private device: Device,
-    private storage: StorageService
+    private storage: StorageService,
+    private remoteConfig: RemoteConfigService,
   ) {}
 
   getSchema(schemaUrl) {
@@ -80,17 +80,17 @@ export class Utility {
     }))
   }
 
-  getKafkaTopic(specs) {
+  getKafkaTopic(specs): Promise<string> {
     const type = specs.name.toLowerCase()
     const defaultTopic = `${specs.avsc}_${specs.name}`
-    return this.http
-      .get(DefaultSchemaSpecEndpoint)
-      .toPromise()
+    return this.remoteConfig.read()
+      .then(config => config.getOrDefault(ConfigKeys.KAFKA_SPECIFICATION_URL, DefaultSchemaSpecEndpoint))
+      .then(url => this.http.get(url).toPromise())
       .then(res => {
         const schemaSpecs = YAML.parse(atob(res['content'])).data
         const topic = schemaSpecs.find(t => t.type.toLowerCase() == type).topic
         if (topic) return topic
-        else Promise.reject()
+        else return Promise.reject()
       })
       .catch(e => defaultTopic)
   }

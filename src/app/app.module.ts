@@ -26,6 +26,8 @@ import { PagesModule } from './pages/pages.module'
 import { AndroidPermissionUtility } from './shared/utilities/android-permission'
 import { jwtOptionsFactory } from './shared/utilities/jwtOptionsFactory'
 import { Utility } from './shared/utilities/util'
+import { FirebaseRemoteConfigService, RemoteConfigService } from './core/services/remote-config.service'
+import { LogService } from './core/services/log.service'
 
 @NgModule({
   imports: [
@@ -68,7 +70,9 @@ import { Utility } from './shared/utilities/util'
     Insomnia,
     BackgroundMode,
     Firebase,
-    LocalNotifications
+    LocalNotifications,
+    LogService,
+    { provide: RemoteConfigService, useClass: FirebaseRemoteConfigService }
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

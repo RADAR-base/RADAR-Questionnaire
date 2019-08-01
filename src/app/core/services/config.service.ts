@@ -6,10 +6,11 @@ import { AppVersion } from '@ionic-native/app-version/ngx'
 
 import {
   DefaultAppVersion,
+  DefaultProtocolBranch,
   DefaultProtocolEndPoint,
   DefaultProtocolPath,
   DefaultQuestionnaireFormatURI,
-  DefaultQuestionnaireTypeURI
+  DefaultQuestionnaireTypeURI,
 } from '../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../shared/enums/storage'
 import { Assessment } from '../../shared/models/assessment'
@@ -20,6 +21,9 @@ import { LocalizationService } from './localization.service'
 import { NotificationService } from './notification.service'
 import { SchedulingService } from './scheduling.service'
 import { StorageService } from './storage.service'
+import { RemoteConfigService } from './remote-config.service'
+import { ConfigKeys } from '../../shared/enums/config'
+import { LogService } from './log.service'
 
 @Injectable()
 export class ConfigService {
@@ -31,7 +35,9 @@ export class ConfigService {
     private util: Utility,
     private localization: LocalizationService,
     private appVersionPlugin: AppVersion,
-    private firebaseAnalytics: FirebaseAnalyticsService
+    private firebaseAnalytics: FirebaseAnalyticsService,
+    private logger: LogService,
+    private remoteConfig: RemoteConfigService,
   ) {}
 
   fetchConfigState(force: boolean) {
@@ -42,9 +48,7 @@ export class ConfigService {
       this.pullProtocol()
     ]).then(([configVersion, scheduleVersion, storedAppVersion, response]) => {
       if (!response) {
-        return Promise.reject({
-          message: 'No response from server'
-        })
+        throw new Error('No response from server')
       }
       let appVersion = DefaultAppVersion
       this.appVersionPlugin.getVersionNumber().then(res => (appVersion = res))
@@ -57,32 +61,7 @@ export class ConfigService {
         storedAppVersion !== appVersion ||
         force
       ) {
-        const assessments = this.formatPulledProcotol(responseData.protocols)
-        const {
-          negative: scheduledAssessments,
-          positive: clinicalAssessments
-        } = this.util.partition(assessments, a => a.protocol.clinicalProtocol)
-
-        this.storage.set(
-          StorageKeys.HAS_CLINICAL_TASKS,
-          clinicalAssessments.length > 0
-        )
-
-        return Promise.all([
-          this.storage.set(StorageKeys.APP_VERSION, appVersion),
-          this.storage.set(StorageKeys.CONFIG_VERSION, responseData.version),
-          this.updateAssessments(
-            StorageKeys.CONFIG_CLINICAL_ASSESSMENTS,
-            clinicalAssessments
-          ),
-          this.updateAssessments(
-            StorageKeys.CONFIG_ASSESSMENTS,
-            scheduledAssessments
-          )
-        ])
-          .then(() => this.schedule.generateSchedule(true))
-          .then(() => this.rescheduleNotifications())
-          .then(() => this.setFirebaseUserProperties())
+        return this.applyUpdatedConfig(responseData.protocols, appVersion, responseData.version)
           .then(() =>
             this.firebaseAnalytics.logEvent('config_update', {
               config_version: String(configVersion),
@@ -99,9 +78,46 @@ export class ConfigService {
     })
   }
 
+  private applyUpdatedConfig(protocols: Assessment[], appVersion: string, protocolVersion: string): Promise<any> {
+    const assessments = this.formatPulledProtocol(protocols)
+    const {
+      negative: scheduledAssessments,
+      positive: clinicalAssessments
+    } = this.util.partition(assessments, a => a.protocol.clinicalProtocol)
+
+    return Promise.all([
+        this.storage.set(StorageKeys.HAS_CLINICAL_TASKS, clinicalAssessments.length > 0),
+        this.storage.set(StorageKeys.APP_VERSION, appVersion),
+        this.storage.set(StorageKeys.CONFIG_VERSION, protocolVersion),
+        this.updateAssessments(
+          StorageKeys.CONFIG_CLINICAL_ASSESSMENTS,
+          clinicalAssessments)
+          .catch(e => {
+            throw this.logger.error('Failed to update clinical assessments', e);
+          }),
+        this.updateAssessments(
+          StorageKeys.CONFIG_ASSESSMENTS,
+          scheduledAssessments
+        ).catch(e => {
+          throw this.logger.error('Failed to update scheduled assessments', e);
+        }),
+      ])
+      .then(() => this.schedule.generateSchedule(true)
+        .catch(e => {
+          throw this.logger.error('Failed to generate schedule', e);
+        }))
+      .then(() => this.rescheduleNotifications()
+        .catch(e => {
+          throw this.logger.error('Failed to reschedule notifications', e);
+        }))
+      .then(() => this.setFirebaseUserProperties()
+        .catch(e => {
+          throw this.logger.error('Failed to set Firebase Analytics user properties', e)
+        }));
+  }
+
   private updateAssessments(key: StorageKeys, assessments: Assessment[]) {
-    return this.storage
-      .set(key, assessments)
+    return this.storage.set(key, assessments)
       .then(() => this.pullQuestionnaires(key))
   }
 
@@ -111,13 +127,15 @@ export class ConfigService {
       this.getProjectName(),
       this.storage.get(StorageKeys.SOURCEID),
       this.storage.get(StorageKeys.ENROLMENTDATE),
-      this.storage.get(StorageKeys.PARTICIPANTID)
+      this.storage.get(StorageKeys.PARTICIPANTID),
+      this.storage.get(StorageKeys.BASE_URI)
     ]).then(
-      ([subjectId, projectId, sourceId, enrolmentDate, humanReadableId]) =>
+      ([subjectId, projectId, sourceId, enrolmentDate, humanReadableId, baseUri]) =>
         this.firebaseAnalytics.setUserProperties({
           subjectId: subjectId,
           projectId: projectId,
           sourceId: sourceId,
+          baseUrl: baseUri,
           enrolmentDate: String(enrolmentDate),
           humanReadableId: humanReadableId
         })
@@ -147,30 +165,38 @@ export class ConfigService {
   }
 
   pullProtocol() {
-    return this.getProjectName().then(projectName => {
-      if (!projectName) {
-        console.error(
-          'Unknown project name : ' + projectName + '. Cannot pull protocols.'
-        )
-        return Promise.reject()
-      }
-      const URI = [
-        DefaultProtocolEndPoint,
-        projectName,
-        DefaultProtocolPath
-      ].join('/')
-      return this.http
-        .get(URI)
-        .toPromise()
-        .then(res => atob(res['content']))
-    })
+    return this.remoteConfig.read()
+      .catch(e => {
+        throw this.logger.error('Failed to fetch Firebase config', e)
+      })
+      .then(cfg => Promise.all([
+        this.getProjectName(),
+        cfg.getOrDefault(ConfigKeys.PROTOCOL_BASE_URL, DefaultProtocolEndPoint),
+        cfg.getOrDefault(ConfigKeys.PROTOCOL_PATH, DefaultProtocolPath),
+        cfg.getOrDefault(ConfigKeys.PROTOCOL_BRANCH, DefaultProtocolBranch)]))
+      .then(([projectName, baseUrl, path, branch]) => {
+        if (!projectName) {
+          console.error(
+            'Unknown project name : ' + projectName + '. Cannot pull protocols.'
+          )
+          return Promise.reject()
+        }
+        const URI = [
+          baseUrl,
+          projectName,
+          `${path}?ref=${branch}`,
+        ].join('/')
+        return this.http.get(URI)
+          .toPromise()
+      })
+      .then(res => atob(res['content']))
   }
 
   getProjectName() {
     return this.storage.get(StorageKeys.PROJECTNAME)
   }
 
-  formatPulledProcotol(protocols: Assessment[]): Assessment[] {
+  formatPulledProtocol(protocols: Assessment[]): Assessment[] {
     return protocols.map(p => {
       p.questionnaire.type = DefaultQuestionnaireTypeURI
       p.questionnaire.format = DefaultQuestionnaireFormatURI
@@ -179,18 +205,17 @@ export class ConfigService {
   }
 
   pullQuestionnaires(storageKey): Promise<Assessment[]> {
-    return this.storage.get(storageKey).then(assessments => {
-      const localizedQuestionnaires = assessments.map(a =>
-        this.pullQuestionnaireLang(a)
-      )
+    return this.storage.get(storageKey)
+      .then(assessments => {
+        const localizeQuestionnaires = assessments.map(a => this.pullQuestionnaireLang(a)
+          .then(translated => {
+            a.questions = this.formatQuestionsHeaders(translated)
+            return a
+          }));
 
-      return Promise.all(localizedQuestionnaires).then(res => {
-        assessments.forEach((a, i) => {
-          a.questions = this.formatQuestionsHeaders(res[i])
-        })
-        return this.storage.set(storageKey, assessments)
+        return Promise.all(localizeQuestionnaires)
       })
-    })
+      .then(assessments => this.storage.set(storageKey, assessments))
   }
 
   pullQuestionnaireLang(assessment): Promise<Object> {
@@ -199,6 +224,7 @@ export class ConfigService {
       this.localization.getLanguage().value
     )
     return this.getQuestionnairesOfLang(uri).catch(e => {
+      this.logger.error(`Failed to get questionnaires from ${uri}`, e);
       const URI = this.formatQuestionnaireUri(assessment.questionnaire, '')
       return this.getQuestionnairesOfLang(URI)
     })
@@ -220,13 +246,10 @@ export class ConfigService {
       .get(URI)
       .toPromise()
       .then(res => {
-        if (res instanceof Array) {
-          return Promise.resolve(res)
-        } else {
-          return Promise.reject({
-            message: 'URL does not contain an array of questions'
-          })
+        if (!(res instanceof Array)) {
+          throw new Error('URL does not contain an array of questions');
         }
+        return res;
       }) as Promise<Question[]>
   }
 
@@ -239,14 +262,16 @@ export class ConfigService {
     return questions
   }
 
-  migrateToLatestVersion() {
+  migrateToLatestVersion(): Promise<any> {
     // NOTE: Migrate ENROLMENTDATE (from V0.3.1- to V0.3.2+)
-    const enrolmentDate = this.storage.get(StorageKeys.ENROLMENTDATE)
-    const referenceDate = this.storage.get(StorageKeys.REFERENCEDATE)
-    Promise.all([enrolmentDate, referenceDate]).then(dates => {
-      if (dates[0] === undefined) {
-        this.storage.set(StorageKeys.ENROLMENTDATE, referenceDate)
-      }
-    })
+    return Promise.all([
+        this.storage.get(StorageKeys.ENROLMENTDATE),
+        this.storage.get(StorageKeys.REFERENCEDATE)
+      ])
+      .then(([enrolmentDate, referenceDate]) => {
+        if (enrolmentDate === undefined) {
+          return this.storage.set(StorageKeys.ENROLMENTDATE, referenceDate)
+        }
+      })
   }
 }

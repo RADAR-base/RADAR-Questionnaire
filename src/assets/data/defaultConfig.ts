@@ -127,37 +127,38 @@ export const DefaultSourceTypeRegistrationBody = {
 }
 
 export const DefaultEndPoint: string =
-  'https://radar-cns-platform.rosalind.kcl.ac.uk/'
+  'https://radar-cns-platform.rosalind.kcl.ac.uk'
 
 // GITHUB SOURCES
 
 export const GIT_API_URI = 'https://api.github.com/repos'
-export const DefaultOrganisation = 'RADAR-Base'
 
-export const DefaultProtocolRepo = 'RADAR-aRMT-protocols'
+export const DefaultProtocolGithubRepo = 'RADAR-Base/RADAR-aRMT-protocols'
 export const DefaultProtocolBranch = 'master'
-export const DefaultProtocolPath = `protocol.json?ref=${DefaultProtocolBranch}`
+export const DefaultProtocolPath = `protocol.json`
 export const DefaultProtocolEndPoint = [
   GIT_API_URI,
-  DefaultOrganisation,
-  DefaultProtocolRepo,
+  DefaultProtocolGithubRepo,
   'contents'
 ].join('/')
 
-export const DefaultSchemaRepo = 'RADAR-Schemas'
+export const DefaultSchemaGithubRepo = 'RADAR-Base/RADAR-Schemas'
 export const DefaultSchemaBranch = 'master'
 export const DefaultSchemaSpecPath = `specifications/active/${DefaultSourcePrefix}-${
   DefaultSourceTypeRegistrationBody.sourceTypeCatalogVersion
 }.yml?ref=${DefaultSchemaBranch}`
 export const DefaultSchemaSpecEndpoint = [
   GIT_API_URI,
-  DefaultOrganisation,
-  DefaultSchemaRepo,
+  DefaultSchemaGithubRepo,
   'contents',
   DefaultSchemaSpecPath
 ].join('/')
 
-export const DefaultSourceProducerAndSecret = DefaultSourceProducerAndSecretExport
+const oauthParts = DefaultSourceProducerAndSecretExport.split(':')
+
+export const DefaultOAuthClientId = oauthParts.shift()
+// TODO: Use empty client secret https://github.com/RADAR-base/RADAR-Questionnaire/issues/140
+export const DefaultOAuthClientSecret = oauthParts.join(':')
 
 // CONFIG SERVICE
 
@@ -166,7 +167,7 @@ export const DefaultQuestionnaireFormatURI = '.json'
 
 // AUTH SERVICE
 
-export const DefaultManagementPortalURI = 'managementportal'
+export const DefaultManagementPortalURI = '/managementportal'
 export const DefaultRefreshTokenURI = '/oauth/token'
 export const DefaultSubjectsURI = '/api/subjects/'
 export const DefaultMetaTokenURI: string = '/api/meta-token/'
@@ -180,7 +181,7 @@ export const DefaultRefreshTokenRequestBody =
 export const DefaultEnrolmentBaseURL =
   DefaultEndPoint + DefaultManagementPortalURI
 
-export const DefaultTokenRefreshTime = 1800000 // 30 minutes in ms
+export const DefaultTokenRefreshSeconds = 1800 // 30 minutes in s
 
 export const DefaultTimeInterval = { unit: 'day', amount: 1 }
 

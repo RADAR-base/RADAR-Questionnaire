@@ -90,7 +90,7 @@ export class ScheduleGeneratorService {
     schedule = res.schedule.sort(compareTasks)
 
     console.log('[√] Updated task schedule.')
-    return Promise.resolve({ schedule, completed: res.updatedCompletedTasks })
+    return Promise.resolve({ schedule, completed: res.completed })
   }
 
   getRepeatProtocol(protocol, type) {
@@ -177,7 +177,7 @@ export class ScheduleGeneratorService {
     schedule: Task[],
     completedTasks,
     utcOffsetPrev?
-  ) {
+  ): { schedule: any[]; completed: any[] } {
     const completed = []
     if (completedTasks && completedTasks.length > 0) {
       // NOTE: If utcOffsetPrev exists, timezone has changed
@@ -185,19 +185,19 @@ export class ScheduleGeneratorService {
       const prevMidnight =
         new Date().setUTCHours(0, 0, 0, 0) +
         getMilliseconds({ minutes: utcOffsetPrev })
-      return completedTasks.map(d => {
-        const finishedToday = schedule.find(
+      completedTasks.map(d => {
+        const task = schedule.find(
           s =>
             ((utcOffsetPrev != null &&
               s.timestamp - currentMidnight == d.timestamp - prevMidnight) ||
               (utcOffsetPrev == null && s.timestamp == d.timestamp)) &&
             s.name == d.name
         )
-        if (finishedToday !== undefined) {
-          finishedToday.completed = true
-          finishedToday.reportedCompletion = d.reportedCompletion
-          finishedToday.timeCompleted = d.timeCompleted
-          return completed.push(finishedToday)
+        if (task !== undefined) {
+          task.completed = true
+          task.reportedCompletion = d.reportedCompletion
+          task.timeCompleted = d.timeCompleted
+          return completed.push(task)
         }
       })
     }

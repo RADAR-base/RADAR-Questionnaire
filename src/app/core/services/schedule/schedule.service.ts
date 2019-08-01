@@ -125,7 +125,7 @@ export class ScheduleService {
       .then(res =>
         Promise.all([
           this.setTasks(TaskType.NON_CLINICAL, res.schedule),
-          this.setCompletedTasks(res.crompleted)
+          this.setCompletedTasks(res.completed)
         ])
       )
   }

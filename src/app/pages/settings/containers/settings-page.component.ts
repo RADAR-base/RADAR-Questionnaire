@@ -33,6 +33,7 @@ export class SettingsPageComponent {
   ) {}
 
   ionViewWillEnter() {
+    this.usage.setPage(this.constructor.name)
     this.loadSettings()
   }
 

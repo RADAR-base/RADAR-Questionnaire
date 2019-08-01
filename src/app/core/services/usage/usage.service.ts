@@ -20,6 +20,7 @@ export class UsageService {
   sendOpenEvent() {
     return this.webIntent.getIntent().then(intent => {
       console.log(intent)
+      // noinspection JSIgnoredPromiseFromCall
       this.sendEventToKafka({
         eventType: intent.extras
           ? UsageEventType.APP_OPEN_NOTIFICATION
@@ -29,6 +30,7 @@ export class UsageService {
   }
 
   sendQuestionnaireEvent(type, task) {
+    // noinspection JSIgnoredPromiseFromCall
     this.firebaseAnalytics.logEvent(type, {
       questionnaire_timestamp: task.timestamp
         ? String(task.timestamp)
@@ -42,10 +44,12 @@ export class UsageService {
   }
 
   sendGeneralEvent(type, payload?) {
+    // noinspection JSIgnoredPromiseFromCall
     this.firebaseAnalytics.logEvent(type, payload ? payload : {})
   }
 
   sendClickEvent(button) {
+    // noinspection JSIgnoredPromiseFromCall
     this.firebaseAnalytics.logEvent(UsageEventType.CLICK, { button: button })
   }
 
@@ -63,8 +67,11 @@ export class UsageService {
   }
 
   setPage(component) {
+    // Note: This converts QuestionsPageComponent to questions-page
     let page = component.split(/(?=[A-Z])/)
     page.pop()
-    page = this.firebaseAnalytics.setCurrentScreen(page.join('-').toLowerCase())
+    page = page.join('-').toLowerCase()
+    // noinspection JSIgnoredPromiseFromCall
+    this.firebaseAnalytics.setCurrentScreen(page)
   }
 }

@@ -19,7 +19,6 @@
     <platform name="android">
         <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application" />
         <allow-intent href="market:*" />
-        <preference name="android-minSdkVersion" value="21" />
         <preference name="AndroidLaunchMode" value="singleTop" />
         <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
         <icon density="mdpi" src="resources/android/icon/drawable-mdpi-icon.png" />
@@ -108,6 +107,7 @@
     <plugin name="cordova-plugin-androidx" spec="^1.0.2" />
     <plugin name="cordova-plugin-androidx-adapter" spec="^1.1.0" />
     <plugin name="cordova-plugin-background-mode-fixes" spec="^0.7.4" />
+    <plugin name="com-darryncampbell-cordova-plugin-intent" spec="^1.1.4" />
     <engine name="android" spec="^8.0.0" />
     <engine name="ios" spec="^5.0.0" />
 </widget>

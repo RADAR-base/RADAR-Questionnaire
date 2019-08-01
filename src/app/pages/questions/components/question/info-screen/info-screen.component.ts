@@ -6,9 +6,9 @@ import {
   Output,
   ViewChild
 } from '@angular/core'
-import { Content } from 'ionic-angular'
-
 import { InfoItem, Section } from '../../../../../shared/models/question'
+
+import { Content } from 'ionic-angular'
 
 let uniqueID = 0
 
@@ -46,7 +46,6 @@ export class InfoScreenComponent implements OnInit {
         content: item.label
       })
     })
-
     if (this.sections.length > 1) this.showScrollButton = true
     else this.emitTimestamp()
   }

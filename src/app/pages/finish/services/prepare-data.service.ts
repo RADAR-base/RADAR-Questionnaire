@@ -3,20 +3,35 @@
 ********/
 
 import { Injectable } from '@angular/core'
+import { QuestionType } from '../../../shared/models/question'
 
 @Injectable()
 export class PrepareDataService {
   constructor() {}
 
-  processQuestionnaireData(answers, timestamps) {
-    console.log(answers)
-    const values = Object.entries(answers).map(([key, value]) => ({
+  processQuestionnaireData(data) {
+    console.log(data.answers)
+    const values = Object.entries(data.answers).map(([key, value]) => ({
       questionId: { string: key.toString() },
-      // int: implicit [int, double, string]
       value: { string: value.toString() },
-      startTime: timestamps[key].startTime,
-      endTime: timestamps[key].endTime
+      startTime: data.timestamps[key].startTime,
+      endTime: data.timestamps[key].endTime
     }))
-    return values
+    return {
+      answers: values,
+      configVersion: '',
+      time: this.getTimeStart(data.questions, values),
+      timeCompleted: this.getTimeCompleted(values)
+    }
+  }
+
+  getTimeStart(questions, answers) {
+    // NOTE: Do not include info screen as start time
+    const index = questions.findIndex(q => q.field_type !== QuestionType.info)
+    return index > -1 ? answers[index].startTime : answers[0].startTime
+  }
+
+  getTimeCompleted(answers) {
+    return answers[answers.length - 1].endTime
   }
 }

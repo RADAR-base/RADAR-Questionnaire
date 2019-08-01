@@ -7,15 +7,15 @@ import {
   OnInit,
   Output
 } from '@angular/core'
-import { BackgroundMode } from '@ionic-native/background-mode/ngx'
-import { Dialogs } from '@ionic-native/dialogs/ngx'
-import { Vibration } from '@ionic-native/vibration/ngx'
-
 import { TaskTimer, Timer } from '../../../../../shared/models/timer'
 import {
   getMilliseconds,
   getSeconds
 } from '../../../../../shared/utilities/time'
+
+import { BackgroundMode } from '@ionic-native/background-mode/ngx'
+import { Dialogs } from '@ionic-native/dialogs/ngx'
+import { Vibration } from '@ionic-native/vibration/ngx'
 
 @Component({
   selector: 'timed-test',

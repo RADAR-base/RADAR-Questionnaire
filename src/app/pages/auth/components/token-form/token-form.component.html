@@ -1,0 +1,22 @@
+<form [formGroup]="metaQRForm" id="tokenForm" (ngSubmit)="submitForm()">
+  <div class="registration">
+    <div class="text text-lg">{{ 'ENROL_REGISTRATION' | translate }}</div>
+    <div class="text text-justify">
+      {{ 'ENROL_REGISTRATION_TOKEN_DESC' | translate }}
+    </div>
+    <ion-input
+      required
+      formControlName="baseURL"
+      type="url"
+      placeholder="Base URL"
+      (ionFocus)="onFocus()"
+    ></ion-input>
+    <ion-input
+      required
+      formControlName="tokenName"
+      type="text"
+      placeholder="Token"
+      (ionFocus)="onFocus()"
+    ></ion-input>
+  </div>
+</form>

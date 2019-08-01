@@ -2,6 +2,7 @@ import {
   DefaultScheduleYearCoverage,
   DefaultTimeInterval
 } from '../../../assets/data/defaultConfig'
+
 import { TimeInterval } from '../../shared/models/protocol'
 
 export enum TimeConversion {
@@ -93,4 +94,32 @@ export function timeIntervalToMillis(interval: TimeInterval): number {
     interval.unit in TIME_UNIT_MILLIS ? interval.unit : DefaultTimeInterval.unit
   const amount = interval.amount ? interval.amount : DefaultTimeInterval.amount
   return amount * TIME_UNIT_MILLIS[unit]
+}
+
+export function setDateTimeToMidnight(date: Date): Date {
+  return new Date(new Date(date).setHours(0, 0, 0, 0))
+}
+
+export function advanceRepeat(timestamp: number, interval: TimeInterval) {
+  const date = new Date(timestamp)
+  const returnDate = new Date(timestamp)
+  switch (interval.unit) {
+    case 'min':
+      return returnDate.setMinutes(date.getMinutes() + interval.amount)
+    case 'hour':
+      return returnDate.setHours(date.getHours() + interval.amount)
+    case 'day':
+      return returnDate.setDate(date.getDate() + interval.amount)
+    case 'week':
+      const ONE_WEEK = 7
+      return returnDate.setDate(date.getDate() + interval.amount * ONE_WEEK)
+    case 'month':
+      return returnDate.setMonth(date.getMonth() + interval.amount)
+    case 'year':
+      return returnDate.setFullYear(date.getFullYear() + interval.amount)
+    default:
+      return returnDate.setFullYear(
+        date.getFullYear() + DefaultScheduleYearCoverage
+      )
+  }
 }

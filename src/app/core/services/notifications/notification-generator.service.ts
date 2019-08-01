@@ -1,19 +1,18 @@
 import 'rxjs/add/operator/map'
 
-import { Injectable } from '@angular/core'
-
-import { DefaultTaskTest } from '../../../assets/data/defaultConfig'
-import { LocKeys } from '../../shared/enums/localisations'
-import { Assessment } from '../../shared/models/assessment'
 import {
   NotificationType,
   SingleNotification
-} from '../../shared/models/notification-handler'
-import { ProtocolNotification } from '../../shared/models/protocol'
-import { Task } from '../../shared/models/task'
-import { getMilliseconds } from '../../shared/utilities/time'
-import { LocalizationService } from './localization.service'
-import { SchedulingService } from './scheduling.service'
+} from '../../../shared/models/notification-handler'
+import { advanceRepeat, getMilliseconds } from '../../../shared/utilities/time'
+
+import { Assessment } from '../../../shared/models/assessment'
+import { DefaultTaskTest } from '../../../../assets/data/defaultConfig'
+import { Injectable } from '@angular/core'
+import { LocKeys } from '../../../shared/enums/localisations'
+import { LocalizationService } from '../misc/localization.service'
+import { ProtocolNotification } from '../../../shared/models/protocol'
+import { Task } from '../../../shared/models/task'
 
 @Injectable()
 export class NotificationGeneratorService {
@@ -59,7 +58,7 @@ export class NotificationGeneratorService {
           reminders.map(r =>
             this.createNotification(
               task,
-              SchedulingService.advanceRepeat(task.timestamp, r.offset),
+              advanceRepeat(task.timestamp, r.offset),
               NotificationType.REMINDER,
               r.notification
             )
@@ -70,10 +69,7 @@ export class NotificationGeneratorService {
           reminders.repeat === undefined ? 1 : reminders.repeat
         let currentTimestamp = task.timestamp
         for (let i = 0; i < repetitions; i++) {
-          currentTimestamp = SchedulingService.advanceRepeat(
-            currentTimestamp,
-            reminders
-          )
+          currentTimestamp = advanceRepeat(currentTimestamp, reminders)
           notifications.push(
             this.createNotification(
               task,

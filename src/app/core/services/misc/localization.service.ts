@@ -4,19 +4,24 @@ import 'moment/locale/es'
 import 'moment/locale/it'
 import 'moment/locale/nl'
 
+import { DefaultSettingsSupportedLanguages } from '../../../../assets/data/defaultConfig'
 import { Injectable } from '@angular/core'
-
-import { Localisations } from '../../../assets/data/localisations'
-import { LocKeys } from '../../shared/enums/localisations'
-import { StorageKeys } from '../../shared/enums/storage'
-import { LanguageSetting } from '../../shared/models/settings'
-import { MultiLanguageText } from '../../shared/models/text'
-import { StorageService } from './storage.service'
+import { LanguageSetting } from '../../../shared/models/settings'
+import { LocKeys } from '../../../shared/enums/localisations'
+import { Localisations } from '../../../../assets/data/localisations'
+import { MultiLanguageText } from '../../../shared/models/text'
+import { StorageKeys } from '../../../shared/enums/storage'
+import { StorageService } from '../storage/storage.service'
 
 import moment = require('moment')
 
 @Injectable()
 export class LocalizationService {
+  private readonly LOCALIZATION_STORAGE = {
+    LANGUAGE: StorageKeys.LANGUAGE,
+    SETTINGS_LANGUAGES: StorageKeys.SETTINGS_LANGUAGES
+  }
+
   readonly defaultLanguage: LanguageSetting = {
     label: LocKeys.LANGUAGE_ENGLISH.toString(),
     value: 'en'
@@ -30,20 +35,38 @@ export class LocalizationService {
     this.update()
   }
 
+  init() {
+    return Promise.all([
+      this.setLanguageSettings(DefaultSettingsSupportedLanguages),
+      this.setLanguage(this.language)
+    ])
+  }
+
   update(): Promise<LanguageSetting> {
     return this.storage
-      .get(StorageKeys.LANGUAGE)
+      .get(this.LOCALIZATION_STORAGE.LANGUAGE)
       .then(language => this.updateLanguage(language))
   }
 
   setLanguage(language: LanguageSetting): Promise<LanguageSetting> {
     return this.storage
-      .set(StorageKeys.LANGUAGE, language)
+      .set(this.LOCALIZATION_STORAGE.LANGUAGE, language)
       .then(() => this.updateLanguage(language))
   }
 
   getLanguage(): LanguageSetting {
     return this.language
+  }
+
+  setLanguageSettings(settings) {
+    return this.storage.set(
+      this.LOCALIZATION_STORAGE.SETTINGS_LANGUAGES,
+      settings
+    )
+  }
+
+  getLanguageSettings() {
+    return this.storage.get(this.LOCALIZATION_STORAGE.SETTINGS_LANGUAGES)
   }
 
   private updateLanguage(language: LanguageSetting) {

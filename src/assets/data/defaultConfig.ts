@@ -1,11 +1,12 @@
-import { LocKeys } from '../../app/shared/enums/localisations'
 import {
   LanguageSetting,
   NotificationSettings,
   WeeklyReportSubSettings
 } from '../../app/shared/models/settings'
-import { Task } from '../../app/shared/models/task'
+
 import { DefaultSourceProducerAndSecretExport } from './secret'
+import { LocKeys } from '../../app/shared/enums/localisations'
+import { Task } from '../../app/shared/models/task'
 
 // DEFAULT SETTINGS
 export const DefaultSettingsNotifications: NotificationSettings = {
@@ -104,7 +105,7 @@ export const LanguageMap = {
 
 export const DefaultAppVersion: string = '0.5.11.1-alpha'
 
-export const DefaultScheduleVersion: number = 0
+export const DefaultScheduleVersion = '0.3.10'
 
 export const DefaultScheduleYearCoverage: number = 2 // years
 
@@ -146,9 +147,8 @@ export const DefaultProtocolEndPoint = [
 
 export const DefaultSchemaRepo = 'RADAR-Schemas'
 export const DefaultSchemaBranch = 'master'
-export const DefaultSchemaSpecPath = `specifications/active/${DefaultSourcePrefix}-${
-  DefaultSourceTypeRegistrationBody.sourceTypeCatalogVersion
-}.yml?ref=${DefaultSchemaBranch}`
+// tslint:disable-next-line: max-line-length
+export const DefaultSchemaSpecPath = `specifications/active/${DefaultSourcePrefix}-${DefaultSourceTypeRegistrationBody.sourceTypeCatalogVersion}.yml?ref=${DefaultSchemaBranch}`
 export const DefaultSchemaSpecEndpoint = [
   GIT_API_URI,
   DefaultOrganisation,
@@ -158,6 +158,8 @@ export const DefaultSchemaSpecEndpoint = [
 ].join('/')
 
 export const DefaultSourceProducerAndSecret = DefaultSourceProducerAndSecretExport
+
+export const DefaultPackageName = 'org.phidatalab.radar_armt'
 
 // CONFIG SERVICE
 
@@ -186,10 +188,7 @@ export const DefaultTimeInterval = { unit: 'day', amount: 1 }
 
 // KAFKA
 
-export const KAFKA_ASSESSMENT = 'assessment'
-export const KAFKA_COMPLETION_LOG = 'completion_log'
-export const KAFKA_TIMEZONE = 'timezone'
-export const KAFKA_CLIENT_KAFKA = '/kafka'
+export const DefaultKafkaURI = '/kafka'
 
 export const DefaultNumberOfCompletionLogsToSend = 10
 

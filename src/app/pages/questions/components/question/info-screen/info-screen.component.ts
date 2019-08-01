@@ -6,9 +6,9 @@ import {
   Output,
   ViewChild
 } from '@angular/core'
-import { InfoItem, Section } from '../../../../../shared/models/question'
-
 import { Content } from 'ionic-angular'
+
+import { InfoItem, Section } from '../../../../../shared/models/question'
 
 let uniqueID = 0
 

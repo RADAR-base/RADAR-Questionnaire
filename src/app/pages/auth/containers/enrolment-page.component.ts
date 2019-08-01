@@ -1,24 +1,24 @@
 import { Component, ViewChild } from '@angular/core'
+import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx'
+import { NavController, Slides } from 'ionic-angular'
+
 import {
   DefaultLanguage,
   DefaultSettingsSupportedLanguages,
   DefaultSettingsWeeklyReport,
   LanguageMap
 } from '../../../../assets/data/defaultConfig'
+import { AlertService } from '../../../core/services/misc/alert.service'
+import { LocalizationService } from '../../../core/services/misc/localization.service'
+import { UsageService } from '../../../core/services/usage/usage.service'
+import { UsageEventType } from '../../../shared/enums/events'
+import { LocKeys } from '../../../shared/enums/localisations'
 import {
   LanguageSetting,
   WeeklyReportSubSettings
 } from '../../../shared/models/settings'
-import { NavController, Slides } from 'ionic-angular'
-
-import { AlertService } from '../../../core/services/misc/alert.service'
-import { AuthService } from '../services/auth.service'
-import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx'
-import { LocKeys } from '../../../shared/enums/localisations'
-import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { SplashPageComponent } from '../../splash/containers/splash-page.component'
-import { UsageEventType } from '../../../shared/enums/events'
-import { UsageService } from '../../../core/services/usage/usage.service'
+import { AuthService } from '../services/auth.service'
 
 @Component({
   selector: 'page-enrolment',

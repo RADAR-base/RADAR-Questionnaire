@@ -1,6 +1,7 @@
+import { Injectable } from '@angular/core'
 import { Device } from '@ionic-native/device/ngx'
 import { Firebase } from '@ionic-native/firebase/ngx'
-import { Injectable } from '@angular/core'
+
 import { User } from '../../../shared/models/user'
 
 @Injectable()

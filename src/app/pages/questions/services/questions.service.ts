@@ -1,10 +1,11 @@
-import { AnswerService } from './answer.service'
 import { Injectable } from '@angular/core'
+
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
-import { TimestampService } from './timestamp.service'
-import { UsageEventType } from '../../../shared/enums/events'
 import { UsageService } from '../../../core/services/usage/usage.service'
+import { UsageEventType } from '../../../shared/enums/events'
 import { getSeconds } from '../../../shared/utilities/time'
+import { AnswerService } from './answer.service'
+import { TimestampService } from './timestamp.service'
 @Injectable()
 export class QuestionsService {
   constructor(

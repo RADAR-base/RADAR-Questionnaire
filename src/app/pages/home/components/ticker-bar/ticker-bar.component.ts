@@ -1,10 +1,10 @@
 import { Component, Input, OnChanges } from '@angular/core'
-import { getHours, getMinutes } from '../../../../shared/utilities/time'
 
-import { LocKeys } from '../../../../shared/enums/localisations'
 import { LocalizationService } from '../../../../core/services/misc/localization.service'
+import { LocKeys } from '../../../../shared/enums/localisations'
 import { ReportScheduling } from '../../../../shared/models/report'
 import { Task } from '../../../../shared/models/task'
+import { getHours, getMinutes } from '../../../../shared/utilities/time'
 
 @Component({
   selector: 'ticker-bar',

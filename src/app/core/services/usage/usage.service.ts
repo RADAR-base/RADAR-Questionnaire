@@ -1,9 +1,10 @@
-import { FirebaseAnalyticsService } from './firebase-analytics.service'
 import { Injectable } from '@angular/core'
-import { KafkaService } from '../kafka/kafka.service'
-import { SchemaType } from '../../../shared/models/kafka'
-import { UsageEventType } from '../../../shared/enums/events'
 import { WebIntent } from '@ionic-native/web-intent/ngx'
+
+import { UsageEventType } from '../../../shared/enums/events'
+import { SchemaType } from '../../../shared/models/kafka'
+import { KafkaService } from '../kafka/kafka.service'
+import { FirebaseAnalyticsService } from './firebase-analytics.service'
 
 @Injectable()
 export class UsageService {

@@ -1,18 +1,18 @@
 import 'rxjs/add/operator/map'
 
+import { Injectable } from '@angular/core'
+
+import { DefaultTaskTest } from '../../../../assets/data/defaultConfig'
+import { LocKeys } from '../../../shared/enums/localisations'
+import { Assessment } from '../../../shared/models/assessment'
 import {
   NotificationType,
   SingleNotification
 } from '../../../shared/models/notification-handler'
-import { advanceRepeat, getMilliseconds } from '../../../shared/utilities/time'
-
-import { Assessment } from '../../../shared/models/assessment'
-import { DefaultTaskTest } from '../../../../assets/data/defaultConfig'
-import { Injectable } from '@angular/core'
-import { LocKeys } from '../../../shared/enums/localisations'
-import { LocalizationService } from '../misc/localization.service'
 import { ProtocolNotification } from '../../../shared/models/protocol'
 import { Task } from '../../../shared/models/task'
+import { advanceRepeat, getMilliseconds } from '../../../shared/utilities/time'
+import { LocalizationService } from '../misc/localization.service'
 
 @Injectable()
 export class NotificationGeneratorService {

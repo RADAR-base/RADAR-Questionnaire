@@ -1,19 +1,19 @@
 // tslint:disable:no-eval
 import { Component, ElementRef, ViewChild } from '@angular/core'
-import { Content, NavController, NavParams, Platform } from 'ionic-angular'
-import { Question, QuestionType } from '../../../shared/models/question'
-
-import { Assessment } from '../../../shared/models/assessment'
-import { FinishPageComponent } from '../../finish/containers/finish-page.component'
 import { Insomnia } from '@ionic-native/insomnia/ngx'
-import { LocKeys } from '../../../shared/enums/localisations'
+import { Content, NavController, NavParams, Platform } from 'ionic-angular'
+
 import { LocalizationService } from '../../../core/services/misc/localization.service'
-import { QuestionsPageAnimations } from './questions-page.animation'
-import { QuestionsService } from '../services/questions.service'
+import { UsageService } from '../../../core/services/usage/usage.service'
+import { UsageEventType } from '../../../shared/enums/events'
+import { LocKeys } from '../../../shared/enums/localisations'
+import { Assessment } from '../../../shared/models/assessment'
+import { Question, QuestionType } from '../../../shared/models/question'
 import { Task } from '../../../shared/models/task'
 import { TaskType } from '../../../shared/utilities/task-type'
-import { UsageEventType } from '../../../shared/enums/events'
-import { UsageService } from '../../../core/services/usage/usage.service'
+import { FinishPageComponent } from '../../finish/containers/finish-page.component'
+import { QuestionsService } from '../services/questions.service'
+import { QuestionsPageAnimations } from './questions-page.animation'
 
 @Component({
   selector: 'page-questions',

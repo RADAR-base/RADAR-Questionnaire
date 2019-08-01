@@ -1,23 +1,23 @@
 import uuid = require("uuid/v4");
 
+import { Injectable } from "@angular/core";
+import { Firebase } from "@ionic-native/firebase/ngx";
+import { Platform } from "ionic-angular";
+
 import {
   DefaultMaxUpstreamResends,
   DefaultNumberOfNotificationsToSchedule,
   FCMPluginProjectSenderId
 } from "../../../../assets/data/defaultConfig";
-
-import { Firebase } from "@ionic-native/firebase/ngx";
-import { Injectable } from "@angular/core";
-import { NotificationGeneratorService } from "./notification-generator.service";
-import { NotificationService } from "./notification.service";
-import { Platform } from "ionic-angular";
-import { ScheduleService } from "../schedule/schedule.service";
-import { SingleNotification } from "../../../shared/models/notification-handler";
 import { StorageKeys } from "../../../shared/enums/storage";
-import { StorageService } from "../storage/storage.service";
-import { SubjectConfigService } from "../config/subject-config.service";
+import { SingleNotification } from "../../../shared/models/notification-handler";
 import { TaskType } from "../../../shared/utilities/task-type";
 import { getSeconds } from "../../../shared/utilities/time";
+import { SubjectConfigService } from "../config/subject-config.service";
+import { ScheduleService } from "../schedule/schedule.service";
+import { StorageService } from "../storage/storage.service";
+import { NotificationGeneratorService } from "./notification-generator.service";
+import { NotificationService } from "./notification.service";
 
 declare var FirebasePlugin;
 

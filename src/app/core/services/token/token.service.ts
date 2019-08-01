@@ -1,5 +1,9 @@
 import 'rxjs/add/operator/toPromise'
 
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
+import { Injectable } from '@angular/core'
+import { JwtHelperService } from '@auth0/angular-jwt'
+
 import {
   DefaultEndPoint,
   DefaultManagementPortalURI,
@@ -8,13 +12,9 @@ import {
   DefaultSourceProducerAndSecret,
   DefaultTokenRefreshTime
 } from '../../../../assets/data/defaultConfig'
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
-
-import { Injectable } from '@angular/core'
-import { JwtHelperService } from '@auth0/angular-jwt'
 import { StorageKeys } from '../../../shared/enums/storage'
-import { StorageService } from '../storage/storage.service'
 import { getSeconds } from '../../../shared/utilities/time'
+import { StorageService } from '../storage/storage.service'
 
 @Injectable()
 export class TokenService {

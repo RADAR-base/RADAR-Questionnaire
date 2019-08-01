@@ -1,13 +1,13 @@
+import { HttpClient } from '@angular/common/http'
+import { Injectable } from '@angular/core'
+
 import {
   DefaultProtocolEndPoint,
   DefaultProtocolPath,
   DefaultQuestionnaireFormatURI,
   DefaultQuestionnaireTypeURI
 } from '../../../../assets/data/defaultConfig'
-
 import { Assessment } from '../../../shared/models/assessment'
-import { HttpClient } from '@angular/common/http'
-import { Injectable } from '@angular/core'
 import { SubjectConfigService } from './subject-config.service'
 
 @Injectable()

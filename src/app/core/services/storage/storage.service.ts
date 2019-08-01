@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core'
 import { Storage } from '@ionic/storage'
-import { StorageKeys } from '../../../shared/enums/storage'
 import { throwError as observableThrowError } from 'rxjs'
+
+import { StorageKeys } from '../../../shared/enums/storage'
 
 @Injectable()
 export class StorageService {

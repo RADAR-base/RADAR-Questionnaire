@@ -1,15 +1,16 @@
 import uuid = require('uuid/v4')
 
-import { DefaultNumberOfNotificationsToSchedule } from '../../../../assets/data/defaultConfig'
 import { Injectable } from '@angular/core'
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx'
+
+import { DefaultNumberOfNotificationsToSchedule } from '../../../../assets/data/defaultConfig'
+import { StorageKeys } from '../../../shared/enums/storage'
+import { SingleNotification } from '../../../shared/models/notification-handler'
+import { TaskType } from '../../../shared/utilities/task-type'
+import { ScheduleService } from '../schedule/schedule.service'
+import { StorageService } from '../storage/storage.service'
 import { NotificationGeneratorService } from './notification-generator.service'
 import { NotificationService } from './notification.service'
-import { ScheduleService } from '../schedule/schedule.service'
-import { SingleNotification } from '../../../shared/models/notification-handler'
-import { StorageKeys } from '../../../shared/enums/storage'
-import { StorageService } from '../storage/storage.service'
-import { TaskType } from '../../../shared/utilities/task-type'
 
 @Injectable()
 export class LocalNotificationService extends NotificationService {

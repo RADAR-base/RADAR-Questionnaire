@@ -1,18 +1,18 @@
-import { Platform } from 'ionic-angular'
 import { Injectable } from '@angular/core'
+import { Platform } from 'ionic-angular'
 
 @Injectable()
 export class LogService {
-
-  constructor(
-    private plt: Platform
-  ) {}
+  constructor(private plt: Platform) {}
 
   log(message: any, ...optionalParameters: any[]) {
     if (this.plt.is('desktop')) {
       console.log(message, ...optionalParameters)
     } else {
-      console.log(LogService.formatObject(message), ...optionalParameters.map(o => LogService.formatObject(o)))
+      console.log(
+        LogService.formatObject(message),
+        ...optionalParameters.map(o => LogService.formatObject(o))
+      )
     }
   }
 
@@ -36,14 +36,16 @@ export class LogService {
       return (<Array<any>>obj).map(o => this.formatObject(o)).toString()
     } else if (typeof obj !== 'object') {
       return String(obj)
-    } else if (obj.toString !== Object.prototype.toString) {
+    } else if (obj.toString() !== Object.prototype.toString()) {
       return obj.toString()
     } else if (typeof obj['json'] === 'function') {
       return obj.json()
-    } if (obj.hasOwnProperty('message')) {
+    }
+    if (obj.hasOwnProperty('message')) {
       return obj.message
     } else {
-      return JSON.stringify(obj);
+      const res = JSON.stringify(obj)
+      return res == '{}' ? obj : res
     }
   }
 }

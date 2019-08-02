@@ -7,6 +7,8 @@ import { Firebase } from '@ionic-native/firebase/ngx'
 import { Injectable } from '@angular/core'
 import { LogService } from '../misc/log.service'
 
+declare var FirebasePlugin
+
 @Injectable()
 export class RemoteConfigService {
   setCacheExpiration(timeoutMillis: number) {
@@ -34,14 +36,15 @@ export interface RemoteConfig {
 class FirebaseRemoteConfig implements RemoteConfig {
   constructor(private firebase: Firebase, private logger: LogService) {}
 
-  get(key: ConfigKeys): Promise<string | null> {
-    return this.firebase.getValue(key.value, '')
+  get(key: ConfigKeys) {
+    return new Promise((resolve, reject) => {
+      FirebasePlugin.getValue(key.value, res => resolve(res), e => reject(e))
+    })
   }
 
   getOrDefault(key: ConfigKeys, defaultValue: string): Promise<string> {
     console.log(`Retrieving ${key.value}`)
-    return this.firebase
-      .getValue(key.value, '')
+    return this.get(key)
       .then((val: string) => (val.length == 0 ? defaultValue : val))
       .catch(e => {
         this.logger.error(

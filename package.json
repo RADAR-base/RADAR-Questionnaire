@@ -58,7 +58,7 @@
         "autoprefixer": "^9.6.1",
         "avsc": "^5.4.12",
         "base64-js": "^1.2.1",
-        "com-darryncampbell-cordova-plugin-intent": "^1.1.4",
+        "com-darryncampbell-cordova-plugin-intent": "^1.1.8",
         "cordova-android": "^8.0.0",
         "cordova-android-support-gradle-release": "^3.0.1",
         "cordova-ios": "5.0.1",

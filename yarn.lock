@@ -2377,10 +2377,10 @@ colorguard@^1.2.0:
     text-table "^0.2.0"
     yargs "^1.2.6"
 
-com-darryncampbell-cordova-plugin-intent@^1.1.4:
-  version "1.1.7"
-  resolved "https://registry.yarnpkg.com/com-darryncampbell-cordova-plugin-intent/-/com-darryncampbell-cordova-plugin-intent-1.1.7.tgz#9dd13ffeb5ad5cbb84d113369dc4aac05d5ce0f3"
-  integrity sha512-e+CIaOTpZ7r178tmCijZcm/o5nJIWVnQaUrwm5xwX1zc5zutVCtz1oH3xqq6gzNk05C9i7n96xdenODHMYpiMw==
+com-darryncampbell-cordova-plugin-intent@^1.1.8:
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/com-darryncampbell-cordova-plugin-intent/-/com-darryncampbell-cordova-plugin-intent-1.1.8.tgz#f965951b38d88c2da5c512ed89cb30871e1f878f"
+  integrity sha512-gEEBCjiycuoK28DofmaNkxYtOre6czLnNvMYFssH2ycHeY5ickm0SBfVTB+GPtXCeUkxAmxANnJn2p4SX8QcWw==
 
 combined-stream@^1.0.6, combined-stream@~1.0.6:
   version "1.0.8"

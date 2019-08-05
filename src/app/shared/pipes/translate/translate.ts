@@ -1,8 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core'
 
-import { LocalizationService } from '../../../core/services/localization.service'
-
-// TODO: Solve Globalization error: plugin_not_installed
+import { LocalizationService } from '../../../core/services/misc/localization.service'
 
 @Pipe({
   name: 'translate',

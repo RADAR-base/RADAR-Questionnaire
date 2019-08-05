@@ -1,6 +1,6 @@
+import { MultiLanguageText } from './text'
 import { Protocol } from './protocol'
 import { Question } from './question'
-import { MultiLanguageText } from './text'
 
 export interface Assessment {
   questionnaire?: QuestionnaireMetadata

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core'
 
-import { Response } from '../../../../../shared/models/question'
 import { RangeInputComponent } from '../range-input/range-input.component'
+import { Response } from '../../../../../shared/models/question'
 
 @Component({
   selector: 'range-info-input',

@@ -9,6 +9,8 @@ import { LogService } from '../misc/log.service'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { StorageService } from '../storage/storage.service'
 
+declare var FirebasePlugin
+
 @Injectable()
 export class RemoteConfigService {
   protected timeoutMillis: number = 14_400_000
@@ -54,10 +56,14 @@ export interface RemoteConfig {
 }
 
 class FirebaseRemoteConfig implements RemoteConfig {
-  constructor(private firebase: Firebase, private logger: LogService) {}
+  constructor(private logger: LogService) {}
 
   get(key: ConfigKeys): Promise<string | null> {
-    return this.firebase.getValue(key.value)
+    // workaround for incompatibility
+    // @ionic-native/firebase + cordova-plugin-firebase-with-upstream-messaging
+    return new Promise((resolve, reject) => {
+      FirebasePlugin.getValue(key.value, res => resolve(res), e => reject(e))
+    })
   }
 
   getOrDefault(key: ConfigKeys, defaultValue: string): Promise<string> {
@@ -84,7 +90,7 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
   ) {
     super(storage)
     this.configSubject = new BehaviorSubject(
-      new FirebaseRemoteConfig(this.firebase, this.logger)
+      new FirebaseRemoteConfig(this.logger)
     )
   }
 
@@ -112,7 +118,7 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
       })
       .then(activated => {
         console.log('New Firebase Remote Config did activate', activated)
-        const conf = new FirebaseRemoteConfig(this.firebase, this.logger)
+        const conf = new FirebaseRemoteConfig(this.logger)
         if (activated) {
           this.configSubject.next(conf)
         }

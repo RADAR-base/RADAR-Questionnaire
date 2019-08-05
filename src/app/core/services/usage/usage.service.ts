@@ -4,13 +4,15 @@ import { KafkaService } from '../kafka/kafka.service'
 import { SchemaType } from '../../../shared/models/kafka'
 import { UsageEventType } from '../../../shared/enums/events'
 import { WebIntent } from '@ionic-native/web-intent/ngx'
+import { LogService } from '../misc/log.service'
 
 @Injectable()
 export class UsageService {
   constructor(
     private webIntent: WebIntent,
     private kafka: KafkaService,
-    private firebaseAnalytics: FirebaseAnalyticsService
+    private firebaseAnalytics: FirebaseAnalyticsService,
+    private logger: LogService,
   ) {}
 
   sendEventToKafka(payload) {
@@ -19,7 +21,7 @@ export class UsageService {
 
   sendOpenEvent() {
     return this.webIntent.getIntent().then(intent => {
-      console.log(intent)
+      this.logger.log(intent)
       // noinspection JSIgnoredPromiseFromCall
       this.sendEventToKafka({
         eventType: intent.extras

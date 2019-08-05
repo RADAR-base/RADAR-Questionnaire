@@ -81,7 +81,7 @@ export class FcmNotificationService extends NotificationService {
   private sendNotification(notification): Promise<void> {
     FirebasePlugin.upstream(
       notification,
-      succ => console.log(succ),
+      succ => this.logger.log(succ),
       err => {
         this.logger.error('Failed to send notification', err)
         if (this.upstreamResends++ < DefaultMaxUpstreamResends)

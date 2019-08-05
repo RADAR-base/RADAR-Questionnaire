@@ -31,8 +31,7 @@ export class AndroidPermissionUtility {
     if (this.isAndroid())
       this.androidPermissions
         .requestPermissions(this.androidPermissionList)
-        .then(
-          success => {
+        .then(success => {
             console.log(success)
             this.checkPermissions()
           },

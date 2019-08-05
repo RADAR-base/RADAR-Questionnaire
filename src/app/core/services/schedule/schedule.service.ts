@@ -112,8 +112,7 @@ export class ScheduleService {
   }
 
   generateSchedule(referenceDate, utcOffsetPrev) {
-    console.log(referenceDate)
-    console.log('Updating schedule..')
+    this.logger.log('Updating schedule..', referenceDate)
     return this.getCompletedTasks()
       .then(completedTasks => {
         return this.schedule.runScheduler(

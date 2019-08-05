@@ -42,10 +42,7 @@ export class ProtocolService {
       )
       .then(([projectName, baseUrl, path, branch]) => {
         if (!projectName) {
-          console.error(
-            'Unknown project name : ' + projectName + '. Cannot pull protocols.'
-          )
-          return Promise.reject()
+          throw new Error('Project name is not set. Cannot pull protocols.')
         }
         const URI = [baseUrl, projectName, `${path}?ref=${branch}`].join('/')
         return this.http.get(URI).toPromise()

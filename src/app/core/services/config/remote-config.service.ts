@@ -44,9 +44,7 @@ class FirebaseRemoteConfig implements RemoteConfig {
       .then((val: string) => (val.length == 0 ? defaultValue : val))
       .catch(e => {
         this.logger.error(
-          `Failed to retrieve ${key.value} (using default ${defaultValue})`,
-          e
-        )
+          `Failed to retrieve ${key.value}. Using default ${defaultValue}.`, e)
         return defaultValue
       })
   }

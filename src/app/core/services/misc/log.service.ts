@@ -36,16 +36,15 @@ export class LogService {
       return (<Array<any>>obj).map(o => this.formatObject(o)).toString()
     } else if (typeof obj !== 'object') {
       return String(obj)
-    } else if (obj.toString() !== Object.prototype.toString()) {
+    } else if (obj.toString !== Object.prototype.toString) {
       return obj.toString()
     } else if (typeof obj['json'] === 'function') {
       return obj.json()
-    }
-    if (obj.hasOwnProperty('message')) {
+    } else if (obj.hasOwnProperty('message')) {
       return obj.message
     } else {
       const res = JSON.stringify(obj)
-      return res == '{}' ? obj : res
+      return res == '{}' ? '<empty object>' : res
     }
   }
 }

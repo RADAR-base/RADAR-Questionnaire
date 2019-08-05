@@ -32,8 +32,8 @@ export class AuthService {
 
   authenticate(authObj) {
     return (isValidURL(authObj)
-      ? this.resolveMetaToken(authObj)
-      : this.resolveRefreshToken(authObj)
+      ? this.URLAuth(authObj)
+      : this.nonURLAuth(authObj)
     ).then(refreshToken => {
       return this.registerToken(refreshToken)
         .then(() => this.registerAsSource())
@@ -41,7 +41,7 @@ export class AuthService {
     })
   }
 
-  resolveMetaToken(authObj) {
+  URLAuth(authObj) {
     // NOTE: Meta QR code and new QR code
     return this.getRefreshTokenFromUrl(authObj).then((body: any) => {
       this.logger.log(`Retrieved refresh token from ${body.baseUrl}`, body)
@@ -54,7 +54,7 @@ export class AuthService {
     })
   }
 
-  resolveRefreshToken(authObj) {
+  nonURLAuth(authObj) {
     // NOTE: Old QR codes: containing refresh token as JSON
     return this.updateURI()
       .then(() => JSON.parse(authObj).refreshToken)

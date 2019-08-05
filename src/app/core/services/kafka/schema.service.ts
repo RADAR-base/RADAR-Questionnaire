@@ -177,10 +177,7 @@ export class SchemaService {
       .toPromise()
       .catch(e =>
         // TODO: add fallback for error
-        this.logger.error(
-          'Failed to get latest Kafka schema versions',
-          e.json()
-        )
+        this.logger.error('Failed to get latest Kafka schema versions', e)
       )
       .then(obj => obj as SchemaMetadata)
   }

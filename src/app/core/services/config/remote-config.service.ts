@@ -6,11 +6,33 @@ import { ConfigKeys } from '../../../shared/enums/config'
 import { Firebase } from '@ionic-native/firebase/ngx'
 import { Injectable } from '@angular/core'
 import { LogService } from '../misc/log.service'
+import { StorageKeys } from '../../../shared/enums/storage'
+import { StorageService } from '../storage/storage.service'
 
 @Injectable()
 export class RemoteConfigService {
-  setCacheExpiration(timeoutMillis: number) {
-    throw new Error('RemoteConfigService method not implemented')
+  protected timeoutMillis: number = 14_400_000
+
+  constructor(private storage: StorageService) {
+    this.storage.get(StorageKeys.REMOTE_CONFIG_CACHE_TIMEOUT)
+      .then(timeout => {
+        if (timeout) {
+          this.timeoutMillis = timeout
+        } else {
+          this.timeoutMillis = 14_400_000  // 3 hours
+          return this.storage.set(StorageKeys.REMOTE_CONFIG_CACHE_TIMEOUT, this.timeoutMillis)
+        }
+      })
+  }
+
+  setCacheExpiration(timeoutMillis: number): Promise<number> {
+    return this.storage.set(StorageKeys.REMOTE_CONFIG_CACHE_TIMEOUT, timeoutMillis)
+      .then(timeout => {
+        if (timeout) {
+          this.timeoutMillis = timeout
+        }
+        return timeoutMillis
+      })
   }
 
   read(): Promise<RemoteConfig> {
@@ -52,19 +74,18 @@ class FirebaseRemoteConfig implements RemoteConfig {
 
 @Injectable()
 export class FirebaseRemoteConfigService extends RemoteConfigService {
-  private timeoutMillis = 14_400_000 // 3 hours
   private lastFetch: number = 0
   private readonly configSubject: BehaviorSubject<RemoteConfig>
 
-  constructor(private firebase: Firebase, private logger: LogService) {
-    super()
+  constructor(
+    private firebase: Firebase,
+    storage: StorageService,
+    private logger: LogService,
+  ) {
+    super(storage)
     this.configSubject = new BehaviorSubject(
       new FirebaseRemoteConfig(this.firebase, this.logger)
     )
-  }
-
-  setCacheExpiration(timeoutMillis: number) {
-    this.timeoutMillis = timeoutMillis
   }
 
   forceFetch(): Promise<RemoteConfig> {
@@ -86,6 +107,8 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
       .then(() => {
         console.log('Activating Firebase Remote Config')
         return this.firebase.activateFetched()
+          // iOS workaround for when activateFetched is false.
+          .catch(e => false)
       })
       .then(activated => {
         console.log('New Firebase Remote Config did activate', activated)

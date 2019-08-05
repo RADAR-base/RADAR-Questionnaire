@@ -25,7 +25,7 @@ export class KafkaService {
     private token: TokenService,
     private schema: SchemaService,
     private firebaseAnalytics: FirebaseAnalyticsService,
-    private logger: LogService
+    private logger: LogService,
   ) {
     this.token.refresh()
     this.updateURI()
@@ -142,8 +142,7 @@ export class KafkaService {
         return new KafkaRest({ url: this.KAFKA_CLIENT_URL, headers: headers })
       })
       .catch(e => {
-        this.logger.error('Could not initiate kafka connection', e)
-        throw e
+        throw this.logger.error('Could not initiate kafka connection', e)
       })
   }
 
@@ -176,7 +175,7 @@ export class KafkaService {
   sendKafkaEvent(type, cacheValue, error?) {
     this.firebaseAnalytics.logEvent(type, {
       name: cacheValue.name,
-      questionnaire_timestamp: String(cacheValue.kafkaObject.value.time),
+      questionnaire_timestamp: String(cacheValue.kafkaObject.time),
       error: JSON.stringify(error)
     })
   }

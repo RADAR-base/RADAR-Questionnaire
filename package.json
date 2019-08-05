@@ -166,11 +166,11 @@
             "cordova-media-with-compression": {},
             "cordova-plugin-file": {},
             "cordova-plugin-insomnia": {},
+            "cordova-plugin-firebase-with-upstream-messaging": {},
             "cordova-plugin-androidx": {},
             "cordova-plugin-androidx-adapter": {},
             "cordova-plugin-background-mode-fixes": {},
-            "com-darryncampbell-cordova-plugin-intent": {},
-            "cordova-plugin-firebase-with-upstream-messaging": {}
+            "com-darryncampbell-cordova-plugin-intent": {}
         }
     },
     "ionic_enable_lint": false

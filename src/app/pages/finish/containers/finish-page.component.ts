@@ -1,11 +1,10 @@
-import { NavController, NavParams } from 'ionic-angular'
-
-import { Assessment } from '../../../shared/models/assessment'
 import { Component } from '@angular/core'
+
+import { NavController, NavParams } from 'ionic-angular'
+import { Assessment } from '../../../shared/models/assessment'
 import { FinishTaskService } from '../services/finish-task.service'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { Task } from '../../../shared/models/task'
-import { UsageEventType } from '../../../shared/enums/events'
 import { UsageService } from '../../../core/services/usage/usage.service'
 
 @Component({
@@ -49,10 +48,7 @@ export class FinishPageComponent {
   onComplete() {
     this.finish.updateTaskToComplete(this.task)
     return Promise.all([
-      this.usage.sendQuestionnaireEvent(
-        UsageEventType.QUESTIONNAIRE_FINISHED,
-        this.task
-      ),
+      this.finish.sendFinishedEvent(this.task),
       !this.task.name.includes('DEMO')
         ? this.finish.processDataAndSend(this.questionnaireData, this.task)
         : Promise.resolve()

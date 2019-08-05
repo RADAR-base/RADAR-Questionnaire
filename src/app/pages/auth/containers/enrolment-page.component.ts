@@ -43,7 +43,7 @@ export class EnrolmentPageComponent {
     private localization: LocalizationService,
     private alertService: AlertService,
     private usage: UsageService,
-    private logger: LogService
+    private logger: LogService,
   ) {
     this.localization.update().then(lang => (this.language = lang))
   }
@@ -101,7 +101,6 @@ export class EnrolmentPageComponent {
         this.next()
       })
       .catch(e => {
-        this.logger.error('Init failed', e)
         this.handleError(e)
         this.loading = false
       })

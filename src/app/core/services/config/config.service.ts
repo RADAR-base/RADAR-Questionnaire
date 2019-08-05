@@ -29,7 +29,7 @@ export class ConfigService {
     private kafka: KafkaService,
     private localization: LocalizationService,
     private firebaseAnalytics: FirebaseAnalyticsService,
-    private logger: LogService
+    private logger: LogService,
   ) {}
 
   fetchConfigState(force?: boolean) {

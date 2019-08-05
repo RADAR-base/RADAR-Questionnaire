@@ -9,6 +9,7 @@ import { StorageService } from '../storage/storage.service'
 import { Task } from '../../../shared/models/task'
 import { TaskType } from '../../../shared/utilities/task-type'
 import { Utility } from '../../../shared/utilities/util'
+
 @Injectable()
 export class QuestionnaireService {
   private readonly QUESTIONNAIRE_STORE = {
@@ -22,7 +23,7 @@ export class QuestionnaireService {
     private localization: LocalizationService,
     private http: HttpClient,
     private util: Utility,
-    private logger: LogService
+    private logger: LogService,
   ) {}
 
   pullQuestionnaires(type: TaskType): Promise<Assessment[]> {

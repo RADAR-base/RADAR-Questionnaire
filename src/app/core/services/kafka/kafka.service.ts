@@ -65,33 +65,36 @@ export class KafkaService {
   sendAllFromCache() {
     if (!this.isCacheSending) {
       this.setCacheSending(true)
-      return this.getCache().then(cache => {
-        const cacheEntries = Object.entries(cache)
-        if (!cacheEntries.length) return Promise.resolve({})
-        else
-          return this.getKafkaInstance().then(kafka => {
-            const promises = !cacheEntries.length
-              ? [Promise.resolve()]
-              : cacheEntries
-                  .filter(([k]) => k)
-                  .map(([k, v]: any) => this.sendToKafka(k, v, kafka))
-            this.setCacheSending(false)
-            return Promise.all(
-              promises.map(p =>
-                p.catch(e => {
-                  console.log(e)
-                  return undefined
-                })
-              )
-            ).then(keys => {
-              console.log(keys)
-              return this.removeFromCache(keys.filter(k => k)).then(() =>
-                this.setLastUploadDate(Date.now())
-              )
-            })
-          })
-      })
-    } else Promise.resolve()
+      return Promise.all([
+        this.getCache(),
+        this.getKafkaInstance(),
+      ])
+        .then(([cache, kafka]) => {
+          const sendPromises = Object.entries(cache)
+            .filter(([k]) => k)
+            .map(([k, v]: any) => this.sendToKafka(k, v, kafka)
+              .catch(e => {
+                this.logger.error('Failed to send data from cache', e)
+                return undefined
+              }))
+
+          return Promise.all(sendPromises)
+        })
+        .then(keys => {
+          this.logger.log(keys)
+          return this.removeFromCache(keys.filter(k => k))
+        })
+        .then(() => {
+          this.setCacheSending(false)
+          return this.setLastUploadDate(Date.now())
+        })
+        .catch(e => {
+          this.logger.error('Failed to send all data from cache', e)
+          this.setCacheSending(false)
+        })
+    } else {
+      return Promise.resolve()
+    }
   }
 
   sendToKafka(k, v, kafka): Promise<any> {
@@ -117,19 +120,18 @@ export class KafkaService {
   }
 
   removeFromCache(cacheKeys: number[]) {
-    return this.getCache().then(cache => {
-      if (cache) {
-        cacheKeys.map(cacheKey => {
-          if (cache[cacheKey]) {
-            console.log('Deleting ' + cacheKey)
-            delete cache[cacheKey]
-          }
-        })
-        return this.setCache(cache)
-      } else {
-        return Promise.resolve()
-      }
-    })
+    return this.getCache()
+      .then(cache => {
+        if (cache) {
+          cacheKeys.map(cacheKey => {
+            if (cache[cacheKey]) {
+              console.log('Deleting ' + cacheKey)
+              delete cache[cacheKey]
+            }
+          })
+          return this.setCache(cache)
+        }
+      })
   }
 
   getKafkaInstance() {

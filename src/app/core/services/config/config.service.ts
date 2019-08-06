@@ -9,6 +9,7 @@ import { FirebaseAnalyticsService } from '../usage/firebase-analytics.service'
 import { Injectable } from '@angular/core'
 import { KafkaService } from '../kafka/kafka.service'
 import { LocalizationService } from '../misc/localization.service'
+import { LogService } from '../misc/log.service'
 import { NotificationService } from '../notifications/notification.service'
 import { ProtocolService } from './protocol.service'
 import { QuestionnaireService } from './questionnaire.service'
@@ -27,7 +28,8 @@ export class ConfigService {
     private subjectConfig: SubjectConfigService,
     private kafka: KafkaService,
     private localization: LocalizationService,
-    private firebaseAnalytics: FirebaseAnalyticsService
+    private firebaseAnalytics: FirebaseAnalyticsService,
+    private logger: LogService,
   ) {}
 
   fetchConfigState(force?: boolean) {
@@ -56,7 +58,7 @@ export class ConfigService {
     ])
       .then(([scheduleVersion, protocol]) => {
         const parsedProtocol = JSON.parse(protocol)
-        console.log(parsedProtocol)
+        this.logger.log(parsedProtocol)
         if (scheduleVersion !== parsedProtocol.version || force) {
           this.sendConfigChangeEvent(
             ConfigEventType.PROTOCOL_CHANGE,
@@ -66,7 +68,9 @@ export class ConfigService {
           return parsedProtocol
         }
       })
-      .catch(() => Promise.reject({ message: 'No response from server' }))
+      .catch(() => {
+        throw new Error('No response from server')
+      })
   }
 
   hasTimezoneChanged() {
@@ -126,7 +130,7 @@ export class ConfigService {
 
   updateConfigStateOnProtocolChange(protocol) {
     const assessments = this.protocol.format(protocol.protocols)
-    console.log(assessments)
+    this.logger.log(assessments)
     return this.questionnaire
       .updateAssessments(TaskType.ALL, assessments)
       .then(() => this.regenerateSchedule())
@@ -165,6 +169,9 @@ export class ConfigService {
           ? this.sendConfigChangeEvent(NotificationEventType.RESCHEDULED)
           : this.sendConfigChangeEvent(NotificationEventType.REFRESHED)
       )
+      .catch(e => {
+        throw this.logger.error('Failed to reschedule notifications', e)
+      })
   }
 
   regenerateSchedule() {
@@ -175,6 +182,9 @@ export class ConfigService {
       .then(([refDate, prevUTCOffset]) =>
         this.schedule.generateSchedule(refDate, prevUTCOffset)
       )
+      .catch(e => {
+        throw this.logger.error('Failed to generate schedule', e)
+      })
       .then(() => this.rescheduleNotifications(true))
   }
 

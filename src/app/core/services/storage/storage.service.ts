@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core'
+import { LogService } from '../misc/log.service'
 import { Storage } from '@ionic/storage'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { throwError as observableThrowError } from 'rxjs'
@@ -7,9 +8,9 @@ import { throwError as observableThrowError } from 'rxjs'
 export class StorageService {
   global: { [key: string]: any } = {}
 
-  constructor(private storage: Storage) {
-    Promise.resolve(this.prepare())
-    console.log(this.global)
+  constructor(private storage: Storage, private logger: LogService) {
+    this.prepare()
+      .then(() => this.logger.log('Global configuration', this.global))
   }
 
   getStorageState() {

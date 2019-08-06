@@ -11,12 +11,16 @@ import { DefaultTaskTest } from '../../../../assets/data/defaultConfig'
 import { Injectable } from '@angular/core'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { LocalizationService } from '../misc/localization.service'
+import { LogService } from '../misc/log.service'
 import { ProtocolNotification } from '../../../shared/models/protocol'
 import { Task } from '../../../shared/models/task'
 
 @Injectable()
 export class NotificationGeneratorService {
-  constructor(private localization: LocalizationService) {}
+  constructor(
+    private localization: LocalizationService,
+    private logger: LogService
+  ) {}
 
   futureNotifications(tasks: Task[], limit: number): SingleNotification[] {
     const now = new Date().getTime()
@@ -34,7 +38,7 @@ export class NotificationGeneratorService {
       .map(n => `DATE ${new Date(n.timestamp)} NAME ${n.task.name}`)
       .reduce((a, b) => a + '\n' + b)
 
-    console.log(rendered)
+    this.logger.log(rendered)
   }
 
   createNotifications(

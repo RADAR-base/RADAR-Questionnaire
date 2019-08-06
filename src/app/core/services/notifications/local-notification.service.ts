@@ -10,6 +10,7 @@ import { SingleNotification } from '../../../shared/models/notification-handler'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { StorageService } from '../storage/storage.service'
 import { TaskType } from '../../../shared/utilities/task-type'
+import { LogService } from '../misc/log.service'
 
 @Injectable()
 export class LocalNotificationService extends NotificationService {
@@ -21,7 +22,8 @@ export class LocalNotificationService extends NotificationService {
     private notifications: NotificationGeneratorService,
     private schedule: ScheduleService,
     private localNotifications: LocalNotifications,
-    private storage: StorageService
+    private storage: StorageService,
+    private logger: LogService,
   ) {
     super()
   }
@@ -37,8 +39,10 @@ export class LocalNotificationService extends NotificationService {
       const localNotifications = this.notifications
         .futureNotifications(tasks, limit)
         .map(t => this.format(t))
-      console.log('NOTIFICATIONS Scheduling LOCAL notifications')
-      console.log(localNotifications)
+      this.logger.log(
+        'NOTIFICATIONS Scheduling LOCAL notifications',
+        localNotifications
+      )
       return Promise.all(
         localNotifications
           .map(n => {

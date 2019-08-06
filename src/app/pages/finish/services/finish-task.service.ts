@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core'
-
 import { TaskType, getTaskType } from '../../../shared/utilities/task-type'
+
+import { Injectable } from '@angular/core'
 import { KafkaService } from '../../../core/services/kafka/kafka.service'
 import { PrepareDataService } from './prepare-data.service'
 import { ScheduleService } from '../../../core/services/schedule/schedule.service'

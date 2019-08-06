@@ -2,6 +2,7 @@ import { Assessment } from '../../../shared/models/assessment'
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { LocalizationService } from '../misc/localization.service'
+import { LogService } from '../misc/log.service'
 import { Question } from '../../../shared/models/question'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { StorageService } from '../storage/storage.service'
@@ -21,27 +22,29 @@ export class QuestionnaireService {
     private storage: StorageService,
     private localization: LocalizationService,
     private http: HttpClient,
-    private util: Utility
+    private util: Utility,
+    private logger: LogService,
   ) {}
 
   pullQuestionnaires(type: TaskType): Promise<Assessment[]> {
-    return this.getAssessments(type).then(assessments => {
-      const language = this.localization.getLanguage().value
-      const localizedQuestionnaires = assessments.map(a =>
-        this.pullQuestionnaireLang(a, language)
-      )
-      return Promise.all(localizedQuestionnaires).then(res => {
-        assessments.forEach((a, i) => {
-          a.questions = this.formatQuestionsHeaders(res[i])
-        })
-        return this.setAssessments(type, assessments)
+    return this.getAssessments(type)
+      .then(assessments => {
+        const language = this.localization.getLanguage().value
+        const localizeQuestionnaires = assessments.map(a =>
+          this.pullQuestionnaireLang(a, language).then(translated => {
+            a.questions = this.formatQuestionsHeaders(translated)
+            return a
+          })
+        )
+        return Promise.all(localizeQuestionnaires)
       })
-    })
+      .then(assessments => this.setAssessments(type, assessments))
   }
 
   pullQuestionnaireLang(assessment, language: string): Promise<Object> {
     const uri = this.formatQuestionnaireUri(assessment.questionnaire, language)
     return this.getQuestionnairesOfLang(uri).catch(e => {
+      this.logger.error(`Failed to get questionnaires from ${uri}`, e)
       const URI = this.formatQuestionnaireUri(assessment.questionnaire, '')
       return this.getQuestionnairesOfLang(URI)
     })
@@ -63,13 +66,10 @@ export class QuestionnaireService {
       .get(URI)
       .toPromise()
       .then(res => {
-        if (res instanceof Array) {
-          return Promise.resolve(res)
-        } else {
-          return Promise.reject({
-            message: 'URL does not contain an array of questions'
-          })
+        if (!(res instanceof Array)) {
+          throw new Error('URL does not contain an array of questions')
         }
+        return res
       }) as Promise<Question[]>
   }
 
@@ -95,9 +95,14 @@ export class QuestionnaireService {
           this.updateAssessments(TaskType.NON_CLINICAL, scheduledAssessments)
         ])
       default:
-        return this.setAssessments(type, assessments).then(() =>
-          this.pullQuestionnaires(type)
-        )
+        return this.setAssessments(type, assessments)
+          .then(() => this.pullQuestionnaires(type))
+          .catch(e => {
+            throw this.logger.error(
+              'Failed to update ' + type + ' assessments',
+              e
+            )
+          })
     }
   }
 

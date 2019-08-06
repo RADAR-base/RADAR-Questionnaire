@@ -10,10 +10,13 @@ import { SchemaMetadata, SchemaType } from '../../../shared/models/kafka'
 
 import { ApplicationTimeZoneValueExport } from '../../../shared/models/timezone'
 import { CompletionLogValueExport } from '../../../shared/models/completion-log'
+import { ConfigKeys } from '../../../shared/enums/config'
 import { DefaultSchemaSpecEndpoint } from '../../../../assets/data/defaultConfig'
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
+import { LogService } from '../misc/log.service'
 import { QuestionnaireService } from '../config/questionnaire.service'
+import { RemoteConfigService } from '../config/remote-config.service'
 import { SubjectConfigService } from '../config/subject-config.service'
 import { Task } from '../../../shared/models/task'
 import { UsageEventValueExport } from '../../../shared/models/usage-event'
@@ -31,7 +34,9 @@ export class SchemaService {
   constructor(
     public questionnaire: QuestionnaireService,
     private config: SubjectConfigService,
-    private http: HttpClient
+    private http: HttpClient,
+    private logger: LogService,
+    private remoteConfig: RemoteConfigService
   ) {}
 
   getSpecs(type, task?: Task) {
@@ -141,14 +146,20 @@ export class SchemaService {
   getKafkaTopic(name, avsc) {
     const type = name.toLowerCase()
     const defaultTopic = `${avsc}_${name}`
-    return this.http
-      .get(DefaultSchemaSpecEndpoint)
-      .toPromise()
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        config.getOrDefault(
+          ConfigKeys.KAFKA_SPECIFICATION_URL,
+          DefaultSchemaSpecEndpoint
+        )
+      )
+      .then(url => this.http.get(url).toPromise())
       .then(res => {
         const schemaSpecs = YAML.parse(atob(res['content'])).data
         const topic = schemaSpecs.find(t => t.type.toLowerCase() == type).topic
         if (topic) return topic
-        else Promise.reject()
+        else return Promise.reject()
       })
       .catch(e => defaultTopic)
   }
@@ -166,7 +177,7 @@ export class SchemaService {
       .toPromise()
       .catch(e =>
         // TODO: add fallback for error
-        console.log(e)
+        this.logger.error('Failed to get latest Kafka schema versions', e)
       )
       .then(obj => obj as SchemaMetadata)
   }

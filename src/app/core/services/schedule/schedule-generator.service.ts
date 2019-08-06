@@ -18,13 +18,15 @@ import { QuestionnaireService } from '../config/questionnaire.service'
 import { Task } from '../../../shared/models/task'
 import { TaskType } from '../../../shared/utilities/task-type'
 import { compareTasks } from '../../../shared/utilities/compare-tasks'
+import { LogService } from '../misc/log.service'
 
 @Injectable()
 export class ScheduleGeneratorService {
   constructor(
     private notificationService: NotificationGeneratorService,
     private localization: LocalizationService,
-    private questionnaire: QuestionnaireService
+    private questionnaire: QuestionnaireService,
+    private logger: LogService,
   ) {}
 
   runScheduler(
@@ -48,7 +50,7 @@ export class ScheduleGeneratorService {
               utcOffsetPrev
             )
           )
-          .catch(e => console.error(e))
+          .catch(e => { this.logger.error('Failed to schedule assessement', e) })
       case TaskType.CLINICAL:
         return Promise.resolve({
           schedule: this.buildTasksForSingleAssessment(
@@ -89,7 +91,7 @@ export class ScheduleGeneratorService {
     )
     schedule = res.schedule.sort(compareTasks)
 
-    console.log('[√] Updated task schedule.')
+    this.logger.log('[√] Updated task schedule.')
     return Promise.resolve({ schedule, completed: res.completed })
   }
 

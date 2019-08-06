@@ -4,13 +4,16 @@
 
 import { Injectable } from '@angular/core'
 import { QuestionType } from '../../../shared/models/question'
+import { LogService } from '../../../core/services/misc/log.service'
 
 @Injectable()
 export class PrepareDataService {
-  constructor() {}
+  constructor(
+    private logger: LogService,
+  ) {}
 
   processQuestionnaireData(data) {
-    console.log(data.answers)
+    this.logger.log('Answers to process', data.answers)
     const values = Object.entries(data.answers).map(([key, value]) => ({
       questionId: { string: key.toString() },
       value: { string: value.toString() },

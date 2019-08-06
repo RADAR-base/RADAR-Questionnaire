@@ -7,6 +7,7 @@ import {
 } from '../../../shared/utilities/time'
 
 import { Injectable } from '@angular/core'
+import { LogService } from '../misc/log.service'
 import { ScheduleGeneratorService } from './schedule-generator.service'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { StorageService } from '../storage/storage.service'
@@ -23,7 +24,8 @@ export class ScheduleService {
 
   constructor(
     private storage: StorageService,
-    private schedule: ScheduleGeneratorService
+    private schedule: ScheduleGeneratorService,
+    private logger: LogService,
   ) {}
 
   getTasks(type: TaskType): Promise<Task[]> {
@@ -110,8 +112,7 @@ export class ScheduleService {
   }
 
   generateSchedule(referenceDate, utcOffsetPrev) {
-    console.log(referenceDate)
-    console.log('Updating schedule..')
+    this.logger.log('Updating schedule..', referenceDate)
     return this.getCompletedTasks()
       .then(completedTasks => {
         return this.schedule.runScheduler(
@@ -131,7 +132,7 @@ export class ScheduleService {
   }
 
   generateClinicalSchedule(assessment, referenceDate) {
-    console.log(assessment)
+    this.logger.log('Generating clinical schedule', assessment)
     return this.getClinicalTasks().then((tasks: Task[]) =>
       this.schedule
         .runScheduler(
@@ -189,7 +190,7 @@ export class ScheduleService {
         )
         .reduce((a, b) => a + '\n' + b)
 
-      console.log(rendered)
+      this.logger.log(rendered)
     })
   }
 }

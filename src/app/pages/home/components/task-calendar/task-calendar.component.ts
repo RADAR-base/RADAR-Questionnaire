@@ -8,6 +8,7 @@ import {
 
 import { LocalizationService } from '../../../../core/services/misc/localization.service'
 import { Task } from '../../../../shared/models/task'
+import { LogService } from '../../../../core/services/misc/log.service'
 
 @Component({
   selector: 'task-calendar',
@@ -26,7 +27,10 @@ export class TaskCalendarComponent implements OnChanges {
   currentTime
   timeIndex: number
 
-  constructor(private localization: LocalizationService) {}
+  constructor(
+    private localization: LocalizationService,
+    private logger: LogService,
+  ) {}
 
   ngOnChanges() {
     if (this.tasks && this.tasks.size) this.setCurrentTime()
@@ -37,7 +41,7 @@ export class TaskCalendarComponent implements OnChanges {
     try {
       this.currentTime = this.localization.moment(now).format('LT') // locale time
     } catch (e) {
-      console.log(e)
+      this.logger.error('Failed to set current time', e)
     }
     // NOTE: Compare current time with the start times of the tasks and
     // find out in between which tasks it should be shown in the interface

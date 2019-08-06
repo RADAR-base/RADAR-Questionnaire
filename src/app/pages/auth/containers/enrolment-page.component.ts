@@ -16,6 +16,7 @@ import { AuthService } from '../services/auth.service'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
+import { LogService } from '../../../core/services/misc/log.service'
 import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 import { UsageEventType } from '../../../shared/enums/events'
 import { UsageService } from '../../../core/services/usage/usage.service'
@@ -41,7 +42,8 @@ export class EnrolmentPageComponent {
     private auth: AuthService,
     private localization: LocalizationService,
     private alertService: AlertService,
-    private usage: UsageService
+    private usage: UsageService,
+    private logger: LogService,
   ) {
     this.localization.update().then(lang => (this.language = lang))
   }
@@ -105,7 +107,7 @@ export class EnrolmentPageComponent {
   }
 
   handleError(e) {
-    console.log(e)
+    this.logger.error('Failed to log in', e)
     this.showOutcomeStatus = true
     this.outcomeStatus =
       e.error && e.error.message

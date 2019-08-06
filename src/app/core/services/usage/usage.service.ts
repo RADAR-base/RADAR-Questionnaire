@@ -1,10 +1,10 @@
 import { FirebaseAnalyticsService } from './firebase-analytics.service'
 import { Injectable } from '@angular/core'
 import { KafkaService } from '../kafka/kafka.service'
+import { LogService } from '../misc/log.service'
 import { SchemaType } from '../../../shared/models/kafka'
 import { UsageEventType } from '../../../shared/enums/events'
 import { WebIntent } from '@ionic-native/web-intent/ngx'
-import { LogService } from '../misc/log.service'
 
 @Injectable()
 export class UsageService {
@@ -12,7 +12,7 @@ export class UsageService {
     private webIntent: WebIntent,
     private kafka: KafkaService,
     private firebaseAnalytics: FirebaseAnalyticsService,
-    private logger: LogService,
+    private logger: LogService
   ) {}
 
   sendEventToKafka(payload) {
@@ -56,7 +56,6 @@ export class UsageService {
   }
 
   sendCompletionLog(task, percent) {
-    const keepInCache = percent == 0
     return this.kafka.prepareKafkaObjectAndSend(
       SchemaType.COMPLETION_LOG,
       {
@@ -64,7 +63,7 @@ export class UsageService {
         percentage: percent,
         timeNotification: task.timestamp
       },
-      keepInCache
+      true
     )
   }
 

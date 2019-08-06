@@ -2,6 +2,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnInit,
   Output,
   ViewChild
@@ -16,7 +17,7 @@ let uniqueID = 0
   selector: 'info-screen',
   templateUrl: 'info-screen.component.html'
 })
-export class InfoScreenComponent implements OnInit {
+export class InfoScreenComponent implements OnInit, OnChanges {
   @ViewChild(Content) content: Content
 
   @Output()
@@ -26,6 +27,8 @@ export class InfoScreenComponent implements OnInit {
   sections: Section[]
   @Input()
   hasFieldLabel: boolean
+  @Input()
+  currentlyShown: boolean
 
   value: number = null
   uniqueID: number = uniqueID++
@@ -35,6 +38,15 @@ export class InfoScreenComponent implements OnInit {
   showScrollButton: boolean
 
   ngOnInit() {
+    this.initSections()
+  }
+
+  ngOnChanges() {
+    if (this.sections.length > 1) this.showScrollButton = true
+    else if (this.currentlyShown) this.emitTimestamp()
+  }
+
+  initSections() {
     this.sections.map((item, i) => {
       console.log(item.label)
       if (item.label.includes('THINC-it')) {
@@ -46,8 +58,6 @@ export class InfoScreenComponent implements OnInit {
         content: item.label
       })
     })
-    if (this.sections.length > 1) this.showScrollButton = true
-    else this.emitTimestamp()
   }
 
   scrollDown() {

@@ -9,11 +9,9 @@ export class StorageService {
   global: { [key: string]: any } = {}
 
   constructor(private storage: Storage, private logger: LogService) {
-    this.prepare().then(() => {
-      // NOTE: Keeping console.log for web inspection
-      console.log(this.global)
-      return this.logger.log('Global configuration', this.global)
-    })
+    this.prepare().then(() =>
+      this.logger.log('Global configuration', this.global)
+    )
   }
 
   getStorageState() {

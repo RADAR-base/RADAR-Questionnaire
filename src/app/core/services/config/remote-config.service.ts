@@ -59,6 +59,15 @@ export interface RemoteConfig {
   getOrDefault(key: ConfigKeys, defaultValue: any): Promise<any>
 }
 
+class EmptyRemoteConfig implements RemoteConfig {
+  get(key: ConfigKeys): Promise<any> {
+    return Promise.resolve()
+  }
+  getOrDefault(key: ConfigKeys, defaultValue: any): Promise<string> {
+    return Promise.resolve(defaultValue)
+  }
+}
+
 class FirebaseRemoteConfig implements RemoteConfig {
   constructor(private logger: LogService) {}
 
@@ -96,9 +105,7 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
     private platform: Platform
   ) {
     super(storage)
-    this.configSubject = new BehaviorSubject(
-      new FirebaseRemoteConfig(this.logger)
-    )
+    this.configSubject = new BehaviorSubject(new EmptyRemoteConfig())
   }
 
   forceFetch(): Promise<RemoteConfig> {

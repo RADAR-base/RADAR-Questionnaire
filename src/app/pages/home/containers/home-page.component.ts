@@ -143,10 +143,6 @@ export class HomePageComponent implements OnDestroy {
 
     if (this.tasksService.isTaskStartable(task)) {
       this.usage.sendClickEvent('start_questionnaire')
-      this.usage.sendQuestionnaireEvent(
-        UsageEventType.QUESTIONNAIRE_STARTED,
-        task
-      )
       this.startingQuestionnaire = true
       return this.tasksService
         .getQuestionnairePayload(task)

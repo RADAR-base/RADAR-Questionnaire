@@ -1,4 +1,3 @@
-// tslint:disable:no-eval
 import { Component, ElementRef, ViewChild } from '@angular/core'
 import { Content, NavController, NavParams, Platform } from 'ionic-angular'
 import { Question, QuestionType } from '../../../shared/models/question'
@@ -70,23 +69,20 @@ export class QuestionsPageComponent {
     private insomnia: Insomnia
   ) {
     this.platform.registerBackButtonAction(() => {
-      this.questionsService.sendCompletionLog(this.task, this.questions.length)
+      this.sendCompletionLog()
       this.platform.exitApp()
     })
   }
 
   ionViewDidLoad() {
     this.init()
-    this.usage.sendQuestionnaireEvent(
-      UsageEventType.QUESTIONNAIRE_STARTED,
-      this.task
-    )
+    this.sendEvent(UsageEventType.QUESTIONNAIRE_STARTED)
     this.usage.setPage(this.constructor.name)
     this.insomnia.keepAwake()
   }
 
   ionViewDidLeave() {
-    this.questionsService.sendCompletionLog(this.task, this.questions.length)
+    this.sendCompletionLog()
     this.questionsService.reset()
     this.insomnia.allowSleepAgain()
   }
@@ -230,11 +226,12 @@ export class QuestionsPageComponent {
   }
 
   exitQuestionnaire() {
-    this.questionsService.sendCloseEvent(this.task)
+    this.sendEvent(UsageEventType.QUESTIONNAIRE_CLOSED)
     this.navCtrl.pop()
   }
 
   navigateToFinishPage() {
+    this.sendEvent(UsageEventType.QUESTIONNAIRE_FINISHED)
     const data = this.questionsService.getData()
     this.navCtrl.setRoot(
       FinishPageComponent,
@@ -248,6 +245,17 @@ export class QuestionsPageComponent {
         assessment: this.assessment
       },
       { animate: true, direction: 'forward' }
+    )
+  }
+
+  sendEvent(type) {
+    this.usage.sendQuestionnaireEvent(type, this.task)
+  }
+
+  sendCompletionLog() {
+    this.usage.sendCompletionLog(
+      this.task,
+      this.questionsService.getAttemptProgress(this.questions.length)
     )
   }
 }

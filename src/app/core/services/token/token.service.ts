@@ -1,5 +1,9 @@
 import 'rxjs/add/operator/toPromise'
 
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
+import { Injectable } from '@angular/core'
+import { JwtHelperService } from '@auth0/angular-jwt'
+
 import {
   DefaultEndPoint,
   DefaultManagementPortalURI,
@@ -9,16 +13,12 @@ import {
   DefaultRequestEncodedContentType,
   DefaultTokenRefreshSeconds
 } from '../../../../assets/data/defaultConfig'
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
-
 import { ConfigKeys } from '../../../shared/enums/config'
-import { Injectable } from '@angular/core'
-import { JwtHelperService } from '@auth0/angular-jwt'
-import { OAuthToken } from '../../../shared/models/token'
-import { RemoteConfigService } from '../config/remote-config.service'
 import { StorageKeys } from '../../../shared/enums/storage'
-import { StorageService } from '../storage/storage.service'
+import { OAuthToken } from '../../../shared/models/token'
 import { getSeconds } from '../../../shared/utilities/time'
+import { RemoteConfigService } from '../config/remote-config.service'
+import { StorageService } from '../storage/storage.service'
 
 @Injectable()
 export class TokenService {

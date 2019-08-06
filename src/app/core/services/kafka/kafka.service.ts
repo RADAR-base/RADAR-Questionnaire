@@ -1,14 +1,14 @@
+import { Injectable } from '@angular/core'
 import * as KafkaRest from 'kafka-rest'
 
 import { DefaultKafkaURI } from '../../../../assets/data/defaultConfig'
-import { FirebaseAnalyticsService } from '../usage/firebase-analytics.service'
-import { Injectable } from '@angular/core'
 import { KafkaEventType } from '../../../shared/enums/events'
-import { LogService } from '../misc/log.service'
-import { SchemaService } from './schema.service'
 import { StorageKeys } from '../../../shared/enums/storage'
+import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 import { TokenService } from '../token/token.service'
+import { FirebaseAnalyticsService } from '../usage/firebase-analytics.service'
+import { SchemaService } from './schema.service'
 
 @Injectable()
 export class KafkaService {

@@ -1,18 +1,18 @@
+import { Component } from '@angular/core'
+import { NavController } from 'ionic-angular'
+
 import {
   DefaultSettingsNotifications,
   DefaultSettingsWeeklyReport
 } from '../../../../assets/data/defaultConfig'
-
 import { AlertService } from '../../../core/services/misc/alert.service'
-import { Component } from '@angular/core'
-import { LocKeys } from '../../../shared/enums/localisations'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
-import { NavController } from 'ionic-angular'
-import { NotificationEventType } from '../../../shared/enums/events'
-import { Settings } from '../../../shared/models/settings'
-import { SettingsService } from '../services/settings.service'
-import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 import { UsageService } from '../../../core/services/usage/usage.service'
+import { NotificationEventType } from '../../../shared/enums/events'
+import { LocKeys } from '../../../shared/enums/localisations'
+import { Settings } from '../../../shared/models/settings'
+import { SplashPageComponent } from '../../splash/containers/splash-page.component'
+import { SettingsService } from '../services/settings.service'
 
 @Component({
   selector: 'page-settings',

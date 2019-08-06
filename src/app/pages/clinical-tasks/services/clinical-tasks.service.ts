@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core'
-import { LocalizationService } from '../../../core/services/misc/localization.service'
+
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
+import { LocalizationService } from '../../../core/services/misc/localization.service'
+import { LogService } from '../../../core/services/misc/log.service'
 import { ScheduleService } from '../../../core/services/schedule/schedule.service'
 import { TaskType } from '../../../shared/utilities/task-type'
-import { LogService } from '../../../core/services/misc/log.service'
 
 @Injectable()
 export class ClinicalTasksService {

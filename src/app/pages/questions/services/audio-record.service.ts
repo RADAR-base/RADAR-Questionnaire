@@ -1,8 +1,9 @@
-import { DefaultAudioRecordOptions } from '../../../../assets/data/defaultConfig'
-import { File } from '@ionic-native/file/ngx'
 import { Injectable } from '@angular/core'
-import { LogService } from '../../../core/services/misc/log.service'
+import { File } from '@ionic-native/file/ngx'
 import { Platform } from 'ionic-angular'
+
+import { DefaultAudioRecordOptions } from '../../../../assets/data/defaultConfig'
+import { LogService } from '../../../core/services/misc/log.service'
 
 declare var Media: any // stops errors w/ cordova-plugin-media-with-compression types
 

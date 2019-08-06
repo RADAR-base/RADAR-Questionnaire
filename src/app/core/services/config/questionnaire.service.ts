@@ -1,14 +1,15 @@
-import { Assessment } from '../../../shared/models/assessment'
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { LocalizationService } from '../misc/localization.service'
-import { LogService } from '../misc/log.service'
-import { Question } from '../../../shared/models/question'
+
 import { StorageKeys } from '../../../shared/enums/storage'
-import { StorageService } from '../storage/storage.service'
+import { Assessment } from '../../../shared/models/assessment'
+import { Question } from '../../../shared/models/question'
 import { Task } from '../../../shared/models/task'
 import { TaskType } from '../../../shared/utilities/task-type'
 import { Utility } from '../../../shared/utilities/util'
+import { LocalizationService } from '../misc/localization.service'
+import { LogService } from '../misc/log.service'
+import { StorageService } from '../storage/storage.service'
 
 @Injectable()
 export class QuestionnaireService {

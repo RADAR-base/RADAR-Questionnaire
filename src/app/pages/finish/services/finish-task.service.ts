@@ -1,10 +1,10 @@
-import { TaskType, getTaskType } from '../../../shared/utilities/task-type'
-
 import { Injectable } from '@angular/core'
+
 import { KafkaService } from '../../../core/services/kafka/kafka.service'
-import { PrepareDataService } from './prepare-data.service'
 import { ScheduleService } from '../../../core/services/schedule/schedule.service'
 import { SchemaType } from '../../../shared/models/kafka'
+import { TaskType, getTaskType } from '../../../shared/utilities/task-type'
+import { PrepareDataService } from './prepare-data.service'
 
 @Injectable()
 export class FinishTaskService {

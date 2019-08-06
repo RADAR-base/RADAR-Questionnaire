@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges } from '@angular/core'
 
-import { TaskProgressAnimations } from './task-progress.animation'
 import { TasksProgress } from '../../../../shared/models/task'
+import { TaskProgressAnimations } from './task-progress.animation'
 
 @Component({
   selector: 'task-progress',

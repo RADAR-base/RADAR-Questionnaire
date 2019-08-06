@@ -5,11 +5,11 @@ import {
   OnChanges,
   Output
 } from '@angular/core'
+import { Dialogs } from '@ionic-native/dialogs/ngx'
+import { Vibration } from '@ionic-native/vibration/ngx'
 
 import { Answer } from '../../../../shared/models/answer'
-import { Dialogs } from '@ionic-native/dialogs/ngx'
 import { Question } from '../../../../shared/models/question'
-import { Vibration } from '@ionic-native/vibration/ngx'
 
 @Component({
   selector: 'question',

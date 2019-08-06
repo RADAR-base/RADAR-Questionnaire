@@ -1,6 +1,7 @@
-import { ConfigService } from '../../../core/services/config/config.service'
-import { DefaultNumberOfCompletionLogsToSend } from '../../../../assets/data/defaultConfig'
 import { Injectable } from '@angular/core'
+
+import { DefaultNumberOfCompletionLogsToSend } from '../../../../assets/data/defaultConfig'
+import { ConfigService } from '../../../core/services/config/config.service'
 import { ScheduleService } from '../../../core/services/schedule/schedule.service'
 import { TokenService } from '../../../core/services/token/token.service'
 import { UsageService } from '../../../core/services/usage/usage.service'

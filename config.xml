@@ -19,7 +19,6 @@
     <platform name="android">
         <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application" />
         <allow-intent href="market:*" />
-        <preference name="android-minSdkVersion" value="21" />
         <preference name="AndroidLaunchMode" value="singleTop" />
         <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
         <icon density="mdpi" src="resources/android/icon/drawable-mdpi-icon.png" />
@@ -101,13 +100,14 @@
     <plugin name="cordova-media-with-compression" spec="^2.1.2" />
     <plugin name="cordova-plugin-file" spec="^6.0.1" />
     <plugin name="cordova-plugin-insomnia" spec="^4.3.0" />
-    <plugin name="cordova-plugin-firebase-with-upstream-messaging" spec="^2.1.1" />
+    <plugin name="cordova-plugin-firebase-with-upstream-messaging" spec="2.1.1" />
     <plugin name="phonegap-plugin-barcodescanner" spec="^8.1.0">
         <variable name="ANDROID_SUPPORT_V4_VERSION" value="27.+" />
     </plugin>
     <plugin name="cordova-plugin-androidx" spec="^1.0.2" />
     <plugin name="cordova-plugin-androidx-adapter" spec="^1.1.0" />
     <plugin name="cordova-plugin-background-mode-fixes" spec="^0.7.4" />
+    <plugin name="com-darryncampbell-cordova-plugin-intent" spec="^1.1.4" />
     <engine name="android" spec="^8.0.0" />
     <engine name="ios" spec="^5.0.0" />
 </widget>

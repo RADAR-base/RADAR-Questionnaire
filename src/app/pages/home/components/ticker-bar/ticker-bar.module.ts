@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common'
-import { NgModule } from '@angular/core'
 import { IonicModule } from 'ionic-angular'
 import { Ng2FittextModule } from 'ng2-fittext'
-
+import { NgModule } from '@angular/core'
 import { PipesModule } from '../../../../shared/pipes/pipes.module'
 import { TickerBarComponent } from './ticker-bar.component'
 

@@ -25,7 +25,7 @@ export class ScheduleService {
   constructor(
     private storage: StorageService,
     private schedule: ScheduleGeneratorService,
-    private logger: LogService,
+    private logger: LogService
   ) {}
 
   getTasks(type: TaskType): Promise<Task[]> {

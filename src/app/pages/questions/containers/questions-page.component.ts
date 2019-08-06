@@ -69,7 +69,10 @@ export class QuestionsPageComponent {
     private platform: Platform,
     private insomnia: Insomnia
   ) {
-    this.onClose()
+    this.platform.registerBackButtonAction(() => {
+      this.questionsService.sendCompletionLog(this.task, this.questions.length)
+      this.platform.exitApp()
+    })
   }
 
   ionViewDidLoad() {
@@ -83,6 +86,7 @@ export class QuestionsPageComponent {
   }
 
   ionViewDidLeave() {
+    this.questionsService.sendCompletionLog(this.task, this.questions.length)
     this.questionsService.reset()
     this.insomnia.allowSleepAgain()
   }
@@ -102,18 +106,6 @@ export class QuestionsPageComponent {
     this.assessment = this.navParams.data.assessment
     this.taskType = this.navParams.data.taskType
     this.setCurrentQuestion(this.nextQuestionIncr)
-  }
-
-  onClose() {
-    this.platform.pause.subscribe(() => this.sendCompletionLog())
-    this.platform.registerBackButtonAction(() => {
-      this.sendCompletionLog()
-      this.platform.exitApp()
-    })
-  }
-
-  sendCompletionLog() {
-    this.questionsService.sendCompletionLog(this.task, this.questions.length)
   }
 
   hideIntro() {
@@ -149,7 +141,7 @@ export class QuestionsPageComponent {
   }
 
   willExitQuestionnaire(value) {
-    return this.currentQuestion + value === -value
+    return value === null
   }
 
   willMoveToValidQuestion(value) {
@@ -166,6 +158,8 @@ export class QuestionsPageComponent {
   }
 
   setCurrentQuestion(value = 0) {
+    if (this.willExitQuestionnaire(value)) return this.exitQuestionnaire()
+    if (this.willMoveToFinish(value)) return this.navigateToFinishPage()
     // NOTE: Record start time when question is shown
     this.startTime = this.questionsService.getTime()
     if (this.willMoveToValidQuestion(value)) {
@@ -176,14 +170,6 @@ export class QuestionsPageComponent {
       this.setNextDisabled()
       this.isPreviousBtDisabled =
         this.questions[this.currentQuestion].field_type === QuestionType.timed
-      return
-    }
-    if (this.willMoveToFinish(value)) {
-      this.navigateToFinishPage()
-      return
-    }
-    if (this.willExitQuestionnaire(value)) {
-      this.navCtrl.pop()
       return
     }
   }
@@ -235,20 +221,15 @@ export class QuestionsPageComponent {
 
   previousQuestion() {
     if (this.isPreviousBtDisabled === false) {
-      if (
-        this.previousButtonText === this.textValues.close ||
-        !this.questionIncrements.length
-      ) {
-        this.exitQuestionnaire()
-      } else {
-        if (!this.isNextBtDisabled) this.questionsService.deleteLastAnswer()
-        this.setCurrentQuestion(-this.questionIncrements.pop())
-      }
+      if (!this.isNextBtDisabled) this.questionsService.deleteLastAnswer()
+      const inc = this.questionIncrements.length
+        ? -this.questionIncrements.pop()
+        : null
+      this.setCurrentQuestion(inc)
     }
   }
 
   exitQuestionnaire() {
-    this.sendCompletionLog()
     this.questionsService.sendCloseEvent(this.task)
     this.navCtrl.pop()
   }

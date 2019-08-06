@@ -140,7 +140,6 @@ export class QuestionsService {
   }
 
   sendCompletionLog(task, totalQuestions) {
-    console.log(this.getAttemptProgress(totalQuestions))
     this.usage.sendCompletionLog(task, this.getAttemptProgress(totalQuestions))
   }
 

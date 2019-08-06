@@ -1,22 +1,21 @@
-import { Device } from '@ionic-native/device/ngx'
 import { Firebase } from '@ionic-native/firebase/ngx'
 import { Injectable } from '@angular/core'
-import { User } from '../../../shared/models/user'
 import { LogService } from '../misc/log.service'
+import { Platform } from 'ionic-angular'
+import { User } from '../../../shared/models/user'
 
 @Injectable()
 export class FirebaseAnalyticsService {
   constructor(
     private firebase: Firebase,
-    private device: Device,
-    private logger: LogService,
+    private platform: Platform,
+    private logger: LogService
   ) {}
 
   logEvent(event: string, params): Promise<any> {
     this.logger.log('Firebase Event', event)
-    if (!this.device.platform) {
+    if (!this.platform.is('cordova'))
       return Promise.resolve('Could not load firebase')
-    }
     return this.firebase
       .logEvent(event.toLowerCase(), params)
       .then((res: any) => {

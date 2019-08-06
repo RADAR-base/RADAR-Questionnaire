@@ -79,6 +79,7 @@ export class FcmNotificationService extends NotificationService {
   }
 
   private sendNotification(notification): Promise<void> {
+    if (!this.platform.is('cordova')) return Promise.resolve()
     FirebasePlugin.upstream(
       notification,
       succ => this.logger.log(succ),

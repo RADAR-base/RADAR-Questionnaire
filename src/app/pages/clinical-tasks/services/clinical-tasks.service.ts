@@ -3,13 +3,15 @@ import { LocalizationService } from '../../../core/services/misc/localization.se
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
 import { ScheduleService } from '../../../core/services/schedule/schedule.service'
 import { TaskType } from '../../../shared/utilities/task-type'
+import { LogService } from '../../../core/services/misc/log.service'
 
 @Injectable()
 export class ClinicalTasksService {
   constructor(
     public questionnaire: QuestionnaireService,
     private localization: LocalizationService,
-    private schedule: ScheduleService
+    private schedule: ScheduleService,
+    private logger: LogService,
   ) {}
 
   getClinicalTask(assessment) {
@@ -24,7 +26,7 @@ export class ClinicalTasksService {
 
   getClinicalTaskPayload(assessment) {
     return this.getClinicalTask(assessment).then(task => {
-      console.log(task)
+      this.logger.log(task)
       return {
         title: assessment.name,
         introduction: this.localization.chooseText(assessment.startText),

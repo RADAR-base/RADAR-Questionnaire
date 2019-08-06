@@ -4,6 +4,7 @@ import { DefaultKafkaURI } from '../../../../assets/data/defaultConfig'
 import { FirebaseAnalyticsService } from '../usage/firebase-analytics.service'
 import { Injectable } from '@angular/core'
 import { KafkaEventType } from '../../../shared/enums/events'
+import { LogService } from '../misc/log.service'
 import { SchemaService } from './schema.service'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { StorageService } from '../storage/storage.service'
@@ -23,7 +24,8 @@ export class KafkaService {
     private storage: StorageService,
     private token: TokenService,
     private schema: SchemaService,
-    private firebaseAnalytics: FirebaseAnalyticsService
+    private firebaseAnalytics: FirebaseAnalyticsService,
+    private logger: LogService,
   ) {
     this.token.refresh()
     this.updateURI()
@@ -63,33 +65,36 @@ export class KafkaService {
   sendAllFromCache() {
     if (!this.isCacheSending) {
       this.setCacheSending(true)
-      return this.getCache().then(cache => {
-        const cacheEntries = Object.entries(cache)
-        if (!cacheEntries.length) return Promise.resolve({})
-        else
-          return this.getKafkaInstance().then(kafka => {
-            const promises = !cacheEntries.length
-              ? [Promise.resolve()]
-              : cacheEntries
-                  .filter(([k]) => k)
-                  .map(([k, v]: any) => this.sendToKafka(k, v, kafka))
-            this.setCacheSending(false)
-            return Promise.all(
-              promises.map(p =>
-                p.catch(e => {
-                  console.log(e)
-                  return undefined
-                })
-              )
-            ).then(keys => {
-              console.log(keys)
-              return this.removeFromCache(keys.filter(k => k)).then(() =>
-                this.setLastUploadDate(Date.now())
-              )
-            })
-          })
-      })
-    } else Promise.resolve()
+      return Promise.all([
+        this.getCache(),
+        this.getKafkaInstance(),
+      ])
+        .then(([cache, kafka]) => {
+          const sendPromises = Object.entries(cache)
+            .filter(([k]) => k)
+            .map(([k, v]: any) => this.sendToKafka(k, v, kafka)
+              .catch(e => {
+                this.logger.error('Failed to send data from cache', e)
+                return undefined
+              }))
+
+          return Promise.all(sendPromises)
+        })
+        .then(keys => {
+          this.logger.log(keys)
+          return this.removeFromCache(keys.filter(k => k))
+        })
+        .then(() => {
+          this.setCacheSending(false)
+          return this.setLastUploadDate(Date.now())
+        })
+        .catch(e => {
+          this.logger.error('Failed to send all data from cache', e)
+          this.setCacheSending(false)
+        })
+    } else {
+      return Promise.resolve()
+    }
   }
 
   sendToKafka(k, v, kafka): Promise<any> {
@@ -102,31 +107,31 @@ export class KafkaService {
             kafka
               .topic(topic)
               .produce(data.schemaId, data.schemaInfo, data.payload, e =>
-                e ? Promise.reject(e) : Promise.resolve()
+                e ? Promise.reject() : Promise.resolve()
               )
           )
       )
       .then(() => this.sendKafkaEvent(KafkaEventType.SEND_SUCCESS, v))
       .then(() => k)
-      .catch(error =>
+      .catch(error => {
+        this.logger.error('Failed to send to kafka', error)
         this.sendKafkaEvent(KafkaEventType.SEND_ERROR, v, JSON.stringify(error))
-      )
+      })
   }
 
   removeFromCache(cacheKeys: number[]) {
-    return this.getCache().then(cache => {
-      if (cache) {
-        cacheKeys.map(cacheKey => {
-          if (cache[cacheKey]) {
-            console.log('Deleting ' + cacheKey)
-            delete cache[cacheKey]
-          }
-        })
-        return this.setCache(cache)
-      } else {
-        return Promise.resolve()
-      }
-    })
+    return this.getCache()
+      .then(cache => {
+        if (cache) {
+          cacheKeys.map(cacheKey => {
+            if (cache[cacheKey]) {
+              console.log('Deleting ' + cacheKey)
+              delete cache[cacheKey]
+            }
+          })
+          return this.setCache(cache)
+        }
+      })
   }
 
   getKafkaInstance() {
@@ -135,6 +140,9 @@ export class KafkaService {
       .then(tokens => {
         const headers = { Authorization: 'Bearer ' + tokens.access_token }
         return new KafkaRest({ url: this.KAFKA_CLIENT_URL, headers: headers })
+      })
+      .catch(e => {
+        throw this.logger.error('Could not initiate kafka connection', e)
       })
   }
 

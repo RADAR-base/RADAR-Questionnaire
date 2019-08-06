@@ -14,8 +14,10 @@ import {
 import { ConfigService } from '../../../core/services/config/config.service'
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
+import { MetaToken } from '../../../shared/models/token'
 import { TokenService } from '../../../core/services/token/token.service'
 import { isValidURL } from '../../../shared/utilities/form-validators'
+import { LogService } from '../../../core/services/misc/log.service'
 
 @Injectable()
 export class AuthService {
@@ -24,7 +26,8 @@ export class AuthService {
   constructor(
     public http: HttpClient,
     private token: TokenService,
-    private config: ConfigService
+    private config: ConfigService,
+    private logger: LogService,
   ) {}
 
   authenticate(authObj) {
@@ -41,8 +44,7 @@ export class AuthService {
   URLAuth(authObj) {
     // NOTE: Meta QR code and new QR code
     return this.getRefreshTokenFromUrl(authObj).then((body: any) => {
-      console.log(body)
-      console.log(body.baseUrl)
+      this.logger.log(`Retrieved refresh token from ${body.baseUrl}`, body)
       const refreshToken = body.refreshToken
       return this.token
         .setURI(body.baseUrl)
@@ -54,10 +56,8 @@ export class AuthService {
 
   nonURLAuth(authObj) {
     // NOTE: Old QR codes: containing refresh token as JSON
-    return this.updateURI().then(() => {
-      const refreshToken = JSON.parse(authObj).refreshToken
-      return refreshToken
-    })
+    return this.updateURI()
+      .then(() => JSON.parse(authObj).refreshToken)
   }
 
   updateURI() {
@@ -66,12 +66,12 @@ export class AuthService {
     })
   }
 
-  registerToken(registrationToken) {
+  registerToken(registrationToken): Promise<void> {
     const refreshBody = DefaultRefreshTokenRequestBody + registrationToken
     return this.token.register(refreshBody)
   }
 
-  getRefreshTokenFromUrl(url) {
+  getRefreshTokenFromUrl(url): Promise<MetaToken> {
     return this.http.get(url).toPromise()
   }
 

@@ -16,7 +16,6 @@ import { UsageService } from '../../../core/services/usage/usage.service'
 })
 export class SplashPageComponent {
   status = 'Checking enrolment...'
-
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,

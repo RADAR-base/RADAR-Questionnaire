@@ -1,4 +1,8 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core'
+import {
+  FirebaseRemoteConfigService,
+  RemoteConfigService
+} from './core/services/config/remote-config.service'
 import { IonicApp, IonicModule } from 'ionic-angular'
 import { IonicStorageModule, Storage } from '@ionic/storage'
 import { JWT_OPTIONS, JwtModule } from '@auth0/angular-jwt'
@@ -19,6 +23,7 @@ import { Globalization } from '@ionic-native/globalization/ngx'
 import { HttpClientModule } from '@angular/common/http'
 import { Insomnia } from '@ionic-native/insomnia/ngx'
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx'
+import { LogService } from './core/services/misc/log.service'
 import { MobileAccessibility } from '@ionic-native/mobile-accessibility/ngx'
 import { PagesModule } from './pages/pages.module'
 import { SplashScreen } from '@ionic-native/splash-screen/ngx'
@@ -70,7 +75,9 @@ import { jwtOptionsFactory } from './shared/utilities/jwtOptionsFactory'
     Insomnia,
     BackgroundMode,
     Firebase,
-    LocalNotifications
+    LocalNotifications,
+    LogService,
+    { provide: RemoteConfigService, useClass: FirebaseRemoteConfigService }
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

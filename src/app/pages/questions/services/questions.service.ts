@@ -122,9 +122,11 @@ export class QuestionsService {
   }
 
   getAttemptProgress(total) {
-    return Math.ceil(
-      (Object.keys(this.answerService.answers).length * 100) / total
-    )
+    const answers = this.answerService.answers
+    const attemptedAnswers = Object.keys(answers)
+      .map(d => (answers[d] ? answers[d] : null))
+      .filter(a => a)
+    return Math.ceil((attemptedAnswers.length * 100) / total)
   }
 
   recordTimeStamp(questionId, startTime) {

@@ -73,7 +73,6 @@
     <ion-slide id="qr-registration">
       <ng-container *ngIf="enterMetaQR">
         <token-form
-          id="tokenForm"
           (data)="metaQRHandler($event)"
           (focus)="clearStatus()"
           (errors)="handleError($event)"

@@ -6,6 +6,7 @@ import { ConfigKeys } from '../../../shared/enums/config'
 import { Firebase } from '@ionic-native/firebase/ngx'
 import { Injectable } from '@angular/core'
 import { LogService } from '../misc/log.service'
+import { Platform } from 'ionic-angular'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { StorageService } from '../storage/storage.service'
 
@@ -16,19 +17,22 @@ export class RemoteConfigService {
   protected timeoutMillis: number = 14_400_000
 
   constructor(private storage: StorageService) {
-    this.storage.get(StorageKeys.REMOTE_CONFIG_CACHE_TIMEOUT)
-      .then(timeout => {
-        if (timeout) {
-          this.timeoutMillis = timeout
-        } else {
-          this.timeoutMillis = 14_400_000  // 3 hours
-          return this.storage.set(StorageKeys.REMOTE_CONFIG_CACHE_TIMEOUT, this.timeoutMillis)
-        }
-      })
+    this.storage.get(StorageKeys.REMOTE_CONFIG_CACHE_TIMEOUT).then(timeout => {
+      if (timeout) {
+        this.timeoutMillis = timeout
+      } else {
+        this.timeoutMillis = 14_400_000 // 3 hours
+        return this.storage.set(
+          StorageKeys.REMOTE_CONFIG_CACHE_TIMEOUT,
+          this.timeoutMillis
+        )
+      }
+    })
   }
 
   setCacheExpiration(timeoutMillis: number): Promise<number> {
-    return this.storage.set(StorageKeys.REMOTE_CONFIG_CACHE_TIMEOUT, timeoutMillis)
+    return this.storage
+      .set(StorageKeys.REMOTE_CONFIG_CACHE_TIMEOUT, timeoutMillis)
       .then(timeout => {
         if (timeout) {
           this.timeoutMillis = timeout
@@ -55,6 +59,15 @@ export interface RemoteConfig {
   getOrDefault(key: ConfigKeys, defaultValue: any): Promise<any>
 }
 
+class EmptyRemoteConfig implements RemoteConfig {
+  get(key: ConfigKeys): Promise<any> {
+    return Promise.resolve()
+  }
+  getOrDefault(key: ConfigKeys, defaultValue: any): Promise<string> {
+    return Promise.resolve(defaultValue)
+  }
+}
+
 class FirebaseRemoteConfig implements RemoteConfig {
   constructor(private logger: LogService) {}
 
@@ -72,7 +85,9 @@ class FirebaseRemoteConfig implements RemoteConfig {
       .then((val: string) => (val.length == 0 ? defaultValue : val))
       .catch(e => {
         this.logger.error(
-          `Failed to retrieve ${key.value}. Using default ${defaultValue}.`, e)
+          `Failed to retrieve ${key.value}. Using default ${defaultValue}.`,
+          e
+        )
         return defaultValue
       })
   }
@@ -87,11 +102,10 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
     private firebase: Firebase,
     storage: StorageService,
     private logger: LogService,
+    private platform: Platform
   ) {
     super(storage)
-    this.configSubject = new BehaviorSubject(
-      new FirebaseRemoteConfig(this.logger)
-    )
+    this.configSubject = new BehaviorSubject(new EmptyRemoteConfig())
   }
 
   forceFetch(): Promise<RemoteConfig> {
@@ -108,13 +122,18 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
 
   private fetch(timeoutMillis: number) {
     console.log('Fetching Firebase Remote Config')
+    if (!this.platform.is('cordova'))
+      return Promise.resolve(this.configSubject.value)
     return this.firebase
       .fetch(timeoutMillis)
       .then(() => {
         console.log('Activating Firebase Remote Config')
-        return this.firebase.activateFetched()
-          // iOS workaround for when activateFetched is false.
-          .catch(e => false)
+        return (
+          this.firebase
+            .activateFetched()
+            // iOS workaround for when activateFetched is false.
+            .catch(e => false)
+        )
       })
       .then(activated => {
         console.log('New Firebase Remote Config did activate', activated)

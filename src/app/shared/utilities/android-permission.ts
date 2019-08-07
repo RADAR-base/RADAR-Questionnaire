@@ -1,8 +1,8 @@
 import 'rxjs/add/operator/map'
 
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx'
-import { Device } from '@ionic-native/device/ngx'
 import { Injectable } from '@angular/core'
+import { Platform } from 'ionic-angular'
 
 @Injectable()
 export class AndroidPermissionUtility {
@@ -20,7 +20,7 @@ export class AndroidPermissionUtility {
   ]
 
   constructor(
-    private device: Device,
+    private platform: Platform,
     private androidPermissions: AndroidPermissions
   ) {}
 
@@ -31,7 +31,8 @@ export class AndroidPermissionUtility {
     if (this.isAndroid())
       this.androidPermissions
         .requestPermissions(this.androidPermissionList)
-        .then(success => {
+        .then(
+          success => {
             console.log(success)
             this.checkPermissions()
           },
@@ -101,12 +102,12 @@ export class AndroidPermissionUtility {
   checkPermission(permission): Promise<any> {
     return new Promise((resolve, reject) => {
       if (!this.isAndroid()) resolve(true)
-      this.androidPermissions.checkPermission(permission)
-        .then(success => {
+      this.androidPermissions.checkPermission(permission).then(
+        success => {
           if (success.hasPermission === true) {
             resolve(true)
           } else {
-            reject(new Error("No permission " + permission + " was given"))
+            reject(new Error('No permission ' + permission + ' was given'))
           }
         },
         error => {
@@ -127,11 +128,13 @@ export class AndroidPermissionUtility {
   }
 
   getWriteExternalStorage_permission() {
-    return this.fetchPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE)
+    return this.fetchPermission(
+      this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE
+    )
   }
 
   isAndroid() {
-    return this.device.platform == 'Android'
+    return this.platform.is('android')
   }
 
   // TODO: Add required permissions as above

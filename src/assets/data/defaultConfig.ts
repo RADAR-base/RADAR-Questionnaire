@@ -5,10 +5,7 @@ import {
   WeeklyReportSubSettings
 } from '../../app/shared/models/settings'
 import { Task } from '../../app/shared/models/task'
-import {
-  DefaultProtocolEndPointExport,
-  DefaultSourceProducerAndSecretExport
-} from './secret'
+import { DefaultSourceProducerAndSecretExport } from './secret'
 
 // DEFAULT SETTINGS
 export const DefaultSettingsNotifications: NotificationSettings = {
@@ -33,24 +30,38 @@ export const DefaultSettingsWeeklyReport: WeeklyReportSubSettings[] = [
 ]
 
 // DEFAULT SETUP
+export const DefaultTaskCompletionWindow = 86400000 // 1 day in ms
+export const DefaultESMCompletionWindow = 600000 // 10 mins in ms
+
 export const DefaultTask: Task = {
   index: 0,
   completed: false,
   reportedCompletion: false,
   timestamp: 0,
   name: 'DEFAULT',
-  reminderSettings: {
-    unit: 'hour',
-    amount: 1,
-    repeat: 1
-  },
   nQuestions: 0,
   estimatedCompletionTime: 0,
+  completionWindow: DefaultTaskCompletionWindow,
   warning: '',
-  isClinical: false
+  isClinical: false,
+  notifications: []
 }
 
-export const DefaultSettingsSelectedLanguage: LanguageSetting = {
+export const DefaultTaskTest: Task = {
+  index: 0,
+  completed: false,
+  reportedCompletion: false,
+  timestamp: 0,
+  name: 'TEST',
+  nQuestions: 0,
+  estimatedCompletionTime: 0,
+  completionWindow: DefaultTaskCompletionWindow,
+  warning: '',
+  isClinical: false,
+  notifications: []
+}
+
+export const DefaultLanguage: LanguageSetting = {
   label: '',
   value: ''
 }
@@ -91,35 +102,100 @@ export const LanguageMap = {
   de: LocKeys.LANGUAGE_GERMAN.toString()
 }
 
-export const DefaultScheduleVersion: number = 0
+export const DefaultAppVersion: string = '0.5.11.1-alpha'
+
+export const DefaultScheduleVersion = '0.3.10'
 
 export const DefaultScheduleYearCoverage: number = 2 // years
 
 export const DefaultScheduleReportRepeat: number = 7 // days
 
 export const DefaultNotificationType: string = 'FCM' // choose from 'FCM' or 'LOCAL'
+export const DefaultMaxUpstreamResends = 100
 export const DefaultNumberOfNotificationsToSchedule: number = 100 //
 export const DefaultNumberOfNotificationsToRescue: number = 12 //
-export const FCMPluginProjectSenderId: string = '486403643787'
+export const FCMPluginProjectSenderId: string = '430900191220'
 export const DefaultNotificationRefreshTime: number = 900000 // 15 mins in ms
 
-export const DefaultSourceTypeModel: string = 'aRMT-App'
-export const DefaultSourceTypeRegistrationBody: any = {
-  sourceTypeCatalogVersion: '1.2.0',
-  sourceTypeModel: 'aRMT-App',
+export const DefaultSourcePrefix = 'aRMT'
+export const DefaultSourceTypeModel: string = `${DefaultSourcePrefix}-App`
+export const DefaultSourceTypeRegistrationBody = {
+  sourceTypeCatalogVersion: '1.4.3',
+  sourceTypeModel: DefaultSourceTypeModel,
   sourceTypeProducer: 'RADAR'
   // "deviceTypeId": 1104
 }
 
 export const DefaultEndPoint: string =
-  'https://radar-cns-platform.rosalind.kcl.ac.uk/'
-// export const DefaultEndPoint: string = 'https://radar-backend.co.uk/'
+  'https://radar-cns-platform.rosalind.kcl.ac.uk'
 
-export const DefaultProtocolEndPoint: string = DefaultProtocolEndPointExport
+// GITHUB SOURCES
 
-export const DefaultSourceProducerAndSecret: string = DefaultSourceProducerAndSecretExport
+export const GIT_API_URI = 'https://api.github.com/repos'
 
-export const URI_managementPortal: string = 'managementportal'
-export const URI_refresh: string = '/oauth/token'
-export const URI_subjects: string = '/api/subjects/'
-export const URI_metatoken: string = '/api/meta-token/'
+export const DefaultProtocolGithubRepo = 'RADAR-Base/RADAR-aRMT-protocols'
+export const DefaultProtocolBranch = 'master'
+export const DefaultProtocolPath = `protocol.json`
+export const DefaultProtocolEndPoint = [
+  GIT_API_URI,
+  DefaultProtocolGithubRepo,
+  'contents'
+].join('/')
+
+export const DefaultSchemaGithubRepo = 'RADAR-Base/RADAR-Schemas'
+export const DefaultSchemaBranch = 'master'
+// tslint:disable-next-line: max-line-length
+export const DefaultSchemaSpecPath = `specifications/active/${DefaultSourcePrefix}-${DefaultSourceTypeRegistrationBody.sourceTypeCatalogVersion}.yml?ref=${DefaultSchemaBranch}`
+export const DefaultSchemaSpecEndpoint = [
+  GIT_API_URI,
+  DefaultSchemaGithubRepo,
+  'contents',
+  DefaultSchemaSpecPath
+].join('/')
+
+const oauthParts = DefaultSourceProducerAndSecretExport.split(':')
+
+export const DefaultOAuthClientId = oauthParts.shift()
+// TODO: Use empty client secret https://github.com/RADAR-base/RADAR-Questionnaire/issues/140
+export const DefaultOAuthClientSecret = oauthParts.join(':')
+
+export const DefaultPackageName = 'org.phidatalab.radar_armt'
+
+// CONFIG SERVICE
+
+export const DefaultQuestionnaireTypeURI = '_armt'
+export const DefaultQuestionnaireFormatURI = '.json'
+
+// AUTH SERVICE
+
+export const DefaultManagementPortalURI = '/managementportal'
+export const DefaultRefreshTokenURI = '/oauth/token'
+export const DefaultSubjectsURI = '/api/subjects/'
+export const DefaultMetaTokenURI: string = '/api/meta-token/'
+
+export const DefaultRequestEncodedContentType =
+  'application/x-www-form-urlencoded'
+export const DefaultRequestJSONContentType = 'application/json'
+export const DefaultRefreshTokenRequestBody =
+  'grant_type=refresh_token&refresh_token='
+
+export const DefaultEnrolmentBaseURL =
+  DefaultEndPoint + DefaultManagementPortalURI
+
+export const DefaultTokenRefreshSeconds = 1800 // 30 minutes in s
+
+export const DefaultTimeInterval = { unit: 'day', amount: 1 }
+
+// KAFKA
+
+export const DefaultKafkaURI = '/kafka'
+
+export const DefaultNumberOfCompletionLogsToSend = 10
+
+// AUDIO TASK
+
+export const DefaultMaxAudioAttemptsAllowed = 5
+export const DefaultAudioRecordOptions = {
+  SampleRate: 16000,
+  NumberOfChannels: 1
+}

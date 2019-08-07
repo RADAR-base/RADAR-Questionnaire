@@ -1,323 +1,181 @@
-import { Component, ElementRef, ViewChild } from '@angular/core'
-import {
-  AlertController,
-  Content,
-  NavController,
-  NavParams,
-  Platform
-} from 'ionic-angular'
+import { Component, OnDestroy } from '@angular/core'
+import { NavController, Platform } from 'ionic-angular'
+import { Subscription } from 'rxjs'
 
-import { DefaultTask } from '../../../../assets/data/defaultConfig'
-import { KafkaService } from '../../../core/services/kafka.service'
-import { StorageService } from '../../../core/services/storage.service'
+import { AlertService } from '../../../core/services/misc/alert.service'
+import { LocalizationService } from '../../../core/services/misc/localization.service'
+import { UsageService } from '../../../core/services/usage/usage.service'
+import { UsageEventType } from '../../../shared/enums/events'
 import { LocKeys } from '../../../shared/enums/localisations'
-import { StorageKeys } from '../../../shared/enums/storage'
 import { Task, TasksProgress } from '../../../shared/models/task'
-import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { checkTaskIsNow } from '../../../shared/utilities/check-task-is-now'
 import { ClinicalTasksPageComponent } from '../../clinical-tasks/containers/clinical-tasks-page.component'
 import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
 import { SettingsPageComponent } from '../../settings/containers/settings-page.component'
-import { StartPageComponent } from '../../start/containers/start-page.component'
+import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 import { TasksService } from '../services/tasks.service'
+import { HomePageAnimations } from './home-page.animation'
 
 @Component({
   selector: 'page-home',
-  templateUrl: 'home-page.component.html'
+  templateUrl: 'home-page.component.html',
+  animations: HomePageAnimations
 })
-export class HomePageComponent {
-  @ViewChild('content')
-  elContent: Content
-  elContentHeight: number
-  @ViewChild('progressBar')
-  elProgress: ElementRef
-  elProgressHeight: number
-  @ViewChild('tickerBar')
-  elTicker: ElementRef
-  elTickerHeight: number
-  @ViewChild('taskInfo')
-  elInfo: ElementRef
-  elInfoHeight: number
-  @ViewChild('footer')
-  elFooter: ElementRef
-  elFooterHeight: number
-  @ViewChild('taskCalendar')
-  elCalendar: ElementRef
+export class HomePageComponent implements OnDestroy {
+  sortedTasks: Promise<Map<any, any>>
+  tasks: Promise<Task[]>
+  currentDate: Date
+  nextTask: Task
+  tasksProgress: Promise<TasksProgress>
+  resumeListener: Subscription = new Subscription()
 
-  isOpenPageClicked: boolean = false
-  nextTask: Task = DefaultTask
-  showCalendar: boolean = false
-  showCompleted: boolean = false
-  showNoTasksToday: boolean = false
-  tasksProgress: TasksProgress
-  calendarScrollHeight: number = 0
-  hasClickedStartButton: boolean = true
-  hasClinicalTasks = false
-  hasOnlyESMs = false
+  showCalendar = false
+  showCompleted = false
+  startingQuestionnaire = false
+  hasClinicalTasks: Promise<boolean>
   taskIsNow = false
+  checkTaskInterval
 
   constructor(
     public navCtrl: NavController,
-    public navParams: NavParams,
-    public alertCtrl: AlertController,
+    public alertService: AlertService,
     private tasksService: TasksService,
-    private translate: TranslatePipe,
-    public storage: StorageService,
+    private localization: LocalizationService,
     private platform: Platform,
-    private kafka: KafkaService
-  ) {}
+    private usage: UsageService
+  ) {
+    this.resumeListener = this.platform.resume.subscribe(e => {
+      this.checkForNewDate()
+      this.usage.sendGeneralEvent(UsageEventType.RESUMED)
+      this.onResume()
+    })
+  }
+
+  getIsLoadingSpinnerShown() {
+    return (
+      (this.startingQuestionnaire && !this.showCalendar) ||
+      (!this.nextTask && !this.showCompleted)
+    )
+  }
+
+  getIsStartButtonShown() {
+    return (
+      this.taskIsNow &&
+      !this.startingQuestionnaire &&
+      !this.showCompleted &&
+      !this.showCalendar
+    )
+  }
+
+  ngOnDestroy() {
+    this.resumeListener.unsubscribe()
+  }
 
   ionViewWillEnter() {
-    this.getElementsAttributes()
-    this.elProgressHeight += 15
-    this.applyTransformations()
+    this.startingQuestionnaire = false
   }
 
   ionViewDidLoad() {
-    this.checkForNextTask()
-    this.evalHasClinicalTasks()
-    this.checkIfOnlyESM()
-
-    setInterval(() => {
-      this.checkForNextTask()
-    }, 1000)
-
-    this.platform.resume.subscribe(e => {
-      this.kafka.sendAllAnswersInCache()
-    })
-
-    this.tasksService.sendNonReportedTaskCompletion()
+    this.init()
+    this.usage.sendOpenEvent()
+    this.usage.setPage(this.constructor.name)
   }
 
-  checkForNextTask() {
-    if (!this.showCalendar) {
-      this.tasksService.getNextTask().then(task => {
-        this.checkForNextTaskGeneric(task)
-      })
+  init() {
+    this.sortedTasks = this.tasksService.getSortedTasksOfToday()
+    this.tasks = this.tasksService.getTasksOfToday()
+    this.currentDate = this.tasksService.getCurrentDateMidnight()
+    this.tasksProgress = this.tasksService.getTaskProgress()
+    this.tasks.then(tasks => {
+      this.checkTaskInterval = setInterval(() => {
+        this.checkForNextTask(tasks)
+      }, 1000)
+    })
+    this.hasClinicalTasks = this.tasksService.evalHasClinicalTasks()
+  }
+
+  onResume() {
+    this.usage.sendOpenEvent()
+    this.checkForNewDate()
+  }
+
+  checkForNewDate() {
+    if (new Date().getDate() !== this.currentDate.getDate()) {
+      this.currentDate = this.tasksService.getCurrentDateMidnight()
+      this.navCtrl.setRoot(SplashPageComponent)
     }
   }
 
-  checkForNextTaskGeneric(task) {
+  checkForNextTask(tasks) {
+    const task = this.tasksService.getNextTask(tasks)
     if (task) {
       this.nextTask = task
-      this.hasClickedStartButton = false
-      this.displayCompleted(false)
-      this.displayEvalTransformations(false)
-      this.taskIsNow = checkTaskIsNow(task.timestamp)
+      this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
     } else {
-      this.tasksService.areAllTasksComplete().then(completed => {
-        if (completed) {
-          this.nextTask = DefaultTask
-          this.displayCompleted(true)
-          if (!this.tasksProgress) {
-            this.showNoTasksToday = true
-          }
-        } else {
-          this.nextTask = DefaultTask
-          this.displayEvalTransformations(true)
-        }
-      })
-    }
-  }
-
-  checkIfOnlyESM() {
-    this.tasksService.getTasksOfToday().then(tasks => {
-      let tmpHasOnlyESMs = true
-      for (let i = 0; i < tasks.length; i++) {
-        if (tasks[i].name !== 'ESM') {
-          tmpHasOnlyESMs = false
-          break
-        }
-      }
-      this.hasOnlyESMs = tmpHasOnlyESMs
-    })
-  }
-
-  evalHasClinicalTasks() {
-    this.storage.get(StorageKeys.HAS_CLINICAL_TASKS).then(isClinical => {
-      this.hasClinicalTasks = isClinical
-    })
-  }
-
-  displayEvalTransformations(requestDisplay: boolean) {
-    this.showCalendar = requestDisplay
-    this.getElementsAttributes()
-    this.applyTransformations()
-  }
-
-  displayCompleted(requestDisplay: boolean) {
-    this.showCompleted = requestDisplay
-    this.getElementsAttributes()
-    this.applyCompletedTransformations()
-  }
-
-  getElementsAttributes() {
-    this.elContentHeight = this.elContent.contentHeight
-    this.elProgressHeight = this.elProgress.nativeElement.offsetHeight - 15
-    this.elTickerHeight = this.elTicker.nativeElement.offsetHeight
-    this.elInfoHeight = this.elInfo.nativeElement.offsetHeight
-    this.elFooterHeight = this.elFooter.nativeElement.offsetHeight
-  }
-
-  applyTransformations() {
-    if (this.showCalendar) {
-      this.elProgress.nativeElement.style.transform = `translateY(-${
-        this.elProgressHeight
-      }px) scale(1)`
-      this.elTicker.nativeElement.style.transform = `translateY(-${
-        this.elProgressHeight
-      }px)`
-      this.elInfo.nativeElement.style.transform = `translateY(-${
-        this.elProgressHeight
-      }px)`
-      this.elFooter.nativeElement.style.transform = `translateY(${
-        this.elFooterHeight
-      }px) scale(0)`
-      this.elCalendar.nativeElement.style.transform = `translateY(-${
-        this.elProgressHeight
-      }px)`
-      this.elCalendar.nativeElement.style.opacity = 1
-    } else {
-      this.elProgress.nativeElement.style.transform = 'translateY(0px) scale(1)'
-      this.elTicker.nativeElement.style.transform = 'translateY(0px)'
-      this.elInfo.nativeElement.style.transform = 'translateY(0px)'
-      this.elFooter.nativeElement.style.transform = 'translateY(0px) scale(1)'
-      this.elCalendar.nativeElement.style.transform = 'translateY(0px)'
-      this.elCalendar.nativeElement.style.opacity = 0
-    }
-    this.setCalendarScrollHeight(this.showCalendar)
-  }
-
-  // TODO: Rename to something appropriate
-  isNextTaskESMandNotNow() {
-    const now = new Date().getTime()
-    if (!this.showCalendar) {
-      if (this.nextTask.name === 'ESM' && this.nextTask.timestamp > now) {
-        this.elProgress.nativeElement.style.transform = `translateY(${
-          this.elFooterHeight
-        }px)`
-        this.elInfo.nativeElement.style.transform = `translateY(${
-          this.elFooterHeight
-        }px)`
-        this.elFooter.nativeElement.style.transform = `translateY(${
-          this.elFooterHeight
-        }px) scale(0)`
-        this.elCalendar.nativeElement.style.transform = 'translateY(0px)'
-        this.elCalendar.nativeElement.style.opacity = 0
-      } else {
-        this.elProgress.nativeElement.style.transform = `translateY(${
-          this.elFooterHeight
-        }px)`
-        this.elInfo.nativeElement.style.transform = `translateY(${
-          this.elFooterHeight
-        }px)`
-        this.elFooter.nativeElement.style.transform = `translateY(${
-          this.elFooterHeight
-        }px) scale(0)`
-        this.elCalendar.nativeElement.style.transform = 'translateY(0px)'
-        this.elCalendar.nativeElement.style.opacity = 0
+      this.taskIsNow = false
+      this.nextTask = null
+      this.showCompleted = this.tasksService.areAllTasksComplete(tasks)
+      if (this.showCompleted) {
+        clearInterval(this.checkTaskInterval)
+        this.showCalendar = false
       }
     }
   }
 
-  setCalendarScrollHeight(show: boolean) {
-    if (show) {
-      this.calendarScrollHeight =
-        this.elContentHeight - this.elTickerHeight - this.elInfoHeight
-    } else {
-      this.calendarScrollHeight = 0
-    }
-  }
-
-  applyCompletedTransformations() {
-    if (this.showCompleted) {
-      this.elTicker.nativeElement.style.padding = `0`
-      this.elTicker.nativeElement.style.transform = `translateY(${this
-        .elInfoHeight + this.elFooterHeight}px)`
-      this.elInfo.nativeElement.style.transform = `translateY(${this
-        .elInfoHeight + this.elFooterHeight}px) scale(0)`
-      this.elFooter.nativeElement.style.transform = `translateY(${this
-        .elInfoHeight + this.elFooterHeight}px) scale(0)`
-    } else {
-      this.elTicker.nativeElement.style.padding = '0 0 2px 0'
-      this.elTicker.nativeElement.style.transform = 'translateY(0px)'
-      this.elInfo.nativeElement.style.transform = 'translateY(0px) scale(1)'
-      this.elFooter.nativeElement.style.transform = 'translateY(0px) scale(1)'
-    }
+  displayTaskCalendar() {
+    this.usage.sendClickEvent('show_task_calendar')
+    this.showCalendar = !this.showCalendar
   }
 
   openSettingsPage() {
     this.navCtrl.push(SettingsPageComponent)
+    this.usage.sendClickEvent('open_settings')
   }
 
   openClinicalTasksPage() {
     this.navCtrl.push(ClinicalTasksPageComponent)
+    this.usage.sendClickEvent('open_clinical_tasks')
   }
 
-  startQuestionnaire(task: Task) {
-    this.hasClickedStartButton = true
-    let startQuestionnaireTask = this.nextTask
-    if (task) {
-      if (task.completed === false) {
-        startQuestionnaireTask = task
-      }
+  startQuestionnaire(taskCalendarTask: Task) {
+    // NOTE: User can start questionnaire from task calendar or start button in home.
+    const task = taskCalendarTask ? taskCalendarTask : this.nextTask
+
+    if (this.tasksService.isTaskStartable(task)) {
+      this.usage.sendClickEvent('start_questionnaire')
+      this.startingQuestionnaire = true
+      return this.tasksService
+        .getQuestionnairePayload(task)
+        .then(payload => this.navCtrl.push(QuestionsPageComponent, payload))
+    } else {
+      this.showMissedInfo()
     }
-    const lang = this.storage.get(StorageKeys.LANGUAGE)
-    const nextAssessment = this.tasksService.getAssessment(
-      startQuestionnaireTask
-    )
-    Promise.all([lang, nextAssessment]).then(res => {
-      const language = res[0].value
-      const assessment = res[1]
-      const params = {
-        title: assessment.name,
-        introduction: assessment.startText[language],
-        endText: assessment.endText[language],
-        questions: assessment.questions,
-        associatedTask: startQuestionnaireTask,
-        assessment: assessment,
-        isLastTask: false
-      }
-
-      this.tasksService.isLastTask(startQuestionnaireTask).then(lastTask => {
-        if (lastTask) params.isLastTask = true
-      })
-
-      if (assessment.showIntroduction) {
-        this.navCtrl.push(StartPageComponent, params)
-      } else {
-        this.navCtrl.push(QuestionsPageComponent, params)
-      }
-    })
   }
 
   showCredits() {
-    const buttons = [
-      {
-        text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
-        handler: () => {}
-      }
-    ]
-    this.showAlert({
-      title: this.translate.transform(LocKeys.CREDITS_TITLE.toString()),
-      message: this.translate.transform(LocKeys.CREDITS_BODY.toString()),
-      buttons: buttons
+    this.usage.sendClickEvent('show_credits')
+    return this.alertService.showAlert({
+      title: this.localization.translateKey(LocKeys.CREDITS_TITLE),
+      message: this.localization.translateKey(LocKeys.CREDITS_BODY),
+      buttons: [
+        {
+          text: this.localization.translateKey(LocKeys.BTN_OKAY),
+          handler: () => {}
+        }
+      ]
     })
   }
 
-  showAlert(parameters) {
-    const alert = this.alertCtrl.create({
-      title: parameters.title,
-      buttons: parameters.buttons
+  showMissedInfo() {
+    return this.alertService.showAlert({
+      title: this.localization.translateKey(LocKeys.CALENDAR_ESM_MISSED_TITLE),
+      message: this.localization.translateKey(LocKeys.CALENDAR_ESM_MISSED_DESC),
+      buttons: [
+        {
+          text: this.localization.translateKey(LocKeys.BTN_OKAY),
+          handler: () => {}
+        }
+      ]
     })
-    if (parameters.message) {
-      alert.setMessage(parameters.message)
-    }
-    if (parameters.inputs) {
-      for (let i = 0; i < parameters.inputs.length; i++) {
-        alert.addInput(parameters.inputs[i])
-      }
-    }
-    alert.present()
   }
 }

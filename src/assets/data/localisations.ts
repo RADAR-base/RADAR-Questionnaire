@@ -56,7 +56,7 @@ export const Localisations = {
     es:
       'Antes de poder usar esta aplicación, debe registrarse. Puede escanear el código QR o ingresar el token.',
     it:
-      'Prima di poter usare questa app, deve registrarsi. Puoi scansionare il codice QR o inserire il token.',
+      'Prima di poter usare questa app, devi registrarti. Puoi scansionare il codice QR o inserire il token.',
     nl:
       'Voordat u de app kunt gebruiken, moeten we de app eerst registreren. U kunt de QR code scannen of het token invoeren.'
   },
@@ -70,7 +70,7 @@ export const Localisations = {
     es:
       'Presione el botón "Escanear" e ingrese el código QR que le dio el personal del estudio. A continuación puede ver un ejemplo de código QR',
     it:
-      'Prema il pulsante "Scan" e inquadri il codice QR che le è stato dato dal personale dello studio. Qui sotto può vedere un esempio di QR.',
+      'Premi il pulsante "Scan" e inquadra il codice QR che hai ricevuto dal personale dello studio. Qui sotto puoi vedere un QR di esempio.',
     nl:
       'Klik op de "Scan" knop en richt de camera op de QR code die u heeft ontvangen van de onderzoeker. Hieronder staat een voorbeeld van een QR code afgebeeld.'
   },
@@ -93,12 +93,12 @@ export const Localisations = {
     de: 'Einstellungen',
     en: 'Preferences',
     es: 'Preferencias',
-    it: ' Preferenze',
+    it: 'Preferenze',
     nl: 'Voorkeurs instellingen'
   },
   ENROL_PREFERENCES_DESC: {
     da:
-      'Vi sender dig en ugenlig opsummering om de data du har sendt til os.  Vælg lige så mange emner du ønsker at modtage information om.',
+      'Vi sender dig en ugentlig opsummering om de data du har sendt til os. Vælg lige så mange emner du ønsker at modtage information om.',
     de:
       'Wir senden Ihnen wöchentliche Zusammenfassungen über die Daten, die Sie uns senden. Wählen Sie beliebig viele Themen aus, zu denen Sie Informationen erhalten möchten.',
     en:
@@ -106,7 +106,7 @@ export const Localisations = {
     es:
       'Le enviaremos cada semana un resumen de los datos que nos envía. Siéntase libre de seleccionar solo los temas sobre los cuales desea recibir información',
     it:
-      'Le invieremo ogni settimana un riepilogo dei dati che ci invierà. Si senta libero di selezionar solo gli argomenti su cui vuole ricevere informazioni.',
+      'Ti invieremo ogni settimana un riepilogo dei dati raccolti. Sentiti libero di selezionare solo gli argomenti di cui vuoi ricevere le informazioni.',
     nl:
       'We zullen u wekelijks samenvattingen sturen over uw verzamelde gegevens. U kunt zelf de onderwerpen selecteren waarover uw informatie wilt ontvangen.'
   },
@@ -115,30 +115,30 @@ export const Localisations = {
     de: 'RADAR-CNS',
     en: 'RADAR-CNS',
     es: 'RADAR-CNS',
-    it: ' RADAR-CNS',
+    it: 'RADAR-CNS',
     nl: 'RADAR-CNS'
   },
   FINISH_THANKS: {
     da: 'Tak fordi du udfyldte spørgeskemaet.',
     de: 'Vielen Dank für das Ausfüllen des Fragebogens.',
     en: 'Thank you for completing the questionnaire.',
-    es: 'Gracias por completar el cuestionario',
-    it: 'Grazie per aver completato il questionario',
-    nl: 'Bedankt voor het invullen van de vragenlijst'
+    es: 'Gracias por completar el cuestionario.',
+    it: 'Grazie per aver completato il questionario.',
+    nl: 'Bedankt voor het invullen van de vragenlijst.'
   },
   FINISH_NEXT_TASK_REMINDER: {
     da: 'Husk, du har stadig udestående opgaver!',
     de: 'Denken Sie daran, Sie haben noch Aufgaben ausstehend!',
     en: 'Remember, you still have tasks outstanding!',
-    es: 'Recuerda, todavía tiene tareas pendientes!',
-    it: 'Ricorda, hai ancora compiti eccezionali!',
-    nl: 'Denk eraan, je hebt nog steeds taken uitstekend!'
+    es: 'Recuerde, todavía tiene tareas pendientes!',
+    it: 'Ricorda, hai ancora delle attività in sospeso!',
+    nl: 'Denk eraan, je hebt nog steeds taken openstaan!'
   },
   FINISH_COMPLETED_IN_CLINIC: {
     da: 'Afsluttet i klinik?',
     de: 'In der Klinik abgeschlossen?',
     en: 'Completed in clinic?',
-    es: 'Completado en la visita clínica',
+    es: 'Completado durante la visita clínica',
     it: 'Completato in clinica?',
     nl: 'Voltooid in de kliniek?'
   },
@@ -146,12 +146,12 @@ export const Localisations = {
     da: 'Blokeret',
     de: 'Nich erlaubt',
     en: 'Blocked',
-    es: 'Obstruido',
+    es: 'Bloqueado',
     it: 'Bloccato',
     nl: 'Geblokkeerd'
   },
   CALENDAR_ESM_MISSED_DESC: {
-    da: 'Desværre kan du kun besvare dette spørgeskema ved den anmeldte tid.',
+    da: 'Spørgsmålet kan ikke besvares længere.',
     de:
       'Leider können Sie diesen Fragebogen nur zum angegebenen Zeitpunkt beantworten.',
     en:
@@ -176,15 +176,15 @@ export const Localisations = {
     de: 'Einstellungen',
     en: 'Settings',
     es: 'Ajustes',
-    it: 'Settings',
-    nl: 'Settings'
+    it: 'Impostazioni',
+    nl: 'Instellingen'
   },
   SETTINGS_PARTICIPANTID: {
     da: 'Bruger ID',
-    de: 'Benutzer ID: ',
-    en: 'User ID: ',
+    de: 'Benutzer ID',
+    en: 'User ID',
     es: 'Código Usuario',
-    it: 'User ID:',
+    it: 'ID utente',
     nl: 'Gebruikers ID'
   },
   SETTINGS_PROJECTNAME: {
@@ -196,20 +196,20 @@ export const Localisations = {
     nl: 'Project naam'
   },
   SETTINGS_USER_INFO: {
-    da: 'Bruger info',
+    da: 'Bruger information',
     de: 'Benutzerinformationen',
     en: 'User Info',
     es: 'Información para el usuario',
-    it: 'User Info',
+    it: 'Informazioni utente',
     nl: 'Gebruikersinformatie'
   },
   SETTINGS_ENROL_DATE: {
-    da: 'Registreringsdata: ',
-    de: 'Registrierungsdatum: ',
-    en: 'Enrolment Date: ',
+    da: 'Registreringsdata',
+    de: 'Registrierungsdatum',
+    en: 'Enrolment Date',
     es: 'Fecha de registro',
-    it: 'Data di arruolamento: ',
-    nl: 'Datum van inclusie: '
+    it: 'Data di arruolamento',
+    nl: 'Datum van inclusie'
   },
   SETTINGS_LANGUAGE: {
     da: 'Sprog',
@@ -224,7 +224,7 @@ export const Localisations = {
     de: 'Wählen Sie Ihre Sprache',
     en: 'Select your Language',
     es: 'Seleccione su idioma',
-    it: 'Selezioni la lingua desiderata',
+    it: 'Seleziona la lingua desiderata',
     nl: 'Kies uw taal'
   },
   SETTINGS_NOTIFICATIONS: {
@@ -303,20 +303,31 @@ export const Localisations = {
     nl: 'Schema'
   },
   SETTINGS_RESET_ALERT: {
-    da: 'Nulstil RADAR-CNS App',
-    de: 'RADAR-CNS App zurücksetzen',
-    en: 'Reset RADAR-CNS App',
-    es: 'Restablecer la aplicación RADAR-CNS',
-    it: 'Reset RADAR-CNS app',
-    nl: 'Reset RADAR-CNS app'
+    da: 'Nulstil App',
+    de: 'App zurücksetzen',
+    en: 'Reset App',
+    es: 'Reiniciar, la aplicación',
+    it: 'Reset app',
+    nl: 'Reset app'
   },
   SETTINGS_RESET_ALERT_DESC: {
-    da: 'Nulstil RADAR-CNS App',
-    de: 'RADAR-CNS App zurücksetzen',
-    en: 'Reset RADAR-CNS App',
-    es: 'Restablecer la aplicación RADAR-CNS',
-    it: 'Reset RADAR-CNS app',
-    nl: 'Reset RADAR-CNS app'
+    da: 'Du er ved at nulstille appen.',
+    de: 'Sie sind dabei, die App zurückzusetzen.',
+    en: 'You are about to reset the app.',
+    es: 'Estás a punto de reiniciar la aplicación.',
+    it: `Stai per ripristinare l'app.`,
+    nl: 'U staat op het punt de app opnieuw in te stellen.'
+  },
+  SETTINGS_RESET_ALERT_OPTION_DESC: {
+    da: `Scegli di ripristinare solo la configurazione e i dati dell'app oppure eseguire un ripristino completo e ripetere la registrazione.`,
+    de:
+      'Wählen Sie diese Option, um nur die App-Konfiguration und -Daten zurückzusetzen, oder führen Sie einen vollständigen Reset und eine erneute Registrierung durch.',
+    en:
+      'Choose to reset app configuration and data only or do a full reset and re-enrol.',
+    es:
+      'Elija restablecer la configuración de la aplicación y solo los datos o realice un reinicio completo y vuelva a inscribirse.',
+    it: `Scegli di ripristinare solo la configurazione e i dati dell'app oppure eseguire un ripristino completo e ripetere la registrazione.`,
+    nl: `Kies ervoor om de app-configuratie en -gegevens alleen opnieuw in te stellen of een volledige reset uit te voeren en opnieuw in te schrijven.`
   },
   SETTINGS_CACHE: {
     da: 'Cache',
@@ -333,6 +344,38 @@ export const Localisations = {
     es: 'Tamaño',
     it: 'Dimensione',
     nl: 'Grootte'
+  },
+  SETTINGS_LAST_UPLOAD_TO_SERVER: {
+    da: 'Sidste upload til server',
+    de: 'Letzter Upload zum Server',
+    en: 'Last Upload to Server',
+    es: 'Última carga al servidor',
+    it: 'Ultimo caricamento sul server',
+    nl: 'Laatste upload naar server'
+  },
+  SETTINGS_DEBUGGING: {
+    da: 'Debugging',
+    de: 'Debuggen',
+    en: 'Debugging',
+    es: 'Depuración',
+    it: 'Debug',
+    nl: 'Debugging'
+  },
+  SETTINGS_GENERATE_NOTIFS: {
+    da: 'Generer Testmeddelelse',
+    de: 'Testbenachrichtigung Generieren',
+    en: 'Generate Test Notifications',
+    es: 'Generar Notificación de Prueba',
+    it: 'Genera Notifica di Prova',
+    nl: 'Genereer Testmelding'
+  },
+  SETTINGS_LOG_NOTIFS: {
+    da: 'Logmeddelelser',
+    de: 'Protokollbenachrichtigungen',
+    en: 'Log Notifications',
+    es: 'Notificaciones de Registro',
+    it: 'Registra le Notifiche',
+    nl: 'Logmeldingen'
   },
   LANGUAGE_ENGLISH: {
     da: 'Engelsk',
@@ -418,7 +461,7 @@ export const Localisations = {
     da: 'Afslut',
     de: 'Fertig',
     en: 'Finish',
-    es: 'Terminar',
+    es: 'Finalizar',
     it: 'Fine',
     nl: 'Voltooid'
   },
@@ -435,8 +478,16 @@ export const Localisations = {
     de: 'Start',
     en: 'Start',
     es: 'Inicio',
-    it: 'Start',
-    nl: 'Start'
+    it: 'Inizio',
+    nl: 'Begin'
+  },
+  BTN_STOP: {
+    da: 'Stoppe',
+    de: 'Stoppen',
+    en: 'Stop',
+    es: 'Detener',
+    it: 'Fermare',
+    nl: 'Stoppen'
   },
   BTN_RESET: {
     da: 'Nulstil',
@@ -445,6 +496,14 @@ export const Localisations = {
     es: 'Restablecer',
     it: 'Reset',
     nl: 'Reset'
+  },
+  BTN_RETRY: {
+    da: 'Prøve igen',
+    de: 'Wiederholen',
+    en: 'Retry',
+    es: 'REintentar',
+    it: 'Riprovare',
+    nl: 'Probeer opnieuw'
   },
   BTN_AGREE: {
     da: 'Enig.',
@@ -526,16 +585,40 @@ export const Localisations = {
     it: 'Seleziona',
     nl: 'Selecteren'
   },
+  BTN_YES: {
+    da: 'Ja',
+    de: 'Ja',
+    en: 'Yes',
+    es: 'Sí',
+    it: 'sì',
+    nl: 'Ja'
+  },
+  BTN_NO: {
+    da: 'Ingen',
+    de: 'Nein',
+    en: 'No',
+    es: 'No',
+    it: 'No',
+    nl: 'Nee'
+  },
+  BTN_TRY_AGAIN: {
+    da: 'Prøv igen',
+    de: 'Versuchen Sie es nochmal',
+    en: 'Try again',
+    es: 'Inténtalo de nuevo',
+    it: 'Riprova',
+    nl: 'Probeer het opnieuw'
+  },
   STATUS_LOADING: {
-    da: 'Indlæser...',
-    de: 'Lädt...',
-    en: 'Loading...',
+    da: 'Indlæser',
+    de: 'Lädt',
+    en: 'Loading',
     es: 'Cargando',
-    it: 'Caricamento...',
-    nl: 'Laden...'
+    it: 'Caricamento',
+    nl: 'Laden'
   },
   STATUS_SUCCESS: {
-    da: 'Success',
+    da: 'Succes',
     de: 'Erfolg',
     en: 'Success',
     es: 'Completado',
@@ -547,7 +630,7 @@ export const Localisations = {
     de: 'jetzt',
     en: 'now',
     es: 'ahora',
-    it: 'adesso',
+    it: 'ora',
     nl: 'nu'
   },
   STATUS_FAILURE: {
@@ -558,6 +641,22 @@ export const Localisations = {
     it: 'Non riuscuto',
     nl: 'Mislukt'
   },
+  NOTIFICATION_TEST_REMINDER_NOW: {
+    da: 'Testmeddelelse',
+    de: 'Testbenachrichtigung',
+    en: 'Test Notification',
+    es: 'Notificación de prueba',
+    it: 'Notifica di prova',
+    nl: 'Testmelding'
+  },
+  NOTIFICATION_TEST_REMINDER_NOW_DESC: {
+    da: 'Dette er en test anmeldelse.',
+    de: 'Dies ist eine Testbenachrichtigung.',
+    en: 'This is a test notification.',
+    es: 'Esta es una notificación de prueba.',
+    it: 'Questa è una notifica di prova.',
+    nl: 'Dit is een testmelding.'
+  },
   NOTIFICATION_REMINDER_SOON: {
     da:
       'RADAR-CNS spørgsmålene skal være færdige imorgen, husk venligst på dette.',
@@ -565,25 +664,25 @@ export const Localisations = {
       'Der RADAR-CNS Fragebogen muss morgen ausgefüllt werden – bitte denken Sie daran.',
     en:
       'RADAR-CNS questionnaire needs to be completed tomorrow – please remember.',
-    es: 'Recuerde que mañana tendrá que completar el cuestionario RADAR-CNS',
-    it: 'Le ricordiamo che domani dovrà compilare il questionario RADAR –CNS',
+    es: 'Recuerde que mañana tendrá que completar el cuestionario RADAR-CNS.',
+    it: 'Ti ricordiamo che domani dovrai compilare il questionario RADAR-CNS.',
     nl:
       'Vergeet u s.v.p. niet om de RADAR-CNS vragenlijst uiterlijk morgen in te vullen?'
   },
   NOTIFICATION_REMINDER_SOON_DESC: {
-    da: 'Husk at sætte lidt tid af imorgen, til at svare på et par spørgsmål.',
+    da: 'Husk at sætte lidt tid af i morgen, til at svare på et par spørgsmål.',
     de: 'Denken Sie daran, morgen etwas Zeit für ein paar Fragebögen zu haben.',
     en: 'Remember to put some time aside for a few questionnaires tomorrow.',
     es:
       'Recuerde reservarse el tiempo mañana para contestar algunos cuestionarios',
     it:
-      'Domani si ricordi di lasciarsi del tempo libero per rispondere a brevi questionari',
+      'Domani ricordati di lasciare del tempo libero per rispondere a brevi questionari.',
     nl:
       'Vergeet u niet om morgen wat tijd vrij te maken voor het invullen van enkele vragenlijsten?'
   },
   NOTIFICATION_REMINDER_NOW: {
     da: 'Tid til at svare på spørgsmål',
-    de: 'Zeit für Fragebögen ',
+    de: 'Zeit für Fragebögen',
     en: 'Questionnaire time',
     es: 'Momento para el cuestionario ',
     it: "E' il momento dei questionari",
@@ -610,7 +709,7 @@ export const Localisations = {
     de: 'Haben Sie einen Fragebogen verpasst?',
     en: 'Missed a questionnaire?',
     es: '¿Ha olvidado algún cuestionario?',
-    it: 'Ha dimenticato un questionario?',
+    it: 'Hai dimenticato un questionario?',
     nl: 'Heeft u een vragenlijst vergeten?'
   },
   NOTIFICATION_REMINDER_FORGOTTEN_DESC: {
@@ -623,13 +722,13 @@ export const Localisations = {
     es:
       'Parece que no ha respondido todas las preguntas. ¿Podría hacerlo ahora?',
     it:
-      'Sembra che si sia dimenticato di rispondere ad alcune domande. Potrebbe farlo ora?',
+      'Sembra che ti sia dimenticato di rispondere ad alcune domande. Puoi farlo ora?',
     nl:
       'Het lijkt erop dat u niet alle vragen heeft beantwoord. Zou u dit nu alsnog willen doen?'
   },
   NOTIFICATION_REMINDER_FORGOTTEN_ALERT_DEFAULT_DESC: {
     da:
-      'Du har savnet dette. Du skal ikke bekymre dig! Den næste forespørgsel vil snart ske.',
+      'Du har ikke nået at svare på dette. Ingen problemer! De næste spørgsmål kommer snart',
     de:
       'Du hast die letzten Fragen verpasst. Mach dir keine Sorgen! Der nächste Fragebogen wird bald fällig.',
     en:
@@ -642,7 +741,8 @@ export const Localisations = {
       'Je hebt deze gemist. Maak je geen zorgen! De volgende vragenlijst zal binnenkort verschijnen.'
   },
   NOTIFICATION_REMINDER_FORGOTTEN_ALERT_LASTOFNIGHT_DESC: {
-    da: 'Du har savnet den sidste. Du skal ikke bekymre dig! Hav en god aften.',
+    da:
+      'Du har ikke nået at svare på sidste spørgsmål. Ingen problemer! Hav en god aften.',
     de: 'Du hast den letzten verpasst. Mach dir keine Sorgen! Gute Nacht.',
     en: "You've missed the last one. Dont worry! Have a good night.",
     es: 'No ha llegado a contestar el último. No se preocupe! Buenas noches!',
@@ -666,7 +766,7 @@ export const Localisations = {
     nl: 'Stappen'
   },
   MEASURE_HEART_RATE: {
-    da: 'Hjertetryme',
+    da: 'Hjerterytme',
     de: 'Puls',
     en: 'Heart rate',
     es: 'Ritmo cardíaco',
@@ -691,7 +791,7 @@ export const Localisations = {
     es:
       'Hecho con &hearts;  para usted por el consorcio RADAR-CNS. Para obtener más información, haga clic  en <a href="http://radar-cns.org">aquí</a>.',
     it:
-      'Fatto con il &hearts; per voi dal consorzio RADAR-CNS. Per maggiori informazioni clicca <a href="http://radar-cns.org">here</a>.',
+      'Fatto con il &hearts; per te dal consorzio RADAR-CNS. Per maggiori informazioni clicca <a href="http://radar-cns.org">qui</a>.',
     nl:
       'Met &hearts; voor u gemaakt door het RADAR-CNS consortium. Voor meer informatie klik <a href="http://radar-cns.org">here</a>'
   },
@@ -699,7 +799,7 @@ export const Localisations = {
     da: 'Dagens opgaver',
     de: 'Heutige Aufgaben',
     en: "Today's tasks",
-    es: 'Las tareas de hoy ',
+    es: 'Las tareas de hoy',
     it: 'Le attività di oggi',
     nl: 'Taken voor vandaag'
   },
@@ -708,7 +808,7 @@ export const Localisations = {
     de: 'Benötigt einen leisen Raum',
     en: 'Requires a quiet space',
     es: 'Requiere un espacio tranquilo',
-    it: 'richiede un posto tranquillo',
+    it: 'Richiede un posto tranquillo',
     nl: 'Vereist een rustige omgeving'
   },
   TASK_PROGRESS_TITLE: {
@@ -716,7 +816,7 @@ export const Localisations = {
     de: 'Heute',
     en: 'Today',
     es: 'Hoy',
-    it: 'oggi',
+    it: 'Oggi',
     nl: 'Vandaag'
   },
   TASK_PROGRESS_COMPLETED: {
@@ -724,48 +824,48 @@ export const Localisations = {
     de: 'Erledigt',
     en: 'Completed',
     es: 'Completado',
-    it: 'completato',
+    it: 'Completato',
     nl: 'Voltooid'
   },
   TASK_BAR_NEXT_TASK: {
     da: 'Din næste opgave starter om ',
     de: 'Ihre nächste Aufgabe started in ',
     en: 'Your next task starts in ',
-    es: 'La próxima tarea comienza en ',
+    es: 'La siguiente tarea comienza en ',
     it: 'La prossima attività inizierà tra ',
     nl: 'Uw volgende taak start over '
   },
   TASK_BAR_NOW_TASK: {
-    da: 'Din opgave starter',
+    da: 'Din opgave starter ',
     de: 'Deine Aufgabe started ',
     en: 'Your task starts ',
-    es: 'La tarea comienza',
-    it: 'Il tuo compito inizia',
-    nl: 'Je taak begint'
+    es: 'La tarea comienza ',
+    it: 'Il tuo compito inizia ',
+    nl: 'Je taak begint '
   },
   TASK_BAR_NEXT_TASK_SOON: {
     da: 'snart',
     de: 'bald',
     en: 'soon',
-    es: 'En breve',
-    it: 'presto',
-    nl: 'spoedig'
+    es: 'en breve',
+    it: 'Presto',
+    nl: 'binnenkort'
   },
   TASK_BAR_AFFIRMATION_1: {
-    da: 'Godt klaret! ',
-    de: 'Gut gemacht! ',
-    en: 'Well done! ',
-    es: '¡Muy bien! ',
-    it: 'ben fatto! ',
-    nl: 'Goed gedaan! '
+    da: 'Godt klaret!',
+    de: 'Gut gemacht!',
+    en: 'Well done!',
+    es: '¡Muy bien!',
+    it: 'Ben fatto!',
+    nl: 'Goed gedaan!'
   },
   TASK_BAR_AFFIRMATION_2: {
-    da: 'Alle opgaver er gennemført',
-    de: 'Alle Aufgaben komplett',
+    da: 'Alle opgaver er gennemført.',
+    de: 'Alle Aufgaben komplett.',
     en: 'All tasks completed.',
-    es: 'Todas las tareas han sido completadas',
-    it: 'Tutte le attività sono state completate',
-    nl: 'Alle taken voltooid'
+    es: 'Todas las tareas han sido completadas.',
+    it: 'Tutte le attività sono state completate.',
+    nl: 'Alle taken voltooid.'
   },
   TASK_BAR_TASK_LEFT_1: {
     da: 'Vent venligst! ',
@@ -816,7 +916,7 @@ export const Localisations = {
     nl: 'uren'
   },
   TASK_TIME_MINUTE_SINGLE: {
-    da: 'minuten',
+    da: 'minut',
     de: 'Min.',
     en: 'min',
     es: 'minuto',
@@ -830,5 +930,79 @@ export const Localisations = {
     es: 'minutos',
     it: 'minuti',
     nl: 'minuten'
+  },
+  TESTING_NOTIFICATIONS: {
+    da: 'Testmeddelelser',
+    de: 'Benachrichtigungen Testen',
+    en: 'Testing Notifications',
+    es: 'Pruebas de Notificaciones',
+    it: 'Test delle Notifiche',
+    nl: 'Testen van Meldingen'
+  },
+  TESTING_NOTIFICATIONS_MESSAGE: {
+    da: 'Luk nu appen og vent i 2 minutter for testmeddelelsen.',
+    de:
+      'Schließen Sie nun die App und warten Sie 2 Minuten auf die Testbenachrichtigung.',
+    en: 'Now close the app and wait for 2 minutes for the test notification.',
+    es:
+      'Ahora cierre la aplicación y espere 2 minutos para la notificación de prueba.',
+    it: "Ora chiudi l'app e attendi 2 minuti per la notifica del test.",
+    nl: 'Sluit nu de app en wacht 2 minuten op de testmelding.'
+  },
+  CLOSE_APP: {
+    da: 'Luk App',
+    de: 'Schließen',
+    en: 'Close App',
+    es: 'Cierre App',
+    it: 'Chiudi App',
+    nl: 'App Sluiten'
+  },
+  WARNING_DO_NOT_CLOSE_APP: {
+    da: 'Luk ikke appen',
+    de: 'Schließen Sie die App nicht',
+    en: 'Do not close the app',
+    es: 'No cierres la aplicación',
+    it: `Non chiudere l'app`,
+    nl: 'Sluit de app niet'
+  },
+  AUDIO_TASK_ALERT: {
+    da: 'Lydopgave afbrudt',
+    de: 'Audio-Task unterbrochen',
+    en: 'Audio task interrupted',
+    es: 'Tarea de audio interrumpida',
+    it: 'Attività audio interrotta',
+    nl: 'Audiotaak onderbroken'
+  },
+  AUDIO_TASK_ALERT_DESC: {
+    da: 'Opgaven er afbrudt. Genstart opgaven.',
+    de: 'Die Aufgabe wurde unterbrochen. Task neu starten.',
+    en: 'Task has been interrupted. Restart task.',
+    es: 'La tarea ha sido interrumpida. Tarea de reinicio.',
+    it: `L'attività è stata interrotta. Riavvia il compito.`,
+    nl: 'Taak is onderbroken. Start de taak opnieuw.'
+  },
+  AUDIO_TASK_ATTEMPT_ALERT: {
+    da: 'Forsøg tilbageværende',
+    de: 'Verbleibende Versuche',
+    en: 'Attempts remaining',
+    es: 'Intentos restantes',
+    it: 'Tentativi rimanenti',
+    nl: 'Pogingen blijven'
+  },
+  AUDIO_TASK_HAPPY_ALERT: {
+    da: 'Indsend optagelse?',
+    de: 'Aufnahme einreichen?',
+    en: 'Submit recording?',
+    es: '¿Enviar grabación?',
+    it: 'Invia la registrazione?',
+    nl: 'Opname verzenden?'
+  },
+  CONFIG_ERROR_DESC: {
+    da: 'Config opdatering mislykkes. Prøve igen?',
+    de: 'Config Update fehlgeschlagen. Wiederholen?',
+    en: 'Config update fail. Retry?',
+    es: 'La actualización de configuración falla. ¿Procesar de nuevo?',
+    it: `Errore nell'aggiornamento della configurazione. Riprovare?`,
+    nl: 'Config-update mislukt. Opnieuw?'
   }
 }

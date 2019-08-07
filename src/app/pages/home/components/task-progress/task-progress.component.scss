@@ -1,14 +1,24 @@
 task-progress {
-  // Create the explosion...
   $particles: 50;
   $width: 500;
   $height: 500;
+
   $box-shadow: ();
   $box-shadow2: ();
 
+  // Create the explosion...
+
   @for $i from 0 through $particles {
-    $box-shadow: $box-shadow, random($width) - $width / 2 + px,
-      random($height) - $height / 1.2 + px, hsl(random(360), 100, 50);
+    $box-shadow: $box-shadow,
+      random($width) -
+      $width /
+      2 +
+      px
+      random($height) -
+      $height /
+      1.2 +
+      px
+      hsl(random(360), 100, 50);
     $box-shadow2: $box-shadow2, 0 0 #fff;
   }
 
@@ -84,31 +94,31 @@ task-progress {
     0%,
     19.9% {
       margin-top: 10%;
-      margin-left: 40%;
+      margin-left: 50%;
     }
 
     20%,
     39.9% {
       margin-top: 40%;
-      margin-left: 30%;
+      margin-left: 40%;
     }
 
     40%,
     59.9% {
       margin-top: 20%;
-      margin-left: 70%;
+      margin-left: 80%;
     }
 
     60%,
     79.9% {
       margin-top: 30%;
-      margin-left: 20%;
+      margin-left: 30%;
     }
 
     80%,
     99.9% {
       margin-top: 30%;
-      margin-left: 80%;
+      margin-left: 90%;
     }
   }
 
@@ -152,7 +162,6 @@ task-progress {
 
   .progress-sub {
     flex: 1 0 60vw;
-    transition: transform 0.8s ease-in-out;
   }
 
   .completed {
@@ -172,16 +181,19 @@ task-progress {
   .counter {
     margin-top: -34vw;
     text-align: center;
-    transition: transform 0.4s ease-in-out;
   }
 
   .large {
-    font-size: 100px;
+    font-size: 24vmin;
     line-height: 0;
   }
 
   .small {
-    padding-top: 48px;
-    font-size: 18px;
+    padding-top: 12vmin;
+    font-size: 4vmin;
+  }
+
+  .container-diary {
+    margin-top: 8vh;
   }
 }

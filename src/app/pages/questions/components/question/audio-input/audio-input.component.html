@@ -1,7 +1,14 @@
-<div class="audio-card">
-  <div *ngFor="let section of sections">
-    <div class="audio-content">
-      <h2>{{ section.label }}</h2>
-    </div>
-  </div>
+<div class="audio-bottom">
+  <ng-container *ngIf="buttonShown">
+    <button
+      ion-button
+      class="bt bt--full"
+      [class.bt-stop]="isRecording()"
+      round
+      full
+      (tap)="handleRecording()"
+    >
+      {{ getRecordingButtonText() }}
+    </button>
+  </ng-container>
 </div>

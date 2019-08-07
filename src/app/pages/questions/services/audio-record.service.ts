@@ -1,110 +1,76 @@
 import { Injectable } from '@angular/core'
-import { File } from '@ionic-native/file'
-// NOTE: File path to opensmile.js; Adding opensmile plugin
-import * as opensmile from 'cordova-plugin-opensmile/www/opensmile'
+import { File } from '@ionic-native/file/ngx'
+import { Platform } from 'ionic-angular'
 
-declare var cordova: any
-declare var window: any
+import { DefaultAudioRecordOptions } from '../../../../assets/data/defaultConfig'
+import { LogService } from '../../../core/services/misc/log.service'
+
+declare var Media: any // stops errors w/ cordova-plugin-media-with-compression types
+
 @Injectable()
 export class AudioRecordService {
-  filename: string = 'audio-opensmile.bin'
+  isRecording: boolean
+  audio
+  fileName = 'audio.m4a'
 
-  audioRecordStatus: boolean = false
-  recording: boolean = false
-  recordingTime: number = 45000
+  constructor(
+    private file: File,
+    private platform: Platform,
+    private logger: LogService
+  ) {}
 
-  constructor(private file: File) {
-    // NOTE: Kill recording on load
-    this.stopAudioRecording()
-  }
+  startAudioRecording(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      if (!this.isRecording) this.isRecording = true
+      else reject()
 
-  setAudioRecordStatus(status) {
-    this.audioRecordStatus = status
-  }
-  getAudioRecordStatus() {
-    return this.audioRecordStatus
-  }
-
-  startAudioRecording(configFile) {
-    this.recording = this.getAudioRecordStatus()
-
-    if (this.recording === false) {
-      this.recording = true
-      this.setRecordTimer()
-      this.setAudioRecordStatus(this.recording)
-      opensmile.start(this.filename, configFile, this.success, this.failure)
-    } else if (this.recording === true) {
-      this.recording = false
-      this.setAudioRecordStatus(this.recording)
-      opensmile.stop('Stop', this.success, this.failure)
-      this.readAudioFile(this.filename)
-    }
+      this.audio = new Media(this.getFilePath(), this.success, this.failure)
+      if (this.isRecording) {
+        return this.audio.startRecordWithCompression(DefaultAudioRecordOptions)
+      } else {
+        reject()
+      }
+    })
   }
 
   stopAudioRecording() {
-    if (this.getAudioRecordStatus()) {
-      opensmile.stop('Stop', this.success, this.failure)
-      this.setAudioRecordStatus(false)
-      this.readAudioFile(this.filename)
-    }
+    this.audio.stopRecord()
+    this.isRecording = false
   }
 
-  setRecordTimer() {
-    if (this.recording === true) {
-      setTimeout(() => {
-        console.log('Time up for recording')
-        this.recording = false
-        this.stopAudioRecording()
-      }, this.recordingTime)
-    }
+  getFilePath() {
+    return this.platform.is('android')
+      ? this.getDir() + this.fileName
+      : this.fileName
   }
 
-  getPath() {
-    return this.file.externalDataDirectory
+  getDir() {
+    return this.platform.is('android')
+      ? this.file.dataDirectory
+      : this.file.tempDirectory
   }
 
-  success(message) {
-    console.log('OPENSMILE' + message)
+  getIsRecording() {
+    return this.isRecording
+  }
+
+  success() {
+    this.logger.log('Action is successful')
   }
 
   failure(error) {
-    console.log('OPENSMILE Error calling OpenSmile Plugin' + error)
+    this.logger.error('Error! ', error)
   }
 
-  readAudioFile(filename) {
-    const filePath = this.getPath()
-    console.log(filePath)
-    this.file.readAsDataURL(filePath, filename).then(
-      base64 => {
-        console.log(base64)
-      },
-      error => {
-        console.log(error)
-      }
-    )
+  readAudioFile() {
+    return this.file.readAsDataURL(this.getDir(), this.fileName).then(data => {
+      this.destroy()
+      return data
+    })
   }
-}
 
-/*****************************
-
-readAudioFile(filename) {
-  var ans_b64 = null
-  window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory + '/' + filename, (fileEntry) => {
-    fileEntry.file((file) => {
-      var reader = new FileReader()
-      reader.onloadend = (e: any) => {
-        ans_b64 = e.target.result
-        console.log(ans_b64)
-        this.answer.id = this.questionID
-        this.answer.value = ans_b64
-        this.answerService.add(this.answer)
-      };
-      reader.readAsDataURL(file)
-    }, errorCallback)
-  }, errorCallback);
-  function errorCallback(error) {
-    alert("ERROR: " + error.code)
+  destroy() {
+    if (this.audio) this.audio.release()
+    this.isRecording = false
   }
 }
-
-*********************************/

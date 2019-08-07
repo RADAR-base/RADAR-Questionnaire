@@ -19,16 +19,11 @@ export interface AnswerValueExport {
   answers: Response[]
   time: number
   timeCompleted: number
+  timeNotification: Object
 }
 
 export interface AnswerKeyExport {
   userId: string
   sourceId: string
   projectId: string
-}
-
-export interface CompletionLogValueExport {
-  name: string
-  time: number
-  completionPercentage: any
 }

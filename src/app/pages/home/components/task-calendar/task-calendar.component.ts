@@ -5,13 +5,10 @@ import {
   OnChanges,
   Output
 } from '@angular/core'
-import { AlertController, Platform } from 'ionic-angular'
 
-import { DefaultTask } from '../../../../../assets/data/defaultConfig'
-import { LocKeys } from '../../../../shared/enums/localisations'
+import { LocalizationService } from '../../../../core/services/misc/localization.service'
+import { LogService } from '../../../../core/services/misc/log.service'
 import { Task } from '../../../../shared/models/task'
-import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
-import { TasksService } from '../../services/tasks.service'
 
 @Component({
   selector: 'task-calendar',
@@ -19,137 +16,44 @@ import { TasksService } from '../../services/tasks.service'
 })
 export class TaskCalendarComponent implements OnChanges {
   @Input()
-  scrollHeight = 0
+  show = false
   @Output()
   task: EventEmitter<Task> = new EventEmitter<Task>()
+  @Input()
+  tasks: Map<number, Task[]>
+  @Input()
+  currentDate: number
 
-  currentTime: String = '06:00'
-  timeIndex = 0
-
-  tasks: Task[] = [DefaultTask]
+  currentTime
+  timeIndex: number
 
   constructor(
-    private tasksService: TasksService,
-    private alertCtrl: AlertController,
-    private translate: TranslatePipe,
-    private platform: Platform
-  ) {
-    this.getTasks()
-    platform.resume.subscribe(e => {
-      this.getTasks()
-    })
-  }
+    private localization: LocalizationService,
+    private logger: LogService,
+  ) {}
 
   ngOnChanges() {
-    this.setCurrentTime()
-  }
-
-  getTasks() {
-    this.tasksService.getTasksOfToday().then(tasks => {
-      if (tasks) {
-        this.tasks = tasks.sort(this.compareTasks)
-      }
-    })
-  }
-
-  getStartTime(task: Task) {
-    const date = new Date(task.timestamp)
-    return this.formatTime(date)
+    if (this.tasks && this.tasks.size) this.setCurrentTime()
   }
 
   setCurrentTime() {
-    const now = new Date()
-    this.currentTime = this.formatTime(now)
-    this.timeIndex = this.getCurrentTimeIndex(now)
-  }
-
-  // NOTE: Compare current time with the start times of the tasks and
-  // find out in between which tasks it should be shown in the interface
-  getCurrentTimeIndex(date: Date) {
-    let tasksPassed = 0
-    for (const task of this.tasks) {
-      if (date.getTime() <= task.timestamp) {
-        return tasksPassed
-      } else {
-        tasksPassed += 1
-      }
+    const now = new Date().getTime()
+    try {
+      this.currentTime = this.localization.moment(now).format('LT') // locale time
+    } catch (e) {
+      this.logger.error('Failed to set current time', e)
     }
-    return tasksPassed
-  }
-
-  formatTime(date) {
-    const hour = date.getHours()
-    const min = date.getMinutes()
-    const hourStr = date.getHours() < 10 ? '0' + String(hour) : String(hour)
-    const minStr = date.getMinutes() < 10 ? '0' + String(min) : String(min)
-    return hourStr + ':' + minStr
-  }
-
-  // Define the order of the tasks - whether it is based on index or timestamp
-  compareTasks(a: Task, b: Task) {
-    if (a.timestamp < b.timestamp) {
-      return -1
-    }
-    if (a.timestamp > b.timestamp) {
-      return 1
-    }
-    return 0
-  }
-
-  hasExtraInfo(warningStr) {
-    return warningStr === '' ? false : true
+    // NOTE: Compare current time with the start times of the tasks and
+    // find out in between which tasks it should be shown in the interface
+    const todaysTasks = this.tasks.get(this.currentDate)
+    this.timeIndex = todaysTasks.findIndex(t => t.timestamp >= now)
   }
 
   clicked(task) {
-    if (task.name !== 'ESM' && !task.completed) {
-      this.task.emit(task)
-    } else {
-      const now = new Date()
-      const nowPlusFifteen = new Date(now.getTime() + 1000 * 60 * 15)
-      const taskTimestamp = new Date(task.timestamp)
-      if (
-        taskTimestamp > now &&
-        taskTimestamp < nowPlusFifteen &&
-        !task.completed
-      ) {
-        this.task.emit(task)
-      } else {
-        this.showESM_missedInfo()
-      }
-    }
+    this.task.emit(task)
   }
 
-  showESM_missedInfo() {
-    const buttons = [
-      {
-        text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
-        handler: () => {}
-      }
-    ]
-    this.showAlert({
-      title: this.translate.transform(
-        LocKeys.CALENDAR_ESM_MISSED_TITLE.toString()
-      ),
-      message: this.translate.transform(
-        LocKeys.CALENDAR_ESM_MISSED_DESC.toString()
-      ),
-      buttons: buttons
-    })
-  }
-
-  showAlert(parameters) {
-    const alert = this.alertCtrl.create({
-      title: parameters.title,
-      buttons: parameters.buttons
-    })
-    if (parameters.message) {
-      alert.setMessage(parameters.message)
-    }
-    if (parameters.inputs) {
-      for (let i = 0; i < parameters.inputs.length; i++) {
-        alert.addInput(parameters.inputs[i])
-      }
-    }
-    alert.present()
+  getStartTime(task: Task) {
+    return this.localization.moment(task.timestamp).format('HH:mm')
   }
 }

@@ -1,17 +1,13 @@
-<!-- Generated template for the TickerBar component -->
 <div
   id="ticker-bar-container"
-  (click)="openReport()"
+  #ticker
 >
-  <div
-    *ngFor="let item of tickerItems"
+  <span
     class="ticker-item"
-    [style.transform]="showNextTickerItem()"
-  >
-    <div id="{{ item.id }}">
-      {{ item.tickerText1 }}
-      <span class="bold">{{ item.tickerText2 }}</span>
-      {{ item.tickerText3 }}
-    </div>
-  </div>
+    [fittext]="true"
+    [maxFontSize]="18"
+    [container]="ticker"
+    [modelToWatch]="tickerText"
+    [innerHTML]="tickerText"
+  ></span>
 </div>

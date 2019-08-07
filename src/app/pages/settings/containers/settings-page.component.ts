@@ -1,117 +1,56 @@
 import { Component } from '@angular/core'
-import { AppVersion } from '@ionic-native/app-version'
-import { AlertController, NavController, NavParams } from 'ionic-angular'
+import { NavController } from 'ionic-angular'
 
 import {
-  DefaultNumberOfNotificationsToSchedule,
   DefaultSettingsNotifications,
-  DefaultSettingsSelectedLanguage,
-  DefaultSettingsWeeklyReport,
-  LanguageMap
+  DefaultSettingsWeeklyReport
 } from '../../../../assets/data/defaultConfig'
-import { ConfigService } from '../../../core/services/config.service'
-import { NotificationService } from '../../../core/services/notification.service'
-import { SchedulingService } from '../../../core/services/scheduling.service'
-import { StorageService } from '../../../core/services/storage.service'
+import { AlertService } from '../../../core/services/misc/alert.service'
+import { LocalizationService } from '../../../core/services/misc/localization.service'
+import { UsageService } from '../../../core/services/usage/usage.service'
+import { NotificationEventType } from '../../../shared/enums/events'
 import { LocKeys } from '../../../shared/enums/localisations'
-import { StorageKeys } from '../../../shared/enums/storage'
-import {
-  LanguageSetting,
-  NotificationSettings,
-  WeeklyReportSubSettings
-} from '../../../shared/models/settings'
-import { TranslatePipe } from '../../../shared/pipes/translate/translate'
+import { Settings } from '../../../shared/models/settings'
 import { SplashPageComponent } from '../../splash/containers/splash-page.component'
+import { SettingsService } from '../services/settings.service'
 
 @Component({
   selector: 'page-settings',
   templateUrl: 'settings-page.component.html'
 })
 export class SettingsPageComponent {
-  appVersionStr: String
-  configVersion: String
-  scheduleVersion: String
-  cacheSize: number
-  participantId: String
-  projectName: String
-  enrolmentDate: Date
-  language: LanguageSetting = DefaultSettingsSelectedLanguage
-  languagesSelectable: String[]
-  notifications: NotificationSettings = DefaultSettingsNotifications
-  weeklyReport: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
+  settings: Settings = {}
+  notificationSettings = DefaultSettingsNotifications
+  weeklyReport = DefaultSettingsWeeklyReport
   showLoading = false
 
   constructor(
     public navCtrl: NavController,
-    public navParams: NavParams,
-    public alertCtrl: AlertController,
-    public storage: StorageService,
-    private appVersion: AppVersion,
-    private schedule: SchedulingService,
-    private configService: ConfigService,
-    private notificationService: NotificationService,
-    public translate: TranslatePipe
+    public alertService: AlertService,
+    public localization: LocalizationService,
+    private settingsService: SettingsService,
+    private usage: UsageService
   ) {}
 
-  ionViewDidLoad() {
+  ionViewWillEnter() {
+    this.usage.setPage(this.constructor.name)
     this.loadSettings()
-
-    this.storage.get(StorageKeys.REFERENCEDATE).then(refDate => {
-      const createdDateMidnight = this.schedule.setDateTimeToMidnight(
-        new Date(refDate)
-      )
-      this.storage.set(StorageKeys.REFERENCEDATE, createdDateMidnight.getTime())
-    })
   }
 
   loadSettings() {
-    const appVersionPromise = this.appVersion.getVersionNumber()
-    const configVersion = this.storage.get(StorageKeys.CONFIG_VERSION)
-    const scheduleVersion = this.storage.get(StorageKeys.SCHEDULE_VERSION)
-    const participantId = this.storage.get(StorageKeys.PARTICIPANTID)
-    const projectName = this.storage.get(StorageKeys.PROJECTNAME)
-    const enrolmentDate = this.storage.get(StorageKeys.ENROLMENTDATE)
-    const language = this.storage.get(StorageKeys.LANGUAGE)
-    const settingsNotification = this.storage.get(
-      StorageKeys.SETTINGS_NOTIFICATIONS
+    Object.entries(this.settingsService.getSettings()).map(([k, v]) =>
+      v.then(val => (this.settings[k] = val))
     )
-    const settingsLanguages = this.storage.get(StorageKeys.SETTINGS_LANGUAGES)
-    const settingsWeeklyReport = this.storage.get(
-      StorageKeys.SETTINGS_WEEKLYREPORT
-    )
-    const cache = this.storage.get(StorageKeys.CACHE_ANSWERS)
-    const settings = [
-      configVersion,
-      scheduleVersion,
-      participantId,
-      projectName,
-      enrolmentDate,
-      language,
-      settingsNotification,
-      settingsLanguages,
-      settingsWeeklyReport,
-      cache,
-      appVersionPromise
-    ]
-    Promise.all(settings).then(returns => {
-      this.appVersionStr = returns[10]
-      this.configVersion = returns[0]
-      this.scheduleVersion = returns[1]
-      this.participantId = returns[2]
-      this.projectName = returns[3]
-      this.enrolmentDate = returns[4]
-      this.language = returns[5]
-      this.notifications = returns[6]
-      this.languagesSelectable = returns[7]
-      this.weeklyReport = returns[8]
-      let size = 0
-      for (const key in returns[9]) {
-        if (key) {
-          size += 1
-        }
-      }
-      this.cacheSize = size
-    })
+  }
+
+  reloadConfig() {
+    this.showLoading = true
+    return this.settingsService
+      .reloadConfig()
+      .then(() => this.loadSettings())
+      .then(() => this.backToSplash())
+      .catch(e => this.showFailAlert())
+      .then(() => (this.showLoading = false))
   }
 
   backToHome() {
@@ -123,57 +62,58 @@ export class SettingsPageComponent {
   }
 
   notificationChange() {
-    this.storage.set(StorageKeys.SETTINGS_NOTIFICATIONS, this.notifications)
+    this.settingsService.setNotifSettings(this.notificationSettings)
   }
 
   weeklyReportChange(index) {
-    this.weeklyReport[index].show = !this.weeklyReport[index].show
-    this.storage.set(StorageKeys.SETTINGS_WEEKLYREPORT, this.weeklyReport)
+    this.settingsService.setReportSettings(this.weeklyReport)
+  }
+
+  showFailAlert() {
+    return this.alertService.showAlert({
+      title: this.localization.translateKey(LocKeys.STATUS_FAILURE),
+      buttons: [
+        {
+          text: this.localization.translateKey(LocKeys.BTN_CANCEL),
+          handler: () => {}
+        },
+        {
+          text: this.localization.translateKey(LocKeys.BTN_RETRY),
+          handler: () => {
+            this.reloadConfig()
+          }
+        }
+      ]
+    })
   }
 
   showSelectLanguage() {
     const buttons = [
       {
-        text: this.translate.transform(LocKeys.BTN_CANCEL.toString()),
+        text: this.localization.translateKey(LocKeys.BTN_CANCEL),
         handler: () => {}
       },
       {
-        text: this.translate.transform(LocKeys.BTN_SET.toString()),
+        text: this.localization.translateKey(LocKeys.BTN_SET),
         handler: selectedLanguageVal => {
-          const lang: LanguageSetting = {
-            label: LanguageMap[selectedLanguageVal],
-            value: selectedLanguageVal
-          }
-          this.storage.set(StorageKeys.LANGUAGE, lang).then(() => {
-            this.configService.pullQuestionnaires(
-              StorageKeys.CONFIG_ASSESSMENTS
-            )
-            this.configService.pullQuestionnaires(
-              StorageKeys.CONFIG_CLINICAL_ASSESSMENTS
-            )
-          })
-          this.language = lang
-          this.navCtrl.setRoot(SplashPageComponent)
+          this.settingsService
+            .changeLanguage(selectedLanguageVal)
+            .then(() => {
+              this.settings.language = this.settingsService.getLanguage()
+              return this.backToSplash()
+            })
+            .catch(e => this.showFailAlert())
         }
       }
     ]
-    const inputs = []
-    for (let i = 0; i < this.languagesSelectable.length; i++) {
-      let checked = false
-      if (this.languagesSelectable[i]['label'] === this.language) {
-        checked = true
-      }
-      inputs.push({
-        type: 'radio',
-        label: this.translate.transform(this.languagesSelectable[i]['label']),
-        value: this.languagesSelectable[i]['value'],
-        checked: checked
-      })
-    }
-    this.showAlert({
-      title: this.translate.transform(
-        LocKeys.SETTINGS_LANGUAGE_ALERT.toString()
-      ),
+    const inputs = this.settings.languagesSelectable.map(lang => ({
+      type: 'radio',
+      label: this.localization.translate(lang.label),
+      value: lang.value,
+      checked: lang.value === this.settings.language.value
+    }))
+    return this.alertService.showAlert({
+      title: this.localization.translateKey(LocKeys.SETTINGS_LANGUAGE_ALERT),
       buttons: buttons,
       inputs: inputs
     })
@@ -182,79 +122,81 @@ export class SettingsPageComponent {
   showInfoNightMode() {
     const buttons = [
       {
-        text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+        text: this.localization.translateKey(LocKeys.BTN_OKAY),
         handler: () => {}
       }
     ]
-    this.showAlert({
-      title: this.translate.transform(
-        LocKeys.SETTINGS_NOTIFICATIONS_NIGHTMOD.toString()
+    return this.alertService.showAlert({
+      title: this.localization.translateKey(
+        LocKeys.SETTINGS_NOTIFICATIONS_NIGHTMOD
       ),
-      message: this.translate.transform(
-        LocKeys.SETTINGS_NOTIFICATIONS_NIGHTMOD_DESC.toString()
+      message: this.localization.translateKey(
+        LocKeys.SETTINGS_NOTIFICATIONS_NIGHTMOD_DESC
       ),
       buttons: buttons
     })
-  }
-
-  consoleLogNotifications() {
-    this.notificationService.consoleLogScheduledNotifications()
-  }
-
-  consoleLogSchedule() {
-    console.log('SCHEDULE SETTINGS')
-    this.schedule.consoleLogSchedule()
   }
 
   showConfirmReset() {
     const buttons = [
       {
-        text: this.translate.transform(LocKeys.BTN_DISAGREE.toString()),
-        handler: () => {
-          console.log('Reset cancel')
-        }
+        text: this.localization.translateKey(LocKeys.BTN_DISAGREE),
+        handler: () => console.log('Reset cancel')
       },
       {
-        text: this.translate.transform(LocKeys.BTN_AGREE.toString()),
+        text: this.localization.translateKey(LocKeys.BTN_AGREE),
         handler: () => {
-          this.storage.clearStorage().then(() => this.backToSplash())
+          return this.showResetOptions()
         }
       }
     ]
-    this.showAlert({
-      title: this.translate.transform(LocKeys.SETTINGS_RESET_ALERT.toString()),
-      message: this.translate.transform(
-        LocKeys.SETTINGS_RESET_ALERT_DESC.toString()
+    return this.alertService.showAlert({
+      title: this.localization.translateKey(LocKeys.SETTINGS_RESET_ALERT),
+      message: this.localization.translateKey(
+        LocKeys.SETTINGS_RESET_ALERT_DESC
       ),
       buttons: buttons
     })
   }
 
-  showAlert(parameters) {
-    const alert = this.alertCtrl.create({
-      title: parameters.title,
-      buttons: parameters.buttons
-    })
-    if (parameters.message) {
-      alert.setMessage(parameters.message)
-    }
-    if (parameters.inputs) {
-      for (let i = 0; i < parameters.inputs.length; i++) {
-        alert.addInput(parameters.inputs[i])
+  showResetOptions() {
+    const buttons = [
+      {
+        text: this.localization.translateKey(LocKeys.BTN_ENROL_ENROL),
+        handler: () => {
+          this.settingsService.resetAuth().then(() => this.backToSplash())
+        }
+      },
+      {
+        text: this.localization.translateKey(LocKeys.SETTINGS_CONFIGURATION),
+        handler: () =>
+          this.settingsService.reset().then(() => this.backToSplash())
       }
-    }
-    alert.present()
+    ]
+    return this.alertService.showAlert({
+      title: this.localization.translateKey(LocKeys.SETTINGS_RESET_ALERT),
+      message: this.localization.translateKey(
+        LocKeys.SETTINGS_RESET_ALERT_OPTION_DESC
+      ),
+      buttons: buttons
+    })
   }
 
-  reloadConfig() {
-    this.showLoading = true
-    this.configService.fetchConfigState(true).then(() => {
-      this.loadSettings()
-      this.notificationService
-        .setNextXNotifications(DefaultNumberOfNotificationsToSchedule)
-        .then(() => {
-          this.showLoading = false
-        })
+  showGenerateTestNotification() {
+    this.alertService.showAlert({
+      title: this.localization.translateKey(LocKeys.TESTING_NOTIFICATIONS),
+      message: this.localization.translateKey(
+        LocKeys.TESTING_NOTIFICATIONS_MESSAGE
+      ),
+      buttons: [
+        {
+          text: this.localization.translateKey(LocKeys.BTN_OKAY),
+          handler: () => {
+            this.usage.sendGeneralEvent(NotificationEventType.TEST)
+            this.settingsService.generateTestNotif()
+          }
+        }
+      ]
     })
   }
 }

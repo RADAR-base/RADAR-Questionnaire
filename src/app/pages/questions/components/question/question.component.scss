@@ -1,4 +1,8 @@
 question {
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 100% !important;
+
   p.stdformat {
     margin-top: 8px;
     margin-bottom: 0;
@@ -21,7 +25,21 @@ question {
     font-size: 16px;
   }
 
+  .field-container {
+    max-height: 56vh !important;
+  }
+
   .rangeformat {
     height: 30vh;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .fade {
+    display: block;
+    opacity: 0.2;
+    pointer-events: none;
   }
 }

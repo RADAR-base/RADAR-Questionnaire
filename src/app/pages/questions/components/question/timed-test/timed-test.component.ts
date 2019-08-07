@@ -3,19 +3,25 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output
 } from '@angular/core'
-import { Dialogs } from '@ionic-native/dialogs'
-import { Vibration } from '@ionic-native/vibration'
+import { BackgroundMode } from '@ionic-native/background-mode/ngx'
+import { Dialogs } from '@ionic-native/dialogs/ngx'
+import { Vibration } from '@ionic-native/vibration/ngx'
 
-import { ITimer, Timer } from '../../../../../shared/models/timer'
+import { TaskTimer, Timer } from '../../../../../shared/models/timer'
+import {
+  getMilliseconds,
+  getSeconds
+} from '../../../../../shared/utilities/time'
 
 @Component({
   selector: 'timed-test',
   templateUrl: 'timed-test.component.html'
 })
-export class TimedTestComponent implements OnInit, OnChanges {
+export class TimedTestComponent implements OnInit, OnChanges, OnDestroy {
   @Output()
   valueChange: EventEmitter<number> = new EventEmitter<number>()
   @Input()
@@ -26,37 +32,38 @@ export class TimedTestComponent implements OnInit, OnChanges {
   timer: Timer
   @Input()
   currentlyShown: boolean
-  public itimer: ITimer
 
-  constructor(private dialogs: Dialogs, private vibration: Vibration) {}
+  public taskTimer: TaskTimer
+  startTime: number
+  endTime: number
+
+  constructor(
+    private dialogs: Dialogs,
+    private vibration: Vibration,
+    private background: BackgroundMode
+  ) {}
 
   ngOnInit() {
+    this.background.enable()
     this.initTimer()
+  }
+
+  ngOnDestroy() {
+    this.background.disable()
   }
 
   ngOnChanges() {
     if (this.currentlyShown) {
-      console.log('Start')
-      this.start()
-    }
-  }
-
-  start() {
-    if (this.itimer.hasStarted) {
-      this.resumeTimer()
-    } else {
-      setTimeout(() => {
-        this.startTimer()
-      }, 1000)
+      this.startTimer()
     }
   }
 
   hasFinished() {
-    return this.itimer.hasFinished
+    return this.taskTimer.hasFinished
   }
 
   hasStarted() {
-    return this.itimer.hasStarted
+    return this.taskTimer.hasStarted
   }
 
   initTimer() {
@@ -64,55 +71,53 @@ export class TimedTestComponent implements OnInit, OnChanges {
       this.timer.start = 0
     }
 
-    this.itimer = <ITimer>{
-      seconds: this.timer.start,
-      runTimer: false,
+    this.taskTimer = {
       hasStarted: false,
       hasFinished: false,
-      secondsRemaining: this.timer.start
+      secondsElapsed: 0,
+      secondsRemaining: this.timer.start,
+      duration: this.timer.start - this.timer.end,
+      displayTime: this.timer.start
     }
-
-    this.itimer.displayTime = this.itimer.secondsRemaining.toString()
   }
 
   startTimer() {
-    this.itimer.hasStarted = true
-    this.itimer.runTimer = true
+    this.taskTimer.hasStarted = true
+    this.startTime = Date.now()
+    this.endTime =
+      this.startTime + getMilliseconds({ seconds: this.taskTimer.duration })
     this.timerTick()
   }
 
-  pauseTimer() {
-    this.itimer.runTimer = false
-  }
-
-  resumeTimer() {
-    this.startTimer()
+  updateCountdown() {
+    this.taskTimer.secondsElapsed = Math.floor(
+      getSeconds({
+        milliseconds: Date.now() - this.startTime
+      })
+    )
+    this.taskTimer.displayTime =
+      this.timer.start - this.taskTimer.secondsElapsed
   }
 
   timerTick() {
-    setTimeout(() => {
-      if (!this.itimer.runTimer) {
-        return
-      }
-      if (this.itimer.secondsRemaining > 0) {
-        this.itimer.secondsRemaining--
-        this.itimer.displayTime = this.itimer.secondsRemaining.toString()
-        if (this.itimer.secondsRemaining > this.timer.end) {
-          this.timerTick()
-        } else {
-          this.dialogs.beep(1)
-          this.vibration.vibrate(600)
+    if (!this.taskTimer.hasStarted) {
+      return
+    }
+    const timerId = setInterval(() => {
+      this.updateCountdown()
 
-          if (this.timer.end === 0) {
-            this.itimer.hasFinished = true
-          } else {
-            this.pauseTimer()
-          }
-          // NOTE: Save timestamp (epoch) and activate the next button
-          const epoch: number = new Date().getTime()
-          this.valueChange.emit(epoch)
-        }
+      if (this.endTime - Date.now() <= 0) {
+        clearInterval(timerId)
+        this.stopTimer()
       }
     }, 1000)
+  }
+
+  stopTimer() {
+    this.background.moveToForeground()
+    this.dialogs.beep(1)
+    this.vibration.vibrate(500)
+    this.taskTimer.hasFinished = true
+    this.valueChange.emit(this.endTime)
   }
 }

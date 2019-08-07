@@ -10,7 +10,7 @@ let uniqueID = 0
 })
 export class CheckboxInputComponent implements OnInit {
   @Output()
-  valueChange: EventEmitter<number> = new EventEmitter<number>()
+  valueChange: EventEmitter<any> = new EventEmitter<any>()
 
   @Input()
   responses: Response[]
@@ -18,39 +18,30 @@ export class CheckboxInputComponent implements OnInit {
   value: number = null
   uniqueID: number = uniqueID++
   name = `checkbox-input-${this.uniqueID}`
-  items: Item[] = Array()
+  items: any[] = Array()
   itemsSelected = {}
 
   ngOnInit() {
     this.responses.map((item, i) => {
-      const codeChecked = this.checkCode(item.code)
       this.items.push({
         id: `check-${this.uniqueID}-${i}`,
         response: item.label,
-        value: codeChecked
+        value: item.code,
+        checked: false
       })
     })
   }
 
-  checkCode(code) {
-    if (code.includes('\r')) {
-      return code.substr(2)
-    }
-    return code
-  }
-
   onInputChange(event) {
-    this.logSelectedItems(event.target)
-    const selectedItems = this.retrieveSelectedItems().toString()
-    this.valueChange.emit(+selectedItems)
+    event.checked = !event.checked
+    this.logSelectedItems(event)
+    this.valueChange.emit(this.retrieveSelectedItems())
   }
 
   logSelectedItems(item) {
-    if (!(item.id in this.itemsSelected)) {
+    if (!(item.id in this.itemsSelected) && item.checked)
       this.itemsSelected[item.id] = item.value
-    } else {
-      delete this.itemsSelected[item.id]
-    }
+    else delete this.itemsSelected[item.id]
   }
 
   retrieveSelectedItems() {

@@ -1,13 +1,10 @@
 import { Component, Input, OnChanges } from '@angular/core'
-import { NavController } from 'ionic-angular'
 
-import { SchedulingService } from '../../../../core/services/scheduling.service'
+import { LocalizationService } from '../../../../core/services/misc/localization.service'
 import { LocKeys } from '../../../../shared/enums/localisations'
 import { ReportScheduling } from '../../../../shared/models/report'
 import { Task } from '../../../../shared/models/task'
-import { TickerItem } from '../../../../shared/models/ticker'
-import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
-import { ReportPageComponent } from '../../../report/containers/report-page.component'
+import { getHours, getMinutes } from '../../../../shared/utilities/time'
 
 @Component({
   selector: 'ticker-bar',
@@ -17,175 +14,104 @@ export class TickerBarComponent implements OnChanges {
   @Input()
   task: Task
   @Input()
-  items: TickerItem[] = []
+  isNow
   @Input()
-  showAffirmation: boolean = false
-  tickerItems: TickerItem[]
-  tickerIndex: number = 0
+  showAffirmation = false
+  @Input()
+  noTasksToday = false
+  tickerText: string
   report: ReportScheduling
 
-  hasTask: boolean = true
-  tickerWeeklyReport: string
-  newWeeklyReport: boolean = false
+  constructor(private localization: LocalizationService) {}
 
-  constructor(
-    private schedule: SchedulingService,
-    private navCtrl: NavController,
-    private translate: TranslatePipe
-  ) {
-    // NOTE: Gets ReportScheduling and adds to tickerItems
-    /*this.schedule.getCurrentReport().then((report) => {
-      this.report = report
-    })*/
+  ngOnChanges() {
+    this.updateTickerItem()
   }
 
-  ngOnChanges(changes) {
-    this.updateTickerItems()
-    if (this.tickerItems.length > 2) {
-      setInterval(() => {
-        this.iterateIndex()
-      }, 7500)
-    }
-  }
-
-  showNextTickerItem() {
-    const style = `translateX(-${this.tickerIndex * 100}%)`
-    return style
-  }
-
-  iterateIndex() {
-    this.tickerIndex += 1
-    if (this.tickerIndex === this.tickerItems.length) {
-      this.tickerIndex = 0
-      this.updateTickerItems()
-    }
-  }
-
-  openReport() {
-    this.updateReport()
-    this.updateTickerItems()
-    this.navCtrl.push(ReportPageComponent)
-  }
-
-  updateReport() {
-    if (this.report) {
-      const now = new Date()
-      this.report['viewed'] = true
-      this.report['firstViewedOn'] = now.getTime()
-      this.schedule.updateReport(this.report)
-    }
-  }
-
-  updateTickerItems() {
-    this.tickerItems = []
-    if (this.report) {
-      this.addReportAvailable()
-    }
-    if (this.showAffirmation) {
-      this.addAffirmation()
-    }
-    if (this.task['timestamp'] > 0) {
-      this.addTask()
-    }
-    if (this.tickerItems.length === 0) {
-      this.addTasksNone()
-    }
-    this.tickerItems = this.tickerItems.concat(this.items)
-    this.tickerItems.push(this.tickerItems[0])
+  updateTickerItem() {
+    if (!this.tickerText) return this.addTasksRemaining()
+    if (this.noTasksToday) return this.addTasksNone()
+    if (this.showAffirmation) return this.addAffirmation()
+    if (this.task) return this.addTask()
+    if (this.report) return this.addReportAvailable()
   }
 
   addReportAvailable() {
     if (this.report) {
       if (this.report['viewed'] === false) {
-        const item = this.generateTickerItem(
-          'report',
-          '',
-          'Report available! ',
-          'Click to view.'
-        )
-        this.tickerItems.push(item)
+        this.tickerText = '<b>Report available!</b> Click to view.'
       }
     }
   }
 
   addTask() {
-    const now = new Date()
-    const timeToNext = this.getTimeToNext(now.getTime(), this.task.timestamp)
-    let item = this.generateTickerItem(
-      'task',
-      this.translate.transform(LocKeys.TASK_BAR_NEXT_TASK.toString()),
-      timeToNext,
-      '.'
-    )
-    if (timeToNext.includes('-')) {
-      item = this.generateTickerItem(
-        'task',
-        this.translate.transform(LocKeys.TASK_BAR_NOW_TASK.toString()),
-        this.translate.transform(LocKeys.STATUS_NOW.toString()),
-        '.'
-      )
-    } else if (this.task.name === 'ESM') {
-      item = this.generateTickerItem(
-        'task',
-        this.translate.transform(LocKeys.TASK_BAR_NOW_TASK.toString()),
-        this.translate.transform(LocKeys.TASK_BAR_NEXT_TASK_SOON.toString()),
-        '.'
-      )
+    if (this.isNow) {
+      this.tickerText =
+        this.localization.translateKey(LocKeys.TASK_BAR_NOW_TASK) +
+        '<b>' +
+        this.localization.translateKey(LocKeys.STATUS_NOW) +
+        '.</b>'
+    } else {
+      if (this.task.name === 'ESM') {
+        this.tickerText =
+          this.localization.translateKey(LocKeys.TASK_BAR_NOW_TASK) +
+          '<b>' +
+          this.localization.translateKey(LocKeys.TASK_BAR_NEXT_TASK_SOON) +
+          '.</b>'
+      } else {
+        this.tickerText =
+          this.localization.translateKey(LocKeys.TASK_BAR_NEXT_TASK) +
+          '<b>' +
+          this.getTimeToNext(this.task.timestamp) +
+          '.</b>'
+      }
     }
-    this.tickerItems.push(item)
   }
 
   addAffirmation() {
-    const item = this.generateTickerItem(
-      'affirmation',
-      '',
-      this.translate.transform(LocKeys.TASK_BAR_AFFIRMATION_1.toString()),
-      this.translate.transform(LocKeys.TASK_BAR_AFFIRMATION_2.toString())
-    )
-    this.tickerItems.push(item)
+    this.tickerText =
+      '<b>' +
+      this.localization.translateKey(LocKeys.TASK_BAR_AFFIRMATION_1) +
+      '</b> ' +
+      this.localization.translateKey(LocKeys.TASK_BAR_AFFIRMATION_2)
+  }
+
+  addTasksRemaining() {
+    this.tickerText =
+      '<b>' +
+      this.localization.translateKey(LocKeys.TASK_BAR_TASK_LEFT_1) +
+      '</b>' +
+      this.localization.translateKey(LocKeys.TASK_BAR_TASK_LEFT_2)
   }
 
   addTasksNone() {
-    const item = this.generateTickerItem(
-      'tasks-none',
-      '',
-      this.translate.transform(LocKeys.TASK_BAR_TASK_LEFT_1.toString()),
-      this.translate.transform(LocKeys.TASK_BAR_TASK_LEFT_2.toString())
-    )
-    this.tickerItems.push(item)
+    this.tickerText =
+      '<b>' +
+      this.localization.translateKey(LocKeys.TASK_BAR_NO_TASK_1) +
+      ' </b>' +
+      this.localization.translateKey(LocKeys.TASK_BAR_NO_TASK_2)
   }
 
-  getTimeToNext(now, next) {
+  getTimeToNext(next) {
+    const now = new Date().getTime()
     let deltaStr = ''
-    const deltaMin = Math.round((next - now) / 60000)
-    const deltaHour = Math.round(deltaMin / 60)
-    const hour_str_single = this.translate.transform(
-      LocKeys.TASK_TIME_HOUR_SINGLE.toString()
-    )
-    const hour_str_multiple = this.translate.transform(
-      LocKeys.TASK_TIME_HOUR_MULTIPLE.toString()
-    )
+    const deltaMin = Math.round(getMinutes({ milliseconds: next - now }))
+    const deltaHour = Math.round(getHours({ minutes: deltaMin }))
     if (deltaMin > 59) {
       deltaStr =
-        deltaHour > 1
-          ? String(deltaHour) + ' ' + hour_str_multiple
-          : String(deltaHour) + ' ' + hour_str_single
+        String(deltaHour) +
+        ' ' +
+        (deltaHour > 1
+          ? this.localization.translateKey(LocKeys.TASK_TIME_HOUR_MULTIPLE)
+          : this.localization.translateKey(LocKeys.TASK_TIME_HOUR_SINGLE))
     } else {
       deltaStr =
         String(deltaMin) +
         ' ' +
-        this.translate.transform(LocKeys.TASK_TIME_MINUTE_SINGLE.toString())
+        (deltaMin > 1
+          ? this.localization.translateKey(LocKeys.TASK_TIME_MINUTE_MULTIPLE)
+          : this.localization.translateKey(LocKeys.TASK_TIME_MINUTE_SINGLE))
     }
     return deltaStr
-  }
-
-  generateTickerItem(id, t1, t2, t3): TickerItem {
-    const item = {
-      id: String(id),
-      tickerText1: String(t1),
-      tickerText2: String(t2),
-      tickerText3: String(t3)
-    }
-    return item
   }
 }

@@ -1,32 +1,25 @@
-<div
-  id="task-info-container"
-  (click)="expand()"
-  *ngIf="displayTask"
->
-
+<div id="task-info-container">
   <div
-    class="non-warn-padding"
-    *ngIf="!hasExtraInfo && !expanded"
+    id="questionnaire-progress"
+    [@moveInProgress]="expanded"
   >
-  </div>
-
-  <div class="info">
-    <div
-      id="questionnaire-progress"
-      [@moveInProgress]="animateMove"
-    >
+    <ng-container *ngIf="!expanded">
       <round-progress
-        id="prog-sm"
         [current]="current"
         [max]="max"
         [radius]="radius"
+        [color]="'#7fcdbb'"
+        [background]="'rgba(255,255,204,0.12)'"
         [stroke]="stroke"
+        [clockwise]="true"
       ></round-progress>
       <div id="questionnaire-counter">{{ current }}</div>
-    </div>
+    </ng-container>
+  </div>
+  <div class="right-info">
     <div
       id="questionnaire-metrics"
-      [@alignCenterRightMetrics]="animateCenterRight"
+      [@alignCenterRightMetrics]="expanded"
     >
       <img
         class="icon-padding icon-sm"
@@ -42,47 +35,66 @@
       {{ task.estimatedCompletionTime }}
       <span class="units">min</span>
     </div>
+    <div
+      id="questionnaire-time"
+      [class.status-collapsed]="!expanded"
+      [@scaleStatus]="expanded"
+      #status
+    >
+      <span
+        [fittext]="true"
+        [maxFontSize]="60"
+        [container]="status"
+        [modelToWatch]="statusChanges"
+        class="text-md"
+      >
+        {{ nextTaskStatus }}
+      </span>
+    </div>
     <div id="questionnaire-time">
       <div
+        *ngIf="!isNow && task.name !=='ESM'"
         class="text-md"
-        *ngIf="isNow"
-        [@alignCenterRightTime]="animateCenterRight"
       >
-        {{ "STATUS_NOW" | translate }}
-      </div>
-      <div
-        *ngIf="!isNow"
-        [class.time-expanded]="!expanded"
-      >
-        <div class="text-lg">
-          <span *ngIf="task.name !=='ESM'">{{ getHour() }}</span>
-          <span *ngIf="task.name ==='ESM'">
-            {{ "TASK_BAR_NEXT_TASK_SOON" | translate }}
-          </span>
+        <div
+          class="time-container"
+          [@moveHour]="expanded"
+        >
+          {{ getHour() }}
         </div>
         <div
-          class="text-sm"
-          [@scaleMinutes]="animateScale"
+          class="time-container"
+          [@scaleMinutes]="expanded"
         >
-          <div *ngIf="task.name !=='ESM'">
-            <span [@fade]="animateFade">:</span>
-            {{ getMinutes() }}
-          </div>
+          <span
+            class="time-colon"
+            [@fade]="expanded"
+          >
+            :
+          </span>
+          <span>{{ getMinutes() }}</span>
         </div>
+        <div
+          [@rotateMeridiem]="expanded"
+          class="time-container meridiem"
+        >
+          {{ getMeridiem() }}
+        </div>
+
       </div>
     </div>
   </div>
 
   <div
-    *ngIf="hasExtraInfo"
+    *ngIf="task.warning"
     class="extra-info"
-    [@alignCenterRightExtraInfo]="animateCenterRight"
+    [@alignCenterRightExtraInfo]="expanded"
   >
+
     <img
-      class="icon-padding extra-info-icon"
+      class="extra-info-icon"
       src="assets/imgs/warning.png"
     >
-    {{ getExtraInfo() }}
+    {{  task.warning }}
   </div>
-
 </div>

@@ -2,9 +2,9 @@
   <div class="value-number">{{ value }}</div>
 </div>
 <ion-range
-  min="min"
-  max="max"
-  step="step"
+  [min]="min"
+  [max]="max"
+  [step]="step"
   snaps="true"
   pin="true"
   [(ngModel)]="value"

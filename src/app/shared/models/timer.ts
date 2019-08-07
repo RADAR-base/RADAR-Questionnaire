@@ -3,11 +3,11 @@ export interface Timer {
   end: number
 }
 
-export interface ITimer {
-  seconds: number
+export interface TaskTimer {
+  duration: number
+  secondsElapsed: number
   secondsRemaining: number
-  runTimer: boolean
   hasStarted: boolean
   hasFinished: boolean
-  displayTime: string
+  displayTime: number
 }

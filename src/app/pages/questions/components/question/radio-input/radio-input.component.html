@@ -1,12 +1,14 @@
-<ul>
-  <li *ngFor="let item of items">
-    <input
-      type="radio"
-      [id]="item.id"
-      [name]="name"
-      [value]="item.value"
-      (change)="onInputChange($event)"
-    >
-    <label [attr.for]="item.id">{{ item.response }}</label>
-  </li>
-</ul>
+<ion-list radio-group>
+  <ul>
+    <li *ngFor="let item of items">
+      <ion-item no-lines>
+        <ion-radio
+          [value]="item.value"
+          [id]="item.id"
+          (ionSelect)="onInputChange(item.value)"
+        ></ion-radio>
+        <ion-label>{{ item.response }}</ion-label>
+      </ion-item>
+    </li>
+  </ul>
+</ion-list>

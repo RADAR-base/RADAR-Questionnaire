@@ -39,8 +39,14 @@ export class LocKeys {
   static SETTINGS_SCHEDULE = new LocKeys('SETTINGS_SCHEDULE')
   static SETTINGS_RESET_ALERT = new LocKeys('SETTINGS_RESET_ALERT')
   static SETTINGS_RESET_ALERT_DESC = new LocKeys('SETTINGS_RESET_ALERT_DESC')
+  static SETTINGS_RESET_ALERT_OPTION_DESC = new LocKeys(
+    'SETTINGS_RESET_ALERT_OPTION_DESC'
+  )
   static SETTINGS_CACHE = new LocKeys('SETTINGS_CACHE')
   static SETTINGS_CACHE_SIZE = new LocKeys('SETTINGS_CACHE_SIZE')
+  static SETTINGS_LAST_UPLOAD_TO_SERVER = new LocKeys(
+    'SETTINGS_LAST_UPLOAD_TO_SERVER'
+  )
   static LANGUAGE_ENGLISH = new LocKeys('LANGUAGE_ENGLISH')
   static LANGUAGE_SPANISH = new LocKeys('LANGUAGE_SPANISH')
   static LANGUAGE_ITALIAN = new LocKeys('LANGUAGE_ITALIAN')
@@ -52,7 +58,9 @@ export class LocKeys {
   static BTN_FINISH = new LocKeys('BTN_FINISH')
   static BTN_DONE = new LocKeys('BTN_DONE')
   static BTN_START = new LocKeys('BTN_START')
+  static BTN_STOP = new LocKeys('BTN_STOP')
   static BTN_RESET = new LocKeys('BTN_RESET')
+  static BTN_RETRY = new LocKeys('BTN_RETRY')
   static BTN_AGREE = new LocKeys('BTN_AGREE')
   static BTN_DISAGREE = new LocKeys('BTN_DISAGREE')
   static BTN_OKAY = new LocKeys('BTN_OKAY')
@@ -63,10 +71,19 @@ export class LocKeys {
   static BTN_PREVIOUS = new LocKeys('BTN_PREVIOUS')
   static BTN_CLOSE = new LocKeys('BTN_CLOSE')
   static BTN_SELECT = new LocKeys('BTN_SELECT')
+  static BTN_YES = new LocKeys('BTN_YES')
+  static BTN_NO = new LocKeys('BTN_NO')
+  static BTN_TRY_AGAIN = new LocKeys('BTN_TRY_AGAIN')
   static STATUS_LOADING = new LocKeys('STATUS_LOADING')
   static STATUS_SUCCESS = new LocKeys('STATUS_SUCCESS')
   static STATUS_FAILURE = new LocKeys('STATUS_FAILURE')
   static STATUS_NOW = new LocKeys('STATUS_NOW')
+  static NOTIFICATION_TEST_REMINDER_NOW = new LocKeys(
+    'NOTIFICATION_TEST_REMINDER_NOW'
+  )
+  static NOTIFICATION_TEST_REMINDER_NOW_DESC = new LocKeys(
+    'NOTIFICATION_TEST_REMINDER_NOW_DESC'
+  )
   static NOTIFICATION_REMINDER_SOON = new LocKeys('NOTIFICATION_REMINDER_SOON')
   static NOTIFICATION_REMINDER_SOON_DESC = new LocKeys(
     'NOTIFICATION_REMINDER_SOON_DESC'
@@ -112,6 +129,17 @@ export class LocKeys {
   static TASK_TIME_HOUR_MULTIPLE = new LocKeys('TASK_TIME_HOUR_MULTIPLE')
   static TASK_TIME_MINUTE_SINGLE = new LocKeys('TASK_TIME_MINUTE_SINGLE')
   static TASK_TIME_MINUTE_MULTIPLE = new LocKeys('TASK_TIME_MINUTE_MULTIPLE')
+  static TESTING_NOTIFICATIONS = new LocKeys('TESTING_NOTIFICATIONS')
+  static TESTING_NOTIFICATIONS_MESSAGE = new LocKeys(
+    'TESTING_NOTIFICATIONS_MESSAGE'
+  )
+  static CLOSE_APP = new LocKeys('CLOSE_APP')
+  static WARNING_DO_NOT_CLOSE_APP = new LocKeys('WARNING_DO_NOT_CLOSE_APP')
+  static CONFIG_ERROR_DESC = new LocKeys('CONFIG_ERROR_DESC')
+  static AUDIO_TASK_ALERT = new LocKeys('AUDIO_TASK_ALERT')
+  static AUDIO_TASK_ALERT_DESC = new LocKeys('AUDIO_TASK_ALERT_DESC')
+  static AUDIO_TASK_ATTEMPT_ALERT = new LocKeys('AUDIO_TASK_ATTEMPT_ALERT')
+  static AUDIO_TASK_HAPPY_ALERT = new LocKeys('AUDIO_TASK_HAPPY_ALERT')
 
   constructor(public value: string) {}
 

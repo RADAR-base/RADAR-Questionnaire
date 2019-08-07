@@ -37,16 +37,22 @@
       class="bt bt--full"
       round
       full
-      *ngIf="!hasClickedDoneButton"
-      (click)="handleClosePage()"
+      *ngIf="showDoneButton"
+      (tap)="handleClosePage()"
     >
       {{ "BTN_DONE" | translate }}
     </button>
-    <div
-      *ngIf="hasClickedDoneButton"
-      class="spinner-center"
-    >
-      <ion-spinner name="dots"></ion-spinner>
-    </div>
+    <ng-container *ngIf="!showDoneButton">
+      <div class="extra-info">
+        <img
+          class="extra-info-icon"
+          src="assets/imgs/warning.png"
+        >
+        {{ "WARNING_DO_NOT_CLOSE_APP" | translate }}
+      </div>
+      <div class="spinner-center">
+        <ion-spinner name="dots"></ion-spinner>
+      </div>
+    </ng-container>
   </div>
 </ion-content>

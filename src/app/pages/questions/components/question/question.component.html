@@ -1,75 +1,102 @@
-<div *ngIf="question?.type === 'info' || question?.type === 'timed';then taskformat else stdformat"></div>
+<div
+  [class.hidden]="!currentlyShown"
+  [class.fade]="previouslyShown && !currentlyShown"
+>
+  <div
+    *ngIf="
+      question?.type === 'info' || question?.type === 'timed';
+      then taskformat;
+      else stdformat
+    "
+  ></div>
 
-<ng-template #stdformat>
-  <p class="stdformat">{{ question.section_header }}</p>
-  <h2 class="stdformat">{{ question.field_label }}</h2>
-</ng-template>
-<ng-template #taskformat>
-  <p class="taskformat">{{ question.section_header }}</p>
-  <h2 class="taskformat">{{ question.field_label }}</h2>
-</ng-template>
+  <ng-template #stdformat>
+    <p class="stdformat">{{ question.section_header }}</p>
+    <div class="field-container">
+      <h2 [fittext]="true" [maxFontSize]="18" [modelToWatch]="question">
+        {{ question.field_label }}
+      </h2>
+    </div>
+  </ng-template>
+  <ng-template #taskformat>
+    <p class="taskformat">{{ question.section_header }}</p>
+    <h2 class="taskformat">{{ question.field_label }}</h2>
+  </ng-template>
 
-<div *ngIf="question.field_type === 'radio'">
-  <radio-input
-    [responses]="question.select_choices_or_calculations"
-    (valueChange)="onValueChange($event)"
-  >
-  </radio-input>
-</div>
+  <div *ngIf="question.field_type === 'radio'">
+    <radio-input
+      [responses]="question.select_choices_or_calculations"
+      (valueChange)="onValueChange($event)"
+    >
+    </radio-input>
+  </div>
 
-<div *ngIf="question.field_type === 'checkbox'">
-  <checkbox-input
-    [responses]="question.select_choices_or_calculations"
-    (valueChange)="onValueChange($event)"
-  >
-  </checkbox-input>
-</div>
+  <div *ngIf="question.field_type === 'checkbox'">
+    <checkbox-input
+      [responses]="question.select_choices_or_calculations"
+      (valueChange)="onValueChange($event)"
+    >
+    </checkbox-input>
+  </div>
 
-<div *ngIf="question.field_type === 'range'">
-  <range-input
-    [min]="question.range.min"
-    [max]="question.range.max"
-    [labelLeft]="question.range.labelLeft"
-    [labelRight]="question.range.labelRight"
-    (valueChange)="onValueChange($event)"
-  >
-  </range-input>
-</div>
+  <div *ngIf="question.field_type === 'range'">
+    <range-input
+      [min]="question.range.min"
+      [max]="question.range.max"
+      [labelLeft]="question.range.labelLeft"
+      [labelRight]="question.range.labelRight"
+      (valueChange)="onValueChange($event)"
+    >
+    </range-input>
+  </div>
 
-<div *ngIf="question.field_type === 'slider'">
-  <slider-input
-    [min]="question.range.min"
-    [max]="question.range.max"
-    [step]="question.range.step"
-    (valueChange)="onValueChange($event)"
-  >
-  </slider-input>
-</div>
+  <div *ngIf="question.field_type === 'range-info'">
+    <range-info-input
+      [min]="question.range.min"
+      [max]="question.range.max"
+      [responses]="question.select_choices_or_calculations"
+      (valueChange)="onValueChange($event)"
+    >
+    </range-info-input>
+  </div>
 
-<div *ngIf="question.field_type === 'info'">
-  <info-screen
-    [sections]="question.select_choices_or_calculations"
-    (valueChange)="onValueChange($event)"
-  >
-  </info-screen>
-</div>
+  <div *ngIf="question.field_type === 'slider'">
+    <slider-input
+      [min]="question.range.min"
+      [max]="question.range.max"
+      [step]="question.range.step"
+      (valueChange)="onValueChange($event)"
+    >
+    </slider-input>
+  </div>
 
-<div *ngIf="question.field_type === 'audio'">
-  <audio-input
-    [sections]="question.select_choices_or_calculations"
-    [currentlyShown]="currentlyShown"
-    (valueChange)="onValueChange($event)"
-  >
-  </audio-input>
-</div>
+  <div *ngIf="question.field_type === 'info'">
+    <info-screen
+      [sections]="question.select_choices_or_calculations"
+      [hasFieldLabel]="question.field_label.length > 0"
+      (valueChange)="onValueChange($event)"
+      [currentlyShown]="currentlyShown"
+    >
+    </info-screen>
+  </div>
 
-<div *ngIf="question.field_type === 'timed'">
-  <timed-test
-    [heading]="question.field_label"
-    [image]="question.field_annotation.image"
-    [timer]="question.field_annotation.timer"
-    [currentlyShown]="currentlyShown"
-    (valueChange)="onValueChange($event)"
-  >
-  </timed-test>
+  <div *ngIf="question.field_type === 'audio'">
+    <audio-input
+      [sections]="question.select_choices_or_calculations"
+      [currentlyShown]="currentlyShown"
+      (valueChange)="onValueChange($event)"
+    >
+    </audio-input>
+  </div>
+
+  <div *ngIf="question.field_type === 'timed'">
+    <timed-test
+      [heading]="question.field_label"
+      [image]="question.field_annotation.image"
+      [timer]="question.field_annotation.timer"
+      [currentlyShown]="currentlyShown"
+      (valueChange)="onValueChange($event)"
+    >
+    </timed-test>
+  </div>
 </div>

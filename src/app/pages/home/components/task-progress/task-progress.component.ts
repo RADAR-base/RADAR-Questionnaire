@@ -1,63 +1,29 @@
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output,
-  ViewChild
-} from '@angular/core'
-import { RoundProgressConfig } from 'angular-svg-round-progressbar'
+import { Component, Input, OnChanges } from '@angular/core'
 
 import { TasksProgress } from '../../../../shared/models/task'
-import { TasksService } from '../../services/tasks.service'
+import { TaskProgressAnimations } from './task-progress.animation'
 
 @Component({
   selector: 'task-progress',
-  templateUrl: 'task-progress.component.html'
+  templateUrl: 'task-progress.component.html',
+  animations: TaskProgressAnimations
 })
 export class TaskProgressComponent implements OnChanges {
   @Input()
   progress: TasksProgress
   @Input()
-  forceComplete: boolean = false
+  forceComplete = false
   @Input()
-  noTasksToday: boolean = false
-  @Output()
-  completed: EventEmitter<Boolean> = new EventEmitter()
+  noTasksToday = false
 
-  text: string
   max: number = 1
   current: number = 0
-  duration: number = 800
-  complete: boolean = false
+  stroke = 22
+  animation = 'easeInQuart'
+  animationDelay = 100
+  duration = 300
+  complete = false
   showFireworks: boolean = false
-
-  @ViewChild('progressActive')
-  elActive: ElementRef
-  @ViewChild('progressComplete')
-  elComplete: ElementRef
-  @ViewChild('checkmark')
-  elCheckmark: ElementRef
-  @ViewChild('counter')
-  elCounter: ElementRef
-
-  constructor(
-    private progConfig: RoundProgressConfig,
-    private tasksService: TasksService
-  ) {
-    this.progConfig.setDefaults({
-      color: '#7fcdbb',
-      background: 'rgba(255,255,204,0.12)',
-      stroke: 22,
-      animation: 'easeInOutQuart',
-      duration: this.duration
-    })
-    this.tasksService.getTaskProgress().then(progress => {
-      this.progress = progress
-      this.updateProgress()
-    })
-  }
 
   ngOnChanges() {
     this.updateProgress()
@@ -65,52 +31,17 @@ export class TaskProgressComponent implements OnChanges {
 
   updateProgress() {
     if (this.progress) {
-      this.max = this.progress.numberOfTasks
       this.current = this.progress.completedTasks
+      this.max = this.progress.numberOfTasks
     }
-    if (this.current >= this.max) {
-      this.complete = true
-      this.displayFireworks(800, 980)
-    } else {
-      this.complete = false
-    }
-    if (this.forceComplete) {
-      this.complete = true
-    }
-    this.transitionToComplete()
-    this.completed.emit(this.complete)
-  }
-
-  transitionToComplete() {
-    if (this.complete) {
-      this.elActive.nativeElement.style.transform =
-        'translate3d(-100%,0,0) scale(0.1)'
-      this.elComplete.nativeElement.style.transform =
-        'translate3d(-100%,0,0) scale(1)'
-      this.elCheckmark.nativeElement.style.transform = 'scale(1)'
-      this.elCounter.nativeElement.style.transform = 'translate3d(0,250px,0)'
-    } else {
-      this.elActive.nativeElement.style.transform =
-        'translate3d(0,0,0) scale(1)'
-      this.elComplete.nativeElement.style.transform =
-        'translate3d(0,0,0) scale(0.1)'
-      this.elCheckmark.nativeElement.style.transform = 'scale(5)'
-      this.elCounter.nativeElement.style.transform = 'translate3d(0,0,0)'
-    }
+    this.complete = this.forceComplete || this.current >= this.max
+    if (this.complete) this.displayFireworks(800, 980)
   }
 
   displayFireworks(milliDelay, milliDisplay) {
     setTimeout(() => {
       this.showFireworks = true
-      setTimeout(() => {
-        this.showFireworks = false
-      }, milliDisplay)
+      setTimeout(() => (this.showFireworks = false), milliDisplay)
     }, milliDelay)
-  }
-
-  easterEggFireworks() {
-    if (this.current >= this.max) {
-      this.displayFireworks(1, 980)
-    }
   }
 }

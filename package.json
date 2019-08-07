@@ -108,6 +108,7 @@
         "phonegap-plugin-mobile-accessibility": "^1.0.5",
         "rxjs": "^6.5.2",
         "uuid": "^3.3.2",
+        "yaml": "^1.6.0",
         "zone.js": "^0.10.1"
     },
     "devDependencies": {

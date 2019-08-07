@@ -4,27 +4,20 @@
 module.exports = function(config) {
   config.set({
     basePath: '../',
-    frameworks: ['jasmine'],
+    frameworks: ['jasmine', '@angular-devkit/build-angular'],
     plugins: [
       require('karma-jasmine'),
       require('karma-browserstack-launcher'),
       require('karma-chrome-launcher'),
       require('karma-coverage-istanbul-reporter'),
       require('karma-jasmine-html-reporter'),
+      require('@angular-devkit/build-angular/plugins/karma'),
       require('karma-scss-preprocessor'),
       require('karma-spec-reporter')
     ],
     client: {
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
-    files: [
-      {
-        pattern: './RADAR-Questionnaire/node_modules/zone.js/dist/zone.js',
-        included: true,
-        watched: true
-      }
-    ],
-
     coverageIstanbulReporter: {
       dir: require('path').join(__dirname, 'coverage'),
       reports: ['html', 'lcovonly'],

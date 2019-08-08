@@ -3,8 +3,9 @@
 ********/
 
 import { Injectable } from '@angular/core'
-import { QuestionType } from '../../../shared/models/question'
+
 import { LogService } from '../../../core/services/misc/log.service'
+import { QuestionType } from '../../../shared/models/question'
 
 @Injectable()
 export class PrepareDataService {

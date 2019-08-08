@@ -1,15 +1,15 @@
+import { Injectable } from '@angular/core'
+import { AppVersion } from '@ionic-native/app-version/ngx'
+
 import {
   DefaultAppVersion,
   DefaultScheduleVersion,
   DefaultSettingsNotifications,
   DefaultSettingsWeeklyReport
 } from '../../../../assets/data/defaultConfig'
-
-import { AppVersion } from '@ionic-native/app-version/ngx'
-import { Injectable } from '@angular/core'
 import { StorageKeys } from '../../../shared/enums/storage'
-import { StorageService } from '../storage/storage.service'
 import { setDateTimeToMidnight } from '../../../shared/utilities/time'
+import { StorageService } from '../storage/storage.service'
 
 @Injectable()
 export class AppConfigService {

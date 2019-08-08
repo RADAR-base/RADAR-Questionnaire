@@ -1,13 +1,13 @@
 import 'rxjs/add/operator/mergeMap'
 
+import { Injectable } from '@angular/core'
+import { Firebase } from '@ionic-native/firebase/ngx'
+import { Platform } from 'ionic-angular'
 import { BehaviorSubject, Observable, from } from 'rxjs'
 
 import { ConfigKeys } from '../../../shared/enums/config'
-import { Firebase } from '@ionic-native/firebase/ngx'
-import { Injectable } from '@angular/core'
-import { LogService } from '../misc/log.service'
-import { Platform } from 'ionic-angular'
 import { StorageKeys } from '../../../shared/enums/storage'
+import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 
 declare var FirebasePlugin

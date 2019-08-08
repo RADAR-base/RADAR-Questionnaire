@@ -1,9 +1,9 @@
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core'
-
 import { CommonModule } from '@angular/common'
-import { IonicModule } from 'ionic-angular'
-import { PipesModule } from '../../../../shared/pipes/pipes.module'
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core'
 import { RoundProgressModule } from 'angular-svg-round-progressbar'
+import { IonicModule } from 'ionic-angular'
+
+import { PipesModule } from '../../../../shared/pipes/pipes.module'
 import { TaskProgressComponent } from './task-progress.component'
 
 const COMPONENTS = [TaskProgressComponent]

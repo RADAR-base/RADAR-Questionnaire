@@ -1,7 +1,7 @@
 import 'rxjs/add/operator/map'
 
-import { AndroidPermissions } from '@ionic-native/android-permissions/ngx'
 import { Injectable } from '@angular/core'
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx'
 import { Platform } from 'ionic-angular'
 
 @Injectable()

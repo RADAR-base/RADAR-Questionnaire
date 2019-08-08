@@ -71,12 +71,18 @@ page-clinical-tasks {
     color: white;
   }
 
+  .task-info-left {
+    float: left;
+  }
+
   .task-info-right {
     float: right;
   }
 
-  .task-info-left {
+  .metrics {
     float: left;
+    width: 64px;
+    white-space: nowrap;
   }
 
   .status-div {

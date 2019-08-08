@@ -1,11 +1,11 @@
 page-enrolment {
   color: $cl-light;
 
-  #logo {
+  .logo {
     width: 120px;
   }
 
-  #logo-container {
+  .logo-container {
     margin: auto;
     padding-bottom: 3vh;
     width: 120px;
@@ -33,26 +33,18 @@ page-enrolment {
     margin-top: 8vh;
   }
 
-  #status {
-    display: flex;
-    margin: auto;
-    padding-top: 5px;
-    padding-bottom: 10px;
-    width: 100%;
-  }
-
   #loading {
     flex: 1 0 100%;
+    margin: 24px;
     height: 34px;
-    opacity: 0;
-    transition: opacity 0.4s ease-in-out;
+    transition: opacity 0.7s ease-in-out;
   }
 
   #outcome {
     flex: 1 0 100%;
+    padding: auto;
     height: auto;
     background-color: $cl-danger-40;
-    opacity: 0;
     transition: opacity 0.4s ease-in-out;
   }
 
@@ -103,15 +95,5 @@ page-enrolment {
   .pref-icon {
     margin: 2vh 0;
     height: 20vh;
-  }
-
-  .token-input {
-    margin: 24px auto;
-    width: 320px;
-    border-bottom: 1px solid white;
-  }
-
-  .registration-qr {
-    padding-bottom: 16vh;
   }
 }

@@ -39,6 +39,9 @@ export class LocKeys {
   static SETTINGS_SCHEDULE = new LocKeys('SETTINGS_SCHEDULE')
   static SETTINGS_RESET_ALERT = new LocKeys('SETTINGS_RESET_ALERT')
   static SETTINGS_RESET_ALERT_DESC = new LocKeys('SETTINGS_RESET_ALERT_DESC')
+  static SETTINGS_RESET_ALERT_OPTION_DESC = new LocKeys(
+    'SETTINGS_RESET_ALERT_OPTION_DESC'
+  )
   static SETTINGS_CACHE = new LocKeys('SETTINGS_CACHE')
   static SETTINGS_CACHE_SIZE = new LocKeys('SETTINGS_CACHE_SIZE')
   static SETTINGS_LAST_UPLOAD_TO_SERVER = new LocKeys(
@@ -57,6 +60,7 @@ export class LocKeys {
   static BTN_START = new LocKeys('BTN_START')
   static BTN_STOP = new LocKeys('BTN_STOP')
   static BTN_RESET = new LocKeys('BTN_RESET')
+  static BTN_RETRY = new LocKeys('BTN_RETRY')
   static BTN_AGREE = new LocKeys('BTN_AGREE')
   static BTN_DISAGREE = new LocKeys('BTN_DISAGREE')
   static BTN_OKAY = new LocKeys('BTN_OKAY')

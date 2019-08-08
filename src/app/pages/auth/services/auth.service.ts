@@ -1,26 +1,23 @@
-import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/toPromise'
 
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
+import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { JwtHelperService } from '@auth0/angular-jwt'
 
 import {
-  DefaultEndPoint,
   DefaultManagementPortalURI,
   DefaultMetaTokenURI,
   DefaultRefreshTokenRequestBody,
-  DefaultRefreshTokenURI,
   DefaultRequestEncodedContentType,
   DefaultRequestJSONContentType,
-  DefaultSourceProducerAndSecret,
+  DefaultSourceTypeModel,
   DefaultSourceTypeRegistrationBody,
-  DefaultSubjectsURI,
-  DefaultTokenRefreshTime
+  DefaultSubjectsURI
 } from '../../../../assets/data/defaultConfig'
-import { StorageService } from '../../../core/services/storage.service'
-import { StorageKeys } from '../../../shared/enums/storage'
-import { getSeconds } from '../../../shared/utilities/time'
+import { ConfigService } from '../../../core/services/config/config.service'
+import { LogService } from '../../../core/services/misc/log.service'
+import { TokenService } from '../../../core/services/token/token.service'
+import { MetaToken } from '../../../shared/models/token'
+import { isValidURL } from '../../../shared/utilities/form-validators'
 
 @Injectable()
 export class AuthService {
@@ -28,77 +25,53 @@ export class AuthService {
 
   constructor(
     public http: HttpClient,
-    public storage: StorageService,
-    private jwtHelper: JwtHelperService
-  ) {
-    this.updateURI()
+    private token: TokenService,
+    private config: ConfigService,
+    private logger: LogService,
+  ) {}
+
+  authenticate(authObj) {
+    return (isValidURL(authObj)
+      ? this.URLAuth(authObj)
+      : this.nonURLAuth(authObj)
+    ).then(refreshToken => {
+      return this.registerToken(refreshToken)
+        .then(() => this.registerAsSource())
+        .then(() => this.registerToken(refreshToken))
+    })
   }
 
-  refresh() {
-    return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
-      const limit = getSeconds({
-        milliseconds: new Date().getTime() + DefaultTokenRefreshTime
-      })
-      if (tokens.iat + tokens.expires_in < limit) {
-        const URI = this.URI_base + DefaultRefreshTokenURI
-        const headers = this.getRegisterHeaders(
-          DefaultRequestEncodedContentType
-        )
-        const params = this.getRefreshParams(tokens.refresh_token)
-        const promise = this.createPostRequest(URI, '', {
-          headers: headers,
-          params: params
-        }).then(newTokens => {
-          return this.storage.set(StorageKeys.OAUTH_TOKENS, newTokens)
-        })
-        return promise
-      } else {
-        return Promise.resolve(tokens)
-      }
+  URLAuth(authObj) {
+    // NOTE: Meta QR code and new QR code
+    return this.getRefreshTokenFromUrl(authObj).then((body: any) => {
+      this.logger.log(`Retrieved refresh token from ${body.baseUrl}`, body)
+      const refreshToken = body.refreshToken
+      return this.token
+        .setURI(body.baseUrl)
+        .catch()
+        .then(() => this.updateURI())
+        .then(() => refreshToken)
     })
+  }
+
+  nonURLAuth(authObj) {
+    // NOTE: Old QR codes: containing refresh token as JSON
+    return this.updateURI()
+      .then(() => JSON.parse(authObj).refreshToken)
   }
 
   updateURI() {
-    return this.storage.get(StorageKeys.BASE_URI).then(uri => {
-      const endPoint = uri ? uri : DefaultEndPoint
-      this.URI_base = endPoint + DefaultManagementPortalURI
+    return this.token.getURI().then(uri => {
+      this.URI_base = uri + DefaultManagementPortalURI
     })
   }
 
-  // TODO: test this
-  registerToken(registrationToken) {
-    const URI = this.URI_base + DefaultRefreshTokenURI
-    // console.debug('URI : ' + URI)
+  registerToken(registrationToken): Promise<void> {
     const refreshBody = DefaultRefreshTokenRequestBody + registrationToken
-    const headers = this.getRegisterHeaders(DefaultRequestEncodedContentType)
-    const promise = this.createPostRequest(URI, refreshBody, {
-      headers: headers
-    })
-    return promise.then(res => {
-      return this.storage.set(StorageKeys.OAUTH_TOKENS, res)
-    })
+    return this.token.register(refreshBody)
   }
 
-  registerAsSource() {
-    return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
-      const decoded = this.jwtHelper.decodeToken(tokens.access_token)
-      const headers = this.getAccessHeaders(
-        tokens.access_token,
-        DefaultRequestJSONContentType
-      )
-      const URI = this.URI_base + DefaultSubjectsURI + decoded.sub + '/sources'
-      const promise = this.createPostRequest(
-        URI,
-        DefaultSourceTypeRegistrationBody,
-        {
-          headers: headers
-        }
-      )
-      return promise
-    })
-  }
-
-  getRefreshTokenFromUrl(url) {
+  getRefreshTokenFromUrl(url): Promise<MetaToken> {
     return this.http.get(url).toPromise()
   }
 
@@ -106,47 +79,61 @@ export class AuthService {
     return base + DefaultMetaTokenURI + token
   }
 
-  createPostRequest(uri, body, headers) {
-    return this.http.post(uri, body, headers).toPromise()
+  getSubjectURI(subject) {
+    return this.URI_base + DefaultSubjectsURI + subject
   }
 
   getSubjectInformation() {
-    return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
-      const decoded = this.jwtHelper.decodeToken(tokens.access_token)
-      const headers = this.getAccessHeaders(
-        tokens.access_token,
-        DefaultRequestEncodedContentType
+    return Promise.all([
+      this.token.getAccessHeaders(DefaultRequestEncodedContentType),
+      this.token.getDecodedSubject()
+    ]).then(([headers, subject]) =>
+      this.http.get(this.getSubjectURI(subject), { headers }).toPromise()
+    )
+  }
+
+  initSubjectInformation() {
+    return this.getSubjectInformation().then(res => {
+      const subjectInformation: any = res
+      const participantId = subjectInformation.externalId
+      const participantLogin = subjectInformation.login
+      const projectName = subjectInformation.project.projectName
+      const sourceId = this.getSourceId(subjectInformation)
+      const createdDate = new Date(subjectInformation.createdDate).getTime()
+      return this.config.setAll(
+        participantId,
+        participantLogin,
+        projectName,
+        sourceId,
+        createdDate
       )
-      const URI = this.URI_base + DefaultSubjectsURI + decoded.sub
-      return this.http.get(URI, { headers }).toPromise()
     })
   }
 
-  getRegisterHeaders(contentType) {
-    // TODO:: Use empty client secret https://github.com/RADAR-base/RADAR-Questionnaire/issues/140
-    const headers = new HttpHeaders()
-      .set('Authorization', 'Basic ' + btoa(DefaultSourceProducerAndSecret))
-      .set('Content-Type', contentType)
-    return headers
+  getSourceId(response) {
+    const sources = response.sources
+    for (let i = 0; i < sources.length; i++) {
+      if (sources[i].sourceTypeModel === DefaultSourceTypeModel) {
+        return sources[i].sourceId
+      }
+    }
+    return 'Device not available'
   }
 
-  getAccessHeaders(accessToken, contentType) {
-    const headers = new HttpHeaders()
-      .set('Authorization', 'Bearer ' + accessToken)
-      .set('Content-Type', contentType)
-    return headers
-  }
-
-  getRefreshParams(refreshToken) {
-    const params = new HttpParams()
-      .set('grant_type', 'refresh_token')
-      .set('refresh_token', refreshToken)
-    return params
-  }
-
-  isRefreshTokenExpired() {
-    return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
-      return this.jwtHelper.isTokenExpired(tokens.refresh_token)
-    })
+  registerAsSource() {
+    return Promise.all([
+      this.token.getAccessHeaders(DefaultRequestJSONContentType),
+      this.token.getDecodedSubject()
+    ]).then(([headers, subject]) =>
+      this.http
+        .post(
+          this.getSubjectURI(subject) + '/sources',
+          DefaultSourceTypeRegistrationBody,
+          {
+            headers
+          }
+        )
+        .toPromise()
+    )
   }
 }

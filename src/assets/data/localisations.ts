@@ -303,20 +303,31 @@ export const Localisations = {
     nl: 'Schema'
   },
   SETTINGS_RESET_ALERT: {
-    da: 'Nulstil RADAR-CNS App',
-    de: 'RADAR-CNS App zurücksetzen',
-    en: 'Reset RADAR-CNS App',
-    es: 'Reiniciar, la aplicación RADAR-CNS',
-    it: 'Reset RADAR-CNS app',
-    nl: 'Reset RADAR-CNS app'
+    da: 'Nulstil App',
+    de: 'App zurücksetzen',
+    en: 'Reset App',
+    es: 'Reiniciar, la aplicación',
+    it: 'Reset app',
+    nl: 'Reset app'
   },
   SETTINGS_RESET_ALERT_DESC: {
-    da: 'Nulstil RADAR-CNS App',
-    de: 'RADAR-CNS App zurücksetzen',
-    en: 'Reset RADAR-CNS App',
-    es: 'Restablecer la aplicación RADAR-CNS',
-    it: 'Reset RADAR-CNS app',
-    nl: 'Reset RADAR-CNS app'
+    da: 'Du er ved at nulstille appen.',
+    de: 'Sie sind dabei, die App zurückzusetzen.',
+    en: 'You are about to reset the app.',
+    es: 'Estás a punto de reiniciar la aplicación.',
+    it: `Stai per ripristinare l'app.`,
+    nl: 'U staat op het punt de app opnieuw in te stellen.'
+  },
+  SETTINGS_RESET_ALERT_OPTION_DESC: {
+    da: `Scegli di ripristinare solo la configurazione e i dati dell'app oppure eseguire un ripristino completo e ripetere la registrazione.`,
+    de:
+      'Wählen Sie diese Option, um nur die App-Konfiguration und -Daten zurückzusetzen, oder führen Sie einen vollständigen Reset und eine erneute Registrierung durch.',
+    en:
+      'Choose to reset app configuration and data only or do a full reset and re-enrol.',
+    es:
+      'Elija restablecer la configuración de la aplicación y solo los datos o realice un reinicio completo y vuelva a inscribirse.',
+    it: `Scegli di ripristinare solo la configurazione e i dati dell'app oppure eseguire un ripristino completo e ripetere la registrazione.`,
+    nl: `Kies ervoor om de app-configuratie en -gegevens alleen opnieuw in te stellen of een volledige reset uit te voeren en opnieuw in te schrijven.`
   },
   SETTINGS_CACHE: {
     da: 'Cache',
@@ -486,6 +497,14 @@ export const Localisations = {
     it: 'Reset',
     nl: 'Reset'
   },
+  BTN_RETRY: {
+    da: 'Prøve igen',
+    de: 'Wiederholen',
+    en: 'Retry',
+    es: 'REintentar',
+    it: 'Riprovare',
+    nl: 'Probeer opnieuw'
+  },
   BTN_AGREE: {
     da: 'Enig.',
     de: 'Ja',
@@ -591,12 +610,12 @@ export const Localisations = {
     nl: 'Probeer het opnieuw'
   },
   STATUS_LOADING: {
-    da: 'Indlæser...',
-    de: 'Lädt...',
-    en: 'Loading...',
+    da: 'Indlæser',
+    de: 'Lädt',
+    en: 'Loading',
     es: 'Cargando',
-    it: 'Caricamento...',
-    nl: 'Laden...'
+    it: 'Caricamento',
+    nl: 'Laden'
   },
   STATUS_SUCCESS: {
     da: 'Succes',

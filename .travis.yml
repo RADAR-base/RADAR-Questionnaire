@@ -1,6 +1,6 @@
 env:
   global:
-    - PACKAGE_NAME=org.phidatalab.radar_armt
+    - PACKAGE_NAME_ANDROID=org.phidatalab.radar_armt
     - KEYSTORE_PATH=radar-armt-release-key.keystore
     - KEYSTORE_ALIAS=alias_name
     - PLAYSTORE_SERVICE_KEY=service-api.json
@@ -13,6 +13,15 @@ android:
     - build-tools-28.0.3
     - android-28
     - extra
+cache:
+  yarn: true
+  directories:
+    - $HOME/.gradle/caches/jars-1
+    - $HOME/.gradle/caches/jars-2
+    - $HOME/.gradle/caches/jars-3
+    - $HOME/.gradle/caches/modules-2/files-2.1/
+    - $HOME/.gradle/native
+    - $HOME/.gradle/wrapper
 before_install:
   - openssl aes-256-cbc -K $encrypted_b7f1c4c89cb5_key -iv $encrypted_b7f1c4c89cb5_iv -in secrets.tar.enc -out secrets.tar -d
   - tar xvf secrets.tar
@@ -30,7 +39,7 @@ script:
   - cordova prepare
   - yarn install
   - if [[ $TRAVIS_BRANCH != $TRAVIS_TAG ]]; then fastlane android build_debug ; fi
-  - if [[ $TRAVIS_BRANCH == $TRAVIS_TAG ]]; then fastlane android deploy keystore_path:$KEYSTORE_PATH keystore_password:$storepass keystore_alias:$KEYSTORE_ALIAS package_name:$PACKAGE_NAME track:$PLAYSTORE_TRACK json_key:$PLAYSTORE_SERVICE_KEY ; fi
+  - if [[ $TRAVIS_BRANCH == $TRAVIS_TAG ]]; then fastlane android deploy keystore_path:$KEYSTORE_PATH keystore_password:$storepass keystore_alias:$KEYSTORE_ALIAS package_name:$PACKAGE_NAME_ANDROID track:$PLAYSTORE_TRACK json_key:$PLAYSTORE_SERVICE_KEY ; fi
 #
 # DOCUMENTATION:
 

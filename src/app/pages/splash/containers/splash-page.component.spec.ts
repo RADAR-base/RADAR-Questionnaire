@@ -1,21 +1,25 @@
 import { ComponentFixture, TestBed, async } from '@angular/core/testing'
-import { NavController } from 'ionic-angular'
+import { NavController, NavParams } from 'ionic-angular'
+import { NavParamsMock } from 'ionic-mocks'
 
 import { AppModule } from '../../../app.module'
-import { EnrolmentPageComponent } from './enrolment-page.component'
+import { SplashPageComponent } from './splash-page.component'
 
-describe('EnrolmentPagecomponent', () => {
-  let component
+describe('SpashPageComponent', () => {
+  let component: any
   let fixture: ComponentFixture<any>
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [AppModule],
       declarations: [],
-      providers: [NavController]
+      providers: [
+        NavController,
+        { provide: NavParams, useClass: NavParamsMock }
+      ]
     }).compileComponents()
 
-    fixture = TestBed.createComponent(EnrolmentPageComponent)
+    fixture = TestBed.createComponent(SplashPageComponent)
     component = fixture.debugElement.componentInstance
     fixture.detectChanges()
   })
@@ -25,6 +29,6 @@ describe('EnrolmentPagecomponent', () => {
   })
 
   it('should create', () => {
-    expect(component instanceof EnrolmentPageComponent).toBe(true)
+    expect(component instanceof SplashPageComponent).toBe(true)
   })
 })

@@ -2,10 +2,10 @@ import { ComponentFixture, TestBed, async } from '@angular/core/testing'
 import { NavController } from 'ionic-angular'
 
 import { AppModule } from '../../../app.module'
-import { EnrolmentPageComponent } from './enrolment-page.component'
+import { HomePageComponent } from './home-page.component'
 
-describe('EnrolmentPagecomponent', () => {
-  let component
+describe('HomePageComponent', () => {
+  let component: any
   let fixture: ComponentFixture<any>
 
   beforeEach(async () => {
@@ -15,7 +15,7 @@ describe('EnrolmentPagecomponent', () => {
       providers: [NavController]
     }).compileComponents()
 
-    fixture = TestBed.createComponent(EnrolmentPageComponent)
+    fixture = TestBed.createComponent(HomePageComponent)
     component = fixture.debugElement.componentInstance
     fixture.detectChanges()
   })
@@ -25,6 +25,6 @@ describe('EnrolmentPagecomponent', () => {
   })
 
   it('should create', () => {
-    expect(component instanceof EnrolmentPageComponent).toBe(true)
+    expect(component instanceof HomePageComponent).toBe(true)
   })
 })

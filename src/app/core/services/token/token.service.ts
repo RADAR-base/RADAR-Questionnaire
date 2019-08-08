@@ -94,7 +94,7 @@ export class TokenService {
     return 'Basic ' + btoa(`${user}:${password}`)
   }
 
-  register(refreshBody?, params?) {
+  register(refreshBody) {
     return this.getURI().then(uri => {
       const URI = uri + DefaultManagementPortalURI + DefaultRefreshTokenURI
       const headers = this.getRegisterHeaders(DefaultRequestEncodedContentType)
@@ -102,7 +102,7 @@ export class TokenService {
         `"Registering with ${URI} using client credentials ${this.clientCredentials}`
       )
       return this.http
-        .post(URI, refreshBody, { headers: headers, params: params })
+        .post(URI, refreshBody, { headers: headers })
         .toPromise()
         .then(res => this.setTokens(res))
     })
@@ -116,12 +116,12 @@ export class TokenService {
         })
         if (tokens.iat + tokens.expires_in < limit) {
           const params = this.getRefreshParams(tokens.refresh_token)
-          return this.register('', params)
+          return this.register(params)
         } else {
           return tokens
         }
       } else {
-        return Promise.reject([])
+        throw new Error('No tokens are available to refresh')
       }
     })
   }

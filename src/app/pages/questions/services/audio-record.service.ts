@@ -1,7 +1,8 @@
-import { DefaultAudioRecordOptions } from '../../../../assets/data/defaultConfig'
-import { Device } from '@ionic-native/device/ngx'
-import { File } from '@ionic-native/file/ngx'
 import { Injectable } from '@angular/core'
+import { File } from '@ionic-native/file/ngx'
+import { Platform } from 'ionic-angular'
+
+import { DefaultAudioRecordOptions } from '../../../../assets/data/defaultConfig'
 import { LogService } from '../../../core/services/misc/log.service'
 
 declare var Media: any // stops errors w/ cordova-plugin-media-with-compression types
@@ -14,7 +15,7 @@ export class AudioRecordService {
 
   constructor(
     private file: File,
-    private device: Device,
+    private platform: Platform,
     private logger: LogService
   ) {}
 
@@ -38,13 +39,13 @@ export class AudioRecordService {
   }
 
   getFilePath() {
-    return this.device.platform == 'Android'
+    return this.platform.is('android')
       ? this.getDir() + this.fileName
       : this.fileName
   }
 
   getDir() {
-    return this.device.platform == 'Android'
+    return this.platform.is('android')
       ? this.file.dataDirectory
       : this.file.tempDirectory
   }

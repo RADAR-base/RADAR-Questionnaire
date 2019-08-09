@@ -1,3 +1,6 @@
+import { HttpClient } from '@angular/common/http'
+import { Injectable } from '@angular/core'
+
 import {
   DefaultProtocolBranch,
   DefaultProtocolEndPoint,
@@ -5,11 +8,8 @@ import {
   DefaultQuestionnaireFormatURI,
   DefaultQuestionnaireTypeURI
 } from '../../../../assets/data/defaultConfig'
-
-import { Assessment } from '../../../shared/models/assessment'
 import { ConfigKeys } from '../../../shared/enums/config'
-import { HttpClient } from '@angular/common/http'
-import { Injectable } from '@angular/core'
+import { Assessment } from '../../../shared/models/assessment'
 import { LogService } from '../misc/log.service'
 import { RemoteConfigService } from './remote-config.service'
 import { SubjectConfigService } from './subject-config.service'

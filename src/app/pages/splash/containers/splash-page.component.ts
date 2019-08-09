@@ -1,14 +1,13 @@
+import { Component } from '@angular/core'
 import { NavController, NavParams } from 'ionic-angular'
 
 import { AlertService } from '../../../core/services/misc/alert.service'
-import { Component } from '@angular/core'
-import { Device } from '@ionic-native/device/ngx'
+import { LocalizationService } from '../../../core/services/misc/localization.service'
+import { UsageService } from '../../../core/services/usage/usage.service'
+import { LocKeys } from '../../../shared/enums/localisations'
 import { EnrolmentPageComponent } from '../../auth/containers/enrolment-page.component'
 import { HomePageComponent } from '../../home/containers/home-page.component'
-import { LocKeys } from '../../../shared/enums/localisations'
-import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { SplashService } from '../services/splash.service'
-import { UsageService } from '../../../core/services/usage/usage.service'
 
 @Component({
   selector: 'page-splash',
@@ -22,7 +21,6 @@ export class SplashPageComponent {
     private splash: SplashService,
     private alertService: AlertService,
     private localization: LocalizationService,
-    private device: Device,
     private usage: UsageService
   ) {
     this.splash
@@ -39,10 +37,7 @@ export class SplashPageComponent {
         this.status = 'Sending missed questionnaire logs..'
         return this.splash.sendMissedQuestionnaireLogs()
       })
-      .catch(e => {
-        console.log('[SPLASH] Notifications error.')
-        if (this.device.platform) return this.showFetchConfigFail(e)
-      })
+      .catch(e => console.log('[SPLASH] Notifications error.'))
       .then(() => this.navCtrl.setRoot(HomePageComponent))
   }
 

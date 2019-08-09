@@ -1,5 +1,8 @@
 import 'rxjs/add/operator/toPromise'
 
+import { HttpClient } from '@angular/common/http'
+import { Injectable } from '@angular/core'
+
 import {
   DefaultManagementPortalURI,
   DefaultMetaTokenURI,
@@ -10,14 +13,11 @@ import {
   DefaultSourceTypeRegistrationBody,
   DefaultSubjectsURI
 } from '../../../../assets/data/defaultConfig'
-
 import { ConfigService } from '../../../core/services/config/config.service'
-import { HttpClient } from '@angular/common/http'
-import { Injectable } from '@angular/core'
-import { MetaToken } from '../../../shared/models/token'
-import { TokenService } from '../../../core/services/token/token.service'
-import { isValidURL } from '../../../shared/utilities/form-validators'
 import { LogService } from '../../../core/services/misc/log.service'
+import { TokenService } from '../../../core/services/token/token.service'
+import { MetaToken } from '../../../shared/models/token'
+import { isValidURL } from '../../../shared/utilities/form-validators'
 
 @Injectable()
 export class AuthService {

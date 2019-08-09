@@ -1,21 +1,21 @@
+import { Injectable } from '@angular/core'
+
+import { DefaultNotificationRefreshTime } from '../../../../assets/data/defaultConfig'
 import {
   ConfigEventType,
   NotificationEventType
 } from '../../../shared/enums/events'
-
-import { AppConfigService } from './app-config.service'
-import { DefaultNotificationRefreshTime } from '../../../../assets/data/defaultConfig'
-import { FirebaseAnalyticsService } from '../usage/firebase-analytics.service'
-import { Injectable } from '@angular/core'
+import { TaskType } from '../../../shared/utilities/task-type'
 import { KafkaService } from '../kafka/kafka.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
 import { NotificationService } from '../notifications/notification.service'
+import { ScheduleService } from '../schedule/schedule.service'
+import { FirebaseAnalyticsService } from '../usage/firebase-analytics.service'
+import { AppConfigService } from './app-config.service'
 import { ProtocolService } from './protocol.service'
 import { QuestionnaireService } from './questionnaire.service'
-import { ScheduleService } from '../schedule/schedule.service'
 import { SubjectConfigService } from './subject-config.service'
-import { TaskType } from '../../../shared/utilities/task-type'
 
 @Injectable()
 export class ConfigService {

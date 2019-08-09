@@ -25,9 +25,8 @@ export class KafkaService {
     private token: TokenService,
     private schema: SchemaService,
     private firebaseAnalytics: FirebaseAnalyticsService,
-    private logger: LogService,
+    private logger: LogService
   ) {
-    this.token.refresh()
     this.updateURI()
   }
 
@@ -65,18 +64,16 @@ export class KafkaService {
   sendAllFromCache() {
     if (!this.isCacheSending) {
       this.setCacheSending(true)
-      return Promise.all([
-        this.getCache(),
-        this.getKafkaInstance(),
-      ])
+      return Promise.all([this.getCache(), this.getKafkaInstance()])
         .then(([cache, kafka]) => {
           const sendPromises = Object.entries(cache)
             .filter(([k]) => k)
-            .map(([k, v]: any) => this.sendToKafka(k, v, kafka)
-              .catch(e => {
+            .map(([k, v]: any) =>
+              this.sendToKafka(k, v, kafka).catch(e => {
                 this.logger.error('Failed to send data from cache', e)
                 return undefined
-              }))
+              })
+            )
 
           return Promise.all(sendPromises)
         })
@@ -120,18 +117,17 @@ export class KafkaService {
   }
 
   removeFromCache(cacheKeys: number[]) {
-    return this.getCache()
-      .then(cache => {
-        if (cache) {
-          cacheKeys.map(cacheKey => {
-            if (cache[cacheKey]) {
-              console.log('Deleting ' + cacheKey)
-              delete cache[cacheKey]
-            }
-          })
-          return this.setCache(cache)
-        }
-      })
+    return this.getCache().then(cache => {
+      if (cache) {
+        cacheKeys.map(cacheKey => {
+          if (cache[cacheKey]) {
+            console.log('Deleting ' + cacheKey)
+            delete cache[cacheKey]
+          }
+        })
+        return this.setCache(cache)
+      }
+    })
   }
 
   getKafkaInstance() {

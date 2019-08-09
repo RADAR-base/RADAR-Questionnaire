@@ -4,6 +4,9 @@ export class StorageServiceMock {
   get(any?) {
     return Promise.resolve('')
   }
+  set(any?) {
+    return Promise.resolve('')
+  }
 }
 export class TokenServiceMock {
   refresh() {
@@ -19,6 +22,9 @@ export class RemoteConfigServiceMock {
     return new Subject()
   }
 }
+export class LogServiceMock {
+  log() {}
+}
 export class ScheduleServiceMock {}
 export class NotificationServiceMock {}
 export class ProtocolServiceMock {}
@@ -28,7 +34,6 @@ export class SubjectConfigServiceMock {}
 export class KafkaServiceMock {}
 export class LocalizationServiceMock {}
 export class FirebaseAnalyticsServiceMock {}
-export class LogServiceMock {}
 export class UtilityMock {}
 export class FirebaseMock {}
 export class AppVersionMock {}

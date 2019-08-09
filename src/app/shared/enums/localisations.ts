@@ -140,6 +140,10 @@ export class LocKeys {
   static AUDIO_TASK_ALERT_DESC = new LocKeys('AUDIO_TASK_ALERT_DESC')
   static AUDIO_TASK_ATTEMPT_ALERT = new LocKeys('AUDIO_TASK_ATTEMPT_ALERT')
   static AUDIO_TASK_HAPPY_ALERT = new LocKeys('AUDIO_TASK_HAPPY_ALERT')
+  static SPLASH_STATUS_UPDATING_CONFIG = new LocKeys(
+    'SPLASH_STATUS_UPDATING_CONFIG'
+  )
+  static SPLASH_STATUS_SENDING_LOGS = new LocKeys('SPLASH_STATUS_SENDING_LOGS')
 
   constructor(public value: string) {}
 

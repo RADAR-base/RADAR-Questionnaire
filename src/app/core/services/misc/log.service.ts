@@ -5,24 +5,24 @@ import { Platform } from 'ionic-angular'
 export class LogService {
   constructor(private plt: Platform) {}
 
-  log(message: any, ...optionalParameters: any[]) {
-    if (this.plt.is('desktop')) {
-      console.log(message, ...optionalParameters)
+  log(...parameters: any[]) {
+    if (this.plt.is('mobileweb')) {
+      console.log(...parameters)
     } else {
-      console.log(
-        LogService.formatObject(message),
-        ...optionalParameters.map(o => LogService.formatObject(o))
-      )
+      const formattedParameters = []
+      parameters.forEach(p => {
+        if (LogService.needsFormatting(p)) {
+          formattedParameters.push(LogService.formatObject(p))
+        }
+        formattedParameters.push(p)
+      })
+      console.log(...formattedParameters)
     }
   }
 
   error(message: string, error: any): Error {
     const formattedException = `${message}: ${LogService.formatObject(error)}`
-    if (this.plt.is('desktop')) {
-      console.log(formattedException, error)
-    } else {
-      console.log(formattedException)
-    }
+    console.log(formattedException, error)
 
     if (error instanceof Error) {
       return error
@@ -31,9 +31,17 @@ export class LogService {
     }
   }
 
+  static needsFormatting(obj: any): boolean {
+    if (Array.isArray(obj)) {
+      return (<any[]>obj).some(o => this.needsFormatting(o))
+    } else {
+      return typeof obj === 'object'
+    }
+  }
+
   static formatObject(obj: any): string {
     if (Array.isArray(obj)) {
-      return (<Array<any>>obj).map(o => this.formatObject(o)).toString()
+      return (<any[]>obj).map(o => this.formatObject(o)).toString()
     } else if (typeof obj !== 'object') {
       return String(obj)
     } else if (obj.toString !== Object.prototype.toString) {

@@ -1,5 +1,9 @@
 import 'rxjs/add/operator/toPromise'
 
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
+import { Injectable } from '@angular/core'
+import { JwtHelperService } from '@auth0/angular-jwt'
+
 import {
   DefaultEndPoint,
   DefaultManagementPortalURI,
@@ -9,16 +13,12 @@ import {
   DefaultRequestEncodedContentType,
   DefaultTokenRefreshSeconds
 } from '../../../../assets/data/defaultConfig'
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
-
 import { ConfigKeys } from '../../../shared/enums/config'
-import { Injectable } from '@angular/core'
-import { JwtHelperService } from '@auth0/angular-jwt'
-import { OAuthToken } from '../../../shared/models/token'
-import { RemoteConfigService } from '../config/remote-config.service'
 import { StorageKeys } from '../../../shared/enums/storage'
-import { StorageService } from '../storage/storage.service'
+import { OAuthToken } from '../../../shared/models/token'
 import { getSeconds } from '../../../shared/utilities/time'
+import { RemoteConfigService } from '../config/remote-config.service'
+import { StorageService } from '../storage/storage.service'
 
 @Injectable()
 export class TokenService {
@@ -94,7 +94,7 @@ export class TokenService {
     return 'Basic ' + btoa(`${user}:${password}`)
   }
 
-  register(refreshBody?, params?) {
+  register(refreshBody) {
     return this.getURI().then(uri => {
       const URI = uri + DefaultManagementPortalURI + DefaultRefreshTokenURI
       const headers = this.getRegisterHeaders(DefaultRequestEncodedContentType)
@@ -102,7 +102,7 @@ export class TokenService {
         `"Registering with ${URI} using client credentials ${this.clientCredentials}`
       )
       return this.http
-        .post(URI, refreshBody, { headers: headers, params: params })
+        .post(URI, refreshBody, { headers: headers })
         .toPromise()
         .then(res => this.setTokens(res))
     })
@@ -116,12 +116,12 @@ export class TokenService {
         })
         if (tokens.iat + tokens.expires_in < limit) {
           const params = this.getRefreshParams(tokens.refresh_token)
-          return this.register('', params)
+          return this.register(params)
         } else {
           return tokens
         }
       } else {
-        return Promise.reject([])
+        throw new Error('No tokens are available to refresh')
       }
     })
   }

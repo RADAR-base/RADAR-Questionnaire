@@ -1,10 +1,10 @@
+import { Injectable } from '@angular/core'
+
+import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
+import { LocalizationService } from '../../../core/services/misc/localization.service'
+import { ScheduleService } from '../../../core/services/schedule/schedule.service'
 import { Task, TasksProgress } from '../../../shared/models/task'
 import { TaskType, getTaskType } from '../../../shared/utilities/task-type'
-
-import { Injectable } from '@angular/core'
-import { LocalizationService } from '../../../core/services/misc/localization.service'
-import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
-import { ScheduleService } from '../../../core/services/schedule/schedule.service'
 import { setDateTimeToMidnight } from '../../../shared/utilities/time'
 
 @Injectable()

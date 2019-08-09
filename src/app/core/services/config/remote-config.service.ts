@@ -1,13 +1,13 @@
 import 'rxjs/add/operator/mergeMap'
 
+import { Injectable } from '@angular/core'
+import { Firebase } from '@ionic-native/firebase/ngx'
+import { Platform } from 'ionic-angular'
 import { BehaviorSubject, Observable, from } from 'rxjs'
 
 import { ConfigKeys } from '../../../shared/enums/config'
-import { Firebase } from '@ionic-native/firebase/ngx'
-import { Injectable } from '@angular/core'
-import { LogService } from '../misc/log.service'
-import { Platform } from 'ionic-angular'
 import { StorageKeys } from '../../../shared/enums/storage'
+import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 
 declare var FirebasePlugin
@@ -55,11 +55,15 @@ export class RemoteConfigService {
 }
 
 export interface RemoteConfig {
+  readonly fetchedAt: Date
+
   get(key: ConfigKeys): Promise<any>
   getOrDefault(key: ConfigKeys, defaultValue: any): Promise<any>
 }
 
 class EmptyRemoteConfig implements RemoteConfig {
+  readonly fetchedAt = new Date(0)
+
   get(key: ConfigKeys): Promise<any> {
     return Promise.resolve()
   }
@@ -69,6 +73,8 @@ class EmptyRemoteConfig implements RemoteConfig {
 }
 
 class FirebaseRemoteConfig implements RemoteConfig {
+  readonly fetchedAt = new Date()
+
   constructor(private logger: LogService) {}
 
   get(key: ConfigKeys): Promise<string | null> {
@@ -95,7 +101,6 @@ class FirebaseRemoteConfig implements RemoteConfig {
 
 @Injectable()
 export class FirebaseRemoteConfigService extends RemoteConfigService {
-  private lastFetch: number = 0
   private readonly configSubject: BehaviorSubject<RemoteConfig>
 
   constructor(
@@ -113,17 +118,21 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
   }
 
   read(): Promise<RemoteConfig> {
-    if (this.lastFetch + this.timeoutMillis >= new Date().getTime()) {
-      return Promise.resolve(this.configSubject.value)
+    const currentValue = this.configSubject.value
+    const nextFetch = currentValue.fetchedAt.getTime() + this.timeoutMillis
+    if (new Date().getTime() <= nextFetch) {
+      return Promise.resolve(currentValue)
     }
 
     return this.fetch(this.timeoutMillis)
   }
 
   private fetch(timeoutMillis: number) {
-    console.log('Fetching Firebase Remote Config')
-    if (!this.platform.is('cordova'))
+    if (!this.platform.is('cordova')) {
+      console.log('Not fetching Firebase Remote Config without cordova')
       return Promise.resolve(this.configSubject.value)
+    }
+    console.log('Fetching Firebase Remote Config')
     return this.firebase
       .fetch(timeoutMillis)
       .then(() => {
@@ -141,16 +150,12 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
         if (activated) {
           this.configSubject.next(conf)
         }
-        this.lastFetch = new Date().getTime()
         return conf
       })
   }
 
   subject(): Observable<RemoteConfig> {
-    if (this.lastFetch == 0) {
-      return from(this.read()).mergeMap(() => this.configSubject)
-    } else {
-      return this.configSubject
-    }
+    return from(this.read())
+      .mergeMap(() => this.configSubject)
   }
 }

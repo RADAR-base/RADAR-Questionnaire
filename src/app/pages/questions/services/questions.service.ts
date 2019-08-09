@@ -1,17 +1,15 @@
-import { AnswerService } from './answer.service'
 import { Injectable } from '@angular/core'
+
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
-import { TimestampService } from './timestamp.service'
-import { UsageEventType } from '../../../shared/enums/events'
-import { UsageService } from '../../../core/services/usage/usage.service'
 import { getSeconds } from '../../../shared/utilities/time'
+import { AnswerService } from './answer.service'
+import { TimestampService } from './timestamp.service'
 @Injectable()
 export class QuestionsService {
   constructor(
     public questionnaire: QuestionnaireService,
     private answerService: AnswerService,
-    private timestampService: TimestampService,
-    private usage: UsageService
+    private timestampService: TimestampService
   ) {}
 
   reset() {
@@ -137,16 +135,5 @@ export class QuestionsService {
         endTime: this.getTime()
       }
     })
-  }
-
-  sendCompletionLog(task, totalQuestions) {
-    this.usage.sendCompletionLog(task, this.getAttemptProgress(totalQuestions))
-  }
-
-  sendCloseEvent(task) {
-    this.usage.sendQuestionnaireEvent(
-      UsageEventType.QUESTIONNAIRE_STARTED,
-      task
-    )
   }
 }

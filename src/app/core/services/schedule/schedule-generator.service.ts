@@ -1,24 +1,24 @@
+import { Injectable } from '@angular/core'
+
 import {
   DefaultESMCompletionWindow,
   DefaultScheduleYearCoverage,
   DefaultTaskCompletionWindow
 } from '../../../../assets/data/defaultConfig'
+import { Assessment } from '../../../shared/models/assessment'
+import { Task } from '../../../shared/models/task'
+import { compareTasks } from '../../../shared/utilities/compare-tasks'
+import { TaskType } from '../../../shared/utilities/task-type'
 import {
   advanceRepeat,
   getMilliseconds,
   setDateTimeToMidnight,
   timeIntervalToMillis
 } from '../../../shared/utilities/time'
-
-import { Assessment } from '../../../shared/models/assessment'
-import { Injectable } from '@angular/core'
-import { LocalizationService } from '../misc/localization.service'
-import { NotificationGeneratorService } from '../notifications/notification-generator.service'
 import { QuestionnaireService } from '../config/questionnaire.service'
-import { Task } from '../../../shared/models/task'
-import { TaskType } from '../../../shared/utilities/task-type'
-import { compareTasks } from '../../../shared/utilities/compare-tasks'
+import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
+import { NotificationGeneratorService } from '../notifications/notification-generator.service'
 
 @Injectable()
 export class ScheduleGeneratorService {

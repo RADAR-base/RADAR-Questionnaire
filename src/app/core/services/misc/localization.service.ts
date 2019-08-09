@@ -4,13 +4,14 @@ import 'moment/locale/es'
 import 'moment/locale/it'
 import 'moment/locale/nl'
 
-import { DefaultSettingsSupportedLanguages } from '../../../../assets/data/defaultConfig'
 import { Injectable } from '@angular/core'
-import { LanguageSetting } from '../../../shared/models/settings'
-import { LocKeys } from '../../../shared/enums/localisations'
+
+import { DefaultSettingsSupportedLanguages } from '../../../../assets/data/defaultConfig'
 import { Localisations } from '../../../../assets/data/localisations'
-import { MultiLanguageText } from '../../../shared/models/text'
+import { LocKeys } from '../../../shared/enums/localisations'
 import { StorageKeys } from '../../../shared/enums/storage'
+import { LanguageSetting } from '../../../shared/models/settings'
+import { MultiLanguageText } from '../../../shared/models/text'
 import { StorageService } from '../storage/storage.service'
 
 import moment = require('moment')

@@ -2,7 +2,6 @@ import {
   DefaultScheduleYearCoverage,
   DefaultTimeInterval
 } from '../../../assets/data/defaultConfig'
-
 import { TimeInterval } from '../../shared/models/protocol'
 
 export enum TimeConversion {

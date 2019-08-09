@@ -1,8 +1,9 @@
-import { Assessment } from '../../../shared/models/assessment'
-import { ClinicalTasksService } from '../services/clinical-tasks.service'
 import { Component } from '@angular/core'
 import { NavController } from 'ionic-angular'
+
+import { Assessment } from '../../../shared/models/assessment'
 import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
+import { ClinicalTasksService } from '../services/clinical-tasks.service'
 
 @Component({
   selector: 'page-clinical-tasks',

@@ -1,18 +1,18 @@
 import 'rxjs/add/operator/map'
 
+import { Injectable } from '@angular/core'
+
+import { StorageKeys } from '../../../shared/enums/storage'
+import { Task } from '../../../shared/models/task'
+import { compareTasks } from '../../../shared/utilities/compare-tasks'
 import { TaskType, getTaskType } from '../../../shared/utilities/task-type'
 import {
   getMilliseconds,
   setDateTimeToMidnight
 } from '../../../shared/utilities/time'
-
-import { Injectable } from '@angular/core'
 import { LogService } from '../misc/log.service'
-import { ScheduleGeneratorService } from './schedule-generator.service'
-import { StorageKeys } from '../../../shared/enums/storage'
 import { StorageService } from '../storage/storage.service'
-import { Task } from '../../../shared/models/task'
-import { compareTasks } from '../../../shared/utilities/compare-tasks'
+import { ScheduleGeneratorService } from './schedule-generator.service'
 
 @Injectable()
 export class ScheduleService {

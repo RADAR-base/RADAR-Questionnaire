@@ -1,20 +1,20 @@
 import { Component, OnDestroy } from '@angular/core'
 import { NavController, Platform } from 'ionic-angular'
-import { Task, TasksProgress } from '../../../shared/models/task'
+import { Subscription } from 'rxjs'
 
 import { AlertService } from '../../../core/services/misc/alert.service'
-import { ClinicalTasksPageComponent } from '../../clinical-tasks/containers/clinical-tasks-page.component'
-import { HomePageAnimations } from './home-page.animation'
-import { LocKeys } from '../../../shared/enums/localisations'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
+import { UsageService } from '../../../core/services/usage/usage.service'
+import { UsageEventType } from '../../../shared/enums/events'
+import { LocKeys } from '../../../shared/enums/localisations'
+import { Task, TasksProgress } from '../../../shared/models/task'
+import { checkTaskIsNow } from '../../../shared/utilities/check-task-is-now'
+import { ClinicalTasksPageComponent } from '../../clinical-tasks/containers/clinical-tasks-page.component'
 import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
 import { SettingsPageComponent } from '../../settings/containers/settings-page.component'
 import { SplashPageComponent } from '../../splash/containers/splash-page.component'
-import { Subscription } from 'rxjs'
 import { TasksService } from '../services/tasks.service'
-import { UsageEventType } from '../../../shared/enums/events'
-import { UsageService } from '../../../core/services/usage/usage.service'
-import { checkTaskIsNow } from '../../../shared/utilities/check-task-is-now'
+import { HomePageAnimations } from './home-page.animation'
 
 @Component({
   selector: 'page-home',
@@ -143,10 +143,6 @@ export class HomePageComponent implements OnDestroy {
 
     if (this.tasksService.isTaskStartable(task)) {
       this.usage.sendClickEvent('start_questionnaire')
-      this.usage.sendQuestionnaireEvent(
-        UsageEventType.QUESTIONNAIRE_STARTED,
-        task
-      )
       this.startingQuestionnaire = true
       return this.tasksService
         .getQuestionnairePayload(task)

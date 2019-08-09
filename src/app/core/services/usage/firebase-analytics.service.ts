@@ -1,8 +1,9 @@
-import { Firebase } from '@ionic-native/firebase/ngx'
 import { Injectable } from '@angular/core'
-import { LogService } from '../misc/log.service'
+import { Firebase } from '@ionic-native/firebase/ngx'
 import { Platform } from 'ionic-angular'
+
 import { User } from '../../../shared/models/user'
+import { LogService } from '../misc/log.service'
 
 @Injectable()
 export class FirebaseAnalyticsService {

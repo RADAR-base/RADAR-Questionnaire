@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core'
-import { LogService } from '../misc/log.service'
 import { Storage } from '@ionic/storage'
-import { StorageKeys } from '../../../shared/enums/storage'
 import { throwError as observableThrowError } from 'rxjs'
+
+import { StorageKeys } from '../../../shared/enums/storage'
+import { LogService } from '../misc/log.service'
 
 @Injectable()
 export class StorageService {

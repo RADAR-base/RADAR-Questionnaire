@@ -1,27 +1,26 @@
+import { HttpClient } from '@angular/common/http'
+import { Injectable } from '@angular/core'
 import * as AvroSchema from 'avsc'
 import * as KafkaRest from 'kafka-rest'
 import * as YAML from 'yamljs'
 
+import { DefaultSchemaSpecEndpoint } from '../../../../assets/data/defaultConfig'
+import { ConfigKeys } from '../../../shared/enums/config'
 import {
   AnswerKeyExport,
   AnswerValueExport
 } from '../../../shared/models/answer'
-import { SchemaMetadata, SchemaType } from '../../../shared/models/kafka'
-
-import { ApplicationTimeZoneValueExport } from '../../../shared/models/timezone'
 import { CompletionLogValueExport } from '../../../shared/models/completion-log'
-import { ConfigKeys } from '../../../shared/enums/config'
-import { DefaultSchemaSpecEndpoint } from '../../../../assets/data/defaultConfig'
-import { HttpClient } from '@angular/common/http'
-import { Injectable } from '@angular/core'
-import { LogService } from '../misc/log.service'
+import { SchemaMetadata, SchemaType } from '../../../shared/models/kafka'
+import { Task } from '../../../shared/models/task'
+import { ApplicationTimeZoneValueExport } from '../../../shared/models/timezone'
+import { UsageEventValueExport } from '../../../shared/models/usage-event'
+import { getTaskType } from '../../../shared/utilities/task-type'
+import { getSeconds } from '../../../shared/utilities/time'
 import { QuestionnaireService } from '../config/questionnaire.service'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { SubjectConfigService } from '../config/subject-config.service'
-import { Task } from '../../../shared/models/task'
-import { UsageEventValueExport } from '../../../shared/models/usage-event'
-import { getSeconds } from '../../../shared/utilities/time'
-import { getTaskType } from '../../../shared/utilities/task-type'
+import { LogService } from '../misc/log.service'
 
 @Injectable()
 export class SchemaService {

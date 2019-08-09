@@ -1,8 +1,8 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core'
-import { Task, TasksProgress } from '../../../../shared/models/task'
 
-import { LocKeys } from '../../../../shared/enums/localisations'
 import { LocalizationService } from '../../../../core/services/misc/localization.service'
+import { LocKeys } from '../../../../shared/enums/localisations'
+import { Task, TasksProgress } from '../../../../shared/models/task'
 import { TaskInfoAnimations } from './task-info.animation'
 
 @Component({

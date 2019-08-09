@@ -14,6 +14,9 @@ android:
     - android-28
     - extra
 addons:
+  apt:
+    packages:
+      - xvfb
   chrome: stable
 cache:
   yarn: true
@@ -40,7 +43,7 @@ before_script:
 script:
   - cordova prepare
   - yarn install
-  - yarn test
+  - xvfb-run -a yarn test
   - if [[ $TRAVIS_BRANCH != $TRAVIS_TAG ]]; then fastlane android build_debug ; fi
   - if [[ $TRAVIS_BRANCH == $TRAVIS_TAG ]]; then fastlane android deploy keystore_path:$KEYSTORE_PATH keystore_password:$storepass keystore_alias:$KEYSTORE_ALIAS package_name:$PACKAGE_NAME_ANDROID track:$PLAYSTORE_TRACK json_key:$PLAYSTORE_SERVICE_KEY ; fi
 #

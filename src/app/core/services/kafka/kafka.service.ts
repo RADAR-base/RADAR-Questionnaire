@@ -74,7 +74,7 @@ export class KafkaService {
             .filter(([k]) => k)
             .map(([k, v]: any) => this.sendToKafka(k, v, kafka)
               .catch(e => {
-                this.logger.error('Failed to send data from cache', e)
+                this.logger.error('Failed to send data from cache to kafka', e)
                 return undefined
               }))
 
@@ -114,8 +114,8 @@ export class KafkaService {
       .then(() => this.sendKafkaEvent(KafkaEventType.SEND_SUCCESS, v))
       .then(() => k)
       .catch(error => {
-        this.logger.error('Failed to send to kafka', error)
         this.sendKafkaEvent(KafkaEventType.SEND_ERROR, v, JSON.stringify(error))
+        throw error
       })
   }
 

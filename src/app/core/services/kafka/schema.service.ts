@@ -6,21 +6,23 @@ import * as YAML from 'yamljs'
 
 import { DefaultSchemaSpecEndpoint } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
-import {
-  AnswerKeyExport,
-  AnswerValueExport
-} from '../../../shared/models/answer'
+import { AnswerValueExport } from '../../../shared/models/answer'
 import { CompletionLogValueExport } from '../../../shared/models/completion-log'
-import { SchemaMetadata, SchemaType } from '../../../shared/models/kafka'
+import {
+  SchemaMetadata,
+  SchemaType,
+  KeyExport
+} from '../../../shared/models/kafka'
 import { Task } from '../../../shared/models/task'
 import { ApplicationTimeZoneValueExport } from '../../../shared/models/timezone'
-import { UsageEventValueExport } from '../../../shared/models/usage-event'
+import { EventValueExport } from '../../../shared/models/event'
 import { getTaskType } from '../../../shared/utilities/task-type'
 import { getSeconds } from '../../../shared/utilities/time'
 import { QuestionnaireService } from '../config/questionnaire.service'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { SubjectConfigService } from '../config/subject-config.service'
 import { LogService } from '../misc/log.service'
+import { QuestionnaireMetadata } from '../../../shared/models/assessment'
 
 @Injectable()
 export class SchemaService {
@@ -38,22 +40,15 @@ export class SchemaService {
     private remoteConfig: RemoteConfigService
   ) {}
 
-  getSpecs(type, task?: Task) {
-    // NOTE: Specs { avsc: string, name: string }
+  getMetaData(type, task?: Task): Promise<QuestionnaireMetadata> {
     switch (type) {
       case SchemaType.ASSESSMENT:
-        return this.getAssessmentAvro(task)
+        return this.questionnaire
+          .getAssessment(getTaskType(task), task)
+          .then(assessment => assessment.questionnaire)
       default:
         return Promise.resolve({ name: type, avsc: 'questionnaire' })
     }
-  }
-
-  getAssessmentAvro(task: Task) {
-    return this.questionnaire
-      .getAssessment(getTaskType(task), task)
-      .then(assessment => {
-        return assessment.questionnaire
-      })
   }
 
   getKafkaObjectKey() {
@@ -67,7 +62,7 @@ export class SchemaService {
         userId: participantName.toString(),
         projectId: projectName
       }))
-      .then(observationKey => observationKey as AnswerKeyExport)
+      .then(observationKey => observationKey as KeyExport)
   }
 
   getKafkaObjectValue(type, payload) {
@@ -98,8 +93,8 @@ export class SchemaService {
           offset: getSeconds({ minutes: new Date().getTimezoneOffset() })
         }
         return ApplicationTimeZone
-      case SchemaType.USAGE:
-        const Event: UsageEventValueExport = {
+      case SchemaType.EVENT:
+        const Event: EventValueExport = {
           time: getSeconds({ milliseconds: this.getUniqueTimeNow() }),
           eventType: payload.eventType
         }

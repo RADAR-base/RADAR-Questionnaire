@@ -1,6 +1,3 @@
-// tslint:disable:no-eval
-import { Component, ElementRef, ViewChild } from '@angular/core'
-import { Insomnia } from '@ionic-native/insomnia/ngx'
 import {
   App,
   Content,
@@ -8,15 +5,18 @@ import {
   NavParams,
   ViewController
 } from 'ionic-angular'
-
-import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
-import { LocKeys } from '../../../shared/enums/localisations'
+// tslint:disable:no-eval
+import { Component, ElementRef, ViewChild } from '@angular/core'
 import { Question, QuestionType } from '../../../shared/models/question'
+
+import { AnswerService } from '../services/answer.service'
+import { FinishPageComponent } from '../../finish/containers/finish-page.component'
+import { FirebaseAnalyticsService } from '../../../core/services/firebaseAnalytics.service'
+import { Insomnia } from '@ionic-native/insomnia/ngx'
+import { LocKeys } from '../../../shared/enums/localisations'
+import { TimestampService } from '../services/timestamp.service'
 import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { getSeconds } from '../../../shared/utilities/time'
-import { FinishPageComponent } from '../../finish/containers/finish-page.component'
-import { AnswerService } from '../services/answer.service'
-import { TimestampService } from '../services/timestamp.service'
 
 @Component({
   selector: 'page-questions',
@@ -156,7 +156,9 @@ export class QuestionsPageComponent {
       this.setNextDisabled()
 
       if (
-        this.questions[this.currentQuestion].field_type === QuestionType.timed
+        this.questions[this.currentQuestion].field_type ===
+          QuestionType.timed ||
+        this.questions[this.currentQuestion].field_type === QuestionType.audio
       )
         this.setPreviousDisabled()
       else this.setPreviousEnabled()

@@ -1,18 +1,18 @@
 import { Component, ElementRef, ViewChild } from '@angular/core'
-import { Insomnia } from '@ionic-native/insomnia/ngx'
 import { Content, NavController, NavParams, Platform } from 'ionic-angular'
 
-import { LocalizationService } from '../../../core/services/misc/localization.service'
-import { UsageService } from '../../../core/services/usage/usage.service'
-import { UsageEventType } from '../../../shared/enums/events'
-import { LocKeys } from '../../../shared/enums/localisations'
 import { Assessment } from '../../../shared/models/assessment'
-import { Question, QuestionType } from '../../../shared/models/question'
+import { FinishPageComponent } from '../../finish/containers/finish-page.component'
+import { Insomnia } from '@ionic-native/insomnia/ngx'
+import { LocKeys } from '../../../shared/enums/localisations'
+import { LocalizationService } from '../../../core/services/misc/localization.service'
+import { Question } from '../../../shared/models/question'
+import { QuestionsPageAnimations } from './questions-page.animation'
+import { QuestionsService } from '../services/questions.service'
 import { Task } from '../../../shared/models/task'
 import { TaskType } from '../../../shared/utilities/task-type'
-import { FinishPageComponent } from '../../finish/containers/finish-page.component'
-import { QuestionsService } from '../services/questions.service'
-import { QuestionsPageAnimations } from './questions-page.animation'
+import { UsageEventType } from '../../../shared/enums/events'
+import { UsageService } from '../../../core/services/usage/usage.service'
 
 @Component({
   selector: 'page-questions',
@@ -41,8 +41,8 @@ export class QuestionsPageComponent {
   }
   nextButtonText = this.localization.translateKey(LocKeys.BTN_NEXT)
   previousButtonText = this.localization.translateKey(LocKeys.BTN_NEXT)
-  isNextBtDisabled = true
-  isPreviousBtDisabled = false
+  isNextButtonDisabled = true
+  isPreviousButtonDisabled = false
   iconValues = {
     previous: 'ios-arrow-back',
     close: 'close-circle'
@@ -115,12 +115,9 @@ export class QuestionsPageComponent {
   onAnswer(event) {
     if (event.id) {
       this.questionsService.submitAnswer(event)
-      this.setNextDisabled()
+      this.updateNextButton()
     }
-    if (
-      event.type === QuestionType.timed ||
-      event.type === QuestionType.audio
-    ) {
+    if (this.questionsService.getIsNextAutomatic(event.type)) {
       this.nextQuestion()
     }
   }
@@ -163,9 +160,8 @@ export class QuestionsPageComponent {
       this.setButtons()
       this.setProgress()
       this.slideQuestion()
-      this.setNextDisabled()
-      this.isPreviousBtDisabled =
-        this.questions[this.currentQuestion].field_type === QuestionType.timed
+      this.updateNextButton()
+      this.updatePreviousButton()
       return
     }
   }
@@ -193,14 +189,20 @@ export class QuestionsPageComponent {
     )
   }
 
-  setNextDisabled() {
-    this.isNextBtDisabled = !this.questionsService.checkAnswer(
+  updateNextButton() {
+    this.isNextButtonDisabled = !this.questionsService.isAnswered(
       this.getCurrentQuestionID()
     )
   }
 
+  updatePreviousButton() {
+    this.isPreviousButtonDisabled = this.questionsService.getIsPreviousDisabled(
+      this.questions[this.currentQuestion].field_type
+    )
+  }
+
   nextQuestion() {
-    if (this.questionsService.checkAnswer(this.getCurrentQuestionID())) {
+    if (this.questionsService.isAnswered(this.getCurrentQuestionID())) {
       // NOTE: Record timestamp and end time when pressed "Next"
       this.questionsService.recordTimeStamp(
         this.getCurrentQuestionID(),
@@ -216,8 +218,8 @@ export class QuestionsPageComponent {
   }
 
   previousQuestion() {
-    if (this.isPreviousBtDisabled === false) {
-      if (!this.isNextBtDisabled) this.questionsService.deleteLastAnswer()
+    if (this.isPreviousButtonDisabled === false) {
+      if (!this.isNextButtonDisabled) this.questionsService.deleteLastAnswer()
       const inc = this.questionIncrements.length
         ? -this.questionIncrements.pop()
         : null

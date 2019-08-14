@@ -1,11 +1,21 @@
-import { Injectable } from '@angular/core'
-
-import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
-import { getSeconds } from '../../../shared/utilities/time'
 import { AnswerService } from './answer.service'
+import { Injectable } from '@angular/core'
+import { QuestionType } from '../../../shared/models/question'
+import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
 import { TimestampService } from './timestamp.service'
+import { getSeconds } from '../../../shared/utilities/time'
+
 @Injectable()
 export class QuestionsService {
+  PREVIOUS_BUTTON_DISABLED_SET: Set<QuestionType> = new Set([
+    QuestionType.timed,
+    QuestionType.audio
+  ])
+  NEXT_BUTTON_AUTOMATIC_SET: Set<QuestionType> = new Set([
+    QuestionType.timed,
+    QuestionType.audio
+  ])
+
   constructor(
     public questionnaire: QuestionnaireService,
     private answerService: AnswerService,
@@ -80,7 +90,7 @@ export class QuestionsService {
     return questions
   }
 
-  checkAnswer(id) {
+  isAnswered(id) {
     return this.answerService.check(id)
   }
 
@@ -135,5 +145,13 @@ export class QuestionsService {
         endTime: this.getTime()
       }
     })
+  }
+
+  getIsPreviousDisabled(type) {
+    return this.PREVIOUS_BUTTON_DISABLED_SET.has(type)
+  }
+
+  getIsNextAutomatic(type) {
+    return this.NEXT_BUTTON_AUTOMATIC_SET.has(type)
   }
 }

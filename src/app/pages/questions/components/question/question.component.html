@@ -2,18 +2,20 @@
   [class.hidden]="!currentlyShown"
   [class.fade]="previouslyShown && !currentlyShown"
 >
-  <div
-    *ngIf="
+  <div *ngIf="
       question?.type === 'info' || question?.type === 'timed';
       then taskformat;
       else stdformat
-    "
-  ></div>
+    "></div>
 
   <ng-template #stdformat>
     <p class="stdformat">{{ question.section_header }}</p>
     <div class="field-container">
-      <h2 [fittext]="true" [maxFontSize]="18" [modelToWatch]="question">
+      <h2
+        [fittext]="true"
+        [maxFontSize]="18"
+        [modelToWatch]="question"
+      >
         {{ question.field_label }}
       </h2>
     </div>
@@ -98,5 +100,13 @@
       (valueChange)="onValueChange($event)"
     >
     </timed-test>
+  </div>
+
+  <div *ngIf="question.field_type === 'text'">
+    <text-input (valueChange)="onValueChange($event)"></text-input>
+  </div>
+
+  <div *ngIf="question.field_type === 'date'">
+    <date-input (valueChange)="onValueChange($event)"></date-input>
   </div>
 </div>

@@ -235,11 +235,13 @@ export class QuestionsPageComponent {
       const logic = this.questions[questionIdx].evaluated_logic
       const logicFieldName = this.getLogicFieldName(logic)
       const answers = this.answerService.answers[logicFieldName]
-      const answerLength = answers.length
-      if (!answerLength) if (eval(logic) === true) return increment
-      for (const answer of answers) {
-        responses[logicFieldName] = answer
-        if (eval(logic) === true) return increment
+      if (typeof answers !== 'undefined') {
+        const answerLength = answers.length
+        if (!answerLength) if (eval(logic) === true) return increment
+        for (const answer of answers) {
+          responses[logicFieldName] = answer
+          if (eval(logic) === true) return increment
+        }
       }
       increment += 1
       questionIdx += 1

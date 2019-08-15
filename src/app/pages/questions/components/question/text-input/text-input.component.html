@@ -1,0 +1,8 @@
+
+<ion-input
+  clearInput
+  [disabled]="!currentlyShown"
+  [placeholder]="validation"
+  [(ngModel)]="value"
+  (ngModelChange)="onInputChange(value)"
+></ion-input>

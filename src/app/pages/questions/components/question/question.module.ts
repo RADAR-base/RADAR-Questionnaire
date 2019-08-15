@@ -14,6 +14,7 @@ import { RangeInputComponent } from './range-input/range-input.component'
 import { SliderInputComponent } from './slider-input/slider-input.component'
 import { TimedTestComponent } from './timed-test/timed-test.component'
 import { Ng2FittextModule } from 'ng2-fittext'
+import { TextInputComponent } from './text-input/text-input.component'
 
 const COMPONENTS = [
   QuestionComponent,
@@ -24,7 +25,8 @@ const COMPONENTS = [
   SliderInputComponent,
   TimedTestComponent,
   InfoScreenComponent,
-  RangeInfoInputComponent
+  RangeInfoInputComponent,
+  TextInputComponent
 ]
 
 @NgModule({

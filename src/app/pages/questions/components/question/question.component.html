@@ -21,6 +21,15 @@
   <h2 class="taskformat">{{ question.field_label }}</h2>
 </ng-template>
 
+<div *ngIf="question.field_type === 'text'">
+  <text-input
+    [validation]="question.text_validation_type_or_show_slider_number"
+    [currentlyShown]="currentlyShown"
+    (valueChange)="onValueChange($event)"
+  >
+  </text-input>
+</div>
+
 <div *ngIf="question.field_type === 'radio'">
   <radio-input
     [responses]="question.select_choices_or_calculations"

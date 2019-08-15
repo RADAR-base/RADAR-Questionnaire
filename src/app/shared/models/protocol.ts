@@ -1,13 +1,15 @@
+import { MultiLanguageText } from './text'
+
 export interface ClinicalProtocol {
   requiresInClinicCompletion?: boolean
   repeatAfterClinicVisit: RepeatQuestionnaire
 }
 
 export interface Protocol {
-  notification?: Notification
+  notification?: ProtocolNotification
   repeatProtocol: TimeInterval
   repeatQuestionnaire: RepeatQuestionnaire
-  reminders?: Reminder[]
+  reminders?: Reminder[] | Reminders
   clinicalProtocol?: ClinicalProtocol
   completionWindow?: TimeInterval
 }
@@ -24,12 +26,16 @@ export interface RepeatQuestionnaire {
 
 export interface Reminder {
   offset: TimeInterval
-  notification: Notification | null
+  notification?: ProtocolNotification
 }
 
-export interface Notification {
-  title: string | null
-  text: string
-  vibrate: boolean
-  sound: boolean
+export interface Reminders extends TimeInterval {
+  repeat?: number
+}
+
+export interface ProtocolNotification {
+  title?: MultiLanguageText
+  text?: MultiLanguageText
+  vibrate?: boolean
+  sound?: boolean
 }

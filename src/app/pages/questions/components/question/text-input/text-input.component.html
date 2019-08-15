@@ -1,8 +1,19 @@
+<ng-container *ngIf="isDateTime">
+  <ion-item>
+    <ion-datetime
+      placeholder="{{ placeholder }}"
+      displayFormat="{{ dateFormat }}"
+      (ionChange)="onInputChange($event)"
+    ></ion-datetime>
+  </ion-item>
+</ng-container>
 
-<ion-input
-  clearInput
-  [disabled]="!currentlyShown"
-  [placeholder]="validation"
-  [(ngModel)]="value"
-  (ngModelChange)="onInputChange(value)"
-></ion-input>
+<ng-container *ngIf="!isDateTime">
+  <ion-item>
+    <ion-input
+      type="text"
+      placeholder="{{ placeholder }}"
+      (ionChange)="onInputChange($event.value)"
+    ></ion-input>
+  </ion-item>
+</ng-container>

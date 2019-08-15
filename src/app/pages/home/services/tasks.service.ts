@@ -1,43 +1,58 @@
 import { Injectable } from '@angular/core'
 
-import {
-  DefaultESMCompletionWindow,
-  DefaultTaskCompletionWindow
-} from '../../../../assets/data/defaultConfig'
-import { SchedulingService } from '../../../core/services/scheduling.service'
-import { StorageService } from '../../../core/services/storage.service'
+import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
+import { LocalizationService } from '../../../core/services/misc/localization.service'
+import { ScheduleService } from '../../../core/services/schedule/schedule.service'
 import { Task, TasksProgress } from '../../../shared/models/task'
+import { TaskType, getTaskType } from '../../../shared/utilities/task-type'
+import { setDateTimeToMidnight } from '../../../shared/utilities/time'
 
 @Injectable()
 export class TasksService {
   constructor(
-    public storage: StorageService,
-    private schedule: SchedulingService
+    private schedule: ScheduleService,
+    private localization: LocalizationService,
+    private questionnaire: QuestionnaireService
   ) {}
 
-  getAssessment(task) {
-    return this.storage.getAssessment(task)
+  getQuestionnairePayload(task) {
+    const type = getTaskType(task)
+    return Promise.all([
+      this.questionnaire.getAssessment(type, task),
+      this.getTasksOfToday()
+    ]).then(([assessment, tasks]) => {
+      return {
+        title: assessment.name,
+        introduction: this.localization.chooseText(assessment.startText),
+        endText: this.localization.chooseText(assessment.endText),
+        questions: assessment.questions,
+        task: task,
+        assessment: assessment,
+        type: type,
+        isLastTask: this.isLastTask(tasks)
+      }
+    })
   }
 
-  getNonClinicalTasksOfToday() {
+  evalHasClinicalTasks() {
+    return this.questionnaire.getHasClinicalTasks()
+  }
+
+  getTasksOfToday() {
     return this.schedule
-      .getNonClinicalTasksForDate(new Date())
+      .getTasksForDate(new Date(), TaskType.NON_CLINICAL)
       .then(tasks =>
         tasks.filter(
-          t =>
-            this.isTaskValid(t) ||
-            (t.completed && this.isToday(t.timeCompleted))
+          t => !this.isTaskExpired(t) || this.wasTaskCompletedToday(t)
         )
       )
   }
 
-  getSortedNonClinicalTasksOfToday(): Promise<Map<number, Task[]>> {
-    return this.getNonClinicalTasksOfToday().then(tasks => {
+  getSortedTasksOfToday(): Promise<Map<number, Task[]>> {
+    return this.getTasksOfToday().then(tasks => {
       const sortedTasks = new Map()
       tasks.forEach(t => {
-        const midnight = this.schedule
-          .setDateTimeToMidnight(t.timestamp)
-          .getTime()
+        const midnight = setDateTimeToMidnight(new Date(t.timestamp)).getTime()
         if (sortedTasks.has(midnight)) sortedTasks.get(midnight).push(t)
         else sortedTasks.set(midnight, [t])
       })
@@ -45,17 +60,15 @@ export class TasksService {
     })
   }
 
-  getTasksOfDate(timestamp) {
-    return this.schedule.getNonClinicalTasksForDate(timestamp)
+  getTaskProgress(): Promise<TasksProgress> {
+    return this.getTasksOfToday().then(tasks => ({
+      numberOfTasks: tasks.length,
+      completedTasks: tasks.filter(d => d.completed).length
+    }))
   }
 
-  getTaskProgress(): Promise<TasksProgress> {
-    return this.getNonClinicalTasksOfToday().then(tasks => {
-      return {
-        numberOfTasks: tasks.length,
-        completedTasks: tasks.filter(d => d.completed).length
-      }
-    })
+  updateTaskToReportedCompletion(task) {
+    this.schedule.updateTaskToReportedCompletion(task)
   }
 
   isToday(date) {
@@ -68,21 +81,25 @@ export class TasksService {
     return !tasks || tasks.every(t => t.completed || !this.isTaskStartable(t))
   }
 
-  isLastTask(task, tasks) {
-    return !tasks || tasks.every(t => t.completed || t.index === task.index)
+  isLastTask(tasks) {
+    return tasks.filter(t => this.isTaskStartable(t)).length <= 1
   }
 
   isTaskStartable(task) {
     // NOTE: This checks if the task timestamp has passed and if task is valid
-    return task.timestamp <= new Date().getTime() && this.isTaskValid(task)
+    return task.timestamp <= new Date().getTime() && !this.isTaskExpired(task)
   }
 
-  isTaskValid(task) {
-    // NOTE: This checks if completion window has not passed and task is incomplete
+  isTaskExpired(task) {
+    // NOTE: This checks if completion window has passed or task is complete
     return (
-      task.timestamp + task.completionWindow > new Date().getTime() &&
-      !task.completed
+      task.timestamp + task.completionWindow < new Date().getTime() ||
+      task.completed
     )
+  }
+
+  wasTaskCompletedToday(task) {
+    return task.completed && this.isToday(task.timeCompleted)
   }
 
   /**
@@ -93,11 +110,11 @@ export class TasksService {
    */
   getNextTask(tasks: Task[]): Task | undefined {
     if (tasks) {
-      return tasks.find(task => this.isTaskValid(task))
+      return tasks.find(task => !this.isTaskExpired(task))
     }
   }
 
   getCurrentDateMidnight() {
-    return this.schedule.setDateTimeToMidnight(new Date())
+    return setDateTimeToMidnight(new Date())
   }
 }

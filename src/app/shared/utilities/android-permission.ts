@@ -2,7 +2,7 @@ import 'rxjs/add/operator/map'
 
 import { Injectable } from '@angular/core'
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx'
-import { Device } from '@ionic-native/device/ngx'
+import { Platform } from 'ionic-angular'
 
 @Injectable()
 export class AndroidPermissionUtility {
@@ -20,7 +20,7 @@ export class AndroidPermissionUtility {
   ]
 
   constructor(
-    private device: Device,
+    private platform: Platform,
     private androidPermissions: AndroidPermissions
   ) {}
 
@@ -107,7 +107,7 @@ export class AndroidPermissionUtility {
           if (success.hasPermission === true) {
             resolve(true)
           } else {
-            reject(false)
+            reject(new Error('No permission ' + permission + ' was given'))
           }
         },
         error => {
@@ -134,7 +134,7 @@ export class AndroidPermissionUtility {
   }
 
   isAndroid() {
-    return this.device.platform == 'Android'
+    return this.platform.is('android')
   }
 
   // TODO: Add required permissions as above

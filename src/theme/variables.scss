@@ -84,6 +84,19 @@ $alert-md-head-text-align: center;
 .alert-title {
   color: $cl-primary;
 }
+
+.picker-wrapper {
+  background-color: $cl-light !important;
+}
+
+.picker-opt {
+  color: map_get($colors, dark) !important;
+}
+
+.picker-opt.picker-opt-selected {
+  color: $cl-primary !important;
+}
+
 // Ionicons
 // --------------------------------------------------
 // The premium icon font for Ionic. For more info, please see:

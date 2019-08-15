@@ -7,11 +7,11 @@ range-info-input {
   }
 
   .info-card {
-    position: fixed;
     overflow: scroll;
     margin: 8px;
-    padding: 10px 10px 0;
-    width: 88%;
+    padding: 10px;
+    max-height: calc(100% - 360px);
+    width: initial;
     height: calc(100vh - 450px);
     -webkit-border-radius: 5px;
     border-radius: 5px;

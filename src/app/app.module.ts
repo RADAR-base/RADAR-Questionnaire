@@ -18,10 +18,16 @@ import { MobileAccessibility } from '@ionic-native/mobile-accessibility/ngx'
 import { SplashScreen } from '@ionic-native/splash-screen/ngx'
 import { StatusBar } from '@ionic-native/status-bar/ngx'
 import { Vibration } from '@ionic-native/vibration/ngx'
+import { WebIntent } from '@ionic-native/web-intent/ngx'
 import { IonicStorageModule, Storage } from '@ionic/storage'
 import { IonicApp, IonicModule } from 'ionic-angular'
 
 import { AppComponent } from './core/containers/app.component'
+import {
+  FirebaseRemoteConfigService,
+  RemoteConfigService
+} from './core/services/config/remote-config.service'
+import { LogService } from './core/services/misc/log.service'
 import { PagesModule } from './pages/pages.module'
 import { AndroidPermissionUtility } from './shared/utilities/android-permission'
 import { jwtOptionsFactory } from './shared/utilities/jwtOptionsFactory'
@@ -56,7 +62,6 @@ import { Utility } from './shared/utilities/util'
     StatusBar,
     SplashScreen,
     Utility,
-    LocalNotifications,
     BarcodeScanner,
     Dialogs,
     Vibration,
@@ -65,10 +70,14 @@ import { Utility } from './shared/utilities/util'
     AndroidPermissions,
     File,
     AppVersion,
+    WebIntent,
     MobileAccessibility,
     Insomnia,
     BackgroundMode,
-    Firebase
+    Firebase,
+    LocalNotifications,
+    LogService,
+    { provide: RemoteConfigService, useClass: FirebaseRemoteConfigService }
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

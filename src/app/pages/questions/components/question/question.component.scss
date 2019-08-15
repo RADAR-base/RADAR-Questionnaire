@@ -32,4 +32,14 @@ question {
   .rangeformat {
     height: 30vh;
   }
+
+  .hidden {
+    display: none;
+  }
+
+  .fade {
+    display: block;
+    opacity: 0.2;
+    pointer-events: none;
+  }
 }

@@ -14,13 +14,11 @@ export class CheckboxInputComponent implements OnInit {
 
   @Input()
   responses: Response[]
-  @Input()
-  currentlyShown
 
   value: number = null
   uniqueID: number = uniqueID++
   name = `checkbox-input-${this.uniqueID}`
-  items: Item[] = Array()
+  items: any[] = Array()
   itemsSelected = {}
 
   ngOnInit() {
@@ -28,22 +26,22 @@ export class CheckboxInputComponent implements OnInit {
       this.items.push({
         id: `check-${this.uniqueID}-${i}`,
         response: item.label,
-        value: item.code
+        value: item.code,
+        checked: false
       })
     })
   }
 
   onInputChange(event) {
-    this.logSelectedItems(event.target)
+    event.checked = !event.checked
+    this.logSelectedItems(event)
     this.valueChange.emit(this.retrieveSelectedItems())
   }
 
   logSelectedItems(item) {
-    if (!(item.id in this.itemsSelected)) {
+    if (!(item.id in this.itemsSelected) && item.checked)
       this.itemsSelected[item.id] = item.value
-    } else {
-      delete this.itemsSelected[item.id]
-    }
+    else delete this.itemsSelected[item.id]
   }
 
   retrieveSelectedItems() {

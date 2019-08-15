@@ -7,13 +7,16 @@ import {
   Output
 } from '@angular/core'
 import { NavController, Platform } from 'ionic-angular'
+import { Subscription } from 'rxjs'
 
 import { DefaultMaxAudioAttemptsAllowed } from '../../../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../../../core/services/misc/alert.service'
 import { LocKeys } from '../../../../../shared/enums/localisations'
 import { Section } from '../../../../../shared/models/question'
-import { Subscription } from 'rxjs'
 import { TranslatePipe } from '../../../../../shared/pipes/translate/translate'
+import { AndroidPermissionUtility } from '../../../../../shared/utilities/android-permission'
+import { HomePageComponent } from '../../../../home/containers/home-page.component'
+import { AudioRecordService } from '../../../services/audio-record.service'
 
 @Component({
   selector: 'audio-input',

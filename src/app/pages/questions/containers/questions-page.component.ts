@@ -229,21 +229,20 @@ export class QuestionsPageComponent {
   evalSkipNext() {
     let increment = 1
     let questionIdx = this.currentQuestion + 1
-    if (questionIdx < this.questions.length) {
-      while (this.questions[questionIdx].evaluated_logic !== '') {
-        const responses = Object.assign({}, this.answerService.answers)
-        const logic = this.questions[questionIdx].evaluated_logic
-        const logicFieldName = this.getLogicFieldName(logic)
-        const answers = this.answerService.answers[logicFieldName]
-        const answerLength = answers.length
-        if (!answerLength) if (eval(logic) === true) return increment
-        for (const answer of answers) {
-          responses[logicFieldName] = answer
-          if (eval(logic) === true) return increment
-        }
-        increment += 1
-        questionIdx += 1
+    console.log(questionIdx, this.questions.length)
+    while (questionIdx < this.questions.length && this.questions[questionIdx].evaluated_logic !== '') {
+      const responses = Object.assign({}, this.answerService.answers)
+      const logic = this.questions[questionIdx].evaluated_logic
+      const logicFieldName = this.getLogicFieldName(logic)
+      const answers = this.answerService.answers[logicFieldName]
+      const answerLength = answers.length
+      if (!answerLength) if (eval(logic) === true) return increment
+      for (const answer of answers) {
+        responses[logicFieldName] = answer
+        if (eval(logic) === true) return increment
       }
+      increment += 1
+      questionIdx += 1
     }
     return increment
   }

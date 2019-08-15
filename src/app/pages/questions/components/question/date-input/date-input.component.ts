@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core'
+import { Component, EventEmitter, Input, Output } from '@angular/core'
 
 @Component({
   selector: 'date-input',
@@ -7,6 +7,9 @@ import { Component, EventEmitter, Output } from '@angular/core'
 export class DateInputComponent {
   @Output()
   valueChange: EventEmitter<number> = new EventEmitter<number>()
+
+  @Input()
+  placeholder = 'Select Date'
 
   onInputChange(date) {
     const epoch = new Date(

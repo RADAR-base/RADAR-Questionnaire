@@ -27,7 +27,7 @@ export class AuthService {
     public http: HttpClient,
     private token: TokenService,
     private config: ConfigService,
-    private logger: LogService,
+    private logger: LogService
   ) {}
 
   authenticate(authObj) {
@@ -56,8 +56,7 @@ export class AuthService {
 
   nonURLAuth(authObj) {
     // NOTE: Old QR codes: containing refresh token as JSON
-    return this.updateURI()
-      .then(() => JSON.parse(authObj).refreshToken)
+    return this.updateURI().then(() => JSON.parse(authObj).refreshToken)
   }
 
   updateURI() {
@@ -73,10 +72,6 @@ export class AuthService {
 
   getRefreshTokenFromUrl(url): Promise<MetaToken> {
     return this.http.get(url).toPromise()
-  }
-
-  getURLFromToken(base, token) {
-    return base + DefaultMetaTokenURI + token
   }
 
   getSubjectURI(subject) {

@@ -38,12 +38,11 @@ export class EnrolmentPageComponent {
 
   constructor(
     public navCtrl: NavController,
-    private scanner: BarcodeScanner,
     private auth: AuthService,
     private localization: LocalizationService,
     private alertService: AlertService,
     private usage: UsageService,
-    private logger: LogService,
+    private logger: LogService
   ) {
     this.localization.update().then(lang => (this.language = lang))
   }
@@ -65,24 +64,11 @@ export class EnrolmentPageComponent {
     this.next()
   }
 
-  scanQRHandler() {
-    const scanOptions = {
-      showFlipCameraButton: true,
-      orientation: 'portrait'
-    }
-    this.scanner.scan(scanOptions).then(res => {
-      this.usage.sendGeneralEvent(UsageEventType.QR_SCANNED, {
-        text: res.text
-      })
-      return this.authenticate(res.text)
-    })
-  }
-
-  metaQRHandler([baseURL, tokenName]) {
-    this.authenticate(this.auth.getURLFromToken(baseURL, tokenName))
-  }
-
   authenticate(authObj) {
+    if (!this.enterMetaQR)
+      this.usage.sendGeneralEvent(UsageEventType.QR_SCANNED, {
+        text: authObj
+      })
     this.showOutcomeStatus = false
     this.loading = true
     this.auth

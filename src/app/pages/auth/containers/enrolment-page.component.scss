@@ -33,6 +33,13 @@ page-enrolment {
     margin-top: 8vh;
   }
 
+  .status {
+    flex: 1 0 100%;
+    padding: auto;
+    height: auto;
+    transition: opacity 0.4s ease-in-out;
+  }
+
   #loading {
     flex: 1 0 100%;
     margin: 24px;
@@ -41,21 +48,11 @@ page-enrolment {
   }
 
   #outcome {
-    flex: 1 0 100%;
-    padding: auto;
-    height: auto;
     background-color: $cl-danger-40;
-    transition: opacity 0.4s ease-in-out;
   }
 
   .padding-text {
     padding-top: 5px;
-  }
-
-  .qr-code {
-    margin: auto;
-    padding-top: 3vh;
-    width: 170px;
   }
 
   .bottom {

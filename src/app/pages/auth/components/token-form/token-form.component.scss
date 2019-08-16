@@ -5,7 +5,9 @@ token-form {
     border-bottom: 1px solid white;
   }
 
-  .registration {
-    padding-bottom: 16vh;
+  .bottom {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
   }
 }

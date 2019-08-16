@@ -1,15 +1,4 @@
 page-questions {
-  .questions-container {
-    display: flex;
-    transition: transform 0.4s;
-  }
-
-  question {
-    flex: 1 0 100vw;
-    padding: 16px;
-    height: 100%;
-  }
-
   .toolbar {
     display: flex;
     align-content: center;
@@ -49,5 +38,14 @@ page-questions {
   .toolbar-progress-bar {
     height: 100%;
     background-color: $cl-primary-60;
+  }
+
+  ion-slide.swiper-slide {
+    align-items: flex-start;
+  }
+
+  ion-slide {
+    overflow: auto !important;
+    padding: 24px;
   }
 }

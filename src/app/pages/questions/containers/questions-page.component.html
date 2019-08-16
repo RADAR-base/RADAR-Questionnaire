@@ -7,19 +7,18 @@
     ></introduction>
   </ng-container>
 
-  <div
-    #questionsContainer
-    class="questions-container"
-    [@enterQuestions]="showIntroduction"
-  >
+  <div [@enterQuestions]="showIntroduction">
     <ng-container *ngIf="!showIntroduction">
-      <question
-        *ngFor="let question of questions; let i = index"
-        [question]="question"
-        [questionIndex]="i"
-        [currentIndex]="currentQuestion"
-        (answer)="onAnswer($event)"
-      ></question>
+      <ion-slides>
+        <ion-slide *ngFor="let question of questions; let i = index">
+          <question
+            [question]="question"
+            [questionIndex]="i"
+            [currentIndex]="currentQuestion"
+            (answer)="onAnswer($event)"
+          ></question>
+        </ion-slide>
+      </ion-slides>
     </ng-container>
   </div>
 </ion-content>

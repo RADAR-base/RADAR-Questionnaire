@@ -1,37 +1,33 @@
-import { Component, ElementRef, ViewChild } from '@angular/core'
-import { Content, NavController, NavParams, Platform } from 'ionic-angular'
-
-import { Assessment } from '../../../shared/models/assessment'
-import { FinishPageComponent } from '../../finish/containers/finish-page.component'
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  ViewChild
+} from '@angular/core'
 import { Insomnia } from '@ionic-native/insomnia/ngx'
-import { LocKeys } from '../../../shared/enums/localisations'
+import { NavController, NavParams, Platform, Slides } from 'ionic-angular'
+
 import { LocalizationService } from '../../../core/services/misc/localization.service'
+import { UsageService } from '../../../core/services/usage/usage.service'
+import { UsageEventType } from '../../../shared/enums/events'
+import { LocKeys } from '../../../shared/enums/localisations'
+import { Assessment } from '../../../shared/models/assessment'
 import { Question } from '../../../shared/models/question'
-import { QuestionsPageAnimations } from './questions-page.animation'
-import { QuestionsService } from '../services/questions.service'
 import { Task } from '../../../shared/models/task'
 import { TaskType } from '../../../shared/utilities/task-type'
-import { UsageEventType } from '../../../shared/enums/events'
-import { UsageService } from '../../../core/services/usage/usage.service'
+import { FinishPageComponent } from '../../finish/containers/finish-page.component'
+import { QuestionsService } from '../services/questions.service'
+import { QuestionsPageAnimations } from './questions-page.animation'
 
 @Component({
   selector: 'page-questions',
   templateUrl: 'questions-page.component.html',
-  animations: QuestionsPageAnimations
+  animations: QuestionsPageAnimations,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class QuestionsPageComponent {
-  @ViewChild(Content)
-  content: Content
-
-  @ViewChild('questionsContainer')
-  questionsContainerRef: ElementRef
-  questionsContainerEl: HTMLElement
-
-  startTime: number
-  progress = 0
-  currentQuestion = 0
-  questionIncrements = []
-  nextQuestionIncr: number = 0
+export class QuestionsPageComponent implements OnInit {
+  @ViewChild(Slides)
+  slides: Slides
 
   textValues = {
     next: this.localization.translateKey(LocKeys.BTN_NEXT),
@@ -39,16 +35,22 @@ export class QuestionsPageComponent {
     finish: this.localization.translateKey(LocKeys.BTN_FINISH),
     close: this.localization.translateKey(LocKeys.BTN_CLOSE)
   }
-  nextButtonText = this.localization.translateKey(LocKeys.BTN_NEXT)
-  previousButtonText = this.localization.translateKey(LocKeys.BTN_NEXT)
-  isNextButtonDisabled = true
-  isPreviousButtonDisabled = false
+  nextButtonText = this.textValues.next
+  previousButtonText = this.textValues.close
+
   iconValues = {
     previous: 'ios-arrow-back',
     close: 'close-circle'
   }
   iconPrevious: string = this.iconValues.close
 
+  startTime: number
+  progress = 0
+  currentQuestion = 0
+  questionIncrements = []
+  nextQuestionIncr: number = 0
+  isNextButtonDisabled = true
+  isPreviousButtonDisabled = false
   task: Task
   taskType: TaskType
   questions: Question[]
@@ -74,11 +76,15 @@ export class QuestionsPageComponent {
     })
   }
 
-  ionViewDidLoad() {
+  ngOnInit() {
     this.init()
+  }
+
+  ionViewDidLoad() {
     this.sendEvent(UsageEventType.QUESTIONNAIRE_STARTED)
     this.usage.setPage(this.constructor.name)
     this.insomnia.keepAwake()
+    this.slides.lockSwipes(true)
   }
 
   ionViewDidLeave() {
@@ -91,7 +97,6 @@ export class QuestionsPageComponent {
     this.questionTitle = this.navParams.data.title
     this.introduction = this.navParams.data.introduction
     this.showIntroduction = this.navParams.data.assessment.showIntroduction
-    this.questionsContainerEl = this.questionsContainerRef.nativeElement
     this.questions = this.questionsService.processQuestions(
       this.questionTitle,
       this.navParams.data.questions
@@ -101,7 +106,6 @@ export class QuestionsPageComponent {
     this.isLastTask = this.navParams.data.isLastTask
     this.assessment = this.navParams.data.assessment
     this.taskType = this.navParams.data.taskType
-    this.setCurrentQuestion(this.nextQuestionIncr)
   }
 
   hideIntro() {
@@ -123,10 +127,9 @@ export class QuestionsPageComponent {
   }
 
   slideQuestion() {
-    // Note: Move to next question
-    this.content.scrollToTop(200)
-    this.questionsContainerEl.style.transform = `translateX(-${this
-      .currentQuestion * 100}%)`
+    this.slides.lockSwipes(false)
+    this.slides.slideTo(this.currentQuestion, 500)
+    this.slides.lockSwipes(true)
   }
 
   willMoveToFinish(value) {

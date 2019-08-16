@@ -1,5 +1,4 @@
 import { Component, ViewChild } from '@angular/core'
-import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx'
 import { NavController, Slides } from 'ionic-angular'
 
 import {
@@ -69,8 +68,8 @@ export class EnrolmentPageComponent {
       this.usage.sendGeneralEvent(UsageEventType.QR_SCANNED, {
         text: authObj
       })
-    this.showOutcomeStatus = false
     this.loading = true
+    this.clearStatus()
     this.auth
       .authenticate(authObj)
       .catch(
@@ -94,7 +93,7 @@ export class EnrolmentPageComponent {
 
   handleError(e) {
     this.logger.error('Failed to log in', e)
-    this.showOutcomeStatus = true
+    this.showStatus()
     this.outcomeStatus =
       e.error && e.error.message
         ? e.error.message
@@ -106,6 +105,10 @@ export class EnrolmentPageComponent {
 
   clearStatus() {
     this.showOutcomeStatus = false
+  }
+
+  showStatus() {
+    setTimeout(() => (this.showOutcomeStatus = true), 500)
   }
 
   navigateToSplash() {

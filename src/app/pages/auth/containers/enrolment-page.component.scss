@@ -1,4 +1,14 @@
 page-enrolment {
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+
   color: $cl-light;
 
   .logo {
@@ -34,25 +44,23 @@ page-enrolment {
   }
 
   .status {
+    position: absolute;
+    bottom: 24%;
     flex: 1 0 100%;
     padding: auto;
+    width: 100%;
     height: auto;
-    transition: opacity 0.4s ease-in-out;
-  }
-
-  #loading {
-    flex: 1 0 100%;
-    margin: 24px;
-    height: 34px;
-    transition: opacity 0.7s ease-in-out;
+    text-align: center;
   }
 
   #outcome {
+    padding-top: 5px;
     background-color: $cl-danger-40;
+    animation: fadeIn 1s;
   }
 
-  .padding-text {
-    padding-top: 5px;
+  #loading {
+    animation: fadeIn 1s;
   }
 
   .bottom {

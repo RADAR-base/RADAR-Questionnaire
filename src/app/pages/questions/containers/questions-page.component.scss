@@ -45,7 +45,9 @@ page-questions {
   }
 
   ion-slide {
-    overflow: auto !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
     padding: 24px;
+    height: 100%;
   }
 }

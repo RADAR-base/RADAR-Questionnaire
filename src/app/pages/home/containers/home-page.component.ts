@@ -144,9 +144,7 @@ export class HomePageComponent implements OnDestroy {
     if (this.tasksService.isTaskStartable(task)) {
       this.usage.sendClickEvent('start_questionnaire')
       this.startingQuestionnaire = true
-      return this.tasksService
-        .getQuestionnairePayload(task)
-        .then(payload => this.navCtrl.push(QuestionsPageComponent, payload))
+      return this.navCtrl.push(QuestionsPageComponent, task)
     } else {
       this.showMissedInfo()
     }

@@ -1,9 +1,13 @@
-import { AnswerService } from './answer.service'
 import { Injectable } from '@angular/core'
-import { QuestionType } from '../../../shared/models/question'
+
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
-import { TimestampService } from './timestamp.service'
+import { LocalizationService } from '../../../core/services/misc/localization.service'
+import { QuestionType } from '../../../shared/models/question'
+import { getTaskType } from '../../../shared/utilities/task-type'
 import { getSeconds } from '../../../shared/utilities/time'
+import { AnswerService } from './answer.service'
+import { FinishTaskService } from './finish-task.service'
+import { TimestampService } from './timestamp.service'
 
 @Injectable()
 export class QuestionsService {
@@ -19,7 +23,9 @@ export class QuestionsService {
   constructor(
     public questionnaire: QuestionnaireService,
     private answerService: AnswerService,
-    private timestampService: TimestampService
+    private timestampService: TimestampService,
+    private localization: LocalizationService,
+    private finish: FinishTaskService
   ) {}
 
   reset() {
@@ -125,10 +131,6 @@ export class QuestionsService {
     return this.evalSkipNext(questions, currentQuestion)
   }
 
-  getAnswerProgress(current, total) {
-    return Math.ceil((current * 100) / total)
-  }
-
   getAttemptProgress(total) {
     const answers = this.answerService.answers
     const attemptedAnswers = Object.keys(answers)
@@ -153,5 +155,39 @@ export class QuestionsService {
 
   getIsNextAutomatic(type) {
     return this.NEXT_BUTTON_AUTOMATIC_SET.has(type)
+  }
+
+  getQuestionnairePayload(task) {
+    const type = getTaskType(task)
+    return this.questionnaire.getAssessment(type, task).then(assessment => {
+      return {
+        title: assessment.name,
+        introduction: this.localization.chooseText(assessment.startText),
+        endText: this.localization.chooseText(assessment.endText),
+        questions: this.processQuestions(assessment.name, assessment.questions),
+        task: task ? task : assessment,
+        assessment: assessment,
+        type: type,
+        isLastTask: false
+      }
+    })
+  }
+
+  processCompletedQuestionnaire(task, questions): Promise<any> {
+    const data = this.getData()
+    return Promise.all([
+      this.finish.updateTaskToComplete(task),
+      this.finish.processDataAndSend(
+        data.answers,
+        questions,
+        data.timestamps,
+        task
+      )
+    ])
+  }
+
+  handleClinicalFollowUp(assessment, completedInClinic?) {
+    if (!completedInClinic) return Promise.resolve()
+    return this.finish.evalClinicalFollowUpTask(assessment)
   }
 }

@@ -1,4 +1,4 @@
-page-finish {
+finish {
   ion-item.item {
     margin-bottom: $item-separation-distance;
     background-color: $cl-primary-40;
@@ -17,17 +17,12 @@ page-finish {
   }
 
   ion-spinner * {
-    margin-left: -15px;
     padding-left: 10px;
     width: 10px;
     height: 30px;
     background-color: #fff;
     fill: #fff;
     stroke: #fff;
-  }
-
-  .spinner-center {
-    margin-left: 50%;
   }
 
   .extra-info {

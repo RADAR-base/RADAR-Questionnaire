@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -40,7 +41,8 @@ export class TimedTestComponent implements OnInit, OnChanges, OnDestroy {
   constructor(
     private dialogs: Dialogs,
     private vibration: Vibration,
-    private background: BackgroundMode
+    private background: BackgroundMode,
+    private ref: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -97,6 +99,7 @@ export class TimedTestComponent implements OnInit, OnChanges, OnDestroy {
     )
     this.taskTimer.displayTime =
       this.timer.start - this.taskTimer.secondsElapsed
+    this.ref.markForCheck()
   }
 
   timerTick() {

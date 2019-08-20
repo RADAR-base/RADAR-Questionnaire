@@ -5,19 +5,19 @@ import { UsageEventType } from '../../../shared/enums/events'
 import { SchemaType } from '../../../shared/models/kafka'
 import { KafkaService } from '../kafka/kafka.service'
 import { LogService } from '../misc/log.service'
-import { FirebaseAnalyticsService } from './firebase-analytics.service'
+import { AnalyticsService } from './analytics.service'
 
 @Injectable()
 export class UsageService {
   constructor(
     private webIntent: WebIntent,
     private kafka: KafkaService,
-    private firebaseAnalytics: FirebaseAnalyticsService,
+    private analytics: AnalyticsService,
     private logger: LogService
   ) {}
 
   sendEventToKafka(payload) {
-    return this.kafka.prepareKafkaObjectAndSend(SchemaType.USAGE, payload, true)
+    return this.kafka.prepareKafkaObjectAndSend(SchemaType.EVENT, payload, true)
   }
 
   sendOpenEvent() {
@@ -34,11 +34,11 @@ export class UsageService {
 
   sendQuestionnaireEvent(type, task) {
     // noinspection JSIgnoredPromiseFromCall
-    this.firebaseAnalytics.logEvent(type, {
+    this.analytics.logEvent(type, {
       questionnaire_timestamp: task.timestamp
         ? String(task.timestamp)
         : Date.now(),
-      type: task.name
+      questionnaire_name: task.name
     })
     return this.sendEventToKafka({
       eventType: type,
@@ -48,12 +48,12 @@ export class UsageService {
 
   sendGeneralEvent(type, payload?) {
     // noinspection JSIgnoredPromiseFromCall
-    this.firebaseAnalytics.logEvent(type, payload ? payload : {})
+    this.analytics.logEvent(type, payload ? payload : {})
   }
 
   sendClickEvent(button) {
     // noinspection JSIgnoredPromiseFromCall
-    this.firebaseAnalytics.logEvent(UsageEventType.CLICK, { button: button })
+    this.analytics.logEvent(UsageEventType.CLICK, { button: button })
   }
 
   sendCompletionLog(task, percent) {
@@ -74,6 +74,6 @@ export class UsageService {
     page.pop()
     page = page.join('-').toLowerCase()
     // noinspection JSIgnoredPromiseFromCall
-    this.firebaseAnalytics.setCurrentScreen(page)
+    this.analytics.setCurrentScreen(page)
   }
 }

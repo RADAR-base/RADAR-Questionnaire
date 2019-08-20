@@ -11,7 +11,10 @@ import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { LogService } from '../../../core/services/misc/log.service'
 import { UsageService } from '../../../core/services/usage/usage.service'
-import { UsageEventType } from '../../../shared/enums/events'
+import {
+  EnrolmentEventType,
+  UsageEventType
+} from '../../../shared/enums/events'
 import { LocKeys } from '../../../shared/enums/localisations'
 import {
   LanguageSetting,
@@ -82,7 +85,7 @@ export class EnrolmentPageComponent {
       )
       .then(() => this.auth.initSubjectInformation())
       .then(() => {
-        this.usage.sendGeneralEvent(UsageEventType.SIGN_UP)
+        this.usage.sendGeneralEvent(EnrolmentEventType.SUCCESS)
         this.next()
       })
       .catch(e => {
@@ -98,9 +101,12 @@ export class EnrolmentPageComponent {
       e.error && e.error.message
         ? e.error.message
         : e.statusText + ' (' + e.status + ')'
-    this.usage.sendGeneralEvent(UsageEventType.SIGN_UP_FAIL, {
-      error: this.outcomeStatus
-    })
+    this.usage.sendGeneralEvent(
+      e.status == 409 ? EnrolmentEventType.ERROR : EnrolmentEventType.FAIL,
+      {
+        error: this.outcomeStatus
+      }
+    )
   }
 
   clearStatus() {

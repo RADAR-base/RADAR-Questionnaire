@@ -5,29 +5,31 @@ export enum UsageEventType {
   QUESTIONNAIRE_FINISHED = 'QUESTIONNAIRE_FINISHED',
   QUESTIONNAIRE_CLOSED = 'QUESTIONNAIRE_CLOSED',
   QR_SCANNED = 'qr_code_scanned',
-  SIGN_UP = 'sign_up',
-  SIGN_UP_FAIL = 'sign_up_fail',
-  SIGN_UP_ERROR = 'sign_up_error',
-  APP_RESET = 'app_reset',
   CLICK = 'click',
   RESUMED = 'resumed'
 }
 
-export enum KafkaEventType {
-  SEND_SUCCESS = 'send_success',
-  SEND_ERROR = 'send_error',
-  PREPARED_OBJECT = 'prepared_kafka_object'
+export enum EnrolmentEventType {
+  SUCCESS = 'sign_up',
+  FAIL = 'sign_up_fail',
+  ERROR = 'sign_up_error'
 }
 
 export enum DataEventType {
-  PROCESSED = 'processed_questionnaire_data',
-  CACHED = 'send_to_cache'
+  PREPARED_OBJECT = 'prepared_kafka_object',
+  CACHED = 'send_to_cache',
+  REMOVED_FROM_CACHE = 'removed_from_cache',
+  SEND_SUCCESS = 'send_success',
+  SEND_ERROR = 'send_error'
 }
 
 export enum ConfigEventType {
   PROTOCOL_CHANGE = 'protocol_change',
   APP_VERSION_CHANGE = 'app_version_change',
-  TIMEZONE_CHANGE = 'timezone_change'
+  TIMEZONE_CHANGE = 'timezone_change',
+  ERROR = 'config_error',
+  APP_RESET = 'app_reset',
+  APP_RESET_PARTIAL = 'app_reset_partial'
 }
 
 export enum NotificationEventType {

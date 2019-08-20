@@ -144,7 +144,10 @@ export class ScheduleService {
           tasks ? tasks.length : 0
         )
         .then((res: any) =>
-          this.setTasks(TaskType.CLINICAL, tasks.concat(res.schedule))
+          this.setTasks(
+            TaskType.CLINICAL,
+            tasks ? tasks.concat(res.schedule) : res.schedule
+          )
         )
     )
   }

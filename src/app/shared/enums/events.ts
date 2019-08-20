@@ -5,11 +5,14 @@ export enum UsageEventType {
   QUESTIONNAIRE_FINISHED = 'QUESTIONNAIRE_FINISHED',
   QUESTIONNAIRE_CLOSED = 'QUESTIONNAIRE_CLOSED',
   QR_SCANNED = 'qr_code_scanned',
-  SIGN_UP = 'sign_up',
-  SIGN_UP_FAIL = 'sign_up_fail',
-  SIGN_UP_ERROR = 'sign_up_error',
   CLICK = 'click',
   RESUMED = 'resumed'
+}
+
+export enum EnrolmentEventType {
+  SUCCESS = 'sign_up',
+  FAIL = 'sign_up_fail',
+  ERROR = 'sign_up_error'
 }
 
 export enum DataEventType {

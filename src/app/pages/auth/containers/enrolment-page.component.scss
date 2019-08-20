@@ -45,7 +45,7 @@ page-enrolment {
 
   .status {
     position: absolute;
-    bottom: 24%;
+    bottom: 16%;
     flex: 1 0 100%;
     padding: auto;
     width: 100%;
@@ -60,7 +60,7 @@ page-enrolment {
   }
 
   #loading {
-    animation: fadeIn 1s;
+    animation: fadeIn 2s infinite;
   }
 
   .bottom {

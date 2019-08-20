@@ -13,6 +13,7 @@ import { File } from '@ionic-native/file/ngx'
 import { Firebase } from '@ionic-native/firebase/ngx'
 import { Globalization } from '@ionic-native/globalization/ngx'
 import { Insomnia } from '@ionic-native/insomnia/ngx'
+import { Keyboard } from '@ionic-native/keyboard/ngx'
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx'
 import { MobileAccessibility } from '@ionic-native/mobile-accessibility/ngx'
 import { SplashScreen } from '@ionic-native/splash-screen/ngx'
@@ -74,6 +75,7 @@ import { Utility } from './shared/utilities/util'
     MobileAccessibility,
     Insomnia,
     BackgroundMode,
+    Keyboard,
     Firebase,
     LocalNotifications,
     LogService,

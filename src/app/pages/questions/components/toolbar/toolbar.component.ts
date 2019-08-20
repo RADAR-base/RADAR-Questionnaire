@@ -19,7 +19,7 @@ export class ToolbarComponent implements OnChanges {
   @Input()
   isNextButtonDisabled: boolean
   @Input()
-  currentQuestion: number
+  currentQuestionId: number
   @Input()
   totalQuestions: number
 
@@ -27,6 +27,10 @@ export class ToolbarComponent implements OnChanges {
   next: EventEmitter<any> = new EventEmitter<any>()
   @Output()
   previous: EventEmitter<any> = new EventEmitter<any>()
+  @Output()
+  finish: EventEmitter<any> = new EventEmitter<any>()
+  @Output()
+  close: EventEmitter<any> = new EventEmitter<any>()
 
   textValues = {
     next: this.localization.translateKey(LocKeys.BTN_NEXT),
@@ -34,10 +38,8 @@ export class ToolbarComponent implements OnChanges {
     finish: this.localization.translateKey(LocKeys.BTN_FINISH),
     close: this.localization.translateKey(LocKeys.BTN_CLOSE)
   }
-
-  nextButtonText = this.textValues.next
-  previousButtonText = this.textValues.close
-
+  rightButtonText = this.textValues.next
+  leftButtonText = this.textValues.close
   iconValues = {
     previous: 'ios-arrow-back',
     close: 'close-circle'
@@ -52,35 +54,49 @@ export class ToolbarComponent implements OnChanges {
     this.setProgress()
   }
 
-  nextQuestion() {
-    this.next.emit()
+  leftButtonHandler() {
+    switch (this.leftButtonText) {
+      case this.textValues.previous:
+        return this.previous.emit()
+      case this.textValues.close:
+        return this.close.emit()
+      default:
+        break
+    }
   }
 
-  previousQuestion() {
-    this.previous.emit()
+  rightButtonHandler() {
+    switch (this.rightButtonText) {
+      case this.textValues.next:
+        return this.next.emit()
+      case this.textValues.finish:
+        return this.finish.emit()
+      default:
+        break
+    }
   }
 
   setButtons() {
     this.iconPrevious = this.getLeftButtonValues().icon
-    this.previousButtonText = this.getLeftButtonValues().text
-    this.nextButtonText = this.getRightButtonText()
+    this.leftButtonText = this.getLeftButtonValues().text
+    this.rightButtonText = this.getRightButtonText()
   }
 
   getLeftButtonValues() {
-    return !this.currentQuestion
+    return !this.currentQuestionId
       ? { text: this.textValues.close, icon: this.iconValues.close }
       : { text: this.textValues.previous, icon: this.iconValues.previous }
   }
 
   getRightButtonText() {
-    return this.currentQuestion === this.totalQuestions - 1
+    return this.currentQuestionId === this.totalQuestions - 1
       ? this.textValues.finish
       : this.textValues.next
   }
 
   setProgress() {
     this.progress = Math.ceil(
-      (this.currentQuestion * 100) / this.totalQuestions
+      (this.currentQuestionId * 100) / this.totalQuestions
     )
   }
 }

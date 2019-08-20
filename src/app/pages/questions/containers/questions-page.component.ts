@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-  ViewChild
-} from '@angular/core'
+import { Component, OnInit, ViewChild } from '@angular/core'
 import { Insomnia } from '@ionic-native/insomnia/ngx'
 import { NavController, NavParams, Platform, Slides } from 'ionic-angular'
 
@@ -19,17 +13,15 @@ import { QuestionsService } from '../services/questions.service'
 
 @Component({
   selector: 'page-questions',
-  templateUrl: 'questions-page.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  templateUrl: 'questions-page.component.html'
 })
 export class QuestionsPageComponent implements OnInit {
   @ViewChild(Slides)
   slides: Slides
 
   startTime = Date.now()
-  currentQuestion = 0
-  questionIncrements = []
-  nextQuestionIncr: number = 0
+  currentQuestionId = 0
+  questionIncrements = [0]
   isNextButtonDisabled = true
   isPreviousButtonDisabled = false
   task: Task
@@ -38,6 +30,7 @@ export class QuestionsPageComponent implements OnInit {
   questionTitle: String
   endText: string
   isLastTask: boolean
+  isClinicalTask: boolean
   introduction: string
   assessment: Assessment
   showIntroductionScreen: boolean
@@ -50,8 +43,7 @@ export class QuestionsPageComponent implements OnInit {
     private questionsService: QuestionsService,
     private usage: UsageService,
     private platform: Platform,
-    private insomnia: Insomnia,
-    private ref: ChangeDetectorRef
+    private insomnia: Insomnia
   ) {
     this.platform.registerBackButtonAction(() => {
       this.sendCompletionLog()
@@ -71,7 +63,7 @@ export class QuestionsPageComponent implements OnInit {
       this.isLastTask = res.isLastTask
       this.assessment = res.assessment
       this.taskType = res.type
-      return this.ref.markForCheck()
+      return (this.isClinicalTask = this.taskType == TaskType.CLINICAL)
     })
   }
 
@@ -88,19 +80,26 @@ export class QuestionsPageComponent implements OnInit {
     this.insomnia.allowSleepAgain()
   }
 
-  hideIntro(exit?: boolean) {
+  handleIntro(start: boolean) {
     this.showIntroductionScreen = false
     this.questionsService.updateAssessmentIntroduction(
       this.assessment,
       this.taskType
     )
-    if (exit) this.exitQuestionnaire()
+    if (start) {
+      this.slides.update()
+      this.slideQuestion()
+    } else this.exitQuestionnaire
   }
 
-  handleStart() {
-    this.hideIntro()
-    this.slides.update()
-    this.setCurrentQuestion()
+  handleFinish(completedInClinic?: boolean) {
+    this.sendEvent(UsageEventType.QUESTIONNAIRE_FINISHED)
+    return this.questionsService
+      .handleClinicalFollowUp(this.assessment, completedInClinic)
+      .then(() => {
+        this.updateDoneButton(false)
+        return this.navCtrl.setRoot(HomePageComponent)
+      })
   }
 
   onAnswer(event) {
@@ -115,79 +114,54 @@ export class QuestionsPageComponent implements OnInit {
 
   slideQuestion() {
     this.slides.lockSwipes(false)
-    this.slides.slideTo(this.currentQuestion, 500)
+    this.slides.slideTo(this.currentQuestionId, 300)
     this.slides.lockSwipes(true)
-  }
 
-  willMoveToFinish(value) {
-    return this.currentQuestion + value === this.questions.length
-  }
-
-  willExitQuestionnaire(value) {
-    return value === null
-  }
-
-  willMoveToValidQuestion(value) {
-    return (
-      !(this.currentQuestion + value < 0) &&
-      !(this.currentQuestion + value >= this.questions.length)
-    )
-  }
-
-  setCurrentQuestion(value = 0) {
-    if (this.willExitQuestionnaire(value)) return this.exitQuestionnaire()
-    if (this.willMoveToFinish(value)) return this.navigateToFinishPage()
-    // NOTE: Record start time when question is shown
     this.startTime = this.questionsService.getTime()
-    if (this.willMoveToValidQuestion(value)) {
-      this.currentQuestion = this.currentQuestion + value
-      this.slideQuestion()
-      this.updateNextButton()
-      this.updatePreviousButton()
-      return
-    }
   }
 
-  getCurrentQuestionID() {
-    return this.questions[this.currentQuestion].field_name
+  getCurrentQuestion() {
+    return this.questions[this.currentQuestionId]
   }
 
   updateNextButton() {
     this.isNextButtonDisabled = !this.questionsService.isAnswered(
-      this.getCurrentQuestionID()
+      this.getCurrentQuestion()
     )
   }
 
   updatePreviousButton() {
     this.isPreviousButtonDisabled = this.questionsService.getIsPreviousDisabled(
-      this.questions[this.currentQuestion].field_type
+      this.getCurrentQuestion()
+    )
+  }
+
+  submitTimestamps() {
+    this.questionsService.recordTimeStamp(
+      this.getCurrentQuestion(),
+      this.startTime
     )
   }
 
   nextQuestion() {
-    if (this.questionsService.isAnswered(this.getCurrentQuestionID())) {
-      // NOTE: Record timestamp and end time when pressed "Next"
-      this.questionsService.recordTimeStamp(
-        this.getCurrentQuestionID(),
-        this.startTime
-      )
-      this.nextQuestionIncr = this.questionsService.getNextQuestion(
-        this.questions,
-        this.currentQuestion
-      )
-      this.setCurrentQuestion(this.nextQuestionIncr)
-      this.questionIncrements.push(this.nextQuestionIncr)
-    }
+    this.submitTimestamps()
+    this.currentQuestionId = this.questionsService.getNextQuestion(
+      this.questions,
+      this.currentQuestionId
+    )
+    this.questionIncrements.push(this.currentQuestionId)
+    this.slideQuestion()
+    this.updateNextButton()
+    this.updatePreviousButton()
   }
 
   previousQuestion() {
-    if (this.isPreviousButtonDisabled === false) {
-      if (!this.isNextButtonDisabled) this.questionsService.deleteLastAnswer()
-      const inc = this.questionIncrements.length
-        ? -this.questionIncrements.pop()
-        : null
-      this.setCurrentQuestion(inc)
-    }
+    if (!this.isNextButtonDisabled) this.questionsService.deleteLastAnswer()
+    this.questionIncrements.pop()
+    this.currentQuestionId = this.questionIncrements[
+      this.questionIncrements.length - 1
+    ]
+    this.slideQuestion()
   }
 
   exitQuestionnaire() {
@@ -195,17 +169,8 @@ export class QuestionsPageComponent implements OnInit {
     this.navCtrl.pop()
   }
 
-  handleFinish(completedInClinic?: boolean) {
-    this.sendEvent(UsageEventType.QUESTIONNAIRE_FINISHED)
-    return this.questionsService
-      .handleClinicalFollowUp(this.assessment, completedInClinic)
-      .then(() => {
-        this.updateDoneButton(false)
-        return this.navCtrl.setRoot(HomePageComponent)
-      })
-  }
-
   navigateToFinishPage() {
+    this.submitTimestamps()
     this.showFinishScreen = true
     this.onQuestionnaireCompleted()
     this.slides.lockSwipes(false)
@@ -221,7 +186,6 @@ export class QuestionsPageComponent implements OnInit {
 
   updateDoneButton(val: boolean) {
     this.showDoneButton = val
-    return this.ref.markForCheck
   }
 
   sendEvent(type) {

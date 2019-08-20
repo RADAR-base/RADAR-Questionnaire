@@ -9,7 +9,11 @@ finish {
   }
 
   .pos-bottom-90 {
-    padding-bottom: 90px;
+    padding-bottom: 32px;
+  }
+
+  .done-button {
+    padding: 0 24px;
   }
 
   .next-task-highlight {
@@ -33,5 +37,12 @@ finish {
 
   .extra-info-icon {
     height: 1.5vh;
+  }
+
+  .pos-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
   }
 }

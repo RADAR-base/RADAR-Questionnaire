@@ -8,10 +8,10 @@
       left
       icon-left
       [class.disabled]="isPreviousButtonDisabled"
-      (tap)="previousQuestion()"
+      (tap)="leftButtonHandler()"
     >
       <ion-icon [name]="iconPrevious"></ion-icon>
-      <div class="toolbar-label">{{ previousButtonText }}</div>
+      <div class="toolbar-label">{{ leftButtonText }}</div>
     </button>
   </ion-buttons>
   <ion-buttons right>
@@ -20,9 +20,9 @@
       right
       icon-right
       [class.disabled]="isNextButtonDisabled"
-      (tap)="nextQuestion()"
+      (tap)="rightButtonHandler()"
     >
-      <div class="toolbar-label">{{ nextButtonText }}</div>
+      <div class="toolbar-label">{{ rightButtonText }}</div>
       <ion-icon name="ios-arrow-forward"></ion-icon>
     </button>
   </ion-buttons>

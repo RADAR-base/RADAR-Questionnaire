@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core'
 
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
-import { QuestionType } from '../../../shared/models/question'
+import { Question, QuestionType } from '../../../shared/models/question'
 import { getTaskType } from '../../../shared/utilities/task-type'
 import { getSeconds } from '../../../shared/utilities/time'
 import { AnswerService } from './answer.service'
@@ -96,13 +96,13 @@ export class QuestionsService {
     return questions
   }
 
-  isAnswered(id) {
+  isAnswered(question: Question) {
+    const id = question.field_name
     return this.answerService.check(id)
   }
 
   evalSkipNext(questions, currentQuestion) {
     // NOTE: Evaluates branching logic
-    let increment = 1
     let questionIdx = currentQuestion + 1
     if (questionIdx < questions.length) {
       while (questions[questionIdx].evaluated_logic !== '') {
@@ -111,16 +111,15 @@ export class QuestionsService {
         const logicFieldName = this.getLogicFieldName(logic)
         const answers = this.answerService.answers[logicFieldName]
         const answerLength = answers.length
-        if (!answerLength) if (eval(logic) === true) return increment
+        if (!answerLength) if (eval(logic) === true) return questionIdx
         for (const answer of answers) {
           responses[logicFieldName] = answer
-          if (eval(logic) === true) return increment
+          if (eval(logic) === true) return questionIdx
         }
-        increment += 1
         questionIdx += 1
       }
     }
-    return increment
+    return questionIdx
   }
 
   getLogicFieldName(logic) {
@@ -139,9 +138,10 @@ export class QuestionsService {
     return Math.ceil((attemptedAnswers.length * 100) / total)
   }
 
-  recordTimeStamp(questionId, startTime) {
+  recordTimeStamp(question, startTime) {
+    const id = question.field_name
     this.timestampService.add({
-      id: questionId,
+      id: id,
       value: {
         startTime: startTime,
         endTime: this.getTime()
@@ -149,12 +149,14 @@ export class QuestionsService {
     })
   }
 
-  getIsPreviousDisabled(type) {
-    return this.PREVIOUS_BUTTON_DISABLED_SET.has(type)
+  getIsPreviousDisabled(question: Question) {
+    const questionType = question.field_type
+    return this.PREVIOUS_BUTTON_DISABLED_SET.has(questionType)
   }
 
-  getIsNextAutomatic(type) {
-    return this.NEXT_BUTTON_AUTOMATIC_SET.has(type)
+  getIsNextAutomatic(question: Question) {
+    const questionType = question.field_type
+    return this.NEXT_BUTTON_AUTOMATIC_SET.has(questionType)
   }
 
   getQuestionnairePayload(task) {

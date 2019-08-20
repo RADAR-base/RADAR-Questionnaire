@@ -10,17 +10,15 @@ export class IntroductionComponent {
   @Input()
   title
   @Output()
-  hide: EventEmitter<any> = new EventEmitter<any>()
-  @Output()
   start: EventEmitter<any> = new EventEmitter<any>()
 
   constructor() {}
 
   hideIntro() {
-    this.hide.emit()
+    this.start.emit(false)
   }
 
   startQuestionnaire() {
-    this.start.emit()
+    this.start.emit(true)
   }
 }

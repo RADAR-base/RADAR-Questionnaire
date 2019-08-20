@@ -19,23 +19,20 @@ import { Task } from '../../../../shared/models/task'
 export class FinishComponent implements OnInit, OnChanges {
   @Input()
   content = ''
-
   @Input()
   isClinicalTask = false
-
-  completedInClinic = false
-
   @Input()
   displayNextTaskReminder = true
-
   @Input()
   showDoneButton
-  task: Task
-  questionnaireData
-  assessment: Assessment
 
   @Output()
   exit: EventEmitter<any> = new EventEmitter<any>()
+
+  task: Task
+  questionnaireData
+  assessment: Assessment
+  completedInClinic = false
 
   constructor(
     public navCtrl: NavController,

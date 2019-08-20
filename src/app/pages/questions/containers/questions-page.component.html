@@ -4,15 +4,14 @@
       <introduction
         [title]="questionTitle"
         [introduction]="introduction"
-        (hide)="hideIntro(true)"
-        (start)="handleStart()"
+        (start)="handleIntro($event)"
       ></introduction>
     </ion-slide>
     <ion-slide *ngFor="let question of questions; let i = index">
       <question
         [question]="question"
         [questionIndex]="i"
-        [currentIndex]="currentQuestion"
+        [currentIndex]="currentQuestionId"
         (answer)="onAnswer($event)"
       ></question>
     </ion-slide>
@@ -20,7 +19,7 @@
       <finish
         [content]="endText"
         [displayNextTaskReminder]="isLastTask"
-        [isClinicalTask]="task ? task.isClinical : false"
+        [isClinicalTask]="isClinicalTask"
         [showDoneButton]="showDoneButton"
         (exit)="handleFinish($event)"
       ></finish>
@@ -32,9 +31,11 @@
   <toolbar
     (next)="nextQuestion()"
     (previous)="previousQuestion()"
+    (close)="exitQuestionnaire()"
+    (finish)="navigateToFinishPage()"
     [isPreviousButtonDisabled]="isPreviousButtonDisabled"
     [isNextButtonDisabled]="isNextButtonDisabled"
-    [currentQuestion]="currentQuestion"
+    [currentQuestionId]="currentQuestionId"
     [totalQuestions]="questions?.length"
   ></toolbar>
 </ion-footer>

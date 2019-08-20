@@ -35,7 +35,7 @@
           ion-button
           left
           icon-left
-          [class.disabled]="isPreviousBtDisabled"
+          [class.disabled]="isPreviousButtonDisabled"
           (tap)="previousQuestion()"
         >
           <ion-icon [name]="iconPrevious"></ion-icon>
@@ -47,7 +47,7 @@
           ion-button
           right
           icon-right
-          [class.disabled]="isNextBtDisabled"
+          [class.disabled]="isNextButtonDisabled"
           (tap)="nextQuestion()"
         >
           <div class="toolbar-label">{{ nextButtonText }}</div>

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core'
 
+import { ConfigService } from '../../../core/services/config/config.service'
 import { KafkaService } from '../../../core/services/kafka/kafka.service'
 import { ScheduleService } from '../../../core/services/schedule/schedule.service'
 import { SchemaType } from '../../../shared/models/kafka'
@@ -11,7 +12,8 @@ export class FinishTaskService {
   constructor(
     private schedule: ScheduleService,
     private prepare: PrepareDataService,
-    private kafka: KafkaService
+    private kafka: KafkaService,
+    private config: ConfigService
   ) {}
 
   updateTaskToComplete(task): Promise<any> {
@@ -44,7 +46,8 @@ export class FinishTaskService {
 
   evalClinicalFollowUpTask(assessment): Promise<any> {
     console.log('evaluating')
-    return this.schedule.generateClinicalSchedule(assessment, Date.now())
-    // TODO: Fix notification scheduling right after generating clinic schedule
+    return this.schedule
+      .generateClinicalSchedule(assessment, Date.now())
+      .then(() => this.config.rescheduleNotifications())
   }
 }

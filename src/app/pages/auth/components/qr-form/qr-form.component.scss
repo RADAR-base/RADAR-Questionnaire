@@ -1,0 +1,13 @@
+qr-form {
+  .qr-code {
+    margin: auto;
+    padding-top: 3vh;
+    width: 170px;
+  }
+
+  .bottom {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+  }
+}

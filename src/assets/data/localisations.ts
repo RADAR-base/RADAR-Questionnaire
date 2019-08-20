@@ -1004,5 +1004,21 @@ export const Localisations = {
     es: 'La actualización de configuración falla. ¿Procesar de nuevo?',
     it: `Errore nell'aggiornamento della configurazione. Riprovare?`,
     nl: 'Config-update mislukt. Opnieuw?'
+  },
+  SPLASH_STATUS_UPDATING_CONFIG: {
+    da: 'Opdaterer underretninger og planlæg...',
+    de: 'Benachrichtigungen und Zeitplan werden aktualisiert...',
+    en: 'Updating notifications and schedule...',
+    es: 'Actualizando notificaciones y programa...',
+    it: 'Aggiornamento notifiche e pianificazione...',
+    nl: 'Meldingen en planning bijwerken...'
+  },
+  SPLASH_STATUS_SENDING_LOGS: {
+    da: 'Afsendelse af ubesvarede spørgeskemaer...',
+    de: 'Versäumte Fragebogenprotokolle werden gesendet...',
+    en: 'Sending missed questionnaire logs...',
+    es: 'Enviando registros de cuestionarios perdidos...',
+    it: 'Invio dei registri dei questionari persi ...',
+    nl: 'Logboeken gemiste vragenlijst verzenden...'
   }
 }

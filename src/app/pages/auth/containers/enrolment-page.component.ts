@@ -1,5 +1,4 @@
 import { Component, ViewChild } from '@angular/core'
-import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx'
 import { NavController, Slides } from 'ionic-angular'
 
 import {
@@ -38,12 +37,11 @@ export class EnrolmentPageComponent {
 
   constructor(
     public navCtrl: NavController,
-    private scanner: BarcodeScanner,
     private auth: AuthService,
     private localization: LocalizationService,
     private alertService: AlertService,
     private usage: UsageService,
-    private logger: LogService,
+    private logger: LogService
   ) {
     this.localization.update().then(lang => (this.language = lang))
   }
@@ -65,26 +63,13 @@ export class EnrolmentPageComponent {
     this.next()
   }
 
-  scanQRHandler() {
-    const scanOptions = {
-      showFlipCameraButton: true,
-      orientation: 'portrait'
-    }
-    this.scanner.scan(scanOptions).then(res => {
-      this.usage.sendGeneralEvent(UsageEventType.QR_SCANNED, {
-        text: res.text
-      })
-      return this.authenticate(res.text)
-    })
-  }
-
-  metaQRHandler([baseURL, tokenName]) {
-    this.authenticate(this.auth.getURLFromToken(baseURL, tokenName))
-  }
-
   authenticate(authObj) {
-    this.showOutcomeStatus = false
+    if (!this.enterMetaQR)
+      this.usage.sendGeneralEvent(UsageEventType.QR_SCANNED, {
+        text: authObj
+      })
     this.loading = true
+    this.clearStatus()
     this.auth
       .authenticate(authObj)
       .catch(
@@ -108,7 +93,7 @@ export class EnrolmentPageComponent {
 
   handleError(e) {
     this.logger.error('Failed to log in', e)
-    this.showOutcomeStatus = true
+    this.showStatus()
     this.outcomeStatus =
       e.error && e.error.message
         ? e.error.message
@@ -120,6 +105,10 @@ export class EnrolmentPageComponent {
 
   clearStatus() {
     this.showOutcomeStatus = false
+  }
+
+  showStatus() {
+    setTimeout(() => (this.showOutcomeStatus = true), 500)
   }
 
   navigateToSplash() {

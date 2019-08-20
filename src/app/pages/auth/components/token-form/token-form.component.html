@@ -1,6 +1,5 @@
 <form id="tokenForm" [formGroup]="metaQRForm" (ngSubmit)="submitForm()">
-  <div class="registration">
-    <div class="text text-lg">{{ 'ENROL_REGISTRATION' | translate }}</div>
+  <div class="form">
     <div class="text text-justify">
       {{ 'ENROL_REGISTRATION_TOKEN_DESC' | translate }}
     </div>
@@ -17,6 +16,19 @@
       type="text"
       placeholder="Token"
       (ionFocus)="onFocus()"
+      clearOnEdit="true"
     ></ion-input>
+  </div>
+  <div class="bottom" padding *ngIf="!loading">
+    <button
+      form="tokenForm"
+      ion-button
+      class="bt bt--full"
+      round
+      full
+      type="submit"
+    >
+      {{ 'BTN_SUBMIT' | translate }}
+    </button>
   </div>
 </form>

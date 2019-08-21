@@ -1,0 +1,20 @@
+<div class="form">
+  <div class="text text-justify">
+    {{ 'ENROL_REGISTRATION_SCAN_DESC' | translate }}
+  </div>
+  <div class="qr-code">
+    <img src="assets/imgs/radar-qr-code.png" alt="RADAR QR code" />
+  </div>
+  <div class="bottom" padding *ngIf="!loading">
+    <button
+      *ngIf="!enterMetaQR"
+      ion-button
+      class="bt bt--full"
+      round
+      full
+      (tap)="scanQRHandler()"
+    >
+      {{ 'BTN_ENROL_SCAN' | translate }}
+    </button>
+  </div>
+</div>

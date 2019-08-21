@@ -21,9 +21,3 @@ export interface AnswerValueExport {
   timeCompleted: number
   timeNotification: Object
 }
-
-export interface AnswerKeyExport {
-  userId: string
-  sourceId: string
-  projectId: string
-}

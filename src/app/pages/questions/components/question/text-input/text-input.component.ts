@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
 
+import moment = require('moment')
+
 @Component({
   selector: 'text-input',
   templateUrl: 'text-input.component.html'
@@ -11,36 +13,34 @@ export class TextInputComponent implements OnInit {
   @Input()
   type
 
-  placeholder = 'Enter text'
-  isDateOrTime: string
+  showDatePicker: boolean
+  showTimePicker: boolean
+  showSeconds: boolean
   dateFormat: string
+  timeFormat: string
+  customMonthNames = []
 
   ngOnInit() {
-    this.isDateOrTime = this.getIsDateOrTime()
-    if (this.isDateOrTime) this.dateFormat = this.getDateFormat()
+    this.initMonthNames()
+    this.showDatePicker = this.type.includes('date')
+    this.showTimePicker = this.type.includes('time')
+    this.showSeconds = this.type.includes('seconds')
+    this.initFormats()
   }
 
-  getIsDateOrTime() {
-    return this.type.includes('date') || this.type.includes('time')
+  initMonthNames() {
+    for (let x = 1; x <= 12; x++)
+      this.customMonthNames.push(moment(x, 'M').format('MMM'))
   }
 
-  getDateFormat() {
-    const type = this.type.split('_')
-    switch (type[0]) {
-      case 'datetime':
-        this.placeholder = 'Enter date and time'
-        if (type[1] == 'seconds') return 'DD MMM YYYY H:mm:s'
-        return 'DD MMM YYYY H:mm'
-      case 'time':
-        this.placeholder = 'Enter hours and minutes'
-        return 'HH:mm'
-      default:
-        this.placeholder = 'Enter date'
-        return 'MMM DD YYYY'
-    }
+  initFormats() {
+    this.dateFormat = 'MMM DD YYYY'
+    this.timeFormat = this.showSeconds ? 'HH:mm:ss' : 'HH:mm'
   }
 
   onInputChange(value) {
-    this.valueChange.emit(this.isDateOrTime ? JSON.stringify(value) : value)
+    this.valueChange.emit(
+      this.showDatePicker || this.showTimePicker ? JSON.stringify(value) : value
+    )
   }
 }

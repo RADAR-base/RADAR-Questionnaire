@@ -1,18 +1,30 @@
-<ng-container *ngIf="isDateOrTime">
+<ng-container *ngIf="showDatePicker">
   <ion-item>
     <ion-datetime
-      placeholder="{{ placeholder }}"
+      placeholder="Enter date"
       displayFormat="{{ dateFormat }}"
+      [monthShortNames]="customMonthNames"
+      (ionChange)="onInputChange($event)"
+    >
+    </ion-datetime>
+  </ion-item>
+</ng-container>
+
+<ng-container *ngIf="showTimePicker">
+  <ion-item>
+    <ion-datetime
+      placeholder="Enter hours and minutes"
+      displayFormat="{{ timeFormat }}"
       (ionChange)="onInputChange($event)"
     ></ion-datetime>
   </ion-item>
 </ng-container>
 
-<ng-container *ngIf="!isDateOrTime">
+<ng-container *ngIf="!showDatePicker && !showTimePicker">
   <ion-item>
     <ion-input
       type="text"
-      placeholder="{{ placeholder }}"
+      placeholder="Enter text"
       (ionChange)="onInputChange($event.value)"
     ></ion-input>
   </ion-item>

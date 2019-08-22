@@ -24,21 +24,9 @@ export class FirebaseAnalyticsService extends AnalyticsService {
     const cleanParams = {}
 
     Object.keys(params).forEach(key => {
-      let cleanKey: string
-      if (key.length > 40) {
-        cleanKey = key.substring(0, 40)
-        this.logger.log(`Firebase analytics key ${key} is too long, cropping to 40 characters: ${cleanKey}`)
-      } else {
-        cleanKey = key
-      }
-
-      let value = params[key]
-      if (value.length > 100) {
-        value = value.substring(0, 100)
-        this.logger.log(`Firebase analytics value for ${key} is too long, cropping to 100 characters: ${value}`)
-      }
-
-      cleanParams[cleanKey] = value
+      cleanParams[this.crop(key, 40,
+        `Firebase analytics key ${key} is too long, cropping to 40 characters`)] = this.crop(value, 100,
+        `Firebase analytics value for ${key} is too long, cropping to 100 characters: ${value}`)
     })
 
     return this.firebase
@@ -85,7 +73,11 @@ export class FirebaseAnalyticsService extends AnalyticsService {
     return Promise.resolve(
       Object.entries(userProperties)
         .filter(([k, v]) => k)
-        .forEach(([key, value]) => this.firebase.setUserProperty(key, value))
+        .forEach(([key, value]) => {
+          return this.firebase.setUserProperty(
+            this.crop(key, 24, `Firebase User Property name ${key} is too long, cropping`),
+            this.crop(String(value), 36, `Firebase User Property value ${value} for ${key} is too long, cropping`))
+        })
     )
   }
 
@@ -95,5 +87,16 @@ export class FirebaseAnalyticsService extends AnalyticsService {
 
   setCurrentScreen(screenName: string): Promise<any> {
     return this.firebase.setScreenName(screenName)
+  }
+
+  crop(value: string, size: number, message?: string): string {
+    if (value.length <= size) {
+      return value
+    } else {
+      if (message) {
+        this.logger.log(message)
+      }
+      return value.substring(0, size)
+    }
   }
 }

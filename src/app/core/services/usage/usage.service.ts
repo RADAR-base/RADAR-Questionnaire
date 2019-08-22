@@ -6,6 +6,7 @@ import { SchemaType } from '../../../shared/models/kafka'
 import { KafkaService } from '../kafka/kafka.service'
 import { LogService } from '../misc/log.service'
 import { AnalyticsService } from './analytics.service'
+import { Task } from '../../../shared/models/task'
 
 @Injectable()
 export class UsageService {
@@ -32,7 +33,7 @@ export class UsageService {
     })
   }
 
-  sendQuestionnaireEvent(type, task) {
+  sendQuestionnaireEvent(type, task: Task) {
     // noinspection JSIgnoredPromiseFromCall
     this.analytics.logEvent(type, {
       questionnaire_timestamp: task.timestamp

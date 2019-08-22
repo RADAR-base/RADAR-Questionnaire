@@ -16,12 +16,33 @@ export class FirebaseAnalyticsService extends AnalyticsService {
     super()
   }
 
-  logEvent(event: string, params: any): Promise<any> {
+  logEvent(event: string, params: { [key: string]: string }): Promise<any> {
     this.logger.log('Firebase Event', event)
     if (!this.platform.is('cordova'))
       return Promise.resolve('Could not load firebase')
+
+    const cleanParams = {}
+
+    Object.keys(params).forEach(key => {
+      let cleanKey: string
+      if (key.length > 40) {
+        cleanKey = key.substring(0, 40)
+        this.logger.log(`Firebase analytics key ${key} is too long, cropping to 40 characters: ${cleanKey}`)
+      } else {
+        cleanKey = key
+      }
+
+      let value = params[key]
+      if (value.length > 100) {
+        value = value.substring(0, 100)
+        this.logger.log(`Firebase analytics value for ${key} is too long, cropping to 100 characters: ${value}`)
+      }
+
+      cleanParams[cleanKey] = value
+    })
+
     return this.firebase
-      .logEvent(event.toLowerCase(), params)
+      .logEvent(event.toLowerCase(), cleanParams)
       .then((res: any) => {
         this.logger.log('firebase analytics service', res)
         return res

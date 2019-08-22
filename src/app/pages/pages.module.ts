@@ -25,7 +25,6 @@ import { PipesModule } from '../shared/pipes/pipes.module'
 import { TranslatePipe } from '../shared/pipes/translate/translate'
 import { AuthModule } from './auth/auth.module'
 import { ClinicalTasksModule } from './clinical-tasks/clinical-tasks.module'
-import { FinishModule } from './finish/finish.module'
 import { HomeModule } from './home/home.module'
 import { QuestionsModule } from './questions/questions.module'
 import { ReportModule } from './report/report.module'
@@ -38,7 +37,6 @@ import { SplashModule } from './splash/splash.module'
     CommonModule,
     AuthModule,
     ClinicalTasksModule,
-    FinishModule,
     HomeModule,
     QuestionsModule,
     ReportModule,

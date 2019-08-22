@@ -1,68 +1,45 @@
-import { Component, ElementRef, ViewChild } from '@angular/core'
-import { Content, NavController, NavParams, Platform } from 'ionic-angular'
-
-import { Assessment } from '../../../shared/models/assessment'
-import { FinishPageComponent } from '../../finish/containers/finish-page.component'
+import { Component, OnInit, ViewChild } from '@angular/core'
 import { Insomnia } from '@ionic-native/insomnia/ngx'
-import { LocKeys } from '../../../shared/enums/localisations'
-import { LocalizationService } from '../../../core/services/misc/localization.service'
+import { NavController, NavParams, Platform, Slides } from 'ionic-angular'
+
+import { UsageService } from '../../../core/services/usage/usage.service'
+import { UsageEventType } from '../../../shared/enums/events'
+import { Assessment } from '../../../shared/models/assessment'
 import { Question } from '../../../shared/models/question'
-import { QuestionsPageAnimations } from './questions-page.animation'
-import { QuestionsService } from '../services/questions.service'
 import { Task } from '../../../shared/models/task'
 import { TaskType } from '../../../shared/utilities/task-type'
-import { UsageEventType } from '../../../shared/enums/events'
-import { UsageService } from '../../../core/services/usage/usage.service'
+import { HomePageComponent } from '../../home/containers/home-page.component'
+import { QuestionsService } from '../services/questions.service'
 
 @Component({
   selector: 'page-questions',
-  templateUrl: 'questions-page.component.html',
-  animations: QuestionsPageAnimations
+  templateUrl: 'questions-page.component.html'
 })
-export class QuestionsPageComponent {
-  @ViewChild(Content)
-  content: Content
+export class QuestionsPageComponent implements OnInit {
+  @ViewChild(Slides)
+  slides: Slides
 
-  @ViewChild('questionsContainer')
-  questionsContainerRef: ElementRef
-  questionsContainerEl: HTMLElement
-
-  startTime: number
-  progress = 0
-  currentQuestion = 0
-  questionIncrements = []
-  nextQuestionIncr: number = 0
-
-  textValues = {
-    next: this.localization.translateKey(LocKeys.BTN_NEXT),
-    previous: this.localization.translateKey(LocKeys.BTN_PREVIOUS),
-    finish: this.localization.translateKey(LocKeys.BTN_FINISH),
-    close: this.localization.translateKey(LocKeys.BTN_CLOSE)
-  }
-  nextButtonText = this.localization.translateKey(LocKeys.BTN_NEXT)
-  previousButtonText = this.localization.translateKey(LocKeys.BTN_NEXT)
+  startTime = Date.now()
+  currentQuestionId = 0
+  questionIncrements = [0]
   isNextButtonDisabled = true
   isPreviousButtonDisabled = false
-  iconValues = {
-    previous: 'ios-arrow-back',
-    close: 'close-circle'
-  }
-  iconPrevious: string = this.iconValues.close
-
   task: Task
   taskType: TaskType
   questions: Question[]
   questionTitle: String
   endText: string
   isLastTask: boolean
+  isClinicalTask: boolean
   introduction: string
   assessment: Assessment
-  showIntroduction: boolean
+  showIntroductionScreen: boolean
+  showDoneButton: boolean
+  showFinishScreen: boolean
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private localization: LocalizationService,
     private questionsService: QuestionsService,
     private usage: UsageService,
     private platform: Platform,
@@ -74,11 +51,27 @@ export class QuestionsPageComponent {
     })
   }
 
+  ngOnInit() {
+    this.task = this.navParams.data
+    const data = this.questionsService.getQuestionnairePayload(this.task)
+    return data.then(res => {
+      this.questionTitle = res.title
+      this.introduction = res.introduction
+      this.showIntroductionScreen = res.assessment.showIntroduction
+      this.questions = res.questions
+      this.endText = res.endText
+      this.isLastTask = res.isLastTask
+      this.assessment = res.assessment
+      this.taskType = res.type
+      return (this.isClinicalTask = this.taskType == TaskType.CLINICAL)
+    })
+  }
+
   ionViewDidLoad() {
-    this.init()
     this.sendEvent(UsageEventType.QUESTIONNAIRE_STARTED)
     this.usage.setPage(this.constructor.name)
     this.insomnia.keepAwake()
+    this.slides.lockSwipes(true)
   }
 
   ionViewDidLeave() {
@@ -87,29 +80,26 @@ export class QuestionsPageComponent {
     this.insomnia.allowSleepAgain()
   }
 
-  init() {
-    this.questionTitle = this.navParams.data.title
-    this.introduction = this.navParams.data.introduction
-    this.showIntroduction = this.navParams.data.assessment.showIntroduction
-    this.questionsContainerEl = this.questionsContainerRef.nativeElement
-    this.questions = this.questionsService.processQuestions(
-      this.questionTitle,
-      this.navParams.data.questions
-    )
-    this.task = this.navParams.data.task
-    this.endText = this.navParams.data.endText
-    this.isLastTask = this.navParams.data.isLastTask
-    this.assessment = this.navParams.data.assessment
-    this.taskType = this.navParams.data.taskType
-    this.setCurrentQuestion(this.nextQuestionIncr)
-  }
-
-  hideIntro() {
-    this.showIntroduction = false
+  handleIntro(start: boolean) {
+    this.showIntroductionScreen = false
     this.questionsService.updateAssessmentIntroduction(
       this.assessment,
       this.taskType
     )
+    if (start) {
+      this.slides.update()
+      this.slideQuestion()
+    } else this.exitQuestionnaire
+  }
+
+  handleFinish(completedInClinic?: boolean) {
+    this.sendEvent(UsageEventType.QUESTIONNAIRE_FINISHED)
+    return this.questionsService
+      .handleClinicalFollowUp(this.assessment, completedInClinic)
+      .then(() => {
+        this.updateDoneButton(false)
+        return this.navCtrl.setRoot(HomePageComponent)
+      })
   }
 
   onAnswer(event) {
@@ -123,108 +113,55 @@ export class QuestionsPageComponent {
   }
 
   slideQuestion() {
-    // Note: Move to next question
-    this.content.scrollToTop(200)
-    this.questionsContainerEl.style.transform = `translateX(-${this
-      .currentQuestion * 100}%)`
-  }
+    this.slides.lockSwipes(false)
+    this.slides.slideTo(this.currentQuestionId, 300)
+    this.slides.lockSwipes(true)
 
-  willMoveToFinish(value) {
-    return this.currentQuestion + value === this.questions.length
-  }
-
-  willExitQuestionnaire(value) {
-    return value === null
-  }
-
-  willMoveToValidQuestion(value) {
-    return (
-      !(this.currentQuestion + value < 0) &&
-      !(this.currentQuestion + value >= this.questions.length)
-    )
-  }
-
-  setButtons() {
-    this.iconPrevious = this.getLeftButtonValues().icon
-    this.previousButtonText = this.getLeftButtonValues().text
-    this.nextButtonText = this.getRightButtonText()
-  }
-
-  setCurrentQuestion(value = 0) {
-    if (this.willExitQuestionnaire(value)) return this.exitQuestionnaire()
-    if (this.willMoveToFinish(value)) return this.navigateToFinishPage()
-    // NOTE: Record start time when question is shown
     this.startTime = this.questionsService.getTime()
-    if (this.willMoveToValidQuestion(value)) {
-      this.currentQuestion = this.currentQuestion + value
-      this.setButtons()
-      this.setProgress()
-      this.slideQuestion()
-      this.updateNextButton()
-      this.updatePreviousButton()
-      return
-    }
   }
 
-  getLeftButtonValues() {
-    return !this.currentQuestion
-      ? { text: this.textValues.close, icon: this.iconValues.close }
-      : { text: this.textValues.previous, icon: this.iconValues.previous }
-  }
-
-  getRightButtonText() {
-    return this.currentQuestion === this.questions.length - 1
-      ? this.textValues.finish
-      : this.textValues.next
-  }
-
-  getCurrentQuestionID() {
-    return this.questions[this.currentQuestion].field_name
-  }
-
-  setProgress() {
-    this.progress = this.questionsService.getAnswerProgress(
-      this.currentQuestion,
-      this.questions.length
-    )
+  getCurrentQuestion() {
+    return this.questions[this.currentQuestionId]
   }
 
   updateNextButton() {
     this.isNextButtonDisabled = !this.questionsService.isAnswered(
-      this.getCurrentQuestionID()
+      this.getCurrentQuestion()
     )
   }
 
   updatePreviousButton() {
     this.isPreviousButtonDisabled = this.questionsService.getIsPreviousDisabled(
-      this.questions[this.currentQuestion].field_type
+      this.getCurrentQuestion()
+    )
+  }
+
+  submitTimestamps() {
+    this.questionsService.recordTimeStamp(
+      this.getCurrentQuestion(),
+      this.startTime
     )
   }
 
   nextQuestion() {
-    if (this.questionsService.isAnswered(this.getCurrentQuestionID())) {
-      // NOTE: Record timestamp and end time when pressed "Next"
-      this.questionsService.recordTimeStamp(
-        this.getCurrentQuestionID(),
-        this.startTime
-      )
-      this.nextQuestionIncr = this.questionsService.getNextQuestion(
-        this.questions,
-        this.currentQuestion
-      )
-      this.setCurrentQuestion(this.nextQuestionIncr)
-      this.questionIncrements.push(this.nextQuestionIncr)
-    }
+    this.submitTimestamps()
+    this.currentQuestionId = this.questionsService.getNextQuestion(
+      this.questions,
+      this.currentQuestionId
+    )
+    this.questionIncrements.push(this.currentQuestionId)
+    this.slideQuestion()
+    this.updateNextButton()
+    this.updatePreviousButton()
   }
 
   previousQuestion() {
-    if (this.isPreviousButtonDisabled === false) {
-      if (!this.isNextButtonDisabled) this.questionsService.deleteLastAnswer()
-      const inc = this.questionIncrements.length
-        ? -this.questionIncrements.pop()
-        : null
-      this.setCurrentQuestion(inc)
-    }
+    if (!this.isNextButtonDisabled) this.questionsService.deleteLastAnswer()
+    this.questionIncrements.pop()
+    this.currentQuestionId = this.questionIncrements[
+      this.questionIncrements.length - 1
+    ]
+    this.slideQuestion()
   }
 
   exitQuestionnaire() {
@@ -233,21 +170,22 @@ export class QuestionsPageComponent {
   }
 
   navigateToFinishPage() {
-    this.sendEvent(UsageEventType.QUESTIONNAIRE_FINISHED)
-    const data = this.questionsService.getData()
-    this.navCtrl.setRoot(
-      FinishPageComponent,
-      {
-        endText: this.endText,
-        task: this.task,
-        isLastTask: this.isLastTask,
-        answers: data.answers,
-        timestamps: data.timestamps,
-        questions: this.questions,
-        assessment: this.assessment
-      },
-      { animate: true, direction: 'forward' }
-    )
+    this.submitTimestamps()
+    this.showFinishScreen = true
+    this.onQuestionnaireCompleted()
+    this.slides.lockSwipes(false)
+    this.slides.slideNext(500)
+    this.slides.lockSwipes(true)
+  }
+
+  onQuestionnaireCompleted() {
+    return this.questionsService
+      .processCompletedQuestionnaire(this.task, this.questions)
+      .then(() => this.updateDoneButton(true))
+  }
+
+  updateDoneButton(val: boolean) {
+    this.showDoneButton = val
   }
 
   sendEvent(type) {

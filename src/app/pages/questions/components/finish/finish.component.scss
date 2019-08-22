@@ -1,4 +1,4 @@
-page-finish {
+finish {
   ion-item.item {
     margin-bottom: $item-separation-distance;
     background-color: $cl-primary-40;
@@ -9,7 +9,11 @@ page-finish {
   }
 
   .pos-bottom-90 {
-    padding-bottom: 90px;
+    padding-bottom: 32px;
+  }
+
+  .done-button {
+    padding: 0 24px;
   }
 
   .next-task-highlight {
@@ -17,17 +21,12 @@ page-finish {
   }
 
   ion-spinner * {
-    margin-left: -15px;
     padding-left: 10px;
     width: 10px;
     height: 30px;
     background-color: #fff;
     fill: #fff;
     stroke: #fff;
-  }
-
-  .spinner-center {
-    margin-left: 50%;
   }
 
   .extra-info {
@@ -38,5 +37,12 @@ page-finish {
 
   .extra-info-icon {
     height: 1.5vh;
+  }
+
+  .pos-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
   }
 }

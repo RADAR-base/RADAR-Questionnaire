@@ -17,8 +17,7 @@ export class TimestampService {
 
   getTimeStamp() {
     // NOTE: Timestamp used to record response time of questionnaires
-    this.date = new Date()
-    return this.date.getTime()
+    return Date.now()
   }
 
   getCurrentTime() {

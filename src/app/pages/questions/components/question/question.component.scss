@@ -1,7 +1,6 @@
 question {
-  overflow-x: hidden;
-  overflow-y: auto;
   width: 100% !important;
+  text-align: left;
 
   p.stdformat {
     margin-top: 8px;
@@ -31,10 +30,6 @@ question {
 
   .rangeformat {
     height: 30vh;
-  }
-
-  .hidden {
-    display: none;
   }
 
   .fade {

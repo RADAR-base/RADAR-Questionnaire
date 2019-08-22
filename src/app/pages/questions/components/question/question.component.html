@@ -1,7 +1,4 @@
-<div
-  [class.hidden]="!currentlyShown"
-  [class.fade]="previouslyShown && !currentlyShown"
->
+<div [class.fade]="!currentlyShown">
   <div
     *ngIf="
       question?.type === 'info' || question?.type === 'timed';

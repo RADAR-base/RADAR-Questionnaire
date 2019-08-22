@@ -8,7 +8,7 @@ import {
 } from '@angular/core'
 import { NavController, Platform } from 'ionic-angular'
 
-import { AlertService } from '../../../../../core/services/alert.service'
+import { AlertService } from '../../../../../core/services/misc/alert.service'
 import { AndroidPermissionUtility } from '../../../../../shared/utilities/android-permission'
 import { AudioRecordService } from '../../../services/audio-record.service'
 import { DefaultMaxAudioAttemptsAllowed } from '../../../../../../assets/data/defaultConfig'
@@ -49,7 +49,7 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   ngOnInit() {
     // NOTE: Stop audio recording when application is on pause / backbutton is pressed
     this.pauseListener = this.platform.pause.subscribe(() => {
-      if (this.currentlyShown && this.isRecording()) {
+      if (this.isRecording()) {
         this.stopRecording()
         this.showTaskInterruptedAlert()
       }

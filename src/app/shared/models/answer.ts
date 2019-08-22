@@ -21,21 +21,3 @@ export interface AnswerValueExport {
   timeCompleted: number
   timeNotification: Object
 }
-
-export interface AnswerKeyExport {
-  userId: string
-  sourceId: string
-  projectId: string
-}
-
-export interface CompletionLogValueExport {
-  name: string
-  time: number
-  timeNotification: Object
-  completionPercentage: any
-}
-
-export interface ApplicationTimeZoneValueExport {
-  time: number
-  offset: number
-}

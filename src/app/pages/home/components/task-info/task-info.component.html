@@ -83,17 +83,18 @@
 
       </div>
     </div>
-    <div
-      *ngIf="hasExtraInfo"
-      class="extra-info"
-      [@alignCenterRightExtraInfo]="expanded"
-    >
-      <img
-        class="extra-info-icon"
-        src="assets/imgs/warning.png"
-      >
-      {{  extraTaskInfo }}
-    </div>
+  </div>
 
+  <div
+    *ngIf="task.warning"
+    class="extra-info"
+    [@alignCenterRightExtraInfo]="expanded"
+  >
+
+    <img
+      class="extra-info-icon"
+      src="assets/imgs/warning.png"
+    >
+    {{  task.warning }}
   </div>
 </div>

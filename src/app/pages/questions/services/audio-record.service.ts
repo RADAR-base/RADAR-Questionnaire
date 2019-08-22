@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core'
-import { Device } from '@ionic-native/device/ngx'
 import { File } from '@ionic-native/file/ngx'
+import { Platform } from 'ionic-angular'
 
 import { DefaultAudioRecordOptions } from '../../../../assets/data/defaultConfig'
+import { LogService } from '../../../core/services/misc/log.service'
 
 declare var Media: any // stops errors w/ cordova-plugin-media-with-compression types
 
@@ -12,7 +13,11 @@ export class AudioRecordService {
   audio
   fileName = 'audio.m4a'
 
-  constructor(private file: File, private device: Device) {}
+  constructor(
+    private file: File,
+    private platform: Platform,
+    private logger: LogService
+  ) {}
 
   startAudioRecording(): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -34,13 +39,13 @@ export class AudioRecordService {
   }
 
   getFilePath() {
-    return this.device.platform == 'Android'
+    return this.platform.is('android')
       ? this.getDir() + this.fileName
       : this.fileName
   }
 
   getDir() {
-    return this.device.platform == 'Android'
+    return this.platform.is('android')
       ? this.file.dataDirectory
       : this.file.tempDirectory
   }
@@ -50,11 +55,11 @@ export class AudioRecordService {
   }
 
   success() {
-    console.log('Action is successful')
+    this.logger.log('Action is successful')
   }
 
   failure(error) {
-    console.log('Error! ' + JSON.stringify(error))
+    this.logger.error('Error! ', error)
   }
 
   readAudioFile() {

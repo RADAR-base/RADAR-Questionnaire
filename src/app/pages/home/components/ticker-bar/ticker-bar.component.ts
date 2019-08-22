@@ -1,12 +1,10 @@
 import { Component, Input, OnChanges } from '@angular/core'
-import { NavController } from 'ionic-angular'
 
-import { SchedulingService } from '../../../../core/services/scheduling.service'
+import { LocalizationService } from '../../../../core/services/misc/localization.service'
 import { LocKeys } from '../../../../shared/enums/localisations'
 import { ReportScheduling } from '../../../../shared/models/report'
 import { Task } from '../../../../shared/models/task'
-import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
-import { ReportPageComponent } from '../../../report/containers/report-page.component'
+import { getHours, getMinutes } from '../../../../shared/utilities/time'
 
 @Component({
   selector: 'ticker-bar',
@@ -24,29 +22,10 @@ export class TickerBarComponent implements OnChanges {
   tickerText: string
   report: ReportScheduling
 
-  constructor(
-    private schedule: SchedulingService,
-    private navCtrl: NavController,
-    private translate: TranslatePipe
-  ) {}
+  constructor(private localization: LocalizationService) {}
 
   ngOnChanges() {
     this.updateTickerItem()
-  }
-
-  openReport() {
-    this.updateReport()
-    this.updateTickerItem()
-    this.navCtrl.push(ReportPageComponent)
-  }
-
-  updateReport() {
-    if (this.report) {
-      const now = new Date()
-      this.report['viewed'] = true
-      this.report['firstViewedOn'] = now.getTime()
-      this.schedule.updateReport(this.report)
-    }
   }
 
   updateTickerItem() {
@@ -68,20 +47,20 @@ export class TickerBarComponent implements OnChanges {
   addTask() {
     if (this.isNow) {
       this.tickerText =
-        this.translate.transform(LocKeys.TASK_BAR_NOW_TASK.toString()) +
+        this.localization.translateKey(LocKeys.TASK_BAR_NOW_TASK) +
         '<b>' +
-        this.translate.transform(LocKeys.STATUS_NOW.toString()) +
+        this.localization.translateKey(LocKeys.STATUS_NOW) +
         '.</b>'
     } else {
       if (this.task.name === 'ESM') {
         this.tickerText =
-          this.translate.transform(LocKeys.TASK_BAR_NOW_TASK.toString()) +
+          this.localization.translateKey(LocKeys.TASK_BAR_NOW_TASK) +
           '<b>' +
-          this.translate.transform(LocKeys.TASK_BAR_NEXT_TASK_SOON.toString()) +
+          this.localization.translateKey(LocKeys.TASK_BAR_NEXT_TASK_SOON) +
           '.</b>'
       } else {
         this.tickerText =
-          this.translate.transform(LocKeys.TASK_BAR_NEXT_TASK.toString()) +
+          this.localization.translateKey(LocKeys.TASK_BAR_NEXT_TASK) +
           '<b>' +
           this.getTimeToNext(this.task.timestamp) +
           '.</b>'
@@ -92,50 +71,46 @@ export class TickerBarComponent implements OnChanges {
   addAffirmation() {
     this.tickerText =
       '<b>' +
-      this.translate.transform(LocKeys.TASK_BAR_AFFIRMATION_1.toString()) +
+      this.localization.translateKey(LocKeys.TASK_BAR_AFFIRMATION_1) +
       '</b> ' +
-      this.translate.transform(LocKeys.TASK_BAR_AFFIRMATION_2.toString())
+      this.localization.translateKey(LocKeys.TASK_BAR_AFFIRMATION_2)
   }
 
   addTasksRemaining() {
     this.tickerText =
       '<b>' +
-      this.translate.transform(LocKeys.TASK_BAR_TASK_LEFT_1.toString()) +
+      this.localization.translateKey(LocKeys.TASK_BAR_TASK_LEFT_1) +
       '</b>' +
-      this.translate.transform(LocKeys.TASK_BAR_TASK_LEFT_2.toString())
+      this.localization.translateKey(LocKeys.TASK_BAR_TASK_LEFT_2)
   }
 
   addTasksNone() {
     this.tickerText =
       '<b>' +
-      this.translate.transform(LocKeys.TASK_BAR_NO_TASK_1.toString()) +
+      this.localization.translateKey(LocKeys.TASK_BAR_NO_TASK_1) +
       ' </b>' +
-      this.translate.transform(LocKeys.TASK_BAR_NO_TASK_2.toString())
+      this.localization.translateKey(LocKeys.TASK_BAR_NO_TASK_2)
   }
 
   getTimeToNext(next) {
     const now = new Date().getTime()
     let deltaStr = ''
-    const deltaMin = Math.round((next - now) / 60000)
-    const deltaHour = Math.round(deltaMin / 60)
+    const deltaMin = Math.round(getMinutes({ milliseconds: next - now }))
+    const deltaHour = Math.round(getHours({ minutes: deltaMin }))
     if (deltaMin > 59) {
       deltaStr =
         String(deltaHour) +
         ' ' +
         (deltaHour > 1
-          ? this.translate.transform(LocKeys.TASK_TIME_HOUR_MULTIPLE.toString())
-          : this.translate.transform(LocKeys.TASK_TIME_HOUR_SINGLE.toString()))
+          ? this.localization.translateKey(LocKeys.TASK_TIME_HOUR_MULTIPLE)
+          : this.localization.translateKey(LocKeys.TASK_TIME_HOUR_SINGLE))
     } else {
       deltaStr =
         String(deltaMin) +
         ' ' +
         (deltaMin > 1
-          ? this.translate.transform(
-              LocKeys.TASK_TIME_MINUTE_MULTIPLE.toString()
-            )
-          : this.translate.transform(
-              LocKeys.TASK_TIME_MINUTE_SINGLE.toString()
-            ))
+          ? this.localization.translateKey(LocKeys.TASK_TIME_MINUTE_MULTIPLE)
+          : this.localization.translateKey(LocKeys.TASK_TIME_MINUTE_SINGLE))
     }
     return deltaStr
   }

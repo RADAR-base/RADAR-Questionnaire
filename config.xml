@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="534" id="org.phidatalab.radar_armt" ios-CFBundleIdentifier="org.phidatalab.radararmt" version="0.7.0-alpha">
+<widget android-versionCode="534" id="org.phidatalab.radar_armt" ios-CFBundleIdentifier="org.phidatalab.radararmt" version="0.7.0-alpha" xmlns:android="http://schemas.android.com/apk/res/android">
     <name>RADAR Questionnaire</name>
     <description>An application that collects active data for research.</description>
     <author email="info@radar-cns.org" href="http://radar-cns.org/">RADAR-CNS</author>
@@ -38,6 +38,15 @@
         <splash density="port-xhdpi" src="resources/android/splash/drawable-port-xhdpi-screen.png" />
         <splash density="port-xxhdpi" src="resources/android/splash/drawable-port-xxhdpi-screen.png" />
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
+        <resource-file src="resources/android/notification/drawable-ldpi-icon.png" target="app/src/main/res/drawable-ldpi/ic_silhouette.png" />
+        <resource-file src="resources/android/notification/drawable-mdpi-icon.png" target="app/src/main/res/drawable-mdpi/ic_silhouette.png" />
+        <resource-file src="resources/android/notification/drawable-hdpi-icon.png" target="app/src/main/res/drawable-hdpi/ic_silhouette.png" />
+        <resource-file src="resources/android/notification/drawable-xhdpi-icon.png" target="app/src/main/res/drawable-xhdpi/ic_silhouette.png" />
+        <resource-file src="resources/android/notification/drawable-xxhdpi-icon.png" target="app/src/main/res/drawable-xxhdpi/ic_silhouette.png" />
+        <resource-file src="resources/android/notification/drawable-xxxhdpi-icon.png" target="app/src/main/res/drawable-xxxhdpi/ic_silhouette.png" />
+        <config-file parent="/manifest/application" target="AndroidManifest.xml">
+            <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/ic_silhouette" />
+        </config-file>
     </platform>
     <platform name="ios">
         <edit-config file="*-Info.plist" mode="merge" target="NSCameraUsageDescription">

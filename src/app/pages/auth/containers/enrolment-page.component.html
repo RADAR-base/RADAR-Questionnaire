@@ -1,5 +1,6 @@
 <ion-content>
   <ion-slides pager="false">
+    <!-- SLIDE 1 -->
     <ion-slide id="intro-language">
       <div class="logo-container">
         <img class="logo" src="assets/imgs/radar-logo.svg" alt="RADAR LOGO" />
@@ -24,6 +25,7 @@
       </div>
     </ion-slide>
 
+    <!-- SLIDE 2 -->
     <ion-slide id="intro">
       <div class="logo-container">
         <img class="logo" src="assets/imgs/radar-logo.svg" alt="RADAR LOGO" />
@@ -42,6 +44,7 @@
       </div>
     </ion-slide>
 
+    <!-- SLIDE 3 -->
     <ion-slide id="qr-registration-choice">
       <div class="registration">
         <div class="text text-lg">{{ 'ENROL_REGISTRATION' | translate }}</div>
@@ -55,7 +58,6 @@
             {{ 'BTN_ENROL_SCAN' | translate }}
           </button>
         </p>
-
         <p>
           <button
             ion-button
@@ -70,62 +72,37 @@
       </div>
     </ion-slide>
 
+    <!-- SLIDE 4 -->
     <ion-slide id="qr-registration">
-      <ng-container *ngIf="enterMetaQR">
-        <token-form
-          (data)="metaQRHandler($event)"
-          (focus)="clearStatus()"
-          (errors)="handleError($event)"
-        ></token-form
-      ></ng-container>
-      <ng-container *ngIf="!enterMetaQR">
-        <div class="registration">
-          <div class="text text-lg">{{ 'ENROL_REGISTRATION' | translate }}</div>
-          <div class="text text-justify">
-            {{ 'ENROL_REGISTRATION_SCAN_DESC' | translate }}
-          </div>
-        </div>
-        <div class="qr-code">
-          <img src="assets/imgs/radar-qr-code.png" alt="RADAR QR code"/>
-        </div>
-      </ng-container>
-      <div id="outcome" *ngIf="showOutcomeStatus">
-        <div class="padding-text">{{ outcomeStatus }}</div>
+      <div class="registration">
+        <div class="text text-lg">{{ 'ENROL_REGISTRATION' | translate }}</div>
+        <ng-container *ngIf="enterMetaQR">
+          <token-form
+            [loading]="loading"
+            (data)="authenticate($event)"
+            (focus)="clearStatus()"
+            (errors)="handleError($event)"
+          ></token-form>
+        </ng-container>
+        <ng-container *ngIf="!enterMetaQR">
+          <qr-form [loading]="loading" (data)="authenticate($event)"></qr-form>
+        </ng-container>
       </div>
-      <div class="bottom">
-        <div padding *ngIf="!loading">
-          <button
-            *ngIf="!enterMetaQR"
-            ion-button
-            class="bt bt--full"
-            round
-            full
-            (tap)="scanQRHandler()"
-          >
-            {{ 'BTN_ENROL_SCAN' | translate }}
-          </button>
-          <button
-            *ngIf="enterMetaQR"
-            form="tokenForm"
-            ion-button
-            class="bt bt--full"
-            round
-            full
-            type="submit"
-          >
-            {{ 'BTN_SUBMIT' | translate }}
-          </button>
+      <div class="status">
+        <div id="outcome" *ngIf="showOutcomeStatus">
+          {{ outcomeStatus }}
         </div>
-        <div id="loading" *ngIf="loading">
+        <div id="loading" *ngIf="loading && !showOutcomeStatus">
           {{ 'STATUS_LOADING' | translate }}...
         </div>
       </div>
     </ion-slide>
 
+    <!-- SLIDE 5 -->
     <ion-slide id="preference-report pos-above">
       <div class="text text-lg">{{ 'ENROL_PREFERENCES' | translate }}</div>
       <div class="pref-icon">
-        <img src="assets/imgs/MobileAnalytics-neg.png" alt="App preferences">
+        <img src="assets/imgs/MobileAnalytics-neg.png" alt="App preferences" />
       </div>
       <div class="text text-justify">
         {{ 'ENROL_PREFERENCES_DESC' | translate }}

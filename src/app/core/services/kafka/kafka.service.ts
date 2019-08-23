@@ -2,14 +2,15 @@ import { Injectable } from '@angular/core'
 import * as KafkaRest from 'kafka-rest'
 
 import { DefaultKafkaURI } from '../../../../assets/data/defaultConfig'
-import { KafkaEventType } from '../../../shared/enums/events'
+import { DataEventType } from '../../../shared/enums/events'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 import { TokenService } from '../token/token.service'
-import { FirebaseAnalyticsService } from '../usage/firebase-analytics.service'
 import { SchemaService } from './schema.service'
-
+import { AnalyticsService } from '../usage/analytics.service'
+import { SchemaType, KafkaObject } from '../../../shared/models/kafka'
+import { CacheValue } from '../../../shared/models/cache'
 @Injectable()
 export class KafkaService {
   private readonly KAFKA_STORE = {
@@ -24,7 +25,7 @@ export class KafkaService {
     private storage: StorageService,
     private token: TokenService,
     private schema: SchemaService,
-    private firebaseAnalytics: FirebaseAnalyticsService,
+    private analytics: AnalyticsService
     private logger: LogService
   ) {
     this.updateURI()
@@ -44,19 +45,26 @@ export class KafkaService {
   prepareKafkaObjectAndSend(type, payload, keepInCache?) {
     const value = this.schema.getKafkaObjectValue(type, payload)
     const keyPromise = this.schema.getKafkaObjectKey()
-    const specsPromise = this.schema.getSpecs(type, payload.task)
-    return Promise.all([keyPromise, specsPromise]).then(([key, specs]) => {
-      const kafkaObject = { key: key, value: value }
-      return this.storeInCache(kafkaObject, specs).then(() => {
-        return keepInCache ? Promise.resolve() : this.sendAllFromCache()
-      })
-    })
+    const metaDataPromise = this.schema.getMetaData(type, payload.task)
+    return Promise.all([keyPromise, metaDataPromise]).then(
+      ([key, metaData]) => {
+        const kafkaObject: KafkaObject = { key: key, value: value }
+        const cacheValue: CacheValue = Object.assign({}, metaData, {
+          kafkaObject
+        })
+        this.sendDataEvent(DataEventType.PREPARED_OBJECT, cacheValue)
+        return this.storeInCache(kafkaObject, cacheValue).then(() => {
+          return keepInCache ? Promise.resolve() : this.sendAllFromCache()
+        })
+      }
+    )
   }
 
-  storeInCache(kafkaObject, specs) {
+  storeInCache(kafkaObject: KafkaObject, cacheValue: CacheValue) {
     return this.getCache().then(cache => {
       console.log('KAFKA-SERVICE: Caching answers.')
-      cache[kafkaObject.value.time] = Object.assign({}, specs, { kafkaObject })
+      cache[kafkaObject.value.time] = cacheValue
+      this.sendDataEvent(DataEventType.CACHED, cacheValue)
       return this.setCache(cache)
     })
   }
@@ -94,7 +102,7 @@ export class KafkaService {
     }
   }
 
-  sendToKafka(k, v, kafka): Promise<any> {
+  sendToKafka(k: number, v: CacheValue, kafka): Promise<any> {
     return this.schema
       .getKafkaTopic(v.name, v.avsc)
       .then(topic =>
@@ -108,10 +116,10 @@ export class KafkaService {
               )
           )
       )
-      .then(() => this.sendKafkaEvent(KafkaEventType.SEND_SUCCESS, v))
+      .then(() => this.sendDataEvent(DataEventType.SEND_SUCCESS, v))
       .then(() => k)
       .catch(error => {
-        this.sendKafkaEvent(KafkaEventType.SEND_ERROR, v, JSON.stringify(error))
+        this.sendDataEvent(DataEventType.SEND_ERROR, v, JSON.stringify(error))
         throw error
       })
   }
@@ -121,6 +129,10 @@ export class KafkaService {
       if (cache) {
         cacheKeys.map(cacheKey => {
           if (cache[cacheKey]) {
+            this.sendDataEvent(
+              DataEventType.REMOVED_FROM_CACHE,
+              cache[cacheKey]
+            )
             console.log('Deleting ' + cacheKey)
             delete cache[cacheKey]
           }
@@ -168,10 +180,13 @@ export class KafkaService {
       .then(cache => Object.keys(cache).reduce((s, k) => (k ? s + 1 : s), 0))
   }
 
-  sendKafkaEvent(type, cacheValue, error?) {
-    this.firebaseAnalytics.logEvent(type, {
-      name: cacheValue.name,
-      questionnaire_timestamp: String(cacheValue.kafkaObject.time),
+  sendDataEvent(type, cacheValue: CacheValue, error?) {
+    const value = cacheValue.kafkaObject.value
+    this.analytics.logEvent(type, {
+      name: cacheValue.repository ? SchemaType.ASSESSMENT : cacheValue.name,
+      timestamp: String(value.time),
+      questionnaire_name: value.name,
+      questionnaire_timestamp: String(value.timeNotification),
       error: JSON.stringify(error)
     })
   }

@@ -30,11 +30,15 @@ export class SplashPageComponent {
 
   onStart() {
     this.usage.setPage(this.constructor.name)
-    this.status = 'Updating notifications and schedule...'
+    this.status = this.localization.translateKey(
+      LocKeys.SPLASH_STATUS_UPDATING_CONFIG
+    )
     return this.splash
       .loadConfig()
       .then(() => {
-        this.status = 'Sending missed questionnaire logs..'
+        this.status = this.localization.translateKey(
+          LocKeys.SPLASH_STATUS_SENDING_LOGS
+        )
         return this.splash.sendMissedQuestionnaireLogs()
       })
       .catch(e => console.log('[SPLASH] Notifications error.'))

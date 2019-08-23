@@ -8,5 +8,16 @@ export enum SchemaType {
   ASSESSMENT = 'assessment',
   COMPLETION_LOG = 'completion_log',
   TIMEZONE = 'timezone',
-  USAGE = 'usage'
+  EVENT = 'event'
+}
+
+export interface KeyExport {
+  userId: string
+  sourceId: string
+  projectId: string
+}
+
+export interface KafkaObject {
+  key: KeyExport
+  value: any
 }

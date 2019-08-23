@@ -1,12 +1,8 @@
-<range-input
-  [min]="min"
-  [max]="max"
-  (valueChange)="onInputChange($event)"
->
+<range-input [min]="min" [max]="max" (valueChange)="onInputChange($event)">
 </range-input>
 
 <div class="info-card">
   <div class="info-content">
-    <h2 [innerHTML]="itemDescription"></h2>
+    <h2 dir="auto" [innerHTML]="itemDescription"></h2>
   </div>
 </div>

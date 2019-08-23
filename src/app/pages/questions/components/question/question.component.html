@@ -1,7 +1,12 @@
 <div [class.fade]="!currentlyShown">
-  <p>{{ question.section_header }}</p>
-  <div class="field-container">
-    <h2 [fittext]="true" [maxFontSize]="18" [modelToWatch]="question">
+  <p dir="auto">{{ question.section_header }}</p>
+  <div class="field-container" dir="auto">
+    <h2
+      dir="auto"
+      [fittext]="true"
+      [maxFontSize]="18"
+      [modelToWatch]="question"
+    >
       {{ question.field_label }}
     </h2>
   </div>

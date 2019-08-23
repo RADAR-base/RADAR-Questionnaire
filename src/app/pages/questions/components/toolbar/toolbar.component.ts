@@ -15,9 +15,9 @@ import { LocKeys } from '../../../../shared/enums/localisations'
 })
 export class ToolbarComponent implements OnChanges {
   @Input()
-  isPreviousButtonDisabled: boolean
+  isLeftButtonDisabled: boolean
   @Input()
-  isNextButtonDisabled: boolean
+  isRightButtonDisabled: boolean
   @Input()
   currentQuestionId: number
   @Input()

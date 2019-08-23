@@ -22,8 +22,8 @@ export class QuestionsPageComponent implements OnInit {
   startTime = Date.now()
   currentQuestionId = 0
   questionIncrements = [0]
-  isNextButtonDisabled = true
-  isPreviousButtonDisabled = false
+  isLeftButtonDisabled = false
+  isRightButtonDisabled = true
   task: Task
   taskType: TaskType
   questions: Question[]
@@ -105,7 +105,7 @@ export class QuestionsPageComponent implements OnInit {
   onAnswer(event) {
     if (event.id) {
       this.questionsService.submitAnswer(event)
-      this.updateNextButton()
+      this.updateToolbarButtons()
     }
     if (this.questionsService.getIsNextAutomatic(event.type)) {
       this.nextQuestion()
@@ -124,18 +124,6 @@ export class QuestionsPageComponent implements OnInit {
     return this.questions[this.currentQuestionId]
   }
 
-  updateNextButton() {
-    this.isNextButtonDisabled = !this.questionsService.isAnswered(
-      this.getCurrentQuestion()
-    )
-  }
-
-  updatePreviousButton() {
-    this.isPreviousButtonDisabled = this.questionsService.getIsPreviousDisabled(
-      this.getCurrentQuestion()
-    )
-  }
-
   submitTimestamps() {
     this.questionsService.recordTimeStamp(
       this.getCurrentQuestion(),
@@ -151,17 +139,25 @@ export class QuestionsPageComponent implements OnInit {
     )
     this.questionIncrements.push(this.currentQuestionId)
     this.slideQuestion()
-    this.updateNextButton()
-    this.updatePreviousButton()
+    this.updateToolbarButtons()
   }
 
   previousQuestion() {
-    if (!this.isNextButtonDisabled) this.questionsService.deleteLastAnswer()
+    if (!this.isRightButtonDisabled) this.questionsService.deleteLastAnswer()
     this.questionIncrements.pop()
     this.currentQuestionId = this.questionIncrements[
       this.questionIncrements.length - 1
     ]
     this.slideQuestion()
+  }
+
+  updateToolbarButtons() {
+    this.isRightButtonDisabled = !this.questionsService.isAnswered(
+      this.getCurrentQuestion()
+    )
+    this.isLeftButtonDisabled = this.questionsService.getIsPreviousDisabled(
+      this.getCurrentQuestion()
+    )
   }
 
   exitQuestionnaire() {

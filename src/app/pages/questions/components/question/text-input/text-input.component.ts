@@ -40,7 +40,7 @@ export class TextInputComponent implements OnInit {
 
   onInputChange(value) {
     this.valueChange.emit(
-      this.showDatePicker || this.showTimePicker ? JSON.stringify(value) : value
+      typeof value === 'object' ? JSON.stringify(value) : value
     )
   }
 }

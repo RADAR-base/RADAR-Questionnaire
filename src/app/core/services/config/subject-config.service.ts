@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core'
 
 import { StorageKeys } from '../../../shared/enums/storage'
 import { StorageService } from '../storage/storage.service'
+import { User } from '../../../shared/models/user'
 
 @Injectable()
 export class SubjectConfigService {
@@ -10,18 +11,20 @@ export class SubjectConfigService {
     PARTICIPANTLOGIN: StorageKeys.PARTICIPANTLOGIN,
     PROJECTNAME: StorageKeys.PROJECTNAME,
     SOURCEID: StorageKeys.SOURCEID,
-    ENROLMENTDATE: StorageKeys.ENROLMENTDATE
+    ENROLMENTDATE: StorageKeys.ENROLMENTDATE,
+    BASE_URI: StorageKeys.BASE_URI,
   }
 
   constructor(public storage: StorageService) {}
 
-  init(participantId, participantLogin, projectName, sourceId, createdDate) {
+  init(user: User) {
     return Promise.all([
-      this.setParticipantID(participantId),
-      this.setProjectName(projectName),
-      this.setParticipantLogin(participantLogin),
-      this.setSourceID(sourceId),
-      this.setEnrolmentDate(createdDate)
+      this.setParticipantID(user.humanReadableId),
+      this.setProjectName(user.projectId),
+      this.setParticipantLogin(user.subjectId),
+      this.setSourceID(user.sourceId),
+      this.setEnrolmentDate(user.enrolmentDate),
+      this.setBaseUrl(user.baseUrl)
     ])
   }
 
@@ -45,6 +48,10 @@ export class SubjectConfigService {
     return this.storage.set(this.SUBJECT_CONFIG_STORE.SOURCEID, id)
   }
 
+  setBaseUrl(uri) {
+    return this.storage.set(this.SUBJECT_CONFIG_STORE.BASE_URI, uri)
+  }
+
   getParticipantID() {
     return this.storage.get(this.SUBJECT_CONFIG_STORE.PARTICIPANTID)
   }
@@ -63,6 +70,10 @@ export class SubjectConfigService {
 
   getParticipantLogin() {
     return this.storage.get(this.SUBJECT_CONFIG_STORE.PARTICIPANTLOGIN)
+  }
+
+  getBaseUrl() {
+    return this.storage.get(this.SUBJECT_CONFIG_STORE.BASE_URI)
   }
 
   reset() {

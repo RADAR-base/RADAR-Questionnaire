@@ -4,16 +4,19 @@ import { Platform } from 'ionic-angular'
 
 import { User } from '../../../shared/models/user'
 import { LogService } from '../misc/log.service'
+import { AnalyticsService } from './analytics.service'
 
 @Injectable()
-export class FirebaseAnalyticsService {
+export class FirebaseAnalyticsService extends AnalyticsService {
   constructor(
     private firebase: Firebase,
     private platform: Platform,
     private logger: LogService
-  ) {}
+  ) {
+    super()
+  }
 
-  logEvent(event: string, params): Promise<any> {
+  logEvent(event: string, params: any): Promise<any> {
     this.logger.log('Firebase Event', event)
     if (!this.platform.is('cordova'))
       return Promise.resolve('Could not load firebase')

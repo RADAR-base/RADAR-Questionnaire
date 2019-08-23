@@ -19,6 +19,7 @@ import { ScheduleService } from '../core/services/schedule/schedule.service'
 import { StorageService } from '../core/services/storage/storage.service'
 import { TokenService } from '../core/services/token/token.service'
 import { FirebaseAnalyticsService } from '../core/services/usage/firebase-analytics.service'
+import { AnalyticsService } from '../core/services/usage/analytics.service'
 import { UsageService } from '../core/services/usage/usage.service'
 import { PipesModule } from '../shared/pipes/pipes.module'
 import { TranslatePipe } from '../shared/pipes/translate/translate'
@@ -61,7 +62,7 @@ import { SplashModule } from './splash/splash.module'
     SchemaService,
     NotificationGeneratorService,
     { provide: NotificationService, useClass: FcmNotificationService },
-    FirebaseAnalyticsService
+    { provide: AnalyticsService, useClass: FirebaseAnalyticsService }
   ]
 })
 export class PagesModule {}

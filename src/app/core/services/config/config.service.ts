@@ -11,11 +11,11 @@ import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
 import { NotificationService } from '../notifications/notification.service'
 import { ScheduleService } from '../schedule/schedule.service'
-import { FirebaseAnalyticsService } from '../usage/firebase-analytics.service'
 import { AppConfigService } from './app-config.service'
 import { ProtocolService } from './protocol.service'
 import { QuestionnaireService } from './questionnaire.service'
 import { SubjectConfigService } from './subject-config.service'
+import { AnalyticsService } from '../usage/analytics.service'
 
 @Injectable()
 export class ConfigService {
@@ -28,8 +28,8 @@ export class ConfigService {
     private subjectConfig: SubjectConfigService,
     private kafka: KafkaService,
     private localization: LocalizationService,
-    private firebaseAnalytics: FirebaseAnalyticsService,
-    private logger: LogService,
+    private analytics: AnalyticsService,
+    private logger: LogService
   ) {}
 
   fetchConfigState(force?: boolean) {
@@ -38,17 +38,24 @@ export class ConfigService {
       this.hasAppVersionChanged(),
       this.hasTimezoneChanged(),
       this.hasNotificationsExpired()
-    ]).then(([newProtocol, newAppVersion, newTimezone, newNotifications]) => {
-      if (newProtocol && newAppVersion && newTimezone)
-        this.subjectConfig.getEnrolmentDate().then(d => this.appConfig.init(d))
-      if (newProtocol)
-        return this.updateConfigStateOnProtocolChange(newProtocol)
-      if (newAppVersion)
-        return this.updateConfigStateOnAppVersionChange(newAppVersion)
-      if (newTimezone)
-        return this.updateConfigStateOnTimezoneChange(newTimezone)
-      if (newNotifications) return this.rescheduleNotifications(false)
-    })
+    ])
+      .then(([newProtocol, newAppVersion, newTimezone, newNotifications]) => {
+        if (newProtocol && newAppVersion && newTimezone)
+          this.subjectConfig
+            .getEnrolmentDate()
+            .then(d => this.appConfig.init(d))
+        if (newProtocol)
+          return this.updateConfigStateOnProtocolChange(newProtocol)
+        if (newAppVersion)
+          return this.updateConfigStateOnAppVersionChange(newAppVersion)
+        if (newTimezone)
+          return this.updateConfigStateOnTimezoneChange(newTimezone)
+        if (newNotifications) return this.rescheduleNotifications(false)
+      })
+      .catch(e => {
+        this.sendConfigChangeEvent(ConfigEventType.ERROR)
+        throw e
+      })
   }
 
   hasProtocolChanged(force?) {
@@ -161,7 +168,7 @@ export class ConfigService {
   }
 
   rescheduleNotifications(cancel?: boolean) {
-    return (cancel ? this.notifications.cancel() : Promise.resolve())
+    return (cancel ? this.cancelNotifications() : Promise.resolve())
       .then(() => this.notifications.publish())
       .then(() => console.log('NOTIFICATIONS scheduled after config change'))
       .then(() =>
@@ -172,6 +179,11 @@ export class ConfigService {
       .catch(e => {
         throw this.logger.error('Failed to reschedule notifications', e)
       })
+  }
+
+  cancelNotifications() {
+    this.sendConfigChangeEvent(NotificationEventType.CANCELLED)
+    return this.notifications.cancel()
   }
 
   regenerateSchedule() {
@@ -189,10 +201,12 @@ export class ConfigService {
   }
 
   resetAll() {
+    this.sendConfigChangeEvent(ConfigEventType.APP_RESET)
     return this.subjectConfig.reset()
   }
 
   resetConfig() {
+    this.sendConfigChangeEvent(ConfigEventType.APP_RESET_PARTIAL)
     return Promise.all([
       this.appConfig.reset(),
       this.questionnaire.reset(),
@@ -212,7 +226,7 @@ export class ConfigService {
           createdDate
         )
         .then(() =>
-          this.firebaseAnalytics.setUserProperties({
+          this.analytics.setUserProperties({
             subjectId: participantLogin,
             projectId: projectName,
             sourceId: sourceId,
@@ -243,10 +257,15 @@ export class ConfigService {
   }
 
   sendConfigChangeEvent(type, previous?, current?) {
-    this.firebaseAnalytics.logEvent(type, {
+    this.analytics.logEvent(type, {
       previous: String(previous),
       current: String(current)
     })
+  }
+
+  sendTestNotification() {
+    this.sendConfigChangeEvent(NotificationEventType.TEST)
+    return this.notifications.sendTestNotification()
   }
 
   updateSettings(settings) {

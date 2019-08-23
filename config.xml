@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="531" id="org.phidatalab.radar_armt" ios-CFBundleIdentifier="org.phidatalab.radararmt" version="0.6.4-alpha">
+<widget android-versionCode="534" id="org.phidatalab.radar_armt" ios-CFBundleIdentifier="org.phidatalab.radararmt" version="0.7.0-alpha">
     <name>RADAR Questionnaire</name>
     <description>An application that collects active data for research.</description>
     <author email="info@radar-cns.org" href="http://radar-cns.org/">RADAR-CNS</author>

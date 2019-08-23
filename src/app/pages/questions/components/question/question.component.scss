@@ -1,26 +1,15 @@
 question {
   text-align: left;
 
-  p.stdformat {
+  p {
     margin-top: 8px;
     margin-bottom: 0;
     color: $cl-light-80;
   }
 
-  p.taskformat {
-    margin: 5px;
-    font-size: 24px;
-  }
-
-  h2.stdformat {
+  h2 {
     margin-top: 16px;
     margin-bottom: 24px;
-  }
-
-  h2.taskformat {
-    margin-top: 16px;
-    margin-bottom: 24px;
-    font-size: 16px;
   }
 
   .field-container {

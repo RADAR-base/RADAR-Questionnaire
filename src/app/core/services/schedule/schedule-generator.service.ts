@@ -154,7 +154,7 @@ export class ScheduleGeneratorService {
     index,
     assessment: Assessment,
     timestamp: number,
-    completionWindow,
+    completionWindow
   ): Task {
     const task: Task = {
       index,

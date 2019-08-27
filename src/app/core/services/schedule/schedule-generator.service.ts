@@ -154,7 +154,7 @@ export class ScheduleGeneratorService {
     index,
     assessment: Assessment,
     timestamp: number,
-    completionWindow
+    completionWindow,
   ): Task {
     const task: Task = {
       index,
@@ -166,7 +166,8 @@ export class ScheduleGeneratorService {
       estimatedCompletionTime: assessment.estimatedCompletionTime,
       completionWindow: completionWindow,
       warning: this.localization.chooseText(assessment.warn),
-      isClinical: assessment.protocol.clinicalProtocol ? true : false
+      isClinical: assessment.protocol.clinicalProtocol ? true : false,
+      showInCalendar: assessment.showInCalendar
     }
     task.notifications = this.notificationService.createNotifications(
       assessment,

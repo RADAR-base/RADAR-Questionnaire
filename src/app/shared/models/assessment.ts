@@ -12,6 +12,7 @@ export interface Assessment {
   warn?: MultiLanguageText
   showIntroduction?: boolean
   questions: Question[]
+  showInCalendar: boolean
 }
 
 export interface QuestionnaireMetadata {

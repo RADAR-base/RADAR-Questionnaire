@@ -5,17 +5,18 @@ import {
   ConfigEventType,
   NotificationEventType
 } from '../../../shared/enums/events'
+import { SchemaType } from '../../../shared/models/kafka'
 import { TaskType } from '../../../shared/utilities/task-type'
 import { KafkaService } from '../kafka/kafka.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
 import { NotificationService } from '../notifications/notification.service'
 import { ScheduleService } from '../schedule/schedule.service'
+import { AnalyticsService } from '../usage/analytics.service'
 import { AppConfigService } from './app-config.service'
 import { ProtocolService } from './protocol.service'
 import { QuestionnaireService } from './questionnaire.service'
 import { SubjectConfigService } from './subject-config.service'
-import { AnalyticsService } from '../usage/analytics.service'
 
 @Injectable()
 export class ConfigService {
@@ -194,10 +195,15 @@ export class ConfigService {
       .then(([refDate, prevUTCOffset]) =>
         this.schedule.generateSchedule(refDate, prevUTCOffset)
       )
+      .then(schedule =>
+        Promise.all([
+          this.sendScheduleToKafka(schedule),
+          this.rescheduleNotifications(true)
+        ])
+      )
       .catch(e => {
         throw this.logger.error('Failed to generate schedule', e)
       })
-      .then(() => this.rescheduleNotifications(true))
   }
 
   resetAll() {
@@ -266,6 +272,19 @@ export class ConfigService {
   sendTestNotification() {
     this.sendConfigChangeEvent(NotificationEventType.TEST)
     return this.notifications.sendTestNotification()
+  }
+
+  sendScheduleToKafka(schedule) {
+    return this.appConfig.getScheduleVersion().then(version =>
+      this.kafka.prepareKafkaObjectAndSend(SchemaType.SCHEDULE, {
+        version: version,
+        tasks: schedule.map(s => ({
+          name: s.name,
+          timestamp: s.timestamp,
+          timeCompleted: s.timeCompleted
+        }))
+      })
+    )
   }
 
   updateSettings(settings) {

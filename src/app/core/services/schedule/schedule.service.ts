@@ -129,6 +129,7 @@ export class ScheduleService {
           this.setCompletedTasks(res.completed)
         ])
       )
+      .then(res => res[0])
   }
 
   generateClinicalSchedule(assessment, referenceDate) {

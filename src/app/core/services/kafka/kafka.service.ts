@@ -4,13 +4,14 @@ import * as KafkaRest from 'kafka-rest'
 import { DefaultKafkaURI } from '../../../../assets/data/defaultConfig'
 import { DataEventType } from '../../../shared/enums/events'
 import { StorageKeys } from '../../../shared/enums/storage'
+import { CacheValue } from '../../../shared/models/cache'
+import { KafkaObject, SchemaType } from '../../../shared/models/kafka'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 import { TokenService } from '../token/token.service'
-import { SchemaService } from './schema.service'
 import { AnalyticsService } from '../usage/analytics.service'
-import { SchemaType, KafkaObject } from '../../../shared/models/kafka'
-import { CacheValue } from '../../../shared/models/cache'
+import { SchemaService } from './schema.service'
+
 @Injectable()
 export class KafkaService {
   private readonly KAFKA_STORE = {
@@ -43,7 +44,7 @@ export class KafkaService {
     })
   }
 
-  prepareKafkaObjectAndSend(type, payload, keepInCache?) {
+  prepareKafkaObjectAndSend(type: SchemaType, payload, keepInCache?) {
     const value = this.schema.getKafkaObjectValue(type, payload)
     const keyPromise = this.schema.getKafkaObjectKey()
     const metaDataPromise = this.schema.getMetaData(type, payload.task)

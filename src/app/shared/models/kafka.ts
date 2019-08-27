@@ -8,7 +8,8 @@ export enum SchemaType {
   ASSESSMENT = 'assessment',
   COMPLETION_LOG = 'completion_log',
   TIMEZONE = 'timezone',
-  EVENT = 'event'
+  EVENT = 'event',
+  SCHEDULE = 'schedule'
 }
 
 export interface KeyExport {

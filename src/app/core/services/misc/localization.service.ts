@@ -15,6 +15,7 @@ import { MultiLanguageText } from '../../../shared/models/text'
 import { StorageService } from '../storage/storage.service'
 
 import moment = require('moment')
+import { Moment } from 'moment'
 
 @Injectable()
 export class LocalizationService {
@@ -115,9 +116,9 @@ export class LocalizationService {
     }
   }
 
-  moment(time?: number | Date) {
+  moment(time?: moment.MomentInput, format?: moment.MomentFormatSpecification, strict?: boolean): Moment {
     if (time !== undefined) {
-      return moment(time).locale(this.language.value)
+      return moment(time, format, strict).locale(this.language.value)
     } else {
       return moment(this.localeMoment)
     }

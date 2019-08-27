@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
 
 import moment = require('moment')
+import { LocalizationService } from '../../../../../core/services/misc/localization.service'
 
 @Component({
   selector: 'text-input',
@@ -21,22 +22,26 @@ export class TextInputComponent implements OnInit {
   customMonthNames = []
   datetimeValue: { [key: string]: any } = {}
 
+  constructor(
+    private localization: LocalizationService
+  ) {}
+
+
   ngOnInit() {
-    this.initMonthNames()
     this.showDatePicker = this.type.includes('date')
     this.showTimePicker = this.type.includes('time')
     this.showSeconds = this.type.includes('seconds')
     this.initFormats()
   }
 
-  initMonthNames() {
-    for (let x = 1; x <= 12; x++)
-      this.customMonthNames.push(moment(x, 'M').format('MMM'))
-  }
 
   initFormats() {
-    this.dateFormat = 'MMM DD YYYY'
-    this.timeFormat = this.showSeconds ? 'HH:mm:ss' : 'HH:mm'
+    const locale = this.localization.moment().localeData()
+    this.dateFormat = locale.longDateFormat('LL').replace('MMMM', 'MMM')
+    this.timeFormat = this.showSeconds ? locale.longDateFormat('LTS') : locale.longDateFormat('LT')
+
+    for (let x = 1; x <= 12; x++)
+      this.customMonthNames.push(this.localization.moment(x, 'M').format('MMM'))
   }
 
   onInputChange(value) {

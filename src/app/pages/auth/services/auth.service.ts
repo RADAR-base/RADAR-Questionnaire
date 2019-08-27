@@ -106,13 +106,8 @@ export class AuthService {
   }
 
   getSourceId(response) {
-    const sources = response.sources
-    for (let i = 0; i < sources.length; i++) {
-      if (sources[i].sourceTypeModel === DefaultSourceTypeModel) {
-        return sources[i].sourceId
-      }
-    }
-    return 'Device not available'
+    const source = response.sources.find(s => s.sourceTypeModel === DefaultSourceTypeModel)
+    return source !== undefined ? source.sourceId : 'Device not available'
   }
 
   registerAsSource() {

@@ -99,21 +99,21 @@ export class QuestionsService {
     // NOTE: Evaluates branching logic
     let increment = 1
     let questionIdx = currentQuestion + 1
-    if (questionIdx < questions.length) {
-      while (questions[questionIdx].evaluated_logic !== '') {
-        const responses = Object.assign({}, this.answerService.answers)
-        const logic = questions[questionIdx].evaluated_logic
-        const logicFieldName = this.getLogicFieldName(logic)
-        const answers = this.answerService.answers[logicFieldName]
+    while (questionIdx < questions.length && questions[questionIdx].evaluated_logic !== '') {
+      const responses = Object.assign({}, this.answerService.answers)
+      const logic = questions[questionIdx].evaluated_logic
+      const logicFieldName = this.getLogicFieldName(logic)
+      const answers = this.answerService.answers[logicFieldName]
+      if (typeof answers !== 'undefined') {
         const answerLength = answers.length
         if (!answerLength) if (eval(logic) === true) return increment
         for (const answer of answers) {
           responses[logicFieldName] = answer
           if (eval(logic) === true) return increment
         }
-        increment += 1
-        questionIdx += 1
       }
+      increment += 1
+      questionIdx += 1
     }
     return increment
   }

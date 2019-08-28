@@ -32,16 +32,7 @@ module.exports = function(config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     singleRun: false,
-
-    browserStack: {
-      project: 'RADAR-Questionnaire',
-      build: 'Karma Local',
-      username: process.env.BROWSERSTACK_USERNAME,
-      accessKey: process.env.BROWSERSTACK_ACCESS_KEY
-    },
-
     browsers: ['Chrome'],
-    // browsers: ['Chrome', 'BS_EDGE', 'BS_FIREFOX', 'BS_SAFARI'],
     customLaunchers: {
       ChromeDebugging: {
         base: 'Chrome',
@@ -50,36 +41,6 @@ module.exports = function(config) {
       ChromeNoSandbox: {
         base: 'Chrome',
         flags: ['--no-sandbox']
-      },
-      BS_CHROME: {
-        base: 'BrowserStack',
-        browser: 'chrome',
-        os: 'Windows',
-        os_version: '10'
-      },
-      BS_FIREFOX: {
-        base: 'BrowserStack',
-        browser: 'firefox',
-        os: 'Windows',
-        os_version: '10'
-      },
-      BS_SAFARI: {
-        base: 'BrowserStack',
-        browser: 'safari',
-        os: 'OS X',
-        os_version: 'El Capitan'
-      },
-      BS_EDGE: {
-        base: 'BrowserStack',
-        browser: 'edge',
-        os: 'Windows',
-        os_version: '10'
-      },
-      BS_IOS9: {
-        base: 'BrowserStack',
-        device: 'iPad Mini 4',
-        os: 'ios',
-        os_version: '9.1'
       }
     },
     browserDisconnectTimeout: 20000,
@@ -87,14 +48,4 @@ module.exports = function(config) {
     browserNoActivityTimeout: 240000,
     captureTimeout: 240000
   })
-
-  if (process.env['TRAVIS']) {
-    config.browserStack.tunnelIdentifier = process.env.TRAVIS_JOB_NUMBER
-    config.browserStack.build =
-      'Karma Travis #' +
-      process.env.TRAVIS_BUILD_NUMBER +
-      ' [' +
-      process.env.TRAVIS_BUILD_ID +
-      ']'
-  }
 }

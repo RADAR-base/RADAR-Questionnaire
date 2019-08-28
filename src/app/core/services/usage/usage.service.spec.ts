@@ -9,8 +9,8 @@ import {
 } from '../../../shared/testing/mock-services'
 import { KafkaService } from '../kafka/kafka.service'
 import { LogService } from '../misc/log.service'
-import { FirebaseAnalyticsService } from './firebase-analytics.service'
 import { UsageService } from './usage.service'
+import { AnalyticsService } from './analytics.service';
 
 describe('UsageService', () => {
   let service
@@ -20,7 +20,7 @@ describe('UsageService', () => {
       providers: [
         UsageService,
         {
-          provide: FirebaseAnalyticsService,
+          provide: AnalyticsService,
           useClass: FirebaseAnalyticsServiceMock
         },
         { provide: KafkaService, useClass: KafkaServiceMock },

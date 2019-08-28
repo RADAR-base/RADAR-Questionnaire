@@ -10,9 +10,9 @@ import {
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 import { TokenService } from '../token/token.service'
-import { FirebaseAnalyticsService } from '../usage/firebase-analytics.service'
 import { KafkaService } from './kafka.service'
 import { SchemaService } from './schema.service'
+import { AnalyticsService } from '../usage/analytics.service';
 
 describe('KafkaService', () => {
   let service
@@ -26,7 +26,7 @@ describe('KafkaService', () => {
         { provide: TokenService, useClass: TokenServiceMock },
         { provide: SchemaService, useClass: SchemaServiceMock },
         {
-          provide: FirebaseAnalyticsService,
+          provide: AnalyticsService,
           useClass: FirebaseAnalyticsServiceMock
         }
       ]

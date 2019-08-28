@@ -17,12 +17,12 @@ import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
 import { NotificationService } from '../notifications/notification.service'
 import { ScheduleService } from '../schedule/schedule.service'
-import { FirebaseAnalyticsService } from '../usage/firebase-analytics.service'
 import { AppConfigService } from './app-config.service'
 import { ConfigService } from './config.service'
 import { ProtocolService } from './protocol.service'
 import { QuestionnaireService } from './questionnaire.service'
 import { SubjectConfigService } from './subject-config.service'
+import { AnalyticsService } from '../usage/analytics.service';
 
 describe('ConfigService', () => {
   let service
@@ -40,7 +40,7 @@ describe('ConfigService', () => {
         { provide: KafkaService, useClass: KafkaServiceMock },
         { provide: LocalizationService, useClass: LocalizationServiceMock },
         {
-          provide: FirebaseAnalyticsService,
+          provide: AnalyticsService,
           useClass: FirebaseAnalyticsServiceMock
         },
         { provide: LogService, useClass: LogServiceMock }

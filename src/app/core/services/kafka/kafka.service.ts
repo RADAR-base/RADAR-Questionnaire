@@ -25,7 +25,7 @@ export class KafkaService {
     private storage: StorageService,
     private token: TokenService,
     private schema: SchemaService,
-    private analytics: AnalyticsService
+    private analytics: AnalyticsService,
     private logger: LogService
   ) {
     this.updateURI()

@@ -48,7 +48,7 @@ export class SettingsPageComponent {
       .reloadConfig()
       .then(() => this.loadSettings())
       .then(() => this.backToSplash())
-      .catch(e => this.showFailAlert())
+      .catch(e => this.showFailAlert(e))
       .then(() => (this.showLoading = false))
   }
 
@@ -68,9 +68,10 @@ export class SettingsPageComponent {
     this.settingsService.setReportSettings(this.weeklyReport)
   }
 
-  showFailAlert() {
+  showFailAlert(e) {
     return this.alertService.showAlert({
       title: this.localization.translateKey(LocKeys.STATUS_FAILURE),
+      message: e,
       buttons: [
         {
           text: this.localization.translateKey(LocKeys.BTN_CANCEL),
@@ -101,7 +102,7 @@ export class SettingsPageComponent {
               this.settings.language = this.settingsService.getLanguage()
               return this.backToSplash()
             })
-            .catch(e => this.showFailAlert())
+            .catch(e => this.showFailAlert(e))
         }
       }
     ]
@@ -196,5 +197,9 @@ export class SettingsPageComponent {
         }
       ]
     })
+  }
+
+  sendCachedData() {
+    return this.settingsService.sendCachedData().then(() => this.backToHome())
   }
 }

@@ -41,7 +41,7 @@ export class SplashPageComponent {
         )
         return this.splash.sendMissedQuestionnaireLogs()
       })
-      .catch(e => console.log('[SPLASH] Notifications error.'))
+      .catch(e => this.showFetchConfigFail(e))
       .then(() => this.navCtrl.setRoot(HomePageComponent))
   }
 

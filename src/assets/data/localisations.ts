@@ -110,6 +110,22 @@ export const Localisations = {
     nl:
       'We zullen u wekelijks samenvattingen sturen over uw verzamelde gegevens. U kunt zelf de onderwerpen selecteren waarover uw informatie wilt ontvangen.'
   },
+  ENROL_REGISTRATION_COMPLETE: {
+    da: 'Registrering Afsluttet',
+    de: 'Registrierung Abgeschlossen',
+    en: 'Registration Complete',
+    es: 'Registro Completo',
+    it: 'Registrazione Completa',
+    nl: 'Registratie Compleet'
+  },
+  ENROL_REGISTRATION_COMPLETE_DESC: {
+    da: `Du er nu med tilmelding til undersøgelsen. Klik på 'Afslut' for at begynde at generere din spørgeskemaplan og dine meddelelser.`,
+    de: `Sie haben sich jetzt erfolgreich für die Studie angemeldet. Klicken Sie auf "Fertig", um den Zeitplan und die Benachrichtigungen für Ihren Fragebogen zu erstellen.`,
+    en: `You have now successfully enrolled in the study. Click 'Finish' to start generating your questionnaire schedule and notifications.`,
+    es: `Ahora se ha inscrito con éxito en el estudio. Haga clic en 'Finalizar' para comenzar a generar su calendario de cuestionarios y notificaciones.`,
+    it: `Ora ti sei iscritto con successo allo studio. Fai clic su "Fine" per iniziare a generare la pianificazione del questionario e le notifiche.`,
+    nl: `U bent nu succesvol ingeschreven voor het onderzoek. Klik op 'Voltooid' om uw vragenlijstschema en meldingen te genereren.`
+  },
   FINISH_THANKS: {
     da: 'Tak fordi du udfyldte spørgeskemaet.',
     de: 'Vielen Dank für das Ausfüllen des Fragebogens.',

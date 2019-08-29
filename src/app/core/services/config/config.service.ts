@@ -16,6 +16,7 @@ import { ProtocolService } from './protocol.service'
 import { QuestionnaireService } from './questionnaire.service'
 import { SubjectConfigService } from './subject-config.service'
 import { AnalyticsService } from '../usage/analytics.service'
+import { User } from '../../../shared/models/user'
 
 @Injectable()
 export class ConfigService {
@@ -215,26 +216,12 @@ export class ConfigService {
     ])
   }
 
-  setAll(participantId, participantLogin, projectName, sourceId, createdDate) {
+  setAll(user: User) {
     return Promise.all([
       this.subjectConfig
-        .init(
-          participantId,
-          participantLogin,
-          projectName,
-          sourceId,
-          createdDate
-        )
-        .then(() =>
-          this.analytics.setUserProperties({
-            subjectId: participantLogin,
-            projectId: projectName,
-            sourceId: sourceId,
-            enrolmentDate: String(),
-            humanReadableId: participantId
-          })
-        )
-        .then(() => this.appConfig.init(createdDate)),
+        .init(user)
+        .then(() => this.analytics.setUserProperties(user))
+        .then(() => this.appConfig.init(user.enrolmentDate)),
       this.localization.init(),
       this.kafka.init()
     ])

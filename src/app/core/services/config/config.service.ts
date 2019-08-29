@@ -11,11 +11,11 @@ import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
 import { NotificationService } from '../notifications/notification.service'
 import { ScheduleService } from '../schedule/schedule.service'
+import { AnalyticsService } from '../usage/analytics.service'
 import { AppConfigService } from './app-config.service'
 import { ProtocolService } from './protocol.service'
 import { QuestionnaireService } from './questionnaire.service'
 import { SubjectConfigService } from './subject-config.service'
-import { AnalyticsService } from '../usage/analytics.service'
 
 @Injectable()
 export class ConfigService {
@@ -266,6 +266,10 @@ export class ConfigService {
   sendTestNotification() {
     this.sendConfigChangeEvent(NotificationEventType.TEST)
     return this.notifications.sendTestNotification()
+  }
+
+  sendCachedData() {
+    return this.kafka.sendAllFromCache()
   }
 
   updateSettings(settings) {

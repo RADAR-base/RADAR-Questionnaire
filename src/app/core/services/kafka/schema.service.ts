@@ -7,22 +7,22 @@ import * as YAML from 'yamljs'
 import { DefaultSchemaSpecEndpoint } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
 import { AnswerValueExport } from '../../../shared/models/answer'
+import { QuestionnaireMetadata } from '../../../shared/models/assessment'
 import { CompletionLogValueExport } from '../../../shared/models/completion-log'
+import { EventValueExport } from '../../../shared/models/event'
 import {
+  KeyExport,
   SchemaMetadata,
-  SchemaType,
-  KeyExport
+  SchemaType
 } from '../../../shared/models/kafka'
 import { Task } from '../../../shared/models/task'
 import { ApplicationTimeZoneValueExport } from '../../../shared/models/timezone'
-import { EventValueExport } from '../../../shared/models/event'
 import { getTaskType } from '../../../shared/utilities/task-type'
 import { getSeconds } from '../../../shared/utilities/time'
 import { QuestionnaireService } from '../config/questionnaire.service'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { SubjectConfigService } from '../config/subject-config.service'
 import { LogService } from '../misc/log.service'
-import { QuestionnaireMetadata } from '../../../shared/models/assessment'
 
 @Injectable()
 export class SchemaService {
@@ -107,7 +107,7 @@ export class SchemaService {
     return AvroSchema.parse(schema, options).clone(value, options)
   }
 
-  convertToAvro(kafkaObject, topic, baseURI) {
+  convertToAvro(kafkaObject, topic, baseURI): Promise<any> {
     if (!this.schemas[topic]) {
       const schemaKeyAndValue: [
         Promise<SchemaMetadata>,
@@ -119,21 +119,22 @@ export class SchemaService {
       this.schemas[topic] = schemaKeyAndValue
     }
     return Promise.all(this.schemas[topic]).then(
-      ([keySchemaMetadata, valueSchemaMetadata]) => {
-        if (keySchemaMetadata && valueSchemaMetadata) {
-          const key = JSON.parse(keySchemaMetadata.schema)
-          const value = JSON.parse(valueSchemaMetadata.schema)
-          const schemaId = new KafkaRest.AvroSchema(key)
-          const schemaInfo = new KafkaRest.AvroSchema(value)
-          const payload = {
-            key: this.getAvroObject(key, kafkaObject.key),
-            value: this.getAvroObject(value, kafkaObject.value)
+      ([keySchemaMetadata, valueSchemaMetadata]) =>
+        new Promise((resolve, reject) => {
+          if (keySchemaMetadata.schema && valueSchemaMetadata.schema) {
+            const key = JSON.parse(keySchemaMetadata.schema)
+            const value = JSON.parse(valueSchemaMetadata.schema)
+            const schemaId = new KafkaRest.AvroSchema(key)
+            const schemaInfo = new KafkaRest.AvroSchema(value)
+            const payload = {
+              key: this.getAvroObject(key, kafkaObject.key),
+              value: this.getAvroObject(value, kafkaObject.value)
+            }
+            resolve({ schemaId, schemaInfo, payload })
+          } else {
+            reject(keySchemaMetadata)
           }
-          return { schemaId, schemaInfo, payload }
-        } else {
-          Promise.reject()
-        }
-      }
+        })
     )
   }
 
@@ -171,7 +172,7 @@ export class SchemaService {
       .toPromise()
       .catch(e =>
         // TODO: add fallback for error
-        this.logger.error('Failed to get latest Kafka schema versions', e)
+        this.logger.error('Failed to get latest Kafka schema versions', e, true)
       )
       .then(obj => obj as SchemaMetadata)
   }

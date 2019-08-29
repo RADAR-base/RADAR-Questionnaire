@@ -17,12 +17,12 @@ export const Localisations = {
     nl: 'Welkom'
   },
   ENROL_WELCOME_2: {
-    da: 'til RADAR-CNS',
-    de: 'zu RADAR-CNS',
-    en: 'to RADAR-CNS',
-    es: 'a RADAR-CNS',
-    it: 'in RADAR-CNS',
-    nl: 'bij RADAR-CNS'
+    da: 'til RADAR-Base',
+    de: 'zu RADAR-Base',
+    en: 'to RADAR-Base',
+    es: 'a RADAR-Base',
+    it: 'in RADAR-Base',
+    nl: 'bij RADAR-Base'
   },
   ENROL_WELCOME_DESC: {
     da:
@@ -109,14 +109,6 @@ export const Localisations = {
       'Ti invieremo ogni settimana un riepilogo dei dati raccolti. Sentiti libero di selezionare solo gli argomenti di cui vuoi ricevere le informazioni.',
     nl:
       'We zullen u wekelijks samenvattingen sturen over uw verzamelde gegevens. U kunt zelf de onderwerpen selecteren waarover uw informatie wilt ontvangen.'
-  },
-  HOME_RADAR_CNS: {
-    da: 'RADAR-CNS',
-    de: 'RADAR-CNS',
-    en: 'RADAR-CNS',
-    es: 'RADAR-CNS',
-    it: 'RADAR-CNS',
-    nl: 'RADAR-CNS'
   },
   FINISH_THANKS: {
     da: 'Tak fordi du udfyldte spørgeskemaet.',
@@ -783,17 +775,16 @@ export const Localisations = {
   },
   CREDITS_BODY: {
     da:
-      'Lavet med &hearts; til dig af RADAR-CNS konsortiet. For mere information click <a href="http://radar-cns.org">her</a>.',
+      'Lavet med &hearts; til dig af RADAR-Base organisationen. For mere information click <a href="http://radar-base.org">her</a>.',
     de:
-      'Vom RADAR-CNS-Konsortium mit &hearts; für Sie gemacht. Für weitere Informationen klicken Sie <a href="http://radar-cns.org">hier</a>',
+      'Von der RADAR-Base-Organisation gemacht mit &hearts; für Sie gemacht. Für weitere Informationen klicken Sie <a href="http://radar-base.org">hier</a>',
     en:
-      'Made with &hearts; for you by the RADAR-CNS consortium. For more information click <a href="http://radar-cns.org">here</a>.',
+      'Made with &hearts; for you by the RADAR-Base organisation. For more information click <a href="http://radar-base.org">here</a>.',
     es:
-      'Hecho con &hearts;  para usted por el consorcio RADAR-CNS. Para obtener más información, haga clic  en <a href="http://radar-cns.org">aquí</a>.',
-    it:
-      'Fatto con il &hearts; per te dal consorzio RADAR-CNS. Per maggiori informazioni clicca <a href="http://radar-cns.org">qui</a>.',
+      'Hecho con &hearts;  para usted por la organización RADAR-Base. Para obtener más información, haga clic  en <a href="http://radar-base.org">aquí</a>.',
+    it: `Fatto con il &hearts; per te dall'organizzazione RADAR-Base. Per maggiori informazioni clicca <a href="http://radar-base.org">qui</a>.`,
     nl:
-      'Met &hearts; voor u gemaakt door het RADAR-CNS consortium. Voor meer informatie klik <a href="http://radar-cns.org">here</a>'
+      'Met &hearts; voor u gemaakt door de RADAR-Base-organisatie. Voor meer informatie klik <a href="http://radar-base.org">here</a>'
   },
   TASK_CALENDAR_TITLE: {
     da: 'Dagens opgaver',

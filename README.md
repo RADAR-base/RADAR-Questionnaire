@@ -4,7 +4,7 @@
 [![BCH compliance](https://bettercodehub.com/edge/badge/RADAR-base/RADAR-Questionnaire?branch=master)](https://bettercodehub.com/)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/03ec17f46bf147278bc71242a769af88)](https://www.codacy.com/app/yatharthranjan89/RADAR-Questionnaire?utm_source=github.com&utm_medium=referral&utm_content=RADAR-base/RADAR-Questionnaire&utm_campaign=Badge_Grade)
 
-Hybrid mobile application to actively capture data for the RADAR-CNS Platform.
+Hybrid mobile application to actively capture data for the RADAR-Base Platform.
 
 ## Note
 
@@ -71,7 +71,7 @@ $ ionic cordova emulate android
 Certain values can be overriden using Firebase Remote Config. Specifically, the following variables are supported:
 
 | Parameter                 | Description                                                      | Default value                                                                                                    |
-|---------------------------|------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|
+| ------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
 | `oauth_client_id`         | Client ID to connect to the ManagementPortal with                | `aRMT`                                                                                                           |
 | `oauth_client_secret`     | Client secret to connect to the ManagementPortal with            | Value set in `secret.ts`                                                                                         |
 | `oauth_refresh_seconds`   | After how many seconds to refresh the OAuth token                | `1800` (=30 minutes)                                                                                             |

@@ -31,7 +31,7 @@ export class UsageService {
       this.sendEventToKafka({
         eventType: intent.extras
           ? UsageEventType.APP_OPEN_NOTIFICATION
-          : UsageEventType.APP_OPEN_DIRECTLY
+          : UsageEventType.APP_OPEN
       })
     })
   }

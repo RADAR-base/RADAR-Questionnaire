@@ -5,6 +5,7 @@ import 'moment/locale/it'
 import 'moment/locale/nl'
 
 import { Injectable } from '@angular/core'
+import * as moment from 'moment'
 
 import { DefaultSettingsSupportedLanguages } from '../../../../assets/data/defaultConfig'
 import { Localisations } from '../../../../assets/data/localisations'
@@ -13,8 +14,6 @@ import { StorageKeys } from '../../../shared/enums/storage'
 import { LanguageSetting } from '../../../shared/models/settings'
 import { MultiLanguageText } from '../../../shared/models/text'
 import { StorageService } from '../storage/storage.service'
-
-import moment = require('moment')
 
 @Injectable()
 export class LocalizationService {

@@ -17,7 +17,11 @@ export class UsageService {
   ) {}
 
   sendEventToKafka(payload) {
-    return this.kafka.prepareKafkaObjectAndSend(SchemaType.EVENT, payload, true)
+    return this.kafka.prepareKafkaObjectAndSend(
+      SchemaType.APP_EVENT,
+      payload,
+      true
+    )
   }
 
   sendOpenEvent() {

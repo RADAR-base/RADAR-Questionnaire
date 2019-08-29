@@ -7,22 +7,22 @@ import * as YAML from 'yamljs'
 import { DefaultSchemaSpecEndpoint } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
 import { AnswerValueExport } from '../../../shared/models/answer'
+import { QuestionnaireMetadata } from '../../../shared/models/assessment'
 import { CompletionLogValueExport } from '../../../shared/models/completion-log'
+import { EventValueExport } from '../../../shared/models/event'
 import {
+  KeyExport,
   SchemaMetadata,
-  SchemaType,
-  KeyExport
+  SchemaType
 } from '../../../shared/models/kafka'
 import { Task } from '../../../shared/models/task'
 import { ApplicationTimeZoneValueExport } from '../../../shared/models/timezone'
-import { EventValueExport } from '../../../shared/models/event'
 import { getTaskType } from '../../../shared/utilities/task-type'
 import { getSeconds } from '../../../shared/utilities/time'
 import { QuestionnaireService } from '../config/questionnaire.service'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { SubjectConfigService } from '../config/subject-config.service'
 import { LogService } from '../misc/log.service'
-import { QuestionnaireMetadata } from '../../../shared/models/assessment'
 
 @Injectable()
 export class SchemaService {
@@ -93,7 +93,7 @@ export class SchemaService {
           offset: getSeconds({ minutes: new Date().getTimezoneOffset() })
         }
         return ApplicationTimeZone
-      case SchemaType.EVENT:
+      case SchemaType.APP_EVENT:
         const Event: EventValueExport = {
           time: getSeconds({ milliseconds: this.getUniqueTimeNow() }),
           eventType: payload.eventType

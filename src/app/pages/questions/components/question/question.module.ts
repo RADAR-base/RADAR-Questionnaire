@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { IonicModule } from 'ionic-angular'
+import { Ng2FittextModule } from 'ng2-fittext'
 
 import { PipesModule } from '../../../../shared/pipes/pipes.module'
 import { AudioInputComponent } from './audio-input/audio-input.component'
@@ -13,7 +14,6 @@ import { RangeInfoInputComponent } from './range-info-input/range-info-input.com
 import { RangeInputComponent } from './range-input/range-input.component'
 import { SliderInputComponent } from './slider-input/slider-input.component'
 import { TimedTestComponent } from './timed-test/timed-test.component'
-import { Ng2FittextModule } from 'ng2-fittext'
 
 const COMPONENTS = [
   QuestionComponent,

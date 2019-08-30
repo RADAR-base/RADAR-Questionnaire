@@ -1,124 +1,90 @@
 <ion-header>
   <ion-toolbar>
-    <button
-      class="logo-small"
-      ion-button
-      menuToggle
-      left
-      (click)="showCredits()"
-    >
-      <img
-        class="logo-small"
-        src="assets/imgs/radar-logo.svg"
-        alt="Logo"
-      >
+    <button class="logo-small" ion-button menuToggle left (tap)="showCredits()">
+      <img class="logo-small" src="assets/imgs/radar-logo.svg" alt="Logo" />
     </button>
-    <button
-      ion-button
-      menuToggle
-      right
-      (click)="openSettingsPage()"
-    >
+    <button ion-button menuToggle right (tap)="openSettingsPage()">
       <ion-icon name="cog"></ion-icon>
     </button>
-    <ion-title text-center>{{ "HOME_RADAR_CNS" | translate }}</ion-title>
+    <ion-title text-center>{{ 'HOME_RADAR_CNS' | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content #content>
+<ion-content>
   <div
-    #progressBar
     class="size-dynamic"
     [class.hidden]="showCalendar"
     [@moveProgress]="showCalendar"
   >
     <task-progress
-      *ngIf="(tasksProgress|async)"
-      [progress]="(tasksProgress|async)"
+      *ngIf="tasksProgress | async"
+      [progress]="tasksProgress | async"
       [forceComplete]="showCompleted"
-      [noTasksToday]="(tasksProgress|async)?.numberOfTasks == 0"
+      [noTasksToday]="(tasksProgress | async)?.numberOfTasks == 0"
     >
     </task-progress>
   </div>
 
   <div
-    *ngIf="hasClinicalTasks"
+    *ngIf="hasClinicalTasks | async"
     class="clinical-container"
-    (click)="openClinicalTasksPage()"
+    (tap)="openClinicalTasksPage()"
   >
-    <div
-      class="clinical-button"
-      [class.clinical-button-bottom]="showCalendar"
-    >
+    <div class="clinical-button" [class.clinical-button-bottom]="showCalendar">
       <div class="clinical-icon">
-        <img
-          src="assets/imgs/clinical.png"
-          class="icon-clinical"
-        >
+        <img src="assets/imgs/clinical.png" class="icon-clinical" />
       </div>
     </div>
   </div>
 
-  <div
-    #tickerBar
-    class="size-static"
-  >
+  <div #tickerBar class="size-static">
     <ticker-bar
       [task]="nextTask"
       [isNow]="taskIsNow"
       [showAffirmation]="showCompleted"
-      [noTasksToday]="(tasksProgress|async)?.numberOfTasks == 0"
+      [noTasksToday]="(tasksProgress | async)?.numberOfTasks == 0"
     ></ticker-bar>
   </div>
 
-  <div
-    #taskInfo
-    class="size-static"
-  >
+  <div class="size-static">
     <task-info
       *ngIf="nextTask"
       [task]="nextTask"
       [isNow]="taskIsNow"
-      [progress]="(tasksProgress|async)"
+      [progress]="tasksProgress | async"
       [expanded]="!showCalendar"
-      (click)="displayTaskCalendar()"
+      (tap)="displayTaskCalendar()"
     ></task-info>
   </div>
 
-  <div
-    #taskCalendar
-    [@displayCalendar]="showCalendar"
-  >
+  <div #taskCalendar [@displayCalendar]="showCalendar">
     <task-calendar
-      *ngIf="(sortedTasks|async)?.size"
+      *ngIf="(sortedTasks | async)?.size"
       [show]="showCalendar"
       (task)="startQuestionnaire($event)"
-      [tasks]="sortedTasks|async"
+      [tasks]="sortedTasks | async"
       [currentDate]="currentDate.getTime()"
     >
     </task-calendar>
   </div>
 
-  <div
-    #footer
-    class="size-static footer"
-  >
-    <div
-      *ngIf="getIsStartButtonShown() && (sortedTasks|async)?.size"
-      padding
-    >
+  <div class="size-static footer">
+    <div *ngIf="getIsStartButtonShown() && (sortedTasks | async)?.size" padding>
       <button
         ion-button
         class="bt bt--full"
         round
         full
-        (click)="startQuestionnaire()"
+        (tap)="startQuestionnaire()"
       >
-        {{ "BTN_START" | translate }}
+        {{ 'BTN_START' | translate }}
       </button>
     </div>
     <div
-      *ngIf="getIsLoadingSpinnerShown() || (!(sortedTasks|async)?.size && (tasksProgress|async)?.numberOfTasks)"
+      *ngIf="
+        getIsLoadingSpinnerShown() ||
+        (!(sortedTasks | async)?.size && (tasksProgress | async)?.numberOfTasks)
+      "
       class="spinner-center"
     >
       <ion-spinner name="dots"></ion-spinner>

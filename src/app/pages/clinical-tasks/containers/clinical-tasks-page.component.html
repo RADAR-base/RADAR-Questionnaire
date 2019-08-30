@@ -1,54 +1,29 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>{{ "CLINICAL_TASKS" | translate }}</ion-title>
+    <ion-title>{{ 'CLINICAL_TASKS' | translate }}</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
-  <ion-scroll
-    scrollY="true"
-    class="layers"
-    [style.height.px]="scrollHeight"
-  >
-
-    <div *ngFor="let task of tasks; let i=index">
-      <div
-        id="task-item"
-        (click)="clicked(task)"
-      >
+  <ion-scroll scrollY="true" class="layers" [style.height.px]="scrollHeight">
+    <div *ngFor="let a of assessments; let i = index">
+      <div id="task-item" (tap)="clicked(a)">
         <ion-row>
           <ion-col>
-            <div class="task-info-left">{{ task.name }}</div>
+            <div class="task-info-left">{{ a.name }}</div>
             <div class="task-info-right">
-              <img
-                class="icon-padding icon-xsm"
-                src="assets/imgs/stopwatch.png"
-              >
-              {{ task.estimatedCompletionTime }}
-              <span class="units">min</span>
-              <div
-                class="status-div"
-                *ngIf="!task.completed"
-              >
-                <ion-icon
-                  name="radio-button-off"
-                  class="status"
-                ></ion-icon>
-              </div>
-              <div
-                class="status-div"
-                *ngIf="task.completed"
-              >
-                <ion-icon
-                  name="checkmark"
-                  class="status-checked"
-                ></ion-icon>
+              <div class="metrics">
+                <img
+                  class="icon-padding icon-xsm"
+                  src="assets/imgs/stopwatch.png"
+                />
+                {{ a.estimatedCompletionTime }}
+                <span class="units">min</span>
               </div>
             </div>
           </ion-col>
         </ion-row>
       </div>
     </div>
-
   </ion-scroll>
 </ion-content>

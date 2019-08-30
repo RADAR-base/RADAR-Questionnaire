@@ -1,0 +1,17 @@
+qr-form {
+  .qr-code {
+    margin: auto;
+    padding-top: 3vh;
+    width: 170px;
+  }
+
+  .form {
+    margin-bottom: 96px;
+  }
+
+  .bottom {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+  }
+}

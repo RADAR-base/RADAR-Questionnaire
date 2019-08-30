@@ -46,7 +46,7 @@
           </div>
           <div
             id="task-item"
-            (click)="clicked(task)"
+            (tap)="clicked(task)"
             *ngIf="task.name !== 'ESM'"
           >
             <ion-row>
@@ -55,8 +55,8 @@
                   <div class="start-time">{{ getStartTime(task) }}</div>
                   <div>
                     <img
-                      class="icon-padding extra-info-icon"
-                      *ngIf="hasExtraInfo(task.warning)"
+                      class="extra-info-icon"
+                      *ngIf="task.warning"
                       src="assets/imgs/warning.png"
                     >
                   </div>

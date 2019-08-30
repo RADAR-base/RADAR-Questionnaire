@@ -25,6 +25,15 @@ interface Time {
   milliseconds?: number
 }
 
+export const TIME_UNIT_MILLIS = {
+  min: getMilliseconds({ minutes: 1 }),
+  hour: getMilliseconds({ hours: 1 }),
+  day: getMilliseconds({ days: 1 }),
+  week: getMilliseconds({ weeks: 1 }),
+  month: getMilliseconds({ months: 1 }),
+  year: getMilliseconds({ years: 1 })
+}
+
 export function getMilliseconds(time: Time) {
   return getSeconds(time) * TimeConversion.SEC_TO_MILLISEC
 }
@@ -68,12 +77,12 @@ export function getSeconds(time: Time) {
   return seconds
 }
 
-export function formatTime(date) {
-  const hour = date.getHours()
-  const min = date.getMinutes()
-  const hourStr = hour < 10 ? '0' + String(hour) : String(hour)
-  const minStr = min < 10 ? '0' + String(min) : String(min)
-  return hourStr + ':' + minStr
+export function getMinutes(time: Time) {
+  return getSeconds(time) / TimeConversion.MIN_TO_SEC
+}
+
+export function getHours(time: Time) {
+  return getMinutes(time) / TimeConversion.HOUR_TO_MIN
 }
 
 export function timeIntervalToMillis(interval: TimeInterval): number {
@@ -86,11 +95,30 @@ export function timeIntervalToMillis(interval: TimeInterval): number {
   return amount * TIME_UNIT_MILLIS[unit]
 }
 
-export const TIME_UNIT_MILLIS = {
-  min: getMilliseconds({ minutes: 1 }),
-  hour: getMilliseconds({ hours: 1 }),
-  day: getMilliseconds({ days: 1 }),
-  week: getMilliseconds({ weeks: 1 }),
-  month: getMilliseconds({ months: 1 }),
-  year: getMilliseconds({ years: 1 })
+export function setDateTimeToMidnight(date: Date): Date {
+  return new Date(new Date(date).setHours(0, 0, 0, 0))
+}
+
+export function advanceRepeat(timestamp: number, interval: TimeInterval) {
+  const date = new Date(timestamp)
+  const returnDate = new Date(timestamp)
+  switch (interval.unit) {
+    case 'min':
+      return returnDate.setMinutes(date.getMinutes() + interval.amount)
+    case 'hour':
+      return returnDate.setHours(date.getHours() + interval.amount)
+    case 'day':
+      return returnDate.setDate(date.getDate() + interval.amount)
+    case 'week':
+      const ONE_WEEK = 7
+      return returnDate.setDate(date.getDate() + interval.amount * ONE_WEEK)
+    case 'month':
+      return returnDate.setMonth(date.getMonth() + interval.amount)
+    case 'year':
+      return returnDate.setFullYear(date.getFullYear() + interval.amount)
+    default:
+      return returnDate.setFullYear(
+        date.getFullYear() + DefaultScheduleYearCoverage
+      )
+  }
 }

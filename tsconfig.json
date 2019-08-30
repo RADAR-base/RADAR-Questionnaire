@@ -9,7 +9,7 @@
     "sourceMap": true,
     "target": "es5",
     "noUnusedLocals": false,
-    "types": ["node"]
+    "types": ["node", "jasmine"]
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"],

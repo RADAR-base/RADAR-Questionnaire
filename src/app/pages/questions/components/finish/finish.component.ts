@@ -6,7 +6,6 @@ import {
   OnInit,
   Output
 } from '@angular/core'
-import { NavController, NavParams } from 'ionic-angular'
 
 import { UsageService } from '../../../../core/services/usage/usage.service'
 import { Assessment } from '../../../../shared/models/assessment'
@@ -25,6 +24,8 @@ export class FinishComponent implements OnInit, OnChanges {
   displayNextTaskReminder = true
   @Input()
   showDoneButton
+  @Input()
+  isShown: boolean
 
   @Output()
   exit: EventEmitter<any> = new EventEmitter<any>()
@@ -34,18 +35,14 @@ export class FinishComponent implements OnInit, OnChanges {
   assessment: Assessment
   completedInClinic = false
 
-  constructor(
-    public navCtrl: NavController,
-    public navParams: NavParams,
-    private usage: UsageService
-  ) {}
+  constructor(private usage: UsageService) {}
 
   ngOnInit() {
     this.usage.setPage(this.constructor.name)
   }
 
   ngOnChanges() {
-    setTimeout(() => (this.showDoneButton = true), 15000)
+    if (this.isShown) setTimeout(() => (this.showDoneButton = true), 15000)
   }
 
   handleClosePage() {

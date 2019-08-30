@@ -78,30 +78,28 @@ export class AuthService {
     return this.URI_base + DefaultSubjectsURI + subject
   }
 
-  getSubjectInformation() {
+  getSubjectInformation(): Promise<any> {
     return Promise.all([
       this.token.getAccessHeaders(DefaultRequestEncodedContentType),
-      this.token.getDecodedSubject()
+      this.token.getDecodedSubject(),
     ]).then(([headers, subject]) =>
       this.http.get(this.getSubjectURI(subject), { headers }).toPromise()
     )
   }
 
   initSubjectInformation() {
-    return this.getSubjectInformation().then(res => {
-      const subjectInformation: any = res
-      const participantId = subjectInformation.externalId
-      const participantLogin = subjectInformation.login
-      const projectName = subjectInformation.project.projectName
-      const sourceId = this.getSourceId(subjectInformation)
-      const createdDate = new Date(subjectInformation.createdDate).getTime()
-      return this.config.setAll(
-        participantId,
-        participantLogin,
-        projectName,
-        sourceId,
-        createdDate
-      )
+    return Promise.all([
+      this.token.getURI(),
+      this.getSubjectInformation()
+    ]).then(([baseUrl, subjectInformation]) => {
+      return this.config.setAll({
+        projectId: subjectInformation.project.projectName,
+        subjectId: subjectInformation.login,
+        sourceId: this.getSourceId(subjectInformation),
+        humanReadableId: subjectInformation.externalId,
+        enrolmentDate: new Date(subjectInformation.createdDate).getTime(),
+        baseUrl: baseUrl,
+      })
     })
   }
 

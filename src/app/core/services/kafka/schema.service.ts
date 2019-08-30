@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import * as AvroSchema from 'avsc'
 import * as KafkaRest from 'kafka-rest'
-import * as YAML from 'yamljs'
+import YAML from 'yaml'
 
 import { DefaultSchemaSpecEndpoint } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'

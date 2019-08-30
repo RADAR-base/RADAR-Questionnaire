@@ -19,6 +19,7 @@ export class TextInputComponent implements OnInit {
   dateFormat: string
   timeFormat: string
   customMonthNames = []
+  datetimeValue: { [key: string]: any } = {}
 
   ngOnInit() {
     this.initMonthNames()
@@ -39,8 +40,11 @@ export class TextInputComponent implements OnInit {
   }
 
   onInputChange(value) {
-    this.valueChange.emit(
-      typeof value === 'object' ? JSON.stringify(value) : value
-    )
+    if (typeof value === 'object') {
+      Object.assign(this.datetimeValue, value)
+      this.valueChange.emit(JSON.stringify(this.datetimeValue))
+    } else {
+      this.valueChange.emit(value)
+    }
   }
 }

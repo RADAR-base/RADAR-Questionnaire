@@ -1,31 +1,28 @@
-import { Component } from '@angular/core'
-import { NavController, NavParams } from 'ionic-angular'
+import { Component, OnInit } from '@angular/core'
+import { Router } from '@angular/router'
 
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { UsageService } from '../../../core/services/usage/usage.service'
 import { LocKeys } from '../../../shared/enums/localisations'
-import { EnrolmentPageComponent } from '../../auth/containers/enrolment-page.component'
-import { HomePageComponent } from '../../home/containers/home-page.component'
 import { SplashService } from '../services/splash.service'
 
 @Component({
   selector: 'page-splash',
   templateUrl: 'splash-page.component.html'
 })
-export class SplashPageComponent {
+export class SplashPageComponent implements OnInit {
   status = 'Checking enrolment...'
   constructor(
-    public navCtrl: NavController,
-    public navParams: NavParams,
+    private router: Router,
     private splash: SplashService,
     private alertService: AlertService,
     private localization: LocalizationService,
     private usage: UsageService
-  ) {
-    this.splash
-      .evalEnrolment()
-      .then(valid => (valid ? this.onStart() : this.enrol()))
+  ) {}
+
+  ngOnInit() {
+    this.onStart()
   }
 
   onStart() {
@@ -42,7 +39,9 @@ export class SplashPageComponent {
         return this.splash.sendMissedQuestionnaireLogs()
       })
       .catch(e => console.log('[SPLASH] Notifications error.'))
-      .then(() => this.navCtrl.setRoot(HomePageComponent))
+      .then(() => {
+        this.router.navigate(['/home'])
+      })
   }
 
   showFetchConfigFail(e) {
@@ -59,14 +58,10 @@ export class SplashPageComponent {
         {
           text: this.localization.translateKey(LocKeys.BTN_RESET),
           handler: () => {
-            this.enrol()
+            this.splash.reset().then(() => this.router.navigate(['/enrol']))
           }
         }
       ]
     })
-  }
-
-  enrol() {
-    this.splash.reset().then(() => this.navCtrl.setRoot(EnrolmentPageComponent))
   }
 }

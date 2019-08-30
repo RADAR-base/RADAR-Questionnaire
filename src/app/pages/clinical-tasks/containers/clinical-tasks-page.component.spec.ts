@@ -30,4 +30,8 @@ describe('ClinicalTasksPageComponent', () => {
   })
 })
 
-class ClinicalTasksServiceMock {}
+class ClinicalTasksServiceMock {
+  getClinicalAssessments() {
+    return Promise.resolve([])
+  }
+}

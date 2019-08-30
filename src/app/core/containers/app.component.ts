@@ -1,4 +1,6 @@
+import { transition, trigger } from '@angular/animations'
 import { Component } from '@angular/core'
+import { RouterOutlet } from '@angular/router'
 import { MobileAccessibility } from '@ionic-native/mobile-accessibility/ngx'
 import { SplashScreen } from '@ionic-native/splash-screen/ngx'
 import { StatusBar } from '@ionic-native/status-bar/ngx'
@@ -8,7 +10,7 @@ import { SplashPageComponent } from '../../pages/splash/containers/splash-page.c
 import { NotificationService } from '../services/notifications/notification.service'
 
 @Component({
-  template: '<ion-nav [root]="rootPage"></ion-nav>'
+  template: '<router-outlet></router-outlet>'
 })
 export class AppComponent {
   rootPage = SplashPageComponent

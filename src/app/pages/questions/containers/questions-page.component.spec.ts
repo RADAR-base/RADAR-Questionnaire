@@ -1,6 +1,4 @@
 import { ComponentFixture, TestBed, async } from '@angular/core/testing'
-import { NavController, NavParams } from 'ionic-angular'
-import { NavParamsMock } from 'ionic-mocks'
 
 import { AppModule } from '../../../app.module'
 import { QuestionsPageComponent } from './questions-page.component'
@@ -13,10 +11,7 @@ describe('QuestionsPageComponent', () => {
     TestBed.configureTestingModule({
       imports: [AppModule],
       declarations: [],
-      providers: [
-        NavController,
-        { provide: NavParams, useClass: NavParamsMock }
-      ]
+      providers: []
     }).compileComponents()
 
     fixture = TestBed.createComponent(QuestionsPageComponent)

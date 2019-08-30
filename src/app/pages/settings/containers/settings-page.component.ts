@@ -1,5 +1,5 @@
-import { Component } from '@angular/core'
-import { NavController } from 'ionic-angular'
+import { Component, OnInit } from '@angular/core'
+import { Router } from '@angular/router'
 
 import {
   DefaultSettingsNotifications,
@@ -10,28 +10,27 @@ import { LocalizationService } from '../../../core/services/misc/localization.se
 import { UsageService } from '../../../core/services/usage/usage.service'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { Settings } from '../../../shared/models/settings'
-import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 import { SettingsService } from '../services/settings.service'
 
 @Component({
   selector: 'page-settings',
   templateUrl: 'settings-page.component.html'
 })
-export class SettingsPageComponent {
+export class SettingsPageComponent implements OnInit {
   settings: Settings = {}
   notificationSettings = DefaultSettingsNotifications
   weeklyReport = DefaultSettingsWeeklyReport
   showLoading = false
 
   constructor(
-    public navCtrl: NavController,
     public alertService: AlertService,
     public localization: LocalizationService,
     private settingsService: SettingsService,
-    private usage: UsageService
+    private usage: UsageService,
+    private router: Router
   ) {}
 
-  ionViewWillEnter() {
+  ngOnInit() {
     this.usage.setPage(this.constructor.name)
     this.loadSettings()
   }
@@ -53,11 +52,11 @@ export class SettingsPageComponent {
   }
 
   backToHome() {
-    this.navCtrl.pop()
+    this.router.navigate(['/home'])
   }
 
   backToSplash() {
-    this.navCtrl.setRoot(SplashPageComponent)
+    this.router.navigate([''])
   }
 
   notificationChange() {

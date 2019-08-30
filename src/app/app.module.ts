@@ -2,6 +2,7 @@ import { HttpClientModule } from '@angular/common/http'
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { RouterModule } from '@angular/router'
 import { JWT_OPTIONS, JwtModule } from '@auth0/angular-jwt'
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx'
 import { AppVersion } from '@ionic-native/app-version/ngx'
@@ -53,7 +54,8 @@ import { Utility } from './shared/utilities/util'
         useFactory: jwtOptionsFactory,
         deps: [Storage]
       }
-    })
+    }),
+    RouterModule.forRoot([])
   ],
   declarations: [AppComponent],
   bootstrap: [IonicApp],

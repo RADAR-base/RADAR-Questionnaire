@@ -5,6 +5,7 @@ import { LocalizationService } from '../../../core/services/misc/localization.se
 import { Question, QuestionType } from '../../../shared/models/question'
 import { getTaskType } from '../../../shared/utilities/task-type'
 import { getSeconds } from '../../../shared/utilities/time'
+import { TasksService } from '../../home/services/tasks.service'
 import { AnswerService } from './answer.service'
 import { FinishTaskService } from './finish-task.service'
 import { TimestampService } from './timestamp.service'
@@ -25,7 +26,8 @@ export class QuestionsService {
     private answerService: AnswerService,
     private timestampService: TimestampService,
     private localization: LocalizationService,
-    private finish: FinishTaskService
+    private finish: FinishTaskService,
+    private tasksService: TasksService
   ) {}
 
   reset() {
@@ -159,20 +161,31 @@ export class QuestionsService {
     return this.NEXT_BUTTON_AUTOMATIC_SET.has(questionType)
   }
 
-  getQuestionnairePayload(task) {
-    const type = getTaskType(task)
-    return this.questionnaire.getAssessment(type, task).then(assessment => {
-      return {
-        title: assessment.name,
-        introduction: this.localization.chooseText(assessment.startText),
-        endText: this.localization.chooseText(assessment.endText),
-        questions: this.processQuestions(assessment.name, assessment.questions),
-        task: task ? task : assessment,
-        assessment: assessment,
-        type: type,
-        isLastTask: false
-      }
+  getQuestionnairePayload(taskIndex) {
+    return this.getTask(taskIndex).then(task => {
+      const type = getTaskType(task)
+      return this.questionnaire.getAssessment(type, task).then(assessment => {
+        return {
+          title: assessment.name,
+          introduction: this.localization.chooseText(assessment.startText),
+          endText: this.localization.chooseText(assessment.endText),
+          questions: this.processQuestions(
+            assessment.name,
+            assessment.questions
+          ),
+          task: task ? task : assessment,
+          assessment: assessment,
+          type: type,
+          isLastTask: false
+        }
+      })
     })
+  }
+
+  getTask(index) {
+    return this.tasksService
+      .getTasksOfToday()
+      .then(tasks => tasks.find(t => t.index == index))
   }
 
   processCompletedQuestionnaire(task, questions): Promise<any> {

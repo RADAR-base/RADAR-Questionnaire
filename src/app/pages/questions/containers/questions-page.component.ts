@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core'
+import { ActivatedRoute, Router } from '@angular/router'
 import { Insomnia } from '@ionic-native/insomnia/ngx'
-import { NavController, NavParams, Platform, Slides } from 'ionic-angular'
+import { Platform, Slides } from 'ionic-angular'
 
 import { UsageService } from '../../../core/services/usage/usage.service'
 import { UsageEventType } from '../../../shared/enums/events'
@@ -8,7 +9,6 @@ import { Assessment } from '../../../shared/models/assessment'
 import { Question } from '../../../shared/models/question'
 import { Task } from '../../../shared/models/task'
 import { TaskType } from '../../../shared/utilities/task-type'
-import { HomePageComponent } from '../../home/containers/home-page.component'
 import { QuestionsService } from '../services/questions.service'
 
 @Component({
@@ -38,8 +38,8 @@ export class QuestionsPageComponent implements OnInit {
   showFinishScreen: boolean
 
   constructor(
-    public navCtrl: NavController,
-    public navParams: NavParams,
+    private router: Router,
+    private route: ActivatedRoute,
     private questionsService: QuestionsService,
     private usage: UsageService,
     private platform: Platform,
@@ -52,9 +52,9 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.task = this.navParams.data
-    const data = this.questionsService.getQuestionnairePayload(this.task)
-    return data.then(res => {
+    const index = this.route.snapshot.paramMap.get('task')
+    const data = this.questionsService.getQuestionnairePayload(index)
+    data.then(res => {
       this.questionTitle = res.title
       this.introduction = res.introduction
       this.showIntroductionScreen = res.assessment.showIntroduction
@@ -63,7 +63,8 @@ export class QuestionsPageComponent implements OnInit {
       this.isLastTask = res.isLastTask
       this.assessment = res.assessment
       this.taskType = res.type
-      return (this.isClinicalTask = this.taskType == TaskType.CLINICAL)
+      this.task = res.task
+      this.isClinicalTask = this.taskType == TaskType.CLINICAL
     })
   }
 
@@ -98,7 +99,7 @@ export class QuestionsPageComponent implements OnInit {
       .handleClinicalFollowUp(this.assessment, completedInClinic)
       .then(() => {
         this.updateDoneButton(false)
-        return this.navCtrl.setRoot(HomePageComponent)
+        return this.router.navigate(['/home'])
       })
   }
 
@@ -162,7 +163,7 @@ export class QuestionsPageComponent implements OnInit {
 
   exitQuestionnaire() {
     this.sendEvent(UsageEventType.QUESTIONNAIRE_CLOSED)
-    this.navCtrl.pop()
+    this.router.navigate(['/home'])
   }
 
   navigateToFinishPage() {

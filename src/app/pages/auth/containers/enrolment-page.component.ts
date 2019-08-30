@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core'
-import { NavController, Slides } from 'ionic-angular'
+import { Router } from '@angular/router'
+import { Slides } from 'ionic-angular'
 
 import {
   DefaultLanguage,
@@ -20,7 +21,6 @@ import {
   LanguageSetting,
   WeeklyReportSubSettings
 } from '../../../shared/models/settings'
-import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 import { AuthService } from '../services/auth.service'
 
 @Component({
@@ -39,7 +39,7 @@ export class EnrolmentPageComponent {
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
 
   constructor(
-    public navCtrl: NavController,
+    private router: Router,
     private auth: AuthService,
     private localization: LocalizationService,
     private alertService: AlertService,
@@ -118,7 +118,7 @@ export class EnrolmentPageComponent {
   }
 
   navigateToSplash() {
-    this.navCtrl.setRoot(SplashPageComponent)
+    this.router.navigate([''])
   }
 
   showSelectLanguage() {
@@ -134,10 +134,7 @@ export class EnrolmentPageComponent {
             label: LanguageMap[selectedLanguageVal],
             value: selectedLanguageVal
           }
-          this.localization.setLanguage(lang).then(() => {
-            this.language = lang
-            return this.navCtrl.setRoot(EnrolmentPageComponent)
-          })
+          this.localization.setLanguage(lang).then(() => (this.language = lang))
         }
       }
     ]

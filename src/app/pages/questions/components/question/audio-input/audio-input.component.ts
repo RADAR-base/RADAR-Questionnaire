@@ -6,17 +6,18 @@ import {
   OnInit,
   Output
 } from '@angular/core'
+import { Router } from '@angular/router'
 import { NavController, Platform } from 'ionic-angular'
+import { Subscription } from 'rxjs'
 
-import { AlertService } from '../../../../../core/services/misc/alert.service'
-import { AndroidPermissionUtility } from '../../../../../shared/utilities/android-permission'
-import { AudioRecordService } from '../../../services/audio-record.service'
 import { DefaultMaxAudioAttemptsAllowed } from '../../../../../../assets/data/defaultConfig'
-import { HomePageComponent } from '../../../../home/containers/home-page.component'
+import { AlertService } from '../../../../../core/services/misc/alert.service'
 import { LocKeys } from '../../../../../shared/enums/localisations'
 import { Section } from '../../../../../shared/models/question'
-import { Subscription } from 'rxjs'
 import { TranslatePipe } from '../../../../../shared/pipes/translate/translate'
+import { AndroidPermissionUtility } from '../../../../../shared/utilities/android-permission'
+import { HomePageComponent } from '../../../../home/containers/home-page.component'
+import { AudioRecordService } from '../../../services/audio-record.service'
 
 @Component({
   selector: 'audio-input',
@@ -37,10 +38,10 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   constructor(
     private audioRecordService: AudioRecordService,
     private permissionUtil: AndroidPermissionUtility,
-    public navCtrl: NavController,
     public alertService: AlertService,
     private platform: Platform,
-    private translate: TranslatePipe
+    private translate: TranslatePipe,
+    private router: Router
   ) {
     this.permissionUtil.checkPermissions()
     this.audioRecordService.destroy()
@@ -127,7 +128,7 @@ export class AudioInputComponent implements OnDestroy, OnInit {
         {
           text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
           handler: () => {
-            this.navCtrl.setRoot(HomePageComponent)
+            this.router.navigate([''])
           }
         }
       ],

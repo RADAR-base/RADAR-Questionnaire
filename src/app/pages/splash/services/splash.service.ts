@@ -15,10 +15,6 @@ export class SplashService {
     private usage: UsageService
   ) {}
 
-  evalEnrolment() {
-    return this.token.isValid().catch(() => false)
-  }
-
   loadConfig() {
     this.token.refresh()
     return this.config.fetchConfigState()

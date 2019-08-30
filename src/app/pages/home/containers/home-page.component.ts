@@ -1,4 +1,5 @@
-import { Component, OnDestroy } from '@angular/core'
+import { Component, OnDestroy, OnInit } from '@angular/core'
+import { Router } from '@angular/router'
 import { NavController, Platform } from 'ionic-angular'
 import { Subscription } from 'rxjs'
 
@@ -21,7 +22,7 @@ import { HomePageAnimations } from './home-page.animation'
   templateUrl: 'home-page.component.html',
   animations: HomePageAnimations
 })
-export class HomePageComponent implements OnDestroy {
+export class HomePageComponent implements OnInit, OnDestroy {
   sortedTasks: Promise<Map<any, any>>
   tasks: Promise<Task[]>
   currentDate: Date
@@ -37,7 +38,7 @@ export class HomePageComponent implements OnDestroy {
   checkTaskInterval
 
   constructor(
-    public navCtrl: NavController,
+    private router: Router,
     public alertService: AlertService,
     private tasksService: TasksService,
     private localization: LocalizationService,
@@ -49,6 +50,17 @@ export class HomePageComponent implements OnDestroy {
       this.usage.sendGeneralEvent(UsageEventType.RESUMED)
       this.onResume()
     })
+  }
+
+  ngOnInit() {
+    this.init()
+    this.usage.sendOpenEvent()
+    this.usage.setPage(this.constructor.name)
+    this.startingQuestionnaire = false
+  }
+
+  ngOnDestroy() {
+    this.resumeListener.unsubscribe()
   }
 
   getIsLoadingSpinnerShown() {
@@ -65,20 +77,6 @@ export class HomePageComponent implements OnDestroy {
       !this.showCompleted &&
       !this.showCalendar
     )
-  }
-
-  ngOnDestroy() {
-    this.resumeListener.unsubscribe()
-  }
-
-  ionViewWillEnter() {
-    this.startingQuestionnaire = false
-  }
-
-  ionViewDidLoad() {
-    this.init()
-    this.usage.sendOpenEvent()
-    this.usage.setPage(this.constructor.name)
   }
 
   init() {
@@ -102,7 +100,7 @@ export class HomePageComponent implements OnDestroy {
   checkForNewDate() {
     if (new Date().getDate() !== this.currentDate.getDate()) {
       this.currentDate = this.tasksService.getCurrentDateMidnight()
-      this.navCtrl.setRoot(SplashPageComponent)
+      this.router.navigate(['/splash'])
     }
   }
 
@@ -128,12 +126,12 @@ export class HomePageComponent implements OnDestroy {
   }
 
   openSettingsPage() {
-    this.navCtrl.push(SettingsPageComponent)
+    this.router.navigate(['/settings'])
     this.usage.sendClickEvent('open_settings')
   }
 
   openClinicalTasksPage() {
-    this.navCtrl.push(ClinicalTasksPageComponent)
+    this.router.navigate(['/clinical-tasks'])
     this.usage.sendClickEvent('open_clinical_tasks')
   }
 
@@ -144,7 +142,7 @@ export class HomePageComponent implements OnDestroy {
     if (this.tasksService.isTaskStartable(task)) {
       this.usage.sendClickEvent('start_questionnaire')
       this.startingQuestionnaire = true
-      return this.navCtrl.push(QuestionsPageComponent, task)
+      return this.router.navigate(['/questions', task.index])
     } else {
       this.showMissedInfo()
     }

@@ -57,8 +57,8 @@ export class RemoteConfigService {
 export interface RemoteConfig {
   readonly fetchedAt: Date
 
-  get(key: ConfigKeys): Promise<any>
-  getOrDefault(key: ConfigKeys, defaultValue: any): Promise<any>
+  get(key: ConfigKeys): Promise<string | null>
+  getOrDefault(key: ConfigKeys, defaultValue: string): Promise<string>
 }
 
 class EmptyRemoteConfig implements RemoteConfig {

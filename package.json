@@ -51,7 +51,7 @@
         "@ionic-native/app-version": "^5.12.0",
         "@ionic-native/background-mode": "^5.12.0",
         "@ionic-native/barcode-scanner": "^5.12.0",
-        "@ionic-native/core": "^5.12.0",
+        "@ionic-native/core": "^5.13.0",
         "@ionic-native/device": "^5.12.0",
         "@ionic-native/dialogs": "^5.12.0",
         "@ionic-native/file": "^5.12.0",

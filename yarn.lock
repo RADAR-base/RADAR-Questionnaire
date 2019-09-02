@@ -435,10 +435,10 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/keyboard@^5.12.0":
-  version "5.12.0"
-  resolved "https://registry.yarnpkg.com/@ionic-native/keyboard/-/keyboard-5.12.0.tgz#e7d5b783daeb36ac6ce3c1f73cd9b4f2e739726e"
-  integrity sha512-PoUSMydXT+VqNn1JsaCH7IrOts8wHlhZsUD7jQSxTRMyysuEQJMgoX+6l33vDEuW91tLPXnUdH1Q48r/ZIBlIA==
+"@ionic-native/keyboard@^5.13.0":
+  version "5.13.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/keyboard/-/keyboard-5.13.0.tgz#4ffb65d6d1003e8e895255402a2427d0253ac32a"
+  integrity sha512-QQnK4qkB0y4K6+Uo+EUHpTNYBoV2CKnumuap7W/3kGAgfgWYlCBqYasmcvxfAPMYTQ3h29fK205NYINtE4zvyg==
   dependencies:
     "@types/cordova" latest
 

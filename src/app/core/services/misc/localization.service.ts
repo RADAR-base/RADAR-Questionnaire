@@ -5,6 +5,7 @@ import 'moment/locale/it'
 import 'moment/locale/nl'
 
 import { Injectable } from '@angular/core'
+import { Moment } from 'moment'
 
 import { DefaultSettingsSupportedLanguages } from '../../../../assets/data/defaultConfig'
 import { Localisations } from '../../../../assets/data/localisations'
@@ -15,7 +16,6 @@ import { MultiLanguageText } from '../../../shared/models/text'
 import { StorageService } from '../storage/storage.service'
 
 import moment = require('moment')
-import { Moment } from 'moment'
 
 @Injectable()
 export class LocalizationService {
@@ -116,7 +116,11 @@ export class LocalizationService {
     }
   }
 
-  moment(time?: moment.MomentInput, format?: moment.MomentFormatSpecification, strict?: boolean): Moment {
+  moment(
+    time?: moment.MomentInput,
+    format?: moment.MomentFormatSpecification,
+    strict?: boolean
+  ): Moment {
     if (time !== undefined) {
       return moment(time, format, strict).locale(this.language.value)
     } else {

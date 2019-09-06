@@ -32,7 +32,7 @@ export class EnrolmentPageComponent {
   slides: Slides
   loading: boolean = false
   showOutcomeStatus: boolean = false
-  outcomeStatus: String
+  outcomeStatus: string
   enterMetaQR = false
   reportSettings: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
   language?: LanguageSetting = DefaultLanguage
@@ -68,9 +68,7 @@ export class EnrolmentPageComponent {
 
   authenticate(authObj) {
     if (!this.enterMetaQR)
-      this.usage.sendGeneralEvent(UsageEventType.QR_SCANNED, {
-        text: authObj
-      })
+      this.usage.sendGeneralEvent(UsageEventType.QR_SCANNED)
     this.loading = true
     this.clearStatus()
     this.auth

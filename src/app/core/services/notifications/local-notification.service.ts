@@ -1,5 +1,3 @@
-import uuid = require('uuid/v4')
-
 import { Injectable } from '@angular/core'
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx'
 
@@ -24,7 +22,7 @@ export class LocalNotificationService extends NotificationService {
     private schedule: ScheduleService,
     private localNotifications: LocalNotifications,
     private storage: StorageService,
-    private logger: LogService,
+    private logger: LogService
   ) {
     super()
   }

@@ -147,9 +147,7 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
       .then(activated => {
         console.log('New Firebase Remote Config did activate', activated)
         const conf = new FirebaseRemoteConfig(this.logger)
-        if (activated) {
-          this.configSubject.next(conf)
-        }
+        this.configSubject.next(conf)
         return conf
       })
   }

@@ -113,7 +113,7 @@ export class QuestionnaireService {
       .then(assessments => {
         const index = assessments.findIndex(a => a.name == assessment.name)
         if (index != -1) {
-          assessments[index] = JSON.parse(JSON.stringify(assessment))
+          assessments[index] = this.util.deepCopy(assessment)
           return this.setAssessments(type, assessments)
         }
       })

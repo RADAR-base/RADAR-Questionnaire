@@ -48,7 +48,9 @@ export class FinishPageComponent {
   onComplete() {
     return Promise.all([
       this.finish.updateTaskToComplete(this.task),
-      this.finish.processDataAndSend(this.questionnaireData, this.task)
+      !this.assessment.isDemo
+        ? this.finish.processDataAndSend(this.questionnaireData, this.task)
+        : Promise.resolve()
     ])
   }
 

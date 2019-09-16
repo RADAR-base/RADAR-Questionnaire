@@ -5,6 +5,7 @@ import {
   ConfigEventType,
   NotificationEventType
 } from '../../../shared/enums/events'
+import { User } from '../../../shared/models/user'
 import { TaskType } from '../../../shared/utilities/task-type'
 import { KafkaService } from '../kafka/kafka.service'
 import { LocalizationService } from '../misc/localization.service'
@@ -215,26 +216,12 @@ export class ConfigService {
     ])
   }
 
-  setAll(participantId, participantLogin, projectName, sourceId, createdDate) {
+  setAll(user: User) {
     return Promise.all([
       this.subjectConfig
-        .init(
-          participantId,
-          participantLogin,
-          projectName,
-          sourceId,
-          createdDate
-        )
-        .then(() =>
-          this.analytics.setUserProperties({
-            subjectId: participantLogin,
-            projectId: projectName,
-            sourceId: sourceId,
-            enrolmentDate: String(),
-            humanReadableId: participantId
-          })
-        )
-        .then(() => this.appConfig.init(createdDate)),
+        .init(user)
+        .then(() => this.analytics.setUserProperties(user))
+        .then(() => this.appConfig.init(user.enrolmentDate)),
       this.localization.init(),
       this.kafka.init()
     ])

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import * as AvroSchema from 'avsc'
 import * as KafkaRest from 'kafka-rest'
-import * as YAML from 'yamljs'
+import YAML from 'yaml'
 
 import { DefaultSchemaSpecEndpoint } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
@@ -93,7 +93,7 @@ export class SchemaService {
           offset: getSeconds({ minutes: new Date().getTimezoneOffset() })
         }
         return ApplicationTimeZone
-      case SchemaType.EVENT:
+      case SchemaType.APP_EVENT:
         const Event: EventValueExport = {
           time: getSeconds({ milliseconds: this.getUniqueTimeNow() }),
           eventType: payload.eventType

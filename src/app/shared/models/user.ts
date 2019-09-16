@@ -3,6 +3,6 @@ export interface User {
   subjectId?: string
   projectId?: string
   sourceId?: string
-  enrolmentDate?: string
+  enrolmentDate?: number
   humanReadableId?: string
 }

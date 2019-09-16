@@ -18,14 +18,8 @@ export class LogService {
     if (this.plt.is('mobileweb')) {
       console.log(...parameters)
     } else {
-      const formattedParameters = []
-      parameters.forEach(p => {
-        if (LogService.needsFormatting(p)) {
-          formattedParameters.push(LogService.formatObject(p))
-        }
-        formattedParameters.push(p)
-      })
-      console.log(...formattedParameters)
+      const message = parameters.map(p => LogService.formatObject(p)).join(', ')
+      console.log(message, ...parameters)
     }
   }
 
@@ -36,7 +30,7 @@ export class LogService {
 
     if (presentToast) this.presentToast(formattedError)
 
-    if (error instanceof Error) {
+    if (error && error instanceof Error) {
       return error
     } else {
       return new Error(formattedException)

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import * as AvroSchema from 'avsc'
 import * as KafkaRest from 'kafka-rest'
-import YAML from 'yaml'
+import * as YAML from 'yaml'
 
 import { DefaultSchemaSpecEndpoint } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
@@ -137,7 +137,7 @@ export class SchemaService {
     )
   }
 
-  getKafkaTopic(name, avsc) {
+  getKafkaTopic(name, avsc): Promise<string> {
     const type = name.toLowerCase()
     const defaultTopic = `${avsc}_${name}`
     return this.remoteConfig
@@ -153,7 +153,7 @@ export class SchemaService {
         const schemaSpecs = YAML.parse(atob(res['content'])).data
         const topic = schemaSpecs.find(t => t.type.toLowerCase() == type).topic
         if (topic) return topic
-        else return Promise.reject()
+        else throw new Error()
       })
       .catch(e => defaultTopic)
   }

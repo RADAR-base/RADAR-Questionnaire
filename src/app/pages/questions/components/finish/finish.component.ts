@@ -23,7 +23,7 @@ export class FinishComponent implements OnInit, OnChanges {
   @Input()
   displayNextTaskReminder = true
   @Input()
-  showDoneButton
+  showDoneButton: boolean
   @Input()
   isShown: boolean
 

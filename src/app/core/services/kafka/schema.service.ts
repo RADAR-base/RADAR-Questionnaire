@@ -153,7 +153,7 @@ export class SchemaService {
         const schemaSpecs = YAML.parse(atob(res['content'])).data
         const topic = schemaSpecs.find(t => t.type.toLowerCase() == type).topic
         if (topic) return topic
-        else throw new Error()
+        else throw new Error('Failed to get Kafka topic')
       })
       .catch(e => defaultTopic)
   }

@@ -13,6 +13,7 @@ export interface Assessment {
   showIntroduction?: boolean
   isDemo?: boolean
   questions: Question[]
+  showInCalendar?: boolean
 }
 
 export interface QuestionnaireMetadata {

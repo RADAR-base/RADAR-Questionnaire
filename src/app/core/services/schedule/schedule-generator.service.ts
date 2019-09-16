@@ -169,6 +169,8 @@ export class ScheduleGeneratorService {
       completionWindow: completionWindow,
       warning: this.localization.chooseText(assessment.warn),
       isClinical: assessment.protocol.clinicalProtocol ? true : false,
+      showInCalendar:
+        assessment.showInCalendar == null ? true : assessment.showInCalendar,
       isDemo: assessment.isDemo
     }
     task.notifications = this.notificationService.createNotifications(

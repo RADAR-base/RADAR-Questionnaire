@@ -102,25 +102,21 @@ export class SchemaService {
     }
   }
 
-  getAvroObject(schema, value) {
+  getAvroObject(schema, value): any {
     const options = { wrapUnions: true }
     return AvroSchema.parse(schema, options).clone(value, options)
   }
 
-  convertToAvro(kafkaObject, topic, baseURI) {
+  convertToAvro(kafkaObject, topic, baseURI): Promise<any> {
     if (!this.schemas[topic]) {
-      const schemaKeyAndValue: [
-        Promise<SchemaMetadata>,
-        Promise<SchemaMetadata>
-      ] = [
+      this.schemas[topic] = [
         this.getLatestKafkaSchemaVersion(topic + '-key', 'latest', baseURI),
         this.getLatestKafkaSchemaVersion(topic + '-value', 'latest', baseURI)
       ]
-      this.schemas[topic] = schemaKeyAndValue
     }
-    return Promise.all(this.schemas[topic]).then(
-      ([keySchemaMetadata, valueSchemaMetadata]) => {
-        if (keySchemaMetadata && valueSchemaMetadata) {
+    return Promise.all(this.schemas[topic])
+      .then(
+        ([keySchemaMetadata, valueSchemaMetadata]) => {
           const key = JSON.parse(keySchemaMetadata.schema)
           const value = JSON.parse(valueSchemaMetadata.schema)
           const schemaId = new KafkaRest.AvroSchema(key)
@@ -130,11 +126,12 @@ export class SchemaService {
             value: this.getAvroObject(value, kafkaObject.value)
           }
           return { schemaId, schemaInfo, payload }
-        } else {
-          Promise.reject()
         }
-      }
-    )
+      )
+      .catch(e => {
+        this.schemas[topic] = null
+        throw e
+      })
   }
 
   getKafkaTopic(name, avsc) {
@@ -169,10 +166,9 @@ export class SchemaService {
     return this.http
       .get(uri)
       .toPromise()
-      .catch(e =>
-        // TODO: add fallback for error
-        this.logger.error('Failed to get latest Kafka schema versions', e)
-      )
+      .catch(e => {
+        throw this.logger.error('Failed to get latest Kafka schema versions', e)
+      })
       .then(obj => obj as SchemaMetadata)
   }
 

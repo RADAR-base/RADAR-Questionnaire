@@ -102,40 +102,34 @@ export class SchemaService {
     }
   }
 
-  getAvroObject(schema, value) {
+  getAvroObject(schema, value): any {
     const options = { wrapUnions: true }
     return AvroSchema.parse(schema, options).clone(value, options)
   }
 
   convertToAvro(kafkaObject, topic, baseURI): Promise<any> {
     if (!this.schemas[topic]) {
-      const schemaKeyAndValue: [
-        Promise<SchemaMetadata>,
-        Promise<SchemaMetadata>
-      ] = [
+      this.schemas[topic] = [
         this.getLatestKafkaSchemaVersion(topic + '-key', 'latest', baseURI),
         this.getLatestKafkaSchemaVersion(topic + '-value', 'latest', baseURI)
       ]
-      this.schemas[topic] = schemaKeyAndValue
     }
-    return Promise.all(this.schemas[topic]).then(
-      ([keySchemaMetadata, valueSchemaMetadata]) =>
-        new Promise((resolve, reject) => {
-          if (keySchemaMetadata.schema && valueSchemaMetadata.schema) {
-            const key = JSON.parse(keySchemaMetadata.schema)
-            const value = JSON.parse(valueSchemaMetadata.schema)
-            const schemaId = new KafkaRest.AvroSchema(key)
-            const schemaInfo = new KafkaRest.AvroSchema(value)
-            const payload = {
-              key: this.getAvroObject(key, kafkaObject.key),
-              value: this.getAvroObject(value, kafkaObject.value)
-            }
-            resolve({ schemaId, schemaInfo, payload })
-          } else {
-            reject(keySchemaMetadata)
-          }
-        })
-    )
+    return Promise.all(this.schemas[topic])
+      .then(([keySchemaMetadata, valueSchemaMetadata]) => {
+        const key = JSON.parse(keySchemaMetadata.schema)
+        const value = JSON.parse(valueSchemaMetadata.schema)
+        const schemaId = new KafkaRest.AvroSchema(key)
+        const schemaInfo = new KafkaRest.AvroSchema(value)
+        const payload = {
+          key: this.getAvroObject(key, kafkaObject.key),
+          value: this.getAvroObject(value, kafkaObject.value)
+        }
+        return { schemaId, schemaInfo, payload }
+      })
+      .catch(e => {
+        this.schemas[topic] = null
+        throw e
+      })
   }
 
   getKafkaTopic(name, avsc) {
@@ -170,10 +164,9 @@ export class SchemaService {
     return this.http
       .get(uri)
       .toPromise()
-      .catch(e =>
-        // TODO: add fallback for error
-        this.logger.error('Failed to get latest Kafka schema versions', e, true)
-      )
+      .catch(e => {
+        throw this.logger.error('Failed to get latest Kafka schema versions', e)
+      })
       .then(obj => obj as SchemaMetadata)
   }
 

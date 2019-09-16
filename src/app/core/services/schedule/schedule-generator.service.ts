@@ -26,7 +26,7 @@ export class ScheduleGeneratorService {
     private notificationService: NotificationGeneratorService,
     private localization: LocalizationService,
     private questionnaire: QuestionnaireService,
-    private logger: LogService,
+    private logger: LogService
   ) {}
 
   runScheduler(
@@ -50,7 +50,9 @@ export class ScheduleGeneratorService {
               utcOffsetPrev
             )
           )
-          .catch(e => { this.logger.error('Failed to schedule assessement', e) })
+          .catch(e => {
+            this.logger.error('Failed to schedule assessement', e)
+          })
       case TaskType.CLINICAL:
         return Promise.resolve({
           schedule: this.buildTasksForSingleAssessment(
@@ -167,7 +169,9 @@ export class ScheduleGeneratorService {
       completionWindow: completionWindow,
       warning: this.localization.chooseText(assessment.warn),
       isClinical: assessment.protocol.clinicalProtocol ? true : false,
-      showInCalendar: assessment.showInCalendar
+      showInCalendar:
+        assessment.showInCalendar == null ? true : assessment.showInCalendar,
+      isDemo: assessment.isDemo
     }
     task.notifications = this.notificationService.createNotifications(
       assessment,

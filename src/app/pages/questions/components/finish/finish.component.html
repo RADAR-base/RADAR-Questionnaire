@@ -26,9 +26,13 @@
     >
       {{ 'BTN_DONE' | translate }}
     </button>
-    <ng-container *ngIf="!showDoneButton">
+    <ng-container *ngIf="!showDoneButton && isShown">
       <div class="extra-info">
-        <img class="extra-info-icon" src="assets/imgs/warning.png" alt="Warning" />
+        <img
+          class="extra-info-icon"
+          src="assets/imgs/warning.png"
+          alt="Warning"
+        />
         {{ 'WARNING_DO_NOT_CLOSE_APP' | translate }}
       </div>
       <div>

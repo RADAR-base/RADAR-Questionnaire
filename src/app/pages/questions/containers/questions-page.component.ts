@@ -89,7 +89,7 @@ export class QuestionsPageComponent implements OnInit {
     if (start) {
       this.slides.update()
       this.slideQuestion()
-    } else this.exitQuestionnaire
+    } else this.exitQuestionnaire()
   }
 
   handleFinish(completedInClinic?: boolean) {

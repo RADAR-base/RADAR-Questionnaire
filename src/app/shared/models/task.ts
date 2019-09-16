@@ -14,6 +14,7 @@ export interface Task {
   notifications?: SingleNotification[]
   timeCompleted?: number
   showInCalendar?: boolean
+  isDemo?: boolean
 }
 
 export interface TasksProgress {

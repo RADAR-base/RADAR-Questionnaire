@@ -28,7 +28,6 @@ export class KafkaService {
     private analytics: AnalyticsService,
     private logger: LogService
   ) {
-    this.token.refresh()
     this.updateURI()
   }
 

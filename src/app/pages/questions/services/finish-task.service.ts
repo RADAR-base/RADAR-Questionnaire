@@ -29,7 +29,7 @@ export class FinishTaskService {
 
   processDataAndSend(answers, questions, timestamps, task) {
     // NOTE: Do not send answers if demo questionnaire
-    if (task.name.includes('DEMO')) return Promise.resolve()
+    if (task.isDemo) return Promise.resolve()
     return this.sendAnswersToKafka(
       this.processQuestionnaireData(answers, timestamps, questions),
       task

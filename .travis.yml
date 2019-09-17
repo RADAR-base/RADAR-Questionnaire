@@ -15,9 +15,12 @@ android:
     - extra
 addons:
   apt:
+    sources:
+      - google-chrome
     packages:
+      - dpkg
+      - google-chrome-stable
       - xvfb
-  chrome: stable
 cache:
   yarn: true
   directories:

@@ -5,8 +5,10 @@ import { PlatformMock } from 'ionic-mocks'
 
 import {
   FirebaseMock,
-  LogServiceMock
+  LogServiceMock,
+  RemoteConfigServiceMock
 } from '../../../shared/testing/mock-services'
+import { RemoteConfigService } from '../config/remote-config.service'
 import { LogService } from '../misc/log.service'
 import { FirebaseAnalyticsService } from './firebase-analytics.service'
 
@@ -19,7 +21,8 @@ describe('FirebaseAnalyticsService', () => {
         FirebaseAnalyticsService,
         { provide: Firebase, useClass: FirebaseMock },
         { provide: LogService, useClass: LogServiceMock },
-        { provide: Platform, useClass: PlatformMock }
+        { provide: Platform, useClass: PlatformMock },
+        { provide: RemoteConfigService, useClass: RemoteConfigServiceMock }
       ]
     })
   )

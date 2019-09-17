@@ -44,7 +44,7 @@ export class TokenService {
       config
         .getOrDefault(
           ConfigKeys.OAUTH_REFRESH_SECONDS,
-          DefaultTokenRefreshSeconds
+          String(DefaultTokenRefreshSeconds)
         )
         .then(
           refreshTime => (this.tokenRefreshMillis = Number(refreshTime) * 1000)
@@ -79,7 +79,7 @@ export class TokenService {
     return this.storage.set(this.TOKEN_STORE.OAUTH_TOKENS, tokens)
   }
 
-  setURI(uri) {
+  setURI(uri: string): Promise<string> {
     let lastSlashIndex = uri.length
     while (lastSlashIndex > 0 && uri[lastSlashIndex - 1] == '/') {
       lastSlashIndex--

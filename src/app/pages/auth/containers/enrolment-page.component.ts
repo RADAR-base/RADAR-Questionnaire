@@ -73,14 +73,9 @@ export class EnrolmentPageComponent {
     this.clearStatus()
     this.auth
       .authenticate(authObj)
-      .catch(
-        e =>
-          new Promise((resolve, reject) => {
-            if (e.status !== 409) reject(e)
-            this.handleError(e)
-            resolve()
-          })
-      )
+      .catch(e => {
+        if (e.status !== 409) throw e
+      })
       .then(() => this.auth.initSubjectInformation())
       .then(() => {
         this.usage.sendGeneralEvent(EnrolmentEventType.SUCCESS)

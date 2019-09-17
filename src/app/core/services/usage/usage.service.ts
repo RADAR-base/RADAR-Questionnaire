@@ -3,6 +3,7 @@ import { WebIntent } from '@ionic-native/web-intent/ngx'
 
 import { UsageEventType } from '../../../shared/enums/events'
 import { SchemaType } from '../../../shared/models/kafka'
+import { Task } from '../../../shared/models/task'
 import { KafkaService } from '../kafka/kafka.service'
 import { LogService } from '../misc/log.service'
 import { AnalyticsService } from './analytics.service'
@@ -17,7 +18,11 @@ export class UsageService {
   ) {}
 
   sendEventToKafka(payload) {
-    return this.kafka.prepareKafkaObjectAndSend(SchemaType.EVENT, payload, true)
+    return this.kafka.prepareKafkaObjectAndSend(
+      SchemaType.APP_EVENT,
+      payload,
+      true
+    )
   }
 
   sendOpenEvent() {
@@ -26,13 +31,13 @@ export class UsageService {
       // noinspection JSIgnoredPromiseFromCall
       this.sendEventToKafka({
         eventType: intent.extras
-          ? UsageEventType.APP_OPEN_NOTIFICATION
-          : UsageEventType.APP_OPEN_DIRECTLY
+          ? UsageEventType.NOTIFICATION_OPEN
+          : UsageEventType.APP_OPEN
       })
     })
   }
 
-  sendQuestionnaireEvent(type, task) {
+  sendQuestionnaireEvent(type, task: Task) {
     // noinspection JSIgnoredPromiseFromCall
     this.analytics.logEvent(type, {
       questionnaire_timestamp: task.timestamp

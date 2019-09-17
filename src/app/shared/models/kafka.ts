@@ -8,7 +8,7 @@ export enum SchemaType {
   ASSESSMENT = 'assessment',
   COMPLETION_LOG = 'completion_log',
   TIMEZONE = 'timezone',
-  EVENT = 'event',
+  APP_EVENT = 'app_event',
   SCHEDULE = 'schedule'
 }
 

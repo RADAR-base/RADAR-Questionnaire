@@ -2,7 +2,6 @@ import { Component, OnDestroy } from '@angular/core'
 import { NavController, Platform } from 'ionic-angular'
 import { Subscription } from 'rxjs'
 
-import { DefaultProjectName } from '../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { UsageService } from '../../../core/services/usage/usage.service'
@@ -23,7 +22,7 @@ import { HomePageAnimations } from './home-page.animation'
   animations: HomePageAnimations
 })
 export class HomePageComponent implements OnDestroy {
-  PROJECT_NAME = DefaultProjectName
+  title: Promise<string>
   sortedTasks: Promise<Map<any, any>>
   tasks: Promise<Task[]>
   currentDate: Date
@@ -94,6 +93,7 @@ export class HomePageComponent implements OnDestroy {
       }, 1000)
     })
     this.hasClinicalTasks = this.tasksService.evalHasClinicalTasks()
+    this.title = this.tasksService.getPlatformInstanceName()
   }
 
   onResume() {

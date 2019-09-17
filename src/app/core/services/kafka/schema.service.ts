@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import * as AvroSchema from 'avsc'
 import * as KafkaRest from 'kafka-rest'
-import YAML from 'yaml'
+import * as YAML from 'yaml'
 
 import { DefaultSchemaSpecEndpoint } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
@@ -102,25 +102,21 @@ export class SchemaService {
     }
   }
 
-  getAvroObject(schema, value) {
+  getAvroObject(schema, value): any {
     const options = { wrapUnions: true }
     return AvroSchema.parse(schema, options).clone(value, options)
   }
 
-  convertToAvro(kafkaObject, topic, baseURI) {
+  convertToAvro(kafkaObject, topic, baseURI): Promise<any> {
     if (!this.schemas[topic]) {
-      const schemaKeyAndValue: [
-        Promise<SchemaMetadata>,
-        Promise<SchemaMetadata>
-      ] = [
+      this.schemas[topic] = [
         this.getLatestKafkaSchemaVersion(topic + '-key', 'latest', baseURI),
         this.getLatestKafkaSchemaVersion(topic + '-value', 'latest', baseURI)
       ]
-      this.schemas[topic] = schemaKeyAndValue
     }
-    return Promise.all(this.schemas[topic]).then(
-      ([keySchemaMetadata, valueSchemaMetadata]) => {
-        if (keySchemaMetadata && valueSchemaMetadata) {
+    return Promise.all(this.schemas[topic])
+      .then(
+        ([keySchemaMetadata, valueSchemaMetadata]) => {
           const key = JSON.parse(keySchemaMetadata.schema)
           const value = JSON.parse(valueSchemaMetadata.schema)
           const schemaId = new KafkaRest.AvroSchema(key)
@@ -130,14 +126,15 @@ export class SchemaService {
             value: this.getAvroObject(value, kafkaObject.value)
           }
           return { schemaId, schemaInfo, payload }
-        } else {
-          Promise.reject()
         }
-      }
-    )
+      )
+      .catch(e => {
+        this.schemas[topic] = null
+        throw e
+      })
   }
 
-  getKafkaTopic(name, avsc) {
+  getKafkaTopic(name, avsc): Promise<string> {
     const type = name.toLowerCase()
     const defaultTopic = `${avsc}_${name}`
     return this.remoteConfig
@@ -153,7 +150,7 @@ export class SchemaService {
         const schemaSpecs = YAML.parse(atob(res['content'])).data
         const topic = schemaSpecs.find(t => t.type.toLowerCase() == type).topic
         if (topic) return topic
-        else return Promise.reject()
+        else throw new Error('Failed to get Kafka topic')
       })
       .catch(e => defaultTopic)
   }
@@ -169,10 +166,9 @@ export class SchemaService {
     return this.http
       .get(uri)
       .toPromise()
-      .catch(e =>
-        // TODO: add fallback for error
-        this.logger.error('Failed to get latest Kafka schema versions', e)
-      )
+      .catch(e => {
+        throw this.logger.error('Failed to get latest Kafka schema versions', e)
+      })
       .then(obj => obj as SchemaMetadata)
   }
 

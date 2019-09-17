@@ -94,7 +94,6 @@
         <icon height="120" src="resources/ios/icon/icon-40@3x.png" width="120" />
         <icon height="167" src="resources/ios/icon/icon-83.5@2x.png" width="167" />
         <icon height="87" src="resources/ios/icon/icon-small@3x.png" width="87" />
-        <icon height="1024" src="resources/ios/icon/icon-1024.png" width="1024" />
     </platform>
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashScreenBackgroundColor" value="0xff6d9aa5" />

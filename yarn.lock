@@ -470,10 +470,10 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/vibration@^5.13.0":
-  version "5.13.0"
-  resolved "https://registry.yarnpkg.com/@ionic-native/vibration/-/vibration-5.13.0.tgz#0e6b0c6a1ce2a5335ccdc29a96e54497c64d17b1"
-  integrity sha512-MkoTL8CornhOFJR7poaVXWPtEjpcByZwZIA+UIQxniO8DffhVBk+LQPk1Wbr4RibvqfXJ3wlBWXEwjHOjfU3ZQ==
+"@ionic-native/vibration@^5.14.0":
+  version "5.14.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/vibration/-/vibration-5.14.0.tgz#a8668a25c3359f8b9421af27164a00c01bd4d999"
+  integrity sha512-GLrm1RXCf/JVXfEQAMIBZWC9NikyNb5xWsmIHh3X8zkYkFDjYyqMCdW+dt2+eOfBdJCYMiJ4n5k5lZq5pUF0AA==
   dependencies:
     "@types/cordova" latest
 
@@ -9660,6 +9660,13 @@ rimraf@2, rimraf@^2.2.8, rimraf@^2.5.4, rimraf@^2.6.0, rimraf@^2.6.1, rimraf@^2.
   version "2.7.1"
   resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.7.1.tgz#35797f13a7fdadc566142c29d4f07ccad483e3ec"
   integrity sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w==
+  dependencies:
+    glob "^7.1.3"
+
+rimraf@2.6.3, rimraf@~2.6.2:
+  version "2.6.3"
+  resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.6.3.tgz#b2d104fe0d8fb27cf9e0a1cda8262dd3833c6cab"
+  integrity sha512-mwqeW5XsA2qAejG46gYdENaxXjx9onRNCfn7L0duuP4hCuTIi/QO7PDK07KJfp1d+izWPrzEJDcSqBa0OZQriA==
   dependencies:
     glob "^7.1.3"
 

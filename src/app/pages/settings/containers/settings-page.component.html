@@ -55,21 +55,36 @@
       <ion-label>
         {{ 'SETTINGS_NOTIFICATIONS_SOUND' | translate }}
       </ion-label>
-      <ion-toggle item-right [(ngModel)]="notificationSettings.sound" (ionChange)="notificationChange()"></ion-toggle>
+      <ion-toggle
+        item-right
+        [(ngModel)]="notificationSettings.sound"
+        (ionChange)="notificationChange()"
+      ></ion-toggle>
     </ion-item>
     <ion-item no-lines>
       <ion-label>
         {{ 'SETTINGS_NOTIFICATIONS_VIBRATION' | translate }}
       </ion-label>
-      <ion-toggle item-right [(ngModel)]="notificationSettings.vibration" (ionChange)="notificationChange()">
+      <ion-toggle
+        item-right
+        [(ngModel)]="notificationSettings.vibration"
+        (ionChange)="notificationChange()"
+      >
       </ion-toggle>
     </ion-item>
     <ion-item no-lines>
       <ion-label>
         {{ 'SETTINGS_NOTIFICATIONS_NIGHTMOD' | translate }}
-        <ion-icon (tap)="showInfoNightMode()" name="information-circle"></ion-icon>
+        <ion-icon
+          (tap)="showInfoNightMode()"
+          name="information-circle"
+        ></ion-icon>
       </ion-label>
-      <ion-toggle item-right [(ngModel)]="notificationSettings.nightMode" (ionChange)="notificationChange()">
+      <ion-toggle
+        item-right
+        [(ngModel)]="notificationSettings.nightMode"
+        (ionChange)="notificationChange()"
+      >
       </ion-toggle>
     </ion-item>
   </ion-item-group>
@@ -80,7 +95,11 @@
     }}</ion-item-divider>
     <ion-item no-lines *ngFor="let subSetting of weeklyReport; let i = index">
       <ion-label>{{ subSetting.name | translate }}</ion-label>
-      <ion-toggle item-right [(ngModel)]="subSetting.show" (ionChange)="weeklyReportChange(i)"></ion-toggle>
+      <ion-toggle
+        item-right
+        [(ngModel)]="subSetting.show"
+        (ionChange)="weeklyReportChange(i)"
+      ></ion-toggle>
     </ion-item>
   </ion-item-group>
 
@@ -106,7 +125,11 @@
     <ion-item-divider no-lines>
       {{ 'SETTINGS_VERSION' | translate }}
       <span>
-        <ion-icon name="repeat" (tap)="reloadConfig()" *ngIf="!showLoading"></ion-icon>
+        <ion-icon
+          name="repeat"
+          (tap)="reloadConfig()"
+          *ngIf="!showLoading"
+        ></ion-icon>
       </span>
     </ion-item-divider>
     <ion-item no-lines>
@@ -130,7 +153,11 @@
     <ion-item-divider no-lines class="item-divider">
       {{ 'SETTINGS_DEBUGGING' | translate }}
     </ion-item-divider>
-    <ion-item no-lines class="item-button" (tap)="showGenerateTestNotification()">
+    <ion-item
+      no-lines
+      class="item-button"
+      (tap)="showGenerateTestNotification()"
+    >
       <ion-label>
         {{ 'SETTINGS_GENERATE_NOTIFS' | translate }}
       </ion-label>
@@ -145,9 +172,17 @@
 </ion-content>
 
 <ion-footer>
-  <ion-toolbar padding>
-    <button ion-button class="bt bt--full" round full (tap)="showConfirmReset()">
-      {{ 'BTN_RESET' | translate }}
-    </button>
+  <ion-toolbar>
+    <ion-buttons>
+      <button
+        ion-button
+        class="bt bt--full"
+        round
+        full
+        (tap)="showConfirmReset()"
+      >
+        {{ 'BTN_RESET' | translate }}
+      </button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-footer>

@@ -428,10 +428,10 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/insomnia@^5.13.0":
-  version "5.13.0"
-  resolved "https://registry.yarnpkg.com/@ionic-native/insomnia/-/insomnia-5.13.0.tgz#c0b376eb3f76d8c81385b4568779dbe7afa738da"
-  integrity sha512-GvQu+5cs4nwVgJzahJYHnPQJhOXFXrH3Riefgew1jKLN6b+mpJpfIbYiI9sGnKP6lYsM3gG96723tXL0cJu4zQ==
+"@ionic-native/insomnia@^5.14.0":
+  version "5.14.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/insomnia/-/insomnia-5.14.0.tgz#fda734739c9c79ec55fa16665e6c3c2b78d88d66"
+  integrity sha512-WIzibu0Zi7kU1RFgD2QJweF/BgLrcsTxgkgRPtjeEReYQcrLQx2b7u4Or/UWPgAgLdt9lWU0k1iV+VOK08+D5g==
   dependencies:
     "@types/cordova" latest
 
@@ -9660,6 +9660,13 @@ rimraf@2, rimraf@^2.2.8, rimraf@^2.5.4, rimraf@^2.6.0, rimraf@^2.6.1, rimraf@^2.
   version "2.7.1"
   resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.7.1.tgz#35797f13a7fdadc566142c29d4f07ccad483e3ec"
   integrity sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w==
+  dependencies:
+    glob "^7.1.3"
+
+rimraf@2.6.3, rimraf@~2.6.2:
+  version "2.6.3"
+  resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.6.3.tgz#b2d104fe0d8fb27cf9e0a1cda8262dd3833c6cab"
+  integrity sha512-mwqeW5XsA2qAejG46gYdENaxXjx9onRNCfn7L0duuP4hCuTIi/QO7PDK07KJfp1d+izWPrzEJDcSqBa0OZQriA==
   dependencies:
     glob "^7.1.3"
 

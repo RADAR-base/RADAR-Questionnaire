@@ -3,7 +3,6 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  OnInit,
   Output
 } from '@angular/core'
 
@@ -15,7 +14,7 @@ import { Task } from '../../../../shared/models/task'
   selector: 'finish',
   templateUrl: 'finish.component.html'
 })
-export class FinishComponent implements OnInit, OnChanges {
+export class FinishComponent implements OnChanges {
   @Input()
   content = ''
   @Input()
@@ -37,12 +36,11 @@ export class FinishComponent implements OnInit, OnChanges {
 
   constructor(private usage: UsageService) {}
 
-  ngOnInit() {
-    this.usage.setPage(this.constructor.name)
-  }
-
   ngOnChanges() {
-    if (this.isShown) setTimeout(() => (this.showDoneButton = true), 15000)
+    if (this.isShown) {
+      this.usage.setPage(this.constructor.name)
+      setTimeout(() => (this.showDoneButton = true), 15000)
+    }
   }
 
   handleClosePage() {

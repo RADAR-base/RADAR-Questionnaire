@@ -3,10 +3,10 @@ import { WebIntent } from '@ionic-native/web-intent/ngx'
 
 import { UsageEventType } from '../../../shared/enums/events'
 import { SchemaType } from '../../../shared/models/kafka'
+import { Task } from '../../../shared/models/task'
 import { KafkaService } from '../kafka/kafka.service'
 import { LogService } from '../misc/log.service'
 import { AnalyticsService } from './analytics.service'
-import { Task } from '../../../shared/models/task'
 
 @Injectable()
 export class UsageService {
@@ -31,7 +31,7 @@ export class UsageService {
       // noinspection JSIgnoredPromiseFromCall
       this.sendEventToKafka({
         eventType: intent.extras
-          ? UsageEventType.APP_OPEN_NOTIFICATION
+          ? UsageEventType.NOTIFICATION_OPEN
           : UsageEventType.APP_OPEN
       })
     })
@@ -78,6 +78,7 @@ export class UsageService {
     let page = component.split(/(?=[A-Z])/)
     page.pop()
     page = page.join('-').toLowerCase()
+    if (!page.includes('page')) page = page + '-page'
     // noinspection JSIgnoredPromiseFromCall
     this.analytics.setCurrentScreen(page)
   }

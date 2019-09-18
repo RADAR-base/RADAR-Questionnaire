@@ -161,7 +161,7 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   exitQuestionnaire() {
-    this.sendEvent(UsageEventType.QUESTIONNAIRE_CLOSED)
+    this.sendEvent(UsageEventType.QUESTIONNAIRE_CANCELLED)
     this.navCtrl.pop()
   }
 

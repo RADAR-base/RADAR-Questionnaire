@@ -55,6 +55,7 @@ export class ToolbarComponent implements OnChanges {
   }
 
   leftButtonHandler() {
+    if (this.isLeftButtonDisabled) return
     switch (this.leftButtonText) {
       case this.textValues.previous:
         return this.previous.emit()
@@ -66,6 +67,7 @@ export class ToolbarComponent implements OnChanges {
   }
 
   rightButtonHandler() {
+    if (this.isRightButtonDisabled) return
     switch (this.rightButtonText) {
       case this.textValues.next:
         return this.next.emit()

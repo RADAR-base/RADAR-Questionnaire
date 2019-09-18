@@ -1,18 +1,9 @@
 import { Injectable } from '@angular/core'
-import { Platform, ToastController } from 'ionic-angular'
+import { Platform } from 'ionic-angular'
 
 @Injectable()
 export class LogService {
-  constructor(private plt: Platform, private toast: ToastController) {}
-
-  presentToast(message: any) {
-    // NOTE: Toast to show error log in the app UI
-    const toast = this.toast.create({
-      message: message.substring(0, 100) + '...',
-      duration: 2000
-    })
-    toast.present()
-  }
+  constructor(private plt: Platform) {}
 
   log(...parameters: any[]) {
     if (this.plt.is('mobileweb')) {
@@ -23,12 +14,10 @@ export class LogService {
     }
   }
 
-  error(message: string, error: any, presentToast?: boolean): Error {
+  error(message: string, error: any): Error {
     const formattedError = LogService.formatObject(error)
     const formattedException = `${message}: ${formattedError}`
     console.log(formattedException, error)
-
-    if (presentToast) this.presentToast(formattedError)
 
     if (error && error instanceof Error) {
       return error

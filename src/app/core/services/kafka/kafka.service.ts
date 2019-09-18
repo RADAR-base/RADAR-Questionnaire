@@ -55,7 +55,7 @@ export class KafkaService {
         })
         this.sendDataEvent(DataEventType.PREPARED_OBJECT, cacheValue)
         return this.storeInCache(kafkaObject, cacheValue).then(() => {
-          return keepInCache ? Promise.resolve() : this.sendAllFromCache()
+          return keepInCache ? Promise.resolve([]) : this.sendAllFromCache()
         })
       }
     )
@@ -71,7 +71,7 @@ export class KafkaService {
   }
 
   sendAllFromCache() {
-    if (this.isCacheSending) return Promise.resolve()
+    if (this.isCacheSending) return Promise.resolve([])
     this.setCacheSending(true)
     return Promise.all([this.getCache(), this.getKafkaInstance()])
       .then(([cache, kafka]) => {
@@ -79,24 +79,23 @@ export class KafkaService {
           .filter(([k]) => k)
           .map(([k, v]: any) =>
             this.sendToKafka(k, v, kafka).catch(e => {
-              this.logger.error(
+              return this.logger.error(
                 'Failed to send data from cache to kafka',
-                e,
-                true
+                e
               )
-              return undefined
             })
           )
         return Promise.all(sendPromises)
       })
       .then(keys => {
-        this.logger.log(keys)
-        return this.removeFromCache(keys.filter(k => k))
+        this.removeFromCache(keys.filter(k => !(k instanceof Error))).then(() =>
+          this.setCacheSending(false)
+        )
+        return keys
       })
-      .then(() => this.setCacheSending(false))
       .catch(e => {
         this.setCacheSending(false)
-        return this.logger.error('Failed to send all data from cache', e, true)
+        return [this.logger.error('Failed to send all data from cache', e)]
       })
   }
 

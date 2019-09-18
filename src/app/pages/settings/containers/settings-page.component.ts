@@ -1,5 +1,9 @@
 import { Component } from '@angular/core'
-import { NavController } from 'ionic-angular'
+import {
+  LoadingController,
+  ModalController,
+  NavController
+} from 'ionic-angular'
 
 import {
   DefaultSettingsNotifications,
@@ -11,6 +15,7 @@ import { UsageService } from '../../../core/services/usage/usage.service'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { Settings } from '../../../shared/models/settings'
 import { SplashPageComponent } from '../../splash/containers/splash-page.component'
+import { CacheSendModalComponent } from '../components/cache-send-modal/cache-send-modal.component'
 import { SettingsService } from '../services/settings.service'
 
 @Component({
@@ -25,10 +30,12 @@ export class SettingsPageComponent {
 
   constructor(
     public navCtrl: NavController,
+    public loadCtrl: LoadingController,
     public alertService: AlertService,
     public localization: LocalizationService,
     private settingsService: SettingsService,
-    private usage: UsageService
+    private usage: UsageService,
+    public modalCtrl: ModalController
   ) {}
 
   ionViewWillEnter() {
@@ -200,6 +207,19 @@ export class SettingsPageComponent {
   }
 
   sendCachedData() {
-    return this.settingsService.sendCachedData().then(() => this.backToHome())
+    const loader = this.loadCtrl.create({
+      content: 'Please wait...',
+      duration: 15000
+    })
+    loader.present()
+    return this.settingsService.sendCachedData().then(res => {
+      loader.dismiss()
+      this.showResult(res)
+    })
+  }
+
+  showResult(res) {
+    const modal = this.modalCtrl.create(CacheSendModalComponent, { data: res })
+    modal.present()
   }
 }

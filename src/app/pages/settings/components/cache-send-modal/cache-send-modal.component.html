@@ -31,11 +31,13 @@
     </ion-segment>
 
     <div [ngSwitch]="result">
-      <div *ngSwitchCase="'errors'" class="scroll-error">
-        <ion-list>
-          <li *ngFor="let e of errors">{{ e.message }}</li>
-        </ion-list>
-      </div>
+      <ng-container *ngIf="errors.length">
+        <div *ngSwitchCase="'errors'" class="scroll-error">
+          <ion-list>
+            <li *ngFor="let e of errors">{{ e.message }}</li>
+          </ion-list>
+        </div>
+      </ng-container>
       <ng-container *ngIf="!errors.length">
         <div *ngSwitchCase="'success'" class="scroll-success">
           <button (tap)="dismiss()" class="done-btn">

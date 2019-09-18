@@ -215,6 +215,7 @@ export class SettingsPageComponent {
     return this.settingsService.sendCachedData().then(res => {
       loader.dismiss()
       this.showResult(res)
+      this.backToHome()
     })
   }
 

@@ -16,6 +16,8 @@ import { SettingsPageComponent } from '../../settings/containers/settings-page.c
 import { StartPageComponent } from '../../start/containers/start-page.component'
 import { TasksService } from '../services/tasks.service'
 
+enum Page {Settings = 'settings', Learn = 'learn', Home = 'home' }
+
 @Component({
   selector: 'page-home',
   templateUrl: 'home-page.component.html',
@@ -34,15 +36,18 @@ import { TasksService } from '../services/tasks.service'
 })
 export class HomePageComponent {
   tasks: Promise<Task[]>
+  uncompletedTasks: Promise<Task[]>
   nextTask: Task
   showCalendar = false
   showCompleted = false
   showNoTasksToday = false
-  tasksProgress: TasksProgress = { numberOfTasks: 1, completedTasks: 0 }
+  tasksProgress: TasksProgress = { numberOfTasks: 1, completedTasks: 0, completedPercentage: 0}
   startingQuestionnaire = false
   hasClinicalTasks = false
   taskIsNow = false
   checkTaskInterval
+  learnItems: any
+  selectedPage: Page
 
   constructor(
     public navCtrl: NavController,
@@ -53,10 +58,22 @@ export class HomePageComponent {
     private platform: Platform,
     private kafka: KafkaService
   ) {
+    this.selectedPage = Page.Home;
     this.platform.resume.subscribe(e => {
       this.kafka.sendAllAnswersInCache()
       this.checkForNextTask()
     })
+    this.learnItems = [
+      {
+        name: 'Privacy Policy',
+        icon: 'eye'
+      },
+      {
+        name: 'About the Study',
+        icon: 'stats'
+      }
+    ]
+
   }
 
   ionViewWillEnter() {
@@ -64,7 +81,8 @@ export class HomePageComponent {
   }
 
   ionViewDidLoad() {
-    this.tasks = this.tasksService.getTasksOfToday()
+    this.tasks = this.tasksService.getTasksOfNow();
+    this.uncompletedTasks = this.tasksService.getUncompletedTasksOfNow();
     this.tasks.then(tasks => {
       this.checkTaskInterval = setInterval(() => {
         this.checkForNextTask()
@@ -166,5 +184,10 @@ export class HomePageComponent {
         }
       ]
     })
+  }
+
+
+  getLearnItems(type: any) {
+    return this.learnItems[type];
   }
 }

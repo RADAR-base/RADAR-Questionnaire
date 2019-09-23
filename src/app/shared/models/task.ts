@@ -11,10 +11,12 @@ export interface Task {
   completionWindow: number
   warning: string
   isClinical: boolean
-  notifications?: SingleNotification[]
+  notifications?: SingleNotification[],
+  iconInfo: string
 }
 
 export interface TasksProgress {
   numberOfTasks: number
   completedTasks: number
+  completedPercentage: number
 }

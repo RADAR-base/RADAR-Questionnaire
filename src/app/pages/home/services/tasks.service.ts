@@ -21,6 +21,25 @@ export class TasksService {
     return this.storage.getAssessment(task)
   }
 
+  getTasksOfNow() {
+    const now = new Date().getTime()
+    return this.schedule.getTasks()
+      .then((tasks: Task[]) => {
+        return tasks.filter(t => t.timestamp <= now && t.timestamp + t.completionWindow > now)
+      })
+  }
+
+  getUncompletedTasksOfNow() {
+    const now = new Date().getTime()
+    return this.schedule.getTasks()
+      .then((tasks: Task[]) => {
+        return tasks.filter(t =>
+          t.timestamp <= now &&
+          t.timestamp + t.completionWindow > now &&
+          !t.completed)
+      })
+  }
+
   getTasksOfToday() {
     const now = new Date()
     return this.schedule.getTasksForDate(now)
@@ -33,7 +52,8 @@ export class TasksService {
   getTaskProgress(tasks): TasksProgress {
     const tasksProgress: TasksProgress = {
       numberOfTasks: 0,
-      completedTasks: 0
+      completedTasks: 0,
+      completedPercentage: 0,
     }
     if (tasks) {
       tasksProgress.numberOfTasks = tasks.length
@@ -41,6 +61,8 @@ export class TasksService {
         (num, t) => (t.completed ? num + 1 : num),
         0
       )
+      tasksProgress.completedPercentage = tasksProgress.numberOfTasks === 0 ? 0
+        : Math.round((tasksProgress.completedTasks/tasksProgress.numberOfTasks)*100);
       return tasksProgress
     }
   }
@@ -107,5 +129,14 @@ export class TasksService {
   updateTaskToReportedCompletion(updatedTask): Promise<any> {
     updatedTask.reportedCompletion = true
     return this.schedule.insertTask(updatedTask)
+  }
+
+
+  formatTime(date) {
+    const hour = date.getHours()
+    const min = date.getMinutes()
+    const hourStr = date.getHours() < 10 ? '0' + String(hour) : String(hour)
+    const minStr = date.getMinutes() < 10 ? '0' + String(min) : String(min)
+    return hourStr + ':' + minStr
   }
 }

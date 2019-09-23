@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core'
 
 import { DefaultScheduleYearCoverage } from '../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../shared/enums/storage'
-import { Assessment } from '../../shared/models/assessment'
+import {Assessment, IconMetaData} from '../../shared/models/assessment'
 import { TimeInterval } from '../../shared/models/protocol'
 import { Task } from '../../shared/models/task'
 import { getMilliseconds } from '../../shared/utilities/time'
@@ -262,13 +262,30 @@ export class SchedulingService {
       estimatedCompletionTime: assessment.estimatedCompletionTime,
       completionWindow: SchedulingService.computeCompletionWindow(assessment),
       warning: this.localization.chooseText(assessment.warn),
-      isClinical: false
+      isClinical: false,
+      iconInfo: SchedulingService.findIconInfo(assessment)
     }
     task.notifications = this.notificationService.createNotifications(
       assessment,
       task
     )
     return task
+  }
+
+  // looks for icon name for icon type, if not available returns default icon name
+  static findIconInfo(assessment: Assessment): string {
+    if (assessment.questionnaire.icon) {
+      return this.findIconName(assessment.questionnaire.icon);
+    }
+    return 'checkbox-outline'
+  }
+
+  // supports only icon type for now
+  static findIconName(icon: IconMetaData): string {
+    if (icon.type === 'icon' && icon.value) {
+      return icon.value;
+    }
+    return 'checkbox-outline'
   }
 
   static computeCompletionWindow(assessment: Assessment): number {

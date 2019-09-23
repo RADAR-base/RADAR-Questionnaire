@@ -44,7 +44,8 @@ export const DefaultTask: Task = {
   completionWindow: 0,
   warning: '',
   isClinical: false,
-  notifications: []
+  notifications: [],
+  iconInfo: 'checkbox-outline'
 }
 
 export const DefaultTaskTest: Task = {
@@ -58,7 +59,8 @@ export const DefaultTaskTest: Task = {
   completionWindow: 0,
   warning: '',
   isClinical: false,
-  notifications: []
+  notifications: [],
+  iconInfo: 'checkbox-outline'
 }
 
 export const DefaultLanguage: LanguageSetting = {

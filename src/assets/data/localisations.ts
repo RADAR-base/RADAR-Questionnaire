@@ -199,6 +199,7 @@ export const Localisations = {
     it: 'RADAR-CNS',
     nl: 'RADAR-CNS'
   },
+
   FINISH_THANKS: {
     da: 'Tak fordi du udfyldte spørgeskemaet.',
     de: 'Vielen Dank für das Ausfüllen des Fragebogens.',
@@ -222,6 +223,24 @@ export const Localisations = {
     es: 'Completado durante la visita clínica',
     it: 'Completato in clinica?',
     nl: 'Voltooid in de kliniek?'
+  },
+  LEARN_HEADING: {
+    en: 'Learn'
+  },
+  SURVEYS_HEADING: {
+    en: 'Surveys'
+  },
+  TODO_LIST_TITLE: {
+    en: 'TODO List'
+  },
+  TODO_TIME_ESTIMATE_NOTICE: {
+    en: 'Estimated time for each survey: 3 minutes'
+  },
+  TODO_SELECT_INFO: {
+    en: 'Select a survey to complete'
+  },
+  NO_SURVEYS_AVAILABLE: {
+    en: 'Well done! You have completed 100% of your surveys'
   },
   CALENDAR_ESM_MISSED_TITLE: {
     da: 'Blokeret',

@@ -8,7 +8,7 @@ import { throwError as observableThrowError } from 'rxjs'
 import { DefaultEndPoint } from '../../../assets/data/defaultConfig'
 import { StorageService } from '../../core/services/storage.service'
 import { StorageKeys } from '../enums/storage'
-import { ObservationKey, SchemaMetadata } from '../models/kafka'
+import { ObservationKey, SchemaMetadata } from "../models/kafka";
 
 @Injectable()
 export class Utility {
@@ -66,11 +66,10 @@ export class Utility {
 
   getObservationKey(): Promise<ObservationKey> {
     return Promise.all([
-      this.storage.get(StorageKeys.SOURCEID),
       this.storage.get(StorageKeys.PROJECTNAME),
-      this.storage.get(StorageKeys.PARTICIPANTLOGIN)
-    ]).then(([sourceId, projectName, participantName]) => ({
-      sourceId,
+      this.storage.get(StorageKeys.PARTICIPANTID)
+    ]).then(([projectName, participantName]) => ({
+      sourceId: '',
       userId: participantName.toString(),
       projectId: projectName,
     }))

@@ -1,4 +1,5 @@
 <ion-content>
+  <div *ngIf="!loading">
   <ion-slides pager direction="horizontal" style="height: 80%;">
     <ion-slide id="intro">
       <div id="logo-container">
@@ -82,5 +83,15 @@
       Already participating
     </button>
   </div>
+  </div>
 
+  <ion-slides *ngIf="loading" direction="horizontal">
+
+    <ion-slide padding id="loadingSlide">
+      <div class="position-center">
+        <ion-spinner name="dots"></ion-spinner>
+      </div>
+      <div class="status-center">{{  "STATUS_LOADING" | translate  }}</div>
+    </ion-slide>
+  </ion-slides>
 </ion-content>

@@ -2,7 +2,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner'
 import { NavController, Slides } from 'ionic-angular'
 
-import { DefaultSettingsWeeklyReport} from '../../../../assets/data/defaultConfig'
+import { DefaultSettingsWeeklyReport } from '../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../core/services/alert.service'
 import { ConfigService } from '../../../core/services/config.service'
 import { LocalizationService } from '../../../core/services/localization.service'
@@ -141,10 +141,9 @@ export class EnrolmentPageComponent {
   }
 
   goToRegistration() {
+    this.loading = true;
     this.authService.keycloakLogin(false)
       .then(() => {
-        this.showOutcomeStatus = false
-        this.transitionStatuses()
         return this.authService.retrieveUserInformation(this.language)
       })
       .then(() => this.configService.fetchConfigState(true))

@@ -20,4 +20,12 @@ export interface QuestionnaireMetadata {
   avsc: string
   type?: string
   format?: string
+  icon?: IconMetaData
+}
+
+export interface IconMetaData {
+  name: string
+  value: string
+  type: string
+  fallbackOption?: IconMetaData
 }

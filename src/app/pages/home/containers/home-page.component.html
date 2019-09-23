@@ -1,122 +1,71 @@
 <ion-header>
   <ion-toolbar>
-    <button
-      class="logo-small"
-      ion-button
-      menuToggle
-      left
-      (click)="showCredits()"
-    >
-      <img
-        class="logo-small"
-        src="assets/imgs/radar-logo.svg"
-        alt="Logo"
-      >
-    </button>
-    <button
-      ion-button
-      menuToggle
-      right
-      (click)="openSettingsPage()"
-    >
-      <ion-icon name="cog"></ion-icon>
-    </button>
-    <ion-title text-center>{{ "HOME_RADAR_CNS" | translate }}</ion-title>
+    <ion-title *ngIf="selectedPage === 'home'" text-center>{{ "SURVEYS_HEADING" | translate }}</ion-title>
+    <ion-title *ngIf="selectedPage === 'learn'"  text-center>{{ "LEARN_HEADING" | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content #content>
-  <div
-    #progressBar
-    class="size-dynamic"
-    [@moveProgress]="showCalendar"
-  >
-    <task-progress
-      [progress]="tasksProgress"
-      [forceComplete]="showCompleted"
-      [noTasksToday]="showNoTasksToday"
-      *ngIf="tasksProgress && !showCalendar"
-    >
-    </task-progress>
-  </div>
-
-  <div
-    *ngIf="hasClinicalTasks"
-    class="clinical"
-    [class.clinical-1]="taskIsNow && !showCompleted"
-    [class.clinical-2]="showCalendar"
-    [class.clinical-3]="showCompleted || showNoTasksToday"
-    [class.clinical-4]="!taskIsNow && !showCompleted && !showCalendar"
-    (click)="openClinicalTasksPage()"
-  >
-    <img
-      src="assets/imgs/clinical.png"
-      class="icon-clinical"
-    >
-  </div>
-
-  <div
-    #tickerBar
-    class="size-static"
-  >
-    <ticker-bar
-      [task]="nextTask"
-      [isNow]="taskIsNow"
-      [showAffirmation]="showCompleted"
-      [noTasksToday]="showNoTasksToday"
-    ></ticker-bar>
-  </div>
-
-  <div
-    #taskInfo
-    class="size-static"
-  >
-    <task-info
-      *ngIf="nextTask"
-      [task]="nextTask"
-      [isNow]="taskIsNow"
-      [progress]="tasksProgress"
-      [expanded]="!showCalendar"
-      (click)="displayTaskCalendar()"
-    ></task-info>
-  </div>
-
-  <div
-    *ngIf="tasks"
-    #taskCalendar
-    [@displayCalendar]="showCalendar"
-  >
-    <task-calendar
-      [show]="showCalendar"
-      (task)="startQuestionnaire($event)"
-      [tasks]="tasks"
-    >
-    </task-calendar>
-  </div>
-
-  <div
-    #footer
-    class="size-static footer"
-  >
+<ion-content #content >
+  <div *ngIf="selectedPage === 'home'">
     <div
-      *ngIf="taskIsNow && !startingQuestionnaire && !showCompleted"
-      padding
+      #taskList
+      class="size-static"
     >
-      <button
-        ion-button
-        class="bt bt--full"
-        round
-        full
-        (click)="startQuestionnaire()"
+      <task-list
+        *ngIf="uncompletedTasks"
+        (task)="startQuestionnaire($event)"
+        [tasks]="uncompletedTasks"
       >
-        {{ "BTN_START" | translate }}
-      </button>
+      </task-list>
     </div>
+
     <div
-      *ngIf="startingQuestionnaire || (!nextTask && !showCompleted)"
-      class="spinner-center"
+      #progressBar
+      class="size-dynamic"
+      [@moveProgress]="showCalendar"
     >
-      <ion-spinner name="dots"></ion-spinner>
+      <task-progress
+        [progress]="tasksProgress"
+        [forceComplete]="showCompleted"
+        [noTasksToday]="showNoTasksToday"
+        *ngIf="tasksProgress && !showCalendar"
+      >
+      </task-progress>
     </div>
   </div>
+
+  <div padding *ngIf="selectedPage === 'learn'">
+    <div> Learn page </div>
+    <div> TO come when design finalized  </div>
+
+    <ion-list>
+      <button ion-item *ngFor="let sItem of learnItems">
+        <ion-icon item-start [name]="sItem.icon"></ion-icon>
+        {{ sItem.name }}
+        <ion-icon item-end name="arrow-forward"></ion-icon>
+      </button>
+    </ion-list>
+  </div>
+
 </ion-content>
+
+<ion-footer>
+  <ion-segment padding [(ngModel)]="selectedPage" onchange="onFooterChange()">
+
+    <ion-segment-button value="home" >
+      <ion-icon name="create" ></ion-icon>
+      <ion-title text-center>{{ "SURVEYS_HEADING" | translate }}</ion-title>
+    </ion-segment-button>
+
+    <ion-segment-button value="learn">
+      <ion-icon name="book" ></ion-icon>
+      <ion-title text-center>{{ "LEARN_HEADING" | translate }}</ion-title>
+    </ion-segment-button>
+
+    <ion-segment-button (ionSelect)="openSettingsPage()">
+      <ion-icon name="cog" ></ion-icon>
+      <ion-title text-center>{{ "SETTINGS_SETTINGS" | translate }}</ion-title>
+    </ion-segment-button>
+  </ion-segment>
+</ion-footer>
+

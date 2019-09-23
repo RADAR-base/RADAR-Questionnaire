@@ -5,6 +5,7 @@ import { IonicModule } from 'ionic-angular'
 import { PipesModule } from '../../shared/pipes/pipes.module'
 import { TaskCalendarModule } from './components/task-calendar/task-calendar.module'
 import { TaskInfoModule } from './components/task-info/task-info.module'
+import { TaskListModule } from "./components/task-list/task-list.module";
 import { TaskProgressModule } from './components/task-progress/task-progress.module'
 import { TickerBarModule } from './components/ticker-bar/ticker-bar.module'
 import { HomePageComponent } from './containers/home-page.component'
@@ -17,6 +18,7 @@ import { TasksService } from './services/tasks.service'
     TaskInfoModule,
     TaskProgressModule,
     TickerBarModule,
+    TaskListModule,
     PipesModule,
     IonicModule.forRoot(HomePageComponent)
   ],

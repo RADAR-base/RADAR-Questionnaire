@@ -12,6 +12,20 @@ page-home {
     flex-grow: 1;
   }
 
+  ion-footer .toolbar-title {
+    font-size: 15px;
+  }
+
+  ion-segment-button {
+    min-height: 10rem;
+  }
+
+  .segment-md .segment-button ion-icon {
+    font-size: 4rem;
+    line-height: 4rem;
+    color: $cl-font;
+  }
+
   ion-header .toolbar-background {
     background-color: $cl-secondary;
   }
@@ -37,7 +51,9 @@ page-home {
   }
 
   .footer {
-    background-color: $cl-primary-40;
+    margin-top: 2px;
+    height: 12rem;
+    border-top: 3px solid $cl-light;
   }
 
   .notification {
@@ -90,5 +106,37 @@ page-home {
     margin-left: 9px;
     width: 32px;
     height: 32px;
+  }
+
+  ion-footer .toolbar-title {
+    font-size: 15px;
+  }
+
+  ion-segment-button {
+    min-height: 10rem;
+  }
+
+  .segment-md .segment-button ion-icon {
+    font-size: 4rem;
+    line-height: 4rem;
+    color: $cl-font;
+  }
+
+  ion-header .toolbar-background {
+    background-color: $cl-secondary;
+  }
+
+  .toolbar-title {
+    color: $cl-font;
+  }
+
+  .footer {
+    margin-top: 2px;
+    height: 12rem;
+    border-top: 3px solid $cl-light;
+  }
+
+  .item-md {
+    font-size: 2.5rem;
   }
 }

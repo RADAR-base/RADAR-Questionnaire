@@ -11,7 +11,7 @@
   </div>
 
   <div *ngIf="!noTasksToday">
-    <div id="navigation">{{ "TASK_PROGRESS_TITLE" | translate }}</div>
+  <!--<div id="navigation">{{ "TASK_PROGRESS_TITLE" | translate }}</div>-->
 
     <div
       class="pyro"
@@ -35,8 +35,8 @@
           [current]="current"
           [max]="max"
           [responsive]="true"
-          [color]="'#7fcdbb'"
-          [background]="'rgba(255,255,204,0.12)'"
+          [color]="'#48459f'"
+          [background]="'rgba(206,238,255,0.5)'"
           [animation]="animation"
           [stroke]="stroke"
         ></round-progress>
@@ -61,7 +61,7 @@
       class="counter"
       [@translateY]="complete"
     >
-      <div class="large">{{ current }}</div>
+      <div class="large">{{ currentPercentage }}%</div>
       <div class="small">
         {{ "TASK_PROGRESS_COMPLETED" | translate }}
       </div>

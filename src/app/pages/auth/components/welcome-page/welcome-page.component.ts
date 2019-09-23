@@ -1,19 +1,20 @@
 import { Component, ViewChild } from '@angular/core';
-import { AlertController, NavController, NavParams, Slides} from 'ionic-angular';
-import {LanguageSetting} from "../../../../shared/models/settings";
-import {LocKeys} from "../../../../shared/enums/localisations";
+import { AlertController, NavController, NavParams, Slides } from 'ionic-angular';
+
 import {
   DefaultSettingsSupportedLanguages,
   LanguageMap
 } from "../../../../../assets/data/defaultConfig";
-import {StorageKeys} from "../../../../shared/enums/storage";
 import {AppComponent} from "../../../../core/containers/app.component";
+import {ConfigService} from "../../../../core/services/config.service";
+import { LocalizationService } from '../../../../core/services/localization.service'
 import {StorageService} from "../../../../core/services/storage.service";
+import {LocKeys} from "../../../../shared/enums/localisations";
+import {StorageKeys} from "../../../../shared/enums/storage";
+import {LanguageSetting} from "../../../../shared/models/settings";
+import {HomePageComponent} from "../../../home/containers/home-page.component";
 import {EnrolmentPageComponent} from "../../containers/enrolment-page.component";
 import {AuthService} from "../../services/auth.service";
-import {ConfigService} from "../../../../core/services/config.service";
-import {HomePageComponent} from "../../../home/containers/home-page.component";
-import { LocalizationService } from '../../../../core/services/localization.service'
 
 /**
  * Generated class for the WelcomePage page.
@@ -35,6 +36,7 @@ export class WelcomePageComponent {
     label: LocKeys.LANGUAGE_ENGLISH.toString(),
     value: 'en'
   }
+  loading: boolean = false
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages;
 
   constructor(
@@ -114,11 +116,24 @@ export class WelcomePageComponent {
   }
 
   goToLogin() {
+    this.loading = true;
     this.authService.keycloakLogin(true)
       .then(() => this.authService.retrieveUserInformation(this.language))
       .then(() => this.configService.fetchConfigState(true))
+      .catch( () => {
+        this.loading = false;
+        this.alertCtrl.create({
+          title: "Could not retrieve configuration",
+          buttons: [{
+            text: this.localization.translateKey(LocKeys.BTN_OKAY),
+            handler: () => {}
+          }],
+          message: "Could not retrieve questionnaire configuration. Please try again later."
+        }).present();
+      })
       .then(() => this.navigateToHome())
       .catch( () => {
+        this.loading = false;
         this.alertCtrl.create({
           title: "Something went wrong",
           buttons: [{

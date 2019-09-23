@@ -3,6 +3,8 @@ import 'rxjs/add/operator/toPromise'
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http'
 import {Injectable} from '@angular/core'
 import {JwtHelperService} from '@auth0/angular-jwt'
+import {Firebase} from "@ionic-native/firebase";
+import {InAppBrowser, InAppBrowserOptions} from '@ionic-native/in-app-browser';
 
 import {
   DefaultEndPoint,
@@ -13,12 +15,10 @@ import {
   DefaultRequestJSONContentType,
   DefaultSubjectsURI
 } from '../../../../assets/data/defaultConfig'
-import {StorageService} from '../../../core/services/storage.service'
-import {StorageKeys} from '../../../shared/enums/storage'
-import {InAppBrowser, InAppBrowserOptions} from '@ionic-native/in-app-browser';
 import {SchedulingService} from "../../../core/services/scheduling.service";
+import {StorageService} from '../../../core/services/storage.service'
 import { TokenService } from '../../../core/services/token.service'
-import {Firebase} from "@ionic-native/firebase";
+import {StorageKeys} from '../../../shared/enums/storage'
 
 const uuidv4 = require('uuid/v4');
 

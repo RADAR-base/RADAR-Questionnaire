@@ -30,6 +30,7 @@ export class TaskProgressComponent implements OnChanges {
 
   max: number = 1
   current: number = 0
+  currentPercentage: number = 0;
   stroke = 22
   animation = 'easeInOutQuart'
   complete = false
@@ -38,6 +39,7 @@ export class TaskProgressComponent implements OnChanges {
   ngOnChanges() {
     this.current = this.progress.completedTasks
     this.max = this.progress.numberOfTasks
+    this.currentPercentage = this.progress.completedPercentage
     this.updateProgress()
   }
 

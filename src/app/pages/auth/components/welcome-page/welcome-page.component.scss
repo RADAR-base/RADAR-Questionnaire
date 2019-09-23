@@ -1,5 +1,4 @@
 page-welcome {
-
   color: white;
 
   #logo {
@@ -105,6 +104,7 @@ page-welcome {
     align-items: flex-start;
     padding-top: 50px;
   }
+
   .pos-above {
     margin-top: -50px;
   }
@@ -138,5 +138,19 @@ page-welcome {
     padding-bottom:10px;
     list-style-type: decimal;
     list-style-position: outside;
+  }
+
+  .position-center {
+    margin-top: 80%;
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 10px;
+    width: 30px;
+    height: 30px;
+  }
+
+  .status-center {
+    margin-top: 15px;
+    text-align: center;
   }
 }

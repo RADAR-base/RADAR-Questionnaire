@@ -47,7 +47,7 @@ export class FcmNotificationService extends NotificationService {
     this.remoteConfig.subject()
       .subscribe(cfg => {
         cfg.getOrDefault(ConfigKeys.NOTIFICATION_TTL_MINUTES, String(this.ttlMinutes))
-          .then(ttl => this.ttlMinutes = Number(ttl))
+          .then(ttl => this.ttlMinutes = Number(ttl) || 10)
       })
   }
 
@@ -79,9 +79,7 @@ export class FcmNotificationService extends NotificationService {
         this.logger.log(fcmNotifications)
         return Promise.all(
           fcmNotifications
-            .map(n => {
-              return this.sendNotification(n)
-            })
+            .map(n => this.sendNotification(n))
             .concat([this.setLastNotificationUpdate()])
         )
       })
@@ -92,7 +90,7 @@ export class FcmNotificationService extends NotificationService {
     if (!this.platform.is('cordova')) return Promise.resolve()
     FirebasePlugin.upstream(
       notification,
-      succ => this.logger.log(succ),
+      succ => this.logger.log('Success sending message upstream', succ),
       err => {
         this.logger.error('Failed to send notification', err)
         if (this.upstreamResends++ < DefaultMaxUpstreamResends)
@@ -105,11 +103,11 @@ export class FcmNotificationService extends NotificationService {
   private format(notification: SingleNotification, participantLogin: string) {
     const endTime =
       notification.task.timestamp + notification.task.completionWindow
-    const diffTime = endTime - notification.timestamp
+    const timeUntilEnd = endTime - notification.timestamp
 
     const ttl =
-      diffTime > 0
-        ? getSeconds({ milliseconds: diffTime })
+      timeUntilEnd > 0
+        ? getSeconds({ milliseconds: timeUntilEnd })
         : getSeconds({ minutes: this.ttlMinutes })
 
     return {
@@ -126,7 +124,7 @@ export class FcmNotificationService extends NotificationService {
   cancel(): Promise<void> {
     return this.config.getParticipantLogin().then(username => {
       if (!username) {
-        return Promise.resolve()
+        return;
       }
       return this.sendNotification({
         eventId: uuid(),

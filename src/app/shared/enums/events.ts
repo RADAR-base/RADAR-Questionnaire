@@ -6,7 +6,10 @@ export enum UsageEventType {
   QUESTIONNAIRE_CANCELLED = 'QUESTIONNAIRE_CANCELLED',
   QR_SCANNED = 'qr_code_scanned',
   CLICK = 'click',
-  RESUMED = 'resumed'
+  RESUMED = 'resumed',
+  RECORDING_STARTED = 'recording_started',
+  RECORDING_STOPPED = 'recording_stopped',
+  RECORDING_ERROR = 'recording_error'
 }
 
 export enum EnrolmentEventType {

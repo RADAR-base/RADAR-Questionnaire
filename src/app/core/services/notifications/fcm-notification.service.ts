@@ -124,7 +124,7 @@ export class FcmNotificationService extends NotificationService {
   cancel(): Promise<void> {
     return this.config.getParticipantLogin().then(username => {
       if (!username) {
-        return;
+        return
       }
       return this.sendNotification({
         eventId: uuid(),

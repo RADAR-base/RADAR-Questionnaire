@@ -4,9 +4,9 @@ import { Platform } from 'ionic-angular'
 import * as uuid from 'uuid/v4'
 
 import {
-  DefaultMaxUpstreamResends,
+  DefaultMaxUpstreamResends, DefaultNotificationTtlMinutes,
   DefaultNumberOfNotificationsToSchedule,
-  FCMPluginProjectSenderId
+  FCMPluginProjectSenderId,
 } from '../../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { SingleNotification } from '../../../shared/models/notification-handler'
@@ -47,7 +47,7 @@ export class FcmNotificationService extends NotificationService {
     this.remoteConfig.subject()
       .subscribe(cfg => {
         cfg.getOrDefault(ConfigKeys.NOTIFICATION_TTL_MINUTES, String(this.ttlMinutes))
-          .then(ttl => this.ttlMinutes = Number(ttl) || 10)
+          .then(ttl => this.ttlMinutes = Number(ttl) || DefaultNotificationTtlMinutes)
       })
   }
 

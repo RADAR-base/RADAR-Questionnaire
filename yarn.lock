@@ -5945,10 +5945,10 @@ ionic-plugin-keyboard@^2.2.1:
   resolved "https://registry.yarnpkg.com/ionic-plugin-keyboard/-/ionic-plugin-keyboard-2.2.1.tgz#f2a9e169bbe9b5522400347c9fd6d3467ee3fa12"
   integrity sha1-8qnhabvptVIkADR8n9bTRn7j+hI=
 
-ionic@^5.3.0:
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/ionic/-/ionic-5.3.0.tgz#60ceba6127b98649b09fad3c1c2b9534d213e19b"
-  integrity sha512-Ylv5EFzThqlLyMyRhTGu32v6FB3ubkF1RmfSr7/ZQqo4/gu+cpkC5ks9DCrMXNn6IZRDMVLxgHtTZLxWPNOD+w==
+ionic@^5.4.1:
+  version "5.4.1"
+  resolved "https://registry.yarnpkg.com/ionic/-/ionic-5.4.1.tgz#94923038e14128b95aed44be4c22badd95d4cc15"
+  integrity sha512-z4Zdb1lEZoqx6HsURVgdqGw0INtDeNrbahTZacrqm3cNmjq6X4SOP+dILIeZoURq/V0KcyVcVQnssWRFbVd8TQ==
   dependencies:
     "@ionic/cli-framework" "2.1.7"
     "@ionic/discover" "2.0.6"

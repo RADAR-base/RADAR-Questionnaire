@@ -189,6 +189,7 @@
             "cordova-plugin-globalization": {},
             "cordova-plugin-camera": {},
             "phonegap-plugin-barcodescanner": {
+                "CAMERA_USAGE_DESCRIPTION": "27.+",
                 "ANDROID_SUPPORT_V4_VERSION": "27.+"
             },
             "cordova-android-support-gradle-release": {

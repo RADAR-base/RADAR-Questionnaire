@@ -44,11 +44,7 @@ export class HomePageComponent implements OnDestroy {
     private platform: Platform,
     private usage: UsageService
   ) {
-    this.resumeListener = this.platform.resume.subscribe(e => {
-      this.checkForNewDate()
-      this.usage.sendGeneralEvent(UsageEventType.RESUMED)
-      this.onResume()
-    })
+    this.resumeListener = this.platform.resume.subscribe(() => this.onResume())
   }
 
   getIsLoadingSpinnerShown() {
@@ -77,7 +73,6 @@ export class HomePageComponent implements OnDestroy {
 
   ionViewDidLoad() {
     this.init()
-    this.usage.sendOpenEvent()
     this.usage.setPage(this.constructor.name)
   }
 
@@ -97,6 +92,7 @@ export class HomePageComponent implements OnDestroy {
   onResume() {
     this.usage.sendOpenEvent()
     this.checkForNewDate()
+    this.usage.sendGeneralEvent(UsageEventType.RESUMED)
   }
 
   checkForNewDate() {

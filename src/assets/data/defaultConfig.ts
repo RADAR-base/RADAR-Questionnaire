@@ -130,6 +130,8 @@ export const DefaultSourceTypeRegistrationBody = {
 export const DefaultEndPoint: string =
   'https://radar-cns-platform.rosalind.kcl.ac.uk'
 
+export const DefaultPlatformInstance = 'RADAR-CNS'
+
 // GITHUB SOURCES
 
 export const GIT_API_URI = 'https://api.github.com/repos'

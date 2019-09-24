@@ -2,8 +2,8 @@
     "version": "1.0.1",
     "name": "radar-questionnaire",
     "description": "An application that collects active data for research.",
-    "author": "RADAR-CNS",
-    "homepage": "http://www.radar-cns.org/",
+    "author": "RADAR-Base",
+    "homepage": "http://www.radar-base.org/",
     "private": true,
     "scripts": {
         "build": "ionic-app-scripts build",

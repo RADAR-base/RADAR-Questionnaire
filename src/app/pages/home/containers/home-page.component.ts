@@ -22,6 +22,7 @@ import { HomePageAnimations } from './home-page.animation'
   animations: HomePageAnimations
 })
 export class HomePageComponent implements OnDestroy {
+  title: Promise<string>
   sortedTasks: Promise<Map<any, any>>
   tasks: Promise<Task[]>
   currentDate: Date
@@ -92,6 +93,7 @@ export class HomePageComponent implements OnDestroy {
       }, 1000)
     })
     this.hasClinicalTasks = this.tasksService.evalHasClinicalTasks()
+    this.title = this.tasksService.getPlatformInstanceName()
   }
 
   onResume() {

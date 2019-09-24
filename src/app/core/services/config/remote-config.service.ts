@@ -74,19 +74,28 @@ class EmptyRemoteConfig implements RemoteConfig {
 
 class FirebaseRemoteConfig implements RemoteConfig {
   readonly fetchedAt = new Date()
+  cache: {[key: string]: string} = {}
 
   constructor(private logger: LogService) {}
 
   get(key: ConfigKeys): Promise<string | null> {
+    const cachedValue = this.cache[key.value]
+    if (cachedValue !== undefined) {
+      this.logger.log(`Retrieving ${key.value} from cache`)
+      return Promise.resolve(cachedValue)
+    }
     // workaround for incompatibility
     // @ionic-native/firebase + cordova-plugin-firebase-with-upstream-messaging
+    this.logger.log(`Retrieving ${key.value}`)
     return new Promise((resolve, reject) => {
-      FirebasePlugin.getValue(key.value, res => resolve(res), e => reject(e))
+      FirebasePlugin.getValue(key.value, res => {
+        this.cache[key.value] = res
+        resolve(res)
+      }, e => reject(e))
     })
   }
 
   getOrDefault(key: ConfigKeys, defaultValue: string): Promise<string> {
-    console.log(`Retrieving ${key.value}`)
     return this.get(key)
       .then((val: string) => (val.length == 0 ? defaultValue : val))
       .catch(e => {

@@ -116,6 +116,7 @@ export const DefaultNumberOfNotificationsToSchedule: number = 100 //
 export const DefaultNumberOfNotificationsToRescue: number = 12 //
 export const FCMPluginProjectSenderId: string = '430900191220'
 export const DefaultNotificationRefreshTime: number = 900000 // 15 mins in ms
+export const DefaultNotificationTtlMinutes: number = 10
 
 export const DefaultSourcePrefix = 'aRMT'
 export const DefaultSourceTypeModel: string = `${DefaultSourcePrefix}-App`

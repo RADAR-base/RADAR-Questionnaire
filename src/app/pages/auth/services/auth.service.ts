@@ -58,7 +58,8 @@ export class AuthService {
 
   metaTokenJsonAuth(authObj) {
     // NOTE: Old QR codes: containing refresh token as JSON
-    return this.updateURI().then(() => JSON.parse(authObj).refreshToken)
+    return this.updateURI()
+      .then(() => JSON.parse(authObj).refreshToken)
   }
 
   updateURI() {

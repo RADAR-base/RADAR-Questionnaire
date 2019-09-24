@@ -791,16 +791,16 @@ export const Localisations = {
   },
   CREDITS_BODY: {
     da:
-      'Lavet med &hearts; til dig af RADAR-Base organisationen. For mere information click <a href="http://radar-base.org">her</a>.',
+      'Lavet med &hearts; til dig af RADAR-Base-samfundet. For mere information click <a href="http://radar-base.org">her</a>.',
     de:
-      'Von der RADAR-Base-Organisation gemacht mit &hearts; für Sie gemacht. Für weitere Informationen klicken Sie <a href="http://radar-base.org">hier</a>',
+      'Von der RADAR-Base-Community gemacht mit &hearts; für Sie gemacht. Für weitere Informationen klicken Sie <a href="http://radar-base.org">hier</a>',
     en:
-      'Made with &hearts; for you by the RADAR-Base organisation. For more information click <a href="http://radar-base.org">here</a>.',
+      'Made with &hearts; for you by the RADAR-Base community. For more information click <a href="http://radar-base.org">here</a>.',
     es:
-      'Hecho con &hearts;  para usted por la organización RADAR-Base. Para obtener más información, haga clic  en <a href="http://radar-base.org">aquí</a>.',
-    it: `Fatto con il &hearts; per te dall'organizzazione RADAR-Base. Per maggiori informazioni clicca <a href="http://radar-base.org">qui</a>.`,
+      'Hecho con &hearts;  para usted por la comunidad RADAR-Base. Para obtener más información, haga clic  en <a href="http://radar-base.org">aquí</a>.',
+    it: `Fatto con il &hearts; per te dalla comunità RADAR-Base. Per maggiori informazioni clicca <a href="http://radar-base.org">qui</a>.`,
     nl:
-      'Met &hearts; voor u gemaakt door de RADAR-Base-organisatie. Voor meer informatie klik <a href="http://radar-base.org">here</a>'
+      'Met &hearts; voor u gemaakt door de RADAR-Base community. Voor meer informatie klik <a href="http://radar-base.org">here</a>'
   },
   TASK_CALENDAR_TITLE: {
     da: 'Dagens opgaver',

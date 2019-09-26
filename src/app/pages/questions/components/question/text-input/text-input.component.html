@@ -1,21 +1,21 @@
 <ng-container *ngIf="showDatePicker">
   <wheel-selector
     [values]="datePickerValues"
-    (onSelect)="emitDate($event)"
+    (onSelect)="emitAnswer({ date: $event })"
   ></wheel-selector>
 </ng-container>
 
 <ng-container *ngIf="showTimePicker">
   <wheel-selector
     [values]="timePickerValues"
-    (onSelect)="emitTime($event)"
+    (onSelect)="emitAnswer({ time: $event })"
   ></wheel-selector>
 </ng-container>
 
 <ng-container *ngIf="showDurationPicker">
   <wheel-selector
     [values]="durationPickerValues"
-    (onSelect)="emitDuration($event)"
+    (onSelect)="emitAnswer({ duration: $event })"
   ></wheel-selector>
 </ng-container>
 
@@ -24,7 +24,7 @@
     <ion-input
       type="text"
       placeholder="Enter text"
-      (ionChange)="emitText($event.value)"
+      (ionChange)="emitAnswer($event)"
     ></ion-input>
   </ion-item>
 </ng-container>

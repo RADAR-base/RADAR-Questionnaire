@@ -20,16 +20,14 @@ export class TextInputComponent implements OnInit {
 
   showSeconds: boolean
   dateFormat: string
-  datePickerValues: any[]
+  datePickerValues: string[]
   timeFormat: string
-  timePickerValues: any[]
-  durationPickerValues: any[]
+  timePickerValues: string[]
+  durationPickerValues: string[]
 
   value = {}
 
   constructor(private localization: LocalizationService) {}
-
-  ionViewDidLoad() {}
 
   ngOnInit() {
     this.showDatePicker = this.type.includes('date')
@@ -63,22 +61,7 @@ export class TextInputComponent implements OnInit {
     return values.map(d => (d < 10 ? '0' + d : d))
   }
 
-  emitDate(date) {
-    this.value['date'] = date
-    this.valueChange.emit(JSON.stringify(this.value))
-  }
-
-  emitTime(time) {
-    this.value['time'] = time
-    this.valueChange.emit(JSON.stringify(this.value))
-  }
-
-  emitText(text) {
-    this.valueChange.emit(text)
-  }
-
-  emitDuration(duration) {
-    this.value['duration'] = duration
-    this.valueChange.emit(JSON.stringify(this.value))
+  emitAnswer(value) {
+    this.valueChange.emit(JSON.stringify(value))
   }
 }

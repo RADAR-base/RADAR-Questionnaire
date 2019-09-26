@@ -228,7 +228,7 @@ export class QuestionsPageComponent {
   }
 
   exitQuestionnaire() {
-    this.sendEvent(UsageEventType.QUESTIONNAIRE_CLOSED)
+    this.sendEvent(UsageEventType.QUESTIONNAIRE_CANCELLED)
     this.navCtrl.pop()
   }
 

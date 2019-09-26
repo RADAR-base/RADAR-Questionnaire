@@ -4,9 +4,9 @@ import { Platform } from 'ionic-angular'
 import * as uuid from 'uuid/v4'
 
 import {
-  DefaultMaxUpstreamResends,
+  DefaultMaxUpstreamResends, DefaultNotificationTtlMinutes,
   DefaultNumberOfNotificationsToSchedule,
-  FCMPluginProjectSenderId
+  FCMPluginProjectSenderId,
 } from '../../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { SingleNotification } from '../../../shared/models/notification-handler'
@@ -18,6 +18,8 @@ import { ScheduleService } from '../schedule/schedule.service'
 import { StorageService } from '../storage/storage.service'
 import { NotificationGeneratorService } from './notification-generator.service'
 import { NotificationService } from './notification.service'
+import { RemoteConfigService } from '../config/remote-config.service'
+import { ConfigKeys } from '../../../shared/enums/config'
 
 declare var FirebasePlugin
 
@@ -27,6 +29,7 @@ export class FcmNotificationService extends NotificationService {
     LAST_NOTIFICATION_UPDATE: StorageKeys.LAST_NOTIFICATION_UPDATE
   }
   upstreamResends: number
+  ttlMinutes: number
 
   constructor(
     private notifications: NotificationGeneratorService,
@@ -35,9 +38,17 @@ export class FcmNotificationService extends NotificationService {
     private config: SubjectConfigService,
     private firebase: Firebase,
     private platform: Platform,
-    private logger: LogService
+    private logger: LogService,
+    private remoteConfig: RemoteConfigService
   ) {
     super()
+    this.ttlMinutes = 10
+
+    this.remoteConfig.subject()
+      .subscribe(cfg => {
+        cfg.getOrDefault(ConfigKeys.NOTIFICATION_TTL_MINUTES, String(this.ttlMinutes))
+          .then(ttl => this.ttlMinutes = Number(ttl) || DefaultNotificationTtlMinutes)
+      })
   }
 
   init() {
@@ -68,9 +79,7 @@ export class FcmNotificationService extends NotificationService {
         this.logger.log(fcmNotifications)
         return Promise.all(
           fcmNotifications
-            .map(n => {
-              return this.sendNotification(n)
-            })
+            .map(n => this.sendNotification(n))
             .concat([this.setLastNotificationUpdate()])
         )
       })
@@ -81,7 +90,7 @@ export class FcmNotificationService extends NotificationService {
     if (!this.platform.is('cordova')) return Promise.resolve()
     FirebasePlugin.upstream(
       notification,
-      succ => this.logger.log(succ),
+      succ => this.logger.log('Success sending message upstream', succ),
       err => {
         this.logger.error('Failed to send notification', err)
         if (this.upstreamResends++ < DefaultMaxUpstreamResends)
@@ -94,12 +103,12 @@ export class FcmNotificationService extends NotificationService {
   private format(notification: SingleNotification, participantLogin: string) {
     const endTime =
       notification.task.timestamp + notification.task.completionWindow
-    const diffTime = endTime - notification.timestamp
+    const timeUntilEnd = endTime - notification.timestamp
 
     const ttl =
-      diffTime > 0
-        ? getSeconds({ milliseconds: diffTime })
-        : getSeconds({ minutes: 10 })
+      timeUntilEnd > 0
+        ? getSeconds({ milliseconds: timeUntilEnd })
+        : getSeconds({ minutes: this.ttlMinutes })
 
     return {
       eventId: uuid(),
@@ -115,7 +124,7 @@ export class FcmNotificationService extends NotificationService {
   cancel(): Promise<void> {
     return this.config.getParticipantLogin().then(username => {
       if (!username) {
-        return Promise.resolve()
+        return
       }
       return this.sendNotification({
         eventId: uuid(),

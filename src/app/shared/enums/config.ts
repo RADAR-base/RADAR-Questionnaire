@@ -6,6 +6,8 @@ export class ConfigKeys {
   static PROTOCOL_BASE_URL = new ConfigKeys('protocol_base_url')
   static PROTOCOL_PATH = new ConfigKeys('protocol_path')
   static PROTOCOL_BRANCH = new ConfigKeys('protocol_branch')
+  static NOTIFICATION_TTL_MINUTES = new ConfigKeys('notification_ttl_minutes')
+  static PLATFORM_INSTANCE = new ConfigKeys('platform_instance')
 
   constructor(public value: string) {}
 

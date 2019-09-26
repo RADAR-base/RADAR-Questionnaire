@@ -7,10 +7,12 @@ import {
   FirebaseMock,
   LogServiceMock,
   NotificationGeneratorServiceMock,
+  RemoteConfigServiceMock,
   ScheduleServiceMock,
   StorageServiceMock,
   SubjectConfigServiceMock
 } from '../../../shared/testing/mock-services'
+import { RemoteConfigService } from '../config/remote-config.service'
 import { SubjectConfigService } from '../config/subject-config.service'
 import { LogService } from '../misc/log.service'
 import { ScheduleService } from '../schedule/schedule.service'
@@ -34,7 +36,8 @@ describe('FcmNotificationService', () => {
           provide: NotificationGeneratorService,
           useClass: NotificationGeneratorServiceMock
         },
-        { provide: ScheduleService, useClass: ScheduleServiceMock }
+        { provide: ScheduleService, useClass: ScheduleServiceMock },
+        { provide: RemoteConfigService, useClass: RemoteConfigServiceMock }
       ]
     })
   )

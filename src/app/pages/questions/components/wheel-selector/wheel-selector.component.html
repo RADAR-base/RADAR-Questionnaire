@@ -1,0 +1,11 @@
+<ion-grid class="grid">
+  <ion-row>
+    <ion-col *ngFor="let col of values; let i = index">
+      <div class="picker-opts" (scroll)="selected(i, $event)">
+        <p *ngFor="let row of col" class="list" id="{{ row }}">
+          {{ row }}
+        </p>
+      </div>
+    </ion-col>
+  </ion-row>
+</ion-grid>

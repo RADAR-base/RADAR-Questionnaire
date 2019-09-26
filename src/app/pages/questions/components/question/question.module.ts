@@ -5,6 +5,7 @@ import { IonicModule } from 'ionic-angular'
 import { Ng2FittextModule } from 'ng2-fittext'
 
 import { PipesModule } from '../../../../shared/pipes/pipes.module'
+import { WheelSelectorComponent } from '../wheel-selector/wheel-selector.component'
 import { AudioInputComponent } from './audio-input/audio-input.component'
 import { CheckboxInputComponent } from './checkbox-input/checkbox-input.component'
 import { InfoScreenComponent } from './info-screen/info-screen.component'
@@ -26,7 +27,8 @@ const COMPONENTS = [
   TimedTestComponent,
   InfoScreenComponent,
   RangeInfoInputComponent,
-  TextInputComponent
+  TextInputComponent,
+  WheelSelectorComponent
 ]
 
 @NgModule({

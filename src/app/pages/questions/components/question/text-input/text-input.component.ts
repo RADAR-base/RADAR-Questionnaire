@@ -15,36 +15,70 @@ export class TextInputComponent implements OnInit {
 
   showDatePicker: boolean
   showTimePicker: boolean
+  showDurationPicker: boolean
+  showTextInput
+
   showSeconds: boolean
   dateFormat: string
+  datePickerValues: any[]
   timeFormat: string
-  customMonthNames = []
-  datetimeValue: { [key: string]: any } = {}
+  timePickerValues: any[]
+  durationPickerValues: any[]
+
+  value = {}
 
   constructor(private localization: LocalizationService) {}
+
+  ionViewDidLoad() {}
 
   ngOnInit() {
     this.showDatePicker = this.type.includes('date')
     this.showTimePicker = this.type.includes('time')
+    this.showDurationPicker = this.type.includes('duration')
+    this.showTextInput = this.type.includes('text')
     this.showSeconds = this.type.includes('seconds')
-    this.initFormats()
+    this.initValues()
   }
 
-  initFormats() {
+  initValues() {
     const locale = this.localization.moment().localeData()
-    this.dateFormat = locale.longDateFormat('LL').replace('MMMM', 'MMM')
-    this.timeFormat = this.showSeconds
-      ? locale.longDateFormat('LTS')
-      : locale.longDateFormat('LT')
-    this.customMonthNames = locale.monthsShort()
+    const months = locale.monthsShort()
+    const days = this.addLeadingZero(Array.from(Array(32).keys()).slice(1, 32))
+    const years = Array.from(Array(21).keys()).map(d => d + 2000)
+    this.datePickerValues = [months, days, years]
+
+    const hours = this.addLeadingZero(Array.from(Array(13).keys()).slice(1, 13))
+    const minutes = this.addLeadingZero(
+      Array.from(Array(60).keys()).slice(1, 60)
+    )
+    const meridiem = ['AM', 'PM']
+    this.timePickerValues = [hours, minutes, meridiem]
+    if (this.showSeconds) this.timePickerValues.push(minutes)
+
+    const duration = this.addLeadingZero(Array.from(Array(100).keys()))
+    this.durationPickerValues = [duration, duration]
   }
 
-  onInputChange(value) {
-    if (typeof value === 'object') {
-      Object.assign(this.datetimeValue, value)
-      this.valueChange.emit(JSON.stringify(this.datetimeValue))
-    } else {
-      this.valueChange.emit(value)
-    }
+  addLeadingZero(values) {
+    return values.map(d => (d < 10 ? '0' + d : d))
+  }
+
+  emitDate(date) {
+    this.value['date'] = date
+    this.valueChange.emit(JSON.stringify(this.value))
+  }
+
+  emitTime(time) {
+    this.value['time'] = time
+    this.valueChange.emit(JSON.stringify(this.value))
+  }
+
+  emitText(text) {
+    this.valueChange.emit(text)
+  }
+
+  emitDuration(duration) {
+    this.value['duration'] = duration
+    this.valueChange.emit(JSON.stringify(this.value))
   }
 }

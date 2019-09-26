@@ -1,24 +1,29 @@
 import 'rxjs/add/operator/toPromise'
 
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http'
-import {Injectable} from '@angular/core'
-import {JwtHelperService} from '@auth0/angular-jwt'
+import { Injectable } from '@angular/core'
 import {Firebase} from "@ionic-native/firebase";
 import {InAppBrowser, InAppBrowserOptions} from '@ionic-native/in-app-browser';
+
 
 import {
   DefaultEndPoint,
   DefaultKeycloakURL,
-  DefaultMetaTokenURI,
+  DefaultManagementPortalURI,
   DefaultRefreshTokenRequestBody,
   DefaultRequestEncodedContentType,
   DefaultRequestJSONContentType,
+  DefaultSourceTypeModel,
+  DefaultSourceTypeRegistrationBody,
   DefaultSubjectsURI
 } from '../../../../assets/data/defaultConfig'
-import {SchedulingService} from "../../../core/services/scheduling.service";
-import {StorageService} from '../../../core/services/storage.service'
-import { TokenService } from '../../../core/services/token.service'
-import {StorageKeys} from '../../../shared/enums/storage'
+import { ConfigService } from '../../../core/services/config/config.service'
+import { LogService } from '../../../core/services/misc/log.service'
+import { AnalyticsService } from '../../../core/services/usage/analytics.service'
+import { TokenService } from '../../../core/services/token/token.service'
+import { MetaToken } from '../../../shared/models/token'
+import { isValidURL } from '../../../shared/utilities/form-validators'
+import {StorageKeys} from "../../../shared/enums/storage";
 
 const uuidv4 = require('uuid/v4');
 
@@ -31,13 +36,14 @@ export class AuthService {
 
   constructor(
     public http: HttpClient,
-    public storage: StorageService,
-    private schedule: SchedulingService,
-    private jwtHelper: JwtHelperService,
+    private token: TokenService,
+    private config: ConfigService,
+    private logger: LogService,
+    private analytics: AnalyticsService,
     private inAppBrowser: InAppBrowser,
     private fireBase: Firebase,
-    private token: TokenService,
   ) {
+    // UCL start
     this.updateURI().then(() => {
       this.keycloakConfig = {
         authServerUrl: this.URI_base,
@@ -46,7 +52,6 @@ export class AuthService {
         redirectUri: 'http://ucl-mighealth-app/callback/',
       };
     });
-
   }
 
   public keycloakLogin(login: boolean): Promise<any> {
@@ -79,6 +84,19 @@ export class AuthService {
         }
       });
 
+    });
+  }
+
+  getAccessToken(kc: any, authorizationResponse: any) {
+    const URI = this.getTokenUrl();
+    const body = this.getAccessTokenParams(authorizationResponse.code, kc.clientId, kc.redirectUri);
+    const headers = this.getTokenRequestHeaders();
+
+    return this.createPostRequest(URI,  body, {
+      header: headers,
+    }).then((newTokens: any) => {
+      newTokens.iat = (new Date().getTime() / 1000) - 10; // reduce 10 sec to for delay
+      this.storage.set(StorageKeys.OAUTH_TOKENS, newTokens);
     });
   }
 
@@ -164,75 +182,68 @@ export class AuthService {
     })
   }
 
-  getAccessToken(kc: any, authorizationResponse: any) {
-    const URI = this.getTokenUrl();
-    const body = this.getAccessTokenParams(authorizationResponse.code, kc.clientId, kc.redirectUri);
-    const headers = this.getTokenRequestHeaders();
-
-    return this.createPostRequest(URI,  body, {
-      header: headers,
-    }).then((newTokens: any) => {
-      newTokens.iat = (new Date().getTime() / 1000) - 10; // reduce 10 sec to for delay
-      this.storage.set(StorageKeys.OAUTH_TOKENS, newTokens);
-    });
+  authenticate(authObj) {
+    return (isValidURL(authObj)
+      ? this.metaTokenUrlAuth(authObj)
+      : this.metaTokenJsonAuth(authObj)
+    ).then(refreshToken => {
+      return this.registerToken(refreshToken)
+        .then(() => this.registerAsSource())
+        .then(() => this.registerToken(refreshToken))
+    })
   }
 
-  refresh() {
-    return this.storage.get(StorageKeys.OAUTH_TOKENS)
-      .then(tokens => {
-        const decoded = this.jwtHelper.decodeToken(tokens.access_token)
-        if (decoded.iat + tokens.expires_in < (new Date().getTime() /1000)) {
-          const URI = this.getTokenUrl();
-          const headers = this.getTokenRequestHeaders();
-          const body = this.getRefreshParams(tokens.refresh_token, this.keycloakConfig.clientId);
-          return this.createPostRequest(URI, body, {
-            headers: headers
-          })
-        } else {
-          return tokens
-        }
-      })
-      .then(newTokens => {
-        newTokens.iat = (new Date().getTime() / 1000) - 10;
-        return this.storage.set(StorageKeys.OAUTH_TOKENS, newTokens)
-      })
-      .catch((reason) => console.log(reason))
+  metaTokenUrlAuth(authObj) {
+    // NOTE: Meta QR code and new QR code
+    return this.getRefreshTokenFromUrl(authObj).then((body: any) => {
+      this.logger.log(`Retrieved refresh token from ${body.baseUrl}`, body)
+      const refreshToken = body.refreshToken
+      return this.token
+        .setURI(body.baseUrl)
+        .then(baseUrl => this.analytics.setUserProperties({ baseUrl }))
+        .catch()
+        .then(() => this.updateURI())
+        .then(() => refreshToken)
+    })
   }
 
-  updateURI() {
-    return new Promise((resolve, reject) => {
-      this.storage.get(StorageKeys.BASE_URI).then(uri => {
-        const endPoint = uri ? uri : DefaultEndPoint;
-        this.URI_base = endPoint + DefaultKeycloakURL;
-        resolve(this.URI_base);
-      });
-    });
+  metaTokenJsonAuth(authObj) {
+    // NOTE: Old QR codes: containing refresh token as JSON
+    return this.updateURI()
+      .then(() => JSON.parse(authObj).refreshToken)
   }
 
   createPostRequest(uri, body, headers) {
     return this.http.post(uri, body, headers).toPromise()
   }
-  registerToken(registrationToken) {
+
+  updateURI() {
+    // return this.token.getURI().then(uri => {
+    //   this.URI_base = uri + DefaultManagementPortalURI
+    // })
+    this.storage.get(StorageKeys.BASE_URI).then(uri => {
+      const endPoint = uri ? uri : DefaultEndPoint;
+      this.URI_base = endPoint + DefaultKeycloakURL;
+    });
+  }
+
+  registerToken(registrationToken): Promise<void> {
     const refreshBody = DefaultRefreshTokenRequestBody + registrationToken
     return this.token.register(refreshBody)
   }
 
-  getRefreshTokenFromUrl(url) {
+  getRefreshTokenFromUrl(url): Promise<MetaToken> {
     return this.http.get(url).toPromise()
-  }
-
-  getURLFromToken(base, token) {
-    return base + DefaultMetaTokenURI + token
   }
 
   getSubjectURI(subject) {
     return this.URI_base + DefaultSubjectsURI + subject
   }
 
-  getSubjectInformation() {
+  getSubjectInformation(): Promise<any> {
     return Promise.all([
       this.token.getAccessHeaders(DefaultRequestEncodedContentType),
-      this.token.getDecodedSubject()
+      this.token.getDecodedSubject(),
     ]).then(([headers, subject]) =>
       this.http.get(this.getSubjectURI(subject), { headers }).toPromise()
     )
@@ -249,6 +260,44 @@ export class AuthService {
       .set('grant_type', 'refresh_token')
       .set('refresh_token', refreshToken)
       .set('client_id', encodeURIComponent(clientId))
+  }
+
+  initSubjectInformation() {
+    return Promise.all([
+      this.token.getURI(),
+      this.getSubjectInformation()
+    ]).then(([baseUrl, subjectInformation]) => {
+      return this.config.setAll({
+        projectId: subjectInformation.project.projectName,
+        subjectId: subjectInformation.login,
+        sourceId: this.getSourceId(subjectInformation),
+        humanReadableId: subjectInformation.externalId,
+        enrolmentDate: new Date(subjectInformation.createdDate).getTime(),
+        baseUrl: baseUrl,
+      })
+    })
+  }
+
+  getSourceId(response) {
+    const source = response.sources.find(s => s.sourceTypeModel === DefaultSourceTypeModel)
+    return source !== undefined ? source.sourceId : 'Device not available'
+  }
+
+  registerAsSource() {
+    return Promise.all([
+      this.token.getAccessHeaders(DefaultRequestJSONContentType),
+      this.token.getDecodedSubject()
+    ]).then(([headers, subject]) =>
+      this.http
+        .post(
+          this.getSubjectURI(subject) + '/sources',
+          DefaultSourceTypeRegistrationBody,
+          {
+            headers
+          }
+        )
+        .toPromise()
+    )
   }
 
   getAccessTokenParams(code , clientId, redirectUrl) {

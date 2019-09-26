@@ -1,13 +1,8 @@
 import 'rxjs/add/operator/map'
 
-import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { AndroidPermissions } from '@ionic-native/android-permissions'
-import { Device } from '@ionic-native/device'
-
-import { Utility } from './util'
-
-declare var cordova: any
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx'
+import { Platform } from 'ionic-angular'
 
 @Injectable()
 export class AndroidPermissionUtility {
@@ -25,29 +20,31 @@ export class AndroidPermissionUtility {
   ]
 
   constructor(
-    private http: HttpClient,
-    private device: Device,
-    private utility: Utility,
+    private platform: Platform,
     private androidPermissions: AndroidPermissions
   ) {}
 
-  AuthorizePermissions() {
+  authorizePermissions() {
     // NOTE: Device.platform holds both platforms, ios and android, currently permissions are taken only on android
     // TODO: Incase "IOS" add respective permission
 
-    this.androidPermissions.requestPermissions(this.androidPermissionList).then(
-      success => {
-        console.log(success)
-        this.checkPermissions()
-      },
-      error => {
-        console.log(error)
-      }
-    )
+    if (this.isAndroid())
+      this.androidPermissions
+        .requestPermissions(this.androidPermissionList)
+        .then(
+          success => {
+            console.log(success)
+            this.checkPermissions()
+          },
+          error => {
+            console.log(error)
+          }
+        )
   }
 
   checkPermissions(): Promise<any> {
     return new Promise((resolve, reject) => {
+      if (!this.isAndroid()) resolve(true)
       this.permissionGrantedList = []
       this.permissionDeniedList = []
 
@@ -82,6 +79,7 @@ export class AndroidPermissionUtility {
   // NOTE: Returns a promise with an object containing "hasPermission" boolean value
   fetchPermission(permission): Promise<any> {
     return new Promise((resolve, reject) => {
+      if (!this.isAndroid()) resolve(true)
       this.androidPermissions.requestPermission(permission).then(
         res => {
           this.checkPermission(permission).then(
@@ -103,12 +101,13 @@ export class AndroidPermissionUtility {
 
   checkPermission(permission): Promise<any> {
     return new Promise((resolve, reject) => {
+      if (!this.isAndroid()) resolve(true)
       this.androidPermissions.checkPermission(permission).then(
         success => {
           if (success.hasPermission === true) {
             resolve(true)
           } else {
-            reject(false)
+            reject(new Error('No permission ' + permission + ' was given'))
           }
         },
         error => {
@@ -132,6 +131,10 @@ export class AndroidPermissionUtility {
     return this.fetchPermission(
       this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE
     )
+  }
+
+  isAndroid() {
+    return this.platform.is('android')
   }
 
   // TODO: Add required permissions as above

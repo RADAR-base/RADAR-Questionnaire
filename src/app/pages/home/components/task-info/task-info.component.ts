@@ -1,53 +1,14 @@
-import { animate, state, style, transition, trigger } from '@angular/animations'
-import { Component, Input, OnChanges } from '@angular/core'
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core'
 
-import { LocalizationService } from '../../../../core/services/localization.service'
+import { LocalizationService } from '../../../../core/services/misc/localization.service'
+import { LocKeys } from '../../../../shared/enums/localisations'
 import { Task, TasksProgress } from '../../../../shared/models/task'
+import { TaskInfoAnimations } from './task-info.animation'
 
 @Component({
   selector: 'task-info',
   templateUrl: 'task-info.component.html',
-  animations: [
-    trigger('fade', [
-      state('false', style({ opacity: '0' })),
-      state('true', style({ opacity: '1.0' })),
-      transition('* => *', animate('400ms ease'))
-    ]),
-    trigger('scaleMinutes', [
-      state(
-        'false',
-        style({ transform: 'translate3d(-25%, -15%, 0) scale(0.4)' })
-      ),
-      state('true', style({ transform: 'translate3d(0, 0, 0) scale(1)' })),
-      transition('* => *', animate('400ms ease'))
-    ]),
-    trigger('alignCenterRightExtraInfo', [
-      state('false', style({ transform: 'translate3d(15%, 0, 0)' })),
-      state('true', style({ transform: 'translate3d(0, 0, 0)' })),
-      transition('* => *', animate('400ms ease'))
-    ]),
-    trigger('alignCenterRightTime', [
-      state('false', style({ transform: 'translate3d(8%, 0, 0) scale(0.8)' })),
-      state('true', style({ transform: 'translate3d(0, 0, 0)' })),
-      transition('* => *', animate('400ms ease'))
-    ]),
-    trigger('moveInProgress', [
-      state(
-        'true',
-        style({ display: 'none', transform: 'translate3d(-150%, 0, 0)' })
-      ),
-      state(
-        'false',
-        style({ display: 'block', transform: 'translate3d(0, 0, 0)' })
-      ),
-      transition('* => *', animate('400ms ease'))
-    ]),
-    trigger('alignCenterRightMetrics', [
-      state('false', style({ transform: 'translate3d(120%, 0, 0)' })),
-      state('true', style({ transform: 'translate3d(0, 0, 0)' })),
-      transition('* => *', animate('400ms ease'))
-    ])
-  ]
+  animations: TaskInfoAnimations
 })
 export class TaskInfoComponent implements OnChanges {
   @Input()
@@ -57,7 +18,11 @@ export class TaskInfoComponent implements OnChanges {
   @Input()
   progress: TasksProgress
   @Input()
-  expanded = true
+  expanded
+  hasExtraInfo: boolean
+  extraTaskInfo: string
+  nextTaskStatus
+  statusChanges: SimpleChanges
 
   max: number = 1
   current: number = 0
@@ -66,8 +31,10 @@ export class TaskInfoComponent implements OnChanges {
 
   constructor(private localization: LocalizationService) {}
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     this.updateProgress()
+    this.updateNextTaskStatus()
+    this.statusChanges = changes
   }
 
   updateProgress() {
@@ -91,5 +58,13 @@ export class TaskInfoComponent implements OnChanges {
     const hour = date.getHours()
     const meridiem = hour >= 12 ? 'PM' : 'AM'
     return meridiem
+  }
+
+  updateNextTaskStatus() {
+    this.nextTaskStatus = this.isNow
+      ? this.localization.translateKey(LocKeys.STATUS_NOW)
+      : this.task.name !== 'ESM'
+      ? ''
+      : this.localization.translateKey(LocKeys.TASK_BAR_NEXT_TASK_SOON)
   }
 }

@@ -4,34 +4,38 @@
 
 import { Injectable } from '@angular/core'
 
-import { StorageService } from '../../../core/services/storage.service'
-import { StorageKeys } from '../../../shared/enums/storage'
+import { LogService } from '../../../core/services/misc/log.service'
+import { QuestionType } from '../../../shared/models/question'
 
 @Injectable()
 export class PrepareDataService {
-  constructor(public storage: StorageService) {}
+  constructor(
+    private logger: LogService,
+  ) {}
 
-  processQuestionnaireData(answers, timestamps): Promise<any> {
-    console.log(answers)
-    return Promise.all([
-      this.storage.get(StorageKeys.CONFIG_VERSION),
-      this.storage.get(StorageKeys.PARTICIPANTLOGIN)
-    ])
-      .then(([configVersion, participantLogin]) => {
-        const values = Object.entries(answers).map(([key, value]) => ({
-          questionId: { string: key.toString() },
-          // int: implicit [int, double, string]
-          value: { string: value.toString() },
-          startTime: timestamps[key].startTime,
-          endTime: timestamps[key].endTime
-        }))
+  processQuestionnaireData(data) {
+    this.logger.log('Answers to process', data.answers)
+    const values = Object.entries(data.answers).map(([key, value]) => ({
+      questionId: { string: key.toString() },
+      value: { string: value.toString() },
+      startTime: data.timestamps[key].startTime,
+      endTime: data.timestamps[key].endTime
+    }))
+    return {
+      answers: values,
+      configVersion: '',
+      time: this.getTimeStart(data.questions, values),
+      timeCompleted: this.getTimeCompleted(values)
+    }
+  }
 
-        return {
-          answers: values,
-          configVersion: configVersion,
-          patientId: participantLogin
-        }
-      })
-      .catch(e => Promise.reject(JSON.stringify(e)))
+  getTimeStart(questions, answers) {
+    // NOTE: Do not include info screen as start time
+    const index = questions.findIndex(q => q.field_type !== QuestionType.info)
+    return index > -1 ? answers[index].startTime : answers[0].startTime
+  }
+
+  getTimeCompleted(answers) {
+    return answers[answers.length - 1].endTime
   }
 }

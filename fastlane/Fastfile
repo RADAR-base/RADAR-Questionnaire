@@ -1,0 +1,28 @@
+platform :android do
+
+  desc "Build debug"
+  lane :build_debug do
+    ionic(
+      platform: 'android',
+      release: false
+    )
+  end
+
+  desc "Deploy android app on play store"
+  lane :deploy do |options|
+    ionic(
+      platform: 'android',
+      release: true,
+      keystore_path: options[:keystore_path],
+      keystore_password: options[:keystore_password],
+      keystore_alias: options[:keystore_alias]
+    )
+    supply(
+      apk: ENV['CORDOVA_ANDROID_RELEASE_BUILD_PATH'],
+      package_name: options[:package_name],
+      track: options[:track],
+      json_key: options[:json_key]
+    )
+  end
+
+end

@@ -72,7 +72,6 @@
           </div>
         </div>
       </div>
-
     </ion-slide>
 
     <ion-slide id="consent-form">
@@ -267,6 +266,30 @@
         </button>
       </div>
     </ion-slide>
+
+    <ion-slide id="registration-complete">
+      <div class="text text-lg">
+        {{ 'ENROL_REGISTRATION_COMPLETE' | translate }}
+      </div>
+      <div class="reg-icon">
+        <img src="assets/imgs/MobileAnalytics-neg.png" alt="Mobile" />
+      </div>
+      <div class="text text-justify">
+        {{ 'ENROL_REGISTRATION_COMPLETE_DESC' | translate }}
+      </div>
+
+      <div padding class="bottom">
+        <button
+          ion-button
+          class="bt bt--full"
+          round
+          full
+          (tap)="navigateToSplash()"
+        >
+          {{ 'BTN_FINISH' | translate }}
+        </button>
+      </div>
+    </ion-slide>
   </ion-slides>
   <ion-slides *ngIf="loading" direction="horizontal">
 
@@ -277,6 +300,4 @@
       <div class="status-center">{{  "STATUS_LOADING" | translate  }}</div>
     </ion-slide>
   </ion-slides>
-
-
 </ion-content>

@@ -1,75 +1,56 @@
 task-info {
   #task-info-container {
+    overflow: hidden;
     margin-bottom: 2px;
-    padding: 7px 15px;
+    padding: 8px 16px;
     background-color: $cl-primary-40;
     font-size: 22px;
   }
 
-  .info {
-    overflow: hidden;
-    padding-bottom: 5px;
-  }
-
   .units {
-    font-size: 15px;
+    font-size: 0.7em;
   }
 
   #questionnaire-progress {
-    position: absolute;
-    top: 6.5vh;
+    float: left;
+    margin-right: -80px;
   }
 
   #questionnaire-counter {
-    margin-top: -15vw;
+    margin-top: -54px;
+    margin-bottom: 12px;
     text-align: center;
-    font-size: 10vw;
+    font-size: 1.5em;
   }
 
   #questionnaire-metrics {
     float: left;
-    padding: auto;
+    margin: auto;
+  }
+
+  .right-info {
+    margin-top: 8px;
+    width: 100%;
   }
 
   #questionnaire-time {
     float: right;
-  }
-
-  .time-expanded {
-    margin-right: -12vw;
-  }
-
-  .time {
-    margin-right: -5vw;
-  }
-
-  .text-lg {
-    float: left;
-    margin-top: -7px;
-    font-size: 14vw;
+    margin: auto;
+    max-width: 72%;
+    white-space: nowrap;
+    line-height: 2.5em;
   }
 
   .text-md {
     float: left;
-    margin-top: -2vw;
-    font-size: 14vw;
-  }
-
-  .text-sm {
-    float: left;
-    margin-top: -7px;
-    font-size: 14vw;
-  }
-
-  .non-warn-padding {
-    width: 100%;
-    height: 15px;
+    font-size: 2.5em;
   }
 
   .extra-info {
-    margin-top: -7px;
+    float: left;
+    width: 100%;
     text-align: center;
-    font-size: 2vh;
+    font-size: 0.7em;
   }
 
   .extra-info-icon {
@@ -85,16 +66,19 @@ task-info {
   }
 
   .meridiem {
-    margin-top: 6px;
-    margin-left: -4vw;
-    writing-mode: vertical-rl;
+    margin-left: -8px;
     font-size: 2.5vh;
-    text-orientation: upright;
   }
 
-  .min-merid {
-    margin-top: -5vw;
-    margin-bottom: -14vw;
-    width: 30vw;
+  .time-container {
+    float: left;
+  }
+
+  .time-colon {
+    margin-right: -16px;
+  }
+
+  .status-collapsed {
+    max-width: 42% !important;
   }
 }

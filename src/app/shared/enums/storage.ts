@@ -1,4 +1,5 @@
 export class StorageKeys {
+  static APP_VERSION = new StorageKeys('APP_VERSION')
   static REFERENCEDATE = new StorageKeys('REFERENCEDATE')
   static ENROLMENTDATE = new StorageKeys('ENROLMENTDATE')
   static OAUTH_TOKENS = new StorageKeys('OAUTH_TOKENS')
@@ -29,8 +30,11 @@ export class StorageKeys {
   static UTC_OFFSET = new StorageKeys('UTC_OFFSET')
   static UTC_OFFSET_PREV = new StorageKeys('UTC_OFFSET_PREV')
   static LAST_NOTIFICATION_UPDATE = new StorageKeys('LAST_NOTIFICATION_UPDATE')
+  static LAST_UPLOAD_DATE = new StorageKeys('LAST_UPLOAD_DATE')
   static BASE_URI = new StorageKeys('BASE_URI')
   static CONSENT_ACCESS_NHS_RECORDS = new StorageKeys('CONSENT_ACCESS_NHS_RECORDS')
+
+  static REMOTE_CONFIG_CACHE_TIMEOUT = new StorageKeys('REMOTE_CONFIG_CACHE_TIMEOUT')
 
   constructor(public value: string) {}
 

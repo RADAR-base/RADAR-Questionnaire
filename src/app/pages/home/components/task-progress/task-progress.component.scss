@@ -162,7 +162,6 @@ task-progress {
 
   .progress-sub {
     flex: 1 0 60vw;
-    transition: transform 0.8s ease-in-out;
   }
 
   .completed {
@@ -185,13 +184,13 @@ task-progress {
   }
 
   .large {
-    font-size: 70px;
+    font-size: 24vmin; // TODO FIXME 70px; UCL
     line-height: 0;
   }
 
   .small {
-    padding-top: 48px;
-    font-size: 18px;
+    padding-top: 12vmin;
+    font-size: 4vmin;
   }
 
   .container-diary {

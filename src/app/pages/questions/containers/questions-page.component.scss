@@ -1,7 +1,7 @@
 page-questions {
   .questions-container {
     display: flex;
-    transition: transform 0.3s ease-in-out;
+    transition: transform 0.4s;
   }
 
   question {
@@ -15,8 +15,7 @@ page-questions {
     align-content: center;
     justify-content: center;
 
-    button,
-    button:hover:not(.disable-hover) {
+    button {
       @include font-body;
 
       &.disabled,

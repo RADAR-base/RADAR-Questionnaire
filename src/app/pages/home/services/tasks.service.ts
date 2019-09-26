@@ -1,29 +1,50 @@
 import { Injectable } from '@angular/core'
 
-import { KafkaService } from '../../../core/services/kafka.service'
-import {
-  SchedulingService,
-  TIME_UNIT_MILLIS
-} from '../../../core/services/scheduling.service'
-import { StorageService } from '../../../core/services/storage.service'
+import { DefaultPlatformInstance } from '../../../../assets/data/defaultConfig'
+import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
+import { RemoteConfigService } from '../../../core/services/config/remote-config.service'
+import { LocalizationService } from '../../../core/services/misc/localization.service'
+import { ScheduleService } from '../../../core/services/schedule/schedule.service'
+import { ConfigKeys } from '../../../shared/enums/config'
 import { Task, TasksProgress } from '../../../shared/models/task'
-import { getMilliseconds } from '../../../shared/utilities/time'
+import { TaskType, getTaskType } from '../../../shared/utilities/task-type'
+import { setDateTimeToMidnight } from '../../../shared/utilities/time'
 
 @Injectable()
 export class TasksService {
   constructor(
-    public storage: StorageService,
-    private schedule: SchedulingService,
-    private kafka: KafkaService
+    private schedule: ScheduleService,
+    private localization: LocalizationService,
+    private questionnaire: QuestionnaireService,
+    private remoteConfig: RemoteConfigService
   ) {}
 
-  getAssessment(task) {
-    return this.storage.getAssessment(task)
+  getQuestionnairePayload(task) {
+    const type = getTaskType(task)
+    return Promise.all([
+      this.questionnaire.getAssessment(type, task),
+      this.getTasksOfToday()
+    ]).then(([assessment, tasks]) => {
+      return {
+        title: assessment.name,
+        introduction: this.localization.chooseText(assessment.startText),
+        endText: this.localization.chooseText(assessment.endText),
+        questions: assessment.questions,
+        task: task,
+        assessment: assessment,
+        type: type,
+        isLastTask: this.isLastTask(tasks)
+      }
+    })
   }
 
+  evalHasClinicalTasks() {
+    return this.questionnaire.getHasClinicalTasks()
+  }
+// from ucl
   getTasksOfNow() {
     const now = new Date().getTime()
-    return this.schedule.getTasks()
+    return this.schedule.getTasks(TaskType.ALL)
       .then((tasks: Task[]) => {
         return tasks.filter(t => t.timestamp <= now && t.timestamp + t.completionWindow > now)
       })
@@ -31,58 +52,74 @@ export class TasksService {
 
   getUncompletedTasksOfNow() {
     const now = new Date().getTime()
-    return this.schedule.getTasks()
-      .then((tasks: Task[]) => {
-        return tasks.filter(t =>
-          t.timestamp <= now &&
-          t.timestamp + t.completionWindow > now &&
-          !t.completed)
-      })
-  }
+    return this.schedule.getIncompleteTasks()
 
+  }
+// end of from ucl
   getTasksOfToday() {
-    const now = new Date()
-    return this.schedule.getTasksForDate(now)
-  }
-
-  getTasksOfDate(timestamp) {
-    return this.schedule.getTasksForDate(timestamp)
-  }
-
-  getTaskProgress(tasks): TasksProgress {
-    const tasksProgress: TasksProgress = {
-      numberOfTasks: 0,
-      completedTasks: 0,
-      completedPercentage: 0,
-    }
-    if (tasks) {
-      tasksProgress.numberOfTasks = tasks.length
-      tasksProgress.completedTasks = tasks.reduce(
-        (num, t) => (t.completed ? num + 1 : num),
-        0
+    return this.schedule
+      .getTasksForDate(new Date(), TaskType.NON_CLINICAL)
+      .then(tasks =>
+        tasks.filter(
+          t => !this.isTaskExpired(t) || this.wasTaskCompletedToday(t)
+        )
       )
-      tasksProgress.completedPercentage = tasksProgress.numberOfTasks === 0 ? 0
-        : Math.round((tasksProgress.completedTasks/tasksProgress.numberOfTasks)*100);
-      return tasksProgress
-    }
   }
 
-  areAllTasksComplete(tasks) {
+  getSortedTasksOfToday(): Promise<Map<number, Task[]>> {
+    return this.getTasksOfToday().then(tasks => {
+      const sortedTasks = new Map()
+      tasks.forEach(t => {
+        const midnight = setDateTimeToMidnight(new Date(t.timestamp)).getTime()
+        if (sortedTasks.has(midnight)) sortedTasks.get(midnight).push(t)
+        else sortedTasks.set(midnight, [t])
+      })
+      return sortedTasks
+    })
+  }
+
+  getTaskProgress(): Promise<TasksProgress> {
+    return this.getTasksOfToday().then(tasks => ({
+      numberOfTasks: tasks.length,
+      completedTasks: tasks.filter(d => d.completed).length,
+      completedPercentage: 0
+      // TODO FIXME completedPercentage: completedTasks === 0 ? 0 : Math.round((completedTasks/numberOfTasks)*100)
+    }))
+  }
+
+  updateTaskToReportedCompletion(task) {
+    this.schedule.updateTaskToReportedCompletion(task)
+  }
+
+  isToday(date) {
     return (
-      !tasks ||
-      tasks.every(t => t.name === 'ESM' || t.isClinical || t.completed)
+      new Date(date).setHours(0, 0, 0, 0) == new Date().setHours(0, 0, 0, 0)
     )
   }
 
-  isLastTask(task, todaysTasks) {
-    return todaysTasks.then((tasks: Task[]) => {
-      return (
-        !tasks ||
-        tasks.every(
-          t => t.name === 'ESM' || t.completed || t.index === task.index
-        )
-      )
-    })
+  areAllTasksComplete(tasks) {
+    return !tasks || tasks.every(t => t.completed || !this.isTaskStartable(t))
+  }
+
+  isLastTask(tasks) {
+    return tasks.filter(t => this.isTaskStartable(t)).length <= 1
+  }
+
+  isTaskStartable(task) {
+    // NOTE: This checks if the task timestamp has passed and if task is valid
+    return task.timestamp <= new Date().getTime() && !this.isTaskExpired(task)
+  }
+
+  isTaskExpired(task) {
+    // NOTE: This checks if completion window has passed or task is complete
+    return (
+      task.timestamp + task.completionWindow < new Date().getTime() ||
+      task.completed
+    )
+  }
+
+  wasTaskCompletedToday(task) {
+    return task.completed && this.isToday(task.timeCompleted)
   }
 
   /**
@@ -93,42 +130,23 @@ export class TasksService {
    */
   getNextTask(tasks: Task[]): Task | undefined {
     if (tasks) {
-      const tenMinutesAgo =
-        new Date().getTime() - getMilliseconds({ minutes: 10 })
-      const midnight = new Date()
-      midnight.setHours(0, 0, 0, 0)
-      const offsetForward = getMilliseconds({ hours: 12 })
-      return tasks.find(task => {
-        switch (task.name) {
-          case 'ESM':
-            // NOTE: For ESM, just look from 10 mins before now
-            return (
-              task.timestamp >= tenMinutesAgo &&
-              task.timestamp < tenMinutesAgo + offsetForward &&
-              task.completed === false
-            )
-          default:
-            // NOTE: Break out of the loop as soon as the next incomplete task is found
-            return (
-              task.timestamp >= midnight.getTime() && task.completed === false
-            )
-        }
-      })
+      return tasks.find(task => !this.isTaskExpired(task))
     }
   }
 
-  sendNonReportedTaskCompletion() {
-    this.schedule.getNonReportedCompletedTasks().then(nonReportedTasks => {
-      nonReportedTasks.forEach(t => {
-        this.kafka.prepareNonReportedTasksKafkaObjectAndSend(t)
-        this.updateTaskToReportedCompletion(t)
-      })
-    })
+  getCurrentDateMidnight() {
+    return setDateTimeToMidnight(new Date())
   }
 
-  updateTaskToReportedCompletion(updatedTask): Promise<any> {
-    updatedTask.reportedCompletion = true
-    return this.schedule.insertTask(updatedTask)
+  getPlatformInstanceName() {
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        config.getOrDefault(
+          ConfigKeys.PLATFORM_INSTANCE,
+          DefaultPlatformInstance
+        )
+      )
   }
 
 

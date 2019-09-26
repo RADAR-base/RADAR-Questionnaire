@@ -1,8 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core'
-import { NavController } from 'ionic-angular'
 
-import { LocalizationService } from '../../../../core/services/localization.service'
-import { SchedulingService } from '../../../../core/services/scheduling.service'
+import { LocalizationService } from '../../../../core/services/misc/localization.service'
 import { LocKeys } from '../../../../shared/enums/localisations'
 import { ReportScheduling } from '../../../../shared/models/report'
 import { Task } from '../../../../shared/models/task'
@@ -24,11 +22,7 @@ export class TickerBarComponent implements OnChanges {
   tickerText: string
   report: ReportScheduling
 
-  constructor(
-    private schedule: SchedulingService,
-    private navCtrl: NavController,
-    private localization: LocalizationService
-  ) {}
+  constructor(private localization: LocalizationService) {}
 
   ngOnChanges() {
     this.updateTickerItem()

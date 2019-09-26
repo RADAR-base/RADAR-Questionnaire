@@ -1,5 +1,13 @@
-<div id="ticker-bar-container">
-  <div class="ticker-item">
-    <span [innerHTML]="tickerText"></span>
-  </div>
+<div
+  id="ticker-bar-container"
+  #ticker
+>
+  <span
+    class="ticker-item"
+    [fittext]="true"
+    [maxFontSize]="18"
+    [container]="ticker"
+    [modelToWatch]="tickerText"
+    [innerHTML]="tickerText"
+  ></span>
 </div>

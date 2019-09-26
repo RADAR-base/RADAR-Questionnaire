@@ -11,7 +11,8 @@ export interface Task {
   completionWindow: number
   warning: string
   isClinical: boolean
-  notifications?: SingleNotification[],
+  notifications?: SingleNotification[]
+  timeCompleted?: number
   iconInfo: string
 }
 

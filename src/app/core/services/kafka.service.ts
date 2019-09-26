@@ -19,12 +19,13 @@ import {
   ApplicationTimeZoneValueExport,
   CompletionLogValueExport
 } from '../../shared/models/answer'
-import { SchemaMetadata } from '../../shared/models/kafka'
+import {KeyExport, SchemaMetadata} from '../../shared/models/kafka'
 import { QuestionType } from '../../shared/models/question'
 import { Task } from '../../shared/models/task'
 import { getSeconds } from '../../shared/utilities/time'
 import { Utility } from '../../shared/utilities/util'
 import { StorageService } from './storage.service'
+import {SchemaService} from "./kafka/schema.service";
 
 @Injectable()
 export class KafkaService {
@@ -35,7 +36,8 @@ export class KafkaService {
   constructor(
     private util: Utility,
     private storage: StorageService,
-    private authService: AuthService
+    private authService: AuthService,
+    private schemaService: SchemaService
   ) {
     this.updateURI()
   }
@@ -112,12 +114,13 @@ export class KafkaService {
   }
 
   prepareKafkaObjectAndSend(task, value, type) {
-    return this.util.getObservationKey()
-      .then(observationKey => {
+     const key = this.schemaService.getKafkaObjectKey;
+    // return this.schemaService.getKafkaObjectKey
+    //   .then(observationKey => {
         // NOTE: Payload for kafka 2 : key Object which contains device information
-        const kafkaObject = {key: observationKey as AnswerKeyExport, value}
+        const kafkaObject = {key: key as AnswerKeyExport, value}
         return this.getSpecs(task, kafkaObject, type)
-      })
+      // })
       .then(specs => this.createPayloadAndSend(specs))
   }
 

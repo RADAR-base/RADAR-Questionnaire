@@ -1,117 +1,97 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>{{ "SETTINGS_SETTINGS" | translate }}</ion-title>
+    <ion-title>{{ 'SETTINGS_SETTINGS' | translate }}</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
-
   <ion-item-group>
-    <ion-item-divider no-lines>{{ "SETTINGS_USER_INFO" | translate }}</ion-item-divider>
+    <ion-item-divider no-lines>{{
+      'SETTINGS_USER_INFO' | translate
+    }}</ion-item-divider>
     <ion-item no-lines>
-      {{ "SETTINGS_PARTICIPANTID" | translate }}
-      <span
-        item-right
-        class="info-value"
-      >
-        {{ participantId }}
+      {{ 'SETTINGS_PARTICIPANTID' | translate }}
+      <span item-right class="info-value">
+        {{ settings.participantID }}
       </span>
     </ion-item>
     <ion-item no-lines>
-      {{ "SETTINGS_PROJECTNAME" | translate }}
-      <span
-        item-right
-        class="info-value"
-      >
-        {{ projectName }}
+      {{ 'SETTINGS_PROJECTNAME' | translate }}
+      <span item-right class="info-value">
+        {{ settings.projectName }}
       </span>
     </ion-item>
     <ion-item no-lines>
-      {{ "SETTINGS_ENROL_DATE" | translate }}
-      <span
-        item-right
-        class="info-value"
-      >
-        {{ enrolmentDate | amCalendar }}
+      {{ 'SETTINGS_ENROL_DATE' | translate }}
+      <span item-right class="info-value">
+        {{ settings.enrolmentDate | amCalendar }}
       </span>
     </ion-item>
   </ion-item-group>
 
   <ion-item-group>
-    <ion-item-divider no-lines>{{ "SETTINGS_LANGUAGE" | translate }}</ion-item-divider>
-    <ion-item
-      no-lines
-      *ngIf="!showLoading"
-    >
-      <span class="info-value">{{ language.label | translate }}</span>
-      <span
-        item-right
-        (click)="showSelectLanguage()"
-      >
-        <ion-icon
-          class="space-right"
-          name="arrow-dropdown"
-        ></ion-icon>
-        {{ "BTN_SELECT" | translate }}
+    <ion-item-divider no-lines>{{
+      'SETTINGS_LANGUAGE' | translate
+    }}</ion-item-divider>
+    <ion-item no-lines *ngIf="!showLoading">
+      <span class="info-value">
+        {{ settings.language?.label | translate }}
+      </span>
+      <span item-right (tap)="showSelectLanguage()">
+        <ion-icon class="space-right" name="arrow-dropdown"></ion-icon>
+        {{ 'BTN_SELECT' | translate }}
       </span>
     </ion-item>
-    <ion-item
-      no-lines
-      *ngIf="showLoading"
-    >
+    <ion-item no-lines *ngIf="showLoading">
       <ion-spinner name="dots"></ion-spinner>
     </ion-item>
   </ion-item-group>
 
   <ion-item-group>
-    <ion-item-divider
-      no-lines
-      class="item-divider"
-    >
-      {{ "SETTINGS_NOTIFICATIONS" | translate }}
+    <ion-item-divider no-lines class="item-divider">
+      {{ 'SETTINGS_NOTIFICATIONS' | translate }}
     </ion-item-divider>
     <ion-item no-lines>
       <ion-label>
-        {{ "SETTINGS_NOTIFICATIONS_SOUND" | translate }}
+        {{ 'SETTINGS_NOTIFICATIONS_SOUND' | translate }}
       </ion-label>
       <ion-toggle
         item-right
-        [(ngModel)]="notifications.sound"
+        [(ngModel)]="notificationSettings.sound"
         (ionChange)="notificationChange()"
       ></ion-toggle>
     </ion-item>
     <ion-item no-lines>
       <ion-label>
-        {{ "SETTINGS_NOTIFICATIONS_VIBRATION" | translate }}
+        {{ 'SETTINGS_NOTIFICATIONS_VIBRATION' | translate }}
       </ion-label>
       <ion-toggle
         item-right
-        [(ngModel)]="notifications.vibration"
+        [(ngModel)]="notificationSettings.vibration"
         (ionChange)="notificationChange()"
       ></ion-toggle>
     </ion-item>
     <ion-item no-lines>
       <ion-label>
-        {{ "SETTINGS_NOTIFICATIONS_NIGHTMOD" | translate }}
+        {{ 'SETTINGS_NOTIFICATIONS_NIGHTMOD' | translate }}
         <ion-icon
-          (click)="showInfoNightMode()"
+          (tap)="showInfoNightMode()"
           name="information-circle"
         ></ion-icon>
       </ion-label>
       <ion-toggle
         item-right
-        [(ngModel)]="notifications.nightMode"
+        [(ngModel)]="notificationSettings.nightMode"
         (ionChange)="notificationChange()"
       ></ion-toggle>
     </ion-item>
   </ion-item-group>
 
   <ion-item-group>
-    <ion-item-divider no-lines>{{ "SETTINGS_REPORT" | translate }}</ion-item-divider>
-    <ion-item
-      no-lines
-      *ngFor="let subSetting of weeklyReport; let i = index"
-    >
+    <ion-item-divider no-lines>{{
+      'SETTINGS_REPORT' | translate
+    }}</ion-item-divider>
+    <ion-item no-lines *ngFor="let subSetting of weeklyReport; let i = index">
       <ion-label>{{ subSetting.name | translate }}</ion-label>
       <ion-toggle
         item-right
@@ -122,67 +102,45 @@
   </ion-item-group>
 
   <ion-item-group>
-    <ion-item-divider no-lines>{{ "SETTINGS_CACHE" | translate }}</ion-item-divider>
+    <ion-item-divider no-lines>{{
+      'SETTINGS_CACHE' | translate
+    }}</ion-item-divider>
     <ion-item no-lines>
-      {{ "SETTINGS_CACHE_SIZE" | translate }}
-      <span
-        item-right
-        class="info-value"
-      >
-        {{ cacheSize }}
+      {{ 'SETTINGS_CACHE_SIZE' | translate }}
+      <span item-right class="info-value">
+        {{ settings.cacheSize }}
+      </span>
+    </ion-item>
+    <ion-item no-lines>
+      {{ 'SETTINGS_LAST_UPLOAD_TO_SERVER' | translate }}
+      <span item-right class="info-value">
+        {{ settings.lastUploadDate | amCalendar }}
       </span>
     </ion-item>
   </ion-item-group>
 
   <ion-item-group>
     <ion-item-divider no-lines>
-      {{ "SETTINGS_VERSION" | translate }}
+      {{ 'SETTINGS_VERSION' | translate }}
       <span>
         <ion-icon
           name="repeat"
-          (click)="reloadConfig()"
+          (tap)="reloadConfig()"
           *ngIf="!showLoading"
         ></ion-icon>
       </span>
     </ion-item-divider>
     <ion-item no-lines>
       App
-      <span
-        item-right
-        class="info-value"
-      >
-        <div>V{{ appVersionStr }}</div>
+      <span item-right class="info-value">
+        <div>V{{ settings.appVersion }}</div>
       </span>
     </ion-item>
     <ion-item no-lines>
-      {{ "SETTINGS_CONFIGURATION" | translate }}
-      <span
-        item-right
-        class="info-value"
-      >
-        <div *ngIf="!showLoading">V{{ configVersion }}</div>
-        <div
-          *ngIf="showLoading"
-          class="spinner-center"
-        >
-          <ion-spinner name="dots"></ion-spinner>
-        </div>
-      </span>
-    </ion-item>
-    <ion-item
-      no-lines
-      (click)="consoleLogSchedule()"
-    >
-      {{ "SETTINGS_SCHEDULE" | translate }}
-      <span
-        item-right
-        class="info-value"
-      >
-        <div *ngIf="!showLoading">V{{ scheduleVersion }}</div>
-        <div
-          *ngIf="showLoading"
-          class="spinner-center"
-        >
+      {{ 'SETTINGS_SCHEDULE' | translate }}
+      <span item-right class="info-value">
+        <div *ngIf="!showLoading">V{{ settings.scheduleVersion }}</div>
+        <div *ngIf="showLoading" class="spinner-center">
           <ion-spinner name="dots"></ion-spinner>
         </div>
       </span>
@@ -190,30 +148,22 @@
   </ion-item-group>
 
   <ion-item-group>
-    <ion-item-divider
-      no-lines
-      class="item-divider"
-    >
-      {{ "SETTINGS_DEBUGGING" | translate }}
+    <ion-item-divider no-lines class="item-divider">
+      {{ 'SETTINGS_DEBUGGING' | translate }}
     </ion-item-divider>
     <ion-item
       no-lines
       class="item-button"
-      (click)="generateTestNotification()"
+      (tap)="showGenerateTestNotification()"
     >
       <ion-label>
-        {{ "SETTINGS_GENERATE_NOTIFS" | translate }}
+        {{ 'SETTINGS_GENERATE_NOTIFS' | translate }}
       </ion-label>
     </ion-item>
-    <ion-item
-      no-lines
-      class="item-button"
-      (click)="consoleLogNotifications()"
-    >
-      <ion-label>{{ "SETTINGS_LOG_NOTIFS" | translate }}</ion-label>
+    <ion-item no-lines class="item-button">
+      <ion-label>{{ 'SETTINGS_LOG_NOTIFS' | translate }}</ion-label>
     </ion-item>
   </ion-item-group>
-
 </ion-content>
 
 <ion-footer>
@@ -223,9 +173,9 @@
       class="bt bt--full"
       round
       full
-      (click)="showConfirmReset()"
+      (tap)="showConfirmReset()"
     >
-      {{ "BTN_RESET" | translate }}
+      {{ 'BTN_RESET' | translate }}
     </button>
   </ion-toolbar>
 </ion-footer>

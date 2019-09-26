@@ -11,11 +11,12 @@ export interface Assessment {
   endText?: MultiLanguageText
   warn?: MultiLanguageText
   showIntroduction?: boolean
+  isDemo?: boolean
   questions: Question[]
 }
 
 export interface QuestionnaireMetadata {
-  repository: string
+  repository?: string
   name: string
   avsc: string
   type?: string

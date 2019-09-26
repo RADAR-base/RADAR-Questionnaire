@@ -17,12 +17,12 @@ export const Localisations = {
     nl: 'Welkom'
   },
   ENROL_WELCOME_2: {
-    da: 'til RADAR-CNS',
-    de: 'zu RADAR-CNS',
+    da: 'til RADAR-Base',
+    de: 'zu RADAR-Base',
     en: 'to Health on the Move',
-    es: 'a RADAR-CNS',
-    it: 'in RADAR-CNS',
-    nl: 'bij RADAR-CNS'
+    es: 'a RADAR-Base',
+    it: 'in RADAR-Base',
+    nl: 'bij RADAR-Base'
   },
   ENROLE_STUDY_DESCRIPTION: {
     en: 'A Research Study by University College London about the Health of Migrants to the UK'
@@ -191,15 +191,22 @@ export const Localisations = {
     nl:
       'We zullen u wekelijks samenvattingen sturen over uw verzamelde gegevens. U kunt zelf de onderwerpen selecteren waarover uw informatie wilt ontvangen.'
   },
-  HOME_RADAR_CNS: {
-    da: 'RADAR-CNS',
-    de: 'RADAR-CNS',
-    en: 'RADAR-CNS',
-    es: 'RADAR-CNS',
-    it: 'RADAR-CNS',
-    nl: 'RADAR-CNS'
+  ENROL_REGISTRATION_COMPLETE: {
+    da: 'Registrering Afsluttet',
+    de: 'Registrierung Abgeschlossen',
+    en: 'Registration Complete',
+    es: 'Registro Completo',
+    it: 'Registrazione Completa',
+    nl: 'Registratie Compleet'
   },
-
+  ENROL_REGISTRATION_COMPLETE_DESC: {
+    da: `Du er nu med tilmelding til undersøgelsen. Klik på 'Afslut' for at begynde at generere din spørgeskemaplan og dine meddelelser.`,
+    de: `Sie haben sich jetzt erfolgreich für die Studie angemeldet. Klicken Sie auf "Fertig", um den Zeitplan und die Benachrichtigungen für Ihren Fragebogen zu erstellen.`,
+    en: `You have now successfully enrolled in the study. Click 'Finish' to start generating your questionnaire schedule and notifications.`,
+    es: `Ahora se ha inscrito con éxito en el estudio. Haga clic en 'Finalizar' para comenzar a generar su calendario de cuestionarios y notificaciones.`,
+    it: `Ora ti sei iscritto con successo allo studio. Fai clic su "Fine" per iniziare a generare la pianificazione del questionario e le notifiche.`,
+    nl: `U bent nu succesvol ingeschreven voor het onderzoek. Klik op 'Voltooid' om uw vragenlijstschema en meldingen te genereren.`
+  },
   FINISH_THANKS: {
     da: 'Tak fordi du udfyldte spørgeskemaet.',
     de: 'Vielen Dank für das Ausfüllen des Fragebogens.',
@@ -403,20 +410,31 @@ export const Localisations = {
     nl: 'Schema'
   },
   SETTINGS_RESET_ALERT: {
-    da: 'Nulstil RADAR-CNS App',
-    de: 'RADAR-CNS App zurücksetzen',
-    en: 'Reset RADAR-CNS App',
-    es: 'Reiniciar, la aplicación RADAR-CNS',
-    it: 'Reset RADAR-CNS app',
-    nl: 'Reset RADAR-CNS app'
+    da: 'Nulstil App',
+    de: 'App zurücksetzen',
+    en: 'Reset App',
+    es: 'Reiniciar, la aplicación',
+    it: 'Reset app',
+    nl: 'Reset app'
   },
   SETTINGS_RESET_ALERT_DESC: {
-    da: 'Nulstil RADAR-CNS App',
-    de: 'RADAR-CNS App zurücksetzen',
-    en: 'Reset RADAR-CNS App',
-    es: 'Restablecer la aplicación RADAR-CNS',
-    it: 'Reset RADAR-CNS app',
-    nl: 'Reset RADAR-CNS app'
+    da: 'Du er ved at nulstille appen.',
+    de: 'Sie sind dabei, die App zurückzusetzen.',
+    en: 'You are about to reset the app.',
+    es: 'Estás a punto de reiniciar la aplicación.',
+    it: `Stai per ripristinare l'app.`,
+    nl: 'U staat op het punt de app opnieuw in te stellen.'
+  },
+  SETTINGS_RESET_ALERT_OPTION_DESC: {
+    da: `Scegli di ripristinare solo la configurazione e i dati dell'app oppure eseguire un ripristino completo e ripetere la registrazione.`,
+    de:
+      'Wählen Sie diese Option, um nur die App-Konfiguration und -Daten zurückzusetzen, oder führen Sie einen vollständigen Reset und eine erneute Registrierung durch.',
+    en:
+      'Choose to reset app configuration and data only or do a full reset and re-enrol.',
+    es:
+      'Elija restablecer la configuración de la aplicación y solo los datos o realice un reinicio completo y vuelva a inscribirse.',
+    it: `Scegli di ripristinare solo la configurazione e i dati dell'app oppure eseguire un ripristino completo e ripetere la registrazione.`,
+    nl: `Kies ervoor om de app-configuratie en -gegevens alleen opnieuw in te stellen of een volledige reset uit te voeren en opnieuw in te schrijven.`
   },
   SETTINGS_CACHE: {
     da: 'Cache',
@@ -433,6 +451,14 @@ export const Localisations = {
     es: 'Tamaño',
     it: 'Dimensione',
     nl: 'Grootte'
+  },
+  SETTINGS_LAST_UPLOAD_TO_SERVER: {
+    da: 'Sidste upload til server',
+    de: 'Letzter Upload zum Server',
+    en: 'Last Upload to Server',
+    es: 'Última carga al servidor',
+    it: 'Ultimo caricamento sul server',
+    nl: 'Laatste upload naar server'
   },
   SETTINGS_DEBUGGING: {
     da: 'Debugging',
@@ -542,7 +568,7 @@ export const Localisations = {
     da: 'Afslut',
     de: 'Fertig',
     en: 'Finish',
-    es: 'Finalizado',
+    es: 'Finalizar',
     it: 'Fine',
     nl: 'Voltooid'
   },
@@ -569,6 +595,14 @@ export const Localisations = {
     es: 'Inicio',
     it: 'Start',
     nl: 'Start'
+  },
+  BTN_STOP: {
+    da: 'Stoppe',
+    de: 'Stoppen',
+    en: 'Stop',
+    es: 'Detener',
+    it: 'Fermare',
+    nl: 'Stoppen'
   },
   BTN_RESET: {
     da: 'Nulstil',
@@ -654,7 +688,7 @@ export const Localisations = {
     da: 'Luk',
     de: 'Beenden',
     en: 'Close',
-    es: 'Cierre',
+    es: 'Cerrar',
     it: 'Chiudi',
     nl: 'Sluiten'
   },
@@ -666,13 +700,37 @@ export const Localisations = {
     it: 'Seleziona',
     nl: 'Selecteren'
   },
+  BTN_YES: {
+    da: 'Ja',
+    de: 'Ja',
+    en: 'Yes',
+    es: 'Sí',
+    it: 'sì',
+    nl: 'Ja'
+  },
+  BTN_NO: {
+    da: 'Ingen',
+    de: 'Nein',
+    en: 'No',
+    es: 'No',
+    it: 'No',
+    nl: 'Nee'
+  },
+  BTN_TRY_AGAIN: {
+    da: 'Prøv igen',
+    de: 'Versuchen Sie es nochmal',
+    en: 'Try again',
+    es: 'Inténtalo de nuevo',
+    it: 'Riprova',
+    nl: 'Probeer het opnieuw'
+  },
   STATUS_LOADING: {
-    da: 'Indlæser...',
-    de: 'Lädt...',
-    en: 'Loading...',
+    da: 'Indlæser',
+    de: 'Lädt',
+    en: 'Loading',
     es: 'Cargando',
-    it: 'Caricamento...',
-    nl: 'Laden...'
+    it: 'Caricamento',
+    nl: 'Laden'
   },
   STATUS_SUCCESS: {
     da: 'Succes',
@@ -687,7 +745,7 @@ export const Localisations = {
     de: 'jetzt',
     en: 'now',
     es: 'ahora',
-    it: 'adesso',
+    it: 'ora',
     nl: 'nu'
   },
   STATUS_FAILURE: {
@@ -840,17 +898,16 @@ export const Localisations = {
   },
   CREDITS_BODY: {
     da:
-      'Lavet med &hearts; til dig af RADAR-CNS konsortiet. For mere information click <a href="http://radar-cns.org">her</a>.',
+      'Lavet med &hearts; til dig af RADAR-Base-samfundet. For mere information click <a href="http://radar-base.org">her</a>.',
     de:
-      'Vom RADAR-CNS-Konsortium mit &hearts; für Sie gemacht. Für weitere Informationen klicken Sie <a href="http://radar-cns.org">hier</a>',
+      'Von der RADAR-Base-Community gemacht mit &hearts; für Sie gemacht. Für weitere Informationen klicken Sie <a href="http://radar-base.org">hier</a>',
     en:
-      'Made with &hearts; for you by the RADAR-CNS consortium. For more information click <a href="http://radar-cns.org">here</a>.',
+      'Made with &hearts; for you by the RADAR-Base community. For more information click <a href="http://radar-base.org">here</a>.',
     es:
-      'Hecho con &hearts;  para usted por el consorcio RADAR-CNS. Para obtener más información, haga clic  en <a href="http://radar-cns.org">aquí</a>.',
-    it:
-      'Fatto con il &hearts; per te dal consorzio RADAR-CNS. Per maggiori informazioni clicca <a href="http://radar-cns.org">qui</a>.',
+      'Hecho con &hearts;  para usted por la comunidad RADAR-Base. Para obtener más información, haga clic  en <a href="http://radar-base.org">aquí</a>.',
+    it: `Fatto con il &hearts; per te dalla comunità RADAR-Base. Per maggiori informazioni clicca <a href="http://radar-base.org">qui</a>.`,
     nl:
-      'Met &hearts; voor u gemaakt door het RADAR-CNS consortium. Voor meer informatie klik <a href="http://radar-cns.org">here</a>'
+      'Met &hearts; voor u gemaakt door de RADAR-Base community. Voor meer informatie klik <a href="http://radar-base.org">here</a>'
   },
   TASK_CALENDAR_TITLE: {
     da: 'Dagens opgaver',
@@ -1008,10 +1065,74 @@ export const Localisations = {
   },
   CLOSE_APP: {
     da: 'Luk App',
-    de: 'Schließen Sie die App',
+    de: 'Schließen',
     en: 'Close App',
     es: 'Cierre App',
     it: 'Chiudi App',
     nl: 'App Sluiten'
+  },
+  WARNING_DO_NOT_CLOSE_APP: {
+    da: 'Luk ikke appen',
+    de: 'Schließen Sie die App nicht',
+    en: 'Do not close the app',
+    es: 'No cierres la aplicación',
+    it: `Non chiudere l'app`,
+    nl: 'Sluit de app niet'
+  },
+  AUDIO_TASK_ALERT: {
+    da: 'Lydopgave afbrudt',
+    de: 'Audio-Task unterbrochen',
+    en: 'Audio task interrupted',
+    es: 'Tarea de audio interrumpida',
+    it: 'Attività audio interrotta',
+    nl: 'Audiotaak onderbroken'
+  },
+  AUDIO_TASK_ALERT_DESC: {
+    da: 'Opgaven er afbrudt. Genstart opgaven.',
+    de: 'Die Aufgabe wurde unterbrochen. Task neu starten.',
+    en: 'Task has been interrupted. Restart task.',
+    es: 'La tarea ha sido interrumpida. Tarea de reinicio.',
+    it: `L'attività è stata interrotta. Riavvia il compito.`,
+    nl: 'Taak is onderbroken. Start de taak opnieuw.'
+  },
+  AUDIO_TASK_ATTEMPT_ALERT: {
+    da: 'Forsøg tilbageværende',
+    de: 'Verbleibende Versuche',
+    en: 'Attempts remaining',
+    es: 'Intentos restantes',
+    it: 'Tentativi rimanenti',
+    nl: 'Pogingen blijven'
+  },
+  AUDIO_TASK_HAPPY_ALERT: {
+    da: 'Indsend optagelse?',
+    de: 'Aufnahme einreichen?',
+    en: 'Submit recording?',
+    es: '¿Enviar grabación?',
+    it: 'Invia la registrazione?',
+    nl: 'Opname verzenden?'
+  },
+  CONFIG_ERROR_DESC: {
+    da: 'Config opdatering mislykkes. Prøve igen?',
+    de: 'Config Update fehlgeschlagen. Wiederholen?',
+    en: 'Config update fail. Retry?',
+    es: 'La actualización de configuración falla. ¿Procesar de nuevo?',
+    it: `Errore nell'aggiornamento della configurazione. Riprovare?`,
+    nl: 'Config-update mislukt. Opnieuw?'
+  },
+  SPLASH_STATUS_UPDATING_CONFIG: {
+    da: 'Opdaterer underretninger og planlæg...',
+    de: 'Benachrichtigungen und Zeitplan werden aktualisiert...',
+    en: 'Updating notifications and schedule...',
+    es: 'Actualizando notificaciones y programa...',
+    it: 'Aggiornamento notifiche e pianificazione...',
+    nl: 'Meldingen en planning bijwerken...'
+  },
+  SPLASH_STATUS_SENDING_LOGS: {
+    da: 'Afsendelse af ubesvarede spørgeskemaer...',
+    de: 'Versäumte Fragebogenprotokolle werden gesendet...',
+    en: 'Sending missed questionnaire logs...',
+    es: 'Enviando registros de cuestionarios perdidos...',
+    it: 'Invio dei registri dei questionari persi ...',
+    nl: 'Logboeken gemiste vragenlijst verzenden...'
   }
 }

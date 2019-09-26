@@ -1,5 +1,6 @@
 checkbox-input {
   display: block;
+  margin-left: -5px;
   width: 100%;
 
   ul {
@@ -7,40 +8,37 @@ checkbox-input {
     flex-direction: column;
     margin: 0;
     padding: 0;
-    width: 100%;
+    width: 115%;
     list-style: none;
   }
 
   ul li {
     display: flex;
     align-content: stretch;
-    margin-bottom: 12px;
   }
 
-  ul li:last-child {
-    border: none;
-  }
-
-  ul li input[type='checkbox'] {
-    position: absolute;
-    visibility: hidden;
-  }
-
-  ul li label {
+  ul li ion-label {
     @include button-round;
 
-    position: relative;
     display: flex;
     flex-grow: 1;
     align-items: center;
     justify-content: flex-start;
+    padding: 16px 24px;
+    height: inherit;
+    white-space: normal;
   }
 
-  ul li:hover label {
-    background-color: $cl-secondary;
+  .checked {
+    background-color: $cl-primary !important;
   }
 
-  input[type='checkbox']:checked + label {
-    background-color: $cl-primary;
+  .checkbox-icon {
+    display: none !important;
+    margin: 0;
+  }
+
+  ion-item {
+    margin: 0 0 -12px -40px !important;
   }
 }

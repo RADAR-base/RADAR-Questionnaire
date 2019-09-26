@@ -1,12 +1,18 @@
-<ul>
-  <li *ngFor="let item of items">
-    <input
-      type="checkbox"
-      [id]="item.id"
-      [name]="name"
-      [value]="item.value"
-      (change)="onInputChange($event)"
-    >
-    <label [attr.for]="item.id">{{ item.response }}</label>
-  </li>
-</ul>
+<ion-list>
+  <ul>
+    <li *ngFor="let item of items">
+      <ion-item no-lines>
+        <ion-checkbox
+          [id]="item.id"
+          name="name"
+          value="item.value"
+          (tap)="onInputChange(item)"
+        >
+        </ion-checkbox>
+        <ion-label [class.checked]="item.checked">{{
+          item.response
+        }}</ion-label>
+      </ion-item>
+    </li>
+  </ul>
+</ion-list>

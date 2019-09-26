@@ -1,49 +1,44 @@
-import { animate, state, style, transition, trigger } from '@angular/animations'
-import { Component } from '@angular/core'
+import { Component, OnDestroy } from '@angular/core'
 import { NavController, Platform } from 'ionic-angular'
+import { Subscription } from 'rxjs'
 
-import { AlertService } from '../../../core/services/alert.service'
-import { KafkaService } from '../../../core/services/kafka.service'
-import { LocalizationService } from '../../../core/services/localization.service'
-import { StorageService } from '../../../core/services/storage.service'
+import { AlertService } from '../../../core/services/misc/alert.service'
+import { LocalizationService } from '../../../core/services/misc/localization.service'
+import { UsageService } from '../../../core/services/usage/usage.service'
+import { UsageEventType } from '../../../shared/enums/events'
 import { LocKeys } from '../../../shared/enums/localisations'
-import { StorageKeys } from '../../../shared/enums/storage'
 import { Task, TasksProgress } from '../../../shared/models/task'
 import { checkTaskIsNow } from '../../../shared/utilities/check-task-is-now'
 import { ClinicalTasksPageComponent } from '../../clinical-tasks/containers/clinical-tasks-page.component'
 import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
 import { SettingsPageComponent } from '../../settings/containers/settings-page.component'
-import { StartPageComponent } from '../../start/containers/start-page.component'
+import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 import { TasksService } from '../services/tasks.service'
+import { HomePageAnimations } from './home-page.animation'
 
 enum Page {Settings = 'settings', Learn = 'learn', Home = 'home' }
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home-page.component.html',
-  animations: [
-    trigger('displayCalendar', [
-      state('true', style({ transform: 'translateY(0%)' })),
-      state('false', style({ transform: 'translateY(100%)' })),
-      transition('*=>*', animate('300ms ease-out'))
-    ]),
-    trigger('moveProgress', [
-      state('true', style({ transform: 'translateY(-100%)' })),
-      state('false', style({ transform: 'translateY(0%)' })),
-      transition('*=>*', animate('300ms ease-out'))
-    ])
-  ]
+  animations: HomePageAnimations
 })
-export class HomePageComponent {
+export class HomePageComponent implements OnDestroy {
+  title: Promise<string>
+  sortedTasks: Promise<Map<any, any>>
   tasks: Promise<Task[]>
+  currentDate: Date
   uncompletedTasks: Promise<Task[]>
   nextTask: Task
+  tasksProgress: Promise<TasksProgress>
+  resumeListener: Subscription = new Subscription()
+
   showCalendar = false
   showCompleted = false
-  showNoTasksToday = false
-  tasksProgress: TasksProgress = { numberOfTasks: 1, completedTasks: 0, completedPercentage: 0}
+  // showNoTasksToday = false
+  // tasksProgress: TasksProgress = { numberOfTasks: 1, completedTasks: 0, completedPercentage: 0}
   startingQuestionnaire = false
-  hasClinicalTasks = false
+  hasClinicalTasks: Promise<boolean>
   taskIsNow = false
   checkTaskInterval
   learnItems: any
@@ -54,14 +49,14 @@ export class HomePageComponent {
     public alertService: AlertService,
     private tasksService: TasksService,
     private localization: LocalizationService,
-    public storage: StorageService,
     private platform: Platform,
-    private kafka: KafkaService
+    private usage: UsageService
   ) {
     this.selectedPage = Page.Home;
-    this.platform.resume.subscribe(e => {
-      this.kafka.sendAllAnswersInCache()
-      this.checkForNextTask()
+    this.resumeListener = this.platform.resume.subscribe(e => {
+      this.checkForNewDate()
+      this.usage.sendGeneralEvent(UsageEventType.RESUMED)
+      this.onResume()
     })
     this.learnItems = [
       {
@@ -76,6 +71,26 @@ export class HomePageComponent {
 
   }
 
+  getIsLoadingSpinnerShown() {
+    return (
+      (this.startingQuestionnaire && !this.showCalendar) ||
+      (!this.nextTask && !this.showCompleted)
+    )
+  }
+
+  getIsStartButtonShown() {
+    return (
+      this.taskIsNow &&
+      !this.startingQuestionnaire &&
+      !this.showCompleted &&
+      !this.showCalendar
+    )
+  }
+
+  ngOnDestroy() {
+    this.resumeListener.unsubscribe()
+  }
+
   ionViewWillEnter() {
     this.startingQuestionnaire = false
   }
@@ -83,97 +98,85 @@ export class HomePageComponent {
   ionViewDidLoad() {
     this.tasks = this.tasksService.getTasksOfNow();
     this.uncompletedTasks = this.tasksService.getUncompletedTasksOfNow();
+    this.init()
+    this.usage.sendOpenEvent()
+    this.usage.setPage(this.constructor.name)
+  }
+
+  init() {
+    this.sortedTasks = this.tasksService.getSortedTasksOfToday()
+    this.tasks = this.tasksService.getTasksOfToday()
+    this.currentDate = this.tasksService.getCurrentDateMidnight()
+    this.tasksProgress = this.tasksService.getTaskProgress()
     this.tasks.then(tasks => {
       this.checkTaskInterval = setInterval(() => {
-        this.checkForNextTask()
+        this.checkForNextTask(tasks)
       }, 1000)
-      this.tasksProgress = this.tasksService.getTaskProgress(tasks)
-      this.showNoTasksToday = this.tasksProgress.numberOfTasks == 0
     })
-    this.evalHasClinicalTasks()
-    this.tasksService.sendNonReportedTaskCompletion()
+    this.hasClinicalTasks = this.tasksService.evalHasClinicalTasks()
+    this.title = this.tasksService.getPlatformInstanceName()
   }
 
-  checkForNextTask() {
-    this.tasks.then(tasks =>
-      this.checkForNextTaskGeneric(this.tasksService.getNextTask(tasks))
-    )
+  onResume() {
+    this.usage.sendOpenEvent()
+    this.checkForNewDate()
   }
 
-  checkForNextTaskGeneric(task) {
-    if (task && task.isClinical == false) {
-      this.nextTask = task
-      this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
-      this.showCompleted = !this.nextTask
-    } else {
-      this.taskIsNow = false
-      this.nextTask = null
-      this.tasks.then(tasks => {
-        this.showCompleted = this.tasksService.areAllTasksComplete(tasks)
-        if (this.showCompleted) {
-          clearInterval(this.checkTaskInterval)
-          this.showCalendar = false
-        }
-      })
+  checkForNewDate() {
+    if (new Date().getDate() !== this.currentDate.getDate()) {
+      this.currentDate = this.tasksService.getCurrentDateMidnight()
+      this.navCtrl.setRoot(SplashPageComponent)
     }
   }
 
-  evalHasClinicalTasks() {
-    this.storage.get(StorageKeys.HAS_CLINICAL_TASKS).then(isClinical => {
-      this.hasClinicalTasks = isClinical
-    })
+  checkForNextTask(tasks) {
+    const task = this.tasksService.getNextTask(tasks)
+    if (task) {
+      this.nextTask = task
+      this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
+    } else {
+      this.taskIsNow = false
+      this.nextTask = null
+      this.showCompleted = this.tasksService.areAllTasksComplete(tasks)
+      if (this.showCompleted) {
+        clearInterval(this.checkTaskInterval)
+        this.showCalendar = false
+      }
+    }
   }
 
   displayTaskCalendar() {
+    this.usage.sendClickEvent('show_task_calendar')
     this.showCalendar = !this.showCalendar
   }
 
   openSettingsPage() {
     this.navCtrl.push(SettingsPageComponent)
+    this.usage.sendClickEvent('open_settings')
   }
 
   openClinicalTasksPage() {
     this.navCtrl.push(ClinicalTasksPageComponent)
+    this.usage.sendClickEvent('open_clinical_tasks')
   }
 
   startQuestionnaire(taskCalendarTask: Task) {
     // NOTE: User can start questionnaire from task calendar or start button in home.
-    let startQuestionnaireTask = this.nextTask
-    if (taskCalendarTask) {
-      if (taskCalendarTask.completed === false) {
-        startQuestionnaireTask = taskCalendarTask
-      }
-    } else {
+    const task = taskCalendarTask ? taskCalendarTask : this.nextTask
+
+    if (this.tasksService.isTaskStartable(task)) {
+      this.usage.sendClickEvent('start_questionnaire')
       this.startingQuestionnaire = true
+      return this.tasksService
+        .getQuestionnairePayload(task)
+        .then(payload => this.navCtrl.push(QuestionsPageComponent, payload))
+    } else {
+      this.showMissedInfo()
     }
-
-    return this.tasksService
-      .getAssessment(startQuestionnaireTask)
-      .then(assessment => {
-        const params = {
-          title: assessment.name,
-          introduction: this.localization.chooseText(assessment.startText),
-          endText: this.localization.chooseText(assessment.endText),
-          questions: assessment.questions,
-          associatedTask: startQuestionnaireTask,
-          assessment: assessment,
-          isLastTask: false
-        }
-
-        this.tasksService
-          .isLastTask(startQuestionnaireTask, this.tasks)
-          .then(lastTask => (params.isLastTask = lastTask))
-          .then(() => {
-            if (assessment.showIntroduction) {
-              this.navCtrl.push(StartPageComponent, params)
-            } else {
-              this.navCtrl.push(QuestionsPageComponent, params)
-            }
-          })
-      })
   }
 
   showCredits() {
+    this.usage.sendClickEvent('show_credits')
     return this.alertService.showAlert({
       title: this.localization.translateKey(LocKeys.CREDITS_TITLE),
       message: this.localization.translateKey(LocKeys.CREDITS_BODY),
@@ -186,8 +189,20 @@ export class HomePageComponent {
     })
   }
 
-
   getLearnItems(type: any) {
     return this.learnItems[type];
+  }
+
+  showMissedInfo() {
+    return this.alertService.showAlert({
+      title: this.localization.translateKey(LocKeys.CALENDAR_ESM_MISSED_TITLE),
+      message: this.localization.translateKey(LocKeys.CALENDAR_ESM_MISSED_DESC),
+      buttons: [
+        {
+          text: this.localization.translateKey(LocKeys.BTN_OKAY),
+          handler: () => {}
+        }
+      ]
+    })
   }
 }

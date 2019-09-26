@@ -2,28 +2,27 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,
+  OnDestroy,
   OnInit,
   Output
 } from '@angular/core'
-import { Device } from '@ionic-native/device'
-import { AlertController, NavController } from 'ionic-angular'
+import { NavController, Platform } from 'ionic-angular'
 
-// NOTE: File path to opensmile.js; Adding opensmile plugin
-import { Answer } from '../../../../../shared/models/answer'
-import { Section } from '../../../../../shared/models/question'
+import { AlertService } from '../../../../../core/services/misc/alert.service'
 import { AndroidPermissionUtility } from '../../../../../shared/utilities/android-permission'
-import { QuestionsPageComponent } from '../../../containers/questions-page.component'
 import { AudioRecordService } from '../../../services/audio-record.service'
-
-declare var cordova: any
-declare var window: any
+import { DefaultMaxAudioAttemptsAllowed } from '../../../../../../assets/data/defaultConfig'
+import { HomePageComponent } from '../../../../home/containers/home-page.component'
+import { LocKeys } from '../../../../../shared/enums/localisations'
+import { Section } from '../../../../../shared/models/question'
+import { Subscription } from 'rxjs'
+import { TranslatePipe } from '../../../../../shared/pipes/translate/translate'
 
 @Component({
   selector: 'audio-input',
   templateUrl: 'audio-input.component.html'
 })
-export class AudioInputComponent implements OnInit, OnChanges {
+export class AudioInputComponent implements OnDestroy, OnInit {
   @Output()
   valueChange: EventEmitter<any> = new EventEmitter<any>()
   @Input()
@@ -31,74 +30,137 @@ export class AudioInputComponent implements OnInit, OnChanges {
   @Input()
   currentlyShown: boolean
 
-  filename: string
-  name: string
-  filepath: string
-  recording: boolean
-  value: string = null
-  configFile = 'liveinput_android.conf'
-  compression = 1
-  platform = false
-  answer_b64: string = null
-  permission: any
-
-  answer: Answer = {
-    id: null,
-    value: null,
-    type: 'audio'
-  }
-
-  ngOnInit() {}
-
-  ngOnChanges() {
-    if (this.currentlyShown) {
-      this.startRecording()
-    }
-  }
+  recordAttempts = 0
+  buttonShown = true
+  pauseListener: Subscription
 
   constructor(
-    public questions: QuestionsPageComponent,
     private audioRecordService: AudioRecordService,
     private permissionUtil: AndroidPermissionUtility,
     public navCtrl: NavController,
-    public alertCtrl: AlertController,
-    private device: Device
+    public alertService: AlertService,
+    private platform: Platform,
+    private translate: TranslatePipe
   ) {
-    // NOTE: Stop audio recording when application is on pause / backbutton is pressed
-    document.addEventListener('pause', () => {
-      console.log('on pause')
-      // if (this.navCtrl.isActive(this.navCtrl.getActive()) == false) {
-      this.audioRecordService.stopAudioRecording()
-      // }
-    })
-
-    document.addEventListener('backbutton', () => {
-      console.log('on backbutton')
-      // if (this.navCtrl.isActive(this.navCtrl.getActive()) == false) {
-      this.audioRecordService.stopAudioRecording()
-      // }
-    })
-
     this.permissionUtil.checkPermissions()
+    this.audioRecordService.destroy()
+  }
+
+  ngOnInit() {
+    // NOTE: Stop audio recording when application is on pause / backbutton is pressed
+    this.pauseListener = this.platform.pause.subscribe(() => {
+      if (this.isRecording()) {
+        this.stopRecording()
+        this.showTaskInterruptedAlert()
+      }
+    })
+    this.platform.registerBackButtonAction(() => {
+      this.stopRecording()
+      this.platform.exitApp()
+    })
+    this.enableNextButton()
+  }
+
+  ngOnDestroy() {
+    this.pauseListener.unsubscribe()
+  }
+
+  handleRecording() {
+    if (!this.isRecording()) {
+      this.recordAttempts++
+      if (this.recordAttempts <= DefaultMaxAudioAttemptsAllowed) {
+        this.startRecording().catch(e => this.showTaskInterruptedAlert())
+      }
+    } else {
+      this.stopRecording()
+      if (this.recordAttempts == DefaultMaxAudioAttemptsAllowed)
+        this.finishRecording().catch(e => this.showTaskInterruptedAlert())
+      else this.showAfterAttemptAlert()
+    }
+  }
+
+  finishRecording() {
+    this.buttonShown = false
+    return this.audioRecordService
+      .readAudioFile()
+      .then(data => this.valueChange.emit(data))
+  }
+
+  enableNextButton() {
+    this.valueChange.emit('')
   }
 
   startRecording() {
-    this.permissionUtil.getRecordAudio_Permission().then(success => {
-      if (success === true) {
-        this.audioRecordService.startAudioRecording(this.configFile)
-      }
-    })
+    return Promise.all([
+      this.permissionUtil.getRecordAudio_Permission(),
+      this.permissionUtil.getWriteExternalStorage_permission()
+    ]).then(res =>
+      res[0] && res[1]
+        ? this.audioRecordService.startAudioRecording()
+        : Promise.reject()
+    )
+  }
+
+  stopRecording() {
+    this.audioRecordService.stopAudioRecording()
   }
 
   isRecording() {
-    return this.audioRecordService.getAudioRecordStatus()
+    return this.audioRecordService.getIsRecording()
   }
 
-  setText() {
-    if (this.audioRecordService.getAudioRecordStatus()) {
-      return 'Stop Recording'
-    } else {
-      return 'Start Recording'
-    }
+  getRecordingButtonText() {
+    return this.translate.transform(
+      this.isRecording()
+        ? LocKeys.BTN_STOP.toString()
+        : LocKeys.BTN_START.toString()
+    )
+  }
+
+  showTaskInterruptedAlert() {
+    this.alertService.showAlert({
+      title: this.translate.transform(LocKeys.AUDIO_TASK_ALERT.toString()),
+      message: this.translate.transform(
+        LocKeys.AUDIO_TASK_ALERT_DESC.toString()
+      ),
+      buttons: [
+        {
+          text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
+          handler: () => {
+            this.navCtrl.setRoot(HomePageComponent)
+          }
+        }
+      ],
+      enableBackdropDismiss: false
+    })
+  }
+
+  showAfterAttemptAlert() {
+    const attemptsLeft = DefaultMaxAudioAttemptsAllowed - this.recordAttempts
+    this.alertService.showAlert({
+      title: this.translate.transform(
+        LocKeys.AUDIO_TASK_HAPPY_ALERT.toString()
+      ),
+      message:
+        this.translate.transform(LocKeys.AUDIO_TASK_ATTEMPT_ALERT.toString()) +
+        ': ' +
+        attemptsLeft,
+      buttons: [
+        {
+          text: this.translate.transform(LocKeys.BTN_YES.toString()),
+          handler: () => {
+            this.finishRecording()
+          }
+        },
+        {
+          text:
+            this.translate.transform(LocKeys.BTN_NO.toString()) +
+            ', ' +
+            this.translate.transform(LocKeys.BTN_TRY_AGAIN.toString()),
+          handler: () => {}
+        }
+      ],
+      enableBackdropDismiss: false
+    })
   }
 }

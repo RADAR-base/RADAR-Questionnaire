@@ -54,6 +54,9 @@ body {
   }
 }
 
+.button-effect {
+  display: none !important;
+}
 
 // Fonts
 h1 {
@@ -88,4 +91,8 @@ p {
 
 .alert-button-group {
   height: 15%;
+}
+
+.button-inner {
+  height: 5%;
 }

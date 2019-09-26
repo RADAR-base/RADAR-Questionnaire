@@ -1,21 +1,28 @@
-import { Component, ElementRef, ViewChild } from '@angular/core'
-import { BarcodeScanner } from '@ionic-native/barcode-scanner'
+import { Component, ViewChild } from '@angular/core'
 import { NavController, Slides } from 'ionic-angular'
 
-import { DefaultSettingsWeeklyReport } from '../../../../assets/data/defaultConfig'
-import { AlertService } from '../../../core/services/alert.service'
-import { ConfigService } from '../../../core/services/config.service'
-import { LocalizationService } from '../../../core/services/localization.service'
-import { SchedulingService } from '../../../core/services/scheduling.service'
-import { StorageService } from '../../../core/services/storage.service'
+import {
+  DefaultLanguage,
+  DefaultSettingsSupportedLanguages,
+  DefaultSettingsWeeklyReport,
+  LanguageMap
+} from '../../../../assets/data/defaultConfig'
+import { AlertService } from '../../../core/services/misc/alert.service'
+import { LocalizationService } from '../../../core/services/misc/localization.service'
+import { LogService } from '../../../core/services/misc/log.service'
+import { UsageService } from '../../../core/services/usage/usage.service'
+import {
+  EnrolmentEventType,
+  UsageEventType
+} from '../../../shared/enums/events'
 import { LocKeys } from '../../../shared/enums/localisations'
-import { StorageKeys } from '../../../shared/enums/storage'
 import {
   LanguageSetting,
   WeeklyReportSubSettings
 } from '../../../shared/models/settings'
-import { HomePageComponent } from '../../home/containers/home-page.component'
+import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 import { AuthService } from '../services/auth.service'
+import { HomePageComponent } from "../../home/containers/home-page.component";
 
 @Component({
   selector: 'page-enrolment',
@@ -24,42 +31,44 @@ import { AuthService } from '../services/auth.service'
 export class EnrolmentPageComponent {
   @ViewChild(Slides)
   slides: Slides
-  @ViewChild('loading')
-  elLoading: ElementRef
-  @ViewChild('outcome')
-  elOutcome: ElementRef
-  isEighteen: boolean = undefined;
-  isBornInUK: boolean = undefined;
-  consentParticipation = undefined;
-  consentNHSRecordAccess = undefined;
-  showTimeCommitmentDetails = false;
-  showPrivacyPolicyDetails = false;
-  showWithdrawalDetails = false;
-  showContactYouDetails = false;
   loading: boolean = false
   showOutcomeStatus: boolean = false
-  reportSettings: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport;
-
-  language?: LanguageSetting
+  isEighteen: boolean = undefined
+  isBornInUK: boolean = undefined
+  consentParticipation = undefined
+  consentNHSRecordAccess = undefined
+  showTimeCommitmentDetails = false
+  showPrivacyPolicyDetails = false
+  showWithdrawalDetails = false
+  showContactYouDetails = false
+  outcomeStatus: string
+  enterMetaQR = false
+  reportSettings: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
+  language?: LanguageSetting = DefaultLanguage
+  languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
 
   constructor(
     public navCtrl: NavController,
-    private scanner: BarcodeScanner,
-    public storage: StorageService,
-    private schedule: SchedulingService,
-    private configService: ConfigService,
-    private authService: AuthService,
+    private auth: AuthService,
     private localization: LocalizationService,
-    private alertService: AlertService
-  ) {}
+    private alertService: AlertService,
+    private usage: UsageService,
+    private logger: LogService
+  ) {
+    this.localization.update().then(lang => (this.language = lang))
+  }
 
   ionViewDidLoad() {
     this.slides.lockSwipes(true)
-    return this.localization.update()
-      .then(lang => (this.language = lang))
+    this.usage.setPage(this.constructor.name)
   }
 
-  ionViewDidEnter() {}
+  next() {
+    this.slides.lockSwipes(false)
+    const slideIndex = this.slides.getActiveIndex() + 1
+    this.slides.slideTo(slideIndex, 500)
+    this.slides.lockSwipes(true)
+  }
 
   isOlderThanEighteen(res: boolean) {
     this.isEighteen = res;
@@ -100,29 +109,6 @@ export class EnrolmentPageComponent {
     }
   }
 
-  weeklyReportChange(index) {
-    this.storage.set(StorageKeys.SETTINGS_WEEKLYREPORT, this.reportSettings)
-  }
-
-  transitionStatuses() {
-    if (this.loading) {
-      this.elOutcome.nativeElement.style.opacity = 0
-      this.elLoading.nativeElement.style.opacity = 1
-    }
-    if (this.showOutcomeStatus) {
-      this.elOutcome.nativeElement.style.transform = 'translate3d(-100%,0,0)'
-      this.elOutcome.nativeElement.style.opacity = 1
-      this.elLoading.nativeElement.style.opacity = 0
-    }
-  }
-
-  next() {
-    this.slides.lockSwipes(false)
-    const slideIndex = this.slides.getActiveIndex() + 1
-    this.slides.slideTo(slideIndex, 500)
-    this.slides.lockSwipes(true)
-  }
-
   goBack() {
     this.slides.lockSwipes(false)
     const slideIndex = this.slides.getActiveIndex() - 1
@@ -136,17 +122,104 @@ export class EnrolmentPageComponent {
     this.slides.lockSwipes(true)
   }
 
+  enterToken() {
+    this.enterMetaQR = true
+    this.next()
+  }
+
+  authenticate(authObj) {
+    if (!this.enterMetaQR)
+      this.usage.sendGeneralEvent(UsageEventType.QR_SCANNED)
+    this.loading = true
+    this.clearStatus()
+    this.auth
+      .authenticate(authObj)
+      .catch(e => {
+        if (e.status !== 409) throw e
+      })
+      .then(() => this.auth.initSubjectInformation())
+      .then(() => {
+        this.usage.sendGeneralEvent(EnrolmentEventType.SUCCESS)
+        this.next()
+      })
+      .catch(e => {
+        this.handleError(e)
+        this.loading = false
+      })
+  }
+
+  handleError(e) {
+    this.logger.error('Failed to log in', e)
+    this.showStatus()
+    this.outcomeStatus =
+      e.error && e.error.message
+        ? e.error.message
+        : e.statusText + ' (' + e.status + ')'
+    this.usage.sendGeneralEvent(
+      e.status == 409 ? EnrolmentEventType.ERROR : EnrolmentEventType.FAIL,
+      {
+        error: this.outcomeStatus
+      }
+    )
+  }
+
+  clearStatus() {
+    this.showOutcomeStatus = false
+  }
+
+  showStatus() {
+    setTimeout(() => (this.showOutcomeStatus = true), 500)
+  }
+
+  navigateToSplash() {
+    this.navCtrl.setRoot(SplashPageComponent)
+  }
+
+  showSelectLanguage() {
+    const buttons = [
+      {
+        text: this.localization.translateKey(LocKeys.BTN_CANCEL),
+        handler: () => {}
+      },
+      {
+        text: this.localization.translateKey(LocKeys.BTN_SET),
+        handler: selectedLanguageVal => {
+          const lang: LanguageSetting = {
+            label: LanguageMap[selectedLanguageVal],
+            value: selectedLanguageVal
+          }
+          this.localization.setLanguage(lang).then(() => {
+            this.language = lang
+            return this.navCtrl.setRoot(EnrolmentPageComponent)
+          })
+        }
+      }
+    ]
+    const inputs = this.languagesSelectable.map(lang => ({
+      type: 'radio',
+      label: this.localization.translate(lang.label),
+      value: lang.value,
+      checked: lang.value === this.language.value
+    }))
+    return this.alertService.showAlert({
+      title: this.localization.translateKey(LocKeys.SETTINGS_LANGUAGE_ALERT),
+      buttons: buttons,
+      inputs: inputs
+    })
+  }
+
   navigateToHome() {
     this.navCtrl.setRoot(HomePageComponent)
   }
 
+
   goToRegistration() {
     this.loading = true;
-    this.authService.keycloakLogin(false)
+    this.auth.keycloakLogin(false)
       .then(() => {
-        return this.authService.retrieveUserInformation(this.language)
+        return this.auth.retrieveUserInformation(this.language)
       })
-      .then(() => this.configService.fetchConfigState(true))
+      .then(() => this.auth.fetchConfigState(true))
       .then(() => this.navigateToHome())
       .catch( () => {
         this.loading = false;

@@ -19,6 +19,12 @@ export class LocKeys {
   static ENROL_REGISTRATION_DESC = new LocKeys('ENROL_REGISTRATION_DESC')
   static ENROL_PREFERENCES = new LocKeys('ENROL_PREFERENCES')
   static ENROL_PREFERENCES_DESC = new LocKeys('ENROL_PREFERENCES_DESC')
+  static ENROL_REGISTRATION_COMPLETE = new LocKeys(
+    'ENROL_REGISTRATION_COMPLETE'
+  )
+  static ENROL_REGISTRATION_COMPLETE_DESC = new LocKeys(
+    'ENROL_REGISTRATION_COMPLETE_DESC'
+  )
   static SURVEYS_HEADING = new LocKeys('SURVEYS_HEADING')
   static LEARN_HEADING = new LocKeys('LEARN_HEADING')
   static TODO_LIST_TITLE = new LocKeys('TODO_LIST_TITLE')
@@ -27,7 +33,6 @@ export class LocKeys {
   static NO_SURVEYS_AVAILABLE = new LocKeys('NO_SURVEYS_AVAILABLE')
   static CALENDAR_ESM_MISSED_TITLE = new LocKeys('CALENDAR_ESM_MISSED_TITLE')
   static CALENDAR_ESM_MISSED_DESC = new LocKeys('CALENDAR_ESM_MISSED_DESC')
-  static HOME_RADAR_CNS = new LocKeys('HOME_RADAR_CNS')
   static FINISH_THANKS = new LocKeys('FINISH_THANKS')
   static FINISH_NEXT_TASK_REMINDER = new LocKeys('FINISH_NEXT_TASK_REMINDER')
   static FINISH_COMPLETED_IN_CLINIC = new LocKeys('FINISH_COMPLETED_IN_CLINIC')
@@ -57,8 +62,14 @@ export class LocKeys {
   static SETTINGS_SCHEDULE = new LocKeys('SETTINGS_SCHEDULE')
   static SETTINGS_RESET_ALERT = new LocKeys('SETTINGS_RESET_ALERT')
   static SETTINGS_RESET_ALERT_DESC = new LocKeys('SETTINGS_RESET_ALERT_DESC')
+  static SETTINGS_RESET_ALERT_OPTION_DESC = new LocKeys(
+    'SETTINGS_RESET_ALERT_OPTION_DESC'
+  )
   static SETTINGS_CACHE = new LocKeys('SETTINGS_CACHE')
   static SETTINGS_CACHE_SIZE = new LocKeys('SETTINGS_CACHE_SIZE')
+  static SETTINGS_LAST_UPLOAD_TO_SERVER = new LocKeys(
+    'SETTINGS_LAST_UPLOAD_TO_SERVER'
+  )
   static LANGUAGE_ENGLISH = new LocKeys('LANGUAGE_ENGLISH')
   static LANGUAGE_SPANISH = new LocKeys('LANGUAGE_SPANISH')
   static LANGUAGE_ITALIAN = new LocKeys('LANGUAGE_ITALIAN')
@@ -70,6 +81,7 @@ export class LocKeys {
   static BTN_FINISH = new LocKeys('BTN_FINISH')
   static BTN_DONE = new LocKeys('BTN_DONE')
   static BTN_START = new LocKeys('BTN_START')
+  static BTN_STOP = new LocKeys('BTN_STOP')
   static BTN_RESET = new LocKeys('BTN_RESET')
   static BTN_RETRY = new LocKeys('BTN_RETRY')
   static BTN_AGREE = new LocKeys('BTN_AGREE')
@@ -82,6 +94,9 @@ export class LocKeys {
   static BTN_PREVIOUS = new LocKeys('BTN_PREVIOUS')
   static BTN_CLOSE = new LocKeys('BTN_CLOSE')
   static BTN_SELECT = new LocKeys('BTN_SELECT')
+  static BTN_YES = new LocKeys('BTN_YES')
+  static BTN_NO = new LocKeys('BTN_NO')
+  static BTN_TRY_AGAIN = new LocKeys('BTN_TRY_AGAIN')
   static STATUS_LOADING = new LocKeys('STATUS_LOADING')
   static STATUS_SUCCESS = new LocKeys('STATUS_SUCCESS')
   static STATUS_FAILURE = new LocKeys('STATUS_FAILURE')
@@ -142,6 +157,16 @@ export class LocKeys {
     'TESTING_NOTIFICATIONS_MESSAGE'
   )
   static CLOSE_APP = new LocKeys('CLOSE_APP')
+  static WARNING_DO_NOT_CLOSE_APP = new LocKeys('WARNING_DO_NOT_CLOSE_APP')
+  static CONFIG_ERROR_DESC = new LocKeys('CONFIG_ERROR_DESC')
+  static AUDIO_TASK_ALERT = new LocKeys('AUDIO_TASK_ALERT')
+  static AUDIO_TASK_ALERT_DESC = new LocKeys('AUDIO_TASK_ALERT_DESC')
+  static AUDIO_TASK_ATTEMPT_ALERT = new LocKeys('AUDIO_TASK_ATTEMPT_ALERT')
+  static AUDIO_TASK_HAPPY_ALERT = new LocKeys('AUDIO_TASK_HAPPY_ALERT')
+  static SPLASH_STATUS_UPDATING_CONFIG = new LocKeys(
+    'SPLASH_STATUS_UPDATING_CONFIG'
+  )
+  static SPLASH_STATUS_SENDING_LOGS = new LocKeys('SPLASH_STATUS_SENDING_LOGS')
 
   constructor(public value: string) {}
 

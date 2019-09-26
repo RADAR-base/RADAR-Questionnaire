@@ -1,0 +1,13 @@
+<ion-item no-lines>
+  <ion-icon item-right name="close-circle" (tap)="hideIntro()"></ion-icon>
+</ion-item>
+<img class="icons-big" src="assets/imgs/radar-logo.svg" alt="RADAR_Base Logo" />
+<h1 text-center class="questionnaire-title">
+  {{ title }}
+</h1>
+<h2 text-center>{{ introduction }}</h2>
+<div class="pos-bottom" padding>
+  <button ion-button class="bt bt--full" round full (tap)="hideIntro()">
+    {{ 'BTN_BEGIN' | translate }}
+  </button>
+</div>

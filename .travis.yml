@@ -1,40 +1,26 @@
 env:
   global:
-    - JAVA_HOME=/usr/lib/jvm/java-8-oracle
-    - APP_VERSION=$TRAVIS_TAG
-    - PACKAGE_NAME=org.phidatalab.radar_armt
-    - PROJECT_NAME=RADAR-base/RADAR-Questionnaire
+    - PACKAGE_NAME_ANDROID=org.phidatalab.radar_armt
+    - KEYSTORE_PATH=radar-armt-release-key.keystore
+    - KEYSTORE_ALIAS=alias_name
+    - PLAYSTORE_SERVICE_KEY=service-api.json
+    - PLAYSTORE_TRACK=alpha
   matrix:
     secure: m8xkdQA8dhCgufxe1URYqeTuN55E5XzU22DmAJIpMvDhU3v7UfIYzTYCRJWBHxCHvi8rF3oh7ajfthVr763ZyJUSLuZ1kg1y1VTqAMedAdqr6LvGCOayBK7wxgHRPCNsIyHijxDChHB90mrPIbu6BkLMH4D94m+O1ishEoifMxwGEVp80/ftKfhkbXdyG8WBrgLLfGwTlK0xqprOAJGUelkYXCq7jZGzN3cf5kkAze+cEWa/2PAKdBlMmnLKuh6YEGzbRYNtQEr7QChCGizXVkoAuEv+OShSHwzhy7f4juSDQRyWDW92REJu+fO3vs+iuBG6BD7TzWb7HsqUzbmrnirnFYfMv/U/PYEnIaa9q91dqpqVaI2ZQ+1dHX66VppYaE4PbfMTXPls7qZfvGX94MtC2K5TQdJUCKNPZhWESJTS2UgwVfTAzMVpJvjd9vOfiiVcFo6qw4Lo04kv44M2p8Ivd7BIf0w2LsNayPnNb6kffcYUnchGruHiPPduKJXOTVE2R7MxlXjq6epIS7Onr4QNapmHf3HY/qWKTsLBSVkrngELOvQ9bwY3cChulXGMN7bXGrpPjkrYS8uaDb0k+qKftEM/MSKlLnsTAcdbPIj2aQF2L/mzP6d7MvaZJGziIIj4Ex6dnD2MhZXwXM4G43R8/7ZedlkKkF5OswtdBQE=
-dist: trusty
-sudo: required
 language: android
 android:
   components:
-    - tools
-    - platform-tools
-    - tools
-    - build-tools-26.0.2
-    - android-26
-    - extra-google-google_play_services
-    - extra-google-m2repository
-    - extra-android-m2repository
+    - build-tools-28.0.3
+    - android-28
+    - extra
 addons:
   apt:
     sources:
-      - sourceline: deb https://dl.yarnpkg.com/debian/ stable main
-        key_url: https://dl.yarnpkg.com/debian/pubkey.gpg
-      - sourceline: deb http://dl.google.com/linux/chrome/deb/ stable main
-        key_url: https://dl-ssl.google.com/linux/linux_signing_key.pub
+      - google-chrome
     packages:
-      - yarn
-      - jq
-      - gradle
+      - dpkg
       - google-chrome-stable
-licenses:
-  - android-sdk-preview-license-.+
-  - android-sdk-license-.+
-  - google-gdk-license-.+
+      - xvfb
 cache:
   yarn: true
   directories:
@@ -45,30 +31,25 @@ cache:
     - $HOME/.gradle/native
     - $HOME/.gradle/wrapper
 before_install:
+  - openssl aes-256-cbc -K $encrypted_b7f1c4c89cb5_key -iv $encrypted_b7f1c4c89cb5_iv -in secrets.tar.enc -out secrets.tar -d
+  - tar xvf secrets.tar
+install:
   - nvm install 11
   - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.12.3
   - export PATH="$HOME/.yarn/bin:$PATH"
-  - openssl aes-256-cbc -K $encrypted_b7f1c4c89cb5_key -iv $encrypted_b7f1c4c89cb5_iv
-    -in secrets.tar.enc -out secrets.tar -d
-  - tar xvf secrets.tar
-  - gem install fastlane
-  - yarn global add cordova ionic
+  - gem install bundler --pre
+  - bundle install
+  - yarn global add ionic cordova
 before_script:
   - mkdir www
   - cp secret.ts src/assets/data/secret.ts
 script:
+  - cordova prepare
   - yarn install
-  - yarn run lint
-  - yarn run lint:css
-  - if [[ $TRAVIS_BRANCH != $TRAVIS_TAG ]]; then yarn build ; fi
-  - if [[ $TRAVIS_BRANCH == $TRAVIS_TAG ]]; then ionic cordova platform add android@6.4.0;
-    yarn install;
-    ionic cordova build --release android;
-    jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -storepass $storepass -keystore radar-armt-release-key.keystore $HOME/build/$PROJECT_NAME/platforms/android/build/outputs/apk/release/android-release-unsigned.apk alias_name;
-    $ANDROID_HOME/build-tools/26.0.2/zipalign -v 4 $HOME/build/$PROJECT_NAME/platforms/android/build/outputs/apk/release/android-release-unsigned.apk $HOME/build/$PROJECT_NAME/platforms/android/build/outputs/apk/release/radar-armt-app-$APP_VERSION.apk;
-    fastlane supply --apk $HOME/build/$PROJECT_NAME/platforms/android/build/outputs/apk/release/radar-armt-app-$APP_VERSION.apk --track alpha --json_key service-api.json --package_name $PACKAGE_NAME
-    ; fi
-
+  - xvfb-run -a yarn test
+  - if [[ $TRAVIS_BRANCH != $TRAVIS_TAG ]]; then fastlane android build_debug ; fi
+  - if [[ $TRAVIS_BRANCH == $TRAVIS_TAG ]]; then fastlane android deploy keystore_path:$KEYSTORE_PATH keystore_password:$storepass keystore_alias:$KEYSTORE_ALIAS package_name:$PACKAGE_NAME_ANDROID track:$PLAYSTORE_TRACK json_key:$PLAYSTORE_SERVICE_KEY ; fi
+#
 # DOCUMENTATION:
 
 # ENCRYPTED:

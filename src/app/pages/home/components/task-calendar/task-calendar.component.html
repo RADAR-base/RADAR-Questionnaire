@@ -3,84 +3,122 @@
   <ion-scroll
     scrollY="true"
     class="layers"
-    [style.height.%]="show? 100 : 0"
+    [style.height.%]="show? 75 : 0"
   >
 
-    <div
-      padding
-      class="date"
-    >
-      {{ "TASK_CALENDAR_TITLE" | translate }}
-    </div>
-    <ng-container *ngIf="(tasks | async)!==null">
-      <ng-container *ngFor="let task of (tasks | async); let i=index">
+    <ng-container *ngIf="(tasks)">
+      <ng-container *ngFor="let sortedTasks of (tasks) | keyvalue">
+        <div
+          *ngIf="sortedTasks.key == currentDate"
+          padding
+          class="date"
+        >
+          {{ "TASK_CALENDAR_TITLE" | translate }}
+        </div>
+        <div
+          *ngIf="sortedTasks.key !== currentDate"
+          padding
+          class="date"
+        >
+          {{ (sortedTasks.key/1000) | amFromUnix | amDateFormat:'MMM D' }}
+        </div>
+        <ng-container *ngFor="let task of sortedTasks.value; let i=index">
+          <div
+            class="current-time-div"
+            *ngIf="i==(timeIndex) && sortedTasks.key == currentDate "
+          >
+            <div id="time-current">
+              <ion-row>
+                <ion-col>
+                  <div class="time-current-division left"></div>
+                </ion-col>
+                <ion-col
+                  col-auto
+                  class="time-current"
+                >
+                  {{ currentTime }}
+                </ion-col>
+                <ion-col>
+                  <div class="time-current-division right"></div>
+                </ion-col>
+              </ion-row>
+            </div>
+          </div>
+          <div
+            id="task-item"
+            (tap)="clicked(task)"
+            *ngIf="task.name !== 'ESM'"
+          >
+            <ion-row>
+              <ion-col>
+                <div class="task-info-left">
+                  <div class="start-time">{{ getStartTime(task) }}</div>
+                  <div>
+                    <img
+                      class="extra-info-icon"
+                      *ngIf="task.warning"
+                      src="assets/imgs/warning.png"
+                    >
+                  </div>
+                </div>
+                <div class="task-info-right">
+                  <div class="metrics">
+                    <div class="metric-time">
+                      <img
+                        class="icon-padding icon-xsm"
+                        src="assets/imgs/stopwatch.png"
+                      >
+                      {{ task.estimatedCompletionTime }}
+                      <span class="units">min</span>
+                    </div>
+                    <div class="metric-q">
+                      <img
+                        class="icon-padding icon-xsm"
+                        src="assets/imgs/nTasks.png"
+                      >
+                      {{ task.nQuestions }}
+                      <span class="units">x</span>
+                    </div>
+                  </div>
+                  <div class="status-div">
+                    <div *ngIf="!task.completed">
+                      <ion-icon
+                        name="radio-button-off"
+                        class="status"
+                      ></ion-icon>
+                    </div>
+                    <div *ngIf="task.completed">
+                      <ion-icon
+                        name="checkmark"
+                        class="status-checked"
+                      ></ion-icon>
+                    </div>
+                  </div>
+                </div>
+              </ion-col>
+            </ion-row>
+          </div>
+        </ng-container>
         <div
           class="current-time-div"
-          *ngIf="i==(timeIndex | async)"
+          *ngIf="(timeIndex === -1) && sortedTasks.key == currentDate "
         >
           <div id="time-current">
             <ion-row>
               <ion-col>
                 <div class="time-current-division left"></div>
               </ion-col>
-              <ion-col col-auto>{{ currentTime }}</ion-col>
+              <ion-col
+                col-auto
+                class="time-current"
+              >
+                {{ currentTime }}
+              </ion-col>
               <ion-col>
                 <div class="time-current-division right"></div>
               </ion-col>
             </ion-row>
           </div>
-        </div>
-        <div
-          id="task-item"
-          (click)="clicked(task)"
-          *ngIf="task.name !== 'ESM' && task.isClinical == false"
-        >
-          <ion-row>
-            <ion-col>
-              <div class="task-info-left">
-                <div>{{ getStartTime(task) }}</div>
-                <div>
-                  <img
-                    class="extra-info-icon"
-                    *ngIf="task.warning"
-                    src="assets/imgs/warning.png"
-                  >
-                </div>
-              </div>
-              <div class="status-div">
-                <div *ngIf="!task.completed">
-                  <ion-icon
-                    name="radio-button-off"
-                    class="status"
-                  ></ion-icon>
-                </div>
-                <div *ngIf="task.completed">
-                  <ion-icon
-                    name="checkmark"
-                    class="status-checked"
-                  ></ion-icon>
-                </div>
-              </div>
-              <div class="metrics">
-                <div class="metric-time">
-                  <img
-                    class="icon-padding icon-xsm"
-                    src="assets/imgs/stopwatch.png"
-                  >
-                  {{ task.estimatedCompletionTime }}
-                  <span class="units">min</span>
-                </div>
-                <div>
-                  <img
-                    class="icon-padding icon-xsm"
-                    src="assets/imgs/nTasks.png"
-                  >
-                  {{ task.nQuestions }}
-                  <span class="units">x</span>
-                </div>
-              </div>
-            </ion-col>
-          </ion-row>
         </div>
       </ng-container>
     </ng-container>

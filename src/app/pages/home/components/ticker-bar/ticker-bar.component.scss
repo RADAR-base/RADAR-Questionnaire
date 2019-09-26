@@ -4,7 +4,6 @@ ticker-bar {
     margin-bottom: 2px;
     padding: 7px 0;
     background-color: $cl-primary-40;
-    text-align: center;
     font-size: 18px;
   }
 
@@ -13,7 +12,8 @@ ticker-bar {
   }
 
   .ticker-item {
-    flex: 1 0 100vw;
+    margin: auto;
+    white-space: nowrap;
     transition: transform 0.8s ease-in-out;
   }
 

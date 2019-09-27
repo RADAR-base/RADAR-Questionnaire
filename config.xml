@@ -108,7 +108,7 @@
     <preference name="SplashScreenSpinnerColor" value="0xffffffff" />
     <preference name="SplashMaintainAspectRatio" value="true" />
     <preference name="SplashShowOnlyFirstTime" value="false" />
-  <preference name="AndroidLaunchMode" value="singleTask" />
+    <preference name="AndroidLaunchMode" value="singleTask" />
     <plugin name="cordova-android-support-gradle-release" spec="^3.0.1">
         <variable name="ANDROID_SUPPORT_VERSION" value="27.+" />
     </plugin>
@@ -143,13 +143,7 @@
     <plugin name="cordova-plugin-background-mode-fixes" spec="^0.7.4" />
     <plugin name="com-darryncampbell-cordova-plugin-intent" spec="^1.1.4" />
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.2.0" />
-    <universal-links>
-      <host name="ucl-mighealth-dev.thehyve.net" scheme="https">
-        <path event="keycloak" url="/login" />
-      </host>
-    </universal-links>
-    <plugin name="cordova-plugin-deeplinks" spec="1.1.0" />
     <plugin name="cordova-plugin-inappbrowser" spec="3.0.0" />
-    <engine name="android" spec="^8.1.0" />
-    <engine name="ios" spec="^5.0.0" />
+    <engine name="android" spec="8.1.0" />
+    <engine name="ios" spec="5.0.1" />
 </widget>

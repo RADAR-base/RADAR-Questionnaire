@@ -4,13 +4,13 @@ import { Injectable } from '@angular/core'
 
 import { DefaultScheduleYearCoverage } from '../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../shared/enums/storage'
-import {Assessment, IconMetaData} from '../../shared/models/assessment'
+import { Assessment, IconMetaData } from '../../shared/models/assessment'
 import { TimeInterval } from '../../shared/models/protocol'
 import { Task } from '../../shared/models/task'
 import { getMilliseconds } from '../../shared/utilities/time'
 import { LocalizationService } from './localization.service'
 import { NotificationGeneratorService } from './notification-generator.service'
-import { StorageService } from './storage.service'
+import { StorageService } from "./storage/storage.service";
 
 export const TIME_UNIT_MILLIS = {
   min: getMilliseconds({ minutes: 1 }),

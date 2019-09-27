@@ -23,7 +23,6 @@ import { WebIntent } from '@ionic-native/web-intent/ngx'
 import { IonicStorageModule, Storage } from '@ionic/storage'
 import { IonicApp, IonicModule } from 'ionic-angular'
 import { InAppBrowser } from '@ionic-native/in-app-browser'
-import { Deeplinks } from '@ionic-native/deeplinks'
 
 import { AppComponent } from './core/containers/app.component'
 import {
@@ -81,7 +80,6 @@ import { Utility } from './shared/utilities/util'
     Firebase,
     LocalNotifications,
     LogService,
-    Deeplinks,
     InAppBrowser,
     { provide: RemoteConfigService, useClass: FirebaseRemoteConfigService }
   ],

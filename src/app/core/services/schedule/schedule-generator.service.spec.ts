@@ -4,8 +4,10 @@ import {
   LocalizationServiceMock,
   LogServiceMock,
   NotificationGeneratorServiceMock,
-  QuestionnaireServiceMock
+  QuestionnaireServiceMock,
+  UtilityMock
 } from '../../../shared/testing/mock-services'
+import { Utility } from '../../../shared/utilities/util'
 import { QuestionnaireService } from '../config/questionnaire.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
@@ -28,6 +30,10 @@ describe('ScheduleGeneratorService', () => {
         {
           provide: NotificationGeneratorService,
           useClass: NotificationGeneratorServiceMock
+        },
+        {
+          provide: Utility,
+          useClass: UtilityMock
         }
       ]
     })

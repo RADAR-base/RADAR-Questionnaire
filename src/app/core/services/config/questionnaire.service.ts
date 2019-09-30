@@ -24,7 +24,7 @@ export class QuestionnaireService {
     private localization: LocalizationService,
     private http: HttpClient,
     private util: Utility,
-    private logger: LogService,
+    private logger: LogService
   ) {}
 
   pullQuestionnaires(type: TaskType): Promise<Assessment[]> {

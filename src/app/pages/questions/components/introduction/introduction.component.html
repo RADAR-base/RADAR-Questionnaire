@@ -7,7 +7,13 @@
 </h1>
 <h2 text-center>{{ introduction }}</h2>
 <div class="pos-bottom" padding>
-  <button ion-button class="bt bt--full" round full (tap)="hideIntro()">
+  <button
+    ion-button
+    class="bt bt--full"
+    round
+    full
+    (tap)="startQuestionnaire()"
+  >
     {{ 'BTN_BEGIN' | translate }}
   </button>
 </div>

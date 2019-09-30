@@ -78,6 +78,7 @@ export class UsageService {
     let page = component.split(/(?=[A-Z])/)
     page.pop()
     page = page.join('-').toLowerCase()
+    if (!page.includes('page')) page = page + '-page'
     // noinspection JSIgnoredPromiseFromCall
     this.analytics.setCurrentScreen(page)
   }

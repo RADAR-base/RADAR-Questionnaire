@@ -115,19 +115,17 @@ export class SchemaService {
       ]
     }
     return Promise.all(this.schemas[topic])
-      .then(
-        ([keySchemaMetadata, valueSchemaMetadata]) => {
-          const key = JSON.parse(keySchemaMetadata.schema)
-          const value = JSON.parse(valueSchemaMetadata.schema)
-          const schemaId = new KafkaRest.AvroSchema(key)
-          const schemaInfo = new KafkaRest.AvroSchema(value)
-          const payload = {
-            key: this.getAvroObject(key, kafkaObject.key),
-            value: this.getAvroObject(value, kafkaObject.value)
-          }
-          return { schemaId, schemaInfo, payload }
+      .then(([keySchemaMetadata, valueSchemaMetadata]) => {
+        const key = JSON.parse(keySchemaMetadata.schema)
+        const value = JSON.parse(valueSchemaMetadata.schema)
+        const schemaId = new KafkaRest.AvroSchema(key)
+        const schemaInfo = new KafkaRest.AvroSchema(value)
+        const payload = {
+          key: this.getAvroObject(key, kafkaObject.key),
+          value: this.getAvroObject(value, kafkaObject.value)
         }
-      )
+        return { schemaId, schemaInfo, payload }
+      })
       .catch(e => {
         this.schemas[topic] = null
         throw e
@@ -146,7 +144,7 @@ export class SchemaService {
       .then(url => this.http.get(url).toPromise())
       .then(res => YAML.parse(atob(res['content'])).data)
       .catch(e => {
-        this.logger.error("Failed to get valid RADAR Schema specifications", e)
+        this.logger.error('Failed to get valid RADAR Schema specifications', e)
         return null
       })
   }
@@ -156,7 +154,7 @@ export class SchemaService {
     const defaultTopic = `${avsc}_${name}`
     if (specifications) {
       const spec = specifications.find(t => t.type.toLowerCase() == type)
-      return spec && spec.topic ? spec.topic : defaultTopic;
+      return spec && spec.topic ? spec.topic : defaultTopic
     }
     return defaultTopic
   }

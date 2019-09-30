@@ -1,6 +1,8 @@
 <ng-container *ngIf="showDatePicker">
   <wheel-selector
     [values]="datePickerValues"
+    [selection]="defaultDatePickerValue"
+    [labels]="datePickerLabels"
     (onSelect)="emitAnswer({ date: $event })"
   ></wheel-selector>
 </ng-container>
@@ -8,6 +10,8 @@
 <ng-container *ngIf="showTimePicker">
   <wheel-selector
     [values]="timePickerValues"
+    [selection]="defaultTimePickerValue"
+    [labels]="timePickerLabels"
     (onSelect)="emitAnswer({ time: $event })"
   ></wheel-selector>
 </ng-container>
@@ -15,6 +19,7 @@
 <ng-container *ngIf="showDurationPicker">
   <wheel-selector
     [values]="durationPickerValues"
+    [labels]="DurationPickerLabels"
     (onSelect)="emitAnswer({ duration: $event })"
   ></wheel-selector>
 </ng-container>

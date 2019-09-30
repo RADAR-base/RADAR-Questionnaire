@@ -26,4 +26,14 @@ wheel-selector {
     display: flex;
     align-items: center;
   }
+
+  ion-note {
+    color: $cl-secondary-light !important;
+    font-size: 10px;
+  }
+
+  .label {
+    margin-bottom: 2px;
+    text-align: center;
+  }
 }

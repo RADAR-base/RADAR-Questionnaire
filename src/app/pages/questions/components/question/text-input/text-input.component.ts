@@ -19,11 +19,14 @@ export class TextInputComponent implements OnInit {
   showTextInput
 
   showSeconds: boolean
-  dateFormat: string
-  datePickerValues: string[]
-  timeFormat: string
-  timePickerValues: string[]
-  durationPickerValues: string[]
+  datePickerValues: string[][]
+  defaultDatePickerValue: string[]
+  datePickerLabels = ['Month', 'Day', 'Year']
+  timePickerValues: string[][]
+  defaultTimePickerValue: string[]
+  timePickerLabels = ['Hours', 'Minutes']
+  durationPickerValues: string[][]
+  durationLabels = ['Hours', 'Minutes']
 
   value = {}
 
@@ -36,32 +39,59 @@ export class TextInputComponent implements OnInit {
     this.showTextInput =
       this.type.includes('text') ||
       !this.type ||
-      (!this.showDatePicker && !this.showTimePicker && this.showDurationPicker)
+      (!this.showDatePicker && !this.showTimePicker && !this.showDurationPicker)
     this.showSeconds = this.type.includes('seconds')
     this.initValues()
   }
 
   initValues() {
-    const locale = this.localization.moment().localeData()
+    if (this.showDatePicker) this.initDates()
+    if (this.showTimePicker) this.initTime()
+    if (this.showDurationPicker) this.initDuration()
+  }
+
+  initDates() {
+    const moment = this.localization.moment()
+    const locale = moment.localeData()
     const months = locale.monthsShort()
     const days = this.addLeadingZero(Array.from(Array(32).keys()).slice(1, 32))
-    const years = Array.from(Array(31).keys()).map(d => d + 2000)
+    const years = Array.from(Array(31).keys()).map(d => String(d + 2000))
     this.datePickerValues = [months, days, years]
+    this.defaultDatePickerValue = [
+      moment.format('MMM'),
+      moment.format('DD'),
+      moment.format('YYYY')
+    ]
+  }
 
+  initTime() {
+    const moment = this.localization.moment()
     const hours = this.addLeadingZero(Array.from(Array(13).keys()).slice(1, 13))
     const minutes = this.addLeadingZero(Array.from(Array(60).keys()))
     const meridiem = ['AM', 'PM']
-    this.timePickerValues = [hours, minutes, meridiem]
-    if (this.showSeconds) this.timePickerValues.push(minutes)
+    this.timePickerValues = [hours, minutes]
+    if (this.showSeconds) {
+      this.timePickerValues.push(minutes)
+      this.timePickerLabels.push('Seconds')
+    }
+    this.timePickerValues.push(meridiem)
+    this.timePickerLabels.push('Meridiem')
+    this.defaultTimePickerValue = [
+      moment.format('HH'),
+      moment.format('mm'),
+      moment.format('A')
+    ]
+  }
 
-    const longHours = this.addLeadingZero(
-      Array.from(Array(24).keys()).slice(1, 24)
-    )
+  initDuration() {
+    const minutes = this.addLeadingZero(Array.from(Array(60).keys()))
+    if (this.showSeconds) this.timePickerValues.push(minutes)
+    const longHours = this.addLeadingZero(Array.from(Array(24).keys()))
     this.durationPickerValues = [longHours, minutes]
   }
 
   addLeadingZero(values) {
-    return values.map(d => (d < 10 ? '0' + d : d))
+    return values.map(d => (d < 10 ? '0' + d : d)).map(String)
   }
 
   emitAnswer(value) {

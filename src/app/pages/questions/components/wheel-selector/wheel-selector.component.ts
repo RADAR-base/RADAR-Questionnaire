@@ -14,14 +14,15 @@ import {
   templateUrl: 'wheel-selector.component.html'
 })
 export class WheelSelectorComponent implements AfterViewInit {
+  keys = Object.keys
   @ViewChildren('wheel') wheels: QueryList<ElementRef>
 
   @Input()
-  values
+  values: { [key: string]: string[] }
   @Input()
-  selection
+  selection: { [key: string]: string }
   @Input()
-  labels
+  labels: { [key: string]: string }
   @Output()
   onSelect: EventEmitter<any> = new EventEmitter<any>()
 
@@ -35,7 +36,8 @@ export class WheelSelectorComponent implements AfterViewInit {
   }
 
   scrollToDefault() {
-    this.wheels.forEach((d, col) => {
+    this.wheels.forEach((d, i) => {
+      const col = this.keys(this.values)[i]
       let row = this.values[col].findIndex(a => a == this.selection[col])
       if (row == -1) row = 0
       d.nativeElement.scrollTo(0, row * this.scrollHeight)
@@ -48,8 +50,10 @@ export class WheelSelectorComponent implements AfterViewInit {
       setTimeout(() => {
         const row = Math.round(event.target.scrollTop / this.scrollHeight)
         const value = this.values[col][row]
-        this.selection[col] = value
-        if (value) this.onSelect.emit(this.selection)
+        if (value) {
+          this.selection[col] = value
+          this.onSelect.emit(this.selection)
+        }
         this.emitterLocked = false
       }, 1000)
     }

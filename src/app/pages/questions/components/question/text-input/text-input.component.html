@@ -2,8 +2,8 @@
   <wheel-selector
     [values]="datePickerValues"
     [selection]="defaultDatePickerValue"
-    [labels]="datePickerLabels"
-    (onSelect)="emitAnswer({ date: $event })"
+    [labels]="labels"
+    (onSelect)="emitAnswer($event)"
   ></wheel-selector>
 </ng-container>
 
@@ -11,8 +11,8 @@
   <wheel-selector
     [values]="timePickerValues"
     [selection]="defaultTimePickerValue"
-    [labels]="timePickerLabels"
-    (onSelect)="emitAnswer({ time: $event })"
+    [labels]="labels"
+    (onSelect)="emitAnswer($event)"
   ></wheel-selector>
 </ng-container>
 
@@ -20,8 +20,8 @@
   <wheel-selector
     [values]="durationPickerValues"
     [selection]="defaultDurationPickerValue"
-    [labels]="durationPickerLabels"
-    (onSelect)="emitAnswer({ duration: $event })"
+    [labels]="labels"
+    (onSelect)="emitAnswer($event)"
   ></wheel-selector>
 </ng-container>
 

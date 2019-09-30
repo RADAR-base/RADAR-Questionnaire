@@ -21,8 +21,11 @@ import {
   WeeklyReportSubSettings
 } from '../../../shared/models/settings'
 import { SplashPageComponent } from '../../splash/containers/splash-page.component'
-import { AuthService } from '../services/auth.service'
 import { HomePageComponent } from "../../home/containers/home-page.component";
+import { StorageService } from "../../../core/services/storage/storage.service";
+import { StorageKeys } from "../../../shared/enums/storage";
+import { AuthService } from "../services/auth.service";
+import {ConfigService} from "../../../core/services/config/config.service";
 
 @Component({
   selector: 'page-enrolment',
@@ -53,7 +56,9 @@ export class EnrolmentPageComponent {
     private localization: LocalizationService,
     private alertService: AlertService,
     private usage: UsageService,
-    private logger: LogService
+    private logger: LogService,
+    private storage: StorageService,
+    private config: ConfigService,
   ) {
     this.localization.update().then(lang => (this.language = lang))
   }
@@ -219,7 +224,7 @@ export class EnrolmentPageComponent {
       .then(() => {
         return this.auth.retrieveUserInformation(this.language)
       })
-      .then(() => this.auth.fetchConfigState(true))
+      .then(() => this.config.fetchConfigState(true))
       .then(() => this.navigateToHome())
       .catch( () => {
         this.loading = false;

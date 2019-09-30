@@ -1,11 +1,13 @@
 import 'rxjs/add/operator/toPromise'
 
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http'
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import {Firebase} from "@ionic-native/firebase";
-import {InAppBrowser, InAppBrowserOptions} from '@ionic-native/in-app-browser';
+import { Firebase } from "@ionic-native/firebase/ngx";
+import { InAppBrowser, InAppBrowserOptions } from '@ionic-native/in-app-browser/ngx';
 
-
+import {
+  setDateTimeToMidnight
+} from '../../../shared/utilities/time'
 import {
   DefaultEndPoint,
   DefaultKeycloakURL,
@@ -24,6 +26,8 @@ import { TokenService } from '../../../core/services/token/token.service'
 import { MetaToken } from '../../../shared/models/token'
 import { isValidURL } from '../../../shared/utilities/form-validators'
 import {StorageKeys} from "../../../shared/enums/storage";
+import {StorageService} from "../../../core/services/storage/storage.service";
+import {SubjectConfigService} from "../../../core/services/config/subject-config.service";
 
 const uuidv4 = require('uuid/v4');
 
@@ -42,6 +46,8 @@ export class AuthService {
     private analytics: AnalyticsService,
     private inAppBrowser: InAppBrowser,
     private fireBase: Firebase,
+    private storage: StorageService,
+    private subjectConfigService: SubjectConfigService
   ) {
     // UCL start
     this.updateURI().then(() => {
@@ -136,20 +142,23 @@ export class AuthService {
         const participantId = subjectInformation.sub
         const participantLogin = subjectInformation.username
         const createdDate = new Date(subjectInformation.createdTimestamp);
-        const createdDateMidnight = this.schedule.setDateTimeToMidnight(
+        const createdDateMidnight = setDateTimeToMidnight(
           createdDate
         );
         this.fetchProjectId().then((result) => {
           const projectName = result;
           resolve (
-            this.storage.init(
-              participantId,
-              participantLogin,
-              projectName,
-              language,
-              createdDate,
-              createdDateMidnight
-            ));
+            // this.storage.init(
+            //   participantId,
+            //   participantLogin,
+            //   projectName,
+            //   language,
+            //   createdDate,
+            //   createdDateMidnight
+            // )
+            // FIXME here it should be config.setAll(User)
+            "STAGING_PROJECT"
+          );
         })
       }).catch(reject);
     });
@@ -221,7 +230,7 @@ export class AuthService {
     // return this.token.getURI().then(uri => {
     //   this.URI_base = uri + DefaultManagementPortalURI
     // })
-    this.storage.get(StorageKeys.BASE_URI).then(uri => {
+    return this.storage.get(StorageKeys.BASE_URI).then(uri => {
       const endPoint = uri ? uri : DefaultEndPoint;
       this.URI_base = endPoint + DefaultKeycloakURL;
     });

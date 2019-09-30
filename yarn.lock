@@ -2903,7 +2903,7 @@ cordova-android-support-gradle-release@^3.0.1:
     q "^1.4.1"
     semver "5.6.0"
 
-cordova-android@8.1.0:
+cordova-android@^8.1.0:
   version "8.1.0"
   resolved "https://registry.yarnpkg.com/cordova-android/-/cordova-android-8.1.0.tgz#d9aea62bbe4a4c8d22fdf21616869439cd1c95a0"
   integrity sha512-eAY6g9q3raJ4P03wNdSWC5MOW1EfxoomWNXsPhi7T6Q9yAqmxqn0sLEUjLL1Ib0LCH3nKQWBXdxapQ5LgbHu+g==
@@ -3077,10 +3077,10 @@ cordova-plugin-globalization@^1.11.0:
   resolved "https://registry.yarnpkg.com/cordova-plugin-globalization/-/cordova-plugin-globalization-1.11.0.tgz#eac3158100298493afa30be8940e698f61efbcfe"
   integrity sha1-6sMVgQAphJOvowvolA5pj2HvvP4=
 
-cordova-plugin-inappbrowser@3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-inappbrowser/-/cordova-plugin-inappbrowser-3.0.0.tgz#d4ae00d36676210751057ad258ae4ad4a9161ada"
-  integrity sha1-1K4A02Z2IQdRBXrSWK5K1KkWGto=
+cordova-plugin-inappbrowser@3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-inappbrowser/-/cordova-plugin-inappbrowser-3.1.0.tgz#61520b8de3eb75b37842d2340f5d90a84a073747"
+  integrity sha512-YqrZfYgbGTS20SFID0mrRxud312VH072QVlFonCAkPgtGg1Svy7lELOCNFd+KU7t4mVtZeTEjZPEeefvjaetwQ==
 
 cordova-plugin-insomnia@^4.3.0:
   version "4.3.0"

@@ -1,20 +1,18 @@
 import { Component, ViewChild } from '@angular/core';
-import { AlertController, NavController, NavParams, Slides } from 'ionic-angular';
+import { NavController, Slides } from 'ionic-angular';
 
-import {
-  DefaultSettingsSupportedLanguages,
-  LanguageMap
-} from "../../../../../assets/data/defaultConfig";
-import {AppComponent} from "../../../../core/containers/app.component";
-import {ConfigService} from "../../../../core/services/config.service";
-import { LocalizationService } from '../../../../core/services/localization.service'
-import {StorageService} from "../../../../core/services/storage.service";
-import {LocKeys} from "../../../../shared/enums/localisations";
-import {StorageKeys} from "../../../../shared/enums/storage";
-import {LanguageSetting} from "../../../../shared/models/settings";
-import {HomePageComponent} from "../../../home/containers/home-page.component";
-import {EnrolmentPageComponent} from "../../containers/enrolment-page.component";
-import {AuthService} from "../../services/auth.service";
+import { DefaultSettingsSupportedLanguages, LanguageMap } from "../../../../../assets/data/defaultConfig";
+import { AppComponent } from "../../../../core/containers/app.component";
+import { StorageService } from "../../../../core/services/storage/storage.service";
+import { LocKeys } from "../../../../shared/enums/localisations";
+import { StorageKeys } from "../../../../shared/enums/storage";
+import { LanguageSetting } from "../../../../shared/models/settings";
+import { HomePageComponent } from "../../../home/containers/home-page.component";
+import { EnrolmentPageComponent } from "../../containers/enrolment-page.component";
+import { AuthService } from "../../services/auth.service";
+import { LocalizationService } from "../../../../core/services/misc/localization.service";
+import { AlertService } from "../../../../core/services/misc/alert.service";
+import { ConfigService } from "../../../../core/services/config/config.service";
 
 /**
  * Generated class for the WelcomePage page.
@@ -41,12 +39,11 @@ export class WelcomePageComponent {
 
   constructor(
     private navCtrl: NavController,
-    private navParams: NavParams,
     private localization: LocalizationService,
     private storage: StorageService,
     private configService: ConfigService,
     private authService: AuthService,
-    private alertCtrl: AlertController) {}
+    private alertService: AlertService) {}
 
   ionViewDidLoad() {
     return this.localization.update()
@@ -88,28 +85,14 @@ export class WelcomePageComponent {
         checked: checked
       })
     }
-    this.showAlert({
+    this.alertService.showAlert({
       title: this.localization.translateKey(LocKeys.SETTINGS_LANGUAGE_ALERT),
       buttons: buttons,
       inputs: inputs
     })
   }
 
-  showAlert(parameters) {
-    const alert = this.alertCtrl.create({
-      title: parameters.title,
-      buttons: parameters.buttons
-    })
-    if (parameters.message) {
-      alert.setMessage(parameters.message)
-    }
-    if (parameters.inputs) {
-      for (let i = 0; i < parameters.inputs.length; i++) {
-        alert.addInput(parameters.inputs[i])
-      }
-    }
-    alert.present()
-  }
+
 
   joinStudy() {
     this.navCtrl.setRoot(EnrolmentPageComponent);
@@ -122,26 +105,26 @@ export class WelcomePageComponent {
       .then(() => this.configService.fetchConfigState(true))
       .catch( () => {
         this.loading = false;
-        this.alertCtrl.create({
+        this.alertService.showAlert({
           title: "Could not retrieve configuration",
           buttons: [{
             text: this.localization.translateKey(LocKeys.BTN_OKAY),
             handler: () => {}
           }],
           message: "Could not retrieve questionnaire configuration. Please try again later."
-        }).present();
+        })
       })
       .then(() => this.navigateToHome())
       .catch( () => {
         this.loading = false;
-        this.alertCtrl.create({
+        this.alertService.showAlert({
           title: "Something went wrong",
           buttons: [{
             text: this.localization.translateKey(LocKeys.BTN_OKAY),
             handler: () => {}
           }],
           message: "Could not successfully redirect to login. Please try again later."
-        }).present();
+        })
       });
   }
 

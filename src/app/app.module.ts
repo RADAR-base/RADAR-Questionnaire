@@ -22,7 +22,7 @@ import { Vibration } from '@ionic-native/vibration/ngx'
 import { WebIntent } from '@ionic-native/web-intent/ngx'
 import { IonicStorageModule, Storage } from '@ionic/storage'
 import { IonicApp, IonicModule } from 'ionic-angular'
-import { InAppBrowser } from '@ionic-native/in-app-browser'
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx'
 
 import { AppComponent } from './core/containers/app.component'
 import {

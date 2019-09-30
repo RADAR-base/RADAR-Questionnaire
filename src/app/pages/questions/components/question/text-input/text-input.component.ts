@@ -77,7 +77,7 @@ export class TextInputComponent implements OnInit {
     this.timePickerValues.push(meridiem)
     this.timePickerLabels.push('Meridiem')
     this.defaultTimePickerValue = [
-      moment.format('HH'),
+      moment.format('hh'),
       moment.format('mm'),
       moment.format('A')
     ]

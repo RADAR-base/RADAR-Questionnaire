@@ -13,6 +13,8 @@ export interface Task {
   isClinical: boolean
   notifications?: SingleNotification[]
   timeCompleted?: number
+  showInCalendar?: boolean
+  isDemo?: boolean
 }
 
 export interface TasksProgress {

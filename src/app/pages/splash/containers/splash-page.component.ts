@@ -29,6 +29,7 @@ export class SplashPageComponent {
   }
 
   onStart() {
+    this.usage.sendOpenEvent()
     this.usage.setPage(this.constructor.name)
     this.status = this.localization.translateKey(
       LocKeys.SPLASH_STATUS_UPDATING_CONFIG
@@ -41,7 +42,7 @@ export class SplashPageComponent {
         )
         return this.splash.sendMissedQuestionnaireLogs()
       })
-      .catch(e => console.log('[SPLASH] Notifications error.'))
+      .catch(e => this.showFetchConfigFail(e))
       .then(() => this.navCtrl.setRoot(HomePageComponent))
   }
 

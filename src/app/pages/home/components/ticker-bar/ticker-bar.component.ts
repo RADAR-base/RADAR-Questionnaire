@@ -52,7 +52,7 @@ export class TickerBarComponent implements OnChanges {
         this.localization.translateKey(LocKeys.STATUS_NOW) +
         '.</b>'
     } else {
-      if (this.task.name === 'ESM') {
+      if (!this.task.showInCalendar) {
         this.tickerText =
           this.localization.translateKey(LocKeys.TASK_BAR_NOW_TASK) +
           '<b>' +

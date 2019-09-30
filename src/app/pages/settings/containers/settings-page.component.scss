@@ -15,6 +15,18 @@ page-settings {
     background-color: $cl-danger-60;
   }
 
+  ion-buttons {
+    margin: 8px 16px;
+  }
+
+  .bt--full {
+    width: 100%;
+  }
+
+  .bt--full:active {
+    background-color: $cl-primary-80;
+  }
+
   .info-value {
     font-weight: bold;
   }
@@ -36,10 +48,6 @@ page-settings {
     background-color: $cl-primary-10;
     color: $cl-font-light;
     font-size: 2rem;
-  }
-
-  .item-button:active {
-    background-color: $cl-primary-80;
   }
 
   ion-spinner * {

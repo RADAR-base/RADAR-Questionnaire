@@ -2,18 +2,19 @@ import { Injectable } from '@angular/core'
 
 import { ConfigService } from '../../../core/services/config/config.service'
 import { KafkaService } from '../../../core/services/kafka/kafka.service'
+import { LogService } from '../../../core/services/misc/log.service'
 import { ScheduleService } from '../../../core/services/schedule/schedule.service'
 import { SchemaType } from '../../../shared/models/kafka'
+import { QuestionType } from '../../../shared/models/question'
 import { TaskType, getTaskType } from '../../../shared/utilities/task-type'
-import { PrepareDataService } from './prepare-data.service'
 
 @Injectable()
 export class FinishTaskService {
   constructor(
     private schedule: ScheduleService,
-    private prepare: PrepareDataService,
     private kafka: KafkaService,
-    private config: ConfigService
+    private config: ConfigService,
+    private logger: LogService
   ) {}
 
   updateTaskToComplete(task): Promise<any> {
@@ -26,9 +27,11 @@ export class FinishTaskService {
     ])
   }
 
-  processDataAndSend(data, task) {
+  processDataAndSend(answers, questions, timestamps, task) {
+    // NOTE: Do not send answers if demo questionnaire
+    if (task.isDemo) return Promise.resolve()
     return this.sendAnswersToKafka(
-      this.prepare.processQuestionnaireData(data),
+      this.processQuestionnaireData(answers, timestamps, questions),
       task
     )
   }
@@ -45,9 +48,34 @@ export class FinishTaskService {
   }
 
   evalClinicalFollowUpTask(assessment): Promise<any> {
-    console.log('evaluating')
     return this.schedule
       .generateClinicalSchedule(assessment, Date.now())
       .then(() => this.config.rescheduleNotifications())
+  }
+
+  processQuestionnaireData(answers, timestamps, questions) {
+    this.logger.log('Answers to process', answers)
+    const values = Object.entries(answers).map(([key, value]) => ({
+      questionId: { string: key.toString() },
+      value: { string: value.toString() },
+      startTime: timestamps[key].startTime,
+      endTime: timestamps[key].endTime
+    }))
+    return {
+      answers: values,
+      configVersion: '',
+      time: this.getTimeStart(questions, values),
+      timeCompleted: this.getTimeCompleted(values)
+    }
+  }
+
+  getTimeStart(questions, answers) {
+    // NOTE: Do not include info screen as start time
+    const index = questions.findIndex(q => q.field_type !== QuestionType.info)
+    return index > -1 ? answers[index].startTime : answers[0].startTime
+  }
+
+  getTimeCompleted(answers) {
+    return answers[answers.length - 1].endTime
   }
 }

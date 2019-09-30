@@ -3,40 +3,19 @@ import { Injectable } from '@angular/core'
 import { DefaultPlatformInstance } from '../../../../assets/data/defaultConfig'
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
 import { RemoteConfigService } from '../../../core/services/config/remote-config.service'
-import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { ScheduleService } from '../../../core/services/schedule/schedule.service'
 import { ConfigKeys } from '../../../shared/enums/config'
 import { Task, TasksProgress } from '../../../shared/models/task'
-import { TaskType, getTaskType } from '../../../shared/utilities/task-type'
+import { TaskType } from '../../../shared/utilities/task-type'
 import { setDateTimeToMidnight } from '../../../shared/utilities/time'
 
 @Injectable()
 export class TasksService {
   constructor(
     private schedule: ScheduleService,
-    private localization: LocalizationService,
     private questionnaire: QuestionnaireService,
     private remoteConfig: RemoteConfigService
   ) {}
-
-  getQuestionnairePayload(task) {
-    const type = getTaskType(task)
-    return Promise.all([
-      this.questionnaire.getAssessment(type, task),
-      this.getTasksOfToday()
-    ]).then(([assessment, tasks]) => {
-      return {
-        title: assessment.name,
-        introduction: this.localization.chooseText(assessment.startText),
-        endText: this.localization.chooseText(assessment.endText),
-        questions: assessment.questions,
-        task: task,
-        assessment: assessment,
-        type: type,
-        isLastTask: this.isLastTask(tasks)
-      }
-    })
-  }
 
   evalHasClinicalTasks() {
     return this.questionnaire.getHasClinicalTasks()

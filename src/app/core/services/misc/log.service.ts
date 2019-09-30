@@ -16,7 +16,8 @@ export class LogService {
   }
 
   error(message: string, error: any): Error {
-    const formattedException = `${message}: ${LogService.formatObject(error)}`
+    const formattedError = LogService.formatObject(error)
+    const formattedException = `${message}: ${formattedError}`
     console.log(formattedException, error)
 
     if (error && error instanceof Error) {

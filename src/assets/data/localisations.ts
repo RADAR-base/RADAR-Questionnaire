@@ -385,6 +385,14 @@ export const Localisations = {
     it: 'Registra le Notifiche',
     nl: 'Logmeldingen'
   },
+  SETTINGS_SEND_CACHED_DATA: {
+    da: 'Send Cachelagrede Data',
+    de: 'Senden Sie Zwischengespeicherte Daten',
+    en: 'Send Cached Data',
+    es: 'Enviar Datos en Caché',
+    it: 'Invia Dati Memorizzati nella Cache',
+    nl: 'Gegevens in Cache Verzenden'
+  },
   LANGUAGE_ENGLISH: {
     da: 'Engelsk',
     de: 'Englisch',

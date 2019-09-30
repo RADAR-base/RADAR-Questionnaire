@@ -31,7 +31,7 @@ export class WheelSelectorComponent implements AfterViewInit {
   constructor() {}
 
   ngAfterViewInit() {
-    this.scrollToDefault()
+    if (this.selection) this.scrollToDefault()
   }
 
   scrollToDefault() {
@@ -46,7 +46,7 @@ export class WheelSelectorComponent implements AfterViewInit {
     if (!this.emitterLocked) {
       this.emitterLocked = true
       setTimeout(() => {
-        const row = event.target.scrollTop / this.scrollHeight
+        const row = Math.round(event.target.scrollTop / this.scrollHeight)
         const value = this.values[col][row]
         this.selection[col] = value
         if (value) this.onSelect.emit(this.selection)

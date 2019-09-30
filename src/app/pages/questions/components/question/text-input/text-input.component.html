@@ -19,7 +19,8 @@
 <ng-container *ngIf="showDurationPicker">
   <wheel-selector
     [values]="durationPickerValues"
-    [labels]="DurationPickerLabels"
+    [selection]="defaultDurationPickerValue"
+    [labels]="durationPickerLabels"
     (onSelect)="emitAnswer({ duration: $event })"
   ></wheel-selector>
 </ng-container>

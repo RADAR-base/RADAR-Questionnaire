@@ -21,12 +21,13 @@ export class TextInputComponent implements OnInit {
   showSeconds: boolean
   datePickerValues: string[][]
   defaultDatePickerValue: string[]
-  datePickerLabels = ['Month', 'Day', 'Year']
+  datePickerLabels = ['Day', 'Month', 'Year']
   timePickerValues: string[][]
   defaultTimePickerValue: string[]
   timePickerLabels = ['Hours', 'Minutes']
   durationPickerValues: string[][]
-  durationLabels = ['Hours', 'Minutes']
+  defaultDurationPickerValue: string[]
+  durationPickerLabels = ['Hours', 'Minutes']
 
   value = {}
 
@@ -56,10 +57,10 @@ export class TextInputComponent implements OnInit {
     const months = locale.monthsShort()
     const days = this.addLeadingZero(Array.from(Array(32).keys()).slice(1, 32))
     const years = Array.from(Array(31).keys()).map(d => String(d + 2000))
-    this.datePickerValues = [months, days, years]
+    this.datePickerValues = [days, months, years]
     this.defaultDatePickerValue = [
-      moment.format('MMM'),
       moment.format('DD'),
+      moment.format('MMM'),
       moment.format('YYYY')
     ]
   }
@@ -75,7 +76,7 @@ export class TextInputComponent implements OnInit {
       this.timePickerLabels.push('Seconds')
     }
     this.timePickerValues.push(meridiem)
-    this.timePickerLabels.push('Meridiem')
+    this.timePickerLabels.push('AM/PM')
     this.defaultTimePickerValue = [
       moment.format('hh'),
       moment.format('mm'),
@@ -85,9 +86,9 @@ export class TextInputComponent implements OnInit {
 
   initDuration() {
     const minutes = this.addLeadingZero(Array.from(Array(60).keys()))
-    if (this.showSeconds) this.timePickerValues.push(minutes)
     const longHours = this.addLeadingZero(Array.from(Array(24).keys()))
     this.durationPickerValues = [longHours, minutes]
+    this.defaultDurationPickerValue = ["00","00"]
   }
 
   addLeadingZero(values) {
@@ -96,7 +97,14 @@ export class TextInputComponent implements OnInit {
 
   emitAnswer(value) {
     if (typeof value !== 'string') {
-      this.value = Object.assign(this.value, value)
+      if ("date" in value) {
+        const month = this.localization.moment().month(value['date'][1]).format("M")
+        this.value = Object.assign(this.value, {day: value['date'][0], month: month, year: value['date'][2]})
+      }
+      else if ("time" in value && this.showSeconds) this.value = Object.assign(this.value, {hour: value['time'][0], minute: value['time'][1], second: value['time'][2], ampm: value['time'][3]})
+      else if ("time" in value) this.value = Object.assign(this.value, {hour: value['time'][0], minute: value['time'][1], ampm: value['time'][2]})
+      else if ("duration" in value) this.value = Object.assign(this.value, {hour: value['duration'][0], minute: value['duration'][1]})
+      else this.value = Object.assign(this.value, value)
       this.valueChange.emit(JSON.stringify(this.value))
     } else this.valueChange.emit(value)
   }

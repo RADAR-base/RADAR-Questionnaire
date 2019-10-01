@@ -274,6 +274,10 @@ export class ConfigService {
     )
   }
 
+  sendCachedData() {
+    return this.kafka.sendAllFromCache()
+  }
+
   updateSettings(settings) {
     // TODO: Fix settings
   }

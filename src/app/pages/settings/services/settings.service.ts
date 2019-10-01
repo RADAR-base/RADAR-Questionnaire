@@ -52,4 +52,8 @@ export class SettingsService {
       .setLanguage(lang)
       .then(() => this.config.updateConfigStateOnLanguageChange())
   }
+
+  sendCachedData() {
+    return this.config.sendCachedData()
+  }
 }

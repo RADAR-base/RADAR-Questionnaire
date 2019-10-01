@@ -55,7 +55,7 @@ export class KafkaService {
         })
         this.sendDataEvent(DataEventType.PREPARED_OBJECT, cacheValue)
         return this.storeInCache(kafkaObject, cacheValue).then(() => {
-          return keepInCache ? Promise.resolve() : this.sendAllFromCache()
+          return keepInCache ? Promise.resolve([]) : this.sendAllFromCache()
         })
       }
     )
@@ -71,50 +71,49 @@ export class KafkaService {
   }
 
   sendAllFromCache() {
-    if (!this.isCacheSending) {
-      this.setCacheSending(true)
-      return Promise.all([this.getCache(), this.getKafkaInstance()])
-        .then(([cache, kafka]) => {
-          const sendPromises = Object.entries(cache)
-            .filter(([k]) => k)
-            .map(([k, v]: any) =>
-              this.sendToKafka(k, v, kafka).catch(e => {
-                this.logger.error('Failed to send data from cache to kafka', e)
-                return undefined
-              })
+    if (this.isCacheSending) return Promise.resolve([])
+    this.setCacheSending(true)
+    return Promise.all([
+      this.getCache(),
+      this.getKafkaInstance(),
+      this.schema.getRadarSpecifications()
+    ])
+      .then(([cache, kafka, specifications]) => {
+        const sendPromises = Object.entries(cache)
+          .filter(([k]) => k)
+          .map(([k, v]: any) => {
+            const topic = this.schema.getKafkaTopic(
+              specifications,
+              v.name,
+              v.avsc
             )
+            return this.sendToKafka(topic, k, v, kafka).catch(e =>
+              this.logger.error('Failed to send data from cache to kafka', e)
+            )
+          })
+        return Promise.all(sendPromises)
+      })
+      .then(keys => {
+        this.removeFromCache(keys.filter(k => !(k instanceof Error))).then(() =>
+          this.setCacheSending(false)
+        )
+        return keys
+      })
 
-          return Promise.all(sendPromises)
-        })
-        .then(keys => {
-          this.logger.log(keys)
-          return this.removeFromCache(keys.filter(k => k))
-        })
-        .then(() => {
-          this.setCacheSending(false)
-          return this.setLastUploadDate(Date.now())
-        })
-        .catch(e => {
-          this.logger.error('Failed to send all data from cache', e)
-          this.setCacheSending(false)
-        })
-    } else {
-      return Promise.resolve()
-    }
+      .catch(e => {
+        this.setCacheSending(false)
+        return [this.logger.error('Failed to send all data from cache', e)]
+      })
   }
 
-  sendToKafka(k: number, v: CacheValue, kafka): Promise<any> {
+  sendToKafka(topic: string, k: number, v: CacheValue, kafka): Promise<any> {
     return this.schema
-      .getKafkaTopic(v.name, v.avsc)
-      .then(topic =>
-        this.schema
-          .convertToAvro(v.kafkaObject, topic, this.BASE_URI)
-          .then(data =>
-            kafka
-              .topic(topic)
-              .produce(data.schemaId, data.schemaInfo, data.payload, e =>
-                e ? Promise.reject() : Promise.resolve()
-              )
+      .convertToAvro(v.kafkaObject, topic, this.BASE_URI)
+      .then(data =>
+        kafka
+          .topic(topic)
+          .produce(data.schemaId, data.schemaInfo, data.payload, e =>
+            e ? Promise.reject() : Promise.resolve()
           )
       )
       .then(() => this.sendDataEvent(DataEventType.SEND_SUCCESS, v))
@@ -126,6 +125,7 @@ export class KafkaService {
   }
 
   removeFromCache(cacheKeys: number[]) {
+    if (!cacheKeys.length) return Promise.resolve()
     return this.getCache().then(cache => {
       if (cache) {
         cacheKeys.map(cacheKey => {
@@ -138,6 +138,7 @@ export class KafkaService {
             delete cache[cacheKey]
           }
         })
+        this.setLastUploadDate(Date.now())
         return this.setCache(cache)
       }
     })

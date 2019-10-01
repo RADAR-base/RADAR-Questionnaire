@@ -171,7 +171,7 @@ export class ScheduleGeneratorService {
       isClinical: assessment.protocol.clinicalProtocol ? true : false,
       showInCalendar:
         assessment.showInCalendar == null ? true : assessment.showInCalendar,
-      isDemo: assessment.isDemo
+      isDemo: !!assessment.isDemo
     }
     task.notifications = this.notificationService.createNotifications(
       assessment,

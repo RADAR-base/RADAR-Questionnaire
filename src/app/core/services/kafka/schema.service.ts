@@ -123,28 +123,24 @@ export class SchemaService {
       ]
     }
     return Promise.all(this.schemas[topic])
-      .then(
-        ([keySchemaMetadata, valueSchemaMetadata]) => {
-          const key = JSON.parse(keySchemaMetadata.schema)
-          const value = JSON.parse(valueSchemaMetadata.schema)
-          const schemaId = new KafkaRest.AvroSchema(key)
-          const schemaInfo = new KafkaRest.AvroSchema(value)
-          const payload = {
-            key: this.getAvroObject(key, kafkaObject.key),
-            value: this.getAvroObject(value, kafkaObject.value)
-          }
-          return { schemaId, schemaInfo, payload }
+      .then(([keySchemaMetadata, valueSchemaMetadata]) => {
+        const key = JSON.parse(keySchemaMetadata.schema)
+        const value = JSON.parse(valueSchemaMetadata.schema)
+        const schemaId = new KafkaRest.AvroSchema(key)
+        const schemaInfo = new KafkaRest.AvroSchema(value)
+        const payload = {
+          key: this.getAvroObject(key, kafkaObject.key),
+          value: this.getAvroObject(value, kafkaObject.value)
         }
-      )
+        return { schemaId, schemaInfo, payload }
+      })
       .catch(e => {
         this.schemas[topic] = null
         throw e
       })
   }
 
-  getKafkaTopic(name, avsc): Promise<string> {
-    const type = name.toLowerCase()
-    const defaultTopic = `${avsc}_${name}`
+  getRadarSpecifications(): Promise<any[] | null> {
     return this.remoteConfig
       .read()
       .then(config =>
@@ -154,13 +150,21 @@ export class SchemaService {
         )
       )
       .then(url => this.http.get(url).toPromise())
-      .then(res => {
-        const schemaSpecs = YAML.parse(atob(res['content'])).data
-        const topic = schemaSpecs.find(t => t.type.toLowerCase() == type).topic
-        if (topic) return topic
-        else throw new Error('Failed to get Kafka topic')
+      .then(res => YAML.parse(atob(res['content'])).data)
+      .catch(e => {
+        this.logger.error('Failed to get valid RADAR Schema specifications', e)
+        return null
       })
-      .catch(e => defaultTopic)
+  }
+
+  getKafkaTopic(specifications: any[] | null, name, avsc): string {
+    const type = name.toLowerCase()
+    const defaultTopic = `${avsc}_${name}`
+    if (specifications) {
+      const spec = specifications.find(t => t.type.toLowerCase() == type)
+      return spec && spec.topic ? spec.topic : defaultTopic
+    }
+    return defaultTopic
   }
 
   getLatestKafkaSchemaVersion(

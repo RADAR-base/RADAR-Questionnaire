@@ -27,7 +27,7 @@ export class WheelSelectorComponent implements AfterViewInit {
   onSelect: EventEmitter<any> = new EventEmitter<any>()
 
   emitterLocked = false
-  scrollHeight = 60
+  scrollHeight = 40
 
   constructor() {}
 

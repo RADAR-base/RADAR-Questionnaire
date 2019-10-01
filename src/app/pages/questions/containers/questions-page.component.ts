@@ -108,6 +108,7 @@ export class QuestionsPageComponent implements OnInit {
       this.updateToolbarButtons()
     }
     if (this.questionsService.getIsNextAutomatic(event.type)) {
+      if (this.isLastQuestion()) return this.navigateToFinishPage()
       this.nextQuestion()
     }
   }
@@ -152,11 +153,13 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   updateToolbarButtons() {
-    this.isRightButtonDisabled = !this.questionsService.isAnswered(
-      this.getCurrentQuestion()
-    )
+    this.isRightButtonDisabled =
+      !this.questionsService.isAnswered(this.getCurrentQuestion()) &&
+      !this.questionsService.getIsNextEnabled(
+        this.getCurrentQuestion().field_type
+      )
     this.isLeftButtonDisabled = this.questionsService.getIsPreviousDisabled(
-      this.getCurrentQuestion()
+      this.getCurrentQuestion().field_type
     )
   }
 
@@ -193,5 +196,9 @@ export class QuestionsPageComponent implements OnInit {
       this.task,
       this.questionsService.getAttemptProgress(this.questions.length)
     )
+  }
+
+  isLastQuestion() {
+    return this.currentQuestionId === this.questions.length - 1
   }
 }

@@ -15,6 +15,7 @@ export class QuestionsService {
     QuestionType.timed,
     QuestionType.audio
   ])
+  NEXT_BUTTON_ENABLED_SET: Set<QuestionType> = new Set([QuestionType.audio])
   NEXT_BUTTON_AUTOMATIC_SET: Set<QuestionType> = new Set([
     QuestionType.timed,
     QuestionType.audio
@@ -149,13 +150,15 @@ export class QuestionsService {
     })
   }
 
-  getIsPreviousDisabled(question: Question) {
-    const questionType = question.field_type
+  getIsPreviousDisabled(questionType: string) {
     return this.PREVIOUS_BUTTON_DISABLED_SET.has(questionType)
   }
 
-  getIsNextAutomatic(question: Question) {
-    const questionType = question.field_type
+  getIsNextEnabled(questionType: string) {
+    return this.NEXT_BUTTON_ENABLED_SET.has(questionType)
+  }
+
+  getIsNextAutomatic(questionType: string) {
     return this.NEXT_BUTTON_AUTOMATIC_SET.has(questionType)
   }
 

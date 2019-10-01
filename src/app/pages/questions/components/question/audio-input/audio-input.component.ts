@@ -7,6 +7,7 @@ import {
   Output
 } from '@angular/core'
 import { NavController, Platform } from 'ionic-angular'
+import { Subscription } from 'rxjs'
 
 import { AlertService } from '../../../../../core/services/misc/alert.service'
 import { AndroidPermissionUtility } from '../../../../../shared/utilities/android-permission'
@@ -15,7 +16,6 @@ import { DefaultMaxAudioAttemptsAllowed } from '../../../../../../assets/data/de
 import { HomePageComponent } from '../../../../home/containers/home-page.component'
 import { LocKeys } from '../../../../../shared/enums/localisations'
 import { Section } from '../../../../../shared/models/question'
-import { Subscription } from 'rxjs'
 import { TranslatePipe } from '../../../../../shared/pipes/translate/translate'
 
 @Component({
@@ -58,7 +58,6 @@ export class AudioInputComponent implements OnDestroy, OnInit {
       this.stopRecording()
       this.platform.exitApp()
     })
-    this.enableNextButton()
   }
 
   ngOnDestroy() {
@@ -84,10 +83,6 @@ export class AudioInputComponent implements OnDestroy, OnInit {
     return this.audioRecordService
       .readAudioFile()
       .then(data => this.valueChange.emit(data))
-  }
-
-  enableNextButton() {
-    this.valueChange.emit('')
   }
 
   startRecording() {

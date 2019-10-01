@@ -70,7 +70,7 @@ export class SchemaService {
       case SchemaType.ASSESSMENT:
         const Answer: AnswerValueExport = {
           name: payload.task.name,
-          version: payload.data.configVersion,
+          version: payload.data.scheduleVersion,
           answers: payload.data.answers,
           time: payload.data.time,
           timeCompleted: payload.data.timeCompleted,

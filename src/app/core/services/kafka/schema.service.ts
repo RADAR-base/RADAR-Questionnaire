@@ -95,7 +95,8 @@ export class SchemaService {
       case SchemaType.APP_EVENT:
         const Event: EventValueExport = {
           time: getSeconds({ milliseconds: this.getUniqueTimeNow() }),
-          eventType: payload.eventType
+          eventType: payload.eventType,
+          questionnaireName: payload.questionnaireName
         }
         return Event
     }
@@ -122,8 +123,8 @@ export class SchemaService {
           value: this.convertToAvro(value, kafkaObject.value)
         }
         return {
-          key_schema: keySchemaMetadata.schema,
-          value_schema: valueSchemaMetadata.schema,
+          key_schema_id: keySchemaMetadata.id,
+          value_schema_id: valueSchemaMetadata.id,
           records: [payload]
         }
       })

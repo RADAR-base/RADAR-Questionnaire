@@ -56,7 +56,7 @@ export class TextInputComponent implements OnInit {
   }
 
   initDates() {
-    const moment = this.localization.moment()
+    const moment = this.localization.moment(Date.now())
     const locale = moment.localeData()
     const month = locale.monthsShort()
     const day = this.addLeadingZero(Array.from(Array(32).keys()).slice(1, 32))
@@ -70,7 +70,7 @@ export class TextInputComponent implements OnInit {
   }
 
   initTime() {
-    const moment = this.localization.moment()
+    const moment = this.localization.moment(Date.now())
     const hour = this.addLeadingZero(Array.from(Array(13).keys()).slice(1, 13))
     const minute = this.addLeadingZero(Array.from(Array(60).keys()))
     const second = minute

@@ -11,6 +11,8 @@ import { Subscription } from 'rxjs'
 
 import { DefaultMaxAudioAttemptsAllowed } from '../../../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../../../core/services/misc/alert.service'
+import { UsageService } from '../../../../../core/services/usage/usage.service'
+import { UsageEventType } from '../../../../../shared/enums/events'
 import { LocKeys } from '../../../../../shared/enums/localisations'
 import { Section } from '../../../../../shared/models/question'
 import { TranslatePipe } from '../../../../../shared/pipes/translate/translate'
@@ -40,7 +42,8 @@ export class AudioInputComponent implements OnDestroy, OnInit {
     public navCtrl: NavController,
     public alertService: AlertService,
     private platform: Platform,
-    private translate: TranslatePipe
+    private translate: TranslatePipe,
+    private usage: UsageService
   ) {
     this.permissionUtil.checkPermissions()
     this.audioRecordService.destroy()
@@ -69,10 +72,15 @@ export class AudioInputComponent implements OnDestroy, OnInit {
     if (!this.isRecording()) {
       this.recordAttempts++
       if (this.recordAttempts <= DefaultMaxAudioAttemptsAllowed) {
-        this.startRecording().catch(e => this.showTaskInterruptedAlert())
+        this.startRecording()
+          .then(() =>
+            this.usage.sendGeneralEvent(UsageEventType.RECORDING_STARTED)
+          )
+          .catch(e => this.showTaskInterruptedAlert())
       }
     } else {
       this.stopRecording()
+      this.usage.sendGeneralEvent(UsageEventType.RECORDING_STOPPED)
       if (this.recordAttempts == DefaultMaxAudioAttemptsAllowed)
         this.finishRecording().catch(e => this.showTaskInterruptedAlert())
       else this.showAfterAttemptAlert()
@@ -118,6 +126,7 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   }
 
   showTaskInterruptedAlert() {
+    this.usage.sendGeneralEvent(UsageEventType.RECORDING_ERROR)
     this.alertService.showAlert({
       title: this.translate.transform(LocKeys.AUDIO_TASK_ALERT.toString()),
       message: this.translate.transform(

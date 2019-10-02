@@ -93,7 +93,6 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   handleFinish(completedInClinic?: boolean) {
-    this.sendEvent(UsageEventType.QUESTIONNAIRE_FINISHED)
     return this.questionsService
       .handleClinicalFollowUp(this.assessment, completedInClinic)
       .then(() => {
@@ -166,6 +165,7 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   navigateToFinishPage() {
+    this.sendEvent(UsageEventType.QUESTIONNAIRE_FINISHED)
     this.submitTimestamps()
     this.showFinishScreen = true
     this.onQuestionnaireCompleted()

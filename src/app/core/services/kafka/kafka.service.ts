@@ -1,18 +1,25 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import * as KafkaRest from 'kafka-rest'
 
-import { DefaultKafkaURI } from '../../../../assets/data/defaultConfig'
+import {
+  DefaultClientAcceptType,
+  DefaultKafkaRequestContentType,
+  DefaultKafkaURI
+} from '../../../../assets/data/defaultConfig'
 import { DataEventType } from '../../../shared/enums/events'
 import { StorageKeys } from '../../../shared/enums/storage'
+import { CacheValue } from '../../../shared/models/cache'
+import { KafkaObject, SchemaType } from '../../../shared/models/kafka'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 import { TokenService } from '../token/token.service'
-import { SchemaService } from './schema.service'
 import { AnalyticsService } from '../usage/analytics.service'
-import { SchemaType, KafkaObject } from '../../../shared/models/kafka'
-import { CacheValue } from '../../../shared/models/cache'
+import { SchemaService } from './schema.service'
+
 @Injectable()
 export class KafkaService {
+  URI_topics: string = '/topics/'
+
   private readonly KAFKA_STORE = {
     LAST_UPLOAD_DATE: StorageKeys.LAST_UPLOAD_DATE,
     CACHE_ANSWERS: StorageKeys.CACHE_ANSWERS
@@ -26,7 +33,8 @@ export class KafkaService {
     private token: TokenService,
     private schema: SchemaService,
     private analytics: AnalyticsService,
-    private logger: LogService
+    private logger: LogService,
+    private http: HttpClient
   ) {
     this.updateURI()
   }
@@ -54,7 +62,7 @@ export class KafkaService {
         })
         this.sendDataEvent(DataEventType.PREPARED_OBJECT, cacheValue)
         return this.storeInCache(kafkaObject, cacheValue).then(() => {
-          return keepInCache ? Promise.resolve() : this.sendAllFromCache()
+          return keepInCache ? Promise.resolve([]) : this.sendAllFromCache()
         })
       }
     )
@@ -70,48 +78,49 @@ export class KafkaService {
   }
 
   sendAllFromCache() {
-    if (!this.isCacheSending) {
-      this.setCacheSending(true)
-      return Promise.all([this.getCache(), this.getKafkaInstance(), this.schema.getRadarSpecifications()])
-        .then(([cache, kafka, specifications]) => {
-          const sendPromises = Object.entries(cache)
-            .filter(([k]) => k)
-            .map(([k, v]: any) => {
-              const topic = this.schema.getKafkaTopic(specifications, v.name, v.avsc)
-
-              return this.sendToKafka(topic, k, v, kafka).catch(e => {
-                this.logger.error('Failed to send data from cache to kafka', e)
-                return undefined
-              })
-            })
-
-          return Promise.all(sendPromises)
-        })
-        .then(keys => {
-          this.logger.log(keys)
-          return this.removeFromCache(keys.filter(k => k))
-        })
-        .then(() => {
+    if (this.isCacheSending) return Promise.resolve([])
+    this.setCacheSending(true)
+    return Promise.all([
+      this.getCache(),
+      this.getKafkaHeaders(),
+      this.schema.getRadarSpecifications()
+    ])
+      .then(([cache, headers, specifications]) => {
+        const sendPromises = Object.entries(cache)
+          .filter(([k]) => k)
+          .map(([k, v]: any) => {
+            const topic = this.schema.getKafkaTopic(
+              specifications,
+              v.name,
+              v.avsc
+            )
+            return this.sendToKafka(topic, k, v, headers).catch(e =>
+              this.logger.error('Failed to send data from cache to kafka', e)
+            )
+          })
+        return Promise.all(sendPromises)
+      })
+      .then(keys => {
+        this.removeFromCache(keys.filter(k => !(k instanceof Error))).then(() =>
           this.setCacheSending(false)
-          return this.setLastUploadDate(Date.now())
-        })
-        .catch(e => {
-          this.logger.error('Failed to send all data from cache', e)
-          this.setCacheSending(false)
-        })
-    } else {
-      return Promise.resolve()
-    }
+        )
+        return keys
+      })
+      .catch(e => {
+        this.setCacheSending(false)
+        return [this.logger.error('Failed to send all data from cache', e)]
+      })
   }
 
-  sendToKafka(topic: string, k: number, v: CacheValue, kafka): Promise<any> {
-    return this.schema.convertToAvro(v.kafkaObject, topic, this.BASE_URI)
+  sendToKafka(topic: string, k: number, v: CacheValue, headers): Promise<any> {
+    return this.schema
+      .getKafkaPayload(v.kafkaObject, topic, this.BASE_URI)
       .then(data =>
-        kafka
-          .topic(topic)
-          .produce(data.schemaId, data.schemaInfo, data.payload, e =>
-            e ? Promise.reject() : Promise.resolve()
-          )
+        this.http
+          .post(this.KAFKA_CLIENT_URL + this.URI_topics + topic, data, {
+            headers: headers
+          })
+          .toPromise()
       )
       .then(() => this.sendDataEvent(DataEventType.SEND_SUCCESS, v))
       .then(() => k)
@@ -122,6 +131,7 @@ export class KafkaService {
   }
 
   removeFromCache(cacheKeys: number[]) {
+    if (!cacheKeys.length) return Promise.resolve()
     return this.getCache().then(cache => {
       if (cache) {
         cacheKeys.map(cacheKey => {
@@ -134,20 +144,23 @@ export class KafkaService {
             delete cache[cacheKey]
           }
         })
+        this.setLastUploadDate(Date.now())
         return this.setCache(cache)
       }
     })
   }
 
-  getKafkaInstance() {
+  getKafkaHeaders() {
     return Promise.all([this.updateURI(), this.token.refresh()])
       .then(() => this.token.getTokens())
-      .then(tokens => {
-        const headers = { Authorization: 'Bearer ' + tokens.access_token }
-        return new KafkaRest({ url: this.KAFKA_CLIENT_URL, headers: headers })
-      })
+      .then(tokens =>
+        new HttpHeaders()
+          .set('Authorization', 'Bearer ' + tokens.access_token)
+          .set('Content-Type', DefaultKafkaRequestContentType)
+          .set('Accept', DefaultClientAcceptType)
+      )
       .catch(e => {
-        throw this.logger.error('Could not initiate kafka connection', e)
+        throw this.logger.error('Could not create kafka headers', e)
       })
   }
 

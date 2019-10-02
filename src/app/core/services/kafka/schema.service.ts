@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import * as AvroSchema from 'avsc'
-import * as KafkaRest from 'kafka-rest'
 import * as YAML from 'yaml'
 
 import { DefaultSchemaSpecEndpoint } from '../../../../assets/data/defaultConfig'
@@ -96,18 +95,19 @@ export class SchemaService {
       case SchemaType.APP_EVENT:
         const Event: EventValueExport = {
           time: getSeconds({ milliseconds: this.getUniqueTimeNow() }),
-          eventType: payload.eventType
+          eventType: payload.eventType,
+          questionnaireName: payload.questionnaireName
         }
         return Event
     }
   }
 
-  getAvroObject(schema, value): any {
+  convertToAvro(schema, value): any {
     const options = { wrapUnions: true }
     return AvroSchema.parse(schema, options).clone(value, options)
   }
 
-  convertToAvro(kafkaObject, topic, baseURI): Promise<any> {
+  getKafkaPayload(kafkaObject, topic, baseURI): Promise<any> {
     if (!this.schemas[topic]) {
       this.schemas[topic] = [
         this.getLatestKafkaSchemaVersion(topic + '-key', 'latest', baseURI),
@@ -115,19 +115,19 @@ export class SchemaService {
       ]
     }
     return Promise.all(this.schemas[topic])
-      .then(
-        ([keySchemaMetadata, valueSchemaMetadata]) => {
-          const key = JSON.parse(keySchemaMetadata.schema)
-          const value = JSON.parse(valueSchemaMetadata.schema)
-          const schemaId = new KafkaRest.AvroSchema(key)
-          const schemaInfo = new KafkaRest.AvroSchema(value)
-          const payload = {
-            key: this.getAvroObject(key, kafkaObject.key),
-            value: this.getAvroObject(value, kafkaObject.value)
-          }
-          return { schemaId, schemaInfo, payload }
+      .then(([keySchemaMetadata, valueSchemaMetadata]) => {
+        const key = JSON.parse(keySchemaMetadata.schema)
+        const value = JSON.parse(valueSchemaMetadata.schema)
+        const payload = {
+          key: this.convertToAvro(key, kafkaObject.key),
+          value: this.convertToAvro(value, kafkaObject.value)
         }
-      )
+        return {
+          key_schema_id: keySchemaMetadata.id,
+          value_schema_id: valueSchemaMetadata.id,
+          records: [payload]
+        }
+      })
       .catch(e => {
         this.schemas[topic] = null
         throw e
@@ -146,7 +146,7 @@ export class SchemaService {
       .then(url => this.http.get(url).toPromise())
       .then(res => YAML.parse(atob(res['content'])).data)
       .catch(e => {
-        this.logger.error("Failed to get valid RADAR Schema specifications", e)
+        this.logger.error('Failed to get valid RADAR Schema specifications', e)
         return null
       })
   }
@@ -156,7 +156,7 @@ export class SchemaService {
     const defaultTopic = `${avsc}_${name}`
     if (specifications) {
       const spec = specifications.find(t => t.type.toLowerCase() == type)
-      return spec && spec.topic ? spec.topic : defaultTopic;
+      return spec && spec.topic ? spec.topic : defaultTopic
     }
     return defaultTopic
   }

@@ -63,7 +63,7 @@ export class TaskInfoComponent implements OnChanges {
   updateNextTaskStatus() {
     this.nextTaskStatus = this.isNow
       ? this.localization.translateKey(LocKeys.STATUS_NOW)
-      : this.task.name !== 'ESM'
+      : this.task.showInCalendar
       ? ''
       : this.localization.translateKey(LocKeys.TASK_BAR_NEXT_TASK_SOON)
   }

@@ -137,9 +137,14 @@ export class QuestionsPageComponent implements OnInit {
       this.questions,
       this.currentQuestionId
     )
-    this.questionIncrements.push(this.currentQuestionId)
-    this.slideQuestion()
-    this.updateToolbarButtons()
+    if (this.currentQuestionId >= this.questions.length) {
+      this.currentQuestionId = this.questionIncrements[this.questionIncrements.length-1]
+      this.navigateToFinishPage()
+    } else {
+      this.questionIncrements.push(this.currentQuestionId)
+      this.slideQuestion()
+      this.updateToolbarButtons()
+    }
   }
 
   previousQuestion() {
@@ -170,7 +175,7 @@ export class QuestionsPageComponent implements OnInit {
     this.showFinishScreen = true
     this.onQuestionnaireCompleted()
     this.slides.lockSwipes(false)
-    this.slides.slideNext(500)
+    this.slides.slideTo(this.slides.length()-1, 500)
     this.slides.lockSwipes(true)
   }
 

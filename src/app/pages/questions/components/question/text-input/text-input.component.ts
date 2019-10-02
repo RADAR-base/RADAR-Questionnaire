@@ -80,7 +80,7 @@ export class TextInputComponent implements OnInit {
     this.defaultTimePickerValue = {
       hour: moment.format('hh'),
       minute: moment.format('mm'),
-      second: this.showSeconds ? moment.format('ss') : "00",
+      second: this.showSeconds ? moment.format('ss') : '00',
       ampm: moment.format('A')
     }
   }

@@ -61,7 +61,6 @@ export class AudioInputComponent implements OnDestroy, OnInit {
       this.stopRecording()
       this.platform.exitApp()
     })
-    this.enableNextButton()
   }
 
   ngOnDestroy() {
@@ -92,10 +91,6 @@ export class AudioInputComponent implements OnDestroy, OnInit {
     return this.audioRecordService
       .readAudioFile()
       .then(data => this.valueChange.emit(data))
-  }
-
-  enableNextButton() {
-    this.valueChange.emit('')
   }
 
   startRecording() {

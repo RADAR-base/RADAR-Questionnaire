@@ -21,7 +21,8 @@ export class QuestionsPageComponent implements OnInit {
 
   startTime = Date.now()
   currentQuestionId = 0
-  questionIncrements = [0]
+  nextQuestionId: number
+  questionOrder = [0]
   isLeftButtonDisabled = false
   isRightButtonDisabled = true
   task: Task
@@ -131,31 +132,34 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   nextQuestion() {
-    this.submitTimestamps()
-    this.currentQuestionId = this.questionsService.getNextQuestion(
+    this.nextQuestionId = this.questionsService.getNextQuestion(
       this.questions,
       this.currentQuestionId
     )
-    this.questionIncrements.push(this.currentQuestionId)
+    if (this.isLastQuestion()) return this.navigateToFinishPage()
+    this.questionOrder.push(this.nextQuestionId)
+    this.submitTimestamps()
+    this.currentQuestionId = this.nextQuestionId
     this.slideQuestion()
     this.updateToolbarButtons()
   }
 
   previousQuestion() {
+    this.questionOrder.pop()
+    this.currentQuestionId = this.questionOrder[this.questionOrder.length - 1]
+    this.updateToolbarButtons()
     if (!this.isRightButtonDisabled) this.questionsService.deleteLastAnswer()
-    this.questionIncrements.pop()
-    this.currentQuestionId = this.questionIncrements[
-      this.questionIncrements.length - 1
-    ]
     this.slideQuestion()
   }
 
   updateToolbarButtons() {
-    this.isRightButtonDisabled = !this.questionsService.isAnswered(
-      this.getCurrentQuestion()
-    )
+    this.isRightButtonDisabled =
+      !this.questionsService.isAnswered(this.getCurrentQuestion()) &&
+      !this.questionsService.getIsNextEnabled(
+        this.getCurrentQuestion().field_type
+      )
     this.isLeftButtonDisabled = this.questionsService.getIsPreviousDisabled(
-      this.getCurrentQuestion()
+      this.getCurrentQuestion().field_type
     )
   }
 
@@ -170,7 +174,7 @@ export class QuestionsPageComponent implements OnInit {
     this.showFinishScreen = true
     this.onQuestionnaireCompleted()
     this.slides.lockSwipes(false)
-    this.slides.slideNext(500)
+    this.slides.slideTo(this.questions.length, 500)
     this.slides.lockSwipes(true)
   }
 
@@ -193,5 +197,9 @@ export class QuestionsPageComponent implements OnInit {
       this.task,
       this.questionsService.getAttemptProgress(this.questions.length)
     )
+  }
+
+  isLastQuestion() {
+    return this.nextQuestionId >= this.questions.length
   }
 }

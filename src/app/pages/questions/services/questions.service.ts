@@ -104,20 +104,23 @@ export class QuestionsService {
   evalSkipNext(questions, currentQuestion) {
     // NOTE: Evaluates branching logic
     let questionIdx = currentQuestion + 1
-    if (questionIdx < questions.length) {
-      while (questions[questionIdx].evaluated_logic !== '') {
-        const responses = Object.assign({}, this.answerService.answers)
-        const logic = questions[questionIdx].evaluated_logic
-        const logicFieldName = this.getLogicFieldName(logic)
-        const answers = this.answerService.answers[logicFieldName]
+    while (
+      questionIdx < questions.length &&
+      questions[questionIdx].evaluated_logic !== ''
+    ) {
+      const responses = Object.assign({}, this.answerService.answers)
+      const logic = questions[questionIdx].evaluated_logic
+      const logicFieldName = this.getLogicFieldName(logic)
+      const answers = this.answerService.answers[logicFieldName]
+      if (typeof answers !== 'undefined') {
         const answerLength = answers.length
         if (!answerLength) if (eval(logic) === true) return questionIdx
         for (const answer of answers) {
           responses[logicFieldName] = answer
           if (eval(logic) === true) return questionIdx
         }
-        questionIdx += 1
       }
+      questionIdx += 1
     }
     return questionIdx
   }

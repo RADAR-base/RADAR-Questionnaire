@@ -18,18 +18,16 @@ export class UsageService {
   ) {}
 
   sendEventToKafka(payload) {
-    return this.kafka.prepareKafkaObjectAndSend(
-      SchemaType.APP_EVENT,
-      payload,
-      true
-    )
+    return this.kafka
+      .prepareKafkaObjectAndSend(SchemaType.APP_EVENT, payload, true)
+      .then((res: any) => this.logger.log('usage service', 'send success'))
+      .catch((error: any) => this.logger.error('usage service', error))
   }
 
   sendOpenEvent() {
     return this.webIntent.getIntent().then(intent => {
       this.logger.log(intent)
-      // noinspection JSIgnoredPromiseFromCall
-      this.sendEventToKafka({
+      return this.sendEventToKafka({
         eventType: intent.extras
           ? UsageEventType.NOTIFICATION_OPEN
           : UsageEventType.APP_OPEN

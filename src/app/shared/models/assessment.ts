@@ -11,7 +11,9 @@ export interface Assessment {
   endText?: MultiLanguageText
   warn?: MultiLanguageText
   showIntroduction?: boolean
+  isDemo?: boolean
   questions: Question[]
+  showInCalendar?: boolean
 }
 
 export interface QuestionnaireMetadata {

@@ -99,24 +99,16 @@
     </ion-slide>
 
     <!-- SLIDE 5 -->
-    <ion-slide id="preference-report pos-above">
-      <div class="text text-lg">{{ 'ENROL_PREFERENCES' | translate }}</div>
-      <div class="pref-icon">
-        <img src="assets/imgs/MobileAnalytics-neg.png" alt="App preferences" />
+    <ion-slide id="registration-complete">
+      <div class="text text-lg">
+        {{ 'ENROL_REGISTRATION_COMPLETE' | translate }}
+      </div>
+      <div class="reg-icon">
+        <img src="assets/imgs/MobileAnalytics-neg.png" alt="Mobile" />
       </div>
       <div class="text text-justify">
-        {{ 'ENROL_PREFERENCES_DESC' | translate }}
+        {{ 'ENROL_REGISTRATION_COMPLETE_DESC' | translate }}
       </div>
-
-      <ion-item-group id="settings">
-        <ion-item
-          no-lines
-          *ngFor="let subSetting of reportSettings; let i = index"
-        >
-          <ion-label>{{ subSetting.name | translate }}</ion-label>
-          <ion-toggle item-right [(ngModel)]="subSetting.show"></ion-toggle>
-        </ion-item>
-      </ion-item-group>
 
       <div padding class="bottom">
         <button

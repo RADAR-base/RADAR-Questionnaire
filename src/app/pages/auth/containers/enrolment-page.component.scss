@@ -45,7 +45,7 @@ page-enrolment {
 
   .status {
     position: absolute;
-    bottom: 16%;
+    bottom: 14vh;
     flex: 1 0 100%;
     padding: auto;
     width: 100%;
@@ -54,7 +54,7 @@ page-enrolment {
   }
 
   #outcome {
-    padding-top: 5px;
+    padding: 5px;
     background-color: $cl-danger-40;
     animation: fadeIn 1s;
   }
@@ -84,20 +84,12 @@ page-enrolment {
     font-size: 2rem;
   }
 
-  .pos-above {
-    margin-top: -50px;
-  }
-
-  .pref-info {
-    padding-bottom: 100px;
-  }
-
   #settings {
     margin-bottom: 5vh;
     padding: 2vh 0;
   }
 
-  .pref-icon {
+  .reg-icon {
     margin: 2vh 0;
     height: 20vh;
   }

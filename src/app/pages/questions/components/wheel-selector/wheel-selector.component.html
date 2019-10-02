@@ -1,0 +1,14 @@
+<ion-grid class="grid">
+  <ion-row>
+    <ion-col *ngFor="let col of keys(values)">
+      <div class="label">
+        <ion-note>{{ labels[col] }}</ion-note>
+      </div>
+      <div #wheel class="picker-opts" (scroll)="selected(col, $event)">
+        <p *ngFor="let row of values[col]" class="list" id="{{ row }}">
+          {{ row }}
+        </p>
+      </div>
+    </ion-col>
+  </ion-row>
+</ion-grid>

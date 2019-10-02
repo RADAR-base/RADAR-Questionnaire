@@ -24,7 +24,7 @@ export class QuestionnaireService {
     private localization: LocalizationService,
     private http: HttpClient,
     private util: Utility,
-    private logger: LogService,
+    private logger: LogService
   ) {}
 
   pullQuestionnaires(type: TaskType): Promise<Assessment[]> {
@@ -109,10 +109,14 @@ export class QuestionnaireService {
 
   updateAssessment(type: TaskType, assessment: Assessment) {
     console.log('updating assessment')
-    return this.getAssessments(type).then(assessments => {
-      assessments.find(a => a.name == assessment.name).replace(assessment)
-      return this.setAssessments(type, assessments)
-    })
+    return this.getAssessments(type)
+      .then(assessments => {
+        const index = assessments.findIndex(a => a.name == assessment.name)
+        if (index != -1) {
+          assessments[index] = this.util.deepCopy(assessment)
+          return this.setAssessments(type, assessments)
+        }
+      })
   }
 
   getAssessment(type: TaskType, task: Task) {

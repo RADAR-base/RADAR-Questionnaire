@@ -19,6 +19,7 @@ import { OAuthToken } from '../../../shared/models/token'
 import { getSeconds } from '../../../shared/utilities/time'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { StorageService } from '../storage/storage.service'
+import { LogService } from '../misc/log.service'
 
 @Injectable()
 export class TokenService {
@@ -28,40 +29,24 @@ export class TokenService {
   }
   URI_base: string
   private tokenRefreshMillis: number = DefaultTokenRefreshSeconds
-  private clientCredentials = TokenService.basicCredentials(
-    DefaultOAuthClientId,
-    DefaultOAuthClientSecret
-  )
 
   constructor(
     public http: HttpClient,
     public storage: StorageService,
     private jwtHelper: JwtHelperService,
-    private remoteConfig: RemoteConfigService
+    private remoteConfig: RemoteConfigService,
+    private logger: LogService
   ) {
     remoteConfig.subject().subscribe(config => {
       console.log('Updating Token config')
       config
         .getOrDefault(
           ConfigKeys.OAUTH_REFRESH_SECONDS,
-          DefaultTokenRefreshSeconds
+          String(DefaultTokenRefreshSeconds)
         )
         .then(
           refreshTime => (this.tokenRefreshMillis = Number(refreshTime) * 1000)
         )
-      Promise.all([
-        config.getOrDefault(ConfigKeys.OAUTH_CLIENT_ID, DefaultOAuthClientId),
-        config.getOrDefault(
-          ConfigKeys.OAUTH_CLIENT_SECRET,
-          DefaultOAuthClientSecret
-        )
-      ]).then(
-        ([clientId, clientSecret]) =>
-          (this.clientCredentials = TokenService.basicCredentials(
-            clientId,
-            clientSecret
-          ))
-      )
     })
   }
 
@@ -79,7 +64,7 @@ export class TokenService {
     return this.storage.set(this.TOKEN_STORE.OAUTH_TOKENS, tokens)
   }
 
-  setURI(uri) {
+  setURI(uri: string): Promise<string> {
     let lastSlashIndex = uri.length
     while (lastSlashIndex > 0 && uri[lastSlashIndex - 1] == '/') {
       lastSlashIndex--
@@ -95,33 +80,33 @@ export class TokenService {
   }
 
   register(refreshBody) {
-    return this.getURI().then(uri => {
-      const URI = uri + DefaultManagementPortalURI + DefaultRefreshTokenURI
-      const headers = this.getRegisterHeaders(DefaultRequestEncodedContentType)
-      console.log(
-        `"Registering with ${URI} using client credentials ${this.clientCredentials}`
-      )
-      return this.http
-        .post(URI, refreshBody, { headers: headers })
-        .toPromise()
-        .then(res => this.setTokens(res))
-    })
+    return Promise.all([
+      this.getURI(),
+      this.getRegisterHeaders(DefaultRequestEncodedContentType)
+    ])
+      .then(([uri, headers]) => {
+        const URI = uri + DefaultManagementPortalURI + DefaultRefreshTokenURI
+        this.logger.log(`"Registering with ${URI} and headers`, headers)
+        return this.http
+          .post(URI, refreshBody, { headers: headers })
+          .toPromise()
+      })
+      .then(res => this.setTokens(res))
   }
 
   refresh(): Promise<any> {
     return this.getTokens().then(tokens => {
-      if (tokens) {
-        const limit = getSeconds({
-          milliseconds: new Date().getTime() + this.tokenRefreshMillis
-        })
-        if (tokens.iat + tokens.expires_in < limit) {
-          const params = this.getRefreshParams(tokens.refresh_token)
-          return this.register(params)
-        } else {
-          return tokens
-        }
-      } else {
+      if (!tokens) {
         throw new Error('No tokens are available to refresh')
+      }
+      const limit = getSeconds({
+        milliseconds: new Date().getTime() + this.tokenRefreshMillis
+      })
+      if (tokens.iat + tokens.expires_in < limit) {
+        const params = this.getRefreshParams(tokens.refresh_token)
+        return this.register(params)
+      } else {
+        return tokens
       }
     })
   }
@@ -140,10 +125,24 @@ export class TokenService {
     )
   }
 
-  getRegisterHeaders(contentType): HttpHeaders {
-    return new HttpHeaders()
-      .set('Authorization', this.clientCredentials)
-      .set('Content-Type', contentType)
+  getRegisterHeaders(contentType): Promise<HttpHeaders> {
+    return this.remoteConfig.read()
+      .then(config => Promise.all([
+        config.getOrDefault(ConfigKeys.OAUTH_CLIENT_ID, DefaultOAuthClientId),
+        config.getOrDefault(
+          ConfigKeys.OAUTH_CLIENT_SECRET,
+          DefaultOAuthClientSecret
+        )
+      ]))
+      .then(([clientId, clientSecret]) => {
+        const creds = TokenService.basicCredentials(
+          clientId,
+          clientSecret
+        )
+        return new HttpHeaders()
+          .set('Authorization', creds)
+          .set('Content-Type', contentType)
+      })
   }
 
   getRefreshParams(refreshToken): HttpParams {

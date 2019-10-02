@@ -20,6 +20,7 @@ export class SplashService {
   }
 
   loadConfig() {
+    this.token.refresh()
     return this.config.fetchConfigState()
   }
 

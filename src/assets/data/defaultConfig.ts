@@ -116,6 +116,7 @@ export const DefaultNumberOfNotificationsToSchedule: number = 100 //
 export const DefaultNumberOfNotificationsToRescue: number = 12 //
 export const FCMPluginProjectSenderId: string = '430900191220'
 export const DefaultNotificationRefreshTime: number = 900000 // 15 mins in ms
+export const DefaultNotificationTtlMinutes: number = 10
 
 export const DefaultSourcePrefix = 'aRMT'
 export const DefaultSourceTypeModel: string = `${DefaultSourcePrefix}-App`
@@ -128,6 +129,8 @@ export const DefaultSourceTypeRegistrationBody = {
 
 export const DefaultEndPoint: string =
   'https://radar-cns-platform.rosalind.kcl.ac.uk'
+
+export const DefaultPlatformInstance = 'RADAR-CNS'
 
 // GITHUB SOURCES
 
@@ -189,6 +192,10 @@ export const DefaultTimeInterval = { unit: 'day', amount: 1 }
 // KAFKA
 
 export const DefaultKafkaURI = '/kafka'
+export const DefaultKafkaRequestContentType =
+  'application/vnd.kafka.avro.v2+json'
+export const DefaultClientAcceptType =
+  'application/vnd.kafka.v2+json, application/vnd.kafka+json; q=0.9, application/json; q=0.8'
 
 export const DefaultNumberOfCompletionLogsToSend = 10
 

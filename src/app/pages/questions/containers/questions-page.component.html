@@ -1,59 +1,42 @@
 <ion-content>
-  <ng-container *ngIf="showIntroduction">
-    <introduction
-      [title]="questionTitle"
-      [introduction]="introduction"
-      (hide)="hideIntro()"
-    ></introduction>
-  </ng-container>
-
-  <div
-    #questionsContainer
-    class="questions-container"
-    [@enterQuestions]="showIntroduction"
-  >
-    <ng-container *ngIf="!showIntroduction">
+  <ion-slides>
+    <ion-slide *ngIf="showIntroductionScreen">
+      <introduction
+        [title]="questionTitle"
+        [introduction]="introduction"
+        (start)="handleIntro($event)"
+      ></introduction>
+    </ion-slide>
+    <ion-slide *ngFor="let question of questions; let i = index">
       <question
-        *ngFor="let question of questions; let i = index"
         [question]="question"
         [questionIndex]="i"
-        [currentIndex]="currentQuestion"
+        [currentIndex]="currentQuestionId"
         (answer)="onAnswer($event)"
       ></question>
-    </ng-container>
-  </div>
+    </ion-slide>
+    <ion-slide>
+      <finish
+        [content]="endText"
+        [displayNextTaskReminder]="isLastTask"
+        [isClinicalTask]="isClinicalTask"
+        [showDoneButton]="showDoneButton"
+        [isShown]="showFinishScreen"
+        (exit)="handleFinish($event)"
+      ></finish>
+    </ion-slide>
+  </ion-slides>
 </ion-content>
 
-<ng-container *ngIf="!showIntroduction">
-  <ion-footer>
-    <ion-toolbar>
-      <div class="toolbar-progress">
-        <div class="toolbar-progress-bar" [style.width]="progress + '%'"></div>
-      </div>
-      <ion-buttons left>
-        <button
-          ion-button
-          left
-          icon-left
-          [class.disabled]="isPreviousButtonDisabled"
-          (tap)="previousQuestion()"
-        >
-          <ion-icon [name]="iconPrevious"></ion-icon>
-          <div class="toolbar-label">{{ previousButtonText }}</div>
-        </button>
-      </ion-buttons>
-      <ion-buttons right>
-        <button
-          ion-button
-          right
-          icon-right
-          [class.disabled]="isNextButtonDisabled"
-          (tap)="nextQuestion()"
-        >
-          <div class="toolbar-label">{{ nextButtonText }}</div>
-          <ion-icon name="ios-arrow-forward"></ion-icon>
-        </button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-footer>
-</ng-container>
+<ion-footer *ngIf="!showIntroductionScreen && !showFinishScreen">
+  <toolbar
+    (next)="nextQuestion()"
+    (previous)="previousQuestion()"
+    (close)="exitQuestionnaire()"
+    (finish)="navigateToFinishPage()"
+    [isLeftButtonDisabled]="isLeftButtonDisabled"
+    [isRightButtonDisabled]="isRightButtonDisabled"
+    [currentQuestionId]="currentQuestionId"
+    [totalQuestions]="questions?.length"
+  ></toolbar>
+</ion-footer>

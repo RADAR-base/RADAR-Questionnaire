@@ -25,8 +25,6 @@ export class ClinicalTasksPageComponent {
   }
 
   clicked(task) {
-    this.clinicalTasksService
-      .getClinicalTaskPayload(task)
-      .then(payload => this.navCtrl.push(QuestionsPageComponent, payload))
+    this.navCtrl.push(QuestionsPageComponent, task)
   }
 }

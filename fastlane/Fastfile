@@ -4,7 +4,6 @@ platform :android do
   lane :build_debug do
     ionic(
       platform: 'android',
-      prod: true,
       release: false
     )
   end
@@ -13,7 +12,6 @@ platform :android do
   lane :deploy do |options|
     ionic(
       platform: 'android',
-      prod: true,
       release: true,
       keystore_path: options[:keystore_path],
       keystore_password: options[:keystore_password],

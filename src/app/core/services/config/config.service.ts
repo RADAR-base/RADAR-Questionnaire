@@ -5,17 +5,18 @@ import {
   ConfigEventType,
   NotificationEventType
 } from '../../../shared/enums/events'
+import { User } from '../../../shared/models/user'
 import { TaskType } from '../../../shared/utilities/task-type'
 import { KafkaService } from '../kafka/kafka.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
 import { NotificationService } from '../notifications/notification.service'
 import { ScheduleService } from '../schedule/schedule.service'
+import { AnalyticsService } from '../usage/analytics.service'
 import { AppConfigService } from './app-config.service'
 import { ProtocolService } from './protocol.service'
 import { QuestionnaireService } from './questionnaire.service'
 import { SubjectConfigService } from './subject-config.service'
-import { AnalyticsService } from '../usage/analytics.service'
 
 @Injectable()
 export class ConfigService {
@@ -215,26 +216,12 @@ export class ConfigService {
     ])
   }
 
-  setAll(participantId, participantLogin, projectName, sourceId, createdDate) {
+  setAll(user: User) {
     return Promise.all([
       this.subjectConfig
-        .init(
-          participantId,
-          participantLogin,
-          projectName,
-          sourceId,
-          createdDate
-        )
-        .then(() =>
-          this.analytics.setUserProperties({
-            subjectId: participantLogin,
-            projectId: projectName,
-            sourceId: sourceId,
-            enrolmentDate: String(),
-            humanReadableId: participantId
-          })
-        )
-        .then(() => this.appConfig.init(createdDate)),
+        .init(user)
+        .then(() => this.analytics.setUserProperties(user))
+        .then(() => this.appConfig.init(user.enrolmentDate)),
       this.localization.init(),
       this.kafka.init()
     ])
@@ -266,6 +253,10 @@ export class ConfigService {
   sendTestNotification() {
     this.sendConfigChangeEvent(NotificationEventType.TEST)
     return this.notifications.sendTestNotification()
+  }
+
+  sendCachedData() {
+    return this.kafka.sendAllFromCache()
   }
 
   updateSettings(settings) {

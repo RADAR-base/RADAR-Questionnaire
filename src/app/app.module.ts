@@ -34,6 +34,8 @@ import { PagesModule } from './pages/pages.module'
 import { AndroidPermissionUtility } from './shared/utilities/android-permission'
 import { jwtOptionsFactory } from './shared/utilities/jwtOptionsFactory'
 import { Utility } from './shared/utilities/util'
+import { KeycloakTokenService } from "./core/services/token/keycloak.token.service";
+import { TokenService } from "./core/services/token/token.service";
 
 @NgModule({
   imports: [
@@ -81,7 +83,8 @@ import { Utility } from './shared/utilities/util'
     LocalNotifications,
     LogService,
     InAppBrowser,
-    { provide: RemoteConfigService, useClass: FirebaseRemoteConfigService }
+    { provide: RemoteConfigService, useClass: FirebaseRemoteConfigService },
+    { provide: TokenService, useClass: KeycloakTokenService }
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

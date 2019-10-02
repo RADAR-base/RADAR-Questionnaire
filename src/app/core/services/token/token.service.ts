@@ -20,6 +20,7 @@ import { getSeconds } from '../../../shared/utilities/time'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { StorageService } from '../storage/storage.service'
 import { LogService } from '../misc/log.service'
+import { KeycloakConfig } from "../../../shared/models/auth";
 
 @Injectable()
 export class TokenService {
@@ -33,9 +34,9 @@ export class TokenService {
   constructor(
     public http: HttpClient,
     public storage: StorageService,
-    private jwtHelper: JwtHelperService,
-    private remoteConfig: RemoteConfigService,
-    private logger: LogService
+    protected jwtHelper: JwtHelperService,
+    protected remoteConfig: RemoteConfigService,
+    protected logger: LogService
   ) {
     remoteConfig.subject().subscribe(config => {
       console.log('Updating Token config')
@@ -155,5 +156,13 @@ export class TokenService {
     return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
       return !this.jwtHelper.isTokenExpired(tokens.refresh_token)
     })
+  }
+
+  setTokenURI(uri: string): Promise<string> {
+    throw new Error('setTokenURI method not implemented')
+  }
+
+  registerAuthCode(authorizationCode, keycloakConfig: KeycloakConfig): Promise<any> {
+    throw new Error('registerAuthCode method is not implemented')
   }
 }

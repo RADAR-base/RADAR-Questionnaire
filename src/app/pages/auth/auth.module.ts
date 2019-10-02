@@ -8,6 +8,7 @@ import { TokenFormComponent } from './components/token-form/token-form.component
 import { WelcomePageComponent } from "./components/welcome-page/welcome-page.component";
 import { EnrolmentPageComponent } from './containers/enrolment-page.component'
 import { AuthService } from './services/auth.service'
+import { KeycloakAuthService } from "./services/keycloak.auth.service";
 
 @NgModule({
   imports: [
@@ -15,12 +16,17 @@ import { AuthService } from './services/auth.service'
     IonicModule.forRoot(WelcomePageComponent),
     PipesModule
   ],
+  entryComponents: [
+    EnrolmentPageComponent
+  ],
   declarations: [
     EnrolmentPageComponent,
     WelcomePageComponent,
     TokenFormComponent,
     QRFormComponent
   ],
-  providers: [AuthService]
+  providers: [
+    { provide: AuthService, useClass: KeycloakAuthService}
+  ]
 })
 export class AuthModule {}

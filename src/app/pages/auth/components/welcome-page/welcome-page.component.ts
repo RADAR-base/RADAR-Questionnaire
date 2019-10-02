@@ -1,7 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
 import { NavController, Slides } from 'ionic-angular';
 
-import { DefaultSettingsSupportedLanguages, LanguageMap } from "../../../../../assets/data/defaultConfig";
+import {
+  DefaultLanguage,
+  DefaultSettingsSupportedLanguages,
+  LanguageMap
+} from "../../../../../assets/data/defaultConfig";
 import { AppComponent } from "../../../../core/containers/app.component";
 import { StorageService } from "../../../../core/services/storage/storage.service";
 import { LocKeys } from "../../../../shared/enums/localisations";
@@ -13,6 +17,10 @@ import { AuthService } from "../../services/auth.service";
 import { LocalizationService } from "../../../../core/services/misc/localization.service";
 import { AlertService } from "../../../../core/services/misc/alert.service";
 import { ConfigService } from "../../../../core/services/config/config.service";
+import { EnrolmentEventType, UsageEventType } from "../../../../shared/enums/events";
+import { UsageService } from "../../../../core/services/usage/usage.service";
+import {SplashPageComponent} from "../../../splash/containers/splash-page.component";
+import {LogService} from "../../../../core/services/misc/log.service";
 
 /**
  * Generated class for the WelcomePage page.
@@ -30,11 +38,10 @@ export class WelcomePageComponent {
   @ViewChild(Slides)
   slides: Slides;
 
-  language: LanguageSetting = {
-    label: LocKeys.LANGUAGE_ENGLISH.toString(),
-    value: 'en'
-  }
+  language?: LanguageSetting = DefaultLanguage
   loading: boolean = false
+  showOutcomeStatus: boolean = false
+  outcomeStatus: string
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages;
 
   constructor(
@@ -43,10 +50,12 @@ export class WelcomePageComponent {
     private storage: StorageService,
     private configService: ConfigService,
     private authService: AuthService,
-    private alertService: AlertService) {}
+    private alertService: AlertService,
+    private usage: UsageService,
+    private logger: LogService) {}
 
   ionViewDidLoad() {
-    return this.localization.update()
+    this.localization.update().then(lang => (this.language = lang))
   }
 
   ionViewDidEnter() {}
@@ -64,72 +73,111 @@ export class WelcomePageComponent {
             label: LanguageMap[selectedLanguageVal],
             value: selectedLanguageVal
           }
-          this.storage.set(StorageKeys.LANGUAGE, lang).then(() => {
+          this.localization.setLanguage(lang).then(() => {
             this.language = lang
-            this.localization.update()
-              .then(() => this.navCtrl.setRoot(AppComponent))
+            return this.navCtrl.setRoot(EnrolmentPageComponent)
           })
         }
       }
     ]
-    const inputs = []
-    for (let i = 0; i < this.languagesSelectable.length; i++) {
-      let checked = false
-      if (this.languagesSelectable[i]['label'] === this.language.label) {
-        checked = true
-      }
-      inputs.push({
-        type: 'radio',
-        label: this.localization.translate(this.languagesSelectable[i].label),
-        value: this.languagesSelectable[i].value,
-        checked: checked
-      })
-    }
-    this.alertService.showAlert({
+    const inputs = this.languagesSelectable.map(lang => ({
+      type: 'radio',
+      label: this.localization.translate(lang.label),
+      value: lang.value,
+      checked: lang.value === this.language.value
+    }))
+    return this.alertService.showAlert({
       title: this.localization.translateKey(LocKeys.SETTINGS_LANGUAGE_ALERT),
       buttons: buttons,
       inputs: inputs
     })
   }
 
-
-
   joinStudy() {
     this.navCtrl.setRoot(EnrolmentPageComponent);
   }
 
   goToLogin() {
-    this.loading = true;
-    this.authService.keycloakLogin(true)
-      .then(() => this.authService.retrieveUserInformation(this.language))
-      .then(() => this.configService.fetchConfigState(true))
-      .catch( () => {
-        this.loading = false;
-        this.alertService.showAlert({
-          title: "Could not retrieve configuration",
-          buttons: [{
-            text: this.localization.translateKey(LocKeys.BTN_OKAY),
-            handler: () => {}
-          }],
-          message: "Could not retrieve questionnaire configuration. Please try again later."
-        })
+    this.loading = true
+    this.clearStatus()
+    this.authService
+      .authenticate(false)
+      .catch(e => {
+        if (e.status !== 409) throw e
       })
-      .then(() => this.navigateToHome())
-      .catch( () => {
-        this.loading = false;
-        this.alertService.showAlert({
-          title: "Something went wrong",
-          buttons: [{
-            text: this.localization.translateKey(LocKeys.BTN_OKAY),
-            handler: () => {}
-          }],
-          message: "Could not successfully redirect to login. Please try again later."
-        })
-      });
+      .then(() => this.authService.initSubjectInformation())
+      .then(() => {
+        this.usage.sendGeneralEvent(EnrolmentEventType.SUCCESS)
+        // this.next()
+        this.navigateToSplash()
+        // FIXME or navigate to splash most likely splash or home this.navigateToHome()
+      })
+      .catch(e => {
+        this.handleError(e)
+        // this.loading = false
+        setTimeout(() => (this.loading = false), 500)
+      })
+    // this.loading = true;
+    // // this.authService.keycloakLogin(true)
+    // // FIXME: This should be similar to authenticate in enrolment
+    // this.authService.authenticate({isRegistration: false})
+    //   .then(() => this.authService.initSubjectInformation())
+    //   .then(() => this.configService.fetchConfigState(true))
+    //   .catch( () => {
+    //     this.loading = false;
+    //     this.alertService.showAlert({
+    //       title: "Could not retrieve configuration",
+    //       buttons: [{
+    //         text: this.localization.translateKey(LocKeys.BTN_OKAY),
+    //         handler: () => {}
+    //       }],
+    //       message: "Could not retrieve questionnaire configuration. Please try again later."
+    //     })
+    //   })
+    //   .then(() => this.navigateToHome())
+    //   .catch( () => {
+    //     this.loading = false;
+    //     this.alertService.showAlert({
+    //       title: "Something went wrong",
+    //       buttons: [{
+    //         text: this.localization.translateKey(LocKeys.BTN_OKAY),
+    //         handler: () => {}
+    //       }],
+    //       message: "Could not successfully redirect to login. Please try again later."
+    //     })
+    //   });
+  }
+
+  handleError(e) {
+    this.logger.error('Failed to log in', e)
+    this.outcomeStatus =
+      e.error && e.error.message
+        ? e.error.message
+        : e.statusText + ' (' + e.status + ')'
+    this.showStatus()
+    this.usage.sendGeneralEvent(
+      e.status == 409 ? EnrolmentEventType.ERROR : EnrolmentEventType.FAIL,
+      {
+        error: this.outcomeStatus
+      }
+    )
+  }
+
+  clearStatus() {
+    this.showOutcomeStatus = false
+    this.outcomeStatus = null
+  }
+
+  showStatus() {
+    // setTimeout(() => (this.showOutcomeStatus = true), 500)
+    this.showOutcomeStatus = true
   }
 
   navigateToHome() {
     this.navCtrl.setRoot(HomePageComponent)
   }
 
+  navigateToSplash() {
+    this.navCtrl.setRoot(SplashPageComponent)
+  }
 }

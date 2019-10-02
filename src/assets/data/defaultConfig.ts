@@ -132,7 +132,11 @@ export const DefaultSourceTypeRegistrationBody = {
 export const DefaultEndPoint: string =
   'https://ucl-mighealth-dev.thehyve.net'
 
-export const DefaultKeycloakURL = 'auth/';
+export const DefaultKeycloakURL = '/auth/';
+
+export const DefaultCallbackURL = 'http://localhost:8100/';
+
+export const DefaultProjectName = 'STAGING_PROJECT'
 
 export const DefaultPlatformInstance = 'RADAR-CNS'
 

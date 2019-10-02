@@ -75,6 +75,13 @@ export class EnrolmentPageComponent {
     this.slides.lockSwipes(true)
   }
 
+  goBack() {
+    this.slides.lockSwipes(false)
+    const slideIndex = this.slides.getActiveIndex() - 1
+    this.slides.slideTo(slideIndex, 500)
+    this.slides.lockSwipes(true)
+  }
+
   isOlderThanEighteen(res: boolean) {
     this.isEighteen = res;
     this.processEligibility();
@@ -83,6 +90,16 @@ export class EnrolmentPageComponent {
   isBornInUnitedKingdom(res: boolean) {
     this.isBornInUK = res;
     this.processEligibility();
+  }
+
+  processEligibility() {
+    if(this.isBornInUK != undefined && this.isEighteen != undefined) {
+      if(this.isBornInUK === true && this.isEighteen == true){
+        this.next();
+      } else {
+        this.slideTo(2);
+      }
+    }
   }
 
   processConsent() {
@@ -96,30 +113,14 @@ export class EnrolmentPageComponent {
         message: "Your consent to participate in the study is at least required."
       })
     }
-    if(this.consentParticipation === true) {
-      this.goToRegistration();
-    }
     if(this.consentNHSRecordAccess === true) {
       this.storage.set(StorageKeys.CONSENT_ACCESS_NHS_RECORDS, true);
     }
-  }
-
-  processEligibility() {
-    if(this.isBornInUK != undefined && this.isEighteen != undefined) {
-      if(this.isBornInUK === true && this.isEighteen == true){
-        this.next();
-      } else {
-        this.slideTo(2);
-      }
+    if(this.consentParticipation === true) {
+      this.authenticate();
     }
   }
 
-  goBack() {
-    this.slides.lockSwipes(false)
-    const slideIndex = this.slides.getActiveIndex() - 1
-    this.slides.slideTo(slideIndex, 500)
-    this.slides.lockSwipes(true)
-  }
 
   slideTo(index: number) {
     this.slides.lockSwipes(false)
@@ -132,29 +133,41 @@ export class EnrolmentPageComponent {
     this.next()
   }
 
-  authenticate(authObj) {
+  authenticate() {
     if (!this.enterMetaQR)
-      this.usage.sendGeneralEvent(UsageEventType.QR_SCANNED)
+      this.usage.sendGeneralEvent(EnrolmentEventType.ELIGIBILITY_MET)
+      // this.usage.sendGeneralEvent(UsageEventType.QR_SCANNED)
     this.loading = true
     this.clearStatus()
     this.auth
-      .authenticate(authObj)
-      .catch(e => {
-        if (e.status !== 409) throw e
-      })
-      .then(() => this.auth.initSubjectInformation())
-      .then(() => {
-        this.usage.sendGeneralEvent(EnrolmentEventType.SUCCESS)
-        this.next()
-      })
+      .authenticate(true)
       .catch(e => {
         this.handleError(e)
         this.loading = false
       })
+      .then(() => this.auth.initSubjectInformation())
+      .then(() => {
+        this.usage.sendGeneralEvent(EnrolmentEventType.SUCCESS)
+        this.navigateToSplash()
+        // this.next()
+        // FIXME or navigate to splash most likely splash or home this.navigateToHome()
+      })
+      .catch(e => {
+        this.handleError(e)
+        this.loading = false
+        this.alertService.showAlert({
+                  title: "Something went wrong",
+                  buttons: [{
+                    text: this.localization.translateKey(LocKeys.BTN_OKAY),
+                    handler: () => {}
+                  }],
+                  message: "Could not successfully register new participant. Please try again later."
+                });
+      })
   }
 
   handleError(e) {
-    this.logger.error('Failed to log in', e)
+    this.logger.error('Failed to register', e)
     this.showStatus()
     this.outcomeStatus =
       e.error && e.error.message
@@ -180,62 +193,29 @@ export class EnrolmentPageComponent {
     this.navCtrl.setRoot(SplashPageComponent)
   }
 
-  showSelectLanguage() {
-    const buttons = [
-      {
-        text: this.localization.translateKey(LocKeys.BTN_CANCEL),
-        handler: () => {}
-      },
-      {
-        text: this.localization.translateKey(LocKeys.BTN_SET),
-        handler: selectedLanguageVal => {
-          const lang: LanguageSetting = {
-            label: LanguageMap[selectedLanguageVal],
-            value: selectedLanguageVal
-          }
-          this.localization.setLanguage(lang).then(() => {
-            this.language = lang
-            return this.navCtrl.setRoot(EnrolmentPageComponent)
-          })
-        }
-      }
-    ]
-    const inputs = this.languagesSelectable.map(lang => ({
-      type: 'radio',
-      label: this.localization.translate(lang.label),
-      value: lang.value,
-      checked: lang.value === this.language.value
-    }))
-    return this.alertService.showAlert({
-      title: this.localization.translateKey(LocKeys.SETTINGS_LANGUAGE_ALERT),
-      buttons: buttons,
-      inputs: inputs
-    })
-  }
-
   navigateToHome() {
     this.navCtrl.setRoot(HomePageComponent)
   }
 
 
-  goToRegistration() {
-    this.loading = true;
-    this.auth.keycloakLogin(false)
-      .then(() => {
-        return this.auth.retrieveUserInformation(this.language)
-      })
-      .then(() => this.config.fetchConfigState(true))
-      .then(() => this.navigateToHome())
-      .catch( () => {
-        this.loading = false;
-        this.alertService.showAlert({
-          title: "Something went wrong",
-          buttons: [{
-            text: this.localization.translateKey(LocKeys.BTN_OKAY),
-            handler: () => {}
-          }],
-          message: "Could not successfully register new participant. Please try again later."
-        });
-      });
-  }
+  // goToRegistration() {
+  //   this.loading = true;
+  //   this.auth.authenticate(false)
+  //     .then(() => {
+  //       return this.auth.retrieveUserInformation(this.language)
+  //     })
+  //     .then(() => this.config.fetchConfigState(true))
+  //     .then(() => this.navigateToHome())
+  //     .catch( () => {
+  //       this.loading = false;
+  //       this.alertService.showAlert({
+  //         title: "Something went wrong",
+  //         buttons: [{
+  //           text: this.localization.translateKey(LocKeys.BTN_OKAY),
+  //           handler: () => {}
+  //         }],
+  //         message: "Could not successfully register new participant. Please try again later."
+  //       });
+  //     });
+  // }
 }

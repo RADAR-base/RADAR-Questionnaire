@@ -4,7 +4,6 @@ import { SeizureDiaryPage } from './seizure-diary';
 
 import { ProtocolService } from '../../core/services/config/protocol.service'
 import { TasksService } from '../home/services/tasks.service'
-import { QuestionsService } from '../questions/services/questions.service'
 import { ScheduleGeneratorService } from '../../core/services/schedule/schedule-generator.service'
 import { QuestionnaireService } from '../../core/services/config/questionnaire.service'
 
@@ -23,7 +22,6 @@ import { SeizureDiaryService } from './seizure-diary.service'
   providers: [
     ProtocolService,
     TasksService,
-    QuestionsService,
     ScheduleGeneratorService,
     QuestionnaireService,
     AlertService,

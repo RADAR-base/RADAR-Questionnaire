@@ -5,7 +5,6 @@ import { ProtocolService } from '../../core/services/config/protocol.service'
 import { QuestionnaireService } from '../../core/services/config/questionnaire.service'
 import { ScheduleGeneratorService } from '../../core/services/schedule/schedule-generator.service'
 import { TasksService } from '../home/services/tasks.service'
-import { QuestionsService } from '../questions/services/questions.service'
 import { Assessment } from '../../shared/models/assessment'
 import { TaskType } from '../../shared/utilities/task-type'
 import { QuestionsPageComponent } from '../questions/containers/questions-page.component'
@@ -40,7 +39,6 @@ export class SeizureDiaryPage {
     public toastCtrl: ToastController,
     public loadingCtrl: LoadingController,
     private tasksService: TasksService,
-    private questionsService: QuestionsService,
     private schedule: ScheduleGeneratorService,
     private questionnaire: QuestionnaireService,
     private protocol: ProtocolService,
@@ -174,10 +172,7 @@ export class SeizureDiaryPage {
 
     // try to start the created task
     if (this.tasksService.isTaskStartable(diaryTask)) {
-      console.log("seizure-diary::startNewSeizureDiary()")
-      return this.questionsService
-        .getQuestionnairePayload(diaryTask)
-        .then(payload => this.navCtrl.push(QuestionsPageComponent, payload))
+      return this.navCtrl.push(QuestionsPageComponent, diaryTask)
     } else {
       alert("task not startable")
     }

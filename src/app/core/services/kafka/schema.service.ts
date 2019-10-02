@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import * as AvroSchema from 'avsc'
-import * as KafkaRest from 'kafka-rest'
 import * as YAML from 'yaml'
 
 import { DefaultSchemaSpecEndpoint } from '../../../../assets/data/defaultConfig'
@@ -96,18 +95,19 @@ export class SchemaService {
       case SchemaType.APP_EVENT:
         const Event: EventValueExport = {
           time: getSeconds({ milliseconds: this.getUniqueTimeNow() }),
-          eventType: payload.eventType
+          eventType: payload.eventType,
+          questionnaireName: payload.questionnaireName
         }
         return Event
     }
   }
 
-  getAvroObject(schema, value): any {
+  convertToAvro(schema, value): any {
     const options = { wrapUnions: true }
     return AvroSchema.parse(schema, options).clone(value, options)
   }
 
-  convertToAvro(kafkaObject, topic, baseURI): Promise<any> {
+  getKafkaPayload(kafkaObject, topic, baseURI): Promise<any> {
     if (!this.schemas[topic]) {
       this.schemas[topic] = [
         this.getLatestKafkaSchemaVersion(topic + '-key', 'latest', baseURI),
@@ -118,13 +118,15 @@ export class SchemaService {
       .then(([keySchemaMetadata, valueSchemaMetadata]) => {
         const key = JSON.parse(keySchemaMetadata.schema)
         const value = JSON.parse(valueSchemaMetadata.schema)
-        const schemaId = new KafkaRest.AvroSchema(key)
-        const schemaInfo = new KafkaRest.AvroSchema(value)
         const payload = {
-          key: this.getAvroObject(key, kafkaObject.key),
-          value: this.getAvroObject(value, kafkaObject.value)
+          key: this.convertToAvro(key, kafkaObject.key),
+          value: this.convertToAvro(value, kafkaObject.value)
         }
-        return { schemaId, schemaInfo, payload }
+        return {
+          key_schema_id: keySchemaMetadata.id,
+          value_schema_id: valueSchemaMetadata.id,
+          records: [payload]
+        }
       })
       .catch(e => {
         this.schemas[topic] = null

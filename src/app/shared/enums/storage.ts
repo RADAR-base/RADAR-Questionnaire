@@ -35,6 +35,8 @@ export class StorageKeys {
 
   static REMOTE_CONFIG_CACHE_TIMEOUT = new StorageKeys('REMOTE_CONFIG_CACHE_TIMEOUT')
 
+  static SD_RECENT_EVENTS = new StorageKeys('SD_RECENT_EVENTS')
+
   constructor(public value: string) {}
 
   toString() {

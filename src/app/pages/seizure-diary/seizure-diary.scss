@@ -1,0 +1,44 @@
+page-seizure-diary {
+  ion-header .toolbar-background {
+    background-color: $cl-secondary;
+  }
+
+  .toolbar-title {
+    color: $cl-font;
+  }
+
+  .bar-button {
+    color: $cl-font;
+  }
+
+  ion-footer .toolbar-background {
+    background-color: $cl-danger-60;
+  }
+
+  .info-value {
+    font-weight: bold;
+  }
+
+  .space-right {
+    padding-right: 0.3em;
+  }
+
+  ion-item.item {
+    margin-bottom: $item-separation-distance;
+    background-color: $cl-primary-40;
+  }
+
+  ion-item.item:last-child {
+    margin-bottom: 0;
+  }
+
+  ion-item-divider.item-divider {
+    background-color: $cl-primary-10;
+    color: $cl-font-light;
+    font-size: 2rem;
+  }
+
+  .item-button:active {
+    background-color: $cl-primary-80;
+  }
+}

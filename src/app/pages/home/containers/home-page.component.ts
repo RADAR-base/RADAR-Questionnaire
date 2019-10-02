@@ -12,6 +12,7 @@ import { checkTaskIsNow } from '../../../shared/utilities/check-task-is-now'
 import { ClinicalTasksPageComponent } from '../../clinical-tasks/containers/clinical-tasks-page.component'
 import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
 import { SettingsPageComponent } from '../../settings/containers/settings-page.component'
+import { SeizureDiaryPage } from '../../seizure-diary/seizure-diary'
 import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 import { TasksService } from '../services/tasks.service'
 import { HomePageAnimations } from './home-page.animation'
@@ -123,6 +124,11 @@ export class HomePageComponent implements OnDestroy {
   displayTaskCalendar() {
     this.usage.sendClickEvent('show_task_calendar')
     this.showCalendar = !this.showCalendar
+  }
+
+  openSeizureDiary() {
+    this.navCtrl.push(SeizureDiaryPage)
+    //this.usage.sendClickEvent('open_settings')
   }
 
   openSettingsPage() {

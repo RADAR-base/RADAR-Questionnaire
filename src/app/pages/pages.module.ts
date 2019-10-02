@@ -30,6 +30,7 @@ import { QuestionsModule } from './questions/questions.module'
 import { ReportModule } from './report/report.module'
 import { SettingsModule } from './settings/settings.module'
 import { SplashModule } from './splash/splash.module'
+import { SeizureDiaryModule } from './seizure-diary/seizure-diary.module'
 
 @NgModule({
   imports: [
@@ -41,7 +42,8 @@ import { SplashModule } from './splash/splash.module'
     QuestionsModule,
     ReportModule,
     SettingsModule,
-    SplashModule
+    SplashModule,
+    SeizureDiaryModule
   ],
   providers: [
     AlertService,

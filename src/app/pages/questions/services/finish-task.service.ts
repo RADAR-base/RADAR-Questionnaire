@@ -8,13 +8,16 @@ import { SchemaType } from '../../../shared/models/kafka'
 import { QuestionType } from '../../../shared/models/question'
 import { TaskType, getTaskType } from '../../../shared/utilities/task-type'
 
+import { SeizureDiaryService } from '../../seizure-diary/seizure-diary.service'
+
 @Injectable()
 export class FinishTaskService {
   constructor(
     private schedule: ScheduleService,
     private kafka: KafkaService,
     private config: ConfigService,
-    private logger: LogService
+    private logger: LogService,
+    private seizureDiary: SeizureDiaryService,
   ) {}
 
   updateTaskToComplete(task): Promise<any> {
@@ -37,6 +40,7 @@ export class FinishTaskService {
   }
 
   sendAnswersToKafka(processedAnswers, task): Promise<any> {
+    if (task.name === "Seizure Diary") this.seizureDiary.addEvent(task, processedAnswers)
     // NOTE: Submit data to kafka
     return Promise.all([
       this.kafka.prepareKafkaObjectAndSend(SchemaType.TIMEZONE, {}),

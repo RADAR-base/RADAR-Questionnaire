@@ -1,9 +1,13 @@
-import { AnswerService } from './answer.service'
 import { Injectable } from '@angular/core'
-import { QuestionType } from '../../../shared/models/question'
+
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
-import { TimestampService } from './timestamp.service'
+import { LocalizationService } from '../../../core/services/misc/localization.service'
+import { Question, QuestionType } from '../../../shared/models/question'
+import { getTaskType } from '../../../shared/utilities/task-type'
 import { getSeconds } from '../../../shared/utilities/time'
+import { AnswerService } from './answer.service'
+import { FinishTaskService } from './finish-task.service'
+import { TimestampService } from './timestamp.service'
 
 @Injectable()
 export class QuestionsService {
@@ -11,6 +15,7 @@ export class QuestionsService {
     QuestionType.timed,
     QuestionType.audio
   ])
+  NEXT_BUTTON_ENABLED_SET: Set<QuestionType> = new Set([QuestionType.audio])
   NEXT_BUTTON_AUTOMATIC_SET: Set<QuestionType> = new Set([
     QuestionType.timed,
     QuestionType.audio
@@ -19,7 +24,9 @@ export class QuestionsService {
   constructor(
     public questionnaire: QuestionnaireService,
     private answerService: AnswerService,
-    private timestampService: TimestampService
+    private timestampService: TimestampService,
+    private localization: LocalizationService,
+    private finish: FinishTaskService
   ) {}
 
   reset() {
@@ -90,31 +97,33 @@ export class QuestionsService {
     return questions
   }
 
-  isAnswered(id) {
+  isAnswered(question: Question) {
+    const id = question.field_name
     return this.answerService.check(id)
   }
 
   evalSkipNext(questions, currentQuestion) {
     // NOTE: Evaluates branching logic
-    let increment = 1
     let questionIdx = currentQuestion + 1
-    if (questionIdx < questions.length) {
-      while (questions[questionIdx].evaluated_logic !== '') {
-        const responses = Object.assign({}, this.answerService.answers)
-        const logic = questions[questionIdx].evaluated_logic
-        const logicFieldName = this.getLogicFieldName(logic)
-        const answers = this.answerService.answers[logicFieldName]
+    while (
+      questionIdx < questions.length &&
+      questions[questionIdx].evaluated_logic !== ''
+    ) {
+      const responses = Object.assign({}, this.answerService.answers)
+      const logic = questions[questionIdx].evaluated_logic
+      const logicFieldName = this.getLogicFieldName(logic)
+      const answers = this.answerService.answers[logicFieldName]
+      if (typeof answers !== 'undefined') {
         const answerLength = answers.length
-        if (!answerLength) if (eval(logic) === true) return increment
+        if (!answerLength) if (eval(logic) === true) return questionIdx
         for (const answer of answers) {
           responses[logicFieldName] = answer
-          if (eval(logic) === true) return increment
+          if (eval(logic) === true) return questionIdx
         }
-        increment += 1
-        questionIdx += 1
       }
+      questionIdx += 1
     }
-    return increment
+    return questionIdx
   }
 
   getLogicFieldName(logic) {
@@ -125,10 +134,6 @@ export class QuestionsService {
     return this.evalSkipNext(questions, currentQuestion)
   }
 
-  getAnswerProgress(current, total) {
-    return Math.ceil((current * 100) / total)
-  }
-
   getAttemptProgress(total) {
     const answers = this.answerService.answers
     const attemptedAnswers = Object.keys(answers)
@@ -137,9 +142,10 @@ export class QuestionsService {
     return Math.ceil((attemptedAnswers.length * 100) / total)
   }
 
-  recordTimeStamp(questionId, startTime) {
+  recordTimeStamp(question, startTime) {
+    const id = question.field_name
     this.timestampService.add({
-      id: questionId,
+      id: id,
       value: {
         startTime: startTime,
         endTime: this.getTime()
@@ -147,11 +153,49 @@ export class QuestionsService {
     })
   }
 
-  getIsPreviousDisabled(type) {
-    return this.PREVIOUS_BUTTON_DISABLED_SET.has(type)
+  getIsPreviousDisabled(questionType: string) {
+    return this.PREVIOUS_BUTTON_DISABLED_SET.has(questionType)
   }
 
-  getIsNextAutomatic(type) {
-    return this.NEXT_BUTTON_AUTOMATIC_SET.has(type)
+  getIsNextEnabled(questionType: string) {
+    return this.NEXT_BUTTON_ENABLED_SET.has(questionType)
+  }
+
+  getIsNextAutomatic(questionType: string) {
+    return this.NEXT_BUTTON_AUTOMATIC_SET.has(questionType)
+  }
+
+  getQuestionnairePayload(task) {
+    const type = getTaskType(task)
+    return this.questionnaire.getAssessment(type, task).then(assessment => {
+      return {
+        title: assessment.name,
+        introduction: this.localization.chooseText(assessment.startText),
+        endText: this.localization.chooseText(assessment.endText),
+        questions: this.processQuestions(assessment.name, assessment.questions),
+        task: task ? task : assessment,
+        assessment: assessment,
+        type: type,
+        isLastTask: false
+      }
+    })
+  }
+
+  processCompletedQuestionnaire(task, questions): Promise<any> {
+    const data = this.getData()
+    return Promise.all([
+      this.finish.updateTaskToComplete(task),
+      this.finish.processDataAndSend(
+        data.answers,
+        questions,
+        data.timestamps,
+        task
+      )
+    ])
+  }
+
+  handleClinicalFollowUp(assessment, completedInClinic?) {
+    if (!completedInClinic) return Promise.resolve()
+    return this.finish.evalClinicalFollowUpTask(assessment)
   }
 }

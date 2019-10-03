@@ -28,9 +28,10 @@ export class UsageService {
     return this.webIntent.getIntent().then(intent => {
       this.logger.log(intent)
       return this.sendEventToKafka({
-        eventType: intent.extras
-          ? UsageEventType.NOTIFICATION_OPEN
-          : UsageEventType.APP_OPEN
+        eventType:
+          Object.keys(intent.extras).length > 1
+            ? UsageEventType.NOTIFICATION_OPEN
+            : UsageEventType.APP_OPEN
       })
     })
   }

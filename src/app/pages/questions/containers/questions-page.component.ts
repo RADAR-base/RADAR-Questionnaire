@@ -19,7 +19,7 @@ export class QuestionsPageComponent implements OnInit {
   @ViewChild(Slides)
   slides: Slides
 
-  startTime = Date.now()
+  startTime: number
   currentQuestionId = 0
   nextQuestionId: number
   questionOrder = [0]
@@ -54,6 +54,7 @@ export class QuestionsPageComponent implements OnInit {
 
   ngOnInit() {
     this.task = this.navParams.data
+    this.startTime = this.questionsService.getTime()
     const data = this.questionsService.getQuestionnairePayload(this.task)
     return data.then(res => {
       this.questionTitle = res.title

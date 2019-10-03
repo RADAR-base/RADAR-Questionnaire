@@ -33,6 +33,7 @@ export class StorageKeys {
   static LAST_UPLOAD_DATE = new StorageKeys('LAST_UPLOAD_DATE')
   static BASE_URI = new StorageKeys('BASE_URI')
   static TOKEN_URI = new StorageKeys('TOKEN_URI')
+  static KEYCLOAK_CONFIG = new StorageKeys('KEYCLOAK_CONFIG')
   static CONSENT_ACCESS_NHS_RECORDS = new StorageKeys('CONSENT_ACCESS_NHS_RECORDS')
 
   static REMOTE_CONFIG_CACHE_TIMEOUT = new StorageKeys('REMOTE_CONFIG_CACHE_TIMEOUT')

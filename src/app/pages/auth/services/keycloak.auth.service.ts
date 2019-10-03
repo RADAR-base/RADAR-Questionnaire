@@ -48,15 +48,14 @@ export class KeycloakAuthService extends AuthService {
         redirectUri: 'http://ucl-mighealth-app/callback/',
       };
       this.logger.log("Initialized keycloak config: ", JSON.stringify(this.keycloakConfig))
-    }).then(() => {
       this.getRealmUrl().then((realmUrl) => {
         this.logger.log("Setting realmUrl to config")
         this.keycloakConfig.realmUrl = realmUrl
         return this.token.setTokenURI(realmUrl)
+      }).then(() => {
+        return this.storage.set(StorageKeys.KEYCLOAK_CONFIG, this.keycloakConfig)
       })
-    });
-
-
+    })
   }
 
   updateURI() {
@@ -80,11 +79,9 @@ export class KeycloakAuthService extends AuthService {
     return new Promise<any>((resolve, reject) => {
       this.createAuthenticationUrl(isRegistration)
         .then((authUrl) => {
-          this.logger.log('authentication-url: ',authUrl)
           const browser = this.inAppBrowser.create(authUrl, '_blank', this.inAppBrowserOptions)
           let authRes = null
           const listener = browser.on('loadstart').subscribe((event: any) => {
-            this.logger.log('browser event', event)
             const callback = encodeURI(event.url)
             //Check the redirect uri
             if (callback.indexOf(this.keycloakConfig.redirectUri) > -1) {
@@ -105,6 +102,7 @@ export class KeycloakAuthService extends AuthService {
       this.getSubjectInformation(),
       this.getProjectName()
     ]).then(([baseUrl, subjectInformation, projectName]) => {
+      this.logger.log("Project name is :", projectName)
       return this.config.setAll({
         projectId: projectName,
         subjectId: subjectInformation.username,
@@ -147,8 +145,6 @@ export class KeycloakAuthService extends AuthService {
         reject('Authorization Failed: No authorization-code found')
       }))
   }
-
-
 
   createAuthenticationUrl(isRegistration: boolean) {
     const state = uuid();

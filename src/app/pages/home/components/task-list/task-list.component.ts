@@ -11,6 +11,7 @@ import { Task } from '../../../../shared/models/task'
 import { TasksService } from '../../services/tasks.service'
 import { AlertService } from "../../../../core/services/misc/alert.service";
 import { LocalizationService } from "../../../../core/services/misc/localization.service";
+import {LogService} from "../../../../core/services/misc/log.service";
 
 @Component({
   selector: 'task-list',
@@ -19,65 +20,47 @@ import { LocalizationService } from "../../../../core/services/misc/localization
 export class TaskListComponent implements OnChanges {
 
   @Input()
-  tasks : Promise<Task[]>;
+  tasks: Map<number, Task[]>
 
   @Output()
   task: EventEmitter<Task> = new EventEmitter<Task>()
 
+  @Input()
+  currentDate: number
+
   currentTime
-  timeIndex: Promise<number>
+  timeIndex: number
 
   constructor(
     private tasksService: TasksService,
     private alertService: AlertService,
     private localization: LocalizationService,
+    private logger: LogService
   ) {}
 
   ngOnChanges() {
-    this.setCurrentTime()
+    if (this.tasks && this.tasks.size) this.setCurrentTime()
   }
 
   setCurrentTime() {
-    try {
-      this.currentTime = this.localization.moment().format('LT') // locale time
-    } catch (e) {
-      console.log(e)
-    }
-
     const now = new Date().getTime()
-    this.timeIndex = this.tasks
-      .then(tasks => tasks.findIndex(t => t.timestamp >= now))
+    try {
+      this.currentTime = this.localization.moment(now).format('LT') // locale time
+    } catch (e) {
+      this.logger.error('Failed to set current time', e)
+    }
+    // NOTE: Compare current time with the start times of the tasks and
+    // find out in between which tasks it should be shown in the interface
+    const todaysTasks = this.tasks.get(this.currentDate)
+    this.timeIndex = todaysTasks.findIndex(t => t.timestamp >= now)
   }
 
   clicked(task) {
-    const now = new Date().getTime()
-    if (
-      task.timestamp <= now &&
-      task.timestamp + task.completionWindow > now &&
-      !task.completed
-    ) {
-      this.task.emit(task)
-    } else {
-      return this.showMissedInfo()
-    }
-  }
-
-  showMissedInfo() {
-    return this.alertService.showAlert({
-      title: this.localization.translateKey(LocKeys.CALENDAR_ESM_MISSED_TITLE),
-      message: this.localization.translateKey(LocKeys.CALENDAR_ESM_MISSED_DESC),
-      buttons: [
-        {
-          text: this.localization.translateKey(LocKeys.BTN_OKAY),
-          handler: () => {}
-        }
-      ]
-    })
+    this.task.emit(task)
   }
 
   getStartTime(task: Task) {
-    return this.localization.moment(task.timestamp)
-      .format('LT')
+    return this.localization.moment(task.timestamp).format('HH:mm')
   }
 
 }

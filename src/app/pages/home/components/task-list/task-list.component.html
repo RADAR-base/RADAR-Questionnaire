@@ -8,9 +8,9 @@
   </div>
 
   <div id="task-container">
-      <ion-scroll scrollX style="height:150px;" *ngIf="(tasks | async) !== null && (tasks | async).length !== 0">
-        <div class="scroll-item">
-          <ion-col col-33 *ngFor="let task of (tasks | async)">
+      <ion-scroll scrollX style="height:150px;" *ngIf="(tasks)">
+        <div class="scroll-item" *ngFor="let task of (tasks | getValues)">
+          <ion-col col-33 >
             <div *ngIf="!task.completed" class="card" (click)="clicked(task)">
               <ion-icon [name]="task.iconInfo"></ion-icon>
               <div class="text-medium"> {{ task.name }}</div>
@@ -19,7 +19,7 @@
         </div>
       </ion-scroll>
   </div>
-  <div padding *ngIf="(tasks | async ) === null || (tasks | async).length == 0">
+  <div padding *ngIf="tasks === null || tasks.size == 0">
     <div class="text-heading" > {{ "NO_SURVEYS_AVAILABLE" | translate }}</div>
   </div>
 </div>

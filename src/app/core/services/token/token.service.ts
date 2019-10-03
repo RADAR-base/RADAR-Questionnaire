@@ -29,7 +29,7 @@ export class TokenService {
     BASE_URI: StorageKeys.BASE_URI
   }
   URI_base: string
-  private tokenRefreshMillis: number = DefaultTokenRefreshSeconds
+  protected tokenRefreshMillis: number = DefaultTokenRefreshSeconds
 
   constructor(
     public http: HttpClient,

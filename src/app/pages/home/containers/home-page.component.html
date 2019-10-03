@@ -12,21 +12,18 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content #content >
+<ion-content>
 
-  <div *ngIf="selectedPage === 'home'">
-    <div
-      #taskList
-      class="size-static"
-    >
+  <div  *ngIf="selectedPage === 'home'">
+    <div #taskList>
       <task-list
-        *ngIf="uncompletedTasks"
+        *ngIf="(sortedTasks | async)?.size"
         (task)="startQuestionnaire($event)"
-        [tasks]="uncompletedTasks"
+        [tasks]="sortedTasks | async"
+        [currentDate]="currentDate.getTime()"
       >
       </task-list>
     </div>
-
 
     <div
       class="size-dynamic"
@@ -41,52 +38,12 @@
       >
       </task-progress>
     </div>
-
-<!--    <div-->
-<!--      *ngIf="hasClinicalTasks | async"-->
-<!--      class="clinical-container"-->
-<!--      (tap)="openClinicalTasksPage()"-->
-<!--    >-->
-<!--      <div class="clinical-button" [class.clinical-button-bottom]="showCalendar">-->
-<!--        <div class="clinical-icon">-->
-<!--          <img src="assets/imgs/clinical.png" class="icon-clinical" />-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
-
-<!--    <div #tickerBar class="size-static">-->
-<!--      <ticker-bar-->
-<!--        [task]="nextTask"-->
-<!--        [isNow]="taskIsNow"-->
-<!--        [showAffirmation]="showCompleted"-->
-<!--        [noTasksToday]="(tasksProgress | async)?.numberOfTasks == 0"-->
-<!--      ></ticker-bar>-->
-<!--    </div>-->
-
-<!--    <div class="size-static">-->
-<!--      <task-info-->
-<!--        *ngIf="nextTask"-->
-<!--        [task]="nextTask"-->
-<!--        [isNow]="taskIsNow"-->
-<!--        [progress]="tasksProgress | async"-->
-<!--        [expanded]="!showCalendar"-->
-<!--        (tap)="displayTaskCalendar()"-->
-<!--      ></task-info>-->
-<!--    </div>-->
-
-    <div #taskCalendar [@displayCalendar]="showCalendar">
-      <task-calendar
-        *ngIf="(sortedTasks | async)?.size"
-        [show]="showCalendar"
-        (task)="startQuestionnaire($event)"
-        [tasks]="sortedTasks | async"
-        [currentDate]="currentDate.getTime()"
-      >
-      </task-calendar>
-    </div>
   </div>
 
-  <div padding *ngIf="selectedPage === 'learn'">
+  <div
+    *ngIf="selectedPage === 'learn'"
+    class="size-dynamic"
+  >
     <div> Learn page </div>
     <div> TO come when design finalized  </div>
 
@@ -98,48 +55,24 @@
       </button>
     </ion-list>
   </div>
-
 </ion-content>
-
-<div class="size-static footer">
-  <div *ngIf="getIsStartButtonShown() && (sortedTasks | async)?.size" padding>
-    <button
-      ion-button
-      class="bt bt--full"
-      round
-      full
-      (tap)="startQuestionnaire()"
-    >
-      {{ 'BTN_START' | translate }}
-    </button>
-  </div>
-  <div
-    *ngIf="
-        getIsLoadingSpinnerShown() ||
-        (!(sortedTasks | async)?.size && (tasksProgress | async)?.numberOfTasks)
-      "
-    class="spinner-center"
-  >
-    <ion-spinner name="dots"></ion-spinner>
-  </div>
-</div>
 
 <ion-footer>
   <ion-segment padding [(ngModel)]="selectedPage" onchange="onFooterChange()">
 
     <ion-segment-button value="home" >
       <ion-icon name="create" ></ion-icon>
-      <ion-title text-center>{{ "SURVEYS_HEADING" | translate }}</ion-title>
+<!--      <ion-title text-center>{{ "SURVEYS_HEADING" | translate }}</ion-title>-->
     </ion-segment-button>
 
     <ion-segment-button value="learn">
       <ion-icon name="book" ></ion-icon>
-      <ion-title text-center>{{ "LEARN_HEADING" | translate }}</ion-title>
+<!--      <ion-title text-center>{{ "LEARN_HEADING" | translate }}</ion-title>-->
     </ion-segment-button>
 
     <ion-segment-button (ionSelect)="openSettingsPage()">
       <ion-icon name="cog" ></ion-icon>
-      <ion-title text-center>{{ "SETTINGS_SETTINGS" | translate }}</ion-title>
+<!--      <ion-title text-center>{{ "SETTINGS_SETTINGS" | translate }}</ion-title>-->
     </ion-segment-button>
   </ion-segment>
 </ion-footer>

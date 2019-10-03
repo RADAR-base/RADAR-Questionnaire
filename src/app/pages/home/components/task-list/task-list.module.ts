@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core'
 import { IonicModule } from 'ionic-angular'
 
 import { PipesModule } from '../../../../shared/pipes/pipes.module'
-import {TaskListComponent} from "./task-list.component";
+import { TaskListComponent } from "./task-list.component";
 
 const COMPONENTS = [TaskListComponent]
 

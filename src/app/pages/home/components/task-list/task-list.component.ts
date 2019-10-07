@@ -20,7 +20,7 @@ import {LogService} from "../../../../core/services/misc/log.service";
 export class TaskListComponent implements OnChanges {
 
   @Input()
-  tasks: Map<number, Task[]>
+  tasks: Task[]
 
   @Output()
   task: EventEmitter<Task> = new EventEmitter<Task>()
@@ -39,7 +39,7 @@ export class TaskListComponent implements OnChanges {
   ) {}
 
   ngOnChanges() {
-    if (this.tasks && this.tasks.size) this.setCurrentTime()
+    if (this.tasks && this.tasks.length) this.setCurrentTime()
   }
 
   setCurrentTime() {
@@ -51,8 +51,8 @@ export class TaskListComponent implements OnChanges {
     }
     // NOTE: Compare current time with the start times of the tasks and
     // find out in between which tasks it should be shown in the interface
-    const todaysTasks = this.tasks.get(this.currentDate)
-    this.timeIndex = todaysTasks.findIndex(t => t.timestamp >= now)
+    // const todaysTasks = this.tasks.get(this.currentDate)
+    // this.timeIndex = todaysTasks.findIndex(t => t.timestamp >= now)
   }
 
   clicked(task) {

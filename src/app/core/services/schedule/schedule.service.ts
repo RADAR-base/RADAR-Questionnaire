@@ -74,6 +74,21 @@ export class ScheduleService {
     return this.storage.get(this.SCHEDULE_STORE.SCHEDULE_TASKS_COMPLETED)
   }
 
+  getPendingTasksForNow(): Promise<Task[]> {
+    return this.getTasks(TaskType.ALL).then(tasks => {
+      this.logger.log('Total number of tasks ', tasks.length)
+      const now = new Date().getTime()
+      const filtered =  tasks
+        .filter(
+          t =>
+            t => t.timestamp <= now || t.timestamp + t.completionWindow <= now
+        )
+        .slice(0, 100)
+      this.logger.log("Incomplete tasks count ", filtered.length)
+      return filtered
+    })
+  }
+
   getIncompleteTasks(): Promise<Task[]> {
     return this.getTasks(TaskType.ALL).then(tasks => {
       const now = new Date().getTime()

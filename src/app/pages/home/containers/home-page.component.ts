@@ -96,14 +96,13 @@ export class HomePageComponent implements OnDestroy {
   }
 
   ionViewDidLoad() {
-    this.tasks = this.tasksService.getTasksOfNow();
-    this.uncompletedTasks = this.tasksService.getUncompletedTasksOfNow();
     this.init()
     this.usage.sendOpenEvent()
     this.usage.setPage(this.constructor.name)
   }
 
   init() {
+    this.uncompletedTasks = this.tasksService.getTasksToComplete();
     this.sortedTasks = this.tasksService.getSortedTasksOfToday()
     this.tasks = this.tasksService.getTasksOfToday()
     this.currentDate = this.tasksService.getCurrentDateMidnight()
@@ -119,6 +118,7 @@ export class HomePageComponent implements OnDestroy {
 
   onResume() {
     this.usage.sendOpenEvent()
+    this.uncompletedTasks = this.tasksService.getTasksToComplete();
     this.checkForNewDate()
   }
 

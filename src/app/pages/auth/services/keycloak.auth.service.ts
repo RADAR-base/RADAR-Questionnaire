@@ -105,9 +105,9 @@ export class KeycloakAuthService extends AuthService {
       this.logger.log("Project name is :", projectName)
       return this.config.setAll({
         projectId: projectName,
-        subjectId: subjectInformation.username,
+        subjectId: subjectInformation.sub,
         sourceId: uuid(),
-        humanReadableId: subjectInformation.sub,
+        humanReadableId: subjectInformation.username,
         enrolmentDate: new Date(subjectInformation.createdTimestamp).getTime(),
         baseUrl: baseUrl? baseUrl : DefaultEndPoint
       })

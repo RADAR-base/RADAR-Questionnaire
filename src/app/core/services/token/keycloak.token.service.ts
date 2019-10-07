@@ -40,7 +40,9 @@ export class KeycloakTokenService extends TokenService {
       this.getTokenParams(authorizationCode, keycloakConfig.clientId, keycloakConfig.redirectUri)
     ])
     .then(([uri, headers, body]) => {
-      this.logger.log(`"Requesting access token with code: ${authorizationCode}, URI: ${uri} and headers`, headers)
+      this.logger.log(
+        `"Requesting access token with code: ${authorizationCode},URI: ${uri} and headers`,
+        headers)
       return this.http
         .post(uri, body, { headers: headers })
         .toPromise()

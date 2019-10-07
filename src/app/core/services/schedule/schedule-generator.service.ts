@@ -167,13 +167,22 @@ export class ScheduleGeneratorService {
       completionWindow: completionWindow,
       warning: this.localization.chooseText(assessment.warn),
       isClinical: !!assessment.protocol.clinicalProtocol ? true : false,
-      iconInfo: 'checkbox-outline'
+      iconInfo: this.getIconInfo(assessment)
     }
     task.notifications = this.notificationService.createNotifications(
       assessment,
       task
     )
     return task
+  }
+
+  getIconInfo(assessment: Assessment) {
+    if (assessment && assessment.questionnaire && assessment.questionnaire.icon && assessment.questionnaire.icon.name) {
+      return assessment.questionnaire.icon.name
+    }
+    else {
+      return 'checkbox'
+    }
   }
 
   updateScheduleWithCompletedTasks(

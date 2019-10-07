@@ -50,13 +50,8 @@ export class TasksService {
       })
   }
 
-  getUncompletedTasksOfNow() {
-    const now = new Date().getTime()
-    return this.schedule.getIncompleteTasks()
-      .then((tasks: Task[]) => {
-        return tasks.filter(t => t.timestamp <= now && t.timestamp + t.completionWindow > now && !t.completed)
-      })
-
+  getTasksToComplete() {
+    return this.schedule.getPendingTasksForNow()
   }
 // end of from ucl
   getTasksOfToday() {

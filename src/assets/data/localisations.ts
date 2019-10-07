@@ -147,7 +147,7 @@ export const Localisations = {
     es: 'Registro Completo',
     it: 'Registrazione Completa',
     nl: 'Registratie Compleet',
-    pl: '',
+    pl: 'Rejestracja zakończona',
     hb: ''
   },
   ENROL_REGISTRATION_COMPLETE_DESC: {
@@ -157,7 +157,7 @@ export const Localisations = {
     es: "Ahora se ha inscrito con éxito en el estudio. Haga clic en 'Finalizar' para comenzar a generar su calendario de cuestionarios y notificaciones.",
     it: "Ora ti sei iscritto con successo allo studio. Fai clic su 'Fine' per iniziare a generare la pianificazione del questionario e le notifiche.",
     nl: "U bent nu succesvol ingeschreven voor het onderzoek. Klik op 'Voltooid' om uw vragenlijstschema en meldingen te genereren.",
-    pl: '',
+    pl: 'Z powodzeniem zarejestrowałeś się w badaniu. Kliknij „Zakończone”, aby wygenerować harmonogram kwestionariusza i powiadomienia',
     hb: ''
   },
   FINISH_THANKS: {
@@ -187,7 +187,7 @@ export const Localisations = {
     es: 'Completado durante la visita clínica',
     it: 'Completato in clinica?',
     nl: 'Voltooid in de kliniek?',
-    pl: '',
+    pl: 'Ukończone w klinice',
     hb: ''
   },
   CALENDAR_ESM_MISSED_TITLE: {
@@ -412,7 +412,7 @@ export const Localisations = {
     es: 'Estás a punto de reiniciar la aplicación.',
     it: "Stai per ripristinare l'app.",
     nl: 'U staat op het punt de app opnieuw in te stellen.',
-    pl: '',
+    pl: 'Masz zamiar zresetować aplikację',
     hb: ''
   },
   SETTINGS_RESET_ALERT_OPTION_DESC: {
@@ -429,7 +429,7 @@ export const Localisations = {
     nl: 
       "Kies ervoor om de app-configuratie en -gegevens alleen opnieuw in te stellen of een volledige reset uit te voeren en opnieuw in te schrijven.",
     pl:
-      '',
+      'wybierz tylko zresetować konfigurację i dane aplikacji lub wykonać pełny reset i ponownie zarejestrować',
     hb: 
       ''
   },
@@ -480,7 +480,7 @@ export const Localisations = {
     es: 'Generar Notificación de Prueba',
     it: 'Genera Notifica di Prova',
     nl: 'Genereer Testmelding',
-    pl: '',
+    pl: 'wygeneruj powiadomienie o badaniu',
     hb: ''
   },
   SETTINGS_LOG_NOTIFS: {
@@ -490,7 +490,7 @@ export const Localisations = {
     es: 'Notificaciones de Registro',
     it: 'Registra le Notifiche',
     nl: 'Logmeldingen',
-    pl: '',
+    pl: 'Powiadomienia z dziennika',
     hb: ''
   },
   SETTINGS_SEND_CACHED_DATA: {
@@ -500,7 +500,7 @@ export const Localisations = {
     es: 'Enviar Datos en Caché',
     it: 'Invia Dati Memorizzati nella Cache',
     nl: 'Gegevens in Cache Verzenden',
-    pl: '',
+    pl: 'Wyślij dane z pamięci podręcznej',
     hb: ''
   },
   LANGUAGE_ENGLISH: {
@@ -560,7 +560,7 @@ export const Localisations = {
     es: 'Holandés',
     it: 'Olandese',
     nl: 'Nederlands',
-    pl: '',
+    pl: 'Holenderski (niderlandzki)',
     hb: ''
   },
   BTN_ENROL_ENROL: {
@@ -570,7 +570,7 @@ export const Localisations = {
     es: 'Registro',
     it: 'Registrazione',
     nl: 'Registreren',
-    pl: 'Holenderski (niderlandzki)',
+    pl: 'zarejestruj się',
     hb: ''
   },
   BTN_ENROL_SCAN: {
@@ -660,7 +660,7 @@ export const Localisations = {
     es: 'REintentar',
     it: 'Riprovare',
     nl: 'Probeer opnieuw',
-    pl: '',
+    pl: 'Spróbuj ponownie',
     hb: ''
   },
   BTN_AGREE: {
@@ -690,7 +690,7 @@ export const Localisations = {
     es: 'De acuerdo',
     it: 'Okay',
     nl: 'OK',
-    pl: '',
+    pl: 'OK',
     hb: ''
   },
   BTN_SET: {
@@ -840,7 +840,7 @@ export const Localisations = {
     es: 'Notificación de prueba',
     it: 'Notifica di prova',
     nl: 'Testmelding',
-    pl: '',
+    pl: 'powiadomienie o badaniu',
     hb: ''
   },
   NOTIFICATION_TEST_REMINDER_NOW_DESC: {
@@ -1316,7 +1316,7 @@ export const Localisations = {
     es: 'Actualizando notificaciones y programa...',
     it: 'Aggiornamento notifiche e pianificazione...',
     nl: 'Meldingen en planning bijwerken...',
-    pl: '',
+    pl: 'Zaktualizuj powiadomienia i harmonogram',
     hb: ''
   },
   SPLASH_STATUS_SENDING_LOGS: {
@@ -1326,7 +1326,7 @@ export const Localisations = {
     es: 'Enviando registros de cuestionarios perdidos...',
     it: 'Invio dei registri dei questionari persi ...',
     nl: 'Logboeken gemiste vragenlijst verzenden...',
-    pl: '',
+    pl: 'Wyślij brakujące dzienniki kwestionariusza',
     hb: ''
   }
 }

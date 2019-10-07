@@ -449,10 +449,10 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/mobile-accessibility@5.14.0":
-  version "5.14.0"
-  resolved "https://registry.yarnpkg.com/@ionic-native/mobile-accessibility/-/mobile-accessibility-5.14.0.tgz#6a4bc9d7437c8ac28731cef1a97dd2e3c75782a5"
-  integrity sha512-6ykSf3p5qOwFNL9px6XbuoJXHOGFbV/WBrNUwKWpxDnmUith5FyBMDQygnCAXamN75AoNvocYA5Gen18ZQjkxQ==
+"@ionic-native/mobile-accessibility@5.15.0":
+  version "5.15.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/mobile-accessibility/-/mobile-accessibility-5.15.0.tgz#c2c946312fd76131fe40eec74078422a5813ef68"
+  integrity sha512-miwnk8bxjyH8iEUrWm2diDVT9/QCBXG5PF8c5DDY0rVkpkI7UYYflSaBDXQsvSoyunu1Oq8I3C8yOsgmsRIlkQ==
   dependencies:
     "@types/cordova" latest
 

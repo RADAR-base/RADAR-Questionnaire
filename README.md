@@ -78,7 +78,7 @@ $ ionic cordova emulate android
 
 ### iOS
 
-To add the iOS platform, you need to have the [XCode](https://apps.apple.com/us/app/xcode/id497799835?mt=12) pre installed.
+To add the iOS platform, you need to have [XCode](https://apps.apple.com/us/app/xcode/id497799835?mt=12) pre installed.
 
 ```
 $ ionic cordova platform add ios

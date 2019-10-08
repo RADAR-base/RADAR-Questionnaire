@@ -1,13 +1,17 @@
 import { Component } from '@angular/core'
 import { NavController, NavParams } from 'ionic-angular'
 
+import { DefaultPackageName } from '../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { UsageService } from '../../../core/services/usage/usage.service'
+import { ConfigEventType } from '../../../shared/enums/events'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { EnrolmentPageComponent } from '../../auth/containers/enrolment-page.component'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { SplashService } from '../services/splash.service'
+
+declare var window
 
 @Component({
   selector: 'page-splash',
@@ -42,7 +46,11 @@ export class SplashPageComponent {
         )
         return this.splash.sendMissedQuestionnaireLogs()
       })
-      .catch(e => this.showFetchConfigFail(e))
+      .catch(e =>
+        e.message == ConfigEventType.APP_UPDATE_AVAILABLE
+          ? this.showAppUpdateAvailable()
+          : this.showFetchConfigFail(e)
+      )
       .then(() => this.navCtrl.setRoot(HomePageComponent))
   }
 
@@ -61,6 +69,23 @@ export class SplashPageComponent {
           text: this.localization.translateKey(LocKeys.BTN_RESET),
           handler: () => {
             this.enrol()
+          }
+        }
+      ]
+    })
+  }
+
+  showAppUpdateAvailable() {
+    this.alertService.showAlert({
+      title: this.localization.translateKey(LocKeys.STATUS_UPDATE_AVAILABLE),
+      message: this.localization.translateKey(
+        LocKeys.STATUS_UPDATE_AVAILABLE_DESC
+      ),
+      buttons: [
+        {
+          text: this.localization.translateKey(LocKeys.BTN_UPDATE),
+          handler: () => {
+            window.location.replace('market://details?id=' + DefaultPackageName)
           }
         }
       ]

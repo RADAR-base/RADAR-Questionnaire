@@ -1,11 +1,19 @@
+import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
+import * as ver from 'semver'
 
-import { DefaultNotificationRefreshTime } from '../../../../assets/data/defaultConfig'
+import {
+  DefaultAppVersion,
+  DefaultGooglePlaystoreAppURL,
+  DefaultNotificationRefreshTime,
+  DefaultPackageName
+} from '../../../../assets/data/defaultConfig'
 import {
   ConfigEventType,
   NotificationEventType
 } from '../../../shared/enums/events'
 import { User } from '../../../shared/models/user'
+import { parseVersion } from '../../../shared/utilities/parse-version'
 import { TaskType } from '../../../shared/utilities/task-type'
 import { KafkaService } from '../kafka/kafka.service'
 import { LocalizationService } from '../misc/localization.service'
@@ -30,17 +38,19 @@ export class ConfigService {
     private kafka: KafkaService,
     private localization: LocalizationService,
     private analytics: AnalyticsService,
-    private logger: LogService
+    private logger: LogService,
+    private http: HttpClient
   ) {}
 
   fetchConfigState(force?: boolean) {
     return Promise.all([
+      this.checkForAppUpdates(),
       this.hasProtocolChanged(force),
       this.hasAppVersionChanged(),
       this.hasTimezoneChanged(),
       this.hasNotificationsExpired()
     ])
-      .then(([newProtocol, newAppVersion, newTimezone, newNotifications]) => {
+      .then(([, newProtocol, newAppVersion, newTimezone, newNotifications]) => {
         if (newProtocol && newAppVersion && newTimezone)
           this.subjectConfig
             .getEnrolmentDate()
@@ -127,6 +137,22 @@ export class ConfigService {
         !lastUpdate ||
         timeElapsed < 0
       )
+    })
+  }
+
+  checkForAppUpdates() {
+    const playstoreURL = DefaultGooglePlaystoreAppURL + DefaultPackageName
+    return Promise.all([
+      this.http
+        .get(playstoreURL, { responseType: 'text' })
+        .toPromise()
+        .then(res => parseVersion(res))
+        .catch(e => DefaultAppVersion),
+      this.appConfig.getAppVersion()
+    ]).then(([playstoreVersion, currentVersion]) => {
+      if (ver.gt(ver.coerce(playstoreVersion), ver.coerce(currentVersion)))
+        throw new Error(ConfigEventType.APP_UPDATE_AVAILABLE)
+      return null
     })
   }
 

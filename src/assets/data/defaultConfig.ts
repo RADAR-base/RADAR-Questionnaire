@@ -166,6 +166,9 @@ export const DefaultKafkaURI = '/kafka'
 export const DefaultQuestionnaireTypeURI = '_armt'
 export const DefaultQuestionnaireFormatURI = '.json'
 
+export const DefaultGooglePlaystoreAppURL =
+  'https://play.google.com/store/apps/details?id='
+
 // DEFAULT HTTP REQUEST VALUES
 
 // *Default HTTP request encoded content type

@@ -15,6 +15,9 @@ export const DefaultPlatformInstance = 'RADAR-CNS'
 // *Default app version
 export const DefaultAppVersion = '0.7.1-alpha'
 
+// *Default Android package name
+export const DefaultPackageName = 'org.phidatalab.radar_armt'
+
 // DEFAULT SOURCE INFO
 // *This is the default source info and description for the aRMT app in RADAR base.
 // *NOTE: These details must match the schema specification files.

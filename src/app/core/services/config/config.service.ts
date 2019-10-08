@@ -44,17 +44,17 @@ export class ConfigService {
 
   fetchConfigState(force?: boolean) {
     return Promise.all([
-      this.checkForAppUpdates(),
       this.hasProtocolChanged(force),
       this.hasAppVersionChanged(),
       this.hasTimezoneChanged(),
       this.hasNotificationsExpired()
     ])
-      .then(([, newProtocol, newAppVersion, newTimezone, newNotifications]) => {
+      .then(([newProtocol, newAppVersion, newTimezone, newNotifications]) => {
         if (newProtocol && newAppVersion && newTimezone)
           this.subjectConfig
             .getEnrolmentDate()
             .then(d => this.appConfig.init(d))
+        this.checkForAppUpdates()
         if (newProtocol)
           return this.updateConfigStateOnProtocolChange(newProtocol)
         if (newAppVersion)
@@ -150,7 +150,7 @@ export class ConfigService {
         .catch(e => DefaultAppVersion),
       this.appConfig.getAppVersion()
     ]).then(([playstoreVersion, currentVersion]) => {
-      if (ver.gt(ver.coerce(playstoreVersion), ver.coerce(currentVersion)))
+      if (ver.gt(playstoreVersion, currentVersion))
         throw new Error(ConfigEventType.APP_UPDATE_AVAILABLE)
       return
     })

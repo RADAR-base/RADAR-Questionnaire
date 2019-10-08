@@ -152,7 +152,7 @@ export class ConfigService {
     ]).then(([playstoreVersion, currentVersion]) => {
       if (ver.gt(ver.coerce(playstoreVersion), ver.coerce(currentVersion)))
         throw new Error(ConfigEventType.APP_UPDATE_AVAILABLE)
-      return null
+      return
     })
   }
 

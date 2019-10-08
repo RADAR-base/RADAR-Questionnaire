@@ -1,5 +1,7 @@
 import { HttpClient, HttpHandler } from '@angular/common/http'
 import { TestBed } from '@angular/core/testing'
+import { Platform } from 'ionic-angular'
+import { PlatformMock } from 'ionic-mocks'
 
 import {
   AppConfigServiceMock,
@@ -46,7 +48,8 @@ describe('ConfigService', () => {
         },
         { provide: LogService, useClass: LogServiceMock },
         HttpClient,
-        HttpHandler
+        HttpHandler,
+        { provide: Platform, useClass: PlatformMock }
       ]
     })
   )

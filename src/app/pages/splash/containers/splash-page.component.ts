@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { NavController, NavParams } from 'ionic-angular'
+import { NavController, NavParams, Platform } from 'ionic-angular'
 
 import { DefaultPackageName } from '../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../core/services/misc/alert.service'
@@ -25,7 +25,8 @@ export class SplashPageComponent {
     private splash: SplashService,
     private alertService: AlertService,
     private localization: LocalizationService,
-    private usage: UsageService
+    private usage: UsageService,
+    private platform: Platform
   ) {
     this.splash
       .evalEnrolment()
@@ -33,6 +34,7 @@ export class SplashPageComponent {
   }
 
   onStart() {
+    this.showAppUpdateAvailable()
     this.usage.sendOpenEvent()
     this.usage.setPage(this.constructor.name)
     this.status = this.localization.translateKey(
@@ -85,11 +87,17 @@ export class SplashPageComponent {
         {
           text: this.localization.translateKey(LocKeys.BTN_UPDATE),
           handler: () => {
-            window.location.replace('market://details?id=' + DefaultPackageName)
+            this.openApplicationStore()
           }
         }
       ]
     })
+  }
+
+  openApplicationStore() {
+    if (this.platform.is('ios'))
+      window.location.replace('itms-apps://itunes.apple.com/app/')
+    else window.location.replace('market://details?id=' + DefaultPackageName)
   }
 
   enrol() {

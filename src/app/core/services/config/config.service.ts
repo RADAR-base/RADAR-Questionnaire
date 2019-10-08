@@ -1,9 +1,12 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
+import { Platform } from 'ionic-angular'
 import * as ver from 'semver'
 
 import {
+  DefaultAppId,
   DefaultAppVersion,
+  DefaultAppleAppStoreAppURL,
   DefaultGooglePlaystoreAppURL,
   DefaultNotificationRefreshTime,
   DefaultPackageName
@@ -39,7 +42,8 @@ export class ConfigService {
     private localization: LocalizationService,
     private analytics: AnalyticsService,
     private logger: LogService,
-    private http: HttpClient
+    private http: HttpClient,
+    private platform: Platform
   ) {}
 
   fetchConfigState(force?: boolean) {
@@ -141,7 +145,9 @@ export class ConfigService {
   }
 
   checkForAppUpdates() {
-    const playstoreURL = DefaultGooglePlaystoreAppURL + DefaultPackageName
+    const playstoreURL = this.platform.is('ios')
+      ? DefaultAppleAppStoreAppURL + DefaultAppId
+      : DefaultGooglePlaystoreAppURL + DefaultPackageName
     return Promise.all([
       this.http
         .get(playstoreURL, { responseType: 'text' })

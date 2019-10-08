@@ -34,7 +34,6 @@ export class SplashPageComponent {
   }
 
   onStart() {
-    this.showAppUpdateAvailable()
     this.usage.sendOpenEvent()
     this.usage.setPage(this.constructor.name)
     this.status = this.localization.translateKey(
@@ -95,9 +94,10 @@ export class SplashPageComponent {
   }
 
   openApplicationStore() {
-    if (this.platform.is('ios'))
-      window.location.replace('itms-apps://itunes.apple.com/app/')
-    else window.location.replace('market://details?id=' + DefaultPackageName)
+    const url = this.platform.is('ios')
+      ? 'itms-apps://itunes.apple.com/app/'
+      : 'market://details?id=' + DefaultPackageName
+    window.location.replace(url)
   }
 
   enrol() {

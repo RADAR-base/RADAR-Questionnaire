@@ -18,6 +18,9 @@ export const DefaultAppVersion = '0.7.1-alpha'
 // *Default Android package name
 export const DefaultPackageName = 'org.phidatalab.radar_armt'
 
+// *Default iOS app id
+export const DefaultAppId = ''
+
 // DEFAULT SOURCE INFO
 // *This is the default source info and description for the aRMT app in RADAR base.
 // *NOTE: These details must match the schema specification files.
@@ -168,6 +171,7 @@ export const DefaultQuestionnaireFormatURI = '.json'
 
 export const DefaultGooglePlaystoreAppURL =
   'https://play.google.com/store/apps/details?id='
+export const DefaultAppleAppStoreAppURL = 'https://apps.apple.com/app/'
 
 // DEFAULT HTTP REQUEST VALUES
 

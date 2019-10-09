@@ -54,7 +54,7 @@ export class ConfigService {
         if (newNotifications) return this.rescheduleNotifications(false)
       })
       .catch(e => {
-        this.sendConfigChangeEvent(ConfigEventType.ERROR)
+        this.sendConfigChangeEvent(ConfigEventType.ERROR, '', '', e.message)
         throw e
       })
   }
@@ -243,10 +243,11 @@ export class ConfigService {
     }
   }
 
-  sendConfigChangeEvent(type, previous?, current?) {
+  sendConfigChangeEvent(type, previous?, current?, error?) {
     this.analytics.logEvent(type, {
       previous: String(previous),
-      current: String(current)
+      current: String(current),
+      error: String(error)
     })
   }
 

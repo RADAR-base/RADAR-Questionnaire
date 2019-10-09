@@ -18,7 +18,7 @@ export const Localisations = {
     it: 'Benvenuto',
     nl: 'Welkom',
     pl: 'Witamy',
-    hb: ''
+    hb: 'ברוכים הבאים'
   },
   ENROL_WELCOME_2: {
     da: 'til RADAR-Base',
@@ -28,7 +28,7 @@ export const Localisations = {
     it: 'in RADAR-Base',
     nl: 'bij RADAR-Base',
     pl: 'w RADAR-CNS',
-    hb: ''
+    hb: 'RADAR-CNS-ל'
   },
   ENROL_WELCOME_DESC: {
     da:
@@ -46,7 +46,7 @@ export const Localisations = {
     pl: 
       'Dziękujemy za wzięcie udziału w badaniu. Przejdź przez proces rejestracji, byś mógł zacząć korzystać z aplikacji',
     hb: 
-      ''  
+      '.תודה שאתם משתתף במחקר זה. בוא נתחיל את הליך ההרשמה באפליקציה'  
   },
   ENROL_REGISTRATION: {
     da: 'Registrering',
@@ -56,7 +56,7 @@ export const Localisations = {
     it: 'Registrazione',
     nl: 'Registratie',
     pl: 'Rejestracja',
-    hb: ''
+    hb: 'הרשמה'
   },
   ENROL_REGISTRATION_DESC: {
     da:
@@ -74,7 +74,7 @@ export const Localisations = {
     pl: 
       'Zanim będziesz mógł korzystać z aplikacji, musisz się zarejestrować. Możesz zeskanować kod QR lub wpisać Token',
     hb: 
-      ''  
+      'לפני שתוכל להתחיל להשתמש באפליקציה, אנחנו צריכים שתרשם אליה. תוכל לעשות זאת באמצעות קוד QR או הזנת טוקן'  
   },
   ENROL_REGISTRATION_SCAN_DESC: {
     da:
@@ -92,7 +92,7 @@ export const Localisations = {
     pl: 
       "Kliknij przycisk Skanuj i skieruj aparat telefonu na kod QR, który otrzymałeś od badacza. Przykładowy kod QR znajduje się poniżej.",
     hb: 
-      ""  
+      ".לחץ על כפתור הסריקה וכוון את הממלצה לקוד QR, שניתן לך מהחוקר. דוגמה לקוד QR מוצגת מטה"  
   },
   ENROL_REGISTRATION_TOKEN_DESC: {
     da:
@@ -110,7 +110,7 @@ export const Localisations = {
     pl: 
       'Wprowadź Token. Powinien być widoczny poniżej kodu QR w Mahagement Portal. Jeśli go tam nie znajdziesz, zeskanuj kod QR.',
     hb: 
-      ''  
+      'הזן את הטוקן. זה אמור להיות זמין לך תחת הקוד QR בפורטל ניהול. אם הוא לא זמין, בבקשה סרוק את הקוד QR.'  
   },
   ENROL_PREFERENCES: {
     da: 'Præferencer',
@@ -120,7 +120,7 @@ export const Localisations = {
     it: 'Preferenze',
     nl: 'Voorkeurs instellingen',
     pl: 'Preferencje',
-    hb: ''
+    hb: 'העדפות'
   },
   ENROL_PREFERENCES_DESC: {
     da:
@@ -138,7 +138,7 @@ export const Localisations = {
     pl: 
       'Co tydzień wyślemy Ci podsumowanie zebranych przez nas danych. Wybierz wszystkie tematy, na temat których chciałbyś uzyskiwać informacje.',
     hb: 
-      ''  
+      'נשלח לך סיכומים שבועיים על המידע שאתה שולח לנו. תרגיש חופשי לבחור כמה נושאים שתרצה לקבל עליהם מידע.'  
   },
   ENROL_REGISTRATION_COMPLETE: {
     da: 'Registrering Afsluttet',
@@ -148,7 +148,7 @@ export const Localisations = {
     it: 'Registrazione Completa',
     nl: 'Registratie Compleet',
     pl: 'Rejestracja zakończona',
-    hb: ''
+    hb: 'הרשמה הושלמה'
   },
   ENROL_REGISTRATION_COMPLETE_DESC: {
     da: "Du er nu med tilmelding til undersøgelsen. Klik på 'Afslut' for at begynde at generere din spørgeskemaplan og dine meddelelser.",
@@ -158,7 +158,7 @@ export const Localisations = {
     it: "Ora ti sei iscritto con successo allo studio. Fai clic su 'Fine' per iniziare a generare la pianificazione del questionario e le notifiche.",
     nl: "U bent nu succesvol ingeschreven voor het onderzoek. Klik op 'Voltooid' om uw vragenlijstschema en meldingen te genereren.",
     pl: 'Z powodzeniem zarejestrowałeś się w badaniu. Kliknij „Zakończone”, aby wygenerować harmonogram kwestionariusza i powiadomienia',
-    hb: ''
+    hb: '.נרשמת בהצלחה למחקר. לחץ על 'סיום' כדי להתחיל ליצור את לוח הזמנים וההודעות שלך'
   },
   FINISH_THANKS: {
     da: 'Tak fordi du udfyldte spørgeskemaet.',
@@ -168,7 +168,7 @@ export const Localisations = {
     it: 'Grazie per aver completato il questionario.',
     nl: 'Bedankt voor het invullen van de vragenlijst.',
     pl: 'Dziękujemy za wypełnienie ankiety.',
-    hb: ''
+    hb: '.תודה שמילאת את השאלון'
   },
   FINISH_NEXT_TASK_REMINDER: {
     da: 'Husk, du har stadig udestående opgaver!',
@@ -178,7 +178,7 @@ export const Localisations = {
     it: 'Ricorda, hai ancora delle attività in sospeso!',
     nl: 'Denk eraan, je hebt nog steeds taken openstaan!',
     pl: 'Pamiętaj, że zostały Ci jeszcze zadania do dokończenia!',
-    hb: ''
+    hb: 'זכור יש לך משימות לא גמורות'
   },
   FINISH_COMPLETED_IN_CLINIC: {
     da: 'Afsluttet i klinik?',
@@ -188,7 +188,7 @@ export const Localisations = {
     it: 'Completato in clinica?',
     nl: 'Voltooid in de kliniek?',
     pl: 'Ukończone w klinice',
-    hb: ''
+    hb: '?מילאת במרפאה'
   },
   CALENDAR_ESM_MISSED_TITLE: {
     da: 'Blokeret',
@@ -198,7 +198,7 @@ export const Localisations = {
     it: 'Bloccato',
     nl: 'Geblokkeerd',
     pl: 'Zablokowane',
-    hb: ''
+    hb: 'חסום'
   },
   CALENDAR_ESM_MISSED_DESC: {
     da: 'Spørgsmålet kan ikke besvares længere.',
@@ -215,7 +215,7 @@ export const Localisations = {
     pl: 
       'Niestety kwestionariusz można wypełniać tylko po otrzymaniu powiadomienia',
     hb: 
-      ''  
+      '.לצערנו, אתה יכול לענות על השאלון רק כשיש ההתראה'  
   },
   CLINICAL_TASKS: {
     da: 'Kliniske vurderinger',
@@ -225,7 +225,7 @@ export const Localisations = {
     it: 'Valutazioni cliniche',
     nl: 'Klinische beoordelingen',
     pl: 'Ocena kliniczna',
-    hb: ''
+    hb: 'הערכות קליניות'
   },
   SETTINGS_SETTINGS: {
     da: 'Indstillinger',
@@ -235,7 +235,7 @@ export const Localisations = {
     it: 'Impostazioni',
     nl: 'Instellingen',
     pl: 'Ustawienia',
-    hb: ''
+    hb: 'הגדרות'
   },
   SETTINGS_PARTICIPANTID: {
     da: 'Bruger ID',
@@ -245,7 +245,7 @@ export const Localisations = {
     it: 'ID utente',
     nl: 'Gebruikers ID',
     pl: 'ID użytkownika',
-    hb: ''
+    hb: 'שם משתמש'
   },
   SETTINGS_PROJECTNAME: {
     da: 'Projektnavn',
@@ -255,7 +255,7 @@ export const Localisations = {
     it: 'Nome del progetto',
     nl: 'Project naam',
     pl: 'Nazwa projektu',
-    hb: ''
+    hb: 'שם הפרויקט'
   },
   SETTINGS_USER_INFO: {
     da: 'Bruger information',
@@ -265,7 +265,7 @@ export const Localisations = {
     it: 'Informazioni utente',
     nl: 'Gebruikersinformatie',
     pl: 'Informacje o użytkowniku',
-    hb: ''
+    hb: 'מידע משתמש'
   },
   SETTINGS_ENROL_DATE: {
     da: 'Registreringsdata',
@@ -275,7 +275,7 @@ export const Localisations = {
     it: 'Data di arruolamento',
     nl: 'Datum van inclusie',
     pl: 'Data rejestracji',
-    hb: ''
+    hb: 'תאריך הרשמה'
   },
   SETTINGS_LANGUAGE: {
     da: 'Sprog',
@@ -285,7 +285,7 @@ export const Localisations = {
     it: 'Lingua',
     nl: 'Taal',
     pl: 'Język',
-    hb: ''
+    hb: 'שפה'
   },
   SETTINGS_LANGUAGE_ALERT: {
     da: 'Vælg dit sprog',
@@ -295,7 +295,7 @@ export const Localisations = {
     it: 'Seleziona la lingua desiderata',
     nl: 'Kies uw taal',
     pl: 'Wybierz język',
-    hb: ''
+    hb: 'בחר את השפה שלך'
   },
   SETTINGS_NOTIFICATIONS: {
     da: 'Notifikationer',
@@ -305,7 +305,7 @@ export const Localisations = {
     it: 'Notifiche',
     nl: 'Notificaties',
     pl: 'Powiadomienia',
-    hb: ''
+    hb: 'התראות'
   },
   SETTINGS_NOTIFICATIONS_SOUND: {
     da: 'Lyd',
@@ -315,7 +315,7 @@ export const Localisations = {
     it: 'Suoneria',
     nl: 'Geluid',
     pl: 'Dźwięk',
-    hb: ''
+    hb: 'צליל'
   },
   SETTINGS_NOTIFICATIONS_VIBRATION: {
     da: 'Vibration',
@@ -325,7 +325,7 @@ export const Localisations = {
     it: 'Vibrazione',
     nl: 'Trillen',
     pl: 'Wibracje',
-    hb: ''
+    hb: 'רטט'
   },
   SETTINGS_NOTIFICATIONS_NIGHTMOD: {
     da: 'Nattilstand',
@@ -335,7 +335,7 @@ export const Localisations = {
     it: 'Modalità notte',
     nl: 'Nachtmodus',
     pl: 'Tryb nocny',
-    hb: ''
+    hb: 'מצב לילה'
   },
   SETTINGS_NOTIFICATIONS_NIGHTMOD_DESC: {
     da: 
@@ -353,7 +353,7 @@ export const Localisations = {
     pl: 
       'Tryb nocny blokuje wszystkie powiadomienia między 22:00 a 07:30.',
     hb: 
-      ''
+      '.מצב לילה עוצר את כל ההתראות בין 22:00 ל- 7:30 למחרת'
   },
   SETTINGS_REPORT: {
     da: 'Ugentlig rapport',
@@ -363,7 +363,7 @@ export const Localisations = {
     it: 'Report settimanale',
     nl: 'Wekelijkse rapporten',
     pl: 'Raport tygodniowy',
-    hb: ''
+    hb: 'דו"חות שבועיים'
   },
   SETTINGS_VERSION: {
     da: 'Version',
@@ -373,7 +373,7 @@ export const Localisations = {
     it: 'Versione',
     nl: 'Versie',
     pl: 'Wersja',
-    hb: ''
+    hb: 'גרסה'
   },
   SETTINGS_CONFIGURATION: {
     da: 'Konfiguration',
@@ -383,7 +383,7 @@ export const Localisations = {
     it: 'Configurazione',
     nl: 'Configuratie',
     pl: 'Konfiguracja',
-    hb: ''
+    hb: 'קונפיגורציה'
   },
   SETTINGS_SCHEDULE: {
     da: 'Tidsplan',
@@ -393,7 +393,7 @@ export const Localisations = {
     it: 'Programma',
     nl: 'Schema',
     pl: 'Plan',
-    hb: ''
+    hb: 'לוּחַ זְמַנִים'
   },
   SETTINGS_RESET_ALERT: {
     da: 'Nulstil App',
@@ -403,7 +403,7 @@ export const Localisations = {
     it: 'Reset app',
     nl: 'Reset app',
     pl: 'Zresetuj aplikację',
-    hb: ''
+    hb: 'לאפס את היישום'
   },
   SETTINGS_RESET_ALERT_DESC: {
     da: 'Du er ved at nulstille appen.',
@@ -413,7 +413,7 @@ export const Localisations = {
     it: "Stai per ripristinare l'app.",
     nl: 'U staat op het punt de app opnieuw in te stellen.',
     pl: 'Masz zamiar zresetować aplikację',
-    hb: ''
+    hb: '.אתה עומד לאפס את האפליקציה'
   },
   SETTINGS_RESET_ALERT_OPTION_DESC: {
     da: 
@@ -431,7 +431,7 @@ export const Localisations = {
     pl:
       'wybierz tylko zresetować konfigurację i dane aplikacji lub wykonać pełny reset i ponownie zarejestrować',
     hb: 
-      ''
+      '.בחר לאפס את תצורת ונתוני האפליקציה בלבד או לבצע איפוס מלא ולהירשם מחדש'
   },
   SETTINGS_CACHE: {
     da: 'Cache',
@@ -441,7 +441,7 @@ export const Localisations = {
     it: 'Cache',
     nl: 'Cache',
     pl: 'Pamięć podręczna (cache)',
-    hb: ''
+    hb: 'מטמון'
   },
   SETTINGS_CACHE_SIZE: {
     da: 'Størrelse',
@@ -451,7 +451,7 @@ export const Localisations = {
     it: 'Dimensione',
     nl: 'Grootte',
     pl: 'Rozmiar',
-    hb: ''
+    hb: 'גודל'
   },
   SETTINGS_LAST_UPLOAD_TO_SERVER: {
     da: 'Sidste upload til server',
@@ -461,7 +461,7 @@ export const Localisations = {
     it: 'Ultimo caricamento sul server',
     nl: 'Laatste upload naar server',
     pl: 'Ostatnie wysyłanie na serwer',
-    hb: ''
+    hb: 'העלאה אחרונה לשרת'
   },
   SETTINGS_DEBUGGING: {
     da: 'Debugging',
@@ -471,7 +471,7 @@ export const Localisations = {
     it: 'Debug',
     nl: 'Debugging',
     pl: 'Debugowanie',
-    hb: ''
+    hb: 'מחפש באגים'
   },
   SETTINGS_GENERATE_NOTIFS: {
     da: 'Generer Testmeddelelse',
@@ -481,7 +481,7 @@ export const Localisations = {
     it: 'Genera Notifica di Prova',
     nl: 'Genereer Testmelding',
     pl: 'wygeneruj powiadomienie o badaniu',
-    hb: ''
+    hb: 'הפק התראות מבחן '
   },
   SETTINGS_LOG_NOTIFS: {
     da: 'Logmeddelelser',
@@ -491,7 +491,7 @@ export const Localisations = {
     it: 'Registra le Notifiche',
     nl: 'Logmeldingen',
     pl: 'Powiadomienia z dziennika',
-    hb: ''
+    hb: 'נעל התראות'
   },
   SETTINGS_SEND_CACHED_DATA: {
     da: 'Send Cachelagrede Data',
@@ -501,7 +501,7 @@ export const Localisations = {
     it: 'Invia Dati Memorizzati nella Cache',
     nl: 'Gegevens in Cache Verzenden',
     pl: 'Wyślij dane z pamięci podręcznej',
-    hb: ''
+    hb: 'שלח נתונים במטמון'
   },
   LANGUAGE_ENGLISH: {
     da: 'Engelsk',
@@ -511,7 +511,7 @@ export const Localisations = {
     it: 'Inglese',
     nl: 'Engels',
     pl: 'Angielski',
-    hb: ''
+    hb: 'אנגלית'
   },
   LANGUAGE_SPANISH: {
     da: 'Spansk',
@@ -521,7 +521,7 @@ export const Localisations = {
     it: 'Spagnolo',
     nl: 'Spaans',
     pl: 'Hiszpański',
-    hb: ''
+    hb: 'ספרדית'
   },
   LANGUAGE_ITALIAN: {
     da: 'Italiensk',
@@ -531,7 +531,7 @@ export const Localisations = {
     it: 'Italiano',
     nl: 'Italiaans',
     pl: 'Włoski',
-    hb: ''
+    hb: 'איטלקית'
   },
   LANGUAGE_GERMAN: {
     da: 'Tysk',
@@ -541,7 +541,7 @@ export const Localisations = {
     it: 'Tedesco',
     nl: 'Duits',
     pl: 'Nimiecki',
-    hb: ''
+    hb: 'גרמנית'
   },
   LANGUAGE_DANISH: {
     da: 'Dansk',
@@ -551,7 +551,7 @@ export const Localisations = {
     it: 'Danese',
     nl: 'Deens',
     pl: 'Duński',
-    hb: ''
+    hb: 'דנית'
   },
   LANGUAGE_DUTCH: {
     da: 'Hollandsk',
@@ -561,7 +561,7 @@ export const Localisations = {
     it: 'Olandese',
     nl: 'Nederlands',
     pl: 'Holenderski (niderlandzki)',
-    hb: ''
+    hb: 'הולנדית'
   },
   BTN_ENROL_ENROL: {
     da: 'Registrering',
@@ -571,7 +571,7 @@ export const Localisations = {
     it: 'Registrazione',
     nl: 'Registreren',
     pl: 'zarejestruj się',
-    hb: ''
+    hb: 'הירשם'
   },
   BTN_ENROL_SCAN: {
     da: 'Scan',
@@ -581,7 +581,7 @@ export const Localisations = {
     it: 'Scansione',
     nl: 'Scan',
     pl: 'Skanuj',
-    hb: ''
+    hb: 'סרוק'
   },
   BTN_ENROL_ENTER_TOKEN: {
     da: 'Indtast Token',
@@ -591,7 +591,7 @@ export const Localisations = {
     it: 'Inserisci Il Token',
     nl: 'Token Invoeren',
     pl: 'Wprowadź Token',
-    hb: ''
+    hb: 'הזן טוק'
   },
   BTN_SUBMIT: {
     da: 'Indsend',
@@ -601,7 +601,7 @@ export const Localisations = {
     it: 'Sottoscrivi',
     nl: 'Voorleggen',
     pl: 'Zapisz',
-    hb: ''
+    hb: 'שלח'
   },
   BTN_FINISH: {
     da: 'Afslut',
@@ -611,7 +611,7 @@ export const Localisations = {
     it: 'Fine',
     nl: 'Voltooid',
     pl: 'Zakończ',
-    hb: ''
+    hb: 'סיים'
   },
   BTN_DONE: {
     da: 'Færdig',
@@ -621,7 +621,7 @@ export const Localisations = {
     it: 'Fatto',
     nl: 'Klaar',
     pl: 'Gotowe',
-    hb: ''
+    hb: 'סיימתי'
   },
   BTN_START: {
     da: 'Start',
@@ -631,7 +631,7 @@ export const Localisations = {
     it: 'Inizio',
     nl: 'Begin',
     pl: 'Start',
-    hb: ''
+    hb: 'התחל'
   },
   BTN_STOP: {
     da: 'Stoppe',
@@ -641,7 +641,7 @@ export const Localisations = {
     it: 'Fermare',
     nl: 'Stoppen',
     pl: 'Stop',
-    hb: ''
+    hb: 'עצור'
   },
   BTN_RESET: {
     da: 'Nulstil',
@@ -651,7 +651,7 @@ export const Localisations = {
     it: 'Reset',
     nl: 'Reset',
     pl: 'Reset',
-    hb: ''
+    hb: 'אתחל מחדש'
   },
   BTN_RETRY: {
     da: 'Prøve igen',
@@ -661,7 +661,7 @@ export const Localisations = {
     it: 'Riprovare',
     nl: 'Probeer opnieuw',
     pl: 'Spróbuj ponownie',
-    hb: ''
+    hb: 'נסה שוב'
   },
   BTN_AGREE: {
     da: 'Enig.',
@@ -671,7 +671,7 @@ export const Localisations = {
     it: 'Accetto',
     nl: 'Akkoord',
     pl: 'Zgadzam się',
-    hb: ''
+    hb: 'מסכים'
   },
   BTN_DISAGREE: {
     da: 'Uenig',
@@ -681,7 +681,7 @@ export const Localisations = {
     it: 'Non accetto',
     nl: 'Niet akkoord',
     pl: 'Nie zgadzam się',
-    hb: ''
+    hb: 'לא מסכים'
   },
   BTN_OKAY: {
     da: 'Okay',
@@ -691,7 +691,7 @@ export const Localisations = {
     it: 'Okay',
     nl: 'OK',
     pl: 'OK',
-    hb: ''
+    hb: 'בסדר'
   },
   BTN_SET: {
     da: 'Indstil',
@@ -701,7 +701,7 @@ export const Localisations = {
     it: 'Set',
     nl: 'Set',
     pl: 'Ok',
-    hb: ''
+    hb: 'הגדר'
   },
   BTN_CANCEL: {
     da: 'Afbryd',
@@ -711,7 +711,7 @@ export const Localisations = {
     it: 'Elimina',
     nl: 'Annuleren',
     pl: 'Anuluj',
-    hb: ''
+    hb: 'בטל'
   },
   BTN_BEGIN: {
     da: 'Begynd',
@@ -721,7 +721,7 @@ export const Localisations = {
     it: 'Inizio',
     nl: 'Starten',
     pl: 'Zacznij',
-    hb: ''
+    hb: 'התחל'
   },
   BTN_NEXT: {
     da: 'Næste',
@@ -731,7 +731,7 @@ export const Localisations = {
     it: 'Successivo',
     nl: 'Volgende',
     pl: 'Następny',
-    hb: ''
+    hb: 'הבא'
   },
   BTN_PREVIOUS: {
     da: 'Forrige',
@@ -741,7 +741,7 @@ export const Localisations = {
     it: 'Precedente',
     nl: 'Vorige',
     pl: 'Poprzedni',
-    hb: ''
+    hb: 'הקודם'
   },
   BTN_CLOSE: {
     da: 'Luk',
@@ -751,7 +751,7 @@ export const Localisations = {
     it: 'Chiudi',
     nl: 'Sluiten',
     pl: 'Zamknij',
-    hb: ''
+    hb: 'סגור'
   },
   BTN_SELECT: {
     da: 'Vælg',
@@ -761,7 +761,7 @@ export const Localisations = {
     it: 'Seleziona',
     nl: 'Selecteren',
     pl: 'Wybierz',
-    hb: ''
+    hb: 'בחר'
   },
   BTN_YES: {
     da: 'Ja',
@@ -771,7 +771,7 @@ export const Localisations = {
     it: 'sì',
     nl: 'Ja',
     pl: 'Tak',
-    hb: ''
+    hb: 'כן'
   },
   BTN_NO: {
     da: 'Ingen',
@@ -781,7 +781,7 @@ export const Localisations = {
     it: 'No',
     nl: 'Nee',
     pl: 'Nie',
-    hb: ''
+    hb: 'לא'
   },
   BTN_TRY_AGAIN: {
     da: 'Prøv igen',
@@ -791,7 +791,7 @@ export const Localisations = {
     it: 'Riprova',
     nl: 'Probeer het opnieuw',
     pl: 'Spróbuj ponownie',
-    hb: ''
+    hb: 'נסה שוב'
   },
   STATUS_LOADING: {
     da: 'Indlæser',
@@ -801,7 +801,7 @@ export const Localisations = {
     it: 'Caricamento',
     nl: 'Laden',
     pl: 'Ładowanie…',
-    hb: ''
+    hb: 'טוען'
   },
   STATUS_SUCCESS: {
     da: 'Succes',
@@ -811,7 +811,7 @@ export const Localisations = {
     it: 'Successo',
     nl: 'Geslaagd',
     pl: 'Sukces',
-    hb: ''
+    hb: 'הצלחה'
   },
   STATUS_NOW: {
     da: 'nu',
@@ -821,7 +821,7 @@ export const Localisations = {
     it: 'ora',
     nl: 'nu',
     pl: 'teraz',
-    hb: ''
+    hb: 'עכשיו'
   },
   STATUS_FAILURE: {
     da: 'Fejl',
@@ -831,7 +831,7 @@ export const Localisations = {
     it: 'Non riuscuto',
     nl: 'Mislukt',
     pl: 'NIe udało się',
-    hb: ''
+    hb: 'נכשל'
   },
   NOTIFICATION_TEST_REMINDER_NOW: {
     da: 'Testmeddelelse',
@@ -841,7 +841,7 @@ export const Localisations = {
     it: 'Notifica di prova',
     nl: 'Testmelding',
     pl: 'powiadomienie o badaniu',
-    hb: ''
+    hb: 'בצע התראת מבח'
   },
   NOTIFICATION_TEST_REMINDER_NOW_DESC: {
     da: 'Dette er en test anmeldelse.',
@@ -851,7 +851,7 @@ export const Localisations = {
     it: 'Questa è una notifica di prova.',
     nl: 'Dit is een testmelding.',
     pl: 'Sprawdź powiadomienia',
-    hb: ''
+    hb: 'זאת התראת מבחן'
   },
   NOTIFICATION_REMINDER_SOON: {
     da:
@@ -869,7 +869,7 @@ export const Localisations = {
     pl: 
       'Ankietę RADAR-CNS powinieneś wypełnić jutro – prosimy pamiętaj',
     hb: 
-      ''  
+      'יש להשלים את שאלון RADAR-CNS מחר- נא לזכור'  
   },
   NOTIFICATION_REMINDER_SOON_DESC: {
     da: 
@@ -887,7 +887,7 @@ export const Localisations = {
     pl: 
       'Pamiętaj, by jutro zachować trochę czasu na wypełnienie ankiety.',
     hb: 
-      ''  
+      'תזכור לפנות קצת זמן להשלים שאלונים מחר'  
   },
   NOTIFICATION_REMINDER_NOW: {
     da: 'Tid til at svare på spørgsmål',
@@ -897,7 +897,7 @@ export const Localisations = {
     it: "E' il momento dei questionari",
     nl: 'Tijd voor een vragenlijst',
     pl: 'Czas na ankietę',
-    hb: ''
+    hb: 'זמן לשאלון'
   },
   NOTIFICATION_REMINDER_NOW_DESC_1: {
     da: 'Det tager normalt ikke længere end',
@@ -907,7 +907,7 @@ export const Localisations = {
     it: 'Non richiederanno più di',
     nl: 'Meestal duurt dit niet langer dan',
     pl: 'Zwykle nie zajmuje więcej niż',
-    hb: ''
+    hb: 'בדרך כלל לא יקח יותר מ...'
   },
   NOTIFICATION_REMINDER_NOW_DESC_2: {
     da: 'minutter',
@@ -917,7 +917,7 @@ export const Localisations = {
     it: 'minuti.',
     nl: 'minuten.',
     pl: 'minut',
-    hb: ''
+    hb: 'דקות'
   },
   NOTIFICATION_REMINDER_FORGOTTEN: {
     da: 'Du mangler at svare på spørgsmål',
@@ -927,7 +927,7 @@ export const Localisations = {
     it: 'Hai dimenticato un questionario?',
     nl: 'Heeft u een vragenlijst vergeten?',
     pl: 'Pominąłeś ankietę?',
-    hb: ''
+    hb: '?פספסת שאלון'
   },
   NOTIFICATION_REMINDER_FORGOTTEN_DESC: {
     da:
@@ -945,7 +945,7 @@ export const Localisations = {
     pl: 
       'Wygląda na to, że nie odpowiedziałeś na wszystkie pytania. Czy mógłbyś zrobić to teraz?',
     hb: 
-      ''  
+      '?נראה שלא ענית על כל השאלות. תוכל לעשות זאת כעת'  
   },
   NOTIFICATION_REMINDER_FORGOTTEN_ALERT_DEFAULT_DESC: {
     da:
@@ -963,7 +963,7 @@ export const Localisations = {
     pl: 
       'Pominąłeś to pytanie. Nie przejmuj się! Następna ankieta będzie dostępna wkrótce.',
     hb: 
-      ''  
+      '.פספסת את זאת. אל תדאג! מועד השאלון הבא יהיה בקרוב'  
   },
   NOTIFICATION_REMINDER_FORGOTTEN_ALERT_LASTOFNIGHT_DESC: {
     da:
@@ -981,7 +981,7 @@ export const Localisations = {
     pl: 
       'Pominąłeś ostatnie pytanie. Nie przejmuj się! Dobranoc.',
     hb: 
-      ''
+      'פספסת את האחרונה. אל תדאג! שיהיה לך לילה טוב'
   },
   MEASURE_PROGRESS: {
     da: 'Fremgang',
@@ -991,7 +991,7 @@ export const Localisations = {
     it: 'Progresso',
     nl: 'Voortgang',
     pl: 'Postęp',
-    hb: ''
+    hb: 'התקדמות'
   },
   MEASURE_STEPS: {
     da: 'Skridt',
@@ -1001,7 +1001,7 @@ export const Localisations = {
     it: 'Passi',
     nl: 'Stappen',
     pl: 'Kroki',
-    hb: ''
+    hb: 'צעדים'
   },
   MEASURE_HEART_RATE: {
     da: 'Hjerterytme',
@@ -1011,7 +1011,7 @@ export const Localisations = {
     it: 'Frequenza cardiaca',
     nl: 'Hartslagfrequentie',
     pl: 'Tętno',
-    hb: ''
+    hb: 'קצב לב'
   },
   CREDITS_TITLE: {
     da: 'Anerkendelser',
@@ -1021,7 +1021,7 @@ export const Localisations = {
     it: 'Crediti',
     nl: 'Credits',
     pl: 'Punkty',
-    hb: ''
+    hb: 'נקודות'
   },
   CREDITS_BODY: {
     da:
@@ -1039,7 +1039,7 @@ export const Localisations = {
     pl: 
       'przygotowane dla Ciebie przez RADAR-CNS. Aby uzyskać więcej informacji kliknij <a href="http://radar-base.org">aquí</a>.',
     hb: 
-      ''  
+      'נעשה באהבה בשבילך על ידי קונצרסיום RADAR-CNS.למידע נוסף לחץ- k <a href=http://radar-cns.org>here</a>.'  
   },
   TASK_CALENDAR_TITLE: {
     da: 'Dagens opgaver',
@@ -1049,7 +1049,7 @@ export const Localisations = {
     it: 'Le attività di oggi',
     nl: 'Taken voor vandaag',
     pl: 'Zadania na dziś',
-    hb: ''
+    hb: 'המשימות של היום'
   },
   TASK_INFO_WARN: {
     da: 'Kræver rolige omgivelser',
@@ -1059,7 +1059,7 @@ export const Localisations = {
     it: 'Richiede un posto tranquillo',
     nl: 'Vereist een rustige omgeving',
     pl: 'Wymaga cichego otoczenia',
-    hb: ''
+    hb: 'דורשת מקום שקט'
   },
   TASK_PROGRESS_TITLE: {
     da: 'I dag',
@@ -1069,7 +1069,7 @@ export const Localisations = {
     it: 'Oggi',
     nl: 'Vandaag',
     pl: 'Dziś',
-    hb: ''
+    hb: 'היום'
   },
   TASK_PROGRESS_COMPLETED: {
     da: 'Gennemført',
@@ -1079,7 +1079,7 @@ export const Localisations = {
     it: 'Completato',
     nl: 'Voltooid',
     pl: 'Ukończone',
-    hb: ''
+    hb: 'הושלם'
   },
   TASK_BAR_NEXT_TASK: {
     da: 'Din næste opgave starter om ',
@@ -1089,7 +1089,7 @@ export const Localisations = {
     it: 'La prossima attività inizierà tra ',
     nl: 'Uw volgende taak start over ',
     pl: 'Następne zadanie zacznie się za',
-    hb: ''
+    hb: 'המשימה הבאה שלך מתחילה בעוד'
   },
   TASK_BAR_NOW_TASK: {
     da: 'Din opgave starter ',
@@ -1099,7 +1099,7 @@ export const Localisations = {
     it: 'Il tuo compito inizia ',
     nl: 'Je taak begint ',
     pl: 'Twoje zadanie zacznie się',
-    hb: ''
+    hb: 'המשימה שלך מתחילה'
   },
   TASK_BAR_NEXT_TASK_SOON: {
     da: 'snart',
@@ -1109,7 +1109,7 @@ export const Localisations = {
     it: 'Presto',
     nl: 'binnenkort',
     pl: 'niedługo',
-    hb: ''
+    hb: 'בקרוב'
   },
   TASK_BAR_AFFIRMATION_1: {
     da: 'Godt klaret!',
@@ -1139,7 +1139,7 @@ export const Localisations = {
     it: 'Resisti! ',
     nl: 'Wacht! ',
     pl: 'Czekaj!',
-    hb: ''
+    hb: '!כל הכבוד'
   },
   TASK_BAR_TASK_LEFT_2: {
     da: 'Der er stadig et par spørgsmål tilbage',
@@ -1149,7 +1149,7 @@ export const Localisations = {
     it: 'Mancano ancora pochi questionari',
     nl: 'Er staan nog een paar vragenlijsten open',
     pl: 'Zostało jeszcze kilka ankiet.',
-    hb: ''
+    hb: '.נותרו עדיין מספר שאלונים'
   },
   TASK_BAR_NO_TASK_1: {
     da: 'Tag det roligt!',
@@ -1159,7 +1159,7 @@ export const Localisations = {
     it: 'Relax!',
     nl: 'Ontspan!',
     pl: 'Spokojnie!',
-    hb: ''
+    hb: '!תרגע'
   },
   TASK_BAR_NO_TASK_2: {
     da: 'Der er ingen opgaver I dag.',
@@ -1169,7 +1169,7 @@ export const Localisations = {
     it: 'Nessuna attività oggi.',
     nl: 'Geen taken vandaag.',
     pl: 'Na dziś nie ma żadnych zadań.',
-    hb: ''
+    hb: '.אין משימות היום'
   },
   TASK_TIME_HOUR_SINGLE: {
     da: 'time',
@@ -1179,7 +1179,7 @@ export const Localisations = {
     it: 'ora',
     nl: 'uur',
     pl: 'godz.',
-    hb: ''
+    hb: 'שעה'
   },
   TASK_TIME_HOUR_MULTIPLE: {
     da: 'timer',
@@ -1189,7 +1189,7 @@ export const Localisations = {
     it: 'ore',
     nl: 'uren',
     pl: 'godz.',
-    hb: ''
+    hb: 'שעות'
   },
   TASK_TIME_MINUTE_SINGLE: {
     da: 'minut',
@@ -1199,7 +1199,7 @@ export const Localisations = {
     it: 'minuto',
     nl: 'minuut',
     pl: 'min.',
-    hb: ''
+    hb: 'דקה'
   },
   TASK_TIME_MINUTE_MULTIPLE: {
     da: 'minutter',
@@ -1209,7 +1209,7 @@ export const Localisations = {
     it: 'minuti',
     nl: 'minuten',
     pl: 'min.',
-    hb: ''
+    hb: 'דקות'
   },
   TESTING_NOTIFICATIONS: {
     da: 'Testmeddelelser',
@@ -1219,7 +1219,7 @@ export const Localisations = {
     it: 'Test delle Notifiche',
     nl: 'Testen van Meldingen',
     pl: 'Powiadomienia testowe',
-    hb: ''
+    hb: 'בודק התראות'
   },
   TESTING_NOTIFICATIONS_MESSAGE: {
     da: 
@@ -1237,7 +1237,7 @@ export const Localisations = {
     pl: 
       'Zamknij aplikację i poczekaj 2 minuty na powiadomienie testowe',
     hb: 
-      ''
+      '.סגור את האפליקציה כעת וחכה 2 דקות להתראת מבחן'
   },
   CLOSE_APP: {
     da: 'Luk App',
@@ -1247,7 +1247,7 @@ export const Localisations = {
     it: 'Chiudi App',
     nl: 'App Sluiten',
     pl: 'Zamknij aplikację',
-    hb: ''
+    hb: 'סגור את האפליקציה'
   },
   WARNING_DO_NOT_CLOSE_APP: {
     da: 'Luk ikke appen',
@@ -1257,7 +1257,7 @@ export const Localisations = {
     it: "Non chiudere l'app",
     nl: 'Sluit de app niet',
     pl: 'Nie zamykaj aplikacji',
-    hb: ''
+    hb: 'אל תסגור את האפליקציה'
   },
   AUDIO_TASK_ALERT: {
     da: 'Lydopgave afbrudt',
@@ -1267,7 +1267,7 @@ export const Localisations = {
     it: 'Attività audio interrotta',
     nl: 'Audiotaak onderbroken',
     pl: 'Zadanie audio przerwane',
-    hb: ''
+    hb: 'משימת האודיו הופרעה'
   },
   AUDIO_TASK_ALERT_DESC: {
     da: 'Opgaven er afbrudt. Genstart opgaven.',
@@ -1277,7 +1277,7 @@ export const Localisations = {
     it: "L'attività è stata interrotta. Riavvia il compito.",
     nl: 'Taak is onderbroken. Start de taak opnieuw.',
     pl: 'Zadanie zostało przerwane. Zacznij od nowa.',
-    hb: ''
+    hb: 'המשימה הופסקה, התחל מחדש'
   },
   AUDIO_TASK_ATTEMPT_ALERT: {
     da: 'Forsøg tilbageværende',
@@ -1287,7 +1287,7 @@ export const Localisations = {
     it: 'Tentativi rimanenti',
     nl: 'Pogingen blijven',
     pl: 'Pozostało prób',
-    hb: ''
+    hb: 'נסיונות שנותר'
   },
   AUDIO_TASK_HAPPY_ALERT: {
     da: 'Indsend optagelse?',
@@ -1297,7 +1297,7 @@ export const Localisations = {
     it: 'Invia la registrazione?',
     nl: 'Opname verzenden?',
     pl: 'Dodaj nagranie',
-    hb: ''
+    hb: 'שלח הקלטה'
   },
   CONFIG_ERROR_DESC: {
     da: 'Config opdatering mislykkes. Prøve igen?',
@@ -1307,7 +1307,7 @@ export const Localisations = {
     it: "Errore nell'aggiornamento della configurazione. Riprovare?",
     nl: 'Config-update mislukt. Opnieuw?',
     pl: 'Nieudana konfiguracja akutualizacji. Powtórzyć?',
-    hb: ''
+    hb: '?עדכון קונפיג נכשל. לנסות שוב'
   },
   SPLASH_STATUS_UPDATING_CONFIG: {
     da: 'Opdaterer underretninger og planlæg...',
@@ -1317,7 +1317,7 @@ export const Localisations = {
     it: 'Aggiornamento notifiche e pianificazione...',
     nl: 'Meldingen en planning bijwerken...',
     pl: 'Zaktualizuj powiadomienia i harmonogram',
-    hb: ''
+    hb: '... מעדכן התראות ולוח זמנים'
   },
   SPLASH_STATUS_SENDING_LOGS: {
     da: 'Afsendelse af ubesvarede spørgeskemaer...',
@@ -1327,6 +1327,6 @@ export const Localisations = {
     it: 'Invio dei registri dei questionari persi ...',
     nl: 'Logboeken gemiste vragenlijst verzenden...',
     pl: 'Wyślij brakujące dzienniki kwestionariusza',
-    hb: ''
+    hb: '... שליחת יומני שאלון שהוחמצו'
   }
 }

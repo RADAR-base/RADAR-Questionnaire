@@ -3,9 +3,9 @@ import { Firebase } from '@ionic-native/firebase/ngx'
 import { Platform } from 'ionic-angular'
 
 import { User } from '../../../shared/models/user'
+import { RemoteConfigService } from '../config/remote-config.service'
 import { LogService } from '../misc/log.service'
 import { AnalyticsService } from './analytics.service'
-import { RemoteConfigService } from '../config/remote-config.service'
 
 @Injectable()
 export class FirebaseAnalyticsService extends AnalyticsService {
@@ -25,13 +25,18 @@ export class FirebaseAnalyticsService extends AnalyticsService {
 
     const cleanParams = {}
 
-    Object.entries(params)
-      .forEach(([key, value]) => {
-        const cleanKey = this.crop(key, 40,
-          `Firebase analytics key ${key} is too long, cropping to 40 characters`)
-        cleanParams[cleanKey] = this.crop(String(value), 100,
-          `Firebase analytics value for ${key} is too long, cropping to 100 characters: ${value}`)
-      })
+    Object.entries(params).forEach(([key, value]) => {
+      const cleanKey = this.crop(
+        key,
+        40,
+        `Firebase analytics key ${key} is too long, cropping to 40 characters`
+      )
+      cleanParams[cleanKey] = this.crop(
+        String(value),
+        100,
+        `Firebase analytics value for ${key} is too long, cropping to 100 characters: ${value}`
+      )
+    })
 
     return this.firebase
       .logEvent(event, cleanParams)
@@ -74,15 +79,27 @@ export class FirebaseAnalyticsService extends AnalyticsService {
    */
 
   setUserProperties(userProperties: User): Promise<any> {
+    if (!this.platform.is('cordova'))
+      return Promise.resolve('Could not load firebase')
+
     return Promise.all(
-        Object.entries(userProperties)
-          .filter(([k, v]) => k)
-          .map(([key, value]) => {
-            return this.firebase.setUserProperty(
-              this.crop(key, 24, `Firebase User Property name ${key} is too long, cropping`),
-              this.crop(String(value), 36, `Firebase User Property value ${value} for ${key} is too long, cropping`))
-          }))
-        .then(() => this.remoteConfig.forceFetch())
+      Object.entries(userProperties)
+        .filter(([k, v]) => k)
+        .map(([key, value]) => {
+          return this.firebase.setUserProperty(
+            this.crop(
+              key,
+              24,
+              `Firebase User Property name ${key} is too long, cropping`
+            ),
+            this.crop(
+              String(value),
+              36,
+              `Firebase User Property value ${value} for ${key} is too long, cropping`
+            )
+          )
+        })
+    ).then(() => this.remoteConfig.forceFetch())
   }
 
   setUserId(userId: string): Promise<any> {

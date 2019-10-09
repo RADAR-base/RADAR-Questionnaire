@@ -36,14 +36,13 @@ export class InfoScreenComponent implements OnInit, OnChanges {
   isThincItReminder = false
   items: InfoItem[] = Array()
   showScrollButton: boolean
-  height = 92
+  height = '92%'
 
   constructor(private platform: Platform) {}
 
   ngOnInit() {
     this.initSections()
-    console.log(this.platform.platforms())
-    if (this.platform.is('ios')) this.height = 80
+    if (this.platform.is('ios')) this.height = '64vh'
   }
 
   ngOnChanges() {

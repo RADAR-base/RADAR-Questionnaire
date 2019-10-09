@@ -25,6 +25,8 @@ export class FinishComponent implements OnChanges {
   showDoneButton: boolean
   @Input()
   isShown: boolean
+  @Input()
+  showEndText: boolean
 
   @Output()
   exit: EventEmitter<any> = new EventEmitter<any>()

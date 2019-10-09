@@ -1,6 +1,10 @@
 <img src="assets/imgs/checkmark-big.svg" class="icon" alt="Completed" />
-<h2 text-center>{{ 'FINISH_THANKS' | translate }}</h2>
-<h2 text-center>{{ content }}</h2>
+<ng-container *ngIf="!showEndText"
+  ><h2 text-center>{{ 'FINISH_THANKS' | translate }}</h2></ng-container
+>
+<ng-container *ngIf="showEndText"
+  ><h2 text-center>{{ content }}</h2>
+</ng-container>
 <div class="pos-bottom">
   <div class="pos-bottom-90">
     <div *ngIf="displayNextTaskReminder" class="next-task-highlight">

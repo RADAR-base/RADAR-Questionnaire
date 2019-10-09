@@ -1129,7 +1129,7 @@ export const Localisations = {
     it: 'Tutte le attività sono state completate.',
     nl: 'Alle taken voltooid.',
     pl: 'Wszystkie zadania ukończone.',
-    hb: ''
+    hb: '.כל המשימות הושלמו'
   },
   TASK_BAR_TASK_LEFT_1: {
     da: 'Vent venligst! ',

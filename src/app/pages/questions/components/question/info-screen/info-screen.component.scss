@@ -1,15 +1,10 @@
 info-screen {
-  display: flex;
-  width: 100%;
+  overflow: hidden;
 
   .info-card {
-    margin: 8px;
     padding: 10px;
-    max-height: calc(100% - 88px);
-    width: inherit;
-    height: calc(100vh - 184px);
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
     background-color: $cl-primary-20;
   }
 
@@ -24,14 +19,8 @@ info-screen {
         to(rgba(0, 0, 0, 0.25))
       );
   }
-
   .items {
     padding-bottom: 32%;
-  }
-
-  .info-card-sm {
-    max-height: calc(94% - 88px);
-    height: calc(95vh - 184px);
   }
 
   .info-heading {
@@ -50,7 +39,8 @@ info-screen {
 
   .icon {
     position: relative;
-    margin: -40px -8px;
+    float: right;
+    margin: -24px 8px;
     width: inherit;
     text-align: right;
   }

@@ -1,13 +1,7 @@
-<div
-  class="info-card"
-  [class.info-card-sm]="hasFieldLabel"
->
+<div class="info-card" [style.height.%]="height">
   <ion-content (ionScroll)="onScroll($event)">
     <div *ngIf="isThincItReminder">
-      <img
-        src="assets/imgs/thincIt_app_icon.png"
-        class="icon-thincIt"
-      >
+      <img src="assets/imgs/thincIt_app_icon.png" class="icon-thincIt" />
     </div>
     <div class="items">
       <div *ngFor="let item of items">
@@ -18,11 +12,7 @@
       </div>
     </div>
   </ion-content>
-  <span
-    *ngIf="showScrollButton"
-    (tap)="scrollDown()"
-    class="icon"
-  >
+  <span *ngIf="showScrollButton" (tap)="scrollDown()" class="icon">
     <ion-icon name="arrow-dropdown-circle"></ion-icon>
   </span>
 </div>

@@ -7,7 +7,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core'
-import { Content } from 'ionic-angular'
+import { Content, Platform } from 'ionic-angular'
 
 import { InfoItem, Section } from '../../../../../shared/models/question'
 
@@ -36,9 +36,14 @@ export class InfoScreenComponent implements OnInit, OnChanges {
   isThincItReminder = false
   items: InfoItem[] = Array()
   showScrollButton: boolean
+  height = 92
+
+  constructor(private platform: Platform) {}
 
   ngOnInit() {
     this.initSections()
+    console.log(this.platform.platforms())
+    if (this.platform.is('ios')) this.height = 80
   }
 
   ngOnChanges() {
@@ -67,7 +72,10 @@ export class InfoScreenComponent implements OnInit, OnChanges {
   }
 
   onScroll(event) {
-    if (event.scrollTop >= (event.scrollHeight - event.contentHeight) * 0.8) {
+    if (
+      event &&
+      event.scrollTop >= (event.scrollHeight - event.contentHeight) * 0.8
+    ) {
       this.emitTimestamp()
       this.showScrollButton = false
     } else this.showScrollButton = true

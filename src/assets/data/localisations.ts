@@ -78,21 +78,21 @@ export const Localisations = {
   },
   ENROL_REGISTRATION_SCAN_DESC: {
     da:
-      "Klik på 'Scan' knappen og hold kameraet over QR-koden som du får udleveret af forskeren. Du kan se et eksempel på en QR-kode herunder.",
+      'Klik på "Scan" knappen og hold kameraet over QR-koden som du får udleveret af forskeren. Du kan se et eksempel på en QR-kode herunder.',
     de:
-      "Klicken Sie auf die Schaltfläche 'Scannen' und richten Sie die Kamera auf den von Ihrem Forscher angegebenen QR-Code. Ein Beispiel für einen QR-Code finden Sie unten.",
+      'Klicken Sie auf die Schaltfläche "Scannen" und richten Sie die Kamera auf den von Ihrem Forscher angegebenen QR-Code. Ein Beispiel für einen QR-Code finden Sie unten.',
     en:
-      "Click the 'Scan' button and point the camera onto the QR code, given by your researcher. An example QR code is below.",
+      'Click the "Scan" button and point the camera onto the QR code, given by your researcher. An example QR code is below.',
     es:
-      "Presione el botón 'Escanear' e ingrese el código QR que le dio el personal del estudio. A continuación puede ver un ejemplo de código QR",
+      'Presione el botón "Escanear" e ingrese el código QR que le dio el personal del estudio. A continuación puede ver un ejemplo de código QR',
     it:
-      "Premi il pulsante 'Scan' e inquadra il codice QR che hai ricevuto dal personale dello studio. Qui sotto puoi vedere un QR di esempio.",
+      'Premi il pulsante "Scan" e inquadra il codice QR che hai ricevuto dal personale dello studio. Qui sotto puoi vedere un QR di esempio.',
     nl:
-      "Klik op de 'Scan' knop en richt de camera op de QR code die u heeft ontvangen van de onderzoeker. Hieronder staat een voorbeeld van een QR code afgebeeld.",
+      'Klik op de "Scan" knop en richt de camera op de QR code die u heeft ontvangen van de onderzoeker. Hieronder staat een voorbeeld van een QR code afgebeeld.',
     pl: 
-      "Kliknij przycisk Skanuj i skieruj aparat telefonu na kod QR, który otrzymałeś od badacza. Przykładowy kod QR znajduje się poniżej.",
+      'Kliknij przycisk Skanuj i skieruj aparat telefonu na kod QR, który otrzymałeś od badacza. Przykładowy kod QR znajduje się poniżej.',
     hb: 
-      ".לחץ על כפתור הסריקה וכוון את הממלצה לקוד QR, שניתן לך מהחוקר. דוגמה לקוד QR מוצגת מטה"  
+      '.לחץ על כפתור הסריקה וכוון את הממלצה לקוד QR, שניתן לך מהחוקר. דוגמה לקוד QR מוצגת מטה'  
   },
   ENROL_REGISTRATION_TOKEN_DESC: {
     da:

@@ -22,4 +22,20 @@
   <div padding *ngIf="tasks === null || tasks.length == 0">
     <div class="text-heading" > {{ "NO_SURVEYS_AVAILABLE" | translate }}</div>
   </div>
+
+<!--  <div id="task-container">-->
+<!--    <ion-scroll scrollX style="height:150px;" *ngIf="tasks">-->
+<!--      <div class="scroll-item" >-->
+<!--        <ion-col col-33 *ngFor="let task of tasks | getValues">-->
+<!--          <div *ngIf="!task.completed" class="card" (click)="clicked(task)">-->
+<!--            <ion-icon [name]="task.iconInfo"></ion-icon>-->
+<!--            <div class="text-medium"> {{ task.name }}</div>-->
+<!--          </div>-->
+<!--        </ion-col>-->
+<!--      </div>-->
+<!--    </ion-scroll>-->
+<!--  </div>-->
+<!--  <div padding *ngIf="tasks === null || tasks.size == 0">-->
+<!--    <div class="text-heading" > {{ "NO_SURVEYS_AVAILABLE" | translate }}</div>-->
+<!--  </div>-->
 </div>

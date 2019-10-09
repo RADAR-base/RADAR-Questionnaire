@@ -17,12 +17,20 @@
   <div  *ngIf="selectedPage === 'home'">
     <div #taskList>
       <task-list
-        *ngIf="(uncompletedTasks | async)?.length"
+        *ngIf="(tasks | async)?.length"
         (task)="startQuestionnaire($event)"
-        [tasks]="uncompletedTasks | async"
+        [tasks]="tasks | async"
         [currentDate]="currentDate.getTime()"
       >
       </task-list>
+
+<!--      <task-list-->
+<!--        *ngIf="(sortedTasks | async)?.size"-->
+<!--        (task)="startQuestionnaire($event)"-->
+<!--        [tasks]="sortedTasks | async"-->
+<!--        [currentDate]="currentDate.getTime()"-->
+<!--      >-->
+<!--      </task-list>-->
     </div>
 
     <div

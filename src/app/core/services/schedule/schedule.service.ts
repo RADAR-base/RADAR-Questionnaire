@@ -80,7 +80,6 @@ export class ScheduleService {
       const now = new Date().getTime()
       const filtered =  tasks
         .filter(
-          t =>
             t => t.timestamp <= now || t.timestamp + t.completionWindow <= now
         )
         .slice(0, 100)

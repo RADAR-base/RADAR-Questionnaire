@@ -102,7 +102,7 @@ export class HomePageComponent implements OnDestroy {
   }
 
   init() {
-    this.uncompletedTasks = this.tasksService.getTasksToComplete();
+    // this.uncompletedTasks = this.tasksService.getTasksToComplete();
     this.sortedTasks = this.tasksService.getSortedTasksOfToday()
     this.tasks = this.tasksService.getTasksOfToday()
     this.currentDate = this.tasksService.getCurrentDateMidnight()
@@ -118,7 +118,7 @@ export class HomePageComponent implements OnDestroy {
 
   onResume() {
     this.usage.sendOpenEvent()
-    this.uncompletedTasks = this.tasksService.getTasksToComplete();
+    // this.uncompletedTasks = this.tasksService.getTasksToComplete();
     this.checkForNewDate()
   }
 

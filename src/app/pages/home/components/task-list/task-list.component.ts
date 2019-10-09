@@ -22,6 +22,9 @@ export class TaskListComponent implements OnChanges {
   @Input()
   tasks: Task[]
 
+  // @Input()
+  // tasks: Map<number, Task[]>
+
   @Output()
   task: EventEmitter<Task> = new EventEmitter<Task>()
 
@@ -40,6 +43,7 @@ export class TaskListComponent implements OnChanges {
 
   ngOnChanges() {
     if (this.tasks && this.tasks.length) this.setCurrentTime()
+    // if (this.tasks && this.tasks.size) this.setCurrentTime()
   }
 
   setCurrentTime() {

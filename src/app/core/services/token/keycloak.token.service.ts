@@ -154,10 +154,10 @@ export class KeycloakTokenService extends TokenService {
   }
 
 
-  isValid(): Promise<boolean> {
-    return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
-      return !this.jwtHelper.isTokenExpired(tokens.access_token)
-    })
-  }
+  // isValid(): Promise<boolean> {
+  //   return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
+  //     return !this.jwtHelper.isTokenExpired(tokens.access_token)
+  //   })
+  // }
 
 }

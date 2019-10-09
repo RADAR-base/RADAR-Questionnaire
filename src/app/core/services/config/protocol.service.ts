@@ -48,7 +48,11 @@ export class ProtocolService {
         this.logger.log('Fetching protocols from: {}', URI)
         return this.http.get(URI).toPromise()
       })
-      .then(res => atob(res['content']))
+      .then(res => {return atob(res['content'])})
+      .catch(() => {
+        this.logger.log("ERROR: Could not successfully pull protocol")
+        throw Error('Could not pull protocol')
+      })
   }
 
   format(protocols: Assessment[]): Assessment[] {

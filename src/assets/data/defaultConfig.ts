@@ -182,6 +182,10 @@ export const DefaultTimeInterval = { unit: 'day', amount: 1 }
 // KAFKA
 
 export const DefaultKafkaURI = '/kafka'
+export const DefaultKafkaRequestContentType =
+  'application/vnd.kafka.avro.v2+json'
+export const DefaultClientAcceptType =
+  'application/vnd.kafka.v2+json, application/vnd.kafka+json; q=0.9, application/json; q=0.8'
 
 export const DefaultNumberOfCompletionLogsToSend = 10
 

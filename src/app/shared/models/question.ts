@@ -35,6 +35,8 @@ export class QuestionType {
   static audio = 'audio'
   static timed = 'timed'
   static info = 'info'
+  static text = 'text'
+  static yesno = 'yesno'
 }
 
 export interface Response {

@@ -39,4 +39,8 @@ export class QuestionsServiceMock {
   getQuestionnairePayload() {
     return Promise.resolve({})
   }
+
+  getTime() {
+    return 0
+  }
 }

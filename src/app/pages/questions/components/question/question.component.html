@@ -82,4 +82,19 @@
     >
     </timed-test>
   </div>
+
+  <div *ngIf="question.field_type === 'text'">
+    <text-input
+      (valueChange)="onValueChange($event)"
+      [type]="question.text_validation_type_or_show_slider_number"
+    ></text-input>
+  </div>
+
+  <div *ngIf="question.field_type === 'yesno'">
+    <radio-input
+      [responses]="[{ code: '1', label: 'Yes' }, { code: '0', label: 'No' }]"
+      (valueChange)="onValueChange($event)"
+    >
+    </radio-input>
+  </div>
 </div>

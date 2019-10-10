@@ -29,18 +29,17 @@ export class SplashService {
   }
 
   sendMissedQuestionnaireLogs() {
-    return this.schedule
-      .getIncompleteTasks()
-      .then(tasks =>
-        Promise.all(
-          tasks
-            .slice(0, DefaultNumberOfCompletionLogsToSend)
-            .map(task =>
-              this.usage
-                .sendCompletionLog(task, 0)
-                .then(() => this.schedule.updateTaskToReportedCompletion(task))
-            )
-        )
+    return this.schedule.getIncompleteTasks().then(tasks =>
+      Promise.all(
+        tasks
+          .filter(t => !t.reportedCompletion)
+          .slice(0, DefaultNumberOfCompletionLogsToSend)
+          .map(task =>
+            this.usage
+              .sendCompletionLog(task, 0)
+              .then(() => this.schedule.updateTaskToReportedCompletion(task))
+          )
       )
+    )
   }
 }

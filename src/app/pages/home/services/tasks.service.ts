@@ -6,7 +6,6 @@ import { RemoteConfigService } from '../../../core/services/config/remote-config
 import { ScheduleService } from '../../../core/services/schedule/schedule.service'
 import { ConfigKeys } from '../../../shared/enums/config'
 import { Task, TasksProgress } from '../../../shared/models/task'
-import { checkTaskIsNow } from '../../../shared/utilities/check-task-is-now'
 import { TaskType } from '../../../shared/utilities/task-type'
 import { setDateTimeToMidnight } from '../../../shared/utilities/time'
 
@@ -94,9 +93,9 @@ export class TasksService {
    */
   getNextTask(tasks: Task[]): Task | undefined {
     if (tasks) {
-      const tasksNow = tasks.filter(t => checkTaskIsNow(t.timestamp))
-      if (tasksNow.length > 1) {
-        return tasksNow.sort((a, b) => a.order - b.order)[0]
+      const nextTasksNow = tasks.filter(task => this.isTaskStartable(task))
+      if (nextTasksNow.length) {
+        return nextTasksNow.sort((a, b) => a.order - b.order)[0]
       } else return tasks.find(task => !this.isTaskExpired(task))
     }
     return undefined

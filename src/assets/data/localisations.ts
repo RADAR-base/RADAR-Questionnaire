@@ -498,7 +498,7 @@ export const Localisations = {
     nl: 'Begin'
   },
   BTN_STOP: {
-    da: 'Stoppe',
+    da: 'Stop',
     de: 'Stoppen',
     en: 'Stop',
     es: 'Detener',
@@ -606,11 +606,11 @@ export const Localisations = {
     de: 'Ja',
     en: 'Yes',
     es: 'Sí',
-    it: 'sì',
+    it: 'Sì',
     nl: 'Ja'
   },
   BTN_NO: {
-    da: 'Ingen',
+    da: 'Nej',
     de: 'Nein',
     en: 'No',
     es: 'No',
@@ -619,11 +619,11 @@ export const Localisations = {
   },
   BTN_TRY_AGAIN: {
     da: 'Prøv igen',
-    de: 'Versuchen Sie es nochmal',
+    de: 'Erneut versuchen',
     en: 'Try again',
-    es: 'Inténtalo de nuevo',
-    it: 'Riprova',
-    nl: 'Probeer het opnieuw'
+    es: 'Volver a intentar',
+    it: 'Prova di nuovo',
+    nl: 'Probeer opnieuw'
   },
   STATUS_LOADING: {
     da: 'Indlæser',
@@ -997,7 +997,7 @@ export const Localisations = {
     nl: 'Taak is onderbroken. Start de taak opnieuw.'
   },
   AUDIO_TASK_ATTEMPT_ALERT: {
-    da: 'Forsøg tilbageværende',
+    da: 'Tilbageværende forsøg',
     de: 'Verbleibende Versuche',
     en: 'Attempts remaining',
     es: 'Intentos restantes',

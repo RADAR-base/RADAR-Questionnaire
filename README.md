@@ -133,6 +133,8 @@ In order to personalize Firebase events, certain user properties must be added t
 | `sourceId`        | Custom identifier for the source the application is registered as |
 | `enrolmentDate`   | Enrolment date of the user                                        |
 
+Further details on the events that are already logged, default events, and default user properties can be found on the [RADAR Base wiki pages](https://radar-base.atlassian.net/wiki/spaces/RAD/pages/905707521/Firebase+Analytics).
+
 ## Other Config Options
 
 Copy `src/assets/data/secret.ts.template` to `src/assets/data/secret.ts` and add the following configuration -

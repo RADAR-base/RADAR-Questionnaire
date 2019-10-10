@@ -50,20 +50,11 @@ export const DefaultTask: Task = {
   completionWindow: DefaultTaskCompletionWindow,
   warning: '',
   isClinical: false,
-  notifications: []
-}
-export const DefaultTaskTest: Task = {
-  index: 0,
-  completed: false,
-  reportedCompletion: false,
-  timestamp: 0,
-  name: 'TEST',
-  nQuestions: 0,
-  estimatedCompletionTime: 0,
-  completionWindow: DefaultTaskCompletionWindow,
-  warning: '',
-  isClinical: false,
-  notifications: []
+  notifications: [],
+  timeCompleted: 0,
+  showInCalendar: true,
+  isDemo: false,
+  order: 0
 }
 
 // *Default schedule coverage in years (length of schedule to generate tasks until)

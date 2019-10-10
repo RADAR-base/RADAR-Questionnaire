@@ -120,6 +120,19 @@ Certain values can be overriden using Firebase Remote Config. Specifically, the 
 | `kafka_specification_url` | URL of the Kafka topic specification                             | <https://api.github.com/repos/RADAR-base/radar-schemas/contents/specifications/active/aRMT_1.4.3.yml?ref=master> |
 | `platform_instance`       | Title of RADAR Base / platform instance                          | `RADAR-CNS`                                                                                                      |
 
+### Analytics
+
+In order to personalize Firebase events, certain user properties must be added to the Firebase console. Specifically, the following user properties are supported:
+
+| Property          | Description                                                       |
+| ----------------- | ----------------------------------------------------------------- |
+| `subjectId`       | Custom identifier for the user                                    |
+| `humanReadableId` | Human readable identifier for the user                            |
+| `baseUrl`         | Custom identifier for the base URL of the project                 |
+| `projectId`       | Custom identifier for the project that a user belongs to          |
+| `sourceId`        | Custom identifier for the source the application is registered as |
+| `enrolmentDate`   | Enrolment date of the user                                        |
+
 ## Other Config Options
 
 Copy `src/assets/data/secret.ts.template` to `src/assets/data/secret.ts` and add the following configuration -

@@ -149,8 +149,6 @@ export class EnrolmentPageComponent {
       .then(() => {
         this.usage.sendGeneralEvent(EnrolmentEventType.SUCCESS)
         this.navigateToSplash()
-        // this.next()
-        // FIXME or navigate to splash most likely splash or home this.navigateToHome()
       })
       .catch(e => {
         this.handleError(e)
@@ -197,25 +195,4 @@ export class EnrolmentPageComponent {
     this.navCtrl.setRoot(HomePageComponent)
   }
 
-
-  // goToRegistration() {
-  //   this.loading = true;
-  //   this.auth.authenticate(false)
-  //     .then(() => {
-  //       return this.auth.retrieveUserInformation(this.language)
-  //     })
-  //     .then(() => this.config.fetchConfigState(true))
-  //     .then(() => this.navigateToHome())
-  //     .catch( () => {
-  //       this.loading = false;
-  //       this.alertService.showAlert({
-  //         title: "Something went wrong",
-  //         buttons: [{
-  //           text: this.localization.translateKey(LocKeys.BTN_OKAY),
-  //           handler: () => {}
-  //         }],
-  //         message: "Could not successfully register new participant. Please try again later."
-  //       });
-  //     });
-  // }
 }

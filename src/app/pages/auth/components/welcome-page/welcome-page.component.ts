@@ -6,10 +6,8 @@ import {
   DefaultSettingsSupportedLanguages,
   LanguageMap
 } from "../../../../../assets/data/defaultConfig";
-import { AppComponent } from "../../../../core/containers/app.component";
 import { StorageService } from "../../../../core/services/storage/storage.service";
 import { LocKeys } from "../../../../shared/enums/localisations";
-import { StorageKeys } from "../../../../shared/enums/storage";
 import { LanguageSetting } from "../../../../shared/models/settings";
 import { HomePageComponent } from "../../../home/containers/home-page.component";
 import { EnrolmentPageComponent } from "../../containers/enrolment-page.component";
@@ -17,10 +15,10 @@ import { AuthService } from "../../services/auth.service";
 import { LocalizationService } from "../../../../core/services/misc/localization.service";
 import { AlertService } from "../../../../core/services/misc/alert.service";
 import { ConfigService } from "../../../../core/services/config/config.service";
-import { EnrolmentEventType, UsageEventType } from "../../../../shared/enums/events";
+import { EnrolmentEventType} from "../../../../shared/enums/events";
 import { UsageService } from "../../../../core/services/usage/usage.service";
-import {SplashPageComponent} from "../../../splash/containers/splash-page.component";
-import {LogService} from "../../../../core/services/misc/log.service";
+import { SplashPageComponent } from "../../../splash/containers/splash-page.component";
+import { LogService } from "../../../../core/services/misc/log.service";
 
 /**
  * Generated class for the WelcomePage page.

@@ -108,44 +108,13 @@ export class WelcomePageComponent {
       .then(() => this.authService.initSubjectInformation())
       .then(() => {
         this.usage.sendGeneralEvent(EnrolmentEventType.SUCCESS)
-        // this.next()
         this.navigateToSplash()
-        // FIXME or navigate to splash most likely splash or home this.navigateToHome()
       })
       .catch(e => {
         this.handleError(e)
         // this.loading = false
         setTimeout(() => (this.loading = false), 500)
       })
-    // this.loading = true;
-    // // this.authService.keycloakLogin(true)
-    // // FIXME: This should be similar to authenticate in enrolment
-    // this.authService.authenticate({isRegistration: false})
-    //   .then(() => this.authService.initSubjectInformation())
-    //   .then(() => this.configService.fetchConfigState(true))
-    //   .catch( () => {
-    //     this.loading = false;
-    //     this.alertService.showAlert({
-    //       title: "Could not retrieve configuration",
-    //       buttons: [{
-    //         text: this.localization.translateKey(LocKeys.BTN_OKAY),
-    //         handler: () => {}
-    //       }],
-    //       message: "Could not retrieve questionnaire configuration. Please try again later."
-    //     })
-    //   })
-    //   .then(() => this.navigateToHome())
-    //   .catch( () => {
-    //     this.loading = false;
-    //     this.alertService.showAlert({
-    //       title: "Something went wrong",
-    //       buttons: [{
-    //         text: this.localization.translateKey(LocKeys.BTN_OKAY),
-    //         handler: () => {}
-    //       }],
-    //       message: "Could not successfully redirect to login. Please try again later."
-    //     })
-    //   });
   }
 
   handleError(e) {

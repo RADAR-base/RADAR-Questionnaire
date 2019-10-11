@@ -108,7 +108,7 @@ export const DefaultAppVersion: string = '0.5.11.1-alpha'
 
 export const DefaultScheduleVersion = '0.3.10'
 
-export const DefaultScheduleYearCoverage: number = 2 // years
+export const DefaultScheduleYearCoverage: number = 1 // years
 
 export const DefaultScheduleReportRepeat: number = 7 // days
 

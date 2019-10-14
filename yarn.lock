@@ -5939,10 +5939,10 @@ ionic-mocks@^1.3.0:
   resolved "https://registry.yarnpkg.com/ionic-mocks/-/ionic-mocks-1.3.0.tgz#398bae25e01f23ab31b6d379754ee9d3c4bfb066"
   integrity sha1-OYuuJeAfI6sxttN5dU7p08S/sGY=
 
-ionic@^5.4.1:
-  version "5.4.1"
-  resolved "https://registry.yarnpkg.com/ionic/-/ionic-5.4.1.tgz#94923038e14128b95aed44be4c22badd95d4cc15"
-  integrity sha512-z4Zdb1lEZoqx6HsURVgdqGw0INtDeNrbahTZacrqm3cNmjq6X4SOP+dILIeZoURq/V0KcyVcVQnssWRFbVd8TQ==
+ionic@^5.4.2:
+  version "5.4.2"
+  resolved "https://registry.yarnpkg.com/ionic/-/ionic-5.4.2.tgz#ad951f4f7df3d7337feb2f5228a4066f686296da"
+  integrity sha512-VEbpHPvoMSNC1fR1/5YkZx6JwkvpjYq9EuEyrEphcPWZ8qal8ijZPJnQHhXzVI3u5c5oR8BdlniePdmtCxnsVA==
   dependencies:
     "@ionic/cli-framework" "2.1.7"
     "@ionic/discover" "2.0.6"

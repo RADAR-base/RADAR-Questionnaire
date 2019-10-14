@@ -128,6 +128,7 @@
     <plugin name="cordova-plugin-camera" spec="^4.0.3" />
     <plugin name="cordova-plugin-local-notification" spec="^0.9.0-beta.3" />
     <plugin name="cordova-plugin-app-version" spec="^0.1.9" />
+    <plugin name="cordova-plugin-network-information" spec="^2.0.2" />
     <plugin name="phonegap-plugin-mobile-accessibility" spec="^1.0.5" />
     <plugin name="cordova-media-with-compression" spec="^2.1.2" />
     <plugin name="cordova-plugin-file" spec="^6.0.1" />

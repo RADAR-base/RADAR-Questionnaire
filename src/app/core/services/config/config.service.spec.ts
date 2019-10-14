@@ -1,4 +1,7 @@
+import { HttpClient, HttpHandler } from '@angular/common/http'
 import { TestBed } from '@angular/core/testing'
+import { Platform } from 'ionic-angular'
+import { PlatformMock } from 'ionic-mocks'
 
 import {
   AppConfigServiceMock,
@@ -17,12 +20,12 @@ import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
 import { NotificationService } from '../notifications/notification.service'
 import { ScheduleService } from '../schedule/schedule.service'
+import { AnalyticsService } from '../usage/analytics.service'
 import { AppConfigService } from './app-config.service'
 import { ConfigService } from './config.service'
 import { ProtocolService } from './protocol.service'
 import { QuestionnaireService } from './questionnaire.service'
 import { SubjectConfigService } from './subject-config.service'
-import { AnalyticsService } from '../usage/analytics.service';
 
 describe('ConfigService', () => {
   let service
@@ -43,7 +46,10 @@ describe('ConfigService', () => {
           provide: AnalyticsService,
           useClass: FirebaseAnalyticsServiceMock
         },
-        { provide: LogService, useClass: LogServiceMock }
+        { provide: LogService, useClass: LogServiceMock },
+        HttpClient,
+        HttpHandler,
+        { provide: Platform, useClass: PlatformMock }
       ]
     })
   )

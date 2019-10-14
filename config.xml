@@ -12,6 +12,7 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
+    <allow-navigation href="*" />
     <icon src="resources/android/icon/drawable-xhdpi-icon.png" />
     <preference name="DisallowOverscroll" value="true" />
     <preference name="BackgroundColor" value="0xff6d9aa5" />

@@ -625,6 +625,14 @@ export const Localisations = {
     it: 'Riprova',
     nl: 'Probeer het opnieuw'
   },
+  BTN_UPDATE: {
+    da: 'Opdater',
+    de: 'Aktualisieren',
+    en: 'Update',
+    es: 'Actualizar',
+    it: 'Aggiorna',
+    nl: 'Bijwerken'
+  },
   STATUS_LOADING: {
     da: 'Indlæser',
     de: 'Lädt',
@@ -656,6 +664,22 @@ export const Localisations = {
     es: 'Error',
     it: 'Non riuscuto',
     nl: 'Mislukt'
+  },
+  STATUS_UPDATE_AVAILABLE: {
+    da: 'Ny Version Tilgængelig',
+    de: 'Neue Version Verfügbar',
+    en: 'New Version Available',
+    es: 'Nueva Versión Disponible',
+    it: 'Nuova Versione Disponibile',
+    nl: 'Nieuwe Versie Beschikbaar'
+  },
+  STATUS_UPDATE_AVAILABLE_DESC: {
+    da: 'Opdater din app, før du fortsætter.',
+    de: 'Bitte aktualisieren Sie Ihre App, bevor Sie fortfahren.',
+    en: 'Please update your app before continuing.',
+    es: 'Actualice su aplicación antes de continuar.',
+    it: `Aggiorna l'app prima di continuare.`,
+    nl: 'Werk uw app bij voordat u doorgaat.'
   },
   NOTIFICATION_TEST_REMINDER_NOW: {
     da: 'Testmeddelelse',

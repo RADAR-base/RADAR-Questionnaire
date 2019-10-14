@@ -1,5 +1,10 @@
 question {
-  text-align: left;
+  .content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-align: left;
+  }
 
   p {
     margin-top: 8px;
@@ -13,7 +18,7 @@ question {
   }
 
   .field-container {
-    max-height: 56vh !important;
+    max-height: 50vh !important;
   }
 
   .rangeformat {
@@ -21,8 +26,18 @@ question {
   }
 
   .fade {
-    display: block;
     opacity: 0.2;
     pointer-events: none;
+  }
+
+  .header {
+    flex-grow: 0;
+  }
+
+  .input {
+    flex-grow: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 8px;
   }
 }

@@ -34,8 +34,10 @@ export class AudioRecordService {
   }
 
   stopAudioRecording() {
-    this.audio.stopRecord()
-    this.isRecording = false
+    if (this.isRecording) {
+      this.audio.stopRecord()
+      this.isRecording = false
+    }
   }
 
   getFilePath() {

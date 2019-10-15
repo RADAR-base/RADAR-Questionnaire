@@ -2,7 +2,7 @@ import 'rxjs/add/operator/map'
 
 import { Injectable } from '@angular/core'
 
-import { DefaultTaskTest } from '../../../../assets/data/defaultConfig'
+import { DefaultTask } from '../../../../assets/data/defaultConfig'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { Assessment } from '../../../shared/models/assessment'
 import {
@@ -91,7 +91,7 @@ export class NotificationGeneratorService {
 
   createTestNotification() {
     return this.createNotification(
-      DefaultTaskTest,
+      DefaultTask,
       new Date().getTime() + getMilliseconds({ minutes: 2 }),
       NotificationType.TEST
     )

@@ -14,6 +14,7 @@ export interface Assessment {
   isDemo?: boolean
   questions: Question[]
   showInCalendar?: boolean
+  order?: number
 }
 
 export interface QuestionnaireMetadata {

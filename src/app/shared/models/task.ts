@@ -11,10 +11,11 @@ export interface Task {
   completionWindow: number
   warning: string
   isClinical: boolean
-  notifications?: SingleNotification[]
-  timeCompleted?: number
-  showInCalendar?: boolean
-  isDemo?: boolean
+  notifications: SingleNotification[]
+  timeCompleted: number
+  showInCalendar: boolean
+  isDemo: boolean
+  order: number
 }
 
 export interface TasksProgress {

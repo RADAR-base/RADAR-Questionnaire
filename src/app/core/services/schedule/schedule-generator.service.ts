@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core'
 import {
   DefaultESMCompletionWindow,
   DefaultScheduleYearCoverage,
+  DefaultTask,
   DefaultTaskCompletionWindow
 } from '../../../../assets/data/defaultConfig'
 import { Assessment } from '../../../shared/models/assessment'
@@ -15,6 +16,7 @@ import {
   setDateTimeToMidnight,
   timeIntervalToMillis
 } from '../../../shared/utilities/time'
+import { Utility } from '../../../shared/utilities/util'
 import { QuestionnaireService } from '../config/questionnaire.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
@@ -26,7 +28,8 @@ export class ScheduleGeneratorService {
     private notificationService: NotificationGeneratorService,
     private localization: LocalizationService,
     private questionnaire: QuestionnaireService,
-    private logger: LogService
+    private logger: LogService,
+    private util: Utility
   ) {}
 
   runScheduler(
@@ -158,26 +161,31 @@ export class ScheduleGeneratorService {
     timestamp: number,
     completionWindow
   ): Task {
-    const task: Task = {
-      index,
-      timestamp,
-      completed: false,
-      reportedCompletion: false,
-      name: assessment.name,
-      nQuestions: assessment.questions.length,
-      estimatedCompletionTime: assessment.estimatedCompletionTime,
-      completionWindow: completionWindow,
-      warning: this.localization.chooseText(assessment.warn),
-      isClinical: assessment.protocol.clinicalProtocol ? true : false,
-      showInCalendar:
-        assessment.showInCalendar == null ? true : assessment.showInCalendar,
-      isDemo: !!assessment.isDemo
-    }
+    const task: Task = this.util.deepCopy(DefaultTask)
+    task.index = index
+    task.timestamp = timestamp
+    task.name = assessment.name
+    task.nQuestions = assessment.questions.length
+    task.estimatedCompletionTime = assessment.estimatedCompletionTime
+    task.completionWindow = completionWindow
+    task.warning = this.localization.chooseText(assessment.warn)
+    task.isClinical = !!assessment.protocol.clinicalProtocol
+    task.showInCalendar = this.getOrDefault(
+      assessment.showInCalendar,
+      task.showInCalendar
+    )
+    task.isDemo = this.getOrDefault(assessment.isDemo, task.isDemo)
+    task.order = this.getOrDefault(assessment.order, task.order)
     task.notifications = this.notificationService.createNotifications(
       assessment,
       task
     )
     return task
+  }
+
+  getOrDefault(val, defaultVal) {
+    if (val == null) return defaultVal
+    return val
   }
 
   updateScheduleWithCompletedTasks(

@@ -1,12 +1,18 @@
 audio-input {
-  display: block;
-  width: 100%;
-
   .audio-bottom {
     position: absolute;
-    top: 75vh;
-    margin: 8px;
-    width: 88%;
+    bottom: 48px;
+    left: 50%;
+    width: 80%;
+  }
+
+  .audio-container {
+    width: inherit;
+    height: inherit !important;
+  }
+
+  button {
+    left: -50%;
   }
 
   .bt-stop {

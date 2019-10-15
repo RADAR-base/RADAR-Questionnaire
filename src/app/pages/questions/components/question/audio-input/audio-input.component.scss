@@ -1,9 +1,18 @@
 audio-input {
   .audio-bottom {
-    display: flex;
-    align-items: flex-end !important;
-    width: 100%;
-    height: 88% !important;
+    position: absolute;
+    bottom: 48px;
+    left: 50%;
+    width: 80%;
+  }
+
+  .audio-container {
+    width: inherit;
+    height: inherit !important;
+  }
+
+  button {
+    left: -50%;
   }
 
   .bt-stop {

@@ -43,6 +43,7 @@ export class InfoScreenComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.initSections()
     if (this.platform.is('ios')) this.height = '64vh'
+    if (this.hasFieldLabel) this.height = '88%'
   }
 
   ngOnChanges() {

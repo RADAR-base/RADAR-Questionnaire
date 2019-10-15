@@ -2,7 +2,7 @@ question {
   .content {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: 96%;
     text-align: left;
   }
 
@@ -38,6 +38,6 @@ question {
     flex-grow: 1;
     overflow-x: hidden;
     overflow-y: auto;
-    padding: 8px;
+    padding: 4px;
   }
 }

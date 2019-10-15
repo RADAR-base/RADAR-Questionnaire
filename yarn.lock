@@ -517,21 +517,30 @@
     ws "3.3.2"
     xml2js "^0.4.19"
 
-"@ionic/cli-framework@2.1.7":
-  version "2.1.7"
-  resolved "https://registry.yarnpkg.com/@ionic/cli-framework/-/cli-framework-2.1.7.tgz#592102fb2fa997bb9fef1761d36e43fe27477ac3"
-  integrity sha512-osuKbmCIzT0H+g39lDy+EmsP5RHc+aYOv+BN+IngsaxKb7ya0V/JlLO1vLkd7RYT+lmiQWiCi7RpHPeEgQJFtw==
+"@ionic/cli-framework-prompts@1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@ionic/cli-framework-prompts/-/cli-framework-prompts-1.0.1.tgz#905ba13c432fddce9b742ded03f3a088f2bb3c4a"
+  integrity sha512-jYFc8pA9Vk64CX5S0wJ6Mq/WtowsZcebfvQe0X2JRwMkwpiOa2ZqK00CYrw1ytS9jeUzJChNX6n1hBUdarwlsw==
+  dependencies:
+    "@ionic/utils-terminal" "1.0.5"
+    debug "^4.0.0"
+    inquirer "^7.0.0"
+    tslib "^1.9.0"
+
+"@ionic/cli-framework@3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@ionic/cli-framework/-/cli-framework-3.0.0.tgz#837f32dd15c07b07bc5ac41aff662fe031a774be"
+  integrity sha512-Pm7Kq2xg/Zas1eU98UC9Ghb4l2kUQh2/IH06SUof5dpB+YpK9mh78IRAcppPnYC5d7SNDYy8fWeo6m+NR9il/w==
   dependencies:
     "@ionic/utils-array" "1.2.1"
-    "@ionic/utils-fs" "2.0.7"
+    "@ionic/utils-fs" "2.0.8"
     "@ionic/utils-object" "1.0.5"
     "@ionic/utils-process" "1.0.5"
     "@ionic/utils-stream" "2.0.4"
-    "@ionic/utils-subprocess" "1.0.8"
+    "@ionic/utils-subprocess" "1.0.9"
     "@ionic/utils-terminal" "1.0.5"
     chalk "^2.3.0"
     debug "^4.0.0"
-    inquirer "^7.0.0"
     lodash "^4.17.5"
     log-update "^3.2.0"
     minimist "^1.2.0"
@@ -571,10 +580,10 @@
     debug "^4.0.0"
     tslib "^1.9.0"
 
-"@ionic/utils-fs@2.0.7":
-  version "2.0.7"
-  resolved "https://registry.yarnpkg.com/@ionic/utils-fs/-/utils-fs-2.0.7.tgz#e4b5eb9f1df8e3edb4867dd2e2804f893df10d32"
-  integrity sha512-rXTKJD66qocDs8w72+z7yw6P8H095yexIMsUbNiJFjMm3Cx542i+Tw9gbGwYN356WrA/0EATXD/zVZDzvDsSKQ==
+"@ionic/utils-fs@2.0.8":
+  version "2.0.8"
+  resolved "https://registry.yarnpkg.com/@ionic/utils-fs/-/utils-fs-2.0.8.tgz#0601ff666ab566182662afe2fb5b57038e9d1730"
+  integrity sha512-7yuU+L+tlt9NIwA6nb/3A+zPr7NIKuvIAo5ijVdHX3VTAdw/x5JXJgGl0BApKcqT1cTJImNt5tc2O4CB1cnhKA==
   dependencies:
     debug "^4.0.0"
     fs-extra "^8.0.1"
@@ -617,13 +626,13 @@
     debug "^4.0.0"
     tslib "^1.9.0"
 
-"@ionic/utils-subprocess@1.0.8":
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/@ionic/utils-subprocess/-/utils-subprocess-1.0.8.tgz#48e3c4b5d727438c4d6d90ae5673e49885e792cb"
-  integrity sha512-gfVCzccOQ3PVfY6d1hDZq1Qv7hOXAn3ZlepAEbUBOeFauIhXmwmwVdIRa9cfi3cESpDidNQ3dpmXyC+nKxv0Og==
+"@ionic/utils-subprocess@1.0.9":
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@ionic/utils-subprocess/-/utils-subprocess-1.0.9.tgz#0248bf4aa6dbe0c8fdebbe4c8eed2b97d6cfee6a"
+  integrity sha512-rNT5/aVsstNebIGM+sq/iibKe1q07NMShKODeRSq1DUVSs8SVQdJGKPZ4/3rGFT5CYsqCZVPQDk/VzDhjQoHMA==
   dependencies:
     "@ionic/utils-array" "1.2.1"
-    "@ionic/utils-fs" "2.0.7"
+    "@ionic/utils-fs" "2.0.8"
     "@ionic/utils-process" "1.0.5"
     "@ionic/utils-stream" "2.0.4"
     "@ionic/utils-terminal" "1.0.5"
@@ -5940,19 +5949,20 @@ ionic-mocks@^1.3.0:
   resolved "https://registry.yarnpkg.com/ionic-mocks/-/ionic-mocks-1.3.0.tgz#398bae25e01f23ab31b6d379754ee9d3c4bfb066"
   integrity sha1-OYuuJeAfI6sxttN5dU7p08S/sGY=
 
-ionic@^5.4.2:
-  version "5.4.2"
-  resolved "https://registry.yarnpkg.com/ionic/-/ionic-5.4.2.tgz#ad951f4f7df3d7337feb2f5228a4066f686296da"
-  integrity sha512-VEbpHPvoMSNC1fR1/5YkZx6JwkvpjYq9EuEyrEphcPWZ8qal8ijZPJnQHhXzVI3u5c5oR8BdlniePdmtCxnsVA==
+ionic@^5.4.4:
+  version "5.4.4"
+  resolved "https://registry.yarnpkg.com/ionic/-/ionic-5.4.4.tgz#f68d481413db60be7e1b6de54a943504ed29ee06"
+  integrity sha512-OebF6aBl3HRTCJcD/iWXrOl2VVEF/TGhu5Zr9Zqu+xRpFLjqJnDfxjiitLZRc/bMNyh9+b56ioV/JW9fwwUCog==
   dependencies:
-    "@ionic/cli-framework" "2.1.7"
+    "@ionic/cli-framework" "3.0.0"
+    "@ionic/cli-framework-prompts" "1.0.1"
     "@ionic/discover" "2.0.6"
     "@ionic/utils-array" "1.2.1"
-    "@ionic/utils-fs" "2.0.7"
+    "@ionic/utils-fs" "2.0.8"
     "@ionic/utils-network" "1.0.5"
     "@ionic/utils-process" "1.0.5"
     "@ionic/utils-stream" "2.0.4"
-    "@ionic/utils-subprocess" "1.0.8"
+    "@ionic/utils-subprocess" "1.0.9"
     "@ionic/utils-terminal" "1.0.5"
     chalk "^2.3.0"
     debug "^4.0.0"

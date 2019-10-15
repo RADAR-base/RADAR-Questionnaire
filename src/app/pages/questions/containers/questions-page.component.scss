@@ -4,8 +4,8 @@ page-questions {
   }
 
   ion-slide {
-    overflow-x: hidden !important;
-    overflow-y: auto !important;
+    overflow: hidden !important;
     padding: 24px;
+    height: 96vh !important;
   }
 }

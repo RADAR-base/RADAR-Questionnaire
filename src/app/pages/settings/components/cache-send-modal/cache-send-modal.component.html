@@ -34,7 +34,9 @@
       <ng-container *ngIf="errors.length">
         <div *ngSwitchCase="'errors'" class="scroll-error">
           <ion-list>
-            <li *ngFor="let e of errors">{{ e.message }}</li>
+            <ng-container *ngFor="let e of errors; let i = index">
+              <li *ngIf="i < 15">{{ e.message }}</li>
+            </ng-container>
           </ion-list>
         </div>
       </ng-container>

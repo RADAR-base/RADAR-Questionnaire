@@ -5,7 +5,6 @@ import { Injectable } from '@angular/core'
 
 import {
   DefaultManagementPortalURI,
-  DefaultRefreshTokenRequestBody,
   DefaultRequestEncodedContentType,
   DefaultRequestJSONContentType,
   DefaultSourceTypeModel,
@@ -14,8 +13,8 @@ import {
 } from '../../../../assets/data/defaultConfig'
 import { ConfigService } from '../../../core/services/config/config.service'
 import { LogService } from '../../../core/services/misc/log.service'
-import { AnalyticsService } from '../../../core/services/usage/analytics.service'
 import { TokenService } from '../../../core/services/token/token.service'
+import { AnalyticsService } from '../../../core/services/usage/analytics.service'
 import { MetaToken } from '../../../shared/models/token'
 import { isValidURL } from '../../../shared/utilities/form-validators'
 
@@ -58,8 +57,7 @@ export class AuthService {
 
   metaTokenJsonAuth(authObj) {
     // NOTE: Old QR codes: containing refresh token as JSON
-    return this.updateURI()
-      .then(() => JSON.parse(authObj).refreshToken)
+    return this.updateURI().then(() => JSON.parse(authObj).refreshToken)
   }
 
   updateURI() {
@@ -69,8 +67,7 @@ export class AuthService {
   }
 
   registerToken(registrationToken): Promise<void> {
-    const refreshBody = DefaultRefreshTokenRequestBody + registrationToken
-    return this.token.register(refreshBody)
+    return this.token.register(this.token.getRefreshParams(registrationToken))
   }
 
   getRefreshTokenFromUrl(url): Promise<MetaToken> {
@@ -84,7 +81,7 @@ export class AuthService {
   getSubjectInformation(): Promise<any> {
     return Promise.all([
       this.token.getAccessHeaders(DefaultRequestEncodedContentType),
-      this.token.getDecodedSubject(),
+      this.token.getDecodedSubject()
     ]).then(([headers, subject]) =>
       this.http.get(this.getSubjectURI(subject), { headers }).toPromise()
     )
@@ -101,13 +98,15 @@ export class AuthService {
         sourceId: this.getSourceId(subjectInformation),
         humanReadableId: subjectInformation.externalId,
         enrolmentDate: new Date(subjectInformation.createdDate).getTime(),
-        baseUrl: baseUrl,
+        baseUrl: baseUrl
       })
     })
   }
 
   getSourceId(response) {
-    const source = response.sources.find(s => s.sourceTypeModel === DefaultSourceTypeModel)
+    const source = response.sources.find(
+      s => s.sourceTypeModel === DefaultSourceTypeModel
+    )
     return source !== undefined ? source.sourceId : 'Device not available'
   }
 

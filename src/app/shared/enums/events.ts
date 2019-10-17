@@ -1,12 +1,15 @@
 export enum UsageEventType {
-  APP_OPEN_NOTIFICATION = 'APP_OPEN_NOTIFICATION',
-  APP_OPEN_DIRECTLY = 'APP_OPEN_DIRECTLY',
-  QUESTIONNAIRE_STARTED = 'QUESTIONNAIRE_STARTED',
-  QUESTIONNAIRE_FINISHED = 'QUESTIONNAIRE_FINISHED',
-  QUESTIONNAIRE_CLOSED = 'QUESTIONNAIRE_CLOSED',
+  NOTIFICATION_OPEN = 'notification_open',
+  APP_OPEN = 'app_open',
+  QUESTIONNAIRE_STARTED = 'questionnaire_started',
+  QUESTIONNAIRE_FINISHED = 'questionnaire_finished',
+  QUESTIONNAIRE_CANCELLED = 'questionnaire_cancelled',
   QR_SCANNED = 'qr_code_scanned',
   CLICK = 'click',
-  RESUMED = 'resumed'
+  RESUMED = 'resumed',
+  RECORDING_STARTED = 'recording_started',
+  RECORDING_STOPPED = 'recording_stopped',
+  RECORDING_ERROR = 'recording_error'
 }
 
 export enum EnrolmentEventType {
@@ -26,6 +29,7 @@ export enum DataEventType {
 export enum ConfigEventType {
   PROTOCOL_CHANGE = 'protocol_change',
   APP_VERSION_CHANGE = 'app_version_change',
+  APP_UPDATE_AVAILABLE = 'app_update_available',
   TIMEZONE_CHANGE = 'timezone_change',
   ERROR = 'config_error',
   APP_RESET = 'app_reset',

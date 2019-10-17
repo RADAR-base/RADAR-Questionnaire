@@ -12,6 +12,10 @@ finish {
     padding-bottom: 32px;
   }
 
+  .icon {
+    width: 30%;
+  }
+
   .done-button {
     padding: 0 24px;
   }
@@ -40,7 +44,8 @@ finish {
   }
 
   .pos-bottom {
-    bottom: 0;
+    position: absolute;
+    bottom: 32px;
     left: 0;
     width: 100%;
   }

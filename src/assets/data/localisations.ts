@@ -17,12 +17,12 @@ export const Localisations = {
     nl: 'Welkom'
   },
   ENROL_WELCOME_2: {
-    da: 'til RADAR-CNS',
-    de: 'zu RADAR-CNS',
-    en: 'to RADAR-CNS',
-    es: 'a RADAR-CNS',
-    it: 'in RADAR-CNS',
-    nl: 'bij RADAR-CNS'
+    da: 'til RADAR-Base',
+    de: 'zu RADAR-Base',
+    en: 'to RADAR-Base',
+    es: 'a RADAR-Base',
+    it: 'in RADAR-Base',
+    nl: 'bij RADAR-Base'
   },
   ENROL_WELCOME_DESC: {
     da:
@@ -110,13 +110,21 @@ export const Localisations = {
     nl:
       'We zullen u wekelijks samenvattingen sturen over uw verzamelde gegevens. U kunt zelf de onderwerpen selecteren waarover uw informatie wilt ontvangen.'
   },
-  HOME_RADAR_CNS: {
-    da: 'RADAR-CNS',
-    de: 'RADAR-CNS',
-    en: 'RADAR-CNS',
-    es: 'RADAR-CNS',
-    it: 'RADAR-CNS',
-    nl: 'RADAR-CNS'
+  ENROL_REGISTRATION_COMPLETE: {
+    da: 'Registrering Afsluttet',
+    de: 'Registrierung Abgeschlossen',
+    en: 'Registration Complete',
+    es: 'Registro Completo',
+    it: 'Registrazione Completa',
+    nl: 'Registratie Compleet'
+  },
+  ENROL_REGISTRATION_COMPLETE_DESC: {
+    da: `Du er nu med tilmelding til undersøgelsen. Klik på 'Afslut' for at begynde at generere din spørgeskemaplan og dine meddelelser.`,
+    de: `Sie haben sich jetzt erfolgreich für die Studie angemeldet. Klicken Sie auf "Fertig", um den Zeitplan und die Benachrichtigungen für Ihren Fragebogen zu erstellen.`,
+    en: `You have now successfully enrolled in the study. Click 'Finish' to start generating your questionnaire schedule and notifications.`,
+    es: `Ahora se ha inscrito con éxito en el estudio. Haga clic en 'Finalizar' para comenzar a generar su calendario de cuestionarios y notificaciones.`,
+    it: `Ora ti sei iscritto con successo allo studio. Fai clic su "Fine" per iniziare a generare la pianificazione del questionario e le notifiche.`,
+    nl: `U bent nu succesvol ingeschreven voor het onderzoek. Klik op 'Voltooid' om uw vragenlijstschema en meldingen te genereren.`
   },
   FINISH_THANKS: {
     da: 'Tak fordi du udfyldte spørgeskemaet.',
@@ -377,6 +385,14 @@ export const Localisations = {
     it: 'Registra le Notifiche',
     nl: 'Logmeldingen'
   },
+  SETTINGS_SEND_CACHED_DATA: {
+    da: 'Send Cachelagrede Data',
+    de: 'Senden Sie Zwischengespeicherte Daten',
+    en: 'Send Cached Data',
+    es: 'Enviar Datos en Caché',
+    it: 'Invia Dati Memorizzati nella Cache',
+    nl: 'Gegevens in Cache Verzenden'
+  },
   LANGUAGE_ENGLISH: {
     da: 'Engelsk',
     de: 'Englisch',
@@ -482,7 +498,7 @@ export const Localisations = {
     nl: 'Begin'
   },
   BTN_STOP: {
-    da: 'Stoppe',
+    da: 'Stop',
     de: 'Stoppen',
     en: 'Stop',
     es: 'Detener',
@@ -590,11 +606,11 @@ export const Localisations = {
     de: 'Ja',
     en: 'Yes',
     es: 'Sí',
-    it: 'sì',
+    it: 'Sì',
     nl: 'Ja'
   },
   BTN_NO: {
-    da: 'Ingen',
+    da: 'Nej',
     de: 'Nein',
     en: 'No',
     es: 'No',
@@ -603,11 +619,19 @@ export const Localisations = {
   },
   BTN_TRY_AGAIN: {
     da: 'Prøv igen',
-    de: 'Versuchen Sie es nochmal',
+    de: 'Erneut versuchen',
     en: 'Try again',
-    es: 'Inténtalo de nuevo',
-    it: 'Riprova',
-    nl: 'Probeer het opnieuw'
+    es: 'Volver a intentar',
+    it: 'Prova di nuovo',
+    nl: 'Probeer opnieuw'
+  },
+  BTN_UPDATE: {
+    da: 'Opdater',
+    de: 'Aktualisieren',
+    en: 'Update',
+    es: 'Actualizar',
+    it: 'Aggiorna',
+    nl: 'Bijwerken'
   },
   STATUS_LOADING: {
     da: 'Indlæser',
@@ -640,6 +664,22 @@ export const Localisations = {
     es: 'Error',
     it: 'Non riuscuto',
     nl: 'Mislukt'
+  },
+  STATUS_UPDATE_AVAILABLE: {
+    da: 'Ny Version Tilgængelig',
+    de: 'Neue Version Verfügbar',
+    en: 'New Version Available',
+    es: 'Nueva Versión Disponible',
+    it: 'Nuova Versione Disponibile',
+    nl: 'Nieuwe Versie Beschikbaar'
+  },
+  STATUS_UPDATE_AVAILABLE_DESC: {
+    da: 'Opdater din app, før du fortsætter.',
+    de: 'Bitte aktualisieren Sie Ihre App, bevor Sie fortfahren.',
+    en: 'Please update your app before continuing.',
+    es: 'Actualice su aplicación antes de continuar.',
+    it: `Aggiorna l'app prima di continuare.`,
+    nl: 'Werk uw app bij voordat u doorgaat.'
   },
   NOTIFICATION_TEST_REMINDER_NOW: {
     da: 'Testmeddelelse',
@@ -783,17 +823,16 @@ export const Localisations = {
   },
   CREDITS_BODY: {
     da:
-      'Lavet med &hearts; til dig af RADAR-CNS konsortiet. For mere information click <a href="http://radar-cns.org">her</a>.',
+      'Lavet med &hearts; til dig af RADAR-Base-samfundet. For mere information click <a href="http://radar-base.org">her</a>.',
     de:
-      'Vom RADAR-CNS-Konsortium mit &hearts; für Sie gemacht. Für weitere Informationen klicken Sie <a href="http://radar-cns.org">hier</a>',
+      'Von der RADAR-Base-Community gemacht mit &hearts; für Sie gemacht. Für weitere Informationen klicken Sie <a href="http://radar-base.org">hier</a>',
     en:
-      'Made with &hearts; for you by the RADAR-CNS consortium. For more information click <a href="http://radar-cns.org">here</a>.',
+      'Made with &hearts; for you by the RADAR-Base community. For more information click <a href="http://radar-base.org">here</a>.',
     es:
-      'Hecho con &hearts;  para usted por el consorcio RADAR-CNS. Para obtener más información, haga clic  en <a href="http://radar-cns.org">aquí</a>.',
-    it:
-      'Fatto con il &hearts; per te dal consorzio RADAR-CNS. Per maggiori informazioni clicca <a href="http://radar-cns.org">qui</a>.',
+      'Hecho con &hearts;  para usted por la comunidad RADAR-Base. Para obtener más información, haga clic  en <a href="http://radar-base.org">aquí</a>.',
+    it: `Fatto con il &hearts; per te dalla comunità RADAR-Base. Per maggiori informazioni clicca <a href="http://radar-base.org">qui</a>.`,
     nl:
-      'Met &hearts; voor u gemaakt door het RADAR-CNS consortium. Voor meer informatie klik <a href="http://radar-cns.org">here</a>'
+      'Met &hearts; voor u gemaakt door de RADAR-Base community. Voor meer informatie klik <a href="http://radar-base.org">here</a>'
   },
   TASK_CALENDAR_TITLE: {
     da: 'Dagens opgaver',
@@ -982,7 +1021,7 @@ export const Localisations = {
     nl: 'Taak is onderbroken. Start de taak opnieuw.'
   },
   AUDIO_TASK_ATTEMPT_ALERT: {
-    da: 'Forsøg tilbageværende',
+    da: 'Tilbageværende forsøg',
     de: 'Verbleibende Versuche',
     en: 'Attempts remaining',
     es: 'Intentos restantes',

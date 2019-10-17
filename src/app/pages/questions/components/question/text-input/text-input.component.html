@@ -1,0 +1,36 @@
+<ng-container *ngIf="showDatePicker">
+  <wheel-selector
+    [values]="datePickerValues"
+    [selection]="defaultDatePickerValue"
+    [labels]="labels"
+    (onSelect)="emitAnswer($event)"
+  ></wheel-selector>
+</ng-container>
+
+<ng-container *ngIf="showTimePicker">
+  <wheel-selector
+    [values]="timePickerValues"
+    [selection]="defaultTimePickerValue"
+    [labels]="labels"
+    (onSelect)="emitAnswer($event)"
+  ></wheel-selector>
+</ng-container>
+
+<ng-container *ngIf="showDurationPicker">
+  <wheel-selector
+    [values]="durationPickerValues"
+    [selection]="defaultDurationPickerValue"
+    [labels]="labels"
+    (onSelect)="emitAnswer($event)"
+  ></wheel-selector>
+</ng-container>
+
+<ng-container *ngIf="showTextInput">
+  <ion-item>
+    <ion-input
+      type="text"
+      placeholder="Enter text"
+      (ionChange)="emitAnswer($event.value)"
+    ></ion-input>
+  </ion-item>
+</ng-container>

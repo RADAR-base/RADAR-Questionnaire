@@ -7,24 +7,20 @@ export class LogService {
 
   log(...parameters: any[]) {
     if (this.plt.is('mobileweb')) {
-      console.log(...parameters)
+      console.log(parameters)
     } else {
-      const formattedParameters = []
-      parameters.forEach(p => {
-        if (LogService.needsFormatting(p)) {
-          formattedParameters.push(LogService.formatObject(p))
-        }
-        formattedParameters.push(p)
-      })
-      console.log(...formattedParameters)
+      const message = parameters.map(p => LogService.formatObject(p)).join(', ')
+      console.log(message)
+      console.log(parameters)
     }
   }
 
   error(message: string, error: any): Error {
-    const formattedException = `${message}: ${LogService.formatObject(error)}`
+    const formattedError = LogService.formatObject(error)
+    const formattedException = `${message}: ${formattedError}`
     console.log(formattedException, error)
 
-    if (error instanceof Error) {
+    if (error && error instanceof Error) {
       return error
     } else {
       return new Error(formattedException)

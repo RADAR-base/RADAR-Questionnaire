@@ -1,0 +1,52 @@
+<ion-card>
+  <ion-card-header>
+    <ion-icon name="md-close" class="header" (tap)="dismiss()"></ion-icon>
+  </ion-card-header>
+
+  <div class="center">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <p>
+            <ion-icon name="checkmark-circle" class="success"></ion-icon>
+          </p>
+          <ion-label> {{ successes.length }} </ion-label>
+        </ion-col>
+        <ion-col>
+          <p><ion-icon name="alert" class="error"></ion-icon></p>
+          <ion-label>
+            {{ errors.length }}
+          </ion-label>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <ion-segment [(ngModel)]="result">
+      <ion-segment-button value="success">
+        {{ 'STATUS_SUCCESS' | translate }}
+      </ion-segment-button>
+      <ion-segment-button value="errors">
+        {{ 'STATUS_FAILURE' | translate }}
+      </ion-segment-button>
+    </ion-segment>
+
+    <div [ngSwitch]="result">
+      <ng-container *ngIf="errors.length">
+        <div *ngSwitchCase="'errors'" class="scroll-error">
+          <ion-list>
+            <ng-container *ngFor="let e of errors; let i = index">
+              <li *ngIf="i < 15">{{ e.message }}</li>
+            </ng-container>
+          </ion-list>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="!errors.length">
+        <div *ngSwitchCase="'success'" class="scroll-success">
+          <button (tap)="dismiss()" class="done-btn">
+            {{ 'BTN_DONE' | translate }}
+          </button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</ion-card>

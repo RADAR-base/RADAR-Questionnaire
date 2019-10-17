@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core'
 
+import { AppConfigService } from '../../../core/services/config/app-config.service'
 import { ConfigService } from '../../../core/services/config/config.service'
 import { KafkaService } from '../../../core/services/kafka/kafka.service'
 import { LogService } from '../../../core/services/misc/log.service'
@@ -14,6 +15,7 @@ export class FinishTaskService {
     private schedule: ScheduleService,
     private kafka: KafkaService,
     private config: ConfigService,
+    private appConfig: AppConfigService,
     private logger: LogService
   ) {}
 
@@ -29,7 +31,7 @@ export class FinishTaskService {
 
   processDataAndSend(answers, questions, timestamps, task) {
     // NOTE: Do not send answers if demo questionnaire
-    if (task.name.includes('DEMO')) return Promise.resolve()
+    if (task.isDemo) return Promise.resolve()
     return this.sendAnswersToKafka(
       this.processQuestionnaireData(answers, timestamps, questions),
       task
@@ -38,13 +40,15 @@ export class FinishTaskService {
 
   sendAnswersToKafka(processedAnswers, task): Promise<any> {
     // NOTE: Submit data to kafka
-    return Promise.all([
-      this.kafka.prepareKafkaObjectAndSend(SchemaType.TIMEZONE, {}),
-      this.kafka.prepareKafkaObjectAndSend(SchemaType.ASSESSMENT, {
-        task: task,
-        data: processedAnswers
-      })
-    ])
+    return this.appConfig.getScheduleVersion().then(scheduleVersion => {
+      return Promise.all([
+        this.kafka.prepareKafkaObjectAndSend(SchemaType.TIMEZONE, {}),
+        this.kafka.prepareKafkaObjectAndSend(SchemaType.ASSESSMENT, {
+          task: task,
+          data: Object.assign(processedAnswers, { scheduleVersion })
+        })
+      ])
+    })
   }
 
   evalClinicalFollowUpTask(assessment): Promise<any> {
@@ -63,7 +67,7 @@ export class FinishTaskService {
     }))
     return {
       answers: values,
-      configVersion: '',
+      scheduleVersion: '',
       time: this.getTimeStart(questions, values),
       timeCompleted: this.getTimeCompleted(values)
     }
@@ -72,7 +76,9 @@ export class FinishTaskService {
   getTimeStart(questions, answers) {
     // NOTE: Do not include info screen as start time
     const index = questions.findIndex(q => q.field_type !== QuestionType.info)
-    return index > -1 ? answers[index].startTime : answers[0].startTime
+    return index > -1 && answers[index]
+      ? answers[index].startTime
+      : answers[0].startTime
   }
 
   getTimeCompleted(answers) {

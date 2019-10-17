@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core'
 
+import { DefaultPlatformInstance } from '../../../../assets/data/defaultConfig'
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
+import { RemoteConfigService } from '../../../core/services/config/remote-config.service'
 import { ScheduleService } from '../../../core/services/schedule/schedule.service'
+import { ConfigKeys } from '../../../shared/enums/config'
 import { Task, TasksProgress } from '../../../shared/models/task'
 import { TaskType } from '../../../shared/utilities/task-type'
 import { setDateTimeToMidnight } from '../../../shared/utilities/time'
@@ -10,7 +13,8 @@ import { setDateTimeToMidnight } from '../../../shared/utilities/time'
 export class TasksService {
   constructor(
     private schedule: ScheduleService,
-    private questionnaire: QuestionnaireService
+    private questionnaire: QuestionnaireService,
+    private remoteConfig: RemoteConfigService
   ) {}
 
   evalHasClinicalTasks() {
@@ -89,11 +93,26 @@ export class TasksService {
    */
   getNextTask(tasks: Task[]): Task | undefined {
     if (tasks) {
-      return tasks.find(task => !this.isTaskExpired(task))
+      const nextTasksNow = tasks.filter(task => this.isTaskStartable(task))
+      if (nextTasksNow.length) {
+        return nextTasksNow.sort((a, b) => a.order - b.order)[0]
+      } else return tasks.find(task => !this.isTaskExpired(task))
     }
+    return undefined
   }
 
   getCurrentDateMidnight() {
     return setDateTimeToMidnight(new Date())
+  }
+
+  getPlatformInstanceName() {
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        config.getOrDefault(
+          ConfigKeys.PLATFORM_INSTANCE,
+          DefaultPlatformInstance
+        )
+      )
   }
 }

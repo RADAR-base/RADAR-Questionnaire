@@ -5,8 +5,6 @@ import { Injectable } from '@angular/core'
 
 import {
   DefaultManagementPortalURI,
-  DefaultMetaTokenURI,
-  DefaultRefreshTokenRequestBody,
   DefaultRequestEncodedContentType,
   DefaultRequestJSONContentType,
   DefaultSourceTypeModel,
@@ -16,6 +14,7 @@ import {
 import { ConfigService } from '../../../core/services/config/config.service'
 import { LogService } from '../../../core/services/misc/log.service'
 import { TokenService } from '../../../core/services/token/token.service'
+import { AnalyticsService } from '../../../core/services/usage/analytics.service'
 import { MetaToken } from '../../../shared/models/token'
 import { isValidURL } from '../../../shared/utilities/form-validators'
 
@@ -27,13 +26,14 @@ export class AuthService {
     public http: HttpClient,
     private token: TokenService,
     private config: ConfigService,
-    private logger: LogService
+    private logger: LogService,
+    private analytics: AnalyticsService
   ) {}
 
   authenticate(authObj) {
     return (isValidURL(authObj)
-      ? this.URLAuth(authObj)
-      : this.nonURLAuth(authObj)
+      ? this.metaTokenUrlAuth(authObj)
+      : this.metaTokenJsonAuth(authObj)
     ).then(refreshToken => {
       return this.registerToken(refreshToken)
         .then(() => this.registerAsSource())
@@ -41,20 +41,21 @@ export class AuthService {
     })
   }
 
-  URLAuth(authObj) {
+  metaTokenUrlAuth(authObj) {
     // NOTE: Meta QR code and new QR code
     return this.getRefreshTokenFromUrl(authObj).then((body: any) => {
       this.logger.log(`Retrieved refresh token from ${body.baseUrl}`, body)
       const refreshToken = body.refreshToken
       return this.token
         .setURI(body.baseUrl)
+        .then(baseUrl => this.analytics.setUserProperties({ baseUrl }))
         .catch()
         .then(() => this.updateURI())
         .then(() => refreshToken)
     })
   }
 
-  nonURLAuth(authObj) {
+  metaTokenJsonAuth(authObj) {
     // NOTE: Old QR codes: containing refresh token as JSON
     return this.updateURI().then(() => JSON.parse(authObj).refreshToken)
   }
@@ -66,8 +67,7 @@ export class AuthService {
   }
 
   registerToken(registrationToken): Promise<void> {
-    const refreshBody = DefaultRefreshTokenRequestBody + registrationToken
-    return this.token.register(refreshBody)
+    return this.token.register(this.token.getRefreshParams(registrationToken))
   }
 
   getRefreshTokenFromUrl(url): Promise<MetaToken> {
@@ -78,7 +78,7 @@ export class AuthService {
     return this.URI_base + DefaultSubjectsURI + subject
   }
 
-  getSubjectInformation() {
+  getSubjectInformation(): Promise<any> {
     return Promise.all([
       this.token.getAccessHeaders(DefaultRequestEncodedContentType),
       this.token.getDecodedSubject()
@@ -88,31 +88,26 @@ export class AuthService {
   }
 
   initSubjectInformation() {
-    return this.getSubjectInformation().then(res => {
-      const subjectInformation: any = res
-      const participantId = subjectInformation.externalId
-      const participantLogin = subjectInformation.login
-      const projectName = subjectInformation.project.projectName
-      const sourceId = this.getSourceId(subjectInformation)
-      const createdDate = new Date(subjectInformation.createdDate).getTime()
-      return this.config.setAll(
-        participantId,
-        participantLogin,
-        projectName,
-        sourceId,
-        createdDate
-      )
+    return Promise.all([
+      this.token.getURI(),
+      this.getSubjectInformation()
+    ]).then(([baseUrl, subjectInformation]) => {
+      return this.config.setAll({
+        projectId: subjectInformation.project.projectName,
+        subjectId: subjectInformation.login,
+        sourceId: this.getSourceId(subjectInformation),
+        humanReadableId: subjectInformation.externalId,
+        enrolmentDate: new Date(subjectInformation.createdDate).getTime(),
+        baseUrl: baseUrl
+      })
     })
   }
 
   getSourceId(response) {
-    const sources = response.sources
-    for (let i = 0; i < sources.length; i++) {
-      if (sources[i].sourceTypeModel === DefaultSourceTypeModel) {
-        return sources[i].sourceId
-      }
-    }
-    return 'Device not available'
+    const source = response.sources.find(
+      s => s.sourceTypeModel === DefaultSourceTypeModel
+    )
+    return source !== undefined ? source.sourceId : 'Device not available'
   }
 
   registerAsSource() {

@@ -1,13 +1,17 @@
 import { Component } from '@angular/core'
-import { NavController, NavParams } from 'ionic-angular'
+import { NavController, NavParams, Platform } from 'ionic-angular'
 
+import { DefaultPackageName } from '../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { UsageService } from '../../../core/services/usage/usage.service'
+import { ConfigEventType } from '../../../shared/enums/events'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { EnrolmentPageComponent } from '../../auth/containers/enrolment-page.component'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { SplashService } from '../services/splash.service'
+
+declare var window
 
 @Component({
   selector: 'page-splash',
@@ -21,7 +25,8 @@ export class SplashPageComponent {
     private splash: SplashService,
     private alertService: AlertService,
     private localization: LocalizationService,
-    private usage: UsageService
+    private usage: UsageService,
+    private platform: Platform
   ) {
     this.splash
       .evalEnrolment()
@@ -29,6 +34,7 @@ export class SplashPageComponent {
   }
 
   onStart() {
+    this.usage.sendOpenEvent()
     this.usage.setPage(this.constructor.name)
     this.status = this.localization.translateKey(
       LocKeys.SPLASH_STATUS_UPDATING_CONFIG
@@ -41,7 +47,11 @@ export class SplashPageComponent {
         )
         return this.splash.sendMissedQuestionnaireLogs()
       })
-      .catch(e => console.log('[SPLASH] Notifications error.'))
+      .catch(e =>
+        e.message == ConfigEventType.APP_UPDATE_AVAILABLE
+          ? this.showAppUpdateAvailable()
+          : this.showFetchConfigFail(e)
+      )
       .then(() => this.navCtrl.setRoot(HomePageComponent))
   }
 
@@ -64,6 +74,30 @@ export class SplashPageComponent {
         }
       ]
     })
+  }
+
+  showAppUpdateAvailable() {
+    this.alertService.showAlert({
+      title: this.localization.translateKey(LocKeys.STATUS_UPDATE_AVAILABLE),
+      message: this.localization.translateKey(
+        LocKeys.STATUS_UPDATE_AVAILABLE_DESC
+      ),
+      buttons: [
+        {
+          text: this.localization.translateKey(LocKeys.BTN_UPDATE),
+          handler: () => {
+            this.openApplicationStore()
+          }
+        }
+      ]
+    })
+  }
+
+  openApplicationStore() {
+    const url = this.platform.is('ios')
+      ? 'itms-apps://itunes.apple.com/app/'
+      : 'market://details?id=' + DefaultPackageName
+    window.location.replace(url)
   }
 
   enrol() {

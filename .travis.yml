@@ -13,6 +13,14 @@ android:
     - build-tools-28.0.3
     - android-28
     - extra
+addons:
+  apt:
+    sources:
+      - google-chrome
+    packages:
+      - dpkg
+      - google-chrome-stable
+      - xvfb
 cache:
   yarn: true
   directories:
@@ -38,6 +46,7 @@ before_script:
 script:
   - cordova prepare
   - yarn install
+  - xvfb-run -a yarn test
   - if [[ $TRAVIS_BRANCH != $TRAVIS_TAG ]]; then fastlane android build_debug ; fi
   - if [[ $TRAVIS_BRANCH == $TRAVIS_TAG ]]; then fastlane android deploy keystore_path:$KEYSTORE_PATH keystore_password:$storepass keystore_alias:$KEYSTORE_ALIAS package_name:$PACKAGE_NAME_ANDROID track:$PLAYSTORE_TRACK json_key:$PLAYSTORE_SERVICE_KEY ; fi
 #

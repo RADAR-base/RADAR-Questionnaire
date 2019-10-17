@@ -15,6 +15,7 @@ export class QuestionsService {
     QuestionType.timed,
     QuestionType.audio
   ])
+  NEXT_BUTTON_ENABLED_SET: Set<QuestionType> = new Set([QuestionType.audio])
   NEXT_BUTTON_AUTOMATIC_SET: Set<QuestionType> = new Set([
     QuestionType.timed,
     QuestionType.audio
@@ -104,20 +105,23 @@ export class QuestionsService {
   evalSkipNext(questions, currentQuestion) {
     // NOTE: Evaluates branching logic
     let questionIdx = currentQuestion + 1
-    if (questionIdx < questions.length) {
-      while (questions[questionIdx].evaluated_logic !== '') {
-        const responses = Object.assign({}, this.answerService.answers)
-        const logic = questions[questionIdx].evaluated_logic
-        const logicFieldName = this.getLogicFieldName(logic)
-        const answers = this.answerService.answers[logicFieldName]
+    while (
+      questionIdx < questions.length &&
+      questions[questionIdx].evaluated_logic !== ''
+    ) {
+      const responses = Object.assign({}, this.answerService.answers)
+      const logic = questions[questionIdx].evaluated_logic
+      const logicFieldName = this.getLogicFieldName(logic)
+      const answers = this.answerService.answers[logicFieldName]
+      if (typeof answers !== 'undefined') {
         const answerLength = answers.length
         if (!answerLength) if (eval(logic) === true) return questionIdx
         for (const answer of answers) {
           responses[logicFieldName] = answer
           if (eval(logic) === true) return questionIdx
         }
-        questionIdx += 1
       }
+      questionIdx += 1
     }
     return questionIdx
   }
@@ -149,13 +153,15 @@ export class QuestionsService {
     })
   }
 
-  getIsPreviousDisabled(question: Question) {
-    const questionType = question.field_type
+  getIsPreviousDisabled(questionType: string) {
     return this.PREVIOUS_BUTTON_DISABLED_SET.has(questionType)
   }
 
-  getIsNextAutomatic(question: Question) {
-    const questionType = question.field_type
+  getIsNextEnabled(questionType: string) {
+    return this.NEXT_BUTTON_ENABLED_SET.has(questionType)
+  }
+
+  getIsNextAutomatic(questionType: string) {
     return this.NEXT_BUTTON_AUTOMATIC_SET.has(questionType)
   }
 

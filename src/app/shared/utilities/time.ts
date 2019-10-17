@@ -1,6 +1,6 @@
 import {
-  DefaultScheduleYearCoverage,
-  DefaultTimeInterval
+  DefaultScheduleTimeInterval,
+  DefaultScheduleYearCoverage
 } from '../../../assets/data/defaultConfig'
 import { TimeInterval } from '../../shared/models/protocol'
 
@@ -90,8 +90,12 @@ export function timeIntervalToMillis(interval: TimeInterval): number {
     return getMilliseconds({ years: DefaultScheduleYearCoverage })
   }
   const unit =
-    interval.unit in TIME_UNIT_MILLIS ? interval.unit : DefaultTimeInterval.unit
-  const amount = interval.amount ? interval.amount : DefaultTimeInterval.amount
+    interval.unit in TIME_UNIT_MILLIS
+      ? interval.unit
+      : DefaultScheduleTimeInterval.unit
+  const amount = interval.amount
+    ? interval.amount
+    : DefaultScheduleTimeInterval.amount
   return amount * TIME_UNIT_MILLIS[unit]
 }
 

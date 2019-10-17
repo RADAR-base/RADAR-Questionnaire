@@ -3,6 +3,7 @@ import { WebIntent } from '@ionic-native/web-intent/ngx'
 
 import { UsageEventType } from '../../../shared/enums/events'
 import { SchemaType } from '../../../shared/models/kafka'
+import { Task } from '../../../shared/models/task'
 import { KafkaService } from '../kafka/kafka.service'
 import { LogService } from '../misc/log.service'
 import { AnalyticsService } from './analytics.service'
@@ -17,22 +18,25 @@ export class UsageService {
   ) {}
 
   sendEventToKafka(payload) {
-    return this.kafka.prepareKafkaObjectAndSend(SchemaType.EVENT, payload, true)
+    return this.kafka
+      .prepareKafkaObjectAndSend(SchemaType.APP_EVENT, payload, true)
+      .then((res: any) => this.logger.log('usage service', 'send success'))
+      .catch((error: any) => this.logger.error('usage service', error))
   }
 
   sendOpenEvent() {
     return this.webIntent.getIntent().then(intent => {
       this.logger.log(intent)
-      // noinspection JSIgnoredPromiseFromCall
-      this.sendEventToKafka({
-        eventType: intent.extras
-          ? UsageEventType.APP_OPEN_NOTIFICATION
-          : UsageEventType.APP_OPEN_DIRECTLY
+      return this.sendEventToKafka({
+        eventType:
+          Object.keys(intent.extras).length > 1
+            ? UsageEventType.NOTIFICATION_OPEN
+            : UsageEventType.APP_OPEN
       })
     })
   }
 
-  sendQuestionnaireEvent(type, task) {
+  sendQuestionnaireEvent(type, task: Task) {
     // noinspection JSIgnoredPromiseFromCall
     this.analytics.logEvent(type, {
       questionnaire_timestamp: task.timestamp
@@ -73,6 +77,7 @@ export class UsageService {
     let page = component.split(/(?=[A-Z])/)
     page.pop()
     page = page.join('-').toLowerCase()
+    if (!page.includes('page')) page = page + '-page'
     // noinspection JSIgnoredPromiseFromCall
     this.analytics.setCurrentScreen(page)
   }

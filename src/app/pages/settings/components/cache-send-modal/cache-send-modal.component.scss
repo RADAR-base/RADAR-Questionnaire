@@ -1,0 +1,69 @@
+cache-send-modal {
+  padding: 24px;
+  padding-top: 30vh;
+  background: rgba(0, 0, 0, 0.5);
+  color: gray;
+
+  ion-card {
+    background-color: white !important;
+  }
+
+  .header {
+    color: $cl-primary;
+  }
+
+  .success {
+    color: $toggle-md-track-background-color-on;
+    font-size: 48px;
+  }
+
+  .error {
+    color: $cl-danger;
+    font-size: 48px;
+  }
+
+  .center {
+    display: block;
+    padding: 8px;
+    text-align: center;
+  }
+
+  li {
+    overflow-x: scroll;
+    padding: 4px;
+    white-space: nowrap;
+    font-size: 12px;
+  }
+
+  button {
+    background: none;
+  }
+
+  ion-label {
+    font-size: 24px;
+  }
+
+  ion-list {
+    color: gray;
+  }
+
+  .scroll-error {
+    overflow-y: auto;
+    height: 32%;
+  }
+
+  .scroll-success {
+    padding: 16px;
+    height: 8%;
+  }
+
+  ion-grid {
+    margin: -16px;
+  }
+
+  .done-btn {
+    color: $cl-primary;
+    text-transform: uppercase;
+    font-size: 16px;
+  }
+}

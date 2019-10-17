@@ -22,6 +22,7 @@ import { HomePageAnimations } from './home-page.animation'
   animations: HomePageAnimations
 })
 export class HomePageComponent implements OnDestroy {
+  title: Promise<string>
   sortedTasks: Promise<Map<any, any>>
   tasks: Promise<Task[]>
   currentDate: Date
@@ -44,11 +45,7 @@ export class HomePageComponent implements OnDestroy {
     private platform: Platform,
     private usage: UsageService
   ) {
-    this.resumeListener = this.platform.resume.subscribe(e => {
-      this.checkForNewDate()
-      this.usage.sendGeneralEvent(UsageEventType.RESUMED)
-      this.onResume()
-    })
+    this.resumeListener = this.platform.resume.subscribe(() => this.onResume())
   }
 
   getIsLoadingSpinnerShown() {
@@ -77,7 +74,6 @@ export class HomePageComponent implements OnDestroy {
 
   ionViewDidLoad() {
     this.init()
-    this.usage.sendOpenEvent()
     this.usage.setPage(this.constructor.name)
   }
 
@@ -89,14 +85,16 @@ export class HomePageComponent implements OnDestroy {
     this.tasks.then(tasks => {
       this.checkTaskInterval = setInterval(() => {
         this.checkForNextTask(tasks)
-      }, 1000)
+      }, 1500)
     })
     this.hasClinicalTasks = this.tasksService.evalHasClinicalTasks()
+    this.title = this.tasksService.getPlatformInstanceName()
   }
 
   onResume() {
     this.usage.sendOpenEvent()
     this.checkForNewDate()
+    this.usage.sendGeneralEvent(UsageEventType.RESUMED)
   }
 
   checkForNewDate() {

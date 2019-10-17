@@ -1,21 +1,33 @@
+import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
+import { Platform } from 'ionic-angular'
+import * as ver from 'semver'
 
-import { DefaultNotificationRefreshTime } from '../../../../assets/data/defaultConfig'
+import {
+  DefaultAppId,
+  DefaultAppVersion,
+  DefaultAppleAppStoreAppURL,
+  DefaultGooglePlaystoreAppURL,
+  DefaultNotificationRefreshTime,
+  DefaultPackageName
+} from '../../../../assets/data/defaultConfig'
 import {
   ConfigEventType,
   NotificationEventType
 } from '../../../shared/enums/events'
+import { User } from '../../../shared/models/user'
+import { parseVersion } from '../../../shared/utilities/parse-version'
 import { TaskType } from '../../../shared/utilities/task-type'
 import { KafkaService } from '../kafka/kafka.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
 import { NotificationService } from '../notifications/notification.service'
 import { ScheduleService } from '../schedule/schedule.service'
+import { AnalyticsService } from '../usage/analytics.service'
 import { AppConfigService } from './app-config.service'
 import { ProtocolService } from './protocol.service'
 import { QuestionnaireService } from './questionnaire.service'
 import { SubjectConfigService } from './subject-config.service'
-import { AnalyticsService } from '../usage/analytics.service'
 
 @Injectable()
 export class ConfigService {
@@ -29,7 +41,9 @@ export class ConfigService {
     private kafka: KafkaService,
     private localization: LocalizationService,
     private analytics: AnalyticsService,
-    private logger: LogService
+    private logger: LogService,
+    private http: HttpClient,
+    private platform: Platform
   ) {}
 
   fetchConfigState(force?: boolean) {
@@ -44,6 +58,7 @@ export class ConfigService {
           this.subjectConfig
             .getEnrolmentDate()
             .then(d => this.appConfig.init(d))
+        this.checkForAppUpdates()
         if (newProtocol)
           return this.updateConfigStateOnProtocolChange(newProtocol)
         if (newAppVersion)
@@ -53,7 +68,7 @@ export class ConfigService {
         if (newNotifications) return this.rescheduleNotifications(false)
       })
       .catch(e => {
-        this.sendConfigChangeEvent(ConfigEventType.ERROR)
+        this.sendConfigChangeEvent(ConfigEventType.ERROR, '', '', e.message)
         throw e
       })
   }
@@ -126,6 +141,24 @@ export class ConfigService {
         !lastUpdate ||
         timeElapsed < 0
       )
+    })
+  }
+
+  checkForAppUpdates() {
+    const playstoreURL = this.platform.is('ios')
+      ? DefaultAppleAppStoreAppURL + DefaultAppId
+      : DefaultGooglePlaystoreAppURL + DefaultPackageName
+    return Promise.all([
+      this.http
+        .get(playstoreURL, { responseType: 'text' })
+        .toPromise()
+        .then(res => parseVersion(res))
+        .catch(e => DefaultAppVersion),
+      this.appConfig.getAppVersion()
+    ]).then(([playstoreVersion, currentVersion]) => {
+      if (ver.gt(playstoreVersion, currentVersion))
+        throw new Error(ConfigEventType.APP_UPDATE_AVAILABLE)
+      return
     })
   }
 
@@ -215,26 +248,12 @@ export class ConfigService {
     ])
   }
 
-  setAll(participantId, participantLogin, projectName, sourceId, createdDate) {
+  setAll(user: User) {
     return Promise.all([
       this.subjectConfig
-        .init(
-          participantId,
-          participantLogin,
-          projectName,
-          sourceId,
-          createdDate
-        )
-        .then(() =>
-          this.analytics.setUserProperties({
-            subjectId: participantLogin,
-            projectId: projectName,
-            sourceId: sourceId,
-            enrolmentDate: String(),
-            humanReadableId: participantId
-          })
-        )
-        .then(() => this.appConfig.init(createdDate)),
+        .init(user)
+        .then(() => this.analytics.setUserProperties(user))
+        .then(() => this.appConfig.init(user.enrolmentDate)),
       this.localization.init(),
       this.kafka.init()
     ])
@@ -256,16 +275,21 @@ export class ConfigService {
     }
   }
 
-  sendConfigChangeEvent(type, previous?, current?) {
+  sendConfigChangeEvent(type, previous?, current?, error?) {
     this.analytics.logEvent(type, {
       previous: String(previous),
-      current: String(current)
+      current: String(current),
+      error: String(error)
     })
   }
 
   sendTestNotification() {
     this.sendConfigChangeEvent(NotificationEventType.TEST)
     return this.notifications.sendTestNotification()
+  }
+
+  sendCachedData() {
+    return this.kafka.sendAllFromCache()
   }
 
   updateSettings(settings) {

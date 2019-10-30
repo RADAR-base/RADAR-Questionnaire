@@ -1,23 +1,22 @@
 info-screen {
-  overflow: hidden;
-
   .info-card {
-    padding: 10px;
+    padding: 16px;
+    height: 92%;
     -webkit-border-radius: 8px;
     border-radius: 8px;
     background-color: $cl-primary-20;
   }
 
-  ion-content {
-    background: none;
-    mask-image:
-      -webkit-gradient(
-        linear,
-        left top,
-        left bottom,
-        from(rgba(0, 0, 0, 1)),
-        to(rgba(0, 0, 0, 0.25))
-      );
+  .content {
+    overflow-y: scroll;
+    width: 100%;
+    mask-image: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      from(rgba(0, 0, 0, 1)),
+      to(rgba(0, 0, 0, 0.25))
+    );
   }
 
   .items {

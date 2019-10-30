@@ -1,7 +1,7 @@
 task-progress {
-  $particles: 50;
+  $particles: 80;
   $width: 500;
-  $height: 500;
+  $height: 300;
 
   $box-shadow: ();
   $box-shadow2: ();
@@ -11,14 +11,14 @@ task-progress {
   @for $i from 0 through $particles {
     $box-shadow: $box-shadow,
       random($width) -
-      $width /
-      2 +
-      px
-      random($height) -
-      $height /
-      1.2 +
-      px
-      hsl(random(360), 100, 50);
+        $width /
+        2 +
+        px
+        random($height) -
+        $height /
+        1.2 +
+        px
+        hsl(random(360), 100, 50);
     $box-shadow2: $box-shadow2, 0 0 #fff;
   }
 
@@ -126,13 +126,14 @@ task-progress {
   .pyro > .after {
     @include animation(
       (
-        1s bang ease-out infinite backwards,
-        1s gravity ease-in infinite backwards,
+        2s bang ease infinite backwards,
+        1s gravity ease infinite backwards,
         5s position linear infinite backwards
       )
     );
 
     position: absolute;
+    top: -240px;
     width: 10px;
     height: 10px;
     border-radius: 50%;

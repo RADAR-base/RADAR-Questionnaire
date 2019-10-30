@@ -4,8 +4,18 @@ page-questions {
   }
 
   ion-slide {
-    overflow: hidden !important;
-    padding: 24px;
-    height: 96vh !important;
+    overflow-x: hidden !important;
+    padding: 24px 24px 0;
+  }
+
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .slide-flex {
+    flex: 1;
+    height: 100%;
   }
 }

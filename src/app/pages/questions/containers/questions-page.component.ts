@@ -2,8 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core'
 import { Insomnia } from '@ionic-native/insomnia/ngx'
 import { NavController, NavParams, Platform, Slides } from 'ionic-angular'
 
+import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { UsageService } from '../../../core/services/usage/usage.service'
 import { UsageEventType } from '../../../shared/enums/events'
+import { LocKeys } from '../../../shared/enums/localisations'
 import { Assessment } from '../../../shared/models/assessment'
 import { Question } from '../../../shared/models/question'
 import { Task } from '../../../shared/models/task'
@@ -19,7 +21,7 @@ export class QuestionsPageComponent implements OnInit {
   @ViewChild(Slides)
   slides: Slides
 
-  startTime = Date.now()
+  startTime: number
   currentQuestionId = 0
   nextQuestionId: number
   questionOrder = [0]
@@ -44,7 +46,8 @@ export class QuestionsPageComponent implements OnInit {
     private questionsService: QuestionsService,
     private usage: UsageService,
     private platform: Platform,
-    private insomnia: Insomnia
+    private insomnia: Insomnia,
+    private localization: LocalizationService
   ) {
     this.platform.registerBackButtonAction(() => {
       this.sendCompletionLog()
@@ -54,13 +57,17 @@ export class QuestionsPageComponent implements OnInit {
 
   ngOnInit() {
     this.task = this.navParams.data
+    this.startTime = this.questionsService.getTime()
     const data = this.questionsService.getQuestionnairePayload(this.task)
     return data.then(res => {
       this.questionTitle = res.title
       this.introduction = res.introduction
       this.showIntroductionScreen = res.assessment.showIntroduction
       this.questions = res.questions
-      this.endText = res.endText
+      this.endText =
+        res.endText && res.endText.length
+          ? res.endText
+          : this.localization.translateKey(LocKeys.FINISH_THANKS)
       this.isLastTask = res.isLastTask
       this.assessment = res.assessment
       this.taskType = res.type

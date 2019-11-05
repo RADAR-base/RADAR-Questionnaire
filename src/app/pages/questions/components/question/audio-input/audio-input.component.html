@@ -1,14 +1,16 @@
-<div class="audio-bottom">
-  <ng-container *ngIf="buttonShown">
-    <button
-      ion-button
-      class="bt bt--full"
-      [class.bt-stop]="isRecording()"
-      round
-      full
-      (tap)="handleRecording()"
-    >
-      {{ getRecordingButtonText() }}
-    </button>
-  </ng-container>
+<div class="audio-container">
+  <div class="audio-bottom">
+    <ng-container *ngIf="buttonShown">
+      <button
+        ion-button
+        class="bt bt--full"
+        [class.bt-stop]="isRecording()"
+        round
+        full
+        (tap)="handleRecording()"
+      >
+        {{ getRecordingButtonText() }}
+      </button>
+    </ng-container>
+  </div>
 </div>

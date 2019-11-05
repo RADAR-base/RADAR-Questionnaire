@@ -86,7 +86,7 @@ export class HomePageComponent implements OnDestroy {
     this.tasks.then(tasks => {
       this.checkTaskInterval = setInterval(() => {
         this.checkForNextTask(tasks)
-      }, 1000)
+      }, 1500)
     })
     this.hasClinicalTasks = this.tasksService.evalHasClinicalTasks()
     this.title = this.tasksService.getPlatformInstanceName()

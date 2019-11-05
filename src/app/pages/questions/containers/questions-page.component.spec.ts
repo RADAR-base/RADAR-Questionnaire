@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed, async } from '@angular/core/testing'
 import { NavController, NavParams } from 'ionic-angular'
 import { NavParamsMock } from 'ionic-mocks'
 
-import { DefaultTaskTest } from '../../../../assets/data/defaultConfig'
 import { AppModule } from '../../../app.module'
 import { QuestionsService } from '../services/questions.service'
 import { QuestionsPageComponent } from './questions-page.component'
@@ -39,5 +38,9 @@ describe('QuestionsPageComponent', () => {
 export class QuestionsServiceMock {
   getQuestionnairePayload() {
     return Promise.resolve({})
+  }
+
+  getTime() {
+    return 0
   }
 }

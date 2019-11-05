@@ -93,8 +93,12 @@ export class TasksService {
    */
   getNextTask(tasks: Task[]): Task | undefined {
     if (tasks) {
-      return tasks.find(task => !this.isTaskExpired(task))
+      const nextTasksNow = tasks.filter(task => this.isTaskStartable(task))
+      if (nextTasksNow.length) {
+        return nextTasksNow.sort((a, b) => a.order - b.order)[0]
+      } else return tasks.find(task => !this.isTaskExpired(task))
     }
+    return undefined
   }
 
   getCurrentDateMidnight() {

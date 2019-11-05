@@ -498,7 +498,7 @@ export const Localisations = {
     nl: 'Begin'
   },
   BTN_STOP: {
-    da: 'Stoppe',
+    da: 'Stop',
     de: 'Stoppen',
     en: 'Stop',
     es: 'Detener',
@@ -606,11 +606,11 @@ export const Localisations = {
     de: 'Ja',
     en: 'Yes',
     es: 'Sí',
-    it: 'sì',
+    it: 'Sì',
     nl: 'Ja'
   },
   BTN_NO: {
-    da: 'Ingen',
+    da: 'Nej',
     de: 'Nein',
     en: 'No',
     es: 'No',
@@ -619,11 +619,19 @@ export const Localisations = {
   },
   BTN_TRY_AGAIN: {
     da: 'Prøv igen',
-    de: 'Versuchen Sie es nochmal',
+    de: 'Erneut versuchen',
     en: 'Try again',
-    es: 'Inténtalo de nuevo',
-    it: 'Riprova',
-    nl: 'Probeer het opnieuw'
+    es: 'Volver a intentar',
+    it: 'Prova di nuovo',
+    nl: 'Probeer opnieuw'
+  },
+  BTN_UPDATE: {
+    da: 'Opdater',
+    de: 'Aktualisieren',
+    en: 'Update',
+    es: 'Actualizar',
+    it: 'Aggiorna',
+    nl: 'Bijwerken'
   },
   STATUS_LOADING: {
     da: 'Indlæser',
@@ -656,6 +664,22 @@ export const Localisations = {
     es: 'Error',
     it: 'Non riuscuto',
     nl: 'Mislukt'
+  },
+  STATUS_UPDATE_AVAILABLE: {
+    da: 'Ny Version Tilgængelig',
+    de: 'Neue Version Verfügbar',
+    en: 'New Version Available',
+    es: 'Nueva Versión Disponible',
+    it: 'Nuova Versione Disponibile',
+    nl: 'Nieuwe Versie Beschikbaar'
+  },
+  STATUS_UPDATE_AVAILABLE_DESC: {
+    da: 'Opdater din app, før du fortsætter.',
+    de: 'Bitte aktualisieren Sie Ihre App, bevor Sie fortfahren.',
+    en: 'Please update your app before continuing.',
+    es: 'Actualice su aplicación antes de continuar.',
+    it: `Aggiorna l'app prima di continuare.`,
+    nl: 'Werk uw app bij voordat u doorgaat.'
   },
   NOTIFICATION_TEST_REMINDER_NOW: {
     da: 'Testmeddelelse',
@@ -997,7 +1021,7 @@ export const Localisations = {
     nl: 'Taak is onderbroken. Start de taak opnieuw.'
   },
   AUDIO_TASK_ATTEMPT_ALERT: {
-    da: 'Forsøg tilbageværende',
+    da: 'Tilbageværende forsøg',
     de: 'Verbleibende Versuche',
     en: 'Attempts remaining',
     es: 'Intentos restantes',

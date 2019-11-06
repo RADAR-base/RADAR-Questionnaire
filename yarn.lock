@@ -7804,10 +7804,10 @@ next-tick@^1.0.0:
   resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.0.0.tgz#ca86d1fe8828169b0120208e3dc8424b9db8342c"
   integrity sha1-yobR/ogoFpsBICCOPchCS524NCw=
 
-ng2-fittext@^1.2.6:
-  version "1.2.6"
-  resolved "https://registry.yarnpkg.com/ng2-fittext/-/ng2-fittext-1.2.6.tgz#34bcb60a93b5c2c6d9065f7a4aac8c43d507ad86"
-  integrity sha512-g61tP5kMNbGV/olYRW3qXN40s1HhjBgyyOt9l1T2VpAYWCGhzFiB9xA48N5/GVvsW3MdZyJ9Hdl+1lpb+bmbGg==
+ng2-fittext@^1.2.8:
+  version "1.2.8"
+  resolved "https://registry.yarnpkg.com/ng2-fittext/-/ng2-fittext-1.2.8.tgz#2d4c62c0611f44b198f960fa8ae10c0a9afcbc00"
+  integrity sha512-XAWfYhHgQ25YYacb13wuApD+fOjCcaKAE8uneVuXyI/aFX8sO0vwaQz6WD1/9zVqgKtY6DP6o8AJ2VI8OwXqSw==
 
 ngx-moment@^3.3.0:
   version "3.4.0"

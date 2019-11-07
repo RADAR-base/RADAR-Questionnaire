@@ -69,7 +69,7 @@
                           class="bt bt--block"
                           [block]="true"
                           [outline]="true"
-                          (tap)="isBornInUnitedKingdom(true)"
+                          (tap)="isBornOutOfUnitedKingdom(true)"
                           large>Yes
                   </button>
                   </div>
@@ -80,7 +80,7 @@
                           class="bt bt--block"
                           [block]="true"
                           [outline]="true"
-                          (tap)="isBornInUnitedKingdom(false)"
+                          (tap)="isBornOutOfUnitedKingdom(false)"
                           large>No</button>
                 </div>
               </td>
@@ -103,7 +103,7 @@
                           class="bt bt--block"
                           [block]="true"
                           [outline]="true"
-                          (tap)="isBornInUnitedKingdom(true)"
+                          (tap)="isMovingToUK(true)"
                           large>Yes
                   </button>
                   </div>
@@ -114,7 +114,7 @@
                           class="bt bt--block"
                           [block]="true"
                           [outline]="true"
-                          (tap)="isBornInUnitedKingdom(false)"
+                          (tap)="isMovingToUK(false)"
                           large>No</button>
                 </div>
               </td>
@@ -135,7 +135,8 @@
             class="bt bt--full"
             round
             full
-            (tap)="processConsent()"
+            [disabled]="!isQuestionOneAnswered || !isQuestionTwoAnswered || !isQuestionThreeAnswered"
+            (tap)="processEligibility()"
           >
             Next
           </button>

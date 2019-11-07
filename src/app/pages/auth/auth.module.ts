@@ -18,7 +18,8 @@ import { EligibilityPageComponent } from "./components/eligibility-page/eligibil
     PipesModule
   ],
   entryComponents: [
-    EligibilityPageComponent
+    EligibilityPageComponent,
+    EnrolmentPageComponent
   ],
   declarations: [
     EnrolmentPageComponent,

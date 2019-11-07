@@ -2,7 +2,6 @@ import { Component, ViewChild } from '@angular/core'
 import { NavController, Slides } from 'ionic-angular'
 import { SplashPageComponent } from '../../../splash/containers/splash-page.component'
 import { HomePageComponent } from "../../../home/containers/home-page.component";
-import { StorageKeys } from "../../../../shared/enums/storage";
 import { AuthService } from "../../services/auth.service";
 import { LocalizationService } from "../../../../core/services/misc/localization.service";
 import { AlertService } from "../../../../core/services/misc/alert.service";
@@ -11,8 +10,8 @@ import { LogService } from "../../../../core/services/misc/log.service";
 import { StorageService } from "../../../../core/services/storage/storage.service";
 import { ConfigService } from "../../../../core/services/config/config.service";
 import { EnrolmentEventType } from "../../../../shared/enums/events";
-import { LocKeys } from "../../../../shared/enums/localisations";
-import {WelcomePageComponent} from "../welcome-page/welcome-page.component";
+import { WelcomePageComponent } from "../welcome-page/welcome-page.component";
+import {EnrolmentPageComponent} from "../../containers/enrolment-page.component";
 
 @Component({
   selector: 'page-eligibility',
@@ -25,15 +24,13 @@ export class EligibilityPageComponent {
   showOutcomeStatus: boolean = false
 
   isEighteen: boolean = undefined
-  isBornInUK: boolean = undefined
-  consentParticipation = undefined
-  consentNHSRecordAccess = undefined
-  showTimeCommitmentDetails = false
-  showPrivacyPolicyDetails = false
-  showWithdrawalDetails = false
-  showContactYouDetails = false
+  isBornOutOfUK: boolean = undefined
+  willMoveToUK: boolean = undefined
+
+  isQuestionOneAnswered = false
+  isQuestionTwoAnswered = false
+  isQuestionThreeAnswered = false
   outcomeStatus: string
-  enterMetaQR = false
 
   constructor(
     public navCtrl: NavController,
@@ -68,85 +65,34 @@ export class EligibilityPageComponent {
   }
 
   isOlderThanEighteen(res: boolean) {
+    this.isQuestionOneAnswered = true
     this.isEighteen = res;
-    this.processEligibility();
   }
 
-  isBornInUnitedKingdom(res: boolean) {
-    this.isBornInUK = res;
-    this.processEligibility();
+  isBornOutOfUnitedKingdom(res: boolean) {
+    this.isQuestionTwoAnswered = true
+    this.isBornOutOfUK = res;
+  }
+
+  isMovingToUK(res: boolean) {
+    this.isQuestionThreeAnswered = true
+    this.willMoveToUK = res;
   }
 
   processEligibility() {
-    if(this.isBornInUK != undefined && this.isEighteen != undefined) {
-      if(this.isBornInUK === true && this.isEighteen == true){
-        this.next();
+    if(this.isBornOutOfUK != undefined && this.isEighteen != undefined && this.willMoveToUK != undefined) {
+      if(this.isBornOutOfUK === true && this.isEighteen == true && this.willMoveToUK === true){
+        this.navigateToConsentPage();
       } else {
-        this.slideTo(2);
+        this.next();
       }
     }
   }
-
-  processConsent() {
-    if (!this.consentParticipation) {
-      this.alertService.showAlert({
-        title: "Consent is required",
-        buttons: [{
-          text: this.localization.translateKey(LocKeys.BTN_OKAY),
-          handler: () => {}
-        }],
-        message: "Your consent to participate in the study is at least required."
-      })
-    }
-    if(this.consentNHSRecordAccess === true) {
-      this.storage.set(StorageKeys.CONSENT_ACCESS_NHS_RECORDS, true);
-    }
-    if(this.consentParticipation === true) {
-      this.authenticate();
-    }
-  }
-
 
   slideTo(index: number) {
     this.slides.lockSwipes(false)
     this.slides.slideTo(index, 500)
     this.slides.lockSwipes(true)
-  }
-
-  enterToken() {
-    this.enterMetaQR = true
-    this.next()
-  }
-
-  authenticate() {
-    if (!this.enterMetaQR)
-      this.usage.sendGeneralEvent(EnrolmentEventType.ELIGIBILITY_MET)
-      // this.usage.sendGeneralEvent(UsageEventType.QR_SCANNED)
-    this.loading = true
-    this.clearStatus()
-    this.auth
-      .authenticate(true)
-      .catch(e => {
-        this.handleError(e)
-        this.loading = false
-      })
-      .then(() => this.auth.initSubjectInformation())
-      .then(() => {
-        this.usage.sendGeneralEvent(EnrolmentEventType.SUCCESS)
-        this.navigateToSplash()
-      })
-      .catch(e => {
-        this.handleError(e)
-        this.loading = false
-        this.alertService.showAlert({
-                  title: "Something went wrong",
-                  buttons: [{
-                    text: this.localization.translateKey(LocKeys.BTN_OKAY),
-                    handler: () => {}
-                  }],
-                  message: "Could not successfully register new participant. Please try again later."
-                });
-      })
   }
 
   handleError(e) {
@@ -172,8 +118,8 @@ export class EligibilityPageComponent {
     setTimeout(() => (this.showOutcomeStatus = true), 500)
   }
 
-  navigateToSplash() {
-    this.navCtrl.setRoot(SplashPageComponent)
+  navigateToConsentPage() {
+    this.navCtrl.setRoot(EnrolmentPageComponent)
   }
 
   navigateToHome() {

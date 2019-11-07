@@ -1,4 +1,4 @@
-page-enrolment {
+page-eligibility {
   @keyframes fadeIn {
     0% {
       opacity: 0;
@@ -60,8 +60,8 @@ page-enrolment {
     @include font-body;
   }
 
-  .scroll{
-    height: 80%
+  .scroll-page {
+    height:75vh !important;
   }
 
   input[type='checkbox']:checked + label {
@@ -89,8 +89,6 @@ page-enrolment {
     margin-right: 5px;
     background-color: $cl-primary;
   }
-
-
 
   .padding {
     margin-top: 3vh;
@@ -200,7 +198,7 @@ page-enrolment {
   }
 
   li {
-    padding-bottom:10px;
+    padding-bottom: 10px;
     list-style-type: decimal;
     list-style-position: outside;
   }

@@ -1,0 +1,192 @@
+<ion-content>
+  <div *ngIf="!loading">
+    <ion-slides padding direction="horizontal">
+
+      <ion-slide id="eligibility">
+        <ion-item>
+          <ion-icon md="md-arrow-back" item-start (click)="navigateToWelcome()"></ion-icon>
+        </ion-item>
+
+        <ion-scroll
+          scrollY="true"
+          class="scroll-page"
+        >
+
+          <div>
+            <img
+              id="logo"
+              src="assets/imgs/new-logo.png"
+              alias="RADAR LOGO"
+            >
+          </div>
+          <div class="text-md">{{ "ENROL_ELIGIBILITY_HEADING" | translate }}</div>
+          <div class="center">
+            <div>
+              <div>
+                <span class="text-sm padding">Are you at least 18 years old?</span>
+              </div>
+              <br>
+              <div>
+          <span>
+            <tr>
+              <td>
+                <div style="padding-right: 10px">
+                  <button ion-button
+                          class="bt bt--block"
+                          [block]="true"
+                          [outline]="true"
+                          (tap)="isOlderThanEighteen(true)"
+                          large>Yes
+                  </button>
+                  </div>
+                </td>
+              <td>
+                <div style="padding-right: 10px">
+                  <button ion-button
+                          class="bt bt--block"
+                          [block]="true"
+                          [outline]="true"
+                          (tap)="isOlderThanEighteen(false)"
+                          large>No</button>
+                </div>
+              </td>
+            </tr>
+          </span>
+              </div>
+              <div padding>
+                <hr/>
+              </div>
+              <div>
+                <span class="text-sm padding">Were you born outside of the United Kingdom? </span>
+              </div>
+              <br>
+              <div>
+          <span>
+            <tr>
+              <td>
+                <div style="padding-right: 10px">
+                  <button ion-button
+                          class="bt bt--block"
+                          [block]="true"
+                          [outline]="true"
+                          (tap)="isBornInUnitedKingdom(true)"
+                          large>Yes
+                  </button>
+                  </div>
+                </td>
+              <td>
+                <div style="padding-right: 10px">
+                  <button ion-button
+                          class="bt bt--block"
+                          [block]="true"
+                          [outline]="true"
+                          (tap)="isBornInUnitedKingdom(false)"
+                          large>No</button>
+                </div>
+              </td>
+            </tr>
+          </span>
+              </div>
+              <div padding>
+                <hr/>
+              </div>
+              <div>
+                <span class="text-sm padding">Are you planning to move to the UK in the next 6 months or currently living in the UK? </span>
+              </div>
+              <br>
+              <div>
+          <span>
+            <tr>
+              <td>
+                <div style="padding-right: 10px">
+                  <button ion-button
+                          class="bt bt--block"
+                          [block]="true"
+                          [outline]="true"
+                          (tap)="isBornInUnitedKingdom(true)"
+                          large>Yes
+                  </button>
+                  </div>
+                </td>
+              <td>
+                <div style="padding-right: 10px">
+                  <button ion-button
+                          class="bt bt--block"
+                          [block]="true"
+                          [outline]="true"
+                          (tap)="isBornInUnitedKingdom(false)"
+                          large>No</button>
+                </div>
+              </td>
+            </tr>
+          </span>
+              </div>
+            </div>
+          </div>
+
+        </ion-scroll>
+
+        <div
+          padding-top="5px"
+          class="bottom"
+        >
+          <button
+            ion-button
+            class="bt bt--full"
+            round
+            full
+            (tap)="processConsent()"
+          >
+            Next
+          </button>
+        </div>
+      </ion-slide>
+
+      <!--  Thank you slide, when not eligible-->
+
+      <ion-slide id="thankyou">
+        <div id="logo-container">
+          <img
+            id="logo"
+            src="assets/imgs/new-logo.png"
+            alias="RADAR LOGO"
+          >
+        </div>
+        <div class="text">
+          <div class="text-lg">{{ "ENROL_ABORT_THANKYOU_1" | translate }}</div>
+          <div class="text-md"> {{ "ENROL_ABORT_MESSAGE" | translate}}</div>
+        </div>
+
+        <div
+          padding
+          class="bottom"
+        >
+          <button
+            ion-button
+            class="bt bt--full"
+            round
+            full
+            (tap)="navigateToWelcome()"
+          >
+            Finish
+          </button>
+        </div>
+      </ion-slide>
+    </ion-slides>
+  </div>
+
+<!--  loading slide-->
+  <ion-slides *ngIf="loading" direction="horizontal">
+    <ion-slide padding id="loadingSlide">
+      <div class="position-center">
+        <ion-spinner name="dots"></ion-spinner>
+      </div>
+      <div class="status-center">{{  "STATUS_LOADING" | translate  }}</div>
+      <div class="status">
+        <div id="outcome" *ngIf="showOutcomeStatus">
+          {{ outcomeStatus }}
+        </div>
+      </div>
+    </ion-slide>
+  </ion-slides>
+</ion-content>

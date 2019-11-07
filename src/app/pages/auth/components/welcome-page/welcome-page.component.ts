@@ -19,6 +19,7 @@ import { EnrolmentEventType} from "../../../../shared/enums/events";
 import { UsageService } from "../../../../core/services/usage/usage.service";
 import { SplashPageComponent } from "../../../splash/containers/splash-page.component";
 import { LogService } from "../../../../core/services/misc/log.service";
+import { EligibilityPageComponent } from "../eligibility-page/eligibility-page.component";
 
 /**
  * Generated class for the WelcomePage page.
@@ -93,7 +94,7 @@ export class WelcomePageComponent {
   }
 
   joinStudy() {
-    this.navCtrl.setRoot(EnrolmentPageComponent);
+    this.navCtrl.setRoot(EligibilityPageComponent);
   }
 
   goToLogin() {

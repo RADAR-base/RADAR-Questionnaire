@@ -1,38 +1,24 @@
 import { Component, ViewChild } from '@angular/core'
 import { NavController, Slides } from 'ionic-angular'
-
-import {
-  DefaultLanguage,
-  DefaultSettingsSupportedLanguages,
-  DefaultSettingsWeeklyReport,
-  LanguageMap
-} from '../../../../assets/data/defaultConfig'
-import { AlertService } from '../../../core/services/misc/alert.service'
-import { LocalizationService } from '../../../core/services/misc/localization.service'
-import { LogService } from '../../../core/services/misc/log.service'
-import { UsageService } from '../../../core/services/usage/usage.service'
-import {
-  EnrolmentEventType,
-  UsageEventType
-} from '../../../shared/enums/events'
-import { LocKeys } from '../../../shared/enums/localisations'
-import {
-  LanguageSetting,
-  WeeklyReportSubSettings
-} from '../../../shared/models/settings'
-import { SplashPageComponent } from '../../splash/containers/splash-page.component'
-import { HomePageComponent } from "../../home/containers/home-page.component";
-import { StorageService } from "../../../core/services/storage/storage.service";
-import { StorageKeys } from "../../../shared/enums/storage";
-import { AuthService } from "../services/auth.service";
-import { ConfigService } from "../../../core/services/config/config.service";
-import { WelcomePageComponent } from "../components/welcome-page/welcome-page.component";
+import { SplashPageComponent } from '../../../splash/containers/splash-page.component'
+import { HomePageComponent } from "../../../home/containers/home-page.component";
+import { StorageKeys } from "../../../../shared/enums/storage";
+import { AuthService } from "../../services/auth.service";
+import { LocalizationService } from "../../../../core/services/misc/localization.service";
+import { AlertService } from "../../../../core/services/misc/alert.service";
+import { UsageService } from "../../../../core/services/usage/usage.service";
+import { LogService } from "../../../../core/services/misc/log.service";
+import { StorageService } from "../../../../core/services/storage/storage.service";
+import { ConfigService } from "../../../../core/services/config/config.service";
+import { EnrolmentEventType } from "../../../../shared/enums/events";
+import { LocKeys } from "../../../../shared/enums/localisations";
+import {WelcomePageComponent} from "../welcome-page/welcome-page.component";
 
 @Component({
-  selector: 'page-enrolment',
-  templateUrl: 'enrolment-page.component.html'
+  selector: 'page-eligibility',
+  templateUrl: 'eligibility-page.component.html'
 })
-export class EnrolmentPageComponent {
+export class EligibilityPageComponent {
   @ViewChild(Slides)
   slides: Slides
   loading: boolean = false
@@ -48,9 +34,6 @@ export class EnrolmentPageComponent {
   showContactYouDetails = false
   outcomeStatus: string
   enterMetaQR = false
-  reportSettings: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
-  language?: LanguageSetting = DefaultLanguage
-  languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
 
   constructor(
     public navCtrl: NavController,
@@ -62,7 +45,7 @@ export class EnrolmentPageComponent {
     private storage: StorageService,
     private config: ConfigService,
   ) {
-    this.localization.update().then(lang => (this.language = lang))
+
   }
 
   ionViewDidLoad() {

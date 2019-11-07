@@ -9,6 +9,7 @@ import { WelcomePageComponent } from "./components/welcome-page/welcome-page.com
 import { EnrolmentPageComponent } from './containers/enrolment-page.component'
 import { AuthService } from './services/auth.service'
 import { KeycloakAuthService } from "./services/keycloak.auth.service";
+import { EligibilityPageComponent } from "./components/eligibility-page/eligibility-page.component";
 
 @NgModule({
   imports: [
@@ -17,11 +18,12 @@ import { KeycloakAuthService } from "./services/keycloak.auth.service";
     PipesModule
   ],
   entryComponents: [
-    EnrolmentPageComponent
+    EligibilityPageComponent
   ],
   declarations: [
     EnrolmentPageComponent,
     WelcomePageComponent,
+    EligibilityPageComponent,
     TokenFormComponent,
     QRFormComponent
   ],

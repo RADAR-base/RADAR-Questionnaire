@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget android-versionCode="534" id="uk.ac.ucl.ihi.onthemove" ios-CFBundleIdentifier="uk.ac.ucl.ihi.onthemove" version="0.7.0-alpha" xmlns:android="http://schemas.android.com/apk/res/android">
-    <name>HOME</name>
+    <name>UCL HOME</name>
     <description>An application for analyzing health of migrants.</description>
     <author email="radar-base@kcl.ac.uk" href="http://radar-base.org/">RADAR-Base</author>
     <content src="index.html" />

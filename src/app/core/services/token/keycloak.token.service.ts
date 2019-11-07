@@ -99,7 +99,8 @@ export class KeycloakTokenService extends TokenService {
       this.getRefreshParams(refreshToken)
     ])
       .then(([uri, headers, body]) => {
-        this.logger.log(`"Requesting access token with refresh-token: ${refreshToken}, URI: ${uri} and headers`, headers)
+        this.logger.log(`"Requesting access token with refresh-token: ${refreshToken}, URI: ${uri} and headers`,
+          headers)
         return this.http
           .post(uri, body, { headers: headers })
           .toPromise()

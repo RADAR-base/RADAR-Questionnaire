@@ -84,6 +84,7 @@ export class QuestionnaireService {
   }
 
   updateAssessments(type: TaskType, assessments: Assessment[]) {
+    console.log('Assessments per type {}', type , assessments.length)
     switch (type) {
       case TaskType.ALL:
         const {

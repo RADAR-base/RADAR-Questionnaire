@@ -66,7 +66,7 @@ export class ConfigService {
     ])
       .then(([scheduleVersion, protocol]) => {
         const parsedProtocol = JSON.parse(protocol)
-        this.logger.log(parsedProtocol)
+        this.logger.log('Protocol : ', parsedProtocol)
         if (scheduleVersion !== parsedProtocol.version || force) {
           this.sendConfigChangeEvent(
             ConfigEventType.PROTOCOL_CHANGE,
@@ -138,7 +138,7 @@ export class ConfigService {
 
   updateConfigStateOnProtocolChange(protocol) {
     const assessments = this.protocol.format(protocol.protocols)
-    this.logger.log(assessments)
+    this.logger.log('Assessments read ', assessments)
     return this.questionnaire
       .updateAssessments(TaskType.ALL, assessments)
       .then(() => this.regenerateSchedule())
@@ -217,6 +217,7 @@ export class ConfigService {
   }
 
   setAll(user: User) {
+    this.logger.log('User info is :', JSON.stringify(user))
     return Promise.all([
       this.subjectConfig
         .init(user)

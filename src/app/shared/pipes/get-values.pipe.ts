@@ -3,7 +3,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 @Pipe({name: 'getValues'})
 export class GetValuesPipe implements PipeTransform {
   transform(map: Map<any, any>): any[] {
-    let ret = [];
+    const ret = [];
 
     map.forEach((val, key) => {
       val.forEach((task) => {

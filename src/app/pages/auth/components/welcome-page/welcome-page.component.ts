@@ -40,6 +40,7 @@ export class WelcomePageComponent {
   loading: boolean = false
   showOutcomeStatus: boolean = false
   outcomeStatus: string
+  showReadMoreInformation: boolean = false
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages;
 
   constructor(
@@ -130,6 +131,17 @@ export class WelcomePageComponent {
     )
   }
 
+  goBack() {
+    this.slides.lockSwipes(false)
+    const slideIndex = this.slides.getActiveIndex() - 1
+    this.slides.slideTo(slideIndex, 500)
+    // this.slides.lockSwipes(true)
+  }
+
+  showAboutStudyPage() {
+    this.showReadMoreInformation = false
+  }
+
   clearStatus() {
     this.showOutcomeStatus = false
     this.outcomeStatus = null
@@ -146,5 +158,9 @@ export class WelcomePageComponent {
 
   navigateToSplash() {
     this.navCtrl.setRoot(SplashPageComponent)
+  }
+
+  showReadMoreText() {
+    this.showReadMoreInformation = true
   }
 }

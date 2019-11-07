@@ -11,6 +11,10 @@ page-welcome {
     width: 200px;
   }
 
+  .icon {
+    font-size: 20px;
+  }
+
   .text {
     margin: auto;
     width: 90vw;
@@ -33,7 +37,7 @@ page-welcome {
 
   .text-md {
     margin-bottom: 2vh;
-    font-size: 30px;
+    font-size: 20px;
   }
 
   .padding {
@@ -87,7 +91,11 @@ page-welcome {
 
   ion-item.item {
     margin-bottom: $item-separation-distance;
-    background-color: $cl-primary-40;
+    //background-color: $cl-primary-40;
+  }
+
+  .item-md.item-block .item-inner {
+    border: none;
   }
 
   ion-item.item:last-child {
@@ -149,8 +157,25 @@ page-welcome {
     height: 30px;
   }
 
+  .text-paragraph {
+    text-align: left;
+    font-size: 12px;
+    padding-bottom: 10px;
+    line-height: 14px;
+  }
+
   .status-center {
     margin-top: 15px;
     text-align: center;
+  }
+
+  #introframe {
+    flex: 1 0 100%;
+    width: calc(100% - 20px);
+    height: 200px;
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 10px;
+    border: none;
   }
 }

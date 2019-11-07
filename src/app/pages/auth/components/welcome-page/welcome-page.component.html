@@ -16,44 +16,80 @@
         <div class="text-md" style="font-size: 25px">
           {{ "ENROLE_STUDY_DESCRIPTION" | translate }}
         </div>
-        <div class="padding text-justify extra-padding">
-          <ion-item no-lines>
-            <span class="info-value">{{ language.label | translate }}</span>
-            <span
-                item-right
-                (click)="showSelectLanguage()"
-            >
-              <ion-icon
-                  class="space-right"
-                  name="arrow-dropdown"
-              ></ion-icon>
-              {{ "BTN_SELECT" | translate }}
-            </span>
-          </ion-item>
-        </div>
       </div>
     </ion-slide>
 
-    <ion-slide id="about">
-
-      <div class="text-md">{{ "ENROL_ABOUT_HEADING" | translate }}</div>
+    <ion-slide id="aboutStudy" *ngIf="!showReadMoreInformation">
+      <ion-item>
+        <ion-icon md="md-arrow-back" item-start (tap)="goBack()"></ion-icon>
+      </ion-item>
 
       <ion-scroll
-          scrollY="true"
-          style="height:550px"
+        scrollY="true"
+        style="height:550px"
       >
-        <div padding class="text text-justify">
-          <div class="text-sm"> {{ "ABOUT_STUDY_1" | translate }}</div>
-          <br/>
-          <div class="text-sm"> {{ "ABOUT_STUDY_2" | translate }}</div>
+        <div >
 
-          <div class="text-ques"> {{ "ABOUT_HOW_THIS_STUDY_WORKS_Q" | translate }}</div>
+          <div padding class="text text-justify">
+            <iframe id="introframe"
+                    src="https://player.vimeo.com/video/288344114?api=1&player_id=player1&background=1"
+            ></iframe>
 
-          <div class="text-sm"> {{ "ABOUT_HOW_THIS_STUDY_WORKS_ANS" | translate }}</div>
+          </div>
 
-          <div class="text-ques"> {{ "ABOUT_WHO_IS_RUNNING_THIS_STUDY_Q" | translate }}</div>
+<!--          <div class="text-md">{{ "ENROL_ABOUT_HEADING" | translate }}</div>-->
+        </div>
+      </ion-scroll>
 
-          <div class="text-sm"> {{ "ABOUT_WHO_IS_RUNNING_THIS_STUDY_ANS" | translate }}</div>
+      <div
+        padding
+        class="bottom"
+      >
+        <button
+          ion-button
+          class="bt bt--full"
+          round
+          full
+          (tap)="showReadMoreText()"
+        >
+          Read More
+        </button>
+      </div>
+    </ion-slide>
+
+    <ion-slide id="info" *ngIf="showReadMoreInformation">
+      <ion-item>
+        <ion-icon md="md-arrow-back" item-start (tap)="showAboutStudyPage()"></ion-icon>
+      </ion-item>
+
+      <ion-scroll
+                  scrollY="true"
+                  style="height:550px"
+      >
+        <div >
+          <div class="text-md">{{ "ENROL_PURPOSE_OF_THE_STUDY" | translate }}</div>
+        </div>
+
+        <div
+          padding
+          class="text-paragraph">
+
+          1 in 7 people in the UK are international migrants. International migrants in the UK are people who were born abroad but who have settled in the UK.<br>
+          <br>
+          Right now we do not know enough about the health of international migrants like you. We also do not know enough about how your health changes after living in the UK for some time.<br>
+          <br>
+          We hope that “The​ Health on the MovE (HOME) ​Study” will help us understand this better.<br>
+          <br>
+          The HOME study is a smartphone app study. Through the app we will be asking you questions about your health. We will be asking some questions about your physical, mental and sexual health. In this way we hope to better understand your health, wellbeing and experiences living in the UK.<br>
+          <br>
+          The data we collect will then be used to improve the health of international migrants like you. For example, it will help us understand how things like the National Health Service (NHS) can be better designed to meet the needs of migrants.<br>
+          <br>
+          The data will also be used to develop programs in the migrant community to improve healthcare access or to prevent disease, for example. But we first need to test the smartphone HOME app in a smaller group before we use it in a much larger group. This smaller study is called a pilot study. We would like you to participate in this pilot study. Our goals in this HOME pilot study are: To find out if we can make the HOME app work in the best possible way. To do this we will try different times of the day during which we send the questionnaires out. We will also test different ways we notify you about these questionnaires.<br>
+          <br>
+          We will study your responses to the questionnaires so that we can begin to understand how you compare to other international migrants, and also how your health changes over time since you moved to the UK.<br>
+          <br>
+          This study was approved by the UCL ethics committee (reference number: 13571/003).<br>
+
 
         </div>
       </ion-scroll>
@@ -69,7 +105,7 @@
         class="bt bt--full"
         round
         full
-        (click)="joinStudy()"
+        (tap)="joinStudy()"
     >
       Join Study
     </button>
@@ -78,7 +114,7 @@
         class="bt bt--full"
         round
         full
-        (click)="goToLogin()"
+        (tap)="goToLogin()"
     >
       Already participating
     </button>

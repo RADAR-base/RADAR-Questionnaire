@@ -116,6 +116,10 @@ export const Localisations = {
     en: 'How this study works',
   },
 
+  ENROL_PURPOSE_OF_THE_STUDY: {
+    en: 'Purpose of this study',
+  },
+
   ENROL_ELIGIBILITY_HEADING: {
     en: 'Eligibility'
   },

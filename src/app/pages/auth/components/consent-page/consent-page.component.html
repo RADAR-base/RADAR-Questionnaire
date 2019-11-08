@@ -37,29 +37,20 @@
               >
               </page-consent-item>
 
-              <ion-item>
-                <ion-icon md="md-alarm" item-start></ion-icon>
-                <ion-label class="text-heading">Withdrawing</ion-label>
-                <ion-icon md="md-arrow-down" *ngIf="!showWithdrawalDetails" item-end
-                          (click)="showWithdrawalDetails =true"></ion-icon>
-                <ion-icon md="md-arrow-up" *ngIf="showWithdrawalDetails" item-end
-                          (click)="showWithdrawalDetails =false"></ion-icon>
-              </ion-item>
-              <ion-row *ngIf="showWithdrawalDetails">
-                <div class="text-sm"> {{ "CONSENT_WITHDRAWAL_DETAILS" | translate }}</div>
-              </ion-row>
+              <page-consent-item
+                title="Withdrawing"
+                md="md-alarm"
+                consentDetailText="CONSENT_WITHDRAWAL_DETAILS"
+              >
+              </page-consent-item>
 
-              <ion-item>
-                <ion-icon md="md-mail" item-start></ion-icon>
-                <ion-label class="text-heading">Contacting you</ion-label>
-                <ion-icon md="md-arrow-down" *ngIf="!showContactYouDetails" item-end
-                          (click)="showContactYouDetails =true"></ion-icon>
-                <ion-icon md="md-arrow-up" *ngIf="showContactYouDetails" item-end
-                          (click)="showContactYouDetails =false"></ion-icon>
-              </ion-item>
-              <ion-row *ngIf="showContactYouDetails">
-                <div class="text-sm"> {{ "CONSENT_CONTACT_YOU_DETAILS" | translate }}</div>
-              </ion-row>
+              <page-consent-item
+                title="Contacting you"
+                md="md-mail"
+                consentDetailText="CONSENT_CONTACT_YOU_DETAILS"
+              >
+              </page-consent-item>
+
             </ion-item-group>
           </div>
 

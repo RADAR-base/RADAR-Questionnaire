@@ -1,6 +1,5 @@
 import { Component, ViewChild } from '@angular/core'
 import { NavController, Slides } from 'ionic-angular'
-import { SplashPageComponent } from '../../../splash/containers/splash-page.component'
 import { HomePageComponent } from "../../../home/containers/home-page.component";
 import { AuthService } from "../../services/auth.service";
 import { LocalizationService } from "../../../../core/services/misc/localization.service";
@@ -11,7 +10,7 @@ import { StorageService } from "../../../../core/services/storage/storage.servic
 import { ConfigService } from "../../../../core/services/config/config.service";
 import { EnrolmentEventType } from "../../../../shared/enums/events";
 import { WelcomePageComponent } from "../welcome-page/welcome-page.component";
-import {EnrolmentPageComponent} from "../../containers/enrolment-page.component";
+import { ConsentPageComponent } from "../consent-page/consent-page.component";
 
 @Component({
   selector: 'page-eligibility',
@@ -119,7 +118,7 @@ export class EligibilityPageComponent {
   }
 
   navigateToConsentPage() {
-    this.navCtrl.setRoot(EnrolmentPageComponent)
+    this.navCtrl.setRoot(ConsentPageComponent)
   }
 
   navigateToHome() {

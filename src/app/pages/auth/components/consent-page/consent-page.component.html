@@ -1,0 +1,130 @@
+<ion-content>
+  <div *ngIf="!loading">
+    <ion-slides padding>
+
+      <ion-slide id="consent-form">
+        <ion-item>
+          <ion-icon md="md-arrow-back" item-start (click)="navigateToEligibility()"></ion-icon>
+        </ion-item>
+
+        <ion-scroll
+          scrollY="true"
+          class="scroll-page"
+        >
+          <div>
+            <img
+              id="logo"
+              src="assets/imgs/new-logo.png"
+              alias="RADAR LOGO"
+            >
+          </div>
+          <div class="text-md">{{ "CONSENT_TITLE" | translate }}</div>
+
+          <div class="text text-justify">
+            <ion-item-group>
+              <ion-item>
+                <ion-icon md="md-alarm" item-start></ion-icon>
+                <ion-label class="text-heading">Time Commitment</ion-label>
+                <ion-icon md="md-arrow-down" *ngIf="!showTimeCommitmentDetails" item-end
+                          (click)="showTimeCommitmentDetails =true"></ion-icon>
+                <ion-icon md="md-arrow-up" *ngIf="showTimeCommitmentDetails" item-end
+                          (click)="showTimeCommitmentDetails =false"></ion-icon>
+              </ion-item>
+              <ion-row *ngIf="showTimeCommitmentDetails">
+                <div class="text-sm"> {{ "CONSENT_TIME_COMMITMENT_DETAILS" | translate }}</div>
+              </ion-row>
+
+              <ion-item>
+                <ion-icon md="md-lock" item-start></ion-icon>
+                <ion-label class="text-heading">Protecting Your Privacy</ion-label>
+                <ion-icon md="md-arrow-down" *ngIf="!showPrivacyPolicyDetails" item-end
+                          (click)="showPrivacyPolicyDetails =true"></ion-icon>
+                <ion-icon md="md-arrow-up" *ngIf="showPrivacyPolicyDetails" item-end
+                          (click)="showPrivacyPolicyDetails =false"></ion-icon>
+              </ion-item>
+              <ion-row *ngIf="showPrivacyPolicyDetails">
+                <div class="text-sm"> {{ "CONSENT_PRIVACY_POLICY_DETAILS" | translate }}</div>
+              </ion-row>
+
+              <ion-item>
+                <ion-icon md="md-alarm" item-start></ion-icon>
+                <ion-label class="text-heading">Withdrawing</ion-label>
+                <ion-icon md="md-arrow-down" *ngIf="!showWithdrawalDetails" item-end
+                          (click)="showWithdrawalDetails =true"></ion-icon>
+                <ion-icon md="md-arrow-up" *ngIf="showWithdrawalDetails" item-end
+                          (click)="showWithdrawalDetails =false"></ion-icon>
+              </ion-item>
+              <ion-row *ngIf="showWithdrawalDetails">
+                <div class="text-sm"> {{ "CONSENT_WITHDRAWAL_DETAILS" | translate }}</div>
+              </ion-row>
+
+              <ion-item>
+                <ion-icon md="md-mail" item-start></ion-icon>
+                <ion-label class="text-heading">Contacting you</ion-label>
+                <ion-icon md="md-arrow-down" *ngIf="!showContactYouDetails" item-end
+                          (click)="showContactYouDetails =true"></ion-icon>
+                <ion-icon md="md-arrow-up" *ngIf="showContactYouDetails" item-end
+                          (click)="showContactYouDetails =false"></ion-icon>
+              </ion-item>
+              <ion-row *ngIf="showContactYouDetails">
+                <div class="text-sm"> {{ "CONSENT_CONTACT_YOU_DETAILS" | translate }}</div>
+              </ion-row>
+            </ion-item-group>
+          </div>
+
+
+          <div padding>
+            <label class="text-justify" for="consentParticipation">
+              <input required
+                     type="checkbox"
+                     id="consentParticipation"
+                     [(ngModel)]="consentParticipation"
+              >
+              {{"CONSENT_PARTICIPATION" | translate }}
+            </label>
+
+            <label class="text-justify" for="consentNHSRecordAccess">
+              <input
+                type="checkbox"
+                id="consentNHSRecordAccess"
+                [(ngModel)]="consentNHSRecordAccess"
+              >
+              {{"CONSENT_NHS_RECORD_ACCESS" | translate }}
+            </label>
+          </div>
+
+        </ion-scroll>
+
+        <div
+          padding-top="5px"
+          class="bottom"
+        >
+          <button
+            ion-button
+            class="bt bt--full"
+            round
+            full
+            [disabled]="false"
+            (tap)="processConsent()"
+          >
+            Submit Consent
+          </button>
+        </div>
+      </ion-slide>
+    </ion-slides>
+  </div>
+  <ion-slides *ngIf="loading" direction="horizontal">
+
+    <ion-slide padding id="loadingSlide">
+      <div class="position-center">
+        <ion-spinner name="dots"></ion-spinner>
+      </div>
+      <div class="status-center">{{  "STATUS_LOADING" | translate  }}</div>
+      <div class="status">
+        <div id="outcome" *ngIf="showOutcomeStatus">
+          {{ outcomeStatus }}
+        </div>
+      </div>
+    </ion-slide>
+  </ion-slides>
+</ion-content>

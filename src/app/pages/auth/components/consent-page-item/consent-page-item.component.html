@@ -1,0 +1,23 @@
+<ion-item>
+  <ion-icon
+    [md]="md"
+    item-start>
+  </ion-icon>
+  <ion-label class="text-heading"> {{title}}</ion-label>
+  <ion-icon
+    md="md-arrow-down"
+    *ngIf="!showDetail"
+    (click)="showDetail =true"
+    item-end>
+  </ion-icon>
+  <ion-icon
+    md="md-arrow-up"
+    *ngIf="showDetail"
+    (click)="showDetail =false"
+    item-end></ion-icon>
+</ion-item>
+
+<!--Add line for each test-->
+<ion-row *ngIf="showDetail">
+  <div class="text-sm"> {{ consentDetailText | translate }}</div>
+</ion-row>

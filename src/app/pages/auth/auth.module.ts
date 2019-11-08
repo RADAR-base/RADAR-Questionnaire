@@ -10,6 +10,7 @@ import { AuthService } from './services/auth.service'
 import { KeycloakAuthService } from "./services/keycloak.auth.service";
 import { EligibilityPageComponent } from "./components/eligibility-page/eligibility-page.component";
 import { ConsentPageComponent } from "./components/consent-page/consent-page.component";
+import { ConsentPageItemComponent } from "./components/consent-page-item/consent-page-item.component";
 
 @NgModule({
   imports: [
@@ -23,6 +24,7 @@ import { ConsentPageComponent } from "./components/consent-page/consent-page.com
   ],
   declarations: [
     ConsentPageComponent,
+    ConsentPageItemComponent,
     WelcomePageComponent,
     EligibilityPageComponent,
     TokenFormComponent,

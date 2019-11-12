@@ -256,3 +256,5 @@ export const LanguageMap = {
   da: LocKeys.LANGUAGE_DANISH.toString(),
   de: LocKeys.LANGUAGE_GERMAN.toString()
 }
+
+export const DefaultQuestionsHidden = '{}'

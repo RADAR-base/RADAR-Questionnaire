@@ -8,6 +8,7 @@ export class ConfigKeys {
   static PROTOCOL_BRANCH = new ConfigKeys('protocol_branch')
   static NOTIFICATION_TTL_MINUTES = new ConfigKeys('notification_ttl_minutes')
   static PLATFORM_INSTANCE = new ConfigKeys('platform_instance')
+  static QUESTIONS_HIDDEN = new ConfigKeys('questions_hidden')
 
   constructor(public value: string) {}
 

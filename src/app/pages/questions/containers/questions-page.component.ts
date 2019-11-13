@@ -12,6 +12,7 @@ import { Task } from '../../../shared/models/task'
 import { TaskType } from '../../../shared/utilities/task-type'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { QuestionsService } from '../services/questions.service'
+import { SeizureDiaryPage } from '../../seizure-diary/seizure-diary'
 
 @Component({
   selector: 'page-questions',
@@ -105,7 +106,13 @@ export class QuestionsPageComponent implements OnInit {
       .handleClinicalFollowUp(this.assessment, completedInClinic)
       .then(() => {
         this.updateDoneButton(false)
-        return this.navCtrl.setRoot(HomePageComponent)
+        const data = this.questionsService.getData()
+        if ("deq_seizure" in data.answers && data.answers["deq_seizure"] === "1") {
+          return this.navCtrl.setRoot(HomePageComponent).then(() => this.navCtrl.push(SeizureDiaryPage))
+          //return this.navCtrl.setPages([{page:HomePageComponent},{page:SeizureDiaryPage}])
+        } else {
+          return this.navCtrl.setRoot(HomePageComponent)
+        }
       })
   }
 

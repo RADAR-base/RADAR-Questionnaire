@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
 
 import { LocalizationService } from '../../../../../core/services/misc/localization.service'
+import { LocKeys } from '../../../../../shared/enums/localisations'
 
 @Component({
   selector: 'text-input',
@@ -36,7 +37,17 @@ export class TextInputComponent implements OnInit {
 
   value = {}
 
-  constructor(private localization: LocalizationService) {}
+  constructor(private localization: LocalizationService) {
+    this.labels = {
+      day: this.localization.translateKey(LocKeys.TXTIN_LABEL_DAY),
+      month: this.localization.translateKey(LocKeys.TXTIN_LABEL_MONTH),
+      year: this.localization.translateKey(LocKeys.TXTIN_LABEL_YEAR),
+      hour: this.localization.translateKey(LocKeys.TXTIN_LABEL_HOUR),
+      minute: this.localization.translateKey(LocKeys.TXTIN_LABEL_MINUTE),
+      second: this.localization.translateKey(LocKeys.TXTIN_LABEL_SECOND),
+      ampm: this.localization.translateKey(LocKeys.TXTIN_LABEL_AMPM)
+    }
+  }
 
   ngOnInit() {
     if (this.type.length) {

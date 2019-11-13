@@ -579,7 +579,7 @@ export const Localisations = {
   },
   BTN_PREVIOUS: {
     da: 'Forrige',
-    de: 'Vorher',
+    de: 'Zurück',
     en: 'Previous',
     es: 'Anterior',
     it: 'Precedente',
@@ -825,7 +825,7 @@ export const Localisations = {
     da:
       'Lavet med &hearts; til dig af RADAR-Base-samfundet. For mere information click <a href="http://radar-base.org">her</a>.',
     de:
-      'Von der RADAR-Base-Community gemacht mit &hearts; für Sie gemacht. Für weitere Informationen klicken Sie <a href="http://radar-base.org">hier</a>',
+      'Von der RADAR-Base-Community mit &hearts; für Sie gemacht. Für weitere Informationen klicken Sie <a href="http://radar-base.org">hier</a>',
     en:
       'Made with &hearts; for you by the RADAR-Base community. For more information click <a href="http://radar-base.org">here</a>.',
     es:
@@ -1059,5 +1059,367 @@ export const Localisations = {
     es: 'Enviando registros de cuestionarios perdidos...',
     it: 'Invio dei registri dei questionari persi ...',
     nl: 'Logboeken gemiste vragenlijst verzenden...'
-  }
+  },
+
+  TXTIN_LABEL_DAY: {
+    da: '',
+    de: 'Tag',
+    en: 'Day',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  TXTIN_LABEL_MONTH: {
+    da: '',
+    de: 'Monat',
+    en: 'Month',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  TXTIN_LABEL_YEAR: {
+    da: '',
+    de: 'Jahr',
+    en: 'Year',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  TXTIN_LABEL_HOUR: {
+    da: '',
+    de: 'Stunde',
+    en: 'Hour',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  TXTIN_LABEL_MINUTE: {
+    da: '',
+    de: 'Minute',
+    en: 'Minute',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  TXTIN_LABEL_SECOND: {
+    da: '',
+    de: 'Sekunde',
+    en: 'Second',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  TXTIN_LABEL_AMPM: {
+    da: '',
+    de: 'AM/PM',
+    en: 'AM/PM',
+    es: '',
+    it: '',
+    nl: ''
+  },
+
+  SD_TITLE_DIARY: {
+    da: '',
+    de: 'Anfall-Tagebuch',
+    en: 'Seizure Diary',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_TITLE_RECENT: {
+    da: '',
+    de: 'Neueste Anfälle (24h)',
+    en: 'Recent Seizures (24h)',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_TITLE_OLDER: {
+    da: '',
+    de: 'Ältere Anfälle',
+    en: 'Older Seizures',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_DURATION: {
+    da: '',
+    de: 'Dauer',
+    en: 'Duration',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_CLEAR_TITLE: {
+    da: '',
+    de: 'Tagebuch Löschen?',
+    en: 'Clear Diary?',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_CLEAR_MESSAGE: {
+    da: '',
+    de: 'Sie sind dabei, die lokal gespeicherte Liste der Anfälle zu löschen. Dies wird keine Auswirkungen auf dem Server haben.<br/><br/>Sind Sie sicher?',
+    en: 'You are about to clear the locally saved list of seizure events. This will not change anything on the server.<br/><br/>Are you sure?',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_LOADING_MESSAGE: {
+    da: '',
+    de: 'Lade Tagebuch-Beschreibung...',
+    en: 'Loading diary specification...',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_LOADING_SUCCESS: {
+    da: '',
+    de: 'Tagebuch-Beschreibung geladen.',
+    en: 'Diary specification loaded.',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_ERROR_NETWORK: {
+    da: '',
+    de: 'Netzwerkfehler!',
+    en: 'Network Error!',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_ERROR_LOADING: {
+    da: '',
+    de: 'Fehler während dem Laden der Tagebuch-Beschreibung!',
+    en: 'Error while loading diary specification!',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_ERROR_NEW: {
+    da: '',
+    de: 'Fehler während dem starten eines neuen Tagebuch-Eintrags',
+    en: 'Error while starting a new diary entry!',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_NEW_TITLE: {
+    da: '',
+    de: 'Neuer Tagebuch-Eintrag?',
+    en: 'New Diary Entry?',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_NEW_MESSAGE: {
+    da: '',
+    de: 'Möchten Sie einen neuen Eintrag ins Tagebuch machen?',
+    en: 'Do you want to add a new seizure event to the diary?',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_DETAIL_TITLE: {
+    da: '',
+    de: 'Anfall Detail',
+    en: 'Seizure Detail',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_DETAIL_1: {
+    da: '',
+    de: 'Start',
+    en: 'Start',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_DETAIL_2: {
+    da: '',
+    de: 'Dauer',
+    en: 'Duration',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_DETAIL_3: {
+    da: '',
+    de: 'Bewusstlos',
+    en: 'Unconscious',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_DETAIL_4: {
+    da: '',
+    de: 'Verwirrt',
+    en: 'Confused',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_DETAIL_5: {
+    da: '',
+    de: 'Motorisch',
+    en: 'Motor',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_DETAIL_6: {
+    da: '',
+    de: 'Nicht-Motorisch',
+    en: 'Non-Motor',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_DETAIL_7: {
+    da: '',
+    de: 'Bestätigt',
+    en: 'Confirmed',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_DETAIL_8: {
+    da: '',
+    de: 'Wearable',
+    en: 'Wearable',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_DETAIL_9: {
+    da: '',
+    de: 'Auslöser',
+    en: 'Trigger',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_DETAIL_10: {
+    da: '',
+    de: 'Auslöser Detail',
+    en: 'Trigger Detail',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_DETAIL_11: {
+    da: '',
+    de: 'Auslöser Sonstiges',
+    en: 'Trigger Other',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_RADIO_YES: {
+    da: '',
+    de: 'Ja',
+    en: 'Yes',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_RADIO_NO: {
+    da: '',
+    de: 'Nein',
+    en: 'No',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_RADIO_DONT_KNOW: {
+    da: '',
+    de: 'Weiß nicht',
+    en: 'Don\'t Know',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_RADIO_DETAIL_1: {
+    da: '',
+    de: 'Schlafmangel',
+    en: 'lack of sleep',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_RADIO_DETAIL_2: {
+    da: '',
+    de: 'Stressereignis',
+    en: 'stress event',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_RADIO_DETAIL_3: {
+    da: '',
+    de: 'Müdigkeit',
+    en: 'tiredness',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_RADIO_DETAIL_4: {
+    da: '',
+    de: 'blinkendes Licht',
+    en: 'flashing light',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_RADIO_DETAIL_5: {
+    da: '',
+    de: 'Alkohol',
+    en: 'alcohol',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_RADIO_DETAIL_6: {
+    da: '',
+    de: 'Vergessen, Medikamente zu nehmen',
+    en: 'forgot to take medication',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_RADIO_DETAIL_7: {
+    da: '',
+    de: 'Sonstiges',
+    en: 'other',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_RADIO_DETAIL_DEFAULT: {
+    da: '',
+    de: 'k.A.',
+    en: 'N/A',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_DURATION_MIN: {
+    da: '',
+    de: 'Minute',
+    en: 'minute',
+    es: '',
+    it: '',
+    nl: ''
+  },
+  SD_DURATION_MINS: {
+    da: '',
+    de: 'Minuten',
+    en: 'minutes',
+    es: '',
+    it: '',
+    nl: ''
+  },
 }

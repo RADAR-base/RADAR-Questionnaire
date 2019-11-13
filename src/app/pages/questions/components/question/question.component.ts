@@ -11,6 +11,9 @@ import { Vibration } from '@ionic-native/vibration/ngx'
 import { Answer } from '../../../../shared/models/answer'
 import { Question } from '../../../../shared/models/question'
 
+import { LocalizationService } from '../../../../core/services/misc/localization.service'
+import { LocKeys } from '../../../../shared/enums/localisations'
+
 @Component({
   selector: 'question',
   templateUrl: 'question.component.html'
@@ -29,8 +32,13 @@ export class QuestionComponent implements OnChanges {
   currentlyShown = false
   previouslyShown = false
 
-  constructor(private vibration: Vibration, private dialogs: Dialogs) {
+  yesnoResponses = [{ code: '1', label: 'Yes' }, { code: '0', label: 'No' }]
+
+  constructor(private vibration: Vibration, private dialogs: Dialogs,
+    private localization: LocalizationService,) {
     this.value = null
+    this.yesnoResponses = [{ code: '1', label: this.localization.translateKey(LocKeys.BTN_YES) },
+      { code: '0', label: this.localization.translateKey(LocKeys.BTN_NO) }]
   }
 
   ngOnChanges() {

@@ -10,6 +10,9 @@ import { QuestionnaireService } from '../../core/services/config/questionnaire.s
 import { AlertService } from '../../core/services/misc/alert.service'
 import { LocalizationService } from '../../core/services/misc/localization.service'
 
+import { PipesModule } from '../../shared/pipes/pipes.module'
+import { TranslatePipe } from '../../shared/pipes/translate/translate'
+
 import { SeizureDiaryService } from './seizure-diary.service'
 
 @NgModule({
@@ -18,6 +21,7 @@ import { SeizureDiaryService } from './seizure-diary.service'
   ],
   imports: [
     IonicPageModule.forChild(SeizureDiaryPage),
+    PipesModule,
   ],
   providers: [
     ProtocolService,
@@ -26,6 +30,7 @@ import { SeizureDiaryService } from './seizure-diary.service'
     QuestionnaireService,
     AlertService,
     LocalizationService,
+    TranslatePipe,
     SeizureDiaryService,
   ]
 })

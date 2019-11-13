@@ -17,6 +17,8 @@ import { SliderInputComponent } from './slider-input/slider-input.component'
 import { TextInputComponent } from './text-input/text-input.component'
 import { TimedTestComponent } from './timed-test/timed-test.component'
 
+import { LocalizationService } from '../../../../core/services/misc/localization.service'
+
 const COMPONENTS = [
   QuestionComponent,
   AudioInputComponent,
@@ -40,6 +42,7 @@ const COMPONENTS = [
     IonicModule.forRoot(SliderInputComponent)
   ],
   declarations: COMPONENTS,
+  providers: [LocalizationService],
   exports: COMPONENTS
 })
 export class QuestionModule {}

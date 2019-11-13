@@ -5,6 +5,7 @@ import * as moment from 'moment'
 import { StorageKeys } from '../../shared/enums/storage'
 import { StorageService } from '../../core/services/storage/storage.service'
 import { LocalizationService } from '../../core/services/misc/localization.service'
+import { LocKeys } from '../../shared/enums/localisations'
 
 
 @Injectable()
@@ -40,22 +41,22 @@ export class SeizureDiaryService {
 
   yesnoRadioToText(choice: number): String {
     switch (choice) {
-      case 0: return 'No'
-      case 1: return 'Yes'
-      default: return 'Don\'t Know'
+      case 0: return this.localization.translateKey(LocKeys.SD_RADIO_NO)
+      case 1: return this.localization.translateKey(LocKeys.SD_RADIO_YES)
+      default: return this.localization.translateKey(LocKeys.SD_RADIO_DONT_KNOW)
     }
   }
 
   triggerDetailToText(choice: number): String {
     switch (choice) {
-      case 1: return 'lack of sleep'
-      case 2: return 'stress event'
-      case 3: return 'tiredness'
-      case 4: return 'flashing light'
-      case 5: return 'alcohol'
-      case 6: return 'forgot to take medication'
-      case 7: return 'other'
-      default: return 'N/A'
+      case 1: return this.localization.translateKey(LocKeys.SD_RADIO_DETAIL_1)
+      case 2: return this.localization.translateKey(LocKeys.SD_RADIO_DETAIL_2)
+      case 3: return this.localization.translateKey(LocKeys.SD_RADIO_DETAIL_3)
+      case 4: return this.localization.translateKey(LocKeys.SD_RADIO_DETAIL_4)
+      case 5: return this.localization.translateKey(LocKeys.SD_RADIO_DETAIL_5)
+      case 6: return this.localization.translateKey(LocKeys.SD_RADIO_DETAIL_6)
+      case 7: return this.localization.translateKey(LocKeys.SD_RADIO_DETAIL_7)
+      default: return this.localization.translateKey(LocKeys.SD_RADIO_DETAIL_DEFAULT)
     }
   }
 
@@ -63,11 +64,11 @@ export class SeizureDiaryService {
     const e = event.data
     const d_start = JSON.parse(e.answers[0].value.string)
     if (isNaN(Number(d_start.month))) d_start.month = this.localization.moment().month(d_start.month).format("M")
-    const d_start_parse = `${d_start.day}-${d_start.month}-${d_start.year} ${d_start.hour}:${d_start.minute} ${d_start.ampm}`
-    const d_start_string = this.localization.moment(d_start_parse, "DD-MM-YYYY LT", false).format("lll")
+    const d_start_parse = `${d_start.day}-${d_start.month}-${d_start.year} ${d_start.hour}:${d_start.minute} ${d_start.ampm.toLowerCase()}`
+    const d_start_string = this.localization.moment(d_start_parse, "DD-MM-YYYY hh:mm a", false).format("lll")
     const d_duration = JSON.parse(e.answers[1].value.string)
     const d_duration_min = moment.duration({hours: d_duration.hour, minutes: d_duration.minute}).asMinutes()
-    const d_duration_string = d_duration_min + (d_duration_min > 1 ? " minutes" : " minute")
+    const d_duration_string = d_duration_min + (d_duration_min > 1 ? ' ' + this.localization.translateKey(LocKeys.SD_DURATION_MINS) : ' ' + this.localization.translateKey(LocKeys.SD_DURATION_MIN))
 
     return {
       raw: event,
@@ -84,8 +85,8 @@ export class SeizureDiaryService {
       diary_confirmation: this.yesnoRadioToText(JSON.parse(e.answers[6].value.string)),
       diary_wearable: this.yesnoRadioToText(JSON.parse(e.answers[7].value.string)),
       diary_trigger: this.yesnoRadioToText(JSON.parse(e.answers[8].value.string)),
-      diary_trigger_detail: e.answers.length > 9 ? this.triggerDetailToText(JSON.parse(e.answers[9].value.string)) : 'N/A',
-      diary_trigger_other: e.answers.length > 10 ? e.answers[10].value.string : 'N/A',
+      diary_trigger_detail: e.answers.length > 9 ? this.triggerDetailToText(JSON.parse(e.answers[9].value.string)) : this.localization.translateKey(LocKeys.SD_RADIO_DETAIL_DEFAULT),
+      diary_trigger_other: e.answers.length > 10 ? e.answers[10].value.string : this.localization.translateKey(LocKeys.SD_RADIO_DETAIL_DEFAULT),
     }
   }
   processEvents(events) {

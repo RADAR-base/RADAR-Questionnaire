@@ -92,18 +92,25 @@ export class LocalizationService {
 
   chooseText(loc: MultiLanguageText, defaultValue?: string) {
     let translation = loc[this.language.value]
-    if (translation !== undefined) {
+    if (translation !== undefined && translation) {
       return translation
     }
     translation = loc['default']
-    if (translation !== undefined) {
+    if (translation !== undefined && translation) {
       console.log(
         'Using fallback language "default" for message ' + defaultValue
       )
       return translation
     }
+    translation = loc['en']
+    if (translation !== undefined && translation) {
+      console.log(
+        'Using fallback language "en" for message ' + defaultValue
+      )
+      return translation
+    }
     const keys = Object.keys(loc)
-    if (keys.length > 0) {
+    if (keys.length > 0 && loc[keys[0]]) {
       const lang = keys[0]
       console.log(
         'Using fallback language "' + lang + '" for message ' + defaultValue

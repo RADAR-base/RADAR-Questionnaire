@@ -6,12 +6,12 @@
 -->
 <ion-header>
   <ion-navbar>
-    <ion-title>Seizure Diary</ion-title>
+    <ion-title>{{ "SD_TITLE_DIARY" | translate }}</ion-title>
     <ion-buttons right>
       <button ion-button icon-only margin-right (tap)="clearLocal()">
         <ion-icon name="trash"></ion-icon>
       </button>
-      <button ion-button icon-only margin-right (tap)="refresh()">
+      <button ion-button icon-only margin-right (tap)="refresh(true)">
         <ion-icon name="refresh"></ion-icon>
       </button>
     </ion-buttons>
@@ -21,21 +21,21 @@
 <ion-content fullscreen>
     <ion-list>
         <ion-item-divider no-lines>
-          Recent Seizures (24h)
+          {{ "SD_TITLE_RECENT" | translate }}
         </ion-item-divider>
 
         <ion-item no-lines *ngFor="let item of recentDiaryEvents" (click)="itemSelected(item)">
           <h1>{{ item.diary_start_string }}</h1>
-          <h3>Duration: {{ item.diary_duration_string }}</h3>
+          <h3>{{ "SD_DURATION" | translate }}: {{ item.diary_duration_string }}</h3>
         </ion-item>
 
         <ion-item-divider no-lines>
-          Older Seizures
+          {{ "SD_TITLE_OLDER" | translate }}
         </ion-item-divider>
 
         <ion-item no-lines *ngFor="let item of olderDiaryEvents" (click)="itemSelected(item)">
           <h1>{{ item.diary_start_string }}</h1>
-          <h3>Duration: {{ item.diary_duration_string }}</h3>
+          <h3>{{ "SD_DURATION" | translate }}: {{ item.diary_duration_string }}</h3>
         </ion-item>
     </ion-list>
 

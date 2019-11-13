@@ -57,20 +57,19 @@ export class SeizureDiaryPage {
   clearLocal() {
     const buttons = [
       {
-        text: this.localization.translateKey(LocKeys.BTN_DISAGREE),
+        text: this.localization.translateKey(LocKeys.BTN_NO),
         handler: () => console.log('clear local cancel')
       },
       {
-        text: this.localization.translateKey(LocKeys.BTN_AGREE),
+        text: this.localization.translateKey(LocKeys.BTN_YES),
         handler: () => {
           return this.seizureDiary.clear().then(() => this.refresh())
         }
       }
     ]
     return this.alertService.showAlert({
-      title: "Clear Diary",
-      message: "You are about to clear the list of locally saved seizure events. This will not change anything on the server." +
-        "<br/><br/>Are you sure?",
+      title: this.localization.translateKey(LocKeys.SD_CLEAR_TITLE),
+      message: this.localization.translateKey(LocKeys.SD_CLEAR_MESSAGE),
       buttons: buttons
     })
   }
@@ -90,13 +89,13 @@ export class SeizureDiaryPage {
   // get diary assessment specification and questionnaire from github
   getDiaryAssessment(): Promise<boolean> {
     console.log("Pulling seizure diary assessment from github...")
-    var loader = this.presentLoading("Loading diary specification...");
+    var loader = this.presentLoading(this.localization.translateKey(LocKeys.SD_LOADING_MESSAGE));
     return new Promise<boolean>((resolve) => {
     this.protocol.pull() // pull protocol from github
       .then((protocol) => this.questionnaire.updateAssessments(TaskType.ALL, this.protocol.format(JSON.parse(protocol).protocols))) // pull protocol questionnaires from github
       .catch(() => {
         loader.dismiss()
-        this.presentToast("Network Error!");
+        this.presentToast(this.localization.translateKey(LocKeys.SD_ERROR_NETWORK), 5000);
         resolve(false)
         throw new Error('No response from server')
       }) // handle network errors
@@ -105,10 +104,10 @@ export class SeizureDiaryPage {
         this.diaryAssessment = diaryAssessment
         loader.dismiss()
         if (typeof this.diaryAssessment !== 'undefined'){
-          this.presentToast("Diary specification loaded.");
+          this.presentToast(this.localization.translateKey(LocKeys.SD_LOADING_SUCCESS), 1000);
           resolve(true)
         } else {
-          this.presentToast("Error loading diary specification!");
+          this.presentToast(this.localization.translateKey(LocKeys.SD_ERROR_LOADING), 5000);
           resolve(false)
         }
       })
@@ -147,19 +146,19 @@ export class SeizureDiaryPage {
   showConfirmNewDiary() {
     const buttons = [
       {
-        text: this.localization.translateKey(LocKeys.BTN_DISAGREE),
+        text: this.localization.translateKey(LocKeys.BTN_NO),
         handler: () => console.log('new diary cancel')
       },
       {
-        text: this.localization.translateKey(LocKeys.BTN_AGREE),
+        text: this.localization.translateKey(LocKeys.BTN_YES),
         handler: () => {
           return this.startNewSeizureDiary()
         }
       }
     ]
     return this.alertService.showAlert({
-      title: "New Diary Entry",
-      message: "Do you want to add a new seizure event to the diary?",
+      title: this.localization.translateKey(LocKeys.SD_NEW_TITLE),
+      message: this.localization.translateKey(LocKeys.SD_NEW_MESSAGE),
       buttons: buttons
     })
   }
@@ -174,27 +173,27 @@ export class SeizureDiaryPage {
     if (this.tasksService.isTaskStartable(diaryTask)) {
       return this.navCtrl.push(QuestionsPageComponent, diaryTask)
     } else {
-      alert("task not startable")
+      this.presentToast(this.localization.translateKey(LocKeys.SD_ERROR_NEW), 5000);
     }
   }
 
   // show an alert with all seizure details
   seizureDetailAlert(eventData) {
     const detailString: string = 
-      "<b>Start:</b> " + eventData.diary_start_string + '<br/>' +
-      "<b>Duration:</b> " + eventData.diary_duration_string + '<br/>' +
-      "<b>Unconscious:</b> " + eventData.diary_unconscious + '<br/>' +
-      "<b>Aware:</b> " + eventData.diary_awareness + '<br/>' +
-      "<b>Motor:</b> " + eventData.diary_motor + '<br/>' +
-      "<b>Non-Motor:</b> " + eventData.diary_nonmotor + '<br/>' +
-      "<b>Confirmed:</b> " + eventData.diary_confirmation + '<br/>' +
-      "<b>Wearable:</b> " + eventData.diary_wearable + '<br/>' +
-      "<b>Trigger:</b> " + eventData.diary_trigger + '<br/>' +
-      "<b>Trigger Detail:</b> " + eventData.diary_trigger_detail + '<br/>' +
-      "<b>Trigger Other:</b> " + eventData.diary_trigger_other;
+      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_1) + ":</b> " + eventData.diary_start_string + '<br/>' +
+      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_2) + ":</b> " + eventData.diary_duration_string + '<br/>' +
+      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_3) + ":</b> " + eventData.diary_unconscious + '<br/>' +
+      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_4) + ":</b> " + eventData.diary_awareness + '<br/>' +
+      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_5) + ":</b> " + eventData.diary_motor + '<br/>' +
+      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_6) + ":</b> " + eventData.diary_nonmotor + '<br/>' +
+      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_7) + ":</b> " + eventData.diary_confirmation + '<br/>' +
+      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_8) + ":</b> " + eventData.diary_wearable + '<br/>' +
+      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_9) + ":</b> " + eventData.diary_trigger + '<br/>' +
+      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_10) + ":</b> " + eventData.diary_trigger_detail + '<br/>' +
+      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_11) + ":</b> " + eventData.diary_trigger_other;
 
     return this.alertService.showAlert({
-      title: "Seizure Detail",
+      title: this.localization.translateKey(LocKeys.SD_DETAIL_TITLE),
       message: detailString,
       buttons: [
         {

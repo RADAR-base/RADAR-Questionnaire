@@ -128,7 +128,7 @@ export class HomePageComponent implements OnDestroy {
 
   openSeizureDiary() {
     this.navCtrl.push(SeizureDiaryPage)
-    //this.usage.sendClickEvent('open_settings')
+    this.usage.sendClickEvent('open_seizure_diary')
   }
 
   openSettingsPage() {

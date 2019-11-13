@@ -94,7 +94,7 @@
 
     <div *ngIf="question.field_type === 'yesno'">
       <radio-input
-        [responses]="[{ code: '1', label: 'Yes' }, { code: '0', label: 'No' }]"
+        [responses]="yesnoResponses"
         (valueChange)="onValueChange($event)"
       >
       </radio-input>

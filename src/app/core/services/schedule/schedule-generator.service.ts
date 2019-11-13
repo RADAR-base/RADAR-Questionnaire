@@ -131,6 +131,7 @@ export class ScheduleGeneratorService {
     )
     const today = setDateTimeToMidnight(new Date())
     const tmpScheduleAll: Task[] = []
+    if (assessment.questionnaire.name === "seizure_diary") return tmpScheduleAll
     while (iterTime <= endTime) {
       repeatQ.unitsFromZero.map(amount => {
         const taskTime = advanceRepeat(iterTime, {

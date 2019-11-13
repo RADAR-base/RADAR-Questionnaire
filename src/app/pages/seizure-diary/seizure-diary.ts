@@ -39,7 +39,7 @@ export class SeizureDiaryPage {
     public toastCtrl: ToastController,
     public loadingCtrl: LoadingController,
     private tasksService: TasksService,
-    private schedule: ScheduleGeneratorService,
+    private scheduleGenerator: ScheduleGeneratorService,
     private questionnaire: QuestionnaireService,
     private protocol: ProtocolService,
     private localization: LocalizationService,
@@ -75,19 +75,18 @@ export class SeizureDiaryPage {
   }
 
   // refresh seizure diary data
-  refresh(): Promise<boolean> {
+  refresh(forcePull=false): Promise<boolean> {
     this.recentDiaryEvents = []
     this.olderDiaryEvents = []
 
-    //return Promise.resolve(this.getDiaryAssessment().then(() => this.getRecentEvents()))
-    //return Promise.all([this.getDiaryAssessment(), this.getRecentEvents()]).then(([A,B]) => {return A && B})
-    var a = this.getDiaryAssessment()
+    if (forcePull) var a = this.pullDiaryAssessment()
+    else var a = this.getDiaryAssessment()
     var b = a.then(() => {return this.getEvents()})
     return Promise.all([a,b]).then(([A,B]) => {return A && B})
   }
 
-  // get diary assessment specification and questionnaire from github
-  getDiaryAssessment(): Promise<boolean> {
+  // pull diary assessment specification and questionnaire from github
+  pullDiaryAssessment(): Promise<boolean> {
     console.log("Pulling seizure diary assessment from github...")
     var loader = this.presentLoading(this.localization.translateKey(LocKeys.SD_LOADING_MESSAGE));
     return new Promise<boolean>((resolve) => {
@@ -114,6 +113,20 @@ export class SeizureDiaryPage {
     })
   }
 
+  // get diary assessment specification and questionnaire from local storage; try pull if not available
+  getDiaryAssessment(): Promise<boolean> {
+    console.log("Getting seizure diary assessment from storage...")
+    return new Promise<boolean>((resolve) => {
+      this.questionnaire.getAssessments(TaskType.NON_CLINICAL)
+        .then((assessments) => assessments.find(a => a.questionnaire.name === "seizure_diary"))
+        .then((diaryAssessment) => {
+          this.diaryAssessment = diaryAssessment
+          if (typeof this.diaryAssessment !== 'undefined') resolve(true)
+          else resolve(this.pullDiaryAssessment())
+        })
+    })
+  }
+
   // load  events from storage
   getEvents(): Promise<boolean> {
     console.log("Loading events from storage...")
@@ -136,7 +149,9 @@ export class SeizureDiaryPage {
   addSeizure() {
     // pull seizure diary assessment specs if needed
     if (typeof this.diaryAssessment === 'undefined') {
-      this.getDiaryAssessment();
+      this.getDiaryAssessment().then((success) => {
+        if (success) this.showConfirmNewDiary()
+      });
     } else {
       this.showConfirmNewDiary();
     }
@@ -167,7 +182,7 @@ export class SeizureDiaryPage {
   startNewSeizureDiary() {
     // create new seizure diary task
     const completionWindow = ScheduleGeneratorService.computeCompletionWindow(this.diaryAssessment)
-    const diaryTask = this.schedule.taskBuilder(0, this.diaryAssessment, new Date().getTime(), completionWindow);
+    const diaryTask = this.scheduleGenerator.taskBuilder(0, this.diaryAssessment, new Date().getTime(), completionWindow);
 
     // try to start the created task
     if (this.tasksService.isTaskStartable(diaryTask)) {

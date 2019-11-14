@@ -77,12 +77,17 @@ export class QuestionsService {
   }
 
   processQuestions(title, questions: any[]) {
-    return this.getHiddenQuestions().then(res => {
-      if (!res[title]) return questions
-      const questionsToHide = res[title].split(',').map(i => Number(i))
-      if (questionsToHide.length == questions.length) return questions
-      return questions.filter((v, i) => !questionsToHide.includes(i))
-    })
+    return this.getHiddenQuestions()
+      .then(res => {
+        if (!res[title]) return questions
+        const questionsToHide = res[title]
+          .split(',')
+          .map(i => Number(i))
+          .filter(d => !isNaN(d))
+        if (questionsToHide.length == questions.length) return questions
+        return questions.filter((_, i) => !questionsToHide.includes(i))
+      })
+      .catch(e => questions)
   }
 
   isAnswered(question: Question) {
@@ -90,8 +95,7 @@ export class QuestionsService {
     return this.answerService.check(id)
   }
 
-  evalSkipNext(questions, currentQuestion) {
-    // NOTE: Evaluates branching logic
+  evalBranchingLogicAndGetNextQuestion(questions, currentQuestion) {
     let questionIdx = currentQuestion + 1
     while (
       questionIdx < questions.length &&
@@ -119,7 +123,7 @@ export class QuestionsService {
   }
 
   getNextQuestion(questions, currentQuestion) {
-    return this.evalSkipNext(questions, currentQuestion)
+    return this.evalBranchingLogicAndGetNextQuestion(questions, currentQuestion)
   }
 
   getAttemptProgress(total) {
@@ -201,5 +205,6 @@ export class QuestionsService {
         config.getOrDefault(ConfigKeys.QUESTIONS_HIDDEN, DefaultQuestionsHidden)
       )
       .then(res => JSON.parse(res))
+      .catch(e => DefaultQuestionsHidden)
   }
 }

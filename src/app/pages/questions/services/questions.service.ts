@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core'
 
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
+import { ShowIntroductionType } from '../../../shared/models/assessment'
 import { Question, QuestionType } from '../../../shared/models/question'
 import { getTaskType } from '../../../shared/utilities/task-type'
 import { getSeconds } from '../../../shared/utilities/time'
@@ -66,7 +67,7 @@ export class QuestionsService {
   }
 
   updateAssessmentIntroduction(assessment, taskType) {
-    if (assessment.showIntroduction) {
+    if (assessment.showIntroduction !== ShowIntroductionType.ALWAYS) {
       assessment.showIntroduction = false
       this.questionnaire.updateAssessment(taskType, assessment)
     }

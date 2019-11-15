@@ -6,7 +6,10 @@ import { LocalizationService } from '../../../core/services/misc/localization.se
 import { UsageService } from '../../../core/services/usage/usage.service'
 import { UsageEventType } from '../../../shared/enums/events'
 import { LocKeys } from '../../../shared/enums/localisations'
-import { Assessment } from '../../../shared/models/assessment'
+import {
+  Assessment,
+  ShowIntroductionType
+} from '../../../shared/models/assessment'
 import { Question } from '../../../shared/models/question'
 import { Task } from '../../../shared/models/task'
 import { TaskType } from '../../../shared/utilities/task-type'
@@ -39,6 +42,11 @@ export class QuestionsPageComponent implements OnInit {
   showIntroductionScreen: boolean
   showDoneButton: boolean
   showFinishScreen: boolean
+  SHOW_INTRODUCTION_SET: Set<boolean | ShowIntroductionType> = new Set([
+    true,
+    ShowIntroductionType.ALWAYS,
+    ShowIntroductionType.ONCE
+  ])
 
   constructor(
     public navCtrl: NavController,
@@ -62,7 +70,9 @@ export class QuestionsPageComponent implements OnInit {
     return data.then(res => {
       this.questionTitle = res.title
       this.introduction = res.introduction
-      this.showIntroductionScreen = res.assessment.showIntroduction
+      this.showIntroductionScreen = this.SHOW_INTRODUCTION_SET.has(
+        res.assessment.showIntroduction
+      )
       this.questions = res.questions
       this.endText =
         res.endText && res.endText.length

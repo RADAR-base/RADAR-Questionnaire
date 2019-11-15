@@ -1,9 +1,11 @@
 question {
+  text-align: initial;
+
   .content {
     display: flex;
     flex-direction: column;
     height: 100%;
-    text-align: left;
+    text-align: initial;
   }
 
   p {

@@ -9,9 +9,9 @@
           (tap)="onInputChange(item)"
         >
         </ion-checkbox>
-        <ion-label [class.checked]="item.checked">{{
-          item.response
-        }}</ion-label>
+        <ion-label [class.checked]="item.checked" dir="auto">
+          {{ item.response }}
+        </ion-label>
       </ion-item>
     </li>
   </ul>

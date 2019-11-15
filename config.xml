@@ -55,7 +55,7 @@
             <string>The app would like to use the camera to scan QR codes.</string>
         </edit-config>
         <edit-config file="*-Info.plist" mode="merge" target="NSPhotoLibraryUsageDescription">
-            <string>The app would like to access the photo library for tasks.</string>
+            <string>The app would like to access the photo library to read the QR code.</string>
         </edit-config>
         <edit-config file="*-Info.plist" mode="merge" target="NSMicrophoneUsageDescription">
             <string>The app would like to access the microphone for audio tasks.</string>

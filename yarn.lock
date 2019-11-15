@@ -3014,7 +3014,7 @@ cordova-custom-config@^5.1.0:
     q "^1.4.1"
     shelljs "^0.7.0"
     tostr "^0.1.0"
-    xcode "^1.0.0"
+    xcode "^2.0.0"
 
 cordova-fetch@^2.0.0:
   version "2.0.1"

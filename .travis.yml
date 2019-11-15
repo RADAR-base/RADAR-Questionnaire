@@ -44,7 +44,7 @@ before_script:
   - mkdir www
   - cp secret.ts src/assets/data/secret.ts
 script:
-  - cordova prepare
+  - cordova prepare android
   - yarn install
   - xvfb-run -a yarn test
   - if [[ $TRAVIS_BRANCH != $TRAVIS_TAG ]]; then fastlane android build_debug ; fi

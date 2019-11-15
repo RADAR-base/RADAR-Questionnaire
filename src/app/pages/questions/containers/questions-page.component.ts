@@ -81,7 +81,8 @@ export class QuestionsPageComponent implements OnInit {
       this.isLastTask = res.isLastTask
       this.assessment = res.assessment
       this.taskType = res.type
-      return (this.isClinicalTask = this.taskType == TaskType.CLINICAL)
+      this.isClinicalTask = this.taskType == TaskType.CLINICAL
+      this.updateToolbarButtons()
     })
   }
 

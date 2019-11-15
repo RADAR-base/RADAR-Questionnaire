@@ -92,7 +92,7 @@ $ ionic cordova run ios
 
 ## Firebase
 
-If using Firebase for notifications, analytics, or remote config, [create your Firebase project](https://console.firebase.google.com/). Then, add your iOS or Android app to the Firebase project. Once added, please download the app's `google-service.json` file (for Android) and `GoogleService-Info.plist` (for iOS), and add it to the root directory.
+If using Firebase for notifications, analytics, or remote config, [create your Firebase project](https://console.firebase.google.com/). Then, add your iOS or Android app to the Firebase project. Once added, please download the app's `google-services.json` file (for Android) and `GoogleService-Info.plist` (for iOS), and add it to the root directory.
 
 ### Remote Notifications
 
@@ -104,6 +104,11 @@ export const DefaultNotificationType = 'FCM'
 ```
 
 In order for notifications to be sent, you must run your own app server. It is part of the [RADAR-base stack](https://github.com/RADAR-base/RADAR-Docker/), and specific docs can be found [here](https://github.com/RADAR-base/RADAR-Docker/tree/dev/dcompose-stack/firebase-app-server).
+
+#### iOS Remote Push Notifications
+
+For Android remote notifications, setting your sender ID and adding your `google-services.json` file is enough to begin receiving notifications. However, for iOS notifications, you must add either an APNs authentication key or APNs certificate to connect with Apple Push Notifications. This can be added in the Firebase project's Cloud Messaging settings.
+
 
 ### Remote Config
 

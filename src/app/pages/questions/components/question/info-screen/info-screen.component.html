@@ -1,13 +1,17 @@
 <div class="info-card">
   <div class="content" #content scrollY="true" (scroll)="onScroll($event)">
     <div *ngIf="isThincItReminder">
-      <img src="assets/imgs/thincIt_app_icon.png" class="icon-thincIt" />
+      <img
+        src="assets/imgs/thincIt_app_icon.png"
+        class="icon-thincIt"
+        alt="thinc-it"
+      />
     </div>
     <div class="items">
       <div *ngFor="let item of items">
-        <p class="info-heading">{{ item.heading }}</p>
+        <p class="info-heading" dir="auto">{{ item.heading }}</p>
         <div class="info-content">
-          <h2>{{ item.content }}</h2>
+          <h2 dir="auto">{{ item.content }}</h2>
         </div>
       </div>
     </div>

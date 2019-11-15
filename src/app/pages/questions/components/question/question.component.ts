@@ -3,19 +3,21 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnInit,
   Output
 } from '@angular/core'
 import { Dialogs } from '@ionic-native/dialogs/ngx'
 import { Vibration } from '@ionic-native/vibration/ngx'
+import * as smoothscroll from 'smoothscroll-polyfill'
 
 import { Answer } from '../../../../shared/models/answer'
-import { Question } from '../../../../shared/models/question'
+import { Question, QuestionType } from '../../../../shared/models/question'
 
 @Component({
   selector: 'question',
   templateUrl: 'question.component.html'
 })
-export class QuestionComponent implements OnChanges {
+export class QuestionComponent implements OnInit, OnChanges {
   @Input()
   question: Question
   @Input()
@@ -28,9 +30,24 @@ export class QuestionComponent implements OnChanges {
   value: any
   currentlyShown = false
   previouslyShown = false
+  isLoading = true
+  isScrollable = false
+  margin = 16
+
+  NON_SCROLLABLE_SET: Set<QuestionType> = new Set([
+    QuestionType.timed,
+    QuestionType.audio,
+    QuestionType.info
+  ])
 
   constructor(private vibration: Vibration, private dialogs: Dialogs) {
+    smoothscroll.polyfill()
     this.value = null
+  }
+
+  ngOnInit() {
+    this.isScrollable = !this.NON_SCROLLABLE_SET.has(this.question.field_type)
+    setTimeout(() => (this.isLoading = false), 200)
   }
 
   ngOnChanges() {

@@ -183,6 +183,10 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   navigateToFinishPage() {
+    const data = this.questionsService.getData()
+    if ("deq_seizure" in data.answers && data.answers["deq_seizure"] === "1") {
+      this.endText += "<br/><br/>" + this.localization.translateKey(LocKeys.DEQ_REDIRECT_MSG)
+    }
     this.sendEvent(UsageEventType.QUESTIONNAIRE_FINISHED)
     this.submitTimestamps()
     this.showFinishScreen = true

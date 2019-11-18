@@ -203,6 +203,8 @@ export class LocKeys {
   static SD_DURATION_MIN = new LocKeys('SD_DURATION_MIN')
   static SD_DURATION_MINS = new LocKeys('SD_DURATION_MINS')
 
+  static DEQ_REDIRECT_MSG = new LocKeys('DEQ_REDIRECT_MSG')
+
 
   constructor(public value: string) {}
 

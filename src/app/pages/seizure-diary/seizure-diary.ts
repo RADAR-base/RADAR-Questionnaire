@@ -118,7 +118,7 @@ export class SeizureDiaryPage {
     console.log("Getting seizure diary assessment from storage...")
     return new Promise<boolean>((resolve) => {
       this.questionnaire.getAssessments(TaskType.NON_CLINICAL)
-        .then((assessments) => assessments.find(a => a.questionnaire.name === "seizure_diary"))
+        .then((assessments) => assessments.find(a => a.questionnaire.name === "epi_seizure_diary"))
         .then((diaryAssessment) => {
           this.diaryAssessment = diaryAssessment
           if (typeof this.diaryAssessment !== 'undefined') resolve(true)

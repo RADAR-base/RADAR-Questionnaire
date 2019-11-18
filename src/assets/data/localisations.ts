@@ -1422,4 +1422,13 @@ export const Localisations = {
     it: '',
     nl: ''
   },
+
+  DEQ_REDIRECT_MSG: {
+    da: '',
+    de: 'Sie werden nun zum Anfalltagebuch weitergeleitet. Bitte fügen Sie alle Anfälle hinzu, die Sie in den letzten 24h hatten und die noch nicht auf der Liste sind.',
+    en: 'You will now be redirected to the seizure diary. Please add any seizure that you had in the last 24h and that is not already on the list.',
+    es: '',
+    it: '',
+    nl: ''
+  },
 }

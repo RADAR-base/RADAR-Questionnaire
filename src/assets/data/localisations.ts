@@ -150,7 +150,7 @@ export const Localisations = {
     it: 'Completato in clinica?',
     nl: 'Voltooid in de kliniek?'
   },
-  CALENDAR_ESM_MISSED_TITLE: {
+  CALENDAR_TASK_MISSED_TITLE: {
     da: 'Blokeret',
     de: 'Nich erlaubt',
     en: 'Blocked',
@@ -158,7 +158,7 @@ export const Localisations = {
     it: 'Bloccato',
     nl: 'Geblokkeerd'
   },
-  CALENDAR_ESM_MISSED_DESC: {
+  CALENDAR_TASK_MISSED_DESC: {
     da: 'Spørgsmålet kan ikke besvares længere.',
     de:
       'Leider können Sie diesen Fragebogen nur zum angegebenen Zeitpunkt beantworten.',

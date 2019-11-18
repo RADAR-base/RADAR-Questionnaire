@@ -70,16 +70,10 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   handleRecording() {
     if (!this.isRecording()) {
       this.recordAttempts++
-      if (this.recordAttempts <= DefaultMaxAudioAttemptsAllowed) {
-        this.startRecording()
-          .then(() =>
-            this.usage.sendGeneralEvent(UsageEventType.RECORDING_STARTED)
-          )
-          .catch(e => this.showTaskInterruptedAlert())
-      }
+      if (this.recordAttempts <= DefaultMaxAudioAttemptsAllowed)
+        this.startRecording().catch(e => this.showTaskInterruptedAlert())
     } else {
       this.stopRecording()
-      this.usage.sendGeneralEvent(UsageEventType.RECORDING_STOPPED)
       if (this.recordAttempts == DefaultMaxAudioAttemptsAllowed)
         this.finishRecording().catch(e => this.showTaskInterruptedAlert())
       else this.showAfterAttemptAlert()
@@ -97,15 +91,17 @@ export class AudioInputComponent implements OnDestroy, OnInit {
     return Promise.all([
       this.permissionUtil.getRecordAudio_Permission(),
       this.permissionUtil.getWriteExternalStorage_permission()
-    ]).then(res =>
-      res[0] && res[1]
+    ]).then(res => {
+      this.usage.sendGeneralEvent(UsageEventType.RECORDING_STARTED, true)
+      return res[0] && res[1]
         ? this.audioRecordService.startAudioRecording()
         : Promise.reject()
-    )
+    })
   }
 
   stopRecording() {
     this.audioRecordService.stopAudioRecording()
+    this.usage.sendGeneralEvent(UsageEventType.RECORDING_STOPPED, true)
   }
 
   isRecording() {

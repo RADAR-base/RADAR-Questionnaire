@@ -50,9 +50,13 @@ export class UsageService {
     })
   }
 
-  sendGeneralEvent(type, payload?) {
+  sendGeneralEvent(type, sendToKafka?, payload?) {
     // noinspection JSIgnoredPromiseFromCall
     this.analytics.logEvent(type, payload ? payload : {})
+    if (sendToKafka)
+      return this.sendEventToKafka({
+        eventType: type
+      })
   }
 
   sendClickEvent(button) {

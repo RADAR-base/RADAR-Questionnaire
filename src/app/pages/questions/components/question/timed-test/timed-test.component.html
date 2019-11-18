@@ -1,10 +1,7 @@
 <div class="test-card">
-  <ion-content>
-    <h2 class="heading">{{ heading }}</h2>
-    <img
-      src="{{image}}"
-      alt="mockreport"
-    >
-    <p class="timer">{{ taskTimer.displayTime }}</p>
-  </ion-content>
+  <div class="content">
+    <h2 dir="auto" class="heading">{{ heading }}</h2>
+    <img src="{{ image }}" alt="mockreport" class="image" />
+    <div class="timer">{{ taskTimer.displayTime }}</div>
+  </div>
 </div>

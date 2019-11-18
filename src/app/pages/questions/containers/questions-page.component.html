@@ -1,31 +1,35 @@
 <ion-content>
-  <ion-slides>
-    <ion-slide *ngIf="showIntroductionScreen">
-      <introduction
-        [title]="questionTitle"
-        [introduction]="introduction"
-        (start)="handleIntro($event)"
-      ></introduction>
-    </ion-slide>
-    <ion-slide *ngFor="let question of questions; let i = index">
-      <question
-        [question]="question"
-        [questionIndex]="i"
-        [currentIndex]="currentQuestionId"
-        (answer)="onAnswer($event)"
-      ></question>
-    </ion-slide>
-    <ion-slide>
-      <finish
-        [content]="endText"
-        [displayNextTaskReminder]="isLastTask"
-        [isClinicalTask]="isClinicalTask"
-        [showDoneButton]="showDoneButton"
-        [isShown]="showFinishScreen"
-        (exit)="handleFinish($event)"
-      ></finish>
-    </ion-slide>
-  </ion-slides>
+  <div class="wrapper">
+    <div class="slide-flex">
+      <ion-slides>
+        <ion-slide *ngIf="showIntroductionScreen">
+          <introduction
+            [title]="questionTitle"
+            [introduction]="introduction"
+            (start)="handleIntro($event)"
+          ></introduction>
+        </ion-slide>
+        <ion-slide *ngFor="let question of questions; let i = index">
+          <question
+            [question]="question"
+            [questionIndex]="i"
+            [currentIndex]="currentQuestionId"
+            (answer)="onAnswer($event)"
+          ></question>
+        </ion-slide>
+        <ion-slide>
+          <finish
+            [content]="endText"
+            [displayNextTaskReminder]="isLastTask"
+            [isClinicalTask]="isClinicalTask"
+            [showDoneButton]="showDoneButton"
+            [isShown]="showFinishScreen"
+            (exit)="handleFinish($event)"
+          ></finish>
+        </ion-slide>
+      </ion-slides>
+    </div>
+  </div>
 </ion-content>
 
 <ion-footer *ngIf="!showIntroductionScreen && !showFinishScreen">

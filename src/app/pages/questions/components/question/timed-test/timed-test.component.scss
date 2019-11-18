@@ -1,7 +1,4 @@
 timed-test {
-  overflow: hidden;
-  text-align: center;
-
   .test-card {
     overflow: hidden;
     padding: 10px;
@@ -11,7 +8,9 @@ timed-test {
     background-color: $cl-primary-20;
   }
 
-  ion-content {
+  .content {
+    align-items: center;
+    overflow-y: auto;
     background: none;
     text-align: center !important;
   }
@@ -26,5 +25,11 @@ timed-test {
     margin: 10px;
     color: white;
     font-size: 140px;
+  }
+
+  .image {
+    padding-bottom: 56px;
+    width: 200px;
+    height: auto;
   }
 }

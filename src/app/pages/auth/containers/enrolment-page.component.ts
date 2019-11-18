@@ -96,6 +96,7 @@ export class EnrolmentPageComponent {
         : e.statusText + ' (' + e.status + ')'
     this.usage.sendGeneralEvent(
       e.status == 409 ? EnrolmentEventType.ERROR : EnrolmentEventType.FAIL,
+      false,
       {
         error: this.outcomeStatus
       }

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core'
 
 import {
-  DefaultESMCompletionWindow,
   DefaultScheduleYearCoverage,
   DefaultTask,
   DefaultTaskCompletionWindow
@@ -220,12 +219,8 @@ export class ScheduleGeneratorService {
   }
 
   static computeCompletionWindow(assessment: Assessment): number {
-    if (assessment.protocol.completionWindow) {
+    if (assessment.protocol.completionWindow)
       return timeIntervalToMillis(assessment.protocol.completionWindow)
-    } else if (assessment.name === 'ESM') {
-      return DefaultESMCompletionWindow
-    } else {
-      return DefaultTaskCompletionWindow
-    }
+    else return DefaultTaskCompletionWindow
   }
 }

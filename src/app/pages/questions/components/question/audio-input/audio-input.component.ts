@@ -92,7 +92,7 @@ export class AudioInputComponent implements OnDestroy, OnInit {
       this.permissionUtil.getRecordAudio_Permission(),
       this.permissionUtil.getWriteExternalStorage_permission()
     ]).then(res => {
-      this.usage.sendGeneralEvent(UsageEventType.RECORDING_STARTED)
+      this.usage.sendGeneralEvent(UsageEventType.RECORDING_STARTED, true)
       return res[0] && res[1]
         ? this.audioRecordService.startAudioRecording()
         : Promise.reject()
@@ -101,7 +101,7 @@ export class AudioInputComponent implements OnDestroy, OnInit {
 
   stopRecording() {
     this.audioRecordService.stopAudioRecording()
-    this.usage.sendGeneralEvent(UsageEventType.RECORDING_STOPPED)
+    this.usage.sendGeneralEvent(UsageEventType.RECORDING_STOPPED, true)
   }
 
   isRecording() {

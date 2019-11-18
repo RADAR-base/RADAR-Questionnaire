@@ -164,8 +164,10 @@ export class HomePageComponent implements OnDestroy {
 
   showMissedInfo() {
     return this.alertService.showAlert({
-      title: this.localization.translateKey(LocKeys.CALENDAR_ESM_MISSED_TITLE),
-      message: this.localization.translateKey(LocKeys.CALENDAR_ESM_MISSED_DESC),
+      title: this.localization.translateKey(LocKeys.CALENDAR_TASK_MISSED_TITLE),
+      message: this.localization.translateKey(
+        LocKeys.CALENDAR_TASK_MISSED_DESC
+      ),
       buttons: [
         {
           text: this.localization.translateKey(LocKeys.BTN_OKAY),

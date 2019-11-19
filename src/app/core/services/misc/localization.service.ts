@@ -59,6 +59,14 @@ export class LocalizationService {
     return this.language
   }
 
+  updateLanguageSettings(): Promise<any> {
+    return this.getLanguageSettings().then(languages =>
+      languages.length == DefaultSettingsSupportedLanguages.length
+        ? []
+        : this.setLanguageSettings(DefaultSettingsSupportedLanguages)
+    )
+  }
+
   setLanguageSettings(settings) {
     return this.storage.set(
       this.LOCALIZATION_STORAGE.SETTINGS_LANGUAGES,

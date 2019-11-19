@@ -59,6 +59,8 @@ export class LocKeys {
   static LANGUAGE_GERMAN = new LocKeys('LANGUAGE_GERMAN')
   static LANGUAGE_DANISH = new LocKeys('LANGUAGE_DANISH')
   static LANGUAGE_DUTCH = new LocKeys('LANGUAGE_DUTCH')
+  static LANGUAGE_POLISH = new LocKeys('LANGUAGE_POLISH')
+  static LANGUAGE_HEBREW = new LocKeys('LANGUAGE_HEBREW')
   static BTN_ENROL_ENROL = new LocKeys('BTN_ENROL_ENROL')
   static BTN_ENROL_SCAN = new LocKeys('BTN_ENROL_SCAN')
   static BTN_FINISH = new LocKeys('BTN_FINISH')

@@ -34,6 +34,7 @@ export class LocalizationService {
   constructor(private storage: StorageService) {
     this.localeMoment = moment()
     this.update()
+    this.updateLanguageSettings()
   }
 
   init() {

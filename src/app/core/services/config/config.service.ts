@@ -244,7 +244,8 @@ export class ConfigService {
       this.appConfig.reset(),
       this.questionnaire.reset(),
       this.kafka.reset(),
-      this.schedule.reset()
+      this.schedule.reset(),
+      this.localization.init()
     ])
   }
 

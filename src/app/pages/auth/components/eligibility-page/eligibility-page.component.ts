@@ -129,4 +129,14 @@ export class EligibilityPageComponent {
     this.navCtrl.setRoot(WelcomePageComponent)
   }
 
+  onValueChange(event: any) {
+    // NOTE: On init the component fires the event once
+    if (event === undefined) {
+      return
+    }
+    console.log('Test value change emit ', event)
+    // this.value = event
+    // this.emitAnswer()
+  }
+
 }

@@ -1,12 +1,37 @@
 yes-or-no-option {
-  .bt--block {
-    width: 75px;
-    height: 75px;
-    font-size: 18px;
-    line-height: 1.35em;
-  }
+  display: block;
+  margin-left: -5px;
+  width: 100%;
 
   ion-label {
+    color: $cl-light !important;
+  }
+
+
+  tr {
+    display: flex;
+    flex-direction: row;
+    margin-right: auto;
+    margin-left: auto;
+    padding: 0;
+    width: 100%;
+    list-style: none;
+  }
+
+  td {
+    padding: 10px;
+  }
+
+  tr td {
+    display: flex;
+    align-content: center;
+  }
+
+  tr td ion-radio {
+    position: relative;
+  }
+
+  tr td ion-label {
     @include button-round;
 
     position: relative;
@@ -14,9 +39,7 @@ yes-or-no-option {
     flex-grow: 1;
     align-items: center;
     justify-content: flex-start;
-    padding: 8px 32px;
     height: inherit;
-    color: $cl-light !important;
     white-space: normal;
   }
 
@@ -27,5 +50,9 @@ yes-or-no-option {
   .radio-icon {
     display: none !important;
     margin: 0;
+  }
+
+  .input-wrapper {
+    margin: 0 -20px -12px 0;
   }
 }

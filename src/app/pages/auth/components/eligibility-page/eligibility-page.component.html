@@ -21,6 +21,13 @@
           </div>
           <div class="text-md">{{ "ENROL_ELIGIBILITY_HEADING" | translate }}</div>
           <div class="center">
+
+            <yes-or-no-option
+            (valueChange)="onValueChange($event)"
+            question="Are you at least 18 years old?"
+            >
+
+            </yes-or-no-option>
             <div>
               <div>
                 <span class="text-sm padding">Are you at least 18 years old?</span>

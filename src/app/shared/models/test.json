@@ -1,0 +1,471 @@
+[
+  {
+    "index": 729,
+    "timestamp": 1569999600000,
+    "completed": false,
+    "reportedCompletion": false,
+    "name": "PHQ8",
+    "nQuestions": 8,
+    "estimatedCompletionTime": 2,
+    "completionWindow": 259200000,
+    "warning": "",
+    "isClinical": false,
+    "iconInfo": "eye",
+    "notifications": [
+      {
+        "task": {
+          "name": "PHQ8",
+          "timestamp": 1569999600000,
+          "completionWindow": 259200000
+        },
+        "timestamp": 1569999600000,
+        "type": 1,
+        "sound": true,
+        "vibrate": true,
+        "title": "Questionnaire time",
+        "text": "Won't usually take longer than 2 minutes."
+      },
+      {
+        "task": {
+          "name": "PHQ8",
+          "timestamp": 1569999600000,
+          "completionWindow": 259200000
+        },
+        "timestamp": 1570345200000,
+        "type": 2,
+        "sound": false,
+        "vibrate": true,
+        "title": "Missed a questionnaire?",
+        "text": "It seems you haven't answered all of our questions. Could you please do that now?"
+      }
+    ]
+  },
+  {
+    "index": 912,
+    "timestamp": 1570003200000,
+    "completed": false,
+    "reportedCompletion": false,
+    "name": "RSES",
+    "nQuestions": 10,
+    "estimatedCompletionTime": 4,
+    "completionWindow": 259200000,
+    "warning": "",
+    "isClinical": false,
+    "iconInfo": "eye",
+    "notifications": [
+      {
+        "task": {
+          "name": "RSES",
+          "timestamp": 1570003200000,
+          "completionWindow": 259200000
+        },
+        "timestamp": 1570003200000,
+        "type": 1,
+        "sound": true,
+        "vibrate": true,
+        "title": "Questionnaire time",
+        "text": "Won't usually take longer than 4 minutes."
+      },
+      {
+        "task": {
+          "name": "RSES",
+          "timestamp": 1570003200000,
+          "completionWindow": 259200000
+        },
+        "timestamp": 1570348800000,
+        "type": 2,
+        "sound": false,
+        "vibrate": true,
+        "title": "Missed a questionnaire?",
+        "text": "It seems you haven't answered all of our questions. Could you please do that now?"
+      }
+    ]
+  },
+  {
+    "index": 11302,
+    "timestamp": 1570005000000,
+    "completed": false,
+    "reportedCompletion": false,
+    "name": "PDDS",
+    "nQuestions": 1,
+    "estimatedCompletionTime": 1,
+    "completionWindow": 259200000,
+    "warning": "",
+    "isClinical": false,
+    "iconInfo": "eye",
+    "notifications": [
+      {
+        "task": {
+          "name": "PDDS",
+          "timestamp": 1570005000000,
+          "completionWindow": 259200000
+        },
+        "timestamp": 1570005000000,
+        "type": 1,
+        "sound": true,
+        "vibrate": true,
+        "title": "Questionnaire time",
+        "text": "Won't usually take longer than 1 minutes."
+      },
+      {
+        "task": {
+          "name": "PDDS",
+          "timestamp": 1570005000000,
+          "completionWindow": 259200000
+        },
+        "timestamp": 1570350600000,
+        "type": 2,
+        "sound": false,
+        "vibrate": true,
+        "title": "Missed a questionnaire?",
+        "text": "It seems you haven't answered all of our questions. Could you please do that now?"
+      }
+    ]
+  },
+  {
+    "index": 1095,
+    "timestamp": 1570172400000,
+    "completed": false,
+    "reportedCompletion": false,
+    "name": "ESM",
+    "nQuestions": 44,
+    "estimatedCompletionTime": 3,
+    "completionWindow": 600000,
+    "warning": "",
+    "isClinical": false,
+    "iconInfo": "eye",
+    "notifications": [
+      {
+        "task": {
+          "name": "ESM",
+          "timestamp": 1570172400000,
+          "completionWindow": 600000
+        },
+        "timestamp": 1570172400000,
+        "type": 1,
+        "sound": true,
+        "vibrate": true,
+        "title": "Questionnaire time",
+        "text": "Won't usually take longer than 3 minutes."
+      }
+    ]
+  },
+  {
+    "index": 1096,
+    "timestamp": 1570176000000,
+    "completed": false,
+    "reportedCompletion": false,
+    "name": "ESM",
+    "nQuestions": 44,
+    "estimatedCompletionTime": 3,
+    "completionWindow": 600000,
+    "warning": "",
+    "isClinical": false,
+    "iconInfo": "eye",
+    "notifications": [
+      {
+        "task": {
+          "name": "ESM",
+          "timestamp": 1570176000000,
+          "completionWindow": 600000
+        },
+        "timestamp": 1570176000000,
+        "type": 1,
+        "sound": true,
+        "vibrate": true,
+        "title": "Questionnaire time",
+        "text": "Won't usually take longer than 3 minutes."
+      }
+    ]
+  },
+  {
+    "index": 11546,
+    "timestamp": 1570176000000,
+    "completed": false,
+    "reportedCompletion": false,
+    "name": "PDQ",
+    "nQuestions": 5,
+    "estimatedCompletionTime": 1,
+    "completionWindow": 0,
+    "warning": "",
+    "isClinical": false,
+    "iconInfo": "eye",
+    "notifications": [
+      {
+        "task": {
+          "name": "PDQ",
+          "timestamp": 1570176000000,
+          "completionWindow": 0
+        },
+        "timestamp": 1570176000000,
+        "type": 1,
+        "sound": true,
+        "vibrate": true,
+        "title": "Questionnaire time",
+        "text": "Won't usually take longer than 1 minutes."
+      }
+    ]
+  },
+  {
+    "index": 1097,
+    "timestamp": 1570179600000,
+    "completed": false,
+    "reportedCompletion": false,
+    "name": "ESM",
+    "nQuestions": 44,
+    "estimatedCompletionTime": 3,
+    "completionWindow": 600000,
+    "warning": "",
+    "isClinical": false,
+    "iconInfo": "eye",
+    "notifications": [
+      {
+        "task": {
+          "name": "ESM",
+          "timestamp": 1570179600000,
+          "completionWindow": 600000
+        },
+        "timestamp": 1570179600000,
+        "type": 1,
+        "sound": true,
+        "vibrate": true,
+        "title": "Questionnaire time",
+        "text": "Won't usually take longer than 3 minutes."
+      }
+    ]
+  },
+  {
+    "schedule": [
+      {
+        "index": 0,
+        "timestamp": 1570027200000,
+        "completed": false,
+        "reportedCompletion": false,
+        "name": "TEST SAMP",
+        "nQuestions": 9,
+        "estimatedCompletionTime": 2,
+        "completionWindow": 259200000,
+        "warning": "",
+        "isClinical": false,
+        "iconInfo": "checkmark-circle",
+        "notifications": [
+          {
+            "task": {
+              "name": "TEST SAMP",
+              "timestamp": 1570027200000,
+              "completionWindow": 259200000
+            },
+            "timestamp": 1570027200000,
+            "type": 1,
+            "sound": true,
+            "vibrate": true,
+            "title": "Questionnaire time",
+            "text": "Won't usually take longer than 2 minutes."
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "timestamp": 1570113600000,
+        "completed": false,
+        "reportedCompletion": false,
+        "name": "TEST SAMP",
+        "nQuestions": 9,
+        "estimatedCompletionTime": 2,
+        "completionWindow": 259200000,
+        "warning": "",
+        "isClinical": false,
+        "iconInfo": "checkmark-circle",
+        "notifications": [
+          {
+            "task": {
+              "name": "TEST SAMP",
+              "timestamp": 1570113600000,
+              "completionWindow": 259200000
+            },
+            "timestamp": 1570113600000,
+            "type": 1,
+            "sound": true,
+            "vibrate": true,
+            "title": "Questionnaire time",
+            "text": "Won't usually take longer than 2 minutes."
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "timestamp": 1570200000000,
+        "completed": false,
+        "reportedCompletion": false,
+        "name": "TEST SAMP",
+        "nQuestions": 9,
+        "estimatedCompletionTime": 2,
+        "completionWindow": 259200000,
+        "warning": "",
+        "isClinical": false,
+        "iconInfo": "checkmark-circle",
+        "notifications": [
+          {
+            "task": {
+              "name": "TEST SAMP",
+              "timestamp": 1570200000000,
+              "completionWindow": 259200000
+            },
+            "timestamp": 1570200000000,
+            "type": 1,
+            "sound": true,
+            "vibrate": true,
+            "title": "Questionnaire time",
+            "text": "Won't usually take longer than 2 minutes."
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "timestamp": 1570286400000,
+        "completed": false,
+        "reportedCompletion": false,
+        "name": "TEST SAMP",
+        "nQuestions": 9,
+        "estimatedCompletionTime": 2,
+        "completionWindow": 259200000,
+        "warning": "",
+        "isClinical": false,
+        "iconInfo": "checkmark-circle",
+        "notifications": [
+          {
+            "task": {
+              "name": "TEST SAMP",
+              "timestamp": 1570286400000,
+              "completionWindow": 259200000
+            },
+            "timestamp": 1570286400000,
+            "type": 1,
+            "sound": true,
+            "vibrate": true,
+            "title": "Questionnaire time",
+            "text": "Won't usually take longer than 2 minutes."
+          }
+        ]
+      },
+      {
+        "index": 4,
+        "timestamp": 1570372800000,
+        "completed": false,
+        "reportedCompletion": false,
+        "name": "TEST SAMP",
+        "nQuestions": 9,
+        "estimatedCompletionTime": 2,
+        "completionWindow": 259200000,
+        "warning": "",
+        "isClinical": false,
+        "iconInfo": "checkmark-circle",
+        "notifications": [
+          {
+            "task": {
+              "name": "TEST SAMP",
+              "timestamp": 1570372800000,
+              "completionWindow": 259200000
+            },
+            "timestamp": 1570372800000,
+            "type": 1,
+            "sound": true,
+            "vibrate": true,
+            "title": "Questionnaire time",
+            "text": "Won't usually take longer than 2 minutes."
+          }
+        ]
+      },
+      {
+        "index": 5,
+        "timestamp": 1570459200000,
+        "completed": false,
+        "reportedCompletion": false,
+        "name": "TEST SAMP",
+        "nQuestions": 9,
+        "estimatedCompletionTime": 2,
+        "completionWindow": 259200000,
+        "warning": "",
+        "isClinical": false,
+        "iconInfo": "checkmark-circle",
+        "notifications": [
+          {
+            "task": {
+              "name": "TEST SAMP",
+              "timestamp": 1570459200000,
+              "completionWindow": 259200000
+            },
+            "timestamp": 1570459200000,
+            "type": 1,
+            "sound": true,
+            "vibrate": true,
+            "title": "Questionnaire time",
+            "text": "Won't usually take longer than 2 minutes."
+          }
+        ]
+      },
+      {
+        "index": 6,
+        "timestamp": 1570545600000,
+        "completed": false,
+        "reportedCompletion": false,
+        "name": "TEST SAMP",
+        "nQuestions": 9,
+        "estimatedCompletionTime": 2,
+        "completionWindow": 259200000,
+        "warning": "",
+        "isClinical": false,
+        "iconInfo": "checkmark-circle",
+        "notifications": [
+          {
+            "task": {
+              "name": "TEST SAMP",
+              "timestamp": 1570545600000,
+              "completionWindow": 259200000
+            },
+            "timestamp": 1570545600000,
+            "type": 1,
+            "sound": true,
+            "vibrate": true,
+            "title": "Questionnaire time",
+            "text": "Won't usually take longer than 2 minutes."
+          }
+        ]
+      },
+      {
+        "index": 7,
+        "timestamp": 1570632000000,
+        "completed": false,
+        "reportedCompletion": false,
+        "name": "TEST SAMP",
+        "nQuestions": 9,
+        "estimatedCompletionTime": 2,
+        "completionWindow": 259200000,
+        "warning": "",
+        "isClinical": false,
+        "iconInfo": "checkmark-circle",
+        "notifications": [
+          {
+            "task": {
+              "name": "TEST SAMP",
+              "timestamp": 1570632000000,
+              "completionWindow": 259200000
+            },
+            "timestamp": 1570632000000,
+            "type": 1,
+            "sound": true,
+            "vibrate": true,
+            "title": "Questionnaire time",
+            "text": "Won't usually take longer than 2 minutes."
+          }
+        ]
+      },
+      {
+        "index": 8,
+        "timestamp": 1570718400000,
+        "completed": false,
+        "reportedCompletion": false,
+        "name": "TEST SAMP",
+        "nQuestions": 9,
+        "estimatedCompletionT
+

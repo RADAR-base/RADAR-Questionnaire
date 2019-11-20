@@ -14,26 +14,27 @@ export class YesOrNoOptionComponent implements OnInit {
 
   @Input()
   question: string
-  // @Input()
-  // responses: Response[]
 
+  responses: any = [{label: "Yes", code: true}, {label: "No", code: false}]
   value: number = null
   uniqueID: number = uniqueID++
-  name = `yes-or-no-input-${this.uniqueID}`
-  // items: Item[] = Array()
+  name = `yes-or-no-${this.uniqueID}`
+  items: Item[] = Array()
+
 
   ngOnInit() {
-    // this.responses.map((item, i) => {
-    //   this.items.push({
-    //     id: `radio-${this.uniqueID}-${i}`,
-    //     response: item.label,
-    //     value: item.code
-    //   })
-    // })
+    // this.responses= [{label: "Yes", code: true}, {label: "No", code: false}]
+    this.responses.map((item, i) => {
+      this.items.push({
+        id: `yes-or-no-${this.uniqueID}-${i}`,
+        response: item.label,
+        value: item.code
+      })
+    })
   }
 
   onInputChange(event) {
-    console.log('yes or not test input', event)
+    console.log("test yes or no click", event)
     this.valueChange.emit(event)
   }
 }

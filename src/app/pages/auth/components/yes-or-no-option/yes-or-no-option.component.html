@@ -2,30 +2,19 @@
   <span class="text-sm padding">{{question}}</span>
 </div>
 <br>
-<div>
-  <ion-list radio-group>
-    <span>
-      <tr>
-        <td>
-          <div style="padding-right: 10px">
-            <ion-radio
-              value='true'
-              (ionSelect)="onInputChange(true)"
-            ></ion-radio>
-            <ion-label>Yes</ion-label>
-
-          </div>
-          </td>
-        <td>
-          <div style="padding-right: 10px">
-            <ion-radio
-              value='false'
-              (ionSelect)="onInputChange(false)"
-            ></ion-radio>
-            <ion-label>No</ion-label>
-          </div>
-        </td>
-      </tr>
-    </span>
-  </ion-list>
-</div>
+<ion-list radio-group>
+  <tr>
+    <td *ngFor="let item of items">
+      <div style="padding-right: 10px; text-align: center">
+        <ion-item no-lines>
+          <ion-radio
+            [value]="item.value"
+            [id]="item.id"
+            (ionSelect)="onInputChange(item.value)"
+          ></ion-radio>
+          <ion-label>{{ item.response }}</ion-label>
+        </ion-item>
+      </div>
+    </td>
+  </tr>
+</ion-list>

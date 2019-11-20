@@ -6005,10 +6005,10 @@ ionic-mocks@^1.3.0:
   resolved "https://registry.yarnpkg.com/ionic-mocks/-/ionic-mocks-1.3.0.tgz#398bae25e01f23ab31b6d379754ee9d3c4bfb066"
   integrity sha1-OYuuJeAfI6sxttN5dU7p08S/sGY=
 
-ionic@^5.4.5:
-  version "5.4.5"
-  resolved "https://registry.yarnpkg.com/ionic/-/ionic-5.4.5.tgz#b6e1b01d666590f6f2594facb9f3a9bbd7b49275"
-  integrity sha512-hc45gTZeqNGQl8Pr3R9F2Ud8qrMybOK9YiG1vGwZVm4ZwnhQw3urB4UHIQVjuruHWQBXS+KM9gFAopJlan9E4Q==
+ionic@^5.4.6:
+  version "5.4.6"
+  resolved "https://registry.yarnpkg.com/ionic/-/ionic-5.4.6.tgz#fbf4817178e75c6bff0d03bc1090b8d5bddb35da"
+  integrity sha512-eiPY1LnfT68jzxZUGB+q9gyTqAdiwjB5xhI0iNHFgDrLWoXEBHsLp9ZA4W7fIe8n7otRWGvFPo9UWZhuvr5QUw==
   dependencies:
     "@ionic/cli-framework" "3.0.0"
     "@ionic/cli-framework-prompts" "1.0.1"

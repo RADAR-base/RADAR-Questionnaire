@@ -1,8 +1,14 @@
 token-form {
-  ion-input {
+  .item {
+    @include font-large;
+
     margin: 24px auto;
-    width: 320px;
-    border-bottom: 1px solid white;
+    padding-left: 0;
+    width: 80vw;
+    height: 40px;
+    border-bottom: 2px solid white;
+    border-left: 2px solid transparent;
+    background-color: transparent !important;
   }
 
   .form {

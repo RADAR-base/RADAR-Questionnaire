@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core'
 
-import { LanguageMap } from '../../../../assets/data/defaultConfig'
 import { ConfigService } from '../../../core/services/config/config.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 
@@ -44,10 +43,7 @@ export class SettingsService {
   }
 
   changeLanguage(langValue) {
-    const lang = {
-      label: LanguageMap[langValue],
-      value: langValue
-    }
+    const lang = JSON.parse(langValue)
     return this.localization
       .setLanguage(lang)
       .then(() => this.config.updateConfigStateOnLanguageChange())

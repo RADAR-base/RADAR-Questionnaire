@@ -116,7 +116,7 @@ export class SettingsPageComponent {
     const inputs = this.settings.languagesSelectable.map(lang => ({
       type: 'radio',
       label: this.localization.translate(lang.label),
-      value: lang.value,
+      value: JSON.stringify(lang),
       checked: lang.value === this.settings.language.value
     }))
     return this.alertService.showAlert({

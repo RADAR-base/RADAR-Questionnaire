@@ -1,0 +1,31 @@
+yes-or-no-option {
+  .bt--block {
+    width: 75px;
+    height: 75px;
+    font-size: 18px;
+    line-height: 1.35em;
+  }
+
+  ion-label {
+    @include button-round;
+
+    position: relative;
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 8px 32px;
+    height: inherit;
+    color: $cl-light !important;
+    white-space: normal;
+  }
+
+  .item-radio-checked ion-label {
+    background-color: $cl-primary !important;
+  }
+
+  .radio-icon {
+    display: none !important;
+    margin: 0;
+  }
+}

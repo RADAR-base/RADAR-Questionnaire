@@ -1,0 +1,31 @@
+<div>
+  <span class="text-sm padding">{{question}}</span>
+</div>
+<br>
+<div>
+  <ion-list radio-group>
+    <span>
+      <tr>
+        <td>
+          <div style="padding-right: 10px">
+            <ion-radio
+              value='true'
+              (ionSelect)="onInputChange(true)"
+            ></ion-radio>
+            <ion-label>Yes</ion-label>
+
+          </div>
+          </td>
+        <td>
+          <div style="padding-right: 10px">
+            <ion-radio
+              value='false'
+              (ionSelect)="onInputChange(false)"
+            ></ion-radio>
+            <ion-label>No</ion-label>
+          </div>
+        </td>
+      </tr>
+    </span>
+  </ion-list>
+</div>

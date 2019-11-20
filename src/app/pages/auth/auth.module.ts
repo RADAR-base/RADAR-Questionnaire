@@ -11,6 +11,7 @@ import { KeycloakAuthService } from "./services/keycloak.auth.service";
 import { EligibilityPageComponent } from "./components/eligibility-page/eligibility-page.component";
 import { ConsentPageComponent } from "./components/consent-page/consent-page.component";
 import { ConsentPageItemComponent } from "./components/consent-page-item/consent-page-item.component";
+import { YesOrNoOptionComponent } from "./components/yes-or-no-option/yes-or-no-option.component";
 
 @NgModule({
   imports: [
@@ -28,7 +29,8 @@ import { ConsentPageItemComponent } from "./components/consent-page-item/consent
     WelcomePageComponent,
     EligibilityPageComponent,
     TokenFormComponent,
-    QRFormComponent
+    QRFormComponent,
+    YesOrNoOptionComponent
   ],
   providers: [
     { provide: AuthService, useClass: KeycloakAuthService}

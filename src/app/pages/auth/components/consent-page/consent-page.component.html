@@ -20,7 +20,7 @@
           </div>
           <div class="text-md">{{ "CONSENT_TITLE" | translate }}</div>
 
-          <div class="text text-justify">
+          <div>
             <ion-item-group>
 
               <page-consent-item
@@ -38,15 +38,49 @@
               </page-consent-item>
 
               <page-consent-item
-                title="Withdrawing"
-                md="md-alarm"
+                title="Data Collection and Use"
+                md="md-analytics"
                 consentDetailText="CONSENT_WITHDRAWAL_DETAILS"
               >
               </page-consent-item>
 
               <page-consent-item
-                title="Contacting you"
+                title="Benefits in Participating"
+                md="md-chatbubbles"
+                consentDetailText="CONSENT_CONTACT_YOU_DETAILS"
+              >
+              </page-consent-item>
+
+              <page-consent-item
+                title="Findings of the Study"
+                md="md-school"
+                consentDetailText="CONSENT_CONTACT_YOU_DETAILS"
+              >
+              </page-consent-item>
+
+              <page-consent-item
+                title="Disadvantages or Risks in Participating"
+                md="md-warning"
+                consentDetailText="CONSENT_CONTACT_YOU_DETAILS"
+              >
+              </page-consent-item>
+
+              <page-consent-item
+                title="Data Protection Privacy Notice"
+                md="md-paper"
+                consentDetailText="CONSENT_CONTACT_YOU_DETAILS"
+              >
+              </page-consent-item>
+
+              <page-consent-item
+                title="Follow up"
                 md="md-mail"
+                consentDetailText="CONSENT_CONTACT_YOU_DETAILS"
+              >
+              </page-consent-item>
+              <page-consent-item
+                title="Withdrawing"
+                md="md-unlock"
                 consentDetailText="CONSENT_CONTACT_YOU_DETAILS"
               >
               </page-consent-item>
@@ -55,7 +89,7 @@
           </div>
 
 
-          <div padding>
+          <div >
             <label class="text-justify" for="consentParticipation">
               <input required
                      type="checkbox"

@@ -563,6 +563,26 @@ export const Localisations = {
     pl: 'Holenderski (niderlandzki)',
     hb: 'הולנדית'
   },
+  LANGUAGE_POLISH: {
+    da: 'polere',
+    de: 'Polieren',
+    en: 'Polish',
+    es: 'Polaco',
+    it: 'Polacco',
+    nl: 'Pools',
+    pl: 'Polski',
+    hb: 'פולני'
+  },
+  LANGUAGE_HEBREW: {
+    da: 'Hebrew',
+    de: 'Hebräisch',
+    en: 'Hebrew',
+    es: 'Hebreo',
+    it: 'Ebraico',
+    nl: 'Hebreeuws',
+    pl: 'hebrajski',
+    hb: 'עברית'
+  },
   BTN_ENROL_ENROL: {
     da: 'Registrering',
     de: 'Registrieren',

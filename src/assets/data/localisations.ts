@@ -564,24 +564,24 @@ export const Localisations = {
     hb: 'הולנדית'
   },
   LANGUAGE_POLISH: {
-    da: 'Polish',
-    de: 'Polish',
+    da: 'polere',
+    de: 'Polieren',
     en: 'Polish',
-    es: 'Polish',
-    it: 'Polish',
-    nl: 'Polish',
-    pl: 'Polish',
-    hb: 'Polish'
+    es: 'Polaco',
+    it: 'Polacco',
+    nl: 'Pools',
+    pl: 'Polski',
+    hb: 'פולני'
   },
   LANGUAGE_HEBREW: {
     da: 'Hebrew',
-    de: 'Hebrew',
+    de: 'Hebräisch',
     en: 'Hebrew',
-    es: 'Hebrew',
-    it: 'Hebrew',
-    nl: 'Hebrew',
-    pl: 'Hebrew',
-    hb: 'Hebrew'
+    es: 'Hebreo',
+    it: 'Ebraico',
+    nl: 'Hebreeuws',
+    pl: 'hebrajski',
+    hb: 'עברית'
   },
   BTN_ENROL_ENROL: {
     da: 'Registrering',

@@ -15,6 +15,8 @@ export enum EnrolmentEventType {
   ERROR = 'sign_up_error',
   ELIGIBILITY_MET = 'ELIGIBILITY_MET',
   ELIGIBILITY_NOT_MET = 'ELIGIBILITY_NOT_MET',
+  CONSENT_RECEIVED = 'CONSENT_RECEIVED',
+  CONSENT_NOT_RECEIVED = 'CONSENT_NOT_RECEIVED',
 }
 
 export enum DataEventType {

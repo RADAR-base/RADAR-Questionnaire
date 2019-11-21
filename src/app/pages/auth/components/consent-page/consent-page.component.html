@@ -21,6 +21,8 @@
           <div class="text-md">{{ "CONSENT_TITLE" | translate }}</div>
 
           <div>
+
+            <div class="text-sm">Please review the information below before you agree to participate in this study.</div>
             <ion-item-group>
 
               <page-consent-item
@@ -89,24 +91,16 @@
           </div>
 
 
-          <div >
-            <label class="text-justify" for="consentParticipation">
-              <input required
-                     type="checkbox"
-                     id="consentParticipation"
-                     [(ngModel)]="consentParticipation"
+          <div padding-top="5px">
+            <div class="center" *ngFor="let question of questions">
+              <yes-or-no-option
+                (valueChange)="onValueChange($event)"
+                [question]="question"
               >
-              {{"CONSENT_PARTICIPATION" | translate }}
-            </label>
+              </yes-or-no-option>
 
-            <label class="text-justify" for="consentNHSRecordAccess">
-              <input
-                type="checkbox"
-                id="consentNHSRecordAccess"
-                [(ngModel)]="consentNHSRecordAccess"
-              >
-              {{"CONSENT_NHS_RECORD_ACCESS" | translate }}
-            </label>
+            </div>
+
           </div>
 
         </ion-scroll>
@@ -121,7 +115,7 @@
             class="bt bt--full"
             round
             full
-            [disabled]="false"
+            [disabled]="isSubmitConsentDisabled"
             (tap)="processConsent()"
           >
             Submit Consent

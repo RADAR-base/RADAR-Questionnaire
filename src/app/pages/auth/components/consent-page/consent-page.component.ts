@@ -7,7 +7,6 @@ import { AlertService } from "../../../../core/services/misc/alert.service";
 import { UsageService } from "../../../../core/services/usage/usage.service";
 import { LogService } from "../../../../core/services/misc/log.service";
 import { StorageService } from "../../../../core/services/storage/storage.service";
-import { ConfigService } from "../../../../core/services/config/config.service";
 import { DefaultLanguage } from "../../../../../assets/data/defaultConfig";
 import { LocKeys } from "../../../../shared/enums/localisations";
 import { StorageKeys } from "../../../../shared/enums/storage";
@@ -16,6 +15,7 @@ import { SplashPageComponent } from "../../../splash/containers/splash-page.comp
 import { HomePageComponent } from "../../../home/containers/home-page.component";
 import { WelcomePageComponent } from "../welcome-page/welcome-page.component";
 import { EligibilityPageComponent } from "../eligibility-page/eligibility-page.component";
+import { YesOrNoQuestion } from "../../../../shared/models/question";
 
 
 @Component({
@@ -29,8 +29,11 @@ export class ConsentPageComponent {
   showOutcomeStatus: boolean = false
   outcomeStatus: string
 
-  consentParticipation = undefined
-  consentNHSRecordAccess = undefined
+  questions: YesOrNoQuestion[]
+  evaluatedQuestions: Map<number, YesOrNoQuestion>
+
+  totalNumberOfConsentsRequired: number = 2
+  isSubmitConsentDisabled = true
 
   showTimeCommitmentDetails = false
   showPrivacyPolicyDetails = false
@@ -47,9 +50,23 @@ export class ConsentPageComponent {
     private usage: UsageService,
     private logger: LogService,
     private storage: StorageService,
-    private config: ConfigService,
   ) {
     this.localization.update().then(lang => (this.language = lang))
+    this.questions = [
+      {
+        questionId: 1,
+        isAnswered: false,
+        question: "I consent (agree) to take part in the Health on the MovE (HOME) Study",
+        answer: undefined
+      },
+      {
+        questionId: 2,
+        isAnswered: false,
+        question: "I consent (agree) to the collection of data about my physical, mental and sexual health",
+        answer: undefined
+      }
+    ];
+    this.evaluatedQuestions = new Map<number, YesOrNoQuestion>()
   }
 
   ionViewDidLoad() {
@@ -72,24 +89,32 @@ export class ConsentPageComponent {
   }
 
   processConsent() {
-    if (!this.consentParticipation) {
-      this.alertService.showAlert({
-        title: "Consent is required",
-        buttons: [{
-          text: this.localization.translateKey(LocKeys.BTN_OKAY),
-          handler: () => {}
-        }],
-        message: "Your consent to participate in the study is at least required."
-      })
-    }
-    if(this.consentNHSRecordAccess === true) {
-      this.storage.set(StorageKeys.CONSENT_ACCESS_NHS_RECORDS, true);
-    }
-    if(this.consentParticipation === true) {
-      this.authenticate();
+    if (this.evaluatedQuestions.size === this.totalNumberOfConsentsRequired) {
+      const hasConsent = Array.from(this.evaluatedQuestions.values())
+        .filter(
+          d => {
+            return (
+              d.answer === false
+            )
+          }).length === 0
+
+      if (hasConsent) {
+        this.usage.sendGeneralEvent(EnrolmentEventType.CONSENT_RECEIVED)
+        this.storage.set(StorageKeys.CONSENT_ACCESS_NHS_RECORDS, true);
+        this.authenticate();
+      } else {
+        this.usage.sendGeneralEvent(EnrolmentEventType.CONSENT_NOT_RECEIVED)
+        this.alertService.showAlert({
+          title: "Consent is required",
+          buttons: [{
+            text: this.localization.translateKey(LocKeys.BTN_OKAY),
+            handler: () => {}
+          }],
+          message: "Your consent to participate in the study is at least required."
+        })
+      }
     }
   }
-
 
   slideTo(index: number) {
     this.slides.lockSwipes(false)
@@ -97,11 +122,8 @@ export class ConsentPageComponent {
     this.slides.lockSwipes(true)
   }
 
-
-
   authenticate() {
-    this.usage.sendGeneralEvent(EnrolmentEventType.ELIGIBILITY_MET)
-      // this.usage.sendGeneralEvent(UsageEventType.QR_SCANNED)
+    // this.usage.sendGeneralEvent(EnrolmentEventType.ELIGIBILITY_MET)
     this.loading = true
     this.clearStatus()
     this.auth
@@ -168,4 +190,15 @@ export class ConsentPageComponent {
     this.navCtrl.setRoot(EligibilityPageComponent)
   }
 
+  onValueChange(event: YesOrNoQuestion) {
+    // NOTE: On init the component fires the event once
+    if (event === undefined) {
+      return
+    }
+    this.evaluatedQuestions.set(event.questionId, event)
+    // if total number of res questions are answered
+    if (this.evaluatedQuestions.size === this.totalNumberOfConsentsRequired) {
+      this.isSubmitConsentDisabled = false
+    }
+  }
 }

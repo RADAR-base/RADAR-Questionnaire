@@ -81,7 +81,7 @@ export class EligibilityPageComponent {
 
   processEligibility() {
     if (this.evaluatedQuestions.size === this.totalNumberOfEligibilityConditions) {
-      let isEligible = Array.from(this.evaluatedQuestions.values())
+      const isEligible = Array.from(this.evaluatedQuestions.values())
         .filter(
         d => {
           return (
@@ -145,10 +145,8 @@ export class EligibilityPageComponent {
     if (event === undefined) {
       return
     }
-    console.log('Test value change emit ', event)
     this.evaluatedQuestions.set(event.questionId, event)
-    console.log('eval questions' , this.evaluatedQuestions)
-    // if total number of res questions are answered
+    // if total number of questions are answered
     if (this.evaluatedQuestions.size === this.totalNumberOfEligibilityConditions) {
       this.isNextButtonDisabled = false
     }

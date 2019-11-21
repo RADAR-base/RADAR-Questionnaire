@@ -82,7 +82,7 @@ export class ConsentPageComponent {
         title: "Data Collection and Use",
         iconMd: "md-analytics",
         detail: [
-          "We take our obligation to protect your privacy very seriously. All of your information will be kept strictly confidential throughout the research project. It will not be possible to identify you from any of the publications or reports that are based on this study. Any answers you give to the survey questions will go from the app, to a secure server hosted by Amazon, and then straight to UCL."
+          "The survey questions will cover a wide range of topics that can affect your health and wellbeing, like your nutrition, housing, employment, and experience with your GP or healthcare provider. You may find that some questions do not apply to you or make you feel uncomfortable. You are free to choose ‘no response’ or stop answering the survey at any time by choosing the ‘stop survey’ option. Your data will only be used for academic research by UCL and will not be shared with anyone."
         ]
       },
       {

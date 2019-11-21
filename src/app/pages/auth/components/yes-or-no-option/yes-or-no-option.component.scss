@@ -1,12 +1,17 @@
 yes-or-no-option {
   display: block;
-  margin-left: -5px;
+  //margin-left: -5px;
   width: 100%;
 
   ion-label {
     color: $cl-light !important;
   }
 
+  tbody {
+    display: inline-block;
+    margin-right: auto;
+    margin-left: auto;
+  }
 
   tr {
     display: flex;

@@ -6,11 +6,10 @@ import { LocalizationService } from "../../../../core/services/misc/localization
 import { AlertService } from "../../../../core/services/misc/alert.service";
 import { UsageService } from "../../../../core/services/usage/usage.service";
 import { LogService } from "../../../../core/services/misc/log.service";
-import { StorageService } from "../../../../core/services/storage/storage.service";
-import { ConfigService } from "../../../../core/services/config/config.service";
 import { EnrolmentEventType } from "../../../../shared/enums/events";
 import { WelcomePageComponent } from "../welcome-page/welcome-page.component";
 import { ConsentPageComponent } from "../consent-page/consent-page.component";
+import { YesOrNoQuestion } from "../../../../shared/models/question";
 
 @Component({
   selector: 'page-eligibility',
@@ -22,14 +21,13 @@ export class EligibilityPageComponent {
   loading: boolean = false
   showOutcomeStatus: boolean = false
 
-  isEighteen: boolean = undefined
-  isBornOutOfUK: boolean = undefined
-  willMoveToUK: boolean = undefined
-
-  isQuestionOneAnswered = false
-  isQuestionTwoAnswered = false
-  isQuestionThreeAnswered = false
+  isNextButtonDisabled = true
   outcomeStatus: string
+
+  questions: YesOrNoQuestion[]
+  evaluatedQuestions: Map<number, YesOrNoQuestion>
+
+  totalNumberOfEligibilityConditions: number = 3
 
   constructor(
     public navCtrl: NavController,
@@ -38,10 +36,28 @@ export class EligibilityPageComponent {
     private alertService: AlertService,
     private usage: UsageService,
     private logger: LogService,
-    private storage: StorageService,
-    private config: ConfigService,
   ) {
-
+    this.questions = [
+      {
+        questionId: 1,
+        isAnswered: false,
+        question: "Are you at least 18 years old?",
+        answer: undefined
+      },
+      {
+        questionId: 2,
+        isAnswered: false,
+        question: "Were you born outside of the United Kingdom?",
+        answer: undefined
+      },
+      {
+        questionId: 3,
+        isAnswered: false,
+        question: "Are you planning to move to the UK in the next 6 months or currently living in the UK?",
+        answer: undefined
+      }
+    ];
+    this.evaluatedQuestions = new Map<number, YesOrNoQuestion>()
   }
 
   ionViewDidLoad() {
@@ -63,27 +79,22 @@ export class EligibilityPageComponent {
     this.slides.lockSwipes(true)
   }
 
-  isOlderThanEighteen(res: boolean) {
-    this.isQuestionOneAnswered = true
-    this.isEighteen = res;
-  }
-
-  isBornOutOfUnitedKingdom(res: boolean) {
-    this.isQuestionTwoAnswered = true
-    this.isBornOutOfUK = res;
-  }
-
-  isMovingToUK(res: boolean) {
-    this.isQuestionThreeAnswered = true
-    this.willMoveToUK = res;
-  }
-
   processEligibility() {
-    if(this.isBornOutOfUK != undefined && this.isEighteen != undefined && this.willMoveToUK != undefined) {
-      if(this.isBornOutOfUK === true && this.isEighteen == true && this.willMoveToUK === true){
+    if (this.evaluatedQuestions.size === this.totalNumberOfEligibilityConditions) {
+      let isEligible = Array.from(this.evaluatedQuestions.values())
+        .filter(
+        d => {
+          return (
+            d.answer === false
+          )
+        }).length === 0
+
+      if (isEligible) {
+        this.usage.sendGeneralEvent(EnrolmentEventType.ELIGIBILITY_MET)
         this.navigateToConsentPage();
       } else {
-        this.next();
+        this.usage.sendGeneralEvent(EnrolmentEventType.ELIGIBILITY_NOT_MET)
+        this.next()
       }
     }
   }
@@ -129,14 +140,18 @@ export class EligibilityPageComponent {
     this.navCtrl.setRoot(WelcomePageComponent)
   }
 
-  onValueChange(event: any) {
+  onValueChange(event: YesOrNoQuestion) {
     // NOTE: On init the component fires the event once
     if (event === undefined) {
       return
     }
     console.log('Test value change emit ', event)
-    // this.value = event
-    // this.emitAnswer()
+    this.evaluatedQuestions.set(event.questionId, event)
+    console.log('eval questions' , this.evaluatedQuestions)
+    // if total number of res questions are answered
+    if (this.evaluatedQuestions.size === this.totalNumberOfEligibilityConditions) {
+      this.isNextButtonDisabled = false
+    }
   }
 
 }

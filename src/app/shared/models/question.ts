@@ -66,3 +66,10 @@ export interface InfoItem {
   heading: string
   content: string
 }
+
+export interface YesOrNoQuestion {
+  isAnswered: boolean
+  answer: boolean
+  question: string
+  questionId: number
+}

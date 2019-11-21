@@ -1,11 +1,11 @@
 <div>
-  <span class="text-sm padding">{{question}}</span>
+  <span class="text-sm padding">{{question.question}}</span>
 </div>
 <br>
 <ion-list radio-group>
   <tr>
     <td *ngFor="let item of items">
-      <div style="padding-right: 10px; text-align: center">
+      <div style="padding-right: 10px;">
         <ion-item no-lines>
           <ion-radio
             [value]="item.value"

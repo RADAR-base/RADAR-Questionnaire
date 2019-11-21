@@ -14,6 +14,7 @@ export enum EnrolmentEventType {
   FAIL = 'sign_up_fail',
   ERROR = 'sign_up_error',
   ELIGIBILITY_MET = 'ELIGIBILITY_MET',
+  ELIGIBILITY_NOT_MET = 'ELIGIBILITY_NOT_MET',
 }
 
 export enum DataEventType {

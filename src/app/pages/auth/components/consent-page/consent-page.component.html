@@ -24,72 +24,14 @@
 
             <div class="text-sm">Please review the information below before you agree to participate in this study.</div>
             <ion-item-group>
-
-              <page-consent-item
-                title="Time Commitment"
-                md="md-alarm"
-                consentDetailText="CONSENT_TIME_COMMITMENT_DETAILS"
-              >
-              </page-consent-item>
-
-              <page-consent-item
-                title="Protecting Your Privacy"
-                md="md-lock"
-                consentDetailText="CONSENT_PRIVACY_POLICY_DETAILS"
-              >
-              </page-consent-item>
-
-              <page-consent-item
-                title="Data Collection and Use"
-                md="md-analytics"
-                consentDetailText="CONSENT_WITHDRAWAL_DETAILS"
-              >
-              </page-consent-item>
-
-              <page-consent-item
-                title="Benefits in Participating"
-                md="md-chatbubbles"
-                consentDetailText="CONSENT_CONTACT_YOU_DETAILS"
-              >
-              </page-consent-item>
-
-              <page-consent-item
-                title="Findings of the Study"
-                md="md-school"
-                consentDetailText="CONSENT_CONTACT_YOU_DETAILS"
-              >
-              </page-consent-item>
-
-              <page-consent-item
-                title="Disadvantages or Risks in Participating"
-                md="md-warning"
-                consentDetailText="CONSENT_CONTACT_YOU_DETAILS"
-              >
-              </page-consent-item>
-
-              <page-consent-item
-                title="Data Protection Privacy Notice"
-                md="md-paper"
-                consentDetailText="CONSENT_CONTACT_YOU_DETAILS"
-              >
-              </page-consent-item>
-
-              <page-consent-item
-                title="Follow up"
-                md="md-mail"
-                consentDetailText="CONSENT_CONTACT_YOU_DETAILS"
-              >
-              </page-consent-item>
-              <page-consent-item
-                title="Withdrawing"
-                md="md-unlock"
-                consentDetailText="CONSENT_CONTACT_YOU_DETAILS"
-              >
-              </page-consent-item>
-
+              <div *ngFor="let consentPageItem of consentPageItems">
+                <page-consent-item
+                  [currentItem]="consentPageItem"
+                >
+                </page-consent-item>
+              </div>
             </ion-item-group>
           </div>
-
 
           <div padding-top="5px">
             <div class="center" *ngFor="let question of questions">
@@ -98,11 +40,8 @@
                 [question]="question"
               >
               </yes-or-no-option>
-
             </div>
-
           </div>
-
         </ion-scroll>
 
         <div
@@ -124,8 +63,8 @@
       </ion-slide>
     </ion-slides>
   </div>
-  <ion-slides *ngIf="loading" direction="horizontal">
 
+  <ion-slides *ngIf="loading" direction="horizontal">
     <ion-slide padding id="loadingSlide">
       <div class="position-center">
         <ion-spinner name="dots"></ion-spinner>
@@ -138,4 +77,5 @@
       </div>
     </ion-slide>
   </ion-slides>
+
 </ion-content>

@@ -9,7 +9,7 @@ import { LogService } from "../../../../core/services/misc/log.service";
 import { EnrolmentEventType } from "../../../../shared/enums/events";
 import { WelcomePageComponent } from "../welcome-page/welcome-page.component";
 import { ConsentPageComponent } from "../consent-page/consent-page.component";
-import { YesOrNoQuestion } from "../../../../shared/models/question";
+import { YesOrNoQuestion } from "../../../../shared/models/auth";
 
 @Component({
   selector: 'page-eligibility',

@@ -1,9 +1,9 @@
 <ion-item>
   <ion-icon
-    [md]="md"
+    [md]="currentItem.iconMd"
     item-start>
   </ion-icon>
-  <ion-label class="text-heading"> {{title}}</ion-label>
+  <ion-label class="text-heading"> {{currentItem.title}}</ion-label>
   <ion-icon
     md="md-arrow-down"
     *ngIf="!showDetail"
@@ -17,7 +17,9 @@
     item-end></ion-icon>
 </ion-item>
 
-<!--Add line for each test-->
+<!--Add line for each text-->
 <ion-row *ngIf="showDetail">
-  <div class="detail text-justify"> {{ consentDetailText | translate }}</div>
+  <div *ngFor="let detail of currentItem.detail">
+    <div class="detail text-justify">  {{ detail }}</div>
+  </div>
 </ion-row>

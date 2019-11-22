@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core'
+import Parser from 'morph-expressions'
 
 import { DefaultQuestionsHidden } from '../../../../assets/data/defaultConfig'
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
@@ -7,6 +8,7 @@ import { LocalizationService } from '../../../core/services/misc/localization.se
 import { ConfigKeys } from '../../../shared/enums/config'
 import { ShowIntroductionType } from '../../../shared/models/assessment'
 import { Question, QuestionType } from '../../../shared/models/question'
+import { parseLogic } from '../../../shared/utilities/parsers'
 import { getTaskType } from '../../../shared/utilities/task-type'
 import { getSeconds } from '../../../shared/utilities/time'
 import { AnswerService } from './answer.service'
@@ -24,6 +26,7 @@ export class QuestionsService {
     QuestionType.timed,
     QuestionType.audio
   ])
+  logicParser: any
 
   constructor(
     public questionnaire: QuestionnaireService,
@@ -32,7 +35,9 @@ export class QuestionsService {
     private localization: LocalizationService,
     private finish: FinishTaskService,
     private remoteConfig: RemoteConfigService
-  ) {}
+  ) {
+    this.logicParser = new Parser()
+  }
 
   reset() {
     this.answerService.reset()
@@ -97,30 +102,28 @@ export class QuestionsService {
   }
 
   evalBranchingLogicAndGetNextQuestion(questions, currentQuestion) {
-    let questionIdx = currentQuestion + 1
+    let qIndex = currentQuestion + 1
     while (
-      questionIdx < questions.length &&
-      questions[questionIdx].evaluated_logic !== ''
+      qIndex < questions.length &&
+      questions[qIndex].branching_logic.length
     ) {
-      const responses = Object.assign({}, this.answerService.answers)
-      const logic = questions[questionIdx].evaluated_logic
+      const logic = parseLogic(questions[qIndex].branching_logic)
       const logicFieldName = this.getLogicFieldName(logic)
       const answers = this.answerService.answers[logicFieldName]
-      if (typeof answers !== 'undefined') {
-        const answerLength = answers.length
-        if (!answerLength) if (eval(logic) === true) return questionIdx
-        for (const answer of answers) {
-          responses[logicFieldName] = answer
-          if (eval(logic) === true) return questionIdx
-        }
+      if (this.answerService.check(logicFieldName)) {
+        const values = {}
+        if (Array.isArray(answers)) answers.forEach(a => (values[a] = '1'))
+        else values[answers] = '1'
+        if (this.logicParser.parseAndEval(logic, { [logicFieldName]: values }))
+          return qIndex
       }
-      questionIdx += 1
+      qIndex += 1
     }
-    return questionIdx
+    return qIndex
   }
 
   getLogicFieldName(logic) {
-    return logic.split("['")[1].split("']")[0]
+    return logic.split('[')[0]
   }
 
   getNextQuestion(questions, currentQuestion) {

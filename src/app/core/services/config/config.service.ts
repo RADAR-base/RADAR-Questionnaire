@@ -16,7 +16,7 @@ import {
   NotificationEventType
 } from '../../../shared/enums/events'
 import { User } from '../../../shared/models/user'
-import { parseVersion } from '../../../shared/utilities/parse-version'
+import { parseVersion } from '../../../shared/utilities/parsers'
 import { TaskType } from '../../../shared/utilities/task-type'
 import { KafkaService } from '../kafka/kafka.service'
 import { LocalizationService } from '../misc/localization.service'

@@ -109,8 +109,8 @@ export class QuestionsService {
     ) {
       const logic = parseLogic(questions[qIndex].branching_logic)
       const logicFieldName = this.getLogicFieldName(logic)
-      const answers = this.answerService.answers[logicFieldName]
       if (this.answerService.check(logicFieldName)) {
+        const answers = this.answerService.answers[logicFieldName]
         const values = {}
         if (Array.isArray(answers)) answers.forEach(a => (values[a] = '1'))
         else values[answers] = '1'

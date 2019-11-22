@@ -155,6 +155,7 @@ export class ScheduleService {
   insertTask(task): Promise<any> {
     const type = getTaskType(task)
     return this.getTasks(type).then(tasks => {
+      if (!tasks) return
       const updatedTasks = tasks.map(d => (d.index === task.index ? task : d))
       return this.setTasks(type, updatedTasks)
     })

@@ -245,6 +245,14 @@ export const DefaultSettingsSupportedLanguages: LanguageSetting[] = [
   {
     label: LocKeys.LANGUAGE_GERMAN.toString(),
     value: 'de'
+  },
+  {
+    label: LocKeys.LANGUAGE_POLISH.toString(),
+    value: 'pl'
+  },
+  {
+    label: LocKeys.LANGUAGE_HEBREW.toString(),
+    value: 'hb'
   }
 ]
 

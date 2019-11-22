@@ -47,7 +47,7 @@ export class QuestionComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.isScrollable = !this.NON_SCROLLABLE_SET.has(this.question.field_type)
-    setTimeout(() => (this.isLoading = false), 50)
+    setTimeout(() => (this.isLoading = false), 200)
   }
 
   ngOnChanges() {

@@ -19,6 +19,7 @@
         </ion-slide>
         <ion-slide>
           <finish
+            *ngIf="showFinishScreen"
             [content]="endText"
             [displayNextTaskReminder]="isLastTask"
             [isClinicalTask]="isClinicalTask"

@@ -2702,10 +2702,10 @@ colors@^1.1.0, colors@^1.1.2:
   resolved "https://registry.yarnpkg.com/colors/-/colors-1.4.0.tgz#c50491479d4c1bdaed2c9ced32cf7c7dc2360f78"
   integrity sha512-a+UqTh4kgZg/SlGvfbzDHpgRu7AAQOmmqRHJnxhRZICKFUT91brVhNNt58CMWU9PsBbv3PDCZUHbVxuDiH2mtA==
 
-com-darryncampbell-cordova-plugin-intent@^1.1.4:
-  version "1.1.8"
-  resolved "https://registry.yarnpkg.com/com-darryncampbell-cordova-plugin-intent/-/com-darryncampbell-cordova-plugin-intent-1.1.8.tgz#f965951b38d88c2da5c512ed89cb30871e1f878f"
-  integrity sha512-gEEBCjiycuoK28DofmaNkxYtOre6czLnNvMYFssH2ycHeY5ickm0SBfVTB+GPtXCeUkxAmxANnJn2p4SX8QcWw==
+com-darryncampbell-cordova-plugin-intent@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/com-darryncampbell-cordova-plugin-intent/-/com-darryncampbell-cordova-plugin-intent-1.2.0.tgz#95c9c6bf7b60e15b09796c27f0d331be524f74a0"
+  integrity sha512-QUnNMMYU4swoS+P3VnUFNo8nvenh7hW11OqnIYXFMTvg3sqj2bHUNmL9tSoXaHQpq1O/7UDzzaUgAFdZ3xaTxA==
 
 combine-source-map@^0.8.0, combine-source-map@~0.8.0:
   version "0.8.0"

@@ -109,25 +109,29 @@ In order for notifications to be sent, you must run your own app server. It is p
 
 For Android remote notifications, setting your sender ID and adding your `google-services.json` file is enough to begin receiving notifications. However, for iOS notifications, you must add either an APNs authentication key or APNs certificate to connect with Apple Push Notifications. This can be added in the Firebase project's Cloud Messaging settings.
 
-
 ### Remote Config
 
 Certain values can be overriden using Firebase Remote Config. Specifically, the following variables are supported:
 
-| Parameter                 | Description                                                      | Default value                                                                                                    |
-| ------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `oauth_client_id`         | Client ID to connect to the ManagementPortal with                | `aRMT`                                                                                                           |
-| `oauth_client_secret`     | Client secret to connect to the ManagementPortal with            | Value set in `secret.ts`                                                                                         |
-| `oauth_refresh_seconds`   | After how many seconds to refresh the OAuth token                | `1800` (=30 minutes)                                                                                             |
-| `protocol_base_url`       | Base URL where the protocol definitions are located.             | <https://api.github.com/repos/RADAR-base/RADAR-aRMT-protocols/contents>                                          |
-| `protocol_branch`         | Github branch where the protocol definitions should be read from | `master`                                                                                                         |
-| `protocol_path`           | Path inside a project name that should be read for a protocol    | `protocol.json`                                                                                                  |
-| `kafka_specification_url` | URL of the Kafka topic specification                             | <https://api.github.com/repos/RADAR-base/radar-schemas/contents/specifications/active/aRMT_1.4.3.yml?ref=master> |
-| `platform_instance`       | Title of RADAR Base / platform instance                          | `RADAR-CNS`                                                                                                      |
+| Parameter                 | Description                                                                                                                   | Default value                                                                                                    |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `oauth_client_id`         | Client ID to connect to the ManagementPortal with                                                                             | `aRMT`                                                                                                           |
+| `oauth_client_secret`     | Client secret to connect to the ManagementPortal with                                                                         | Value set in `secret.ts`                                                                                         |
+| `oauth_refresh_seconds`   | After how many seconds to refresh the OAuth token                                                                             | `1800` (=30 minutes)                                                                                             |
+| `protocol_base_url`       | Base URL where the protocol definitions are located.                                                                          | <https://api.github.com/repos/RADAR-base/RADAR-aRMT-protocols/contents>                                          |
+| `protocol_branch`         | Github branch where the protocol definitions should be read from                                                              | `master`                                                                                                         |
+| `protocol_path`           | Path inside a project name that should be read for a protocol                                                                 | `protocol.json`                                                                                                  |
+| `kafka_specification_url` | URL of the Kafka topic specification                                                                                          | <https://api.github.com/repos/RADAR-base/radar-schemas/contents/specifications/active/aRMT_1.4.3.yml?ref=master> |
+| `platform_instance`       | Title of RADAR Base / platform instance                                                                                       | `RADAR-CNS`                                                                                                      |
+| `questions_hidden`        | Specify certain questions of questionnaires to hide. Conditions may be added as well (see below). Example: `{“ESM”: “1,2,3”}` | `{}`                                                                                                             |
+
+#### Conditions
+
+Conditions can be added to remote config variables to target specific groups of users. Different condition rule types are supported: app, platform, country/region, user property, date/time, and random percentile. For example a `protocol_branch` config value can be different based on the user property `projectId`.
 
 ### Analytics
 
-In order to personalize Firebase events, certain user properties must be added to the Firebase console. Specifically, the following user properties are supported:
+In order to personalize Firebase events and remote config variables, certain user properties may be added to the Firebase console. Specifically, the following user properties are supported:
 
 | Property          | Description                                                       |
 | ----------------- | ----------------------------------------------------------------- |
@@ -171,6 +175,16 @@ export const DefaultSchemaGithubRepo = 'RADAR-Base/RADAR-Schemas'
 
 // The name of the branch in the schema repository
 export const DefaultSchemaBranch = 'master'
+```
+
+## Adding Language Support
+
+Translations must be specified or modified in the localisations file `(src/assets/data/localisations.ts)`. When adding additional text in the localisations file, additional keys must also be added to `src/app/shared/enums/localisations.ts`.
+
+To add additional languages, the following default config `(src/assets/data/defaultConfig.ts)` variable must be updated:
+
+```ts
+export const DefaultSettingsSupportedLanguages: LanguageSetting[] = []
 ```
 
 ## Publishing to the Google Playstore

@@ -12,6 +12,9 @@ export class AlertService {
    * @returns {Promise} Returns a promise which is resolved when the transition has completed.
    */
   showAlert(parameters?: AlertOptions): Promise<any> {
+    parameters.message = parameters.message
+      ? '<div dir="auto">' + parameters.message + '</div>'
+      : parameters.message
     const alert = this.alertCtrl.create(parameters)
     return alert.present()
   }

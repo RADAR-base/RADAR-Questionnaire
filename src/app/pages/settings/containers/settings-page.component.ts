@@ -208,7 +208,10 @@ export class SettingsPageComponent {
 
   sendCachedData() {
     const loader = this.loadCtrl.create({
-      content: 'Please wait...',
+      content:
+        '<div dir="auto">' +
+        this.localization.translateKey(LocKeys.SETTINGS_WAIT_ALERT) +
+        '...</div>',
       duration: 15000
     })
     loader.present()

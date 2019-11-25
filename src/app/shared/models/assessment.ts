@@ -10,7 +10,7 @@ export interface Assessment {
   startText?: MultiLanguageText
   endText?: MultiLanguageText
   warn?: MultiLanguageText
-  showIntroduction?: boolean
+  showIntroduction?: boolean | ShowIntroductionType
   isDemo?: boolean
   questions: Question[]
   showInCalendar?: boolean
@@ -23,4 +23,10 @@ export interface QuestionnaireMetadata {
   avsc: string
   type?: string
   format?: string
+}
+
+export enum ShowIntroductionType {
+  ALWAYS = 'always',
+  ONCE = 'once',
+  NEVER = 'never'
 }

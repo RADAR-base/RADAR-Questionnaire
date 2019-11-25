@@ -1,9 +1,11 @@
 question {
+  text-align: initial;
+
   .content {
     display: flex;
     flex-direction: column;
-    height: 96%;
-    text-align: left;
+    height: 100%;
+    text-align: initial;
   }
 
   p {
@@ -36,8 +38,21 @@ question {
 
   .input {
     flex-grow: 1;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: hidden;
     padding: 4px;
+  }
+
+  .input-scroll {
+    overflow-y: auto !important;
+    mask-image:
+      linear-gradient(to top, transparent 3%, black 7%),
+      linear-gradient(to bottom, transparent 0%, black 7%);
+    mask-size: 100% 50%, 100% 51%;
+    mask-position: bottom, top;
+    mask-repeat: no-repeat, no-repeat;
+  }
+
+  .spinner-container {
+    text-align: center;
   }
 }

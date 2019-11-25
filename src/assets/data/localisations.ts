@@ -503,6 +503,16 @@ export const Localisations = {
     pl: 'Wyślij dane z pamięci podręcznej',
     hb: 'שלח נתונים במטמון'
   },
+  SETTINGS_WAIT_ALERT: {
+    da: 'Vent venligst',
+    de: 'Warten Sie mal',
+    en: 'Please wait',
+    es: 'Por favor espera',
+    it: 'Attendere prego',
+    nl: 'Even geduld aub',
+    pl: 'Proszę czekać',
+    hb: 'המתן בבקשה'
+  },
   LANGUAGE_ENGLISH: {
     da: 'Engelsk',
     de: 'Englisch',
@@ -564,7 +574,7 @@ export const Localisations = {
     hb: 'הולנדית'
   },
   LANGUAGE_POLISH: {
-    da: 'polere',
+    da: 'Polere',
     de: 'Polieren',
     en: 'Polish',
     es: 'Polaco',
@@ -580,7 +590,7 @@ export const Localisations = {
     es: 'Hebreo',
     it: 'Ebraico',
     nl: 'Hebreeuws',
-    pl: 'hebrajski',
+    pl: 'Hebrajski',
     hb: 'עברית'
   },
   BTN_ENROL_ENROL: {
@@ -654,7 +664,7 @@ export const Localisations = {
     hb: 'התחל'
   },
   BTN_STOP: {
-    da: 'Stop',
+    da: 'Stoppe',
     de: 'Stoppen',
     en: 'Stop',
     es: 'Detener',
@@ -819,7 +829,9 @@ export const Localisations = {
     en: 'Update',
     es: 'Actualizar',
     it: 'Aggiorna',
-    nl: 'Bijwerken'
+    nl: 'Bijwerken',
+    pl: 'zmodernizować',
+    hb: 'עדכון'
   },
   STATUS_LOADING: {
     da: 'Indlæser',
@@ -858,7 +870,7 @@ export const Localisations = {
     es: 'Error',
     it: 'Non riuscuto',
     nl: 'Mislukt',
-    pl: 'NIe udało się',
+    pl: 'Nie udało się',
     hb: 'נכשל'
   },
   STATUS_UPDATE_AVAILABLE: {
@@ -867,7 +879,9 @@ export const Localisations = {
     en: 'New Version Available',
     es: 'Nueva Versión Disponible',
     it: 'Nuova Versione Disponibile',
-    nl: 'Nieuwe Versie Beschikbaar'
+    nl: 'Nieuwe Versie Beschikbaar',
+    pl: 'Nowa wersja dostępna',
+    hb: 'גרסה חדשה זמינה'
   },
   STATUS_UPDATE_AVAILABLE_DESC: {
     da: 'Opdater din app, før du fortsætter.',
@@ -875,7 +889,9 @@ export const Localisations = {
     en: 'Please update your app before continuing.',
     es: 'Actualice su aplicación antes de continuar.',
     it: `Aggiorna l'app prima di continuare.`,
-    nl: 'Werk uw app bij voordat u doorgaat.'
+    nl: 'Werk uw app bij voordat u doorgaat.',
+    pl: 'Zaktualizuj aplikację przed kontynuowaniem',
+    hb: 'אנא עדכן את האפליקציה שלך לפני שתמשיך'
   },
   NOTIFICATION_TEST_REMINDER_NOW: {
     da: 'Testmeddelelse',
@@ -1145,7 +1161,7 @@ export const Localisations = {
     it: 'Ben fatto!',
     nl: 'Goed gedaan!',
     pl: 'Gratulacje!',
-    hb: ''
+    hb: 'הכבוד'
   },
   TASK_BAR_AFFIRMATION_2: {
     da: 'Alle opgaver er gennemført.',

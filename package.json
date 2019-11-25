@@ -129,7 +129,7 @@
         "@types/jasminewd2": "^2.0.8",
         "@types/node": "^12.7.8",
         "codelyzer": "^5.1.2",
-        "eslint": "^6.5.1",
+        "eslint": "^6.7.1",
         "eslint-scope": "^5.0.0",
         "import-sort-cli": "^6.0.0",
         "import-sort-parser-babylon": "^6.0.0",

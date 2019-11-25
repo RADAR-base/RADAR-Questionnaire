@@ -27,8 +27,8 @@ export const Localisations = {
     es: 'a RADAR-Base',
     it: 'in RADAR-Base',
     nl: 'bij RADAR-Base',
-    pl: 'w RADAR-CNS',
-    hb: 'RADAR-CNS-ל'
+    pl: 'w RADAR-Base',
+    hb: 'RADAR-Base-ל'
   },
   ENROL_WELCOME_DESC: {
     da:
@@ -43,10 +43,9 @@ export const Localisations = {
       'Grazie per aver preso parte al nostro studio. Iniziamo il processo di arruolamento.',
     nl:
       'Bedankt voor uw deelname aan dit onderzoek. Laten we starten met het registratie-proces.',
-    pl: 
+    pl:
       'Dziękujemy za wzięcie udziału w badaniu. Przejdź przez proces rejestracji, byś mógł zacząć korzystać z aplikacji',
-    hb: 
-      '.תודה שאתם משתתף במחקר זה. בוא נתחיל את הליך ההרשמה באפליקציה'  
+    hb: '.תודה שאתם משתתף במחקר זה. בוא נתחיל את הליך ההרשמה באפליקציה'
   },
   ENROL_REGISTRATION: {
     da: 'Registrering',
@@ -71,10 +70,10 @@ export const Localisations = {
       'Prima di poter usare questa app, devi registrarti. Puoi scansionare il codice QR o inserire il token.',
     nl:
       'Voordat u de app kunt gebruiken, moeten we de app eerst registreren. U kunt de QR code scannen of het token invoeren.',
-    pl: 
+    pl:
       'Zanim będziesz mógł korzystać z aplikacji, musisz się zarejestrować. Możesz zeskanować kod QR lub wpisać Token',
-    hb: 
-      'לפני שתוכל להתחיל להשתמש באפליקציה, אנחנו צריכים שתרשם אליה. תוכל לעשות זאת באמצעות קוד QR או הזנת טוקן'  
+    hb:
+      'לפני שתוכל להתחיל להשתמש באפליקציה, אנחנו צריכים שתרשם אליה. תוכל לעשות זאת באמצעות קוד QR או הזנת טוקן'
   },
   ENROL_REGISTRATION_SCAN_DESC: {
     da:
@@ -89,10 +88,10 @@ export const Localisations = {
       'Premi il pulsante "Scan" e inquadra il codice QR che hai ricevuto dal personale dello studio. Qui sotto puoi vedere un QR di esempio.',
     nl:
       'Klik op de "Scan" knop en richt de camera op de QR code die u heeft ontvangen van de onderzoeker. Hieronder staat een voorbeeld van een QR code afgebeeld.',
-    pl: 
+    pl:
       'Kliknij przycisk Skanuj i skieruj aparat telefonu na kod QR, który otrzymałeś od badacza. Przykładowy kod QR znajduje się poniżej.',
-    hb: 
-      '.לחץ על כפתור הסריקה וכוון את הממלצה לקוד QR, שניתן לך מהחוקר. דוגמה לקוד QR מוצגת מטה'  
+    hb:
+      '.לחץ על כפתור הסריקה וכוון את הממלצה לקוד QR, שניתן לך מהחוקר. דוגמה לקוד QR מוצגת מטה'
   },
   ENROL_REGISTRATION_TOKEN_DESC: {
     da:
@@ -107,10 +106,10 @@ export const Localisations = {
       'Inserisci il token. Questo dovrebbe essere disponibile sotto il codice QR sul portale di gestione. Se non è presente, scansiona il codice QR.',
     nl:
       'Voer het token in. Dit moet beschikbaar zijn onder de QR-code op Management Portal. Indien niet aanwezig, scan de QR-code.',
-    pl: 
+    pl:
       'Wprowadź Token. Powinien być widoczny poniżej kodu QR w Mahagement Portal. Jeśli go tam nie znajdziesz, zeskanuj kod QR.',
-    hb: 
-      'הזן את הטוקן. זה אמור להיות זמין לך תחת הקוד QR בפורטל ניהול. אם הוא לא זמין, בבקשה סרוק את הקוד QR.'  
+    hb:
+      'הזן את הטוקן. זה אמור להיות זמין לך תחת הקוד QR בפורטל ניהול. אם הוא לא זמין, בבקשה סרוק את הקוד QR.'
   },
   ENROL_PREFERENCES: {
     da: 'Præferencer',
@@ -135,10 +134,10 @@ export const Localisations = {
       'Ti invieremo ogni settimana un riepilogo dei dati raccolti. Sentiti libero di selezionare solo gli argomenti di cui vuoi ricevere le informazioni.',
     nl:
       'We zullen u wekelijks samenvattingen sturen over uw verzamelde gegevens. U kunt zelf de onderwerpen selecteren waarover uw informatie wilt ontvangen.',
-    pl: 
+    pl:
       'Co tydzień wyślemy Ci podsumowanie zebranych przez nas danych. Wybierz wszystkie tematy, na temat których chciałbyś uzyskiwać informacje.',
-    hb: 
-      'נשלח לך סיכומים שבועיים על המידע שאתה שולח לנו. תרגיש חופשי לבחור כמה נושאים שתרצה לקבל עליהם מידע.'  
+    hb:
+      'נשלח לך סיכומים שבועיים על המידע שאתה שולח לנו. תרגיש חופשי לבחור כמה נושאים שתרצה לקבל עליהם מידע.'
   },
   ENROL_REGISTRATION_COMPLETE: {
     da: 'Registrering Afsluttet',
@@ -151,14 +150,21 @@ export const Localisations = {
     hb: 'הרשמה הושלמה'
   },
   ENROL_REGISTRATION_COMPLETE_DESC: {
-    da: "Du er nu med tilmelding til undersøgelsen. Klik på 'Afslut' for at begynde at generere din spørgeskemaplan og dine meddelelser.",
-    de: "Sie haben sich jetzt erfolgreich für die Studie angemeldet. Klicken Sie auf 'Fertig', um den Zeitplan und die Benachrichtigungen für Ihren Fragebogen zu erstellen.",
-    en: "You have now successfully enrolled in the study. Click 'Finish' to start generating your questionnaire schedule and notifications.",
-    es: "Ahora se ha inscrito con éxito en el estudio. Haga clic en 'Finalizar' para comenzar a generar su calendario de cuestionarios y notificaciones.",
-    it: "Ora ti sei iscritto con successo allo studio. Fai clic su 'Fine' per iniziare a generare la pianificazione del questionario e le notifiche.",
-    nl: "U bent nu succesvol ingeschreven voor het onderzoek. Klik op 'Voltooid' om uw vragenlijstschema en meldingen te genereren.",
-    pl: 'Z powodzeniem zarejestrowałeś się w badaniu. Kliknij „Zakończone”, aby wygenerować harmonogram kwestionariusza i powiadomienia',
-    hb: '.נרשמת בהצלחה למחקר. לחץ על 'סיום' כדי להתחיל ליצור את לוח הזמנים וההודעות שלך'
+    da:
+      "Du er nu med tilmelding til undersøgelsen. Klik på 'Afslut' for at begynde at generere din spørgeskemaplan og dine meddelelser.",
+    de:
+      "Sie haben sich jetzt erfolgreich für die Studie angemeldet. Klicken Sie auf 'Fertig', um den Zeitplan und die Benachrichtigungen für Ihren Fragebogen zu erstellen.",
+    en:
+      "You have now successfully enrolled in the study. Click 'Finish' to start generating your questionnaire schedule and notifications.",
+    es:
+      "Ahora se ha inscrito con éxito en el estudio. Haga clic en 'Finalizar' para comenzar a generar su calendario de cuestionarios y notificaciones.",
+    it:
+      "Ora ti sei iscritto con successo allo studio. Fai clic su 'Fine' per iniziare a generare la pianificazione del questionario e le notifiche.",
+    nl:
+      "U bent nu succesvol ingeschreven voor het onderzoek. Klik op 'Voltooid' om uw vragenlijstschema en meldingen te genereren.",
+    pl:
+      'Z powodzeniem zarejestrowałeś się w badaniu. Kliknij „Zakończone”, aby wygenerować harmonogram kwestionariusza i powiadomienia',
+    hb: `.נרשמת בהצלחה למחקר. לחץ על 'סיום' כדי להתחיל ליצור את לוח הזמנים וההודעות שלך`
   },
   FINISH_THANKS: {
     da: 'Tak fordi du udfyldte spørgeskemaet.',
@@ -212,10 +218,9 @@ export const Localisations = {
       'Sfortunatamente, puoi rispondere a questo questionario solo al momento della notifica.',
     nl:
       'Helaas kunt u deze vragenlijst alleen op het aangegeven tijdstip beantwoorden.',
-    pl: 
+    pl:
       'Niestety kwestionariusz można wypełniać tylko po otrzymaniu powiadomienia',
-    hb: 
-      '.לצערנו, אתה יכול לענות על השאלון רק כשיש ההתראה'  
+    hb: '.לצערנו, אתה יכול לענות על השאלון רק כשיש ההתראה'
   },
   CLINICAL_TASKS: {
     da: 'Kliniske vurderinger',
@@ -338,22 +343,17 @@ export const Localisations = {
     hb: 'מצב לילה'
   },
   SETTINGS_NOTIFICATIONS_NIGHTMOD_DESC: {
-    da: 
-      'Nattilstand stopper alle notifikationer imellem kl. 22:00 og 07:30.',
+    da: 'Nattilstand stopper alle notifikationer imellem kl. 22:00 og 07:30.',
     de:
       'Der Nachtmodus stoppt alle Benachrichtigungen zwischen 22:00 und 07:30.',
-    en: 
-      'Night Mode stops all notifications between 22:00 and 07:30.',
+    en: 'Night Mode stops all notifications between 22:00 and 07:30.',
     es:
       'La modalidad nocturna detiene todas las notificaciones entre las  22 y las  7:30 horas',
     it:
       "La modalità notte bloccherà tutte le notifiche dell'app tra le 22:00 e le 7:30.",
-    nl: 
-      'De nachtmodus blokkeert alle notificaties tussen 22:00u en 7:30u.',
-    pl: 
-      'Tryb nocny blokuje wszystkie powiadomienia między 22:00 a 07:30.',
-    hb: 
-      '.מצב לילה עוצר את כל ההתראות בין 22:00 ל- 7:30 למחרת'
+    nl: 'De nachtmodus blokkeert alle notificaties tussen 22:00u en 7:30u.',
+    pl: 'Tryb nocny blokuje wszystkie powiadomienia między 22:00 a 07:30.',
+    hb: '.מצב לילה עוצר את כל ההתראות בין 22:00 ל- 7:30 למחרת'
   },
   SETTINGS_REPORT: {
     da: 'Ugentlig rapport',
@@ -416,7 +416,7 @@ export const Localisations = {
     hb: '.אתה עומד לאפס את האפליקציה'
   },
   SETTINGS_RESET_ALERT_OPTION_DESC: {
-    da: 
+    da:
       'Vælg kun at nulstille appkonfiguration og data, eller udfør en fuldstændig nulstilling og tilmelding.',
     de:
       'Wählen Sie diese Option, um nur die App-Konfiguration und -Daten zurückzusetzen, oder führen Sie einen vollständigen Reset und eine erneute Registrierung durch.',
@@ -424,13 +424,13 @@ export const Localisations = {
       'Choose to reset app configuration and data only or do a full reset and re-enrol.',
     es:
       'Elija restablecer la configuración de la aplicación y solo los datos o realice un reinicio completo y vuelva a inscribirse.',
-    it: 
+    it:
       "Scegli di ripristinare solo la configurazione e i dati dell'app oppure eseguire un ripristino completo e ripetere la registrazione.",
-    nl: 
-      "Kies ervoor om de app-configuratie en -gegevens alleen opnieuw in te stellen of een volledige reset uit te voeren en opnieuw in te schrijven.",
+    nl:
+      'Kies ervoor om de app-configuratie en -gegevens alleen opnieuw in te stellen of een volledige reset uit te voeren en opnieuw in te schrijven.',
     pl:
       'wybierz tylko zresetować konfigurację i dane aplikacji lub wykonać pełny reset i ponownie zarejestrować',
-    hb: 
+    hb:
       '.בחר לאפס את תצורת ונתוני האפליקציה בלבד או לבצע איפוס מלא ולהירשם מחדש'
   },
   SETTINGS_CACHE: {
@@ -564,24 +564,24 @@ export const Localisations = {
     hb: 'הולנדית'
   },
   LANGUAGE_POLISH: {
-    da: 'polere',
-    de: 'Polieren',
+    da: 'Polish',
+    de: 'Polish',
     en: 'Polish',
-    es: 'Polaco',
-    it: 'Polacco',
-    nl: 'Pools',
-    pl: 'Polski',
-    hb: 'פולני'
+    es: 'Polish',
+    it: 'Polish',
+    nl: 'Polish',
+    pl: 'Polish',
+    hb: 'Polish'
   },
   LANGUAGE_HEBREW: {
     da: 'Hebrew',
-    de: 'Hebräisch',
+    de: 'Hebrew',
     en: 'Hebrew',
-    es: 'Hebreo',
-    it: 'Ebraico',
-    nl: 'Hebreeuws',
-    pl: 'hebrajski',
-    hb: 'עברית'
+    es: 'Hebrew',
+    it: 'Hebrew',
+    nl: 'Hebrew',
+    pl: 'Hebrew',
+    hb: 'Hebrew'
   },
   BTN_ENROL_ENROL: {
     da: 'Registrering',
@@ -654,7 +654,7 @@ export const Localisations = {
     hb: 'התחל'
   },
   BTN_STOP: {
-    da: 'Stoppe',
+    da: 'Stop',
     de: 'Stoppen',
     en: 'Stop',
     es: 'Detener',
@@ -788,13 +788,13 @@ export const Localisations = {
     de: 'Ja',
     en: 'Yes',
     es: 'Sí',
-    it: 'sì',
+    it: 'Sì',
     nl: 'Ja',
     pl: 'Tak',
     hb: 'כן'
   },
   BTN_NO: {
-    da: 'Ingen',
+    da: 'Nej',
     de: 'Nein',
     en: 'No',
     es: 'No',
@@ -805,13 +805,21 @@ export const Localisations = {
   },
   BTN_TRY_AGAIN: {
     da: 'Prøv igen',
-    de: 'Versuchen Sie es nochmal',
+    de: 'Erneut versuchen',
     en: 'Try again',
-    es: 'Inténtalo de nuevo',
-    it: 'Riprova',
-    nl: 'Probeer het opnieuw',
+    es: 'Volver a intentar',
+    it: 'Prova di nuovo',
+    nl: 'Probeer opnieuw',
     pl: 'Spróbuj ponownie',
     hb: 'נסה שוב'
+  },
+  BTN_UPDATE: {
+    da: 'Opdater',
+    de: 'Aktualisieren',
+    en: 'Update',
+    es: 'Actualizar',
+    it: 'Aggiorna',
+    nl: 'Bijwerken'
   },
   STATUS_LOADING: {
     da: 'Indlæser',
@@ -853,6 +861,22 @@ export const Localisations = {
     pl: 'NIe udało się',
     hb: 'נכשל'
   },
+  STATUS_UPDATE_AVAILABLE: {
+    da: 'Ny Version Tilgængelig',
+    de: 'Neue Version Verfügbar',
+    en: 'New Version Available',
+    es: 'Nueva Versión Disponible',
+    it: 'Nuova Versione Disponibile',
+    nl: 'Nieuwe Versie Beschikbaar'
+  },
+  STATUS_UPDATE_AVAILABLE_DESC: {
+    da: 'Opdater din app, før du fortsætter.',
+    de: 'Bitte aktualisieren Sie Ihre App, bevor Sie fortfahren.',
+    en: 'Please update your app before continuing.',
+    es: 'Actualice su aplicación antes de continuar.',
+    it: `Aggiorna l'app prima di continuare.`,
+    nl: 'Werk uw app bij voordat u doorgaat.'
+  },
   NOTIFICATION_TEST_REMINDER_NOW: {
     da: 'Testmeddelelse',
     de: 'Testbenachrichtigung',
@@ -880,34 +904,25 @@ export const Localisations = {
       'Der RADAR-CNS Fragebogen muss morgen ausgefüllt werden – bitte denken Sie daran.',
     en:
       'RADAR-CNS questionnaire needs to be completed tomorrow – please remember.',
-    es: 
-      'Recuerde que mañana tendrá que completar el cuestionario RADAR-CNS.',
-    it: 
-      'Ti ricordiamo che domani dovrai compilare il questionario RADAR-CNS.',
+    es: 'Recuerde que mañana tendrá que completar el cuestionario RADAR-CNS.',
+    it: 'Ti ricordiamo che domani dovrai compilare il questionario RADAR-CNS.',
     nl:
       'Vergeet u s.v.p. niet om de RADAR-CNS vragenlijst uiterlijk morgen in te vullen?',
-    pl: 
-      'Ankietę RADAR-CNS powinieneś wypełnić jutro – prosimy pamiętaj',
-    hb: 
-      'יש להשלים את שאלון RADAR-CNS מחר- נא לזכור'  
+    pl: 'Ankietę RADAR-CNS powinieneś wypełnić jutro – prosimy pamiętaj',
+    hb: 'יש להשלים את שאלון RADAR-CNS מחר- נא לזכור'
   },
   NOTIFICATION_REMINDER_SOON_DESC: {
-    da: 
-      'Husk at sætte lidt tid af i morgen, til at svare på et par spørgsmål.',
-    de: 
-      'Denken Sie daran, morgen etwas Zeit für ein paar Fragebögen zu haben.',
-    en: 
-      'Remember to put some time aside for a few questionnaires tomorrow.',
+    da: 'Husk at sætte lidt tid af i morgen, til at svare på et par spørgsmål.',
+    de: 'Denken Sie daran, morgen etwas Zeit für ein paar Fragebögen zu haben.',
+    en: 'Remember to put some time aside for a few questionnaires tomorrow.',
     es:
       'Recuerde reservarse el tiempo mañana para contestar algunos cuestionarios',
     it:
       'Domani ricordati di lasciare del tempo libero per rispondere a brevi questionari.',
     nl:
       'Vergeet u niet om morgen wat tijd vrij te maken voor het invullen van enkele vragenlijsten?',
-    pl: 
-      'Pamiętaj, by jutro zachować trochę czasu na wypełnienie ankiety.',
-    hb: 
-      'תזכור לפנות קצת זמן להשלים שאלונים מחר'  
+    pl: 'Pamiętaj, by jutro zachować trochę czasu na wypełnienie ankiety.',
+    hb: 'תזכור לפנות קצת זמן להשלים שאלונים מחר'
   },
   NOTIFICATION_REMINDER_NOW: {
     da: 'Tid til at svare på spørgsmål',
@@ -962,10 +977,9 @@ export const Localisations = {
       'Sembra che ti sia dimenticato di rispondere ad alcune domande. Puoi farlo ora?',
     nl:
       'Het lijkt erop dat u niet alle vragen heeft beantwoord. Zou u dit nu alsnog willen doen?',
-    pl: 
+    pl:
       'Wygląda na to, że nie odpowiedziałeś na wszystkie pytania. Czy mógłbyś zrobić to teraz?',
-    hb: 
-      '?נראה שלא ענית על כל השאלות. תוכל לעשות זאת כעת'  
+    hb: '?נראה שלא ענית על כל השאלות. תוכל לעשות זאת כעת'
   },
   NOTIFICATION_REMINDER_FORGOTTEN_ALERT_DEFAULT_DESC: {
     da:
@@ -980,28 +994,20 @@ export const Localisations = {
       'Hai perso questo. Non preoccuparti! Il prossimo quesionario sarà presto disponibile.',
     nl:
       'Je hebt deze gemist. Maak je geen zorgen! De volgende vragenlijst zal binnenkort verschijnen.',
-    pl: 
+    pl:
       'Pominąłeś to pytanie. Nie przejmuj się! Następna ankieta będzie dostępna wkrótce.',
-    hb: 
-      '.פספסת את זאת. אל תדאג! מועד השאלון הבא יהיה בקרוב'  
+    hb: '.פספסת את זאת. אל תדאג! מועד השאלון הבא יהיה בקרוב'
   },
   NOTIFICATION_REMINDER_FORGOTTEN_ALERT_LASTOFNIGHT_DESC: {
     da:
       'Du har ikke nået at svare på sidste spørgsmål. Ingen problemer! Hav en god aften.',
-    de: 
-      'Du hast den letzten verpasst. Mach dir keine Sorgen! Gute Nacht.',
-    en: 
-      "You've missed the last one. Dont worry! Have a good night.",
-    es: 
-      'No ha llegado a contestar el último. No se preocupe! Buenas noches!',
-    it: 
-      "Hai perso l'ultimo. Non preoccuparti! Buonanotte.",
-    nl: 
-      'Je hebt de laatste gemist. Maak je geen zorgen! Goede nacht.',
-    pl: 
-      'Pominąłeś ostatnie pytanie. Nie przejmuj się! Dobranoc.',
-    hb: 
-      'פספסת את האחרונה. אל תדאג! שיהיה לך לילה טוב'
+    de: 'Du hast den letzten verpasst. Mach dir keine Sorgen! Gute Nacht.',
+    en: "You've missed the last one. Dont worry! Have a good night.",
+    es: 'No ha llegado a contestar el último. No se preocupe! Buenas noches!',
+    it: "Hai perso l'ultimo. Non preoccuparti! Buonanotte.",
+    nl: 'Je hebt de laatste gemist. Maak je geen zorgen! Goede nacht.',
+    pl: 'Pominąłeś ostatnie pytanie. Nie przejmuj się! Dobranoc.',
+    hb: 'פספסת את האחרונה. אל תדאג! שיהיה לך לילה טוב'
   },
   MEASURE_PROGRESS: {
     da: 'Fremgang',
@@ -1052,14 +1058,14 @@ export const Localisations = {
       'Made with &hearts; for you by the RADAR-Base community. For more information click <a href="http://radar-base.org">here</a>.',
     es:
       'Hecho con &hearts;  para usted por la comunidad RADAR-Base. Para obtener más información, haga clic  en <a href="http://radar-base.org">aquí</a>.',
-    it: 
+    it:
       'Fatto con il &hearts; per te dalla comunità RADAR-Base. Per maggiori informazioni clicca <a href="http://radar-base.org">qui</a>.',
     nl:
       'Met &hearts; voor u gemaakt door de RADAR-Base community. Voor meer informatie klik <a href="http://radar-base.org">here</a>.',
-    pl: 
-      'przygotowane dla Ciebie przez RADAR-CNS. Aby uzyskać więcej informacji kliknij <a href="http://radar-base.org">aquí</a>.',
-    hb: 
-      'נעשה באהבה בשבילך על ידי קונצרסיום RADAR-CNS.למידע נוסף לחץ- k <a href=http://radar-cns.org>here</a>.'  
+    pl:
+      'przygotowane dla Ciebie przez RADAR-Base. Aby uzyskać więcej informacji kliknij <a href="http://radar-base.org">aquí</a>.',
+    hb:
+      'נעשה באהבה בשבילך על ידי קונצרסיום RADAR-Base.למידע נוסף לחץ- k <a href=http://radar-base.org>here</a>.'
   },
   TASK_CALENDAR_TITLE: {
     da: 'Dagens opgaver',
@@ -1108,8 +1114,8 @@ export const Localisations = {
     es: 'La siguiente tarea comienza en ',
     it: 'La prossima attività inizierà tra ',
     nl: 'Uw volgende taak start over ',
-    pl: 'Następne zadanie zacznie się za',
-    hb: 'המשימה הבאה שלך מתחילה בעוד'
+    pl: 'Następne zadanie zacznie się za ',
+    hb: 'המשימה הבאה שלך מתחילה בעוד '
   },
   TASK_BAR_NOW_TASK: {
     da: 'Din opgave starter ',
@@ -1118,8 +1124,8 @@ export const Localisations = {
     es: 'La tarea comienza ',
     it: 'Il tuo compito inizia ',
     nl: 'Je taak begint ',
-    pl: 'Twoje zadanie zacznie się',
-    hb: 'המשימה שלך מתחילה'
+    pl: 'Twoje zadanie zacznie się ',
+    hb: 'המשימה שלך מתחילה '
   },
   TASK_BAR_NEXT_TASK_SOON: {
     da: 'snart',
@@ -1158,8 +1164,8 @@ export const Localisations = {
     es: 'Espere! ',
     it: 'Resisti! ',
     nl: 'Wacht! ',
-    pl: 'Czekaj!',
-    hb: '!כל הכבוד'
+    pl: 'Czekaj! ',
+    hb: '!כל הכבוד '
   },
   TASK_BAR_TASK_LEFT_2: {
     da: 'Der er stadig et par spørgsmål tilbage',
@@ -1242,22 +1248,16 @@ export const Localisations = {
     hb: 'בודק התראות'
   },
   TESTING_NOTIFICATIONS_MESSAGE: {
-    da: 
-      'Luk nu appen og vent i 2 minutter for testmeddelelsen.',
+    da: 'Luk nu appen og vent i 2 minutter for testmeddelelsen.',
     de:
       'Schließen Sie nun die App und warten Sie 2 Minuten auf die Testbenachrichtigung.',
-    en: 
-      'Now close the app and wait for 2 minutes for the test notification.',
+    en: 'Now close the app and wait for 2 minutes for the test notification.',
     es:
       'Ahora cierre la aplicación y espere 2 minutos para la notificación de prueba.',
-    it: 
-      "Ora chiudi l'app e attendi 2 minuti per la notifica del test.",
-    nl: 
-      'Sluit nu de app en wacht 2 minuten op de testmelding.',
-    pl: 
-      'Zamknij aplikację i poczekaj 2 minuty na powiadomienie testowe',
-    hb: 
-      '.סגור את האפליקציה כעת וחכה 2 דקות להתראת מבחן'
+    it: "Ora chiudi l'app e attendi 2 minuti per la notifica del test.",
+    nl: 'Sluit nu de app en wacht 2 minuten op de testmelding.',
+    pl: 'Zamknij aplikację i poczekaj 2 minuty na powiadomienie testowe',
+    hb: '.סגור את האפליקציה כעת וחכה 2 דקות להתראת מבחן'
   },
   CLOSE_APP: {
     da: 'Luk App',
@@ -1300,7 +1300,7 @@ export const Localisations = {
     hb: 'המשימה הופסקה, התחל מחדש'
   },
   AUDIO_TASK_ATTEMPT_ALERT: {
-    da: 'Forsøg tilbageværende',
+    da: 'Tilbageværende forsøg',
     de: 'Verbleibende Versuche',
     en: 'Attempts remaining',
     es: 'Intentos restantes',

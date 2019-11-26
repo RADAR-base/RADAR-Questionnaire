@@ -27,6 +27,7 @@ export class HomePageComponent implements OnDestroy {
   tasks: Promise<Task[]>
   currentDate: Date
   nextTask: Task
+  timeToNextTask: number
   tasksProgress: Promise<TasksProgress>
   resumeListener: Subscription = new Subscription()
 
@@ -109,6 +110,7 @@ export class HomePageComponent implements OnDestroy {
     if (task) {
       this.nextTask = task
       this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
+      this.timeToNextTask = this.nextTask.timestamp - Date.now()
     } else {
       this.taskIsNow = false
       this.nextTask = null

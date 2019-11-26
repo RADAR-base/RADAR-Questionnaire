@@ -19,6 +19,8 @@ export class TickerBarComponent implements OnChanges {
   showAffirmation = false
   @Input()
   noTasksToday = false
+  @Input()
+  timeToNextMilli: number
   tickerText: string
   report: ReportScheduling
 
@@ -62,7 +64,7 @@ export class TickerBarComponent implements OnChanges {
         this.tickerText =
           this.localization.translateKey(LocKeys.TASK_BAR_NEXT_TASK) +
           '<b>' +
-          this.getTimeToNext(this.task.timestamp) +
+          this.getTimeToNextString() +
           '.</b>'
       }
     }
@@ -92,10 +94,11 @@ export class TickerBarComponent implements OnChanges {
       this.localization.translateKey(LocKeys.TASK_BAR_NO_TASK_2)
   }
 
-  getTimeToNext(next) {
-    const now = new Date().getTime()
+  getTimeToNextString() {
     let deltaStr = ''
-    const deltaMin = Math.round(getMinutes({ milliseconds: next - now }))
+    const deltaMin = Math.round(
+      getMinutes({ milliseconds: this.timeToNextMilli })
+    )
     const deltaHour = Math.round(getHours({ minutes: deltaMin }))
     if (deltaMin > 59) {
       deltaStr =

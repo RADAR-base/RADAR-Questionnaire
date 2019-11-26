@@ -196,7 +196,7 @@ export const Localisations = {
     pl: 'Ukończone w klinice',
     hb: '?מילאת במרפאה'
   },
-  CALENDAR_ESM_MISSED_TITLE: {
+  CALENDAR_TASK_MISSED_TITLE: {
     da: 'Blokeret',
     de: 'Nich erlaubt',
     en: 'Blocked',
@@ -206,7 +206,7 @@ export const Localisations = {
     pl: 'Zablokowane',
     hb: 'חסום'
   },
-  CALENDAR_ESM_MISSED_DESC: {
+  CALENDAR_TASK_MISSED_DESC: {
     da: 'Spørgsmålet kan ikke besvares længere.',
     de:
       'Leider können Sie diesen Fragebogen nur zum angegebenen Zeitpunkt beantworten.',
@@ -574,7 +574,7 @@ export const Localisations = {
     hb: 'הולנדית'
   },
   LANGUAGE_POLISH: {
-    da: 'polere',
+    da: 'Polere',
     de: 'Polieren',
     en: 'Polish',
     es: 'Polaco',
@@ -590,7 +590,7 @@ export const Localisations = {
     es: 'Hebreo',
     it: 'Ebraico',
     nl: 'Hebreeuws',
-    pl: 'hebrajski',
+    pl: 'Hebrajski',
     hb: 'עברית'
   },
   BTN_ENROL_ENROL: {
@@ -664,7 +664,7 @@ export const Localisations = {
     hb: 'התחל'
   },
   BTN_STOP: {
-    da: 'Stop',
+    da: 'Stoppe',
     de: 'Stoppen',
     en: 'Stop',
     es: 'Detener',
@@ -830,8 +830,8 @@ export const Localisations = {
     es: 'Actualizar',
     it: 'Aggiorna',
     nl: 'Bijwerken',
-    pl: 'Uaktualnić',
-    hb: 'להתעדכן'
+    pl: 'zmodernizować',
+    hb: 'עדכון'
   },
   STATUS_LOADING: {
     da: 'Indlæser',
@@ -890,8 +890,8 @@ export const Localisations = {
     es: 'Actualice su aplicación antes de continuar.',
     it: `Aggiorna l'app prima di continuare.`,
     nl: 'Werk uw app bij voordat u doorgaat.',
-    pl: 'Zaktualizuj aplikację przed kontynuowaniem.',
-    hb: 'אנא עדכן את האפליקציה שלך לפני שתמשיך.'
+    pl: 'Zaktualizuj aplikację przed kontynuowaniem',
+    hb: 'אנא עדכן את האפליקציה שלך לפני שתמשיך'
   },
   NOTIFICATION_TEST_REMINDER_NOW: {
     da: 'Testmeddelelse',
@@ -1161,7 +1161,7 @@ export const Localisations = {
     it: 'Ben fatto!',
     nl: 'Goed gedaan!',
     pl: 'Gratulacje!',
-    hb: ''
+    hb: 'הכבוד'
   },
   TASK_BAR_AFFIRMATION_2: {
     da: 'Alle opgaver er gennemført.',

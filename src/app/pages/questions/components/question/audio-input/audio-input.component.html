@@ -1,4 +1,7 @@
 <div class="audio-container">
+  <div [class.info-card]="showInfoCard">
+    <h2 dir="auto">{{ text }}</h2>
+  </div>
   <div class="audio-bottom">
     <ng-container *ngIf="buttonShown">
       <button

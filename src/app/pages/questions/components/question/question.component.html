@@ -1,7 +1,7 @@
 <div class="content" [class.fade]="!currentlyShown">
   <div class="header">
     <p>{{ question.section_header }}</p>
-    <div class="field-container" dir="auto">
+    <div *ngIf="!isFieldLabelHidden" class="field-container" dir="auto">
       <h2
         dir="auto"
         [fittext]="true"
@@ -69,6 +69,7 @@
           *ngSwitchCase="'info'"
           [sections]="question.select_choices_or_calculations"
           [hasFieldLabel]="question.field_label.length > 0"
+          [image]="question.field_annotation?.image"
           (valueChange)="onValueChange($event)"
           [currentlyShown]="currentlyShown"
         >
@@ -76,7 +77,7 @@
 
         <audio-input
           *ngSwitchCase="'audio'"
-          [sections]="question.select_choices_or_calculations"
+          [text]="question.field_label"
           [currentlyShown]="currentlyShown"
           (valueChange)="onValueChange($event)"
         >

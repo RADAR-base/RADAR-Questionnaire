@@ -52,7 +52,7 @@ export class QuestionComponent implements OnInit, OnChanges {
     this.isFieldLabelHidden = this.HIDE_FIELD_LABEL_SET.has(
       this.question.field_type
     )
-    setTimeout(() => (this.isLoading = false), 200)
+    setTimeout(() => (this.isLoading = false), 800)
   }
 
   ngOnChanges() {

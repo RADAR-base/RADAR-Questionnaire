@@ -3073,10 +3073,10 @@ cordova-plugin-app-version@^0.1.9:
   resolved "https://registry.yarnpkg.com/cordova-plugin-app-version/-/cordova-plugin-app-version-0.1.9.tgz#9db0607863337a710489302e5f50a904f1449bdb"
   integrity sha1-nbBgeGMzenEEiTAuX1CpBPFEm9s=
 
-cordova-plugin-background-mode-fixes@^0.7.5:
-  version "0.7.5"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-background-mode-fixes/-/cordova-plugin-background-mode-fixes-0.7.5.tgz#1a953487696bcb8578daf508d85cdcd47315b069"
-  integrity sha512-cjxhGy+GMVKtsD565dh3xIbC2FyvvlLgyuKA/dXZpdSyQXXCxQm2FAOrFHYIfMG6U1ydWjGcenrrzbuA1d09Pg==
+cordova-plugin-background-mode-fixes@^0.7.6:
+  version "0.7.6"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-background-mode-fixes/-/cordova-plugin-background-mode-fixes-0.7.6.tgz#b98e6cd319ed3495042e20e6e01142474a2bb568"
+  integrity sha512-9BgAaLy/VcIX7FpWzDDgSIYfN7ZF32QL0U8Ell/5LXEKOqbIZTl8+NpUsotqGxMJ0coaBWoqbkBgqh45NR2H3g==
 
 cordova-plugin-badge@^0.8.8:
   version "0.8.8"

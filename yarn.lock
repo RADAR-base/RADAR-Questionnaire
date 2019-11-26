@@ -3005,16 +3005,17 @@ cordova-fetch@^2.0.0:
     semver "^5.6.0"
     which "^1.3.1"
 
-cordova-ios@5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/cordova-ios/-/cordova-ios-5.0.1.tgz#8ee30280c47f29cc3e8716167a9ce33cbaf9debd"
-  integrity sha512-JcFyDmlyzY2OQJo0eHpuFERFqvO4daHl8HL96RhUVjJVtuoqXHsOF0xTuQSAqIbefelMPEWwY3Lc/dvT4ttTwQ==
+cordova-ios@5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/cordova-ios/-/cordova-ios-5.1.0.tgz#adf346871313c62d6de895c285e512d1854d5e8c"
+  integrity sha512-uDFkcfRV1cV1eCBTbh1IZ0f+36Hy48o+t03oT5LY3e1946nmsTzOHcCoiuo3xlZKD5237Qu4evIrmAzikdz77Q==
   dependencies:
     cordova-common "^3.1.0"
     ios-sim "^8.0.1"
     nopt "^4.0.1"
     plist "^3.0.1"
     q "^1.5.1"
+    semver "^6.3.0"
     shelljs "^0.5.3"
     unorm "^1.4.1"
     xcode "^2.0.0"

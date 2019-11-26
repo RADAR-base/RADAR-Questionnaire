@@ -28,11 +28,12 @@ export class InfoScreenComponent implements OnInit, OnChanges {
   hasFieldLabel: boolean
   @Input()
   currentlyShown: boolean
+  @Input()
+  image: string
 
   value: number = null
   uniqueID: number = uniqueID++
   name = `info-${this.uniqueID}`
-  isThincItReminder = false
   items: InfoItem[] = Array()
   showScrollButton: boolean
 
@@ -49,10 +50,8 @@ export class InfoScreenComponent implements OnInit, OnChanges {
 
   initSections() {
     this.sections.map((item, i) => {
-      console.log(item.label)
-      if (item.label.includes('THINC-it')) {
-        this.isThincItReminder = true
-      }
+      if (item.label.includes('THINC-it'))
+        this.image = 'assets/imgs/thincIt_app_icon.png'
       this.items.push({
         id: `info-${this.uniqueID}-${i}`,
         heading: item.code,

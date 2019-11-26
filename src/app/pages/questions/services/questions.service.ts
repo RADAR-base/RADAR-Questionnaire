@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core'
-import Parser from 'morph-expressions'
 
 import { DefaultQuestionsHidden } from '../../../../assets/data/defaultConfig'
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
@@ -8,9 +7,10 @@ import { LocalizationService } from '../../../core/services/misc/localization.se
 import { ConfigKeys } from '../../../shared/enums/config'
 import { ShowIntroductionType } from '../../../shared/models/assessment'
 import { Question, QuestionType } from '../../../shared/models/question'
-import { parseLogic } from '../../../shared/utilities/parsers'
+import { parseAndEvalLogic } from '../../../shared/utilities/parsers'
 import { getTaskType } from '../../../shared/utilities/task-type'
 import { getSeconds } from '../../../shared/utilities/time'
+import { Utility } from '../../../shared/utilities/util'
 import { AnswerService } from './answer.service'
 import { FinishTaskService } from './finish-task.service'
 import { TimestampService } from './timestamp.service'
@@ -26,7 +26,6 @@ export class QuestionsService {
     QuestionType.timed,
     QuestionType.audio
   ])
-  logicParser: any
 
   constructor(
     public questionnaire: QuestionnaireService,
@@ -34,10 +33,9 @@ export class QuestionsService {
     private timestampService: TimestampService,
     private localization: LocalizationService,
     private finish: FinishTaskService,
-    private remoteConfig: RemoteConfigService
-  ) {
-    this.logicParser = new Parser()
-  }
+    private remoteConfig: RemoteConfigService,
+    private util: Utility
+  ) {}
 
   reset() {
     this.answerService.reset()
@@ -101,33 +99,18 @@ export class QuestionsService {
     return this.answerService.check(id)
   }
 
-  evalBranchingLogicAndGetNextQuestion(questions, currentQuestion) {
-    let qIndex = currentQuestion + 1
+  getNextQuestion(questions, currentQuestionId) {
+    let qIndex = currentQuestionId + 1
     while (
       qIndex < questions.length &&
       questions[qIndex].branching_logic.length
     ) {
-      const logic = parseLogic(questions[qIndex].branching_logic)
-      const logicFieldName = this.getLogicFieldName(logic)
-      if (this.answerService.check(logicFieldName)) {
-        const answers = this.answerService.answers[logicFieldName]
-        const values = {}
-        if (Array.isArray(answers)) answers.forEach(a => (values[a] = '1'))
-        else values[answers] = '1'
-        if (this.logicParser.parseAndEval(logic, { [logicFieldName]: values }))
-          return qIndex
-      }
+      const answers = this.util.deepCopy(this.answerService.answers)
+      if (parseAndEvalLogic(questions[qIndex].branching_logic, answers))
+        return qIndex
       qIndex += 1
     }
     return qIndex
-  }
-
-  getLogicFieldName(logic) {
-    return logic.split('[')[0]
-  }
-
-  getNextQuestion(questions, currentQuestion) {
-    return this.evalBranchingLogicAndGetNextQuestion(questions, currentQuestion)
   }
 
   getAttemptProgress(total) {
@@ -166,9 +149,10 @@ export class QuestionsService {
     return this.questionnaire
       .getAssessment(type, task)
       .then(assessment =>
-        this.processQuestions(assessment.name, assessment.questions).then(
-          questions => [assessment, questions]
-        )
+        this.processQuestions(
+          assessment.name,
+          assessment.questions
+        ).then(questions => [assessment, questions])
       )
       .then(([assessment, questions]) => {
         return {

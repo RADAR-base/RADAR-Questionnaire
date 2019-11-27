@@ -116,7 +116,7 @@ export class SettingsPageComponent {
     const inputs = this.settings.languagesSelectable.map(lang => ({
       type: 'radio',
       label: this.localization.translate(lang.label),
-      value: lang.value,
+      value: JSON.stringify(lang),
       checked: lang.value === this.settings.language.value
     }))
     return this.alertService.showAlert({
@@ -208,7 +208,10 @@ export class SettingsPageComponent {
 
   sendCachedData() {
     const loader = this.loadCtrl.create({
-      content: 'Please wait...',
+      content:
+        '<div dir="auto">' +
+        this.localization.translateKey(LocKeys.SETTINGS_WAIT_ALERT) +
+        '...</div>',
       duration: 15000
     })
     loader.present()

@@ -28,13 +28,15 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   @Output()
   valueChange: EventEmitter<any> = new EventEmitter<any>()
   @Input()
-  sections: Section[]
+  text: string
   @Input()
   currentlyShown: boolean
 
   recordAttempts = 0
   buttonShown = true
   pauseListener: Subscription
+  showInfoCard: boolean
+  textLengthThreshold = 400
 
   constructor(
     private audioRecordService: AudioRecordService,
@@ -61,6 +63,7 @@ export class AudioInputComponent implements OnDestroy, OnInit {
       this.stopRecording()
       this.platform.exitApp()
     })
+    this.showInfoCard = this.text.length > this.textLengthThreshold
   }
 
   ngOnDestroy() {

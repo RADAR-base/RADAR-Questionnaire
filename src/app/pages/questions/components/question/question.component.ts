@@ -32,6 +32,7 @@ export class QuestionComponent implements OnInit, OnChanges {
   previouslyShown = false
   isLoading = true
   isScrollable = false
+  isFieldLabelHidden = false
   margin = 16
 
   NON_SCROLLABLE_SET: Set<QuestionType> = new Set([
@@ -39,6 +40,7 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.audio,
     QuestionType.info
   ])
+  HIDE_FIELD_LABEL_SET: Set<QuestionType> = new Set([QuestionType.audio])
 
   constructor(private vibration: Vibration, private dialogs: Dialogs) {
     smoothscroll.polyfill()
@@ -47,7 +49,10 @@ export class QuestionComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.isScrollable = !this.NON_SCROLLABLE_SET.has(this.question.field_type)
-    setTimeout(() => (this.isLoading = false), 200)
+    this.isFieldLabelHidden = this.HIDE_FIELD_LABEL_SET.has(
+      this.question.field_type
+    )
+    setTimeout(() => (this.isLoading = false), 800)
   }
 
   ngOnChanges() {

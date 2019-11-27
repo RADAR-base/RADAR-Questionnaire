@@ -4,8 +4,7 @@ import { NavController, Slides } from 'ionic-angular'
 import {
   DefaultLanguage,
   DefaultSettingsSupportedLanguages,
-  DefaultSettingsWeeklyReport,
-  LanguageMap
+  DefaultSettingsWeeklyReport
 } from '../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
@@ -124,10 +123,7 @@ export class EnrolmentPageComponent {
       {
         text: this.localization.translateKey(LocKeys.BTN_SET),
         handler: selectedLanguageVal => {
-          const lang: LanguageSetting = {
-            label: LanguageMap[selectedLanguageVal],
-            value: selectedLanguageVal
-          }
+          const lang = JSON.parse(selectedLanguageVal)
           this.localization.setLanguage(lang).then(() => {
             this.language = lang
             return this.navCtrl.setRoot(EnrolmentPageComponent)
@@ -138,7 +134,7 @@ export class EnrolmentPageComponent {
     const inputs = this.languagesSelectable.map(lang => ({
       type: 'radio',
       label: this.localization.translate(lang.label),
-      value: lang.value,
+      value: JSON.stringify(lang),
       checked: lang.value === this.language.value
     }))
     return this.alertService.showAlert({

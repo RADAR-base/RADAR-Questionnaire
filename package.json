@@ -128,7 +128,7 @@
         "@ionic/app-scripts": "^3.2.4",
         "@types/jasmine": "^3.5.0",
         "@types/jasminewd2": "^2.0.8",
-        "@types/node": "^12.7.8",
+        "@types/node": "^12.12.14",
         "codelyzer": "^5.1.2",
         "eslint": "^6.7.1",
         "eslint-scope": "^5.0.0",

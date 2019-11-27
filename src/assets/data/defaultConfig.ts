@@ -245,16 +245,15 @@ export const DefaultSettingsSupportedLanguages: LanguageSetting[] = [
   {
     label: LocKeys.LANGUAGE_GERMAN.toString(),
     value: 'de'
+  },
+  {
+    label: LocKeys.LANGUAGE_POLISH.toString(),
+    value: 'pl'
+  },
+  {
+    label: LocKeys.LANGUAGE_HEBREW.toString(),
+    value: 'hb'
   }
 ]
-
-export const LanguageMap = {
-  en: LocKeys.LANGUAGE_ENGLISH.toString(),
-  it: LocKeys.LANGUAGE_ITALIAN.toString(),
-  es: LocKeys.LANGUAGE_SPANISH.toString(),
-  nl: LocKeys.LANGUAGE_DUTCH.toString(),
-  da: LocKeys.LANGUAGE_DANISH.toString(),
-  de: LocKeys.LANGUAGE_GERMAN.toString()
-}
 
 export const DefaultQuestionsHidden = '{}'

@@ -136,7 +136,7 @@
         "import-sort-parser-babylon": "^6.0.0",
         "import-sort-parser-typescript": "^6.0.0",
         "import-sort-style-module": "^6.0.0",
-        "ionic": "^5.4.5",
+        "ionic": "^5.4.9",
         "jasmine": "^3.5.0",
         "jasmine-core": "^3.5.0",
         "jasmine-spec-reporter": "^4.2.1",

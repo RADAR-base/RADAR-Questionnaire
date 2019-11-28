@@ -1,5 +1,5 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
+import { HTTP } from '@ionic-native/http/ngx'
 
 import {
   DefaultClientAcceptType,
@@ -34,7 +34,7 @@ export class KafkaService {
     private schema: SchemaService,
     private analytics: AnalyticsService,
     private logger: LogService,
-    private http: HttpClient
+    private http: HTTP
   ) {
     this.updateURI()
   }
@@ -115,19 +115,31 @@ export class KafkaService {
   sendToKafka(topic: string, k: number, v: CacheValue, headers): Promise<any> {
     return this.schema
       .getKafkaPayload(v.kafkaObject, topic, this.BASE_URI)
-      .then(data =>
-        this.http
-          .post(this.KAFKA_CLIENT_URL + this.URI_topics + topic, data, {
-            headers: headers
-          })
-          .toPromise()
-      )
-      .then(() => this.sendDataEvent(DataEventType.SEND_SUCCESS, v))
-      .then(() => k)
-      .catch(error => {
-        this.sendDataEvent(DataEventType.SEND_ERROR, v, JSON.stringify(error))
-        throw error
+      .then(data => {
+        this.http.setDataSerializer('json')
+        return this.http.post(
+          this.KAFKA_CLIENT_URL + this.URI_topics + topic,
+          data,
+          headers
+        )
       })
+      .then(res => this.onKafkaSendSuccess(res, k, v))
+      .catch(error => this.onKafkaSendFail(error, v))
+  }
+
+  onKafkaSendSuccess(res, key, value) {
+    const offsets = JSON.parse(res.data).offsets
+    this.logger.log(offsets)
+    if (offsets) {
+      this.sendDataEvent(DataEventType.SEND_SUCCESS, value)
+      return key
+    } else throw new Error('Failed to receive partition values')
+  }
+
+  onKafkaSendFail(error, value) {
+    console.log(value)
+    this.sendDataEvent(DataEventType.SEND_ERROR, value, JSON.stringify(error))
+    throw error
   }
 
   removeFromCache(cacheKeys: number[]) {
@@ -153,12 +165,11 @@ export class KafkaService {
   getKafkaHeaders() {
     return Promise.all([this.updateURI(), this.token.refresh()])
       .then(() => this.token.getTokens())
-      .then(tokens =>
-        new HttpHeaders()
-          .set('Authorization', 'Bearer ' + tokens.access_token)
-          .set('Content-Type', DefaultKafkaRequestContentType)
-          .set('Accept', DefaultClientAcceptType)
-      )
+      .then(tokens => ({
+        Authorization: 'Bearer ' + tokens.access_token,
+        'Content-Type': DefaultKafkaRequestContentType,
+        Accept: DefaultClientAcceptType
+      }))
       .catch(e => {
         throw this.logger.error('Could not create kafka headers', e)
       })

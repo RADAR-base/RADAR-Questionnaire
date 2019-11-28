@@ -57,6 +57,7 @@
         "@ionic-native/file": "^5.17.0",
         "@ionic-native/firebase": "^5.17.0",
         "@ionic-native/globalization": "^5.17.0",
+        "@ionic-native/http": "^5.17.1",
         "@ionic-native/insomnia": "^5.17.0",
         "@ionic-native/keyboard": "^5.17.0",
         "@ionic-native/local-notifications": "^5.17.0",
@@ -78,6 +79,7 @@
         "cordova-ios": "5.0.1",
         "cordova-lib": "^9.0.1",
         "cordova-media-with-compression": "^2.1.2",
+        "cordova-plugin-advanced-http": "^2.2.0",
         "cordova-plugin-android-permissions": "^1.0.0",
         "cordova-plugin-androidx": "^1.0.2",
         "cordova-plugin-androidx-adapter": "^1.1.0",
@@ -219,6 +221,9 @@
             "cordova-custom-config": {},
             "cordova-plugin-ionic-webview": {
                 "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
+            },
+            "cordova-plugin-advanced-http": {
+                "OKHTTP_VERSION": "3.10.0"
             }
         }
     },

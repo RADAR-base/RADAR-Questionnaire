@@ -1,5 +1,5 @@
-import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
+import { HTTP } from '@ionic-native/http/ngx'
 import * as AvroSchema from 'avsc'
 import * as YAML from 'yaml'
 
@@ -34,7 +34,7 @@ export class SchemaService {
   constructor(
     public questionnaire: QuestionnaireService,
     private config: SubjectConfigService,
-    private http: HttpClient,
+    private http: HTTP,
     private logger: LogService,
     private remoteConfig: RemoteConfigService
   ) {}
@@ -143,8 +143,9 @@ export class SchemaService {
           DefaultSchemaSpecEndpoint
         )
       )
-      .then(url => this.http.get(url).toPromise())
-      .then(res => YAML.parse(atob(res['content'])).data)
+      .then(url => this.http.get(url, {}, {}))
+      .then(res => JSON.parse(res.data))
+      .then(data => YAML.parse(atob(data['content'])).data)
       .catch(e => {
         this.logger.error('Failed to get valid RADAR Schema specifications', e)
         return null
@@ -170,8 +171,8 @@ export class SchemaService {
     const uri = endPoint + this.URI_schema + questionName + versionStr
 
     return this.http
-      .get(uri)
-      .toPromise()
+      .get(uri, {}, {})
+      .then(res => JSON.parse(res.data))
       .catch(e => {
         throw this.logger.error('Failed to get latest Kafka schema versions', e)
       })

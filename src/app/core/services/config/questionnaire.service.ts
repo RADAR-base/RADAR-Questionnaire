@@ -1,5 +1,5 @@
-import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
+import { HTTP } from '@ionic-native/http/ngx'
 
 import { StorageKeys } from '../../../shared/enums/storage'
 import { Assessment } from '../../../shared/models/assessment'
@@ -22,7 +22,7 @@ export class QuestionnaireService {
   constructor(
     private storage: StorageService,
     private localization: LocalizationService,
-    private http: HttpClient,
+    private http: HTTP,
     private util: Utility,
     private logger: LogService
   ) {}
@@ -63,15 +63,13 @@ export class QuestionnaireService {
   }
 
   getQuestionnairesOfLang(URI): Promise<Question[]> {
-    return this.http
-      .get(URI)
-      .toPromise()
-      .then(res => {
-        if (!(res instanceof Array)) {
-          throw new Error('URL does not contain an array of questions')
-        }
-        return res
-      }) as Promise<Question[]>
+    return this.http.get(URI, {}, {}).then(res => {
+      res = JSON.parse(res.data)
+      if (!(res instanceof Array)) {
+        throw new Error('URL does not contain an array of questions')
+      }
+      return res
+    }) as Promise<Question[]>
   }
 
   formatQuestionsHeaders(questions) {

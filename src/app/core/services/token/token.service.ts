@@ -1,8 +1,8 @@
 import 'rxjs/add/operator/toPromise'
 
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { JwtHelperService } from '@auth0/angular-jwt'
+import { HTTP } from '@ionic-native/http/ngx'
 
 import {
   DefaultEndPoint,
@@ -18,8 +18,8 @@ import { StorageKeys } from '../../../shared/enums/storage'
 import { OAuthToken } from '../../../shared/models/token'
 import { getSeconds } from '../../../shared/utilities/time'
 import { RemoteConfigService } from '../config/remote-config.service'
-import { StorageService } from '../storage/storage.service'
 import { LogService } from '../misc/log.service'
+import { StorageService } from '../storage/storage.service'
 
 @Injectable()
 export class TokenService {
@@ -31,7 +31,7 @@ export class TokenService {
   private tokenRefreshMillis: number = DefaultTokenRefreshSeconds
 
   constructor(
-    public http: HttpClient,
+    private http: HTTP,
     public storage: StorageService,
     private jwtHelper: JwtHelperService,
     private remoteConfig: RemoteConfigService,
@@ -87,11 +87,10 @@ export class TokenService {
       .then(([uri, headers]) => {
         const URI = uri + DefaultManagementPortalURI + DefaultRefreshTokenURI
         this.logger.log(`"Registering with ${URI} and headers`, headers)
-        return this.http
-          .post(URI, refreshBody, { headers: headers })
-          .toPromise()
+        this.http.setDataSerializer('urlencoded')
+        return this.http.post(URI, refreshBody, headers)
       })
-      .then(res => this.setTokens(res))
+      .then(res => this.setTokens(JSON.parse(res.data)))
   }
 
   refresh(): Promise<any> {
@@ -118,37 +117,32 @@ export class TokenService {
   }
 
   getAccessHeaders(contentType) {
-    return this.getTokens().then(tokens =>
-      new HttpHeaders()
-        .set('Authorization', 'Bearer ' + tokens.access_token)
-        .set('Content-Type', contentType)
-    )
+    return this.getTokens().then(tokens => ({
+      Authorization: 'Bearer ' + tokens.access_token,
+      'Content-Type': contentType
+    }))
   }
 
-  getRegisterHeaders(contentType): Promise<HttpHeaders> {
-    return this.remoteConfig.read()
-      .then(config => Promise.all([
-        config.getOrDefault(ConfigKeys.OAUTH_CLIENT_ID, DefaultOAuthClientId),
-        config.getOrDefault(
-          ConfigKeys.OAUTH_CLIENT_SECRET,
-          DefaultOAuthClientSecret
-        )
-      ]))
+  getRegisterHeaders(contentType): Promise<Object> {
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        Promise.all([
+          config.getOrDefault(ConfigKeys.OAUTH_CLIENT_ID, DefaultOAuthClientId),
+          config.getOrDefault(
+            ConfigKeys.OAUTH_CLIENT_SECRET,
+            DefaultOAuthClientSecret
+          )
+        ])
+      )
       .then(([clientId, clientSecret]) => {
-        const creds = TokenService.basicCredentials(
-          clientId,
-          clientSecret
-        )
-        return new HttpHeaders()
-          .set('Authorization', creds)
-          .set('Content-Type', contentType)
+        const creds = TokenService.basicCredentials(clientId, clientSecret)
+        return { Authorization: creds, 'Content-Type': contentType }
       })
   }
 
-  getRefreshParams(refreshToken): HttpParams {
-    return new HttpParams()
-      .set('grant_type', 'refresh_token')
-      .set('refresh_token', refreshToken)
+  getRefreshParams(refreshToken): Object {
+    return { grant_type: 'refresh_token', refresh_token: refreshToken }
   }
 
   isValid(): Promise<boolean> {

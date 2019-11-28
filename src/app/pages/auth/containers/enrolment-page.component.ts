@@ -87,11 +87,12 @@ export class EnrolmentPageComponent {
   }
 
   handleError(e) {
+    const error = JSON.parse(e.error)
     this.logger.error('Failed to log in', e)
     this.showStatus()
     this.outcomeStatus =
-      e.error && e.error.message
-        ? e.error.message
+      error && error.message
+        ? error.message
         : e.statusText + ' (' + e.status + ')'
     this.usage.sendGeneralEvent(
       e.status == 409 ? EnrolmentEventType.ERROR : EnrolmentEventType.FAIL,

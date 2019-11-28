@@ -427,6 +427,13 @@
   dependencies:
     "@types/cordova" latest
 
+"@ionic-native/http@^5.17.1":
+  version "5.17.1"
+  resolved "https://registry.yarnpkg.com/@ionic-native/http/-/http-5.17.1.tgz#b85394f1a5086f79a365fd4c08863dc7d5888309"
+  integrity sha512-DaTXGeV9ZSzyTIlff0jU8l8weboF3bM2zzKSrvGrS/hoAIflN6luXHhLSK8DEk2tu4RGr/92qUPBhvLcLRVYlg==
+  dependencies:
+    "@types/cordova" latest
+
 "@ionic-native/insomnia@^5.17.0":
   version "5.17.0"
   resolved "https://registry.yarnpkg.com/@ionic-native/insomnia/-/insomnia-5.17.0.tgz#d65ba19b543ab4d5180a06cb8dd93b8ac52547e4"
@@ -3046,6 +3053,11 @@ cordova-media-with-compression@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/cordova-media-with-compression/-/cordova-media-with-compression-2.1.2.tgz#a2cf06414a57b88860b9632473d9c966ee0e9989"
   integrity sha512-pzJ+iKkfGQ3XwKc2V+4k/wqNIMaxQR4b+qJAp07Uy/cV8NoiBQF3J2ycqTvuzewUwzgBh5VLvA2ztqxD1KnIUg==
+
+cordova-plugin-advanced-http@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-advanced-http/-/cordova-plugin-advanced-http-2.2.0.tgz#b3f882b6fe5b695cb5561218089594b0ff3e09d7"
+  integrity sha512-gf/iIEa/RNWc9CBgEk98lRoJxguMHYaE+ANXtS2wPQUq6gBO+3mH2U+nyFoH8y/o+QjALPAJkcWKcXtlOKMxRA==
 
 cordova-plugin-android-permissions@^1.0.0:
   version "1.0.2"

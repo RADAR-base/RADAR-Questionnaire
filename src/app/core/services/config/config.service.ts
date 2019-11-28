@@ -1,5 +1,5 @@
-import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
+import { HTTP } from '@ionic-native/http/ngx'
 import { Platform } from 'ionic-angular'
 import * as ver from 'semver'
 
@@ -42,7 +42,7 @@ export class ConfigService {
     private localization: LocalizationService,
     private analytics: AnalyticsService,
     private logger: LogService,
-    private http: HttpClient,
+    private http: HTTP,
     private platform: Platform
   ) {}
 
@@ -150,8 +150,7 @@ export class ConfigService {
       : DefaultGooglePlaystoreAppURL + DefaultPackageName
     return Promise.all([
       this.http
-        .get(playstoreURL, { responseType: 'text' })
-        .toPromise()
+        .sendRequest(playstoreURL, { method: 'get', responseType: 'text' })
         .then(res => parseVersion(res))
         .catch(e => DefaultAppVersion),
       this.appConfig.getAppVersion()

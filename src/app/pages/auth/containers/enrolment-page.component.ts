@@ -81,7 +81,6 @@ export class EnrolmentPageComponent {
         this.next()
       })
       .catch(e => {
-        console.log(e)
         this.handleError(e)
         this.loading = false
       })

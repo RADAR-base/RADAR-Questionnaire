@@ -144,7 +144,7 @@ export class SchemaService {
         )
       )
       .then(url => this.http.get(url, {}, {}))
-      .then(data => YAML.parse(atob(data['content'])).data)
+      .then(res => YAML.parse(atob(res['content'])).data)
       .catch(e => {
         this.logger.error('Failed to get valid RADAR Schema specifications', e)
         return null

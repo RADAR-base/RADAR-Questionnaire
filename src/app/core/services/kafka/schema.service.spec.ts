@@ -1,7 +1,7 @@
-import { HttpClient, HttpHandler } from '@angular/common/http'
 import { TestBed } from '@angular/core/testing'
 
 import {
+  HttpServiceMock,
   LocalizationServiceMock,
   LogServiceMock,
   QuestionnaireServiceMock,
@@ -12,6 +12,7 @@ import {
 import { QuestionnaireService } from '../config/questionnaire.service'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { SubjectConfigService } from '../config/subject-config.service'
+import { HttpService } from '../http/http.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
@@ -30,8 +31,7 @@ describe('SchemaService', () => {
         { provide: LocalizationService, useClass: LocalizationServiceMock },
         { provide: SubjectConfigService, useClass: SubjectConfigServiceMock },
         { provide: RemoteConfigService, useClass: RemoteConfigServiceMock },
-        HttpClient,
-        HttpHandler
+        { provide: HttpService, useClass: HttpServiceMock }
       ]
     })
   )

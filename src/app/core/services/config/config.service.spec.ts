@@ -1,4 +1,3 @@
-import { HttpClient, HttpHandler } from '@angular/common/http'
 import { TestBed } from '@angular/core/testing'
 import { Platform } from 'ionic-angular'
 import { PlatformMock } from 'ionic-mocks'
@@ -6,6 +5,7 @@ import { PlatformMock } from 'ionic-mocks'
 import {
   AppConfigServiceMock,
   FirebaseAnalyticsServiceMock,
+  HttpServiceMock,
   KafkaServiceMock,
   LocalizationServiceMock,
   LogServiceMock,
@@ -15,6 +15,7 @@ import {
   ScheduleServiceMock,
   SubjectConfigServiceMock
 } from '../../../shared/testing/mock-services'
+import { HttpService } from '../http/http.service'
 import { KafkaService } from '../kafka/kafka.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
@@ -47,8 +48,7 @@ describe('ConfigService', () => {
           useClass: FirebaseAnalyticsServiceMock
         },
         { provide: LogService, useClass: LogServiceMock },
-        HttpClient,
-        HttpHandler,
+        { provide: HttpService, useClass: HttpServiceMock },
         { provide: Platform, useClass: PlatformMock }
       ]
     })

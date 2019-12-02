@@ -1,11 +1,12 @@
-import { HttpClient, HttpHandler } from '@angular/common/http'
 import { TestBed } from '@angular/core/testing'
 
 import {
+  HttpServiceMock,
   LogServiceMock,
   RemoteConfigServiceMock,
   SubjectConfigServiceMock
 } from '../../../shared/testing/mock-services'
+import { HttpService } from '../http/http.service'
 import { LogService } from '../misc/log.service'
 import { ProtocolService } from './protocol.service'
 import { RemoteConfigService } from './remote-config.service'
@@ -18,8 +19,7 @@ describe('ProtocolService', () => {
     TestBed.configureTestingModule({
       providers: [
         ProtocolService,
-        HttpClient,
-        HttpHandler,
+        { provide: HttpService, useClass: HttpServiceMock },
         { provide: SubjectConfigService, useClass: SubjectConfigServiceMock },
         { provide: RemoteConfigService, useClass: RemoteConfigServiceMock },
         { provide: LogService, useClass: LogServiceMock }

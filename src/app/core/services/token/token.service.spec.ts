@@ -1,14 +1,15 @@
-import { HttpClient, HttpHandler } from '@angular/common/http'
 import { TestBed } from '@angular/core/testing'
 import { JwtHelperService } from '@auth0/angular-jwt'
 
 import {
+  HttpServiceMock,
   JwtHelperServiceMock,
   LogServiceMock,
   RemoteConfigServiceMock,
   StorageServiceMock
 } from '../../../shared/testing/mock-services'
 import { RemoteConfigService } from '../config/remote-config.service'
+import { HttpService } from '../http/http.service'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 import { TokenService } from './token.service'
@@ -20,8 +21,7 @@ describe('TokenService', () => {
     TestBed.configureTestingModule({
       providers: [
         TokenService,
-        HttpClient,
-        HttpHandler,
+        { provide: HttpService, useClass: HttpServiceMock },
         { provide: RemoteConfigService, useClass: RemoteConfigServiceMock },
         { provide: JwtHelperService, useClass: JwtHelperServiceMock },
         { provide: StorageService, useClass: StorageServiceMock },

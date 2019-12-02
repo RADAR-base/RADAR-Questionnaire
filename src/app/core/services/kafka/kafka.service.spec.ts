@@ -1,13 +1,14 @@
-import { HttpClient, HttpHandler } from '@angular/common/http'
 import { TestBed } from '@angular/core/testing'
 
 import {
   FirebaseAnalyticsServiceMock,
+  HttpServiceMock,
   LogServiceMock,
   SchemaServiceMock,
   StorageServiceMock,
   TokenServiceMock
 } from '../../../shared/testing/mock-services'
+import { HttpService } from '../http/http.service'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 import { TokenService } from '../token/token.service'
@@ -22,8 +23,7 @@ describe('KafkaService', () => {
     TestBed.configureTestingModule({
       providers: [
         KafkaService,
-        HttpClient,
-        HttpHandler,
+        { provide: HttpService, useClass: HttpServiceMock },
         { provide: StorageService, useClass: StorageServiceMock },
         { provide: LogService, useClass: LogServiceMock },
         { provide: TokenService, useClass: TokenServiceMock },

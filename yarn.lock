@@ -357,10 +357,10 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@ionic-native/android-permissions@^5.17.0":
-  version "5.17.0"
-  resolved "https://registry.yarnpkg.com/@ionic-native/android-permissions/-/android-permissions-5.17.0.tgz#043145e9c402192e13e7efbcd4fecce63f98033a"
-  integrity sha512-Hj1f2391JtMrmMzOErvU9UM3Iq+qjkpWYMNpvIBjjYku0TSRBMbllmohmYxKqkFbMgxG3qfdaF4lCgmhn5v56g==
+"@ionic-native/android-permissions@^5.17.1":
+  version "5.17.1"
+  resolved "https://registry.yarnpkg.com/@ionic-native/android-permissions/-/android-permissions-5.17.1.tgz#13c1eed007ff7095ea3ed632a3c57fbb4197579b"
+  integrity sha512-amobkwhGVcng/lJWrWvsvvms2x1n616yhWLa2aiPS1nr4gBZlyrV9XrTbhe4kb6nVchKcELonx/a+gFVt0B2OQ==
   dependencies:
     "@types/cordova" latest
 
@@ -9111,7 +9111,7 @@ postcss@^6.0.1, postcss@^6.0.17, postcss@^6.0.21, postcss@^6.0.23:
     source-map "^0.6.1"
     supports-color "^5.4.0"
 
-postcss@^7.0.0, postcss@^7.0.1, postcss@^7.0.13, postcss@^7.0.14, postcss@^7.0.17, postcss@^7.0.18, postcss@^7.0.2, postcss@^7.0.21, postcss@^7.0.23, postcss@^7.0.7:
+postcss@^7.0.0, postcss@^7.0.1, postcss@^7.0.13, postcss@^7.0.14, postcss@^7.0.17, postcss@^7.0.2, postcss@^7.0.21, postcss@^7.0.23, postcss@^7.0.7:
   version "7.0.23"
   resolved "https://registry.yarnpkg.com/postcss/-/postcss-7.0.23.tgz#9f9759fad661b15964f3cfc3140f66f1e05eadc1"
   integrity sha512-hOlMf3ouRIFXD+j2VJecwssTwbvsPGJVMzupptg+85WA+i7MwyrydmQAgY3R+m0Bc0exunhbJmijy8u8+vufuQ==

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core'
-import { HTTP } from '@ionic-native/http/ngx'
 import { Platform } from 'ionic-angular'
 import * as ver from 'semver'
 
@@ -18,6 +17,7 @@ import {
 import { User } from '../../../shared/models/user'
 import { parseVersion } from '../../../shared/utilities/parse-version'
 import { TaskType } from '../../../shared/utilities/task-type'
+import { HttpService } from '../http/http.service'
 import { KafkaService } from '../kafka/kafka.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
@@ -42,7 +42,7 @@ export class ConfigService {
     private localization: LocalizationService,
     private analytics: AnalyticsService,
     private logger: LogService,
-    private http: HTTP,
+    private http: HttpService,
     private platform: Platform
   ) {}
 
@@ -150,7 +150,7 @@ export class ConfigService {
       : DefaultGooglePlaystoreAppURL + DefaultPackageName
     return Promise.all([
       this.http
-        .sendRequest(playstoreURL, { method: 'get', responseType: 'text' })
+        .get(playstoreURL, {}, { responseType: 'text' })
         .then(res => parseVersion(res))
         .catch(e => DefaultAppVersion),
       this.appConfig.getAppVersion()

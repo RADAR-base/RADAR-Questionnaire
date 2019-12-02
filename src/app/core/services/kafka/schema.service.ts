@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core'
-import { HTTP } from '@ionic-native/http/ngx'
 import * as AvroSchema from 'avsc'
 import * as YAML from 'yaml'
 
@@ -21,6 +20,7 @@ import { getSeconds } from '../../../shared/utilities/time'
 import { QuestionnaireService } from '../config/questionnaire.service'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { SubjectConfigService } from '../config/subject-config.service'
+import { HttpService } from '../http/http.service'
 import { LogService } from '../misc/log.service'
 
 @Injectable()
@@ -34,7 +34,7 @@ export class SchemaService {
   constructor(
     public questionnaire: QuestionnaireService,
     private config: SubjectConfigService,
-    private http: HTTP,
+    private http: HttpService,
     private logger: LogService,
     private remoteConfig: RemoteConfigService
   ) {}
@@ -144,7 +144,6 @@ export class SchemaService {
         )
       )
       .then(url => this.http.get(url, {}, {}))
-      .then(res => JSON.parse(res.data))
       .then(data => YAML.parse(atob(data['content'])).data)
       .catch(e => {
         this.logger.error('Failed to get valid RADAR Schema specifications', e)
@@ -172,7 +171,6 @@ export class SchemaService {
 
     return this.http
       .get(uri, {}, {})
-      .then(res => JSON.parse(res.data))
       .catch(e => {
         throw this.logger.error('Failed to get latest Kafka schema versions', e)
       })

@@ -2,7 +2,6 @@ import 'rxjs/add/operator/toPromise'
 
 import { Injectable } from '@angular/core'
 import { JwtHelperService } from '@auth0/angular-jwt'
-import { HTTP } from '@ionic-native/http/ngx'
 
 import {
   DefaultEndPoint,
@@ -18,6 +17,7 @@ import { StorageKeys } from '../../../shared/enums/storage'
 import { OAuthToken } from '../../../shared/models/token'
 import { getSeconds } from '../../../shared/utilities/time'
 import { RemoteConfigService } from '../config/remote-config.service'
+import { HttpService } from '../http/http.service'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 
@@ -31,7 +31,7 @@ export class TokenService {
   private tokenRefreshMillis: number = DefaultTokenRefreshSeconds
 
   constructor(
-    private http: HTTP,
+    private http: HttpService,
     public storage: StorageService,
     private jwtHelper: JwtHelperService,
     private remoteConfig: RemoteConfigService,
@@ -87,10 +87,9 @@ export class TokenService {
       .then(([uri, headers]) => {
         const URI = uri + DefaultManagementPortalURI + DefaultRefreshTokenURI
         this.logger.log(`"Registering with ${URI} and headers`, headers)
-        this.http.setDataSerializer('urlencoded')
         return this.http.post(URI, refreshBody, headers)
       })
-      .then(res => this.setTokens(JSON.parse(res.data)))
+      .then(res => this.setTokens(res))
   }
 
   refresh(): Promise<any> {

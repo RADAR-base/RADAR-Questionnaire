@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core'
-import { HTTP } from '@ionic-native/http/ngx'
 
 import {
   DefaultProtocolBranch,
@@ -10,6 +9,7 @@ import {
 } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
 import { Assessment } from '../../../shared/models/assessment'
+import { HttpService } from '../http/http.service'
 import { LogService } from '../misc/log.service'
 import { RemoteConfigService } from './remote-config.service'
 import { SubjectConfigService } from './subject-config.service'
@@ -18,7 +18,7 @@ import { SubjectConfigService } from './subject-config.service'
 export class ProtocolService {
   constructor(
     private config: SubjectConfigService,
-    private http: HTTP,
+    private http: HttpService,
     private remoteConfig: RemoteConfigService,
     private logger: LogService
   ) {}
@@ -45,7 +45,7 @@ export class ProtocolService {
           throw new Error('Project name is not set. Cannot pull protocols.')
         }
         const URI = [baseUrl, projectName, `${path}?ref=${branch}`].join('/')
-        return this.http.get(URI, {}, {}).then(res => JSON.parse(res.data))
+        return this.http.get(URI, {}, {})
       })
       .then(res => atob(res['content']))
   }

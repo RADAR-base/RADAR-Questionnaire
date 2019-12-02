@@ -1,7 +1,6 @@
 import 'rxjs/add/operator/toPromise'
 
 import { Injectable } from '@angular/core'
-import { HTTP } from '@ionic-native/http/ngx'
 
 import {
   DefaultManagementPortalURI,
@@ -12,6 +11,7 @@ import {
   DefaultSubjectsURI
 } from '../../../../assets/data/defaultConfig'
 import { ConfigService } from '../../../core/services/config/config.service'
+import { HttpService } from '../../../core/services/http/http.service'
 import { LogService } from '../../../core/services/misc/log.service'
 import { TokenService } from '../../../core/services/token/token.service'
 import { AnalyticsService } from '../../../core/services/usage/analytics.service'
@@ -23,7 +23,7 @@ export class AuthService {
   URI_base: string
 
   constructor(
-    private http: HTTP,
+    private http: HttpService,
     private token: TokenService,
     private config: ConfigService,
     private logger: LogService,
@@ -71,7 +71,7 @@ export class AuthService {
   }
 
   getRefreshTokenFromUrl(url): Promise<MetaToken> {
-    return this.http.get(url, {}, {}).then(res => JSON.parse(res.data))
+    return this.http.get(url, {}, {})
   }
 
   getSubjectURI(subject) {
@@ -83,9 +83,7 @@ export class AuthService {
       this.token.getAccessHeaders(DefaultRequestEncodedContentType),
       this.token.getDecodedSubject()
     ]).then(([headers, subject]) =>
-      this.http
-        .get(this.getSubjectURI(subject), {}, headers)
-        .then(res => JSON.parse(res.data))
+      this.http.get(this.getSubjectURI(subject), {}, headers)
     )
   }
 
@@ -116,13 +114,12 @@ export class AuthService {
     return Promise.all([
       this.token.getAccessHeaders(DefaultRequestJSONContentType),
       this.token.getDecodedSubject()
-    ]).then(([headers, subject]) => {
-      this.http.setDataSerializer('json')
-      return this.http.post(
+    ]).then(([headers, subject]) =>
+      this.http.post(
         this.getSubjectURI(subject) + '/sources',
         DefaultSourceTypeRegistrationBody,
         headers
       )
-    })
+    )
   }
 }

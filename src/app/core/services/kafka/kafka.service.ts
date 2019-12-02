@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core'
-import { HTTP } from '@ionic-native/http/ngx'
 
 import {
   DefaultClientAcceptType,
@@ -10,6 +9,7 @@ import { DataEventType } from '../../../shared/enums/events'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { CacheValue } from '../../../shared/models/cache'
 import { KafkaObject, SchemaType } from '../../../shared/models/kafka'
+import { HttpService } from '../http/http.service'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 import { TokenService } from '../token/token.service'
@@ -34,7 +34,7 @@ export class KafkaService {
     private schema: SchemaService,
     private analytics: AnalyticsService,
     private logger: LogService,
-    private http: HTTP
+    private http: HttpService
   ) {
     this.updateURI()
   }
@@ -115,20 +115,19 @@ export class KafkaService {
   sendToKafka(topic: string, k: number, v: CacheValue, headers): Promise<any> {
     return this.schema
       .getKafkaPayload(v.kafkaObject, topic, this.BASE_URI)
-      .then(data => {
-        this.http.setDataSerializer('json')
-        return this.http.post(
+      .then(data =>
+        this.http.post(
           this.KAFKA_CLIENT_URL + this.URI_topics + topic,
           data,
           headers
         )
-      })
+      )
       .then(res => this.onKafkaSendSuccess(res, k, v))
       .catch(error => this.onKafkaSendFail(error, v))
   }
 
   onKafkaSendSuccess(res, key, value) {
-    const offsets = JSON.parse(res.data).offsets
+    const offsets = res.offsets
     this.logger.log(offsets)
     if (offsets) {
       this.sendDataEvent(DataEventType.SEND_SUCCESS, value)

@@ -6,6 +6,9 @@ import { ConfigService } from '../core/services/config/config.service'
 import { ProtocolService } from '../core/services/config/protocol.service'
 import { QuestionnaireService } from '../core/services/config/questionnaire.service'
 import { SubjectConfigService } from '../core/services/config/subject-config.service'
+import { HttpAngularService } from '../core/services/http/http-angular.service'
+import { HttpNativeService } from '../core/services/http/http-native.service'
+import { HttpService } from '../core/services/http/http.service'
 import { KafkaService } from '../core/services/kafka/kafka.service'
 import { SchemaService } from '../core/services/kafka/schema.service'
 import { AlertService } from '../core/services/misc/alert.service'
@@ -18,8 +21,8 @@ import { ScheduleGeneratorService } from '../core/services/schedule/schedule-gen
 import { ScheduleService } from '../core/services/schedule/schedule.service'
 import { StorageService } from '../core/services/storage/storage.service'
 import { TokenService } from '../core/services/token/token.service'
-import { FirebaseAnalyticsService } from '../core/services/usage/firebase-analytics.service'
 import { AnalyticsService } from '../core/services/usage/analytics.service'
+import { FirebaseAnalyticsService } from '../core/services/usage/firebase-analytics.service'
 import { UsageService } from '../core/services/usage/usage.service'
 import { PipesModule } from '../shared/pipes/pipes.module'
 import { TranslatePipe } from '../shared/pipes/translate/translate'
@@ -44,6 +47,9 @@ import { SplashModule } from './splash/splash.module'
     SplashModule
   ],
   providers: [
+    HttpService,
+    HttpAngularService,
+    HttpNativeService,
     AlertService,
     DatePipe,
     ConfigService,

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core'
-import { HTTP } from '@ionic-native/http/ngx'
 
 import { StorageKeys } from '../../../shared/enums/storage'
 import { Assessment } from '../../../shared/models/assessment'
@@ -7,6 +6,7 @@ import { Question } from '../../../shared/models/question'
 import { Task } from '../../../shared/models/task'
 import { TaskType } from '../../../shared/utilities/task-type'
 import { Utility } from '../../../shared/utilities/util'
+import { HttpService } from '../http/http.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
@@ -22,7 +22,7 @@ export class QuestionnaireService {
   constructor(
     private storage: StorageService,
     private localization: LocalizationService,
-    private http: HTTP,
+    private http: HttpService,
     private util: Utility,
     private logger: LogService
   ) {}
@@ -64,7 +64,6 @@ export class QuestionnaireService {
 
   getQuestionnairesOfLang(URI): Promise<Question[]> {
     return this.http.get(URI, {}, {}).then(res => {
-      res = JSON.parse(res.data)
       if (!(res instanceof Array)) {
         throw new Error('URL does not contain an array of questions')
       }

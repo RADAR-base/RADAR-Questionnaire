@@ -81,13 +81,14 @@ export class EnrolmentPageComponent {
         this.next()
       })
       .catch(e => {
+        console.log(e)
         this.handleError(e)
         this.loading = false
       })
   }
 
   handleError(e) {
-    const error = JSON.parse(e.error)
+    const error = e.error
     this.logger.error('Failed to log in', e)
     this.showStatus()
     this.outcomeStatus =

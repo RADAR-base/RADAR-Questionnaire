@@ -364,10 +364,10 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/app-version@^5.17.0":
-  version "5.17.0"
-  resolved "https://registry.yarnpkg.com/@ionic-native/app-version/-/app-version-5.17.0.tgz#bcde3b7b5cb246ee927b80aff65241dd3de67353"
-  integrity sha512-IZ3dM7o8FKJlnEoUxfGq/jzLFuAIG0aEePwAVidHw6tH7y9WdpgQM6v5lT0pGFPeOr5FRo4vLDKQPZty0dNb1Q==
+"@ionic-native/app-version@^5.17.1":
+  version "5.17.1"
+  resolved "https://registry.yarnpkg.com/@ionic-native/app-version/-/app-version-5.17.1.tgz#a2d790c40d25a6c33b18a8bb42351de3ef8f969d"
+  integrity sha512-KpSNeb+KxAyBPG1L3cJnZVeWhtRqdeEzQblnTh6V3L/4QZjYLGmuRt8K6j+xBoGBs+dK5xTMmhYRbiVOVInlqQ==
   dependencies:
     "@types/cordova" latest
 
@@ -9111,7 +9111,7 @@ postcss@^6.0.1, postcss@^6.0.17, postcss@^6.0.21, postcss@^6.0.23:
     source-map "^0.6.1"
     supports-color "^5.4.0"
 
-postcss@^7.0.0, postcss@^7.0.1, postcss@^7.0.13, postcss@^7.0.14, postcss@^7.0.17, postcss@^7.0.18, postcss@^7.0.2, postcss@^7.0.21, postcss@^7.0.23, postcss@^7.0.7:
+postcss@^7.0.0, postcss@^7.0.1, postcss@^7.0.13, postcss@^7.0.14, postcss@^7.0.17, postcss@^7.0.2, postcss@^7.0.21, postcss@^7.0.23, postcss@^7.0.7:
   version "7.0.23"
   resolved "https://registry.yarnpkg.com/postcss/-/postcss-7.0.23.tgz#9f9759fad661b15964f3cfc3140f66f1e05eadc1"
   integrity sha512-hOlMf3ouRIFXD+j2VJecwssTwbvsPGJVMzupptg+85WA+i7MwyrydmQAgY3R+m0Bc0exunhbJmijy8u8+vufuQ==

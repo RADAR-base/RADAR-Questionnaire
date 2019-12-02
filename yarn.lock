@@ -378,10 +378,10 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/barcode-scanner@^5.17.0":
-  version "5.17.0"
-  resolved "https://registry.yarnpkg.com/@ionic-native/barcode-scanner/-/barcode-scanner-5.17.0.tgz#77a713353d17f08ea72b9840056eec0e6b7f5ec6"
-  integrity sha512-LeL3zZ2FDZOQfwChtI9nK8DqJHUb+OiJTVxDa103TNIIBA0mO3DK3/Q3B82WbQAm8qrEFBXIqOKoqNKcCSEDBA==
+"@ionic-native/barcode-scanner@^5.17.1":
+  version "5.17.1"
+  resolved "https://registry.yarnpkg.com/@ionic-native/barcode-scanner/-/barcode-scanner-5.17.1.tgz#9f953e6620d7b89644fbbcff4f39d35b44ac5201"
+  integrity sha512-ApjbO4mX9vQT0onjvkmpsMDhRhg1AmqGShfRyS/snkPcM7kRry2+0U3dI5Cjb3NtfEb+uJEM07Tj7peV8leotQ==
   dependencies:
     "@types/cordova" latest
 
@@ -9111,7 +9111,7 @@ postcss@^6.0.1, postcss@^6.0.17, postcss@^6.0.21, postcss@^6.0.23:
     source-map "^0.6.1"
     supports-color "^5.4.0"
 
-postcss@^7.0.0, postcss@^7.0.1, postcss@^7.0.13, postcss@^7.0.14, postcss@^7.0.17, postcss@^7.0.18, postcss@^7.0.2, postcss@^7.0.21, postcss@^7.0.23, postcss@^7.0.7:
+postcss@^7.0.0, postcss@^7.0.1, postcss@^7.0.13, postcss@^7.0.14, postcss@^7.0.17, postcss@^7.0.2, postcss@^7.0.21, postcss@^7.0.23, postcss@^7.0.7:
   version "7.0.23"
   resolved "https://registry.yarnpkg.com/postcss/-/postcss-7.0.23.tgz#9f9759fad661b15964f3cfc3140f66f1e05eadc1"
   integrity sha512-hOlMf3ouRIFXD+j2VJecwssTwbvsPGJVMzupptg+85WA+i7MwyrydmQAgY3R+m0Bc0exunhbJmijy8u8+vufuQ==

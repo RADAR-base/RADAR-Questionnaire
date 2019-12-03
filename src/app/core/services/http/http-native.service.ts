@@ -29,4 +29,12 @@ export class HttpNativeService {
         options.responseType == 'text' ? res.data : JSON.parse(res.data)
       )
   }
+
+  public delete(url: string, params?: any, options?): Promise<Object> {
+    return this.http
+      .delete(url, params, options)
+      .then(res =>
+        options.responseType == 'text' ? res.data : JSON.parse(res.data)
+      )
+  }
 }

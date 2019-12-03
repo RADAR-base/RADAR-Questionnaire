@@ -24,6 +24,12 @@ export class HttpAngularService {
     return this.http.post(url, body, { headers: options }).toPromise()
   }
 
+  public delete(url: string, params?: any, options?): Promise<Object> {
+    return this.http
+      .delete(url, { headers: options, params: params })
+      .toPromise()
+  }
+
   private convertToSearchParams(params: any) {
     const searchParams = new URLSearchParams()
     for (const k in params) {

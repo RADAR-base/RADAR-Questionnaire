@@ -19,11 +19,15 @@ export class HttpService {
         : this.angularHttp
   }
 
-  public get(url: string, params?: any, options?: any): Promise<Object> {
-    return this.http.get(url, params, options)
+  public get<T>(url: string, params?: any, options?: any): Promise<T> {
+    return this.http.get<T>(url, params, options)
   }
 
-  public post(url: string, params?: any, options?: any): Promise<Object> {
-    return this.http.post(url, params, options)
+  public post<T>(url: string, params?: any, options?: any): Promise<T> {
+    return this.http.post<T>(url, params, options)
+  }
+
+  public delete<T>(url: string, params?: any, options?: any): Promise<T> {
+    return this.http.delete<T>(url, params, options)
   }
 }

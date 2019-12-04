@@ -7,34 +7,34 @@ import { DefaultRequestEncodedContentType } from '../../../../assets/data/defaul
 export class HttpNativeService {
   constructor(public http: HTTP) {}
 
-  public get(url: string, params?: any, options?): Promise<Object> {
-    if (!options) options = {}
+  public get<T>(url: string, params?: any, headers?): Promise<T> {
+    if (!headers) headers = {}
 
     return this.http
-      .get(url, params, options)
+      .get(url, params, headers)
       .then(res =>
-        options.responseType == 'text' ? res.data : JSON.parse(res.data)
+        headers.responseType == 'text' ? res.data : JSON.parse(res.data)
       )
   }
 
-  public post(url: string, params?: any, options?): Promise<Object> {
-    if (!options) options = {}
-    if (options['Content-Type'] == DefaultRequestEncodedContentType)
+  public post<T>(url: string, data?: any, headers?): Promise<T> {
+    if (!headers) headers = {}
+    if (headers['Content-Type'] == DefaultRequestEncodedContentType)
       this.http.setDataSerializer('urlencoded')
     else this.http.setDataSerializer('json')
 
     return this.http
-      .post(url, params, options)
+      .post(url, data, headers)
       .then(res =>
-        options.responseType == 'text' ? res.data : JSON.parse(res.data)
+        headers.responseType == 'text' ? res.data : JSON.parse(res.data)
       )
   }
 
-  public delete(url: string, params?: any, options?): Promise<Object> {
+  public delete<T>(url: string, params?: any, headers?): Promise<T> {
     return this.http
-      .delete(url, params, options)
+      .delete(url, params, headers)
       .then(res =>
-        options.responseType == 'text' ? res.data : JSON.parse(res.data)
+        headers.responseType == 'text' ? res.data : JSON.parse(res.data)
       )
   }
 }

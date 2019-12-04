@@ -7,27 +7,29 @@ import { DefaultRequestEncodedContentType } from '../../../../assets/data/defaul
 export class HttpAngularService {
   constructor(public http: HttpClient) {}
 
-  public get(url: string, params?: any, options?) {
-    if (!options) options = {}
-    options.params = params
+  public get<T>(url: string, params?: any, headers?): Promise<T> {
+    if (!headers) headers = {}
+    const options = { headers, params }
+    console.log(options)
 
-    return this.http.get(url, { headers: options }).toPromise()
+    return this.http.get<T>(url, options).toPromise()
   }
 
-  public post(url: string, params?: any, options?) {
-    if (!options) options = {}
+  public post<T>(url: string, data?: any, headers?): Promise<T> {
+    if (!headers) headers = {}
     const body =
-      options['Content-Type'] == DefaultRequestEncodedContentType
-        ? this.convertToSearchParams(params).toString()
-        : params
+      headers['Content-Type'] == DefaultRequestEncodedContentType
+        ? this.convertToSearchParams(data).toString()
+        : data
+    const options = { headers }
 
-    return this.http.post(url, body, { headers: options }).toPromise()
+    return this.http.post<T>(url, body, options).toPromise()
   }
 
-  public delete(url: string, params?: any, options?): Promise<Object> {
-    return this.http
-      .delete(url, { headers: options, params: params })
-      .toPromise()
+  public delete<T>(url: string, params?: any, headers?): Promise<T> {
+    const options = { headers, params }
+
+    return this.http.delete<T>(url, options).toPromise()
   }
 
   private convertToSearchParams(params: any) {

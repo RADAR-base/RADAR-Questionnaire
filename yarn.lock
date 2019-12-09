@@ -420,10 +420,10 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/globalization@^5.17.1":
-  version "5.17.1"
-  resolved "https://registry.yarnpkg.com/@ionic-native/globalization/-/globalization-5.17.1.tgz#d81636b32c95dbee917e4aff2034efe6ae762cb9"
-  integrity sha512-njUM3IAWda9jWwrQVkpEBKGQKX31xtDL7S61IUnFmI89Lo6B8C1Mw5AowLCdTe1bzvjv98Qdr7+KLq8pynW6mA==
+"@ionic-native/globalization@^5.18.0":
+  version "5.18.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/globalization/-/globalization-5.18.0.tgz#90445e1b7ed7621fea451191e6b09c7875438837"
+  integrity sha512-0FXup5I6jYE25abqTpm5eiWBnRdeZEjpAtAGn+nWJNVLdrPM8PBFgo58mRzRyIpHRzqKnoP4p1uvoX9rDqqgDw==
   dependencies:
     "@types/cordova" latest
 

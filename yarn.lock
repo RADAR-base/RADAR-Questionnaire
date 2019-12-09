@@ -427,10 +427,10 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/insomnia@^5.17.1":
-  version "5.17.1"
-  resolved "https://registry.yarnpkg.com/@ionic-native/insomnia/-/insomnia-5.17.1.tgz#be44bac0f289ec20ca6aa24228ae986b370c5266"
-  integrity sha512-2OYMB+jio5PA29WoDKqFd4gwxmgXh2y0B0jRzIFZiMrso0rQiFwuAiyFZdRsP3XK4kPVWTxPTRURdN/hznk19Q==
+"@ionic-native/insomnia@^5.18.0":
+  version "5.18.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/insomnia/-/insomnia-5.18.0.tgz#d6e79361b3f3b8a49d35b911d3c4792f2cbe1f51"
+  integrity sha512-O2Nssse/uxPIHufxsWKXhsDs6AMEr15zg8/6uw1qf31/rQQZU5qfRZcdTYAb8vwfz8v/8xSIqsk6+mdCQbCIVw==
   dependencies:
     "@types/cordova" latest
 

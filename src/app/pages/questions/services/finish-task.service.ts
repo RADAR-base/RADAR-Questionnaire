@@ -23,6 +23,7 @@ export class FinishTaskService {
   ) {}
 
   updateTaskToComplete(task): Promise<any> {
+    if (task.name === "Seizure Diary") return Promise.resolve()
     return Promise.all([
       this.schedule.updateTaskToComplete(task),
       this.schedule.updateTaskToReportedCompletion(task),

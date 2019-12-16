@@ -78,7 +78,7 @@ export const DefaultNumberOfCompletionLogsToSend = 10
 export const DefaultNotificationType: string = 'FCM'
 
 // *Default FCM sender ID from Firebase settings
-export const FCMPluginProjectSenderId: string = '430900191220'
+export const FCMPluginProjectSenderId: string = '430130156260'
 
 // *Default maximum upstream retries when sending fails
 export const DefaultMaxUpstreamResends = 100
@@ -97,7 +97,8 @@ export const DefaultNotificationTtlMinutes: number = 10
 export const GIT_API_URI = 'https://api.github.com/repos'
 
 // *The Github repository where the protocols are located
-export const DefaultProtocolGithubRepo = 'RADAR-Base/RADAR-aRMT-protocols'
+//export const DefaultProtocolGithubRepo = 'RADAR-Base/RADAR-aRMT-protocols'
+export const DefaultProtocolGithubRepo = 'sboettcher/RADAR-epilepsy-questionnaires'
 
 // *The name of the branch where the protocol definitions should be read from (REMOTE CONFIG KEY: `protocol_branch`)
 export const DefaultProtocolBranch = 'master'

@@ -5,72 +5,45 @@
       <div id="logo-container">
         <img
             id="logo"
-            src="assets/imgs/new-logo.png"
+            src="assets/imgs/home-app.png"
             alias="UCL LOGO"
         >
       </div>
       <div class="text">
-        <div class="text-lg">{{ "ENROL_WELCOME_1" | translate }} {{ "ENROL_WELCOME_2" |
+        <div class="text-lg">{{ "ENROL_WELCOME_1" | translate }} <br>{{ "ENROL_WELCOME_2" |
           translate }}
         </div>
-        <div class="text-md" style="font-size: 25px">
+        <div class="text-md" style="font-size: 20px">
           {{ "ENROLE_STUDY_DESCRIPTION" | translate }}
         </div>
       </div>
     </ion-slide>
 
-    <ion-slide id="aboutStudy" *ngIf="!showReadMoreInformation">
+    <ion-slide id="aboutStudy">
 <!--      <ion-item>-->
 <!--        <ion-icon md="md-arrow-back" item-start (click)="goBack()"></ion-icon>-->
 <!--      </ion-item>-->
 
       <ion-scroll
         scrollY="true"
-        style="height:550px"
+        class="scroll-page"
       >
         <div >
 
           <div >
             <iframe id="introframe"
-                    src="https://player.vimeo.com/video/288344114?api=1&player_id=player1&background=1"
+                    src="https://player.vimeo.com/video/376190254?api=1&player_id=player1&background=1"
             ></iframe>
 
           </div>
 
           <div class="text-md">{{ "ENROL_ABOUT_HEADING" | translate }}</div>
         </div>
-      </ion-scroll>
 
-      <div
-        padding
-        class="bottom"
-      >
-        <button
-          style="padding-bottom: 5px;"
-          ion-button
-          class="bt bt--full"
-          round
-          full
-          (tap)="showReadMoreText()"
-        >
-          Read More
-        </button>
-      </div>
-    </ion-slide>
-
-    <ion-slide id="info" *ngIf="showReadMoreInformation">
-      <ion-item>
-        <ion-icon md="md-arrow-back" item-start (click)="showAboutStudyPage()"></ion-icon>
-      </ion-item>
-
-      <ion-scroll
-                  scrollY="true"
-                  style="height:550px"
-      >
         <div>
-          <div>
-            <div class="text-md">{{ "ENROL_PURPOSE_OF_THE_STUDY" | translate }}</div>
-          </div>
+<!--          <div>-->
+<!--            <div class="text-md">{{ "ENROL_PURPOSE_OF_THE_STUDY" | translate }}</div>-->
+<!--          </div>-->
 
           <div
             padding
@@ -100,7 +73,35 @@
           </div>
         </div>
       </ion-scroll>
+
+<!--      <div-->
+<!--        padding-->
+<!--        class="bottom"-->
+<!--      >-->
+<!--        <button-->
+<!--          ion-button-->
+<!--          class="bt bt&#45;&#45;full"-->
+<!--          round-->
+<!--          full-->
+<!--          (tap)="showReadMoreText()"-->
+<!--        >-->
+<!--          Read More-->
+<!--        </button>-->
+<!--      </div>-->
     </ion-slide>
+
+<!--    <ion-slide id="info" *ngIf="showReadMoreInformation">-->
+<!--      <ion-item>-->
+<!--        <ion-icon md="md-arrow-back" item-start (click)="showAboutStudyPage()"></ion-icon>-->
+<!--      </ion-item>-->
+
+<!--      <ion-scroll-->
+<!--        scrollY="true"-->
+<!--        style="height:550px"-->
+<!--      >-->
+
+<!--      </ion-scroll>-->
+<!--    </ion-slide>-->
   </ion-slides>
 
   <div

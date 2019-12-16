@@ -22,7 +22,7 @@
 
           <div>
 
-            <div class="text-sm">Please review the information below before you agree to participate in this study.</div>
+            <div class="text-sm" style="padding-bottom: 10px">Please review the information below before you agree to participate in this study.</div>
             <ion-item-group>
               <div *ngFor="let consentPageItem of consentPageItems">
                 <page-consent-item
@@ -33,7 +33,7 @@
             </ion-item-group>
           </div>
 
-          <div padding-top="5px">
+          <div padding-top="15px">
             <div class="center" *ngFor="let question of questions">
               <yes-or-no-option
                 (valueChange)="onValueChange($event)"
@@ -58,6 +58,37 @@
             (tap)="processConsent()"
           >
             Submit Consent
+          </button>
+        </div>
+      </ion-slide>
+
+      <!--  Thank you slide, when not eligible-->
+
+      <ion-slide id="thankyou">
+        <div id="logo-container">
+          <img
+            id="logo"
+            src="assets/imgs/home-app.png"
+            alias="RADAR LOGO"
+          >
+        </div>
+        <div class="text">
+          <div class="text-lg">{{ "ENROL_ABORT_THANKYOU_1" | translate }}</div>
+          <div class="text-md"> {{ "ENROL_NO_CONSENT_MESSAGE" | translate}}</div>
+        </div>
+
+        <div
+          padding
+          class="bottom"
+        >
+          <button
+            ion-button
+            class="bt bt--full"
+            round
+            full
+            (tap)="navigateToWelcome()"
+          >
+            Finish
           </button>
         </div>
       </ion-slide>

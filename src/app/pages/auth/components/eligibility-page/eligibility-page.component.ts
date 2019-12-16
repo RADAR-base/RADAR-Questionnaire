@@ -41,19 +41,19 @@ export class EligibilityPageComponent {
       {
         questionId: 1,
         isAnswered: false,
-        question: "Are you at least 18 years old?",
+        question: "1/3: Are you at least 18 years old?",
         answer: undefined
       },
       {
         questionId: 2,
         isAnswered: false,
-        question: "Were you born outside of the United Kingdom?",
+        question: "2/3: Were you born outside of the United Kingdom?",
         answer: undefined
       },
       {
         questionId: 3,
         isAnswered: false,
-        question: "Are you planning to move to the UK in the next 6 months or currently living in the UK?",
+        question: "3/3: Are you planning to move to the UK in the next 6 months or currently living in the UK?",
         answer: undefined
       }
     ];

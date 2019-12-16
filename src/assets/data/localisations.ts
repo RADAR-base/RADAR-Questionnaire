@@ -11,7 +11,7 @@ export const Localisations = {
   ENROL_WELCOME_1: {
     da: 'Velkommen',
     de: 'Herzlich willkommen',
-    en: 'Welcome',
+    en: 'Welcome to',
     es: 'Bienvenido',
     it: 'Benvenuto',
     nl: 'Welkom'
@@ -19,7 +19,7 @@ export const Localisations = {
   ENROL_WELCOME_2: {
     da: 'til RADAR-Base',
     de: 'zu RADAR-Base',
-    en: 'to Health on the Move',
+    en: 'Health On the MovE (HOME)',
     es: 'a RADAR-Base',
     it: 'in RADAR-Base',
     nl: 'bij RADAR-Base'
@@ -103,6 +103,10 @@ export const Localisations = {
 
   ENROL_ABORT_MESSAGE: {
     en: 'It seems you do not meet our eligibility criteria to participant in the study.'
+  },
+
+  ENROL_NO_CONSENT_MESSAGE: {
+    en: 'Thank you for trying to participant in our study.'
   },
   ENROL_ABOUT_HEADING: {
     da: 'Velkommen',

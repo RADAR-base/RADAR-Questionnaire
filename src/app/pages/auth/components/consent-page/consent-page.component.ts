@@ -72,35 +72,35 @@ export class ConsentPageComponent {
         ]
       },
       {
-        title: "Protecting Your Privacy",
+        title: "Privacy",
         iconMd: "md-lock",
         detail: [
           "We take our obligation to protect your privacy very seriously. All of your information will be kept strictly confidential throughout the research project. It will not be possible to identify you from any of the publications or reports that are based on this study. Any answers you give to the survey questions will go from the app, to a secure server hosted by Amazon, and then straight to UCL."
         ]
       },
       {
-        title: "Data Collection and Use",
+        title: "Data Collection",
         iconMd: "md-analytics",
         detail: [
           "The survey questions will cover a wide range of topics that can affect your health and wellbeing, like your nutrition, housing, employment, and experience with your GP or healthcare provider. You may find that some questions do not apply to you or make you feel uncomfortable. You are free to choose ‘no response’ or stop answering the survey at any time by choosing the ‘stop survey’ option. Your data will only be used for academic research by UCL and will not be shared with anyone."
         ]
       },
       {
-        title: "Benefits in Participating",
+        title: "Benefits",
         iconMd: "md-chatbubbles",
         detail: [
           "Taking part in this study will help us gain a better understanding of the health of migrants like you in the UK. While there are no immediate benefits for you, every survey that you fill out will increase our understanding of the health and wellbeing of migrants."
         ]
       },
       {
-        title: "Findings of the Study",
+        title: "Study Findings",
         iconMd: "md-school",
         detail: [
-          "The results of this study will be written up and published in scientific journals as well as within wider media platforms. We will engage with policymakers to help them make decisions that  better reflect the health needs of migrants like yourself in the UK. Additionally, we will send you summaries of our analysed data every few months via email. The results will also be on the study website."
+          "The results of this study will be written up and published in scientific journals as well as within wider media platforms. We will engage with policymakers to help them make decisions that  better reflect the health needs of migrants like yourself in the UK. Additionally, we will send you summaries of our analysed data every few months via email. The results will also be on the study website (www.homeappstudy.net)."
         ]
       },
       {
-        title: "Disadvantages or Risks in Participating",
+        title: "Disadvantages",
         iconMd: "md-warning",
         detail: [
           "In this study you will be asked questions relating to migration, mental and sexual health which you may find distressing. There is a possibility that completing the surveys could evoke previous negative experiences with your health or migratory experience.",
@@ -109,16 +109,16 @@ export class ConsentPageComponent {
         ]
       },
       {
-        title: "Data Protection Privacy Notice",
+        title: "Data Protection",
         iconMd: "md-paper",
         detail: [
-          "The controller for this project will be University College London (UCL). The UCL Data Protection Officer provides oversight of UCL activities involving the processing of personal data, and can be contacted at data-protection@ucl.ac.uk. This ‘local’ privacy notice sets out the information that applies to this particular study. Further information on how UCL uses participant information can be found in our ‘general’ privacy notice: For participants in health and care research studies, click here.",
+          "The controller for this project will be University College London (UCL). The UCL Data Protection Officer provides oversight of UCL activities involving the processing of personal data, and can be contacted at data-protection@ucl.ac.uk. This ‘local’ privacy notice sets out the information that applies to this particular study. Further information on how UCL uses participant information can be found in our ‘general’ privacy notice: For participants in health and care research studies, click here (www.homeappstudy.net).",
           "The information that is required to be provided to participants under data protection legislation (GDPR and DPA 2018) is provided across both the ‘local’ and ‘general’ privacy notices. The lawful basis that will be used to process your personal data are: ‘Public task’ for personal data and’ Research purposes’ for special category data.",
           "Your personal data will be processed so long as it is required for the research project. If we are able to anonymise or pseudonymise the personal data you provide we will undertake this, and will endeavour to minimise the processing of personal data wherever possible. If you are concerned about how your personal data is being processed, or if you would like to contact us about your rights, please contact UCL in the first instance at data-protection@ucl.ac.uk."
         ]
       },
       {
-        title: "Follow up",
+        title: "Follow Up",
         iconMd: "md-mail",
         detail: [
           "Your email address will be included in this research study's registry. We will send a newsletter every few months with information about this study. You can opt out of this registry at any time to stop receiving the newsletter or any other form of correspondence."
@@ -157,27 +157,30 @@ export class ConsentPageComponent {
 
   processConsent() {
     if (this.evaluatedQuestions.size === this.totalNumberOfConsentsRequired) {
-      const hasConsent = Array.from(this.evaluatedQuestions.values())
+      const consentNotGiven = Array.from(this.evaluatedQuestions.values())
         .filter(
           d => {
             return (
               d.answer === false
             )
-          }).length === 0
+          }).length
 
-      if (hasConsent) {
+      if (consentNotGiven === 0) {
         this.usage.sendGeneralEvent(EnrolmentEventType.CONSENT_RECEIVED)
         this.storage.set(StorageKeys.CONSENT_ACCESS_NHS_RECORDS, true);
         this.authenticate();
-      } else {
+      } else if (consentNotGiven === 2) {
         this.usage.sendGeneralEvent(EnrolmentEventType.CONSENT_NOT_RECEIVED)
+        this.next()
+      } else {
+        this.usage.sendGeneralEvent(EnrolmentEventType.CONSENT_PARTIALLY_RECEIVED)
         this.alertService.showAlert({
-          title: "Consent is required",
+          title: "Full Consent Required",
           buttons: [{
             text: this.localization.translateKey(LocKeys.BTN_OKAY),
             handler: () => {}
           }],
-          message: "Your consent to participate in the study is at least required."
+          message: "Your consent to both points is required to be able to participate in the HOME study."
         })
       }
     }

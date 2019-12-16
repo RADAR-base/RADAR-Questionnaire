@@ -24,8 +24,8 @@ page-consent-item {
     margin-bottom: 2vh;
     padding-bottom: 1vh;
     max-width: 60vh;
-    word-break: break-word;
     text-align: justify;
+    word-break: break-word;
     font-size: 15px;
   }
 
@@ -46,8 +46,9 @@ page-consent-item {
   }
 
   .detail {
-    padding-left: 5px;
     padding-right: 5px;
+    padding-left: 5px;
+    padding-bottom: 5px;
     font-size: 12px;
   }
 }

@@ -82,7 +82,11 @@ $alert-md-head-text-align: center;
 @import 'ionic.theme.default';
 
 .alert-title {
-  color: $cl-primary;
+  color: $cl-light;
+}
+
+.alert-button {
+  color: $cl-light !important;
 }
 // Ionicons
 // --------------------------------------------------

@@ -1,4 +1,4 @@
-<ion-item>
+<ion-item (click)="showDetail = !showDetail">
   <ion-icon
     [md]="currentItem.iconMd"
     item-start>
@@ -7,13 +7,11 @@
   <ion-icon
     md="md-arrow-down"
     *ngIf="!showDetail"
-    (click)="showDetail =true"
     item-end>
   </ion-icon>
   <ion-icon
     md="md-arrow-up"
     *ngIf="showDetail"
-    (click)="showDetail =false"
     item-end></ion-icon>
 </ion-item>
 

@@ -126,7 +126,7 @@ export class ConsentPageComponent {
       },
       {
         title: "Withdrawing",
-        iconMd: "md-unlock",
+        iconMd: "md-log-out",
         detail: [
           "Your participation in this study is entirely voluntary. You may withdraw your consent and stop your participation in this study at any time. If you choose to withdraw, we will stop collecting any new data and can destroy all of the data we have previously collected. To withdraw from the study, simply send an email to the research team at r.aldridge@ucl.ac.uk."
         ]

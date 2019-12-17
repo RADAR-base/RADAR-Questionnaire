@@ -2,13 +2,12 @@ page-welcome {
   color: white;
 
   #logo {
-    width: 200px;
+    width: 250px;
   }
 
   #logo-container {
     margin: auto;
-    padding-bottom: 3vh;
-    width: 200px;
+    width: 250px;
   }
 
   .icon {
@@ -24,6 +23,14 @@ page-welcome {
     height:75vh !important;
   }
 
+  ::-webkit-scrollbar {
+    width: 3px;
+    background-color: white;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: $cl-light;
+  }
+
   .text-ques {
     margin-bottom: 2vh;
     font-size: 25px;
@@ -36,7 +43,7 @@ page-welcome {
 
   .text-lg {
     margin-bottom: 2vh;
-    font-size: 40px;
+    font-size: 30px;
   }
 
   .text-md {
@@ -51,7 +58,6 @@ page-welcome {
 
   .extra-padding {
     margin-top: 8vh;
-
   }
 
   #status {
@@ -81,11 +87,6 @@ page-welcome {
     padding-top: 5px;
   }
 
-  .qr-code {
-    margin: auto;
-    padding-top: 3vh;
-    width: 170px;
-  }
 
   .bottom {
     position: fixed;
@@ -95,7 +96,6 @@ page-welcome {
 
   ion-item.item {
     margin-bottom: $item-separation-distance;
-    //background-color: $cl-primary-40;
   }
 
   .item-md.item-block .item-inner {
@@ -139,11 +139,6 @@ page-welcome {
     margin: 24px auto;
     width: 320px;
     border-bottom: 1px solid white;
-  }
-
-  .scroll-content {
-    margin-bottom: 0 !important;
-    padding-bottom: 0 !important;
   }
 
   li {

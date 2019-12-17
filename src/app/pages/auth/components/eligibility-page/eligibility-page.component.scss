@@ -64,6 +64,14 @@ page-eligibility {
     height:75vh !important;
   }
 
+  ::-webkit-scrollbar {
+    width: 3px;
+    background-color: white;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: $cl-light;
+  }
+
   input[type='checkbox']:checked + label {
     background-color: $cl-primary;
   }

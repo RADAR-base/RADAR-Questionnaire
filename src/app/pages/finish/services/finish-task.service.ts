@@ -22,7 +22,8 @@ export class FinishTaskService {
       this.schedule.updateTaskToReportedCompletion(task),
       getTaskType(task) == TaskType.NON_CLINICAL
         ? this.schedule.addToCompletedTasks(task)
-        : Promise.resolve()
+        : Promise.resolve(),
+      this.config.rescheduleNotifications()
     ])
   }
 

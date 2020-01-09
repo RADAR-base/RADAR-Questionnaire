@@ -57,7 +57,7 @@
         "@ionic-native/file": "^5.17.1",
         "@ionic-native/firebase": "^5.19.1",
         "@ionic-native/globalization": "^5.19.1",
-        "@ionic-native/insomnia": "^5.17.1",
+        "@ionic-native/insomnia": "^5.19.1",
         "@ionic-native/keyboard": "^5.17.1",
         "@ionic-native/local-notifications": "^5.17.1",
         "@ionic-native/mobile-accessibility": "5.19.1",

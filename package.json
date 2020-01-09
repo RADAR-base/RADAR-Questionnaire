@@ -48,7 +48,7 @@
         "@angular/router": "^7.2.13",
         "@auth0/angular-jwt": "^3.0.0",
         "@ionic-native/android-permissions": "^5.17.1",
-        "@ionic-native/app-version": "^5.17.1",
+        "@ionic-native/app-version": "^5.19.1",
         "@ionic-native/background-mode": "^5.17.1",
         "@ionic-native/barcode-scanner": "^5.17.1",
         "@ionic-native/core": "^5.17.1",

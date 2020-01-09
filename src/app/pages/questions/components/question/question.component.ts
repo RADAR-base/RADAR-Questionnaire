@@ -33,7 +33,7 @@ export class QuestionComponent implements OnInit, OnChanges {
   isLoading = true
   isScrollable = false
   isFieldLabelHidden = false
-  margin = 16
+  margin = 32
 
   NON_SCROLLABLE_SET: Set<QuestionType> = new Set([
     QuestionType.timed,

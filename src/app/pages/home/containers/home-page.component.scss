@@ -1,5 +1,6 @@
 page-home {
   .scroll-content {
+    overflow: hidden;
     display: flex;
     flex-flow: column;
   }
@@ -91,5 +92,9 @@ page-home {
 
   .hidden {
     display: none;
+  }
+
+  .taskCalendar {
+    overflow: auto !important;
   }
 }

@@ -22,13 +22,13 @@ export class SplashPageComponent {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private splash: SplashService,
+    private splashService: SplashService,
     private alertService: AlertService,
     private localization: LocalizationService,
     private usage: UsageService,
     private platform: Platform
   ) {
-    this.splash
+    this.splashService
       .evalEnrolment()
       .then(valid => (valid ? this.onStart() : this.enrol()))
   }
@@ -39,16 +39,16 @@ export class SplashPageComponent {
     this.status = this.localization.translateKey(
       LocKeys.SPLASH_STATUS_UPDATING_CONFIG
     )
-    this.splash
+    this.splashService
       .isAppUpdateAvailable()
       .then(res => (res ? this.showAppUpdateAvailable() : []))
-    return this.splash
+    return this.splashService
       .loadConfig()
       .then(() => {
         this.status = this.localization.translateKey(
           LocKeys.SPLASH_STATUS_SENDING_LOGS
         )
-        return this.splash.sendMissedQuestionnaireLogs()
+        return this.splashService.sendMissedQuestionnaireLogs()
       })
       .catch(e => this.showFetchConfigFail(e))
       .then(() => this.navCtrl.setRoot(HomePageComponent))
@@ -100,6 +100,8 @@ export class SplashPageComponent {
   }
 
   enrol() {
-    this.splash.reset().then(() => this.navCtrl.setRoot(EnrolmentPageComponent))
+    this.splashService
+      .reset()
+      .then(() => this.navCtrl.setRoot(EnrolmentPageComponent))
   }
 }

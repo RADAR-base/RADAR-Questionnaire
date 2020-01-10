@@ -9,6 +9,7 @@ export class ConfigKeys {
   static NOTIFICATION_TTL_MINUTES = new ConfigKeys('notification_ttl_minutes')
   static PLATFORM_INSTANCE = new ConfigKeys('platform_instance')
   static QUESTIONS_HIDDEN = new ConfigKeys('questions_hidden')
+  static APP_VERSION_LATEST = new ConfigKeys('app_version_latest')
 
   constructor(public value: string) {}
 

@@ -39,6 +39,9 @@ export class SplashPageComponent {
     this.status = this.localization.translateKey(
       LocKeys.SPLASH_STATUS_UPDATING_CONFIG
     )
+    this.splash
+      .isAppUpdateAvailable()
+      .then(res => (res ? this.showAppUpdateAvailable() : []))
     return this.splash
       .loadConfig()
       .then(() => {
@@ -47,11 +50,7 @@ export class SplashPageComponent {
         )
         return this.splash.sendMissedQuestionnaireLogs()
       })
-      .catch(e =>
-        e.message == ConfigEventType.APP_UPDATE_AVAILABLE
-          ? this.showAppUpdateAvailable()
-          : this.showFetchConfigFail(e)
-      )
+      .catch(e => this.showFetchConfigFail(e))
       .then(() => this.navCtrl.setRoot(HomePageComponent))
   }
 

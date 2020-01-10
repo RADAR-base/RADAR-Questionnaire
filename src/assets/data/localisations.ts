@@ -196,7 +196,7 @@ export const Localisations = {
     pl: 'Ukończone w klinice',
     hb: '?מילאת במרפאה'
   },
-  CALENDAR_ESM_MISSED_TITLE: {
+  CALENDAR_TASK_MISSED_TITLE: {
     da: 'Blokeret',
     de: 'Nich erlaubt',
     en: 'Blocked',
@@ -206,7 +206,7 @@ export const Localisations = {
     pl: 'Zablokowane',
     hb: 'חסום'
   },
-  CALENDAR_ESM_MISSED_DESC: {
+  CALENDAR_TASK_MISSED_DESC: {
     da: 'Spørgsmålet kan ikke besvares længere.',
     de:
       'Leider können Sie diesen Fragebogen nur zum angegebenen Zeitpunkt beantworten.',

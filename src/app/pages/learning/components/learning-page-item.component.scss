@@ -1,0 +1,54 @@
+learning-item {
+  .bt--block {
+    width: 75px;
+    height: 75px;
+    font-size: 18px;
+    line-height: 1.35em;
+  }
+
+  .item {
+    @include button-round;
+  }
+
+  .text {
+    margin: auto;
+    width: 90vw;
+  }
+
+  .text-justify {
+    text-align: justify;
+  }
+
+  .text-heading {
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+    padding-bottom: 1vh;
+    max-width: 60vh;
+    text-align: justify;
+    word-break: break-word;
+    font-size: 15px;
+  }
+
+  .item-md {
+    margin-top: 5px;
+  }
+
+  .item-md:last-child {
+    margin-bottom: 5px;
+  }
+
+  .item-md ion-icon[item-end] {
+    padding-bottom: 10px;
+  }
+
+  .icon {
+    padding-top: 4px;
+  }
+
+  .detail {
+    padding-right: 5px;
+    padding-left: 5px;
+    padding-bottom: 5px;
+    font-size: 12px;
+  }
+}

@@ -52,16 +52,8 @@
     *ngIf="selectedPage === 'learn'"
     class="size-dynamic"
   >
-    <div> Learn page </div>
-    <div> TO come when design finalized  </div>
-
-    <ion-list>
-      <button ion-item *ngFor="let sItem of learnItems">
-        <ion-icon item-start [name]="sItem.icon"></ion-icon>
-        {{ sItem.name }}
-        <ion-icon item-end name="arrow-forward"></ion-icon>
-      </button>
-    </ion-list>
+    <page-learning>
+    </page-learning>
   </div>
 </ion-content>
 

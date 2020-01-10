@@ -15,6 +15,7 @@ import { SettingsPageComponent } from '../../settings/containers/settings-page.c
 import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 import { TasksService } from '../services/tasks.service'
 import { HomePageAnimations } from './home-page.animation'
+import { LearningPageComponent } from "../../learning/containers/learning-page.component";
 
 enum Page {Settings = 'settings', Learn = 'learn', Home = 'home' }
 
@@ -153,6 +154,11 @@ export class HomePageComponent implements OnDestroy {
   openSettingsPage() {
     this.navCtrl.push(SettingsPageComponent)
     this.usage.sendClickEvent('open_settings')
+  }
+
+  openLearningPage() {
+    this.navCtrl.push(LearningPageComponent)
+    this.usage.sendClickEvent('open_learning')
   }
 
   openClinicalTasksPage() {

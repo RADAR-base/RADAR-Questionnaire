@@ -1,0 +1,16 @@
+page-learning {
+  color: white;
+
+  .scroll-page {
+    height: calc(100vh - 12rem);
+  }
+
+  ::-webkit-scrollbar {
+    width: 3px;
+    background-color: white;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: $cl-light;
+  }
+}

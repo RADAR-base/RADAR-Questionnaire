@@ -1,22 +1,17 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { Platform } from 'ionic-angular'
 import * as ver from 'semver'
 
 import {
-  DefaultAppId,
   DefaultAppVersion,
-  DefaultAppleAppStoreAppURL,
-  DefaultGooglePlaystoreAppURL,
-  DefaultNotificationRefreshTime,
-  DefaultPackageName
+  DefaultNotificationRefreshTime
 } from '../../../../assets/data/defaultConfig'
+import { ConfigKeys } from '../../../shared/enums/config'
 import {
   ConfigEventType,
   NotificationEventType
 } from '../../../shared/enums/events'
 import { User } from '../../../shared/models/user'
-import { parseVersion } from '../../../shared/utilities/parse-version'
 import { TaskType } from '../../../shared/utilities/task-type'
 import { KafkaService } from '../kafka/kafka.service'
 import { LocalizationService } from '../misc/localization.service'
@@ -27,6 +22,7 @@ import { AnalyticsService } from '../usage/analytics.service'
 import { AppConfigService } from './app-config.service'
 import { ProtocolService } from './protocol.service'
 import { QuestionnaireService } from './questionnaire.service'
+import { RemoteConfigService } from './remote-config.service'
 import { SubjectConfigService } from './subject-config.service'
 
 @Injectable()
@@ -42,8 +38,7 @@ export class ConfigService {
     private localization: LocalizationService,
     private analytics: AnalyticsService,
     private logger: LogService,
-    private http: HttpClient,
-    private platform: Platform
+    private remoteConfig: RemoteConfigService
   ) {}
 
   fetchConfigState(force?: boolean) {
@@ -58,7 +53,6 @@ export class ConfigService {
           this.subjectConfig
             .getEnrolmentDate()
             .then(d => this.appConfig.init(d))
-        this.checkForAppUpdates()
         if (newProtocol)
           return this.updateConfigStateOnProtocolChange(newProtocol)
         if (newAppVersion)
@@ -145,21 +139,18 @@ export class ConfigService {
   }
 
   checkForAppUpdates() {
-    const playstoreURL = this.platform.is('ios')
-      ? DefaultAppleAppStoreAppURL + DefaultAppId
-      : DefaultGooglePlaystoreAppURL + DefaultPackageName
     return Promise.all([
-      this.http
-        .get(playstoreURL, { responseType: 'text' })
-        .toPromise()
-        .then(res => parseVersion(res))
-        .catch(e => DefaultAppVersion),
+      this.remoteConfig
+        .read()
+        .then(config =>
+          config.getOrDefault(ConfigKeys.APP_VERSION_LATEST, DefaultAppVersion)
+        ),
       this.appConfig.getAppVersion()
-    ]).then(([playstoreVersion, currentVersion]) => {
-      if (ver.gt(playstoreVersion, currentVersion))
-        throw new Error(ConfigEventType.APP_UPDATE_AVAILABLE)
-      return
-    })
+    ])
+      .then(([playstoreVersion, currentVersion]) =>
+        ver.gt(ver.clean(playstoreVersion), ver.clean(currentVersion))
+      )
+      .catch(() => false)
   }
 
   checkParticipantEnrolled() {

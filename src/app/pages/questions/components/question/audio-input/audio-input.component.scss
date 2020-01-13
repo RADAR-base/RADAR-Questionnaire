@@ -7,6 +7,7 @@ audio-input {
   }
 
   .audio-container {
+    overflow: hidden;
     width: inherit;
     height: inherit !important;
   }
@@ -29,7 +30,7 @@ audio-input {
     background-color: $cl-primary-10;
   }
 
-  h2 {
+  .info-card h2 {
     @include font-body;
   }
 }

@@ -19,7 +19,7 @@ export const TaskInfoAnimations = [
     transition('* => *', animate('350ms ease'))
   ]),
   trigger('moveHour', [
-    state('false', style({ transform: 'translate3d(90%, 0, 0)' })),
+    state('false', style({ transform: 'translate3d(105%, 0, 0)' })),
     transition('* => *', animate('350ms ease'))
   ]),
   trigger('alignCenterRightExtraInfo', [

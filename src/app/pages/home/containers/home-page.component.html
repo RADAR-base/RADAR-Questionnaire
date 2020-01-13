@@ -41,6 +41,7 @@
     <ticker-bar
       [task]="nextTask"
       [isNow]="taskIsNow"
+      [timeToNextMilli]="timeToNextTask"
       [showAffirmation]="showCompleted"
       [noTasksToday]="(tasksProgress | async)?.numberOfTasks == 0"
     ></ticker-bar>
@@ -57,7 +58,7 @@
     ></task-info>
   </div>
 
-  <div #taskCalendar [@displayCalendar]="showCalendar">
+  <div #taskCalendar class="taskCalendar" [@displayCalendar]="showCalendar">
     <task-calendar
       *ngIf="(sortedTasks | async)?.size"
       [show]="showCalendar"

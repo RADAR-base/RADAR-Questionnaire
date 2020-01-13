@@ -28,7 +28,7 @@ export const DefaultAppId = ''
 export const DefaultSourcePrefix = 'aRMT'
 export const DefaultSourceTypeModel: string = `${DefaultSourcePrefix}-App`
 export const DefaultSourceTypeRegistrationBody = {
-  sourceTypeCatalogVersion: '1.4.3',
+  sourceTypeCatalogVersion: '1.5.0',
   sourceTypeModel: DefaultSourceTypeModel,
   sourceTypeProducer: 'RADAR'
 }

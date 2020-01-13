@@ -24,6 +24,10 @@ export class SplashService {
     return this.config.fetchConfigState()
   }
 
+  isAppUpdateAvailable() {
+    return this.config.checkForAppUpdates()
+  }
+
   reset() {
     return this.config.resetAll()
   }

@@ -19,6 +19,8 @@ export class TickerBarComponent implements OnChanges {
   showAffirmation = false
   @Input()
   noTasksToday = false
+  @Input()
+  timeToNextMilli: number
   tickerText: string
   report: ReportScheduling
 
@@ -62,7 +64,7 @@ export class TickerBarComponent implements OnChanges {
         this.tickerText =
           this.localization.translateKey(LocKeys.TASK_BAR_NEXT_TASK) +
           '<b>' +
-          this.getTimeToNext(this.task.timestamp) +
+          this.getTimeToNextString() +
           '.</b>'
       }
     }
@@ -92,26 +94,32 @@ export class TickerBarComponent implements OnChanges {
       this.localization.translateKey(LocKeys.TASK_BAR_NO_TASK_2)
   }
 
-  getTimeToNext(next) {
-    const now = new Date().getTime()
-    let deltaStr = ''
-    const deltaMin = Math.round(getMinutes({ milliseconds: next - now }))
-    const deltaHour = Math.round(getHours({ minutes: deltaMin }))
-    if (deltaMin > 59) {
-      deltaStr =
-        String(deltaHour) +
-        ' ' +
-        (deltaHour > 1
-          ? this.localization.translateKey(LocKeys.TASK_TIME_HOUR_MULTIPLE)
-          : this.localization.translateKey(LocKeys.TASK_TIME_HOUR_SINGLE))
-    } else {
-      deltaStr =
-        String(deltaMin) +
-        ' ' +
-        (deltaMin > 1
-          ? this.localization.translateKey(LocKeys.TASK_TIME_MINUTE_MULTIPLE)
-          : this.localization.translateKey(LocKeys.TASK_TIME_MINUTE_SINGLE))
-    }
-    return deltaStr
+  getTimeToNextString() {
+    const minutes = Math.round(
+      getMinutes({ milliseconds: this.timeToNextMilli })
+    )
+    if (minutes > 59) return this.getHoursToNextString(minutes)
+    else return this.getMinutesToNextString(minutes)
+  }
+
+  getHoursToNextString(minutes) {
+    const hour = Math.round(getHours({ minutes: minutes }))
+    return (
+      String(hour) +
+      ' ' +
+      (hour > 1
+        ? this.localization.translateKey(LocKeys.TASK_TIME_HOUR_MULTIPLE)
+        : this.localization.translateKey(LocKeys.TASK_TIME_HOUR_SINGLE))
+    )
+  }
+
+  getMinutesToNextString(minutes) {
+    return (
+      String(minutes) +
+      ' ' +
+      (minutes > 1
+        ? this.localization.translateKey(LocKeys.TASK_TIME_MINUTE_MULTIPLE)
+        : this.localization.translateKey(LocKeys.TASK_TIME_MINUTE_SINGLE))
+    )
   }
 }

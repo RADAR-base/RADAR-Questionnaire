@@ -72,10 +72,10 @@ export class ConsentPageComponent {
         ]
       },
       {
-        title: "Privacy",
-        iconMd: "md-lock",
+        title: "Benefits",
+        iconMd: "md-chatbubbles",
         detail: [
-          "We take our obligation to protect your privacy very seriously. All of your information will be kept strictly confidential throughout the research project. It will not be possible to identify you from any of the publications or reports that are based on this study. Any answers you give to the survey questions will go from the app, to a secure server hosted by Amazon, and then straight to UCL."
+          "Taking part in this study will help us gain a better understanding of the health of migrants like you in the UK. While there are no immediate benefits for you, every survey that you fill out will increase our understanding of the health and wellbeing of migrants."
         ]
       },
       {
@@ -86,13 +86,6 @@ export class ConsentPageComponent {
         ]
       },
       {
-        title: "Benefits",
-        iconMd: "md-chatbubbles",
-        detail: [
-          "Taking part in this study will help us gain a better understanding of the health of migrants like you in the UK. While there are no immediate benefits for you, every survey that you fill out will increase our understanding of the health and wellbeing of migrants."
-        ]
-      },
-      {
         title: "Study Findings",
         iconMd: "md-school",
         detail: [
@@ -100,12 +93,17 @@ export class ConsentPageComponent {
         ]
       },
       {
-        title: "Disadvantages",
-        iconMd: "md-warning",
+        title: "Follow Up",
+        iconMd: "md-mail",
         detail: [
-          "In this study you will be asked questions relating to migration, mental and sexual health which you may find distressing. There is a possibility that completing the surveys could evoke previous negative experiences with your health or migratory experience.",
-          "Before you undertake a survey you will be explained in short about its content and you can then decide not to take part in that particular survey. Following most surveys, we will include information to signpost you to national support related to the survey you have just undertaken and should you become distressed. Additionally, the resource section of the HOME app will have more information about the health and migration services available in the UK.",
-          "We advise you to contact your GP or local mental health services should you feel you need more support. Additionally, the resource section of the HOME app will have more information about the health and migration services available in the UK."
+          "Your email address will be included in this research study's registry. We will send a newsletter every few months with information about this study. You can opt out of this registry at any time to stop receiving the newsletter or any other form of correspondence."
+        ]
+      },
+      {
+        title: "Privacy",
+        iconMd: "md-lock",
+        detail: [
+          "We take our obligation to protect your privacy very seriously. All of your information will be kept strictly confidential throughout the research project. It will not be possible to identify you from any of the publications or reports that are based on this study. Any answers you give to the survey questions will go from the app, to a secure server hosted by Amazon, and then straight to UCL."
         ]
       },
       {
@@ -118,10 +116,12 @@ export class ConsentPageComponent {
         ]
       },
       {
-        title: "Follow Up",
-        iconMd: "md-mail",
+        title: "Disadvantages",
+        iconMd: "md-warning",
         detail: [
-          "Your email address will be included in this research study's registry. We will send a newsletter every few months with information about this study. You can opt out of this registry at any time to stop receiving the newsletter or any other form of correspondence."
+          "In this study you will be asked questions relating to migration, mental and sexual health which you may find distressing. There is a possibility that completing the surveys could evoke previous negative experiences with your health or migratory experience.",
+          "Before you undertake a survey you will be explained in short about its content and you can then decide not to take part in that particular survey. Following most surveys, we will include information to signpost you to national support related to the survey you have just undertaken and should you become distressed. Additionally, the resource section of the HOME app will have more information about the health and migration services available in the UK.",
+          "We advise you to contact your GP or local mental health services should you feel you need more support. Additionally, the resource section of the HOME app will have more information about the health and migration services available in the UK."
         ]
       },
       {

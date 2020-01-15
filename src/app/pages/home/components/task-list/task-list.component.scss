@@ -1,8 +1,8 @@
 task-list {
   ion-scroll[scrollX] {
     white-space: nowrap;
-    border-top: 3px solid $cl-light;
-    border-bottom: 3px solid $cl-light;
+    //border-top: 3px solid $cl-light;
+    //border-bottom: 3px solid $cl-light;
 
     .scroll-item {
       display: inline;

@@ -42,6 +42,18 @@
           <div class="toolbar-label">{{ previousButtonText }}</div>
         </button>
       </ion-buttons>
+
+      <ion-buttons *ngIf="showExitButton" style="text-align: center;">
+        <button
+          ion-button
+          left
+          icon-left
+          (tap)="stopQuestionnaire()"
+        >
+          <ion-icon [name]="iconValues.close"></ion-icon>
+        </button>
+      </ion-buttons>
+
       <ion-buttons right>
         <button
           ion-button

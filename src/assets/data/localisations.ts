@@ -226,7 +226,7 @@ export const Localisations = {
   FINISH_NEXT_TASK_REMINDER: {
     da: 'Husk, du har stadig udestående opgaver!',
     de: 'Denken Sie daran, Sie haben noch Aufgaben ausstehend!',
-    en: 'Remember, you still have tasks outstanding!',
+    en: 'Remember, you still have surveys to be completed. It would be great if you could finish those too!',
     es: 'Recuerde, todavía tiene tareas pendientes!',
     it: 'Ricorda, hai ancora delle attività in sospeso!',
     nl: 'Denk eraan, je hebt nog steeds taken openstaan!'
@@ -240,10 +240,13 @@ export const Localisations = {
     nl: 'Voltooid in de kliniek?'
   },
   LEARN_HEADING: {
-    en: 'Learn'
+    en: 'Resources'
+  },
+  STUDY_INFO_HEADING: {
+    en: 'Study Information'
   },
   SURVEYS_HEADING: {
-    en: 'Surveys'
+    en: 'Your Surveys'
   },
   TODO_LIST_TITLE: {
     en: 'TODO List'

@@ -1,18 +1,19 @@
-import { Component, ElementRef, ViewChild } from '@angular/core'
-import { Insomnia } from '@ionic-native/insomnia/ngx'
-import { Content, NavController, NavParams, Platform } from 'ionic-angular'
+import {Component, ElementRef, ViewChild} from '@angular/core'
+import {Insomnia} from '@ionic-native/insomnia/ngx'
+import {Content, NavController, NavParams, Platform} from 'ionic-angular'
 
-import { LocalizationService } from '../../../core/services/misc/localization.service'
-import { UsageService } from '../../../core/services/usage/usage.service'
-import { UsageEventType } from '../../../shared/enums/events'
-import { LocKeys } from '../../../shared/enums/localisations'
-import { Assessment } from '../../../shared/models/assessment'
-import { Question } from '../../../shared/models/question'
-import { Task } from '../../../shared/models/task'
-import { TaskType } from '../../../shared/utilities/task-type'
-import { FinishPageComponent } from '../../finish/containers/finish-page.component'
-import { QuestionsService } from '../services/questions.service'
-import { QuestionsPageAnimations } from './questions-page.animation'
+import {LocalizationService} from '../../../core/services/misc/localization.service'
+import {UsageService} from '../../../core/services/usage/usage.service'
+import {UsageEventType} from '../../../shared/enums/events'
+import {LocKeys} from '../../../shared/enums/localisations'
+import {Assessment} from '../../../shared/models/assessment'
+import {Question} from '../../../shared/models/question'
+import {Task} from '../../../shared/models/task'
+import {TaskType} from '../../../shared/utilities/task-type'
+import {FinishPageComponent} from '../../finish/containers/finish-page.component'
+import {QuestionsService} from '../services/questions.service'
+import {QuestionsPageAnimations} from './questions-page.animation'
+import {AlertService} from "../../../core/services/misc/alert.service";
 
 @Component({
   selector: 'page-questions',
@@ -59,6 +60,8 @@ export class QuestionsPageComponent {
   assessment: Assessment
   showIntroduction: boolean
 
+  showExitButton = false
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -66,7 +69,8 @@ export class QuestionsPageComponent {
     private questionsService: QuestionsService,
     private usage: UsageService,
     private platform: Platform,
-    private insomnia: Insomnia
+    private insomnia: Insomnia,
+    private alertService: AlertService
   ) {
     this.platform.registerBackButtonAction(() => {
       this.sendCompletionLog()
@@ -148,6 +152,7 @@ export class QuestionsPageComponent {
     this.iconPrevious = this.getLeftButtonValues().icon
     this.previousButtonText = this.getLeftButtonValues().text
     this.nextButtonText = this.getRightButtonText()
+    this.showExitButton = this.getLeftButtonValues().showExitButton
   }
 
   setCurrentQuestion(value = 0) {
@@ -168,8 +173,8 @@ export class QuestionsPageComponent {
 
   getLeftButtonValues() {
     return !this.currentQuestion
-      ? { text: this.textValues.close, icon: this.iconValues.close }
-      : { text: this.textValues.previous, icon: this.iconValues.previous }
+      ? { text: this.textValues.close, icon: this.iconValues.close, showExitButton: false}
+      : { text: this.textValues.previous, icon: this.iconValues.previous, showExitButton: true }
   }
 
   getRightButtonText() {
@@ -225,6 +230,32 @@ export class QuestionsPageComponent {
         : null
       this.setCurrentQuestion(inc)
     }
+  }
+
+  stopQuestionnaire() {
+    this.sendEvent(UsageEventType.QUESTIONNAIRE_INTERRUPTED)
+    this.alertService.showAlert({
+      title: "Are you sure you want to quit this survey?",
+      buttons: [
+        {
+          text: this.localization.translateKey(LocKeys.BTN_YES),
+          handler: () => {
+            console.log('Want to exit now')
+            this.sendEvent(UsageEventType.WANT_TO_EXIT_NOW)
+            this.exitQuestionnaire()
+          }
+        },
+        {
+          text: this.localization.translateKey(LocKeys.BTN_NO),
+          handler: () => {
+            this.sendEvent(UsageEventType.WANT_TO_CONTINUE)
+            console.log('Dont want to exit now')
+          }
+        }
+      ],
+      message: "Your progress will be lost. But you can redo it later!"
+    })
+
   }
 
   exitQuestionnaire() {

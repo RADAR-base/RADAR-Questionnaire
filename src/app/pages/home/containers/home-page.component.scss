@@ -12,6 +12,21 @@ page-home {
     flex-grow: 1;
   }
 
+  .logo {
+    height: 200px;
+  }
+
+  .text-md {
+    margin-bottom: 2vh;
+    color: $cl-light;
+    font-size: 20px;
+  }
+
+  #studyInfo {
+    padding: 5px;
+    //text-align: center;
+  }
+
   ion-header .toolbar-background {
     background-color: $cl-secondary;
   }
@@ -33,13 +48,14 @@ page-home {
   }
 
   .logo-small {
+    position: absolute !important;
     height: 40px;
   }
 
   .footer {
     margin-top: 2px;
     //height: 12rem;
-    border-top: 3px solid $cl-light;
+    //border-top: 3px solid $cl-light;
     background-color: $cl-secondary;
   }
 
@@ -113,5 +129,13 @@ page-home {
 
   .hidden {
     display: none;
+  }
+
+  a {
+    padding-right: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    color: $cl-light;
+    font-size: 12px;
   }
 }

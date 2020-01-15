@@ -36,7 +36,7 @@ export class LearningPageComponent {
     this.learningPageItems = [
       {
         title: "Visas and immigration",
-        iconMd: "md-plane",
+        iconMd: "md-globe",
         detail: [
           `<div class="detail text-justify"> There is one single government website for all your visa and immigration information.</div>`,
           `<a href="https://www.gov.uk/browse/visas-immigration">https://www.gov.uk/browse/visas-immigration</a>`

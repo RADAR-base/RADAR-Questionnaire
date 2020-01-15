@@ -1,38 +1,34 @@
 <ion-content>
   <div *ngIf="!loading">
 
-<!--        <ion-item>-->
-<!--          <ion-icon md="md-arrow-back" item-start (click)="navigateToEligibility()"></ion-icon>-->
-<!--        </ion-item>-->
-
-        <ion-scroll
-          scrollY="true"
-          class="scroll-page"
+    <ion-scroll
+      scrollY="true"
+      class="scroll-page"
+    >
+      <div padding>
+        <img
+          class="logo"
+          src="assets/imgs/phone-in-hand.png"
+          alias="RADAR LOGO"
         >
-          <div>
-            <img
-              class="logo"
-              src="assets/imgs/consent.png"
-              alias="RADAR LOGO"
-            >
-          </div>
-          <div class="text-md">We know your time is valuable. To thank you for your participation in the HOME study, we have compiled a list of resources covering different aspects of migration to the UK that you may find useful.</div>
+        <div class="padding text-sm text-justify" style="padding-bottom: 5px;">We know your time is valuable. To thank you for your participation in
+          the HOME study, we have
+          compiled a list of resources covering different aspects of migration to the UK that you may find useful.
+        </div>
 
-          <div>
+        <div>
+          <ion-item-group>
+            <div *ngFor="let consentPageItem of learningPageItems">
+              <learning-item
+                [currentItem]="consentPageItem"
+              >
+              </learning-item>
+            </div>
+          </ion-item-group>
+        </div>
+      </div>
 
-            <div class="text-sm" style="padding-bottom: 10px">Please review the information below before you agree to participate in this study.</div>
-            <ion-item-group>
-              <div *ngFor="let consentPageItem of learningPageItems">
-                <learning-item
-                  [currentItem]="consentPageItem"
-                >
-                </learning-item>
-              </div>
-            </ion-item-group>
-          </div>
-
-
-        </ion-scroll>
+    </ion-scroll>
   </div>
 
   <ion-slides *ngIf="loading" direction="horizontal">

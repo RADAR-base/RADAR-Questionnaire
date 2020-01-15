@@ -1,21 +1,24 @@
 <ion-header>
-  <ion-toolbar>
-<!--    <button class="logo-small" ion-button menuToggle left (tap)="showCredits()">-->
-<!--      <img class="logo-small" src="assets/imgs/radar-logo.svg" alt="Logo" />-->
-<!--    </button>-->
-<!--    <button ion-button menuToggle right (tap)="openSettingsPage()">-->
-<!--      <ion-icon name="cog"></ion-icon>-->
-<!--    </button>-->
-<!--    <ion-title text-center>{{ title | async }}</ion-title>-->
-    <ion-title *ngIf="selectedPage === 'home'" text-center>{{ "SURVEYS_HEADING" | translate }}</ion-title>
-    <ion-title *ngIf="selectedPage === 'learn'"  text-center>{{ "LEARN_HEADING" | translate }}</ion-title>
+  <ion-toolbar text-center>
+    <button class="logo-small" ion-button menuToggle left>
+      <img class="logo-small" src="assets/imgs/homeapp-xxxhdpi-icon.png" alt="Logo"/>
+    </button>
+    <!--    <ion-title text-center>{{ title | async }}</ion-title>-->
+    <ion-title *ngIf="selectedPage === 'home'">{{ "SURVEYS_HEADING" | translate }}</ion-title>
+    <ion-title *ngIf="selectedPage === 'learn'">{{ "LEARN_HEADING" | translate }}</ion-title>
+    <ion-title *ngIf="selectedPage === 'studyInfo'">{{ "STUDY_INFO_HEADING" | translate }}</ion-title>
+
+    <button ion-button menuToggle right (tap)="openSettingsPage()">
+      <ion-icon name="cog"></ion-icon>
+    </button>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
-  <div  *ngIf="selectedPage === 'home'">
-    <div #taskList>
+  <!--  Surveys screen-->
+  <div *ngIf="selectedPage === 'home'">
+    <div>
       <task-list
         *ngIf="(tasks | async)?.length"
         (task)="startQuestionnaire($event)"
@@ -24,17 +27,17 @@
       >
       </task-list>
 
-<!--      <task-list-->
-<!--        *ngIf="(sortedTasks | async)?.size"-->
-<!--        (task)="startQuestionnaire($event)"-->
-<!--        [tasks]="sortedTasks | async"-->
-<!--        [currentDate]="currentDate.getTime()"-->
-<!--      >-->
-<!--      </task-list>-->
+      <!--      <task-list-->
+      <!--        *ngIf="(sortedTasks | async)?.size"-->
+      <!--        (task)="startQuestionnaire($event)"-->
+      <!--        [tasks]="sortedTasks | async"-->
+      <!--        [currentDate]="currentDate.getTime()"-->
+      <!--      >-->
+      <!--      </task-list>-->
     </div>
 
     <div
-      class="size-dynamic"
+      class="size-dynamic" style="margin-top: 30%;"
       [class.hidden]="showCalendar"
       [@moveProgress]="showCalendar"
     >
@@ -48,6 +51,7 @@
     </div>
   </div>
 
+  <!--  Learning screen-->
   <div
     *ngIf="selectedPage === 'learn'"
     class="size-dynamic"
@@ -55,24 +59,52 @@
     <page-learning>
     </page-learning>
   </div>
+
+  <!--  Learning screen-->
+  <div
+    *ngIf="selectedPage === 'studyInfo'"
+    class="size-dynamic"
+  >
+    <div id="studyInfo" padding>
+      <div style="text-align: center;">
+        <img
+          class="logo"
+          src="assets/imgs/phone-in-hand.png"
+          alias="Study Information LOGO"
+        >
+        <div class="text-md">{{ "STUDY_INFO_HEADING" | translate }}</div>
+      </div>
+      <div style="padding-bottom: 5px;"><b>Study contacts</b></div>
+      <div ><li>Study website: <a href="http://homeappstudy.net/">http://homeappstudy.net/</a></li></div>
+      <div ><li>Study contact email: <a href="http://homeappstudy.net/">http://homeappstudy.net/</a></li></div>
+      <div style="text-align: center">
+        <iframe id="introframe"
+                    src="https://player.vimeo.com/video/376190254?api=1&player_id=player1&background=1"
+                    frameborder="0" allowfullscreen>
+
+        </iframe>
+      </div>
+      <div ><li>Doctors of the World Website: <a href="https://www.doctorsoftheworld.org.uk/">https://www.doctorsoftheworld.org.uk/</a></li></div>
+    </div>
+  </div>
 </ion-content>
 
 <ion-footer>
   <ion-segment padding [(ngModel)]="selectedPage" onchange="onFooterChange()">
 
-    <ion-segment-button value="home" >
-      <ion-icon name="create" ></ion-icon>
-<!--      <ion-title text-center>{{ "SURVEYS_HEADING" | translate }}</ion-title>-->
+    <ion-segment-button value="home">
+      <ion-icon name="create"></ion-icon>
+      <!--      <ion-title text-center>{{ "SURVEYS_HEADING" | translate }}</ion-title>-->
     </ion-segment-button>
 
     <ion-segment-button value="learn">
-      <ion-icon name="book" ></ion-icon>
-<!--      <ion-title text-center>{{ "LEARN_HEADING" | translate }}</ion-title>-->
+      <ion-icon name="bookmarks"></ion-icon>
+      <!--      <ion-title text-center>{{ "LEARN_HEADING" | translate }}</ion-title>-->
     </ion-segment-button>
 
-    <ion-segment-button (ionSelect)="openSettingsPage()">
-      <ion-icon name="cog" ></ion-icon>
-<!--      <ion-title text-center>{{ "SETTINGS_SETTINGS" | translate }}</ion-title>-->
+    <ion-segment-button value="studyInfo">
+      <ion-icon name="school"></ion-icon>
+      <!--      <ion-title text-center>{{ "SETTINGS_SETTINGS" | translate }}</ion-title>-->
     </ion-segment-button>
   </ion-segment>
 </ion-footer>

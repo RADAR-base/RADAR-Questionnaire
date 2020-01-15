@@ -1,8 +1,33 @@
 page-learning {
+  align-content: center;
   color: white;
 
+  .logo {
+    height: 200px;
+  }
+
+  ion-scroll {
+    padding: 5px;
+    text-align: center;
+  }
+
+  .text {
+    margin: auto;
+    width: 90vw;
+  }
+
+  .text-justify {
+    text-align: justify;
+  }
+
+  .text-md {
+    margin-bottom: 2vh;
+    color: $cl-light;
+    font-size: 20px;
+  }
+
   .scroll-page {
-    height: calc(100vh - 12rem);
+    height: calc(100vh - 20%);
   }
 
   ::-webkit-scrollbar {

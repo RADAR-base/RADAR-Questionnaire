@@ -37,7 +37,7 @@
     </div>
 
     <div
-      class="size-dynamic" style="margin-top: 30%;"
+      class="size-dynamic" style="margin-top: 20%;"
       [class.hidden]="showCalendar"
       [@moveProgress]="showCalendar"
     >
@@ -90,7 +90,7 @@
 </ion-content>
 
 <ion-footer>
-  <ion-segment padding [(ngModel)]="selectedPage" onchange="onFooterChange()">
+  <ion-segment padding [(ngModel)]="selectedPage" onchange="onFooterChange($event)">
 
     <ion-segment-button value="home">
       <ion-icon name="create"></ion-icon>

@@ -31,7 +31,6 @@ import { QuestionsModule } from './questions/questions.module'
 import { ReportModule } from './report/report.module'
 import { SettingsModule } from './settings/settings.module'
 import { SplashModule } from './splash/splash.module'
-import { LearningModule } from "./learning/learning.module";
 
 @NgModule({
   imports: [
@@ -45,7 +44,6 @@ import { LearningModule } from "./learning/learning.module";
     ReportModule,
     SettingsModule,
     SplashModule,
-    LearningModule
   ],
   providers: [
     AlertService,

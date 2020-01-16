@@ -4,8 +4,7 @@
     src="assets/imgs/checkmark-big.svg"
     alt="Completed"
   >
-  <h2 text-center>{{ "FINISH_THANKS" | translate }}</h2>
-  <h2 text-center>{{ content }}</h2>
+  <h2 text-center>{{ content ? content : "FINISH_THANKS" | translate  }}</h2>
   <ion-item-group class="pos-bottom pos-bottom-90">
     <div
       *ngIf="displayNextTaskReminder"

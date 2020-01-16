@@ -44,7 +44,7 @@ export class LearningPageComponent {
       },
       {
         title: "Registering for work",
-        iconMd: "md-briefcase",
+        iconMd: "md-create",
         detail: [
           `<div class="detail text-justify">For all information related to work, taxes, benefits and unemployment support, please visit:<a href="http://www.gov.uk/">www.gov.uk</a> or visit your local Job centre Plus for face-to-face advice.  </div> `
         ]
@@ -64,7 +64,7 @@ export class LearningPageComponent {
       },
       {
         title: "Access to health support",
-        iconMd: "md-chatbubbles",
+        iconMd: "md-heart",
         detail: [
           `<div ><b>Mental health support services</b></div>`,
           `<div ><li>For advice and support to empower anyone experiencing a mental health problem.<a href="https://www.mind.org.uk/">https://www.mind.org.uk/</a></li></div>`,
@@ -96,7 +96,7 @@ export class LearningPageComponent {
       },
       {
         title: "Access to community support",
-        iconMd: "md-contacts",
+        iconMd: "md-people",
         detail: [
           `<div ><b>Citizens advice</b></div>`,
           `<div ><li>National service that gives free, confidential information and advice to assist people with housing, money, legal, consumer and other problems. <a href="https://www.citizensadvice.org.uk/">https://www.citizensadvice.org.uk/</a></li></div>`,

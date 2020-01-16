@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core'
+import * as dynamicRules from 'dynamic-rules'
+import * as moment from 'moment'
 
-import { DefaultQuestionsHidden } from '../../../../assets/data/defaultConfig'
+import { DefaultQuestionnaireFilters } from '../../../../assets/data/defaultConfig'
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
 import { RemoteConfigService } from '../../../core/services/config/remote-config.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
@@ -78,13 +80,8 @@ export class QuestionsService {
   }
 
   processQuestions(title, questions: any[]) {
-    return this.getHiddenQuestions()
-      .then(res => {
-        if (!res[title]) return questions
-        const questionsToHide = res[title]
-          .split(',')
-          .map(i => Number(i))
-          .filter(d => !isNaN(d))
+    return this.getHiddenQuestionIds(title)
+      .then(questionsToHide => {
         if (questionsToHide.length == questions.length) return questions
         return questions.filter((_, i) => !questionsToHide.includes(i))
       })
@@ -163,9 +160,10 @@ export class QuestionsService {
     return this.questionnaire
       .getAssessment(type, task)
       .then(assessment =>
-        this.processQuestions(assessment.name, assessment.questions).then(
-          questions => [assessment, questions]
-        )
+        this.processQuestions(
+          assessment.name,
+          assessment.questions
+        ).then(questions => [assessment, questions])
       )
       .then(([assessment, questions]) => {
         return {
@@ -199,13 +197,24 @@ export class QuestionsService {
     return this.finish.evalClinicalFollowUpTask(assessment)
   }
 
-  getHiddenQuestions(): Promise<Object> {
+  getHiddenQuestionIds(title): Promise<number[]> {
+    const conditionalVars = { time: moment() }
     return this.remoteConfig
       .read()
       .then(config =>
-        config.getOrDefault(ConfigKeys.QUESTIONS_HIDDEN, DefaultQuestionsHidden)
+        config.getOrDefault(
+          ConfigKeys.QUESTIONNAIRE_FILTERS,
+          DefaultQuestionnaireFilters
+        )
       )
+      .catch(e => DefaultQuestionnaireFilters)
       .then(res => JSON.parse(res))
-      .catch(e => DefaultQuestionsHidden)
+      .then(data => {
+        const questionsHidden = data.questions_hidden[title]
+        if (questionsHidden) {
+          const result = dynamicRules.execute(conditionalVars, questionsHidden)
+          return result.formula
+        } else return []
+      })
   }
 }

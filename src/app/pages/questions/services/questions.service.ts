@@ -78,7 +78,8 @@ export class QuestionsService {
   }
 
   processQuestions(title, questions: any[]) {
-    if (title.includes('ESM')) if (new Date().getHours() > 10) questions.shift()
+    if (title.includes('ESM28Q'))
+      if (new Date().getHours() > 10) return Promise.resolve(questions.slice(1))
 
     return Promise.resolve(questions)
   }
@@ -155,9 +156,10 @@ export class QuestionsService {
     return this.questionnaire
       .getAssessment(type, task)
       .then(assessment =>
-        this.processQuestions(assessment.name, assessment.questions).then(
-          questions => [assessment, questions]
-        )
+        this.processQuestions(
+          assessment.name,
+          assessment.questions
+        ).then(questions => [assessment, questions])
       )
       .then(([assessment, questions]) => {
         return {

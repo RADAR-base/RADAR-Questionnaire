@@ -188,7 +188,7 @@ export class QuestionsPageComponent implements OnInit {
 
   exitQuestionnaire() {
     this.sendEvent(UsageEventType.QUESTIONNAIRE_CANCELLED)
-    this.navCtrl.pop()
+    this.navCtrl.pop({ animation: 'wp-transition' })
   }
 
   navigateToFinishPage() {

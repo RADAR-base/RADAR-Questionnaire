@@ -14,12 +14,9 @@ android:
     - android-28
     - extra
 addons:
+  chrome: stable
   apt:
-    sources:
-      - google-chrome
     packages:
-      - dpkg
-      - google-chrome-stable
       - xvfb
 cache:
   yarn: true

@@ -40,7 +40,9 @@ export class KafkaService {
   }
 
   init() {
-    return this.setCache({})
+    return this.getCache().then(cache =>
+      cache ? Promise.resolve([]) : this.setCache({})
+    )
   }
 
   updateURI() {

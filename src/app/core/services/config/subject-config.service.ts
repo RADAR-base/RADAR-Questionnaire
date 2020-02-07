@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core'
 
 import { StorageKeys } from '../../../shared/enums/storage'
-import { StorageService } from '../storage/storage.service'
 import { User } from '../../../shared/models/user'
+import { Utility } from '../../../shared/utilities/util'
+import { StorageService } from '../storage/storage.service'
 
 @Injectable()
 export class SubjectConfigService {
@@ -12,10 +13,10 @@ export class SubjectConfigService {
     PROJECTNAME: StorageKeys.PROJECTNAME,
     SOURCEID: StorageKeys.SOURCEID,
     ENROLMENTDATE: StorageKeys.ENROLMENTDATE,
-    BASE_URI: StorageKeys.BASE_URI,
+    BASE_URI: StorageKeys.BASE_URI
   }
 
-  constructor(public storage: StorageService) {}
+  constructor(public storage: StorageService, private util: Utility) {}
 
   init(user: User) {
     return Promise.all([
@@ -77,6 +78,10 @@ export class SubjectConfigService {
   }
 
   reset() {
-    return this.storage.clear()
+    return this.storage.get(StorageKeys.CACHE_ANSWERS).then(cache => {
+      const previous = this.util.deepCopy(cache)
+      this.storage.clear()
+      return this.storage.set(StorageKeys.CACHE_ANSWERS, previous)
+    })
   }
 }

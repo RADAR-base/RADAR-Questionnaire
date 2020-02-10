@@ -413,10 +413,10 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/firebase@^5.19.1":
-  version "5.19.1"
-  resolved "https://registry.yarnpkg.com/@ionic-native/firebase/-/firebase-5.19.1.tgz#e5bd7c30895ac3edd99ade9e65e995c9d114b589"
-  integrity sha512-97eBgReAejWgVOv/NBykyUi+AXgqb2qa49Hfx5N4uLLblUiLjaYBm8bwz0/YfCogWEC+YLiZaOWVZL6+CXemfw==
+"@ionic-native/firebase@^5.21.2":
+  version "5.21.2"
+  resolved "https://registry.yarnpkg.com/@ionic-native/firebase/-/firebase-5.21.2.tgz#5d9921bd2f528b492bd228c146e907e5db7c76f0"
+  integrity sha512-zZdJUP/7e2C5KkVvie5Cv17XdkXY0o69NoNQT85Tp7dN33fRFVlr1nJRX9caeWwHMpzXRW9bfUHN8CvfxjQmgA==
   dependencies:
     "@types/cordova" latest
 

@@ -12,6 +12,7 @@ import {
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { UsageService } from '../../../core/services/usage/usage.service'
+import { ConfigEventType } from '../../../shared/enums/events'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { Settings } from '../../../shared/models/settings'
 import { SplashPageComponent } from '../../splash/containers/splash-page.component'
@@ -144,7 +145,7 @@ export class SettingsPageComponent {
     })
   }
 
-  showConfirmReset() {
+  showConfirmReset(resetType: string) {
     const buttons = [
       {
         text: this.localization.translateKey(LocKeys.BTN_DISAGREE),
@@ -153,7 +154,9 @@ export class SettingsPageComponent {
       {
         text: this.localization.translateKey(LocKeys.BTN_AGREE),
         handler: () => {
-          return this.showResetOptions()
+          if (resetType == ConfigEventType.APP_RESET)
+            this.settingsService.resetAuth().then(() => this.backToSplash())
+          else this.settingsService.reset().then(() => this.backToSplash())
         }
       }
     ]
@@ -171,13 +174,12 @@ export class SettingsPageComponent {
       {
         text: this.localization.translateKey(LocKeys.BTN_ENROL_ENROL),
         handler: () => {
-          this.settingsService.resetAuth().then(() => this.backToSplash())
+          this.showConfirmReset(ConfigEventType.APP_RESET)
         }
       },
       {
         text: this.localization.translateKey(LocKeys.SETTINGS_CONFIGURATION),
-        handler: () =>
-          this.settingsService.reset().then(() => this.backToSplash())
+        handler: () => this.showConfirmReset(ConfigEventType.APP_RESET_PARTIAL)
       }
     ]
     return this.alertService.showAlert({

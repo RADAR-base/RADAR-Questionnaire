@@ -8,7 +8,12 @@ import {
 } from '../../../../assets/data/defaultConfig'
 import { DataEventType } from '../../../shared/enums/events'
 import { StorageKeys } from '../../../shared/enums/storage'
-import { CacheValue } from '../../../shared/models/cache'
+import { instanceOfAnswerValueExport } from '../../../shared/models/answer'
+import {
+  CacheValue,
+  OldCacheValue,
+  instanceOfCacheValue
+} from '../../../shared/models/cache'
 import { KafkaObject, SchemaType } from '../../../shared/models/kafka'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
@@ -88,15 +93,19 @@ export class KafkaService {
       .then(([cache, headers, specifications]) => {
         const sendPromises = Object.entries(cache)
           .filter(([k]) => k)
-          .map(([k, v]: any) => {
-            const topic = this.schema.getKafkaTopic(
-              specifications,
-              v.name,
-              v.avsc
-            )
-            return this.sendToKafka(topic, k, v, headers).catch(e =>
-              this.logger.error('Failed to send data from cache to kafka', e)
-            )
+          .map(([k, val]: any) => {
+            return this.processCacheValue(val)
+              .then(v => {
+                const topic = this.schema.getKafkaTopic(
+                  specifications,
+                  v.name,
+                  v.avsc
+                )
+                return this.sendToKafka(topic, k, v, headers)
+              })
+              .catch(e =>
+                this.logger.error('Failed to send data from cache to kafka', e)
+              )
           })
         return Promise.all(sendPromises)
       })
@@ -110,6 +119,24 @@ export class KafkaService {
         this.setCacheSending(false)
         return [this.logger.error('Failed to send all data from cache', e)]
       })
+  }
+
+  processCacheValue(value: CacheValue | OldCacheValue): Promise<CacheValue> {
+    if (instanceOfCacheValue(value)) {
+      return Promise.resolve(<CacheValue>value)
+    } else {
+      const oldCacheVal = <OldCacheValue>value
+      const type = instanceOfAnswerValueExport(oldCacheVal.cache.value)
+        ? SchemaType.ASSESSMENT
+        : SchemaType.OTHER
+      return this.schema.getMetaData(type, oldCacheVal.task).then(specs =>
+        Object.assign({}, oldCacheVal, {
+          kafkaObject: oldCacheVal.cache,
+          avsc: specs.avsc,
+          name: specs.name
+        })
+      )
+    }
   }
 
   sendToKafka(topic: string, k: number, v: CacheValue, headers): Promise<any> {

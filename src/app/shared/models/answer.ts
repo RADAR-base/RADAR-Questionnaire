@@ -21,3 +21,7 @@ export interface AnswerValueExport {
   timeCompleted: number
   timeNotification: Object
 }
+
+export function instanceOfAnswerValueExport(object: any) {
+  return 'answers' in object
+}

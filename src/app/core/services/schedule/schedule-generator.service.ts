@@ -122,7 +122,10 @@ export class ScheduleGeneratorService {
       assessment.protocol,
       type
     )
-    let iterTime = refTimestamp
+    const dayOfWeek = repeatP.dayOfWeek
+    let iterTime = dayOfWeek
+      ? this.shiftDayOfWeek(refTimestamp, dayOfWeek)
+      : refTimestamp
     const endTime =
       iterTime + getMilliseconds({ years: DefaultScheduleYearCoverage })
     const completionWindow = ScheduleGeneratorService.computeCompletionWindow(
@@ -216,6 +219,23 @@ export class ScheduleGeneratorService {
       })
     }
     return { schedule, completed }
+  }
+
+  shiftDayOfWeek(refTimestamp, dayOfWeek) {
+    const moment = this.localization.moment(refTimestamp)
+    const now = moment.day()
+    if (now <= dayOfWeek) {
+      return moment
+        .day(dayOfWeek)
+        .toDate()
+        .getTime()
+    } else {
+      return moment
+        .add(1, 'weeks')
+        .day(dayOfWeek)
+        .toDate()
+        .getTime()
+    }
   }
 
   static computeCompletionWindow(assessment: Assessment): number {

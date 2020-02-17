@@ -223,19 +223,17 @@ export class ScheduleGeneratorService {
 
   shiftDayOfWeek(refTimestamp, dayOfWeek) {
     const moment = this.localization.moment(refTimestamp)
-    const now = moment.day()
-    if (now <= dayOfWeek) {
-      return moment
-        .day(dayOfWeek)
-        .toDate()
-        .getTime()
-    } else {
-      return moment
-        .add(1, 'weeks')
-        .day(dayOfWeek)
-        .toDate()
-        .getTime()
-    }
+    const target = moment.day(dayOfWeek).valueOf()
+    return moment.valueOf() <= target
+      ? moment
+          .day(dayOfWeek)
+          .toDate()
+          .getTime()
+      : moment
+          .add(1, 'w')
+          .day(dayOfWeek)
+          .toDate()
+          .getTime()
   }
 
   static computeCompletionWindow(assessment: Assessment): number {

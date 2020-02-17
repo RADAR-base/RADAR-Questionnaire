@@ -117,12 +117,12 @@ export class ScheduleGeneratorService {
     const dayOfWeek = repeatP.dayOfWeek
     // NOTE: If ref timestamp is specified in the protocol
     const refTime = protocol.referenceTimestamp
-      ? new Date(protocol.referenceTimestamp).getTime()
+      ? setDateTimeToMidnight(new Date(protocol.referenceTimestamp)).getTime()
       : refTimestamp
     // NOTE: If day of the week is specified in the protocol
     const iterTime = dayOfWeek
       ? this.shiftDayOfWeek(refTime, dayOfWeek)
-      : refTimestamp
+      : refTime
     return iterTime
   }
 

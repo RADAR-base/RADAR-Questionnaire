@@ -12,11 +12,13 @@ export interface Protocol {
   reminders?: Reminder[] | Reminders
   clinicalProtocol?: ClinicalProtocol
   completionWindow?: TimeInterval
+  referenceTimestamp?: string
 }
 
 export interface TimeInterval {
   unit?: string
   amount?: number
+  dayOfWeek?: string
 }
 
 export interface RepeatQuestionnaire {

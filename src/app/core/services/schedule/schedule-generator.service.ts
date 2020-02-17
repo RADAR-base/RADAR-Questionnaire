@@ -112,20 +112,29 @@ export class ScheduleGeneratorService {
     return { repeatP, repeatQ }
   }
 
+  getIterTime(protocol, refTimestamp, repeatP) {
+    // NOTE: Get initial timestamp to start schedule generation from
+    const dayOfWeek = repeatP.dayOfWeek
+    // NOTE: If ref timestamp is specified in the protocol
+    const refTime = protocol.referenceTimestamp
+      ? new Date(protocol.referenceTimestamp).getTime()
+      : refTimestamp
+    // NOTE: If day of the week is specified in the protocol
+    const iterTime = dayOfWeek
+      ? this.shiftDayOfWeek(refTime, dayOfWeek)
+      : refTimestamp
+    return iterTime
+  }
+
   buildTasksForSingleAssessment(
     assessment: Assessment,
     indexOffset: number,
     refTimestamp,
     type: TaskType
   ): Task[] {
-    const { repeatP, repeatQ } = this.getRepeatProtocol(
-      assessment.protocol,
-      type
-    )
-    const dayOfWeek = repeatP.dayOfWeek
-    let iterTime = dayOfWeek
-      ? this.shiftDayOfWeek(refTimestamp, dayOfWeek)
-      : refTimestamp
+    const protocol = assessment.protocol
+    const { repeatP, repeatQ } = this.getRepeatProtocol(protocol, type)
+    let iterTime = this.getIterTime(protocol, refTimestamp, repeatP)
     const endTime =
       iterTime + getMilliseconds({ years: DefaultScheduleYearCoverage })
     const completionWindow = ScheduleGeneratorService.computeCompletionWindow(
@@ -222,6 +231,7 @@ export class ScheduleGeneratorService {
   }
 
   shiftDayOfWeek(refTimestamp, dayOfWeek) {
+    // NOTE: Shift ref timestamp to specified day of the same week
     const moment = this.localization.moment(refTimestamp)
     const target = moment.day(dayOfWeek).valueOf()
     return moment.valueOf() <= target

@@ -121,10 +121,8 @@ Certain values can be overriden using Firebase Remote Config. Specifically, the 
 | `protocol_base_url`       | Base URL where the protocol definitions are located.                                                                          | <https://api.github.com/repos/RADAR-base/RADAR-aRMT-protocols/contents>                                          |
 | `protocol_branch`         | Github branch where the protocol definitions should be read from                                                              | `master`                                                                                                         |
 | `protocol_path`           | Path inside a project name that should be read for a protocol                                                                 | `protocol.json`                                                                                                  |
-| `kafka_specification_url` | URL of the Kafka topic specification                                                                                          | <https://api.github.com/repos/RADAR-base/radar-schemas/contents/specifications/active/aRMT_1.4.3.yml?ref=master> |
+| `kafka_specification_url` | URL of the Kafka topic specification                                                                                          | <https://api.github.com/repos/RADAR-base/radar-schemas/contents/specifications/active/aRMT-1.4.3.yml?ref=master> |
 | `platform_instance`       | Title of RADAR Base / platform instance                                                                                       | `RADAR-CNS`                                                                                                      |
-| `questions_hidden`        | Specify certain questions of questionnaires to hide. Conditions may be added as well (see below). Example: `{“ESM”: “1,2,3”}` | `{}`                                                                                                             |
-
 #### Conditions
 
 Conditions can be added to remote config variables to target specific groups of users. Different condition rule types are supported: app, platform, country/region, user property, date/time, and random percentile. For example a `protocol_branch` config value can be different based on the user property `projectId`.

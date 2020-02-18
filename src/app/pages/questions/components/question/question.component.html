@@ -14,7 +14,11 @@
   </div>
   <div #input class="input" [class.input-scroll]="isScrollable">
     <div
-      [style.height.px]="input.offsetHeight - margin"
+      [style.height.px]="
+        input.offsetParent.offsetHeight -
+        input.previousSibling.offsetHeight -
+        margin
+      "
       [ngSwitch]="question.field_type"
     >
       <ng-container *ngIf="isLoading">
@@ -69,6 +73,7 @@
           *ngSwitchCase="'info'"
           [sections]="question.select_choices_or_calculations"
           [hasFieldLabel]="question.field_label.length > 0"
+          [image]="question.field_annotation?.image"
           (valueChange)="onValueChange($event)"
           [currentlyShown]="currentlyShown"
         >

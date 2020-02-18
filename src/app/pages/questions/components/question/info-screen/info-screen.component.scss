@@ -11,6 +11,7 @@ info-screen {
     overflow-y: scroll;
     width: 100%;
     mask-image:
+
       -webkit-gradient(
         linear,
         left top,
@@ -32,10 +33,14 @@ info-screen {
     margin-bottom: 48%;
   }
 
-  .icon-thincIt {
-    margin-top: 15px;
-    margin-left: 35%;
-    width: 30%;
+  .image {
+    margin: auto;
+    width: 104px;
+    height: auto;
+  }
+
+  .image-container {
+    text-align: center;
   }
 
   .icon {

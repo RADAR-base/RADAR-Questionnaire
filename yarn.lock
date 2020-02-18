@@ -371,10 +371,10 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/background-mode@^5.17.1":
-  version "5.17.1"
-  resolved "https://registry.yarnpkg.com/@ionic-native/background-mode/-/background-mode-5.17.1.tgz#7e366eff6b5d61717ed22473c6a94f37e9e77981"
-  integrity sha512-2fbGtStEKw2ylmaXCVuwd0lvUdvBuwoGfmBFxjcd4bvSt3J6Q5oqwmxvWpkJsJ0fRiNB1TTyqItRdfdRTRmZ7w==
+"@ionic-native/background-mode@^5.20.0":
+  version "5.20.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/background-mode/-/background-mode-5.20.0.tgz#ca55a749098841cee652e6e06a5dfaf58b8404cd"
+  integrity sha512-ulkJVRxFlal1RBDtqprx1Kk1ch6CrS/TLQXHXwf+kA1fHMc7bVyMV4MYIjipaYJ4I9fkofhPlo2k3PjzFuKB4A==
   dependencies:
     "@types/cordova" latest
 
@@ -434,10 +434,10 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/keyboard@^5.17.1":
-  version "5.17.1"
-  resolved "https://registry.yarnpkg.com/@ionic-native/keyboard/-/keyboard-5.17.1.tgz#914a65339e436067df79ce5efb1bb7bba7aa431e"
-  integrity sha512-Wnb1DVv3OBMokDFV9sm9VF7UTtcfunBL/4Gj6RrHEgkOh2hEbktzazWQB2Kxu+T6v2tLdUxMwGSocMcZ3n/nNA==
+"@ionic-native/keyboard@^5.20.0":
+  version "5.20.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/keyboard/-/keyboard-5.20.0.tgz#42e38c1bb89d8322871dd74fddd52ad67a57f906"
+  integrity sha512-b9BcwArkCzhH9rIx4BS+/6E0/hF5uW07ozuQZNMezhEwhA/vQHmC3nuKxa3jaZsVLeg6OpqyLllIyZcMVQJwhg==
   dependencies:
     "@types/cordova" latest
 
@@ -1598,10 +1598,10 @@ autoprefixer@^9.7.1, autoprefixer@^9.7.2:
     postcss "^7.0.23"
     postcss-value-parser "^4.0.2"
 
-avsc@^5.4.16:
-  version "5.4.16"
-  resolved "https://registry.yarnpkg.com/avsc/-/avsc-5.4.16.tgz#ab57863760f69c11ed315a7b8bde95d92f2222e4"
-  integrity sha512-Z85B8ZaEU2PWNPRJYuMSp5Hg7Nw3KPKW47lW/Kus7AcwV7fr6uJG3UckagqIPLydIeO/Cm+yjnJG7g0tliICOg==
+avsc@^5.4.18:
+  version "5.4.18"
+  resolved "https://registry.yarnpkg.com/avsc/-/avsc-5.4.18.tgz#8d7f869924d1eb364c68cb5e9807cbd8e28c9c8d"
+  integrity sha512-rQwa/WrpfNm1jEzmRe78EuKvvI9uikZeZL68HqTbbPFTFgZPxExhJESHyqgwlVvWCKlYTwBezR38G1Tjkn+2Zg==
 
 aws-sign2@~0.7.0:
   version "0.7.0"
@@ -4290,10 +4290,10 @@ eslint@^5.0.0:
     table "^5.2.3"
     text-table "^0.2.0"
 
-eslint@^6.7.1:
-  version "6.7.1"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-6.7.1.tgz#269ccccec3ef60ab32358a44d147ac209154b919"
-  integrity sha512-UWzBS79pNcsDSxgxbdjkmzn/B6BhsXMfUaOHnNwyE8nD+Q6pyT96ow2MccVayUTV4yMid4qLhMiQaywctRkBLA==
+eslint@^6.8.0:
+  version "6.8.0"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-6.8.0.tgz#62262d6729739f9275723824302fb227c8c93ffb"
+  integrity sha512-K+Iayyo2LtyYhDSYwz5D5QdWw0hCacNzyq1Y821Xna2xSJj7cijoLLYmLxTQgcgZ9mC61nryMy9S7GRbYpI5Ig==
   dependencies:
     "@babel/code-frame" "^7.0.0"
     ajv "^6.10.0"

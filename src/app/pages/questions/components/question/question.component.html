@@ -73,6 +73,7 @@
           *ngSwitchCase="'info'"
           [sections]="question.select_choices_or_calculations"
           [hasFieldLabel]="question.field_label.length > 0"
+          [image]="question.field_annotation?.image"
           (valueChange)="onValueChange($event)"
           [currentlyShown]="currentlyShown"
         >

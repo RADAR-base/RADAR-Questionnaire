@@ -41,7 +41,8 @@ import { Utility } from './shared/utilities/util'
     BrowserModule,
     BrowserAnimationsModule,
     IonicModule.forRoot(AppComponent, {
-      mode: 'md'
+      mode: 'md',
+      activator: 'none'
     }),
     IonicStorageModule.forRoot({
       name: '__appdb',

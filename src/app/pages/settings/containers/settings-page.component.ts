@@ -13,6 +13,7 @@ import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { UsageService } from '../../../core/services/usage/usage.service'
 import { LocKeys } from '../../../shared/enums/localisations'
+import { ResetOption } from '../../../shared/models/reset-options'
 import { Settings } from '../../../shared/models/settings'
 import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 import { CacheSendModalComponent } from '../components/cache-send-modal/cache-send-modal.component'
@@ -169,23 +170,35 @@ export class SettingsPageComponent {
   showResetOptions() {
     const buttons = [
       {
-        text: this.localization.translateKey(LocKeys.BTN_ENROL_ENROL),
-        handler: () => {
-          this.settingsService.resetAuth().then(() => this.backToSplash())
-        }
+        text: this.localization.translateKey(LocKeys.BTN_CANCEL),
+        handler: () => {}
       },
       {
-        text: this.localization.translateKey(LocKeys.SETTINGS_CONFIGURATION),
-        handler: () =>
-          this.settingsService.reset().then(() => this.backToSplash())
+        text: this.localization.translateKey(LocKeys.BTN_RESET),
+        handler: selected => {
+          const promises = []
+          if (selected.includes(ResetOption.ENROLMENT))
+            promises.push(this.settingsService.resetAuth())
+          if (selected.includes(ResetOption.CONFIG))
+            promises.push(this.settingsService.resetConfig())
+          if (selected.includes(ResetOption.CACHE))
+            promises.push(this.settingsService.resetCache())
+          Promise.all(promises).then(() => this.backToSplash())
+        }
       }
     ]
+    const input = []
+    for (const item in ResetOption) {
+      if (item)
+        input.push({ type: 'checkbox', label: item, value: ResetOption[item] })
+    }
     return this.alertService.showAlert({
       title: this.localization.translateKey(LocKeys.SETTINGS_RESET_ALERT),
       message: this.localization.translateKey(
         LocKeys.SETTINGS_RESET_ALERT_OPTION_DESC
       ),
-      buttons: buttons
+      buttons: buttons,
+      inputs: input
     })
   }
 

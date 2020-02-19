@@ -30,8 +30,12 @@ export class SettingsService {
     return this.config.resetAll()
   }
 
-  reset() {
+  resetConfig() {
     return this.config.resetConfig()
+  }
+
+  resetCache() {
+    return this.config.resetCache()
   }
 
   getLanguage() {

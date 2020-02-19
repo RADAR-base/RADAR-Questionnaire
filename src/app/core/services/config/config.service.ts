@@ -240,6 +240,10 @@ export class ConfigService {
     ])
   }
 
+  resetCache() {
+    return this.kafka.reset()
+  }
+
   setAll(user: User) {
     return Promise.all([
       this.subjectConfig

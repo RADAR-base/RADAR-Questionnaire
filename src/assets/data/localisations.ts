@@ -295,7 +295,7 @@ export const Localisations = {
   SETTINGS_LANGUAGE_ALERT: {
     da: 'Vælg dit sprog',
     de: 'Wählen Sie Ihre Sprache',
-    en: 'Select your Language',
+    en: 'Select Your Language',
     es: 'Seleccione su idioma',
     it: 'Seleziona la lingua desiderata',
     nl: 'Kies uw taal',

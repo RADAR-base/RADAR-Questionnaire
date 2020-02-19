@@ -211,13 +211,12 @@
   dependencies:
     tslib "^1.9.0"
 
-"@angular/platform-server@^7.2.13":
-  version "7.2.15"
-  resolved "https://registry.yarnpkg.com/@angular/platform-server/-/platform-server-7.2.15.tgz#06c8a4c1850da6289f643bd690fc7e1e8bdd6376"
-  integrity sha512-a7XhYlbmQ7pN6liFq8WqdX4GNoxCIXhlZqotZkfwJDsDy2E2yyvVx6BYCEOnSRvO9xXwfyBXiLfZ4Y2A7xeCoQ==
+"@angular/platform-server@^9.0.0":
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/@angular/platform-server/-/platform-server-9.0.0.tgz#1b187e995a4cc641e6c1d3904932b4eb78a88b5d"
+  integrity sha512-wIHZdv7WCtuZ6pgj1n/H2V7KbUxUBfrb1PJzVnCWzpMQDIf+jrMxLlB2irpYb/HHh4tOem6dHX5JV45A2sJ5/w==
   dependencies:
-    domino "^2.1.0"
-    tslib "^1.9.0"
+    domino "^2.1.2"
     xhr2 "^0.1.4"
 
 "@angular/router@^7.2.13":
@@ -3846,10 +3845,10 @@ domhandler@^2.3.0:
   dependencies:
     domelementtype "1"
 
-domino@^2.1.0:
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/domino/-/domino-2.1.3.tgz#0ca1ad02cbd316ebe2e99e0ac9fb0010407d4601"
-  integrity sha512-EwjTbUv1Q/RLQOdn9k7ClHutrQcWGsfXaRQNOnM/KgK4xDBoLFEcIRFuBSxAx13Vfa63X029gXYrNFrSy+DOSg==
+domino@^2.1.2:
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/domino/-/domino-2.1.4.tgz#78922e7fab7c610f35792b6c745b7962d342e9c4"
+  integrity sha512-l70mlQ7IjPKC8kT7GljQXJZmt5OqFL+RE91ik5y5WWQtsd9wP8R7gpFnNu96fK5MqAAZRXfLLsnzKtkty5fWGQ==
 
 domutils@^1.5.1:
   version "1.7.0"

@@ -1,6 +1,10 @@
 import { CommonModule, DatePipe } from '@angular/common'
 import { NgModule } from '@angular/core'
 
+import {
+  FcmNotificationControllerService,
+  RadarUserControllerService
+} from '../core/services/app-server/api'
 import { AppConfigService } from '../core/services/config/app-config.service'
 import { ConfigService } from '../core/services/config/config.service'
 import { ProtocolService } from '../core/services/config/protocol.service'
@@ -18,8 +22,8 @@ import { ScheduleGeneratorService } from '../core/services/schedule/schedule-gen
 import { ScheduleService } from '../core/services/schedule/schedule.service'
 import { StorageService } from '../core/services/storage/storage.service'
 import { TokenService } from '../core/services/token/token.service'
-import { FirebaseAnalyticsService } from '../core/services/usage/firebase-analytics.service'
 import { AnalyticsService } from '../core/services/usage/analytics.service'
+import { FirebaseAnalyticsService } from '../core/services/usage/firebase-analytics.service'
 import { UsageService } from '../core/services/usage/usage.service'
 import { PipesModule } from '../shared/pipes/pipes.module'
 import { TranslatePipe } from '../shared/pipes/translate/translate'
@@ -62,7 +66,9 @@ import { SplashModule } from './splash/splash.module'
     SchemaService,
     NotificationGeneratorService,
     { provide: NotificationService, useClass: FcmNotificationService },
-    { provide: AnalyticsService, useClass: FirebaseAnalyticsService }
+    { provide: AnalyticsService, useClass: FirebaseAnalyticsService },
+    FcmNotificationControllerService,
+    RadarUserControllerService
   ]
 })
 export class PagesModule {}

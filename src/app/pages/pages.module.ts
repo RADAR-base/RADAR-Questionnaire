@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core'
 
 import {
   FcmNotificationControllerService,
+  RadarProjectControllerService,
   RadarUserControllerService
 } from '../core/services/app-server/api'
 import { AppConfigService } from '../core/services/config/app-config.service'
@@ -68,7 +69,8 @@ import { SplashModule } from './splash/splash.module'
     { provide: NotificationService, useClass: FcmNotificationService },
     { provide: AnalyticsService, useClass: FirebaseAnalyticsService },
     FcmNotificationControllerService,
-    RadarUserControllerService
+    RadarUserControllerService,
+    RadarProjectControllerService
   ]
 })
 export class PagesModule {}

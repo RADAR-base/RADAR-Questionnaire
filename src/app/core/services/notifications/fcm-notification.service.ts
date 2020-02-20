@@ -19,6 +19,7 @@ import {
 } from '../../../shared/models/notification-handler'
 import { TaskType } from '../../../shared/utilities/task-type'
 import { getSeconds } from '../../../shared/utilities/time'
+import { RadarProjectControllerService } from '../app-server/api'
 import { FcmNotificationControllerService } from '../app-server/fcm-notification-controller.service'
 import { RadarUserControllerService } from '../app-server/radar-user-controller.service'
 import { RemoteConfigService } from '../config/remote-config.service'
@@ -37,7 +38,7 @@ export class FcmNotificationService extends NotificationService {
   private readonly NOTIFICATION_STORAGE = {
     LAST_NOTIFICATION_UPDATE: StorageKeys.LAST_NOTIFICATION_UPDATE
   }
-  FCM_TOKEN = 'DefaultToken'
+  FCM_TOKEN: string
   upstreamResends: number
   ttlMinutes: number
 
@@ -52,6 +53,7 @@ export class FcmNotificationService extends NotificationService {
     private remoteConfig: RemoteConfigService,
     private fcmNotificationController: FcmNotificationControllerService,
     private radarUserController: RadarUserControllerService,
+    private radarProjectController: RadarProjectControllerService,
     private localization: LocalizationService
   ) {
     super()
@@ -90,7 +92,7 @@ export class FcmNotificationService extends NotificationService {
   ): Promise<void[]> {
     this.resetResends()
     return Promise.all([
-      this.checkSubjectExistsElseCreate(),
+      this.checkProjectAndSubjectExistElseCreate(),
       this.config.getSourceID()
     ]).then(([user, sourceId]) => {
       switch (type) {
@@ -131,6 +133,29 @@ export class FcmNotificationService extends NotificationService {
     return this.fcmNotificationController
       .deleteNotificationsForUserUsingDELETE(user.projectId, user.subjectId)
       .toPromise()
+      .catch()
+  }
+
+  private checkProjectAndSubjectExistElseCreate(): Promise<any> {
+    return this.checkProjectExistsElseCreate().then(() =>
+      this.checkSubjectExistsElseCreate()
+    )
+  }
+
+  private checkProjectExistsElseCreate(): Promise<any> {
+    return this.config.getProjectName().then(projectId => {
+      return this.radarProjectController
+        .getProjectsUsingProjectIdUsingGET(projectId)
+        .toPromise()
+        .catch(e => {
+          if (e.status == 404) {
+            const project = { projectId }
+            return this.radarProjectController
+              .addProjectUsingPOST(project)
+              .toPromise()
+          } else return Promise.reject(e)
+        })
+    })
   }
 
   private checkSubjectExistsElseCreate(): Promise<any> {
@@ -139,7 +164,7 @@ export class FcmNotificationService extends NotificationService {
       this.config.getProjectName(),
       this.config.getParticipantLogin()
     ]).then(([enrolmentDate, projectId, subjectId]) => {
-      if (!subjectId) throw new Error('Subject id is null')
+      if (!subjectId) return Promise.reject('Subject id is null')
       return this.radarUserController
         .getRadarUserUsingSubjectIdUsingGET(subjectId)
         .toPromise()
@@ -153,9 +178,8 @@ export class FcmNotificationService extends NotificationService {
               timezone: new Date().getTimezoneOffset(),
               language: this.localization.getLanguage().value
             }
-            this.radarUserController.addUserUsingPOST(user)
-            return user
-          }
+            return this.radarUserController.addUserUsingPOST(user).toPromise()
+          } else return Promise.reject(e)
         })
     })
   }

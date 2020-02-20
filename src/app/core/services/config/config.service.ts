@@ -11,6 +11,7 @@ import {
   ConfigEventType,
   NotificationEventType
 } from '../../../shared/enums/events'
+import { NotificationActionType } from '../../../shared/models/notification-handler'
 import { User } from '../../../shared/models/user'
 import { TaskType } from '../../../shared/utilities/task-type'
 import { KafkaService } from '../kafka/kafka.service'
@@ -192,7 +193,7 @@ export class ConfigService {
   }
 
   rescheduleNotifications(cancel?: boolean) {
-    return (cancel ? this.cancelNotifications() : Promise.resolve())
+    return (cancel ? this.cancelNotifications() : Promise.resolve([]))
       .then(() => this.notifications.publish())
       .then(() => console.log('NOTIFICATIONS scheduled after config change'))
       .then(() =>
@@ -207,7 +208,7 @@ export class ConfigService {
 
   cancelNotifications() {
     this.sendConfigChangeEvent(NotificationEventType.CANCELLED)
-    return this.notifications.cancel()
+    return this.notifications.publish(0, NotificationActionType.CANCEL)
   }
 
   regenerateSchedule() {
@@ -277,7 +278,7 @@ export class ConfigService {
 
   sendTestNotification() {
     this.sendConfigChangeEvent(NotificationEventType.TEST)
-    return this.notifications.sendTestNotification()
+    return this.notifications.publish(0, NotificationActionType.TEST)
   }
 
   sendCachedData() {

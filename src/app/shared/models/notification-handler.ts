@@ -7,6 +7,12 @@ export enum NotificationType {
   TEST
 }
 
+export enum NotificationActionType {
+  ALL,
+  TEST,
+  CANCEL
+}
+
 export interface SingleNotification {
   task?: NotificationTaskInfo
   timestamp: number

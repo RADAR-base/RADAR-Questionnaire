@@ -85,7 +85,7 @@ export class BasicErrorControllerService {
     let headers = this.defaultHeaders
 
     // to determine the Accept header
-    let httpHeaderAccepts: string[] = ['text/html']
+    const httpHeaderAccepts: string[] = ['text/html']
     const httpHeaderAcceptSelected:
       | string
       | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts)
@@ -129,7 +129,7 @@ export class BasicErrorControllerService {
     let headers = this.defaultHeaders
 
     // to determine the Accept header
-    let httpHeaderAccepts: string[] = ['text/html']
+    const httpHeaderAccepts: string[] = ['text/html']
     const httpHeaderAcceptSelected:
       | string
       | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts)
@@ -173,7 +173,7 @@ export class BasicErrorControllerService {
     let headers = this.defaultHeaders
 
     // to determine the Accept header
-    let httpHeaderAccepts: string[] = ['text/html']
+    const httpHeaderAccepts: string[] = ['text/html']
     const httpHeaderAcceptSelected:
       | string
       | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts)
@@ -217,7 +217,7 @@ export class BasicErrorControllerService {
     let headers = this.defaultHeaders
 
     // to determine the Accept header
-    let httpHeaderAccepts: string[] = ['text/html']
+    const httpHeaderAccepts: string[] = ['text/html']
     const httpHeaderAcceptSelected:
       | string
       | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts)
@@ -261,7 +261,7 @@ export class BasicErrorControllerService {
     let headers = this.defaultHeaders
 
     // to determine the Accept header
-    let httpHeaderAccepts: string[] = ['text/html']
+    const httpHeaderAccepts: string[] = ['text/html']
     const httpHeaderAcceptSelected:
       | string
       | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts)
@@ -305,7 +305,7 @@ export class BasicErrorControllerService {
     let headers = this.defaultHeaders
 
     // to determine the Accept header
-    let httpHeaderAccepts: string[] = ['text/html']
+    const httpHeaderAccepts: string[] = ['text/html']
     const httpHeaderAcceptSelected:
       | string
       | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts)
@@ -349,7 +349,7 @@ export class BasicErrorControllerService {
     let headers = this.defaultHeaders
 
     // to determine the Accept header
-    let httpHeaderAccepts: string[] = ['text/html']
+    const httpHeaderAccepts: string[] = ['text/html']
     const httpHeaderAcceptSelected:
       | string
       | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts)

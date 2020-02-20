@@ -43,3 +43,6 @@ export class LocalNotificationsMock {}
 export class ScheduleGeneratorServiceMock {}
 export class JwtHelperServiceMock {}
 export class WebIntentMock {}
+export class FcmNotificationControllerServiceMock {}
+export class RadarUserControllerServiceMock {}
+export class RadarProjectControllerServiceMock {}

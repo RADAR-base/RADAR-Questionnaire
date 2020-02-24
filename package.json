@@ -52,7 +52,7 @@
         "@ionic-native/background-mode": "^5.20.0",
         "@ionic-native/barcode-scanner": "^5.21.5",
         "@ionic-native/core": "^5.17.1",
-        "@ionic-native/device": "^5.17.1",
+        "@ionic-native/device": "^5.21.6",
         "@ionic-native/dialogs": "^5.17.1",
         "@ionic-native/file": "^5.17.1",
         "@ionic-native/firebase": "^5.21.5",

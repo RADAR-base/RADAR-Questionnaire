@@ -370,10 +370,10 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/background-mode@^5.20.0":
-  version "5.20.0"
-  resolved "https://registry.yarnpkg.com/@ionic-native/background-mode/-/background-mode-5.20.0.tgz#ca55a749098841cee652e6e06a5dfaf58b8404cd"
-  integrity sha512-ulkJVRxFlal1RBDtqprx1Kk1ch6CrS/TLQXHXwf+kA1fHMc7bVyMV4MYIjipaYJ4I9fkofhPlo2k3PjzFuKB4A==
+"@ionic-native/background-mode@^5.21.6":
+  version "5.21.6"
+  resolved "https://registry.yarnpkg.com/@ionic-native/background-mode/-/background-mode-5.21.6.tgz#ab7ca1284bab595776bf8c4590be1248c38e4672"
+  integrity sha512-gFRLN4vzb0DfKHvxvZriTu9pHKFKEc+e+sia99LfBDl2Yo27xEjiDv16VENnjj3fhZNCFjBEOnWl2LoZcpMohg==
   dependencies:
     "@types/cordova" latest
 

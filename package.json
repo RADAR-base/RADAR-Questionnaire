@@ -113,7 +113,7 @@
         "rxjs": "^6.5.4",
         "semver": "^6.3.0",
         "smoothscroll-polyfill": "^0.4.4",
-        "uuid": "^3.3.3",
+        "uuid": "^3.4.0",
         "yaml": "^1.7.2",
         "zone.js": "~0.8.26"
     },

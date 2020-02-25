@@ -21,6 +21,7 @@ export interface SingleNotification {
   text?: string
   vibrate?: boolean
   sound?: boolean
+  id?: number
 }
 
 export interface NotificationTaskInfo {

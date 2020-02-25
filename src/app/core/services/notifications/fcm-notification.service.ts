@@ -193,7 +193,7 @@ export class FcmNotificationService extends NotificationService {
       )
       .toPromise()
       .then(res => {
-        notification.notification.fcmMessageId = res.fcmMessageId
+        notification.notification.id = res.id
         return this.logger.log(
           'Success sending message upstream, updating FCM message Id',
           res

@@ -23,6 +23,8 @@ import { NotificationGeneratorService } from '../notifications/notification-gene
 
 @Injectable()
 export class ScheduleGeneratorService {
+  DefaultReferenceTimestampFormat = 'DD-MM-YYYY:hh:mm'
+
   constructor(
     private notificationService: NotificationGeneratorService,
     private localization: LocalizationService,
@@ -115,9 +117,16 @@ export class ScheduleGeneratorService {
   getIterTime(protocol, refTimestamp, repeatP) {
     // NOTE: Get initial timestamp to start schedule generation from
     const dayOfWeek = repeatP.dayOfWeek
-    // NOTE: If ref timestamp is specified in the protocol
+    // NOTE: If ref timestamp is specified in the protocol, gets refTimestamp (in the timezone of device)
     const refTime = protocol.referenceTimestamp
-      ? setDateTimeToMidnight(new Date(protocol.referenceTimestamp)).getTime()
+      ? setDateTimeToMidnight(
+          this.localization
+            .moment(
+              protocol.referenceTimestamp,
+              this.DefaultReferenceTimestampFormat
+            )
+            .toDate()
+        ).getTime()
       : refTimestamp
     // NOTE: If day of the week is specified in the protocol
     const iterTime = dayOfWeek

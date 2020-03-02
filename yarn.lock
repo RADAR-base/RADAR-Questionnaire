@@ -515,46 +515,46 @@
     ws "3.3.2"
     xml2js "^0.4.19"
 
-"@ionic/cli-framework-prompts@1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@ionic/cli-framework-prompts/-/cli-framework-prompts-1.0.2.tgz#034c823535b3eb177233c53009b7e0a09f56ceed"
-  integrity sha512-sc6KYVVR3BN0vldxl+xMQc5V2rwi7GrCVD3baJkrJcpgTe3P19zQwZyObTZFDWc4y1p5Wgd+ltqUKvvcOa72FA==
+"@ionic/cli-framework-prompts@1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@ionic/cli-framework-prompts/-/cli-framework-prompts-1.0.4.tgz#c1ddc292bd51a0129fdfd2425eaf16666cb83980"
+  integrity sha512-mII1sPCWDsQYxOSBFjQBPzis2UJuM59T6O1/6EelCQGilHEMZ39bFNb8O2f3Irnx6y6sX/4VVTy2BQwDHMK1yA==
   dependencies:
-    "@ionic/utils-terminal" "1.1.0"
+    "@ionic/utils-terminal" "1.1.2"
     debug "^4.0.0"
     inquirer "^7.0.0"
     tslib "^1.9.0"
 
-"@ionic/cli-framework@3.0.3":
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/@ionic/cli-framework/-/cli-framework-3.0.3.tgz#54718360eae528c3983ef688363b22ea8b6a0b58"
-  integrity sha512-Mya8gxEOtllE/NuOykpx7CXwPTgj8N8cecGtxzUHkRQxbxEM75roH2IyDGwmyBIhUeY3hKj4cmYM7wlPvpkJ0Q==
+"@ionic/cli-framework@3.0.6":
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/@ionic/cli-framework/-/cli-framework-3.0.6.tgz#8e88a704642276620e745bee7f61192681597553"
+  integrity sha512-Z4guoGhkoVfXhwC//Wzqkq6aBO9dEvp0NqN8ZYF8fOUDO0bi0GI5gaUvultK8i74rIKntwcS4xDRQLuRdn8UUA==
   dependencies:
-    "@ionic/utils-array" "1.2.1"
-    "@ionic/utils-fs" "2.0.8"
-    "@ionic/utils-object" "1.0.5"
-    "@ionic/utils-process" "1.0.6"
-    "@ionic/utils-stream" "2.0.4"
-    "@ionic/utils-subprocess" "1.0.10"
-    "@ionic/utils-terminal" "1.1.0"
-    chalk "^2.3.0"
+    "@ionic/utils-array" "1.2.2"
+    "@ionic/utils-fs" "2.0.9"
+    "@ionic/utils-object" "1.0.6"
+    "@ionic/utils-process" "1.0.9"
+    "@ionic/utils-stream" "2.0.5"
+    "@ionic/utils-subprocess" "1.0.13"
+    "@ionic/utils-terminal" "1.1.2"
+    chalk "^3.0.0"
     debug "^4.0.0"
     lodash "^4.17.5"
     log-update "^3.2.0"
     minimist "^1.2.0"
     rimraf "^3.0.0"
-    slice-ansi "^2.0.0"
+    slice-ansi "^3.0.0"
     string-width "^4.1.0"
-    strip-ansi "^5.2.0"
+    strip-ansi "^6.0.0"
     tslib "^1.9.0"
     untildify "^4.0.0"
     wrap-ansi "^6.0.0"
     write-file-atomic "^3.0.0"
 
-"@ionic/discover@2.0.6":
-  version "2.0.6"
-  resolved "https://registry.yarnpkg.com/@ionic/discover/-/discover-2.0.6.tgz#13102066a13634b9c43d3851314a4f0dd4779cf3"
-  integrity sha512-OEjUcVDliTqCWlFGFbD+msTLwQCXNHXUTdg6PQIjDn5RipVSWtpVB+DjLO+D1zYkY6TgD9mxBcIwiYJBRuw5dg==
+"@ionic/discover@2.0.8":
+  version "2.0.8"
+  resolved "https://registry.yarnpkg.com/@ionic/discover/-/discover-2.0.8.tgz#9e66ca000f694dc208fe5ba7f6739d98a04a109e"
+  integrity sha512-Bk/JPL2J/Qq4FAkBrgxPdosx8rtLHXXwqsfiDWDcpW2LpsFytpzlysWsI59++h6bzp1n/w9/M/lLflfMtK6mdw==
   dependencies:
     debug "^4.0.0"
     netmask "^1.0.6"
@@ -570,78 +570,78 @@
     localforage-cordovasqlitedriver "1.7.0"
     tslib "^1.7.1"
 
-"@ionic/utils-array@1.2.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@ionic/utils-array/-/utils-array-1.2.1.tgz#751216d14f3e48f50e395bbb906dfefb50a53cdf"
-  integrity sha512-t0/gXFf70oDPpviGUHpaDD9++zIx8nFXpPm8c3We8iH5dRwEJLSun+AJTqxO/XPzEhM24KBuj3rLY9bSYBadEg==
+"@ionic/utils-array@1.2.2":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@ionic/utils-array/-/utils-array-1.2.2.tgz#ad838e1782943e748e9370ac2b59543e6fee8716"
+  integrity sha512-t9FkPHw1OfWkbGobvr2z5bMfpQT3WE/LEFGLraNFiygtOrS3JQnjmqgUHQXk+WVf9RAt5pMUKcmNRCd+AUCvwQ==
   dependencies:
     debug "^4.0.0"
     tslib "^1.9.0"
 
-"@ionic/utils-fs@2.0.8":
-  version "2.0.8"
-  resolved "https://registry.yarnpkg.com/@ionic/utils-fs/-/utils-fs-2.0.8.tgz#0601ff666ab566182662afe2fb5b57038e9d1730"
-  integrity sha512-7yuU+L+tlt9NIwA6nb/3A+zPr7NIKuvIAo5ijVdHX3VTAdw/x5JXJgGl0BApKcqT1cTJImNt5tc2O4CB1cnhKA==
+"@ionic/utils-fs@2.0.9":
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/@ionic/utils-fs/-/utils-fs-2.0.9.tgz#c9ebb4c6b78b3056d69b692f5c03006fd59c6176"
+  integrity sha512-koOcdQlMHLIncPVZYQ+GkBHFhu7CJd0PdzDf9EfQBpOZwY66muS7UAlzVtoeY6tURYYniJlQsmg3auTIgVy9bQ==
   dependencies:
     debug "^4.0.0"
     fs-extra "^8.0.1"
     through2 "^3.0.0"
     tslib "^1.9.0"
 
-"@ionic/utils-network@1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@ionic/utils-network/-/utils-network-1.0.5.tgz#f98b50c2b07516c497853b770a2bf2cf1426c0ed"
-  integrity sha512-seOoxQUKTugpNjQWYVAmylh6mfddPyE2EsWWyn6ojkp7HurMadvRZa9OQ/PrhMjkphHupPMyuIukaD7F2zMW9Q==
-  dependencies:
-    debug "^4.0.0"
-    tslib "^1.9.0"
-
-"@ionic/utils-object@1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@ionic/utils-object/-/utils-object-1.0.5.tgz#a915f07473c9fa89cc0e185efc87f15b66e49f46"
-  integrity sha512-nyNH8EJcE/xl5G7Zyz5Thy5f1Otj+fhsXca3C5WsCG6y7yb2biDaaw3lgq/KtEYfXyH1znHsbs9hdJNLgCefGQ==
-  dependencies:
-    debug "^4.0.0"
-    tslib "^1.9.0"
-
-"@ionic/utils-process@1.0.6":
+"@ionic/utils-network@1.0.6":
   version "1.0.6"
-  resolved "https://registry.yarnpkg.com/@ionic/utils-process/-/utils-process-1.0.6.tgz#086b3f1037bf38db396ea68be922e14d51be0bfe"
-  integrity sha512-RK9kscKVgxVelG4qGZBEdEuFX65l6JS20QnDkJ0qAa2loBb+Ty+9L0H5k556F/dEHsbQ3rPduBjUr+55CQ1Emw==
+  resolved "https://registry.yarnpkg.com/@ionic/utils-network/-/utils-network-1.0.6.tgz#cae562504b7a06403c41a8b260d7820201098923"
+  integrity sha512-a7W44S+1ACuRAle9o6YuyTtt6MgxcKhK65Qf1M6rVpzfhW/rJ9gpyACbICHXst5jh2k7ngp5CT9Jyw5fByHNlQ==
   dependencies:
-    "@ionic/utils-object" "1.0.5"
-    "@ionic/utils-terminal" "1.1.0"
+    debug "^4.0.0"
+    tslib "^1.9.0"
+
+"@ionic/utils-object@1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@ionic/utils-object/-/utils-object-1.0.6.tgz#8eff2eaba2e73dbb4f38333c76610410fbbfbf86"
+  integrity sha512-3defzcaHsdZQgQMKIDMki4Klp9hDKVbRfDCet6f6Xpmd8ycgIgW4wBbtcJRkasps2KJYJLs810mvI/1szOYrSA==
+  dependencies:
+    debug "^4.0.0"
+    tslib "^1.9.0"
+
+"@ionic/utils-process@1.0.9":
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@ionic/utils-process/-/utils-process-1.0.9.tgz#ccfd8575f3067a0d2af17616085d99ac67af5def"
+  integrity sha512-52SejUFhEDpE5wvlsBLv5a4oxmEUXPZgTtrx3I1yIdd+5jyYuT9XVxM2uzrRMq//X7EgqvSlnnpvTObpTFV4Bw==
+  dependencies:
+    "@ionic/utils-object" "1.0.6"
+    "@ionic/utils-terminal" "1.1.2"
     debug "^4.0.0"
     lodash "^4.17.5"
-    tree-kill "1.2.1"
+    tree-kill "^1.2.2"
     tslib "^1.9.0"
 
-"@ionic/utils-stream@2.0.4":
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/@ionic/utils-stream/-/utils-stream-2.0.4.tgz#78e350d7a60076e234037fdf1b39060c58c84917"
-  integrity sha512-qha4Msonb44++xvf8YppBR27dNBRuMLSty4/THH9uD6UEdjU2+23LWACKuqnQUSsZjQdvALVDMcRRWEIYEL2VQ==
+"@ionic/utils-stream@2.0.5":
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/@ionic/utils-stream/-/utils-stream-2.0.5.tgz#51ea52dcd02fad6094104df8fe4e49d731c2c259"
+  integrity sha512-GOjEsgEyFTpX5Y6MpDDograU7PgPcclKvrhe1Lhft7VSg6RzeEzmZykzkDK89visw2Qb45G0gfyOuxLlq+WetA==
   dependencies:
     debug "^4.0.0"
     tslib "^1.9.0"
 
-"@ionic/utils-subprocess@1.0.10":
-  version "1.0.10"
-  resolved "https://registry.yarnpkg.com/@ionic/utils-subprocess/-/utils-subprocess-1.0.10.tgz#21d6f4ffb9f4f1f747457b81f628c3f4870b1ced"
-  integrity sha512-eQu3wuGLjGzV8jRgtfZg6H8wQNI/0LPBvRNDoP+oCdyZFkw4Go+IV5lLbRG7n2IaKdlLPVNUWcD+Bb49bKdDPA==
+"@ionic/utils-subprocess@1.0.13":
+  version "1.0.13"
+  resolved "https://registry.yarnpkg.com/@ionic/utils-subprocess/-/utils-subprocess-1.0.13.tgz#852edce68a2c078f9f87273ee8de57e0c1837c65"
+  integrity sha512-k7OdoJdwkdf5q2WhZDuiLR/p153vJZBlCSfj5iRfuD9bWEzJRD1uufLMT3DFSVIDLHKZt7ni1ViswWeZ1qfMpQ==
   dependencies:
-    "@ionic/utils-array" "1.2.1"
-    "@ionic/utils-fs" "2.0.8"
-    "@ionic/utils-process" "1.0.6"
-    "@ionic/utils-stream" "2.0.4"
-    "@ionic/utils-terminal" "1.1.0"
+    "@ionic/utils-array" "1.2.2"
+    "@ionic/utils-fs" "2.0.9"
+    "@ionic/utils-process" "1.0.9"
+    "@ionic/utils-stream" "2.0.5"
+    "@ionic/utils-terminal" "1.1.2"
     cross-spawn "^7.0.0"
     debug "^4.0.0"
     tslib "^1.9.0"
 
-"@ionic/utils-terminal@1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@ionic/utils-terminal/-/utils-terminal-1.1.0.tgz#b9c7e27aeb1e8e09a4dbc73c653b1d7dbe43cc2d"
-  integrity sha512-I4b3CVXm7dPYON3ksvPgG1mg38WiwfnDchmxSv1+AHhxkmrKJNYDr71LAdypXYzVsNI55rIhUOL7Re1NRrp9EQ==
+"@ionic/utils-terminal@1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@ionic/utils-terminal/-/utils-terminal-1.1.2.tgz#9f88f0920a8302c0a0e6954767ddffc2a3787a2f"
+  integrity sha512-ODXbta2kvFNkMIEGwl7KX5gJTcZZHkzSLoBh3wND2H+EsG0KpIqOZKWMtkj+suuPut85wyLZ7fGfARnrNf7dtA==
   dependencies:
     debug "^4.0.0"
     tslib "^1.9.0"
@@ -1541,6 +1541,11 @@ astral-regex@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/astral-regex/-/astral-regex-1.0.0.tgz#6c8c3fb827dd43ee3918f27b82782ab7658a6fd9"
   integrity sha512-+Ryf6g3BKoRc7jfp7ad8tM4TtMiaWvbF/1/sQcZPkkS7ag3D5nMBCe2UfOTONtAkaG0tO0ij3C5Lwmf1EiyjHg==
+
+astral-regex@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/astral-regex/-/astral-regex-2.0.0.tgz#483143c567aeed4785759c0865786dc77d7d2e31"
+  integrity sha512-Z7tMw1ytTXt5jqMcOP+OQteU1VuNK9Y02uuJtKQ1Sv69jXQKKg5cibLwGJow8yzZP+eAc18EmLGPal0bp36rvQ==
 
 async-each@^1.0.0, async-each@^1.0.1:
   version "1.0.3"
@@ -6104,22 +6109,22 @@ ionic-mocks@^1.3.0:
   resolved "https://registry.yarnpkg.com/ionic-mocks/-/ionic-mocks-1.3.0.tgz#398bae25e01f23ab31b6d379754ee9d3c4bfb066"
   integrity sha1-OYuuJeAfI6sxttN5dU7p08S/sGY=
 
-ionic@^5.4.9:
-  version "5.4.9"
-  resolved "https://registry.yarnpkg.com/ionic/-/ionic-5.4.9.tgz#c0cb2b97b407eeafb76ba0c5ac285a383a8330e1"
-  integrity sha512-yLHqfWG5edSrODRvLxju/TdVdZPuoaE7hDci3ZByy96rZsgJXSTuY+jMOboAZu3nVOE8csbYWY7BKv6zlDg3cw==
+ionic@^5.4.16:
+  version "5.4.16"
+  resolved "https://registry.yarnpkg.com/ionic/-/ionic-5.4.16.tgz#f4d4a58d24a7803b504d8c486aeb51d330b4b173"
+  integrity sha512-MlHmcctGxxUdvjKJGDUQOZEJMMTrZk3ZtC0tkMUy/im53c0giZrKQtkBKXOLK6uYXBnhlOXn0jrs97PnfNadyg==
   dependencies:
-    "@ionic/cli-framework" "3.0.3"
-    "@ionic/cli-framework-prompts" "1.0.2"
-    "@ionic/discover" "2.0.6"
-    "@ionic/utils-array" "1.2.1"
-    "@ionic/utils-fs" "2.0.8"
-    "@ionic/utils-network" "1.0.5"
-    "@ionic/utils-process" "1.0.6"
-    "@ionic/utils-stream" "2.0.4"
-    "@ionic/utils-subprocess" "1.0.10"
-    "@ionic/utils-terminal" "1.1.0"
-    chalk "^2.3.0"
+    "@ionic/cli-framework" "3.0.6"
+    "@ionic/cli-framework-prompts" "1.0.4"
+    "@ionic/discover" "2.0.8"
+    "@ionic/utils-array" "1.2.2"
+    "@ionic/utils-fs" "2.0.9"
+    "@ionic/utils-network" "1.0.6"
+    "@ionic/utils-process" "1.0.9"
+    "@ionic/utils-stream" "2.0.5"
+    "@ionic/utils-subprocess" "1.0.13"
+    "@ionic/utils-terminal" "1.1.2"
+    chalk "^3.0.0"
     debug "^4.0.0"
     diff "^4.0.1"
     elementtree "^0.1.7"
@@ -10510,7 +10515,7 @@ slice-ansi@1.0.0:
   dependencies:
     is-fullwidth-code-point "^2.0.0"
 
-slice-ansi@^2.0.0, slice-ansi@^2.1.0:
+slice-ansi@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/slice-ansi/-/slice-ansi-2.1.0.tgz#cacd7693461a637a5788d92a7dd4fba068e81636"
   integrity sha512-Qu+VC3EwYLldKa1fCxuuvULvSJOKEgk9pi8dZeCVK7TqBfUNTH4sFkk4joj8afVSfAYgJoSOetjx9QWOJ5mYoQ==
@@ -10518,6 +10523,15 @@ slice-ansi@^2.0.0, slice-ansi@^2.1.0:
     ansi-styles "^3.2.0"
     astral-regex "^1.0.0"
     is-fullwidth-code-point "^2.0.0"
+
+slice-ansi@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/slice-ansi/-/slice-ansi-3.0.0.tgz#31ddc10930a1b7e0b67b08c96c2f49b77a789787"
+  integrity sha512-pSyv7bSTC7ig9Dcgbw9AuRNUb5k5V6oDudjZoMBSr13qpLBG7tB+zgCkARjq7xIUgdz5P1Qe8u+rSGdouOOIyQ==
+  dependencies:
+    ansi-styles "^4.0.0"
+    astral-regex "^2.0.0"
+    is-fullwidth-code-point "^3.0.0"
 
 smart-buffer@^4.1.0:
   version "4.1.0"
@@ -11740,6 +11754,11 @@ tree-kill@1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/tree-kill/-/tree-kill-1.2.1.tgz#5398f374e2f292b9dcc7b2e71e30a5c3bb6c743a"
   integrity sha512-4hjqbObwlh2dLyW4tcz0Ymw0ggoaVDMveUB9w8kFSQScdRLo0gxO9J7WFcUBo+W3C1TLdFIEwNOWebgZZ0RH9Q==
+
+tree-kill@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/tree-kill/-/tree-kill-1.2.2.tgz#4ca09a9092c88b73a7cdc5e8a01b507b0790a0cc"
+  integrity sha512-L0Orpi8qGpRG//Nd+H90vFB+3iHnue1zSSGmNOOCh1GLJ7rUKVwV2HvijphGQS2UmhUZewS9VgvxYIdgr+fG1A==
 
 trim-newlines@^1.0.0:
   version "1.0.0"

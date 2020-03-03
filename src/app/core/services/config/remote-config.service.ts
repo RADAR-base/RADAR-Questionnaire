@@ -7,6 +7,7 @@ import { BehaviorSubject, Observable, from } from 'rxjs'
 
 import { ConfigKeys } from '../../../shared/enums/config'
 import { StorageKeys } from '../../../shared/enums/storage'
+import { getSeconds } from '../../../shared/utilities/time'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 
@@ -143,7 +144,7 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
     }
     console.log('Fetching Firebase Remote Config')
     return this.firebase
-      .fetch(timeoutMillis)
+      .fetch(getSeconds({ milliseconds: timeoutMillis }))
       .then(() => {
         console.log('Activating Firebase Remote Config')
         return (
@@ -166,5 +167,5 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
   subject(): Observable<RemoteConfig> {
     return from(this.read())
       .mergeMap(() => this.configSubject)
-  }
+      }
 }

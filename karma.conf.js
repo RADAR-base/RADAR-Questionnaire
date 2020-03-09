@@ -32,14 +32,14 @@ module.exports = function(config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     singleRun: false,
-    browsers: ['Chrome'],
+    browsers: ['ChromeHeadless'],
     customLaunchers: {
       ChromeDebugging: {
-        base: 'Chrome',
+        base: 'ChromeHeadless',
         flags: ['--remote-debugging-port=9333']
       },
       ChromeNoSandbox: {
-        base: 'Chrome',
+        base: 'ChromeHeadless',
         flags: ['--no-sandbox']
       }
     },

@@ -6,7 +6,10 @@ import { LocalizationService } from '../../../core/services/misc/localization.se
 import { UsageService } from '../../../core/services/usage/usage.service'
 import { UsageEventType } from '../../../shared/enums/events'
 import { LocKeys } from '../../../shared/enums/localisations'
-import { Assessment } from '../../../shared/models/assessment'
+import {
+  Assessment,
+  ShowIntroductionType
+} from '../../../shared/models/assessment'
 import { Question } from '../../../shared/models/question'
 import { Task } from '../../../shared/models/task'
 import { TaskType } from '../../../shared/utilities/task-type'
@@ -40,6 +43,11 @@ export class QuestionsPageComponent implements OnInit {
   showIntroductionScreen: boolean
   showDoneButton: boolean
   showFinishScreen: boolean
+  SHOW_INTRODUCTION_SET: Set<boolean | ShowIntroductionType> = new Set([
+    true,
+    ShowIntroductionType.ALWAYS,
+    ShowIntroductionType.ONCE
+  ])
 
   constructor(
     public navCtrl: NavController,
@@ -56,26 +64,6 @@ export class QuestionsPageComponent implements OnInit {
     })
   }
 
-  ngOnInit() {
-    this.task = this.navParams.data
-    this.startTime = this.questionsService.getTime()
-    const data = this.questionsService.getQuestionnairePayload(this.task)
-    return data.then(res => {
-      this.questionTitle = res.title
-      this.introduction = res.introduction
-      this.showIntroductionScreen = res.assessment.showIntroduction
-      this.questions = res.questions
-      this.endText =
-        res.endText && res.endText.length
-          ? res.endText
-          : this.localization.translateKey(LocKeys.FINISH_THANKS)
-      this.isLastTask = res.isLastTask
-      this.assessment = res.assessment
-      this.taskType = res.type
-      return (this.isClinicalTask = this.taskType == TaskType.CLINICAL)
-    })
-  }
-
   ionViewDidLoad() {
     this.sendEvent(UsageEventType.QUESTIONNAIRE_STARTED)
     this.usage.setPage(this.constructor.name)
@@ -87,6 +75,34 @@ export class QuestionsPageComponent implements OnInit {
     this.sendCompletionLog()
     this.questionsService.reset()
     this.insomnia.allowSleepAgain()
+  }
+
+  ngOnInit() {
+    this.task = this.navParams.data
+    return this.questionsService
+      .getQuestionnairePayload(this.task)
+      .then(res => {
+        this.initQuestionnaire(res)
+        return this.updateToolbarButtons()
+      })
+  }
+
+  initQuestionnaire(res) {
+    this.startTime = this.questionsService.getTime()
+    this.questionTitle = res.title
+    this.introduction = res.introduction
+    this.showIntroductionScreen = this.SHOW_INTRODUCTION_SET.has(
+      res.assessment.showIntroduction
+    )
+    this.questions = res.questions
+    this.endText =
+      res.endText && res.endText.length
+        ? res.endText
+        : this.localization.translateKey(LocKeys.FINISH_THANKS)
+    this.isLastTask = res.isLastTask
+    this.assessment = res.assessment
+    this.taskType = res.type
+    this.isClinicalTask = this.taskType == TaskType.CLINICAL
   }
 
   handleIntro(start: boolean) {
@@ -179,7 +195,7 @@ export class QuestionsPageComponent implements OnInit {
 
   exitQuestionnaire() {
     this.sendEvent(UsageEventType.QUESTIONNAIRE_CANCELLED)
-    this.navCtrl.pop()
+    this.navCtrl.pop({ animation: 'wp-transition' })
   }
 
   navigateToFinishPage() {

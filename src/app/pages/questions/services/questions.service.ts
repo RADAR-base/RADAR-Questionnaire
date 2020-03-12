@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core'
 
+import { DefaultQuestionsHidden } from '../../../../assets/data/defaultConfig'
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
+import { RemoteConfigService } from '../../../core/services/config/remote-config.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
+import { ConfigKeys } from '../../../shared/enums/config'
+import { ShowIntroductionType } from '../../../shared/models/assessment'
 import { Question, QuestionType } from '../../../shared/models/question'
 import { getTaskType } from '../../../shared/utilities/task-type'
 import { getSeconds } from '../../../shared/utilities/time'
@@ -26,7 +30,8 @@ export class QuestionsService {
     private answerService: AnswerService,
     private timestampService: TimestampService,
     private localization: LocalizationService,
-    private finish: FinishTaskService
+    private finish: FinishTaskService,
+    private remoteConfig: RemoteConfigService
   ) {}
 
   reset() {
@@ -66,35 +71,17 @@ export class QuestionsService {
   }
 
   updateAssessmentIntroduction(assessment, taskType) {
-    if (assessment.showIntroduction) {
+    if (assessment.showIntroduction !== ShowIntroductionType.ALWAYS) {
       assessment.showIntroduction = false
       this.questionnaire.updateAssessment(taskType, assessment)
     }
   }
 
-  showESMSleepQuestion() {
-    // Note: First ESM will show sleep question
-    return new Date().getHours() <= 9
-  }
-
-  showESMRatingQuestion() {
-    // Note: Last ESM will show rating question
-    // TODO: Fix hardcoded values
-    return new Date().getHours() >= 19
-  }
-
-  isESM(title) {
-    return title === 'ESM'
-  }
-
   processQuestions(title, questions: any[]) {
-    if (this.isESM(title)) {
-      const length = questions.length
-      const first = this.showESMSleepQuestion() ? 0 : 1
-      const last = this.showESMRatingQuestion() ? length - 1 : length - 2
-      return questions.slice(first, last)
-    }
-    return questions
+    if (title.includes('ESM28Q'))
+      if (new Date().getHours() > 10) return Promise.resolve(questions.slice(1))
+
+    return Promise.resolve(questions)
   }
 
   isAnswered(question: Question) {
@@ -102,8 +89,7 @@ export class QuestionsService {
     return this.answerService.check(id)
   }
 
-  evalSkipNext(questions, currentQuestion) {
-    // NOTE: Evaluates branching logic
+  evalBranchingLogicAndGetNextQuestion(questions, currentQuestion) {
     let questionIdx = currentQuestion + 1
     while (
       questionIdx < questions.length &&
@@ -131,7 +117,7 @@ export class QuestionsService {
   }
 
   getNextQuestion(questions, currentQuestion) {
-    return this.evalSkipNext(questions, currentQuestion)
+    return this.evalBranchingLogicAndGetNextQuestion(questions, currentQuestion)
   }
 
   getAttemptProgress(total) {
@@ -167,18 +153,26 @@ export class QuestionsService {
 
   getQuestionnairePayload(task) {
     const type = getTaskType(task)
-    return this.questionnaire.getAssessment(type, task).then(assessment => {
-      return {
-        title: assessment.name,
-        introduction: this.localization.chooseText(assessment.startText),
-        endText: this.localization.chooseText(assessment.endText),
-        questions: this.processQuestions(assessment.name, assessment.questions),
-        task: task ? task : assessment,
-        assessment: assessment,
-        type: type,
-        isLastTask: false
-      }
-    })
+    return this.questionnaire
+      .getAssessment(type, task)
+      .then(assessment =>
+        this.processQuestions(
+          assessment.name,
+          assessment.questions
+        ).then(questions => [assessment, questions])
+      )
+      .then(([assessment, questions]) => {
+        return {
+          title: assessment.name,
+          introduction: this.localization.chooseText(assessment.startText),
+          endText: this.localization.chooseText(assessment.endText),
+          questions: questions,
+          task: task ? task : assessment,
+          assessment: assessment,
+          type: type,
+          isLastTask: false
+        }
+      })
   }
 
   processCompletedQuestionnaire(task, questions): Promise<any> {
@@ -197,5 +191,15 @@ export class QuestionsService {
   handleClinicalFollowUp(assessment, completedInClinic?) {
     if (!completedInClinic) return Promise.resolve()
     return this.finish.evalClinicalFollowUpTask(assessment)
+  }
+
+  getHiddenQuestions(): Promise<Object> {
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        config.getOrDefault(ConfigKeys.QUESTIONS_HIDDEN, DefaultQuestionsHidden)
+      )
+      .then(res => JSON.parse(res))
+      .catch(e => DefaultQuestionsHidden)
   }
 }

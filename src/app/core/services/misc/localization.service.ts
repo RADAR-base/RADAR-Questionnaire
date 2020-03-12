@@ -34,6 +34,7 @@ export class LocalizationService {
   constructor(private storage: StorageService) {
     this.localeMoment = moment()
     this.update()
+    this.updateLanguageSettings()
   }
 
   init() {
@@ -57,6 +58,14 @@ export class LocalizationService {
 
   getLanguage(): LanguageSetting {
     return this.language
+  }
+
+  updateLanguageSettings(): Promise<any> {
+    return this.getLanguageSettings().then(languages =>
+      languages && languages.length == DefaultSettingsSupportedLanguages.length
+        ? []
+        : this.setLanguageSettings(DefaultSettingsSupportedLanguages)
+    )
   }
 
   setLanguageSettings(settings) {

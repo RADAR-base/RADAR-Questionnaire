@@ -7,7 +7,6 @@ import {
   Output,
   ViewChild
 } from '@angular/core'
-import { Content, Platform } from 'ionic-angular'
 
 import { InfoItem, Section } from '../../../../../shared/models/question'
 
@@ -18,7 +17,7 @@ let uniqueID = 0
   templateUrl: 'info-screen.component.html'
 })
 export class InfoScreenComponent implements OnInit, OnChanges {
-  @ViewChild(Content) content: Content
+  @ViewChild('content') content
 
   @Output()
   valueChange: EventEmitter<number> = new EventEmitter<number>()
@@ -29,21 +28,19 @@ export class InfoScreenComponent implements OnInit, OnChanges {
   hasFieldLabel: boolean
   @Input()
   currentlyShown: boolean
+  @Input()
+  image: string
 
   value: number = null
   uniqueID: number = uniqueID++
   name = `info-${this.uniqueID}`
-  isThincItReminder = false
   items: InfoItem[] = Array()
   showScrollButton: boolean
-  height = '92%'
 
-  constructor(private platform: Platform) {}
+  constructor() {}
 
   ngOnInit() {
     this.initSections()
-    if (this.platform.is('ios')) this.height = '64vh'
-    if (this.hasFieldLabel) this.height = '88%'
   }
 
   ngOnChanges() {
@@ -53,10 +50,8 @@ export class InfoScreenComponent implements OnInit, OnChanges {
 
   initSections() {
     this.sections.map((item, i) => {
-      console.log(item.label)
-      if (item.label.includes('THINC-it')) {
-        this.isThincItReminder = true
-      }
+      if (item.label.includes('THINC-it'))
+        this.image = 'assets/imgs/thincIt_app_icon.png'
       this.items.push({
         id: `info-${this.uniqueID}-${i}`,
         heading: item.code,
@@ -66,15 +61,20 @@ export class InfoScreenComponent implements OnInit, OnChanges {
   }
 
   scrollDown() {
-    const dimensions = this.content.getContentDimensions()
-    const position = dimensions.scrollTop + dimensions.contentHeight / 2
-    this.content.scrollTo(0, position, 1000)
+    const height =
+      this.content.nativeElement.clientHeight / this.sections.length
+    this.content.nativeElement.scrollBy({
+      top: height,
+      left: 0,
+      behavior: 'smooth'
+    })
   }
 
   onScroll(event) {
     if (
       event &&
-      event.scrollTop >= (event.scrollHeight - event.contentHeight) * 0.8
+      event.target.scrollTop >=
+        (event.target.scrollHeight - event.target.clientHeight) * 0.8
     ) {
       this.emitTimestamp()
       this.showScrollButton = false

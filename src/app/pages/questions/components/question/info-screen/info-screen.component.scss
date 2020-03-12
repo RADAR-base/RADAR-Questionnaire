@@ -1,16 +1,17 @@
 info-screen {
-  overflow: hidden;
-
   .info-card {
-    padding: 10px;
+    padding: 16px;
+    height: 92%;
     -webkit-border-radius: 8px;
     border-radius: 8px;
     background-color: $cl-primary-20;
   }
 
-  ion-content {
-    background: none;
+  .content {
+    overflow-y: scroll;
+    width: 100%;
     mask-image:
+
       -webkit-gradient(
         linear,
         left top,
@@ -32,10 +33,14 @@ info-screen {
     margin-bottom: 48%;
   }
 
-  .icon-thincIt {
-    margin-top: 15px;
-    margin-left: 35%;
-    width: 30%;
+  .image {
+    margin: auto;
+    width: 104px;
+    height: auto;
+  }
+
+  .image-container {
+    text-align: center;
   }
 
   .icon {

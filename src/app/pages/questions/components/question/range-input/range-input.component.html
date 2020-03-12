@@ -1,11 +1,8 @@
 <ion-list radio-group>
   <ul>
-    <li
-      *ngFor="let item of items"
-      class="item-md"
-    >
+    <li *ngFor="let item of items" class="item-md">
       <ion-item no-lines>
-        <ion-label [attr.for]="item.id">{{ item.value }}</ion-label>
+        <ion-label [attr.for]="item.id" dir="auto">{{ item.value }}</ion-label>
         <ion-radio
           [value]="item.value"
           [id]="item.id"

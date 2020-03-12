@@ -28,6 +28,7 @@ export class HomePageComponent implements OnDestroy {
   tasks: Promise<Task[]>
   currentDate: Date
   nextTask: Task
+  timeToNextTask: number
   tasksProgress: Promise<TasksProgress>
   resumeListener: Subscription = new Subscription()
 
@@ -110,6 +111,7 @@ export class HomePageComponent implements OnDestroy {
     if (task) {
       this.nextTask = task
       this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
+      this.timeToNextTask = this.nextTask.timestamp - Date.now()
     } else {
       this.taskIsNow = false
       this.nextTask = null
@@ -170,8 +172,10 @@ export class HomePageComponent implements OnDestroy {
 
   showMissedInfo() {
     return this.alertService.showAlert({
-      title: this.localization.translateKey(LocKeys.CALENDAR_ESM_MISSED_TITLE),
-      message: this.localization.translateKey(LocKeys.CALENDAR_ESM_MISSED_DESC),
+      title: this.localization.translateKey(LocKeys.CALENDAR_TASK_MISSED_TITLE),
+      message: this.localization.translateKey(
+        LocKeys.CALENDAR_TASK_MISSED_DESC
+      ),
       buttons: [
         {
           text: this.localization.translateKey(LocKeys.BTN_OKAY),

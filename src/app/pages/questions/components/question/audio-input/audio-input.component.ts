@@ -28,13 +28,15 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   @Output()
   valueChange: EventEmitter<any> = new EventEmitter<any>()
   @Input()
-  sections: Section[]
+  text: string
   @Input()
   currentlyShown: boolean
 
   recordAttempts = 0
   buttonShown = true
   pauseListener: Subscription
+  showInfoCard: boolean
+  textLengthThreshold = 400
 
   constructor(
     private audioRecordService: AudioRecordService,
@@ -61,6 +63,7 @@ export class AudioInputComponent implements OnDestroy, OnInit {
       this.stopRecording()
       this.platform.exitApp()
     })
+    this.showInfoCard = this.text.length > this.textLengthThreshold
   }
 
   ngOnDestroy() {
@@ -70,16 +73,10 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   handleRecording() {
     if (!this.isRecording()) {
       this.recordAttempts++
-      if (this.recordAttempts <= DefaultMaxAudioAttemptsAllowed) {
-        this.startRecording()
-          .then(() =>
-            this.usage.sendGeneralEvent(UsageEventType.RECORDING_STARTED)
-          )
-          .catch(e => this.showTaskInterruptedAlert())
-      }
+      if (this.recordAttempts <= DefaultMaxAudioAttemptsAllowed)
+        this.startRecording().catch(e => this.showTaskInterruptedAlert())
     } else {
       this.stopRecording()
-      this.usage.sendGeneralEvent(UsageEventType.RECORDING_STOPPED)
       if (this.recordAttempts == DefaultMaxAudioAttemptsAllowed)
         this.finishRecording().catch(e => this.showTaskInterruptedAlert())
       else this.showAfterAttemptAlert()
@@ -97,15 +94,17 @@ export class AudioInputComponent implements OnDestroy, OnInit {
     return Promise.all([
       this.permissionUtil.getRecordAudio_Permission(),
       this.permissionUtil.getWriteExternalStorage_permission()
-    ]).then(res =>
-      res[0] && res[1]
+    ]).then(res => {
+      this.usage.sendGeneralEvent(UsageEventType.RECORDING_STARTED, true)
+      return res[0] && res[1]
         ? this.audioRecordService.startAudioRecording()
         : Promise.reject()
-    )
+    })
   }
 
   stopRecording() {
     this.audioRecordService.stopAudioRecording()
+    this.usage.sendGeneralEvent(UsageEventType.RECORDING_STOPPED, true)
   }
 
   isRecording() {

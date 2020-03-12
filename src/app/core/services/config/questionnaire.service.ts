@@ -76,7 +76,11 @@ export class QuestionnaireService {
 
   formatQuestionsHeaders(questions) {
     questions.forEach((q, i) => {
-      if (!q.section_header && i > 0) {
+      if (
+        i > 0 &&
+        !q.section_header &&
+        q.matrix_group_name == questions[i - 1].matrix_group_name
+      ) {
         q.section_header = questions[i - 1].section_header
       }
     })
@@ -109,14 +113,13 @@ export class QuestionnaireService {
 
   updateAssessment(type: TaskType, assessment: Assessment) {
     console.log('updating assessment')
-    return this.getAssessments(type)
-      .then(assessments => {
-        const index = assessments.findIndex(a => a.name == assessment.name)
-        if (index != -1) {
-          assessments[index] = this.util.deepCopy(assessment)
-          return this.setAssessments(type, assessments)
-        }
-      })
+    return this.getAssessments(type).then(assessments => {
+      const index = assessments.findIndex(a => a.name == assessment.name)
+      if (index != -1) {
+        assessments[index] = this.util.deepCopy(assessment)
+        return this.setAssessments(type, assessments)
+      }
+    })
   }
 
   getAssessment(type: TaskType, task: Task) {

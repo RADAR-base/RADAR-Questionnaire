@@ -36,6 +36,8 @@ export class LogService {
   }
 
   static formatObject(obj: any): string {
+    if (!obj) return
+
     if (Array.isArray(obj)) {
       return (<any[]>obj).map(o => this.formatObject(o)).toString()
     } else if (typeof obj !== 'object') {

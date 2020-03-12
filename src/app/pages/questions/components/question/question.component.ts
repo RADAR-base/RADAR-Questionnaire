@@ -3,13 +3,15 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnInit,
   Output
 } from '@angular/core'
 import { Dialogs } from '@ionic-native/dialogs/ngx'
 import { Vibration } from '@ionic-native/vibration/ngx'
+import * as smoothscroll from 'smoothscroll-polyfill'
 
 import { Answer } from '../../../../shared/models/answer'
-import { Question } from '../../../../shared/models/question'
+import { Question, QuestionType } from '../../../../shared/models/question'
 
 import { LocalizationService } from '../../../../core/services/misc/localization.service'
 import { LocKeys } from '../../../../shared/enums/localisations'
@@ -18,7 +20,7 @@ import { LocKeys } from '../../../../shared/enums/localisations'
   selector: 'question',
   templateUrl: 'question.component.html'
 })
-export class QuestionComponent implements OnChanges {
+export class QuestionComponent implements OnInit, OnChanges {
   @Input()
   question: Question
   @Input()
@@ -31,14 +33,34 @@ export class QuestionComponent implements OnChanges {
   value: any
   currentlyShown = false
   previouslyShown = false
+  isLoading = true
+  isScrollable = false
+  isFieldLabelHidden = false
+  margin = 32
+
+  NON_SCROLLABLE_SET: Set<QuestionType> = new Set([
+    QuestionType.timed,
+    QuestionType.audio,
+    QuestionType.info
+  ])
+  HIDE_FIELD_LABEL_SET: Set<QuestionType> = new Set([QuestionType.audio])
 
   yesnoResponses = [{ code: '1', label: 'Yes' }, { code: '0', label: 'No' }]
 
   constructor(private vibration: Vibration, private dialogs: Dialogs,
     private localization: LocalizationService,) {
+    smoothscroll.polyfill()
     this.value = null
     this.yesnoResponses = [{ code: '1', label: this.localization.translateKey(LocKeys.BTN_YES) },
       { code: '0', label: this.localization.translateKey(LocKeys.BTN_NO) }]
+  }
+
+  ngOnInit() {
+    this.isScrollable = !this.NON_SCROLLABLE_SET.has(this.question.field_type)
+    this.isFieldLabelHidden = this.HIDE_FIELD_LABEL_SET.has(
+      this.question.field_type
+    )
+    setTimeout(() => (this.isLoading = false), 800)
   }
 
   ngOnChanges() {

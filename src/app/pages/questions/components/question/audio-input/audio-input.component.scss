@@ -7,6 +7,7 @@ audio-input {
   }
 
   .audio-container {
+    overflow: hidden;
     width: inherit;
     height: inherit !important;
   }
@@ -17,5 +18,19 @@ audio-input {
 
   .bt-stop {
     background-color: $cl-danger-40;
+  }
+
+  .info-card {
+    overflow: auto;
+    margin-top: 16px;
+    padding: 10px;
+    max-height: 68%;
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+    background-color: $cl-primary-10;
+  }
+
+  .info-card h2 {
+    @include font-body;
   }
 }

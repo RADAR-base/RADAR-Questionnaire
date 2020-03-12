@@ -5,7 +5,6 @@ import { DefaultPackageName } from '../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { UsageService } from '../../../core/services/usage/usage.service'
-import { ConfigEventType } from '../../../shared/enums/events'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { EnrolmentPageComponent } from '../../auth/containers/enrolment-page.component'
 import { HomePageComponent } from '../../home/containers/home-page.component'
@@ -68,10 +67,32 @@ export class SplashPageComponent {
         {
           text: this.localization.translateKey(LocKeys.BTN_RESET),
           handler: () => {
-            this.enrol()
+            this.showConfirmReset()
           }
         }
       ]
+    })
+  }
+
+  showConfirmReset() {
+    const buttons = [
+      {
+        text: this.localization.translateKey(LocKeys.BTN_DISAGREE),
+        handler: () => console.log('Reset cancel')
+      },
+      {
+        text: this.localization.translateKey(LocKeys.BTN_AGREE),
+        handler: () => {
+          this.enrol()
+        }
+      }
+    ]
+    return this.alertService.showAlert({
+      title: this.localization.translateKey(LocKeys.SETTINGS_RESET_ALERT),
+      message: this.localization.translateKey(
+        LocKeys.SETTINGS_RESET_ALERT_DESC
+      ),
+      buttons: buttons
     })
   }
 

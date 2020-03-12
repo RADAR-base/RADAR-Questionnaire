@@ -417,21 +417,21 @@ export const Localisations = {
   },
   SETTINGS_RESET_ALERT_OPTION_DESC: {
     da:
-      'Vælg kun at nulstille appkonfiguration og data, eller udfør en fuldstændig nulstilling og tilmelding.',
+      'Vælg at nulstille din cache, tilmelding eller appkonfiguration (dette inkluderer dine meddelelser og plan).<br><br>Du kan også vælge at nulstille mere end en mulighed.',
     de:
-      'Wählen Sie diese Option, um nur die App-Konfiguration und -Daten zurückzusetzen, oder führen Sie einen vollständigen Reset und eine erneute Registrierung durch.',
+      'Wählen Sie, ob Sie Ihren Cache, Ihre Registrierung oder Ihre App-Konfiguration zurücksetzen möchten (dies schließt Ihre Benachrichtigungen und Ihren Zeitplan ein).<br><br>Sie können auch mehrere Optionen zurücksetzen.',
     en:
-      'Choose to reset app configuration and data only or do a full reset and re-enrol.',
+      'Choose to reset your cache, enrolment, or app configuration (this includes your notifications and schedule).<br><br>You may also choose to reset more than one option.',
     es:
-      'Elija restablecer la configuración de la aplicación y solo los datos o realice un reinicio completo y vuelva a inscribirse.',
+      'Elija restablecer su caché, inscripción o configuración de la aplicación (esto incluye sus notificaciones y programación).<br><br>También puede optar por restablecer más de una opción.',
     it:
-      "Scegli di ripristinare solo la configurazione e i dati dell'app oppure eseguire un ripristino completo e ripetere la registrazione.",
+      "Scegli di reimpostare la cache, la registrazione o la configurazione dell'app (ciò include le notifiche e la pianificazione).<br><br>Puoi anche scegliere di ripristinare più di un'opzione.",
     nl:
-      'Kies ervoor om de app-configuratie en -gegevens alleen opnieuw in te stellen of een volledige reset uit te voeren en opnieuw in te schrijven.',
+      'Kies ervoor om uw cache, inschrijving of app-configuratie opnieuw in te stellen (dit omvat uw meldingen en planning).<br><br>U kunt er ook voor kiezen om meer dan één optie opnieuw in te stellen.',
     pl:
-      'wybierz tylko zresetować konfigurację i dane aplikacji lub wykonać pełny reset i ponownie zarejestrować',
+      'Wybierz zresetowanie pamięci podręcznej, rejestracji lub konfiguracji aplikacji (dotyczy to również powiadomień i harmonogramu).<br><br>Możesz także zresetować więcej niż jedną opcję.',
     hb:
-      '.בחר לאפס את תצורת ונתוני האפליקציה בלבד או לבצע איפוס מלא ולהירשם מחדש'
+      'בחר לאפס את זיכרון המטמון, ההרשמה או התצורה של האפליקציה שלך (זה כולל את ההודעות ולוח הזמנים שלך).<br><br> אתה יכול גם לבחור לאפס יותר מאפשרות אחת.'
   },
   SETTINGS_CACHE: {
     da: 'Cache',

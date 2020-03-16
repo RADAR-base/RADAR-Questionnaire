@@ -461,10 +461,10 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/status-bar@^5.21.6":
-  version "5.21.6"
-  resolved "https://registry.yarnpkg.com/@ionic-native/status-bar/-/status-bar-5.21.6.tgz#14db13195d1dc4f1c7d858387a8ddd86798a988d"
-  integrity sha512-3kaTMOWWGFy6xWGNKivw19SJyS5QGKXdMnzbHXus+pGJWOTR1R3Y9sKzK/38vHcaVX+cGc1ErSGwFsLH84IMXQ==
+"@ionic-native/status-bar@^5.22.0":
+  version "5.22.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/status-bar/-/status-bar-5.22.0.tgz#0d499886557216ba4b406b53aa4f8501fceb4490"
+  integrity sha512-CVb/HjNZdYMmUHK/H2q1uo6uIt+KOG/NnOgn4jUNTiw5XiGWvT+hqrMNTBrRk1nG573ky5OhW0f0oe+GqWaxOg==
   dependencies:
     "@types/cordova" latest
 

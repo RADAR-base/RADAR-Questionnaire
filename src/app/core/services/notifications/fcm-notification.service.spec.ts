@@ -16,11 +16,6 @@ import {
   StorageServiceMock,
   SubjectConfigServiceMock
 } from '../../../shared/testing/mock-services'
-import {
-  FcmNotificationControllerService,
-  RadarProjectControllerService,
-  RadarUserControllerService
-} from '../app-server/api'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { SubjectConfigService } from '../config/subject-config.service'
 import { LocalizationService } from '../misc/localization.service'
@@ -48,18 +43,6 @@ describe('FcmNotificationService', () => {
         },
         { provide: ScheduleService, useClass: ScheduleServiceMock },
         { provide: RemoteConfigService, useClass: RemoteConfigServiceMock },
-        {
-          provide: FcmNotificationControllerService,
-          useClass: FcmNotificationControllerServiceMock
-        },
-        {
-          provide: RadarUserControllerService,
-          useClass: RadarUserControllerServiceMock
-        },
-        {
-          provide: RadarProjectControllerService,
-          useClass: RadarProjectControllerServiceMock
-        },
         { provide: LocalizationService, useClass: LocalizationServiceMock }
       ]
     })

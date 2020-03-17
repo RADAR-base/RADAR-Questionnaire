@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core'
 import { Firebase } from '@ionic-native/firebase/ngx'
 import { Platform } from 'ionic-angular'
+import * as Swagger from 'swagger-client'
 
 import {
   DefaultMaxUpstreamResends,
@@ -19,9 +20,6 @@ import {
 } from '../../../shared/models/notification-handler'
 import { TaskType } from '../../../shared/utilities/task-type'
 import { getSeconds } from '../../../shared/utilities/time'
-import { RadarProjectControllerService } from '../app-server/api'
-import { FcmNotificationControllerService } from '../app-server/fcm-notification-controller.service'
-import { RadarUserControllerService } from '../app-server/radar-user-controller.service'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { SubjectConfigService } from '../config/subject-config.service'
 import { LocalizationService } from '../misc/localization.service'
@@ -35,12 +33,14 @@ declare var FirebasePlugin
 
 @Injectable()
 export class FcmNotificationService extends NotificationService {
+  private APP_SERVER_URL = 'http://localhost:8080'
   private readonly NOTIFICATION_STORAGE = {
     LAST_NOTIFICATION_UPDATE: StorageKeys.LAST_NOTIFICATION_UPDATE
   }
   FCM_TOKEN: string
   upstreamResends: number
   ttlMinutes: number
+  apiClient
 
   constructor(
     private notifications: NotificationGeneratorService,
@@ -51,9 +51,6 @@ export class FcmNotificationService extends NotificationService {
     private platform: Platform,
     private logger: LogService,
     private remoteConfig: RemoteConfigService,
-    private fcmNotificationController: FcmNotificationControllerService,
-    private radarUserController: RadarUserControllerService,
-    private radarProjectController: RadarProjectControllerService,
     private localization: LocalizationService
   ) {
     super()
@@ -69,6 +66,16 @@ export class FcmNotificationService extends NotificationService {
             (this.ttlMinutes = Number(ttl) || DefaultNotificationTtlMinutes)
         )
     })
+    this.initApiClient()
+  }
+
+  async initApiClient() {
+    await Swagger({ url: `${this.APP_SERVER_URL}/v3/api-docs` }).then(
+      client => {
+        this.apiClient = client
+        console.log(this.apiClient)
+      }
+    )
   }
 
   init() {
@@ -130,10 +137,13 @@ export class FcmNotificationService extends NotificationService {
   }
 
   cancelAllNotifications(user): Promise<any> {
-    return this.fcmNotificationController
-      .deleteNotificationsForUserUsingDELETE(user.projectId, user.subjectId)
-      .toPromise()
-      .catch()
+    console.log(user)
+    return this.apiClient.apis[
+      'fcm-notification-controller'
+    ].deleteNotificationsForUser({
+      subjectId: user.subjectId,
+      projectId: user.projectId
+    })
   }
 
   private checkProjectAndSubjectExistElseCreate(): Promise<any> {
@@ -144,15 +154,13 @@ export class FcmNotificationService extends NotificationService {
 
   private checkProjectExistsElseCreate(): Promise<any> {
     return this.config.getProjectName().then(projectId => {
-      return this.radarProjectController
-        .getProjectsUsingProjectIdUsingGET(projectId)
-        .toPromise()
+      return this.apiClient.apis['radar-project-controller']
+        .getProjectsUsingProjectId({ projectId })
         .catch(e => {
           if (e.status == 404) {
-            const project = { projectId }
-            return this.radarProjectController
-              .addProjectUsingPOST(project)
-              .toPromise()
+            return this.apiClient.apis['radar-project-controller'].addProject({
+              projectId
+            })
           } else return Promise.reject(e)
         })
     })
@@ -165,9 +173,9 @@ export class FcmNotificationService extends NotificationService {
       this.config.getParticipantLogin()
     ]).then(([enrolmentDate, projectId, subjectId]) => {
       if (!subjectId) return Promise.reject('Subject id is null')
-      return this.radarUserController
-        .getRadarUserUsingSubjectIdUsingGET(subjectId)
-        .toPromise()
+      return this.apiClient.apis['radar-user-controller']
+        .getRadarUserUsingSubjectId({ subjectId })
+        .then(res => res.body)
         .catch(e => {
           if (e.status == 404) {
             const user = {
@@ -178,22 +186,25 @@ export class FcmNotificationService extends NotificationService {
               timezone: new Date().getTimezoneOffset(),
               language: this.localization.getLanguage().value
             }
-            return this.radarUserController.addUserUsingPOST(user).toPromise()
+            return this.apiClient.apis['radar-user-controller'].addUser({
+              user
+            })
           } else return Promise.reject(e)
         })
     })
   }
 
   private sendNotification(notification, subjectId, projectId): Promise<any> {
-    return this.fcmNotificationController
-      .scheduleSingleNotificationUsingPOST(
-        notification.notificationDto,
-        projectId,
-        subjectId
+    return this.apiClient.apis['fcm-notification-controller']
+      .addSingleNotification(
+        {
+          projectId,
+          subjectId
+        },
+        { requestBody: notification.notificationDto }
       )
-      .toPromise()
       .then(res => {
-        notification.notification.id = res.id
+        notification.notification.id = res.body.id
         return this.logger.log(
           'Success sending message upstream, updating FCM message Id',
           res

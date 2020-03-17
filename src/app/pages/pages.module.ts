@@ -1,11 +1,6 @@
 import { CommonModule, DatePipe } from '@angular/common'
 import { NgModule } from '@angular/core'
 
-import {
-  FcmNotificationControllerService,
-  RadarProjectControllerService,
-  RadarUserControllerService
-} from '../core/services/app-server/api'
 import { AppConfigService } from '../core/services/config/app-config.service'
 import { ConfigService } from '../core/services/config/config.service'
 import { ProtocolService } from '../core/services/config/protocol.service'
@@ -67,10 +62,7 @@ import { SplashModule } from './splash/splash.module'
     SchemaService,
     NotificationGeneratorService,
     { provide: NotificationService, useClass: FcmNotificationService },
-    { provide: AnalyticsService, useClass: FirebaseAnalyticsService },
-    FcmNotificationControllerService,
-    RadarUserControllerService,
-    RadarProjectControllerService
+    { provide: AnalyticsService, useClass: FirebaseAnalyticsService }
   ]
 })
 export class PagesModule {}

@@ -72,16 +72,11 @@ export class FcmXmppNotificationService extends FcmNotificationService {
   }
 
   cancelAllNotifications(user): Promise<any> {
-    return this.config.getParticipantLogin().then(username => {
-      if (!username) {
-        return
-      }
-      return this.sendUpstreamMessage({
-        eventId: uuid(),
-        action: 'CANCEL',
-        cancelType: 'all',
-        subjectId: username
-      })
+    return this.sendUpstreamMessage({
+      eventId: uuid(),
+      action: 'CANCEL',
+      cancelType: 'all',
+      subjectId: user.subjectId
     })
   }
 

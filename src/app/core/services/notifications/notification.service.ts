@@ -5,13 +5,13 @@ export class NotificationService {
   init() {
     return undefined
   }
-  cancel(user?): Promise<void> {
+  cancelAllNotifications(user): Promise<any> {
     return undefined
   }
   permissionCheck(): Promise<void> {
     return undefined
   }
-  publish(limit?: number, type?): Promise<void[]> {
+  publish(limit?: number, type?): Promise<any> {
     return undefined
   }
 

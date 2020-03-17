@@ -42,15 +42,15 @@ export class NotificationWrapperService {
     return this.notificationService.init()
   }
 
-  cancel(user?): Promise<any> {
-    return this.notificationService.cancel(user)
+  cancelAllNotifications(user?): Promise<any> {
+    return this.notificationService.cancelAllNotifications(user)
   }
 
   permissionCheck(): Promise<any> {
     return this.notificationService.permissionCheck()
   }
 
-  publish(limit?: number, type?): Promise<any> {
+  publish(limit: number, type?): Promise<any> {
     return this.notificationService.publish(limit, type)
   }
 

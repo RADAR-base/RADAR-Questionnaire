@@ -94,7 +94,7 @@ export class FcmNotificationService extends NotificationService {
   publish(
     limit: number = DefaultNumberOfNotificationsToSchedule,
     type?
-  ): Promise<void[]> {
+  ): Promise<any> {
     this.resetResends()
     return Promise.all([
       this.getSubjectDetails(),

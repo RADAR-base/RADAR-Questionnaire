@@ -29,3 +29,9 @@ export interface NotificationTaskInfo {
   timestamp: number
   completionWindow: number
 }
+
+export enum NotificationMessagingType {
+  LOCAL = 'LOCAL',
+  FCM = 'FCM',
+  FCM_XMPP = 'FCM_XMPP'
+}

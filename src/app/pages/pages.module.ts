@@ -11,8 +11,10 @@ import { SchemaService } from '../core/services/kafka/schema.service'
 import { AlertService } from '../core/services/misc/alert.service'
 import { LocalizationService } from '../core/services/misc/localization.service'
 import { FcmNotificationService } from '../core/services/notifications/fcm-notification.service'
+import { FcmXmppNotificationService } from '../core/services/notifications/fcm-xmpp-notification.service'
 import { LocalNotificationService } from '../core/services/notifications/local-notification.service'
 import { NotificationGeneratorService } from '../core/services/notifications/notification-generator.service'
+import { NotificationWrapperService } from '../core/services/notifications/notification-wrapper.service'
 import { NotificationService } from '../core/services/notifications/notification.service'
 import { ScheduleGeneratorService } from '../core/services/schedule/schedule-generator.service'
 import { ScheduleService } from '../core/services/schedule/schedule.service'
@@ -61,7 +63,10 @@ import { SplashModule } from './splash/splash.module'
     UsageService,
     SchemaService,
     NotificationGeneratorService,
-    { provide: NotificationService, useClass: FcmNotificationService },
+    FcmNotificationService,
+    FcmXmppNotificationService,
+    LocalNotificationService,
+    { provide: NotificationService, useClass: NotificationWrapperService },
     { provide: AnalyticsService, useClass: FirebaseAnalyticsService }
   ]
 })

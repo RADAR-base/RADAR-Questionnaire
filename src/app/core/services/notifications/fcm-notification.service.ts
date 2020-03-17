@@ -13,7 +13,6 @@ import {
 } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
 import { StorageKeys } from '../../../shared/enums/storage'
-import { FcmNotificationDto } from '../../../shared/models/models'
 import {
   NotificationActionType,
   SingleNotification
@@ -43,15 +42,15 @@ export class FcmNotificationService extends NotificationService {
   apiClient
 
   constructor(
-    private notifications: NotificationGeneratorService,
-    private storage: StorageService,
-    private schedule: ScheduleService,
-    private config: SubjectConfigService,
-    private firebase: Firebase,
-    private platform: Platform,
-    private logger: LogService,
-    private remoteConfig: RemoteConfigService,
-    private localization: LocalizationService
+    public notifications: NotificationGeneratorService,
+    public storage: StorageService,
+    public schedule: ScheduleService,
+    public config: SubjectConfigService,
+    public firebase: Firebase,
+    public platform: Platform,
+    public logger: LogService,
+    public remoteConfig: RemoteConfigService,
+    public localization: LocalizationService
   ) {
     super()
     this.ttlMinutes = 10
@@ -73,7 +72,6 @@ export class FcmNotificationService extends NotificationService {
     await Swagger({ url: `${this.APP_SERVER_URL}/v3/api-docs` }).then(
       client => {
         this.apiClient = client
-        console.log(this.apiClient)
       }
     )
   }
@@ -99,7 +97,7 @@ export class FcmNotificationService extends NotificationService {
   ): Promise<void[]> {
     this.resetResends()
     return Promise.all([
-      this.checkProjectAndSubjectExistElseCreate(),
+      this.getSubjectDetails(),
       this.config.getSourceID()
     ]).then(([user, sourceId]) => {
       switch (type) {
@@ -111,6 +109,10 @@ export class FcmNotificationService extends NotificationService {
           return this.publishAllNotifications(user, sourceId, limit)
       }
     })
+  }
+
+  getSubjectDetails() {
+    return this.checkProjectAndSubjectExistElseCreate()
   }
 
   publishAllNotifications(user, sourceId, limit): Promise<any> {
@@ -137,7 +139,6 @@ export class FcmNotificationService extends NotificationService {
   }
 
   cancelAllNotifications(user): Promise<any> {
-    console.log(user)
     return this.apiClient.apis[
       'fcm-notification-controller'
     ].deleteNotificationsForUser({
@@ -217,10 +218,7 @@ export class FcmNotificationService extends NotificationService {
       })
   }
 
-  private format(
-    notification: SingleNotification,
-    sourceId
-  ): { notification: SingleNotification; notificationDto: FcmNotificationDto } {
+  private format(notification: SingleNotification, sourceId) {
     const taskInfo = notification.task
     const endTime = taskInfo.timestamp + taskInfo.completionWindow
     const timeUntilEnd = endTime - notification.timestamp

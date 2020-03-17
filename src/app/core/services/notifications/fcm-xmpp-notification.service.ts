@@ -80,6 +80,10 @@ export class FcmXmppNotificationService extends FcmNotificationService {
     })
   }
 
+  cancelSingleNotification(user, notificationId) {
+    return
+  }
+
   private sendUpstreamMessage(notification): Promise<any> {
     if (!this.platform.is('cordova')) return Promise.resolve()
     FirebasePlugin.upstream(

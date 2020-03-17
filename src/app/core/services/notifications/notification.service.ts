@@ -11,7 +11,7 @@ export class NotificationService {
   permissionCheck(): Promise<void> {
     return undefined
   }
-  publish(limit?: number, type?): Promise<any> {
+  publish(type, limit?, notificationId?): Promise<any> {
     return undefined
   }
 

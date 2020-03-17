@@ -4,7 +4,8 @@ import * as ver from 'semver'
 
 import {
   DefaultAppVersion,
-  DefaultNotificationRefreshTime
+  DefaultNotificationRefreshTime,
+  DefaultNumberOfNotificationsToSchedule
 } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
 import {
@@ -194,7 +195,9 @@ export class ConfigService {
 
   rescheduleNotifications(cancel?: boolean) {
     return (cancel ? this.cancelNotifications() : Promise.resolve([]))
-      .then(() => this.notifications.publish())
+      .then(() =>
+        this.notifications.publish(NotificationActionType.SCHEDULE_ALL)
+      )
       .then(() => console.log('NOTIFICATIONS scheduled after config change'))
       .then(() =>
         cancel
@@ -208,7 +211,16 @@ export class ConfigService {
 
   cancelNotifications() {
     this.sendConfigChangeEvent(NotificationEventType.CANCELLED)
-    return this.notifications.publish(0, NotificationActionType.CANCEL)
+    return this.notifications.publish(NotificationActionType.CANCEL_ALL)
+  }
+
+  cancelSingleNotification(notificationId: number) {
+    if (notificationId)
+      return this.notifications.publish(
+        NotificationActionType.CANCEL_SINGLE,
+        0,
+        notificationId
+      )
   }
 
   regenerateSchedule() {
@@ -278,7 +290,7 @@ export class ConfigService {
 
   sendTestNotification() {
     this.sendConfigChangeEvent(NotificationEventType.TEST)
-    return this.notifications.publish(0, NotificationActionType.TEST)
+    return this.notifications.publish(NotificationActionType.TEST)
   }
 
   sendCachedData() {

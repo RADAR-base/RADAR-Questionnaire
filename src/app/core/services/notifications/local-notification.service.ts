@@ -35,14 +35,16 @@ export class LocalNotificationService extends NotificationService {
   }
 
   publish(
+    type,
     limit: number = DefaultNumberOfNotificationsToSchedule,
-    type?
+    notificationId?: string
   ): Promise<any> {
     switch (type) {
       case NotificationActionType.TEST:
         return this.publishTestNotification()
-      case NotificationActionType.CANCEL:
+      case NotificationActionType.CANCEL_ALL:
         return this.cancelAllNotifications()
+      case NotificationActionType.SCHEDULE_ALL:
       default:
         return this.publishAllNotifications(limit)
     }

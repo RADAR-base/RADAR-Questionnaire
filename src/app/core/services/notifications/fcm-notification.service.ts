@@ -92,8 +92,9 @@ export class FcmNotificationService extends NotificationService {
   }
 
   publish(
+    type,
     limit: number = DefaultNumberOfNotificationsToSchedule,
-    type?
+    notificationId?: string
   ): Promise<any> {
     this.resetResends()
     return Promise.all([
@@ -103,8 +104,11 @@ export class FcmNotificationService extends NotificationService {
       switch (type) {
         case NotificationActionType.TEST:
           return this.publishTestNotification(user, sourceId)
-        case NotificationActionType.CANCEL:
+        case NotificationActionType.CANCEL_ALL:
           return this.cancelAllNotifications(user)
+        case NotificationActionType.CANCEL_SINGLE:
+          return this.cancelSingleNotification(user, notificationId)
+        case NotificationActionType.SCHEDULE_ALL:
         default:
           return this.publishAllNotifications(user, sourceId, limit)
       }
@@ -145,6 +149,18 @@ export class FcmNotificationService extends NotificationService {
       subjectId: user.subjectId,
       projectId: user.projectId
     })
+  }
+
+  cancelSingleNotification(user, notificationId) {
+    return this.apiClient.apis['fcm-notification-controller']
+      .deleteNotificationUsingProjectIdAndSubjectIdAndNotificationId({
+        subjectId: user.subjectId,
+        projectId: user.projectId,
+        id: notificationId
+      })
+      .then(() =>
+        console.log('Success cancelling notification ' + notificationId)
+      )
   }
 
   private checkProjectAndSubjectExistElseCreate(): Promise<any> {

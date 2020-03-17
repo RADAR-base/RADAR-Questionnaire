@@ -8,9 +8,10 @@ export enum NotificationType {
 }
 
 export enum NotificationActionType {
-  ALL,
+  SCHEDULE_ALL,
   TEST,
-  CANCEL
+  CANCEL_ALL,
+  CANCEL_SINGLE
 }
 
 export interface SingleNotification {

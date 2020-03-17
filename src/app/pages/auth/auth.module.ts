@@ -14,11 +14,11 @@ import { ConsentPageItemComponent } from "./components/consent-page-item/consent
 import { YesOrNoOptionComponent } from "./components/yes-or-no-option/yes-or-no-option.component";
 
 @NgModule({
-	imports: [
-		CommonModule,
-		IonicModule.forRoot(WelcomePageComponent),
-		PipesModule
-	],
+  imports: [
+    CommonModule,
+    IonicModule.forRoot(WelcomePageComponent),
+    PipesModule,
+  ],
 	entryComponents: [
 		EligibilityPageComponent,
 		ConsentPageComponent
@@ -30,11 +30,11 @@ import { YesOrNoOptionComponent } from "./components/yes-or-no-option/yes-or-no-
 		EligibilityPageComponent,
 		TokenFormComponent,
 		QRFormComponent,
-		YesOrNoOptionComponent
+		YesOrNoOptionComponent,
 	],
-	exports: [
-		ConsentPageItemComponent
-	],
+  exports: [
+    ConsentPageItemComponent,
+  ],
 	providers: [
 		{provide: AuthService, useClass: KeycloakAuthService}
 	]

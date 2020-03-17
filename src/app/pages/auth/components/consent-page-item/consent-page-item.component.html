@@ -18,6 +18,6 @@
 <!--Add line for each text-->
 <ion-row *ngIf="showDetail">
   <div *ngFor="let detail of currentItem.detail">
-    <div class="detail text-justify">  {{ detail }}</div>
+    <div class="detail text-justify" [innerHTML]="detail"></div>
   </div>
 </ion-row>

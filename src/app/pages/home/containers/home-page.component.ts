@@ -16,6 +16,7 @@ import { SplashPageComponent } from '../../splash/containers/splash-page.compone
 import { TasksService } from '../services/tasks.service'
 import { HomePageAnimations } from './home-page.animation'
 import {LogService} from "../../../core/services/misc/log.service";
+import {ConsentPageItem} from "../../../shared/models/auth";
 
 enum Page {Settings = 'settings', Learn = 'learn', Home = 'home' }
 
@@ -45,6 +46,8 @@ export class HomePageComponent implements OnDestroy {
   learnItems: any
   selectedPage: Page
 
+  // consentPageItems: ConsentPageItem[]
+
   constructor(
     public navCtrl: NavController,
     public alertService: AlertService,
@@ -69,7 +72,9 @@ export class HomePageComponent implements OnDestroy {
         name: 'About the Study',
         icon: 'stats'
       }
-    ]
+    ];
+
+
 
   }
 

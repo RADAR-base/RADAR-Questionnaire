@@ -12,6 +12,9 @@ import { HomePageComponent } from './containers/home-page.component'
 import { TasksService } from './services/tasks.service'
 import { LearningPageModule } from "./components/learning-page/learning-page.module";
 import { LearningPageItemModule } from "./components/learning-page-item/learning-page-item.module";
+import {AuthModule} from "../auth/auth.module";
+import {StudyInfoComponent} from "./components/study-info/study-info.component";
+// import {StudyInfoModule} from "../auth/components/study-info/study-info.module";
 
 @NgModule({
   imports: [
@@ -25,8 +28,9 @@ import { LearningPageItemModule } from "./components/learning-page-item/learning
     LearningPageModule,
     LearningPageItemModule,
     IonicModule.forRoot(HomePageComponent),
+    AuthModule,
   ],
-  declarations: [HomePageComponent],
+  declarations: [HomePageComponent, StudyInfoComponent],
   providers: [TasksService]
 })
 export class HomeModule {}

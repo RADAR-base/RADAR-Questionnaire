@@ -1,0 +1,30 @@
+<div id="studyInfo" padding>
+  <div style="text-align: center;">
+    <img
+      class="logo"
+      src="assets/imgs/hand-with-phone.png"
+      alias="Study Information LOGO"
+    >
+    <!--        <div class="text-md">{{ "STUDY_INFO_HEADING" | translate }}</div>-->
+  </div>
+<!--  <div style="padding-bottom: 5px;"><b>Study contacts</b></div>-->
+<!--  <div ><li>Study website: <a href="http://homeappstudy.net/">http://homeappstudy.net/</a></li></div>-->
+<!--  <div ><li>Study contact email: <a href="http://homeappstudy.net/">http://homeappstudy.net/</a></li></div>-->
+  <div style="text-align: center; margin-bottom: 16px;">
+    <iframe id="introframe"
+            src="https://player.vimeo.com/video/376190254?api=1&player_id=player1&background=1"
+            frameborder="0" allowfullscreen>
+
+    </iframe>
+    <a href="https://vimeo.com/376190254" target="_blank">https://vimeo.com/376190254</a>
+  </div>
+<!--  <div style="margin-bottom: 32px;"><li>Doctors of the World Website: <a href="https://www.doctorsoftheworld.org.uk/">https://www.doctorsoftheworld.org.uk/</a></li></div>-->
+  <ion-item-group>
+    <div *ngFor="let consentPageItem of consentPageItems">
+      <page-consent-item
+        [currentItem]="consentPageItem"
+      >
+      </page-consent-item>
+    </div>
+  </ion-item-group>
+</div>

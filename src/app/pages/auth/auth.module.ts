@@ -14,26 +14,29 @@ import { ConsentPageItemComponent } from "./components/consent-page-item/consent
 import { YesOrNoOptionComponent } from "./components/yes-or-no-option/yes-or-no-option.component";
 
 @NgModule({
-  imports: [
-    CommonModule,
-    IonicModule.forRoot(WelcomePageComponent),
-    PipesModule
-  ],
-  entryComponents: [
-    EligibilityPageComponent,
-    ConsentPageComponent
-  ],
-  declarations: [
-    ConsentPageComponent,
-    ConsentPageItemComponent,
-    WelcomePageComponent,
-    EligibilityPageComponent,
-    TokenFormComponent,
-    QRFormComponent,
-    YesOrNoOptionComponent
-  ],
-  providers: [
-    { provide: AuthService, useClass: KeycloakAuthService}
-  ]
+	imports: [
+		CommonModule,
+		IonicModule.forRoot(WelcomePageComponent),
+		PipesModule
+	],
+	entryComponents: [
+		EligibilityPageComponent,
+		ConsentPageComponent
+	],
+	declarations: [
+		ConsentPageComponent,
+		ConsentPageItemComponent,
+		WelcomePageComponent,
+		EligibilityPageComponent,
+		TokenFormComponent,
+		QRFormComponent,
+		YesOrNoOptionComponent
+	],
+	exports: [
+		ConsentPageItemComponent
+	],
+	providers: [
+		{provide: AuthService, useClass: KeycloakAuthService}
+	]
 })
 export class AuthModule {}

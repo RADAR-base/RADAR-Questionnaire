@@ -13,7 +13,12 @@ page-finish {
   }
 
   .next-task-highlight {
-    background-color: $cl-warning-20;
+    padding: 10px;
+    text-align: center;
+    background-color: map_get($colors, light); // $cl-light-80;
+    h2{
+      color: map_get($colors, secondary);// $cl-warning-20;
+    }
   }
 
   ion-spinner * {

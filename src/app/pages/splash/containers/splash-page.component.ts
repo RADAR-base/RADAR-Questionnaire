@@ -27,6 +27,9 @@ export class SplashPageComponent {
     this.splash
       .evalEnrolment()
       .then(valid => (valid ? this.onStart() : this.welcome()))
+
+      // .evalEnrolment()
+      // .then(valid => (true ? this.onStart() : this.welcome()))
   }
 
   onStart() {

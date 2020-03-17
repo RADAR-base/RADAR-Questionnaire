@@ -24,7 +24,7 @@ import { LearningPageItemModule } from "./components/learning-page-item/learning
     PipesModule,
     LearningPageModule,
     LearningPageItemModule,
-    IonicModule.forRoot(HomePageComponent)
+    IonicModule.forRoot(HomePageComponent),
   ],
   declarations: [HomePageComponent],
   providers: [TasksService]

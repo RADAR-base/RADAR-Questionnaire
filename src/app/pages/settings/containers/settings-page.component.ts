@@ -29,6 +29,17 @@ export class SettingsPageComponent {
   weeklyReport = DefaultSettingsWeeklyReport
   showLoading = false
 
+  RESET_OPTION_MESSAGES = {
+    [ResetOption.ENROLMENT]: LocKeys.SETTINGS_RESET_ALERT_ENROLMENT_DESC,
+    [ResetOption.CACHE]: LocKeys.SETTINGS_RESET_ALERT_CACHE_DESC,
+    [ResetOption.CONFIG]: LocKeys.SETTINGS_RESET_ALERT_CONFIG_DESC
+  }
+  RESET_OPTIONS = {
+    [ResetOption.ENROLMENT]: LocKeys.SETTINGS_ENROLMENT,
+    [ResetOption.CACHE]: LocKeys.SETTINGS_CACHE,
+    [ResetOption.CONFIG]: LocKeys.SETTINGS_CONFIGURATION
+  }
+
   constructor(
     public navCtrl: NavController,
     public loadCtrl: LoadingController,
@@ -179,7 +190,7 @@ export class SettingsPageComponent {
           const promises = []
           if (selected.includes(ResetOption.ENROLMENT))
             promises.push(this.settingsService.resetAuth())
-          if (selected.includes(ResetOption.CONFIG))
+          else if (selected.includes(ResetOption.CONFIG))
             promises.push(this.settingsService.resetConfig())
           if (selected.includes(ResetOption.CACHE))
             promises.push(this.settingsService.resetCache())
@@ -190,7 +201,14 @@ export class SettingsPageComponent {
     const input = []
     for (const item in ResetOption) {
       if (item)
-        input.push({ type: 'checkbox', label: item, value: ResetOption[item] })
+        input.push({
+          type: 'checkbox',
+          label: this.localization.translateKey(this.RESET_OPTIONS[item]),
+          value: ResetOption[item],
+          handler: d => {
+            if (d.checked) this.showResetOptionConfirm(d)
+          }
+        })
     }
     return this.alertService.showAlert({
       title: this.localization.translateKey(LocKeys.SETTINGS_RESET_ALERT),
@@ -199,6 +217,21 @@ export class SettingsPageComponent {
       ),
       buttons: buttons,
       inputs: input
+    })
+  }
+
+  showResetOptionConfirm(option) {
+    const buttons = [
+      {
+        text: this.localization.translateKey(LocKeys.BTN_OKAY),
+        handler: () => {}
+      }
+    ]
+    return this.alertService.showAlert({
+      message: this.localization.translateKey(
+        this.RESET_OPTION_MESSAGES[option.value]
+      ),
+      buttons: buttons
     })
   }
 

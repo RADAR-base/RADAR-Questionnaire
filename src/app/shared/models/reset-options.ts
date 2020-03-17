@@ -1,5 +1,5 @@
 export enum ResetOption {
-  CACHE = 'Cache',
-  ENROLMENT = 'Enrolment',
-  CONFIG = 'Config'
+  CACHE = 'CACHE',
+  ENROLMENT = 'ENROLMENT',
+  CONFIG = 'CONFIG'
 }

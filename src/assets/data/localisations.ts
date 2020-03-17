@@ -421,7 +421,7 @@ export const Localisations = {
     de:
       'Wählen Sie, ob Sie Ihren Cache, Ihre Registrierung oder Ihre App-Konfiguration zurücksetzen möchten (dies schließt Ihre Benachrichtigungen und Ihren Zeitplan ein).<br><br>Sie können auch mehrere Optionen zurücksetzen.',
     en:
-      'Choose to reset your cache, enrolment, or app configuration (this includes your notifications and schedule).<br><br>You may also choose to reset more than one option.',
+      'Choose options to reset.<br><br>You may also choose to reset more than one option. To do a full reset, select all the options.',
     es:
       'Elija restablecer su caché, inscripción o configuración de la aplicación (esto incluye sus notificaciones y programación).<br><br>También puede optar por restablecer más de una opción.',
     it:
@@ -432,6 +432,70 @@ export const Localisations = {
       'Wybierz zresetowanie pamięci podręcznej, rejestracji lub konfiguracji aplikacji (dotyczy to również powiadomień i harmonogramu).<br><br>Możesz także zresetować więcej niż jedną opcję.',
     hb:
       'בחר לאפס את זיכרון המטמון, ההרשמה או התצורה של האפליקציה שלך (זה כולל את ההודעות ולוח הזמנים שלך).<br><br> אתה יכול גם לבחור לאפס יותר מאפשרות אחת.'
+  },
+  SETTINGS_RESET_ALERT_ENROLMENT_DESC: {
+    da:
+      'Ved at nulstille tilmeldingen nulstiller du også konfigs. Når du nulstiller, bliver du logget ud af appen.',
+    de:
+      'Durch Zurücksetzen der Registrierung setzen Sie auch die Konfigurationen zurück. Nach dem Zurücksetzen werden Sie von der App abgemeldet.',
+    en:
+      'By resetting enrolment, you are also resetting the configs. Once you reset you will be logged out of the app.',
+    es:
+      'Al restablecer la inscripción, también restablece las configuraciones. Una vez que reinicie, se cerrará la sesión de la aplicación.',
+    it:
+      "Ripristinando la registrazione, si ripristinano anche le configurazioni. Una volta ripristinato, verrai disconnesso dall'app.",
+    nl:
+      'Door de inschrijving opnieuw in te stellen, zet u ook de configuraties terug. Zodra u opnieuw instelt, wordt u uitgelogd bij de app.',
+    pl:
+      'Przez zresetowanie rejestracji resetujesz także konfiguracje. Po zresetowaniu nastąpi wylogowanie z aplikacji.',
+    hb:
+      "על ידי איפוס הרשמה, אתה מאפס מחדש את הקונפיג 'ים. לאחר שתאפס, תתנתק מהאפליקציה."
+  },
+  SETTINGS_RESET_ALERT_CACHE_DESC: {
+    da:
+      "Ved at nulstille cachen sletter du dine cache-spurgte data, der ikke kunne sendes. Prøv at sende dataene først ved at trykke på 'Send cache-data' i indstillingerne",
+    de:
+      'Durch Zurücksetzen des Caches löschen Sie Ihre zwischengespeicherten Fragebogendaten, die nicht gesendet werden konnten. Bitte versuchen Sie zuerst, die Daten zu senden, indem Sie in den Einstellungen auf "Zwischengespeicherte Daten senden" tippen',
+    en:
+      'By resetting the cache, you are deleting your cached questionnaire data that failed to send. Please try sending the data first by tapping `Send Cached Data` in the settings.',
+    es:
+      'Al restablecer el caché, está eliminando los datos del cuestionario en caché que no se pudieron enviar. Intente enviar los datos primero tocando `Enviar datos en caché` en la configuración',
+    it:
+      'Ripristinando la cache, si eliminano i dati del questionario memorizzati nella cache che non è stato possibile inviare. Prova a inviare prima i dati toccando "Invia dati memorizzati nella cache" nelle impostazioni',
+    nl:
+      "Door de cache opnieuw in te stellen, verwijdert u uw gecachte vragenlijstgegevens die niet konden worden verzonden. Probeer eerst de gegevens te verzenden door in de instellingen op 'Cachegegevens verzenden' te tikken",
+    pl:
+      'Przez zresetowanie pamięci podręcznej usuwasz buforowane dane kwestionariusza, których nie udało się wysłać. Spróbuj najpierw wysłać dane, dotykając opcji „Wyślij buforowane dane” w ustawieniach',
+    hb:
+      "על ידי איפוס המטמון, אתה מוחק את נתוני השאלון המטמון שלך שלא הצליחו לשלוח. אנא נסה לשלוח את הנתונים תחילה על ידי הקשה על 'שלח נתונים במטמון' בהגדרות"
+  },
+  SETTINGS_RESET_ALERT_CONFIG_DESC: {
+    da:
+      'Ved at nulstille konfigurationerne trækker du spørgeskemaer, regenererer din spørgeskemaplan og omplanlægger meddelelser.',
+    de:
+      'Durch Zurücksetzen der Konfigurationen ziehen Sie Fragebögen erneut ab, generieren Ihren Fragebogenplan neu und planen Benachrichtigungen neu.',
+    en:
+      'By resetting the configurations, you are re-pulling questionnaires, regenerating your questionnaire schedule, and rescheduling notifications.',
+    es:
+      'Al restablecer las configuraciones, está volviendo a extraer los cuestionarios, regenerando la programación de su cuestionario y reprogramando las notificaciones.',
+    it:
+      'Ripristinando le configurazioni, si stanno rielaborando i questionari, rigenerando la pianificazione del questionario e riprogrammando le notifiche.',
+    nl:
+      'Door de configuraties opnieuw in te stellen, trekt u de vragenlijsten opnieuw, genereert u uw vragenlijstschema opnieuw en plant u de meldingen opnieuw.',
+    pl:
+      'Po zresetowaniu konfiguracji ponownie pobierasz kwestionariusze, odnawiasz harmonogram ankiety i ponownie planujesz powiadomienia.',
+    hb:
+      'על ידי איפוס התצורות, אתה מושך שאלונים מחדש, מחדש את לוח הזמנים לשאלון שלך ומזמן מחדש התראות.'
+  },
+  SETTINGS_ENROLMENT: {
+    da: 'Inschrijving',
+    de: 'Inschrijving',
+    en: 'Enrolment',
+    es: 'Inschrijving',
+    it: 'Inschrijving',
+    nl: 'Inschrijving',
+    pl: 'Rekrutacja',
+    hb: 'הרשמה'
   },
   SETTINGS_CACHE: {
     da: 'Cache',

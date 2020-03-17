@@ -17,10 +17,13 @@ export class NotificationService {
   sendTestNotification(): Promise<void> {
     return undefined
   }
-  setLastNotificationUpdate(): Promise<any> {
+  setLastNotificationUpdate(timestamp: number): Promise<any> {
     return undefined
   }
   getLastNotificationUpdate(): Promise<any> {
+    return undefined
+  }
+  reset(): Promise<any> {
     return undefined
   }
 }

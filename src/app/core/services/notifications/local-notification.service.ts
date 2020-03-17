@@ -47,7 +47,7 @@ export class LocalNotificationService extends NotificationService {
           .map(n => {
             return this.sendNotification(n)
           })
-          .concat([this.setLastNotificationUpdate()])
+          .concat([this.setLastNotificationUpdate(Date.now())])
       )
     })
   }
@@ -89,14 +89,18 @@ export class LocalNotificationService extends NotificationService {
     )
   }
 
-  setLastNotificationUpdate(): Promise<void> {
+  setLastNotificationUpdate(timestamp): Promise<void> {
     return this.storage.set(
       this.NOTIFICATION_STORAGE.LAST_NOTIFICATION_UPDATE,
-      Date.now()
+      timestamp
     )
   }
 
   getLastNotificationUpdate(): Promise<any> {
     return this.storage.get(this.NOTIFICATION_STORAGE.LAST_NOTIFICATION_UPDATE)
+  }
+
+  reset() {
+    return this.setLastNotificationUpdate(null)
   }
 }

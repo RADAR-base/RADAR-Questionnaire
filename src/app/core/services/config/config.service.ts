@@ -226,16 +226,15 @@ export class ConfigService {
 
   resetAll() {
     this.sendConfigChangeEvent(ConfigEventType.APP_RESET)
-    return this.subjectConfig.reset()
+    return this.resetConfig().then(() => this.subjectConfig.reset())
   }
 
   resetConfig() {
-    this.sendConfigChangeEvent(ConfigEventType.APP_RESET_PARTIAL)
     return Promise.all([
       this.appConfig.reset(),
       this.questionnaire.reset(),
-      this.kafka.reset(),
       this.schedule.reset(),
+      this.notifications.reset(),
       this.localization.init()
     ])
   }

@@ -22,7 +22,8 @@ declare var FirebasePlugin
 @Injectable()
 export abstract class FcmNotificationService extends NotificationService {
   private readonly NOTIFICATION_STORAGE = {
-    LAST_NOTIFICATION_UPDATE: StorageKeys.LAST_NOTIFICATION_UPDATE
+    LAST_NOTIFICATION_UPDATE: StorageKeys.LAST_NOTIFICATION_UPDATE,
+    FCM_TOKEN: StorageKeys.FCM_TOKEN
   }
   FCM_TOKEN: string
   upstreamResends: number
@@ -61,6 +62,7 @@ export abstract class FcmNotificationService extends NotificationService {
     )
     FirebasePlugin.getToken(token => {
       this.FCM_TOKEN = token
+      this.setFCMToken(token)
       this.logger.log('[NOTIFICATION SERVICE] Refresh token success')
     })
   }
@@ -106,6 +108,10 @@ export abstract class FcmNotificationService extends NotificationService {
 
   getLastNotificationUpdate() {
     return this.storage.get(this.NOTIFICATION_STORAGE.LAST_NOTIFICATION_UPDATE)
+  }
+
+  setFCMToken(token) {
+    return this.storage.set(this.NOTIFICATION_STORAGE.FCM_TOKEN, token)
   }
 
   resetResends() {

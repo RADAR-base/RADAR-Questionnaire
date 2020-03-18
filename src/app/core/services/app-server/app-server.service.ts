@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core'
+import * as moment from 'moment-timezone'
 import * as Swagger from 'swagger-client'
 
 import { DefaultAppServerURL } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
+import { StorageKeys } from '../../../shared/enums/storage'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { SubjectConfigService } from '../config/subject-config.service'
 import { LocalizationService } from '../misc/localization.service'
@@ -19,12 +21,17 @@ export class AppServerService {
 
   constructor(
     public storage: StorageService,
-    public config: SubjectConfigService,
+    public subjectConfig: SubjectConfigService,
     public logger: LogService,
     public remoteConfig: RemoteConfigService,
     public localization: LocalizationService
   ) {
-    this.initApiClient()
+    this.init()
+  }
+
+  init() {
+    if (!this.apiClient) this.initApiClient()
+    this.checkProjectAndSubjectExistElseCreate()
   }
 
   initApiClient() {
@@ -52,47 +59,95 @@ export class AppServerService {
   }
 
   checkProjectExistsElseCreate(): Promise<any> {
-    return this.config.getProjectName().then(projectId => {
-      return this.apiClient.apis[this.RADAR_PROJECT_CONTROLLER]
-        .getProjectsUsingProjectId({ projectId })
-        .catch(e => {
-          if (e.status == 404) return this.addProjectToServer(projectId)
-          else return Promise.reject(e)
-        })
+    return this.subjectConfig.getProjectName().then(projectId => {
+      return this.getApiClient().then(apiClient =>
+        apiClient.apis[this.RADAR_PROJECT_CONTROLLER]
+          .getProjectsUsingProjectId({ projectId })
+          .catch(e => {
+            if (e.status == 404) return this.addProjectToServer(projectId)
+            else return Promise.reject(e)
+          })
+      )
     })
   }
 
   addProjectToServer(projectId) {
-    return this.apiClient.apis[this.RADAR_PROJECT_CONTROLLER].addProject({
-      projectId
-    })
+    return this.getApiClient().then(apiClient =>
+      apiClient.apis[this.RADAR_PROJECT_CONTROLLER].addProject(
+        {},
+        {
+          requestBody: {
+            projectId
+          }
+        }
+      )
+    )
   }
 
   checkSubjectExistsElseCreate(): Promise<any> {
     return Promise.all([
-      this.config.getParticipantLogin(),
-      this.config.getProjectName(),
-      this.config.getEnrolmentDate()
-    ]).then(([subjectId, projectId, enrolmentDate]) => {
-      return this.apiClient.apis[this.RADAR_USER_CONTROLLER]
-        .getRadarUserUsingSubjectId({ subjectId })
-        .then(res => res.body)
-        .catch(e => {
-          if (e.status == 404)
-            return this.addSubjectToServer(subjectId, projectId, enrolmentDate)
-          else Promise.reject(e)
-        })
+      this.subjectConfig.getParticipantLogin(),
+      this.subjectConfig.getProjectName(),
+      this.subjectConfig.getEnrolmentDate(),
+      this.getFCMToken()
+    ]).then(([subjectId, projectId, enrolmentDate, fcmToken]) => {
+      return this.getApiClient().then(apiClient =>
+        apiClient.apis[this.RADAR_USER_CONTROLLER]
+          .getRadarUserUsingSubjectId({ subjectId })
+          .then(res => res.body)
+          .catch(e => {
+            if (e.status == 404)
+              return this.addSubjectToServer(
+                subjectId,
+                projectId,
+                enrolmentDate,
+                fcmToken
+              )
+            else Promise.reject(e)
+          })
+      )
     })
   }
 
-  addSubjectToServer(subjectId, projectId, enrolmentDate, fcmToken?) {
-    return this.apiClient.apis[this.RADAR_USER_CONTROLLER].addUser({
-      enrolmentDate: new Date(enrolmentDate),
-      projectId,
-      subjectId,
-      fcmToken,
-      timezone: new Date().getTimezoneOffset(),
-      language: this.localization.getLanguage().value
-    })
+  addSubjectToServer(subjectId, projectId, enrolmentDate, fcmToken) {
+    return this.getApiClient().then(apiClient =>
+      apiClient.apis[this.RADAR_USER_CONTROLLER].addUser(
+        {},
+        {
+          requestBody: {
+            enrolmentDate: new Date(enrolmentDate),
+            projectId,
+            subjectId,
+            fcmToken,
+            timezone: moment.tz.guess(),
+            language: this.localization.getLanguage().value
+          }
+        }
+      )
+    )
+  }
+
+  updateSubjectTimezone() {
+    return Promise.all([
+      this.subjectConfig.getParticipantLogin(),
+      this.getApiClient()
+    ]).then(([subjectId, apiClient]) =>
+      apiClient.apis[this.RADAR_USER_CONTROLLER]
+        .getRadarUserUsingSubjectId({
+          subjectId
+        })
+        .then(res => {
+          const user = res.body
+          user.timezone = moment.tz.guess()
+          return apiClient.apis[this.RADAR_USER_CONTROLLER].updateUser(
+            {},
+            { requestBody: user }
+          )
+        })
+    )
+  }
+
+  getFCMToken() {
+    return this.storage.get(StorageKeys.FCM_TOKEN)
   }
 }

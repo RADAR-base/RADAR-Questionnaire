@@ -15,6 +15,7 @@ import {
 import { NotificationActionType } from '../../../shared/models/notification-handler'
 import { User } from '../../../shared/models/user'
 import { TaskType } from '../../../shared/utilities/task-type'
+import { AppServerService } from '../app-server/app-server.service'
 import { KafkaService } from '../kafka/kafka.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
@@ -40,7 +41,8 @@ export class ConfigService {
     private localization: LocalizationService,
     private analytics: AnalyticsService,
     private logger: LogService,
-    private remoteConfig: RemoteConfigService
+    private remoteConfig: RemoteConfigService,
+    private appServerService: AppServerService
   ) {}
 
   fetchConfigState(force?: boolean) {
@@ -191,6 +193,7 @@ export class ConfigService {
       .then(() => this.appConfig.setUTCOffset(utcOffset))
       .then(() => this.appConfig.setPrevUTCOffset(prevUtcOffset))
       .then(() => this.regenerateSchedule())
+      .then(() => this.appServerService.updateSubjectTimezone())
   }
 
   rescheduleNotifications(cancel?: boolean) {
@@ -260,7 +263,8 @@ export class ConfigService {
         .then(() => this.analytics.setUserProperties(user))
         .then(() => this.appConfig.init(user.enrolmentDate)),
       this.localization.init(),
-      this.kafka.init()
+      this.kafka.init(),
+      this.appServerService.init()
     ])
   }
 

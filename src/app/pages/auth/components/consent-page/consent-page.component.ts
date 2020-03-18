@@ -83,14 +83,16 @@ export class ConsentPageComponent {
         title: "Data Collection",
         iconMd: "md-analytics",
         detail: [
-          `<div class="detail text-justify">The survey questions will cover a wide range of topics that can affect your health and wellbeing, like your nutrition, housing, employment, and experience with your GP or healthcare provider. You may find that some questions do not apply to you or make you feel uncomfortable. You will be able to stop the survey at any time by pressing the ‘close’ button. Your data will be used for academic research by UCL and only de-personalised results will be shared to improve health, care and services for the migrant community.</div>`
+          `<div class="detail text-justify">The survey questions will cover a wide range of topics that can affect your health and wellbeing, like your nutrition, housing, employment, and experience with your GP or healthcare provider. </div>` +
+          `<div class="detail text-justify">You may find that some questions do not apply to you or make you feel uncomfortable. You will be able to stop the survey at any time by pressing the ‘close’ button.</div>` +
+          `<div class="detail text-justify">Your data will be used for academic research by UCL and only de-personalised results will be shared to improve health, care and services for the migrant community.</div>`
         ]
       },
       {
         title: "Study Findings",
         iconMd: "md-school",
         detail: [
-          `<div class="detail text-justify">The results of this study will be written up and published in scientific journals as well as within wider media platforms. We will engage with policymakers to help them make decisions that better reflect the health needs of migrants like yourself in the UK. Additionally, we will send you summaries of our analysed data every few weeks via email. The results will also be on the study website www.homeappstudy.net.</div>`
+          `<div class="detail text-justify">The results of this study will be written up and published in scientific journals as well as within wider media platforms. We will engage with policymakers to help them make decisions that better reflect the health needs of migrants like yourself in the UK. Additionally, we will send you summaries of our analysed data every few weeks via email. The results will also be on the study website <a href="http://homeappstudy.net/">www.homeappstudy.net</a>.</div>`
         ]
       },
       {

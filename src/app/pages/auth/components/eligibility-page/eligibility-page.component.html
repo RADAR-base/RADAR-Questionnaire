@@ -19,7 +19,7 @@
               alias="Eligibility LOGO"
             >
           </div>
-          <div class="text-md">{{ "ENROL_ELIGIBILITY_HEADING" | translate }}</div>
+          <div class="text-md" style="margin-top: 10px">{{ "ENROL_ELIGIBILITY_HEADING" | translate }}</div>
           <div class="center" *ngFor="let question of questions">
             <yes-or-no-option
               (valueChange)="onValueChange($event)"

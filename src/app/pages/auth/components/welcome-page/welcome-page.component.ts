@@ -4,13 +4,10 @@ import { NavController, Slides } from 'ionic-angular';
 import {
   DefaultLanguage,
   DefaultSettingsSupportedLanguages,
-  LanguageMap
 } from "../../../../../assets/data/defaultConfig";
 import { StorageService } from "../../../../core/services/storage/storage.service";
-import { LocKeys } from "../../../../shared/enums/localisations";
 import { LanguageSetting } from "../../../../shared/models/settings";
 import { HomePageComponent } from "../../../home/containers/home-page.component";
-import { EnrolmentPageComponent } from "../../containers/enrolment-page.component";
 import { AuthService } from "../../services/auth.service";
 import { LocalizationService } from "../../../../core/services/misc/localization.service";
 import { AlertService } from "../../../../core/services/misc/alert.service";
@@ -60,38 +57,39 @@ export class WelcomePageComponent {
 
   ionViewDidEnter() {}
 
-  showSelectLanguage() {
-    const buttons = [
-      {
-        text: this.localization.translateKey(LocKeys.BTN_CANCEL),
-        handler: () => {}
-      },
-      {
-        text: this.localization.translateKey(LocKeys.BTN_SET),
-        handler: selectedLanguageVal => {
-          const lang: LanguageSetting = {
-            label: LanguageMap[selectedLanguageVal],
-            value: selectedLanguageVal
-          }
-          this.localization.setLanguage(lang).then(() => {
-            this.language = lang
-            return this.navCtrl.setRoot(EnrolmentPageComponent)
-          })
-        }
-      }
-    ]
-    const inputs = this.languagesSelectable.map(lang => ({
-      type: 'radio',
-      label: this.localization.translate(lang.label),
-      value: lang.value,
-      checked: lang.value === this.language.value
-    }))
-    return this.alertService.showAlert({
-      title: this.localization.translateKey(LocKeys.SETTINGS_LANGUAGE_ALERT),
-      buttons: buttons,
-      inputs: inputs
-    })
-  }
+  // Keeping this in the code since we will need it for phase 2
+  // showSelectLanguage() {
+  //   const buttons = [
+  //     {
+  //       text: this.localization.translateKey(LocKeys.BTN_CANCEL),
+  //       handler: () => {}
+  //     },
+  //     {
+  //       text: this.localization.translateKey(LocKeys.BTN_SET),
+  //       handler: selectedLanguageVal => {
+  //         const lang: LanguageSetting = {
+  //           label: LanguageMap[selectedLanguageVal],
+  //           value: selectedLanguageVal
+  //         }
+  //         this.localization.setLanguage(lang).then(() => {
+  //           this.language = lang
+  //           return this.navCtrl.setRoot(EnrolmentPageComponent)
+  //         })
+  //       }
+  //     }
+  //   ]
+  //   const inputs = this.languagesSelectable.map(lang => ({
+  //     type: 'radio',
+  //     label: this.localization.translate(lang.label),
+  //     value: lang.value,
+  //     checked: lang.value === this.language.value
+  //   }))
+  //   return this.alertService.showAlert({
+  //     title: this.localization.translateKey(LocKeys.SETTINGS_LANGUAGE_ALERT),
+  //     buttons: buttons,
+  //     inputs: inputs
+  //   })
+  // }
 
   joinStudy() {
     this.navCtrl.setRoot(EligibilityPageComponent);

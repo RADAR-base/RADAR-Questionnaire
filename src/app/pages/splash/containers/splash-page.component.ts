@@ -5,7 +5,6 @@ import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { UsageService } from '../../../core/services/usage/usage.service'
 import { LocKeys } from '../../../shared/enums/localisations'
-import { EnrolmentPageComponent } from '../../auth/containers/enrolment-page.component'
 import { WelcomePageComponent } from "../../auth/components/welcome-page/welcome-page.component";
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { SplashService } from '../services/splash.service'
@@ -67,16 +66,16 @@ export class SplashPageComponent {
         {
           text: this.localization.translateKey(LocKeys.BTN_RESET),
           handler: () => {
-            this.enrol()
+            this.welcome()
           }
         }
       ]
     })
   }
 
-  enrol() {
-    this.splash.reset().then(() => this.navCtrl.setRoot(EnrolmentPageComponent))
-  }
+  // enrol() {
+  //   this.splash.reset().then(() => this.navCtrl.setRoot(EnrolmentPageComponent))
+  // }
 
   welcome() {
     this.splash.reset().then(() => this.navCtrl.setRoot(WelcomePageComponent))

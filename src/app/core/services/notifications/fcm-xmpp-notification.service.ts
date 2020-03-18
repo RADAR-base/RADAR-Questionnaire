@@ -6,7 +6,6 @@ import * as uuid from 'uuid/v4'
 import { DefaultMaxUpstreamResends } from '../../../../assets/data/defaultConfig'
 import { SingleNotification } from '../../../shared/models/notification-handler'
 import { TaskType } from '../../../shared/utilities/task-type'
-import { getSeconds } from '../../../shared/utilities/time'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { SubjectConfigService } from '../config/subject-config.service'
 import { LocalizationService } from '../misc/localization.service'
@@ -35,9 +34,9 @@ export class FcmXmppNotificationService extends FcmNotificationService {
   }
 
   getSubjectDetails() {
-    return this.config.getParticipantLogin().then(subjectId => {
+    return this.config.getParticipantLogin().then(subjectId => ({
       subjectId
-    })
+    }))
   }
 
   publishAllNotifications(user, sourceId, limit): Promise<any> {

@@ -13,17 +13,14 @@ import { NotificationActionType } from '../../../shared/models/notification-hand
 import { getSeconds } from '../../../shared/utilities/time'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { SubjectConfigService } from '../config/subject-config.service'
-import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
-import { ScheduleService } from '../schedule/schedule.service'
 import { StorageService } from '../storage/storage.service'
-import { NotificationGeneratorService } from './notification-generator.service'
 import { NotificationService } from './notification.service'
 
 declare var FirebasePlugin
 
 @Injectable()
-export class FcmNotificationService extends NotificationService {
+export abstract class FcmNotificationService extends NotificationService {
   private readonly NOTIFICATION_STORAGE = {
     LAST_NOTIFICATION_UPDATE: StorageKeys.LAST_NOTIFICATION_UPDATE
   }
@@ -78,6 +75,7 @@ export class FcmNotificationService extends NotificationService {
       this.getSubjectDetails(),
       this.config.getSourceID()
     ]).then(([user, sourceId]) => {
+      if (!user) return Promise.reject('Unable to pull subject details')
       switch (type) {
         case NotificationActionType.TEST:
           return this.publishTestNotification(user, sourceId)
@@ -122,23 +120,13 @@ export class FcmNotificationService extends NotificationService {
       : getSeconds({ minutes: this.ttlMinutes })
   }
 
-  getSubjectDetails() {
-    return
-  }
+  abstract getSubjectDetails()
 
-  publishAllNotifications(user, sourceId, limit): Promise<any> {
-    return
-  }
+  abstract publishAllNotifications(user, sourceId, limit)
 
-  publishTestNotification(user, sourceId): Promise<void> {
-    return
-  }
+  abstract publishTestNotification(user, sourceId)
 
-  cancelAllNotifications(user): Promise<any> {
-    return
-  }
+  abstract cancelAllNotifications(user)
 
-  cancelSingleNotification(user, notificationId) {
-    return
-  }
+  abstract cancelSingleNotification(user, notificationId)
 }

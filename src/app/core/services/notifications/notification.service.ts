@@ -1,24 +1,14 @@
 import { Injectable } from '@angular/core'
 
 @Injectable()
-export class NotificationService {
-  init() {
-    return undefined
-  }
-  cancelAllNotifications(user): Promise<any> {
-    return undefined
-  }
-  permissionCheck(): Promise<void> {
-    return undefined
-  }
-  publish(type, limit?, notificationId?): Promise<any> {
-    return undefined
-  }
+export abstract class NotificationService {
+  abstract init()
 
-  setLastNotificationUpdate(): Promise<any> {
-    return undefined
-  }
-  getLastNotificationUpdate(): Promise<any> {
-    return undefined
-  }
+  abstract permissionCheck()
+
+  abstract publish(type, limit?, notificationId?)
+
+  abstract setLastNotificationUpdate()
+
+  abstract getLastNotificationUpdate()
 }

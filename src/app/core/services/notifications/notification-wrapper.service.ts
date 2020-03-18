@@ -4,22 +4,22 @@ import { DefaultNotificationType } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
 import { NotificationMessagingType } from '../../../shared/models/notification-handler'
 import { RemoteConfigService } from '../config/remote-config.service'
-import { FcmRestNotificationService } from './fcm-rest-notification.service'
+import { AppServerRestNotificationService } from './app-server-rest-notification.service'
 import { FcmXmppNotificationService } from './fcm-xmpp-notification.service'
 import { LocalNotificationService } from './local-notification.service'
+import { NotificationService } from './notification.service'
 
 @Injectable()
-export class NotificationWrapperService {
-  notificationService:
-    | FcmRestNotificationService
-    | FcmXmppNotificationService
-    | LocalNotificationService
+export class NotificationWrapperService extends NotificationService {
+  notificationService: NotificationService
+
   constructor(
-    public fcmRestNotificationService: FcmRestNotificationService,
+    public appServerRestNotificationService: AppServerRestNotificationService,
     public fcmXmppNotificationService: FcmXmppNotificationService,
     public localNotificationService: LocalNotificationService,
     private remoteConfig: RemoteConfigService
   ) {
+    super()
     this.remoteConfig
       .read()
       .then(config =>
@@ -29,12 +29,11 @@ export class NotificationWrapperService {
         )
       )
       .then(type => {
-        if (type == NotificationMessagingType.LOCAL.toString())
-          this.notificationService = fcmXmppNotificationService
-        if (type == NotificationMessagingType.FCM_XMPP)
+        this.notificationService = fcmXmppNotificationService
+        if (type == NotificationMessagingType.LOCAL)
           this.notificationService = localNotificationService
-        if (type == NotificationMessagingType.FCM)
-          this.notificationService = fcmRestNotificationService
+        if (type == NotificationMessagingType.FCM_REST)
+          this.notificationService = appServerRestNotificationService
       })
   }
 

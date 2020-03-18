@@ -10,7 +10,7 @@ import { KafkaService } from '../core/services/kafka/kafka.service'
 import { SchemaService } from '../core/services/kafka/schema.service'
 import { AlertService } from '../core/services/misc/alert.service'
 import { LocalizationService } from '../core/services/misc/localization.service'
-import { FcmNotificationService } from '../core/services/notifications/fcm-notification.service'
+import { FcmRestNotificationService } from '../core/services/notifications/fcm-rest-notification.service'
 import { FcmXmppNotificationService } from '../core/services/notifications/fcm-xmpp-notification.service'
 import { LocalNotificationService } from '../core/services/notifications/local-notification.service'
 import { NotificationGeneratorService } from '../core/services/notifications/notification-generator.service'
@@ -63,7 +63,7 @@ import { SplashModule } from './splash/splash.module'
     UsageService,
     SchemaService,
     NotificationGeneratorService,
-    FcmNotificationService,
+    FcmRestNotificationService,
     FcmXmppNotificationService,
     LocalNotificationService,
     { provide: NotificationService, useClass: NotificationWrapperService },

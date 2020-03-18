@@ -4,18 +4,18 @@ import { DefaultNotificationType } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
 import { NotificationMessagingType } from '../../../shared/models/notification-handler'
 import { RemoteConfigService } from '../config/remote-config.service'
-import { FcmNotificationService } from './fcm-notification.service'
+import { FcmRestNotificationService } from './fcm-rest-notification.service'
 import { FcmXmppNotificationService } from './fcm-xmpp-notification.service'
 import { LocalNotificationService } from './local-notification.service'
 
 @Injectable()
 export class NotificationWrapperService {
   notificationService:
-    | FcmNotificationService
+    | FcmRestNotificationService
     | FcmXmppNotificationService
     | LocalNotificationService
   constructor(
-    public fcmNotificationService: FcmNotificationService,
+    public fcmRestNotificationService: FcmRestNotificationService,
     public fcmXmppNotificationService: FcmXmppNotificationService,
     public localNotificationService: LocalNotificationService,
     private remoteConfig: RemoteConfigService
@@ -34,7 +34,7 @@ export class NotificationWrapperService {
         if (type == NotificationMessagingType.FCM_XMPP)
           this.notificationService = localNotificationService
         if (type == NotificationMessagingType.FCM)
-          this.notificationService = fcmNotificationService
+          this.notificationService = fcmRestNotificationService
       })
   }
 

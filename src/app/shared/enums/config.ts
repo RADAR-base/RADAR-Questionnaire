@@ -13,6 +13,7 @@ export class ConfigKeys {
   static NOTIFICATION_MESSAGING_TYPE = new ConfigKeys(
     'notification_messaging_type'
   )
+  static APP_SERVER_URL = new ConfigKeys('app_server_url')
 
   constructor(public value: string) {}
 

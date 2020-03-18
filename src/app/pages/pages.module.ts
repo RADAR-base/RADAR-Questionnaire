@@ -1,6 +1,7 @@
 import { CommonModule, DatePipe } from '@angular/common'
 import { NgModule } from '@angular/core'
 
+import { AppServerService } from '../core/services/app-server/app-server.service'
 import { AppConfigService } from '../core/services/config/app-config.service'
 import { ConfigService } from '../core/services/config/config.service'
 import { ProtocolService } from '../core/services/config/protocol.service'
@@ -66,6 +67,7 @@ import { SplashModule } from './splash/splash.module'
     AppServerRestNotificationService,
     FcmXmppNotificationService,
     LocalNotificationService,
+    AppServerService,
     { provide: NotificationService, useClass: NotificationWrapperService },
     { provide: AnalyticsService, useClass: FirebaseAnalyticsService }
   ]

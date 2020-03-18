@@ -77,6 +77,9 @@ export const DefaultNumberOfCompletionLogsToSend = 10
 // *Default notification type (either 'FCM' or 'LOCAL' notifications)
 export const DefaultNotificationType: string = 'FCM'
 
+// *Default app server URL
+export const DefaultAppServerURL = 'http://localhost:8080'
+
 // *Default FCM sender ID from Firebase settings
 export const FCMPluginProjectSenderId: string = '430900191220'
 

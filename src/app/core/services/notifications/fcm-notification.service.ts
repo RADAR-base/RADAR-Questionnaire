@@ -10,6 +10,7 @@ import {
 import { ConfigKeys } from '../../../shared/enums/config'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { NotificationActionType } from '../../../shared/models/notification-handler'
+import { getSeconds } from '../../../shared/utilities/time'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { SubjectConfigService } from '../config/subject-config.service'
 import { LocalizationService } from '../misc/localization.service'
@@ -31,15 +32,12 @@ export class FcmNotificationService extends NotificationService {
   ttlMinutes = 10
 
   constructor(
-    public notifications: NotificationGeneratorService,
     public storage: StorageService,
-    public schedule: ScheduleService,
     public config: SubjectConfigService,
     public firebase: Firebase,
     public platform: Platform,
     public logger: LogService,
-    public remoteConfig: RemoteConfigService,
-    public localization: LocalizationService
+    public remoteConfig: RemoteConfigService
   ) {
     super()
     this.remoteConfig.subject().subscribe(cfg => {
@@ -114,6 +112,14 @@ export class FcmNotificationService extends NotificationService {
 
   resetResends() {
     this.upstreamResends = 0
+  }
+
+  calculateTtlSeconds(taskTimestamp, notificationTimestamp, completionWindow) {
+    const endTime = taskTimestamp + completionWindow
+    const timeUntilEnd = endTime - notificationTimestamp
+    return timeUntilEnd > 0
+      ? getSeconds({ milliseconds: timeUntilEnd })
+      : getSeconds({ minutes: this.ttlMinutes })
   }
 
   getSubjectDetails() {

@@ -31,17 +31,7 @@ export class FcmXmppNotificationService extends FcmNotificationService {
     public remoteConfig: RemoteConfigService,
     public localization: LocalizationService
   ) {
-    super(
-      notifications,
-      storage,
-      schedule,
-      config,
-      firebase,
-      platform,
-      logger,
-      remoteConfig,
-      localization
-    )
+    super(storage, config, firebase, platform, logger, remoteConfig)
   }
 
   getSubjectDetails() {
@@ -99,15 +89,6 @@ export class FcmXmppNotificationService extends FcmNotificationService {
   }
 
   private formatXmpp(notification: SingleNotification, participantLogin?) {
-    const endTime =
-      notification.task.timestamp + notification.task.completionWindow
-    const timeUntilEnd = endTime - notification.timestamp
-
-    const ttl =
-      timeUntilEnd > 0
-        ? getSeconds({ milliseconds: timeUntilEnd })
-        : getSeconds({ minutes: this.ttlMinutes })
-
     return {
       eventId: uuid(),
       action: 'SCHEDULE',
@@ -115,7 +96,11 @@ export class FcmXmppNotificationService extends FcmNotificationService {
       notificationMessage: notification.text,
       time: notification.timestamp,
       subjectId: participantLogin,
-      ttlSeconds: ttl
+      ttlSeconds: this.calculateTtlSeconds(
+        notification.task.timestamp,
+        notification.timestamp,
+        notification.task.completionWindow
+      )
     }
   }
 }

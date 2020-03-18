@@ -36,17 +36,7 @@ export class FcmRestNotificationService extends FcmNotificationService {
     public remoteConfig: RemoteConfigService,
     public localization: LocalizationService
   ) {
-    super(
-      notifications,
-      storage,
-      schedule,
-      config,
-      firebase,
-      platform,
-      logger,
-      remoteConfig,
-      localization
-    )
+    super(storage, config, firebase, platform, logger, remoteConfig)
     this.initApiClient()
   }
 
@@ -132,25 +122,21 @@ export class FcmRestNotificationService extends FcmNotificationService {
       this.config.getProjectName(),
       this.config.getParticipantLogin()
     ]).then(([enrolmentDate, projectId, subjectId]) => {
-      if (!subjectId) return Promise.reject('Subject id is null')
       return this.apiClient.apis['radar-user-controller']
         .getRadarUserUsingSubjectId({ subjectId })
         .then(res => res.body)
-        .catch(e => {
-          if (e.status == 404) {
-            const user = {
-              enrolmentDate: new Date(enrolmentDate),
-              projectId,
-              subjectId,
-              fcmToken: this.FCM_TOKEN,
-              timezone: new Date().getTimezoneOffset(),
-              language: this.localization.getLanguage().value
-            }
-            return this.apiClient.apis['radar-user-controller'].addUser({
-              user
-            })
-          } else return Promise.reject(e)
-        })
+        .catch(e =>
+          e.status == 404
+            ? this.apiClient.apis['radar-user-controller'].addUser({
+                enrolmentDate: new Date(enrolmentDate),
+                projectId,
+                subjectId,
+                fcmToken: this.FCM_TOKEN,
+                timezone: new Date().getTimezoneOffset(),
+                language: this.localization.getLanguage().value
+              })
+            : Promise.reject(e)
+        )
     })
   }
 
@@ -179,20 +165,16 @@ export class FcmRestNotificationService extends FcmNotificationService {
 
   private format(notification: SingleNotification, sourceId) {
     const taskInfo = notification.task
-    const endTime = taskInfo.timestamp + taskInfo.completionWindow
-    const timeUntilEnd = endTime - notification.timestamp
-
-    const ttl =
-      timeUntilEnd > 0
-        ? getSeconds({ milliseconds: timeUntilEnd })
-        : getSeconds({ minutes: this.ttlMinutes })
-
     return {
       notification,
       notificationDto: {
         title: notification.title,
         body: notification.text,
-        ttlSeconds: ttl,
+        ttlSeconds: this.calculateTtlSeconds(
+          taskInfo.timestamp,
+          notification.timestamp,
+          taskInfo.completionWindow
+        ),
         sourceId: sourceId,
         type: taskInfo.name,
         sourceType: DefaultSourcePrefix,

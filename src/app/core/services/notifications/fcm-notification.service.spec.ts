@@ -4,13 +4,10 @@ import { Platform } from 'ionic-angular'
 import { PlatformMock } from 'ionic-mocks'
 
 import {
-  FcmNotificationControllerServiceMock,
   FirebaseMock,
   LocalizationServiceMock,
   LogServiceMock,
   NotificationGeneratorServiceMock,
-  RadarProjectControllerServiceMock,
-  RadarUserControllerServiceMock,
   RemoteConfigServiceMock,
   ScheduleServiceMock,
   StorageServiceMock,

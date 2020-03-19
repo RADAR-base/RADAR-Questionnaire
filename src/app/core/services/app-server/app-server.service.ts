@@ -2,7 +2,10 @@ import { Injectable } from '@angular/core'
 import * as moment from 'moment-timezone'
 import * as Swagger from 'swagger-client'
 
-import { DefaultAppServerURL } from '../../../../assets/data/defaultConfig'
+import {
+  DefaultAppServerURL,
+  DefaultRequestJSONContentType
+} from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { RemoteConfigService } from '../config/remote-config.service'
@@ -10,6 +13,7 @@ import { SubjectConfigService } from '../config/subject-config.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
+import { TokenService } from '../token/token.service'
 
 @Injectable()
 export class AppServerService {
@@ -24,7 +28,8 @@ export class AppServerService {
     public subjectConfig: SubjectConfigService,
     public logger: LogService,
     public remoteConfig: RemoteConfigService,
-    public localization: LocalizationService
+    public localization: LocalizationService,
+    private token: TokenService
   ) {
     this.init()
   }
@@ -35,21 +40,23 @@ export class AppServerService {
   }
 
   initApiClient() {
-    return this.remoteConfig
-      .read()
-      .then(config =>
-        config.getOrDefault(ConfigKeys.APP_SERVER_URL, DefaultAppServerURL)
-      )
-      .then(url =>
-        Swagger({ url: url + this.API_DOCS_URL })
+    return Promise.all([this.getAppServerURL(), this.token.getTokens()]).then(
+      ([url, tokens]) =>
+        Swagger({
+          url: url + this.API_DOCS_URL,
+          requestInterceptor: req => {
+            req.headers['Authorization'] = 'Bearer ' + tokens.access_token
+            req.headers['Content-Type'] = DefaultRequestJSONContentType
+          }
+        })
           .then(client => (this.apiClient = client))
           .catch(e => this.logger.error('Error pulling API docs', e))
-      )
+    )
   }
 
   getApiClient() {
     if (this.apiClient) return Promise.resolve(this.apiClient)
-    else this.initApiClient().then(() => this.apiClient)
+    else return this.initApiClient().then(() => this.apiClient)
   }
 
   checkProjectAndSubjectExistElseCreate(): Promise<any> {
@@ -149,5 +156,13 @@ export class AppServerService {
 
   getFCMToken() {
     return this.storage.get(StorageKeys.FCM_TOKEN)
+  }
+
+  getAppServerURL() {
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        config.getOrDefault(ConfigKeys.APP_SERVER_URL, DefaultAppServerURL)
+      )
   }
 }

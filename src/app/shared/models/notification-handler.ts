@@ -8,6 +8,7 @@ export enum NotificationType {
 }
 
 export enum NotificationActionType {
+  SCHEDULE_SINGLE,
   SCHEDULE_ALL,
   TEST,
   CANCEL_ALL,

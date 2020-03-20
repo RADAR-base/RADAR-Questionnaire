@@ -25,6 +25,7 @@ export class NotificationGeneratorService {
   futureNotifications(tasks: Task[], limit: number): SingleNotification[] {
     const now = new Date().getTime()
     return tasks
+      .filter(a => !a.completed)
       .map(t => t.notifications.filter(n => n.timestamp > now))
       .reduce((arr, n) => arr.concat(n), [])
       .sort(NotificationGeneratorService.compareNotifications)

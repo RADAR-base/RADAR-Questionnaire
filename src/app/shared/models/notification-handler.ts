@@ -8,9 +8,11 @@ export enum NotificationType {
 }
 
 export enum NotificationActionType {
-  ALL,
+  SCHEDULE_SINGLE,
+  SCHEDULE_ALL,
   TEST,
-  CANCEL
+  CANCEL_ALL,
+  CANCEL_SINGLE
 }
 
 export interface SingleNotification {
@@ -28,4 +30,11 @@ export interface NotificationTaskInfo {
   name: string
   timestamp: number
   completionWindow: number
+}
+
+export enum NotificationMessagingType {
+  LOCAL = 'LOCAL',
+  FCM = 'FCM',
+  FCM_XMPP = 'FCM_XMPP',
+  FCM_REST = 'FCM_REST'
 }

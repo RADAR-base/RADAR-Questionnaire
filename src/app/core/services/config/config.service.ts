@@ -4,7 +4,8 @@ import * as ver from 'semver'
 
 import {
   DefaultAppVersion,
-  DefaultNotificationRefreshTime
+  DefaultNotificationRefreshTime,
+  DefaultNumberOfNotificationsToSchedule
 } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
 import {
@@ -14,6 +15,7 @@ import {
 import { NotificationActionType } from '../../../shared/models/notification-handler'
 import { User } from '../../../shared/models/user'
 import { TaskType } from '../../../shared/utilities/task-type'
+import { AppServerService } from '../app-server/app-server.service'
 import { KafkaService } from '../kafka/kafka.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
@@ -39,7 +41,8 @@ export class ConfigService {
     private localization: LocalizationService,
     private analytics: AnalyticsService,
     private logger: LogService,
-    private remoteConfig: RemoteConfigService
+    private remoteConfig: RemoteConfigService,
+    private appServerService: AppServerService
   ) {}
 
   fetchConfigState(force?: boolean) {
@@ -190,11 +193,14 @@ export class ConfigService {
       .then(() => this.appConfig.setUTCOffset(utcOffset))
       .then(() => this.appConfig.setPrevUTCOffset(prevUtcOffset))
       .then(() => this.regenerateSchedule())
+      .then(() => this.appServerService.updateSubjectTimezone())
   }
 
   rescheduleNotifications(cancel?: boolean) {
     return (cancel ? this.cancelNotifications() : Promise.resolve([]))
-      .then(() => this.notifications.publish())
+      .then(() =>
+        this.notifications.publish(NotificationActionType.SCHEDULE_ALL)
+      )
       .then(() => console.log('NOTIFICATIONS scheduled after config change'))
       .then(() =>
         cancel
@@ -208,7 +214,16 @@ export class ConfigService {
 
   cancelNotifications() {
     this.sendConfigChangeEvent(NotificationEventType.CANCELLED)
-    return this.notifications.publish(0, NotificationActionType.CANCEL)
+    return this.notifications.publish(NotificationActionType.CANCEL_ALL)
+  }
+
+  cancelSingleNotification(notificationId: number) {
+    if (notificationId)
+      return this.notifications.publish(
+        NotificationActionType.CANCEL_SINGLE,
+        0,
+        notificationId
+      )
   }
 
   regenerateSchedule() {
@@ -248,7 +263,8 @@ export class ConfigService {
         .then(() => this.analytics.setUserProperties(user))
         .then(() => this.appConfig.init(user.enrolmentDate)),
       this.localization.init(),
-      this.kafka.init()
+      this.kafka.init(),
+      this.appServerService.init()
     ])
   }
 
@@ -278,7 +294,7 @@ export class ConfigService {
 
   sendTestNotification() {
     this.sendConfigChangeEvent(NotificationEventType.TEST)
-    return this.notifications.publish(0, NotificationActionType.TEST)
+    return this.notifications.publish(NotificationActionType.TEST)
   }
 
   sendCachedData() {

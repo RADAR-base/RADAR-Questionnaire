@@ -84,4 +84,11 @@ export class FinishTaskService {
   getTimeCompleted(answers) {
     return answers[answers.length - 1].endTime
   }
+
+  cancelNotificationsForCompletedTask(task): Promise<any> {
+    const notifications = task.notifications
+    return notifications.forEach(n =>
+      this.config.cancelSingleNotification(n.id)
+    )
+  }
 }

@@ -56,7 +56,10 @@ export class FcmXmppNotificationService extends FcmNotificationService {
 
   publishTestNotification(user, sourceId): Promise<void> {
     return this.sendUpstreamMessage(
-      this.formatXmpp(this.notifications.createTestNotification(), '')
+      this.formatXmpp(
+        this.notifications.createTestNotification(),
+        user.subjectId
+      )
     )
   }
 

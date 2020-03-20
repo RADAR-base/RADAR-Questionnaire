@@ -93,7 +93,7 @@ export class NotificationGeneratorService {
   createTestNotification() {
     return this.createNotification(
       DefaultTask,
-      new Date().getTime() + getMilliseconds({ minutes: 2 }),
+      new Date().getTime() + getMilliseconds({ minutes: 3 }),
       NotificationType.TEST
     )
   }

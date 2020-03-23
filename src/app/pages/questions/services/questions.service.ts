@@ -81,17 +81,10 @@ export class QuestionsService {
   }
 
   processQuestions(title, questions: any[]) {
-    return this.getHiddenQuestions()
-      .then(res => {
-        if (!res[title]) return questions
-        const questionsToHide = res[title]
-          .split(',')
-          .map(i => Number(i))
-          .filter(d => !isNaN(d))
-        if (questionsToHide.length == questions.length) return questions
-        return questions.filter((_, i) => !questionsToHide.includes(i))
-      })
-      .catch(e => questions)
+    if (title.includes('ESM28Q'))
+      if (new Date().getHours() > 10) return Promise.resolve(questions.slice(1))
+
+    return Promise.resolve(questions)
   }
 
   isAnswered(question: Question) {

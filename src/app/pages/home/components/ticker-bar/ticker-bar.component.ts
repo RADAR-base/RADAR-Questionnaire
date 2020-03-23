@@ -95,26 +95,31 @@ export class TickerBarComponent implements OnChanges {
   }
 
   getTimeToNextString() {
-    let deltaStr = ''
-    const deltaMin = Math.round(
+    const minutes = Math.round(
       getMinutes({ milliseconds: this.timeToNextMilli })
     )
-    const deltaHour = Math.round(getHours({ minutes: deltaMin }))
-    if (deltaMin > 59) {
-      deltaStr =
-        String(deltaHour) +
-        ' ' +
-        (deltaHour > 1
-          ? this.localization.translateKey(LocKeys.TASK_TIME_HOUR_MULTIPLE)
-          : this.localization.translateKey(LocKeys.TASK_TIME_HOUR_SINGLE))
-    } else {
-      deltaStr =
-        String(deltaMin) +
-        ' ' +
-        (deltaMin > 1
-          ? this.localization.translateKey(LocKeys.TASK_TIME_MINUTE_MULTIPLE)
-          : this.localization.translateKey(LocKeys.TASK_TIME_MINUTE_SINGLE))
-    }
-    return deltaStr
+    if (minutes > 59) return this.getHoursToNextString(minutes)
+    else return this.getMinutesToNextString(minutes)
+  }
+
+  getHoursToNextString(minutes) {
+    const hour = Math.round(getHours({ minutes: minutes }))
+    return (
+      String(hour) +
+      ' ' +
+      (hour > 1
+        ? this.localization.translateKey(LocKeys.TASK_TIME_HOUR_MULTIPLE)
+        : this.localization.translateKey(LocKeys.TASK_TIME_HOUR_SINGLE))
+    )
+  }
+
+  getMinutesToNextString(minutes) {
+    return (
+      String(minutes) +
+      ' ' +
+      (minutes > 1
+        ? this.localization.translateKey(LocKeys.TASK_TIME_MINUTE_MULTIPLE)
+        : this.localization.translateKey(LocKeys.TASK_TIME_MINUTE_SINGLE))
+    )
   }
 }

@@ -14,7 +14,11 @@
   </div>
   <div #input class="input" [class.input-scroll]="isScrollable">
     <div
-      [style.height.px]="input.offsetHeight - margin"
+      [style.height.px]="
+        input.offsetParent.offsetHeight -
+        input.previousSibling.offsetHeight -
+        margin
+      "
       [ngSwitch]="question.field_type"
     >
       <ng-container *ngIf="isLoading">

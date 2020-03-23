@@ -11,6 +11,8 @@ export class TextInputComponent implements OnInit {
   valueChange: EventEmitter<string> = new EventEmitter<string>()
   @Input()
   type: string
+  @Input()
+  currentlyShown: boolean
 
   showDatePicker: boolean
   showTimePicker: boolean
@@ -97,9 +99,11 @@ export class TextInputComponent implements OnInit {
   }
 
   emitAnswer(value) {
-    if (typeof value !== 'string') {
-      this.value = Object.assign(this.value, value)
-      this.valueChange.emit(JSON.stringify(this.value))
-    } else this.valueChange.emit(value)
+    if (this.currentlyShown) {
+      if (typeof value !== 'string') {
+        this.value = Object.assign(this.value, value)
+        this.valueChange.emit(JSON.stringify(this.value))
+      } else this.valueChange.emit(value)
+    }
   }
 }

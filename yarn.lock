@@ -433,10 +433,10 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/keyboard@^5.20.0":
-  version "5.20.0"
-  resolved "https://registry.yarnpkg.com/@ionic-native/keyboard/-/keyboard-5.20.0.tgz#42e38c1bb89d8322871dd74fddd52ad67a57f906"
-  integrity sha512-b9BcwArkCzhH9rIx4BS+/6E0/hF5uW07ozuQZNMezhEwhA/vQHmC3nuKxa3jaZsVLeg6OpqyLllIyZcMVQJwhg==
+"@ionic-native/keyboard@^5.23.0":
+  version "5.23.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/keyboard/-/keyboard-5.23.0.tgz#094d7f48a7274de1fa65e9f573f7bf18ab6f35ed"
+  integrity sha512-n1RPlNCG3xX7/Te1HuXVJxZ3O2oJ79CJ8sOmfMAc8jLc6WBbgnNr8y5oj5G31kC3ECzxdW6cBRw4DdTTlbYiow==
   dependencies:
     "@types/cordova" latest
 

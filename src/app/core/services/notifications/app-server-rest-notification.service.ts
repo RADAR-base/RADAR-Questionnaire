@@ -42,7 +42,7 @@ export class AppServerRestNotificationService extends FcmNotificationService {
     return Promise.all([
       this.appServerService.checkProjectAndSubjectExistElseCreate(),
       this.config.getSourceID()
-    ]).then(([user, sourceId]) => Object.assign({}, user, sourceId))
+    ]).then(([user, sourceId]) => Object.assign({}, user, { sourceId }))
   }
 
   publishAllNotifications(user, limit): Promise<any> {
@@ -62,7 +62,7 @@ export class AppServerRestNotificationService extends FcmNotificationService {
 
   publishTestNotification(user): Promise<void> {
     return this.sendNotification(
-      this.format(this.notifications.createTestNotification(), user.sourceId),
+      this.format(this.notifications.createTestNotification(), user),
       user.subjectId,
       user.projectId
     )

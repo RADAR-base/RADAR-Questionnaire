@@ -39,14 +39,17 @@ export class AppServerRestNotificationService extends FcmNotificationService {
   }
 
   getSubjectDetails() {
-    return this.appServerService.checkProjectAndSubjectExistElseCreate()
+    return Promise.all([
+      this.appServerService.checkProjectAndSubjectExistElseCreate(),
+      this.config.getSourceID()
+    ]).then(([user, sourceId]) => Object.assign({}, user, sourceId))
   }
 
-  publishAllNotifications(user, sourceId, limit): Promise<any> {
+  publishAllNotifications(user, limit): Promise<any> {
     return this.schedule.getTasks(TaskType.ALL).then(tasks => {
       const fcmNotifications = this.notifications
         .futureNotifications(tasks, limit)
-        .map(t => this.format(t, sourceId))
+        .map(t => this.format(t, user))
       this.logger.log('NOTIFICATIONS Scheduling FCM notifications')
       this.logger.log(fcmNotifications)
       return Promise.all(
@@ -57,9 +60,9 @@ export class AppServerRestNotificationService extends FcmNotificationService {
     })
   }
 
-  publishTestNotification(user, sourceId): Promise<void> {
+  publishTestNotification(user): Promise<void> {
     return this.sendNotification(
-      this.format(this.notifications.createTestNotification(), sourceId),
+      this.format(this.notifications.createTestNotification(), user.sourceId),
       user.subjectId,
       user.projectId
     )
@@ -112,7 +115,7 @@ export class AppServerRestNotificationService extends FcmNotificationService {
     )
   }
 
-  private format(notification: SingleNotification, sourceId) {
+  private format(notification: SingleNotification, user) {
     const taskInfo = notification.task
     return {
       notification,
@@ -124,7 +127,7 @@ export class AppServerRestNotificationService extends FcmNotificationService {
           notification.timestamp,
           taskInfo.completionWindow
         ),
-        sourceId: sourceId,
+        sourceId: user.sourceId,
         type: taskInfo.name,
         sourceType: DefaultSourcePrefix,
         appPackage: DefaultPackageName,

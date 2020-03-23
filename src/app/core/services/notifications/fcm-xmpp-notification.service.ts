@@ -34,16 +34,20 @@ export class FcmXmppNotificationService extends FcmNotificationService {
   }
 
   getSubjectDetails() {
-    return this.config.getParticipantLogin().then(subjectId => ({
-      subjectId
+    return Promise.all([
+      this.config.getParticipantLogin(),
+      this.config.getProjectName()
+    ]).then(([subjectId, projectId]) => ({
+      subjectId,
+      projectId
     }))
   }
 
-  publishAllNotifications(user, sourceId, limit): Promise<any> {
+  publishAllNotifications(user, limit): Promise<any> {
     return this.schedule.getTasks(TaskType.ALL).then(tasks => {
       const fcmNotifications = this.notifications
         .futureNotifications(tasks, limit)
-        .map(t => this.formatXmpp(t, user.subjectId))
+        .map(t => this.format(t, user))
       this.logger.log('NOTIFICATIONS Scheduling FCM notifications')
       this.logger.log(fcmNotifications)
       return Promise.all(
@@ -54,12 +58,9 @@ export class FcmXmppNotificationService extends FcmNotificationService {
     })
   }
 
-  publishTestNotification(user, sourceId): Promise<void> {
+  publishTestNotification(user): Promise<void> {
     return this.sendUpstreamMessage(
-      this.formatXmpp(
-        this.notifications.createTestNotification(),
-        user.subjectId
-      )
+      this.format(this.notifications.createTestNotification(), user)
     )
   }
 
@@ -90,14 +91,15 @@ export class FcmXmppNotificationService extends FcmNotificationService {
     return Promise.resolve()
   }
 
-  private formatXmpp(notification: SingleNotification, participantLogin?) {
+  private format(notification: SingleNotification, user) {
     return {
       eventId: uuid(),
       action: 'SCHEDULE',
       notificationTitle: notification.title,
       notificationMessage: notification.text,
       time: notification.timestamp,
-      subjectId: participantLogin,
+      subjectId: user.subjectId,
+      projectId: user.projectId,
       ttlSeconds: this.calculateTtlSeconds(
         notification.task.timestamp,
         notification.timestamp,

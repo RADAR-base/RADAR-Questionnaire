@@ -20,7 +20,10 @@ export class NotificationWrapperService extends NotificationService {
     private remoteConfig: RemoteConfigService
   ) {
     super()
-    this.remoteConfig
+  }
+
+  init() {
+    return this.remoteConfig
       .read()
       .then(config =>
         config.getOrDefault(
@@ -29,16 +32,13 @@ export class NotificationWrapperService extends NotificationService {
         )
       )
       .then(type => {
-        this.notificationService = fcmXmppNotificationService
         if (type == NotificationMessagingType.LOCAL)
-          this.notificationService = localNotificationService
+          return (this.notificationService = this.localNotificationService)
         if (type == NotificationMessagingType.FCM_REST)
-          this.notificationService = appServerRestNotificationService
+          return (this.notificationService = this.appServerRestNotificationService)
+        return (this.notificationService = this.fcmXmppNotificationService)
       })
-  }
-
-  init() {
-    return this.notificationService.init()
+      .then(() => this.notificationService.init())
   }
 
   permissionCheck(): Promise<any> {

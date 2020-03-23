@@ -73,21 +73,18 @@ export abstract class FcmNotificationService extends NotificationService {
     notificationId?: string
   ): Promise<any> {
     this.resetResends()
-    return Promise.all([
-      this.getSubjectDetails(),
-      this.config.getSourceID()
-    ]).then(([user, sourceId]) => {
+    return this.getSubjectDetails().then(user => {
       if (!user) return Promise.reject('Unable to pull subject details')
       switch (type) {
         case NotificationActionType.TEST:
-          return this.publishTestNotification(user, sourceId)
+          return this.publishTestNotification(user)
         case NotificationActionType.CANCEL_ALL:
           return this.cancelAllNotifications(user)
         case NotificationActionType.CANCEL_SINGLE:
           return this.cancelSingleNotification(user, notificationId)
         case NotificationActionType.SCHEDULE_ALL:
         default:
-          return this.publishAllNotifications(user, sourceId, limit)
+          return this.publishAllNotifications(user, limit)
       }
     })
   }
@@ -128,9 +125,9 @@ export abstract class FcmNotificationService extends NotificationService {
 
   abstract getSubjectDetails()
 
-  abstract publishAllNotifications(user, sourceId, limit)
+  abstract publishAllNotifications(user, limit)
 
-  abstract publishTestNotification(user, sourceId)
+  abstract publishTestNotification(user)
 
   abstract cancelAllNotifications(user)
 

@@ -24,8 +24,9 @@ export class AppComponent {
       this.accessibility.usePreferredTextZoom(false)
       this.statusBar.hide()
       this.splashScreen.hide()
-      this.notificationService.init()
-      return this.notificationService.permissionCheck()
+      this.notificationService
+        .init()
+        .then(() => this.notificationService.permissionCheck())
     })
   }
 }

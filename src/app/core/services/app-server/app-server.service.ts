@@ -118,8 +118,8 @@ export class AppServerService {
 
   addSubjectToServer(subjectId, projectId, enrolmentDate, fcmToken) {
     return this.getApiClient().then(apiClient =>
-      apiClient.apis[this.RADAR_USER_CONTROLLER].addUser(
-        {},
+      apiClient.apis[this.RADAR_USER_CONTROLLER].addUserToProject(
+        { projectId },
         {
           requestBody: {
             enrolmentDate: new Date(enrolmentDate),

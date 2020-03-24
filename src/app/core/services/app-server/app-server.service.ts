@@ -21,6 +21,7 @@ export class AppServerService {
 
   RADAR_USER_CONTROLLER = 'radar-user-controller'
   RADAR_PROJECT_CONTROLLER = 'radar-project-controller'
+  MAX_API_RETRIES = 10
   apiClient: any
 
   constructor(
@@ -30,13 +31,13 @@ export class AppServerService {
     public remoteConfig: RemoteConfigService,
     public localization: LocalizationService,
     private token: TokenService
-  ) {
-    this.init()
-  }
+  ) {}
 
   init() {
-    if (!this.apiClient) this.initApiClient()
-    this.checkProjectAndSubjectExistElseCreate()
+    return (this.apiClient
+      ? Promise.resolve()
+      : this.initApiClient()
+    ).then(() => this.checkProjectAndSubjectExistElseCreate())
   }
 
   initApiClient() {
@@ -66,13 +67,16 @@ export class AppServerService {
   }
 
   checkProjectExistsElseCreate(): Promise<any> {
+    // NOTE: Adding retries here because of random 'Failed to load resource'
+    let attempts = 0
     return this.subjectConfig.getProjectName().then(projectId => {
       return this.getApiClient().then(apiClient =>
         apiClient.apis[this.RADAR_PROJECT_CONTROLLER]
           .getProjectsUsingProjectId({ projectId })
           .catch(e => {
             if (e.status == 404) return this.addProjectToServer(projectId)
-            else return Promise.reject(e)
+            else if (attempts++ < this.MAX_API_RETRIES)
+              return this.checkProjectExistsElseCreate()
           })
       )
     })

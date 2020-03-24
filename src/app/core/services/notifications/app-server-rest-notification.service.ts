@@ -97,10 +97,7 @@ export class AppServerRestNotificationService extends FcmNotificationService {
     return this.appServerService.getApiClient().then(apiClient =>
       apiClient.apis[this.FCM_NOTIFICATION_CONTROLLER]
         .addSingleNotification(
-          {
-            projectId,
-            subjectId
-          },
+          { projectId: projectId, subjectId: subjectId },
           { requestBody: notification.notificationDto }
         )
         .then(res => {

@@ -1,9 +1,14 @@
 import { Injectable } from '@angular/core'
 import { Firebase } from '@ionic-native/firebase/ngx'
 import { Platform } from 'ionic-angular'
+import * as moment from 'moment-timezone'
 import * as uuid from 'uuid/v4'
 
-import { DefaultMaxUpstreamResends } from '../../../../assets/data/defaultConfig'
+import {
+  DefaultMaxUpstreamResends,
+  DefaultPackageName,
+  DefaultSourcePrefix
+} from '../../../../assets/data/defaultConfig'
 import { SingleNotification } from '../../../shared/models/notification-handler'
 import { TaskType } from '../../../shared/utilities/task-type'
 import { RemoteConfigService } from '../config/remote-config.service'
@@ -36,10 +41,14 @@ export class FcmXmppNotificationService extends FcmNotificationService {
   getSubjectDetails() {
     return Promise.all([
       this.config.getParticipantLogin(),
-      this.config.getProjectName()
-    ]).then(([subjectId, projectId]) => ({
+      this.config.getProjectName(),
+      this.config.getSourceID(),
+      this.config.getEnrolmentDate()
+    ]).then(([subjectId, projectId, sourceId, enrolmentDate]) => ({
       subjectId,
-      projectId
+      projectId,
+      sourceId,
+      enrolmentDate
     }))
   }
 
@@ -104,7 +113,14 @@ export class FcmXmppNotificationService extends FcmNotificationService {
         notification.task.timestamp,
         notification.timestamp,
         notification.task.completionWindow
-      )
+      ),
+      type: notification.task.name,
+      sourceType: DefaultSourcePrefix,
+      appPackage: DefaultPackageName,
+      sourceId: user.sourceId,
+      enrolmentDate: user.enrolmentDate,
+      timezone: moment.tz.guess(),
+      language: this.localization.getLanguage().value
     }
   }
 }

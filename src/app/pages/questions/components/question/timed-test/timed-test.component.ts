@@ -77,8 +77,8 @@ export class TimedTestComponent implements OnInit, OnChanges, OnDestroy {
       hasStarted: false,
       hasFinished: false,
       secondsElapsed: 0,
-      secondsRemaining: this.timer.start,
-      duration: this.timer.start - this.timer.end,
+      secondsRemaining: Math.max(this.timer.start, this.timer.end),
+      duration: Math.abs(this.timer.start - this.timer.end),
       displayTime: this.timer.start
     }
   }
@@ -98,7 +98,9 @@ export class TimedTestComponent implements OnInit, OnChanges, OnDestroy {
       })
     )
     this.taskTimer.displayTime =
-      this.timer.start - this.taskTimer.secondsElapsed
+      this.timer.start > this.timer.end
+        ? this.timer.start - this.taskTimer.secondsElapsed
+        : this.taskTimer.secondsElapsed
     this.ref.markForCheck()
   }
 

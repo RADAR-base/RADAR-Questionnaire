@@ -99,11 +99,9 @@ export class TextInputComponent implements OnInit {
   }
 
   emitAnswer(value) {
-    if (this.currentlyShown) {
-      if (typeof value !== 'string') {
-        this.value = Object.assign(this.value, value)
-        this.valueChange.emit(JSON.stringify(this.value))
-      } else this.valueChange.emit(value)
-    }
+    if (typeof value !== 'string') {
+      this.value = Object.assign(this.value, value)
+      this.valueChange.emit(JSON.stringify(this.value))
+    } else this.valueChange.emit(value)
   }
 }

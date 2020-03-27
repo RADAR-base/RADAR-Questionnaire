@@ -45,7 +45,7 @@ export const Localisations = {
       'Bedankt voor uw deelname aan dit onderzoek. Laten we starten met het registratie-proces.',
     pl:
       'Dziękujemy za wzięcie udziału w badaniu. Przejdź przez proces rejestracji, byś mógł zacząć korzystać z aplikacji',
-    hb: '.תודה שאתם משתתף במחקר זה. בוא נתחיל את הליך ההרשמה באפליקציה'
+    hb: 'תודה על השתתפותך במחקר. בוא נתחיל את תהליך ההרשמה.'
   },
   ENROL_REGISTRATION: {
     da: 'Registrering',
@@ -73,7 +73,7 @@ export const Localisations = {
     pl:
       'Zanim będziesz mógł korzystać z aplikacji, musisz się zarejestrować. Możesz zeskanować kod QR lub wpisać Token',
     hb:
-      'לפני שתוכל להתחיל להשתמש באפליקציה, אנחנו צריכים שתרשם אליה. תוכל לעשות זאת באמצעות קוד QR או הזנת טוקן'
+      'לפני שתוכל להתשתמש באפליקציה אנו צריכים שתרשם אליה. תוכל לעשות זאת באמצעות קוד QR או הזנת טוקן.'
   },
   ENROL_REGISTRATION_SCAN_DESC: {
     da:
@@ -91,7 +91,7 @@ export const Localisations = {
     pl:
       'Kliknij przycisk Skanuj i skieruj aparat telefonu na kod QR, który otrzymałeś od badacza. Przykładowy kod QR znajduje się poniżej.',
     hb:
-      '.לחץ על כפתור הסריקה וכוון את הממלצה לקוד QR, שניתן לך מהחוקר. דוגמה לקוד QR מוצגת מטה'
+      'לחץ על כפתור הסריקה וכוון את המצלמה לכיוון קוד הQR שניתן לך על ידי החוקרים. דוגמה לקוד QR מוצגת למטה.'
   },
   ENROL_REGISTRATION_TOKEN_DESC: {
     da:
@@ -109,7 +109,7 @@ export const Localisations = {
     pl:
       'Wprowadź Token. Powinien być widoczny poniżej kodu QR w Mahagement Portal. Jeśli go tam nie znajdziesz, zeskanuj kod QR.',
     hb:
-      'הזן את הטוקן. זה אמור להיות זמין לך תחת הקוד QR בפורטל ניהול. אם הוא לא זמין, בבקשה סרוק את הקוד QR.'
+      'הזן את הטוקן. הוא אמור להיות זמין מתחת לקוד הQR בפורטל הניהול. אם הוא לא זמין בבקשה סרוק את קוד הQR.'
   },
   ENROL_PREFERENCES: {
     da: 'Præferencer',
@@ -147,7 +147,7 @@ export const Localisations = {
     it: 'Registrazione Completa',
     nl: 'Registratie Compleet',
     pl: 'Rejestracja zakończona',
-    hb: 'הרשמה הושלמה'
+    hb: 'ההרשמה הושלמה'
   },
   ENROL_REGISTRATION_COMPLETE_DESC: {
     da:
@@ -164,7 +164,7 @@ export const Localisations = {
       "U bent nu succesvol ingeschreven voor het onderzoek. Klik op 'Voltooid' om uw vragenlijstschema en meldingen te genereren.",
     pl:
       'Z powodzeniem zarejestrowałeś się w badaniu. Kliknij „Zakończone”, aby wygenerować harmonogram kwestionariusza i powiadomienia',
-    hb: `.נרשמת בהצלחה למחקר. לחץ על 'סיום' כדי להתחיל ליצור את לוח הזמנים וההודעות שלך`
+    hb: `נרשמת בהצלחה למחקר. לחץ "סיום" כדי ליצור את לוח הזמנים וההתראות שלך .`
   },
   FINISH_THANKS: {
     da: 'Tak fordi du udfyldte spørgeskemaet.',
@@ -184,7 +184,7 @@ export const Localisations = {
     it: 'Ricorda, hai ancora delle attività in sospeso!',
     nl: 'Denk eraan, je hebt nog steeds taken openstaan!',
     pl: 'Pamiętaj, że zostały Ci jeszcze zadania do dokończenia!',
-    hb: 'זכור יש לך משימות לא גמורות'
+    hb: 'זכור, עדיין יש לך משימות לא גמורות'
   },
   FINISH_COMPLETED_IN_CLINIC: {
     da: 'Afsluttet i klinik?',
@@ -403,7 +403,7 @@ export const Localisations = {
     it: 'Reset app',
     nl: 'Reset app',
     pl: 'Zresetuj aplikację',
-    hb: 'לאפס את היישום'
+    hb: 'אפס אפליקציה'
   },
   SETTINGS_RESET_ALERT_DESC: {
     da: 'Du er ved at nulstille appen.',
@@ -491,7 +491,7 @@ export const Localisations = {
     it: 'Registra le Notifiche',
     nl: 'Logmeldingen',
     pl: 'Powiadomienia z dziennika',
-    hb: 'נעל התראות'
+    hb: 'תיעוד התראות'
   },
   SETTINGS_SEND_CACHED_DATA: {
     da: 'Send Cachelagrede Data',
@@ -581,7 +581,7 @@ export const Localisations = {
     it: 'Polacco',
     nl: 'Pools',
     pl: 'Polski',
-    hb: 'פולני'
+    hb: 'פולנית'
   },
   LANGUAGE_HEBREW: {
     da: 'Hebrew',
@@ -621,7 +621,7 @@ export const Localisations = {
     it: 'Inserisci Il Token',
     nl: 'Token Invoeren',
     pl: 'Wprowadź Token',
-    hb: 'הזן טוק'
+    hb: 'הזן טוקן'
   },
   BTN_SUBMIT: {
     da: 'Indsend',
@@ -901,7 +901,7 @@ export const Localisations = {
     it: 'Notifica di prova',
     nl: 'Testmelding',
     pl: 'powiadomienie o badaniu',
-    hb: 'בצע התראת מבח'
+    hb: 'התראת מבחן'
   },
   NOTIFICATION_TEST_REMINDER_NOW_DESC: {
     da: 'Dette er en test anmeldelse.',
@@ -925,7 +925,7 @@ export const Localisations = {
     nl:
       'Vergeet u s.v.p. niet om de RADAR-CNS vragenlijst uiterlijk morgen in te vullen?',
     pl: 'Ankietę RADAR-CNS powinieneś wypełnić jutro – prosimy pamiętaj',
-    hb: 'יש להשלים את שאלון RADAR-CNS מחר- נא לזכור'
+    hb: 'נא לזכור ששאלון RADAR-CNS צריך להיענות מחר בבוקר'
   },
   NOTIFICATION_REMINDER_SOON_DESC: {
     da: 'Husk at sætte lidt tid af i morgen, til at svare på et par spørgsmål.',
@@ -1012,7 +1012,7 @@ export const Localisations = {
       'Je hebt deze gemist. Maak je geen zorgen! De volgende vragenlijst zal binnenkort verschijnen.',
     pl:
       'Pominąłeś to pytanie. Nie przejmuj się! Następna ankieta będzie dostępna wkrótce.',
-    hb: '.פספסת את זאת. אל תדאג! מועד השאלון הבא יהיה בקרוב'
+    hb: 'פספסת את שאלון זה. אל תדאג! השאלון הבא יהיה בקרוב'
   },
   NOTIFICATION_REMINDER_FORGOTTEN_ALERT_LASTOFNIGHT_DESC: {
     da:
@@ -1023,7 +1023,7 @@ export const Localisations = {
     it: "Hai perso l'ultimo. Non preoccuparti! Buonanotte.",
     nl: 'Je hebt de laatste gemist. Maak je geen zorgen! Goede nacht.',
     pl: 'Pominąłeś ostatnie pytanie. Nie przejmuj się! Dobranoc.',
-    hb: 'פספסת את האחרונה. אל תדאג! שיהיה לך לילה טוב'
+    hb: 'פספסת את השאלון האחרון. אל תדאג! שיהיה לך לילה טוב'
   },
   MEASURE_PROGRESS: {
     da: 'Fremgang',
@@ -1081,7 +1081,7 @@ export const Localisations = {
     pl:
       'przygotowane dla Ciebie przez RADAR-Base. Aby uzyskać więcej informacji kliknij <a href="http://radar-base.org">aquí</a>.',
     hb:
-      'נעשה באהבה בשבילך על ידי קונצרסיום RADAR-Base.למידע נוסף לחץ- k <a href=http://radar-base.org>here</a>.'
+      'נעשה עבורך באהבה על ידי קונצרסיום RADAR-Base. למידע נוסף לחץ- http://radar-base.org'
   },
   TASK_CALENDAR_TITLE: {
     da: 'Dagens opgaver',
@@ -1101,7 +1101,7 @@ export const Localisations = {
     it: 'Richiede un posto tranquillo',
     nl: 'Vereist een rustige omgeving',
     pl: 'Wymaga cichego otoczenia',
-    hb: 'דורשת מקום שקט'
+    hb: 'דורש מקום שקט'
   },
   TASK_PROGRESS_TITLE: {
     da: 'I dag',
@@ -1161,7 +1161,7 @@ export const Localisations = {
     it: 'Ben fatto!',
     nl: 'Goed gedaan!',
     pl: 'Gratulacje!',
-    hb: 'הכבוד'
+    hb: 'כל הכבוד!'
   },
   TASK_BAR_AFFIRMATION_2: {
     da: 'Alle opgaver er gennemført.',
@@ -1181,7 +1181,7 @@ export const Localisations = {
     it: 'Resisti! ',
     nl: 'Wacht! ',
     pl: 'Czekaj! ',
-    hb: '!כל הכבוד '
+    hb: 'החזק מעמד!'
   },
   TASK_BAR_TASK_LEFT_2: {
     da: 'Der er stadig et par spørgsmål tilbage',
@@ -1201,7 +1201,7 @@ export const Localisations = {
     it: 'Relax!',
     nl: 'Ontspan!',
     pl: 'Spokojnie!',
-    hb: '!תרגע'
+    hb: 'הירגע!'
   },
   TASK_BAR_NO_TASK_2: {
     da: 'Der er ingen opgaver I dag.',
@@ -1323,7 +1323,7 @@ export const Localisations = {
     it: 'Tentativi rimanenti',
     nl: 'Pogingen blijven',
     pl: 'Pozostało prób',
-    hb: 'נסיונות שנותר'
+    hb: 'ניסיונותו שנותרו'
   },
   AUDIO_TASK_HAPPY_ALERT: {
     da: 'Indsend optagelse?',
@@ -1333,7 +1333,7 @@ export const Localisations = {
     it: 'Invia la registrazione?',
     nl: 'Opname verzenden?',
     pl: 'Dodaj nagranie',
-    hb: 'שלח הקלטה'
+    hb: 'לשלוח הקלטה?'
   },
   CONFIG_ERROR_DESC: {
     da: 'Config opdatering mislykkes. Prøve igen?',
@@ -1343,7 +1343,7 @@ export const Localisations = {
     it: "Errore nell'aggiornamento della configurazione. Riprovare?",
     nl: 'Config-update mislukt. Opnieuw?',
     pl: 'Nieudana konfiguracja akutualizacji. Powtórzyć?',
-    hb: '?עדכון קונפיג נכשל. לנסות שוב'
+    hb: 'עדכון קונפיגורציה נכשל. לנסות שוב?'
   },
   SPLASH_STATUS_UPDATING_CONFIG: {
     da: 'Opdaterer underretninger og planlæg...',
@@ -1363,6 +1363,6 @@ export const Localisations = {
     it: 'Invio dei registri dei questionari persi ...',
     nl: 'Logboeken gemiste vragenlijst verzenden...',
     pl: 'Wyślij brakujące dzienniki kwestionariusza',
-    hb: '... שליחת יומני שאלון שהוחמצו'
+    hb: 'שליחת שאלונים שהוחמצו...'
   }
 }

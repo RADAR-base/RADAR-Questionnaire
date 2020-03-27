@@ -1,4 +1,4 @@
-<ng-container *ngIf="showDatePicker">
+<ng-container *ngIf="showDatePicker && currentlyShown">
   <wheel-selector
     [values]="datePickerValues"
     [selection]="defaultDatePickerValue"
@@ -7,7 +7,7 @@
   ></wheel-selector>
 </ng-container>
 
-<ng-container *ngIf="showTimePicker">
+<ng-container *ngIf="showTimePicker && currentlyShown">
   <wheel-selector
     [values]="timePickerValues"
     [selection]="defaultTimePickerValue"
@@ -16,7 +16,7 @@
   ></wheel-selector>
 </ng-container>
 
-<ng-container *ngIf="showDurationPicker">
+<ng-container *ngIf="showDurationPicker && currentlyShown">
   <wheel-selector
     [values]="durationPickerValues"
     [selection]="defaultDurationPickerValue"

@@ -124,7 +124,7 @@
         "@angular/http": "^7.2.13",
         "@angular/platform-browser": "^7.2.13",
         "@angular/platform-browser-dynamic": "^7.2.13",
-        "@angular/platform-server": "^9.0.5",
+        "@angular/platform-server": "^9.1.0",
         "@ionic/app-scripts": "^3.2.4",
         "@types/jasmine": "^3.5.0",
         "@types/jasminewd2": "^2.0.8",

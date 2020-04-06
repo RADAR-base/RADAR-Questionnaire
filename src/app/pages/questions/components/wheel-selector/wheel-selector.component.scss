@@ -12,12 +12,25 @@ wheel-selector {
     display: none;
   }
 
+  .inner {
+    mask-image:   
+    radial-gradient(
+      circle at 50% 50%,
+      black 30%,
+      rgba(0, 0, 0, 0.1) 70%
+    );
+  }
+
+
+  .bg {
+    border-radius: 28px;
+    background-color: $cl-primary-40;
+  }
+
   .picker-opts {
     overflow: scroll;
     width: fit-content;
-    height: 40px;
-    border-radius: $label-height;
-    background-color: $cl-primary-40;
+    height: 120px;
     font-size: 20px;
     scroll-snap-type: y mandatory;
   }

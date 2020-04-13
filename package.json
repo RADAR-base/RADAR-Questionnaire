@@ -115,7 +115,7 @@
         "smoothscroll-polyfill": "^0.4.4",
         "uuid": "^3.4.0",
         "yaml": "^1.7.2",
-        "zone.js": "~0.8.26"
+        "zone.js": "~0.10.3"
     },
     "devDependencies": {
         "@angular-devkit/build-angular": "^0.13.8",

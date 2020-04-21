@@ -187,8 +187,7 @@ export class ConfigService {
       .getEnrolmentDate()
       .then(enrolment => this.appConfig.setReferenceDate(enrolment))
       .then(() => this.appConfig.setUTCOffset(utcOffset))
-      .then(() => this.appConfig.setPrevUTCOffset(prevUtcOffset))
-      .then(() => this.regenerateSchedule())
+      .then(() => this.regenerateSchedule(prevUtcOffset))
   }
 
   rescheduleNotifications(cancel?: boolean) {
@@ -210,14 +209,10 @@ export class ConfigService {
     return this.notifications.cancel()
   }
 
-  regenerateSchedule() {
-    return Promise.all([
-      this.appConfig.getReferenceDate(),
-      this.appConfig.getPrevUTCOffset()
-    ])
-      .then(([refDate, prevUTCOffset]) =>
-        this.schedule.generateSchedule(refDate, prevUTCOffset)
-      )
+  regenerateSchedule(prevUTCOffset?: number) {
+    return this.appConfig
+      .getReferenceDate()
+      .then(refDate => this.schedule.generateSchedule(refDate, prevUTCOffset))
       .catch(e => {
         throw this.logger.error('Failed to generate schedule', e)
       })

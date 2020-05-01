@@ -18,6 +18,7 @@ addons:
   apt:
     packages:
       - xvfb
+      - libgbm1
 cache:
   yarn: true
   directories:

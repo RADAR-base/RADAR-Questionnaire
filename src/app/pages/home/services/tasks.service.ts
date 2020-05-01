@@ -5,8 +5,8 @@ import { QuestionnaireService } from '../../../core/services/config/questionnair
 import { RemoteConfigService } from '../../../core/services/config/remote-config.service'
 import { ScheduleService } from '../../../core/services/schedule/schedule.service'
 import { ConfigKeys } from '../../../shared/enums/config'
+import { AssessmentType } from '../../../shared/models/assessment'
 import { Task, TasksProgress } from '../../../shared/models/task'
-import { TaskType } from '../../../shared/utilities/task-type'
 import { setDateTimeToMidnight } from '../../../shared/utilities/time'
 
 @Injectable()
@@ -23,7 +23,7 @@ export class TasksService {
 
   getTasksOfToday() {
     return this.schedule
-      .getTasksForDate(new Date(), TaskType.NON_CLINICAL)
+      .getTasksForDate(new Date(), AssessmentType.SCHEDULED)
       .then(tasks =>
         tasks.filter(
           t => !this.isTaskExpired(t) || this.wasTaskCompletedToday(t)

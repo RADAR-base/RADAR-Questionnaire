@@ -18,7 +18,7 @@ export class FinishComponent implements OnChanges {
   @Input()
   content = ''
   @Input()
-  isClinicalTask = false
+  requiresInClinicCompletion = false
   @Input()
   displayNextTaskReminder = true
   @Input()

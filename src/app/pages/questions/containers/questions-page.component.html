@@ -23,7 +23,7 @@
             *ngIf="showFinishScreen"
             [content]="endText"
             [displayNextTaskReminder]="isLastTask"
-            [isClinicalTask]="isClinicalTask"
+            [requiresInClinicCompletion]="requiresInClinicCompletion"
             [showDoneButton]="showDoneButton"
             [isShown]="showFinishScreen"
             (exit)="handleFinish($event)"

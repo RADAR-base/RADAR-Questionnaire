@@ -3,9 +3,9 @@ import 'rxjs/add/operator/map'
 import { Injectable } from '@angular/core'
 
 import { StorageKeys } from '../../../shared/enums/storage'
+import { AssessmentType } from '../../../shared/models/assessment'
 import { Task } from '../../../shared/models/task'
 import { compareTasks } from '../../../shared/utilities/compare-tasks'
-import { TaskType, getTaskType } from '../../../shared/utilities/task-type'
 import {
   getMilliseconds,
   setDateTimeToMidnight
@@ -28,13 +28,13 @@ export class ScheduleService {
     private logger: LogService
   ) {}
 
-  getTasks(type: TaskType): Promise<Task[]> {
+  getTasks(type: AssessmentType): Promise<Task[]> {
     switch (type) {
-      case TaskType.NON_CLINICAL:
+      case AssessmentType.SCHEDULED:
         return this.getNonClinicalTasks()
-      case TaskType.CLINICAL:
+      case AssessmentType.ON_DEMAND:
         return this.getClinicalTasks()
-      case TaskType.ALL:
+      case AssessmentType.ALL:
         return Promise.all([
           this.getNonClinicalTasks(),
           this.getClinicalTasks()
@@ -50,7 +50,7 @@ export class ScheduleService {
     }
   }
 
-  getTasksForDate(date: Date, type: TaskType) {
+  getTasksForDate(date: Date, type: AssessmentType) {
     return this.getTasks(type).then(schedule => {
       const startTime = setDateTimeToMidnight(date).getTime()
       const endTime = startTime + getMilliseconds({ days: 1 })
@@ -75,7 +75,7 @@ export class ScheduleService {
   }
 
   getIncompleteTasks(): Promise<Task[]> {
-    return this.getTasks(TaskType.ALL).then(tasks => {
+    return this.getTasks(AssessmentType.ALL).then(tasks => {
       const now = new Date().getTime()
       return tasks
         .filter(
@@ -86,11 +86,11 @@ export class ScheduleService {
     })
   }
 
-  setTasks(type: TaskType, tasks): Promise<void> {
+  setTasks(type: AssessmentType, tasks): Promise<void> {
     switch (type) {
-      case TaskType.NON_CLINICAL:
+      case AssessmentType.SCHEDULED:
         return this.setNonClinicalTasks(tasks)
-      case TaskType.CLINICAL:
+      case AssessmentType.ON_DEMAND:
         return this.setClinicalTasks(tasks)
     }
   }
@@ -116,7 +116,7 @@ export class ScheduleService {
     return this.getCompletedTasks()
       .then(completedTasks => {
         return this.schedule.runScheduler(
-          TaskType.NON_CLINICAL,
+          AssessmentType.SCHEDULED,
           referenceDate,
           completedTasks,
           utcOffsetPrev
@@ -125,7 +125,7 @@ export class ScheduleService {
       .catch(e => e)
       .then(res =>
         Promise.all([
-          this.setTasks(TaskType.NON_CLINICAL, res.schedule),
+          this.setTasks(AssessmentType.SCHEDULED, res.schedule),
           this.setCompletedTasks(res.completed)
         ])
       )
@@ -136,7 +136,7 @@ export class ScheduleService {
     return this.getClinicalTasks().then((tasks: Task[]) =>
       this.schedule
         .runScheduler(
-          TaskType.CLINICAL,
+          AssessmentType.ON_DEMAND,
           referenceDate,
           [],
           null,
@@ -145,7 +145,7 @@ export class ScheduleService {
         )
         .then((res: any) =>
           this.setTasks(
-            TaskType.CLINICAL,
+            AssessmentType.ON_DEMAND,
             tasks ? tasks.concat(res.schedule) : res.schedule
           )
         )
@@ -153,7 +153,7 @@ export class ScheduleService {
   }
 
   insertTask(task): Promise<any> {
-    const type = getTaskType(task)
+    const type = task.type
     return this.getTasks(type).then(tasks => {
       if (!tasks) return
       const updatedTasks = tasks.map(d => (d.index === task.index ? task : d))
@@ -181,7 +181,7 @@ export class ScheduleService {
   }
 
   consoleLogSchedule() {
-    this.getTasks(TaskType.ALL).then(tasks => {
+    this.getTasks(AssessmentType.ALL).then(tasks => {
       let rendered = `\nSCHEDULE Total (${tasks.length})\n`
       rendered += tasks
         .sort(compareTasks)

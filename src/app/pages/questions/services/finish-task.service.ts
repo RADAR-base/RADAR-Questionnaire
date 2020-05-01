@@ -5,9 +5,9 @@ import { ConfigService } from '../../../core/services/config/config.service'
 import { KafkaService } from '../../../core/services/kafka/kafka.service'
 import { LogService } from '../../../core/services/misc/log.service'
 import { ScheduleService } from '../../../core/services/schedule/schedule.service'
+import { AssessmentType } from '../../../shared/models/assessment'
 import { SchemaType } from '../../../shared/models/kafka'
 import { QuestionType } from '../../../shared/models/question'
-import { TaskType, getTaskType } from '../../../shared/utilities/task-type'
 
 @Injectable()
 export class FinishTaskService {
@@ -23,7 +23,7 @@ export class FinishTaskService {
     return Promise.all([
       this.schedule.updateTaskToComplete(task),
       this.schedule.updateTaskToReportedCompletion(task),
-      getTaskType(task) == TaskType.NON_CLINICAL
+      task.type == AssessmentType.SCHEDULED
         ? this.schedule.addToCompletedTasks(task)
         : Promise.resolve()
     ])

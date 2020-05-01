@@ -4,22 +4,23 @@ import { Platform } from 'ionic-angular'
 import * as uuid from 'uuid/v4'
 
 import {
-  DefaultMaxUpstreamResends, DefaultNotificationTtlMinutes,
+  DefaultMaxUpstreamResends,
+  DefaultNotificationTtlMinutes,
   DefaultNumberOfNotificationsToSchedule,
-  FCMPluginProjectSenderId,
+  FCMPluginProjectSenderId
 } from '../../../../assets/data/defaultConfig'
+import { ConfigKeys } from '../../../shared/enums/config'
 import { StorageKeys } from '../../../shared/enums/storage'
+import { AssessmentType } from '../../../shared/models/assessment'
 import { SingleNotification } from '../../../shared/models/notification-handler'
-import { TaskType } from '../../../shared/utilities/task-type'
 import { getSeconds } from '../../../shared/utilities/time'
+import { RemoteConfigService } from '../config/remote-config.service'
 import { SubjectConfigService } from '../config/subject-config.service'
 import { LogService } from '../misc/log.service'
 import { ScheduleService } from '../schedule/schedule.service'
 import { StorageService } from '../storage/storage.service'
 import { NotificationGeneratorService } from './notification-generator.service'
 import { NotificationService } from './notification.service'
-import { RemoteConfigService } from '../config/remote-config.service'
-import { ConfigKeys } from '../../../shared/enums/config'
 
 declare var FirebasePlugin
 
@@ -44,11 +45,17 @@ export class FcmNotificationService extends NotificationService {
     super()
     this.ttlMinutes = 10
 
-    this.remoteConfig.subject()
-      .subscribe(cfg => {
-        cfg.getOrDefault(ConfigKeys.NOTIFICATION_TTL_MINUTES, String(this.ttlMinutes))
-          .then(ttl => this.ttlMinutes = Number(ttl) || DefaultNotificationTtlMinutes)
-      })
+    this.remoteConfig.subject().subscribe(cfg => {
+      cfg
+        .getOrDefault(
+          ConfigKeys.NOTIFICATION_TTL_MINUTES,
+          String(this.ttlMinutes)
+        )
+        .then(
+          ttl =>
+            (this.ttlMinutes = Number(ttl) || DefaultNotificationTtlMinutes)
+        )
+    })
   }
 
   init() {
@@ -71,7 +78,7 @@ export class FcmNotificationService extends NotificationService {
     this.resetResends()
     return this.config.getParticipantLogin().then(username => {
       if (!username) return Promise.resolve([])
-      return this.schedule.getTasks(TaskType.ALL).then(tasks => {
+      return this.schedule.getTasks(AssessmentType.ALL).then(tasks => {
         const fcmNotifications = this.notifications
           .futureNotifications(tasks, limit)
           .map(t => this.format(t, username))

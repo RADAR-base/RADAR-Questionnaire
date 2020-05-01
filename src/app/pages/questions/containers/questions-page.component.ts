@@ -12,7 +12,6 @@ import {
 } from '../../../shared/models/assessment'
 import { Question } from '../../../shared/models/question'
 import { Task } from '../../../shared/models/task'
-import { TaskType } from '../../../shared/utilities/task-type'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { QuestionsService } from '../services/questions.service'
 
@@ -36,7 +35,7 @@ export class QuestionsPageComponent implements OnInit {
   questionTitle: String
   endText: string
   isLastTask: boolean
-  isClinicalTask: boolean
+  requiresInClinicCompletion: boolean
   introduction: string
   assessment: Assessment
   showIntroductionScreen: boolean
@@ -101,7 +100,7 @@ export class QuestionsPageComponent implements OnInit {
     this.isLastTask = res.isLastTask
     this.assessment = res.assessment
     this.taskType = res.type
-    this.isClinicalTask = this.taskType == TaskType.CLINICAL
+    this.requiresInClinicCompletion = res.requiresInClinicCompletion
   }
 
   handleIntro(start: boolean) {

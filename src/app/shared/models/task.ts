@@ -1,3 +1,4 @@
+import { AssessmentType } from './assessment'
 import { SingleNotification } from './notification-handler'
 
 export interface Task {
@@ -6,11 +7,12 @@ export interface Task {
   reportedCompletion: boolean
   timestamp: number
   name: string
+  type: AssessmentType
   nQuestions: number
   estimatedCompletionTime?: number
   completionWindow: number
   warning: string
-  isClinical: boolean
+  requiresInClinicCompletion: boolean
   notifications: SingleNotification[]
   timeCompleted: number
   showInCalendar: boolean

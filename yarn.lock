@@ -211,13 +211,13 @@
   dependencies:
     tslib "^1.9.0"
 
-"@angular/platform-server@^9.0.5":
-  version "9.0.5"
-  resolved "https://registry.yarnpkg.com/@angular/platform-server/-/platform-server-9.0.5.tgz#b6d233247c47444735ebaa80fb7b44267670ebe5"
-  integrity sha512-5iEugPj0oZgw6JHS5s8m4WejCnEoNeWgttzsCQuyCaVmIOQGCbTdqSsxD+AgBO7A5lrzxYQOgil/XCM/up5Smw==
+"@angular/platform-server@^9.1.6":
+  version "9.1.6"
+  resolved "https://registry.yarnpkg.com/@angular/platform-server/-/platform-server-9.1.6.tgz#c80b93da0d99fec4b1e50a1fbf6275aca7521655"
+  integrity sha512-hLAwh/J9a2v9opLIZVIiykPIsxmRozY3OjXH1phbIDFQQCHCNLlODOowxVnn7DF90DyVSLCTKNnqNjZW3DdlVg==
   dependencies:
     domino "^2.1.2"
-    xhr2 "^0.1.4"
+    xhr2 "^0.2.0"
 
 "@angular/router@^7.2.13":
   version "7.2.15"
@@ -12823,10 +12823,10 @@ xcode@^1.0.0, xcode@^2.0.0:
     simple-plist "^1.0.0"
     uuid "^3.3.2"
 
-xhr2@^0.1.4:
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/xhr2/-/xhr2-0.1.4.tgz#7f87658847716db5026323812f818cadab387a5f"
-  integrity sha1-f4dliEdxbbUCYyOBL4GMras4el8=
+xhr2@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/xhr2/-/xhr2-0.2.0.tgz#eddeff782f3b7551061b8d75645085269396e521"
+  integrity sha512-BDtiD0i2iKPK/S8OAZfpk6tyzEDnKKSjxWHcMBVmh+LuqJ8A32qXTyOx+TVOg2dKvq6zGBq2sgKPkEeRs1qTRA==
 
 xml-escape@^1.1.0:
   version "1.1.0"

@@ -16,6 +16,8 @@ import { SubjectConfigService } from './subject-config.service'
 
 @Injectable()
 export class ProtocolService {
+  ATTRIBUTE_DELIMITER = '#'
+
   constructor(
     private config: SubjectConfigService,
     private http: HttpClient,
@@ -24,30 +26,83 @@ export class ProtocolService {
   ) {}
 
   pull() {
-    return this.remoteConfig
-      .read()
-      .catch(e => {
-        throw this.logger.error('Failed to fetch Firebase config', e)
-      })
+    return this.config
+      .getParticipantAttributes()
+      .then(attributes => this.pullValidProtocolUrlResult(attributes))
+      .then(res => atob(res['content']))
+  }
+
+  pullValidProtocolUrlResult(attributes) {
+    const powerset = this.getAllAttributeSubsets(attributes)
+    return new Promise((resolve, reject) => {
+      for (let iter = powerset.length - 1; iter >= 0; iter--) {
+        this.createProtocolUrl(this.formatAttributes(powerset[iter]))
+          .then(URI => this.http.get(URI).toPromise())
+          .then(res => {
+            if (res['content']) resolve(res)
+          })
+      }
+      reject('No valid protocol found.')
+    })
+  }
+
+  getAllAttributeSubsets(attributes) {
+    const array = Object.entries(attributes)
+    const result = array.reduce(
+      (subsets, value) => subsets.concat(subsets.map(set => [...set, value])),
+      [[]]
+    )
+    return result
+  }
+
+  formatAttributes(attributes: any[]) {
+    if (!attributes || !attributes.length) return ''
+    return attributes
+      .reduce((acc, val) => acc.concat(val), [])
+      .join(this.ATTRIBUTE_DELIMITER)
+  }
+
+  createProtocolUrl(attributes?) {
+    return this.readRemoteConfig()
       .then(cfg =>
         Promise.all([
           this.config.getProjectName(),
-          cfg.getOrDefault(
-            ConfigKeys.PROTOCOL_BASE_URL,
-            DefaultProtocolEndPoint
-          ),
-          cfg.getOrDefault(ConfigKeys.PROTOCOL_PATH, DefaultProtocolPath),
-          cfg.getOrDefault(ConfigKeys.PROTOCOL_BRANCH, DefaultProtocolBranch)
+          this.getBaseUrl(cfg),
+          this.getProtocolPath(cfg),
+          this.getProtocolBranch(cfg)
         ])
       )
       .then(([projectName, baseUrl, path, branch]) => {
-        if (!projectName) {
+        if (!projectName)
           throw new Error('Project name is not set. Cannot pull protocols.')
-        }
-        const URI = [baseUrl, projectName, `${path}?ref=${branch}`].join('/')
-        return this.http.get(URI).toPromise()
+        console.log(attributes)
+        if (attributes) projectName = projectName + '#' + attributes
+        return [baseUrl, projectName, `${path}?ref=${branch}`].join('/')
       })
-      .then(res => atob(res['content']))
+  }
+
+  readRemoteConfig() {
+    return this.remoteConfig.read().catch(e => {
+      throw this.logger.error('Failed to fetch Firebase config', e)
+    })
+  }
+
+  getBaseUrl(config) {
+    return config.getOrDefault(
+      ConfigKeys.PROTOCOL_BASE_URL,
+      DefaultProtocolEndPoint
+    )
+  }
+
+  getProtocolPath(config) {
+    return config.getOrDefault(ConfigKeys.PROTOCOL_PATH, DefaultProtocolPath)
+  }
+
+  getProtocolBranch(config) {
+    return config.getOrDefault(
+      ConfigKeys.PROTOCOL_BRANCH,
+      DefaultProtocolBranch
+    )
   }
 
   format(protocols: Assessment[]): Assessment[] {

@@ -108,7 +108,6 @@ export class HomePageComponent implements OnDestroy {
   checkForNextTask(tasks) {
     const task = this.tasksService.getNextTask(tasks)
     if (task) {
-      this.nextTask = task
       this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
       this.timeToNextTask = this.nextTask.timestamp - Date.now()
     } else {

@@ -5,6 +5,7 @@ export class StorageKeys {
   static OAUTH_TOKENS = new StorageKeys('OAUTH_TOKENS')
   static PARTICIPANTID = new StorageKeys('PARTICIPANTID')
   static PARTICIPANTLOGIN = new StorageKeys('PARTICIPANTLOGIN')
+  static PARTICIPANT_ATTRIBUTES = new StorageKeys('PARTICIPANT_ATTRIBUTES')
   static PROJECTNAME = new StorageKeys('PROJECTNAME')
   static SOURCEID = new StorageKeys('SOURCEID')
   static LANGUAGE = new StorageKeys('LANGUAGE')
@@ -33,7 +34,9 @@ export class StorageKeys {
   static LAST_UPLOAD_DATE = new StorageKeys('LAST_UPLOAD_DATE')
   static BASE_URI = new StorageKeys('BASE_URI')
 
-  static REMOTE_CONFIG_CACHE_TIMEOUT = new StorageKeys('REMOTE_CONFIG_CACHE_TIMEOUT')
+  static REMOTE_CONFIG_CACHE_TIMEOUT = new StorageKeys(
+    'REMOTE_CONFIG_CACHE_TIMEOUT'
+  )
 
   constructor(public value: string) {}
 

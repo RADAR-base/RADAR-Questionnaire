@@ -98,7 +98,8 @@ export class AuthService {
         sourceId: this.getSourceId(subjectInformation),
         humanReadableId: subjectInformation.externalId,
         enrolmentDate: new Date(subjectInformation.createdDate).getTime(),
-        baseUrl: baseUrl
+        baseUrl: baseUrl,
+        attributes: subjectInformation.attributes
       })
     })
   }

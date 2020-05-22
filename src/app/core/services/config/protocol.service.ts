@@ -20,8 +20,8 @@ import { SubjectConfigService } from './subject-config.service'
 export class ProtocolService {
   GIT_TREE = 'tree'
   GIT_BRANCHES = 'branches'
-  ATTRIBUTE_KEY = 'key'
-  ATTRIBUTE_VAL = 'val'
+  ATTRIBUTE_KEY = 0
+  ATTRIBUTE_VAL = 1
 
   constructor(
     private config: SubjectConfigService,
@@ -36,58 +36,57 @@ export class ProtocolService {
       this.config.getParticipantAttributes()
     ])
       .then(([tree, attributes]) =>
-        this.findValidProtocol(tree, [], this.ATTRIBUTE_KEY, '', attributes)
+        this.findValidProtocolUrl(tree, [], this.ATTRIBUTE_KEY, '', attributes)
       )
-      .then((url: string) =>
-        this.http
-          .get(url)
-          .toPromise()
-          .then(res => atob(res['content']))
-      )
+      .then((url: string) => this.http.get(url).toPromise())
+      .then(res => atob(res['content']))
   }
 
-  findValidProtocol(children, paths, findNext, protocol, attributes) {
-    if (
-      findNext == this.ATTRIBUTE_KEY &&
-      children.map(c => c.path).includes(DefaultProtocolPath)
-    )
-      protocol = children.find(c => c.path == DefaultProtocolPath).url
+  findValidProtocolUrl(children, previousPath, findNext, protocol, attributes) {
+    if (findNext == this.ATTRIBUTE_KEY)
+      protocol = this.getProtocolPathInTree(children, DefaultProtocolPath)
     return new Promise(resolve => {
-      let selected
-      let childTreeUrl = ''
-      if (findNext == this.ATTRIBUTE_KEY) {
-        findNext = this.ATTRIBUTE_VAL
-        for (const child in children) {
-          if (Object.keys(attributes).includes(child['path'])) selected = child
-        }
-      } else {
-        findNext = this.ATTRIBUTE_KEY
-        const lastKey = paths[paths.length - 1]
-        for (const child in children) {
-          if (child['path'] == attributes[lastKey]) selected = child
-        }
-      }
-      if (selected == null) {
-        resolve(protocol)
-      } else {
-        paths.push(selected['path'])
-        childTreeUrl = selected['url']
-        this.http
-          .get(childTreeUrl)
-          .toPromise()
-          .then((nextChildren: any) => {
-            resolve(
-              this.findValidProtocol(
-                nextChildren.tree,
-                paths,
-                findNext,
-                protocol,
-                attributes
-              )
+      const selected = this.matchTreeWithAttributes(
+        children,
+        findNext,
+        attributes,
+        previousPath
+      )
+      if (selected == null) resolve(protocol)
+      else {
+        findNext = !findNext
+        this.getChildTree(selected).then(nextChildren =>
+          resolve(
+            this.findValidProtocolUrl(
+              nextChildren['tree'],
+              selected['path'],
+              findNext,
+              protocol,
+              attributes
             )
-          })
+          )
+        )
       }
     })
+  }
+
+  getProtocolPathInTree(children, protocolPath) {
+    const child = children.find(c => c.path == protocolPath).url
+    if (child != null) return child
+  }
+
+  getChildTree(child) {
+    return this.http.get(child['url']).toPromise()
+  }
+
+  matchTreeWithAttributes(children, findNext, attributes, previousPath) {
+    if (findNext == this.ATTRIBUTE_KEY) {
+      for (const child in children)
+        if (Object.keys(attributes).includes(child['path'])) return child
+    } else {
+      for (const child in children)
+        if (child['path'] == attributes[previousPath]) return child
+    }
   }
 
   getProjectTree() {
@@ -95,8 +94,8 @@ export class ProtocolService {
       .then(cfg =>
         Promise.all([this.config.getProjectName(), this.getProtocolBranch(cfg)])
       )
-      .then(([projectName, branch]) => {
-        return this.getGitRootTreeHashUrl(branch)
+      .then(([projectName, branch]) =>
+        this.getRootTreeHashUrl(branch)
           .then(url => this.http.get(url).toPromise())
           .then((res: any) => {
             const project = res.tree.find(
@@ -106,13 +105,11 @@ export class ProtocolService {
               throw new Error('Unable to find project in repository.')
             return this.http.get(project.url).toPromise()
           })
-          .then((projectChild: any) => {
-            return projectChild.tree
-          })
-      })
+          .then(projectChild => projectChild['tree'])
+      )
   }
 
-  getGitRootTreeHashUrl(branch) {
+  getRootTreeHashUrl(branch) {
     const treeUrl = [
       GIT_API_URI,
       DefaultProtocolGithubRepo,

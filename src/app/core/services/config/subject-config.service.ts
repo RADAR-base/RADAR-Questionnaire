@@ -1,8 +1,17 @@
+import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 
+import {
+  DefaultManagementPortalURI,
+  DefaultRequestEncodedContentType,
+  DefaultRequestJSONContentType,
+  DefaultSourceTypeRegistrationBody,
+  DefaultSubjectsURI
+} from '../../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { User } from '../../../shared/models/user'
 import { StorageService } from '../storage/storage.service'
+import { TokenService } from '../token/token.service'
 
 @Injectable()
 export class SubjectConfigService {
@@ -16,7 +25,11 @@ export class SubjectConfigService {
     BASE_URI: StorageKeys.BASE_URI
   }
 
-  constructor(public storage: StorageService) {}
+  constructor(
+    public storage: StorageService,
+    private token: TokenService,
+    private http: HttpClient
+  ) {}
 
   init(user: User) {
     return Promise.all([
@@ -87,6 +100,40 @@ export class SubjectConfigService {
 
   getBaseUrl() {
     return this.storage.get(this.SUBJECT_CONFIG_STORE.BASE_URI)
+  }
+
+  pullSubjectInformation(): Promise<any> {
+    return Promise.all([
+      this.token.getAccessHeaders(DefaultRequestEncodedContentType),
+      this.token.getDecodedSubject(),
+      this.token.getURI()
+    ]).then(([headers, subject, uri]) => {
+      const subjectURI =
+        uri + DefaultManagementPortalURI + DefaultSubjectsURI + subject
+      return this.http.get(subjectURI, { headers }).toPromise()
+    })
+  }
+
+  pushSubjectSourceInformation() {
+    return Promise.all([
+      this.token.getAccessHeaders(DefaultRequestJSONContentType),
+      this.token.getDecodedSubject(),
+      this.token.getURI()
+    ]).then(([headers, subject, uri]) =>
+      this.http
+        .post(
+          uri +
+            DefaultManagementPortalURI +
+            DefaultSubjectsURI +
+            subject +
+            '/sources',
+          DefaultSourceTypeRegistrationBody,
+          {
+            headers
+          }
+        )
+        .toPromise()
+    )
   }
 
   reset() {

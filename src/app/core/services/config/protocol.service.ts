@@ -31,10 +31,7 @@ export class ProtocolService {
   ) {}
 
   pull() {
-    return Promise.all([
-      this.getProjectTree(),
-      this.config.getParticipantAttributes()
-    ])
+    return Promise.all([this.getProjectTree(), this.getParticipantAttributes()])
       .then(([tree, attributes]) =>
         this.findValidProtocolUrl(tree, [], this.ATTRIBUTE_KEY, '', attributes)
       )
@@ -144,6 +141,17 @@ export class ProtocolService {
       ConfigKeys.PROTOCOL_BRANCH,
       DefaultProtocolBranch
     )
+  }
+
+  getParticipantAttributes() {
+    return this.config.getParticipantAttributes().then(attributes => {
+      if (attributes == null)
+        return this.config.pullSubjectInformation().then(user => {
+          this.config.setParticipantAttributes(user.attributes)
+          return user.attributes
+        })
+      else return attributes
+    })
   }
 
   format(protocols: Assessment[]): Assessment[] {

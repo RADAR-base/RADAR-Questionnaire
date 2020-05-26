@@ -101,7 +101,9 @@ export class TasksService {
       } else {
         nextTask = tasks.find(task => !this.isTaskExpired(task))
       }
-      nextTask.isLastTask = isLastTask
+      if (nextTask) {
+        nextTask.isLastTask = isLastTask
+      }
     }
     return nextTask
   }

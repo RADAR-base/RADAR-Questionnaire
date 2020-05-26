@@ -130,6 +130,9 @@ export const DefaultSchemaSpecEndpoint = [
   DefaultSchemaSpecPath
 ].join('/')
 
+// *The order in which participant attributes are matched to protocol endpoints; format: {attributeName: orderNumber}
+export const DefaultParticipantAttributeOrder = {}
+
 // DEFAULT AUTH DATA
 
 // *The client id and secret for OAuth authorisation with the Management Portal

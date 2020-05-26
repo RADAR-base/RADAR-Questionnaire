@@ -10,6 +10,9 @@ export class ConfigKeys {
   static PLATFORM_INSTANCE = new ConfigKeys('platform_instance')
   static QUESTIONS_HIDDEN = new ConfigKeys('questions_hidden')
   static APP_VERSION_LATEST = new ConfigKeys('app_version_latest')
+  static PARTICIPANT_ATTRIBUTE_ORDER = new ConfigKeys(
+    'participant_attribute_order'
+  )
 
   constructor(public value: string) {}
 

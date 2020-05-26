@@ -1,7 +1,9 @@
+// tslint:disable: forin
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 
 import {
+  DefaultParticipantAttributeOrder,
   DefaultProtocolBranch,
   DefaultProtocolEndPoint,
   DefaultProtocolGithubRepo,
@@ -12,6 +14,7 @@ import {
 } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
 import { Assessment } from '../../../shared/models/assessment'
+import { sortObject } from '../../../shared/utilities/sort-object'
 import { LogService } from '../misc/log.service'
 import { RemoteConfigService } from './remote-config.service'
 import { SubjectConfigService } from './subject-config.service'
@@ -22,6 +25,8 @@ export class ProtocolService {
   GIT_BRANCHES = 'branches'
   ATTRIBUTE_KEY = 0
   ATTRIBUTE_VAL = 1
+  // NOTE: If no/null attribute order, default value:
+  HIGH_ATTRIBUTE_ORDER = 99
 
   constructor(
     private config: SubjectConfigService,
@@ -78,12 +83,15 @@ export class ProtocolService {
 
   matchTreeWithAttributes(children, findNext, attributes, previousPath) {
     if (findNext == this.ATTRIBUTE_KEY) {
-      for (const child in children)
-        if (Object.keys(attributes).includes(child['path'])) return child
+      for (const attribute in attributes) {
+        const child = children.find(c => c.path == attribute)
+        if (child != null) return child
+      }
     } else {
-      for (const child in children)
+      for (const child of children)
         if (child['path'] == attributes[previousPath]) return child
     }
+    return null
   }
 
   getProjectTree() {
@@ -143,15 +151,40 @@ export class ProtocolService {
     )
   }
 
+  getParticipantAttributeOrder(config) {
+    return config.getOrDefault(
+      ConfigKeys.PARTICIPANT_ATTRIBUTE_ORDER,
+      DefaultParticipantAttributeOrder
+    )
+  }
+
   getParticipantAttributes() {
-    return this.config.getParticipantAttributes().then(attributes => {
-      if (attributes == null)
-        return this.config.pullSubjectInformation().then(user => {
-          this.config.setParticipantAttributes(user.attributes)
-          return user.attributes
-        })
-      else return attributes
-    })
+    return this.readRemoteConfig()
+      .then(cfg =>
+        Promise.all([
+          this.config.getParticipantAttributes(),
+          this.getParticipantAttributeOrder(cfg)
+        ])
+      )
+      .then(([attributes, order]) => {
+        const orderWithoutNull = this.formatAttributeOrder(attributes, order)
+        if (attributes == null)
+          return this.config.pullSubjectInformation().then(user => {
+            this.config.setParticipantAttributes(user.attributes)
+            return sortObject(user.attributes, orderWithoutNull)
+          })
+        else return sortObject(attributes, orderWithoutNull)
+      })
+  }
+
+  formatAttributeOrder(attributes, order) {
+    const orderWithoutNull = {}
+    Object.keys(attributes).map(
+      k =>
+        (orderWithoutNull[k] =
+          order[k] != null ? order[k] : this.HIGH_ATTRIBUTE_ORDER)
+    )
+    return orderWithoutNull
   }
 
   format(protocols: Assessment[]): Assessment[] {

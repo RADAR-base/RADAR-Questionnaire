@@ -100,7 +100,7 @@ export class QuestionsPageComponent implements OnInit {
     this.isLastTask = res.isLastTask
     this.assessment = res.assessment
     this.taskType = res.type
-    this.requiresInClinicCompletion = res.requiresInClinicCompletion
+    this.requiresInClinicCompletion = this.assessment.requiresInClinicCompletion
   }
 
   handleIntro(start: boolean) {

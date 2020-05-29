@@ -7,8 +7,6 @@ import {
 } from '@angular/core'
 
 import { UsageService } from '../../../../core/services/usage/usage.service'
-import { Assessment } from '../../../../shared/models/assessment'
-import { Task } from '../../../../shared/models/task'
 
 @Component({
   selector: 'finish',
@@ -25,13 +23,9 @@ export class FinishComponent implements OnChanges {
   showDoneButton: boolean
   @Input()
   isShown: boolean
-
   @Output()
   exit: EventEmitter<any> = new EventEmitter<any>()
 
-  task: Task
-  questionnaireData
-  assessment: Assessment
   completedInClinic = false
 
   constructor(private usage: UsageService) {}

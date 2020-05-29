@@ -16,6 +16,7 @@ export interface Assessment {
   questions: Question[]
   showInCalendar?: boolean
   order?: number
+  requiresInClinicCompletion?: boolean
 }
 
 export interface QuestionnaireMetadata {

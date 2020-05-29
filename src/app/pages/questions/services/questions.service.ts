@@ -189,7 +189,7 @@ export class QuestionsService {
 
   handleClinicalFollowUp(assessment, completedInClinic?) {
     if (!completedInClinic) return Promise.resolve()
-    return this.finish.evalClinicalFollowUpTask(assessment)
+    return this.finish.createClinicalFollowUpTask(assessment)
   }
 
   getHiddenQuestions(): Promise<Object> {

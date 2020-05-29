@@ -18,7 +18,7 @@ import { ScheduleGeneratorService } from './schedule-generator.service'
 export class ScheduleService {
   private readonly SCHEDULE_STORE = {
     SCHEDULE_TASKS: StorageKeys.SCHEDULE_TASKS,
-    SCHEDULE_TASKS_CLINICAL: StorageKeys.SCHEDULE_TASKS_CLINICAL,
+    SCHEDULE_TASKS_ON_DEMAND: StorageKeys.SCHEDULE_TASKS_ON_DEMAND,
     SCHEDULE_TASKS_COMPLETED: StorageKeys.SCHEDULE_TASKS_COMPLETED
   }
 
@@ -31,15 +31,15 @@ export class ScheduleService {
   getTasks(type: AssessmentType): Promise<Task[]> {
     switch (type) {
       case AssessmentType.SCHEDULED:
-        return this.getNonClinicalTasks()
+        return this.getScheduledTasks()
       case AssessmentType.ON_DEMAND:
-        return this.getClinicalTasks()
+        return this.getOnDemandTasks()
       case AssessmentType.ALL:
         return Promise.all([
-          this.getNonClinicalTasks(),
-          this.getClinicalTasks()
-        ]).then(([defaultTasks, clinicalTasks]) => {
-          const allTasks = (defaultTasks || []).concat(clinicalTasks || [])
+          this.getScheduledTasks(),
+          this.getOnDemandTasks()
+        ]).then(([scheduledTasks, onDemandTasks]) => {
+          const allTasks = (scheduledTasks || []).concat(onDemandTasks || [])
           allTasks.forEach(t => {
             if (t.notifications === undefined) {
               t.notifications = []
@@ -62,12 +62,12 @@ export class ScheduleService {
     })
   }
 
-  getNonClinicalTasks(): Promise<Task[]> {
+  getScheduledTasks(): Promise<Task[]> {
     return this.storage.get(this.SCHEDULE_STORE.SCHEDULE_TASKS)
   }
 
-  getClinicalTasks(): Promise<Task[]> {
-    return this.storage.get(this.SCHEDULE_STORE.SCHEDULE_TASKS_CLINICAL)
+  getOnDemandTasks(): Promise<Task[]> {
+    return this.storage.get(this.SCHEDULE_STORE.SCHEDULE_TASKS_ON_DEMAND)
   }
 
   getCompletedTasks(): Promise<Task[]> {
@@ -89,17 +89,17 @@ export class ScheduleService {
   setTasks(type: AssessmentType, tasks): Promise<void> {
     switch (type) {
       case AssessmentType.SCHEDULED:
-        return this.setNonClinicalTasks(tasks)
+        return this.setScheduledTasks(tasks)
       case AssessmentType.ON_DEMAND:
-        return this.setClinicalTasks(tasks)
+        return this.setOnDemandTasks(tasks)
     }
   }
 
-  setClinicalTasks(tasks) {
-    return this.storage.set(this.SCHEDULE_STORE.SCHEDULE_TASKS_CLINICAL, tasks)
+  setOnDemandTasks(tasks) {
+    return this.storage.set(this.SCHEDULE_STORE.SCHEDULE_TASKS_ON_DEMAND, tasks)
   }
 
-  setNonClinicalTasks(tasks) {
+  setScheduledTasks(tasks) {
     return this.storage.set(this.SCHEDULE_STORE.SCHEDULE_TASKS, tasks)
   }
 
@@ -131,9 +131,9 @@ export class ScheduleService {
       )
   }
 
-  generateClinicalSchedule(assessment, referenceDate) {
-    this.logger.log('Generating clinical schedule', assessment)
-    return this.getClinicalTasks().then((tasks: Task[]) =>
+  generateOnDemandSchedule(assessment, referenceDate) {
+    this.logger.log('Generating on-demand schedule notifications..', assessment)
+    return this.getOnDemandTasks().then((tasks: Task[]) =>
       this.schedule
         .runScheduler(
           AssessmentType.ON_DEMAND,
@@ -174,8 +174,8 @@ export class ScheduleService {
 
   reset() {
     return Promise.all([
-      this.setClinicalTasks([]),
-      this.setNonClinicalTasks([]),
+      this.setOnDemandTasks([]),
+      this.setScheduledTasks([]),
       this.setCompletedTasks([])
     ])
   }

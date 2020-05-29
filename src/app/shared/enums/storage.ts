@@ -15,16 +15,15 @@ export class StorageKeys {
   static CONFIG_ASSESSMENTS = new StorageKeys('CONFIG_ASSESSMENTS')
   static SCHEDULE_VERSION = new StorageKeys('SCHEDULE_VERSION')
   static SCHEDULE_TASKS = new StorageKeys('SCHEDULE_TASKS')
-  static SCHEDULE_TASKS_CLINICAL = new StorageKeys('SCHEDULE_TASKS_CLINICAL')
+  static SCHEDULE_TASKS_ON_DEMAND = new StorageKeys('SCHEDULE_TASKS_ON_DEMAND')
 
   // NOTE: SCHEDULE_TASKS_COMPLETED: All completed tasks from midnight of last schedule generation date
   static SCHEDULE_TASKS_COMPLETED = new StorageKeys('SCHEDULE_TASKS_COMPLETED')
 
   static SCHEDULE_REPORT = new StorageKeys('SCHEDULE_REPORT')
   static CACHE_ANSWERS = new StorageKeys('CHACHE_ANSWERS')
-  static HAS_CLINICAL_TASKS = new StorageKeys('HAS_CLINICAL_TASKS')
-  static CONFIG_CLINICAL_ASSESSMENTS = new StorageKeys(
-    'CONFIG_CLINICAL_ASSESSMENTS'
+  static CONFIG_ASSESSMENTS_ON_DEMAND = new StorageKeys(
+    'CONFIG_ASSESSMENTS_ON_DEMAND'
   )
   static TIME_ZONE = new StorageKeys('TIME_ZONE')
   static UTC_OFFSET = new StorageKeys('UTC_OFFSET')
@@ -33,7 +32,9 @@ export class StorageKeys {
   static LAST_UPLOAD_DATE = new StorageKeys('LAST_UPLOAD_DATE')
   static BASE_URI = new StorageKeys('BASE_URI')
 
-  static REMOTE_CONFIG_CACHE_TIMEOUT = new StorageKeys('REMOTE_CONFIG_CACHE_TIMEOUT')
+  static REMOTE_CONFIG_CACHE_TIMEOUT = new StorageKeys(
+    'REMOTE_CONFIG_CACHE_TIMEOUT'
+  )
 
   constructor(public value: string) {}
 

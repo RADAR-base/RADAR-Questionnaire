@@ -12,7 +12,7 @@ export interface Task {
   estimatedCompletionTime?: number
   completionWindow: number
   warning: string
-  requiresInClinicCompletion: boolean
+  requiresInClinicCompletion?: boolean
   notifications: SingleNotification[]
   timeCompleted: number
   showInCalendar: boolean

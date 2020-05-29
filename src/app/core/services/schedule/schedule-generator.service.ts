@@ -168,9 +168,7 @@ export class ScheduleGeneratorService {
     task.estimatedCompletionTime = assessment.estimatedCompletionTime
     task.completionWindow = completionWindow
     task.warning = this.localization.chooseText(assessment.warn)
-    task.requiresInClinicCompletion =
-      task.type == AssessmentType.ON_DEMAND &&
-      !!assessment.protocol.clinicalProtocol.requiresInClinicCompletion
+    task.requiresInClinicCompletion = assessment.requiresInClinicCompletion
     task.showInCalendar = this.getOrDefault(
       assessment.showInCalendar,
       task.showInCalendar

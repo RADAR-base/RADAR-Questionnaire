@@ -1,4 +1,5 @@
 import { LocKeys } from '../../app/shared/enums/localisations'
+import { AssessmentType } from '../../app/shared/models/assessment'
 import {
   LanguageSetting,
   NotificationSettings,
@@ -44,6 +45,7 @@ export const DefaultESMCompletionWindow = 600000
 // *Default sample task
 export const DefaultTask: Task = {
   index: 0,
+  type: AssessmentType.SCHEDULED,
   completed: false,
   reportedCompletion: false,
   timestamp: 0,
@@ -52,7 +54,6 @@ export const DefaultTask: Task = {
   estimatedCompletionTime: 0,
   completionWindow: DefaultTaskCompletionWindow,
   warning: '',
-  isClinical: false,
   notifications: [],
   timeCompleted: 0,
   showInCalendar: true,

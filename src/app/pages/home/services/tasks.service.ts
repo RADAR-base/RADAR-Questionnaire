@@ -17,8 +17,8 @@ export class TasksService {
     private remoteConfig: RemoteConfigService
   ) {}
 
-  evalHasClinicalTasks() {
-    return this.questionnaire.getHasClinicalTasks()
+  getHasOnDemandTasks() {
+    return this.questionnaire.getHasOnDemandAssessments()
   }
 
   getTasksOfToday() {

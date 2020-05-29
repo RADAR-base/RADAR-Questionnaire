@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core'
 
-import { DefaultPlatformInstance } from '../../../../assets/data/defaultConfig'
+import {
+  DefaultOnDemandAssessmentIcon,
+  DefaultPlatformInstance
+} from '../../../../assets/data/defaultConfig'
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
 import { RemoteConfigService } from '../../../core/services/config/remote-config.service'
 import { ScheduleService } from '../../../core/services/schedule/schedule.service'
@@ -16,6 +19,17 @@ export class TasksService {
     private questionnaire: QuestionnaireService,
     private remoteConfig: RemoteConfigService
   ) {}
+
+  getOnDemandAssessmentIcon() {
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        config.getOrDefault(
+          ConfigKeys.ON_DEMAND_ASSESSMENT_ICON,
+          DefaultOnDemandAssessmentIcon
+        )
+      )
+  }
 
   getHasOnDemandTasks() {
     return this.questionnaire.getHasOnDemandAssessments()

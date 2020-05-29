@@ -26,13 +26,13 @@
   </div>
 
   <div
-    *ngIf="hasClinicalTasks | async"
+    *ngIf="hasOnDemandTasks | async"
     class="clinical-container"
     (tap)="openClinicalTasksPage()"
   >
     <div class="clinical-button" [class.clinical-button-bottom]="showCalendar">
       <div class="clinical-icon">
-        <img src="assets/imgs/clinical.png" class="icon-clinical" />
+        <img src="{{ onDemandIcon | async }}" class="icon-clinical" />
       </div>
     </div>
   </div>

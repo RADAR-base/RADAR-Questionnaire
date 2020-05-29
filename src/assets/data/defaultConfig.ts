@@ -6,6 +6,7 @@ import {
   WeeklyReportSubSettings
 } from '../../app/shared/models/settings'
 import { Task } from '../../app/shared/models/task'
+import { Localisations } from './localisations'
 import { DefaultSourceProducerAndSecretExport } from './secret'
 
 // DEFAULT APP INFO
@@ -33,6 +34,15 @@ export const DefaultSourceTypeRegistrationBody = {
   sourceTypeModel: DefaultSourceTypeModel,
   sourceTypeProducer: 'RADAR'
 }
+
+// *The icon for On Demand assessments  (REMOTE CONFIG KEY: `on_demand_assessment_icon`)
+export const DefaultOnDemandAssessmentIcon = 'assets/imgs/clinical.png'
+
+// *The icon for On Demand assessments  (REMOTE CONFIG KEY: `on_demand_assessment_label`)
+// *The format/type is LanguageSetting
+export const DefaultOnDemandAssessmentLabel = JSON.stringify(
+  Localisations['CLINICAL_TASKS']
+)
 
 // DEFAULT SCHEDULE SETUP
 

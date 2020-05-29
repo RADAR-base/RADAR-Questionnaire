@@ -35,6 +35,7 @@ export class HomePageComponent implements OnDestroy {
   showCompleted = false
   startingQuestionnaire = false
   hasOnDemandTasks: Promise<boolean>
+  onDemandIcon: Promise<string>
   taskIsNow = false
   checkTaskInterval
 
@@ -90,6 +91,7 @@ export class HomePageComponent implements OnDestroy {
     })
     this.hasOnDemandTasks = this.tasksService.getHasOnDemandTasks()
     this.title = this.tasksService.getPlatformInstanceName()
+    this.onDemandIcon = this.tasksService.getOnDemandAssessmentIcon()
   }
 
   onResume() {

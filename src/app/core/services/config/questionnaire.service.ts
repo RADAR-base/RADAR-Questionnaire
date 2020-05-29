@@ -14,8 +14,7 @@ import { StorageService } from '../storage/storage.service'
 export class QuestionnaireService {
   private readonly QUESTIONNAIRE_STORE = {
     CONFIG_ASSESSMENTS: StorageKeys.CONFIG_ASSESSMENTS,
-    CONFIG_CLINICAL_ASSESSMENTS: StorageKeys.CONFIG_CLINICAL_ASSESSMENTS,
-    HAS_CLINICAL_TASKS: StorageKeys.HAS_CLINICAL_TASKS
+    CONFIG_ASSESSMENTS_ON_DEMAND: StorageKeys.CONFIG_ASSESSMENTS_ON_DEMAND
   }
 
   constructor(
@@ -93,14 +92,10 @@ export class QuestionnaireService {
       case AssessmentType.ALL:
         const {
           negative: scheduledAssessments,
-          positive: clinicalAssessments
-        } = this.util.partition(
-          assessments,
-          a => a.type == AssessmentType.ON_DEMAND
-        )
+          positive: onDemandAssessments
+        } = this.util.partition(assessments, a => this.assessmentPartitioner(a))
         return Promise.all([
-          this.setHasClinicalTasks(clinicalAssessments.length > 0),
-          this.updateAssessments(AssessmentType.ON_DEMAND, clinicalAssessments),
+          this.updateAssessments(AssessmentType.ON_DEMAND, onDemandAssessments),
           this.updateAssessments(AssessmentType.SCHEDULED, scheduledAssessments)
         ])
       default:
@@ -112,6 +107,21 @@ export class QuestionnaireService {
               e
             )
           })
+    }
+  }
+
+  assessmentPartitioner(assessment: Assessment) {
+    if (assessment.type) {
+      return assessment.type == AssessmentType.ON_DEMAND
+    } else {
+      if (assessment.protocol.clinicalProtocol) {
+        assessment.type = AssessmentType.ON_DEMAND
+        assessment.requiresInClinicCompletion = true
+        return true
+      } else {
+        assessment.type = AssessmentType.SCHEDULED
+        return false
+      }
     }
   }
 
@@ -144,18 +154,16 @@ export class QuestionnaireService {
   getKeyFromTaskType(type: AssessmentType) {
     switch (type) {
       case AssessmentType.ON_DEMAND:
-        return this.QUESTIONNAIRE_STORE.CONFIG_CLINICAL_ASSESSMENTS
+        return this.QUESTIONNAIRE_STORE.CONFIG_ASSESSMENTS_ON_DEMAND
       default:
         return this.QUESTIONNAIRE_STORE.CONFIG_ASSESSMENTS
     }
   }
 
-  setHasClinicalTasks(value) {
-    return this.storage.set(this.QUESTIONNAIRE_STORE.HAS_CLINICAL_TASKS, value)
-  }
-
-  getHasClinicalTasks() {
-    return this.storage.get(this.QUESTIONNAIRE_STORE.HAS_CLINICAL_TASKS)
+  getHasOnDemandAssessments() {
+    return this.storage
+      .get(this.QUESTIONNAIRE_STORE.CONFIG_ASSESSMENTS_ON_DEMAND)
+      .then(assessments => assessments.length > 0)
   }
 
   reset() {

@@ -4,10 +4,10 @@ import { QuestionnaireService } from '../../../core/services/config/questionnair
 import { AssessmentType } from '../../../shared/models/assessment'
 
 @Injectable()
-export class ClinicalTasksService {
+export class OnDemandService {
   constructor(public questionnaire: QuestionnaireService) {}
 
-  getClinicalAssessments() {
+  getAssessements() {
     return this.questionnaire.getAssessments(AssessmentType.ON_DEMAND)
   }
 }

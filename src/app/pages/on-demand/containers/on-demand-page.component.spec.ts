@@ -2,10 +2,10 @@ import { ComponentFixture, TestBed, async } from '@angular/core/testing'
 import { NavController } from 'ionic-angular'
 
 import { AppModule } from '../../../app.module'
-import { ClinicalTasksService } from '../services/clinical-tasks.service'
-import { ClinicalTasksPageComponent } from './clinical-tasks-page.component'
+import { OnDemandService } from '../services/on-demand.service'
+import { OnDemandPageComponent } from './on-demand-page.component'
 
-describe('ClinicalTasksPageComponent', () => {
+describe('OnDemandPageComponent', () => {
   let component: any
   let fixture: ComponentFixture<any>
 
@@ -15,19 +15,19 @@ describe('ClinicalTasksPageComponent', () => {
       declarations: [],
       providers: [
         NavController,
-        { provide: ClinicalTasksService, useClass: ClinicalTasksServiceMock }
+        { provide: OnDemandService, useClass: OnDemandServiceMock }
       ]
     }).compileComponents()
 
-    fixture = TestBed.createComponent(ClinicalTasksPageComponent)
+    fixture = TestBed.createComponent(OnDemandPageComponent)
     component = fixture.debugElement.componentInstance
     component.assessments = []
     fixture.detectChanges()
   })
 
   it('should create', () => {
-    expect(component instanceof ClinicalTasksPageComponent).toBe(true)
+    expect(component instanceof OnDemandPageComponent).toBe(true)
   })
 })
 
-class ClinicalTasksServiceMock {}
+class OnDemandServiceMock {}

@@ -1,11 +1,11 @@
 // tslint:disable: forin
+// tslint:disable: no-bitwise
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 
 import {
   DefaultParticipantAttributeOrder,
   DefaultProtocolBranch,
-  DefaultProtocolEndPoint,
   DefaultProtocolGithubRepo,
   DefaultProtocolPath,
   DefaultQuestionnaireFormatURI,
@@ -14,6 +14,12 @@ import {
 } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
 import { Assessment } from '../../../shared/models/assessment'
+import { Attributes } from '../../../shared/models/attribute'
+import {
+  GithubContent,
+  GithubTree,
+  GithubTreeChild
+} from '../../../shared/models/github'
 import { sortObject } from '../../../shared/utilities/sort-object'
 import { LogService } from '../misc/log.service'
 import { RemoteConfigService } from './remote-config.service'
@@ -25,8 +31,7 @@ export class ProtocolService {
   GIT_BRANCHES = 'branches'
   ATTRIBUTE_KEY = 0
   ATTRIBUTE_VAL = 1
-  // NOTE: If no/null attribute order, default value:
-  HIGH_ATTRIBUTE_ORDER = 99
+  DEFAULT_ATTRIBUTE_ORDER = Number.MAX_SAFE_INTEGER
 
   constructor(
     private config: SubjectConfigService,
@@ -38,15 +43,46 @@ export class ProtocolService {
   pull() {
     return Promise.all([this.getProjectTree(), this.getParticipantAttributes()])
       .then(([tree, attributes]) =>
-        this.findValidProtocolUrl(tree, [], this.ATTRIBUTE_KEY, '', attributes)
+        this.findValidProtocolUrl(tree, '', this.ATTRIBUTE_KEY, '', attributes)
       )
       .then((url: string) => this.http.get(url).toPromise())
-      .then(res => atob(res['content']))
+      .then((res: GithubContent) => atob(res.content))
   }
 
-  findValidProtocolUrl(children, previousPath, findNext, protocol, attributes) {
+  /**
+   * This function retrieves a valid protocol url that matches the most number of attributes
+   * based on attribute order. This is done by traversing the Github tree recursively until the
+   * children contain no matching user attributes.
+   *
+   * First, it checks if any of the children is a protocol.json file and stores it to `protocolURL`.
+   * Next, it matches any of the children with any of the user attribute keys based on the order/priority.
+   * If there is no match, it will return the `protocolURL` set earlier.
+   * If there is a match, it will run the same function recursively for the children of that new tree,
+   *  but this time searching for the matching attribute value.
+   * This will keep repeating and alternating between key and value until no match is found,
+   *  and the protocol url is returned.
+   *
+   *  @param children : children (blobs or trees) of the Github tree (of that path).
+   *                  : The initial value is the children of of the project tree (`repo/project-name`).
+   *  @param previousPath : path that was last traversed.
+   *                  : The initial value is an empty string
+   *  @param findNext : If the path to find next is the attribute key or value.
+   *                  : The format is `project-name/attribute-key/attribute-value/attribute-key-2/attribute-value-2/..`
+   *                  : The initial value is `ATTRIBUTE_KEY`
+   *  @param protocolURL : The protocol url, if it exists, in the path (`path/protocol.json`).
+   *                     : The initial value is an empty string
+   *  @param attributes : A key-value pairs of the user's attributes.
+   *                    : This value is constant throughout the recursion
+   */
+  findValidProtocolUrl(
+    children: GithubTreeChild[],
+    previousPath: string,
+    findNext: number,
+    protocolURL: string,
+    attributes: Attributes
+  ) {
     if (findNext == this.ATTRIBUTE_KEY)
-      protocol = this.getProtocolPathInTree(children, DefaultProtocolPath)
+      protocolURL = this.getProtocolPathInTree(children, DefaultProtocolPath)
     return new Promise(resolve => {
       const selected = this.matchTreeWithAttributes(
         children,
@@ -54,16 +90,16 @@ export class ProtocolService {
         attributes,
         previousPath
       )
-      if (selected == null) resolve(protocol)
+      if (selected == null) resolve(protocolURL)
       else {
-        findNext = !findNext
+        findNext = ~findNext
         this.getChildTree(selected).then(nextChildren =>
           resolve(
             this.findValidProtocolUrl(
-              nextChildren['tree'],
-              selected['path'],
+              nextChildren.tree,
+              selected.path,
               findNext,
-              protocol,
+              protocolURL,
               attributes
             )
           )
@@ -72,16 +108,21 @@ export class ProtocolService {
     })
   }
 
-  getProtocolPathInTree(children, protocolPath) {
+  getProtocolPathInTree(children: GithubTreeChild[], protocolPath: string) {
     const child = children.find(c => c.path == protocolPath).url
     if (child != null) return child
   }
 
-  getChildTree(child) {
-    return this.http.get(child['url']).toPromise()
+  getChildTree(child: GithubTreeChild): Promise<GithubTree> {
+    return this.http.get<GithubTree>(child.url).toPromise()
   }
 
-  matchTreeWithAttributes(children, findNext, attributes, previousPath) {
+  matchTreeWithAttributes(
+    children: GithubTreeChild[],
+    findNext: number,
+    attributes: Attributes,
+    previousPath: string
+  ): GithubTreeChild {
     if (findNext == this.ATTRIBUTE_KEY) {
       for (const attribute in attributes) {
         const child = children.find(c => c.path == attribute)
@@ -89,38 +130,35 @@ export class ProtocolService {
       }
     } else {
       for (const child of children)
-        if (child['path'] == attributes[previousPath]) return child
+        if (child.path == attributes[previousPath]) return child
     }
     return null
   }
 
-  getProjectTree() {
+  getProjectTree(): Promise<GithubTreeChild[]> {
     return this.readRemoteConfig()
       .then(cfg =>
-        Promise.all([this.config.getProjectName(), this.getProtocolBranch(cfg)])
+        Promise.all([
+          this.config.getProjectName(),
+          this.getProtocolBranch(cfg),
+          this.getProtocolRepo
+        ])
       )
-      .then(([projectName, branch]) =>
-        this.getRootTreeHashUrl(branch)
+      .then(([projectName, branch, repo]) =>
+        this.getRootTreeHashUrl(branch, repo)
           .then(url => this.http.get(url).toPromise())
-          .then((res: any) => {
-            const project = res.tree.find(
-              c => c.path == projectName && c.type == this.GIT_TREE
-            )
+          .then((res: GithubTree) => {
+            const project = res.tree.find(c => c.path == projectName)
             if (project == null)
               throw new Error('Unable to find project in repository.')
-            return this.http.get(project.url).toPromise()
+            return this.http.get<GithubTree>(project.url).toPromise()
           })
-          .then(projectChild => projectChild['tree'])
       )
+      .then(projectChild => projectChild.tree)
   }
 
-  getRootTreeHashUrl(branch) {
-    const treeUrl = [
-      GIT_API_URI,
-      DefaultProtocolGithubRepo,
-      this.GIT_BRANCHES,
-      branch
-    ].join('/')
+  getRootTreeHashUrl(branch, repo) {
+    const treeUrl = [GIT_API_URI, repo, this.GIT_BRANCHES, branch].join('/')
     return this.http
       .get(treeUrl)
       .toPromise()
@@ -133,21 +171,17 @@ export class ProtocolService {
     })
   }
 
-  getBaseUrl(config) {
-    return config.getOrDefault(
-      ConfigKeys.PROTOCOL_BASE_URL,
-      DefaultProtocolEndPoint
-    )
-  }
-
-  getProtocolPath(config) {
-    return config.getOrDefault(ConfigKeys.PROTOCOL_PATH, DefaultProtocolPath)
-  }
-
   getProtocolBranch(config) {
     return config.getOrDefault(
       ConfigKeys.PROTOCOL_BRANCH,
       DefaultProtocolBranch
+    )
+  }
+
+  getProtocolRepo(config) {
+    return config.getOrDefault(
+      ConfigKeys.PROTOCOL_REPO,
+      DefaultProtocolGithubRepo
     )
   }
 
@@ -177,12 +211,15 @@ export class ProtocolService {
       })
   }
 
+  /**
+   * This maps the attribute keys to their order (from order object) and sets it to the max int if null.
+   */
   formatAttributeOrder(attributes, order) {
     const orderWithoutNull = {}
     Object.keys(attributes).map(
       k =>
         (orderWithoutNull[k] =
-          order[k] != null ? order[k] : this.HIGH_ATTRIBUTE_ORDER)
+          order[k] != null ? order[k] : this.DEFAULT_ATTRIBUTE_ORDER)
     )
     return orderWithoutNull
   }

@@ -141,7 +141,7 @@ export class ProtocolService {
         Promise.all([
           this.config.getProjectName(),
           this.getProtocolBranch(cfg),
-          this.getProtocolRepo
+          this.getProtocolRepo(cfg)
         ])
       )
       .then(([projectName, branch, repo]) =>

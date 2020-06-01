@@ -113,19 +113,27 @@ For Android remote notifications, setting your sender ID and adding your `google
 
 Certain values can be overriden using Firebase Remote Config. Specifically, the following variables are supported:
 
-| Parameter                 | Description                                                                                                                   | Default value                                                                                                    |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `oauth_client_id`         | Client ID to connect to the ManagementPortal with                                                                             | `aRMT`                                                                                                           |
-| `oauth_client_secret`     | Client secret to connect to the ManagementPortal with                                                                         | Value set in `secret.ts`                                                                                         |
-| `oauth_refresh_seconds`   | After how many seconds to refresh the OAuth token                                                                             | `1800` (=30 minutes)                                                                                             |
-| `protocol_base_url`       | Base URL where the protocol definitions are located.                                                                          | <https://api.github.com/repos/RADAR-base/RADAR-aRMT-protocols/contents>                                          |
-| `protocol_branch`         | Github branch where the protocol definitions should be read from                                                              | `master`                                                                                                         |
-| `protocol_path`           | Path inside a project name that should be read for a protocol                                                                 | `protocol.json`                                                                                                  |
-| `kafka_specification_url` | URL of the Kafka topic specification                                                                                          | <https://api.github.com/repos/RADAR-base/radar-schemas/contents/specifications/active/aRMT-1.4.3.yml?ref=master> |
-| `platform_instance`       | Title of RADAR Base / platform instance                                                                                       | `RADAR-CNS`                                                                                                      |
+| Parameter                     | Description                                                                             | Default value                                                                                                    |
+| ----------------------------- | --------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `oauth_client_id`             | Client ID to connect to the ManagementPortal with                                       | `aRMT`                                                                                                           |
+| `oauth_client_secret`         | Client secret to connect to the ManagementPortal with                                   | Value set in `secret.ts`                                                                                         |
+| `oauth_refresh_seconds`       | After how many seconds to refresh the OAuth token                                       | `1800` (=30 minutes)                                                                                             |
+| `protocol_repo`               | Github repo where the protocol definitions are located.                                 | `RADAR-Base/RADAR-aRMT-protocols`                                                                                |
+| `protocol_branch`             | Github branch where the protocol definitions should be read from                        | `master`                                                                                                         |
+| `protocol_path`               | Path inside a project name that should be read for a protocol                           | `protocol.json`                                                                                                  |
+| `kafka_specification_url`     | URL of the Kafka topic specification                                                    | <https://api.github.com/repos/RADAR-base/radar-schemas/contents/specifications/active/aRMT-1.4.3.yml?ref=master> |
+| `platform_instance`           | Title of RADAR Base / platform instance                                                 | `RADAR-CNS`                                                                                                      |
+| `participant_attribute_order` | Map that specifies the order in which the attributes are matched with the protocol path | `{Human-readable-identifier: -1}`                                                                                |
+
 #### Conditions
 
 Conditions can be added to remote config variables to target specific groups of users. Different condition rule types are supported: app, platform, country/region, user property, date/time, and random percentile. For example a `protocol_branch` config value can be different based on the user property `projectId`.
+
+#### Protocol Attributes
+
+A user/subject can have `attributes` which are taken from Management Portal. These could determine what protocol would be pulled for the user from Github ([RADAR aRMT Protocols](https://github.com/RADAR-base/RADAR-aRMT-protocols)). The repository should follow the format: `/PROJECT_NAME/ATTRIBUTE-KEY-1/ATTRIBUTE-VALUE-1/protocol.json`. Please note that a default `protocol.json` file must always be present in the project directory, e.g.: `/PROJECT_NAME/protocol.json`.
+
+For multiple attributes, you may set them as follows: `/PROJECT_NAME/ATTRIBUTE-KEY-1/ATTRIBUTE-VALUE-1/ATTRIBUTE-KEY-2/ATTRIBUTE-VALUE-2/[...]/protocol.json`. If multiple attribute keys are found in the same path (e.g. `/PROJECT_NAME/ATTRIBUTE-KEY-1/` and `/PROJECT_NAME/ATTRIBUTE-KEY-2/`), and these attributes are present for the user, the `participant_attribute_order` from the Remote Config will be used to determine which attribute takes precedence. If this is not present, the default value is `{Human-readable-identifier: -1}`; the human readable id will always be the highest priority. If an order value is not present for the attribute, the default value (`MAX_INT_VALUE`) would be used.
 
 ### Analytics
 

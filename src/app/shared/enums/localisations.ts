@@ -168,6 +168,7 @@ export class LocKeys {
   static TXTIN_LABEL_AMPM = new LocKeys('TXTIN_LABEL_AMPM')
 
   static SD_TITLE_DIARY = new LocKeys('SD_TITLE_DIARY')
+  static SD_INFO_BODY = new LocKeys('SD_INFO_BODY')
   static SD_TITLE_RECENT = new LocKeys('SD_TITLE_RECENT')
   static SD_TITLE_OLDER = new LocKeys('SD_TITLE_OLDER')
   static SD_DURATION = new LocKeys('SD_DURATION')
@@ -192,6 +193,7 @@ export class LocKeys {
   static SD_DETAIL_9 = new LocKeys('SD_DETAIL_9')
   static SD_DETAIL_10 = new LocKeys('SD_DETAIL_10')
   static SD_DETAIL_11 = new LocKeys('SD_DETAIL_11')
+  static SD_DETAIL_12 = new LocKeys('SD_DETAIL_12')
   static SD_RADIO_YES = new LocKeys('SD_RADIO_YES')
   static SD_RADIO_NO = new LocKeys('SD_RADIO_NO')
   static SD_RADIO_DONT_KNOW = new LocKeys('SD_RADIO_DONT_KNOW')

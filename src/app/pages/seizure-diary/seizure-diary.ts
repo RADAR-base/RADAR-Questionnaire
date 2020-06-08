@@ -54,6 +54,19 @@ export class SeizureDiaryPage {
     this.seizureDetailAlert(item)
   }
 
+  infoText() {
+    return this.alertService.showAlert({
+      title: this.localization.translateKey(LocKeys.SD_TITLE_DIARY),
+      message: this.localization.translateKey(LocKeys.SD_INFO_BODY),
+      buttons: [
+        {
+          text: this.localization.translateKey(LocKeys.BTN_OKAY),
+          handler: () => {}
+        }
+      ]
+    })
+  }
+
   clearLocal() {
     const buttons = [
       {
@@ -153,7 +166,8 @@ export class SeizureDiaryPage {
         if (success) this.showConfirmNewDiary()
       });
     } else {
-      this.showConfirmNewDiary();
+      //this.showConfirmNewDiary();
+      this.startNewSeizureDiary();
     }
   }
 
@@ -205,7 +219,9 @@ export class SeizureDiaryPage {
       "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_8) + ":</b> " + eventData.diary_wearable + '<br/>' +
       "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_9) + ":</b> " + eventData.diary_trigger + '<br/>' +
       "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_10) + ":</b> " + eventData.diary_trigger_detail + '<br/>' +
-      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_11) + ":</b> " + eventData.diary_trigger_other;
+      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_11) + ":</b> " + eventData.diary_trigger_other + '<br/>' + '<br/>' +
+      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_12) + ":</b> " + '<br/>' + this.localization.moment(eventData.timeCompleted, "X", false).format("lll");
+
 
     return this.alertService.showAlert({
       title: this.localization.translateKey(LocKeys.SD_DETAIL_TITLE),

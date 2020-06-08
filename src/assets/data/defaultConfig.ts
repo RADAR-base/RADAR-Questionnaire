@@ -13,7 +13,7 @@ import { DefaultSourceProducerAndSecretExport } from './secret'
 export const DefaultPlatformInstance = 'RADAR-CNS'
 
 // *Default app version
-export const DefaultAppVersion = '0.7.5-epi'
+export const DefaultAppVersion = '0.7.7-epi'
 
 // *Default Android package name
 export const DefaultPackageName = 'org.phidatalab.radar_armt_epi'
@@ -28,7 +28,7 @@ export const DefaultAppId = ''
 export const DefaultSourcePrefix = 'aRMT'
 export const DefaultSourceTypeModel: string = `${DefaultSourcePrefix}-App`
 export const DefaultSourceTypeRegistrationBody = {
-  sourceTypeCatalogVersion: '1.5.0',
+  sourceTypeCatalogVersion: '1.5.1',
   sourceTypeModel: DefaultSourceTypeModel,
   sourceTypeProducer: 'RADAR'
 }
@@ -67,7 +67,7 @@ export const DefaultScheduleYearCoverage: number = 2
 export const DefaultScheduleTimeInterval = { unit: 'day', amount: 1 }
 
 // *Default schedule/protocol version
-export const DefaultScheduleVersion = '0.3.10'
+export const DefaultScheduleVersion = '0.2.3'
 
 // *Default max number of completion logs to send on app start
 export const DefaultNumberOfCompletionLogsToSend = 10
@@ -148,8 +148,9 @@ export const DefaultTokenRefreshSeconds = 1800 // 30 minutes in s
 // DEFAULT URI
 
 // *The Default endpoint where the RADAR-base platform is hosted
-export const DefaultEndPoint: string =
-  'https://radar-cns-platform.rosalind.kcl.ac.uk'
+export const DefaultEndPoint: string = 'https://www.radar-studies.co.uk'
+//export const DefaultEndPoint: string = 'https://radar-cns-platform.rosalind.kcl.ac.uk'
+//export const DefaultEndPoint: string = 'https://nz1200.ukl.uni-freiburg.de'
 
 export const DefaultManagementPortalURI = '/managementportal'
 export const DefaultRefreshTokenURI = '/oauth/token'

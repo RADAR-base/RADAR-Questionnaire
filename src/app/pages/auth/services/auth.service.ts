@@ -97,6 +97,6 @@ export class AuthService {
   }
 
   registerAsSource() {
-    return this.subjectConfig.pushSubjectSourceInformation()
+    return this.subjectConfig.registerSourceToSubject()
   }
 }

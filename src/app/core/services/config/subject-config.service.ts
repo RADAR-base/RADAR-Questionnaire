@@ -114,7 +114,7 @@ export class SubjectConfigService {
     })
   }
 
-  pushSubjectSourceInformation() {
+  registerSourceToSubject() {
     return Promise.all([
       this.token.getAccessHeaders(DefaultRequestJSONContentType),
       this.token.getDecodedSubject(),

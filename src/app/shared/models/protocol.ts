@@ -14,6 +14,11 @@ export interface Protocol {
   completionWindow?: TimeInterval
 }
 
+export interface ProtocolMetaData {
+  protocol: string
+  url?: string
+}
+
 export interface TimeInterval {
   unit?: string
   amount?: number

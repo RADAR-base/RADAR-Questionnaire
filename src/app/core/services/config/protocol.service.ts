@@ -18,6 +18,7 @@ import {
   GithubTree,
   GithubTreeChild
 } from '../../../shared/models/github'
+import { ProtocolMetaData } from '../../../shared/models/protocol'
 import { sortObject } from '../../../shared/utilities/sort-object'
 import { LogService } from '../misc/log.service'
 import { RemoteConfigService } from './remote-config.service'
@@ -36,7 +37,7 @@ export class ProtocolService {
     private logger: LogService
   ) {}
 
-  pull() {
+  pull(): Promise<ProtocolMetaData> {
     return Promise.all([this.getProjectTree(), this.getParticipantAttributes()])
       .then(([tree, attributes]) =>
         this.findValidProtocolUrl(
@@ -45,7 +46,10 @@ export class ProtocolService {
         ).catch(() => this.getProtocolPathInTree(tree, DefaultProtocolPath))
       )
       .then((url: string) => this.http.get(url).toPromise())
-      .then((res: GithubContent) => atob(res.content))
+      .then((res: GithubContent) => ({
+        protocol: atob(res.content),
+        url: res.url
+      }))
   }
 
   /**
@@ -111,17 +115,14 @@ export class ProtocolService {
   }
 
   getProjectTree(): Promise<GithubTreeChild[]> {
-    return this.readRemoteConfig()
-      .then(cfg =>
-        Promise.all([
-          this.config.getProjectName(),
-          this.getProtocolBranch(cfg),
-          this.getProtocolRepo(cfg)
-        ])
-      )
-      .then(([projectName, branch, repo]) =>
-        this.getRootTreeHashUrl(branch, repo)
-          .then(url => this.http.get(url).toPromise())
+    return Promise.all([
+      this.config.getProjectName(),
+      this.getRootTreeHashUrl()
+    ])
+      .then(([projectName, url]) =>
+        this.http
+          .get(url)
+          .toPromise()
           .then((res: GithubTree) => {
             const project = res.tree.find(c => c.path == projectName)
             if (project == null)
@@ -132,12 +133,18 @@ export class ProtocolService {
       .then(projectChild => projectChild.tree)
   }
 
-  getRootTreeHashUrl(branch, repo) {
-    const treeUrl = [GIT_API_URI, repo, this.GIT_BRANCHES, branch].join('/')
-    return this.http
-      .get(treeUrl)
-      .toPromise()
-      .then((res: any) => res.commit.commit.tree.url)
+  getRootTreeHashUrl() {
+    return this.readRemoteConfig()
+      .then(cfg =>
+        Promise.all([this.getProtocolBranch(cfg), this.getProtocolRepo(cfg)])
+      )
+      .then(([branch, repo]) => {
+        const treeUrl = [GIT_API_URI, repo, this.GIT_BRANCHES, branch].join('/')
+        return this.http
+          .get(treeUrl)
+          .toPromise()
+          .then((res: any) => res.commit.commit.tree.url)
+      })
   }
 
   readRemoteConfig() {

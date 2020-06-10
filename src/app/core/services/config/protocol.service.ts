@@ -1,5 +1,4 @@
 // tslint:disable: forin
-// tslint:disable: no-bitwise
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 
@@ -14,7 +13,6 @@ import {
 } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
 import { Assessment } from '../../../shared/models/assessment'
-import { Attributes } from '../../../shared/models/attribute'
 import {
   GithubContent,
   GithubTree,
@@ -29,8 +27,6 @@ import { SubjectConfigService } from './subject-config.service'
 export class ProtocolService {
   GIT_TREE = 'tree'
   GIT_BRANCHES = 'branches'
-  ATTRIBUTE_KEY = 0
-  ATTRIBUTE_VAL = 1
   DEFAULT_ATTRIBUTE_ORDER = Number.MAX_SAFE_INTEGER
 
   constructor(
@@ -43,7 +39,10 @@ export class ProtocolService {
   pull() {
     return Promise.all([this.getProjectTree(), this.getParticipantAttributes()])
       .then(([tree, attributes]) =>
-        this.findValidProtocolUrl(tree, '', this.ATTRIBUTE_KEY, '', attributes)
+        this.findValidProtocolUrl(
+          tree,
+          new Map(Object.entries(attributes))
+        ).catch(() => this.getProtocolPathInTree(tree, DefaultProtocolPath))
       )
       .then((url: string) => this.http.get(url).toPromise())
       .then((res: GithubContent) => atob(res.content))
@@ -51,60 +50,33 @@ export class ProtocolService {
 
   /**
    * This function retrieves a valid protocol url that matches the most number of attributes
-   * based on attribute order. This is done by traversing the Github tree recursively until the
-   * children contain no matching user attributes.
+   * based on attribute order. This is done by traversing the Github tree for the attribute key first
+   * the the attribute value.
    *
-   * First, it checks if any of the children is a protocol.json file and stores it to `protocolURL`.
-   * Next, it matches any of the children with any of the user attribute keys based on the order/priority.
-   * If there is no match, it will return the `protocolURL` set earlier.
-   * If there is a match, it will run the same function recursively for the children of that new tree,
+   * First, it matches any of the children with any of the user attribute keys based on the order/priority.
+   * Next, it will check for matches of the attribute value for the children of that new tree,
    *  but this time searching for the matching attribute value.
-   * This will keep repeating and alternating between key and value until no match is found,
-   *  and the protocol url is returned.
+   * Then, it will check for matches of the `protocol.json` file. Finally, returning this url.
    *
-   *  @param children : children (blobs or trees) of the Github tree (of that path).
-   *                  : The initial value is the children of of the project tree (`repo/project-name`).
-   *  @param previousPath : path that was last traversed.
-   *                  : The initial value is an empty string
-   *  @param findNext : If the path to find next is the attribute key or value.
-   *                  : The format is `project-name/attribute-key/attribute-value/attribute-key-2/attribute-value-2/..`
-   *                  : The initial value is `ATTRIBUTE_KEY`
-   *  @param protocolURL : The protocol url, if it exists, in the path (`path/protocol.json`).
-   *                     : The initial value is an empty string
+   *  @param children : The children (blobs or trees) of of the project tree (`repo/project-name`).
    *  @param attributes : A key-value pairs of the user's attributes.
-   *                    : This value is constant throughout the recursion
    */
   findValidProtocolUrl(
     children: GithubTreeChild[],
-    previousPath: string,
-    findNext: number,
-    protocolURL: string,
-    attributes: Attributes
-  ) {
-    if (findNext == this.ATTRIBUTE_KEY)
-      protocolURL = this.getProtocolPathInTree(children, DefaultProtocolPath)
-    return new Promise(resolve => {
-      const selected = this.matchTreeWithAttributes(
-        children,
-        findNext,
+    attributes: Map<String, String>
+  ): Promise<String> {
+    const keyTree = this.matchTreeWithAttributeKey(children, attributes)
+    if (!keyTree) return Promise.reject()
+    return this.getChildTree(keyTree).then(keyChildren => {
+      const valueTree = this.matchTreeWithAttributeValue(
+        keyChildren.tree,
         attributes,
-        previousPath
+        keyTree.path
       )
-      if (selected == null) resolve(protocolURL)
-      else {
-        findNext = ~findNext
-        this.getChildTree(selected).then(nextChildren =>
-          resolve(
-            this.findValidProtocolUrl(
-              nextChildren.tree,
-              selected.path,
-              findNext,
-              protocolURL,
-              attributes
-            )
-          )
-        )
-      }
+      if (!valueTree) return Promise.reject()
+      return this.getChildTree(valueTree).then(valChildren =>
+        this.getProtocolPathInTree(valChildren.tree, DefaultProtocolPath)
+      )
     })
   }
 
@@ -117,21 +89,24 @@ export class ProtocolService {
     return this.http.get<GithubTree>(child.url).toPromise()
   }
 
-  matchTreeWithAttributes(
+  matchTreeWithAttributeKey(
     children: GithubTreeChild[],
-    findNext: number,
-    attributes: Attributes,
-    previousPath: string
+    attributes: Map<String, String>
   ): GithubTreeChild {
-    if (findNext == this.ATTRIBUTE_KEY) {
-      for (const attribute in attributes) {
-        const child = children.find(c => c.path == attribute)
-        if (child != null) return child
-      }
-    } else {
-      for (const child of children)
-        if (child.path == attributes[previousPath]) return child
+    for (const [key, val] of attributes) {
+      const child = children.find(c => c.path == key)
+      if (child !== null) return child
     }
+    return null
+  }
+
+  matchTreeWithAttributeValue(
+    children: GithubTreeChild[],
+    attributes: Map<String, String>,
+    key: string
+  ): GithubTreeChild {
+    for (const child of children)
+      if (child.path == attributes.get(key)) return child
     return null
   }
 

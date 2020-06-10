@@ -131,9 +131,9 @@ Conditions can be added to remote config variables to target specific groups of 
 
 #### Protocol Attributes
 
-A user/subject can have `attributes` which are taken from Management Portal. These could determine what protocol would be pulled for the user from Github ([RADAR aRMT Protocols](https://github.com/RADAR-base/RADAR-aRMT-protocols)). The repository should follow the format: `/PROJECT_NAME/ATTRIBUTE-KEY-1/ATTRIBUTE-VALUE-1/protocol.json`. Please note that a default `protocol.json` file must always be present in the project directory, e.g.: `/PROJECT_NAME/protocol.json`.
+A user/subject can have `attributes` which are taken from Management Portal. These could determine what protocol would be pulled for the user from Github ([RADAR aRMT Protocols](https://github.com/RADAR-base/RADAR-aRMT-protocols)). The repository should follow the format: `/PROJECT_NAME/ATTRIBUTE-KEY/ATTRIBUTE-VALUE/protocol.json`. Please note that a default `protocol.json` file must always be present in the project directory, e.g.: `/PROJECT_NAME/protocol.json`.
 
-For multiple attributes, you may set them as follows: `/PROJECT_NAME/ATTRIBUTE-KEY-1/ATTRIBUTE-VALUE-1/ATTRIBUTE-KEY-2/ATTRIBUTE-VALUE-2/[...]/protocol.json`. If multiple attribute keys are found in the same path (e.g. `/PROJECT_NAME/ATTRIBUTE-KEY-1/` and `/PROJECT_NAME/ATTRIBUTE-KEY-2/`), and these attributes are present for the user, the `participant_attribute_order` from the Remote Config will be used to determine which attribute takes precedence. If this is not present, the default value is `{Human-readable-identifier: -1}`; the human readable id will always be the highest priority. If an order value is not present for the attribute, the default value (`MAX_INT_VALUE`) would be used.
+If multiple attributes are present for the user, the `participant_attribute_order` from the Remote Config will be used to determine which attribute takes precedence. If this is not present, the default value is `{Human-readable-identifier: -1}`; the human readable id will always be the highest priority. If an order value is not present for the attribute, the default value (`MAX_INT_VALUE`) would be used.
 
 ### Analytics
 

@@ -495,7 +495,7 @@ export const Localisations = {
   },
   SETTINGS_SEND_CACHED_DATA: {
     da: 'Send Cachelagrede Data',
-    de: 'Senden Sie Zwischengespeicherte Daten',
+    de: 'Sende zwischengespeicherte Daten',
     en: 'Send Cached Data',
     es: 'Enviar Datos en Caché',
     it: 'Invia Dati Memorizzati nella Cache',
@@ -505,7 +505,7 @@ export const Localisations = {
   },
   SETTINGS_WAIT_ALERT: {
     da: 'Vent venligst',
-    de: 'Warten Sie mal',
+    de: 'Bitte warten',
     en: 'Please wait',
     es: 'Por favor espera',
     it: 'Attendere prego',
@@ -1001,7 +1001,7 @@ export const Localisations = {
     da:
       'Du har ikke nået at svare på dette. Ingen problemer! De næste spørgsmål kommer snart',
     de:
-      'Du hast die letzten Fragen verpasst. Mach dir keine Sorgen! Der nächste Fragebogen wird bald fällig.',
+      'Sie haben die letzten Fragen verpasst. Machen Sie sich keine Sorgen! Der nächste Fragebogen wird bald fällig.',
     en:
       "You've missed this one. Dont worry! The next quesionnaire will be due soon.",
     es:
@@ -1017,7 +1017,7 @@ export const Localisations = {
   NOTIFICATION_REMINDER_FORGOTTEN_ALERT_LASTOFNIGHT_DESC: {
     da:
       'Du har ikke nået at svare på sidste spørgsmål. Ingen problemer! Hav en god aften.',
-    de: 'Du hast den letzten verpasst. Mach dir keine Sorgen! Gute Nacht.',
+    de: 'Sie haben den letzten verpasst. Machen Sie sich keine Sorgen! Gute Nacht.',
     en: "You've missed the last one. Dont worry! Have a good night.",
     es: 'No ha llegado a contestar el último. No se preocupe! Buenas noches!',
     it: "Hai perso l'ultimo. Non preoccuparti! Buonanotte.",
@@ -1095,7 +1095,7 @@ export const Localisations = {
   },
   TASK_INFO_WARN: {
     da: 'Kræver rolige omgivelser',
-    de: 'Benötigt einen leisen Raum',
+    de: 'Benötigt einen ruhigen Platz',
     en: 'Requires a quiet space',
     es: 'Requiere un espacio tranquilo',
     it: 'Richiede un posto tranquillo',
@@ -1125,7 +1125,7 @@ export const Localisations = {
   },
   TASK_BAR_NEXT_TASK: {
     da: 'Din næste opgave starter om ',
-    de: 'Ihre nächste Aufgabe started in ',
+    de: 'Ihre nächste Aufgabe startet in ',
     en: 'Your next task starts in ',
     es: 'La siguiente tarea comienza en ',
     it: 'La prossima attività inizierà tra ',
@@ -1135,7 +1135,7 @@ export const Localisations = {
   },
   TASK_BAR_NOW_TASK: {
     da: 'Din opgave starter ',
-    de: 'Deine Aufgabe started ',
+    de: 'Ihre Aufgabe startet ',
     en: 'Your task starts ',
     es: 'La tarea comienza ',
     it: 'Il tuo compito inizia ',
@@ -1307,7 +1307,7 @@ export const Localisations = {
   },
   AUDIO_TASK_ALERT_DESC: {
     da: 'Opgaven er afbrudt. Genstart opgaven.',
-    de: 'Die Aufgabe wurde unterbrochen. Task neu starten.',
+    de: 'Die Aufgabe wurde unterbrochen. Aufgabe neu starten.',
     en: 'Task has been interrupted. Restart task.',
     es: 'La tarea ha sido interrumpida. Tarea de reinicio.',
     it: "L'attività è stata interrotta. Riavvia il compito.",

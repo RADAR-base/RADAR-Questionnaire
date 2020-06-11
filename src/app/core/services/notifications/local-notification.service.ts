@@ -13,18 +13,14 @@ import { NotificationService } from './notification.service'
 
 @Injectable()
 export class LocalNotificationService extends NotificationService {
-  private readonly NOTIFICATION_STORAGE = {
-    LAST_NOTIFICATION_UPDATE: StorageKeys.LAST_NOTIFICATION_UPDATE
-  }
-
   constructor(
     private notifications: NotificationGeneratorService,
     private schedule: ScheduleService,
     private localNotifications: LocalNotifications,
-    private storage: StorageService,
+    private store: StorageService,
     private logger: LogService
   ) {
-    super()
+    super(store)
   }
 
   init() {
@@ -87,20 +83,5 @@ export class LocalNotificationService extends NotificationService {
     return this.sendNotification(
       this.format(this.notifications.createTestNotification())
     )
-  }
-
-  setLastNotificationUpdate(timestamp): Promise<void> {
-    return this.storage.set(
-      this.NOTIFICATION_STORAGE.LAST_NOTIFICATION_UPDATE,
-      timestamp
-    )
-  }
-
-  getLastNotificationUpdate(): Promise<any> {
-    return this.storage.get(this.NOTIFICATION_STORAGE.LAST_NOTIFICATION_UPDATE)
-  }
-
-  reset() {
-    return this.setLastNotificationUpdate(null)
   }
 }

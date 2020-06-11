@@ -137,6 +137,14 @@ export class SubjectConfigService {
   }
 
   reset() {
-    return this.storage.clear()
+    return Promise.all([
+      this.setParticipantID(null),
+      this.setParticipantLogin(null),
+      this.setEnrolmentDate(null),
+      this.setProjectName(null),
+      this.setSourceID(null),
+      this.setBaseUrl(null),
+      this.token.setTokens(null)
+    ])
   }
 }

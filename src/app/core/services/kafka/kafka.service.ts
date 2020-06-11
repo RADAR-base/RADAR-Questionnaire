@@ -89,14 +89,12 @@ export class KafkaService {
         const sendPromises = Object.entries(cache)
           .filter(([k]) => k)
           .map(([k, v]: any) => {
-            const topic = this.schema.getKafkaTopic(
-              specifications,
-              v.name,
-              v.avsc
-            )
-            return this.sendToKafka(topic, k, v, headers).catch(e =>
-              this.logger.error('Failed to send data from cache to kafka', e)
-            )
+            return this.schema
+              .getKafkaTopic(specifications, v.name, v.avsc)
+              .then(topic => this.sendToKafka(topic, k, v, headers))
+              .catch(e =>
+                this.logger.error('Failed to send data from cache to kafka', e)
+              )
           })
         return Promise.all(sendPromises)
       })

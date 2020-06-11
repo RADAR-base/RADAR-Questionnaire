@@ -114,7 +114,8 @@ export class AppConfigService {
       this.setUTCOffset(null),
       this.setReferenceDate(null),
       this.setReportSettings(null),
-      this.setNotificationSettings(null)
+      this.setNotificationSettings(null),
+      this.setScheduleHashUrl(null)
     ])
   }
 }

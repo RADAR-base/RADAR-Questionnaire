@@ -74,11 +74,11 @@ export class ConfigService {
     ])
       .then(([prevHash, currentHash]) => {
         if (prevHash != currentHash) {
-          this.appConfig.setScheduleHashUrl(currentHash)
           return Promise.all([
             this.appConfig.getScheduleVersion(),
             this.protocol.pull()
           ]).then(([scheduleVersion, protocolData]) => {
+            this.appConfig.setScheduleHashUrl(currentHash)
             const parsedProtocol = JSON.parse(protocolData.protocol)
             if (scheduleVersion !== parsedProtocol.version || force) {
               this.sendConfigChangeEvent(
@@ -230,18 +230,23 @@ export class ConfigService {
 
   resetAll() {
     this.sendConfigChangeEvent(ConfigEventType.APP_RESET)
-    return this.subjectConfig.reset()
+    return Promise.all([this.resetConfig(), this.resetCache()]).then(() =>
+      this.subjectConfig.reset()
+    )
   }
 
   resetConfig() {
-    this.sendConfigChangeEvent(ConfigEventType.APP_RESET_PARTIAL)
     return Promise.all([
       this.appConfig.reset(),
       this.questionnaire.reset(),
-      this.kafka.reset(),
       this.schedule.reset(),
+      this.notifications.reset(),
       this.localization.init()
     ])
+  }
+
+  resetCache() {
+    return this.kafka.reset()
   }
 
   setAll(user: User) {

@@ -5,6 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx'
 import { StatusBar } from '@ionic-native/status-bar/ngx'
 import { Platform } from 'ionic-angular'
 
+import { NotificationServiceMock } from '../../shared/testing/mock-services'
 import { NotificationService } from '../services/notifications/notification.service'
 import { AppComponent } from './app.component'
 
@@ -21,7 +22,7 @@ describe('AppComponent', () => {
         Platform,
         SplashScreen,
         MobileAccessibility,
-        NotificationService
+        { provide: NotificationService, useClass: NotificationServiceMock }
       ]
     }).compileComponents()
 

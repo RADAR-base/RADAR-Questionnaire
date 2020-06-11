@@ -1,5 +1,13 @@
+import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 
+import {
+  DefaultManagementPortalURI,
+  DefaultRequestEncodedContentType,
+  DefaultRequestJSONContentType,
+  DefaultSourceTypeRegistrationBody,
+  DefaultSubjectsURI
+} from '../../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { User } from '../../../shared/models/user'
 import { StorageService } from '../storage/storage.service'
@@ -10,13 +18,18 @@ export class SubjectConfigService {
   private readonly SUBJECT_CONFIG_STORE = {
     PARTICIPANTID: StorageKeys.PARTICIPANTID,
     PARTICIPANTLOGIN: StorageKeys.PARTICIPANTLOGIN,
+    PARTICIPANT_ATTRIBUTES: StorageKeys.PARTICIPANT_ATTRIBUTES,
     PROJECTNAME: StorageKeys.PROJECTNAME,
     SOURCEID: StorageKeys.SOURCEID,
     ENROLMENTDATE: StorageKeys.ENROLMENTDATE,
     BASE_URI: StorageKeys.BASE_URI
   }
 
-  constructor(public storage: StorageService, private token: TokenService) {}
+  constructor(
+    public storage: StorageService,
+    private token: TokenService,
+    private http: HttpClient
+  ) {}
 
   init(user: User) {
     return Promise.all([
@@ -25,7 +38,8 @@ export class SubjectConfigService {
       this.setParticipantLogin(user.subjectId),
       this.setSourceID(user.sourceId),
       this.setEnrolmentDate(user.enrolmentDate),
-      this.setBaseUrl(user.baseUrl)
+      this.setBaseUrl(user.baseUrl),
+      this.setParticipantAttributes(user.attributes)
     ])
   }
 
@@ -35,6 +49,13 @@ export class SubjectConfigService {
 
   setParticipantLogin(login) {
     return this.storage.set(this.SUBJECT_CONFIG_STORE.PARTICIPANTLOGIN, login)
+  }
+
+  setParticipantAttributes(attributes) {
+    return this.storage.set(
+      this.SUBJECT_CONFIG_STORE.PARTICIPANT_ATTRIBUTES,
+      attributes
+    )
   }
 
   setEnrolmentDate(date) {
@@ -73,8 +94,46 @@ export class SubjectConfigService {
     return this.storage.get(this.SUBJECT_CONFIG_STORE.PARTICIPANTLOGIN)
   }
 
+  getParticipantAttributes() {
+    return this.storage.get(this.SUBJECT_CONFIG_STORE.PARTICIPANT_ATTRIBUTES)
+  }
+
   getBaseUrl() {
     return this.storage.get(this.SUBJECT_CONFIG_STORE.BASE_URI)
+  }
+
+  pullSubjectInformation(): Promise<any> {
+    return Promise.all([
+      this.token.getAccessHeaders(DefaultRequestEncodedContentType),
+      this.token.getDecodedSubject(),
+      this.token.getURI()
+    ]).then(([headers, subject, uri]) => {
+      const subjectURI =
+        uri + DefaultManagementPortalURI + DefaultSubjectsURI + subject
+      return this.http.get(subjectURI, { headers }).toPromise()
+    })
+  }
+
+  registerSourceToSubject() {
+    return Promise.all([
+      this.token.getAccessHeaders(DefaultRequestJSONContentType),
+      this.token.getDecodedSubject(),
+      this.token.getURI()
+    ]).then(([headers, subject, uri]) =>
+      this.http
+        .post(
+          uri +
+            DefaultManagementPortalURI +
+            DefaultSubjectsURI +
+            subject +
+            '/sources',
+          DefaultSourceTypeRegistrationBody,
+          {
+            headers
+          }
+        )
+        .toPromise()
+    )
   }
 
   reset() {

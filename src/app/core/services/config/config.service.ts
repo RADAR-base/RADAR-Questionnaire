@@ -69,23 +69,32 @@ export class ConfigService {
 
   hasProtocolChanged(force?) {
     return Promise.all([
-      this.appConfig.getScheduleVersion(),
-      this.protocol.pull()
+      this.appConfig.getScheduleHashUrl(),
+      this.protocol.getRootTreeHashUrl()
     ])
-      .then(([scheduleVersion, protocol]) => {
-        const parsedProtocol = JSON.parse(protocol)
-        this.logger.log(parsedProtocol)
-        if (scheduleVersion !== parsedProtocol.version || force) {
-          this.sendConfigChangeEvent(
-            ConfigEventType.PROTOCOL_CHANGE,
-            scheduleVersion,
-            parsedProtocol.version
-          )
-          return parsedProtocol
-        }
+      .then(([prevHash, currentHash]) => {
+        if (prevHash != currentHash) {
+          this.appConfig.setScheduleHashUrl(currentHash)
+          return Promise.all([
+            this.appConfig.getScheduleVersion(),
+            this.protocol.pull()
+          ]).then(([scheduleVersion, protocolData]) => {
+            const parsedProtocol = JSON.parse(protocolData.protocol)
+            if (scheduleVersion !== parsedProtocol.version || force) {
+              this.sendConfigChangeEvent(
+                ConfigEventType.PROTOCOL_CHANGE,
+                scheduleVersion,
+                parsedProtocol.version,
+                '',
+                protocolData.url
+              )
+              return parsedProtocol
+            }
+          })
+        } else return false
       })
       .catch(() => {
-        throw new Error('No response from server')
+        throw new Error('Error pulling protocols.')
       })
   }
 
@@ -105,7 +114,7 @@ export class ConfigService {
         return { prevUtcOffset, utcOffset }
       } else {
         console.log(`[SPLASH] Current Timezone is ${utcOffset}`)
-        return null
+        return false
       }
     })
   }
@@ -122,7 +131,7 @@ export class ConfigService {
           appVersion
         )
         return appVersion
-      }
+      } else return false
     })
   }
 
@@ -187,8 +196,7 @@ export class ConfigService {
       .getEnrolmentDate()
       .then(enrolment => this.appConfig.setReferenceDate(enrolment))
       .then(() => this.appConfig.setUTCOffset(utcOffset))
-      .then(() => this.appConfig.setPrevUTCOffset(prevUtcOffset))
-      .then(() => this.regenerateSchedule())
+      .then(() => this.regenerateSchedule(prevUtcOffset))
   }
 
   rescheduleNotifications(cancel?: boolean) {
@@ -210,14 +218,10 @@ export class ConfigService {
     return this.notifications.cancel()
   }
 
-  regenerateSchedule() {
-    return Promise.all([
-      this.appConfig.getReferenceDate(),
-      this.appConfig.getPrevUTCOffset()
-    ])
-      .then(([refDate, prevUTCOffset]) =>
-        this.schedule.generateSchedule(refDate, prevUTCOffset)
-      )
+  regenerateSchedule(prevUTCOffset?: number) {
+    return this.appConfig
+      .getReferenceDate()
+      .then(refDate => this.schedule.generateSchedule(refDate, prevUTCOffset))
       .catch(e => {
         throw this.logger.error('Failed to generate schedule', e)
       })
@@ -270,11 +274,12 @@ export class ConfigService {
     }
   }
 
-  sendConfigChangeEvent(type, previous?, current?, error?) {
+  sendConfigChangeEvent(type, previous?, current?, error?, data?) {
     this.analytics.logEvent(type, {
       previous: String(previous),
       current: String(current),
-      error: String(error)
+      error: String(error),
+      data: String(data)
     })
   }
 

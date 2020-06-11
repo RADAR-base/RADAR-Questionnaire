@@ -1,3 +1,4 @@
+import { HttpClient, HttpHandler } from '@angular/common/http'
 import { TestBed } from '@angular/core/testing'
 
 import {
@@ -16,6 +17,8 @@ describe('SubjectConfigService', () => {
       providers: [
         SubjectConfigService,
         { provide: StorageService, useClass: StorageServiceMock },
+        HttpClient,
+        HttpHandler,
         { provide: TokenService, useClass: TokenServiceMock }
       ]
     })

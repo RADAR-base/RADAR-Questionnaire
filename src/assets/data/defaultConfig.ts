@@ -13,7 +13,7 @@ import { DefaultSourceProducerAndSecretExport } from './secret'
 export const DefaultPlatformInstance = 'RADAR-CNS'
 
 // *Default app version
-export const DefaultAppVersion = '0.7.4'
+export const DefaultAppVersion = '0.7.5'
 
 // *Default Android package name
 export const DefaultPackageName = 'org.phidatalab.radar_armt'
@@ -96,7 +96,7 @@ export const DefaultNotificationTtlMinutes: number = 10
 
 export const GIT_API_URI = 'https://api.github.com/repos'
 
-// *The Github repository where the protocols are located
+// *The Github repository where the protocols are located (REMOTE CONFIG KEY: `protocol_repo`)
 export const DefaultProtocolGithubRepo = 'RADAR-Base/RADAR-aRMT-protocols'
 
 // *The name of the branch where the protocol definitions should be read from (REMOTE CONFIG KEY: `protocol_branch`)
@@ -104,13 +104,6 @@ export const DefaultProtocolBranch = 'master'
 
 // *The path inside a project name that should be read for a protocol (REMOTE CONFIG KEY: `protocol_path`)
 export const DefaultProtocolPath = `protocol.json`
-
-// *The full protocol endpoint (REMOTE CONFIG KEY: `protocol_base_url`)
-export const DefaultProtocolEndPoint = [
-  GIT_API_URI,
-  DefaultProtocolGithubRepo,
-  'contents'
-].join('/')
 
 // *The name of the repository where the questionnaire schemas are located
 export const DefaultSchemaGithubRepo = 'RADAR-Base/RADAR-Schemas'
@@ -129,6 +122,11 @@ export const DefaultSchemaSpecEndpoint = [
   'contents',
   DefaultSchemaSpecPath
 ].join('/')
+
+// *The order in which participant attributes are matched to protocol endpoints; format: {attributeName: orderNumber}
+export const DefaultParticipantAttributeOrder = {
+  'Human-readable-identifier': -1
+}
 
 // DEFAULT AUTH DATA
 

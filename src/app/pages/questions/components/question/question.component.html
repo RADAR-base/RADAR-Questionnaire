@@ -101,6 +101,7 @@
           *ngSwitchCase="'text'"
           (valueChange)="onValueChange($event)"
           [type]="question.text_validation_type_or_show_slider_number"
+          [currentlyShown]="currentlyShown"
         ></text-input>
 
         <radio-input

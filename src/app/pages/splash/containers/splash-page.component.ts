@@ -56,7 +56,7 @@ export class SplashPageComponent {
   showFetchConfigFail(e) {
     this.alertService.showAlert({
       title: this.localization.translateKey(LocKeys.STATUS_FAILURE),
-      message: e.message,
+      message: this.localization.translateKey(LocKeys.CONFIG_ERROR_DESC),
       buttons: [
         {
           text: this.localization.translateKey(LocKeys.BTN_RETRY),
@@ -65,34 +65,10 @@ export class SplashPageComponent {
           }
         },
         {
-          text: this.localization.translateKey(LocKeys.BTN_RESET),
-          handler: () => {
-            this.showConfirmReset()
-          }
+          text: this.localization.translateKey(LocKeys.BTN_DISMISS),
+          handler: () => {}
         }
       ]
-    })
-  }
-
-  showConfirmReset() {
-    const buttons = [
-      {
-        text: this.localization.translateKey(LocKeys.BTN_DISAGREE),
-        handler: () => console.log('Reset cancel')
-      },
-      {
-        text: this.localization.translateKey(LocKeys.BTN_AGREE),
-        handler: () => {
-          this.enrol()
-        }
-      }
-    ]
-    return this.alertService.showAlert({
-      title: this.localization.translateKey(LocKeys.SETTINGS_RESET_ALERT),
-      message: this.localization.translateKey(
-        LocKeys.SETTINGS_RESET_ALERT_DESC
-      ),
-      buttons: buttons
     })
   }
 

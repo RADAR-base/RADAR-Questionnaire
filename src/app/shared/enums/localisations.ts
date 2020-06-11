@@ -76,6 +76,7 @@ export class LocKeys {
   static BTN_ENROL_SCAN = new LocKeys('BTN_ENROL_SCAN')
   static BTN_FINISH = new LocKeys('BTN_FINISH')
   static BTN_DONE = new LocKeys('BTN_DONE')
+  static BTN_DISMISS = new LocKeys('BTN_DISMISS')
   static BTN_START = new LocKeys('BTN_START')
   static BTN_STOP = new LocKeys('BTN_STOP')
   static BTN_RESET = new LocKeys('BTN_RESET')

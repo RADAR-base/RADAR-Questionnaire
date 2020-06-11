@@ -717,6 +717,16 @@ export const Localisations = {
     pl: 'Gotowe',
     hb: 'סיימתי'
   },
+  BTN_DISMISS: {
+    da: 'Afskedige',
+    de: 'Entlassen',
+    en: 'Dismiss',
+    es: 'Descartar',
+    it: 'Respingere',
+    nl: 'Afwijzen',
+    pl: 'Odwołać',
+    hb: 'לשחרר'
+  },
   BTN_START: {
     da: 'Start',
     de: 'Start',
@@ -1400,14 +1410,21 @@ export const Localisations = {
     hb: 'לשלוח הקלטה?'
   },
   CONFIG_ERROR_DESC: {
-    da: 'Config opdatering mislykkes. Prøve igen?',
-    de: 'Config Update fehlgeschlagen. Wiederholen?',
-    en: 'Config update fail. Retry?',
-    es: 'La actualización de configuración falla. ¿Procesar de nuevo?',
-    it: "Errore nell'aggiornamento della configurazione. Riprovare?",
-    nl: 'Config-update mislukt. Opnieuw?',
-    pl: 'Nieudana konfiguracja akutualizacji. Powtórzyć?',
-    hb: 'עדכון קונפיגורציה נכשל. לנסות שוב?'
+    da:
+      'Der opstod et problem med at opdatere din konfiguration. Tryk på "Gentag igen" for at prøve igen. Hvis du ofte oplever dette problem, skal du kontakte din studiekoordinator eller forsøge at nulstille applikationen i indstillingerne.',
+    de:
+      'Beim Aktualisieren Ihrer Konfiguration ist ein Problem aufgetreten. Drücken Sie "Wiederholen", um es erneut zu versuchen. Wenn dieses Problem häufig auftritt, wenden Sie sich an Ihren Studienkoordinator oder versuchen Sie, die Anwendung in den Einstellungen zurückzusetzen.',
+    en:
+      'There was a problem updating your config. Press "Retry" to try again. If you are experiencing this problem frequently, please contact your study coordinator or try to reset the application in the settings.',
+    es:
+      'Hubo un problema al actualizar su configuración. Presione "Reintentar" para volver a intentarlo. Si tiene este problema con frecuencia, comuníquese con su coordinador de estudio o intente restablecer la aplicación en la configuración.',
+    it: `Si è verificato un problema durante l'aggiornamento della configurazione. Premi "Riprova" per riprovare. Se si riscontra questo problema frequentemente, contattare il coordinatore dello studio o provare a ripristinare l'applicazione nelle impostazioni.`,
+    nl:
+      'Er is een probleem opgetreden bij het bijwerken van uw configuratie. Druk op "Opnieuw" om het opnieuw te proberen. Als je dit probleem regelmatig ervaart, neem dan contact op met je studiecoördinator of probeer de applicatie te resetten in de instellingen.',
+    pl:
+      'Podczas aktualizowania konfiguracji wystąpił problem. Naciśnij „Ponów”, aby spróbować ponownie. Jeśli często występuje ten problem, skontaktuj się z koordynatorem badania lub spróbuj zresetować aplikację w ustawieniach.',
+    hb:
+      'הייתה בעיה בעדכון התצורה שלך. לחץ על "נסה שוב" כדי לנסות שוב. אם אתה נתקל בבעיה זו לעתים קרובות, אנא צור קשר עם רכז הלימוד שלך או נסה לאפס את היישום בהגדרות.'
   },
   SPLASH_STATUS_UPDATING_CONFIG: {
     da: 'Opdaterer underretninger og planlæg...',

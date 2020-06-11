@@ -189,10 +189,10 @@ export class SettingsPageComponent {
         handler: selected => {
           const promises = []
           if (selected.includes(ResetOption.ENROLMENT))
-            promises.push(this.settingsService.resetAuth())
+            promises.push(this.settingsService.resetEnrolment())
           else if (selected.includes(ResetOption.CONFIG))
             promises.push(this.settingsService.resetConfig())
-          if (selected.includes(ResetOption.CACHE))
+          else if (selected.includes(ResetOption.CACHE))
             promises.push(this.settingsService.resetCache())
           Promise.all(promises).then(() => this.backToSplash())
         }

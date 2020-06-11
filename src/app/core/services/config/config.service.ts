@@ -74,11 +74,11 @@ export class ConfigService {
     ])
       .then(([prevHash, currentHash]) => {
         if (prevHash != currentHash) {
-          this.appConfig.setScheduleHashUrl(currentHash)
           return Promise.all([
             this.appConfig.getScheduleVersion(),
             this.protocol.pull()
           ]).then(([scheduleVersion, protocolData]) => {
+            this.appConfig.setScheduleHashUrl(currentHash)
             const parsedProtocol = JSON.parse(protocolData.protocol)
             if (scheduleVersion !== parsedProtocol.version || force) {
               this.sendConfigChangeEvent(
@@ -230,7 +230,9 @@ export class ConfigService {
 
   resetAll() {
     this.sendConfigChangeEvent(ConfigEventType.APP_RESET)
-    return this.resetConfig().then(() => this.subjectConfig.reset())
+    return Promise.all([this.resetConfig(), this.resetCache()]).then(() =>
+      this.subjectConfig.reset()
+    )
   }
 
   resetConfig() {

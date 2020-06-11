@@ -26,7 +26,7 @@ export class SettingsService {
     return this.config.sendTestNotification()
   }
 
-  resetAuth() {
+  resetEnrolment() {
     return this.config.resetAll()
   }
 

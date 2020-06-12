@@ -1,5 +1,7 @@
 import { TestBed } from '@angular/core/testing'
 
+import { StorageServiceMock } from '../../../shared/testing/mock-services'
+import { StorageService } from '../storage/storage.service'
 import { NotificationService } from './notification.service'
 
 describe('NotificationService', () => {
@@ -7,7 +9,10 @@ describe('NotificationService', () => {
 
   beforeEach(() =>
     TestBed.configureTestingModule({
-      providers: [NotificationService]
+      providers: [
+        NotificationService,
+        { provide: StorageService, useClass: StorageServiceMock }
+      ]
     })
   )
 

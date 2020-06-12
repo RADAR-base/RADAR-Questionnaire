@@ -5,4 +5,5 @@ export interface User {
   sourceId?: string
   enrolmentDate?: number
   humanReadableId?: string
+  attributes?: any
 }

@@ -14,10 +14,12 @@ android:
     - android-28
     - extra
 addons:
-  chrome: stable
   apt:
     packages:
+      - dpkg
       - xvfb
+      - libgbm1
+  chrome: stable
 cache:
   yarn: true
   directories:

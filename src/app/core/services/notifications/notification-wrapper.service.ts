@@ -5,6 +5,7 @@ import { DefaultNotificationType } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
 import { NotificationMessagingType } from '../../../shared/models/notification-handler'
 import { RemoteConfigService } from '../config/remote-config.service'
+import { StorageService } from '../storage/storage.service'
 import { AppServerRestNotificationService } from './app-server-rest-notification.service'
 import { FcmXmppNotificationService } from './fcm-xmpp-notification.service'
 import { LocalNotificationService } from './local-notification.service'
@@ -19,9 +20,10 @@ export class NotificationWrapperService extends NotificationService {
     public fcmXmppNotificationService: FcmXmppNotificationService,
     public localNotificationService: LocalNotificationService,
     private remoteConfig: RemoteConfigService,
-    private platform: Platform
+    private platform: Platform,
+    private store: StorageService
   ) {
-    super()
+    super(store)
   }
 
   init() {
@@ -53,14 +55,6 @@ export class NotificationWrapperService extends NotificationService {
 
   publish(type, limit?, notificationId?): Promise<any> {
     return this.notificationService.publish(type, limit, notificationId)
-  }
-
-  setLastNotificationUpdate(): Promise<any> {
-    return this.notificationService.setLastNotificationUpdate()
-  }
-
-  getLastNotificationUpdate(): Promise<any> {
-    return this.notificationService.getLastNotificationUpdate()
   }
 
   isPlatformCordova() {

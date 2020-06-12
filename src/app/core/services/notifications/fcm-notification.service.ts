@@ -21,23 +21,19 @@ declare var FirebasePlugin
 
 @Injectable()
 export abstract class FcmNotificationService extends NotificationService {
-  private readonly NOTIFICATION_STORAGE = {
-    LAST_NOTIFICATION_UPDATE: StorageKeys.LAST_NOTIFICATION_UPDATE,
-    FCM_TOKEN: StorageKeys.FCM_TOKEN
-  }
   FCM_TOKEN: string
   upstreamResends: number
   ttlMinutes = 10
 
   constructor(
-    public storage: StorageService,
+    public store: StorageService,
     public config: SubjectConfigService,
     public firebase: Firebase,
     public platform: Platform,
     public logger: LogService,
     public remoteConfig: RemoteConfigService
   ) {
-    super()
+    super(store)
     this.remoteConfig.subject().subscribe(cfg => {
       cfg
         .getOrDefault(
@@ -96,19 +92,8 @@ export abstract class FcmNotificationService extends NotificationService {
       .then(res => (res.isEnabled ? true : this.firebase.grantPermission()))
   }
 
-  setLastNotificationUpdate(): Promise<void> {
-    return this.storage.set(
-      this.NOTIFICATION_STORAGE.LAST_NOTIFICATION_UPDATE,
-      Date.now()
-    )
-  }
-
-  getLastNotificationUpdate() {
-    return this.storage.get(this.NOTIFICATION_STORAGE.LAST_NOTIFICATION_UPDATE)
-  }
-
   setFCMToken(token) {
-    return this.storage.set(this.NOTIFICATION_STORAGE.FCM_TOKEN, token)
+    return this.store.set(StorageKeys.FCM_TOKEN, token)
   }
 
   resetResends() {

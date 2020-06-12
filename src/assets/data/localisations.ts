@@ -295,7 +295,7 @@ export const Localisations = {
   SETTINGS_LANGUAGE_ALERT: {
     da: 'Vælg dit sprog',
     de: 'Wählen Sie Ihre Sprache',
-    en: 'Select your Language',
+    en: 'Select Your Language',
     es: 'Seleccione su idioma',
     it: 'Seleziona la lingua desiderata',
     nl: 'Kies uw taal',
@@ -417,21 +417,85 @@ export const Localisations = {
   },
   SETTINGS_RESET_ALERT_OPTION_DESC: {
     da:
-      'Vælg kun at nulstille appkonfiguration og data, eller udfør en fuldstændig nulstilling og tilmelding.',
+      'Vælg at nulstille din cache, tilmelding eller appkonfiguration (dette inkluderer dine meddelelser og plan).<br><br>Du kan også vælge at nulstille mere end en mulighed.',
     de:
-      'Wählen Sie diese Option, um nur die App-Konfiguration und -Daten zurückzusetzen, oder führen Sie einen vollständigen Reset und eine erneute Registrierung durch.',
+      'Wählen Sie, ob Sie Ihren Cache, Ihre Registrierung oder Ihre App-Konfiguration zurücksetzen möchten (dies schließt Ihre Benachrichtigungen und Ihren Zeitplan ein).<br><br>Sie können auch mehrere Optionen zurücksetzen.',
     en:
-      'Choose to reset app configuration and data only or do a full reset and re-enrol.',
+      'Choose options to reset.<br><br>You may also choose to reset more than one option. To do a full reset, select all the options.',
     es:
-      'Elija restablecer la configuración de la aplicación y solo los datos o realice un reinicio completo y vuelva a inscribirse.',
+      'Elija restablecer su caché, inscripción o configuración de la aplicación (esto incluye sus notificaciones y programación).<br><br>También puede optar por restablecer más de una opción.',
     it:
-      "Scegli di ripristinare solo la configurazione e i dati dell'app oppure eseguire un ripristino completo e ripetere la registrazione.",
+      "Scegli di reimpostare la cache, la registrazione o la configurazione dell'app (ciò include le notifiche e la pianificazione).<br><br>Puoi anche scegliere di ripristinare più di un'opzione.",
     nl:
-      'Kies ervoor om de app-configuratie en -gegevens alleen opnieuw in te stellen of een volledige reset uit te voeren en opnieuw in te schrijven.',
+      'Kies ervoor om uw cache, inschrijving of app-configuratie opnieuw in te stellen (dit omvat uw meldingen en planning).<br><br>U kunt er ook voor kiezen om meer dan één optie opnieuw in te stellen.',
     pl:
-      'wybierz tylko zresetować konfigurację i dane aplikacji lub wykonać pełny reset i ponownie zarejestrować',
+      'Wybierz zresetowanie pamięci podręcznej, rejestracji lub konfiguracji aplikacji (dotyczy to również powiadomień i harmonogramu).<br><br>Możesz także zresetować więcej niż jedną opcję.',
     hb:
-      '.בחר לאפס את תצורת ונתוני האפליקציה בלבד או לבצע איפוס מלא ולהירשם מחדש'
+      'בחר לאפס את זיכרון המטמון, ההרשמה או התצורה של האפליקציה שלך (זה כולל את ההודעות ולוח הזמנים שלך).<br><br> אתה יכול גם לבחור לאפס יותר מאפשרות אחת.'
+  },
+  SETTINGS_RESET_ALERT_ENROLMENT_DESC: {
+    da:
+      'Ved at nulstille tilmeldingen nulstiller du også konfigs. Når du nulstiller, bliver du logget ud af appen.',
+    de:
+      'Durch Zurücksetzen der Registrierung setzen Sie auch die Konfigurationen zurück. Nach dem Zurücksetzen werden Sie von der App abgemeldet.',
+    en:
+      'By resetting enrolment, you are also resetting the configs. Once you reset you will be logged out of the app.',
+    es:
+      'Al restablecer la inscripción, también restablece las configuraciones. Una vez que reinicie, se cerrará la sesión de la aplicación.',
+    it:
+      "Ripristinando la registrazione, si ripristinano anche le configurazioni. Una volta ripristinato, verrai disconnesso dall'app.",
+    nl:
+      'Door de inschrijving opnieuw in te stellen, zet u ook de configuraties terug. Zodra u opnieuw instelt, wordt u uitgelogd bij de app.',
+    pl:
+      'Przez zresetowanie rejestracji resetujesz także konfiguracje. Po zresetowaniu nastąpi wylogowanie z aplikacji.',
+    hb:
+      "על ידי איפוס הרשמה, אתה מאפס מחדש את הקונפיג 'ים. לאחר שתאפס, תתנתק מהאפליקציה."
+  },
+  SETTINGS_RESET_ALERT_CACHE_DESC: {
+    da:
+      "Ved at nulstille cachen sletter du dine cache-spurgte data, der ikke kunne sendes. Prøv at sende dataene først ved at trykke på 'Send cache-data' i indstillingerne",
+    de:
+      'Durch Zurücksetzen des Caches löschen Sie Ihre zwischengespeicherten Fragebogendaten, die nicht gesendet werden konnten. Bitte versuchen Sie zuerst, die Daten zu senden, indem Sie in den Einstellungen auf "Zwischengespeicherte Daten senden" tippen',
+    en:
+      'By resetting the cache, you are deleting your cached questionnaire data that failed to send. Please try sending the data first by tapping `Send Cached Data` in the settings.',
+    es:
+      'Al restablecer el caché, está eliminando los datos del cuestionario en caché que no se pudieron enviar. Intente enviar los datos primero tocando `Enviar datos en caché` en la configuración',
+    it:
+      'Ripristinando la cache, si eliminano i dati del questionario memorizzati nella cache che non è stato possibile inviare. Prova a inviare prima i dati toccando "Invia dati memorizzati nella cache" nelle impostazioni',
+    nl:
+      "Door de cache opnieuw in te stellen, verwijdert u uw gecachte vragenlijstgegevens die niet konden worden verzonden. Probeer eerst de gegevens te verzenden door in de instellingen op 'Cachegegevens verzenden' te tikken",
+    pl:
+      'Przez zresetowanie pamięci podręcznej usuwasz buforowane dane kwestionariusza, których nie udało się wysłać. Spróbuj najpierw wysłać dane, dotykając opcji „Wyślij buforowane dane” w ustawieniach',
+    hb:
+      "על ידי איפוס המטמון, אתה מוחק את נתוני השאלון המטמון שלך שלא הצליחו לשלוח. אנא נסה לשלוח את הנתונים תחילה על ידי הקשה על 'שלח נתונים במטמון' בהגדרות"
+  },
+  SETTINGS_RESET_ALERT_CONFIG_DESC: {
+    da:
+      'Ved at nulstille konfigurationerne trækker du spørgeskemaer, regenererer din spørgeskemaplan og omplanlægger meddelelser.',
+    de:
+      'Durch Zurücksetzen der Konfigurationen ziehen Sie Fragebögen erneut ab, generieren Ihren Fragebogenplan neu und planen Benachrichtigungen neu.',
+    en:
+      'By resetting the configurations, you are re-pulling questionnaires, regenerating your questionnaire schedule, and rescheduling notifications.',
+    es:
+      'Al restablecer las configuraciones, está volviendo a extraer los cuestionarios, regenerando la programación de su cuestionario y reprogramando las notificaciones.',
+    it:
+      'Ripristinando le configurazioni, si stanno rielaborando i questionari, rigenerando la pianificazione del questionario e riprogrammando le notifiche.',
+    nl:
+      'Door de configuraties opnieuw in te stellen, trekt u de vragenlijsten opnieuw, genereert u uw vragenlijstschema opnieuw en plant u de meldingen opnieuw.',
+    pl:
+      'Po zresetowaniu konfiguracji ponownie pobierasz kwestionariusze, odnawiasz harmonogram ankiety i ponownie planujesz powiadomienia.',
+    hb:
+      'על ידי איפוס התצורות, אתה מושך שאלונים מחדש, מחדש את לוח הזמנים לשאלון שלך ומזמן מחדש התראות.'
+  },
+  SETTINGS_ENROLMENT: {
+    da: 'Inschrijving',
+    de: 'Inschrijving',
+    en: 'Enrolment',
+    es: 'Inschrijving',
+    it: 'Inschrijving',
+    nl: 'Inschrijving',
+    pl: 'Rekrutacja',
+    hb: 'הרשמה'
   },
   SETTINGS_CACHE: {
     da: 'Cache',
@@ -653,6 +717,16 @@ export const Localisations = {
     pl: 'Gotowe',
     hb: 'סיימתי'
   },
+  BTN_DISMISS: {
+    da: 'Afskedige',
+    de: 'Entlassen',
+    en: 'Dismiss',
+    es: 'Descartar',
+    it: 'Respingere',
+    nl: 'Afwijzen',
+    pl: 'Odwołać',
+    hb: 'לשחרר'
+  },
   BTN_START: {
     da: 'Start',
     de: 'Start',
@@ -687,7 +761,7 @@ export const Localisations = {
     da: 'Prøve igen',
     de: 'Wiederholen',
     en: 'Retry',
-    es: 'REintentar',
+    es: 'Reintentar',
     it: 'Riprovare',
     nl: 'Probeer opnieuw',
     pl: 'Spróbuj ponownie',
@@ -1336,14 +1410,21 @@ export const Localisations = {
     hb: 'לשלוח הקלטה?'
   },
   CONFIG_ERROR_DESC: {
-    da: 'Config opdatering mislykkes. Prøve igen?',
-    de: 'Config Update fehlgeschlagen. Wiederholen?',
-    en: 'Config update fail. Retry?',
-    es: 'La actualización de configuración falla. ¿Procesar de nuevo?',
-    it: "Errore nell'aggiornamento della configurazione. Riprovare?",
-    nl: 'Config-update mislukt. Opnieuw?',
-    pl: 'Nieudana konfiguracja akutualizacji. Powtórzyć?',
-    hb: 'עדכון קונפיגורציה נכשל. לנסות שוב?'
+    da:
+      'Der opstod et problem med at opdatere din konfiguration. Tryk på "Prøve igen" for at prøve igen. Hvis du ofte oplever dette problem, skal du kontakte din studiekoordinator eller forsøge at nulstille applikationen i indstillingerne.',
+    de:
+      'Beim Aktualisieren Ihrer Konfiguration ist ein Problem aufgetreten. Drücken Sie "Wiederholen", um es erneut zu versuchen. Wenn dieses Problem häufig auftritt, wenden Sie sich an Ihren Studienkoordinator oder versuchen Sie, die Anwendung in den Einstellungen zurückzusetzen.',
+    en:
+      'There was a problem updating your config. Press "Retry" to try again. If you are experiencing this problem frequently, please contact your study coordinator or try to reset the application in the settings.',
+    es:
+      'Hubo un problema al actualizar su configuración. Presione "Reintentar" para volver a intentarlo. Si tiene este problema con frecuencia, comuníquese con su coordinador de estudio o intente restablecer la aplicación en la configuración.',
+    it: `Si è verificato un problema durante l'aggiornamento della configurazione. Premi "Riprovare" per riprovare. Se si riscontra questo problema frequentemente, contattare il coordinatore dello studio o provare a ripristinare l'applicazione nelle impostazioni.`,
+    nl:
+      'Er is een probleem opgetreden bij het bijwerken van uw configuratie. Druk op "Probeer opnieuw" om het opnieuw te proberen. Als je dit probleem regelmatig ervaart, neem dan contact op met je studiecoördinator of probeer de applicatie te resetten in de instellingen.',
+    pl:
+      'Podczas aktualizowania konfiguracji wystąpił problem. Naciśnij „Spróbuj ponownie”, aby spróbować ponownie. Jeśli często występuje ten problem, skontaktuj się z koordynatorem badania lub spróbuj zresetować aplikację w ustawieniach.',
+    hb:
+      'הייתה בעיה בעדכון התצורה שלך. לחץ על "נסה שוב" כדי לנסות שוב. אם אתה נתקל בבעיה זו לעתים קרובות, אנא צור קשר עם רכז הלימוד שלך או נסה לאפס את היישום בהגדרות.'
   },
   SPLASH_STATUS_UPDATING_CONFIG: {
     da: 'Opdaterer underretninger og planlæg...',

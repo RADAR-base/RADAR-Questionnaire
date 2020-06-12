@@ -15,6 +15,7 @@ import { StorageService } from '../storage/storage.service'
 export class AppConfigService {
   private readonly CONFIG_STORE = {
     SCHEDULE_VERSION: StorageKeys.SCHEDULE_VERSION,
+    SCHEDULE_HASH_URL: StorageKeys.SCHEDULE_HASH_URL,
     APP_VERSION: StorageKeys.APP_VERSION,
     UTC_OFFSET: StorageKeys.UTC_OFFSET,
     UTC_OFFSET_PREV: StorageKeys.UTC_OFFSET_PREV,
@@ -45,6 +46,10 @@ export class AppConfigService {
 
   getScheduleVersion() {
     return this.storage.get(this.CONFIG_STORE.SCHEDULE_VERSION)
+  }
+
+  getScheduleHashUrl() {
+    return this.storage.get(this.CONFIG_STORE.SCHEDULE_HASH_URL)
   }
 
   getNotificationSettings() {
@@ -83,6 +88,10 @@ export class AppConfigService {
     return this.storage.set(this.CONFIG_STORE.SCHEDULE_VERSION, version)
   }
 
+  setScheduleHashUrl(hash) {
+    return this.storage.set(this.CONFIG_STORE.SCHEDULE_HASH_URL, hash)
+  }
+
   setUTCOffset(offset) {
     return this.storage.set(this.CONFIG_STORE.UTC_OFFSET, offset)
   }
@@ -105,7 +114,8 @@ export class AppConfigService {
       this.setUTCOffset(null),
       this.setReferenceDate(null),
       this.setReportSettings(null),
-      this.setNotificationSettings(null)
+      this.setNotificationSettings(null),
+      this.setScheduleHashUrl(null)
     ])
   }
 }

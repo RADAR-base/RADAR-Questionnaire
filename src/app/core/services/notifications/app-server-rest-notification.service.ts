@@ -55,7 +55,7 @@ export class AppServerRestNotificationService extends FcmNotificationService {
       return Promise.all(
         fcmNotifications
           .map(n => this.sendNotification(n, user.subjectId, user.projectId))
-          .concat([this.setLastNotificationUpdate()])
+          .concat([this.setLastNotificationUpdate(Date.now())])
       )
     })
   }

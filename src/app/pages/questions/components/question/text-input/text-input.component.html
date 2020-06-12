@@ -1,28 +1,34 @@
-<ng-container *ngIf="showDatePicker">
-  <wheel-selector
-    [values]="datePickerValues"
-    [selection]="defaultDatePickerValue"
-    [labels]="labels"
-    (onSelect)="emitAnswer($event)"
-  ></wheel-selector>
+<ng-container *ngIf="showDatePicker && currentlyShown">
+  <div class="mid">
+    <wheel-selector
+      [values]="datePickerValues"
+      [selection]="defaultDatePickerValue"
+      [labels]="labels"
+      (onSelect)="emitAnswer($event)"
+    ></wheel-selector>
+  </div>
 </ng-container>
 
-<ng-container *ngIf="showTimePicker">
-  <wheel-selector
-    [values]="timePickerValues"
-    [selection]="defaultTimePickerValue"
-    [labels]="labels"
-    (onSelect)="emitAnswer($event)"
-  ></wheel-selector>
+<ng-container *ngIf="showTimePicker && currentlyShown">
+  <div class="mid">
+    <wheel-selector
+      [values]="timePickerValues"
+      [selection]="defaultTimePickerValue"
+      [labels]="labels"
+      (onSelect)="emitAnswer($event)"
+    ></wheel-selector>
+  </div>
 </ng-container>
 
-<ng-container *ngIf="showDurationPicker">
-  <wheel-selector
-    [values]="durationPickerValues"
-    [selection]="defaultDurationPickerValue"
-    [labels]="labels"
-    (onSelect)="emitAnswer($event)"
-  ></wheel-selector>
+<ng-container *ngIf="showDurationPicker && currentlyShown">
+  <div class="mid">
+    <wheel-selector
+      [values]="durationPickerValues"
+      [selection]="defaultDurationPickerValue"
+      [labels]="labels"
+      (onSelect)="emitAnswer($event)"
+    ></wheel-selector>
+  </div>
 </ng-container>
 
 <ng-container *ngIf="showTextInput">

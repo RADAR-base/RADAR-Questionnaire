@@ -151,14 +151,18 @@ export class SchemaService {
       })
   }
 
-  getKafkaTopic(specifications: any[] | null, name, avsc): string {
-    const type = name.toLowerCase()
-    const defaultTopic = `${avsc}_${name}`
-    if (specifications) {
-      const spec = specifications.find(t => t.type.toLowerCase() == type)
-      return spec && spec.topic ? spec.topic : defaultTopic
+  getKafkaTopic(specifications: any[] | null, name, avsc): Promise<any> {
+    try {
+      const type = name.toLowerCase()
+      const defaultTopic = `${avsc}_${name}`
+      if (specifications) {
+        const spec = specifications.find(t => t.type.toLowerCase() == type)
+        return Promise.resolve(spec && spec.topic ? spec.topic : defaultTopic)
+      }
+      return Promise.resolve(defaultTopic)
+    } catch (e) {
+      return Promise.reject('Failed to get kafka topic')
     }
-    return defaultTopic
   }
 
   getLatestKafkaSchemaVersion(

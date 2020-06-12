@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core'
+import { Platform } from 'ionic-angular'
 
 import { DefaultNotificationType } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
@@ -17,7 +18,8 @@ export class NotificationWrapperService extends NotificationService {
     public appServerRestNotificationService: AppServerRestNotificationService,
     public fcmXmppNotificationService: FcmXmppNotificationService,
     public localNotificationService: LocalNotificationService,
-    private remoteConfig: RemoteConfigService
+    private remoteConfig: RemoteConfigService,
+    private platform: Platform
   ) {
     super()
   }
@@ -38,11 +40,15 @@ export class NotificationWrapperService extends NotificationService {
           return (this.notificationService = this.appServerRestNotificationService)
         return (this.notificationService = this.fcmXmppNotificationService)
       })
-      .then(() => this.notificationService.init())
+      .then(() =>
+        this.isPlatformCordova() ? this.notificationService.init() : true
+      )
   }
 
   permissionCheck(): Promise<any> {
-    return this.notificationService.permissionCheck()
+    return this.isPlatformCordova()
+      ? this.notificationService.permissionCheck()
+      : true
   }
 
   publish(type, limit?, notificationId?): Promise<any> {
@@ -55,5 +61,9 @@ export class NotificationWrapperService extends NotificationService {
 
   getLastNotificationUpdate(): Promise<any> {
     return this.notificationService.getLastNotificationUpdate()
+  }
+
+  isPlatformCordova() {
+    return this.platform.is('cordova')
   }
 }

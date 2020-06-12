@@ -169,7 +169,7 @@ export class QuestionsService {
           task: task ? task : assessment,
           assessment: assessment,
           type: type,
-          isLastTask: false
+          isLastTask: task ? task.isLastTask : false
         }
       })
   }

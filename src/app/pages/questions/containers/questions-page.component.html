@@ -22,7 +22,7 @@
           <finish
             *ngIf="showFinishScreen"
             [content]="endText"
-            [displayNextTaskReminder]="isLastTask"
+            [displayNextTaskReminder]="!isLastTask"
             [requiresInClinicCompletion]="requiresInClinicCompletion"
             [showDoneButton]="showDoneButton"
             [isShown]="showFinishScreen"

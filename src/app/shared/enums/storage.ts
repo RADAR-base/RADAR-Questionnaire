@@ -5,6 +5,7 @@ export class StorageKeys {
   static OAUTH_TOKENS = new StorageKeys('OAUTH_TOKENS')
   static PARTICIPANTID = new StorageKeys('PARTICIPANTID')
   static PARTICIPANTLOGIN = new StorageKeys('PARTICIPANTLOGIN')
+  static PARTICIPANT_ATTRIBUTES = new StorageKeys('PARTICIPANT_ATTRIBUTES')
   static PROJECTNAME = new StorageKeys('PROJECTNAME')
   static SOURCEID = new StorageKeys('SOURCEID')
   static LANGUAGE = new StorageKeys('LANGUAGE')
@@ -14,6 +15,7 @@ export class StorageKeys {
   static CONFIG_VERSION = new StorageKeys('CONFIG_VERSION')
   static CONFIG_ASSESSMENTS = new StorageKeys('CONFIG_ASSESSMENTS')
   static SCHEDULE_VERSION = new StorageKeys('SCHEDULE_VERSION')
+  static SCHEDULE_HASH_URL = new StorageKeys('SCHEDULE_HASH_URL')
   static SCHEDULE_TASKS = new StorageKeys('SCHEDULE_TASKS')
   static SCHEDULE_TASKS_ON_DEMAND = new StorageKeys('SCHEDULE_TASKS_ON_DEMAND')
 

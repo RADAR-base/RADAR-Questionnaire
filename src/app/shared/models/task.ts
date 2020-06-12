@@ -18,6 +18,7 @@ export interface Task {
   showInCalendar: boolean
   isDemo: boolean
   order: number
+  isLastTask?: boolean
 }
 
 export interface TasksProgress {

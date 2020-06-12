@@ -26,15 +26,12 @@ declare var FirebasePlugin
 
 @Injectable()
 export class FcmNotificationService extends NotificationService {
-  private readonly NOTIFICATION_STORAGE = {
-    LAST_NOTIFICATION_UPDATE: StorageKeys.LAST_NOTIFICATION_UPDATE
-  }
   upstreamResends: number
   ttlMinutes: number
 
   constructor(
     private notifications: NotificationGeneratorService,
-    private storage: StorageService,
+    private store: StorageService,
     private schedule: ScheduleService,
     private config: SubjectConfigService,
     private firebase: Firebase,
@@ -42,7 +39,7 @@ export class FcmNotificationService extends NotificationService {
     private logger: LogService,
     private remoteConfig: RemoteConfigService
   ) {
-    super()
+    super(store)
     this.ttlMinutes = 10
 
     this.remoteConfig.subject().subscribe(cfg => {
@@ -87,7 +84,7 @@ export class FcmNotificationService extends NotificationService {
         return Promise.all(
           fcmNotifications
             .map(n => this.sendNotification(n))
-            .concat([this.setLastNotificationUpdate()])
+            .concat([this.setLastNotificationUpdate(Date.now())])
         )
       })
     })
@@ -153,17 +150,6 @@ export class FcmNotificationService extends NotificationService {
     return this.sendNotification(
       this.format(this.notifications.createTestNotification(), '')
     )
-  }
-
-  setLastNotificationUpdate(): Promise<void> {
-    return this.storage.set(
-      this.NOTIFICATION_STORAGE.LAST_NOTIFICATION_UPDATE,
-      Date.now()
-    )
-  }
-
-  getLastNotificationUpdate() {
-    return this.storage.get(this.NOTIFICATION_STORAGE.LAST_NOTIFICATION_UPDATE)
   }
 
   resetResends() {

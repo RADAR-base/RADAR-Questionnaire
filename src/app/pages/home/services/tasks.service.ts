@@ -106,13 +106,20 @@ export class TasksService {
    *                         translates to which questionnaire the `START` button on home page corresponds to.
    */
   getNextTask(tasks: Task[]): Task | undefined {
+    let nextTask : Task = undefined
     if (tasks) {
       const nextTasksNow = tasks.filter(task => this.isTaskStartable(task))
+      const isLastTask = this.isLastTask(tasks)
       if (nextTasksNow.length) {
-        return nextTasksNow.sort((a, b) => a.order - b.order)[0]
-      } else return tasks.find(task => !this.isTaskExpired(task))
+        nextTask = nextTasksNow.sort((a, b) => a.order - b.order)[0]
+      } else {
+        nextTask = tasks.find(task => !this.isTaskExpired(task))
+      }
+      if (nextTask) {
+        nextTask.isLastTask = isLastTask
+      }
     }
-    return undefined
+    return nextTask
   }
 
   getCurrentDateMidnight() {

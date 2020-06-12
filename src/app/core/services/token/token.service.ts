@@ -69,10 +69,8 @@ export class TokenService {
     while (lastSlashIndex > 0 && uri[lastSlashIndex - 1] == '/') {
       lastSlashIndex--
     }
-    return this.storage.set(
-      this.TOKEN_STORE.BASE_URI,
-      uri.substring(0, lastSlashIndex)
-    )
+    const url = uri.substring(0, lastSlashIndex)
+    return this.storage.set(this.TOKEN_STORE.BASE_URI, url).then(() => url)
   }
 
   static basicCredentials(user: string, password: string): string {

@@ -3538,17 +3538,17 @@ cordova-serve@^3.0.0:
     opn "^5.3.0"
     which "^1.3.0"
 
-cordova-sqlite-storage-dependencies@2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/cordova-sqlite-storage-dependencies/-/cordova-sqlite-storage-dependencies-2.1.0.tgz#374e13ca6d5dd5229b51167875e45e53a3ed2a76"
-  integrity sha512-m0cPOWPzckAqS0/e7v+xtcM+FrHrw63qgh5T91JdkXMKCK8sN9bDoqVNJHZ5E9y7sRO7liMUIDm6Dz439RYqGA==
+cordova-sqlite-storage-dependencies@2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/cordova-sqlite-storage-dependencies/-/cordova-sqlite-storage-dependencies-2.1.1.tgz#3706fd035289bdaca5770599986d5b9829b4bab0"
+  integrity sha512-1lV5Pg1FttjBmGO8z4gxtuA4BbPKtgTfUEh1Vx4boa41inizyxaowRyTeaaqEhi5gmYAaX8sRTABm9U/XckRFg==
 
-cordova-sqlite-storage@^3.3.0:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/cordova-sqlite-storage/-/cordova-sqlite-storage-3.4.0.tgz#5a4b96d5120e525d35f9470279d23f6ccdc8bd23"
-  integrity sha512-Uavq3HulVIYXxTFCp5aafiQhYrZF0/cGlyN76RYhIftcD5IRhza9+ghhV5abJYvuGlzY+p9dM5hPcjnYxfAH+g==
+cordova-sqlite-storage@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/cordova-sqlite-storage/-/cordova-sqlite-storage-5.0.0.tgz#19323c5e810ed596e802e72392c17d341badd2b4"
+  integrity sha512-AFb3t3yrdFZ0ZY16FKJupyx71bq+iKHSWHfHH1xmFjEuGK7VPbSHwGEf9hpypin42Z10OdkR1CgnTyvkWNtLlw==
   dependencies:
-    cordova-sqlite-storage-dependencies "2.1.0"
+    cordova-sqlite-storage-dependencies "2.1.1"
 
 cordova-support-android-plugin@^1.0.1:
   version "1.0.1"

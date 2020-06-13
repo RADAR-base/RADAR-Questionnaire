@@ -1,26 +1,36 @@
 import { Injectable } from '@angular/core'
 
+import { StorageKeys } from '../../../shared/enums/storage'
+import { StorageService } from '../storage/storage.service'
+
 @Injectable()
-export class NotificationService {
-  init() {
-    return undefined
+export abstract class NotificationService {
+  private readonly NOTIFICATION_STORAGE = {
+    LAST_NOTIFICATION_UPDATE: StorageKeys.LAST_NOTIFICATION_UPDATE
   }
-  cancel(): Promise<void> {
-    return undefined
+  constructor(private readonly storage: StorageService) {}
+
+  abstract init()
+
+  abstract cancel()
+
+  abstract permissionCheck()
+
+  abstract publish(limit?: number)
+
+  abstract sendTestNotification()
+
+  setLastNotificationUpdate(timestamp): Promise<void> {
+    return this.storage.set(
+      this.NOTIFICATION_STORAGE.LAST_NOTIFICATION_UPDATE,
+      timestamp
+    )
   }
-  permissionCheck(): Promise<void> {
-    return undefined
+  getLastNotificationUpdate() {
+    return this.storage.get(this.NOTIFICATION_STORAGE.LAST_NOTIFICATION_UPDATE)
   }
-  publish(limit?: number): Promise<void[]> {
-    return undefined
-  }
-  sendTestNotification(): Promise<void> {
-    return undefined
-  }
-  setLastNotificationUpdate(): Promise<any> {
-    return undefined
-  }
-  getLastNotificationUpdate(): Promise<any> {
-    return undefined
+
+  reset() {
+    return this.setLastNotificationUpdate(null)
   }
 }

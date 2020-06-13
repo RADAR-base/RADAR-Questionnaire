@@ -5,13 +5,10 @@ import { Injectable } from '@angular/core'
 
 import {
   DefaultManagementPortalURI,
-  DefaultRequestEncodedContentType,
-  DefaultRequestJSONContentType,
-  DefaultSourceTypeModel,
-  DefaultSourceTypeRegistrationBody,
-  DefaultSubjectsURI
+  DefaultSourceTypeModel
 } from '../../../../assets/data/defaultConfig'
 import { ConfigService } from '../../../core/services/config/config.service'
+import { SubjectConfigService } from '../../../core/services/config/subject-config.service'
 import { LogService } from '../../../core/services/misc/log.service'
 import { TokenService } from '../../../core/services/token/token.service'
 import { AnalyticsService } from '../../../core/services/usage/analytics.service'
@@ -27,7 +24,8 @@ export class AuthService {
     private token: TokenService,
     private config: ConfigService,
     private logger: LogService,
-    private analytics: AnalyticsService
+    private analytics: AnalyticsService,
+    private subjectConfig: SubjectConfigService
   ) {}
 
   authenticate(authObj) {
@@ -74,23 +72,10 @@ export class AuthService {
     return this.http.get(url).toPromise()
   }
 
-  getSubjectURI(subject) {
-    return this.URI_base + DefaultSubjectsURI + subject
-  }
-
-  getSubjectInformation(): Promise<any> {
-    return Promise.all([
-      this.token.getAccessHeaders(DefaultRequestEncodedContentType),
-      this.token.getDecodedSubject()
-    ]).then(([headers, subject]) =>
-      this.http.get(this.getSubjectURI(subject), { headers }).toPromise()
-    )
-  }
-
   initSubjectInformation() {
     return Promise.all([
       this.token.getURI(),
-      this.getSubjectInformation()
+      this.subjectConfig.pullSubjectInformation()
     ]).then(([baseUrl, subjectInformation]) => {
       return this.config.setAll({
         projectId: subjectInformation.project.projectName,
@@ -98,7 +83,8 @@ export class AuthService {
         sourceId: this.getSourceId(subjectInformation),
         humanReadableId: subjectInformation.externalId,
         enrolmentDate: new Date(subjectInformation.createdDate).getTime(),
-        baseUrl: baseUrl
+        baseUrl: baseUrl,
+        attributes: subjectInformation.attributes
       })
     })
   }
@@ -111,19 +97,6 @@ export class AuthService {
   }
 
   registerAsSource() {
-    return Promise.all([
-      this.token.getAccessHeaders(DefaultRequestJSONContentType),
-      this.token.getDecodedSubject()
-    ]).then(([headers, subject]) =>
-      this.http
-        .post(
-          this.getSubjectURI(subject) + '/sources',
-          DefaultSourceTypeRegistrationBody,
-          {
-            headers
-          }
-        )
-        .toPromise()
-    )
+    return this.subjectConfig.registerSourceToSubject()
   }
 }

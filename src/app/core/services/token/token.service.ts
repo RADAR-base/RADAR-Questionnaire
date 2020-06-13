@@ -18,8 +18,8 @@ import { StorageKeys } from '../../../shared/enums/storage'
 import { OAuthToken } from '../../../shared/models/token'
 import { getSeconds } from '../../../shared/utilities/time'
 import { RemoteConfigService } from '../config/remote-config.service'
-import { StorageService } from '../storage/storage.service'
 import { LogService } from '../misc/log.service'
+import { StorageService } from '../storage/storage.service'
 
 @Injectable()
 export class TokenService {
@@ -69,10 +69,8 @@ export class TokenService {
     while (lastSlashIndex > 0 && uri[lastSlashIndex - 1] == '/') {
       lastSlashIndex--
     }
-    return this.storage.set(
-      this.TOKEN_STORE.BASE_URI,
-      uri.substring(0, lastSlashIndex)
-    )
+    const url = uri.substring(0, lastSlashIndex)
+    return this.storage.set(this.TOKEN_STORE.BASE_URI, url).then(() => url)
   }
 
   static basicCredentials(user: string, password: string): string {
@@ -126,19 +124,19 @@ export class TokenService {
   }
 
   getRegisterHeaders(contentType): Promise<HttpHeaders> {
-    return this.remoteConfig.read()
-      .then(config => Promise.all([
-        config.getOrDefault(ConfigKeys.OAUTH_CLIENT_ID, DefaultOAuthClientId),
-        config.getOrDefault(
-          ConfigKeys.OAUTH_CLIENT_SECRET,
-          DefaultOAuthClientSecret
-        )
-      ]))
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        Promise.all([
+          config.getOrDefault(ConfigKeys.OAUTH_CLIENT_ID, DefaultOAuthClientId),
+          config.getOrDefault(
+            ConfigKeys.OAUTH_CLIENT_SECRET,
+            DefaultOAuthClientSecret
+          )
+        ])
+      )
       .then(([clientId, clientSecret]) => {
-        const creds = TokenService.basicCredentials(
-          clientId,
-          clientSecret
-        )
+        const creds = TokenService.basicCredentials(clientId, clientSecret)
         return new HttpHeaders()
           .set('Authorization', creds)
           .set('Content-Type', contentType)
@@ -155,5 +153,9 @@ export class TokenService {
     return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
       return !this.jwtHelper.isTokenExpired(tokens.refresh_token)
     })
+  }
+
+  reset() {
+    return Promise.all([this.setTokens(null)])
   }
 }

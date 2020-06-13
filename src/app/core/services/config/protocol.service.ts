@@ -183,13 +183,17 @@ export class ProtocolService {
         ])
       )
       .then(([attributes, order]) => {
-        const orderWithoutNull = this.formatAttributeOrder(attributes, order)
-        if (attributes == null)
-          return this.config.pullSubjectInformation().then(user => {
-            this.config.setParticipantAttributes(user.attributes)
-            return sortObject(user.attributes, orderWithoutNull)
-          })
-        else return sortObject(attributes, orderWithoutNull)
+        return new Promise(resolve => {
+          if (attributes == null)
+            this.config.pullSubjectInformation().then(user => {
+              this.config.setParticipantAttributes(user.attributes)
+              resolve((attributes = user.attributes))
+            })
+          else resolve()
+        }).then(() => {
+          const orderWithoutNull = this.formatAttributeOrder(attributes, order)
+          return sortObject(attributes, orderWithoutNull)
+        })
       })
   }
 

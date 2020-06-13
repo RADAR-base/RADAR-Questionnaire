@@ -3472,10 +3472,10 @@ cordova-plugin-file@^6.0.1:
   resolved "https://registry.yarnpkg.com/cordova-plugin-file/-/cordova-plugin-file-6.0.2.tgz#f3911479f8357e9aacb5576674f8d95b31a1fb20"
   integrity sha512-m7cughw327CjONN/qjzsTpSesLaeybksQh420/gRuSXJX5Zt9NfgsSbqqKDon6jnQ9Mm7h7imgyO2uJ34XMBtA==
 
-cordova-plugin-firebase-with-upstream-messaging@2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-firebase-with-upstream-messaging/-/cordova-plugin-firebase-with-upstream-messaging-2.1.1.tgz#2d27e4b22477469f34c3f7b1038fad484f0b87c0"
-  integrity sha512-tCqluARa7nTJa/FlTx8R0LGbI/QKKAbnP/D/Xjd21ecdoied60B2hBcZ0cuxP5HUbZq5pSH6spVDO1xXFGqZHg==
+cordova-plugin-firebase-with-upstream-messaging@^2.1.3:
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-firebase-with-upstream-messaging/-/cordova-plugin-firebase-with-upstream-messaging-2.1.3.tgz#40cd29e5505c287ea8de09289a8dbaef46c26db9"
+  integrity sha512-qNHA/ewo1rdcbjAfJdz3eGe3IFQqOOswLQcnsMRYxAIRMzb21DMgMQOGKlTUggx0v+2S4UEbZPF+6jWgn2irAw==
 
 cordova-plugin-globalization@^1.11.0:
   version "1.11.0"

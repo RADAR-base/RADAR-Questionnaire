@@ -115,7 +115,7 @@
     "rxjs": "^6.5.4",
     "semver": "^7.3.2",
     "smoothscroll-polyfill": "^0.4.4",
-    "snyk": "^1.316.1",
+    "snyk": "^1.341.1",
     "uuid": "^3.4.0",
     "yaml": "^1.7.2",
     "zone.js": "~0.8.26"

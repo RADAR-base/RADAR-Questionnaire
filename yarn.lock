@@ -410,10 +410,10 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/device@^5.23.0":
-  version "5.23.0"
-  resolved "https://registry.yarnpkg.com/@ionic-native/device/-/device-5.23.0.tgz#770be819c63f58c83faf67663f42fd13a9f827ed"
-  integrity sha512-Yo7JADZpDuSF7BJ5vnAyUWKPVRlPNvFjPcbZ+47gfxmP9FTGK6cWX0ujSj36i0ioXmszV8b6yHM0OoWQX9lKGA==
+"@ionic-native/device@^5.26.0":
+  version "5.26.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/device/-/device-5.26.0.tgz#f41ef316fa2e29f293d233f0b792671e48f79dfc"
+  integrity sha512-TRIOPX2eSggl0SKxV4kvCLk/emY2Yge1wWnkIm1izbniTTo9afr87eKGcU6wJQLhwjI2O9IYUHFdptRER3jbGg==
   dependencies:
     "@types/cordova" latest
 

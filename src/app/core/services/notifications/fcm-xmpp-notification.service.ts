@@ -62,7 +62,7 @@ export class FcmXmppNotificationService extends FcmNotificationService {
       return Promise.all(
         fcmNotifications
           .map(n => this.sendUpstreamMessage(n))
-          .concat([this.setLastNotificationUpdate()])
+          .concat([this.setLastNotificationUpdate(Date.now())])
       )
     })
   }

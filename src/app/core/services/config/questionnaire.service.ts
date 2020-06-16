@@ -158,7 +158,8 @@ export class QuestionnaireService {
   reset() {
     return Promise.all([
       this.setAssessments(TaskType.CLINICAL, {}),
-      this.setAssessments(TaskType.NON_CLINICAL, {})
+      this.setAssessments(TaskType.NON_CLINICAL, {}),
+      this.setHasClinicalTasks(false)
     ])
   }
 }

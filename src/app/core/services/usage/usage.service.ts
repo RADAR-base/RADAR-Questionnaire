@@ -29,7 +29,7 @@ export class UsageService {
       this.logger.log(intent)
       return this.sendEventToKafka({
         eventType:
-          Object.keys(intent.extras).length > 1
+          intent.extras && Object.keys(intent.extras).length > 1
             ? UsageEventType.NOTIFICATION_OPEN
             : UsageEventType.APP_OPEN
       })

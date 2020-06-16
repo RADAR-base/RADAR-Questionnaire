@@ -145,16 +145,16 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
     console.log('Fetching Firebase Remote Config')
     return this.firebase
       .fetch(getSeconds({ milliseconds: timeoutMillis }))
-      .then(() => {
-        console.log('Activating Firebase Remote Config')
-        return (
-          this.firebase
-            .activateFetched()
-            // iOS workaround for when activateFetched is false.
-            .catch(e => false)
-        )
+      .then(() => this.firebase.activateFetched())
+      .catch(e => {
+        // iOS workaround for when activateFetched is false.
+        return false
       })
       .then(activated => {
+        // iOS workaround for when activateFetched is null. This is caused by cordova plugin result being null.
+        // This means that fetched config was activated, because the plugin result is an error if activated is false.
+        if (this.platform.is('ios') && activated == null) activated = true
+
         console.log('New Firebase Remote Config did activate', activated)
         const conf = new FirebaseRemoteConfig(this.logger)
         if (activated) {
@@ -165,7 +165,6 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
   }
 
   subject(): Observable<RemoteConfig> {
-    return from(this.read())
-      .mergeMap(() => this.configSubject)
-      }
+    return from(this.read()).mergeMap(() => this.configSubject)
+  }
 }

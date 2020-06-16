@@ -144,7 +144,8 @@ export class SubjectConfigService {
       this.setProjectName(null),
       this.setSourceID(null),
       this.setBaseUrl(null),
-      this.token.setTokens(null)
+      this.token.setTokens(null),
+      this.setParticipantAttributes(null)
     ])
   }
 }

@@ -112,7 +112,7 @@
     "ngx-moment": "^4.0.1",
     "phonegap-plugin-barcodescanner": "^8.1.0",
     "phonegap-plugin-mobile-accessibility": "^1.0.5",
-    "rxjs": "^6.5.4",
+    "rxjs": "^6.5.5",
     "semver": "^7.3.2",
     "smoothscroll-polyfill": "^0.4.4",
     "snyk": "^1.341.1",

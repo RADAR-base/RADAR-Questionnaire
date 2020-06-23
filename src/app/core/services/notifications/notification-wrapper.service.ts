@@ -36,11 +36,16 @@ export class NotificationWrapperService extends NotificationService {
         )
       )
       .then(type => {
-        if (type == NotificationMessagingType.LOCAL)
-          return (this.notificationService = this.localNotificationService)
-        if (type == NotificationMessagingType.FCM_REST)
-          return (this.notificationService = this.appServerRestNotificationService)
-        return (this.notificationService = this.fcmXmppNotificationService)
+        switch (type) {
+          case NotificationMessagingType.LOCAL:
+            return (this.notificationService = this.localNotificationService)
+          case NotificationMessagingType.FCM_REST:
+            return (this.notificationService = this.appServerRestNotificationService)
+          case NotificationMessagingType.FCM_XMPP:
+            return (this.notificationService = this.fcmXmppNotificationService)
+          default:
+            throw new Error('No such notification service available')
+        }
       })
       .then(() =>
         this.isPlatformCordova() ? this.notificationService.init() : true

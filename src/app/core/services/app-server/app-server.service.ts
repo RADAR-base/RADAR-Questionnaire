@@ -75,7 +75,7 @@ export class AppServerService {
           .getProjectsUsingProjectId({ projectId })
           .catch(e => {
             if (e.status == 404) return this.addProjectToServer(projectId)
-            else if (attempts++ < this.MAX_API_RETRIES)
+            else if (++attempts < this.MAX_API_RETRIES)
               return this.checkProjectExistsElseCreate()
           })
       )

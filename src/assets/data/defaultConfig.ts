@@ -36,7 +36,7 @@ export const DefaultSourceTypeRegistrationBody = {
 }
 
 // *The icon for On Demand assessments  (REMOTE CONFIG KEY: `on_demand_assessment_icon`)
-export const DefaultOnDemandAssessmentIcon = 'assets/imgs/clinical.png'
+export const DefaultOnDemandAssessmentIcon = 'assets/imgs/day-night.png'
 
 // *The icon for On Demand assessments  (REMOTE CONFIG KEY: `on_demand_assessment_label`)
 // *The format/type is LanguageSetting

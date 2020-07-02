@@ -22,7 +22,7 @@ export class OnDemandService {
   }
 
   getOnDemandPageLabel() {
-    this.title = this.remoteConfig
+    return this.remoteConfig
       .read()
       .then(config =>
         config.getOrDefault(

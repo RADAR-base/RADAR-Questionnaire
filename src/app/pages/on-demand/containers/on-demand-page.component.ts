@@ -12,6 +12,7 @@ import { OnDemandService } from '../services/on-demand.service'
 export class OnDemandPageComponent {
   scrollHeight: number = 500
   assessments: Assessment[]
+  title: Promise<String>
 
   constructor(
     private navCtrl: NavController,
@@ -22,6 +23,7 @@ export class OnDemandPageComponent {
     this.onDemandService.getAssessements().then(assessments => {
       this.assessments = assessments.sort((a, b) => a.order - b.order)
     })
+    this.title = this.onDemandService.getOnDemandPageLabel()
   }
 
   clicked(task) {

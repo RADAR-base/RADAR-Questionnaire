@@ -35,6 +35,10 @@ export class TasksService {
     return this.questionnaire.getHasOnDemandAssessments()
   }
 
+  getHasClinicalTasks() {
+    return this.questionnaire.getHasClinicalAssessments()
+  }
+
   getTasksOfToday() {
     return this.schedule
       .getTasksForDate(new Date(), AssessmentType.SCHEDULED)
@@ -106,7 +110,7 @@ export class TasksService {
    *                         translates to which questionnaire the `START` button on home page corresponds to.
    */
   getNextTask(tasks: Task[]): Task | undefined {
-    let nextTask : Task = undefined
+    let nextTask: Task = undefined
     if (tasks) {
       const nextTasksNow = tasks.filter(task => this.isTaskStartable(task))
       const isLastTask = this.isLastTask(tasks)

@@ -232,6 +232,16 @@ export const Localisations = {
     pl: 'Ocena kliniczna',
     hb: 'הערכות קליניות'
   },
+  ON_DEMAND_TASKS: {
+    da: 'Kliniske vurderinger',
+    de: 'Klinische Bewertungen',
+    en: 'On Demand assessments',
+    es: 'Evaluaciones clínicas',
+    it: 'Valutazioni cliniche',
+    nl: 'Klinische beoordelingen',
+    pl: 'Ocena kliniczna',
+    hb: 'הערכות קליניות'
+  },
   SETTINGS_SETTINGS: {
     da: 'Indstillinger',
     de: 'Einstellungen',

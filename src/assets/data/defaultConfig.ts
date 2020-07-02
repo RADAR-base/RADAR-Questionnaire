@@ -41,7 +41,7 @@ export const DefaultOnDemandAssessmentIcon = 'assets/imgs/clinical.png'
 // *The icon for On Demand assessments  (REMOTE CONFIG KEY: `on_demand_assessment_label`)
 // *The format/type is LanguageSetting
 export const DefaultOnDemandAssessmentLabel = JSON.stringify(
-  Localisations['CLINICAL_TASKS']
+  Localisations['ON_DEMAND_TASKS']
 )
 
 // DEFAULT SCHEDULE SETUP

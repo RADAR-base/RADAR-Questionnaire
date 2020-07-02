@@ -25,14 +25,27 @@
     </task-progress>
   </div>
 
-  <div
-    *ngIf="hasOnDemandTasks | async"
-    class="clinical-container"
-    (tap)="openClinicalTasksPage()"
-  >
-    <div class="clinical-button" [class.clinical-button-bottom]="showCalendar">
+  <div class="clinical-container" (tap)="openClinicalTasksPage()">
+    <div
+      *ngIf="hasOnDemandTasks | async"
+      class="clinical-button"
+      [class.clinical-button-bottom]="showCalendar"
+    >
       <div class="clinical-icon">
         <img src="{{ onDemandIcon | async }}" class="icon-clinical" />
+      </div>
+    </div>
+  </div>
+
+  <div class="clinical-container">
+    <div
+      *ngIf="hasClinicalTasks | async"
+      class="clinical-button"
+      (tap)="openClinicalTasksPage()"
+      [class.clinical-button-bottom]="showCalendar"
+    >
+      <div class="clinical-icon">
+        <img src="assets/imgs/clinical.png" class="icon-clinical" />
       </div>
     </div>
   </div>

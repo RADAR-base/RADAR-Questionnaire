@@ -170,6 +170,9 @@ export class LocKeys {
   )
   static SPLASH_STATUS_SENDING_LOGS = new LocKeys('SPLASH_STATUS_SENDING_LOGS')
 
+  static CLINICAL_TASKS = new LocKeys('CLINICAL_TASKS')
+  static ON_DEMAND_TASKS = new LocKeys('CLINICAL_TASKS')
+
   constructor(public value: string) {}
 
   toString() {

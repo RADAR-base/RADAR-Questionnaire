@@ -19,6 +19,7 @@ export class ScheduleService {
   private readonly SCHEDULE_STORE = {
     SCHEDULE_TASKS: StorageKeys.SCHEDULE_TASKS,
     SCHEDULE_TASKS_ON_DEMAND: StorageKeys.SCHEDULE_TASKS_ON_DEMAND,
+    SCHEDULE_TASKS_CLINICAL: StorageKeys.SCHEDULE_TASKS_CLINICAL,
     SCHEDULE_TASKS_COMPLETED: StorageKeys.SCHEDULE_TASKS_COMPLETED
   }
 
@@ -34,6 +35,8 @@ export class ScheduleService {
         return this.getScheduledTasks()
       case AssessmentType.ON_DEMAND:
         return this.getOnDemandTasks()
+      case AssessmentType.CLINICAL:
+        return this.getClinicalTasks()
       case AssessmentType.ALL:
         return Promise.all([
           this.getScheduledTasks(),
@@ -70,6 +73,10 @@ export class ScheduleService {
     return this.storage.get(this.SCHEDULE_STORE.SCHEDULE_TASKS_ON_DEMAND)
   }
 
+  getClinicalTasks(): Promise<Task[]> {
+    return this.storage.get(this.SCHEDULE_STORE.SCHEDULE_TASKS_CLINICAL)
+  }
+
   getCompletedTasks(): Promise<Task[]> {
     return this.storage.get(this.SCHEDULE_STORE.SCHEDULE_TASKS_COMPLETED)
   }
@@ -97,6 +104,10 @@ export class ScheduleService {
 
   setOnDemandTasks(tasks) {
     return this.storage.set(this.SCHEDULE_STORE.SCHEDULE_TASKS_ON_DEMAND, tasks)
+  }
+
+  setClinicalTasks(tasks) {
+    return this.storage.set(this.SCHEDULE_STORE.SCHEDULE_TASKS_CLINICAL, tasks)
   }
 
   setScheduledTasks(tasks) {

@@ -36,5 +36,6 @@ export enum ShowIntroductionType {
 export enum AssessmentType {
   ON_DEMAND = 'on_demand',
   SCHEDULED = 'scheduled',
+  CLINICAL = 'clinical',
   ALL = 'all'
 }

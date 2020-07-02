@@ -24,6 +24,7 @@ import { UsageService } from '../core/services/usage/usage.service'
 import { PipesModule } from '../shared/pipes/pipes.module'
 import { TranslatePipe } from '../shared/pipes/translate/translate'
 import { AuthModule } from './auth/auth.module'
+import { ClinicalTasksModule } from './clinical-tasks/clinical-tasks.module'
 import { HomeModule } from './home/home.module'
 import { OnDemandModule } from './on-demand/on-demand.module'
 import { QuestionsModule } from './questions/questions.module'
@@ -36,6 +37,7 @@ import { SplashModule } from './splash/splash.module'
     PipesModule,
     CommonModule,
     AuthModule,
+    ClinicalTasksModule,
     OnDemandModule,
     HomeModule,
     QuestionsModule,

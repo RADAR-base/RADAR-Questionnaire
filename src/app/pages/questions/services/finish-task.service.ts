@@ -53,7 +53,7 @@ export class FinishTaskService {
 
   createClinicalFollowUpTask(assessment): Promise<any> {
     return this.schedule
-      .generateOnDemandSchedule(assessment, Date.now())
+      .generateClinicalSchedule(assessment, Date.now())
       .then(() => this.config.rescheduleNotifications())
   }
 

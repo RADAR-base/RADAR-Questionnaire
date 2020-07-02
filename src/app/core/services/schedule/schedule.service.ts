@@ -142,12 +142,12 @@ export class ScheduleService {
       )
   }
 
-  generateOnDemandSchedule(assessment, referenceDate) {
-    this.logger.log('Generating on-demand schedule notifications..', assessment)
-    return this.getOnDemandTasks().then((tasks: Task[]) =>
+  generateClinicalSchedule(assessment, referenceDate) {
+    this.logger.log('Generating clinical schedule notifications..', assessment)
+    return this.getClinicalTasks().then((tasks: Task[]) =>
       this.schedule
         .runScheduler(
-          AssessmentType.ON_DEMAND,
+          AssessmentType.CLINICAL,
           referenceDate,
           [],
           null,
@@ -156,7 +156,7 @@ export class ScheduleService {
         )
         .then((res: any) =>
           this.setTasks(
-            AssessmentType.ON_DEMAND,
+            AssessmentType.CLINICAL,
             tasks ? tasks.concat(res.schedule) : res.schedule
           )
         )

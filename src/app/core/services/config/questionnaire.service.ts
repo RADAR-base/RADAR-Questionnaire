@@ -91,27 +91,19 @@ export class QuestionnaireService {
     // NOTE: Update assessment list from protocol
     switch (type) {
       case AssessmentType.ALL:
-        const scheduledAssessments = assessments
-          .filter(
-            a =>
-              a.type == AssessmentType.SCHEDULED ||
-              (!a.type && !a.protocol.clinicalProtocol)
-          )
-          .map(b => Object.assign(b, { type: AssessmentType.SCHEDULED }))
-        const onDemandAssessments = assessments
-          .filter(a => a.type == AssessmentType.ON_DEMAND)
-          .map(b => Object.assign(b, { type: AssessmentType.ON_DEMAND }))
-        const clinicalAssessments = assessments
-          .filter(
-            a =>
-              a.type == AssessmentType.CLINICAL ||
-              (!a.type && a.protocol.clinicalProtocol)
-          )
-          .map(b => Object.assign(b, { type: AssessmentType.CLINICAL }))
         return Promise.all([
-          this.updateAssessments(AssessmentType.ON_DEMAND, onDemandAssessments),
-          this.updateAssessments(AssessmentType.CLINICAL, clinicalAssessments),
-          this.updateAssessments(AssessmentType.SCHEDULED, scheduledAssessments)
+          this.updateAssessments(
+            AssessmentType.ON_DEMAND,
+            this.assessmentPartitioner(assessments, AssessmentType.ON_DEMAND)
+          ),
+          this.updateAssessments(
+            AssessmentType.CLINICAL,
+            this.assessmentPartitioner(assessments, AssessmentType.CLINICAL)
+          ),
+          this.updateAssessments(
+            AssessmentType.SCHEDULED,
+            this.assessmentPartitioner(assessments, AssessmentType.SCHEDULED)
+          )
         ])
       default:
         return this.setAssessments(type, assessments)
@@ -123,6 +115,32 @@ export class QuestionnaireService {
             )
           })
     }
+  }
+
+  assessmentPartitioner(assessments, type) {
+    let partitioned
+    switch (type) {
+      case AssessmentType.SCHEDULED:
+        partitioned = assessments.filter(
+          a =>
+            a.type == AssessmentType.SCHEDULED ||
+            (!a.type && !a.protocol.clinicalProtocol)
+        )
+        break
+      case AssessmentType.ON_DEMAND:
+        partitioned = assessments.filter(
+          a => a.type == AssessmentType.ON_DEMAND
+        )
+        break
+      case AssessmentType.CLINICAL:
+        partitioned = assessments.filter(
+          a =>
+            a.type == AssessmentType.CLINICAL ||
+            (!a.type && a.protocol.clinicalProtocol)
+        )
+        break
+    }
+    return partitioned.map(b => Object.assign(b, { type }))
   }
 
   updateAssessment(type: AssessmentType, assessment: Assessment) {

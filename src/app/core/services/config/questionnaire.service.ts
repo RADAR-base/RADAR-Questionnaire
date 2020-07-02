@@ -129,7 +129,7 @@ export class QuestionnaireService {
         break
       case AssessmentType.ON_DEMAND:
         partitioned = assessments.filter(
-          a => a.type == AssessmentType.ON_DEMAND
+          a => a.type == AssessmentType.ON_DEMAND || a.protocol.onDemandProtocol
         )
         break
       case AssessmentType.CLINICAL:

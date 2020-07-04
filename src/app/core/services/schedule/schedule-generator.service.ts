@@ -101,7 +101,7 @@ export class ScheduleGeneratorService {
   getRepeatProtocol(protocol, type) {
     let repeatP, repeatQ
     switch (type) {
-      case AssessmentType.ON_DEMAND:
+      case AssessmentType.CLINICAL:
         repeatQ = protocol.clinicalProtocol.repeatAfterClinicVisit
         break
       default:

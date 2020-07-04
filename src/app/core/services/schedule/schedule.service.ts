@@ -40,9 +40,12 @@ export class ScheduleService {
       case AssessmentType.ALL:
         return Promise.all([
           this.getScheduledTasks(),
+          this.getClinicalTasks(),
           this.getOnDemandTasks()
-        ]).then(([scheduledTasks, onDemandTasks]) => {
-          const allTasks = (scheduledTasks || []).concat(onDemandTasks || [])
+        ]).then(([scheduledTasks, clinicalTasks, onDemandTasks]) => {
+          const allTasks = (scheduledTasks || [])
+            .concat(onDemandTasks || [])
+            .concat(clinicalTasks || [])
           allTasks.forEach(t => {
             if (t.notifications === undefined) {
               t.notifications = []
@@ -99,6 +102,8 @@ export class ScheduleService {
         return this.setScheduledTasks(tasks)
       case AssessmentType.ON_DEMAND:
         return this.setOnDemandTasks(tasks)
+      case AssessmentType.CLINICAL:
+        return this.setClinicalTasks(tasks)
     }
   }
 

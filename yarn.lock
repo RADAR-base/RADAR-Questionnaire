@@ -3706,12 +3706,10 @@ cordova-plugin-androidx-adapter@^1.1.1:
     q "^1.4.1"
     recursive-readdir "^2.2.2"
 
-cordova-plugin-androidx@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-androidx/-/cordova-plugin-androidx-1.0.2.tgz#a48d3fabf20beb4273171fdece0b524362b2643f"
-  integrity sha512-gA0Ugz3xXRndZ5+QV+T2BjigNt5YraC+uDA/gOEM6p4m4ofwqFAPoHA4Q17VIHnRtn9++OYoa1Gi44+l6blGhA==
-  dependencies:
-    q "^1.4.1"
+cordova-plugin-androidx@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-androidx/-/cordova-plugin-androidx-2.0.0.tgz#ac7bd51ba0ae42dbfe4090a3cd4b8fac32f35ad1"
+  integrity sha512-n5QA1LJ/wT9qpDCHAw2GwqVXVlEajRPnDH5CKZGpv90M1FYVMydYlFwCEbpp263e5I5QloPjyoyWagiKLB+JMg==
 
 cordova-plugin-app-version@^0.1.9:
   version "0.1.9"

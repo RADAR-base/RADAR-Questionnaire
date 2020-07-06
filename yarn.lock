@@ -3649,10 +3649,10 @@ cordova-fetch@^2.0.0:
     semver "^5.6.0"
     which "^1.3.1"
 
-cordova-ios@6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/cordova-ios/-/cordova-ios-6.0.0.tgz#0736177d119441560efba857c9b3d5051bc31071"
-  integrity sha512-KORyAF5fj8XF0DKgYLXz9CRgIMmsuNGU/Zqb4EfTDSN8xxoBhXWqDqURDhaOUTeiq0Cdqk7XfEdKU8jVgADgIw==
+cordova-ios@6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/cordova-ios/-/cordova-ios-6.1.0.tgz#24f52007dddadabcfcec3a0cade7ff7646d43ecc"
+  integrity sha512-FlX17lC2w78CqEQXypSeFIW3vUFF7VkCjNNLN+EbvOlLld5LUIbNJWepBdKlEg1/ZMmTwAuucMuKSZTr37ra+Q==
   dependencies:
     cordova-common "^4.0.1"
     fs-extra "^9.0.0"
@@ -9164,15 +9164,7 @@ nopt@1.0.9:
   dependencies:
     abbrev "1"
 
-nopt@^4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/nopt/-/nopt-4.0.1.tgz#d0d4685afd5415193c8c7505602d0d17cd64474d"
-  integrity sha1-0NRoWv1UFRk8jHUFYC0NF81kR00=
-  dependencies:
-    abbrev "1"
-    osenv "^0.1.4"
-
-nopt@^4.0.3:
+nopt@^4.0.1, nopt@^4.0.3:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/nopt/-/nopt-4.0.3.tgz#a375cad9d02fd921278d954c2254d5aa57e15e48"
   integrity sha512-CvaGwVMztSMJLOeXPrez7fyfObdZqNUK1cPAEzLHrTybIua9pMdmmPR5YwtfNftIOMv3DPUhFaxsZMNTQO20Kg==
@@ -14226,14 +14218,7 @@ which@1, which@^1.2.1, which@^1.2.9, which@^1.3.0, which@^1.3.1:
   dependencies:
     isexe "^2.0.0"
 
-which@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/which/-/which-2.0.1.tgz#f1cf94d07a8e571b6ff006aeb91d0300c47ef0a4"
-  integrity sha512-N7GBZOTswtB9lkQBZA4+zAXrjEIWAUOB93AvzUiudRzRxhUdLURQ7D/gAIMY1gatT/LTbmbcv8SiYazy3eYB7w==
-  dependencies:
-    isexe "^2.0.0"
-
-which@^2.0.2:
+which@^2.0.1, which@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/which/-/which-2.0.2.tgz#7c6a8dd0a636a0327e10b59c9286eee93f3f51b1"
   integrity sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==

@@ -30,7 +30,7 @@ export class QuestionsPageComponent implements OnInit {
   isLeftButtonDisabled = false
   isRightButtonDisabled = true
   task: Task
-  taskType: TaskType
+  taskType: AssessmentType
   questions: Question[]
   questionTitle: String
   endText: string

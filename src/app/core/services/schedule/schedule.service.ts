@@ -190,6 +190,7 @@ export class ScheduleService {
 
   reset() {
     return Promise.all([
+      this.setClinicalTasks([]),
       this.setOnDemandTasks([]),
       this.setScheduledTasks([]),
       this.setCompletedTasks([])

@@ -180,6 +180,7 @@ export class ConfigService {
   updateConfigStateOnLanguageChange() {
     return Promise.all([
       this.questionnaire.pullQuestionnaires(AssessmentType.ON_DEMAND),
+      this.questionnaire.pullQuestionnaires(AssessmentType.CLINICAL),
       this.questionnaire.pullQuestionnaires(AssessmentType.SCHEDULED)
     ]).then(() => this.rescheduleNotifications(true))
   }

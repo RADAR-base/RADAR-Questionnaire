@@ -64,6 +64,16 @@ export class ScheduleGeneratorService {
           ),
           completed: [] as Task[]
         })
+      case AssessmentType.CLINICAL:
+        return Promise.resolve({
+          schedule: this.buildTasksForSingleAssessment(
+            assessment,
+            indexOffset,
+            refTimestamp,
+            AssessmentType.CLINICAL
+          ),
+          completed: [] as Task[]
+        })
     }
     return Promise.resolve()
   }

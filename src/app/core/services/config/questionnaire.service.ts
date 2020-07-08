@@ -134,7 +134,9 @@ export class QuestionnaireService {
         break
       case AssessmentType.CLINICAL:
         partitioned = assessments.filter(
-          a => a.type == AssessmentType.CLINICAL || a.protocol.clinicalProtocol
+          a =>
+            a.type == AssessmentType.CLINICAL ||
+            (!a.type && a.protocol.clinicalProtocol)
         )
         partitioned.map(b =>
           Object.assign(b, { requiresInClinicCompletion: true })

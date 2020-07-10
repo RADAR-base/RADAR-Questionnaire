@@ -8,6 +8,7 @@ import { UsageEventType } from '../../../shared/enums/events'
 import { LocKeys } from '../../../shared/enums/localisations'
 import {
   Assessment,
+  AssessmentType,
   ShowIntroductionType
 } from '../../../shared/models/assessment'
 import { Question } from '../../../shared/models/question'

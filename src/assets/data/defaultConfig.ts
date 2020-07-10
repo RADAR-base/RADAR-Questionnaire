@@ -1,10 +1,12 @@
 import { LocKeys } from '../../app/shared/enums/localisations'
+import { AssessmentType } from '../../app/shared/models/assessment'
 import {
   LanguageSetting,
   NotificationSettings,
   WeeklyReportSubSettings
 } from '../../app/shared/models/settings'
 import { Task } from '../../app/shared/models/task'
+import { Localisations } from './localisations'
 import { DefaultSourceProducerAndSecretExport } from './secret'
 
 // DEFAULT APP INFO
@@ -33,6 +35,15 @@ export const DefaultSourceTypeRegistrationBody = {
   sourceTypeProducer: 'RADAR'
 }
 
+// *The icon for On Demand assessments  (REMOTE CONFIG KEY: `on_demand_assessment_icon`)
+export const DefaultOnDemandAssessmentIcon = 'assets/imgs/new-questionnaire.png'
+
+// *The icon for On Demand assessments  (REMOTE CONFIG KEY: `on_demand_assessment_label`)
+// *The format/type is LanguageSetting
+export const DefaultOnDemandAssessmentLabel = JSON.stringify(
+  Localisations['ON_DEMAND_TASKS']
+)
+
 // DEFAULT SCHEDULE SETUP
 
 // *Default general task completion window or time window in which the task is available to answer (1 day in ms)
@@ -44,6 +55,7 @@ export const DefaultESMCompletionWindow = 600000
 // *Default sample task
 export const DefaultTask: Task = {
   index: 0,
+  type: AssessmentType.SCHEDULED,
   completed: false,
   reportedCompletion: false,
   timestamp: 0,
@@ -52,7 +64,6 @@ export const DefaultTask: Task = {
   estimatedCompletionTime: 0,
   completionWindow: DefaultTaskCompletionWindow,
   warning: '',
-  isClinical: false,
   notifications: [],
   timeCompleted: 0,
   showInCalendar: true,

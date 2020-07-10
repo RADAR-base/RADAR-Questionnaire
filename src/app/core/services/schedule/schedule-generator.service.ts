@@ -5,10 +5,9 @@ import {
   DefaultTask,
   DefaultTaskCompletionWindow
 } from '../../../../assets/data/defaultConfig'
-import { Assessment } from '../../../shared/models/assessment'
+import { Assessment, AssessmentType } from '../../../shared/models/assessment'
 import { Task } from '../../../shared/models/task'
 import { compareTasks } from '../../../shared/utilities/compare-tasks'
-import { TaskType } from '../../../shared/utilities/task-type'
 import {
   advanceRepeat,
   getMilliseconds,
@@ -41,7 +40,7 @@ export class ScheduleGeneratorService {
   ) {
     // NOTE: Check if clinical or regular
     switch (type) {
-      case TaskType.NON_CLINICAL:
+      case AssessmentType.SCHEDULED:
         return this.questionnaire
           .getAssessments(type)
           .then(assessments =>
@@ -55,13 +54,23 @@ export class ScheduleGeneratorService {
           .catch(e => {
             this.logger.error('Failed to schedule assessement', e)
           })
-      case TaskType.CLINICAL:
+      case AssessmentType.ON_DEMAND:
         return Promise.resolve({
           schedule: this.buildTasksForSingleAssessment(
             assessment,
             indexOffset,
             refTimestamp,
-            TaskType.CLINICAL
+            AssessmentType.ON_DEMAND
+          ),
+          completed: [] as Task[]
+        })
+      case AssessmentType.CLINICAL:
+        return Promise.resolve({
+          schedule: this.buildTasksForSingleAssessment(
+            assessment,
+            indexOffset,
+            refTimestamp,
+            AssessmentType.CLINICAL
           ),
           completed: [] as Task[]
         })
@@ -82,7 +91,7 @@ export class ScheduleGeneratorService {
             assessment,
             list.length,
             refTimestamp,
-            TaskType.NON_CLINICAL
+            AssessmentType.SCHEDULED
           )
         ),
       []
@@ -102,7 +111,7 @@ export class ScheduleGeneratorService {
   getRepeatProtocol(protocol, type) {
     let repeatP, repeatQ
     switch (type) {
-      case TaskType.CLINICAL:
+      case AssessmentType.CLINICAL:
         repeatQ = protocol.clinicalProtocol.repeatAfterClinicVisit
         break
       default:
@@ -116,7 +125,7 @@ export class ScheduleGeneratorService {
     assessment: Assessment,
     indexOffset: number,
     refTimestamp,
-    type: TaskType
+    type: AssessmentType
   ): Task[] {
     const { repeatP, repeatQ } = this.getRepeatProtocol(
       assessment.protocol,
@@ -164,11 +173,12 @@ export class ScheduleGeneratorService {
     task.index = index
     task.timestamp = timestamp
     task.name = assessment.name
+    task.type = assessment.type
     task.nQuestions = assessment.questions.length
     task.estimatedCompletionTime = assessment.estimatedCompletionTime
     task.completionWindow = completionWindow
     task.warning = this.localization.chooseText(assessment.warn)
-    task.isClinical = !!assessment.protocol.clinicalProtocol
+    task.requiresInClinicCompletion = assessment.requiresInClinicCompletion
     task.showInCalendar = this.getOrDefault(
       assessment.showInCalendar,
       task.showInCalendar

@@ -72,7 +72,7 @@ export const DefaultTask: Task = {
 }
 
 // *Default schedule coverage in years (length of schedule to generate tasks until)
-export const DefaultScheduleYearCoverage: number = 2
+export const DefaultScheduleYearCoverage: number = 3
 
 // *Default time interval of protocol
 export const DefaultScheduleTimeInterval = { unit: 'day', amount: 1 }

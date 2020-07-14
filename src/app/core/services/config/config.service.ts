@@ -53,6 +53,10 @@ export class ConfigService {
           this.subjectConfig
             .getEnrolmentDate()
             .then(d => this.appConfig.init(d))
+        if (newProtocol && newTimezone)
+          return this.updateConfigStateOnTimezoneChange(newTimezone).then(() =>
+            this.updateConfigStateOnProtocolChange(newProtocol)
+          )
         if (newProtocol)
           return this.updateConfigStateOnProtocolChange(newProtocol)
         if (newAppVersion)

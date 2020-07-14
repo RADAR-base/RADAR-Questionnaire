@@ -17,6 +17,7 @@ export class ConfigKeys {
   static PARTICIPANT_ATTRIBUTE_ORDER = new ConfigKeys(
     'participant_attribute_order'
   )
+  static SCHEDULE_YEAR_COVERAGE = new ConfigKeys('schedule_year_coverage')
 
   constructor(public value: string) {}
 

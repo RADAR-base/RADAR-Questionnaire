@@ -5,6 +5,7 @@ import {
   DefaultTask,
   DefaultTaskCompletionWindow
 } from '../../../../assets/data/defaultConfig'
+import { ConfigKeys } from '../../../shared/enums/config'
 import { Assessment, AssessmentType } from '../../../shared/models/assessment'
 import { Task } from '../../../shared/models/task'
 import { compareTasks } from '../../../shared/utilities/compare-tasks'
@@ -16,6 +17,7 @@ import {
 } from '../../../shared/utilities/time'
 import { Utility } from '../../../shared/utilities/util'
 import { QuestionnaireService } from '../config/questionnaire.service'
+import { RemoteConfigService } from '../config/remote-config.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
 import { NotificationGeneratorService } from '../notifications/notification-generator.service'
@@ -26,6 +28,7 @@ export class ScheduleGeneratorService {
     private notificationService: NotificationGeneratorService,
     private localization: LocalizationService,
     private questionnaire: QuestionnaireService,
+    private remoteConfig: RemoteConfigService,
     private logger: LogService,
     private util: Utility
   ) {}
@@ -38,51 +41,57 @@ export class ScheduleGeneratorService {
     assessment?,
     indexOffset?
   ) {
-    // NOTE: Check if clinical or regular
-    switch (type) {
-      case AssessmentType.SCHEDULED:
-        return this.questionnaire
-          .getAssessments(type)
-          .then(assessments =>
-            this.buildTaskSchedule(
-              assessments,
-              completedTasks,
-              refTimestamp,
-              utcOffsetPrev
+    return this.getScheduleYearCoverage().then(scheduleYearCoverage => {
+      // NOTE: Check if clinical or regular
+      switch (type) {
+        case AssessmentType.SCHEDULED:
+          return this.questionnaire
+            .getAssessments(type)
+            .then(assessments =>
+              this.buildTaskSchedule(
+                assessments,
+                completedTasks,
+                refTimestamp,
+                utcOffsetPrev,
+                scheduleYearCoverage
+              )
             )
-          )
-          .catch(e => {
-            this.logger.error('Failed to schedule assessement', e)
+            .catch(e => {
+              this.logger.error('Failed to schedule assessement', e)
+            })
+        case AssessmentType.ON_DEMAND:
+          return Promise.resolve({
+            schedule: this.buildTasksForSingleAssessment(
+              assessment,
+              indexOffset,
+              refTimestamp,
+              AssessmentType.ON_DEMAND,
+              scheduleYearCoverage
+            ),
+            completed: [] as Task[]
           })
-      case AssessmentType.ON_DEMAND:
-        return Promise.resolve({
-          schedule: this.buildTasksForSingleAssessment(
-            assessment,
-            indexOffset,
-            refTimestamp,
-            AssessmentType.ON_DEMAND
-          ),
-          completed: [] as Task[]
-        })
-      case AssessmentType.CLINICAL:
-        return Promise.resolve({
-          schedule: this.buildTasksForSingleAssessment(
-            assessment,
-            indexOffset,
-            refTimestamp,
-            AssessmentType.CLINICAL
-          ),
-          completed: [] as Task[]
-        })
-    }
-    return Promise.resolve()
+        case AssessmentType.CLINICAL:
+          return Promise.resolve({
+            schedule: this.buildTasksForSingleAssessment(
+              assessment,
+              indexOffset,
+              refTimestamp,
+              AssessmentType.CLINICAL,
+              scheduleYearCoverage
+            ),
+            completed: [] as Task[]
+          })
+      }
+      return Promise.resolve()
+    })
   }
 
   buildTaskSchedule(
     assessments: Assessment[],
     completedTasks,
     refTimestamp,
-    utcOffsetPrev
+    utcOffsetPrev,
+    scheduleYearCoverage: number
   ): Promise<{ schedule: Task[]; completed: Task[] }> {
     let schedule: Task[] = assessments.reduce(
       (list, assessment) =>
@@ -91,7 +100,8 @@ export class ScheduleGeneratorService {
             assessment,
             list.length,
             refTimestamp,
-            AssessmentType.SCHEDULED
+            AssessmentType.SCHEDULED,
+            scheduleYearCoverage
           )
         ),
       []
@@ -125,15 +135,15 @@ export class ScheduleGeneratorService {
     assessment: Assessment,
     indexOffset: number,
     refTimestamp,
-    type: AssessmentType
+    type: AssessmentType,
+    scheduleYearCoverage: number
   ): Task[] {
     const { repeatP, repeatQ } = this.getRepeatProtocol(
       assessment.protocol,
       type
     )
     let iterTime = refTimestamp
-    const endTime =
-      iterTime + getMilliseconds({ years: DefaultScheduleYearCoverage })
+    const endTime = iterTime + getMilliseconds({ years: scheduleYearCoverage })
     const completionWindow = ScheduleGeneratorService.computeCompletionWindow(
       assessment
     )
@@ -226,6 +236,21 @@ export class ScheduleGeneratorService {
       })
     }
     return { schedule, completed }
+  }
+
+  getScheduleYearCoverage() {
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        config.getOrDefault(
+          ConfigKeys.SCHEDULE_YEAR_COVERAGE,
+          DefaultScheduleYearCoverage.toString()
+        )
+      )
+      .then(coverage => parseFloat(coverage))
+      .catch(e => {
+        throw this.logger.error('Failed to fetch Firebase config', e)
+      })
   }
 
   static computeCompletionWindow(assessment: Assessment): number {

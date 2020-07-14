@@ -11,8 +11,8 @@ import {
   ConfigEventType,
   NotificationEventType
 } from '../../../shared/enums/events'
+import { AssessmentType } from '../../../shared/models/assessment'
 import { User } from '../../../shared/models/user'
-import { TaskType } from '../../../shared/utilities/task-type'
 import { KafkaService } from '../kafka/kafka.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
@@ -53,6 +53,10 @@ export class ConfigService {
           this.subjectConfig
             .getEnrolmentDate()
             .then(d => this.appConfig.init(d))
+        if (newProtocol && newTimezone && !newAppVersion)
+          return this.updateConfigStateOnTimezoneChange(newTimezone).then(() =>
+            this.updateConfigStateOnProtocolChange(newProtocol)
+          )
         if (newProtocol)
           return this.updateConfigStateOnProtocolChange(newProtocol)
         if (newAppVersion)
@@ -73,7 +77,7 @@ export class ConfigService {
       this.protocol.getRootTreeHashUrl()
     ])
       .then(([prevHash, currentHash]) => {
-        if (prevHash != currentHash) {
+        if (prevHash != currentHash || force) {
           return Promise.all([
             this.appConfig.getScheduleVersion(),
             this.protocol.pull()
@@ -172,22 +176,23 @@ export class ConfigService {
     const assessments = this.protocol.format(protocol.protocols)
     this.logger.log(assessments)
     return this.questionnaire
-      .updateAssessments(TaskType.ALL, assessments)
+      .updateAssessments(AssessmentType.ALL, assessments)
       .then(() => this.regenerateSchedule())
       .then(() => this.appConfig.setScheduleVersion(protocol.version))
   }
 
   updateConfigStateOnLanguageChange() {
     return Promise.all([
-      this.questionnaire.pullQuestionnaires(TaskType.CLINICAL),
-      this.questionnaire.pullQuestionnaires(TaskType.NON_CLINICAL)
+      this.questionnaire.pullQuestionnaires(AssessmentType.ON_DEMAND),
+      this.questionnaire.pullQuestionnaires(AssessmentType.CLINICAL),
+      this.questionnaire.pullQuestionnaires(AssessmentType.SCHEDULED)
     ]).then(() => this.rescheduleNotifications(true))
   }
 
   updateConfigStateOnAppVersionChange(version) {
     return this.appConfig
       .setAppVersion(version)
-      .then(() => this.regenerateSchedule())
+      .then(() => this.fetchConfigState(true))
   }
 
   updateConfigStateOnTimezoneChange({ prevUtcOffset, utcOffset }) {

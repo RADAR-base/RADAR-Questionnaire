@@ -7,8 +7,7 @@ import {
 } from '@angular/core'
 
 import { UsageService } from '../../../../core/services/usage/usage.service'
-import { Assessment } from '../../../../shared/models/assessment'
-import { Task } from '../../../../shared/models/task'
+import { AssessmentType } from '../../../../shared/models/assessment'
 
 @Component({
   selector: 'finish',
@@ -18,25 +17,26 @@ export class FinishComponent implements OnChanges {
   @Input()
   content = ''
   @Input()
-  isClinicalTask = false
-  @Input()
-  displayNextTaskReminder = true
-  @Input()
   showDoneButton: boolean
   @Input()
   isShown: boolean
-
+  @Input()
+  requiresInClinicCompletion = false
+  @Input()
+  taskType: AssessmentType
+  @Input()
+  isLastTask = false
   @Output()
   exit: EventEmitter<any> = new EventEmitter<any>()
 
-  task: Task
-  questionnaireData
-  assessment: Assessment
+  displayNextTaskReminder = true
   completedInClinic = false
 
   constructor(private usage: UsageService) {}
 
   ngOnChanges() {
+    this.displayNextTaskReminder =
+      this.taskType == AssessmentType.SCHEDULED && !this.isLastTask
     if (this.isShown) {
       this.usage.setPage(this.constructor.name)
       setTimeout(() => (this.showDoneButton = true), 15000)

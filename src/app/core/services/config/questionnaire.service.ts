@@ -2,10 +2,9 @@ import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 
 import { StorageKeys } from '../../../shared/enums/storage'
-import { Assessment } from '../../../shared/models/assessment'
+import { Assessment, AssessmentType } from '../../../shared/models/assessment'
 import { Question } from '../../../shared/models/question'
 import { Task } from '../../../shared/models/task'
-import { TaskType } from '../../../shared/utilities/task-type'
 import { Utility } from '../../../shared/utilities/util'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
@@ -15,8 +14,8 @@ import { StorageService } from '../storage/storage.service'
 export class QuestionnaireService {
   private readonly QUESTIONNAIRE_STORE = {
     CONFIG_ASSESSMENTS: StorageKeys.CONFIG_ASSESSMENTS,
-    CONFIG_CLINICAL_ASSESSMENTS: StorageKeys.CONFIG_CLINICAL_ASSESSMENTS,
-    HAS_CLINICAL_TASKS: StorageKeys.HAS_CLINICAL_TASKS
+    CONIFG_ON_DEMAND_ASSESSMENTS: StorageKeys.CONFIG_ON_DEMAND_ASSESSMENTS,
+    CONFIG_CLINICAL_ASSESSMENTS: StorageKeys.CONFIG_CLINICAL_ASSESSMENTS
   }
 
   constructor(
@@ -27,7 +26,8 @@ export class QuestionnaireService {
     private logger: LogService
   ) {}
 
-  pullQuestionnaires(type: TaskType): Promise<Assessment[]> {
+  pullQuestionnaires(type: AssessmentType): Promise<Assessment[]> {
+    // NOTE: Pull questionnaire definitions
     return this.getAssessments(type)
       .then(assessments => {
         const language = this.localization.getLanguage().value
@@ -87,17 +87,23 @@ export class QuestionnaireService {
     return questions
   }
 
-  updateAssessments(type: TaskType, assessments: Assessment[]) {
+  updateAssessments(type: AssessmentType, assessments: Assessment[]) {
+    // NOTE: Update assessment list from protocol
     switch (type) {
-      case TaskType.ALL:
-        const {
-          negative: scheduledAssessments,
-          positive: clinicalAssessments
-        } = this.util.partition(assessments, a => a.protocol.clinicalProtocol)
+      case AssessmentType.ALL:
         return Promise.all([
-          this.setHasClinicalTasks(clinicalAssessments.length > 0),
-          this.updateAssessments(TaskType.CLINICAL, clinicalAssessments),
-          this.updateAssessments(TaskType.NON_CLINICAL, scheduledAssessments)
+          this.updateAssessments(
+            AssessmentType.ON_DEMAND,
+            this.assessmentPartitioner(assessments, AssessmentType.ON_DEMAND)
+          ),
+          this.updateAssessments(
+            AssessmentType.CLINICAL,
+            this.assessmentPartitioner(assessments, AssessmentType.CLINICAL)
+          ),
+          this.updateAssessments(
+            AssessmentType.SCHEDULED,
+            this.assessmentPartitioner(assessments, AssessmentType.SCHEDULED)
+          )
         ])
       default:
         return this.setAssessments(type, assessments)
@@ -111,8 +117,36 @@ export class QuestionnaireService {
     }
   }
 
-  updateAssessment(type: TaskType, assessment: Assessment) {
-    console.log('updating assessment')
+  assessmentPartitioner(assessments, type) {
+    let partitioned
+    switch (type) {
+      case AssessmentType.SCHEDULED:
+        partitioned = assessments.filter(
+          a =>
+            a.type == AssessmentType.SCHEDULED ||
+            (!a.type && !a.protocol.clinicalProtocol)
+        )
+        break
+      case AssessmentType.ON_DEMAND:
+        partitioned = assessments.filter(
+          a => a.type == AssessmentType.ON_DEMAND || a.protocol.onDemandProtocol
+        )
+        break
+      case AssessmentType.CLINICAL:
+        partitioned = assessments.filter(
+          a =>
+            a.type == AssessmentType.CLINICAL ||
+            (!a.type && a.protocol.clinicalProtocol)
+        )
+        partitioned.map(b =>
+          Object.assign(b, { requiresInClinicCompletion: true })
+        )
+        break
+    }
+    return partitioned.map(b => Object.assign(b, { type }))
+  }
+
+  updateAssessment(type: AssessmentType, assessment: Assessment) {
     return this.getAssessments(type).then(assessments => {
       const index = assessments.findIndex(a => a.name == assessment.name)
       if (index != -1) {
@@ -122,7 +156,7 @@ export class QuestionnaireService {
     })
   }
 
-  getAssessment(type: TaskType, task: Task) {
+  getAssessment(type: AssessmentType, task: Task) {
     return this.getAssessments(type).then(assessments =>
       assessments.find(a => a.name === task.name)
     )
@@ -138,28 +172,35 @@ export class QuestionnaireService {
     return this.storage.set(key, assessments)
   }
 
-  getKeyFromTaskType(type: TaskType) {
+  getKeyFromTaskType(type: AssessmentType) {
     switch (type) {
-      case TaskType.CLINICAL:
+      case AssessmentType.ON_DEMAND:
+        return this.QUESTIONNAIRE_STORE.CONIFG_ON_DEMAND_ASSESSMENTS
+      case AssessmentType.CLINICAL:
         return this.QUESTIONNAIRE_STORE.CONFIG_CLINICAL_ASSESSMENTS
+      case AssessmentType.SCHEDULED:
       default:
         return this.QUESTIONNAIRE_STORE.CONFIG_ASSESSMENTS
     }
   }
 
-  setHasClinicalTasks(value) {
-    return this.storage.set(this.QUESTIONNAIRE_STORE.HAS_CLINICAL_TASKS, value)
+  getHasOnDemandAssessments() {
+    return this.storage
+      .get(this.QUESTIONNAIRE_STORE.CONIFG_ON_DEMAND_ASSESSMENTS)
+      .then(assessments => assessments.length > 0)
   }
 
-  getHasClinicalTasks() {
-    return this.storage.get(this.QUESTIONNAIRE_STORE.HAS_CLINICAL_TASKS)
+  getHasClinicalAssessments() {
+    return this.storage
+      .get(this.QUESTIONNAIRE_STORE.CONFIG_CLINICAL_ASSESSMENTS)
+      .then(assessments => assessments.length > 0)
   }
 
   reset() {
     return Promise.all([
-      this.setAssessments(TaskType.CLINICAL, {}),
-      this.setAssessments(TaskType.NON_CLINICAL, {}),
-      this.setHasClinicalTasks(false)
+      this.setAssessments(AssessmentType.ON_DEMAND, {}),
+      this.setAssessments(AssessmentType.CLINICAL, {}),
+      this.setAssessments(AssessmentType.SCHEDULED, {})
     ])
   }
 }

@@ -99,7 +99,7 @@ export class ProtocolService {
   ): GithubTreeChild {
     for (const [key, val] of attributes) {
       const child = children.find(c => c.path == key)
-      if (child !== null) return child
+      if (child != null) return child
     }
     return null
   }
@@ -125,7 +125,7 @@ export class ProtocolService {
           .toPromise()
           .then((res: GithubTree) => {
             const project = res.tree.find(c => c.path == projectName)
-            if (project == null)
+            if (project == null || project == undefined)
               throw new Error('Unable to find project in repository.')
             return this.http.get<GithubTree>(project.url).toPromise()
           })

@@ -10,9 +10,14 @@ export class ConfigKeys {
   static PLATFORM_INSTANCE = new ConfigKeys('platform_instance')
   static QUESTIONS_HIDDEN = new ConfigKeys('questions_hidden')
   static APP_VERSION_LATEST = new ConfigKeys('app_version_latest')
+  static ON_DEMAND_ASSESSMENT_LABEL = new ConfigKeys(
+    'on_demand_assessment_label'
+  )
+  static ON_DEMAND_ASSESSMENT_ICON = new ConfigKeys('on_demand_assessment_icon')
   static PARTICIPANT_ATTRIBUTE_ORDER = new ConfigKeys(
     'participant_attribute_order'
   )
+  static SCHEDULE_YEAR_COVERAGE = new ConfigKeys('schedule_year_coverage')
 
   constructor(public value: string) {}
 

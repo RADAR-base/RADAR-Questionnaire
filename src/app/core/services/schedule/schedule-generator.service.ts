@@ -135,7 +135,6 @@ export class ScheduleGeneratorService {
     type: AssessmentType
   ): Task[] {
     const scheduleYearCoverage = this.getScheduleYearCoverage()
-    console.log(scheduleYearCoverage)
     const { repeatP, repeatQ } = this.getRepeatProtocol(
       assessment.protocol,
       type

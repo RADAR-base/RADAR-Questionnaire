@@ -133,7 +133,7 @@
     "@types/jasminewd2": "^2.0.8",
     "@types/node": "14.0.22",
     "codelyzer": "^5.2.2",
-    "eslint": "^6.8.0",
+    "eslint": "^7.4.0",
     "eslint-scope": "^5.0.0",
     "import-sort-cli": "^6.0.0",
     "import-sort-parser-babylon": "^6.0.0",

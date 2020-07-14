@@ -24,6 +24,8 @@ import { NotificationGeneratorService } from '../notifications/notification-gene
 
 @Injectable()
 export class ScheduleGeneratorService {
+  SCHEDULE_YEAR_COVERAGE = DefaultScheduleYearCoverage
+
   constructor(
     private notificationService: NotificationGeneratorService,
     private localization: LocalizationService,
@@ -41,7 +43,7 @@ export class ScheduleGeneratorService {
     assessment?,
     indexOffset?
   ) {
-    return this.getScheduleYearCoverage().then(scheduleYearCoverage => {
+    return this.fetchScheduleYearCoverage().then(() => {
       // NOTE: Check if clinical or regular
       switch (type) {
         case AssessmentType.SCHEDULED:
@@ -52,8 +54,7 @@ export class ScheduleGeneratorService {
                 assessments,
                 completedTasks,
                 refTimestamp,
-                utcOffsetPrev,
-                scheduleYearCoverage
+                utcOffsetPrev
               )
             )
             .catch(e => {
@@ -65,8 +66,7 @@ export class ScheduleGeneratorService {
               assessment,
               indexOffset,
               refTimestamp,
-              AssessmentType.ON_DEMAND,
-              scheduleYearCoverage
+              AssessmentType.ON_DEMAND
             ),
             completed: [] as Task[]
           })
@@ -76,8 +76,7 @@ export class ScheduleGeneratorService {
               assessment,
               indexOffset,
               refTimestamp,
-              AssessmentType.CLINICAL,
-              scheduleYearCoverage
+              AssessmentType.CLINICAL
             ),
             completed: [] as Task[]
           })
@@ -90,8 +89,7 @@ export class ScheduleGeneratorService {
     assessments: Assessment[],
     completedTasks,
     refTimestamp,
-    utcOffsetPrev,
-    scheduleYearCoverage: number
+    utcOffsetPrev
   ): Promise<{ schedule: Task[]; completed: Task[] }> {
     let schedule: Task[] = assessments.reduce(
       (list, assessment) =>
@@ -100,8 +98,7 @@ export class ScheduleGeneratorService {
             assessment,
             list.length,
             refTimestamp,
-            AssessmentType.SCHEDULED,
-            scheduleYearCoverage
+            AssessmentType.SCHEDULED
           )
         ),
       []
@@ -135,9 +132,10 @@ export class ScheduleGeneratorService {
     assessment: Assessment,
     indexOffset: number,
     refTimestamp,
-    type: AssessmentType,
-    scheduleYearCoverage: number
+    type: AssessmentType
   ): Task[] {
+    const scheduleYearCoverage = this.getScheduleYearCoverage()
+    console.log(scheduleYearCoverage)
     const { repeatP, repeatQ } = this.getRepeatProtocol(
       assessment.protocol,
       type
@@ -239,6 +237,11 @@ export class ScheduleGeneratorService {
   }
 
   getScheduleYearCoverage() {
+    if (this.SCHEDULE_YEAR_COVERAGE > 0) return this.SCHEDULE_YEAR_COVERAGE
+    else return DefaultScheduleYearCoverage
+  }
+
+  fetchScheduleYearCoverage() {
     return this.remoteConfig
       .read()
       .then(config =>
@@ -247,7 +250,7 @@ export class ScheduleGeneratorService {
           DefaultScheduleYearCoverage.toString()
         )
       )
-      .then(coverage => parseFloat(coverage))
+      .then(coverage => (this.SCHEDULE_YEAR_COVERAGE = parseFloat(coverage)))
       .catch(e => {
         throw this.logger.error('Failed to fetch Firebase config', e)
       })

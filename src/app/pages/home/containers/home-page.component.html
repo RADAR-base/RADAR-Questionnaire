@@ -26,10 +26,15 @@
   </div>
 
   <div
-    class="clinical-container clinical-button"
-    [class.clinical-button-bottom]="showCalendar"
+    class="clinical-container"
+    *ngIf="(hasClinicalTasks | async) || (hasOnDemandTasks | async)"
   >
-    <ion-fab left bottom>
+    <ion-fab
+      left
+      bottom
+      class="clinical-button"
+      [class.clinical-button-bottom]="showCalendar"
+    >
       <button ion-fab class="fab">
         <ion-icon name="add"></ion-icon>
       </button>

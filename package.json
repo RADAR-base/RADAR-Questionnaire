@@ -48,7 +48,7 @@
     "@angular/core": "^7.2.13",
     "@angular/forms": "^7.2.13",
     "@angular/router": "^7.2.13",
-    "@auth0/angular-jwt": "^4.2.0",
+    "@auth0/angular-jwt": "^5.0.1",
     "@ionic-native/android-permissions": "^5.26.0",
     "@ionic-native/app-version": "^5.27.0",
     "@ionic-native/background-mode": "^5.26.0",

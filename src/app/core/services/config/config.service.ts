@@ -53,6 +53,10 @@ export class ConfigService {
           this.subjectConfig
             .getEnrolmentDate()
             .then(d => this.appConfig.init(d))
+        if (newProtocol && newTimezone && !newAppVersion)
+          return this.updateConfigStateOnTimezoneChange(newTimezone).then(() =>
+            this.updateConfigStateOnProtocolChange(newProtocol)
+          )
         if (newProtocol)
           return this.updateConfigStateOnProtocolChange(newProtocol)
         if (newAppVersion)
@@ -73,7 +77,7 @@ export class ConfigService {
       this.protocol.getRootTreeHashUrl()
     ])
       .then(([prevHash, currentHash]) => {
-        if (prevHash != currentHash) {
+        if (prevHash != currentHash || force) {
           return Promise.all([
             this.appConfig.getScheduleVersion(),
             this.protocol.pull()
@@ -188,7 +192,7 @@ export class ConfigService {
   updateConfigStateOnAppVersionChange(version) {
     return this.appConfig
       .setAppVersion(version)
-      .then(() => this.regenerateSchedule())
+      .then(() => this.fetchConfigState(true))
   }
 
   updateConfigStateOnTimezoneChange({ prevUtcOffset, utcOffset }) {

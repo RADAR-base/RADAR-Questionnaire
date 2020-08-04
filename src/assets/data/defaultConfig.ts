@@ -15,7 +15,7 @@ import { DefaultSourceProducerAndSecretExport } from './secret'
 export const DefaultPlatformInstance = 'RADAR-CNS'
 
 // *Default app version
-export const DefaultAppVersion = '0.7.5'
+export const DefaultAppVersion = '0.9.0-alpha'
 
 // *Default Android package name
 export const DefaultPackageName = 'org.phidatalab.radar_armt'
@@ -72,7 +72,7 @@ export const DefaultTask: Task = {
 }
 
 // *Default schedule coverage in years (length of schedule to generate tasks until)
-export const DefaultScheduleYearCoverage: number = 2
+export const DefaultScheduleYearCoverage: number = 3
 
 // *Default time interval of protocol
 export const DefaultScheduleTimeInterval = { unit: 'day', amount: 1 }

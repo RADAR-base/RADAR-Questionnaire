@@ -25,11 +25,13 @@
     </task-progress>
   </div>
 
-  <div
-    class="clinical-container clinical-button"
-    [class.clinical-button-bottom]="showCalendar"
-  >
-    <ion-fab left bottom>
+  <div class="clinical-container" *ngIf="showMiscTasksButton | async">
+    <ion-fab
+      left
+      bottom
+      class="clinical-button"
+      [class.clinical-button-bottom]="showCalendar"
+    >
       <button ion-fab class="fab">
         <ion-icon name="add"></ion-icon>
       </button>

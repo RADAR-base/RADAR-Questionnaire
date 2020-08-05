@@ -40,6 +40,7 @@ export class HomePageComponent implements OnDestroy {
   onDemandIcon: Promise<string>
   taskIsNow = false
   checkTaskInterval
+  showMiscTasksButton: Promise<boolean>
 
   constructor(
     public navCtrl: NavController,
@@ -95,6 +96,7 @@ export class HomePageComponent implements OnDestroy {
     this.hasClinicalTasks = this.tasksService.getHasClinicalTasks()
     this.title = this.tasksService.getPlatformInstanceName()
     this.onDemandIcon = this.tasksService.getOnDemandAssessmentIcon()
+    this.showMiscTasksButton = this.getShowMiscTasksButton()
   }
 
   onResume() {
@@ -187,5 +189,11 @@ export class HomePageComponent implements OnDestroy {
         }
       ]
     })
+  }
+
+  getShowMiscTasksButton() {
+    return Promise.all([this.hasOnDemandTasks, this.hasClinicalTasks]).then(
+      ([onDemand, clinical]) => onDemand || clinical
+    )
   }
 }

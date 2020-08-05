@@ -25,10 +25,7 @@
     </task-progress>
   </div>
 
-  <div
-    class="clinical-container"
-    *ngIf="(hasClinicalTasks | async) || (hasOnDemandTasks | async)"
-  >
+  <div class="clinical-container" *ngIf="showMiscTasksButton | async">
     <ion-fab
       left
       bottom

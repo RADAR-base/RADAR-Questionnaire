@@ -15,7 +15,7 @@ import { DefaultSourceProducerAndSecretExport } from './secret'
 export const DefaultPlatformInstance = 'RADAR-CNS'
 
 // *Default app version
-export const DefaultAppVersion = '0.9.0-alpha'
+export const DefaultAppVersion = '0.9.1-alpha'
 
 // *Default Android package name
 export const DefaultPackageName = 'org.phidatalab.radar_armt'

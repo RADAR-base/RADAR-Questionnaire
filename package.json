@@ -57,7 +57,7 @@
     "@ionic-native/device": "^5.26.0",
     "@ionic-native/dialogs": "^5.26.0",
     "@ionic-native/file": "^5.26.0",
-    "@ionic-native/firebase": "^5.26.0",
+    "@ionic-native/firebase": "^5.28.0",
     "@ionic-native/globalization": "^5.26.0",
     "@ionic-native/insomnia": "^5.27.0",
     "@ionic-native/keyboard": "^5.26.0",

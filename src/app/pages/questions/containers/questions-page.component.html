@@ -9,21 +9,24 @@
             (start)="handleIntro($event)"
           ></introduction>
         </ion-slide>
-        <ion-slide *ngFor="let question of questions; let i = index">
-          <question
-            *ngIf="i >= currentQuestionId - 10 && i <= currentQuestionId + 10"
-            [question]="question"
-            [questionIndex]="i"
-            [currentIndex]="currentQuestionId"
-            (answer)="onAnswer($event)"
-          ></question>
-        </ion-slide>
+        <ng-container *ngIf="!showIntroductionScreen">
+          <ion-slide *ngFor="let question of questions; let i = index">
+            <question
+              *ngIf="i >= currentQuestionId - 10 && i <= currentQuestionId + 10"
+              [question]="question"
+              [questionIndex]="i"
+              [currentIndex]="currentQuestionId"
+              (answer)="onAnswer($event)"
+            ></question>
+          </ion-slide>
+        </ng-container>
         <ion-slide>
           <finish
             *ngIf="showFinishScreen"
             [content]="endText"
-            [displayNextTaskReminder]="isLastTask"
-            [isClinicalTask]="isClinicalTask"
+            [isLastTask]="isLastTask"
+            [requiresInClinicCompletion]="requiresInClinicCompletion"
+            [taskType]="taskType"
             [showDoneButton]="showDoneButton"
             [isShown]="showFinishScreen"
             (exit)="handleFinish($event)"
@@ -34,7 +37,7 @@
   </div>
 </ion-content>
 
-<ion-footer *ngIf="!showIntroductionScreen && !showFinishScreen">
+<ion-footer [class.hidden]="showIntroductionScreen || showFinishScreen">
   <toolbar
     (next)="nextQuestion()"
     (previous)="previousQuestion()"

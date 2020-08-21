@@ -6,7 +6,7 @@ import { QuestionsPageComponent } from '../../questions/containers/questions-pag
 import { ClinicalTasksService } from '../services/clinical-tasks.service'
 
 @Component({
-  selector: 'page-clinical-tasks',
+  selector: 'page-on-demand',
   templateUrl: 'clinical-tasks-page.component.html'
 })
 export class ClinicalTasksPageComponent {
@@ -19,7 +19,7 @@ export class ClinicalTasksPageComponent {
   ) {}
 
   ionViewDidLoad() {
-    this.clinicalTasksService.getClinicalAssessments().then(assessments => {
+    this.clinicalTasksService.getAssessements().then(assessments => {
       this.assessments = assessments.sort((a, b) => a.order - b.order)
     })
   }

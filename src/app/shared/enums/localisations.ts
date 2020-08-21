@@ -47,6 +47,16 @@ export class LocKeys {
   static SETTINGS_RESET_ALERT_OPTION_DESC = new LocKeys(
     'SETTINGS_RESET_ALERT_OPTION_DESC'
   )
+  static SETTINGS_RESET_ALERT_CONFIG_DESC = new LocKeys(
+    'SETTINGS_RESET_ALERT_CONFIG_DESC'
+  )
+  static SETTINGS_RESET_ALERT_CACHE_DESC = new LocKeys(
+    'SETTINGS_RESET_ALERT_CACHE_DESC'
+  )
+  static SETTINGS_RESET_ALERT_ENROLMENT_DESC = new LocKeys(
+    'SETTINGS_RESET_ALERT_ENROLMENT_DESC'
+  )
+  static SETTINGS_ENROLMENT = new LocKeys('SETTINGS_ENROLMENT')
   static SETTINGS_CACHE = new LocKeys('SETTINGS_CACHE')
   static SETTINGS_CACHE_SIZE = new LocKeys('SETTINGS_CACHE_SIZE')
   static SETTINGS_LAST_UPLOAD_TO_SERVER = new LocKeys(
@@ -66,6 +76,7 @@ export class LocKeys {
   static BTN_ENROL_SCAN = new LocKeys('BTN_ENROL_SCAN')
   static BTN_FINISH = new LocKeys('BTN_FINISH')
   static BTN_DONE = new LocKeys('BTN_DONE')
+  static BTN_DISMISS = new LocKeys('BTN_DISMISS')
   static BTN_START = new LocKeys('BTN_START')
   static BTN_STOP = new LocKeys('BTN_STOP')
   static BTN_RESET = new LocKeys('BTN_RESET')
@@ -158,6 +169,9 @@ export class LocKeys {
     'SPLASH_STATUS_UPDATING_CONFIG'
   )
   static SPLASH_STATUS_SENDING_LOGS = new LocKeys('SPLASH_STATUS_SENDING_LOGS')
+
+  static CLINICAL_TASKS = new LocKeys('CLINICAL_TASKS')
+  static ON_DEMAND_TASKS = new LocKeys('ON_DEMAND_TASKS')
 
   constructor(public value: string) {}
 

@@ -16,7 +16,6 @@ import {
 } from '../../../shared/models/kafka'
 import { Task } from '../../../shared/models/task'
 import { ApplicationTimeZoneValueExport } from '../../../shared/models/timezone'
-import { getTaskType } from '../../../shared/utilities/task-type'
 import { getSeconds } from '../../../shared/utilities/time'
 import { QuestionnaireService } from '../config/questionnaire.service'
 import { RemoteConfigService } from '../config/remote-config.service'
@@ -43,7 +42,7 @@ export class SchemaService {
     switch (type) {
       case SchemaType.ASSESSMENT:
         return this.questionnaire
-          .getAssessment(getTaskType(task), task)
+          .getAssessment(task.type, task)
           .then(assessment => assessment.questionnaire)
       default:
         return Promise.resolve({ name: type, avsc: 'questionnaire' })
@@ -151,14 +150,18 @@ export class SchemaService {
       })
   }
 
-  getKafkaTopic(specifications: any[] | null, name, avsc): string {
-    const type = name.toLowerCase()
-    const defaultTopic = `${avsc}_${name}`
-    if (specifications) {
-      const spec = specifications.find(t => t.type.toLowerCase() == type)
-      return spec && spec.topic ? spec.topic : defaultTopic
+  getKafkaTopic(specifications: any[] | null, name, avsc): Promise<any> {
+    try {
+      const type = name.toLowerCase()
+      const defaultTopic = `${avsc}_${name}`
+      if (specifications) {
+        const spec = specifications.find(t => t.type.toLowerCase() == type)
+        return Promise.resolve(spec && spec.topic ? spec.topic : defaultTopic)
+      }
+      return Promise.resolve(defaultTopic)
+    } catch (e) {
+      return Promise.reject('Failed to get kafka topic')
     }
-    return defaultTopic
   }
 
   getLatestKafkaSchemaVersion(

@@ -4,16 +4,19 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnInit,
   Output,
   QueryList,
   ViewChildren
 } from '@angular/core'
 
+import { Utility } from '../../../../shared/utilities/util'
+
 @Component({
   selector: 'wheel-selector',
   templateUrl: 'wheel-selector.component.html'
 })
-export class WheelSelectorComponent implements AfterViewInit {
+export class WheelSelectorComponent implements AfterViewInit, OnInit {
   keys = Object.keys
   @ViewChildren('wheel') wheels: QueryList<ElementRef>
 
@@ -26,20 +29,37 @@ export class WheelSelectorComponent implements AfterViewInit {
   @Output()
   onSelect: EventEmitter<any> = new EventEmitter<any>()
 
+  valuesWithNulls
+
   emitterLocked = false
   scrollHeight = 40
 
-  constructor() {}
+  constructor(private util: Utility) {}
+
+  ngOnInit() {
+    this.valuesWithNulls = this.util.deepCopy(this.values)
+    this.addNullValues()
+  }
 
   ngAfterViewInit() {
+    console.log(this.valuesWithNulls)
     if (this.selection) this.scrollToDefault()
+  }
+
+  addNullValues() {
+    const keys = this.keys(this.valuesWithNulls)
+    keys.forEach(d => {
+      this.valuesWithNulls[d].unshift('-')
+      this.valuesWithNulls[d].push('-')
+    })
   }
 
   scrollToDefault() {
     this.wheels.forEach((d, i) => {
-      const col = this.keys(this.values)[i]
-      let row = this.values[col].findIndex(a => a == this.selection[col])
-      if (row == -1) row = 0
+      const col = this.keys(this.valuesWithNulls)[i]
+      let row =
+        this.valuesWithNulls[col].findIndex(a => a == this.selection[col]) - 1
+      if (row < 0) row = 0
       d.nativeElement.scrollTo(0, row * this.scrollHeight)
     })
   }
@@ -48,8 +68,8 @@ export class WheelSelectorComponent implements AfterViewInit {
     if (!this.emitterLocked) {
       this.emitterLocked = true
       setTimeout(() => {
-        const row = Math.round(event.target.scrollTop / this.scrollHeight)
-        const value = this.values[col][row]
+        const row = Math.round(event.target.scrollTop / this.scrollHeight) + 1
+        const value = this.valuesWithNulls[col][row]
         if (value) {
           this.selection[col] = value
           this.onSelect.emit(this.selection)

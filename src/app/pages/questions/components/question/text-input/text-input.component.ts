@@ -11,6 +11,8 @@ export class TextInputComponent implements OnInit {
   valueChange: EventEmitter<string> = new EventEmitter<string>()
   @Input()
   type: string
+  @Input()
+  currentlyShown: boolean
 
   showDatePicker: boolean
   showTimePicker: boolean

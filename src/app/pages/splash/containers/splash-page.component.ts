@@ -5,7 +5,6 @@ import { DefaultPackageName } from '../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { UsageService } from '../../../core/services/usage/usage.service'
-import { ConfigEventType } from '../../../shared/enums/events'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { EnrolmentPageComponent } from '../../auth/containers/enrolment-page.component'
 import { HomePageComponent } from '../../home/containers/home-page.component'
@@ -55,9 +54,10 @@ export class SplashPageComponent {
   }
 
   showFetchConfigFail(e) {
+    console.log(e)
     this.alertService.showAlert({
       title: this.localization.translateKey(LocKeys.STATUS_FAILURE),
-      message: e.message,
+      message: this.localization.translateKey(LocKeys.CONFIG_ERROR_DESC),
       buttons: [
         {
           text: this.localization.translateKey(LocKeys.BTN_RETRY),
@@ -66,10 +66,8 @@ export class SplashPageComponent {
           }
         },
         {
-          text: this.localization.translateKey(LocKeys.BTN_RESET),
-          handler: () => {
-            this.enrol()
-          }
+          text: this.localization.translateKey(LocKeys.BTN_DISMISS),
+          handler: () => {}
         }
       ]
     })

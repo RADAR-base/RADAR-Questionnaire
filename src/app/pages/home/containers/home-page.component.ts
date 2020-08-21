@@ -10,6 +10,7 @@ import { LocKeys } from '../../../shared/enums/localisations'
 import { Task, TasksProgress } from '../../../shared/models/task'
 import { checkTaskIsNow } from '../../../shared/utilities/check-task-is-now'
 import { ClinicalTasksPageComponent } from '../../clinical-tasks/containers/clinical-tasks-page.component'
+import { OnDemandPageComponent } from '../../on-demand/containers/on-demand-page.component'
 import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
 import { SettingsPageComponent } from '../../settings/containers/settings-page.component'
 import { SplashPageComponent } from '../../splash/containers/splash-page.component'
@@ -35,8 +36,11 @@ export class HomePageComponent implements OnDestroy {
   showCompleted = false
   startingQuestionnaire = false
   hasClinicalTasks: Promise<boolean>
+  hasOnDemandTasks: Promise<boolean>
+  onDemandIcon: Promise<string>
   taskIsNow = false
   checkTaskInterval
+  showMiscTasksButton: Promise<boolean>
 
   constructor(
     public navCtrl: NavController,
@@ -88,8 +92,11 @@ export class HomePageComponent implements OnDestroy {
         this.checkForNextTask(tasks)
       }, 1500)
     })
-    this.hasClinicalTasks = this.tasksService.evalHasClinicalTasks()
+    this.hasOnDemandTasks = this.tasksService.getHasOnDemandTasks()
+    this.hasClinicalTasks = this.tasksService.getHasClinicalTasks()
     this.title = this.tasksService.getPlatformInstanceName()
+    this.onDemandIcon = this.tasksService.getOnDemandAssessmentIcon()
+    this.showMiscTasksButton = this.getShowMiscTasksButton()
   }
 
   onResume() {
@@ -137,6 +144,11 @@ export class HomePageComponent implements OnDestroy {
     this.usage.sendClickEvent('open_clinical_tasks')
   }
 
+  openOnDemandTasksPage() {
+    this.navCtrl.push(OnDemandPageComponent)
+    this.usage.sendClickEvent('open_on_demand_tasks')
+  }
+
   startQuestionnaire(taskCalendarTask: Task) {
     // NOTE: User can start questionnaire from task calendar or start button in home.
     const task = taskCalendarTask ? taskCalendarTask : this.nextTask
@@ -177,5 +189,11 @@ export class HomePageComponent implements OnDestroy {
         }
       ]
     })
+  }
+
+  getShowMiscTasksButton() {
+    return Promise.all([this.hasOnDemandTasks, this.hasClinicalTasks]).then(
+      ([onDemand, clinical]) => onDemand || clinical
+    )
   }
 }

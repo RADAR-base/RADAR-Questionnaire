@@ -2,13 +2,10 @@
 <h2 text-center>{{ content }}</h2>
 <div class="pos-bottom">
   <div class="pos-bottom-90">
-    <div
-      *ngIf="displayNextTaskReminder && !isClinicalTask"
-      class="next-task-highlight"
-    >
+    <div *ngIf="displayNextTaskReminder" class="next-task-highlight">
       {{ 'FINISH_NEXT_TASK_REMINDER' | translate }}
     </div>
-    <ion-item no-lines *ngIf="isClinicalTask">
+    <ion-item no-lines *ngIf="requiresInClinicCompletion">
       <ion-label>
         {{ 'FINISH_COMPLETED_IN_CLINIC' | translate }}
       </ion-label>

@@ -7,8 +7,8 @@ import {
   DefaultPackageName,
   DefaultSourcePrefix
 } from '../../../../assets/data/defaultConfig'
+import { AssessmentType } from '../../../shared/models/assessment'
 import { SingleNotification } from '../../../shared/models/notification-handler'
-import { TaskType } from '../../../shared/utilities/task-type'
 import { AppServerService } from '../app-server/app-server.service'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { SubjectConfigService } from '../config/subject-config.service'
@@ -46,7 +46,7 @@ export class AppServerRestNotificationService extends FcmNotificationService {
   }
 
   publishAllNotifications(user, limit): Promise<any> {
-    return this.schedule.getTasks(TaskType.ALL).then(tasks => {
+    return this.schedule.getTasks(AssessmentType.ALL).then(tasks => {
       const fcmNotifications = this.notifications
         .futureNotifications(tasks, limit)
         .map(t => this.format(t, user))

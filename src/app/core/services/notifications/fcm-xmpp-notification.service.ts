@@ -9,8 +9,8 @@ import {
   DefaultPackageName,
   DefaultSourcePrefix
 } from '../../../../assets/data/defaultConfig'
+import { AssessmentType } from '../../../shared/models/assessment'
 import { SingleNotification } from '../../../shared/models/notification-handler'
-import { TaskType } from '../../../shared/utilities/task-type'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { SubjectConfigService } from '../config/subject-config.service'
 import { LocalizationService } from '../misc/localization.service'
@@ -53,7 +53,7 @@ export class FcmXmppNotificationService extends FcmNotificationService {
   }
 
   publishAllNotifications(user, limit): Promise<any> {
-    return this.schedule.getTasks(TaskType.ALL).then(tasks => {
+    return this.schedule.getTasks(AssessmentType.ALL).then(tasks => {
       const fcmNotifications = this.notifications
         .futureNotifications(tasks, limit)
         .map(t => this.format(t, user))

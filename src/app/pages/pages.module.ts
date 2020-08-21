@@ -29,6 +29,7 @@ import { TranslatePipe } from '../shared/pipes/translate/translate'
 import { AuthModule } from './auth/auth.module'
 import { ClinicalTasksModule } from './clinical-tasks/clinical-tasks.module'
 import { HomeModule } from './home/home.module'
+import { OnDemandModule } from './on-demand/on-demand.module'
 import { QuestionsModule } from './questions/questions.module'
 import { ReportModule } from './report/report.module'
 import { SettingsModule } from './settings/settings.module'
@@ -40,6 +41,7 @@ import { SplashModule } from './splash/splash.module'
     CommonModule,
     AuthModule,
     ClinicalTasksModule,
+    OnDemandModule,
     HomeModule,
     QuestionsModule,
     ReportModule,

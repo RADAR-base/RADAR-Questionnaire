@@ -14,9 +14,14 @@ export class ConfigKeys {
     'notification_messaging_type'
   )
   static APP_SERVER_URL = new ConfigKeys('app_server_url')
+  static ON_DEMAND_ASSESSMENT_LABEL = new ConfigKeys(
+    'on_demand_assessment_label'
+  )
+  static ON_DEMAND_ASSESSMENT_ICON = new ConfigKeys('on_demand_assessment_icon')
   static PARTICIPANT_ATTRIBUTE_ORDER = new ConfigKeys(
     'participant_attribute_order'
   )
+  static SCHEDULE_YEAR_COVERAGE = new ConfigKeys('schedule_year_coverage')
 
   constructor(public value: string) {}
 

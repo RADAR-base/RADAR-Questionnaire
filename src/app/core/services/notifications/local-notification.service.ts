@@ -3,11 +3,8 @@ import { LocalNotifications } from '@ionic-native/local-notifications/ngx'
 
 import { DefaultNumberOfNotificationsToSchedule } from '../../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../../shared/enums/storage'
-import {
-  NotificationActionType,
-  SingleNotification
-} from '../../../shared/models/notification-handler'
-import { TaskType } from '../../../shared/utilities/task-type'
+import { AssessmentType } from '../../../shared/models/assessment'
+import { NotificationActionType, SingleNotification } from '../../../shared/models/notification-handler'
 import { LogService } from '../misc/log.service'
 import { ScheduleService } from '../schedule/schedule.service'
 import { StorageService } from '../storage/storage.service'
@@ -49,7 +46,7 @@ export class LocalNotificationService extends NotificationService {
   publishAllNotifications(
     limit: number = DefaultNumberOfNotificationsToSchedule
   ): Promise<void[]> {
-    return this.schedule.getTasks(TaskType.ALL).then(tasks => {
+    return this.schedule.getTasks(AssessmentType.ALL).then(tasks => {
       const localNotifications = this.notifications
         .futureNotifications(tasks, limit)
         .map(t => this.format(t))

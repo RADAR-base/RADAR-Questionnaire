@@ -5,10 +5,12 @@ import {
   LogServiceMock,
   NotificationGeneratorServiceMock,
   QuestionnaireServiceMock,
+  RemoteConfigServiceMock,
   UtilityMock
 } from '../../../shared/testing/mock-services'
 import { Utility } from '../../../shared/utilities/util'
 import { QuestionnaireService } from '../config/questionnaire.service'
+import { RemoteConfigService } from '../config/remote-config.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
 import { NotificationGeneratorService } from '../notifications/notification-generator.service'
@@ -34,7 +36,8 @@ describe('ScheduleGeneratorService', () => {
         {
           provide: Utility,
           useClass: UtilityMock
-        }
+        },
+        { provide: RemoteConfigService, useClass: RemoteConfigServiceMock }
       ]
     })
   )

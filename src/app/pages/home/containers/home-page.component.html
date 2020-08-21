@@ -25,16 +25,35 @@
     </task-progress>
   </div>
 
-  <div
-    *ngIf="hasClinicalTasks | async"
-    class="clinical-container"
-    (tap)="openClinicalTasksPage()"
-  >
-    <div class="clinical-button" [class.clinical-button-bottom]="showCalendar">
-      <div class="clinical-icon">
-        <img src="assets/imgs/clinical.png" class="icon-clinical" />
-      </div>
-    </div>
+  <div class="clinical-container" *ngIf="showMiscTasksButton | async">
+    <ion-fab
+      left
+      bottom
+      class="clinical-button"
+      [class.clinical-button-bottom]="showCalendar"
+    >
+      <button ion-fab class="fab">
+        <ion-icon name="add"></ion-icon>
+      </button>
+      <ion-fab-list side="top">
+        <button
+          *ngIf="hasClinicalTasks | async"
+          class="clinical-icon"
+          ion-fab
+          (tap)="openClinicalTasksPage()"
+        >
+          <img src="assets/imgs/clinical.png" class="icon-clinical" />
+        </button>
+        <button
+          *ngIf="hasOnDemandTasks | async"
+          class="clinical-icon"
+          ion-fab
+          (tap)="openOnDemandTasksPage()"
+        >
+          <img src="{{ onDemandIcon | async }}" class="icon-clinical" />
+        </button>
+      </ion-fab-list>
+    </ion-fab>
   </div>
 
   <div #tickerBar class="size-static">

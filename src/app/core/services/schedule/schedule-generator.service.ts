@@ -5,10 +5,10 @@ import {
   DefaultTask,
   DefaultTaskCompletionWindow
 } from '../../../../assets/data/defaultConfig'
-import { Assessment } from '../../../shared/models/assessment'
+import { ConfigKeys } from '../../../shared/enums/config'
+import { Assessment, AssessmentType } from '../../../shared/models/assessment'
 import { Task } from '../../../shared/models/task'
 import { compareTasks } from '../../../shared/utilities/compare-tasks'
-import { TaskType } from '../../../shared/utilities/task-type'
 import {
   advanceRepeat,
   getMilliseconds,
@@ -17,16 +17,20 @@ import {
 } from '../../../shared/utilities/time'
 import { Utility } from '../../../shared/utilities/util'
 import { QuestionnaireService } from '../config/questionnaire.service'
+import { RemoteConfigService } from '../config/remote-config.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
 import { NotificationGeneratorService } from '../notifications/notification-generator.service'
 
 @Injectable()
 export class ScheduleGeneratorService {
+  SCHEDULE_YEAR_COVERAGE = DefaultScheduleYearCoverage
+
   constructor(
     private notificationService: NotificationGeneratorService,
     private localization: LocalizationService,
     private questionnaire: QuestionnaireService,
+    private remoteConfig: RemoteConfigService,
     private logger: LogService,
     private util: Utility
   ) {}
@@ -39,34 +43,46 @@ export class ScheduleGeneratorService {
     assessment?,
     indexOffset?
   ) {
-    // NOTE: Check if clinical or regular
-    switch (type) {
-      case TaskType.NON_CLINICAL:
-        return this.questionnaire
-          .getAssessments(type)
-          .then(assessments =>
-            this.buildTaskSchedule(
-              assessments,
-              completedTasks,
-              refTimestamp,
-              utcOffsetPrev
+    return this.fetchScheduleYearCoverage().then(() => {
+      // NOTE: Check if clinical or regular
+      switch (type) {
+        case AssessmentType.SCHEDULED:
+          return this.questionnaire
+            .getAssessments(type)
+            .then(assessments =>
+              this.buildTaskSchedule(
+                assessments,
+                completedTasks,
+                refTimestamp,
+                utcOffsetPrev
+              )
             )
-          )
-          .catch(e => {
-            this.logger.error('Failed to schedule assessement', e)
+            .catch(e => {
+              this.logger.error('Failed to schedule assessement', e)
+            })
+        case AssessmentType.ON_DEMAND:
+          return Promise.resolve({
+            schedule: this.buildTasksForSingleAssessment(
+              assessment,
+              indexOffset,
+              refTimestamp,
+              AssessmentType.ON_DEMAND
+            ),
+            completed: [] as Task[]
           })
-      case TaskType.CLINICAL:
-        return Promise.resolve({
-          schedule: this.buildTasksForSingleAssessment(
-            assessment,
-            indexOffset,
-            refTimestamp,
-            TaskType.CLINICAL
-          ),
-          completed: [] as Task[]
-        })
-    }
-    return Promise.resolve()
+        case AssessmentType.CLINICAL:
+          return Promise.resolve({
+            schedule: this.buildTasksForSingleAssessment(
+              assessment,
+              indexOffset,
+              refTimestamp,
+              AssessmentType.CLINICAL
+            ),
+            completed: [] as Task[]
+          })
+      }
+      return Promise.resolve()
+    })
   }
 
   buildTaskSchedule(
@@ -82,7 +98,7 @@ export class ScheduleGeneratorService {
             assessment,
             list.length,
             refTimestamp,
-            TaskType.NON_CLINICAL
+            AssessmentType.SCHEDULED
           )
         ),
       []
@@ -102,7 +118,7 @@ export class ScheduleGeneratorService {
   getRepeatProtocol(protocol, type) {
     let repeatP, repeatQ
     switch (type) {
-      case TaskType.CLINICAL:
+      case AssessmentType.CLINICAL:
         repeatQ = protocol.clinicalProtocol.repeatAfterClinicVisit
         break
       default:
@@ -116,15 +132,15 @@ export class ScheduleGeneratorService {
     assessment: Assessment,
     indexOffset: number,
     refTimestamp,
-    type: TaskType
+    type: AssessmentType
   ): Task[] {
+    const scheduleYearCoverage = this.getScheduleYearCoverage()
     const { repeatP, repeatQ } = this.getRepeatProtocol(
       assessment.protocol,
       type
     )
     let iterTime = refTimestamp
-    const endTime =
-      iterTime + getMilliseconds({ years: DefaultScheduleYearCoverage })
+    const endTime = iterTime + getMilliseconds({ years: scheduleYearCoverage })
     const completionWindow = ScheduleGeneratorService.computeCompletionWindow(
       assessment
     )
@@ -164,11 +180,12 @@ export class ScheduleGeneratorService {
     task.index = index
     task.timestamp = timestamp
     task.name = assessment.name
+    task.type = assessment.type
     task.nQuestions = assessment.questions.length
     task.estimatedCompletionTime = assessment.estimatedCompletionTime
     task.completionWindow = completionWindow
     task.warning = this.localization.chooseText(assessment.warn)
-    task.isClinical = !!assessment.protocol.clinicalProtocol
+    task.requiresInClinicCompletion = assessment.requiresInClinicCompletion
     task.showInCalendar = this.getOrDefault(
       assessment.showInCalendar,
       task.showInCalendar
@@ -216,6 +233,26 @@ export class ScheduleGeneratorService {
       })
     }
     return { schedule, completed }
+  }
+
+  getScheduleYearCoverage() {
+    if (this.SCHEDULE_YEAR_COVERAGE > 0) return this.SCHEDULE_YEAR_COVERAGE
+    else return DefaultScheduleYearCoverage
+  }
+
+  fetchScheduleYearCoverage() {
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        config.getOrDefault(
+          ConfigKeys.SCHEDULE_YEAR_COVERAGE,
+          DefaultScheduleYearCoverage.toString()
+        )
+      )
+      .then(coverage => (this.SCHEDULE_YEAR_COVERAGE = parseFloat(coverage)))
+      .catch(e => {
+        throw this.logger.error('Failed to fetch Firebase config', e)
+      })
   }
 
   static computeCompletionWindow(assessment: Assessment): number {

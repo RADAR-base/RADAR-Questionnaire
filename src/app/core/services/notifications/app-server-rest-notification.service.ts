@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Firebase } from '@ionic-native/firebase/ngx'
 import { Platform } from 'ionic-angular'
@@ -33,14 +34,15 @@ export class AppServerRestNotificationService extends FcmNotificationService {
     public logger: LogService,
     public remoteConfig: RemoteConfigService,
     public localization: LocalizationService,
-    private appServerService: AppServerService
+    private appServerService: AppServerService,
+    private http: HttpClient
   ) {
     super(storage, config, firebase, platform, logger, remoteConfig)
   }
 
   getSubjectDetails() {
     return Promise.all([
-      this.appServerService.checkProjectAndSubjectExistElseCreate(),
+      this.appServerService.init(),
       this.config.getSourceID()
     ]).then(([user, sourceId]) => Object.assign({}, user, { sourceId }))
   }
@@ -69,39 +71,46 @@ export class AppServerRestNotificationService extends FcmNotificationService {
   }
 
   cancelAllNotifications(user): Promise<any> {
-    return this.appServerService.getApiClient().then(apiClient =>
-      apiClient.apis[
-        this.FCM_NOTIFICATION_CONTROLLER
-      ].deleteNotificationsForUser({
-        subjectId: user.subjectId,
-        projectId: user.projectId
-      })
-    )
+    return this.appServerService
+      .getHeaders()
+      .then(headers =>
+        this.http
+          .delete(
+            this.getNotificationEndpoint(user.projectId, user.subjectId),
+            { headers }
+          )
+          .toPromise()
+      )
   }
 
   cancelSingleNotification(user, notificationId) {
-    return this.appServerService.getApiClient().then(apiClient =>
-      apiClient.apis[this.FCM_NOTIFICATION_CONTROLLER]
-        .deleteNotificationUsingProjectIdAndSubjectIdAndNotificationId({
-          subjectId: user.subjectId,
-          projectId: user.projectId,
-          id: notificationId
-        })
-        .then(() =>
-          console.log('Success cancelling notification ' + notificationId)
-        )
-    )
+    return this.appServerService
+      .getHeaders()
+      .then(headers =>
+        this.http
+          .delete(
+            this.getNotificationEndpoint(user.projectId, user.subjectId) +
+              notificationId,
+            { headers }
+          )
+          .toPromise()
+      )
+      .then(() =>
+        console.log('Success cancelling notification ' + notificationId)
+      )
   }
 
   private sendNotification(notification, subjectId, projectId): Promise<any> {
-    return this.appServerService.getApiClient().then(apiClient =>
-      apiClient.apis[this.FCM_NOTIFICATION_CONTROLLER]
-        .addSingleNotification(
-          { projectId: projectId, subjectId: subjectId },
-          { requestBody: notification.notificationDto }
+    return this.appServerService.getHeaders().then(headers =>
+      this.http
+        .post(
+          this.getNotificationEndpoint(projectId, subjectId),
+          { headers },
+          notification.notificationDto
         )
+        .toPromise()
         .then(res => {
-          notification.notification.id = res.body.id
+          notification.notification.id = res['body'].id
           return this.logger.log('Successfully sent! Updating notification Id')
         })
         .catch(err => {
@@ -131,5 +140,10 @@ export class AppServerRestNotificationService extends FcmNotificationService {
         scheduledTime: new Date(notification.timestamp)
       }
     }
+  }
+
+  getNotificationEndpoint(projectId, subjectId) {
+    const url = this.appServerService.getAppServerURL()
+    return `${url}/projects/${projectId}/users/${subjectId}/messaging/notifications/`
   }
 }

@@ -1,6 +1,6 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import * as moment from 'moment-timezone'
-import * as Swagger from 'swagger-client'
 
 import {
   DefaultAppServerURL,
@@ -17,7 +17,7 @@ import { TokenService } from '../token/token.service'
 
 @Injectable()
 export class AppServerService {
-  private API_DOCS_URL = '/v3/api-docs'
+  private APP_SERVER_URL = ''
 
   RADAR_USER_CONTROLLER = 'radar-user-controller'
   RADAR_PROJECT_CONTROLLER = 'radar-project-controller'
@@ -30,131 +30,122 @@ export class AppServerService {
     public logger: LogService,
     public remoteConfig: RemoteConfigService,
     public localization: LocalizationService,
-    private token: TokenService
+    private token: TokenService,
+    private http: HttpClient
   ) {}
 
   init() {
-    return (this.apiClient
-      ? Promise.resolve()
-      : this.initApiClient()
-    ).then(() => this.checkProjectAndSubjectExistElseCreate())
+    // NOTE: Initialising ensures project and subject exists in the app server
+    return this.updateAppServerURL()
+      .then(() => this.addProjectIfMissing())
+      .then(() => this.addSubjectIfMissing())
   }
 
-  initApiClient() {
-    return Promise.all([this.getAppServerURL(), this.token.getTokens()]).then(
-      ([url, tokens]) =>
-        Swagger({
-          url: url + this.API_DOCS_URL,
-          requestInterceptor: req => {
-            req.headers['Authorization'] = 'Bearer ' + tokens.access_token
-            req.headers['Content-Type'] = DefaultRequestJSONContentType
-          }
+  getHeaders() {
+    return Promise.all([
+      this.updateAppServerURL(),
+      this.token.getTokens()
+    ]).then(([, tokens]) =>
+      new HttpHeaders()
+        .set('Authorization', 'Bearer ' + tokens.access_token)
+        .set('Content-Type', DefaultRequestJSONContentType)
+    )
+  }
+
+  getProject(projectId): Promise<any> {
+    return this.getHeaders().then(headers =>
+      this.http
+        .get(`${this.APP_SERVER_URL}/projects/ ${projectId}`, {
+          headers
         })
-          .then(client => (this.apiClient = client))
-          .catch(e => this.logger.error('Error pulling API docs', e))
+        .toPromise()
     )
   }
 
-  getApiClient() {
-    if (this.apiClient) return Promise.resolve(this.apiClient)
-    else return this.initApiClient().then(() => this.apiClient)
-  }
-
-  checkProjectAndSubjectExistElseCreate(): Promise<any> {
-    return this.checkProjectExistsElseCreate().then(() =>
-      this.checkSubjectExistsElseCreate()
-    )
-  }
-
-  checkProjectExistsElseCreate(): Promise<any> {
+  addProjectIfMissing(): Promise<any> {
     // NOTE: Adding retries here because of random 'Failed to load resource'
     let attempts = 0
     return this.subjectConfig.getProjectName().then(projectId => {
-      return this.getApiClient().then(apiClient =>
-        apiClient.apis[this.RADAR_PROJECT_CONTROLLER]
-          .getProjectsUsingProjectId({ projectId })
-          .catch(e => {
-            if (e.status == 404) return this.addProjectToServer(projectId)
-            else if (++attempts < this.MAX_API_RETRIES)
-              return this.checkProjectExistsElseCreate()
-          })
-      )
+      return this.getProject(projectId).catch(e => {
+        if (e.status == 404) return this.addProjectToServer(projectId)
+        else if (++attempts < this.MAX_API_RETRIES)
+          return this.addProjectIfMissing()
+      })
     })
   }
 
   addProjectToServer(projectId) {
-    return this.getApiClient().then(apiClient =>
-      apiClient.apis[this.RADAR_PROJECT_CONTROLLER].addProject(
-        {},
-        {
-          requestBody: {
-            projectId
-          }
-        }
-      )
+    return this.getHeaders().then(headers =>
+      this.http
+        .post(`${this.APP_SERVER_URL}/projects/`, { projectId }, { headers })
+        .toPromise()
     )
   }
 
-  checkSubjectExistsElseCreate(): Promise<any> {
+  getSubject(subjectId): Promise<any> {
+    return this.getHeaders()
+      .then(headers =>
+        this.http
+          .get(`${this.APP_SERVER_URL}/users/${subjectId}`, {
+            headers
+          })
+          .toPromise()
+      )
+      .then(res => res['body'])
+  }
+
+  addSubjectIfMissing(): Promise<any> {
     return Promise.all([
       this.subjectConfig.getParticipantLogin(),
       this.subjectConfig.getProjectName(),
       this.subjectConfig.getEnrolmentDate(),
       this.getFCMToken()
     ]).then(([subjectId, projectId, enrolmentDate, fcmToken]) => {
-      return this.getApiClient().then(apiClient =>
-        apiClient.apis[this.RADAR_USER_CONTROLLER]
-          .getRadarUserUsingSubjectId({ subjectId })
-          .then(res => res.body)
-          .catch(e => {
-            if (e.status == 404)
-              return this.addSubjectToServer(
-                subjectId,
-                projectId,
-                enrolmentDate,
-                fcmToken
-              )
-            else Promise.reject(e)
-          })
-      )
+      return this.getSubject(subjectId).catch(e => {
+        if (e.status == 404)
+          return this.addSubjectToServer(
+            subjectId,
+            projectId,
+            enrolmentDate,
+            fcmToken
+          )
+        else Promise.reject(e)
+      })
     })
   }
 
   addSubjectToServer(subjectId, projectId, enrolmentDate, fcmToken) {
-    return this.getApiClient().then(apiClient =>
-      apiClient.apis[this.RADAR_USER_CONTROLLER].addUserToProject(
-        { projectId },
+    return this.getHeaders().then(headers =>
+      this.http.post(
+        `${this.APP_SERVER_URL}/projects/${projectId}/users/`,
         {
-          requestBody: {
-            enrolmentDate: new Date(enrolmentDate),
-            projectId,
-            subjectId,
-            fcmToken,
-            timezone: moment.tz.guess(),
-            language: this.localization.getLanguage().value
-          }
-        }
+          enrolmentDate: new Date(enrolmentDate),
+          projectId,
+          subjectId,
+          fcmToken,
+          timezone: moment.tz.guess(),
+          language: this.localization.getLanguage().value
+        },
+        { headers }
       )
     )
   }
 
-  updateSubjectTimezone() {
+  updateSubject(properties) {
     return Promise.all([
+      this.subjectConfig.getProjectName(),
       this.subjectConfig.getParticipantLogin(),
-      this.getApiClient()
-    ]).then(([subjectId, apiClient]) =>
-      apiClient.apis[this.RADAR_USER_CONTROLLER]
-        .getRadarUserUsingSubjectId({
-          subjectId
-        })
-        .then(res => {
-          const user = res.body
-          user.timezone = moment.tz.guess()
-          return apiClient.apis[this.RADAR_USER_CONTROLLER].updateUser(
-            {},
-            { requestBody: user }
-          )
-        })
+      this.getHeaders()
+    ]).then(([projectId, subjectId, headers]) =>
+      this.getSubject(subjectId).then(res => {
+        const user = res.body
+        const updatedUser = Object.assign(user, properties)
+        return this.http.put(
+          `${this.APP_SERVER_URL}/projects/${projectId}/users/${subjectId}`,
+          updatedUser,
+          { headers }
+        )
+      })
     )
   }
 
@@ -162,11 +153,16 @@ export class AppServerService {
     return this.storage.get(StorageKeys.FCM_TOKEN)
   }
 
-  getAppServerURL() {
+  updateAppServerURL() {
     return this.remoteConfig
       .read()
       .then(config =>
         config.getOrDefault(ConfigKeys.APP_SERVER_URL, DefaultAppServerURL)
       )
+      .then(url => (this.APP_SERVER_URL = url))
+  }
+
+  getAppServerURL() {
+    return this.APP_SERVER_URL
   }
 }

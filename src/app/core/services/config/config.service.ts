@@ -1,21 +1,20 @@
-import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
+import * as moment from 'moment-timezone'
 import * as ver from 'semver'
 
 import {
   DefaultAppVersion,
-  DefaultNotificationRefreshTime,
-  DefaultNumberOfNotificationsToSchedule
+  DefaultNotificationRefreshTime
 } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
 import {
   ConfigEventType,
   NotificationEventType
 } from '../../../shared/enums/events'
+import { AssessmentType } from '../../../shared/models/assessment'
 import { NotificationActionType } from '../../../shared/models/notification-handler'
 import { User } from '../../../shared/models/user'
 import { AppServerService } from '../app-server/app-server.service'
-import { AssessmentType } from '../../../shared/models/assessment'
 import { KafkaService } from '../kafka/kafka.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
@@ -191,7 +190,13 @@ export class ConfigService {
       this.questionnaire.pullQuestionnaires(AssessmentType.ON_DEMAND),
       this.questionnaire.pullQuestionnaires(AssessmentType.CLINICAL),
       this.questionnaire.pullQuestionnaires(AssessmentType.SCHEDULED)
-    ]).then(() => this.rescheduleNotifications(true))
+    ])
+      .then(() => this.rescheduleNotifications(true))
+      .then(() =>
+        this.appServerService.updateSubject({
+          language: this.localization.getLanguage().value
+        })
+      )
   }
 
   updateConfigStateOnAppVersionChange(version) {
@@ -207,7 +212,9 @@ export class ConfigService {
       .then(enrolment => this.appConfig.setReferenceDate(enrolment))
       .then(() => this.appConfig.setUTCOffset(utcOffset))
       .then(() => this.regenerateSchedule(prevUtcOffset))
-      .then(() => this.appServerService.updateSubjectTimezone())
+      .then(() =>
+        this.appServerService.updateSubject({ timezone: moment.tz.guess() })
+      )
   }
 
   rescheduleNotifications(cancel?: boolean) {

@@ -17,12 +17,7 @@ import { TokenService } from '../token/token.service'
 
 @Injectable()
 export class AppServerService {
-  private APP_SERVER_URL = ''
-
-  RADAR_USER_CONTROLLER = 'radar-user-controller'
-  RADAR_PROJECT_CONTROLLER = 'radar-project-controller'
-  MAX_API_RETRIES = 10
-  apiClient: any
+  private APP_SERVER_URL = DefaultAppServerURL
 
   constructor(
     public storage: StorageService,
@@ -39,6 +34,7 @@ export class AppServerService {
     return this.updateAppServerURL()
       .then(() => this.addProjectIfMissing())
       .then(() => this.addSubjectIfMissing())
+      .then(() => this.updateSubject({ lastOpened: new Date() }))
   }
 
   getHeaders() {
@@ -55,7 +51,7 @@ export class AppServerService {
   getProject(projectId): Promise<any> {
     return this.getHeaders().then(headers =>
       this.http
-        .get(`${this.APP_SERVER_URL}/projects/ ${projectId}`, {
+        .get(`${this.APP_SERVER_URL}/projects/${projectId}`, {
           headers
         })
         .toPromise()
@@ -63,13 +59,12 @@ export class AppServerService {
   }
 
   addProjectIfMissing(): Promise<any> {
+    console.log('Ensuring project exists..')
     // NOTE: Adding retries here because of random 'Failed to load resource'
-    let attempts = 0
     return this.subjectConfig.getProjectName().then(projectId => {
       return this.getProject(projectId).catch(e => {
         if (e.status == 404) return this.addProjectToServer(projectId)
-        else if (++attempts < this.MAX_API_RETRIES)
-          return this.addProjectIfMissing()
+        else return
       })
     })
   }
@@ -83,18 +78,17 @@ export class AppServerService {
   }
 
   getSubject(subjectId): Promise<any> {
-    return this.getHeaders()
-      .then(headers =>
-        this.http
-          .get(`${this.APP_SERVER_URL}/users/${subjectId}`, {
-            headers
-          })
-          .toPromise()
-      )
-      .then(res => res['body'])
+    return this.getHeaders().then(headers =>
+      this.http
+        .get(`${this.APP_SERVER_URL}/users/${subjectId}`, {
+          headers
+        })
+        .toPromise()
+    )
   }
 
   addSubjectIfMissing(): Promise<any> {
+    console.log('Ensuring subject exists..')
     return Promise.all([
       this.subjectConfig.getParticipantLogin(),
       this.subjectConfig.getProjectName(),
@@ -109,25 +103,27 @@ export class AppServerService {
             enrolmentDate,
             fcmToken
           )
-        else Promise.reject(e)
+        else return
       })
     })
   }
 
   addSubjectToServer(subjectId, projectId, enrolmentDate, fcmToken) {
     return this.getHeaders().then(headers =>
-      this.http.post(
-        `${this.APP_SERVER_URL}/projects/${projectId}/users/`,
-        {
-          enrolmentDate: new Date(enrolmentDate),
-          projectId,
-          subjectId,
-          fcmToken,
-          timezone: moment.tz.guess(),
-          language: this.localization.getLanguage().value
-        },
-        { headers }
-      )
+      this.http
+        .post(
+          `${this.APP_SERVER_URL}/projects/${projectId}/users/`,
+          {
+            enrolmentDate: new Date(enrolmentDate),
+            projectId,
+            subjectId,
+            fcmToken,
+            timezone: moment.tz.guess(),
+            language: this.localization.getLanguage().value
+          },
+          { headers }
+        )
+        .toPromise()
     )
   }
 
@@ -137,14 +133,15 @@ export class AppServerService {
       this.subjectConfig.getParticipantLogin(),
       this.getHeaders()
     ]).then(([projectId, subjectId, headers]) =>
-      this.getSubject(subjectId).then(res => {
-        const user = res.body
+      this.getSubject(subjectId).then(user => {
         const updatedUser = Object.assign(user, properties)
-        return this.http.put(
-          `${this.APP_SERVER_URL}/projects/${projectId}/users/${subjectId}`,
-          updatedUser,
-          { headers }
-        )
+        return this.http
+          .put(
+            `${this.APP_SERVER_URL}/projects/${projectId}/users/${subjectId}`,
+            updatedUser,
+            { headers }
+          )
+          .toPromise()
       })
     )
   }

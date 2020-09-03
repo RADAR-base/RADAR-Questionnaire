@@ -22,6 +22,10 @@ import { NotificationGeneratorService } from './notification-generator.service'
 
 @Injectable()
 export class FcmRestNotificationService extends FcmNotificationService {
+  NOTIFICATIONS_PATH = 'messaging/notifications'
+  SUBJECT_PATH = 'users'
+  PROJECT_PATH = 'projects'
+
   constructor(
     public notifications: NotificationGeneratorService,
     public storage: StorageService,
@@ -150,6 +154,6 @@ export class FcmRestNotificationService extends FcmNotificationService {
 
   getNotificationEndpoint(projectId, subjectId) {
     const url = this.appServerService.getAppServerURL()
-    return `${url}/projects/${projectId}/users/${subjectId}/messaging/notifications/`
+    return `${url}/${this.PROJECT_PATH}/${projectId}/${this.SUBJECT_PATH}/${subjectId}/${this.NOTIFICATIONS_PATH}/`
   }
 }

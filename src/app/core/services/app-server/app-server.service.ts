@@ -18,6 +18,8 @@ import { TokenService } from '../token/token.service'
 @Injectable()
 export class AppServerService {
   private APP_SERVER_URL = DefaultAppServerURL
+  SUBJECT_PATH = 'users'
+  PROJECT_PATH = 'projects'
 
   constructor(
     public storage: StorageService,
@@ -66,7 +68,7 @@ export class AppServerService {
   getProject(projectId): Promise<any> {
     return this.getHeaders().then(headers =>
       this.http
-        .get(`${this.APP_SERVER_URL}/projects/${projectId}`, {
+        .get(`${this.APP_SERVER_URL}/${this.PROJECT_PATH}/${projectId}`, {
           headers
         })
         .toPromise()
@@ -83,7 +85,11 @@ export class AppServerService {
   addProjectToServer(projectId) {
     return this.getHeaders().then(headers =>
       this.http
-        .post(`${this.APP_SERVER_URL}/projects/`, { projectId }, { headers })
+        .post(
+          `${this.APP_SERVER_URL}/${this.PROJECT_PATH}/`,
+          { projectId },
+          { headers }
+        )
         .toPromise()
     )
   }
@@ -91,7 +97,7 @@ export class AppServerService {
   getSubject(subjectId): Promise<any> {
     return this.getHeaders().then(headers =>
       this.http
-        .get(`${this.APP_SERVER_URL}/users/${subjectId}`, {
+        .get(`${this.APP_SERVER_URL}/${this.SUBJECT_PATH}/${subjectId}`, {
           headers
         })
         .toPromise()
@@ -130,7 +136,7 @@ export class AppServerService {
     return this.getHeaders().then(headers =>
       this.http
         .post(
-          `${this.APP_SERVER_URL}/projects/${projectId}/users/`,
+          `${this.APP_SERVER_URL}/${this.PROJECT_PATH}/${projectId}/${this.SUBJECT_PATH}/`,
           {
             enrolmentDate: new Date(enrolmentDate),
             projectId,
@@ -152,7 +158,7 @@ export class AppServerService {
       const subjectId = subject.subjectId
       return this.http
         .put(
-          `${this.APP_SERVER_URL}/projects/${projectId}/users/${subjectId}`,
+          `${this.APP_SERVER_URL}/${this.PROJECT_PATH}/${projectId}/${this.SUBJECT_PATH}/${subjectId}`,
           updatedSubject,
           { headers }
         )

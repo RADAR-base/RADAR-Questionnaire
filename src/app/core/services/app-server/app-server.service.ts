@@ -32,9 +32,24 @@ export class AppServerService {
   init() {
     // NOTE: Initialising ensures project and subject exists in the app server
     return this.updateAppServerURL()
-      .then(() => this.addProjectIfMissing())
-      .then(() => this.addSubjectIfMissing())
-      .then(() => this.updateSubject({ lastOpened: new Date() }))
+      .then(() =>
+        Promise.all([
+          this.subjectConfig.getParticipantLogin(),
+          this.subjectConfig.getProjectName(),
+          this.subjectConfig.getEnrolmentDate(),
+          this.getFCMToken()
+        ])
+      )
+      .then(([subjectId, projectId, enrolmentDate, fcmToken]) =>
+        this.addProjectIfMissing(projectId).then(() =>
+          this.addSubjectIfMissing(
+            subjectId,
+            projectId,
+            enrolmentDate,
+            fcmToken
+          )
+        )
+      )
   }
 
   getHeaders() {
@@ -58,14 +73,10 @@ export class AppServerService {
     )
   }
 
-  addProjectIfMissing(): Promise<any> {
-    console.log('Ensuring project exists..')
-    // NOTE: Adding retries here because of random 'Failed to load resource'
-    return this.subjectConfig.getProjectName().then(projectId => {
-      return this.getProject(projectId).catch(e => {
-        if (e.status == 404) return this.addProjectToServer(projectId)
-        else return
-      })
+  addProjectIfMissing(projectId): Promise<any> {
+    return this.getProject(projectId).catch(e => {
+      if (e.status == 404) return this.addProjectToServer(projectId)
+      else return
     })
   }
 
@@ -87,15 +98,23 @@ export class AppServerService {
     )
   }
 
-  addSubjectIfMissing(): Promise<any> {
-    console.log('Ensuring subject exists..')
-    return Promise.all([
-      this.subjectConfig.getParticipantLogin(),
-      this.subjectConfig.getProjectName(),
-      this.subjectConfig.getEnrolmentDate(),
-      this.getFCMToken()
-    ]).then(([subjectId, projectId, enrolmentDate, fcmToken]) => {
-      return this.getSubject(subjectId).catch(e => {
+  addSubjectIfMissing(
+    subjectId,
+    projectId,
+    enrolmentDate,
+    fcmToken
+  ): Promise<any> {
+    // NOTE: Adds subject if missing, updates subject if it exists
+    return this.getSubject(subjectId)
+      .then(subject =>
+        this.updateSubject(subject, {
+          fcmToken,
+          lastOpened: new Date(),
+          timezone: moment.tz.guess(),
+          language: this.localization.getLanguage().value
+        })
+      )
+      .catch(e => {
         if (e.status == 404)
           return this.addSubjectToServer(
             subjectId,
@@ -105,7 +124,6 @@ export class AppServerService {
           )
         else return
       })
-    })
   }
 
   addSubjectToServer(subjectId, projectId, enrolmentDate, fcmToken) {
@@ -127,23 +145,19 @@ export class AppServerService {
     )
   }
 
-  updateSubject(properties) {
-    return Promise.all([
-      this.subjectConfig.getProjectName(),
-      this.subjectConfig.getParticipantLogin(),
-      this.getHeaders()
-    ]).then(([projectId, subjectId, headers]) =>
-      this.getSubject(subjectId).then(user => {
-        const updatedUser = Object.assign(user, properties)
-        return this.http
-          .put(
-            `${this.APP_SERVER_URL}/projects/${projectId}/users/${subjectId}`,
-            updatedUser,
-            { headers }
-          )
-          .toPromise()
-      })
-    )
+  updateSubject(subject, properties) {
+    return this.getHeaders().then(headers => {
+      const updatedSubject = Object.assign(subject, properties)
+      const projectId = subject.projectId
+      const subjectId = subject.subjectId
+      return this.http
+        .put(
+          `${this.APP_SERVER_URL}/projects/${projectId}/users/${subjectId}`,
+          updatedSubject,
+          { headers }
+        )
+        .toPromise()
+    })
   }
 
   getFCMToken() {

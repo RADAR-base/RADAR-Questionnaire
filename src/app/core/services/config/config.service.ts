@@ -190,13 +190,7 @@ export class ConfigService {
       this.questionnaire.pullQuestionnaires(AssessmentType.ON_DEMAND),
       this.questionnaire.pullQuestionnaires(AssessmentType.CLINICAL),
       this.questionnaire.pullQuestionnaires(AssessmentType.SCHEDULED)
-    ])
-      .then(() => this.rescheduleNotifications(true))
-      .then(() =>
-        this.appServerService.updateSubject({
-          language: this.localization.getLanguage().value
-        })
-      )
+    ]).then(() => this.rescheduleNotifications(true))
   }
 
   updateConfigStateOnAppVersionChange(version) {
@@ -212,9 +206,6 @@ export class ConfigService {
       .then(enrolment => this.appConfig.setReferenceDate(enrolment))
       .then(() => this.appConfig.setUTCOffset(utcOffset))
       .then(() => this.regenerateSchedule(prevUtcOffset))
-      .then(() =>
-        this.appServerService.updateSubject({ timezone: moment.tz.guess() })
-      )
   }
 
   rescheduleNotifications(cancel?: boolean) {

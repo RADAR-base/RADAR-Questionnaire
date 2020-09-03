@@ -83,7 +83,7 @@ export class FcmXmppNotificationService extends FcmNotificationService {
   }
 
   cancelSingleNotification(user, notificationId) {
-    return
+    throw new Error('FCM-XMPP Notification Service method not implemented')
   }
 
   private sendUpstreamMessage(notification): Promise<any> {

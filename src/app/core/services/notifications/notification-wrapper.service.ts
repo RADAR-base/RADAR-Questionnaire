@@ -6,7 +6,7 @@ import { ConfigKeys } from '../../../shared/enums/config'
 import { NotificationMessagingType } from '../../../shared/models/notification-handler'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { StorageService } from '../storage/storage.service'
-import { AppServerRestNotificationService } from './app-server-rest-notification.service'
+import { FcmRestNotificationService } from './fcm-rest-notification.service'
 import { FcmXmppNotificationService } from './fcm-xmpp-notification.service'
 import { LocalNotificationService } from './local-notification.service'
 import { NotificationService } from './notification.service'
@@ -16,7 +16,7 @@ export class NotificationWrapperService extends NotificationService {
   notificationService: NotificationService
 
   constructor(
-    public appServerRestNotificationService: AppServerRestNotificationService,
+    public fcmRestNotificationService: FcmRestNotificationService,
     public fcmXmppNotificationService: FcmXmppNotificationService,
     public localNotificationService: LocalNotificationService,
     private remoteConfig: RemoteConfigService,
@@ -40,7 +40,7 @@ export class NotificationWrapperService extends NotificationService {
           case NotificationMessagingType.LOCAL:
             return (this.notificationService = this.localNotificationService)
           case NotificationMessagingType.FCM_REST:
-            return (this.notificationService = this.appServerRestNotificationService)
+            return (this.notificationService = this.fcmRestNotificationService)
           case NotificationMessagingType.FCM_XMPP:
             return (this.notificationService = this.fcmXmppNotificationService)
           default:

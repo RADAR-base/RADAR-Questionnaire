@@ -21,9 +21,7 @@ import { FcmNotificationService } from './fcm-notification.service'
 import { NotificationGeneratorService } from './notification-generator.service'
 
 @Injectable()
-export class AppServerRestNotificationService extends FcmNotificationService {
-  FCM_NOTIFICATION_CONTROLLER = 'fcm-notification-controller'
-
+export class FcmRestNotificationService extends FcmNotificationService {
   constructor(
     public notifications: NotificationGeneratorService,
     public storage: StorageService,
@@ -43,8 +41,15 @@ export class AppServerRestNotificationService extends FcmNotificationService {
   getSubjectDetails() {
     return Promise.all([
       this.appServerService.init(),
-      this.config.getSourceID()
-    ]).then(([user, sourceId]) => Object.assign({}, user, { sourceId }))
+      this.config.getParticipantLogin()
+    ])
+      .then(([, subjectId]) =>
+        Promise.all([
+          this.appServerService.getSubject(subjectId),
+          this.config.getSourceID()
+        ])
+      )
+      .then(([user, sourceId]) => Object.assign({}, user, { sourceId }))
   }
 
   publishAllNotifications(user, limit): Promise<any> {
@@ -105,8 +110,8 @@ export class AppServerRestNotificationService extends FcmNotificationService {
       this.http
         .post(
           this.getNotificationEndpoint(projectId, subjectId),
-          { headers },
-          notification.notificationDto
+          notification.notificationDto,
+          { headers }
         )
         .toPromise()
         .then(res => {

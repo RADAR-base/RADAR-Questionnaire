@@ -82,7 +82,7 @@ export class FcmXmppNotificationService extends FcmNotificationService {
     })
   }
 
-  cancelSingleNotification(user, notificationId) {
+  cancelSingleNotification(user, notification: SingleNotification) {
     throw new Error('FCM-XMPP Notification Service method not implemented')
   }
 

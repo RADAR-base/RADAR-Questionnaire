@@ -239,12 +239,14 @@ export class ConfigService {
   }
 
   cancelSingleNotification(notificationId: number) {
-    if (notificationId)
+    if (notificationId) {
       return this.notifications.publish(
         NotificationActionType.CANCEL_SINGLE,
         0,
         notificationId
       )
+    }
+    return
   }
 
   regenerateSchedule(prevUTCOffset?: number) {

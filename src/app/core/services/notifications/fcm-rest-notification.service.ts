@@ -88,21 +88,22 @@ export class FcmRestNotificationService extends FcmNotificationService {
       )
   }
 
-  cancelSingleNotification(user, notificationId) {
+  cancelSingleNotification(user, notification: SingleNotification) {
     return this.appServerService
       .getHeaders()
       .then(headers =>
         this.http
           .delete(
             this.getNotificationEndpoint(user.projectId, user.subjectId) +
-              notificationId,
+              notification.id,
             { headers }
           )
           .toPromise()
       )
-      .then(() =>
-        console.log('Success cancelling notification ' + notificationId)
-      )
+      .then(() => {
+        console.log('Success cancelling notification ' + notification.id)
+        return (notification.id = undefined)
+      })
   }
 
   private sendNotification(notification, subjectId, projectId): Promise<any> {
@@ -115,7 +116,7 @@ export class FcmRestNotificationService extends FcmNotificationService {
         )
         .toPromise()
         .then(res => {
-          notification.notification.id = res['body'].id
+          notification.notification.id = res['id']
           return this.logger.log('Successfully sent! Updating notification Id')
         })
         .catch(err => {

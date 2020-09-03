@@ -86,9 +86,8 @@ export class FinishTaskService {
   }
 
   cancelNotificationsForCompletedTask(task): Promise<any> {
+    console.log('Cancelling pending reminders for task..')
     const notifications = task.notifications
-    return notifications.forEach(n =>
-      this.config.cancelSingleNotification(n.id)
-    )
+    return notifications.forEach(n => this.config.cancelSingleNotification(n))
   }
 }

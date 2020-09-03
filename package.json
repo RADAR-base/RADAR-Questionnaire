@@ -116,7 +116,6 @@
     "rxjs": "^6.5.5",
     "semver": "^7.3.2",
     "smoothscroll-polyfill": "^0.4.4",
-    "swagger-client": "^3.10.0",
     "snyk": "^1.361.3",
     "uuid": "^3.4.0",
     "yaml": "^1.10.0",

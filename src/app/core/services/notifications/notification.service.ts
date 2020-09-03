@@ -22,6 +22,7 @@ export abstract class NotificationService {
       timestamp
     )
   }
+
   getLastNotificationUpdate() {
     return this.storage.get(this.NOTIFICATION_STORAGE.LAST_NOTIFICATION_UPDATE)
   }

@@ -12,7 +12,7 @@ import { LocalNotificationService } from './local-notification.service'
 import { NotificationService } from './notification.service'
 
 @Injectable()
-export class NotificationWrapperService extends NotificationService {
+export class NotificationFactoryService extends NotificationService {
   notificationService: NotificationService
 
   constructor(

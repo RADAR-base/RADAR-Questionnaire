@@ -14,8 +14,8 @@ import { LocalizationService } from '../core/services/misc/localization.service'
 import { FcmRestNotificationService } from '../core/services/notifications/fcm-rest-notification.service'
 import { FcmXmppNotificationService } from '../core/services/notifications/fcm-xmpp-notification.service'
 import { LocalNotificationService } from '../core/services/notifications/local-notification.service'
+import { NotificationFactoryService } from '../core/services/notifications/notification-factory.service'
 import { NotificationGeneratorService } from '../core/services/notifications/notification-generator.service'
-import { NotificationWrapperService } from '../core/services/notifications/notification-wrapper.service'
 import { NotificationService } from '../core/services/notifications/notification.service'
 import { ScheduleGeneratorService } from '../core/services/schedule/schedule-generator.service'
 import { ScheduleService } from '../core/services/schedule/schedule.service'
@@ -70,7 +70,7 @@ import { SplashModule } from './splash/splash.module'
     FcmXmppNotificationService,
     LocalNotificationService,
     AppServerService,
-    { provide: NotificationService, useClass: NotificationWrapperService },
+    { provide: NotificationService, useClass: NotificationFactoryService },
     { provide: AnalyticsService, useClass: FirebaseAnalyticsService }
   ]
 })

@@ -22,6 +22,13 @@ export class NotificationGeneratorService {
     private logger: LogService
   ) {}
 
+  findNotificationByMessageId(tasks: Task[], id: number): SingleNotification {
+    return tasks
+      .map(t => t.notifications)
+      .reduce((arr, n) => arr.concat(n), [])
+      .find(n => n.messageId == id)
+  }
+
   futureNotifications(tasks: Task[], limit: number): SingleNotification[] {
     const now = new Date().getTime()
     return tasks
@@ -93,7 +100,7 @@ export class NotificationGeneratorService {
   createTestNotification() {
     return this.createNotification(
       DefaultTask,
-      new Date().getTime() + getMilliseconds({ minutes: 3 }),
+      new Date().getTime() + getMilliseconds({ minutes: 0.5 }),
       NotificationType.TEST
     )
   }

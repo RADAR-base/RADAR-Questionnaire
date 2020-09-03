@@ -24,6 +24,7 @@ export interface SingleNotification {
   vibrate?: boolean
   sound?: boolean
   id?: number
+  messageId?: number
 }
 
 export interface NotificationTaskInfo {
@@ -36,4 +37,9 @@ export enum NotificationMessagingType {
   LOCAL = 'LOCAL',
   FCM_XMPP = 'FCM_XMPP',
   FCM_REST = 'FCM_REST'
+}
+
+export enum NotificationMessagingState {
+  DELIVERED = 'DELIVERED',
+  OPENED = 'OPENED'
 }

@@ -230,13 +230,14 @@
   dependencies:
     tslib "^1.9.0"
 
-"@angular/platform-server@^9.0.5":
-  version "9.0.5"
-  resolved "https://registry.yarnpkg.com/@angular/platform-server/-/platform-server-9.0.5.tgz#b6d233247c47444735ebaa80fb7b44267670ebe5"
-  integrity sha512-5iEugPj0oZgw6JHS5s8m4WejCnEoNeWgttzsCQuyCaVmIOQGCbTdqSsxD+AgBO7A5lrzxYQOgil/XCM/up5Smw==
+"@angular/platform-server@^10.1.0":
+  version "10.1.0"
+  resolved "https://registry.yarnpkg.com/@angular/platform-server/-/platform-server-10.1.0.tgz#05d9a76b95992c271e59d62d82fb23a49508f831"
+  integrity sha512-crO6SubPgupiXLegDoJyYegnhlnGaTSk3K8q7hi8Qg6EXv+9EzxDe63sqVBd6jJ7Lv7UJ2RN5cdRHDSKOl3dSw==
   dependencies:
     domino "^2.1.2"
-    xhr2 "^0.1.4"
+    tslib "^2.0.0"
+    xhr2 "^0.2.0"
 
 "@angular/router@^7.2.13":
   version "7.2.15"
@@ -14837,10 +14838,10 @@ xdg-basedir@^4.0.0:
   resolved "https://registry.yarnpkg.com/xdg-basedir/-/xdg-basedir-4.0.0.tgz#4bc8d9984403696225ef83a1573cbbcb4e79db13"
   integrity sha512-PSNhEJDejZYV7h50BohL09Er9VaIefr2LMAf3OEmpCkjOi34eYyQYAXUTjEQtZJTKcF0E2UKTh+osDLsgNim9Q==
 
-xhr2@^0.1.4:
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/xhr2/-/xhr2-0.1.4.tgz#7f87658847716db5026323812f818cadab387a5f"
-  integrity sha1-f4dliEdxbbUCYyOBL4GMras4el8=
+xhr2@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/xhr2/-/xhr2-0.2.0.tgz#eddeff782f3b7551061b8d75645085269396e521"
+  integrity sha512-BDtiD0i2iKPK/S8OAZfpk6tyzEDnKKSjxWHcMBVmh+LuqJ8A32qXTyOx+TVOg2dKvq6zGBq2sgKPkEeRs1qTRA==
 
 xml-escape@^1.1.0:
   version "1.1.0"

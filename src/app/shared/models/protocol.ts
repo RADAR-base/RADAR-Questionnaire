@@ -11,7 +11,13 @@ export interface Protocol {
   repeatQuestionnaire: RepeatQuestionnaire
   reminders?: Reminder[] | Reminders
   clinicalProtocol?: ClinicalProtocol
+  onDemandProtocol?
   completionWindow?: TimeInterval
+}
+
+export interface ProtocolMetaData {
+  protocol: string
+  url?: string
 }
 
 export interface TimeInterval {

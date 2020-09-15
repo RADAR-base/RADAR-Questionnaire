@@ -18,14 +18,15 @@ import { ScheduleGeneratorService } from '../core/services/schedule/schedule-gen
 import { ScheduleService } from '../core/services/schedule/schedule.service'
 import { StorageService } from '../core/services/storage/storage.service'
 import { TokenService } from '../core/services/token/token.service'
-import { FirebaseAnalyticsService } from '../core/services/usage/firebase-analytics.service'
 import { AnalyticsService } from '../core/services/usage/analytics.service'
+import { FirebaseAnalyticsService } from '../core/services/usage/firebase-analytics.service'
 import { UsageService } from '../core/services/usage/usage.service'
 import { PipesModule } from '../shared/pipes/pipes.module'
 import { TranslatePipe } from '../shared/pipes/translate/translate'
 import { AuthModule } from './auth/auth.module'
 import { ClinicalTasksModule } from './clinical-tasks/clinical-tasks.module'
 import { HomeModule } from './home/home.module'
+import { OnDemandModule } from './on-demand/on-demand.module'
 import { QuestionsModule } from './questions/questions.module'
 import { ReportModule } from './report/report.module'
 import { SettingsModule } from './settings/settings.module'
@@ -38,6 +39,7 @@ import { SeizureDiaryModule } from './seizure-diary/seizure-diary.module'
     CommonModule,
     AuthModule,
     ClinicalTasksModule,
+    OnDemandModule,
     HomeModule,
     QuestionsModule,
     ReportModule,

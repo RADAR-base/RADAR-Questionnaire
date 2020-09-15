@@ -11,8 +11,8 @@ import {
   ConfigEventType,
   NotificationEventType
 } from '../../../shared/enums/events'
+import { AssessmentType } from '../../../shared/models/assessment'
 import { User } from '../../../shared/models/user'
-import { TaskType } from '../../../shared/utilities/task-type'
 import { KafkaService } from '../kafka/kafka.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
@@ -53,6 +53,10 @@ export class ConfigService {
           this.subjectConfig
             .getEnrolmentDate()
             .then(d => this.appConfig.init(d))
+        if (newProtocol && newTimezone && !newAppVersion)
+          return this.updateConfigStateOnTimezoneChange(newTimezone).then(() =>
+            this.updateConfigStateOnProtocolChange(newProtocol)
+          )
         if (newProtocol)
           return this.updateConfigStateOnProtocolChange(newProtocol)
         if (newAppVersion)
@@ -69,23 +73,32 @@ export class ConfigService {
 
   hasProtocolChanged(force?) {
     return Promise.all([
-      this.appConfig.getScheduleVersion(),
-      this.protocol.pull()
+      this.appConfig.getScheduleHashUrl(),
+      this.protocol.getRootTreeHashUrl()
     ])
-      .then(([scheduleVersion, protocol]) => {
-        const parsedProtocol = JSON.parse(protocol)
-        this.logger.log(parsedProtocol)
-        if (scheduleVersion !== parsedProtocol.version || force) {
-          this.sendConfigChangeEvent(
-            ConfigEventType.PROTOCOL_CHANGE,
-            scheduleVersion,
-            parsedProtocol.version
-          )
-          return parsedProtocol
-        }
+      .then(([prevHash, currentHash]) => {
+        if (prevHash != currentHash || force) {
+          return Promise.all([
+            this.appConfig.getScheduleVersion(),
+            this.protocol.pull()
+          ]).then(([scheduleVersion, protocolData]) => {
+            this.appConfig.setScheduleHashUrl(currentHash)
+            const parsedProtocol = JSON.parse(protocolData.protocol)
+            if (scheduleVersion !== parsedProtocol.version || force) {
+              this.sendConfigChangeEvent(
+                ConfigEventType.PROTOCOL_CHANGE,
+                scheduleVersion,
+                parsedProtocol.version,
+                '',
+                protocolData.url
+              )
+              return parsedProtocol
+            }
+          })
+        } else return false
       })
       .catch(() => {
-        throw new Error('No response from server')
+        throw new Error('Error pulling protocols.')
       })
   }
 
@@ -105,7 +118,7 @@ export class ConfigService {
         return { prevUtcOffset, utcOffset }
       } else {
         console.log(`[SPLASH] Current Timezone is ${utcOffset}`)
-        return null
+        return false
       }
     })
   }
@@ -122,7 +135,7 @@ export class ConfigService {
           appVersion
         )
         return appVersion
-      }
+      } else return false
     })
   }
 
@@ -163,22 +176,23 @@ export class ConfigService {
     const assessments = this.protocol.format(protocol.protocols)
     this.logger.log(assessments)
     return this.questionnaire
-      .updateAssessments(TaskType.ALL, assessments)
+      .updateAssessments(AssessmentType.ALL, assessments)
       .then(() => this.regenerateSchedule())
       .then(() => this.appConfig.setScheduleVersion(protocol.version))
   }
 
   updateConfigStateOnLanguageChange() {
     return Promise.all([
-      this.questionnaire.pullQuestionnaires(TaskType.CLINICAL),
-      this.questionnaire.pullQuestionnaires(TaskType.NON_CLINICAL)
+      this.questionnaire.pullQuestionnaires(AssessmentType.ON_DEMAND),
+      this.questionnaire.pullQuestionnaires(AssessmentType.CLINICAL),
+      this.questionnaire.pullQuestionnaires(AssessmentType.SCHEDULED)
     ]).then(() => this.rescheduleNotifications(true))
   }
 
   updateConfigStateOnAppVersionChange(version) {
     return this.appConfig
       .setAppVersion(version)
-      .then(() => this.regenerateSchedule())
+      .then(() => this.fetchConfigState(true))
   }
 
   updateConfigStateOnTimezoneChange({ prevUtcOffset, utcOffset }) {
@@ -187,8 +201,7 @@ export class ConfigService {
       .getEnrolmentDate()
       .then(enrolment => this.appConfig.setReferenceDate(enrolment))
       .then(() => this.appConfig.setUTCOffset(utcOffset))
-      .then(() => this.appConfig.setPrevUTCOffset(prevUtcOffset))
-      .then(() => this.regenerateSchedule())
+      .then(() => this.regenerateSchedule(prevUtcOffset))
   }
 
   rescheduleNotifications(cancel?: boolean) {
@@ -210,14 +223,10 @@ export class ConfigService {
     return this.notifications.cancel()
   }
 
-  regenerateSchedule() {
-    return Promise.all([
-      this.appConfig.getReferenceDate(),
-      this.appConfig.getPrevUTCOffset()
-    ])
-      .then(([refDate, prevUTCOffset]) =>
-        this.schedule.generateSchedule(refDate, prevUTCOffset)
-      )
+  regenerateSchedule(prevUTCOffset?: number) {
+    return this.appConfig
+      .getReferenceDate()
+      .then(refDate => this.schedule.generateSchedule(refDate, prevUTCOffset))
       .catch(e => {
         throw this.logger.error('Failed to generate schedule', e)
       })
@@ -226,18 +235,23 @@ export class ConfigService {
 
   resetAll() {
     this.sendConfigChangeEvent(ConfigEventType.APP_RESET)
-    return this.subjectConfig.reset()
+    return Promise.all([this.resetConfig(), this.resetCache()]).then(() =>
+      this.subjectConfig.reset()
+    )
   }
 
   resetConfig() {
-    this.sendConfigChangeEvent(ConfigEventType.APP_RESET_PARTIAL)
     return Promise.all([
       this.appConfig.reset(),
       this.questionnaire.reset(),
-      this.kafka.reset(),
       this.schedule.reset(),
+      this.notifications.reset(),
       this.localization.init()
     ])
+  }
+
+  resetCache() {
+    return this.kafka.reset()
   }
 
   setAll(user: User) {
@@ -267,11 +281,12 @@ export class ConfigService {
     }
   }
 
-  sendConfigChangeEvent(type, previous?, current?, error?) {
+  sendConfigChangeEvent(type, previous?, current?, error?, data?) {
     this.analytics.logEvent(type, {
       previous: String(previous),
       current: String(current),
-      error: String(error)
+      error: String(error),
+      data: String(data)
     })
   }
 

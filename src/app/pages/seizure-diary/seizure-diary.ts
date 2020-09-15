@@ -5,8 +5,8 @@ import { ProtocolService } from '../../core/services/config/protocol.service'
 import { QuestionnaireService } from '../../core/services/config/questionnaire.service'
 import { ScheduleGeneratorService } from '../../core/services/schedule/schedule-generator.service'
 import { TasksService } from '../home/services/tasks.service'
-import { Assessment } from '../../shared/models/assessment'
-import { TaskType } from '../../shared/utilities/task-type'
+import { Assessment, AssessmentType } from '../../shared/models/assessment'
+//import { TaskType } from '../../shared/utilities/task-type'
 import { QuestionsPageComponent } from '../questions/containers/questions-page.component'
 
 import { AlertService } from '../../core/services/misc/alert.service'
@@ -104,7 +104,7 @@ export class SeizureDiaryPage {
     var loader = this.presentLoading(this.localization.translateKey(LocKeys.SD_LOADING_MESSAGE));
     return new Promise<boolean>((resolve) => {
     this.protocol.pull() // pull protocol from github
-      .then((protocol) => this.questionnaire.updateAssessments(TaskType.ALL, this.protocol.format(JSON.parse(protocol).protocols))) // pull protocol questionnaires from github
+      .then((protocol) => this.questionnaire.updateAssessments(AssessmentType.ALL, this.protocol.format(JSON.parse(protocol.protocol).protocols))) // pull protocol questionnaires from github
       .catch(() => {
         loader.dismiss()
         this.presentToast(this.localization.translateKey(LocKeys.SD_ERROR_NETWORK), 5000);
@@ -130,7 +130,7 @@ export class SeizureDiaryPage {
   getDiaryAssessment(): Promise<boolean> {
     console.log("Getting seizure diary assessment from storage...")
     return new Promise<boolean>((resolve) => {
-      this.questionnaire.getAssessments(TaskType.NON_CLINICAL)
+      this.questionnaire.getAssessments(AssessmentType.SCHEDULED)
         .then((assessments) => assessments.find(a => a.questionnaire.name === "epi_seizure_diary"))
         .then((diaryAssessment) => {
           this.diaryAssessment = diaryAssessment

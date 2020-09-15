@@ -1,0 +1,10 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.16.0
+ignore: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  SNYK-JS-LODASH-567746:
+    - cordova-custom-config > lodash:
+        patched: '2020-04-30T22:27:22.682Z'
+    - cordova-ios > cordova-common > @netflix/nerror > lodash:
+        patched: '2020-07-14T16:40:34.557Z'

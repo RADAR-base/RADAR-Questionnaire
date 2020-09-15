@@ -3,25 +3,27 @@ import { NavController } from 'ionic-angular'
 
 import { Assessment } from '../../../shared/models/assessment'
 import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
-import { ClinicalTasksService } from '../services/clinical-tasks.service'
+import { OnDemandService } from '../services/on-demand.service'
 
 @Component({
   selector: 'page-on-demand',
-  templateUrl: 'clinical-tasks-page.component.html'
+  templateUrl: 'on-demand-page.component.html'
 })
-export class ClinicalTasksPageComponent {
+export class OnDemandPageComponent {
   scrollHeight: number = 500
   assessments: Assessment[]
+  title: Promise<String>
 
   constructor(
     private navCtrl: NavController,
-    private clinicalTasksService: ClinicalTasksService
+    private onDemandService: OnDemandService
   ) {}
 
   ionViewDidLoad() {
-    this.clinicalTasksService.getAssessements().then(assessments => {
+    this.onDemandService.getAssessements().then(assessments => {
       this.assessments = assessments.sort((a, b) => a.order - b.order)
     })
+    this.title = this.onDemandService.getOnDemandPageLabel()
   }
 
   clicked(task) {

@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core'
 
-import { DefaultPlatformInstance } from '../../../../assets/data/defaultConfig'
+import {
+  DefaultOnDemandAssessmentIcon,
+  DefaultPlatformInstance
+} from '../../../../assets/data/defaultConfig'
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
 import { RemoteConfigService } from '../../../core/services/config/remote-config.service'
 import { ScheduleService } from '../../../core/services/schedule/schedule.service'
 import { ConfigKeys } from '../../../shared/enums/config'
+import { AssessmentType } from '../../../shared/models/assessment'
 import { Task, TasksProgress } from '../../../shared/models/task'
-import { TaskType } from '../../../shared/utilities/task-type'
 import { setDateTimeToMidnight } from '../../../shared/utilities/time'
 
 @Injectable()
@@ -17,13 +20,28 @@ export class TasksService {
     private remoteConfig: RemoteConfigService
   ) {}
 
-  evalHasClinicalTasks() {
-    return this.questionnaire.getHasClinicalTasks()
+  getOnDemandAssessmentIcon() {
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        config.getOrDefault(
+          ConfigKeys.ON_DEMAND_ASSESSMENT_ICON,
+          DefaultOnDemandAssessmentIcon
+        )
+      )
+  }
+
+  getHasOnDemandTasks() {
+    return this.questionnaire.getHasOnDemandAssessments()
+  }
+
+  getHasClinicalTasks() {
+    return this.questionnaire.getHasClinicalAssessments()
   }
 
   getTasksOfToday() {
     return this.schedule
-      .getTasksForDate(new Date(), TaskType.NON_CLINICAL)
+      .getTasksForDate(new Date(), AssessmentType.SCHEDULED)
       .then(tasks =>
         tasks.filter(
           t => !this.isTaskExpired(t) || this.wasTaskCompletedToday(t)
@@ -92,13 +110,20 @@ export class TasksService {
    *                         translates to which questionnaire the `START` button on home page corresponds to.
    */
   getNextTask(tasks: Task[]): Task | undefined {
+    let nextTask: Task = undefined
     if (tasks) {
       const nextTasksNow = tasks.filter(task => this.isTaskStartable(task))
+      const isLastTask = this.isLastTask(tasks)
       if (nextTasksNow.length) {
-        return nextTasksNow.sort((a, b) => a.order - b.order)[0]
-      } else return tasks.find(task => !this.isTaskExpired(task))
+        nextTask = nextTasksNow.sort((a, b) => a.order - b.order)[0]
+      } else {
+        nextTask = tasks.find(task => !this.isTaskExpired(task))
+      }
+      if (nextTask) {
+        nextTask.isLastTask = isLastTask
+      }
     }
-    return undefined
+    return nextTask
   }
 
   getCurrentDateMidnight() {

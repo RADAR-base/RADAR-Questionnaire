@@ -5,9 +5,9 @@ import { ConfigService } from '../../../core/services/config/config.service'
 import { KafkaService } from '../../../core/services/kafka/kafka.service'
 import { LogService } from '../../../core/services/misc/log.service'
 import { ScheduleService } from '../../../core/services/schedule/schedule.service'
+import { AssessmentType } from '../../../shared/models/assessment'
 import { SchemaType } from '../../../shared/models/kafka'
 import { QuestionType } from '../../../shared/models/question'
-import { TaskType, getTaskType } from '../../../shared/utilities/task-type'
 
 import { SeizureDiaryService } from '../../seizure-diary/seizure-diary.service'
 
@@ -27,7 +27,7 @@ export class FinishTaskService {
     return Promise.all([
       this.schedule.updateTaskToComplete(task),
       this.schedule.updateTaskToReportedCompletion(task),
-      getTaskType(task) == TaskType.NON_CLINICAL
+      task.type == AssessmentType.SCHEDULED
         ? this.schedule.addToCompletedTasks(task)
         : Promise.resolve()
     ])
@@ -56,7 +56,7 @@ export class FinishTaskService {
     })
   }
 
-  evalClinicalFollowUpTask(assessment): Promise<any> {
+  createClinicalFollowUpTask(assessment): Promise<any> {
     return this.schedule
       .generateClinicalSchedule(assessment, Date.now())
       .then(() => this.config.rescheduleNotifications())

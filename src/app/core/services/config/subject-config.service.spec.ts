@@ -1,7 +1,12 @@
+import { HttpClient, HttpHandler } from '@angular/common/http'
 import { TestBed } from '@angular/core/testing'
 
-import { StorageServiceMock } from '../../../shared/testing/mock-services'
+import {
+  StorageServiceMock,
+  TokenServiceMock
+} from '../../../shared/testing/mock-services'
 import { StorageService } from '../storage/storage.service'
+import { TokenService } from '../token/token.service'
 import { SubjectConfigService } from './subject-config.service'
 
 describe('SubjectConfigService', () => {
@@ -11,7 +16,10 @@ describe('SubjectConfigService', () => {
     TestBed.configureTestingModule({
       providers: [
         SubjectConfigService,
-        { provide: StorageService, useClass: StorageServiceMock }
+        { provide: StorageService, useClass: StorageServiceMock },
+        HttpClient,
+        HttpHandler,
+        { provide: TokenService, useClass: TokenServiceMock }
       ]
     })
   )

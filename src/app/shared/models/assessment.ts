@@ -6,6 +6,7 @@ export interface Assessment {
   questionnaire?: QuestionnaireMetadata
   estimatedCompletionTime?: number
   name: string
+  type?: AssessmentType
   protocol: Protocol
   startText?: MultiLanguageText
   endText?: MultiLanguageText
@@ -15,6 +16,7 @@ export interface Assessment {
   questions: Question[]
   showInCalendar?: boolean
   order?: number
+  requiresInClinicCompletion?: boolean
 }
 
 export interface QuestionnaireMetadata {
@@ -29,4 +31,11 @@ export enum ShowIntroductionType {
   ALWAYS = 'always',
   ONCE = 'once',
   NEVER = 'never'
+}
+
+export enum AssessmentType {
+  ON_DEMAND = 'on_demand',
+  SCHEDULED = 'scheduled',
+  CLINICAL = 'clinical',
+  ALL = 'all'
 }

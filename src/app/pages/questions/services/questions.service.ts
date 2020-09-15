@@ -7,7 +7,6 @@ import { LocalizationService } from '../../../core/services/misc/localization.se
 import { ConfigKeys } from '../../../shared/enums/config'
 import { ShowIntroductionType } from '../../../shared/models/assessment'
 import { Question, QuestionType } from '../../../shared/models/question'
-import { getTaskType } from '../../../shared/utilities/task-type'
 import { getSeconds } from '../../../shared/utilities/time'
 import { AnswerService } from './answer.service'
 import { FinishTaskService } from './finish-task.service'
@@ -152,7 +151,7 @@ export class QuestionsService {
   }
 
   getQuestionnairePayload(task) {
-    const type = getTaskType(task)
+    const type = task.type
     return this.questionnaire
       .getAssessment(type, task)
       .then(assessment =>
@@ -170,7 +169,7 @@ export class QuestionsService {
           task: task ? task : assessment,
           assessment: assessment,
           type: type,
-          isLastTask: false
+          isLastTask: task ? task.isLastTask : false
         }
       })
   }
@@ -190,7 +189,7 @@ export class QuestionsService {
 
   handleClinicalFollowUp(assessment, completedInClinic?) {
     if (!completedInClinic) return Promise.resolve()
-    return this.finish.evalClinicalFollowUpTask(assessment)
+    return this.finish.createClinicalFollowUpTask(assessment)
   }
 
   getHiddenQuestions(): Promise<Object> {

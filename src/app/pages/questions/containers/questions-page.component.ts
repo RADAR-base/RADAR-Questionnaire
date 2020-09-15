@@ -8,11 +8,11 @@ import { UsageEventType } from '../../../shared/enums/events'
 import { LocKeys } from '../../../shared/enums/localisations'
 import {
   Assessment,
+  AssessmentType,
   ShowIntroductionType
 } from '../../../shared/models/assessment'
 import { Question } from '../../../shared/models/question'
 import { Task } from '../../../shared/models/task'
-import { TaskType } from '../../../shared/utilities/task-type'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { QuestionsService } from '../services/questions.service'
 import { SeizureDiaryPage } from '../../seizure-diary/seizure-diary'
@@ -32,12 +32,12 @@ export class QuestionsPageComponent implements OnInit {
   isLeftButtonDisabled = false
   isRightButtonDisabled = true
   task: Task
-  taskType: TaskType
+  taskType: AssessmentType
   questions: Question[]
   questionTitle: String
   endText: string
   isLastTask: boolean
-  isClinicalTask: boolean
+  requiresInClinicCompletion: boolean
   introduction: string
   assessment: Assessment
   showIntroductionScreen: boolean
@@ -102,7 +102,7 @@ export class QuestionsPageComponent implements OnInit {
     this.isLastTask = res.isLastTask
     this.assessment = res.assessment
     this.taskType = res.type
-    this.isClinicalTask = this.taskType == TaskType.CLINICAL
+    this.requiresInClinicCompletion = this.assessment.requiresInClinicCompletion
   }
 
   handleIntro(start: boolean) {

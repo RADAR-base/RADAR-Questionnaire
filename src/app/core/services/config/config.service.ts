@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core'
-import * as moment from 'moment-timezone'
 import * as ver from 'semver'
 
 import {
   DefaultAppVersion,
-  DefaultNotificationRefreshTime
+  DefaultNotificationRefreshTime,
+  DefaultNotificationType
 } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
 import {
@@ -49,26 +49,39 @@ export class ConfigService {
       this.hasProtocolChanged(force),
       this.hasAppVersionChanged(),
       this.hasTimezoneChanged(),
-      this.hasNotificationsExpired()
+      this.hasNotificationsExpired(),
+      this.hasNotificationMessagingTypeChanged()
     ])
-      .then(([newProtocol, newAppVersion, newTimezone, newNotifications]) => {
-        if (newProtocol && newAppVersion && newTimezone)
-          this.subjectConfig
-            .getEnrolmentDate()
-            .then(d => this.appConfig.init(d))
-            .then(() => this.appServerService.init())
-        if (newProtocol && newTimezone && !newAppVersion)
-          return this.updateConfigStateOnTimezoneChange(newTimezone).then(() =>
-            this.updateConfigStateOnProtocolChange(newProtocol)
-          )
-        if (newProtocol)
-          return this.updateConfigStateOnProtocolChange(newProtocol)
-        if (newAppVersion)
-          return this.updateConfigStateOnAppVersionChange(newAppVersion)
-        if (newTimezone)
-          return this.updateConfigStateOnTimezoneChange(newTimezone)
-        if (newNotifications) return this.rescheduleNotifications(false)
-      })
+      .then(
+        ([
+          newProtocol,
+          newAppVersion,
+          newTimezone,
+          newNotifications,
+          newMessagingType
+        ]) => {
+          if (newProtocol && newAppVersion && newTimezone)
+            this.subjectConfig
+              .getEnrolmentDate()
+              .then(d => this.appConfig.init(d))
+              .then(() => this.appServerService.init())
+          if (newMessagingType)
+            this.notifications
+              .setNotificationMessagingType(newMessagingType)
+              .then(() => this.rescheduleNotifications(true))
+          if (newProtocol && newTimezone && !newAppVersion)
+            return this.updateConfigStateOnTimezoneChange(
+              newTimezone
+            ).then(() => this.updateConfigStateOnProtocolChange(newProtocol))
+          if (newProtocol)
+            return this.updateConfigStateOnProtocolChange(newProtocol)
+          if (newAppVersion)
+            return this.updateConfigStateOnAppVersionChange(newAppVersion)
+          if (newTimezone)
+            return this.updateConfigStateOnTimezoneChange(newTimezone)
+          if (newNotifications) return this.rescheduleNotifications(false)
+        }
+      )
       .catch(e => {
         this.sendConfigChangeEvent(ConfigEventType.ERROR, '', '', e.message)
         throw e
@@ -104,6 +117,20 @@ export class ConfigService {
       .catch(() => {
         throw new Error('Error pulling protocols.')
       })
+  }
+
+  hasNotificationMessagingTypeChanged() {
+    return Promise.all([
+      this.remoteConfig
+        .read()
+        .then(config =>
+          config.getOrDefault(
+            ConfigKeys.NOTIFICATION_MESSAGING_TYPE,
+            DefaultNotificationType
+          )
+        ),
+      this.notifications.getNotificationMessagingType()
+    ]).then(([type, previousType]) => (type !== previousType ? type : false))
   }
 
   hasTimezoneChanged() {

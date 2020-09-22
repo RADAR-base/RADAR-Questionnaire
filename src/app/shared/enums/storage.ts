@@ -43,6 +43,9 @@ export class StorageKeys {
   )
 
   static FCM_TOKEN = new StorageKeys('FCM_TOKEN')
+  static NOTIFICATION_MESSAGING_TYPE = new StorageKeys(
+    'NOTIFICATION_MESSAGING_TYPE'
+  )
 
   constructor(public value: string) {}
 

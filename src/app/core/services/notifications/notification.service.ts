@@ -6,7 +6,8 @@ import { StorageService } from '../storage/storage.service'
 @Injectable()
 export abstract class NotificationService {
   private readonly NOTIFICATION_STORAGE = {
-    LAST_NOTIFICATION_UPDATE: StorageKeys.LAST_NOTIFICATION_UPDATE
+    LAST_NOTIFICATION_UPDATE: StorageKeys.LAST_NOTIFICATION_UPDATE,
+    NOTIFICATION_MESSAGING_TYPE: StorageKeys.NOTIFICATION_MESSAGING_TYPE
   }
   constructor(public storage: StorageService) {}
 
@@ -25,6 +26,16 @@ export abstract class NotificationService {
 
   getLastNotificationUpdate() {
     return this.storage.get(this.NOTIFICATION_STORAGE.LAST_NOTIFICATION_UPDATE)
+  }
+
+  getNotificationMessagingType() {
+    return this.storage.get(
+      this.NOTIFICATION_STORAGE.NOTIFICATION_MESSAGING_TYPE
+    )
+  }
+
+  setNotificationMessagingType(type) {
+    return this.storage.set(StorageKeys.NOTIFICATION_MESSAGING_TYPE, type)
   }
 
   reset() {

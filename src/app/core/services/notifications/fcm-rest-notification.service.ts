@@ -67,7 +67,17 @@ export class FcmRestNotificationService extends FcmNotificationService {
           tasks,
           messageId
         )
-        return this.updateNotificationStateToDelivered(subject, notification.id)
+        return this.updateNotificationState(
+          subject,
+          notification.id,
+          NotificationMessagingState.DELIVERED
+        ).then(() =>
+          this.updateNotificationState(
+            subject,
+            notification.id,
+            NotificationMessagingState.OPENED
+          )
+        )
       })
     })
   }
@@ -143,7 +153,7 @@ export class FcmRestNotificationService extends FcmNotificationService {
   }
 
   updateNotificationState(subject, notificationId, state) {
-    this.appServerService
+    return this.appServerService
       .getHeaders()
       .then(headers =>
         this.http
@@ -161,19 +171,6 @@ export class FcmRestNotificationService extends FcmNotificationService {
           )
           .toPromise()
       )
-  }
-
-  updateNotificationStateToDelivered(subject, notificationId) {
-    this.updateNotificationState(
-      subject,
-      notificationId,
-      NotificationMessagingState.DELIVERED
-    )
-    return this.updateNotificationState(
-      subject,
-      notificationId,
-      NotificationMessagingState.DELIVERED
-    )
   }
 
   private sendNotification(notification, subjectId, projectId): Promise<any> {

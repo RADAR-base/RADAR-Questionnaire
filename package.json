@@ -117,6 +117,7 @@
     "semver": "^7.3.2",
     "smoothscroll-polyfill": "^0.4.4",
     "snyk": "^1.361.3",
+    "url-join": "^4.0.1",
     "uuid": "^3.4.0",
     "yaml": "^1.10.0",
     "zone.js": "~0.8.26"

@@ -4,6 +4,7 @@ import { Firebase } from '@ionic-native/firebase/ngx'
 import { WebIntent } from '@ionic-native/web-intent/ngx'
 import { Platform } from 'ionic-angular'
 import { Subscription } from 'rxjs'
+import * as urljoin from 'url-join'
 
 import {
   DefaultMaxUpstreamResends,
@@ -142,16 +143,24 @@ export class FcmRestNotificationService extends FcmNotificationService {
   }
 
   updateNotificationState(subject, notificationId, state) {
-    this.appServerService.getHeaders().then(headers =>
-      this.http
-        .post(
-          `${this.getNotificationEndpoint(subject.projectId, subject.subjectId)}
-              ${notificationId}/${this.STATE_EVENTS_PATH}`,
-          { notificationId: notificationId, state: state, time: new Date() },
-          { headers }
-        )
-        .toPromise()
-    )
+    this.appServerService
+      .getHeaders()
+      .then(headers =>
+        this.http
+          .post(
+            urljoin(
+              this.getNotificationEndpoint(
+                subject.projectId,
+                subject.subjectId
+              ),
+              notificationId,
+              this.STATE_EVENTS_PATH
+            ),
+            { notificationId: notificationId, state: state, time: new Date() },
+            { headers }
+          )
+          .toPromise()
+      )
   }
 
   updateNotificationStateToDelivered(subject, notificationId) {
@@ -184,7 +193,7 @@ export class FcmRestNotificationService extends FcmNotificationService {
         .catch(err => {
           this.logger.error('Failed to send notification', err)
           if (this.upstreamResends++ < DefaultMaxUpstreamResends)
-            this.sendNotification(notification, subjectId, projectId)
+            return this.sendNotification(notification, subjectId, projectId)
         })
     )
   }
@@ -211,7 +220,13 @@ export class FcmRestNotificationService extends FcmNotificationService {
   }
 
   getNotificationEndpoint(projectId, subjectId) {
-    const url = this.appServerService.getAppServerURL()
-    return `${url}/${this.PROJECT_PATH}/${projectId}/${this.SUBJECT_PATH}/${subjectId}/${this.NOTIFICATIONS_PATH}/`
+    return urljoin(
+      this.appServerService.getAppServerURL(),
+      this.PROJECT_PATH,
+      projectId,
+      this.SUBJECT_PATH,
+      subjectId,
+      this.NOTIFICATIONS_PATH
+    )
   }
 }

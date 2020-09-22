@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import * as moment from 'moment-timezone'
+import * as urljoin from 'url-join'
 
 import {
   DefaultAppServerURL,
@@ -68,7 +69,7 @@ export class AppServerService {
   getProject(projectId): Promise<any> {
     return this.getHeaders().then(headers =>
       this.http
-        .get(`${this.APP_SERVER_URL}/${this.PROJECT_PATH}/${projectId}`, {
+        .get(urljoin(this.APP_SERVER_URL, this.PROJECT_PATH, projectId), {
           headers
         })
         .toPromise()
@@ -86,7 +87,7 @@ export class AppServerService {
     return this.getHeaders().then(headers =>
       this.http
         .post(
-          `${this.APP_SERVER_URL}/${this.PROJECT_PATH}/`,
+          urljoin(this.APP_SERVER_URL, this.PROJECT_PATH),
           { projectId },
           { headers }
         )
@@ -97,7 +98,7 @@ export class AppServerService {
   getSubject(subjectId): Promise<any> {
     return this.getHeaders().then(headers =>
       this.http
-        .get(`${this.APP_SERVER_URL}/${this.SUBJECT_PATH}/${subjectId}`, {
+        .get(urljoin(this.APP_SERVER_URL, this.SUBJECT_PATH, subjectId), {
           headers
         })
         .toPromise()
@@ -136,7 +137,12 @@ export class AppServerService {
     return this.getHeaders().then(headers =>
       this.http
         .post(
-          `${this.APP_SERVER_URL}/${this.PROJECT_PATH}/${projectId}/${this.SUBJECT_PATH}/`,
+          urljoin(
+            this.APP_SERVER_URL,
+            this.PROJECT_PATH,
+            projectId,
+            this.SUBJECT_PATH
+          ),
           {
             enrolmentDate: new Date(enrolmentDate),
             projectId,
@@ -158,7 +164,13 @@ export class AppServerService {
       const subjectId = subject.subjectId
       return this.http
         .put(
-          `${this.APP_SERVER_URL}/${this.PROJECT_PATH}/${projectId}/${this.SUBJECT_PATH}/${subjectId}`,
+          urljoin(
+            this.APP_SERVER_URL,
+            this.PROJECT_PATH,
+            projectId,
+            this.SUBJECT_PATH,
+            subjectId
+          ),
           updatedSubject,
           { headers }
         )

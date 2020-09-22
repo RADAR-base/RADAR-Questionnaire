@@ -93,8 +93,10 @@ export class FcmXmppNotificationService extends FcmNotificationService {
       succ => this.logger.log('Success sending message upstream', succ),
       err => {
         this.logger.error('Failed to send notification', err)
-        if (this.upstreamResends++ < DefaultMaxUpstreamResends)
+        if (this.upstreamResends++ < DefaultMaxUpstreamResends) {
           this.sendUpstreamMessage(notification)
+          setTimeout(() => this.logger.log('Resending message..'), 200)
+        }
       }
     )
     return Promise.resolve()

@@ -44,6 +44,26 @@ export const DefaultOnDemandAssessmentLabel = JSON.stringify(
   Localisations['ON_DEMAND_TASKS']
 )
 
+// DEFAULT URI
+
+// *The Default endpoint where the RADAR-base platform is hosted
+export const DefaultEndPoint: string =
+  'https://radar-cns-platform.rosalind.kcl.ac.uk'
+
+export const DefaultManagementPortalURI = '/managementportal'
+export const DefaultRefreshTokenURI = '/oauth/token'
+export const DefaultSubjectsURI = '/api/subjects/'
+export const DefaultMetaTokenURI: string = '/api/meta-token/'
+export const DefaultEnrolmentBaseURL =
+  DefaultEndPoint + DefaultManagementPortalURI
+export const DefaultKafkaURI = '/kafka'
+export const DefaultQuestionnaireTypeURI = '_armt'
+export const DefaultQuestionnaireFormatURI = '.json'
+
+export const DefaultGooglePlaystoreAppURL =
+  'https://play.google.com/store/apps/details?id='
+export const DefaultAppleAppStoreAppURL = 'https://apps.apple.com/app/'
+
 // DEFAULT SCHEDULE SETUP
 
 // *Default general task completion window or time window in which the task is available to answer (1 day in ms)
@@ -89,7 +109,7 @@ export const DefaultNumberOfCompletionLogsToSend = 10
 export const DefaultNotificationType: string = 'FCM_XMPP'
 
 // *Default app server URL
-export const DefaultAppServerURL = 'http://localhost:8080'
+export const DefaultAppServerURL = DefaultEndPoint + '/appserver'
 
 // *Default FCM sender ID from Firebase settings
 export const FCMPluginProjectSenderId: string = '430900191220'
@@ -155,26 +175,6 @@ export const DefaultOAuthClientSecret = oauthParts.join(':')
 
 // *Default length of time to wait before refreshing tokens (REMOTE CONFIG KEY: `oauth_refresh_seconds`)
 export const DefaultTokenRefreshSeconds = 1800 // 30 minutes in s
-
-// DEFAULT URI
-
-// *The Default endpoint where the RADAR-base platform is hosted
-export const DefaultEndPoint: string =
-  'https://radar-cns-platform.rosalind.kcl.ac.uk'
-
-export const DefaultManagementPortalURI = '/managementportal'
-export const DefaultRefreshTokenURI = '/oauth/token'
-export const DefaultSubjectsURI = '/api/subjects/'
-export const DefaultMetaTokenURI: string = '/api/meta-token/'
-export const DefaultEnrolmentBaseURL =
-  DefaultEndPoint + DefaultManagementPortalURI
-export const DefaultKafkaURI = '/kafka'
-export const DefaultQuestionnaireTypeURI = '_armt'
-export const DefaultQuestionnaireFormatURI = '.json'
-
-export const DefaultGooglePlaystoreAppURL =
-  'https://play.google.com/store/apps/details?id='
-export const DefaultAppleAppStoreAppURL = 'https://apps.apple.com/app/'
 
 // DEFAULT HTTP REQUEST VALUES
 

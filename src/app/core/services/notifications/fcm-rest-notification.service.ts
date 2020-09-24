@@ -8,6 +8,7 @@ import * as urljoin from 'url-join'
 
 import {
   DefaultMaxUpstreamResends,
+  DefaultNumberOfNotificationsToSchedule,
   DefaultPackageName,
   DefaultSourcePrefix
 } from '../../../../assets/data/defaultConfig'
@@ -122,16 +123,14 @@ export class FcmRestNotificationService extends FcmNotificationService {
   }
 
   cancelAllNotifications(subject): Promise<any> {
-    return this.appServerService
-      .getHeaders()
-      .then(headers =>
-        this.http
-          .delete(
-            this.getNotificationEndpoint(subject.projectId, subject.subjectId),
-            { headers }
-          )
-          .toPromise()
+    return this.schedule.getTasks(AssessmentType.ALL).then(tasks => {
+      const fcmNotifications = this.notifications
+        .futureNotifications(tasks, DefaultNumberOfNotificationsToSchedule)
+        .filter(t => t.id)
+      return Promise.all(
+        fcmNotifications.map(n => this.cancelSingleNotification(subject, n))
       )
+    })
   }
 
   cancelSingleNotification(subject, notification: SingleNotification) {

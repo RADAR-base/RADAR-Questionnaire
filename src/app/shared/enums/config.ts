@@ -10,6 +10,10 @@ export class ConfigKeys {
   static PLATFORM_INSTANCE = new ConfigKeys('platform_instance')
   static QUESTIONS_HIDDEN = new ConfigKeys('questions_hidden')
   static APP_VERSION_LATEST = new ConfigKeys('app_version_latest')
+  static NOTIFICATION_MESSAGING_TYPE = new ConfigKeys(
+    'notification_messaging_type'
+  )
+  static APP_SERVER_URL = new ConfigKeys('app_server_url')
   static ON_DEMAND_ASSESSMENT_LABEL = new ConfigKeys(
     'on_demand_assessment_label'
   )

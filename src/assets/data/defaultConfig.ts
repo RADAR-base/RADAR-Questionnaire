@@ -15,7 +15,7 @@ import { DefaultSourceProducerAndSecretExport } from './secret'
 export const DefaultPlatformInstance = 'RADAR-CNS'
 
 // *Default app version
-export const DefaultAppVersion = '0.9.0-alpha'
+export const DefaultAppVersion = '0.9.1'
 
 // *Default Android package name
 export const DefaultPackageName = 'org.phidatalab.radar_armt'
@@ -43,6 +43,26 @@ export const DefaultOnDemandAssessmentIcon = 'assets/imgs/new-questionnaire.png'
 export const DefaultOnDemandAssessmentLabel = JSON.stringify(
   Localisations['ON_DEMAND_TASKS']
 )
+
+// DEFAULT URI
+
+// *The Default endpoint where the RADAR-base platform is hosted
+export const DefaultEndPoint: string =
+  'https://radar-cns-platform.rosalind.kcl.ac.uk'
+
+export const DefaultManagementPortalURI = '/managementportal'
+export const DefaultRefreshTokenURI = '/oauth/token'
+export const DefaultSubjectsURI = '/api/subjects/'
+export const DefaultMetaTokenURI: string = '/api/meta-token/'
+export const DefaultEnrolmentBaseURL =
+  DefaultEndPoint + DefaultManagementPortalURI
+export const DefaultKafkaURI = '/kafka'
+export const DefaultQuestionnaireTypeURI = '_armt'
+export const DefaultQuestionnaireFormatURI = '.json'
+
+export const DefaultGooglePlaystoreAppURL =
+  'https://play.google.com/store/apps/details?id='
+export const DefaultAppleAppStoreAppURL = 'https://apps.apple.com/app/'
 
 // DEFAULT SCHEDULE SETUP
 
@@ -86,7 +106,10 @@ export const DefaultNumberOfCompletionLogsToSend = 10
 // DEFAULT NOTIFICATION SETUP
 
 // *Default notification type (either 'FCM' or 'LOCAL' notifications)
-export const DefaultNotificationType: string = 'FCM'
+export const DefaultNotificationType: string = 'FCM_XMPP'
+
+// *Default app server URL
+export const DefaultAppServerURL = DefaultEndPoint + '/appserver'
 
 // *Default FCM sender ID from Firebase settings
 export const FCMPluginProjectSenderId: string = '430900191220'
@@ -152,26 +175,6 @@ export const DefaultOAuthClientSecret = oauthParts.join(':')
 
 // *Default length of time to wait before refreshing tokens (REMOTE CONFIG KEY: `oauth_refresh_seconds`)
 export const DefaultTokenRefreshSeconds = 1800 // 30 minutes in s
-
-// DEFAULT URI
-
-// *The Default endpoint where the RADAR-base platform is hosted
-export const DefaultEndPoint: string =
-  'https://radar-cns-platform.rosalind.kcl.ac.uk'
-
-export const DefaultManagementPortalURI = '/managementportal'
-export const DefaultRefreshTokenURI = '/oauth/token'
-export const DefaultSubjectsURI = '/api/subjects/'
-export const DefaultMetaTokenURI: string = '/api/meta-token/'
-export const DefaultEnrolmentBaseURL =
-  DefaultEndPoint + DefaultManagementPortalURI
-export const DefaultKafkaURI = '/kafka'
-export const DefaultQuestionnaireTypeURI = '_armt'
-export const DefaultQuestionnaireFormatURI = '.json'
-
-export const DefaultGooglePlaystoreAppURL =
-  'https://play.google.com/store/apps/details?id='
-export const DefaultAppleAppStoreAppURL = 'https://apps.apple.com/app/'
 
 // DEFAULT HTTP REQUEST VALUES
 

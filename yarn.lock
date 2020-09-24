@@ -676,10 +676,10 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/web-intent@^5.26.0":
-  version "5.26.0"
-  resolved "https://registry.yarnpkg.com/@ionic-native/web-intent/-/web-intent-5.26.0.tgz#6f606653565e7a57c009920807c2d1cac8caf898"
-  integrity sha512-4geXb3pnA+ni7HsqX6Ln/RE8JyF+7c0zIvyhqu45H+v4IoM1tIkGiklJiMfXi+24U8wTTEkrwyk70xyin5Qepg==
+"@ionic-native/web-intent@^5.28.0":
+  version "5.28.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/web-intent/-/web-intent-5.28.0.tgz#8ac1eb23b66573e9f418e6b004a952e526cddf1b"
+  integrity sha512-2uZKsSmoRj5s73fln3nXDs7unazrDux7h1UcrxhlUa2qI20LML/Ye3/ZFc5Wy8GB+mQOwQtJjTQPT6Gpl4fQTw==
   dependencies:
     "@types/cordova" latest
 

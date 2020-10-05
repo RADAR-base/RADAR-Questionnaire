@@ -8,14 +8,15 @@ import * as urljoin from 'url-join'
 
 import {
   DefaultMaxUpstreamResends,
-  DefaultNumberOfNotificationsToSchedule,
   DefaultPackageName,
-  DefaultSourcePrefix
+  DefaultSourcePrefix,
 } from '../../../../assets/data/defaultConfig'
+import { FcmNotifications } from '../../../shared/models/appServer'
 import { AssessmentType } from '../../../shared/models/assessment'
 import {
   NotificationMessagingState,
-  SingleNotification
+  NotificationType,
+  SingleNotification,
 } from '../../../shared/models/notification-handler'
 import { AppServerService } from '../app-server/app-server.service'
 import { RemoteConfigService } from '../config/remote-config.service'
@@ -56,13 +57,13 @@ export class FcmRestNotificationService extends FcmNotificationService {
   }
 
   onAppOpen() {
-    return this.webIntent.getIntent().then(intent => {
+    return this.webIntent.getIntent().then((intent) => {
       if (!intent.extras) return
       const extras = intent.extras['google.message_id'].split(':')
       const messageId = extras[extras.length - 1]
       return Promise.all([
         this.getSubjectDetails(),
-        this.schedule.getTasks(AssessmentType.ALL)
+        this.schedule.getTasks(AssessmentType.ALL),
       ]).then(([subject, tasks]) => {
         const notification = this.notifications.findNotificationByMessageId(
           tasks,
@@ -86,27 +87,27 @@ export class FcmRestNotificationService extends FcmNotificationService {
   getSubjectDetails() {
     return Promise.all([
       this.appServerService.init(),
-      this.config.getParticipantLogin()
+      this.config.getParticipantLogin(),
     ])
       .then(([, subjectId]) =>
         Promise.all([
           this.appServerService.getSubject(subjectId),
-          this.config.getSourceID()
+          this.config.getSourceID(),
         ])
       )
       .then(([subject, sourceId]) => Object.assign({}, subject, { sourceId }))
   }
 
   publishAllNotifications(subject, limit): Promise<any> {
-    return this.schedule.getTasks(AssessmentType.ALL).then(tasks => {
+    return this.schedule.getTasks(AssessmentType.ALL).then((tasks) => {
       const fcmNotifications = this.notifications
         .futureNotifications(tasks, limit)
-        .map(t => this.format(t, subject))
+        .map((t) => this.format(t, subject))
       this.logger.log('NOTIFICATIONS Scheduling FCM notifications')
       this.logger.log(fcmNotifications)
       return Promise.all(
         fcmNotifications
-          .map(n =>
+          .map((n) =>
             this.sendNotification(n, subject.subjectId, subject.projectId)
           )
           .concat([this.setLastNotificationUpdate(Date.now())])
@@ -122,21 +123,44 @@ export class FcmRestNotificationService extends FcmNotificationService {
     )
   }
 
-  cancelAllNotifications(subject): Promise<any> {
-    return this.schedule.getTasks(AssessmentType.ALL).then(tasks => {
-      const fcmNotifications = this.notifications
-        .futureNotifications(tasks, DefaultNumberOfNotificationsToSchedule)
-        .filter(t => t.id)
-      return Promise.all(
-        fcmNotifications.map(n => this.cancelSingleNotification(subject, n))
+  pullAllPublishedNotifications(subject) {
+    return this.appServerService
+      .getHeaders()
+      .then((headers) =>
+        this.http
+          .get(
+            this.getNotificationEndpoint(subject.projectId, subject.subjectId),
+            { headers }
+          )
+          .toPromise()
       )
-    })
+  }
+
+  cancelAllNotifications(subject): Promise<any> {
+    return this.pullAllPublishedNotifications(subject).then(
+      (res: FcmNotifications) => {
+        const now = Date.now()
+        const notifications = res.notifications
+          .map((n) =>
+            Object.assign(
+              {},
+              {
+                id: n.id,
+                timestamp: n.scheduledTime.getTime(),
+                type: NotificationType.NOW,
+              }
+            )
+          )
+          .filter((n) => n.timestamp > now)
+        notifications.map((o) => this.cancelSingleNotification(subject, o))
+      }
+    )
   }
 
   cancelSingleNotification(subject, notification: SingleNotification) {
     return this.appServerService
       .getHeaders()
-      .then(headers =>
+      .then((headers) =>
         this.http
           .delete(
             this.getNotificationEndpoint(subject.projectId, subject.subjectId) +
@@ -154,7 +178,7 @@ export class FcmRestNotificationService extends FcmNotificationService {
   updateNotificationState(subject, notificationId, state) {
     return this.appServerService
       .getHeaders()
-      .then(headers =>
+      .then((headers) =>
         this.http
           .post(
             urljoin(
@@ -173,7 +197,7 @@ export class FcmRestNotificationService extends FcmNotificationService {
   }
 
   private sendNotification(notification, subjectId, projectId): Promise<any> {
-    return this.appServerService.getHeaders().then(headers =>
+    return this.appServerService.getHeaders().then((headers) =>
       this.http
         .post(
           this.getNotificationEndpoint(projectId, subjectId),
@@ -181,12 +205,12 @@ export class FcmRestNotificationService extends FcmNotificationService {
           { headers }
         )
         .toPromise()
-        .then(res => {
+        .then((res) => {
           notification.notification.id = res['id']
           notification.notification.messageId = res['fcmMessageId']
           return this.logger.log('Successfully sent! Updating notification Id')
         })
-        .catch(err => {
+        .catch((err) => {
           this.logger.error('Failed to send notification', err)
           if (this.upstreamResends++ < DefaultMaxUpstreamResends)
             return this.sendNotification(notification, subjectId, projectId)
@@ -210,8 +234,8 @@ export class FcmRestNotificationService extends FcmNotificationService {
         type: taskInfo.name,
         sourceType: DefaultSourcePrefix,
         appPackage: DefaultPackageName,
-        scheduledTime: new Date(notification.timestamp)
-      }
+        scheduledTime: new Date(notification.timestamp),
+      },
     }
   }
 

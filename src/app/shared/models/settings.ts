@@ -10,6 +10,7 @@ export interface Settings {
   notificationSettings?: NotificationSettings
   weeklyReport?: WeeklyReportSubSettings[]
   lastUploadDate?: Date
+  lastNotificationUpdate?: Date
 }
 export interface NotificationSettings {
   sound: boolean

@@ -4,12 +4,12 @@ import * as ver from 'semver'
 import {
   DefaultAppVersion,
   DefaultNotificationRefreshTime,
-  DefaultNotificationType
+  DefaultNotificationType,
 } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
 import {
   ConfigEventType,
-  NotificationEventType
+  NotificationEventType,
 } from '../../../shared/enums/events'
 import { AssessmentType } from '../../../shared/models/assessment'
 import { NotificationActionType } from '../../../shared/models/notification-handler'
@@ -50,7 +50,7 @@ export class ConfigService {
       this.hasAppVersionChanged(),
       this.hasTimezoneChanged(),
       this.hasNotificationsExpired(),
-      this.hasNotificationMessagingTypeChanged()
+      this.hasNotificationMessagingTypeChanged(),
     ])
       .then(
         ([
@@ -58,12 +58,12 @@ export class ConfigService {
           newAppVersion,
           newTimezone,
           newNotifications,
-          newMessagingType
+          newMessagingType,
         ]) => {
           if (newProtocol && newAppVersion && newTimezone)
             this.subjectConfig
               .getEnrolmentDate()
-              .then(d => this.appConfig.init(d))
+              .then((d) => this.appConfig.init(d))
               .then(() => this.appServerService.init())
           if (newMessagingType)
             this.notifications
@@ -82,7 +82,7 @@ export class ConfigService {
           if (newNotifications) return this.rescheduleNotifications(false)
         }
       )
-      .catch(e => {
+      .catch((e) => {
         this.sendConfigChangeEvent(ConfigEventType.ERROR, '', '', e.message)
         throw e
       })
@@ -91,13 +91,13 @@ export class ConfigService {
   hasProtocolChanged(force?) {
     return Promise.all([
       this.appConfig.getScheduleHashUrl(),
-      this.protocol.getRootTreeHashUrl()
+      this.protocol.getRootTreeHashUrl(),
     ])
       .then(([prevHash, currentHash]) => {
         if (prevHash != currentHash || force) {
           return Promise.all([
             this.appConfig.getScheduleVersion(),
-            this.protocol.pull()
+            this.protocol.pull(),
           ]).then(([scheduleVersion, protocolData]) => {
             this.appConfig.setScheduleHashUrl(currentHash)
             const parsedProtocol = JSON.parse(protocolData.protocol)
@@ -123,18 +123,18 @@ export class ConfigService {
     return Promise.all([
       this.remoteConfig
         .read()
-        .then(config =>
+        .then((config) =>
           config.getOrDefault(
             ConfigKeys.NOTIFICATION_MESSAGING_TYPE,
             DefaultNotificationType
           )
         ),
-      this.notifications.getNotificationMessagingType()
+      this.notifications.getNotificationMessagingType(),
     ]).then(([type, previousType]) => (type !== previousType ? type : false))
   }
 
   hasTimezoneChanged() {
-    return this.appConfig.getUTCOffset().then(prevUtcOffset => {
+    return this.appConfig.getUTCOffset().then((prevUtcOffset) => {
       const utcOffset = new Date().getTimezoneOffset()
       // NOTE: Cancels all notifications and reschedule tasks if timezone has changed
       if (prevUtcOffset !== utcOffset) {
@@ -157,7 +157,7 @@ export class ConfigService {
   hasAppVersionChanged() {
     return Promise.all([
       this.appConfig.getStoredAppVersion(),
-      this.appConfig.getAppVersion()
+      this.appConfig.getAppVersion(),
     ]).then(([storedAppVersion, appVersion]) => {
       if (storedAppVersion !== appVersion) {
         this.sendConfigChangeEvent(
@@ -172,7 +172,7 @@ export class ConfigService {
 
   hasNotificationsExpired() {
     // NOTE: Only run this if not run in last DefaultNotificationRefreshTime
-    return this.notifications.getLastNotificationUpdate().then(lastUpdate => {
+    return this.notifications.getLastNotificationUpdate().then((lastUpdate) => {
       const timeElapsed = Date.now() - lastUpdate
       return (
         timeElapsed > DefaultNotificationRefreshTime ||
@@ -186,10 +186,10 @@ export class ConfigService {
     return Promise.all([
       this.remoteConfig
         .read()
-        .then(config =>
+        .then((config) =>
           config.getOrDefault(ConfigKeys.APP_VERSION_LATEST, DefaultAppVersion)
         ),
-      this.appConfig.getAppVersion()
+      this.appConfig.getAppVersion(),
     ])
       .then(([playstoreVersion, currentVersion]) =>
         ver.gt(ver.clean(playstoreVersion), ver.clean(currentVersion))
@@ -200,7 +200,7 @@ export class ConfigService {
   checkParticipantEnrolled() {
     return this.subjectConfig
       .getParticipantLogin()
-      .then(participant => (participant ? participant : Promise.reject([])))
+      .then((participant) => (participant ? participant : Promise.reject([])))
   }
 
   updateConfigStateOnProtocolChange(protocol) {
@@ -216,7 +216,7 @@ export class ConfigService {
     return Promise.all([
       this.questionnaire.pullQuestionnaires(AssessmentType.ON_DEMAND),
       this.questionnaire.pullQuestionnaires(AssessmentType.CLINICAL),
-      this.questionnaire.pullQuestionnaires(AssessmentType.SCHEDULED)
+      this.questionnaire.pullQuestionnaires(AssessmentType.SCHEDULED),
     ]).then(() => this.rescheduleNotifications(true))
   }
 
@@ -230,7 +230,7 @@ export class ConfigService {
     // NOTE: Update midnight to time zone of reference date.
     return this.subjectConfig
       .getEnrolmentDate()
-      .then(enrolment => this.appConfig.setReferenceDate(enrolment))
+      .then((enrolment) => this.appConfig.setReferenceDate(enrolment))
       .then(() => this.appConfig.setUTCOffset(utcOffset))
       .then(() => this.regenerateSchedule(prevUtcOffset))
   }
@@ -246,7 +246,7 @@ export class ConfigService {
           ? this.sendConfigChangeEvent(NotificationEventType.RESCHEDULED)
           : this.sendConfigChangeEvent(NotificationEventType.REFRESHED)
       )
-      .catch(e => {
+      .catch((e) => {
         throw this.logger.error('Failed to reschedule notifications', e)
       })
   }
@@ -270,8 +270,8 @@ export class ConfigService {
   regenerateSchedule(prevUTCOffset?: number) {
     return this.appConfig
       .getReferenceDate()
-      .then(refDate => this.schedule.generateSchedule(refDate, prevUTCOffset))
-      .catch(e => {
+      .then((refDate) => this.schedule.generateSchedule(refDate, prevUTCOffset))
+      .catch((e) => {
         throw this.logger.error('Failed to generate schedule', e)
       })
       .then(() => this.rescheduleNotifications(true))
@@ -290,7 +290,7 @@ export class ConfigService {
       this.questionnaire.reset(),
       this.schedule.reset(),
       this.notifications.reset(),
-      this.localization.init()
+      this.localization.init(),
     ])
   }
 
@@ -306,7 +306,7 @@ export class ConfigService {
         .then(() => this.appConfig.init(user.enrolmentDate)),
       this.localization.init(),
       this.kafka.init(),
-      this.appServerService.init()
+      this.appServerService.init(),
     ])
   }
 
@@ -322,7 +322,8 @@ export class ConfigService {
       languagesSelectable: this.localization.getLanguageSettings(),
       language: Promise.resolve(this.localization.getLanguage()),
       cacheSize: this.kafka.getCacheSize(),
-      lastUploadDate: this.kafka.getLastUploadDate()
+      lastUploadDate: this.kafka.getLastUploadDate(),
+      lastNotificationUpdate: this.notifications.getLastNotificationUpdate(),
     }
   }
 
@@ -331,7 +332,7 @@ export class ConfigService {
       previous: String(previous),
       current: String(current),
       error: String(error),
-      data: String(data)
+      data: String(data),
     })
   }
 

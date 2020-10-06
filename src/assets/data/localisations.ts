@@ -537,6 +537,16 @@ export const Localisations = {
     pl: 'Ostatnie wysyłanie na serwer',
     hb: 'העלאה אחרונה לשרת'
   },
+  SETTINGS_LAST_NOTIFICATION_UPDATE: {
+    da: 'Sidste underretningsopdatering',
+    de: 'Letzte Benachrichtigung Update',
+    en: 'Last Notification Update',
+    es: 'Última actualización de notificación',
+    it: 'Ultimo aggiornamento delle notifiche',
+    nl: 'Laatste melding-update',
+    pl: 'Ostatnia aktualizacja powiadomienia',
+    hb: 'עדכון ההודעה האחרונה'
+  },
   SETTINGS_DEBUGGING: {
     da: 'Debugging',
     de: 'Debuggen',

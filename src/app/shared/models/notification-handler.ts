@@ -4,7 +4,7 @@ export enum NotificationType {
   REMINDER,
   MISSED_SOON,
   MISSED,
-  TEST,
+  TEST
 }
 
 export enum NotificationActionType {
@@ -12,7 +12,7 @@ export enum NotificationActionType {
   SCHEDULE_ALL,
   TEST,
   CANCEL_ALL,
-  CANCEL_SINGLE,
+  CANCEL_SINGLE
 }
 
 export interface SingleNotification {
@@ -36,10 +36,10 @@ export interface NotificationTaskInfo {
 export enum NotificationMessagingType {
   LOCAL = 'LOCAL',
   FCM_XMPP = 'FCM_XMPP',
-  FCM_REST = 'FCM_REST',
+  FCM_REST = 'FCM_REST'
 }
 
 export enum NotificationMessagingState {
   DELIVERED = 'DELIVERED',
-  OPENED = 'OPENED',
+  OPENED = 'OPENED'
 }

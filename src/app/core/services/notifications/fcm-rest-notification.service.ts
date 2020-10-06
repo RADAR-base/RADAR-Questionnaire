@@ -15,9 +15,9 @@ import { FcmNotifications } from '../../../shared/models/appServer'
 import { AssessmentType } from '../../../shared/models/assessment'
 import {
   NotificationMessagingState,
-  NotificationType,
   SingleNotification,
 } from '../../../shared/models/notification-handler'
+import { getMilliseconds } from '../../../shared/utilities/time'
 import { AppServerService } from '../app-server/app-server.service'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { SubjectConfigService } from '../config/subject-config.service'
@@ -141,16 +141,10 @@ export class FcmRestNotificationService extends FcmNotificationService {
       (res: FcmNotifications) => {
         const now = Date.now()
         const notifications = res.notifications
-          .map((n) =>
-            Object.assign(
-              {},
-              {
-                id: n.id,
-                timestamp: n.scheduledTime.getTime(),
-                type: NotificationType.NOW,
-              }
-            )
-          )
+          .map((n) => ({
+            id: n.id,
+            timestamp: getMilliseconds({ seconds: n.scheduledTime }),
+          }))
           .filter((n) => n.timestamp > now)
         notifications.map((o) => this.cancelSingleNotification(subject, o))
       }
@@ -163,8 +157,13 @@ export class FcmRestNotificationService extends FcmNotificationService {
       .then((headers) =>
         this.http
           .delete(
-            this.getNotificationEndpoint(subject.projectId, subject.subjectId) +
-              notification.id,
+            urljoin(
+              this.getNotificationEndpoint(
+                subject.projectId,
+                subject.subjectId
+              ),
+              notification.id.toString()
+            ),
             { headers }
           )
           .toPromise()
@@ -186,7 +185,7 @@ export class FcmRestNotificationService extends FcmNotificationService {
                 subject.projectId,
                 subject.subjectId
               ),
-              notificationId,
+              notificationId.toString(),
               this.STATE_EVENTS_PATH
             ),
             { notificationId: notificationId, state: state, time: new Date() },

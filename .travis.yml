@@ -10,8 +10,8 @@ env:
 language: android
 android:
   components:
-    - build-tools-28.0.3
-    - android-28
+    - build-tools-29.0.2
+    - android-29
     - extra
 addons:
   apt:
@@ -37,8 +37,6 @@ install:
   - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.12.3
   - export PATH="$HOME/.yarn/bin:$PATH"
   - gem install bundler --pre
-  - gem install fastlane
-  - gem cleanup
   - bundle install
   - yarn global add ionic cordova
 before_script:

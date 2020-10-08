@@ -100,6 +100,7 @@
     "cordova-sqlite-storage": "^5.0.0",
     "cordova-support-android-plugin": "^1.0.1",
     "core-js": "2.6.8",
+    "execa": "^4.0.3",
     "graphlib": "^2.1.8",
     "ionic-angular": "^3.9.10",
     "ionic-mocks": "^1.3.0",

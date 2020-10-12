@@ -11,7 +11,7 @@ import {
   DefaultPackageName,
   DefaultSourcePrefix
 } from '../../../../assets/data/defaultConfig'
-import { FcmNotifications } from '../../../shared/models/appServer'
+import { FcmNotifications } from '../../../shared/models/app-server'
 import { AssessmentType } from '../../../shared/models/assessment'
 import {
   NotificationMessagingState,

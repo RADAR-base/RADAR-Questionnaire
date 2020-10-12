@@ -143,7 +143,7 @@
     "import-sort-parser-typescript": "^6.0.0",
     "import-sort-style-module": "^6.0.0",
     "ionic": "^5.4.16",
-    "jasmine": "^3.5.0",
+    "jasmine": "^3.6.1",
     "jasmine-core": "^3.5.0",
     "jasmine-spec-reporter": "^5.0.2",
     "karma": "^5.2.2",

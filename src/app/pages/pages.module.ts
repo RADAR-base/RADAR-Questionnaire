@@ -1,6 +1,7 @@
 import { CommonModule, DatePipe } from '@angular/common'
 import { NgModule } from '@angular/core'
 
+import { AppServerService } from '../core/services/app-server/app-server.service'
 import { AppConfigService } from '../core/services/config/app-config.service'
 import { ConfigService } from '../core/services/config/config.service'
 import { ProtocolService } from '../core/services/config/protocol.service'
@@ -10,8 +11,10 @@ import { KafkaService } from '../core/services/kafka/kafka.service'
 import { SchemaService } from '../core/services/kafka/schema.service'
 import { AlertService } from '../core/services/misc/alert.service'
 import { LocalizationService } from '../core/services/misc/localization.service'
-import { FcmNotificationService } from '../core/services/notifications/fcm-notification.service'
+import { FcmRestNotificationService } from '../core/services/notifications/fcm-rest-notification.service'
+import { FcmXmppNotificationService } from '../core/services/notifications/fcm-xmpp-notification.service'
 import { LocalNotificationService } from '../core/services/notifications/local-notification.service'
+import { NotificationFactoryService } from '../core/services/notifications/notification-factory.service'
 import { NotificationGeneratorService } from '../core/services/notifications/notification-generator.service'
 import { NotificationService } from '../core/services/notifications/notification.service'
 import { ScheduleGeneratorService } from '../core/services/schedule/schedule-generator.service'
@@ -63,7 +66,11 @@ import { SplashModule } from './splash/splash.module'
     UsageService,
     SchemaService,
     NotificationGeneratorService,
-    { provide: NotificationService, useClass: FcmNotificationService },
+    FcmRestNotificationService,
+    FcmXmppNotificationService,
+    LocalNotificationService,
+    AppServerService,
+    { provide: NotificationService, useClass: NotificationFactoryService },
     { provide: AnalyticsService, useClass: FirebaseAnalyticsService }
   ]
 })

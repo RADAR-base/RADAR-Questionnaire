@@ -136,7 +136,7 @@
     "cordova-android": "^9.0.0",
     "cordova-plugin-firebase-with-upstream-messaging": "^2.1.4",
     "cordova-plugin-network-information": "git+https://github.com/apache/cordova-plugin-network-information.git",
-    "eslint": "^6.8.0",
+    "eslint": "^7.11.0",
     "eslint-scope": "^5.0.0",
     "import-sort-cli": "^6.0.0",
     "import-sort-parser-babylon": "^6.0.0",

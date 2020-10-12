@@ -537,6 +537,16 @@ export const Localisations = {
     pl: 'Ostatnie wysyłanie na serwer',
     hb: 'העלאה אחרונה לשרת'
   },
+  SETTINGS_LAST_NOTIFICATION_UPDATE: {
+    da: 'Sidste underretningsopdatering',
+    de: 'Letzte Benachrichtigung Update',
+    en: 'Last Notification Update',
+    es: 'Última actualización de notificación',
+    it: 'Ultimo aggiornamento delle notifiche',
+    nl: 'Laatste melding-update',
+    pl: 'Ostatnia aktualizacja powiadomienia',
+    hb: 'עדכון ההודעה האחרונה'
+  },
   SETTINGS_DEBUGGING: {
     da: 'Debugging',
     de: 'Debuggen',
@@ -1348,16 +1358,16 @@ export const Localisations = {
     hb: 'בודק התראות'
   },
   TESTING_NOTIFICATIONS_MESSAGE: {
-    da: 'Luk nu appen og vent i 2 minutter for testmeddelelsen.',
+    da: 'Luk nu appen og vent i 3 minutter for testmeddelelsen.',
     de:
-      'Schließen Sie nun die App und warten Sie 2 Minuten auf die Testbenachrichtigung.',
-    en: 'Now close the app and wait for 2 minutes for the test notification.',
+      'Schließen Sie nun die App und warten Sie 3 Minuten auf die Testbenachrichtigung.',
+    en: 'Now close the app and wait for 3 minutes for the test notification.',
     es:
-      'Ahora cierre la aplicación y espere 2 minutos para la notificación de prueba.',
-    it: "Ora chiudi l'app e attendi 2 minuti per la notifica del test.",
-    nl: 'Sluit nu de app en wacht 2 minuten op de testmelding.',
-    pl: 'Zamknij aplikację i poczekaj 2 minuty na powiadomienie testowe',
-    hb: '.סגור את האפליקציה כעת וחכה 2 דקות להתראת מבחן'
+      'Ahora cierre la aplicación y espere 3 minutos para la notificación de prueba.',
+    it: "Ora chiudi l'app e attendi 3 minuti per la notifica del test.",
+    nl: 'Sluit nu de app en wacht 3 minuten op de testmelding.',
+    pl: 'Zamknij aplikację i poczekaj 3 minuty na powiadomienie testowe',
+    hb: '.סגור את האפליקציה כעת וחכה 3 דקות להתראת מבחן'
   },
   CLOSE_APP: {
     da: 'Luk App',

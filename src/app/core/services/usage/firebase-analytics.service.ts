@@ -93,7 +93,7 @@ export class FirebaseAnalyticsService extends AnalyticsService {
               `Firebase User Property name ${key} is too long, cropping`
             ),
             this.crop(
-              String(value),
+              LogService.formatObject(value),
               36,
               `Firebase User Property value ${value} for ${key} is too long, cropping`
             )

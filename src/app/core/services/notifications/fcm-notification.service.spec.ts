@@ -5,6 +5,7 @@ import { PlatformMock } from 'ionic-mocks'
 
 import {
   FirebaseMock,
+  LocalizationServiceMock,
   LogServiceMock,
   NotificationGeneratorServiceMock,
   RemoteConfigServiceMock,
@@ -14,6 +15,7 @@ import {
 } from '../../../shared/testing/mock-services'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { SubjectConfigService } from '../config/subject-config.service'
+import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
 import { ScheduleService } from '../schedule/schedule.service'
 import { StorageService } from '../storage/storage.service'
@@ -37,7 +39,8 @@ describe('FcmNotificationService', () => {
           useClass: NotificationGeneratorServiceMock
         },
         { provide: ScheduleService, useClass: ScheduleServiceMock },
-        { provide: RemoteConfigService, useClass: RemoteConfigServiceMock }
+        { provide: RemoteConfigService, useClass: RemoteConfigServiceMock },
+        { provide: LocalizationService, useClass: LocalizationServiceMock }
       ]
     })
   )

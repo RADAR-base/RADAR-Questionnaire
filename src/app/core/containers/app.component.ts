@@ -8,10 +8,11 @@ import { SplashPageComponent } from '../../pages/splash/containers/splash-page.c
 import { NotificationService } from '../services/notifications/notification.service'
 
 @Component({
-  template: '<ion-nav [root]="rootPage"></ion-nav>'
+  template: '<ion-nav *ngIf="isAppInitialized" [root]="rootPage"></ion-nav>'
 })
 export class AppComponent {
   rootPage = SplashPageComponent
+  isAppInitialized: boolean
 
   constructor(
     private platform: Platform,
@@ -24,8 +25,11 @@ export class AppComponent {
       this.accessibility.usePreferredTextZoom(false)
       this.statusBar.hide()
       this.splashScreen.hide()
-      this.notificationService.init()
-      return this.notificationService.permissionCheck()
+      this.notificationService
+        .init()
+        .then(() => this.notificationService.permissionCheck())
+        .catch()
+        .then(() => (this.isAppInitialized = true))
     })
   }
 }

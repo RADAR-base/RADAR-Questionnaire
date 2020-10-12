@@ -2260,10 +2260,10 @@ autoprefixer@^9.8.0, autoprefixer@^9.8.6:
     postcss "^7.0.32"
     postcss-value-parser "^4.1.0"
 
-avsc@^5.4.21:
-  version "5.4.21"
-  resolved "https://registry.yarnpkg.com/avsc/-/avsc-5.4.21.tgz#eafaf5cbfd72bbc3d1bd82fc6bdeb7dda3ba8b2c"
-  integrity sha512-Vr733yyksCfwwXVZ6WjgttDF1TLlUeYWBJDHpO61qeOo6GnaIaVRiJ64ZgpwXfFtbPv1fCuLFV0qz++QUFCZPw==
+avsc@^5.5.1:
+  version "5.5.1"
+  resolved "https://registry.yarnpkg.com/avsc/-/avsc-5.5.1.tgz#463dcf792cab9cfb363cc61b6df7e493f968c3d2"
+  integrity sha512-Z5srUrB/P0Acr2/XmaF/y5hM09QK3j/Hc2BVRGAMNtbSy3QAyfQOsWar/2obat1Eh58GgaoDpRHqQwWLykLxWA==
 
 aws-sign2@~0.7.0:
   version "0.7.0"

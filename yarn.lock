@@ -3965,10 +3965,10 @@ cordova-sqlite-storage@^5.1.0:
   dependencies:
     cordova-sqlite-storage-dependencies "3.0.0"
 
-cordova-support-android-plugin@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/cordova-support-android-plugin/-/cordova-support-android-plugin-1.0.1.tgz#ff3010596dd66dc7e0f3ca9c0942dc55a3309089"
-  integrity sha512-m/ciZFl2kPsdA1jFp0By2txF0aOqnVvhNqQhM04fFNjD2tlcFNsaIqOpkCfDzCYVy9mVH0BupwePmRMTgEIoMw==
+cordova-support-android-plugin@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/cordova-support-android-plugin/-/cordova-support-android-plugin-1.0.2.tgz#db5c8c34190d656d7fa116f702f103d692f492a4"
+  integrity sha512-bgvSG5/A2Z/OerfNHN7AHMV3jt+9bH6J4vw9T8R5OJRkkK+ENRBhL8qx7m6mLmBPvtQoIhCMOCRMM9fd4P/p9w==
 
 core-js@2.6.8:
   version "2.6.8"

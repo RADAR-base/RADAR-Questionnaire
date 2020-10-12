@@ -1876,7 +1876,7 @@ amdefine@>=0.0.4:
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
   integrity sha1-SlKCrBZHKek2Gbz9OtFR+BfOkfU=
 
-android-versions@^1.4.0:
+android-versions@^1.5.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/android-versions/-/android-versions-1.6.0.tgz#14792f6849090486726b29959d9fa5dbc0163727"
   integrity sha512-ojC2Ig7b/KJ6iNtR8e4bacmOsJyEkoERk3CKMIsnH7kJz5z6551NMbrVaRb7KXYavu1d74Uhml/bfcmqT3nAcg==
@@ -2067,11 +2067,6 @@ array-flatten@^2.1.0:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/array-flatten/-/array-flatten-2.1.2.tgz#24ef80a28c1a893617e2149b0c6d0d788293b099"
   integrity sha512-hNfzcOV8W4NdualtqBFPyVO+54DSJuZGY9qT4pRroB6S9e3iiido2ISIC5h9R2sPJ8H3FHCIiEnsv1lPXO3KtQ==
-
-array-ify@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/array-ify/-/array-ify-1.0.0.tgz#9e528762b4a9066ad163a6962a364418e9626ece"
-  integrity sha1-nlKHYrSpBmrRY6aWKjZEGOlibs4=
 
 array-union@^1.0.1, array-union@^1.0.2:
   version "1.0.2"
@@ -3516,14 +3511,6 @@ commondir@^1.0.1:
   resolved "https://registry.yarnpkg.com/commondir/-/commondir-1.0.1.tgz#ddd800da0c66127393cca5950ea968a3aaf1253b"
   integrity sha1-3dgA2gxmEnOTzKWVDqloo6rxJTs=
 
-compare-func@^1.3.2:
-  version "1.3.4"
-  resolved "https://registry.yarnpkg.com/compare-func/-/compare-func-1.3.4.tgz#6b07c4c5e8341119baf44578085bda0f4a823516"
-  integrity sha512-sq2sWtrqKPkEXAC8tEJA1+BqAH9GbFkGBtUOqrUX57VSfwp8xyktctk+uLoRy5eccTdxzDcVIztlYDpKs3Jv1Q==
-  dependencies:
-    array-ify "^1.0.0"
-    dot-prop "^3.0.0"
-
 component-bind@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/component-bind/-/component-bind-1.0.0.tgz#00c608ab7dcd93897c0009651b1d3a8e1e73bbd1"
@@ -3709,25 +3696,25 @@ cordova-android-support-gradle-release@^3.0.1:
     q "^1.4.1"
     semver "5.6.0"
 
-cordova-android@^8.1.0:
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/cordova-android/-/cordova-android-8.1.0.tgz#d9aea62bbe4a4c8d22fdf21616869439cd1c95a0"
-  integrity sha512-eAY6g9q3raJ4P03wNdSWC5MOW1EfxoomWNXsPhi7T6Q9yAqmxqn0sLEUjLL1Ib0LCH3nKQWBXdxapQ5LgbHu+g==
+cordova-android@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/cordova-android/-/cordova-android-9.0.0.tgz#8b9285b8062286c41d6b6e910f143bdc266a934c"
+  integrity sha512-2ZEgApK4LPMYW0zh/mLAH3CabzCaKE0yxQTzA2wTf0Eo2HHTJnRtDCf9spGf3nPOkubyXS6+pvzz5QzNHpVTqQ==
   dependencies:
-    android-versions "^1.4.0"
-    compare-func "^1.3.2"
-    cordova-common "^3.2.0"
-    nopt "^4.0.1"
+    android-versions "^1.5.0"
+    cordova-common "^4.0.1"
+    execa "^4.0.2"
+    fs-extra "^9.0.1"
+    nopt "^4.0.3"
     properties-parser "^0.3.1"
-    q "^1.5.1"
-    shelljs "^0.5.3"
+    which "^2.0.2"
 
 cordova-app-hello-world@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/cordova-app-hello-world/-/cordova-app-hello-world-4.0.0.tgz#a30e896b210787332337069c50845e1802dabcff"
   integrity sha512-hTNYHUJT5YyMa1cQQE1naGyU6Eh5D5Jl33sMnCh3+q15ZwWTL/TOy3k8+mUvjTp8bwhO5eECGKULYoVO+fp9ZA==
 
-cordova-common@^3.1.0, cordova-common@^3.2.0:
+cordova-common@^3.1.0:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/cordova-common/-/cordova-common-3.2.1.tgz#f4fdbeb40d9049fe28a09fa901756ed66d246661"
   integrity sha512-xg0EnjnA6EipxXG8cupdlYQYeDA6+ghbN+Pjq88xN1LInwP6Bo7IyGBdSV5QnfjOvzShF9BBwSxBAv0FOO0C2Q==
@@ -3866,11 +3853,6 @@ cordova-plugin-androidx-adapter@^1.1.1:
     q "^1.4.1"
     recursive-readdir "^2.2.2"
 
-cordova-plugin-androidx@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-androidx/-/cordova-plugin-androidx-2.0.0.tgz#ac7bd51ba0ae42dbfe4090a3cd4b8fac32f35ad1"
-  integrity sha512-n5QA1LJ/wT9qpDCHAw2GwqVXVlEajRPnDH5CKZGpv90M1FYVMydYlFwCEbpp263e5I5QloPjyoyWagiKLB+JMg==
-
 cordova-plugin-app-version@^0.1.9:
   version "0.1.9"
   resolved "https://registry.yarnpkg.com/cordova-plugin-app-version/-/cordova-plugin-app-version-0.1.9.tgz#9db0607863337a710489302e5f50a904f1449bdb"
@@ -3901,20 +3883,15 @@ cordova-plugin-dialogs@^2.0.2:
   resolved "https://registry.yarnpkg.com/cordova-plugin-dialogs/-/cordova-plugin-dialogs-2.0.2.tgz#ac3ce8b73bc885ff847078d5b533e7a4ed418a2f"
   integrity sha512-FUHI6eEVeoz2VkxbF0P56QlUQLGzXcvw3i4xuXyM9gEct6Y+FA3Xzgl2pJTZcTg5wRqLWzN08kgNoHPkom15pw==
 
-cordova-plugin-enable-multidex@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-enable-multidex/-/cordova-plugin-enable-multidex-0.2.0.tgz#74f4a43598d5298927d1e941acddeffaef281995"
-  integrity sha512-W/s8FpRdi3kTLtePdvauqKj1qqoxZDJWmEphvAmSmPwNTtfv3CxgnwFYc9aNmR9iDiJk3E0ME+9BRkbyz/4rXw==
-
 cordova-plugin-file@^6.0.1:
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/cordova-plugin-file/-/cordova-plugin-file-6.0.2.tgz#f3911479f8357e9aacb5576674f8d95b31a1fb20"
   integrity sha512-m7cughw327CjONN/qjzsTpSesLaeybksQh420/gRuSXJX5Zt9NfgsSbqqKDon6jnQ9Mm7h7imgyO2uJ34XMBtA==
 
-cordova-plugin-firebase-with-upstream-messaging@^2.1.3:
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-firebase-with-upstream-messaging/-/cordova-plugin-firebase-with-upstream-messaging-2.1.3.tgz#40cd29e5505c287ea8de09289a8dbaef46c26db9"
-  integrity sha512-qNHA/ewo1rdcbjAfJdz3eGe3IFQqOOswLQcnsMRYxAIRMzb21DMgMQOGKlTUggx0v+2S4UEbZPF+6jWgn2irAw==
+cordova-plugin-firebase-with-upstream-messaging@^2.1.4:
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-firebase-with-upstream-messaging/-/cordova-plugin-firebase-with-upstream-messaging-2.1.4.tgz#52d0096d0e4837fa794cff3547b6a58141e9b712"
+  integrity sha512-VQdZpBrwG5SHP/tyir66r5oV6Db4V+Pv9YJtyYyqb/n/QT/ySo7xJqy7MBuf52otTLXYxJY58pMn7u76L8IBuA==
 
 cordova-plugin-globalization@^1.11.0:
   version "1.11.0"
@@ -3941,10 +3918,9 @@ cordova-plugin-local-notification@^0.9.0-beta.3:
   resolved "https://registry.yarnpkg.com/cordova-plugin-local-notification/-/cordova-plugin-local-notification-0.9.0-beta.3.tgz#f63d49b90ea9cdf1a5de53e7eb478a09bb236f93"
   integrity sha512-L3Z1velxrkm9nHFcvLnMgBPZjKFt6hwM6hn1lA+JFwIR26Yw6UF72z+/lRMBclAcOxBIDYCqeaLgvezmajjuEg==
 
-cordova-plugin-network-information@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-network-information/-/cordova-plugin-network-information-2.0.2.tgz#f48a92cbd7cccb63cb0a5e5a00030001b8ac4fea"
-  integrity sha512-NwO3qDBNL/vJxUxBTPNOA1HvkDf9eTeGH8JSZiwy1jq2W2mJKQEDBwqWkaEQS19Yd/MQTiw0cykxg5D7u4J6cQ==
+"cordova-plugin-network-information@git+https://github.com/apache/cordova-plugin-network-information.git":
+  version "3.0.0-dev"
+  resolved "git+https://github.com/apache/cordova-plugin-network-information.git#c5e6656bb6054801eb0e7c041cec2d799c824580"
 
 cordova-plugin-splashscreen@^5.0.4:
   version "5.0.4"
@@ -4689,13 +4665,6 @@ domutils@^1.5.1:
     dom-serializer "0"
     domelementtype "1"
 
-dot-prop@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/dot-prop/-/dot-prop-3.0.0.tgz#1b708af094a49c9a0e7dbcad790aba539dac1177"
-  integrity sha1-G3CK8JSknJoOfbyteQq6U52sEXc=
-  dependencies:
-    is-obj "^1.0.0"
-
 dot-prop@^5.2.0:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/dot-prop/-/dot-prop-5.2.0.tgz#c34ecc29556dc45f1f4c22697b6f4904e0cc4fcb"
@@ -5424,6 +5393,21 @@ execa@^1.0.0:
     signal-exit "^3.0.0"
     strip-eof "^1.0.0"
 
+execa@^4.0.2, execa@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/execa/-/execa-4.0.3.tgz#0a34dabbad6d66100bd6f2c576c8669403f317f2"
+  integrity sha512-WFDXGHckXPWZX19t1kCsXzOpqX9LWYNqn4C+HqZlk/V0imTkzJZqf87ZBhvpHaftERYknpk0fjSylnXVlVgI0A==
+  dependencies:
+    cross-spawn "^7.0.0"
+    get-stream "^5.0.0"
+    human-signals "^1.1.1"
+    is-stream "^2.0.0"
+    merge-stream "^2.0.0"
+    npm-run-path "^4.0.0"
+    onetime "^5.1.0"
+    signal-exit "^3.0.2"
+    strip-final-newline "^2.0.0"
+
 execall@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/execall/-/execall-1.0.0.tgz#73d0904e395b3cab0658b08d09ec25307f29bb73"
@@ -5985,7 +5969,7 @@ fs-extra@^8.0.0, fs-extra@^8.0.1, fs-extra@^8.1.0:
     jsonfile "^4.0.0"
     universalify "^0.1.0"
 
-fs-extra@^9.0.0:
+fs-extra@^9.0.0, fs-extra@^9.0.1:
   version "9.0.1"
   resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-9.0.1.tgz#910da0062437ba4c39fedd863f1675ccfefcb9fc"
   integrity sha512-h2iAoN838FqAFJY2/qVpzFXy+EBxfVE220PalAqQLDVsFOHLJrZvut5puAbCdNv6WJk+B8ihI+k0c7JK5erwqQ==
@@ -6138,6 +6122,13 @@ get-stream@^4.0.0, get-stream@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/get-stream/-/get-stream-4.1.0.tgz#c1b255575f3dc21d59bfc79cd3d2b46b1c3a54b5"
   integrity sha512-GMat4EJ5161kIy2HevLlr4luNjBgvmj413KaQA7jt4V8B4RDsfpHk7WQ9GVqfYyyx8OS/L66Kox+rJRNklLK7w==
+  dependencies:
+    pump "^3.0.0"
+
+get-stream@^5.0.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/get-stream/-/get-stream-5.2.0.tgz#4966a1795ee5ace65e706c4b7beb71257d6e22d3"
+  integrity sha512-nBF+F1rAZVCu/p7rjzgA+Yb4lfYXrpl7a6VmJrU8wF9I1CKvP/QwPNZHnOlwbTkY6dvtFIzFMSyQXbLoTQPRpA==
   dependencies:
     pump "^3.0.0"
 
@@ -6755,6 +6746,11 @@ https-proxy-agent@^3.0.0:
   dependencies:
     agent-base "^4.3.0"
     debug "^3.1.0"
+
+human-signals@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/human-signals/-/human-signals-1.1.1.tgz#c5b1cd14f50aeae09ab6c59fe63ba3395fe4dfa3"
+  integrity sha512-SEQu7vl8KjNL2eoGBLF3+wAjpsNfA9XMlXAYj/3EdaNfAlxKthD1xjEQfGOUhllCGGJVNY34bRr6lPINhNjyZw==
 
 humanize-ms@^1.2.1:
   version "1.2.1"
@@ -7500,11 +7496,6 @@ is-number@^7.0.0:
   resolved "https://registry.yarnpkg.com/is-number/-/is-number-7.0.0.tgz#7535345b896734d5f80c4d06c50955527a14f12b"
   integrity sha512-41Cifkg6e8TylSpdtTpeLVMqvSBEVzTttHvERD741+pnZ8ANv0004MRL43QKPDlK9cGvNp6NZWZUBlbGXYxxng==
 
-is-obj@^1.0.0:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/is-obj/-/is-obj-1.0.1.tgz#3e4729ac1f5fde025cd7d83a896dab9f4f67db0f"
-  integrity sha1-PkcprB9f3gJc19g6iW2rn09n2w8=
-
 is-obj@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/is-obj/-/is-obj-2.0.0.tgz#473fb05d973705e3fd9620545018ca8e22ef4982"
@@ -7592,6 +7583,11 @@ is-stream@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/is-stream/-/is-stream-1.1.0.tgz#12d4a3dd4e68e0b79ceb8dbc84173ae80d91ca44"
   integrity sha1-EtSj3U5o4Lec6428hBc66A2RykQ=
+
+is-stream@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/is-stream/-/is-stream-2.0.0.tgz#bde9c32680d6fae04129d6ac9d921ce7815f78e3"
+  integrity sha512-XCoy+WlUr7d1+Z8GgSuXmpuUFC9fOhRXglJMx+dwLKTkL44Cjd4W1Z5P+BQZpr+cR93aGP4S/s7Ftw6Nd/kiEw==
 
 is-supported-regexp-flag@^1.0.0:
   version "1.0.1"
@@ -8880,6 +8876,11 @@ merge-descriptors@1.0.1:
   resolved "https://registry.yarnpkg.com/merge-descriptors/-/merge-descriptors-1.0.1.tgz#b00aaa556dd8b44568150ec9d1b953f3f90cbb61"
   integrity sha1-sAqqVW3YtEVoFQ7J0blT8/kMu2E=
 
+merge-stream@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/merge-stream/-/merge-stream-2.0.0.tgz#52823629a14dd00c9770fb6ad47dc6310f2c1f60"
+  integrity sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w==
+
 merge2@^1.2.3, merge2@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/merge2/-/merge2-1.3.0.tgz#5b366ee83b2f1582c48f87e47cf1a9352103ca81"
@@ -9582,6 +9583,13 @@ npm-run-path@^2.0.0:
   dependencies:
     path-key "^2.0.0"
 
+npm-run-path@^4.0.0:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/npm-run-path/-/npm-run-path-4.0.1.tgz#b7ecd1e5ed53da8e37a55e1c2269e0b97ed748ea"
+  integrity sha512-S48WzZW777zhNIrn7gxOlISNAqi9ZC/uQFnRdbeIHhZhCA6UqpkOT8T1G7BvfdgP4Er8gF4sUbaS0i7QvIfCWw==
+  dependencies:
+    path-key "^3.0.0"
+
 "npmlog@0 || 1 || 2 || 3 || 4", npmlog@^4.0.0, npmlog@^4.0.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/npmlog/-/npmlog-4.1.2.tgz#08a7f2a8bf734604779a9efa4ad5cc717abb954b"
@@ -10212,6 +10220,11 @@ path-key@^2.0.0, path-key@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/path-key/-/path-key-2.0.1.tgz#411cadb574c5a140d3a4b1910d40d80cc9f40b40"
   integrity sha1-QRyttXTFoUDTpLGRDUDYDMn0C0A=
+
+path-key@^3.0.0:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/path-key/-/path-key-3.1.1.tgz#581f6ade658cbba65a0d3380de7753295054f375"
+  integrity sha512-ojmeN0qd+y0jszEtoY48r0Peq5dwMEkIlCOu6Q5f41lfkswXuKtYrhgoTpLnyIcHm24Uhqx+5Tqm2InSwLhE6Q==
 
 path-key@^3.1.0:
   version "3.1.0"
@@ -11619,10 +11632,17 @@ rxjs@6.3.3:
   dependencies:
     tslib "^1.9.0"
 
-rxjs@^6.1.0, rxjs@^6.4.0, rxjs@^6.5.5:
+rxjs@^6.1.0, rxjs@^6.4.0:
   version "6.5.5"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.5.5.tgz#c5c884e3094c8cfee31bf27eb87e54ccfc87f9ec"
   integrity sha512-WfQI+1gohdf0Dai/Bbmk5L5ItH5tYqm3ki2c5GdWhKjalzjg93N3avFjVStyZZz+A2Em+ZxKH5bNghw9UeylGQ==
+  dependencies:
+    tslib "^1.9.0"
+
+rxjs@^6.6.3:
+  version "6.6.3"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.6.3.tgz#8ca84635c4daa900c0d3967a6ee7ac60271ee552"
+  integrity sha512-trsQc+xYYXZ3urjOiJOuCOa5N3jAZ3eiSpQB5hIT8zGlL2QfnHLJ2r7GMkBGuIausdJN1OneaI6gQlsqNHHmZQ==
   dependencies:
     tslib "^1.9.0"
 
@@ -11956,11 +11976,6 @@ shelljs@^0.2.6:
   version "0.2.6"
   resolved "https://registry.yarnpkg.com/shelljs/-/shelljs-0.2.6.tgz#90492d72ffcc8159976baba62fb0f6884f0c3378"
   integrity sha1-kEktcv/MgVmXa6umL7D2iE8MM3g=
-
-shelljs@^0.5.3:
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/shelljs/-/shelljs-0.5.3.tgz#c54982b996c76ef0c1e6b59fbdc5825f5b713113"
-  integrity sha1-xUmCuZbHbvDB5rWfvcWCX1txMRM=
 
 shelljs@^0.7.0:
   version "0.7.8"
@@ -13041,6 +13056,11 @@ strip-eof@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/strip-eof/-/strip-eof-1.0.0.tgz#bb43ff5598a6eb05d89b59fcd129c983313606bf"
   integrity sha1-u0P/VZim6wXYm1n80SnJgzE2Br8=
+
+strip-final-newline@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/strip-final-newline/-/strip-final-newline-2.0.0.tgz#89b852fb2fcbe936f6f4b3187afb0a12c1ab58ad"
+  integrity sha512-BrpvfNAE3dcvq7ll3xVumzjKjZQ5tI1sEUIKr3Uoks0XUl45St3FlatVqef9prk4jRDzhW6WZg+3bk93y6pLjA==
 
 strip-indent@^1.0.1:
   version "1.0.1"

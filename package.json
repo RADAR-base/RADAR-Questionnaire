@@ -108,7 +108,7 @@
     "moment": "^2.22.2",
     "moment-timezone": "^0.5.28",
     "ng2-fittext": "^1.2.12",
-    "ngx-moment": "^4.0.1",
+    "ngx-moment": "^5.0.0",
     "phonegap-plugin-barcodescanner": "^8.1.0",
     "phonegap-plugin-mobile-accessibility": "^1.0.5",
     "rxjs": "^6.6.3",

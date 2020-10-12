@@ -18,7 +18,7 @@ export enum NotificationActionType {
 export interface SingleNotification {
   task?: NotificationTaskInfo
   timestamp: number
-  type: NotificationType
+  type?: NotificationType
   title?: string
   text?: string
   vibrate?: boolean

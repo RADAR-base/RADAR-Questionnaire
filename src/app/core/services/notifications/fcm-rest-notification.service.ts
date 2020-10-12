@@ -11,11 +11,13 @@ import {
   DefaultPackageName,
   DefaultSourcePrefix
 } from '../../../../assets/data/defaultConfig'
+import { FcmNotifications } from '../../../shared/models/app-server'
 import { AssessmentType } from '../../../shared/models/assessment'
 import {
   NotificationMessagingState,
   SingleNotification
 } from '../../../shared/models/notification-handler'
+import { getMilliseconds } from '../../../shared/utilities/time'
 import { AppServerService } from '../app-server/app-server.service'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { SubjectConfigService } from '../config/subject-config.service'
@@ -121,17 +123,32 @@ export class FcmRestNotificationService extends FcmNotificationService {
     )
   }
 
-  cancelAllNotifications(subject): Promise<any> {
+  pullAllPublishedNotifications(subject) {
     return this.appServerService
       .getHeaders()
       .then(headers =>
         this.http
-          .delete(
+          .get(
             this.getNotificationEndpoint(subject.projectId, subject.subjectId),
             { headers }
           )
           .toPromise()
       )
+  }
+
+  cancelAllNotifications(subject): Promise<any> {
+    return this.pullAllPublishedNotifications(subject).then(
+      (res: FcmNotifications) => {
+        const now = Date.now()
+        const notifications = res.notifications
+          .map(n => ({
+            id: n.id,
+            timestamp: getMilliseconds({ seconds: n.scheduledTime })
+          }))
+          .filter(n => n.timestamp > now)
+        notifications.map(o => this.cancelSingleNotification(subject, o))
+      }
+    )
   }
 
   cancelSingleNotification(subject, notification: SingleNotification) {
@@ -140,14 +157,17 @@ export class FcmRestNotificationService extends FcmNotificationService {
       .then(headers =>
         this.http
           .delete(
-            this.getNotificationEndpoint(subject.projectId, subject.subjectId) +
-              notification.id,
+            this.getNotificationEndpoint(
+              subject.projectId,
+              subject.subjectId,
+              notification.id
+            ),
             { headers }
           )
           .toPromise()
       )
       .then(() => {
-        console.log('Success cancelling notification ' + notification.id)
+        this.logger.log('Success cancelling notification ' + notification.id)
         return (notification.id = undefined)
       })
   }
@@ -161,9 +181,9 @@ export class FcmRestNotificationService extends FcmNotificationService {
             urljoin(
               this.getNotificationEndpoint(
                 subject.projectId,
-                subject.subjectId
+                subject.subjectId,
+                notificationId
               ),
-              notificationId,
               this.STATE_EVENTS_PATH
             ),
             { notificationId: notificationId, state: state, time: new Date() },
@@ -216,14 +236,15 @@ export class FcmRestNotificationService extends FcmNotificationService {
     }
   }
 
-  getNotificationEndpoint(projectId, subjectId) {
+  getNotificationEndpoint(projectId, subjectId, notificationId?) {
     return urljoin(
       this.appServerService.getAppServerURL(),
       this.PROJECT_PATH,
       projectId,
       this.SUBJECT_PATH,
       subjectId,
-      this.NOTIFICATIONS_PATH
+      this.NOTIFICATIONS_PATH,
+      notificationId ? notificationId.toString() : ''
     )
   }
 }

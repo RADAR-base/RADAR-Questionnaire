@@ -3,7 +3,7 @@ export interface FcmNotificationDto {
   body: string
   delivered?: boolean
   id?: number
-  scheduledTime: Date
+  scheduledTime: number
   sourceId: string
   sourceType?: string
   title: string

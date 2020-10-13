@@ -10,14 +10,12 @@
 </ng-container>
 
 <ng-container *ngIf="showTimePicker && currentlyShown">
-  <div class="mid">
-    <wheel-selector
-      [values]="timePickerValues"
-      [selection]="defaultTimePickerValue"
-      [labels]="labels"
-      (onSelect)="emitAnswer($event)"
-    ></wheel-selector>
-  </div>
+  <wheel-selector
+    [values]="timePickerValues"
+    [selection]="defaultTimePickerValue"
+    [labels]="labels"
+    (onSelect)="emitAnswer($event)"
+  ></wheel-selector>
 </ng-container>
 
 <ng-container *ngIf="showDurationPicker && currentlyShown">

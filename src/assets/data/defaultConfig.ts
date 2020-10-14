@@ -30,7 +30,7 @@ export const DefaultAppId = ''
 export const DefaultSourcePrefix = 'aRMT'
 export const DefaultSourceTypeModel: string = `${DefaultSourcePrefix}-App`
 export const DefaultSourceTypeRegistrationBody = {
-  sourceTypeCatalogVersion: '1.5.1',
+  sourceTypeCatalogVersion: '1.9.0',
   sourceTypeModel: DefaultSourceTypeModel,
   sourceTypeProducer: 'RADAR'
 }
@@ -78,7 +78,7 @@ export const DefaultScheduleYearCoverage: number = 3
 export const DefaultScheduleTimeInterval = { unit: 'day', amount: 1 }
 
 // *Default schedule/protocol version
-export const DefaultScheduleVersion = '0.2.3'
+export const DefaultScheduleVersion = '0.2.7'
 
 // *Default max number of completion logs to send on app start
 export const DefaultNumberOfCompletionLogsToSend = 10

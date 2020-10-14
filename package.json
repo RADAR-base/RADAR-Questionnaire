@@ -81,7 +81,6 @@
     "cordova-android": "^8.1.0",
     "cordova-android-support-gradle-release": "^3.0.1",
     "cordova-custom-config": "^5.1.0",
-    "cordova-ios": "6.0.0",
     "cordova-lib": "^9.0.1",
     "cordova-media-with-compression": "^2.1.2",
     "cordova-plugin-android-permissions": "^1.0.0",
@@ -137,6 +136,7 @@
     "@types/jasminewd2": "^2.0.8",
     "@types/node": "14.0.22",
     "codelyzer": "^5.2.2",
+    "cordova-plugin-enable-multidex": "^0.2.0",
     "eslint": "^6.8.0",
     "eslint-scope": "^5.0.0",
     "import-sort-cli": "^6.0.0",
@@ -187,7 +187,6 @@
   },
   "cordova": {
     "platforms": [
-      "ios",
       "android"
     ],
     "plugins": {
@@ -226,7 +225,8 @@
       "cordova-custom-config": {},
       "cordova-plugin-ionic-webview": {
         "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
-      }
+      },
+      "cordova-plugin-enable-multidex": {}
     }
   },
   "ionic_enable_lint": false,

@@ -108,14 +108,21 @@ export class SeizureDiaryService {
   }
 
   eventWithin24h(element) {
-    const event_date = Date.parse(this.processEvent(element).diary_start_string)
-    if (Date.now()-event_date < 86400000) {
+    const event_date = this.parseDaytimeDict(this.processEvent(element).diary_start)
+    if (Date.now() - event_date.valueOf() <= 86400000) {
       return true
     }
     return false
   }
   eventOlder24h(element) {
     return !this.eventWithin24h(element)
+  }
+
+  parseDaytimeDict(daytime_dict) {
+    var out = new Date(parseInt(daytime_dict.year), parseInt(daytime_dict.month)-1, parseInt(daytime_dict.day))
+    out.setHours(daytime_dict.ampm.localeCompare("AM") ? parseInt(daytime_dict.hour)+12 : parseInt(daytime_dict.hour))
+    out.setMinutes(parseInt(daytime_dict.minute), parseInt(daytime_dict.second))
+    return out
   }
 
 }

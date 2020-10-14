@@ -1525,7 +1525,7 @@ export const Localisations = {
   },
   SD_INFO_BODY: {
     da: '',
-    de: 'Dies ist Ihr persönliches Anfall-Tagebuch.<br/>Die Anfälle die Sie jeden Tag hizufügen sind hier aufgelistet, beginnend mit dem neuesten.<br/>Um einen neuen Anfall hinzuzufügen, tippen Sie auf das "+" rechts unten.<br/>Um mehr Informationen über einen Anfall anzuzeigen, tippen Sie direkt auf den Anfall in der Liste.<br/><br/>Anfälle die einmal zur Liste hinzugefügt wurden, können nicht mehr gelöscht werden. Falls Sie einen Anfall irrtümlich eingetragen haben, kontaktieren Sie bitte Ihr Forscherteam.',
+    de: 'Dies ist Ihr persönliches Anfall-Tagebuch.<br/>Die Anfälle die Sie jeden Tag hinzufügen sind hier aufgelistet, beginnend mit dem neuesten.<br/>Um einen neuen Anfall hinzuzufügen, tippen Sie auf das "+" rechts unten.<br/>Um mehr Informationen über einen Anfall anzuzeigen, tippen Sie direkt auf den Anfall in der Liste.<br/><br/>Anfälle die einmal zur Liste hinzugefügt wurden, können nicht mehr gelöscht werden. Falls Sie einen Anfall irrtümlich eingetragen haben, kontaktieren Sie bitte Ihr Forscherteam.',
     en: 'This is your personal seizure diary.<br/>The seizures that you have added every day are reported here, the most recent one first.<br/>To add a new seizure to the list, tap the "+" in the bottom right corner.<br/>To view more information about one seizure, tap directly on the seizure in the list.<br/><br/>Seizures that have already been added to the list cannot be deleted. If you have entered a seizure by mistake, please contact your research team.',
     es: '',
     it: '',

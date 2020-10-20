@@ -64,7 +64,6 @@ export class ConfigService {
             this.subjectConfig
               .getEnrolmentDate()
               .then(d => this.appConfig.init(d))
-              .then(() => this.appServerService.init())
           if (newMessagingType)
             this.notifications
               .setNotificationMessagingType(newMessagingType)
@@ -306,7 +305,7 @@ export class ConfigService {
         .then(() => this.appConfig.init(user.enrolmentDate)),
       this.localization.init(),
       this.kafka.init(),
-      this.appServerService.init()
+      this.notifications.init()
     ])
   }
 

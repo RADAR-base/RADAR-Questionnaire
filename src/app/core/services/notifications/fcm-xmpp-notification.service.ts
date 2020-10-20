@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { Firebase } from '@ionic-native/firebase/ngx'
+import { FirebaseX } from '@ionic-native/firebase-x/ngx'
 import { Platform } from 'ionic-angular'
 import * as moment from 'moment-timezone'
 import * as uuid from 'uuid/v4'
@@ -29,7 +29,7 @@ export class FcmXmppNotificationService extends FcmNotificationService {
     public storage: StorageService,
     public schedule: ScheduleService,
     public config: SubjectConfigService,
-    public firebase: Firebase,
+    public firebase: FirebaseX,
     public platform: Platform,
     public logger: LogService,
     public remoteConfig: RemoteConfigService,

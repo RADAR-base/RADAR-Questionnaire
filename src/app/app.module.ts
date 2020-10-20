@@ -10,7 +10,7 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx'
 import { Device } from '@ionic-native/device/ngx'
 import { Dialogs } from '@ionic-native/dialogs/ngx'
 import { File } from '@ionic-native/file/ngx'
-import { Firebase } from '@ionic-native/firebase/ngx'
+import { FirebaseX } from '@ionic-native/firebase-x/ngx'
 import { Globalization } from '@ionic-native/globalization/ngx'
 import { Insomnia } from '@ionic-native/insomnia/ngx'
 import { Keyboard } from '@ionic-native/keyboard/ngx'
@@ -77,7 +77,7 @@ import { Utility } from './shared/utilities/util'
     Insomnia,
     BackgroundMode,
     Keyboard,
-    Firebase,
+    FirebaseX,
     LocalNotifications,
     LogService,
     { provide: RemoteConfigService, useClass: FirebaseRemoteConfigService }

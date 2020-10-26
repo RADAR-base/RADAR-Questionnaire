@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { Firebase } from '@ionic-native/firebase/ngx'
+import { FirebaseX } from '@ionic-native/firebase-x/ngx'
 import { Platform } from 'ionic-angular'
 
 import { User } from '../../../shared/models/user'
@@ -10,7 +10,7 @@ import { AnalyticsService } from './analytics.service'
 @Injectable()
 export class FirebaseAnalyticsService extends AnalyticsService {
   constructor(
-    private firebase: Firebase,
+    private firebase: FirebaseX,
     private platform: Platform,
     private logger: LogService,
     private remoteConfig: RemoteConfigService

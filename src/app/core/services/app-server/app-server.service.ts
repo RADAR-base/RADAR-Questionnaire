@@ -18,7 +18,8 @@ import { TokenService } from '../token/token.service'
 
 @Injectable()
 export class AppServerService {
-  private APP_SERVER_URL = DefaultAppServerURL
+  private APP_SERVER_URL
+  private TOKENS
   SUBJECT_PATH = 'users'
   PROJECT_PATH = 'projects'
 
@@ -57,11 +58,11 @@ export class AppServerService {
 
   getHeaders() {
     return Promise.all([
-      this.updateAppServerURL(),
-      this.token.getTokens()
-    ]).then(([, tokens]) =>
+      this.APP_SERVER_URL ? this.APP_SERVER_URL : this.updateAppServerURL(),
+      this.TOKENS ? this.TOKENS : this.updateTokens()
+    ]).then(([]) =>
       new HttpHeaders()
-        .set('Authorization', 'Bearer ' + tokens.access_token)
+        .set('Authorization', 'Bearer ' + this.TOKENS.access_token)
         .set('Content-Type', DefaultRequestJSONContentType)
     )
   }
@@ -189,6 +190,10 @@ export class AppServerService {
         config.getOrDefault(ConfigKeys.APP_SERVER_URL, DefaultAppServerURL)
       )
       .then(url => (this.APP_SERVER_URL = url))
+  }
+
+  updateTokens() {
+    return this.token.getTokens().then(tokens => (this.TOKENS = tokens))
   }
 
   getAppServerURL() {

@@ -1,7 +1,7 @@
 import 'rxjs/add/operator/mergeMap'
 
 import { Injectable } from '@angular/core'
-import { Firebase } from '@ionic-native/firebase/ngx'
+import { FirebaseX } from '@ionic-native/firebase-x/ngx'
 import { Platform } from 'ionic-angular'
 import { BehaviorSubject, Observable, from } from 'rxjs'
 
@@ -75,9 +75,9 @@ class EmptyRemoteConfig implements RemoteConfig {
 
 class FirebaseRemoteConfig implements RemoteConfig {
   readonly fetchedAt = new Date()
-  cache: {[key: string]: string} = {}
+  cache: { [key: string]: string } = {}
 
-  constructor(private logger: LogService) {}
+  constructor(private firebase: FirebaseX, private logger: LogService) {}
 
   get(key: ConfigKeys): Promise<string | null> {
     const cachedValue = this.cache[key.value]
@@ -85,15 +85,8 @@ class FirebaseRemoteConfig implements RemoteConfig {
       this.logger.log(`Retrieving ${key.value} from cache`)
       return Promise.resolve(cachedValue)
     }
-    // workaround for incompatibility
-    // @ionic-native/firebase + cordova-plugin-firebase-with-upstream-messaging
     this.logger.log(`Retrieving ${key.value}`)
-    return new Promise((resolve, reject) => {
-      FirebasePlugin.getValue(key.value, res => {
-        this.cache[key.value] = res
-        resolve(res)
-      }, e => reject(e))
-    })
+    return this.firebase.getValue(key.value)
   }
 
   getOrDefault(key: ConfigKeys, defaultValue: string): Promise<string> {
@@ -114,7 +107,7 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
   private readonly configSubject: BehaviorSubject<RemoteConfig>
 
   constructor(
-    private firebase: Firebase,
+    private firebase: FirebaseX,
     storage: StorageService,
     private logger: LogService,
     private platform: Platform
@@ -146,17 +139,9 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
     return this.firebase
       .fetch(getSeconds({ milliseconds: timeoutMillis }))
       .then(() => this.firebase.activateFetched())
-      .catch(e => {
-        // iOS workaround for when activateFetched is false.
-        return false
-      })
       .then(activated => {
-        // iOS workaround for when activateFetched is null. This is caused by cordova plugin result being null.
-        // This means that fetched config was activated, because the plugin result is an error if activated is false.
-        if (this.platform.is('ios') && activated == null) activated = true
-
         console.log('New Firebase Remote Config did activate', activated)
-        const conf = new FirebaseRemoteConfig(this.logger)
+        const conf = new FirebaseRemoteConfig(this.firebase, this.logger)
         if (activated) {
           this.configSubject.next(conf)
         }

@@ -29,13 +29,13 @@ export class NotificationFactoryService extends NotificationService {
   init() {
     return this.remoteConfig
       .forceFetch()
-      .then((config) =>
+      .then(config =>
         config.getOrDefault(
           ConfigKeys.NOTIFICATION_MESSAGING_TYPE,
           DefaultNotificationType
         )
       )
-      .then((type) => {
+      .then(type => {
         switch (type) {
           case NotificationMessagingType.LOCAL:
             return (this.notificationService = this.localNotificationService)

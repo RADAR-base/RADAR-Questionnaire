@@ -59,7 +59,7 @@ export class AppServerService {
   getHeaders() {
     return Promise.all([
       this.APP_SERVER_URL ? this.APP_SERVER_URL : this.updateAppServerURL(),
-      this.TOKENS ? this.TOKENS : this.token.getTokens()
+      this.TOKENS ? this.TOKENS : this.updateTokens()
     ]).then(([]) =>
       new HttpHeaders()
         .set('Authorization', 'Bearer ' + this.TOKENS.access_token)

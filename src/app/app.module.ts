@@ -42,7 +42,9 @@ import { Utility } from './shared/utilities/util'
     BrowserAnimationsModule,
     IonicModule.forRoot(AppComponent, {
       mode: 'md',
-      activator: 'none'
+      activator: 'none',
+      scrollAssist: false,
+      autoFocusAssist: false,
     }),
     IonicStorageModule.forRoot({
       name: '__appdb',
@@ -80,7 +82,7 @@ import { Utility } from './shared/utilities/util'
     Firebase,
     LocalNotifications,
     LogService,
-    { provide: RemoteConfigService, useClass: FirebaseRemoteConfigService }
+    { provide: RemoteConfigService, useClass: FirebaseRemoteConfigService },
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

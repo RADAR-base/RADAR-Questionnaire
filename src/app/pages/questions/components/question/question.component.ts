@@ -21,6 +21,7 @@ import { Question, QuestionType } from '../../../../shared/models/question'
 })
 export class QuestionComponent implements OnInit, OnChanges {
   @ViewChild('content') content
+  @ViewChild('input') input
 
   @Input()
   question: Question
@@ -39,6 +40,7 @@ export class QuestionComponent implements OnInit, OnChanges {
   isFieldLabelHidden = false
   margin = 32
   keyboardScrollPadding = 200
+  keyboardInputOffset = 0
 
   NON_SCROLLABLE_SET: Set<QuestionType> = new Set([
     QuestionType.timed,
@@ -62,7 +64,13 @@ export class QuestionComponent implements OnInit, OnChanges {
     this.isFieldLabelHidden = this.HIDE_FIELD_LABEL_SET.has(
       this.question.field_type
     )
-    setTimeout(() => (this.isLoading = false), 800)
+    setTimeout(() => {
+      this.isLoading = false
+      this.keyboardInputOffset = Math.max(
+        this.input.nativeElement.offsetTop - this.keyboardScrollPadding,
+        0
+      )
+    }, 800)
   }
 
   ngOnChanges() {
@@ -130,8 +138,8 @@ export class QuestionComponent implements OnInit, OnChanges {
     if (value) {
       // Add delay for keyboard to show up
       setTimeout(() => {
-        this.content.nativeElement.style = `padding-bottom:${this.keyboardScrollPadding}px;`
-        this.content.nativeElement.scrollTop = this.keyboardScrollPadding
+        this.content.nativeElement.style = `padding-bottom:${this.keyboardInputOffset}px;`
+        this.content.nativeElement.scrollTop = this.keyboardInputOffset
       }, 100)
     } else {
       this.content.nativeElement.style = ''

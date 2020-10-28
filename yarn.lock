@@ -3753,7 +3753,7 @@ cordova-android-support-gradle-release@^3.0.1:
     q "^1.4.1"
     semver "5.6.0"
 
-cordova-android@^8.1.0:
+cordova-android@8.1.0:
   version "8.1.0"
   resolved "https://registry.yarnpkg.com/cordova-android/-/cordova-android-8.1.0.tgz#d9aea62bbe4a4c8d22fdf21616869439cd1c95a0"
   integrity sha512-eAY6g9q3raJ4P03wNdSWC5MOW1EfxoomWNXsPhi7T6Q9yAqmxqn0sLEUjLL1Ib0LCH3nKQWBXdxapQ5LgbHu+g==
@@ -4029,10 +4029,9 @@ cordova-plugin-file@^6.0.1:
   resolved "https://registry.yarnpkg.com/cordova-plugin-file/-/cordova-plugin-file-6.0.2.tgz#f3911479f8357e9aacb5576674f8d95b31a1fb20"
   integrity sha512-m7cughw327CjONN/qjzsTpSesLaeybksQh420/gRuSXJX5Zt9NfgsSbqqKDon6jnQ9Mm7h7imgyO2uJ34XMBtA==
 
-cordova-plugin-firebase-with-upstream-messaging@^2.1.3:
+"cordova-plugin-firebase-with-upstream-messaging@git+https://github.com/RADAR-base/cordova-plugin-firebase.git#patch":
   version "2.1.3"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-firebase-with-upstream-messaging/-/cordova-plugin-firebase-with-upstream-messaging-2.1.3.tgz#40cd29e5505c287ea8de09289a8dbaef46c26db9"
-  integrity sha512-qNHA/ewo1rdcbjAfJdz3eGe3IFQqOOswLQcnsMRYxAIRMzb21DMgMQOGKlTUggx0v+2S4UEbZPF+6jWgn2irAw==
+  resolved "git+https://github.com/RADAR-base/cordova-plugin-firebase.git#975ec5130f3efc6b3b3398886a02589c68dece9f"
 
 cordova-plugin-globalization@^1.11.0:
   version "1.11.0"

@@ -1455,5 +1455,15 @@ export const Localisations = {
     nl: 'Logboeken gemiste vragenlijst verzenden...',
     pl: 'Wyślij brakujące dzienniki kwestionariusza',
     hb: 'שליחת שאלונים שהוחמצו...'
+  },
+  PLACEHOLDER_TEXT_INPUT: {
+    da: 'Indtast tekst',
+    de: 'Text eingeben',
+    en: 'Enter text',
+    es: 'Introducir el texto',
+    it: 'Inserire il testo',
+    nl: 'Tekst invoeren',
+    pl: 'Wprowadź tekst',
+    hb: 'הזן טקסט'
   }
 }

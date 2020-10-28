@@ -173,6 +173,8 @@ export class LocKeys {
   static CLINICAL_TASKS = new LocKeys('CLINICAL_TASKS')
   static ON_DEMAND_TASKS = new LocKeys('ON_DEMAND_TASKS')
 
+  static PLACEHOLDER_TEXT_INPUT = new LocKeys('PLACEHOLDER_TEXT_INPUT')
+
   constructor(public value: string) {}
 
   toString() {

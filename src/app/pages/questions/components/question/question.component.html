@@ -1,4 +1,4 @@
-<div class="content" [class.fade]="!currentlyShown">
+<div class="content" #content [class.fade]="!currentlyShown">
   <div class="header" dir="auto">
     <p>{{ question.section_header }}</p>
     <div *ngIf="!isFieldLabelHidden" class="field-container" dir="auto">
@@ -100,6 +100,7 @@
         <text-input
           *ngSwitchCase="'text'"
           (valueChange)="onValueChange($event)"
+          (textInputFocus)="onTextInputFocus($event)"
           [type]="question.text_validation_type_or_show_slider_number"
           [currentlyShown]="currentlyShown"
         ></text-input>

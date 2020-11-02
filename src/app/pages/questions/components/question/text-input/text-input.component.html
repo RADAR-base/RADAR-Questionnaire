@@ -29,8 +29,10 @@
   <ion-item>
     <ion-input
       type="text"
-      placeholder="Enter text"
+      placeholder="{{ 'PLACEHOLDER_TEXT_INPUT' | translate }}"
       (ionChange)="emitAnswer($event.value)"
+      (ionFocus)="emitTextInputFocus(true)"
+      (ionBlur)="emitTextInputFocus(false)"
     ></ion-input>
   </ion-item>
 </ng-container>

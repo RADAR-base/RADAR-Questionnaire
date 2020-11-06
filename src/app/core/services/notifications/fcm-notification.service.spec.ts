@@ -1,10 +1,11 @@
 import { TestBed } from '@angular/core/testing'
-import { Firebase } from '@ionic-native/firebase/ngx'
+import { FirebaseX } from '@ionic-native/firebase-x/ngx'
 import { Platform } from 'ionic-angular'
 import { PlatformMock } from 'ionic-mocks'
 
 import {
   FirebaseMock,
+  LocalizationServiceMock,
   LogServiceMock,
   NotificationGeneratorServiceMock,
   RemoteConfigServiceMock,
@@ -14,6 +15,7 @@ import {
 } from '../../../shared/testing/mock-services'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { SubjectConfigService } from '../config/subject-config.service'
+import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
 import { ScheduleService } from '../schedule/schedule.service'
 import { StorageService } from '../storage/storage.service'
@@ -28,7 +30,7 @@ describe('FcmNotificationService', () => {
       providers: [
         FcmNotificationService,
         { provide: Platform, useClass: PlatformMock },
-        { provide: Firebase, useClass: FirebaseMock },
+        { provide: FirebaseX, useClass: FirebaseMock },
         { provide: LogService, useClass: LogServiceMock },
         { provide: StorageService, useClass: StorageServiceMock },
         { provide: SubjectConfigService, useClass: SubjectConfigServiceMock },
@@ -37,7 +39,8 @@ describe('FcmNotificationService', () => {
           useClass: NotificationGeneratorServiceMock
         },
         { provide: ScheduleService, useClass: ScheduleServiceMock },
-        { provide: RemoteConfigService, useClass: RemoteConfigServiceMock }
+        { provide: RemoteConfigService, useClass: RemoteConfigServiceMock },
+        { provide: LocalizationService, useClass: LocalizationServiceMock }
       ]
     })
   )

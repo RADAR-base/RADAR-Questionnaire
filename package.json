@@ -184,7 +184,7 @@
     "tslint-config-standard": "^9.0.0",
     "typescript": "~3.1.6",
     "watchify": "^3.11.1",
-    "webpack": "^4.43.0",
+    "webpack": "^4.45.0",
     "webpack-sources": "^1.4.3"
   },
   "resolutions": {

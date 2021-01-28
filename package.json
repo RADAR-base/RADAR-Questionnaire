@@ -142,7 +142,7 @@
     "cordova-plugin-firebasex": "git+https://github.com/mpgxvii/cordova-plugin-firebasex.git#cli_build",
     "cordova-plugin-ionic-webview": "^4.2.1",
     "cordova-plugin-network-information": "git+https://github.com/apache/cordova-plugin-network-information.git",
-    "eslint": "^6.8.0",
+    "eslint": "^7.18.0",
     "eslint-scope": "^5.0.0",
     "import-sort-cli": "^6.0.0",
     "import-sort-parser-babylon": "^6.0.0",

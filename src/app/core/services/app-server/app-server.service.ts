@@ -35,7 +35,7 @@ export class AppServerService {
 
   init() {
     // NOTE: Initialising ensures project and subject exists in the app server
-    return this.updateAppServerURL()
+    return Promise.all([this.updateAppServerURL(), this.updateTokens()])
       .then(() =>
         Promise.all([
           this.subjectConfig.getParticipantLogin(),

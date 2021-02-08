@@ -17,6 +17,8 @@ export class FinishComponent implements OnChanges {
   @Input()
   content = ''
   @Input()
+  finishButtonText?: string
+  @Input()
   showDoneButton: boolean
   @Input()
   isShown: boolean

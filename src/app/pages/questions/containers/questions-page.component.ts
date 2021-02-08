@@ -16,6 +16,7 @@ import { Task } from '../../../shared/models/task'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { QuestionsService } from '../services/questions.service'
 import {AppLauncher, AppLauncherOptions} from "@ionic-native/app-launcher/ngx";
+import {AlertService} from "../../../core/services/misc/alert.service";
 
 @Component({
   selector: 'page-questions',
@@ -37,6 +38,7 @@ export class QuestionsPageComponent implements OnInit {
   launchAppData: Question
   questionTitle: String
   endText: string
+  finishButtonText: string
   isLastTask: boolean
   requiresInClinicCompletion: boolean
   introduction: string
@@ -59,6 +61,7 @@ export class QuestionsPageComponent implements OnInit {
     private insomnia: Insomnia,
     private localization: LocalizationService,
     private appLauncher: AppLauncher,
+    private alertService: AlertService,
   ) {
     this.platform.registerBackButtonAction(() => {
       this.sendCompletionLog()
@@ -98,10 +101,20 @@ export class QuestionsPageComponent implements OnInit {
     )
     this.questions = this.removeLaunchAppFromQuestions(res.questions)
     this.launchAppData = this.getLaunchAppData(res.questions)
-    this.endText =
-      res.endText && res.endText.length
-        ? res.endText
-        : this.localization.translateKey(LocKeys.FINISH_THANKS)
+    if(this.launchAppData){
+      this.endText = this.launchAppData.app_launch_description && this.launchAppData.app_launch_description.length
+      ? this.launchAppData.app_launch_description
+        : this.localization.translateKey(LocKeys.LAUNCH_APP_DESC)
+      this.finishButtonText = this.launchAppData.finish_button_text && this.launchAppData.finish_button_text.length
+        ? this.launchAppData.finish_button_text
+        : this.localization.translateKey(LocKeys.LAUNCH_APP_BUTTON) + ' ' +this.launchAppData.app_name
+    }else{
+      this.endText =
+        res.endText && res.endText.length
+          ? res.endText
+          : this.localization.translateKey(LocKeys.FINISH_THANKS)
+    }
+
     this.isLastTask = res.isLastTask
     this.assessment = res.assessment
     this.taskType = res.type
@@ -165,6 +178,18 @@ export class QuestionsPageComponent implements OnInit {
           })
         } else {
           console.log('App cannot be launched')
+          this.alertService.showAlert({
+            title: this.launchAppData.app_name + ' ' +
+              this.localization.translateKey(LocKeys.LAUNCH_APP_FAILURE),
+            message: this.launchAppData.app_name + ' ' +
+              this.localization.translateKey(LocKeys.LAUNCH_APP_FAILURE_DESC),
+            buttons: [
+              {
+                text: this.localization.translateKey(LocKeys.BTN_DISMISS),
+                handler: () => {}
+              }
+            ]
+          })
         }
       })
       .catch((error: any) => console.log('Error in checking if the app can launch', error))

@@ -176,6 +176,46 @@ export const Localisations = {
     pl: 'Dziękujemy za wypełnienie ankiety.',
     hb: '.תודה שמילאת את השאלון'
   },
+  LAUNCH_APP_DESC: {
+    da: '',
+    de: '',
+    en: 'Finish the questionnaire and launch',
+    es: '',
+    it: '',
+    nl: '',
+    pl: '',
+    hb: ''
+  },
+  LAUNCH_APP_BUTTON: {
+    da: '',
+    de: '',
+    en: 'Launch',
+    es: '',
+    it: '',
+    nl: '',
+    pl: '',
+    hb: ''
+  },
+  LAUNCH_APP_FAILURE: {
+    da: '',
+    de: '',
+    en: 'cannot be launched',
+    es: '',
+    it: '',
+    nl: '',
+    pl: '',
+    hb: ''
+  },
+  LAUNCH_APP_FAILURE_DESC: {
+    da: '',
+    de: '',
+    en: 'is not install on your device or does not support deep linking',
+    es: '',
+    it: '',
+    nl: '',
+    pl: '',
+    hb: ''
+  },
   FINISH_NEXT_TASK_REMINDER: {
     da: 'Husk, du har stadig udestående opgaver!',
     de: 'Denken Sie daran, Sie haben noch Aufgaben ausstehend!',

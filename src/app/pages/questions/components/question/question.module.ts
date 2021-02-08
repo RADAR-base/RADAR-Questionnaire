@@ -16,6 +16,7 @@ import { RangeInputComponent } from './range-input/range-input.component'
 import { SliderInputComponent } from './slider-input/slider-input.component'
 import { TextInputComponent } from './text-input/text-input.component'
 import { TimedTestComponent } from './timed-test/timed-test.component'
+import {AppLauncherComponent} from "./app-launcher/app-launcher.component";
 
 const COMPONENTS = [
   QuestionComponent,
@@ -28,7 +29,8 @@ const COMPONENTS = [
   InfoScreenComponent,
   RangeInfoInputComponent,
   TextInputComponent,
-  WheelSelectorComponent
+  WheelSelectorComponent,
+  AppLauncherComponent
 ]
 
 @NgModule({

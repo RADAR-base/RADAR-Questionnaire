@@ -20,6 +20,9 @@ export interface Question {
   text_validation_type_or_show_slider_number?: string
   type?: string
   range?: Range
+  app_name?: string
+  android_package_name?: string
+  ios_package_name?: string
 }
 
 export interface SelectChoicesOrCalculations {
@@ -37,6 +40,7 @@ export class QuestionType {
   static info = 'info'
   static text = 'text'
   static yesno = 'yesno'
+  static launcher = 'launcher'
 }
 
 export interface Response {

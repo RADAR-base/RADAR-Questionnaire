@@ -13,6 +13,7 @@
           <ion-slide *ngFor="let question of questions; let i = index">
             <question
               *ngIf="i >= currentQuestionId - 10 && i <= currentQuestionId + 10"
+              [task]="task"
               [question]="question"
               [questionIndex]="i"
               [currentIndex]="currentQuestionId"

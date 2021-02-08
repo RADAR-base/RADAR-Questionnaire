@@ -21,8 +21,8 @@ export interface Question {
   type?: string
   range?: Range
   app_name?: string
-  android_package_name?: string
-  ios_package_name?: string
+  android_uri?: string
+  ios_uri?: string
 }
 
 export interface SelectChoicesOrCalculations {

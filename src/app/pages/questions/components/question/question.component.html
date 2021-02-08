@@ -115,15 +115,6 @@
         >
         </radio-input>
 
-        <app-launcher
-          *ngSwitchCase="'launcher'"
-          [appName]="question.app_name"
-          [androidPackageName]="question.android_package_name"
-          [iosPackageName]="question.ios_package_name"
-          [timestamp]="task.timestamp"
-          (valueChange)="onValueChange($event)"
-        >
-        </app-launcher>
       </ng-container>
     </div>
   </div>

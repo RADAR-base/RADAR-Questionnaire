@@ -15,6 +15,7 @@ import { Question } from '../../../shared/models/question'
 import { Task } from '../../../shared/models/task'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { QuestionsService } from '../services/questions.service'
+import {AppLauncher, AppLauncherOptions} from "@ionic-native/app-launcher/ngx";
 
 @Component({
   selector: 'page-questions',
@@ -33,6 +34,7 @@ export class QuestionsPageComponent implements OnInit {
   task: Task
   taskType: AssessmentType
   questions: Question[]
+  launchAppData: Question
   questionTitle: String
   endText: string
   isLastTask: boolean
@@ -55,7 +57,8 @@ export class QuestionsPageComponent implements OnInit {
     private usage: UsageService,
     private platform: Platform,
     private insomnia: Insomnia,
-    private localization: LocalizationService
+    private localization: LocalizationService,
+    private appLauncher: AppLauncher,
   ) {
     this.platform.registerBackButtonAction(() => {
       this.sendCompletionLog()
@@ -93,7 +96,8 @@ export class QuestionsPageComponent implements OnInit {
     this.showIntroductionScreen = this.SHOW_INTRODUCTION_SET.has(
       res.assessment.showIntroduction
     )
-    this.questions = res.questions
+    this.questions = this.removeLaunchAppFromQuestions(res.questions)
+    this.launchAppData = this.getLaunchAppData(res.questions)
     this.endText =
       res.endText && res.endText.length
         ? res.endText
@@ -102,6 +106,15 @@ export class QuestionsPageComponent implements OnInit {
     this.assessment = res.assessment
     this.taskType = res.type
     this.requiresInClinicCompletion = this.assessment.requiresInClinicCompletion
+  }
+
+  removeLaunchAppFromQuestions(questions: Question[]): Question[]{
+    return questions.filter(q => q.field_type != 'launcher')
+  }
+
+  getLaunchAppData(questions: Question[]): Question{
+    const launcherApps = questions.filter(q => q.field_type == 'launcher')
+    return launcherApps.length> 0 ? launcherApps[0] : null
   }
 
   handleIntro(start: boolean) {
@@ -121,8 +134,40 @@ export class QuestionsPageComponent implements OnInit {
       .handleClinicalFollowUp(this.assessment, completedInClinic)
       .then(() => {
         this.updateDoneButton(false)
+        this.launchApp()
         return this.navCtrl.setRoot(HomePageComponent)
       })
+  }
+
+  launchApp() {
+    if(!this.launchAppData) return
+    const options: AppLauncherOptions = {}
+
+    if(this.platform.is('ios')) {
+      options.uri = this.launchAppData.ios_uri
+    } else {
+      options.uri = this.launchAppData.android_uri
+    }
+    if ('?' in (options.uri as any)) {
+      options.uri += '&'
+    } else {
+      options.uri += '?'
+    }
+    options.uri += 'timestamp=' + this.task.timestamp
+
+    this.appLauncher.canLaunch(options)
+      .then((canLaunch: boolean) => {
+        if(canLaunch){
+          this.appLauncher.launch(options).then(()=>{
+            console.log('App launched')
+          }, (err)=>{
+            console.log('Error in launching app', err)
+          })
+        } else {
+          console.log('App cannot be launched')
+        }
+      })
+      .catch((error: any) => console.log('Error in checking if the app can launch', error))
   }
 
   onAnswer(event) {

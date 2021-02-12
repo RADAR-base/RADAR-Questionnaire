@@ -8,6 +8,7 @@ import { PipesModule } from '../../../../shared/pipes/pipes.module'
 import { WheelSelectorComponent } from '../wheel-selector/wheel-selector.component'
 import { AudioInputComponent } from './audio-input/audio-input.component'
 import { CheckboxInputComponent } from './checkbox-input/checkbox-input.component'
+import { DescriptiveInputComponent } from './descriptive-input/descriptive-input.component'
 import { InfoScreenComponent } from './info-screen/info-screen.component'
 import { QuestionComponent } from './question.component'
 import { RadioInputComponent } from './radio-input/radio-input.component'
@@ -28,7 +29,8 @@ const COMPONENTS = [
   InfoScreenComponent,
   RangeInfoInputComponent,
   TextInputComponent,
-  WheelSelectorComponent
+  WheelSelectorComponent,
+  DescriptiveInputComponent
 ]
 
 @NgModule({

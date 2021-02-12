@@ -1,0 +1,53 @@
+descriptive-input {
+  .info-carrd {
+    padding: 28px;
+    height: 92%;
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+    background-color: $cl-primary-20;
+  }
+
+  .content {
+    overflow-y: scroll;
+    padding-bottom: 24%;
+    width: 100%;
+    mask-image:
+
+      -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        from(rgba(0, 0, 0, 1)),
+        to(rgba(0, 0, 0, 0.25))
+      );
+  }
+
+  .info-heading {
+    color: $cl-light-60;
+  }
+
+  .info-content {
+    margin-bottom: 48%;
+    font-size: 16px;
+  }
+
+  img {
+    display: block;
+    margin: 0 auto !important;
+    width: 104px !important;
+    height: auto !important;
+  }
+
+  .icon {
+    position: relative;
+    float: right;
+    margin: -36px 8px;
+    width: inherit;
+    text-align: right;
+  }
+
+  ion-icon {
+    color: $cl-light-40;
+    font-size: 40px;
+  }
+}

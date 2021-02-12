@@ -47,8 +47,12 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.audio,
     QuestionType.info,
     QuestionType.text,
+    QuestionType.descriptive,
   ])
-  HIDE_FIELD_LABEL_SET: Set<QuestionType> = new Set([QuestionType.audio])
+  HIDE_FIELD_LABEL_SET: Set<QuestionType> = new Set([
+    QuestionType.audio,
+    QuestionType.descriptive,
+  ])
 
   constructor(
     private vibration: Vibration,

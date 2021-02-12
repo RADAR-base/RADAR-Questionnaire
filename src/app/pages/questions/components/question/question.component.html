@@ -114,6 +114,14 @@
           (valueChange)="onValueChange($event)"
         >
         </radio-input>
+
+        <descriptive-input
+          *ngSwitchCase="'descriptive'"
+          [text]="question.field_label"
+          (valueChange)="onValueChange($event)"
+          [currentlyShown]="currentlyShown"
+        >
+        </descriptive-input>
       </ng-container>
     </div>
   </div>

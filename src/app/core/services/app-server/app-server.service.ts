@@ -107,9 +107,7 @@ export class AppServerService {
             this.SUBJECT_PATH,
             subjectId
           ),
-          {
-            headers
-          }
+          { headers }
         )
         .toPromise()
     )

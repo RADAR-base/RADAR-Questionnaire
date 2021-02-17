@@ -133,7 +133,6 @@ export class ScheduleService {
     return this.getCompletedTasks()
       .then(completedTasks => {
         return this.schedule.runScheduler(
-          AssessmentType.SCHEDULED,
           referenceDate,
           completedTasks,
           utcOffsetPrev

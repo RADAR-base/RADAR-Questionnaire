@@ -1,5 +1,6 @@
 import { Protocol } from './protocol'
 import { Question } from './question'
+import { Task } from './task'
 import { MultiLanguageText } from './text'
 
 export interface Assessment {

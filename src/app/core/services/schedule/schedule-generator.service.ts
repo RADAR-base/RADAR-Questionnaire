@@ -40,49 +40,21 @@ export class ScheduleGeneratorService {
   ) {}
 
   runScheduler(
-    type,
     refTimestamp,
     completedTasks,
-    utcOffsetPrev,
-    assessment?,
-    indexOffset?
+    utcOffsetPrev
   ): Promise<SchedulerResult> {
     return this.fetchScheduleYearCoverage().then(() => {
-      // NOTE: Check if clinical or regular
-      switch (type) {
-        case AssessmentType.SCHEDULED:
-          return this.questionnaire
-            .getAssessments(type)
-            .then(assessments =>
-              this.buildTaskSchedule(
-                assessments,
-                completedTasks,
-                refTimestamp,
-                utcOffsetPrev
-              )
-            )
-        case AssessmentType.ON_DEMAND:
-          return Promise.resolve({
-            schedule: this.buildTasksForSingleAssessment(
-              assessment,
-              indexOffset,
-              refTimestamp,
-              AssessmentType.ON_DEMAND
-            ),
-            completed: [] as Task[]
-          })
-        case AssessmentType.CLINICAL:
-          return Promise.resolve({
-            schedule: this.buildTasksForSingleAssessment(
-              assessment,
-              indexOffset,
-              refTimestamp,
-              AssessmentType.CLINICAL
-            ),
-            completed: [] as Task[]
-          })
-      }
-      return Promise.resolve({ schedule: [], completed: [] })
+      return this.questionnaire
+        .getAssessments(AssessmentType.SCHEDULED)
+        .then(assessments =>
+          this.buildTaskSchedule(
+            assessments,
+            completedTasks,
+            refTimestamp,
+            utcOffsetPrev
+          )
+        )
     })
   }
 
@@ -91,7 +63,7 @@ export class ScheduleGeneratorService {
     completedTasks,
     refTimestamp,
     utcOffsetPrev
-  ): Promise<{ schedule: Task[]; completed: Task[] }> {
+  ): Promise<SchedulerResult> {
     let schedule: Task[] = assessments.reduce(
       (list, assessment) =>
         list.concat(
@@ -113,7 +85,10 @@ export class ScheduleGeneratorService {
     schedule = res.schedule.sort(compareTasks)
 
     this.logger.log('[√] Updated task schedule.')
-    return Promise.resolve({ schedule, completed: res.completed })
+    return Promise.resolve({
+      schedule,
+      completed: res.completed
+    })
   }
 
   getRepeatProtocol(protocol, type) {
@@ -209,7 +184,7 @@ export class ScheduleGeneratorService {
     schedule: Task[],
     completedTasks,
     utcOffsetPrev?
-  ): { schedule: any[]; completed: any[] } {
+  ): SchedulerResult {
     const completed = []
     if (completedTasks && completedTasks.length > 0) {
       // NOTE: If utcOffsetPrev exists, timezone has changed

@@ -1,9 +1,9 @@
 import 'rxjs/add/operator/map'
 
-import { Injectable } from '@angular/core'
+import { EventEmitter, Injectable } from '@angular/core'
 
 import { StorageKeys } from '../../../shared/enums/storage'
-import { AssessmentType } from '../../../shared/models/assessment'
+import { Assessment, AssessmentType } from '../../../shared/models/assessment'
 import { Task } from '../../../shared/models/task'
 import { compareTasks } from '../../../shared/utilities/compare-tasks'
 import {
@@ -22,6 +22,7 @@ export class ScheduleService {
     SCHEDULE_TASKS_CLINICAL: StorageKeys.SCHEDULE_TASKS_CLINICAL,
     SCHEDULE_TASKS_COMPLETED: StorageKeys.SCHEDULE_TASKS_COMPLETED
   }
+  changeDetectionEmitter: EventEmitter<void> = new EventEmitter<void>()
 
   constructor(
     private storage: StorageService,
@@ -147,25 +148,25 @@ export class ScheduleService {
       )
   }
 
-  generateClinicalSchedule(assessment, referenceDate) {
-    this.logger.log('Generating clinical schedule notifications..', assessment)
-    return this.getClinicalTasks().then((tasks: Task[]) =>
-      this.schedule
-        .runScheduler(
-          AssessmentType.CLINICAL,
-          referenceDate,
-          [],
-          null,
-          assessment,
-          tasks ? tasks.length : 0
-        )
-        .then((res: any) =>
-          this.setTasks(
-            AssessmentType.CLINICAL,
-            tasks ? tasks.concat(res.schedule) : res.schedule
-          )
-        )
-    )
+  generateSingleTask(
+    assessment: Assessment,
+    assessmentType,
+    referenceDate: number
+  ) {
+    console.log(assessment)
+    return this.getTasks(assessmentType).then((tasks: Task[]) => {
+      const schedule = this.schedule.buildTasksForSingleAssessment(
+        assessment,
+        tasks ? tasks.length : 0,
+        referenceDate,
+        assessmentType
+      )
+      const newTasks = (tasks ? tasks.concat(schedule) : schedule).sort(
+        compareTasks
+      )
+      this.changeDetectionEmitter.emit()
+      return this.setTasks(assessmentType, newTasks)
+    })
   }
 
   insertTask(task): Promise<any> {

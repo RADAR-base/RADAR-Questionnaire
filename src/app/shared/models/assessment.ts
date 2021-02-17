@@ -39,3 +39,8 @@ export enum AssessmentType {
   CLINICAL = 'clinical',
   ALL = 'all'
 }
+
+export interface SchedulerResult {
+  schedule: Task[]
+  completed: Task[]
+}

@@ -31,6 +31,7 @@ export class HomePageComponent implements OnDestroy {
   timeToNextTask: number
   tasksProgress: Promise<TasksProgress>
   resumeListener: Subscription = new Subscription()
+  changeDetectionListener: Subscription = new Subscription()
 
   showCalendar = false
   showCompleted = false
@@ -51,6 +52,12 @@ export class HomePageComponent implements OnDestroy {
     private usage: UsageService
   ) {
     this.resumeListener = this.platform.resume.subscribe(() => this.onResume())
+    this.changeDetectionListener = this.tasksService.changeDetectionEmitter.subscribe(
+      () => {
+        console.log('Changes to task service detected')
+        this.refresh()
+      }
+    )
   }
 
   getIsLoadingSpinnerShown() {
@@ -71,6 +78,7 @@ export class HomePageComponent implements OnDestroy {
 
   ngOnDestroy() {
     this.resumeListener.unsubscribe()
+    this.changeDetectionListener.unsubscribe()
   }
 
   ionViewWillEnter() {
@@ -108,8 +116,12 @@ export class HomePageComponent implements OnDestroy {
   checkForNewDate() {
     if (new Date().getDate() !== this.currentDate.getDate()) {
       this.currentDate = this.tasksService.getCurrentDateMidnight()
-      this.navCtrl.setRoot(SplashPageComponent)
+      this.refresh()
     }
+  }
+
+  refresh() {
+    this.navCtrl.setRoot(SplashPageComponent)
   }
 
   checkForNextTask(tasks) {

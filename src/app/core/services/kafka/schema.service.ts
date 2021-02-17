@@ -42,7 +42,7 @@ export class SchemaService {
     switch (type) {
       case SchemaType.ASSESSMENT:
         return this.questionnaire
-          .getAssessment(task.type, task)
+          .getAssessmentForTask(task.type, task)
           .then(assessment => assessment.questionnaire)
       default:
         return Promise.resolve({ name: type, avsc: 'questionnaire' })

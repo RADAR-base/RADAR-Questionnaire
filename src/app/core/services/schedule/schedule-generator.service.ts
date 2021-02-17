@@ -6,7 +6,11 @@ import {
   DefaultTaskCompletionWindow
 } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
-import { Assessment, AssessmentType } from '../../../shared/models/assessment'
+import {
+  Assessment,
+  AssessmentType,
+  SchedulerResult
+} from '../../../shared/models/assessment'
 import { Task } from '../../../shared/models/task'
 import { compareTasks } from '../../../shared/utilities/compare-tasks'
 import {
@@ -42,7 +46,7 @@ export class ScheduleGeneratorService {
     utcOffsetPrev,
     assessment?,
     indexOffset?
-  ) {
+  ): Promise<SchedulerResult> {
     return this.fetchScheduleYearCoverage().then(() => {
       // NOTE: Check if clinical or regular
       switch (type) {
@@ -57,9 +61,6 @@ export class ScheduleGeneratorService {
                 utcOffsetPrev
               )
             )
-            .catch(e => {
-              this.logger.error('Failed to schedule assessement', e)
-            })
         case AssessmentType.ON_DEMAND:
           return Promise.resolve({
             schedule: this.buildTasksForSingleAssessment(
@@ -81,7 +82,7 @@ export class ScheduleGeneratorService {
             completed: [] as Task[]
           })
       }
-      return Promise.resolve()
+      return Promise.resolve({ schedule: [], completed: [] })
     })
   }
 

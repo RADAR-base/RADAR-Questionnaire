@@ -18,6 +18,7 @@ import { AppServerService } from '../app-server/app-server.service'
 import { KafkaService } from '../kafka/kafka.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
+import { MessageHandlerService } from '../notifications/message-handler.service'
 import { NotificationService } from '../notifications/notification.service'
 import { ScheduleService } from '../schedule/schedule.service'
 import { AnalyticsService } from '../usage/analytics.service'
@@ -41,7 +42,7 @@ export class ConfigService {
     private analytics: AnalyticsService,
     private logger: LogService,
     private remoteConfig: RemoteConfigService,
-    private appServerService: AppServerService
+    private messageHandlerService: MessageHandlerService
   ) {}
 
   fetchConfigState(force?: boolean) {
@@ -203,20 +204,21 @@ export class ConfigService {
   }
 
   updateConfigStateOnProtocolChange(protocol) {
-    const assessments = this.protocol.format(protocol.protocols)
+    const assessments = protocol.protocols
     this.logger.log(assessments)
     return this.questionnaire
-      .updateAssessments(AssessmentType.ALL, assessments)
-      .then(() => this.regenerateSchedule())
+      .pullDefinitionsForQuestionnaires(assessments)
       .then(() => this.appConfig.setScheduleVersion(protocol.version))
+      .then(() => this.regenerateSchedule())
   }
 
   updateConfigStateOnLanguageChange() {
-    return Promise.all([
-      this.questionnaire.pullQuestionnaires(AssessmentType.ON_DEMAND),
-      this.questionnaire.pullQuestionnaires(AssessmentType.CLINICAL),
-      this.questionnaire.pullQuestionnaires(AssessmentType.SCHEDULED)
-    ]).then(() => this.rescheduleNotifications(true))
+    return this.questionnaire
+      .getAssessments(AssessmentType.ALL)
+      .then(assessments =>
+        this.questionnaire.pullDefinitionsForQuestionnaires(assessments)
+      )
+      .then(() => this.rescheduleNotifications(true))
   }
 
   updateConfigStateOnAppVersionChange(version) {

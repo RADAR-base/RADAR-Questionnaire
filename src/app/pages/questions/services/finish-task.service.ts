@@ -53,7 +53,7 @@ export class FinishTaskService {
 
   createClinicalFollowUpTask(assessment): Promise<any> {
     return this.schedule
-      .generateClinicalSchedule(assessment, Date.now())
+      .generateSingleTask(assessment, AssessmentType.CLINICAL, Date.now())
       .then(() => this.config.rescheduleNotifications())
   }
 
@@ -88,6 +88,7 @@ export class FinishTaskService {
   cancelNotificationsForCompletedTask(task): Promise<any> {
     console.log('Cancelling pending reminders for task..')
     const notifications = task.notifications
+    if (!notifications) return
     return notifications.forEach(n => this.config.cancelSingleNotification(n))
   }
 }

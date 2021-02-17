@@ -209,12 +209,4 @@ export class ProtocolService {
     )
     return orderWithoutNull
   }
-
-  format(protocols: Assessment[]): Assessment[] {
-    return protocols.map(p => {
-      p.questionnaire.type = DefaultQuestionnaireTypeURI
-      p.questionnaire.format = DefaultQuestionnaireFormatURI
-      return p
-    })
-  }
 }

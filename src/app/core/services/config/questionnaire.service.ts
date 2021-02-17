@@ -1,8 +1,17 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
+import * as urljoin from 'url-join'
 
+import {
+  DefaultQuestionnaireFormatURI,
+  DefaultQuestionnaireTypeURI
+} from '../../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../../shared/enums/storage'
-import { Assessment, AssessmentType } from '../../../shared/models/assessment'
+import {
+  Assessment,
+  AssessmentType,
+  QuestionnaireMetadata
+} from '../../../shared/models/assessment'
 import { Question } from '../../../shared/models/question'
 import { Task } from '../../../shared/models/task'
 import { Utility } from '../../../shared/utilities/util'
@@ -26,52 +35,44 @@ export class QuestionnaireService {
     private logger: LogService
   ) {}
 
-  pullQuestionnaires(type: AssessmentType): Promise<Assessment[]> {
-    // NOTE: Pull questionnaire definitions
-    return this.getAssessments(type)
-      .then(assessments => {
-        const language = this.localization.getLanguage().value
-        const localizeQuestionnaires = assessments.map(a =>
-          this.pullQuestionnaireLang(a, language).then(translated => {
-            a.questions = this.formatQuestionsHeaders(translated)
-            return a
-          })
-        )
-        return Promise.all(localizeQuestionnaires)
-      })
-      .then(assessments => this.setAssessments(type, assessments))
+  pullDefinitionsForQuestionnaires(assessments: Assessment[]) {
+    // NOTE: Update assessment list from protocol
+    return Promise.all(
+      this.util
+        .deepCopy(assessments)
+        .map(a => this.pullDefinitionForSingleQuestionnaire(a))
+    )
   }
 
-  pullQuestionnaireLang(assessment, language: string): Promise<Object> {
-    const uri = this.formatQuestionnaireUri(assessment.questionnaire, language)
-    return this.getQuestionnairesOfLang(uri).catch(e => {
-      this.logger.error(`Failed to get questionnaires from ${uri}`, e)
-      const URI = this.formatQuestionnaireUri(assessment.questionnaire, '')
-      return this.getQuestionnairesOfLang(URI)
+  pullDefinitionForSingleQuestionnaire(assessment: Assessment) {
+    assessment.questionnaire = Object.assign(assessment.questionnaire, {
+      type: DefaultQuestionnaireTypeURI,
+      format: DefaultQuestionnaireFormatURI
     })
+    const type = this.getAssessmentTypeFromAssessment(assessment)
+    const language = this.localization.getLanguage().value
+    let uri = this.formatQuestionnaireUri(assessment.questionnaire, language)
+    return this.get(uri)
+      .catch(e => {
+        this.logger.error(`Failed to get questionnaires from ${uri}`, e)
+        uri = this.formatQuestionnaireUri(assessment.questionnaire, '')
+        return this.get(uri) as Promise<Question[]>
+      })
+      .then(translated => {
+        assessment.questions = this.formatQuestionsHeaders(translated)
+        return assessment
+      })
+      .then(res => this.addToAssessments(type, Object.assign(res, { type })))
+      .catch(e => {
+        throw this.logger.error('Failed to update ' + type + ' assessments', e)
+      })
   }
 
-  formatQuestionnaireUri(questionnaireRepo, langVal: string) {
-    let uri = questionnaireRepo.repository + questionnaireRepo.name + '/'
-    uri += questionnaireRepo.name + questionnaireRepo.type
-    if (langVal !== '') {
-      uri += '_' + langVal
-    }
-    uri += questionnaireRepo.format
-    console.log(uri)
-    return uri
-  }
-
-  getQuestionnairesOfLang(URI): Promise<Question[]> {
-    return this.http
-      .get(URI)
-      .toPromise()
-      .then(res => {
-        if (!(res instanceof Array)) {
-          throw new Error('URL does not contain an array of questions')
-        }
-        return res
-      }) as Promise<Question[]>
+  formatQuestionnaireUri(metadata: QuestionnaireMetadata, lang: string) {
+    const baseUrl = urljoin(metadata.repository, metadata.name)
+    const fileName = metadata.name + metadata.type
+    const suffix = lang.length ? `_${lang}` : ''
+    return urljoin(baseUrl, fileName + suffix + metadata.format)
   }
 
   formatQuestionsHeaders(questions) {
@@ -87,63 +88,21 @@ export class QuestionnaireService {
     return questions
   }
 
-  updateAssessments(type: AssessmentType, assessments: Assessment[]) {
-    // NOTE: Update assessment list from protocol
-    switch (type) {
-      case AssessmentType.ALL:
-        return Promise.all([
-          this.updateAssessments(
-            AssessmentType.ON_DEMAND,
-            this.assessmentPartitioner(assessments, AssessmentType.ON_DEMAND)
-          ),
-          this.updateAssessments(
-            AssessmentType.CLINICAL,
-            this.assessmentPartitioner(assessments, AssessmentType.CLINICAL)
-          ),
-          this.updateAssessments(
-            AssessmentType.SCHEDULED,
-            this.assessmentPartitioner(assessments, AssessmentType.SCHEDULED)
-          )
-        ])
-      default:
-        return this.setAssessments(type, assessments)
-          .then(() => this.pullQuestionnaires(type))
-          .catch(e => {
-            throw this.logger.error(
-              'Failed to update ' + type + ' assessments',
-              e
-            )
-          })
-    }
-  }
+  getAssessmentTypeFromAssessment(a: Assessment) {
+    if (
+      a.type == AssessmentType.SCHEDULED ||
+      (!a.type && !a.protocol.clinicalProtocol)
+    )
+      return AssessmentType.SCHEDULED
 
-  assessmentPartitioner(assessments, type) {
-    let partitioned
-    switch (type) {
-      case AssessmentType.SCHEDULED:
-        partitioned = assessments.filter(
-          a =>
-            a.type == AssessmentType.SCHEDULED ||
-            (!a.type && !a.protocol.clinicalProtocol)
-        )
-        break
-      case AssessmentType.ON_DEMAND:
-        partitioned = assessments.filter(
-          a => a.type == AssessmentType.ON_DEMAND || a.protocol.onDemandProtocol
-        )
-        break
-      case AssessmentType.CLINICAL:
-        partitioned = assessments.filter(
-          a =>
-            a.type == AssessmentType.CLINICAL ||
-            (!a.type && a.protocol.clinicalProtocol)
-        )
-        partitioned.map(b =>
-          Object.assign(b, { requiresInClinicCompletion: true })
-        )
-        break
-    }
-    return partitioned.map(b => Object.assign(b, { type }))
+    if (a.type == AssessmentType.ON_DEMAND || a.protocol.onDemandProtocol)
+      return AssessmentType.ON_DEMAND
+
+    if (
+      a.type == AssessmentType.CLINICAL ||
+      (!a.type && a.protocol.clinicalProtocol)
+    )
+      return AssessmentType.CLINICAL
   }
 
   updateAssessment(type: AssessmentType, assessment: Assessment) {
@@ -156,7 +115,7 @@ export class QuestionnaireService {
     })
   }
 
-  getAssessment(type: AssessmentType, task: Task) {
+  getAssessmentForTask(type: AssessmentType, task: Task) {
     return this.getAssessments(type).then(assessments =>
       assessments.find(a => a.name === task.name)
     )
@@ -170,6 +129,15 @@ export class QuestionnaireService {
   setAssessments(type, assessments) {
     const key = this.getKeyFromTaskType(type)
     return this.storage.set(key, assessments)
+  }
+
+  addToAssessments(type, assessment) {
+    return this.getAssessments(type).then(assessments => {
+      const index = assessments.findIndex(a => a.name == assessment.name)
+      if (index > -1) assessments[index] = assessment
+      else assessments.push(assessment)
+      return this.setAssessments(type, assessments)
+    })
   }
 
   getKeyFromTaskType(type: AssessmentType) {
@@ -198,9 +166,21 @@ export class QuestionnaireService {
 
   reset() {
     return Promise.all([
-      this.setAssessments(AssessmentType.ON_DEMAND, {}),
-      this.setAssessments(AssessmentType.CLINICAL, {}),
-      this.setAssessments(AssessmentType.SCHEDULED, {})
+      this.setAssessments(AssessmentType.ON_DEMAND, []),
+      this.setAssessments(AssessmentType.CLINICAL, []),
+      this.setAssessments(AssessmentType.SCHEDULED, [])
     ])
+  }
+
+  get(url): Promise<any> {
+    return this.http
+      .get(url)
+      .toPromise()
+      .then(res => {
+        if (!(res instanceof Array)) {
+          throw new Error('URL does not contain an array of questions')
+        }
+        return res
+      })
   }
 }

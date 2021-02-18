@@ -164,16 +164,21 @@ export class HomePageComponent implements OnDestroy {
 
   showCredits() {
     this.usage.sendClickEvent('show_credits')
-    return this.alertService.showAlert({
-      title: this.localization.translateKey(LocKeys.CREDITS_TITLE),
-      message: this.localization.translateKey(LocKeys.CREDITS_BODY),
-      buttons: [
-        {
-          text: this.localization.translateKey(LocKeys.BTN_OKAY),
-          handler: () => {}
-        }
-      ]
-    })
+    return Promise.all([
+      this.tasksService.getAppCreditsTitle(),
+      this.tasksService.getAppCreditsBody()
+    ]).then(([title, body]) =>
+      this.alertService.showAlert({
+        title: this.localization.chooseText(title),
+        message: this.localization.chooseText(body),
+        buttons: [
+          {
+            text: this.localization.translateKey(LocKeys.BTN_OKAY),
+            handler: () => {}
+          }
+        ]
+      })
+    )
   }
 
   showMissedInfo() {

@@ -40,7 +40,8 @@ install:
   - export PATH="$HOME/.yarn/bin:$PATH"
   - gem install bundler --pre
   - bundle install
-  - yarn global add ionic cordova
+  - yarn global add ionic
+  - yarn global add cordova
 before_script:
   - mkdir www
   - cp secret.ts src/assets/data/secret.ts

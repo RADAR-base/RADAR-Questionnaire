@@ -54,11 +54,12 @@ export class TextInputComponent implements OnInit {
 
   ngOnInit() {
     if (this.type.length) {
-      this.showTextInput = false
       this.showDatePicker = this.type.includes('date')
       this.showTimePicker = this.type.includes('time')
       this.showDurationPicker = this.type.includes('duration')
     }
+    this.showTextInput =
+      !this.showDatePicker && !this.showTimePicker && !this.showDurationPicker
     this.showSeconds = this.type.includes('second')
     this.initValues()
   }

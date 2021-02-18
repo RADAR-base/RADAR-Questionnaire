@@ -10,9 +10,15 @@
       'SETTINGS_USER_INFO' | translate
     }}</ion-item-divider>
     <ion-item no-lines>
-      {{ 'SETTINGS_PARTICIPANTID' | translate }}
+      {{ 'SETTINGS_PARTICIPANTNAME' | translate }}
       <span item-right class="info-value">
         {{ settings.participantID }}
+      </span>
+    </ion-item>
+    <ion-item no-lines>
+      {{ 'SETTINGS_PARTICIPANTID' | translate }}
+      <span item-right class="info-value-small">
+        {{ settings.participantLogin }}
       </span>
     </ion-item>
     <ion-item no-lines>
@@ -61,20 +67,6 @@
 
   <ion-item-group>
     <ion-item-divider no-lines>{{
-      'SETTINGS_REPORT' | translate
-    }}</ion-item-divider>
-    <ion-item no-lines *ngFor="let subSetting of weeklyReport; let i = index">
-      <ion-label>{{ subSetting.name | translate }}</ion-label>
-      <ion-toggle
-        item-right
-        [(ngModel)]="subSetting.show"
-        (ionChange)="weeklyReportChange(i)"
-      ></ion-toggle>
-    </ion-item>
-  </ion-item-group>
-
-  <ion-item-group>
-    <ion-item-divider no-lines>{{
       'SETTINGS_CACHE' | translate
     }}</ion-item-divider>
     <ion-item no-lines>
@@ -88,6 +80,9 @@
       <span item-right class="info-value">
         {{ settings.lastUploadDate | amCalendar }}
       </span>
+    </ion-item>
+    <ion-item no-lines class="item-button" (tap)="sendCachedData()">
+      <ion-label>{{ 'SETTINGS_SEND_CACHED_DATA' | translate }}</ion-label>
     </ion-item>
   </ion-item-group>
 
@@ -134,9 +129,6 @@
     </ion-item>
     <ion-item no-lines class="item-button">
       <ion-label>{{ 'SETTINGS_LOG_NOTIFS' | translate }}</ion-label>
-    </ion-item>
-    <ion-item no-lines class="item-button" (tap)="sendCachedData()">
-      <ion-label>{{ 'SETTINGS_SEND_CACHED_DATA' | translate }}</ion-label>
     </ion-item>
   </ion-item-group>
 </ion-content>

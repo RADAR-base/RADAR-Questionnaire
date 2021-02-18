@@ -313,6 +313,7 @@ export class ConfigService {
 
   getAll() {
     return {
+      participantLogin: this.subjectConfig.getParticipantLogin(),
       participantID: this.subjectConfig.getParticipantID(),
       projectName: this.subjectConfig.getProjectName(),
       enrolmentDate: this.subjectConfig.getEnrolmentDate(),

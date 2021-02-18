@@ -119,7 +119,7 @@ export const DefaultNumberOfCompletionLogsToSend = 10
 
 // DEFAULT NOTIFICATION SETUP
 
-// *Default notification type (either 'FCM' or 'LOCAL' notifications)
+// *Default notification type (either 'FCM_XMPP', 'FCM_REST' or 'LOCAL' notifications)
 export const DefaultNotificationType: string = 'FCM_XMPP'
 
 // *Default app server URL

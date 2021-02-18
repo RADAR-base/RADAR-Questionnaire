@@ -52,40 +52,10 @@
       {{ 'SETTINGS_NOTIFICATIONS' | translate }}
     </ion-item-divider>
     <ion-item no-lines>
-      <ion-label>
-        {{ 'SETTINGS_NOTIFICATIONS_SOUND' | translate }}
-      </ion-label>
-      <ion-toggle
-        item-right
-        [(ngModel)]="notificationSettings.sound"
-        (ionChange)="notificationChange()"
-      ></ion-toggle>
-    </ion-item>
-    <ion-item no-lines>
-      <ion-label>
-        {{ 'SETTINGS_NOTIFICATIONS_VIBRATION' | translate }}
-      </ion-label>
-      <ion-toggle
-        item-right
-        [(ngModel)]="notificationSettings.vibration"
-        (ionChange)="notificationChange()"
-      >
-      </ion-toggle>
-    </ion-item>
-    <ion-item no-lines>
-      <ion-label>
-        {{ 'SETTINGS_NOTIFICATIONS_NIGHTMOD' | translate }}
-        <ion-icon
-          (tap)="showInfoNightMode()"
-          name="information-circle"
-        ></ion-icon>
-      </ion-label>
-      <ion-toggle
-        item-right
-        [(ngModel)]="notificationSettings.nightMode"
-        (ionChange)="notificationChange()"
-      >
-      </ion-toggle>
+      {{ 'SETTINGS_LAST_NOTIFICATION_UPDATE' | translate }}
+      <span item-right class="info-value">
+        {{ settings.lastNotificationUpdate | amCalendar }}
+      </span>
     </ion-item>
   </ion-item-group>
 

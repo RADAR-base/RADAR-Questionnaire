@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing'
-import { Firebase } from '@ionic-native/firebase/ngx'
+import { FirebaseX } from '@ionic-native/firebase-x/ngx'
 import { Platform } from 'ionic-angular'
 import { PlatformMock } from 'ionic-mocks'
 
@@ -46,7 +46,7 @@ describe('FirebaseRemoteConfig', () => {
         { provide: StorageService, useClass: StorageServiceMock },
         { provide: LogService, useClass: LogServiceMock },
         { provide: Platform, useClass: PlatformMock },
-        { provide: Firebase, useClass: FirebaseMock }
+        { provide: FirebaseX, useClass: FirebaseMock }
       ]
     })
   )

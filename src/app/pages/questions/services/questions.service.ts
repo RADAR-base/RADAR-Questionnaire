@@ -183,7 +183,8 @@ export class QuestionsService {
         questions,
         data.timestamps,
         task
-      )
+      ),
+      this.finish.cancelNotificationsForCompletedTask(task)
     ])
   }
 

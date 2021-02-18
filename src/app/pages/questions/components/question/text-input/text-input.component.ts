@@ -1,14 +1,26 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core'
+import { IonicFormInput } from 'ionic-angular'
 
 import { LocalizationService } from '../../../../../core/services/misc/localization.service'
 
 @Component({
   selector: 'text-input',
-  templateUrl: 'text-input.component.html'
+  templateUrl: 'text-input.component.html',
 })
 export class TextInputComponent implements OnInit {
+  @ViewChild('content') content
+
   @Output()
   valueChange: EventEmitter<string> = new EventEmitter<string>()
+  @Output()
+  textInputFocus: EventEmitter<string> = new EventEmitter<string>()
   @Input()
   type: string
   @Input()
@@ -33,7 +45,7 @@ export class TextInputComponent implements OnInit {
     hour: 'Hour',
     minute: 'Minute',
     second: 'Second',
-    ampm: 'AM/PM'
+    ampm: 'AM/PM',
   }
 
   value = {}
@@ -42,11 +54,12 @@ export class TextInputComponent implements OnInit {
 
   ngOnInit() {
     if (this.type.length) {
-      this.showTextInput = false
       this.showDatePicker = this.type.includes('date')
       this.showTimePicker = this.type.includes('time')
       this.showDurationPicker = this.type.includes('duration')
     }
+    this.showTextInput =
+      !this.showDatePicker && !this.showTimePicker && !this.showDurationPicker
     this.showSeconds = this.type.includes('second')
     this.initValues()
   }
@@ -103,5 +116,9 @@ export class TextInputComponent implements OnInit {
       this.value = Object.assign(this.value, value)
       this.valueChange.emit(JSON.stringify(this.value))
     } else this.valueChange.emit(value)
+  }
+
+  emitTextInputFocus(value) {
+    this.textInputFocus.emit(value)
   }
 }

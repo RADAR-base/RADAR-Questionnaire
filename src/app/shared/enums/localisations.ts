@@ -62,6 +62,9 @@ export class LocKeys {
   static SETTINGS_LAST_UPLOAD_TO_SERVER = new LocKeys(
     'SETTINGS_LAST_UPLOAD_TO_SERVER'
   )
+  static SETTINGS_LAST_NOTIFICATION_UPDATE = new LocKeys(
+    'SETTINGS_LAST_NOTIFICATION_UPDATE'
+  )
   static SETTINGS_SEND_CACHED_DATA = new LocKeys('SETTINGS_SEND_CACHED_DATA')
   static SETTINGS_WAIT_ALERT = new LocKeys('SETTINGS_WAIT_ALERT')
   static LANGUAGE_ENGLISH = new LocKeys('LANGUAGE_ENGLISH')
@@ -172,6 +175,8 @@ export class LocKeys {
 
   static CLINICAL_TASKS = new LocKeys('CLINICAL_TASKS')
   static ON_DEMAND_TASKS = new LocKeys('ON_DEMAND_TASKS')
+
+  static PLACEHOLDER_TEXT_INPUT = new LocKeys('PLACEHOLDER_TEXT_INPUT')
 
   constructor(public value: string) {}
 

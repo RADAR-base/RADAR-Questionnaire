@@ -55,7 +55,7 @@ export class HomePageComponent implements OnDestroy {
     this.changeDetectionListener = this.tasksService.changeDetectionEmitter.subscribe(
       () => {
         console.log('Changes to task service detected')
-        this.refresh()
+        this.navCtrl.setRoot(HomePageComponent)
       }
     )
   }
@@ -116,12 +116,8 @@ export class HomePageComponent implements OnDestroy {
   checkForNewDate() {
     if (new Date().getDate() !== this.currentDate.getDate()) {
       this.currentDate = this.tasksService.getCurrentDateMidnight()
-      this.refresh()
+      this.navCtrl.setRoot(SplashPageComponent)
     }
-  }
-
-  refresh() {
-    this.navCtrl.setRoot(SplashPageComponent)
   }
 
   checkForNextTask(tasks) {

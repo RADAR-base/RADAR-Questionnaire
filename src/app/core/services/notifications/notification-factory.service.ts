@@ -28,7 +28,7 @@ export class NotificationFactoryService extends NotificationService {
 
   init() {
     return this.remoteConfig
-      .read()
+      .forceFetch()
       .then(config =>
         config.getOrDefault(
           ConfigKeys.NOTIFICATION_MESSAGING_TYPE,

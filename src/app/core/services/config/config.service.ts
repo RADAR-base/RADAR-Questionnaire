@@ -64,7 +64,6 @@ export class ConfigService {
             this.subjectConfig
               .getEnrolmentDate()
               .then(d => this.appConfig.init(d))
-              .then(() => this.appServerService.init())
           if (newMessagingType)
             this.notifications
               .setNotificationMessagingType(newMessagingType)
@@ -279,9 +278,11 @@ export class ConfigService {
 
   resetAll() {
     this.sendConfigChangeEvent(ConfigEventType.APP_RESET)
-    return Promise.all([this.resetConfig(), this.resetCache()]).then(() =>
-      this.subjectConfig.reset()
-    )
+    return Promise.all([
+      this.resetConfig(),
+      this.resetCache(),
+      this.cancelNotifications()
+    ]).then(() => this.subjectConfig.reset())
   }
 
   resetConfig() {
@@ -306,7 +307,7 @@ export class ConfigService {
         .then(() => this.appConfig.init(user.enrolmentDate)),
       this.localization.init(),
       this.kafka.init(),
-      this.appServerService.init()
+      this.notifications.init()
     ])
   }
 

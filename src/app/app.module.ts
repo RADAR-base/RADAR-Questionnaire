@@ -10,7 +10,7 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx'
 import { Device } from '@ionic-native/device/ngx'
 import { Dialogs } from '@ionic-native/dialogs/ngx'
 import { File } from '@ionic-native/file/ngx'
-import { Firebase } from '@ionic-native/firebase/ngx'
+import { FirebaseX } from '@ionic-native/firebase-x/ngx'
 import { Globalization } from '@ionic-native/globalization/ngx'
 import { Insomnia } from '@ionic-native/insomnia/ngx'
 import { Keyboard } from '@ionic-native/keyboard/ngx'
@@ -42,7 +42,9 @@ import { Utility } from './shared/utilities/util'
     BrowserAnimationsModule,
     IonicModule.forRoot(AppComponent, {
       mode: 'md',
-      activator: 'none'
+      activator: 'none',
+      scrollAssist: false,
+      autoFocusAssist: false,
     }),
     IonicStorageModule.forRoot({
       name: '__appdb',
@@ -77,10 +79,10 @@ import { Utility } from './shared/utilities/util'
     Insomnia,
     BackgroundMode,
     Keyboard,
-    Firebase,
+    FirebaseX,
     LocalNotifications,
     LogService,
-    { provide: RemoteConfigService, useClass: FirebaseRemoteConfigService }
+    { provide: RemoteConfigService, useClass: FirebaseRemoteConfigService },
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

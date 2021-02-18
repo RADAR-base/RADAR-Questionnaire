@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { Firebase } from '@ionic-native/firebase/ngx'
+import { FirebaseX } from '@ionic-native/firebase-x/ngx'
 import { Platform } from 'ionic-angular'
 
 import {
@@ -28,7 +28,7 @@ export abstract class FcmNotificationService extends NotificationService {
   constructor(
     public store: StorageService,
     public config: SubjectConfigService,
-    public firebase: Firebase,
+    public firebase: FirebaseX,
     public platform: Platform,
     public logger: LogService,
     public remoteConfig: RemoteConfigService
@@ -48,6 +48,8 @@ export abstract class FcmNotificationService extends NotificationService {
   }
 
   init() {
+    if (!this.platform.is('ios'))
+      FirebasePlugin.setDeliveryMetricsExportToBigQuery(true)
     FirebasePlugin.setSenderId(
       FCMPluginProjectSenderId,
       () => this.logger.log('[NOTIFICATION SERVICE] Set sender id success'),
@@ -56,7 +58,7 @@ export abstract class FcmNotificationService extends NotificationService {
         alert(error)
       }
     )
-    FirebasePlugin.getToken(token => {
+    this.firebase.getToken().then(token => {
       this.FCM_TOKEN = token
       this.setFCMToken(token)
       this.logger.log('[NOTIFICATION SERVICE] Refresh token success')
@@ -89,7 +91,7 @@ export abstract class FcmNotificationService extends NotificationService {
     if (!this.platform.is('ios')) return Promise.resolve()
     return this.firebase
       .hasPermission()
-      .then(res => (res.isEnabled ? true : this.firebase.grantPermission()))
+      .then(res => (res ? true : this.firebase.grantPermission()))
   }
 
   setFCMToken(token) {

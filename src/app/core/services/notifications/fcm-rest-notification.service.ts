@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { Firebase } from '@ionic-native/firebase/ngx'
+import { FirebaseX } from '@ionic-native/firebase-x/ngx'
 import { WebIntent } from '@ionic-native/web-intent/ngx'
 import { Platform } from 'ionic-angular'
 import { Subscription } from 'rxjs'
@@ -42,7 +42,7 @@ export class FcmRestNotificationService extends FcmNotificationService {
     public storage: StorageService,
     public schedule: ScheduleService,
     public config: SubjectConfigService,
-    public firebase: Firebase,
+    public firebase: FirebaseX,
     public platform: Platform,
     public logger: LogService,
     public remoteConfig: RemoteConfigService,
@@ -54,6 +54,11 @@ export class FcmRestNotificationService extends FcmNotificationService {
     super(storage, config, firebase, platform, logger, remoteConfig)
     this.onAppOpen()
     this.resumeListener = this.platform.resume.subscribe(() => this.onAppOpen())
+  }
+
+  init() {
+    super.init()
+    return this.appServerService.init()
   }
 
   onAppOpen() {

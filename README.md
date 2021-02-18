@@ -18,6 +18,7 @@ It is recommended that you install the following versions or later:
 node v13.8.0
 ionic v5.4.16
 npm v6.13.6
+yarn v1.19.0
 ```
 
 ## Install

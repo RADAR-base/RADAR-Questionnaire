@@ -23,7 +23,8 @@ export interface Question {
   app_name?: string
   android_uri?: string
   ios_uri?: string
-  app_launch_description?: string
+  launcher_failure_on_validating_text?: string
+  launcher_failure_on_launch_text?: string
   finish_button_text?: string
 }
 

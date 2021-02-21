@@ -189,27 +189,37 @@ export const Localisations = {
   LAUNCH_APP_BUTTON: {
     da: '',
     de: '',
-    en: 'Launch',
+    en: 'Finish and Launch App',
     es: '',
     it: '',
     nl: '',
     pl: '',
     hb: ''
   },
-  LAUNCH_APP_FAILURE: {
-    da: '',
-    de: '',
-    en: 'cannot be launched',
-    es: '',
-    it: '',
-    nl: '',
-    pl: '',
-    hb: ''
-  },
-  LAUNCH_APP_FAILURE_DESC: {
+  LAUNCH_APP_FAILURE_ON_VALIDATING: {
     da: '',
     de: '',
     en: 'is not install on your device or does not support deep linking',
+    es: '',
+    it: '',
+    nl: '',
+    pl: '',
+    hb: ''
+  },
+  LAUNCH_APP_FAILURE_ON_LAUNCH_TITLE: {
+    da: '',
+    de: '',
+    en: 'Error on Launching',
+    es: '',
+    it: '',
+    nl: '',
+    pl: '',
+    hb: ''
+  },
+  LAUNCH_APP_FAILURE_ON_LAUNCH_DESC: {
+    da: '',
+    de: '',
+    en: 'cannot be launched',
     es: '',
     it: '',
     nl: '',

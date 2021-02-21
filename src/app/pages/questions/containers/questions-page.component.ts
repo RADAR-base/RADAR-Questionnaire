@@ -37,6 +37,7 @@ export class QuestionsPageComponent implements OnInit {
   questions: Question[]
   launchAppData: Question
   questionTitle: String
+  appLauncherOptions?: AppLauncherOptions
   endText: string
   finishButtonText: string
   isLastTask: boolean
@@ -87,6 +88,7 @@ export class QuestionsPageComponent implements OnInit {
     return this.questionsService
       .getQuestionnairePayload(this.task)
       .then(res => {
+        console.log(res)
         this.initQuestionnaire(res)
         return this.updateToolbarButtons()
       })
@@ -99,21 +101,16 @@ export class QuestionsPageComponent implements OnInit {
     this.showIntroductionScreen = this.SHOW_INTRODUCTION_SET.has(
       res.assessment.showIntroduction
     )
+
     this.questions = this.removeLaunchAppFromQuestions(res.questions)
-    this.launchAppData = this.getLaunchAppData(res.questions)
-    if(this.launchAppData){
-      this.endText = this.launchAppData.app_launch_description && this.launchAppData.app_launch_description.length
-      ? this.launchAppData.app_launch_description
-        : this.localization.translateKey(LocKeys.LAUNCH_APP_DESC)
-      this.finishButtonText = this.launchAppData.finish_button_text && this.launchAppData.finish_button_text.length
-        ? this.launchAppData.finish_button_text
-        : this.localization.translateKey(LocKeys.LAUNCH_APP_BUTTON) + ' ' +this.launchAppData.app_name
-    }else{
-      this.endText =
-        res.endText && res.endText.length
-          ? res.endText
-          : this.localization.translateKey(LocKeys.FINISH_THANKS)
-    }
+    this.launchAppData = this.getLaunchApp(res.questions)
+
+    this.endText =
+      res.endText && res.endText.length
+        ? res.endText
+        : this.localization.translateKey(LocKeys.FINISH_THANKS)
+
+    this.validateLaunchAppUri()
 
     this.isLastTask = res.isLastTask
     this.assessment = res.assessment
@@ -121,14 +118,7 @@ export class QuestionsPageComponent implements OnInit {
     this.requiresInClinicCompletion = this.assessment.requiresInClinicCompletion
   }
 
-  removeLaunchAppFromQuestions(questions: Question[]): Question[]{
-    return questions.filter(q => q.field_type != 'launcher')
-  }
 
-  getLaunchAppData(questions: Question[]): Question{
-    const launcherApps = questions.filter(q => q.field_type == 'launcher')
-    return launcherApps.length> 0 ? launcherApps[0] : null
-  }
 
   handleIntro(start: boolean) {
     this.showIntroductionScreen = false
@@ -152,48 +142,7 @@ export class QuestionsPageComponent implements OnInit {
       })
   }
 
-  launchApp() {
-    if(!this.launchAppData) return
-    const options: AppLauncherOptions = {}
 
-    if(this.platform.is('ios')) {
-      options.uri = this.launchAppData.ios_uri
-    } else {
-      options.uri = this.launchAppData.android_uri
-    }
-    if ('?' in (options.uri as any)) {
-      options.uri += '&'
-    } else {
-      options.uri += '?'
-    }
-    options.uri += 'timestamp=' + this.task.timestamp
-
-    this.appLauncher.canLaunch(options)
-      .then((canLaunch: boolean) => {
-        if(canLaunch){
-          this.appLauncher.launch(options).then(()=>{
-            console.log('App launched')
-          }, (err)=>{
-            console.log('Error in launching app', err)
-          })
-        } else {
-          console.log('App cannot be launched')
-          this.alertService.showAlert({
-            title: this.launchAppData.app_name + ' ' +
-              this.localization.translateKey(LocKeys.LAUNCH_APP_FAILURE),
-            message: this.launchAppData.app_name + ' ' +
-              this.localization.translateKey(LocKeys.LAUNCH_APP_FAILURE_DESC),
-            buttons: [
-              {
-                text: this.localization.translateKey(LocKeys.BTN_DISMISS),
-                handler: () => {}
-              }
-            ]
-          })
-        }
-      })
-      .catch((error: any) => console.log('Error in checking if the app can launch', error))
-  }
 
   onAnswer(event) {
     if (event.id) {
@@ -295,4 +244,102 @@ export class QuestionsPageComponent implements OnInit {
   isLastQuestion() {
     return this.nextQuestionId >= this.questions.length
   }
+
+  // launch external app
+  removeLaunchAppFromQuestions(questions: Question[]): Question[]{
+    return questions.filter(q => q.field_type != 'launcher')
+  }
+
+  getLaunchApp(questions: Question[]): Question{
+    const launchApps = questions.filter(q => q.field_type == 'launcher')
+    return launchApps.length> 0 ? launchApps[0] : null
+  }
+
+  validateLaunchAppUri() {
+    if(!this.launchAppData) return
+    if(this.platform.is('ios')){
+      if(!this.launchAppData.ios_uri) return
+    }
+    else if(this.platform.is('android')){
+      if(!this.launchAppData.android_uri) return
+    }
+    else return
+
+    const options: AppLauncherOptions = {}
+
+    if(this.platform.is('ios')) {
+      options.uri = this.launchAppData.ios_uri
+    } else {
+      options.uri = this.launchAppData.android_uri
+    }
+
+    if (options.uri.toString().includes('?')) {
+      options.uri += '&'
+    } else {
+      options.uri += '?'
+    }
+
+    options.uri += 'timestamp=' + this.task.timestamp
+
+    this.appLauncher.canLaunch(options)
+      .then((canLaunch: boolean) => {
+        if(canLaunch){
+          this.appLauncherOptions = options
+          this.modifyAppLauncherTextOnValidating(options)
+        } else {
+          this.modifyAppLauncherFailureTextOnValidating(options)
+        }
+      })
+      .catch((error: any) => {
+        this.modifyAppLauncherFailureTextOnValidating(options)
+      })
+  }
+
+  modifyAppLauncherTextOnValidating(options: AppLauncherOptions){
+    this.endText = this.launchAppData.field_label && this.launchAppData.field_label.length ?
+      (this.launchAppData.field_label) : (this.localization.translateKey(LocKeys.LAUNCH_APP_DESC) + ' ' +
+        (this.launchAppData.app_name? this.launchAppData.app_name : options.uri.toString()))
+
+    this.finishButtonText =
+      this.launchAppData.finish_button_text && this.launchAppData.finish_button_text.length
+        ? this.launchAppData.finish_button_text
+        : this.localization.translateKey(LocKeys.LAUNCH_APP_BUTTON)
+  }
+
+  modifyAppLauncherFailureTextOnValidating(options: AppLauncherOptions){
+    this.endText = this.launchAppData.launcher_failure_on_validating_text &&
+    this.launchAppData.launcher_failure_on_validating_text.length ?
+      (this.launchAppData.launcher_failure_on_validating_text) :
+      ((this.launchAppData.app_name? this.launchAppData.app_name : options.uri.toString()) + ' ' +
+        this.localization.translateKey(LocKeys.LAUNCH_APP_FAILURE_ON_VALIDATING))
+  }
+
+  launchApp() {
+    if(this.appLauncherOptions){
+      this.appLauncher.launch(this.appLauncherOptions).then(()=>{
+        console.log('App launched')
+      }, (err)=>{
+        console.log('Error in launching app', err)
+        this.showAlertOnAppLaunchError()
+      })
+    }
+  }
+
+  showAlertOnAppLaunchError(){
+    this.alertService.showAlert({
+      title: this.localization.translateKey(LocKeys.LAUNCH_APP_FAILURE_ON_LAUNCH_TITLE),
+      message: this.launchAppData.launcher_failure_on_launch_text ?
+        this.launchAppData.launcher_failure_on_launch_text :
+        ((this.launchAppData.app_name ? this.launchAppData.app_name : 'App') + ' ' +
+          this.localization.translateKey(LocKeys.LAUNCH_APP_FAILURE_ON_LAUNCH_DESC)),
+      buttons: [
+        {
+          text: this.localization.translateKey(LocKeys.BTN_DISMISS),
+          handler: () => {}
+        }
+      ]
+    })
+  }
 }
+
+

@@ -29,7 +29,7 @@ export class MessageHandlerService {
       case MessagingAction.QUESTIONNAIRE_TRIGGERED:
         this.logger.log('A questionnaire was triggered!')
         const questionnaire = <Assessment>JSON.parse(data.get('questionnaire'))
-        const metadata = JSON.parse(data.get('metadata'))
+        const metadata = data.get('metadata')
         return this.triggerQuestionnaire(questionnaire).then(() =>
           this.usage.sendQuestionnaireEvent(
             UsageEventType.QUESTIONNAIRE_TRIGGERED,

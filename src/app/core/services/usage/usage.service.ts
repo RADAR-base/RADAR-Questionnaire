@@ -40,7 +40,7 @@ export class UsageService {
     type,
     taskName: string,
     taskTimestamp: number,
-    metadata: string
+    metadata?: string
   ) {
     // noinspection JSIgnoredPromiseFromCall
     this.analytics.logEvent(type, {

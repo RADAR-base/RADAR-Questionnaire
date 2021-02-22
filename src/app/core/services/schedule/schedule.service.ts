@@ -147,7 +147,7 @@ export class ScheduleService {
       )
   }
 
-  generateSingleTask(
+  generateSingleAssessmentTask(
     assessment: Assessment,
     assessmentType,
     referenceDate: number

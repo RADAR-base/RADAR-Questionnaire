@@ -41,53 +41,38 @@ export class ScheduleGeneratorService {
 
   runScheduler(
     refTimestamp,
-    completedTasks,
+    completedTasks: Task[],
     utcOffsetPrev
   ): Promise<SchedulerResult> {
-    return this.fetchScheduleYearCoverage().then(() => {
-      return this.questionnaire
-        .getAssessments(AssessmentType.SCHEDULED)
-        .then(assessments =>
-          this.buildTaskSchedule(
-            assessments,
-            completedTasks,
-            refTimestamp,
-            utcOffsetPrev
-          )
+    return Promise.all([
+      this.questionnaire.getAssessments(AssessmentType.SCHEDULED),
+      this.fetchScheduleYearCoverage()
+    ]).then(([assessments]) => {
+      const schedule: Task[] = assessments.reduce((list, assessment) => {
+        const completed = completedTasks.filter(t => t.name == assessment.name)
+        return (
+          list.concat(
+            this.buildTasksForSingleAssessment(
+              assessment,
+              list.length,
+              refTimestamp,
+              AssessmentType.SCHEDULED
+            )
+          ),
+          []
         )
-    })
-  }
-
-  buildTaskSchedule(
-    assessments: Assessment[],
-    completedTasks,
-    refTimestamp,
-    utcOffsetPrev
-  ): Promise<SchedulerResult> {
-    let schedule: Task[] = assessments.reduce(
-      (list, assessment) =>
-        list.concat(
-          this.buildTasksForSingleAssessment(
-            assessment,
-            list.length,
-            refTimestamp,
-            AssessmentType.SCHEDULED
-          )
-        ),
-      []
-    )
-    // NOTE: Check for completed tasks
-    const res = this.updateScheduleWithCompletedTasks(
-      schedule,
-      completedTasks,
-      utcOffsetPrev
-    )
-    schedule = res.schedule.sort(compareTasks)
-
-    this.logger.log('[√] Updated task schedule.')
-    return Promise.resolve({
-      schedule,
-      completed: res.completed
+      })
+      // NOTE: Check for completed tasks
+      const res = this.updateScheduleWithCompletedTasks(
+        schedule,
+        completedTasks,
+        utcOffsetPrev
+      )
+      this.logger.log('[√] Updated task schedule.')
+      return Promise.resolve({
+        schedule: res.schedule.sort(compareTasks),
+        completed: res.completed
+      })
     })
   }
 

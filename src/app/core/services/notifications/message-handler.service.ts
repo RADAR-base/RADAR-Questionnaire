@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core'
 import { FirebaseX } from '@ionic-native/firebase-x/ngx'
 
+import { UsageEventType } from '../../../shared/enums/events'
 import { Assessment, AssessmentType } from '../../../shared/models/assessment'
+import { MessagingAction } from '../../../shared/models/notification-handler'
 import { QuestionnaireService } from '../config/questionnaire.service'
 import { LogService } from '../misc/log.service'
 import { ScheduleService } from '../schedule/schedule.service'
+import { UsageService } from '../usage/usage.service'
 
 @Injectable()
 export class MessageHandlerService {
@@ -12,7 +15,8 @@ export class MessageHandlerService {
     public firebase: FirebaseX,
     public logger: LogService,
     public schedule: ScheduleService,
-    public questionnaire: QuestionnaireService
+    public questionnaire: QuestionnaireService,
+    public usage: UsageService
   ) {
     this.firebase
       .onMessageReceived()
@@ -22,11 +26,20 @@ export class MessageHandlerService {
   onMessageReceived(data) {
     const action = data.get('action')
     switch (action) {
-      case 'QUESTIONNAIRE_TRIGGER':
-        console.log('A questionnaire was triggered!')
-        return this.triggerQuestionnaire(JSON.parse(data.get('questionnaire')))
+      case MessagingAction.QUESTIONNAIRE_TRIGGERED:
+        this.logger.log('A questionnaire was triggered!')
+        const questionnaire = <Assessment>JSON.parse(data.get('questionnaire'))
+        const metadata = JSON.parse(data.get('metadata'))
+        return this.triggerQuestionnaire(questionnaire).then(() =>
+          this.usage.sendQuestionnaireEvent(
+            UsageEventType.QUESTIONNAIRE_TRIGGERED,
+            questionnaire.name,
+            Date.now(),
+            metadata
+          )
+        )
       default:
-        console.log('Cannot process message.')
+        this.logger.log('Cannot process message.')
     }
   }
 
@@ -34,7 +47,7 @@ export class MessageHandlerService {
     return this.questionnaire
       .pullDefinitionForSingleQuestionnaire(questionnaire)
       .then(() =>
-        this.schedule.generateSingleTask(
+        this.schedule.generateSingleAssessmentTask(
           questionnaire,
           AssessmentType.SCHEDULED,
           Date.now()

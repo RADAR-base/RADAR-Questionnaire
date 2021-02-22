@@ -43,3 +43,7 @@ export enum NotificationMessagingState {
   DELIVERED = 'DELIVERED',
   OPENED = 'OPENED'
 }
+
+export enum MessagingAction {
+  QUESTIONNAIRE_TRIGGERED = 'QUESTIONNAIRE_TRIGGEREDs'
+}

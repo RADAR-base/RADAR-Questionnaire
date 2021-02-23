@@ -95,7 +95,8 @@ export class SchemaService {
         const Event: EventValueExport = {
           time: getSeconds({ milliseconds: this.getUniqueTimeNow() }),
           eventType: payload.eventType.toUpperCase(),
-          questionnaireName: payload.questionnaireName
+          questionnaireName: payload.questionnaireName,
+          metadata: payload.metadata ? payload.metadata : null
         }
         return Event
     }

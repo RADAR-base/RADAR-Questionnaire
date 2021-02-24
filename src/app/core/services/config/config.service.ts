@@ -278,11 +278,10 @@ export class ConfigService {
 
   resetAll() {
     this.sendConfigChangeEvent(ConfigEventType.APP_RESET)
-    return Promise.all([
-      this.resetConfig(),
-      this.resetCache(),
-      this.cancelNotifications()
-    ]).then(() => this.subjectConfig.reset())
+    this.cancelNotifications()
+    return Promise.all([this.resetConfig(), this.resetCache()]).then(() =>
+      this.subjectConfig.reset()
+    )
   }
 
   resetConfig() {

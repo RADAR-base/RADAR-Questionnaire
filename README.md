@@ -10,6 +10,17 @@ A hybrid mobile application to actively capture data for the RADAR-Base Platform
 
 We use the [Ionic framework](http://ionicframework.com/docs/), which is built with [Angular](https://angular.io/) and wraps [Apache Cordova](https://cordova.apache.org/).
 
+### Recommended Package Versions
+
+It is recommended that you install the following versions or later:
+
+```
+node v13.8.0
+ionic v5.4.16
+npm v6.13.6
+yarn v1.19.0
+```
+
 ## Install
 
 First install [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/en/docs/install).

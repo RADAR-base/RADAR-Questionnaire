@@ -9,7 +9,7 @@ export function parseVersion(data) {
     .match(playstorePattern)
     .toString()
     .match(versionPattern)[0]
-}
+  }
 
 // NOTE: Parses and evaluates the branching logic
 // Example: '[esm_social_interact(1)] = \"1\" or' or '[esm_social] = '1'' to 'esm_social_interact[1] == "1" ||'
@@ -24,8 +24,8 @@ export function parseAndEvalLogic(logic: string, answers): string {
     .replace(/[\]]/g, '')
     .replace(/\(([0-9A-z""'']+?)\)/g, '[$1]')
     .replace(/[=]/g, '==')
-    .replace(/or/g, '||')
-    .replace(/and/g, '&&')
+    .replace(/ or /g, ' || ')
+    .replace(/ and /g, ' && ')
 
   // Get identifiers, aka field names and filter unique values
   const compiled = parser.parse(logic)
@@ -43,7 +43,7 @@ export function parseAndEvalLogic(logic: string, answers): string {
       Object.assign(parsedAnswers, { [fieldName]: values })
     } else Object.assign(parsedAnswers, { [fieldName]: answer })
   })
-
+  
   // Evalute logic with answers
   return compiled.eval(parsedAnswers)
 }

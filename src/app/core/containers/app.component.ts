@@ -27,6 +27,7 @@ export class AppComponent {
       this.notificationService
         .init()
         .then(() => this.notificationService.permissionCheck())
+        .catch()
         .then(() => (this.isAppInitialized = true))
         .then(() => this.splashScreen.hide())
     })

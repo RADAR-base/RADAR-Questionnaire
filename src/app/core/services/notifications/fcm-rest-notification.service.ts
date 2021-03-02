@@ -92,11 +92,12 @@ export class FcmRestNotificationService extends FcmNotificationService {
   getSubjectDetails() {
     return Promise.all([
       this.appServerService.init(),
+      this.config.getProjectName(),
       this.config.getParticipantLogin()
     ])
-      .then(([, subjectId]) =>
+      .then(([, projectId, subjectId]) =>
         Promise.all([
-          this.appServerService.getSubject(subjectId),
+          this.appServerService.getSubject(projectId, subjectId),
           this.config.getSourceID()
         ])
       )

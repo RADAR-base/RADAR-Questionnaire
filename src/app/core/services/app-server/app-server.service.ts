@@ -35,7 +35,7 @@ export class AppServerService {
 
   init() {
     // NOTE: Initialising ensures project and subject exists in the app server
-    return this.updateAppServerURL()
+    return Promise.all([this.updateAppServerURL(), this.updateTokens()])
       .then(() =>
         Promise.all([
           this.subjectConfig.getParticipantLogin(),
@@ -96,12 +96,19 @@ export class AppServerService {
     )
   }
 
-  getSubject(subjectId): Promise<any> {
+  getSubject(projectId, subjectId): Promise<any> {
     return this.getHeaders().then(headers =>
       this.http
-        .get(urljoin(this.APP_SERVER_URL, this.SUBJECT_PATH, subjectId), {
-          headers
-        })
+        .get(
+          urljoin(
+            this.APP_SERVER_URL,
+            this.PROJECT_PATH,
+            projectId,
+            this.SUBJECT_PATH,
+            subjectId
+          ),
+          { headers }
+        )
         .toPromise()
     )
   }
@@ -113,7 +120,7 @@ export class AppServerService {
     fcmToken
   ): Promise<any> {
     // NOTE: Adds subject if missing, updates subject if it exists
-    return this.getSubject(subjectId)
+    return this.getSubject(projectId, subjectId)
       .then(subject =>
         this.updateSubject(subject, {
           fcmToken,

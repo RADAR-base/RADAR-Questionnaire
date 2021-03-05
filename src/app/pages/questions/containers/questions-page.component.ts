@@ -37,7 +37,6 @@ export class QuestionsPageComponent implements OnInit {
   externalApp: ExternalApp
   questionTitle: String
   endText: string
-  finishButtonText: string
   isLastTask: boolean
   requiresInClinicCompletion: boolean
   introduction: string
@@ -87,7 +86,6 @@ export class QuestionsPageComponent implements OnInit {
     return this.questionsService
       .getQuestionnairePayload(this.task)
       .then(res => {
-        console.log(res)
         this.initQuestionnaire(res)
         return this.updateToolbarButtons()
       })

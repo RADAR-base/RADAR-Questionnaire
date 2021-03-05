@@ -21,7 +21,7 @@
       *ngIf="showDoneButton"
       (tap)="handleClosePage()"
     >
-      {{'BTN_DONE' | translate }}
+      {{ 'BTN_DONE' | translate }}
     </button>
     <ng-container *ngIf="!showDoneButton && isShown">
       <div class="extra-info">

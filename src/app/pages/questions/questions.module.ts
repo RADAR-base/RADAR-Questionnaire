@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
-import {IonicModule, NavParams} from 'ionic-angular'
+import { IonicModule } from 'ionic-angular'
 
 import { PipesModule } from '../../shared/pipes/pipes.module'
 import { FinishComponent } from './components/finish/finish.component'

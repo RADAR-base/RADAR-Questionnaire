@@ -11,12 +11,11 @@ import {
   AssessmentType,
   ShowIntroductionType
 } from '../../../shared/models/assessment'
-import { Question } from '../../../shared/models/question'
+import {ExternalApp, Question} from '../../../shared/models/question'
 import { Task } from '../../../shared/models/task'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { QuestionsService } from '../services/questions.service'
-import {AppLauncher, AppLauncherOptions} from "@ionic-native/app-launcher/ngx";
-import {AlertService} from "../../../core/services/misc/alert.service";
+import {AppLauncherService} from "../services/app-launcher.service";
 
 @Component({
   selector: 'page-questions',
@@ -35,9 +34,8 @@ export class QuestionsPageComponent implements OnInit {
   task: Task
   taskType: AssessmentType
   questions: Question[]
-  launchAppData: Question
+  externalApp: ExternalApp
   questionTitle: String
-  appLauncherOptions?: AppLauncherOptions
   endText: string
   finishButtonText: string
   isLastTask: boolean
@@ -47,6 +45,8 @@ export class QuestionsPageComponent implements OnInit {
   showIntroductionScreen: boolean
   showDoneButton: boolean
   showFinishScreen: boolean
+  showFinishAndLaunchScreen: boolean = false
+  externalAppCanLaunch: boolean = false
   SHOW_INTRODUCTION_SET: Set<boolean | ShowIntroductionType> = new Set([
     true,
     ShowIntroductionType.ALWAYS,
@@ -61,8 +61,7 @@ export class QuestionsPageComponent implements OnInit {
     private platform: Platform,
     private insomnia: Insomnia,
     private localization: LocalizationService,
-    private appLauncher: AppLauncher,
-    private alertService: AlertService,
+    private appLauncher: AppLauncherService,
   ) {
     this.platform.registerBackButtonAction(() => {
       this.sendCompletionLog()
@@ -102,23 +101,21 @@ export class QuestionsPageComponent implements OnInit {
       res.assessment.showIntroduction
     )
 
-    this.questions = this.removeLaunchAppFromQuestions(res.questions)
-    this.launchAppData = this.getLaunchApp(res.questions)
+    this.questions = this.appLauncher.removeLaunchAppFromQuestions(res.questions)
+    this.externalApp = this.appLauncher.getLaunchApp(res.questions)
 
     this.endText =
       res.endText && res.endText.length
         ? res.endText
         : this.localization.translateKey(LocKeys.FINISH_THANKS)
 
-    this.validateLaunchAppUri()
+    this.checkIfQuestionnaireHasAppLaunch()
 
     this.isLastTask = res.isLastTask
     this.assessment = res.assessment
     this.taskType = res.type
     this.requiresInClinicCompletion = this.assessment.requiresInClinicCompletion
   }
-
-
 
   handleIntro(start: boolean) {
     this.showIntroductionScreen = false
@@ -137,12 +134,12 @@ export class QuestionsPageComponent implements OnInit {
       .handleClinicalFollowUp(this.assessment, completedInClinic)
       .then(() => {
         this.updateDoneButton(false)
-        this.launchApp()
+        if(this.externalAppCanLaunch) {
+          this.appLauncher.launchApp(this.externalApp, this.task)
+        }
         return this.navCtrl.setRoot(HomePageComponent)
       })
   }
-
-
 
   onAnswer(event) {
     if (event.id) {
@@ -245,100 +242,17 @@ export class QuestionsPageComponent implements OnInit {
     return this.nextQuestionId >= this.questions.length
   }
 
-  // launch external app
-  removeLaunchAppFromQuestions(questions: Question[]): Question[]{
-    return questions.filter(q => q.field_type != 'launcher')
-  }
-
-  getLaunchApp(questions: Question[]): Question{
-    const launchApps = questions.filter(q => q.field_type == 'launcher')
-    return launchApps.length> 0 ? launchApps[0] : null
-  }
-
-  validateLaunchAppUri() {
-    if(!this.launchAppData) return
-    if(this.platform.is('ios')){
-      if(!this.launchAppData.ios_uri) return
+  private checkIfQuestionnaireHasAppLaunch() {
+    if(this.externalApp && this.appLauncher.isExternalAppUriValidForThePlatform(this.externalApp)){
+      this.appLauncher.isExternalAppCanLaunch(this.externalApp, this.task)
+        .then(canLaunch => {
+          this.showFinishAndLaunchScreen = true
+          this.externalAppCanLaunch = canLaunch
+        })
+        .catch(err => {
+          this.showFinishAndLaunchScreen = false
+        })
     }
-    else if(this.platform.is('android')){
-      if(!this.launchAppData.android_uri) return
-    }
-    else return
-
-    const options: AppLauncherOptions = {}
-
-    if(this.platform.is('ios')) {
-      options.uri = this.launchAppData.ios_uri
-    } else {
-      options.uri = this.launchAppData.android_uri
-    }
-
-    if (options.uri.toString().includes('?')) {
-      options.uri += '&'
-    } else {
-      options.uri += '?'
-    }
-
-    options.uri += 'timestamp=' + this.task.timestamp
-
-    this.appLauncher.canLaunch(options)
-      .then((canLaunch: boolean) => {
-        if(canLaunch){
-          this.appLauncherOptions = options
-          this.modifyAppLauncherTextOnValidating(options)
-        } else {
-          this.modifyAppLauncherFailureTextOnValidating(options)
-        }
-      })
-      .catch((error: any) => {
-        this.modifyAppLauncherFailureTextOnValidating(options)
-      })
-  }
-
-  modifyAppLauncherTextOnValidating(options: AppLauncherOptions){
-    this.endText = this.launchAppData.field_label && this.launchAppData.field_label.length ?
-      (this.launchAppData.field_label) : (this.localization.translateKey(LocKeys.LAUNCH_APP_DESC) + ' ' +
-        (this.launchAppData.app_name? this.launchAppData.app_name : options.uri.toString()))
-
-    this.finishButtonText =
-      this.launchAppData.finish_button_text && this.launchAppData.finish_button_text.length
-        ? this.launchAppData.finish_button_text
-        : this.localization.translateKey(LocKeys.LAUNCH_APP_BUTTON)
-  }
-
-  modifyAppLauncherFailureTextOnValidating(options: AppLauncherOptions){
-    this.endText = this.launchAppData.launcher_failure_on_validating_text &&
-    this.launchAppData.launcher_failure_on_validating_text.length ?
-      (this.launchAppData.launcher_failure_on_validating_text) :
-      ((this.launchAppData.app_name? this.launchAppData.app_name : options.uri.toString()) + ' ' +
-        this.localization.translateKey(LocKeys.LAUNCH_APP_FAILURE_ON_VALIDATING))
-  }
-
-  launchApp() {
-    if(this.appLauncherOptions){
-      this.appLauncher.launch(this.appLauncherOptions).then(()=>{
-        console.log('App launched')
-      }, (err)=>{
-        console.log('Error in launching app', err)
-        this.showAlertOnAppLaunchError()
-      })
-    }
-  }
-
-  showAlertOnAppLaunchError(){
-    this.alertService.showAlert({
-      title: this.localization.translateKey(LocKeys.LAUNCH_APP_FAILURE_ON_LAUNCH_TITLE),
-      message: this.launchAppData.launcher_failure_on_launch_text ?
-        this.launchAppData.launcher_failure_on_launch_text :
-        ((this.launchAppData.app_name ? this.launchAppData.app_name : 'App') + ' ' +
-          this.localization.translateKey(LocKeys.LAUNCH_APP_FAILURE_ON_LAUNCH_DESC)),
-      buttons: [
-        {
-          text: this.localization.translateKey(LocKeys.BTN_DISMISS),
-          handler: () => {}
-        }
-      ]
-    })
   }
 }
 

@@ -28,7 +28,7 @@ const COMPONENTS = [
   InfoScreenComponent,
   RangeInfoInputComponent,
   TextInputComponent,
-  WheelSelectorComponent,
+  WheelSelectorComponent
 ]
 
 @NgModule({

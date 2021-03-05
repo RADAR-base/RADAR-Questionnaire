@@ -20,12 +20,19 @@ export interface Question {
   text_validation_type_or_show_slider_number?: string
   type?: string
   range?: Range
-  app_name?: string
-  android_uri?: string
-  ios_uri?: string
-  launcher_failure_on_validating_text?: string
-  launcher_failure_on_launch_text?: string
-  finish_button_text?: string
+}
+
+export interface ExternalApp {
+  branching_logic?: string
+  evaluated_logic?: string
+  field_label?: string
+  field_name?: string
+  field_type?: string
+  form_name?: string
+  type?: string
+  external_app_name?: string
+  external_app_android_uri?: string
+  external_app_ios_uri?: string
 }
 
 export interface SelectChoicesOrCalculations {

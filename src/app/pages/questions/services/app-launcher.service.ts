@@ -10,6 +10,7 @@ import {UsageService} from "../../../core/services/usage/usage.service";
 import {Insomnia} from "@ionic-native/insomnia/ngx";
 import {AlertService} from "../../../core/services/misc/alert.service";
 import { Task } from '../../../shared/models/task'
+import {LogService} from "../../../core/services/misc/log.service";
 
 @Injectable()
 export class AppLauncherService {
@@ -22,6 +23,7 @@ export class AppLauncherService {
     private localization: LocalizationService,
     private appLauncher: AppLauncher,
     private alertService: AlertService,
+    private logger: LogService
 ) {}
 
   removeLaunchAppFromQuestions(questions: Question[]): Question[]{
@@ -64,7 +66,8 @@ export class AppLauncherService {
       .then((canLaunch: boolean) => {
         return canLaunch;
       })
-      .catch(() => {
+      .catch(err => {
+        this.logger.error("External App is not installed or doesn't support deeplink.", err)
         return false
       })
   }

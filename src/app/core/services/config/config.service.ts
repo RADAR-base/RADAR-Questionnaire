@@ -305,9 +305,8 @@ export class ConfigService {
         .then(() => this.analytics.setUserProperties(user))
         .then(() => this.appConfig.init(user.enrolmentDate)),
       this.localization.init(),
-      this.kafka.init(),
-      this.notifications.init()
-    ])
+      this.kafka.init()
+    ]).then(() => this.notifications.init())
   }
 
   getAll() {

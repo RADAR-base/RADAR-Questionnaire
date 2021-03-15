@@ -34,16 +34,18 @@ export abstract class FcmNotificationService extends NotificationService {
     public remoteConfig: RemoteConfigService
   ) {
     super(store)
-    this.remoteConfig.subject().subscribe(cfg => {
-      cfg
-        .getOrDefault(
-          ConfigKeys.NOTIFICATION_TTL_MINUTES,
-          String(this.ttlMinutes)
-        )
-        .then(
-          ttl =>
-            (this.ttlMinutes = Number(ttl) || DefaultNotificationTtlMinutes)
-        )
+    this.platform.ready().then(() => {
+      this.remoteConfig.subject().subscribe(cfg => {
+        cfg
+          .getOrDefault(
+            ConfigKeys.NOTIFICATION_TTL_MINUTES,
+            String(this.ttlMinutes)
+          )
+          .then(
+            ttl =>
+              (this.ttlMinutes = Number(ttl) || DefaultNotificationTtlMinutes)
+          )
+      })
     })
   }
 

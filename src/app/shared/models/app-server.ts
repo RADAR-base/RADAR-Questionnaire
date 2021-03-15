@@ -9,6 +9,7 @@ export interface FcmNotificationDto {
   title: string
   ttlSeconds: number
   type: string
+  fcmMessageId?: number
 }
 
 export interface FcmNotifications {

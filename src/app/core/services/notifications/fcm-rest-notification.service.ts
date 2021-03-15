@@ -1,4 +1,8 @@
-import { HttpClient } from '@angular/common/http'
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpResponse
+} from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { FirebaseX } from '@ionic-native/firebase-x/ngx'
 import { WebIntent } from '@ionic-native/web-intent/ngx'
@@ -7,11 +11,13 @@ import { Subscription } from 'rxjs'
 import * as urljoin from 'url-join'
 
 import {
-  DefaultMaxUpstreamResends,
   DefaultPackageName,
   DefaultSourcePrefix
 } from '../../../../assets/data/defaultConfig'
-import { FcmNotifications } from '../../../shared/models/app-server'
+import {
+  FcmNotificationDto,
+  FcmNotifications
+} from '../../../shared/models/app-server'
 import { AssessmentType } from '../../../shared/models/assessment'
 import {
   NotificationMessagingState,
@@ -52,8 +58,12 @@ export class FcmRestNotificationService extends FcmNotificationService {
     private webIntent: WebIntent
   ) {
     super(storage, config, firebase, platform, logger, remoteConfig)
-    this.onAppOpen()
-    this.resumeListener = this.platform.resume.subscribe(() => this.onAppOpen())
+    this.platform.ready().then(() => {
+      this.onAppOpen()
+      this.resumeListener = this.platform.resume.subscribe(() =>
+        this.onAppOpen()
+      )
+    })
   }
 
   init() {
@@ -205,18 +215,20 @@ export class FcmRestNotificationService extends FcmNotificationService {
         .post(
           this.getNotificationEndpoint(projectId, subjectId),
           notification.notificationDto,
-          { headers }
+          { headers, observe: 'response' }
         )
         .toPromise()
-        .then(res => {
-          notification.notification.id = res['id']
-          notification.notification.messageId = res['fcmMessageId']
-          return this.logger.log('Successfully sent! Updating notification Id')
+        .then((res: HttpResponse<FcmNotificationDto>) => {
+          this.logger.log('Successfully sent! Updating notification Id')
+          return res.body
         })
-        .catch(err => {
-          this.logger.error('Failed to send notification', err)
-          if (this.upstreamResends++ < DefaultMaxUpstreamResends)
-            return this.sendNotification(notification, subjectId, projectId)
+        .catch((err: HttpErrorResponse) => {
+          if (err.status == 409) return err.message['dto']
+          return this.logger.error('Failed to send notification', err)
+        })
+        .then((resultNotification: FcmNotificationDto) => {
+          notification.notification.id = resultNotification.id
+          notification.notification.messageId = resultNotification.fcmMessageId
         })
     )
   }

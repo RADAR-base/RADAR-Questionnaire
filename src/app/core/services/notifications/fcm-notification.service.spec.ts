@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing'
 import { FirebaseX } from '@ionic-native/firebase-x/ngx'
 import { Platform } from 'ionic-angular'
-import { PlatformMock } from 'ionic-mocks'
 
 import {
   FirebaseMock,
@@ -29,7 +28,7 @@ describe('FcmNotificationService', () => {
     TestBed.configureTestingModule({
       providers: [
         FcmNotificationService,
-        { provide: Platform, useClass: PlatformMock },
+        Platform,
         { provide: FirebaseX, useClass: FirebaseMock },
         { provide: LogService, useClass: LogServiceMock },
         { provide: StorageService, useClass: StorageServiceMock },
@@ -47,6 +46,8 @@ describe('FcmNotificationService', () => {
 
   beforeEach(() => {
     service = TestBed.get(FcmNotificationService)
+    const platform = TestBed.get(Platform)
+    spyOn(platform, 'ready').and.callFake(() => Promise.resolve(''))
   })
 
   it('should create', () => {

@@ -1,6 +1,7 @@
 import { HttpClient, HttpHandler } from '@angular/common/http'
 import { TestBed } from '@angular/core/testing'
 import { JwtHelperService } from '@auth0/angular-jwt'
+import { Platform } from 'ionic-angular'
 
 import {
   JwtHelperServiceMock,
@@ -22,6 +23,7 @@ describe('TokenService', () => {
         TokenService,
         HttpClient,
         HttpHandler,
+        Platform,
         { provide: RemoteConfigService, useClass: RemoteConfigServiceMock },
         { provide: JwtHelperService, useClass: JwtHelperServiceMock },
         { provide: StorageService, useClass: StorageServiceMock },
@@ -32,6 +34,8 @@ describe('TokenService', () => {
 
   beforeEach(() => {
     service = TestBed.get(TokenService)
+    const platform = TestBed.get(Platform)
+    spyOn(platform, 'ready').and.callFake(() => Promise.resolve(''))
   })
 
   it('should create', () => {

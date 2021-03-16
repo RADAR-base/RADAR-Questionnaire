@@ -12,6 +12,12 @@ export interface FcmNotificationDto {
   fcmMessageId?: number
 }
 
+export interface FcmNotificationError {
+  dto?: FcmNotificationDto
+  errorMessage: string
+  message: string
+}
+
 export interface FcmNotifications {
   notifications?: Array<FcmNotificationDto>
 }

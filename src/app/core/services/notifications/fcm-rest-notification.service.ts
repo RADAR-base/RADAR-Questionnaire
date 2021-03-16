@@ -16,6 +16,7 @@ import {
 } from '../../../../assets/data/defaultConfig'
 import {
   FcmNotificationDto,
+  FcmNotificationError,
   FcmNotifications
 } from '../../../shared/models/app-server'
 import { AssessmentType } from '../../../shared/models/assessment'
@@ -223,12 +224,19 @@ export class FcmRestNotificationService extends FcmNotificationService {
           return res.body
         })
         .catch((err: HttpErrorResponse) => {
-          if (err.status == 409) return err.message['dto']
+          const data: FcmNotificationError = err.error
+          if (err.status == 409) {
+            this.logger.log(
+              'Notification already exists, storing notification data..'
+            )
+            return data.dto ? data.dto : notification.notification
+          }
           return this.logger.error('Failed to send notification', err)
         })
         .then((resultNotification: FcmNotificationDto) => {
           notification.notification.id = resultNotification.id
-          notification.notification.messageId = resultNotification.fcmMessageId
+          return (notification.notification.messageId =
+            resultNotification.fcmMessageId)
         })
     )
   }

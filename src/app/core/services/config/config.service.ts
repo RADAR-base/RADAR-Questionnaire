@@ -304,6 +304,7 @@ export class ConfigService {
       this.subjectConfig
         .init(user)
         .then(() => this.analytics.setUserProperties(user))
+        .then(() => this.analytics.setUserProperties(user.attributes))
         .then(() => this.appConfig.init(user.enrolmentDate)),
       this.localization.init(),
       this.kafka.init(),

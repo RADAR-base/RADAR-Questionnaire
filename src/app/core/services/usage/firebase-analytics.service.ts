@@ -78,7 +78,7 @@ export class FirebaseAnalyticsService extends AnalyticsService {
    * ```
    */
 
-  setUserProperties(userProperties: User): Promise<any> {
+  setUserProperties(userProperties: User | Object): Promise<any> {
     if (!this.platform.is('cordova'))
       return Promise.resolve('Could not load firebase')
 

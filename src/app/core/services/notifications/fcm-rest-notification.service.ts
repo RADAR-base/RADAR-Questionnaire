@@ -224,6 +224,7 @@ export class FcmRestNotificationService extends FcmNotificationService {
           return res.body
         })
         .catch((err: HttpErrorResponse) => {
+          this.logger.log('Http request returned an error: ' + err.message)
           const data: FcmNotificationError = err.error
           if (err.status == 409) {
             this.logger.log(

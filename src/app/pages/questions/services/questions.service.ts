@@ -187,7 +187,6 @@ export class QuestionsService {
 
   processCompletedQuestionnaire(task, questions): Promise<any> {
     const data = this.getData()
-    console.log(data)
     return Promise.all([
       this.finish.updateTaskToComplete(task),
       this.finish.processDataAndSend(

@@ -34,9 +34,8 @@ export class QuestionsPageComponent implements OnInit {
   taskType: AssessmentType
   questions: Question[]
   // Questions grouped by matrix group if it exists
-  groupedQuestions = {}
-  totalQuestionGroups = 0
-  questionTitle: String
+  groupedQuestions: Map<string, Question[]>
+  questionTitle: string
   endText: string
   isLastTask: boolean
   requiresInClinicCompletion: boolean
@@ -99,7 +98,6 @@ export class QuestionsPageComponent implements OnInit {
     )
     this.questions = res.questions
     this.groupedQuestions = this.groupQuestionsByMatrixGroup(this.questions)
-    this.totalQuestionGroups = Object.keys(this.groupedQuestions).length
     this.endText =
       res.endText && res.endText.length
         ? res.endText
@@ -111,14 +109,14 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   groupQuestionsByMatrixGroup(questions: Question[]) {
-    const groupedQuestions = {}
+    const groupedQuestions = new Map<string, Question[]>()
     questions.forEach(q => {
       const key = q.field_type.includes(this.MATRIX_FIELD_NAME)
         ? q.matrix_group_name
         : q.field_name
-      groupedQuestions[key]
-        ? groupedQuestions[key].push(q)
-        : (groupedQuestions[key] = [q])
+      const entry = groupedQuestions.get(key) ? groupedQuestions.get(key) : []
+      entry.push(q)
+      groupedQuestions.set(key, entry)
     })
 
     return groupedQuestions
@@ -164,10 +162,9 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   getCurrentQuestions() {
-    // NOTE: For non-matrix type this will only return one question but for matrix types this can be more than one
-    return this.groupedQuestions[
-      Object.keys(this.groupedQuestions)[this.currentQuestionId]
-    ]
+    // NOTE: For non-matrix type this will only return one question (array) but for matrix types this can be more than one
+    const key = Array.from(this.groupedQuestions.keys())[this.currentQuestionId]
+    return this.groupedQuestions.get(key)
   }
 
   submitTimestamps() {
@@ -247,5 +244,10 @@ export class QuestionsPageComponent implements OnInit {
 
   isLastQuestion() {
     return this.nextQuestionId >= this.questions.length
+  }
+
+  asIsOrder(a, b) {
+    // NOTE: This is needed to display questions (in the view) from the map in order
+    return 1
   }
 }

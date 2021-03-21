@@ -11,7 +11,10 @@
         </ion-slide>
         <ng-container *ngIf="!showIntroductionScreen">
           <ion-slide
-            *ngFor="let item of groupedQuestions | keyvalue; let i = index"
+            *ngFor="
+              let item of groupedQuestions | keyvalue: asIsOrder;
+              let i = index
+            "
           >
             <ng-container *ngFor="let question of item.value">
               <question
@@ -52,6 +55,6 @@
     [isLeftButtonDisabled]="isLeftButtonDisabled"
     [isRightButtonDisabled]="isRightButtonDisabled"
     [currentQuestionId]="currentQuestionId"
-    [totalQuestions]="totalQuestionGroups"
+    [totalQuestions]="groupedQuestions?.size"
   ></toolbar>
 </ion-footer>

@@ -88,14 +88,18 @@ export class QuestionsService {
     return this.answerService.check(id)
   }
 
-  evalBranchingLogicAndGetNextQuestion(questions, currentQuestion) {
+  evalBranchingLogicAndGetNextQuestion(groupedQuestions, currentQuestion) {
     let questionIdx = currentQuestion + 1
+    const groupKeys = Object.keys(groupedQuestions)
+
     while (
-      questionIdx < questions.length &&
-      questions[questionIdx].evaluated_logic !== ''
+      questionIdx < groupKeys.length &&
+      this.isNotNullOrEmpty(
+        groupedQuestions[groupKeys[questionIdx]].evaluated_logic
+      )
     ) {
       const responses = Object.assign({}, this.answerService.answers)
-      const logic = questions[questionIdx].evaluated_logic
+      const logic = groupedQuestions[groupKeys[questionIdx]].evaluated_logic
       const logicFieldName = this.getLogicFieldName(logic)
       const answers = this.answerService.answers[logicFieldName]
       if (typeof answers !== 'undefined') {
@@ -111,12 +115,19 @@ export class QuestionsService {
     return questionIdx
   }
 
+  isNotNullOrEmpty(value) {
+    return value && value !== ''
+  }
+
   getLogicFieldName(logic) {
     return logic.split("['")[1].split("']")[0]
   }
 
-  getNextQuestion(questions, currentQuestion) {
-    return this.evalBranchingLogicAndGetNextQuestion(questions, currentQuestion)
+  getNextQuestion(groupedQuestions, currentQuestion) {
+    return this.evalBranchingLogicAndGetNextQuestion(
+      groupedQuestions,
+      currentQuestion
+    )
   }
 
   getAttemptProgress(total) {
@@ -176,6 +187,7 @@ export class QuestionsService {
 
   processCompletedQuestionnaire(task, questions): Promise<any> {
     const data = this.getData()
+    console.log(data)
     return Promise.all([
       this.finish.updateTaskToComplete(task),
       this.finish.processDataAndSend(

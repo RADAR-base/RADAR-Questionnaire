@@ -278,11 +278,10 @@ export class ConfigService {
 
   resetAll() {
     this.sendConfigChangeEvent(ConfigEventType.APP_RESET)
-    return Promise.all([
-      this.resetConfig(),
-      this.resetCache(),
-      this.cancelNotifications()
-    ]).then(() => this.subjectConfig.reset())
+    this.cancelNotifications()
+    return Promise.all([this.resetConfig(), this.resetCache()]).then(() =>
+      this.subjectConfig.reset()
+    )
   }
 
   resetConfig() {
@@ -306,9 +305,8 @@ export class ConfigService {
         .then(() => this.analytics.setUserProperties(user))
         .then(() => this.appConfig.init(user.enrolmentDate)),
       this.localization.init(),
-      this.kafka.init(),
-      this.notifications.init()
-    ])
+      this.kafka.init()
+    ]).then(() => this.notifications.init())
   }
 
   getAll() {

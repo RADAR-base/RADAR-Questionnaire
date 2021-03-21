@@ -7,7 +7,9 @@ import { LocalizationService } from '../../../core/services/misc/localization.se
 import { ConfigKeys } from '../../../shared/enums/config'
 import { ShowIntroductionType } from '../../../shared/models/assessment'
 import { Question, QuestionType } from '../../../shared/models/question'
+import { parseAndEvalLogic } from '../../../shared/utilities/parsers'
 import { getSeconds } from '../../../shared/utilities/time'
+import { Utility } from '../../../shared/utilities/util'
 import { AnswerService } from './answer.service'
 import { FinishTaskService } from './finish-task.service'
 import { TimestampService } from './timestamp.service'
@@ -30,7 +32,8 @@ export class QuestionsService {
     private timestampService: TimestampService,
     private localization: LocalizationService,
     private finish: FinishTaskService,
-    private remoteConfig: RemoteConfigService
+    private remoteConfig: RemoteConfigService,
+    private util: Utility
   ) {}
 
   reset() {
@@ -88,46 +91,25 @@ export class QuestionsService {
     return this.answerService.check(id)
   }
 
-  evalBranchingLogicAndGetNextQuestion(groupedQuestions, currentQuestion) {
-    let questionIdx = currentQuestion + 1
+  getNextQuestion(groupedQuestions, currentQuestionId) {
+    let qIndex = currentQuestionId + 1
     const groupKeys = Object.keys(groupedQuestions)
 
     while (
-      questionIdx < groupKeys.length &&
-      this.isNotNullOrEmpty(
-        groupedQuestions[groupKeys[questionIdx]].evaluated_logic
-      )
+      qIndex < groupKeys.length &&
+      groupedQuestions[groupKeys[qIndex]].branching_logic.length
     ) {
-      const responses = Object.assign({}, this.answerService.answers)
-      const logic = groupedQuestions[groupKeys[questionIdx]].evaluated_logic
-      const logicFieldName = this.getLogicFieldName(logic)
-      const answers = this.answerService.answers[logicFieldName]
-      if (typeof answers !== 'undefined') {
-        const answerLength = answers.length
-        if (!answerLength) if (eval(logic) === true) return questionIdx
-        for (const answer of answers) {
-          responses[logicFieldName] = answer
-          if (eval(logic) === true) return questionIdx
-        }
-      }
-      questionIdx += 1
+      const answers = this.util.deepCopy(this.answerService.answers)
+      if (
+        parseAndEvalLogic(
+          groupedQuestions[groupKeys[qIndex]].branching_logic,
+          answers
+        )
+      )
+        return qIndex
+      qIndex += 1
     }
-    return questionIdx
-  }
-
-  isNotNullOrEmpty(value) {
-    return value && value !== ''
-  }
-
-  getLogicFieldName(logic) {
-    return logic.split("['")[1].split("']")[0]
-  }
-
-  getNextQuestion(groupedQuestions, currentQuestion) {
-    return this.evalBranchingLogicAndGetNextQuestion(
-      groupedQuestions,
-      currentQuestion
-    )
+    return qIndex
   }
 
   getAttemptProgress(total) {

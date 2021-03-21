@@ -10,14 +10,20 @@
           ></introduction>
         </ion-slide>
         <ng-container *ngIf="!showIntroductionScreen">
-          <ion-slide *ngFor="let question of questions; let i = index">
-            <question
-              *ngIf="i >= currentQuestionId - 10 && i <= currentQuestionId + 10"
-              [question]="question"
-              [questionIndex]="i"
-              [currentIndex]="currentQuestionId"
-              (answer)="onAnswer($event)"
-            ></question>
+          <ion-slide
+            *ngFor="let item of groupedQuestions | keyvalue; let i = index"
+          >
+            <ng-container *ngFor="let question of item.value">
+              <question
+                *ngIf="
+                  i >= currentQuestionId - 10 && i <= currentQuestionId + 10
+                "
+                [question]="question"
+                [questionIndex]="i"
+                [currentIndex]="currentQuestionId"
+                (answer)="onAnswer($event)"
+              ></question>
+            </ng-container>
           </ion-slide>
         </ng-container>
         <ion-slide>
@@ -46,6 +52,6 @@
     [isLeftButtonDisabled]="isLeftButtonDisabled"
     [isRightButtonDisabled]="isRightButtonDisabled"
     [currentQuestionId]="currentQuestionId"
-    [totalQuestions]="questions?.length"
+    [totalQuestions]="totalQuestionGroups"
   ></toolbar>
 </ion-footer>

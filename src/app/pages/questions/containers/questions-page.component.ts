@@ -33,6 +33,9 @@ export class QuestionsPageComponent implements OnInit {
   task: Task
   taskType: AssessmentType
   questions: Question[]
+  // Questions grouped by matrix group if it exists
+  groupedQuestions = {}
+  totalQuestionGroups = 0
   questionTitle: String
   endText: string
   isLastTask: boolean
@@ -47,6 +50,7 @@ export class QuestionsPageComponent implements OnInit {
     ShowIntroductionType.ALWAYS,
     ShowIntroductionType.ONCE
   ])
+  MATRIX_FIELD_NAME = 'matrix'
 
   constructor(
     public navCtrl: NavController,
@@ -94,6 +98,8 @@ export class QuestionsPageComponent implements OnInit {
       res.assessment.showIntroduction
     )
     this.questions = res.questions
+    this.groupedQuestions = this.groupQuestionsByMatrixGroup(this.questions)
+    this.totalQuestionGroups = Object.keys(this.groupedQuestions).length
     this.endText =
       res.endText && res.endText.length
         ? res.endText
@@ -102,6 +108,20 @@ export class QuestionsPageComponent implements OnInit {
     this.assessment = res.assessment
     this.taskType = res.type
     this.requiresInClinicCompletion = this.assessment.requiresInClinicCompletion
+  }
+
+  groupQuestionsByMatrixGroup(questions: Question[]) {
+    const groupedQuestions = {}
+    questions.forEach(q => {
+      const key = q.field_type.includes(this.MATRIX_FIELD_NAME)
+        ? q.matrix_group_name
+        : q.field_name
+      groupedQuestions[key]
+        ? groupedQuestions[key].push(q)
+        : (groupedQuestions[key] = [q])
+    })
+
+    return groupedQuestions
   }
 
   handleIntro(start: boolean) {
@@ -143,20 +163,23 @@ export class QuestionsPageComponent implements OnInit {
     this.startTime = this.questionsService.getTime()
   }
 
-  getCurrentQuestion() {
-    return this.questions[this.currentQuestionId]
+  getCurrentQuestions() {
+    // NOTE: For non-matrix type this will only return one question but for matrix types this can be more than one
+    return this.groupedQuestions[
+      Object.keys(this.groupedQuestions)[this.currentQuestionId]
+    ]
   }
 
   submitTimestamps() {
-    this.questionsService.recordTimeStamp(
-      this.getCurrentQuestion(),
-      this.startTime
+    const currentQuestions = this.getCurrentQuestions()
+    currentQuestions.forEach(q =>
+      this.questionsService.recordTimeStamp(q, this.startTime)
     )
   }
 
   nextQuestion() {
     this.nextQuestionId = this.questionsService.getNextQuestion(
-      this.questions,
+      this.groupedQuestions,
       this.currentQuestionId
     )
     if (this.isLastQuestion()) return this.navigateToFinishPage()
@@ -176,13 +199,13 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   updateToolbarButtons() {
+    // NOTE: Only the first question of each question group is used
+    const currentQuestionsFirstQ = this.getCurrentQuestions()[0]
     this.isRightButtonDisabled =
-      !this.questionsService.isAnswered(this.getCurrentQuestion()) &&
-      !this.questionsService.getIsNextEnabled(
-        this.getCurrentQuestion().field_type
-      )
+      !this.questionsService.isAnswered(currentQuestionsFirstQ) &&
+      !this.questionsService.getIsNextEnabled(currentQuestionsFirstQ.field_type)
     this.isLeftButtonDisabled = this.questionsService.getIsPreviousDisabled(
-      this.getCurrentQuestion().field_type
+      currentQuestionsFirstQ.field_type
     )
   }
 

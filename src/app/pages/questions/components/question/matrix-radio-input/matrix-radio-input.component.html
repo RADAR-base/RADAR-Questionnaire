@@ -1,0 +1,17 @@
+<ion-list radio-group>
+  <ul>
+    <li *ngFor="let item of items; let i = index" class="item-md">
+      <ion-item no-lines text-wrap>
+        <ion-label [attr.for]="item.id" dir="auto">{{
+          item.response
+        }}</ion-label>
+        <ion-radio
+          [checked]="i == 0"
+          [value]="item.value"
+          [id]="item.id"
+          (ionSelect)="onInputChange(item.value)"
+        ></ion-radio>
+      </ion-item>
+    </li>
+  </ul>
+</ion-list>

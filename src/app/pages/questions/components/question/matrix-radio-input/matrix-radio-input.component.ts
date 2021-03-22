@@ -33,7 +33,8 @@ export class MatrixRadioInputComponent implements OnInit {
   }
 
   ngOnChanges() {
-    this.onInputChange(this.responses[0].code)
+    if (this.currentlyShown)
+      setTimeout(() => this.onInputChange(this.responses[0].code), 100)
   }
 
   onInputChange(event) {

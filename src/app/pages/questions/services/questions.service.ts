@@ -91,18 +91,31 @@ export class QuestionsService {
     return this.answerService.check(id)
   }
 
-  getNextQuestion(questions, currentQuestionId) {
+  getNextQuestion(groupedQuestions, currentQuestionId) {
     let qIndex = currentQuestionId + 1
+    const groupKeys = Array.from(groupedQuestions.keys())
+
     while (
-      qIndex < questions.length &&
-      questions[qIndex].branching_logic.length
+      qIndex < groupKeys.length &&
+      this.isNotNullOrEmpty(
+        groupedQuestions.get(groupKeys[qIndex]).branching_logic
+      )
     ) {
       const answers = this.util.deepCopy(this.answerService.answers)
-      if (parseAndEvalLogic(questions[qIndex].branching_logic, answers))
+      if (
+        parseAndEvalLogic(
+          groupedQuestions.get(groupKeys[qIndex]).branching_logic,
+          answers
+        )
+      )
         return qIndex
       qIndex += 1
     }
     return qIndex
+  }
+
+  isNotNullOrEmpty(value) {
+    return value && value.length && value != ''
   }
 
   getAttemptProgress(total) {

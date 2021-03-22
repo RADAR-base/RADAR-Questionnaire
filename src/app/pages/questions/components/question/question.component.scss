@@ -9,6 +9,10 @@ question {
     text-align: initial;
   }
 
+  .content-matrix {
+    height: auto !important;
+  }
+
   p {
     margin-top: 8px;
     margin-bottom: 0;
@@ -22,6 +26,10 @@ question {
 
   .field-container {
     max-height: 50vh !important;
+  }
+
+  .field-container-matrix {
+    margin-bottom: -24px;
   }
 
   .rangeformat {
@@ -39,13 +47,12 @@ question {
 
   .input {
     flex-grow: 1;
-    padding: 4px;
+    padding: 4px 4px 8px;
   }
 
   .input-scroll {
     overflow-y: auto !important;
-    mask-image:
-      linear-gradient(to top, transparent 3%, black 7%),
+    mask-image: linear-gradient(to top, transparent 3%, black 7%),
       linear-gradient(to bottom, transparent 0%, black 7%);
     mask-size: 100% 50%, 100% 51%;
     mask-position: bottom, top;

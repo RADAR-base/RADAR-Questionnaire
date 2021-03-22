@@ -130,6 +130,7 @@
         <matrix-radio-input
           *ngSwitchCase="'matrix-radio'"
           [responses]="question.select_choices_or_calculations"
+          [currentlyShown]="currentlyShown"
           (valueChange)="onValueChange($event)"
         >
         </matrix-radio-input>

@@ -14,6 +14,8 @@ export class MatrixRadioInputComponent implements OnInit {
 
   @Input()
   responses: Response[]
+  @Input()
+  currentlyShown: boolean
 
   value: number = null
   uniqueID: number = uniqueID++
@@ -28,9 +30,10 @@ export class MatrixRadioInputComponent implements OnInit {
         value: item.code
       })
     })
-    setTimeout(() => {
-      this.onInputChange(this.responses[0].code)
-    }, 500)
+  }
+
+  ngOnChanges() {
+    this.onInputChange(this.responses[0].code)
   }
 
   onInputChange(event) {

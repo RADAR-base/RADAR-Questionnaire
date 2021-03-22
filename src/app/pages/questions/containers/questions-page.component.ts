@@ -197,7 +197,9 @@ export class QuestionsPageComponent implements OnInit {
 
   updateToolbarButtons() {
     // NOTE: Only the first question of each question group is used
-    const currentQuestionsFirstQ = this.getCurrentQuestions()[0]
+    const currentQs = this.getCurrentQuestions()
+    if (!currentQs) return
+    const currentQuestionsFirstQ = currentQs[0]
     this.isRightButtonDisabled =
       !this.questionsService.isAnswered(currentQuestionsFirstQ) &&
       !this.questionsService.getIsNextEnabled(currentQuestionsFirstQ.field_type)
@@ -217,7 +219,7 @@ export class QuestionsPageComponent implements OnInit {
     this.showFinishScreen = true
     this.onQuestionnaireCompleted()
     this.slides.lockSwipes(false)
-    this.slides.slideTo(this.questions.length, 500)
+    this.slides.slideTo(this.groupedQuestions.size, 500)
     this.slides.lockSwipes(true)
   }
 
@@ -243,7 +245,7 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   isLastQuestion() {
-    return this.nextQuestionId >= this.questions.length
+    return this.nextQuestionId >= this.groupedQuestions.size
   }
 
   asIsOrder(a, b) {

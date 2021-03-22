@@ -98,13 +98,13 @@ export class QuestionsService {
     while (
       qIndex < groupKeys.length &&
       this.isNotNullOrEmpty(
-        groupedQuestions.get(groupKeys[qIndex]).branching_logic
+        groupedQuestions.get(groupKeys[qIndex])[0].branching_logic
       )
     ) {
       const answers = this.util.deepCopy(this.answerService.answers)
       if (
         parseAndEvalLogic(
-          groupedQuestions.get(groupKeys[qIndex]).branching_logic,
+          groupedQuestions.get(groupKeys[qIndex])[0].branching_logic,
           answers
         )
       )

@@ -37,6 +37,7 @@ export class QuestionType {
   static info = 'info'
   static text = 'text'
   static yesno = 'yesno'
+  static matrix_radio = 'matrix-radio'
 }
 
 export interface Response {

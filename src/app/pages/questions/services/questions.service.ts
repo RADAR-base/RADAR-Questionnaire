@@ -6,7 +6,11 @@ import { RemoteConfigService } from '../../../core/services/config/remote-config
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { ConfigKeys } from '../../../shared/enums/config'
 import { ShowIntroductionType } from '../../../shared/models/assessment'
-import { Question, QuestionType } from '../../../shared/models/question'
+import {
+  Question,
+  QuestionPosition,
+  QuestionType
+} from '../../../shared/models/question'
 import { parseAndEvalLogic } from '../../../shared/utilities/parsers'
 import { getSeconds } from '../../../shared/utilities/time'
 import { Utility } from '../../../shared/utilities/util'
@@ -91,27 +95,36 @@ export class QuestionsService {
     return this.answerService.check(id)
   }
 
-  getNextQuestion(groupedQuestions, currentQuestionId) {
+  getNextQuestion(groupedQuestions, currentQuestionId): QuestionPosition {
     let qIndex = currentQuestionId + 1
-    const groupKeys = Array.from(groupedQuestions.keys())
+    const groupKeys: string[] = Array.from(groupedQuestions.keys())
+    const questionIndices = []
 
-    while (
-      qIndex < groupKeys.length &&
-      this.isNotNullOrEmpty(
-        groupedQuestions.get(groupKeys[qIndex])[0].branching_logic
-      )
-    ) {
+    while (qIndex < groupKeys.length) {
+      const groupQuestions = groupedQuestions.get(groupKeys[qIndex])
       const answers = this.util.deepCopy(this.answerService.answers)
-      if (
-        parseAndEvalLogic(
-          groupedQuestions.get(groupKeys[qIndex])[0].branching_logic,
-          answers
-        )
-      )
-        return qIndex
+      groupQuestions.forEach((q, i) => {
+        if (
+          this.isNotNullOrEmpty(
+            groupedQuestions.get(groupKeys[qIndex])[i].branching_logic
+          )
+        ) {
+          if (parseAndEvalLogic(q.branching_logic, answers))
+            questionIndices.push(i)
+        } else questionIndices.push(i)
+      })
+      if (questionIndices.length)
+        return {
+          groupKeyIndex: qIndex,
+          questionIndices: questionIndices
+        }
+
       qIndex += 1
     }
-    return qIndex
+    return {
+      groupKeyIndex: qIndex,
+      questionIndices: questionIndices
+    }
   }
 
   isNotNullOrEmpty(value) {

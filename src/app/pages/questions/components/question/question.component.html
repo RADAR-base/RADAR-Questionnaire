@@ -5,7 +5,7 @@
   [class.content-matrix]="isMatrix"
 >
   <div class="header" dir="auto">
-    <p>{{ question.section_header }}</p>
+    <p *ngIf="!isSectionHeaderHidden">{{ question.section_header }}</p>
     <div
       *ngIf="!isFieldLabelHidden"
       class="field-container"

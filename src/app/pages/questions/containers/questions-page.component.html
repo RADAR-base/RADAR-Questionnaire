@@ -26,6 +26,7 @@
                 [question]="question"
                 [questionIndex]="i"
                 [currentIndex]="currentQuestionGroupId"
+                [isSectionHeaderHidden]="j != currentQuestionIndices[0]"
                 (answer)="onAnswer($event)"
               ></question>
             </ng-container>

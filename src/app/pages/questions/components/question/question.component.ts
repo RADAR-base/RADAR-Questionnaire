@@ -5,7 +5,7 @@ import {
   OnChanges,
   OnInit,
   Output,
-  ViewChild,
+  ViewChild
 } from '@angular/core'
 import { Dialogs } from '@ionic-native/dialogs/ngx'
 import { Vibration } from '@ionic-native/vibration/ngx'
@@ -29,6 +29,8 @@ export class QuestionComponent implements OnInit, OnChanges {
   questionIndex: number
   @Input()
   currentIndex: number
+  @Input()
+  isSectionHeaderHidden: boolean
   @Output()
   answer: EventEmitter<Answer> = new EventEmitter<Answer>()
 

@@ -49,6 +49,13 @@ export class QuestionsService {
     this.answerService.pop()
   }
 
+  deleteLastAnswers(questions: Question[]) {
+    const questionKeys = questions.map(q => q.field_name)
+    this.answerService.keys = this.answerService.keys.filter(
+      k => !questionKeys.includes(k)
+    )
+  }
+
   submitAnswer(answer) {
     this.answerService.add(answer)
   }
@@ -93,6 +100,10 @@ export class QuestionsService {
   isAnswered(question: Question) {
     const id = question.field_name
     return this.answerService.check(id)
+  }
+
+  isAnyAnswered(questions: Question[]) {
+    return questions.some(q => this.isAnswered(q))
   }
 
   getNextQuestion(groupedQuestions, currentQuestionId): QuestionPosition {
@@ -154,8 +165,18 @@ export class QuestionsService {
     return this.PREVIOUS_BUTTON_DISABLED_SET.has(questionType)
   }
 
+  getIsAnyPreviousEnabled(questions: Question[]) {
+    // NOTE: This checks if any question in the array has previous button enabled
+    return questions.some(q => this.getIsPreviousDisabled(q.field_type))
+  }
+
   getIsNextEnabled(questionType: string) {
     return this.NEXT_BUTTON_ENABLED_SET.has(questionType)
+  }
+
+  getIsAnyNextEnabled(questions: Question[]) {
+    // NOTE: This checks if any question in the array has next button enabled
+    return questions.some(q => this.getIsNextEnabled(q.field_type))
   }
 
   getIsNextAutomatic(questionType: string) {

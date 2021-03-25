@@ -17,6 +17,8 @@ export abstract class NotificationService {
 
   abstract publish(type, limit?, notificationId?)
 
+  abstract unregisterFromNotificataions(): Promise<any>
+
   setLastNotificationUpdate(timestamp): Promise<void> {
     return this.storage.set(
       this.NOTIFICATION_STORAGE.LAST_NOTIFICATION_UPDATE,

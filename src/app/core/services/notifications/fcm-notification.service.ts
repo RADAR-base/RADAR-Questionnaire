@@ -50,6 +50,7 @@ export abstract class FcmNotificationService extends NotificationService {
   }
 
   init() {
+    this.firebase.setAutoInitEnabled(true)
     if (!this.platform.is('ios'))
       FirebasePlugin.setDeliveryMetricsExportToBigQuery(true)
     FirebasePlugin.setSenderId(
@@ -110,6 +111,13 @@ export abstract class FcmNotificationService extends NotificationService {
     return timeUntilEnd > 0
       ? getSeconds({ milliseconds: timeUntilEnd })
       : getSeconds({ minutes: this.ttlMinutes })
+  }
+
+  unregisterFromNotificataions(): Promise<any> {
+    // NOTE: This will delete the current device token and stop receiving notifications
+    return this.firebase
+      .setAutoInitEnabled(false)
+      .then(() => this.firebase.unregister())
   }
 
   abstract getSubjectDetails()

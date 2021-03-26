@@ -50,6 +50,7 @@ export abstract class FcmNotificationService extends NotificationService {
   }
 
   init() {
+    this.firebase.setAutoInitEnabled(true)
     if (!this.platform.is('ios'))
       FirebasePlugin.setDeliveryMetricsExportToBigQuery(true)
     FirebasePlugin.setSenderId(
@@ -60,11 +61,10 @@ export abstract class FcmNotificationService extends NotificationService {
         alert(error)
       }
     )
-    this.firebase.getToken().then(token => {
-      this.FCM_TOKEN = token
-      this.setFCMToken(token)
-      this.logger.log('[NOTIFICATION SERVICE] Refresh token success')
-    })
+    this.firebase
+      .onTokenRefresh()
+      .subscribe(token => this.onTokenRefresh(token))
+    this.firebase.getToken().then(token => this.onTokenRefresh(token))
   }
 
   publish(
@@ -110,6 +110,21 @@ export abstract class FcmNotificationService extends NotificationService {
     return timeUntilEnd > 0
       ? getSeconds({ milliseconds: timeUntilEnd })
       : getSeconds({ minutes: this.ttlMinutes })
+  }
+
+  unregisterFromNotificataions(): Promise<any> {
+    // NOTE: This will delete the current device token and stop receiving notifications
+    return this.firebase
+      .setAutoInitEnabled(false)
+      .then(() => this.firebase.unregister())
+  }
+
+  onTokenRefresh(token) {
+    if (token) {
+      this.FCM_TOKEN = token
+      this.setFCMToken(token)
+      this.logger.log('[NOTIFICATION SERVICE] Refresh token success')
+    }
   }
 
   abstract getSubjectDetails()

@@ -62,6 +62,10 @@ export class NotificationFactoryService extends NotificationService {
     return this.notificationService.publish(type, limit, notificationId)
   }
 
+  unregisterFromNotificataions(): Promise<any> {
+    return this.notificationService.unregisterFromNotificataions()
+  }
+
   isPlatformCordova() {
     return this.platform.is('cordova')
   }

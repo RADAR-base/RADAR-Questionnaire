@@ -61,11 +61,10 @@ export abstract class FcmNotificationService extends NotificationService {
         alert(error)
       }
     )
-    this.firebase.getToken().then(token => {
-      this.FCM_TOKEN = token
-      this.setFCMToken(token)
-      this.logger.log('[NOTIFICATION SERVICE] Refresh token success')
-    })
+    this.firebase
+      .onTokenRefresh()
+      .subscribe(token => this.onTokenRefresh(token))
+    this.firebase.getToken().then(token => this.onTokenRefresh(token))
   }
 
   publish(
@@ -118,6 +117,14 @@ export abstract class FcmNotificationService extends NotificationService {
     return this.firebase
       .setAutoInitEnabled(false)
       .then(() => this.firebase.unregister())
+  }
+
+  onTokenRefresh(token) {
+    if (token) {
+      this.FCM_TOKEN = token
+      this.setFCMToken(token)
+      this.logger.log('[NOTIFICATION SERVICE] Refresh token success')
+    }
   }
 
   abstract getSubjectDetails()

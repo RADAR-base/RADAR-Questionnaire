@@ -153,7 +153,7 @@
     "jasmine": "^3.6.1",
     "jasmine-core": "^3.5.0",
     "jasmine-spec-reporter": "^5.0.2",
-    "karma": "^5.2.3",
+    "karma": "^6.3.1",
     "karma-browserify": "^7.0.0",
     "karma-browserstack-launcher": "^1.6.0",
     "karma-chrome-launcher": "^3.1.0",

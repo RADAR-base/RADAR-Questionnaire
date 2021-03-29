@@ -61,20 +61,6 @@
 
   <ion-item-group>
     <ion-item-divider no-lines>{{
-      'SETTINGS_REPORT' | translate
-    }}</ion-item-divider>
-    <ion-item no-lines *ngFor="let subSetting of weeklyReport; let i = index">
-      <ion-label>{{ subSetting.name | translate }}</ion-label>
-      <ion-toggle
-        item-right
-        [(ngModel)]="subSetting.show"
-        (ionChange)="weeklyReportChange(i)"
-      ></ion-toggle>
-    </ion-item>
-  </ion-item-group>
-
-  <ion-item-group>
-    <ion-item-divider no-lines>{{
       'SETTINGS_CACHE' | translate
     }}</ion-item-divider>
     <ion-item no-lines>

@@ -12,7 +12,7 @@ import { SubjectConfigService } from '../../../core/services/config/subject-conf
 import { LogService } from '../../../core/services/misc/log.service'
 import { TokenService } from '../../../core/services/token/token.service'
 import { AnalyticsService } from '../../../core/services/usage/analytics.service'
-import { MetaToken } from '../../../shared/models/token'
+import { MetaToken, OAuthToken } from '../../../shared/models/token'
 import { isValidURL } from '../../../shared/utilities/form-validators'
 
 @Injectable()
@@ -64,7 +64,7 @@ export class AuthService {
     })
   }
 
-  registerToken(registrationToken): Promise<void> {
+  registerToken(registrationToken): Promise<OAuthToken> {
     return this.token.register(this.token.getRefreshParams(registrationToken))
   }
 

@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core'
 
 import {
+  DefaultAppCreditsBody,
+  DefaultAppCreditsTitle,
   DefaultOnDemandAssessmentIcon,
   DefaultPlatformInstance
 } from '../../../../assets/data/defaultConfig'
@@ -139,5 +141,26 @@ export class TasksService {
           DefaultPlatformInstance
         )
       )
+  }
+
+  getAppCreditsTitle() {
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        config.getOrDefault(
+          ConfigKeys.APP_CREDITS_TITLE,
+          DefaultAppCreditsTitle
+        )
+      )
+      .then(res => JSON.parse(res))
+  }
+
+  getAppCreditsBody() {
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        config.getOrDefault(ConfigKeys.APP_CREDITS_BODY, DefaultAppCreditsBody)
+      )
+      .then(res => JSON.parse(res))
   }
 }

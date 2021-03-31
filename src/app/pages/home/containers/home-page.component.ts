@@ -42,6 +42,9 @@ export class HomePageComponent implements OnDestroy {
   checkTaskInterval
   showMiscTasksButton: Promise<boolean>
 
+  APP_CREDITS = '&#169; RADAR-Base'
+  HTML_BREAK = '<br>'
+
   constructor(
     public navCtrl: NavController,
     public alertService: AlertService,
@@ -170,7 +173,11 @@ export class HomePageComponent implements OnDestroy {
     ]).then(([title, body]) =>
       this.alertService.showAlert({
         title: this.localization.chooseText(title),
-        message: this.localization.chooseText(body),
+        message:
+          this.localization.chooseText(body) +
+          this.HTML_BREAK +
+          this.HTML_BREAK +
+          this.APP_CREDITS,
         buttons: [
           {
             text: this.localization.translateKey(LocKeys.BTN_OKAY),

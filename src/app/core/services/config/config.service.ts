@@ -29,7 +29,7 @@ import { SubjectConfigService } from './subject-config.service'
 
 @Injectable()
 export class ConfigService {
-  ATTRIBUTE_KEY_PREFIX = 'att-'
+  ATTRIBUTE_KEY_PREFIX = 'att_'
 
   constructor(
     private schedule: ScheduleService,

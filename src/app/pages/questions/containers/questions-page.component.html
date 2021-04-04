@@ -16,14 +16,17 @@
               let i = index
             "
           >
-            <ng-container *ngFor="let question of item.value">
+            <ng-container *ngFor="let question of item.value; let j = index">
               <question
                 *ngIf="
-                  i >= currentQuestionId - 10 && i <= currentQuestionId + 10
+                  i >= currentQuestionGroupId - 10 &&
+                  i <= currentQuestionGroupId + 10 &&
+                  currentQuestionIndices.includes(j)
                 "
                 [question]="question"
                 [questionIndex]="i"
-                [currentIndex]="currentQuestionId"
+                [currentIndex]="currentQuestionGroupId"
+                [isSectionHeaderHidden]="j != currentQuestionIndices[0]"
                 (answer)="onAnswer($event)"
               ></question>
             </ng-container>
@@ -54,7 +57,7 @@
     (finish)="navigateToFinishPage()"
     [isLeftButtonDisabled]="isLeftButtonDisabled"
     [isRightButtonDisabled]="isRightButtonDisabled"
-    [currentQuestionId]="currentQuestionId"
+    [currentQuestionId]="currentQuestionGroupId"
     [totalQuestions]="groupedQuestions?.size"
   ></toolbar>
 </ion-footer>

@@ -69,3 +69,8 @@ export interface InfoItem {
   heading: string
   content: string
 }
+
+export interface QuestionPosition {
+  groupKeyIndex: number
+  questionIndices: number[]
+}

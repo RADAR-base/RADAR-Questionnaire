@@ -6,7 +6,11 @@ import { RemoteConfigService } from '../../../core/services/config/remote-config
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { ConfigKeys } from '../../../shared/enums/config'
 import { ShowIntroductionType } from '../../../shared/models/assessment'
-import { Question, QuestionType } from '../../../shared/models/question'
+import {
+  Question,
+  QuestionPosition,
+  QuestionType
+} from '../../../shared/models/question'
 import { parseAndEvalLogic } from '../../../shared/utilities/parsers'
 import { getSeconds } from '../../../shared/utilities/time'
 import { Utility } from '../../../shared/utilities/util'
@@ -43,6 +47,13 @@ export class QuestionsService {
 
   deleteLastAnswer() {
     this.answerService.pop()
+  }
+
+  deleteLastAnswers(questions: Question[]) {
+    const questionKeys = questions.map(q => q.field_name)
+    this.answerService.keys = this.answerService.keys.filter(
+      k => !questionKeys.includes(k)
+    )
   }
 
   submitAnswer(answer) {
@@ -91,27 +102,40 @@ export class QuestionsService {
     return this.answerService.check(id)
   }
 
-  getNextQuestion(groupedQuestions, currentQuestionId) {
-    let qIndex = currentQuestionId + 1
-    const groupKeys = Array.from(groupedQuestions.keys())
+  isAnyAnswered(questions: Question[]) {
+    return questions.some(q => this.isAnswered(q))
+  }
 
-    while (
-      qIndex < groupKeys.length &&
-      this.isNotNullOrEmpty(
-        groupedQuestions.get(groupKeys[qIndex]).branching_logic
-      )
-    ) {
+  getNextQuestion(groupedQuestions, currentQuestionId): QuestionPosition {
+    let qIndex = currentQuestionId + 1
+    const groupKeys: string[] = Array.from(groupedQuestions.keys())
+    const questionIndices = []
+
+    while (qIndex < groupKeys.length) {
+      const groupQuestions = groupedQuestions.get(groupKeys[qIndex])
       const answers = this.util.deepCopy(this.answerService.answers)
-      if (
-        parseAndEvalLogic(
-          groupedQuestions.get(groupKeys[qIndex]).branching_logic,
-          answers
-        )
-      )
-        return qIndex
+      groupQuestions.forEach((q, i) => {
+        if (
+          this.isNotNullOrEmpty(
+            groupedQuestions.get(groupKeys[qIndex])[i].branching_logic
+          )
+        ) {
+          if (parseAndEvalLogic(q.branching_logic, answers))
+            questionIndices.push(i)
+        } else questionIndices.push(i)
+      })
+      if (questionIndices.length)
+        return {
+          groupKeyIndex: qIndex,
+          questionIndices: questionIndices
+        }
+
       qIndex += 1
     }
-    return qIndex
+    return {
+      groupKeyIndex: qIndex,
+      questionIndices: questionIndices
+    }
   }
 
   isNotNullOrEmpty(value) {
@@ -141,8 +165,18 @@ export class QuestionsService {
     return this.PREVIOUS_BUTTON_DISABLED_SET.has(questionType)
   }
 
+  getIsAnyPreviousEnabled(questions: Question[]) {
+    // NOTE: This checks if any question in the array has previous button enabled
+    return questions.some(q => this.getIsPreviousDisabled(q.field_type))
+  }
+
   getIsNextEnabled(questionType: string) {
     return this.NEXT_BUTTON_ENABLED_SET.has(questionType)
+  }
+
+  getIsAnyNextEnabled(questions: Question[]) {
+    // NOTE: This checks if any question in the array has next button enabled
+    return questions.some(q => this.getIsNextEnabled(q.field_type))
   }
 
   getIsNextAutomatic(questionType: string) {

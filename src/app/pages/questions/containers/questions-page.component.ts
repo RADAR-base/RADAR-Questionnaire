@@ -25,8 +25,8 @@ export class QuestionsPageComponent implements OnInit {
   slides: Slides
 
   startTime: number
-  currentQuestionId = 0
-  nextQuestionId: number
+  currentQuestionGroupId = 0
+  nextQuestionGroupId: number
   questionOrder = [0]
   isLeftButtonDisabled = false
   isRightButtonDisabled = true
@@ -35,6 +35,8 @@ export class QuestionsPageComponent implements OnInit {
   questions: Question[]
   // Questions grouped by matrix group if it exists
   groupedQuestions: Map<string, Question[]>
+  // Indices of questions (of the group) currently shown
+  currentQuestionIndices: number[]
   questionTitle: string
   endText: string
   isLastTask: boolean
@@ -106,6 +108,10 @@ export class QuestionsPageComponent implements OnInit {
     this.assessment = res.assessment
     this.taskType = res.type
     this.requiresInClinicCompletion = this.assessment.requiresInClinicCompletion
+    const groupKeys = Array.from(this.groupedQuestions.keys())
+    this.currentQuestionIndices = Object.keys(
+      this.groupedQuestions.get(groupKeys[0])
+    ).map(Number)
   }
 
   groupQuestionsByMatrixGroup(questions: Question[]) {
@@ -146,7 +152,7 @@ export class QuestionsPageComponent implements OnInit {
   onAnswer(event) {
     if (event.id) {
       this.questionsService.submitAnswer(event)
-      this.updateToolbarButtons()
+      setTimeout(() => this.updateToolbarButtons(), 100)
     }
     if (this.questionsService.getIsNextAutomatic(event.type)) {
       this.nextQuestion()
@@ -155,7 +161,7 @@ export class QuestionsPageComponent implements OnInit {
 
   slideQuestion() {
     this.slides.lockSwipes(false)
-    this.slides.slideTo(this.currentQuestionId, 300)
+    this.slides.slideTo(this.currentQuestionGroupId, 300)
     this.slides.lockSwipes(true)
 
     this.startTime = this.questionsService.getTime()
@@ -163,7 +169,9 @@ export class QuestionsPageComponent implements OnInit {
 
   getCurrentQuestions() {
     // NOTE: For non-matrix type this will only return one question (array) but for matrix types this can be more than one
-    const key = Array.from(this.groupedQuestions.keys())[this.currentQuestionId]
+    const key = Array.from(this.groupedQuestions.keys())[
+      this.currentQuestionGroupId
+    ]
     return this.groupedQuestions.get(key)
   }
 
@@ -175,34 +183,41 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   nextQuestion() {
-    this.nextQuestionId = this.questionsService.getNextQuestion(
+    const questionPosition = this.questionsService.getNextQuestion(
       this.groupedQuestions,
-      this.currentQuestionId
+      this.currentQuestionGroupId
     )
+    this.nextQuestionGroupId = questionPosition.groupKeyIndex
+    this.currentQuestionIndices = questionPosition.questionIndices
     if (this.isLastQuestion()) return this.navigateToFinishPage()
-    this.questionOrder.push(this.nextQuestionId)
+    this.questionOrder.push(this.nextQuestionGroupId)
     this.submitTimestamps()
-    this.currentQuestionId = this.nextQuestionId
+    this.currentQuestionGroupId = this.nextQuestionGroupId
     this.slideQuestion()
     this.updateToolbarButtons()
   }
 
   previousQuestion() {
+    const currentQuestions = this.getCurrentQuestions()
     this.questionOrder.pop()
-    this.currentQuestionId = this.questionOrder[this.questionOrder.length - 1]
+    this.currentQuestionGroupId = this.questionOrder[
+      this.questionOrder.length - 1
+    ]
     this.updateToolbarButtons()
-    if (!this.isRightButtonDisabled) this.questionsService.deleteLastAnswer()
+    if (!this.isRightButtonDisabled)
+      this.questionsService.deleteLastAnswers(currentQuestions)
     this.slideQuestion()
   }
 
   updateToolbarButtons() {
     // NOTE: Only the first question of each question group is used
-    const currentQuestionsFirstQ = this.getCurrentQuestions()[0]
+    const currentQs = this.getCurrentQuestions()
+    if (!currentQs) return
     this.isRightButtonDisabled =
-      !this.questionsService.isAnswered(currentQuestionsFirstQ) &&
-      !this.questionsService.getIsNextEnabled(currentQuestionsFirstQ.field_type)
-    this.isLeftButtonDisabled = this.questionsService.getIsPreviousDisabled(
-      currentQuestionsFirstQ.field_type
+      !this.questionsService.isAnyAnswered(currentQs) &&
+      !this.questionsService.getIsAnyNextEnabled(currentQs)
+    this.isLeftButtonDisabled = this.questionsService.getIsAnyPreviousEnabled(
+      currentQs
     )
   }
 
@@ -217,7 +232,7 @@ export class QuestionsPageComponent implements OnInit {
     this.showFinishScreen = true
     this.onQuestionnaireCompleted()
     this.slides.lockSwipes(false)
-    this.slides.slideTo(this.questions.length, 500)
+    this.slides.slideTo(this.groupedQuestions.size, 500)
     this.slides.lockSwipes(true)
   }
 
@@ -243,7 +258,7 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   isLastQuestion() {
-    return this.nextQuestionId >= this.questions.length
+    return this.nextQuestionGroupId >= this.groupedQuestions.size
   }
 
   asIsOrder(a, b) {

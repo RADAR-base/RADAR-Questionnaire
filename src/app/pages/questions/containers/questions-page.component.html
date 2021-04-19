@@ -13,6 +13,7 @@
           <ion-slide *ngFor="let question of questions; let i = index">
             <question
               *ngIf="i >= currentQuestionId - 10 && i <= currentQuestionId + 10"
+              [task]="task"
               [question]="question"
               [questionIndex]="i"
               [currentIndex]="currentQuestionId"
@@ -22,7 +23,7 @@
         </ng-container>
         <ion-slide>
           <finish
-            *ngIf="showFinishScreen"
+            *ngIf="showFinishScreen && !showFinishAndLaunchScreen"
             [content]="endText"
             [isLastTask]="isLastTask"
             [requiresInClinicCompletion]="requiresInClinicCompletion"
@@ -31,6 +32,18 @@
             [isShown]="showFinishScreen"
             (exit)="handleFinish($event)"
           ></finish>
+          <finish-and-launch
+            *ngIf="showFinishScreen && showFinishAndLaunchScreen"
+            [externalApp]="externalApp"
+            [task]="task"
+            [content]="endText"
+            [isLastTask]="isLastTask"
+            [requiresInClinicCompletion]="requiresInClinicCompletion"
+            [taskType]="taskType"
+            [showDoneButton]="showDoneButton"
+            [isShown]="showFinishScreen"
+            (exit)="handleFinish($event)"
+          ></finish-and-launch>
         </ion-slide>
       </ion-slides>
     </div>

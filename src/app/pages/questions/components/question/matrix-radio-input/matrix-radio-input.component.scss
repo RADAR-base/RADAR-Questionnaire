@@ -1,6 +1,7 @@
-range-input {
+matrix-radio-input {
   display: block;
-  width: 100%;
+  overflow: hidden;
+  width: auto;
 
   ion-label {
     color: white !important;
@@ -10,7 +11,7 @@ range-input {
     display: flex;
     margin: 0;
     padding: 0;
-    width: 100%;
+    width: 98%;
     list-style: none;
   }
 
@@ -27,17 +28,18 @@ range-input {
   }
 
   ul li ion-label {
-    @include font-large;
-
     position: relative;
     display: flex;
     flex-grow: 1;
     align-items: center;
     justify-content: center;
+    padding: 0 4px;
     height: $bt-height;
     border: 2px solid white;
     border-right: none;
     background-color: $cl-primary-20;
+    text-align: center;
+    font-size: 3vw !important;
   }
 
   .item-radio-checked ion-label {
@@ -61,22 +63,6 @@ range-input {
 
   ul li:hover ion-label {
     background-color: $cl-primary;
-  }
-
-  .padding {
-    margin: 10px 3px;
-    font-size: 80%;
-  }
-
-  .labelLeft {
-    float: left;
-    width: 50%;
-  }
-
-  .labelRight {
-    float: right;
-    width: 50%;
-    text-align: right;
   }
 
   .radio-icon {

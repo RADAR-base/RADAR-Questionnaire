@@ -6,8 +6,14 @@ import { RemoteConfigService } from '../../../core/services/config/remote-config
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { ConfigKeys } from '../../../shared/enums/config'
 import { ShowIntroductionType } from '../../../shared/models/assessment'
-import { Question, QuestionType } from '../../../shared/models/question'
+import {
+  Question,
+  QuestionPosition,
+  QuestionType
+} from '../../../shared/models/question'
+import { parseAndEvalLogic } from '../../../shared/utilities/parsers'
 import { getSeconds } from '../../../shared/utilities/time'
+import { Utility } from '../../../shared/utilities/util'
 import { AnswerService } from './answer.service'
 import { FinishTaskService } from './finish-task.service'
 import { TimestampService } from './timestamp.service'
@@ -30,7 +36,8 @@ export class QuestionsService {
     private timestampService: TimestampService,
     private localization: LocalizationService,
     private finish: FinishTaskService,
-    private remoteConfig: RemoteConfigService
+    private remoteConfig: RemoteConfigService,
+    private util: Utility
   ) {}
 
   reset() {
@@ -40,6 +47,13 @@ export class QuestionsService {
 
   deleteLastAnswer() {
     this.answerService.pop()
+  }
+
+  deleteLastAnswers(questions: Question[]) {
+    const questionKeys = questions.map(q => q.field_name)
+    this.answerService.keys = this.answerService.keys.filter(
+      k => !questionKeys.includes(k)
+    )
   }
 
   submitAnswer(answer) {
@@ -88,35 +102,44 @@ export class QuestionsService {
     return this.answerService.check(id)
   }
 
-  evalBranchingLogicAndGetNextQuestion(questions, currentQuestion) {
-    let questionIdx = currentQuestion + 1
-    while (
-      questionIdx < questions.length &&
-      questions[questionIdx].evaluated_logic !== ''
-    ) {
-      const responses = Object.assign({}, this.answerService.answers)
-      const logic = questions[questionIdx].evaluated_logic
-      const logicFieldName = this.getLogicFieldName(logic)
-      const answers = this.answerService.answers[logicFieldName]
-      if (typeof answers !== 'undefined') {
-        const answerLength = answers.length
-        if (!answerLength) if (eval(logic) === true) return questionIdx
-        for (const answer of answers) {
-          responses[logicFieldName] = answer
-          if (eval(logic) === true) return questionIdx
+  isAnyAnswered(questions: Question[]) {
+    return questions.some(q => this.isAnswered(q))
+  }
+
+  getNextQuestion(groupedQuestions, currentQuestionId): QuestionPosition {
+    let qIndex = currentQuestionId + 1
+    const groupKeys: string[] = Array.from(groupedQuestions.keys())
+    const questionIndices = []
+
+    while (qIndex < groupKeys.length) {
+      const groupQuestions = groupedQuestions.get(groupKeys[qIndex])
+      const answers = this.util.deepCopy(this.answerService.answers)
+      groupQuestions.forEach((q, i) => {
+        if (
+          this.isNotNullOrEmpty(
+            groupedQuestions.get(groupKeys[qIndex])[i].branching_logic
+          )
+        ) {
+          if (parseAndEvalLogic(q.branching_logic, answers))
+            questionIndices.push(i)
+        } else questionIndices.push(i)
+      })
+      if (questionIndices.length)
+        return {
+          groupKeyIndex: qIndex,
+          questionIndices: questionIndices
         }
-      }
-      questionIdx += 1
+
+      qIndex += 1
     }
-    return questionIdx
+    return {
+      groupKeyIndex: qIndex,
+      questionIndices: questionIndices
+    }
   }
 
-  getLogicFieldName(logic) {
-    return logic.split("['")[1].split("']")[0]
-  }
-
-  getNextQuestion(questions, currentQuestion) {
-    return this.evalBranchingLogicAndGetNextQuestion(questions, currentQuestion)
+  isNotNullOrEmpty(value) {
+    return value && value.length && value != ''
   }
 
   getAttemptProgress(total) {
@@ -142,8 +165,18 @@ export class QuestionsService {
     return this.PREVIOUS_BUTTON_DISABLED_SET.has(questionType)
   }
 
+  getIsAnyPreviousEnabled(questions: Question[]) {
+    // NOTE: This checks if any question in the array has previous button enabled
+    return questions.some(q => this.getIsPreviousDisabled(q.field_type))
+  }
+
   getIsNextEnabled(questionType: string) {
     return this.NEXT_BUTTON_ENABLED_SET.has(questionType)
+  }
+
+  getIsAnyNextEnabled(questions: Question[]) {
+    // NOTE: This checks if any question in the array has next button enabled
+    return questions.some(q => this.getIsNextEnabled(q.field_type))
   }
 
   getIsNextAutomatic(questionType: string) {

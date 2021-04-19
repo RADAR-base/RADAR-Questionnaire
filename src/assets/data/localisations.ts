@@ -262,6 +262,16 @@ export const Localisations = {
     pl: 'ID użytkownika',
     hb: 'שם משתמש'
   },
+  SETTINGS_PARTICIPANTNAME: {
+    da: 'Bruger Navn',
+    de: 'Nutzername',
+    en: 'User Name',
+    es: 'Nombre de Usuario',
+    it: 'Nome utente',
+    nl: 'Gebruikers naam',
+    pl: 'Nazwa użytkownika',
+    hb: 'שם משתמש'
+  },
   SETTINGS_PROJECTNAME: {
     da: 'Projektnavn',
     de: 'Projekt Name',

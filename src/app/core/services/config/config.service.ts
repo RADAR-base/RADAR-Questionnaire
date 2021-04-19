@@ -29,6 +29,8 @@ import { SubjectConfigService } from './subject-config.service'
 
 @Injectable()
 export class ConfigService {
+  ATTRIBUTE_KEY_PREFIX = 'att-'
+
   constructor(
     private schedule: ScheduleService,
     private notifications: NotificationService,
@@ -278,6 +280,8 @@ export class ConfigService {
 
   resetAll() {
     this.sendConfigChangeEvent(ConfigEventType.APP_RESET)
+    this.cancelNotifications()
+    this.notifications.unregisterFromNotificataions()
     return Promise.all([this.resetConfig(), this.resetCache()]).then(() =>
       this.subjectConfig.reset()
     )
@@ -302,15 +306,21 @@ export class ConfigService {
       this.subjectConfig
         .init(user)
         .then(() => this.analytics.setUserProperties(user))
+        .then(() =>
+          this.analytics.setUserProperties(
+            user.attributes,
+            this.ATTRIBUTE_KEY_PREFIX
+          )
+        )
         .then(() => this.appConfig.init(user.enrolmentDate)),
       this.localization.init(),
-      this.kafka.init(),
-      this.notifications.init()
-    ])
+      this.kafka.init()
+    ]).then(() => this.notifications.init())
   }
 
   getAll() {
     return {
+      participantLogin: this.subjectConfig.getParticipantLogin(),
       participantID: this.subjectConfig.getParticipantID(),
       projectName: this.subjectConfig.getProjectName(),
       enrolmentDate: this.subjectConfig.getEnrolmentDate(),

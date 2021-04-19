@@ -38,10 +38,24 @@ export const DefaultSourceTypeRegistrationBody = {
 // *The icon for On Demand assessments  (REMOTE CONFIG KEY: `on_demand_assessment_icon`)
 export const DefaultOnDemandAssessmentIcon = 'assets/imgs/new-questionnaire.png'
 
-// *The icon for On Demand assessments  (REMOTE CONFIG KEY: `on_demand_assessment_label`)
+// *The label/title for On Demand assessments  (REMOTE CONFIG KEY: `on_demand_assessment_label`)
 // *The format/type is LanguageSetting
 export const DefaultOnDemandAssessmentLabel = JSON.stringify(
   Localisations['ON_DEMAND_TASKS']
+)
+
+// *The app credits title found in the popup when tapping the logo on the left side of the home page
+// (REMOTE CONFIG KEY: `app_credits_title`)
+// *The format/type is LanguageSetting
+export const DefaultAppCreditsTitle = JSON.stringify(
+  Localisations['CREDITS_TITLE']
+)
+
+// *The app credits body found in the popup when tapping the logo on the left side of the home page
+// (REMOTE CONFIG KEY: `app_credits_body`)
+// *The format/type is LanguageSetting
+export const DefaultAppCreditsBody = JSON.stringify(
+  Localisations['CREDITS_BODY']
 )
 
 // DEFAULT URI
@@ -105,7 +119,7 @@ export const DefaultNumberOfCompletionLogsToSend = 10
 
 // DEFAULT NOTIFICATION SETUP
 
-// *Default notification type (either 'FCM' or 'LOCAL' notifications)
+// *Default notification type (either 'FCM_XMPP', 'FCM_REST' or 'LOCAL' notifications)
 export const DefaultNotificationType: string = 'FCM_XMPP'
 
 // *Default app server URL

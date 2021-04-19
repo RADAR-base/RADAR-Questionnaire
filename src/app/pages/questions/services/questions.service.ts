@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core'
 
-import { DefaultQuestionsHidden } from '../../../../assets/data/defaultConfig'
+import {
+  DefaultQuestionnaireNextButtonAutomaticSet,
+  DefaultQuestionnaireNextButtonEnabledSet,
+  DefaultQuestionsHidden
+} from '../../../../assets/data/defaultConfig'
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
 import { RemoteConfigService } from '../../../core/services/config/remote-config.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
@@ -24,11 +28,13 @@ export class QuestionsService {
     QuestionType.timed,
     QuestionType.audio
   ])
-  NEXT_BUTTON_ENABLED_SET: Set<QuestionType> = new Set([QuestionType.audio])
-  NEXT_BUTTON_AUTOMATIC_SET: Set<QuestionType> = new Set([
-    QuestionType.timed,
-    QuestionType.audio
-  ])
+  NEXT_BUTTON_ENABLED_SET: Set<QuestionType> = new Set(
+    DefaultQuestionnaireNextButtonEnabledSet
+  )
+  NEXT_BUTTON_AUTOMATIC_SET: Set<QuestionType> = new Set(
+    DefaultQuestionnaireNextButtonAutomaticSet
+  )
+  DELIMITER = ','
 
   constructor(
     public questionnaire: QuestionnaireService,
@@ -38,7 +44,36 @@ export class QuestionsService {
     private finish: FinishTaskService,
     private remoteConfig: RemoteConfigService,
     private util: Utility
-  ) {}
+  ) {
+    this.init()
+  }
+
+  init() {
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        Promise.all([
+          config.getOrDefault(
+            ConfigKeys.QUESTIONNAIRE_NEXT_BUTTON_AUTOMATIC_SET,
+            DefaultQuestionnaireNextButtonAutomaticSet.toString()
+          ),
+          config.getOrDefault(
+            ConfigKeys.QUESTIONNAIRE_NEXT_BUTTON_ENABLED_SET,
+            DefaultQuestionnaireNextButtonEnabledSet.toString()
+          )
+        ])
+      )
+      .then(([nextAutomaticSet, nextEnabledSet]) => {
+        if (nextAutomaticSet.length)
+          this.NEXT_BUTTON_AUTOMATIC_SET = new Set(
+            nextAutomaticSet.split(this.DELIMITER)
+          )
+        if (nextEnabledSet.length)
+          this.NEXT_BUTTON_ENABLED_SET = new Set(
+            nextEnabledSet.split(this.DELIMITER)
+          )
+      })
+  }
 
   reset() {
     this.answerService.reset()

@@ -83,7 +83,6 @@ export class QuestionComponent implements OnInit, OnChanges {
     this.initRange()
     if (this.questionIndex === this.currentIndex) {
       this.currentlyShown = true
-      if (this.value) this.emitAnswer()
     } else {
       if (Math.abs(this.questionIndex - this.currentIndex) == 1)
         this.previouslyShown = true

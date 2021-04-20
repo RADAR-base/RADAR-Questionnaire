@@ -107,6 +107,7 @@
     "ionic-mocks": "^1.3.0",
     "ionicons": "^4.6.3",
     "moment": "^2.22.2",
+    "morph-expressions": "^1.1.1",
     "moment-timezone": "^0.5.31",
     "ng2-fittext": "^1.2.12",
     "ngx-moment": "^5.0.0",

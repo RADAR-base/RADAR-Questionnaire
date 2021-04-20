@@ -23,6 +23,9 @@ export class ConfigKeys {
   )
   static SCHEDULE_YEAR_COVERAGE = new ConfigKeys('schedule_year_coverage')
 
+  static APP_CREDITS_TITLE = new ConfigKeys('app_credits_title')
+  static APP_CREDITS_BODY = new ConfigKeys('app_credits_body')
+
   constructor(public value: string) {}
 
   toString() {

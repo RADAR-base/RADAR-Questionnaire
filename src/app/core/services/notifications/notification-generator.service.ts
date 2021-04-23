@@ -22,9 +22,17 @@ export class NotificationGeneratorService {
     private logger: LogService
   ) {}
 
+  findNotificationByMessageId(tasks: Task[], id: number): SingleNotification {
+    return tasks
+      .map(t => t.notifications)
+      .reduce((arr, n) => arr.concat(n), [])
+      .find(n => n.messageId == id)
+  }
+
   futureNotifications(tasks: Task[], limit: number): SingleNotification[] {
     const now = new Date().getTime()
     return tasks
+      .filter(a => !a.completed)
       .map(t => t.notifications.filter(n => n.timestamp > now))
       .reduce((arr, n) => arr.concat(n), [])
       .sort(NotificationGeneratorService.compareNotifications)
@@ -92,7 +100,7 @@ export class NotificationGeneratorService {
   createTestNotification() {
     return this.createNotification(
       DefaultTask,
-      new Date().getTime() + getMilliseconds({ minutes: 2 }),
+      new Date().getTime() + getMilliseconds({ minutes: 3 }),
       NotificationType.TEST
     )
   }

@@ -1,27 +1,27 @@
 <ng-container *ngIf="showDatePicker && currentlyShown">
   <wheel-selector
-      [values]="datePickerValues"
-      [selection]="defaultDatePickerValue"
-      [labels]="labels"
-      (onSelect)="emitAnswer($event)"
+    [values]="datePickerValues"
+    [selection]="defaultDatePickerValue"
+    [labels]="labels"
+    (onSelect)="emitAnswer($event)"
   ></wheel-selector>
 </ng-container>
 
 <ng-container *ngIf="showTimePicker && currentlyShown">
   <wheel-selector
-      [values]="timePickerValues"
-      [selection]="defaultTimePickerValue"
-      [labels]="labels"
-      (onSelect)="emitAnswer($event)"
+    [values]="timePickerValues"
+    [selection]="defaultTimePickerValue"
+    [labels]="labels"
+    (onSelect)="emitAnswer($event)"
   ></wheel-selector>
 </ng-container>
 
 <ng-container *ngIf="showDurationPicker && currentlyShown">
   <wheel-selector
-      [values]="durationPickerValues"
-      [selection]="defaultDurationPickerValue"
-      [labels]="labels"
-      (onSelect)="emitAnswer($event)"
+    [values]="durationPickerValues"
+    [selection]="defaultDurationPickerValue"
+    [labels]="labels"
+    (onSelect)="emitAnswer($event)"
   ></wheel-selector>
 </ng-container>
 
@@ -29,8 +29,10 @@
   <ion-item>
     <ion-input
       type="text"
-      placeholder="Enter text"
+      placeholder="{{ 'PLACEHOLDER_TEXT_INPUT' | translate }}"
       (ionChange)="emitAnswer($event.value)"
+      (ionFocus)="emitTextInputFocus(true)"
+      (ionBlur)="emitTextInputFocus(false)"
     ></ion-input>
   </ion-item>
 </ng-container>

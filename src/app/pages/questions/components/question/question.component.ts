@@ -4,10 +4,12 @@ import {
   Input,
   OnChanges,
   OnInit,
-  Output
+  Output,
+  ViewChild,
 } from '@angular/core'
 import { Dialogs } from '@ionic-native/dialogs/ngx'
 import { Vibration } from '@ionic-native/vibration/ngx'
+import { Content, Keyboard } from 'ionic-angular'
 import * as smoothscroll from 'smoothscroll-polyfill'
 
 import { Answer } from '../../../../shared/models/answer'
@@ -18,9 +20,12 @@ import { LocKeys } from '../../../../shared/enums/localisations'
 
 @Component({
   selector: 'question',
-  templateUrl: 'question.component.html'
+  templateUrl: 'question.component.html',
 })
 export class QuestionComponent implements OnInit, OnChanges {
+  @ViewChild('content') content
+  @ViewChild('input') input
+
   @Input()
   question: Question
   @Input()
@@ -37,19 +42,25 @@ export class QuestionComponent implements OnInit, OnChanges {
   isScrollable = false
   isFieldLabelHidden = false
   margin = 32
+  keyboardScrollPadding = 200
+  keyboardInputOffset = 0
 
   NON_SCROLLABLE_SET: Set<QuestionType> = new Set([
     QuestionType.timed,
     QuestionType.audio,
     QuestionType.info,
-    QuestionType.text
+    QuestionType.text,
   ])
   HIDE_FIELD_LABEL_SET: Set<QuestionType> = new Set([QuestionType.audio])
 
   yesnoResponses = [{ code: '1', label: 'Yes' }, { code: '0', label: 'No' }]
 
-  constructor(private vibration: Vibration, private dialogs: Dialogs,
-    private localization: LocalizationService,) {
+  constructor(
+      private vibration: Vibration,
+      private dialogs: Dialogs,
+      private keyboard: Keyboard,
+      private localization: LocalizationService,
+  ) {
     smoothscroll.polyfill()
     this.value = null
     this.yesnoResponses = [{ code: '1', label: this.localization.translateKey(LocKeys.BTN_YES) },
@@ -61,7 +72,13 @@ export class QuestionComponent implements OnInit, OnChanges {
     this.isFieldLabelHidden = this.HIDE_FIELD_LABEL_SET.has(
       this.question.field_type
     )
-    setTimeout(() => (this.isLoading = false), 800)
+    setTimeout(() => {
+      this.isLoading = false
+      this.keyboardInputOffset = Math.max(
+        this.input.nativeElement.offsetTop - this.keyboardScrollPadding,
+        0
+      )
+    }, 800)
   }
 
   ngOnChanges() {
@@ -122,6 +139,19 @@ export class QuestionComponent implements OnInit, OnChanges {
         labelLeft: minLabel.trim(),
         labelRight: maxLabel.trim()
       }
+    }
+  }
+
+  onTextInputFocus(value) {
+    if (value) {
+      // Add delay for keyboard to show up
+      setTimeout(() => {
+        this.content.nativeElement.style = `padding-bottom:${this.keyboardInputOffset}px;`
+        this.content.nativeElement.scrollTop = this.keyboardInputOffset
+      }, 100)
+    } else {
+      this.content.nativeElement.style = ''
+      this.content.nativeElement.scrollTop = 0
     }
   }
 }

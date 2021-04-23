@@ -89,4 +89,10 @@ export class FinishTaskService {
   getTimeCompleted(answers) {
     return answers[answers.length - 1].endTime
   }
+
+  cancelNotificationsForCompletedTask(task): Promise<any> {
+    console.log('Cancelling pending reminders for task..')
+    const notifications = task.notifications
+    return notifications.forEach(n => this.config.cancelSingleNotification(n))
+  }
 }

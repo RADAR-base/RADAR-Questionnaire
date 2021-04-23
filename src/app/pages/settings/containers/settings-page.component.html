@@ -52,54 +52,10 @@
       {{ 'SETTINGS_NOTIFICATIONS' | translate }}
     </ion-item-divider>
     <ion-item no-lines>
-      <ion-label>
-        {{ 'SETTINGS_NOTIFICATIONS_SOUND' | translate }}
-      </ion-label>
-      <ion-toggle
-        item-right
-        [(ngModel)]="notificationSettings.sound"
-        (ionChange)="notificationChange()"
-      ></ion-toggle>
-    </ion-item>
-    <ion-item no-lines>
-      <ion-label>
-        {{ 'SETTINGS_NOTIFICATIONS_VIBRATION' | translate }}
-      </ion-label>
-      <ion-toggle
-        item-right
-        [(ngModel)]="notificationSettings.vibration"
-        (ionChange)="notificationChange()"
-      >
-      </ion-toggle>
-    </ion-item>
-    <ion-item no-lines>
-      <ion-label>
-        {{ 'SETTINGS_NOTIFICATIONS_NIGHTMOD' | translate }}
-        <ion-icon
-          (tap)="showInfoNightMode()"
-          name="information-circle"
-        ></ion-icon>
-      </ion-label>
-      <ion-toggle
-        item-right
-        [(ngModel)]="notificationSettings.nightMode"
-        (ionChange)="notificationChange()"
-      >
-      </ion-toggle>
-    </ion-item>
-  </ion-item-group>
-
-  <ion-item-group>
-    <ion-item-divider no-lines>{{
-      'SETTINGS_REPORT' | translate
-    }}</ion-item-divider>
-    <ion-item no-lines *ngFor="let subSetting of weeklyReport; let i = index">
-      <ion-label>{{ subSetting.name | translate }}</ion-label>
-      <ion-toggle
-        item-right
-        [(ngModel)]="subSetting.show"
-        (ionChange)="weeklyReportChange(i)"
-      ></ion-toggle>
+      {{ 'SETTINGS_LAST_NOTIFICATION_UPDATE' | translate }}
+      <span item-right class="info-value">
+        {{ settings.lastNotificationUpdate | amCalendar }}
+      </span>
     </ion-item>
   </ion-item-group>
 

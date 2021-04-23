@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { Firebase } from '@ionic-native/firebase/ngx'
+import { FirebaseX } from '@ionic-native/firebase-x/ngx'
 import { Platform } from 'ionic-angular'
 
 import { User } from '../../../shared/models/user'
@@ -10,7 +10,7 @@ import { AnalyticsService } from './analytics.service'
 @Injectable()
 export class FirebaseAnalyticsService extends AnalyticsService {
   constructor(
-    private firebase: Firebase,
+    private firebase: FirebaseX,
     private platform: Platform,
     private logger: LogService,
     private remoteConfig: RemoteConfigService
@@ -78,7 +78,10 @@ export class FirebaseAnalyticsService extends AnalyticsService {
    * ```
    */
 
-  setUserProperties(userProperties: User): Promise<any> {
+  setUserProperties(
+    userProperties: User | Object,
+    keyPrefix?: string
+  ): Promise<any> {
     if (!this.platform.is('cordova'))
       return Promise.resolve('Could not load firebase')
 
@@ -88,7 +91,7 @@ export class FirebaseAnalyticsService extends AnalyticsService {
         .map(([key, value]) => {
           return this.firebase.setUserProperty(
             this.crop(
-              key,
+              keyPrefix ? keyPrefix + key : key,
               24,
               `Firebase User Property name ${key} is too long, cropping`
             ),

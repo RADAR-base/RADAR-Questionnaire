@@ -43,6 +43,11 @@ export class StorageKeys {
   )
 
   static SD_RECENT_EVENTS = new StorageKeys('SD_RECENT_EVENTS')
+  
+  static FCM_TOKEN = new StorageKeys('FCM_TOKEN')
+  static NOTIFICATION_MESSAGING_TYPE = new StorageKeys(
+    'NOTIFICATION_MESSAGING_TYPE'
+  )
 
   constructor(public value: string) {}
 

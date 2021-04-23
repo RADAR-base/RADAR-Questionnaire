@@ -65,14 +65,18 @@ range-input {
 
   .padding {
     margin: 10px 3px;
+    font-size: 80%;
   }
 
   .labelLeft {
     float: left;
+    width: 50%;
   }
 
   .labelRight {
     float: right;
+    width: 50%;
+    text-align: right;
   }
 
   .radio-icon {

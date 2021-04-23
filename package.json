@@ -27,7 +27,7 @@
     "prepare": "yarn run snyk-protect",
     "build-android-apk": "cordova build android --release",
     "build-android-bundle": "cordova build android --release ; cd ./platforms/android/ ; ./gradlew bundleRelease",
-    "sign-android-bundle": "jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore /home/boettche/Neurozentrum/WorkPackages/WP7/aRMT_epi_playstore/keystore.jks platforms/android/app/build/outputs/bundle/release/app.aab org.phidatalab.radar_armt_epi ; cp platforms/android/app/build/outputs/bundle/release/app.aab /home/boettche/Neurozentrum/WorkPackages/WP7/aRMT_epi_playstore/",
+    "sign-android-bundle": "jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore /home/boettche/Neurozentrum/WorkPackages/WP7/aRMT_epi_playstore/keystore.jks platforms/android/app/build/outputs/bundle/release/app-release.aab org.phidatalab.radar_armt_epi ; cp platforms/android/app/build/outputs/bundle/release/app-release.aab /home/boettche/Neurozentrum/WorkPackages/WP7/aRMT_epi_playstore/",
     "emulate-android": "cordova emulate android"
   },
   "importSort": {
@@ -196,7 +196,10 @@
     "xcode": "^2.0.0"
   },
   "cordova": {
-    "platforms": [],
+    "platforms": [
+      "android",
+      "ios"
+    ],
     "plugins": {
       "cordova-plugin-device": {},
       "cordova-plugin-splashscreen": {},
@@ -250,8 +253,7 @@
       },
       "cordova-plugin-ionic-webview": {
         "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
-      },
-      "cordova-plugin-enable-multidex": {}
+      }
     }
   },
   "ionic_enable_lint": false,

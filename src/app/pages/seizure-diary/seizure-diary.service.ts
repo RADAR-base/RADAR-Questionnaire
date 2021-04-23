@@ -19,6 +19,16 @@ export class SeizureDiaryService {
     private localization: LocalizationService,
   ) {}
 
+  parseMonth(monthStr: string, locs = moment.locales()) {
+    var monthNum = -1;
+    locs.forEach(l => {
+        var lData = moment.localeData(l);
+        if (monthNum < 0)
+            monthNum = lData.monthsShort().indexOf(monthStr);
+    });
+    return monthNum + 1;
+  }
+
   // gets events from storage, checks for 24h time constraint, and re-sets and returns events within the last 24h
   getEvents(): Promise<any> {
     return this.storage.get(this.SD_STORE.SD_RECENT_EVENTS).then((events) => {
@@ -63,7 +73,9 @@ export class SeizureDiaryService {
   processEvent(event) {
     const e = event.data
     const d_start = JSON.parse(e.answers[0].value.string)
-    if (isNaN(Number(d_start.month))) d_start.month = this.localization.moment().month(d_start.month).format("M")
+    if (isNaN(Number(d_start.month))) {
+        d_start.month = this.parseMonth(d_start.month, ["en", "de"]);
+    }
     const d_start_parse = `${d_start.day}-${d_start.month}-${d_start.year} ${d_start.hour}:${d_start.minute} ${d_start.ampm.toLowerCase()}`
     const d_start_string = this.localization.moment(d_start_parse, "DD-MM-YYYY hh:mm a", false).format("lll")
     const d_duration = JSON.parse(e.answers[1].value.string)
@@ -95,7 +107,42 @@ export class SeizureDiaryService {
     return processedEvents;
   }
 
+  getEvent24Hour(ev) {
+    let offset = 0;
+    if (+ev.diary_start.hour == 12) {
+        if (ev.diary_start.ampm.toUpperCase() === "AM") {
+            offset = -12;
+        }
+    } else if (ev.diary_start.ampm.toUpperCase() === "PM") {
+        offset = 12;
+    }
+    return +ev.diary_start.hour + offset;
+  }
+
   compareEvents(a,b) {
+    let getEvent24Hour = function(ev) {
+        let offset = 0;
+        if (+ev.diary_start.hour == 12) {
+            if (ev.diary_start.ampm.toUpperCase() === "AM") {
+                offset = -12;
+            }
+        } else if (ev.diary_start.ampm.toUpperCase() === "PM") {
+            offset = 12;
+        }
+        return +ev.diary_start.hour + offset;
+    }
+    const aDate = new Date(a.diary_start.year, a.diary_start.month, a.diary_start.day, getEvent24Hour(a), a.diary_start.minute, a.diary_start.second, 0);
+    const bDate = new Date(b.diary_start.year, b.diary_start.month, b.diary_start.day, getEvent24Hour(b), b.diary_start.minute, b.diary_start.second, 0);
+    if (aDate < bDate) {
+      return -1;
+    }
+    if (aDate > bDate) {
+      return 1;
+    }
+    return 0;
+  }
+
+  compareEventsStr(a,b) {
     const aDate = Date.parse(a.diary_start_string)
     const bDate = Date.parse(b.diary_start_string)
     if (aDate < bDate) {

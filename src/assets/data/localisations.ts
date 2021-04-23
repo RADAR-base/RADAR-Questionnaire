@@ -499,7 +499,7 @@ export const Localisations = {
   },
   SETTINGS_ENROLMENT: {
     da: 'Inschrijving',
-    de: 'Inschrijving',
+    de: 'Registrierung',
     en: 'Enrolment',
     es: 'Inschrijving',
     it: 'Inschrijving',
@@ -809,7 +809,7 @@ export const Localisations = {
   },
   BTN_SET: {
     da: 'Indstil',
-    de: 'Festsetzen',
+    de: 'Setzen',
     en: 'Set',
     es: 'Conjunto',
     it: 'Set',

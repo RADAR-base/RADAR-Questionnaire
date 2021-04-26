@@ -26,7 +26,7 @@ export class MessageHandlerService {
   onMessageReceived(data) {
     const action = data.get('action')
     switch (action) {
-      case MessagingAction.QUESTIONNAIRE_TRIGGERED:
+      case MessagingAction.QUESTIONNAIRE_TRIGGER:
         this.logger.log('A questionnaire was triggered!')
         const questionnaire = <Assessment>JSON.parse(data.get('questionnaire'))
         const metadata = data.get('metadata')

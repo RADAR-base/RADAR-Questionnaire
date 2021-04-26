@@ -45,5 +45,5 @@ export enum NotificationMessagingState {
 }
 
 export enum MessagingAction {
-  QUESTIONNAIRE_TRIGGERED = 'QUESTIONNAIRE_TRIGGEREDs'
+  QUESTIONNAIRE_TRIGGER = 'QUESTIONNAIRE_TRIGGER'
 }

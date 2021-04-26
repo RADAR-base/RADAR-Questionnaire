@@ -23,13 +23,15 @@ export class MessageHandlerService {
       .subscribe(data => this.onMessageReceived(new Map(Object.entries(data))))
   }
 
-  onMessageReceived(data) {
+  onMessageReceived(data: Map<string, string>) {
     const action = data.get('action')
     switch (action) {
       case MessagingAction.QUESTIONNAIRE_TRIGGER:
         this.logger.log('A questionnaire was triggered!')
         const questionnaire = <Assessment>JSON.parse(data.get('questionnaire'))
-        const metadata = data.get('metadata')
+        const metadata = new Map(
+          Object.entries(JSON.parse(data.get('metadata')))
+        )
         return this.triggerQuestionnaire(questionnaire).then(() =>
           this.usage.sendQuestionnaireEvent(
             UsageEventType.QUESTIONNAIRE_TRIGGERED,

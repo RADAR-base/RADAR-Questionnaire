@@ -155,9 +155,7 @@ export class QuestionsPageComponent implements OnInit {
       setTimeout(() => this.updateToolbarButtons(), 100)
     }
     if (this.questionsService.getIsNextAutomatic(event.type)) {
-      setTimeout(() => {
-        this.nextQuestion()
-      }, 20)
+      this.nextQuestion()
     }
   }
 

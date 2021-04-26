@@ -106,7 +106,7 @@ export class FirebaseAnalyticsService extends AnalyticsService {
   }
 
   formatUserPropertyKey(key: string, keyPrefix: string) {
-    return (keyPrefix ? keyPrefix + key : key).replace(/[\W]+/g, '')
+    return (keyPrefix ? keyPrefix + key : key).replace(/[\W]+/g, '_')
   }
 
   setUserId(userId: string): Promise<any> {

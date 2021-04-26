@@ -63,12 +63,14 @@ export class FinishTaskService {
 
   processQuestionnaireData(answers, timestamps, questions) {
     this.logger.log('Answers to process', answers)
-    const values = Object.entries(answers).map(([key, value]) => ({
-      questionId: { string: key.toString() },
-      value: { string: value.toString() },
-      startTime: timestamps[key].startTime,
-      endTime: timestamps[key].endTime
-    }))
+    const values = Object.entries(answers)
+      .filter(([k, v]) => timestamps[k])
+      .map(([key, value]) => ({
+        questionId: { string: key.toString() },
+        value: { string: value.toString() },
+        startTime: timestamps[key].startTime,
+        endTime: timestamps[key].endTime
+      }))
     return {
       answers: values,
       scheduleVersion: '',
@@ -91,8 +93,7 @@ export class FinishTaskService {
 
   cancelNotificationsForCompletedTask(task): Promise<any> {
     console.log('Cancelling pending reminders for task..')
-    const notifications = task.notifications
-    if (!notifications) return
+    const notifications = task.notifications ? task.notifications : []
     return notifications.forEach(n => this.config.cancelSingleNotification(n))
   }
 }

@@ -5,7 +5,7 @@ import {
   OnChanges,
   OnInit,
   Output,
-  ViewChild,
+  ViewChild
 } from '@angular/core'
 import { Dialogs } from '@ionic-native/dialogs/ngx'
 import { Vibration } from '@ionic-native/vibration/ngx'
@@ -29,6 +29,8 @@ export class QuestionComponent implements OnInit, OnChanges {
   questionIndex: number
   @Input()
   currentIndex: number
+  @Input()
+  isSectionHeaderHidden: boolean
   @Output()
   answer: EventEmitter<Answer> = new EventEmitter<Answer>()
 
@@ -41,14 +43,17 @@ export class QuestionComponent implements OnInit, OnChanges {
   margin = 32
   keyboardScrollPadding = 200
   keyboardInputOffset = 0
+  inputHeight = 0
+  isMatrix = false
 
   NON_SCROLLABLE_SET: Set<QuestionType> = new Set([
     QuestionType.timed,
     QuestionType.audio,
     QuestionType.info,
-    QuestionType.text,
+    QuestionType.text
   ])
   HIDE_FIELD_LABEL_SET: Set<QuestionType> = new Set([QuestionType.audio])
+  MATRIX_INPUT_SET: Set<QuestionType> = new Set([QuestionType.matrix_radio])
 
   constructor(
     private vibration: Vibration,
@@ -64,6 +69,7 @@ export class QuestionComponent implements OnInit, OnChanges {
     this.isFieldLabelHidden = this.HIDE_FIELD_LABEL_SET.has(
       this.question.field_type
     )
+    this.isMatrix = this.MATRIX_INPUT_SET.has(this.question.field_type)
     setTimeout(() => {
       this.isLoading = false
       this.keyboardInputOffset = Math.max(

@@ -9,6 +9,7 @@ import { WheelSelectorComponent } from '../wheel-selector/wheel-selector.compone
 import { AudioInputComponent } from './audio-input/audio-input.component'
 import { CheckboxInputComponent } from './checkbox-input/checkbox-input.component'
 import { InfoScreenComponent } from './info-screen/info-screen.component'
+import { MatrixRadioInputComponent } from './matrix-radio-input/matrix-radio-input.component'
 import { QuestionComponent } from './question.component'
 import { RadioInputComponent } from './radio-input/radio-input.component'
 import { RangeInfoInputComponent } from './range-info-input/range-info-input.component'
@@ -28,7 +29,8 @@ const COMPONENTS = [
   InfoScreenComponent,
   RangeInfoInputComponent,
   TextInputComponent,
-  WheelSelectorComponent
+  WheelSelectorComponent,
+  MatrixRadioInputComponent
 ]
 
 @NgModule({

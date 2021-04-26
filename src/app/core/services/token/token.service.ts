@@ -3,6 +3,7 @@ import 'rxjs/add/operator/toPromise'
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { JwtHelperService } from '@auth0/angular-jwt'
+import { Platform } from 'ionic-angular'
 
 import {
   DefaultEndPoint,
@@ -35,18 +36,22 @@ export class TokenService {
     public storage: StorageService,
     private jwtHelper: JwtHelperService,
     private remoteConfig: RemoteConfigService,
-    private logger: LogService
+    private logger: LogService,
+    public platform: Platform
   ) {
-    remoteConfig.subject().subscribe(config => {
-      console.log('Updating Token config')
-      config
-        .getOrDefault(
-          ConfigKeys.OAUTH_REFRESH_SECONDS,
-          String(DefaultTokenRefreshSeconds)
-        )
-        .then(
-          refreshTime => (this.tokenRefreshMillis = Number(refreshTime) * 1000)
-        )
+    this.platform.ready().then(() => {
+      this.remoteConfig.subject().subscribe(config => {
+        console.log('Updating Token config')
+        config
+          .getOrDefault(
+            ConfigKeys.OAUTH_REFRESH_SECONDS,
+            String(DefaultTokenRefreshSeconds)
+          )
+          .then(
+            refreshTime =>
+              (this.tokenRefreshMillis = Number(refreshTime) * 1000)
+          )
+      })
     })
   }
 
@@ -77,7 +82,7 @@ export class TokenService {
     return 'Basic ' + btoa(`${user}:${password}`)
   }
 
-  register(refreshBody) {
+  register(refreshBody): Promise<OAuthToken> {
     return Promise.all([
       this.getURI(),
       this.getRegisterHeaders(DefaultRequestEncodedContentType)
@@ -89,10 +94,10 @@ export class TokenService {
           .post(URI, refreshBody, { headers: headers })
           .toPromise()
       })
-      .then(res => this.setTokens(res))
+      .then(res => this.setTokens(res).then(() => res))
   }
 
-  refresh(): Promise<any> {
+  refresh(): Promise<OAuthToken> {
     return this.getTokens().then(tokens => {
       if (!tokens) {
         throw new Error('No tokens are available to refresh')

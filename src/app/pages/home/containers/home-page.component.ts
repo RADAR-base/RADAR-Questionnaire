@@ -43,6 +43,9 @@ export class HomePageComponent implements OnDestroy {
   checkTaskInterval
   showMiscTasksButton: Promise<boolean>
 
+  APP_CREDITS = '&#169; RADAR-Base'
+  HTML_BREAK = '<br>'
+
   constructor(
     public navCtrl: NavController,
     public alertService: AlertService,
@@ -172,16 +175,25 @@ export class HomePageComponent implements OnDestroy {
 
   showCredits() {
     this.usage.sendClickEvent('show_credits')
-    return this.alertService.showAlert({
-      title: this.localization.translateKey(LocKeys.CREDITS_TITLE),
-      message: this.localization.translateKey(LocKeys.CREDITS_BODY),
-      buttons: [
-        {
-          text: this.localization.translateKey(LocKeys.BTN_OKAY),
-          handler: () => {}
-        }
-      ]
-    })
+    return Promise.all([
+      this.tasksService.getAppCreditsTitle(),
+      this.tasksService.getAppCreditsBody()
+    ]).then(([title, body]) =>
+      this.alertService.showAlert({
+        title: this.localization.chooseText(title),
+        message:
+          this.localization.chooseText(body) +
+          this.HTML_BREAK +
+          this.HTML_BREAK +
+          this.APP_CREDITS,
+        buttons: [
+          {
+            text: this.localization.translateKey(LocKeys.BTN_OKAY),
+            handler: () => {}
+          }
+        ]
+      })
+    )
   }
 
   showMissedInfo() {

@@ -54,23 +54,23 @@ export class QuestionsService {
       .then(config =>
         Promise.all([
           config.getOrDefault(
-            ConfigKeys.QUESTIONNAIRE_NEXT_BUTTON_AUTOMATIC_SET,
+            ConfigKeys.AUTO_NEXT_QUESTIONNAIRE_TYPES,
             DefaultAutoNextQuestionnaireTypes.toString()
           ),
           config.getOrDefault(
-            ConfigKeys.QUESTIONNAIRE_NEXT_BUTTON_ENABLED_SET,
+            ConfigKeys.SKIPPABLE_QUESTIONNAIRE_TYPES,
             DefaultSkippableQuestionnaireTypes.toString()
           )
         ])
       )
-      .then(([nextAutomaticSet, nextEnabledSet]) => {
-        if (nextAutomaticSet.length)
+      .then(([autoNextSet, skippableSet]) => {
+        if (autoNextSet.length)
           this.NEXT_BUTTON_AUTOMATIC_SET = new Set(
-            this.stringToArray(nextAutomaticSet, this.DELIMITER)
+            this.stringToArray(autoNextSet, this.DELIMITER)
           )
-        if (nextEnabledSet.length)
+        if (skippableSet.length)
           this.NEXT_BUTTON_ENABLED_SET = new Set(
-            this.stringToArray(nextEnabledSet, this.DELIMITER)
+            this.stringToArray(skippableSet, this.DELIMITER)
           )
       })
   }

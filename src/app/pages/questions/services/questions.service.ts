@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core'
 
 import {
-  DefaultQuestionnaireNextButtonAutomaticSet,
-  DefaultQuestionnaireNextButtonEnabledSet,
-  DefaultQuestionsHidden
+  DefaultAutoNextQuestionnaireTypes,
+  DefaultQuestionsHidden,
+  DefaultSkippableQuestionnaireTypes
 } from '../../../../assets/data/defaultConfig'
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
 import { RemoteConfigService } from '../../../core/services/config/remote-config.service'
@@ -29,10 +29,10 @@ export class QuestionsService {
     QuestionType.audio
   ])
   NEXT_BUTTON_ENABLED_SET: Set<QuestionType> = new Set(
-    DefaultQuestionnaireNextButtonEnabledSet
+    DefaultSkippableQuestionnaireTypes
   )
   NEXT_BUTTON_AUTOMATIC_SET: Set<QuestionType> = new Set(
-    DefaultQuestionnaireNextButtonAutomaticSet
+    DefaultAutoNextQuestionnaireTypes
   )
   DELIMITER = ','
 
@@ -55,22 +55,22 @@ export class QuestionsService {
         Promise.all([
           config.getOrDefault(
             ConfigKeys.QUESTIONNAIRE_NEXT_BUTTON_AUTOMATIC_SET,
-            DefaultQuestionnaireNextButtonAutomaticSet.toString()
+            DefaultAutoNextQuestionnaireTypes.toString()
           ),
           config.getOrDefault(
             ConfigKeys.QUESTIONNAIRE_NEXT_BUTTON_ENABLED_SET,
-            DefaultQuestionnaireNextButtonEnabledSet.toString()
+            DefaultSkippableQuestionnaireTypes.toString()
           )
         ])
       )
       .then(([nextAutomaticSet, nextEnabledSet]) => {
         if (nextAutomaticSet.length)
           this.NEXT_BUTTON_AUTOMATIC_SET = new Set(
-            nextAutomaticSet.split(this.DELIMITER)
+            this.stringToArray(nextAutomaticSet, this.DELIMITER)
           )
         if (nextEnabledSet.length)
           this.NEXT_BUTTON_ENABLED_SET = new Set(
-            nextEnabledSet.split(this.DELIMITER)
+            this.stringToArray(nextEnabledSet, this.DELIMITER)
           )
       })
   }
@@ -269,5 +269,9 @@ export class QuestionsService {
       )
       .then(res => JSON.parse(res))
       .catch(e => DefaultQuestionsHidden)
+  }
+
+  stringToArray(array, delimiter) {
+    return array.split(delimiter).map(s => s.trim())
   }
 }

@@ -26,6 +26,13 @@ export class ConfigKeys {
   static APP_CREDITS_TITLE = new ConfigKeys('app_credits_title')
   static APP_CREDITS_BODY = new ConfigKeys('app_credits_body')
 
+  static AUTO_NEXT_QUESTIONNAIRE_TYPES = new ConfigKeys(
+    'auto_next_questionnaire_types'
+  )
+  static SKIPPABLE_QUESTIONNAIRE_TYPES = new ConfigKeys(
+    'skippable_questionnaire_types'
+  )
+
   constructor(public value: string) {}
 
   toString() {

@@ -1,5 +1,6 @@
 import { LocKeys } from '../../app/shared/enums/localisations'
 import { AssessmentType } from '../../app/shared/models/assessment'
+import { QuestionType } from '../../app/shared/models/question'
 import {
   LanguageSetting,
   NotificationSettings,
@@ -207,7 +208,7 @@ export const DefaultKafkaRequestContentType =
 export const DefaultClientAcceptType =
   'application/vnd.kafka.v2+json, application/vnd.kafka+json; q=0.9, application/json; q=0.8'
 
-// DEFAULT AUDIO INPUT SETUP
+// DEFAULT QUESTIONNAIRE COMPONENT SETUP
 
 // *Default audio input/recording attempts allowed
 export const DefaultMaxAudioAttemptsAllowed = 5
@@ -217,6 +218,15 @@ export const DefaultAudioRecordOptions = {
   SampleRate: 16000,
   NumberOfChannels: 1
 }
+
+// *Default question/question input types where the questionnaire will automatically move to the next question upon answering the question.
+export const DefaultAutoNextQuestionnaireTypes = [
+  QuestionType.timed,
+  QuestionType.audio
+]
+
+// *Default question/question input types where the next button is enabled by default, allowing the question to be skippable.
+export const DefaultSkippableQuestionnaireTypes = [QuestionType.audio]
 
 // DEFAULT GENERAL SETUP
 // *Default notification, report, and language settings

@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core'
 
-import { DefaultQuestionsHidden } from '../../../../assets/data/defaultConfig'
+import {
+  DefaultAutoNextQuestionnaireTypes,
+  DefaultQuestionsHidden,
+  DefaultSkippableQuestionnaireTypes
+} from '../../../../assets/data/defaultConfig'
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
 import { RemoteConfigService } from '../../../core/services/config/remote-config.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
@@ -24,11 +28,13 @@ export class QuestionsService {
     QuestionType.timed,
     QuestionType.audio
   ])
-  NEXT_BUTTON_ENABLED_SET: Set<QuestionType> = new Set([QuestionType.audio])
-  NEXT_BUTTON_AUTOMATIC_SET: Set<QuestionType> = new Set([
-    QuestionType.timed,
-    QuestionType.audio
-  ])
+  NEXT_BUTTON_ENABLED_SET: Set<QuestionType> = new Set(
+    DefaultSkippableQuestionnaireTypes
+  )
+  NEXT_BUTTON_AUTOMATIC_SET: Set<QuestionType> = new Set(
+    DefaultAutoNextQuestionnaireTypes
+  )
+  DELIMITER = ','
 
   constructor(
     public questionnaire: QuestionnaireService,
@@ -38,7 +44,36 @@ export class QuestionsService {
     private finish: FinishTaskService,
     private remoteConfig: RemoteConfigService,
     private util: Utility
-  ) {}
+  ) {
+    this.init()
+  }
+
+  init() {
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        Promise.all([
+          config.getOrDefault(
+            ConfigKeys.AUTO_NEXT_QUESTIONNAIRE_TYPES,
+            DefaultAutoNextQuestionnaireTypes.toString()
+          ),
+          config.getOrDefault(
+            ConfigKeys.SKIPPABLE_QUESTIONNAIRE_TYPES,
+            DefaultSkippableQuestionnaireTypes.toString()
+          )
+        ])
+      )
+      .then(([autoNextSet, skippableSet]) => {
+        if (autoNextSet.length)
+          this.NEXT_BUTTON_AUTOMATIC_SET = new Set(
+            this.stringToArray(autoNextSet, this.DELIMITER)
+          )
+        if (skippableSet.length)
+          this.NEXT_BUTTON_ENABLED_SET = new Set(
+            this.stringToArray(skippableSet, this.DELIMITER)
+          )
+      })
+  }
 
   reset() {
     this.answerService.reset()
@@ -234,5 +269,9 @@ export class QuestionsService {
       )
       .then(res => JSON.parse(res))
       .catch(e => DefaultQuestionsHidden)
+  }
+
+  stringToArray(array, delimiter) {
+    return array.split(delimiter).map(s => s.trim())
   }
 }

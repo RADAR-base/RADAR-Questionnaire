@@ -17,6 +17,7 @@ import {
 import { Task } from '../../../shared/models/task'
 import { ApplicationTimeZoneValueExport } from '../../../shared/models/timezone'
 import { getSeconds } from '../../../shared/utilities/time'
+import { Utility } from '../../../shared/utilities/util'
 import { QuestionnaireService } from '../config/questionnaire.service'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { SubjectConfigService } from '../config/subject-config.service'
@@ -35,14 +36,15 @@ export class SchemaService {
     private config: SubjectConfigService,
     private http: HttpClient,
     private logger: LogService,
-    private remoteConfig: RemoteConfigService
+    private remoteConfig: RemoteConfigService,
+    private utility: Utility
   ) {}
 
   getMetaData(type, task?: Task): Promise<QuestionnaireMetadata> {
     switch (type) {
       case SchemaType.ASSESSMENT:
         return this.questionnaire
-          .getAssessment(task.type, task)
+          .getAssessmentForTask(task.type, task)
           .then(assessment => assessment.questionnaire)
       default:
         return Promise.resolve({ name: type, avsc: 'questionnaire' })
@@ -95,7 +97,8 @@ export class SchemaService {
         const Event: EventValueExport = {
           time: getSeconds({ milliseconds: this.getUniqueTimeNow() }),
           eventType: payload.eventType.toUpperCase(),
-          questionnaireName: payload.questionnaireName
+          questionnaireName: payload.questionnaireName,
+          metadata: this.utility.mapToObject(payload.metadata)
         }
         return Event
     }

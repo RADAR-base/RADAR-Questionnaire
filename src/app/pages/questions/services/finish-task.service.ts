@@ -53,7 +53,11 @@ export class FinishTaskService {
 
   createClinicalFollowUpTask(assessment): Promise<any> {
     return this.schedule
-      .generateClinicalSchedule(assessment, Date.now())
+      .generateSingleAssessmentTask(
+        assessment,
+        AssessmentType.CLINICAL,
+        Date.now()
+      )
       .then(() => this.config.rescheduleNotifications())
   }
 

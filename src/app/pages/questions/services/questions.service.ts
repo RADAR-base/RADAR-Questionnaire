@@ -221,7 +221,7 @@ export class QuestionsService {
   getQuestionnairePayload(task) {
     const type = task.type
     return this.questionnaire
-      .getAssessment(type, task)
+      .getAssessmentForTask(type, task)
       .then(assessment =>
         this.processQuestions(
           assessment.name,

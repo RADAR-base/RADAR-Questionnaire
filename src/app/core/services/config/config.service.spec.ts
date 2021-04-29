@@ -10,6 +10,7 @@ import {
   KafkaServiceMock,
   LocalizationServiceMock,
   LogServiceMock,
+  MessageHandlerServiceMock,
   NotificationServiceMock,
   ProtocolServiceMock,
   QuestionnaireServiceMock,
@@ -21,6 +22,7 @@ import { AppServerService } from '../app-server/app-server.service'
 import { KafkaService } from '../kafka/kafka.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
+import { MessageHandlerService } from '../notifications/message-handler.service'
 import { NotificationService } from '../notifications/notification.service'
 import { ScheduleService } from '../schedule/schedule.service'
 import { AnalyticsService } from '../usage/analytics.service'
@@ -55,7 +57,8 @@ describe('ConfigService', () => {
         HttpHandler,
         { provide: Platform, useClass: PlatformMock },
         { provide: RemoteConfigService, useClass: RemoteConfigServiceMock },
-        { provide: AppServerService, useClass: AppServerServiceMock }
+        { provide: AppServerService, useClass: AppServerServiceMock },
+        { provide: MessageHandlerService, useClass: MessageHandlerServiceMock }
       ]
     })
   )

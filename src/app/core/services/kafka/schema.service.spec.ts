@@ -7,8 +7,10 @@ import {
   QuestionnaireServiceMock,
   RemoteConfigServiceMock,
   StorageServiceMock,
-  SubjectConfigServiceMock
+  SubjectConfigServiceMock,
+  UtilityMock
 } from '../../../shared/testing/mock-services'
+import { Utility } from '../../../shared/utilities/util'
 import { QuestionnaireService } from '../config/questionnaire.service'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { SubjectConfigService } from '../config/subject-config.service'
@@ -30,6 +32,7 @@ describe('SchemaService', () => {
         { provide: LocalizationService, useClass: LocalizationServiceMock },
         { provide: SubjectConfigService, useClass: SubjectConfigServiceMock },
         { provide: RemoteConfigService, useClass: RemoteConfigServiceMock },
+        { provide: Utility, useClass: UtilityMock },
         HttpClient,
         HttpHandler
       ]

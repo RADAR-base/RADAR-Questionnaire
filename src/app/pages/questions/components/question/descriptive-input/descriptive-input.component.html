@@ -1,10 +1,7 @@
 <div class="info-carrd">
-  <div class="content" #content scrollY="true" (scroll)="onScroll($event)">
+  <div class="content" #content scrollY="true">
     <div class="items">
-      <div class="info-content" [innerHTML]="text"></div>
+      <div class="info-content" [innerHTML]="sanitizedHtml"></div>
     </div>
   </div>
-  <span *ngIf="showScrollButton" (tap)="scrollDown()" class="icon">
-    <ion-icon name="arrow-dropdown-circle"></ion-icon>
-  </span>
 </div>

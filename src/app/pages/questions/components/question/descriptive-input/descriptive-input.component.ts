@@ -7,6 +7,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core'
+import { DomSanitizer } from '@angular/platform-browser'
 
 import { InfoItem } from '../../../../../shared/models/question'
 
@@ -23,7 +24,7 @@ export class DescriptiveInputComponent implements OnInit, OnChanges {
   valueChange: EventEmitter<number> = new EventEmitter<number>()
 
   @Input()
-  text: String
+  text: string
   @Input()
   currentlyShown: boolean
 
@@ -32,14 +33,16 @@ export class DescriptiveInputComponent implements OnInit, OnChanges {
   name = `info-${this.uniqueID}`
   items: InfoItem[] = Array()
   showScrollButton: boolean
+  sanitizedHtml: any
 
-  constructor() {}
+  constructor(private sanitizer: DomSanitizer) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(this.text)
+  }
 
   ngOnChanges() {
-    if (this.text.length > 1) this.showScrollButton = true
-    else if (this.currentlyShown) this.emitTimestamp()
+    if (this.currentlyShown) this.emitTimestamp()
   }
 
   scrollDown() {

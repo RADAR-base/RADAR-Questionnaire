@@ -11,15 +11,6 @@ descriptive-input {
     overflow-y: scroll;
     padding-bottom: 24%;
     width: 100%;
-    mask-image:
-
-      -webkit-gradient(
-        linear,
-        left top,
-        left bottom,
-        from(rgba(0, 0, 0, 1)),
-        to(rgba(0, 0, 0, 0.25))
-      );
   }
 
   .info-heading {
@@ -34,8 +25,12 @@ descriptive-input {
   img {
     display: block;
     margin: 0 auto !important;
-    width: 104px !important;
     height: auto !important;
+    -webkit-transform: scale(0.8); /* Saf3.1+, Chrome */
+    -moz-transform: scale(0.8); /* FF3.5+ */
+    -ms-transform: scale(0.8); /* IE9 */
+    -o-transform: scale(0.8); /* Opera 10.5+ */
+    transform: scale(0.8);
   }
 
   .icon {
@@ -49,5 +44,11 @@ descriptive-input {
   ion-icon {
     color: $cl-light-40;
     font-size: 40px;
+  }
+
+  .info-content iframe {
+    padding: auto;
+    width: 100%;
+    height: auto;
   }
 }

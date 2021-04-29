@@ -31,6 +31,7 @@ export class HomePageComponent implements OnDestroy {
   timeToNextTask: number
   tasksProgress: Promise<TasksProgress>
   resumeListener: Subscription = new Subscription()
+  changeDetectionListener: Subscription = new Subscription()
 
   showCalendar = false
   showCompleted = false
@@ -42,6 +43,9 @@ export class HomePageComponent implements OnDestroy {
   checkTaskInterval
   showMiscTasksButton: Promise<boolean>
 
+  APP_CREDITS = '&#169; RADAR-Base'
+  HTML_BREAK = '<br>'
+
   constructor(
     public navCtrl: NavController,
     public alertService: AlertService,
@@ -51,6 +55,12 @@ export class HomePageComponent implements OnDestroy {
     private usage: UsageService
   ) {
     this.resumeListener = this.platform.resume.subscribe(() => this.onResume())
+    this.changeDetectionListener = this.tasksService.changeDetectionEmitter.subscribe(
+      () => {
+        console.log('Changes to task service detected')
+        this.navCtrl.setRoot(HomePageComponent)
+      }
+    )
   }
 
   getIsLoadingSpinnerShown() {
@@ -71,6 +81,7 @@ export class HomePageComponent implements OnDestroy {
 
   ngOnDestroy() {
     this.resumeListener.unsubscribe()
+    this.changeDetectionListener.unsubscribe()
   }
 
   ionViewWillEnter() {
@@ -164,16 +175,25 @@ export class HomePageComponent implements OnDestroy {
 
   showCredits() {
     this.usage.sendClickEvent('show_credits')
-    return this.alertService.showAlert({
-      title: this.localization.translateKey(LocKeys.CREDITS_TITLE),
-      message: this.localization.translateKey(LocKeys.CREDITS_BODY),
-      buttons: [
-        {
-          text: this.localization.translateKey(LocKeys.BTN_OKAY),
-          handler: () => {}
-        }
-      ]
-    })
+    return Promise.all([
+      this.tasksService.getAppCreditsTitle(),
+      this.tasksService.getAppCreditsBody()
+    ]).then(([title, body]) =>
+      this.alertService.showAlert({
+        title: this.localization.chooseText(title),
+        message:
+          this.localization.chooseText(body) +
+          this.HTML_BREAK +
+          this.HTML_BREAK +
+          this.APP_CREDITS,
+        buttons: [
+          {
+            text: this.localization.translateKey(LocKeys.BTN_OKAY),
+            handler: () => {}
+          }
+        ]
+      })
+    )
   }
 
   showMissedInfo() {

@@ -36,17 +36,23 @@ export class UsageService {
     })
   }
 
-  sendQuestionnaireEvent(type, task: Task) {
+  sendQuestionnaireEvent(
+    type,
+    taskName: string,
+    taskTimestamp: number,
+    metadata?: Map<string, string>
+  ) {
     // noinspection JSIgnoredPromiseFromCall
     this.analytics.logEvent(type, {
-      questionnaire_timestamp: task.timestamp
-        ? String(task.timestamp)
+      questionnaire_timestamp: taskTimestamp
+        ? String(taskTimestamp)
         : Date.now(),
-      questionnaire_name: task.name
+      questionnaire_name: taskName
     })
     return this.sendEventToKafka({
       eventType: type,
-      questionnaireName: task.name
+      questionnaireName: taskName,
+      metaData: metadata
     })
   }
 

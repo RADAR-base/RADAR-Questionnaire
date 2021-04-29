@@ -18,6 +18,7 @@ import { AppServerService } from '../app-server/app-server.service'
 import { KafkaService } from '../kafka/kafka.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
+import { MessageHandlerService } from '../notifications/message-handler.service'
 import { NotificationService } from '../notifications/notification.service'
 import { ScheduleService } from '../schedule/schedule.service'
 import { AnalyticsService } from '../usage/analytics.service'
@@ -29,6 +30,8 @@ import { SubjectConfigService } from './subject-config.service'
 
 @Injectable()
 export class ConfigService {
+  ATTRIBUTE_KEY_PREFIX = 'att_'
+
   constructor(
     private schedule: ScheduleService,
     private notifications: NotificationService,
@@ -41,7 +44,7 @@ export class ConfigService {
     private analytics: AnalyticsService,
     private logger: LogService,
     private remoteConfig: RemoteConfigService,
-    private appServerService: AppServerService
+    private messageHandlerService: MessageHandlerService
   ) {}
 
   fetchConfigState(force?: boolean) {
@@ -203,20 +206,21 @@ export class ConfigService {
   }
 
   updateConfigStateOnProtocolChange(protocol) {
-    const assessments = this.protocol.format(protocol.protocols)
+    const assessments = protocol.protocols
     this.logger.log(assessments)
     return this.questionnaire
-      .updateAssessments(AssessmentType.ALL, assessments)
-      .then(() => this.regenerateSchedule())
+      .pullDefinitionsForQuestionnaires(assessments)
       .then(() => this.appConfig.setScheduleVersion(protocol.version))
+      .then(() => this.regenerateSchedule())
   }
 
   updateConfigStateOnLanguageChange() {
-    return Promise.all([
-      this.questionnaire.pullQuestionnaires(AssessmentType.ON_DEMAND),
-      this.questionnaire.pullQuestionnaires(AssessmentType.CLINICAL),
-      this.questionnaire.pullQuestionnaires(AssessmentType.SCHEDULED)
-    ]).then(() => this.rescheduleNotifications(true))
+    return this.questionnaire
+      .getAssessments(AssessmentType.ALL)
+      .then(assessments =>
+        this.questionnaire.pullDefinitionsForQuestionnaires(assessments)
+      )
+      .then(() => this.rescheduleNotifications(true))
   }
 
   updateConfigStateOnAppVersionChange(version) {
@@ -278,11 +282,11 @@ export class ConfigService {
 
   resetAll() {
     this.sendConfigChangeEvent(ConfigEventType.APP_RESET)
-    return Promise.all([
-      this.resetConfig(),
-      this.resetCache(),
-      this.cancelNotifications()
-    ]).then(() => this.subjectConfig.reset())
+    this.cancelNotifications()
+    this.notifications.unregisterFromNotificataions()
+    return Promise.all([this.resetConfig(), this.resetCache()]).then(() =>
+      this.subjectConfig.reset()
+    )
   }
 
   resetConfig() {
@@ -304,15 +308,21 @@ export class ConfigService {
       this.subjectConfig
         .init(user)
         .then(() => this.analytics.setUserProperties(user))
+        .then(() =>
+          this.analytics.setUserProperties(
+            user.attributes,
+            this.ATTRIBUTE_KEY_PREFIX
+          )
+        )
         .then(() => this.appConfig.init(user.enrolmentDate)),
       this.localization.init(),
-      this.kafka.init(),
-      this.notifications.init()
-    ])
+      this.kafka.init()
+    ]).then(() => this.notifications.init())
   }
 
   getAll() {
     return {
+      participantLogin: this.subjectConfig.getParticipantLogin(),
       participantID: this.subjectConfig.getParticipantID(),
       projectName: this.subjectConfig.getProjectName(),
       enrolmentDate: this.subjectConfig.getEnrolmentDate(),

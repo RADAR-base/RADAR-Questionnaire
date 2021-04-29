@@ -19,7 +19,6 @@ import { TokenService } from '../token/token.service'
 @Injectable()
 export class AppServerService {
   private APP_SERVER_URL
-  private TOKENS
   SUBJECT_PATH = 'users'
   PROJECT_PATH = 'projects'
 
@@ -35,7 +34,7 @@ export class AppServerService {
 
   init() {
     // NOTE: Initialising ensures project and subject exists in the app server
-    return Promise.all([this.updateAppServerURL(), this.updateTokens()])
+    return Promise.all([this.updateAppServerURL()])
       .then(() =>
         Promise.all([
           this.subjectConfig.getParticipantLogin(),
@@ -59,10 +58,10 @@ export class AppServerService {
   getHeaders() {
     return Promise.all([
       this.APP_SERVER_URL ? this.APP_SERVER_URL : this.updateAppServerURL(),
-      this.TOKENS ? this.TOKENS : this.updateTokens()
-    ]).then(([]) =>
+      this.token.refresh()
+    ]).then(([, tokens]) =>
       new HttpHeaders()
-        .set('Authorization', 'Bearer ' + this.TOKENS.access_token)
+        .set('Authorization', 'Bearer ' + tokens.access_token)
         .set('Content-Type', DefaultRequestJSONContentType)
     )
   }
@@ -96,12 +95,19 @@ export class AppServerService {
     )
   }
 
-  getSubject(subjectId): Promise<any> {
+  getSubject(projectId, subjectId): Promise<any> {
     return this.getHeaders().then(headers =>
       this.http
-        .get(urljoin(this.APP_SERVER_URL, this.SUBJECT_PATH, subjectId), {
-          headers
-        })
+        .get(
+          urljoin(
+            this.APP_SERVER_URL,
+            this.PROJECT_PATH,
+            projectId,
+            this.SUBJECT_PATH,
+            subjectId
+          ),
+          { headers }
+        )
         .toPromise()
     )
   }
@@ -113,7 +119,7 @@ export class AppServerService {
     fcmToken
   ): Promise<any> {
     // NOTE: Adds subject if missing, updates subject if it exists
-    return this.getSubject(subjectId)
+    return this.getSubject(projectId, subjectId)
       .then(subject =>
         this.updateSubject(subject, {
           fcmToken,
@@ -185,15 +191,11 @@ export class AppServerService {
 
   updateAppServerURL() {
     return this.remoteConfig
-      .read()
+      .forceFetch()
       .then(config =>
         config.getOrDefault(ConfigKeys.APP_SERVER_URL, DefaultAppServerURL)
       )
       .then(url => (this.APP_SERVER_URL = url))
-  }
-
-  updateTokens() {
-    return this.token.getTokens().then(tokens => (this.TOKENS = tokens))
   }
 
   getAppServerURL() {

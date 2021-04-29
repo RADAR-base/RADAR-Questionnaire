@@ -21,6 +21,7 @@ import {
 import { ProtocolMetaData } from '../../../shared/models/protocol'
 import { sortObject } from '../../../shared/utilities/sort-object'
 import { LogService } from '../misc/log.service'
+import { AnalyticsService } from '../usage/analytics.service'
 import { RemoteConfigService } from './remote-config.service'
 import { SubjectConfigService } from './subject-config.service'
 
@@ -34,7 +35,8 @@ export class ProtocolService {
     private config: SubjectConfigService,
     private http: HttpClient,
     private remoteConfig: RemoteConfigService,
-    private logger: LogService
+    private logger: LogService,
+    private analytics: AnalyticsService
   ) {}
 
   pull(): Promise<ProtocolMetaData> {
@@ -179,21 +181,21 @@ export class ProtocolService {
       .then(cfg =>
         Promise.all([
           this.config.getParticipantAttributes(),
+          this.config.pullSubjectInformation(),
           this.getParticipantAttributeOrder(cfg)
         ])
       )
-      .then(([attributes, order]) => {
-        return new Promise(resolve => {
-          if (attributes == null)
-            this.config.pullSubjectInformation().then(user => {
-              this.config.setParticipantAttributes(user.attributes)
-              resolve((attributes = user.attributes))
-            })
-          else resolve()
-        }).then(() => {
-          const orderWithoutNull = this.formatAttributeOrder(attributes, order)
-          return sortObject(attributes, orderWithoutNull)
-        })
+      .then(([attributes, user, order]) => {
+        const newAttributes =
+          JSON.stringify(attributes) == JSON.stringify(user.attributes)
+            ? attributes
+            : user.attributes
+        this.config.setParticipantAttributes(newAttributes)
+        this.analytics.setUserProperties(newAttributes)
+        return sortObject(
+          newAttributes,
+          this.formatAttributeOrder(newAttributes, order)
+        )
       })
   }
 
@@ -208,13 +210,5 @@ export class ProtocolService {
           order[k] != null ? order[k] : this.DEFAULT_ATTRIBUTE_ORDER)
     )
     return orderWithoutNull
-  }
-
-  format(protocols: Assessment[]): Assessment[] {
-    return protocols.map(p => {
-      p.questionnaire.type = DefaultQuestionnaireTypeURI
-      p.questionnaire.format = DefaultQuestionnaireFormatURI
-      return p
-    })
   }
 }

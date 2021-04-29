@@ -44,3 +44,4 @@ export class ScheduleGeneratorServiceMock {}
 export class JwtHelperServiceMock {}
 export class WebIntentMock {}
 export class AppServerServiceMock {}
+export class MessageHandlerServiceMock {}

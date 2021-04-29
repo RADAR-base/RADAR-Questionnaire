@@ -1,5 +1,6 @@
 import { Protocol } from './protocol'
 import { Question } from './question'
+import { Task } from './task'
 import { MultiLanguageText } from './text'
 
 export interface Assessment {
@@ -38,4 +39,9 @@ export enum AssessmentType {
   SCHEDULED = 'scheduled',
   CLINICAL = 'clinical',
   ALL = 'all'
+}
+
+export interface SchedulerResult {
+  schedule: Task[]
+  completed: Task[]
 }

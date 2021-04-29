@@ -78,7 +78,10 @@ export class FirebaseAnalyticsService extends AnalyticsService {
    * ```
    */
 
-  setUserProperties(userProperties: User): Promise<any> {
+  setUserProperties(
+    userProperties: User | Object,
+    keyPrefix?: string
+  ): Promise<any> {
     if (!this.platform.is('cordova'))
       return Promise.resolve('Could not load firebase')
 
@@ -88,7 +91,7 @@ export class FirebaseAnalyticsService extends AnalyticsService {
         .map(([key, value]) => {
           return this.firebase.setUserProperty(
             this.crop(
-              key,
+              this.formatUserPropertyKey(key, keyPrefix),
               24,
               `Firebase User Property name ${key} is too long, cropping`
             ),
@@ -100,6 +103,10 @@ export class FirebaseAnalyticsService extends AnalyticsService {
           )
         })
     ).then(() => this.remoteConfig.forceFetch())
+  }
+
+  formatUserPropertyKey(key: string, keyPrefix: string) {
+    return (keyPrefix ? keyPrefix + key : key).replace(/[\W]+/g, '_')
   }
 
   setUserId(userId: string): Promise<any> {

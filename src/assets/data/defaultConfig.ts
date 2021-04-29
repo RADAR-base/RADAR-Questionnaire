@@ -1,5 +1,6 @@
 import { LocKeys } from '../../app/shared/enums/localisations'
 import { AssessmentType } from '../../app/shared/models/assessment'
+import { QuestionType } from '../../app/shared/models/question'
 import {
   LanguageSetting,
   NotificationSettings,
@@ -38,10 +39,24 @@ export const DefaultSourceTypeRegistrationBody = {
 // *The icon for On Demand assessments  (REMOTE CONFIG KEY: `on_demand_assessment_icon`)
 export const DefaultOnDemandAssessmentIcon = 'assets/imgs/new-questionnaire.png'
 
-// *The icon for On Demand assessments  (REMOTE CONFIG KEY: `on_demand_assessment_label`)
+// *The label/title for On Demand assessments  (REMOTE CONFIG KEY: `on_demand_assessment_label`)
 // *The format/type is LanguageSetting
 export const DefaultOnDemandAssessmentLabel = JSON.stringify(
   Localisations['ON_DEMAND_TASKS']
+)
+
+// *The app credits title found in the popup when tapping the logo on the left side of the home page
+// (REMOTE CONFIG KEY: `app_credits_title`)
+// *The format/type is LanguageSetting
+export const DefaultAppCreditsTitle = JSON.stringify(
+  Localisations['CREDITS_TITLE']
+)
+
+// *The app credits body found in the popup when tapping the logo on the left side of the home page
+// (REMOTE CONFIG KEY: `app_credits_body`)
+// *The format/type is LanguageSetting
+export const DefaultAppCreditsBody = JSON.stringify(
+  Localisations['CREDITS_BODY']
 )
 
 // DEFAULT URI
@@ -105,7 +120,7 @@ export const DefaultNumberOfCompletionLogsToSend = 10
 
 // DEFAULT NOTIFICATION SETUP
 
-// *Default notification type (either 'FCM' or 'LOCAL' notifications)
+// *Default notification type (either 'FCM_XMPP', 'FCM_REST' or 'LOCAL' notifications)
 export const DefaultNotificationType: string = 'FCM_XMPP'
 
 // *Default app server URL
@@ -193,7 +208,7 @@ export const DefaultKafkaRequestContentType =
 export const DefaultClientAcceptType =
   'application/vnd.kafka.v2+json, application/vnd.kafka+json; q=0.9, application/json; q=0.8'
 
-// DEFAULT AUDIO INPUT SETUP
+// DEFAULT QUESTIONNAIRE COMPONENT SETUP
 
 // *Default audio input/recording attempts allowed
 export const DefaultMaxAudioAttemptsAllowed = 5
@@ -203,6 +218,15 @@ export const DefaultAudioRecordOptions = {
   SampleRate: 16000,
   NumberOfChannels: 1
 }
+
+// *Default question/question input types where the questionnaire will automatically move to the next question upon answering the question.
+export const DefaultAutoNextQuestionnaireTypes = [
+  QuestionType.timed,
+  QuestionType.audio
+]
+
+// *Default question/question input types where the next button is enabled by default, allowing the question to be skippable.
+export const DefaultSkippableQuestionnaireTypes = [QuestionType.audio]
 
 // DEFAULT GENERAL SETUP
 // *Default notification, report, and language settings

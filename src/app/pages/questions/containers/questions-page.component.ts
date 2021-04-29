@@ -123,7 +123,9 @@ export class QuestionsPageComponent implements OnInit {
       .then(() => {
         this.updateDoneButton(false)
         const data = this.questionsService.getData()
-        if (("deq_seizure" in data.answers && data.answers["deq_seizure"] === "1") || this.assessment.questionnaire.name === "epi_seizure_diary") {
+        // forward to seizure diary instead of home if appropriate
+        if (("deq_seizure" in data.answers && data.answers["deq_seizure"] === "1")
+            || this.assessment.questionnaire.name === "epi_seizure_diary") {
           return this.navCtrl.setRoot(HomePageComponent).then(() => this.navCtrl.push(SeizureDiaryPage))
           //return this.navCtrl.setPages([{page:HomePageComponent},{page:SeizureDiaryPage}])
         } else {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { Moment } from 'moment'
+//import { Moment } from 'moment'
 import * as moment from 'moment'
 
 import { StorageKeys } from '../../shared/enums/storage'
@@ -20,9 +20,9 @@ export class SeizureDiaryService {
   ) {}
 
   parseMonth(monthStr: string, locs = moment.locales()) {
-    var monthNum = -1;
+    let monthNum = -1;
     locs.forEach(l => {
-        var lData = moment.localeData(l);
+        const lData = moment.localeData(l);
         if (monthNum < 0)
             monthNum = lData.monthsShort().indexOf(monthStr);
     });
@@ -32,8 +32,8 @@ export class SeizureDiaryService {
   // gets events from storage, checks for 24h time constraint, and re-sets and returns events within the last 24h
   getEvents(): Promise<any> {
     return this.storage.get(this.SD_STORE.SD_RECENT_EVENTS).then((events) => {
-      var recentFiltered = events !== null ? events.filter(this.eventWithin24h, this) : []
-      var olderFiltered = events !== null ? events.filter(this.eventOlder24h, this) : []
+      const recentFiltered = events !== null ? events.filter(this.eventWithin24h, this) : []
+      const olderFiltered = events !== null ? events.filter(this.eventOlder24h, this) : []
       return [recentFiltered, olderFiltered]
     })
   }
@@ -80,7 +80,9 @@ export class SeizureDiaryService {
     const d_start_string = this.localization.moment(d_start_parse, "DD-MM-YYYY hh:mm a", false).format("lll")
     const d_duration = JSON.parse(e.answers[1].value.string)
     const d_duration_min = moment.duration({hours: d_duration.hour, minutes: d_duration.minute}).asMinutes()
-    const d_duration_string = d_duration_min + (d_duration_min > 1 ? ' ' + this.localization.translateKey(LocKeys.SD_DURATION_MINS) : ' ' + this.localization.translateKey(LocKeys.SD_DURATION_MIN))
+    const d_duration_string = d_duration_min + (d_duration_min > 1
+        ? ' ' + this.localization.translateKey(LocKeys.SD_DURATION_MINS)
+        : ' ' + this.localization.translateKey(LocKeys.SD_DURATION_MIN))
 
     return {
       raw: event,
@@ -97,13 +99,17 @@ export class SeizureDiaryService {
       diary_confirmation: this.yesnoRadioToText(JSON.parse(e.answers[6].value.string)),
       diary_wearable: this.yesnoRadioToText(JSON.parse(e.answers[7].value.string)),
       diary_trigger: this.yesnoRadioToText(JSON.parse(e.answers[8].value.string)),
-      diary_trigger_detail: e.answers.length > 9 ? this.triggerDetailToText(JSON.parse(e.answers[9].value.string)) : this.localization.translateKey(LocKeys.SD_RADIO_DETAIL_DEFAULT),
-      diary_trigger_other: e.answers.length > 10 ? e.answers[10].value.string : this.localization.translateKey(LocKeys.SD_RADIO_DETAIL_DEFAULT),
+      diary_trigger_detail: e.answers.length > 9
+        ? this.triggerDetailToText(JSON.parse(e.answers[9].value.string))
+        : this.localization.translateKey(LocKeys.SD_RADIO_DETAIL_DEFAULT),
+      diary_trigger_other: e.answers.length > 10
+        ? e.answers[10].value.string
+        : this.localization.translateKey(LocKeys.SD_RADIO_DETAIL_DEFAULT),
     }
   }
   processEvents(events) {
-    let processedEvents = [];
-    for (let event of events) processedEvents.push(this.processEvent(event))
+    const processedEvents = [];
+    for (const event of events) processedEvents.push(this.processEvent(event))
     return processedEvents;
   }
 
@@ -120,7 +126,7 @@ export class SeizureDiaryService {
   }
 
   compareEvents(a,b) {
-    let getEvent24Hour = function(ev) {
+    const getEvent24Hour = function(ev) {
         let offset = 0;
         if (+ev.diary_start.hour == 12) {
             if (ev.diary_start.ampm.toUpperCase() === "AM") {
@@ -131,8 +137,10 @@ export class SeizureDiaryService {
         }
         return +ev.diary_start.hour + offset;
     }
-    const aDate = new Date(a.diary_start.year, a.diary_start.month, a.diary_start.day, getEvent24Hour(a), a.diary_start.minute, a.diary_start.second, 0);
-    const bDate = new Date(b.diary_start.year, b.diary_start.month, b.diary_start.day, getEvent24Hour(b), b.diary_start.minute, b.diary_start.second, 0);
+    const aDate = new Date(a.diary_start.year, a.diary_start.month, a.diary_start.day,
+        getEvent24Hour(a), a.diary_start.minute, a.diary_start.second, 0);
+    const bDate = new Date(b.diary_start.year, b.diary_start.month, b.diary_start.day,
+        getEvent24Hour(b), b.diary_start.minute, b.diary_start.second, 0);
     if (aDate < bDate) {
       return -1;
     }
@@ -166,7 +174,7 @@ export class SeizureDiaryService {
   }
 
   parseDaytimeDict(daytime_dict) {
-    var out = new Date(parseInt(daytime_dict.year), parseInt(daytime_dict.month)-1, parseInt(daytime_dict.day))
+    const out = new Date(parseInt(daytime_dict.year), parseInt(daytime_dict.month)-1, parseInt(daytime_dict.day))
     out.setHours(daytime_dict.ampm.localeCompare("AM") ? parseInt(daytime_dict.hour)+12 : parseInt(daytime_dict.hour))
     out.setMinutes(parseInt(daytime_dict.minute), parseInt(daytime_dict.second))
     return out

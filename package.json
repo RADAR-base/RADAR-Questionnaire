@@ -78,6 +78,7 @@
     "avsc": "^5.5.3",
     "base64-js": "^1.3.1",
     "browserify": "^16.3.0",
+    "cocoapods": "^0.0.0",
     "com-darryncampbell-cordova-plugin-intent": "^2.0.0",
     "cordova-android-support-gradle-release": "^3.0.1",
     "cordova-custom-config": "^5.1.0",
@@ -142,8 +143,7 @@
     "@types/jasminewd2": "^2.0.8",
     "@types/node": "14.0.22",
     "codelyzer": "^5.2.2",
-    "cordova-android": "^9.0.0",
-    "cordova-ios": "5.1.1",
+    "cordova-android": "^9.1.0",
     "cordova-plugin-firebasex": "git+https://github.com/mpgxvii/cordova-plugin-firebasex.git#cli_build",
     "cordova-plugin-ionic-webview": "^4.2.1",
     "cordova-plugin-network-information": "git+https://github.com/apache/cordova-plugin-network-information.git",
@@ -197,8 +197,7 @@
   },
   "cordova": {
     "platforms": [
-      "android",
-      "ios"
+      "android"
     ],
     "plugins": {
       "cordova-plugin-device": {},

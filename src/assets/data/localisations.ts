@@ -569,7 +569,7 @@ export const Localisations = {
   },
   SETTINGS_LOG_NOTIFS: {
     da: 'Logmeddelelser',
-    de: 'Protokollbenachrichtigungen',
+    de: 'Benachrichtigungen Loggen',
     en: 'Log Notifications',
     es: 'Notificaciones de Registro',
     it: 'Registra le Notifiche',

@@ -92,26 +92,29 @@ export class SeizureDiaryPage {
     this.recentDiaryEvents = []
     this.olderDiaryEvents = []
 
-    if (forcePull) var a = this.pullDiaryAssessment()
-    else var a = this.getDiaryAssessment()
-    var b = a.then(() => {return this.getEvents()})
+    let a = this.getDiaryAssessment()
+    if (forcePull) a = this.pullDiaryAssessment()
+    const b = a.then(() => {return this.getEvents()})
     return Promise.all([a,b]).then(([A,B]) => {return A && B})
   }
 
   // pull diary assessment specification and questionnaire from github
   pullDiaryAssessment(): Promise<boolean> {
     console.log("Pulling seizure diary assessment from github...")
-    var loader = this.presentLoading(this.localization.translateKey(LocKeys.SD_LOADING_MESSAGE));
+    const loader = this.presentLoading(this.localization.translateKey(LocKeys.SD_LOADING_MESSAGE));
     return new Promise<boolean>((resolve) => {
     this.protocol.pull() // pull protocol from github
-      .then((protocol) => this.questionnaire.updateAssessments(AssessmentType.ALL, this.protocol.format(JSON.parse(protocol.protocol).protocols))) // pull protocol questionnaires from github
+      .then((protocol) => this.questionnaire.updateAssessments(
+        AssessmentType.ALL,
+        this.protocol.format(JSON.parse(protocol.protocol).protocols)
+      )) // pull protocol questionnaires from github
       .catch(() => {
         loader.dismiss()
         this.presentToast(this.localization.translateKey(LocKeys.SD_ERROR_NETWORK), 5000);
         resolve(false)
         throw new Error('No response from server')
       }) // handle network errors
-      .then(([_A, _B, scheduledAssessments]) => scheduledAssessments.find(a => a.name === "Seizure Diary")) // select the seizure diary questionnaire
+      .then(([_A, _B, scheduledAssessments]) => scheduledAssessments.find(a => a.name === "Seizure Diary")) // filter SD
       .then((diaryAssessment) => { // update global var; will still be undefined if nothing was found, without exception
         this.diaryAssessment = diaryAssessment
         loader.dismiss()
@@ -148,8 +151,12 @@ export class SeizureDiaryPage {
       this.seizureDiary.getEvents()
         .then(([recentEvents, olderEvents]) => {
           //loader.dismiss()
-          this.recentDiaryEvents = recentEvents !== null ? this.seizureDiary.processEvents(recentEvents).sort(this.seizureDiary.compareEvents).reverse() : []
-          this.olderDiaryEvents = olderEvents !== null ? this.seizureDiary.processEvents(olderEvents).sort(this.seizureDiary.compareEvents).reverse() : []
+          this.recentDiaryEvents = recentEvents !== null
+            ? this.seizureDiary.processEvents(recentEvents).sort(this.seizureDiary.compareEvents).reverse()
+            : []
+          this.olderDiaryEvents = olderEvents !== null
+            ? this.seizureDiary.processEvents(olderEvents).sort(this.seizureDiary.compareEvents).reverse()
+            : []
           console.log("Recent:", this.recentDiaryEvents)
           console.log("Older:", this.olderDiaryEvents)
           //this.presentToast("Events loaded.");
@@ -196,7 +203,9 @@ export class SeizureDiaryPage {
   startNewSeizureDiary() {
     // create new seizure diary task
     const completionWindow = ScheduleGeneratorService.computeCompletionWindow(this.diaryAssessment)
-    const diaryTask = this.scheduleGenerator.taskBuilder(0, this.diaryAssessment, new Date().getTime(), completionWindow);
+    const diaryTask = this.scheduleGenerator.taskBuilder(
+        0, this.diaryAssessment, new Date().getTime(), completionWindow
+        );
 
     // try to start the created task
     if (this.tasksService.isTaskStartable(diaryTask)) {
@@ -207,20 +216,21 @@ export class SeizureDiaryPage {
   }
 
   // show an alert with all seizure details
-  seizureDetailAlert(eventData) {
+  seizureDetailAlert(ev) {
     const detailString: string = 
-      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_1) + ":</b> " + eventData.diary_start_string + '<br/>' +
-      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_2) + ":</b> " + eventData.diary_duration_string + '<br/>' +
-      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_3) + ":</b> " + eventData.diary_unconscious + '<br/>' +
-      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_4) + ":</b> " + eventData.diary_awareness + '<br/>' +
-      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_5) + ":</b> " + eventData.diary_motor + '<br/>' +
-      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_6) + ":</b> " + eventData.diary_nonmotor + '<br/>' +
-      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_7) + ":</b> " + eventData.diary_confirmation + '<br/>' +
-      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_8) + ":</b> " + eventData.diary_wearable + '<br/>' +
-      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_9) + ":</b> " + eventData.diary_trigger + '<br/>' +
-      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_10) + ":</b> " + eventData.diary_trigger_detail + '<br/>' +
-      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_11) + ":</b> " + eventData.diary_trigger_other + '<br/>' + '<br/>' +
-      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_12) + ":</b> " + '<br/>' + this.localization.moment(eventData.timeCompleted, "X", false).format("lll");
+      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_1) + ":</b> " + ev.diary_start_string + '<br/>' +
+      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_2) + ":</b> " + ev.diary_duration_string + '<br/>' +
+      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_3) + ":</b> " + ev.diary_unconscious + '<br/>' +
+      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_4) + ":</b> " + ev.diary_awareness + '<br/>' +
+      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_5) + ":</b> " + ev.diary_motor + '<br/>' +
+      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_6) + ":</b> " + ev.diary_nonmotor + '<br/>' +
+      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_7) + ":</b> " + ev.diary_confirmation + '<br/>' +
+      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_8) + ":</b> " + ev.diary_wearable + '<br/>' +
+      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_9) + ":</b> " + ev.diary_trigger + '<br/>' +
+      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_10) + ":</b> " + ev.diary_trigger_detail + '<br/>' +
+      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_11) + ":</b> " + ev.diary_trigger_other + '<br/>' + '<br/>' +
+      "<b>" + this.localization.translateKey(LocKeys.SD_DETAIL_12) + ":</b> "
+        + '<br/>' + this.localization.moment(ev.timeCompleted, "X", false).format("lll");
 
 
     return this.alertService.showAlert({
@@ -246,7 +256,7 @@ export class SeizureDiaryPage {
 
   // present a loading message
   presentLoading(msg="Loading...", timeout=5000, spinner='crescent') {
-    let loading = this.loadingCtrl.create({
+    const loading = this.loadingCtrl.create({
       content: msg,
       spinner: spinner
     });

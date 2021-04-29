@@ -1,0 +1,98 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: weekly
+  open-pull-requests-limit: 10
+  target-branch: dev
+  reviewers:
+  - mpgxvii
+  - yatharthranjan
+  ignore:
+  - dependency-name: "@angular/cdk"
+    versions:
+    - ">= 9.a, < 10"
+  - dependency-name: "@angular/cli"
+    versions:
+    - ">= 8.a, < 9"
+  - dependency-name: "@angular/cli"
+    versions:
+    - ">= 9.a, < 10"
+  - dependency-name: "@angular/common"
+    versions:
+    - ">= 9.a, < 10"
+  - dependency-name: "@angular/platform-server"
+    versions:
+    - "> 9.0.5, < 10"
+  - dependency-name: "@auth0/angular-jwt"
+    versions:
+    - ">= 5.a, < 6"
+  - dependency-name: core-js
+    versions:
+    - "> 2.6.8, < 3"
+  - dependency-name: ionicons
+    versions:
+    - ">= 5.0.a, < 5.1"
+  - dependency-name: typescript
+    versions:
+    - "> 3.1.6, < 4"
+  - dependency-name: "@ionic-native/vibration"
+    versions:
+    - 5.31.1
+    - 5.32.0
+  - dependency-name: "@ionic-native/insomnia"
+    versions:
+    - 5.31.1
+    - 5.32.0
+  - dependency-name: "@types/node"
+    versions:
+    - 14.14.31
+    - 14.14.32
+    - 14.14.34
+    - 14.14.35
+    - 14.14.37
+  - dependency-name: snyk
+    versions:
+    - 1.458.0
+    - 1.462.0
+    - 1.474.0
+    - 1.487.0
+    - 1.503.0
+    - 1.511.0
+  - dependency-name: karma
+    versions:
+    - 6.1.1
+    - 6.2.0
+    - 6.3.1
+  - dependency-name: "@types/jasmine"
+    versions:
+    - 3.6.4
+    - 3.6.6
+    - 3.6.7
+  - dependency-name: postcss-scss
+    versions:
+    - 3.0.4
+  - dependency-name: webpack
+    versions:
+    - 4.46.0
+  - dependency-name: eslint
+    versions:
+    - 7.18.0
+    - 7.19.0
+    - 7.20.0
+  - dependency-name: uuid
+    versions:
+    - 8.3.2
+  - dependency-name: "@ionic-native/firebase"
+    versions:
+    - 5.30.0
+  - dependency-name: moment
+    versions:
+    - 2.29.1
+  - dependency-name: jasmine-spec-reporter
+    versions:
+    - 6.0.0
+  - dependency-name: rxjs-tslint
+    versions:
+    - 0.1.8

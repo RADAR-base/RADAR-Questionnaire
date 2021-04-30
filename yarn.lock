@@ -599,10 +599,10 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/dialogs@^5.26.0":
-  version "5.26.0"
-  resolved "https://registry.yarnpkg.com/@ionic-native/dialogs/-/dialogs-5.26.0.tgz#0d33e7c517361582c85aa9720838b8461a2c180c"
-  integrity sha512-a1kuNkOkyWJYW7GLniP2+JSepx361EHrkGQdGm5RWPDStPlYxuPBbhNcXikKpu85UzmC81GQq9dYf4dFYwBLTg==
+"@ionic-native/dialogs@^5.32.0":
+  version "5.32.1"
+  resolved "https://registry.yarnpkg.com/@ionic-native/dialogs/-/dialogs-5.32.1.tgz#3476ff8dcb6a170e7e532a90a4d9d9657ef97be9"
+  integrity sha512-CvThnADbUcFnZRaGohtelJI91uvbZeG8tUbpYZRr0DpQhhT4VWBFK4/f4hLvDu2LRwWFagt8N9Qfg9PGRoEXVQ==
   dependencies:
     "@types/cordova" latest
 

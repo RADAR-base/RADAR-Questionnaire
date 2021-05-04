@@ -57,7 +57,7 @@
         </feature>
         <preference name="WKWebViewOnly" value="true" />
         <preference name="CordovaWebViewEngine" value="CDVWKWebViewEngine" />
-        <preference name="AllowsInlineMediaPlayback" value="true">
+        <preference name="AllowsInlineMediaPlayback" value="true" />
         <edit-config file="*-Info.plist" mode="merge" target="NSCameraUsageDescription">
             <string>The app would like to use the camera to scan QR codes.</string>
         </edit-config>

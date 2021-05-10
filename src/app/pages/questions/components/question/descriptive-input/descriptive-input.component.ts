@@ -8,6 +8,7 @@ import {
   ViewChild
 } from '@angular/core'
 import { DomSanitizer } from '@angular/platform-browser'
+import * as DomPurify from 'dompurify'
 
 import { InfoItem } from '../../../../../shared/models/question'
 
@@ -22,7 +23,6 @@ export class DescriptiveInputComponent implements OnInit, OnChanges {
 
   @Output()
   valueChange: EventEmitter<number> = new EventEmitter<number>()
-
   @Input()
   text: string
   @Input()
@@ -35,10 +35,18 @@ export class DescriptiveInputComponent implements OnInit, OnChanges {
   showScrollButton: boolean
   sanitizedHtml: any
 
+  HTML_ALLOWED_TAGS = ['iframe']
+  HTML_ALLOWED_ATTR = ['allow', 'allowfullscreen', 'frameborder', 'scrolling']
+
   constructor(private sanitizer: DomSanitizer) {}
 
   ngOnInit() {
-    this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(this.text)
+    this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(
+      DomPurify.sanitize(this.text, {
+        ADD_TAGS: this.HTML_ALLOWED_TAGS,
+        ADD_ATTR: this.HTML_ALLOWED_ATTR
+      })
+    )
   }
 
   ngOnChanges() {

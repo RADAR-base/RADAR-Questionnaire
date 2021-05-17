@@ -71,7 +71,7 @@ jobs:
         run: ionic cordova platform add android && rm package-lock.json
 
       - name: Run unit tests
-        run: xvfb-run -a yarn test
+        run: yarn run test
 
       - name: Build Android app
         run: |

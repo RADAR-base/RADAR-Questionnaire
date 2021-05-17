@@ -22,7 +22,7 @@
     "fix:css": "stylelint --fix 'src/**/*.scss'",
     "fix:prettier": "prettier --write '**/*.{js,ts,json}'",
     "fix:sort": "import-sort --write 'src/**/*.{js,ts}'",
-    "test": "ng test --watch=false --no-progress --browsers=ChromeNoSandbox",
+    "test": "ng test --watch=false --no-progress --browsers=ChromeHeadless",
     "snyk-protect": "snyk protect",
     "prepare": "yarn run snyk-protect"
   },

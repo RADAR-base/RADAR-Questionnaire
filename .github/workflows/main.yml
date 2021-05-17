@@ -61,11 +61,11 @@ jobs:
       - name: Install app dependencies
         run: yarn install
 
-      - name: Add Android platform
-        run: ionic cordova platform add android && rm package-lock.json
-
       - name: Run unit tests
         run: yarn run test
+
+      - name: Add Android platform
+        run: ionic cordova platform add android && rm package-lock.json
 
       - name: Build Android app
         run: |

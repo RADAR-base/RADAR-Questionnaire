@@ -46,6 +46,11 @@ jobs:
         with:
           node-version: '13'
 
+      - name: Setup Ruby
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: '2.7.2'
+
       - name: Copy aRMT secrets
         run: 'echo "$SECRET" > src/assets/data/secret.ts'
         shell: bash
@@ -67,8 +72,12 @@ jobs:
       - name: Add Android platform
         run: ionic cordova platform add android && rm package-lock.json
 
-      - name: Build Android app
+      - name: Prepare Android app
         run: |
-          cordova prepare android && \
-          yarn install && yarn add rxjs && \
-          ionic cordova build android
+          cordova prepare && \
+          yarn install
+
+      - name: Build Android app
+        uses: maierj/fastlane-action@v2.0.1
+        with:
+          lane: 'android build_debug'

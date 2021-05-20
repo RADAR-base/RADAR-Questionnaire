@@ -1,2 +1,2 @@
 exclude:
-  - src/assets
+  - ./src/assets/.*

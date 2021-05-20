@@ -17,7 +17,7 @@ import { Question, QuestionType } from '../../../../shared/models/question'
 
 @Component({
   selector: 'question',
-  templateUrl: 'question.component.html',
+  templateUrl: 'question.component.html'
 })
 export class QuestionComponent implements OnInit, OnChanges {
   @ViewChild('content') content
@@ -50,9 +50,13 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.timed,
     QuestionType.audio,
     QuestionType.info,
-    QuestionType.text
+    QuestionType.text,
+    QuestionType.descriptive
   ])
-  HIDE_FIELD_LABEL_SET: Set<QuestionType> = new Set([QuestionType.audio])
+  HIDE_FIELD_LABEL_SET: Set<QuestionType> = new Set([
+    QuestionType.audio,
+    QuestionType.descriptive
+  ])
   MATRIX_INPUT_SET: Set<QuestionType> = new Set([QuestionType.matrix_radio])
 
   constructor(

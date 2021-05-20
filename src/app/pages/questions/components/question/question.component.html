@@ -127,6 +127,14 @@
         >
         </radio-input>
 
+        <descriptive-input
+          *ngSwitchCase="'descriptive'"
+          [text]="question.field_label"
+          (valueChange)="onValueChange($event)"
+          [currentlyShown]="currentlyShown"
+        >
+        </descriptive-input>
+
         <matrix-radio-input
           *ngSwitchCase="'matrix-radio'"
           [responses]="question.select_choices_or_calculations"

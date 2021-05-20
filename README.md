@@ -272,4 +272,4 @@ This is an example of an image:
 
 Here is the output:
 
-<img src="https://i.ibb.co/6Y2v8gL/Screen-Shot-2021-05-20-at-9-39-55-PM.png" width="200px"><img src="https://i.ibb.co/j3cjRcP/Screen-Shot-2021-05-20-at-9-44-06-PM.pngs" width="200px">
+<img src="/.github/etc/descriptive-2.png" width="200px"><img src="/.github/etc/descriptive-1.png" width="200px">

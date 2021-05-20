@@ -75,7 +75,7 @@ jobs:
 
       - name: Prepare Android app
         run: |
-          cordova prepare && \
+          cordova prepare android && \
           yarn install
 
       - name: Build Android app

@@ -59,6 +59,12 @@ jobs:
         env:
           SECRET: ${{secrets.SECRET_TS}}
 
+      - name: Copy Google-Services.json
+        run: 'echo "$SECRET" > google-services.json'
+        shell: bash
+        env:
+          SECRET: ${{secrets.GOOGLE_SERVICES_ANDROID}}
+
       - name: Install Ionic and Cordova
         run: npm i -g ionic cordova
 

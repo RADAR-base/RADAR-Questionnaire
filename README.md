@@ -243,3 +243,33 @@ $ANDROID_HOME/build-tools/27.0.2/zipalign -v 4 <your-project-path>/platforms/and
 
 8. Now the apk is ready to be uploaded to the playstore at path `<your-project-path>/platforms/android/app/build/outputs/apk/release/radar-armt-app-$APP_VERSION.apk`
 9. NOTE: The signing and aligning can also be done by importing the android project at path `<your-project-path>/platforms/android/` into Android Studio.
+
+## Questionnaire Input Types
+
+The questionnaire input types supported are `audio`, `checkbox`, `descriptive`, `info-screen`, `matrix-radio`, `radio`, `range-info`, `range-input`, `slider`, `text`, `date`, `time`, and `timed-test`.
+
+### Descriptive Input Type
+
+The descriptive input supports HTML in the `field_label` property of a questionnaire in the questionnaire definition. The css will automatically be inherited from the app. Here is an example input:
+
+```
+Hello this is an example of a descriptive input text.
+<br> <br>
+<b>This is a bold text</b>
+<br>
+<h1>This is an h1</h1>
+<br>
+<h2>This is an h2</h2>
+<br>
+<h3>This is an h3</h3>
+<br>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/4rxh60G2RRU" title="YouTube video player" allowfullscreen></iframe>
+<br><br>
+This is an example of an image:
+<br>
+<img src="https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg">
+```
+
+Here is the output:
+<img src="https://i.ibb.co/6Y2v8gL/Screen-Shot-2021-05-20-at-9-39-55-PM.png">
+<img src="https://i.ibb.co/j3cjRcP/Screen-Shot-2021-05-20-at-9-44-06-PM.pngs">

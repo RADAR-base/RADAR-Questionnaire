@@ -19,7 +19,7 @@ jobs:
   # Build and test the code
   build:
     # The type of runner that the job will run on
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -47,10 +47,11 @@ jobs:
         with:
           node-version: '13'
 
-      - name: Setup Ruby
-        uses: actions/setup-ruby@v1
+      - name: Set up Ruby 2.6
+        uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '2.7.2'
+          ruby-version: 2.6 # Not needed with a .ruby-version file
+          bundler-cache: true
 
       - name: Copy aRMT secrets
         run: 'echo "$SECRET" > src/assets/data/secret.ts'
@@ -58,11 +59,11 @@ jobs:
         env:
           SECRET: ${{secrets.SECRET_TS}}
 
-      - name: Install Cordova
-        run: npm i -g cordova
+      - name: Install Ionic and Cordova
+        run: npm i -g ionic cordova
 
-      - name: Install Ionic
-        run: npm i -g ionic
+      - name: Install Yarn
+        run: npm i -g yarn
 
       - name: Install app dependencies
         run: yarn install

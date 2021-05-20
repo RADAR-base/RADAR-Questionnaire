@@ -65,6 +65,20 @@ jobs:
         env:
           SECRET: ${{secrets.GOOGLE_SERVICES_ANDROID}}
 
+      - name: Copy Playstore Account Service-api.json
+        run: 'echo "$SECRET" > service-api.json'
+        shell: bash
+        env:
+          SECRET: ${{secrets.SERVICE_API}}
+
+      - name: Copy Release Keystore
+        run: |
+          echo "$SECRET" > radar-armt-release-key.keystore.asc
+          gpg -d --passphrase "${{ secrets.RELEASE_KEYSTORE_PASSPHRASE }}" --batch radar-armt-release-key.keystore.asc > radar-armt-release-key.keystore
+        shell: bash
+        env:
+          SECRET: ${{secrets.RELEASE_KEYSTORE}}
+
       - name: Install Ionic and Cordova
         run: npm i -g ionic cordova
 

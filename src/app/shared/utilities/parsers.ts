@@ -39,11 +39,18 @@ export function parseAndEvalLogic(logic: string, answers): string {
     const answer = answers[fieldName]
     const values = {}
     if (Array.isArray(answer)) {
-      answer.forEach(a => (values[a] = TRUE_VAL))
-      Object.assign(parsedAnswers, { [fieldName]: values })
-    } else Object.assign(parsedAnswers, { [fieldName]: answer })
+        if (answer.length == 1 && !logic.includes('(')) {
+            Object.assign(parsedAnswers, { [fieldName]: answer[0] })
+        } else {
+            answer.forEach(a => (values[a] = TRUE_VAL))
+            Object.assign(parsedAnswers, { [fieldName]: values })
+        }
+    } else if (logic.includes('(')) {
+        Object.assign(parsedAnswers, { [fieldName]: {answer:'1'} })
+    } else {
+        Object.assign(parsedAnswers, { [fieldName]: answer })
+    }
   })
-  
   // Evalute logic with answers
   return compiled.eval(parsedAnswers)
 }

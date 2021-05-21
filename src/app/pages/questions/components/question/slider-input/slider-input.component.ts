@@ -14,6 +14,10 @@ export class SliderInputComponent {
   max = 100
   @Input()
   step = 10
+  @Input()
+  labelLeft = ''
+  @Input()
+  labelRight = ''
 
   value: number = null
 

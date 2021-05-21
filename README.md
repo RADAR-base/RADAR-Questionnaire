@@ -261,7 +261,7 @@ Hello this is an example of a descriptive input text.
 <br>
 <h2>This is an h2</h2>
 <br>
-<h3>This is an h3</h3>
+<h3>This is an h3</h3> <h4>This is an h4</h4> <h5>This is an h5</h5>
 <br>
 <iframe width="560" height="315" src="https://www.youtube.com/embed/4rxh60G2RRU" title="YouTube video player" allowfullscreen></iframe>
 <br><br>

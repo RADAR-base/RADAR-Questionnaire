@@ -142,7 +142,7 @@ export class ScheduleService {
       .then(res =>
         Promise.all([
           this.setTasks(AssessmentType.SCHEDULED, res.schedule),
-          this.setCompletedTasks(res.completed)
+          this.setCompletedTasks(res.completed ? res.completed : [])
         ])
       )
   }

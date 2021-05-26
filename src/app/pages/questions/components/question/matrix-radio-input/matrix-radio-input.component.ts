@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output
+} from '@angular/core'
 
 import { Item, Response } from '../../../../../shared/models/question'
 
@@ -8,7 +15,7 @@ let uniqueID = 0
   selector: 'matrix-radio-input',
   templateUrl: 'matrix-radio-input.component.html'
 })
-export class MatrixRadioInputComponent implements OnInit {
+export class MatrixRadioInputComponent implements OnInit, OnChanges {
   @Output()
   valueChange: EventEmitter<number> = new EventEmitter<number>()
 

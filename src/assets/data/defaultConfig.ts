@@ -172,6 +172,9 @@ export const DefaultSchemaSpecEndpoint = [
   DefaultSchemaSpecPath
 ].join('/')
 
+// *The Github token used for accessing the Github API.
+export const DefaultGithubToken = ''
+
 // *The order in which participant attributes are matched to protocol endpoints; format: {attributeName: orderNumber}
 export const DefaultParticipantAttributeOrder = {
   'Human-readable-identifier': -1

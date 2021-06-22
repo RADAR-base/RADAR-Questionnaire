@@ -1,10 +1,10 @@
-import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import * as urljoin from 'url-join'
 
 import {
   DefaultQuestionnaireFormatURI,
-  DefaultQuestionnaireTypeURI
+  DefaultQuestionnaireTypeURI,
+  GIT_API_URI
 } from '../../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../../shared/enums/storage'
 import {
@@ -15,6 +15,7 @@ import {
 import { Question } from '../../../shared/models/question'
 import { Task } from '../../../shared/models/task'
 import { Utility } from '../../../shared/utilities/util'
+import { GithubClientService } from '../misc/github-client.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
@@ -30,7 +31,7 @@ export class QuestionnaireService {
   constructor(
     private storage: StorageService,
     private localization: LocalizationService,
-    private http: HttpClient,
+    private githubClient: GithubClientService,
     private util: Utility,
     private logger: LogService
   ) {}
@@ -38,41 +39,63 @@ export class QuestionnaireService {
   pullDefinitionsForQuestionnaires(assessments: Assessment[]) {
     // NOTE: Update assessment list from protocol
     return Promise.all(
-      this.util
-        .deepCopy(assessments)
-        .map(a => this.pullDefinitionForSingleQuestionnaire(a))
+      this.util.deepCopy(assessments).map(a => {
+        const type = this.getAssessmentTypeFromAssessment(a)
+        return this.pullDefinitionForSingleQuestionnaire(a)
+          .then(res =>
+            this.addToAssessments(type, Object.assign(res, { type }))
+          )
+          .catch(e => {
+            throw this.logger.error(
+              'Failed to update ' + type + ' assessments',
+              e
+            )
+          })
+      })
     )
   }
 
-  pullDefinitionForSingleQuestionnaire(assessment: Assessment) {
+  pullDefinitionForSingleQuestionnaire(
+    assessment: Assessment
+  ): Promise<Assessment> {
     assessment.questionnaire = Object.assign(assessment.questionnaire, {
       type: DefaultQuestionnaireTypeURI,
       format: DefaultQuestionnaireFormatURI
     })
-    const type = this.getAssessmentTypeFromAssessment(assessment)
     const language = this.localization.getLanguage().value
     let uri = this.formatQuestionnaireUri(assessment.questionnaire, language)
-    return this.get(uri)
+    return this.githubClient
+      .getContent(uri)
       .catch(e => {
         this.logger.error(`Failed to get questionnaires from ${uri}`, e)
         uri = this.formatQuestionnaireUri(assessment.questionnaire, '')
-        return this.get(uri) as Promise<Question[]>
+        return this.githubClient.getContent(uri) as Promise<Question[]>
       })
       .then(translated => {
         assessment.questions = this.formatQuestionsHeaders(translated)
         return assessment
       })
-      .then(res => this.addToAssessments(type, Object.assign(res, { type })))
-      .catch(e => {
-        throw this.logger.error('Failed to update ' + type + ' assessments', e)
-      })
   }
 
   formatQuestionnaireUri(metadata: QuestionnaireMetadata, lang: string) {
-    const baseUrl = urljoin(metadata.repository, metadata.name)
-    const fileName = metadata.name + metadata.type
+    // NOTE: This parses the URL supplied in the protocol file.
+    const urlParts = metadata.repository.split('://')[1].split('/')
+    const questionnaireName = metadata.name
+    const organization = urlParts[1],
+      repo = urlParts[2],
+      branch = urlParts[3],
+      directory = urlParts[4] + '/' + questionnaireName
     const suffix = lang.length ? `_${lang}` : ''
-    return urljoin(baseUrl, fileName + suffix + metadata.format)
+    const fileName =
+      questionnaireName + metadata.type + suffix + metadata.format
+    return urljoin(
+      GIT_API_URI,
+      organization,
+      repo,
+      'contents',
+      directory,
+      fileName
+    )
   }
 
   formatQuestionsHeaders(questions) {
@@ -170,17 +193,5 @@ export class QuestionnaireService {
       this.setAssessments(AssessmentType.CLINICAL, []),
       this.setAssessments(AssessmentType.SCHEDULED, [])
     ])
-  }
-
-  get(url): Promise<any> {
-    return this.http
-      .get(url)
-      .toPromise()
-      .then(res => {
-        if (!(res instanceof Array)) {
-          throw new Error('URL does not contain an array of questions')
-        }
-        return res
-      })
   }
 }

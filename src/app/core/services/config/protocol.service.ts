@@ -1,5 +1,4 @@
 // tslint:disable: forin
-import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 
 import {
@@ -7,12 +6,9 @@ import {
   DefaultProtocolBranch,
   DefaultProtocolGithubRepo,
   DefaultProtocolPath,
-  DefaultQuestionnaireFormatURI,
-  DefaultQuestionnaireTypeURI,
   GIT_API_URI
 } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
-import { Assessment } from '../../../shared/models/assessment'
 import {
   GithubContent,
   GithubTree,
@@ -20,6 +16,7 @@ import {
 } from '../../../shared/models/github'
 import { ProtocolMetaData } from '../../../shared/models/protocol'
 import { sortObject } from '../../../shared/utilities/sort-object'
+import { GithubClientService } from '../misc/github-client.service'
 import { LogService } from '../misc/log.service'
 import { AnalyticsService } from '../usage/analytics.service'
 import { RemoteConfigService } from './remote-config.service'
@@ -33,7 +30,7 @@ export class ProtocolService {
 
   constructor(
     private config: SubjectConfigService,
-    private http: HttpClient,
+    private githubClient: GithubClientService,
     private remoteConfig: RemoteConfigService,
     private logger: LogService,
     private analytics: AnalyticsService
@@ -47,7 +44,7 @@ export class ProtocolService {
           new Map(Object.entries(attributes))
         ).catch(() => this.getProtocolPathInTree(tree, DefaultProtocolPath))
       )
-      .then((url: string) => this.http.get(url).toPromise())
+      .then((url: string) => this.githubClient.get(url))
       .then((res: GithubContent) => ({
         protocol: atob(res.content),
         url: res.url
@@ -92,7 +89,7 @@ export class ProtocolService {
   }
 
   getChildTree(child: GithubTreeChild): Promise<GithubTree> {
-    return this.http.get<GithubTree>(child.url).toPromise()
+    return this.githubClient.get(child.url) as Promise<GithubTree>
   }
 
   matchTreeWithAttributeKey(
@@ -122,15 +119,12 @@ export class ProtocolService {
       this.getRootTreeHashUrl()
     ])
       .then(([projectName, url]) =>
-        this.http
-          .get(url)
-          .toPromise()
-          .then((res: GithubTree) => {
-            const project = res.tree.find(c => c.path == projectName)
-            if (project == null || project == undefined)
-              throw new Error('Unable to find project in repository.')
-            return this.http.get<GithubTree>(project.url).toPromise()
-          })
+        this.githubClient.get(url).then((res: GithubTree) => {
+          const project = res.tree.find(c => c.path == projectName)
+          if (project == null || project == undefined)
+            throw new Error('Unable to find project in repository.')
+          return this.githubClient.get(project.url) as Promise<GithubTree>
+        })
       )
       .then(projectChild => projectChild.tree)
   }
@@ -142,9 +136,8 @@ export class ProtocolService {
       )
       .then(([branch, repo]) => {
         const treeUrl = [GIT_API_URI, repo, this.GIT_BRANCHES, branch].join('/')
-        return this.http
+        return this.githubClient
           .get(treeUrl)
-          .toPromise()
           .then((res: any) => res.commit.commit.tree.url)
       })
   }

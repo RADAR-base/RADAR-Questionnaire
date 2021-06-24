@@ -5,27 +5,32 @@ import { DefaultGithubToken } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
 import { GithubContent } from '../../../shared/models/github'
 import { RemoteConfigService } from '../config/remote-config.service'
+import { LogService } from './log.service'
 
 @Injectable()
 export class GithubClientService {
   constructor(
     private http: HttpClient,
-    private remoteConfig: RemoteConfigService
+    private remoteConfig: RemoteConfigService,
+    private logger: LogService
   ) {}
 
   get(url): Promise<any> {
-    return this.remoteConfig
-      .read()
+    return this.readRemoteConfig()
       .then(config =>
-        config.getOrDefault(ConfigKeys.GITHUB_API_TOKEN, DefaultGithubToken)
+        config
+          ? config.getOrDefault(ConfigKeys.GITHUB_API_TOKEN, DefaultGithubToken)
+          : DefaultGithubToken
       )
-      .then(token =>
-        this.http
+      .then(token => {
+        return this.http
           .get(url, {
-            headers: new HttpHeaders().set('Authorization', 'Bearer ' + token)
+            headers: token
+              ? new HttpHeaders().set('Authorization', 'Bearer ' + token)
+              : {}
           })
           .toPromise()
-      )
+      })
   }
 
   getContent(url): Promise<any> {
@@ -34,6 +39,12 @@ export class GithubClientService {
       if (!(parsed instanceof Array))
         throw new Error('URL does not contain an array of questions')
       return parsed
+    })
+  }
+
+  readRemoteConfig() {
+    return this.remoteConfig.read().catch(e => {
+      throw this.logger.error('Failed to fetch Firebase config', e)
     })
   }
 }

@@ -15,7 +15,7 @@ import {
 import { Question } from '../../../shared/models/question'
 import { Task } from '../../../shared/models/task'
 import { Utility } from '../../../shared/utilities/util'
-import { GithubClientService } from '../misc/github-client.service'
+import { GithubClient } from '../misc/github-client.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
@@ -31,7 +31,7 @@ export class QuestionnaireService {
   constructor(
     private storage: StorageService,
     private localization: LocalizationService,
-    private githubClient: GithubClientService,
+    private githubClient: GithubClient,
     private util: Utility,
     private logger: LogService
   ) {}

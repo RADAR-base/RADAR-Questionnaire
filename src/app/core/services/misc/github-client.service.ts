@@ -8,7 +8,7 @@ import { RemoteConfigService } from '../config/remote-config.service'
 import { LogService } from './log.service'
 
 @Injectable()
-export class GithubClientService {
+export class GithubClient {
   constructor(
     private http: HttpClient,
     private remoteConfig: RemoteConfigService,

@@ -16,7 +16,7 @@ import {
 } from '../../../shared/models/github'
 import { ProtocolMetaData } from '../../../shared/models/protocol'
 import { sortObject } from '../../../shared/utilities/sort-object'
-import { GithubClientService } from '../misc/github-client.service'
+import { GithubClient } from '../misc/github-client.service'
 import { LogService } from '../misc/log.service'
 import { AnalyticsService } from '../usage/analytics.service'
 import { RemoteConfigService } from './remote-config.service'
@@ -30,7 +30,7 @@ export class ProtocolService {
 
   constructor(
     private config: SubjectConfigService,
-    private githubClient: GithubClientService,
+    private githubClient: GithubClient,
     private remoteConfig: RemoteConfigService,
     private logger: LogService,
     private analytics: AnalyticsService

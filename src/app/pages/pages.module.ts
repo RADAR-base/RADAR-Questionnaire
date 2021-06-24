@@ -10,7 +10,7 @@ import { SubjectConfigService } from '../core/services/config/subject-config.ser
 import { KafkaService } from '../core/services/kafka/kafka.service'
 import { SchemaService } from '../core/services/kafka/schema.service'
 import { AlertService } from '../core/services/misc/alert.service'
-import { GithubClientService } from '../core/services/misc/github-client.service'
+import { GithubClient } from '../core/services/misc/github-client.service'
 import { LocalizationService } from '../core/services/misc/localization.service'
 import { FcmRestNotificationService } from '../core/services/notifications/fcm-rest-notification.service'
 import { FcmXmppNotificationService } from '../core/services/notifications/fcm-xmpp-notification.service'
@@ -75,7 +75,7 @@ import { SplashModule } from './splash/splash.module'
     MessageHandlerService,
     { provide: NotificationService, useClass: NotificationFactoryService },
     { provide: AnalyticsService, useClass: FirebaseAnalyticsService },
-    GithubClientService
+    GithubClient
   ]
 })
 export class PagesModule {}

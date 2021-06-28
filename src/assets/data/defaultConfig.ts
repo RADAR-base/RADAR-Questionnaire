@@ -8,7 +8,6 @@ import {
 } from '../../app/shared/models/settings'
 import { Task } from '../../app/shared/models/task'
 import { Localisations } from './localisations'
-import { DefaultSourceProducerAndSecretExport } from './secret'
 
 // DEFAULT APP INFO
 
@@ -179,14 +178,11 @@ export const DefaultParticipantAttributeOrder = {
 
 // DEFAULT AUTH DATA
 
-// *The client id and secret for OAuth authorisation with the Management Portal
-const oauthParts = DefaultSourceProducerAndSecretExport.split(':')
-
 // * Default oAuth client id (REMOTE CONFIG KEY: `oauth_client_id`)
-export const DefaultOAuthClientId = oauthParts.shift()
+export const DefaultOAuthClientId = 'aRMT'
 
 // * Default oAuth client secret (REMOTE CONFIG KEY: `oauth_client_secret`)
-export const DefaultOAuthClientSecret = oauthParts.join(':')
+export const DefaultOAuthClientSecret = ''
 
 // *Default length of time to wait before refreshing tokens (REMOTE CONFIG KEY: `oauth_refresh_seconds`)
 export const DefaultTokenRefreshSeconds = 1800 // 30 minutes in s

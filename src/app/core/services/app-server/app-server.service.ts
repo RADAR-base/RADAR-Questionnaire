@@ -21,6 +21,7 @@ export class AppServerService {
   private APP_SERVER_URL
   SUBJECT_PATH = 'users'
   PROJECT_PATH = 'projects'
+  GITHUB_CONTENT_PATH = 'github/content'
 
   constructor(
     public storage: StorageService,
@@ -49,7 +50,7 @@ export class AppServerService {
             subjectId,
             projectId,
             enrolmentDate,
-            fcmToken
+            'fcmToken'
           )
         )
       )
@@ -181,6 +182,18 @@ export class AppServerService {
           updatedSubject,
           { headers }
         )
+        .toPromise()
+    })
+  }
+
+  // NOTE: This method fetches from Github through the App Server.
+  fetchFromGithub(githubUrl: string) {
+    return this.getHeaders().then(headers => {
+      return this.http
+        .get(urljoin(this.APP_SERVER_URL, this.GITHUB_CONTENT_PATH), {
+          headers,
+          params: { url: githubUrl }
+        })
         .toPromise()
     })
   }

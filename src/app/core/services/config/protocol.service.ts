@@ -44,7 +44,7 @@ export class ProtocolService {
           new Map(Object.entries(attributes))
         ).catch(() => this.getProtocolPathInTree(tree, DefaultProtocolPath))
       )
-      .then((url: string) => this.githubClient.get(url))
+      .then((url: string) => this.githubClient.getRaw(url))
       .then((res: GithubContent) => ({
         protocol: atob(res.content),
         url: res.url
@@ -89,7 +89,7 @@ export class ProtocolService {
   }
 
   getChildTree(child: GithubTreeChild): Promise<GithubTree> {
-    return this.githubClient.get(child.url) as Promise<GithubTree>
+    return this.githubClient.getRaw(child.url) as Promise<GithubTree>
   }
 
   matchTreeWithAttributeKey(
@@ -119,11 +119,11 @@ export class ProtocolService {
       this.getRootTreeHashUrl()
     ])
       .then(([projectName, url]) =>
-        this.githubClient.get(url).then((res: GithubTree) => {
+        this.githubClient.getRaw(url).then((res: GithubTree) => {
           const project = res.tree.find(c => c.path == projectName)
           if (project == null || project == undefined)
             throw new Error('Unable to find project in repository.')
-          return this.githubClient.get(project.url) as Promise<GithubTree>
+          return this.githubClient.getRaw(project.url) as Promise<GithubTree>
         })
       )
       .then(projectChild => projectChild.tree)
@@ -137,7 +137,7 @@ export class ProtocolService {
       .then(([branch, repo]) => {
         const treeUrl = [GIT_API_URI, repo, this.GIT_BRANCHES, branch].join('/')
         return this.githubClient
-          .get(treeUrl)
+          .getRaw(treeUrl)
           .then((res: any) => res.commit.commit.tree.url)
       })
   }

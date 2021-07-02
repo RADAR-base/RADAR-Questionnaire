@@ -32,7 +32,6 @@ export class ConfigKeys {
   static SKIPPABLE_QUESTIONNAIRE_TYPES = new ConfigKeys(
     'skippable_questionnaire_types'
   )
-  static GITHUB_API_TOKEN = new ConfigKeys('github_api_token')
 
   constructor(public value: string) {}
 

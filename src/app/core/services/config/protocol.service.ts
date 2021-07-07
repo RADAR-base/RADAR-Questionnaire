@@ -49,9 +49,13 @@ export class ProtocolService {
       )
       .then((url: string) => this.http.get(url).toPromise())
       .then((res: GithubContent) => ({
-        protocol: atob(res.content),
+        protocol: this.base64ToUnicode(res.content),
         url: res.url
       }))
+  }
+
+  base64ToUnicode(raw: string): string {
+    return decodeURIComponent(escape(atob(raw)))
   }
 
   /**

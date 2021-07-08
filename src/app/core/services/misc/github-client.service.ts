@@ -1,22 +1,33 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 
-import { GithubContent } from '../../../shared/models/github'
+import { DefaultGithubFetchStrategy } from '../../../../assets/data/defaultConfig'
+import { ConfigKeys } from '../../../shared/enums/config'
+import {
+  GithubContent,
+  GithubFetchStrategy
+} from '../../../shared/models/github'
 import { Utility } from '../../../shared/utilities/util'
 import { AppServerService } from '../app-server/app-server.service'
+import { RemoteConfigService } from '../config/remote-config.service'
 
 @Injectable()
 export class GithubClient {
   constructor(
     private appServerService: AppServerService,
     private util: Utility,
-    private http: HttpClient
+    private http: HttpClient,
+    private remoteConfig: RemoteConfigService
   ) {}
 
   getRaw(url): Promise<any> {
-    return this.appServerService.fetchFromGithub(url).catch(e => {
-      if (e.status == 404) return this.http.get(url).toPromise()
-      else throw e
+    return this.getFetchStrategy().then(strategy => {
+      switch (strategy) {
+        case GithubFetchStrategy.APP_SERVER:
+          return this.appServerService.fetchFromGithub(url)
+        default:
+          return this.http.get(url).toPromise()
+      }
     })
   }
 
@@ -24,5 +35,16 @@ export class GithubClient {
     return this.getRaw(url).then((res: GithubContent) => {
       return JSON.parse(this.util.base64ToUnicode(res.content))
     })
+  }
+
+  getFetchStrategy(): Promise<String> {
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        config.getOrDefault(
+          ConfigKeys.GITHUB_FETCH_STRATEGY,
+          DefaultGithubFetchStrategy
+        )
+      )
   }
 }

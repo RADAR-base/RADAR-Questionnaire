@@ -33,6 +33,8 @@ export class ConfigKeys {
     'skippable_questionnaire_types'
   )
 
+  static GITHUB_FETCH_STRATEGY = new ConfigKeys('github_fetch_strategy')
+
   constructor(public value: string) {}
 
   toString() {

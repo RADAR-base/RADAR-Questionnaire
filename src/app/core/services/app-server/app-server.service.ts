@@ -50,7 +50,7 @@ export class AppServerService {
             subjectId,
             projectId,
             enrolmentDate,
-            'fcmToken'
+            fcmToken
           )
         )
       )

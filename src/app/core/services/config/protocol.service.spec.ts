@@ -5,13 +5,15 @@ import {
   FirebaseAnalyticsServiceMock,
   LogServiceMock,
   RemoteConfigServiceMock,
-  SubjectConfigServiceMock
+  SubjectConfigServiceMock,
+  UtilityMock
 } from '../../../shared/testing/mock-services'
 import { LogService } from '../misc/log.service'
 import { AnalyticsService } from '../usage/analytics.service'
 import { ProtocolService } from './protocol.service'
 import { RemoteConfigService } from './remote-config.service'
 import { SubjectConfigService } from './subject-config.service'
+import { Utility } from '../../../shared/utilities/util'
 
 describe('ProtocolService', () => {
   let service
@@ -28,7 +30,8 @@ describe('ProtocolService', () => {
         {
           provide: AnalyticsService,
           useClass: FirebaseAnalyticsServiceMock
-        }
+        },
+        { provide: Utility, useClass: UtilityMock }
       ]
     })
   )
@@ -40,4 +43,5 @@ describe('ProtocolService', () => {
   it('should create', () => {
     expect(service instanceof ProtocolService).toBe(true)
   })
+
 })

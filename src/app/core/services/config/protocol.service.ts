@@ -21,6 +21,7 @@ import { LogService } from '../misc/log.service'
 import { AnalyticsService } from '../usage/analytics.service'
 import { RemoteConfigService } from './remote-config.service'
 import { SubjectConfigService } from './subject-config.service'
+import { Utility } from '../../../shared/utilities/util'
 
 @Injectable()
 export class ProtocolService {
@@ -33,7 +34,8 @@ export class ProtocolService {
     private githubClient: GithubClient,
     private remoteConfig: RemoteConfigService,
     private logger: LogService,
-    private analytics: AnalyticsService
+    private analytics: AnalyticsService,
+    private util: Utility
   ) {}
 
   pull(): Promise<ProtocolMetaData> {
@@ -46,7 +48,7 @@ export class ProtocolService {
       )
       .then((url: string) => this.githubClient.getRaw(url))
       .then((res: GithubContent) => ({
-        protocol: atob(res.content),
+        protocol: this.util.base64ToUnicode(res.content),
         url: res.url
       }))
   }

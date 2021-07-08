@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 
 import { GithubContent } from '../../../shared/models/github'
@@ -8,11 +9,15 @@ import { AppServerService } from '../app-server/app-server.service'
 export class GithubClient {
   constructor(
     private appServerService: AppServerService,
-    private util: Utility
+    private util: Utility,
+    private http: HttpClient
   ) {}
 
   getRaw(url): Promise<any> {
-    return this.appServerService.fetchFromGithub(url)
+    return this.appServerService.fetchFromGithub(url).catch(e => {
+      if (e.status == 404) return this.http.get(url).toPromise()
+      else throw e
+    })
   }
 
   getContent(url): Promise<any> {

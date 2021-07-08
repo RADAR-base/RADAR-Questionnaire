@@ -48,20 +48,18 @@ export class ScheduleGeneratorService {
       this.questionnaire.getAssessments(AssessmentType.SCHEDULED),
       this.fetchScheduleYearCoverage()
     ]).then(([assessments]) => {
-      const schedule: Task[] = assessments.reduce((list, assessment) => {
-        const completed = completedTasks.filter(t => t.name == assessment.name)
-        return (
-          list.concat(
-            this.buildTasksForSingleAssessment(
-              assessment,
-              list.length,
-              refTimestamp,
-              AssessmentType.SCHEDULED
-            )
-          ),
-          []
-        )
-      })
+      const schedule: Task[] = assessments.reduce(
+        (list: Task[], assessment) => {
+          const tasks = this.buildTasksForSingleAssessment(
+            assessment,
+            list.length,
+            refTimestamp,
+            AssessmentType.SCHEDULED
+          )
+          return list.concat(tasks)
+        },
+        []
+      )
       // NOTE: Check for completed tasks
       const res = this.updateScheduleWithCompletedTasks(
         schedule,

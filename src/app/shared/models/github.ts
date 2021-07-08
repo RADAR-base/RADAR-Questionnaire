@@ -22,3 +22,8 @@ export interface GithubContent {
   size: number
   url: string
 }
+
+export enum GithubFetchStrategy {
+  DEFAULT = 'default',
+  APP_SERVER = 'appserver'
+}

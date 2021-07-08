@@ -62,4 +62,8 @@ export class Utility {
       {}
     )
   }
+
+  base64ToUnicode(raw: string): string {
+    return decodeURIComponent(escape(atob(raw)))
+  }
 }

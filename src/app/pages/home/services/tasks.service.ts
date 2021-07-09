@@ -1,6 +1,8 @@
-import { Injectable } from '@angular/core'
+import { EventEmitter, Injectable } from '@angular/core'
 
 import {
+  DefaultAppCreditsBody,
+  DefaultAppCreditsTitle,
   DefaultOnDemandAssessmentIcon,
   DefaultPlatformInstance
 } from '../../../../assets/data/defaultConfig'
@@ -14,11 +16,18 @@ import { setDateTimeToMidnight } from '../../../shared/utilities/time'
 
 @Injectable()
 export class TasksService {
+  changeDetectionEmitter: EventEmitter<void> = new EventEmitter<void>()
+
   constructor(
     private schedule: ScheduleService,
     private questionnaire: QuestionnaireService,
     private remoteConfig: RemoteConfigService
-  ) {}
+  ) {
+    this.schedule.changeDetectionEmitter.subscribe(() => {
+      console.log('Changes detected to schedule..')
+      this.changeDetectionEmitter.emit()
+    })
+  }
 
   getOnDemandAssessmentIcon() {
     return this.remoteConfig
@@ -139,5 +148,26 @@ export class TasksService {
           DefaultPlatformInstance
         )
       )
+  }
+
+  getAppCreditsTitle() {
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        config.getOrDefault(
+          ConfigKeys.APP_CREDITS_TITLE,
+          DefaultAppCreditsTitle
+        )
+      )
+      .then(res => JSON.parse(res))
+  }
+
+  getAppCreditsBody() {
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        config.getOrDefault(ConfigKeys.APP_CREDITS_BODY, DefaultAppCreditsBody)
+      )
+      .then(res => JSON.parse(res))
   }
 }

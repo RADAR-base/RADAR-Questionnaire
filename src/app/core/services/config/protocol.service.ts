@@ -1,5 +1,4 @@
 // tslint:disable: forin
-import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 
 import {
@@ -7,12 +6,9 @@ import {
   DefaultProtocolBranch,
   DefaultProtocolGithubRepo,
   DefaultProtocolPath,
-  DefaultQuestionnaireFormatURI,
-  DefaultQuestionnaireTypeURI,
   GIT_API_URI
 } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
-import { Assessment } from '../../../shared/models/assessment'
 import {
   GithubContent,
   GithubTree,
@@ -20,10 +16,12 @@ import {
 } from '../../../shared/models/github'
 import { ProtocolMetaData } from '../../../shared/models/protocol'
 import { sortObject } from '../../../shared/utilities/sort-object'
+import { GithubClient } from '../misc/github-client.service'
 import { LogService } from '../misc/log.service'
 import { AnalyticsService } from '../usage/analytics.service'
 import { RemoteConfigService } from './remote-config.service'
 import { SubjectConfigService } from './subject-config.service'
+import { Utility } from '../../../shared/utilities/util'
 
 @Injectable()
 export class ProtocolService {
@@ -33,10 +31,11 @@ export class ProtocolService {
 
   constructor(
     private config: SubjectConfigService,
-    private http: HttpClient,
+    private githubClient: GithubClient,
     private remoteConfig: RemoteConfigService,
     private logger: LogService,
-    private analytics: AnalyticsService
+    private analytics: AnalyticsService,
+    private util: Utility
   ) {}
 
   pull(): Promise<ProtocolMetaData> {
@@ -47,9 +46,9 @@ export class ProtocolService {
           new Map(Object.entries(attributes))
         ).catch(() => this.getProtocolPathInTree(tree, DefaultProtocolPath))
       )
-      .then((url: string) => this.http.get(url).toPromise())
+      .then((url: string) => this.githubClient.getRaw(url))
       .then((res: GithubContent) => ({
-        protocol: atob(res.content),
+        protocol: this.util.base64ToUnicode(res.content),
         url: res.url
       }))
   }
@@ -92,7 +91,7 @@ export class ProtocolService {
   }
 
   getChildTree(child: GithubTreeChild): Promise<GithubTree> {
-    return this.http.get<GithubTree>(child.url).toPromise()
+    return this.githubClient.getRaw(child.url) as Promise<GithubTree>
   }
 
   matchTreeWithAttributeKey(
@@ -122,15 +121,12 @@ export class ProtocolService {
       this.getRootTreeHashUrl()
     ])
       .then(([projectName, url]) =>
-        this.http
-          .get(url)
-          .toPromise()
-          .then((res: GithubTree) => {
-            const project = res.tree.find(c => c.path == projectName)
-            if (project == null || project == undefined)
-              throw new Error('Unable to find project in repository.')
-            return this.http.get<GithubTree>(project.url).toPromise()
-          })
+        this.githubClient.getRaw(url).then((res: GithubTree) => {
+          const project = res.tree.find(c => c.path == projectName)
+          if (project == null || project == undefined)
+            throw new Error('Unable to find project in repository.')
+          return this.githubClient.getRaw(project.url) as Promise<GithubTree>
+        })
       )
       .then(projectChild => projectChild.tree)
   }
@@ -142,9 +138,8 @@ export class ProtocolService {
       )
       .then(([branch, repo]) => {
         const treeUrl = [GIT_API_URI, repo, this.GIT_BRANCHES, branch].join('/')
-        return this.http
-          .get(treeUrl)
-          .toPromise()
+        return this.githubClient
+          .getRaw(treeUrl)
           .then((res: any) => res.commit.commit.tree.url)
       })
   }
@@ -210,13 +205,5 @@ export class ProtocolService {
           order[k] != null ? order[k] : this.DEFAULT_ATTRIBUTE_ORDER)
     )
     return orderWithoutNull
-  }
-
-  format(protocols: Assessment[]): Assessment[] {
-    return protocols.map(p => {
-      p.questionnaire.type = DefaultQuestionnaireTypeURI
-      p.questionnaire.format = DefaultQuestionnaireFormatURI
-      return p
-    })
   }
 }

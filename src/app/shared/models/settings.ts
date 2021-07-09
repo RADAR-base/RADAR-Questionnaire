@@ -2,6 +2,7 @@ export interface Settings {
   appVersion?: string
   cacheSize?: number
   scheduleVersion?: string
+  participantLogin?: string
   participantID?: string
   projectName?: string
   enrolmentDate?: string

@@ -37,6 +37,8 @@ export class QuestionType {
   static info = 'info'
   static text = 'text'
   static yesno = 'yesno'
+  static descriptive = 'descriptive'
+  static matrix_radio = 'matrix-radio'
 }
 
 export interface Response {
@@ -67,4 +69,9 @@ export interface InfoItem {
   id: string
   heading: string
   content: string
+}
+
+export interface QuestionPosition {
+  groupKeyIndex: number
+  questionIndices: number[]
 }

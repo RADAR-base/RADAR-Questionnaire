@@ -147,6 +147,7 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
         }
         return conf
       })
+      .catch(e => this.configSubject.value)
   }
 
   subject(): Observable<RemoteConfig> {

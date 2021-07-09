@@ -23,6 +23,18 @@ export class ConfigKeys {
   )
   static SCHEDULE_YEAR_COVERAGE = new ConfigKeys('schedule_year_coverage')
 
+  static APP_CREDITS_TITLE = new ConfigKeys('app_credits_title')
+  static APP_CREDITS_BODY = new ConfigKeys('app_credits_body')
+
+  static AUTO_NEXT_QUESTIONNAIRE_TYPES = new ConfigKeys(
+    'auto_next_questionnaire_types'
+  )
+  static SKIPPABLE_QUESTIONNAIRE_TYPES = new ConfigKeys(
+    'skippable_questionnaire_types'
+  )
+
+  static GITHUB_FETCH_STRATEGY = new ConfigKeys('github_fetch_strategy')
+
   constructor(public value: string) {}
 
   toString() {

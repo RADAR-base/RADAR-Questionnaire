@@ -61,6 +61,26 @@ h2 {
   margin: 1em 8px;
 }
 
+h3 {
+  color: $cl-font;
+  font-size: 14px;
+}
+
+h4 {
+  color: $cl-font;
+  font-size: 12px;
+}
+
+h5 {
+  color: $cl-font;
+  font-size: 10px;
+}
+
+h6 {
+  color: $cl-font;
+  font-size: 8px;
+}
+
 p {
   @include font-body;
 

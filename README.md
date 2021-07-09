@@ -124,17 +124,24 @@ For Android remote notifications, setting your sender ID and adding your `google
 
 Certain values can be overriden using Firebase Remote Config. Specifically, the following variables are supported:
 
-| Parameter                     | Description                                                                             | Default value                                                                                                    |
-| ----------------------------- | --------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `oauth_client_id`             | Client ID to connect to the ManagementPortal with                                       | `aRMT`                                                                                                           |
-| `oauth_client_secret`         | Client secret to connect to the ManagementPortal with                                   | Value set in `secret.ts`                                                                                         |
-| `oauth_refresh_seconds`       | After how many seconds to refresh the OAuth token                                       | `1800` (=30 minutes)                                                                                             |
-| `protocol_repo`               | Github repo where the protocol definitions are located.                                 | `RADAR-Base/RADAR-aRMT-protocols`                                                                                |
-| `protocol_branch`             | Github branch where the protocol definitions should be read from                        | `master`                                                                                                         |
-| `protocol_path`               | Path inside a project name that should be read for a protocol                           | `protocol.json`                                                                                                  |
-| `kafka_specification_url`     | URL of the Kafka topic specification                                                    | <https://api.github.com/repos/RADAR-base/radar-schemas/contents/specifications/active/aRMT-1.4.3.yml?ref=master> |
-| `platform_instance`           | Title of RADAR Base / platform instance                                                 | `RADAR-CNS`                                                                                                      |
-| `participant_attribute_order` | Map that specifies the order in which the attributes are matched with the protocol path | `{Human-readable-identifier: -1}`                                                                                |
+| Parameter                       | Description                                                                                                                                                                                               | Default value                                                                                                    |
+| ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `oauth_client_id`               | Client ID to connect to the ManagementPortal with                                                                                                                                                         | `aRMT`                                                                                                           |
+| `oauth_client_secret`           | Client secret to connect to the ManagementPortal with                                                                                                                                                     | ``                                                                                                               |
+| `oauth_refresh_seconds`         | After how many seconds to refresh the OAuth token                                                                                                                                                         | `1800` (=30 minutes)                                                                                             |
+| `protocol_repo`                 | Github repo where the protocol definitions are located.                                                                                                                                                   | `RADAR-Base/RADAR-aRMT-protocols`                                                                                |
+| `protocol_branch`               | Github branch where the protocol definitions should be read from                                                                                                                                          | `master`                                                                                                         |
+| `protocol_path`                 | Path inside a project name that should be read for a protocol                                                                                                                                             | `protocol.json`                                                                                                  |
+| `kafka_specification_url`       | URL of the Kafka topic specification                                                                                                                                                                      | <https://api.github.com/repos/RADAR-base/radar-schemas/contents/specifications/active/aRMT-1.4.3.yml?ref=master> |
+| `platform_instance`             | Title of RADAR Base / platform instance                                                                                                                                                                   | `RADAR-CNS`                                                                                                      |
+| `participant_attribute_order`   | Map that specifies the order in which the attributes are matched with the protocol path                                                                                                                   | `{Human-readable-identifier: -1}`                                                                                |
+| `schedule_year_coverage`        | Schedule coverage in years (length of schedule to generate tasks until)                                                                                                                                   | `3`                                                                                                              |
+| `notification_messaging_type`   | Notifications type (either 'FCM_XMPP', 'FCM_REST' or 'LOCAL' notifications)                                                                                                                               | `FCM_XMPP`                                                                                                       |
+| `app_server_url`                | Default app server url.                                                                                                                                                                                   | `{DefaultEndPoint + '/appserver'}`                                                                               |
+| `app_credits_title`             | Title of the popup box that appears when you tap on the app logo on the left hand side of the homepage.                                                                                                   | `Credits`                                                                                                        |
+| `app_credits_body`              | Body of the popup box that appears when you tap on the app logo on the left hand side of the homepage.                                                                                                    | `Made with &hearts; for you by the RADAR-Base community.`                                                        |
+| `auto_next_questionnaire_types` | String list of question/question input types where the questionnaire will automatically move to the next question upon answering the question. It is recommended to always include timed and audio types. | `timed,audio`                                                                                                    |
+| `skippable_questionnaire_types` | String list of question/question input types where the next button is enabled by default, allowing the question to be skippable.                                                                          | `audio`                                                                                                          |
 
 #### Conditions
 
@@ -236,3 +243,33 @@ $ANDROID_HOME/build-tools/27.0.2/zipalign -v 4 <your-project-path>/platforms/and
 
 8. Now the apk is ready to be uploaded to the playstore at path `<your-project-path>/platforms/android/app/build/outputs/apk/release/radar-armt-app-$APP_VERSION.apk`
 9. NOTE: The signing and aligning can also be done by importing the android project at path `<your-project-path>/platforms/android/` into Android Studio.
+
+## Questionnaire Input Types
+
+The questionnaire input types supported are `audio`, `checkbox`, `descriptive`, `info-screen`, `matrix-radio`, `radio`, `range-info`, `range-input`, `slider`, `text`, `date`, `time`, and `timed-test`.
+
+### Descriptive Input Type
+
+The descriptive input supports HTML in the `field_label` property of a questionnaire in the questionnaire definition. The css will automatically be inherited from the app. Here is an example input:
+
+```
+Hello this is an example of a descriptive input text.
+<br> <br>
+<b>This is a bold text</b>
+<br>
+<h1>This is an h1</h1>
+<br>
+<h2>This is an h2</h2>
+<br>
+<h3>This is an h3</h3> <h4>This is an h4</h4> <h5>This is an h5</h5>
+<br>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/4rxh60G2RRU" title="YouTube video player" allowfullscreen></iframe>
+<br><br>
+This is an example of an image:
+<br>
+<img src="https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg">
+```
+
+Here is the output:
+
+<img src="/.github/etc/descriptive-2.png" width="200px"><img src="/.github/etc/descriptive-1.png" width="200px">

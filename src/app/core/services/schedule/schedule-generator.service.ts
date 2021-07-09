@@ -6,7 +6,11 @@ import {
   DefaultTaskCompletionWindow
 } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
-import { Assessment, AssessmentType } from '../../../shared/models/assessment'
+import {
+  Assessment,
+  AssessmentType,
+  SchedulerResult
+} from '../../../shared/models/assessment'
 import { Task } from '../../../shared/models/task'
 import { compareTasks } from '../../../shared/utilities/compare-tasks'
 import {
@@ -36,83 +40,38 @@ export class ScheduleGeneratorService {
   ) {}
 
   runScheduler(
-    type,
     refTimestamp,
-    completedTasks,
-    utcOffsetPrev,
-    assessment?,
-    indexOffset?
-  ) {
-    return this.fetchScheduleYearCoverage().then(() => {
-      // NOTE: Check if clinical or regular
-      switch (type) {
-        case AssessmentType.SCHEDULED:
-          return this.questionnaire
-            .getAssessments(type)
-            .then(assessments =>
-              this.buildTaskSchedule(
-                assessments,
-                completedTasks,
-                refTimestamp,
-                utcOffsetPrev
-              )
-            )
-            .catch(e => {
-              this.logger.error('Failed to schedule assessement', e)
-            })
-        case AssessmentType.ON_DEMAND:
-          return Promise.resolve({
-            schedule: this.buildTasksForSingleAssessment(
-              assessment,
-              indexOffset,
-              refTimestamp,
-              AssessmentType.ON_DEMAND
-            ),
-            completed: [] as Task[]
-          })
-        case AssessmentType.CLINICAL:
-          return Promise.resolve({
-            schedule: this.buildTasksForSingleAssessment(
-              assessment,
-              indexOffset,
-              refTimestamp,
-              AssessmentType.CLINICAL
-            ),
-            completed: [] as Task[]
-          })
-      }
-      return Promise.resolve()
-    })
-  }
-
-  buildTaskSchedule(
-    assessments: Assessment[],
-    completedTasks,
-    refTimestamp,
+    completedTasks: Task[],
     utcOffsetPrev
-  ): Promise<{ schedule: Task[]; completed: Task[] }> {
-    let schedule: Task[] = assessments.reduce(
-      (list, assessment) =>
-        list.concat(
-          this.buildTasksForSingleAssessment(
+  ): Promise<SchedulerResult> {
+    return Promise.all([
+      this.questionnaire.getAssessments(AssessmentType.SCHEDULED),
+      this.fetchScheduleYearCoverage()
+    ]).then(([assessments]) => {
+      const schedule: Task[] = assessments.reduce(
+        (list: Task[], assessment) => {
+          const tasks = this.buildTasksForSingleAssessment(
             assessment,
             list.length,
             refTimestamp,
             AssessmentType.SCHEDULED
           )
-        ),
-      []
-    )
-    // NOTE: Check for completed tasks
-    const res = this.updateScheduleWithCompletedTasks(
-      schedule,
-      completedTasks,
-      utcOffsetPrev
-    )
-    schedule = res.schedule.sort(compareTasks)
-
-    this.logger.log('[√] Updated task schedule.')
-    return Promise.resolve({ schedule, completed: res.completed })
+          return list.concat(tasks)
+        },
+        []
+      )
+      // NOTE: Check for completed tasks
+      const res = this.updateScheduleWithCompletedTasks(
+        schedule,
+        completedTasks,
+        utcOffsetPrev
+      )
+      this.logger.log('[√] Updated task schedule.')
+      return Promise.resolve({
+        schedule: res.schedule.sort(compareTasks),
+        completed: res.completed
+      })
+    })
   }
 
   getRepeatProtocol(protocol, type) {
@@ -208,7 +167,7 @@ export class ScheduleGeneratorService {
     schedule: Task[],
     completedTasks,
     utcOffsetPrev?
-  ): { schedule: any[]; completed: any[] } {
+  ): SchedulerResult {
     const completed = []
     if (completedTasks && completedTasks.length > 0) {
       // NOTE: If utcOffsetPrev exists, timezone has changed

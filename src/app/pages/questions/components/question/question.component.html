@@ -1,7 +1,17 @@
-<div class="content" #content [class.fade]="!currentlyShown">
+<div
+  class="content"
+  #content
+  [class.fade]="!currentlyShown"
+  [class.content-matrix]="isMatrix"
+>
   <div class="header" dir="auto">
-    <p>{{ question.section_header }}</p>
-    <div *ngIf="!isFieldLabelHidden" class="field-container" dir="auto">
+    <p *ngIf="!isSectionHeaderHidden">{{ question.section_header }}</p>
+    <div
+      *ngIf="!isFieldLabelHidden"
+      class="field-container"
+      [class.field-container-matrix]="isMatrix"
+      dir="auto"
+    >
       <h2
         dir="auto"
         [fittext]="true"
@@ -15,9 +25,11 @@
   <div #input class="input" [class.input-scroll]="isScrollable">
     <div
       [style.height.px]="
-        input.offsetParent.offsetHeight -
-        input.previousSibling.offsetHeight -
-        margin
+        isMatrix
+          ? 'auto'
+          : input.offsetParent.offsetHeight -
+            input.previousSibling.offsetHeight -
+            margin
       "
       [ngSwitch]="question.field_type"
     >
@@ -65,6 +77,8 @@
           [min]="question.range.min"
           [max]="question.range.max"
           [step]="question.range.step"
+          [labelLeft]="question.range.labelLeft"
+          [labelRight]="question.range.labelRight"
           (valueChange)="onValueChange($event)"
         >
         </slider-input>
@@ -114,6 +128,23 @@
           (valueChange)="onValueChange($event)"
         >
         </radio-input>
+
+        <descriptive-input
+          *ngSwitchCase="'descriptive'"
+          [text]="question.field_label"
+          (valueChange)="onValueChange($event)"
+          [currentlyShown]="currentlyShown"
+        >
+        </descriptive-input>
+
+        <matrix-radio-input
+          *ngSwitchCase="'matrix-radio'"
+          [responses]="question.select_choices_or_calculations"
+          [currentlyShown]="currentlyShown"
+          [previouslyShown]="previouslyShown"
+          (valueChange)="onValueChange($event)"
+        >
+        </matrix-radio-input>
       </ng-container>
     </div>
   </div>

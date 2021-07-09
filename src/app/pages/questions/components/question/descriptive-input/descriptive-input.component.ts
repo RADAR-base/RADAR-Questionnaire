@@ -7,63 +7,55 @@ import {
   Output,
   ViewChild
 } from '@angular/core'
+import { DomSanitizer } from '@angular/platform-browser'
+import * as DomPurify from 'dompurify'
 
-import { InfoItem, Section } from '../../../../../shared/models/question'
+import { InfoItem } from '../../../../../shared/models/question'
 
 let uniqueID = 0
 
 @Component({
-  selector: 'info-screen',
-  templateUrl: 'info-screen.component.html'
+  selector: 'descriptive-input',
+  templateUrl: 'descriptive-input.component.html'
 })
-export class InfoScreenComponent implements OnInit, OnChanges {
+export class DescriptiveInputComponent implements OnInit, OnChanges {
   @ViewChild('content') content
 
   @Output()
   valueChange: EventEmitter<number> = new EventEmitter<number>()
-
   @Input()
-  sections: Section[]
-  @Input()
-  hasFieldLabel: boolean
+  text: string
   @Input()
   currentlyShown: boolean
-  @Input()
-  image: string
 
   value: number = null
   uniqueID: number = uniqueID++
   name = `info-${this.uniqueID}`
   items: InfoItem[] = Array()
   showScrollButton: boolean
+  sanitizedHtml: any
 
-  constructor() {}
+  HTML_ALLOWED_TAGS = ['iframe']
+  HTML_ALLOWED_ATTR = ['allow', 'allowfullscreen', 'frameborder', 'scrolling']
+
+  constructor(private sanitizer: DomSanitizer) {}
 
   ngOnInit() {
-    this.initSections()
+    this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(
+      DomPurify.sanitize(this.text, {
+        ADD_TAGS: this.HTML_ALLOWED_TAGS,
+        ADD_ATTR: this.HTML_ALLOWED_ATTR
+      })
+    )
   }
 
   ngOnChanges() {
-    if (this.sections.length > 1) this.showScrollButton = true
-    else if (this.currentlyShown) this.emitTimestamp()
-  }
-
-  initSections() {
-    if (!this.sections.length) return
-    this.sections.map((item, i) => {
-      if (item.label.includes('THINC-it'))
-        this.image = 'assets/imgs/thincIt_app_icon.png'
-      this.items.push({
-        id: `info-${this.uniqueID}-${i}`,
-        heading: item.code,
-        content: item.label
-      })
-    })
+    if (this.currentlyShown) this.emitTimestamp()
   }
 
   scrollDown() {
     const height =
-      this.content.nativeElement.clientHeight / this.sections.length
+      this.content.nativeElement.clientHeight / (this.text.length / 100)
     this.content.nativeElement.scrollBy({
       top: height,
       left: 0,

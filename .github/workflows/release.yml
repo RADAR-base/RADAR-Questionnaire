@@ -7,6 +7,9 @@ on:
   release:
     types: [published]
 
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
 env:
   PACKAGE_NAME_ANDROID: org.phidatalab.radar_armt
   KEYSTORE_PATH: radar-armt-release-key.keystore

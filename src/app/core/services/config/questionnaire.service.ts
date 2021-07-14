@@ -73,6 +73,9 @@ export class QuestionnaireService {
       })
       .then(translated => {
         assessment.questions = this.formatQuestionsHeaders(translated)
+        if (assessment.protocol.clinicalProtocol)
+          assessment.requiresInClinicCompletion =
+            assessment.protocol.clinicalProtocol.requiresInClinicCompletion
         return assessment
       })
   }

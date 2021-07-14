@@ -7,6 +7,9 @@ on:
   release:
     types: [published]
 
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
 env:
   PACKAGE_NAME_ANDROID: org.phidatalab.radar_armt
   KEYSTORE_PATH: radar-armt-release-key.keystore
@@ -88,11 +91,11 @@ jobs:
       - name: Install app dependencies
         run: yarn install
 
-      - name: Add Android platform
-        run: ionic cordova platform add android && rm package-lock.json
-
       - name: Run unit tests
         run: yarn run test
+
+      - name: Add Android platform
+        run: ionic cordova platform add android && rm package-lock.json
 
       - name: Build Android app
         run: |
@@ -103,4 +106,11 @@ jobs:
         uses: maierj/fastlane-action@v2.0.1
         with:
           lane: 'android deploy'
-          options: '{ "keystore_path": $KEYSTORE_PATH, "keystore_password": ${{secrets.KEYSTORE_PASS}}, "keystore_alias": $KEYSTORE_ALIAS, "package_name": $PACKAGE_NAME_ANDROID, "track": $PLAYSTORE_TRACK, "json_key": $PLAYSTORE_SERVICE_KEY }'
+          options: '{ "keystore_path": $KEYSTORE_PATH, "keystore_password": $KEYSTORE_PASS, "keystore_alias": $KEYSTORE_ALIAS, "package_name": $PACKAGE_NAME_ANDROID, "track": $PLAYSTORE_TRACK, "json_key": $PLAYSTORE_SERVICE_KEY }'
+        env:
+          KEYSTORE_PATH: ${{env.KEYSTORE_PATH}}
+          KEYSTORE_PASS: ${{secrets.KEYSTORE_PASS}}
+          KEYSTORE_ALIAS: ${{env.KEYSTORE_ALIAS}}
+          PACKAGE_NAME_ANDROID: ${{env.PACKAGE_NAME_ANDROID}}
+          PLAYSTORE_TRACK: ${{env.PLAYSTORE_TRACK}}
+          PLAYSTORE_SERVICE_KEY: ${{env.PLAYSTORE_SERVICE_KEY}}

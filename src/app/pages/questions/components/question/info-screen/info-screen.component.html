@@ -1,4 +1,4 @@
-<div class="info-card">
+<div class="info-card" *ngIf="sections">
   <div class="content" #content scrollY="true" (scroll)="onScroll($event)">
     <div class="image-container">
       <img *ngIf="image" src="{{ image }}" class="image" alt="info-screen" />

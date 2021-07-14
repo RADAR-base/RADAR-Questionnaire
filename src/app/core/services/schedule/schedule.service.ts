@@ -61,11 +61,14 @@ export class ScheduleService {
     return this.getTasks(type).then(schedule => {
       const startTime = setDateTimeToMidnight(date).getTime()
       const endTime = startTime + getMilliseconds({ days: 1 })
-      return schedule.filter(d => {
-        return (
-          d.timestamp + d.completionWindow > startTime && d.timestamp < endTime
-        )
-      })
+      return schedule
+        ? schedule.filter(d => {
+            return (
+              d.timestamp + d.completionWindow > startTime &&
+              d.timestamp < endTime
+            )
+          })
+        : []
     })
   }
 

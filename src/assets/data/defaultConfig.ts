@@ -16,7 +16,7 @@ import { DefaultSourceProducerAndSecretExport } from './secret'
 export const DefaultPlatformInstance = 'RADAR-CNS'
 
 // *Default app version
-export const DefaultAppVersion = '2.0.0-alpha'
+export const DefaultAppVersion = '2.0.1-alpha'
 
 // *Default Android package name
 export const DefaultPackageName = 'org.phidatalab.radar_armt'
@@ -121,10 +121,11 @@ export const DefaultNumberOfCompletionLogsToSend = 10
 // DEFAULT NOTIFICATION SETUP
 
 // *Default notification type (either 'FCM_XMPP', 'FCM_REST' or 'LOCAL' notifications)
-export const DefaultNotificationType: string = 'FCM_XMPP'
+export const DefaultNotificationType: string = 'FCM_REST'
 
 // *Default app server URL
-export const DefaultAppServerURL = DefaultEndPoint + '/appserver'
+// export const DefaultAppServerURL = DefaultEndPoint + '/appserver'
+export const DefaultAppServerURL = 'http://localhost:8080/'
 
 // *Default FCM sender ID from Firebase settings
 export const FCMPluginProjectSenderId: string = '430900191220'
@@ -146,7 +147,7 @@ export const DefaultNotificationTtlMinutes: number = 10
 export const GIT_API_URI = 'https://api.github.com/repos'
 
 // *The Github content fetching mechanism, if this is done by a direct request to Github or a request through the app server. (REMOTE CONFIG KEY: `github_fetch_strategy`, VALUES: `default` (direct to Github) or `appserver`)
-export const DefaultGithubFetchStrategy = 'default'
+export const DefaultGithubFetchStrategy = 'appserver'
 
 // *The Github repository where the protocols are located (REMOTE CONFIG KEY: `protocol_repo`)
 export const DefaultProtocolGithubRepo = 'RADAR-Base/RADAR-aRMT-protocols'

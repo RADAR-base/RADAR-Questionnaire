@@ -118,6 +118,8 @@ export class FirebaseAnalyticsService extends AnalyticsService {
   }
 
   crop(value: string, size: number, message?: string): string {
+    if (!value) return ''
+
     if (value.length <= size) {
       return value
     } else {

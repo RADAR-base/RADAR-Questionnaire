@@ -49,6 +49,7 @@ export class InfoScreenComponent implements OnInit, OnChanges {
   }
 
   initSections() {
+    if (!this.sections.length) return
     this.sections.map((item, i) => {
       if (item.label.includes('THINC-it'))
         this.image = 'assets/imgs/thincIt_app_icon.png'

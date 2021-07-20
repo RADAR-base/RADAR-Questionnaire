@@ -50,7 +50,8 @@
         <custom-config-file parent="./application" target="AndroidManifest.xml">
             <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/notification_icon" />
         </custom-config-file>
-        <custom-preference name="android-manifest/@android:requestLegacyExternalStorage" value="true" />
+        <custom-preference name="android-manifest/application/@android:requestLegacyExternalStorage" value="true" />
+        <custom-preference name="android-manifest/application/@android:usesCleartextTraffic" value="true" />
     </platform>
     <platform name="ios">
         <feature name="CDVWKWebViewEngine">

@@ -1,5 +1,6 @@
 import { LocKeys } from '../../app/shared/enums/localisations'
 import { AssessmentType } from '../../app/shared/models/assessment'
+import { QuestionType } from '../../app/shared/models/question'
 import {
   LanguageSetting,
   NotificationSettings,
@@ -7,7 +8,6 @@ import {
 } from '../../app/shared/models/settings'
 import { Task } from '../../app/shared/models/task'
 import { Localisations } from './localisations'
-import { DefaultSourceProducerAndSecretExport } from './secret'
 
 // DEFAULT APP INFO
 
@@ -15,7 +15,7 @@ import { DefaultSourceProducerAndSecretExport } from './secret'
 export const DefaultPlatformInstance = 'RADAR-CNS'
 
 // *Default app version
-export const DefaultAppVersion = '1.0.0-alpha'
+export const DefaultAppVersion = '2.0.1-alpha'
 
 // *Default Android package name
 export const DefaultPackageName = 'org.phidatalab.radar_armt'
@@ -144,6 +144,9 @@ export const DefaultNotificationTtlMinutes: number = 10
 
 export const GIT_API_URI = 'https://api.github.com/repos'
 
+// *The Github content fetching mechanism, if this is done by a direct request to Github or a request through the app server. (REMOTE CONFIG KEY: `github_fetch_strategy`, VALUES: `default` (direct to Github) or `appserver`)
+export const DefaultGithubFetchStrategy = 'default'
+
 // *The Github repository where the protocols are located (REMOTE CONFIG KEY: `protocol_repo`)
 export const DefaultProtocolGithubRepo = 'RADAR-Base/RADAR-aRMT-protocols'
 
@@ -178,14 +181,11 @@ export const DefaultParticipantAttributeOrder = {
 
 // DEFAULT AUTH DATA
 
-// *The client id and secret for OAuth authorisation with the Management Portal
-const oauthParts = DefaultSourceProducerAndSecretExport.split(':')
-
 // * Default oAuth client id (REMOTE CONFIG KEY: `oauth_client_id`)
-export const DefaultOAuthClientId = oauthParts.shift()
+export const DefaultOAuthClientId = 'aRMT'
 
 // * Default oAuth client secret (REMOTE CONFIG KEY: `oauth_client_secret`)
-export const DefaultOAuthClientSecret = oauthParts.join(':')
+export const DefaultOAuthClientSecret = ''
 
 // *Default length of time to wait before refreshing tokens (REMOTE CONFIG KEY: `oauth_refresh_seconds`)
 export const DefaultTokenRefreshSeconds = 1800 // 30 minutes in s
@@ -207,7 +207,7 @@ export const DefaultKafkaRequestContentType =
 export const DefaultClientAcceptType =
   'application/vnd.kafka.v2+json, application/vnd.kafka+json; q=0.9, application/json; q=0.8'
 
-// DEFAULT AUDIO INPUT SETUP
+// DEFAULT QUESTIONNAIRE COMPONENT SETUP
 
 // *Default audio input/recording attempts allowed
 export const DefaultMaxAudioAttemptsAllowed = 5
@@ -217,6 +217,15 @@ export const DefaultAudioRecordOptions = {
   SampleRate: 16000,
   NumberOfChannels: 1
 }
+
+// *Default question/question input types where the questionnaire will automatically move to the next question upon answering the question.
+export const DefaultAutoNextQuestionnaireTypes = [
+  QuestionType.timed,
+  QuestionType.audio
+]
+
+// *Default question/question input types where the next button is enabled by default, allowing the question to be skippable.
+export const DefaultSkippableQuestionnaireTypes = [QuestionType.audio]
 
 // DEFAULT GENERAL SETUP
 // *Default notification, report, and language settings

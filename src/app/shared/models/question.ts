@@ -51,6 +51,7 @@ export class QuestionType {
   static text = 'text'
   static yesno = 'yesno'
   static launcher = 'launcher'
+  static descriptive = 'descriptive'
   static matrix_radio = 'matrix-radio'
 }
 

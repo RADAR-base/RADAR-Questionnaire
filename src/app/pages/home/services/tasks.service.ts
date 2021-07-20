@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { EventEmitter, Injectable } from '@angular/core'
 
 import {
   DefaultAppCreditsBody,
@@ -16,11 +16,18 @@ import { setDateTimeToMidnight } from '../../../shared/utilities/time'
 
 @Injectable()
 export class TasksService {
+  changeDetectionEmitter: EventEmitter<void> = new EventEmitter<void>()
+
   constructor(
     private schedule: ScheduleService,
     private questionnaire: QuestionnaireService,
     private remoteConfig: RemoteConfigService
-  ) {}
+  ) {
+    this.schedule.changeDetectionEmitter.subscribe(() => {
+      console.log('Changes detected to schedule..')
+      this.changeDetectionEmitter.emit()
+    })
+  }
 
   getOnDemandAssessmentIcon() {
     return this.remoteConfig

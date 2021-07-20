@@ -260,7 +260,7 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   sendEvent(type) {
-    this.usage.sendQuestionnaireEvent(type, this.task)
+    this.usage.sendQuestionnaireEvent(type, this.task.name, this.task.timestamp)
   }
 
   sendCompletionLog() {

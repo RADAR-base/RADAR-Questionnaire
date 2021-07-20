@@ -54,4 +54,16 @@ export class Utility {
     }
     return newO;
   }
+
+  mapToObject(map: Map<string, string>): Object {
+    if (!map) return
+    return Array.from(map).reduce(
+      (obj, [key, value]) => Object.assign(obj, { [key]: value }),
+      {}
+    )
+  }
+
+  base64ToUnicode(raw: string): string {
+    return decodeURIComponent(escape(atob(raw)))
+  }
 }

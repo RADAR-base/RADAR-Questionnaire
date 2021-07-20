@@ -4,6 +4,7 @@ export enum UsageEventType {
   QUESTIONNAIRE_STARTED = 'questionnaire_started',
   QUESTIONNAIRE_FINISHED = 'questionnaire_finished',
   QUESTIONNAIRE_CANCELLED = 'questionnaire_cancelled',
+  QUESTIONNAIRE_TRIGGERED = 'questionnaire_triggered',
   QR_SCANNED = 'qr_code_scanned',
   CLICK = 'click',
   RESUMED = 'resumed',

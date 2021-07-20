@@ -77,6 +77,8 @@
           [min]="question.range.min"
           [max]="question.range.max"
           [step]="question.range.step"
+          [labelLeft]="question.range.labelLeft"
+          [labelRight]="question.range.labelRight"
           (valueChange)="onValueChange($event)"
         >
         </slider-input>
@@ -126,6 +128,14 @@
           (valueChange)="onValueChange($event)"
         >
         </radio-input>
+
+        <descriptive-input
+          *ngSwitchCase="'descriptive'"
+          [text]="question.field_label"
+          (valueChange)="onValueChange($event)"
+          [currentlyShown]="currentlyShown"
+        >
+        </descriptive-input>
 
         <matrix-radio-input
           *ngSwitchCase="'matrix-radio'"

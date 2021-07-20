@@ -91,7 +91,7 @@ export class FirebaseAnalyticsService extends AnalyticsService {
         .map(([key, value]) => {
           return this.firebase.setUserProperty(
             this.crop(
-              keyPrefix ? keyPrefix + key : key,
+              this.formatUserPropertyKey(key, keyPrefix),
               24,
               `Firebase User Property name ${key} is too long, cropping`
             ),
@@ -105,6 +105,10 @@ export class FirebaseAnalyticsService extends AnalyticsService {
     ).then(() => this.remoteConfig.forceFetch())
   }
 
+  formatUserPropertyKey(key: string, keyPrefix: string) {
+    return (keyPrefix ? keyPrefix + key : key).replace(/[\W]+/g, '_')
+  }
+
   setUserId(userId: string): Promise<any> {
     return this.firebase.setUserId(userId)
   }
@@ -114,6 +118,8 @@ export class FirebaseAnalyticsService extends AnalyticsService {
   }
 
   crop(value: string, size: number, message?: string): string {
+    if (!value) return ''
+
     if (value.length <= size) {
       return value
     } else {

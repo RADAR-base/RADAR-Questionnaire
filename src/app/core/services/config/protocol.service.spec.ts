@@ -3,10 +3,14 @@ import { TestBed } from '@angular/core/testing'
 
 import {
   FirebaseAnalyticsServiceMock,
+  GithubClientMock,
   LogServiceMock,
   RemoteConfigServiceMock,
-  SubjectConfigServiceMock
+  SubjectConfigServiceMock,
+  UtilityMock
 } from '../../../shared/testing/mock-services'
+import { Utility } from '../../../shared/utilities/util'
+import { GithubClient } from '../misc/github-client.service'
 import { LogService } from '../misc/log.service'
 import { AnalyticsService } from '../usage/analytics.service'
 import { ProtocolService } from './protocol.service'
@@ -28,7 +32,9 @@ describe('ProtocolService', () => {
         {
           provide: AnalyticsService,
           useClass: FirebaseAnalyticsServiceMock
-        }
+        },
+        { provide: Utility, useClass: UtilityMock },
+        { provide: GithubClient, useClass: GithubClientMock }
       ]
     })
   )

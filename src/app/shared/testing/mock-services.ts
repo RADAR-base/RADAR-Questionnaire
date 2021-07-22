@@ -35,7 +35,11 @@ export class KafkaServiceMock {}
 export class LocalizationServiceMock {}
 export class FirebaseAnalyticsServiceMock {}
 export class UtilityMock {}
-export class FirebaseMock {}
+export class FirebaseMock {
+  setConfigSettings(settings: any) {
+    return
+  }
+}
 export class AppVersionMock {}
 export class SchemaServiceMock {}
 export class NotificationGeneratorServiceMock {}

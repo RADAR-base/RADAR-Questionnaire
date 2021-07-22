@@ -80,7 +80,7 @@ export class AppServerService {
   addProjectIfMissing(projectId): Promise<any> {
     return this.getProject(projectId).catch(e => {
       if (e.status == 404) return this.addProjectToServer(projectId)
-      else return
+      else throw e
     })
   }
 
@@ -137,7 +137,7 @@ export class AppServerService {
             enrolmentDate,
             fcmToken
           )
-        else return
+        else throw e
       })
   }
 

@@ -41,8 +41,14 @@ jobs:
         with:
           java-version: 1.8
 
-      - name: Install NDK
-        run: cp -R /usr/local/lib/android/sdk/ndk-bundle /usr/local/lib/android/sdk/ndk/21.4.7075529
+      - name: Setup Android Tools
+        uses: maxim-lobanov/setup-android-tools@v1
+        with:
+          packages: |
+            platforms;android-29
+            platforms;android-30
+            platforms;android-31
+            ndk;21.4.7075529
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2

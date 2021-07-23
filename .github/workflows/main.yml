@@ -50,6 +50,9 @@ jobs:
             platforms;android-31
             ndk;21.4.7075529
 
+      - name: Fix Android directories
+        run: export ANDROID_NDK_HOME=$ANDROID_HOME/ndk/21.4.7075529
+
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
 

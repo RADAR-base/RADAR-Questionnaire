@@ -18,7 +18,7 @@ jobs:
   # Build and test the code
   build:
     # The type of runner that the job will run on
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -46,15 +46,10 @@ jobs:
         with:
           packages: |
             platforms;android-29
-            platforms;android-30
-            platforms;android-31
             ndk;21.4.7075529
 
       - name: Fix Android directories
         run: export ANDROID_NDK_HOME=$ANDROID_HOME/ndk/21.4.7075529
-
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v2
 
       - name: Setup Node
         uses: actions/setup-node@v2

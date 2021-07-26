@@ -95,6 +95,9 @@ jobs:
           cordova prepare android && \
           yarn install
 
+      - name: Prepare Android app
+        run: ionic cordova build android
+
       - name: Build Android app
         uses: maierj/fastlane-action@v2.0.1
         with:

@@ -41,6 +41,9 @@ jobs:
         with:
           java-version: 1.8
 
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+
       - name: Setup Android Tools
         uses: maxim-lobanov/setup-android-tools@v1
         with:
@@ -50,7 +53,7 @@ jobs:
             ndk;21.4.7075529
 
       - name: Fix Android directories
-        run: mkdir -p .android && touch ~/.android/repositories.cfg
+        run: rm -R /usr/local/lib/android/sdk/build-tools/
 
       - name: Setup Node
         uses: actions/setup-node@v2

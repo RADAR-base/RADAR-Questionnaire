@@ -52,9 +52,6 @@ jobs:
       - name: Fix Android directories
         run: mkdir -p .android && touch ~/.android/repositories.cfg
 
-      - name: Fix Android issue
-        run: yes | sdkmanager "platforms;android-27"
-
       - name: Setup Node
         uses: actions/setup-node@v2
         with:

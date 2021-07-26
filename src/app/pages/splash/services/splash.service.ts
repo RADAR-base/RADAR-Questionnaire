@@ -22,10 +22,10 @@ export class SplashService {
   }
 
   loadConfig() {
-    return this.notificationService
-      .init()
+    return this.token
+      .refresh()
+      .then(() => this.notificationService.init())
       .then(() => this.notificationService.permissionCheck())
-      .then(() => this.token.refresh())
       .then(() => this.config.fetchConfigState())
   }
 

@@ -49,7 +49,7 @@ jobs:
             ndk;21.4.7075529
 
       - name: Fix Android directories
-        run: export ANDROID_NDK_HOME=$ANDROID_HOME/ndk/21.4.7075529
+        run: mkdir -p .android && touch ~/.android/repositories.cfg
 
       - name: Setup Node
         uses: actions/setup-node@v2

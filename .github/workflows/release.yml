@@ -45,6 +45,12 @@ jobs:
         with:
           java-version: 1.8
 
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Fix Android directories
+        run: rm -R /usr/local/lib/android/sdk/build-tools/31.0.0/
+
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
@@ -106,7 +112,7 @@ jobs:
         uses: maierj/fastlane-action@v2.0.1
         with:
           lane: 'android deploy'
-          options: '{ "keystore_path": ${KEYSTORE_PATH}, "keystore_password": ${KEYSTORE_PASS}, "keystore_alias": ${KEYSTORE_ALIAS}, "package_name": ${PACKAGE_NAME_ANDROID}, "track": ${PLAYSTORE_TRACK}, "json_key": ${PLAYSTORE_SERVICE_KEY} }'
+          options: '{ "keystore_path": "${KEYSTORE_PATH}", "keystore_password": "${KEYSTORE_PASS}", "keystore_alias": "${KEYSTORE_ALIAS}", "package_name": "${PACKAGE_NAME_ANDROID}", "track": "${PLAYSTORE_TRACK}", "json_key": "${PLAYSTORE_SERVICE_KEY}" }'
         env:
           KEYSTORE_PATH: ${{env.KEYSTORE_PATH}}
           KEYSTORE_PASS: ${{secrets.KEYSTORE_PASS}}

@@ -112,7 +112,7 @@ export abstract class FcmNotificationService extends NotificationService {
       : getSeconds({ minutes: this.ttlMinutes })
   }
 
-  unregisterFromNotificataions(): Promise<any> {
+  unregisterFromNotifications(): Promise<any> {
     // NOTE: This will delete the current device token and stop receiving notifications
     return this.firebase
       .setAutoInitEnabled(false)

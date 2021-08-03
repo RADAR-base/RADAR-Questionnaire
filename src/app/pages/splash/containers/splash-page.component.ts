@@ -28,8 +28,14 @@ export class SplashPageComponent {
     private platform: Platform
   ) {
     this.splashService
-      .evalEnrolment()
-      .then(valid => (valid ? this.onStart() : this.enrol()))
+      .isEnrolled()
+      .then(enrolled =>
+        enrolled
+          ? this.splashService
+              .evalEnrolment()
+              .then(valid => (valid ? this.onStart() : this.resetAndEnrol()))
+          : this.enrol()
+      )
   }
 
   onStart() {
@@ -97,9 +103,11 @@ export class SplashPageComponent {
     window.location.replace(url)
   }
 
+  resetAndEnrol() {
+    this.splashService.reset().then(() => this.enrol())
+  }
+
   enrol() {
-    this.splashService
-      .reset()
-      .then(() => this.navCtrl.setRoot(EnrolmentPageComponent))
+    this.navCtrl.setRoot(EnrolmentPageComponent)
   }
 }

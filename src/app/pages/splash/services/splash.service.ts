@@ -21,6 +21,10 @@ export class SplashService {
     return this.token.isValid().catch(() => false)
   }
 
+  isEnrolled() {
+    return this.token.getTokens().then(tokens => !!tokens)
+  }
+
   loadConfig() {
     return this.token
       .refresh()

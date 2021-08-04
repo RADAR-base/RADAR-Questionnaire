@@ -108,12 +108,7 @@ jobs:
           cordova prepare android && \
           yarn install
 
-      - name: Build Android app
-        uses: maierj/fastlane-action@v2.0.1
-        with:
-          lane: 'android build_debug'
-
-      - name: Deploy Android app to Play Store
+      - name: Build and Deploy Android app to Play Store
         uses: maierj/fastlane-action@v2.0.1
         with:
           lane: 'android deploy'

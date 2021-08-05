@@ -103,7 +103,7 @@ export class LocalNotificationService extends NotificationService {
     )
   }
 
-  unregisterFromNotificataions(): Promise<any> {
+  unregisterFromNotifications(): Promise<any> {
     return Promise.resolve('Method not available for notification type.')
   }
 }

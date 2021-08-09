@@ -583,10 +583,10 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/barcode-scanner@^5.27.0":
-  version "5.27.0"
-  resolved "https://registry.yarnpkg.com/@ionic-native/barcode-scanner/-/barcode-scanner-5.27.0.tgz#85f1c97d469b6eb2560628fb390babe33288b529"
-  integrity sha512-rBtZzQ7ed2bmf65sXzdzk7CFeCY1VKAJ6c6zZMlIYPJ13zKJ93U1qL9hsgSLQcUxhA86SJk8A4e7MurfKnPSFw==
+"@ionic-native/barcode-scanner@^5.35.0":
+  version "5.35.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/barcode-scanner/-/barcode-scanner-5.35.0.tgz#cd2ec3787e07730c96ec8f420d84e308356691d6"
+  integrity sha512-C42TYioxcoHfYSCK03+/gvtU/stHma/tkY15lubqOlaMEl9vkpx1/sOsisDe3R9Jc5bdzJHjEfYJpOZkftFTzA==
   dependencies:
     "@types/cordova" latest
 

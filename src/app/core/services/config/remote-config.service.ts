@@ -105,6 +105,7 @@ class FirebaseRemoteConfig implements RemoteConfig {
 @Injectable()
 export class FirebaseRemoteConfigService extends RemoteConfigService {
   private readonly configSubject: BehaviorSubject<RemoteConfig>
+  private FETCH_TIMEOUT_SECONDS = 20
 
   constructor(
     private firebase: FirebaseX,
@@ -114,7 +115,7 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
   ) {
     super(storage)
     this.configSubject = new BehaviorSubject(new EmptyRemoteConfig())
-    this.firebase.setConfigSettings({ fetchTimeout: 10 })
+    FirebasePlugin.setConfigSettings(this.FETCH_TIMEOUT_SECONDS, null)
   }
 
   forceFetch(): Promise<RemoteConfig> {

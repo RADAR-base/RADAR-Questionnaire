@@ -646,10 +646,10 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/keyboard@^5.26.0":
-  version "5.26.0"
-  resolved "https://registry.yarnpkg.com/@ionic-native/keyboard/-/keyboard-5.26.0.tgz#caa2c76ae2dba772261386dfe47209d6a9b90a94"
-  integrity sha512-Jk2WCr7Ssfzv+JVQhv3SduagjrSuUsx7UK9JbDlYfDo92XIO2MpGyNbbNSRdCMFUrS4BF39BATin+opfxdQqjw==
+"@ionic-native/keyboard@^5.36.0":
+  version "5.36.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/keyboard/-/keyboard-5.36.0.tgz#0f8c5316de80b70e2bd81ed7b460219a2cfdb837"
+  integrity sha512-cx4jrSD65WdbMAmOLG0/MndzY1DtlXWLgeni3U16lstw5VmmlV8oyv2R2ok/NI2xneXlRDXjzpExuUNc8FL43Q==
   dependencies:
     "@types/cordova" latest
 

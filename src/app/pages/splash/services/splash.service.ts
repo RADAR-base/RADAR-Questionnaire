@@ -9,6 +9,7 @@ import { UsageService } from '../../../core/services/usage/usage.service'
 
 @Injectable()
 export class SplashService {
+  INVALID_USER_ERROR = 'was not found in the database'
   constructor(
     private config: ConfigService,
     private token: TokenService,
@@ -18,7 +19,14 @@ export class SplashService {
   ) {}
 
   evalEnrolment() {
-    return this.token.isValid().catch(() => false)
+    return this.token
+      .refresh()
+      .catch(e => {
+        if (e.error.error_description.includes(this.INVALID_USER_ERROR))
+          return this.token.setTokens(null)
+        else return
+      })
+      .then(() => this.token.isValid().catch(() => false))
   }
 
   isEnrolled() {

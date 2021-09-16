@@ -28,7 +28,7 @@ export class SettingsPageComponent {
   notificationSettings = DefaultSettingsNotifications
   weeklyReport = DefaultSettingsWeeklyReport
   showLoading = false
-  daysFromEnrolment = 0
+  daysSinceEnrolment = 0
 
   RESET_OPTION_MESSAGES = {
     [ResetOption.ENROLMENT]: LocKeys.SETTINGS_RESET_ALERT_ENROLMENT_DESC,
@@ -62,11 +62,11 @@ export class SettingsPageComponent {
         v.then(val => (this.settings[k] = val))
       )
     ).then(() => {
-      this.daysFromEnrolment = this.getDaysFromEnrolment()
+      this.daysSinceEnrolment = this.getDaysSinceEnrolment()
     })
   }
 
-  getDaysFromEnrolment() {
+  getDaysSinceEnrolment() {
     const now = this.localization.moment(Date.now())
     const enrolment = this.localization.moment(this.settings.enrolmentDate)
     return now.diff(enrolment, 'days')

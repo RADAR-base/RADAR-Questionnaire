@@ -33,6 +33,12 @@
         {{ settings.enrolmentDate | amCalendar }}
       </span>
     </ion-item>
+    <ion-item no-lines>
+      {{ 'SETTINGS_DAYS_FROM_ENROL' | translate }}
+      <span item-right class="info-value">
+        {{ daysFromEnrolment }}
+      </span>
+    </ion-item>
   </ion-item-group>
 
   <ion-item-group>

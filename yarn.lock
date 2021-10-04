@@ -583,10 +583,10 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/barcode-scanner@^5.27.0":
-  version "5.27.0"
-  resolved "https://registry.yarnpkg.com/@ionic-native/barcode-scanner/-/barcode-scanner-5.27.0.tgz#85f1c97d469b6eb2560628fb390babe33288b529"
-  integrity sha512-rBtZzQ7ed2bmf65sXzdzk7CFeCY1VKAJ6c6zZMlIYPJ13zKJ93U1qL9hsgSLQcUxhA86SJk8A4e7MurfKnPSFw==
+"@ionic-native/barcode-scanner@^5.33.1":
+  version "5.33.1"
+  resolved "https://registry.yarnpkg.com/@ionic-native/barcode-scanner/-/barcode-scanner-5.33.1.tgz#bed200f5a96d3259ff8be3364386e0b4780061e6"
+  integrity sha512-+nIMspJ2W07gOhw7gTjMwQKrRcbAEJLKAdYGnXNJb3I6v2ps0dpdOsgipKmB+nK5/3abvrLx6+YRBarBy2dw4w==
   dependencies:
     "@types/cordova" latest
 
@@ -4137,10 +4137,10 @@ cordova-plugin-local-notification@^0.9.0-beta.3:
   version "3.0.0-dev"
   resolved "git+https://github.com/apache/cordova-plugin-network-information.git#c5e6656bb6054801eb0e7c041cec2d799c824580"
 
-cordova-plugin-splashscreen@^5.0.4:
-  version "5.0.4"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-splashscreen/-/cordova-plugin-splashscreen-5.0.4.tgz#1bb6fc2d0d5a55cb987e35af554a2693f80abc39"
-  integrity sha512-zmyhBrObNuwDH4KB4zuZrJ9IKC113EM6KJpqC0/2f3o9GRznPk1S4j9O9rosJT4EASg4X3hdssv9XkAH3D5ZYg==
+cordova-plugin-splashscreen@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-splashscreen/-/cordova-plugin-splashscreen-6.0.0.tgz#674718f87894cd75615da2b55905eb4cc719cf01"
+  integrity sha512-pm4ZtJKQY4bCGXVeIInbGrXilryTevYSKgfvoQJpW9UClOWKAxSsYf2/4G2u1vcn492svOSL42OSa2MhujBWEQ==
 
 cordova-plugin-statusbar@^2.4.3:
   version "2.4.3"

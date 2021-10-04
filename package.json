@@ -52,7 +52,7 @@
     "@ionic-native/android-permissions": "^5.26.0",
     "@ionic-native/app-version": "^5.28.0",
     "@ionic-native/background-mode": "^5.32.0",
-    "@ionic-native/barcode-scanner": "^5.27.0",
+    "@ionic-native/barcode-scanner": "^5.33.1",
     "@ionic-native/core": "^5.32.0",
     "@ionic-native/device": "^5.26.0",
     "@ionic-native/dialogs": "^5.26.0",
@@ -187,7 +187,7 @@
     "typescript": "~3.1.6",
     "watchify": "^3.11.1",
     "webpack": "^4.43.0",
-    "webpack-sources": "^1.4.3"
+    "webpack-sources": "^3.2.1"
   },
   "resolutions": {
     "xcode": "^2.0.0"

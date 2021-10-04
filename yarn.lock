@@ -3834,10 +3834,10 @@ continuable-cache@^0.3.1:
   resolved "https://registry.yarnpkg.com/continuable-cache/-/continuable-cache-0.3.1.tgz#bd727a7faed77e71ff3985ac93351a912733ad0f"
   integrity sha1-vXJ6f67XfnH/OYWskzUakSczrQ8=
 
-convert-source-map@^1.1.3, convert-source-map@^1.5.0, convert-source-map@^1.5.1, convert-source-map@^1.7.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/convert-source-map/-/convert-source-map-1.7.0.tgz#17a2cb882d7f77d3490585e2ce6c524424a3a442"
-  integrity sha512-4FJkXzKXEDB1snCFZlLP4gpC3JILicCpGbzG9f9G7tGqGCzETQ2hWPrcinA9oU4wtf2biUaEH5065UnMeR33oA==
+convert-source-map@^1.5.0, convert-source-map@^1.5.1, convert-source-map@^1.7.0, convert-source-map@^1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/convert-source-map/-/convert-source-map-1.8.0.tgz#f3373c32d21b4d780dd8004514684fb791ca4369"
+  integrity sha512-+OQdjP49zViI/6i7nIJpA8rAl4sV/JdPfU9nZs3VqOwGIgizICvuN2ru6fMd+4llL0tar18UYJXfZ/TWtmhUjA==
   dependencies:
     safe-buffer "~5.1.1"
 
@@ -8266,15 +8266,15 @@ jszip@3.4.0, jszip@^3.2.2:
     readable-stream "~2.3.6"
     set-immediate-shim "~1.0.1"
 
-karma-browserify@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/karma-browserify/-/karma-browserify-7.0.0.tgz#60f443f991ecfbbfb5737a9fd76e73b8b6eb9a57"
-  integrity sha512-SLgh1dmF2eZEj3glrmTD2CMJRGZwEiKA6k2hBr2+2JDC4JMU1dlsvBKpV66Lvi/tbj3H9qA+Vl/FdIcfPRrJpA==
+karma-browserify@^8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/karma-browserify/-/karma-browserify-8.1.0.tgz#a200b15e2d93863cc704efe730722a5078b7d45b"
+  integrity sha512-q5OWuCfdXMfyhkRrH8XP5LiixD4lx0uCmlf6yQmGeQNHLH4Hoofur3tBJtSEhOXmY0mOdBe8ek2UUxicjmGqFQ==
   dependencies:
-    convert-source-map "^1.1.3"
+    convert-source-map "^1.8.0"
     hat "^0.0.3"
     js-string-escape "^1.0.0"
-    lodash "^4.17.14"
+    lodash "^4.17.21"
     minimatch "^3.0.0"
     os-shim "^0.1.3"
 
@@ -8423,6 +8423,13 @@ kind-of@^3.0.2, kind-of@^3.0.3, kind-of@^3.2.0:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-3.2.2.tgz#31ea21a734bab9bbb0f32466d893aea51e4a3c64"
   integrity sha1-MeohpzS6ubuw8yRm2JOupR5KPGQ=
+  dependencies:
+    is-buffer "^1.1.5"
+
+kind-of@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-4.0.0.tgz#20813df3d712928b207378691a45066fae72dd57"
+  integrity sha1-IIE989cSkosgc3hpGkUGb65y3Vc=
   dependencies:
     is-buffer "^1.1.5"
 
@@ -8971,7 +8978,7 @@ lodash.values@^4.3.0:
   resolved "https://registry.yarnpkg.com/lodash.values/-/lodash.values-4.3.0.tgz#a3a6c2b0ebecc5c2cba1c17e6e620fe81b53d347"
   integrity sha1-o6bCsOvsxcLLocF+bmIP6BtT00c=
 
-lodash@^4.0.0, lodash@^4.1.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.12, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.4, lodash@^4.17.5, lodash@~4.17.10:
+lodash@^4.0.0, lodash@^4.1.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.12, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.21, lodash@^4.17.4, lodash@^4.17.5, lodash@~4.17.10:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==

@@ -576,10 +576,10 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/background-mode@^5.32.0":
-  version "5.32.1"
-  resolved "https://registry.yarnpkg.com/@ionic-native/background-mode/-/background-mode-5.32.1.tgz#10c5f60b31127add1baf9b1bb2aabfa82a9bbaf6"
-  integrity sha512-0dRW7JHIJDnmSQ2FFzNrophMkSPK4npbu6+TJNSJk3JkUY5e7qRc//lToraU/RK+eC2cclAnuZp1qQ9UWEJhRA==
+"@ionic-native/background-mode@^5.36.0":
+  version "5.36.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/background-mode/-/background-mode-5.36.0.tgz#9d67c13c4b5bffe408fc78d45782e2ef888cf24c"
+  integrity sha512-ODKQW5F0EgKkiw6LDlbZugcCjfqwVN2198S7JLzAaN7WW6HT74gRiSox1x4a92jrFQCaGWfehXAb688I8RUCng==
   dependencies:
     "@types/cordova" latest
 
@@ -8423,6 +8423,13 @@ kind-of@^3.0.2, kind-of@^3.0.3, kind-of@^3.2.0:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-3.2.2.tgz#31ea21a734bab9bbb0f32466d893aea51e4a3c64"
   integrity sha1-MeohpzS6ubuw8yRm2JOupR5KPGQ=
+  dependencies:
+    is-buffer "^1.1.5"
+
+kind-of@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-4.0.0.tgz#20813df3d712928b207378691a45066fae72dd57"
+  integrity sha1-IIE989cSkosgc3hpGkUGb65y3Vc=
   dependencies:
     is-buffer "^1.1.5"
 

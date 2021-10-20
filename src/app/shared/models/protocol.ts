@@ -13,6 +13,7 @@ export interface Protocol {
   clinicalProtocol?: ClinicalProtocol
   onDemandProtocol?
   completionWindow?: TimeInterval
+  referenceTimestamp?: string
 }
 
 export interface ProtocolMetaData {

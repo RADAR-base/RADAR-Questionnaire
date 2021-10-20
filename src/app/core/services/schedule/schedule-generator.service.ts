@@ -29,6 +29,7 @@ import { NotificationGeneratorService } from '../notifications/notification-gene
 @Injectable()
 export class ScheduleGeneratorService {
   SCHEDULE_YEAR_COVERAGE = DefaultScheduleYearCoverage
+  REFERENCE_TIMESTAMP_FORMAT = 'DD-MM-YYYY:hh:mm'
 
   constructor(
     private notificationService: NotificationGeneratorService,
@@ -87,18 +88,32 @@ export class ScheduleGeneratorService {
     return { repeatP, repeatQ }
   }
 
+  getReferenceTimestamp(protocol, refTimestamp) {
+    // NOTE: Get initial timestamp to start schedule generation from
+    // If ref timestamp is specified in the protocol, gets refTimestamp (in the timezone of device)
+    return protocol.referenceTimestamp
+      ? setDateTimeToMidnight(
+          this.localization
+            .moment(
+              protocol.referenceTimestamp,
+              this.REFERENCE_TIMESTAMP_FORMAT
+            )
+            .toDate()
+        ).getTime()
+      : refTimestamp
+  }
+
   buildTasksForSingleAssessment(
     assessment: Assessment,
     indexOffset: number,
     refTimestamp,
     type: AssessmentType
   ): Task[] {
+    const protocol = assessment.protocol
     const scheduleYearCoverage = this.getScheduleYearCoverage()
-    const { repeatP, repeatQ } = this.getRepeatProtocol(
-      assessment.protocol,
-      type
-    )
-    let iterTime = refTimestamp
+    const { repeatP, repeatQ } = this.getRepeatProtocol(protocol, type)
+
+    let iterTime = this.getReferenceTimestamp(protocol, refTimestamp)
     const endTime = iterTime + getMilliseconds({ years: scheduleYearCoverage })
     const completionWindow = ScheduleGeneratorService.computeCompletionWindow(
       assessment

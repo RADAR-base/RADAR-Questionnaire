@@ -45,6 +45,8 @@ export class QuestionComponent implements OnInit, OnChanges {
   keyboardInputOffset = 0
   inputHeight = 0
   isMatrix = false
+  isAutoHeight = false
+  showScrollButton = false
 
   NON_SCROLLABLE_SET: Set<QuestionType> = new Set([
     QuestionType.timed,
@@ -58,6 +60,13 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.descriptive
   ])
   MATRIX_INPUT_SET: Set<QuestionType> = new Set([QuestionType.matrix_radio])
+
+  // Input set where height is set to auto
+  AUTO_HEIGHT_INPUT_SET: Set<QuestionType> = new Set([
+    QuestionType.radio,
+    QuestionType.yesno,
+    QuestionType.slider
+  ])
 
   constructor(
     private vibration: Vibration,
@@ -74,6 +83,8 @@ export class QuestionComponent implements OnInit, OnChanges {
       this.question.field_type
     )
     this.isMatrix = this.MATRIX_INPUT_SET.has(this.question.field_type)
+    this.isAutoHeight =
+      this.isMatrix || this.AUTO_HEIGHT_INPUT_SET.has(this.question.field_type)
     setTimeout(() => {
       this.isLoading = false
       this.keyboardInputOffset = Math.max(
@@ -81,6 +92,9 @@ export class QuestionComponent implements OnInit, OnChanges {
         0
       )
     }, 800)
+    setTimeout(() => {
+      this.showScrollButton = this.isScrollbarVisible()
+    }, 900)
   }
 
   ngOnChanges() {
@@ -154,5 +168,31 @@ export class QuestionComponent implements OnInit, OnChanges {
       this.content.nativeElement.style = ''
       this.content.nativeElement.scrollTop = 0
     }
+  }
+
+  isScrollbarVisible() {
+    return (
+      this.input.nativeElement.scrollHeight >
+      this.input.nativeElement.clientHeight
+    )
+  }
+
+  onScroll(event) {
+    if (
+      event &&
+      event.target.scrollTop >=
+        (event.target.scrollHeight - event.target.clientHeight) * 0.1
+    ) {
+      this.showScrollButton = false
+    } else this.showScrollButton = true
+  }
+
+  scrollDown() {
+    const height = this.input.nativeElement.clientHeight
+    this.input.nativeElement.scrollBy({
+      top: height,
+      left: 0,
+      behavior: 'smooth'
+    })
   }
 }

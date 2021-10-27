@@ -22,10 +22,15 @@
       </h2>
     </div>
   </div>
-  <div #input class="input" [class.input-scroll]="isScrollable">
+  <div
+    #input
+    class="input"
+    [class.input-scroll]="isScrollable"
+    (scroll)="onScroll($event)"
+  >
     <div
       [style.height.px]="
-        isMatrix
+        isAutoHeight
           ? 'auto'
           : input.offsetParent.offsetHeight -
             input.previousSibling.offsetHeight -
@@ -147,5 +152,8 @@
         </matrix-radio-input>
       </ng-container>
     </div>
+  </div>
+  <div class="arrow-icon" *ngIf="showScrollButton" (tap)="scrollDown()">
+    <ion-icon name="ios-arrow-down"></ion-icon>
   </div>
 </div>

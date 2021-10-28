@@ -88,10 +88,10 @@ jobs:
       - name: Add Android platform
         run: ionic cordova platform add android && rm package-lock.json
 
-      - name: Prepare Android app
-        run: |
-          cordova prepare android && \
-          yarn install
+      # - name: Prepare Android app
+      #   run: |
+      #     cordova prepare android && \
+      #     yarn install
 
       - name: Build Android app
         uses: maierj/fastlane-action@v2.0.1

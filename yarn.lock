@@ -639,10 +639,10 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/insomnia@^5.32.1":
-  version "5.32.1"
-  resolved "https://registry.yarnpkg.com/@ionic-native/insomnia/-/insomnia-5.32.1.tgz#1080be4afc5036a188ef6ce5c70e3c1c53793e7c"
-  integrity sha512-bKGjjgyKFKxQtHxUqf2qJGVBjXI39HM6DwxdjuyKGHQRxdf4N1W9MAGiojvJ/qGY9r12qUmhXjiGyo0UycDnLA==
+"@ionic-native/insomnia@^5.36.0":
+  version "5.36.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/insomnia/-/insomnia-5.36.0.tgz#40f5e163a4624bf74554d6e8502a99f3feefc772"
+  integrity sha512-PATf1poxh+yjx5WjhxhEY/CsdlM0cFm3C86NMlwt6187QVRkNRue3TkHhU138gfkkFYXNxJfLcDCmfwvMLNQRg==
   dependencies:
     "@types/cordova" latest
 
@@ -8423,6 +8423,13 @@ kind-of@^3.0.2, kind-of@^3.0.3, kind-of@^3.2.0:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-3.2.2.tgz#31ea21a734bab9bbb0f32466d893aea51e4a3c64"
   integrity sha1-MeohpzS6ubuw8yRm2JOupR5KPGQ=
+  dependencies:
+    is-buffer "^1.1.5"
+
+kind-of@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-4.0.0.tgz#20813df3d712928b207378691a45066fae72dd57"
+  integrity sha1-IIE989cSkosgc3hpGkUGb65y3Vc=
   dependencies:
     is-buffer "^1.1.5"
 

@@ -71,7 +71,7 @@
     "@ionic/storage": "^2.2.0",
     "angular-svg-round-progressbar": "^3.0.1",
     "autoprefixer": "^9.8.6",
-    "avsc": "^5.5.3",
+    "avsc": "^5.7.3",
     "base64-js": "^1.5.1",
     "browserify": "^16.3.0",
     "com-darryncampbell-cordova-plugin-intent": "^2.0.0",

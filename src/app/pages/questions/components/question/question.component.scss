@@ -1,4 +1,22 @@
 question {
+  @keyframes bounce {
+    0% {
+      transform: translateY(0);
+    }
+
+    30% {
+      transform: translateY(-20px);
+    }
+
+    50% {
+      transform: translateY(0);
+    }
+
+    100% {
+      transform: translateY(0);
+    }
+  }
+
   text-align: initial;
 
   .content {
@@ -54,12 +72,20 @@ question {
     overflow-y: auto !important;
     mask-image: linear-gradient(to top, transparent 3%, black 7%),
       linear-gradient(to bottom, transparent 0%, black 7%);
-    mask-size: 100% 50%, 100% 51%;
+    mask-size: 100% 25%, 100% 80%;
     mask-position: bottom, top;
     mask-repeat: no-repeat, no-repeat;
   }
 
   .spinner-container {
     text-align: center;
+  }
+
+  .arrow-icon {
+    position: absolute;
+    bottom: 0;
+    left: 45%;
+    font-size: 40px;
+    animation: bounce 1s;
   }
 }

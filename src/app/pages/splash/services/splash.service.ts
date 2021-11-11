@@ -23,7 +23,10 @@ export class SplashService {
       .refresh()
       .catch(e => {
         if (e.status == 401) {
-          if (e.error.error_description.includes(this.INVALID_USER_ERROR))
+          if (
+            e.error.error_description &&
+            e.error.error_description.includes(this.INVALID_USER_ERROR)
+          )
             return this.token.setTokens(null)
         } else return
       })

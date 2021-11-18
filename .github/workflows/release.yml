@@ -94,6 +94,9 @@ jobs:
       - name: Install Yarn
         run: npm i -g yarn
 
+      - name: Install cordova-res
+        run: npm i -g cordova-res
+
       - name: Install app dependencies
         run: yarn install
 
@@ -104,9 +107,7 @@ jobs:
         run: ionic cordova platform add android && rm package-lock.json
 
       - name: Prepare Android app
-        run: |
-          cordova prepare android && \
-          yarn install
+        run: yarn install
 
       - name: Build and Deploy Android app to Play Store
         uses: maierj/fastlane-action@v2.0.1

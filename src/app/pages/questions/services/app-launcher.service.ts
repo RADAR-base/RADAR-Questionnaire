@@ -1,20 +1,19 @@
 import { Injectable } from '@angular/core'
+import { AppLauncher, AppLauncherOptions } from '@ionic-native/app-launcher/ngx'
+import { Insomnia } from '@ionic-native/insomnia/ngx'
+import { Platform } from 'ionic-angular'
 
+import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
-import {ExternalApp, Question} from '../../../shared/models/question'
-import {AppLauncher, AppLauncherOptions} from "@ionic-native/app-launcher/ngx";
-import {LocKeys} from "../../../shared/enums/localisations";
-import {Platform} from "ionic-angular";
-import {QuestionsService} from "./questions.service";
-import {UsageService} from "../../../core/services/usage/usage.service";
-import {Insomnia} from "@ionic-native/insomnia/ngx";
-import {AlertService} from "../../../core/services/misc/alert.service";
+import { LogService } from '../../../core/services/misc/log.service'
+import { UsageService } from '../../../core/services/usage/usage.service'
+import { LocKeys } from '../../../shared/enums/localisations'
+import { ExternalApp, Question } from '../../../shared/models/question'
 import { Task } from '../../../shared/models/task'
-import {LogService} from "../../../core/services/misc/log.service";
+import { QuestionsService } from './questions.service'
 
 @Injectable()
 export class AppLauncherService {
-
   constructor(
     private questionsService: QuestionsService,
     private usage: UsageService,
@@ -24,62 +23,67 @@ export class AppLauncherService {
     private appLauncher: AppLauncher,
     private alertService: AlertService,
     private logger: LogService
-) {}
+  ) {}
 
-  removeLaunchAppFromQuestions(questions: Question[]): Question[]{
+  removeLaunchAppFromQuestions(questions: Question[]): Question[] {
     return questions.filter(q => q.field_type != 'launcher')
   }
 
-  getLaunchApp(questions: Question[]): ExternalApp{
+  getLaunchApp(questions: Question[]): ExternalApp {
     const launchApps = questions.filter(q => q.field_type == 'launcher')
-    return launchApps.length> 0 ? launchApps[0] : null
+    return launchApps.length > 0 ? launchApps[0] : null
   }
 
   isExternalAppUriValidForThePlatform(externalApp: ExternalApp): boolean {
-    if(!externalApp){
+    if (!externalApp) {
       return false
     }
-    if(this.platform.is('ios')){
-      if(!externalApp.external_app_ios_uri){
+    if (this.platform.is('ios')) {
+      if (!externalApp.external_app_ios_uri) {
         return false
       }
-    }
-    else if(this.platform.is('android')){
-      if(!externalApp.external_app_android_uri) {
+    } else if (this.platform.is('android')) {
+      if (!externalApp.external_app_android_uri) {
         return false
       }
-    }
-    else{
+    } else {
       return false
     }
     return true
   }
 
   isExternalAppCanLaunch(externalApp: Question, task: Task) {
-    if(!this.isExternalAppUriValidForThePlatform(externalApp)){
+    if (!this.isExternalAppUriValidForThePlatform(externalApp)) {
       return Promise.reject()
     }
 
-    const options: AppLauncherOptions = this.getAppLauncherOptions(externalApp, task)
+    const options: AppLauncherOptions = this.getAppLauncherOptions(
+      externalApp,
+      task
+    )
 
-    return this.appLauncher.canLaunch(options)
+    return this.appLauncher
+      .canLaunch(options)
       .then((canLaunch: boolean) => {
-        return canLaunch;
+        return canLaunch
       })
       .catch(err => {
-        this.logger.error("External App is not installed or doesn't support deeplink.", err)
+        this.logger.error(
+          "External App is not installed or doesn't support deeplink.",
+          err
+        )
         return false
       })
   }
 
-  getAppLauncherOptions(externalApp: ExternalApp, task: Task){
+  getAppLauncherOptions(externalApp: ExternalApp, task: Task) {
     const options: AppLauncherOptions = {}
 
-    if(!externalApp) {
+    if (!externalApp) {
       return options
     }
 
-    if(this.platform.is('ios')) {
+    if (this.platform.is('ios')) {
       options.uri = externalApp.external_app_ios_uri
     } else {
       options.uri = externalApp.external_app_android_uri
@@ -97,31 +101,42 @@ export class AppLauncherService {
   }
 
   launchApp(externalApp: Question, task: Task) {
-    if(!externalApp) return
+    if (!externalApp) return
 
-    this.appLauncher.launch(this.getAppLauncherOptions(externalApp, task)).then(()=>{
-      console.log('App launched')
-    }, (err)=>{
-      console.log('Error in launching app', err)
-      this.showAlertOnAppLaunchError(externalApp)
-    })
+    this.appLauncher.launch(this.getAppLauncherOptions(externalApp, task)).then(
+      () => {
+        console.log('App launched')
+      },
+      err => {
+        console.log('Error in launching app', err)
+        this.showAlertOnAppLaunchError(externalApp)
+      }
+    )
   }
 
-  showAlertOnAppLaunchError(externalApp: ExternalApp){
-    if(!externalApp) return
+  showAlertOnAppLaunchError(externalApp: ExternalApp) {
+    if (!externalApp) return
 
-    this.alertService.showAlert({
-      title: this.localization.translateKey(LocKeys.EXTERNAL_APP_FAILURE_ON_LAUNCH_TITLE),
-      message: (externalApp.external_app_name ? externalApp.external_app_name : 'App')
-        + ' ' +
-        this.localization.translateKey(LocKeys.EXTERNAL_APP_FAILURE_ON_LAUNCH_DESC),
-      buttons: [
-        {
-          text: this.localization.translateKey(LocKeys.BTN_DISMISS),
-          handler: () => {
+    this.alertService
+      .showAlert({
+        title: this.localization.translateKey(
+          LocKeys.EXTERNAL_APP_FAILURE_ON_LAUNCH_TITLE
+        ),
+        message:
+          (externalApp.external_app_name
+            ? externalApp.external_app_name
+            : 'App') +
+          ' ' +
+          this.localization.translateKey(
+            LocKeys.EXTERNAL_APP_FAILURE_ON_LAUNCH_DESC
+          ),
+        buttons: [
+          {
+            text: this.localization.translateKey(LocKeys.BTN_DISMISS),
+            handler: () => {}
           }
-        }
-      ]
-    } ).then( _ => {} )
+        ]
+      })
+      .then(_ => {})
   }
 }

@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { JWT_OPTIONS, JwtModule } from '@auth0/angular-jwt'
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx'
+import { AppLauncher } from '@ionic-native/app-launcher/ngx'
 import { AppVersion } from '@ionic-native/app-version/ngx'
 import { BackgroundMode } from '@ionic-native/background-mode/ngx'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx'
@@ -33,7 +34,6 @@ import { PagesModule } from './pages/pages.module'
 import { AndroidPermissionUtility } from './shared/utilities/android-permission'
 import { jwtOptionsFactory } from './shared/utilities/jwtOptionsFactory'
 import { Utility } from './shared/utilities/util'
-import {AppLauncher} from "@ionic-native/app-launcher/ngx";
 
 @NgModule({
   imports: [
@@ -45,7 +45,7 @@ import {AppLauncher} from "@ionic-native/app-launcher/ngx";
       mode: 'md',
       activator: 'none',
       scrollAssist: false,
-      autoFocusAssist: false,
+      autoFocusAssist: false
     }),
     IonicStorageModule.forRoot({
       name: '__appdb',
@@ -84,7 +84,7 @@ import {AppLauncher} from "@ionic-native/app-launcher/ngx";
     LocalNotifications,
     LogService,
     AppLauncher,
-    { provide: RemoteConfigService, useClass: FirebaseRemoteConfigService },
+    { provide: RemoteConfigService, useClass: FirebaseRemoteConfigService }
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

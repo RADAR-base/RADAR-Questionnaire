@@ -11,11 +11,11 @@ import {
   AssessmentType,
   ShowIntroductionType
 } from '../../../shared/models/assessment'
-import {ExternalApp, Question} from '../../../shared/models/question'
+import { ExternalApp, Question } from '../../../shared/models/question'
 import { Task } from '../../../shared/models/task'
 import { HomePageComponent } from '../../home/containers/home-page.component'
+import { AppLauncherService } from '../services/app-launcher.service'
 import { QuestionsService } from '../services/questions.service'
-import {AppLauncherService} from "../services/app-launcher.service";
 
 @Component({
   selector: 'page-questions',
@@ -65,7 +65,7 @@ export class QuestionsPageComponent implements OnInit {
     private platform: Platform,
     private insomnia: Insomnia,
     private localization: LocalizationService,
-    private appLauncher: AppLauncherService,
+    private appLauncher: AppLauncherService
   ) {
     this.platform.registerBackButtonAction(() => {
       this.sendCompletionLog()
@@ -104,7 +104,9 @@ export class QuestionsPageComponent implements OnInit {
       res.assessment.showIntroduction
     )
 
-    this.questions = this.appLauncher.removeLaunchAppFromQuestions(res.questions)
+    this.questions = this.appLauncher.removeLaunchAppFromQuestions(
+      res.questions
+    )
     this.externalApp = this.appLauncher.getLaunchApp(res.questions)
     this.groupedQuestions = this.groupQuestionsByMatrixGroup(this.questions)
     this.endText =
@@ -155,7 +157,7 @@ export class QuestionsPageComponent implements OnInit {
       .handleClinicalFollowUp(this.assessment, completedInClinic)
       .then(() => {
         this.updateDoneButton(false)
-        if(this.externalAppCanLaunch) {
+        if (this.externalAppCanLaunch) {
           this.appLauncher.launchApp(this.externalApp, this.task)
         }
         return this.navCtrl.setRoot(HomePageComponent)
@@ -280,8 +282,12 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   private checkIfQuestionnaireHasAppLaunch() {
-    if(this.externalApp && this.appLauncher.isExternalAppUriValidForThePlatform(this.externalApp)){
-      this.appLauncher.isExternalAppCanLaunch(this.externalApp, this.task)
+    if (
+      this.externalApp &&
+      this.appLauncher.isExternalAppUriValidForThePlatform(this.externalApp)
+    ) {
+      this.appLauncher
+        .isExternalAppCanLaunch(this.externalApp, this.task)
         .then(canLaunch => {
           this.showFinishAndLaunchScreen = true
           this.externalAppCanLaunch = canLaunch
@@ -292,5 +298,3 @@ export class QuestionsPageComponent implements OnInit {
     }
   }
 }
-
-

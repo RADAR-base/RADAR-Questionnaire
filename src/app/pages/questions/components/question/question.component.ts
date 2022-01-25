@@ -14,7 +14,7 @@ import * as smoothscroll from 'smoothscroll-polyfill'
 
 import { Answer } from '../../../../shared/models/answer'
 import { Question, QuestionType } from '../../../../shared/models/question'
-import {Task} from "../../../../shared/models/task";
+import { Task } from '../../../../shared/models/task'
 
 @Component({
   selector: 'question',

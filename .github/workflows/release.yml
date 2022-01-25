@@ -45,6 +45,12 @@ jobs:
         with:
           java-version: 1.8
 
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Fix Android directories
+        run: rm -R /usr/local/lib/android/sdk/build-tools/31.0.0/
+
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
@@ -88,6 +94,9 @@ jobs:
       - name: Install Yarn
         run: npm i -g yarn
 
+      - name: Install cordova-res
+        run: npm i -g cordova-res
+
       - name: Install app dependencies
         run: yarn install
 
@@ -97,16 +106,14 @@ jobs:
       - name: Add Android platform
         run: ionic cordova platform add android && rm package-lock.json
 
-      - name: Build Android app
-        run: |
-          cordova prepare android && \
-          yarn install && yarn add rxjs
+      - name: Prepare Android app
+        run: yarn install
 
-      - name: Deploy Android app to Play Store
+      - name: Build and Deploy Android app to Play Store
         uses: maierj/fastlane-action@v2.0.1
         with:
           lane: 'android deploy'
-          options: '{ "keystore_path": ${KEYSTORE_PATH}, "keystore_password": ${KEYSTORE_PASS}, "keystore_alias": ${KEYSTORE_ALIAS}, "package_name": ${PACKAGE_NAME_ANDROID}, "track": ${PLAYSTORE_TRACK}, "json_key": ${PLAYSTORE_SERVICE_KEY} }'
+          options: '{ "keystore_path": "${KEYSTORE_PATH}", "keystore_password": "${KEYSTORE_PASS}", "keystore_alias": "${KEYSTORE_ALIAS}", "package_name": "${PACKAGE_NAME_ANDROID}", "track": "${PLAYSTORE_TRACK}", "json_key": "${PLAYSTORE_SERVICE_KEY}" }'
         env:
           KEYSTORE_PATH: ${{env.KEYSTORE_PATH}}
           KEYSTORE_PASS: ${{secrets.KEYSTORE_PASS}}

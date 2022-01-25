@@ -133,6 +133,7 @@ export class QuestionnaireService {
 
   updateAssessment(type: AssessmentType, assessment: Assessment) {
     return this.getAssessments(type).then(assessments => {
+      if (!assessments) assessments = []
       const index = assessments.findIndex(a => a.name == assessment.name)
       if (index != -1) {
         assessments[index] = this.util.deepCopy(assessment)
@@ -159,6 +160,7 @@ export class QuestionnaireService {
 
   addToAssessments(type, assessment) {
     return this.getAssessments(type).then(assessments => {
+      if (!assessments) assessments = []
       const index = assessments.findIndex(a => a.name == assessment.name)
       if (index > -1) assessments[index] = assessment
       else assessments.push(assessment)

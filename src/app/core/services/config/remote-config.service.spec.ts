@@ -43,9 +43,9 @@ describe('FirebaseRemoteConfig', () => {
     TestBed.configureTestingModule({
       providers: [
         FirebaseRemoteConfigService,
+        Platform,
         { provide: StorageService, useClass: StorageServiceMock },
         { provide: LogService, useClass: LogServiceMock },
-        { provide: Platform, useClass: PlatformMock },
         { provide: FirebaseX, useClass: FirebaseMock }
       ]
     })
@@ -53,6 +53,8 @@ describe('FirebaseRemoteConfig', () => {
 
   beforeEach(() => {
     service = TestBed.get(FirebaseRemoteConfigService)
+    const platform = TestBed.get(Platform)
+    spyOn(platform, 'ready').and.callFake(() => Promise.resolve(''))
   })
 
   it('should create', () => {

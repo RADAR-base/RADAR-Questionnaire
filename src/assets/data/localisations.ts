@@ -302,6 +302,16 @@ export const Localisations = {
     pl: 'Data rejestracji',
     hb: 'תאריך הרשמה'
   },
+  SETTINGS_DAYS_SINCE_ENROL: {
+    da: 'Dage siden registrering',
+    de: 'Tage seit der Registrierung',
+    en: 'Days Since Enrolment',
+    es: 'Días desde el registro',
+    it: 'Giorni dalla registrazione',
+    nl: 'Dagen sinds registratie',
+    pl: 'Dni od rejestracji',
+    hb: 'ימים מרגע ההרשמה'
+  },
   SETTINGS_LANGUAGE: {
     da: 'Sprog',
     de: 'Sprache',

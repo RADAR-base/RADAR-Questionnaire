@@ -3,12 +3,14 @@ import { NgModule } from '@angular/core'
 import { IonicModule } from 'ionic-angular'
 
 import { PipesModule } from '../../shared/pipes/pipes.module'
+import { FinishAndLaunchComponent } from './components/finish-and-launch/finish-and-launch.component'
 import { FinishComponent } from './components/finish/finish.component'
 import { IntroductionComponent } from './components/introduction/introduction.component'
 import { QuestionModule } from './components/question/question.module'
 import { ToolbarComponent } from './components/toolbar/toolbar.component'
 import { QuestionsPageComponent } from './containers/questions-page.component'
 import { AnswerService } from './services/answer.service'
+import { AppLauncherService } from './services/app-launcher.service'
 import { AudioRecordService } from './services/audio-record.service'
 import { FinishTaskService } from './services/finish-task.service'
 import { QuestionsService } from './services/questions.service'
@@ -25,6 +27,7 @@ import { TimestampService } from './services/timestamp.service'
     IntroductionComponent,
     QuestionsPageComponent,
     FinishComponent,
+    FinishAndLaunchComponent,
     ToolbarComponent
   ],
   providers: [
@@ -32,7 +35,8 @@ import { TimestampService } from './services/timestamp.service'
     AudioRecordService,
     TimestampService,
     QuestionsService,
-    FinishTaskService
+    FinishTaskService,
+    AppLauncherService
   ]
 })
 export class QuestionsModule {}

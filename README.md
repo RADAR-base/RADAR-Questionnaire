@@ -170,14 +170,15 @@ Further details on the events that are already logged, default events, and defau
 
 ## Other Config Options
 
-Copy `src/assets/data/secret.ts.template` to `src/assets/data/secret.ts` and add the following configuration -
+You can change the default config locally in `src/assets/data/defaultConfig.ts`. Some of these can also be modified in Firebase remote config.
+
+The main configs you may want to modify are:
+
+The client secret for OAuth authorisation with the Management Portal (empty by default).
 
 ```ts
-// The client secret for OAuth authorisation with the Management Portal
-export const DefaultSourceProducerAndSecretExport = 'aRMT:<aRMT-secret>'
+export const DefaultOAuthClientSecret = ''
 ```
-
-In `src/assets/data/defaultConfig.ts` the following settings can be changed:
 
 The Default endpoint of where the RADAR-base platform is hosted.
 
@@ -185,7 +186,7 @@ The Default endpoint of where the RADAR-base platform is hosted.
 export const DefaultEndPoint = 'https://your-hosted-radar-platform-base-url/'
 ```
 
-Also change the Default Github source details where the questionnaire scheduling protocols and questionnaire schemas are hosted.
+You can also change the Default Github source details where the questionnaire scheduling protocols and questionnaire schemas are hosted.
 
 ```ts
 // The Github repository where the protocols are located

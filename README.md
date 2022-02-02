@@ -138,6 +138,7 @@ Certain values can be overriden using Firebase Remote Config. Specifically, the 
 | `schedule_year_coverage`        | Schedule coverage in years (length of schedule to generate tasks until)                                                                                                                                   | `3`                                                                                                              |
 | `notification_messaging_type`   | Notifications type (either 'FCM_XMPP', 'FCM_REST' or 'LOCAL' notifications)                                                                                                                               | `FCM_XMPP`                                                                                                       |
 | `app_server_url`                | Default app server url.                                                                                                                                                                                   | `{DefaultEndPoint + '/appserver'}`                                                                               |
+| `github_fetch_strategy`         | Default Github fetch strategy for Github requests (default or appserver).                                                                                                                                 | `default`                                                                                                        |
 | `app_credits_title`             | Title of the popup box that appears when you tap on the app logo on the left hand side of the homepage.                                                                                                   | `Credits`                                                                                                        |
 | `app_credits_body`              | Body of the popup box that appears when you tap on the app logo on the left hand side of the homepage.                                                                                                    | `Made with &hearts; for you by the RADAR-Base community.`                                                        |
 | `auto_next_questionnaire_types` | String list of question/question input types where the questionnaire will automatically move to the next question upon answering the question. It is recommended to always include timed and audio types. | `timed,audio`                                                                                                    |
@@ -180,13 +181,23 @@ The client secret for OAuth authorisation with the Management Portal (empty by d
 export const DefaultOAuthClientSecret = ''
 ```
 
-The Default endpoint of where the RADAR-base platform is hosted.
+The default endpoint of where the RADAR-base platform is hosted.
 
 ```ts
 export const DefaultEndPoint = 'https://your-hosted-radar-platform-base-url/'
 ```
 
-You can also change the Default Github source details where the questionnaire scheduling protocols and questionnaire schemas are hosted.
+The default appserver configs.
+
+```ts
+// The notification type (either 'FCM_XMPP', 'FCM_REST' or 'LOCAL' notifications)
+export const DefaultNotificationType: string = 'FCM_XMPP'
+
+// App server URL
+export const DefaultAppServerURL = DefaultEndPoint + '/appserver'
+```
+
+You can also change the default Github source details where the questionnaire scheduling protocols and questionnaire schemas are hosted.
 
 ```ts
 // The Github repository where the protocols are located
@@ -200,6 +211,9 @@ export const DefaultSchemaGithubRepo = 'RADAR-Base/RADAR-Schemas'
 
 // The name of the branch in the schema repository
 export const DefaultSchemaBranch = 'master'
+
+// The Github content fetching mechanism, if this is done by a direct request to Github or a request through the app server. (REMOTE CONFIG KEY: `github_fetch_strategy`, VALUES: `default` (direct to Github) or `appserver`)
+export const DefaultGithubFetchStrategy = 'default'
 ```
 
 ## Adding Language Support

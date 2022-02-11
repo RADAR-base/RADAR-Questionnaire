@@ -71,6 +71,11 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.slider
   ])
 
+  SCROLLBAR_VISIBLE_SET: Set<QuestionType> = new Set([
+    QuestionType.radio,
+    QuestionType.checkbox
+  ])
+
   constructor(
     private vibration: Vibration,
     private dialogs: Dialogs,
@@ -174,6 +179,7 @@ export class QuestionComponent implements OnInit, OnChanges {
   }
 
   isScrollbarVisible() {
+    if (!this.SCROLLBAR_VISIBLE_SET.has(this.question.field_type)) return false
     return (
       this.input.nativeElement.scrollHeight >
       this.input.nativeElement.clientHeight

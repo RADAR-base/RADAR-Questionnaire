@@ -1497,13 +1497,13 @@ export const Localisations = {
     hb: 'הזן טקסט'
   },
   EXTERNAL_APP_LAUNCH_DESC: {
-    da: 'Afslut spørgeskemaet og start.',
-    de: 'Beenden Sie den Fragebogen und starten Sie.',
-    en: 'Finish the questionnaire and launch.',
-    es: 'Terminar el cuestionario y lanzar.',
-    it: 'Completa il questionario e avvia.',
-    nl: 'Voltooi de vragenlijst en start.',
-    pl: 'Wypełnij ankietę i uruchom.',
+    da: 'Afslut spørgeskemaet og start',
+    de: 'Beenden Sie den Fragebogen und starten Sie',
+    en: 'Finish the questionnaire and launch',
+    es: 'Terminar el cuestionario y lanzar',
+    it: 'Completa il questionario e avvia',
+    nl: 'Voltooi de vragenlijst en start',
+    pl: 'Wypełnij ankietę i uruchom',
     hb: 'סיים את השאלון והפעל'
   },
   EXTERNAL_APP_LAUNCH_BUTTON: {

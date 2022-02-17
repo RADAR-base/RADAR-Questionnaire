@@ -256,7 +256,8 @@ export class ConfigService {
 
   cancelNotifications() {
     this.sendConfigChangeEvent(NotificationEventType.CANCELLED)
-    return this.notifications.publish(NotificationActionType.CANCEL_ALL)
+    if (this.notifications)
+      return this.notifications.publish(NotificationActionType.CANCEL_ALL)
   }
 
   cancelSingleNotification(notificationId: number) {

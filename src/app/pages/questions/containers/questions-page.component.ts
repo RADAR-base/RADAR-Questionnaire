@@ -158,9 +158,12 @@ export class QuestionsPageComponent implements OnInit {
       .then(() => {
         this.updateDoneButton(false)
         if (this.externalAppCanLaunch) {
-          this.appLauncher.launchApp(this.externalApp, this.task)
-        }
-        return this.navCtrl.setRoot(HomePageComponent)
+          this.appLauncher
+            .launchApp(this.externalApp, this.task)
+            .then(success => {
+              this.navCtrl.setRoot(HomePageComponent)
+            })
+        } else this.navCtrl.setRoot(HomePageComponent)
       })
   }
 
@@ -286,15 +289,8 @@ export class QuestionsPageComponent implements OnInit {
       this.externalApp &&
       this.appLauncher.isExternalAppUriValidForThePlatform(this.externalApp)
     ) {
-      this.appLauncher
-        .isExternalAppCanLaunch(this.externalApp, this.task)
-        .then(canLaunch => {
-          this.showFinishAndLaunchScreen = true
-          this.externalAppCanLaunch = canLaunch
-        })
-        .catch(err => {
-          this.showFinishAndLaunchScreen = false
-        })
+      this.showFinishAndLaunchScreen = true
+      this.externalAppCanLaunch = true
     }
   }
 }

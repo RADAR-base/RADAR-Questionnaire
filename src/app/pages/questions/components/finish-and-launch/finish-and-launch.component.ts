@@ -42,7 +42,7 @@ export class FinishAndLaunchComponent implements OnInit, OnChanges {
   displayNextTaskReminder = true
   completedInClinic = false
 
-  canLaunch = false
+  canLaunch = true
   externalAppLaunchDescription = ''
 
   constructor(
@@ -52,15 +52,7 @@ export class FinishAndLaunchComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit() {
-    this.appLauncher
-      .isExternalAppCanLaunch(this.externalApp, this.task)
-      .then(canLaunch => {
-        this.canLaunch = canLaunch
-        this.getExternalAppLaunchDescription()
-      })
-      .catch(err => {
-        console.log(err)
-      })
+    this.getExternalAppLaunchDescription()
   }
 
   ngOnChanges() {
@@ -81,24 +73,13 @@ export class FinishAndLaunchComponent implements OnInit, OnChanges {
       this.externalApp,
       this.task
     )
-    if (this.canLaunch) {
-      this.externalAppLaunchDescription =
-        this.externalApp.field_label && this.externalApp.field_label.length
-          ? this.externalApp.field_label
-          : this.localization.translateKey(LocKeys.EXTERNAL_APP_LAUNCH_DESC) +
-            ' ' +
-            (this.externalApp.external_app_name
-              ? this.externalApp.external_app_name
-              : options.uri.toString())
-    } else {
-      this.externalAppLaunchDescription =
-        (this.externalApp.external_app_name
-          ? this.externalApp.external_app_name
-          : options.uri.toString()) +
-        ' ' +
-        this.localization.translateKey(
-          LocKeys.EXTERNAL_APP_FAILURE_ON_VALIDATING
-        )
-    }
+    this.externalAppLaunchDescription =
+      this.externalApp.field_label && this.externalApp.field_label.length
+        ? this.externalApp.field_label
+        : this.localization.translateKey(LocKeys.EXTERNAL_APP_LAUNCH_DESC) +
+          ' ' +
+          (this.externalApp.external_app_name
+            ? this.externalApp.external_app_name
+            : options.uri.toString())
   }
 }

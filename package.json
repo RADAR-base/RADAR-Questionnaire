@@ -99,7 +99,7 @@
     "cordova-support-android-plugin": "^1.0.2",
     "core-js": "2.6.8",
     "dompurify": "^2.2.8",
-    "execa": "^4.0.3",
+    "execa": "^6.1.0",
     "graphlib": "^2.1.8",
     "install": "^0.13.0",
     "ionic-angular": "^3.9.10",

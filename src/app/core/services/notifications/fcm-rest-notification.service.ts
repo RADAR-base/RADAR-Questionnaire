@@ -169,24 +169,29 @@ export class FcmRestNotificationService extends FcmNotificationService {
   }
 
   cancelSingleNotification(subject, notification: SingleNotification) {
-    return this.appServerService
-      .getHeaders()
-      .then(headers =>
-        this.http
-          .delete(
-            this.getNotificationEndpoint(
-              subject.projectId,
-              subject.subjectId,
-              notification.id
-            ),
-            { headers }
-          )
-          .toPromise()
-      )
-      .then(() => {
-        this.logger.log('Success cancelling notification ' + notification.id)
-        return (notification.id = undefined)
-      })
+    if (notification.id) {
+      return this.appServerService
+        .getHeaders()
+        .then(headers =>
+          this.http
+            .delete(
+              this.getNotificationEndpoint(
+                subject.projectId,
+                subject.subjectId,
+                notification.id
+              ),
+              { headers }
+            )
+            .toPromise()
+        )
+        .then(() => {
+          this.logger.log('Success cancelling notification ' + notification.id)
+          return (notification.id = undefined)
+        })
+    } else {
+      this.logger.log('Cannot cancel undefined notification id.')
+      return Promise.resolve()
+    }
   }
 
   updateNotificationState(subject, notificationId, state) {

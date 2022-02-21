@@ -14,6 +14,7 @@ import * as smoothscroll from 'smoothscroll-polyfill'
 
 import { Answer } from '../../../../shared/models/answer'
 import { Question, QuestionType } from '../../../../shared/models/question'
+import { Task } from '../../../../shared/models/task'
 
 @Component({
   selector: 'question',
@@ -29,6 +30,8 @@ export class QuestionComponent implements OnInit, OnChanges {
   questionIndex: number
   @Input()
   currentIndex: number
+  @Input()
+  task: Task
   @Input()
   isSectionHeaderHidden: boolean
   @Output()
@@ -66,6 +69,11 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.radio,
     QuestionType.yesno,
     QuestionType.slider
+  ])
+
+  SCROLLBAR_VISIBLE_SET: Set<QuestionType> = new Set([
+    QuestionType.radio,
+    QuestionType.checkbox
   ])
 
   constructor(
@@ -171,6 +179,7 @@ export class QuestionComponent implements OnInit, OnChanges {
   }
 
   isScrollbarVisible() {
+    if (!this.SCROLLBAR_VISIBLE_SET.has(this.question.field_type)) return false
     return (
       this.input.nativeElement.scrollHeight >
       this.input.nativeElement.clientHeight

@@ -1495,5 +1495,57 @@ export const Localisations = {
     nl: 'Tekst invoeren',
     pl: 'Wprowadź tekst',
     hb: 'הזן טקסט'
+  },
+  EXTERNAL_APP_LAUNCH_DESC: {
+    da: 'Afslut spørgeskemaet og start',
+    de: 'Beenden Sie den Fragebogen und starten Sie',
+    en: 'Finish the questionnaire and launch',
+    es: 'Terminar el cuestionario y lanzar',
+    it: 'Completa il questionario e avvia',
+    nl: 'Voltooi de vragenlijst en start',
+    pl: 'Wypełnij ankietę i uruchom',
+    hb: 'סיים את השאלון והפעל'
+  },
+  EXTERNAL_APP_LAUNCH_BUTTON: {
+    da: 'Afslut og start app',
+    de: 'App beenden und starten',
+    en: 'Finish and Launch App',
+    es: 'Finalizar y ejecutar la aplicación',
+    it: "Termina e avvia l'app",
+    nl: 'Voltooi en start app',
+    pl: 'Zakończ i uruchom aplikację',
+    hb: 'סיום והפעל את האפליקציה'
+  },
+  EXTERNAL_APP_FAILURE_ON_VALIDATING: {
+    da: 'er ikke installeret på din enhed eller understøtter ikke dybe links.',
+    de:
+      'nicht auf Ihrem Gerät installiert ist oder Deep Linking nicht unterstützt.',
+    en: 'is not installed on your device or does not support deep linking.',
+    es: 'no está instalado en su dispositivo o no admite enlaces profundos.',
+    it: 'non è installato sul tuo dispositivo o non supporta il deep linking.',
+    nl: 'is niet op uw apparaat geïnstalleerd of ondersteunt geen deeplinking.',
+    pl:
+      'nie jest zainstalowany na Twoim urządzeniu lub nie obsługuje precyzyjnych linków.',
+    hb: 'אינו מותקן במכשיר שלך או אינו תומך בקישור עמוק.'
+  },
+  EXTERNAL_APP_FAILURE_ON_LAUNCH_TITLE: {
+    da: 'Fejl ved lancering',
+    de: 'Fehler beim Starten',
+    en: 'Error on Launching',
+    es: 'Error al iniciar',
+    it: "Errore all'avvio",
+    nl: 'Fout bij opstarten',
+    pl: 'Błąd podczas uruchamiania',
+    hb: 'שגיאה בהפעלה'
+  },
+  EXTERNAL_APP_FAILURE_ON_LAUNCH_DESC: {
+    da: 'kan ikke startes.',
+    de: 'kann nicht gestartet werden.',
+    en: 'cannot be launched.',
+    es: 'no se puede lanzar.',
+    it: 'non può essere lanciato.',
+    nl: 'kan niet worden gestart.',
+    pl: 'nie można uruchomić.',
+    hb: 'לא ניתן להפעיל.'
   }
 }

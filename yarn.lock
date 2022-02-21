@@ -667,10 +667,10 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/mobile-accessibility@^5.28.0":
-  version "5.28.0"
-  resolved "https://registry.npmjs.org/@ionic-native/mobile-accessibility/-/mobile-accessibility-5.28.0.tgz"
-  integrity sha512-Qkw9IoKt3iNx9CGSm0yZERiwdgBO78306vfjKAxB8qghMAeer116rQsa6fxjFONf4KQFE3CPGEQShJeDC3qfag==
+"@ionic-native/mobile-accessibility@^5.36.0":
+  version "5.36.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/mobile-accessibility/-/mobile-accessibility-5.36.0.tgz#07d9328921d81331f8cac16a2082d9748ba3bd08"
+  integrity sha512-mEe99zkDTvk0QzklmPR9DmlojqmRuQyuYwQk6q+ePV5NJIP5xrqJ4C7DdkolHvfFGhFcZ59aIuIfrRtgUY4+lg==
   dependencies:
     "@types/cordova" latest
 

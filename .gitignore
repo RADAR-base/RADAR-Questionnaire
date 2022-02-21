@@ -32,6 +32,7 @@ plugins/ios.json
 www/*
 $RECYCLE.BIN/
 google-services.json
+google-services*.json
 GoogleService-info.plist
 
 .DS_Store

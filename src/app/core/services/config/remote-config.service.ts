@@ -3,13 +3,14 @@ import 'rxjs/add/operator/mergeMap'
 import { Injectable } from '@angular/core'
 import { FirebaseX } from '@ionic-native/firebase-x/ngx'
 import { Platform } from 'ionic-angular'
-import { BehaviorSubject, Observable, from } from 'rxjs'
+import { BehaviorSubject, Observable, from, merge } from 'rxjs'
 
 import { ConfigKeys } from '../../../shared/enums/config'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { getSeconds } from '../../../shared/utilities/time'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
+import { concatMap, first, mergeMap, skip } from "rxjs/operators";
 
 declare var FirebasePlugin
 
@@ -43,11 +44,24 @@ export class RemoteConfigService {
   }
 
   read(): Promise<RemoteConfig> {
+    return this.subject().pipe(
+      first()
+    ).toPromise().then(currentValue => {
+      const nextFetch = currentValue.fetchedAt.getTime() + this.timeoutMillis
+      if (new Date().getTime() <= nextFetch) {
+        return Promise.resolve(currentValue)
+      } else {
+        return this.fetch(this.timeoutMillis);
+      }
+    });
+  }
+
+  fetch(timeoutMillis: number): Promise<RemoteConfig> {
     throw new Error('RemoteConfigService method not implemented')
   }
 
   forceFetch(): Promise<RemoteConfig> {
-    throw new Error('RemoteConfigService method not implemented')
+    return this.fetch(0);
   }
 
   subject(): Observable<RemoteConfig> {
@@ -75,28 +89,19 @@ class EmptyRemoteConfig implements RemoteConfig {
 
 class FirebaseRemoteConfig implements RemoteConfig {
   readonly fetchedAt = new Date()
-  cache: { [key: string]: string } = {}
 
   constructor(private firebase: FirebaseX, private logger: LogService) {}
 
   get(key: ConfigKeys): Promise<string | null> {
-    const cachedValue = this.cache[key.value]
-    if (cachedValue !== undefined) {
-      this.logger.log(`Retrieving ${key.value} from cache`)
-      return Promise.resolve(cachedValue)
-    }
     this.logger.log(`Retrieving ${key.value}`)
     return this.firebase.getValue(key.value)
   }
 
   getOrDefault(key: ConfigKeys, defaultValue: string): Promise<string> {
     return this.get(key)
-      .then((val: string) => (val.length == 0 ? defaultValue : val))
+      .then((val: string) => (val && val.length ? val : defaultValue))
       .catch(e => {
-        this.logger.error(
-          `Failed to retrieve ${key.value}. Using default ${defaultValue}.`,
-          e
-        )
+        this.logger.error(`Failed to retrieve ${key.value}. Using default ${defaultValue}.`, e)
         return defaultValue
       })
   }
@@ -117,24 +122,10 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
     this.configSubject = new BehaviorSubject(new EmptyRemoteConfig())
     this.platform.ready().then(() => {
       FirebasePlugin.setConfigSettings(this.FETCH_TIMEOUT_SECONDS, null)
-    })
+    });
   }
 
-  forceFetch(): Promise<RemoteConfig> {
-    return this.fetch(0)
-  }
-
-  read(): Promise<RemoteConfig> {
-    const currentValue = this.configSubject.value
-    const nextFetch = currentValue.fetchedAt.getTime() + this.timeoutMillis
-    if (new Date().getTime() <= nextFetch) {
-      return Promise.resolve(currentValue)
-    }
-
-    return this.fetch(this.timeoutMillis)
-  }
-
-  private fetch(timeoutMillis: number) {
+  fetch(timeoutMillis: number) {
     if (!this.platform.is('cordova')) {
       console.log('Not fetching Firebase Remote Config without cordova')
       return Promise.resolve(this.configSubject.value)
@@ -146,15 +137,19 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
       .then(activated => {
         console.log('New Firebase Remote Config did activate', activated)
         const conf = new FirebaseRemoteConfig(this.firebase, this.logger)
-        if (activated) {
-          this.configSubject.next(conf)
-        }
+        this.configSubject.next(conf)
         return conf
       })
       .catch(e => this.configSubject.value)
   }
 
   subject(): Observable<RemoteConfig> {
-    return from(this.read()).mergeMap(() => this.configSubject)
+    if (this.configSubject.value.fetchedAt.getTime() === 0) {
+      return from(this.fetch(this.timeoutMillis)).pipe(
+        concatMap(() => this.configSubject.pipe(skip(1))),
+      )
+    } else {
+      return this.configSubject;
+    }
   }
 }

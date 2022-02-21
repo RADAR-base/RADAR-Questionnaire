@@ -184,12 +184,14 @@ export class QuestionnaireService {
     return this.storage
       .get(this.QUESTIONNAIRE_STORE.CONIFG_ON_DEMAND_ASSESSMENTS)
       .then(assessments => assessments.length > 0)
+      .catch(() => false)
   }
 
   getHasClinicalAssessments() {
     return this.storage
       .get(this.QUESTIONNAIRE_STORE.CONFIG_CLINICAL_ASSESSMENTS)
       .then(assessments => assessments.length > 0)
+      .catch(() => false)
   }
 
   reset() {

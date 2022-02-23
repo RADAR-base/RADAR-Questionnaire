@@ -27,6 +27,7 @@ export class MessageHandlerService {
 
   onMessageReceived(data: Map<string, string>) {
     const action = data.get('action')
+    console.log(data)
     switch (action) {
       case MessagingAction.QUESTIONNAIRE_TRIGGER:
         this.logger.log('A questionnaire was triggered!')
@@ -51,12 +52,16 @@ export class MessageHandlerService {
     return Promise.all([
       this.appConfig.getReferenceDate(),
       this.questionnaire.pullDefinitionForSingleQuestionnaire(questionnaire)
-    ]).then(([refTimestamp, questionnaire]) =>
-      this.schedule.generateSingleAssessmentTask(
-        questionnaire,
-        AssessmentType.SCHEDULED,
-        refTimestamp
-      )
-    )
+    ]).then(([refTimestamp, questionnaire]) => {
+      return this.questionnaire
+        .addToAssessments(AssessmentType.SCHEDULED, questionnaire)
+        .then(() =>
+          this.schedule.generateSingleAssessmentTask(
+            questionnaire,
+            AssessmentType.SCHEDULED,
+            refTimestamp
+          )
+        )
+    })
   }
 }

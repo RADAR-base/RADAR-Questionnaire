@@ -159,6 +159,7 @@ export class QuestionnaireService {
   }
 
   addToAssessments(type, assessment) {
+    // NOTE: If an assessment does not exist, it is added, otherwise it is updated
     return this.getAssessments(type).then(assessments => {
       if (!assessments) assessments = []
       const index = assessments.findIndex(a => a.name == assessment.name)

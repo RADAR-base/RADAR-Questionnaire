@@ -27,7 +27,6 @@ export class MessageHandlerService {
 
   onMessageReceived(data: Map<string, string>) {
     const action = data.get('action')
-    console.log(data)
     switch (action) {
       case MessagingAction.QUESTIONNAIRE_TRIGGER:
         this.logger.log('A questionnaire was triggered!')

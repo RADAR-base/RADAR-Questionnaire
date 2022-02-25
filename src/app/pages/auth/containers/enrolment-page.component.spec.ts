@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, async } from '@angular/core/testing'
-import { NavController } from 'ionic-angular'
+import { NavController } from '@ionic/angular'
 
 import { AppModule } from '../../../app.module'
 import { EnrolmentPageComponent } from './enrolment-page.component'

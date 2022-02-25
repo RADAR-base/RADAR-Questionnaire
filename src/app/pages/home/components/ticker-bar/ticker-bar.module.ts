@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
-import { IonicModule } from 'ionic-angular'
+import { IonicModule } from '@ionic/angular'
 import { Ng2FittextModule } from 'ng2-fittext'
 
 import { PipesModule } from '../../../../shared/pipes/pipes.module'
@@ -11,7 +11,7 @@ const COMPONENTS = [TickerBarComponent]
 @NgModule({
   imports: [
     CommonModule,
-    IonicModule.forRoot(TickerBarComponent),
+    IonicModule.forRoot(),
     PipesModule,
     Ng2FittextModule
   ],

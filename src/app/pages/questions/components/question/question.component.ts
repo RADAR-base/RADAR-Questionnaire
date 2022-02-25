@@ -1,5 +1,6 @@
 import {
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
@@ -8,21 +9,22 @@ import {
   ViewChild
 } from '@angular/core'
 import { Dialogs } from '@ionic-native/dialogs/ngx'
+import { Keyboard } from '@ionic-native/keyboard/ngx'
 import { Vibration } from '@ionic-native/vibration/ngx'
-import { Content, Keyboard } from 'ionic-angular'
+import { IonContent } from '@ionic/angular'
 import * as smoothscroll from 'smoothscroll-polyfill'
 
 import { Answer } from '../../../../shared/models/answer'
 import { Question, QuestionType } from '../../../../shared/models/question'
-import { Task } from '../../../../shared/models/task'
 
 @Component({
   selector: 'question',
-  templateUrl: 'question.component.html'
+  templateUrl: 'question.component.html',
+  styleUrls: ['question.component.scss']
 })
 export class QuestionComponent implements OnInit, OnChanges {
   @ViewChild('content') content
-  @ViewChild('input') input
+  @ViewChild('input', { read: ElementRef }) input
 
   @Input()
   question: Question
@@ -30,8 +32,6 @@ export class QuestionComponent implements OnInit, OnChanges {
   questionIndex: number
   @Input()
   currentIndex: number
-  @Input()
-  task: Task
   @Input()
   isSectionHeaderHidden: boolean
   @Output()
@@ -69,11 +69,6 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.radio,
     QuestionType.yesno,
     QuestionType.slider
-  ])
-
-  SCROLLBAR_VISIBLE_SET: Set<QuestionType> = new Set([
-    QuestionType.radio,
-    QuestionType.checkbox
   ])
 
   constructor(
@@ -150,12 +145,14 @@ export class QuestionComponent implements OnInit, OnChanges {
     ) {
       const min = this.question.select_choices_or_calculations[0].code
       const minLabel = this.question.select_choices_or_calculations[0].label
-      const max = this.question.select_choices_or_calculations[
-        this.question.select_choices_or_calculations.length - 1
-      ].code
-      const maxLabel = this.question.select_choices_or_calculations[
-        this.question.select_choices_or_calculations.length - 1
-      ].label
+      const max =
+        this.question.select_choices_or_calculations[
+          this.question.select_choices_or_calculations.length - 1
+        ].code
+      const maxLabel =
+        this.question.select_choices_or_calculations[
+          this.question.select_choices_or_calculations.length - 1
+        ].label
       this.question.range = {
         min: parseInt(min.trim()),
         max: parseInt(max.trim()),
@@ -179,7 +176,6 @@ export class QuestionComponent implements OnInit, OnChanges {
   }
 
   isScrollbarVisible() {
-    if (!this.SCROLLBAR_VISIBLE_SET.has(this.question.field_type)) return false
     return (
       this.input.nativeElement.scrollHeight >
       this.input.nativeElement.clientHeight

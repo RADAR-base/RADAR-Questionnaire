@@ -11,7 +11,8 @@ import { LocKeys } from '../../../../shared/enums/localisations'
 
 @Component({
   selector: 'toolbar',
-  templateUrl: 'toolbar.component.html'
+  templateUrl: 'toolbar.component.html',
+  styleUrls: ['toolbar.component.scss']
 })
 export class ToolbarComponent implements OnChanges {
   @Input()
@@ -67,6 +68,7 @@ export class ToolbarComponent implements OnChanges {
   }
 
   rightButtonHandler() {
+    console.log('rightbut')
     if (this.isRightButtonDisabled) return
     switch (this.rightButtonText) {
       case this.textValues.next:

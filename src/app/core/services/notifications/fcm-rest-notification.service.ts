@@ -6,7 +6,7 @@ import {
 import { Injectable } from '@angular/core'
 import { FirebaseX } from '@ionic-native/firebase-x/ngx'
 import { WebIntent } from '@ionic-native/web-intent/ngx'
-import { Platform } from 'ionic-angular'
+import { Platform } from '@ionic/angular'
 import { Subscription } from 'rxjs'
 import * as urljoin from 'url-join'
 
@@ -169,29 +169,24 @@ export class FcmRestNotificationService extends FcmNotificationService {
   }
 
   cancelSingleNotification(subject, notification: SingleNotification) {
-    if (notification.id) {
-      return this.appServerService
-        .getHeaders()
-        .then(headers =>
-          this.http
-            .delete(
-              this.getNotificationEndpoint(
-                subject.projectId,
-                subject.subjectId,
-                notification.id
-              ),
-              { headers }
-            )
-            .toPromise()
-        )
-        .then(() => {
-          this.logger.log('Success cancelling notification ' + notification.id)
-          return (notification.id = undefined)
-        })
-    } else {
-      this.logger.log('Cannot cancel undefined notification id.')
-      return Promise.resolve()
-    }
+    return this.appServerService
+      .getHeaders()
+      .then(headers =>
+        this.http
+          .delete(
+            this.getNotificationEndpoint(
+              subject.projectId,
+              subject.subjectId,
+              notification.id
+            ),
+            { headers }
+          )
+          .toPromise()
+      )
+      .then(() => {
+        this.logger.log('Success cancelling notification ' + notification.id)
+        return (notification.id = undefined)
+      })
   }
 
   updateNotificationState(subject, notificationId, state) {

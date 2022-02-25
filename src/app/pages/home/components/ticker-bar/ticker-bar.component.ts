@@ -8,7 +8,8 @@ import { getHours, getMinutes } from '../../../../shared/utilities/time'
 
 @Component({
   selector: 'ticker-bar',
-  templateUrl: 'ticker-bar.component.html'
+  templateUrl: 'ticker-bar.component.html',
+  styleUrls: ['./ticker-bar.component.scss']
 })
 export class TickerBarComponent implements OnChanges {
   @Input()

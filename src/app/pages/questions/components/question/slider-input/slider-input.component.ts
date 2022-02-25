@@ -2,7 +2,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core'
 
 @Component({
   selector: 'slider-input',
-  templateUrl: 'slider-input.component.html'
+  templateUrl: 'slider-input.component.html',
+  styleUrls: ['slider-input.component.scss']
 })
 export class SliderInputComponent {
   @Output()

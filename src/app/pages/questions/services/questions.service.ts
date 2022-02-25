@@ -22,7 +22,9 @@ import { AnswerService } from './answer.service'
 import { FinishTaskService } from './finish-task.service'
 import { TimestampService } from './timestamp.service'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class QuestionsService {
   PREVIOUS_BUTTON_DISABLED_SET: Set<QuestionType> = new Set([
     QuestionType.timed,
@@ -223,10 +225,9 @@ export class QuestionsService {
     return this.questionnaire
       .getAssessmentForTask(type, task)
       .then(assessment =>
-        this.processQuestions(
-          assessment.name,
-          assessment.questions
-        ).then(questions => [assessment, questions])
+        this.processQuestions(assessment.name, assessment.questions).then(
+          questions => [assessment, questions]
+        )
       )
       .then(([assessment, questions]) => {
         return {

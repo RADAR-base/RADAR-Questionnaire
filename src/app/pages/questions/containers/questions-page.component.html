@@ -1,64 +1,49 @@
 <ion-content>
-  <div class="wrapper">
-    <div class="slide-flex">
-      <ion-slides>
-        <ion-slide *ngIf="showIntroductionScreen">
-          <introduction
-            [title]="questionTitle"
-            [introduction]="introduction"
-            (start)="handleIntro($event)"
-          ></introduction>
+  <div class="slide-flex">
+    <ion-slides>
+      <ion-slide *ngIf="showIntroductionScreen">
+        <introduction
+          [title]="questionTitle"
+          [introduction]="introduction"
+          (start)="handleIntro($event)"
+        ></introduction>
+      </ion-slide>
+      <ng-container *ngIf="!showIntroductionScreen">
+        <ion-slide
+          *ngFor="
+            let item of groupedQuestions | keyvalue: asIsOrder;
+            let i = index
+          "
+        >
+          <ng-container *ngFor="let question of item.value; let j = index">
+            <question
+              *ngIf="
+                i >= currentQuestionGroupId - 10 &&
+                i <= currentQuestionGroupId + 10 &&
+                currentQuestionIndices.includes(j)
+              "
+              [question]="question"
+              [questionIndex]="i"
+              [currentIndex]="currentQuestionGroupId"
+              [isSectionHeaderHidden]="j != currentQuestionIndices[0]"
+              (answer)="onAnswer($event)"
+            ></question>
+          </ng-container>
         </ion-slide>
-        <ng-container *ngIf="!showIntroductionScreen">
-          <ion-slide
-            *ngFor="
-              let item of groupedQuestions | keyvalue: asIsOrder;
-              let i = index
-            "
-          >
-            <ng-container *ngFor="let question of item.value; let j = index">
-              <question
-                *ngIf="
-                  i >= currentQuestionGroupId - 10 &&
-                  i <= currentQuestionGroupId + 10 &&
-                  currentQuestionIndices.includes(j)
-                "
-                [question]="question"
-                [questionIndex]="i"
-                [task]="task"
-                [currentIndex]="currentQuestionGroupId"
-                [isSectionHeaderHidden]="j != currentQuestionIndices[0]"
-                (answer)="onAnswer($event)"
-              ></question>
-            </ng-container>
-          </ion-slide>
-        </ng-container>
-        <ion-slide>
-          <finish
-            *ngIf="showFinishScreen && !showFinishAndLaunchScreen"
-            [content]="endText"
-            [isLastTask]="isLastTask"
-            [requiresInClinicCompletion]="requiresInClinicCompletion"
-            [taskType]="taskType"
-            [showDoneButton]="showDoneButton"
-            [isShown]="showFinishScreen"
-            (exit)="handleFinish($event)"
-          ></finish>
-          <finish-and-launch
-            *ngIf="showFinishScreen && showFinishAndLaunchScreen"
-            [externalApp]="externalApp"
-            [task]="task"
-            [content]="endText"
-            [isLastTask]="isLastTask"
-            [requiresInClinicCompletion]="requiresInClinicCompletion"
-            [taskType]="taskType"
-            [showDoneButton]="showDoneButton"
-            [isShown]="showFinishScreen"
-            (exit)="handleFinish($event)"
-          ></finish-and-launch>
-        </ion-slide>
-      </ion-slides>
-    </div>
+      </ng-container>
+      <ion-slide>
+        <finish
+          *ngIf="showFinishScreen"
+          [content]="endText"
+          [isLastTask]="isLastTask"
+          [requiresInClinicCompletion]="requiresInClinicCompletion"
+          [taskType]="taskType"
+          [showDoneButton]="showDoneButton"
+          [isShown]="showFinishScreen"
+          (exit)="handleFinish($event)"
+        ></finish>
+      </ion-slide>
+    </ion-slides>
   </div>
 </ion-content>
 

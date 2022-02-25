@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core'
+import { Router } from '@angular/router'
 import { Insomnia } from '@ionic-native/insomnia/ngx'
-import { NavController, NavParams, Platform, Slides } from 'ionic-angular'
+import { IonSlides, NavController, Platform } from '@ionic/angular'
+import { Subscription } from 'rxjs'
 
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { UsageService } from '../../../core/services/usage/usage.service'
@@ -11,19 +13,19 @@ import {
   AssessmentType,
   ShowIntroductionType
 } from '../../../shared/models/assessment'
-import { ExternalApp, Question } from '../../../shared/models/question'
+import { Question } from '../../../shared/models/question'
 import { Task } from '../../../shared/models/task'
-import { HomePageComponent } from '../../home/containers/home-page.component'
-import { AppLauncherService } from '../services/app-launcher.service'
 import { QuestionsService } from '../services/questions.service'
+import { q } from './quest'
 
 @Component({
   selector: 'page-questions',
-  templateUrl: 'questions-page.component.html'
+  templateUrl: 'questions-page.component.html',
+  styleUrls: ['questions-page.component.scss']
 })
 export class QuestionsPageComponent implements OnInit {
-  @ViewChild(Slides)
-  slides: Slides
+  @ViewChild(IonSlides)
+  slides: IonSlides
 
   startTime: number
   currentQuestionGroupId = 0
@@ -34,7 +36,6 @@ export class QuestionsPageComponent implements OnInit {
   task: Task
   taskType: AssessmentType
   questions: Question[]
-  externalApp: ExternalApp
   // Questions grouped by matrix group if it exists
   groupedQuestions: Map<string, Question[]>
   // Indices of questions (of the group) currently shown
@@ -48,52 +49,47 @@ export class QuestionsPageComponent implements OnInit {
   showIntroductionScreen: boolean
   showDoneButton: boolean
   showFinishScreen: boolean
-  showFinishAndLaunchScreen: boolean = false
-  externalAppCanLaunch: boolean = false
   SHOW_INTRODUCTION_SET: Set<boolean | ShowIntroductionType> = new Set([
     true,
     ShowIntroductionType.ALWAYS,
     ShowIntroductionType.ONCE
   ])
   MATRIX_FIELD_NAME = 'matrix'
+  backButtonListener: Subscription
 
   constructor(
     public navCtrl: NavController,
-    public navParams: NavParams,
     private questionsService: QuestionsService,
     private usage: UsageService,
     private platform: Platform,
     private insomnia: Insomnia,
     private localization: LocalizationService,
-    private appLauncher: AppLauncherService
+    private router: Router
   ) {
-    this.platform.registerBackButtonAction(() => {
+    this.backButtonListener = this.platform.backButton.subscribe(() => {
       this.sendCompletionLog()
-      this.platform.exitApp()
+      navigator['app'].exitApp()
+      // this.platform.exitApp()
     })
-  }
-
-  ionViewDidLoad() {
-    this.sendEvent(UsageEventType.QUESTIONNAIRE_STARTED)
-    this.usage.setPage(this.constructor.name)
-    this.insomnia.keepAwake()
-    this.slides.lockSwipes(true)
   }
 
   ionViewDidLeave() {
     this.sendCompletionLog()
     this.questionsService.reset()
     this.insomnia.allowSleepAgain()
+    this.backButtonListener.unsubscribe()
   }
 
   ngOnInit() {
-    this.task = this.navParams.data
-    return this.questionsService
-      .getQuestionnairePayload(this.task)
-      .then(res => {
-        this.initQuestionnaire(res)
-        return this.updateToolbarButtons()
-      })
+    this.task = this.router.getCurrentNavigation().extras.state as Task
+    this.questionsService.getQuestionnairePayload(this.task).then(res => {
+      this.initQuestionnaire(res)
+      return this.updateToolbarButtons()
+    })
+    this.sendEvent(UsageEventType.QUESTIONNAIRE_STARTED)
+    this.usage.setPage(this.constructor.name)
+    this.insomnia.keepAwake()
+    this.slides.lockSwipes(true)
   }
 
   initQuestionnaire(res) {
@@ -103,19 +99,13 @@ export class QuestionsPageComponent implements OnInit {
     this.showIntroductionScreen = this.SHOW_INTRODUCTION_SET.has(
       res.assessment.showIntroduction
     )
-
-    this.questions = this.appLauncher.removeLaunchAppFromQuestions(
-      res.questions
-    )
-    this.externalApp = this.appLauncher.getLaunchApp(res.questions)
+    this.questions = res.questions
+    this.questions = q
     this.groupedQuestions = this.groupQuestionsByMatrixGroup(this.questions)
     this.endText =
       res.endText && res.endText.length
         ? res.endText
         : this.localization.translateKey(LocKeys.FINISH_THANKS)
-
-    this.checkIfQuestionnaireHasAppLaunch()
-
     this.isLastTask = res.isLastTask
     this.assessment = res.assessment
     this.taskType = res.type
@@ -157,13 +147,7 @@ export class QuestionsPageComponent implements OnInit {
       .handleClinicalFollowUp(this.assessment, completedInClinic)
       .then(() => {
         this.updateDoneButton(false)
-        if (this.externalAppCanLaunch) {
-          this.appLauncher
-            .launchApp(this.externalApp, this.task)
-            .then(success => {
-              this.navCtrl.setRoot(HomePageComponent)
-            })
-        } else this.navCtrl.setRoot(HomePageComponent)
+        return this.navCtrl.navigateRoot('/home')
       })
   }
 
@@ -218,9 +202,8 @@ export class QuestionsPageComponent implements OnInit {
   previousQuestion() {
     const currentQuestions = this.getCurrentQuestions()
     this.questionOrder.pop()
-    this.currentQuestionGroupId = this.questionOrder[
-      this.questionOrder.length - 1
-    ]
+    this.currentQuestionGroupId =
+      this.questionOrder[this.questionOrder.length - 1]
     this.updateToolbarButtons()
     if (!this.isRightButtonDisabled)
       this.questionsService.deleteLastAnswers(currentQuestions)
@@ -234,14 +217,14 @@ export class QuestionsPageComponent implements OnInit {
     this.isRightButtonDisabled =
       !this.questionsService.isAnyAnswered(currentQs) &&
       !this.questionsService.getIsAnyNextEnabled(currentQs)
-    this.isLeftButtonDisabled = this.questionsService.getIsAnyPreviousEnabled(
-      currentQs
-    )
+    this.isLeftButtonDisabled =
+      this.questionsService.getIsAnyPreviousEnabled(currentQs)
   }
 
   exitQuestionnaire() {
     this.sendEvent(UsageEventType.QUESTIONNAIRE_CANCELLED)
-    this.navCtrl.pop({ animation: 'wp-transition' })
+    this.navCtrl.navigateBack('/home')
+    // this.navCtrl.pop({ animation: 'wp-transition' })
   }
 
   navigateToFinishPage() {
@@ -282,15 +265,5 @@ export class QuestionsPageComponent implements OnInit {
   asIsOrder(a, b) {
     // NOTE: This is needed to display questions (in the view) from the map in order
     return 1
-  }
-
-  private checkIfQuestionnaireHasAppLaunch() {
-    if (
-      this.externalApp &&
-      this.appLauncher.isExternalAppUriValidForThePlatform(this.externalApp)
-    ) {
-      this.showFinishAndLaunchScreen = true
-      this.externalAppCanLaunch = true
-    }
   }
 }

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
 import { FormsModule } from '@angular/forms'
-import { IonicModule } from 'ionic-angular'
+import { IonicModule } from '@ionic/angular'
 import { Ng2FittextModule } from 'ng2-fittext'
 
 import { PipesModule } from '../../../../shared/pipes/pipes.module'
@@ -41,7 +41,7 @@ const COMPONENTS = [
     CommonModule,
     PipesModule,
     FormsModule,
-    IonicModule.forRoot(SliderInputComponent)
+    IonicModule.forRoot()
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS

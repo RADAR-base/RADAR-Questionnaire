@@ -6,7 +6,8 @@ let uniqueID = 0
 
 @Component({
   selector: 'range-input',
-  templateUrl: 'range-input.component.html'
+  templateUrl: 'range-input.component.html',
+  styleUrls: ['range-input.component.scss']
 })
 export class RangeInputComponent implements OnInit {
   @Output()

@@ -1,23 +1,21 @@
-ticker-bar {
-  #ticker-bar-container {
-    display: flex;
-    margin-bottom: 2px;
-    padding: 7px 0;
-    background-color: $cl-primary-40;
-    font-size: 18px;
-  }
+#ticker-bar-container {
+  display: flex;
+  margin-bottom: 2px;
+  padding: 7px 0;
+  background-color: var(--cl-primary-40);
+  font-size: 18px;
+}
 
-  #report {
-    color: map_get($colors, warning);
-  }
+#report {
+  color: #ff8;
+}
 
-  .ticker-item {
-    margin: auto;
-    white-space: nowrap;
-    transition: transform 0.8s ease-in-out;
-  }
+.ticker-item {
+  margin: auto;
+  white-space: nowrap;
+  transition: transform 0.8s ease-in-out;
+}
 
-  .bold {
-    font-weight: bold;
-  }
+.bold {
+  font-weight: bold;
 }

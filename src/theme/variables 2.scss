@@ -1,0 +1,95 @@
+// Ionic Variables and Theming. For more info, please see:
+// http://ionicframework.com/docs/v2/theming/
+
+@import 'ionic.globals';
+
+// Main Map : white
+--colors: (
+  primary: #0b4a59,
+  secondary: #6d9aa5,
+  secondary-light: #9bb5bc,
+  danger: #f53d3d,
+  success: #3fc380,
+  warning: #ff8,
+  tertiary: #7fcdbb,
+  light: white,
+  dark: #222
+);
+
+// Main Colors // Shortcut
+--cl-primary: #0b4a59;
+--cl-secondary: #6d9aa5;
+--cl-secondary-light: #9bb5bc;
+
+// Transparent Base
+--cl-primary-10: rgba(#0b4a59, 0.1);
+--cl-primary-20: rgba(#0b4a59, 0.2);
+--cl-primary-40: rgba(#0b4a59, 0.4);
+--cl-primary-60: rgba(#0b4a59, 0.6);
+--cl-primary-80: rgba(#0b4a59, 0.8);
+
+// Transparent whites
+--cl-light: white;
+--cl-light-10: rgba(white, 0.1);
+--cl-light-20: rgba(white, 0.2);
+--cl-light-40: rgba(white, 0.4);
+--cl-light-60: rgba(white, 0.6);
+--cl-light-80: rgba(white, 0.8);
+
+// Provoking colours
+--cl-danger: #f53d3d;
+--cl-danger-10: rgba(#f53d3d, 0.1);
+--cl-danger-20: rgba(#f53d3d, 0.2);
+--cl-danger-40: rgba(#f53d3d, 0.4);
+--cl-danger-60: rgba(#f53d3d, 0.6);
+--cl-danger-80: rgba(#f53d3d, 0.8);
+--cl-warning: #ff8;
+--cl-warning-10: rgba(#ff8, 0.1);
+--cl-warning-20: rgba(#ff8, 0.2);
+--cl-warning-40: rgba(#ff8, 0.4);
+--cl-warning-60: rgba(#ff8, 0.6);
+--cl-warning-80: rgba(#ff8, 0.8);
+
+// Checkmark
+--cl-checkmark: #9ad1c3;
+
+// Font
+--cl-font: --cl-light;
+--cl-font-light: --cl-light-80;
+
+// App Globals
+--bt-height: 56px;
+--label-height: 40px;
+--item-separation-distance: 0.1em;
+
+// Ionic Overrides
+--font-family-md-base: 'Montserrat', sans-serif;
+--text-color: var(--ion-font);
+--background-color: transparent;
+--button-md-text-transform: none;
+--toggle-md-track-background-color-off: --cl-light-80;
+--toggle-md-track-background-color-on: #3fc380;
+--toggle-md-handle-background-color-off: --cl-light;
+--toggle-md-handle-background-color-on: --cl-light;
+--alert-md-head-text-align: center;
+// App Theme
+// --------------------------------------------------
+// Ionic apps can have different themes applied, which can
+// then be future customized. This import comes last
+// so that the above variables are used and Ionic's
+// default are overridden.
+
+@import 'ionic.theme.default';
+
+.alert-title {
+  color: var(--ion-color-primary);
+}
+// Ionicons
+// --------------------------------------------------
+// The premium icon font for Ionic. For more info, please see:
+// http://ionicframework.com/docs/v2/ionicons/
+--ionicons-font-path: '../assets/fonts';
+
+@import 'ionicons';
+
+--range-md-tick-background-color: var(--ion-color-secondary);

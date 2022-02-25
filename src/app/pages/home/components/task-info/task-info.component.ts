@@ -8,7 +8,8 @@ import { TaskInfoAnimations } from './task-info.animation'
 @Component({
   selector: 'task-info',
   templateUrl: 'task-info.component.html',
-  animations: TaskInfoAnimations
+  animations: TaskInfoAnimations,
+  styleUrls: ['./task-info.component.scss']
 })
 export class TaskInfoComponent implements OnChanges {
   @Input()

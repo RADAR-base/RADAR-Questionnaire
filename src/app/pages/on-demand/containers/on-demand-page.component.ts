@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { NavController } from 'ionic-angular'
+import { NavController } from '@ionic/angular'
 
 import { Assessment } from '../../../shared/models/assessment'
 import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
@@ -15,7 +15,7 @@ export class OnDemandPageComponent {
   title: Promise<String>
 
   constructor(
-    private navCtrl: NavController,
+    public navCtrl: NavController,
     private onDemandService: OnDemandService
   ) {}
 
@@ -27,6 +27,6 @@ export class OnDemandPageComponent {
   }
 
   clicked(task) {
-    this.navCtrl.push(QuestionsPageComponent, task)
+    this.navCtrl.navigateForward('/questions', { state: task })
   }
 }

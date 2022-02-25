@@ -1,91 +1,91 @@
-question {
-  @keyframes bounce {
-    0% {
-      transform: translateY(0);
-    }
-
-    30% {
-      transform: translateY(-20px);
-    }
-
-    50% {
-      transform: translateY(0);
-    }
-
-    100% {
-      transform: translateY(0);
-    }
+@keyframes bounce {
+  0% {
+    transform: translateY(0);
   }
 
+  30% {
+    transform: translateY(-20px);
+  }
+
+  50% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  height: 100%;
   text-align: initial;
+}
 
-  .content {
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    height: 100%;
-    text-align: initial;
-  }
+.content-matrix {
+  height: auto !important;
+}
 
-  .content-matrix {
-    height: auto !important;
-  }
+p {
+  margin-top: 8px;
+  margin-bottom: 0;
+  color: var(--cl-light-80);
+  opacity: 0.8;
+}
 
-  p {
-    margin-top: 8px;
-    margin-bottom: 0;
-    color: $cl-light-80;
-  }
+h2 {
+  margin-top: 16px;
+  margin-bottom: 24px;
+}
 
-  h2 {
-    margin-top: 16px;
-    margin-bottom: 24px;
-  }
+.field-container {
+  max-height: 50vh !important;
+}
 
-  .field-container {
-    max-height: 50vh !important;
-  }
+.field-container-matrix {
+  margin-bottom: -24px;
+}
 
-  .field-container-matrix {
-    margin-bottom: -24px;
-  }
+.rangeformat {
+  height: 30vh;
+}
 
-  .rangeformat {
-    height: 30vh;
-  }
+.fade {
+  opacity: 0.2;
+  pointer-events: none;
+}
 
-  .fade {
-    opacity: 0.2;
-    pointer-events: none;
-  }
+.header {
+  flex-grow: 0;
+}
 
-  .header {
-    flex-grow: 0;
-  }
+.input {
+  flex-grow: 1;
+  padding: 4px 4px 8px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 95%;
+}
 
-  .input {
-    flex-grow: 1;
-    padding: 4px 4px 8px;
-  }
+.input-scroll {
+  overflow-y: auto !important;
+  mask-image: linear-gradient(to top, transparent 3%, black 7%),
+    linear-gradient(to bottom, transparent 0%, black 7%);
+  mask-size: 100% 25%, 100% 80%;
+  mask-position: bottom, top;
+  mask-repeat: no-repeat, no-repeat;
+}
 
-  .input-scroll {
-    overflow-y: auto !important;
-    mask-image: linear-gradient(to top, transparent 3%, black 7%),
-      linear-gradient(to bottom, transparent 0%, black 7%);
-    mask-size: 100% 25%, 100% 80%;
-    mask-position: bottom, top;
-    mask-repeat: no-repeat, no-repeat;
-  }
+.spinner-container {
+  text-align: center;
+}
 
-  .spinner-container {
-    text-align: center;
-  }
-
-  .arrow-icon {
-    position: absolute;
-    bottom: 0;
-    left: 45%;
-    font-size: 40px;
-    animation: bounce 1s;
-  }
+.arrow-icon {
+  position: absolute;
+  bottom: 0;
+  left: 45%;
+  font-size: 40px;
+  animation: bounce 1s;
 }

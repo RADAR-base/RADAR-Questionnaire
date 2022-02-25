@@ -1,36 +1,35 @@
-audio-input {
-  .audio-bottom {
-    position: absolute;
-    bottom: 48px;
-    left: 50%;
-    width: 80%;
-  }
+.audio-bottom {
+  position: absolute;
+  bottom: 48px;
+  left: 50%;
+  width: 80%;
+}
 
-  .audio-container {
-    overflow: hidden;
-    width: inherit;
-    height: inherit !important;
-  }
+.audio-container {
+  overflow: hidden;
+  width: inherit;
+  height: inherit !important;
+}
 
-  button {
-    left: -50%;
-  }
+button {
+  left: -50%;
+}
 
-  .bt-stop {
-    background-color: $cl-danger-40;
-  }
+.bt-stop {
+  background-color: var(--cl-danger-40);
+}
 
-  .info-card {
-    overflow: auto;
-    margin-top: 16px;
-    padding: 10px;
-    max-height: 68%;
-    -webkit-border-radius: 8px;
-    border-radius: 8px;
-    background-color: $cl-primary-10;
-  }
+.info-card {
+  overflow: auto;
+  margin-top: 16px;
+  padding: 10px;
+  max-height: 68%;
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
+  background-color: var(--cl-primary-10);
+}
 
-  .info-card h2 {
-    @include font-body;
-  }
+.info-card h2 {
+  color: var(--ion-font);
+  font-size: 16px;
 }

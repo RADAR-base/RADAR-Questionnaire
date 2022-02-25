@@ -16,7 +16,8 @@ let uniqueID = 0
 
 @Component({
   selector: 'descriptive-input',
-  templateUrl: 'descriptive-input.component.html'
+  templateUrl: 'descriptive-input.component.html',
+  styleUrls: ['descriptive-input.component.scss']
 })
 export class DescriptiveInputComponent implements OnInit, OnChanges {
   @ViewChild('content') content

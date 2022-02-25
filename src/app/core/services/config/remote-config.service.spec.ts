@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing'
 import { FirebaseX } from '@ionic-native/firebase-x/ngx'
-import { Platform } from 'ionic-angular'
+import { Platform } from '@ionic/angular'
 import { PlatformMock } from 'ionic-mocks'
 
 import {

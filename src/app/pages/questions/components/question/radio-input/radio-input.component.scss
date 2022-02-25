@@ -1,62 +1,102 @@
-radio-input {
-  display: block;
-  margin-left: -5px;
+ion-label {
+  color: white !important;
+}
+
+ion-list {
+  --background: transparent !important;
+  background-color: transparent;
+}
+
+ion-radio-group {
+  --background: transparent;
+  background-color: transparent;
+  align-content: center;
+}
+
+ul {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
   width: 100%;
+  list-style: none;
+  background-color: transparent;
+}
 
-  ion-label {
-    color: white !important;
-  }
+li {
+  padding: 0;
+  background-color: transparent;
+}
 
-  ul {
-    display: flex;
-    flex-direction: column;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    list-style: none;
-  }
+ul li {
+  display: flex;
+  align-content: stretch;
+  background-color: transparent;
+}
 
-  li {
-    padding: 0;
-  }
+ul li:last-child {
+  padding-bottom: 32px;
+  border: none;
+}
 
-  ul li {
-    display: flex;
-    align-content: stretch;
-  }
+ul li ion-radio {
+  position: absolute;
+}
 
-  ul li:last-child {
-    padding-bottom: 32px;
-    border: none;
-  }
+ul li ion-label {
+  padding: 8px 32px;
+  height: var(--bt-height);
+  border: 2px solid white;
+  border-radius: var(--bt-height);
+  background-color: var(--cl-primary-20);
+  color: white;
+  font-size: 18px;
+  position: relative;
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 16px 24px;
+  height: inherit;
+  white-space: normal;
+}
 
-  ul li ion-radio {
-    position: absolute;
-  }
+.item-radio-checked {
+  background-color: var(--cl-primary) !important;
+}
 
-  ul li ion-label {
-    @include button-round;
+.radio-icon {
+  display: none !important;
+  margin: 0;
+}
 
-    position: relative;
-    display: flex;
-    flex-grow: 1;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 16px 24px;
-    height: inherit;
-    white-space: normal;
-  }
+.input-wrapper {
+  margin: 0 -20px -12px 0;
+}
 
-  .item-radio-checked ion-label {
-    background-color: $cl-primary !important;
-  }
+ion-item {
+  background-color: transparent;
+  --background: transparent;
+  width: 100%;
+  padding: 6px;
+  height: var(--bt-height);
+  border: 2px solid white;
+  border-radius: var(--bt-height);
+  background-color: var(--cl-primary-20);
+  color: white;
+  font-size: 18px;
+  position: relative;
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  justify-content: flex-start;
+  height: inherit;
+  white-space: normal;
+  margin-bottom: 16px;
+}
 
-  .radio-icon {
-    display: none !important;
-    margin: 0;
-  }
-
-  .input-wrapper {
-    margin: 0 -20px -12px 0;
-  }
+ion-radio {
+  --color: transparent;
+  --color-checked: transparent;
+  width: 0px;
 }

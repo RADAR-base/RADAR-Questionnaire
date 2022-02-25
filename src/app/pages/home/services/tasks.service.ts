@@ -14,7 +14,9 @@ import { AssessmentType } from '../../../shared/models/assessment'
 import { Task, TasksProgress } from '../../../shared/models/task'
 import { setDateTimeToMidnight } from '../../../shared/utilities/time'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class TasksService {
   changeDetectionEmitter: EventEmitter<void> = new EventEmitter<void>()
 

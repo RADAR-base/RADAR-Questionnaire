@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import * as AvroSchema from 'avsc'
+// import * as AvroSchema from 'avsc'
 import * as YAML from 'yaml'
 
 import { DefaultSchemaSpecEndpoint } from '../../../../assets/data/defaultConfig'
@@ -106,7 +106,8 @@ export class SchemaService {
 
   convertToAvro(schema, value): any {
     const options = { wrapUnions: true }
-    return AvroSchema.parse(schema, options).clone(value, options)
+    return
+    // return AvroSchema.parse(schema, options).clone(value, options)
   }
 
   getKafkaPayload(kafkaObject, topic, baseURI): Promise<any> {

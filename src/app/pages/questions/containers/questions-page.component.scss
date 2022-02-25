@@ -1,25 +1,26 @@
-page-questions {
-  ion-slide.swiper-slide {
-    align-items: flex-start;
-  }
+ion-slide.swiper-slide {
+  align-items: flex-start;
+}
 
-  ion-slide {
-    overflow-x: hidden !important;
-    padding: 24px 24px 0;
-  }
+ion-slide {
+  overflow-x: hidden !important;
+  padding: 24px 24px 0;
+}
 
-  .wrapper {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
+ion-slides {
+  height: 100%;
+}
 
-  .slide-flex {
-    flex: 1;
-    height: 100%;
-  }
+.wrapper {
+  display: flex;
+  flex-direction: column;
+}
 
-  .hidden {
-    visibility: hidden;
-  }
+.slide-flex {
+  flex: 1;
+  height: 100%;
+}
+
+.hidden {
+  visibility: hidden;
 }

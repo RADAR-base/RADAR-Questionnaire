@@ -1,44 +1,81 @@
-checkbox-input {
-  display: block;
-  margin-left: -5px;
+ul {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  width: 115%;
+  list-style: none;
+}
+
+ul li {
+  display: flex;
+  align-content: stretch;
+}
+
+ul li ion-label {
+  padding: 8px 32px;
+  height: var(--bt-height);
+  border: 6px solid white;
+  border-radius: var(--bt-height);
+  background-color: var(--cl-primary-20);
+  color: white;
+  font-size: 18px;
+  position: relative;
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 16px 24px;
+  height: inherit;
+  white-space: normal;
+}
+
+.checked {
+  background-color: var(--cl-primary) !important;
+}
+
+.checkbox-icon {
+  display: none !important;
+  margin: 0;
+}
+
+ion-item {
+  background-color: transparent;
+  --background: transparent;
   width: 100%;
+  padding: 4px;
+  height: var(--bt-height);
+  border: 2px solid white;
+  border-radius: var(--bt-height);
+  background-color: var(--cl-primary-20);
+  color: white;
+  font-size: 18px;
+  position: relative;
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  justify-content: flex-start;
+  height: inherit;
+  white-space: normal;
+  margin-bottom: 14px;
+}
 
-  ul {
-    display: flex;
-    flex-direction: column;
-    margin: 0;
-    padding: 0;
-    width: 115%;
-    list-style: none;
-  }
+ion-label {
+  color: white !important;
+}
 
-  ul li {
-    display: flex;
-    align-content: stretch;
-  }
+ion-list {
+  --background: transparent !important;
+  background-color: transparent !important;
+}
 
-  ul li ion-label {
-    @include button-round;
+ion-checkbox {
+  --background: transparent;
+  --background-checked: transparent;
+  width: 4px;
+  --border-width: 0px;
+}
 
-    display: flex;
-    flex-grow: 1;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 16px 24px;
-    height: inherit;
-    white-space: normal;
-  }
-
-  .checked {
-    background-color: $cl-primary !important;
-  }
-
-  .checkbox-icon {
-    display: none !important;
-    margin: 0;
-  }
-
-  ion-item {
-    margin: 0 0 -12px -40px !important;
-  }
+.item-checkbox-checked {
+  background-color: var(--cl-primary) !important;
 }

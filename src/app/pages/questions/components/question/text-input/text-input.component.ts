@@ -6,13 +6,13 @@ import {
   Output,
   ViewChild
 } from '@angular/core'
-import { IonicFormInput } from 'ionic-angular'
 
 import { LocalizationService } from '../../../../../core/services/misc/localization.service'
 
 @Component({
   selector: 'text-input',
   templateUrl: 'text-input.component.html',
+  styleUrls: ['text-input.component.scss']
 })
 export class TextInputComponent implements OnInit {
   @ViewChild('content') content
@@ -45,7 +45,7 @@ export class TextInputComponent implements OnInit {
     hour: 'Hour',
     minute: 'Minute',
     second: 'Second',
-    ampm: 'AM/PM',
+    ampm: 'AM/PM'
   }
 
   value = {}

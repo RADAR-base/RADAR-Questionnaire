@@ -1,5 +1,6 @@
-import { Component, OnDestroy } from '@angular/core'
-import { NavController, Platform } from 'ionic-angular'
+import { Component, OnDestroy, OnInit } from '@angular/core'
+import { Router } from '@angular/router'
+import { NavController, Platform } from '@ionic/angular'
 import { Subscription } from 'rxjs'
 
 import { AlertService } from '../../../core/services/misc/alert.service'
@@ -9,20 +10,16 @@ import { UsageEventType } from '../../../shared/enums/events'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { Task, TasksProgress } from '../../../shared/models/task'
 import { checkTaskIsNow } from '../../../shared/utilities/check-task-is-now'
-import { ClinicalTasksPageComponent } from '../../clinical-tasks/containers/clinical-tasks-page.component'
-import { OnDemandPageComponent } from '../../on-demand/containers/on-demand-page.component'
-import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
-import { SettingsPageComponent } from '../../settings/containers/settings-page.component'
-import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 import { TasksService } from '../services/tasks.service'
 import { HomePageAnimations } from './home-page.animation'
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home-page.component.html',
-  animations: HomePageAnimations
+  animations: HomePageAnimations,
+  styleUrls: ['./home-page.component.scss']
 })
-export class HomePageComponent implements OnDestroy {
+export class HomePageComponent implements OnInit, OnDestroy {
   title: Promise<string>
   sortedTasks: Promise<Map<any, any>>
   tasks: Promise<Task[]>
@@ -47,6 +44,7 @@ export class HomePageComponent implements OnDestroy {
   HTML_BREAK = '<br>'
 
   constructor(
+    private router: Router,
     public navCtrl: NavController,
     public alertService: AlertService,
     private tasksService: TasksService,
@@ -55,12 +53,11 @@ export class HomePageComponent implements OnDestroy {
     private usage: UsageService
   ) {
     this.resumeListener = this.platform.resume.subscribe(() => this.onResume())
-    this.changeDetectionListener = this.tasksService.changeDetectionEmitter.subscribe(
-      () => {
+    this.changeDetectionListener =
+      this.tasksService.changeDetectionEmitter.subscribe(() => {
         console.log('Changes to task service detected')
-        this.navCtrl.setRoot(HomePageComponent)
-      }
-    )
+        this.navCtrl.navigateRoot('')
+      })
   }
 
   getIsLoadingSpinnerShown() {
@@ -79,6 +76,11 @@ export class HomePageComponent implements OnDestroy {
     )
   }
 
+  ngOnInit() {
+    this.init()
+    this.usage.setPage(this.constructor.name)
+  }
+
   ngOnDestroy() {
     this.resumeListener.unsubscribe()
     this.changeDetectionListener.unsubscribe()
@@ -86,11 +88,6 @@ export class HomePageComponent implements OnDestroy {
 
   ionViewWillEnter() {
     this.startingQuestionnaire = false
-  }
-
-  ionViewDidLoad() {
-    this.init()
-    this.usage.setPage(this.constructor.name)
   }
 
   init() {
@@ -119,7 +116,7 @@ export class HomePageComponent implements OnDestroy {
   checkForNewDate() {
     if (new Date().getDate() !== this.currentDate.getDate()) {
       this.currentDate = this.tasksService.getCurrentDateMidnight()
-      this.navCtrl.setRoot(SplashPageComponent)
+      this.navCtrl.navigateRoot('')
     }
   }
 
@@ -146,17 +143,17 @@ export class HomePageComponent implements OnDestroy {
   }
 
   openSettingsPage() {
-    this.navCtrl.push(SettingsPageComponent)
+    this.navCtrl.navigateForward('settings')
     this.usage.sendClickEvent('open_settings')
   }
 
   openClinicalTasksPage() {
-    this.navCtrl.push(ClinicalTasksPageComponent)
+    this.navCtrl.navigateForward('/clinical-tasks')
     this.usage.sendClickEvent('open_clinical_tasks')
   }
 
   openOnDemandTasksPage() {
-    this.navCtrl.push(OnDemandPageComponent)
+    this.navCtrl.navigateForward('/on-demand')
     this.usage.sendClickEvent('open_on_demand_tasks')
   }
 
@@ -167,7 +164,7 @@ export class HomePageComponent implements OnDestroy {
     if (this.tasksService.isTaskStartable(task)) {
       this.usage.sendClickEvent('start_questionnaire')
       this.startingQuestionnaire = true
-      return this.navCtrl.push(QuestionsPageComponent, task)
+      this.navCtrl.navigateForward('/questions', { state: task })
     } else {
       this.showMissedInfo()
     }
@@ -180,7 +177,7 @@ export class HomePageComponent implements OnDestroy {
       this.tasksService.getAppCreditsBody()
     ]).then(([title, body]) =>
       this.alertService.showAlert({
-        title: this.localization.chooseText(title),
+        header: this.localization.chooseText(title),
         message:
           this.localization.chooseText(body) +
           this.HTML_BREAK +
@@ -198,7 +195,9 @@ export class HomePageComponent implements OnDestroy {
 
   showMissedInfo() {
     return this.alertService.showAlert({
-      title: this.localization.translateKey(LocKeys.CALENDAR_TASK_MISSED_TITLE),
+      header: this.localization.translateKey(
+        LocKeys.CALENDAR_TASK_MISSED_TITLE
+      ),
       message: this.localization.translateKey(
         LocKeys.CALENDAR_TASK_MISSED_DESC
       ),

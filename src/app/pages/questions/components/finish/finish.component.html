@@ -9,7 +9,7 @@
       <ion-label>
         {{ 'FINISH_COMPLETED_IN_CLINIC' | translate }}
       </ion-label>
-      <ion-toggle item-right [(ngModel)]="completedInClinic"></ion-toggle>
+      <ion-toggle item-right (ionChange)="toggleChanged($event)"></ion-toggle>
     </ion-item>
   </div>
   <div class="done-button">

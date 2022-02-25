@@ -1,52 +1,50 @@
-descriptive-input {
-  .info-carrd {
-    padding: 28px;
-    height: 92%;
-    -webkit-border-radius: 8px;
-    border-radius: 8px;
-    background-color: $cl-primary-20;
-  }
+.info-carrd {
+  padding: 28px;
+  height: 92%;
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
+  background-color: var(--cl-primary-20);
+}
 
-  .content {
-    overflow-y: scroll;
-    padding-bottom: 24%;
-    width: 100%;
-  }
+.content {
+  overflow-y: scroll;
+  padding-bottom: 24%;
+  width: 100%;
+}
 
-  .info-heading {
-    color: $cl-light-60;
-  }
+.info-heading {
+  color: var(--cl-light-60);
+}
 
-  .info-content {
-    margin-bottom: 48%;
-    font-size: 16px;
-  }
+.info-content {
+  margin-bottom: 48%;
+  font-size: 16px;
+}
 
-  img {
-    display: block;
-    margin: 0 auto !important;
-    height: auto !important;
-    -webkit-transform: scale(0.8);
-    transform: scale(0.8);
-  }
+img {
+  display: block;
+  margin: 0 auto !important;
+  height: auto !important;
+  -webkit-transform: scale(0.8);
+  transform: scale(0.8);
+}
 
-  .icon {
-    position: relative;
-    float: right;
-    margin: -36px 8px;
-    width: inherit;
-    text-align: right;
-  }
+.icon {
+  position: relative;
+  float: right;
+  margin: -36px 8px;
+  width: inherit;
+  text-align: right;
+}
 
-  ion-icon {
-    color: $cl-light-40;
-    font-size: 40px;
-  }
+ion-icon {
+  color: var(--cl-light-40);
+  font-size: 40px;
+}
 
-  .info-content iframe {
-    padding: auto;
-    width: 100%;
-    height: auto;
-    border: 0;
-  }
+.info-content iframe {
+  padding: auto;
+  width: 100%;
+  height: auto;
+  border: 0;
 }

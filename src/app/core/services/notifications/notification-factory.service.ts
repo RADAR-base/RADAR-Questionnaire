@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { Platform } from 'ionic-angular'
+import { Platform } from '@ionic/angular'
 
 import { DefaultNotificationType } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'

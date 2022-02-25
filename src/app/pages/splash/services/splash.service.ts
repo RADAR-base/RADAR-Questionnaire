@@ -7,7 +7,9 @@ import { ScheduleService } from '../../../core/services/schedule/schedule.servic
 import { TokenService } from '../../../core/services/token/token.service'
 import { UsageService } from '../../../core/services/usage/usage.service'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SplashService {
   INVALID_USER_ERROR = 'was not found in the database'
   constructor(

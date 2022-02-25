@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { NavController } from 'ionic-angular'
+import { NavController } from '@ionic/angular'
 
 import { Assessment } from '../../../shared/models/assessment'
 import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
@@ -14,7 +14,7 @@ export class ClinicalTasksPageComponent {
   assessments: Assessment[]
 
   constructor(
-    private navCtrl: NavController,
+    public navCtrl: NavController,
     private clinicalTasksService: ClinicalTasksService
   ) {}
 
@@ -25,6 +25,6 @@ export class ClinicalTasksPageComponent {
   }
 
   clicked(task) {
-    this.navCtrl.push(QuestionsPageComponent, task)
+    this.navCtrl.navigateForward('/questions', { state: task })
   }
 }

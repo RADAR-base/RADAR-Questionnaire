@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core'
-import { Platform } from 'ionic-angular'
+import { Platform } from '@ionic/angular'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class LogService {
   constructor(private plt: Platform) {}
 

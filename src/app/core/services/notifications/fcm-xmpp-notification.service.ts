@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { FirebaseX } from '@ionic-native/firebase-x/ngx'
-import { Platform } from 'ionic-angular'
+import { Platform } from '@ionic/angular'
 import * as moment from 'moment-timezone'
 import * as uuid from 'uuid/v4'
 

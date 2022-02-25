@@ -159,7 +159,6 @@ export class QuestionnaireService {
   }
 
   addToAssessments(type, assessment) {
-    // NOTE: If an assessment does not exist, it is added, otherwise it is updated
     return this.getAssessments(type).then(assessments => {
       if (!assessments) assessments = []
       const index = assessments.findIndex(a => a.name == assessment.name)
@@ -185,14 +184,12 @@ export class QuestionnaireService {
     return this.storage
       .get(this.QUESTIONNAIRE_STORE.CONIFG_ON_DEMAND_ASSESSMENTS)
       .then(assessments => assessments.length > 0)
-      .catch(() => false)
   }
 
   getHasClinicalAssessments() {
     return this.storage
       .get(this.QUESTIONNAIRE_STORE.CONFIG_CLINICAL_ASSESSMENTS)
       .then(assessments => assessments.length > 0)
-      .catch(() => false)
   }
 
   reset() {

@@ -40,14 +40,13 @@ export class QuestionnaireService {
     // NOTE: Update assessment list from protocol
     return Promise.all(
       this.util.deepCopy(assessments).map(a => {
-        const type = this.getAssessmentTypeFromAssessment(a)
         return this.pullDefinitionForSingleQuestionnaire(a)
-          .then(res =>
-            this.addToAssessments(type, Object.assign(res, { type }))
+          .then(assessment =>
+            this.addToAssessments(assessment.type, assessment)
           )
           .catch(e => {
             throw this.logger.error(
-              'Failed to update ' + type + ' assessments',
+              'Failed to update ' + a.name + ' assessment',
               e
             )
           })
@@ -64,6 +63,9 @@ export class QuestionnaireService {
     })
     const language = this.localization.getLanguage().value
     let uri = this.formatQuestionnaireUri(assessment.questionnaire, language)
+    assessment.type = assessment.type
+      ? assessment.type
+      : this.getAssessmentTypeFromAssessment(assessment)
     return this.githubClient
       .getContent(uri)
       .catch(e => {

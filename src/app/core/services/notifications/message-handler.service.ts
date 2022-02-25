@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core'
 import { FirebaseX } from '@ionic-native/firebase-x/ngx'
+import { Subscription } from 'rxjs'
 
 import { UsageEventType } from '../../../shared/enums/events'
 import { Assessment, AssessmentType } from '../../../shared/models/assessment'
@@ -12,6 +13,8 @@ import { UsageService } from '../usage/usage.service'
 
 @Injectable()
 export class MessageHandlerService {
+  messageListener: Subscription = new Subscription()
+
   constructor(
     public firebase: FirebaseX,
     public logger: LogService,
@@ -20,9 +23,13 @@ export class MessageHandlerService {
     public usage: UsageService,
     public appConfig: AppConfigService
   ) {
-    this.firebase
+    this.messageListener = this.firebase
       .onMessageReceived()
       .subscribe(data => this.onMessageReceived(new Map(Object.entries(data))))
+  }
+
+  ngOnDestroy() {
+    this.messageListener.unsubscribe()
   }
 
   onMessageReceived(data: Map<string, string>) {

@@ -14433,10 +14433,10 @@ tslib@^2.1.0:
   resolved "https://registry.npmjs.org/tslib/-/tslib-2.2.0.tgz"
   integrity sha512-gS9GVHRU+RGn5KQM2rllAlR3dU6m7AcpJKdtH8gFvQiC4Otgk98XnmMU+nZenHt/+VhnBPWwgrJsyrdcw6i23w==
 
-tslint-angular@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.npmjs.org/tslint-angular/-/tslint-angular-3.0.2.tgz"
-  integrity sha512-UgeGO776Z7VvzCnW6pOsbL3qs7PwzZatKkk2OzQO45H9Zf4T+bNBz87nFkB96W/swyCHmpK2M0vl61n0biFVTQ==
+tslint-angular@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/tslint-angular/-/tslint-angular-3.0.3.tgz#872d4fe36497d20582dbe4b8ed3338ff0c922c30"
+  integrity sha512-5xD1gLE89lBExfSbMslDw/ZfOZM0t0CJsoJa4svsgF7tlwVS3IpXjzNcNRN0RZqDBj+cdTlbeel6GpZ3PqpPiw==
 
 tslint-config-prettier@^1.15.0:
   version "1.18.0"

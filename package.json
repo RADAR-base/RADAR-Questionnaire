@@ -182,7 +182,7 @@
     "stylelint": "^13.6.1",
     "stylelint-config-standard": "^20.0.0",
     "tslint": "^5.20.1",
-    "tslint-angular": "^3.0.2",
+    "tslint-angular": "^3.0.3",
     "tslint-config-prettier": "^1.15.0",
     "tslint-config-standard": "^9.0.0",
     "typescript": "~3.1.6",

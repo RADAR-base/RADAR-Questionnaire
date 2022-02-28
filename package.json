@@ -138,7 +138,7 @@
     "@types/node": "14.0.22",
     "codelyzer": "^5.2.2",
     "cordova-android": "^9.0.0",
-    "cordova-ios": "5.1.1",
+    "cordova-ios": "6.2.0",
     "cordova-plugin-app-launcher": "^0.4.0",
     "cordova-plugin-background-mode": "https://bitbucket.org/TheBosZ/cordova-plugin-run-in-background.git",
     "cordova-plugin-firebasex": "https://github.com/mpgxvii/cordova-plugin-firebasex.git",

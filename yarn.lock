@@ -639,10 +639,10 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/globalization@^5.26.0":
-  version "5.26.0"
-  resolved "https://registry.npmjs.org/@ionic-native/globalization/-/globalization-5.26.0.tgz"
-  integrity sha512-HPxkump7lW+Nb0ukwc7yxTKgeQSDAKxayk+N4DZh3utj6mK28m2x170cnh8ozH1Fet88VceIVX8K8iEIMEppTA==
+"@ionic-native/globalization@^5.36.0":
+  version "5.36.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/globalization/-/globalization-5.36.0.tgz#aa4ebe13d71dbf7950334dafd47b1507328cb4dd"
+  integrity sha512-eL41IdeMF03FbU9h+lPb/th4QqqCbV5wydTZSRp4grSPtxuv4tM5fvosWTKJeyZYf+xTwbIh1juixmLIAHEKfw==
   dependencies:
     "@types/cordova" latest
 

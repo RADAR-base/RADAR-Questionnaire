@@ -100,14 +100,19 @@ export class ScheduleService {
     })
   }
 
-  setTasks(type: AssessmentType, tasks): Promise<void> {
+  setTasks(type: AssessmentType, tasks: Task[]): Promise<void> {
+    const uniqueTasks = [
+      ...new Map(
+        tasks.map<[string, Task]>(task => [task.timestamp + '-' + task.name, task])
+      ).values()
+    ];
     switch (type) {
       case AssessmentType.SCHEDULED:
-        return this.setScheduledTasks(tasks)
+        return this.setScheduledTasks(uniqueTasks)
       case AssessmentType.ON_DEMAND:
-        return this.setOnDemandTasks(tasks)
+        return this.setOnDemandTasks(uniqueTasks)
       case AssessmentType.CLINICAL:
-        return this.setClinicalTasks(tasks)
+        return this.setClinicalTasks(uniqueTasks)
     }
   }
 

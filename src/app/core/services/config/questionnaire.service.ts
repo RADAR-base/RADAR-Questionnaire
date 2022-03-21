@@ -87,17 +87,22 @@ export class QuestionnaireService {
     const organization = urlParts[1],
       repo = urlParts[2],
       branch = urlParts[3],
-      directory = urlParts[4] + '/' + questionnaireName
+      directory = urlParts.slice(4).join('/')
     const suffix = lang.length ? `_${lang}` : ''
     const fileName =
       questionnaireName + metadata.type + suffix + metadata.format
-    return urljoin(
-      GIT_API_URI,
-      organization,
-      repo,
-      'contents',
-      directory,
-      fileName
+    return (
+      urljoin(
+        GIT_API_URI,
+        organization,
+        repo,
+        'contents',
+        directory,
+        questionnaireName,
+        fileName
+      ) +
+      '?ref=' +
+      branch
     )
   }
 

@@ -18,12 +18,13 @@ export interface Protocol {
 
 export interface ProtocolReferenceTimestamp {
   timestamp: string
-  format: ReferenceTimestampFormat
+  format: ReferenceTimestampKey
 }
 
-export enum ReferenceTimestampFormat {
+export enum ReferenceTimestampKey {
   DATE = 'date',
   DATETIME = 'datetime',
+  DATETIMEUTC = 'datetimeutc',
   TODAY = 'today',
   NOW = 'now'
 }

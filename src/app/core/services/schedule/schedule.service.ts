@@ -139,17 +139,16 @@ export class ScheduleService {
     return this.storage.push(this.SCHEDULE_STORE.SCHEDULE_TASKS_COMPLETED, task)
   }
 
-  generateSchedule(referenceDate, utcOffsetPrev) {
-    this.logger.log('Updating schedule..', referenceDate)
+  generateSchedule(referenceTimestamp, utcOffsetPrev) {
+    this.logger.log('Updating schedule..', referenceTimestamp)
     return this.getCompletedTasks()
       .then(completedTasks => {
         return this.schedule.runScheduler(
-          referenceDate,
+          referenceTimestamp,
           completedTasks,
           utcOffsetPrev
         )
       })
-      .catch(e => e)
       .then(res =>
         Promise.all([
           this.setTasks(AssessmentType.SCHEDULED, res.schedule),

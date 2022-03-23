@@ -11,6 +11,10 @@ import {
   AssessmentType,
   SchedulerResult
 } from '../../../shared/models/assessment'
+import {
+  ProtocolReferenceTimestamp,
+  ReferenceTimestampFormat
+} from '../../../shared/models/protocol'
 import { Task } from '../../../shared/models/task'
 import { compareTasks } from '../../../shared/utilities/compare-tasks'
 import {
@@ -94,28 +98,16 @@ export class ScheduleGeneratorService {
     completionWindow = protocol.completionWindow
       ? timeIntervalToMillis(protocol.completionWindow)
       : DefaultTaskCompletionWindow
-    refTime = this.getReferenceTimestamp(protocol, refTimestamp)
+    refTime = this.getReferenceTimestamp(
+      protocol.referenceTimestamp,
+      refTimestamp
+    )
     endTime = advanceRepeat(refTime, {
       unit: 'year',
       amount: this.getScheduleYearCoverage()
     })
 
     return { repeatP, repeatQ, completionWindow, refTime, endTime }
-  }
-
-  getReferenceTimestamp(protocol, refTimestamp) {
-    // NOTE: Get initial timestamp to start schedule generation from
-    // If ref timestamp is specified in the protocol, gets refTimestamp (in the timezone of device)
-    return protocol.referenceTimestamp
-      ? setDateTimeToMidnight(
-          this.localization
-            .moment(
-              protocol.referenceTimestamp,
-              this.REFERENCE_TIMESTAMP_FORMAT
-            )
-            .toDate()
-        ).getTime()
-      : refTimestamp
   }
 
   buildTasksForSingleAssessment(
@@ -219,6 +211,24 @@ export class ScheduleGeneratorService {
       })
     }
     return { schedule, completed }
+  }
+
+  getReferenceTimestamp(refTimestamp, defaultRefTimestamp) {
+    // NOTE: Get initial timestamp to start schedule generation from
+    switch (true) {
+      case refTimestamp.timestamp && refTimestamp.format:
+        switch (refTimestamp.format) {
+          case ReferenceTimestampFormat.DATE:
+          case ReferenceTimestampFormat.DATETIME:
+            return this.localization.moment(refTimestamp)
+          case ReferenceTimestampFormat.NOW:
+            return Date.now()
+          case ReferenceTimestampFormat.TODAY:
+            return setDateTimeToMidnightEpoch(new Date())
+        }
+      default:
+        return defaultRefTimestamp
+    }
   }
 
   getScheduleYearCoverage() {

@@ -13,7 +13,19 @@ export interface Protocol {
   clinicalProtocol?: ClinicalProtocol
   onDemandProtocol?
   completionWindow?: TimeInterval
-  referenceTimestamp?: string
+  referenceTimestamp?: string | ProtocolReferenceTimestamp
+}
+
+export interface ProtocolReferenceTimestamp {
+  timestamp: string
+  format: ReferenceTimestampFormat
+}
+
+export enum ReferenceTimestampFormat {
+  DATE = 'date',
+  DATETIME = 'datetime',
+  TODAY = 'today',
+  NOW = 'now'
 }
 
 export interface ProtocolMetaData {

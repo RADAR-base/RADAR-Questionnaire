@@ -1,3 +1,4 @@
+// tslint:disable:max-line-length
 import { LocKeys } from '../../app/shared/enums/localisations'
 import { AssessmentType } from '../../app/shared/models/assessment'
 import { QuestionType } from '../../app/shared/models/question'
@@ -163,7 +164,6 @@ export const DefaultSchemaGithubRepo = 'RADAR-Base/RADAR-Schemas'
 export const DefaultSchemaBranch = 'master'
 
 // *The path to the schema specifications file
-// tslint:disable-next-line: max-line-length
 export const DefaultSchemaSpecPath = `specifications/active/${DefaultSourcePrefix}-${DefaultSourceTypeRegistrationBody.sourceTypeCatalogVersion}.yml?ref=${DefaultSchemaBranch}`
 
 // *The URL of the Kafka topic specification (REMOTE CONFIG KEY: `kafka_specification_url`)

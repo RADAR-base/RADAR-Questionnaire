@@ -227,6 +227,11 @@ export class ScheduleGeneratorService {
         case ReferenceTimestampKey.TODAY:
           return setDateTimeToMidnightEpoch(new Date())
       }
+    } else if (refTimestamp) {
+      return this.localization
+        .moment(refTimestamp, this.REFERENCE_TIMESTAMP_FORMAT)
+        .toDate()
+        .getTime()
     } else return defaultRefTimestamp
   }
 

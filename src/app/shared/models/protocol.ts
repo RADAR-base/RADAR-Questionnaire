@@ -18,10 +18,10 @@ export interface Protocol {
 
 export interface ProtocolReferenceTimestamp {
   timestamp: string
-  format: ReferenceTimestampKey
+  format: ReferenceTimestampFormat
 }
 
-export enum ReferenceTimestampKey {
+export enum ReferenceTimestampFormat {
   DATE = 'date',
   DATETIME = 'datetime',
   DATETIMEUTC = 'datetimeutc',

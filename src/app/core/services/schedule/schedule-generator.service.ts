@@ -12,7 +12,7 @@ import {
   AssessmentType,
   SchedulerResult
 } from '../../../shared/models/assessment'
-import { ReferenceTimestampKey } from '../../../shared/models/protocol'
+import { ReferenceTimestampFormat } from '../../../shared/models/protocol'
 import { Task } from '../../../shared/models/task'
 import { compareTasks } from '../../../shared/utilities/compare-tasks'
 import {
@@ -215,16 +215,16 @@ export class ScheduleGeneratorService {
     // NOTE: Get initial timestamp to start schedule generation from
     if (refTimestamp && refTimestamp.format) {
       switch (refTimestamp.format) {
-        case ReferenceTimestampKey.DATE:
-        case ReferenceTimestampKey.DATETIME:
-        case ReferenceTimestampKey.DATETIMEUTC:
+        case ReferenceTimestampFormat.DATE:
+        case ReferenceTimestampFormat.DATETIME:
+        case ReferenceTimestampFormat.DATETIMEUTC:
           return this.localization
             .moment(refTimestamp.timestamp)
             .toDate()
             .getTime()
-        case ReferenceTimestampKey.NOW:
+        case ReferenceTimestampFormat.NOW:
           return Date.now()
-        case ReferenceTimestampKey.TODAY:
+        case ReferenceTimestampFormat.TODAY:
           return setDateTimeToMidnightEpoch(new Date())
       }
     } else if (refTimestamp) {

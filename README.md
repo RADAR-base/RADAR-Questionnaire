@@ -107,7 +107,7 @@ If using Firebase for notifications, analytics, or remote config, [create your F
 
 ### Package Name
 
-When you add your iOS or Android app to the Firebase project, make sure you name your package name as app-id
+When you add your iOS or Android app to the Firebase project, make sure you name your `package name` as app-id
 
 - Android : `org.phidatalab.radar_armt`
 - iOS: `org.phidatalab.radar-armt`

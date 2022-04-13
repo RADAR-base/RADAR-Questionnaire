@@ -229,10 +229,11 @@ export class ScheduleGeneratorService {
       }
     } else if (refTimestamp) {
       // Keeps support for previous configuration
-      return this.localization
-        .moment(refTimestamp, this.REFERENCE_TIMESTAMP_FORMAT)
-        .toDate()
-        .getTime()
+      return setDateTimeToMidnightEpoch(
+        this.localization
+          .moment(refTimestamp, this.REFERENCE_TIMESTAMP_FORMAT)
+          .toDate()
+      )
     } else return defaultRefTimestamp
   }
 

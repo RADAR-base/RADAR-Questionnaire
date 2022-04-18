@@ -126,7 +126,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.13.8",
-    "@angular/cli": "^7.3.10",
+    "@angular/cli": "^13.3.3",
     "@angular/compiler-cli": "^7.2.13",
     "@angular/http": "^7.2.13",
     "@angular/platform-browser": "^7.2.13",

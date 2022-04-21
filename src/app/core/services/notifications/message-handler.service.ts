@@ -24,7 +24,7 @@ export class MessageHandlerService implements OnDestroy {
     public appConfig: AppConfigService
   ) {
     this.messageListener = this.firebase.onMessageReceived().subscribe(data => {
-      this.usage.sendGeneralEvent(UsageEventType.MESSAGE_RECEIVED)
+      this.usage.sendGeneralEvent(UsageEventType.FCM_MESSAGE_RECEIVED)
       return this.onMessageReceived(new Map(Object.entries(data)))
     })
   }

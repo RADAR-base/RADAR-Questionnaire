@@ -100,10 +100,16 @@ export function timeIntervalToMillis(interval: TimeInterval): number {
 }
 
 export function setDateTimeToMidnight(date: Date): Date {
-  return new Date(new Date(date).setHours(0, 0, 0, 0))
+  return new Date(setDateTimeToMidnightEpoch(date))
+}
+
+export function setDateTimeToMidnightEpoch(date: Date): number {
+  return new Date(date).setHours(0, 0, 0, 0)
 }
 
 export function advanceRepeat(timestamp: number, interval: TimeInterval) {
+  // This generates a new timestamp from a timestamp plus a specified offset/interval.
+  // This also checks at the end that if hour was midnight then it should stay midnight (accounting for timezone)
   const date = new Date(timestamp)
   const returnDate = new Date(timestamp)
   switch (interval.unit) {

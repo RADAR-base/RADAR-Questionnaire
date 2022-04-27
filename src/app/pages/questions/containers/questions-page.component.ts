@@ -186,7 +186,7 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   getCurrentQuestions() {
-    // NOTE: For non-matrix type this will only return one question (array) but for matrix types this can be more than one
+    // For non-matrix type this will only return one question (array) but for matrix types, this can be more than one
     const key = Array.from(this.groupedQuestions.keys())[
       this.currentQuestionGroupId
     ]

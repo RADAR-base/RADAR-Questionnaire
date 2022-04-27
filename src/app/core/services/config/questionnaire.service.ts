@@ -40,14 +40,13 @@ export class QuestionnaireService {
     // NOTE: Update assessment list from protocol
     return Promise.all(
       this.util.deepCopy(assessments).map(a => {
-        const type = this.getAssessmentTypeFromAssessment(a)
         return this.pullDefinitionForSingleQuestionnaire(a)
-          .then(res =>
-            this.addToAssessments(type, Object.assign(res, { type }))
+          .then(assessment =>
+            this.addToAssessments(assessment.type, assessment)
           )
           .catch(e => {
             throw this.logger.error(
-              'Failed to update ' + type + ' assessments',
+              'Failed to update ' + a.name + ' assessment',
               e
             )
           })
@@ -64,6 +63,9 @@ export class QuestionnaireService {
     })
     const language = this.localization.getLanguage().value
     let uri = this.formatQuestionnaireUri(assessment.questionnaire, language)
+    assessment.type = assessment.type
+      ? assessment.type
+      : this.getAssessmentTypeFromAssessment(assessment)
     return this.githubClient
       .getContent(uri)
       .catch(e => {
@@ -87,17 +89,22 @@ export class QuestionnaireService {
     const organization = urlParts[1],
       repo = urlParts[2],
       branch = urlParts[3],
-      directory = urlParts[4] + '/' + questionnaireName
+      directory = urlParts.slice(4).join('/')
     const suffix = lang.length ? `_${lang}` : ''
     const fileName =
       questionnaireName + metadata.type + suffix + metadata.format
-    return urljoin(
-      GIT_API_URI,
-      organization,
-      repo,
-      'contents',
-      directory,
-      fileName
+    return (
+      urljoin(
+        GIT_API_URI,
+        organization,
+        repo,
+        'contents',
+        directory,
+        questionnaireName,
+        fileName
+      ) +
+      '?ref=' +
+      branch
     )
   }
 
@@ -159,6 +166,7 @@ export class QuestionnaireService {
   }
 
   addToAssessments(type, assessment) {
+    // NOTE: If an assessment does not exist, it is added, otherwise it is updated
     return this.getAssessments(type).then(assessments => {
       if (!assessments) assessments = []
       const index = assessments.findIndex(a => a.name == assessment.name)

@@ -8,7 +8,7 @@ import {
   DefaultSettingsWeeklyReport
 } from '../../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../../shared/enums/storage'
-import { setDateTimeToMidnight } from '../../../shared/utilities/time'
+import { setDateTimeToMidnightEpoch } from '../../../shared/utilities/time'
 import { StorageService } from '../storage/storage.service'
 
 @Injectable()
@@ -103,7 +103,7 @@ export class AppConfigService {
   setReferenceDate(enrolmentDate) {
     return this.storage.set(
       this.CONFIG_STORE.REFERENCEDATE,
-      setDateTimeToMidnight(new Date(enrolmentDate)).getTime()
+      setDateTimeToMidnightEpoch(new Date(enrolmentDate))
     )
   }
 

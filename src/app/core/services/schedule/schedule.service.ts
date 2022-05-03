@@ -8,7 +8,7 @@ import { Task } from '../../../shared/models/task'
 import { compareTasks } from '../../../shared/utilities/compare-tasks'
 import {
   getMilliseconds,
-  setDateTimeToMidnight
+  setDateTimeToMidnightEpoch
 } from '../../../shared/utilities/time'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
@@ -61,7 +61,7 @@ export class ScheduleService {
 
   getTasksForDate(date: Date, type: AssessmentType) {
     return this.getTasks(type).then(schedule => {
-      const startTime = setDateTimeToMidnight(date).getTime()
+      const startTime = setDateTimeToMidnightEpoch(date)
       const endTime = startTime + getMilliseconds({ days: 1 })
       return schedule
         ? schedule.filter(d => {
@@ -102,14 +102,22 @@ export class ScheduleService {
     })
   }
 
-  setTasks(type: AssessmentType, tasks): Promise<void> {
+  setTasks(type: AssessmentType, tasks: Task[]): Promise<void> {
+    const uniqueTasks = [
+      ...new Map(
+        tasks.map<[string, Task]>(task => [
+          task.timestamp + '-' + task.name,
+          task
+        ])
+      ).values()
+    ]
     switch (type) {
       case AssessmentType.SCHEDULED:
-        return this.setScheduledTasks(tasks)
+        return this.setScheduledTasks(uniqueTasks)
       case AssessmentType.ON_DEMAND:
-        return this.setOnDemandTasks(tasks)
+        return this.setOnDemandTasks(uniqueTasks)
       case AssessmentType.CLINICAL:
-        return this.setClinicalTasks(tasks)
+        return this.setClinicalTasks(uniqueTasks)
     }
   }
 
@@ -133,17 +141,16 @@ export class ScheduleService {
     return this.storage.push(this.SCHEDULE_STORE.SCHEDULE_TASKS_COMPLETED, task)
   }
 
-  generateSchedule(referenceDate, utcOffsetPrev) {
-    this.logger.log('Updating schedule..', referenceDate)
+  generateSchedule(referenceTimestamp, utcOffsetPrev) {
+    this.logger.log('Updating schedule..', referenceTimestamp)
     return this.getCompletedTasks()
       .then(completedTasks => {
         return this.schedule.runScheduler(
-          referenceDate,
+          referenceTimestamp,
           completedTasks,
           utcOffsetPrev
         )
       })
-      .catch(e => e)
       .then(res =>
         Promise.all([
           this.setTasks(AssessmentType.SCHEDULED, res.schedule),
@@ -157,7 +164,6 @@ export class ScheduleService {
     assessmentType,
     referenceDate: number
   ) {
-    console.log(assessment)
     return this.getTasks(assessmentType).then((tasks: Task[]) => {
       const schedule = this.schedule.buildTasksForSingleAssessment(
         assessment,

@@ -12,7 +12,10 @@ import { ScheduleService } from '../../../core/services/schedule/schedule.servic
 import { ConfigKeys } from '../../../shared/enums/config'
 import { AssessmentType } from '../../../shared/models/assessment'
 import { Task, TasksProgress } from '../../../shared/models/task'
-import { setDateTimeToMidnight } from '../../../shared/utilities/time'
+import {
+  setDateTimeToMidnight,
+  setDateTimeToMidnightEpoch
+} from '../../../shared/utilities/time'
 
 @Injectable({
   providedIn: 'root'
@@ -64,7 +67,7 @@ export class TasksService {
     return this.getTasksOfToday().then(tasks => {
       const sortedTasks = new Map()
       tasks.forEach(t => {
-        const midnight = setDateTimeToMidnight(new Date(t.timestamp)).getTime()
+        const midnight = setDateTimeToMidnightEpoch(new Date(t.timestamp))
         if (sortedTasks.has(midnight)) sortedTasks.get(midnight).push(t)
         else sortedTasks.set(midnight, [t])
       })

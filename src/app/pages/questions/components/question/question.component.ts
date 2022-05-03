@@ -67,8 +67,11 @@ export class QuestionComponent implements OnInit, OnChanges {
   // Input set where height is set to auto
   AUTO_HEIGHT_INPUT_SET: Set<QuestionType> = new Set([
     QuestionType.radio,
+    QuestionType.checkbox,
     QuestionType.yesno,
-    QuestionType.slider
+    QuestionType.slider,
+    QuestionType.range,
+    QuestionType.text
   ])
 
   constructor(
@@ -183,13 +186,16 @@ export class QuestionComponent implements OnInit, OnChanges {
   }
 
   onScroll(event) {
-    if (
-      event &&
-      event.target.scrollTop >=
-        (event.target.scrollHeight - event.target.clientHeight) * 0.1
-    ) {
-      this.showScrollButton = false
-    } else this.showScrollButton = true
+    // This will hide/show the scroll arrow depending on the user's scroll event
+    if (this.showScrollButton) {
+      if (
+        event &&
+        event.target.scrollTop >=
+          (event.target.scrollHeight - event.target.clientHeight) * 0.1
+      ) {
+        this.showScrollButton = false
+      } else this.showScrollButton = true
+    }
   }
 
   scrollDown() {

@@ -105,6 +105,13 @@ $ ionic cordova run ios
 
 If using Firebase for notifications, analytics, or remote config, [create your Firebase project](https://console.firebase.google.com/). Then, add your iOS or Android app to the Firebase project. Once added, please download the app's `google-services.json` file (for Android) and `GoogleService-Info.plist` (for iOS), and add it to the root directory.
 
+### Package Name
+
+When you add your iOS or Android app to the Firebase project, make sure you name your `package name` as app-id
+
+- Android : `org.phidatalab.radar_armt`
+- iOS: `org.phidatalab.radar-armt`
+
 ### Remote Notifications
 
 If using FCM pull notifications instead of the local ones, please specify the FCM sender id (as mentioned in FCM settings) in `src/assets/data/defaultConfig.ts` and the default notification type to FCM (this is already the default value).

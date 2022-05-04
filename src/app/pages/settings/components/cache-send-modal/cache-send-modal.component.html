@@ -1,6 +1,6 @@
 <ion-card>
   <ion-card-header>
-    <ion-icon name="md-close" class="header" (tap)="dismiss()"></ion-icon>
+    <ion-icon name="md-close" class="header" (click)="dismiss()"></ion-icon>
   </ion-card-header>
 
   <div class="center">
@@ -42,7 +42,7 @@
       </ng-container>
       <ng-container *ngIf="!errors.length">
         <div *ngSwitchCase="'success'" class="scroll-success">
-          <button (tap)="dismiss()" class="done-btn">
+          <button (click)="dismiss()" class="done-btn">
             {{ 'BTN_DONE' | translate }}
           </button>
         </div>

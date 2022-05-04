@@ -27,7 +27,11 @@
               </ion-row>
             </div>
           </div>
-          <div id="task-item" (tap)="clicked(task)" *ngIf="task.showInCalendar">
+          <div
+            id="task-item"
+            (click)="clicked(task)"
+            *ngIf="task.showInCalendar"
+          >
             <ion-row>
               <ion-col>
                 <div class="task-info-left">

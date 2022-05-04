@@ -16,7 +16,6 @@ import {
 import { Question } from '../../../shared/models/question'
 import { Task } from '../../../shared/models/task'
 import { QuestionsService } from '../services/questions.service'
-import { q } from './quest'
 
 @Component({
   selector: 'page-questions',
@@ -100,7 +99,6 @@ export class QuestionsPageComponent implements OnInit {
       res.assessment.showIntroduction
     )
     this.questions = res.questions
-    this.questions = q
     this.groupedQuestions = this.groupQuestionsByMatrixGroup(this.questions)
     this.endText =
       res.endText && res.endText.length

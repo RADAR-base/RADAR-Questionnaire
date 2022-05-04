@@ -1,5 +1,7 @@
 ion-label {
   color: white !important;
+  word-wrap: break-word !important;
+  white-space: normal !important;
 }
 
 ion-list {
@@ -11,54 +13,6 @@ ion-radio-group {
   --background: transparent;
   background-color: transparent;
   align-content: center;
-}
-
-ul {
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  list-style: none;
-  background-color: transparent;
-}
-
-li {
-  padding: 0;
-  background-color: transparent;
-}
-
-ul li {
-  display: flex;
-  align-content: stretch;
-  background-color: transparent;
-}
-
-ul li:last-child {
-  padding-bottom: 32px;
-  border: none;
-}
-
-ul li ion-radio {
-  position: absolute;
-}
-
-ul li ion-label {
-  padding: 8px 32px;
-  height: var(--bt-height);
-  border: 2px solid white;
-  border-radius: var(--bt-height);
-  background-color: var(--cl-primary-20);
-  color: white;
-  font-size: 18px;
-  position: relative;
-  display: flex;
-  flex-grow: 1;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 16px 24px;
-  height: inherit;
-  white-space: normal;
 }
 
 .item-radio-checked {
@@ -78,7 +32,7 @@ ion-item {
   background-color: transparent;
   --background: transparent;
   width: 100%;
-  padding: 6px;
+  padding: 8px;
   height: var(--bt-height);
   border: 2px solid white;
   border-radius: var(--bt-height);

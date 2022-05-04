@@ -68,7 +68,6 @@ export class ToolbarComponent implements OnChanges {
   }
 
   rightButtonHandler() {
-    console.log('rightbut')
     if (this.isRightButtonDisabled) return
     switch (this.rightButtonText) {
       case this.textValues.next:

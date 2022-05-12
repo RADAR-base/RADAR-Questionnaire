@@ -291,7 +291,7 @@ Here is the output:
 
 ## Common Error
 
-Here are some common errors you might found during installation.
+Here are some common errors you might find during installation.
 
 ### Error: cordova-custom-config
 

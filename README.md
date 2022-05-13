@@ -295,3 +295,17 @@ This is an example of an image:
 Here is the output:
 
 <img src="/.github/etc/descriptive-2.png" width="200px"><img src="/.github/etc/descriptive-1.png" width="200px">
+
+## Common Error
+
+Here are some common errors you might find during installation.
+
+### Error: cordova-custom-config
+
+When you are running `ionic cordova run ios`, you might encounter the problem, we solved this problem by refering this [issue](https://github.com/dpa99c/cordova-custom-config/issues/144) with `cordova-custom-config`.
+
+We enter the following command at the root directory.
+```
+cd plugins/cordova-custom-config
+yarn install 
+```

@@ -296,7 +296,7 @@ Here is the output:
 
 <img src="/.github/etc/descriptive-2.png" width="200px"><img src="/.github/etc/descriptive-1.png" width="200px">
 
-## Common Error
+## Common Errors
 
 Here are some common errors you might find during installation.
 
@@ -309,3 +309,7 @@ We enter the following command at the root directory.
 cd plugins/cordova-custom-config
 yarn install 
 ```
+
+### Error: Failed to fetch platform. Probably this is either a connection problem.
+
+You may encounter this error when running `yarn install` or `cordova platform` commands. This is usually because of the conflict of `package-lock.json` and `yarn.lock` files. To solve, simply delete the `package-lock.json` file in the root directory.

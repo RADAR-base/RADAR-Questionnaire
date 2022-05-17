@@ -6,6 +6,9 @@ import {
   Output,
   ViewChild
 } from '@angular/core'
+import { ModalController } from '@ionic/angular'
+import { Ionic4DatepickerModalComponent } from '@logisticinfotech/ionic4-datepicker'
+import * as moment from 'moment'
 
 import { LocalizationService } from '../../../../../core/services/misc/localization.service'
 
@@ -50,7 +53,10 @@ export class TextInputComponent implements OnInit {
 
   value = {}
 
-  constructor(private localization: LocalizationService) {}
+  constructor(
+    private localization: LocalizationService,
+    public modalCtrl: ModalController
+  ) {}
 
   ngOnInit() {
     if (this.type.length) {
@@ -71,6 +77,18 @@ export class TextInputComponent implements OnInit {
   }
 
   initDates() {
+    this.datePickerObj = {
+      dateFormat: 'YYYY-MM-DD',
+      btnProperties: {
+        expand: 'block', // Default 'block'
+        fill: 'outline', // Default 'solid'
+        size: 'small', // Default 'default'
+        disabled: '', // Default false
+        strong: 'true', // Default false
+        color: 'secondary' // Default ''
+      },
+      closeOnSelect: 'true'
+    }
     const moment = this.localization.moment(Date.now())
     const locale = moment.localeData()
     const month = locale.monthsShort()
@@ -111,11 +129,43 @@ export class TextInputComponent implements OnInit {
     return values.map(d => (d < 10 ? '0' + d : d)).map(String)
   }
 
+  datePickerObj: any = {}
+  selectedDate: string = new Date().toLocaleDateString('en-ZA')
+
+  async openDatePicker() {
+    const datePickerModal = await this.modalCtrl.create({
+      component: Ionic4DatepickerModalComponent,
+      cssClass: 'li-ionic4-datePicker',
+      componentProps: {
+        objConfig: this.datePickerObj,
+        selectedDate: this.selectedDate
+      }
+    })
+    await datePickerModal.present()
+
+    datePickerModal.onDidDismiss().then(data => {
+      console.log(data)
+      this.selectedDate = data.data.date
+
+      // set defaultDatepickervalue
+      const split_date = data.data.date.split('-')
+      this.defaultDatePickerValue = {
+        year: split_date[0],
+        month: moment()
+          .month(parseInt(split_date[1]) - 1)
+          .format('MMM'),
+        day: split_date[2]
+      }
+      this.emitAnswer(this.defaultDatePickerValue)
+    })
+  }
+
   emitAnswer(value) {
     if (typeof value !== 'string') {
       this.value = Object.assign(this.value, value)
       this.valueChange.emit(JSON.stringify(this.value))
     } else this.valueChange.emit(value)
+    console.log(this.value)
   }
 
   emitTextInputFocus(value) {

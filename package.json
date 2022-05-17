@@ -67,6 +67,7 @@
     "@ionic-native/web-intent": "^5.28.0",
     "@ionic/angular": "^4.0.0-beta.6",
     "@ionic/storage": "2.2.0",
+    "@logisticinfotech/ionic4-datepicker": "^1.4.4",
     "angular-svg-round-progressbar": "^3.0.1",
     "autoprefixer": "^9.8.6",
     "base64-js": "^1.5.1",

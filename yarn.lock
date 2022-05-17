@@ -646,6 +646,13 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
+"@logisticinfotech/ionic4-datepicker@^1.4.4":
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/@logisticinfotech/ionic4-datepicker/-/ionic4-datepicker-1.4.4.tgz#ee30b4def3ee5d2ec88df1c0e68c149841eb0b98"
+  integrity sha512-2L22qs3B4kc2a6Dmjv/P3A/MS4ChbAjV+6umfOX3Pt/i3+P7mMHhGDWgFMZVrL14na7uoHewkY1v0CBvC2MW1w==
+  dependencies:
+    tslib "^1.9.0"
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.npmjs.org/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz"

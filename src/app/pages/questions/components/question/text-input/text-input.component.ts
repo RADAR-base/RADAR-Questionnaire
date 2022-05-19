@@ -144,7 +144,6 @@ export class TextInputComponent implements OnInit {
     await datePickerModal.present()
 
     datePickerModal.onDidDismiss().then(data => {
-      console.log(data)
       this.selectedDate = data.data.date
 
       // set defaultDatepickervalue
@@ -165,7 +164,6 @@ export class TextInputComponent implements OnInit {
       this.value = Object.assign(this.value, value)
       this.valueChange.emit(JSON.stringify(this.value))
     } else this.valueChange.emit(value)
-    console.log(this.value)
   }
 
   emitTextInputFocus(value) {

@@ -77,8 +77,12 @@ export class TextInputComponent implements OnInit {
   }
 
   initDates() {
+    const moment = this.localization.moment(Date.now())
+    const locale = moment.localeData()
+    const formatL = locale.longDateFormat('L')
     this.datePickerObj = {
-      dateFormat: 'YYYY-MM-DD',
+      // User the user's locale format as output format
+      dateFormat: formatL,
       btnProperties: {
         expand: 'block', // Default 'block'
         fill: 'outline', // Default 'solid'
@@ -89,8 +93,6 @@ export class TextInputComponent implements OnInit {
       },
       closeOnSelect: 'true'
     }
-    const moment = this.localization.moment(Date.now())
-    const locale = moment.localeData()
     const month = locale.monthsShort()
     const day = this.addLeadingZero(Array.from(Array(32).keys()).slice(1, 32))
     const year = Array.from(Array(31).keys()).map(d => String(d + 2000))
@@ -130,7 +132,7 @@ export class TextInputComponent implements OnInit {
   }
 
   datePickerObj: any = {}
-  selectedDate: string = new Date().toLocaleDateString('en-ZA')
+  selectedDate: string = new Date().toLocaleDateString()
 
   async openDatePicker() {
     const datePickerModal = await this.modalCtrl.create({
@@ -146,8 +148,16 @@ export class TextInputComponent implements OnInit {
     datePickerModal.onDidDismiss().then(data => {
       this.selectedDate = data.data.date
 
+      // transfer local date format all to US format to easily parse the data
+      const split_date = moment(
+        data.data.date,
+        moment.localeData().longDateFormat('L')
+      )
+        .format('YYYY-MM-DD')
+        .split('-')
+
+      // ex: split_date will be "2022-05-10"
       // set defaultDatepickervalue
-      const split_date = data.data.date.split('-')
       this.defaultDatePickerValue = {
         year: split_date[0],
         month: moment()

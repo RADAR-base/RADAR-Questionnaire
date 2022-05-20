@@ -149,21 +149,11 @@ export class TextInputComponent implements OnInit {
       this.selectedDate = data.data.date
 
       // transfer local date format all to US format to easily parse the data
-      const split_date = moment(
-        data.data.date,
-        moment.localeData().longDateFormat('L')
-      )
-        .format('YYYY-MM-DD')
-        .split('-')
-
-      // ex: split_date will be "2022-05-10"
-      // set defaultDatepickervalue
+      const date = moment(data.data.date)
       this.defaultDatePickerValue = {
-        year: split_date[0],
-        month: moment()
-          .month(parseInt(split_date[1]) - 1)
-          .format('MMM'),
-        day: split_date[2]
+        year: date.format('YYYY'),
+        month: date.format('M'),
+        day: date.format('D')
       }
       this.emitAnswer(this.defaultDatePickerValue)
     })

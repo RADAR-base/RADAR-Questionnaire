@@ -6,6 +6,9 @@ import {
   Output,
   ViewChild
 } from '@angular/core'
+import { ModalController } from '@ionic/angular'
+import { Ionic4DatepickerModalComponent } from '@logisticinfotech/ionic4-datepicker'
+import * as moment from 'moment'
 
 import { LocalizationService } from '../../../../../core/services/misc/localization.service'
 
@@ -50,7 +53,10 @@ export class TextInputComponent implements OnInit {
 
   value = {}
 
-  constructor(private localization: LocalizationService) {}
+  constructor(
+    private localization: LocalizationService,
+    public modalCtrl: ModalController
+  ) {}
 
   ngOnInit() {
     if (this.type.length) {
@@ -73,6 +79,20 @@ export class TextInputComponent implements OnInit {
   initDates() {
     const moment = this.localization.moment(Date.now())
     const locale = moment.localeData()
+    const formatL = locale.longDateFormat('L')
+    this.datePickerObj = {
+      // User the user's locale format as output format
+      dateFormat: formatL,
+      btnProperties: {
+        expand: 'block', // Default 'block'
+        fill: 'outline', // Default 'solid'
+        size: 'small', // Default 'default'
+        disabled: '', // Default false
+        strong: 'true', // Default false
+        color: 'secondary' // Default ''
+      },
+      closeOnSelect: 'true'
+    }
     const month = locale.monthsShort()
     const day = this.addLeadingZero(Array.from(Array(32).keys()).slice(1, 32))
     const year = Array.from(Array(31).keys()).map(d => String(d + 2000))
@@ -109,6 +129,34 @@ export class TextInputComponent implements OnInit {
 
   addLeadingZero(values) {
     return values.map(d => (d < 10 ? '0' + d : d)).map(String)
+  }
+
+  datePickerObj: any = {}
+  selectedDate: string = new Date().toLocaleDateString()
+
+  async openDatePicker() {
+    const datePickerModal = await this.modalCtrl.create({
+      component: Ionic4DatepickerModalComponent,
+      cssClass: 'li-ionic4-datePicker',
+      componentProps: {
+        objConfig: this.datePickerObj,
+        selectedDate: this.selectedDate
+      }
+    })
+    await datePickerModal.present()
+
+    datePickerModal.onDidDismiss().then(data => {
+      this.selectedDate = data.data.date
+
+      // transfer local date format all to US format to easily parse the data
+      const date = moment(data.data.date)
+      this.defaultDatePickerValue = {
+        year: date.format('YYYY'),
+        month: date.format('M'),
+        day: date.format('D')
+      }
+      this.emitAnswer(this.defaultDatePickerValue)
+    })
   }
 
   emitAnswer(value) {

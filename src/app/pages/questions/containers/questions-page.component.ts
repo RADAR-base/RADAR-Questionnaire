@@ -172,9 +172,6 @@ export class QuestionsPageComponent implements OnInit {
       this.questionsService.submitAnswer(event)
       setTimeout(() => this.updateToolbarButtons(), 100)
     }
-    if (this.questionsService.getIsNextAutomatic(event.type)) {
-      this.nextQuestion()
-    }
   }
 
   slideQuestion() {
@@ -201,6 +198,8 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   nextQuestion() {
+    if (this.isRightButtonDisabled) return
+
     const questionPosition = this.questionsService.getNextQuestion(
       this.groupedQuestions,
       this.currentQuestionGroupId

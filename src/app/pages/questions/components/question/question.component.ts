@@ -9,9 +9,9 @@ import {
 } from '@angular/core'
 import { Dialogs } from '@ionic-native/dialogs/ngx'
 import { Vibration } from '@ionic-native/vibration/ngx'
-import { Content, Keyboard } from 'ionic-angular'
 import * as smoothscroll from 'smoothscroll-polyfill'
 
+import { KeyboardEventType } from '../../../../shared/enums/events'
 import { Answer } from '../../../../shared/models/answer'
 import { Question, QuestionType } from '../../../../shared/models/question'
 import { Task } from '../../../../shared/models/task'
@@ -34,8 +34,13 @@ export class QuestionComponent implements OnInit, OnChanges {
   task: Task
   @Input()
   isSectionHeaderHidden: boolean
+  // isNextAutomatic: automatically slide to next upon answer
+  @Input()
+  isNextAutomatic: boolean
   @Output()
   answer: EventEmitter<Answer> = new EventEmitter<Answer>()
+  @Output()
+  autoNext: EventEmitter<Answer> = new EventEmitter<Answer>()
 
   value: any
   currentlyShown = false
@@ -79,11 +84,7 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.checkbox
   ])
 
-  constructor(
-    private vibration: Vibration,
-    private dialogs: Dialogs,
-    private keyboard: Keyboard
-  ) {
+  constructor(private vibration: Vibration, private dialogs: Dialogs) {
     smoothscroll.polyfill()
     this.value = null
   }
@@ -118,31 +119,18 @@ export class QuestionComponent implements OnInit, OnChanges {
       else this.previouslyShown = false
       this.currentlyShown = false
     }
-    // this.evalBeep()
   }
 
-  emitAnswer() {
-    this.answer.emit({
-      id: this.question.field_name,
-      value: this.value,
-      type: this.question.field_type
-    })
-  }
-
-  onValueChange(event: any) {
+  emitAnswer(event: any) {
     // NOTE: On init the component fires the event once
-    if (event === undefined) {
-      return
-    }
-    this.value = event
-    this.emitAnswer()
-  }
-
-  evalBeep() {
-    if (this.currentlyShown && this.question.field_label.includes('beep')) {
-      console.log('Beep!')
-      this.dialogs.beep(1)
-      this.vibration.vibrate(600)
+    if (event && event !== undefined) {
+      this.value = event
+      this.answer.emit({
+        id: this.question.field_name,
+        value: this.value,
+        type: this.question.field_type
+      })
+      if (this.question.isAutoNext) this.autoNext.emit()
     }
   }
 
@@ -168,16 +156,26 @@ export class QuestionComponent implements OnInit, OnChanges {
     }
   }
 
-  onTextInputFocus(value) {
-    if (value) {
-      // Add delay for keyboard to show up
-      setTimeout(() => {
-        this.content.nativeElement.style = `padding-bottom:${this.keyboardInputOffset}px;`
-        this.content.nativeElement.scrollTop = this.keyboardInputOffset
-      }, 100)
-    } else {
-      this.content.nativeElement.style = ''
-      this.content.nativeElement.scrollTop = 0
+  onKeyboardEvent(value) {
+    switch (value) {
+      case KeyboardEventType.FOCUS:
+        // Add delay for keyboard to show up
+        setTimeout(() => {
+          this.content.nativeElement.style = `padding-bottom:${this.keyboardInputOffset}px;`
+          this.content.nativeElement.scrollTop = this.keyboardInputOffset
+        }, 100)
+        break
+      case KeyboardEventType.BLUR: {
+        this.content.nativeElement.style = ''
+        this.content.nativeElement.scrollTop = 0
+        break
+      }
+      case KeyboardEventType.ENTER: {
+        this.autoNext.emit()
+        break
+      }
+      default:
+        break
     }
   }
 

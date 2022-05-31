@@ -1,111 +1,101 @@
-page-clinical-tasks {
-  ion-header .toolbar-background {
-    background-color: var(--ion-color-secondary);
-  }
+ion-header .toolbar-background {
+  --background: var(--ion-color-secondary);
+}
 
-  .toolbar-title {
-    color: var(--ion-font);
-  }
+ion-toolbar {
+  --background: var(--ion-color-secondary);
+}
 
-  .date {
-    font-size: 20px;
-  }
+ion-toolbar > ion-button {
+  --border-width: 0 !important;
+  --background: transparent;
+  --padding-start: 12px;
+  --padding-end: 12px;
+}
 
-  .layers {
-    position: relative;
-    padding-top: 40px;
-  }
+ion-title {
+  margin: -4px;
+}
 
-  #time-current {
-    top: 0;
-    left: 0;
-    z-index: 2;
-    width: 100%;
-  }
+.date {
+  font-size: 20px;
+}
 
-  .time-current-division {
-    margin-top: 10px;
-    width: 100%;
-    height: 2px;
-    background-color: var(--cl-warning);
-  }
+.layers {
+  position: relative;
+  padding-top: 40px;
+}
 
-  .time-current-division.left {
-    margin-left: -5px;
-  }
+#time-current {
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 100%;
+}
 
-  .time-current-division.right {
-    margin-left: 5px;
-  }
+.time-current-division {
+  margin-top: 10px;
+  width: 100%;
+  height: 2px;
+  background-color: var(--cl-warning);
+}
 
-  .time-current {
-    color: var(--cl-light-80);
-    text-align: center;
-    font-size: 18px;
-  }
+.time-current-division.left {
+  margin-left: -5px;
+}
 
-  #task-item {
-    display: block;
-    margin-bottom: 3px;
-    padding: 3px 9px;
-    padding-bottom: 0;
-    background-color: var(--cl-primary-40);
-    text-align: center;
-    font-size: 18px;
-  }
+.time-current-division.right {
+  margin-left: 5px;
+}
 
-  .units {
-    font-size: 12px;
-  }
+.time-current {
+  color: var(--cl-light-80);
+  text-align: center;
+  font-size: 18px;
+}
 
-  .icon-padding {
-    padding-right: 5px;
-    padding-left: 5px;
-  }
+#task-item {
+  display: block;
+  margin-bottom: 3px;
+  padding: 3px 9px;
+  padding-bottom: 0;
+  background-color: var(--cl-primary-40);
+  text-align: center;
+  font-size: 18px;
+}
 
-  .icon-xsm {
-    height: 14px;
-  }
+.units {
+  font-size: 12px;
+}
 
-  ion-icon {
-    color: white;
-  }
+.icon-padding {
+  padding-right: 5px;
+  padding-left: 5px;
+}
 
-  .task-info-left {
-    float: left;
-  }
+.icon-xsm {
+  height: 14px;
+}
 
-  .task-info-right {
-    float: right;
-  }
+ion-icon {
+  color: white;
+}
 
-  .metrics {
-    float: left;
-    width: 64px;
-    white-space: nowrap;
-  }
+.task-info-left {
+  float: left;
+}
 
-  .status-div {
-    float: right;
-    padding-left: 10px;
-  }
+.task-info-right {
+  float: right;
+}
 
-  .status {
-    margin-top: -8px;
-    margin-bottom: -8px;
-    padding-top: 2px;
-    padding-right: 0;
-    color: map-get($colors, tertiary);
-    font-size: 28px;
-  }
+.metrics {
+  float: left;
+  width: 64px;
+  white-space: nowrap;
+}
 
-  .status-checked {
-    margin-left: 2px;
-    padding-top: 2px;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background-color: map-get($colors, tertiary);
-    font-size: 21px;
-  }
+.status-div {
+  float: right;
+  padding-left: 10px;
 }

@@ -10,7 +10,7 @@ import { ClinicalTasksService } from './services/clinical-tasks.service'
 
 const routes: Routes = [
   {
-    path: 'clinical-tasks',
+    path: '',
     component: ClinicalTasksPageComponent,
     canActivate: [AuthGuard]
   }

@@ -8,6 +8,13 @@ const routes: Routes = [
       import('./pages/questions/questions.module').then(m => m.QuestionsModule)
   },
   {
+    path: 'clinical-tasks',
+    loadChildren: () =>
+      import('./pages/clinical-tasks/clinical-tasks.module').then(
+        m => m.ClinicalTasksModule
+      )
+  },
+  {
     path: 'settings',
     loadChildren: () =>
       import('./pages/settings/settings.module').then(m => m.SettingsModule)

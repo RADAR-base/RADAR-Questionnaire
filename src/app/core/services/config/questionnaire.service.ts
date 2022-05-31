@@ -190,7 +190,7 @@ export class QuestionnaireService {
   getHasOnDemandAssessments() {
     return this.storage
       .get(this.QUESTIONNAIRE_STORE.CONIFG_ON_DEMAND_ASSESSMENTS)
-      .then(assessments => assessments.length > 0)
+      .then(assessments => assessments && assessments.length > 0)
   }
 
   getHasClinicalAssessments() {

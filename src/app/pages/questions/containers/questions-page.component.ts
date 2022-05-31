@@ -200,8 +200,9 @@ export class QuestionsPageComponent implements OnInit {
   previousQuestion() {
     const currentQuestions = this.getCurrentQuestions()
     this.questionOrder.pop()
-    this.currentQuestionGroupId =
-      this.questionOrder[this.questionOrder.length - 1]
+    this.currentQuestionGroupId = this.questionOrder[
+      this.questionOrder.length - 1
+    ]
     this.updateToolbarButtons()
     if (!this.isRightButtonDisabled)
       this.questionsService.deleteLastAnswers(currentQuestions)
@@ -215,8 +216,9 @@ export class QuestionsPageComponent implements OnInit {
     this.isRightButtonDisabled =
       !this.questionsService.isAnyAnswered(currentQs) &&
       !this.questionsService.getIsAnyNextEnabled(currentQs)
-    this.isLeftButtonDisabled =
-      this.questionsService.getIsAnyPreviousEnabled(currentQs)
+    this.isLeftButtonDisabled = this.questionsService.getIsAnyPreviousEnabled(
+      currentQs
+    )
   }
 
   exitQuestionnaire() {

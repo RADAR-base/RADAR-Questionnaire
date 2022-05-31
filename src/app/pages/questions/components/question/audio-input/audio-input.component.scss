@@ -1,18 +1,13 @@
 .audio-bottom {
   position: absolute;
   bottom: 48px;
-  left: 50%;
-  width: 80%;
+  width: 85%;
 }
 
 .audio-container {
   overflow: hidden;
   width: inherit;
   height: inherit !important;
-}
-
-button {
-  left: -50%;
 }
 
 .bt-stop {

@@ -102,7 +102,7 @@ import { Utility } from './shared/utilities/util'
     Dialogs,
     Vibration,
     Globalization,
-    // AndroidPermissionUtility,
+    AndroidPermissionUtility,
     AndroidPermissions,
     File,
     AppVersion,

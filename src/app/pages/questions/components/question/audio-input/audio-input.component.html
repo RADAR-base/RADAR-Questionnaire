@@ -4,7 +4,7 @@
   </div>
   <div class="audio-bottom">
     <ng-container *ngIf="buttonShown">
-      <button
+      <ion-button
         ion-button
         class="bt bt--full"
         [class.bt-stop]="isRecording()"
@@ -13,7 +13,7 @@
         (click)="handleRecording()"
       >
         {{ getRecordingButtonText() }}
-      </button>
+      </ion-button>
     </ng-container>
   </div>
 </div>

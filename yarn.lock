@@ -1526,6 +1526,13 @@ autoprefixer@^9.8.6:
     postcss "^7.0.32"
     postcss-value-parser "^4.1.0"
 
+avro-js@^1.11.0:
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/avro-js/-/avro-js-1.11.0.tgz#fb4613f05e4df5b88c8b631ec400fbb82ea65ec5"
+  integrity sha512-ndeGph6lECwNvIcpA4YfRxMaZNMR/Eiw+QX77ibxouYm+jC51Ha2aAIxYD6eg1EABlQU5yErprtA+N2YP3G2BQ==
+  dependencies:
+    underscore "^1.12.0"
+
 aws-sign2@~0.7.0:
   version "0.7.0"
   resolved "https://registry.npmjs.org/aws-sign2/-/aws-sign2-0.7.0.tgz"
@@ -11415,6 +11422,11 @@ underscore@1.2.1:
   version "1.2.1"
   resolved "https://registry.npmjs.org/underscore/-/underscore-1.2.1.tgz"
   integrity sha1-/FxrB2VnPZKi1KyLTcCqiHAuK9Q=
+
+underscore@^1.12.0:
+  version "1.13.3"
+  resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.13.3.tgz#54bc95f7648c5557897e5e968d0f76bc062c34ee"
+  integrity sha512-QvjkYpiD+dJJraRA8+dGAU4i7aBbb2s0S3jA45TFOvg2VgqvdCDd/3N6CqA8gluk1W91GLoXg5enMUx560QzuA==
 
 underscore@^1.8.3, underscore@^1.9.1, underscore@^1.9.2:
   version "1.13.2"

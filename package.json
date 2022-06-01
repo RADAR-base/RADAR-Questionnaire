@@ -70,6 +70,7 @@
     "@logisticinfotech/ionic4-datepicker": "^1.4.4",
     "angular-svg-round-progressbar": "^3.0.1",
     "autoprefixer": "^9.8.6",
+    "avro-js": "^1.11.0",
     "base64-js": "^1.5.1",
     "browserify": "^16.3.0",
     "browserify-zlib": "^0.2.0",

@@ -56,7 +56,8 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.audio,
     QuestionType.info,
     QuestionType.text,
-    QuestionType.descriptive
+    QuestionType.descriptive,
+    QuestionType.slider
   ])
   HIDE_FIELD_LABEL_SET: Set<QuestionType> = new Set([
     QuestionType.audio,
@@ -148,14 +149,12 @@ export class QuestionComponent implements OnInit, OnChanges {
     ) {
       const min = this.question.select_choices_or_calculations[0].code
       const minLabel = this.question.select_choices_or_calculations[0].label
-      const max =
-        this.question.select_choices_or_calculations[
-          this.question.select_choices_or_calculations.length - 1
-        ].code
-      const maxLabel =
-        this.question.select_choices_or_calculations[
-          this.question.select_choices_or_calculations.length - 1
-        ].label
+      const max = this.question.select_choices_or_calculations[
+        this.question.select_choices_or_calculations.length - 1
+      ].code
+      const maxLabel = this.question.select_choices_or_calculations[
+        this.question.select_choices_or_calculations.length - 1
+      ].label
       this.question.range = {
         min: parseInt(min.trim()),
         max: parseInt(max.trim()),
@@ -181,7 +180,7 @@ export class QuestionComponent implements OnInit, OnChanges {
   isScrollbarVisible() {
     return (
       this.input.nativeElement.scrollHeight >
-      this.input.nativeElement.clientHeight
+        this.input.nativeElement.clientHeight && this.isScrollable
     )
   }
 

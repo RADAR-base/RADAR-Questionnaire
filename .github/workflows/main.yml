@@ -65,20 +65,11 @@ jobs:
         env:
           SECRET: ${{secrets.GOOGLE_SERVICES_ANDROID}}
 
-      - name: Install Ionic and Cordova
-        run: npm i -g ionic cordova
-
       - name: Install Yarn
         run: npm i -g yarn
 
       - name: Install cordova-res
         run: npm i -g cordova-res
-
-      - name: Install app dependencies
-        run: yarn install
-
-      - name: Run unit tests
-        run: yarn run test
 
       - name: Use coturiv/setup-ionic
         uses: coturiv/setup-ionic@v1
@@ -89,6 +80,12 @@ jobs:
         uses: coturiv/setup-ionic@v1
         with:
           cordova-version: 8
+
+      - name: Install app dependencies
+        run: yarn install
+
+      - name: Run unit tests
+        run: yarn run test
 
       - name: Build
         run: |

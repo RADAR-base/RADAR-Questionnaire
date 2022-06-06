@@ -48,7 +48,9 @@ export class NotificationFactoryService extends NotificationService {
         }
       })
       .then(() =>
-        this.isPlatformCordova() ? this.notificationService.init() : true
+        this.isPlatformCordova()
+          ? this.notificationService.init()
+          : (this.notificationService = this.fcmRestNotificationService)
       )
   }
 

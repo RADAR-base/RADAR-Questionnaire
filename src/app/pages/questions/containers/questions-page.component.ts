@@ -80,15 +80,18 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.task = this.router.getCurrentNavigation().extras.state as Task
-    this.questionsService.getQuestionnairePayload(this.task).then(res => {
-      this.initQuestionnaire(res)
-      return this.updateToolbarButtons()
-    })
-    this.sendEvent(UsageEventType.QUESTIONNAIRE_STARTED)
-    this.usage.setPage(this.constructor.name)
-    this.insomnia.keepAwake()
-    this.slides.lockSwipes(true)
+    const nav = this.router.getCurrentNavigation()
+    if (nav) {
+      this.task = nav.extras.state as Task
+      this.questionsService.getQuestionnairePayload(this.task).then(res => {
+        this.initQuestionnaire(res)
+        return this.updateToolbarButtons()
+      })
+      this.sendEvent(UsageEventType.QUESTIONNAIRE_STARTED)
+      this.usage.setPage(this.constructor.name)
+      this.insomnia.keepAwake()
+      this.slides.lockSwipes(true)
+    }
   }
 
   initQuestionnaire(res) {

@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed, async } from '@angular/core/testing'
-import { NavController } from '@ionic/angular'
+import { IonicModule, NavController } from '@ionic/angular'
+import { PipesModule } from 'src/app/shared/pipes/pipes.module'
 
 import { AppModule } from '../../../app.module'
 import { ClinicalTasksService } from '../services/clinical-tasks.service'
@@ -11,8 +12,8 @@ describe('ClinicalTasksPageComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [AppModule],
-      declarations: [],
+      imports: [AppModule, IonicModule, PipesModule],
+      declarations: [ClinicalTasksPageComponent],
       providers: [
         NavController,
         { provide: ClinicalTasksService, useClass: ClinicalTasksServiceMock }
@@ -30,4 +31,8 @@ describe('ClinicalTasksPageComponent', () => {
   })
 })
 
-class ClinicalTasksServiceMock {}
+class ClinicalTasksServiceMock {
+  getAssessements() {
+    return Promise.resolve([])
+  }
+}

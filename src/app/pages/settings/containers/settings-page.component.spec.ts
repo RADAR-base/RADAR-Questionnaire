@@ -1,7 +1,10 @@
 import { ComponentFixture, TestBed, async } from '@angular/core/testing'
-import { NavController } from '@ionic/angular'
+import { IonicModule, NavController } from '@ionic/angular'
+import { MomentModule } from 'ngx-moment'
+import { PipesModule } from 'src/app/shared/pipes/pipes.module'
 
 import { AppModule } from '../../../app.module'
+import { SettingsService } from '../services/settings.service'
 import { SettingsPageComponent } from './settings-page.component'
 
 describe('SettingsPageComponent', () => {
@@ -10,9 +13,9 @@ describe('SettingsPageComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [AppModule],
-      declarations: [],
-      providers: [NavController]
+      imports: [AppModule, IonicModule, PipesModule, MomentModule],
+      declarations: [SettingsPageComponent],
+      providers: [NavController, SettingsService]
     }).compileComponents()
 
     fixture = TestBed.createComponent(SettingsPageComponent)

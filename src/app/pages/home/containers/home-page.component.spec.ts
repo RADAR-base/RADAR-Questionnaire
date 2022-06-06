@@ -1,7 +1,12 @@
 import { ComponentFixture, TestBed, async } from '@angular/core/testing'
-import { NavController } from '@ionic/angular'
+import { IonicModule, NavController } from '@ionic/angular'
+import { PipesModule } from 'src/app/shared/pipes/pipes.module'
 
 import { AppModule } from '../../../app.module'
+import { TaskCalendarModule } from '../components/task-calendar/task-calendar.module'
+import { TaskInfoModule } from '../components/task-info/task-info.module'
+import { TaskProgressModule } from '../components/task-progress/task-progress.module'
+import { TickerBarModule } from '../components/ticker-bar/ticker-bar.module'
 import { HomePageComponent } from './home-page.component'
 
 describe('HomePageComponent', () => {
@@ -10,8 +15,16 @@ describe('HomePageComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [AppModule],
-      declarations: [],
+      imports: [
+        AppModule,
+        IonicModule,
+        TaskProgressModule,
+        TickerBarModule,
+        TaskInfoModule,
+        TaskCalendarModule,
+        PipesModule
+      ],
+      declarations: [HomePageComponent],
       providers: [NavController]
     }).compileComponents()
 

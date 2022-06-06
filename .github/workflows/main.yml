@@ -85,13 +85,16 @@ jobs:
       - name: Run unit tests
         run: yarn run test
 
-      - name: Add Android platform
-        run: ionic cordova platform add android && rm package-lock.json
-
-      - name: Prepare Android app
-        run: yarn install
-
-      - name: Build Android app
-        uses: maierj/fastlane-action@v2.0.1
+      - name: Use coturiv/setup-ionic
+        uses: coturiv/setup-ionic@v1
         with:
-          lane: 'android build_debug'
+          java-version: 8
+
+      - name: Use coturiv/setup-ionic
+        uses: coturiv/setup-ionic@v1
+        with:
+          cordova-version: 8
+
+      - name: Build
+        run: |
+          ionic cordova build android --prod

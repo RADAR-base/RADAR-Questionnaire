@@ -3,7 +3,8 @@ import { ModalController, NavParams, Platform } from '@ionic/angular'
 
 @Component({
   selector: 'cache-send-modal',
-  templateUrl: 'cache-send-modal.component.html'
+  templateUrl: 'cache-send-modal.component.html',
+  styleUrls: ['cache-send-modal.component.scss']
 })
 export class CacheSendModalComponent {
   successes: any[]

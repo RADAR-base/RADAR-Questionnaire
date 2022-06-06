@@ -144,20 +144,24 @@ p {
   border-radius: 8px !important;
 }
 
+.modal-wrapper,
+.inner-scroll {
+  background: transparent !important;
+}
 
 .li-ionic4-datePicker {
   .modal-wrapper {
-    height:440px;
+    height: 440px;
     max-height: 100%;
     width: 312px;
     ion-button {
-        --ion-color-primary: white;
-        --border-radious: 5px;
-        --border-color: none;
-        --border-width: 0px !important;
+      --ion-color-primary: white;
+      --border-radious: 5px;
+      --border-color: none;
+      --border-width: 0px !important;
     }
-    ion-footer{
-      ion-button{
+    ion-footer {
+      ion-button {
         --border-width: 2px;
         --ion-color-primary: var(--ion-color-primary);
       }
@@ -165,19 +169,18 @@ p {
 
     .dp-month-year-scroll-container {
       ion-item {
-          background-color: var(--ion-color-secondary)!important;
-          ion-label {
-              padding:5px;
-              color: white;
-              background-color: var(--ion-color-secondary)!important;
-          }
-          ion-label.dp-selected {
-              color: var(--ion-color-primary);
-              font-size: 20px;
-              font-weight: 500;
-          }
+        background-color: var(--ion-color-secondary) !important;
+        ion-label {
+          padding: 5px;
+          color: white;
+          background-color: var(--ion-color-secondary) !important;
+        }
+        ion-label.dp-selected {
+          color: var(--ion-color-primary);
+          font-size: 20px;
+          font-weight: 500;
+        }
       }
     }
   }
 }
-

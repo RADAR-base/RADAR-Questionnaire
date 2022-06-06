@@ -81,6 +81,11 @@ jobs:
         with:
           cordova-version: 8
 
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
       - name: Install app dependencies
         run: yarn install
 

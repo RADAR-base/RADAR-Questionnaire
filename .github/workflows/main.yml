@@ -84,8 +84,12 @@ jobs:
         run: yarn install
 
       - name: Run unit tests
-        run: yarn run test && yarn add rxjs
+        run: yarn run test && yarn
 
       - name: Build
         run: |
-          ionic cordova build android --prod
+        cordova prepare android
+
+      - name: Build
+        run: |
+          ionic cordova build android

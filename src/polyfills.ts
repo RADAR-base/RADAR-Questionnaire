@@ -62,3 +62,5 @@ import './zone-flags'
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
+
+global.Buffer = global.Buffer || require('buffer').Buffer

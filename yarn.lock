@@ -2076,10 +2076,12 @@ android-versions@^1.5.0:
   dependencies:
     semver "^5.7.1"
 
-angular-svg-round-progressbar@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.npmjs.org/angular-svg-round-progressbar/-/angular-svg-round-progressbar-3.0.1.tgz"
-  integrity sha512-sH9dW/VoPb4sWwPQyuj+N4HmLxn1okUPJmB1UG979vDS9zzMGpSc6Cg8W/ixWmws5J3KMBH1XTWa6Aj7h4hhng==
+angular-svg-round-progressbar@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/angular-svg-round-progressbar/-/angular-svg-round-progressbar-9.0.0.tgz#7291c45ba5261345e666800794f04c6c370667d2"
+  integrity sha512-q8d2AEG9u+GMAMrZY40NgejN5fHwR4iK+rRxtJ7NnMEvvuAMqt9UEtKe0SqVQHvZYE6W16L5J9yaO+TEtfRjpw==
+  dependencies:
+    tslib "^2.3.0"
 
 ansi-align@^3.0.0:
   version "3.0.0"
@@ -14423,15 +14425,10 @@ tslib@^1, tslib@^1.0.0, tslib@^1.10.0, tslib@^1.11.2, tslib@^1.13.0, tslib@^1.7.
   resolved "https://registry.npmjs.org/tslib/-/tslib-1.13.0.tgz"
   integrity sha512-i/6DQjL8Xf3be4K/E6Wgpekn5Qasl1usyw++dAA35Ue5orEn65VIxOA+YvNNl9HV3qv70T7CNwjODHZrLwvd1Q==
 
-tslib@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.npmjs.org/tslib/-/tslib-2.0.0.tgz"
-  integrity sha512-lTqkx847PI7xEDYJntxZH89L2/aXInsyF2luSafe/+0fHOMjlBNXdH6th7f70qxLDhul7KZK0zC8V5ZIyHl0/g==
-
-tslib@^2.1.0:
-  version "2.2.0"
-  resolved "https://registry.npmjs.org/tslib/-/tslib-2.2.0.tgz"
-  integrity sha512-gS9GVHRU+RGn5KQM2rllAlR3dU6m7AcpJKdtH8gFvQiC4Otgk98XnmMU+nZenHt/+VhnBPWwgrJsyrdcw6i23w==
+tslib@^2.0.0, tslib@^2.1.0, tslib@^2.3.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.4.0.tgz#7cecaa7f073ce680a05847aa77be941098f36dc3"
+  integrity sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==
 
 tslint-angular@^3.0.2:
   version "3.0.2"

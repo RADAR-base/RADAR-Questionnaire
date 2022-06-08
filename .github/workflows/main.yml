@@ -88,4 +88,4 @@ jobs:
 
       - name: Build
         run: |
-          cordova platform rm android && cordova platform add android && ionic cordova build android
+          ionic cordova platform add android && rm package-lock.json && yarn install

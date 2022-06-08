@@ -92,4 +92,4 @@ jobs:
 
       - name: Build
         run: |
-          ionic cordova platform build android
+          ionic cordova build android

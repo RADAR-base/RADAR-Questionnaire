@@ -86,6 +86,10 @@ jobs:
       - name: Run unit tests
         run: yarn run test && yarn
 
-      - name: Build
+      - name: Prepare Android
         run: |
           ionic cordova platform add android && rm package-lock.json && yarn install
+
+      - name: Build
+        run: |
+          ionic cordova platform build android

@@ -29,7 +29,7 @@
                 [currentIndex]="currentQuestionGroupId"
                 [isSectionHeaderHidden]="j != currentQuestionIndices[0]"
                 (answer)="onAnswer($event)"
-                (autoNext)="nextQuestion()"
+                (nextAction)="nextAction($event)"
               ></question>
             </ng-container>
           </ion-slide>

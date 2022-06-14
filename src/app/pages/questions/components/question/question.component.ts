@@ -40,7 +40,7 @@ export class QuestionComponent implements OnInit, OnChanges {
   @Output()
   answer: EventEmitter<Answer> = new EventEmitter<Answer>()
   @Output()
-  autoNext: EventEmitter<Answer> = new EventEmitter<Answer>()
+  nextAction: EventEmitter<any> = new EventEmitter<any>()
 
   value: any
   currentlyShown = false
@@ -130,7 +130,8 @@ export class QuestionComponent implements OnInit, OnChanges {
         value: this.value,
         type: this.question.field_type
       })
-      if (this.question.isAutoNext) this.autoNext.emit()
+      if (this.question.isAutoNext) this.nextAction.emit('auto')
+      else this.nextAction.emit('enable')
     }
   }
 
@@ -141,12 +142,14 @@ export class QuestionComponent implements OnInit, OnChanges {
     ) {
       const min = this.question.select_choices_or_calculations[0].code
       const minLabel = this.question.select_choices_or_calculations[0].label
-      const max = this.question.select_choices_or_calculations[
-        this.question.select_choices_or_calculations.length - 1
-      ].code
-      const maxLabel = this.question.select_choices_or_calculations[
-        this.question.select_choices_or_calculations.length - 1
-      ].label
+      const max =
+        this.question.select_choices_or_calculations[
+          this.question.select_choices_or_calculations.length - 1
+        ].code
+      const maxLabel =
+        this.question.select_choices_or_calculations[
+          this.question.select_choices_or_calculations.length - 1
+        ].label
       this.question.range = {
         min: parseInt(min.trim()),
         max: parseInt(max.trim()),
@@ -171,7 +174,7 @@ export class QuestionComponent implements OnInit, OnChanges {
         break
       }
       case KeyboardEventType.ENTER: {
-        this.autoNext.emit()
+        this.nextAction.emit('auto')
         break
       }
       default:
@@ -207,5 +210,10 @@ export class QuestionComponent implements OnInit, OnChanges {
       left: 0,
       behavior: 'smooth'
     })
+  }
+
+  onAudioRecordStart(start) {
+    if (start) this.nextAction.emit('disable')
+    else this.nextAction.emit('enable')
   }
 }

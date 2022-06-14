@@ -27,6 +27,8 @@ import { AudioRecordService } from '../../../services/audio-record.service'
 export class AudioInputComponent implements OnDestroy, OnInit {
   @Output()
   valueChange: EventEmitter<any> = new EventEmitter<any>()
+  @Output()
+  onRecordStart: EventEmitter<any> = new EventEmitter<any>()
   @Input()
   text: string
   @Input()
@@ -77,6 +79,7 @@ export class AudioInputComponent implements OnDestroy, OnInit {
         this.startRecording().catch(e => this.showTaskInterruptedAlert())
     } else {
       this.stopRecording()
+      this.onRecordStart.emit(false)
       if (this.recordAttempts == DefaultMaxAudioAttemptsAllowed)
         this.finishRecording().catch(e => this.showTaskInterruptedAlert())
       else this.showAfterAttemptAlert()
@@ -95,6 +98,7 @@ export class AudioInputComponent implements OnDestroy, OnInit {
       this.permissionUtil.getRecordAudio_Permission(),
       this.permissionUtil.getWriteExternalStorage_permission()
     ]).then(res => {
+      this.onRecordStart.emit(true)
       this.usage.sendGeneralEvent(UsageEventType.RECORDING_STARTED, true)
       return res[0] && res[1]
         ? this.audioRecordService.startAudioRecording()

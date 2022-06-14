@@ -168,10 +168,7 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   onAnswer(event) {
-    if (event.id) {
-      this.questionsService.submitAnswer(event)
-      setTimeout(() => this.updateToolbarButtons(), 100)
-    }
+    if (event.id) this.questionsService.submitAnswer(event)
   }
 
   slideQuestion() {
@@ -197,6 +194,13 @@ export class QuestionsPageComponent implements OnInit {
     )
   }
 
+  nextAction(event) {
+    if (event == 'auto') return this.nextQuestion()
+    if (event == 'enable')
+      return setTimeout(() => this.updateToolbarButtons(), 100)
+    if (event == 'diisable') return (this.isRightButtonDisabled = true)
+  }
+
   nextQuestion() {
     if (this.isRightButtonDisabled) return
 
@@ -217,9 +221,8 @@ export class QuestionsPageComponent implements OnInit {
   previousQuestion() {
     const currentQuestions = this.getCurrentQuestions()
     this.questionOrder.pop()
-    this.currentQuestionGroupId = this.questionOrder[
-      this.questionOrder.length - 1
-    ]
+    this.currentQuestionGroupId =
+      this.questionOrder[this.questionOrder.length - 1]
     this.updateToolbarButtons()
     if (!this.isRightButtonDisabled)
       this.questionsService.deleteLastAnswers(currentQuestions)
@@ -233,9 +236,8 @@ export class QuestionsPageComponent implements OnInit {
     this.isRightButtonDisabled =
       !this.questionsService.isAnyAnswered(currentQs) &&
       !this.questionsService.getIsAnyNextEnabled(currentQs)
-    this.isLeftButtonDisabled = this.questionsService.getIsAnyPreviousEnabled(
-      currentQs
-    )
+    this.isLeftButtonDisabled =
+      this.questionsService.getIsAnyPreviousEnabled(currentQs)
   }
 
   exitQuestionnaire() {

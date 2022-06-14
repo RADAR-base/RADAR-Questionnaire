@@ -103,6 +103,7 @@
           [text]="question.field_label"
           [currentlyShown]="currentlyShown"
           (valueChange)="emitAnswer($event)"
+          (onRecordStart)="onAudioRecordStart($event)"
         >
         </audio-input>
 

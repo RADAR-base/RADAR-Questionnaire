@@ -4,7 +4,10 @@ import { NavController, NavParams, Platform, Slides } from 'ionic-angular'
 
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { UsageService } from '../../../core/services/usage/usage.service'
-import { UsageEventType } from '../../../shared/enums/events'
+import {
+  NextButtonEventType,
+  UsageEventType
+} from '../../../shared/enums/events'
 import { LocKeys } from '../../../shared/enums/localisations'
 import {
   Assessment,
@@ -195,10 +198,11 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   nextAction(event) {
-    if (event == 'auto') return this.nextQuestion()
-    if (event == 'enable')
+    if (event == NextButtonEventType.AUTO) return this.nextQuestion()
+    if (event == NextButtonEventType.ENABLE)
       return setTimeout(() => this.updateToolbarButtons(), 100)
-    if (event == 'diisable') return (this.isRightButtonDisabled = true)
+    if (event == NextButtonEventType.DISABLE)
+      return (this.isRightButtonDisabled = true)
   }
 
   nextQuestion() {

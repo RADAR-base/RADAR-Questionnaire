@@ -53,3 +53,9 @@ export enum KeyboardEventType {
   BLUR = 'blur',
   ENTER = 'enter'
 }
+
+export enum NextButtonEventType {
+  AUTO = 'auto',
+  DISABLE = 'disable',
+  ENABLE = 'enable'
+}

@@ -11,7 +11,10 @@ import { Dialogs } from '@ionic-native/dialogs/ngx'
 import { Vibration } from '@ionic-native/vibration/ngx'
 import * as smoothscroll from 'smoothscroll-polyfill'
 
-import { KeyboardEventType } from '../../../../shared/enums/events'
+import {
+  KeyboardEventType,
+  NextButtonEventType
+} from '../../../../shared/enums/events'
 import { Answer } from '../../../../shared/models/answer'
 import { Question, QuestionType } from '../../../../shared/models/question'
 import { Task } from '../../../../shared/models/task'
@@ -130,8 +133,9 @@ export class QuestionComponent implements OnInit, OnChanges {
         value: this.value,
         type: this.question.field_type
       })
-      if (this.question.isAutoNext) this.nextAction.emit('auto')
-      else this.nextAction.emit('enable')
+      if (this.question.isAutoNext)
+        this.nextAction.emit(NextButtonEventType.AUTO)
+      else this.nextAction.emit(NextButtonEventType.ENABLE)
     }
   }
 
@@ -174,7 +178,7 @@ export class QuestionComponent implements OnInit, OnChanges {
         break
       }
       case KeyboardEventType.ENTER: {
-        this.nextAction.emit('auto')
+        this.nextAction.emit(NextButtonEventType.AUTO)
         break
       }
       default:
@@ -212,8 +216,8 @@ export class QuestionComponent implements OnInit, OnChanges {
     })
   }
 
-  onAudioRecordStart(start) {
-    if (start) this.nextAction.emit('disable')
-    else this.nextAction.emit('enable')
+  onAudioRecordStart(start: boolean) {
+    if (start) this.nextAction.emit(NextButtonEventType.DISABLE)
+    else this.nextAction.emit(NextButtonEventType.ENABLE)
   }
 }

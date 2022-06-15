@@ -61,7 +61,9 @@ ion-back-button {
 }
 
 .bt--full:active {
-  background-color: var(--cl-primary-80);
+  // background-color: var(--cl-primary-80);
+  background-color: var(--cl-danger-40);
+  border-radius: 56px !important;
 }
 
 .info-value {

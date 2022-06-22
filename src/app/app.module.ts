@@ -63,6 +63,7 @@ import { TranslatePipe } from './shared/pipes/translate/translate'
 import { AndroidPermissionUtility } from './shared/utilities/android-permission'
 import { jwtOptionsFactory } from './shared/utilities/jwtOptionsFactory'
 import { Utility } from './shared/utilities/util'
+import { Health } from '@awesome-cordova-plugins/health/ngx'
 
 @NgModule({
   imports: [
@@ -94,6 +95,7 @@ import { Utility } from './shared/utilities/util'
   bootstrap: [AppComponent],
   entryComponents: [AppComponent],
   providers: [
+    Health,
     Device,
     StatusBar,
     SplashScreen,

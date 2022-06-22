@@ -46,6 +46,7 @@
     "@angular/platform-browser-dynamic": "~7.2.13",
     "@angular/router": "~7.2.13",
     "@auth0/angular-jwt": "^4.2.0",
+    "@awesome-cordova-plugins/core": "^5.43.0",
     "@awesome-cordova-plugins/health": "^5.43.0",
     "@awesome-cordova-plugins/keyboard": "^5.39.0",
     "@ionic-native/android-permissions": "^5.26.0",

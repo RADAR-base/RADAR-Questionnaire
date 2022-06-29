@@ -95,7 +95,11 @@ export class HealthInputComponent implements OnInit {
       })
       .catch(e => console.log(e))
   }
-  ngOnInit() {}
+  ngOnInit() {
+    this.exportData()
+    console.log(this.radarSchema)
+    this.onInputChange(this.radarSchema)
+  }
 
   onInputChange(event) {
     this.valueChange.emit(event)
@@ -103,47 +107,47 @@ export class HealthInputComponent implements OnInit {
   reset() {
     this.loadData()
   }
-  // exportData() {
-  //   this.radarSchema = {
-  //     namespace: 'org.radarcns.active.health',
-  //     type: 'record',
-  //     name: 'patient302',
-  //     doc: 'General health data for patient',
-  //     fields: [
-  //       {
-  //         name: 'height',
-  //         type: 'double',
-  //         doc: 'data for height, current unit will be "m"',
-  //         value: this.height
-  //       },
-  //       {
-  //         name: 'bloodPressure',
-  //         type: 'double',
-  //         doc: 'data for bloodPressure, current unit will be ""',
-  //         value: this.bloodPressure
-  //       },
-  //       {
-  //         name: 'weight',
-  //         type: 'double',
-  //         doc: 'data for weight, current unit will be "kg"',
-  //         value: this.weight
-  //       },
-  //       {
-  //         name: 'bodyTemperature',
-  //         type: 'double',
-  //         doc: 'data for bodyTemperature, current unit will be "degC"',
-  //         value: this.bodyTemperature
-  //       },
-  //       {
-  //         name: 'heartRate',
-  //         type: 'double',
-  //         doc: 'data for heartRate, current unit will be "count/min"',
-  //         value: this.heartRate
-  //       }
-  //     ]
-  //   }
-  //   console.log(this.radarSchema)
-  // }
+  exportData() {
+    this.radarSchema = {
+      namespace: 'org.radarcns.active.health',
+      type: 'record',
+      name: 'patient302',
+      doc: 'General health data for patient',
+      fields: [
+        {
+          name: 'height',
+          type: 'double',
+          doc: 'data for height, current unit will be "m"',
+          value: this.height
+        },
+        {
+          name: 'bloodPressure',
+          type: 'double',
+          doc: 'data for bloodPressure, current unit will be ""',
+          value: this.bloodPressure
+        },
+        {
+          name: 'weight',
+          type: 'double',
+          doc: 'data for weight, current unit will be "kg"',
+          value: this.weight
+        },
+        {
+          name: 'bodyTemperature',
+          type: 'double',
+          doc: 'data for bodyTemperature, current unit will be "degC"',
+          value: this.bodyTemperature
+        },
+        {
+          name: 'heartRate',
+          type: 'double',
+          doc: 'data for heartRate, current unit will be "count/min"',
+          value: this.heartRate
+        }
+      ]
+    }
+    console.log(this.radarSchema)
+  }
   loadData() {
     // For height
     this.health

@@ -1,29 +1,10 @@
-<ion-list>
+<ion-list *ngFor="let r of requirements; let index = index">
   <ion-item>
-    <ion-label position="floating"> Item </ion-label>
-    <ion-input type="text" [(ngModel)]="height" readonly></ion-input>
-  </ion-item>
-
-  <ion-item>
-    <ion-label position="floating"> No Lines Item </ion-label>
-    <!-- <ion-input type="text" [(ngModel)]="bloodPressure" readonly></ion-input> -->
-    <ion-input type="text" [(ngModel)]="height" readonly></ion-input>
-  </ion-item>
-
-  <ion-item>
-    <ion-label position="floating"> Height </ion-label>
-    <ion-input type="text" [(ngModel)]="height" readonly></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label position="floating"> Height </ion-label>
-    <ion-input type="text" [(ngModel)]="height" readonly></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label position="floating"> Height </ion-label>
-    <ion-input type="text" [(ngModel)]="height" readonly></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label position="floating"> Height </ion-label>
-    <ion-input type="text" [(ngModel)]="height" readonly></ion-input>
+    <ion-label position="floating">{{ r.data }}</ion-label>
+    <ion-input
+      type="text"
+      [(ngModel)]="requirements[index].value"
+      readonly
+    ></ion-input>
   </ion-item>
 </ion-list>

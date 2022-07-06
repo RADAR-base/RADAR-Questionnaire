@@ -46,16 +46,23 @@ type RadarSchema = {
   styleUrls: ['health-input.component.scss']
 })
 export class HealthInputComponent implements OnInit {
+  // 1. JUDGE BY HEALTH INPUT TYPE TO DECIDE WHAT DATA WE NEED
+  // 2. PRINT OUT THE DATA AND REQUEST ACCORDINGLY
   @Output()
   valueChange: EventEmitter<number> = new EventEmitter<number>()
 
   @Input()
   responses: Response[]
 
+  requirements = [
+    { data: 'weight', value: '', timeInterval: 1 },
+    { data: 'height', value: '', timeInterval: 1 }
+  ]
   bloodPressure = 'No Data'
   bodyFat = 'No Data'
   bodyTemperature = 'No Data'
   heartRate = 'No Data'
+  heartRateResting = 'No Data'
   highHeartRateNotifications = 'No Data'
   irregularRhythmNotifications = 'No Data'
   lowHeartRateNotifications = 'No Data'
@@ -63,10 +70,15 @@ export class HealthInputComponent implements OnInit {
   weight = 'No Data'
   height = 'No Data'
   stepcount = 'No Data'
-  radarSchema: RadarSchema
+  radarSchema: RadarSchema[]
   workouts = []
 
   constructor(private health: Health) {
+    const requireField = this.requirements.reduce((prev, cur) => {
+      prev.push(cur.data)
+      return prev
+    }, [])
+    console.log(requireField)
     this.health
       .isAvailable()
       .then((available: boolean) => {
@@ -76,15 +88,7 @@ export class HealthInputComponent implements OnInit {
             'distance',
             'nutrition', //read and write permissions
             {
-              read: [
-                'steps',
-                'height',
-                'weight',
-                'heart_rate',
-                'blood_pressure',
-                'gender',
-                'temperature'
-              ], //read only permission
+              read: requireField, //read only permission
               write: ['height', 'weight'] //write only permission
             }
           ])
@@ -97,7 +101,7 @@ export class HealthInputComponent implements OnInit {
   }
   ngOnInit() {
     this.exportData()
-    console.log(this.radarSchema)
+    console.log('test', this.radarSchema)
     this.onInputChange(this.radarSchema)
   }
 
@@ -108,102 +112,63 @@ export class HealthInputComponent implements OnInit {
     this.loadData()
   }
   exportData() {
-    this.radarSchema = {
-      namespace: 'org.radarcns.active.health',
-      type: 'record',
-      name: 'patient302',
-      doc: 'General health data for patient',
-      fields: [
-        {
-          name: 'height',
-          type: 'double',
-          doc: 'data for height, current unit will be "m"',
-          value: this.height
-        },
-        {
-          name: 'bloodPressure',
-          type: 'double',
-          doc: 'data for bloodPressure, current unit will be ""',
-          value: this.bloodPressure
-        },
-        {
-          name: 'weight',
-          type: 'double',
-          doc: 'data for weight, current unit will be "kg"',
-          value: this.weight
-        },
-        {
-          name: 'bodyTemperature',
-          type: 'double',
-          doc: 'data for bodyTemperature, current unit will be "degC"',
-          value: this.bodyTemperature
-        },
-        {
-          name: 'heartRate',
-          type: 'double',
-          doc: 'data for heartRate, current unit will be "count/min"',
-          value: this.heartRate
-        }
-      ]
-    }
+    this.radarSchema = [
+      {
+        namespace: 'org.radarcns.connector.health',
+        type: 'record',
+        name: 'patient302',
+        doc: 'General health data for patient',
+        fields: [
+          {
+            name: 'height',
+            type: 'double',
+            doc: 'data for height, current unit will be "m"',
+            value: this.height
+          },
+          {
+            name: 'bloodPressure',
+            type: 'double',
+            doc: 'data for bloodPressure, current unit will be ""',
+            value: this.bloodPressure
+          },
+          {
+            name: 'weight',
+            type: 'double',
+            doc: 'data for weight, current unit will be "kg"',
+            value: this.weight
+          },
+          {
+            name: 'bodyTemperature',
+            type: 'double',
+            doc: 'data for bodyTemperature, current unit will be "degC"',
+            value: this.bodyTemperature
+          },
+          {
+            name: 'heartRate',
+            type: 'double',
+            doc: 'data for heartRate, current unit will be "count/min"',
+            value: this.heartRate
+          }
+        ]
+      }
+    ]
     console.log(this.radarSchema)
   }
   loadData() {
-    // For height
-    this.health
-      .query({
-        startDate: new Date(new Date().getTime() - 3 * 24 * 60 * 60 * 1000), // three days ago
-        endDate: new Date(), // now
-        dataType: 'height',
-        limit: 1000
-      })
-      .then(res => {
-        console.log(res[0].value)
-        this.height = res[0].value + res[0].unit
-      })
-    this.health
-      .query({
-        startDate: new Date(new Date().getTime() - 3 * 24 * 60 * 60 * 1000), // three days ago
-        endDate: new Date(), // now
-        dataType: 'blood_pressure',
-        limit: 1000
-      })
-      .then((res: any) => {
-        this.bloodPressure =
-          res[0].value.diastolic + '/' + res[0].value.systolic + res[0].unit
-      })
-    this.health
-      .query({
-        startDate: new Date(new Date().getTime() - 3 * 24 * 60 * 60 * 1000), // three days ago
-        endDate: new Date(), // now
-        dataType: 'weight',
-        limit: 1000
-      })
-      .then((res: any) => {
-        console.log(res)
-        this.weight = res[0].value + res[0].unit
-      })
-    this.health
-      .query({
-        startDate: new Date(new Date().getTime() - 3 * 24 * 60 * 60 * 1000), // three days ago
-        endDate: new Date(), // now
-        dataType: 'temperature',
-        limit: 1000
-      })
-      .then((res: any) => {
-        console.log(res)
-        this.bodyTemperature = res[0].value + res[0].unit
-      })
-    this.health
-      .query({
-        startDate: new Date(new Date().getTime() - 3 * 24 * 60 * 60 * 1000), // three days ago
-        endDate: new Date(), // now
-        dataType: 'heart_rate',
-        limit: 1000
-      })
-      .then((res: any) => {
-        console.log(res)
-        this.heartRate = res[0].value + res[0].unit
-      })
+    this.requirements.forEach(r => {
+      this.health
+        .query({
+          startDate: new Date(
+            new Date().getTime() - 1000 * 24 * 60 * 60 * 1000
+          ), // three days ago
+          endDate: new Date(), // now
+          dataType: r.data,
+          limit: 1000
+        })
+        .then(res => {
+          console.log(res[0])
+          r.value = res[0].value + res[0].unit
+        })
+    })
   }
 }

@@ -18,8 +18,14 @@ export interface Question {
   text_validation_max?: string
   text_validation_min?: string
   text_validation_type_or_show_slider_number?: string
+  extra_section?: Health_Requirement[]
   type?: string
   range?: Range
+}
+export interface Health_Requirement {
+  data_name: string
+  time_intervals: string
+  value: string
 }
 
 export interface SelectChoicesOrCalculations {
@@ -39,6 +45,7 @@ export class QuestionType {
   static yesno = 'yesno'
   static descriptive = 'descriptive'
   static matrix_radio = 'matrix-radio'
+  static health = 'health'
 }
 
 export interface Response {

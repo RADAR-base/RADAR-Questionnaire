@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core'
 import { Health } from '@awesome-cordova-plugins/health/ngx'
+import { Health_Requirement } from 'src/app/shared/models/question'
 
 type RadarSchema = {
   namespace: string
@@ -54,10 +55,9 @@ export class HealthInputComponent implements OnInit {
   @Input()
   responses: Response[]
 
-  requirements = [
-    { data: 'weight', value: '', timeInterval: 1 },
-    { data: 'height', value: '', timeInterval: 1 }
-  ]
+  @Input()
+  health_requirements: Health_Requirement[]
+
   bloodPressure = 'No Data'
   bodyFat = 'No Data'
   bodyTemperature = 'No Data'
@@ -73,9 +73,10 @@ export class HealthInputComponent implements OnInit {
   radarSchema: RadarSchema[]
   workouts = []
 
-  constructor(private health: Health) {
-    const requireField = this.requirements.reduce((prev, cur) => {
-      prev.push(cur.data)
+  constructor(private health: Health) {}
+  ngOnInit() {
+    const requireField = this.health_requirements.reduce((prev, cur) => {
+      prev.push(cur.data_name)
       return prev
     }, [])
     console.log(requireField)
@@ -98,10 +99,7 @@ export class HealthInputComponent implements OnInit {
           .catch(e => console.log(e))
       })
       .catch(e => console.log(e))
-  }
-  ngOnInit() {
     this.exportData()
-    console.log('test', this.radarSchema)
     this.onInputChange(this.radarSchema)
   }
 
@@ -155,14 +153,14 @@ export class HealthInputComponent implements OnInit {
     console.log(this.radarSchema)
   }
   loadData() {
-    this.requirements.forEach(r => {
+    this.health_requirements.forEach(r => {
       this.health
         .query({
           startDate: new Date(
             new Date().getTime() - 1000 * 24 * 60 * 60 * 1000
           ), // three days ago
           endDate: new Date(), // now
-          dataType: r.data,
+          dataType: r.data_name,
           limit: 1000
         })
         .then(res => {

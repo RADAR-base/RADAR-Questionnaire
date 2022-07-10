@@ -1,9 +1,9 @@
-<ion-list *ngFor="let r of requirements; let index = index">
+<ion-list *ngFor="let r of health_requirements; let index = index">
   <ion-item>
-    <ion-label position="floating">{{ r.data }}</ion-label>
+    <ion-label position="floating">{{ r.data_name }}</ion-label>
     <ion-input
       type="text"
-      [(ngModel)]="requirements[index].value"
+      [(ngModel)]="health_requirements[index].value"
       readonly
     ></ion-input>
   </ion-item>

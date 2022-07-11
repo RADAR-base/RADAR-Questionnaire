@@ -41,15 +41,17 @@ export class AppServerService {
           this.subjectConfig.getParticipantLogin(),
           this.subjectConfig.getProjectName(),
           this.subjectConfig.getEnrolmentDate(),
+          this.subjectConfig.getParticipantAttributes(),
           this.getFCMToken()
         ])
       )
-      .then(([subjectId, projectId, enrolmentDate, fcmToken]) =>
+      .then(([subjectId, projectId, enrolmentDate, attributes, fcmToken]) =>
         this.addProjectIfMissing(projectId).then(() =>
           this.addSubjectIfMissing(
             subjectId,
             projectId,
             enrolmentDate,
+            attributes,
             fcmToken
           )
         )
@@ -117,6 +119,7 @@ export class AppServerService {
     subjectId,
     projectId,
     enrolmentDate,
+    attributes,
     fcmToken
   ): Promise<any> {
     // NOTE: Adds subject if missing, updates subject if it exists
@@ -126,7 +129,8 @@ export class AppServerService {
           fcmToken,
           lastOpened: new Date(),
           timezone: moment.tz.guess(),
-          language: this.localization.getLanguage().value
+          language: this.localization.getLanguage().value,
+          attributes
         })
       )
       .catch(e => {
@@ -135,13 +139,20 @@ export class AppServerService {
             subjectId,
             projectId,
             enrolmentDate,
-            fcmToken
+            fcmToken,
+            attributes
           )
         else throw e
       })
   }
 
-  addSubjectToServer(subjectId, projectId, enrolmentDate, fcmToken) {
+  addSubjectToServer(
+    subjectId,
+    projectId,
+    enrolmentDate,
+    fcmToken,
+    attributes
+  ) {
     return this.getHeaders().then(headers =>
       this.http
         .post(
@@ -157,7 +168,8 @@ export class AppServerService {
             subjectId,
             fcmToken,
             timezone: moment.tz.guess(),
-            language: this.localization.getLanguage().value
+            language: this.localization.getLanguage().value,
+            attributes
           },
           { headers, params: { forceFcmToken: 'true' } }
         )

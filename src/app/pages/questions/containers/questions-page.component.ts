@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core'
 import { Insomnia } from '@ionic-native/insomnia/ngx'
 import { NavController, NavParams, Platform, Slides } from 'ionic-angular'
 
+import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { UsageService } from '../../../core/services/usage/usage.service'
 import {
@@ -14,7 +15,11 @@ import {
   AssessmentType,
   ShowIntroductionType
 } from '../../../shared/models/assessment'
-import { ExternalApp, Question } from '../../../shared/models/question'
+import {
+  ExternalApp,
+  Question,
+  QuestionType
+} from '../../../shared/models/question'
 import { Task } from '../../../shared/models/task'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { AppLauncherService } from '../services/app-launcher.service'
@@ -68,7 +73,8 @@ export class QuestionsPageComponent implements OnInit {
     private platform: Platform,
     private insomnia: Insomnia,
     private localization: LocalizationService,
-    private appLauncher: AppLauncherService
+    private appLauncher: AppLauncherService,
+    private alertService: AlertService
   ) {
     this.platform.registerBackButtonAction(() => {
       this.sendCompletionLog()
@@ -225,8 +231,9 @@ export class QuestionsPageComponent implements OnInit {
   previousQuestion() {
     const currentQuestions = this.getCurrentQuestions()
     this.questionOrder.pop()
-    this.currentQuestionGroupId =
-      this.questionOrder[this.questionOrder.length - 1]
+    this.currentQuestionGroupId = this.questionOrder[
+      this.questionOrder.length - 1
+    ]
     this.updateToolbarButtons()
     if (!this.isRightButtonDisabled)
       this.questionsService.deleteLastAnswers(currentQuestions)
@@ -240,8 +247,9 @@ export class QuestionsPageComponent implements OnInit {
     this.isRightButtonDisabled =
       !this.questionsService.isAnyAnswered(currentQs) &&
       !this.questionsService.getIsAnyNextEnabled(currentQs)
-    this.isLeftButtonDisabled =
-      this.questionsService.getIsAnyPreviousEnabled(currentQs)
+    this.isLeftButtonDisabled = this.questionsService.getIsAnyPreviousEnabled(
+      currentQs
+    )
   }
 
   exitQuestionnaire() {
@@ -287,6 +295,23 @@ export class QuestionsPageComponent implements OnInit {
   asIsOrder(a, b) {
     // NOTE: This is needed to display questions (in the view) from the map in order
     return 1
+  }
+
+  showDisabledButtonAlert() {
+    const currentQuestionType = this.getCurrentQuestions()[0].field_type
+    // NOTE: Show alert when next is tapped without finishing audio question
+    if (currentQuestionType == QuestionType.audio)
+      this.alertService.showAlert({
+        message: this.localization.translateKey(
+          LocKeys.AUDIO_TASK_BUTTON_ALERT_DESC
+        ),
+        buttons: [
+          {
+            text: this.localization.translateKey(LocKeys.BTN_DISMISS),
+            handler: () => {}
+          }
+        ]
+      })
   }
 
   private checkIfQuestionnaireHasAppLaunch() {

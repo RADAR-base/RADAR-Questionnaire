@@ -70,11 +70,6 @@ question {
 
   .input-scroll {
     overflow-y: auto !important;
-    mask-image: linear-gradient(to top, transparent 3%, black 7%),
-      linear-gradient(to bottom, transparent 0%, black 7%);
-    mask-size: 100% 25%, 100% 80%;
-    mask-position: bottom, top;
-    mask-repeat: no-repeat, no-repeat;
   }
 
   .spinner-container {

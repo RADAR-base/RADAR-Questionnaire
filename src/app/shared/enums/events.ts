@@ -47,3 +47,15 @@ export enum NotificationEventType {
   RESCHEDULED = 'notification_rescheduled',
   TEST = 'notification_test'
 }
+
+export enum KeyboardEventType {
+  FOCUS = 'focus',
+  BLUR = 'blur',
+  ENTER = 'enter'
+}
+
+export enum NextButtonEventType {
+  AUTO = 'auto',
+  DISABLE = 'disable',
+  ENABLE = 'enable'
+}

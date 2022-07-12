@@ -1429,6 +1429,21 @@ export const Localisations = {
     pl: 'Zadanie zostało przerwane. Zacznij od nowa.',
     hb: 'המשימה הופסקה, התחל מחדש'
   },
+  AUDIO_TASK_BUTTON_ALERT_DESC: {
+    da:
+      'Stop venligst optagelsen, når du er færdig for at aktivere den næste knap.',
+    de:
+      'Bitte stoppen Sie die Aufnahme, wenn Sie fertig sind, um die Schaltfläche „Weiter“ zu aktivieren.',
+    en:
+      'Please stop the recording once you are done in order to enable the next button.',
+    es:
+      'Detenga la grabación una vez que haya terminado para habilitar el siguiente botón.',
+    it:
+      'Interrompi la registrazione una volta che hai finito per abilitare il pulsante successivo.',
+    nl: 'Stop de opname als u klaar bent om de volgende knop in te schakelen.',
+    pl: 'Po zakończeniu zatrzymaj nagrywanie, aby włączyć następny przycisk.',
+    hb: 'אנא עצור את ההקלטה לאחר שתסיים כדי להפעיל את הכפתור הבא.'
+  },
   AUDIO_TASK_ATTEMPT_ALERT: {
     da: 'Tilbageværende forsøg',
     de: 'Verbleibende Versuche',

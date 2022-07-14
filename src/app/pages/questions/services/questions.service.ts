@@ -125,11 +125,10 @@ export class QuestionsService {
     }
   }
 
-  processQuestions(title, questions: any[]) {
-    if (title.includes('ESM28Q'))
-      if (new Date().getHours() > 10) return Promise.resolve(questions.slice(1))
-
-    return Promise.resolve(questions)
+  processQuestions(title, questions: Question[]) {
+    return questions.map(q =>
+      Object.assign(q, { isAutoNext: this.getIsNextAutomatic(q.field_type) })
+    )
   }
 
   isAnswered(question: Question) {
@@ -222,13 +221,11 @@ export class QuestionsService {
     const type = task.type
     return this.questionnaire
       .getAssessmentForTask(type, task)
-      .then(assessment =>
-        this.processQuestions(
+      .then(assessment => {
+        const questions = this.processQuestions(
           assessment.name,
           assessment.questions
-        ).then(questions => [assessment, questions])
-      )
-      .then(([assessment, questions]) => {
+        )
         return {
           title: assessment.name,
           introduction: this.localization.chooseText(assessment.startText),

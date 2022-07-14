@@ -6,13 +6,14 @@ import {
   Output,
   ViewChild
 } from '@angular/core'
-import { IonicFormInput } from 'ionic-angular'
+import { Keyboard } from '@ionic-native/keyboard/ngx'
 
 import { LocalizationService } from '../../../../../core/services/misc/localization.service'
+import { KeyboardEventType } from '../../../../../shared/enums/events'
 
 @Component({
   selector: 'text-input',
-  templateUrl: 'text-input.component.html',
+  templateUrl: 'text-input.component.html'
 })
 export class TextInputComponent implements OnInit {
   @ViewChild('content') content
@@ -20,7 +21,7 @@ export class TextInputComponent implements OnInit {
   @Output()
   valueChange: EventEmitter<string> = new EventEmitter<string>()
   @Output()
-  textInputFocus: EventEmitter<string> = new EventEmitter<string>()
+  keyboardEvent: EventEmitter<string> = new EventEmitter<string>()
   @Input()
   type: string
   @Input()
@@ -45,12 +46,15 @@ export class TextInputComponent implements OnInit {
     hour: 'Hour',
     minute: 'Minute',
     second: 'Second',
-    ampm: 'AM/PM',
+    ampm: 'AM/PM'
   }
 
   value = {}
 
-  constructor(private localization: LocalizationService) {}
+  constructor(
+    private localization: LocalizationService,
+    private keyboard: Keyboard
+  ) {}
 
   ngOnInit() {
     if (this.type.length) {
@@ -112,13 +116,16 @@ export class TextInputComponent implements OnInit {
   }
 
   emitAnswer(value) {
+    if (!value) return
     if (typeof value !== 'string') {
       this.value = Object.assign(this.value, value)
       this.valueChange.emit(JSON.stringify(this.value))
     } else this.valueChange.emit(value)
   }
 
-  emitTextInputFocus(value) {
-    this.textInputFocus.emit(value)
+  emitKeyboardEvent(value) {
+    if (value == KeyboardEventType.ENTER) this.keyboard.hide()
+
+    this.keyboardEvent.emit(value)
   }
 }

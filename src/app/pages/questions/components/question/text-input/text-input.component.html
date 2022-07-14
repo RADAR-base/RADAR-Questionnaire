@@ -29,10 +29,12 @@
   <ion-item>
     <ion-input
       type="text"
+      enterkeyhint="next"
       placeholder="{{ 'PLACEHOLDER_TEXT_INPUT' | translate }}"
       (ionChange)="emitAnswer($event.value)"
-      (ionFocus)="emitTextInputFocus(true)"
-      (ionBlur)="emitTextInputFocus(false)"
+      (ionFocus)="emitKeyboardEvent('focus')"
+      (ionBlur)="emitKeyboardEvent('blur')"
+      (keyup.enter)="emitKeyboardEvent('enter')"
     ></ion-input>
   </ion-item>
 </ng-container>

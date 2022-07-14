@@ -31,6 +31,8 @@ export class ToolbarComponent implements OnChanges {
   finish: EventEmitter<any> = new EventEmitter<any>()
   @Output()
   close: EventEmitter<any> = new EventEmitter<any>()
+  @Output()
+  tappedDisabledButton: EventEmitter<any> = new EventEmitter<any>()
 
   textValues = {
     next: this.localization.translateKey(LocKeys.BTN_NEXT),
@@ -67,7 +69,10 @@ export class ToolbarComponent implements OnChanges {
   }
 
   rightButtonHandler() {
-    if (this.isRightButtonDisabled) return
+    if (this.isRightButtonDisabled) {
+      this.tappedDisabledButton.emit()
+      return
+    }
     switch (this.rightButtonText) {
       case this.textValues.next:
         return this.next.emit()

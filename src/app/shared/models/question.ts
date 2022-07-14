@@ -20,6 +20,7 @@ export interface Question {
   text_validation_type_or_show_slider_number?: string
   type?: string
   range?: Range
+  isAutoNext?: boolean
 }
 
 export interface ExternalApp {

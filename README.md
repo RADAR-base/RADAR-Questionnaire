@@ -105,6 +105,13 @@ $ ionic cordova run ios
 
 If using Firebase for notifications, analytics, or remote config, [create your Firebase project](https://console.firebase.google.com/). Then, add your iOS or Android app to the Firebase project. Once added, please download the app's `google-services.json` file (for Android) and `GoogleService-Info.plist` (for iOS), and add it to the root directory.
 
+### Package Name
+
+When you add your iOS or Android app to the Firebase project, make sure you name your `package name` as app-id
+
+- Android : `org.phidatalab.radar_armt`
+- iOS: `org.phidatalab.radar-armt`
+
 ### Remote Notifications
 
 If using FCM pull notifications instead of the local ones, please specify the FCM sender id (as mentioned in FCM settings) in `src/assets/data/defaultConfig.ts` and the default notification type to FCM (this is already the default value).
@@ -288,3 +295,21 @@ This is an example of an image:
 Here is the output:
 
 <img src="/.github/etc/descriptive-2.png" width="200px"><img src="/.github/etc/descriptive-1.png" width="200px">
+
+## Common Errors
+
+Here are some common errors you might find during installation.
+
+### Error: cordova-custom-config
+
+When you are running `ionic cordova run ios`, you might encounter the problem, we solved this problem by refering this [issue](https://github.com/dpa99c/cordova-custom-config/issues/144) with `cordova-custom-config`.
+
+We enter the following command at the root directory.
+```
+cd plugins/cordova-custom-config
+yarn install 
+```
+
+### Error: Failed to fetch platform. Probably this is either a connection problem.
+
+You may encounter this error when running `yarn install` or `cordova platform` commands. This is usually because of the conflict of `package-lock.json` and `yarn.lock` files. To solve, simply delete the `package-lock.json` file in the root directory.

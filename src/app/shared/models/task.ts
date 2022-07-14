@@ -2,7 +2,7 @@ import { AssessmentType } from './assessment'
 import { SingleNotification } from './notification-handler'
 
 export interface Task {
-  index: number
+  id: number
   completed: boolean
   reportedCompletion: boolean
   timestamp: number

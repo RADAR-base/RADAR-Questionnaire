@@ -10,6 +10,7 @@ import {
   getMilliseconds,
   setDateTimeToMidnightEpoch
 } from '../../../shared/utilities/time'
+import { AppServerService } from '../app-server/app-server.service'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 import { ScheduleGeneratorService } from './schedule-generator.service'
@@ -27,7 +28,8 @@ export class ScheduleService {
   constructor(
     private storage: StorageService,
     private schedule: ScheduleGeneratorService,
-    private logger: LogService
+    private logger: LogService,
+    private appServer: AppServerService
   ) {}
 
   getTasks(type: AssessmentType): Promise<Task[]> {
@@ -141,20 +143,30 @@ export class ScheduleService {
 
   generateSchedule(referenceTimestamp, utcOffsetPrev) {
     this.logger.log('Updating schedule..', referenceTimestamp)
-    return this.getCompletedTasks()
-      .then(completedTasks => {
-        return this.schedule.runScheduler(
-          referenceTimestamp,
-          completedTasks,
-          utcOffsetPrev
-        )
+    return this.appServer
+      .init()
+      .then(() => this.appServer.getSchedule())
+      .then(res => {
+        if (res.length) {
+          return this.setTasks(AssessmentType.SCHEDULED, res)
+        } else this.appServer.generateSchedule()
       })
-      .then(res =>
-        Promise.all([
-          this.setTasks(AssessmentType.SCHEDULED, res.schedule),
-          this.setCompletedTasks(res.completed ? res.completed : [])
-        ])
-      )
+      .catch(() => {
+        return this.getCompletedTasks()
+          .then(completedTasks => {
+            return this.schedule.runScheduler(
+              referenceTimestamp,
+              completedTasks,
+              utcOffsetPrev
+            )
+          })
+          .then(res =>
+            Promise.all([
+              this.setTasks(AssessmentType.SCHEDULED, res.schedule),
+              this.setCompletedTasks(res.completed ? res.completed : [])
+            ])
+          )
+      })
   }
 
   generateSingleAssessmentTask(
@@ -181,7 +193,7 @@ export class ScheduleService {
     const type = task.type
     return this.getTasks(type).then(tasks => {
       if (!tasks) return
-      const updatedTasks = tasks.map(d => (d.index === task.index ? task : d))
+      const updatedTasks = tasks.map(d => (d.id === task.id ? task : d))
       return this.setTasks(type, updatedTasks)
     })
   }

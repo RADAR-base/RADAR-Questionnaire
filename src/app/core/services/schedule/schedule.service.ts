@@ -143,30 +143,32 @@ export class ScheduleService {
 
   generateSchedule(referenceTimestamp, utcOffsetPrev) {
     this.logger.log('Updating schedule..', referenceTimestamp)
-    return this.appServer
-      .init()
-      .then(() => this.appServer.getSchedule())
-      .then(res => {
-        if (res.length) {
-          return this.setTasks(AssessmentType.SCHEDULED, res)
-        } else this.appServer.generateSchedule()
-      })
-      .catch(() => {
-        return this.getCompletedTasks()
-          .then(completedTasks => {
+    return Promise.all([this.appServer.init(), this.getCompletedTasks()]).then(
+      ([, completedTasks]) => {
+        return this.appServer
+          .getSchedule()
+          .then(tasks => tasks.map(this.schedule.mapTaskDTO))
+          .catch(() => {
             return this.schedule.runScheduler(
               referenceTimestamp,
               completedTasks,
               utcOffsetPrev
             )
           })
-          .then(res =>
+          .then((schedule: Task[]) => {
+            // NOTE: Check for completed tasks
+            const res = this.schedule.updateScheduleWithCompletedTasks(
+              schedule,
+              completedTasks,
+              utcOffsetPrev
+            )
             Promise.all([
               this.setTasks(AssessmentType.SCHEDULED, res.schedule),
               this.setCompletedTasks(res.completed ? res.completed : [])
             ])
-          )
-      })
+          })
+      }
+    )
   }
 
   generateSingleAssessmentTask(

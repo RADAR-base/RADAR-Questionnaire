@@ -46,7 +46,7 @@ export class ScheduleGeneratorService {
     refTimestamp,
     completedTasks: Task[],
     utcOffsetPrev
-  ): Promise<SchedulerResult> {
+  ): Promise<Task[]> {
     return Promise.all([
       this.questionnaire.getAssessments(AssessmentType.SCHEDULED),
       this.fetchScheduleYearCoverage()
@@ -63,18 +63,23 @@ export class ScheduleGeneratorService {
         },
         []
       )
-      // NOTE: Check for completed tasks
-      const res = this.updateScheduleWithCompletedTasks(
-        schedule,
-        completedTasks,
-        utcOffsetPrev
-      )
-      this.logger.log('[√] Updated task schedule.')
-      return Promise.resolve({
-        schedule: res.schedule.sort(compareTasks),
-        completed: res.completed
-      })
+      return schedule
     })
+  }
+
+  mapTaskDTO(task: Task, assesmentType: AssessmentType): Promise<Task> {
+    return this.questionnaire
+      .getAssessmentForTask(assesmentType, task)
+      .then(assessment => {
+        const newTask = Object.assign(task, {
+          timestamp: new Date(task.timestamp).getTime(),
+          nQuestions: assessment.questions.length,
+          warning: this.localization.chooseText(assessment.warn),
+          requiresInClinicCompletion: assessment.requiresInClinicCompletion,
+          notifications: []
+        })
+        return newTask
+      })
   }
 
   getProtocolValues(protocol, type, defaultRefTime) {

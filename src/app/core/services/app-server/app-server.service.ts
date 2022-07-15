@@ -229,25 +229,21 @@ export class AppServerService {
       this.subjectConfig.getParticipantLogin(),
       this.subjectConfig.getProjectName()
     ]).then(([subjectId, projectId]) => {
-      return this.getHeaders()
-        .then(headers =>
-          this.http
-            .get(
-              urljoin(
-                this.APP_SERVER_URL,
-                this.PROJECT_PATH,
-                projectId,
-                this.SUBJECT_PATH,
-                subjectId,
-                this.QUESTIONNAIRE_SCHEDULE_PATH
-              ),
-              { headers }
-            )
-            .toPromise()
-        )
-        .then((tasks: Task[]) =>
-          tasks.map(t => Object.assign(t, { timestamp: t.timestamp * 1000 }))
-        )
+      return this.getHeaders().then(headers =>
+        this.http
+          .get(
+            urljoin(
+              this.APP_SERVER_URL,
+              this.PROJECT_PATH,
+              projectId,
+              this.SUBJECT_PATH,
+              subjectId,
+              this.QUESTIONNAIRE_SCHEDULE_PATH
+            ),
+            { headers }
+          )
+          .toPromise()
+      )
     })
   }
 

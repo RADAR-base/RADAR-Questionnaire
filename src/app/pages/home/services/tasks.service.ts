@@ -62,15 +62,17 @@ export class TasksService {
   }
 
   getSortedTasksOfToday(): Promise<Map<number, Task[]>> {
-    return this.getTasksOfToday().then(tasks => {
-      const sortedTasks = new Map()
-      tasks.forEach(t => {
-        const midnight = setDateTimeToMidnightEpoch(new Date(t.timestamp))
-        if (sortedTasks.has(midnight)) sortedTasks.get(midnight).push(t)
-        else sortedTasks.set(midnight, [t])
+    return this.getTasksOfToday()
+      .then(t => t.sort((a, b) => a.timestamp - b.timestamp))
+      .then(tasks => {
+        const sortedTasks = new Map()
+        tasks.forEach(t => {
+          const midnight = setDateTimeToMidnightEpoch(new Date(t.timestamp))
+          if (sortedTasks.has(midnight)) sortedTasks.get(midnight).push(t)
+          else sortedTasks.set(midnight, [t])
+        })
+        return sortedTasks
       })
-      return sortedTasks
-    })
   }
 
   getTaskProgress(): Promise<TasksProgress> {

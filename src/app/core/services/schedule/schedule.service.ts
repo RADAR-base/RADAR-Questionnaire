@@ -16,7 +16,7 @@ import { StorageService } from '../storage/storage.service'
 import { ScheduleGeneratorService } from './schedule-generator.service'
 
 @Injectable()
-export class ScheduleService {
+export abstract class ScheduleService {
   private readonly SCHEDULE_STORE = {
     SCHEDULE_TASKS: StorageKeys.SCHEDULE_TASKS,
     SCHEDULE_TASKS_ON_DEMAND: StorageKeys.SCHEDULE_TASKS_ON_DEMAND,
@@ -26,11 +26,19 @@ export class ScheduleService {
   changeDetectionEmitter: EventEmitter<void> = new EventEmitter<void>()
 
   constructor(
-    private storage: StorageService,
-    private schedule: ScheduleGeneratorService,
-    private logger: LogService,
-    private appServer: AppServerService
+    protected storage: StorageService,
+    protected logger: LogService
   ) {}
+
+  abstract generateSchedule(referenceTimestamp, utcOffsetPrev)
+
+  abstract generateSingleAssessmentTask(
+    assessment: Assessment,
+    assessmentType,
+    referenceDate: number
+  )
+
+  abstract getTasksForDate(date: Date, type: AssessmentType)
 
   getTasks(type: AssessmentType): Promise<Task[]> {
     switch (type) {
@@ -57,21 +65,6 @@ export class ScheduleService {
           return allTasks
         })
     }
-  }
-
-  getTasksForDate(date: Date, type: AssessmentType) {
-    return this.getTasks(type).then(schedule => {
-      const startTime = setDateTimeToMidnightEpoch(date)
-      const endTime = startTime + getMilliseconds({ days: 1 })
-      return schedule
-        ? schedule.filter(d => {
-            return (
-              d.timestamp + d.completionWindow > startTime &&
-              d.timestamp < endTime
-            )
-          })
-        : []
-    })
   }
 
   getScheduledTasks(): Promise<Task[]> {
@@ -139,56 +132,6 @@ export class ScheduleService {
 
   addToCompletedTasks(task) {
     return this.storage.push(this.SCHEDULE_STORE.SCHEDULE_TASKS_COMPLETED, task)
-  }
-
-  generateSchedule(referenceTimestamp, utcOffsetPrev) {
-    this.logger.log('Updating schedule..', referenceTimestamp)
-    return Promise.all([this.appServer.init(), this.getCompletedTasks()]).then(
-      ([, completedTasks]) => {
-        return this.appServer
-          .getSchedule()
-          .then(tasks => tasks.map(this.schedule.mapTaskDTO))
-          .catch(() => {
-            return this.schedule.runScheduler(
-              referenceTimestamp,
-              completedTasks,
-              utcOffsetPrev
-            )
-          })
-          .then((schedule: Task[]) => {
-            // NOTE: Check for completed tasks
-            const res = this.schedule.updateScheduleWithCompletedTasks(
-              schedule,
-              completedTasks,
-              utcOffsetPrev
-            )
-            Promise.all([
-              this.setTasks(AssessmentType.SCHEDULED, res.schedule),
-              this.setCompletedTasks(res.completed ? res.completed : [])
-            ])
-          })
-      }
-    )
-  }
-
-  generateSingleAssessmentTask(
-    assessment: Assessment,
-    assessmentType,
-    referenceDate: number
-  ) {
-    return this.getTasks(assessmentType).then((tasks: Task[]) => {
-      const schedule = this.schedule.buildTasksForSingleAssessment(
-        assessment,
-        tasks ? tasks.length : 0,
-        referenceDate,
-        assessmentType
-      )
-      const newTasks = (tasks ? tasks.concat(schedule) : schedule).sort(
-        compareTasks
-      )
-      this.changeDetectionEmitter.emit()
-      return this.setTasks(assessmentType, newTasks)
-    })
   }
 
   insertTask(task): Promise<any> {

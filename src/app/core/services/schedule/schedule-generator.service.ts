@@ -17,6 +17,7 @@ import { Task } from '../../../shared/models/task'
 import { compareTasks } from '../../../shared/utilities/compare-tasks'
 import {
   advanceRepeat,
+  getMilliseconds,
   setDateTimeToMidnight,
   setDateTimeToMidnightEpoch,
   timeIntervalToMillis
@@ -46,7 +47,7 @@ export class ScheduleGeneratorService {
     refTimestamp,
     completedTasks: Task[],
     utcOffsetPrev
-  ): Promise<Task[]> {
+  ): Promise<SchedulerResult> {
     return Promise.all([
       this.questionnaire.getAssessments(AssessmentType.SCHEDULED),
       this.fetchScheduleYearCoverage()
@@ -63,7 +64,17 @@ export class ScheduleGeneratorService {
         },
         []
       )
-      return schedule
+      // NOTE: Check for completed tasks
+      const res = this.updateScheduleWithCompletedTasks(
+        schedule,
+        completedTasks,
+        utcOffsetPrev
+      )
+      this.logger.log('[√] Updated task schedule.')
+      return Promise.resolve({
+        schedule: res.schedule.sort(compareTasks),
+        completed: res.completed
+      })
     })
   }
 
@@ -72,7 +83,7 @@ export class ScheduleGeneratorService {
       .getAssessmentForTask(assesmentType, task)
       .then(assessment => {
         const newTask = Object.assign(task, {
-          timestamp: new Date(task.timestamp).getTime(),
+          timestamp: getMilliseconds({ seconds: task.timestamp }),
           nQuestions: assessment.questions.length,
           warning: this.localization.chooseText(assessment.warn),
           requiresInClinicCompletion: assessment.requiresInClinicCompletion,

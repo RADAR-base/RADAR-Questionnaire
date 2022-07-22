@@ -30,6 +30,8 @@ export abstract class ScheduleService {
     protected logger: LogService
   ) {}
 
+  abstract init()
+
   abstract generateSchedule(referenceTimestamp, utcOffsetPrev)
 
   abstract generateSingleAssessmentTask(

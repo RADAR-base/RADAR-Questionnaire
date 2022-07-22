@@ -23,6 +23,7 @@ export class ScheduleFactoryService extends ScheduleService {
     logger: LogService
   ) {
     super(store, logger)
+    this.init()
   }
 
   init() {
@@ -59,7 +60,7 @@ export class ScheduleFactoryService extends ScheduleService {
     assessmentType,
     referenceDate: number
   ) {
-    return this.generateSingleAssessmentTask(
+    return this.scheduleService.generateSingleAssessmentTask(
       assessment,
       assessmentType,
       referenceDate
@@ -67,6 +68,6 @@ export class ScheduleFactoryService extends ScheduleService {
   }
 
   getTasksForDate(date: Date, type: AssessmentType) {
-    return this.getTasksForDate(date, type)
+    return this.scheduleService.getTasksForDate(date, type)
   }
 }

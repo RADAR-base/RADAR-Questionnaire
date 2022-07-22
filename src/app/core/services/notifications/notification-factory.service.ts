@@ -36,6 +36,7 @@ export class NotificationFactoryService extends NotificationService {
         )
       )
       .then(type => {
+        type = NotificationMessagingType.FCM_REST
         switch (type) {
           case NotificationMessagingType.LOCAL:
             return (this.notificationService = this.localNotificationService)

@@ -1,45 +1,6 @@
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core'
 import { Health } from '@awesome-cordova-plugins/health/ngx'
-import { Health_Requirement } from 'src/app/shared/models/question'
-
-type RadarSchema = {
-  namespace: string
-  type: string
-  name: string
-  doc: string
-  fields: [
-    {
-      name: string
-      type: string
-      doc: string
-      value: string
-    },
-    {
-      name: string
-      type: string
-      doc: string
-      value: string
-    },
-    {
-      name: string
-      type: string
-      doc: string
-      value: string
-    },
-    {
-      name: string
-      type: string
-      doc: string
-      value: string
-    },
-    {
-      name: string
-      type: string
-      doc: string
-      value: string
-    }
-  ]
-}
+import { Health_Requirement, Question } from 'src/app/shared/models/question'
 
 @Component({
   selector: 'health-input',
@@ -56,29 +17,33 @@ export class HealthInputComponent implements OnInit {
   responses: Response[]
 
   @Input()
-  health_requirements: Health_Requirement[]
+  health_question: Question
 
-  bloodPressure = 'No Data'
-  bodyFat = 'No Data'
-  bodyTemperature = 'No Data'
-  heartRate = 'No Data'
-  heartRateResting = 'No Data'
-  highHeartRateNotifications = 'No Data'
-  irregularRhythmNotifications = 'No Data'
-  lowHeartRateNotifications = 'No Data'
-  steps = 'No Data'
-  weight = 'No Data'
-  height = 'No Data'
-  stepcount = 'No Data'
-  radarSchema: RadarSchema[]
-  workouts = []
+  health_requirements: Health_Requirement[] = [
+    {
+      data_name: 'weight',
+      time_intervals: '1000',
+      value: ''
+    },
+    {
+      data_name: 'height',
+      time_intervals: '1000',
+      value: ''
+    },
+    {
+      data_name: 'blood_pressure',
+      time_intervals: '1000',
+      value: ''
+    }
+  ]
+
+  health_value: string
+  test_data: any
 
   constructor(private health: Health) {}
   ngOnInit() {
-    const requireField = this.health_requirements.reduce((prev, cur) => {
-      prev.push(cur.data_name)
-      return prev
-    }, [])
+    console.log(this.health_question)
+    const requireField = [this.health_question.field_name]
     console.log(requireField)
     this.health
       .isAvailable()
@@ -86,11 +51,11 @@ export class HealthInputComponent implements OnInit {
         console.log(available)
         this.health
           .requestAuthorization([
-            'distance',
-            'nutrition', //read and write permissions
+            // 'distance',
+            // 'nutrition', //read and write permissions
             {
-              read: requireField, //read only permission
-              write: ['height', 'weight'] //write only permission
+              read: requireField //read only permission
+              // write: ['height', 'weight'] //write only permission
             }
           ])
           .then(res => {
@@ -100,7 +65,7 @@ export class HealthInputComponent implements OnInit {
       })
       .catch(e => console.log(e))
     this.exportData()
-    this.onInputChange(this.radarSchema)
+    this.onInputChange(this.test_data)
   }
 
   onInputChange(event) {
@@ -110,7 +75,7 @@ export class HealthInputComponent implements OnInit {
     this.loadData()
   }
   exportData() {
-    this.radarSchema = [
+    this.test_data = [
       {
         namespace: 'org.radarcns.connector.health',
         type: 'record',
@@ -121,52 +86,22 @@ export class HealthInputComponent implements OnInit {
             name: 'height',
             type: 'double',
             doc: 'data for height, current unit will be "m"',
-            value: this.height
-          },
-          {
-            name: 'bloodPressure',
-            type: 'double',
-            doc: 'data for bloodPressure, current unit will be ""',
-            value: this.bloodPressure
-          },
-          {
-            name: 'weight',
-            type: 'double',
-            doc: 'data for weight, current unit will be "kg"',
-            value: this.weight
-          },
-          {
-            name: 'bodyTemperature',
-            type: 'double',
-            doc: 'data for bodyTemperature, current unit will be "degC"',
-            value: this.bodyTemperature
-          },
-          {
-            name: 'heartRate',
-            type: 'double',
-            doc: 'data for heartRate, current unit will be "count/min"',
-            value: this.heartRate
+            value: 'test'
           }
         ]
       }
     ]
-    console.log(this.radarSchema)
   }
   loadData() {
-    this.health_requirements.forEach(r => {
-      this.health
-        .query({
-          startDate: new Date(
-            new Date().getTime() - 1000 * 24 * 60 * 60 * 1000
-          ), // three days ago
-          endDate: new Date(), // now
-          dataType: r.data_name,
-          limit: 1000
-        })
-        .then(res => {
-          console.log(res[0])
-          r.value = res[0].value + res[0].unit
-        })
-    })
+    this.health
+      .query({
+        startDate: new Date(new Date().getTime() - 1000 * 24 * 60 * 60 * 1000), // three days ago
+        endDate: new Date(), // now
+        dataType: this.health_question.field_name,
+        limit: 1000
+      })
+      .then(res => {
+        this.health_value = res[0].value + res[0].unit
+      })
   }
 }

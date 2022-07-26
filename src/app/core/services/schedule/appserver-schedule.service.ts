@@ -29,6 +29,8 @@ export class AppserverScheduleService extends ScheduleService {
     super(store, logger)
   }
 
+  init() {}
+
   getTasksForDate(date: Date, type: AssessmentType) {
     return this.getTasks(type).then(schedule => {
       const startTime = setDateTimeToMidnightEpoch(date)

@@ -1,12 +1,15 @@
 import {} from './notification.service'
 
 import { Injectable } from '@angular/core'
+import * as moment from 'moment'
 
 import { Assessment, AssessmentType } from '../../../shared/models/assessment'
+import { TaskState } from '../../../shared/models/protocol'
 import { Task } from '../../../shared/models/task'
-import { compareTasks } from '../../../shared/utilities/compare-tasks'
 import {
+  advanceRepeat,
   getMilliseconds,
+  setDateTimeToMidnight,
   setDateTimeToMidnightEpoch
 } from '../../../shared/utilities/time'
 import { AppServerService } from '../app-server/app-server.service'
@@ -32,18 +35,15 @@ export class AppserverScheduleService extends ScheduleService {
   init() {}
 
   getTasksForDate(date: Date, type: AssessmentType) {
-    return this.getTasks(type).then(schedule => {
-      const startTime = setDateTimeToMidnightEpoch(date)
-      const endTime = startTime + getMilliseconds({ days: 1 })
-      return schedule
-        ? schedule.filter(d => {
-            return (
-              d.timestamp + d.completionWindow > startTime &&
-              d.timestamp < endTime
-            )
-          })
-        : []
-    })
+    const startTime = setDateTimeToMidnight(date)
+    const endTime = moment(startTime).add(1, 'days').toDate()
+    return this.appServer
+      .getScheduleForDates(startTime, endTime)
+      .then(tasks =>
+        Promise.all(
+          tasks.map(t => this.mapTaskDTO(t, AssessmentType.SCHEDULED))
+        )
+      )
   }
 
   generateSchedule(referenceTimestamp, utcOffsetPrev) {
@@ -53,15 +53,16 @@ export class AppserverScheduleService extends ScheduleService {
         return this.appServer
           .getSchedule()
           .then(tasks =>
-            tasks.map(t => this.mapTaskDTO(t, AssessmentType.SCHEDULED))
+            Promise.all(
+              tasks.map(t => this.mapTaskDTO(t, AssessmentType.SCHEDULED))
+            )
           )
-          .then((schedule: Task[]) => {
-            console.log(schedule)
-            // TODO: Check for completed tasks
-            return schedule
-          })
       }
     )
+  }
+
+  updateTaskToComplete(updatedTask): Promise<any> {
+    return this.appServer.updateTaskState(updatedTask.id, TaskState.COMPLETED)
   }
 
   generateSingleAssessmentTask(
@@ -77,7 +78,6 @@ export class AppserverScheduleService extends ScheduleService {
       .getAssessmentForTask(assesmentType, task)
       .then(assessment => {
         const newTask = Object.assign(task, {
-          timestamp: getMilliseconds({ seconds: task.timestamp }),
           nQuestions: assessment.questions.length,
           warning: this.localization.chooseText(assessment.warn),
           requiresInClinicCompletion: assessment.requiresInClinicCompletion,

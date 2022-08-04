@@ -19,6 +19,7 @@ export interface Task {
   isDemo: boolean
   order: number
   isLastTask?: boolean
+  status?: string
 }
 
 export interface TasksProgress {

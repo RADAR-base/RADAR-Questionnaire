@@ -54,14 +54,11 @@ export class TasksService {
   getTasksOfToday() {
     return this.schedule
       .getTasksForDate(new Date(), AssessmentType.SCHEDULED)
-      .then(tasks =>
-        tasks.filter(
-          t => !this.isTaskExpired(t) || this.wasTaskCompletedToday(t)
-        )
-      )
+      .then(tasks => tasks.filter(t => !this.isTaskExpired(t)))
   }
 
-  getSortedTasksOfToday(): Promise<Map<number, Task[]>> {
+  getValidTasksMap(): Promise<Map<number, Task[]>> {
+    // This groups the tasks valid for today into a Map, where the key is midnight epoch and the value is an array of tasks
     return this.getTasksOfToday()
       .then(t => t.sort((a, b) => a.timestamp - b.timestamp))
       .then(tasks => {
@@ -109,7 +106,7 @@ export class TasksService {
     // NOTE: This checks if completion window has passed or task is complete
     return (
       task.timestamp + task.completionWindow < new Date().getTime() ||
-      task.completed
+      (task.completed && !this.wasTaskCompletedToday(task))
     )
   }
 

@@ -36,7 +36,6 @@ export class ScheduleFactoryService extends ScheduleService {
         )
       )
       .then(type => {
-        type = SchedulerType.LOCAL
         switch (type) {
           case SchedulerType.LOCAL:
             return (this.scheduleService = this.localScheduleService)
@@ -69,5 +68,9 @@ export class ScheduleFactoryService extends ScheduleService {
 
   getTasksForDate(date: Date, type: AssessmentType) {
     return this.scheduleService.getTasksForDate(date, type)
+  }
+
+  updateTaskToComplete(updatedTask): Promise<any> {
+    return this.scheduleService.updateTaskToComplete(updatedTask)
   }
 }

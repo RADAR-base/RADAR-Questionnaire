@@ -34,6 +34,8 @@ export class AppServerService {
   PROJECT_PATH = 'projects'
   GITHUB_CONTENT_PATH = 'github/content'
   QUESTIONNAIRE_SCHEDULE_PATH = 'questionnaire/schedule'
+  QUESTIONNAIRE_TASK = 'questionnaire/task'
+  QUESTIONNAIRE_STATE_EVENTS_PATH = 'state_events'
   NOTIFICATIONS_PATH = 'messaging/notifications'
   STATE_EVENTS_PATH = 'state_events'
 
@@ -247,6 +249,35 @@ export class AppServerService {
     })
   }
 
+  getScheduleForDates(startTime: Date, endTime: Date): Promise<any> {
+    return Promise.all([
+      this.subjectConfig.getParticipantLogin(),
+      this.subjectConfig.getProjectName()
+    ]).then(([subjectId, projectId]) => {
+      return this.getHeaders().then(headers =>
+        this.http
+          .get(
+            urljoin(
+              this.APP_SERVER_URL,
+              this.PROJECT_PATH,
+              projectId,
+              this.SUBJECT_PATH,
+              subjectId,
+              this.QUESTIONNAIRE_SCHEDULE_PATH
+            ),
+            {
+              headers,
+              params: {
+                startTime: startTime.toISOString(),
+                endTime: endTime.toISOString()
+              }
+            }
+          )
+          .toPromise()
+      )
+    })
+  }
+
   generateSchedule(): Promise<any> {
     return Promise.all([
       this.subjectConfig.getParticipantLogin(),
@@ -305,6 +336,37 @@ export class AppServerService {
         )
         .toPromise()
     )
+  }
+
+  updateTaskState(taskId, state) {
+    return Promise.all([
+      this.subjectConfig.getParticipantLogin(),
+      this.subjectConfig.getProjectName()
+    ]).then(([subjectId, projectId]) => {
+      return this.getHeaders().then(headers =>
+        this.http
+          .post(
+            urljoin(
+              this.getAppServerURL(),
+              this.PROJECT_PATH,
+              projectId,
+              this.SUBJECT_PATH,
+              subjectId,
+              this.QUESTIONNAIRE_SCHEDULE_PATH,
+              taskId.toString(),
+              this.QUESTIONNAIRE_STATE_EVENTS_PATH
+            ),
+            {
+              taskId: taskId,
+              state: state,
+              time: new Date(),
+              associatedInfo: ''
+            },
+            { headers }
+          )
+          .toPromise()
+      )
+    })
   }
 
   updateNotificationState(subject, notificationId, state) {

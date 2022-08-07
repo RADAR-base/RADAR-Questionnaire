@@ -24,3 +24,9 @@ ion-slides {
 .hidden {
   visibility: hidden;
 }
+
+.matrixGroup {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}

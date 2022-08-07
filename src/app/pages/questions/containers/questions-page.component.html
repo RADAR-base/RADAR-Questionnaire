@@ -15,20 +15,22 @@
             let i = index
           "
         >
-          <ng-container *ngFor="let question of item.value; let j = index">
-            <question
-              *ngIf="
-                i >= currentQuestionGroupId - 10 &&
-                i <= currentQuestionGroupId + 10 &&
-                currentQuestionIndices.includes(j)
-              "
-              [question]="question"
-              [questionIndex]="i"
-              [currentIndex]="currentQuestionGroupId"
-              [isSectionHeaderHidden]="j != currentQuestionIndices[0]"
-              (answer)="onAnswer($event)"
-            ></question>
-          </ng-container>
+          <div className = "matrixGroup">
+            <ng-container *ngFor="let question of item.value; let j = index">
+              <question
+                *ngIf="
+                  i >= currentQuestionGroupId - 10 &&
+                  i <= currentQuestionGroupId + 10 &&
+                  currentQuestionIndices.includes(j)
+                "
+                [question]="question"
+                [questionIndex]="i"
+                [currentIndex]="currentQuestionGroupId"
+                [isSectionHeaderHidden]="j != currentQuestionIndices[0]"
+                (answer)="onAnswer($event)"
+              ></question>
+            </ng-container>
+        </div>
         </ion-slide>
       </ng-container>
       <ion-slide>

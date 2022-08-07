@@ -63,7 +63,7 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.audio,
     QuestionType.descriptive
   ])
-  MATRIX_INPUT_SET: Set<QuestionType> = new Set([QuestionType.matrix_radio])
+  MATRIX_INPUT_SET: Set<QuestionType> = new Set([QuestionType.matrix_radio,QuestionType.health])
 
   // Input set where height is set to auto
   AUTO_HEIGHT_INPUT_SET: Set<QuestionType> = new Set([

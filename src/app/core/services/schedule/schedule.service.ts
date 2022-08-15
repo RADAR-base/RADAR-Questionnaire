@@ -97,6 +97,16 @@ export abstract class ScheduleService {
     })
   }
 
+  getReportedIncompleteTasks(): Promise<Task[]> {
+    // These tasks have been completed but have not yet been reported as complete to the app server
+    return this.getTasks(AssessmentType.ALL).then(tasks => {
+      const now = new Date().getTime()
+      return tasks
+        .filter(d => d.completed && !d.reportedCompletion)
+        .slice(0, 100)
+    })
+  }
+
   setTasks(type: AssessmentType, tasks: Task[]): Promise<void> {
     const uniqueTasks = [
       ...new Map(

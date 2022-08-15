@@ -78,21 +78,6 @@ export class ScheduleGeneratorService {
     })
   }
 
-  mapTaskDTO(task: Task, assesmentType: AssessmentType): Promise<Task> {
-    return this.questionnaire
-      .getAssessmentForTask(assesmentType, task)
-      .then(assessment => {
-        const newTask = Object.assign(task, {
-          timestamp: getMilliseconds({ seconds: task.timestamp }),
-          nQuestions: assessment.questions.length,
-          warning: this.localization.chooseText(assessment.warn),
-          requiresInClinicCompletion: assessment.requiresInClinicCompletion,
-          notifications: []
-        })
-        return newTask
-      })
-  }
-
   getProtocolValues(protocol, type, defaultRefTime) {
     // repeatProtocol/repeatP - This repeats the protocol until the end of the year coverage (default: 3 years).
     // - This specifices the reference timestamp from which to generate the individual tasks.

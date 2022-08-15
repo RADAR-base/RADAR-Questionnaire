@@ -40,9 +40,9 @@ export class AppserverScheduleService extends ScheduleService {
     return this.appServer
       .getScheduleForDates(startTime, endTime)
       .then(tasks =>
-        Promise.all(
+        Promise.all<Task>(
           tasks.map(t => this.mapTaskDTO(t, AssessmentType.SCHEDULED))
-        )
+        ).then(res => this.setTasks(AssessmentType.SCHEDULED, res))
       )
   }
 
@@ -53,16 +53,20 @@ export class AppserverScheduleService extends ScheduleService {
         return this.appServer
           .getSchedule()
           .then(tasks =>
-            Promise.all(
+            Promise.all<Task>(
               tasks.map(t => this.mapTaskDTO(t, AssessmentType.SCHEDULED))
             )
           )
+          .then(res => this.setTasks(AssessmentType.SCHEDULED, res))
       }
     )
   }
 
   updateTaskToComplete(updatedTask): Promise<any> {
-    return this.appServer.updateTaskState(updatedTask.id, TaskState.COMPLETED)
+    return this.appServer
+      .updateTaskState(updatedTask.id, TaskState.COMPLETED)
+      .then(() => super.updateTaskToReportedCompletion(updatedTask))
+      .catch(() => super.updateTaskToComplete(updatedTask))
   }
 
   generateSingleAssessmentTask(
@@ -78,6 +82,7 @@ export class AppserverScheduleService extends ScheduleService {
       .getAssessmentForTask(assesmentType, task)
       .then(assessment => {
         const newTask = Object.assign(task, {
+          reportedCompletion: false,
           nQuestions: assessment.questions.length,
           warning: this.localization.chooseText(assessment.warn),
           requiresInClinicCompletion: assessment.requiresInClinicCompletion,

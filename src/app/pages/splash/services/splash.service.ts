@@ -67,4 +67,12 @@ export class SplashService {
       )
     )
   }
+
+  sendReportedIncompleteTasks() {
+    return this.schedule
+      .getReportedIncompleteTasks()
+      .then(tasks =>
+        Promise.all(tasks.map(task => this.schedule.updateTaskToComplete(task)))
+      )
+  }
 }

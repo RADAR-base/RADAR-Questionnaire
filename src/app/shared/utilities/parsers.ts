@@ -8,8 +8,7 @@ export function parseVersion(data) {
   return data
     .match(playstorePattern)
     .toString()
-    .match(versionPattern)[0]
-  }
+    .match(versionPattern)[0]}
 
 // NOTE: Parses and evaluates the branching logic
 // Example: '[esm_social_interact(1)] = \"1\" or' or '[esm_social] = '1'' to 'esm_social_interact[1] == "1" ||'
@@ -37,13 +36,14 @@ export function parseAndEvalLogic(logic: string, answers): string {
   const parsedAnswers = {}
   identifiers.forEach(fieldName => {
     const answer = answers[fieldName]
-    const values = {}
     if (Array.isArray(answer)) {
-      answer.forEach(a => (values[a] = TRUE_VAL))
-      Object.assign(parsedAnswers, { [fieldName]: values })
+      answer.forEach(a => {
+        const parsed = { [fieldName]: a }
+        if (compiled.eval(parsed)) Object.assign(parsedAnswers, parsed)
+      })
     } else Object.assign(parsedAnswers, { [fieldName]: answer })
   })
-  
+
   // Evalute logic with answers
   return compiled.eval(parsedAnswers)
 }

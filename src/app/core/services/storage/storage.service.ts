@@ -4,7 +4,7 @@ import { Observable, Subject, throwError as observableThrowError } from 'rxjs'
 
 import { StorageKeys } from '../../../shared/enums/storage'
 import { LogService } from '../misc/log.service'
-import { filter, map, startWith } from "rxjs/operators";
+import { filter, startWith, switchMap } from "rxjs/operators";
 
 @Injectable()
 export class StorageService {
@@ -59,7 +59,7 @@ export class StorageService {
     return this.keyUpdates.pipe(
       startWith(key),
       filter(k => k === key || k === null),
-      map(k => this.global[k.toString()]),
+      switchMap(k => this.get(k)),
     );
   }
 

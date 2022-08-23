@@ -15,6 +15,8 @@ import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 import { TokenService } from '../token/token.service'
+import { filter } from "rxjs/operators";
+import { Subscription } from "rxjs";
 
 @Injectable()
 export class AppServerService {
@@ -22,6 +24,7 @@ export class AppServerService {
   SUBJECT_PATH = 'users'
   PROJECT_PATH = 'projects'
   GITHUB_CONTENT_PATH = 'github/content'
+  private tokenSubscription: Subscription = null
 
   constructor(
     public storage: StorageService,
@@ -35,7 +38,7 @@ export class AppServerService {
 
   init() {
     // NOTE: Initialising ensures project and subject exists in the app server
-    return Promise.all([this.updateAppServerURL()])
+    return this.updateAppServerURL()
       .then(() =>
         Promise.all([
           this.subjectConfig.getParticipantLogin(),
@@ -46,16 +49,25 @@ export class AppServerService {
         ])
       )
       .then(([subjectId, projectId, enrolmentDate, attributes, fcmToken]) =>
-        this.addProjectIfMissing(projectId).then(() =>
-          this.addSubjectIfMissing(
-            subjectId,
-            projectId,
-            enrolmentDate,
-            attributes,
-            fcmToken
-          )
-        )
-      )
+        this.addProjectIfMissing(projectId)
+          .then(() => this.addSubjectIfMissing(
+              subjectId,
+              projectId,
+              enrolmentDate,
+              attributes,
+              fcmToken
+            )
+          ).then(httpRes => {
+            if (this.tokenSubscription !== null) {
+              this.tokenSubscription.unsubscribe();
+            }
+            this.tokenSubscription = this.storage.observe(StorageKeys.FCM_TOKEN)
+              .pipe(filter(t => t && t !== fcmToken))
+              .subscribe(newFcmToken =>
+                this.addSubjectIfMissing(subjectId, projectId, enrolmentDate, attributes, newFcmToken))
+            return httpRes;
+          })
+      );
   }
 
   getHeaders() {

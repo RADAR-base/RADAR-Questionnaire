@@ -22,7 +22,6 @@ import { QuestionnaireService } from '../config/questionnaire.service'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { SubjectConfigService } from '../config/subject-config.service'
 import { LogService } from '../misc/log.service'
-import { valid } from "semver";
 
 @Injectable()
 export class SchemaService {

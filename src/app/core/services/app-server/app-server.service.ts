@@ -274,6 +274,7 @@ export class AppServerService {
             }
           )
           .toPromise()
+          .catch(e => [])
       )
     })
   }

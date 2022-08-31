@@ -106,7 +106,7 @@ export class TasksService {
     // NOTE: This checks if completion window has passed or task is complete
     return (
       task.timestamp + task.completionWindow < new Date().getTime() ||
-      (task.completed && !this.wasTaskCompletedToday(task))
+      task.completed
     )
   }
 

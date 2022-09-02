@@ -68,8 +68,8 @@ export class FcmRestNotificationService extends FcmNotificationService {
   }
 
   init() {
-    super.init()
-    return this.appServerService.init()
+    return super.init()
+      .then(() => this.appServerService.init())
   }
 
   onAppOpen() {

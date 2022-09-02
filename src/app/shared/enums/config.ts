@@ -35,6 +35,10 @@ export class ConfigKeys {
 
   static GITHUB_FETCH_STRATEGY = new ConfigKeys('github_fetch_strategy')
 
+  static TOPIC_CACHE_TIMEOUT = new ConfigKeys(
+    'topic_cache_timeout'
+  )
+
   constructor(public value: string) {}
 
   toString() {

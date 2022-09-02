@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing'
 
 import {
   FirebaseAnalyticsServiceMock,
-  LogServiceMock,
+  LogServiceMock, RemoteConfigServiceMock,
   SchemaServiceMock,
   StorageServiceMock,
   TokenServiceMock
@@ -14,6 +14,7 @@ import { TokenService } from '../token/token.service'
 import { AnalyticsService } from '../usage/analytics.service'
 import { KafkaService } from './kafka.service'
 import { SchemaService } from './schema.service'
+import { RemoteConfigService } from "../config/remote-config.service";
 
 describe('KafkaService', () => {
   let service
@@ -31,7 +32,8 @@ describe('KafkaService', () => {
         {
           provide: AnalyticsService,
           useClass: FirebaseAnalyticsServiceMock
-        }
+        },
+        { provide: RemoteConfigService, useClass: RemoteConfigServiceMock },
       ]
     })
   )

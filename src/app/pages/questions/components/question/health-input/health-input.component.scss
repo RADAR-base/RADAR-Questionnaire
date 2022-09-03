@@ -14,13 +14,11 @@ ion-item {
   width: 100%;
   padding: 8px;
   height: var(--bt-height);
-  // border: 2px solid white;
-  // border-radius: var(--bt-height);
-  // background-color: var(--cl-primary-20);
   color: white;
   font-size: 18px;
   position: relative;
   display: flex;
+  flex-direction: column;
   flex-grow: 1;
   align-items: center;
   justify-content: flex-start;

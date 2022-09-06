@@ -54,7 +54,11 @@ export class TasksService {
   getTasksOfToday() {
     return this.schedule
       .getTasksForDate(new Date(), AssessmentType.SCHEDULED)
-      .then(tasks => tasks.filter(t => !this.isTaskExpired(t)))
+      .then(tasks =>
+        tasks.filter(
+          t => !this.isTaskExpired(t) || this.wasTaskCompletedToday(t)
+        )
+      )
   }
 
   getValidTasksMap(): Promise<Map<number, Task[]>> {

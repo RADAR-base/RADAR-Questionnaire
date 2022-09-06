@@ -9,7 +9,14 @@ export enum SchemaType {
   COMPLETION_LOG = 'completion_log',
   TIMEZONE = 'timezone',
   APP_EVENT = 'app_event',
-  OTHER = 'other'
+  OTHER = 'other',
+
+  // generic 
+  GENERAL_HEALTH = 'general_health',
+
+  // aggregated data
+  //   Steps, Calroies, Nutrition    [ 'steps', 'distance','calories','activity', 'nutrition'] 
+  AGGREGATED_HEALTH = 'aggregated_health'
 }
 
 export interface KeyExport {

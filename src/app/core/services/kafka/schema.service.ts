@@ -67,6 +67,26 @@ export class SchemaService {
 
   getKafkaObjectValue(type, payload) {
     switch (type) {
+      //case SchemaType.Nutrtion 
+      case SchemaType.AGGREGATED_HEALTH:
+        const HealthBodyMeasurement = {
+          name: payload.task.name,
+          version: payload.data.scheduleVersion,
+          answers: payload.data.answers,
+          time: payload.data.time,
+          timeReceived: payload.data.timeReceived,
+          timeInterval: payload.data.timeInterval
+        }
+        return HealthBodyMeasurement
+      case SchemaType.GENERAL_HEALTH:
+        const general_schema = {
+          key: payload.task.name,
+          version: payload.data.scheduleVersion,
+          value: payload.data.answers,
+          time: payload.data.time,
+          timeReceived: payload.data.timeReceived,
+        }
+        return general_schema
       case SchemaType.ASSESSMENT:
         const Answer: AnswerValueExport = {
           name: payload.task.name,

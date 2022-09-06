@@ -27,6 +27,7 @@ import { LogService } from '../misc/log.service'
 export class SchemaService {
   URI_schema: string = '/schema/subjects/'
   URI_version: string = '/versions/'
+  GENERAL_TOPIC: string = 'questionnaire_response'
   private schemas: {
     [key: string]: [Promise<SchemaMetadata>, Promise<SchemaMetadata>]
   } = {}
@@ -153,17 +154,34 @@ export class SchemaService {
       })
   }
 
-  getKafkaTopic(specifications: any[] | null, name, avsc): Promise<any> {
-    try {
-      const type = name.toLowerCase()
-      const defaultTopic = `${avsc}_${name}`
-      if (specifications) {
-        const spec = specifications.find(t => t.type.toLowerCase() == type)
-        return Promise.resolve(spec && spec.topic ? spec.topic : defaultTopic)
+  getKafkaTopic(specifications: any[] | null, name, avsc, topics: string[] | null): Promise<any> {
+    const type = name.toLowerCase()
+
+    if (specifications) {
+      const spec = specifications.find(t => t.type.toLowerCase() == type)
+      if (spec && spec.topic && this.topicExists(spec.topic, topics)) {
+        return Promise.resolve(spec.topic)
       }
+    }
+    const questionnaireTopic = `${avsc}_${name}`
+    if (this.topicExists(questionnaireTopic, topics)) {
+      return Promise.resolve(questionnaireTopic)
+    }
+    const defaultTopic = this.GENERAL_TOPIC;
+    if (this.topicExists(defaultTopic, topics)) {
       return Promise.resolve(defaultTopic)
-    } catch (e) {
-      return Promise.reject('Failed to get kafka topic')
+    }
+
+    return Promise.reject(`No suitable topic found on server for questionnaire ${name}`)
+  }
+
+  private topicExists(topic: string, topics: string[] | null) {
+    if (!topics || topics.includes(topic)) {
+      return true
+    } else {
+      this.logger.error(
+        `Cannot send data to specification topic ${topic} because target server does not have it`, null)
+      return false
     }
   }
 

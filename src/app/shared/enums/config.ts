@@ -13,6 +13,7 @@ export class ConfigKeys {
   static NOTIFICATION_MESSAGING_TYPE = new ConfigKeys(
     'notification_messaging_type'
   )
+  static SCHEDULE_SERVICE_TYPE = new ConfigKeys('schedule_service_type')
   static APP_SERVER_URL = new ConfigKeys('app_server_url')
   static ON_DEMAND_ASSESSMENT_LABEL = new ConfigKeys(
     'on_demand_assessment_label'

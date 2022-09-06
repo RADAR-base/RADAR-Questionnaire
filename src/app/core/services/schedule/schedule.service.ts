@@ -10,12 +10,13 @@ import {
   getMilliseconds,
   setDateTimeToMidnightEpoch
 } from '../../../shared/utilities/time'
+import { AppServerService } from '../app-server/app-server.service'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 import { ScheduleGeneratorService } from './schedule-generator.service'
 
 @Injectable()
-export class ScheduleService {
+export abstract class ScheduleService {
   private readonly SCHEDULE_STORE = {
     SCHEDULE_TASKS: StorageKeys.SCHEDULE_TASKS,
     SCHEDULE_TASKS_ON_DEMAND: StorageKeys.SCHEDULE_TASKS_ON_DEMAND,
@@ -25,10 +26,21 @@ export class ScheduleService {
   changeDetectionEmitter: EventEmitter<void> = new EventEmitter<void>()
 
   constructor(
-    private storage: StorageService,
-    private schedule: ScheduleGeneratorService,
-    private logger: LogService
+    protected storage: StorageService,
+    protected logger: LogService
   ) {}
+
+  abstract init()
+
+  abstract generateSchedule(referenceTimestamp, utcOffsetPrev)
+
+  abstract generateSingleAssessmentTask(
+    assessment: Assessment,
+    assessmentType,
+    referenceDate: number
+  )
+
+  abstract getTasksForDate(date: Date, type: AssessmentType)
 
   getTasks(type: AssessmentType): Promise<Task[]> {
     switch (type) {
@@ -57,21 +69,6 @@ export class ScheduleService {
     }
   }
 
-  getTasksForDate(date: Date, type: AssessmentType) {
-    return this.getTasks(type).then(schedule => {
-      const startTime = setDateTimeToMidnightEpoch(date)
-      const endTime = startTime + getMilliseconds({ days: 1 })
-      return schedule
-        ? schedule.filter(d => {
-            return (
-              d.timestamp + d.completionWindow > startTime &&
-              d.timestamp < endTime
-            )
-          })
-        : []
-    })
-  }
-
   getScheduledTasks(): Promise<Task[]> {
     return this.storage.get(this.SCHEDULE_STORE.SCHEDULE_TASKS)
   }
@@ -96,6 +93,16 @@ export class ScheduleService {
           d =>
             d && d.completed === false && d.timestamp + d.completionWindow < now
         )
+        .slice(0, 100)
+    })
+  }
+
+  getReportedIncompleteTasks(): Promise<Task[]> {
+    // These tasks have been completed but have not yet been reported as complete to the app server
+    return this.getTasks(AssessmentType.ALL).then(tasks => {
+      const now = new Date().getTime()
+      return tasks
+        .filter(d => d.completed && !d.reportedCompletion)
         .slice(0, 100)
     })
   }
@@ -139,49 +146,11 @@ export class ScheduleService {
     return this.storage.push(this.SCHEDULE_STORE.SCHEDULE_TASKS_COMPLETED, task)
   }
 
-  generateSchedule(referenceTimestamp, utcOffsetPrev) {
-    this.logger.log('Updating schedule..', referenceTimestamp)
-    return this.getCompletedTasks()
-      .then(completedTasks => {
-        return this.schedule.runScheduler(
-          referenceTimestamp,
-          completedTasks,
-          utcOffsetPrev
-        )
-      })
-      .then(res =>
-        Promise.all([
-          this.setTasks(AssessmentType.SCHEDULED, res.schedule),
-          this.setCompletedTasks(res.completed ? res.completed : [])
-        ])
-      )
-  }
-
-  generateSingleAssessmentTask(
-    assessment: Assessment,
-    assessmentType,
-    referenceDate: number
-  ) {
-    return this.getTasks(assessmentType).then((tasks: Task[]) => {
-      const schedule = this.schedule.buildTasksForSingleAssessment(
-        assessment,
-        tasks ? tasks.length : 0,
-        referenceDate,
-        assessmentType
-      )
-      const newTasks = (tasks ? tasks.concat(schedule) : schedule).sort(
-        compareTasks
-      )
-      this.changeDetectionEmitter.emit()
-      return this.setTasks(assessmentType, newTasks)
-    })
-  }
-
   insertTask(task): Promise<any> {
     const type = task.type
     return this.getTasks(type).then(tasks => {
       if (!tasks) return
-      const updatedTasks = tasks.map(d => (d.index === task.index ? task : d))
+      const updatedTasks = tasks.map(d => (d.id === task.id ? task : d))
       return this.setTasks(type, updatedTasks)
     })
   }

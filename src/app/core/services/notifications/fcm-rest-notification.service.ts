@@ -40,7 +40,6 @@ export class FcmRestNotificationService extends FcmNotificationService {
   NOTIFICATIONS_PATH = 'messaging/notifications'
   SUBJECT_PATH = 'users'
   PROJECT_PATH = 'projects'
-  STATE_EVENTS_PATH = 'state_events'
 
   resumeListener: Subscription = new Subscription()
 
@@ -55,7 +54,6 @@ export class FcmRestNotificationService extends FcmNotificationService {
     public remoteConfig: RemoteConfigService,
     public localization: LocalizationService,
     private appServerService: AppServerService,
-    private http: HttpClient,
     private webIntent: WebIntent
   ) {
     super(storage, config, firebase, platform, logger, remoteConfig)
@@ -85,17 +83,19 @@ export class FcmRestNotificationService extends FcmNotificationService {
           tasks,
           messageId
         )
-        return this.updateNotificationState(
-          subject,
-          notification.id,
-          NotificationMessagingState.DELIVERED
-        ).then(() =>
-          this.updateNotificationState(
+        return this.appServerService
+          .updateNotificationState(
             subject,
             notification.id,
-            NotificationMessagingState.OPENED
+            NotificationMessagingState.DELIVERED
           )
-        )
+          .then(() =>
+            this.appServerService.updateNotificationState(
+              subject,
+              notification.id,
+              NotificationMessagingState.OPENED
+            )
+          )
       })
     })
   }
@@ -123,16 +123,14 @@ export class FcmRestNotificationService extends FcmNotificationService {
       this.logger.log('NOTIFICATIONS Scheduling FCM notifications')
       this.logger.log(fcmNotifications)
       return Promise.all(
-        fcmNotifications
-          .map(n =>
-            this.sendNotification(n, subject.subjectId, subject.projectId)
-          )
-          .concat([this.setLastNotificationUpdate(Date.now())])
+        fcmNotifications.map(n =>
+          this.sendNotification(n, subject.subjectId, subject.projectId)
+        )
       )
     })
   }
 
-  publishTestNotification(subject): Promise<void> {
+  publishTestNotification(subject): Promise<any> {
     return this.sendNotification(
       this.format(this.notifications.createTestNotification(), subject),
       subject.subjectId,
@@ -140,22 +138,21 @@ export class FcmRestNotificationService extends FcmNotificationService {
     )
   }
 
-  pullAllPublishedNotifications(subject) {
+  sendNotification(notification, subjectId, projectId) {
     return this.appServerService
-      .getHeaders()
-      .then(headers =>
-        this.http
-          .get(
-            this.getNotificationEndpoint(subject.projectId, subject.subjectId),
-            { headers }
-          )
-          .toPromise()
-      )
+      .addNotification(notification, subjectId, projectId)
+      .then((resultNotification: FcmNotificationDto) => {
+        this.setLastNotificationUpdate(Date.now())
+        notification.notification.id = resultNotification.id
+        return (notification.notification.messageId =
+          resultNotification.fcmMessageId)
+      })
   }
 
   cancelAllNotifications(subject): Promise<any> {
-    return this.pullAllPublishedNotifications(subject).then(
-      (res: FcmNotifications) => {
+    return this.appServerService
+      .pullAllPublishedNotifications(subject)
+      .then((res: FcmNotifications) => {
         const now = Date.now()
         const notifications = res.notifications
           .map(n => ({
@@ -164,26 +161,13 @@ export class FcmRestNotificationService extends FcmNotificationService {
           }))
           .filter(n => n.timestamp > now)
         notifications.map(o => this.cancelSingleNotification(subject, o))
-      }
-    )
+      })
   }
 
   cancelSingleNotification(subject, notification: SingleNotification) {
     if (notification.id) {
       return this.appServerService
-        .getHeaders()
-        .then(headers =>
-          this.http
-            .delete(
-              this.getNotificationEndpoint(
-                subject.projectId,
-                subject.subjectId,
-                notification.id
-              ),
-              { headers }
-            )
-            .toPromise()
-        )
+        .deleteNotification(subject, notification)
         .then(() => {
           this.logger.log('Success cancelling notification ' + notification.id)
           return (notification.id = undefined)
@@ -192,59 +176,6 @@ export class FcmRestNotificationService extends FcmNotificationService {
       this.logger.log('Cannot cancel undefined notification id.')
       return Promise.resolve()
     }
-  }
-
-  updateNotificationState(subject, notificationId, state) {
-    return this.appServerService
-      .getHeaders()
-      .then(headers =>
-        this.http
-          .post(
-            urljoin(
-              this.getNotificationEndpoint(
-                subject.projectId,
-                subject.subjectId,
-                notificationId
-              ),
-              this.STATE_EVENTS_PATH
-            ),
-            { notificationId: notificationId, state: state, time: new Date() },
-            { headers }
-          )
-          .toPromise()
-      )
-  }
-
-  private sendNotification(notification, subjectId, projectId): Promise<any> {
-    return this.appServerService.getHeaders().then(headers =>
-      this.http
-        .post(
-          this.getNotificationEndpoint(projectId, subjectId),
-          notification.notificationDto,
-          { headers, observe: 'response' }
-        )
-        .toPromise()
-        .then((res: HttpResponse<FcmNotificationDto>) => {
-          this.logger.log('Successfully sent! Updating notification Id')
-          return res.body
-        })
-        .catch((err: HttpErrorResponse) => {
-          this.logger.log('Http request returned an error: ' + err.message)
-          const data: FcmNotificationError = err.error
-          if (err.status == 409) {
-            this.logger.log(
-              'Notification already exists, storing notification data..'
-            )
-            return data.dto ? data.dto : notification.notification
-          }
-          return this.logger.error('Failed to send notification', err)
-        })
-        .then((resultNotification: FcmNotificationDto) => {
-          notification.notification.id = resultNotification.id
-          return (notification.notification.messageId =
-            resultNotification.fcmMessageId)
-        })
-    )
   }
 
   private format(notification: SingleNotification, subject) {
@@ -266,17 +197,5 @@ export class FcmRestNotificationService extends FcmNotificationService {
         scheduledTime: new Date(notification.timestamp)
       }
     }
-  }
-
-  getNotificationEndpoint(projectId, subjectId, notificationId?) {
-    return urljoin(
-      this.appServerService.getAppServerURL(),
-      this.PROJECT_PATH,
-      projectId,
-      this.SUBJECT_PATH,
-      subjectId,
-      this.NOTIFICATIONS_PATH,
-      notificationId ? notificationId.toString() : ''
-    )
   }
 }

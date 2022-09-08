@@ -2,7 +2,7 @@ import { AssessmentType } from './assessment'
 import { SingleNotification } from './notification-handler'
 
 export interface Task {
-  index: number
+  id: number
   completed: boolean
   reportedCompletion: boolean
   timestamp: number
@@ -19,6 +19,7 @@ export interface Task {
   isDemo: boolean
   order: number
   isLastTask?: boolean
+  status?: string
 }
 
 export interface TasksProgress {

@@ -17,6 +17,7 @@ import { Task } from '../../../shared/models/task'
 import { compareTasks } from '../../../shared/utilities/compare-tasks'
 import {
   advanceRepeat,
+  getMilliseconds,
   setDateTimeToMidnight,
   setDateTimeToMidnightEpoch,
   timeIntervalToMillis
@@ -152,7 +153,7 @@ export class ScheduleGeneratorService {
     completionWindow
   ): Task {
     const task: Task = this.util.deepCopy(DefaultTask)
-    task.index = index
+    task.id = index
     task.timestamp = timestamp
     task.name = assessment.name
     task.type = assessment.type

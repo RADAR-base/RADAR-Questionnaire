@@ -258,16 +258,6 @@ export class QuestionsService {
     return this.finish.createClinicalFollowUpTask(assessment)
   }
 
-  getHiddenQuestions(): Promise<Object> {
-    return this.remoteConfig
-      .read()
-      .then(config =>
-        config.getOrDefault(ConfigKeys.QUESTIONS_HIDDEN, DefaultQuestionsHidden)
-      )
-      .then(res => JSON.parse(res))
-      .catch(e => DefaultQuestionsHidden)
-  }
-
   stringToArray(array, delimiter) {
     return array.split(delimiter).map(s => s.trim())
   }

@@ -94,7 +94,7 @@ export class HomePageComponent implements OnDestroy {
   }
 
   init() {
-    this.sortedTasks = this.tasksService.getSortedTasksOfToday()
+    this.sortedTasks = this.tasksService.getValidTasksMap()
     this.tasks = this.tasksService.getTasksOfToday()
     this.currentDate = this.tasksService.getCurrentDateMidnight()
     this.tasksProgress = this.tasksService.getTaskProgress()

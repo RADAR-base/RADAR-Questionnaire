@@ -21,8 +21,9 @@ export class FinishTaskService {
 
   updateTaskToComplete(task): Promise<any> {
     return Promise.all([
-      this.schedule.updateTaskToComplete(task),
-      this.schedule.updateTaskToReportedCompletion(task),
+      this.schedule
+        .updateTaskToComplete(task)
+        .then(res => this.schedule.updateTaskToReportedCompletion(task)),
       task.type == AssessmentType.SCHEDULED
         ? this.schedule.addToCompletedTasks(task)
         : Promise.resolve()

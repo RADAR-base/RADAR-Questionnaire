@@ -16,7 +16,7 @@ import { Localisations } from './localisations'
 export const DefaultPlatformInstance = 'RADAR-CNS'
 
 // *Default app version
-export const DefaultAppVersion = '2.4.0-alpha'
+export const DefaultAppVersion = '2.6.0-alpha'
 
 // *Default Android package name
 export const DefaultPackageName = 'org.phidatalab.radar_armt'
@@ -89,7 +89,7 @@ export const DefaultESMCompletionWindow = 600000
 
 // *Default sample task
 export const DefaultTask: Task = {
-  index: 0,
+  id: 0,
   type: AssessmentType.SCHEDULED,
   completed: false,
   reportedCompletion: false,
@@ -117,6 +117,9 @@ export const DefaultScheduleVersion = '0.3.10'
 
 // *Default max number of completion logs to send on app start
 export const DefaultNumberOfCompletionLogsToSend = 10
+
+// *Default schedule service type (either 'LOCAL' or 'APPSERVER')
+export const DefaultScheduleServiceType: string = 'LOCAL'
 
 // DEFAULT NOTIFICATION SETUP
 

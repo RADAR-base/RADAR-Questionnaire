@@ -12,11 +12,12 @@ export enum SchemaType {
   OTHER = 'other',
 
   // generic 
-  GENERAL_HEALTH = 'general_health',
+  GENERAL_HEALTH = 'healthkit_generic_data',
 
   // aggregated data
-  //   Steps, Calroies, Nutrition    [ 'steps', 'distance','calories','activity', 'nutrition'] 
-  AGGREGATED_HEALTH = 'aggregated_health'
+  // !Will have to remove activity here, since each activity acutally contains more payload 
+  // Steps, Calroies, Nutrition    [ 'steps', 'distance','calories','activity', 'nutrition'] 
+  AGGREGATED_HEALTH = 'healthkit_aggregated_exercise_data'
 }
 
 export interface KeyExport {

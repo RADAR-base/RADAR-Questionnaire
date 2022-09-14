@@ -67,24 +67,20 @@ export class SchemaService {
 
   getKafkaObjectValue(type, payload) {
     switch (type) {
-      //case SchemaType.Nutrtion 
       case SchemaType.AGGREGATED_HEALTH:
         const HealthBodyMeasurement = {
-          name: payload.task.name,
-          version: payload.data.scheduleVersion,
-          answers: payload.data.answers,
+          ...payload.data.aggregatedData,
           time: payload.data.time,
           timeReceived: payload.data.timeReceived,
-          timeInterval: payload.data.timeInterval
+          timeInterval: payload.data.timeInterval, //second 
         }
         return HealthBodyMeasurement
       case SchemaType.GENERAL_HEALTH:
         const general_schema = {
-          key: payload.task.name,
-          version: payload.data.scheduleVersion,
-          value: payload.data.answers,
-          time: payload.data.time,
-          timeReceived: payload.data.timeReceived,
+          key: payload.data.key, //height 
+          value: payload.data.value, //172.3232
+          time: payload.data.time, //epoch 
+          timeReceived: payload.data.timeReceived, //epoch 
         }
         return general_schema
       case SchemaType.ASSESSMENT:
@@ -178,6 +174,13 @@ export class SchemaService {
       const defaultTopic = `${avsc}_${name}`
       if (specifications) {
         const spec = specifications.find(t => t.type.toLowerCase() == type)
+        // TODO: Can do a revision 
+        if(name === "healthkit_generic_data"){
+          return Promise.resolve("healthkit_generic_data")
+        }
+        else if(name === "healthkit_aggregated_exercise_data"){
+          return Promise.resolve("healthkit_aggregated_exercise_data")
+        }
         return Promise.resolve(spec && spec.topic ? spec.topic : defaultTopic)
       }
       return Promise.resolve(defaultTopic)

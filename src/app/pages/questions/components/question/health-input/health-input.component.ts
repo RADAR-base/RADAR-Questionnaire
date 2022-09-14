@@ -25,9 +25,18 @@ export class HealthInputComponent implements OnInit {
   // the interval days for first query 
   defaultInterval = 1000
 
+  // the bucket for aggregated query 
+  defaultBucket = 'day'
+  
   constructor(private health: Health) { }
   ngOnInit() {
-    const requireField = [this.health_question.field_name]
+    let requireField = []
+    if(this.health_question.field_name === 'blood_pressure_systolic' || this.health_question.field_name === 'blood_pressure_diastolic'){
+      requireField = ['blood_pressure']
+    }
+    else{
+      requireField = [this.health_question.field_name]
+    }
     this.health
       .isAvailable()
       .then((available: boolean) => {
@@ -54,36 +63,28 @@ export class HealthInputComponent implements OnInit {
   onInputChange() {
     const event = {
       'value' : this.health_value,
-      'time': this.health_display_time
+      'time': this.health_time
     }
     console.log("Final Sumit Data: ", event)
     this.valueChange.emit(event)
   }
 
   async loadData() {
+    // * Still has some improvment for this UI dispaly
 
-    // TODO: Error Handling for empty return 
-    // Done: Implement LocalStorage
-    // Done: Limit the float for UI 
-    // Done: Check Andorid device when loading the data
-      // * Still has some improvment for this UI dispaly
 
-    // TODO: Processing the data 
-
-    // !clearn the localstorage query 
+    // // !clearn the localstorage query  ( For testing )
     // localStorage.setItem('lastQueryTimeDic', null)
 
  
     const lastQueryTimeDic = localStorage.getItem('lastQueryTimeDic')
-    console.log("LastQuery: ", lastQueryTimeDic)
+    // console.log("LastQuery: ", lastQueryTimeDic)
 
     if(lastQueryTimeDic !== "null"){
 
       const dic = JSON.parse(lastQueryTimeDic) 
 
-      console.log("Dic",dic)
       if(this.health_question.field_name in dic){
-        console.log("Has Dic")
         await this.query(new Date(dic[this.health_question.field_name]), new Date())
       }
       else{
@@ -104,73 +105,97 @@ export class HealthInputComponent implements OnInit {
   }
 
   async query(queryStartDate: Date, queryEndDate: Date){
+     // !Will have to remove activity here, since each activity acutally contains more payload
+     // !Set the acitiviy to be UNKNOWN for now to avoid schema confliction 
     const aggregatedField = [ 'steps', 'distance','calories','activity', 'nutrition']
-    console.log('Start Date: ', queryStartDate.toLocaleDateString())
-    console.log('End Date: ', queryEndDate.toLocaleDateString())
     //aggregated data 
     if ( aggregatedField.includes(this.health_question.field_name) || this.health_question.field_name.startsWith('nutrition') || this.health_question.field_name.startsWith('calories')){
       await this.health.queryAggregated({
-        startDate: queryStartDate, // three days ago
-        endDate: queryEndDate, // now
+        startDate: queryStartDate, 
+        endDate: queryEndDate, 
         dataType: this.health_question.field_name,
-        bucket: 'day'
+        bucket: this.defaultBucket 
       }).then(res => {
-        console.log("Value Before Updated: ", this.health_value);
         if(res === null){
-          console.log(this.health_question.field_name, " is empty")
           this.health_value = null
           this.health_display = "There is no data for this date"
         }else{
-          console.log("Field Name: ", this.health_question.field_name)
-          const value = res[res.length-1].value 
-          this.health_value = parseFloat(value)
+          if(this.health_question.field_name === "activity"){
+            const value = res[res.length-1].value 
+            this.health_value = "UNKNOWN"
+          }
+          else{
+            const value = res[res.length-1].value 
+            this.health_value = parseFloat(value)
+          }
           this.health_display = this.health_value.toString() + " " +  res[res.length-1].unit
         }
         this.health_display_time = res[res.length-1].startDate.toLocaleDateString()
-        console.log("Value After Updated: ", this.health_value )
+        this.health_time = Math.floor(res[res.length-1].startDate.getTime()/1000)
       })
     }
     else {
-      await this.health
-        .query({
-          // put the lastDate in StartDate 
-          startDate: queryStartDate,
-          endDate: queryEndDate, // now
-          dataType: this.health_question.field_name,
-          limit: 1000
-        })
-        .then(res => {
-          console.log("Value Before Updated: ", this.health_value);
-          console.log("res", res);
-          if(res.length === 0){
-            console.log(this.health_question.field_name, " is empty")
-            this.health_value = null
-            this.health_display = "No data for today"
-            this.health_display_time = new Date().toLocaleDateString()
-          }
-          else{
-            if( this.health_question.field_name === 'blood_pressure'){
-              const blood_pressure = res[0].value as any
-              this.health_value = blood_pressure.systolic + '/' + blood_pressure.diastolic
-              this.health_display = this.health_value.toFixed(2) + " " +  res[0].unit
-            }
-            else if (this.health_question.field_name === 'date_of_birth'){
-              const value = res[0].value as any
-              console.log(value.day + '/' + value.month + '/' + value.year)
-              this.health_value = value.day + '/' + value.month + '/' + value.year
-              this.health_display = this.health_value
+      if(this.health_question.field_name === 'blood_pressure_systolic' || this.health_question.field_name === 'blood_pressure_diastolic' ){
+        await this.health
+          .query({
+            // put the lastDate in StartDate 
+            startDate: queryStartDate,
+            endDate: queryEndDate, // now
+            dataType: 'blood_pressure',
+            limit: 1000
+          }) 
+          .then(res => {
+            if(res.length === 0){
+              this.health_value = null
+              this.health_display = "No data for today"
+              this.health_display_time = new Date().toLocaleDateString()
+              this.health_time = Math.floor(res[0].startDate.getTime()/1000)
             }
             else{
-              console.log("Field Name: ", this.health_question.field_name)
-              this.health_value = parseFloat(res[0].value)
+              const blood_pressure = res[0].value as any
+              if(this.health_question.field_name ==='blood_pressure_systolic'){
+                this.health_value = blood_pressure.systolic
+              }else{
+                this.health_value = blood_pressure.diastolic
+              }
               this.health_display = this.health_value.toFixed(2) + " " +  res[0].unit
+              this.health_time = Math.floor(res[0].startDate.getTime()/1000)
             }
-            // deal with time 
-            console.log("Value After Updated: ", this.health_value )
-            this.health_display_time = res[0].startDate.toLocaleDateString()
-          }
+          })
+      }
+      else{
+        await this.health
+          .query({
+            // put the lastDate in StartDate 
+            startDate: queryStartDate,
+            endDate: queryEndDate, // now
+            dataType: this.health_question.field_name,
+            limit: 1000
+          })
+          .then(res => {
+            if(res.length === 0){
+              this.health_value = null
+              this.health_display = "No data for today"
+              this.health_display_time = new Date().toLocaleDateString()
+              this.health_time = Math.floor(res[0].startDate.getTime()/1000)
+            }
+            else{
+              if (this.health_question.field_name === 'date_of_birth'){
+                const value = res[0].value as any
+                this.health_value = value.day + '/' + value.month + '/' + value.year
+                this.health_display = this.health_value
+              }
+              else{
+                this.health_value = parseFloat(res[0].value)
+                this.health_display = this.health_value.toFixed(2) + " " +  res[0].unit
+              }
+              // deal with time 
+              this.health_display_time = res[0].startDate.toLocaleDateString()
+              this.health_time = Math.floor(res[0].startDate.getTime()/1000)
+            }
 
-        })
+          })
+      }
     }
   }
 }

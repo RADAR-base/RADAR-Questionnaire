@@ -50,6 +50,7 @@ export class KafkaService {
     })
   }
 
+
   prepareKafkaObjectAndSend(type, payload, keepInCache?) {
     const value = this.schema.getKafkaObjectValue(type, payload)
     const keyPromise = this.schema.getKafkaObjectKey()

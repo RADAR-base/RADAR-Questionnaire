@@ -34,18 +34,14 @@ export class FinishTaskService {
   processDataAndSend(answers, questions, timestamps, task) {
     // NOTE: Do not send answers if demo questionnaire
     if (task.isDemo) return Promise.resolve()
-    console.log("Answers", answers)
-    console.log("Questions", questions)
-    console.log("task", task)
-
     if (questions.some((question)=> question.field_type === 'health')) {
       const results = this.processHealthQuestionnaireData(answers, timestamps, questions)
-      console.log('results', results)
+      // console.log('Results', results)
       results.forEach((result)=>{
-        return this.sendAnswersToKafka(
-            result,
-            task
-          )
+        this.sendAnswersToKafka(
+          result,
+          task
+        )
       })
 
 
@@ -62,26 +58,18 @@ export class FinishTaskService {
   sendAnswersToKafka(processedAnswers, task): Promise<any> {
     // if it's from health 
     if("timeInterval" in processedAnswers){
-      return this.appConfig.getScheduleVersion().then(scheduleVersion => {
-        return Promise.all([
-          this.kafka.prepareKafkaObjectAndSend(SchemaType.TIMEZONE, {}),
-          this.kafka.prepareKafkaObjectAndSend(SchemaType.AGGREGATED_HEALTH, {
+        return Promise.all([this.kafka.prepareKafkaObjectAndSend(SchemaType.AGGREGATED_HEALTH, {
             task: task,
-            data: Object.assign(processedAnswers, { scheduleVersion })
+            data: processedAnswers
           })
         ])
-      })
     }
     else if("key" in processedAnswers){
-      return this.appConfig.getScheduleVersion().then(scheduleVersion => {
-        return Promise.all([
-          this.kafka.prepareKafkaObjectAndSend(SchemaType.TIMEZONE, {}),
-          this.kafka.prepareKafkaObjectAndSend(SchemaType.GENERAL_HEALTH, {
-            task: task,
-            data: Object.assign(processedAnswers, { scheduleVersion })
-          })
-        ])
-      })
+      return Promise.all([this.kafka.prepareKafkaObjectAndSend(SchemaType.GENERAL_HEALTH, {
+          task: task,
+          data: processedAnswers
+        })
+      ])
     }
     // 
     // NOTE: Submit data to kafka
@@ -112,49 +100,55 @@ export class FinishTaskService {
 
   processHealthQuestionnaireData(answers, timestampes, questions) {
     this.logger.log('Answers to process', answers)
-    console.log('timestamp', timestampes)
 
     //* Go with genreal schema 
     // const result = null;
     let results = [];
+    let aggregatedData = {}
+    let aggregatedTime = 1
     for (const [key, value] of Object.entries<any>(answers)) {
+      // TODO: aggregated all the value into one schema 
       if(value.value !== null && value.value !== undefined){
 
         let result = {}
         const aggregatedField = [ 'steps', 'distance','calories','activity', 'nutrition']
-
         // * judge if it's for general or for aggregation 
-        if(aggregatedField.includes(key) || key.startsWith('nutrition') || key.startsWith('calories')){
+        // TODO: value --> intvalue, stringvalue, floatvalu
 
-          result = {
-            ...answers,
-            time: timestampes[questions[0].field_name].startTime, // from the data 
-            timeReceived: timestampes[questions[questions.length - 1].field_name].endTime, // 
-            timeInterval: 1
-          }
+        if(aggregatedField.includes(key) || key.startsWith('nutrition') || key.startsWith('calories')){
+          aggregatedData = {[key]:value.value, ...aggregatedData}
+          aggregatedTime = value.time
+          //keys = []
         }
         else{
           result = {
-            time: timestampes[questions[0].field_name].startTime,
-            timeReceived: value.time,
+            time: value.time,
+            timeReceived: timestampes[questions[0].field_name].startTime,
             key: key,
             value: value.value
           }
+          results.push(result)
         }
-
-        results.push(result)
       }
       console.log(`${key}: ${value}`);
     }
+    const allAggregatedField = ['steps','distance','calories','activity','nutrition']
 
+    allAggregatedField.forEach((field)=>{
+      if ( !(field in aggregatedData) ){
+        aggregatedData = {[field]:null, ...aggregatedData} 
+      }
 
-
-    //* Go with aggregation schema
-    const result = {
-      ...answers,
-      time: timestampes[questions[0].field_name].startTime, // from the data 
-      timeReceived: timestampes[questions[questions.length - 1].field_name].endTime, // 
+    })
+    
+    const aggregatedResult = {
+      aggregatedData: aggregatedData,
+      time: aggregatedTime, // from the data 
+      timeReceived: timestampes[questions[0].field_name].startTime, // 
+      timeInterval: 86400
     }
+
+    results.push(aggregatedResult)
 
     return results
   }
@@ -168,7 +162,6 @@ export class FinishTaskService {
         startTime: timestamps[key].startTime,
         endTime: timestamps[key].endTime
       }))
-    console.log(values)
     return {
       answers: values,
       scheduleVersion: '',

@@ -59,6 +59,10 @@ export const DefaultAppCreditsBody = JSON.stringify(
   Localisations['CREDITS_BODY']
 )
 
+export const DefaultShowTaskCalendarName = 'false'
+
+export const DefaultShowTaskProgressCount = 'false'
+
 // DEFAULT URI
 
 // *The Default endpoint where the RADAR-base platform is hosted

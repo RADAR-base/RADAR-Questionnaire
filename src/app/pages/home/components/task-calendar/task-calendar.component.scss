@@ -45,6 +45,10 @@ task-calendar {
     font-size: 18px;
   }
 
+  .task-item-name {
+    font-size: 15px !important;
+  }
+
   .units {
     margin-right: 2px;
     font-size: 12px;
@@ -67,7 +71,7 @@ task-calendar {
     display: inline-flex;
     float: left;
     padding-left: 5px;
-    width: 80px;
+    width: auto;
   }
 
   .task-info-right {
@@ -81,7 +85,7 @@ task-calendar {
   .metrics {
     display: inline-flex;
     float: left;
-    margin-right: 12px;
+    margin-right: 8px;
     text-align: left;
   }
 
@@ -102,14 +106,15 @@ task-calendar {
     float: right;
     margin-top: -8px;
     margin-right: 8px;
-    margin-bottom: -8px;
+    margin-bottom: -7px;
     padding-top: 5px;
+    padding-bottom: 5px;
     width: 24px;
   }
 
   .status {
     color: map-get($colors, tertiary);
-    font-size: 28px;
+    font-size: 26px;
   }
 
   .status-checked {

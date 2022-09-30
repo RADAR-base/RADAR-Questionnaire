@@ -1,41 +1,24 @@
 <div>
-
-  <ion-scroll
-    scrollY="true"
-    class="layers"
-    [style.height.vh]="show? 100 : 0"
-  >
-
-    <ng-container *ngIf="(tasks)">
-      <ng-container *ngFor="let sortedTasks of (tasks) | keyvalue">
-        <div
-          *ngIf="sortedTasks.key == currentDate"
-          padding
-          class="date"
-        >
-          {{ "TASK_CALENDAR_TITLE" | translate }}
+  <ion-scroll scrollY="true" class="layers" [style.height.vh]="show ? 100 : 0">
+    <ng-container *ngIf="tasks">
+      <ng-container *ngFor="let sortedTasks of tasks | keyvalue">
+        <div *ngIf="sortedTasks.key == currentDate" padding class="date">
+          {{ 'TASK_CALENDAR_TITLE' | translate }}
         </div>
-        <div
-          *ngIf="sortedTasks.key !== currentDate"
-          padding
-          class="date"
-        >
-          {{ (sortedTasks.key/1000) | amFromUnix | amDateFormat:'MMM D' }}
+        <div *ngIf="sortedTasks.key !== currentDate" padding class="date">
+          {{ sortedTasks.key / 1000 | amFromUnix | amDateFormat: 'MMM D' }}
         </div>
-        <ng-container *ngFor="let task of sortedTasks.value; let i=index">
+        <ng-container *ngFor="let task of sortedTasks.value; let i = index">
           <div
             class="current-time-div"
-            *ngIf="i==(timeIndex) && sortedTasks.key == currentDate "
+            *ngIf="i == timeIndex && sortedTasks.key == currentDate"
           >
             <div id="time-current">
               <ion-row>
                 <ion-col>
                   <div class="time-current-division left"></div>
                 </ion-col>
-                <ion-col
-                  col-auto
-                  class="time-current"
-                >
+                <ion-col col-auto class="time-current">
                   {{ currentTime }}
                 </ion-col>
                 <ion-col>
@@ -48,17 +31,23 @@
             id="task-item"
             (tap)="clicked(task)"
             *ngIf="task.showInCalendar"
+            [class.task-item-name]="isTaskNameShown"
           >
             <ion-row>
               <ion-col>
                 <div class="task-info-left">
-                  <div class="start-time">{{ getStartTime(task) }}</div>
+                  <div *ngIf="isTaskNameShown" class="start-time">
+                    {{ task.name }}
+                  </div>
+                  <div *ngIf="!isTaskNameShown" class="start-time">
+                    {{ getStartTime(task) }}
+                  </div>
                   <div>
                     <img
                       class="extra-info-icon"
                       *ngIf="task.warning"
                       src="assets/imgs/warning.png"
-                    >
+                    />
                   </div>
                 </div>
                 <div class="task-info-right">
@@ -67,7 +56,7 @@
                       <img
                         class="icon-padding icon-xsm"
                         src="assets/imgs/stopwatch.png"
-                      >
+                      />
                       {{ task.estimatedCompletionTime }}
                       <span class="units">min</span>
                     </div>
@@ -75,7 +64,7 @@
                       <img
                         class="icon-padding icon-xsm"
                         src="assets/imgs/nTasks.png"
-                      >
+                      />
                       {{ task.nQuestions }}
                       <span class="units">x</span>
                     </div>
@@ -101,17 +90,14 @@
         </ng-container>
         <div
           class="current-time-div"
-          *ngIf="(timeIndex === -1) && sortedTasks.key == currentDate "
+          *ngIf="timeIndex === -1 && sortedTasks.key == currentDate"
         >
           <div id="time-current">
             <ion-row>
               <ion-col>
                 <div class="time-current-division left"></div>
               </ion-col>
-              <ion-col
-                col-auto
-                class="time-current"
-              >
+              <ion-col col-auto class="time-current">
                 {{ currentTime }}
               </ion-col>
               <ion-col>
@@ -123,5 +109,4 @@
       </ng-container>
     </ng-container>
   </ion-scroll>
-
 </div>

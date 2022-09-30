@@ -1,5 +1,5 @@
 <div class="info-carrd">
-  <div class="content" #content scrollY="true">
+  <div class="content" #content scrollY="true" *ngIf="currentlyShown">
     <div class="items">
       <div class="info-content" [innerHTML]="sanitizedHtml"></div>
     </div>

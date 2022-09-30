@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core'
 
 import {
   DefaultAutoNextQuestionnaireTypes,
-  DefaultQuestionsHidden,
+  DefaultShowTaskProgressCount,
   DefaultSkippableQuestionnaireTypes
 } from '../../../../assets/data/defaultConfig'
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
@@ -35,6 +35,7 @@ export class QuestionsService {
     DefaultAutoNextQuestionnaireTypes
   )
   DELIMITER = ','
+  isProgressCountShown = false
 
   constructor(
     public questionnaire: QuestionnaireService,
@@ -60,10 +61,16 @@ export class QuestionsService {
           config.getOrDefault(
             ConfigKeys.SKIPPABLE_QUESTIONNAIRE_TYPES,
             DefaultSkippableQuestionnaireTypes.toString()
+          ),
+          config.getOrDefault(
+            ConfigKeys.SHOW_TASK_PROGRESS_COUNT,
+            DefaultShowTaskProgressCount.toString()
           )
         ])
       )
-      .then(([autoNextSet, skippableSet]) => {
+      .then(([autoNextSet, skippableSet, showTaskProgressCount]) => {
+        if (showTaskProgressCount.length)
+          this.isProgressCountShown = JSON.parse(showTaskProgressCount)
         if (autoNextSet.length)
           this.NEXT_BUTTON_AUTOMATIC_SET = new Set(
             this.stringToArray(autoNextSet, this.DELIMITER)
@@ -260,5 +267,9 @@ export class QuestionsService {
 
   stringToArray(array, delimiter) {
     return array.split(delimiter).map(s => s.trim())
+  }
+
+  getIsProgressCountShown() {
+    return this.isProgressCountShown
   }
 }

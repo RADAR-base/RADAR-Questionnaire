@@ -16,7 +16,7 @@ import { Localisations } from './localisations'
 export const DefaultPlatformInstance = 'RADAR-CNS'
 
 // *Default app version
-export const DefaultAppVersion = '2.6.0-alpha'
+export const DefaultAppVersion = '2.6.1-alpha'
 
 // *Default Android package name
 export const DefaultPackageName = 'org.phidatalab.radar_armt'
@@ -58,6 +58,10 @@ export const DefaultAppCreditsTitle = JSON.stringify(
 export const DefaultAppCreditsBody = JSON.stringify(
   Localisations['CREDITS_BODY']
 )
+
+export const DefaultShowTaskCalendarName = 'false'
+
+export const DefaultShowTaskProgressCount = 'false'
 
 // DEFAULT URI
 

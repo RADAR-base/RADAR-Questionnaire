@@ -40,6 +40,10 @@ export class QuestionsServiceMock {
     return Promise.resolve({})
   }
 
+  getIsProgressCountShown() {
+    return false
+  }
+
   getTime() {
     return 0
   }

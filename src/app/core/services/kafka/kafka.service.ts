@@ -85,8 +85,14 @@ export class KafkaService {
   }
 
   private fetchTopics() {
-    return this.http.get(this.KAFKA_CLIENT_URL + this.URI_topics, {observe: 'body'})
-      .toPromise()
+    return this.getAccessToken()
+      .then(accessToken => this.http.get(this.KAFKA_CLIENT_URL + this.URI_topics,
+        {
+          observe: 'body',
+          headers: new HttpHeaders()
+            .set('Authorization', 'Bearer ' + accessToken)
+            .set('Accept', DefaultClientAcceptType),
+        }).toPromise())
       .then((topics: string[]) => {
         this.topics = topics
         this.lastTopicFetch = Date.now()
@@ -173,7 +179,7 @@ export class KafkaService {
       .then(data =>
         this.http
           .post(this.KAFKA_CLIENT_URL + this.URI_topics + topic, data, {
-            headers: headers
+            headers
           })
           .toPromise()
       )
@@ -205,12 +211,17 @@ export class KafkaService {
     })
   }
 
-  getKafkaHeaders() {
+  getAccessToken() {
     return Promise.all([this.updateURI(), this.token.refresh()])
       .then(() => this.token.getTokens())
-      .then(tokens =>
+      .then(tokens => tokens.access_token)
+  }
+
+  getKafkaHeaders() {
+    return this.getAccessToken()
+      .then(accessToken =>
         new HttpHeaders()
-          .set('Authorization', 'Bearer ' + tokens.access_token)
+          .set('Authorization', 'Bearer ' + accessToken)
           .set('Content-Type', DefaultKafkaRequestContentType)
           .set('Accept', DefaultClientAcceptType)
       )

@@ -36,9 +36,11 @@ export class ConfigKeys {
 
   static GITHUB_FETCH_STRATEGY = new ConfigKeys('github_fetch_strategy')
 
-  static TOPIC_CACHE_TIMEOUT = new ConfigKeys(
-    'topic_cache_timeout'
-  )
+  static TOPIC_CACHE_TIMEOUT = new ConfigKeys('topic_cache_timeout')
+
+  static SHOW_TASK_CALENDAR_NAME = new ConfigKeys('show_task_calendar_name')
+
+  static SHOW_TASK_PROGRESS_COUNT = new ConfigKeys('show_task_progress_count')
 
   constructor(public value: string) {}
 

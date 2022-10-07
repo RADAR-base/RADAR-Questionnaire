@@ -42,6 +42,7 @@ export class HomePageComponent implements OnDestroy {
   taskIsNow = false
   checkTaskInterval
   showMiscTasksButton: Promise<boolean>
+  isTaskCalendarTaskNameShown = false
 
   APP_CREDITS = '&#169; RADAR-Base'
   HTML_BREAK = '<br>'
@@ -61,6 +62,7 @@ export class HomePageComponent implements OnDestroy {
         this.navCtrl.setRoot(HomePageComponent)
       }
     )
+    this.getisTaskCalendarTaskNameShown()
   }
 
   getIsLoadingSpinnerShown() {
@@ -68,6 +70,12 @@ export class HomePageComponent implements OnDestroy {
       (this.startingQuestionnaire && !this.showCalendar) ||
       (!this.nextTask && !this.showCompleted)
     )
+  }
+
+  getisTaskCalendarTaskNameShown() {
+    this.tasksService
+      .getIsTaskCalendarTaskNameShown()
+      .then(res => (this.isTaskCalendarTaskNameShown = res))
   }
 
   getIsStartButtonShown() {

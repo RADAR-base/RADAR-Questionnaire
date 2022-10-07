@@ -84,6 +84,7 @@
       (task)="startQuestionnaire($event)"
       [tasks]="sortedTasks | async"
       [currentDate]="currentDate.getTime()"
+      [isTaskNameShown]="isTaskNameShown"
     >
     </task-calendar>
   </div>

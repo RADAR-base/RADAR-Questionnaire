@@ -4,7 +4,8 @@ import {
   DefaultAppCreditsBody,
   DefaultAppCreditsTitle,
   DefaultOnDemandAssessmentIcon,
-  DefaultPlatformInstance
+  DefaultPlatformInstance,
+  DefaultShowTaskCalendarName
 } from '../../../../assets/data/defaultConfig'
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
 import { RemoteConfigService } from '../../../core/services/config/remote-config.service'
@@ -173,6 +174,18 @@ export class TasksService {
       .read()
       .then(config =>
         config.getOrDefault(ConfigKeys.APP_CREDITS_BODY, DefaultAppCreditsBody)
+      )
+      .then(res => JSON.parse(res))
+  }
+
+  getIsTaskCalendarTaskNameShown() {
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        config.getOrDefault(
+          ConfigKeys.SHOW_TASK_CALENDAR_NAME,
+          DefaultShowTaskCalendarName
+        )
       )
       .then(res => JSON.parse(res))
   }

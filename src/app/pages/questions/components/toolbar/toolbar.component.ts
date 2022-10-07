@@ -22,6 +22,8 @@ export class ToolbarComponent implements OnChanges {
   currentQuestionId: number
   @Input()
   totalQuestions: number
+  @Input()
+  isProgressCountShown: boolean
 
   @Output()
   next: EventEmitter<any> = new EventEmitter<any>()

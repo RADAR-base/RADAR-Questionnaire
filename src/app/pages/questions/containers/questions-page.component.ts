@@ -64,7 +64,7 @@ export class QuestionsPageComponent implements OnInit {
     ShowIntroductionType.ONCE
   ])
   MATRIX_FIELD_NAME = 'matrix'
-  showProgressCount = false
+  showProgressCount: Promise<boolean>
 
   constructor(
     public navCtrl: NavController,

@@ -61,16 +61,10 @@ export class QuestionsService {
           config.getOrDefault(
             ConfigKeys.SKIPPABLE_QUESTIONNAIRE_TYPES,
             DefaultSkippableQuestionnaireTypes.toString()
-          ),
-          config.getOrDefault(
-            ConfigKeys.SHOW_TASK_PROGRESS_COUNT,
-            DefaultShowTaskProgressCount.toString()
           )
         ])
       )
-      .then(([autoNextSet, skippableSet, showTaskProgressCount]) => {
-        if (showTaskProgressCount.length)
-          this.isProgressCountShown = JSON.parse(showTaskProgressCount)
+      .then(([autoNextSet, skippableSet]) => {
         if (autoNextSet.length)
           this.NEXT_BUTTON_AUTOMATIC_SET = new Set(
             this.stringToArray(autoNextSet, this.DELIMITER)
@@ -270,6 +264,14 @@ export class QuestionsService {
   }
 
   getIsProgressCountShown() {
-    return this.isProgressCountShown
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        config.getOrDefault(
+          ConfigKeys.SHOW_TASK_PROGRESS_COUNT,
+          DefaultShowTaskProgressCount
+        )
+      )
+      .then(res => JSON.parse(res))
   }
 }

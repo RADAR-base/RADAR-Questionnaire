@@ -79,12 +79,12 @@
 
   <div #taskCalendar class="taskCalendar" [@displayCalendar]="showCalendar">
     <task-calendar
-      *ngIf="(sortedTasks | async)?.size"
+      *ngIf="(sortedTasks | async)?.size && isTaskCalendarTaskNameShown | async"
       [show]="showCalendar"
       (task)="startQuestionnaire($event)"
       [tasks]="sortedTasks | async"
       [currentDate]="currentDate.getTime()"
-      [isTaskNameShown]="isTaskCalendarTaskNameShown"
+      [isTaskNameShown]="isTaskCalendarTaskNameShown | async"
     >
     </task-calendar>
   </div>

@@ -150,6 +150,8 @@ Certain values can be overriden using Firebase Remote Config. Specifically, the 
 | `app_credits_body`              | Body of the popup box that appears when you tap on the app logo on the left hand side of the homepage.                                                                                                    | `Made with &hearts; for you by the RADAR-Base community.`                                                        |
 | `auto_next_questionnaire_types` | String list of question/question input types where the questionnaire will automatically move to the next question upon answering the question. It is recommended to always include timed and audio types. | `timed,audio`                                                                                                    |
 | `skippable_questionnaire_types` | String list of question/question input types where the next button is enabled by default, allowing the question to be skippable.                                                                          | `audio`                                                                                                          |
+| `show_task_calendar_name`       | The task calendar by default shows the task timestamp instead of the task name. This allows showing of the task name instead of the timestamp.                                                            | `false`                                                                                                          |
+| `show_task_progress_count`      | In the questionnaire page, by default, only the task progress bar is shown. This config will enable the showing of the "question number / total questions" count.                                         | `false`                                                                                                          |
 
 #### Conditions
 
@@ -305,9 +307,10 @@ Here are some common errors you might find during installation.
 When you are running `ionic cordova run ios`, you might encounter the problem, we solved this problem by refering this [issue](https://github.com/dpa99c/cordova-custom-config/issues/144) with `cordova-custom-config`.
 
 We enter the following command at the root directory.
+
 ```
 cd plugins/cordova-custom-config
-yarn install 
+yarn install
 ```
 
 ### Error: Failed to fetch platform. Probably this is either a connection problem.

@@ -206,7 +206,8 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   nextAction(event) {
-    if (event == NextButtonEventType.AUTO) return this.nextQuestion()
+    if (event == NextButtonEventType.AUTO)
+      return setTimeout(() => this.nextQuestion(), 100)
     if (event == NextButtonEventType.ENABLE)
       return setTimeout(() => this.updateToolbarButtons(), 100)
     if (event == NextButtonEventType.DISABLE)
@@ -214,8 +215,6 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   nextQuestion() {
-    if (this.isRightButtonDisabled) return
-
     const questionPosition = this.questionsService.getNextQuestion(
       this.groupedQuestions,
       this.currentQuestionGroupId

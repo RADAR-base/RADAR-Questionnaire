@@ -64,7 +64,7 @@ export class QuestionsPageComponent implements OnInit {
     ShowIntroductionType.ONCE
   ])
   MATRIX_FIELD_NAME = 'matrix'
-  showProgressCount = false
+  showProgressCount: Promise<boolean>
 
   constructor(
     public navCtrl: NavController,
@@ -100,7 +100,8 @@ export class QuestionsPageComponent implements OnInit {
     this.task = this.navParams.data
     this.showProgressCount = this.questionsService.getIsProgressCountShown()
     return this.questionsService
-      .getQuestionnairePayload(this.task)
+      .initRemoteConfigParams()
+      .then(() => this.questionsService.getQuestionnairePayload(this.task))
       .then(res => {
         this.initQuestionnaire(res)
         return this.updateToolbarButtons()
@@ -206,7 +207,8 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   nextAction(event) {
-    if (event == NextButtonEventType.AUTO) return this.nextQuestion()
+    if (event == NextButtonEventType.AUTO)
+      return setTimeout(() => this.nextQuestion(), 100)
     if (event == NextButtonEventType.ENABLE)
       return setTimeout(() => this.updateToolbarButtons(), 100)
     if (event == NextButtonEventType.DISABLE)
@@ -214,8 +216,6 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   nextQuestion() {
-    if (this.isRightButtonDisabled) return
-
     const questionPosition = this.questionsService.getNextQuestion(
       this.groupedQuestions,
       this.currentQuestionGroupId

@@ -45,11 +45,9 @@ export class QuestionsService {
     private finish: FinishTaskService,
     private remoteConfig: RemoteConfigService,
     private util: Utility
-  ) {
-    this.init()
-  }
+  ) {}
 
-  init() {
+  initRemoteConfigParams() {
     return this.remoteConfig
       .read()
       .then(config =>

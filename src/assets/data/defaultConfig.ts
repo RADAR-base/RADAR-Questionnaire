@@ -212,7 +212,7 @@ export const DefaultKafkaRequestContentType =
 
 // *Default HTTP request client accept type
 export const DefaultClientAcceptType =
-  'application/vnd.kafka.v2+json, application/vnd.kafka+json; q=0.9, application/json; q=0.8'
+  'application/vnd.kafka.v2+json, application/vnd.kafka.v1+json, application/vnd.kafka+json; q=0.9, application/json; q=0.8'
 
 // DEFAULT QUESTIONNAIRE COMPONENT SETUP
 

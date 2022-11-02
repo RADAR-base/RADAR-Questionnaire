@@ -23,7 +23,6 @@ export class ScheduleFactoryService extends ScheduleService {
     logger: LogService
   ) {
     super(store, logger)
-    this.init()
   }
 
   init() {

@@ -42,6 +42,7 @@ export class SplashService {
       .refresh()
       .then(() => this.notificationService.init())
       .then(() => this.notificationService.permissionCheck())
+      .then(() => this.schedule.init())
       .then(() => this.config.fetchConfigState())
   }
 

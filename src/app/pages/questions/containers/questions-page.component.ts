@@ -64,7 +64,7 @@ export class QuestionsPageComponent implements OnInit {
     ShowIntroductionType.ONCE
   ])
   MATRIX_FIELD_NAME = 'matrix'
-  showProgressCount = false
+  showProgressCount: Promise<boolean>
 
   constructor(
     public navCtrl: NavController,
@@ -100,7 +100,8 @@ export class QuestionsPageComponent implements OnInit {
     this.task = this.navParams.data
     this.showProgressCount = this.questionsService.getIsProgressCountShown()
     return this.questionsService
-      .getQuestionnairePayload(this.task)
+      .initRemoteConfigParams()
+      .then(() => this.questionsService.getQuestionnairePayload(this.task))
       .then(res => {
         this.initQuestionnaire(res)
         return this.updateToolbarButtons()

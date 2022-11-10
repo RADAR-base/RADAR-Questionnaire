@@ -9,6 +9,7 @@ import {
 import { LocalizationService } from '../../../../core/services/misc/localization.service'
 import { LogService } from '../../../../core/services/misc/log.service'
 import { Task } from '../../../../shared/models/task'
+import { setDateTimeToMidnight } from '../../../../shared/utilities/time'
 
 @Component({
   selector: 'task-calendar',
@@ -21,8 +22,6 @@ export class TaskCalendarComponent implements OnChanges {
   task: EventEmitter<Task> = new EventEmitter<Task>()
   @Input()
   tasks: Map<number, Task[]>
-  @Input()
-  currentDate: number
   @Input()
   isTaskNameShown: boolean
 
@@ -47,7 +46,9 @@ export class TaskCalendarComponent implements OnChanges {
     }
     // NOTE: Compare current time with the start times of the tasks and
     // find out in between which tasks it should be shown in the interface
-    const todaysTasks = this.tasks.get(this.currentDate)
+    const todaysTasks = this.tasks.get(
+      setDateTimeToMidnight(new Date()).getTime()
+    )
     if (todaysTasks)
       this.timeIndex = todaysTasks.findIndex(t => t.timestamp >= now)
   }

@@ -16,6 +16,7 @@ import { SubjectConfigService } from '../config/subject-config.service'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 import { NotificationService } from './notification.service'
+import { Subscription } from "rxjs";
 
 declare var FirebasePlugin
 
@@ -24,6 +25,7 @@ export abstract class FcmNotificationService extends NotificationService {
   FCM_TOKEN: string
   upstreamResends: number
   ttlMinutes = 10
+  private tokenSubscription: Subscription
 
   constructor(
     public store: StorageService,
@@ -34,6 +36,7 @@ export abstract class FcmNotificationService extends NotificationService {
     public remoteConfig: RemoteConfigService
   ) {
     super(store)
+    this.tokenSubscription = null
     this.platform.ready().then(() => {
       this.remoteConfig.subject().subscribe(cfg => {
         cfg
@@ -50,21 +53,34 @@ export abstract class FcmNotificationService extends NotificationService {
   }
 
   init() {
-    this.firebase.setAutoInitEnabled(true)
     if (!this.platform.is('ios'))
       FirebasePlugin.setDeliveryMetricsExportToBigQuery(true)
-    FirebasePlugin.setSenderId(
-      FCMPluginProjectSenderId,
-      () => this.logger.log('[NOTIFICATION SERVICE] Set sender id success'),
-      error => {
+    return Promise.all([
+      this.firebase.setAutoInitEnabled(true),
+      this.setSenderIdPromise(),
+    ])
+      .then(() => this.firebase.getToken())
+      .then(token => {
+        if (this.tokenSubscription === null) {
+          this.tokenSubscription = this.firebase
+            .onTokenRefresh()
+            .subscribe(t => this.onTokenRefresh(t))
+        }
+        if (token) {
+          return this.onTokenRefresh(token);
+        }
+      })
+  }
+
+  setSenderIdPromise(): Promise<void> {
+    return new Promise((resolve, reject) =>
+      FirebasePlugin.setSenderId(FCMPluginProjectSenderId, resolve, reject))
+      .then(() => this.logger.log('[NOTIFICATION SERVICE] Set sender id success'))
+      .catch(error => {
         this.logger.error('Failed to set sender ID', error)
         alert(error)
-      }
-    )
-    this.firebase
-      .onTokenRefresh()
-      .subscribe(token => this.onTokenRefresh(token))
-    this.firebase.getToken().then(token => this.onTokenRefresh(token))
+        throw error
+      })
   }
 
   publish(
@@ -113,6 +129,10 @@ export abstract class FcmNotificationService extends NotificationService {
   }
 
   unregisterFromNotifications(): Promise<any> {
+    if (this.tokenSubscription) {
+      this.tokenSubscription.unsubscribe();
+      this.tokenSubscription = null;
+    }
     // NOTE: This will delete the current device token and stop receiving notifications
     return this.firebase
       .setAutoInitEnabled(false)
@@ -122,8 +142,10 @@ export abstract class FcmNotificationService extends NotificationService {
   onTokenRefresh(token) {
     if (token) {
       this.FCM_TOKEN = token
-      this.setFCMToken(token)
-      this.logger.log('[NOTIFICATION SERVICE] Refresh token success')
+      return this.setFCMToken(token)
+        .then(() => this.logger.log('[NOTIFICATION SERVICE] Refresh token success'))
+    } else {
+      return Promise.resolve()
     }
   }
 

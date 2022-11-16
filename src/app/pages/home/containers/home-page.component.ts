@@ -23,12 +23,12 @@ export class HomePageComponent implements OnInit, OnDestroy {
   title: Promise<string>
   sortedTasks: Promise<Map<any, any>>
   tasks: Promise<Task[]>
-  currentDate: Date
   nextTask: Task
   timeToNextTask: number
   tasksProgress: Promise<TasksProgress>
   resumeListener: Subscription = new Subscription()
   changeDetectionListener: Subscription = new Subscription()
+  lastTaskRefreshTime = Date.now()
 
   showCalendar = false
   showCompleted = false
@@ -39,9 +39,12 @@ export class HomePageComponent implements OnInit, OnDestroy {
   taskIsNow = false
   checkTaskInterval
   showMiscTasksButton: Promise<boolean>
+  isTaskCalendarTaskNameShown: Promise<boolean>
 
   APP_CREDITS = '&#169; RADAR-Base'
   HTML_BREAK = '<br>'
+  // How long to wait before refreshing tasks
+  TASK_REFRESH_MILLIS = 600_000
 
   constructor(
     private router: Router,
@@ -53,11 +56,12 @@ export class HomePageComponent implements OnInit, OnDestroy {
     private usage: UsageService
   ) {
     this.resumeListener = this.platform.resume.subscribe(() => this.onResume())
-    this.changeDetectionListener =
-      this.tasksService.changeDetectionEmitter.subscribe(() => {
+    this.changeDetectionListener = this.tasksService.changeDetectionEmitter.subscribe(
+      () => {
         console.log('Changes to task service detected')
         this.navCtrl.navigateRoot('')
-      })
+      }
+    )
   }
 
   getIsLoadingSpinnerShown() {
@@ -93,9 +97,8 @@ export class HomePageComponent implements OnInit, OnDestroy {
   }
 
   init() {
-    this.sortedTasks = this.tasksService.getSortedTasksOfToday()
+    this.sortedTasks = this.tasksService.getValidTasksMap()
     this.tasks = this.tasksService.getTasksOfToday()
-    this.currentDate = this.tasksService.getCurrentDateMidnight()
     this.tasksProgress = this.tasksService.getTaskProgress()
     this.tasks.then(tasks => {
       this.checkTaskInterval = setInterval(() => {
@@ -105,6 +108,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.hasOnDemandTasks = this.tasksService.getHasOnDemandTasks()
     this.hasClinicalTasks = this.tasksService.getHasClinicalTasks()
     this.title = this.tasksService.getPlatformInstanceName()
+    this.isTaskCalendarTaskNameShown = this.tasksService.getIsTaskCalendarTaskNameShown()
     this.onDemandIcon = this.tasksService.getOnDemandAssessmentIcon()
     this.showMiscTasksButton = this.getShowMiscTasksButton()
   }
@@ -116,8 +120,8 @@ export class HomePageComponent implements OnInit, OnDestroy {
   }
 
   checkForNewDate() {
-    if (new Date().getDate() !== this.currentDate.getDate()) {
-      this.currentDate = this.tasksService.getCurrentDateMidnight()
+    if (Date.now() - this.lastTaskRefreshTime > this.TASK_REFRESH_MILLIS) {
+      this.lastTaskRefreshTime = Date.now()
       this.navCtrl.navigateRoot('')
     }
   }

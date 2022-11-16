@@ -59,7 +59,9 @@ export class SplashPageComponent {
         this.status = this.localization.translateKey(
           LocKeys.SPLASH_STATUS_SENDING_LOGS
         )
-        return this.splashService.sendMissedQuestionnaireLogs()
+        return this.splashService
+          .sendMissedQuestionnaireLogs()
+          .then(() => this.splashService.sendReportedIncompleteTasks())
       })
       .catch(e => {
         console.log('showing error')

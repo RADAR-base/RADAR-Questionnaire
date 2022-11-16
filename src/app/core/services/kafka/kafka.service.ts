@@ -15,9 +15,13 @@ import { StorageService } from '../storage/storage.service'
 import { TokenService } from '../token/token.service'
 import { AnalyticsService } from '../usage/analytics.service'
 import { SchemaService } from './schema.service'
+import { RemoteConfigService } from "../config/remote-config.service";
+import { ConfigKeys } from "../../../shared/enums/config";
 
 @Injectable()
 export class KafkaService {
+  private static DEFAULT_TOPIC_CACHE_VALIDITY = 600_000 // 10 minutes
+
   URI_topics: string = '/topics/'
 
   private readonly KAFKA_STORE = {
@@ -27,6 +31,9 @@ export class KafkaService {
   private KAFKA_CLIENT_URL: string
   private BASE_URI: string
   private isCacheSending: boolean
+  private topics: string[] = null
+  private lastTopicFetch: number = 0
+  private TOPIC_CACHE_VALIDITY = KafkaService.DEFAULT_TOPIC_CACHE_VALIDITY
 
   constructor(
     private storage: StorageService,
@@ -34,20 +41,75 @@ export class KafkaService {
     private schema: SchemaService,
     private analytics: AnalyticsService,
     private logger: LogService,
-    private http: HttpClient
+    private http: HttpClient,
+    private remoteConfig: RemoteConfigService,
   ) {
     this.updateURI()
+    this.readTopicCacheValidity();
   }
 
   init() {
-    return this.setCache({})
+    return Promise.all([
+      this.setCache({}),
+      this.updateTopicCacheValidity(),
+      this.fetchTopics(),
+    ]);
   }
 
   updateURI() {
-    this.token.getURI().then(uri => {
+    return this.token.getURI().then(uri => {
       this.BASE_URI = uri
       this.KAFKA_CLIENT_URL = uri + DefaultKafkaURI
     })
+  }
+
+  readTopicCacheValidity() {
+    return this.storage.get(StorageKeys.TOPIC_CACHE_TIMEOUT)
+      .then(timeout => {
+        if (typeof timeout === 'number') {
+          this.TOPIC_CACHE_VALIDITY = timeout
+        }
+      });
+  }
+
+  updateTopicCacheValidity() {
+    return this.remoteConfig.read()
+      .then(config => config.getOrDefault(ConfigKeys.TOPIC_CACHE_TIMEOUT, this.TOPIC_CACHE_VALIDITY.toString()))
+      .then(timeoutString => {
+        const timeout = parseInt(timeoutString)
+        if (!isNaN(timeout)) {
+          this.TOPIC_CACHE_VALIDITY = Math.max(0, timeout)
+          return this.storage.set(StorageKeys.TOPIC_CACHE_TIMEOUT, this.TOPIC_CACHE_VALIDITY)
+        }
+      })
+  }
+
+  private fetchTopics() {
+    return this.getAccessToken()
+      .then(accessToken => this.http.get(this.KAFKA_CLIENT_URL + this.URI_topics,
+        {
+          observe: 'body',
+          headers: new HttpHeaders()
+            .set('Authorization', 'Bearer ' + accessToken)
+            .set('Accept', DefaultClientAcceptType),
+        }).toPromise())
+      .then((topics: string[]) => {
+        this.topics = topics
+        this.lastTopicFetch = Date.now()
+        return topics
+      })
+      .catch(e => {
+        this.logger.error("Failed to fetch Kafka topics", e)
+        return this.topics
+      });
+  }
+
+  getTopics() {
+    if (this.topics !== null || this.lastTopicFetch + this.TOPIC_CACHE_VALIDITY >= Date.now()) {
+      return Promise.resolve(this.topics)
+    } else {
+      return this.fetchTopics();
+    }
   }
 
   prepareKafkaObjectAndSend(type, payload, keepInCache?) {
@@ -83,14 +145,15 @@ export class KafkaService {
     return Promise.all([
       this.getCache(),
       this.getKafkaHeaders(),
-      this.schema.getRadarSpecifications()
+      this.schema.getRadarSpecifications(),
+      this.getTopics(),
     ])
-      .then(([cache, headers, specifications]) => {
+      .then(([cache, headers, specifications, topics]) => {
         const sendPromises = Object.entries(cache)
           .filter(([k]) => k)
           .map(([k, v]: any) => {
             return this.schema
-              .getKafkaTopic(specifications, v.name, v.avsc)
+              .getKafkaTopic(specifications, v.name, v.avsc, topics)
               .then(topic => this.sendToKafka(topic, k, v, headers))
               .catch(e =>
                 this.logger.error('Failed to send data from cache to kafka', e)
@@ -116,7 +179,7 @@ export class KafkaService {
       .then(data =>
         this.http
           .post(this.KAFKA_CLIENT_URL + this.URI_topics + topic, data, {
-            headers: headers
+            headers
           })
           .toPromise()
       )
@@ -148,12 +211,17 @@ export class KafkaService {
     })
   }
 
-  getKafkaHeaders() {
+  getAccessToken() {
     return Promise.all([this.updateURI(), this.token.refresh()])
       .then(() => this.token.getTokens())
-      .then(tokens =>
+      .then(tokens => tokens.access_token)
+  }
+
+  getKafkaHeaders() {
+    return this.getAccessToken()
+      .then(accessToken =>
         new HttpHeaders()
-          .set('Authorization', 'Bearer ' + tokens.access_token)
+          .set('Authorization', 'Bearer ' + accessToken)
           .set('Content-Type', DefaultKafkaRequestContentType)
           .set('Accept', DefaultClientAcceptType)
       )

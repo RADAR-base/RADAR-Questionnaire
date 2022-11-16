@@ -39,6 +39,11 @@ export enum NotificationMessagingType {
   FCM_REST = 'FCM_REST'
 }
 
+export enum SchedulerType {
+  LOCAL = 'LOCAL',
+  APPSERVER = 'APPSERVER'
+}
+
 export enum NotificationMessagingState {
   DELIVERED = 'DELIVERED',
   OPENED = 'OPENED'

@@ -1,7 +1,12 @@
-<ion-toolbar>
+<ion-toolbar mode="ios">
   <div class="toolbar-progress">
     <div class="toolbar-progress-bar" [style.width]="progress + '%'"></div>
   </div>
+
+  <ion-title *ngIf="isProgressCountShown" text-center color="light">
+    {{ currentQuestionId + 1 + '/' + totalQuestions }}
+  </ion-title>
+
   <ion-button
     ion-button
     slot="start"

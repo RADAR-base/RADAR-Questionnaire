@@ -44,6 +44,7 @@ export class SplashService {
       .refresh()
       .then(() => this.notificationService.init())
       .then(() => this.notificationService.permissionCheck())
+      .then(() => this.schedule.init())
       .then(() => this.config.fetchConfigState())
   }
 
@@ -68,5 +69,13 @@ export class SplashService {
           )
       )
     )
+  }
+
+  sendReportedIncompleteTasks() {
+    return this.schedule
+      .getReportedIncompleteTasks()
+      .then(tasks =>
+        Promise.all(tasks.map(task => this.schedule.updateTaskToComplete(task)))
+      )
   }
 }

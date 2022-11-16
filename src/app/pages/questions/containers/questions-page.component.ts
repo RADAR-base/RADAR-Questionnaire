@@ -4,17 +4,26 @@ import { Insomnia } from '@ionic-native/insomnia/ngx'
 import { IonSlides, NavController, Platform } from '@ionic/angular'
 import { Subscription } from 'rxjs'
 
+import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { UsageService } from '../../../core/services/usage/usage.service'
-import { UsageEventType } from '../../../shared/enums/events'
+import {
+  NextButtonEventType,
+  UsageEventType
+} from '../../../shared/enums/events'
 import { LocKeys } from '../../../shared/enums/localisations'
 import {
   Assessment,
   AssessmentType,
   ShowIntroductionType
 } from '../../../shared/models/assessment'
-import { Question } from '../../../shared/models/question'
+import {
+  ExternalApp,
+  Question,
+  QuestionType
+} from '../../../shared/models/question'
 import { Task } from '../../../shared/models/task'
+import { AppLauncherService } from '../services/app-launcher.service'
 import { QuestionsService } from '../services/questions.service'
 
 @Component({
@@ -55,6 +64,7 @@ export class QuestionsPageComponent implements OnInit {
   ])
   MATRIX_FIELD_NAME = 'matrix'
   backButtonListener: Subscription
+  showProgressCount: Promise<boolean>
 
   constructor(
     public navCtrl: NavController,
@@ -63,7 +73,9 @@ export class QuestionsPageComponent implements OnInit {
     private platform: Platform,
     private insomnia: Insomnia,
     private localization: LocalizationService,
-    private router: Router
+    private router: Router,
+    private appLauncher: AppLauncherService,
+    private alertService: AlertService
   ) {
     this.backButtonListener = this.platform.backButton.subscribe(() => {
       this.sendCompletionLog()
@@ -83,10 +95,14 @@ export class QuestionsPageComponent implements OnInit {
     const nav = this.router.getCurrentNavigation()
     if (nav) {
       this.task = nav.extras.state as Task
-      this.questionsService.getQuestionnairePayload(this.task).then(res => {
-        this.initQuestionnaire(res)
-        return this.updateToolbarButtons()
-      })
+      this.showProgressCount = this.questionsService.getIsProgressCountShown()
+      this.questionsService
+        .initRemoteConfigParams()
+        .then(() => this.questionsService.getQuestionnairePayload(this.task))
+        .then(res => {
+          this.initQuestionnaire(res)
+          return this.updateToolbarButtons()
+        })
       this.sendEvent(UsageEventType.QUESTIONNAIRE_STARTED)
       this.usage.setPage(this.constructor.name)
       this.insomnia.keepAwake()
@@ -153,13 +169,7 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   onAnswer(event) {
-    if (event.id) {
-      this.questionsService.submitAnswer(event)
-      setTimeout(() => this.updateToolbarButtons(), 100)
-    }
-    if (this.questionsService.getIsNextAutomatic(event.type)) {
-      this.nextQuestion()
-    }
+    if (event.id) this.questionsService.submitAnswer(event)
   }
 
   slideQuestion() {
@@ -185,6 +195,15 @@ export class QuestionsPageComponent implements OnInit {
     )
   }
 
+  nextAction(event) {
+    if (event == NextButtonEventType.AUTO)
+      return setTimeout(() => this.nextQuestion(), 100)
+    if (event == NextButtonEventType.ENABLE)
+      return setTimeout(() => this.updateToolbarButtons(), 100)
+    if (event == NextButtonEventType.DISABLE)
+      return (this.isRightButtonDisabled = true)
+  }
+
   nextQuestion() {
     const questionPosition = this.questionsService.getNextQuestion(
       this.groupedQuestions,
@@ -203,8 +222,9 @@ export class QuestionsPageComponent implements OnInit {
   previousQuestion() {
     const currentQuestions = this.getCurrentQuestions()
     this.questionOrder.pop()
-    this.currentQuestionGroupId =
-      this.questionOrder[this.questionOrder.length - 1]
+    this.currentQuestionGroupId = this.questionOrder[
+      this.questionOrder.length - 1
+    ]
     this.updateToolbarButtons()
     if (!this.isRightButtonDisabled)
       this.questionsService.deleteLastAnswers(currentQuestions)
@@ -218,8 +238,9 @@ export class QuestionsPageComponent implements OnInit {
     this.isRightButtonDisabled =
       !this.questionsService.isAnyAnswered(currentQs) &&
       !this.questionsService.getIsAnyNextEnabled(currentQs)
-    this.isLeftButtonDisabled =
-      this.questionsService.getIsAnyPreviousEnabled(currentQs)
+    this.isLeftButtonDisabled = this.questionsService.getIsAnyPreviousEnabled(
+      currentQs
+    )
   }
 
   exitQuestionnaire() {
@@ -266,5 +287,32 @@ export class QuestionsPageComponent implements OnInit {
   asIsOrder(a, b) {
     // NOTE: This is needed to display questions (in the view) from the map in order
     return 1
+  }
+
+  showDisabledButtonAlert() {
+    const currentQuestionType = this.getCurrentQuestions()[0].field_type
+    // NOTE: Show alert when next is tapped without finishing audio question
+    if (currentQuestionType == QuestionType.audio)
+      this.alertService.showAlert({
+        message: this.localization.translateKey(
+          LocKeys.AUDIO_TASK_BUTTON_ALERT_DESC
+        ),
+        buttons: [
+          {
+            text: this.localization.translateKey(LocKeys.BTN_DISMISS),
+            handler: () => {}
+          }
+        ]
+      })
+  }
+
+  private checkIfQuestionnaireHasAppLaunch() {
+    if (
+      this.externalApp &&
+      this.appLauncher.isExternalAppUriValidForThePlatform(this.externalApp)
+    ) {
+      this.showFinishAndLaunchScreen = true
+      this.externalAppCanLaunch = true
+    }
   }
 }

@@ -29,6 +29,14 @@ export enum ReferenceTimestampFormat {
   NOW = 'now'
 }
 
+export enum TaskState {
+  ADDED = 'ADDED',
+  UPDATED = 'UPDATED',
+  CANCELLED = 'CANCELLED',
+  SCHEDULED = 'SCHEDULED',
+  COMPLETED = 'COMPLETED'
+}
+
 export interface ProtocolMetaData {
   protocol: string
   url?: string

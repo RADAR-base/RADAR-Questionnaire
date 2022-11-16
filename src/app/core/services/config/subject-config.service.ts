@@ -74,19 +74,19 @@ export class SubjectConfigService {
     return this.storage.set(this.SUBJECT_CONFIG_STORE.BASE_URI, uri)
   }
 
-  getParticipantID() {
+  getParticipantID(): Promise<String> {
     return this.storage.get(this.SUBJECT_CONFIG_STORE.PARTICIPANTID)
   }
 
-  getEnrolmentDate() {
+  getEnrolmentDate(): Promise<Number> {
     return this.storage.get(this.SUBJECT_CONFIG_STORE.ENROLMENTDATE)
   }
 
-  getProjectName() {
+  getProjectName(): Promise<String> {
     return this.storage.get(this.SUBJECT_CONFIG_STORE.PROJECTNAME)
   }
 
-  getSourceID() {
+  getSourceID(): Promise<String> {
     return this.storage.get(this.SUBJECT_CONFIG_STORE.SOURCEID)
   }
 
@@ -94,11 +94,11 @@ export class SubjectConfigService {
     return this.storage.get(this.SUBJECT_CONFIG_STORE.PARTICIPANTLOGIN)
   }
 
-  getParticipantAttributes() {
+  getParticipantAttributes(): Promise<Map<String, String>> {
     return this.storage.get(this.SUBJECT_CONFIG_STORE.PARTICIPANT_ATTRIBUTES)
   }
 
-  getBaseUrl() {
+  getBaseUrl(): Promise<String> {
     return this.storage.get(this.SUBJECT_CONFIG_STORE.BASE_URI)
   }
 

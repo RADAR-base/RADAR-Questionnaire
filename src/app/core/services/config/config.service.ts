@@ -209,6 +209,7 @@ export class ConfigService {
   }
 
   updateConfigStateOnProtocolChange(protocol) {
+    this.questionnaire.reset()
     const assessments = protocol.protocols
     this.logger.log(assessments)
     return this.questionnaire

@@ -6,11 +6,13 @@ import {
   Output,
   ViewChild
 } from '@angular/core'
+import { Keyboard } from '@ionic-native/keyboard/ngx'
 import { ModalController } from '@ionic/angular'
 import { Ionic4DatepickerModalComponent } from '@logisticinfotech/ionic4-datepicker'
 import * as moment from 'moment'
 
 import { LocalizationService } from '../../../../../core/services/misc/localization.service'
+import { KeyboardEventType } from '../../../../../shared/enums/events'
 
 @Component({
   selector: 'text-input',
@@ -23,7 +25,7 @@ export class TextInputComponent implements OnInit {
   @Output()
   valueChange: EventEmitter<string> = new EventEmitter<string>()
   @Output()
-  textInputFocus: EventEmitter<string> = new EventEmitter<string>()
+  keyboardEvent: EventEmitter<string> = new EventEmitter<string>()
   @Input()
   type: string
   @Input()
@@ -55,7 +57,8 @@ export class TextInputComponent implements OnInit {
 
   constructor(
     private localization: LocalizationService,
-    public modalCtrl: ModalController
+    public modalCtrl: ModalController,
+    private keyboard: Keyboard
   ) {}
 
   ngOnInit() {
@@ -160,13 +163,16 @@ export class TextInputComponent implements OnInit {
   }
 
   emitAnswer(value) {
+    if (!value) return
     if (typeof value !== 'string') {
       this.value = Object.assign(this.value, value)
       this.valueChange.emit(JSON.stringify(this.value))
     } else this.valueChange.emit(value)
   }
 
-  emitTextInputFocus(value) {
-    this.textInputFocus.emit(value)
+  emitKeyboardEvent(value) {
+    if (value == KeyboardEventType.ENTER) this.keyboard.hide()
+
+    this.keyboardEvent.emit(value)
   }
 }

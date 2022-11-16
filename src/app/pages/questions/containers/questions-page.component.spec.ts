@@ -50,6 +50,14 @@ export class QuestionsServiceMock {
     return Promise.resolve({})
   }
 
+  initRemoteConfigParams() {
+    return Promise.resolve({})
+  }
+
+  getIsProgressCountShown() {
+    return false
+  }
+
   getTime() {
     return 0
   }

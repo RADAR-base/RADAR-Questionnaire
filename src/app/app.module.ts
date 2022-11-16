@@ -51,6 +51,9 @@ import { MessageHandlerService } from './core/services/notifications/message-han
 import { NotificationFactoryService } from './core/services/notifications/notification-factory.service'
 import { NotificationGeneratorService } from './core/services/notifications/notification-generator.service'
 import { NotificationService } from './core/services/notifications/notification.service'
+import { AppserverScheduleService } from './core/services/schedule/appserver-schedule.service'
+import { LocalScheduleService } from './core/services/schedule/local-schedule.service'
+import { ScheduleFactoryService } from './core/services/schedule/schedule-factory.service'
 import { ScheduleGeneratorService } from './core/services/schedule/schedule-generator.service'
 import { ScheduleService } from './core/services/schedule/schedule.service'
 import { StorageService } from './core/services/storage/storage.service'
@@ -114,7 +117,10 @@ import { Utility } from './shared/utilities/util'
     FirebaseX,
     LocalNotifications,
     LogService,
+    LocalScheduleService,
+    AppserverScheduleService,
     { provide: RemoteConfigService, useClass: FirebaseRemoteConfigService },
+    { provide: ScheduleService, useClass: ScheduleFactoryService },
     ConfigService,
     AlertService,
     DatePipe,
@@ -126,7 +132,6 @@ import { Utility } from './shared/utilities/util'
     TokenService,
     KafkaService,
     LocalizationService,
-    ScheduleService,
     ScheduleGeneratorService,
     StorageService,
     TranslatePipe,

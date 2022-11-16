@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { AppLauncher, AppLauncherOptions } from '@ionic-native/app-launcher/ngx'
 import { Insomnia } from '@ionic-native/insomnia/ngx'
-import { Platform } from 'ionic-angular'
+import { Platform } from '@ionic/angular'
 
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
@@ -97,7 +97,7 @@ export class AppLauncherService {
 
     this.alertService
       .showAlert({
-        title: this.localization.translateKey(
+        header: this.localization.translateKey(
           LocKeys.EXTERNAL_APP_FAILURE_ON_LAUNCH_TITLE
         ),
         message:

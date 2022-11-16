@@ -44,6 +44,7 @@ export class QuestionsPageComponent implements OnInit {
   task: Task
   taskType: AssessmentType
   questions: Question[]
+  externalApp: ExternalApp
   // Questions grouped by matrix group if it exists
   groupedQuestions: Map<string, Question[]>
   // Indices of questions (of the group) currently shown
@@ -57,6 +58,9 @@ export class QuestionsPageComponent implements OnInit {
   showIntroductionScreen: boolean
   showDoneButton: boolean
   showFinishScreen: boolean
+  showFinishAndLaunchScreen: boolean = false
+  externalAppCanLaunch: boolean = false
+
   SHOW_INTRODUCTION_SET: Set<boolean | ShowIntroductionType> = new Set([
     true,
     ShowIntroductionType.ALWAYS,

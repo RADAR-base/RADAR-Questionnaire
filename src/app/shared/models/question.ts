@@ -23,6 +23,19 @@ export interface Question {
   isAutoNext?: boolean
 }
 
+export interface ExternalApp {
+  branching_logic?: string
+  evaluated_logic?: string
+  field_label?: string
+  field_name?: string
+  field_type?: string
+  form_name?: string
+  type?: string
+  external_app_name?: string
+  external_app_android_uri?: string
+  external_app_ios_uri?: string
+}
+
 export interface SelectChoicesOrCalculations {
   code: string
   label: string

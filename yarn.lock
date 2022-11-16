@@ -462,6 +462,13 @@
   dependencies:
     "@types/cordova" latest
 
+"@ionic-native/app-launcher@^5.31.1":
+  version "5.36.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/app-launcher/-/app-launcher-5.36.0.tgz#9e8f0704cd608af43ddebb297ba7b6a8c810a480"
+  integrity sha512-Hc8P6mxtWqB2jVE4CSVl1umYvAvt1Eo3u49HRQ/sGy/9o49b4fpeBmJR2nKNp5EeTKcTaqIoDv6nEJRN4mcEzQ==
+  dependencies:
+    "@types/cordova" latest
+
 "@ionic-native/app-version@^5.28.0":
   version "5.36.0"
   resolved "https://registry.npmjs.org/@ionic-native/app-version/-/app-version-5.36.0.tgz"
@@ -2966,6 +2973,11 @@ cordova-plugin-androidx-adapter@^1.1.3:
   dependencies:
     q "^1.5.1"
     recursive-readdir "^2.2.2"
+
+cordova-plugin-app-launcher@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-app-launcher/-/cordova-plugin-app-launcher-0.4.0.tgz#3fe5ef22d843789ac4c0c5dac1badbf3b6ba5170"
+  integrity sha512-D9xUoMUTG+K/kxm0f8uoHwWtCz+oTLKLAJBx6LZSb2PjunYJxU9OLR6t/CAqq2PAyFjv2Y/tswA7KAVls6NakQ==
 
 cordova-plugin-app-version@^0.1.12:
   version "0.1.12"

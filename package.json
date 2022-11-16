@@ -48,6 +48,7 @@
     "@auth0/angular-jwt": "^4.2.0",
     "@awesome-cordova-plugins/keyboard": "^5.39.0",
     "@ionic-native/android-permissions": "^5.26.0",
+    "@ionic-native/app-launcher": "^5.31.1",
     "@ionic-native/app-version": "^5.28.0",
     "@ionic-native/background-mode": "^5.32.0",
     "@ionic-native/barcode-scanner": "^5.33.1",
@@ -143,6 +144,7 @@
     "codelyzer": "^5.2.2",
     "cordova-android": "^9.0.0",
     "cordova-ios": "5.1.1",
+    "cordova-plugin-app-launcher": "^0.4.0",
     "cordova-plugin-background-mode": "https://bitbucket.org/TheBosZ/cordova-plugin-run-in-background",
     "cordova-plugin-firebasex": "git+https://github.com/mpgxvii/cordova-plugin-firebasex.git",
     "cordova-plugin-ionic-webview": "^4.2.1",
@@ -256,7 +258,8 @@
       "cordova-plugin-ionic-webview": {
         "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
       },
-      "cordova-plugin-background-mode": {}
+      "cordova-plugin-background-mode": {},
+      "cordova-plugin-app-launcher": {}
     }
   },
   "ionic_enable_lint": false

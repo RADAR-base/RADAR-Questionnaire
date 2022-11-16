@@ -1,13 +1,14 @@
 <ion-content>
-  <div class="slide-flex">
-    <ion-slides>
-      <ion-slide *ngIf="showIntroductionScreen">
-        <introduction
-          [title]="questionTitle"
-          [introduction]="introduction"
-          (start)="handleIntro($event)"
-        ></introduction>
-      </ion-slide> 
+  <div class="wrapper">
+    <div class="slide-flex">
+      <ion-slides>
+        <ion-slide *ngIf="showIntroductionScreen">
+          <introduction
+            [title]="questionTitle"
+            [introduction]="introduction"
+            (start)="handleIntro($event)"
+          ></introduction>
+        </ion-slide>
         <ng-container *ngIf="!showIntroductionScreen">
           <ion-slide
             *ngFor="

@@ -30,7 +30,7 @@
           <task-calendar-row
             *ngIf="task.showInCalendar"
             [task]="task"
-            (tap)="clicked(task)"
+            (click)="clicked(task)"
             [isTaskNameShown]="isTaskNameShown"
           ></task-calendar-row>
         </ng-container>

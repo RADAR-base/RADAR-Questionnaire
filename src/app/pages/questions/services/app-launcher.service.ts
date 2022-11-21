@@ -12,7 +12,9 @@ import { ExternalApp, Question } from '../../../shared/models/question'
 import { Task } from '../../../shared/models/task'
 import { QuestionsService } from './questions.service'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AppLauncherService {
   constructor(
     private questionsService: QuestionsService,

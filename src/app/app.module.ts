@@ -7,6 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { RouterModule } from '@angular/router'
 import { JWT_OPTIONS, JwtModule } from '@auth0/angular-jwt'
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx'
+import { AppLauncher } from '@ionic-native/app-launcher/ngx'
 import { AppVersion } from '@ionic-native/app-version/ngx'
 import { BackgroundMode } from '@ionic-native/background-mode/ngx'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx'
@@ -145,7 +146,8 @@ import { Utility } from './shared/utilities/util'
     MessageHandlerService,
     { provide: NotificationService, useClass: NotificationFactoryService },
     { provide: AnalyticsService, useClass: FirebaseAnalyticsService },
-    GithubClient
+    GithubClient,
+    AppLauncher
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

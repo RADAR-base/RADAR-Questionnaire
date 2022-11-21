@@ -20,6 +20,7 @@ import {
 } from '../../../../shared/enums/events'
 import { Answer } from '../../../../shared/models/answer'
 import { Question, QuestionType } from '../../../../shared/models/question'
+import { Task } from '../../../../shared/models/task'
 
 @Component({
   selector: 'question',
@@ -36,6 +37,8 @@ export class QuestionComponent implements OnInit, OnChanges {
   questionIndex: number
   @Input()
   currentIndex: number
+  @Input()
+  task: Task
   @Input()
   isSectionHeaderHidden: boolean
   // isNextAutomatic: automatically slide to next upon answer
@@ -148,12 +151,14 @@ export class QuestionComponent implements OnInit, OnChanges {
     ) {
       const min = this.question.select_choices_or_calculations[0].code
       const minLabel = this.question.select_choices_or_calculations[0].label
-      const max = this.question.select_choices_or_calculations[
-        this.question.select_choices_or_calculations.length - 1
-      ].code
-      const maxLabel = this.question.select_choices_or_calculations[
-        this.question.select_choices_or_calculations.length - 1
-      ].label
+      const max =
+        this.question.select_choices_or_calculations[
+          this.question.select_choices_or_calculations.length - 1
+        ].code
+      const maxLabel =
+        this.question.select_choices_or_calculations[
+          this.question.select_choices_or_calculations.length - 1
+        ].label
       this.question.range = {
         min: parseInt(min.trim()),
         max: parseInt(max.trim()),

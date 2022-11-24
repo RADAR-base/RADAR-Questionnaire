@@ -122,16 +122,15 @@ export class QuestionComponent implements OnInit, OnChanges {
     if (this.questionIndex === this.currentIndex) {
       this.currentlyShown = true
     } else {
-      if (Math.abs(this.questionIndex - this.currentIndex) == 1)
-        this.previouslyShown = true
-      else this.previouslyShown = false
+      this.previouslyShown =
+        Math.abs(this.questionIndex - this.currentIndex) == 1
       this.currentlyShown = false
     }
   }
 
   emitAnswer(event: any) {
     // NOTE: On init the component fires the event once
-    if (event && event !== undefined) {
+    if (event) {
       this.value = event
       this.answer.emit({
         id: this.question.field_name,
@@ -193,21 +192,21 @@ export class QuestionComponent implements OnInit, OnChanges {
 
   isScrollbarVisible() {
     return (
+      this.SCROLLBAR_VISIBLE_SET.has(this.question.field_type) &&
       this.input.nativeElement.scrollHeight >
-        this.input.nativeElement.clientHeight && this.isScrollable
+        this.input.nativeElement.clientHeight
     )
   }
 
   onScroll(event) {
     // This will hide/show the scroll arrow depending on the user's scroll event
-    if (this.showScrollButton) {
-      if (
-        event &&
-        event.target.scrollTop >=
-          (event.target.scrollHeight - event.target.clientHeight) * 0.1
-      ) {
-        this.showScrollButton = false
-      } else this.showScrollButton = true
+    if (
+      this.showScrollButton &&
+      event &&
+      event.target.scrollTop >=
+        (event.target.scrollHeight - event.target.clientHeight) * 0.1
+    ) {
+      this.showScrollButton = false
     }
   }
 

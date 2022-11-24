@@ -106,6 +106,7 @@ class FirebaseRemoteConfig implements RemoteConfig {
 export class FirebaseRemoteConfigService extends RemoteConfigService {
   private readonly configSubject: BehaviorSubject<RemoteConfig>
   private FETCH_TIMEOUT_SECONDS = 20
+  private MINIMUM_FETCH_INTERVAL_SECONDS = 21600 // 6 hours
 
   constructor(
     private firebase: FirebaseX,
@@ -116,7 +117,7 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
     super(storage)
     this.configSubject = new BehaviorSubject(new EmptyRemoteConfig())
     this.platform.ready().then(() => {
-      FirebasePlugin.setConfigSettings(this.FETCH_TIMEOUT_SECONDS, null)
+      FirebasePlugin.setConfigSettings(this.FETCH_TIMEOUT_SECONDS, this.MINIMUM_FETCH_INTERVAL_SECONDS)
     })
   }
 

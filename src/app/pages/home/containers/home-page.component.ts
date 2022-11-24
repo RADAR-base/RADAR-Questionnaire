@@ -26,6 +26,7 @@ export class HomePageComponent implements OnDestroy {
   title: Promise<string>
   sortedTasks: Promise<Map<any, any>>
   tasks: Promise<Task[]>
+  currentDate: Date = new Date()
   nextTask: Task
   timeToNextTask: number
   tasksProgress: Promise<TasksProgress>
@@ -163,7 +164,7 @@ export class HomePageComponent implements OnDestroy {
     this.usage.sendClickEvent('open_on_demand_tasks')
   }
 
-  startQuestionnaire(taskCalendarTask: Task) {
+  startQuestionnaire(taskCalendarTask?: Task) {
     // NOTE: User can start questionnaire from task calendar or start button in home.
     const task = taskCalendarTask ? taskCalendarTask : this.nextTask
 

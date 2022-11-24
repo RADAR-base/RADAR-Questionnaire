@@ -43,6 +43,11 @@ ion-toolbar > ion-button {
   color: var(--ion-font);
 }
 
+.toolbar-background {
+  background-color: var(--ion-color-secondary);
+  --background: var(--ion-color-secondary);
+}
+
 .bar-button {
   color: var(--ion-font);
 }

@@ -1,7 +1,6 @@
 .audio-bottom {
-  position: absolute;
-  bottom: 48px;
-  width: 85%;
+  bottom: 100px;
+  width: 100%;
 }
 
 .audio-container {
@@ -12,6 +11,10 @@
 
 .bt-stop {
   background-color: var(--cl-danger-40);
+}
+
+.center-col {
+  text-align: center;
 }
 
 .info-card {
@@ -27,4 +30,12 @@
 .info-card h2 {
   color: var(--ion-font);
   font-size: 16px;
+}
+
+ion-grid {
+  height: 100% !important;
+}
+
+.content-row {
+  height: 85%;
 }

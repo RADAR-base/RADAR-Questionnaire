@@ -1,19 +1,29 @@
-<div class="audio-container">
-  <div [class.info-card]="showInfoCard">
-    <h2 dir="auto">{{ text }}</h2>
-  </div>
-  <div class="audio-bottom">
-    <ng-container *ngIf="buttonShown">
-      <ion-button
-        ion-button
-        class="bt bt--full"
-        [class.bt-stop]="isRecording()"
-        round
-        full
-        (click)="handleRecording()"
-      >
-        {{ getRecordingButtonText() }}
-      </ion-button>
-    </ng-container>
-  </div>
-</div>
+<ion-grid>
+  <ion-row class="ion-align-items-start align-items-start content-row">
+    <ion-col size="12">
+      <div class="audio-container">
+        <div [class.info-card]="showInfoCard">
+          <h2 dir="auto">{{ text }}</h2>
+        </div>
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row class="ion-align-items-center ion-align-items-end">
+    <ion-col size="12" class="center-col ion-text-center">
+      <div class="audio-bottom">
+        <ng-container *ngIf="buttonShown">
+          <ion-button
+            ion-button
+            class="bt bt--full"
+            [class.bt-stop]="isRecording()"
+            round
+            full
+            (click)="handleRecording()"
+          >
+            {{ getRecordingButtonText() }}
+          </ion-button>
+        </ng-container>
+      </div>
+    </ion-col>
+  </ion-row>
+</ion-grid>

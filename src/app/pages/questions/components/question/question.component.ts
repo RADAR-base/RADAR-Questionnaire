@@ -55,7 +55,7 @@ export class QuestionComponent implements OnInit, OnChanges {
   isLoading = true
   isScrollable = false
   isFieldLabelHidden = false
-  margin = 32
+  margin = 64
   keyboardScrollPadding = 200
   keyboardInputOffset = 0
   inputHeight = 0

@@ -7,6 +7,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core'
+import { IonContent } from '@ionic/angular'
 
 import { InfoItem, Section } from '../../../../../shared/models/question'
 
@@ -18,7 +19,7 @@ let uniqueID = 0
   styleUrls: ['info-screen.component.scss']
 })
 export class InfoScreenComponent implements OnInit, OnChanges {
-  @ViewChild('content') content
+  @ViewChild('content') content: IonContent
 
   @Output()
   valueChange: EventEmitter<number> = new EventEmitter<number>()
@@ -63,20 +64,17 @@ export class InfoScreenComponent implements OnInit, OnChanges {
   }
 
   scrollDown() {
-    const height =
-      this.content.nativeElement.clientHeight / this.sections.length
-    this.content.nativeElement.scrollBy({
-      top: height,
-      left: 0,
-      behavior: 'smooth'
+    this.content.getScrollElement().then(el => {
+      const height = el.clientHeight / this.sections.length
+      this.content.scrollByPoint(0, height, 300)
     })
   }
 
   onScroll(event) {
     if (
       event &&
-      event.target.scrollTop >=
-        (event.target.scrollHeight - event.target.clientHeight) * 0.8
+      event.target.scrollHeight - event.detail.scrollTop <
+        event.target.clientHeight
     ) {
       this.emitTimestamp()
       this.showScrollButton = false

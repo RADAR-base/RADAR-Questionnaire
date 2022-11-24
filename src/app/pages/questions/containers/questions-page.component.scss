@@ -1,5 +1,6 @@
 ion-slide.swiper-slide {
   align-items: flex-start;
+  overflow-y: scroll;
 }
 
 ion-slide {
@@ -8,7 +9,7 @@ ion-slide {
 }
 
 ion-slides {
-  height: 100%;
+  height: 100vh;
 }
 
 .wrapper {
@@ -22,5 +23,5 @@ ion-slides {
 }
 
 .hidden {
-  visibility: hidden;
+  display: none;
 }

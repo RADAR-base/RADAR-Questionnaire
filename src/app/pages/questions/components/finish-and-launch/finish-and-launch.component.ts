@@ -83,4 +83,8 @@ export class FinishAndLaunchComponent implements OnInit, OnChanges {
             ? this.externalApp.external_app_name
             : options.uri.toString())
   }
+
+  toggleChanged(event) {
+    this.completedInClinic = event
+  }
 }

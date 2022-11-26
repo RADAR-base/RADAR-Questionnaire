@@ -73,7 +73,7 @@ jobs:
       - name: Use coturiv/setup-ionic
         uses: coturiv/setup-ionic@v1
         with:
-          cordova-version: 8
+          cordova-version: 11
 
       - name: Setup Node
         uses: actions/setup-node@v2
@@ -92,4 +92,4 @@ jobs:
 
       - name: Build
         run: |
-          ionic cordova build android
+          yarn && ionic cordova build android

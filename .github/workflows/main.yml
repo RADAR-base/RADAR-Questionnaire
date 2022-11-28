@@ -88,7 +88,7 @@ jobs:
 
       - name: Prepare Android
         run: |
-          ionic cordova platform add android && rm package-lock.json && rm -rf node_modules && yarn install
+          ionic cordova platform add android && rm package-lock.json && yarn install
 
       - name: Build
         run: |

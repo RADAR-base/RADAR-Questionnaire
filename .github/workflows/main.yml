@@ -84,7 +84,7 @@ jobs:
         run: yarn install
 
       - name: Run unit tests
-        run: yarn run test && yarn
+        run: yarn run test
 
       - name: Prepare Android
         run: |
@@ -92,4 +92,4 @@ jobs:
 
       - name: Build
         run: |
-          yarn && ionic cordova build android
+          ionic cordova build android

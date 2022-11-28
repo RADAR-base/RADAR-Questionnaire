@@ -153,7 +153,7 @@
     <plugin name="cordova-plugin-background-mode" spec="https://bitbucket.org/TheBosZ/cordova-plugin-run-in-background.git" />
     <plugin name="com-darryncampbell-cordova-plugin-intent" spec="^2.0.0" />
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.2.0" />
-    <plugin name="cordova-custom-config" spec="^5.1.0" />
+    <plugin name="cordova-custom-config" spec="^5.1.1" />
     <plugin name="cordova-plugin-ionic-webview" spec="^4.2.1" />
     <engine name="ios" spec="5.1.1" />
     <engine name="android" spec="^9.0.0" />

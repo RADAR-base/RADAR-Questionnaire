@@ -29,8 +29,7 @@ import { AuthService } from '../services/auth.service'
   styleUrls: ['./enrolment-page.component.scss']
 })
 export class EnrolmentPageComponent {
-  @ViewChild(IonSlides)
-  slides: IonSlides
+  @ViewChild(IonSlides, { static: true }) slides: IonSlides
   loading: boolean = false
   showOutcomeStatus: boolean = false
   outcomeStatus: string
@@ -56,7 +55,6 @@ export class EnrolmentPageComponent {
   }
 
   next() {
-    console.log('starting?')
     this.slides.lockSwipes(false)
     this.slides.getActiveIndex().then(index => {
       const slideIndex = index + 1

@@ -20,7 +20,7 @@ let uniqueID = 0
   styleUrls: ['descriptive-input.component.scss']
 })
 export class DescriptiveInputComponent implements OnInit, OnChanges {
-  @ViewChild('content') content
+  @ViewChild('content', { static: false }) content
 
   @Output()
   valueChange: EventEmitter<number> = new EventEmitter<number>()

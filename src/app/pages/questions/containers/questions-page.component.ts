@@ -32,8 +32,7 @@ import { QuestionsService } from '../services/questions.service'
   styleUrls: ['questions-page.component.scss']
 })
 export class QuestionsPageComponent implements OnInit {
-  @ViewChild(IonSlides)
-  slides: IonSlides
+  @ViewChild(IonSlides, { static: true }) slides: IonSlides
 
   startTime: number
   currentQuestionGroupId = 0

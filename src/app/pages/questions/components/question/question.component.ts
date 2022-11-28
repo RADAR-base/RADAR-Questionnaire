@@ -28,8 +28,8 @@ import { Task } from '../../../../shared/models/task'
   styleUrls: ['question.component.scss']
 })
 export class QuestionComponent implements OnInit, OnChanges {
-  @ViewChild('content') content
-  @ViewChild('input', { read: ElementRef }) input
+  @ViewChild('content', { static: false }) content
+  @ViewChild('input', { read: ElementRef, static: false }) input
 
   @Input()
   question: Question

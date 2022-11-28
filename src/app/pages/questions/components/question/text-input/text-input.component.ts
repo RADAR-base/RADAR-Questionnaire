@@ -20,7 +20,7 @@ import { KeyboardEventType } from '../../../../../shared/enums/events'
   styleUrls: ['text-input.component.scss']
 })
 export class TextInputComponent implements OnInit {
-  @ViewChild('content') content
+  @ViewChild('content', { static: false }) content
 
   @Output()
   valueChange: EventEmitter<string> = new EventEmitter<string>()

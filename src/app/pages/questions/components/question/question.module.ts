@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { IonicModule } from '@ionic/angular'
-import { Ng2FittextModule } from 'ng2-fittext'
 import { Ionic4DatepickerModule } from '@logisticinfotech/ionic4-datepicker'
 
 import { PipesModule } from '../../../../shared/pipes/pipes.module'
@@ -38,10 +37,8 @@ const COMPONENTS = [
 
 @NgModule({
   imports: [
-    Ng2FittextModule,
     CommonModule,
     PipesModule,
-    FormsModule,
     Ionic4DatepickerModule,
     IonicModule.forRoot()
   ],

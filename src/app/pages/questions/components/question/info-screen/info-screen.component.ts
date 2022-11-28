@@ -19,7 +19,7 @@ let uniqueID = 0
   styleUrls: ['info-screen.component.scss']
 })
 export class InfoScreenComponent implements OnInit, OnChanges {
-  @ViewChild('content') content: IonContent
+  @ViewChild('content', { static: false }) content: IonContent
 
   @Output()
   valueChange: EventEmitter<number> = new EventEmitter<number>()

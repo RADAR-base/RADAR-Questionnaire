@@ -197,7 +197,8 @@
   },
   "description": "An Ionic project",
   "resolutions": {
-    "xcode": "^2.0.0"
+    "xcode": "^2.0.0",
+    "ansi-html": "^0.0.9"
   },
   "cordova": {
     "platforms": [

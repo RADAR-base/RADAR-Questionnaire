@@ -9,7 +9,7 @@
   dependencies:
     "@jridgewell/trace-mapping" "^0.3.0"
 
-"@angular-devkit/architect@0.803.29", "@angular-devkit/architect@~0.803.29":
+"@angular-devkit/architect@0.803.29":
   version "0.803.29"
   resolved "https://registry.yarnpkg.com/@angular-devkit/architect/-/architect-0.803.29.tgz#0399969087ac77876b8e429cb26eebd20596607b"
   integrity sha512-yHBud/fZHTelX24yjQg5lefZrfIebruoFTGeOwF0JdX8+KiHcTIxS4LOnUTYriasfHarcHRFXBAV/bRm+wv5ow==

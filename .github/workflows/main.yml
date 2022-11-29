@@ -80,6 +80,9 @@ jobs:
         with:
           node-version: '14'
 
+      - name: Install @angular/core
+        run: npm i @angular/core -s
+
       - name: Install app dependencies
         run: yarn install
 

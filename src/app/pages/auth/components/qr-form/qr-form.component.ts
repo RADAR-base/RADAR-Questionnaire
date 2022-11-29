@@ -3,7 +3,8 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx'
 
 @Component({
   selector: 'qr-form',
-  templateUrl: 'qr-form.component.html'
+  templateUrl: 'qr-form.component.html',
+  styleUrls: ['qr-form.component.scss']
 })
 export class QRFormComponent {
   @Input()

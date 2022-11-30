@@ -59,9 +59,6 @@ jobs:
         env:
           SECRET: ${{secrets.GOOGLE_SERVICES_ANDROID}}
 
-      - name: Install Yarn
-        run: npm i -g yarn
-
       - name: Install cordova-res
         run: npm i -g cordova-res
 
@@ -84,7 +81,7 @@ jobs:
         run: npm install
 
       - name: Run unit tests
-        run: yarn run test
+        run: npm run test
 
       - name: Prepare Android
         run: |

@@ -80,8 +80,8 @@ jobs:
         with:
           node-version: '14'
 
-      - name: Install @angular/core
-        run: npm i @angular/core -s
+      - name: Use yarn for ionic
+        run: ionic config set -g yarn true
 
       - name: Install app dependencies
         run: yarn install

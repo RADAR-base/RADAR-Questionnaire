@@ -80,18 +80,15 @@ jobs:
         with:
           node-version: '14'
 
-      - name: Use yarn for ionic
-        run: ionic config set -g yarn true
-
       - name: Install app dependencies
-        run: yarn install
+        run: npm install
 
       - name: Run unit tests
         run: yarn run test
 
       - name: Prepare Android
         run: |
-          ionic cordova platform add android && rm package-lock.json && yarn install
+          ionic cordova platform add android && npm install
 
       - name: Build
         run: |

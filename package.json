@@ -4,6 +4,7 @@
   "author": "Ionic Framework",
   "homepage": "https://ionicframework.com/",
   "scripts": {
+    "preinstall": "npx npm-force-resolutions",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
@@ -192,12 +193,11 @@
     "watchify": "^3.11.1",
     "webpack": "^4.0.0"
   },
-  "description": "An Ionic project",
+  "description": "RADAR Questionnaire app",
   "resolutions": {
     "ansi-html": "^0.0.9",
     "node-forge": "^1.3.0",
-    "loader-utils": "^2.0.3",
-    "terser": "^5.14.2"
+    "loader-utils": "^2.0.3"
   },
   "cordova": {
     "platforms": [

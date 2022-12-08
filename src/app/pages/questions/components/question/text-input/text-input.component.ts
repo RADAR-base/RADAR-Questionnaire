@@ -171,6 +171,7 @@ export class TextInputComponent implements OnInit {
   }
 
   emitKeyboardEvent(value) {
+    value = value.toLowerCase()
     if (value == KeyboardEventType.ENTER) this.keyboard.hide()
 
     this.keyboardEvent.emit(value)

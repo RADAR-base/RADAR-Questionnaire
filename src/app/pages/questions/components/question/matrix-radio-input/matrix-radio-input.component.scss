@@ -67,3 +67,7 @@ ul li:hover ion-label {
 .radio-icon {
   display: none !important;
 }
+
+ion-item {
+  --ripple-color: transparent;
+}

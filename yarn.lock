@@ -8365,12 +8365,12 @@ karma-sourcemap-loader@^0.3.7:
   dependencies:
     graceful-fs "^4.1.2"
 
-karma-spec-reporter@^0.0.32:
-  version "0.0.32"
-  resolved "https://registry.npmjs.org/karma-spec-reporter/-/karma-spec-reporter-0.0.32.tgz"
-  integrity sha1-LpxyB+pyZ3EmAln4K+y1QyCeRAo=
+karma-spec-reporter@^0.0.35:
+  version "0.0.35"
+  resolved "https://registry.yarnpkg.com/karma-spec-reporter/-/karma-spec-reporter-0.0.35.tgz#845d9f8b047a452f36fca493d63a72bcc3c865c7"
+  integrity sha512-ejUIU6yzD2bgcn573ypcRfF1IDnLwkxnSMqXsmmvF/PiOwmQgaLRr8H8blBZmrgxH8qhp+W90Q94h16kEQDWzw==
   dependencies:
-    colors "^1.1.2"
+    colors "^1.4.0"
 
 karma-webpack@^4.0.2:
   version "4.0.2"

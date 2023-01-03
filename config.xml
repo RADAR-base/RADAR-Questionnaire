@@ -48,9 +48,12 @@
         <resource-file src="resources/android/notification/drawable-xhdpi-icon.png" target="app/src/main/res/drawable-xhdpi/notification_icon.png" />
         <resource-file src="resources/android/notification/drawable-xxhdpi-icon.png" target="app/src/main/res/drawable-xxhdpi/notification_icon.png" />
         <resource-file src="resources/android/notification/drawable-xxxhdpi-icon.png" target="app/src/main/res/drawable-xxxhdpi/notification_icon.png" />
-        <custom-config-file parent="./application" target="AndroidManifest.xml">
+        <config-file parent="/manifest/application/" target="app/src/main/AndroidManifest.xml">
             <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/notification_icon" />
-        </custom-config-file>
+        </config-file>
+        <config-file parent="/manifest/" target="app/src/main/AndroidManifest.xml">
+            <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+        </config-file>
         <custom-preference name="android-manifest/application/@android:requestLegacyExternalStorage" value="true" />
         <custom-preference name="android-manifest/application/@android:usesCleartextTraffic" value="true" />
     </platform>

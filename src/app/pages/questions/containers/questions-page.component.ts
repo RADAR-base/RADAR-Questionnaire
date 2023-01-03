@@ -167,7 +167,7 @@ export class QuestionsPageComponent implements OnInit {
       .handleClinicalFollowUp(this.assessment, completedInClinic)
       .then(() => {
         this.updateDoneButton(false)
-        return this.navCtrl.navigateBack('/home')
+        return this.navCtrl.navigateRoot('/home')
       })
   }
 

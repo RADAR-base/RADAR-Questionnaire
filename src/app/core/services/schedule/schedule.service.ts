@@ -44,6 +44,10 @@ export abstract class ScheduleService {
 
   abstract getTasksForDate(date: Date, type: AssessmentType)
 
+  isInitialised() {
+    return false
+  }
+
   getTasks(type: AssessmentType): Promise<Task[]> {
     switch (type) {
       case AssessmentType.SCHEDULED:

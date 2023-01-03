@@ -47,7 +47,9 @@ export class ConfigService {
     private logger: LogService,
     private remoteConfig: RemoteConfigService,
     private messageHandlerService: MessageHandlerService
-  ) {}
+  ) {
+    this.notifications.init()
+  }
 
   fetchConfigState(force?: boolean) {
     console.log('fetching config')

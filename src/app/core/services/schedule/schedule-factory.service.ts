@@ -46,6 +46,10 @@ export class ScheduleFactoryService extends ScheduleService {
       })
   }
 
+  isInitialised() {
+    return this.scheduleService != null || this.scheduleService != undefined
+  }
+
   generateSchedule(referenceTimestamp, utcOffsetPrev) {
     return this.scheduleService.generateSchedule(
       referenceTimestamp,

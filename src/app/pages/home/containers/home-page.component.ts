@@ -56,12 +56,11 @@ export class HomePageComponent implements OnInit, OnDestroy {
     private usage: UsageService
   ) {
     this.resumeListener = this.platform.resume.subscribe(() => this.onResume())
-    this.changeDetectionListener = this.tasksService.changeDetectionEmitter.subscribe(
-      () => {
+    this.changeDetectionListener =
+      this.tasksService.changeDetectionEmitter.subscribe(() => {
         console.log('Changes to task service detected')
         this.navCtrl.navigateRoot('')
-      }
-    )
+      })
   }
 
   getIsLoadingSpinnerShown() {
@@ -81,7 +80,9 @@ export class HomePageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.init()
+    this.platform
+      .ready()
+      .then(() => this.tasksService.init().then(() => this.init()))
     this.usage.setPage(this.constructor.name)
   }
 
@@ -108,7 +109,8 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.hasOnDemandTasks = this.tasksService.getHasOnDemandTasks()
     this.hasClinicalTasks = this.tasksService.getHasClinicalTasks()
     this.title = this.tasksService.getPlatformInstanceName()
-    this.isTaskCalendarTaskNameShown = this.tasksService.getIsTaskCalendarTaskNameShown()
+    this.isTaskCalendarTaskNameShown =
+      this.tasksService.getIsTaskCalendarTaskNameShown()
     this.onDemandIcon = this.tasksService.getOnDemandAssessmentIcon()
     this.showMiscTasksButton = this.getShowMiscTasksButton()
   }

@@ -51,6 +51,9 @@
         <config-file parent="/manifest/application/" target="app/src/main/AndroidManifest.xml">
             <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/notification_icon" />
         </config-file>
+        <config-file parent="/manifest/" target="app/src/main/AndroidManifest.xml">
+            <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+        </config-file>
     </platform>
     <platform name="ios">
         <feature name="CDVWKWebViewEngine">

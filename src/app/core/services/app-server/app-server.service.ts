@@ -1,4 +1,9 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http'
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+  HttpResponse
+} from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import * as moment from 'moment-timezone'
 import * as urljoin from 'url-join'
@@ -9,12 +14,20 @@ import {
 } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
 import { StorageKeys } from '../../../shared/enums/storage'
+import {
+  FcmNotificationDto,
+  FcmNotificationError
+} from '../../../shared/models/app-server'
+import { SingleNotification } from '../../../shared/models/notification-handler'
+import { Task } from '../../../shared/models/task'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { SubjectConfigService } from '../config/subject-config.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 import { TokenService } from '../token/token.service'
+import { filter } from "rxjs/operators";
+import { Subscription } from "rxjs";
 
 @Injectable()
 export class AppServerService {
@@ -22,6 +35,12 @@ export class AppServerService {
   SUBJECT_PATH = 'users'
   PROJECT_PATH = 'projects'
   GITHUB_CONTENT_PATH = 'github/content'
+  QUESTIONNAIRE_SCHEDULE_PATH = 'questionnaire/schedule'
+  QUESTIONNAIRE_TASK = 'questionnaire/task'
+  QUESTIONNAIRE_STATE_EVENTS_PATH = 'state_events'
+  NOTIFICATIONS_PATH = 'messaging/notifications'
+  STATE_EVENTS_PATH = 'state_events'
+  private tokenSubscription: Subscription = null
 
   constructor(
     public storage: StorageService,
@@ -35,25 +54,36 @@ export class AppServerService {
 
   init() {
     // NOTE: Initialising ensures project and subject exists in the app server
-    return Promise.all([this.updateAppServerURL()])
+    return this.updateAppServerURL()
       .then(() =>
         Promise.all([
           this.subjectConfig.getParticipantLogin(),
           this.subjectConfig.getProjectName(),
           this.subjectConfig.getEnrolmentDate(),
+          this.subjectConfig.getParticipantAttributes(),
           this.getFCMToken()
         ])
       )
-      .then(([subjectId, projectId, enrolmentDate, fcmToken]) =>
-        this.addProjectIfMissing(projectId).then(() =>
-          this.addSubjectIfMissing(
-            subjectId,
-            projectId,
-            enrolmentDate,
-            fcmToken
-          )
-        )
-      )
+      .then(([subjectId, projectId, enrolmentDate, attributes, fcmToken]) =>
+        this.addProjectIfMissing(projectId)
+          .then(() => this.addSubjectIfMissing(
+              subjectId,
+              projectId,
+              enrolmentDate,
+              attributes,
+              fcmToken
+            )
+          ).then(httpRes => {
+            if (this.tokenSubscription !== null) {
+              this.tokenSubscription.unsubscribe();
+            }
+            this.tokenSubscription = this.storage.observe(StorageKeys.FCM_TOKEN)
+              .pipe(filter(t => t && t !== fcmToken))
+              .subscribe(newFcmToken =>
+                this.addSubjectIfMissing(subjectId, projectId, enrolmentDate, attributes, newFcmToken))
+            return httpRes;
+          })
+      );
   }
 
   getHeaders() {
@@ -117,6 +147,7 @@ export class AppServerService {
     subjectId,
     projectId,
     enrolmentDate,
+    attributes,
     fcmToken
   ): Promise<any> {
     // NOTE: Adds subject if missing, updates subject if it exists
@@ -126,7 +157,8 @@ export class AppServerService {
           fcmToken,
           lastOpened: new Date(),
           timezone: moment.tz.guess(),
-          language: this.localization.getLanguage().value
+          language: this.localization.getLanguage().value,
+          attributes
         })
       )
       .catch(e => {
@@ -135,13 +167,20 @@ export class AppServerService {
             subjectId,
             projectId,
             enrolmentDate,
-            fcmToken
+            fcmToken,
+            attributes
           )
         else throw e
       })
   }
 
-  addSubjectToServer(subjectId, projectId, enrolmentDate, fcmToken) {
+  addSubjectToServer(
+    subjectId,
+    projectId,
+    enrolmentDate,
+    fcmToken,
+    attributes
+  ) {
     return this.getHeaders().then(headers =>
       this.http
         .post(
@@ -157,7 +196,8 @@ export class AppServerService {
             subjectId,
             fcmToken,
             timezone: moment.tz.guess(),
-            language: this.localization.getLanguage().value
+            language: this.localization.getLanguage().value,
+            attributes
           },
           { headers, params: { forceFcmToken: 'true' } }
         )
@@ -196,6 +236,205 @@ export class AppServerService {
         })
         .toPromise()
     })
+  }
+
+  getSchedule(): Promise<any> {
+    return Promise.all([
+      this.subjectConfig.getParticipantLogin(),
+      this.subjectConfig.getProjectName()
+    ]).then(([subjectId, projectId]) => {
+      return this.getHeaders().then(headers =>
+        this.http
+          .get(
+            urljoin(
+              this.APP_SERVER_URL,
+              this.PROJECT_PATH,
+              projectId,
+              this.SUBJECT_PATH,
+              subjectId,
+              this.QUESTIONNAIRE_SCHEDULE_PATH
+            ),
+            { headers }
+          )
+          .toPromise()
+      )
+    })
+  }
+
+  getScheduleForDates(startTime: Date, endTime: Date): Promise<any> {
+    return Promise.all([
+      this.subjectConfig.getParticipantLogin(),
+      this.subjectConfig.getProjectName()
+    ]).then(([subjectId, projectId]) => {
+      return this.getHeaders().then(headers =>
+        this.http
+          .get(
+            urljoin(
+              this.APP_SERVER_URL,
+              this.PROJECT_PATH,
+              projectId,
+              this.SUBJECT_PATH,
+              subjectId,
+              this.QUESTIONNAIRE_SCHEDULE_PATH
+            ),
+            {
+              headers,
+              params: {
+                startTime: startTime.toISOString(),
+                endTime: endTime.toISOString()
+              }
+            }
+          )
+          .toPromise()
+          .catch(e => [])
+      )
+    })
+  }
+
+  generateSchedule(): Promise<any> {
+    return Promise.all([
+      this.subjectConfig.getParticipantLogin(),
+      this.subjectConfig.getProjectName()
+    ]).then(([subjectId, projectId]) => {
+      return this.getHeaders().then(headers =>
+        this.http
+          .post(
+            urljoin(
+              this.APP_SERVER_URL,
+              this.PROJECT_PATH,
+              projectId,
+              this.SUBJECT_PATH,
+              subjectId,
+              this.QUESTIONNAIRE_SCHEDULE_PATH
+            ),
+            { headers }
+          )
+          .toPromise()
+      )
+    })
+  }
+
+  pullAllPublishedNotifications(subject) {
+    return this.getHeaders().then(headers =>
+      this.http
+        .get(
+          urljoin(
+            this.getAppServerURL(),
+            this.PROJECT_PATH,
+            subject.projectId,
+            this.SUBJECT_PATH,
+            subject.subjectId,
+            this.NOTIFICATIONS_PATH
+          ),
+          { headers }
+        )
+        .toPromise()
+    )
+  }
+
+  deleteNotification(subject, notification: SingleNotification) {
+    return this.getHeaders().then(headers =>
+      this.http
+        .delete(
+          urljoin(
+            this.getAppServerURL(),
+            this.PROJECT_PATH,
+            subject.projectId,
+            this.SUBJECT_PATH,
+            subject.subjectId,
+            this.NOTIFICATIONS_PATH,
+            notification.id.toString()
+          ),
+          { headers }
+        )
+        .toPromise()
+    )
+  }
+
+  updateTaskState(taskId, state) {
+    return Promise.all([
+      this.subjectConfig.getParticipantLogin(),
+      this.subjectConfig.getProjectName()
+    ]).then(([subjectId, projectId]) => {
+      return this.getHeaders().then(headers =>
+        this.http
+          .post(
+            urljoin(
+              this.getAppServerURL(),
+              this.PROJECT_PATH,
+              projectId,
+              this.SUBJECT_PATH,
+              subjectId,
+              this.QUESTIONNAIRE_SCHEDULE_PATH,
+              taskId.toString(),
+              this.QUESTIONNAIRE_STATE_EVENTS_PATH
+            ),
+            {
+              taskId: taskId,
+              state: state,
+              time: new Date(),
+              associatedInfo: ''
+            },
+            { headers }
+          )
+          .toPromise()
+      )
+    })
+  }
+
+  updateNotificationState(subject, notificationId, state) {
+    return this.getHeaders().then(headers =>
+      this.http
+        .post(
+          urljoin(
+            this.getAppServerURL(),
+            this.PROJECT_PATH,
+            subject.projectId,
+            this.SUBJECT_PATH,
+            subject.subjectId,
+            this.NOTIFICATIONS_PATH,
+            notificationId.toString(),
+            this.STATE_EVENTS_PATH
+          ),
+          { notificationId: notificationId, state: state, time: new Date() },
+          { headers }
+        )
+        .toPromise()
+    )
+  }
+
+  public addNotification(notification, subjectId, projectId): Promise<any> {
+    return this.getHeaders().then(headers =>
+      this.http
+        .post(
+          urljoin(
+            this.getAppServerURL(),
+            this.PROJECT_PATH,
+            projectId,
+            this.SUBJECT_PATH,
+            subjectId,
+            this.NOTIFICATIONS_PATH
+          ),
+          notification.notificationDto,
+          { headers, observe: 'response' }
+        )
+        .toPromise()
+        .then((res: HttpResponse<FcmNotificationDto>) => {
+          this.logger.log('Successfully sent! Updating notification Id')
+          return res.body
+        })
+        .catch((err: HttpErrorResponse) => {
+          this.logger.log('Http request returned an error: ' + err.message)
+          const data: FcmNotificationError = err.error
+          if (err.status == 409) {
+            this.logger.log(
+              'Notification already exists, storing notification data..'
+            )
+            return data.dto ? data.dto : notification.notification
+          }
+          return this.logger.error('Failed to send notification', err)
+        })
+    )
   }
 
   getFCMToken() {

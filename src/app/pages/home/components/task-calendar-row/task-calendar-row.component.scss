@@ -1,0 +1,90 @@
+#task-item {
+  display: block;
+  margin-bottom: 3px;
+  padding: 3px 9px;
+  padding-bottom: 0;
+  background-color: var(--cl-primary-40) !important;
+  text-align: center;
+  font-size: 18px;
+}
+
+.task-item-name {
+  font-size: 15px !important;
+}
+
+.units {
+  margin-right: 2px;
+  font-size: 12px;
+}
+
+.icon-padding {
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+.extra-info-icon {
+  padding-left: 3px;
+}
+
+.icon-xsm {
+  height: 14px;
+}
+
+.task-info-left {
+  display: inline-flex;
+  float: left;
+  padding-left: 5px;
+  width: auto;
+}
+
+.task-info-right {
+  display: inline-flex;
+  float: right;
+  margin-right: 10px;
+  max-width: 160px;
+  width: 160px;
+}
+
+.metrics {
+  display: inline-flex;
+  float: left;
+  margin-right: 8px;
+  text-align: left;
+}
+
+.metric-time {
+  float: left;
+  margin-right: 10px;
+  width: 64px;
+  white-space: nowrap;
+}
+
+.metric-q {
+  float: left;
+  width: 56px;
+  white-space: nowrap;
+}
+
+.status-div {
+  float: right;
+  margin-top: -8px;
+  margin-right: 8px;
+  margin-bottom: -7px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  width: 24px;
+}
+
+.status {
+  color: #7fcdbb;
+  font-size: 26px;
+}
+
+.status-checked {
+  padding-top: 2px;
+  width: 23px;
+  height: 23px;
+  border-radius: 50%;
+  background-color: #7fcdbb;
+  font-size: 21px;
+}

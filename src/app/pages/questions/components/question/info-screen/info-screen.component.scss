@@ -4,6 +4,7 @@
   -webkit-border-radius: 8px;
   border-radius: 8px;
   background-color: var(--cl-primary-20);
+  overflow: scroll;
 }
 
 ion-content {
@@ -16,10 +17,12 @@ ion-content {
     from(rgba(0, 0, 0, 1)),
     to(rgba(0, 0, 0, 0.25))
   );
+  overflow: scroll;
 }
 
 .items {
   padding-bottom: 32%;
+  overflow: scroll;
 }
 
 .info-heading {
@@ -28,6 +31,7 @@ ion-content {
 
 .info-content {
   margin-bottom: 48%;
+  overflow: scroll;
 }
 
 .image {

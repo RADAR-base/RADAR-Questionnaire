@@ -47,7 +47,9 @@ export class ConfigService {
     private logger: LogService,
     private remoteConfig: RemoteConfigService,
     private messageHandlerService: MessageHandlerService
-  ) {}
+  ) {
+    this.notifications.init()
+  }
 
   fetchConfigState(force?: boolean) {
     console.log('fetching config')
@@ -209,6 +211,7 @@ export class ConfigService {
   }
 
   updateConfigStateOnProtocolChange(protocol) {
+    this.questionnaire.reset()
     const assessments = protocol.protocols
     this.logger.log(assessments)
     return this.questionnaire

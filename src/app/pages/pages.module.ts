@@ -19,6 +19,9 @@ import { MessageHandlerService } from '../core/services/notifications/message-ha
 import { NotificationFactoryService } from '../core/services/notifications/notification-factory.service'
 import { NotificationGeneratorService } from '../core/services/notifications/notification-generator.service'
 import { NotificationService } from '../core/services/notifications/notification.service'
+import { AppserverScheduleService } from '../core/services/schedule/appserver-schedule.service'
+import { LocalScheduleService } from '../core/services/schedule/local-schedule.service'
+import { ScheduleFactoryService } from '../core/services/schedule/schedule-factory.service'
 import { ScheduleGeneratorService } from '../core/services/schedule/schedule-generator.service'
 import { ScheduleService } from '../core/services/schedule/schedule.service'
 import { StorageService } from '../core/services/storage/storage.service'
@@ -61,7 +64,8 @@ import { SplashModule } from './splash/splash.module'
     TokenService,
     KafkaService,
     LocalizationService,
-    ScheduleService,
+    LocalScheduleService,
+    AppserverScheduleService,
     ScheduleGeneratorService,
     StorageService,
     TranslatePipe,

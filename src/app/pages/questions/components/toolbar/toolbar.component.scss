@@ -21,6 +21,9 @@ ion-button {
   --padding-start: 8px;
   --padding-end: 0px;
   text-transform: uppercase;
+  --ripple-color: transparent;
+  --background-hover: transparent;
+  --background-activated: transparent;
 }
 
 ion-icon {
@@ -29,10 +32,6 @@ ion-icon {
 
 .toolbar-label {
   height: 12px;
-}
-
-.toolbar-background {
-  background-color: var(--ion-color-secondary);
 }
 
 ion-toolbar {

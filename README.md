@@ -18,7 +18,6 @@ It is recommended that you install the following versions or later:
 node v13.8.0
 ionic v5.4.16
 npm v6.13.6
-yarn v1.19.0
 ```
 
 ## Install
@@ -28,13 +27,13 @@ First install [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/en/d
 Globally install ionic and cordova:
 
 ```
-$ yarn global add ionic cordova
+$ npm i -g ionic cordova
 ```
 
-In the project folder run `yarn` to install dependencies:
+In the project folder run `npm i` to install dependencies:
 
 ```
-$ yarn
+$ npm i
 ```
 
 Cordova provides a simple command to install the plugins and platforms set in `package.json` or `config.xml`.
@@ -54,13 +53,13 @@ $ ionic serve
 Use the following command to sort, format and fix common css problems:
 
 ```
-$ yarn fix:css
+$ npm run fix:css
 ```
 
 Use the following command before commiting to fix all common styling and sorting problems:
 
 ```
-$ yarn fix:all
+$ npm run fix:all
 ```
 
 ## Platforms
@@ -150,6 +149,8 @@ Certain values can be overriden using Firebase Remote Config. Specifically, the 
 | `app_credits_body`              | Body of the popup box that appears when you tap on the app logo on the left hand side of the homepage.                                                                                                    | `Made with &hearts; for you by the RADAR-Base community.`                                                        |
 | `auto_next_questionnaire_types` | String list of question/question input types where the questionnaire will automatically move to the next question upon answering the question. It is recommended to always include timed and audio types. | `timed,audio`                                                                                                    |
 | `skippable_questionnaire_types` | String list of question/question input types where the next button is enabled by default, allowing the question to be skippable.                                                                          | `audio`                                                                                                          |
+| `show_task_calendar_name`       | The task calendar by default shows the task timestamp instead of the task name. This allows showing of the task name instead of the timestamp.                                                            | `false`                                                                                                          |
+| `show_task_progress_count`      | In the questionnaire page, by default, only the task progress bar is shown. This config will enable the showing of the "question number / total questions" count.                                         | `false`                                                                                                          |
 
 #### Conditions
 
@@ -242,10 +243,9 @@ Instructions to build a signed apk for publishing on the playstore -
 3. Run the following to build the app
 
 ```shell
-yarn install
-yarn build
+npm install
+npm run build
 ionic cordova platform add android
-yarn install
 ionic cordova build --release android
 ```
 
@@ -305,11 +305,8 @@ Here are some common errors you might find during installation.
 When you are running `ionic cordova run ios`, you might encounter the problem, we solved this problem by refering this [issue](https://github.com/dpa99c/cordova-custom-config/issues/144) with `cordova-custom-config`.
 
 We enter the following command at the root directory.
+
 ```
 cd plugins/cordova-custom-config
-yarn install 
+npm install
 ```
-
-### Error: Failed to fetch platform. Probably this is either a connection problem.
-
-You may encounter this error when running `yarn install` or `cordova platform` commands. This is usually because of the conflict of `package-lock.json` and `yarn.lock` files. To solve, simply delete the `package-lock.json` file in the root directory.

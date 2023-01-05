@@ -23,14 +23,16 @@
   ></wheel-selector>
 </ng-container>
 
-<ng-container *ngIf="showTextInput">
+<ng-container *ngIf="showTextInput && currentlyShown">
   <ion-item color="none" class="input">
     <ion-input
       type="text"
+      enterkeyhint="next"
       placeholder="{{ 'PLACEHOLDER_TEXT_INPUT' | translate }}"
-      (ionChange)="emitAnswer($event.value)"
-      (ionFocus)="emitTextInputFocus(true)"
-      (ionBlur)="emitTextInputFocus(false)"
+      (ionChange)="emitAnswer($event.detail.value)"
+      (ionFocus)="emitKeyboardEvent('focus')"
+      (ionBlur)="emitKeyboardEvent('blur')"
+      (keyup)="emitKeyboardEvent($event.key)"
     ></ion-input>
   </ion-item>
 </ng-container>

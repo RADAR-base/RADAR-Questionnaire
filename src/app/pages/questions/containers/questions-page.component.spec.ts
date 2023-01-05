@@ -4,6 +4,7 @@ import { NavParamsMock } from 'ionic-mocks'
 import { PipesModule } from 'src/app/shared/pipes/pipes.module'
 
 import { AppModule } from '../../../app.module'
+import { FinishAndLaunchComponent } from '../components/finish-and-launch/finish-and-launch.component'
 import { FinishComponent } from '../components/finish/finish.component'
 import { IntroductionComponent } from '../components/introduction/introduction.component'
 import { QuestionModule } from '../components/question/question.module'
@@ -22,6 +23,7 @@ describe('QuestionsPageComponent', () => {
         QuestionsPageComponent,
         IntroductionComponent,
         FinishComponent,
+        FinishAndLaunchComponent,
         ToolbarComponent
       ],
       providers: [
@@ -48,6 +50,14 @@ describe('QuestionsPageComponent', () => {
 export class QuestionsServiceMock {
   getQuestionnairePayload() {
     return Promise.resolve({})
+  }
+
+  initRemoteConfigParams() {
+    return Promise.resolve({})
+  }
+
+  getIsProgressCountShown() {
+    return false
   }
 
   getTime() {

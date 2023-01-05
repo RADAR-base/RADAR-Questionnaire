@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core'
 
 import {
   DefaultAutoNextQuestionnaireTypes,
-  DefaultQuestionsHidden,
+  DefaultShowTaskProgressCount,
   DefaultSkippableQuestionnaireTypes
 } from '../../../../assets/data/defaultConfig'
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
@@ -37,6 +37,7 @@ export class QuestionsService {
     DefaultAutoNextQuestionnaireTypes
   )
   DELIMITER = ','
+  isProgressCountShown = false
 
   constructor(
     public questionnaire: QuestionnaireService,
@@ -46,11 +47,9 @@ export class QuestionsService {
     private finish: FinishTaskService,
     private remoteConfig: RemoteConfigService,
     private util: Utility
-  ) {
-    this.init()
-  }
+  ) {}
 
-  init() {
+  initRemoteConfigParams() {
     return this.remoteConfig
       .read()
       .then(config =>
@@ -127,11 +126,10 @@ export class QuestionsService {
     }
   }
 
-  processQuestions(title, questions: any[]) {
-    if (title.includes('ESM28Q'))
-      if (new Date().getHours() > 10) return Promise.resolve(questions.slice(1))
-
-    return Promise.resolve(questions)
+  processQuestions(title, questions: Question[]) {
+    return questions.map(q =>
+      Object.assign(q, { isAutoNext: this.getIsNextAutomatic(q.field_type) })
+    )
   }
 
   isAnswered(question: Question) {
@@ -224,12 +222,11 @@ export class QuestionsService {
     const type = task.type
     return this.questionnaire
       .getAssessmentForTask(type, task)
-      .then(assessment =>
-        this.processQuestions(assessment.name, assessment.questions).then(
-          questions => [assessment, questions]
+      .then(assessment => {
+        const questions = this.processQuestions(
+          assessment.name,
+          assessment.questions
         )
-      )
-      .then(([assessment, questions]) => {
         return {
           title: assessment.name,
           introduction: this.localization.chooseText(assessment.startText),
@@ -262,17 +259,19 @@ export class QuestionsService {
     return this.finish.createClinicalFollowUpTask(assessment)
   }
 
-  getHiddenQuestions(): Promise<Object> {
+  stringToArray(array, delimiter) {
+    return array.split(delimiter).map(s => s.trim())
+  }
+
+  getIsProgressCountShown() {
     return this.remoteConfig
       .read()
       .then(config =>
-        config.getOrDefault(ConfigKeys.QUESTIONS_HIDDEN, DefaultQuestionsHidden)
+        config.getOrDefault(
+          ConfigKeys.SHOW_TASK_PROGRESS_COUNT,
+          DefaultShowTaskProgressCount
+        )
       )
       .then(res => JSON.parse(res))
-      .catch(e => DefaultQuestionsHidden)
-  }
-
-  stringToArray(array, delimiter) {
-    return array.split(delimiter).map(s => s.trim())
   }
 }

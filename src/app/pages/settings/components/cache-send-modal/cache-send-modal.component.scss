@@ -3,6 +3,9 @@ ion-card {
   margin-top: 30vh;
   width: 80%;
   background-color: var(--ion-color-light);
+  --background: var(--ion-color-light);
+  color: var(--ion-color-primary);
+  --color: var(--ion-color-primary);
 }
 
 .header {

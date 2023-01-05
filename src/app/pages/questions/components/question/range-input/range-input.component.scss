@@ -23,6 +23,7 @@ ion-item {
   border: 2px solid white;
   border-right: none;
   background-color: var(--cl-primary-20);
+  --ripple-color: transparent;
 }
 
 .item-radio-checked {

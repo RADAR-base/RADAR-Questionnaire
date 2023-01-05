@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="secondary">
     <ion-button
       class="logo-small"
       ion-button
@@ -83,14 +83,16 @@
         (click)="displayTaskCalendar()"
       ></task-info>
     </div>
-
     <div #taskCalendar class="taskCalendar" [@displayCalendar]="showCalendar">
       <task-calendar
-        *ngIf="(sortedTasks | async)?.size"
+        *ngIf="
+          (sortedTasks | async)?.size &&
+          (isTaskCalendarTaskNameShown | async) !== null
+        "
         [show]="showCalendar"
         (task)="startQuestionnaire($event)"
         [tasks]="sortedTasks | async"
-        [currentDate]="currentDate.getTime()"
+        [isTaskNameShown]="isTaskCalendarTaskNameShown | async"
       >
       </task-calendar>
     </div>

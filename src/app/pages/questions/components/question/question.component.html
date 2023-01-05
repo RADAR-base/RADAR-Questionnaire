@@ -12,12 +12,7 @@
       [class.field-container-matrix]="isMatrix"
       dir="auto"
     >
-      <h2
-        dir="auto"
-        [fittext]="true"
-        [maxFontSize]="18"
-        [modelToWatch]="question"
-      >
+      <h2 dir="auto">
         {{ question.field_label }}
       </h2>
     </div>
@@ -47,14 +42,14 @@
         <radio-input
           *ngSwitchCase="'radio'"
           [responses]="question.select_choices_or_calculations"
-          (valueChange)="onValueChange($event)"
+          (valueChange)="emitAnswer($event)"
         >
         </radio-input>
 
         <checkbox-input
           *ngSwitchCase="'checkbox'"
           [responses]="question.select_choices_or_calculations"
-          (valueChange)="onValueChange($event)"
+          (valueChange)="emitAnswer($event)"
         >
         </checkbox-input>
 
@@ -72,7 +67,7 @@
           [max]="question.range.max"
           [labelLeft]="question.range.labelLeft"
           [labelRight]="question.range.labelRight"
-          (valueChange)="onValueChange($event)"
+          (valueChange)="emitAnswer($event)"
         >
         </range-input>
 
@@ -81,7 +76,7 @@
           [min]="question.range.min"
           [max]="question.range.max"
           [responses]="question.select_choices_or_calculations"
-          (valueChange)="onValueChange($event)"
+          (valueChange)="emitAnswer($event)"
         >
         </range-info-input>
 
@@ -92,7 +87,7 @@
           [step]="question.range.step"
           [labelLeft]="question.range.labelLeft"
           [labelRight]="question.range.labelRight"
-          (valueChange)="onValueChange($event)"
+          (valueChange)="emitAnswer($event)"
         >
         </slider-input>
 
@@ -101,7 +96,7 @@
           [sections]="question.select_choices_or_calculations"
           [hasFieldLabel]="question.field_label.length > 0"
           [image]="question.field_annotation?.image"
-          (valueChange)="onValueChange($event)"
+          (valueChange)="emitAnswer($event)"
           [currentlyShown]="currentlyShown"
         >
         </info-screen>
@@ -110,7 +105,8 @@
           *ngSwitchCase="'audio'"
           [text]="question.field_label"
           [currentlyShown]="currentlyShown"
-          (valueChange)="onValueChange($event)"
+          (valueChange)="emitAnswer($event)"
+          (onRecordStart)="onAudioRecordStart($event)"
         >
         </audio-input>
 
@@ -120,14 +116,14 @@
           [image]="question.field_annotation.image"
           [timer]="question.field_annotation.timer"
           [currentlyShown]="currentlyShown"
-          (valueChange)="onValueChange($event)"
+          (valueChange)="emitAnswer($event)"
         >
         </timed-test>
 
         <text-input
           *ngSwitchCase="'text'"
-          (valueChange)="onValueChange($event)"
-          (textInputFocus)="onTextInputFocus($event)"
+          (valueChange)="emitAnswer($event)"
+          (keyboardEvent)="onKeyboardEvent($event)"
           [type]="question.text_validation_type_or_show_slider_number"
           [currentlyShown]="currentlyShown"
         ></text-input>
@@ -138,14 +134,14 @@
             { code: '1', label: 'Yes' },
             { code: '0', label: 'No' }
           ]"
-          (valueChange)="onValueChange($event)"
+          (valueChange)="emitAnswer($event)"
         >
         </radio-input>
 
         <descriptive-input
           *ngSwitchCase="'descriptive'"
           [text]="question.field_label"
-          (valueChange)="onValueChange($event)"
+          (valueChange)="emitAnswer($event)"
           [currentlyShown]="currentlyShown"
         >
         </descriptive-input>
@@ -155,7 +151,7 @@
           [responses]="question.select_choices_or_calculations"
           [currentlyShown]="currentlyShown"
           [previouslyShown]="previouslyShown"
-          (valueChange)="onValueChange($event)"
+          (valueChange)="emitAnswer($event)"
         >
         </matrix-radio-input>
       </ng-container>

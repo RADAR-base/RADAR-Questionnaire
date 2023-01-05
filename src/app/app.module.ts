@@ -7,6 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { RouterModule } from '@angular/router'
 import { JWT_OPTIONS, JwtModule } from '@auth0/angular-jwt'
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx'
+import { AppLauncher } from '@ionic-native/app-launcher/ngx'
 import { AppVersion } from '@ionic-native/app-version/ngx'
 import { BackgroundMode } from '@ionic-native/background-mode/ngx'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx'
@@ -51,6 +52,9 @@ import { MessageHandlerService } from './core/services/notifications/message-han
 import { NotificationFactoryService } from './core/services/notifications/notification-factory.service'
 import { NotificationGeneratorService } from './core/services/notifications/notification-generator.service'
 import { NotificationService } from './core/services/notifications/notification.service'
+import { AppserverScheduleService } from './core/services/schedule/appserver-schedule.service'
+import { LocalScheduleService } from './core/services/schedule/local-schedule.service'
+import { ScheduleFactoryService } from './core/services/schedule/schedule-factory.service'
 import { ScheduleGeneratorService } from './core/services/schedule/schedule-generator.service'
 import { ScheduleService } from './core/services/schedule/schedule.service'
 import { StorageService } from './core/services/storage/storage.service'
@@ -116,7 +120,10 @@ import { Health } from '@awesome-cordova-plugins/health/ngx'
     FirebaseX,
     LocalNotifications,
     LogService,
+    LocalScheduleService,
+    AppserverScheduleService,
     { provide: RemoteConfigService, useClass: FirebaseRemoteConfigService },
+    { provide: ScheduleService, useClass: ScheduleFactoryService },
     ConfigService,
     AlertService,
     DatePipe,
@@ -128,7 +135,6 @@ import { Health } from '@awesome-cordova-plugins/health/ngx'
     TokenService,
     KafkaService,
     LocalizationService,
-    ScheduleService,
     ScheduleGeneratorService,
     StorageService,
     TranslatePipe,
@@ -142,7 +148,8 @@ import { Health } from '@awesome-cordova-plugins/health/ngx'
     MessageHandlerService,
     { provide: NotificationService, useClass: NotificationFactoryService },
     { provide: AnalyticsService, useClass: FirebaseAnalyticsService },
-    GithubClient
+    GithubClient,
+    AppLauncher
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

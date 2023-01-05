@@ -5,6 +5,7 @@ import {
   OnChanges,
   Output
 } from '@angular/core'
+import { setDateTimeToMidnight } from 'src/app/shared/utilities/time'
 
 import { LocalizationService } from '../../../../core/services/misc/localization.service'
 import { LogService } from '../../../../core/services/misc/log.service'
@@ -23,7 +24,7 @@ export class TaskCalendarComponent implements OnChanges {
   @Input()
   tasks: Map<number, Task[]>
   @Input()
-  currentDate: number
+  isTaskNameShown: boolean
 
   currentTime
   timeIndex: number
@@ -46,7 +47,9 @@ export class TaskCalendarComponent implements OnChanges {
     }
     // NOTE: Compare current time with the start times of the tasks and
     // find out in between which tasks it should be shown in the interface
-    const todaysTasks = this.tasks.get(this.currentDate)
+    const todaysTasks = this.tasks.get(
+      setDateTimeToMidnight(new Date()).getTime()
+    )
     if (todaysTasks)
       this.timeIndex = todaysTasks.findIndex(t => t.timestamp >= now)
   }

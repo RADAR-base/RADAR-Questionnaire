@@ -37,10 +37,18 @@ ion-toolbar > ion-button {
   --background: transparent;
   --padding-start: 12px;
   --padding-end: 12px;
+  --ripple-color: transparent;
+  --background-hover: transparent;
+  --background-activated: transparent;
 }
 
 .toolbar-title {
   color: var(--ion-font);
+}
+
+.toolbar-background {
+  background-color: var(--ion-color-secondary);
+  --background: var(--ion-color-secondary);
 }
 
 .bar-button {
@@ -91,6 +99,8 @@ ion-spinner * {
 ion-fab-button {
   --background: var(--cl-primary-60);
   --box-shadow: none;
+  --background-hover: var(--cl-primary-60);
+  --background-activated: var(--cl-primary-60);
 }
 
 .clinical-container {

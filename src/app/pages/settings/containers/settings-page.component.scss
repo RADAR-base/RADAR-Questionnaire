@@ -89,7 +89,9 @@ ion-item.item:last-child {
 }
 
 ion-item-divider {
-  --background: var(--cl-primary-10);
+  --background: transparent;
+  --border: none;
+  border: none !important;
   --color: var(--cl-font-light);
   font-size: 20px;
   --padding-bottom: 10px;

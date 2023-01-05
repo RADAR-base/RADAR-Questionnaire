@@ -45,7 +45,7 @@ jobs:
         uses: android-actions/setup-android@v2
 
       - name: Fix Android directories
-        run: rm -R /usr/local/lib/android/sdk/build-tools/31.0.0/ && rm -R /usr/local/lib/android/sdk/build-tools/32.0.0/
+        run: rm -R /usr/local/lib/android/sdk/build-tools/31.0.0/ && rm -R /usr/local/lib/android/sdk/build-tools/32.0.0/ && rm -R /usr/local/lib/android/sdk/build-tools/33.0.0/ && rm -R /usr/local/lib/android/sdk/build-tools/33.0.1/
 
       - name: Copy aRMT secrets
         run: 'echo "$SECRET" > src/assets/data/secret.ts'
@@ -59,9 +59,6 @@ jobs:
         env:
           SECRET: ${{secrets.GOOGLE_SERVICES_ANDROID}}
 
-      - name: Install Yarn
-        run: npm i -g yarn
-
       - name: Install cordova-res
         run: npm i -g cordova-res
 
@@ -73,7 +70,7 @@ jobs:
       - name: Use coturiv/setup-ionic
         uses: coturiv/setup-ionic@v1
         with:
-          cordova-version: 8
+          cordova-version: 11
 
       - name: Setup Node
         uses: actions/setup-node@v2
@@ -81,14 +78,14 @@ jobs:
           node-version: '14'
 
       - name: Install app dependencies
-        run: yarn install
+        run: npm install
 
       - name: Run unit tests
-        run: yarn run test && yarn
+        run: npm run test
 
       - name: Prepare Android
         run: |
-          ionic cordova platform add android && rm package-lock.json && yarn install
+          ionic cordova platform add android && npm install
 
       - name: Build
         run: |

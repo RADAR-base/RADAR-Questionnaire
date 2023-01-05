@@ -1,3 +1,7 @@
+:host {
+  width: inherit;
+}
+
 @keyframes bounce {
   0% {
     transform: translateY(0);
@@ -20,7 +24,8 @@
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  height: 100%;
+  margin: 8px;
+  height: 95%;
   text-align: initial;
 }
 
@@ -41,7 +46,7 @@ h2 {
 }
 
 .field-container {
-  max-height: 50vh !important;
+  // max-height: 50vh !important;
 }
 
 .field-container-matrix {
@@ -63,7 +68,7 @@ h2 {
 
 .input {
   flex-grow: 1;
-  padding: 4px 4px 8px;
+  padding: 4px 4px 50px;
   margin-left: auto;
   margin-right: auto;
   width: 100%;

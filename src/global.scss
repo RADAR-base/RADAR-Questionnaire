@@ -70,6 +70,7 @@ ion-button {
   text-transform: none;
   font-size: 18px;
   line-height: 1.35em;
+  --ripple-color: transparent;
 }
 
 .bt--full {
@@ -131,17 +132,30 @@ p {
   width: 100%;
 }
 
+ion-toolbar {
+  --background: #f2f2f2;
+}
+
 .button-inner {
   height: 5%;
 }
 
 .alert-wrapper {
   border-radius: 8px !important;
+  background-color: var(--ion-color-light);
 }
 
 .card-md {
   padding: 4px;
   border-radius: 8px !important;
+  background-color: var(--ion-color-light);
+}
+
+ion-loading.custom-loading {
+  --background: #e3edff;
+  --spinner-color: var(--ion-color-primary);
+
+  color: var(--ion-color-primary);
 }
 
 .modal-wrapper,
@@ -183,4 +197,8 @@ p {
       }
     }
   }
+}
+
+.alert-sub-title.sc-ion-alert-md, .alert-title.sc-ion-alert-md {
+  color: var(--ion-color-primary) !important;
 }

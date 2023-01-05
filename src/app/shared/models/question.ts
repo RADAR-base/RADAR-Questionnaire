@@ -20,6 +20,20 @@ export interface Question {
   text_validation_type_or_show_slider_number?: string
   type?: string
   range?: Range
+  isAutoNext?: boolean
+}
+
+export interface ExternalApp {
+  branching_logic?: string
+  evaluated_logic?: string
+  field_label?: string
+  field_name?: string
+  field_type?: string
+  form_name?: string
+  type?: string
+  external_app_name?: string
+  external_app_android_uri?: string
+  external_app_ios_uri?: string
 }
 export interface Health_Requirement {
   data_name: string

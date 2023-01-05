@@ -1,18 +1,21 @@
 import { Injectable } from '@angular/core'
 import { Storage } from '@ionic/storage'
-import { throwError as observableThrowError } from 'rxjs'
+import { Observable, Subject, throwError as observableThrowError } from 'rxjs'
 
 import { StorageKeys } from '../../../shared/enums/storage'
 import { LogService } from '../misc/log.service'
+import { filter, startWith, switchMap } from "rxjs/operators";
 
 @Injectable()
 export class StorageService {
   global: { [key: string]: any } = {}
+  private readonly keyUpdates: Subject<StorageKeys | null>
 
   constructor(private storage: Storage, private logger: LogService) {
     this.prepare().then(() =>
       this.logger.log('Global configuration', this.global)
     )
+    this.keyUpdates = new Subject<StorageKeys | null>();
   }
 
   getStorageState() {
@@ -23,15 +26,23 @@ export class StorageService {
     const k = key.toString()
     this.global[k] = value
     return this.storage.set(k, value)
+      .then(res => {
+        this.keyUpdates.next(key);
+        return res;
+      });
   }
 
   push(key: StorageKeys, value: any): Promise<any> {
     if (this.global[key.toString()]) this.global[key.toString()].push(value)
     else this.global[key.toString()] = [value]
     return this.storage.set(key.toString(), this.global[key.toString()])
+      .then(res => {
+        this.keyUpdates.next(key);
+        return res;
+      });
   }
 
-  get(key: StorageKeys) {
+  get(key: StorageKeys): Promise<any> {
     const k = key.toString()
     const local = this.global[k]
     if (local !== undefined) {
@@ -44,12 +55,21 @@ export class StorageService {
     }
   }
 
+  observe(key: StorageKeys): Observable<any> {
+    return this.keyUpdates.pipe(
+      startWith(key),
+      filter(k => k === key || k === null),
+      switchMap(k => this.get(k)),
+    );
+  }
+
   remove(key: StorageKeys) {
     const k = key.toString()
     return this.storage
       .remove(k)
       .then(res => {
         this.global[k] = null
+        this.keyUpdates.next(key);
         return res
       })
       .catch(error => this.handleError(error))
@@ -72,6 +92,7 @@ export class StorageService {
   clear() {
     this.global = {}
     return this.storage.clear()
+      .then(() => this.keyUpdates.next(null));
   }
 
   private handleError(error: any) {

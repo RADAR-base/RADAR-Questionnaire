@@ -34,3 +34,9 @@ ion-slides {
 .q-container {
   width: 88vw;
 }
+
+.matrixGroup {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}

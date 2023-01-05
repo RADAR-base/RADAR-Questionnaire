@@ -19,7 +19,7 @@ export class FinishTaskService {
     private config: ConfigService,
     private appConfig: AppConfigService,
     private logger: LogService
-  ) {}
+  ) { }
 
   updateTaskToComplete(task): Promise<any> {
     return Promise.all([
@@ -35,23 +35,56 @@ export class FinishTaskService {
   processDataAndSend(answers, questions, timestamps, task) {
     // NOTE: Do not send answers if demo questionnaire
     if (task.isDemo) return Promise.resolve()
-    return this.sendAnswersToKafka(
-      this.processQuestionnaireData(answers, timestamps, questions),
-      task
-    )
+    if (questions.some((question)=> question.field_type === 'health')) {
+      const results = this.processHealthQuestionnaireData(answers, timestamps, questions)
+      // console.log('Results', results)
+      results.forEach((result)=>{
+        this.sendAnswersToKafka(
+          result,
+          task
+        )
+      })
+
+
+    } else {
+      return this.sendAnswersToKafka(
+          this.processQuestionnaireData(answers, timestamps, questions),
+          task
+      )
+    }
   }
 
+
+
   sendAnswersToKafka(processedAnswers, task): Promise<any> {
-    // NOTE: Submit data to kafka
-    return this.appConfig.getScheduleVersion().then(scheduleVersion => {
-      return Promise.all([
-        this.kafka.prepareKafkaObjectAndSend(SchemaType.TIMEZONE, {}),
-        this.kafka.prepareKafkaObjectAndSend(SchemaType.ASSESSMENT, {
+    // if it's from health 
+    if("timeInterval" in processedAnswers){
+        return Promise.all([this.kafka.prepareKafkaObjectAndSend(SchemaType.AGGREGATED_HEALTH, {
+            task: task,
+            data: processedAnswers
+          })
+        ])
+    }
+    else if("key" in processedAnswers){
+      return Promise.all([this.kafka.prepareKafkaObjectAndSend(SchemaType.GENERAL_HEALTH, {
           task: task,
-          data: Object.assign(processedAnswers, { scheduleVersion })
+          data: processedAnswers
         })
       ])
-    })
+    }
+    // 
+    // NOTE: Submit data to kafka
+    else{
+      return this.appConfig.getScheduleVersion().then(scheduleVersion => {
+        return Promise.all([
+          this.kafka.prepareKafkaObjectAndSend(SchemaType.TIMEZONE, {}),
+          this.kafka.prepareKafkaObjectAndSend(SchemaType.ASSESSMENT, {
+            task: task,
+            data: Object.assign(processedAnswers, { scheduleVersion })
+          })
+        ])
+      })
+    }
   }
 
   createClinicalFollowUpTask(assessment): Promise<any> {
@@ -63,7 +96,63 @@ export class FinishTaskService {
       )
       .then(() => this.config.rescheduleNotifications())
   }
+  // TODO process for general questionnaire schema
 
+
+  processHealthQuestionnaireData(answers, timestampes, questions) {
+    this.logger.log('Answers to process', answers)
+
+    //* Go with genreal schema 
+    // const result = null;
+    let results = [];
+    let aggregatedData = {}
+    let aggregatedTime = 1
+    for (const [key, value] of Object.entries<any>(answers)) {
+      // TODO: aggregated all the value into one schema 
+      if(value.value !== null && value.value !== undefined){
+
+        let result = {}
+        const aggregatedField = [ 'steps', 'distance','calories','activity', 'nutrition']
+        // * judge if it's for general or for aggregation 
+        // TODO: value --> intvalue, stringvalue, floatvalu
+
+        if(aggregatedField.includes(key) || key.startsWith('nutrition') || key.startsWith('calories')){
+          aggregatedData = {[key]:value.value, ...aggregatedData}
+          aggregatedTime = value.time
+          //keys = []
+        }
+        else{
+          result = {
+            time: value.time,
+            timeReceived: timestampes[questions[0].field_name].startTime,
+            key: key,
+            value: value.value
+          }
+          results.push(result)
+        }
+      }
+      console.log(`${key}: ${value}`);
+    }
+    const allAggregatedField = ['steps','distance','calories','activity','nutrition']
+
+    allAggregatedField.forEach((field)=>{
+      if ( !(field in aggregatedData) ){
+        aggregatedData = {[field]:null, ...aggregatedData} 
+      }
+
+    })
+    
+    const aggregatedResult = {
+      aggregatedData: aggregatedData,
+      time: aggregatedTime, // from the data 
+      timeReceived: timestampes[questions[0].field_name].startTime, // 
+      timeInterval: 86400
+    }
+
+    results.push(aggregatedResult)
+
+    return results
+  }
   processQuestionnaireData(answers, timestamps, questions) {
     this.logger.log('Answers to process', answers)
     const values = Object.entries(answers)

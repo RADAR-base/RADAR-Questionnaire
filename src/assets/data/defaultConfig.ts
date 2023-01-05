@@ -67,7 +67,7 @@ export const DefaultShowTaskProgressCount = 'false'
 
 // *The Default endpoint where the RADAR-base platform is hosted
 export const DefaultEndPoint: string =
-  'https://radar-cns-platform.rosalind.kcl.ac.uk'
+  'https://radar-k3s-test.thehyve.net'
 
 export const DefaultManagementPortalURI = '/managementportal'
 export const DefaultRefreshTokenURI = '/oauth/token'
@@ -156,7 +156,7 @@ export const GIT_API_URI = 'https://api.github.com/repos'
 export const DefaultGithubFetchStrategy = 'appserver'
 
 // *The Github repository where the protocols are located (REMOTE CONFIG KEY: `protocol_repo`)
-export const DefaultProtocolGithubRepo = 'RADAR-Base/RADAR-aRMT-protocols'
+export const DefaultProtocolGithubRepo = 'hardco2020/RADAR-aRMT-protocols'
 
 // *The name of the branch where the protocol definitions should be read from (REMOTE CONFIG KEY: `protocol_branch`)
 export const DefaultProtocolBranch = 'master'
@@ -192,7 +192,7 @@ export const DefaultParticipantAttributeOrder = {
 export const DefaultOAuthClientId = 'aRMT'
 
 // * Default oAuth client secret (REMOTE CONFIG KEY: `oauth_client_secret`)
-export const DefaultOAuthClientSecret = ''
+export const DefaultOAuthClientSecret = 'open%DEGREE%forever'
 
 // *Default length of time to wait before refreshing tokens (REMOTE CONFIG KEY: `oauth_refresh_seconds`)
 export const DefaultTokenRefreshSeconds = 1800 // 30 minutes in s

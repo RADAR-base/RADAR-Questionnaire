@@ -15,8 +15,8 @@ import { StorageService } from '../storage/storage.service'
 import { TokenService } from '../token/token.service'
 import { AnalyticsService } from '../usage/analytics.service'
 import { SchemaService } from './schema.service'
-import { RemoteConfigService } from "../config/remote-config.service";
-import { ConfigKeys } from "../../../shared/enums/config";
+import { RemoteConfigService } from '../config/remote-config.service'
+import { ConfigKeys } from '../../../shared/enums/config'
 
 @Injectable()
 export class KafkaService {
@@ -42,18 +42,18 @@ export class KafkaService {
     private analytics: AnalyticsService,
     private logger: LogService,
     private http: HttpClient,
-    private remoteConfig: RemoteConfigService,
+    private remoteConfig: RemoteConfigService
   ) {
     this.updateURI()
-    this.readTopicCacheValidity();
+    this.readTopicCacheValidity()
   }
 
   init() {
     return Promise.all([
       this.setCache({}),
       this.updateTopicCacheValidity(),
-      this.fetchTopics(),
-    ]);
+      this.fetchTopics()
+    ])
   }
 
   updateURI() {
@@ -64,51 +64,65 @@ export class KafkaService {
   }
 
   readTopicCacheValidity() {
-    return this.storage.get(StorageKeys.TOPIC_CACHE_TIMEOUT)
-      .then(timeout => {
-        if (typeof timeout === 'number') {
-          this.TOPIC_CACHE_VALIDITY = timeout
-        }
-      });
+    return this.storage.get(StorageKeys.TOPIC_CACHE_TIMEOUT).then(timeout => {
+      if (typeof timeout === 'number') {
+        this.TOPIC_CACHE_VALIDITY = timeout
+      }
+    })
   }
 
   updateTopicCacheValidity() {
-    return this.remoteConfig.read()
-      .then(config => config.getOrDefault(ConfigKeys.TOPIC_CACHE_TIMEOUT, this.TOPIC_CACHE_VALIDITY.toString()))
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        config.getOrDefault(
+          ConfigKeys.TOPIC_CACHE_TIMEOUT,
+          this.TOPIC_CACHE_VALIDITY.toString()
+        )
+      )
       .then(timeoutString => {
         const timeout = parseInt(timeoutString)
         if (!isNaN(timeout)) {
           this.TOPIC_CACHE_VALIDITY = Math.max(0, timeout)
-          return this.storage.set(StorageKeys.TOPIC_CACHE_TIMEOUT, this.TOPIC_CACHE_VALIDITY)
+          return this.storage.set(
+            StorageKeys.TOPIC_CACHE_TIMEOUT,
+            this.TOPIC_CACHE_VALIDITY
+          )
         }
       })
   }
 
   private fetchTopics() {
     return this.getAccessToken()
-      .then(accessToken => this.http.get(this.KAFKA_CLIENT_URL + this.URI_topics,
-        {
-          observe: 'body',
-          headers: new HttpHeaders()
-            .set('Authorization', 'Bearer ' + accessToken)
-            .set('Accept', DefaultClientAcceptType),
-        }).toPromise())
+      .then(accessToken =>
+        this.http
+          .get(this.KAFKA_CLIENT_URL + this.URI_topics, {
+            observe: 'body',
+            headers: new HttpHeaders()
+              .set('Authorization', 'Bearer ' + accessToken)
+              .set('Accept', DefaultClientAcceptType)
+          })
+          .toPromise()
+      )
       .then((topics: string[]) => {
         this.topics = topics
         this.lastTopicFetch = Date.now()
         return topics
       })
       .catch(e => {
-        this.logger.error("Failed to fetch Kafka topics", e)
+        this.logger.error('Failed to fetch Kafka topics', e)
         return this.topics
-      });
+      })
   }
 
   getTopics() {
-    if (this.topics !== null || this.lastTopicFetch + this.TOPIC_CACHE_VALIDITY >= Date.now()) {
+    if (
+      this.topics !== null ||
+      this.lastTopicFetch + this.TOPIC_CACHE_VALIDITY >= Date.now()
+    ) {
       return Promise.resolve(this.topics)
     } else {
-      return this.fetchTopics();
+      return this.fetchTopics()
     }
   }
 
@@ -146,7 +160,7 @@ export class KafkaService {
       this.getCache(),
       this.getKafkaHeaders(),
       this.schema.getRadarSpecifications(),
-      this.getTopics(),
+      this.getTopics()
     ])
       .then(([cache, headers, specifications, topics]) => {
         const sendPromises = Object.entries(cache)

@@ -53,6 +53,14 @@
         >
         </checkbox-input>
 
+        <health-input
+          *ngSwitchCase="'health'"
+          [responses]="question.select_choices_or_calculations"
+          [health_question]="question"
+          (valueChange)="onValueChange($event)"
+        >
+        </health-input>
+
         <range-input
           *ngSwitchCase="'range'"
           [min]="question.range.min"

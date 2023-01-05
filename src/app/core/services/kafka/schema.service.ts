@@ -68,6 +68,22 @@ export class SchemaService {
 
   getKafkaObjectValue(type, payload) {
     switch (type) {
+      case SchemaType.AGGREGATED_HEALTH:
+        const HealthBodyMeasurement = {
+          ...payload.data.aggregatedData,
+          time: payload.data.time,
+          timeReceived: payload.data.timeReceived,
+          timeInterval: payload.data.timeInterval //second
+        }
+        return HealthBodyMeasurement
+      case SchemaType.GENERAL_HEALTH:
+        const general_schema = {
+          key: payload.data.key, //height
+          value: payload.data.value, //172.3232
+          time: payload.data.time, //epoch
+          timeReceived: payload.data.timeReceived //epoch
+        }
+        return general_schema
       case SchemaType.ASSESSMENT:
         const Answer: AnswerValueExport = {
           name: payload.task.name,
@@ -153,11 +169,22 @@ export class SchemaService {
       })
   }
 
-  getKafkaTopic(specifications: any[] | null, name, avsc, topics: string[] | null): Promise<any> {
+  getKafkaTopic(
+    specifications: any[] | null,
+    name,
+    avsc,
+    topics: string[] | null
+  ): Promise<any> {
     const type = name.toLowerCase()
 
     if (specifications) {
       const spec = specifications.find(t => t.type.toLowerCase() == type)
+      // HEALTHKIT
+      if (name === 'healthkit_generic_data') {
+        return Promise.resolve('healthkit_generic_data')
+      } else if (name === 'healthkit_aggregated_exercise_data') {
+        return Promise.resolve('healthkit_aggregated_exercise_data')
+      }
       if (spec && spec.topic && this.topicExists(spec.topic, topics)) {
         return Promise.resolve(spec.topic)
       }
@@ -166,12 +193,14 @@ export class SchemaService {
     if (this.topicExists(questionnaireTopic, topics)) {
       return Promise.resolve(questionnaireTopic)
     }
-    const defaultTopic = this.GENERAL_TOPIC;
+    const defaultTopic = this.GENERAL_TOPIC
     if (this.topicExists(defaultTopic, topics)) {
       return Promise.resolve(defaultTopic)
     }
 
-    return Promise.reject(`No suitable topic found on server for questionnaire ${name}`)
+    return Promise.reject(
+      `No suitable topic found on server for questionnaire ${name}`
+    )
   }
 
   private topicExists(topic: string, topics: string[] | null) {
@@ -179,7 +208,9 @@ export class SchemaService {
       return true
     } else {
       this.logger.error(
-        `Cannot send data to specification topic ${topic} because target server does not have it`, null)
+        `Cannot send data to specification topic ${topic} because target server does not have it`,
+        null
+      )
       return false
     }
   }

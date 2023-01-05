@@ -1,8 +1,9 @@
 {
   "name": "radar-questionnaire",
-  "version": "0.0.1",
-  "author": "Ionic Framework",
-  "homepage": "https://ionicframework.com/",
+  "description": "An application that collects active data for research.",
+  "version": "2.6.3",
+  "author": "RADAR Base",
+  "homepage": "http://www.radar-base.org/",
   "scripts": {
     "preinstall": "npx npm-force-resolutions",
     "ng": "ng",
@@ -193,7 +194,6 @@
     "watchify": "^3.11.1",
     "webpack": "^4.0.0"
   },
-  "description": "RADAR Questionnaire app",
   "resolutions": {
     "ansi-html": "^0.0.9",
     "node-forge": "^1.3.0",

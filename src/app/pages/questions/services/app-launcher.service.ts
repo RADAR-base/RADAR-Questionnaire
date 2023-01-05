@@ -54,6 +54,23 @@ export class AppLauncherService {
     return true
   }
 
+  isExternalAppCanLaunch(externalApp: Question, task: Task) {
+    if(!this.isExternalAppUriValidForThePlatform(externalApp)){
+      return Promise.reject()
+    }
+
+    const options: AppLauncherOptions = this.getAppLauncherOptions(externalApp, task)
+
+    return this.appLauncher.canLaunch(options)
+      .then((canLaunch: boolean) => {
+        return canLaunch;
+      })
+      .catch(err => {
+        this.logger.error("External App is not installed or doesn't support deeplink.", err)
+        return false
+      })
+  }
+
   getAppLauncherOptions(externalApp: ExternalApp, task: Task) {
     const options: AppLauncherOptions = {}
 

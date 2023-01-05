@@ -318,8 +318,15 @@ export class QuestionsPageComponent implements OnInit {
       this.externalApp &&
       this.appLauncher.isExternalAppUriValidForThePlatform(this.externalApp)
     ) {
-      this.showFinishAndLaunchScreen = true
-      this.externalAppCanLaunch = true
+      this.appLauncher.isExternalAppCanLaunch(this.externalApp, this.task)
+        .then(canLaunch => {
+          this.showFinishAndLaunchScreen = true
+          this.externalAppCanLaunch = canLaunch
+        })
+        .catch(err => {
+          this.showFinishAndLaunchScreen = false
+          console.log(err)
+        })
     }
   }
 }

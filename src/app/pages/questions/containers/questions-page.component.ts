@@ -38,6 +38,7 @@ export class QuestionsPageComponent implements OnInit {
   currentQuestionGroupId = 0
   nextQuestionGroupId: number
   questionOrder = [0]
+  allQuestionIndices = []
   isLeftButtonDisabled = false
   isRightButtonDisabled = true
   task: Task
@@ -134,6 +135,7 @@ export class QuestionsPageComponent implements OnInit {
     this.currentQuestionIndices = Object.keys(
       this.groupedQuestions.get(groupKeys[0])
     ).map(Number)
+    this.allQuestionIndices[0] = this.currentQuestionIndices
   }
 
   groupQuestionsByMatrixGroup(questions: Question[]) {
@@ -216,6 +218,8 @@ export class QuestionsPageComponent implements OnInit {
     this.currentQuestionIndices = questionPosition.questionIndices
     if (this.isLastQuestion()) return this.navigateToFinishPage()
     this.questionOrder.push(this.nextQuestionGroupId)
+    this.allQuestionIndices[this.nextQuestionGroupId] =
+      this.currentQuestionIndices
     this.submitTimestamps()
     this.currentQuestionGroupId = this.nextQuestionGroupId
     this.slideQuestion()
@@ -227,6 +231,8 @@ export class QuestionsPageComponent implements OnInit {
     this.questionOrder.pop()
     this.currentQuestionGroupId =
       this.questionOrder[this.questionOrder.length - 1]
+    this.currentQuestionIndices =
+      this.allQuestionIndices[this.currentQuestionGroupId]
     this.updateToolbarButtons()
     if (!this.isRightButtonDisabled)
       this.questionsService.deleteLastAnswers(currentQuestions)

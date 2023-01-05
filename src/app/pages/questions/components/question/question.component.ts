@@ -84,7 +84,8 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.yesno,
     QuestionType.slider,
     QuestionType.range,
-    QuestionType.text
+    QuestionType.text,
+    QuestionType.matrix_radio
   ])
 
   SCROLLBAR_VISIBLE_SET: Set<QuestionType> = new Set([

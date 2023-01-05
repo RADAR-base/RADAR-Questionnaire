@@ -1,44 +1,31 @@
-// display: block;
-// overflow: hidden;
-// width: auto;
-
 ion-label {
   color: white !important;
+  word-wrap: break-word !important;
+  white-space: normal !important;
 }
 
-ul {
-  display: flex;
+ion-list {
+  --background: transparent !important;
+  background-color: transparent;
+}
+
+ion-radio-group {
+  --background: transparent;
+  background-color: transparent;
+  align-content: center;
+}
+
+.item-radio-checked {
+  background-color: var(--cl-primary) !important;
+}
+
+.radio-icon {
+  display: none !important;
   margin: 0;
-  padding: 0;
-  width: 98%;
-  list-style: none;
 }
 
-ul li,
-.item-md {
-  display: flex;
-  flex: 1 0 8px;
-  align-content: stretch;
-  margin: 0 -15px -12px;
-}
-
-ul li ion-radio {
-  position: absolute;
-}
-
-ul li ion-label {
-  position: relative;
-  display: flex;
-  flex-grow: 1;
-  align-items: center;
-  justify-content: center;
-  padding: 0 4px;
-  height: var(--bt-height);
-  border: 2px solid white;
-  border-right: none;
-  background-color: var(--cl-primary-20);
-  text-align: center;
-  font-size: 3vw !important;
+.input-wrapper {
+  margin: 0 -20px -12px 0;
 }
 
 .item-radio-checked ion-label {
@@ -49,25 +36,66 @@ ion-radio:checked + ion-label {
   background-color: var(--ion-color-secondary);
 }
 
-ul li:first-child ion-label {
+ion-item {
+  background-color: transparent;
+  --background: transparent;
+  width: 100%;
+  padding: 8px;
+  height: var(--bt-height);
+  border: 2px solid white;
+  border-radius: var(--bt-height);
+  background-color: var(--cl-primary-20);
+  color: white;
+  font-size: 18px;
+  position: relative;
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  justify-content: flex-start;
+  height: auto;
+  white-space: normal;
+  margin-bottom: 16px;
+  --ripple-color: transparent;
+}
+
+ion-radio {
+  --color: transparent;
+  --color-checked: transparent;
+  width: 0;
+}
+
+ion-radio-group {
+  width: 100vw;
+}
+
+ion-col:last-child ion-item {
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
 }
 
-ul li:last-child ion-label {
+ion-col:first-child ion-item {
   border-right: 2px solid white;
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
 }
 
-ul li:hover ion-label {
-  background-color: var(--ion-color-primary);
+ion-row {
+  flex-wrap: nowrap;
+  align-items: center;
 }
 
-.radio-icon {
-  display: none !important;
+.item-md {
+  display: flex;
+  flex: 1 0 8px;
+  align-content: stretch;
+  margin: 0 -5px -12px;
 }
 
 ion-item {
-  --ripple-color: transparent;
+  margin-right: -12px !important;
+}
+
+ion-col {
+  margin-right: -8px !important;
+  height: inherit;
 }

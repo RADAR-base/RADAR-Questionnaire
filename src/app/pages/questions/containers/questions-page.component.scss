@@ -6,6 +6,11 @@ ion-slide.swiper-slide {
 ion-slide {
   overflow-x: hidden !important;
   padding: 24px 24px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+  height: 100%;
 }
 
 ion-slides {
@@ -24,4 +29,8 @@ ion-slides {
 
 .hidden {
   display: none;
+}
+
+.q-container {
+  width: 88vw;
 }

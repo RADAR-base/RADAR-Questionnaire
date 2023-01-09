@@ -126,7 +126,6 @@
     "unorm": "^1.6.0",
     "url-join": "^4.0.1",
     "uuid": "^3.4.0",
-    "webpack": "^5.74.0",
     "xcode": "^3.0.1",
     "xml-js": "^1.6.11",
     "xmldom": "^0.6.0",
@@ -196,7 +195,7 @@
     "tslint-config-prettier": "^1.15.0",
     "typescript": "~3.5.3",
     "watchify": "^3.11.1",
-    "webpack": "^4.0.0"
+    "webpack": "^4.6.0"
   },
   "resolutions": {
     "ansi-html": "^0.0.9",

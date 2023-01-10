@@ -1,9 +1,9 @@
-ion-label{
-  --color:white;
+ion-label {
+  --color: white;
 }
 
-ion-list{
-  overflow:auto;
+ion-list {
+  overflow: auto;
   max-height: 60vh;
   background-color: var(--cl-primary-20);
 }
@@ -25,7 +25,7 @@ ion-item {
   height: inherit;
   white-space: normal;
 
-  ion-input{
+  ion-input {
     font-weight: bold;
   }
 }
@@ -33,4 +33,3 @@ ion-item {
 .healthContainer {
   display: flex;
 }
-

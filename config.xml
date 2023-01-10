@@ -71,6 +71,12 @@
         <edit-config file="*-Info.plist" mode="merge" target="NSMicrophoneUsageDescription">
             <string>The app would like to access the microphone for audio tasks.</string>
         </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSHealthShareUsageDescription">
+            <string>The app would like read access to the healthkit data.</string>
+        </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSHealthUpdateUsageDescription">
+            <string>The app would like write access to the healthkit data.</string>
+        </edit-config>
         <icon height="180" src="resources/ios/icon/icon-60@3x.png" width="180" />
         <icon height="60" src="resources/ios/icon/icon-60.png" width="60" />
         <icon height="120" src="resources/ios/icon/icon-60@2x.png" width="120" />

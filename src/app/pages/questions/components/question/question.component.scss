@@ -23,9 +23,9 @@
 .content {
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
+  overflow-y: hidden;
   margin: 8px;
-  height: 95%;
+  height: auto;
   text-align: initial;
 }
 

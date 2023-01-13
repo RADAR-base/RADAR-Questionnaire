@@ -55,7 +55,7 @@ export class QuestionComponent implements OnInit, OnChanges {
   isLoading = true
   isScrollable = false
   isFieldLabelHidden = false
-  margin = 64
+  margin = 100
   keyboardScrollPadding = 200
   keyboardInputOffset = 0
   inputHeight = 0
@@ -71,6 +71,7 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.descriptive,
     QuestionType.slider
   ])
+
   HIDE_FIELD_LABEL_SET: Set<QuestionType> = new Set([
     QuestionType.audio,
     QuestionType.descriptive

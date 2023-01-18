@@ -52,6 +52,10 @@ ion-col:last-child {
   width: 50%;
 }
 
+.item-background-color {
+  --ion-item-background: transparent;
+}
+
 .labelRight {
   float: right;
   width: 50%;
@@ -62,8 +66,7 @@ ion-radio {
   --color: transparent;
   --color-checked: transparent;
 
-  width: 0 !important;
-  height: 0 !important;
+  width: 0;
 }
 
 ion-row {

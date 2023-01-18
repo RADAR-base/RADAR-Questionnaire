@@ -4,13 +4,15 @@
       [size]="colSize"
       *ngFor="let item of items; let i = index"
       [class.checked]="i == checkedItem"
+      (click)="onInputChange(item.value)"
+      (tap)="onInputChange(item.value)"
     >
-      <ion-label [attr.for]="item.id" dir="auto">{{ item.value }}</ion-label>
       <ion-radio
         [value]="item.value"
         [id]="item.id"
         (ionSelect)="onInputChange(item.value)"
       ></ion-radio>
+      <ion-label [attr.for]="item.id" dir="auto">{{ item.value }}</ion-label>
     </ion-col>
   </ion-row>
 </ion-radio-group>

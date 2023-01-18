@@ -94,6 +94,8 @@ export class HomePageComponent implements OnInit, OnDestroy {
   ionViewWillEnter() {
     this.startingQuestionnaire = false
     this.tasksProgress = this.tasksService.getTaskProgress()
+    this.sortedTasks = this.tasksService.getValidTasksMap()
+    this.tasks = this.tasksService.getTasksOfToday()
     this.showCalendar = false
   }
 

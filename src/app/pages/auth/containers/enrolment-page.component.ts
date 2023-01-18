@@ -114,7 +114,6 @@ export class EnrolmentPageComponent {
   }
 
   navigateToSplash() {
-    console.log('navigating splash')
     this.navCtrl.navigateRoot('/')
   }
 

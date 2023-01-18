@@ -52,7 +52,6 @@ export class ConfigService {
   }
 
   fetchConfigState(force?: boolean) {
-    console.log('fetching config')
     return Promise.all([
       this.hasProtocolChanged(force),
       this.hasAppVersionChanged(),

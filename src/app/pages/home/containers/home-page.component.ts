@@ -25,7 +25,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   tasks: Promise<Task[]>
   nextTask: Task
   timeToNextTask: number
-  tasksProgress: Promise<TasksProgress>
+  tasksProgress = Promise.resolve({ numberOfTasks: 0, completedTasks: 5 })
   resumeListener: Subscription = new Subscription()
   changeDetectionListener: Subscription = new Subscription()
   lastTaskRefreshTime = Date.now()

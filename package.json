@@ -115,7 +115,7 @@
     "phonegap-plugin-mobile-accessibility": "^1.0.5",
     "rxjs": "^6.6.3",
     "sass": "^1.52.2",
-    "semver": "^7.3.2",
+    "semver": "^7.3.8",
     "smoothscroll-polyfill": "^0.4.4",
     "snyk": "^1.573.0",
     "stream": "^0.0.2",

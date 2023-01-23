@@ -92,6 +92,7 @@
         [show]="showCalendar"
         (task)="startQuestionnaire($event)"
         [tasks]="sortedTasks | async"
+        [currentDate]="currentDate"
         [isTaskNameShown]="isTaskCalendarTaskNameShown | async"
       >
       </task-calendar>

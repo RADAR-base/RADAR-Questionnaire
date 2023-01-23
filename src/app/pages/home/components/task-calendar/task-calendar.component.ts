@@ -24,6 +24,8 @@ export class TaskCalendarComponent implements OnChanges {
   @Input()
   tasks: Map<number, Task[]>
   @Input()
+  currentDate: number
+  @Input()
   isTaskNameShown: boolean
 
   currentTime

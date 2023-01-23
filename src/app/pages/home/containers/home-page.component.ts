@@ -40,6 +40,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   checkTaskInterval
   showMiscTasksButton: Promise<boolean>
   isTaskCalendarTaskNameShown: Promise<boolean>
+  currentDate: number
 
   APP_CREDITS = '&#169; RADAR-Base'
   HTML_BREAK = '<br>'
@@ -126,6 +127,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   checkForNewDate() {
     if (Date.now() - this.lastTaskRefreshTime > this.TASK_REFRESH_MILLIS) {
       this.lastTaskRefreshTime = Date.now()
+      this.currentDate = this.tasksService.getCurrentDateMidnight().getTime()
       this.navCtrl.navigateRoot('')
     }
   }

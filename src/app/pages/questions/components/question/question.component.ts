@@ -19,7 +19,11 @@ import {
   NextButtonEventType
 } from '../../../../shared/enums/events'
 import { Answer } from '../../../../shared/models/answer'
-import { Question, QuestionType } from '../../../../shared/models/question'
+import {
+  Question,
+  QuestionType,
+  Response
+} from '../../../../shared/models/question'
 import { Task } from '../../../../shared/models/task'
 
 @Component({
@@ -62,6 +66,10 @@ export class QuestionComponent implements OnInit, OnChanges {
   isMatrix = false
   isAutoHeight = false
   showScrollButton = false
+  defaultYesNoResponse: Response[] = [
+    { code: '1', label: 'Yes' },
+    { code: '0', label: 'No' }
+  ]
 
   NON_SCROLLABLE_SET: Set<QuestionType> = new Set([
     QuestionType.timed,

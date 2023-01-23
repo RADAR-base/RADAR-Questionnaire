@@ -122,10 +122,7 @@
 
         <radio-input
           *ngSwitchCase="'yesno'"
-          [responses]="[
-            { code: '1', label: 'Yes' },
-            { code: '0', label: 'No' }
-          ]"
+          [responses]="defaultYesNoResponse"
           (valueChange)="emitAnswer($event)"
         >
         </radio-input>

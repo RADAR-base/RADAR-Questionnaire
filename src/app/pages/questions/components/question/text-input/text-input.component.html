@@ -1,5 +1,5 @@
 <ng-container *ngIf="showDatePicker && currentlyShown">
-  <ion-item button (click)="openDatePicker()" color="none">
+  <ion-item (click)="openDatePicker()" color="none">
     <ion-input [(ngModel)]="selectedDate"> </ion-input>
     <ion-icon name="calendar" slot="end"></ion-icon>
   </ion-item>

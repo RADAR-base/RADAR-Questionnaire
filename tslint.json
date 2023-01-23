@@ -4,6 +4,9 @@
   "rules": {
     "callable-types": true,
     "forin": true,
+    "deprecation": {
+      "severity": "warning"
+    },
     "import-spacing": true,
     "interface-over-type-literal": true,
     "max-line-length": [true, 120],

@@ -5,15 +5,16 @@ import {
   OnChanges,
   Output
 } from '@angular/core'
+import { setDateTimeToMidnight } from 'src/app/shared/utilities/time'
 
 import { LocalizationService } from '../../../../core/services/misc/localization.service'
 import { LogService } from '../../../../core/services/misc/log.service'
 import { Task } from '../../../../shared/models/task'
-import { setDateTimeToMidnight } from '../../../../shared/utilities/time'
 
 @Component({
   selector: 'task-calendar',
-  templateUrl: 'task-calendar.component.html'
+  templateUrl: 'task-calendar.component.html',
+  styleUrls: ['task-calendar.component.scss']
 })
 export class TaskCalendarComponent implements OnChanges {
   @Input()

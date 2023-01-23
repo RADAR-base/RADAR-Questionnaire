@@ -5,7 +5,9 @@ import { Injectable } from '@angular/core'
 
 import { Answer } from '../../../shared/models/answer'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AnswerService {
   answers = {}
   keys = []

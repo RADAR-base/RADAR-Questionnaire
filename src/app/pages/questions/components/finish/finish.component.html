@@ -5,24 +5,24 @@
     <div *ngIf="displayNextTaskReminder" class="next-task-highlight">
       {{ 'FINISH_NEXT_TASK_REMINDER' | translate }}
     </div>
-    <ion-item no-lines *ngIf="requiresInClinicCompletion">
+    <ion-item color="none" lines="none" *ngIf="requiresInClinicCompletion">
       <ion-label>
         {{ 'FINISH_COMPLETED_IN_CLINIC' | translate }}
       </ion-label>
-      <ion-toggle item-right [(ngModel)]="completedInClinic"></ion-toggle>
+      <ion-toggle item-right (ionChange)="toggleChanged($event)"></ion-toggle>
     </ion-item>
   </div>
   <div class="done-button">
-    <button
+    <ion-button
       ion-button
       class="bt bt--full"
       round
       full
       *ngIf="showDoneButton"
-      (tap)="handleClosePage()"
+      (click)="handleClosePage()"
     >
       {{ 'BTN_DONE' | translate }}
-    </button>
+    </ion-button>
     <ng-container *ngIf="!showDoneButton && isShown">
       <div class="extra-info">
         <img

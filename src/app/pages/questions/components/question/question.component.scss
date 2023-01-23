@@ -1,86 +1,87 @@
-question {
-  @keyframes bounce {
-    0% {
-      transform: translateY(0);
-    }
+:host {
+  width: inherit;
+}
 
-    30% {
-      transform: translateY(-20px);
-    }
-
-    50% {
-      transform: translateY(0);
-    }
-
-    100% {
-      transform: translateY(0);
-    }
+@keyframes bounce {
+  0% {
+    transform: translateY(0);
   }
 
+  30% {
+    transform: translateY(-20px);
+  }
+
+  50% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
+  margin: 8px;
+  height: auto;
   text-align: initial;
+}
 
-  .content {
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    height: 100%;
-    text-align: initial;
-  }
+.content-matrix {
+  height: auto !important;
+}
 
-  .content-matrix {
-    height: auto !important;
-  }
+p {
+  margin-top: 8px;
+  margin-bottom: 0;
+  color: var(--cl-light-80);
+  opacity: 0.8;
+}
 
-  p {
-    margin-top: 8px;
-    margin-bottom: 0;
-    color: $cl-light-80;
-  }
+h2 {
+  margin-top: 16px;
+  margin-bottom: 24px;
+}
 
-  h2 {
-    margin-top: 16px;
-    margin-bottom: 24px;
-  }
+.field-container {
+  // max-height: 50vh !important;
+}
 
-  .field-container {
-    max-height: 50vh !important;
-  }
+.field-container-matrix {
+  margin-bottom: -24px;
+}
 
-  .field-container-matrix {
-    margin-bottom: -24px;
-  }
+.rangeformat {
+  height: 30vh;
+}
 
-  .rangeformat {
-    height: 30vh;
-  }
+.fade {
+  opacity: 0.2;
+  pointer-events: none;
+}
 
-  .fade {
-    opacity: 0.2;
-    pointer-events: none;
-  }
+.header {
+  flex-grow: 0;
+}
 
-  .header {
-    flex-grow: 0;
-  }
+.input {
+  flex-grow: 1;
+  padding: 4px 4px 50px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
 
-  .input {
-    flex-grow: 1;
-    padding: 4px 4px 8px;
-  }
+.spinner-container {
+  text-align: center;
+}
 
-  .input-scroll {
-    overflow-y: auto !important;
-  }
-
-  .spinner-container {
-    text-align: center;
-  }
-
-  .arrow-icon {
-    position: absolute;
-    bottom: 0;
-    left: 45%;
-    font-size: 40px;
-    animation: bounce 1s;
-  }
+.arrow-icon {
+  position: absolute;
+  bottom: 0;
+  left: 45%;
+  font-size: 40px;
+  animation: bounce 1s;
 }

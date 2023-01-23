@@ -1,10 +1,7 @@
 {
-  "name": "RADAR Questionnaire",
+  "name": "radar-questionnaire",
   "integrations": {
     "cordova": {}
   },
-  "type": "ionic-angular",
-  "yarn": true,
-  "npmClient": "yarn",
-  "id": "8c49e8ec"
+  "type": "angular"
 }

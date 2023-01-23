@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core'
-import { AlertController, AlertOptions } from 'ionic-angular'
+import { AlertController } from '@ionic/angular'
+import { AlertOptions } from '@ionic/core'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AlertService {
   constructor(private alertCtrl: AlertController) {}
 
@@ -11,11 +14,11 @@ export class AlertService {
    * @param {AlertOptions} [parameters={}] Alert options
    * @returns {Promise} Returns a promise which is resolved when the transition has completed.
    */
-  showAlert(parameters?: AlertOptions): Promise<any> {
+  async showAlert(parameters?: AlertOptions): Promise<any> {
     parameters.message = parameters.message
       ? '<div dir="auto">' + parameters.message + '</div>'
       : parameters.message
-    const alert = this.alertCtrl.create(parameters)
-    return alert.present()
+    const alert = await this.alertCtrl.create(parameters)
+    return await alert.present()
   }
 }

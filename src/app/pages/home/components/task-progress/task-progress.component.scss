@@ -1,16 +1,15 @@
-task-progress {
-  $particles: 80;
-  $width: 500;
-  $height: 300;
+$particles: 80;
+$width: 500;
+$height: 300;
 
-  $box-shadow: ();
-  $box-shadow2: ();
+$box-shadow: ();
+$box-shadow2: ();
 
-  // Create the explosion...
+// Create the explosion...
 
-  @for $i from 0 through $particles {
-    $box-shadow: $box-shadow,
-      random($width) -
+@for $i from 0 through $particles {
+  $box-shadow: $box-shadow,
+    random($width) -
       $width /
       2 +
       px
@@ -19,182 +18,180 @@ task-progress {
       1.2 +
       px
       hsl(random(360), 100, 50);
-    $box-shadow2: $box-shadow2, 0 0 #fff;
+  $box-shadow2: $box-shadow2, 0 0 #fff;
+}
+
+@mixin keyframes($animationName) {
+  @-webkit-keyframes #{$animationName} {
+    @content;
   }
 
-  @mixin keyframes($animationName) {
-    @-webkit-keyframes #{$animationName} {
-      @content;
-    }
-
-    @-moz-keyframes #{$animationName} {
-      @content;
-    }
-
-    @-o-keyframes #{$animationName} {
-      @content;
-    }
-
-    @-ms-keyframes #{$animationName} {
-      @content;
-    }
-
-    @keyframes #{$animationName} {
-      @content;
-    }
+  @-moz-keyframes #{$animationName} {
+    @content;
   }
 
-  @mixin animation-delay($settings) {
-    -moz-animation-delay: $settings;
-    -webkit-animation-delay: $settings;
-    -o-animation-delay: $settings;
-    -ms-animation-delay: $settings;
-    animation-delay: $settings;
+  @-o-keyframes #{$animationName} {
+    @content;
   }
 
-  @mixin animation-duration($settings) {
-    -moz-animation-duration: $settings;
-    -webkit-animation-duration: $settings;
-    -o-animation-duration: $settings;
-    -ms-animation-duration: $settings;
-    animation-duration: $settings;
+  @-ms-keyframes #{$animationName} {
+    @content;
   }
 
-  @mixin animation($settings) {
-    -moz-animation: $settings;
-    -webkit-animation: $settings;
-    -o-animation: $settings;
-    -ms-animation: $settings;
-    animation: $settings;
+  @keyframes #{$animationName} {
+    @content;
+  }
+}
+
+@mixin animation-delay($settings) {
+  -moz-animation-delay: $settings;
+  -webkit-animation-delay: $settings;
+  -o-animation-delay: $settings;
+  -ms-animation-delay: $settings;
+  animation-delay: $settings;
+}
+
+@mixin animation-duration($settings) {
+  -moz-animation-duration: $settings;
+  -webkit-animation-duration: $settings;
+  -o-animation-duration: $settings;
+  -ms-animation-duration: $settings;
+  animation-duration: $settings;
+}
+
+@mixin animation($settings) {
+  -moz-animation: $settings;
+  -webkit-animation: $settings;
+  -o-animation: $settings;
+  -ms-animation: $settings;
+  animation: $settings;
+}
+
+@mixin transform($settings) {
+  -moz-transform: $settings;
+  -webkit-transform: $settings;
+  -o-transform: $settings;
+  -ms-transform: $settings;
+  transform: $settings;
+}
+
+@include keyframes(bang) {
+  to {
+    box-shadow: $box-shadow;
+  }
+}
+
+@include keyframes(gravity) {
+  to {
+    @include transform(translateY(350px));
+
+    opacity: 0;
+  }
+}
+
+@include keyframes(position) {
+  0%,
+  19.9% {
+    margin-top: 10%;
+    margin-left: 50%;
   }
 
-  @mixin transform($settings) {
-    -moz-transform: $settings;
-    -webkit-transform: $settings;
-    -o-transform: $settings;
-    -ms-transform: $settings;
-    transform: $settings;
+  20%,
+  39.9% {
+    margin-top: 40%;
+    margin-left: 40%;
   }
 
-  @include keyframes(bang) {
-    to {
-      box-shadow: $box-shadow;
-    }
+  40%,
+  59.9% {
+    margin-top: 20%;
+    margin-left: 80%;
   }
 
-  @include keyframes(gravity) {
-    to {
-      @include transform(translateY(350px));
-
-      opacity: 0;
-    }
+  60%,
+  79.9% {
+    margin-top: 30%;
+    margin-left: 30%;
   }
 
-  @include keyframes(position) {
-    0%,
-    19.9% {
-      margin-top: 10%;
-      margin-left: 50%;
-    }
-
-    20%,
-    39.9% {
-      margin-top: 40%;
-      margin-left: 40%;
-    }
-
-    40%,
-    59.9% {
-      margin-top: 20%;
-      margin-left: 80%;
-    }
-
-    60%,
-    79.9% {
-      margin-top: 30%;
-      margin-left: 30%;
-    }
-
-    80%,
-    99.9% {
-      margin-top: 30%;
-      margin-left: 90%;
-    }
+  80%,
+  99.9% {
+    margin-top: 30%;
+    margin-left: 90%;
   }
+}
 
-  .pyro > .before,
-  .pyro > .after {
-    @include animation(
-      (
-        2s bang ease infinite backwards,
-        1s gravity ease infinite backwards,
-        5s position linear infinite backwards
-      )
-    );
+.pyro > .before,
+.pyro > .after {
+  @include animation(
+    (
+      2s bang ease infinite backwards,
+      1s gravity ease infinite backwards,
+      5s position linear infinite backwards
+    )
+  );
 
-    position: absolute;
-    top: -240px;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    box-shadow: $box-shadow2;
-  }
+  position: absolute;
+  top: -240px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  box-shadow: $box-shadow2;
+}
 
-  #task-progress-container {
-    display: block;
-    padding: 15px 0 30px;
-    font-size: 24px;
-  }
+#task-progress-container {
+  display: block;
+  padding: 15px 0 30px;
+  font-size: 24px;
+}
 
-  #navigation {
-    padding: 15px 0 20px;
-    text-align: center;
-  }
+#navigation {
+  padding: 15px 0 20px;
+  text-align: center;
+}
 
-  #progress {
-    display: flex;
-    margin: auto;
-    width: 60vw;
-  }
+#progress {
+  display: flex;
+  margin: auto;
+  width: 60vw;
+}
 
-  .noTasks-padding {
-    height: 15vh;
-  }
+.noTasks-padding {
+  height: 15vh;
+}
 
-  .progress-sub {
-    flex: 1 0 60vw;
-  }
+.progress-sub {
+  flex: 1 0 60vw;
+}
 
-  .completed {
-    margin: auto;
-    width: 56vw;
-    height: 56vw;
-    border-radius: 100%;
-    background-color: map-get($colors, tertiary);
-  }
+.completed {
+  margin: auto;
+  width: 56vw;
+  height: 56vw;
+  border-radius: 100%;
+  background-color: #7fcdbb;
+}
 
-  .checkmark {
-    padding: 2vw 0 0 8vw;
-    font-size: 56vw;
-    transition: transform 0.8s ease-in;
-  }
+.checkmark {
+  font-size: 58vw;
+  transition: transform 0.8s ease-in;
+}
 
-  .counter {
-    margin-top: -34vw;
-    text-align: center;
-  }
+.counter {
+  margin-top: -34vw;
+  text-align: center;
+}
 
-  .large {
-    font-size: 24vmin;
-    line-height: 0;
-  }
+.large {
+  font-size: 24vmin;
+  line-height: 0;
+}
 
-  .small {
-    padding-top: 12vmin;
-    font-size: 4vmin;
-  }
+.small {
+  padding-top: 12vmin;
+  font-size: 4vmin;
+}
 
-  .container-diary {
-    margin-top: 8vh;
-  }
+.container-diary {
+  margin-top: 8vh;
 }

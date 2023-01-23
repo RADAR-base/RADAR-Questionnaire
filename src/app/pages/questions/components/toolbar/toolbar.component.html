@@ -1,32 +1,31 @@
-<ion-toolbar mode="ios">
+<ion-toolbar>
   <div class="toolbar-progress">
     <div class="toolbar-progress-bar" [style.width]="progress + '%'"></div>
   </div>
+
   <ion-title *ngIf="isProgressCountShown" text-center color="light">
     {{ currentQuestionId + 1 + '/' + totalQuestions }}
   </ion-title>
-  <ion-buttons left>
-    <button
-      ion-button
-      left
-      icon-left
-      [class.disabled]="isLeftButtonDisabled"
-      (tap)="leftButtonHandler()"
-    >
-      <ion-icon [name]="iconPrevious"></ion-icon>
-      <div class="toolbar-label">{{ leftButtonText }}</div>
-    </button>
-  </ion-buttons>
-  <ion-buttons right>
-    <button
-      ion-button
-      right
-      icon-right
-      [class.disabled]="isRightButtonDisabled"
-      (tap)="rightButtonHandler()"
-    >
-      <div class="toolbar-label">{{ rightButtonText }}</div>
-      <ion-icon name="ios-arrow-forward"></ion-icon>
-    </button>
-  </ion-buttons>
+
+  <ion-button
+    ion-button
+    slot="start"
+    icon-left
+    [class.disabled]="isLeftButtonDisabled"
+    (click)="leftButtonHandler()"
+  >
+    <ion-icon [name]="iconPrevious"></ion-icon>
+    <div class="toolbar-label">{{ leftButtonText }}</div>
+  </ion-button>
+  <ion-button
+    mode="ios"
+    ion-button
+    slot="end"
+    icon-right
+    [class.disabled]="isRightButtonDisabled"
+    (click)="rightButtonHandler()"
+  >
+    <div class="toolbar-label">{{ rightButtonText }}</div>
+    <ion-icon name="ios-arrow-forward"></ion-icon>
+  </ion-button>
 </ion-toolbar>

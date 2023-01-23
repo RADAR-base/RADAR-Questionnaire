@@ -12,12 +12,7 @@
       [class.field-container-matrix]="isMatrix"
       dir="auto"
     >
-      <h2
-        dir="auto"
-        [fittext]="true"
-        [maxFontSize]="18"
-        [modelToWatch]="question"
-      >
+      <h2 dir="auto">
         {{ question.field_label }}
       </h2>
     </div>
@@ -154,7 +149,7 @@
       </ng-container>
     </div>
   </div>
-  <div class="arrow-icon" *ngIf="showScrollButton" (tap)="scrollDown()">
+  <div class="arrow-icon" *ngIf="showScrollButton" (click)="scrollDown()">
     <ion-icon name="ios-arrow-down"></ion-icon>
   </div>
 </div>

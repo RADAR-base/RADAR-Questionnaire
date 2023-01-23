@@ -47,17 +47,6 @@ jobs:
       - name: Fix Android directories
         run: rm -R /usr/local/lib/android/sdk/build-tools/31.0.0/ && rm -R /usr/local/lib/android/sdk/build-tools/32.0.0/ && rm -R /usr/local/lib/android/sdk/build-tools/33.0.0/ && rm -R /usr/local/lib/android/sdk/build-tools/33.0.1/
 
-      - name: Setup Node
-        uses: actions/setup-node@v2
-        with:
-          node-version: '13'
-
-      - name: Set up Ruby 2.6
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.6 # Not needed with a .ruby-version file
-          bundler-cache: true
-
       - name: Copy aRMT secrets
         run: 'echo "$SECRET" > src/assets/data/secret.ts'
         shell: bash
@@ -70,28 +59,34 @@ jobs:
         env:
           SECRET: ${{secrets.GOOGLE_SERVICES_ANDROID}}
 
-      - name: Install Ionic and Cordova
-        run: npm i -g ionic cordova
-
-      - name: Install Yarn
-        run: npm i -g yarn
-
       - name: Install cordova-res
         run: npm i -g cordova-res
 
+      - name: Use coturiv/setup-ionic
+        uses: coturiv/setup-ionic@v1
+        with:
+          java-version: 8
+
+      - name: Use coturiv/setup-ionic
+        uses: coturiv/setup-ionic@v1
+        with:
+          cordova-version: 11
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
       - name: Install app dependencies
-        run: yarn install
+        run: npm install
 
       - name: Run unit tests
-        run: yarn run test
+        run: npm run test
 
-      - name: Add Android platform
-        run: ionic cordova platform add android && rm package-lock.json
+      - name: Prepare Android
+        run: |
+          ionic cordova platform add android && npm install
 
-      - name: Prepare Android app
-        run: yarn install
-
-      - name: Build Android app
-        uses: maierj/fastlane-action@v2.0.1
-        with:
-          lane: 'android build_debug'
+      - name: Build
+        run: |
+          ionic cordova build android

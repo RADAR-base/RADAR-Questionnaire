@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core'
-import { NavController, Slides } from 'ionic-angular'
+import { IonSlides, NavController } from '@ionic/angular'
+import { AlertInput } from '@ionic/core'
 
 import {
   DefaultLanguage,
@@ -24,11 +25,11 @@ import { AuthService } from '../services/auth.service'
 
 @Component({
   selector: 'page-enrolment',
-  templateUrl: 'enrolment-page.component.html'
+  templateUrl: 'enrolment-page.component.html',
+  styleUrls: ['./enrolment-page.component.scss']
 })
 export class EnrolmentPageComponent {
-  @ViewChild(Slides)
-  slides: Slides
+  @ViewChild(IonSlides, { static: true }) slides: IonSlides
   loading: boolean = false
   showOutcomeStatus: boolean = false
   outcomeStatus: string
@@ -48,16 +49,18 @@ export class EnrolmentPageComponent {
     this.localization.update().then(lang => (this.language = lang))
   }
 
-  ionViewDidLoad() {
+  ionViewDidEnter() {
     this.slides.lockSwipes(true)
     this.usage.setPage(this.constructor.name)
   }
 
   next() {
     this.slides.lockSwipes(false)
-    const slideIndex = this.slides.getActiveIndex() + 1
-    this.slides.slideTo(slideIndex, 500)
-    this.slides.lockSwipes(true)
+    this.slides.getActiveIndex().then(index => {
+      const slideIndex = index + 1
+      this.slides.slideTo(slideIndex, 500)
+      this.slides.lockSwipes(true)
+    })
   }
 
   enterToken() {
@@ -111,7 +114,7 @@ export class EnrolmentPageComponent {
   }
 
   navigateToSplash() {
-    this.navCtrl.setRoot(SplashPageComponent)
+    this.navCtrl.navigateRoot('/')
   }
 
   showSelectLanguage() {
@@ -126,19 +129,22 @@ export class EnrolmentPageComponent {
           const lang = JSON.parse(selectedLanguageVal)
           this.localization.setLanguage(lang).then(() => {
             this.language = lang
-            return this.navCtrl.setRoot(EnrolmentPageComponent)
+            return this.navigateToSplash()
           })
         }
       }
     ]
-    const inputs = this.languagesSelectable.map(lang => ({
-      type: 'radio',
-      label: this.localization.translate(lang.label),
-      value: JSON.stringify(lang),
-      checked: lang.value === this.language.value
-    }))
+    const inputs = this.languagesSelectable.map(
+      lang =>
+        ({
+          type: 'radio',
+          label: this.localization.translate(lang.label),
+          value: JSON.stringify(lang),
+          checked: lang.value === this.language.value
+        } as AlertInput)
+    )
     return this.alertService.showAlert({
-      title: this.localization.translateKey(LocKeys.SETTINGS_LANGUAGE_ALERT),
+      header: this.localization.translateKey(LocKeys.SETTINGS_LANGUAGE_ALERT),
       buttons: buttons,
       inputs: inputs
     })

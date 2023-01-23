@@ -5,16 +5,16 @@
   <div class="qr-code">
     <img src="assets/imgs/radar-qr-code.png" alt="RADAR QR code" />
   </div>
-  <div class="bottom" padding *ngIf="!loading">
-    <button
+  <div class="ion-padding bottom" *ngIf="!loading">
+    <ion-button
       *ngIf="!enterMetaQR"
       ion-button
       class="bt bt--full"
       round
       full
-      (tap)="scanQRHandler()"
+      (click)="scanQRHandler()"
     >
       {{ 'BTN_ENROL_SCAN' | translate }}
-    </button>
+    </ion-button>
   </div>
 </div>

@@ -17,7 +17,8 @@ import { AppLauncherService } from '../../services/app-launcher.service'
 
 @Component({
   selector: 'finish-and-launch',
-  templateUrl: 'finish-and-launch.component.html'
+  templateUrl: 'finish-and-launch.component.html',
+  styleUrls: ['finish-and-launch.component.scss']
 })
 export class FinishAndLaunchComponent implements OnInit, OnChanges {
   @Input()
@@ -88,5 +89,9 @@ export class FinishAndLaunchComponent implements OnInit, OnChanges {
           this.externalApp.external_app_name : options.uri.toString())
         + ' ' + this.localization.translateKey(LocKeys.EXTERNAL_APP_FAILURE_ON_VALIDATING)
     }
+  }
+
+  toggleChanged(event) {
+    this.completedInClinic = event
   }
 }

@@ -1,5 +1,3 @@
-import {} from './notification.service'
-
 import { Injectable } from '@angular/core'
 import * as moment from 'moment'
 

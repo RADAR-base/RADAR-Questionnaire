@@ -8,6 +8,7 @@ import {
   ViewChild
 } from '@angular/core'
 import { DomSanitizer } from '@angular/platform-browser'
+import { IonContent } from '@ionic/angular'
 import * as DomPurify from 'dompurify'
 
 import { InfoItem } from '../../../../../shared/models/question'
@@ -16,10 +17,11 @@ let uniqueID = 0
 
 @Component({
   selector: 'descriptive-input',
-  templateUrl: 'descriptive-input.component.html'
+  templateUrl: 'descriptive-input.component.html',
+  styleUrls: ['descriptive-input.component.scss']
 })
 export class DescriptiveInputComponent implements OnInit, OnChanges {
-  @ViewChild('content') content
+  @ViewChild('content', { static: false }) content: IonContent
 
   @Output()
   valueChange: EventEmitter<number> = new EventEmitter<number>()
@@ -54,20 +56,17 @@ export class DescriptiveInputComponent implements OnInit, OnChanges {
   }
 
   scrollDown() {
-    const height =
-      this.content.nativeElement.clientHeight / (this.text.length / 100)
-    this.content.nativeElement.scrollBy({
-      top: height,
-      left: 0,
-      behavior: 'smooth'
+    this.content.getScrollElement().then(el => {
+      const height = el.clientHeight / this.text.length
+      this.content.scrollByPoint(0, height, 300)
     })
   }
 
   onScroll(event) {
     if (
       event &&
-      event.target.scrollTop >=
-        (event.target.scrollHeight - event.target.clientHeight) * 0.8
+      event.target.scrollHeight - event.detail.scrollTop <
+        event.target.clientHeight
     ) {
       this.emitTimestamp()
       this.showScrollButton = false

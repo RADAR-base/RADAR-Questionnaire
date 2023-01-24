@@ -1,9 +1,8 @@
-import 'rxjs/add/operator/mergeMap'
-
 import { Injectable } from '@angular/core'
 import { FirebaseX } from '@ionic-native/firebase-x/ngx'
 import { Platform } from '@ionic/angular'
 import { BehaviorSubject, Observable, from } from 'rxjs'
+import { mergeMap } from 'rxjs/operators'
 
 import { ConfigKeys } from '../../../shared/enums/config'
 import { StorageKeys } from '../../../shared/enums/storage'
@@ -159,6 +158,6 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
   }
 
   subject(): Observable<RemoteConfig> {
-    return from(this.read()).mergeMap(() => this.configSubject)
+    return from(this.read()).pipe(mergeMap(() => this.configSubject))
   }
 }

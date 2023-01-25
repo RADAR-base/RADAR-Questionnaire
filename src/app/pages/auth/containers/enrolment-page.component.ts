@@ -51,6 +51,7 @@ export class EnrolmentPageComponent {
 
   ionViewDidEnter() {
     this.usage.setPage(this.constructor.name)
+    this.slides.lockSwipes(true)
   }
 
   next() {

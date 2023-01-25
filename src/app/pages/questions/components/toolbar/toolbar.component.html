@@ -3,7 +3,7 @@
     <div class="toolbar-progress-bar" [style.width]="progress + '%'"></div>
   </div>
 
-  <ion-title *ngIf="isProgressCountShown" text-center color="light">
+  <ion-title *ngIf="isProgressCountShown" class="ion-text-center" color="light">
     {{ currentQuestionId + 1 + '/' + totalQuestions }}
   </ion-title>
 

@@ -82,7 +82,7 @@
     "browserify-zlib": "^0.2.0",
     "buffer": "^6.0.3",
     "com-darryncampbell-cordova-plugin-intent": "^2.0.0",
-    "compare-versions": "^6.0.0-rc.1",
+    "compare-versions": "^5.0.3",
     "cordova-lib": "^9.0.1",
     "cordova-plugin-android-permissions": "^1.1.2",
     "cordova-plugin-app-version": "^0.1.12",

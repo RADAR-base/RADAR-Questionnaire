@@ -164,7 +164,7 @@
     "karma-cli": "^2.0.0",
     "karma-coverage": "~2.0.3",
     "karma-coverage-istanbul-reporter": "~3.0.2",
-    "karma-jasmine": "~4.0.0",
+    "karma-jasmine": "~4.0.2",
     "karma-jasmine-html-reporter": "^1.5.0",
     "karma-requirejs": "^1.1.0",
     "karma-sourcemap-loader": "^0.3.7",

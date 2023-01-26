@@ -9,15 +9,16 @@ import { ModalController, NavParams, Platform } from '@ionic/angular'
 export class CacheSendModalComponent {
   successes: any[]
   errors: Error[]
+  result = []
 
   constructor(
     public platform: Platform,
     public params: NavParams,
     public modalCtrl: ModalController
   ) {
-    const result = this.params.get('data')
-    this.errors = result.filter(d => d instanceof Error)
-    this.successes = result.filter(d => !(d instanceof Error))
+    this.result = this.params.get('data')
+    this.errors = this.result.filter(d => d instanceof Error)
+    this.successes = this.result.filter(d => !(d instanceof Error))
   }
 
   dismiss() {

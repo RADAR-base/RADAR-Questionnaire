@@ -50,13 +50,15 @@ export class EnrolmentPageComponent {
   }
 
   ionViewDidEnter() {
-    this.slides.lockSwipes(true)
     this.usage.setPage(this.constructor.name)
+    this.slides.lockSwipes(true)
   }
 
   next() {
-    this.slides.lockSwipes(false)
-    this.slides.getActiveIndex().then(index => {
+    Promise.all([
+      this.slides.lockSwipes(false),
+      this.slides.getActiveIndex()
+    ]).then(([, index]) => {
       const slideIndex = index + 1
       this.slides.slideTo(slideIndex, 500)
       this.slides.lockSwipes(true)

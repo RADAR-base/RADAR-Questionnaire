@@ -46,7 +46,6 @@ import { GithubClient } from './core/services/misc/github-client.service'
 import { LocalizationService } from './core/services/misc/localization.service'
 import { LogService } from './core/services/misc/log.service'
 import { FcmRestNotificationService } from './core/services/notifications/fcm-rest-notification.service'
-import { FcmXmppNotificationService } from './core/services/notifications/fcm-xmpp-notification.service'
 import { LocalNotificationService } from './core/services/notifications/local-notification.service'
 import { MessageHandlerService } from './core/services/notifications/message-handler.service'
 import { NotificationFactoryService } from './core/services/notifications/notification-factory.service'
@@ -140,7 +139,6 @@ import { Utility } from './shared/utilities/util'
     SchemaService,
     NotificationGeneratorService,
     FcmRestNotificationService,
-    FcmXmppNotificationService,
     LocalNotificationService,
     AppServerService,
     MessageHandlerService,

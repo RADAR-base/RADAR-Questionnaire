@@ -40,6 +40,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   checkTaskInterval
   showMiscTasksButton: Promise<boolean>
   isTaskCalendarTaskNameShown: Promise<boolean>
+  currentDate: number
 
   APP_CREDITS = '&#169; RADAR-Base'
   HTML_BREAK = '<br>'
@@ -92,6 +93,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter() {
+    this.nextTask = null
     this.startingQuestionnaire = false
     this.tasksProgress = this.tasksService.getTaskProgress()
     this.sortedTasks = this.tasksService.getValidTasksMap()
@@ -103,11 +105,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.sortedTasks = this.tasksService.getValidTasksMap()
     this.tasks = this.tasksService.getTasksOfToday()
     this.tasksProgress = this.tasksService.getTaskProgress()
-    this.tasks.then(tasks => {
-      this.checkTaskInterval = setInterval(() => {
-        this.checkForNextTask(tasks)
-      }, 1500)
-    })
+    this.checkTaskInterval = setInterval(() => this.checkForNextTask(), 1500)
     this.hasOnDemandTasks = this.tasksService.getHasOnDemandTasks()
     this.hasClinicalTasks = this.tasksService.getHasClinicalTasks()
     this.title = this.tasksService.getPlatformInstanceName()
@@ -126,25 +124,28 @@ export class HomePageComponent implements OnInit, OnDestroy {
   checkForNewDate() {
     if (Date.now() - this.lastTaskRefreshTime > this.TASK_REFRESH_MILLIS) {
       this.lastTaskRefreshTime = Date.now()
+      this.currentDate = this.tasksService.getCurrentDateMidnight().getTime()
       this.navCtrl.navigateRoot('')
     }
   }
 
-  checkForNextTask(tasks) {
-    const task = this.tasksService.getNextTask(tasks)
-    if (task) {
-      this.nextTask = task
-      this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
-      this.timeToNextTask = this.nextTask.timestamp - Date.now()
-    } else {
-      this.taskIsNow = false
-      this.nextTask = null
-      this.showCompleted = this.tasksService.areAllTasksComplete(tasks)
-      if (this.showCompleted) {
-        clearInterval(this.checkTaskInterval)
-        this.showCalendar = false
+  checkForNextTask() {
+    this.tasks.then(tasks => {
+      const task = this.tasksService.getNextTask(tasks)
+      if (task) {
+        this.nextTask = task
+        this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
+        this.timeToNextTask = this.nextTask.timestamp - Date.now()
+      } else {
+        this.taskIsNow = false
+        this.nextTask = null
+        this.showCompleted = this.tasksService.areAllTasksComplete(tasks)
+        if (this.showCompleted) {
+          clearInterval(this.checkTaskInterval)
+          this.showCalendar = false
+        }
       }
-    }
+    })
   }
 
   displayTaskCalendar() {

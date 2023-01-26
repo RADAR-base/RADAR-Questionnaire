@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import * as ver from 'semver'
+import { compare } from 'compare-versions'
 
 import {
   DefaultAppVersion,
@@ -198,7 +198,7 @@ export class ConfigService {
       this.appConfig.getAppVersion()
     ])
       .then(([playstoreVersion, currentVersion]) =>
-        ver.gt(ver.clean(playstoreVersion), ver.clean(currentVersion))
+        compare(playstoreVersion, currentVersion, '>')
       )
       .catch(() => false)
   }

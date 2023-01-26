@@ -60,6 +60,7 @@ export class QuestionsPageComponent implements OnInit {
   showFinishScreen: boolean
   showFinishAndLaunchScreen: boolean = false
   externalAppCanLaunch: boolean = false
+  viewEntered = false
 
   SHOW_INTRODUCTION_SET: Set<boolean | ShowIntroductionType> = new Set([
     true,
@@ -109,9 +110,13 @@ export class QuestionsPageComponent implements OnInit {
         })
       this.sendEvent(UsageEventType.QUESTIONNAIRE_STARTED)
       this.usage.setPage(this.constructor.name)
-      this.insomnia.keepAwake()
       this.slides.lockSwipes(true)
+      this.insomnia.keepAwake()
     }
+  }
+
+  ionViewWillEnter() {
+    this.slides.update()
   }
 
   initQuestionnaire(res) {
@@ -178,9 +183,11 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   slideQuestion() {
-    this.slides.lockSwipes(false)
-    this.slides.slideTo(this.currentQuestionGroupId, 300)
-    this.slides.lockSwipes(true)
+    console.log(this.currentQuestionGroupId)
+    this.slides
+      .lockSwipes(false)
+      .then(() => this.slides.slideTo(this.currentQuestionGroupId, 300))
+      .then(() => this.slides.lockSwipes(true))
 
     this.startTime = this.questionsService.getTime()
   }
@@ -261,9 +268,10 @@ export class QuestionsPageComponent implements OnInit {
     this.submitTimestamps()
     this.showFinishScreen = true
     this.onQuestionnaireCompleted()
-    this.slides.lockSwipes(false)
-    this.slides.slideTo(this.groupedQuestions.size, 500)
-    this.slides.lockSwipes(true)
+    this.slides
+      .lockSwipes(false)
+      .then(() => this.slides.slideTo(this.groupedQuestions.size, 500))
+      .then(() => this.slides.lockSwipes(true))
   }
 
   onQuestionnaireCompleted() {
@@ -318,7 +326,8 @@ export class QuestionsPageComponent implements OnInit {
       this.externalApp &&
       this.appLauncher.isExternalAppUriValidForThePlatform(this.externalApp)
     ) {
-      this.appLauncher.isExternalAppCanLaunch(this.externalApp, this.task)
+      this.appLauncher
+        .isExternalAppCanLaunch(this.externalApp, this.task)
         .then(canLaunch => {
           this.showFinishAndLaunchScreen = true
           this.externalAppCanLaunch = canLaunch

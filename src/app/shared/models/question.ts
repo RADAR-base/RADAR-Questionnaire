@@ -57,7 +57,7 @@ export class QuestionType {
 
 export interface Response {
   label: string
-  code: number
+  code: number | string
 }
 
 export interface Range {

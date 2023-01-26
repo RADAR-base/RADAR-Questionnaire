@@ -3,7 +3,7 @@
     <div class="toolbar-progress-bar" [style.width]="progress + '%'"></div>
   </div>
 
-  <ion-title *ngIf="isProgressCountShown" text-center color="light">
+  <ion-title *ngIf="isProgressCountShown" class="ion-text-center" color="light">
     {{ currentQuestionId + 1 + '/' + totalQuestions }}
   </ion-title>
 
@@ -26,6 +26,6 @@
     (click)="rightButtonHandler()"
   >
     <div class="toolbar-label">{{ rightButtonText }}</div>
-    <ion-icon name="ios-arrow-forward"></ion-icon>
+    <ion-icon name="chevron-forward-outline"></ion-icon>
   </ion-button>
 </ion-toolbar>

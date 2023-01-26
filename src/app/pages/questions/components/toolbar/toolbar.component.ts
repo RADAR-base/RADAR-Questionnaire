@@ -46,7 +46,7 @@ export class ToolbarComponent implements OnChanges {
   rightButtonText = this.textValues.next
   leftButtonText = this.textValues.close
   iconValues = {
-    previous: 'ios-arrow-back',
+    previous: 'chevron-back-outline',
     close: 'close-circle'
   }
   iconPrevious: string = this.iconValues.close

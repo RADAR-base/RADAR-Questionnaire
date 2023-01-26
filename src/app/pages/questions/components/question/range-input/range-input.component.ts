@@ -26,7 +26,7 @@ export class RangeInputComponent implements OnInit {
   uniqueID: number = uniqueID++
   name = `range-input-${this.uniqueID}`
   items: Item[] = Array()
-  colSize = 1
+  colSize = '1'
   checkedItem: number = null
 
   ngOnInit() {
@@ -36,7 +36,7 @@ export class RangeInputComponent implements OnInit {
         value: i
       })
     }
-    this.colSize = 12 / this.items.length
+    this.colSize = (12 / this.items.length).toString()
   }
 
   onInputChange(value) {

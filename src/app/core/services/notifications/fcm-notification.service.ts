@@ -53,8 +53,6 @@ export abstract class FcmNotificationService extends NotificationService {
   }
 
   init() {
-    if (!this.platform.is('ios'))
-      FirebasePlugin.setDeliveryMetricsExportToBigQuery(true)
     return this.firebase
       .setAutoInitEnabled(true)
       .then(() => this.firebase.getToken())

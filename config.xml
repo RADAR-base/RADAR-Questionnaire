@@ -50,6 +50,7 @@
         <resource-file src="resources/android/notification/drawable-xxxhdpi-icon.png" target="app/src/main/res/drawable-xxxhdpi/notification_icon.png" />
         <config-file parent="/manifest/application/" target="app/src/main/AndroidManifest.xml">
             <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/notification_icon" />
+            <meta-data android:name="delivery_metrics_exported_to_big_query_enabled" android:value="true" />
         </config-file>
         <config-file parent="/manifest/" target="app/src/main/AndroidManifest.xml">
             <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />

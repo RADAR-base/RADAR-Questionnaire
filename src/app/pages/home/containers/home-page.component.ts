@@ -76,7 +76,8 @@ export class HomePageComponent implements OnInit, OnDestroy {
       this.taskIsNow &&
       !this.startingQuestionnaire &&
       !this.showCompleted &&
-      !this.showCalendar
+      !this.showCalendar &&
+      !this.getIsLoadingSpinnerShown()
     )
   }
 

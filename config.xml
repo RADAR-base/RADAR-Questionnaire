@@ -67,6 +67,7 @@
         <preference name="AllowInlineMediaPlayback" value="true" />
         <preference name="scheme" value="app" />
         <preference name="hostname" value="localhost" />
+        <preference name="deployment-target" value="11.0" />
         <edit-config file="*-Info.plist" mode="merge" target="NSCameraUsageDescription">
             <string>The app would like to use the camera to scan QR codes.</string>
         </edit-config>

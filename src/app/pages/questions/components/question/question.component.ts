@@ -1,5 +1,6 @@
 import {
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
@@ -8,7 +9,9 @@ import {
   ViewChild
 } from '@angular/core'
 import { Dialogs } from '@ionic-native/dialogs/ngx'
+import { Keyboard } from '@ionic-native/keyboard/ngx'
 import { Vibration } from '@ionic-native/vibration/ngx'
+import { IonContent } from '@ionic/angular'
 import * as smoothscroll from 'smoothscroll-polyfill'
 
 import {
@@ -16,16 +19,21 @@ import {
   NextButtonEventType
 } from '../../../../shared/enums/events'
 import { Answer } from '../../../../shared/models/answer'
-import { Question, QuestionType } from '../../../../shared/models/question'
+import {
+  Question,
+  QuestionType,
+  Response
+} from '../../../../shared/models/question'
 import { Task } from '../../../../shared/models/task'
 
 @Component({
   selector: 'question',
-  templateUrl: 'question.component.html'
+  templateUrl: 'question.component.html',
+  styleUrls: ['question.component.scss']
 })
 export class QuestionComponent implements OnInit, OnChanges {
-  @ViewChild('content') content
-  @ViewChild('input') input
+  @ViewChild('content', { static: false }) content
+  @ViewChild('input', { read: ElementRef, static: false }) inputEl
 
   @Input()
   question: Question
@@ -51,21 +59,27 @@ export class QuestionComponent implements OnInit, OnChanges {
   isLoading = true
   isScrollable = false
   isFieldLabelHidden = false
-  margin = 32
+  margin = 100
   keyboardScrollPadding = 200
   keyboardInputOffset = 0
   inputHeight = 0
   isMatrix = false
   isAutoHeight = false
   showScrollButton = false
+  defaultYesNoResponse: Response[] = [
+    { code: '1', label: 'Yes' },
+    { code: '0', label: 'No' }
+  ]
 
   NON_SCROLLABLE_SET: Set<QuestionType> = new Set([
     QuestionType.timed,
     QuestionType.audio,
     QuestionType.info,
     QuestionType.text,
-    QuestionType.descriptive
+    QuestionType.descriptive,
+    QuestionType.slider
   ])
+
   HIDE_FIELD_LABEL_SET: Set<QuestionType> = new Set([
     QuestionType.audio,
     QuestionType.descriptive
@@ -79,7 +93,8 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.yesno,
     QuestionType.slider,
     QuestionType.range,
-    QuestionType.text
+    QuestionType.text,
+    QuestionType.matrix_radio
   ])
 
   SCROLLBAR_VISIBLE_SET: Set<QuestionType> = new Set([
@@ -103,7 +118,7 @@ export class QuestionComponent implements OnInit, OnChanges {
     setTimeout(() => {
       this.isLoading = false
       this.keyboardInputOffset = Math.max(
-        this.input.nativeElement.offsetTop - this.keyboardScrollPadding,
+        this.inputEl.nativeElement.offsetTop - this.keyboardScrollPadding,
         0
       )
     }, 800)
@@ -117,16 +132,15 @@ export class QuestionComponent implements OnInit, OnChanges {
     if (this.questionIndex === this.currentIndex) {
       this.currentlyShown = true
     } else {
-      if (Math.abs(this.questionIndex - this.currentIndex) == 1)
-        this.previouslyShown = true
-      else this.previouslyShown = false
+      this.previouslyShown =
+        Math.abs(this.questionIndex - this.currentIndex) == 1
       this.currentlyShown = false
     }
   }
 
   emitAnswer(event: any) {
     // NOTE: On init the component fires the event once
-    if (event && event !== undefined) {
+    if (event) {
       this.value = event
       this.answer.emit({
         id: this.question.field_name,
@@ -187,29 +201,28 @@ export class QuestionComponent implements OnInit, OnChanges {
   }
 
   isScrollbarVisible() {
-    if (!this.SCROLLBAR_VISIBLE_SET.has(this.question.field_type)) return false
     return (
-      this.input.nativeElement.scrollHeight >
-      this.input.nativeElement.clientHeight
+      this.SCROLLBAR_VISIBLE_SET.has(this.question.field_type) &&
+      this.inputEl.nativeElement.scrollHeight >
+        this.inputEl.nativeElement.clientHeight
     )
   }
 
   onScroll(event) {
     // This will hide/show the scroll arrow depending on the user's scroll event
-    if (this.showScrollButton) {
-      if (
-        event &&
-        event.target.scrollTop >=
-          (event.target.scrollHeight - event.target.clientHeight) * 0.1
-      ) {
-        this.showScrollButton = false
-      } else this.showScrollButton = true
+    if (
+      this.showScrollButton &&
+      event &&
+      event.target.scrollTop >=
+        (event.target.scrollHeight - event.target.clientHeight) * 0.1
+    ) {
+      this.showScrollButton = false
     }
   }
 
   scrollDown() {
-    const height = this.input.nativeElement.clientHeight
-    this.input.nativeElement.scrollBy({
+    const height = this.inputEl.nativeElement.clientHeight
+    this.inputEl.nativeElement.scrollBy({
       top: height,
       left: 0,
       behavior: 'smooth'

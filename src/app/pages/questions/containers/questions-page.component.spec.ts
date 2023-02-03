@@ -1,8 +1,14 @@
 import { ComponentFixture, TestBed, async } from '@angular/core/testing'
-import { NavController, NavParams } from 'ionic-angular'
+import { IonicModule, NavController, NavParams } from '@ionic/angular'
 import { NavParamsMock } from 'ionic-mocks'
+import { PipesModule } from 'src/app/shared/pipes/pipes.module'
 
 import { AppModule } from '../../../app.module'
+import { FinishAndLaunchComponent } from '../components/finish-and-launch/finish-and-launch.component'
+import { FinishComponent } from '../components/finish/finish.component'
+import { IntroductionComponent } from '../components/introduction/introduction.component'
+import { QuestionModule } from '../components/question/question.module'
+import { ToolbarComponent } from '../components/toolbar/toolbar.component'
 import { QuestionsService } from '../services/questions.service'
 import { QuestionsPageComponent } from './questions-page.component'
 
@@ -12,8 +18,14 @@ describe('QuestionsPageComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [AppModule],
-      declarations: [],
+      imports: [AppModule, IonicModule, PipesModule, QuestionModule],
+      declarations: [
+        QuestionsPageComponent,
+        IntroductionComponent,
+        FinishComponent,
+        FinishAndLaunchComponent,
+        ToolbarComponent
+      ],
       providers: [
         NavController,
         { provide: NavParams, useClass: NavParamsMock },

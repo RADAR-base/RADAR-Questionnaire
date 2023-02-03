@@ -4,6 +4,9 @@
   "rules": {
     "callable-types": true,
     "forin": true,
+    "deprecation": {
+      "severity": "warning"
+    },
     "import-spacing": true,
     "interface-over-type-literal": true,
     "max-line-length": [true, 120],
@@ -29,7 +32,7 @@
     "no-input-rename": true,
     "no-output-rename": true,
     "no-duplicate-imports": true,
-    "use-life-cycle-interface": true,
+    "use-lifecycle-interface": true,
     "use-pipe-transform-interface": true,
     "component-class-suffix": false,
     "directive-class-suffix": true,

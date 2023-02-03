@@ -1,95 +1,217 @@
 // Ionic Variables and Theming. For more info, please see:
-// http://ionicframework.com/docs/v2/theming/
+// http://ionicframework.com/docs/theming/
 
-@import 'ionic.globals';
+/** Ionic CSS Variables **/
+:root {
+  /** primary **/
+  --ion-color-primary: #0b4a59;
+  --ion-color-primary-rgb: 56, 128, 255;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #383f41;
+  --ion-color-primary-tint: #383f41;
 
-// Main Map : map_get($colors, light)
-$colors: (
-  primary: #0b4a59,
-  secondary: #6d9aa5,
-  secondary-light: #9bb5bc,
-  danger: #f53d3d,
-  success: #3fc380,
-  warning: #ff8,
-  tertiary: #7fcdbb,
-  light: white,
-  dark: #222
-);
+  /** secondary **/
+  --ion-color-secondary: #6d9aa5;
+  --ion-color-secondary-rgb: 109, 154, 165;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #36abe0;
+  --ion-color-secondary-tint: #50c8ff;
 
-// Main Colors // Shortcut
-$cl-primary: map_get($colors, primary);
-$cl-secondary: map_get($colors, secondary);
-$cl-secondary-light: map_get($colors, secondary-light);
+  /** tertiary **/
+  --ion-color-tertiary: #7fcdbb;
+  --ion-color-tertiary-rgb: 82, 96, 255;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+  --ion-color-tertiary-shade: #4854e0;
+  --ion-color-tertiary-tint: #6370ff;
 
-// Transparent Base
-$cl-primary-10: rgba(map_get($colors, primary), 0.1);
-$cl-primary-20: rgba(map_get($colors, primary), 0.2);
-$cl-primary-40: rgba(map_get($colors, primary), 0.4);
-$cl-primary-60: rgba(map_get($colors, primary), 0.6);
-$cl-primary-80: rgba(map_get($colors, primary), 0.8);
+  /** success **/
+  --ion-color-success: #2dd36f;
+  --ion-color-success-rgb: 45, 211, 111;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #28ba62;
+  --ion-color-success-tint: #42d77d;
 
-// Transparent whites
-$cl-light: map_get($colors, light);
-$cl-light-10: rgba(map_get($colors, light), 0.1);
-$cl-light-20: rgba(map_get($colors, light), 0.2);
-$cl-light-40: rgba(map_get($colors, light), 0.4);
-$cl-light-60: rgba(map_get($colors, light), 0.6);
-$cl-light-80: rgba(map_get($colors, light), 0.8);
+  /** warning **/
+  --ion-color-warning: #ffc409;
+  --ion-color-warning-rgb: 255, 196, 9;
+  --ion-color-warning-contrast: #000000;
+  --ion-color-warning-contrast-rgb: 0, 0, 0;
+  --ion-color-warning-shade: #e0ac08;
+  --ion-color-warning-tint: #ffca22;
 
-// Provoking colours
-$cl-danger: map_get($colors, danger);
-$cl-danger-10: rgba(map_get($colors, danger), 0.1);
-$cl-danger-20: rgba(map_get($colors, danger), 0.2);
-$cl-danger-40: rgba(map_get($colors, danger), 0.4);
-$cl-danger-60: rgba(map_get($colors, danger), 0.6);
-$cl-danger-80: rgba(map_get($colors, danger), 0.8);
-$cl-warning: map_get($colors, warning);
-$cl-warning-10: rgba(map_get($colors, warning), 0.1);
-$cl-warning-20: rgba(map_get($colors, warning), 0.2);
-$cl-warning-40: rgba(map_get($colors, warning), 0.4);
-$cl-warning-60: rgba(map_get($colors, warning), 0.6);
-$cl-warning-80: rgba(map_get($colors, warning), 0.8);
+  /** danger **/
+  --ion-color-danger: #eb445a;
+  --ion-color-danger-rgb: 235, 68, 90;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #cf3c4f;
+  --ion-color-danger-tint: #ed576b;
 
-// Checkmark
-$cl-checkmark: #9ad1c3;
+  /** dark **/
+  --ion-color-dark: #222428;
+  --ion-color-dark-rgb: 34, 36, 40;
+  --ion-color-dark-contrast: #ffffff;
+  --ion-color-dark-contrast-rgb: 255, 255, 255;
+  --ion-color-dark-shade: #1e2023;
+  --ion-color-dark-tint: #383a3e;
 
-// Font
-$cl-font: $cl-light;
-$cl-font-light: $cl-light-80;
+  /** medium **/
+  --ion-color-medium: #92949c;
+  --ion-color-medium-rgb: 146, 148, 156;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-contrast-rgb: 255, 255, 255;
+  --ion-color-medium-shade: #808289;
+  --ion-color-medium-tint: #9d9fa6;
 
-// App Globals
-$bt-height: 56px;
-$label-height: 40px;
-$item-separation-distance: 0.1em;
+  /** light **/
+  --ion-color-light: #f4f5f8;
+  --ion-color-light-rgb: 244, 245, 248;
+  --ion-color-light-contrast: #000000;
+  --ion-color-light-contrast-rgb: 0, 0, 0;
+  --ion-color-light-shade: #d7d8da;
+  --ion-color-light-tint: #f5f6f9;
 
-// Ionic Overrides
-$font-family-md-base: 'Montserrat', sans-serif;
-$text-color: $cl-font;
-$background-color: transparent;
-$button-md-text-transform: none;
-$toggle-md-track-background-color-off: $cl-light-80;
-$toggle-md-track-background-color-on: map_get($colors, success);
-$toggle-md-handle-background-color-off: $cl-light;
-$toggle-md-handle-background-color-on: $cl-light;
-$alert-md-head-text-align: center;
-// App Theme
-// --------------------------------------------------
-// Ionic apps can have different themes applied, which can
-// then be future customized. This import comes last
-// so that the above variables are used and Ionic's
-// default are overridden.
+  --ion-font: white;
 
-@import 'ionic.theme.default';
+  // Main Colors // Shortcut
+  --cl-primary: #0b4a59;
+  --cl-secondary: #6d9aa5;
+  --cl-secondary-light: #9bb5bc;
 
-.alert-title {
-  color: $cl-primary;
+  // Transparent Base
+  --cl-primary-10: rgba(11, 74, 89, 0.1);
+  --cl-primary-20: rgba(11, 74, 89, 0.2);
+  --cl-primary-40: rgba(11, 74, 89, 0.4);
+  --cl-primary-60: rgba(11, 74, 89, 0.6);
+  --cl-primary-80: rgba(11, 74, 89, 0.8);
+
+  // Transparent whites
+  --cl-light: white;
+  --cl-light-10: rgba(white, 0.1);
+  --cl-light-20: rgba(white, 0.2);
+  --cl-light-40: rgba(white, 0.4);
+  --cl-light-60: rgba(white, 0.6);
+  --cl-light-80: rgba(white, 0.8);
+
+  // Provoking colours
+  --cl-danger: #f53d3d;
+  --cl-danger-10: rgba(245, 61, 61, 0.1);
+  --cl-danger-20: rgba(245, 61, 61, 0.2);
+  --cl-danger-40: rgba(245, 61, 61, 0.4);
+  --cl-danger-60: rgba(245, 61, 61, 0.6);
+  --cl-danger-80: rgba(245, 61, 61, 0.8);
+  --cl-warning: #ff8;
+  --cl-warning-10: rgba(#ff8, 0.1);
+  --cl-warning-20: rgba(#ff8, 0.2);
+  --cl-warning-40: rgba(#ff8, 0.4);
+  --cl-warning-60: rgba(#ff8, 0.6);
+  --cl-warning-80: rgba(#ff8, 0.8);
+
+  // Checkmark
+  --cl-checkmark: #9ad1c3;
+
+  // Font
+  --cl-font: --cl-light;
+  --cl-font-light: --cl-light-80;
+
+  // App Globals
+  --bt-height: 56px;
+  --label-height: 40px;
+  --item-separation-distance: 0.1em;
+
+  // Ionic Overrides
+  --font-family-md-base: 'Montserrat', sans-serif;
+  --text-color: var(--ion-font);
+  --background-color: transparent;
+  --button-md-text-transform: none;
+  --toggle-md-track-background-color-off: var(--cl-light-80);
+  --toggle-md-track-background-color-on: #3fc380;
+  --toggle-md-handle-background-color-off: var(--cl-light);
+  --toggle-md-handle-background-color-on: var(--cl-light);
+  --alert-md-head-text-align: center;
 }
-// Ionicons
-// --------------------------------------------------
-// The premium icon font for Ionic. For more info, please see:
-// http://ionicframework.com/docs/v2/ionicons/
-$ionicons-font-path: '../assets/fonts';
 
-@import 'ionicons';
+@media (prefers-color-scheme: dark) {
+  /*
+   * Dark Colors
+   * -------------------------------------------
+   */
 
-$range-md-tick-background-color: $cl-secondary;
+  body {
+    /** primary **/
+    --ion-color-primary: #0b4a59;
+    --ion-color-primary-rgb: 56, 128, 255;
+    --ion-color-primary-contrast: #ffffff;
+    --ion-color-primary-contrast-rgb: 255, 255, 255;
+    --ion-color-primary-shade: #383f41;
+    --ion-color-primary-tint: #383f41;
+
+    /** secondary **/
+    --ion-color-secondary: #6d9aa5;
+    --ion-color-secondary-rgb: 109, 154, 165;
+    --ion-color-secondary-contrast: #ffffff;
+    --ion-color-secondary-contrast-rgb: 255, 255, 255;
+    --ion-color-secondary-shade: #36abe0;
+    --ion-color-secondary-tint: #50c8ff;
+
+    /** tertiary **/
+    --ion-color-tertiary: #7fcdbb;
+    --ion-color-tertiary-rgb: 82, 96, 255;
+    --ion-color-tertiary-contrast: #ffffff;
+    --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+    --ion-color-tertiary-shade: #4854e0;
+    --ion-color-tertiary-tint: #6370ff;
+
+    /** success **/
+    --ion-color-success: #2dd36f;
+    --ion-color-success-rgb: 45, 211, 111;
+    --ion-color-success-contrast: #ffffff;
+    --ion-color-success-contrast-rgb: 255, 255, 255;
+    --ion-color-success-shade: #28ba62;
+    --ion-color-success-tint: #42d77d;
+
+    /** warning **/
+    --ion-color-warning: #ffc409;
+    --ion-color-warning-rgb: 255, 196, 9;
+    --ion-color-warning-contrast: #000000;
+    --ion-color-warning-contrast-rgb: 0, 0, 0;
+    --ion-color-warning-shade: #e0ac08;
+    --ion-color-warning-tint: #ffca22;
+
+    /** danger **/
+    --ion-color-danger: #eb445a;
+    --ion-color-danger-rgb: 235, 68, 90;
+    --ion-color-danger-contrast: #ffffff;
+    --ion-color-danger-contrast-rgb: 255, 255, 255;
+    --ion-color-danger-shade: #cf3c4f;
+    --ion-color-danger-tint: #ed576b;
+
+    /** dark **/
+    --ion-color-dark: #222428;
+    --ion-color-dark-rgb: 34, 36, 40;
+    --ion-color-dark-contrast: #ffffff;
+    --ion-color-dark-contrast-rgb: 255, 255, 255;
+    --ion-color-dark-shade: #1e2023;
+    --ion-color-dark-tint: #383a3e;
+
+    /** medium **/
+    --ion-color-medium: #92949c;
+    --ion-color-medium-rgb: 146, 148, 156;
+    --ion-color-medium-contrast: #ffffff;
+    --ion-color-medium-contrast-rgb: 255, 255, 255;
+    --ion-color-medium-shade: #808289;
+    --ion-color-medium-tint: #9d9fa6;
+
+    /** light **/
+    --ion-color-light: #f4f5f8;
+    --ion-color-light-rgb: 244, 245, 248;
+    --ion-color-light-contrast: #000000;
+    --ion-color-light-contrast-rgb: 0, 0, 0;
+    --ion-color-light-shade: #d7d8da;
+    --ion-color-light-tint: #f5f6f9;
+  }
+}

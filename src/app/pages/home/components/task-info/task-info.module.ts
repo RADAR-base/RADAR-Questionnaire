@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common'
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core'
+import { IonicModule } from '@ionic/angular'
 import { RoundProgressModule } from 'angular-svg-round-progressbar'
-import { IonicModule } from 'ionic-angular'
-import { Ng2FittextModule } from 'ng2-fittext'
 
 import { PipesModule } from '../../../../shared/pipes/pipes.module'
 import { TaskInfoComponent } from './task-info.component'
@@ -13,9 +12,8 @@ const COMPONENTS = [TaskInfoComponent]
   imports: [
     RoundProgressModule,
     CommonModule,
-    IonicModule.forRoot(TaskInfoComponent),
-    PipesModule,
-    Ng2FittextModule
+    IonicModule.forRoot(),
+    PipesModule
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,

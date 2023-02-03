@@ -7,16 +7,20 @@ import {
   ViewChild
 } from '@angular/core'
 import { Keyboard } from '@ionic-native/keyboard/ngx'
+import { ModalController } from '@ionic/angular'
+import { Ionic4DatepickerModalComponent } from '@logisticinfotech/ionic4-datepicker'
+import * as moment from 'moment'
 
 import { LocalizationService } from '../../../../../core/services/misc/localization.service'
 import { KeyboardEventType } from '../../../../../shared/enums/events'
 
 @Component({
   selector: 'text-input',
-  templateUrl: 'text-input.component.html'
+  templateUrl: 'text-input.component.html',
+  styleUrls: ['text-input.component.scss']
 })
 export class TextInputComponent implements OnInit {
-  @ViewChild('content') content
+  @ViewChild('content', { static: false }) content
 
   @Output()
   valueChange: EventEmitter<string> = new EventEmitter<string>()
@@ -48,11 +52,13 @@ export class TextInputComponent implements OnInit {
     second: 'Second',
     ampm: 'AM/PM'
   }
+  textValue = ''
 
   value = {}
 
   constructor(
     private localization: LocalizationService,
+    public modalCtrl: ModalController,
     private keyboard: Keyboard
   ) {}
 
@@ -77,6 +83,20 @@ export class TextInputComponent implements OnInit {
   initDates() {
     const moment = this.localization.moment(Date.now())
     const locale = moment.localeData()
+    const formatL = locale.longDateFormat('L')
+    this.datePickerObj = {
+      // User the user's locale format as output format
+      dateFormat: formatL,
+      btnProperties: {
+        expand: 'block', // Default 'block'
+        fill: 'outline', // Default 'solid'
+        size: 'small', // Default 'default'
+        disabled: '', // Default false
+        strong: 'true', // Default false
+        color: 'secondary' // Default ''
+      },
+      closeOnSelect: 'true'
+    }
     const month = locale.monthsShort()
     const day = this.addLeadingZero(Array.from(Array(32).keys()).slice(1, 32))
     const year = Array.from(Array(31).keys()).map(d => String(d + 2000))
@@ -115,8 +135,36 @@ export class TextInputComponent implements OnInit {
     return values.map(d => (d < 10 ? '0' + d : d)).map(String)
   }
 
+  datePickerObj: any = {}
+  selectedDate: string = new Date().toLocaleDateString()
+
+  async openDatePicker() {
+    const datePickerModal = await this.modalCtrl.create({
+      component: Ionic4DatepickerModalComponent,
+      cssClass: 'li-ionic4-datePicker',
+      componentProps: {
+        objConfig: this.datePickerObj,
+        selectedDate: this.selectedDate
+      }
+    })
+    await datePickerModal.present()
+
+    datePickerModal.onDidDismiss().then(data => {
+      this.selectedDate = data.data.date
+
+      // transfer local date format all to US format to easily parse the data
+      const date = moment(data.data.date)
+      this.defaultDatePickerValue = {
+        year: date.format('YYYY'),
+        month: date.format('M'),
+        day: date.format('D')
+      }
+      this.emitAnswer(this.defaultDatePickerValue)
+    })
+  }
+
   emitAnswer(value) {
-    if (!value) return
+    if (!value) value = this.textValue
     if (typeof value !== 'string') {
       this.value = Object.assign(this.value, value)
       this.valueChange.emit(JSON.stringify(this.value))
@@ -124,6 +172,7 @@ export class TextInputComponent implements OnInit {
   }
 
   emitKeyboardEvent(value) {
+    value = value.toLowerCase()
     if (value == KeyboardEventType.ENTER) this.keyboard.hide()
 
     this.keyboardEvent.emit(value)

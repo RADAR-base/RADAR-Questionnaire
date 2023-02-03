@@ -6,7 +6,8 @@ let uniqueID = 0
 
 @Component({
   selector: 'radio-input',
-  templateUrl: 'radio-input.component.html'
+  templateUrl: 'radio-input.component.html',
+  styleUrls: ['radio-input.component.scss']
 })
 export class RadioInputComponent implements OnInit {
   @Output()
@@ -31,6 +32,6 @@ export class RadioInputComponent implements OnInit {
   }
 
   onInputChange(event) {
-    this.valueChange.emit(event)
+    this.valueChange.emit(event.detail.value)
   }
 }

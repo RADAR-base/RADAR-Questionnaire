@@ -18,7 +18,6 @@ It is recommended that you install the following versions or later:
 node v13.8.0
 ionic v5.4.16
 npm v6.13.6
-yarn v1.19.0
 ```
 
 ## Install
@@ -28,13 +27,13 @@ First install [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/en/d
 Globally install ionic and cordova:
 
 ```
-$ yarn global add ionic cordova
+$ npm i -g ionic cordova
 ```
 
-In the project folder run `yarn` to install dependencies:
+In the project folder run `npm i` to install dependencies:
 
 ```
-$ yarn
+$ npm i
 ```
 
 Cordova provides a simple command to install the plugins and platforms set in `package.json` or `config.xml`.
@@ -54,13 +53,13 @@ $ ionic serve
 Use the following command to sort, format and fix common css problems:
 
 ```
-$ yarn fix:css
+$ npm run fix:css
 ```
 
 Use the following command before commiting to fix all common styling and sorting problems:
 
 ```
-$ yarn fix:all
+$ npm run fix:all
 ```
 
 ## Platforms
@@ -143,7 +142,7 @@ Certain values can be overriden using Firebase Remote Config. Specifically, the 
 | `platform_instance`             | Title of RADAR Base / platform instance                                                                                                                                                                   | `RADAR-CNS`                                                                                                      |
 | `participant_attribute_order`   | Map that specifies the order in which the attributes are matched with the protocol path                                                                                                                   | `{Human-readable-identifier: -1}`                                                                                |
 | `schedule_year_coverage`        | Schedule coverage in years (length of schedule to generate tasks until)                                                                                                                                   | `3`                                                                                                              |
-| `notification_messaging_type`   | Notifications type (either 'FCM_XMPP', 'FCM_REST' or 'LOCAL' notifications)                                                                                                                               | `FCM_XMPP`                                                                                                       |
+| `notification_messaging_type`   | Notifications type (either 'FCM_REST' or 'LOCAL' notifications)                                                                                                                                           | `FCM_REST`                                                                                                       |
 | `app_server_url`                | Default app server url.                                                                                                                                                                                   | `{DefaultEndPoint + '/appserver'}`                                                                               |
 | `github_fetch_strategy`         | Default Github fetch strategy for Github requests (default or appserver).                                                                                                                                 | `default`                                                                                                        |
 | `app_credits_title`             | Title of the popup box that appears when you tap on the app logo on the left hand side of the homepage.                                                                                                   | `Credits`                                                                                                        |
@@ -199,8 +198,8 @@ export const DefaultEndPoint = 'https://your-hosted-radar-platform-base-url/'
 The default appserver configs.
 
 ```ts
-// The notification type (either 'FCM_XMPP', 'FCM_REST' or 'LOCAL' notifications)
-export const DefaultNotificationType: string = 'FCM_XMPP'
+// The notification type (either 'FCM_REST' or 'LOCAL' notifications, NOTE: 'FCM_XMPP' support was removed in v3.0.0)
+export const DefaultNotificationType: string = 'FCM_REST'
 
 // App server URL
 export const DefaultAppServerURL = DefaultEndPoint + '/appserver'
@@ -244,10 +243,9 @@ Instructions to build a signed apk for publishing on the playstore -
 3. Run the following to build the app
 
 ```shell
-yarn install
-yarn build
+npm install
+npm run build
 ionic cordova platform add android
-yarn install
 ionic cordova build --release android
 ```
 
@@ -310,9 +308,5 @@ We enter the following command at the root directory.
 
 ```
 cd plugins/cordova-custom-config
-yarn install
+npm install
 ```
-
-### Error: Failed to fetch platform. Probably this is either a connection problem.
-
-You may encounter this error when running `yarn install` or `cordova platform` commands. This is usually because of the conflict of `package-lock.json` and `yarn.lock` files. To solve, simply delete the `package-lock.json` file in the root directory.

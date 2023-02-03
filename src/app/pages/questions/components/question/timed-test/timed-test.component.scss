@@ -1,35 +1,33 @@
-timed-test {
-  .test-card {
-    overflow: hidden;
-    padding: 10px;
-    height: 92%;
-    -webkit-border-radius: 8px;
-    border-radius: 8px;
-    background-color: $cl-primary-20;
-  }
+.test-card {
+  overflow: hidden;
+  padding: 10px;
+  height: 92%;
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
+  background-color: var(--cl-primary-20);
+}
 
-  .content {
-    align-items: center;
-    overflow-y: auto;
-    background: none;
-    text-align: center !important;
-  }
+.content {
+  align-items: center;
+  overflow-y: auto;
+  background: none;
+  text-align: center !important;
+}
 
-  .heading {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    font-size: 24px;
-  }
+.heading {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 18px;
+}
 
-  .timer {
-    margin: 10px;
-    color: white;
-    font-size: 140px;
-  }
+.timer {
+  margin: 10px;
+  color: white;
+  font-size: 140px;
+}
 
-  .image {
-    padding-bottom: 56px;
-    width: 200px;
-    height: auto;
-  }
+.image {
+  padding-bottom: 56px;
+  width: 200px;
+  height: auto;
 }

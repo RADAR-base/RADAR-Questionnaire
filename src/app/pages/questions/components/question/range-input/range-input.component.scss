@@ -1,85 +1,75 @@
-range-input {
-  display: block;
-  width: 100%;
+ion-label {
+  color: white !important;
+}
 
-  ion-label {
-    color: white !important;
-  }
+.item-md {
+  display: flex;
+  flex: 1 0 8px;
+  align-content: stretch;
+  margin: 0 -5px -12px;
+}
 
-  ul {
-    display: flex;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    list-style: none;
-  }
+ion-col {
+  --ripple-color: transparent;
 
-  ul li,
-  .item-md {
-    display: flex;
-    flex: 1 0 8px;
-    align-content: stretch;
-    margin: 0 -15px -12px;
-  }
+  position: relative;
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  justify-content: center;
+  height: var(--bt-height);
+  border: 2px solid white;
+  border-right: none;
+  background-color: var(--cl-primary-20);
+  color: var(--ion-font);
+  text-align: center;
+  font-size: 16px;
+  line-height: 1.35em;
+}
 
-  ul li ion-radio {
-    position: absolute;
-  }
+.checked {
+  background-color: var(--cl-primary) !important;
+}
 
-  ul li ion-label {
-    @include font-large;
+ion-col:first-child {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
 
-    position: relative;
-    display: flex;
-    flex-grow: 1;
-    align-items: center;
-    justify-content: center;
-    height: $bt-height;
-    border: 2px solid white;
-    border-right: none;
-    background-color: $cl-primary-20;
-  }
+ion-col:last-child {
+  border-right: 2px solid white;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
 
-  .item-radio-checked ion-label {
-    background-color: $cl-primary !important;
-  }
+.padding {
+  margin: 10px 3px;
+  font-size: 80%;
+}
 
-  ion-radio:checked + ion-label {
-    background-color: $cl-secondary;
-  }
+.labelLeft {
+  float: left;
+  width: 50%;
+}
 
-  ul li:first-child ion-label {
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
-  }
+.item-background-color {
+  --ion-item-background: transparent;
+}
 
-  ul li:last-child ion-label {
-    border-right: 2px solid white;
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-  }
+.labelRight {
+  float: right;
+  width: 50%;
+  text-align: right;
+}
 
-  ul li:hover ion-label {
-    background-color: $cl-primary;
-  }
+ion-radio {
+  --color: transparent;
+  --color-checked: transparent;
 
-  .padding {
-    margin: 10px 3px;
-    font-size: 80%;
-  }
+  width: 0;
+}
 
-  .labelLeft {
-    float: left;
-    width: 50%;
-  }
-
-  .labelRight {
-    float: right;
-    width: 50%;
-    text-align: right;
-  }
-
-  .radio-icon {
-    display: none !important;
-  }
+ion-row {
+  flex-wrap: nowrap;
+  align-items: center;
 }

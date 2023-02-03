@@ -16,12 +16,12 @@ import {
 } from '../../../shared/models/github'
 import { ProtocolMetaData } from '../../../shared/models/protocol'
 import { sortObject } from '../../../shared/utilities/sort-object'
+import { Utility } from '../../../shared/utilities/util'
 import { GithubClient } from '../misc/github-client.service'
 import { LogService } from '../misc/log.service'
 import { AnalyticsService } from '../usage/analytics.service'
 import { RemoteConfigService } from './remote-config.service'
 import { SubjectConfigService } from './subject-config.service'
-import { Utility } from '../../../shared/utilities/util'
 
 @Injectable()
 export class ProtocolService {
@@ -40,7 +40,7 @@ export class ProtocolService {
 
   pull(): Promise<ProtocolMetaData> {
     return Promise.all([this.getProjectTree(), this.getParticipantAttributes()])
-      .then(([tree, attributes]) =>
+      .then(([tree, attributes]: [GithubTreeChild[], any]) =>
         this.findValidProtocolUrl(
           tree,
           new Map(Object.entries(attributes))

@@ -1,7 +1,7 @@
 import { HttpClient, HttpHandler } from '@angular/common/http'
 import { TestBed } from '@angular/core/testing'
 import { JwtHelperService } from '@auth0/angular-jwt'
-import { Platform } from 'ionic-angular'
+import { Platform } from '@ionic/angular'
 
 import {
   JwtHelperServiceMock,

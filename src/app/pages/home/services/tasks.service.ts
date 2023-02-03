@@ -18,7 +18,9 @@ import {
   setDateTimeToMidnightEpoch
 } from '../../../shared/utilities/time'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class TasksService {
   changeDetectionEmitter: EventEmitter<void> = new EventEmitter<void>()
 
@@ -31,6 +33,13 @@ export class TasksService {
       console.log('Changes detected to schedule..')
       this.changeDetectionEmitter.emit()
     })
+  }
+
+  init() {
+    console.log(this.schedule.isInitialised())
+    return this.schedule.isInitialised()
+      ? Promise.resolve()
+      : this.schedule.init()
   }
 
   getOnDemandAssessmentIcon() {

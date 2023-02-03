@@ -1,5 +1,5 @@
 <img src="assets/imgs/checkmark-big.svg" class="icon" alt="Completed" />
-<h2 text-center>
+<h2 class="ion-text-center">
   {{ content }}
   <br />
   {{ externalAppLaunchDescription }}
@@ -13,7 +13,7 @@
       <ion-label>
         {{ 'FINISH_COMPLETED_IN_CLINIC' | translate }}
       </ion-label>
-      <ion-toggle item-right [(ngModel)]="completedInClinic"></ion-toggle>
+      <ion-toggle item-right (ionChange)="toggleChanged($event)"></ion-toggle>
     </ion-item>
   </div>
   <div class="done-button">

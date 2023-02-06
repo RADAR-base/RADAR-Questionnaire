@@ -3710,10 +3710,9 @@ colors@1.4.0, colors@^1.1.2, colors@^1.4.0:
   resolved "https://registry.npmjs.org/colors/-/colors-1.4.0.tgz"
   integrity sha512-a+UqTh4kgZg/SlGvfbzDHpgRu7AAQOmmqRHJnxhRZICKFUT91brVhNNt58CMWU9PsBbv3PDCZUHbVxuDiH2mtA==
 
-com-darryncampbell-cordova-plugin-intent@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.npmjs.org/com-darryncampbell-cordova-plugin-intent/-/com-darryncampbell-cordova-plugin-intent-2.0.0.tgz"
-  integrity sha512-4f5BAyhpiGVsuouj2cokZCb99RA8V4O5YZnwGMliceFCu35BQcQvC0VLW55jl+xVDLhVymomnaBiHSktKKnK4w==
+"com-darryncampbell-cordova-plugin-intent@git+https://github.com/mpgxvii/darryncampbell-cordova-plugin-intent.git":
+  version "2.2.0"
+  resolved "git+https://github.com/mpgxvii/darryncampbell-cordova-plugin-intent.git#302b201bbe5e82365dd3a00bb4a15dd643e5f011"
 
 combine-source-map@^0.8.0, combine-source-map@~0.8.0:
   version "0.8.0"
@@ -3930,6 +3929,11 @@ cordova-android@^9.0.0:
     properties-parser "^0.3.1"
     which "^2.0.2"
 
+cordova-androidx-build@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/cordova-androidx-build/-/cordova-androidx-build-1.0.4.tgz#caaf2bf59dcc82f4d12b4c384e1deafce6ba3ca4"
+  integrity sha512-ZC+NHOA4WPI8qV+YyvBba/XokF169tpc9X08fbov6zNXwczeA0w+9lqq+E5Nyp+hX4OX/r8p3q1MSPPYLDa8tA==
+
 cordova-app-hello-world@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npmjs.org/cordova-app-hello-world/-/cordova-app-hello-world-4.0.0.tgz"
@@ -4055,10 +4059,10 @@ cordova-lib@^9.0.1:
     shebang-command "^1.2.0"
     underscore "^1.9.1"
 
-cordova-media-with-compression@^2.1.2:
-  version "2.1.2"
-  resolved "https://registry.npmjs.org/cordova-media-with-compression/-/cordova-media-with-compression-2.1.2.tgz"
-  integrity sha512-pzJ+iKkfGQ3XwKc2V+4k/wqNIMaxQR4b+qJAp07Uy/cV8NoiBQF3J2ycqTvuzewUwzgBh5VLvA2ztqxD1KnIUg==
+cordova-media-with-compression@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/cordova-media-with-compression/-/cordova-media-with-compression-2.3.0.tgz#1d94f7abb48d10fb7dba999c36268908de6c0ffa"
+  integrity sha512-vBajDbqSiM0gkenvdM0IVTLOpHZEtRKv9puoISaOVla6aLl1EDMok89g0fWy5vsrtzXEugn8C7Ev+Fxp+kuO3g==
 
 cordova-plugin-android-permissions@^1.1.2:
   version "1.1.2"
@@ -4083,9 +4087,9 @@ cordova-plugin-app-version@^0.1.12:
   resolved "https://registry.npmjs.org/cordova-plugin-app-version/-/cordova-plugin-app-version-0.1.12.tgz"
   integrity sha512-P+0d9+h9HasanKuMd8tcEpuJJlsVmClie3Mbq16v3TV/VroDrgYB6Ea8Imkc/WjjMVSBCjWB+pji1LoupWlddA==
 
-"cordova-plugin-background-mode@https://bitbucket.org/TheBosZ/cordova-plugin-run-in-background.git":
-  version "0.7.3"
-  resolved "https://bitbucket.org/TheBosZ/cordova-plugin-run-in-background.git#df990e762f6ad8fb2021c0001f3576bd9b5b8bb7"
+"cordova-plugin-background-mode@git+https://bitbucket.org/TheBosZ/cordova-plugin-run-in-background.git":
+  version "0.8.0"
+  resolved "git+https://bitbucket.org/TheBosZ/cordova-plugin-run-in-background.git#e11ee4f4324cb1f67db093d2c7a815ea23bc48bb"
 
 cordova-plugin-badge@^0.8.8:
   version "0.8.8"
@@ -4112,9 +4116,10 @@ cordova-plugin-file@^6.0.1:
   resolved "https://registry.npmjs.org/cordova-plugin-file/-/cordova-plugin-file-6.0.2.tgz"
   integrity sha512-m7cughw327CjONN/qjzsTpSesLaeybksQh420/gRuSXJX5Zt9NfgsSbqqKDon6jnQ9Mm7h7imgyO2uJ34XMBtA==
 
-"cordova-plugin-firebasex@https://github.com/mpgxvii/cordova-plugin-firebasex.git":
-  version "11.0.3-cli"
-  resolved "https://github.com/mpgxvii/cordova-plugin-firebasex.git#2b1c960beddf28311b8466f68cdbd65a54c38c63"
+cordova-plugin-firebasex@^15.0.0-cli:
+  version "15.0.0"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-firebasex/-/cordova-plugin-firebasex-15.0.0.tgz#0de692da7a2d9332a8a3b22117904f3a0cb3b810"
+  integrity sha512-MKFP+D08K83uCkWLpkw7R0JHuUwsXOyalxdGaPLbierYCIxb4YX9IAl5u4HX8JgxtuhAY3y9ecCRor/4XFXb9w==
   dependencies:
     plist "^3.0.1"
     semver "^7.3.2"
@@ -4146,9 +4151,9 @@ cordova-plugin-local-notification@^0.9.0-beta.3:
   resolved "https://registry.npmjs.org/cordova-plugin-local-notification/-/cordova-plugin-local-notification-0.9.0-beta.3.tgz"
   integrity sha512-L3Z1velxrkm9nHFcvLnMgBPZjKFt6hwM6hn1lA+JFwIR26Yw6UF72z+/lRMBclAcOxBIDYCqeaLgvezmajjuEg==
 
-"cordova-plugin-network-information@https://github.com/apache/cordova-plugin-network-information.git":
+"cordova-plugin-network-information@git+https://github.com/apache/cordova-plugin-network-information.git":
   version "3.0.1-dev"
-  resolved "https://github.com/apache/cordova-plugin-network-information.git#a18c3b7cededc772aedc053005adf563a1141ac2"
+  resolved "git+https://github.com/apache/cordova-plugin-network-information.git#6fe954d1ee2bf9eb421937d0dd04ffd95e24258c"
 
 cordova-plugin-splashscreen@^6.0.0:
   version "6.0.0"

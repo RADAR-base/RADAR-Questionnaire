@@ -174,7 +174,7 @@
     "postcss-cli": "^7.1.2",
     "postcss-scss": "^2.0.0",
     "postcss-sorting": "^5.0.1",
-    "prettier": "^2.1.2",
+    "prettier": "^2.8.3",
     "protractor": "~7.0.0",
     "reflect-metadata": "^0.1.13",
     "requirejs": "^2.3.6",

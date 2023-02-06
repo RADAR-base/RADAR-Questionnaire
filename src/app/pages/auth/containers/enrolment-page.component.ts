@@ -1,6 +1,5 @@
 import { Component, ViewChild } from '@angular/core'
-import { IonSlides, NavController } from '@ionic/angular'
-import { AlertInput } from '@ionic/core'
+import { NavController, Slides } from 'ionic-angular'
 
 import {
   DefaultLanguage,
@@ -25,11 +24,11 @@ import { AuthService } from '../services/auth.service'
 
 @Component({
   selector: 'page-enrolment',
-  templateUrl: 'enrolment-page.component.html',
-  styleUrls: ['./enrolment-page.component.scss']
+  templateUrl: 'enrolment-page.component.html'
 })
 export class EnrolmentPageComponent {
-  @ViewChild(IonSlides, { static: true }) slides: IonSlides
+  @ViewChild(Slides)
+  slides: Slides
   loading: boolean = false
   showOutcomeStatus: boolean = false
   outcomeStatus: string
@@ -49,20 +48,16 @@ export class EnrolmentPageComponent {
     this.localization.update().then(lang => (this.language = lang))
   }
 
-  ionViewDidEnter() {
-    this.usage.setPage(this.constructor.name)
+  ionViewDidLoad() {
     this.slides.lockSwipes(true)
+    this.usage.setPage(this.constructor.name)
   }
 
   next() {
-    Promise.all([
-      this.slides.lockSwipes(false),
-      this.slides.getActiveIndex()
-    ]).then(([, index]) => {
-      const slideIndex = index + 1
-      this.slides.slideTo(slideIndex, 500)
-      this.slides.lockSwipes(true)
-    })
+    this.slides.lockSwipes(false)
+    const slideIndex = this.slides.getActiveIndex() + 1
+    this.slides.slideTo(slideIndex, 500)
+    this.slides.lockSwipes(true)
   }
 
   enterToken() {
@@ -116,7 +111,7 @@ export class EnrolmentPageComponent {
   }
 
   navigateToSplash() {
-    this.navCtrl.navigateRoot('/')
+    this.navCtrl.setRoot(SplashPageComponent)
   }
 
   showSelectLanguage() {
@@ -131,22 +126,19 @@ export class EnrolmentPageComponent {
           const lang = JSON.parse(selectedLanguageVal)
           this.localization.setLanguage(lang).then(() => {
             this.language = lang
-            return this.navigateToSplash()
+            return this.navCtrl.setRoot(EnrolmentPageComponent)
           })
         }
       }
     ]
-    const inputs = this.languagesSelectable.map(
-      lang =>
-        ({
-          type: 'radio',
-          label: this.localization.translate(lang.label),
-          value: JSON.stringify(lang),
-          checked: lang.value === this.language.value
-        } as AlertInput)
-    )
+    const inputs = this.languagesSelectable.map(lang => ({
+      type: 'radio',
+      label: this.localization.translate(lang.label),
+      value: JSON.stringify(lang),
+      checked: lang.value === this.language.value
+    }))
     return this.alertService.showAlert({
-      header: this.localization.translateKey(LocKeys.SETTINGS_LANGUAGE_ALERT),
+      title: this.localization.translateKey(LocKeys.SETTINGS_LANGUAGE_ALERT),
       buttons: buttons,
       inputs: inputs
     })

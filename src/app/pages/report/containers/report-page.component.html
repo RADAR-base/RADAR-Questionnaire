@@ -1,30 +1,34 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-navbar>
     <ion-title>Weekly Reports</ion-title>
-  </ion-toolbar>
+  </ion-navbar>
 </ion-header>
 
 <ion-content>
-  <div class="report-dates ion-text-center">
+  <div
+    text-center
+    class="report-dates"
+  >
     <h2>29th Apr - 5th May</h2>
   </div>
 
   <div class="report-card">
-    <ion-slides [pager]="true">
+    <ion-slides pager="true">
       <ion-slide>
         <h2 class="report-line">
           Feedback
-          <br />
+          <br>
           <div class="line">.</div>
         </h2>
         <div class="report-content">
           <div class="report-chart">
-            <img src="assets/imgs/mockreport-compliance.png" alt="mockreport" />
+            <img
+              src="assets/imgs/mockreport-compliance.png"
+              alt="mockreport"
+            >
           </div>
           <div class="report-message">
-            <p class="report-summary-text report-line">
-              "Well done. Keep it up!"
-            </p>
+            <p class="report-summary-text report-line">"Well done. Keep it up!"</p>
           </div>
         </div>
       </ion-slide>
@@ -32,12 +36,15 @@
       <ion-slide>
         <h2 class="report-line">
           Steps
-          <br />
+          <br>
           <div class="line">.</div>
         </h2>
         <div class="report-content">
           <div class="report-chart">
-            <img src="assets/imgs/mockreport-steps.png" alt="mockreport" />
+            <img
+              src="assets/imgs/mockreport-steps.png"
+              alt="mockreport"
+            >
           </div>
           <div class="report-message">
             <p class="report-summary-text">"Well done. Keep it up!"</p>
@@ -48,23 +55,28 @@
       <ion-slide>
         <h2 class="report-line">
           Heart rate
-          <br />
+          <br>
           <div class="line">.</div>
         </h2>
         <div class="report-content">
           <div class="report-chart">
-            <img src="assets/imgs/mockreport-heartRate.png" alt="mockreport" />
+            <img
+              src="assets/imgs/mockreport-heartRate.png"
+              alt="mockreport"
+            >
           </div>
           <div class="report-message">
             <p class="report-summary-text">
               "Well done. Keep it up!"
-              <br />
-              <br />
-              <br />
+              <br>
+              <br>
+              <br>
             </p>
           </div>
         </div>
       </ion-slide>
     </ion-slides>
+
   </div>
+
 </ion-content>

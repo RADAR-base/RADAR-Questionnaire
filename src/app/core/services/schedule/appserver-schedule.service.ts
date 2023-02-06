@@ -1,3 +1,5 @@
+import {} from './notification.service'
+
 import { Injectable } from '@angular/core'
 import * as moment from 'moment'
 
@@ -35,34 +37,13 @@ export class AppserverScheduleService extends ScheduleService {
   getTasksForDate(date: Date, type: AssessmentType) {
     const startTime = setDateTimeToMidnight(date)
     const endTime = moment(startTime).add(1, 'days').toDate()
-
     return this.appServer
       .getScheduleForDates(startTime, endTime)
-      .then(tasks => {
-        if (tasks == null || !tasks.length) throw new Error()
-        return Promise.all<Task>(
+      .then(tasks =>
+        Promise.all<Task>(
           tasks.map(t => this.mapTaskDTO(t, AssessmentType.SCHEDULED))
         ).then(res => this.setTasks(AssessmentType.SCHEDULED, res))
-      })
-      .catch(e => {
-        console.log('Error pulling tasks..')
-        return this.getLocalTasksForDate(date, AssessmentType.SCHEDULED)
-      })
-  }
-
-  getLocalTasksForDate(date: Date, type: AssessmentType) {
-    return this.getTasks(type).then(schedule => {
-      const startTime = setDateTimeToMidnightEpoch(date)
-      const endTime = startTime + getMilliseconds({ days: 1 })
-      return schedule
-        ? schedule.filter(d => {
-            return (
-              d.timestamp + d.completionWindow > startTime &&
-              d.timestamp < endTime
-            )
-          })
-        : []
-    })
+      )
   }
 
   generateSchedule(referenceTimestamp, utcOffsetPrev) {

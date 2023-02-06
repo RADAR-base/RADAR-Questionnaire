@@ -43,7 +43,7 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v1
         with:
-          java-version: 11
+          java-version: 1.8
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
@@ -91,20 +91,23 @@ jobs:
       - name: Install Ionic and Cordova
         run: npm i -g ionic cordova
 
+      - name: Install Yarn
+        run: npm i -g yarn
+
       - name: Install cordova-res
         run: npm i -g cordova-res
 
       - name: Install app dependencies
-        run: npm install
+        run: yarn install
 
       - name: Run unit tests
-        run: npm run test
+        run: yarn run test
 
       - name: Add Android platform
-        run: ionic cordova platform add android
+        run: ionic cordova platform add android && rm package-lock.json
 
       - name: Prepare Android app
-        run: npm install
+        run: yarn install
 
       - name: Build and Deploy Android app to Play Store
         uses: maierj/fastlane-action@v2.0.1

@@ -1,4 +1,4 @@
-<ion-content [scrollY]="false">
+<ion-content>
   <div class="wrapper">
     <div class="slide-flex">
       <ion-slides>
@@ -16,10 +16,7 @@
               let i = index
             "
           >
-            <div
-              class="q-container"
-              *ngFor="let question of item.value; let j = index"
-            >
+            <ng-container *ngFor="let question of item.value; let j = index">
               <question
                 *ngIf="
                   i >= currentQuestionGroupId - 10 &&
@@ -34,7 +31,7 @@
                 (answer)="onAnswer($event)"
                 (nextAction)="nextAction($event)"
               ></question>
-            </div>
+            </ng-container>
           </ion-slide>
         </ng-container>
         <ion-slide>

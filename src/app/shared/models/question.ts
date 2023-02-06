@@ -51,13 +51,14 @@ export class QuestionType {
   static info = 'info'
   static text = 'text'
   static yesno = 'yesno'
+  static launcher = 'launcher'
   static descriptive = 'descriptive'
   static matrix_radio = 'matrix-radio'
 }
 
 export interface Response {
   label: string
-  code: number | string
+  code: number
 }
 
 export interface Range {

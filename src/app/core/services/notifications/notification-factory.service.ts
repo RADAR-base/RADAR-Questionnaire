@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { Platform } from '@ionic/angular'
+import { Platform } from 'ionic-angular'
 
 import { DefaultNotificationType } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
@@ -7,6 +7,7 @@ import { NotificationMessagingType } from '../../../shared/models/notification-h
 import { RemoteConfigService } from '../config/remote-config.service'
 import { StorageService } from '../storage/storage.service'
 import { FcmRestNotificationService } from './fcm-rest-notification.service'
+import { FcmXmppNotificationService } from './fcm-xmpp-notification.service'
 import { LocalNotificationService } from './local-notification.service'
 import { NotificationService } from './notification.service'
 
@@ -16,6 +17,7 @@ export class NotificationFactoryService extends NotificationService {
 
   constructor(
     public fcmRestNotificationService: FcmRestNotificationService,
+    public fcmXmppNotificationService: FcmXmppNotificationService,
     public localNotificationService: LocalNotificationService,
     private remoteConfig: RemoteConfigService,
     private platform: Platform,
@@ -39,14 +41,14 @@ export class NotificationFactoryService extends NotificationService {
             return (this.notificationService = this.localNotificationService)
           case NotificationMessagingType.FCM_REST:
             return (this.notificationService = this.fcmRestNotificationService)
+          case NotificationMessagingType.FCM_XMPP:
+            return (this.notificationService = this.fcmXmppNotificationService)
           default:
             throw new Error('No such notification service available')
         }
       })
       .then(() =>
-        this.isPlatformCordova()
-          ? this.notificationService.init()
-          : (this.notificationService = this.fcmRestNotificationService)
+        this.isPlatformCordova() ? this.notificationService.init() : true
       )
   }
 

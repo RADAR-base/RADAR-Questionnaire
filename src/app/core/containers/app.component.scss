@@ -19,15 +19,15 @@
 // Application
 ion-app.md,
 ion-content {
-  background-color: var(--ion-color-secondary);
-  background-image: url('../../../assets/imgs/bg-mobile.png');
+  background-color: $cl-secondary;
+  background-image: url('../assets/imgs/bg-mobile.png');
   background-position: top center;
   background-size: cover;
   background-repeat: no-repeat;
 }
 
 body {
-  background-color: var(--ion-color-secondary);
+  background-color: $cl-secondary;
 }
 
 .icons-big {
@@ -62,22 +62,22 @@ h2 {
 }
 
 h3 {
-  color: var(--ion-font);
+  color: $cl-font;
   font-size: 14px;
 }
 
 h4 {
-  color: var(--ion-font);
+  color: $cl-font;
   font-size: 12px;
 }
 
 h5 {
-  color: var(--ion-font);
+  color: $cl-font;
   font-size: 10px;
 }
 
 h6 {
-  color: var(--ion-font);
+  color: $cl-font;
   font-size: 8px;
 }
 

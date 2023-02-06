@@ -10,8 +10,7 @@ import { isValidURL } from '../../../../shared/utilities/form-validators'
 
 @Component({
   selector: 'token-form',
-  templateUrl: 'token-form.component.html',
-  styleUrls: ['./token-form.component.scss']
+  templateUrl: 'token-form.component.html'
 })
 export class TokenFormComponent {
   @Input()

@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, async } from '@angular/core/testing'
 import { MobileAccessibility } from '@ionic-native/mobile-accessibility/ngx'
 import { SplashScreen } from '@ionic-native/splash-screen/ngx'
 import { StatusBar } from '@ionic-native/status-bar/ngx'
-import { Platform } from '@ionic/angular'
+import { Platform } from 'ionic-angular'
 
 import { NotificationServiceMock } from '../../shared/testing/mock-services'
 import { NotificationService } from '../services/notifications/notification.service'

@@ -1,11 +1,7 @@
 import { ComponentFixture, TestBed, async } from '@angular/core/testing'
-import { FormsModule, ReactiveFormsModule } from '@angular/forms'
-import { IonicModule, NavController } from '@ionic/angular'
-import { PipesModule } from 'src/app/shared/pipes/pipes.module'
+import { NavController } from 'ionic-angular'
 
 import { AppModule } from '../../../app.module'
-import { QRFormComponent } from '../components/qr-form/qr-form.component'
-import { TokenFormComponent } from '../components/token-form/token-form.component'
 import { EnrolmentPageComponent } from './enrolment-page.component'
 
 describe('EnrolmentPagecomponent', () => {
@@ -14,18 +10,8 @@ describe('EnrolmentPagecomponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [
-        AppModule,
-        IonicModule,
-        PipesModule,
-        FormsModule,
-        ReactiveFormsModule
-      ],
-      declarations: [
-        EnrolmentPageComponent,
-        TokenFormComponent,
-        QRFormComponent
-      ],
+      imports: [AppModule],
+      declarations: [],
       providers: [NavController]
     }).compileComponents()
 

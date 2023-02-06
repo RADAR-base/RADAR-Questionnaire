@@ -1,8 +1,10 @@
 <ng-container *ngIf="showDatePicker && currentlyShown">
-  <ion-item (click)="openDatePicker()" color="none">
-    <ion-input [(ngModel)]="selectedDate"> </ion-input>
-    <ion-icon name="calendar" slot="end"></ion-icon>
-  </ion-item>
+  <wheel-selector
+    [values]="datePickerValues"
+    [selection]="defaultDatePickerValue"
+    [labels]="labels"
+    (onSelect)="emitAnswer($event)"
+  ></wheel-selector>
 </ng-container>
 
 <ng-container *ngIf="showTimePicker && currentlyShown">
@@ -23,17 +25,16 @@
   ></wheel-selector>
 </ng-container>
 
-<ng-container *ngIf="showTextInput && currentlyShown">
-  <ion-item color="none" class="input">
+<ng-container *ngIf="showTextInput">
+  <ion-item>
     <ion-input
       type="text"
       enterkeyhint="next"
       placeholder="{{ 'PLACEHOLDER_TEXT_INPUT' | translate }}"
-      [(ngModel)]="textValue"
-      (ionChange)="emitAnswer('')"
+      (ionChange)="emitAnswer($event.value)"
       (ionFocus)="emitKeyboardEvent('focus')"
       (ionBlur)="emitKeyboardEvent('blur')"
-      (keyup)="emitKeyboardEvent($event.key)"
+      (keyup.enter)="emitKeyboardEvent('enter')"
     ></ion-input>
   </ion-item>
 </ng-container>

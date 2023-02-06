@@ -6,7 +6,7 @@ import {
 import { Injectable } from '@angular/core'
 import { FirebaseX } from '@ionic-native/firebase-x/ngx'
 import { WebIntent } from '@ionic-native/web-intent/ngx'
-import { Platform } from '@ionic/angular'
+import { Platform } from 'ionic-angular'
 import { Subscription } from 'rxjs'
 import * as urljoin from 'url-join'
 
@@ -66,7 +66,8 @@ export class FcmRestNotificationService extends FcmNotificationService {
   }
 
   init() {
-    return super.init().then(() => this.appServerService.init())
+    return super.init()
+      .then(() => this.appServerService.init())
   }
 
   onAppOpen() {

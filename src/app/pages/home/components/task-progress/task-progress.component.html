@@ -4,14 +4,32 @@
     class="noTasks-padding container-diary"
     *ngIf="noTasksToday"
   >
-    <img src="assets/imgs/diary.png" class="icon-esm" />
+    <img
+      src="assets/imgs/diary.png"
+      class="icon-esm"
+    >
   </div>
 
   <div *ngIf="!noTasksToday">
-    <div id="navigation">{{ 'TASK_PROGRESS_TITLE' | translate }}</div>
+    <div id="navigation">{{ "TASK_PROGRESS_TITLE" | translate }}</div>
 
-    <div *ngIf="progress" id="progress">
-      <div #progressActive class="progress-sub" *ngIf="!complete">
+    <div
+      class="pyro"
+      *ngIf="showFireworks"
+    >
+      <div class="before"></div>
+      <div class="after"></div>
+    </div>
+
+    <div
+      *ngIf="progress"
+      id="progress"
+    >
+      <div
+        #progressActive
+        class="progress-sub"
+        *ngIf="!complete"
+      >
         <round-progress
           id="prog-lg"
           [current]="current"
@@ -31,15 +49,24 @@
         [@enterAnimation]
       >
         <div class="completed">
-          <ion-icon #checkmark class="checkmark" name="checkmark"></ion-icon>
+          <ion-icon
+            #checkmark
+            class="checkmark"
+            name="checkmark"
+          ></ion-icon>
         </div>
       </div>
     </div>
-    <div #counter class="counter" [@translateY]="complete">
+    <div
+      #counter
+      class="counter"
+      [@translateY]="complete"
+    >
       <div class="large">{{ current }}</div>
       <div class="small">
-        {{ 'TASK_PROGRESS_COMPLETED' | translate }}
+        {{ "TASK_PROGRESS_COMPLETED" | translate }}
       </div>
     </div>
   </div>
+
 </div>

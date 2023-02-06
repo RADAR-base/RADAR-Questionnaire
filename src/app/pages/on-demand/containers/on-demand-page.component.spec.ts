@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed, async } from '@angular/core/testing'
-import { IonicModule, NavController } from '@ionic/angular'
-import { PipesModule } from 'src/app/shared/pipes/pipes.module'
+import { NavController } from 'ionic-angular'
 
 import { AppModule } from '../../../app.module'
 import { OnDemandService } from '../services/on-demand.service'
@@ -12,8 +11,8 @@ describe('OnDemandPageComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [AppModule, IonicModule, PipesModule],
-      declarations: [OnDemandPageComponent],
+      imports: [AppModule],
+      declarations: [],
       providers: [
         NavController,
         { provide: OnDemandService, useClass: OnDemandServiceMock }

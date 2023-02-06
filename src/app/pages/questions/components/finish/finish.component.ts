@@ -11,8 +11,7 @@ import { AssessmentType } from '../../../../shared/models/assessment'
 
 @Component({
   selector: 'finish',
-  templateUrl: 'finish.component.html',
-  styleUrls: ['finish.component.scss']
+  templateUrl: 'finish.component.html'
 })
 export class FinishComponent implements OnChanges {
   @Input()
@@ -46,9 +45,5 @@ export class FinishComponent implements OnChanges {
 
   handleClosePage() {
     this.exit.emit(this.completedInClinic)
-  }
-
-  toggleChanged(event) {
-    this.completedInClinic = event
   }
 }

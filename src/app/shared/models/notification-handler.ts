@@ -35,6 +35,7 @@ export interface NotificationTaskInfo {
 
 export enum NotificationMessagingType {
   LOCAL = 'LOCAL',
+  FCM_XMPP = 'FCM_XMPP',
   FCM_REST = 'FCM_REST'
 }
 

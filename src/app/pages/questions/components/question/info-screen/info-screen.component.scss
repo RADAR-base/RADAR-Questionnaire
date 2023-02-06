@@ -1,57 +1,58 @@
-.info-card {
-  padding: 16px;
-  height: 88%;
-  -webkit-border-radius: 8px;
-  border-radius: 12px;
-  background-color: var(--cl-primary-20);
-}
+info-screen {
+  .info-card {
+    padding: 16px;
+    height: 92%;
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+    background-color: $cl-primary-20;
+  }
 
-ion-content {
-  width: 75vw;
-  --background: transparent;
-  mask-image: -webkit-gradient(
-    linear,
-    left top,
-    left bottom,
-    from(rgba(0, 0, 0, 1)),
-    to(rgba(0, 0, 0, 0.25))
-  );
-  overflow: scroll;
-}
+  .content {
+    overflow-y: scroll;
+    width: 100%;
+    mask-image:
 
-.items {
-  padding-bottom: 32%;
-  overflow: scroll;
-}
+      -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        from(rgba(0, 0, 0, 1)),
+        to(rgba(0, 0, 0, 0.25))
+      );
+  }
 
-.info-heading {
-  opacity: 0.6;
-}
+  .items {
+    padding-bottom: 32%;
+  }
 
-.info-content {
-  margin-bottom: 48%;
-  overflow: scroll;
-}
+  .info-heading {
+    color: $cl-light-60;
+  }
 
-.image {
-  margin: auto;
-  width: 104px;
-  height: auto;
-}
+  .info-content {
+    margin-bottom: 48%;
+  }
 
-.image-container {
-  text-align: center;
-}
+  .image {
+    margin: auto;
+    width: 104px;
+    height: auto;
+  }
 
-.icon {
-  position: relative;
-  float: right;
-  margin: -36px 8px;
-  width: inherit;
-  text-align: right;
-}
+  .image-container {
+    text-align: center;
+  }
 
-ion-icon {
-  color: var(--cl-light-40);
-  font-size: 32px;
+  .icon {
+    position: relative;
+    float: right;
+    margin: -36px 8px;
+    width: inherit;
+    text-align: right;
+  }
+
+  ion-icon {
+    color: $cl-light-40;
+    font-size: 40px;
+  }
 }

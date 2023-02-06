@@ -14,8 +14,7 @@ import { Utility } from '../../../../shared/utilities/util'
 
 @Component({
   selector: 'wheel-selector',
-  templateUrl: 'wheel-selector.component.html',
-  styleUrls: ['wheel-selector.component.scss']
+  templateUrl: 'wheel-selector.component.html'
 })
 export class WheelSelectorComponent implements AfterViewInit, OnInit {
   keys = Object.keys

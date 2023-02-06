@@ -1,6 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core'
-import { Router } from '@angular/router'
-import { NavController, Platform } from '@ionic/angular'
+import { Component, OnDestroy } from '@angular/core'
+import { NavController, Platform } from 'ionic-angular'
 import { Subscription } from 'rxjs'
 
 import { AlertService } from '../../../core/services/misc/alert.service'
@@ -10,22 +9,26 @@ import { UsageEventType } from '../../../shared/enums/events'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { Task, TasksProgress } from '../../../shared/models/task'
 import { checkTaskIsNow } from '../../../shared/utilities/check-task-is-now'
+import { ClinicalTasksPageComponent } from '../../clinical-tasks/containers/clinical-tasks-page.component'
+import { OnDemandPageComponent } from '../../on-demand/containers/on-demand-page.component'
+import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
+import { SettingsPageComponent } from '../../settings/containers/settings-page.component'
+import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 import { TasksService } from '../services/tasks.service'
 import { HomePageAnimations } from './home-page.animation'
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home-page.component.html',
-  animations: HomePageAnimations,
-  styleUrls: ['./home-page.component.scss']
+  animations: HomePageAnimations
 })
-export class HomePageComponent implements OnInit, OnDestroy {
+export class HomePageComponent implements OnDestroy {
   title: Promise<string>
   sortedTasks: Promise<Map<any, any>>
   tasks: Promise<Task[]>
   nextTask: Task
   timeToNextTask: number
-  tasksProgress = Promise.resolve({ numberOfTasks: 0, completedTasks: 5 })
+  tasksProgress: Promise<TasksProgress>
   resumeListener: Subscription = new Subscription()
   changeDetectionListener: Subscription = new Subscription()
   lastTaskRefreshTime = Date.now()
@@ -40,7 +43,6 @@ export class HomePageComponent implements OnInit, OnDestroy {
   checkTaskInterval
   showMiscTasksButton: Promise<boolean>
   isTaskCalendarTaskNameShown: Promise<boolean>
-  currentDate: number
 
   APP_CREDITS = '&#169; RADAR-Base'
   HTML_BREAK = '<br>'
@@ -48,7 +50,6 @@ export class HomePageComponent implements OnInit, OnDestroy {
   TASK_REFRESH_MILLIS = 600_000
 
   constructor(
-    private router: Router,
     public navCtrl: NavController,
     public alertService: AlertService,
     private tasksService: TasksService,
@@ -57,11 +58,12 @@ export class HomePageComponent implements OnInit, OnDestroy {
     private usage: UsageService
   ) {
     this.resumeListener = this.platform.resume.subscribe(() => this.onResume())
-    this.changeDetectionListener =
-      this.tasksService.changeDetectionEmitter.subscribe(() => {
+    this.changeDetectionListener = this.tasksService.changeDetectionEmitter.subscribe(
+      () => {
         console.log('Changes to task service detected')
-        this.navCtrl.navigateRoot('')
-      })
+        this.navCtrl.setRoot(HomePageComponent)
+      }
+    )
   }
 
   getIsLoadingSpinnerShown() {
@@ -76,16 +78,8 @@ export class HomePageComponent implements OnInit, OnDestroy {
       this.taskIsNow &&
       !this.startingQuestionnaire &&
       !this.showCompleted &&
-      !this.showCalendar &&
-      !this.getIsLoadingSpinnerShown()
+      !this.showCalendar
     )
-  }
-
-  ngOnInit() {
-    this.platform
-      .ready()
-      .then(() => this.tasksService.init().then(() => this.init()))
-    this.usage.setPage(this.constructor.name)
   }
 
   ngOnDestroy() {
@@ -94,24 +88,27 @@ export class HomePageComponent implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter() {
-    this.nextTask = null
     this.startingQuestionnaire = false
-    this.tasksProgress = this.tasksService.getTaskProgress()
-    this.sortedTasks = this.tasksService.getValidTasksMap()
-    this.tasks = this.tasksService.getTasksOfToday()
-    this.showCalendar = false
+  }
+
+  ionViewDidLoad() {
+    this.init()
+    this.usage.setPage(this.constructor.name)
   }
 
   init() {
     this.sortedTasks = this.tasksService.getValidTasksMap()
     this.tasks = this.tasksService.getTasksOfToday()
     this.tasksProgress = this.tasksService.getTaskProgress()
-    this.checkTaskInterval = setInterval(() => this.checkForNextTask(), 1500)
+    this.tasks.then(tasks => {
+      this.checkTaskInterval = setInterval(() => {
+        this.checkForNextTask(tasks)
+      }, 1500)
+    })
     this.hasOnDemandTasks = this.tasksService.getHasOnDemandTasks()
     this.hasClinicalTasks = this.tasksService.getHasClinicalTasks()
     this.title = this.tasksService.getPlatformInstanceName()
-    this.isTaskCalendarTaskNameShown =
-      this.tasksService.getIsTaskCalendarTaskNameShown()
+    this.isTaskCalendarTaskNameShown = this.tasksService.getIsTaskCalendarTaskNameShown()
     this.onDemandIcon = this.tasksService.getOnDemandAssessmentIcon()
     this.showMiscTasksButton = this.getShowMiscTasksButton()
   }
@@ -125,28 +122,25 @@ export class HomePageComponent implements OnInit, OnDestroy {
   checkForNewDate() {
     if (Date.now() - this.lastTaskRefreshTime > this.TASK_REFRESH_MILLIS) {
       this.lastTaskRefreshTime = Date.now()
-      this.currentDate = this.tasksService.getCurrentDateMidnight().getTime()
-      this.navCtrl.navigateRoot('')
+      this.navCtrl.setRoot(SplashPageComponent)
     }
   }
 
-  checkForNextTask() {
-    this.tasks.then(tasks => {
-      const task = this.tasksService.getNextTask(tasks)
-      if (task) {
-        this.nextTask = task
-        this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
-        this.timeToNextTask = this.nextTask.timestamp - Date.now()
-      } else {
-        this.taskIsNow = false
-        this.nextTask = null
-        this.showCompleted = this.tasksService.areAllTasksComplete(tasks)
-        if (this.showCompleted) {
-          clearInterval(this.checkTaskInterval)
-          this.showCalendar = false
-        }
+  checkForNextTask(tasks) {
+    const task = this.tasksService.getNextTask(tasks)
+    if (task) {
+      this.nextTask = task
+      this.taskIsNow = checkTaskIsNow(this.nextTask.timestamp)
+      this.timeToNextTask = this.nextTask.timestamp - Date.now()
+    } else {
+      this.taskIsNow = false
+      this.nextTask = null
+      this.showCompleted = this.tasksService.areAllTasksComplete(tasks)
+      if (this.showCompleted) {
+        clearInterval(this.checkTaskInterval)
+        this.showCalendar = false
       }
-    })
+    }
   }
 
   displayTaskCalendar() {
@@ -155,17 +149,17 @@ export class HomePageComponent implements OnInit, OnDestroy {
   }
 
   openSettingsPage() {
-    this.navCtrl.navigateForward('settings')
+    this.navCtrl.push(SettingsPageComponent)
     this.usage.sendClickEvent('open_settings')
   }
 
   openClinicalTasksPage() {
-    this.navCtrl.navigateForward('/clinical-tasks')
+    this.navCtrl.push(ClinicalTasksPageComponent)
     this.usage.sendClickEvent('open_clinical_tasks')
   }
 
   openOnDemandTasksPage() {
-    this.navCtrl.navigateForward('/on-demand')
+    this.navCtrl.push(OnDemandPageComponent)
     this.usage.sendClickEvent('open_on_demand_tasks')
   }
 
@@ -176,7 +170,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
     if (this.tasksService.isTaskStartable(task)) {
       this.usage.sendClickEvent('start_questionnaire')
       this.startingQuestionnaire = true
-      this.navCtrl.navigateForward('/questions', { state: task })
+      return this.navCtrl.push(QuestionsPageComponent, task)
     } else {
       this.showMissedInfo()
     }
@@ -189,7 +183,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
       this.tasksService.getAppCreditsBody()
     ]).then(([title, body]) =>
       this.alertService.showAlert({
-        header: this.localization.chooseText(title),
+        title: this.localization.chooseText(title),
         message:
           this.localization.chooseText(body) +
           this.HTML_BREAK +
@@ -207,9 +201,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
 
   showMissedInfo() {
     return this.alertService.showAlert({
-      header: this.localization.translateKey(
-        LocKeys.CALENDAR_TASK_MISSED_TITLE
-      ),
+      title: this.localization.translateKey(LocKeys.CALENDAR_TASK_MISSED_TITLE),
       message: this.localization.translateKey(
         LocKeys.CALENDAR_TASK_MISSED_DESC
       ),

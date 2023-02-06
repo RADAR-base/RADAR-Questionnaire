@@ -6,8 +6,7 @@ let uniqueID = 0
 
 @Component({
   selector: 'range-input',
-  templateUrl: 'range-input.component.html',
-  styleUrls: ['range-input.component.scss']
+  templateUrl: 'range-input.component.html'
 })
 export class RangeInputComponent implements OnInit {
   @Output()
@@ -26,8 +25,6 @@ export class RangeInputComponent implements OnInit {
   uniqueID: number = uniqueID++
   name = `range-input-${this.uniqueID}`
   items: Item[] = Array()
-  colSize = '1'
-  checkedItem: number = null
 
   ngOnInit() {
     for (let i = this.min; i <= this.max; i++) {
@@ -36,11 +33,9 @@ export class RangeInputComponent implements OnInit {
         value: i
       })
     }
-    this.colSize = (12 / this.items.length).toString()
   }
 
   onInputChange(value) {
     this.valueChange.emit(value)
-    this.checkedItem = this.items.findIndex(i => i.value == value)
   }
 }

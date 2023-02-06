@@ -1,8 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core'
-import { Router } from '@angular/router'
 import { Insomnia } from '@ionic-native/insomnia/ngx'
-import { IonSlides, NavController, Platform } from '@ionic/angular'
-import { Subscription } from 'rxjs'
+import { NavController, NavParams, Platform, Slides } from 'ionic-angular'
 
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
@@ -23,22 +21,22 @@ import {
   QuestionType
 } from '../../../shared/models/question'
 import { Task } from '../../../shared/models/task'
+import { HomePageComponent } from '../../home/containers/home-page.component'
 import { AppLauncherService } from '../services/app-launcher.service'
 import { QuestionsService } from '../services/questions.service'
 
 @Component({
   selector: 'page-questions',
-  templateUrl: 'questions-page.component.html',
-  styleUrls: ['questions-page.component.scss']
+  templateUrl: 'questions-page.component.html'
 })
 export class QuestionsPageComponent implements OnInit {
-  @ViewChild(IonSlides, { static: true }) slides: IonSlides
+  @ViewChild(Slides)
+  slides: Slides
 
   startTime: number
   currentQuestionGroupId = 0
   nextQuestionGroupId: number
   questionOrder = [0]
-  allQuestionIndices = []
   isLeftButtonDisabled = false
   isRightButtonDisabled = true
   task: Task
@@ -60,63 +58,54 @@ export class QuestionsPageComponent implements OnInit {
   showFinishScreen: boolean
   showFinishAndLaunchScreen: boolean = false
   externalAppCanLaunch: boolean = false
-  viewEntered = false
-
   SHOW_INTRODUCTION_SET: Set<boolean | ShowIntroductionType> = new Set([
     true,
     ShowIntroductionType.ALWAYS,
     ShowIntroductionType.ONCE
   ])
   MATRIX_FIELD_NAME = 'matrix'
-  backButtonListener: Subscription
   showProgressCount: Promise<boolean>
 
   constructor(
     public navCtrl: NavController,
+    public navParams: NavParams,
     private questionsService: QuestionsService,
     private usage: UsageService,
     private platform: Platform,
     private insomnia: Insomnia,
     private localization: LocalizationService,
-    private router: Router,
     private appLauncher: AppLauncherService,
     private alertService: AlertService
   ) {
-    this.backButtonListener = this.platform.backButton.subscribe(() => {
+    this.platform.registerBackButtonAction(() => {
       this.sendCompletionLog()
-      navigator['app'].exitApp()
-      // this.platform.exitApp()
+      this.platform.exitApp()
     })
+  }
+
+  ionViewDidLoad() {
+    this.sendEvent(UsageEventType.QUESTIONNAIRE_STARTED)
+    this.usage.setPage(this.constructor.name)
+    this.insomnia.keepAwake()
+    this.slides.lockSwipes(true)
   }
 
   ionViewDidLeave() {
     this.sendCompletionLog()
     this.questionsService.reset()
     this.insomnia.allowSleepAgain()
-    this.backButtonListener.unsubscribe()
   }
 
   ngOnInit() {
-    const nav = this.router.getCurrentNavigation()
-    if (nav) {
-      this.task = nav.extras.state as Task
-      this.showProgressCount = this.questionsService.getIsProgressCountShown()
-      this.questionsService
-        .initRemoteConfigParams()
-        .then(() => this.questionsService.getQuestionnairePayload(this.task))
-        .then(res => {
-          this.initQuestionnaire(res)
-          return this.updateToolbarButtons()
-        })
-      this.sendEvent(UsageEventType.QUESTIONNAIRE_STARTED)
-      this.usage.setPage(this.constructor.name)
-      this.slides.lockSwipes(true)
-      this.insomnia.keepAwake()
-    }
-  }
-
-  ionViewWillEnter() {
-    this.slides.update()
+    this.task = this.navParams.data
+    this.showProgressCount = this.questionsService.getIsProgressCountShown()
+    return this.questionsService
+      .initRemoteConfigParams()
+      .then(() => this.questionsService.getQuestionnairePayload(this.task))
+      .then(res => {
+        this.initQuestionnaire(res)
+        return this.updateToolbarButtons()
+      })
   }
 
   initQuestionnaire(res) {
@@ -126,12 +115,19 @@ export class QuestionsPageComponent implements OnInit {
     this.showIntroductionScreen = this.SHOW_INTRODUCTION_SET.has(
       res.assessment.showIntroduction
     )
-    this.questions = res.questions
+
+    this.questions = this.appLauncher.removeLaunchAppFromQuestions(
+      res.questions
+    )
+    this.externalApp = this.appLauncher.getLaunchApp(res.questions)
     this.groupedQuestions = this.groupQuestionsByMatrixGroup(this.questions)
     this.endText =
       res.endText && res.endText.length
         ? res.endText
         : this.localization.translateKey(LocKeys.FINISH_THANKS)
+
+    this.checkIfQuestionnaireHasAppLaunch()
+
     this.isLastTask = res.isLastTask
     this.assessment = res.assessment
     this.taskType = res.type
@@ -140,7 +136,6 @@ export class QuestionsPageComponent implements OnInit {
     this.currentQuestionIndices = Object.keys(
       this.groupedQuestions.get(groupKeys[0])
     ).map(Number)
-    this.allQuestionIndices[0] = this.currentQuestionIndices
   }
 
   groupQuestionsByMatrixGroup(questions: Question[]) {
@@ -174,7 +169,13 @@ export class QuestionsPageComponent implements OnInit {
       .handleClinicalFollowUp(this.assessment, completedInClinic)
       .then(() => {
         this.updateDoneButton(false)
-        return this.navCtrl.navigateRoot('/home')
+        if (this.externalAppCanLaunch) {
+          this.appLauncher
+            .launchApp(this.externalApp, this.task)
+            .then(success => {
+              this.navCtrl.setRoot(HomePageComponent)
+            })
+        } else this.navCtrl.setRoot(HomePageComponent)
       })
   }
 
@@ -183,11 +184,9 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   slideQuestion() {
-    console.log(this.currentQuestionGroupId)
-    this.slides
-      .lockSwipes(false)
-      .then(() => this.slides.slideTo(this.currentQuestionGroupId, 300))
-      .then(() => this.slides.lockSwipes(true))
+    this.slides.lockSwipes(false)
+    this.slides.slideTo(this.currentQuestionGroupId, 300)
+    this.slides.lockSwipes(true)
 
     this.startTime = this.questionsService.getTime()
   }
@@ -225,8 +224,6 @@ export class QuestionsPageComponent implements OnInit {
     this.currentQuestionIndices = questionPosition.questionIndices
     if (this.isLastQuestion()) return this.navigateToFinishPage()
     this.questionOrder.push(this.nextQuestionGroupId)
-    this.allQuestionIndices[this.nextQuestionGroupId] =
-      this.currentQuestionIndices
     this.submitTimestamps()
     this.currentQuestionGroupId = this.nextQuestionGroupId
     this.slideQuestion()
@@ -236,10 +233,9 @@ export class QuestionsPageComponent implements OnInit {
   previousQuestion() {
     const currentQuestions = this.getCurrentQuestions()
     this.questionOrder.pop()
-    this.currentQuestionGroupId =
-      this.questionOrder[this.questionOrder.length - 1]
-    this.currentQuestionIndices =
-      this.allQuestionIndices[this.currentQuestionGroupId]
+    this.currentQuestionGroupId = this.questionOrder[
+      this.questionOrder.length - 1
+    ]
     this.updateToolbarButtons()
     if (!this.isRightButtonDisabled)
       this.questionsService.deleteLastAnswers(currentQuestions)
@@ -253,14 +249,14 @@ export class QuestionsPageComponent implements OnInit {
     this.isRightButtonDisabled =
       !this.questionsService.isAnyAnswered(currentQs) &&
       !this.questionsService.getIsAnyNextEnabled(currentQs)
-    this.isLeftButtonDisabled =
-      this.questionsService.getIsAnyPreviousEnabled(currentQs)
+    this.isLeftButtonDisabled = this.questionsService.getIsAnyPreviousEnabled(
+      currentQs
+    )
   }
 
   exitQuestionnaire() {
     this.sendEvent(UsageEventType.QUESTIONNAIRE_CANCELLED)
-    this.navCtrl.navigateBack('/home')
-    // this.navCtrl.pop({ animation: 'wp-transition' })
+    this.navCtrl.pop({ animation: 'wp-transition' })
   }
 
   navigateToFinishPage() {
@@ -268,10 +264,9 @@ export class QuestionsPageComponent implements OnInit {
     this.submitTimestamps()
     this.showFinishScreen = true
     this.onQuestionnaireCompleted()
-    this.slides
-      .lockSwipes(false)
-      .then(() => this.slides.slideTo(this.groupedQuestions.size, 500))
-      .then(() => this.slides.lockSwipes(true))
+    this.slides.lockSwipes(false)
+    this.slides.slideTo(this.groupedQuestions.size, 500)
+    this.slides.lockSwipes(true)
   }
 
   onQuestionnaireCompleted() {
@@ -326,16 +321,8 @@ export class QuestionsPageComponent implements OnInit {
       this.externalApp &&
       this.appLauncher.isExternalAppUriValidForThePlatform(this.externalApp)
     ) {
-      this.appLauncher
-        .isExternalAppCanLaunch(this.externalApp, this.task)
-        .then(canLaunch => {
-          this.showFinishAndLaunchScreen = true
-          this.externalAppCanLaunch = canLaunch
-        })
-        .catch(err => {
-          this.showFinishAndLaunchScreen = false
-          console.log(err)
-        })
+      this.showFinishAndLaunchScreen = true
+      this.externalAppCanLaunch = true
     }
   }
 }

@@ -3,9 +3,7 @@ import { Injectable } from '@angular/core'
 
 import { Timestamp } from '../../../shared/models/timestamp'
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class TimestampService {
   private date: Date
 

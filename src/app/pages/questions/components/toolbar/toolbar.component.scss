@@ -1,56 +1,47 @@
-.toolbar {
-  display: flex;
-  align-content: center;
-  justify-content: center;
-
-  .icon {
-    font-size: 24px;
+toolbar {
+  .toolbar-title {
+    color: $cl-light-40 !important;
+    font-size: 16px;
   }
-}
 
-ion-button {
-  color: var(--ion-font);
-  font-size: 16px;
-  &.disabled,
-  &.disabled:hover {
-    color: var(--cl-light-40);
-    opacity: 0.4;
+  .toolbar {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+
+    button {
+      @include font-body;
+
+      &.disabled,
+      &.disabled:hover {
+        color: $cl-light-40;
+      }
+    }
+
+    .icon {
+      font-size: 24px;
+    }
   }
-  --border-width: 0px;
-  --background: transparent;
-  --padding-start: 8px;
-  --padding-end: 8px;
-  text-transform: uppercase;
-  --ripple-color: transparent;
-  --background-hover: transparent;
-  --background-activated: transparent;
-}
 
-ion-icon {
-  padding-right: 4px;
-  padding-left: 4px;
-  padding-top: 4px;
-  font-size: 21px;
-}
+  .toolbar-label {
+    height: 12px;
+  }
 
-.toolbar-label {
-  height: 12px;
-}
+  .toolbar-background {
+    background-color: $cl-secondary;
+  }
 
-ion-toolbar {
-  --background: var(--ion-color-secondary);
-}
+  .toolbar-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background-color: $cl-secondary-light;
+  }
 
-.toolbar-progress {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 4px;
-  background-color: var(--cl-secondary-light);
-}
-
-.toolbar-progress-bar {
-  height: 100%;
-  background-color: var(--cl-primary-60);
+  .toolbar-progress-bar {
+    height: 100%;
+    background-color: $cl-primary-60;
+  }
 }

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
-import { IonicModule } from '@ionic/angular'
+import { IonicModule } from 'ionic-angular'
 import { MomentModule } from 'ngx-moment'
 
 import { PipesModule } from '../../../../shared/pipes/pipes.module'
@@ -13,7 +13,7 @@ const COMPONENTS = [TaskCalendarComponent]
   imports: [
     MomentModule,
     CommonModule,
-    IonicModule.forRoot(),
+    IonicModule.forRoot(TaskCalendarComponent),
     PipesModule,
     TaskCalendarRowModule
   ],

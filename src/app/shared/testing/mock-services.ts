@@ -26,9 +26,7 @@ export class LogServiceMock {
   log() {}
 }
 export class ScheduleServiceMock {}
-export class NotificationServiceMock {
-  init() {}
-}
+export class NotificationServiceMock {}
 export class ProtocolServiceMock {}
 export class QuestionnaireServiceMock {}
 export class AppConfigServiceMock {}

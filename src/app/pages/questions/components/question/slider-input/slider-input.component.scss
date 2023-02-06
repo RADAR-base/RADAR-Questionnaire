@@ -1,44 +1,44 @@
-.value {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 32px;
-}
+slider-input {
+  .value {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 32px;
+  }
 
-.value-number {
-  color: var(--ion-font);
-  font-size: 18px;
-  line-height: 1.35em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4px 16px;
-  width: 128px;
-  height: var(--label-height);
-  border-radius: var(--label-height);
-  background-color: var(--cl-primary-40);
-}
+  .value-number {
+    @include font-large;
 
-ion-label {
-  padding-bottom: 0;
-  color: var(--ion-font);
-  font-size: 18px;
-  line-height: 1.35em;
-}
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 16px;
+    width: 128px;
+    height: $label-height;
+    border-radius: $label-height;
+    background-color: $cl-primary-40;
+  }
 
-.padding {
-  margin: -10px 5px;
-  font-size: 80%;
-}
+  ion-label {
+    @include font-large;
 
-.labelLeft {
-  float: left;
-  width: 48%;
-}
+    padding-bottom: 0;
+  }
 
-.labelRight {
-  float: right;
-  width: 48%;
-  text-align: right;
+  .padding {
+    margin: -10px 5px;
+    font-size: 80%;
+  }
+
+  .labelLeft {
+    float: left;
+    width: 48%;
+  }
+
+  .labelRight {
+    float: right;
+    width: 48%;
+    text-align: right;
+  }
 }

@@ -1,12 +1,16 @@
-import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { CommonModule } from '@angular/common'
+import { NgModule } from '@angular/core'
+import { IonicModule } from 'ionic-angular'
 
-import { PipesModule } from '../../shared/pipes/pipes.module';
-import { ReportPageComponent } from './containers/report-page.component';
+import { PipesModule } from '../../shared/pipes/pipes.module'
+import { ReportPageComponent } from './containers/report-page.component'
 
 @NgModule({
-  imports: [CommonModule, PipesModule, IonicModule.forRoot()],
-  declarations: [ReportPageComponent],
+  imports: [
+    CommonModule,
+    PipesModule,
+    IonicModule.forRoot(ReportPageComponent)
+  ],
+  declarations: [ReportPageComponent]
 })
 export class ReportModule {}

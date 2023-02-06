@@ -22,9 +22,7 @@ import { AnswerService } from './answer.service'
 import { FinishTaskService } from './finish-task.service'
 import { TimestampService } from './timestamp.service'
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class QuestionsService {
   PREVIOUS_BUTTON_DISABLED_SET: Set<QuestionType> = new Set([
     QuestionType.timed,

@@ -1,6 +1,6 @@
 <ion-card>
   <ion-card-header>
-    <ion-icon name="close" class="header" (click)="dismiss()"></ion-icon>
+    <ion-icon name="md-close" class="header" (tap)="dismiss()"></ion-icon>
   </ion-card-header>
 
   <div class="center">
@@ -21,12 +21,12 @@
       </ion-row>
     </ion-grid>
 
-    <ion-segment (ionChange)="segmentChanged($event)">
+    <ion-segment [(ngModel)]="result">
       <ion-segment-button value="success">
-        <ion-label>{{ 'STATUS_SUCCESS' | translate }}</ion-label>
+        {{ 'STATUS_SUCCESS' | translate }}
       </ion-segment-button>
       <ion-segment-button value="errors">
-        <ion-label> {{ 'STATUS_FAILURE' | translate }}</ion-label>
+        {{ 'STATUS_FAILURE' | translate }}
       </ion-segment-button>
     </ion-segment>
 
@@ -42,7 +42,7 @@
       </ng-container>
       <ng-container *ngIf="!errors.length">
         <div *ngSwitchCase="'success'" class="scroll-success">
-          <button (click)="dismiss()" class="done-btn">
+          <button (tap)="dismiss()" class="done-btn">
             {{ 'BTN_DONE' | translate }}
           </button>
         </div>

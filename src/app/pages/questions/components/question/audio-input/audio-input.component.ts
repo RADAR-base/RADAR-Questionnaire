@@ -6,7 +6,7 @@ import {
   OnInit,
   Output
 } from '@angular/core'
-import { NavController, Platform } from '@ionic/angular'
+import { NavController, Platform } from 'ionic-angular'
 import { Subscription } from 'rxjs'
 
 import { DefaultMaxAudioAttemptsAllowed } from '../../../../../../assets/data/defaultConfig'
@@ -22,8 +22,7 @@ import { AudioRecordService } from '../../../services/audio-record.service'
 
 @Component({
   selector: 'audio-input',
-  templateUrl: 'audio-input.component.html',
-  styleUrls: ['audio-input.component.scss']
+  templateUrl: 'audio-input.component.html'
 })
 export class AudioInputComponent implements OnDestroy, OnInit {
   @Output()
@@ -40,7 +39,6 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   pauseListener: Subscription
   showInfoCard: boolean
   textLengthThreshold = 400
-  backButtonListener: Subscription
 
   constructor(
     private audioRecordService: AudioRecordService,
@@ -63,19 +61,15 @@ export class AudioInputComponent implements OnDestroy, OnInit {
         this.showTaskInterruptedAlert()
       }
     })
-
-    this.backButtonListener = this.platform.backButton.subscribe(() => {
+    this.platform.registerBackButtonAction(() => {
       this.stopRecording()
-      navigator['app'].exitApp()
-      // this.platform.exitApp();
+      this.platform.exitApp()
     })
-
     this.showInfoCard = this.text.length > this.textLengthThreshold
   }
 
   ngOnDestroy() {
     this.pauseListener.unsubscribe()
-    this.backButtonListener.unsubscribe()
   }
 
   handleRecording() {
@@ -132,7 +126,7 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   showTaskInterruptedAlert() {
     this.usage.sendGeneralEvent(UsageEventType.RECORDING_ERROR)
     this.alertService.showAlert({
-      header: this.translate.transform(LocKeys.AUDIO_TASK_ALERT.toString()),
+      title: this.translate.transform(LocKeys.AUDIO_TASK_ALERT.toString()),
       message: this.translate.transform(
         LocKeys.AUDIO_TASK_ALERT_DESC.toString()
       ),
@@ -140,18 +134,18 @@ export class AudioInputComponent implements OnDestroy, OnInit {
         {
           text: this.translate.transform(LocKeys.BTN_OKAY.toString()),
           handler: () => {
-            this.navCtrl.navigateRoot('')
+            this.navCtrl.setRoot(HomePageComponent)
           }
         }
       ],
-      backdropDismiss: false
+      enableBackdropDismiss: false
     })
   }
 
   showAfterAttemptAlert() {
     const attemptsLeft = DefaultMaxAudioAttemptsAllowed - this.recordAttempts
     this.alertService.showAlert({
-      header: this.translate.transform(
+      title: this.translate.transform(
         LocKeys.AUDIO_TASK_HAPPY_ALERT.toString()
       ),
       message:
@@ -173,7 +167,7 @@ export class AudioInputComponent implements OnDestroy, OnInit {
           handler: () => {}
         }
       ],
-      backdropDismiss: false
+      enableBackdropDismiss: false
     })
   }
 }

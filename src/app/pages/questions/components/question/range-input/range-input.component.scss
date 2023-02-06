@@ -1,75 +1,85 @@
-ion-label {
-  color: white !important;
-}
+range-input {
+  display: block;
+  width: 100%;
 
-.item-md {
-  display: flex;
-  flex: 1 0 8px;
-  align-content: stretch;
-  margin: 0 -5px -12px;
-}
+  ion-label {
+    color: white !important;
+  }
 
-ion-col {
-  --ripple-color: transparent;
+  ul {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    list-style: none;
+  }
 
-  position: relative;
-  display: flex;
-  flex-grow: 1;
-  align-items: center;
-  justify-content: center;
-  height: var(--bt-height);
-  border: 2px solid white;
-  border-right: none;
-  background-color: var(--cl-primary-20);
-  color: var(--ion-font);
-  text-align: center;
-  font-size: 16px;
-  line-height: 1.35em;
-}
+  ul li,
+  .item-md {
+    display: flex;
+    flex: 1 0 8px;
+    align-content: stretch;
+    margin: 0 -15px -12px;
+  }
 
-.checked {
-  background-color: var(--cl-primary) !important;
-}
+  ul li ion-radio {
+    position: absolute;
+  }
 
-ion-col:first-child {
-  border-top-left-radius: 8px;
-  border-bottom-left-radius: 8px;
-}
+  ul li ion-label {
+    @include font-large;
 
-ion-col:last-child {
-  border-right: 2px solid white;
-  border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
-}
+    position: relative;
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+    height: $bt-height;
+    border: 2px solid white;
+    border-right: none;
+    background-color: $cl-primary-20;
+  }
 
-.padding {
-  margin: 10px 3px;
-  font-size: 80%;
-}
+  .item-radio-checked ion-label {
+    background-color: $cl-primary !important;
+  }
 
-.labelLeft {
-  float: left;
-  width: 50%;
-}
+  ion-radio:checked + ion-label {
+    background-color: $cl-secondary;
+  }
 
-.item-background-color {
-  --ion-item-background: transparent;
-}
+  ul li:first-child ion-label {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+  }
 
-.labelRight {
-  float: right;
-  width: 50%;
-  text-align: right;
-}
+  ul li:last-child ion-label {
+    border-right: 2px solid white;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
 
-ion-radio {
-  --color: transparent;
-  --color-checked: transparent;
+  ul li:hover ion-label {
+    background-color: $cl-primary;
+  }
 
-  width: 0;
-}
+  .padding {
+    margin: 10px 3px;
+    font-size: 80%;
+  }
 
-ion-row {
-  flex-wrap: nowrap;
-  align-items: center;
+  .labelLeft {
+    float: left;
+    width: 50%;
+  }
+
+  .labelRight {
+    float: right;
+    width: 50%;
+    text-align: right;
+  }
+
+  .radio-icon {
+    display: none !important;
+  }
 }

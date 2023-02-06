@@ -1,6 +1,6 @@
 // MIXINS
 @mixin font-body() {
-  color: var(--ion-font);
+  color: $cl-font;
   font-size: 16px;
 }
 
@@ -13,22 +13,22 @@
 @mixin font-body-light() {
   @include font-body;
 
-  color: var(--cl-font-light);
+  color: $cl-font-light;
 }
 
 @mixin font-small() {
-  color: var(--cl-font-light);
+  color: $cl-font-light;
   font-size: 12px;
 }
 
 @mixin font-large() {
-  color: var(--ion-font);
+  color: $cl-font;
   font-size: 18px;
   line-height: 1.35em;
 }
 
 @mixin font-title() {
-  color: var(--ion-font);
+  color: $cl-font;
   font-size: 20px;
 }
 
@@ -36,8 +36,8 @@
   @include font-large;
 
   padding: 8px 32px;
-  height: var(--bt-height);
+  height: $bt-height;
   border: 2px solid white;
-  border-radius: var(--bt-height);
-  background-color: var(--cl-primary-20);
+  border-radius: $bt-height;
+  background-color: $cl-primary-20;
 }

@@ -3,28 +3,28 @@
     <div dir="auto" class="text text-justify">
       {{ 'ENROL_REGISTRATION_TOKEN_DESC' | translate }}
     </div>
-    <ion-item class="input" color="transparent">
+    <ion-item class="input">
       <ion-input
-        [required]="true"
+        required
         formControlName="baseURL"
         type="url"
         placeholder="Base URL"
         (ionFocus)="onFocus()"
       ></ion-input>
     </ion-item>
-    <ion-item class="input" color="transparent">
+    <ion-item class="input">
       <ion-input
-        [required]="true"
+        required
         formControlName="tokenName"
         type="text"
         placeholder="Token"
         (ionFocus)="onFocus()"
-        [clearOnEdit]="true"
+        clearOnEdit="true"
       ></ion-input>
     </ion-item>
   </div>
-  <div class="bottom" *ngIf="!loading">
-    <ion-button
+  <div class="bottom" padding *ngIf="!loading">
+    <button
       form="tokenForm"
       ion-button
       class="bt bt--full"
@@ -33,6 +33,6 @@
       type="submit"
     >
       {{ 'BTN_SUBMIT' | translate }}
-    </ion-button>
+    </button>
   </div>
 </form>

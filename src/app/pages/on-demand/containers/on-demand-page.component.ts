@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { NavController } from '@ionic/angular'
+import { NavController } from 'ionic-angular'
 
 import { Assessment } from '../../../shared/models/assessment'
 import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
@@ -7,8 +7,7 @@ import { OnDemandService } from '../services/on-demand.service'
 
 @Component({
   selector: 'page-on-demand',
-  templateUrl: 'on-demand-page.component.html',
-  styleUrls: ['on-demand-page.component.scss']
+  templateUrl: 'on-demand-page.component.html'
 })
 export class OnDemandPageComponent {
   scrollHeight: number = 500
@@ -16,7 +15,7 @@ export class OnDemandPageComponent {
   title: Promise<String>
 
   constructor(
-    public navCtrl: NavController,
+    private navCtrl: NavController,
     private onDemandService: OnDemandService
   ) {}
 
@@ -28,6 +27,6 @@ export class OnDemandPageComponent {
   }
 
   clicked(task) {
-    this.navCtrl.navigateForward('/questions', { state: task })
+    this.navCtrl.push(QuestionsPageComponent, task)
   }
 }

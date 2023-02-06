@@ -1,34 +1,20 @@
 import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
-import { FormsModule, ReactiveFormsModule } from '@angular/forms'
-import { RouterModule, Routes } from '@angular/router'
-import { IonicModule } from '@ionic/angular'
-import { TokenService } from 'src/app/core/services/token/token.service'
+import { IonicModule } from 'ionic-angular'
 
 import { PipesModule } from '../../shared/pipes/pipes.module'
 import { QRFormComponent } from './components/qr-form/qr-form.component'
 import { TokenFormComponent } from './components/token-form/token-form.component'
 import { EnrolmentPageComponent } from './containers/enrolment-page.component'
-import { AuthGuard } from './services/auth.guard'
 import { AuthService } from './services/auth.service'
-
-const routes: Routes = [
-  {
-    path: '',
-    component: EnrolmentPageComponent
-  }
-]
 
 @NgModule({
   imports: [
     CommonModule,
-    IonicModule,
-    RouterModule.forChild(routes),
-    PipesModule,
-    FormsModule,
-    ReactiveFormsModule
+    IonicModule.forRoot(EnrolmentPageComponent),
+    PipesModule
   ],
   declarations: [EnrolmentPageComponent, TokenFormComponent, QRFormComponent],
-  providers: [AuthService, AuthGuard]
+  providers: [AuthService]
 })
 export class AuthModule {}

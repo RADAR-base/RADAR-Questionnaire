@@ -1,14 +1,18 @@
 <ion-list>
-  <ion-item lines="none" *ngFor="let item of items">
-    <ion-checkbox
-      [id]="item.id"
-      name="name"
-      value="item.value"
-      (click)="onInputChange(item)"
-    >
-    </ion-checkbox>
-    <ion-label [class.checked]="item.checked" dir="auto">
-      {{ item.response }}
-    </ion-label>
-  </ion-item>
+  <ul>
+    <li *ngFor="let item of items">
+      <ion-item no-lines>
+        <ion-checkbox
+          [id]="item.id"
+          name="name"
+          value="item.value"
+          (tap)="onInputChange(item)"
+        >
+        </ion-checkbox>
+        <ion-label [class.checked]="item.checked" dir="auto">
+          {{ item.response }}
+        </ion-label>
+      </ion-item>
+    </li>
+  </ul>
 </ion-list>

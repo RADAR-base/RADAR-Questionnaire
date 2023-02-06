@@ -5,14 +5,13 @@
   [min]="min"
   [max]="max"
   [step]="step"
-  [snaps]="true"
-  [pin]="true"
-  color="secondary"
+  snaps="true"
+  pin="true"
   [(ngModel)]="value"
   (ngModelChange)="onInputChange()"
 >
-  <ion-label slot="start">{{ min }}</ion-label>
-  <ion-label slot="end">{{ max }}</ion-label>
+  <ion-label range-left>{{ min }}</ion-label>
+  <ion-label range-right>{{ max }}</ion-label>
 </ion-range>
 <div class="padding">
   <div class="labelLeft">{{ labelLeft }}</div>

@@ -1,7 +1,9 @@
+import 'rxjs/add/operator/toPromise'
+
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { JwtHelperService } from '@auth0/angular-jwt'
-import { Platform } from '@ionic/angular'
+import { Platform } from 'ionic-angular'
 
 import {
   DefaultEndPoint,
@@ -20,9 +22,7 @@ import { RemoteConfigService } from '../config/remote-config.service'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class TokenService {
   private readonly TOKEN_STORE = {
     OAUTH_TOKENS: StorageKeys.OAUTH_TOKENS,

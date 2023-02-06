@@ -1,25 +1,26 @@
-ion-spinner * {
-  margin-right: auto;
-  margin-left: auto;
-  padding-left: 10px;
-  width: 10px;
-  height: 30px;
-  background-color: #fff;
-  fill: #fff;
-  stroke: #fff;
-}
+page-splash {
+  ion-spinner * {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 10px;
+    width: 10px;
+    height: 30px;
+    background-color: #fff;
+    fill: #fff;
+    stroke: #fff;
+  }
 
-.position-center {
-  margin-top: 80%;
-  margin-right: auto;
-  margin-left: auto;
-  padding-left: 10px;
-  width: 30px;
-  height: 30px;
-}
+  .position-center {
+    margin-top: 80%;
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 10px;
+    width: 30px;
+    height: 30px;
+  }
 
-.status-center {
-  margin-top: 15px;
-  text-align: center;
-  font-size: 14px;
+  .status-center {
+    margin-top: 15px;
+    text-align: center;
+  }
 }

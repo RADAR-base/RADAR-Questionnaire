@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, async } from '@angular/core/testing'
-import { NavController } from '@ionic/angular'
+import { NavController } from 'ionic-angular'
 
 import { LocalizationService } from '../../../../core/services/misc/localization.service'
 import { LogService } from '../../../../core/services/misc/log.service'

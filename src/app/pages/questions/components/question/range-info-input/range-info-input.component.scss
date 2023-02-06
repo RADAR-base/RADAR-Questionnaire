@@ -1,14 +1,20 @@
-.info-card {
-  overflow: auto;
-  padding: 10px;
-  margin-top: 24px;
-  max-height: 60%;
-  -webkit-border-radius: 8px;
-  border-radius: 8px;
-  background-color: var(--cl-primary-20);
-}
+range-info-input {
+  overflow: hidden;
 
-h2 {
-  color: var(--ion-font);
-  font-size: 16px;
+  range-input {
+    margin-bottom: 24px;
+  }
+
+  .info-card {
+    overflow: auto;
+    padding: 10px;
+    max-height: 60%;
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+    background-color: $cl-primary-20;
+  }
+
+  h2 {
+    @include font-body;
+  }
 }

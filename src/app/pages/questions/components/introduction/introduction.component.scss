@@ -1,25 +1,13 @@
-:host {
-  width: 100%;
-}
+introduction {
+  .questionnaire-title {
+    font-size: 4rem;
+  }
 
-.questionnaire-title {
-  font-size: 32px;
-}
+  .icons-big {
+    width: 30%;
+  }
 
-.icons-big {
-  width: 30%;
-}
-
-.intro {
-  align-items: center;
-  //margin-right: 10%;
-  //margin-left: 10%;
-}
-
-h2 {
-  font-size: 15px !important;
-}
-
-.pos-bottom {
-  padding-bottom: 64px;
+  h2 {
+    font-size: 15px !important;
+  }
 }

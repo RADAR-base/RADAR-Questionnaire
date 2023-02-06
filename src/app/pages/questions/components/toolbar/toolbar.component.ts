@@ -11,8 +11,7 @@ import { LocKeys } from '../../../../shared/enums/localisations'
 
 @Component({
   selector: 'toolbar',
-  templateUrl: 'toolbar.component.html',
-  styleUrls: ['toolbar.component.scss']
+  templateUrl: 'toolbar.component.html'
 })
 export class ToolbarComponent implements OnChanges {
   @Input()
@@ -46,7 +45,7 @@ export class ToolbarComponent implements OnChanges {
   rightButtonText = this.textValues.next
   leftButtonText = this.textValues.close
   iconValues = {
-    previous: 'chevron-back-outline',
+    previous: 'ios-arrow-back',
     close: 'close-circle'
   }
   iconPrevious: string = this.iconValues.close

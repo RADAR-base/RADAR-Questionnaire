@@ -9,9 +9,7 @@ import { AssessmentType } from '../../../shared/models/assessment'
 import { SchemaType } from '../../../shared/models/kafka'
 import { QuestionType } from '../../../shared/models/question'
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class FinishTaskService {
   constructor(
     private schedule: ScheduleService,

@@ -1,3 +1,5 @@
+import 'rxjs/add/operator/toPromise'
+
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 
@@ -13,9 +15,7 @@ import { AnalyticsService } from '../../../core/services/usage/analytics.service
 import { MetaToken, OAuthToken } from '../../../shared/models/token'
 import { isValidURL } from '../../../shared/utilities/form-validators'
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class AuthService {
   URI_base: string
 
@@ -29,10 +29,9 @@ export class AuthService {
   ) {}
 
   authenticate(authObj) {
-    return (
-      isValidURL(authObj)
-        ? this.metaTokenUrlAuth(authObj)
-        : this.metaTokenJsonAuth(authObj)
+    return (isValidURL(authObj)
+      ? this.metaTokenUrlAuth(authObj)
+      : this.metaTokenJsonAuth(authObj)
     ).then(refreshToken => {
       return this.registerToken(refreshToken)
         .then(() => this.registerAsSource())

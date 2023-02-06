@@ -1,119 +1,93 @@
 <ion-content>
-  <ion-slides [pager]="false">
+  <ion-slides pager="false">
     <!-- SLIDE 1 -->
     <ion-slide id="intro-language">
-      <ion-card>
-        <div class="logo-container">
-          <img class="logo" src="assets/imgs/radar-logo.svg" alt="RADAR LOGO" />
+      <div class="logo-container">
+        <img class="logo" src="assets/imgs/radar-logo.svg" alt="RADAR LOGO" />
+      </div>
+      <div class="text">
+        <div class="text-lg">{{ 'ENROL_WELCOME_1' | translate }}</div>
+        {{ 'ENROL_WELCOME_2' | translate }}
+        <div class="padding text-justify extra-padding">
+          <ion-item no-lines>
+            <span class="info-value">{{ language.label | translate }}</span>
+            <span item-right (tap)="showSelectLanguage()">
+              <ion-icon class="space-right" name="arrow-dropdown"></ion-icon>
+              {{ 'BTN_SELECT' | translate }}
+            </span>
+          </ion-item>
         </div>
-        <div class="text">
-          <div class="text-lg">{{ 'ENROL_WELCOME_1' | translate }}</div>
-          {{ 'ENROL_WELCOME_2' | translate }}
-          <div class="padding text-justify extra-padding">
-            <ion-item no-lines>
-              <span class="info-value">{{ language.label | translate }}</span>
-              <span slot="end" (click)="showSelectLanguage()">
-                <ion-icon
-                  class="space-right"
-                  name="caret-down-outline"
-                ></ion-icon>
-                {{ 'BTN_SELECT' | translate }}
-              </span>
-            </ion-item>
-          </div>
-        </div>
-        <div class="bottom">
-          <ion-button
-            ion-button
-            class="bt bt--full"
-            round
-            full
-            (click)="next()"
-          >
-            {{ 'BTN_START' | translate }}
-          </ion-button>
-        </div>
-      </ion-card>
+      </div>
+      <div padding class="bottom">
+        <button ion-button class="bt bt--full" round full (tap)="next()">
+          {{ 'BTN_START' | translate }}
+        </button>
+      </div>
     </ion-slide>
 
     <!-- SLIDE 2 -->
     <ion-slide id="intro">
-      <ion-card>
-        <div class="logo-container">
-          <img class="logo" src="assets/imgs/radar-logo.svg" alt="RADAR LOGO" />
+      <div class="logo-container">
+        <img class="logo" src="assets/imgs/radar-logo.svg" alt="RADAR LOGO" />
+      </div>
+      <div class="text">
+        <div class="text-lg">{{ 'ENROL_WELCOME_1' | translate }}</div>
+        {{ 'ENROL_WELCOME_2' | translate }}
+        <div dir="auto" class="padding text-justify extra-padding">
+          {{ 'ENROL_WELCOME_DESC' | translate }}
         </div>
-        <div class="text">
-          <div class="text-lg">{{ 'ENROL_WELCOME_1' | translate }}</div>
-          {{ 'ENROL_WELCOME_2' | translate }}
-          <div dir="auto" class="padding text-justify extra-padding">
-            {{ 'ENROL_WELCOME_DESC' | translate }}
-          </div>
-        </div>
-        <div class="bottom">
-          <ion-button class="bt bt--full" round full (click)="next()">
-            {{ 'BTN_ENROL_ENROL' | translate }}
-          </ion-button>
-        </div>
-      </ion-card>
+      </div>
+      <div padding class="bottom">
+        <button ion-button class="bt bt--full" round full (tap)="next()">
+          {{ 'BTN_ENROL_ENROL' | translate }}
+        </button>
+      </div>
     </ion-slide>
 
     <!-- SLIDE 3 -->
     <ion-slide id="qr-registration-choice">
-      <ion-card>
-        <div class="registration">
-          <div class="text text-lg">{{ 'ENROL_REGISTRATION' | translate }}</div>
-          <div dir="auto" class="text text-justify">
-            {{ 'ENROL_REGISTRATION_DESC' | translate }}
-          </div>
+      <div class="registration">
+        <div class="text text-lg">{{ 'ENROL_REGISTRATION' | translate }}</div>
+        <div dir="auto" class="text text-justify">
+          {{ 'ENROL_REGISTRATION_DESC' | translate }}
         </div>
-        <div class="bottom">
-          <p>
-            <ion-button
-              ion-button
-              class="bt bt--full"
-              round
-              full
-              (click)="next()"
-            >
-              {{ 'BTN_ENROL_SCAN' | translate }}
-            </ion-button>
-          </p>
-          <p>
-            <ion-button
-              ion-button
-              class="bt bt--full"
-              round
-              full
-              (click)="enterToken()"
-            >
-              {{ 'BTN_ENROL_ENTER_TOKEN' | translate }}
-            </ion-button>
-          </p>
-        </div>
-      </ion-card>
+      </div>
+      <div padding class="bottom">
+        <p>
+          <button ion-button class="bt bt--full" round full (tap)="next()">
+            {{ 'BTN_ENROL_SCAN' | translate }}
+          </button>
+        </p>
+        <p>
+          <button
+            ion-button
+            class="bt bt--full"
+            round
+            full
+            (tap)="enterToken()"
+          >
+            {{ 'BTN_ENROL_ENTER_TOKEN' | translate }}
+          </button>
+        </p>
+      </div>
     </ion-slide>
 
     <!-- SLIDE 4 -->
     <ion-slide id="qr-registration">
-      <ion-card>
-        <div class="registration">
-          <div class="text text-lg">{{ 'ENROL_REGISTRATION' | translate }}</div>
-          <ng-container *ngIf="enterMetaQR">
-            <token-form
-              [loading]="loading"
-              (data)="authenticate($event)"
-              (focus)="clearStatus()"
-              (errors)="handleError($event)"
-            ></token-form>
-          </ng-container>
-          <ng-container *ngIf="!enterMetaQR">
-            <qr-form
-              [loading]="loading"
-              (data)="authenticate($event)"
-            ></qr-form>
-          </ng-container>
-        </div>
-      </ion-card>
+      <div class="registration">
+        <div class="text text-lg">{{ 'ENROL_REGISTRATION' | translate }}</div>
+        <ng-container *ngIf="enterMetaQR">
+          <token-form
+            [loading]="loading"
+            (data)="authenticate($event)"
+            (focus)="clearStatus()"
+            (errors)="handleError($event)"
+          ></token-form>
+        </ng-container>
+        <ng-container *ngIf="!enterMetaQR">
+          <qr-form [loading]="loading" (data)="authenticate($event)"></qr-form>
+        </ng-container>
+      </div>
       <div class="status">
         <div id="outcome" *ngIf="showOutcomeStatus">
           {{ outcomeStatus }}
@@ -126,29 +100,27 @@
 
     <!-- SLIDE 5 -->
     <ion-slide id="registration-complete">
-      <ion-card>
-        <div class="text text-lg">
-          {{ 'ENROL_REGISTRATION_COMPLETE' | translate }}
-        </div>
-        <div class="reg-icon">
-          <img src="assets/imgs/MobileAnalytics-neg.png" alt="Mobile" />
-        </div>
-        <div dir="auto" class="text text-justify">
-          {{ 'ENROL_REGISTRATION_COMPLETE_DESC' | translate }}
-        </div>
+      <div class="text text-lg">
+        {{ 'ENROL_REGISTRATION_COMPLETE' | translate }}
+      </div>
+      <div class="reg-icon">
+        <img src="assets/imgs/MobileAnalytics-neg.png" alt="Mobile" />
+      </div>
+      <div dir="auto" class="text text-justify">
+        {{ 'ENROL_REGISTRATION_COMPLETE_DESC' | translate }}
+      </div>
 
-        <div class="bottom">
-          <ion-button
-            ion-button
-            class="bt bt--full"
-            round
-            full
-            (click)="navigateToSplash()"
-          >
-            {{ 'BTN_FINISH' | translate }}
-          </ion-button>
-        </div>
-      </ion-card>
+      <div padding class="bottom">
+        <button
+          ion-button
+          class="bt bt--full"
+          round
+          full
+          (tap)="navigateToSplash()"
+        >
+          {{ 'BTN_FINISH' | translate }}
+        </button>
+      </div>
     </ion-slide>
   </ion-slides>
 </ion-content>

@@ -1,28 +1,28 @@
 <img src="assets/imgs/checkmark-big.svg" class="icon" alt="Completed" />
-<h2 class="ion-text-center">{{ content }}</h2>
+<h2 text-center>{{ content }}</h2>
 <div class="pos-bottom">
   <div class="pos-bottom-90">
     <div *ngIf="displayNextTaskReminder" class="next-task-highlight">
       {{ 'FINISH_NEXT_TASK_REMINDER' | translate }}
     </div>
-    <ion-item color="none" lines="none" *ngIf="requiresInClinicCompletion">
+    <ion-item no-lines *ngIf="requiresInClinicCompletion">
       <ion-label>
         {{ 'FINISH_COMPLETED_IN_CLINIC' | translate }}
       </ion-label>
-      <ion-toggle item-right (ionChange)="toggleChanged($event)"></ion-toggle>
+      <ion-toggle item-right [(ngModel)]="completedInClinic"></ion-toggle>
     </ion-item>
   </div>
   <div class="done-button">
-    <ion-button
+    <button
       ion-button
       class="bt bt--full"
       round
       full
       *ngIf="showDoneButton"
-      (click)="handleClosePage()"
+      (tap)="handleClosePage()"
     >
       {{ 'BTN_DONE' | translate }}
-    </ion-button>
+    </button>
     <ng-container *ngIf="!showDoneButton && isShown">
       <div class="extra-info">
         <img

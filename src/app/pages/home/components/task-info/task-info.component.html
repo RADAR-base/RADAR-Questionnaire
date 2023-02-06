@@ -1,5 +1,8 @@
 <div id="task-info-container">
-  <div id="questionnaire-progress" [@moveInProgress]="expanded">
+  <div
+    id="questionnaire-progress"
+    [@moveInProgress]="expanded"
+  >
     <ng-container *ngIf="!expanded">
       <round-progress
         [current]="current"
@@ -14,12 +17,21 @@
     </ng-container>
   </div>
   <div class="right-info">
-    <div id="questionnaire-metrics" [@alignCenterRightMetrics]="expanded">
-      <img class="icon-padding icon-sm" src="assets/imgs/nTasks.png" />
+    <div
+      id="questionnaire-metrics"
+      [@alignCenterRightMetrics]="expanded"
+    >
+      <img
+        class="icon-padding icon-sm"
+        src="assets/imgs/nTasks.png"
+      >
       {{ task.nQuestions }}
       <span class="units">x</span>
-      <br />
-      <img class="icon-padding icon-sm" src="assets/imgs/stopwatch.png" />
+      <br>
+      <img
+        class="icon-padding icon-sm"
+        src="assets/imgs/stopwatch.png"
+      >
       {{ task.estimatedCompletionTime }}
       <span class="units">min</span>
     </div>
@@ -29,22 +41,46 @@
       [@scaleStatus]="expanded"
       #status
     >
-      <span class="text-md">
+      <span
+        [fittext]="true"
+        [maxFontSize]="60"
+        [container]="status"
+        [modelToWatch]="statusChanges"
+        class="text-md"
+      >
         {{ nextTaskStatus }}
       </span>
     </div>
     <div id="questionnaire-time">
-      <div *ngIf="!isNow && task.showInCalendar" class="text-md">
-        <div class="time-container" [@moveHour]="expanded">
+      <div
+        *ngIf="!isNow && task.showInCalendar"
+        class="text-md"
+      >
+        <div
+          class="time-container"
+          [@moveHour]="expanded"
+        >
           {{ getHour() }}
         </div>
-        <div class="time-container" [@scaleMinutes]="expanded">
-          <span class="time-colon" [@fade]="expanded"> : </span>
+        <div
+          class="time-container"
+          [@scaleMinutes]="expanded"
+        >
+          <span
+            class="time-colon"
+            [@fade]="expanded"
+          >
+            :
+          </span>
           <span>{{ getMinutes() }}</span>
         </div>
-        <div [@rotateMeridiem]="expanded" class="time-container meridiem">
+        <div
+          [@rotateMeridiem]="expanded"
+          class="time-container meridiem"
+        >
           {{ getMeridiem() }}
         </div>
+
       </div>
     </div>
   </div>
@@ -54,7 +90,11 @@
     class="extra-info"
     [@alignCenterRightExtraInfo]="expanded"
   >
-    <img class="extra-info-icon" src="assets/imgs/warning.png" />
-    {{ task.warning }}
+
+    <img
+      class="extra-info-icon"
+      src="assets/imgs/warning.png"
+    >
+    {{  task.warning }}
   </div>
 </div>

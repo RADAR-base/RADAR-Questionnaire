@@ -17,8 +17,7 @@ import { AppLauncherService } from '../../services/app-launcher.service'
 
 @Component({
   selector: 'finish-and-launch',
-  templateUrl: 'finish-and-launch.component.html',
-  styleUrls: ['finish-and-launch.component.scss']
+  templateUrl: 'finish-and-launch.component.html'
 })
 export class FinishAndLaunchComponent implements OnInit, OnChanges {
   @Input()
@@ -43,7 +42,7 @@ export class FinishAndLaunchComponent implements OnInit, OnChanges {
   displayNextTaskReminder = true
   completedInClinic = false
 
-  canLaunch = false
+  canLaunch = true
   externalAppLaunchDescription = ''
 
   constructor(
@@ -53,13 +52,7 @@ export class FinishAndLaunchComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit() {
-    this.appLauncher.isExternalAppCanLaunch(this.externalApp, this.task).then(canLaunch=>{
-      this.canLaunch = canLaunch
-      this.externalAppLaunchDescription = this.getExternalAppLaunchDescription(this.canLaunch)
-    }).catch(err=>{
-      console.log(err)
-      this.externalAppLaunchDescription = this.getExternalAppLaunchDescription(false)
-    })
+    this.getExternalAppLaunchDescription()
   }
 
   ngOnChanges() {
@@ -75,23 +68,18 @@ export class FinishAndLaunchComponent implements OnInit, OnChanges {
     this.exit.emit(this.completedInClinic)
   }
 
-  getExternalAppLaunchDescription(canLaunch: boolean) {
+  getExternalAppLaunchDescription() {
     const options = this.appLauncher.getAppLauncherOptions(
       this.externalApp,
       this.task
     )
-    if(canLaunch){
-      return this.externalApp.field_label && this.externalApp.field_label.length ?
-        (this.externalApp.field_label) : (this.localization.translateKey(LocKeys.EXTERNAL_APP_LAUNCH_DESC) + ' ' +
-          (this.externalApp.external_app_name? this.externalApp.external_app_name : options.uri.toString()))
-    }else{
-      return (this.externalApp.external_app_name?
-          this.externalApp.external_app_name : options.uri.toString())
-        + ' ' + this.localization.translateKey(LocKeys.EXTERNAL_APP_FAILURE_ON_VALIDATING)
-    }
-  }
-
-  toggleChanged(event) {
-    this.completedInClinic = event
+    this.externalAppLaunchDescription =
+      this.externalApp.field_label && this.externalApp.field_label.length
+        ? this.externalApp.field_label
+        : this.localization.translateKey(LocKeys.EXTERNAL_APP_LAUNCH_DESC) +
+          ' ' +
+          (this.externalApp.external_app_name
+            ? this.externalApp.external_app_name
+            : options.uri.toString())
   }
 }

@@ -1,8 +1,9 @@
+import 'rxjs/add/operator/mergeMap'
+
 import { Injectable } from '@angular/core'
 import { FirebaseX } from '@ionic-native/firebase-x/ngx'
-import { Platform } from '@ionic/angular'
+import { Platform } from 'ionic-angular'
 import { BehaviorSubject, Observable, from } from 'rxjs'
-import { mergeMap } from 'rxjs/operators'
 
 import { ConfigKeys } from '../../../shared/enums/config'
 import { StorageKeys } from '../../../shared/enums/storage'
@@ -105,7 +106,6 @@ class FirebaseRemoteConfig implements RemoteConfig {
 export class FirebaseRemoteConfigService extends RemoteConfigService {
   private readonly configSubject: BehaviorSubject<RemoteConfig>
   private FETCH_TIMEOUT_SECONDS = 20
-  private MINIMUM_FETCH_INTERVAL_SECONDS = 21600 // 6 hours
 
   constructor(
     private firebase: FirebaseX,
@@ -116,10 +116,7 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
     super(storage)
     this.configSubject = new BehaviorSubject(new EmptyRemoteConfig())
     this.platform.ready().then(() => {
-      FirebasePlugin.setConfigSettings(
-        this.FETCH_TIMEOUT_SECONDS,
-        this.MINIMUM_FETCH_INTERVAL_SECONDS
-      )
+      FirebasePlugin.setConfigSettings(this.FETCH_TIMEOUT_SECONDS, null)
     })
   }
 
@@ -158,6 +155,6 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
   }
 
   subject(): Observable<RemoteConfig> {
-    return from(this.read()).pipe(mergeMap(() => this.configSubject))
+    return from(this.read()).mergeMap(() => this.configSubject)
   }
 }

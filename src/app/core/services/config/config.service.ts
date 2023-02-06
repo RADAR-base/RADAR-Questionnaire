@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { compare } from 'compare-versions'
+import * as ver from 'semver'
 
 import {
   DefaultAppVersion,
@@ -28,9 +28,7 @@ import { QuestionnaireService } from './questionnaire.service'
 import { RemoteConfigService } from './remote-config.service'
 import { SubjectConfigService } from './subject-config.service'
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class ConfigService {
   ATTRIBUTE_KEY_PREFIX = 'att_'
 
@@ -47,9 +45,7 @@ export class ConfigService {
     private logger: LogService,
     private remoteConfig: RemoteConfigService,
     private messageHandlerService: MessageHandlerService
-  ) {
-    this.notifications.init()
-  }
+  ) {}
 
   fetchConfigState(force?: boolean) {
     return Promise.all([
@@ -76,9 +72,9 @@ export class ConfigService {
               .setNotificationMessagingType(newMessagingType)
               .then(() => this.rescheduleNotifications(true))
           if (newProtocol && newTimezone && !newAppVersion)
-            return this.updateConfigStateOnTimezoneChange(newTimezone).then(
-              () => this.updateConfigStateOnProtocolChange(newProtocol)
-            )
+            return this.updateConfigStateOnTimezoneChange(
+              newTimezone
+            ).then(() => this.updateConfigStateOnProtocolChange(newProtocol))
           if (newProtocol)
             return this.updateConfigStateOnProtocolChange(newProtocol)
           if (newAppVersion)
@@ -198,7 +194,7 @@ export class ConfigService {
       this.appConfig.getAppVersion()
     ])
       .then(([playstoreVersion, currentVersion]) =>
-        compare(playstoreVersion, currentVersion, '>')
+        ver.gt(ver.clean(playstoreVersion), ver.clean(currentVersion))
       )
       .catch(() => false)
   }
@@ -261,7 +257,8 @@ export class ConfigService {
 
   cancelNotifications() {
     this.sendConfigChangeEvent(NotificationEventType.CANCELLED)
-    return this.notifications.publish(NotificationActionType.CANCEL_ALL)
+    if (this.notifications)
+      return this.notifications.publish(NotificationActionType.CANCEL_ALL)
   }
 
   cancelSingleNotification(notificationId: number) {
@@ -287,8 +284,8 @@ export class ConfigService {
 
   resetAll() {
     this.sendConfigChangeEvent(ConfigEventType.APP_RESET)
-    // this.cancelNotifications()
-    // this.notifications.unregisterFromNotifications()
+    this.cancelNotifications()
+    this.notifications.unregisterFromNotifications()
     return Promise.all([this.resetConfig(), this.resetCache()]).then(() =>
       this.subjectConfig.reset()
     )

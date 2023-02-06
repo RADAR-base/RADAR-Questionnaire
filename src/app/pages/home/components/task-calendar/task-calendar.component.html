@@ -1,15 +1,11 @@
 <div>
-  <ion-content
-    [scrollY]="true"
-    class="layers"
-    [style.height.vh]="show ? 100 : 0"
-  >
+  <ion-scroll scrollY="true" class="layers" [style.height.vh]="show ? 100 : 0">
     <ng-container *ngIf="tasks">
       <ng-container *ngFor="let sortedTasks of tasks | keyvalue">
-        <div *ngIf="sortedTasks.key == currentDate" class="date ion-padding">
+        <div *ngIf="sortedTasks.key == currentDate" padding class="date">
           {{ 'TASK_CALENDAR_TITLE' | translate }}
         </div>
-        <div *ngIf="sortedTasks.key !== currentDate" class="date ion-padding">
+        <div *ngIf="sortedTasks.key !== currentDate" padding class="date">
           {{ sortedTasks.key / 1000 | amFromUnix | amDateFormat: 'MMM D' }}
         </div>
         <ng-container *ngFor="let task of sortedTasks.value; let i = index">
@@ -34,7 +30,7 @@
           <task-calendar-row
             *ngIf="task.showInCalendar"
             [task]="task"
-            (click)="clicked(task)"
+            (tap)="clicked(task)"
             [isTaskNameShown]="isTaskNameShown"
           ></task-calendar-row>
         </ng-container>
@@ -58,5 +54,5 @@
         </div>
       </ng-container>
     </ng-container>
-  </ion-content>
+  </ion-scroll>
 </div>

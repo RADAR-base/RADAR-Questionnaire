@@ -1,28 +1,21 @@
-/* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
-  "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
-    "outDir": "./dist/out-tsc",
-    "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
     "declaration": false,
-    "downlevelIteration": true,
-    "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "lib": ["es2017", "dom"],
     "moduleResolution": "node",
-    "importHelpers": true,
-    "target": "es2015",
-    "module": "es2020",
-    "lib": ["es2018", "dom"],
-    "types": ["node"],
-    "paths": {
-      "zlib": ["node_modules/browserify-zlib"]
-    }
+    "sourceMap": true,
+    "target": "es5",
+    "noUnusedLocals": false,
+    "types": ["node", "jasmine"],
+    "downlevelIteration": true
   },
-  "angularCompilerOptions": {
-    "enableI18nLegacyMessageIdFormat": false,
-    "strictInjectionParameters": true,
-    "strictInputAccessModifiers": true,
-    "strictTemplates": true
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"],
+  "compileOnSave": false,
+  "atom": {
+    "rewriteTsconfig": false
   }
 }

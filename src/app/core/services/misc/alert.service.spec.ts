@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing'
-import { AlertController } from '@ionic/angular'
+import { AlertController } from 'ionic-angular'
 import { AlertControllerMock } from 'ionic-mocks'
 
 import { AlertService } from './alert.service'

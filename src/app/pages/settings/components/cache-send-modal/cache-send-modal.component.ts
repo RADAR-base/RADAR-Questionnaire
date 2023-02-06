@@ -1,29 +1,25 @@
 import { Component } from '@angular/core'
-import { ModalController, NavParams, Platform } from '@ionic/angular'
+import { NavParams, Platform, ViewController } from 'ionic-angular'
 
 @Component({
   selector: 'cache-send-modal',
-  templateUrl: 'cache-send-modal.component.html',
-  styleUrls: ['cache-send-modal.component.scss']
+  templateUrl: 'cache-send-modal.component.html'
 })
 export class CacheSendModalComponent {
   successes: any[]
   errors: Error[]
-  result = []
 
   constructor(
     public platform: Platform,
     public params: NavParams,
-    public modalCtrl: ModalController
+    public viewCtrl: ViewController
   ) {
-    this.result = this.params.get('data')
-    this.errors = this.result.filter(d => d instanceof Error)
-    this.successes = this.result.filter(d => !(d instanceof Error))
+    const result = this.params.get('data')
+    this.errors = result.filter(d => d instanceof Error)
+    this.successes = result.filter(d => !(d instanceof Error))
   }
 
   dismiss() {
-    this.modalCtrl.dismiss()
+    this.viewCtrl.dismiss()
   }
-
-  segmentChanged(event) {}
 }

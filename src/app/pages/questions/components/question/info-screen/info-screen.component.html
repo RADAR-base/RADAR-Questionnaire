@@ -1,11 +1,5 @@
 <div class="info-card" *ngIf="sections">
-  <ion-content
-    class="content"
-    #content
-    [scrollY]="true"
-    [scrollEvents]="true"
-    (ionScroll)="onScroll($event)"
-  >
+  <div class="content" #content scrollY="true" (scroll)="onScroll($event)">
     <div class="image-container">
       <img *ngIf="image" src="{{ image }}" class="image" alt="info-screen" />
     </div>
@@ -17,8 +11,8 @@
         </div>
       </div>
     </div>
-  </ion-content>
-  <span *ngIf="showScrollButton" (click)="scrollDown()" class="icon">
-    <ion-icon name="chevron-down-circle"></ion-icon>
+  </div>
+  <span *ngIf="showScrollButton" (tap)="scrollDown()" class="icon">
+    <ion-icon name="arrow-dropdown-circle"></ion-icon>
   </span>
 </div>

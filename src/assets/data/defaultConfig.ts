@@ -127,8 +127,8 @@ export const DefaultScheduleServiceType: string = 'LOCAL'
 
 // DEFAULT NOTIFICATION SETUP
 
-// *Default notification type (either 'FCM_XMPP', 'FCM_REST' or 'LOCAL' notifications)
-export const DefaultNotificationType: string = 'FCM_XMPP'
+// *Default notification type (either 'FCM_REST' or 'LOCAL' notifications)
+export const DefaultNotificationType: string = 'FCM_REST'
 
 // *Default app server URL
 export const DefaultAppServerURL = DefaultEndPoint + '/appserver'

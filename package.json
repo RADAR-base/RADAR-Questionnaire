@@ -235,9 +235,9 @@
       "cordova-plugin-app-launcher": {},
       "cordova-plugin-media-with-compression": {},
       "cordova-plugin-firebasex": {
-        "FIREBASE_ANALYTICS_COLLECTION_ENABLED": "true",
-        "FIREBASE_PERFORMANCE_COLLECTION_ENABLED": "true",
-        "FIREBASE_CRASHLYTICS_COLLECTION_ENABLED": "true",
+        "FIREBASE_ANALYTICS_COLLECTION_ENABLED": "false",
+        "FIREBASE_PERFORMANCE_COLLECTION_ENABLED": "false",
+        "FIREBASE_CRASHLYTICS_COLLECTION_ENABLED": "false",
         "IOS_SHOULD_ESTABLISH_DIRECT_CHANNEL": "true",
         "IOS_FIREBASE_SDK_VERSION": "9.1.0",
         "ANDROID_ICON_ACCENT": "#FF00FFFF",

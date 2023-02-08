@@ -76,7 +76,8 @@ export class HomePageComponent implements OnInit, OnDestroy {
       this.taskIsNow &&
       !this.startingQuestionnaire &&
       !this.showCompleted &&
-      !this.showCalendar
+      !this.showCalendar &&
+      !this.getIsLoadingSpinnerShown()
     )
   }
 
@@ -168,7 +169,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.usage.sendClickEvent('open_on_demand_tasks')
   }
 
-  startQuestionnaire(taskCalendarTask: Task) {
+  startQuestionnaire(taskCalendarTask?: Task) {
     // NOTE: User can start questionnaire from task calendar or start button in home.
     const task = taskCalendarTask ? taskCalendarTask : this.nextTask
 

@@ -23,7 +23,6 @@ export class HomePageComponent implements OnInit, OnDestroy {
   title: Promise<string>
   sortedTasks: Promise<Map<any, any>>
   tasks: Promise<Task[]>
-  currentDate: Date = new Date()
   nextTask: Task
   timeToNextTask: number
   tasksProgress = Promise.resolve({ numberOfTasks: 0, completedTasks: 5 })

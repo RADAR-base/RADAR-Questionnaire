@@ -151,4 +151,6 @@ export class EnrolmentPageComponent {
       inputs: inputs
     })
   }
+
+  showPrivacyPolicy() {}
 }

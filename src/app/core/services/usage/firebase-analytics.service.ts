@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { FirebaseX } from '@ionic-native/firebase-x/ngx'
-import { Platform } from 'ionic-angular'
+import { Platform } from '@ionic/angular'
 
 import { User } from '../../../shared/models/user'
 import { RemoteConfigService } from '../config/remote-config.service'

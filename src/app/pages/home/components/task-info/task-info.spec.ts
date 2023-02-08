@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, async } from '@angular/core/testing'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
-import { NavController } from 'ionic-angular'
+import { NavController } from '@ionic/angular'
 import * as moment from 'moment'
 
 import { DefaultTask } from '../../../../../assets/data/defaultConfig'

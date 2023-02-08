@@ -1,117 +1,118 @@
 <ion-header>
-  <ion-navbar>
+  <ion-toolbar>
+    <ion-back-button slot="start"></ion-back-button>
     <ion-title>{{ 'SETTINGS_SETTINGS' | translate }}</ion-title>
-  </ion-navbar>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-item-group>
-    <ion-item-divider no-lines>{{
+    <ion-item-divider lines="full">{{
       'SETTINGS_USER_INFO' | translate
     }}</ion-item-divider>
-    <ion-item no-lines>
+    <ion-item lines="full">
       {{ 'SETTINGS_PARTICIPANTNAME' | translate }}
-      <span item-right class="info-value">
+      <span slot="end" class="info-value">
         {{ settings.participantID }}
       </span>
     </ion-item>
-    <ion-item no-lines>
+    <ion-item lines="full">
       {{ 'SETTINGS_PARTICIPANTID' | translate }}
-      <span item-right class="info-value-small">
+      <span slot="end" class="info-value-small">
         {{ settings.participantLogin }}
       </span>
     </ion-item>
-    <ion-item no-lines>
+    <ion-item lines="full">
       {{ 'SETTINGS_PROJECTNAME' | translate }}
-      <span item-right class="info-value">
+      <span slot="end" class="info-value">
         {{ settings.projectName }}
       </span>
     </ion-item>
-    <ion-item no-lines>
+    <ion-item lines="full">
       {{ 'SETTINGS_ENROL_DATE' | translate }}
-      <span item-right class="info-value">
+      <span slot="end" class="info-value">
         {{ settings.enrolmentDate | amCalendar }}
       </span>
     </ion-item>
-    <ion-item no-lines>
+    <ion-item lines="full">
       {{ 'SETTINGS_DAYS_SINCE_ENROL' | translate }}
-      <span item-right class="info-value">
+      <span slot="end" class="info-value">
         {{ daysSinceEnrolment }}
       </span>
     </ion-item>
   </ion-item-group>
 
   <ion-item-group>
-    <ion-item-divider no-lines>{{
+    <ion-item-divider lines="full">{{
       'SETTINGS_LANGUAGE' | translate
     }}</ion-item-divider>
-    <ion-item no-lines *ngIf="!showLoading">
+    <ion-item lines="full" *ngIf="!showLoading">
       <span class="info-value">
         {{ settings.language?.label | translate }}
       </span>
-      <span item-right (tap)="showSelectLanguage()">
-        <ion-icon class="space-right" name="arrow-dropdown"></ion-icon>
+      <span slot="end" (click)="showSelectLanguage()">
+        <ion-icon class="space-right" name="caret-down-outline"></ion-icon>
         {{ 'BTN_SELECT' | translate }}
       </span>
     </ion-item>
-    <ion-item no-lines *ngIf="showLoading">
+    <ion-item lines="full" *ngIf="showLoading">
       <ion-spinner name="dots"></ion-spinner>
     </ion-item>
   </ion-item-group>
 
   <ion-item-group>
-    <ion-item-divider no-lines class="item-divider">
+    <ion-item-divider lines="full" class="item-divider">
       {{ 'SETTINGS_NOTIFICATIONS' | translate }}
     </ion-item-divider>
-    <ion-item no-lines>
+    <ion-item lines="full">
       {{ 'SETTINGS_LAST_NOTIFICATION_UPDATE' | translate }}
-      <span item-right class="info-value">
+      <span slot="end" class="info-value">
         {{ settings.lastNotificationUpdate | amCalendar }}
       </span>
     </ion-item>
   </ion-item-group>
 
   <ion-item-group>
-    <ion-item-divider no-lines>{{
+    <ion-item-divider lines="full">{{
       'SETTINGS_CACHE' | translate
     }}</ion-item-divider>
-    <ion-item no-lines>
+    <ion-item lines="full">
       {{ 'SETTINGS_CACHE_SIZE' | translate }}
-      <span item-right class="info-value">
+      <span slot="end" class="info-value">
         {{ settings.cacheSize }}
       </span>
     </ion-item>
-    <ion-item no-lines>
+    <ion-item lines="full">
       {{ 'SETTINGS_LAST_UPLOAD_TO_SERVER' | translate }}
-      <span item-right class="info-value">
+      <span slot="end" class="info-value">
         {{ settings.lastUploadDate | amCalendar }}
       </span>
     </ion-item>
-    <ion-item no-lines class="item-button" (tap)="sendCachedData()">
+    <ion-item lines="full" class="item-button" (click)="sendCachedData()">
       <ion-label>{{ 'SETTINGS_SEND_CACHED_DATA' | translate }}</ion-label>
     </ion-item>
   </ion-item-group>
 
   <ion-item-group>
-    <ion-item-divider no-lines>
+    <ion-item-divider lines="full">
       {{ 'SETTINGS_VERSION' | translate }}
       <span>
         <ion-icon
           name="repeat"
-          (tap)="reloadConfig()"
+          (click)="reloadConfig()"
           *ngIf="!showLoading"
         ></ion-icon>
       </span>
     </ion-item-divider>
-    <ion-item no-lines>
+    <ion-item lines="full">
       App
-      <span item-right class="info-value">
+      <span slot="end" class="info-value">
         <div>V{{ settings.appVersion }}</div>
       </span>
     </ion-item>
-    <ion-item no-lines>
+    <ion-item lines="full">
       {{ 'SETTINGS_SCHEDULE' | translate }}
-      <span item-right class="info-value">
+      <span slot="end" class="info-value">
         <div *ngIf="!showLoading">V{{ settings.scheduleVersion }}</div>
         <div *ngIf="showLoading" class="spinner-center">
           <ion-spinner name="dots"></ion-spinner>
@@ -121,36 +122,30 @@
   </ion-item-group>
 
   <ion-item-group>
-    <ion-item-divider no-lines class="item-divider">
+    <ion-item-divider lines="full" class="item-divider">
       {{ 'SETTINGS_DEBUGGING' | translate }}
     </ion-item-divider>
     <ion-item
-      no-lines
+      lines="full"
       class="item-button"
-      (tap)="showGenerateTestNotification()"
+      (click)="showGenerateTestNotification()"
     >
       <ion-label>
         {{ 'SETTINGS_GENERATE_NOTIFS' | translate }}
       </ion-label>
     </ion-item>
-    <ion-item no-lines class="item-button">
+    <ion-item lines="full" class="item-button">
       <ion-label>{{ 'SETTINGS_LOG_NOTIFS' | translate }}</ion-label>
     </ion-item>
   </ion-item-group>
 </ion-content>
 
 <ion-footer>
-  <ion-toolbar>
+  <ion-toolbar class="footer">
     <ion-buttons>
-      <button
-        ion-button
-        class="bt bt--full"
-        round
-        full
-        (tap)="showConfirmReset()"
-      >
+      <ion-button class="bt bt--full" round full (click)="showConfirmReset()">
         {{ 'BTN_RESET' | translate }}
-      </button>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-footer>

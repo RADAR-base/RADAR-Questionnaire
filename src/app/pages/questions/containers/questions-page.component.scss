@@ -1,25 +1,35 @@
-page-questions {
-  ion-slide.swiper-slide {
-    align-items: flex-start;
-  }
+ion-slide.swiper-slide {
+  align-items: flex-start;
+}
 
-  ion-slide {
-    overflow-x: hidden !important;
-    padding: 24px 24px 0;
-  }
+ion-slide {
+  overflow-x: hidden !important;
+  padding: 24px 24px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+  height: 100%;
+}
 
-  .wrapper {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
+ion-slides {
+  height: 100vh;
+}
 
-  .slide-flex {
-    flex: 1;
-    height: 100%;
-  }
+.wrapper {
+  display: flex;
+  flex-direction: column;
+}
 
-  .hidden {
-    visibility: hidden;
-  }
+.slide-flex {
+  flex: 1;
+  height: 100%;
+}
+
+.hidden {
+  display: none;
+}
+
+.q-container {
+  width: 88vw;
 }

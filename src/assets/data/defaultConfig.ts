@@ -16,7 +16,7 @@ import { Localisations } from './localisations'
 export const DefaultPlatformInstance = 'RADAR-CNS'
 
 // *Default app version
-export const DefaultAppVersion = '2.6.3-alpha'
+export const DefaultAppVersion = '3.0.0-alpha'
 
 // *Default Android package name
 export const DefaultPackageName = 'org.phidatalab.radar_armt'
@@ -66,8 +66,7 @@ export const DefaultShowTaskProgressCount = 'false'
 // DEFAULT URI
 
 // *The Default endpoint where the RADAR-base platform is hosted
-export const DefaultEndPoint: string =
-  'https://radar-cns-platform.rosalind.kcl.ac.uk'
+export const DefaultEndPoint: string = 'https://stage.radar-base.net'
 
 export const DefaultManagementPortalURI = '/managementportal'
 export const DefaultRefreshTokenURI = '/oauth/token'
@@ -153,7 +152,7 @@ export const DefaultNotificationTtlMinutes: number = 10
 export const GIT_API_URI = 'https://api.github.com/repos'
 
 // *The Github content fetching mechanism, if this is done by a direct request to Github or a request through the app server. (REMOTE CONFIG KEY: `github_fetch_strategy`, VALUES: `default` (direct to Github) or `appserver`)
-export const DefaultGithubFetchStrategy = 'default'
+export const DefaultGithubFetchStrategy = 'appserver'
 
 // *The Github repository where the protocols are located (REMOTE CONFIG KEY: `protocol_repo`)
 export const DefaultProtocolGithubRepo = 'RADAR-Base/RADAR-aRMT-protocols'

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core'
-import { NavController, NavParams, Platform } from 'ionic-angular'
+import { Router } from '@angular/router'
+import { NavController, Platform } from '@ionic/angular'
 
 import { DefaultPackageName } from '../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../core/services/misc/alert.service'
@@ -14,18 +15,19 @@ declare var window
 
 @Component({
   selector: 'page-splash',
-  templateUrl: 'splash-page.component.html'
+  templateUrl: 'splash-page.component.html',
+  styleUrls: ['./splash-page.component.scss']
 })
 export class SplashPageComponent {
   status = 'Checking enrolment...'
   constructor(
     public navCtrl: NavController,
-    public navParams: NavParams,
     private splashService: SplashService,
     private alertService: AlertService,
     private localization: LocalizationService,
     private usage: UsageService,
-    private platform: Platform
+    private platform: Platform,
+    private router: Router
   ) {
     this.splashService
       .isEnrolled()
@@ -33,7 +35,9 @@ export class SplashPageComponent {
         enrolled
           ? this.splashService
               .evalEnrolment()
-              .then(valid => (valid ? this.onStart() : this.resetAndEnrol()))
+              .then(valid =>
+                valid ? !!this.onStart() : !!this.resetAndEnrol()
+              )
           : this.enrol()
       )
   }
@@ -58,13 +62,13 @@ export class SplashPageComponent {
           .then(() => this.splashService.sendReportedIncompleteTasks())
       })
       .catch(e => this.showFetchConfigFail(e))
-      .then(() => this.navCtrl.setRoot(HomePageComponent))
+      .then(() => this.navCtrl.navigateRoot('/home'))
   }
 
   showFetchConfigFail(e) {
     console.log(e)
     this.alertService.showAlert({
-      title: this.localization.translateKey(LocKeys.STATUS_FAILURE),
+      header: this.localization.translateKey(LocKeys.STATUS_FAILURE),
       message: this.localization.translateKey(LocKeys.CONFIG_ERROR_DESC),
       buttons: [
         {
@@ -83,7 +87,7 @@ export class SplashPageComponent {
 
   showAppUpdateAvailable() {
     this.alertService.showAlert({
-      title: this.localization.translateKey(LocKeys.STATUS_UPDATE_AVAILABLE),
+      header: this.localization.translateKey(LocKeys.STATUS_UPDATE_AVAILABLE),
       message: this.localization.translateKey(
         LocKeys.STATUS_UPDATE_AVAILABLE_DESC
       ),
@@ -106,10 +110,10 @@ export class SplashPageComponent {
   }
 
   resetAndEnrol() {
-    this.splashService.reset().then(() => this.enrol())
+    return this.splashService.reset().then(() => this.enrol())
   }
 
   enrol() {
-    this.navCtrl.setRoot(EnrolmentPageComponent)
+    return this.navCtrl.navigateRoot('/enrol')
   }
 }

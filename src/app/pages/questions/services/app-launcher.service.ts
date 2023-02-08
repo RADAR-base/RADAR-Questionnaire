@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { AppLauncher, AppLauncherOptions } from '@ionic-native/app-launcher/ngx'
 import { Insomnia } from '@ionic-native/insomnia/ngx'
-import { Platform } from 'ionic-angular'
+import { Platform } from '@ionic/angular'
 
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
@@ -12,7 +12,9 @@ import { ExternalApp, Question } from '../../../shared/models/question'
 import { Task } from '../../../shared/models/task'
 import { QuestionsService } from './questions.service'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AppLauncherService {
   constructor(
     private questionsService: QuestionsService,
@@ -50,6 +52,23 @@ export class AppLauncherService {
       return false
     }
     return true
+  }
+
+  isExternalAppCanLaunch(externalApp: Question, task: Task) {
+    if(!this.isExternalAppUriValidForThePlatform(externalApp)){
+      return Promise.reject()
+    }
+
+    const options: AppLauncherOptions = this.getAppLauncherOptions(externalApp, task)
+
+    return this.appLauncher.canLaunch(options)
+      .then((canLaunch: boolean) => {
+        return canLaunch;
+      })
+      .catch(err => {
+        this.logger.error("External App is not installed or doesn't support deeplink.", err)
+        return false
+      })
   }
 
   getAppLauncherOptions(externalApp: ExternalApp, task: Task) {
@@ -97,7 +116,7 @@ export class AppLauncherService {
 
     this.alertService
       .showAlert({
-        title: this.localization.translateKey(
+        header: this.localization.translateKey(
           LocKeys.EXTERNAL_APP_FAILURE_ON_LAUNCH_TITLE
         ),
         message:

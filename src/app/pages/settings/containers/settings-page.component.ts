@@ -1,9 +1,11 @@
 import { Component } from '@angular/core'
+import { Router } from '@angular/router'
 import {
   LoadingController,
   ModalController,
   NavController
-} from 'ionic-angular'
+} from '@ionic/angular'
+import { AlertInput } from '@ionic/core'
 
 import {
   DefaultSettingsNotifications,
@@ -21,7 +23,8 @@ import { SettingsService } from '../services/settings.service'
 
 @Component({
   selector: 'page-settings',
-  templateUrl: 'settings-page.component.html'
+  templateUrl: 'settings-page.component.html',
+  styleUrls: ['settings-page.component.scss']
 })
 export class SettingsPageComponent {
   settings: Settings = {}
@@ -48,7 +51,8 @@ export class SettingsPageComponent {
     public localization: LocalizationService,
     private settingsService: SettingsService,
     private usage: UsageService,
-    public modalCtrl: ModalController
+    public modalCtrl: ModalController,
+    private router: Router
   ) {}
 
   ionViewWillEnter() {
@@ -57,9 +61,10 @@ export class SettingsPageComponent {
   }
 
   loadSettings() {
-    Promise.all(
-      Object.entries(this.settingsService.getSettings()).map(([k, v]) =>
-        v.then(val => (this.settings[k] = val))
+    return Promise.all(
+      Object.entries(this.settingsService.getSettings()).map(
+        ([k, v]: [string, Promise<any>]) =>
+          v.then(val => (this.settings[k] = val))
       )
     ).then(() => {
       this.daysSinceEnrolment = this.getDaysSinceEnrolment()
@@ -83,11 +88,11 @@ export class SettingsPageComponent {
   }
 
   backToHome() {
-    this.navCtrl.pop()
+    this.navCtrl.navigateBack('/home')
   }
 
   backToSplash() {
-    this.navCtrl.setRoot(SplashPageComponent)
+    this.navCtrl.navigateRoot('')
   }
 
   notificationChange() {
@@ -100,7 +105,7 @@ export class SettingsPageComponent {
 
   showFailAlert(e) {
     return this.alertService.showAlert({
-      title: this.localization.translateKey(LocKeys.STATUS_FAILURE),
+      header: this.localization.translateKey(LocKeys.STATUS_FAILURE),
       message: e,
       buttons: [
         {
@@ -136,14 +141,17 @@ export class SettingsPageComponent {
         }
       }
     ]
-    const inputs = this.settings.languagesSelectable.map(lang => ({
-      type: 'radio',
-      label: this.localization.translate(lang.label),
-      value: JSON.stringify(lang),
-      checked: lang.value === this.settings.language.value
-    }))
+    const inputs = this.settings.languagesSelectable.map(
+      lang =>
+        ({
+          type: 'radio',
+          label: this.localization.translate(lang.label),
+          value: JSON.stringify(lang),
+          checked: lang.value === this.settings.language.value
+        } as AlertInput)
+    )
     return this.alertService.showAlert({
-      title: this.localization.translateKey(LocKeys.SETTINGS_LANGUAGE_ALERT),
+      header: this.localization.translateKey(LocKeys.SETTINGS_LANGUAGE_ALERT),
       buttons: buttons,
       inputs: inputs
     })
@@ -157,7 +165,7 @@ export class SettingsPageComponent {
       }
     ]
     return this.alertService.showAlert({
-      title: this.localization.translateKey(
+      header: this.localization.translateKey(
         LocKeys.SETTINGS_NOTIFICATIONS_NIGHTMOD
       ),
       message: this.localization.translateKey(
@@ -181,7 +189,7 @@ export class SettingsPageComponent {
       }
     ]
     return this.alertService.showAlert({
-      title: this.localization.translateKey(LocKeys.SETTINGS_RESET_ALERT),
+      header: this.localization.translateKey(LocKeys.SETTINGS_RESET_ALERT),
       message: this.localization.translateKey(
         LocKeys.SETTINGS_RESET_ALERT_DESC
       ),
@@ -222,7 +230,7 @@ export class SettingsPageComponent {
         })
     }
     return this.alertService.showAlert({
-      title: this.localization.translateKey(LocKeys.SETTINGS_RESET_ALERT),
+      header: this.localization.translateKey(LocKeys.SETTINGS_RESET_ALERT),
       message: this.localization.translateKey(
         LocKeys.SETTINGS_RESET_ALERT_OPTION_DESC
       ),
@@ -248,7 +256,7 @@ export class SettingsPageComponent {
 
   showGenerateTestNotification() {
     this.alertService.showAlert({
-      title: this.localization.translateKey(LocKeys.TESTING_NOTIFICATIONS),
+      header: this.localization.translateKey(LocKeys.TESTING_NOTIFICATIONS),
       message: this.localization.translateKey(
         LocKeys.TESTING_NOTIFICATIONS_MESSAGE
       ),
@@ -263,24 +271,27 @@ export class SettingsPageComponent {
     })
   }
 
-  sendCachedData() {
-    const loader = this.loadCtrl.create({
-      content:
-        '<div dir="auto">' +
-        this.localization.translateKey(LocKeys.SETTINGS_WAIT_ALERT) +
-        '...</div>',
+  async sendCachedData() {
+    const loader = await this.loadCtrl.create({
+      message: this.localization.translateKey(LocKeys.SETTINGS_WAIT_ALERT),
+      cssClass: 'custom-loading',
       duration: 15000
     })
     loader.present()
-    return this.settingsService.sendCachedData().then(res => {
-      loader.dismiss()
+    return this.settingsService.sendCachedData().then(async res => {
+      await loader.dismiss()
       this.showResult(res)
       this.backToHome()
     })
   }
 
-  showResult(res) {
-    const modal = this.modalCtrl.create(CacheSendModalComponent, { data: res })
-    modal.present()
+  async showResult(res) {
+    const modal = await this.modalCtrl.create({
+      component: CacheSendModalComponent,
+      componentProps: {
+        data: res
+      }
+    })
+    return await modal.present()
   }
 }

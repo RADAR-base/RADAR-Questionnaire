@@ -2,7 +2,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core'
 
 @Component({
   selector: 'introduction',
-  templateUrl: 'introduction.component.html'
+  templateUrl: 'introduction.component.html',
+  styleUrls: ['introduction.component.scss']
 })
 export class IntroductionComponent {
   @Input()

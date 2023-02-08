@@ -1,84 +1,82 @@
-task-info {
-  #task-info-container {
-    overflow: hidden;
-    margin-bottom: 2px;
-    padding: 8px 16px;
-    background-color: $cl-primary-40;
-    font-size: 22px;
-  }
+#task-info-container {
+  overflow: hidden;
+  margin-bottom: 2px;
+  padding: 8px 16px;
+  background-color: var(--cl-primary-40);
+  font-size: 22px;
+}
 
-  .units {
-    font-size: 0.7em;
-  }
+.units {
+  font-size: 0.7em;
+}
 
-  #questionnaire-progress {
-    float: left;
-    margin-right: -80px;
-  }
+#questionnaire-progress {
+  float: left;
+  margin-right: -80px;
+}
 
-  #questionnaire-counter {
-    margin-top: -54px;
-    margin-bottom: 12px;
-    text-align: center;
-    font-size: 1.5em;
-  }
+#questionnaire-counter {
+  margin-top: -54px;
+  margin-bottom: 12px;
+  text-align: center;
+  font-size: 1.5em;
+}
 
-  #questionnaire-metrics {
-    float: left;
-    margin: auto;
-  }
+#questionnaire-metrics {
+  float: left;
+  margin: auto;
+}
 
-  .right-info {
-    margin-top: 8px;
-    width: 100%;
-  }
+.right-info {
+  margin-top: 8px;
+  width: 100%;
+}
 
-  #questionnaire-time {
-    float: right;
-    margin: auto;
-    max-width: 72%;
-    white-space: nowrap;
-    line-height: 2.5em;
-  }
+#questionnaire-time {
+  float: right;
+  margin: auto;
+  max-width: 72%;
+  white-space: nowrap;
+  line-height: 2.5em;
+}
 
-  .text-md {
-    float: left;
-    font-size: 2.5em;
-  }
+.text-md {
+  float: left;
+  font-size: 2.5em;
+}
 
-  .extra-info {
-    float: left;
-    width: 100%;
-    text-align: center;
-    font-size: 0.7em;
-  }
+.extra-info {
+  float: left;
+  width: 100%;
+  text-align: center;
+  font-size: 0.7em;
+}
 
-  .extra-info-icon {
-    height: 1.5vh;
-  }
+.extra-info-icon {
+  height: 1.5vh;
+}
 
-  .icon-padding {
-    padding-right: 5px;
-  }
+.icon-padding {
+  padding-right: 5px;
+}
 
-  .icon-sm {
-    height: 18px;
-  }
+.icon-sm {
+  height: 18px;
+}
 
-  .meridiem {
-    margin-left: -8px;
-    font-size: 2.5vh;
-  }
+.meridiem {
+  margin-left: -8px;
+  font-size: 2.5vh;
+}
 
-  .time-container {
-    float: left;
-  }
+.time-container {
+  float: left;
+}
 
-  .time-colon {
-    margin-right: -16px;
-  }
+.time-colon {
+  margin-right: -16px;
+}
 
-  .status-collapsed {
-    max-width: 42% !important;
-  }
+.status-collapsed {
+  max-width: 42% !important;
 }

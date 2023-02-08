@@ -1,19 +1,19 @@
 page-report {
   .toolbar-background {
-    background-color: $cl-secondary;
+    background-color: var(--ion-color-secondary);
   }
 
   .toolbar-title {
-    color: $cl-font;
+    color: var(--ion-font);
   }
 
   .bar-button {
-    color: $cl-font;
+    color: var(--ion-font);
   }
 
   .item {
     margin-bottom: $item-separation-distance;
-    background-color: $cl-primary-40 !important;
+    background-color: var(--cl-primary-40) !important;
   }
 
   .item:last-child {
@@ -21,7 +21,7 @@ page-report {
   }
 
   .item:hover {
-    background-color: $cl-primary !important;
+    background-color: var(--cl-primary) !important;
     cursor: pointer;
   }
 
@@ -31,7 +31,7 @@ page-report {
 
   .report-card {
     height: 80%;
-    background-color: $cl-primary-40;
+    background-color: var(--cl-primary-40);
   }
 
   .report-dates {
@@ -68,7 +68,7 @@ page-report {
   }
 
   .report-summary-text {
-    color: $cl-light-80;
+    color: var(--cl-light-80);
     font-style: italic;
     font-size: 20px;
   }

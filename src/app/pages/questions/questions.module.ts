@@ -1,8 +1,11 @@
 import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
-import { IonicModule } from 'ionic-angular'
+import { FormsModule } from '@angular/forms'
+import { RouterModule, Routes } from '@angular/router'
+import { IonicModule } from '@ionic/angular'
 
 import { PipesModule } from '../../shared/pipes/pipes.module'
+import { AuthGuard } from '../auth/services/auth.guard'
 import { FinishAndLaunchComponent } from './components/finish-and-launch/finish-and-launch.component'
 import { FinishComponent } from './components/finish/finish.component'
 import { IntroductionComponent } from './components/introduction/introduction.component'
@@ -16,19 +19,28 @@ import { FinishTaskService } from './services/finish-task.service'
 import { QuestionsService } from './services/questions.service'
 import { TimestampService } from './services/timestamp.service'
 
+const routes: Routes = [
+  {
+    path: '',
+    component: QuestionsPageComponent
+  }
+]
+
 @NgModule({
   imports: [
     CommonModule,
     QuestionModule,
     PipesModule,
-    IonicModule.forRoot(QuestionsPageComponent)
+    FormsModule,
+    IonicModule.forRoot(),
+    RouterModule.forChild(routes)
   ],
   declarations: [
     IntroductionComponent,
     QuestionsPageComponent,
     FinishComponent,
-    FinishAndLaunchComponent,
-    ToolbarComponent
+    ToolbarComponent,
+    FinishAndLaunchComponent
   ],
   providers: [
     AnswerService,

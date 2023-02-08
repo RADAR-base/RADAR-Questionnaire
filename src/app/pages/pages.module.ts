@@ -63,7 +63,6 @@ import { SplashModule } from './splash/splash.module'
     TokenService,
     KafkaService,
     LocalizationService,
-    { provide: ScheduleService, useClass: ScheduleFactoryService },
     LocalScheduleService,
     AppserverScheduleService,
     ScheduleGeneratorService,

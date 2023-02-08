@@ -8,7 +8,9 @@ import { KafkaService } from '../kafka/kafka.service'
 import { LogService } from '../misc/log.service'
 import { AnalyticsService } from './analytics.service'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class UsageService {
   constructor(
     private webIntent: WebIntent,

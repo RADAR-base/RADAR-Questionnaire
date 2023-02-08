@@ -12,12 +12,7 @@
       [class.field-container-matrix]="isMatrix"
       dir="auto"
     >
-      <h2
-        dir="auto"
-        [fittext]="true"
-        [maxFontSize]="18"
-        [modelToWatch]="question"
-      >
+      <h2 dir="auto">
         {{ question.field_label }}
       </h2>
     </div>
@@ -28,133 +23,129 @@
     [class.input-scroll]="isScrollable"
     (scroll)="onScroll($event)"
   >
+    <ng-container *ngIf="isLoading">
+      <div class="spinner-container">
+        <ion-spinner name="dots" color="light"></ion-spinner>
+      </div>
+    </ng-container>
     <div
+      *ngIf="!isLoading && inputEl"
       [style.height.px]="
         isAutoHeight
           ? 'auto'
-          : input.offsetParent.offsetHeight -
-            input.previousSibling.offsetHeight -
+          : inputEl.nativeElement.offsetParent.offsetHeight -
+            inputEl.nativeElement.previousSibling.offsetHeight -
             margin
       "
       [ngSwitch]="question.field_type"
     >
-      <ng-container *ngIf="isLoading">
-        <div class="spinner-container">
-          <ion-spinner name="dots" color="light"></ion-spinner>
-        </div>
-      </ng-container>
-      <ng-container *ngIf="!isLoading">
-        <radio-input
-          *ngSwitchCase="'radio'"
-          [responses]="question.select_choices_or_calculations"
-          (valueChange)="emitAnswer($event)"
-        >
-        </radio-input>
+      <radio-input
+        *ngSwitchCase="'radio'"
+        [responses]="question.select_choices_or_calculations"
+        (valueChange)="emitAnswer($event)"
+      >
+      </radio-input>
 
-        <checkbox-input
-          *ngSwitchCase="'checkbox'"
-          [responses]="question.select_choices_or_calculations"
-          (valueChange)="emitAnswer($event)"
-        >
-        </checkbox-input>
+      <checkbox-input
+        *ngSwitchCase="'checkbox'"
+        [responses]="question.select_choices_or_calculations"
+        (valueChange)="emitAnswer($event)"
+      >
+      </checkbox-input>
 
-        <range-input
-          *ngSwitchCase="'range'"
-          [min]="question.range.min"
-          [max]="question.range.max"
-          [labelLeft]="question.range.labelLeft"
-          [labelRight]="question.range.labelRight"
-          (valueChange)="emitAnswer($event)"
-        >
-        </range-input>
+      <range-input
+        *ngSwitchCase="'range'"
+        [min]="question.range.min"
+        [max]="question.range.max"
+        [labelLeft]="question.range.labelLeft"
+        [labelRight]="question.range.labelRight"
+        (valueChange)="emitAnswer($event)"
+      >
+      </range-input>
 
-        <range-info-input
-          *ngSwitchCase="'range-info'"
-          [min]="question.range.min"
-          [max]="question.range.max"
-          [responses]="question.select_choices_or_calculations"
-          (valueChange)="emitAnswer($event)"
-        >
-        </range-info-input>
+      <range-info-input
+        *ngSwitchCase="'range-info'"
+        [min]="question.range.min"
+        [max]="question.range.max"
+        [responses]="question.select_choices_or_calculations"
+        (valueChange)="emitAnswer($event)"
+      >
+      </range-info-input>
 
-        <slider-input
-          *ngSwitchCase="'slider'"
-          [min]="question.range.min"
-          [max]="question.range.max"
-          [step]="question.range.step"
-          [labelLeft]="question.range.labelLeft"
-          [labelRight]="question.range.labelRight"
-          (valueChange)="emitAnswer($event)"
-        >
-        </slider-input>
+      <slider-input
+        *ngSwitchCase="'slider'"
+        [min]="question.range.min"
+        [max]="question.range.max"
+        [step]="question.range.step"
+        [labelLeft]="question.range.labelLeft"
+        [labelRight]="question.range.labelRight"
+        (valueChange)="emitAnswer($event)"
+      >
+      </slider-input>
 
-        <info-screen
-          *ngSwitchCase="'info'"
-          [sections]="question.select_choices_or_calculations"
-          [hasFieldLabel]="question.field_label.length > 0"
-          [image]="question.field_annotation?.image"
-          (valueChange)="emitAnswer($event)"
-          [currentlyShown]="currentlyShown"
-        >
-        </info-screen>
+      <info-screen
+        *ngSwitchCase="'info'"
+        [sections]="question.select_choices_or_calculations"
+        [hasFieldLabel]="question.field_label.length > 0"
+        [image]="question.field_annotation?.image"
+        (valueChange)="emitAnswer($event)"
+        [currentlyShown]="currentlyShown"
+      >
+      </info-screen>
 
-        <audio-input
-          *ngSwitchCase="'audio'"
-          [text]="question.field_label"
-          [currentlyShown]="currentlyShown"
-          (valueChange)="emitAnswer($event)"
-          (onRecordStart)="onAudioRecordStart($event)"
-        >
-        </audio-input>
+      <audio-input
+        *ngSwitchCase="'audio'"
+        [text]="question.field_label"
+        [currentlyShown]="currentlyShown"
+        (valueChange)="emitAnswer($event)"
+        (onRecordStart)="onAudioRecordStart($event)"
+      >
+      </audio-input>
 
-        <timed-test
-          *ngSwitchCase="'timed'"
-          [heading]="question.field_label"
-          [image]="question.field_annotation.image"
-          [timer]="question.field_annotation.timer"
-          [currentlyShown]="currentlyShown"
-          (valueChange)="emitAnswer($event)"
-        >
-        </timed-test>
+      <timed-test
+        *ngSwitchCase="'timed'"
+        [heading]="question.field_label"
+        [image]="question.field_annotation.image"
+        [timer]="question.field_annotation.timer"
+        [currentlyShown]="currentlyShown"
+        (valueChange)="emitAnswer($event)"
+      >
+      </timed-test>
 
-        <text-input
-          *ngSwitchCase="'text'"
-          (valueChange)="emitAnswer($event)"
-          (keyboardEvent)="onKeyboardEvent($event)"
-          [type]="question.text_validation_type_or_show_slider_number"
-          [currentlyShown]="currentlyShown"
-        ></text-input>
+      <text-input
+        *ngSwitchCase="'text'"
+        (valueChange)="emitAnswer($event)"
+        (keyboardEvent)="onKeyboardEvent($event)"
+        [type]="question.text_validation_type_or_show_slider_number"
+        [currentlyShown]="currentlyShown"
+      ></text-input>
 
-        <radio-input
-          *ngSwitchCase="'yesno'"
-          [responses]="[
-            { code: '1', label: 'Yes' },
-            { code: '0', label: 'No' }
-          ]"
-          (valueChange)="emitAnswer($event)"
-        >
-        </radio-input>
+      <radio-input
+        *ngSwitchCase="'yesno'"
+        [responses]="defaultYesNoResponse"
+        (valueChange)="emitAnswer($event)"
+      >
+      </radio-input>
 
-        <descriptive-input
-          *ngSwitchCase="'descriptive'"
-          [text]="question.field_label"
-          (valueChange)="emitAnswer($event)"
-          [currentlyShown]="currentlyShown"
-        >
-        </descriptive-input>
+      <descriptive-input
+        *ngSwitchCase="'descriptive'"
+        [text]="question.field_label"
+        (valueChange)="emitAnswer($event)"
+        [currentlyShown]="currentlyShown"
+      >
+      </descriptive-input>
 
-        <matrix-radio-input
-          *ngSwitchCase="'matrix-radio'"
-          [responses]="question.select_choices_or_calculations"
-          [currentlyShown]="currentlyShown"
-          [previouslyShown]="previouslyShown"
-          (valueChange)="emitAnswer($event)"
-        >
-        </matrix-radio-input>
-      </ng-container>
+      <matrix-radio-input
+        *ngSwitchCase="'matrix-radio'"
+        [responses]="question.select_choices_or_calculations"
+        [currentlyShown]="currentlyShown"
+        [previouslyShown]="previouslyShown"
+        (valueChange)="emitAnswer($event)"
+      >
+      </matrix-radio-input>
     </div>
   </div>
-  <div class="arrow-icon" *ngIf="showScrollButton" (tap)="scrollDown()">
+  <div class="arrow-icon" *ngIf="showScrollButton" (click)="scrollDown()">
     <ion-icon name="ios-arrow-down"></ion-icon>
   </div>
 </div>

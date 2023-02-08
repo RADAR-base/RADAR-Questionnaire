@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { Platform } from 'ionic-angular'
+import { Platform } from '@ionic/angular'
 
 import { DefaultNotificationType } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
@@ -44,7 +44,9 @@ export class NotificationFactoryService extends NotificationService {
         }
       })
       .then(() =>
-        this.isPlatformCordova() ? this.notificationService.init() : true
+        this.isPlatformCordova()
+          ? this.notificationService.init()
+          : (this.notificationService = this.fcmRestNotificationService)
       )
   }
 

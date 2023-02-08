@@ -1,5 +1,3 @@
-import 'rxjs/add/operator/map'
-
 import { EventEmitter, Injectable } from '@angular/core'
 
 import { StorageKeys } from '../../../shared/enums/storage'
@@ -15,7 +13,9 @@ import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 import { ScheduleGeneratorService } from './schedule-generator.service'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export abstract class ScheduleService {
   private readonly SCHEDULE_STORE = {
     SCHEDULE_TASKS: StorageKeys.SCHEDULE_TASKS,
@@ -41,6 +41,10 @@ export abstract class ScheduleService {
   )
 
   abstract getTasksForDate(date: Date, type: AssessmentType)
+
+  isInitialised() {
+    return false
+  }
 
   getTasks(type: AssessmentType): Promise<Task[]> {
     switch (type) {

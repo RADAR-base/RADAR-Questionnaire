@@ -1,29 +1,28 @@
 <ion-header>
-  <ion-navbar>
+  <ion-toolbar>
+    <ion-back-button slot="start"></ion-back-button>
     <ion-title>{{ 'CLINICAL_TASKS' | translate }}</ion-title>
-  </ion-navbar>
+  </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-scroll scrollY="true" class="layers" [style.height.px]="scrollHeight">
-    <div *ngFor="let a of assessments; let i = index">
-      <div id="task-item" (tap)="clicked(a)">
-        <ion-row>
-          <ion-col>
-            <div class="task-info-left">{{ a.name }}</div>
-            <div class="task-info-right">
-              <div class="metrics">
-                <img
-                  class="icon-padding icon-xsm"
-                  src="assets/imgs/stopwatch.png"
-                />
-                {{ a.estimatedCompletionTime }}
-                <span class="units">min</span>
-              </div>
+<ion-content [scrollY]="true" class="layers" [style.height.px]="scrollHeight">
+  <div *ngFor="let a of assessments; let i = index">
+    <div id="task-item" (click)="clicked(a)">
+      <ion-row>
+        <ion-col>
+          <div class="task-info-left">{{ a.name }}</div>
+          <div class="task-info-right">
+            <div class="metrics">
+              <img
+                class="icon-padding icon-xsm"
+                src="assets/imgs/stopwatch.png"
+              />
+              {{ a.estimatedCompletionTime }}
+              <span class="units">min</span>
             </div>
-          </ion-col>
-        </ion-row>
-      </div>
+          </div>
+        </ion-col>
+      </ion-row>
     </div>
-  </ion-scroll>
+  </div>
 </ion-content>

@@ -1,9 +1,13 @@
-text-input {
-  .item {
-    width: 90%;
-  }
+ion-item {
+  margin-bottom: 8px !important;
+}
 
-  ion-item {
-    margin-bottom: 8px !important;
-  }
+.input {
+  padding-left: 0;
+  width: 80vw;
+  height: 40px;
+  border-bottom: 2px solid white;
+  color: var(--ion-font);
+  font-size: 18px;
+  line-height: 1.35em;
 }

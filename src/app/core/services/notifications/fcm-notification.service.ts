@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { FirebaseX } from '@ionic-native/firebase-x/ngx'
-import { Platform } from 'ionic-angular'
-import { Subscription } from "rxjs";
+import { Platform } from '@ionic/angular'
+import { Subscription } from 'rxjs'
 
 import {
   DefaultNotificationTtlMinutes,
@@ -51,7 +51,8 @@ export abstract class FcmNotificationService extends NotificationService {
   }
 
   init() {
-    return this.firebase.setAutoInitEnabled(true)
+    return this.firebase
+      .setAutoInitEnabled(true)
       .then(() => this.firebase.getToken())
       .then(token => {
         if (this.tokenSubscription === null) {
@@ -60,11 +61,10 @@ export abstract class FcmNotificationService extends NotificationService {
             .subscribe(t => this.onTokenRefresh(t))
         }
         if (token) {
-          return this.onTokenRefresh(token);
+          return this.onTokenRefresh(token)
         }
       })
   }
-
 
   publish(
     type,
@@ -113,8 +113,8 @@ export abstract class FcmNotificationService extends NotificationService {
 
   unregisterFromNotifications(): Promise<any> {
     if (this.tokenSubscription) {
-      this.tokenSubscription.unsubscribe();
-      this.tokenSubscription = null;
+      this.tokenSubscription.unsubscribe()
+      this.tokenSubscription = null
     }
     // NOTE: This will delete the current device token and stop receiving notifications
     return this.firebase
@@ -125,8 +125,9 @@ export abstract class FcmNotificationService extends NotificationService {
   onTokenRefresh(token) {
     if (token) {
       this.FCM_TOKEN = token
-      return this.setFCMToken(token)
-        .then(() => this.logger.log('[NOTIFICATION SERVICE] Refresh token success'))
+      return this.setFCMToken(token).then(() =>
+        this.logger.log('[NOTIFICATION SERVICE] Refresh token success')
+      )
     } else {
       return Promise.resolve()
     }

@@ -198,7 +198,7 @@ export const DefaultEndPoint = 'https://your-hosted-radar-platform-base-url/'
 The default appserver configs.
 
 ```ts
-// The notification type (either 'FCM_REST' or 'LOCAL' notifications, NOTE: 'FCM_XMPP' support was removed in v3.0.0)
+// The notification type (either 'FCM_REST' or 'LOCAL' notifications, NOTE: 'FCM_XMPP' support was removed in v2.6.4)
 export const DefaultNotificationType: string = 'FCM_REST'
 
 // App server URL

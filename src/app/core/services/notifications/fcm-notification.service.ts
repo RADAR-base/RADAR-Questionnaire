@@ -18,8 +18,6 @@ import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 import { NotificationService } from './notification.service'
 
-declare var FirebasePlugin
-
 @Injectable()
 export abstract class FcmNotificationService extends NotificationService {
   FCM_TOKEN: string

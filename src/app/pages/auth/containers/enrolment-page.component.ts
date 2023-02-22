@@ -1,4 +1,8 @@
 import { Component, ViewChild } from '@angular/core'
+import {
+  InAppBrowser,
+  InAppBrowserOptions
+} from '@awesome-cordova-plugins/in-app-browser/ngx'
 import { IonSlides, NavController } from '@ionic/angular'
 import { AlertInput } from '@ionic/core'
 
@@ -37,9 +41,18 @@ export class EnrolmentPageComponent {
   reportSettings: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
   language?: LanguageSetting = DefaultLanguage
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
+  PRIVACY_POLICY_URL = 'https://radar-base.org/actve-app-armt-privacy-policy/'
+  browserOptions: InAppBrowserOptions = {
+    location: 'yes',
+    hidenavigationbuttons: 'yes',
+    hideurlbar: 'yes',
+    toolbarcolor: '#6d9aa5',
+    closebuttoncolor: '#ffffff'
+  }
 
   constructor(
     public navCtrl: NavController,
+    private theInAppBrowser: InAppBrowser,
     private auth: AuthService,
     private localization: LocalizationService,
     private alertService: AlertService,
@@ -152,5 +165,12 @@ export class EnrolmentPageComponent {
     })
   }
 
-  showPrivacyPolicy() {}
+  showPrivacyPolicy() {
+    console.log('Opening privacy policy..')
+    this.openWithInAppBrowser(this.PRIVACY_POLICY_URL)
+  }
+
+  openWithInAppBrowser(url: string) {
+    this.theInAppBrowser.create(url, '_blank', this.browserOptions)
+  }
 }

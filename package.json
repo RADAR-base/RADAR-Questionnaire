@@ -49,6 +49,7 @@
     "@angular/router": "~10.2.5",
     "@auth0/angular-jwt": "5.0.0",
     "@awesome-cordova-plugins/core": "^5.1.0",
+    "@awesome-cordova-plugins/in-app-browser": "^5.36.0",
     "@awesome-cordova-plugins/keyboard": "^5.39.0",
     "@ionic-native/android-permissions": "^5.26.0",
     "@ionic-native/app-launcher": "^5.31.1",
@@ -81,7 +82,7 @@
     "browserify": "^16.3.0",
     "browserify-zlib": "^0.2.0",
     "buffer": "^6.0.3",
-    "com-darryncampbell-cordova-plugin-intent": "^2.0.0",
+    "com-darryncampbell-cordova-plugin-intent": "git+https://github.com/mpgxvii/darryncampbell-cordova-plugin-intent.git",
     "compare-versions": "^5.0.3",
     "cordova-lib": "^9.0.1",
     "cordova-plugin-android-permissions": "^1.1.2",
@@ -141,6 +142,7 @@
     "cordova-plugin-background-mode": "https://bitbucket.org/TheBosZ/cordova-plugin-run-in-background",
     "cordova-plugin-file": "^7.0.0",
     "cordova-plugin-firebasex": "15.0.0-cli",
+    "cordova-plugin-inappbrowser": "^5.0.0",
     "cordova-plugin-ionic-webview": "^4.2.1",
     "cordova-plugin-media-with-compression": "^2.3.1",
     "cordova-plugin-network-information": "git+https://github.com/apache/cordova-plugin-network-information.git",
@@ -258,7 +260,8 @@
         "ANDROID_FIREBASE_CRASHLYTICS_NDK_VERSION": "18.1.0",
         "ANDROID_GSON_VERSION": "2.8.7",
         "ANDROID_FIREBASE_PERF_GRADLE_PLUGIN_VERSION": "1.4.0"
-      }
+      },
+      "cordova-plugin-inappbrowser": {}
     }
   },
   "ionic_enable_lint": false

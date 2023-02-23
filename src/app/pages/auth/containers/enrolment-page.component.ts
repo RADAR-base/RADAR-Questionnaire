@@ -8,6 +8,7 @@ import { AlertInput } from '@ionic/core'
 
 import {
   DefaultLanguage,
+  DefaultPrivacyPolicyUrl,
   DefaultSettingsSupportedLanguages,
   DefaultSettingsWeeklyReport
 } from '../../../../assets/data/defaultConfig'
@@ -41,7 +42,6 @@ export class EnrolmentPageComponent {
   reportSettings: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
   language?: LanguageSetting = DefaultLanguage
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
-  PRIVACY_POLICY_URL = 'https://radar-base.org/actve-app-armt-privacy-policy/'
   browserOptions: InAppBrowserOptions = {
     location: 'yes',
     hidenavigationbuttons: 'yes',
@@ -167,7 +167,7 @@ export class EnrolmentPageComponent {
 
   showPrivacyPolicy() {
     console.log('Opening privacy policy..')
-    this.openWithInAppBrowser(this.PRIVACY_POLICY_URL)
+    this.openWithInAppBrowser(DefaultPrivacyPolicyUrl)
   }
 
   openWithInAppBrowser(url: string) {

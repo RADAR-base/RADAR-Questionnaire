@@ -75,7 +75,7 @@
     "@ionic/angular": "^5.9.4",
     "@ionic/storage": "2.2.0",
     "@logisticinfotech/ionic4-datepicker": "^1.4.4",
-    "angular-svg-round-progressbar": "^6.0.1",
+    "angular-svg-round-progressbar": "^10.0.0",
     "autoprefixer": "^9.8.6",
     "avro-js": "^1.11.1",
     "base64-js": "^1.5.1",

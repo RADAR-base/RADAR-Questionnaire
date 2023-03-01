@@ -129,4 +129,9 @@ export class FirebaseAnalyticsService extends AnalyticsService {
       return value.substring(0, size)
     }
   }
+
+  enableAnalytics() {
+    this.firebase.setAnalyticsCollectionEnabled(true)
+    return this.firebase.setCrashlyticsCollectionEnabled(true)
+  }
 }

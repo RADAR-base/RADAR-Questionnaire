@@ -1,10 +1,15 @@
 import { Component, ViewChild } from '@angular/core'
+import {
+  InAppBrowser,
+  InAppBrowserOptions
+} from '@awesome-cordova-plugins/in-app-browser/ngx'
 import { Globalization } from '@ionic-native/globalization/ngx'
 import { IonSlides, NavController } from '@ionic/angular'
 import { AlertInput } from '@ionic/core'
 
 import {
   DefaultLanguage,
+  DefaultPrivacyPolicyUrl,
   DefaultSettingsSupportedLanguages,
   DefaultSettingsWeeklyReport
 } from '../../../../assets/data/defaultConfig'
@@ -37,9 +42,17 @@ export class EnrolmentPageComponent {
   reportSettings: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
   language?: LanguageSetting = DefaultLanguage
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
+  browserOptions: InAppBrowserOptions = {
+    location: 'yes',
+    hidenavigationbuttons: 'yes',
+    hideurlbar: 'yes',
+    toolbarcolor: '#6d9aa5',
+    closebuttoncolor: '#ffffff'
+  }
 
   constructor(
     public navCtrl: NavController,
+    private theInAppBrowser: InAppBrowser,
     private auth: AuthService,
     private localization: LocalizationService,
     private alertService: AlertService,
@@ -158,5 +171,14 @@ export class EnrolmentPageComponent {
       buttons: buttons,
       inputs: inputs
     })
+  }
+
+  showPrivacyPolicy() {
+    console.log('Opening privacy policy..')
+    this.openWithInAppBrowser(DefaultPrivacyPolicyUrl)
+  }
+
+  openWithInAppBrowser(url: string) {
+    this.theInAppBrowser.create(url, '_blank', this.browserOptions)
   }
 }

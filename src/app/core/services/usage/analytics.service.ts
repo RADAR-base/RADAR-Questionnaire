@@ -16,4 +16,7 @@ export class AnalyticsService {
   setCurrentScreen(name: string): Promise<void> {
     return undefined
   }
+  enableAnalytics(): Promise<void> {
+    return undefined
+  }
 }

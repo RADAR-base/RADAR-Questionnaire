@@ -298,3 +298,6 @@ export const DefaultSettingsSupportedLanguages: LanguageSetting[] = [
 ]
 
 export const DefaultQuestionsHidden = '{}'
+
+export const DefaultPrivacyPolicyUrl =
+  'https://radar-base.org/actve-app-armt-privacy-policy/'

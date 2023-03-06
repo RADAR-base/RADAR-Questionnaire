@@ -37,7 +37,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular-devkit/build-angular": "~0.1002.4",
+    "@angular-devkit/build-angular": "~15.2.1",
     "@angular/animations": "~10.2.5",
     "@angular/cdk": "^10.2.7",
     "@angular/common": "~10.2.5",
@@ -130,7 +130,7 @@
     "@angular/compiler-cli": "~10.2.5",
     "@angular/language-service": "~10.2.5",
     "@angular/platform-server": "~10.2.5",
-    "@ionic/angular-toolkit": "2.3.3",
+    "@ionic/angular-toolkit": "8.0.0",
     "@types/jasmine": "~3.6.0",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",

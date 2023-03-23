@@ -19,7 +19,7 @@ ion-button {
   --border-width: 0px;
   --background: transparent;
   --padding-start: 8px;
-  --padding-end: 0px;
+  --padding-end: 8px;
   text-transform: uppercase;
   --ripple-color: transparent;
   --background-hover: transparent;
@@ -28,6 +28,9 @@ ion-button {
 
 ion-icon {
   padding-right: 4px;
+  padding-left: 4px;
+  padding-top: 4px;
+  font-size: 21px;
 }
 
 .toolbar-label {

@@ -52,6 +52,7 @@ export class TextInputComponent implements OnInit {
     second: 'Second',
     ampm: 'AM/PM'
   }
+  textValue = ''
 
   value = {}
 
@@ -163,7 +164,7 @@ export class TextInputComponent implements OnInit {
   }
 
   emitAnswer(value) {
-    if (!value) return
+    if (!value) value = this.textValue
     if (typeof value !== 'string') {
       this.value = Object.assign(this.value, value)
       this.valueChange.emit(JSON.stringify(this.value))

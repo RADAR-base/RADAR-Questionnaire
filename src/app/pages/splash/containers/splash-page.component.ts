@@ -43,7 +43,6 @@ export class SplashPageComponent {
   }
 
   onStart() {
-    console.log('on start')
     this.usage.sendOpenEvent()
     this.usage.setPage(this.constructor.name)
     this.status = this.localization.translateKey(
@@ -55,7 +54,6 @@ export class SplashPageComponent {
     return this.splashService
       .loadConfig()
       .then(() => {
-        console.log('changin status')
         this.status = this.localization.translateKey(
           LocKeys.SPLASH_STATUS_SENDING_LOGS
         )
@@ -63,14 +61,8 @@ export class SplashPageComponent {
           .sendMissedQuestionnaireLogs()
           .then(() => this.splashService.sendReportedIncompleteTasks())
       })
-      .catch(e => {
-        console.log('showing error')
-        this.showFetchConfigFail(e)
-      })
-      .then(() => {
-        console.log('navigating to home')
-        this.navCtrl.navigateRoot('/home')
-      })
+      .catch(e => this.showFetchConfigFail(e))
+      .then(() => this.navCtrl.navigateRoot('/home'))
   }
 
   showFetchConfigFail(e) {

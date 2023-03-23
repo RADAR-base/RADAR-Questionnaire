@@ -1,5 +1,3 @@
-import 'rxjs/add/operator/map'
-
 import { EventEmitter, Injectable } from '@angular/core'
 
 import { StorageKeys } from '../../../shared/enums/storage'

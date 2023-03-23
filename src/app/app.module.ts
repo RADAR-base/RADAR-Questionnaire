@@ -6,6 +6,7 @@ import { BrowserModule } from '@angular/platform-browser'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { RouterModule } from '@angular/router'
 import { JWT_OPTIONS, JwtModule } from '@auth0/angular-jwt'
+import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx'
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx'
 import { AppLauncher } from '@ionic-native/app-launcher/ngx'
 import { AppVersion } from '@ionic-native/app-version/ngx'
@@ -46,7 +47,6 @@ import { GithubClient } from './core/services/misc/github-client.service'
 import { LocalizationService } from './core/services/misc/localization.service'
 import { LogService } from './core/services/misc/log.service'
 import { FcmRestNotificationService } from './core/services/notifications/fcm-rest-notification.service'
-import { FcmXmppNotificationService } from './core/services/notifications/fcm-xmpp-notification.service'
 import { LocalNotificationService } from './core/services/notifications/local-notification.service'
 import { MessageHandlerService } from './core/services/notifications/message-handler.service'
 import { NotificationFactoryService } from './core/services/notifications/notification-factory.service'
@@ -115,6 +115,7 @@ import { Health } from '@awesome-cordova-plugins/health/ngx'
     WebIntent,
     MobileAccessibility,
     Insomnia,
+    InAppBrowser,
     BackgroundMode,
     Keyboard,
     FirebaseX,
@@ -142,7 +143,6 @@ import { Health } from '@awesome-cordova-plugins/health/ngx'
     SchemaService,
     NotificationGeneratorService,
     FcmRestNotificationService,
-    FcmXmppNotificationService,
     LocalNotificationService,
     AppServerService,
     MessageHandlerService,

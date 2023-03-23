@@ -1,5 +1,5 @@
 <ion-content>
-  <ion-slides pager="false">
+  <ion-slides [pager]="false">
     <!-- SLIDE 1 -->
     <ion-slide id="intro-language">
       <ion-card>
@@ -13,7 +13,10 @@
             <ion-item no-lines>
               <span class="info-value">{{ language.label | translate }}</span>
               <span slot="end" (click)="showSelectLanguage()">
-                <ion-icon class="space-right" name="arrow-dropdown"></ion-icon>
+                <ion-icon
+                  class="space-right"
+                  name="caret-down-outline"
+                ></ion-icon>
                 {{ 'BTN_SELECT' | translate }}
               </span>
             </ion-item>
@@ -122,6 +125,41 @@
     </ion-slide>
 
     <!-- SLIDE 5 -->
+    <ion-slide id="privacy-policy">
+        <ion-card>
+          <div class="registration">
+            <div class="text-lg">{{ 'ENROL_REGISTRATION' | translate }}</div>
+
+            <div dir="auto" class="text text-justify">
+                {{ 'ENROL_PRIVACY_POLICY_DESC' | translate }}
+              </div>
+            <div class="padding text-justify extra-padding">
+            </div>
+          </div>
+          <div class="bottom">
+              <ion-button
+              ion-button
+              class="bt bt--full policy"
+              round
+              full
+              (click)="showPrivacyPolicy()"
+            >
+              {{ 'BTN_VIEW_POLICY' | translate }}
+            </ion-button>
+            <ion-button
+              ion-button
+              class="bt bt--full"
+              round
+              full
+              (click)="next()"
+            >
+              {{ 'BTN_NEXT' | translate }}
+            </ion-button>
+          </div>
+        </ion-card>
+      </ion-slide>
+
+    <!-- SLIDE 6 -->
     <ion-slide id="registration-complete">
       <ion-card>
         <div class="text text-lg">

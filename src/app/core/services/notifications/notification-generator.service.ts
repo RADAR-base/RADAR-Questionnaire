@@ -1,5 +1,3 @@
-import 'rxjs/add/operator/map'
-
 import { Injectable } from '@angular/core'
 
 import { DefaultTask } from '../../../../assets/data/defaultConfig'

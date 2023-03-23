@@ -1,5 +1,6 @@
 .list {
   margin-top: 0;
+  margin-bottom: 0;
   padding: 8px;
   height: 40px;
   text-align: center;
@@ -35,6 +36,13 @@
 .grid {
   display: flex;
   align-items: center;
+  justify-content: center;
+}
+
+ion-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 ion-note {

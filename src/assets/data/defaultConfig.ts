@@ -16,7 +16,7 @@ import { Localisations } from './localisations'
 export const DefaultPlatformInstance = 'RADAR-CNS'
 
 // *Default app version
-export const DefaultAppVersion = '2.6.3-alpha'
+export const DefaultAppVersion = '3.0.0-alpha'
 
 // *Default Android package name
 export const DefaultPackageName = 'org.phidatalab.radar_armt'
@@ -66,8 +66,7 @@ export const DefaultShowTaskProgressCount = 'false'
 // DEFAULT URI
 
 // *The Default endpoint where the RADAR-base platform is hosted
-export const DefaultEndPoint: string =
-  'https://radar-cns-platform.rosalind.kcl.ac.uk'
+export const DefaultEndPoint: string = 'https://stage.radar-base.net'
 
 export const DefaultManagementPortalURI = '/managementportal'
 export const DefaultRefreshTokenURI = '/oauth/token'
@@ -127,8 +126,8 @@ export const DefaultScheduleServiceType: string = 'LOCAL'
 
 // DEFAULT NOTIFICATION SETUP
 
-// *Default notification type (either 'FCM_XMPP', 'FCM_REST' or 'LOCAL' notifications)
-export const DefaultNotificationType: string = 'FCM_XMPP'
+// *Default notification type (either 'FCM_REST' or 'LOCAL' notifications)
+export const DefaultNotificationType: string = 'FCM_REST'
 
 // *Default app server URL
 export const DefaultAppServerURL = DefaultEndPoint + '/appserver'
@@ -299,3 +298,6 @@ export const DefaultSettingsSupportedLanguages: LanguageSetting[] = [
 ]
 
 export const DefaultQuestionsHidden = '{}'
+
+export const DefaultPrivacyPolicyUrl =
+  'https://radar-base.org/actve-app-armt-privacy-policy/'

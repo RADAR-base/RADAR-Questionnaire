@@ -10,9 +10,9 @@
       <img class="logo-small" src="assets/imgs/radar-logo.svg" alt="Logo" />
     </ion-button>
     <ion-button ion-button menuToggle slot="end" (click)="openSettingsPage()">
-      <ion-icon name="cog"></ion-icon>
+      <ion-icon name="settings"></ion-icon>
     </ion-button>
-    <ion-title text-center>{{ title | async }}</ion-title>
+    <ion-title class="ion-text-center">{{ title | async }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -92,6 +92,7 @@
         [show]="showCalendar"
         (task)="startQuestionnaire($event)"
         [tasks]="sortedTasks | async"
+        [currentDate]="currentDate"
         [isTaskNameShown]="isTaskCalendarTaskNameShown | async"
       >
       </task-calendar>
@@ -100,14 +101,14 @@
     <div class="size-static footer">
       <div
         *ngIf="getIsStartButtonShown() && (sortedTasks | async)?.size"
-        padding
+        class="ion-padding"
       >
         <ion-button
           ion-button
           class="bt bt--full"
           round
           full
-          (click)="startQuestionnaire()"
+          (click)="startQuestionnaire(null)"
         >
           {{ 'BTN_START' | translate }}
         </ion-button>

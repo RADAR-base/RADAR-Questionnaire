@@ -5,7 +5,7 @@
     </div>
     <ion-item class="input" color="transparent">
       <ion-input
-        required
+        [required]="true"
         formControlName="baseURL"
         type="url"
         placeholder="Base URL"
@@ -14,12 +14,12 @@
     </ion-item>
     <ion-item class="input" color="transparent">
       <ion-input
-        required
+        [required]="true"
         formControlName="tokenName"
         type="text"
         placeholder="Token"
         (ionFocus)="onFocus()"
-        clearOnEdit="true"
+        [clearOnEdit]="true"
       ></ion-input>
     </ion-item>
   </div>

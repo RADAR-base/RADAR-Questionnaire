@@ -61,9 +61,10 @@ export class SettingsPageComponent {
   }
 
   loadSettings() {
-    Promise.all(
-      Object.entries(this.settingsService.getSettings()).map(([k, v]) =>
-        v.then(val => (this.settings[k] = val))
+    return Promise.all(
+      Object.entries(this.settingsService.getSettings()).map(
+        ([k, v]: [string, Promise<any>]) =>
+          v.then(val => (this.settings[k] = val))
       )
     ).then(() => {
       this.daysSinceEnrolment = this.getDaysSinceEnrolment()

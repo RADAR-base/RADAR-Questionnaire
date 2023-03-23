@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core'
 import { FirebaseX } from '@ionic-native/firebase-x/ngx'
 import { Platform } from '@ionic/angular'
+import { Subscription } from 'rxjs'
 
 import {
   DefaultNotificationTtlMinutes,
@@ -16,9 +17,6 @@ import { SubjectConfigService } from '../config/subject-config.service'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 import { NotificationService } from './notification.service'
-import { Subscription } from "rxjs";
-
-declare var FirebasePlugin
 
 @Injectable()
 export abstract class FcmNotificationService extends NotificationService {
@@ -53,12 +51,8 @@ export abstract class FcmNotificationService extends NotificationService {
   }
 
   init() {
-    if (!this.platform.is('ios'))
-      FirebasePlugin.setDeliveryMetricsExportToBigQuery(true)
-    return Promise.all([
-      this.firebase.setAutoInitEnabled(true),
-      this.setSenderIdPromise(),
-    ])
+    return this.firebase
+      .setAutoInitEnabled(true)
       .then(() => this.firebase.getToken())
       .then(token => {
         if (this.tokenSubscription === null) {
@@ -67,19 +61,8 @@ export abstract class FcmNotificationService extends NotificationService {
             .subscribe(t => this.onTokenRefresh(t))
         }
         if (token) {
-          return this.onTokenRefresh(token);
+          return this.onTokenRefresh(token)
         }
-      })
-  }
-
-  setSenderIdPromise(): Promise<void> {
-    return new Promise((resolve, reject) =>
-      FirebasePlugin.setSenderId(FCMPluginProjectSenderId, resolve, reject))
-      .then(() => this.logger.log('[NOTIFICATION SERVICE] Set sender id success'))
-      .catch(error => {
-        this.logger.error('Failed to set sender ID', error)
-        alert(error)
-        throw error
       })
   }
 
@@ -130,8 +113,8 @@ export abstract class FcmNotificationService extends NotificationService {
 
   unregisterFromNotifications(): Promise<any> {
     if (this.tokenSubscription) {
-      this.tokenSubscription.unsubscribe();
-      this.tokenSubscription = null;
+      this.tokenSubscription.unsubscribe()
+      this.tokenSubscription = null
     }
     // NOTE: This will delete the current device token and stop receiving notifications
     return this.firebase
@@ -142,8 +125,9 @@ export abstract class FcmNotificationService extends NotificationService {
   onTokenRefresh(token) {
     if (token) {
       this.FCM_TOKEN = token
-      return this.setFCMToken(token)
-        .then(() => this.logger.log('[NOTIFICATION SERVICE] Refresh token success'))
+      return this.setFCMToken(token).then(() =>
+        this.logger.log('[NOTIFICATION SERVICE] Refresh token success')
+      )
     } else {
       return Promise.resolve()
     }

@@ -142,7 +142,7 @@ Certain values can be overriden using Firebase Remote Config. Specifically, the 
 | `platform_instance`             | Title of RADAR Base / platform instance                                                                                                                                                                   | `RADAR-CNS`                                                                                                      |
 | `participant_attribute_order`   | Map that specifies the order in which the attributes are matched with the protocol path                                                                                                                   | `{Human-readable-identifier: -1}`                                                                                |
 | `schedule_year_coverage`        | Schedule coverage in years (length of schedule to generate tasks until)                                                                                                                                   | `3`                                                                                                              |
-| `notification_messaging_type`   | Notifications type (either 'FCM_XMPP', 'FCM_REST' or 'LOCAL' notifications)                                                                                                                               | `FCM_XMPP`                                                                                                       |
+| `notification_messaging_type`   | Notifications type (either 'FCM_REST' or 'LOCAL' notifications)                                                                                                                                           | `FCM_REST`                                                                                                       |
 | `app_server_url`                | Default app server url.                                                                                                                                                                                   | `{DefaultEndPoint + '/appserver'}`                                                                               |
 | `github_fetch_strategy`         | Default Github fetch strategy for Github requests (default or appserver).                                                                                                                                 | `default`                                                                                                        |
 | `app_credits_title`             | Title of the popup box that appears when you tap on the app logo on the left hand side of the homepage.                                                                                                   | `Credits`                                                                                                        |
@@ -198,8 +198,8 @@ export const DefaultEndPoint = 'https://your-hosted-radar-platform-base-url/'
 The default appserver configs.
 
 ```ts
-// The notification type (either 'FCM_XMPP', 'FCM_REST' or 'LOCAL' notifications)
-export const DefaultNotificationType: string = 'FCM_XMPP'
+// The notification type (either 'FCM_REST' or 'LOCAL' notifications, NOTE: 'FCM_XMPP' support was removed in v2.6.4)
+export const DefaultNotificationType: string = 'FCM_REST'
 
 // App server URL
 export const DefaultAppServerURL = DefaultEndPoint + '/appserver'

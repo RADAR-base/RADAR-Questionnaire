@@ -19,7 +19,11 @@ import {
   NextButtonEventType
 } from '../../../../shared/enums/events'
 import { Answer } from '../../../../shared/models/answer'
-import { Question, QuestionType } from '../../../../shared/models/question'
+import {
+  Question,
+  QuestionType,
+  Response
+} from '../../../../shared/models/question'
 import { Task } from '../../../../shared/models/task'
 
 @Component({
@@ -29,7 +33,7 @@ import { Task } from '../../../../shared/models/task'
 })
 export class QuestionComponent implements OnInit, OnChanges {
   @ViewChild('content', { static: false }) content
-  @ViewChild('input', { read: ElementRef, static: false }) input
+  @ViewChild('input', { read: ElementRef, static: false }) inputEl
 
   @Input()
   question: Question
@@ -55,13 +59,17 @@ export class QuestionComponent implements OnInit, OnChanges {
   isLoading = true
   isScrollable = false
   isFieldLabelHidden = false
-  margin = 64
+  margin = 100
   keyboardScrollPadding = 200
   keyboardInputOffset = 0
   inputHeight = 0
   isMatrix = false
   isAutoHeight = false
   showScrollButton = false
+  defaultYesNoResponse: Response[] = [
+    { code: '1', label: 'Yes' },
+    { code: '0', label: 'No' }
+  ]
 
   NON_SCROLLABLE_SET: Set<QuestionType> = new Set([
     QuestionType.timed,
@@ -71,6 +79,7 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.descriptive,
     QuestionType.slider
   ])
+
   HIDE_FIELD_LABEL_SET: Set<QuestionType> = new Set([
     QuestionType.audio,
     QuestionType.descriptive
@@ -109,7 +118,7 @@ export class QuestionComponent implements OnInit, OnChanges {
     setTimeout(() => {
       this.isLoading = false
       this.keyboardInputOffset = Math.max(
-        this.input.nativeElement.offsetTop - this.keyboardScrollPadding,
+        this.inputEl.nativeElement.offsetTop - this.keyboardScrollPadding,
         0
       )
     }, 800)
@@ -194,8 +203,8 @@ export class QuestionComponent implements OnInit, OnChanges {
   isScrollbarVisible() {
     return (
       this.SCROLLBAR_VISIBLE_SET.has(this.question.field_type) &&
-      this.input.nativeElement.scrollHeight >
-        this.input.nativeElement.clientHeight
+      this.inputEl.nativeElement.scrollHeight >
+        this.inputEl.nativeElement.clientHeight
     )
   }
 
@@ -212,8 +221,8 @@ export class QuestionComponent implements OnInit, OnChanges {
   }
 
   scrollDown() {
-    const height = this.input.nativeElement.clientHeight
-    this.input.nativeElement.scrollBy({
+    const height = this.inputEl.nativeElement.clientHeight
+    this.inputEl.nativeElement.scrollBy({
       top: height,
       left: 0,
       behavior: 'smooth'

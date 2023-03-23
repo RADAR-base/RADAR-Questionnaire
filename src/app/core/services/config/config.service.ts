@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import * as ver from 'semver'
+import { compare } from 'compare-versions'
 
 import {
   DefaultAppVersion,
@@ -52,7 +52,6 @@ export class ConfigService {
   }
 
   fetchConfigState(force?: boolean) {
-    console.log('fetching config')
     return Promise.all([
       this.hasProtocolChanged(force),
       this.hasAppVersionChanged(),
@@ -199,7 +198,7 @@ export class ConfigService {
       this.appConfig.getAppVersion()
     ])
       .then(([playstoreVersion, currentVersion]) =>
-        ver.gt(ver.clean(playstoreVersion), ver.clean(currentVersion))
+        compare(playstoreVersion, currentVersion, '>')
       )
       .catch(() => false)
   }
@@ -322,7 +321,8 @@ export class ConfigService {
         )
         .then(() => this.appConfig.init(user.enrolmentDate)),
       this.localization.init(),
-      this.kafka.init()
+      this.kafka.init(),
+      this.analytics.enableAnalytics()
     ]).then(() => this.notifications.init())
   }
 

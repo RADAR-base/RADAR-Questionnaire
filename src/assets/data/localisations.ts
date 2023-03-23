@@ -166,6 +166,23 @@ export const Localisations = {
       'Z powodzeniem zarejestrowałeś się w badaniu. Kliknij „Zakończone”, aby wygenerować harmonogram kwestionariusza i powiadomienia',
     hb: `נרשמת בהצלחה למחקר. לחץ "סיום" כדי ליצור את לוח הזמנים וההתראות שלך .`
   },
+  ENROL_PRIVACY_POLICY_DESC: {
+    da:
+      "Ved at tilmelde dig undersøgelsen accepterer du indsamling og brug af oplysninger i forhold til vores privatlivspolitik.",
+    de:
+      "Indem Sie sich für die Studie anmelden, stimmen Sie der Erfassung und Verwendung von Informationen in Bezug auf unsere Datenschutzrichtlinie zu.",
+    en:
+      "By enrolling in the study, you agree to the collection and use of information in relation to our privacy policy.",
+    es:
+      "Al inscribirse en el estudio, acepta la recopilación y el uso de información en relación con nuestra política de privacidad.",
+    it:
+      "Iscrivendoti allo studio, accetti la raccolta e l'utilizzo delle informazioni in relazione alla nostra politica sulla privacy.",
+    nl:
+      "Door u in te schrijven voor het onderzoek gaat u akkoord met het verzamelen en gebruiken van informatie in verband met ons privacybeleid.",
+    pl:
+      'Zapisując się do badania, zgadzasz się na gromadzenie i wykorzystywanie informacji w związku z naszą polityką prywatności.',
+    hb: `בהצטרפות למחקר, אתה מסכים לאיסוף ושימוש במידע ביחס למדיניות הפרטיות שלנו.`
+  },
   FINISH_THANKS: {
     da: 'Tak fordi du udfyldte spørgeskemaet.',
     de: 'Vielen Dank für das Ausfüllen des Fragebogens.',
@@ -736,6 +753,16 @@ export const Localisations = {
     nl: 'Voorleggen',
     pl: 'Zapisz',
     hb: 'שלח'
+  },
+  BTN_VIEW_POLICY: {
+    da: 'Se privatlivspolitik',
+    de: 'Datenschutzrichtlinie anzeigen',
+    en: 'View Privacy Policy',
+    es: 'Ver política de privacidad',
+    it: `Visualizza l'informativa sulla privacy`,
+    nl: 'Bekijk het privacybeleid',
+    pl: 'Zobacz Politykę prywatności',
+    hb: 'הצג את מדיניות הפרטיות'
   },
   BTN_FINISH: {
     da: 'Afslut',

@@ -32,6 +32,6 @@ export class RadioInputComponent implements OnInit {
   }
 
   onInputChange(event) {
-    this.valueChange.emit(event)
+    this.valueChange.emit(event.detail.value)
   }
 }

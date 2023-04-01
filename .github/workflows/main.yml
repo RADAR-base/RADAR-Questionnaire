@@ -65,7 +65,7 @@ jobs:
       - name: Use coturiv/setup-ionic
         uses: coturiv/setup-ionic@v1
         with:
-          java-version: 8
+          java-version: 11
 
       - name: Use coturiv/setup-ionic
         uses: coturiv/setup-ionic@v1

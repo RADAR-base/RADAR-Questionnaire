@@ -197,7 +197,7 @@
   },
   "resolutions": {
     "node-forge": "1.3.0",
-    "loader-utils": "3.2.1",
+    "loader-utils": "2.0.3",
     "nth-check": "2.0.1",
     "webpack": "5.76.0"
   },

@@ -15,9 +15,9 @@ We use the [Ionic framework](http://ionicframework.com/docs/), which is built wi
 It is recommended that you install the following versions or later:
 
 ```
-node v13.8.0
+node v16.13.0
 ionic v5.4.16
-npm v6.13.6
+npm v8.1.0
 ```
 
 ## Install

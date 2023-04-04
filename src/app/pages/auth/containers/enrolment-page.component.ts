@@ -60,7 +60,6 @@ export class EnrolmentPageComponent {
     private logger: LogService,
     private globalization: Globalization
   ) {
-    this.auth.reset()
     this.globalization.getPreferredLanguage().then(res => {
       // Language value is in BCP 47 format (e.g. en-US)
       const tag = res.value.split('-')[0]
@@ -109,6 +108,7 @@ export class EnrolmentPageComponent {
       .catch(e => {
         this.handleError(e)
         this.loading = false
+        this.auth.reset()
       })
   }
 
@@ -118,7 +118,9 @@ export class EnrolmentPageComponent {
     this.outcomeStatus =
       e.error && e.error.message
         ? e.error.message
-        : e.statusText + ' (' + e.status + ')'
+        : e.status
+        ? e.statusText + ' (' + e.status + ')'
+        : e
     this.usage.sendGeneralEvent(
       e.status == 409 ? EnrolmentEventType.ERROR : EnrolmentEventType.FAIL,
       false,

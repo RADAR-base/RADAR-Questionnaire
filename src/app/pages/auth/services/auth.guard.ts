@@ -13,6 +13,10 @@ export class AuthGuard implements CanActivate {
     return this.token
       .isValid()
       .catch(() => false)
-      .then(res => (res ? true : this.router.navigate(['/enrol'])))
+      .then(res => (res ? true : this.resetAndEnrol()))
+  }
+
+  resetAndEnrol() {
+    return this.token.reset().then(() => this.router.navigate(['/']))
   }
 }

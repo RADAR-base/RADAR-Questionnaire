@@ -186,7 +186,7 @@
     "rxjs-tslint": "^0.1.8",
     "stylefmt": "^6.0.3",
     "stylelint": "^13.6.1",
-    "stylelint-config-standard": "^20.0.0",
+    "stylelint-config-standard": "^22.0.0",
     "ts-node": "^10.9.1",
     "tslint": "~6.1.0",
     "tslint-angular": "^3.0.2",

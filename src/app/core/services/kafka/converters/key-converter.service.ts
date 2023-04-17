@@ -38,7 +38,6 @@ export class KeyConverterService extends ConverterService {
   }
 
   convertToRecord(cache, topics): Promise<any> {
-    // add back caching of schemas
     return this.getKafkaTopic(cache).then(topic =>
       this.getSchemas(topic).then(keySchemaMetadata => {
         const kafkaObject = cache.kafkaObject

@@ -47,9 +47,7 @@ export abstract class ConverterService {
   }
 
   convertToRecord(cache, topics): Promise<any> {
-    // add back caching of schemas
     return this.getKafkaTopic(cache, topics).then(topic => {
-      console.log('topic is ' + topic)
       return this.getSchemas(topic).then(valueSchemaMetadata => {
         const kafkaObject = cache.kafkaObject
         const value = JSON.parse(valueSchemaMetadata.schema)

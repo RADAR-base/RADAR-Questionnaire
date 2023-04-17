@@ -88,9 +88,9 @@ export class LocalizationService {
   }
 
   translate(value: string) {
+    if (!value) return ''
     const loc = Localisations[value]
     if (!loc) {
-      console.log('Missing localization ' + value)
       return value
     }
     return this.chooseText(loc, value)

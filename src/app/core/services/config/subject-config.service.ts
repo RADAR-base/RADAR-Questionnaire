@@ -102,6 +102,16 @@ export class SubjectConfigService {
     return this.storage.get(this.SUBJECT_CONFIG_STORE.BASE_URI)
   }
 
+  getKafkaObservationKey() {
+    return Promise.all([
+      this.getSourceID(),
+      this.getProjectName(),
+      this.getParticipantLogin()
+    ]).then(([sourceId, projectId, userId]) => {
+      return { sourceId, projectId, userId }
+    })
+  }
+
   pullSubjectInformation(): Promise<any> {
     return Promise.all([
       this.token.getAccessHeaders(DefaultRequestEncodedContentType),

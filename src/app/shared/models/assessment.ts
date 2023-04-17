@@ -23,7 +23,7 @@ export interface Assessment {
 export interface QuestionnaireMetadata {
   repository?: string
   name: string
-  avsc: string
+  avsc?: string
   type?: string
   format?: string
 }

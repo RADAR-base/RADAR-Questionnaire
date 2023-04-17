@@ -17,8 +17,8 @@ export class CacheSendModalComponent {
     public modalCtrl: ModalController
   ) {
     this.result = this.params.get('data')
-    this.errors = this.result.filter(d => d instanceof Error)
-    this.successes = this.result.filter(d => !(d instanceof Error))
+    this.errors = this.result['failedKeys']
+    this.successes = this.result['successKeys']
   }
 
   dismiss() {

@@ -6,6 +6,7 @@ import { BrowserModule } from '@angular/platform-browser'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { RouterModule } from '@angular/router'
 import { JWT_OPTIONS, JwtModule } from '@auth0/angular-jwt'
+import { Health } from '@awesome-cordova-plugins/health/ngx'
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx'
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx'
 import { AppLauncher } from '@ionic-native/app-launcher/ngx'
@@ -40,6 +41,14 @@ import {
   RemoteConfigService
 } from './core/services/config/remote-config.service'
 import { SubjectConfigService } from './core/services/config/subject-config.service'
+import { CacheService } from './core/services/kafka/cache.service'
+import { AppEventConverterService } from './core/services/kafka/converters/app-event-converter.service'
+import { AssessmentConverterService } from './core/services/kafka/converters/assessment-converter.service'
+import { CompletionLogConverterService } from './core/services/kafka/converters/completion-log-converter.service'
+import { ConverterFactoryService } from './core/services/kafka/converters/converter-factory.service.'
+import { ConverterService } from './core/services/kafka/converters/converter.service'
+import { KeyConverterService } from './core/services/kafka/converters/key-converter.service'
+import { TimezoneConverterService } from './core/services/kafka/converters/timezone-converter.service'
 import { KafkaService } from './core/services/kafka/kafka.service'
 import { SchemaService } from './core/services/kafka/schema.service'
 import { AlertService } from './core/services/misc/alert.service'
@@ -67,7 +76,6 @@ import { TranslatePipe } from './shared/pipes/translate/translate'
 import { AndroidPermissionUtility } from './shared/utilities/android-permission'
 import { jwtOptionsFactory } from './shared/utilities/jwtOptionsFactory'
 import { Utility } from './shared/utilities/util'
-import { Health } from '@awesome-cordova-plugins/health/ngx'
 
 @NgModule({
   imports: [
@@ -141,6 +149,13 @@ import { Health } from '@awesome-cordova-plugins/health/ngx'
     TranslatePipe,
     UsageService,
     SchemaService,
+    ConverterFactoryService,
+    AssessmentConverterService,
+    AppEventConverterService,
+    CompletionLogConverterService,
+    TimezoneConverterService,
+    KeyConverterService,
+    CacheService,
     NotificationGeneratorService,
     FcmRestNotificationService,
     LocalNotificationService,

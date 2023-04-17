@@ -6,6 +6,8 @@ import {
 } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import * as moment from 'moment-timezone'
+import { Subscription } from 'rxjs'
+import { filter } from 'rxjs/operators'
 import * as urljoin from 'url-join'
 
 import {
@@ -26,8 +28,6 @@ import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 import { TokenService } from '../token/token.service'
-import { filter } from "rxjs/operators";
-import { Subscription } from "rxjs";
 
 @Injectable()
 export class AppServerService {
@@ -66,24 +66,34 @@ export class AppServerService {
       )
       .then(([subjectId, projectId, enrolmentDate, attributes, fcmToken]) =>
         this.addProjectIfMissing(projectId)
-          .then(() => this.addSubjectIfMissing(
+          .then(() =>
+            this.addSubjectIfMissing(
               subjectId,
               projectId,
               enrolmentDate,
               attributes,
               fcmToken
             )
-          ).then(httpRes => {
+          )
+          .then(httpRes => {
             if (this.tokenSubscription !== null) {
-              this.tokenSubscription.unsubscribe();
+              this.tokenSubscription.unsubscribe()
             }
-            this.tokenSubscription = this.storage.observe(StorageKeys.FCM_TOKEN)
+            this.tokenSubscription = this.storage
+              .observe(StorageKeys.FCM_TOKEN)
               .pipe(filter(t => t && t !== fcmToken))
               .subscribe(newFcmToken =>
-                this.addSubjectIfMissing(subjectId, projectId, enrolmentDate, attributes, newFcmToken))
-            return httpRes;
+                this.addSubjectIfMissing(
+                  subjectId,
+                  projectId,
+                  enrolmentDate,
+                  attributes,
+                  newFcmToken
+                )
+              )
+            return httpRes
           })
-      );
+      )
   }
 
   getHeaders() {
@@ -438,6 +448,7 @@ export class AppServerService {
   }
 
   getFCMToken() {
+    return 'test'
     return this.storage.get(StorageKeys.FCM_TOKEN)
   }
 

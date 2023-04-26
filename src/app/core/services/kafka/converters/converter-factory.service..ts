@@ -5,6 +5,7 @@ import { SchemaType } from 'src/app/shared/models/kafka'
 import { AppEventConverterService } from './app-event-converter.service'
 import { AssessmentConverterService } from './assessment-converter.service'
 import { CompletionLogConverterService } from './completion-log-converter.service'
+import { HealthkitConverterService } from './healthkit-converter.service'
 import { KeyConverterService } from './key-converter.service'
 import { TimezoneConverterService } from './timezone-converter.service'
 
@@ -12,6 +13,7 @@ import { TimezoneConverterService } from './timezone-converter.service'
 export class ConverterFactoryService {
   constructor(
     private assessmentConverter: AssessmentConverterService,
+    private healthkitConverter: HealthkitConverterService,
     private appEventConverter: AppEventConverterService,
     private completionLogConverter: CompletionLogConverterService,
     private timzoneConverter: TimezoneConverterService,
@@ -22,10 +24,8 @@ export class ConverterFactoryService {
 
   getConverter(type) {
     switch (type) {
-      // case SchemaType.AGGREGATED_HEALTH:
-      //   return this.assessmentConverter
-      // case SchemaType.GENERAL_HEALTH:
-      //   return this.assessmentConverter
+      case SchemaType.HEALTHKIT:
+        return this.healthkitConverter
       case SchemaType.ASSESSMENT:
         return this.assessmentConverter
       case SchemaType.COMPLETION_LOG:

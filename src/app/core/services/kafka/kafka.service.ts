@@ -179,7 +179,16 @@ export class KafkaService {
   }
 
   convertCacheToRecords(cache) {
+    // what we can do here is group similar
     return this.schema.getKafkaObjectKey().then(key => {
+      // const groupedCache = {}
+      // Object.entries(cache).map(([k, v]) => {
+      //   const type = v['name']
+      //   groupedCache[type]
+      //     ? groupedCache[type].push({ [k]: v })
+      //     : (groupedCache[type] = [{ [k]: v }])
+      // })
+      // after grouping similar convert to array of records
       const records = Object.entries(cache)
         .filter(([k]) => k)
         .map(([k, v]) => {

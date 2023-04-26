@@ -47,6 +47,7 @@ import { AssessmentConverterService } from './core/services/kafka/converters/ass
 import { CompletionLogConverterService } from './core/services/kafka/converters/completion-log-converter.service'
 import { ConverterFactoryService } from './core/services/kafka/converters/converter-factory.service.'
 import { ConverterService } from './core/services/kafka/converters/converter.service'
+import { HealthkitConverterService } from './core/services/kafka/converters/healthkit-converter.service'
 import { KeyConverterService } from './core/services/kafka/converters/key-converter.service'
 import { TimezoneConverterService } from './core/services/kafka/converters/timezone-converter.service'
 import { KafkaService } from './core/services/kafka/kafka.service'
@@ -155,6 +156,7 @@ import { Utility } from './shared/utilities/util'
     CompletionLogConverterService,
     TimezoneConverterService,
     KeyConverterService,
+    HealthkitConverterService,
     CacheService,
     NotificationGeneratorService,
     FcmRestNotificationService,

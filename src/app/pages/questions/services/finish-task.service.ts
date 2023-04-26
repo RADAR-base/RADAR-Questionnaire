@@ -17,10 +17,14 @@ export class FinishTaskService {
   ) {}
 
   processCompletedQuestionnaire(data, task, assessmentMetadata) {
+    // temporarily change both to healthkit
+    const type = task.name.toLowerCase().includes('health')
+      ? SchemaType.HEALTHKIT
+      : SchemaType.HEALTHKIT
     return Promise.all([
       this.updateTaskToComplete(task),
       !task.isDemo
-        ? this.kafka.prepareKafkaObjectAndStore(SchemaType.ASSESSMENT, {
+        ? this.kafka.prepareKafkaObjectAndStore(type, {
             task,
             data,
             metadata: assessmentMetadata

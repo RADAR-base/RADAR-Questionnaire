@@ -16,6 +16,7 @@ export enum SchemaType {
   APP_EVENT = 'app_event',
   OTHER = 'other',
   KEY = 'key',
+  HEALTHKIT = 'healthkit',
 
   // generic
   GENERAL_HEALTH = 'healthkit_generic_data',

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import * as AvroSchema from 'avro-js'
+import { HealthkitSchemaType } from 'src/app/shared/models/health'
 import * as YAML from 'yaml'
 
 import { DefaultSchemaSpecEndpoint } from '../../../../assets/data/defaultConfig'
@@ -41,8 +42,12 @@ export class SchemaService {
     private utility: Utility
   ) {}
 
-  getMetaData(type, task?: Task): Promise<QuestionnaireMetadata> {
+  getMetaData(type, payload?: any): Promise<QuestionnaireMetadata> {
+    const task = payload.task
+    const data = payload.data
     switch (type) {
+      case SchemaType.GENERAL_HEALTH:
+        return Promise.resolve({ name: data.key, avsc: 'healthkit' })
       case SchemaType.ASSESSMENT:
         return this.questionnaire
           .getAssessmentForTask(task.type, task)
@@ -68,22 +73,8 @@ export class SchemaService {
 
   getKafkaObjectValue(type, payload) {
     switch (type) {
-      case SchemaType.AGGREGATED_HEALTH:
-        const HealthBodyMeasurement = {
-          ...payload.data.aggregatedData,
-          time: payload.data.time,
-          timeReceived: payload.data.timeReceived,
-          timeInterval: payload.data.timeInterval //second
-        }
-        return HealthBodyMeasurement
       case SchemaType.GENERAL_HEALTH:
-        const general_schema = {
-          key: payload.data.key, //height
-          value: payload.data.value, //172.3232
-          time: payload.data.time, //epoch
-          timeReceived: payload.data.timeReceived //epoch
-        }
-        return general_schema
+        return payload.data as HealthkitSchemaType
       case SchemaType.ASSESSMENT:
         const Answer: AnswerValueExport = {
           name: payload.task.name,
@@ -180,10 +171,10 @@ export class SchemaService {
     if (specifications) {
       const spec = specifications.find(t => t.type.toLowerCase() == type)
       // HEALTHKIT
-      if (name === 'healthkit_generic_data') {
-        return Promise.resolve('healthkit_generic_data')
-      } else if (name === 'healthkit_aggregated_exercise_data') {
-        return Promise.resolve('healthkit_aggregated_exercise_data')
+      if (avsc === 'healthkit') {
+        const topic = 'active_healthkit_' + name
+        console.log('Topic is: ' + topic)
+        return Promise.resolve(topic)
       }
       if (spec && spec.topic && this.topicExists(spec.topic, topics)) {
         return Promise.resolve(spec.topic)

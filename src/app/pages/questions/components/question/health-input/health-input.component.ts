@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
 import { Health } from '@awesome-cordova-plugins/health/ngx'
+import { StorageService } from 'src/app/core/services/storage/storage.service'
+import { StorageKeys } from 'src/app/shared/enums/storage'
 import { Health_Requirement, Question } from 'src/app/shared/models/question'
 
 import { Response } from '../../../../../shared/models/question'
@@ -29,9 +31,14 @@ export class HealthInputComponent implements OnInit {
 
   // the bucket for aggregated query
   defaultBucket = 'day'
+  MIN_POLL_TIMESTAMP = new Date(
+    new Date().getTime() - this.defaultInterval * 24 * 60 * 60 * 1000
+  )
 
-  constructor(private health: Health) {}
+  constructor(private health: Health, private storage: StorageService) {}
+
   ngOnInit() {
+    this.initLastPollTimes()
     let requireField = []
     if (
       this.health_question.field_name === 'blood_pressure_systolic' ||
@@ -41,20 +48,19 @@ export class HealthInputComponent implements OnInit {
     } else {
       requireField = [this.health_question.field_name]
     }
+    const healthDataType = requireField[0]
     this.health
       .isAvailable()
       .then((available: boolean) => {
         this.health
           .requestAuthorization([
-            // 'nutrition', //read and write permissions
             {
               read: requireField //read only permission
-              // write: ['height', 'weight'] //write only permission
             }
           ])
           .then(res => {
-            this.loadData().then(() => {
-              this.onInputChange()
+            this.loadData(healthDataType).then(data => {
+              this.onInputChange(data)
             })
           })
           .catch(e => console.log(e))
@@ -64,165 +70,81 @@ export class HealthInputComponent implements OnInit {
       })
   }
 
-  onInputChange() {
+  initLastPollTimes() {
+    const dic = this.storage.get(StorageKeys.HEALTH_LAST_POLL_TIMES)
+    if (!dic) {
+      this.storage.set(StorageKeys.HEALTH_LAST_POLL_TIMES, {})
+    }
+  }
+
+  onInputChange(data) {
     const event = {
       value: this.health_value,
       time: this.health_time
     }
-    console.log('Final Sumit Data: ', event)
-    this.valueChange.emit(event)
+    this.valueChange.emit(data)
   }
 
-  async loadData() {
-    // * Still has some improvment for this UI dispaly
+  loadData(healthDataType) {
+    const dic = this.storage.get(StorageKeys.HEALTH_LAST_POLL_TIMES)
+    const lastPollTime = new Date(dic[healthDataType])
 
-    // // !clearn the localstorage query  ( For testing )
-    // localStorage.setItem('lastQueryTimeDic', null)
-
-    const lastQueryTimeDic = localStorage.getItem('lastQueryTimeDic')
-    // console.log("LastQuery: ", lastQueryTimeDic)
-
-    if (lastQueryTimeDic !== 'null') {
-      const dic = JSON.parse(lastQueryTimeDic)
-
-      if (this.health_question.field_name in dic) {
-        await this.query(
-          new Date(dic[this.health_question.field_name]),
-          new Date()
-        )
-      } else {
-        await this.query(
-          new Date(
-            new Date().getTime() - this.defaultInterval * 24 * 60 * 60 * 1000
-          ),
-          new Date()
-        )
-      }
-      dic[this.health_question.field_name] = new Date().toLocaleDateString()
-      localStorage.setItem('lastQueryTimeDic', JSON.stringify(dic))
-    } else {
-      await this.query(
-        new Date(
-          new Date().getTime() - this.defaultInterval * 24 * 60 * 60 * 1000
-        ),
-        new Date()
-      )
-      const newDic = {
-        [this.health_question.field_name]: new Date().toLocaleDateString()
-      }
-      localStorage.setItem('lastQueryTimeDic', JSON.stringify(newDic))
-    }
+    return this.health
+      .requestAuthorization([
+        {
+          read: [healthDataType] //read only permission
+        }
+      ])
+      .then(() => {
+        return this.query(
+          lastPollTime ? lastPollTime : this.MIN_POLL_TIMESTAMP,
+          new Date(),
+          healthDataType
+        ).then(res => {
+          dic[healthDataType] = new Date().toLocaleDateString()
+          this.storage.set(StorageKeys.HEALTH_LAST_POLL_TIMES, dic)
+          return res
+        })
+      })
+      .catch(e => {
+        console.log(e)
+        return null
+      })
   }
 
-  async query(queryStartDate: Date, queryEndDate: Date) {
+  query(queryStartTime: Date, queryEndTime: Date, dataType: string) {
     // !Will have to remove activity here, since each activity acutally contains more payload
     // !Set the acitiviy to be UNKNOWN for now to avoid schema confliction
-    const aggregatedField = [
-      'steps',
-      'distance',
-      'calories',
-      'activity',
-      'nutrition'
-    ]
-    //aggregated data
-    if (
-      aggregatedField.includes(this.health_question.field_name) ||
-      this.health_question.field_name.startsWith('nutrition') ||
-      this.health_question.field_name.startsWith('calories')
-    ) {
-      await this.health
-        .queryAggregated({
-          startDate: queryStartDate,
-          endDate: queryEndDate,
-          dataType: this.health_question.field_name,
-          bucket: this.defaultBucket
-        })
-        .then(res => {
-          if (res === null) {
-            this.health_value = null
-            this.health_display = 'There is no data for this date'
+    return this.health
+      .query({
+        // put the lastDate in StartDate
+        startDate: queryStartTime,
+        endDate: queryEndTime, // now
+        dataType: dataType,
+        limit: 1000
+      })
+      .then(res => {
+        console.log('Field type: ' + dataType)
+        if (res.length === 0) {
+          this.health_value = null
+          this.health_display = 'No data for today'
+          this.health_display_time = new Date().toLocaleDateString()
+          this.health_time = Math.floor(res[0].startDate.getTime() / 1000)
+        } else {
+          if (dataType === 'date_of_birth') {
+            const value = res[0].value as any
+            this.health_value = value.day + '/' + value.month + '/' + value.year
+            this.health_display = this.health_value
           } else {
-            if (this.health_question.field_name === 'activity') {
-              const value = res[res.length - 1].value
-              this.health_value = 'UNKNOWN'
-            } else {
-              const value = res[res.length - 1].value
-              this.health_value = parseFloat(value)
-            }
+            this.health_value = parseFloat(res[0].value)
             this.health_display =
-              this.health_value.toString() + ' ' + res[res.length - 1].unit
+              this.health_value.toFixed(2) + ' ' + res[0].unit
           }
-          this.health_display_time =
-            res[res.length - 1].startDate.toLocaleDateString()
-          this.health_time = Math.floor(
-            res[res.length - 1].startDate.getTime() / 1000
-          )
-        })
-    } else {
-      if (
-        this.health_question.field_name === 'blood_pressure_systolic' ||
-        this.health_question.field_name === 'blood_pressure_diastolic'
-      ) {
-        await this.health
-          .query({
-            // put the lastDate in StartDate
-            startDate: queryStartDate,
-            endDate: queryEndDate, // now
-            dataType: 'blood_pressure',
-            limit: 1000
-          })
-          .then(res => {
-            if (res.length === 0) {
-              this.health_value = null
-              this.health_display = 'No data for today'
-              this.health_display_time = new Date().toLocaleDateString()
-              this.health_time = Math.floor(res[0].startDate.getTime() / 1000)
-            } else {
-              const blood_pressure = res[0].value as any
-              if (
-                this.health_question.field_name === 'blood_pressure_systolic'
-              ) {
-                this.health_value = blood_pressure.systolic
-              } else {
-                this.health_value = blood_pressure.diastolic
-              }
-              this.health_display =
-                this.health_value.toFixed(2) + ' ' + res[0].unit
-              this.health_time = Math.floor(res[0].startDate.getTime() / 1000)
-            }
-          })
-      } else {
-        await this.health
-          .query({
-            // put the lastDate in StartDate
-            startDate: queryStartDate,
-            endDate: queryEndDate, // now
-            dataType: this.health_question.field_name,
-            limit: 1000
-          })
-          .then(res => {
-            if (res.length === 0) {
-              this.health_value = null
-              this.health_display = 'No data for today'
-              this.health_display_time = new Date().toLocaleDateString()
-              this.health_time = Math.floor(res[0].startDate.getTime() / 1000)
-            } else {
-              if (this.health_question.field_name === 'date_of_birth') {
-                const value = res[0].value as any
-                this.health_value =
-                  value.day + '/' + value.month + '/' + value.year
-                this.health_display = this.health_value
-              } else {
-                this.health_value = parseFloat(res[0].value)
-                this.health_display =
-                  this.health_value.toFixed(2) + ' ' + res[0].unit
-              }
-              // deal with time
-              this.health_display_time = res[0].startDate.toLocaleDateString()
-              this.health_time = Math.floor(res[0].startDate.getTime() / 1000)
-            }
-          })
-      }
-    }
+          // deal with time
+          this.health_display_time = res[0].startDate.toLocaleDateString()
+          this.health_time = Math.floor(res[0].startDate.getTime() / 1000)
+        }
+        return res
+      })
   }
 }

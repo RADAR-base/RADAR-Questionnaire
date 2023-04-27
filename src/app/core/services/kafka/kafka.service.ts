@@ -6,17 +6,17 @@ import {
   DefaultKafkaRequestContentType,
   DefaultKafkaURI
 } from '../../../../assets/data/defaultConfig'
+import { ConfigKeys } from '../../../shared/enums/config'
 import { DataEventType } from '../../../shared/enums/events'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { CacheValue } from '../../../shared/models/cache'
 import { KafkaObject, SchemaType } from '../../../shared/models/kafka'
+import { RemoteConfigService } from '../config/remote-config.service'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 import { TokenService } from '../token/token.service'
 import { AnalyticsService } from '../usage/analytics.service'
 import { SchemaService } from './schema.service'
-import { RemoteConfigService } from '../config/remote-config.service'
-import { ConfigKeys } from '../../../shared/enums/config'
 
 @Injectable()
 export class KafkaService {
@@ -129,7 +129,7 @@ export class KafkaService {
   prepareKafkaObjectAndSend(type, payload, keepInCache?) {
     const value = this.schema.getKafkaObjectValue(type, payload)
     const keyPromise = this.schema.getKafkaObjectKey()
-    const metaDataPromise = this.schema.getMetaData(type, payload.task)
+    const metaDataPromise = this.schema.getMetaData(type, payload)
     return Promise.all([keyPromise, metaDataPromise]).then(
       ([key, metaData]) => {
         const kafkaObject: KafkaObject = { key: key, value: value }

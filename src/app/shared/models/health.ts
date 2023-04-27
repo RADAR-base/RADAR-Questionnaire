@@ -13,3 +13,17 @@ export enum HealthkitSchemaType {
   HEART_RATE = 'healthkit_heart_rate',
   VITAL_SIGNS = 'healthkit_vital_signs'
 }
+
+export interface HealthkitValueExport {
+  startTime: number
+  endTime: number
+  timeReceived: number
+  sourceId: string
+  sourceName: string
+  unit: string
+  key: string
+  intValue: number
+  floatValue: number
+  doubleValue: number
+  stringValue: string
+}

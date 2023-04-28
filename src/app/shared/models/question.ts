@@ -35,6 +35,11 @@ export interface ExternalApp {
   external_app_android_uri?: string
   external_app_ios_uri?: string
 }
+export interface Health_Requirement {
+  data_name: string
+  time_intervals: string
+  value: string
+}
 
 export interface SelectChoicesOrCalculations {
   code: string
@@ -53,6 +58,7 @@ export class QuestionType {
   static yesno = 'yesno'
   static descriptive = 'descriptive'
   static matrix_radio = 'matrix-radio'
+  static health = 'health'
 }
 
 export interface Response {

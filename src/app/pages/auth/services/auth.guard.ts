@@ -17,6 +17,6 @@ export class AuthGuard implements CanActivate {
   }
 
   resetAndEnrol() {
-    return this.token.reset().then(() => this.router.navigate(['/']))
+    return this.token.reset().then(() => this.router.navigate(['/enrol']))
   }
 }

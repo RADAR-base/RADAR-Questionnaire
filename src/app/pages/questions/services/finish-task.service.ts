@@ -35,23 +35,45 @@ export class FinishTaskService {
   processDataAndSend(answers, questions, timestamps, task) {
     // NOTE: Do not send answers if demo questionnaire
     if (task.isDemo) return Promise.resolve()
-    return this.sendAnswersToKafka(
-      this.processQuestionnaireData(answers, timestamps, questions),
-      task
-    )
+    if (questions.some(question => question.field_type === 'health')) {
+      const results = this.processHealthQuestionnaireData(
+        answers,
+        timestamps,
+        questions
+      )
+      Object.keys(results).forEach(key =>
+        this.sendAnswersToKafka(results[key], task)
+      )
+    } else {
+      return this.sendAnswersToKafka(
+        this.processQuestionnaireData(answers, timestamps, questions),
+        task
+      )
+    }
   }
 
   sendAnswersToKafka(processedAnswers, task): Promise<any> {
-    // NOTE: Submit data to kafka
-    return this.appConfig.getScheduleVersion().then(scheduleVersion => {
-      return Promise.all([
-        this.kafka.prepareKafkaObjectAndSend(SchemaType.TIMEZONE, {}),
-        this.kafka.prepareKafkaObjectAndSend(SchemaType.ASSESSMENT, {
-          task: task,
-          data: Object.assign(processedAnswers, { scheduleVersion })
-        })
-      ])
-    })
+    // If it's from health
+    if (processedAnswers instanceof Array) {
+      return Promise.all(
+        processedAnswers.map(p =>
+          this.kafka.prepareKafkaObjectAndSend(SchemaType.GENERAL_HEALTH, {
+            task: task,
+            data: p
+          })
+        )
+      )
+    } else {
+      return this.appConfig.getScheduleVersion().then(scheduleVersion => {
+        return Promise.all([
+          this.kafka.prepareKafkaObjectAndSend(SchemaType.TIMEZONE, {}),
+          this.kafka.prepareKafkaObjectAndSend(SchemaType.ASSESSMENT, {
+            task: task,
+            data: Object.assign(processedAnswers, { scheduleVersion })
+          })
+        ])
+      })
+    }
   }
 
   createClinicalFollowUpTask(assessment): Promise<any> {
@@ -62,6 +84,38 @@ export class FinishTaskService {
         Date.now()
       )
       .then(() => this.config.rescheduleNotifications())
+  }
+  // TODO process for general questionnaire schema
+
+  processHealthQuestionnaireData(answers, timestamps, questions) {
+    // this.logger.log('Answers to process', answers)
+
+    let results = {}
+    for (let [key, value] of Object.entries<any>(answers)) {
+      // value is array of datapoints
+      // key is name of data type
+      console.log(key)
+      console.log(value.length)
+      if (value.length) {
+        const formatted = value.map(v => ({
+          startTime: new Date(v.startDate).getTime(),
+          endTime: new Date(v.endDate).getTime(),
+          timeReceived: Date.now(),
+          sourceId: v.sourceBundleId,
+          sourceName: v.sourceName,
+          unit: v.unit,
+          key,
+          intValue: null,
+          floatValue: v.value,
+          doubleValue: null,
+          stringValue: null
+        }))
+        results[key] = formatted
+      }
+    }
+    console.log('results')
+    console.log(results)
+    return results
   }
 
   processQuestionnaireData(answers, timestamps, questions) {

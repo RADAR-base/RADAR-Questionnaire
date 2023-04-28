@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import * as AvroSchema from 'avro-js'
+import { HealthkitSchemaType } from 'src/app/shared/models/health'
 import * as YAML from 'yaml'
 
 import { DefaultSchemaSpecEndpoint } from '../../../../assets/data/defaultConfig'
@@ -41,8 +42,12 @@ export class SchemaService {
     private utility: Utility
   ) {}
 
-  getMetaData(type, task?: Task): Promise<QuestionnaireMetadata> {
+  getMetaData(type, payload?: any): Promise<QuestionnaireMetadata> {
+    const task = payload.task
+    const data = payload.data
     switch (type) {
+      case SchemaType.GENERAL_HEALTH:
+        return Promise.resolve({ name: data.key, avsc: 'healthkit' })
       case SchemaType.ASSESSMENT:
         return this.questionnaire
           .getAssessmentForTask(task.type, task)
@@ -68,6 +73,8 @@ export class SchemaService {
 
   getKafkaObjectValue(type, payload) {
     switch (type) {
+      case SchemaType.GENERAL_HEALTH:
+        return payload.data as HealthkitSchemaType
       case SchemaType.ASSESSMENT:
         const Answer: AnswerValueExport = {
           name: payload.task.name,
@@ -153,11 +160,22 @@ export class SchemaService {
       })
   }
 
-  getKafkaTopic(specifications: any[] | null, name, avsc, topics: string[] | null): Promise<any> {
+  getKafkaTopic(
+    specifications: any[] | null,
+    name,
+    avsc,
+    topics: string[] | null
+  ): Promise<any> {
     const type = name.toLowerCase()
 
     if (specifications) {
       const spec = specifications.find(t => t.type.toLowerCase() == type)
+      // HEALTHKIT
+      if (avsc === 'healthkit') {
+        const topic = 'active_healthkit_' + name
+        console.log('Topic is: ' + topic)
+        return Promise.resolve(topic)
+      }
       if (spec && spec.topic && this.topicExists(spec.topic, topics)) {
         return Promise.resolve(spec.topic)
       }
@@ -166,12 +184,14 @@ export class SchemaService {
     if (this.topicExists(questionnaireTopic, topics)) {
       return Promise.resolve(questionnaireTopic)
     }
-    const defaultTopic = this.GENERAL_TOPIC;
+    const defaultTopic = this.GENERAL_TOPIC
     if (this.topicExists(defaultTopic, topics)) {
       return Promise.resolve(defaultTopic)
     }
 
-    return Promise.reject(`No suitable topic found on server for questionnaire ${name}`)
+    return Promise.reject(
+      `No suitable topic found on server for questionnaire ${name}`
+    )
   }
 
   private topicExists(topic: string, topics: string[] | null) {
@@ -179,7 +199,9 @@ export class SchemaService {
       return true
     } else {
       this.logger.error(
-        `Cannot send data to specification topic ${topic} because target server does not have it`, null)
+        `Cannot send data to specification topic ${topic} because target server does not have it`,
+        null
+      )
       return false
     }
   }

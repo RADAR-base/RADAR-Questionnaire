@@ -50,7 +50,7 @@
     "@auth0/angular-jwt": "5.0.0",
     "@awesome-cordova-plugins/core": "^5.1.0",
     "@awesome-cordova-plugins/health": "^5.43.0",
-    "@awesome-cordova-plugins/in-app-browser": "^5.36.0",
+    "@awesome-cordova-plugins/in-app-browser": "^6.0.0",
     "@awesome-cordova-plugins/keyboard": "^5.39.0",
     "@ionic-native/android-permissions": "^5.26.0",
     "@ionic-native/app-launcher": "^5.31.1",

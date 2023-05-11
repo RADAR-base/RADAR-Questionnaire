@@ -1,21 +1,33 @@
 import { Injectable } from '@angular/core'
+import { Platform } from '@ionic/angular'
 import { Storage } from '@ionic/storage'
 import { Observable, Subject, throwError as observableThrowError } from 'rxjs'
+import { filter, startWith, switchMap } from 'rxjs/operators'
 
 import { StorageKeys } from '../../../shared/enums/storage'
 import { LogService } from '../misc/log.service'
-import { filter, startWith, switchMap } from "rxjs/operators";
 
 @Injectable()
 export class StorageService {
   global: { [key: string]: any } = {}
   private readonly keyUpdates: Subject<StorageKeys | null>
 
-  constructor(private storage: Storage, private logger: LogService) {
+  constructor(
+    private storage: Storage,
+    private logger: LogService,
+    private healthStorage: Storage,
+    private platform: Platform
+  ) {
+    this.healthStorage = new Storage({
+      name: '__health_db',
+      storeName: '_data',
+      driverOrder: ['sqlite', 'indexeddb', 'websql', 'localstorage']
+    })
+
     this.prepare().then(() =>
       this.logger.log('Global configuration', this.global)
     )
-    this.keyUpdates = new Subject<StorageKeys | null>();
+    this.keyUpdates = new Subject<StorageKeys | null>()
   }
 
   getStorageState() {
@@ -25,21 +37,30 @@ export class StorageService {
   set(key: StorageKeys, value: any): Promise<any> {
     const k = key.toString()
     this.global[k] = value
-    return this.storage.set(k, value)
-      .then(res => {
-        this.keyUpdates.next(key);
-        return res;
-      });
+    return this.storage.set(k, value).then(res => {
+      this.keyUpdates.next(key)
+      return res
+    })
+  }
+
+  setHealthData(key: StorageKeys, value: any): Promise<any> {
+    const k = key.toString()
+    return this.platform.ready().then(() => {
+      return this.healthStorage.set(k, value).then(res => {
+        return res
+      })
+    })
   }
 
   push(key: StorageKeys, value: any): Promise<any> {
     if (this.global[key.toString()]) this.global[key.toString()].push(value)
     else this.global[key.toString()] = [value]
-    return this.storage.set(key.toString(), this.global[key.toString()])
+    return this.storage
+      .set(key.toString(), this.global[key.toString()])
       .then(res => {
-        this.keyUpdates.next(key);
-        return res;
-      });
+        this.keyUpdates.next(key)
+        return res
+      })
   }
 
   get(key: StorageKeys): Promise<any> {
@@ -55,12 +76,19 @@ export class StorageService {
     }
   }
 
+  getHealthData(key: StorageKeys): Promise<any> {
+    const k = key.toString()
+    return this.healthStorage.get(k).then(value => {
+      return value
+    })
+  }
+
   observe(key: StorageKeys): Observable<any> {
     return this.keyUpdates.pipe(
       startWith(key),
       filter(k => k === key || k === null),
-      switchMap(k => this.get(k)),
-    );
+      switchMap(k => this.get(k))
+    )
   }
 
   remove(key: StorageKeys) {
@@ -69,7 +97,7 @@ export class StorageService {
       .remove(k)
       .then(res => {
         this.global[k] = null
-        this.keyUpdates.next(key);
+        this.keyUpdates.next(key)
         return res
       })
       .catch(error => this.handleError(error))
@@ -91,8 +119,7 @@ export class StorageService {
 
   clear() {
     this.global = {}
-    return this.storage.clear()
-      .then(() => this.keyUpdates.next(null));
+    return this.storage.clear().then(() => this.keyUpdates.next(null))
   }
 
   private handleError(error: any) {

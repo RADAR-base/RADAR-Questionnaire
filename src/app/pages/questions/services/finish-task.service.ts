@@ -56,13 +56,16 @@ export class FinishTaskService {
     // If it's from health
     if (processedAnswers instanceof Array) {
       return Promise.all(
-        processedAnswers.map(p =>
-          this.kafka.prepareKafkaObjectAndSend(SchemaType.GENERAL_HEALTH, {
-            task: task,
-            data: p
-          })
-        )
-      )
+        processedAnswers.map(p => {
+          return this.kafka.prepareKafkaObjectAndSend(
+            SchemaType.GENERAL_HEALTH,
+            {
+              task: task,
+              data: p
+            }
+          )
+        })
+      ).then(cacheValues => this.kafka.storeMultipleInCache(cacheValues))
     } else {
       return this.appConfig.getScheduleVersion().then(scheduleVersion => {
         return Promise.all([
@@ -94,8 +97,6 @@ export class FinishTaskService {
     for (let [key, value] of Object.entries<any>(answers)) {
       // value is array of datapoints
       // key is name of data type
-      console.log(key)
-      console.log(value.length)
       if (value.length) {
         const formatted = value.map(v => ({
           startTime: new Date(v.startDate).getTime(),
@@ -113,8 +114,6 @@ export class FinishTaskService {
         results[key] = formatted
       }
     }
-    console.log('results')
-    console.log(results)
     return results
   }
 

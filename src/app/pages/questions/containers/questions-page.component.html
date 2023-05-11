@@ -12,7 +12,7 @@
         <ng-container *ngIf="!showIntroductionScreen">
           <ion-slide
             *ngFor="
-              let item of groupedQuestions | keyvalue: asIsOrder;
+              let item of groupedQuestions | keyvalue : asIsOrder;
               let i = index
             "
           >
@@ -46,6 +46,8 @@
             [taskType]="taskType"
             [showDoneButton]="showDoneButton"
             [isShown]="showFinishScreen"
+            [questions]="questions"
+            [task]="task"
             (exit)="handleFinish($event)"
           ></finish>
           <finish-and-launch

@@ -93,12 +93,13 @@ export class HealthInputComponent implements OnInit {
           dic && dic[healthDataType]
             ? new Date(dic[healthDataType])
             : new Date(this.MIN_POLL_TIMESTAMP)
-
-        lastPollTime = new Date(this.MIN_POLL_TIMESTAMP)
         const endTime = new Date()
         return this.query(lastPollTime, endTime, healthDataType).then(res => {
-          dic[healthDataType] = endTime.getTime()
-          this.storage.set(StorageKeys.HEALTH_LAST_POLL_TIMES, dic)
+          if (res.length) {
+            dic[healthDataType] = new Date(res[0].endDate).getTime()
+            console.log(dic)
+            this.storage.set(StorageKeys.HEALTH_LAST_POLL_TIMES, dic)
+          }
           return res
         })
       })
@@ -117,7 +118,7 @@ export class HealthInputComponent implements OnInit {
         startDate: queryStartTime,
         endDate: queryEndTime, // now
         dataType: dataType,
-        limit: 200
+        limit: 500
       })
       .then(res => {
         console.log('Field type: ' + dataType)

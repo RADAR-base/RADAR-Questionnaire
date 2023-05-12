@@ -10,6 +10,8 @@ import { LogService } from '../misc/log.service'
 @Injectable()
 export class StorageService {
   global: { [key: string]: any } = {}
+  healthGlobal: { [key: string]: any } = {}
+
   private readonly keyUpdates: Subject<StorageKeys | null>
 
   constructor(
@@ -18,15 +20,22 @@ export class StorageService {
     private healthStorage: Storage,
     private platform: Platform
   ) {
-    this.healthStorage = new Storage({
-      name: '__health_db',
-      storeName: '_data',
-      driverOrder: ['sqlite', 'indexeddb', 'websql', 'localstorage']
+    this.platform.ready().then(() => {
+      this.healthStorage = new Storage({
+        name: '__health_db',
+        storeName: '_data',
+        driverOrder: ['sqlite', 'indexeddb', 'websql', 'localstorage']
+      })
+
+      this.prepare()
+        .then(() => this.logger.log('Global configuration', this.global))
+        .then(() =>
+          this.prepareHealth().then(() =>
+            this.logger.log('Global configuration', this.healthGlobal)
+          )
+        )
     })
 
-    this.prepare().then(() =>
-      this.logger.log('Global configuration', this.global)
-    )
     this.keyUpdates = new Subject<StorageKeys | null>()
   }
 
@@ -43,13 +52,14 @@ export class StorageService {
     })
   }
 
-  setHealthData(key: StorageKeys, value: any): Promise<any> {
-    const k = key.toString()
-    return this.platform.ready().then(() => {
-      return this.healthStorage.set(k, value).then(res => {
-        return res
+  setHealthData(value: any): Promise<any> {
+    const keys = Object.keys(value)
+    return Promise.all(
+      keys.map(k => {
+        this.healthGlobal[k] = value[k]
+        return this.healthStorage.set(k, value[k])
       })
-    })
+    )
   }
 
   push(key: StorageKeys, value: any): Promise<any> {
@@ -77,10 +87,11 @@ export class StorageService {
   }
 
   getHealthData(key: StorageKeys): Promise<any> {
+    const cache = {}
     const k = key.toString()
-    return this.healthStorage.get(k).then(value => {
-      return value
-    })
+    if (this.healthGlobal !== undefined) {
+      return Promise.resolve(this.healthGlobal)
+    }
   }
 
   observe(key: StorageKeys): Observable<any> {
@@ -115,6 +126,19 @@ export class StorageService {
         )
       )
       .then(() => 'Store set')
+  }
+
+  prepareHealth() {
+    return this.healthStorage
+      .keys()
+      .then(keys =>
+        Promise.all(
+          keys.map(k =>
+            this.healthStorage.get(k).then(v => (this.healthGlobal[k] = v))
+          )
+        )
+      )
+      .then(() => 'Health Store set')
   }
 
   clear() {

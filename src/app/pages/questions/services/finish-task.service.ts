@@ -65,7 +65,7 @@ export class FinishTaskService {
             }
           )
         })
-      ).then(cacheValues => this.kafka.storeMultipleInCache(cacheValues))
+      ).then(cacheValues => this.kafka.storeHealthDataInCache(cacheValues))
     } else {
       return this.appConfig.getScheduleVersion().then(scheduleVersion => {
         return Promise.all([

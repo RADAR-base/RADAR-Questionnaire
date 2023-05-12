@@ -87,7 +87,6 @@ export class StorageService {
   }
 
   getHealthData(key: StorageKeys): Promise<any> {
-    const cache = {}
     const k = key.toString()
     if (this.healthGlobal !== undefined) {
       return Promise.resolve(this.healthGlobal)

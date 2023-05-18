@@ -118,7 +118,7 @@ export class HealthInputComponent implements OnInit {
         startDate: queryStartTime,
         endDate: queryEndTime, // now
         dataType: dataType,
-        limit: 500
+        limit: 1000
       })
       .then(res => {
         console.log('Field type: ' + dataType)

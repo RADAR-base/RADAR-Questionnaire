@@ -1,9 +1,16 @@
-export enum HealthkitDataType {
+export enum HealthkitFloatDataType {
   STAIRS = 'stairs',
   DISTANCE = 'distance',
   APPLE_EXERCISE_TIME = 'appleExerciseTime',
   VO2MAX = 'vo2Max',
   ACTIVITY = 'activity'
+}
+
+export enum HealthkitStringDataType {
+  SLEEP = 'sleep',
+  ACTIVITY = 'activity',
+  GENDER = 'gender',
+  DATE_OF_BIRTH = 'date_of_birth'
 }
 
 export enum HealthkitSchemaType {
@@ -27,3 +34,4 @@ export interface HealthkitValueExport {
   doubleValue: number
   stringValue: string
 }
+

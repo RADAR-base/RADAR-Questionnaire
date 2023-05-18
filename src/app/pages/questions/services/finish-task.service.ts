@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core'
+import { HealthkitStringDataType } from 'src/app/shared/models/health'
 
 import { AppConfigService } from '../../../core/services/config/app-config.service'
 import { ConfigService } from '../../../core/services/config/config.service'
@@ -98,23 +99,36 @@ export class FinishTaskService {
       // value is array of datapoints
       // key is name of data type
       if (value.length) {
-        const formatted = value.map(v => ({
-          startTime: new Date(v.startDate).getTime(),
-          endTime: new Date(v.endDate).getTime(),
-          timeReceived: Date.now(),
-          sourceId: v.sourceBundleId,
-          sourceName: v.sourceName,
-          unit: v.unit,
-          key,
-          intValue: null,
-          floatValue: v.value,
-          doubleValue: null,
-          stringValue: null
-        }))
+        const type = this.getDataTypeFromKey(key)
+        const formatted = value.map(v =>
+          Object.assign(
+            {},
+            {
+              startTime: new Date(v.startDate).getTime(),
+              endTime: new Date(v.endDate).getTime(),
+              timeReceived: Date.now(),
+              sourceId: v.sourceBundleId,
+              sourceName: v.sourceName,
+              unit: v.unit,
+              key,
+              intValue: null,
+              floatValue: null,
+              doubleValue: null,
+              stringValue: null
+            },
+            { [type]: v.value }
+          )
+        )
         results[key] = formatted
       }
     }
     return results
+  }
+
+  getDataTypeFromKey(key: string) {
+    if (key in Object.values(HealthkitStringDataType)) {
+      return 'stringValue'
+    } else return 'floatValue'
   }
 
   processQuestionnaireData(answers, timestamps, questions) {

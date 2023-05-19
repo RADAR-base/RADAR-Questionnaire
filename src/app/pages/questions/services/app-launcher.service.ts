@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core'
-import { AppLauncher, AppLauncherOptions } from '@ionic-native/app-launcher/ngx'
-import { Insomnia } from '@ionic-native/insomnia/ngx'
+import { AppLauncher } from '@capacitor/app-launcher'
 import { Platform } from '@ionic/angular'
 
 import { AlertService } from '../../../core/services/misc/alert.service'
@@ -20,9 +19,7 @@ export class AppLauncherService {
     private questionsService: QuestionsService,
     private usage: UsageService,
     private platform: Platform,
-    private insomnia: Insomnia,
     private localization: LocalizationService,
-    private appLauncher: AppLauncher,
     private alertService: AlertService,
     private logger: LogService
   ) {}
@@ -55,24 +52,27 @@ export class AppLauncherService {
   }
 
   isExternalAppCanLaunch(externalApp: Question, task: Task) {
-    if(!this.isExternalAppUriValidForThePlatform(externalApp)){
+    if (!this.isExternalAppUriValidForThePlatform(externalApp)) {
       return Promise.reject()
     }
 
-    const options: AppLauncherOptions = this.getAppLauncherOptions(externalApp, task)
+    const options = this.getAppLauncherOptions(externalApp, task)
 
-    return this.appLauncher.canLaunch(options)
-      .then((canLaunch: boolean) => {
-        return canLaunch;
+    return AppLauncher.canOpenUrl({ url: options.uri })
+      .then(result => {
+        return result.value
       })
       .catch(err => {
-        this.logger.error("External App is not installed or doesn't support deeplink.", err)
+        this.logger.error(
+          "External App is not installed or doesn't support deeplink.",
+          err
+        )
         return false
       })
   }
 
   getAppLauncherOptions(externalApp: ExternalApp, task: Task) {
-    const options: AppLauncherOptions = {}
+    const options = { uri: '' }
 
     if (!externalApp) {
       return options
@@ -98,17 +98,17 @@ export class AppLauncherService {
   launchApp(externalApp: Question, task: Task) {
     if (!externalApp) return
 
-    return this.appLauncher
-      .launch(this.getAppLauncherOptions(externalApp, task))
-      .then(
-        () => {
-          console.log('App launched')
-        },
-        err => {
-          console.log('Error in launching app', err)
-          this.showAlertOnAppLaunchError(externalApp)
-        }
-      )
+    return AppLauncher.openUrl({
+      url: this.getAppLauncherOptions(externalApp, task).uri
+    }).then(
+      () => {
+        console.log('App launched')
+      },
+      err => {
+        console.log('Error in launching app', err)
+        this.showAlertOnAppLaunchError(externalApp)
+      }
+    )
   }
 
   showAlertOnAppLaunchError(externalApp: ExternalApp) {

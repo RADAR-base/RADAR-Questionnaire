@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
-import { Keyboard } from '@ionic-native/keyboard/ngx'
+import { Keyboard } from '@capacitor/keyboard'
 
 import {
   DefaultEnrolmentBaseURL,
@@ -29,10 +29,10 @@ export class TokenFormComponent {
     tokenName: new FormControl('')
   })
 
-  constructor(private keyboard: Keyboard) {}
+  constructor() {}
 
-  submitForm() {
-    this.keyboard.hide()
+  async submitForm() {
+    await Keyboard.hide()
     const baseURL = this.metaQRForm.get('baseURL').value.trim()
     const token = this.metaQRForm.get('tokenName').value.trim()
     if (!isValidURL(baseURL))

@@ -8,15 +8,17 @@ import {
   OnInit,
   Output
 } from '@angular/core'
-import { BackgroundMode } from '@ionic-native/background-mode/ngx'
-import { Dialogs } from '@ionic-native/dialogs/ngx'
-import { Vibration } from '@ionic-native/vibration/ngx'
+import { Plugins } from '@capacitor/core'
+import { Dialog } from '@capacitor/dialog'
+import { Haptics, ImpactStyle } from '@capacitor/haptics'
 
 import { TaskTimer, Timer } from '../../../../../shared/models/timer'
 import {
   getMilliseconds,
   getSeconds
 } from '../../../../../shared/utilities/time'
+
+const { App, BackgroundTask } = Plugins
 
 @Component({
   selector: 'timed-test',
@@ -39,21 +41,13 @@ export class TimedTestComponent implements OnInit, OnChanges, OnDestroy {
   startTime: number
   endTime: number
 
-  constructor(
-    private dialogs: Dialogs,
-    private vibration: Vibration,
-    private background: BackgroundMode,
-    private ref: ChangeDetectorRef
-  ) {}
+  constructor(private ref: ChangeDetectorRef) {}
 
   ngOnInit() {
-    this.background.enable()
     this.initTimer()
   }
 
-  ngOnDestroy() {
-    this.background.disable()
-  }
+  ngOnDestroy() {}
 
   ngOnChanges() {
     if (this.currentlyShown) {
@@ -118,9 +112,7 @@ export class TimedTestComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   stopTimer() {
-    this.background.moveToForeground()
-    this.dialogs.beep(1)
-    this.vibration.vibrate(500)
+    Haptics.vibrate()
     this.taskTimer.hasFinished = true
     this.valueChange.emit(this.endTime)
   }

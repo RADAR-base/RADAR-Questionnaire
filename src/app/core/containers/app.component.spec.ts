@@ -1,8 +1,6 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core'
 import { ComponentFixture, TestBed, async } from '@angular/core/testing'
-import { MobileAccessibility } from '@ionic-native/mobile-accessibility/ngx'
-import { SplashScreen } from '@ionic-native/splash-screen/ngx'
-import { StatusBar } from '@ionic-native/status-bar/ngx'
+import { MobileAccessibility } from '@awesome-cordova-plugins/mobile-accessibility/ngx'
 import { Platform } from '@ionic/angular'
 
 import { NotificationServiceMock } from '../../shared/testing/mock-services'
@@ -20,7 +18,6 @@ describe('AppComponent', () => {
       providers: [
         StatusBar,
         Platform,
-        SplashScreen,
         MobileAccessibility,
         { provide: NotificationService, useClass: NotificationServiceMock }
       ]

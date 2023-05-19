@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { WebIntent } from '@ionic-native/web-intent/ngx'
+import { WebIntent } from '@awesome-cordova-plugins/web-intent/ngx'
 
 import { UsageEventType } from '../../../shared/enums/events'
 import { SchemaType } from '../../../shared/models/kafka'

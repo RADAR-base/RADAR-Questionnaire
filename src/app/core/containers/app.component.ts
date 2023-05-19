@@ -1,7 +1,6 @@
 import { Component } from '@angular/core'
-import { MobileAccessibility } from '@ionic-native/mobile-accessibility/ngx'
-import { SplashScreen } from '@ionic-native/splash-screen/ngx'
-import { StatusBar } from '@ionic-native/status-bar/ngx'
+import { MobileAccessibility } from '@awesome-cordova-plugins/mobile-accessibility/ngx'
+import { StatusBar } from '@capacitor/status-bar'
 import { Platform } from '@ionic/angular'
 
 import { SplashPageComponent } from '../../pages/splash/containers/splash-page.component'
@@ -17,15 +16,12 @@ export class AppComponent {
 
   constructor(
     private platform: Platform,
-    private statusBar: StatusBar,
-    private splashScreen: SplashScreen,
     private accessibility: MobileAccessibility
   ) {
     this.platform.ready().then(() => {
       this.accessibility.usePreferredTextZoom(false)
-      this.statusBar.hide()
+      StatusBar.hide()
       this.isAppInitialized = true
-      this.splashScreen.hide()
     })
   }
 }

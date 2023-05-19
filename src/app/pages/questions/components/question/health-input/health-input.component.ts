@@ -1,5 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
-import { Health } from '@awesome-cordova-plugins/health/ngx'
+import {
+  ActivityData,
+  CapacitorHealthkit,
+  OtherData,
+  QueryOutput,
+  SampleNames,
+  SleepData
+} from '@perfood/capacitor-healthkit'
 import { StorageService } from 'src/app/core/services/storage/storage.service'
 import { StorageKeys } from 'src/app/shared/enums/storage'
 import { Health_Requirement, Question } from 'src/app/shared/models/question'
@@ -34,8 +41,17 @@ export class HealthInputComponent implements OnInit {
   MIN_POLL_TIMESTAMP = new Date(
     new Date().getTime() - this.defaultInterval * 24 * 60 * 60 * 1000
   )
+  READ_PERMISSIONS = [
+    'calories',
+    'stairs',
+    'activity',
+    'steps',
+    'distance',
+    'duration',
+    'weight'
+  ]
 
-  constructor(private health: Health, private storage: StorageService) {}
+  constructor(private storage: StorageService) {}
 
   ngOnInit() {
     this.initLastPollTimes()
@@ -49,15 +65,13 @@ export class HealthInputComponent implements OnInit {
       requireField = [this.health_question.field_name]
     }
     const healthDataType = requireField[0]
-    this.health
-      .isAvailable()
-      .then((available: boolean) => {
-        this.health
-          .requestAuthorization([
-            {
-              read: requireField //read only permission
-            }
-          ])
+    CapacitorHealthkit.isAvailable()
+      .then(() => {
+        CapacitorHealthkit.requestAuthorization({
+          all: [''],
+          read: requireField,
+          write: ['']
+        })
           .then(res => {
             this.loadData(healthDataType).then(data => {
               this.onInputChange(data)
@@ -89,12 +103,11 @@ export class HealthInputComponent implements OnInit {
     const dic = this.storage.get(StorageKeys.HEALTH_LAST_POLL_TIMES)
     const lastPollTime = new Date(dic[healthDataType])
 
-    return this.health
-      .requestAuthorization([
-        {
-          read: [healthDataType] //read only permission
-        }
-      ])
+    return CapacitorHealthkit.requestAuthorization({
+      all: [''],
+      read: [healthDataType],
+      write: ['']
+    })
       .then(() => {
         return this.query(
           lastPollTime ? lastPollTime : this.MIN_POLL_TIMESTAMP,
@@ -115,36 +128,40 @@ export class HealthInputComponent implements OnInit {
   query(queryStartTime: Date, queryEndTime: Date, dataType: string) {
     // !Will have to remove activity here, since each activity acutally contains more payload
     // !Set the acitiviy to be UNKNOWN for now to avoid schema confliction
-    return this.health
-      .query({
-        // put the lastDate in StartDate
-        startDate: queryStartTime,
-        endDate: queryEndTime, // now
-        dataType: dataType,
-        limit: 1000
-      })
-      .then(res => {
-        console.log('Field type: ' + dataType)
-        if (res.length === 0) {
-          this.health_value = null
-          this.health_display = 'No data for today'
-          this.health_display_time = new Date().toLocaleDateString()
-          this.health_time = Math.floor(res[0].startDate.getTime() / 1000)
+    return CapacitorHealthkit.queryHKitSampleType<OtherData>({
+      // put the lastDate in StartDate
+      startDate: queryStartTime.toISOString(),
+      endDate: queryEndTime.toISOString(), // now
+      sampleName: dataType,
+      limit: 1000
+    }).then((data: QueryOutput<OtherData>) => {
+      console.log('Field type: ' + dataType)
+      const countReturn = data.countReturn
+      const res = data.resultData
+      if (countReturn === 0) {
+        this.health_value = null
+        this.health_display = 'No data for today'
+        this.health_display_time = new Date().toLocaleDateString()
+        this.health_time = Math.floor(
+          new Date(res[0].startDate).getTime() / 1000
+        )
+      } else {
+        if (dataType === 'date_of_birth') {
+          const value = res[0].value as any
+          this.health_value = value.day + '/' + value.month + '/' + value.year
+          this.health_display = this.health_value
         } else {
-          if (dataType === 'date_of_birth') {
-            const value = res[0].value as any
-            this.health_value = value.day + '/' + value.month + '/' + value.year
-            this.health_display = this.health_value
-          } else {
-            this.health_value = parseFloat(res[0].value)
-            this.health_display =
-              this.health_value.toFixed(2) + ' ' + res[0].unit
-          }
-          // deal with time
-          this.health_display_time = res[0].startDate.toLocaleDateString()
-          this.health_time = Math.floor(res[0].startDate.getTime() / 1000)
+          this.health_value = res[0].value
+          this.health_display =
+            this.health_value.toFixed(2) + ' ' + res[0].unitName
         }
-        return res
-      })
+        // deal with time
+        this.health_display_time = res[0].startDate
+        this.health_time = Math.floor(
+          new Date(res[0].startDate).getTime() / 1000
+        )
+      }
+      return res
+    })
   }
 }

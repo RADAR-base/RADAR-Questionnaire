@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core'
-import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx'
+import { BarcodeScanner } from '@capacitor-community/barcode-scanner'
 
 @Component({
   selector: 'qr-form',
@@ -13,13 +13,13 @@ export class QRFormComponent {
   @Output()
   data: EventEmitter<any> = new EventEmitter<any>()
 
-  constructor(private scanner: BarcodeScanner) {}
+  constructor() {}
 
   scanQRHandler() {
     const scanOptions = {
       showFlipCameraButton: true,
       orientation: 'portrait'
     }
-    return this.scanner.scan(scanOptions).then(res => this.data.emit(res.text))
+    return BarcodeScanner.startScan().then(res => this.data.emit(res.content))
   }
 }

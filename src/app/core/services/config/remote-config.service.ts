@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { FirebaseX } from '@ionic-native/firebase-x/ngx'
+import { FirebaseRemoteConfig } from '@capacitor-firebase/remote-config'
 import { Platform } from '@ionic/angular'
 import { BehaviorSubject, Observable, from } from 'rxjs'
 import { mergeMap } from 'rxjs/operators'
@@ -72,20 +72,23 @@ class EmptyRemoteConfig implements RemoteConfig {
   }
 }
 
-class FirebaseRemoteConfig implements RemoteConfig {
+class FirebaseConfig implements RemoteConfig {
   readonly fetchedAt = new Date()
   cache: { [key: string]: string } = {}
 
-  constructor(private firebase: FirebaseX, private logger: LogService) {}
+  constructor(private logger: LogService) {}
 
-  get(key: ConfigKeys): Promise<string | null> {
+  async get(key: ConfigKeys): Promise<string | null> {
     const cachedValue = this.cache[key.value]
     if (cachedValue !== undefined) {
       this.logger.log(`Retrieving ${key.value} from cache`)
       return Promise.resolve(cachedValue)
     }
     this.logger.log(`Retrieving ${key.value}`)
-    return this.firebase.getValue(key.value)
+    const { value } = await FirebaseRemoteConfig.getString({
+      key: key.value
+    })
+    return value
   }
 
   getOrDefault(key: ConfigKeys, defaultValue: string): Promise<string> {
@@ -108,7 +111,6 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
   private MINIMUM_FETCH_INTERVAL_SECONDS = 21600 // 6 hours
 
   constructor(
-    private firebase: FirebaseX,
     storage: StorageService,
     private logger: LogService,
     private platform: Platform
@@ -137,21 +139,22 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
     return this.fetch(this.timeoutMillis)
   }
 
-  private fetch(timeoutMillis: number) {
+  private async fetch(timeoutMillis: number) {
     if (!this.platform.is('cordova')) {
       console.log('Not fetching Firebase Remote Config without cordova')
       return Promise.resolve(this.configSubject.value)
     }
     console.log('Fetching Firebase Remote Config')
-    return this.firebase
-      .fetch(getSeconds({ milliseconds: timeoutMillis }))
-      .then(() => this.firebase.activateFetched())
+    return await FirebaseRemoteConfig.fetchConfig({
+      minimumFetchIntervalInSeconds: getSeconds({
+        milliseconds: timeoutMillis
+      })
+    })
+      .then(async () => await FirebaseRemoteConfig.activate())
       .then(activated => {
         console.log('New Firebase Remote Config did activate', activated)
-        const conf = new FirebaseRemoteConfig(this.firebase, this.logger)
-        if (activated) {
-          this.configSubject.next(conf)
-        }
+        const conf = new FirebaseConfig(this.logger)
+        this.configSubject.next(conf)
         return conf
       })
       .catch(e => this.configSubject.value)

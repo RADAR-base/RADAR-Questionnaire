@@ -1,14 +1,7 @@
-import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpResponse
-} from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { FirebaseX } from '@ionic-native/firebase-x/ngx'
-import { WebIntent } from '@ionic-native/web-intent/ngx'
+import { WebIntent } from '@awesome-cordova-plugins/web-intent/ngx'
 import { Platform } from '@ionic/angular'
 import { Subscription } from 'rxjs'
-import * as urljoin from 'url-join'
 
 import {
   DefaultPackageName,
@@ -48,7 +41,6 @@ export class FcmRestNotificationService extends FcmNotificationService {
     public storage: StorageService,
     public schedule: ScheduleService,
     public config: SubjectConfigService,
-    public firebase: FirebaseX,
     public platform: Platform,
     public logger: LogService,
     public remoteConfig: RemoteConfigService,
@@ -56,7 +48,7 @@ export class FcmRestNotificationService extends FcmNotificationService {
     private appServerService: AppServerService,
     private webIntent: WebIntent
   ) {
-    super(storage, config, firebase, platform, logger, remoteConfig)
+    super(storage, config, platform, logger, remoteConfig)
     this.platform.ready().then(() => {
       this.onAppOpen()
       this.resumeListener = this.platform.resume.subscribe(() =>

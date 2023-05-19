@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core'
 import { Router } from '@angular/router'
-import { Insomnia } from '@ionic-native/insomnia/ngx'
+import { KeepAwake } from '@capacitor-community/keep-awake'
 import { IonSlides, NavController, Platform } from '@ionic/angular'
 import { Subscription } from 'rxjs'
 
@@ -77,7 +77,6 @@ export class QuestionsPageComponent implements OnInit {
     private questionsService: QuestionsService,
     private usage: UsageService,
     private platform: Platform,
-    private insomnia: Insomnia,
     private localization: LocalizationService,
     private router: Router,
     private appLauncher: AppLauncherService,
@@ -91,9 +90,9 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   ionViewDidLeave() {
+    KeepAwake.allowSleep()
     this.sendCompletionLog()
     this.questionsService.reset()
-    this.insomnia.allowSleepAgain()
     this.backButtonListener.unsubscribe()
   }
 
@@ -112,7 +111,7 @@ export class QuestionsPageComponent implements OnInit {
       this.sendEvent(UsageEventType.QUESTIONNAIRE_STARTED)
       this.usage.setPage(this.constructor.name)
       this.slides.lockSwipes(true)
-      this.insomnia.keepAwake()
+      KeepAwake.keepAwake()
     }
   }
 

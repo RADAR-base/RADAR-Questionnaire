@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { File } from '@ionic-native/file/ngx'
+import { Directory, Encoding, Filesystem } from '@capacitor/filesystem'
 import { Platform } from '@ionic/angular'
 
 import { DefaultAudioRecordOptions } from '../../../../assets/data/defaultConfig'
@@ -15,11 +15,7 @@ export class AudioRecordService {
   audio
   fileName = 'audio.m4a'
 
-  constructor(
-    private file: File,
-    private platform: Platform,
-    private logger: LogService
-  ) {}
+  constructor(private platform: Platform, private logger: LogService) {}
 
   startAudioRecording(): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -49,9 +45,7 @@ export class AudioRecordService {
   }
 
   getDir() {
-    return this.platform.is('android')
-      ? this.file.dataDirectory
-      : this.file.tempDirectory
+    return Directory.Documents
   }
 
   getIsRecording() {
@@ -66,11 +60,15 @@ export class AudioRecordService {
     this.logger.error('Error! ', error)
   }
 
-  readAudioFile() {
-    return this.file.readAsDataURL(this.getDir(), this.fileName).then(data => {
-      this.destroy()
-      return data
+  async readAudioFile() {
+    const contents = await Filesystem.readFile({
+      path: this.fileName,
+      directory: this.getDir(),
+      encoding: Encoding.UTF8
     })
+    this.destroy()
+    console.log(contents)
+    return contents
   }
 
   destroy() {

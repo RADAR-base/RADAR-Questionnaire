@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { AppVersion } from '@ionic-native/app-version/ngx'
+import { App } from '@capacitor/app'
 
 import {
   DefaultAppVersion,
@@ -24,7 +24,7 @@ export class AppConfigService {
     SETTINGS_WEEKLYREPORT: StorageKeys.SETTINGS_WEEKLYREPORT
   }
 
-  constructor(public storage: StorageService, private appVersion: AppVersion) {}
+  constructor(public storage: StorageService) {}
 
   init(enrolmentDate) {
     return Promise.all([
@@ -36,8 +36,9 @@ export class AppConfigService {
     ])
   }
 
-  getAppVersion() {
-    return this.appVersion.getVersionNumber().catch(() => DefaultAppVersion)
+  async getAppVersion() {
+    const appInfo = await App.getInfo()
+    return appInfo.version
   }
 
   getStoredAppVersion() {

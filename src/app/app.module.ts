@@ -6,25 +6,8 @@ import { BrowserModule } from '@angular/platform-browser'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { RouterModule } from '@angular/router'
 import { JWT_OPTIONS, JwtModule } from '@auth0/angular-jwt'
-import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx'
-import { AndroidPermissions } from '@ionic-native/android-permissions/ngx'
-import { AppLauncher } from '@ionic-native/app-launcher/ngx'
-import { AppVersion } from '@ionic-native/app-version/ngx'
-import { BackgroundMode } from '@ionic-native/background-mode/ngx'
-import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx'
-import { Device } from '@ionic-native/device/ngx'
-import { Dialogs } from '@ionic-native/dialogs/ngx'
-import { File } from '@ionic-native/file/ngx'
-import { FirebaseX } from '@ionic-native/firebase-x/ngx'
-import { Globalization } from '@ionic-native/globalization/ngx'
-import { Insomnia } from '@ionic-native/insomnia/ngx'
-import { Keyboard } from '@ionic-native/keyboard/ngx'
-import { LocalNotifications } from '@ionic-native/local-notifications/ngx'
-import { MobileAccessibility } from '@ionic-native/mobile-accessibility/ngx'
-import { SplashScreen } from '@ionic-native/splash-screen/ngx'
-import { StatusBar } from '@ionic-native/status-bar/ngx'
-import { Vibration } from '@ionic-native/vibration/ngx'
-import { WebIntent } from '@ionic-native/web-intent/ngx'
+import { MobileAccessibility } from '@awesome-cordova-plugins/mobile-accessibility/ngx'
+import { WebIntent } from '@awesome-cordova-plugins/web-intent/ngx'
 import { IonicModule } from '@ionic/angular'
 import { IonicStorageModule, Storage } from '@ionic/storage'
 
@@ -64,10 +47,8 @@ import { FirebaseAnalyticsService } from './core/services/usage/firebase-analyti
 import { UsageService } from './core/services/usage/usage.service'
 import { PagesModule } from './pages/pages.module'
 import { TranslatePipe } from './shared/pipes/translate/translate'
-import { AndroidPermissionUtility } from './shared/utilities/android-permission'
 import { jwtOptionsFactory } from './shared/utilities/jwtOptionsFactory'
 import { Utility } from './shared/utilities/util'
-import { Health } from '@awesome-cordova-plugins/health/ngx'
 
 @NgModule({
   imports: [
@@ -99,27 +80,10 @@ import { Health } from '@awesome-cordova-plugins/health/ngx'
   bootstrap: [AppComponent],
   entryComponents: [AppComponent],
   providers: [
-    Health,
-    Device,
-    StatusBar,
-    SplashScreen,
     Utility,
-    BarcodeScanner,
-    Dialogs,
-    Vibration,
-    Globalization,
-    AndroidPermissionUtility,
-    AndroidPermissions,
     File,
-    AppVersion,
     WebIntent,
     MobileAccessibility,
-    Insomnia,
-    InAppBrowser,
-    BackgroundMode,
-    Keyboard,
-    FirebaseX,
-    LocalNotifications,
     LogService,
     LocalScheduleService,
     AppserverScheduleService,
@@ -148,8 +112,7 @@ import { Health } from '@awesome-cordova-plugins/health/ngx'
     MessageHandlerService,
     { provide: NotificationService, useClass: NotificationFactoryService },
     { provide: AnalyticsService, useClass: FirebaseAnalyticsService },
-    GithubClient,
-    AppLauncher
+    GithubClient
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

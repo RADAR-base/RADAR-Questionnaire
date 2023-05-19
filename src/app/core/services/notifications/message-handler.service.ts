@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core'
-import { FirebaseX } from '@ionic-native/firebase-x/ngx'
+import { FirebaseMessaging } from '@capacitor-firebase/messaging'
 import { Subscription } from 'rxjs'
 
 import { UsageEventType } from '../../../shared/enums/events'
@@ -16,16 +16,16 @@ export class MessageHandlerService implements OnDestroy {
   messageListener: Subscription = new Subscription()
 
   constructor(
-    public firebase: FirebaseX,
     public logger: LogService,
     public schedule: ScheduleService,
     public questionnaireService: QuestionnaireService,
     public usage: UsageService,
     public appConfig: AppConfigService
   ) {
-    this.messageListener = this.firebase.onMessageReceived().subscribe(data => {
+    FirebaseMessaging.addListener('notificationReceived', event => {
+      console.log('notificationReceived', { event })
       this.usage.sendGeneralEvent(UsageEventType.FCM_MESSAGE_RECEIVED)
-      return this.onMessageReceived(new Map(Object.entries(data)))
+      return this.onMessageReceived(new Map(Object.entries(event)))
     })
   }
 

@@ -14,11 +14,9 @@ import { AlertService } from '../../../../../core/services/misc/alert.service'
 import { UsageService } from '../../../../../core/services/usage/usage.service'
 import { UsageEventType } from '../../../../../shared/enums/events'
 import { LocKeys } from '../../../../../shared/enums/localisations'
-import { Section } from '../../../../../shared/models/question'
 import { TranslatePipe } from '../../../../../shared/pipes/translate/translate'
-import { AndroidPermissionUtility } from '../../../../../shared/utilities/android-permission'
-import { HomePageComponent } from '../../../../home/containers/home-page.component'
 import { AudioRecordService } from '../../../services/audio-record.service'
+import { Filesystem } from '@capacitor/filesystem';
 
 @Component({
   selector: 'audio-input',
@@ -44,14 +42,12 @@ export class AudioInputComponent implements OnDestroy, OnInit {
 
   constructor(
     private audioRecordService: AudioRecordService,
-    private permissionUtil: AndroidPermissionUtility,
     public navCtrl: NavController,
     public alertService: AlertService,
     private platform: Platform,
     private translate: TranslatePipe,
     private usage: UsageService
   ) {
-    this.permissionUtil.checkPermissions()
     this.audioRecordService.destroy()
   }
 
@@ -101,8 +97,7 @@ export class AudioInputComponent implements OnDestroy, OnInit {
 
   startRecording() {
     return Promise.all([
-      this.permissionUtil.getRecordAudio_Permission(),
-      this.permissionUtil.getWriteExternalStorage_permission()
+      Filesystem.requestPermissions()
     ]).then(res => {
       this.onRecordStart.emit(true)
       this.usage.sendGeneralEvent(UsageEventType.RECORDING_STARTED, true)

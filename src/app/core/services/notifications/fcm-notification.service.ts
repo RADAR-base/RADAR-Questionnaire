@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core'
-import { FirebaseX } from '@ionic-native/firebase-x/ngx'
+import { FirebaseMessaging } from '@capacitor-firebase/messaging'
 import { Platform } from '@ionic/angular'
 import { Subscription } from 'rxjs'
 
 import {
   DefaultNotificationTtlMinutes,
-  DefaultNumberOfNotificationsToSchedule,
-  FCMPluginProjectSenderId
+  DefaultNumberOfNotificationsToSchedule
 } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
 import { StorageKeys } from '../../../shared/enums/storage'
@@ -28,7 +27,6 @@ export abstract class FcmNotificationService extends NotificationService {
   constructor(
     public store: StorageService,
     public config: SubjectConfigService,
-    public firebase: FirebaseX,
     public platform: Platform,
     public logger: LogService,
     public remoteConfig: RemoteConfigService
@@ -50,20 +48,17 @@ export abstract class FcmNotificationService extends NotificationService {
     })
   }
 
-  init() {
-    return this.firebase
-      .setAutoInitEnabled(true)
-      .then(() => this.firebase.getToken())
-      .then(token => {
-        if (this.tokenSubscription === null) {
-          this.tokenSubscription = this.firebase
-            .onTokenRefresh()
-            .subscribe(t => this.onTokenRefresh(t))
-        }
-        if (token) {
-          return this.onTokenRefresh(token)
-        }
-      })
+  async init() {
+    return FirebaseMessaging.getToken().then(async token => {
+      if (this.tokenSubscription === null) {
+        await FirebaseMessaging.addListener('tokenReceived', event =>
+          this.onTokenRefresh(event)
+        )
+      }
+      if (token) {
+        return this.onTokenRefresh(token)
+      }
+    })
   }
 
   publish(
@@ -88,11 +83,10 @@ export abstract class FcmNotificationService extends NotificationService {
     })
   }
 
-  permissionCheck(): Promise<void> {
+  async permissionCheck(): Promise<void> {
     if (!this.platform.is('ios')) return Promise.resolve()
-    return this.firebase
-      .hasPermission()
-      .then(res => (res ? true : this.firebase.grantPermission()))
+    const result = await FirebaseMessaging.requestPermissions()
+    return
   }
 
   setFCMToken(token) {
@@ -117,9 +111,7 @@ export abstract class FcmNotificationService extends NotificationService {
       this.tokenSubscription = null
     }
     // NOTE: This will delete the current device token and stop receiving notifications
-    return this.firebase
-      .setAutoInitEnabled(false)
-      .then(() => this.firebase.unregister())
+    return FirebaseMessaging.deleteToken()
   }
 
   onTokenRefresh(token) {

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core'
+import { HealthkitStringDataType } from 'src/app/shared/models/health'
 
 import { AppConfigService } from '../../../core/services/config/app-config.service'
 import { ConfigService } from '../../../core/services/config/config.service'
@@ -56,13 +57,16 @@ export class FinishTaskService {
     // If it's from health
     if (processedAnswers instanceof Array) {
       return Promise.all(
-        processedAnswers.map(p =>
-          this.kafka.prepareKafkaObjectAndSend(SchemaType.GENERAL_HEALTH, {
-            task: task,
-            data: p
-          })
-        )
-      )
+        processedAnswers.map(p => {
+          return this.kafka.prepareKafkaObjectAndSend(
+            SchemaType.GENERAL_HEALTH,
+            {
+              task: task,
+              data: p
+            }
+          )
+        })
+      ).then(cacheValues => this.kafka.storeHealthDataInCache(cacheValues))
     } else {
       return this.appConfig.getScheduleVersion().then(scheduleVersion => {
         return Promise.all([
@@ -94,28 +98,37 @@ export class FinishTaskService {
     for (let [key, value] of Object.entries<any>(answers)) {
       // value is array of datapoints
       // key is name of data type
-      console.log(key)
-      console.log(value.length)
       if (value.length) {
-        const formatted = value.map(v => ({
-          startTime: new Date(v.startDate).getTime(),
-          endTime: new Date(v.endDate).getTime(),
-          timeReceived: Date.now(),
-          sourceId: v.sourceBundleId,
-          sourceName: v.sourceName,
-          unit: v.unit,
-          key,
-          intValue: null,
-          floatValue: v.value,
-          doubleValue: null,
-          stringValue: null
-        }))
+        const type = this.getDataTypeFromKey(key)
+        const formatted = value.map(v =>
+          Object.assign(
+            {},
+            {
+              startTime: new Date(v.startDate).getTime(),
+              endTime: new Date(v.endDate).getTime(),
+              timeReceived: Date.now(),
+              sourceId: v.sourceBundleId,
+              sourceName: v.sourceName,
+              unit: v.unit,
+              key,
+              intValue: null,
+              floatValue: null,
+              doubleValue: null,
+              stringValue: null
+            },
+            { [type]: v.value }
+          )
+        )
         results[key] = formatted
       }
     }
-    console.log('results')
-    console.log(results)
     return results
+  }
+
+  getDataTypeFromKey(key: string) {
+    if (key in Object.values(HealthkitStringDataType)) {
+      return 'stringValue'
+    } else return 'floatValue'
   }
 
   processQuestionnaireData(answers, timestamps, questions) {

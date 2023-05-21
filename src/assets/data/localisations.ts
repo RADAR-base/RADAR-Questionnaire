@@ -564,6 +564,16 @@ export const Localisations = {
     pl: 'Rozmiar',
     hb: 'גודל'
   },
+  SETTINGS_HEALTH_CACHE_SIZE: {
+    da: 'Sundhedsstørrelse',
+    de: 'Gesundheitsgröße',
+    en: 'Health Size',
+    es: 'Tamaño de la salud',
+    it: 'Dimensioni della salute',
+    nl: 'Gezondheidsgrootte',
+    pl: 'Rozmiar zdrowia',
+    hb: 'גודל בריאות'
+  },
   SETTINGS_LAST_UPLOAD_TO_SERVER: {
     da: 'Sidste upload til server',
     de: 'Letzter Upload zum Server',

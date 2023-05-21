@@ -126,7 +126,7 @@ export class KafkaService {
     }
   }
 
-  prepareKafkaObjectAndSend(type, payload, keepInCache?) {
+  prepareKafkaObjectAndSend(type, payload, keepInCache?): Promise<CacheValue> {
     const value = this.schema.getKafkaObjectValue(type, payload)
     const keyPromise = this.schema.getKafkaObjectKey()
     const metaDataPromise = this.schema.getMetaData(type, payload)
@@ -136,20 +136,36 @@ export class KafkaService {
         const cacheValue: CacheValue = Object.assign({}, metaData, {
           kafkaObject
         })
-        this.sendDataEvent(DataEventType.PREPARED_OBJECT, cacheValue)
-        return this.storeInCache(kafkaObject, cacheValue).then(() => {
-          return keepInCache ? Promise.resolve([]) : this.sendAllFromCache()
-        })
+        return cacheValue
       }
     )
   }
 
-  storeInCache(kafkaObject: KafkaObject, cacheValue: CacheValue) {
+  storeInCache(cacheValue: CacheValue) {
     return this.getCache().then(cache => {
       console.log('KAFKA-SERVICE: Caching answers.')
-      cache[kafkaObject.value.time] = cacheValue
+      const kafkaObjectVal = cacheValue.kafkaObject.value
+      const cacheKey = kafkaObjectVal.time
+        ? kafkaObjectVal.time
+        : kafkaObjectVal.startTime
+      cache[cacheKey] = cacheValue
       this.sendDataEvent(DataEventType.CACHED, cacheValue)
       return this.setCache(cache)
+    })
+  }
+
+  storeHealthDataInCache(cacheValue: CacheValue[]) {
+    return this.getHealthCache().then(cache => {
+      cache = cache ? cache : {}
+      cacheValue.map((c: CacheValue) => {
+        console.log('KAFKA-SERVICE: Caching answers.')
+        const kafkaObjectVal = c.kafkaObject.value
+        const cacheKey = kafkaObjectVal.startTime
+          ? kafkaObjectVal.startTime + Math.random()
+          : kafkaObjectVal.time
+        cache[cacheKey] = c
+      })
+      return this.setHealthCache(cache)
     })
   }
 
@@ -158,12 +174,15 @@ export class KafkaService {
     this.setCacheSending(true)
     return Promise.all([
       this.getCache(),
+      this.getHealthCache(),
       this.getKafkaHeaders(),
       this.schema.getRadarSpecifications(),
       this.getTopics()
     ])
-      .then(([cache, headers, specifications, topics]) => {
-        const sendPromises = Object.entries(cache)
+      .then(([cache, healthCache, headers, specifications, topics]) => {
+        const sendPromises = Object.entries(
+          Object.assign({}, cache, healthCache)
+        )
           .filter(([k]) => k)
           .map(([k, v]: any) => {
             return this.schema
@@ -176,9 +195,10 @@ export class KafkaService {
         return Promise.all(sendPromises)
       })
       .then(keys => {
-        this.removeFromCache(keys.filter(k => !(k instanceof Error))).then(() =>
-          this.setCacheSending(false)
-        )
+        const successKeys = keys.filter(k => !(k instanceof Error))
+        this.removeFromCache(successKeys)
+          .then(() => this.removeFromHealthCache(successKeys))
+          .then(() => this.setCacheSending(false))
         return keys
       })
       .catch(e => {
@@ -225,6 +245,22 @@ export class KafkaService {
     })
   }
 
+  removeFromHealthCache(cacheKeys: number[]) {
+    if (!cacheKeys.length) return Promise.resolve()
+    return this.getHealthCache().then(cache => {
+      if (cache) {
+        cacheKeys.map(cacheKey => {
+          if (cache[cacheKey]) {
+            console.log('Deleting ' + cacheKey)
+            delete cache[cacheKey]
+          }
+        })
+        this.setLastUploadDate(Date.now())
+        return this.setHealthCache(cache)
+      }
+    })
+  }
+
   getAccessToken() {
     return Promise.all([this.updateURI(), this.token.refresh()])
       .then(() => this.token.getTokens())
@@ -248,6 +284,10 @@ export class KafkaService {
     return this.storage.set(this.KAFKA_STORE.CACHE_ANSWERS, cache)
   }
 
+  setHealthCache(cache) {
+    return this.storage.setHealthData(cache)
+  }
+
   setCacheSending(val: boolean) {
     this.isCacheSending = val
   }
@@ -256,12 +296,26 @@ export class KafkaService {
     return this.storage.set(this.KAFKA_STORE.LAST_UPLOAD_DATE, date)
   }
 
+  setHealthkitPollTimes(dic) {
+    return this.storage.set(StorageKeys.HEALTH_LAST_POLL_TIMES, dic)
+  }
+
   getCache() {
     return this.storage.get(this.KAFKA_STORE.CACHE_ANSWERS)
   }
 
+  getHealthCache() {
+    return this.storage.getHealthData(this.KAFKA_STORE.CACHE_ANSWERS)
+  }
+
   getLastUploadDate() {
     return this.storage.get(this.KAFKA_STORE.LAST_UPLOAD_DATE)
+  }
+
+  getHealthCacheSize() {
+    return this.getHealthCache().then(cache =>
+      Object.keys(cache).reduce((s, k) => (k ? s + 1 : s), 0)
+    )
   }
 
   getCacheSize() {
@@ -282,6 +336,10 @@ export class KafkaService {
   }
 
   reset() {
-    return Promise.all([this.setCache({}), this.setLastUploadDate(null)])
+    return Promise.all([
+      this.setCache({}),
+      this.setLastUploadDate(null),
+      this.setHealthkitPollTimes({})
+    ])
   }
 }

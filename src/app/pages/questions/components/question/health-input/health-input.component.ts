@@ -25,15 +25,14 @@ export class HealthInputComponent implements OnInit {
   health_display: any
   health_display_time: any
   health_time: any
-  not_support = false
+  not_support = true
   // the interval days for first query
-  defaultInterval = 1000
+  defaultInterval = 100
 
   // the bucket for aggregated query
   defaultBucket = 'day'
-  MIN_POLL_TIMESTAMP = new Date(
+  MIN_POLL_TIMESTAMP =
     new Date().getTime() - this.defaultInterval * 24 * 60 * 60 * 1000
-  )
 
   constructor(private health: Health, private storage: StorageService) {}
 
@@ -48,33 +47,28 @@ export class HealthInputComponent implements OnInit {
     } else {
       requireField = [this.health_question.field_name]
     }
+    console.log('Requesting permissions: ' + requireField)
     const healthDataType = requireField[0]
     this.health
       .isAvailable()
       .then((available: boolean) => {
-        this.health
-          .requestAuthorization([
-            {
-              read: requireField //read only permission
-            }
-          ])
-          .then(res => {
-            this.loadData(healthDataType).then(data => {
-              this.onInputChange(data)
-            })
+        if (available) {
+          this.not_support = false
+          console.log('Requesting data..')
+          this.loadData(healthDataType).then(data => {
+            this.onInputChange(data)
           })
-          .catch(e => console.log(e))
+        }
       })
-      .catch(e => {
-        this.not_support = true
-      })
+      .catch(e => console.log(e))
   }
 
   initLastPollTimes() {
-    const dic = this.storage.get(StorageKeys.HEALTH_LAST_POLL_TIMES)
-    if (!dic) {
-      this.storage.set(StorageKeys.HEALTH_LAST_POLL_TIMES, {})
-    }
+    return this.storage
+      .get(StorageKeys.HEALTH_LAST_POLL_TIMES)
+      .then(dic =>
+        dic ? [] : this.storage.set(StorageKeys.HEALTH_LAST_POLL_TIMES, {})
+      )
   }
 
   onInputChange(data) {
@@ -86,23 +80,26 @@ export class HealthInputComponent implements OnInit {
   }
 
   loadData(healthDataType) {
-    const dic = this.storage.get(StorageKeys.HEALTH_LAST_POLL_TIMES)
-    const lastPollTime = new Date(dic[healthDataType])
-
-    return this.health
-      .requestAuthorization([
+    return Promise.all([
+      this.health.requestAuthorization([
         {
           read: [healthDataType] //read only permission
         }
-      ])
-      .then(() => {
-        return this.query(
-          lastPollTime ? lastPollTime : this.MIN_POLL_TIMESTAMP,
-          new Date(),
-          healthDataType
-        ).then(res => {
-          dic[healthDataType] = new Date().toLocaleDateString()
-          this.storage.set(StorageKeys.HEALTH_LAST_POLL_TIMES, dic)
+      ]),
+      this.storage.get(StorageKeys.HEALTH_LAST_POLL_TIMES)
+    ])
+      .then(([, dic]) => {
+        let lastPollTime =
+          dic && dic[healthDataType]
+            ? new Date(dic[healthDataType])
+            : new Date(this.MIN_POLL_TIMESTAMP)
+        const endTime = new Date()
+        return this.query(lastPollTime, endTime, healthDataType).then(res => {
+          if (res.length) {
+            dic[healthDataType] = new Date(res[0].endDate).getTime()
+            console.log(dic)
+            this.storage.set(StorageKeys.HEALTH_LAST_POLL_TIMES, dic)
+          }
           return res
         })
       })
@@ -125,7 +122,7 @@ export class HealthInputComponent implements OnInit {
       })
       .then(res => {
         console.log('Field type: ' + dataType)
-        if (res.length === 0) {
+        if (!res.length) {
           this.health_value = null
           this.health_display = 'No data for today'
           this.health_display_time = new Date().toLocaleDateString()

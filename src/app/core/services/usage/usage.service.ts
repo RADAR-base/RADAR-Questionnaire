@@ -22,6 +22,7 @@ export class UsageService {
   sendEventToKafka(payload) {
     return this.kafka
       .prepareKafkaObjectAndSend(SchemaType.APP_EVENT, payload, true)
+      .then(event => this.kafka.storeInCache(event))
       .then((res: any) => this.logger.log('usage service', 'send success'))
       .catch((error: any) => this.logger.error('usage service', error))
   }
@@ -73,15 +74,17 @@ export class UsageService {
   }
 
   sendCompletionLog(task, percent) {
-    return this.kafka.prepareKafkaObjectAndSend(
-      SchemaType.COMPLETION_LOG,
-      {
-        name: task.name,
-        percentage: percent,
-        timeNotification: task.timestamp
-      },
-      true
-    )
+    return this.kafka
+      .prepareKafkaObjectAndSend(
+        SchemaType.COMPLETION_LOG,
+        {
+          name: task.name,
+          percentage: percent,
+          timeNotification: task.timestamp
+        },
+        true
+      )
+      .then(log => this.kafka.storeInCache(log))
   }
 
   setPage(component) {

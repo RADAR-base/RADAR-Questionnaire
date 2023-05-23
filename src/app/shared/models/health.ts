@@ -34,4 +34,3 @@ export interface HealthkitValueExport {
   doubleValue: number
   stringValue: string
 }
-

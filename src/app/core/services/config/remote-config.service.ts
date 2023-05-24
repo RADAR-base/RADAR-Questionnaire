@@ -10,8 +10,6 @@ import { getSeconds } from '../../../shared/utilities/time'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 
-declare var FirebasePlugin
-
 @Injectable()
 export class RemoteConfigService {
   protected timeoutMillis: number = 10_800_000
@@ -116,10 +114,10 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
     super(storage)
     this.configSubject = new BehaviorSubject(new EmptyRemoteConfig())
     this.platform.ready().then(() => {
-      FirebasePlugin.setConfigSettings(
-        this.FETCH_TIMEOUT_SECONDS,
-        this.MINIMUM_FETCH_INTERVAL_SECONDS
-      )
+      this.firebase.setConfigSettings({
+        fetchTimeout: this.FETCH_TIMEOUT_SECONDS,
+        minimumFetchInterval: this.MINIMUM_FETCH_INTERVAL_SECONDS
+      })
     })
   }
 

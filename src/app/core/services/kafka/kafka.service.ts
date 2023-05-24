@@ -9,7 +9,7 @@ import {
 import { ConfigKeys } from '../../../shared/enums/config'
 import { DataEventType } from '../../../shared/enums/events'
 import { StorageKeys } from '../../../shared/enums/storage'
-import { CacheValue } from '../../../shared/models/cache'
+import { CacheValue, KeyValue } from '../../../shared/models/cache'
 import { KafkaObject, SchemaType } from '../../../shared/models/kafka'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { LogService } from '../misc/log.service'
@@ -180,22 +180,29 @@ export class KafkaService {
       this.getTopics()
     ])
       .then(([cache, healthCache, headers, specifications, topics]) => {
-        const sendPromises = Object.entries(
+        const cacheByTopics = {}
+        const completeCache = Object.entries(
           Object.assign({}, cache, healthCache)
+        ).filter(([k]) => k)
+        const sendPromises = completeCache.map(([k, v]: any) =>
+          this.schema
+            .getKafkaTopic(specifications, v.name, v.avsc, topics)
+            .then(topic => {
+              if (!cacheByTopics[topic]) cacheByTopics[topic] = []
+              return cacheByTopics[topic].push({ key: k, value: v })
+            })
         )
-          .filter(([k]) => k)
-          .map(([k, v]: any) => {
-            return this.schema
-              .getKafkaTopic(specifications, v.name, v.avsc, topics)
-              .then(topic => this.sendToKafka(topic, k, v, headers))
-              .catch(e =>
-                this.logger.error('Failed to send data from cache to kafka', e)
-              )
-          })
-        return Promise.all(sendPromises)
+        return Promise.all(sendPromises).then(res => {
+          const keys = Object.keys(cacheByTopics)
+          return Promise.all(
+            keys.map(k => this.sendToKafka(k, cacheByTopics[k], headers))
+          )
+        })
       })
-      .then(keys => {
-        const successKeys = keys.filter(k => !(k instanceof Error))
+      .then((keys: any[][]) => {
+        const successKeys = [].concat
+          .apply([], keys)
+          .filter(k => !(k instanceof Error))
         this.removeFromCache(successKeys)
           .then(() => this.removeFromHealthCache(successKeys))
           .then(() => this.setCacheSending(false))
@@ -207,9 +214,10 @@ export class KafkaService {
       })
   }
 
-  sendToKafka(topic: string, k: number, v: CacheValue, headers): Promise<any> {
+  sendToKafka(topic: string, values: KeyValue[], headers): Promise<any[]> {
+    const kafkaObjects = values.map(v => v.value.kafkaObject)
     return this.schema
-      .getKafkaPayload(v.kafkaObject, topic, this.BASE_URI)
+      .getKafkaPayload(kafkaObjects, topic, this.BASE_URI)
       .then(data =>
         this.http
           .post(this.KAFKA_CLIENT_URL + this.URI_topics + topic, data, {
@@ -217,10 +225,18 @@ export class KafkaService {
           })
           .toPromise()
       )
-      .then(() => this.sendDataEvent(DataEventType.SEND_SUCCESS, v))
-      .then(() => k)
+      .then(() =>
+        values.map(v => this.sendDataEvent(DataEventType.SEND_SUCCESS, v.value))
+      )
+      .then(() => values.map(v => v.key))
       .catch(error => {
-        this.sendDataEvent(DataEventType.SEND_ERROR, v, JSON.stringify(error))
+        values.map(v =>
+          this.sendDataEvent(
+            DataEventType.SEND_ERROR,
+            v.value,
+            JSON.stringify(error)
+          )
+        )
         throw error
       })
   }

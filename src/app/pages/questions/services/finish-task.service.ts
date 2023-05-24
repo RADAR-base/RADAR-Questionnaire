@@ -53,7 +53,7 @@ export class FinishTaskService {
     }
   }
 
-  sendAnswersToKafka(processedAnswers, task): Promise<any> {
+  sendAnswersToKafka(processedAnswers, task) {
     // If it's from health
     if (processedAnswers instanceof Array) {
       return Promise.all(
@@ -75,7 +75,12 @@ export class FinishTaskService {
             task: task,
             data: Object.assign(processedAnswers, { scheduleVersion })
           })
-        ])
+        ]).then(([timezone, assessment]) => {
+          return Promise.all([
+            this.kafka.storeInCache(timezone),
+            this.kafka.storeInCache(assessment)
+          ]).then(() => this.kafka.sendAllFromCache())
+        })
       })
     }
   }

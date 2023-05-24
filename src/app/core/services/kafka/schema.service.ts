@@ -116,7 +116,7 @@ export class SchemaService {
     return AvroSchema.parse(schema).clone(value, { wrapUnions: true })
   }
 
-  getKafkaPayload(kafkaObject, topic, baseURI): Promise<any> {
+  getKafkaPayload(kafkaObject: any[], topic, baseURI): Promise<any> {
     if (!this.schemas[topic]) {
       this.schemas[topic] = [
         this.getLatestKafkaSchemaVersion(topic + '-key', 'latest', baseURI),
@@ -127,14 +127,14 @@ export class SchemaService {
       .then(([keySchemaMetadata, valueSchemaMetadata]) => {
         const key = JSON.parse(keySchemaMetadata.schema)
         const value = JSON.parse(valueSchemaMetadata.schema)
-        const payload = {
-          key: this.convertToAvro(key, kafkaObject.key),
-          value: this.convertToAvro(value, kafkaObject.value)
-        }
+        const records = kafkaObject.map(k => ({
+          key: this.convertToAvro(key, k.key),
+          value: this.convertToAvro(value, k.value)
+        }))
         return {
           key_schema_id: keySchemaMetadata.id,
           value_schema_id: valueSchemaMetadata.id,
-          records: [payload]
+          records
         }
       })
       .catch(e => {

@@ -4,7 +4,10 @@ import * as AvroSchema from 'avro-js'
 import { HealthkitSchemaType } from 'src/app/shared/models/health'
 import * as YAML from 'yaml'
 
-import { DefaultSchemaSpecEndpoint } from '../../../../assets/data/defaultConfig'
+import {
+  DefaultHealthkitTopicPrefix,
+  DefaultSchemaSpecEndpoint
+} from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
 import { AnswerValueExport } from '../../../shared/models/answer'
 import { QuestionnaireMetadata } from '../../../shared/models/assessment'
@@ -172,8 +175,7 @@ export class SchemaService {
       const spec = specifications.find(t => t.type.toLowerCase() == type)
       // HEALTHKIT
       if (avsc === 'healthkit') {
-        const topic = 'active_healthkit_' + name
-        console.log('Topic is: ' + topic)
+        const topic = DefaultHealthkitTopicPrefix + name
         return Promise.resolve(topic)
       }
       if (spec && spec.topic && this.topicExists(spec.topic, topics)) {

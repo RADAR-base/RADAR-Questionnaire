@@ -62,6 +62,15 @@ export class StorageService {
     )
   }
 
+  removeHealthData(keys: any[]) {
+    return keys.map(k =>
+      this.healthStorage
+        .remove(k)
+        .then(() => (this.healthGlobal[k] = null))
+        .catch(error => this.handleError(error))
+    )
+  }
+
   push(key: StorageKeys, value: any): Promise<any> {
     if (this.global[key.toString()]) this.global[key.toString()].push(value)
     else this.global[key.toString()] = [value]

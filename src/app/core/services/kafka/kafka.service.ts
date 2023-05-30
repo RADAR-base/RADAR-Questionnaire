@@ -195,18 +195,19 @@ export class KafkaService {
         return Promise.all(sendPromises).then(res => {
           const keys = Object.keys(cacheByTopics)
           return Promise.all(
-            keys.map(k => this.sendToKafka(k, cacheByTopics[k], headers))
+            keys.map(k =>
+              this.sendToKafka(k, cacheByTopics[k], headers).catch(e => e)
+            )
           )
         })
       })
       .then((keys: any[][]) => {
-        const successKeys = [].concat
-          .apply([], keys)
-          .filter(k => !(k instanceof Error))
-        this.removeFromCache(successKeys)
+        const allKeys = [].concat.apply([], keys)
+        const successKeys = allKeys.filter(k => !(k instanceof Error))
+        return this.removeFromCache(successKeys)
           .then(() => this.removeFromHealthCache(successKeys))
           .then(() => this.setCacheSending(false))
-        return keys
+          .then(() => allKeys)
       })
       .catch(e => {
         this.setCacheSending(false)
@@ -263,18 +264,7 @@ export class KafkaService {
 
   removeFromHealthCache(cacheKeys: number[]) {
     if (!cacheKeys.length) return Promise.resolve()
-    return this.getHealthCache().then(cache => {
-      if (cache) {
-        cacheKeys.map(cacheKey => {
-          if (cache[cacheKey]) {
-            console.log('Deleting ' + cacheKey)
-            delete cache[cacheKey]
-          }
-        })
-        this.setLastUploadDate(Date.now())
-        return this.setHealthCache(cache)
-      }
-    })
+    return this.removeFromHealthCache(cacheKeys)
   }
 
   getAccessToken() {

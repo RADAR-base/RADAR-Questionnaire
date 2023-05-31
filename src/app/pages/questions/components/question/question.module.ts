@@ -9,6 +9,7 @@ import { WheelSelectorComponent } from '../wheel-selector/wheel-selector.compone
 import { AudioInputComponent } from './audio-input/audio-input.component'
 import { CheckboxInputComponent } from './checkbox-input/checkbox-input.component'
 import { DescriptiveInputComponent } from './descriptive-input/descriptive-input.component'
+import { HealthInputComponent } from './health-input/health-input.component'
 import { InfoScreenComponent } from './info-screen/info-screen.component'
 import { MatrixRadioInputComponent } from './matrix-radio-input/matrix-radio-input.component'
 import { QuestionComponent } from './question.component'
@@ -18,7 +19,7 @@ import { RangeInputComponent } from './range-input/range-input.component'
 import { SliderInputComponent } from './slider-input/slider-input.component'
 import { TextInputComponent } from './text-input/text-input.component'
 import { TimedTestComponent } from './timed-test/timed-test.component'
-import { HealthInputComponent } from './health-input/health-input.component'
+import { WebInputComponent } from './web-input/web-input.component'
 
 const COMPONENTS = [
   QuestionComponent,
@@ -34,7 +35,8 @@ const COMPONENTS = [
   WheelSelectorComponent,
   DescriptiveInputComponent,
   MatrixRadioInputComponent,
-  HealthInputComponent
+  HealthInputComponent,
+  WebInputComponent
 ]
 
 @NgModule({

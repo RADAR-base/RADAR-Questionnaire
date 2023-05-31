@@ -12,6 +12,7 @@ import { DescriptiveInputComponent } from './descriptive-input/descriptive-input
 import { HealthInputComponent } from './health-input/health-input.component'
 import { InfoScreenComponent } from './info-screen/info-screen.component'
 import { MatrixRadioInputComponent } from './matrix-radio-input/matrix-radio-input.component'
+import { NotesInputComponent } from './notes-input/notes-input.component'
 import { QuestionComponent } from './question.component'
 import { RadioInputComponent } from './radio-input/radio-input.component'
 import { RangeInfoInputComponent } from './range-info-input/range-info-input.component'
@@ -36,7 +37,8 @@ const COMPONENTS = [
   DescriptiveInputComponent,
   MatrixRadioInputComponent,
   HealthInputComponent,
-  WebInputComponent
+  WebInputComponent,
+  NotesInputComponent
 ]
 
 @NgModule({

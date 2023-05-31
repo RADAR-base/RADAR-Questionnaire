@@ -52,6 +52,11 @@ export class StorageService {
     })
   }
 
+  resetHealthData(): Promise<any> {
+    this.healthGlobal = {}
+    return this.healthStorage.clear()
+  }
+
   setHealthData(value: any): Promise<any> {
     const keys = Object.keys(value)
     return Promise.all(
@@ -63,11 +68,13 @@ export class StorageService {
   }
 
   removeHealthData(keys: any[]) {
-    return keys.map(k =>
-      this.healthStorage
-        .remove(k)
-        .then(() => (this.healthGlobal[k] = null))
-        .catch(error => this.handleError(error))
+    return Promise.all(
+      keys.map(k =>
+        this.healthStorage
+          .remove(k)
+          .then(() => delete this.healthGlobal[k])
+          .catch(error => this.handleError(error))
+      )
     )
   }
 

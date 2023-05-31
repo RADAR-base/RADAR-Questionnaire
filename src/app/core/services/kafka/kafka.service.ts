@@ -183,7 +183,7 @@ export class KafkaService {
         const cacheByTopics = {}
         const completeCache = Object.entries(
           Object.assign({}, cache, healthCache)
-        ).filter(([k]) => k)
+        ).filter(([k, v]) => k && v)
         const sendPromises = completeCache.map(([k, v]: any) =>
           this.schema
             .getKafkaTopic(specifications, v.name, v.avsc, topics)
@@ -264,7 +264,9 @@ export class KafkaService {
 
   removeFromHealthCache(cacheKeys: number[]) {
     if (!cacheKeys.length) return Promise.resolve()
-    return this.removeFromHealthCache(cacheKeys)
+    return this.storage
+      .removeHealthData(cacheKeys)
+      .then(() => this.setLastUploadDate(Date.now()))
   }
 
   getAccessToken() {
@@ -292,6 +294,10 @@ export class KafkaService {
 
   setHealthCache(cache) {
     return this.storage.setHealthData(cache)
+  }
+
+  resetHealthCache() {
+    return this.storage.resetHealthData()
   }
 
   setCacheSending(val: boolean) {
@@ -344,6 +350,7 @@ export class KafkaService {
   reset() {
     return Promise.all([
       this.setCache({}),
+      this.resetHealthCache(),
       this.setLastUploadDate(null),
       this.setHealthkitPollTimes({})
     ])

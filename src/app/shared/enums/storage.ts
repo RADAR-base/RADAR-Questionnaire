@@ -42,14 +42,15 @@ export class StorageKeys {
     'REMOTE_CONFIG_CACHE_TIMEOUT'
   )
 
-  static TOPIC_CACHE_TIMEOUT = new StorageKeys(
-    'TOPIC_CACHE_TIMEOUT'
-  )
+  static TOPIC_CACHE_TIMEOUT = new StorageKeys('TOPIC_CACHE_TIMEOUT')
 
   static FCM_TOKEN = new StorageKeys('FCM_TOKEN')
   static NOTIFICATION_MESSAGING_TYPE = new StorageKeys(
     'NOTIFICATION_MESSAGING_TYPE'
   )
+
+  static HEALTH_LAST_POLL_TIMES = new StorageKeys('HEALTH_LAST_POLL_TIMES')
+  static HEALTHKIT_CACHE = new StorageKeys('HEALTHKIT_CACHE')
 
   constructor(public value: string) {}
 

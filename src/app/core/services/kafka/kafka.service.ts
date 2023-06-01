@@ -6,17 +6,17 @@ import {
   DefaultKafkaRequestContentType,
   DefaultKafkaURI
 } from '../../../../assets/data/defaultConfig'
+import { ConfigKeys } from '../../../shared/enums/config'
 import { DataEventType } from '../../../shared/enums/events'
 import { StorageKeys } from '../../../shared/enums/storage'
-import { CacheValue } from '../../../shared/models/cache'
+import { CacheValue, KeyValue } from '../../../shared/models/cache'
 import { KafkaObject, SchemaType } from '../../../shared/models/kafka'
+import { RemoteConfigService } from '../config/remote-config.service'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 import { TokenService } from '../token/token.service'
 import { AnalyticsService } from '../usage/analytics.service'
 import { SchemaService } from './schema.service'
-import { RemoteConfigService } from "../config/remote-config.service";
-import { ConfigKeys } from "../../../shared/enums/config";
 
 @Injectable()
 export class KafkaService {
@@ -42,18 +42,18 @@ export class KafkaService {
     private analytics: AnalyticsService,
     private logger: LogService,
     private http: HttpClient,
-    private remoteConfig: RemoteConfigService,
+    private remoteConfig: RemoteConfigService
   ) {
     this.updateURI()
-    this.readTopicCacheValidity();
+    this.readTopicCacheValidity()
   }
 
   init() {
     return Promise.all([
       this.setCache({}),
       this.updateTopicCacheValidity(),
-      this.fetchTopics(),
-    ]);
+      this.fetchTopics()
+    ])
   }
 
   updateURI() {
@@ -64,78 +64,108 @@ export class KafkaService {
   }
 
   readTopicCacheValidity() {
-    return this.storage.get(StorageKeys.TOPIC_CACHE_TIMEOUT)
-      .then(timeout => {
-        if (typeof timeout === 'number') {
-          this.TOPIC_CACHE_VALIDITY = timeout
-        }
-      });
+    return this.storage.get(StorageKeys.TOPIC_CACHE_TIMEOUT).then(timeout => {
+      if (typeof timeout === 'number') {
+        this.TOPIC_CACHE_VALIDITY = timeout
+      }
+    })
   }
 
   updateTopicCacheValidity() {
-    return this.remoteConfig.read()
-      .then(config => config.getOrDefault(ConfigKeys.TOPIC_CACHE_TIMEOUT, this.TOPIC_CACHE_VALIDITY.toString()))
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        config.getOrDefault(
+          ConfigKeys.TOPIC_CACHE_TIMEOUT,
+          this.TOPIC_CACHE_VALIDITY.toString()
+        )
+      )
       .then(timeoutString => {
         const timeout = parseInt(timeoutString)
         if (!isNaN(timeout)) {
           this.TOPIC_CACHE_VALIDITY = Math.max(0, timeout)
-          return this.storage.set(StorageKeys.TOPIC_CACHE_TIMEOUT, this.TOPIC_CACHE_VALIDITY)
+          return this.storage.set(
+            StorageKeys.TOPIC_CACHE_TIMEOUT,
+            this.TOPIC_CACHE_VALIDITY
+          )
         }
       })
   }
 
   private fetchTopics() {
     return this.getAccessToken()
-      .then(accessToken => this.http.get(this.KAFKA_CLIENT_URL + this.URI_topics,
-        {
-          observe: 'body',
-          headers: new HttpHeaders()
-            .set('Authorization', 'Bearer ' + accessToken)
-            .set('Accept', DefaultClientAcceptType),
-        }).toPromise())
+      .then(accessToken =>
+        this.http
+          .get(this.KAFKA_CLIENT_URL + this.URI_topics, {
+            observe: 'body',
+            headers: new HttpHeaders()
+              .set('Authorization', 'Bearer ' + accessToken)
+              .set('Accept', DefaultClientAcceptType)
+          })
+          .toPromise()
+      )
       .then((topics: string[]) => {
         this.topics = topics
         this.lastTopicFetch = Date.now()
         return topics
       })
       .catch(e => {
-        this.logger.error("Failed to fetch Kafka topics", e)
+        this.logger.error('Failed to fetch Kafka topics', e)
         return this.topics
-      });
+      })
   }
 
   getTopics() {
-    if (this.topics !== null || this.lastTopicFetch + this.TOPIC_CACHE_VALIDITY >= Date.now()) {
+    if (
+      this.topics !== null ||
+      this.lastTopicFetch + this.TOPIC_CACHE_VALIDITY >= Date.now()
+    ) {
       return Promise.resolve(this.topics)
     } else {
-      return this.fetchTopics();
+      return this.fetchTopics()
     }
   }
 
-  prepareKafkaObjectAndSend(type, payload, keepInCache?) {
+  prepareKafkaObjectAndSend(type, payload, keepInCache?): Promise<CacheValue> {
     const value = this.schema.getKafkaObjectValue(type, payload)
     const keyPromise = this.schema.getKafkaObjectKey()
-    const metaDataPromise = this.schema.getMetaData(type, payload.task)
+    const metaDataPromise = this.schema.getMetaData(type, payload)
     return Promise.all([keyPromise, metaDataPromise]).then(
       ([key, metaData]) => {
         const kafkaObject: KafkaObject = { key: key, value: value }
         const cacheValue: CacheValue = Object.assign({}, metaData, {
           kafkaObject
         })
-        this.sendDataEvent(DataEventType.PREPARED_OBJECT, cacheValue)
-        return this.storeInCache(kafkaObject, cacheValue).then(() => {
-          return keepInCache ? Promise.resolve([]) : this.sendAllFromCache()
-        })
+        return cacheValue
       }
     )
   }
 
-  storeInCache(kafkaObject: KafkaObject, cacheValue: CacheValue) {
+  storeInCache(cacheValue: CacheValue) {
     return this.getCache().then(cache => {
       console.log('KAFKA-SERVICE: Caching answers.')
-      cache[kafkaObject.value.time] = cacheValue
+      const kafkaObjectVal = cacheValue.kafkaObject.value
+      const cacheKey = kafkaObjectVal.time
+        ? kafkaObjectVal.time
+        : kafkaObjectVal.startTime
+      cache[cacheKey] = cacheValue
       this.sendDataEvent(DataEventType.CACHED, cacheValue)
       return this.setCache(cache)
+    })
+  }
+
+  storeHealthDataInCache(cacheValue: CacheValue[]) {
+    return this.getHealthCache().then(cache => {
+      cache = cache ? cache : {}
+      cacheValue.map((c: CacheValue) => {
+        console.log('KAFKA-SERVICE: Caching answers.')
+        const kafkaObjectVal = c.kafkaObject.value
+        const cacheKey = kafkaObjectVal.startTime
+          ? kafkaObjectVal.startTime + Math.random()
+          : kafkaObjectVal.time
+        cache[cacheKey] = c
+      })
+      return this.setHealthCache(cache)
     })
   }
 
@@ -144,28 +174,40 @@ export class KafkaService {
     this.setCacheSending(true)
     return Promise.all([
       this.getCache(),
+      this.getHealthCache(),
       this.getKafkaHeaders(),
       this.schema.getRadarSpecifications(),
-      this.getTopics(),
+      this.getTopics()
     ])
-      .then(([cache, headers, specifications, topics]) => {
-        const sendPromises = Object.entries(cache)
-          .filter(([k]) => k)
-          .map(([k, v]: any) => {
-            return this.schema
-              .getKafkaTopic(specifications, v.name, v.avsc, topics)
-              .then(topic => this.sendToKafka(topic, k, v, headers))
-              .catch(e =>
-                this.logger.error('Failed to send data from cache to kafka', e)
-              )
-          })
-        return Promise.all(sendPromises)
-      })
-      .then(keys => {
-        this.removeFromCache(keys.filter(k => !(k instanceof Error))).then(() =>
-          this.setCacheSending(false)
+      .then(([cache, healthCache, headers, specifications, topics]) => {
+        const cacheByTopics = {}
+        const completeCache = Object.entries(
+          Object.assign({}, cache, healthCache)
+        ).filter(([k, v]) => k && v)
+        const sendPromises = completeCache.map(([k, v]: any) =>
+          this.schema
+            .getKafkaTopic(specifications, v.name, v.avsc, topics)
+            .then(topic => {
+              if (!cacheByTopics[topic]) cacheByTopics[topic] = []
+              return cacheByTopics[topic].push({ key: k, value: v })
+            })
         )
-        return keys
+        return Promise.all(sendPromises).then(res => {
+          const keys = Object.keys(cacheByTopics)
+          return Promise.all(
+            keys.map(k =>
+              this.sendToKafka(k, cacheByTopics[k], headers).catch(e => e)
+            )
+          )
+        })
+      })
+      .then((keys: any[][]) => {
+        const allKeys = [].concat.apply([], keys)
+        const successKeys = allKeys.filter(k => !(k instanceof Error))
+        return this.removeFromCache(successKeys)
+          .then(() => this.removeFromHealthCache(successKeys))
+          .then(() => this.setCacheSending(false))
+          .then(() => allKeys)
       })
       .catch(e => {
         this.setCacheSending(false)
@@ -173,9 +215,10 @@ export class KafkaService {
       })
   }
 
-  sendToKafka(topic: string, k: number, v: CacheValue, headers): Promise<any> {
+  sendToKafka(topic: string, values: KeyValue[], headers): Promise<any[]> {
+    const kafkaObjects = values.map(v => v.value.kafkaObject)
     return this.schema
-      .getKafkaPayload(v.kafkaObject, topic, this.BASE_URI)
+      .getKafkaPayload(kafkaObjects, topic, this.BASE_URI)
       .then(data =>
         this.http
           .post(this.KAFKA_CLIENT_URL + this.URI_topics + topic, data, {
@@ -183,10 +226,18 @@ export class KafkaService {
           })
           .toPromise()
       )
-      .then(() => this.sendDataEvent(DataEventType.SEND_SUCCESS, v))
-      .then(() => k)
+      .then(() =>
+        values.map(v => this.sendDataEvent(DataEventType.SEND_SUCCESS, v.value))
+      )
+      .then(() => values.map(v => v.key))
       .catch(error => {
-        this.sendDataEvent(DataEventType.SEND_ERROR, v, JSON.stringify(error))
+        values.map(v =>
+          this.sendDataEvent(
+            DataEventType.SEND_ERROR,
+            v.value,
+            JSON.stringify(error)
+          )
+        )
         throw error
       })
   }
@@ -209,6 +260,13 @@ export class KafkaService {
         return this.setCache(cache)
       }
     })
+  }
+
+  removeFromHealthCache(cacheKeys: number[]) {
+    if (!cacheKeys.length) return Promise.resolve()
+    return this.storage
+      .removeHealthData(cacheKeys)
+      .then(() => this.setLastUploadDate(Date.now()))
   }
 
   getAccessToken() {
@@ -234,6 +292,14 @@ export class KafkaService {
     return this.storage.set(this.KAFKA_STORE.CACHE_ANSWERS, cache)
   }
 
+  setHealthCache(cache) {
+    return this.storage.setHealthData(cache)
+  }
+
+  resetHealthCache() {
+    return this.storage.resetHealthData()
+  }
+
   setCacheSending(val: boolean) {
     this.isCacheSending = val
   }
@@ -242,12 +308,26 @@ export class KafkaService {
     return this.storage.set(this.KAFKA_STORE.LAST_UPLOAD_DATE, date)
   }
 
+  setHealthkitPollTimes(dic) {
+    return this.storage.set(StorageKeys.HEALTH_LAST_POLL_TIMES, dic)
+  }
+
   getCache() {
     return this.storage.get(this.KAFKA_STORE.CACHE_ANSWERS)
   }
 
+  getHealthCache() {
+    return this.storage.getHealthData(this.KAFKA_STORE.CACHE_ANSWERS)
+  }
+
   getLastUploadDate() {
     return this.storage.get(this.KAFKA_STORE.LAST_UPLOAD_DATE)
+  }
+
+  getHealthCacheSize() {
+    return this.getHealthCache().then(cache =>
+      Object.keys(cache).reduce((s, k) => (k ? s + 1 : s), 0)
+    )
   }
 
   getCacheSize() {
@@ -268,6 +348,11 @@ export class KafkaService {
   }
 
   reset() {
-    return Promise.all([this.setCache({}), this.setLastUploadDate(null)])
+    return Promise.all([
+      this.setCache({}),
+      this.resetHealthCache(),
+      this.setLastUploadDate(null),
+      this.setHealthkitPollTimes({})
+    ])
   }
 }

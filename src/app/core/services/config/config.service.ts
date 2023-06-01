@@ -321,7 +321,8 @@ export class ConfigService {
         )
         .then(() => this.appConfig.init(user.enrolmentDate)),
       this.localization.init(),
-      this.kafka.init()
+      this.kafka.init(),
+      this.analytics.enableAnalytics()
     ]).then(() => this.notifications.init())
   }
 
@@ -338,6 +339,7 @@ export class ConfigService {
       languagesSelectable: this.localization.getLanguageSettings(),
       language: Promise.resolve(this.localization.getLanguage()),
       cacheSize: this.kafka.getCacheSize(),
+      healthCacheSize: this.kafka.getHealthCacheSize(),
       lastUploadDate: this.kafka.getLastUploadDate(),
       lastNotificationUpdate: this.notifications.getLastNotificationUpdate()
     }

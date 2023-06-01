@@ -10,6 +10,7 @@ export class CacheSendModalComponent {
   successes: any[]
   errors: Error[]
   result = []
+  segementShown: string
 
   constructor(
     public platform: Platform,
@@ -25,5 +26,7 @@ export class CacheSendModalComponent {
     this.modalCtrl.dismiss()
   }
 
-  segmentChanged(event) {}
+  segmentChanged(event) {
+    this.segementShown = event.detail.value
+  }
 }

@@ -298,3 +298,8 @@ export const DefaultSettingsSupportedLanguages: LanguageSetting[] = [
 ]
 
 export const DefaultQuestionsHidden = '{}'
+
+export const DefaultPrivacyPolicyUrl =
+  'https://radar-base.org/actve-app-armt-privacy-policy/'
+
+export const DefaultHealthkitTopicPrefix = 'active_apple_healthkit_'

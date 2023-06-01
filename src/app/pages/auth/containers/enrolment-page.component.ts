@@ -1,9 +1,15 @@
 import { Component, ViewChild } from '@angular/core'
+import {
+  InAppBrowser,
+  InAppBrowserOptions
+} from '@awesome-cordova-plugins/in-app-browser/ngx'
+import { Globalization } from '@ionic-native/globalization/ngx'
 import { IonSlides, NavController } from '@ionic/angular'
 import { AlertInput } from '@ionic/core'
 
 import {
   DefaultLanguage,
+  DefaultPrivacyPolicyUrl,
   DefaultSettingsSupportedLanguages,
   DefaultSettingsWeeklyReport
 } from '../../../../assets/data/defaultConfig'
@@ -20,7 +26,6 @@ import {
   LanguageSetting,
   WeeklyReportSubSettings
 } from '../../../shared/models/settings'
-import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 import { AuthService } from '../services/auth.service'
 
 @Component({
@@ -37,16 +42,31 @@ export class EnrolmentPageComponent {
   reportSettings: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
   language?: LanguageSetting = DefaultLanguage
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
+  browserOptions: InAppBrowserOptions = {
+    location: 'yes',
+    hidenavigationbuttons: 'yes',
+    hideurlbar: 'yes',
+    toolbarcolor: '#6d9aa5',
+    closebuttoncolor: '#ffffff'
+  }
 
   constructor(
     public navCtrl: NavController,
+    private theInAppBrowser: InAppBrowser,
     private auth: AuthService,
     private localization: LocalizationService,
     private alertService: AlertService,
     private usage: UsageService,
-    private logger: LogService
+    private logger: LogService,
+    private globalization: Globalization
   ) {
-    this.localization.update().then(lang => (this.language = lang))
+    this.globalization.getPreferredLanguage().then(res => {
+      // Language value is in BCP 47 format (e.g. en-US)
+      const tag = res.value.split('-')[0]
+      let lang = this.languagesSelectable.find(a => a.value == tag)
+      this.language = lang ? lang : this.language
+      this.localization.setLanguage(this.language)
+    })
   }
 
   ionViewDidEnter() {
@@ -88,6 +108,7 @@ export class EnrolmentPageComponent {
       .catch(e => {
         this.handleError(e)
         this.loading = false
+        this.auth.reset()
       })
   }
 
@@ -97,7 +118,9 @@ export class EnrolmentPageComponent {
     this.outcomeStatus =
       e.error && e.error.message
         ? e.error.message
-        : e.statusText + ' (' + e.status + ')'
+        : e.status
+        ? e.statusText + ' (' + e.status + ')'
+        : e
     this.usage.sendGeneralEvent(
       e.status == 409 ? EnrolmentEventType.ERROR : EnrolmentEventType.FAIL,
       false,
@@ -150,5 +173,14 @@ export class EnrolmentPageComponent {
       buttons: buttons,
       inputs: inputs
     })
+  }
+
+  showPrivacyPolicy() {
+    console.log('Opening privacy policy..')
+    this.openWithInAppBrowser(DefaultPrivacyPolicyUrl)
+  }
+
+  openWithInAppBrowser(url: string) {
+    this.theInAppBrowser.create(url, '_blank', this.browserOptions)
   }
 }

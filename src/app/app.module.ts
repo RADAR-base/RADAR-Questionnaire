@@ -6,6 +6,8 @@ import { BrowserModule } from '@angular/platform-browser'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { RouterModule } from '@angular/router'
 import { JWT_OPTIONS, JwtModule } from '@auth0/angular-jwt'
+import { Health } from '@awesome-cordova-plugins/health/ngx'
+import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx'
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx'
 import { AppLauncher } from '@ionic-native/app-launcher/ngx'
 import { AppVersion } from '@ionic-native/app-version/ngx'
@@ -97,6 +99,7 @@ import { Utility } from './shared/utilities/util'
   bootstrap: [AppComponent],
   entryComponents: [AppComponent],
   providers: [
+    Health,
     Device,
     StatusBar,
     SplashScreen,
@@ -112,6 +115,7 @@ import { Utility } from './shared/utilities/util'
     WebIntent,
     MobileAccessibility,
     Insomnia,
+    InAppBrowser,
     BackgroundMode,
     Keyboard,
     FirebaseX,

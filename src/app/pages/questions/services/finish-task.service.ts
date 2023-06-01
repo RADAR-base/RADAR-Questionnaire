@@ -1,4 +1,8 @@
 import { Injectable } from '@angular/core'
+import {
+  HealthKitDataTypeKey,
+  HealthkitStringDataType
+} from 'src/app/shared/models/health'
 
 import { AppConfigService } from '../../../core/services/config/app-config.service'
 import { ConfigService } from '../../../core/services/config/config.service'
@@ -35,23 +39,53 @@ export class FinishTaskService {
   processDataAndSend(answers, questions, timestamps, task) {
     // NOTE: Do not send answers if demo questionnaire
     if (task.isDemo) return Promise.resolve()
-    return this.sendAnswersToKafka(
-      this.processQuestionnaireData(answers, timestamps, questions),
-      task
-    )
+    if (questions.some(question => question.field_type === 'health')) {
+      const results = this.processHealthQuestionnaireData(
+        answers,
+        timestamps,
+        questions
+      )
+      Object.keys(results).forEach(key =>
+        this.sendAnswersToKafka(results[key], task)
+      )
+    } else {
+      return this.sendAnswersToKafka(
+        this.processQuestionnaireData(answers, timestamps, questions),
+        task
+      )
+    }
   }
 
-  sendAnswersToKafka(processedAnswers, task): Promise<any> {
-    // NOTE: Submit data to kafka
-    return this.appConfig.getScheduleVersion().then(scheduleVersion => {
-      return Promise.all([
-        this.kafka.prepareKafkaObjectAndSend(SchemaType.TIMEZONE, {}),
-        this.kafka.prepareKafkaObjectAndSend(SchemaType.ASSESSMENT, {
-          task: task,
-          data: Object.assign(processedAnswers, { scheduleVersion })
+  sendAnswersToKafka(processedAnswers, task) {
+    // If it's from health
+    if (processedAnswers instanceof Array) {
+      return Promise.all(
+        processedAnswers.map(p => {
+          return this.kafka.prepareKafkaObjectAndSend(
+            SchemaType.GENERAL_HEALTH,
+            {
+              task: task,
+              data: p
+            }
+          )
         })
-      ])
-    })
+      ).then(cacheValues => this.kafka.storeHealthDataInCache(cacheValues))
+    } else {
+      return this.appConfig.getScheduleVersion().then(scheduleVersion => {
+        return Promise.all([
+          this.kafka.prepareKafkaObjectAndSend(SchemaType.TIMEZONE, {}),
+          this.kafka.prepareKafkaObjectAndSend(SchemaType.ASSESSMENT, {
+            task: task,
+            data: Object.assign(processedAnswers, { scheduleVersion })
+          })
+        ]).then(([timezone, assessment]) => {
+          return Promise.all([
+            this.kafka.storeInCache(timezone),
+            this.kafka.storeInCache(assessment)
+          ]).then(() => this.kafka.sendAllFromCache())
+        })
+      })
+    }
   }
 
   createClinicalFollowUpTask(assessment): Promise<any> {
@@ -62,6 +96,51 @@ export class FinishTaskService {
         Date.now()
       )
       .then(() => this.config.rescheduleNotifications())
+  }
+  // TODO process for general questionnaire schema
+
+  processHealthQuestionnaireData(answers, timestamps, questions) {
+    // this.logger.log('Answers to process', answers)
+
+    let results = {}
+    for (let [key, value] of Object.entries<any>(answers)) {
+      // value is array of datapoints
+      // key is name of data type
+      if (value.length) {
+        const type = this.getDataTypeFromKey(key)
+        const formatted = value.map(v =>
+          Object.assign(
+            {},
+            {
+              startTime: new Date(v.startDate).getTime(),
+              endTime: new Date(v.endDate).getTime(),
+              timeReceived: Date.now(),
+              sourceId: v.sourceBundleId,
+              sourceName: v.sourceName,
+              unit: v.unit,
+              key,
+              intValue: null,
+              floatValue: null,
+              doubleValue: null,
+              stringValue: null
+            },
+            { [type]: v.value }
+          )
+        )
+        results[key] = formatted
+      }
+    }
+    return results
+  }
+
+  getDataTypeFromKey(key) {
+    if (
+      Object.values(HealthkitStringDataType).includes(
+        key as HealthkitStringDataType
+      )
+    ) {
+      return HealthKitDataTypeKey.STRING
+    } else return HealthKitDataTypeKey.FLOAT
   }
 
   processQuestionnaireData(answers, timestamps, questions) {

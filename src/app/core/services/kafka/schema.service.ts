@@ -1,9 +1,13 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import * as AvroSchema from 'avro-js'
+import { HealthkitSchemaType } from 'src/app/shared/models/health'
 import * as YAML from 'yaml'
 
-import { DefaultSchemaSpecEndpoint } from '../../../../assets/data/defaultConfig'
+import {
+  DefaultHealthkitTopicPrefix,
+  DefaultSchemaSpecEndpoint
+} from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
 import { AnswerValueExport } from '../../../shared/models/answer'
 import { QuestionnaireMetadata } from '../../../shared/models/assessment'
@@ -41,8 +45,12 @@ export class SchemaService {
     private utility: Utility
   ) {}
 
-  getMetaData(type, task?: Task): Promise<QuestionnaireMetadata> {
+  getMetaData(type, payload?: any): Promise<QuestionnaireMetadata> {
+    const task = payload.task
+    const data = payload.data
     switch (type) {
+      case SchemaType.GENERAL_HEALTH:
+        return Promise.resolve({ name: data.key, avsc: 'healthkit' })
       case SchemaType.ASSESSMENT:
         return this.questionnaire
           .getAssessmentForTask(task.type, task)
@@ -68,6 +76,8 @@ export class SchemaService {
 
   getKafkaObjectValue(type, payload) {
     switch (type) {
+      case SchemaType.GENERAL_HEALTH:
+        return payload.data as HealthkitSchemaType
       case SchemaType.ASSESSMENT:
         const Answer: AnswerValueExport = {
           name: payload.task.name,
@@ -109,7 +119,7 @@ export class SchemaService {
     return AvroSchema.parse(schema).clone(value, { wrapUnions: true })
   }
 
-  getKafkaPayload(kafkaObject, topic, baseURI): Promise<any> {
+  getKafkaPayload(kafkaObject: any[], topic, baseURI): Promise<any> {
     if (!this.schemas[topic]) {
       this.schemas[topic] = [
         this.getLatestKafkaSchemaVersion(topic + '-key', 'latest', baseURI),
@@ -120,14 +130,14 @@ export class SchemaService {
       .then(([keySchemaMetadata, valueSchemaMetadata]) => {
         const key = JSON.parse(keySchemaMetadata.schema)
         const value = JSON.parse(valueSchemaMetadata.schema)
-        const payload = {
-          key: this.convertToAvro(key, kafkaObject.key),
-          value: this.convertToAvro(value, kafkaObject.value)
-        }
+        const records = kafkaObject.map(k => ({
+          key: this.convertToAvro(key, k.key),
+          value: this.convertToAvro(value, k.value)
+        }))
         return {
           key_schema_id: keySchemaMetadata.id,
           value_schema_id: valueSchemaMetadata.id,
-          records: [payload]
+          records
         }
       })
       .catch(e => {
@@ -153,11 +163,21 @@ export class SchemaService {
       })
   }
 
-  getKafkaTopic(specifications: any[] | null, name, avsc, topics: string[] | null): Promise<any> {
+  getKafkaTopic(
+    specifications: any[] | null,
+    name,
+    avsc,
+    topics: string[] | null
+  ): Promise<any> {
     const type = name.toLowerCase()
 
     if (specifications) {
       const spec = specifications.find(t => t.type.toLowerCase() == type)
+      // HEALTHKIT
+      if (avsc === 'healthkit') {
+        const topic = DefaultHealthkitTopicPrefix + name
+        return Promise.resolve(topic)
+      }
       if (spec && spec.topic && this.topicExists(spec.topic, topics)) {
         return Promise.resolve(spec.topic)
       }
@@ -166,12 +186,14 @@ export class SchemaService {
     if (this.topicExists(questionnaireTopic, topics)) {
       return Promise.resolve(questionnaireTopic)
     }
-    const defaultTopic = this.GENERAL_TOPIC;
+    const defaultTopic = this.GENERAL_TOPIC
     if (this.topicExists(defaultTopic, topics)) {
       return Promise.resolve(defaultTopic)
     }
 
-    return Promise.reject(`No suitable topic found on server for questionnaire ${name}`)
+    return Promise.reject(
+      `No suitable topic found on server for questionnaire ${name}`
+    )
   }
 
   private topicExists(topic: string, topics: string[] | null) {
@@ -179,7 +201,9 @@ export class SchemaService {
       return true
     } else {
       this.logger.error(
-        `Cannot send data to specification topic ${topic} because target server does not have it`, null)
+        `Cannot send data to specification topic ${topic} because target server does not have it`,
+        null
+      )
       return false
     }
   }

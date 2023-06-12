@@ -25,14 +25,14 @@
       <ion-segment-button value="success">
         <ion-label>{{ 'STATUS_SUCCESS' | translate }}</ion-label>
       </ion-segment-button>
-      <ion-segment-button value="errors">
+      <ion-segment-button value="error">
         <ion-label> {{ 'STATUS_FAILURE' | translate }}</ion-label>
       </ion-segment-button>
     </ion-segment>
 
-    <div [ngSwitch]="result">
+    <div [ngSwitch]="segementShown">
       <ng-container *ngIf="errors.length">
-        <div *ngSwitchCase="'errors'" class="scroll-error">
+        <div *ngSwitchCase="'error'" class="scroll-error">
           <ion-list>
             <ng-container *ngFor="let e of errors; let i = index">
               <li *ngIf="i < 15">{{ e.message }}</li>

@@ -112,7 +112,7 @@ export class FinishTaskService {
           Object.assign(
             {},
             {
-              startTime: new Date(v.startDate).getTime(),
+              time: new Date(v.startDate).getTime(),
               endTime: new Date(v.endDate).getTime(),
               timeReceived: Date.now(),
               sourceId: v.sourceBundleId,

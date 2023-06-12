@@ -28,7 +28,7 @@ export enum HealthkitSchemaType {
 }
 
 export interface HealthkitValueExport {
-  startTime: number
+  time: number
   endTime: number
   timeReceived: number
   sourceId: string

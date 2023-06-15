@@ -13,6 +13,8 @@ import { RemoteConfigService } from '../config/remote-config.service'
 
 @Injectable()
 export class GithubClient {
+  githubFetchStrategy: string
+
   constructor(
     private appServerService: AppServerService,
     private util: Utility,
@@ -38,13 +40,19 @@ export class GithubClient {
   }
 
   getFetchStrategy(): Promise<String> {
-    return this.remoteConfig
-      .read()
-      .then(config =>
-        config.getOrDefault(
-          ConfigKeys.GITHUB_FETCH_STRATEGY,
-          DefaultGithubFetchStrategy
+    if (!this.githubFetchStrategy)
+      return this.remoteConfig
+        .read()
+        .then(config =>
+          config.getOrDefault(
+            ConfigKeys.GITHUB_FETCH_STRATEGY,
+            DefaultGithubFetchStrategy
+          )
         )
-      )
+        .then(strategy => {
+          this.githubFetchStrategy = strategy
+          return strategy
+        })
+    else return Promise.resolve(this.githubFetchStrategy)
   }
 }

@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
+import * as pako from 'pako'
 
 import {
   DefaultClientAcceptType,
@@ -219,13 +220,14 @@ export class KafkaService {
     const kafkaObjects = values.map(v => v.value.kafkaObject)
     return this.schema
       .getKafkaPayload(kafkaObjects, topic, this.BASE_URI)
-      .then(data =>
-        this.http
-          .post(this.KAFKA_CLIENT_URL + this.URI_topics + topic, data, {
+      .then(data => {
+        const compressed = pako.gzip(JSON.stringify(data)).buffer
+        return this.http
+          .post(this.KAFKA_CLIENT_URL + this.URI_topics + topic, compressed, {
             headers
           })
           .toPromise()
-      )
+      })
       .then(() =>
         values.map(v => this.sendDataEvent(DataEventType.SEND_SUCCESS, v.value))
       )
@@ -280,6 +282,7 @@ export class KafkaService {
       .then(accessToken =>
         new HttpHeaders()
           .set('Authorization', 'Bearer ' + accessToken)
+          .set('Content-Encoding', 'gzip')
           .set('Content-Type', DefaultKafkaRequestContentType)
           .set('Accept', DefaultClientAcceptType)
       )

@@ -4,6 +4,7 @@ import * as pako from 'pako'
 
 import {
   DefaultClientAcceptType,
+  DefaultCompressedContentEncoding,
   DefaultKafkaRequestContentType,
   DefaultKafkaURI
 } from '../../../../assets/data/defaultConfig'
@@ -282,7 +283,7 @@ export class KafkaService {
       .then(accessToken =>
         new HttpHeaders()
           .set('Authorization', 'Bearer ' + accessToken)
-          .set('Content-Encoding', 'gzip')
+          .set('Content-Encoding', DefaultCompressedContentEncoding)
           .set('Content-Type', DefaultKafkaRequestContentType)
           .set('Accept', DefaultClientAcceptType)
       )

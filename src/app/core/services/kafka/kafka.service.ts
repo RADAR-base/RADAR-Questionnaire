@@ -1,8 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
+import * as pako from 'pako'
 
 import {
   DefaultClientAcceptType,
+  DefaultCompressedContentEncoding,
   DefaultKafkaRequestContentType,
   DefaultKafkaURI
 } from '../../../../assets/data/defaultConfig'
@@ -34,6 +36,7 @@ export class KafkaService {
   private topics: string[] = null
   private lastTopicFetch: number = 0
   private TOPIC_CACHE_VALIDITY = KafkaService.DEFAULT_TOPIC_CACHE_VALIDITY
+  HTTP_ERROR = 'HttpErrorResponse'
 
   constructor(
     private storage: StorageService,
@@ -219,13 +222,20 @@ export class KafkaService {
     const kafkaObjects = values.map(v => v.value.kafkaObject)
     return this.schema
       .getKafkaPayload(kafkaObjects, topic, this.BASE_URI)
-      .then(data =>
-        this.http
-          .post(this.KAFKA_CLIENT_URL + this.URI_topics + topic, data, {
-            headers
-          })
-          .toPromise()
-      )
+      .then(data => {
+        const compressed = pako.gzip(JSON.stringify(data)).buffer
+        return this.postData(
+          compressed,
+          topic,
+          headers.set('Content-Encoding', DefaultCompressedContentEncoding)
+        ).catch(e => {
+          if (e.name == this.HTTP_ERROR) {
+            this.logger.log('Retrying uncompressed..')
+            return this.postData(data, topic, headers)
+          }
+          throw e
+        })
+      })
       .then(() =>
         values.map(v => this.sendDataEvent(DataEventType.SEND_SUCCESS, v.value))
       )
@@ -240,6 +250,14 @@ export class KafkaService {
         )
         throw error
       })
+  }
+
+  postData(data, topic, headers) {
+    return this.http
+      .post(this.KAFKA_CLIENT_URL + this.URI_topics + topic, data, {
+        headers
+      })
+      .toPromise()
   }
 
   removeFromCache(cacheKeys: number[]) {

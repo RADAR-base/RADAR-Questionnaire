@@ -209,6 +209,9 @@ export const DefaultRequestJSONContentType = 'application/json'
 export const DefaultKafkaRequestContentType =
   'application/vnd.kafka.avro.v2+json'
 
+// *Default HTTP request content encoding
+export const DefaultCompressedContentEncoding = 'gzip'
+
 // *Default HTTP request client accept type
 export const DefaultClientAcceptType =
   'application/vnd.kafka.v2+json, application/vnd.kafka+json; q=0.9, application/json; q=0.8'

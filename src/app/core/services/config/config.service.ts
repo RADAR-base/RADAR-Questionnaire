@@ -339,6 +339,7 @@ export class ConfigService {
       languagesSelectable: this.localization.getLanguageSettings(),
       language: Promise.resolve(this.localization.getLanguage()),
       cacheSize: this.kafka.getCacheSize(),
+      healthCacheSize: this.kafka.getHealthCacheSize(),
       lastUploadDate: this.kafka.getLastUploadDate(),
       lastNotificationUpdate: this.notifications.getLastNotificationUpdate()
     }

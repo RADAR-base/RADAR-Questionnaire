@@ -32,23 +32,23 @@ export class SchemaService {
     return this.converterFactory.getConverter(type).processData(payload)
   }
 
-  getKafkaPayload(cache, cacheKey, topics): Promise<any> {
+  getKafkaPayload(kafkaObject: any[], cacheKey, topic): Promise<any> {
     return Promise.all([
       this.converterFactory
         .getConverter(SchemaType.KEY)
-        .convertToRecord(cache, topics),
-      this.converterFactory
-        .getConverter(cache.name)
-        .convertToRecord(cache, topics)
-    ]).then(([key, avro]) => {
+        .convertToRecord(kafkaObject[0], topic),
+      kafkaObject.map(k =>
+        this.converterFactory.getConverter(k.name).convertToRecord(k, topic)
+      )
+    ]).then(([key, records]) => {
       return {
-        type: cache.name,
-        topic: avro.topic,
+        type: kafkaObject[0].name,
+        topic: topic,
         cacheKey: cacheKey,
         record: {
           key_schema_id: key.schema,
-          value_schema_id: avro.schema,
-          records: [{ key: key.value, value: avro.value }]
+          value_schema_id: key.schema,
+          records
         }
       }
     })

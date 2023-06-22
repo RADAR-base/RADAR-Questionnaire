@@ -8,6 +8,7 @@ import {
 
 import { UsageService } from '../../../../core/services/usage/usage.service'
 import { AssessmentType } from '../../../../shared/models/assessment'
+import { QuestionsService } from '../../services/questions.service'
 
 @Component({
   selector: 'finish',
@@ -27,21 +28,36 @@ export class FinishComponent implements OnChanges {
   taskType: AssessmentType
   @Input()
   isLastTask = false
+  @Input()
+  task
+  @Input()
+  questions
   @Output()
   exit: EventEmitter<any> = new EventEmitter<any>()
 
   displayNextTaskReminder = true
   completedInClinic = false
 
-  constructor(private usage: UsageService) {}
+  constructor(
+    private usage: UsageService,
+    private questionsService: QuestionsService
+  ) {}
 
   ngOnChanges() {
     this.displayNextTaskReminder =
       this.taskType == AssessmentType.SCHEDULED && !this.isLastTask
     if (this.isShown) {
+      this.onQuestionnaireCompleted()
       this.usage.setPage(this.constructor.name)
       setTimeout(() => (this.showDoneButton = true), 15000)
     }
+  }
+
+  onQuestionnaireCompleted() {
+    return this.questionsService.processCompletedQuestionnaire(
+      this.task,
+      this.questions
+    )
   }
 
   handleClosePage() {

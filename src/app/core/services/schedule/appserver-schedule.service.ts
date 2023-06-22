@@ -45,7 +45,7 @@ export class AppserverScheduleService extends ScheduleService {
         ).then(res => this.setTasks(AssessmentType.SCHEDULED, res))
       })
       .catch(e => {
-        console.log('Error pulling tasks..')
+        console.log('Error pulling tasks.. ' + e)
         return this.getLocalTasksForDate(date, AssessmentType.SCHEDULED)
       })
   }

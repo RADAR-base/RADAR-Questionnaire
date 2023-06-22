@@ -1,4 +1,8 @@
 import { Injectable } from '@angular/core'
+import {
+  HealthKitDataTypeKey,
+  HealthkitStringDataType
+} from 'src/app/shared/models/health'
 
 import { ConfigService } from '../../../core/services/config/config.service'
 import { KafkaService } from '../../../core/services/kafka/kafka.service'

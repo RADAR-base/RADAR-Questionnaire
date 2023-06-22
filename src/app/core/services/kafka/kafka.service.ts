@@ -1,8 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
+import * as pako from 'pako'
 
 import {
   DefaultClientAcceptType,
+  DefaultCompressedContentEncoding,
   DefaultKafkaRequestContentType,
   DefaultKafkaURI,
   DefaultRequestJSONContentType
@@ -10,7 +12,7 @@ import {
 import { ConfigKeys } from '../../../shared/enums/config'
 import { DataEventType } from '../../../shared/enums/events'
 import { StorageKeys } from '../../../shared/enums/storage'
-import { CacheValue } from '../../../shared/models/cache'
+import { CacheValue, KeyValue } from '../../../shared/models/cache'
 import { KafkaObject, SchemaType } from '../../../shared/models/kafka'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { LogService } from '../misc/log.service'
@@ -32,6 +34,7 @@ export class KafkaService {
   private topics: string[] = null
   private lastTopicFetch: number = 0
   private TOPIC_CACHE_VALIDITY = KafkaService.DEFAULT_TOPIC_CACHE_VALIDITY
+  HTTP_ERROR = 'HttpErrorResponse'
 
   constructor(
     private storage: StorageService,
@@ -196,7 +199,7 @@ export class KafkaService {
           const valueWithKey = { key, value }
           const cacheKey = parseFloat(k)
           v['kafkaObject'] = valueWithKey
-          return this.schema.getKafkaPayload(v, cacheKey, this.topics)
+          return this.schema.getKafkaPayload([v], cacheKey, this.topics)
         })
       return Promise.all(records)
     })
@@ -233,6 +236,13 @@ export class KafkaService {
       })
   }
 
+  removeFromHealthCache(cacheKeys: number[]) {
+    if (!cacheKeys.length) return Promise.resolve()
+    return this.storage
+      .removeHealthData(cacheKeys)
+      .then(() => this.setLastUploadDate(Date.now()))
+  }
+
   getAccessToken() {
     return Promise.all([this.updateURI(), this.token.refresh()])
       .then(() => this.token.getTokens())
@@ -252,8 +262,42 @@ export class KafkaService {
       })
   }
 
+  setCache(cache) {
+    return this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
+  }
+
+  setHealthCache(cache) {
+    return this.storage.setHealthData(cache)
+  }
+
+  resetHealthCache() {
+    return this.storage.resetHealthData()
+  }
+
+  setCacheSending(val: boolean) {
+    this.isCacheSending = val
+  }
+
+  setLastUploadDate(date) {
+    return this.storage.set(StorageKeys.LAST_UPLOAD_DATE, date)
+  }
+
+  setHealthkitPollTimes(dic) {
+    return this.storage.set(StorageKeys.HEALTH_LAST_POLL_TIMES, dic)
+  }
+
+  getHealthCache() {
+    return this.storage.getHealthData(StorageKeys.HEALTHKIT_CACHE)
+  }
+
   getLastUploadDate() {
     return this.cache.getLastUploadDate()
+  }
+
+  getHealthCacheSize() {
+    return this.getHealthCache().then(cache =>
+      Object.keys(cache).reduce((s, k) => (k ? s + 1 : s), 0)
+    )
   }
 
   getCacheSize() {

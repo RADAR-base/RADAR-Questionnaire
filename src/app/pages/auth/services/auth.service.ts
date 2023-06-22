@@ -28,6 +28,10 @@ export class AuthService {
     private subjectConfig: SubjectConfigService
   ) {}
 
+  reset() {
+    this.config.resetAll()
+  }
+
   authenticate(authObj) {
     return (
       isValidURL(authObj)

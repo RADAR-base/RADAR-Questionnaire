@@ -114,6 +114,7 @@
     "moment-timezone": "^0.5.40",
     "morph-expressions": "^1.1.1",
     "ngx-moment": "^5.0.0",
+    "pako": "^2.1.0",
     "path": "^0.12.7",
     "phonegap-plugin-barcodescanner": "^8.1.0",
     "phonegap-plugin-mobile-accessibility": "^1.0.5",
@@ -141,12 +142,12 @@
     "@types/node": "^12.11.1",
     "codelyzer": "^6.0.2",
     "cordova-android": "^10.1.2",
-    "cordova-ios": "^6.2.0",
+    "cordova-ios": "^6.3.0",
     "cordova-plugin-app-launcher": "^0.4.0",
     "cordova-plugin-background-mode": "https://bitbucket.org/TheBosZ/cordova-plugin-run-in-background",
-    "cordova-plugin-health": "^2.0.3",
     "cordova-plugin-file": "^7.0.0",
     "cordova-plugin-firebasex": "15.0.0-cli",
+    "cordova-plugin-health": "^2.0.3",
     "cordova-plugin-inappbrowser": "^5.0.0",
     "cordova-plugin-ionic-webview": "^4.2.1",
     "cordova-plugin-media-with-compression": "^2.3.1",
@@ -205,8 +206,8 @@
   },
   "cordova": {
     "platforms": [
-      "ios",
-      "android"
+      "android",
+      "ios"
     ],
     "plugins": {
       "cordova-plugin-device": {},

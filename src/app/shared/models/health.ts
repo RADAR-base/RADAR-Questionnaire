@@ -13,6 +13,12 @@ export enum HealthkitStringDataType {
   DATE_OF_BIRTH = 'date_of_birth'
 }
 
+export enum HealthKitDataTypeKey {
+  STRING = 'stringValue',
+  FLOAT = 'floatValue',
+  DOUBLE = 'doubleValue'
+}
+
 export enum HealthkitSchemaType {
   ACTIVITY = 'healthkit_activity',
   BODY_MEASUREMENT = 'healthkit_body_measurement',
@@ -22,7 +28,7 @@ export enum HealthkitSchemaType {
 }
 
 export interface HealthkitValueExport {
-  startTime: number
+  time: number
   endTime: number
   timeReceived: number
   sourceId: string

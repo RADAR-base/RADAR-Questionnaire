@@ -1,7 +1,11 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { AnswerValueExport } from 'src/app/shared/models/answer'
-import { HealthkitDataType } from 'src/app/shared/models/health'
+import {
+  HealthKitDataTypeKey,
+  HealthkitDataType,
+  HealthkitStringDataType
+} from 'src/app/shared/models/health'
 import { QuestionType } from 'src/app/shared/models/question'
 import { getSeconds } from 'src/app/shared/utilities/time'
 
@@ -45,15 +49,37 @@ export class HealthkitConverterService extends ConverterService {
   }
 
   processSingleDatatype(key, data, timeReceived) {
-    const results = data.map(d => {
-      return {
-        startTime: new Date(d.startDate).getTime(),
-        endTime: new Date(d.endDate).getTime(),
-        timeReceived,
-        [key]: d.value
-      }
-    })
+    const type = this.getDataTypeFromKey(key)
+    const results = data.map(d =>
+      Object.assign(
+        {},
+        {
+          time: new Date(d.startDate).getTime(),
+          endTime: new Date(d.endDate).getTime(),
+          timeReceived: timeReceived,
+          sourceId: d.sourceBundleId,
+          sourceName: d.sourceName,
+          unit: d.unit,
+          key,
+          intValue: null,
+          floatValue: null,
+          doubleValue: null,
+          stringValue: null
+        },
+        { [type]: d.value }
+      )
+    )
     return results
+  }
+
+  getDataTypeFromKey(key) {
+    if (
+      Object.values(HealthkitStringDataType).includes(
+        key as HealthkitStringDataType
+      )
+    ) {
+      return HealthKitDataTypeKey.STRING
+    } else return HealthKitDataTypeKey.FLOAT
   }
 
   getKafkaTopic(payload, topics): Promise<any> {

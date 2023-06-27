@@ -83,6 +83,6 @@ export class HealthkitConverterService extends ConverterService {
   }
 
   getKafkaTopic(payload, topics): Promise<any> {
-    return Promise.resolve('healthkit_steps')
+    return Promise.resolve('active_apple_healthkit_steps')
   }
 }

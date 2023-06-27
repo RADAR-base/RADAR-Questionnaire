@@ -24,7 +24,7 @@ export class FinishTaskService {
     // temporarily change both to healthkit
     const type = task.name.toLowerCase().includes('health')
       ? SchemaType.HEALTHKIT
-      : SchemaType.HEALTHKIT
+      : SchemaType.ASSESSMENT
     return Promise.all([
       this.updateTaskToComplete(task),
       !task.isDemo

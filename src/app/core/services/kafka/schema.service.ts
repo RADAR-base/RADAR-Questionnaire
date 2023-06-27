@@ -37,18 +37,22 @@ export class SchemaService {
       this.converterFactory
         .getConverter(SchemaType.KEY)
         .convertToRecord(kafkaObject[0], topic),
-      kafkaObject.map(k =>
-        this.converterFactory.getConverter(k.name).convertToRecord(k, topic)
+      Promise.all(
+        kafkaObject.map(k => {
+          return this.converterFactory
+            .getConverter(k.name)
+            .convertToRecord(k, topic)
+        })
       )
     ]).then(([key, records]) => {
       return {
         type: kafkaObject[0].name,
-        topic: topic,
+        topic: records[0].topic,
         cacheKey: cacheKey,
         record: {
           key_schema_id: key.schema,
-          value_schema_id: key.schema,
-          records
+          value_schema_id: records[0].schema,
+          records: records.map(r => ({ key: key.value, value: r.value }))
         }
       }
     })

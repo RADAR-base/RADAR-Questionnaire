@@ -25,6 +25,9 @@ export class RemoteConfigServiceMock {
 export class LogServiceMock {
   log() {}
 }
+
+export class ConverterFactoryServiceMock {}
+
 export class ScheduleServiceMock {}
 export class NotificationServiceMock {
   init() {}
@@ -52,3 +55,4 @@ export class WebIntentMock {}
 export class AppServerServiceMock {}
 export class MessageHandlerServiceMock {}
 export class GithubClientMock {}
+export class CacheServiceMock {}

@@ -153,8 +153,8 @@ export class KafkaService {
       this.getKafkaHeaders(DefaultKafkaRequestContentType)
     ])
       .then(([cache, headers]) => {
-        return this.convertCacheToRecords(cache).then(records =>
-          Promise.all(
+        return this.convertCacheToRecords(cache).then(records => {
+          return Promise.all(
             records.map(r =>
               this.sendToKafka(r.type, r.topic, r.record, headers)
                 .then(() => successKeys.push(r.cacheKey))
@@ -167,7 +167,7 @@ export class KafkaService {
                 })
             )
           )
-        )
+        })
       })
       .then(() =>
         this.cache.removeFromCache(successKeys).then(() => {
@@ -206,31 +206,31 @@ export class KafkaService {
   }
 
   sendToKafka(type, topic, record, headers): Promise<any> {
-    const recordVal = record.records[0].value
-    const questionnaireName = recordVal.name
-    const timestamp = recordVal.timeNotification
-      ? recordVal.timeNotification.double
-      : 0
+    const allRecords = record.records
     return this.http
       .post(this.KAFKA_CLIENT_URL + this.URI_topics + topic, record, {
         headers
       })
       .toPromise()
       .then(() =>
-        this.sendDataEvent(
-          DataEventType.SEND_SUCCESS,
-          type,
-          questionnaireName,
-          timestamp
+        allRecords.map(r =>
+          this.sendDataEvent(
+            DataEventType.SEND_SUCCESS,
+            type,
+            r.name ? r.value.name : r.value.questionnaireName,
+            r.time
+          )
         )
       )
       .catch(e => {
-        this.sendDataEvent(
-          DataEventType.SEND_ERROR,
-          type,
-          questionnaireName,
-          timestamp,
-          JSON.stringify(e)
+        allRecords.map(r =>
+          this.sendDataEvent(
+            DataEventType.SEND_ERROR,
+            type,
+            r.name ? r.value.name : r.value.questionnaireName,
+            r.time,
+            JSON.stringify(e)
+          )
         )
         throw e
       })

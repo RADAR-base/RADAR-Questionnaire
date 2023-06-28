@@ -46,14 +46,13 @@ export abstract class ConverterService {
     }
   }
 
-  convertToRecord(cache, topics): Promise<any> {
-    return this.getKafkaTopic(cache, topics).then(topic => {
+  convertToRecord(kafkaValue, topics): Promise<any> {
+    return this.getKafkaTopic(kafkaValue, topics).then(topic => {
       return this.getSchemas(topic).then(valueSchemaMetadata => {
-        const kafkaObject = cache.kafkaObject
         const value = JSON.parse(valueSchemaMetadata.schema)
         const record = {
           schema: valueSchemaMetadata.id,
-          value: this.convertToAvro(value, kafkaObject.value),
+          value: this.convertToAvro(value, kafkaValue),
           topic
         }
         return record

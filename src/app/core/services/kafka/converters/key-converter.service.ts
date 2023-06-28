@@ -37,14 +37,13 @@ export class KeyConverterService extends ConverterService {
     }
   }
 
-  convertToRecord(cache, topics): Promise<any> {
-    return this.getKafkaTopic(cache).then(topic =>
+  convertToRecord(kafkaKey, topics): Promise<any> {
+    return this.getKafkaTopic(kafkaKey).then(topic =>
       this.getSchemas(topic).then(keySchemaMetadata => {
-        const kafkaObject = cache.kafkaObject
         const key = JSON.parse(keySchemaMetadata.schema)
         const record = {
           schema: keySchemaMetadata.id,
-          value: this.convertToAvro(key, kafkaObject.key),
+          value: this.convertToAvro(key, kafkaKey),
           topic
         }
         return record

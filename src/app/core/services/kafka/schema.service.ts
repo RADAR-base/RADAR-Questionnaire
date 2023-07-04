@@ -34,6 +34,7 @@ export class SchemaService {
 
   getKafkaPayload(
     type,
+    kafkaKey,
     kafkaObjects: any[],
     cacheKeys: any[],
     topic
@@ -41,25 +42,23 @@ export class SchemaService {
     return Promise.all([
       this.converterFactory
         .getConverter(SchemaType.KEY)
-        .convertToRecord(kafkaObjects[0].key, topic),
+        .convertToRecord(kafkaKey, topic),
       Promise.all(
         kafkaObjects.map(k => {
           return this.converterFactory
             .getConverter(type)
-            .convertToRecord(k.value, topic)
+            .convertToRecord(k, topic)
         })
       )
-    ]).then(([key, records]) => {
-      return {
-        type: kafkaObjects[0].name,
-        topic: records[0].topic,
-        cacheKey: cacheKeys,
-        record: {
-          key_schema_id: key.schema,
-          value_schema_id: records[0].schema,
-          records: records.map(r => ({ key: key.value, value: r.value }))
-        }
+    ]).then(([key, records]) => ({
+      type: kafkaObjects[0].name,
+      topic: records[0]['topic'],
+      cacheKey: cacheKeys,
+      record: {
+        key_schema_id: key.schema,
+        value_schema_id: records[0]['schema'],
+        records: records.map(r => ({ key: key.value, value: r['value'] }))
       }
-    })
+    }))
   }
 }

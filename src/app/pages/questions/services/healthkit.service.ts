@@ -113,7 +113,7 @@ export class HealthkitService {
   }
 
   processData(answers, timestamps, questions) {
-    // this.logger.log('Answers to process', answers)
+    this.logger.log('Answers to process', answers)
 
     let results = []
     for (const [key, value] of Object.entries<any>(answers)) {
@@ -123,13 +123,12 @@ export class HealthkitService {
           result = {
             startTime: v.startTime,
             endTime: v.endTime,
-            timeReceived: timestamps[questions[0].field_name].startTime,
-            [key]: v.value
+            timeReceived: Date.now(),
+            value: v.value
           }
           results.push(result)
         })
       }
-      console.log(results)
     }
 
     return results

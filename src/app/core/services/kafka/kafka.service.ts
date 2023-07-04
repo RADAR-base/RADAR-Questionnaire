@@ -189,21 +189,42 @@ export class KafkaService {
         const type = v['name']
         if (!groupedCache[type]) groupedCache[type] = []
         groupedCache[type].push({
-          key: k,
-          value: { key, value: v['kafkaObject'].value }
+          key,
+          value: { key: k, value: v['kafkaObject'].value }
         })
       })
       // after grouping similar convert to array of records
+      let allRecords = []
       const records = Object.entries(groupedCache).map(([k, v]: [any, any]) => {
-        return this.schema.getKafkaPayload(
-          k,
-          v.map(v => v.value),
-          v.map(v => v.key),
-          this.topics
-        )
+        const type = k
+        if (type == 'healthkit') {
+          const healthKitData = v[0].value.value
+          const cacheKey = v[0].value.key
+          const hkRecords = Object.entries(healthKitData).map(
+            ([dataType, values]: [string, any[]]) => {
+              return this.schema.getKafkaPayload(
+                type,
+                v[0].key,
+                values,
+                [cacheKey],
+                this.topics
+              )
+            }
+          )
+          return (allRecords = allRecords.concat(hkRecords))
+        } else {
+          return allRecords.push(
+            this.schema.getKafkaPayload(
+              type,
+              v[0].key,
+              v.map(a => a.value.value),
+              v.map(a => a.value.key),
+              this.topics
+            )
+          )
+        }
       })
-
-      return Promise.all(records)
+      return Promise.all(allRecords)
     })
   }
 

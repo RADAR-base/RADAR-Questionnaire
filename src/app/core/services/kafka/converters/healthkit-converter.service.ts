@@ -34,18 +34,17 @@ export class HealthkitConverterService extends ConverterService {
 
   processData(payload) {
     const answers = payload.data.answers
+    let processedData = {}
     Object.entries(answers).forEach(([k, v]) => {
       if (v && v instanceof Array) {
-        const processedData = this.processSingleDatatype(
+        processedData[k] = this.processSingleDatatype(
           k,
           v,
           payload.data.timeCompleted
         )
-        console.log(processedData)
       }
     })
-
-    return {}
+    return processedData
   }
 
   processSingleDatatype(key, data, timeReceived) {
@@ -83,6 +82,7 @@ export class HealthkitConverterService extends ConverterService {
   }
 
   getKafkaTopic(payload, topics): Promise<any> {
-    return Promise.resolve('active_apple_healthkit_steps')
+    const key = payload.key
+    return Promise.resolve('active_apple_healthkit_' + key)
   }
 }

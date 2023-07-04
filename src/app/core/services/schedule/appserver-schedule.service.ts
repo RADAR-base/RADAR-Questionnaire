@@ -102,9 +102,13 @@ export class AppserverScheduleService extends ScheduleService {
       .then(assessment => {
         const newTask = Object.assign(task, {
           reportedCompletion: !!task.completed,
-          nQuestions: assessment.questions.length,
-          warning: this.localization.chooseText(assessment.warn),
-          requiresInClinicCompletion: assessment.requiresInClinicCompletion,
+          nQuestions: assessment ? assessment.questions.length : 1,
+          warning: assessment
+            ? this.localization.chooseText(assessment.warn)
+            : '',
+          requiresInClinicCompletion: assessment
+            ? assessment.requiresInClinicCompletion
+            : false,
           notifications: []
         })
         return newTask

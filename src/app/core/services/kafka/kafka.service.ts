@@ -230,33 +230,44 @@ export class KafkaService {
 
   sendToKafka(type, topic, record, headers): Promise<any> {
     const allRecords = record.records
+    const compressed = pako.gzip(JSON.stringify(record)).buffer
+    return this.postData(
+      compressed,
+      topic,
+      headers.set('Content-Encoding', DefaultCompressedContentEncoding)
+    )
+      .catch(e => {
+        if (e.name == this.HTTP_ERROR) {
+          this.logger.log('Retrying uncompressed..')
+          return this.postData(record, topic, headers)
+        }
+        throw e
+      })
+      .then(() => this.sendSendEvent(allRecords, DataEventType.SEND_SUCCESS))
+      .catch(e => {
+        this.sendSendEvent(allRecords, DataEventType.SEND_ERROR, e)
+        throw e
+      })
+  }
+
+  sendSendEvent(records, eventType, error?) {
+    records.map(r =>
+      this.sendDataEvent(
+        DataEventType.SEND_SUCCESS,
+        eventType,
+        r.name ? r.value.name : r.value.questionnaireName,
+        r.time,
+        error ? JSON.stringify(error) : ''
+      )
+    )
+  }
+
+  postData(data, topic, headers) {
     return this.http
-      .post(this.KAFKA_CLIENT_URL + this.URI_topics + topic, record, {
+      .post(this.KAFKA_CLIENT_URL + this.URI_topics + topic, data, {
         headers
       })
       .toPromise()
-      .then(() =>
-        allRecords.map(r =>
-          this.sendDataEvent(
-            DataEventType.SEND_SUCCESS,
-            type,
-            r.name ? r.value.name : r.value.questionnaireName,
-            r.time
-          )
-        )
-      )
-      .catch(e => {
-        allRecords.map(r =>
-          this.sendDataEvent(
-            DataEventType.SEND_ERROR,
-            type,
-            r.name ? r.value.name : r.value.questionnaireName,
-            r.time,
-            JSON.stringify(e)
-          )
-        )
-        throw e
-      })
   }
 
   removeFromHealthCache(cacheKeys: number[]) {

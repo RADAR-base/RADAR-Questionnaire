@@ -1,7 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
-import { Health } from '@awesome-cordova-plugins/health/ngx'
-import { StorageService } from 'src/app/core/services/storage/storage.service'
-import { StorageKeys } from 'src/app/shared/enums/storage'
 import { Health_Requirement, Question } from 'src/app/shared/models/question'
 
 import { Response } from '../../../../../shared/models/question'

@@ -16,6 +16,7 @@ import { CacheValue, KeyValue } from '../../../shared/models/cache'
 import { KafkaObject, SchemaType } from '../../../shared/models/kafka'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { LogService } from '../misc/log.service'
+import { GlobalStorageService } from '../storage/global-storage.service'
 import { StorageService } from '../storage/storage.service'
 import { TokenService } from '../token/token.service'
 import { AnalyticsService } from '../usage/analytics.service'
@@ -37,7 +38,7 @@ export class KafkaService {
   HTTP_ERROR = 'HttpErrorResponse'
 
   constructor(
-    private storage: StorageService,
+    private storage: GlobalStorageService,
     private cache: CacheService,
     private token: TokenService,
     private schema: SchemaService,
@@ -271,10 +272,10 @@ export class KafkaService {
   }
 
   removeFromHealthCache(cacheKeys: number[]) {
-    if (!cacheKeys.length) return Promise.resolve()
-    return this.storage
-      .removeHealthData(cacheKeys)
-      .then(() => this.setLastUploadDate(Date.now()))
+    // if (!cacheKeys.length) return Promise.resolve()
+    // return this.storage
+    //   .removeHealthData(cacheKeys)
+    //   .then(() => this.setLastUploadDate(Date.now()))
   }
 
   getAccessToken() {
@@ -300,14 +301,6 @@ export class KafkaService {
     return this.storage.set(StorageKeys.CACHE_ANSWERS, cache)
   }
 
-  setHealthCache(cache) {
-    return this.storage.setHealthData(cache)
-  }
-
-  resetHealthCache() {
-    return this.storage.resetHealthData()
-  }
-
   setCacheSending(val: boolean) {
     this.isCacheSending = val
   }
@@ -320,18 +313,15 @@ export class KafkaService {
     return this.storage.set(StorageKeys.HEALTH_LAST_POLL_TIMES, dic)
   }
 
-  getHealthCache() {
-    return this.storage.getHealthData(StorageKeys.HEALTHKIT_CACHE)
-  }
-
   getLastUploadDate() {
     return this.cache.getLastUploadDate()
   }
 
   getHealthCacheSize() {
-    return this.getHealthCache().then(cache =>
-      Object.keys(cache).reduce((s, k) => (k ? s + 1 : s), 0)
-    )
+    return Promise.resolve(0)
+    // return this.getHealthCache().then(cache =>
+    //   Object.keys(cache).reduce((s, k) => (k ? s + 1 : s), 0)
+    // )
   }
 
   getCacheSize() {

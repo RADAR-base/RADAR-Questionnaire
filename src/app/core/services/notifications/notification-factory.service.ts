@@ -5,6 +5,7 @@ import { DefaultNotificationType } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
 import { NotificationMessagingType } from '../../../shared/models/notification-handler'
 import { RemoteConfigService } from '../config/remote-config.service'
+import { GlobalStorageService } from '../storage/global-storage.service'
 import { StorageService } from '../storage/storage.service'
 import { FcmRestNotificationService } from './fcm-rest-notification.service'
 import { LocalNotificationService } from './local-notification.service'
@@ -19,7 +20,7 @@ export class NotificationFactoryService extends NotificationService {
     public localNotificationService: LocalNotificationService,
     private remoteConfig: RemoteConfigService,
     private platform: Platform,
-    private store: StorageService
+    private store: GlobalStorageService
   ) {
     super(store)
   }

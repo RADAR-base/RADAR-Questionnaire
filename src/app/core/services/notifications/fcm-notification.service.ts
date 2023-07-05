@@ -15,6 +15,7 @@ import { getSeconds } from '../../../shared/utilities/time'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { SubjectConfigService } from '../config/subject-config.service'
 import { LogService } from '../misc/log.service'
+import { GlobalStorageService } from '../storage/global-storage.service'
 import { StorageService } from '../storage/storage.service'
 import { NotificationService } from './notification.service'
 
@@ -26,7 +27,7 @@ export abstract class FcmNotificationService extends NotificationService {
   private tokenSubscription: Subscription
 
   constructor(
-    public store: StorageService,
+    public store: GlobalStorageService,
     public config: SubjectConfigService,
     public firebase: FirebaseX,
     public platform: Platform,

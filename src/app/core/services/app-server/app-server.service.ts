@@ -26,7 +26,7 @@ import { RemoteConfigService } from '../config/remote-config.service'
 import { SubjectConfigService } from '../config/subject-config.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
-import { StorageService } from '../storage/storage.service'
+import { GlobalStorageService } from '../storage/global-storage.service'
 import { TokenService } from '../token/token.service'
 
 @Injectable()
@@ -43,7 +43,7 @@ export class AppServerService {
   private tokenSubscription: Subscription = null
 
   constructor(
-    public storage: StorageService,
+    public storage: GlobalStorageService,
     public subjectConfig: SubjectConfigService,
     public logger: LogService,
     public remoteConfig: RemoteConfigService,

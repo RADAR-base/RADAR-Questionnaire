@@ -8,32 +8,21 @@ import { StorageKeys } from '../../../shared/enums/storage'
 import { LogService } from '../misc/log.service'
 
 @Injectable()
-export class StorageService {
+export abstract class StorageService {
   global: { [key: string]: any } = {}
   healthGlobal: { [key: string]: any } = {}
 
-  private readonly keyUpdates: Subject<StorageKeys | null>
+  public readonly keyUpdates: Subject<StorageKeys | null>
 
   constructor(
-    private storage: Storage,
-    private logger: LogService,
-    private healthStorage: Storage,
-    private platform: Platform
+    public storage: Storage,
+    public logger: LogService,
+    public platform: Platform
   ) {
     this.platform.ready().then(() => {
-      this.healthStorage = new Storage({
-        name: '__health_db',
-        storeName: '_data',
-        driverOrder: ['sqlite', 'indexeddb', 'websql', 'localstorage']
-      })
-
-      this.prepare()
-        .then(() => this.logger.log('Global configuration', this.global))
-        .then(() =>
-          this.prepareHealth().then(() =>
-            this.logger.log('Global configuration', this.healthGlobal)
-          )
-        )
+      this.prepare().then(() =>
+        this.logger.log('Global configuration', this.global)
+      )
     })
 
     this.keyUpdates = new Subject<StorageKeys | null>()
@@ -50,32 +39,6 @@ export class StorageService {
       this.keyUpdates.next(key)
       return res
     })
-  }
-
-  resetHealthData(): Promise<any> {
-    this.healthGlobal = {}
-    return this.healthStorage.clear()
-  }
-
-  setHealthData(value: any): Promise<any> {
-    const keys = Object.keys(value)
-    return Promise.all(
-      keys.map(k => {
-        this.healthGlobal[k] = value[k]
-        return this.healthStorage.set(k, value[k])
-      })
-    )
-  }
-
-  removeHealthData(keys: any[]) {
-    return Promise.all(
-      keys.map(k =>
-        this.healthStorage
-          .remove(k)
-          .then(() => delete this.healthGlobal[k])
-          .catch(error => this.handleError(error))
-      )
-    )
   }
 
   push(key: StorageKeys, value: any): Promise<any> {
@@ -99,13 +62,6 @@ export class StorageService {
         this.global[k] = value
         return value
       })
-    }
-  }
-
-  getHealthData(key: StorageKeys): Promise<any> {
-    const k = key.toString()
-    if (this.healthGlobal !== undefined) {
-      return Promise.resolve(this.healthGlobal)
     }
   }
 
@@ -143,25 +99,12 @@ export class StorageService {
       .then(() => 'Store set')
   }
 
-  prepareHealth() {
-    return this.healthStorage
-      .keys()
-      .then(keys =>
-        Promise.all(
-          keys.map(k =>
-            this.healthStorage.get(k).then(v => (this.healthGlobal[k] = v))
-          )
-        )
-      )
-      .then(() => 'Health Store set')
-  }
-
   clear() {
     this.global = {}
     return this.storage.clear().then(() => this.keyUpdates.next(null))
   }
 
-  private handleError(error: any) {
+  handleError(error: any) {
     const errMsg = error.message
       ? error.message
       : error.status

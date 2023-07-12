@@ -5,6 +5,7 @@ import {
   AppVersionMock,
   StorageServiceMock
 } from '../../../shared/testing/mock-services'
+import { GlobalStorageService } from '../storage/global-storage.service'
 import { StorageService } from '../storage/storage.service'
 import { AppConfigService } from './app-config.service'
 
@@ -16,7 +17,7 @@ describe('AppConfigService', () => {
       providers: [
         AppConfigService,
         { provide: AppVersion, useClass: AppVersionMock },
-        { provide: StorageService, useClass: StorageServiceMock }
+        { provide: GlobalStorageService, useClass: StorageServiceMock }
       ]
     })
   )

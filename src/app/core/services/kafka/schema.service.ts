@@ -37,28 +37,26 @@ export class SchemaService {
     kafkaKey,
     kafkaObjects: any[],
     cacheKeys: any[],
-    topic
+    topics
   ): Promise<any> {
-    return Promise.all([
-      this.converterFactory
-        .getConverter(SchemaType.KEY)
-        .convertToRecord(kafkaKey, topic),
-      Promise.all(
-        kafkaObjects.map(k => {
-          return this.converterFactory
-            .getConverter(type)
-            .convertToRecord(k, topic)
-        })
-      )
-    ]).then(([key, records]) => ({
-      type: kafkaObjects[0].name,
-      topic: records[0]['topic'],
-      cacheKey: cacheKeys,
-      record: {
-        key_schema_id: key.schema,
-        value_schema_id: records[0]['schema'],
-        records: records.map(r => ({ key: key.value, value: r['value'] }))
-      }
-    }))
+    const valueConverter = this.converterFactory.getConverter(type)
+    return valueConverter.getKafkaTopic(kafkaObjects[0], topics).then(topic =>
+      valueConverter.getSchemas(topic).then(schema => {
+        return Promise.all([
+          this.converterFactory
+            .getConverter(SchemaType.KEY)
+            .convertToRecord(kafkaKey, topic, ''),
+          valueConverter.batchConvertToRecord(kafkaObjects, topic, schema)
+        ]).then(([key, records]) => ({
+          topic,
+          cacheKey: cacheKeys,
+          record: {
+            key_schema_id: key.schema,
+            value_schema_id: records[0]['schema'],
+            records: records.map(r => ({ key: key.value, value: r['value'] }))
+          }
+        }))
+      })
+    )
   }
 }

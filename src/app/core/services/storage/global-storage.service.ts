@@ -13,5 +13,10 @@ export class GlobalStorageService extends StorageService {
     public platform: Platform
   ) {
     super(storage, logger, platform)
+    this.platform.ready().then(() => {
+      this.prepare().then(() =>
+        this.logger.log('Global configuration', this.global)
+      )
+    })
   }
 }

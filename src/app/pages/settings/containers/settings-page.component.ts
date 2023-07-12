@@ -274,8 +274,7 @@ export class SettingsPageComponent {
   async sendCachedData() {
     const loader = await this.loadCtrl.create({
       message: this.localization.translateKey(LocKeys.SETTINGS_WAIT_ALERT),
-      cssClass: 'custom-loading',
-      duration: 15000
+      cssClass: 'custom-loading'
     })
     loader.present()
     return this.settingsService.sendCachedData().then(async res => {

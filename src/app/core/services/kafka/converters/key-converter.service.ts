@@ -37,7 +37,7 @@ export class KeyConverterService extends ConverterService {
     }
   }
 
-  convertToRecord(kafkaKey, topics): Promise<any> {
+  convertToRecord(kafkaKey, topics, schema): any {
     return this.getKafkaTopic(kafkaKey).then(topic =>
       this.getSchemas(topic).then(keySchemaMetadata => {
         const key = JSON.parse(keySchemaMetadata.schema)

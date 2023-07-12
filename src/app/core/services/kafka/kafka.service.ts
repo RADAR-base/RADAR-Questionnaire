@@ -141,26 +141,28 @@ export class KafkaService {
       kafkaObject.value.name,
       kafkaObject.value.timestamp
     )
-    return this.cache.storeInCache(kafkaObject, cacheValue)
+    return this.cache.storeInCache(type, kafkaObject, cacheValue)
   }
 
   sendAllFromCache(): Promise<any> {
-    const successKeys = []
-    const failedKeys = []
+    let successKeys = []
+    let failedKeys = []
     if (this.isCacheSending) return Promise.resolve([])
     this.cache.setCacheSending(true)
     return Promise.all([
       this.cache.getCache(),
+      this.cache.getHealthCache(),
       this.getKafkaHeaders(DefaultKafkaRequestContentType)
     ])
-      .then(([cache, headers]) => {
-        return this.convertCacheToRecords(cache).then(records => {
+      .then(([cache, healthCache, headers]) => {
+        const completeCache = { ...cache, ...healthCache }
+        return this.convertCacheToRecords(completeCache).then(records => {
           return Promise.all(
             records.map(r =>
-              this.sendToKafka(r.type, r.topic, r.record, headers)
-                .then(() => successKeys.push(r.cacheKey))
+              this.sendToKafka(r.topic, r.record, headers)
+                .then(() => (successKeys = successKeys.concat(r.cacheKey)))
                 .catch(e => {
-                  failedKeys.push(r.cacheKey)
+                  failedKeys = failedKeys.concat(r.cacheKey)
                   return this.logger.error(
                     'Failed to send data from cache to kafka',
                     e
@@ -171,10 +173,13 @@ export class KafkaService {
         })
       })
       .then(() =>
-        this.cache.removeFromCache(successKeys).then(() => {
-          this.cache.setCacheSending(false)
-          return { successKeys, failedKeys }
-        })
+        this.cache
+          .removeFromCache(successKeys)
+          .then(() => this.cache.removeFromHealthCache(successKeys))
+          .then(() => {
+            this.cache.setCacheSending(false)
+            return { successKeys, failedKeys }
+          })
       )
       .catch(e => {
         this.cache.setCacheSending(false)
@@ -186,50 +191,34 @@ export class KafkaService {
     // what we can do here is group similar
     return this.schema.getKafkaObjectKey().then(key => {
       const groupedCache = {}
-      Object.entries(cache).map(([k, v]) => {
-        const type = v['name']
+      Object.entries(cache).map(([k, v]: [any, CacheValue]) => {
+        if (!v || !v.kafkaObject) return
+        const type = v.name
         if (!groupedCache[type]) groupedCache[type] = []
         groupedCache[type].push({
           key,
-          value: { key: k, value: v['kafkaObject'].value }
+          value: { key: k, value: v.kafkaObject.value }
         })
       })
       // after grouping similar convert to array of records
       let allRecords = []
       const records = Object.entries(groupedCache).map(([k, v]: [any, any]) => {
         const type = k
-        if (type == 'healthkit') {
-          const healthKitData = v[0].value.value
-          const cacheKey = v[0].value.key
-          const hkRecords = Object.entries(healthKitData).map(
-            ([dataType, values]: [string, any[]]) => {
-              return this.schema.getKafkaPayload(
-                type,
-                v[0].key,
-                values,
-                [cacheKey],
-                this.topics
-              )
-            }
+        return allRecords.push(
+          this.schema.getKafkaPayload(
+            type,
+            v[0].key,
+            v.map(a => a.value.value),
+            v.map(a => a.value.key),
+            this.topics
           )
-          return (allRecords = allRecords.concat(hkRecords))
-        } else {
-          return allRecords.push(
-            this.schema.getKafkaPayload(
-              type,
-              v[0].key,
-              v.map(a => a.value.value),
-              v.map(a => a.value.key),
-              this.topics
-            )
-          )
-        }
+        )
       })
       return Promise.all(allRecords)
     })
   }
 
-  sendToKafka(type, topic, record, headers): Promise<any> {
+  sendToKafka(topic, record, headers): Promise<any> {
     const allRecords = record.records
     const compressed = pako.gzip(JSON.stringify(record)).buffer
     return this.postData(
@@ -318,10 +307,9 @@ export class KafkaService {
   }
 
   getHealthCacheSize() {
-    return Promise.resolve(0)
-    // return this.getHealthCache().then(cache =>
-    //   Object.keys(cache).reduce((s, k) => (k ? s + 1 : s), 0)
-    // )
+    return this.cache
+      .getHealthCache()
+      .then(cache => Object.keys(cache).reduce((s, k) => (k ? s + 1 : s), 0))
   }
 
   getCacheSize() {

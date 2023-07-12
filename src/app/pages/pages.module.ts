@@ -70,6 +70,7 @@ import { SplashModule } from './splash/splash.module'
     ScheduleGeneratorService,
     GlobalStorageService,
     HealthStorageService,
+    { provide: StorageService, useClass: GlobalStorageService },
     TranslatePipe,
     UsageService,
     SchemaService,

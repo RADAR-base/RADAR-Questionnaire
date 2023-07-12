@@ -19,12 +19,6 @@ export abstract class StorageService {
     public logger: LogService,
     public platform: Platform
   ) {
-    this.platform.ready().then(() => {
-      this.prepare().then(() =>
-        this.logger.log('Global configuration', this.global)
-      )
-    })
-
     this.keyUpdates = new Subject<StorageKeys | null>()
   }
 

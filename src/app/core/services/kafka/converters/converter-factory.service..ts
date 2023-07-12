@@ -23,7 +23,7 @@ export class ConverterFactoryService {
   init() {}
 
   getConverter(type) {
-    switch (type) {
+    switch (this.classify(type)) {
       case SchemaType.HEALTHKIT:
         return this.healthkitConverter
       case SchemaType.ASSESSMENT:
@@ -39,5 +39,10 @@ export class ConverterFactoryService {
       default:
         return this.assessmentConverter
     }
+  }
+
+  classify(type) {
+    if (type.includes(SchemaType.HEALTHKIT)) return SchemaType.HEALTHKIT
+    else return type
   }
 }

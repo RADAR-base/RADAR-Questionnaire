@@ -26,13 +26,13 @@ export class HealthStorageService extends StorageService {
       })
 
       this.prepare().then(() =>
-        this.logger.log('Global configuration', this.global)
+        this.logger.log('Health configuration', this.global)
       )
     })
   }
 
   getStorageState() {
-    return this.storage.ready()
+    return this.healthStorage.ready()
   }
 
   set(key: StorageKeys, value: any): Promise<any> {
@@ -72,7 +72,7 @@ export class HealthStorageService extends StorageService {
   }
 
   getAllKeys(): Promise<string[]> {
-    return this.storage.keys()
+    return this.healthStorage.keys()
   }
 
   prepare() {
@@ -90,6 +90,6 @@ export class HealthStorageService extends StorageService {
 
   clear() {
     this.global = {}
-    return this.storage.clear().then(() => this.keyUpdates.next(null))
+    return this.healthStorage.clear().then(() => this.keyUpdates.next(null))
   }
 }

@@ -46,22 +46,31 @@ export abstract class ConverterService {
     }
   }
 
-  convertToRecord(kafkaValue, topics): Promise<any> {
-    return this.getKafkaTopic(kafkaValue, topics).then(topic => {
-      return this.getSchemas(topic).then(valueSchemaMetadata => {
-        const value = JSON.parse(valueSchemaMetadata.schema)
-        const record = {
-          schema: valueSchemaMetadata.id,
-          value: this.convertToAvro(value, kafkaValue),
-          topic
-        }
-        return record
-      })
-    })
+  convertToRecord(kafkaValue, topic, valueSchemaMetadata) {
+    const value = JSON.parse(valueSchemaMetadata.schema)
+    const record = {
+      schema: valueSchemaMetadata.id,
+      value: this.convertToAvro(value, kafkaValue),
+      topic
+    }
+    return record
+  }
+
+  batchConvertToRecord(kafkaValues, topic, valueSchemaMetadata) {
+    const value = JSON.parse(valueSchemaMetadata.schema)
+    return this.batchConvertToAvro(value, kafkaValues).map(v => ({
+      value: v,
+      schema: valueSchemaMetadata.id
+    }))
   }
 
   convertToAvro(schema, value): any {
     return AvroSchema.parse(schema).clone(value, { wrapUnions: true })
+  }
+
+  batchConvertToAvro(schema, values): any {
+    const parsedSchema = AvroSchema.parse(schema)
+    return values.map(v => parsedSchema.clone(v, { wrapUnions: true }))
   }
 
   getUniqueTimeNow() {

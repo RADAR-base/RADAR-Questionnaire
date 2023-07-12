@@ -150,6 +150,7 @@ import { Utility } from './shared/utilities/util'
     ScheduleGeneratorService,
     GlobalStorageService,
     HealthStorageService,
+    { provide: StorageService, useClass: GlobalStorageService },
     TranslatePipe,
     UsageService,
     SchemaService,

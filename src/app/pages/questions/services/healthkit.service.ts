@@ -84,7 +84,7 @@ export class HealthkitService {
         startDate: queryStartTime,
         endDate: queryEndTime, // now
         dataType: dataType,
-        limit: 1000
+        limit: 5000
       })
       .then(res => {
         console.log('Field type: ' + dataType)

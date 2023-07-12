@@ -231,22 +231,20 @@ export class KafkaService {
         }
         throw e
       })
-      .then(() => this.sendSendEvent(allRecords, DataEventType.SEND_SUCCESS))
+      .then(() => this.sendSendEvent(allRecords[0], DataEventType.SEND_SUCCESS))
       .catch(e => {
-        this.sendSendEvent(allRecords, DataEventType.SEND_ERROR, e)
+        this.sendSendEvent(allRecords[0], DataEventType.SEND_ERROR, e)
         throw e
       })
   }
 
-  sendSendEvent(records, eventType, error?) {
-    records.map(r =>
-      this.sendDataEvent(
-        DataEventType.SEND_SUCCESS,
-        eventType,
-        r.name ? r.value.name : r.value.questionnaireName,
-        r.time,
-        error ? JSON.stringify(error) : ''
-      )
+  sendSendEvent(record, eventType, error?) {
+    this.sendDataEvent(
+      DataEventType.SEND_SUCCESS,
+      eventType,
+      record.name ? record.value.name : record.value.questionnaireName,
+      record.time,
+      error ? JSON.stringify(error) : ''
     )
   }
 
@@ -305,9 +303,7 @@ export class KafkaService {
   }
 
   getHealthCacheSize() {
-    return this.cache
-      .getHealthCache()
-      .then(cache => Object.keys(cache).reduce((s, k) => (k ? s + 1 : s), 0))
+    return this.cache.getHealthCacheSize()
   }
 
   getCacheSize() {

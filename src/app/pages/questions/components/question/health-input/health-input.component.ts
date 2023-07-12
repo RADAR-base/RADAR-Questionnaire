@@ -33,16 +33,15 @@ export class HealthInputComponent implements OnInit {
     let healthDataType = this.health_question.field_name
     if (this.health_question.field_name.includes('blood_pressure'))
       healthDataType = 'blood_pressure'
-
     this.healthKitService.checkHealthkitSupported().then(res => {
       this.isSupported = res
       if (this.isSupported) {
-        this.health_display = 'No data for today'
         this.health_display_time = new Date().toLocaleDateString()
-
-        this.healthKitService
-          .loadData(healthDataType)
-          .then(data => this.valueChange.emit(data))
+        this.health_display = 'Loading..'
+        this.healthKitService.loadData(healthDataType).then(data => {
+          this.health_display = data.length + ' records'
+          return this.valueChange.emit(data)
+        })
       }
     })
   }

@@ -63,12 +63,9 @@ export class HealthStorageService extends StorageService {
   remove(keys: any) {
     return Promise.all(
       keys.map(k =>
-        this.healthStorage
-          .remove(k)
-          .then(() => delete this.global[k])
-          .catch(error => this.handleError(error))
+        this.healthStorage.remove(k).catch(error => this.handleError(error))
       )
-    )
+    ).then(() => keys.map(k => delete this.global[k]))
   }
 
   getAllKeys(): Promise<string[]> {

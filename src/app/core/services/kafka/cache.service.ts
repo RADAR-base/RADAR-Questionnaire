@@ -28,6 +28,7 @@ import { SchemaService } from './schema.service'
 @Injectable()
 export class CacheService {
   URI_topics: string = '/topics/'
+  HEALTH_CACHE_LIMIT = 10000
 
   private readonly KAFKA_STORE = {
     LAST_UPLOAD_DATE: StorageKeys.LAST_UPLOAD_DATE,
@@ -106,7 +107,14 @@ export class CacheService {
   }
 
   getHealthCache() {
-    return this.healthStore.get(this.KAFKA_STORE.CACHE_ANSWERS)
+    return this.healthStore.get(this.KAFKA_STORE.CACHE_ANSWERS).then(data => {
+      return Object.keys(data)
+        .slice(0, this.HEALTH_CACHE_LIMIT)
+        .reduce((result, key) => {
+          result[key] = data[key]
+          return result
+        }, {})
+    })
   }
 
   setCache(cache) {
@@ -127,6 +135,12 @@ export class CacheService {
 
   getLastUploadDate() {
     return this.storage.get(this.KAFKA_STORE.LAST_UPLOAD_DATE)
+  }
+
+  getHealthCacheSize() {
+    return this.healthStore
+      .get(this.KAFKA_STORE.CACHE_ANSWERS)
+      .then(cache => Object.keys(cache).reduce((s, k) => (k ? s + 1 : s), 0))
   }
 
   getCacheSize() {

@@ -19,7 +19,7 @@ export class FirebaseAnalyticsService extends AnalyticsService {
   }
 
   logEvent(event: string, params: { [key: string]: string }): Promise<any> {
-    this.logger.log('Firebase Event', event)
+    // this.logger.log('Firebase Event', event)
     if (!this.platform.is('cordova'))
       return Promise.resolve('Could not load firebase')
 

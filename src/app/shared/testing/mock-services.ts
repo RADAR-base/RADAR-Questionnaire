@@ -56,3 +56,4 @@ export class AppServerServiceMock {}
 export class MessageHandlerServiceMock {}
 export class GithubClientMock {}
 export class CacheServiceMock {}
+export class HealthkitServiceMock {}

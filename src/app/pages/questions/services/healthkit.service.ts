@@ -40,10 +40,19 @@ export class HealthkitService {
   }
 
   initLastPollTimes() {
-    const dic = this.storage.get(StorageKeys.HEALTH_LAST_POLL_TIMES)
-    if (!dic) {
-      this.storage.set(StorageKeys.HEALTH_LAST_POLL_TIMES, {})
-    }
+    return this.getLastPollTimes().then(dic => {
+      if (!dic) {
+        return this.setLastPollTimes({})
+      }
+    })
+  }
+
+  getLastPollTimes() {
+    return this.storage.get(StorageKeys.HEALTH_LAST_POLL_TIMES)
+  }
+
+  setLastPollTimes(value) {
+    this.storage.set(StorageKeys.HEALTH_LAST_POLL_TIMES, value)
   }
 
   checkHealthkitSupported() {
@@ -51,8 +60,9 @@ export class HealthkitService {
   }
 
   loadData(healthDataType) {
-    return this.storage.get(StorageKeys.HEALTH_LAST_POLL_TIMES).then(dic => {
-      const lastPollTime = new Date(dic[healthDataType])
+    return this.getLastPollTimes().then(dic => {
+      let lastPollTime = this.MIN_POLL_TIMESTAMP
+      if (healthDataType in dic) lastPollTime = dic[healthDataType]
       return this.health
         .requestAuthorization([
           {
@@ -60,13 +70,13 @@ export class HealthkitService {
           }
         ])
         .then(() => {
-          return this.query(
-            lastPollTime ? lastPollTime : this.MIN_POLL_TIMESTAMP,
-            new Date(),
-            healthDataType
-          ).then(res => {
-            dic[healthDataType] = new Date().toLocaleDateString()
-            this.storage.set(StorageKeys.HEALTH_LAST_POLL_TIMES, dic)
+          const endDate = new Date()
+          return this.query(lastPollTime, endDate, healthDataType).then(res => {
+            if (res.length) {
+              const lastDataDate = new Date(res[res.length - 1].endDate)
+              dic[healthDataType] = lastDataDate
+              this.setLastPollTimes(dic)
+            }
             return res
           })
         })
@@ -95,8 +105,10 @@ export class HealthkitService {
       startTime = endTime
       endTime = endTime + getMilliseconds({ hours: 1 })
     }
-    console.log('Field type: ' + dataType)
-    console.log(completeData)
     return completeData
+  }
+
+  reset() {
+    return this.setLastPollTimes({})
   }
 }

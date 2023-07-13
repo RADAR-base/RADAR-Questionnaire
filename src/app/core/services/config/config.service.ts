@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core'
 import { compare } from 'compare-versions'
+import { HealthkitService } from 'src/app/pages/questions/services/healthkit.service'
 
 import {
   DefaultAppVersion,
@@ -46,7 +47,8 @@ export class ConfigService {
     private analytics: AnalyticsService,
     private logger: LogService,
     private remoteConfig: RemoteConfigService,
-    private messageHandlerService: MessageHandlerService
+    private messageHandlerService: MessageHandlerService,
+    private healthKitService: HealthkitService
   ) {
     this.notifications.init()
   }
@@ -300,7 +302,8 @@ export class ConfigService {
       this.questionnaire.reset(),
       this.schedule.reset(),
       this.notifications.reset(),
-      this.localization.init()
+      this.localization.init(),
+      this.healthKitService.reset()
     ])
   }
 

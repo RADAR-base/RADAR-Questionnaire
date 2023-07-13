@@ -231,14 +231,14 @@ export class KafkaService {
         }
         throw e
       })
-      .then(() => this.sendSendEvent(allRecords[0], DataEventType.SEND_SUCCESS))
+      .then(() => this.sendEvent(allRecords[0], DataEventType.SEND_SUCCESS))
       .catch(e => {
-        this.sendSendEvent(allRecords[0], DataEventType.SEND_ERROR, e)
+        this.sendEvent(allRecords[0], DataEventType.SEND_ERROR, e)
         throw e
       })
   }
 
-  sendSendEvent(record, eventType, error?) {
+  sendEvent(record, eventType, error?) {
     this.sendDataEvent(
       DataEventType.SEND_SUCCESS,
       eventType,

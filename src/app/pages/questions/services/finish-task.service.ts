@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core'
-import { HealthkitStringDataType } from 'src/app/shared/models/health'
+import {
+  HealthKitDataTypeKey,
+  HealthkitStringDataType
+} from 'src/app/shared/models/health'
 
 import { AppConfigService } from '../../../core/services/config/app-config.service'
 import { ConfigService } from '../../../core/services/config/config.service'
@@ -109,7 +112,7 @@ export class FinishTaskService {
           Object.assign(
             {},
             {
-              startTime: new Date(v.startDate).getTime(),
+              time: new Date(v.startDate).getTime(),
               endTime: new Date(v.endDate).getTime(),
               timeReceived: Date.now(),
               sourceId: v.sourceBundleId,
@@ -130,10 +133,14 @@ export class FinishTaskService {
     return results
   }
 
-  getDataTypeFromKey(key: string) {
-    if (key in Object.values(HealthkitStringDataType)) {
-      return 'stringValue'
-    } else return 'floatValue'
+  getDataTypeFromKey(key) {
+    if (
+      Object.values(HealthkitStringDataType).includes(
+        key as HealthkitStringDataType
+      )
+    ) {
+      return HealthKitDataTypeKey.STRING
+    } else return HealthKitDataTypeKey.FLOAT
   }
 
   processQuestionnaireData(answers, timestamps, questions) {

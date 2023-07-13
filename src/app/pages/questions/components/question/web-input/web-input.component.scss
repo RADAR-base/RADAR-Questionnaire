@@ -7,6 +7,11 @@
   overflow: scroll;
 }
 
+ion-label {
+  margin-left: 4px;
+  font-size: 12px;
+}
+
 ion-content {
   width: 75vw;
   --background: transparent;
@@ -27,11 +32,6 @@ ion-content {
 
 .info-heading {
   opacity: 0.6;
-}
-
-.info-content {
-  margin-bottom: 48%;
-  overflow: scroll;
 }
 
 .image {

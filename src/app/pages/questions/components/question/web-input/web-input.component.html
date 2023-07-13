@@ -1,9 +1,11 @@
 <ion-content class="content" #content [scrollY]="true">
   <div class="items">
+    <ion-label *ngIf="!inputValid">Please enter a valid NHS number.</ion-label>
     <ion-item color="none" class="input">
       <ion-input
         type="text"
         enterkeyhint="next"
+        maxlength="15"
         placeholder="Enter NHS number"
         [(ngModel)]="textValue"
         (ionChange)="emitAnswer('')"

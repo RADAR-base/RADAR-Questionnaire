@@ -53,8 +53,8 @@ export class HealthkitConverterService extends ConverterService {
       Object.assign(
         {},
         {
-          time: new Date(d.startDate).getTime(),
-          endTime: new Date(d.endDate).getTime(),
+          time: getSeconds({ milliseconds: new Date(d.startDate).getTime() }),
+          endTime: getSeconds({ milliseconds: new Date(d.endDate).getTime() }),
           timeReceived: timeReceived,
           sourceId: d.sourceBundleId,
           sourceName: d.sourceName,

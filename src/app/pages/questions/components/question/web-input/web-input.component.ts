@@ -13,7 +13,6 @@ import {
 } from '@awesome-cordova-plugins/in-app-browser/ngx'
 import { Keyboard } from '@ionic-native/keyboard/ngx'
 import { KeyboardEventType } from 'src/app/shared/enums/events'
-import { isValidNHSId } from 'src/app/shared/utilities/form-validators'
 
 @Component({
   selector: 'web-input',
@@ -29,10 +28,13 @@ export class WebInputComponent implements OnInit {
   text: string
   @Input()
   currentlyShown: boolean
+  @Input()
+  url: string
+  @Input()
+  validator
 
   textValue = ''
   inputValid = true
-  NHS_URL = 'https://www.nhs.uk/nhs-services/online-services/find-nhs-number/'
 
   browserOptions: InAppBrowserOptions = {
     location: 'yes',
@@ -50,10 +52,10 @@ export class WebInputComponent implements OnInit {
   ngOnInit() {}
 
   emitAnswer(value) {
-    const cleanedValue = value.replace(/\s/g, '')
-    const valid = isValidNHSId(cleanedValue)
+    const valid = this.validator(this.textValue)
     if (valid) {
       this.valueChange.emit(this.textValue)
+      this.inputValid = true
     } else this.inputValid = false
   }
 
@@ -65,7 +67,7 @@ export class WebInputComponent implements OnInit {
   }
 
   openUrl() {
-    this.openWithInAppBrowser(this.NHS_URL)
+    this.openWithInAppBrowser(this.url)
   }
 
   openWithInAppBrowser(url: string) {

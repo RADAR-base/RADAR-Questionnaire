@@ -7,17 +7,13 @@ export function isValidURL(URL: string) {
 }
 
 export function isValidNHSId(nhsId: string) {
-  if (nhsId.length !== 10) {
-    return false
-  }
-  const checksum = this.calculateNHSChecksum(nhsId)
+  const checksum = calculateNHSChecksum(nhsId)
   const lastDigit: number = parseInt(nhsId[9], 10)
   return checksum === lastDigit
 }
 
 export function calculateNHSChecksum(nhsId: string): number {
   nhsId = nhsId.replace(/\s/g, '') // Remove any spaces
-
   if (nhsId.length !== 10) {
     throw new Error('Invalid NHS ID length. Expected length is 10.')
   }
@@ -25,6 +21,7 @@ export function calculateNHSChecksum(nhsId: string): number {
   const total: number = nhsId
     .split('')
     .map((digit, index) => parseInt(digit, 10) * weights[index])
+    .slice(0, 9)
     .reduce((acc, curr) => acc + curr, 0)
   const checksum: number = (11 - (total % 11)) % 11
   return checksum

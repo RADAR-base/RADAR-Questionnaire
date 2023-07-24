@@ -15,6 +15,11 @@ const routes: Routes = [
       )
   },
   {
+    path: 'on-demand',
+    loadChildren: () =>
+      import('./pages/on-demand/on-demand.module').then(m => m.OnDemandModule)
+  },
+  {
     path: 'settings',
     loadChildren: () =>
       import('./pages/settings/settings.module').then(m => m.SettingsModule)

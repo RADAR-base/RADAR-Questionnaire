@@ -37,7 +37,7 @@ export class WebInputComponent implements OnInit {
   inputValid = true
 
   browserOptions: InAppBrowserOptions = {
-    location: 'yes',
+    location: 'no',
     hidenavigationbuttons: 'yes',
     hideurlbar: 'yes',
     toolbarcolor: '#6d9aa5',

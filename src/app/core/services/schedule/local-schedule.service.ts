@@ -8,6 +8,7 @@ import {
   setDateTimeToMidnightEpoch
 } from '../../../shared/utilities/time'
 import { LogService } from '../misc/log.service'
+import { GlobalStorageService } from '../storage/global-storage.service'
 import { StorageService } from '../storage/storage.service'
 import { ScheduleGeneratorService } from './schedule-generator.service'
 import { ScheduleService } from './schedule.service'
@@ -15,7 +16,7 @@ import { ScheduleService } from './schedule.service'
 @Injectable()
 export class LocalScheduleService extends ScheduleService {
   constructor(
-    private store: StorageService,
+    private store: GlobalStorageService,
     logger: LogService,
     private scheduleGenerator: ScheduleGeneratorService
   ) {

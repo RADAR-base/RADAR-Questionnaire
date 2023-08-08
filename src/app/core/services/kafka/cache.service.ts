@@ -1,0 +1,170 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { Injectable } from '@angular/core'
+
+import {
+  DefaultClientAcceptType,
+  DefaultKafkaRequestContentType,
+  DefaultKafkaURI
+} from '../../../../assets/data/defaultConfig'
+import { ConfigKeys } from '../../../shared/enums/config'
+import { DataEventType } from '../../../shared/enums/events'
+import { StorageKeys } from '../../../shared/enums/storage'
+import { CacheValue } from '../../../shared/models/cache'
+import {
+  KafkaObject,
+  KeyExport,
+  SchemaType
+} from '../../../shared/models/kafka'
+import { RemoteConfigService } from '../config/remote-config.service'
+import { SubjectConfigService } from '../config/subject-config.service'
+import { LogService } from '../misc/log.service'
+import { GlobalStorageService } from '../storage/global-storage.service'
+import { HealthStorageService } from '../storage/health-storage.service'
+import { StorageService } from '../storage/storage.service'
+import { TokenService } from '../token/token.service'
+import { AnalyticsService } from '../usage/analytics.service'
+import { SchemaService } from './schema.service'
+
+@Injectable()
+export class CacheService {
+  URI_topics: string = '/topics/'
+  HEALTH_CACHE_LIMIT = 10000
+
+  private readonly KAFKA_STORE = {
+    LAST_UPLOAD_DATE: StorageKeys.LAST_UPLOAD_DATE,
+    CACHE_ANSWERS: StorageKeys.CACHE_ANSWERS
+  }
+
+  private isCacheSending: boolean
+
+  constructor(
+    private storage: GlobalStorageService,
+    private healthStore: HealthStorageService,
+    private analytics: AnalyticsService,
+    private logger: LogService
+  ) {}
+
+  init() {
+    return Promise.all([this.setCache({}), this.setHealthCache({})])
+  }
+
+  storeInCache(type, kafkaObject: KafkaObject, cacheValue: any) {
+    if (type == SchemaType.HEALTHKIT) {
+      return this.getHealthCache().then(cache => {
+        const data = Object.entries(cacheValue.kafkaObject.value)
+        cache = cache ? cache : {}
+        data.map(([key, values]: [any, any[]]) => {
+          values.map(v => {
+            const cacheKey = v['time'] + Math.random()
+            cache[cacheKey] = {
+              avsc: 'questionnaire',
+              name: 'healthkit_' + key,
+              kafkaObject: { value: v }
+            }
+          })
+        })
+        return this.setHealthCache(cache)
+      })
+    } else {
+      return this.getCache().then(cache => {
+        this.logger.log('KAFKA-SERVICE: Caching answers.')
+        cache[kafkaObject.value.time] = cacheValue
+        this.sendDataEvent(DataEventType.CACHED, cacheValue)
+        return this.setCache(cache)
+      })
+    }
+  }
+
+  removeFromCache(cacheKeys: number[]) {
+    if (!cacheKeys.length) return Promise.resolve()
+    return this.getCache().then(cache => {
+      if (cache) {
+        cacheKeys.map(cacheKey => {
+          if (cache[cacheKey]) {
+            this.sendDataEvent(
+              DataEventType.REMOVED_FROM_CACHE,
+              cache[cacheKey]
+            )
+            this.logger.log('Deleting ' + cacheKey)
+            delete cache[cacheKey]
+          }
+        })
+        this.setLastUploadDate(Date.now())
+        return this.setCache(cache)
+      }
+    })
+  }
+
+  removeFromHealthCache(cacheKeys: number[]) {
+    if (!cacheKeys.length) return Promise.resolve()
+    return this.healthStore
+      .remove(cacheKeys)
+      .then(() => this.setLastUploadDate(Date.now()))
+  }
+
+  setHealthCache(cache) {
+    return this.healthStore.set(StorageKeys.CACHE_ANSWERS, cache)
+  }
+
+  getHealthCache() {
+    return this.healthStore.get(this.KAFKA_STORE.CACHE_ANSWERS).then(data => {
+      return Object.keys(data)
+        .slice(0, this.HEALTH_CACHE_LIMIT)
+        .reduce((result, key) => {
+          result[key] = data[key]
+          return result
+        }, {})
+    })
+  }
+
+  setCache(cache) {
+    return this.storage.set(this.KAFKA_STORE.CACHE_ANSWERS, cache)
+  }
+
+  setCacheSending(val: boolean) {
+    this.isCacheSending = val
+  }
+
+  setLastUploadDate(date) {
+    return this.storage.set(this.KAFKA_STORE.LAST_UPLOAD_DATE, date)
+  }
+
+  getCache() {
+    return this.storage.get(this.KAFKA_STORE.CACHE_ANSWERS)
+  }
+
+  getLastUploadDate() {
+    return this.storage.get(this.KAFKA_STORE.LAST_UPLOAD_DATE)
+  }
+
+  getHealthCacheSize() {
+    return this.healthStore
+      .get(this.KAFKA_STORE.CACHE_ANSWERS)
+      .then(cache => Object.keys(cache).reduce((s, k) => (k ? s + 1 : s), 0))
+  }
+
+  getCacheSize() {
+    return this.storage
+      .get(this.KAFKA_STORE.CACHE_ANSWERS)
+      .then(cache => Object.keys(cache).reduce((s, k) => (k ? s + 1 : s), 0))
+  }
+
+  sendDataEvent(type, cacheValue: CacheValue, error?) {
+    const value = cacheValue.kafkaObject.value
+    this.analytics.logEvent(type, {
+      name: cacheValue.repository ? SchemaType.ASSESSMENT : cacheValue.name,
+      timestamp: String(value.time),
+      questionnaire_name: value.name,
+      questionnaire_timestamp: String(value.timeNotification),
+      error: JSON.stringify(error)
+    })
+  }
+
+  reset() {
+    return Promise.all([
+      this.setCache({}),
+      this.healthStore.clear(),
+      this.setLastUploadDate(null)
+    ])
+  }
+}

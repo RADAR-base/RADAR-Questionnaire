@@ -31,6 +31,7 @@ import { SubjectConfigService } from '../config/subject-config.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
 import { ScheduleService } from '../schedule/schedule.service'
+import { GlobalStorageService } from '../storage/global-storage.service'
 import { StorageService } from '../storage/storage.service'
 import { FcmNotificationService } from './fcm-notification.service'
 import { NotificationGeneratorService } from './notification-generator.service'
@@ -45,7 +46,7 @@ export class FcmRestNotificationService extends FcmNotificationService {
 
   constructor(
     public notifications: NotificationGeneratorService,
-    public storage: StorageService,
+    public storage: GlobalStorageService,
     public schedule: ScheduleService,
     public config: SubjectConfigService,
     public firebase: FirebaseX,

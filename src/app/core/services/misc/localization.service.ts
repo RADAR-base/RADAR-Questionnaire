@@ -9,6 +9,7 @@ import { LocKeys } from '../../../shared/enums/localisations'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { LanguageSetting } from '../../../shared/models/settings'
 import { MultiLanguageText } from '../../../shared/models/text'
+import { GlobalStorageService } from '../storage/global-storage.service'
 import { StorageService } from '../storage/storage.service'
 
 @Injectable({
@@ -28,7 +29,7 @@ export class LocalizationService {
   private language: LanguageSetting = { ...this.defaultLanguage }
   private localeMoment: moment.Moment
 
-  constructor(private storage: StorageService) {
+  constructor(private storage: GlobalStorageService) {
     this.localeMoment = moment()
     this.update()
     this.updateLanguageSettings()
@@ -88,9 +89,9 @@ export class LocalizationService {
   }
 
   translate(value: string) {
+    if (!value) return ''
     const loc = Localisations[value]
     if (!loc) {
-      console.log('Missing localization ' + value)
       return value
     }
     return this.chooseText(loc, value)

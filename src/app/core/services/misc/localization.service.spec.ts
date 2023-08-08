@@ -4,6 +4,7 @@ import {
   LogServiceMock,
   StorageServiceMock
 } from '../../../shared/testing/mock-services'
+import { GlobalStorageService } from '../storage/global-storage.service'
 import { StorageService } from '../storage/storage.service'
 import { LocalizationService } from './localization.service'
 import { LogService } from './log.service'
@@ -15,7 +16,7 @@ describe('LocalizationService', () => {
     TestBed.configureTestingModule({
       providers: [
         LocalizationService,
-        { provide: StorageService, useClass: StorageServiceMock },
+        { provide: GlobalStorageService, useClass: StorageServiceMock },
         { provide: LogService, useClass: LogServiceMock }
       ]
     })

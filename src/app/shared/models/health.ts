@@ -3,7 +3,17 @@ export enum HealthkitFloatDataType {
   DISTANCE = 'distance',
   APPLE_EXERCISE_TIME = 'appleExerciseTime',
   VO2MAX = 'vo2Max',
-  ACTIVITY = 'activity'
+  ACTIVITY = 'activity',
+  CALORIES = 'calories'
+}
+
+export enum HealthkitDataType {
+  STAIRS = 'stairs',
+  DISTANCE = 'distance',
+  APPLE_EXERCISE_TIME = 'appleExerciseTime',
+  VO2MAX = 'vo2Max',
+  ACTIVITY = 'activity',
+  CALORIES = 'calories'
 }
 
 export enum HealthkitStringDataType {

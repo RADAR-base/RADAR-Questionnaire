@@ -16,7 +16,7 @@ export interface Response {
 export interface AnswerValueExport {
   name: any
   version: any
-  answers: Response[]
+  answers: any[]
   time: number
   timeCompleted: number
   timeNotification: Object

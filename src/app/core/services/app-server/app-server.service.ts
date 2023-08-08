@@ -448,7 +448,6 @@ export class AppServerService {
   }
 
   getFCMToken() {
-    return 'test'
     return this.storage.get(StorageKeys.FCM_TOKEN)
   }
 

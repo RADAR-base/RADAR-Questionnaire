@@ -1,0 +1,12 @@
+<ion-item color="none" class="input">
+  <ion-textarea
+    fill="outline"
+    [autoGrow]="true"
+    placeholder="{{ 'PLACEHOLDER_TEXT_INPUT' | translate }}"
+    [(ngModel)]="textValue"
+    (ionChange)="emitAnswer('')"
+    (ionFocus)="emitKeyboardEvent('focus')"
+    (ionBlur)="emitKeyboardEvent('blur')"
+    (keyup)="emitKeyboardEvent($event.key)"
+  ></ion-textarea>
+</ion-item>

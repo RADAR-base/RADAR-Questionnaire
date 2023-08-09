@@ -9,9 +9,7 @@ import {
   ViewChild
 } from '@angular/core'
 import { Dialogs } from '@ionic-native/dialogs/ngx'
-import { Keyboard } from '@ionic-native/keyboard/ngx'
 import { Vibration } from '@ionic-native/vibration/ngx'
-import { IonContent } from '@ionic/angular'
 import * as smoothscroll from 'smoothscroll-polyfill'
 
 import {
@@ -84,7 +82,10 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.audio,
     QuestionType.descriptive
   ])
-  MATRIX_INPUT_SET: Set<QuestionType> = new Set([QuestionType.matrix_radio,QuestionType.health])
+  MATRIX_INPUT_SET: Set<QuestionType> = new Set([
+    QuestionType.matrix_radio,
+    QuestionType.health
+  ])
 
   // Input set where height is set to auto
   AUTO_HEIGHT_INPUT_SET: Set<QuestionType> = new Set([

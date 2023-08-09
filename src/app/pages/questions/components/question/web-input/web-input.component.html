@@ -1,0 +1,27 @@
+<ion-content class="content" #content [scrollY]="true">
+  <div class="items">
+    <ion-label *ngIf="!inputValid">Please enter a valid NHS number.</ion-label>
+    <ion-item color="none" class="input">
+      <ion-input
+        type="text"
+        enterkeyhint="next"
+        maxlength="15"
+        placeholder="Enter NHS number"
+        [(ngModel)]="textValue"
+        (ionChange)="emitAnswer('')"
+        (ionFocus)="emitKeyboardEvent('focus')"
+        (ionBlur)="emitKeyboardEvent('blur')"
+        (keyup)="emitKeyboardEvent($event.key)"
+      ></ion-input>
+    </ion-item>
+    <ion-button
+      ion-button
+      class="bt bt--full policy"
+      round
+      full
+      (click)="openUrl()"
+    >
+      Login to NHS
+    </ion-button>
+  </div>
+</ion-content>

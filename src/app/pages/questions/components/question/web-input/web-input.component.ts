@@ -40,7 +40,7 @@ export class WebInputComponent implements OnInit {
   NHS_URL = 'https://www.nhs.uk/nhs-services/online-services/find-nhs-number/'
 
   browserOptions: InAppBrowserOptions = {
-    location: 'yes',
+    location: 'no',
     hidenavigationbuttons: 'yes',
     hideurlbar: 'yes',
     toolbarcolor: '#6d9aa5',

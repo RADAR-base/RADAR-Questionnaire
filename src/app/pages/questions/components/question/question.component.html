@@ -157,8 +157,7 @@
         [text]="question.field_label"
         (valueChange)="emitAnswer($event)"
         [currentlyShown]="currentlyShown"
-        [url]="webInputUrl"
-        [validator]="webInputValidator"
+        [type]="question.field_annotation"
       >
       </web-input>
 

@@ -9,11 +9,8 @@ import {
   ViewChild
 } from '@angular/core'
 import { Dialogs } from '@ionic-native/dialogs/ngx'
-import { Keyboard } from '@ionic-native/keyboard/ngx'
 import { Vibration } from '@ionic-native/vibration/ngx'
-import { IonContent } from '@ionic/angular'
 import * as smoothscroll from 'smoothscroll-polyfill'
-import { isValidNHSId } from 'src/app/shared/utilities/form-validators'
 
 import {
   KeyboardEventType,
@@ -106,11 +103,6 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.checkbox
   ])
 
-  NHS_URL = 'https://www.nhs.uk/nhs-services/online-services/find-nhs-number/'
-  NHS_LABEL = 'nhs'
-  webInputUrl = this.NHS_URL
-  webInputValidator = isValidNHSId
-
   constructor(private vibration: Vibration, private dialogs: Dialogs) {
     smoothscroll.polyfill()
     this.value = null
@@ -138,7 +130,6 @@ export class QuestionComponent implements OnInit, OnChanges {
 
   ngOnChanges() {
     this.initRange()
-    this.initWebInput()
     if (this.questionIndex === this.currentIndex) {
       this.currentlyShown = true
     } else {
@@ -184,13 +175,6 @@ export class QuestionComponent implements OnInit, OnChanges {
         labelLeft: minLabel.trim(),
         labelRight: maxLabel.trim()
       }
-    }
-  }
-
-  initWebInput() {
-    if (this.question.field_annotation == this.NHS_LABEL) {
-      this.webInputUrl = this.NHS_URL
-      this.webInputValidator = isValidNHSId
     }
   }
 

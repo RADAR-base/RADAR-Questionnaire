@@ -94,6 +94,12 @@ export class AppServerService {
             return httpRes
           })
       )
+      .catch(e => {
+        throw new HttpErrorResponse({
+          status: e.status,
+          statusText: 'Unable to connect to the appserver.'
+        })
+      })
   }
 
   getHeaders() {

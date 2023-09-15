@@ -6,6 +6,7 @@ import {
   StorageServiceMock
 } from '../../../shared/testing/mock-services'
 import { LogService } from '../misc/log.service'
+import { GlobalStorageService } from '../storage/global-storage.service'
 import { StorageService } from '../storage/storage.service'
 import { ScheduleGeneratorService } from './schedule-generator.service'
 import { ScheduleService } from './schedule.service'
@@ -21,7 +22,7 @@ describe('ScheduleService', () => {
           provide: ScheduleGeneratorService,
           useClass: ScheduleGeneratorServiceMock
         },
-        { provide: StorageService, useClass: StorageServiceMock },
+        { provide: GlobalStorageService, useClass: StorageServiceMock },
         { provide: LogService, useClass: LogServiceMock }
       ]
     })

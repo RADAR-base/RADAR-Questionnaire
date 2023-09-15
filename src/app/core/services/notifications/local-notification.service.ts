@@ -10,6 +10,7 @@ import {
 } from '../../../shared/models/notification-handler'
 import { LogService } from '../misc/log.service'
 import { ScheduleService } from '../schedule/schedule.service'
+import { GlobalStorageService } from '../storage/global-storage.service'
 import { StorageService } from '../storage/storage.service'
 import { NotificationGeneratorService } from './notification-generator.service'
 import { NotificationService } from './notification.service'
@@ -20,7 +21,7 @@ export class LocalNotificationService extends NotificationService {
     private notifications: NotificationGeneratorService,
     private schedule: ScheduleService,
     private localNotifications: LocalNotifications,
-    private store: StorageService,
+    private store: GlobalStorageService,
     private logger: LogService
   ) {
     super(store)

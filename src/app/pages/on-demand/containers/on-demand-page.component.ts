@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { NavController } from '@ionic/angular'
 
 import { Assessment } from '../../../shared/models/assessment'
@@ -10,7 +10,7 @@ import { OnDemandService } from '../services/on-demand.service'
   templateUrl: 'on-demand-page.component.html',
   styleUrls: ['on-demand-page.component.scss']
 })
-export class OnDemandPageComponent {
+export class OnDemandPageComponent implements OnInit {
   scrollHeight: number = 500
   assessments: Assessment[]
   title: Promise<String>
@@ -20,7 +20,7 @@ export class OnDemandPageComponent {
     private onDemandService: OnDemandService
   ) {}
 
-  ionViewDidLoad() {
+  ngOnInit() {
     this.onDemandService.getAssessements().then(assessments => {
       this.assessments = assessments.sort((a, b) => a.order - b.order)
     })

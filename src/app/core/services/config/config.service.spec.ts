@@ -2,11 +2,13 @@ import { HttpClient, HttpHandler } from '@angular/common/http'
 import { TestBed } from '@angular/core/testing'
 import { Platform } from '@ionic/angular'
 import { PlatformMock } from 'ionic-mocks'
+import { HealthkitService } from 'src/app/pages/questions/services/healthkit.service'
 
 import {
   AppConfigServiceMock,
   AppServerServiceMock,
   FirebaseAnalyticsServiceMock,
+  HealthkitServiceMock,
   KafkaServiceMock,
   LocalizationServiceMock,
   LogServiceMock,
@@ -58,7 +60,8 @@ describe('ConfigService', () => {
         { provide: Platform, useClass: PlatformMock },
         { provide: RemoteConfigService, useClass: RemoteConfigServiceMock },
         { provide: AppServerService, useClass: AppServerServiceMock },
-        { provide: MessageHandlerService, useClass: MessageHandlerServiceMock }
+        { provide: MessageHandlerService, useClass: MessageHandlerServiceMock },
+        { provide: HealthkitService, useClass: HealthkitServiceMock }
       ]
     })
   )

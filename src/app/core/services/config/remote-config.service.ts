@@ -8,13 +8,14 @@ import { ConfigKeys } from '../../../shared/enums/config'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { getSeconds } from '../../../shared/utilities/time'
 import { LogService } from '../misc/log.service'
+import { GlobalStorageService } from '../storage/global-storage.service'
 import { StorageService } from '../storage/storage.service'
 
 @Injectable()
 export class RemoteConfigService {
   protected timeoutMillis: number = 10_800_000
 
-  constructor(private storage: StorageService) {
+  constructor(private storage: GlobalStorageService) {
     this.storage.get(StorageKeys.REMOTE_CONFIG_CACHE_TIMEOUT).then(timeout => {
       if (timeout) {
         this.timeoutMillis = timeout
@@ -107,7 +108,7 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
 
   constructor(
     private firebase: FirebaseX,
-    storage: StorageService,
+    storage: GlobalStorageService,
     private logger: LogService,
     private platform: Platform
   ) {

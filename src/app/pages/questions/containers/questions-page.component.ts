@@ -187,7 +187,6 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   slideQuestion() {
-    console.log(this.currentQuestionGroupId)
     this.slides
       .lockSwipes(false)
       .then(() => this.slides.slideTo(this.currentQuestionGroupId, 300))

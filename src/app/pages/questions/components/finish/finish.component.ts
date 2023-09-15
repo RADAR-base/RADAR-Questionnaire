@@ -49,7 +49,7 @@ export class FinishComponent implements OnChanges {
     if (this.isShown) {
       this.onQuestionnaireCompleted()
       this.usage.setPage(this.constructor.name)
-      setTimeout(() => (this.showDoneButton = true), 15000)
+      setTimeout(() => (this.showDoneButton = true), 10000)
     }
   }
 

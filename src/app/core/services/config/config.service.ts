@@ -76,7 +76,10 @@ export class ConfigService {
           if (newMessagingType)
             this.notifications
               .setNotificationMessagingType(newMessagingType)
-              .then(() => this.rescheduleNotifications(true))
+              .then(() => {
+                console.log('Class: ConfigService, Function: , Line 80 ' , );
+                this.rescheduleNotifications(true)
+              })
           if (newProtocol && newTimezone && !newAppVersion)
             return this.updateConfigStateOnTimezoneChange(newTimezone).then(
               () => this.updateConfigStateOnProtocolChange(newProtocol)
@@ -87,7 +90,10 @@ export class ConfigService {
             return this.updateConfigStateOnAppVersionChange(newAppVersion)
           if (newTimezone)
             return this.updateConfigStateOnTimezoneChange(newTimezone)
-          if (newNotifications) return this.rescheduleNotifications(false)
+          if (newNotifications) {
+            console.log('Class: ConfigService, Function: , Line 94 ' , );
+            return this.rescheduleNotifications(false)
+          }
         }
       )
       .catch(e => {
@@ -245,20 +251,65 @@ export class ConfigService {
       .then(() => this.regenerateSchedule(prevUtcOffset))
   }
 
+  // rescheduleNotifications(cancel?: boolean) {
+  //   return (cancel ? this.cancelNotifications() : Promise.resolve([]))
+  //     .then(() =>
+  //       this.notifications.publish(NotificationActionType.SCHEDULE_ALL)
+  //     )
+  //     .then(() => console.log('NOTIFICATIONS scheduled after config change'))
+  //     .then(() =>
+  //       cancel
+  //         ? this.sendConfigChangeEvent(NotificationEventType.RESCHEDULED)
+  //         : this.sendConfigChangeEvent(NotificationEventType.REFRESHED)
+  //     )
+  //     .catch(e => {
+  //       throw this.logger.error('Failed to reschedule notifications', e)
+  //     })
+  // }
+
   rescheduleNotifications(cancel?: boolean) {
-    return (cancel ? this.cancelNotifications() : Promise.resolve([]))
-      .then(() =>
-        this.notifications.publish(NotificationActionType.SCHEDULE_ALL)
-      )
-      .then(() => console.log('NOTIFICATIONS scheduled after config change'))
-      .then(() =>
-        cancel
-          ? this.sendConfigChangeEvent(NotificationEventType.RESCHEDULED)
-          : this.sendConfigChangeEvent(NotificationEventType.REFRESHED)
-      )
-      .catch(e => {
-        throw this.logger.error('Failed to reschedule notifications', e)
-      })
+    console.log('Class: ConfigService, Function: rescheduleNotifications, Line 271 cancel' , cancel);
+    if(cancel){
+      console.log('Class: ConfigService, Function: rescheduleNotifications, Line 273 ' , );
+      this.cancelNotifications()
+        .then(() => {
+          console.log('Class: ConfigService, Function: , Line 276 ' , );
+          this.notifications.publish(NotificationActionType.SCHEDULE_ALL)})
+        .then(() => {
+          console.log('Class: ConfigService, Function: , Line 279 ' , );
+          console.log('NOTIFICATIONS scheduled after config change')
+        })
+        .then(() => {
+          this.sendConfigChangeEvent(NotificationEventType.RESCHEDULED)
+          console.log('Class: ConfigService, Function: , Line 284 ' , );
+        })
+        .catch(e => {throw this.logger.error('Failed to reschedule notifications', e)})
+    } else {
+      console.log('Class: ConfigService, Function: rescheduleNotifications, Line 288 ' , );
+      this.notifications.publish(NotificationActionType.SCHEDULE_ALL)
+        .then(() => {
+          console.log('NOTIFICATIONS scheduled after config change')
+          console.log('Class: ConfigService, Function: , Line 292 ' , );
+        })
+        .then(() => {
+          this.sendConfigChangeEvent(NotificationEventType.REFRESHED)
+          console.log('Class: ConfigService, Function: , Line 296 ' , );
+        })
+        .catch(e => {throw this.logger.error('Failed to reschedule notifications', e)})
+    }
+    // return (cancel ? this.cancelNotifications() : Promise.resolve([]))
+    //   .then(() =>
+    //     this.notifications.publish(NotificationActionType.SCHEDULE_ALL)
+    //   )
+    //   .then(() => console.log('NOTIFICATIONS scheduled after config change'))
+    //   .then(() =>
+    //     cancel
+    //       ? this.sendConfigChangeEvent(NotificationEventType.RESCHEDULED)
+    //       : this.sendConfigChangeEvent(NotificationEventType.REFRESHED)
+    //   )
+    //   .catch(e => {
+    //     throw this.logger.error('Failed to reschedule notifications', e)
+    //   })
   }
 
   cancelNotifications() {

@@ -54,15 +54,25 @@ export class SplashPageComponent {
     return this.splashService
       .loadConfig()
       .then(() => {
+        console.log('Class: SplashPageComponent, Function: , Line 57 ' , );
         this.status = this.localization.translateKey(
           LocKeys.SPLASH_STATUS_SENDING_LOGS
         )
         return this.splashService
           .sendMissedQuestionnaireLogs()
-          .then(() => this.splashService.sendReportedIncompleteTasks())
+          .then(() => {
+            console.log('Class: SplashPageComponent, Function: , Line 64 ' , );
+            this.splashService.sendReportedIncompleteTasks()
+          })
       })
-      .catch(e => this.showFetchConfigFail(e))
-      .then(() => this.navCtrl.navigateRoot('/home'))
+      .catch(e => {
+        console.log('Class: SplashPageComponent, Function: , Line 69 e' , e);
+        return this.showFetchConfigFail(e)
+      })
+      .then(() => {
+        console.log('Class: SplashPageComponent, Function: navigateRoot, Line 66 ' , );
+        this.navCtrl.navigateRoot('/home')
+      })
   }
 
   showFetchConfigFail(e) {

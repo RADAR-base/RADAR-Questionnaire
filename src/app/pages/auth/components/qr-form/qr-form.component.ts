@@ -16,10 +16,12 @@ export class QRFormComponent {
   constructor(private scanner: BarcodeScanner) {}
 
   scanQRHandler() {
+    console.log('Class: QRFormComponent, Function: scanQRHandler, Line 19 ' , );
     const scanOptions = {
       showFlipCameraButton: true,
       orientation: 'portrait'
     }
+    console.log('Class: QRFormComponent, Function: scanQRHandler, Line 24 scanOptions' , scanOptions);
     return this.scanner.scan(scanOptions).then(res => this.data.emit(res.text))
   }
 }

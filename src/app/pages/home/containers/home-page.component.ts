@@ -56,6 +56,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
     private platform: Platform,
     private usage: UsageService
   ) {
+    console.log('Class: HomePageComponent, Function: constructor, Line 59 ' , );
     this.resumeListener = this.platform.resume.subscribe(() => this.onResume())
     this.changeDetectionListener =
       this.tasksService.changeDetectionEmitter.subscribe(() => {
@@ -82,6 +83,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    console.log('Class: HomePageComponent, Function: ngOnInit, Line 86 ' , );
     this.platform
       .ready()
       .then(() => this.tasksService.init().then(() => this.init()))

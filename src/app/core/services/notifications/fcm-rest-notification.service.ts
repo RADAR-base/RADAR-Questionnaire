@@ -67,7 +67,6 @@ export class FcmRestNotificationService extends FcmNotificationService {
   }
 
   init() {
-    console.log('Class: FcmRestNotificationService, Function: init, Line 70 ' , );
     return super.init().then(() => this.appServerService.init())
   }
 
@@ -116,94 +115,55 @@ export class FcmRestNotificationService extends FcmNotificationService {
       .then(([subject, sourceId]) => Object.assign({}, subject, { sourceId }))
   }
 
-  // publishAllNotifications(subject, limit) {
   publishAllNotifications(subject, limit): Promise<any> {
-    console.log('Class: FcmRestNotificationService, Function: publishAllNotifications, Line 147 subject, limit' , subject, limit);
     return this.schedule.getTasks(AssessmentType.ALL).then(tasks => {
       const fcmNotifications = this.notifications
         .futureNotifications(tasks, limit)
         .map(t => this.format(t, subject))
       this.logger.log('NOTIFICATIONS Scheduling FCM notifications')
       this.logger.log(fcmNotifications)
-      //###
       const notifications = fcmNotifications.map(n => n.notificationDto)
-      return this.sendNotificationsBatch({notifications}, subject.subjectId, subject.projectId)
-      // return this.sendNotificationsBatch(fcmNotifications, subject.subjectId, subject.projectId)
-      // fcmNotifications.map(n => this.sendNotification(n, subject.subjectId, subject.projectId))
-      // return Promise.all(
-      //   fcmNotifications.map(n =>
-      //     this.sendNotification(n, subject.subjectId, subject.projectId)
-      //   )
-      // )
+      return this.sendNotificationsBundle({notifications}, subject.subjectId, subject.projectId)
     })
-    // return this.schedule.getTasks(AssessmentType.ALL).then(tasks => {
-    //   const fcmNotifications = this.notifications
-    //     .futureNotifications(tasks, limit)
-    //     .map(t => this.format(t, subject))
-    //   this.logger.log('NOTIFICATIONS Scheduling FCM notifications')
-    //   this.logger.log(fcmNotifications)
-    //   return Promise.all(
-    //     fcmNotifications.map(n =>
-    //       this.sendNotification(n, subject.subjectId, subject.projectId)
-    //     )
-    //   )
-    // })
   }
 
   publishTestNotification(subject): Promise<any> {
-    return Promise.resolve();
-    // return this.sendNotification(
-    //   this.format(this.notifications.createTestNotification(), subject),
-    //   subject.subjectId,
-    //   subject.projectId
-    // )
+    return this.sendNotification(
+      this.format(this.notifications.createTestNotification(), subject),
+      subject.subjectId,
+      subject.projectId
+    )
   }
 
-  // sendNotification(notification, subjectId, projectId) {
-  //   console.log('Class: FcmRestNotificationService, Function: sendNotification, Line 143 notification, subjectId, projectId' , notification, subjectId, projectId);
-  //   return this.appServerService
-  //     .addNotification(notification, subjectId, projectId)
-  //     .then((resultNotification: FcmNotificationDto) => {
-  //       this.setLastNotificationUpdate(Date.now())
-  //       notification.notification.id = resultNotification.id
-  //       return (notification.notification.messageId =
-  //         resultNotification.fcmMessageId)
-  //     })
-  // }
-
-  sendNotificationsBatch(notifications, subjectId, projectId) {
-    console.log('Class: FcmRestNotificationService, Function: sendNotificationsBatch, Line 172 notifications, subjectId, projectId' , notifications, subjectId, projectId);
-    return this.appServerService.addNotificationsBatch(notifications, subjectId, projectId)
+  sendNotification(notification, subjectId, projectId) {
+    return this.appServerService
+      .addNotification(notification, subjectId, projectId)
       .then((resultNotification: FcmNotificationDto) => {
-        console.log('Class: FcmRestNotificationService, Function: , Line 175 resultNotification' , resultNotification);
-        // this.setLastNotificationUpdate(Date.now())
+        this.setLastNotificationUpdate(Date.now())
+        notification.notification.id = resultNotification.id
+        return (notification.notification.messageId =
+          resultNotification.fcmMessageId)
+      })
+  }
+
+  sendNotificationsBundle(notifications, subjectId, projectId) {
+    return this.appServerService.addNotificationsBundle(notifications, subjectId, projectId)
+      .then((resultNotification: FcmNotificationDto) => {
+        this.setLastNotificationUpdate(Date.now())
         // notification.notification.id = resultNotification.id
         // return (notification.notification.messageId =
         //   resultNotification.fcmMessageId)
       })
   }
 
-  cancelAllNotificationsBatch(subject, notifications: SingleNotification[]){
-    console.log('Class: FcmRestNotificationService, Function: cancelAllNotificationsBatch, Line 187 subject, notification' , subject, notifications);
-    if (notification.id) {
-      return this.appServerService
-        .deleteNotification(subject, notification)
-        .then(() => {
-          this.logger.log('Success cancelling notification ' + notification.id)
-          return (notification.id = undefined)
-        })
-    } else {
-      this.logger.log('Cannot cancel undefined notification id.')
-      return Promise.resolve()
-    }
+  cancelAllNotificationsBundle(subject, notifications: SingleNotification[]){
+    // TODO
   }
 
   cancelAllNotifications(subject): Promise<any> {
-    console.log('Class: FcmRestNotificationService, Function: cancelAllNotifications, Line 155 subject' , subject);
     return this.appServerService
       .pullAllPublishedNotifications(subject)
       .then((res: FcmNotifications) => {
-        console.log('Class: FcmRestNotificationService, Function: , Line 245 res' , res);
         const now = Date.now()
         const notifications = res.notifications
           .map(n => ({
@@ -211,13 +171,12 @@ export class FcmRestNotificationService extends FcmNotificationService {
             timestamp: getMilliseconds({ seconds: n.scheduledTime })
           }))
           .filter(n => n.timestamp > now)
-        // notifications.map(o => this.cancelSingleNotification(subject, o))
-        this.cancelAllNotificationsBatch(subject, notifications)
+        notifications.map(o => this.cancelSingleNotification(subject, o))
+        // TODO this.cancelAllNotificationsBundle(subject, notifications)
       })
   }
 
   cancelSingleNotification(subject, notification: SingleNotification) {
-    console.log('Class: FcmRestNotificationService, Function: cancelSingleNotification, Line 258 subject, notification' , subject, notification);
     if (notification.id) {
       return this.appServerService
         .deleteNotification(subject, notification)

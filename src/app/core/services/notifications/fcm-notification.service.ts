@@ -52,7 +52,6 @@ export abstract class FcmNotificationService extends NotificationService {
   }
 
   init() {
-    console.log('Class: FcmNotificationService, Function: init, Line 55 ' , );
     return this.firebase
       .setAutoInitEnabled(true)
       .then(() => this.firebase.getToken())
@@ -89,29 +88,6 @@ export abstract class FcmNotificationService extends NotificationService {
       }
     })
   }
-
-  // publish(
-  //   type,
-  //   limit: number = DefaultNumberOfNotificationsToSchedule,
-  //   notificationId?: string
-  // ) {
-  //   this.resetResends()
-  //   this.getSubjectDetails().then(user => {
-  //     if (!user) return Promise.reject('Unable to pull subject details')
-  //     switch (type) {
-  //       case NotificationActionType.TEST:
-  //         return this.publishTestNotification(user)
-  //       case NotificationActionType.CANCEL_ALL:
-  //         return this.cancelAllNotifications(user)
-  //       case NotificationActionType.CANCEL_SINGLE:
-  //         return this.cancelSingleNotification(user, notificationId)
-  //       case NotificationActionType.SCHEDULE_ALL:
-  //       default:
-  //         return this.publishAllNotifications(user, limit)
-  //     }
-  //   })
-  // }
-
 
   permissionCheck(): Promise<void> {
     if (!this.platform.is('ios')) return Promise.resolve()

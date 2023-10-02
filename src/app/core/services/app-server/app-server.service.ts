@@ -53,22 +53,19 @@ export class AppServerService {
   ) {}
 
   init() {
-    console.log('Class: AppServerService, Function: init, Line 56 ' , );
     // NOTE: Initialising ensures project and subject exists in the app server
     return this.updateAppServerURL()
-      .then(() => {
-        console.log('Class: AppServerService, Function: , Line 60 ' , );
-        return Promise.all([
+      .then(() =>
+        Promise.all([
           this.subjectConfig.getParticipantLogin(),
           this.subjectConfig.getProjectName(),
           this.subjectConfig.getEnrolmentDate(),
           this.subjectConfig.getParticipantAttributes(),
           this.getFCMToken()
         ])
-      })
-      .then(([subjectId, projectId, enrolmentDate, attributes, fcmToken]) => {
-        console.log('Class: AppServerService, Function: , Line 70 ' , subjectId, projectId, enrolmentDate, attributes, fcmToken);
-        return this.addProjectIfMissing(projectId)
+      )
+      .then(([subjectId, projectId, enrolmentDate, attributes, fcmToken]) =>
+        this.addProjectIfMissing(projectId)
           .then(() =>
             this.addSubjectIfMissing(
               subjectId,
@@ -79,7 +76,6 @@ export class AppServerService {
             )
           )
           .then(httpRes => {
-            console.log('Class: AppServerService, Function: , Line 82 ' , );
             if (this.tokenSubscription !== null) {
               this.tokenSubscription.unsubscribe()
             }
@@ -97,9 +93,8 @@ export class AppServerService {
               )
             return httpRes
           })
-      })
+      )
       .catch(e => {
-        console.log('Class: AppServerService, Function: , Line 102 ' , );
         throw new HttpErrorResponse({
           status: e.status,
           statusText: 'Unable to connect to the appserver.'
@@ -249,7 +244,6 @@ export class AppServerService {
 
   // NOTE: This method fetches from Github through the App Server.
   fetchFromGithub(githubUrl: string) {
-    console.log('Class: AppServerService, Function: fetchFromGithub, Line 252 ' , );
     return this.getHeaders().then(headers => {
       return this.http
         .get(urljoin(this.APP_SERVER_URL, this.GITHUB_CONTENT_PATH), {
@@ -261,7 +255,6 @@ export class AppServerService {
   }
 
   getSchedule(): Promise<any> {
-    console.log('Class: AppServerService, Function: getSchedule, Line 264 ' , );
     return Promise.all([
       this.subjectConfig.getParticipantLogin(),
       this.subjectConfig.getProjectName()
@@ -285,7 +278,6 @@ export class AppServerService {
   }
 
   getScheduleForDates(startTime: Date, endTime: Date): Promise<any> {
-    console.log('Class: AppServerService, Function: getScheduleForDates, Line 288 ' , );
     return Promise.all([
       this.subjectConfig.getParticipantLogin(),
       this.subjectConfig.getProjectName()
@@ -316,7 +308,6 @@ export class AppServerService {
   }
 
   generateSchedule(): Promise<any> {
-    console.log('Class: AppServerService, Function: generateSchedule, Line 312 ' , );
     return Promise.all([
       this.subjectConfig.getParticipantLogin(),
       this.subjectConfig.getProjectName()
@@ -340,7 +331,6 @@ export class AppServerService {
   }
 
   pullAllPublishedNotifications(subject) {
-    console.log('Class: AppServerService, Function: pullAllPublishedNotifications, Line 335 subject' , subject);
     return this.getHeaders().then(headers =>
       this.http
         .get(
@@ -359,7 +349,6 @@ export class AppServerService {
   }
 
   deleteNotification(subject, notification: SingleNotification) {
-    console.log('Class: AppServerService, Function: deleteNotification, Line 353 subject, notification' , subject, notification);
     return this.getHeaders().then(headers =>
       this.http
         .delete(
@@ -378,30 +367,11 @@ export class AppServerService {
     )
   }
 
-  deleteNotificationsBatch(subject, notifications: SingleNotification[]) {
-    console.log('Class: AppServerService, Function: deleteNotificationsBatch, Line 382 subject, notifications' , subject, notifications);
-    return this.getHeaders().then(headers =>
-      this.http
-        .delete(
-          urljoin(
-            this.getAppServerURL(),
-            this.PROJECT_PATH,
-            subject.projectId,
-            this.SUBJECT_PATH,
-            subject.subjectId,
-            this.NOTIFICATIONS_PATH,
-            "batch"
-            // notification.id.toString()
-          ),
-          notifications,
-          { headers }
-        )
-        .toPromise()
-    )
+  deleteNotificationsBundle(subject, notifications: SingleNotification[]) {
+    // TODO
   }
 
   updateTaskState(taskId, state) {
-    console.log('Class: AppServerService, Function: updateTaskState, Line 372 taskId, state' , taskId, state);
     return Promise.all([
       this.subjectConfig.getParticipantLogin(),
       this.subjectConfig.getProjectName()
@@ -433,7 +403,6 @@ export class AppServerService {
   }
 
   updateNotificationState(subject, notificationId, state) {
-    console.log('Class: AppServerService, Function: updateNotificationState, Line 403 subject, notificationId, state' , subject, notificationId, state);
     return this.getHeaders().then(headers =>
       this.http
         .post(
@@ -454,7 +423,7 @@ export class AppServerService {
     )
   }
 
-  addNotificationsBatch(notifications, subjectId, projectId): Promise<any> {
+  addNotificationsBundle(notifications, subjectId, projectId): Promise<any> {
     return this.getHeaders().then(headers =>
       this.http
         .post(
@@ -467,7 +436,6 @@ export class AppServerService {
             this.NOTIFICATIONS_PATH,
             "batch"
           ),
-          // notification.notificationDto,
           notifications,
           { headers, observe: 'response' }
         )
@@ -485,47 +453,44 @@ export class AppServerService {
           //   )
           //   return data.dto ? data.dto : notification.notification
           // }
-          // return this.logger.error('Failed to send notification', err)
+          return this.logger.error('Failed to send notification', err)
         })
     )
   }
 
-  // public addNotification(notification, subjectId, projectId): Promise<any> {
-  //   console.log('Class: AppServerService, Function: addNotification, Line 460 notification, subjectId, projectId' , notification, subjectId, projectId);
-  //   return this.getHeaders().then(headers =>
-  //     this.http
-  //       .post(
-  //         urljoin(
-  //           this.getAppServerURL(),
-  //           this.PROJECT_PATH,
-  //           projectId,
-  //           this.SUBJECT_PATH,
-  //           subjectId,
-  //           this.NOTIFICATIONS_PATH
-  //         ),
-  //         notification.notificationDto,
-  //         { headers, observe: 'response' }
-  //       )
-  //       .toPromise()
-  //       .then((res: HttpResponse<FcmNotificationDto>) => {
-  //         console.log('Class: AppServerService, Function: , Line 482 res' , res);
-  //         this.logger.log('Successfully sent! Updating notification Id')
-  //         return res.body
-  //       })
-  //       .catch((err: HttpErrorResponse) => {
-  //         console.log('Class: AppServerService, Function: , Line 487 err' , err);
-  //         this.logger.log('Http request returned an error: ' + err.message)
-  //         const data: FcmNotificationError = err.error
-  //         if (err.status == 409) {
-  //           this.logger.log(
-  //             'Notification already exists, storing notification data..'
-  //           )
-  //           return data.dto ? data.dto : notification.notification
-  //         }
-  //         return this.logger.error('Failed to send notification', err)
-  //       })
-  //   )
-  // }
+  public addNotification(notification, subjectId, projectId): Promise<any> {
+    return this.getHeaders().then(headers =>
+      this.http
+        .post(
+          urljoin(
+            this.getAppServerURL(),
+            this.PROJECT_PATH,
+            projectId,
+            this.SUBJECT_PATH,
+            subjectId,
+            this.NOTIFICATIONS_PATH
+          ),
+          notification.notificationDto,
+          { headers, observe: 'response' }
+        )
+        .toPromise()
+        .then((res: HttpResponse<FcmNotificationDto>) => {
+          this.logger.log('Successfully sent! Updating notification Id')
+          return res.body
+        })
+        .catch((err: HttpErrorResponse) => {
+          this.logger.log('Http request returned an error: ' + err.message)
+          const data: FcmNotificationError = err.error
+          if (err.status == 409) {
+            this.logger.log(
+              'Notification already exists, storing notification data..'
+            )
+            return data.dto ? data.dto : notification.notification
+          }
+          return this.logger.error('Failed to send notification', err)
+        })
+    )
+  }
 
   getFCMToken() {
     return this.storage.get(StorageKeys.FCM_TOKEN)

@@ -42,22 +42,10 @@ export class SplashService {
   loadConfig() {
     return this.token
       .refresh()
-      .then(() => {
-        console.log('Class: SplashService, Function: , Line 46 ' , );
-        return this.notificationService.init()
-      })
-      .then(() => {
-        console.log('Class: SplashService, Function: , Line 50 ' , );
-        return this.notificationService.permissionCheck()
-      })
-      .then(() => {
-        console.log('Class: SplashService, Function: , Line 54 ' , );
-        return this.schedule.init()
-      })
-      .then(() => {
-        console.log('Class: SplashService, Function: , Line 58 ' , );
-        return this.config.fetchConfigState()
-      })
+      .then(() => this.notificationService.init())
+      .then(() => this.notificationService.permissionCheck())
+      .then(() => this.schedule.init())
+      .then(() => this.config.fetchConfigState())
   }
 
   isAppUpdateAvailable() {

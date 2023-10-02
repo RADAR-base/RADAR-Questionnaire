@@ -26,7 +26,6 @@ export class NotificationFactoryService extends NotificationService {
   }
 
   init() {
-    console.log('Class: NotificationFactoryService, Function: init, Line 29 ' , );
     return this.remoteConfig
       .forceFetch()
       .then(config =>
@@ -36,7 +35,6 @@ export class NotificationFactoryService extends NotificationService {
         )
       )
       .then(type => {
-        console.log('Class: NotificationFactoryService, Function: , Line 39 type' , type);
         switch (type) {
           case NotificationMessagingType.LOCAL:
             return (this.notificationService = this.localNotificationService)
@@ -60,9 +58,7 @@ export class NotificationFactoryService extends NotificationService {
   }
 
   publish(type, limit?, notificationId?): Promise<any> {
-    // publish(type, limit?, notificationId?): Promise<any> {
     return this.notificationService.publish(type, limit, notificationId)
-    // this.notificationService.publish(type, limit, notificationId)
   }
 
   unregisterFromNotifications(): Promise<any> {

@@ -62,7 +62,7 @@ export class SplashPageComponent {
           .sendMissedQuestionnaireLogs()
           .then(() => {
             console.log('Class: SplashPageComponent, Function: , Line 64 ' , );
-            this.splashService.sendReportedIncompleteTasks()
+            return this.splashService.sendReportedIncompleteTasks()
           })
       })
       .catch(e => {
@@ -70,8 +70,8 @@ export class SplashPageComponent {
         return this.showFetchConfigFail(e)
       })
       .then(() => {
-        console.log('Class: SplashPageComponent, Function: navigateRoot, Line 66 ' , );
-        this.navCtrl.navigateRoot('/home')
+        console.log('Class: SplashPageComponent, Function: navigateRoot, Line 73 ' , );
+        return this.navCtrl.navigateRoot('/home')
       })
   }
 

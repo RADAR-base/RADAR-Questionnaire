@@ -59,7 +59,7 @@ export class NotificationFactoryService extends NotificationService {
       : true
   }
 
-  publish(type, limit?, notificationId?) {
+  publish(type, limit?, notificationId?): Promise<any> {
     // publish(type, limit?, notificationId?): Promise<any> {
     return this.notificationService.publish(type, limit, notificationId)
     // this.notificationService.publish(type, limit, notificationId)

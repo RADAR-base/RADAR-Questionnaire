@@ -69,29 +69,42 @@ export class ConfigService {
           newNotifications,
           newMessagingType
         ]) => {
-          if (newProtocol && newAppVersion && newTimezone)
+          console.log('Class: ConfigService, Function: , Line 72 ' , newProtocol, newAppVersion, newTimezone, newNotifications, newMessagingType);
+          if (newProtocol && newAppVersion && newTimezone) {
+            console.log('Class: ConfigService, Function: , Line 74 ' , );
             this.subjectConfig
               .getEnrolmentDate()
               .then(d => this.appConfig.init(d))
-          if (newMessagingType)
+          }
+          if (newMessagingType) {
+            console.log('Class: ConfigService, Function: , Line 80 ' , );
             this.notifications
               .setNotificationMessagingType(newMessagingType)
               .then(() => {
-                console.log('Class: ConfigService, Function: , Line 80 ' , );
-                this.rescheduleNotifications(true)
+                console.log('Class: ConfigService, Function: , Line 80 ',);
+                return this.rescheduleNotifications(true)
               })
-          if (newProtocol && newTimezone && !newAppVersion)
+          }
+          if (newProtocol && newTimezone && !newAppVersion) {
+            console.log('Class: ConfigService, Function: , Line 89 ' , );
             return this.updateConfigStateOnTimezoneChange(newTimezone).then(
               () => this.updateConfigStateOnProtocolChange(newProtocol)
             )
-          if (newProtocol)
+          }
+          if (newProtocol) {
+            console.log('Class: ConfigService, Function: , Line 95 ' , );
             return this.updateConfigStateOnProtocolChange(newProtocol)
-          if (newAppVersion)
+          }
+          if (newAppVersion) {
+            console.log('Class: ConfigService, Function: , Line 99 ' , );
             return this.updateConfigStateOnAppVersionChange(newAppVersion)
-          if (newTimezone)
+          }
+          if (newTimezone) {
+            console.log('Class: ConfigService, Function: , Line 103 ' , );
             return this.updateConfigStateOnTimezoneChange(newTimezone)
+          }
           if (newNotifications) {
-            console.log('Class: ConfigService, Function: , Line 94 ' , );
+            console.log('Class: ConfigService, Function: , Line 107 ' , );
             return this.rescheduleNotifications(false)
           }
         }

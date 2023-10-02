@@ -72,7 +72,7 @@ export class FcmRestNotificationService extends FcmNotificationService {
   }
 
   onAppOpen() {
-    this.webIntent.getIntent().then(intent => {
+    return this.webIntent.getIntent().then(intent => {
       if (!intent.extras) return
       const extras = intent.extras['google.message_id'].split(':')
       const messageId = extras[extras.length - 1]
@@ -126,13 +126,15 @@ export class FcmRestNotificationService extends FcmNotificationService {
       this.logger.log('NOTIFICATIONS Scheduling FCM notifications')
       this.logger.log(fcmNotifications)
       //###
-      // return this.sendAllNotificationsBatch(fcmNotifications, subject.subjectId, subject.projectId)
+      const notifications = fcmNotifications.map(n => n.notificationDto)
+      return this.sendNotificationsBatch({notifications}, subject.subjectId, subject.projectId)
+      // return this.sendNotificationsBatch(fcmNotifications, subject.subjectId, subject.projectId)
       // fcmNotifications.map(n => this.sendNotification(n, subject.subjectId, subject.projectId))
-      return Promise.all(
-        fcmNotifications.map(n =>
-          this.sendNotification(n, subject.subjectId, subject.projectId)
-        )
-      )
+      // return Promise.all(
+      //   fcmNotifications.map(n =>
+      //     this.sendNotification(n, subject.subjectId, subject.projectId)
+      //   )
+      // )
     })
     // return this.schedule.getTasks(AssessmentType.ALL).then(tasks => {
     //   const fcmNotifications = this.notifications
@@ -149,26 +151,52 @@ export class FcmRestNotificationService extends FcmNotificationService {
   }
 
   publishTestNotification(subject): Promise<any> {
-    return this.sendNotification(
-      this.format(this.notifications.createTestNotification(), subject),
-      subject.subjectId,
-      subject.projectId
-    )
+    return Promise.resolve();
+    // return this.sendNotification(
+    //   this.format(this.notifications.createTestNotification(), subject),
+    //   subject.subjectId,
+    //   subject.projectId
+    // )
   }
 
-  sendNotification(notification, subjectId, projectId) {
-    console.log('Class: FcmRestNotificationService, Function: sendNotification, Line 143 notification, subjectId, projectId' , notification, subjectId, projectId);
-    return this.appServerService
-      .addNotification(notification, subjectId, projectId)
+  // sendNotification(notification, subjectId, projectId) {
+  //   console.log('Class: FcmRestNotificationService, Function: sendNotification, Line 143 notification, subjectId, projectId' , notification, subjectId, projectId);
+  //   return this.appServerService
+  //     .addNotification(notification, subjectId, projectId)
+  //     .then((resultNotification: FcmNotificationDto) => {
+  //       this.setLastNotificationUpdate(Date.now())
+  //       notification.notification.id = resultNotification.id
+  //       return (notification.notification.messageId =
+  //         resultNotification.fcmMessageId)
+  //     })
+  // }
+
+  sendNotificationsBatch(notifications, subjectId, projectId) {
+    console.log('Class: FcmRestNotificationService, Function: sendNotificationsBatch, Line 172 notifications, subjectId, projectId' , notifications, subjectId, projectId);
+    return this.appServerService.addNotificationsBatch(notifications, subjectId, projectId)
       .then((resultNotification: FcmNotificationDto) => {
-        this.setLastNotificationUpdate(Date.now())
-        notification.notification.id = resultNotification.id
-        return (notification.notification.messageId =
-          resultNotification.fcmMessageId)
+        console.log('Class: FcmRestNotificationService, Function: , Line 175 resultNotification' , resultNotification);
+        // this.setLastNotificationUpdate(Date.now())
+        // notification.notification.id = resultNotification.id
+        // return (notification.notification.messageId =
+        //   resultNotification.fcmMessageId)
       })
   }
 
-  // cancelAllNotificationsBatch(){}
+  cancelAllNotificationsBatch(subject, notifications: SingleNotification[]){
+    console.log('Class: FcmRestNotificationService, Function: cancelAllNotificationsBatch, Line 187 subject, notification' , subject, notifications);
+    if (notification.id) {
+      return this.appServerService
+        .deleteNotification(subject, notification)
+        .then(() => {
+          this.logger.log('Success cancelling notification ' + notification.id)
+          return (notification.id = undefined)
+        })
+    } else {
+      this.logger.log('Cannot cancel undefined notification id.')
+      return Promise.resolve()
+    }
+  }
 
   cancelAllNotifications(subject): Promise<any> {
     console.log('Class: FcmRestNotificationService, Function: cancelAllNotifications, Line 155 subject' , subject);
@@ -183,7 +211,8 @@ export class FcmRestNotificationService extends FcmNotificationService {
             timestamp: getMilliseconds({ seconds: n.scheduledTime })
           }))
           .filter(n => n.timestamp > now)
-        notifications.map(o => this.cancelSingleNotification(subject, o))
+        // notifications.map(o => this.cancelSingleNotification(subject, o))
+        this.cancelAllNotificationsBatch(subject, notifications)
       })
   }
 

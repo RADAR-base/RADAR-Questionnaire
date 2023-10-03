@@ -38,6 +38,7 @@ import { NotificationGeneratorService } from './notification-generator.service'
 
 @Injectable()
 export class FcmRestNotificationService extends FcmNotificationService {
+
   NOTIFICATIONS_PATH = 'messaging/notifications'
   SUBJECT_PATH = 'users'
   PROJECT_PATH = 'projects'
@@ -156,24 +157,8 @@ export class FcmRestNotificationService extends FcmNotificationService {
       })
   }
 
-  cancelAllNotificationsBundle(subject, notifications: SingleNotification[]){
-    // TODO
-  }
-
-  cancelAllNotifications(subject): Promise<any> {
-    return this.appServerService
-      .pullAllPublishedNotifications(subject)
-      .then((res: FcmNotifications) => {
-        const now = Date.now()
-        const notifications = res.notifications
-          .map(n => ({
-            id: n.id,
-            timestamp: getMilliseconds({ seconds: n.scheduledTime })
-          }))
-          .filter(n => n.timestamp > now)
-        notifications.map(o => this.cancelSingleNotification(subject, o))
-        // TODO this.cancelAllNotificationsBundle(subject, notifications)
-      })
+  cancelAllNotifications(subject){
+    return this.appServerService.deleteNotificationsBundle(subject);
   }
 
   cancelSingleNotification(subject, notification: SingleNotification) {

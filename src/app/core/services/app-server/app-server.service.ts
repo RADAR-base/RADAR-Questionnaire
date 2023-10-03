@@ -40,6 +40,7 @@ export class AppServerService {
   QUESTIONNAIRE_STATE_EVENTS_PATH = 'state_events'
   NOTIFICATIONS_PATH = 'messaging/notifications'
   NOTIFICATIONS_BATCH_PATH = 'messaging/notifications/batch'
+  ALL_PATH = 'all'
   STATE_EVENTS_PATH = 'state_events'
   private tokenSubscription: Subscription = null
 
@@ -334,7 +335,7 @@ export class AppServerService {
   pullAllPublishedNotifications(subject) {
     return this.getHeaders().then(headers =>
       this.http
-        .get(
+        .delete(
           urljoin(
             this.getAppServerURL(),
             this.PROJECT_PATH,
@@ -368,8 +369,23 @@ export class AppServerService {
     )
   }
 
-  deleteNotificationsBundle(subject, notifications: SingleNotification[]) {
-    // TODO
+  deleteNotificationsBundle(subject) {
+      return this.getHeaders().then(headers =>
+          this.http
+              .delete(
+                  urljoin(
+                      this.getAppServerURL(),
+                      this.PROJECT_PATH,
+                      subject.projectId,
+                      this.SUBJECT_PATH,
+                      subject.subjectId,
+                      this.NOTIFICATIONS_PATH,
+                      this.ALL_PATH
+                  ),
+                  { headers }
+              )
+              .toPromise()
+      )
   }
 
   updateTaskState(taskId, state) {

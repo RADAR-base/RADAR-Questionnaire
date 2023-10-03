@@ -39,6 +39,7 @@ export class AppServerService {
   QUESTIONNAIRE_TASK = 'questionnaire/task'
   QUESTIONNAIRE_STATE_EVENTS_PATH = 'state_events'
   NOTIFICATIONS_PATH = 'messaging/notifications'
+  NOTIFICATIONS_BATCH_PATH = 'messaging/notifications/batch'
   STATE_EVENTS_PATH = 'state_events'
   private tokenSubscription: Subscription = null
 
@@ -433,8 +434,7 @@ export class AppServerService {
             projectId,
             this.SUBJECT_PATH,
             subjectId,
-            this.NOTIFICATIONS_PATH,
-            "batch"
+            this.NOTIFICATIONS_BATCH_PATH,
           ),
           notifications,
           { headers, observe: 'response' }

@@ -158,7 +158,7 @@ export class FcmRestNotificationService extends FcmNotificationService {
   }
 
   cancelAllNotifications(subject){
-    return this.appServerService.deleteNotificationsBundle(subject);
+    return this.appServerService.deleteAllUserNotifications(subject);
   }
 
   cancelSingleNotification(subject, notification: SingleNotification) {

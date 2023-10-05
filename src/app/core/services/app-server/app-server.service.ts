@@ -335,7 +335,7 @@ export class AppServerService {
   pullAllPublishedNotifications(subject) {
     return this.getHeaders().then(headers =>
       this.http
-        .delete(
+        .get(
           urljoin(
             this.getAppServerURL(),
             this.PROJECT_PATH,
@@ -369,7 +369,7 @@ export class AppServerService {
     )
   }
 
-  deleteNotificationsBundle(subject) {
+  deleteAllUserNotifications(subject) {
       return this.getHeaders().then(headers =>
           this.http
               .delete(

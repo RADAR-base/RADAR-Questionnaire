@@ -86,7 +86,6 @@
     "browserify": "^16.3.0",
     "browserify-zlib": "^0.2.0",
     "buffer": "^6.0.3",
-    "com-darryncampbell-cordova-plugin-intent": "git+https://github.com/mpgxvii/darryncampbell-cordova-plugin-intent.git",
     "compare-versions": "^5.0.3",
     "cordova-lib": "^9.0.1",
     "cordova-plugin-android-permissions": "^1.1.2",
@@ -141,17 +140,19 @@
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",
     "codelyzer": "^6.0.2",
+    "com-darryncampbell-cordova-plugin-intent": "github:mpgxvii/darryncampbell-cordova-plugin-intent",
     "cordova-android": "^10.1.2",
+    "cordova-androidx-build": "^1.0.4",
     "cordova-ios": "^6.3.0",
     "cordova-plugin-app-launcher": "^0.4.0",
-    "cordova-plugin-background-mode": "https://bitbucket.org/TheBosZ/cordova-plugin-run-in-background",
+    "cordova-plugin-background-mode": "bitbucket:TheBosZ/cordova-plugin-run-in-background",
     "cordova-plugin-file": "^7.0.0",
     "cordova-plugin-firebasex": "15.0.0-cli",
     "cordova-plugin-health": "^2.0.3",
     "cordova-plugin-inappbrowser": "^5.0.0",
     "cordova-plugin-ionic-webview": "^4.2.1",
     "cordova-plugin-media-with-compression": "^2.3.1",
-    "cordova-plugin-network-information": "git+https://github.com/apache/cordova-plugin-network-information.git",
+    "cordova-plugin-network-information": "github:apache/cordova-plugin-network-information",
     "cordova-sqlite-storage": "^6.0.0",
     "eslint": "^7.6.0",
     "eslint-plugin-import": "2.22.1",
@@ -228,7 +229,9 @@
       "cordova-plugin-local-notification": {},
       "cordova-plugin-app-version": {},
       "phonegap-plugin-mobile-accessibility": {},
-      "cordova-plugin-file": {},
+      "cordova-plugin-file": {
+        "ANDROIDX_WEBKIT_VERSION": "1.4.0"
+      },
       "cordova-plugin-insomnia": {},
       "com-darryncampbell-cordova-plugin-intent": {},
       "cordova-plugin-ionic-keyboard": {},
@@ -239,7 +242,9 @@
       "cordova-plugin-background-mode": {},
       "cordova-plugin-health": {
         "HEALTH_READ_PERMISSION": "App needs read access",
-        "HEALTH_WRITE_PERMISSION": "App needs write access"
+        "HEALTH_WRITE_PERMISSION": "App needs write access",
+        "FIT_API_VERSION": "21.1.0",
+        "PLAY_AUTH_VERSION": "20.2.0"
       },
       "cordova-plugin-app-launcher": {},
       "cordova-plugin-media-with-compression": {},
@@ -266,7 +271,9 @@
         "ANDROID_FIREBASE_CRASHLYTICS_VERSION": "18.1.0",
         "ANDROID_FIREBASE_CRASHLYTICS_NDK_VERSION": "18.1.0",
         "ANDROID_GSON_VERSION": "2.8.7",
-        "ANDROID_FIREBASE_PERF_GRADLE_PLUGIN_VERSION": "1.4.0"
+        "ANDROID_FIREBASE_PERF_GRADLE_PLUGIN_VERSION": "1.4.0",
+        "FIREBASE_FCM_AUTOINIT_ENABLED": "true",
+        "ANDROID_GRPC_OKHTTP": "1.46.0"
       },
       "cordova-plugin-inappbrowser": {}
     }

@@ -18,6 +18,7 @@ import { Utility } from '../../../shared/utilities/util'
 import { GithubClient } from '../misc/github-client.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
+import { GlobalStorageService } from '../storage/global-storage.service'
 import { StorageService } from '../storage/storage.service'
 
 @Injectable()
@@ -27,9 +28,10 @@ export class QuestionnaireService {
     CONIFG_ON_DEMAND_ASSESSMENTS: StorageKeys.CONFIG_ON_DEMAND_ASSESSMENTS,
     CONFIG_CLINICAL_ASSESSMENTS: StorageKeys.CONFIG_CLINICAL_ASSESSMENTS
   }
+  LANG_EN = 'en'
 
   constructor(
-    private storage: StorageService,
+    private storage: GlobalStorageService,
     private localization: LocalizationService,
     private githubClient: GithubClient,
     private util: Utility,
@@ -70,7 +72,10 @@ export class QuestionnaireService {
       .getContent(uri)
       .catch(e => {
         this.logger.error(`Failed to get questionnaires from ${uri}`, e)
-        uri = this.formatQuestionnaireUri(assessment.questionnaire, '')
+        uri = this.formatQuestionnaireUri(
+          assessment.questionnaire,
+          this.LANG_EN
+        )
         return this.githubClient.getContent(uri) as Promise<Question[]>
       })
       .then(translated => {
@@ -90,7 +95,7 @@ export class QuestionnaireService {
       repo = urlParts[2],
       branch = urlParts[3],
       directory = urlParts.slice(4).join('/')
-    const suffix = lang.length ? `_${lang}` : ''
+    const suffix = lang.length && lang != this.LANG_EN ? `_${lang}` : ''
     const fileName =
       questionnaireName + metadata.type + suffix + metadata.format
     return (

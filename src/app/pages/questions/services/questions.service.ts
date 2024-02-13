@@ -96,10 +96,14 @@ export class QuestionsService {
     this.answerService.add(answer)
   }
 
-  getData() {
+  getData(questions) {
+    const answers = this.getAnswers()
+    const timestamps = this.timestampService.timestamps
     return {
-      answers: this.getAnswers(),
-      timestamps: this.timestampService.timestamps
+      answers,
+      timestamps,
+      time: this.getTimeStart(questions, answers, timestamps),
+      timeCompleted: this.getTimeCompleted(answers, timestamps)
     }
   }
 
@@ -109,10 +113,27 @@ export class QuestionsService {
 
   getAnswers() {
     const answers = {}
-    this.answerService.keys.map(
-      d => (answers[d] = this.answerService.answers[d])
+    const timestamps = this.timestampService.timestamps
+    this.answerService.keys.map(d =>
+      timestamps[d] ? (answers[d] = this.answerService.answers[d]) : []
     )
     return answers
+  }
+
+  getTimeStart(questions, answers, timestamps) {
+    // NOTE: Do not include info screen as start time
+    const index = questions.findIndex(
+      q => q.field_type !== QuestionType.info && answers[q.field_name]
+    )
+    const firstKey =
+      index > -1 ? questions[index].field_name : questions[0].field_name
+    return timestamps[firstKey].startTime
+  }
+
+  getTimeCompleted(answers, timestamps) {
+    const answerKeys = Object.keys(answers)
+    const lastKey = answerKeys[answerKeys.length - 1]
+    return timestamps[lastKey].endTime
   }
 
   getTime() {
@@ -241,17 +262,16 @@ export class QuestionsService {
   }
 
   processCompletedQuestionnaire(task, questions): Promise<any> {
-    const data = this.getData()
-    return Promise.all([
-      this.finish.updateTaskToComplete(task),
-      this.finish.processDataAndSend(
-        data.answers,
-        questions,
-        data.timestamps,
-        task
-      ),
-      this.finish.cancelNotificationsForCompletedTask(task)
-    ])
+    const type = task.type
+    return this.questionnaire
+      .getAssessmentForTask(type, task)
+      .then(assessment =>
+        this.finish.processCompletedQuestionnaire(
+          this.getData(questions),
+          task,
+          assessment.questionnaire
+        )
+      )
   }
 
   handleClinicalFollowUp(assessment, completedInClinic?) {

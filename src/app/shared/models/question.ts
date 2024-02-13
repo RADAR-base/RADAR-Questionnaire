@@ -95,3 +95,7 @@ export interface QuestionPosition {
   groupKeyIndex: number
   questionIndices: number[]
 }
+
+export enum WebInputType {
+  NHS = 'nhs'
+}

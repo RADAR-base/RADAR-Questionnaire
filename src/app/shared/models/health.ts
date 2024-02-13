@@ -1,9 +1,32 @@
+export enum HealthkitFloatDataType {
+  STAIRS = 'stairs',
+  DISTANCE = 'distance',
+  APPLE_EXERCISE_TIME = 'appleExerciseTime',
+  VO2MAX = 'vo2Max',
+  ACTIVITY = 'activity',
+  CALORIES = 'calories'
+}
+
 export enum HealthkitDataType {
   STAIRS = 'stairs',
   DISTANCE = 'distance',
   APPLE_EXERCISE_TIME = 'appleExerciseTime',
   VO2MAX = 'vo2Max',
-  ACTIVITY = 'activity'
+  ACTIVITY = 'activity',
+  CALORIES = 'calories'
+}
+
+export enum HealthkitStringDataType {
+  SLEEP = 'sleep',
+  ACTIVITY = 'activity',
+  GENDER = 'gender',
+  DATE_OF_BIRTH = 'date_of_birth'
+}
+
+export enum HealthKitDataTypeKey {
+  STRING = 'stringValue',
+  FLOAT = 'floatValue',
+  DOUBLE = 'doubleValue'
 }
 
 export enum HealthkitSchemaType {
@@ -15,7 +38,7 @@ export enum HealthkitSchemaType {
 }
 
 export interface HealthkitValueExport {
-  startTime: number
+  time: number
   endTime: number
   timeReceived: number
   sourceId: string

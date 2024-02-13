@@ -151,6 +151,22 @@
         (valueChange)="emitAnswer($event)"
       >
       </matrix-radio-input>
+
+      <web-input
+        *ngSwitchCase="'web'"
+        [text]="question.field_label"
+        (valueChange)="emitAnswer($event)"
+        [currentlyShown]="currentlyShown"
+        [type]="question.field_annotation"
+      >
+      </web-input>
+
+      <notes-input
+        *ngSwitchCase="'notes'"
+        (valueChange)="emitAnswer($event)"
+        (keyboardEvent)="onKeyboardEvent($event)"
+        [currentlyShown]="currentlyShown"
+      ></notes-input>
     </div>
   </div>
   <div class="arrow-icon" *ngIf="showScrollButton" (click)="scrollDown()">

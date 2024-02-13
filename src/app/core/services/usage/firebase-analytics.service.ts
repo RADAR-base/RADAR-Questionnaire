@@ -18,7 +18,7 @@ export class FirebaseAnalyticsService extends AnalyticsService {
   }
 
   logEvent(event: string, params: { [key: string]: string }): Promise<any> {
-    this.logger.log('Firebase Event', event)
+    // this.logger.log('Firebase Event', event)
     if (!this.platform.is('cordova'))
       return Promise.resolve('Could not load firebase')
 
@@ -39,7 +39,7 @@ export class FirebaseAnalyticsService extends AnalyticsService {
 
     return FirebaseAnalytics.logEvent({ name: event, params: cleanParams })
       .then((res: any) => {
-        this.logger.log('firebase analytics service', res)
+        // this.logger.log('firebase analytics service', res)
         return res
       })
       .catch((error: any) => {

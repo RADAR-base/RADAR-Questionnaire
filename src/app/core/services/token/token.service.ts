@@ -18,6 +18,7 @@ import { OAuthToken } from '../../../shared/models/token'
 import { getSeconds } from '../../../shared/utilities/time'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { LogService } from '../misc/log.service'
+import { GlobalStorageService } from '../storage/global-storage.service'
 import { StorageService } from '../storage/storage.service'
 
 @Injectable({
@@ -33,7 +34,7 @@ export class TokenService {
 
   constructor(
     public http: HttpClient,
-    public storage: StorageService,
+    public storage: GlobalStorageService,
     private jwtHelper: JwtHelperService,
     private remoteConfig: RemoteConfigService,
     private logger: LogService,

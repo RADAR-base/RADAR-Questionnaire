@@ -36,7 +36,6 @@ export class TasksService {
   }
 
   init() {
-    console.log(this.schedule.isInitialised())
     return this.schedule.isInitialised()
       ? Promise.resolve()
       : this.schedule.init()

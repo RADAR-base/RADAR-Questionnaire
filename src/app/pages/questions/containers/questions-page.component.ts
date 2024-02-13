@@ -186,7 +186,6 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   slideQuestion() {
-    console.log(this.currentQuestionGroupId)
     this.slides
       .lockSwipes(false)
       .then(() => this.slides.slideTo(this.currentQuestionGroupId, 300))
@@ -270,17 +269,10 @@ export class QuestionsPageComponent implements OnInit {
     this.sendEvent(UsageEventType.QUESTIONNAIRE_FINISHED)
     this.submitTimestamps()
     this.showFinishScreen = true
-    this.onQuestionnaireCompleted()
     this.slides
       .lockSwipes(false)
       .then(() => this.slides.slideTo(this.groupedQuestions.size, 500))
       .then(() => this.slides.lockSwipes(true))
-  }
-
-  onQuestionnaireCompleted() {
-    return this.questionsService
-      .processCompletedQuestionnaire(this.task, this.questions)
-      .then(() => this.updateDoneButton(true))
   }
 
   updateDoneButton(val: boolean) {

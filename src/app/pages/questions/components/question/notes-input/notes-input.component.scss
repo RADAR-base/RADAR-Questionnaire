@@ -1,0 +1,15 @@
+ion-item {
+  margin-bottom: 8px !important;
+}
+
+.input {
+  padding-left: 0;
+  width: 80vw;
+  border-start-end-radius: 20px;
+  border-start-start-radius: 20px;
+  border-bottom: 2px solid white;
+  background-color: var(--cl-primary-10);
+  color: var(--ion-font);
+  font-size: 18px;
+  line-height: 1.35em;
+}

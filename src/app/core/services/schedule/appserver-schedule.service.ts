@@ -14,6 +14,7 @@ import { AppServerService } from '../app-server/app-server.service'
 import { QuestionnaireService } from '../config/questionnaire.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
+import { GlobalStorageService } from '../storage/global-storage.service'
 import { StorageService } from '../storage/storage.service'
 import { ScheduleGeneratorService } from './schedule-generator.service'
 import { ScheduleService } from './schedule.service'
@@ -21,7 +22,7 @@ import { ScheduleService } from './schedule.service'
 @Injectable()
 export class AppserverScheduleService extends ScheduleService {
   constructor(
-    private store: StorageService,
+    private store: GlobalStorageService,
     logger: LogService,
     private appServer: AppServerService,
     private localization: LocalizationService,
@@ -45,7 +46,7 @@ export class AppserverScheduleService extends ScheduleService {
         ).then(res => this.setTasks(AssessmentType.SCHEDULED, res))
       })
       .catch(e => {
-        console.log('Error pulling tasks..')
+        console.log('Error pulling tasks.. ' + e)
         return this.getLocalTasksForDate(date, AssessmentType.SCHEDULED)
       })
   }
@@ -102,9 +103,13 @@ export class AppserverScheduleService extends ScheduleService {
       .then(assessment => {
         const newTask = Object.assign(task, {
           reportedCompletion: !!task.completed,
-          nQuestions: assessment.questions.length,
-          warning: this.localization.chooseText(assessment.warn),
-          requiresInClinicCompletion: assessment.requiresInClinicCompletion,
+          nQuestions: assessment ? assessment.questions.length : 1,
+          warning: assessment
+            ? this.localization.chooseText(assessment.warn)
+            : '',
+          requiresInClinicCompletion: assessment
+            ? assessment.requiresInClinicCompletion
+            : false,
           notifications: []
         })
         return newTask

@@ -10,6 +10,7 @@ import {
 } from '../../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { User } from '../../../shared/models/user'
+import { GlobalStorageService } from '../storage/global-storage.service'
 import { StorageService } from '../storage/storage.service'
 import { TokenService } from '../token/token.service'
 
@@ -26,7 +27,7 @@ export class SubjectConfigService {
   }
 
   constructor(
-    public storage: StorageService,
+    public storage: GlobalStorageService,
     private token: TokenService,
     private http: HttpClient
   ) {}
@@ -100,6 +101,16 @@ export class SubjectConfigService {
 
   getBaseUrl(): Promise<String> {
     return this.storage.get(this.SUBJECT_CONFIG_STORE.BASE_URI)
+  }
+
+  getKafkaObservationKey() {
+    return Promise.all([
+      this.getSourceID(),
+      this.getProjectName(),
+      this.getParticipantLogin()
+    ]).then(([sourceId, projectId, userId]) => {
+      return { sourceId, projectId, userId }
+    })
   }
 
   pullSubjectInformation(): Promise<any> {

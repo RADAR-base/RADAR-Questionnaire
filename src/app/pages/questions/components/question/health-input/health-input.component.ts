@@ -12,6 +12,7 @@ import { StorageKeys } from 'src/app/shared/enums/storage'
 import { Health_Requirement, Question } from 'src/app/shared/models/question'
 
 import { Response } from '../../../../../shared/models/question'
+import { HealthkitService } from '../../../services/healthkit.service'
 
 @Component({
   selector: 'health-input',
@@ -28,15 +29,12 @@ export class HealthInputComponent implements OnInit {
   @Input()
   health_question: Question
 
-  health_value: any
-  health_display: any
-  health_display_time: any
-  health_time: any
-  not_support = false
-  // the interval days for first query
-  defaultInterval = 1000
+  health_display: string
+  health_display_time: string
+  isSupported = false
 
   // the bucket for aggregated query
+  defaultInterval = 7 // days
   defaultBucket = 'day'
   MIN_POLL_TIMESTAMP = new Date(
     new Date().getTime() - this.defaultInterval * 24 * 60 * 60 * 1000

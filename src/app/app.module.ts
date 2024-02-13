@@ -21,6 +21,15 @@ import {
   RemoteConfigService
 } from './core/services/config/remote-config.service'
 import { SubjectConfigService } from './core/services/config/subject-config.service'
+import { CacheService } from './core/services/kafka/cache.service'
+import { AppEventConverterService } from './core/services/kafka/converters/app-event-converter.service'
+import { AssessmentConverterService } from './core/services/kafka/converters/assessment-converter.service'
+import { CompletionLogConverterService } from './core/services/kafka/converters/completion-log-converter.service'
+import { ConverterFactoryService } from './core/services/kafka/converters/converter-factory.service.'
+import { ConverterService } from './core/services/kafka/converters/converter.service'
+import { HealthkitConverterService } from './core/services/kafka/converters/healthkit-converter.service'
+import { KeyConverterService } from './core/services/kafka/converters/key-converter.service'
+import { TimezoneConverterService } from './core/services/kafka/converters/timezone-converter.service'
 import { KafkaService } from './core/services/kafka/kafka.service'
 import { SchemaService } from './core/services/kafka/schema.service'
 import { AlertService } from './core/services/misc/alert.service'
@@ -38,6 +47,8 @@ import { LocalScheduleService } from './core/services/schedule/local-schedule.se
 import { ScheduleFactoryService } from './core/services/schedule/schedule-factory.service'
 import { ScheduleGeneratorService } from './core/services/schedule/schedule-generator.service'
 import { ScheduleService } from './core/services/schedule/schedule.service'
+import { GlobalStorageService } from './core/services/storage/global-storage.service'
+import { HealthStorageService } from './core/services/storage/health-storage.service'
 import { StorageService } from './core/services/storage/storage.service'
 import { TokenService } from './core/services/token/token.service'
 import { AnalyticsService } from './core/services/usage/analytics.service'
@@ -96,10 +107,20 @@ import { Utility } from './shared/utilities/util'
     KafkaService,
     LocalizationService,
     ScheduleGeneratorService,
-    StorageService,
+    GlobalStorageService,
+    HealthStorageService,
+    { provide: StorageService, useClass: GlobalStorageService },
     TranslatePipe,
     UsageService,
     SchemaService,
+    ConverterFactoryService,
+    AssessmentConverterService,
+    AppEventConverterService,
+    CompletionLogConverterService,
+    TimezoneConverterService,
+    KeyConverterService,
+    HealthkitConverterService,
+    CacheService,
     NotificationGeneratorService,
     FcmRestNotificationService,
     LocalNotificationService,

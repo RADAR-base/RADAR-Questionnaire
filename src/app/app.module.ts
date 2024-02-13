@@ -6,8 +6,6 @@ import { BrowserModule } from '@angular/platform-browser'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { RouterModule } from '@angular/router'
 import { JWT_OPTIONS, JwtModule } from '@auth0/angular-jwt'
-import { MobileAccessibility } from '@awesome-cordova-plugins/mobile-accessibility/ngx'
-import { WebIntent } from '@awesome-cordova-plugins/web-intent/ngx'
 import { IonicModule } from '@ionic/angular'
 import { IonicStorageModule, Storage } from '@ionic/storage'
 
@@ -81,9 +79,6 @@ import { Utility } from './shared/utilities/util'
   entryComponents: [AppComponent],
   providers: [
     Utility,
-    File,
-    WebIntent,
-    MobileAccessibility,
     LogService,
     LocalScheduleService,
     AppserverScheduleService,

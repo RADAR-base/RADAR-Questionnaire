@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core'
-import { WebIntent } from '@awesome-cordova-plugins/web-intent/ngx'
 import { Platform } from '@ionic/angular'
 import { Subscription } from 'rxjs'
 
@@ -46,7 +45,6 @@ export class FcmRestNotificationService extends FcmNotificationService {
     public remoteConfig: RemoteConfigService,
     public localization: LocalizationService,
     private appServerService: AppServerService,
-    private webIntent: WebIntent
   ) {
     super(storage, config, platform, logger, remoteConfig)
     this.platform.ready().then(() => {
@@ -62,33 +60,33 @@ export class FcmRestNotificationService extends FcmNotificationService {
   }
 
   onAppOpen() {
-    return this.webIntent.getIntent().then(intent => {
-      if (!intent.extras) return
-      const extras = intent.extras['google.message_id'].split(':')
-      const messageId = extras[extras.length - 1]
-      return Promise.all([
-        this.getSubjectDetails(),
-        this.schedule.getTasks(AssessmentType.ALL)
-      ]).then(([subject, tasks]) => {
-        const notification = this.notifications.findNotificationByMessageId(
-          tasks,
-          messageId
-        )
-        return this.appServerService
-          .updateNotificationState(
-            subject,
-            notification.id,
-            NotificationMessagingState.DELIVERED
-          )
-          .then(() =>
-            this.appServerService.updateNotificationState(
-              subject,
-              notification.id,
-              NotificationMessagingState.OPENED
-            )
-          )
-      })
-    })
+    // return this.webIntent.getIntent().then(intent => {
+    //   if (!intent.extras) return
+    //   const extras = intent.extras['google.message_id'].split(':')
+    //   const messageId = extras[extras.length - 1]
+    //   return Promise.all([
+    //     this.getSubjectDetails(),
+    //     this.schedule.getTasks(AssessmentType.ALL)
+    //   ]).then(([subject, tasks]) => {
+    //     const notification = this.notifications.findNotificationByMessageId(
+    //       tasks,
+    //       messageId
+    //     )
+    //     return this.appServerService
+    //       .updateNotificationState(
+    //         subject,
+    //         notification.id,
+    //         NotificationMessagingState.DELIVERED
+    //       )
+    //       .then(() =>
+    //         this.appServerService.updateNotificationState(
+    //           subject,
+    //           notification.id,
+    //           NotificationMessagingState.OPENED
+    //         )
+    //       )
+    //   })
+    // })
   }
 
   getSubjectDetails() {

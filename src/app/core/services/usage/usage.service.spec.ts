@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing'
-import { WebIntent } from '@ionic-native/web-intent/ngx'
 
 import {
   FirebaseAnalyticsServiceMock,
@@ -25,7 +24,6 @@ describe('UsageService', () => {
         },
         { provide: KafkaService, useClass: KafkaServiceMock },
         { provide: LogService, useClass: LogServiceMock },
-        { provide: WebIntent, useClass: WebIntentMock }
       ]
     })
   )

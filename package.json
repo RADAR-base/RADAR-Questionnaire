@@ -49,8 +49,6 @@
     "@angular/router": "~12.2.17",
     "@auth0/angular-jwt": "5.0.0",
     "@awesome-cordova-plugins/core": "^6.3.0",
-    "@awesome-cordova-plugins/mobile-accessibility": "^6.3.0",
-    "@awesome-cordova-plugins/web-intent": "^6.3.0",
     "@capacitor-community/barcode-scanner": "^4.0.1",
     "@capacitor-community/keep-awake": "^4.0.0",
     "@capacitor-firebase/analytics": "^5.0.0",
@@ -101,7 +99,6 @@
     "morph-expressions": "^1.1.1",
     "ngx-moment": "^5.0.0",
     "path": "^0.12.7",
-    "phonegap-plugin-mobile-accessibility": "^1.0.5",
     "rxjs": "^6.6.3",
     "sass": "^1.52.2",
     "smoothscroll-polyfill": "^0.4.4",
@@ -128,7 +125,6 @@
     "codelyzer": "^6.0.2",
     "cordova-android": "^10.1.2",
     "cordova-ios": "^6.2.0",
-    "cordova-plugin-media-with-compression": "^2.3.1",
     "cordova-sqlite-storage": "^6.0.0",
     "eslint": "^7.6.0",
     "eslint-plugin-import": "2.22.1",
@@ -180,17 +176,6 @@
     "loader-utils": "2.0.4",
     "nth-check": "2.0.1",
     "webpack": "5.76.0"
-  },
-  "cordova": {
-    "platforms": [
-      "ios",
-      "android"
-    ],
-    "plugins": {
-      "phonegap-plugin-mobile-accessibility": {},
-      "com-darryncampbell-cordova-plugin-intent": {},
-      "cordova-plugin-media-with-compression": {}
-    }
   },
   "ionic_enable_lint": false
 }

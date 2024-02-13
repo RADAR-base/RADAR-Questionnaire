@@ -1,5 +1,4 @@
 import { Component } from '@angular/core'
-import { MobileAccessibility } from '@awesome-cordova-plugins/mobile-accessibility/ngx'
 import { StatusBar } from '@capacitor/status-bar'
 import { Platform } from '@ionic/angular'
 
@@ -16,10 +15,8 @@ export class AppComponent {
 
   constructor(
     private platform: Platform,
-    private accessibility: MobileAccessibility
   ) {
     this.platform.ready().then(() => {
-      this.accessibility.usePreferredTextZoom(false)
       StatusBar.hide()
       this.isAppInitialized = true
     })

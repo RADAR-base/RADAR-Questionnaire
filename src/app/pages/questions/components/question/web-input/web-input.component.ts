@@ -7,14 +7,11 @@ import {
   Output,
   ViewChild
 } from '@angular/core'
-import {
-  InAppBrowser,
-  InAppBrowserOptions
-} from '@awesome-cordova-plugins/in-app-browser/ngx'
-import { Keyboard } from '@ionic-native/keyboard/ngx'
 import { KeyboardEventType } from 'src/app/shared/enums/events'
 import { WebInputType } from 'src/app/shared/models/question'
 import { isValidNHSId } from 'src/app/shared/utilities/form-validators'
+import { Browser, OpenOptions } from '@capacitor/browser'
+import { Keyboard } from '@capacitor/keyboard'
 
 @Component({
   selector: 'web-input',
@@ -33,24 +30,21 @@ export class WebInputComponent implements OnInit {
   @Input()
   type: string
 
+  keyboard = Keyboard
+  browser = Browser
+
   url: string
   validator
   textValue = ''
   inputValid = true
   NHS_URL = 'https://www.nhs.uk/nhs-services/online-services/find-nhs-number/'
 
-  browserOptions: InAppBrowserOptions = {
-    location: 'no',
-    hidenavigationbuttons: 'yes',
-    hideurlbar: 'yes',
-    toolbarcolor: '#6d9aa5',
-    closebuttoncolor: '#ffffff'
+  browserOptions: OpenOptions = {
+    url: '',
+    toolbarColor: '#6d9aa5',
   }
 
-  constructor(
-    private theInAppBrowser: InAppBrowser,
-    private keyboard: Keyboard
-  ) {}
+  constructor() {}
 
   ngOnInit() {
       this.url = this.getWebUrl()
@@ -77,7 +71,8 @@ export class WebInputComponent implements OnInit {
   }
 
   openWithInAppBrowser(url: string) {
-    this.theInAppBrowser.create(url, '_blank', this.browserOptions)
+    const options = Object.assign({}, this.browserOptions, { url })
+    this.browser.open(options)
   }
 
   getWebUrl() {

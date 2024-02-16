@@ -20,6 +20,10 @@ export class QRFormComponent {
       showFlipCameraButton: true,
       orientation: 'portrait'
     }
-    return BarcodeScanner.startScan().then(res => this.data.emit(res.content))
+    BarcodeScanner.checkPermission({ force: true }).then(() => {
+      BarcodeScanner.hideBackground().then(() =>
+        BarcodeScanner.startScan().then(res => this.data.emit(res.content))
+      )
+    })
   }
 }

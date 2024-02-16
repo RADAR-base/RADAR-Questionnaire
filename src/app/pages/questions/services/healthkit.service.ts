@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core'
-import { Health } from '@awesome-cordova-plugins/health/ngx'
 import { Platform } from '@ionic/angular'
 import { StorageService } from 'src/app/core/services/storage/storage.service'
 import { StorageKeys } from 'src/app/shared/enums/storage'
@@ -8,7 +7,14 @@ import {
   setDateTimeToMidnight,
   setDateTimeToMidnightEpoch
 } from 'src/app/shared/utilities/time'
-
+import {
+  ActivityData,
+  CapacitorHealthkit,
+  OtherData,
+  QueryOutput,
+  SampleNames,
+  SleepData
+} from '@perfood/capacitor-healthkit'
 import { LogService } from '../../../core/services/misc/log.service'
 
 declare var Media: any // stops errors w/ cordova-plugin-media-with-compression types
@@ -31,9 +37,6 @@ export class HealthkitService {
   MAX_HOURLY_RECORD_LIMIT = 500
 
   constructor(
-    private platform: Platform,
-    private logger: LogService,
-    private health: Health,
     private storage: StorageService
   ) {
     this.initLastPollTimes()
@@ -56,19 +59,21 @@ export class HealthkitService {
   }
 
   checkHealthkitSupported() {
-    return this.health.isAvailable()
+    return CapacitorHealthkit.isAvailable()
   }
 
   loadData(healthDataType) {
     return this.getLastPollTimes().then(dic => {
       let lastPollTime = this.MIN_POLL_TIMESTAMP
       if (healthDataType in dic) lastPollTime = dic[healthDataType]
-      return this.health
-        .requestAuthorization([
+      return CapacitorHealthkit
+        .requestAuthorization(
           {
-            read: [healthDataType] //read only permission
+            all: [''],
+            read: [healthDataType], //read only permission
+            write: [''],
           }
-        ])
+        )
         .then(() => {
           const endDate = new Date()
           return this.query(lastPollTime, endDate, healthDataType).then(res => {
@@ -92,13 +97,13 @@ export class HealthkitService {
     let endTime = startTime + getMilliseconds({ hours: 1 })
     let completeData = []
     while (endTime < queryEndTime.getTime()) {
-      await this.health
-        .query({
-          startDate: new Date(startTime),
-          endDate: new Date(endTime),
-          dataType: dataType,
-          limit: this.MAX_HOURLY_RECORD_LIMIT
-        })
+      const queryOptions = {
+        sampleName: dataType,
+        startDate: new Date(startTime).toISOString(),
+        endDate: new Date(endTime).toISOString(),
+        limit: this.MAX_HOURLY_RECORD_LIMIT,
+      };
+      await CapacitorHealthkit.queryHKitSampleType(queryOptions)
         .then(res => {
           return (completeData = completeData.concat(res))
         })

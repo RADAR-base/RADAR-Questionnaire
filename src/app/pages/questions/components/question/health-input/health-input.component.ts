@@ -31,6 +31,8 @@ export class HealthInputComponent implements OnInit {
 
   health_display: string
   health_display_time: string
+  health_value: any
+  health_time: any
   isSupported = false
 
   // the bucket for aggregated query
@@ -78,7 +80,7 @@ export class HealthInputComponent implements OnInit {
           .catch(e => console.log(e))
       })
       .catch(e => {
-        this.not_support = true
+        this.isSupported = false
       })
   }
 

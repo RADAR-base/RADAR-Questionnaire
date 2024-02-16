@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
-import { Keyboard } from '@ionic-native/keyboard/ngx'
+import { Keyboard } from '@capacitor/keyboard'
 import { ModalController } from '@ionic/angular'
 
 import { LocalizationService } from '../../../../../core/services/misc/localization.service'
@@ -22,11 +22,11 @@ export class NotesInputComponent implements OnInit {
 
   textValue = ''
   value = {}
+  keyboard = Keyboard
 
   constructor(
     private localization: LocalizationService,
     public modalCtrl: ModalController,
-    private keyboard: Keyboard
   ) {}
 
   ngOnInit() {}

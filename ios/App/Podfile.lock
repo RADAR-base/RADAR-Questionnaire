@@ -3,7 +3,7 @@ PODS:
     - CapacitorCordova
   - CapacitorApp (5.0.2):
     - Capacitor
-  - CapacitorAppLauncher (5.0.2):
+  - CapacitorAppLauncher (5.0.7):
     - Capacitor
   - CapacitorBrowser (5.0.2):
     - Capacitor
@@ -184,7 +184,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Capacitor: 304a960e431f9e6f78556554ca71c41c1b2b9680
   CapacitorApp: ff3f625ee3266e9e3f66a8900985920fa05bbf47
-  CapacitorAppLauncher: ccb65c596a5ec04e9cd564bd3e07c4c370f75224
+  CapacitorAppLauncher: e20e53bcc6500dd1a69a4702cf73e71ddafbcb2a
   CapacitorBrowser: a9d0a398a68a90567394676a8d8a1ec824c02ded
   CapacitorCommunityBarcodeScanner: a43bb14cec343f4defaf26cac281d799b25b90f0
   CapacitorCommunityKeepAwake: 5127ac2043946ccc83a3716b3961152b94ad37f9

@@ -7,6 +7,7 @@ import {
   DefaultMetaTokenURI
 } from '../../../../../assets/data/defaultConfig'
 import { isValidURL } from '../../../../shared/utilities/form-validators'
+import { Capacitor } from '@capacitor/core'
 
 @Component({
   selector: 'token-form',
@@ -32,7 +33,9 @@ export class TokenFormComponent {
   constructor() {}
 
   async submitForm() {
-    await Keyboard.hide()
+    if (Capacitor.isNativePlatform()) {
+      await Keyboard.hide()
+    }
     const baseURL = this.metaQRForm.get('baseURL').value.trim()
     const token = this.metaQRForm.get('tokenName').value.trim()
     if (!isValidURL(baseURL))

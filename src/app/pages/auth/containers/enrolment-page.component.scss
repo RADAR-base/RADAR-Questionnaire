@@ -67,8 +67,8 @@
 
 .bottom {
   position: fixed;
-  bottom: 16px;
-  width: 90%;
+  bottom: 128px;
+  width: 100%;
 }
 
 ion-item.item {
@@ -106,10 +106,11 @@ img {
 
 ion-card {
   box-shadow: none !important;
-  height: 60%;
-  margin-top: 24px;
+  height: 100%;
+  margin-top: 312px;
+  margin-bottom: 104px;
   color: white;
-  overflow: visible;
+  // overflow: visible;
   --background: transparent;
   background: transparent;
 }
@@ -119,7 +120,7 @@ ion-slides {
 }
 
 .bt--full {
-  width: 100%;
+  width: 96%;
 }
 
 .policy {

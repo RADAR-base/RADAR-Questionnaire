@@ -151,11 +151,10 @@ export class KafkaService {
     this.cache.setCacheSending(true)
     return Promise.all([
       this.cache.getCache(),
-      this.cache.getHealthCache(),
       this.getKafkaHeaders(DefaultKafkaRequestContentType)
     ])
-      .then(([cache, healthCache, headers]) => {
-        const completeCache = { ...cache, ...healthCache }
+      .then(([cache, headers]) => {
+        const completeCache = { ...cache }
         return this.convertCacheToRecords(completeCache).then(records => {
           return Promise.all(
             records.map(r =>

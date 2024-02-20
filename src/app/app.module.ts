@@ -48,7 +48,6 @@ import { ScheduleFactoryService } from './core/services/schedule/schedule-factor
 import { ScheduleGeneratorService } from './core/services/schedule/schedule-generator.service'
 import { ScheduleService } from './core/services/schedule/schedule.service'
 import { GlobalStorageService } from './core/services/storage/global-storage.service'
-import { HealthStorageService } from './core/services/storage/health-storage.service'
 import { StorageService } from './core/services/storage/storage.service'
 import { TokenService } from './core/services/token/token.service'
 import { AnalyticsService } from './core/services/usage/analytics.service'
@@ -108,7 +107,6 @@ import { Utility } from './shared/utilities/util'
     LocalizationService,
     ScheduleGeneratorService,
     GlobalStorageService,
-    HealthStorageService,
     { provide: StorageService, useClass: GlobalStorageService },
     TranslatePipe,
     UsageService,

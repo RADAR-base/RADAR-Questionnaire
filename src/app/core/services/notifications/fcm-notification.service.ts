@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core'
 import { FirebaseMessaging } from '@capacitor-firebase/messaging'
 import { Platform } from '@ionic/angular'
-import { Subscription } from 'rxjs'
 
 import {
   DefaultNotificationTtlMinutes,
@@ -23,7 +22,6 @@ export abstract class FcmNotificationService extends NotificationService {
   FCM_TOKEN: string
   upstreamResends: number
   ttlMinutes = 10
-  private tokenSubscription: Subscription
 
   constructor(
     public store: GlobalStorageService,
@@ -33,7 +31,6 @@ export abstract class FcmNotificationService extends NotificationService {
     public remoteConfig: RemoteConfigService
   ) {
     super(store)
-    this.tokenSubscription = null
     this.platform.ready().then(() => {
       this.remoteConfig.subject().subscribe(cfg => {
         cfg
@@ -50,15 +47,17 @@ export abstract class FcmNotificationService extends NotificationService {
   }
 
   async init() {
-    return FirebaseMessaging.getToken().then(async token => {
-      if (this.tokenSubscription === null) {
-        await FirebaseMessaging.addListener('tokenReceived', event =>
-          this.onTokenRefresh(event)
-        )
-      }
-      if (token) {
-        return this.onTokenRefresh(token)
-      }
+    await FirebaseMessaging.addListener('tokenReceived', event =>
+      this.onTokenRefresh(event.token)
+    )
+    return this.getFcmToken().then(token => {
+      this.onTokenRefresh(token)
+    })
+  }
+
+  getFcmToken() {
+    return FirebaseMessaging.getToken().then(async res => {
+      return res ? res.token : null
     })
   }
 
@@ -106,11 +105,8 @@ export abstract class FcmNotificationService extends NotificationService {
       : getSeconds({ minutes: this.ttlMinutes })
   }
 
-  unregisterFromNotifications(): Promise<any> {
-    if (this.tokenSubscription) {
-      this.tokenSubscription.unsubscribe()
-      this.tokenSubscription = null
-    }
+  async unregisterFromNotifications(): Promise<any> {
+    await FirebaseMessaging.removeAllListeners()
     // NOTE: This will delete the current device token and stop receiving notifications
     return FirebaseMessaging.deleteToken()
   }

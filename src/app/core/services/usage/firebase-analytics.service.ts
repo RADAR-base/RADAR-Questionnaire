@@ -6,6 +6,7 @@ import { User } from '../../../shared/models/user'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { LogService } from '../misc/log.service'
 import { AnalyticsService } from './analytics.service'
+import { Capacitor } from '@capacitor/core'
 
 @Injectable()
 export class FirebaseAnalyticsService extends AnalyticsService {
@@ -19,9 +20,8 @@ export class FirebaseAnalyticsService extends AnalyticsService {
 
   logEvent(event: string, params: { [key: string]: string }): Promise<any> {
     // this.logger.log('Firebase Event', event)
-    if (!this.platform.is('cordova'))
-      return Promise.resolve('Could not load firebase')
-
+    if (!Capacitor.isNativePlatform()) return Promise.resolve()
+    
     const cleanParams = {}
 
     Object.entries(params).forEach(([key, value]) => {
@@ -108,10 +108,12 @@ export class FirebaseAnalyticsService extends AnalyticsService {
   }
 
   setUserId(userId: string): Promise<any> {
-    return FirebaseAnalytics.setUserId({ userId: userId })
+    if (!Capacitor.isNativePlatform()) return Promise.resolve()
+      return FirebaseAnalytics.setUserId({ userId: userId })
   }
 
   setCurrentScreen(screenName: string): Promise<any> {
+    if (!Capacitor.isNativePlatform()) return Promise.resolve()
     return FirebaseAnalytics.setCurrentScreen({ screenName })
   }
 

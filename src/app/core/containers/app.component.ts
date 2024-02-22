@@ -3,6 +3,7 @@ import { StatusBar } from '@capacitor/status-bar'
 import { Platform } from '@ionic/angular'
 
 import { SplashPageComponent } from '../../pages/splash/containers/splash-page.component'
+import { Capacitor } from '@capacitor/core'
 
 @Component({
   selector: 'app-root',
@@ -13,11 +14,11 @@ export class AppComponent {
   rootPage = SplashPageComponent
   isAppInitialized: boolean
 
-  constructor(
-    private platform: Platform,
-  ) {
+  constructor(private platform: Platform) {
     this.platform.ready().then(() => {
-      StatusBar.hide()
+      if (Capacitor.isNativePlatform()) {
+        StatusBar.hide()
+      }
       this.isAppInitialized = true
     })
   }

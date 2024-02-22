@@ -10,7 +10,6 @@ import {
 import { StorageKeys } from '../../../shared/enums/storage'
 import { setDateTimeToMidnightEpoch } from '../../../shared/utilities/time'
 import { GlobalStorageService } from '../storage/global-storage.service'
-import { StorageService } from '../storage/storage.service'
 
 @Injectable()
 export class AppConfigService {
@@ -25,7 +24,7 @@ export class AppConfigService {
     SETTINGS_WEEKLYREPORT: StorageKeys.SETTINGS_WEEKLYREPORT
   }
 
-  constructor(public storage: StorageService) {}
+  constructor(public storage: GlobalStorageService) {}
 
   init(enrolmentDate) {
     return Promise.all([

@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing'
-import { LocalNotifications } from '@ionic-native/local-notifications/ngx'
 
 import {
   LocalNotificationsMock,
@@ -11,7 +10,6 @@ import {
 import { LogService } from '../misc/log.service'
 import { ScheduleService } from '../schedule/schedule.service'
 import { GlobalStorageService } from '../storage/global-storage.service'
-import { StorageService } from '../storage/storage.service'
 import { LocalNotificationService } from './local-notification.service'
 import { NotificationGeneratorService } from './notification-generator.service'
 
@@ -22,7 +20,6 @@ describe('LocalNotificationService', () => {
     TestBed.configureTestingModule({
       providers: [
         LocalNotificationService,
-        { provide: LocalNotifications, useClass: LocalNotificationsMock },
         { provide: LogService, useClass: LogServiceMock },
         { provide: GlobalStorageService, useClass: StorageServiceMock },
         {

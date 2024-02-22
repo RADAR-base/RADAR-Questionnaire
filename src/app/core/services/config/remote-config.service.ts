@@ -9,7 +9,7 @@ import { StorageKeys } from '../../../shared/enums/storage'
 import { getSeconds } from '../../../shared/utilities/time'
 import { LogService } from '../misc/log.service'
 import { GlobalStorageService } from '../storage/global-storage.service'
-import { StorageService } from '../storage/storage.service'
+import { Capacitor } from '@capacitor/core'
 
 @Injectable()
 export class RemoteConfigService {
@@ -110,7 +110,7 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
   private MINIMUM_FETCH_INTERVAL_SECONDS = 21600 // 6 hours
 
   constructor(
-    storage: StorageService,
+    storage: GlobalStorageService,
     private logger: LogService,
     private platform: Platform
   ) {
@@ -139,8 +139,8 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
   }
 
   private async fetch(timeoutMillis: number) {
-    if (!this.platform.is('cordova')) {
-      console.log('Not fetching Firebase Remote Config without cordova')
+
+    if (!Capacitor.isNativePlatform()) {
       return Promise.resolve(this.configSubject.value)
     }
     console.log('Fetching Firebase Remote Config')

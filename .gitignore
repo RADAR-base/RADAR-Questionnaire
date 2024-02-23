@@ -14,6 +14,7 @@ log.txt
 .vscode/
 npm-debug.log*
 
+.angular
 .idea/
 .sass-cache/
 .tmp/

@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed, async } from '@angular/core/testing'
 import { IonicModule, NavController, NavParams } from '@ionic/angular'
-import { NavParamsMock } from 'ionic-mocks'
 import { PipesModule } from 'src/app/shared/pipes/pipes.module'
 
 import { AppModule } from '../../../app.module'
@@ -28,7 +27,6 @@ describe('QuestionsPageComponent', () => {
       ],
       providers: [
         NavController,
-        { provide: NavParams, useClass: NavParamsMock },
         { provide: QuestionsService, useClass: QuestionsServiceMock }
       ]
     }).compileComponents()

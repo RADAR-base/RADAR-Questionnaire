@@ -101,7 +101,7 @@ export class AudioInputComponent implements OnDestroy, OnInit {
     ]).then(res => {
       this.onRecordStart.emit(true)
       this.usage.sendGeneralEvent(UsageEventType.RECORDING_STARTED, true)
-      return res[0] && res[1]
+      return res['publicStorage'] == 'granted'
         ? this.audioRecordService.startAudioRecording()
         : Promise.reject()
     })

@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core'
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core'
 import { Router } from '@angular/router'
 import { KeepAwake } from '@capacitor-community/keep-awake'
-import { IonSlides, NavController, Platform } from '@ionic/angular'
+import { NavController, Platform } from '@ionic/angular'
 import { Subscription } from 'rxjs'
 
 import { AlertService } from '../../../core/services/misc/alert.service'
@@ -32,7 +32,8 @@ import { QuestionsService } from '../services/questions.service'
   styleUrls: ['questions-page.component.scss']
 })
 export class QuestionsPageComponent implements OnInit {
-  @ViewChild(IonSlides, { static: true }) slides: IonSlides
+  @ViewChild('swiper')
+  slides: ElementRef | undefined;
 
   startTime: number
   currentQuestionGroupId = 0
@@ -110,13 +111,14 @@ export class QuestionsPageComponent implements OnInit {
         })
       this.sendEvent(UsageEventType.QUESTIONNAIRE_STARTED)
       this.usage.setPage(this.constructor.name)
-      this.slides.lockSwipes(true)
+      this.slides.nativeElement.swiper.allowSlideNext = false
+      this.slides.nativeElement.swiper.allowSlidePrev = false
       KeepAwake.keepAwake()
     }
   }
 
   ionViewWillEnter() {
-    this.slides.update()
+    this.slides.nativeElement.swiper.update()
   }
 
   initQuestionnaire(res) {
@@ -167,7 +169,7 @@ export class QuestionsPageComponent implements OnInit {
       this.taskType
     )
     if (start) {
-      this.slides.update()
+      this.slides.nativeElement.swiper.update()
       this.slideQuestion()
     } else this.exitQuestionnaire()
   }
@@ -186,11 +188,11 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   slideQuestion() {
-    this.slides
-      .lockSwipes(false)
-      .then(() => this.slides.slideTo(this.currentQuestionGroupId, 300))
-      .then(() => this.slides.lockSwipes(true))
-
+    this.slides.nativeElement.swiper.allowSlideNext = true
+    this.slides.nativeElement.swiper.allowSlidePrev = true
+    this.slides.nativeElement.swiper.slideTo(this.currentQuestionGroupId, 300)
+    this.slides.nativeElement.swiper.allowSlideNext = false
+    this.slides.nativeElement.swiper.allowSlidePrev = false
     this.startTime = this.questionsService.getTime()
   }
 
@@ -269,10 +271,9 @@ export class QuestionsPageComponent implements OnInit {
     this.sendEvent(UsageEventType.QUESTIONNAIRE_FINISHED)
     this.submitTimestamps()
     this.showFinishScreen = true
-    this.slides
-      .lockSwipes(false)
-      .then(() => this.slides.slideTo(this.groupedQuestions.size, 500))
-      .then(() => this.slides.lockSwipes(true))
+    this.slides.nativeElement.swiper.allowSlideNext = true
+    this.slides.nativeElement.swiper.slideTo(this.groupedQuestions.size, 500)
+    this.slides.nativeElement.swiper.allowSlideNext = false
   }
 
   updateDoneButton(val: boolean) {

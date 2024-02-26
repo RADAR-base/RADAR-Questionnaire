@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed, async } from '@angular/core/testing'
 import { IonicModule, NavController, NavParams } from '@ionic/angular'
-import { NavParamsMock } from 'ionic-mocks'
 
 import { AppModule } from '../../../app.module'
 import { SplashPageComponent } from './splash-page.component'
@@ -15,7 +14,6 @@ describe('SpashPageComponent', () => {
       declarations: [SplashPageComponent],
       providers: [
         NavController,
-        { provide: NavParams, useClass: NavParamsMock }
       ]
     }).compileComponents()
 

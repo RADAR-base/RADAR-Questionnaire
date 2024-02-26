@@ -1,8 +1,8 @@
-ion-slide.swiper-slide {
+swiper-slide.swiper-slide {
   align-items: flex-start;
 }
 
-ion-slide {
+swiper-slide {
   overflow-x: hidden !important;
   padding: 24px 24px 0;
   display: flex;
@@ -12,7 +12,7 @@ ion-slide {
   height: 100%;
 }
 
-ion-slides {
+swiper-container {
   height: 100vh;
 }
 

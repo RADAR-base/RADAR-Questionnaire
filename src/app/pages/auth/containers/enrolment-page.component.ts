@@ -1,7 +1,7 @@
-import { Component, ViewChild } from '@angular/core'
+import { Component, ElementRef, ViewChild } from '@angular/core'
 import { Browser } from '@capacitor/browser'
 import { Device } from '@capacitor/device'
-import { IonSlides, NavController } from '@ionic/angular'
+import { NavController } from '@ionic/angular'
 import { AlertInput } from '@ionic/core'
 
 import {
@@ -31,7 +31,9 @@ import { AuthService } from '../services/auth.service'
   styleUrls: ['./enrolment-page.component.scss']
 })
 export class EnrolmentPageComponent {
-  @ViewChild(IonSlides, { static: true }) slides: IonSlides
+  @ViewChild('swiper')
+  slides: ElementRef | undefined;
+
   loading: boolean = false
   showOutcomeStatus: boolean = false
   outcomeStatus: string
@@ -62,18 +64,18 @@ export class EnrolmentPageComponent {
 
   ionViewDidEnter() {
     this.usage.setPage(this.constructor.name)
-    this.slides.lockSwipes(true)
+    this.slides.nativeElement.swiper.allowSlideNext = false
+    this.slides.nativeElement.swiper.allowSlidePrev = false
   }
 
   next() {
-    Promise.all([
-      this.slides.lockSwipes(false),
-      this.slides.getActiveIndex()
-    ]).then(([, index]) => {
+      this.slides.nativeElement.swiper.allowSlideNext = true
+      const index = this.slides.nativeElement.swiper.activeIndex
       const slideIndex = index + 1
-      this.slides.slideTo(slideIndex, 500)
-      this.slides.lockSwipes(true)
-    })
+      this.slides.nativeElement.swiper.slideTo()
+      this.slides.nativeElement.swiper.slideTo(slideIndex, 500)
+      this.slides.nativeElement.swiper.allowSlideNext = false
+      this.slides.nativeElement.swiper.allowSlidePrev = false
   }
 
   enterToken() {

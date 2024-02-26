@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing'
 import { Platform } from '@ionic/angular'
-import { PlatformMock } from 'ionic-mocks'
 
 import {
   FirebaseMock,
@@ -19,7 +18,6 @@ describe('FirebaseAnalyticsService', () => {
       providers: [
         FirebaseAnalyticsService,
         { provide: LogService, useClass: LogServiceMock },
-        { provide: Platform, useClass: PlatformMock },
         { provide: RemoteConfigService, useClass: RemoteConfigServiceMock }
       ]
     })

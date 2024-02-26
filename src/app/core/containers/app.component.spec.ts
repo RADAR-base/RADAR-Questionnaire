@@ -1,7 +1,6 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core'
 import { ComponentFixture, TestBed, async } from '@angular/core/testing'
 import { Platform } from '@ionic/angular'
-import { StatusBar } from '@capacitor/status-bar'
 
 import { NotificationServiceMock } from '../../shared/testing/mock-services'
 import { NotificationService } from '../services/notifications/notification.service'
@@ -16,7 +15,6 @@ describe('AppComponent', () => {
       declarations: [AppComponent],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
-        StatusBar,
         Platform,
         { provide: NotificationService, useClass: NotificationServiceMock }
       ]

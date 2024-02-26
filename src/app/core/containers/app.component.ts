@@ -1,6 +1,7 @@
 import { Component } from '@angular/core'
 import { StatusBar } from '@capacitor/status-bar'
 import { Platform } from '@ionic/angular'
+import { register } from 'swiper/element/bundle'
 
 import { SplashPageComponent } from '../../pages/splash/containers/splash-page.component'
 import { Capacitor } from '@capacitor/core'
@@ -15,6 +16,7 @@ export class AppComponent {
   isAppInitialized: boolean
 
   constructor(private platform: Platform) {
+    register()
     this.platform.ready().then(() => {
       if (Capacitor.isNativePlatform()) {
         StatusBar.hide()

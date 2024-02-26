@@ -1,7 +1,7 @@
 <ion-content>
-  <ion-slides [pager]="false">
+  <swiper-container #swiper [pager]="false">
     <!-- SLIDE 1 -->
-    <ion-slide id="intro-language">
+    <swiper-slide id="intro-language">
       <ion-card>
         <div class="logo-container">
           <img class="logo" src="assets/imgs/radar-logo.svg" alt="RADAR LOGO" />
@@ -34,10 +34,10 @@
           </ion-button>
         </div>
       </ion-card>
-    </ion-slide>
+    </swiper-slide>
 
     <!-- SLIDE 2 -->
-    <ion-slide id="intro">
+    <swiper-slide id="intro">
       <ion-card>
         <div class="logo-container">
           <img class="logo" src="assets/imgs/radar-logo.svg" alt="RADAR LOGO" />
@@ -55,10 +55,10 @@
           </ion-button>
         </div>
       </ion-card>
-    </ion-slide>
+    </swiper-slide>
 
     <!-- SLIDE 3 -->
-    <ion-slide id="qr-registration-choice">
+    <swiper-slide id="qr-registration-choice">
       <ion-card>
         <div class="registration">
           <div class="text text-lg">{{ 'ENROL_REGISTRATION' | translate }}</div>
@@ -91,10 +91,10 @@
           </p>
         </div>
       </ion-card>
-    </ion-slide>
+    </swiper-slide>
 
     <!-- SLIDE 4 -->
-    <ion-slide id="qr-registration">
+    <swiper-slide id="qr-registration">
       <ion-card>
         <div class="registration">
           <div class="text text-lg">{{ 'ENROL_REGISTRATION' | translate }}</div>
@@ -122,10 +122,10 @@
           {{ 'STATUS_LOADING' | translate }}...
         </div>
       </div>
-    </ion-slide>
+    </swiper-slide>
 
     <!-- SLIDE 5 -->
-    <ion-slide id="privacy-policy">
+    <swiper-slide id="privacy-policy">
         <ion-card>
           <div class="registration">
             <div class="text-lg">{{ 'ENROL_REGISTRATION' | translate }}</div>
@@ -157,10 +157,10 @@
             </ion-button>
           </div>
         </ion-card>
-      </ion-slide>
+      </swiper-slide>
 
     <!-- SLIDE 6 -->
-    <ion-slide id="registration-complete">
+    <swiper-slide id="registration-complete">
       <ion-card>
         <div class="text text-lg">
           {{ 'ENROL_REGISTRATION_COMPLETE' | translate }}
@@ -184,6 +184,6 @@
           </ion-button>
         </div>
       </ion-card>
-    </ion-slide>
-  </ion-slides>
+    </swiper-slide>
+  </swiper-container>
 </ion-content>

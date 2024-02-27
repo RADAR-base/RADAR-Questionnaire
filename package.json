@@ -174,7 +174,8 @@
     "loader-utils": "2.0.4",
     "nth-check": "2.0.1",
     "webpack": "5.76.0",
-    "@capacitor/core": "5.7.0"
+    "@capacitor/core": "5.7.0",
+    "undici": "5.28.3"
   },
   "ionic_enable_lint": false
 }

@@ -1,8 +1,8 @@
 <ion-content [scrollY]="false">
   <div class="wrapper">
     <div class="slide-flex">
-      <swiper-container>
-        <swiper-slide *ngIf="showIntroductionScreen">
+      <swiper-container #swiper>
+        <swiper-slide *ngIf="showIntroductionScreen" class="center">
           <introduction
             [title]="questionTitle"
             [introduction]="introduction"
@@ -37,7 +37,7 @@
             </div>
           </swiper-slide>
         </ng-container>
-        <swiper-slide>
+        <swiper-slide class="center">
           <finish
             *ngIf="showFinishScreen && !showFinishAndLaunchScreen"
             [content]="endText"

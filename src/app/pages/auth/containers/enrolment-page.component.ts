@@ -72,7 +72,6 @@ export class EnrolmentPageComponent {
       this.slides.nativeElement.swiper.allowSlideNext = true
       const index = this.slides.nativeElement.swiper.activeIndex
       const slideIndex = index + 1
-      this.slides.nativeElement.swiper.slideTo()
       this.slides.nativeElement.swiper.slideTo(slideIndex, 500)
       this.slides.nativeElement.swiper.allowSlideNext = false
       this.slides.nativeElement.swiper.allowSlidePrev = false

@@ -207,3 +207,7 @@ body.scanner-active {
   background: transparent;
   opacity: 0.2;
 }
+
+ion-modal {
+  --background: transparent !important;
+}

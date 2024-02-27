@@ -18,9 +18,6 @@ export class AppComponent {
   constructor(private platform: Platform) {
     register()
     this.platform.ready().then(() => {
-      if (Capacitor.isNativePlatform()) {
-        StatusBar.hide()
-      }
       this.isAppInitialized = true
     })
   }

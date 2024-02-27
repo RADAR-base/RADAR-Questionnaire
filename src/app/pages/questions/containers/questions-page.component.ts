@@ -32,7 +32,7 @@ import { QuestionsService } from '../services/questions.service'
   styleUrls: ['questions-page.component.scss']
 })
 export class QuestionsPageComponent implements OnInit {
-  @ViewChild('swiper')
+  @ViewChild('slides')
   slides: ElementRef | undefined;
 
   startTime: number
@@ -109,16 +109,19 @@ export class QuestionsPageComponent implements OnInit {
           this.initQuestionnaire(res)
           return this.updateToolbarButtons()
         })
-      this.sendEvent(UsageEventType.QUESTIONNAIRE_STARTED)
-      this.usage.setPage(this.constructor.name)
-      this.slides.nativeElement.swiper.allowSlideNext = false
-      this.slides.nativeElement.swiper.allowSlidePrev = false
-      KeepAwake.keepAwake()
     }
   }
 
   ionViewWillEnter() {
     this.slides.nativeElement.swiper.update()
+  }
+
+  ionViewDidEnter() {
+    this.sendEvent(UsageEventType.QUESTIONNAIRE_STARTED)
+    this.usage.setPage(this.constructor.name)
+    this.slides.nativeElement.swiper.allowSlideNext = false
+    this.slides.nativeElement.swiper.allowSlidePrev = false
+    KeepAwake.keepAwake()
   }
 
   initQuestionnaire(res) {
@@ -190,10 +193,9 @@ export class QuestionsPageComponent implements OnInit {
   slideQuestion() {
     this.slides.nativeElement.swiper.allowSlideNext = true
     this.slides.nativeElement.swiper.allowSlidePrev = true
-    this.slides.nativeElement.swiper.slideTo(this.currentQuestionGroupId, 300)
+    this.slides.nativeElement.swiper.slideTo(this.currentQuestionGroupId, 400)
     this.slides.nativeElement.swiper.allowSlideNext = false
     this.slides.nativeElement.swiper.allowSlidePrev = false
-    this.startTime = this.questionsService.getTime()
   }
 
   getCurrentQuestions() {

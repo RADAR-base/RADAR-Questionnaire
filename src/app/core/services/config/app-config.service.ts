@@ -10,6 +10,7 @@ import {
 import { StorageKeys } from '../../../shared/enums/storage'
 import { setDateTimeToMidnightEpoch } from '../../../shared/utilities/time'
 import { GlobalStorageService } from '../storage/global-storage.service'
+import { Capacitor } from '@capacitor/core'
 
 @Injectable()
 export class AppConfigService {
@@ -37,8 +38,11 @@ export class AppConfigService {
   }
 
   async getAppVersion() {
-    const appInfo = await App.getInfo()
-    return appInfo.version
+    if (Capacitor.isNative) {
+      const appInfo = await App.getInfo()
+      return appInfo.version
+    }
+    else return DefaultAppVersion
   }
 
   getStoredAppVersion() {

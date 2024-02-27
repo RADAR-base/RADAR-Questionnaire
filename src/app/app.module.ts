@@ -67,7 +67,8 @@ import { Utility } from './shared/utilities/util'
     IonicModule.forRoot({
       mode: 'md',
       scrollAssist: false,
-      scrollPadding: false
+      scrollPadding: false,
+      innerHTMLTemplatesEnabled: true
     }),
     RouterModule.forRoot([]),
     IonicStorageModule.forRoot({

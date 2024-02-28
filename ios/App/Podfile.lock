@@ -1,47 +1,51 @@
 PODS:
-  - Capacitor (5.0.3):
+  - Capacitor (5.7.0):
     - CapacitorCordova
-  - CapacitorApp (5.0.2):
+  - CapacitorApp (5.0.7):
     - Capacitor
   - CapacitorAppLauncher (5.0.7):
     - Capacitor
-  - CapacitorBrowser (5.0.2):
+  - CapacitorBrowser (5.2.0):
     - Capacitor
   - CapacitorCommunityBarcodeScanner (4.0.1):
     - Capacitor
   - CapacitorCommunityKeepAwake (4.0.0):
     - Capacitor
-  - CapacitorCordova (5.0.3)
-  - CapacitorDevice (5.0.2):
+  - CapacitorCordova (5.7.0)
+  - CapacitorDevice (5.0.7):
     - Capacitor
-  - CapacitorDialog (5.0.2):
+  - CapacitorDialog (5.0.7):
     - Capacitor
-  - CapacitorFilesystem (5.0.2):
+  - CapacitorFilesystem (5.2.1):
     - Capacitor
-  - CapacitorFirebaseAnalytics (5.0.0):
+  - CapacitorFirebaseAnalytics (5.4.1):
     - Capacitor
-    - CapacitorFirebaseAnalytics/Lite (= 5.0.0)
-  - CapacitorFirebaseAnalytics/Lite (5.0.0):
+    - CapacitorFirebaseAnalytics/Lite (= 5.4.1)
+  - CapacitorFirebaseAnalytics/Lite (5.4.1):
     - Capacitor
-  - CapacitorFirebaseMessaging (5.0.0):
+  - CapacitorFirebaseMessaging (5.4.1):
     - Capacitor
-    - FirebaseMessaging (= 10.8.0)
-  - CapacitorFirebaseRemoteConfig (5.0.0):
+    - FirebaseMessaging (~> 10.8)
+  - CapacitorFirebaseRemoteConfig (5.4.1):
     - Capacitor
-    - FirebaseRemoteConfig (= 10.8.0)
-  - CapacitorHaptics (5.0.2):
+    - FirebaseRemoteConfig (~> 10.8)
+  - CapacitorGrabIntentExtras (0.0.4):
     - Capacitor
-  - CapacitorKeyboard (5.0.2):
+  - CapacitorHaptics (5.0.7):
     - Capacitor
-  - CapacitorLocalNotifications (5.0.2):
+  - CapacitorKeyboard (5.0.8):
     - Capacitor
-  - CapacitorSplashScreen (5.0.2):
+  - CapacitorLocalNotifications (5.0.7):
     - Capacitor
-  - CapacitorStatusBar (5.0.2):
+  - CapacitorSplashScreen (5.0.7):
+    - Capacitor
+  - CapacitorStatusBar (5.0.7):
+    - Capacitor
+  - CapacitorTextZoom (5.0.7):
     - Capacitor
   - CapacitorVoiceRecorder (5.0.0):
     - Capacitor
-  - CordovaPlugins (5.0.3):
+  - CordovaPlugins (5.7.0):
     - CapacitorCordova
   - FirebaseABTesting (10.20.0):
     - FirebaseCore (~> 10.0)
@@ -115,11 +119,13 @@ DEPENDENCIES:
   - "CapacitorFirebaseAnalytics (from `../../node_modules/@capacitor-firebase/analytics`)"
   - "CapacitorFirebaseMessaging (from `../../node_modules/@capacitor-firebase/messaging`)"
   - "CapacitorFirebaseRemoteConfig (from `../../node_modules/@capacitor-firebase/remote-config`)"
+  - CapacitorGrabIntentExtras (from `../../node_modules/capacitor-grab-intent-extras`)
   - "CapacitorHaptics (from `../../node_modules/@capacitor/haptics`)"
   - "CapacitorKeyboard (from `../../node_modules/@capacitor/keyboard`)"
   - "CapacitorLocalNotifications (from `../../node_modules/@capacitor/local-notifications`)"
   - "CapacitorSplashScreen (from `../../node_modules/@capacitor/splash-screen`)"
   - "CapacitorStatusBar (from `../../node_modules/@capacitor/status-bar`)"
+  - "CapacitorTextZoom (from `../../node_modules/@capacitor/text-zoom`)"
   - CapacitorVoiceRecorder (from `../../node_modules/capacitor-voice-recorder`)
   - CordovaPlugins (from `../capacitor-cordova-ios-plugins`)
   - "PerfoodCapacitorHealthkit (from `../../node_modules/@perfood/capacitor-healthkit`)"
@@ -164,6 +170,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor-firebase/messaging"
   CapacitorFirebaseRemoteConfig:
     :path: "../../node_modules/@capacitor-firebase/remote-config"
+  CapacitorGrabIntentExtras:
+    :path: "../../node_modules/capacitor-grab-intent-extras"
   CapacitorHaptics:
     :path: "../../node_modules/@capacitor/haptics"
   CapacitorKeyboard:
@@ -174,6 +182,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/splash-screen"
   CapacitorStatusBar:
     :path: "../../node_modules/@capacitor/status-bar"
+  CapacitorTextZoom:
+    :path: "../../node_modules/@capacitor/text-zoom"
   CapacitorVoiceRecorder:
     :path: "../../node_modules/capacitor-voice-recorder"
   CordovaPlugins:
@@ -182,26 +192,28 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@perfood/capacitor-healthkit"
 
 SPEC CHECKSUMS:
-  Capacitor: 304a960e431f9e6f78556554ca71c41c1b2b9680
-  CapacitorApp: ff3f625ee3266e9e3f66a8900985920fa05bbf47
-  CapacitorAppLauncher: e20e53bcc6500dd1a69a4702cf73e71ddafbcb2a
-  CapacitorBrowser: a9d0a398a68a90567394676a8d8a1ec824c02ded
-  CapacitorCommunityBarcodeScanner: a43bb14cec343f4defaf26cac281d799b25b90f0
-  CapacitorCommunityKeepAwake: 5127ac2043946ccc83a3716b3961152b94ad37f9
-  CapacitorCordova: def732a63679698df6fb392bbe6d269a0b61e937
-  CapacitorDevice: adf98d46bfca2bd4f858bab8bc5b1dad1b3b86cd
-  CapacitorDialog: cff37b6d3d1ea73bc41532359a0cbe2a5a25b0dd
-  CapacitorFilesystem: 2c9a32fd0fe3615ce45e96899afa3d68a8db5e21
-  CapacitorFirebaseAnalytics: 088dcf0e06205d2732f314a7dd0bc7c1ed2941b7
-  CapacitorFirebaseMessaging: f9f851914310468918b906a775d26a9e5005bc6d
-  CapacitorFirebaseRemoteConfig: d0962aef1e270fa3917abb8a42b7e6385bd1d8f1
-  CapacitorHaptics: d5e6ffa733d50c2ffcc79b191bf14547505744d4
-  CapacitorKeyboard: 18b2e25f50503780d4454ff308d19533d459c2b8
-  CapacitorLocalNotifications: f557862c3ea93f49422eef5a49e087923a8178e9
-  CapacitorSplashScreen: d22414cbe4bf1730e35cb06eabc4d3cc2f813148
-  CapacitorStatusBar: 5d6e5b15d447d3d493b0b50ff32b58e551c7840f
+  Capacitor: fc155ee2ee45a2093d716f13cf5aa5a865e2d85a
+  CapacitorApp: 17fecd0e6cb23feafac7eb0939417389038b0979
+  CapacitorAppLauncher: 7b2705481a74cbe322441bd374f56194de59ab1a
+  CapacitorBrowser: a6deae9e5bf87f62b62a753cff7992c5def9e771
+  CapacitorCommunityBarcodeScanner: 7feb206489c8555a8ca0c74c57ddf49ead774eb8
+  CapacitorCommunityKeepAwake: f3442e3e9b666dd0162522fbd053da1fe81ede20
+  CapacitorCordova: e825fce1a2e14e4b5730641c7e098dccf74397b7
+  CapacitorDevice: fc91bdb484dc0e70755e9b621cd557afe642613a
+  CapacitorDialog: ea1beaccb7f825191aa18b72cba8981b881b3b2d
+  CapacitorFilesystem: 9f3e3c7fea2fff12f46dd5b07a2914f2103e4cfc
+  CapacitorFirebaseAnalytics: dfccb704820bb7db82debbc05fded24b096bed71
+  CapacitorFirebaseMessaging: ff3b2e81e11f1e20e4e349dc9a920516cf649345
+  CapacitorFirebaseRemoteConfig: a20f5e883f99e7dd0c243a1e31a0418ea89f08a9
+  CapacitorGrabIntentExtras: f2bf4ebbb94a1cf9466a0e97807cc2d5d1368800
+  CapacitorHaptics: 7c7c206f0c96a628fed073830c96d28c4b2e772e
+  CapacitorKeyboard: aec619a578235c6ce279075009a2689c2cf5c42c
+  CapacitorLocalNotifications: c58afadd159f6bc540ef9b3cbdbc82510a2bf112
+  CapacitorSplashScreen: dd3de3f3644710fa2a697cfb91ec262eece4d242
+  CapacitorStatusBar: f390fbb49b82ffb754ea4b3cf71dc8b048baf3e7
+  CapacitorTextZoom: 69814a62b1d0f23a899cca06ea9838c38de187ff
   CapacitorVoiceRecorder: 872ea857b497ce2c71afe3e4eb5de0a74290c0db
-  CordovaPlugins: cdabf8459cca3fdfc48637eaca7bed66fd45e8fb
+  CordovaPlugins: a707edf6d79ba00bd300f341fe9e1ada032d211f
   FirebaseABTesting: 1d5d49804bcfc5fa782bc2491a8c1364e2cf7241
   FirebaseCore: dc5c7badf99d47613c52b2e3a57a64cd187f8554
   FirebaseCoreInternal: efeeb171ac02d623bdaefe121539939821e10811
@@ -211,9 +223,9 @@ SPEC CHECKSUMS:
   GoogleDataTransport: 57c22343ab29bc686febbf7cbb13bad167c2d8fe
   GoogleUtilities: 0759d1a57ebb953965c2dfe0ba4c82e95ccc2e34
   nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
-  PerfoodCapacitorHealthkit: ae738715747e2810dc0cd01211b498fea393ae08
+  PerfoodCapacitorHealthkit: 88f6e78b319072c4d0aec439b2fcc14d3f05d311
   PromisesObjC: c50d2056b5253dadbd6c2bea79b0674bd5a52fa4
 
-PODFILE CHECKSUM: a9c850414836c6b196ac9a6b720cc1e05a2c44ba
+PODFILE CHECKSUM: 807b2d64b378a63b1ee9fadea97e60faa9962159
 
 COCOAPODS: 1.14.3

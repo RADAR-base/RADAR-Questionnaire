@@ -27,7 +27,9 @@ def capacitor_pods
   pod 'CapacitorLocalNotifications', :path => '../../node_modules/@capacitor/local-notifications'
   pod 'CapacitorSplashScreen', :path => '../../node_modules/@capacitor/splash-screen'
   pod 'CapacitorStatusBar', :path => '../../node_modules/@capacitor/status-bar'
+  pod 'CapacitorTextZoom', :path => '../../node_modules/@capacitor/text-zoom'
   pod 'PerfoodCapacitorHealthkit', :path => '../../node_modules/@perfood/capacitor-healthkit'
+  pod 'CapacitorGrabIntentExtras', :path => '../../node_modules/capacitor-grab-intent-extras'
   pod 'CapacitorVoiceRecorder', :path => '../../node_modules/capacitor-voice-recorder'
   pod 'CordovaPlugins', :path => '../capacitor-cordova-ios-plugins'
 end

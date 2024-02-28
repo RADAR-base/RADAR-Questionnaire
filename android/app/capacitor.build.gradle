@@ -25,8 +25,10 @@ dependencies {
     implementation project(':capacitor-local-notifications')
     implementation project(':capacitor-splash-screen')
     implementation project(':capacitor-status-bar')
+    implementation project(':capacitor-text-zoom')
+    implementation project(':capacitor-grab-intent-extras')
     implementation project(':capacitor-voice-recorder')
-    implementation "androidx.core:core:1.1.0"
+
 }
 
 

@@ -32,7 +32,7 @@ import { QuestionsService } from '../services/questions.service'
   styleUrls: ['questions-page.component.scss']
 })
 export class QuestionsPageComponent implements OnInit {
-  @ViewChild('slides')
+  @ViewChild('swiper')
   slides: ElementRef | undefined;
 
   startTime: number

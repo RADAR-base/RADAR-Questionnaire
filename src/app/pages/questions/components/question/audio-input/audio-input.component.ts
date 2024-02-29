@@ -16,7 +16,6 @@ import { UsageEventType } from '../../../../../shared/enums/events'
 import { LocKeys } from '../../../../../shared/enums/localisations'
 import { TranslatePipe } from '../../../../../shared/pipes/translate/translate'
 import { AudioRecordService } from '../../../services/audio-record.service'
-import { Filesystem } from '@capacitor/filesystem';
 
 @Component({
   selector: 'audio-input',
@@ -47,9 +46,7 @@ export class AudioInputComponent implements OnDestroy, OnInit {
     private platform: Platform,
     private translate: TranslatePipe,
     private usage: UsageService
-  ) {
-    this.audioRecordService.destroy()
-  }
+  ) {}
 
   ngOnInit() {
     // NOTE: Stop audio recording when application is on pause / backbutton is pressed
@@ -63,7 +60,6 @@ export class AudioInputComponent implements OnDestroy, OnInit {
     this.backButtonListener = this.platform.backButton.subscribe(() => {
       this.stopRecording()
       navigator['app'].exitApp()
-      // this.platform.exitApp();
     })
 
     this.showInfoCard = this.text.length > this.textLengthThreshold
@@ -80,36 +76,28 @@ export class AudioInputComponent implements OnDestroy, OnInit {
       if (this.recordAttempts <= DefaultMaxAudioAttemptsAllowed)
         this.startRecording().catch(e => this.showTaskInterruptedAlert())
     } else {
-      this.stopRecording()
+      this.stopRecording().catch(e => this.showTaskInterruptedAlert())
       this.onRecordStart.emit(false)
       if (this.recordAttempts == DefaultMaxAudioAttemptsAllowed)
-        this.finishRecording().catch(e => this.showTaskInterruptedAlert())
+        this.finishRecording()
       else this.showAfterAttemptAlert()
     }
   }
 
   finishRecording() {
     this.buttonShown = false
-    return this.audioRecordService
-      .readAudioFile()
-      .then(data => this.valueChange.emit(data))
+    this.valueChange.emit(this.audioRecordService.getFormattedAudioData())
   }
 
   startRecording() {
-    return Promise.all([
-      Filesystem.requestPermissions()
-    ]).then(res => {
-      this.onRecordStart.emit(true)
-      this.usage.sendGeneralEvent(UsageEventType.RECORDING_STARTED, true)
-      return res['publicStorage'] == 'granted'
-        ? this.audioRecordService.startAudioRecording()
-        : Promise.reject()
-    })
+    this.onRecordStart.emit(true)
+    this.usage.sendGeneralEvent(UsageEventType.RECORDING_STARTED, true)
+    return this.audioRecordService.startAudioRecording()
   }
 
   stopRecording() {
-    this.audioRecordService.stopAudioRecording()
     this.usage.sendGeneralEvent(UsageEventType.RECORDING_STOPPED, true)
+    return this.audioRecordService.stopAudioRecording()
   }
 
   isRecording() {

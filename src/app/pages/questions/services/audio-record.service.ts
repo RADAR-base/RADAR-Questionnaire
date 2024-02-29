@@ -1,6 +1,13 @@
 import { Injectable } from '@angular/core'
 import { Directory, Encoding, Filesystem } from '@capacitor/filesystem'
 import { Platform } from '@ionic/angular'
+import {
+  VoiceRecorder,
+  VoiceRecorderPlugin,
+  RecordingData,
+  GenericResponse,
+  CurrentRecordingStatus
+} from 'capacitor-voice-recorder'
 
 import { DefaultAudioRecordOptions } from '../../../../assets/data/defaultConfig'
 import { LogService } from '../../../core/services/misc/log.service'
@@ -10,40 +17,48 @@ import { LogService } from '../../../core/services/misc/log.service'
 })
 export class AudioRecordService {
   isRecording: boolean
-  audio
-  fileName = 'audio.m4a'
+  encoding = 'base64'
+  data: any
 
-  constructor(private platform: Platform, private logger: LogService) {}
+  constructor(
+    private logger: LogService
+  ) {}
 
   startAudioRecording(): Promise<any> {
     return new Promise((resolve, reject) => {
-      if (!this.isRecording) this.isRecording = true
-      else reject()
-
-      this.audio = ''
-      if (this.isRecording) {
-        return this.audio.startRecordWithCompression(DefaultAudioRecordOptions)
-      } else {
-        reject()
-      }
+      return VoiceRecorder.requestAudioRecordingPermission().then(
+        (result: GenericResponse) => {
+          return VoiceRecorder.startRecording()
+            .then((result: GenericResponse) => {
+              this.isRecording = true
+            })
+            .catch(error => {
+              this.isRecording = false
+              reject()
+            })
+        }
+      )
     })
   }
 
   stopAudioRecording() {
-    if (this.isRecording) {
-      this.audio.stopRecord()
-      this.isRecording = false
-    }
+    return VoiceRecorder.stopRecording()
+      .then((result: RecordingData) => {
+        this.isRecording = false
+        this.data = result.value
+        return result.value
+      })
+      .catch(error => {
+        console.log(error)
+        this.isRecording = false
+        return Promise.reject(error)
+      })
   }
 
-  getFilePath() {
-    return this.platform.is('android')
-      ? this.getDir() + this.fileName
-      : this.fileName
-  }
-
-  getDir() {
-    return Directory.Documents
+  getFormattedAudioData() {
+    const mimeType = this.data.mimeType
+    const data = this.data.recordDataBase64
+    return `data:${mimeType};${this.encoding},${data}`
   }
 
   getIsRecording() {
@@ -56,21 +71,5 @@ export class AudioRecordService {
 
   failure(error) {
     this.logger.error('Error! ', error)
-  }
-
-  async readAudioFile() {
-    const contents = await Filesystem.readFile({
-      path: this.fileName,
-      directory: this.getDir(),
-      encoding: Encoding.UTF8
-    })
-    this.destroy()
-    console.log(contents)
-    return contents
-  }
-
-  destroy() {
-    if (this.audio) this.audio.release()
-    this.isRecording = false
   }
 }

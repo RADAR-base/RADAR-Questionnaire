@@ -86,7 +86,6 @@ export class QuestionsPageComponent implements OnInit {
     this.backButtonListener = this.platform.backButton.subscribe(() => {
       this.sendCompletionLog()
       navigator['app'].exitApp()
-      // this.platform.exitApp()
     })
   }
 
@@ -266,7 +265,6 @@ export class QuestionsPageComponent implements OnInit {
   exitQuestionnaire() {
     this.sendEvent(UsageEventType.QUESTIONNAIRE_CANCELLED)
     this.navCtrl.navigateBack('/home')
-    // this.navCtrl.pop({ animation: 'wp-transition' })
   }
 
   navigateToFinishPage() {

@@ -3,7 +3,7 @@ swiper-slide.swiper-slide {
 }
 
 swiper-slide {
-  overflow: hidden !important;
+  overflow-x: hidden !important;
   padding: 24px 24px 0;
   display: flex;
   flex-direction: column;

@@ -27,6 +27,7 @@ import { GlobalStorageService } from '../storage/global-storage.service'
 import { StorageService } from '../storage/storage.service'
 import { FcmNotificationService } from './fcm-notification.service'
 import { NotificationGeneratorService } from './notification-generator.service'
+import { GrabIntentExtras } from 'capacitor-grab-intent-extras'
 
 @Injectable()
 export class FcmRestNotificationService extends FcmNotificationService {
@@ -61,33 +62,32 @@ export class FcmRestNotificationService extends FcmNotificationService {
   }
 
   onAppOpen() {
-    // return this.webIntent.getIntent().then(intent => {
-    //   if (!intent.extras) return
-    //   const extras = intent.extras['google.message_id'].split(':')
-    //   const messageId = extras[extras.length - 1]
-    //   return Promise.all([
-    //     this.getSubjectDetails(),
-    //     this.schedule.getTasks(AssessmentType.ALL)
-    //   ]).then(([subject, tasks]) => {
-    //     const notification = this.notifications.findNotificationByMessageId(
-    //       tasks,
-    //       messageId
-    //     )
-    //     return this.appServerService
-    //       .updateNotificationState(
-    //         subject,
-    //         notification.id,
-    //         NotificationMessagingState.DELIVERED
-    //       )
-    //       .then(() =>
-    //         this.appServerService.updateNotificationState(
-    //           subject,
-    //           notification.id,
-    //           NotificationMessagingState.OPENED
-    //         )
-    //       )
-    //   })
-    // })
+    return GrabIntentExtras.getIntentExtras().then(extras => {
+      if (!extras) return
+      const messageId = extras['google.message_id'].split(':').slice(-1)
+      return Promise.all([
+        this.getSubjectDetails(),
+        this.schedule.getTasks(AssessmentType.ALL)
+      ]).then(([subject, tasks]) => {
+        const notification = this.notifications.findNotificationByMessageId(
+          tasks,
+          messageId
+        )
+        return this.appServerService
+          .updateNotificationState(
+            subject,
+            notification.id,
+            NotificationMessagingState.DELIVERED
+          )
+          .then(() =>
+            this.appServerService.updateNotificationState(
+              subject,
+              notification.id,
+              NotificationMessagingState.OPENED
+            )
+          )
+      })
+    })
   }
 
   getSubjectDetails() {

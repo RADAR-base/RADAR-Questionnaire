@@ -1,5 +1,4 @@
 import { Component } from '@angular/core'
-import { StatusBar } from '@capacitor/status-bar'
 import { Platform } from '@ionic/angular'
 import { register } from 'swiper/element/bundle'
 import { TextZoom } from '@capacitor/text-zoom'
@@ -19,9 +18,7 @@ export class AppComponent {
   constructor(private platform: Platform) {
     register()
     this.platform.ready().then(() => {
-      if (Capacitor.isNativePlatform) {
-        TextZoom.set({ value: 1 })
-      }
+      if (Capacitor.isPluginAvailable('TextZoom')) TextZoom.set({ value: 1 })
       this.isAppInitialized = true
     })
   }

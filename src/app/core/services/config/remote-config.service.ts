@@ -117,10 +117,9 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
     super(storage)
     this.configSubject = new BehaviorSubject(new EmptyRemoteConfig())
     this.platform.ready().then(() => {
-      // this.firebase.setConfigSettings({
-      //   fetchTimeout: this.FETCH_TIMEOUT_SECONDS,
-      //   minimumFetchInterval: this.MINIMUM_FETCH_INTERVAL_SECONDS
-      // })
+      FirebaseRemoteConfig.setMinimumFetchInterval({
+        minimumFetchIntervalInSeconds: this.MINIMUM_FETCH_INTERVAL_SECONDS
+      })
     })
   }
 
@@ -139,7 +138,6 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
   }
 
   private async fetch(timeoutMillis: number) {
-
     if (!Capacitor.isNativePlatform()) {
       return Promise.resolve(this.configSubject.value)
     }

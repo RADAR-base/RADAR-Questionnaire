@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli'
 
 const config: CapacitorConfig = {
   appId: 'org.phidatalab.radar_armt',
-  appName: 'radar-questionnaire',
+  appName: 'RADAR Questionnaire',
   webDir: 'www',
   server: {
     androidScheme: 'https'
@@ -21,6 +21,9 @@ const config: CapacitorConfig = {
       splashImmersive: true
     },
     PushNotifications: {
+      presentationOptions: ['badge', 'sound', 'alert']
+    },
+    FirebaseMessaging: {
       presentationOptions: ['badge', 'sound', 'alert']
     }
   },

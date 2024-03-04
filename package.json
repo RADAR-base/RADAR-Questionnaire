@@ -119,7 +119,7 @@
     "phonegap-plugin-barcodescanner": "^8.1.0",
     "phonegap-plugin-mobile-accessibility": "^1.0.5",
     "rxjs": "^6.6.3",
-    "sass": "^1.52.2",
+    "sass": "^1.71.1",
     "smoothscroll-polyfill": "^0.4.4",
     "snyk": "^1.1089.0",
     "stream": "^0.0.2",

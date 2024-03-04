@@ -112,15 +112,13 @@ export class FirebaseRemoteConfigService extends RemoteConfigService {
   constructor(
     storage: GlobalStorageService,
     private logger: LogService,
-    private platform: Platform
   ) {
     super(storage)
     this.configSubject = new BehaviorSubject(new EmptyRemoteConfig())
-    this.platform.ready().then(() => {
+    if (Capacitor.isNativePlatform())
       FirebaseRemoteConfig.setMinimumFetchInterval({
         minimumFetchIntervalInSeconds: this.MINIMUM_FETCH_INTERVAL_SECONDS
       })
-    })
   }
 
   forceFetch(): Promise<RemoteConfig> {

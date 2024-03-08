@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { SchemaType } from 'src/app/shared/models/kafka'
 

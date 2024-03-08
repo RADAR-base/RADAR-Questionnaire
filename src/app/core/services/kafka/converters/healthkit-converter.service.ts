@@ -33,6 +33,24 @@ export class HealthkitConverterService extends ConverterService {
   init() {}
 
   processData(payload) {
+    if (payload.data.answers) {
+      return this.processCacheData(payload.data.answers)
+    }
+    else {
+      return this.processHealthkitData(payload)
+    }
+  }
+
+  processCacheData(answers) {
+    this.logger.log('Answers to process', answers)
+    const values = Object.entries(answers).map(([key, value]) => ({
+      questionId: key.toString(),
+      value: { startTime: value['startTime'], endTime: value['endTime']}
+    }))
+    return values
+  }
+
+  processHealthkitData(payload) {
     const answers = payload.data.answers
     let processedData = {}
     Object.entries(answers).forEach(([k, v]) => {
@@ -69,6 +87,14 @@ export class HealthkitConverterService extends ConverterService {
       )
     )
     return results
+  }
+
+  batchConvertToRecord(kafkaValues, topic, valueSchemaMetadata) {
+    const value = JSON.parse(valueSchemaMetadata.schema)
+    return this.batchConvertToAvro(value, kafkaValues).map(v => ({
+      value: v,
+      schema: valueSchemaMetadata.id
+    }))
   }
 
   getDataTypeFromKey(key) {

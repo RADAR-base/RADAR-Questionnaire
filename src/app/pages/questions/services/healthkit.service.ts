@@ -34,7 +34,7 @@ export class HealthkitService {
   MIN_POLL_TIMESTAMP = new Date(
     new Date().getTime() - this.DEFAULT_LOOKBACK_INTERVAL * 24 * 60 * 60 * 1000
   )
-  MAX_HOURLY_RECORD_LIMIT = 500
+  MAX_HOURLY_RECORD_LIMIT = 1000
 
   constructor(
     private storage: StorageService
@@ -75,15 +75,8 @@ export class HealthkitService {
           }
         )
         .then(() => {
-          const endDate = new Date()
-          return this.query(lastPollTime, endDate, healthDataType).then(res => {
-            if (res.length) {
-              const lastDataDate = new Date(res[res.length - 1].endDate)
-              dic[healthDataType] = lastDataDate
-              this.setLastPollTimes(dic)
-            }
-            return res
-          })
+          const currentDate = new Date()
+          return { startTime: lastPollTime, endTime: currentDate }
         })
         .catch(e => {
           console.log(e)

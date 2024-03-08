@@ -174,7 +174,6 @@ export class KafkaService {
       .then(() =>
         this.cache
           .removeFromCache(successKeys)
-          .then(() => this.cache.removeFromHealthCache(successKeys))
           .then(() => {
             this.cache.setCacheSending(false)
             return { successKeys, failedKeys }
@@ -187,6 +186,7 @@ export class KafkaService {
   }
 
   convertCacheToRecords(cache) {
+    // NOTE: This will get the kafka object key first which contains user and project details
     return this.schema.getKafkaObjectKey().then(key => {
       const groupedCache = {}
       Object.entries(cache).map(([k, v]: [any, CacheValue]) => {
@@ -299,10 +299,6 @@ export class KafkaService {
 
   getLastUploadDate() {
     return this.cache.getLastUploadDate()
-  }
-
-  getHealthCacheSize() {
-    return this.cache.getHealthCacheSize()
   }
 
   getCacheSize() {

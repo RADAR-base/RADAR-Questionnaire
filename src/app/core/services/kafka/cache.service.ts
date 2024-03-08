@@ -43,17 +43,16 @@ export class CacheService {
   ) {}
 
   init() {
-    return Promise.all([this.setCache({}), this.setHealthCache({})])
+    return Promise.all([this.setCache({})])
   }
 
   storeInCache(type, kafkaObject: KafkaObject, cacheValue: any) {
-      return this.getCache().then(cache => {
-        this.logger.log('KAFKA-SERVICE: Caching answers.')
-        cache[kafkaObject.value.time] = cacheValue
-        this.sendDataEvent(DataEventType.CACHED, cacheValue)
-        return this.setCache(cache)
-      })
-    
+    return this.getCache().then(cache => {
+      this.logger.log('KAFKA-SERVICE: Caching answers.')
+      cache[kafkaObject.value.time] = cacheValue
+      this.sendDataEvent(DataEventType.CACHED, cacheValue)
+      return this.setCache(cache)
+    })
   }
 
   removeFromCache(cacheKeys: number[]) {
@@ -76,29 +75,6 @@ export class CacheService {
     })
   }
 
-  removeFromHealthCache(cacheKeys: number[]) {
-    if (!cacheKeys.length) return Promise.resolve()
-    // return this.healthStore
-    //   .remove(cacheKeys)
-    //   .then(() => this.setLastUploadDate(Date.now()))
-  }
-
-  setHealthCache(cache) {
-    // return this.healthStore.set(StorageKeys.CACHE_ANSWERS, cache)
-  }
-
-  getHealthCache() {
-    return Promise.resolve()
-    // return this.healthStore.get(this.KAFKA_STORE.CACHE_ANSWERS).then(data => {
-    //   return Object.keys(data)
-    //     .slice(0, this.HEALTH_CACHE_LIMIT)
-    //     .reduce((result, key) => {
-    //       result[key] = data[key]
-    //       return result
-    //     }, {})
-    // })
-  }
-
   setCache(cache) {
     return this.storage.set(this.KAFKA_STORE.CACHE_ANSWERS, cache)
   }
@@ -119,10 +95,6 @@ export class CacheService {
     return this.storage.get(this.KAFKA_STORE.LAST_UPLOAD_DATE)
   }
 
-  getHealthCacheSize() {
-    return
-  }
-
   getCacheSize() {
     return this.storage
       .get(this.KAFKA_STORE.CACHE_ANSWERS)
@@ -141,9 +113,6 @@ export class CacheService {
   }
 
   reset() {
-    return Promise.all([
-      this.setCache({}),
-      this.setLastUploadDate(null)
-    ])
+    return Promise.all([this.setCache({}), this.setLastUploadDate(null)])
   }
 }

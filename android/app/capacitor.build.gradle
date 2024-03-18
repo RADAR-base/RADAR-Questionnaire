@@ -9,11 +9,11 @@ android {
 
 apply from: "../capacitor-cordova-android-plugins/cordova.variables.gradle"
 dependencies {
-    implementation project(':capacitor-community-barcode-scanner')
     implementation project(':capacitor-community-keep-awake')
     implementation project(':capacitor-firebase-analytics')
     implementation project(':capacitor-firebase-messaging')
     implementation project(':capacitor-firebase-remote-config')
+    implementation project(':capacitor-mlkit-barcode-scanning')
     implementation project(':capacitor-app')
     implementation project(':capacitor-app-launcher')
     implementation project(':capacitor-browser')

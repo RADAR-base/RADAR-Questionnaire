@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core'
-import { BarcodeScanner } from '@capacitor-community/barcode-scanner'
+import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
 
 @Component({
   selector: 'qr-form',
@@ -19,18 +19,17 @@ export class QRFormComponent {
     document.querySelector('body').classList.add('scanner-active')
     // Check camera permission
     // This is just a simple example, check out the better checks below
-    await BarcodeScanner.checkPermission({ force: true })
+    await BarcodeScanner.requestPermissions()
 
-    // make background of WebView transparent
-    // note: if you are using ionic this might not be enough, check below
-    BarcodeScanner.hideBackground()
-
-    const result = await BarcodeScanner.startScan() // start scanning and wait for a result
-
-    // if the result has content
-    if (result.hasContent) {
-      this.data.emit(result.content)
-    }
-    document.querySelector('body').classList.remove('scanner-active');
+     // Add the `barcodeScanned` listener
+    const listener = await BarcodeScanner.addListener(
+    'barcodeScanned',
+    async result => {
+      await listener.remove();
+      this.data.emit(result.barcode.rawValue)
+      document.querySelector('body').classList.remove('scanner-active');
+    },
+    );
+    await BarcodeScanner.startScan() // start scanning and wait for a result
   }
 }

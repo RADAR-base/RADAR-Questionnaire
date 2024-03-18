@@ -8,8 +8,6 @@ import {
   Output,
   ViewChild
 } from '@angular/core'
-import { Dialogs } from '@ionic-native/dialogs/ngx'
-import { Vibration } from '@ionic-native/vibration/ngx'
 import * as smoothscroll from 'smoothscroll-polyfill'
 
 import {
@@ -57,7 +55,7 @@ export class QuestionComponent implements OnInit, OnChanges {
   isLoading = true
   isScrollable = false
   isFieldLabelHidden = false
-  margin = 100
+  margin = 50
   keyboardScrollPadding = 200
   keyboardInputOffset = 0
   inputHeight = 0
@@ -103,7 +101,7 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.checkbox
   ])
 
-  constructor(private vibration: Vibration, private dialogs: Dialogs) {
+  constructor() {
     smoothscroll.polyfill()
     this.value = null
   }

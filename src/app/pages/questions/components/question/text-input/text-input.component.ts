@@ -6,7 +6,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core'
-import { Keyboard } from '@ionic-native/keyboard/ngx'
+import { Keyboard } from '@capacitor/keyboard'
 import { ModalController } from '@ionic/angular'
 import { Ionic4DatepickerModalComponent } from '@logisticinfotech/ionic4-datepicker'
 import * as moment from 'moment'
@@ -58,8 +58,7 @@ export class TextInputComponent implements OnInit {
 
   constructor(
     private localization: LocalizationService,
-    public modalCtrl: ModalController,
-    private keyboard: Keyboard
+    public modalCtrl: ModalController
   ) {}
 
   ngOnInit() {
@@ -171,9 +170,9 @@ export class TextInputComponent implements OnInit {
     } else this.valueChange.emit(value)
   }
 
-  emitKeyboardEvent(value) {
+  async emitKeyboardEvent(value) {
     value = value.toLowerCase()
-    if (value == KeyboardEventType.ENTER) this.keyboard.hide()
+    if (value == KeyboardEventType.ENTER) await Keyboard.hide()
 
     this.keyboardEvent.emit(value)
   }

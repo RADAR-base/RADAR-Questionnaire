@@ -14,10 +14,7 @@ import { AlertService } from '../../../../../core/services/misc/alert.service'
 import { UsageService } from '../../../../../core/services/usage/usage.service'
 import { UsageEventType } from '../../../../../shared/enums/events'
 import { LocKeys } from '../../../../../shared/enums/localisations'
-import { Section } from '../../../../../shared/models/question'
 import { TranslatePipe } from '../../../../../shared/pipes/translate/translate'
-import { AndroidPermissionUtility } from '../../../../../shared/utilities/android-permission'
-import { HomePageComponent } from '../../../../home/containers/home-page.component'
 import { AudioRecordService } from '../../../services/audio-record.service'
 
 @Component({
@@ -44,16 +41,12 @@ export class AudioInputComponent implements OnDestroy, OnInit {
 
   constructor(
     private audioRecordService: AudioRecordService,
-    private permissionUtil: AndroidPermissionUtility,
     public navCtrl: NavController,
     public alertService: AlertService,
     private platform: Platform,
     private translate: TranslatePipe,
     private usage: UsageService
-  ) {
-    this.permissionUtil.checkPermissions()
-    this.audioRecordService.destroy()
-  }
+  ) {}
 
   ngOnInit() {
     // NOTE: Stop audio recording when application is on pause / backbutton is pressed
@@ -67,7 +60,6 @@ export class AudioInputComponent implements OnDestroy, OnInit {
     this.backButtonListener = this.platform.backButton.subscribe(() => {
       this.stopRecording()
       navigator['app'].exitApp()
-      // this.platform.exitApp();
     })
 
     this.showInfoCard = this.text.length > this.textLengthThreshold
@@ -84,37 +76,28 @@ export class AudioInputComponent implements OnDestroy, OnInit {
       if (this.recordAttempts <= DefaultMaxAudioAttemptsAllowed)
         this.startRecording().catch(e => this.showTaskInterruptedAlert())
     } else {
-      this.stopRecording()
+      this.stopRecording().catch(e => this.showTaskInterruptedAlert())
       this.onRecordStart.emit(false)
       if (this.recordAttempts == DefaultMaxAudioAttemptsAllowed)
-        this.finishRecording().catch(e => this.showTaskInterruptedAlert())
+        this.finishRecording()
       else this.showAfterAttemptAlert()
     }
   }
 
   finishRecording() {
     this.buttonShown = false
-    return this.audioRecordService
-      .readAudioFile()
-      .then(data => this.valueChange.emit(data))
+    this.valueChange.emit(this.audioRecordService.getFormattedAudioData())
   }
 
   startRecording() {
-    return Promise.all([
-      this.permissionUtil.getRecordAudio_Permission(),
-      this.permissionUtil.getWriteExternalStorage_permission()
-    ]).then(res => {
-      this.onRecordStart.emit(true)
-      this.usage.sendGeneralEvent(UsageEventType.RECORDING_STARTED, true)
-      return res[0] && res[1]
-        ? this.audioRecordService.startAudioRecording()
-        : Promise.reject()
-    })
+    this.onRecordStart.emit(true)
+    this.usage.sendGeneralEvent(UsageEventType.RECORDING_STARTED, true)
+    return this.audioRecordService.startAudioRecording()
   }
 
   stopRecording() {
-    this.audioRecordService.stopAudioRecording()
     this.usage.sendGeneralEvent(UsageEventType.RECORDING_STOPPED, true)
+    return this.audioRecordService.stopAudioRecording()
   }
 
   isRecording() {

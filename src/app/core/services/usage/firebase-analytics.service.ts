@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core'
-import { FirebaseX } from '@ionic-native/firebase-x/ngx'
+import { FirebaseAnalytics } from '@capacitor-firebase/analytics'
 import { Platform } from '@ionic/angular'
 
 import { User } from '../../../shared/models/user'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { LogService } from '../misc/log.service'
 import { AnalyticsService } from './analytics.service'
+import { Capacitor } from '@capacitor/core'
 
 @Injectable()
 export class FirebaseAnalyticsService extends AnalyticsService {
   constructor(
-    private firebase: FirebaseX,
     private platform: Platform,
     private logger: LogService,
     private remoteConfig: RemoteConfigService
@@ -20,9 +20,8 @@ export class FirebaseAnalyticsService extends AnalyticsService {
 
   logEvent(event: string, params: { [key: string]: string }): Promise<any> {
     // this.logger.log('Firebase Event', event)
-    if (!this.platform.is('cordova'))
-      return Promise.resolve('Could not load firebase')
-
+    if (!Capacitor.isNativePlatform()) return Promise.resolve()
+    
     const cleanParams = {}
 
     Object.entries(params).forEach(([key, value]) => {
@@ -38,8 +37,7 @@ export class FirebaseAnalyticsService extends AnalyticsService {
       )
     })
 
-    return this.firebase
-      .logEvent(event, cleanParams)
+    return FirebaseAnalytics.logEvent({ name: event, params: cleanParams })
       .then((res: any) => {
         // this.logger.log('firebase analytics service', res)
         return res
@@ -89,18 +87,18 @@ export class FirebaseAnalyticsService extends AnalyticsService {
       Object.entries(userProperties)
         .filter(([k, v]) => k)
         .map(([key, value]) => {
-          return this.firebase.setUserProperty(
-            this.crop(
+          return FirebaseAnalytics.setUserProperty({
+            key: this.crop(
               this.formatUserPropertyKey(key, keyPrefix),
               24,
               `Firebase User Property name ${key} is too long, cropping`
             ),
-            this.crop(
+            value: this.crop(
               LogService.formatObject(value),
               36,
               `Firebase User Property value ${value} for ${key} is too long, cropping`
             )
-          )
+          })
         })
     ).then(() => this.remoteConfig.forceFetch())
   }
@@ -110,11 +108,13 @@ export class FirebaseAnalyticsService extends AnalyticsService {
   }
 
   setUserId(userId: string): Promise<any> {
-    return this.firebase.setUserId(userId)
+    if (!Capacitor.isNativePlatform()) return Promise.resolve()
+      return FirebaseAnalytics.setUserId({ userId: userId })
   }
 
   setCurrentScreen(screenName: string): Promise<any> {
-    return this.firebase.setScreenName(screenName)
+    if (!Capacitor.isNativePlatform()) return Promise.resolve()
+    return FirebaseAnalytics.setCurrentScreen({ screenName })
   }
 
   crop(value: string, size: number, message?: string): string {
@@ -134,7 +134,6 @@ export class FirebaseAnalyticsService extends AnalyticsService {
     if (!this.platform.is('cordova'))
       return Promise.resolve('Could not load firebase')
 
-    this.firebase.setAnalyticsCollectionEnabled(true)
-    return this.firebase.setCrashlyticsCollectionEnabled(true)
+    return FirebaseAnalytics.setEnabled({ enabled: true })
   }
 }

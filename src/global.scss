@@ -202,3 +202,12 @@ ion-loading.custom-loading {
 .alert-sub-title.sc-ion-alert-md, .alert-title.sc-ion-alert-md {
   color: var(--ion-color-primary) !important;
 }
+
+body.scanner-active {
+  background: transparent;
+  opacity: 0.2;
+}
+
+ion-modal {
+  --background: transparent !important;
+}

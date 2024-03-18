@@ -1,16 +1,16 @@
 <ion-content [scrollY]="false">
   <div class="wrapper">
     <div class="slide-flex">
-      <ion-slides>
-        <ion-slide *ngIf="showIntroductionScreen">
+      <swiper-container #swiper>
+        <swiper-slide *ngIf="showIntroductionScreen" class="center">
           <introduction
             [title]="questionTitle"
             [introduction]="introduction"
             (start)="handleIntro($event)"
           ></introduction>
-        </ion-slide>
+        </swiper-slide>
         <ng-container *ngIf="!showIntroductionScreen">
-          <ion-slide
+          <swiper-slide
             *ngFor="
               let item of groupedQuestions | keyvalue : asIsOrder;
               let i = index
@@ -35,9 +35,9 @@
                 (nextAction)="nextAction($event)"
               ></question>
             </div>
-          </ion-slide>
+          </swiper-slide>
         </ng-container>
-        <ion-slide>
+        <swiper-slide class="center">
           <finish
             *ngIf="showFinishScreen && !showFinishAndLaunchScreen"
             [content]="endText"
@@ -62,8 +62,8 @@
             [isShown]="showFinishScreen"
             (exit)="handleFinish($event)"
           ></finish-and-launch>
-        </ion-slide>
-      </ion-slides>
+        </swiper-slide>
+      </swiper-container>
     </div>
   </div>
 </ion-content>

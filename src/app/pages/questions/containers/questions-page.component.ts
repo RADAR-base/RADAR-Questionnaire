@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core'
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core'
 import { Router } from '@angular/router'
-import { Insomnia } from '@ionic-native/insomnia/ngx'
-import { IonSlides, NavController, Platform } from '@ionic/angular'
+import { KeepAwake } from '@capacitor-community/keep-awake'
+import { NavController, Platform } from '@ionic/angular'
 import { Subscription } from 'rxjs'
 
 import { AlertService } from '../../../core/services/misc/alert.service'
@@ -32,7 +32,8 @@ import { QuestionsService } from '../services/questions.service'
   styleUrls: ['questions-page.component.scss']
 })
 export class QuestionsPageComponent implements OnInit {
-  @ViewChild(IonSlides, { static: true }) slides: IonSlides
+  @ViewChild('swiper')
+  slides: ElementRef | undefined;
 
   startTime: number
   currentQuestionGroupId = 0
@@ -77,7 +78,6 @@ export class QuestionsPageComponent implements OnInit {
     private questionsService: QuestionsService,
     private usage: UsageService,
     private platform: Platform,
-    private insomnia: Insomnia,
     private localization: LocalizationService,
     private router: Router,
     private appLauncher: AppLauncherService,
@@ -86,14 +86,13 @@ export class QuestionsPageComponent implements OnInit {
     this.backButtonListener = this.platform.backButton.subscribe(() => {
       this.sendCompletionLog()
       navigator['app'].exitApp()
-      // this.platform.exitApp()
     })
   }
 
   ionViewDidLeave() {
+    KeepAwake.allowSleep()
     this.sendCompletionLog()
     this.questionsService.reset()
-    this.insomnia.allowSleepAgain()
     this.backButtonListener.unsubscribe()
   }
 
@@ -109,15 +108,19 @@ export class QuestionsPageComponent implements OnInit {
           this.initQuestionnaire(res)
           return this.updateToolbarButtons()
         })
-      this.sendEvent(UsageEventType.QUESTIONNAIRE_STARTED)
-      this.usage.setPage(this.constructor.name)
-      this.slides.lockSwipes(true)
-      this.insomnia.keepAwake()
     }
   }
 
   ionViewWillEnter() {
-    this.slides.update()
+    this.slides.nativeElement.swiper.update()
+  }
+
+  ionViewDidEnter() {
+    this.sendEvent(UsageEventType.QUESTIONNAIRE_STARTED)
+    this.usage.setPage(this.constructor.name)
+    this.slides.nativeElement.swiper.allowSlideNext = false
+    this.slides.nativeElement.swiper.allowSlidePrev = false
+    KeepAwake.keepAwake()
   }
 
   initQuestionnaire(res) {
@@ -168,7 +171,7 @@ export class QuestionsPageComponent implements OnInit {
       this.taskType
     )
     if (start) {
-      this.slides.update()
+      this.slides.nativeElement.swiper.update()
       this.slideQuestion()
     } else this.exitQuestionnaire()
   }
@@ -187,12 +190,11 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   slideQuestion() {
-    this.slides
-      .lockSwipes(false)
-      .then(() => this.slides.slideTo(this.currentQuestionGroupId, 300))
-      .then(() => this.slides.lockSwipes(true))
-
-    this.startTime = this.questionsService.getTime()
+    this.slides.nativeElement.swiper.allowSlideNext = true
+    this.slides.nativeElement.swiper.allowSlidePrev = true
+    this.slides.nativeElement.swiper.slideTo(this.currentQuestionGroupId, 400)
+    this.slides.nativeElement.swiper.allowSlideNext = false
+    this.slides.nativeElement.swiper.allowSlidePrev = false
   }
 
   getCurrentQuestions() {
@@ -263,17 +265,15 @@ export class QuestionsPageComponent implements OnInit {
   exitQuestionnaire() {
     this.sendEvent(UsageEventType.QUESTIONNAIRE_CANCELLED)
     this.navCtrl.navigateBack('/home')
-    // this.navCtrl.pop({ animation: 'wp-transition' })
   }
 
   navigateToFinishPage() {
     this.sendEvent(UsageEventType.QUESTIONNAIRE_FINISHED)
     this.submitTimestamps()
     this.showFinishScreen = true
-    this.slides
-      .lockSwipes(false)
-      .then(() => this.slides.slideTo(this.groupedQuestions.size, 500))
-      .then(() => this.slides.lockSwipes(true))
+    this.slides.nativeElement.swiper.allowSlideNext = true
+    this.slides.nativeElement.swiper.slideTo(this.groupedQuestions.size, 500)
+    this.slides.nativeElement.swiper.allowSlideNext = false
   }
 
   updateDoneButton(val: boolean) {

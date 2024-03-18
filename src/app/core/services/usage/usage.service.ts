@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core'
-import { WebIntent } from '@ionic-native/web-intent/ngx'
 
 import { UsageEventType } from '../../../shared/enums/events'
 import { SchemaType } from '../../../shared/models/kafka'
@@ -13,7 +12,6 @@ import { AnalyticsService } from './analytics.service'
 })
 export class UsageService {
   constructor(
-    private webIntent: WebIntent,
     private kafka: KafkaService,
     private analytics: AnalyticsService,
     private logger: LogService
@@ -27,14 +25,8 @@ export class UsageService {
   }
 
   sendOpenEvent() {
-    return this.webIntent.getIntent().then(intent => {
-      this.logger.log(intent)
-      return this.sendEventToKafka({
-        eventType:
-          intent.extras && Object.keys(intent.extras).length > 1
-            ? UsageEventType.NOTIFICATION_OPEN
-            : UsageEventType.APP_OPEN
-      })
+    return this.sendEventToKafka({
+      eventType: UsageEventType.APP_OPEN
     })
   }
 

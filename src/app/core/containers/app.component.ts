@@ -1,8 +1,8 @@
 import { Component } from '@angular/core'
-import { MobileAccessibility } from '@ionic-native/mobile-accessibility/ngx'
-import { SplashScreen } from '@ionic-native/splash-screen/ngx'
-import { StatusBar } from '@ionic-native/status-bar/ngx'
 import { Platform } from '@ionic/angular'
+import { register } from 'swiper/element/bundle'
+import { TextZoom } from '@capacitor/text-zoom'
+import { Capacitor } from '@capacitor/core'
 
 import { SplashPageComponent } from '../../pages/splash/containers/splash-page.component'
 
@@ -15,17 +15,11 @@ export class AppComponent {
   rootPage = SplashPageComponent
   isAppInitialized: boolean
 
-  constructor(
-    private platform: Platform,
-    private statusBar: StatusBar,
-    private splashScreen: SplashScreen,
-    private accessibility: MobileAccessibility
-  ) {
+  constructor(private platform: Platform) {
+    register()
     this.platform.ready().then(() => {
-      this.accessibility.usePreferredTextZoom(false)
-      this.statusBar.hide()
+      if (Capacitor.isPluginAvailable('TextZoom')) TextZoom.set({ value: 1 })
       this.isAppInitialized = true
-      this.splashScreen.hide()
     })
   }
 }

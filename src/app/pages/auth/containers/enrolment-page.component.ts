@@ -1,10 +1,7 @@
-import { Component, ViewChild } from '@angular/core'
-import {
-  InAppBrowser,
-  InAppBrowserOptions
-} from '@awesome-cordova-plugins/in-app-browser/ngx'
-import { Globalization } from '@ionic-native/globalization/ngx'
-import { IonSlides, NavController } from '@ionic/angular'
+import { Component, ElementRef, ViewChild } from '@angular/core'
+import { Browser } from '@capacitor/browser'
+import { Device } from '@capacitor/device'
+import { NavController } from '@ionic/angular'
 import { AlertInput } from '@ionic/core'
 
 import {
@@ -34,7 +31,9 @@ import { AuthService } from '../services/auth.service'
   styleUrls: ['./enrolment-page.component.scss']
 })
 export class EnrolmentPageComponent {
-  @ViewChild(IonSlides, { static: true }) slides: IonSlides
+  @ViewChild('swiper')
+  slides: ElementRef | undefined;
+
   loading: boolean = false
   showOutcomeStatus: boolean = false
   outcomeStatus: string
@@ -42,47 +41,40 @@ export class EnrolmentPageComponent {
   reportSettings: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
   language?: LanguageSetting = DefaultLanguage
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
-  browserOptions: InAppBrowserOptions = {
-    location: 'yes',
-    hidenavigationbuttons: 'yes',
-    hideurlbar: 'yes',
-    toolbarcolor: '#6d9aa5',
-    closebuttoncolor: '#ffffff'
-  }
 
   constructor(
     public navCtrl: NavController,
-    private theInAppBrowser: InAppBrowser,
     private auth: AuthService,
     private localization: LocalizationService,
     private alertService: AlertService,
     private usage: UsageService,
-    private logger: LogService,
-    private globalization: Globalization
+    private logger: LogService
   ) {
-    this.globalization.getPreferredLanguage().then(res => {
-      // Language value is in BCP 47 format (e.g. en-US)
-      const tag = res.value.split('-')[0]
-      let lang = this.languagesSelectable.find(a => a.value == tag)
-      this.language = lang ? lang : this.language
-      this.localization.setLanguage(this.language)
-    })
+    this.init()
+  }
+
+  async init() {
+    const languageTag = await Device.getLanguageTag()
+    // Language value is in BCP 47 format (e.g. en-US)
+    const tag = languageTag.value.split('-')[0]
+    let lang = this.languagesSelectable.find(a => a.value == tag)
+    this.language = lang ? lang : this.language
+    this.localization.setLanguage(this.language)
   }
 
   ionViewDidEnter() {
     this.usage.setPage(this.constructor.name)
-    this.slides.lockSwipes(true)
+    this.slides.nativeElement.swiper.allowSlideNext = false
+    this.slides.nativeElement.swiper.allowSlidePrev = false
   }
 
   next() {
-    Promise.all([
-      this.slides.lockSwipes(false),
-      this.slides.getActiveIndex()
-    ]).then(([, index]) => {
+      this.slides.nativeElement.swiper.allowSlideNext = true
+      const index = this.slides.nativeElement.swiper.activeIndex
       const slideIndex = index + 1
-      this.slides.slideTo(slideIndex, 500)
-      this.slides.lockSwipes(true)
-    })
+      this.slides.nativeElement.swiper.slideTo(slideIndex, 500)
+      this.slides.nativeElement.swiper.allowSlideNext = false
+      this.slides.nativeElement.swiper.allowSlidePrev = false
   }
 
   enterToken() {
@@ -180,7 +172,7 @@ export class EnrolmentPageComponent {
     this.openWithInAppBrowser(DefaultPrivacyPolicyUrl)
   }
 
-  openWithInAppBrowser(url: string) {
-    this.theInAppBrowser.create(url, '_blank', this.browserOptions)
+  async openWithInAppBrowser(url: string) {
+    await Browser.open({ url })
   }
 }

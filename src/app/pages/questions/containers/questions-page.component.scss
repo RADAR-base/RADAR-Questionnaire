@@ -1,19 +1,24 @@
-ion-slide.swiper-slide {
+swiper-slide.swiper-slide {
   align-items: flex-start;
 }
 
-ion-slide {
+swiper-slide {
   overflow-x: hidden !important;
   padding: 24px 24px 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-start !important;
   align-items: flex-start !important;
-  height: 100%;
+  width: 95vw;
+  height: 99%;
 }
 
-ion-slides {
-  height: 100vh;
+swiper-container {
+  height: 95vh;
+}
+
+.center {
+  text-align: center;
 }
 
 .wrapper {

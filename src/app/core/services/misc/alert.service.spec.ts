@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing'
 import { AlertController } from '@ionic/angular'
-import { AlertControllerMock } from 'ionic-mocks'
 
 import { AlertService } from './alert.service'
 
@@ -11,7 +10,7 @@ describe('AlertService', () => {
     TestBed.configureTestingModule({
       providers: [
         AlertService,
-        { provide: AlertController, useClass: AlertControllerMock }
+        AlertController
       ]
     })
   )

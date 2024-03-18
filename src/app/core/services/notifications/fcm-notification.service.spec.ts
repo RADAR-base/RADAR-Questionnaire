@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing'
-import { FirebaseX } from '@ionic-native/firebase-x/ngx'
 import { Platform } from '@ionic/angular'
 
 import {
@@ -30,7 +29,6 @@ describe('FcmNotificationService', () => {
       providers: [
         FcmNotificationService,
         Platform,
-        { provide: FirebaseX, useClass: FirebaseMock },
         { provide: LogService, useClass: LogServiceMock },
         { provide: GlobalStorageService, useClass: StorageServiceMock },
         { provide: SubjectConfigService, useClass: SubjectConfigServiceMock },

@@ -66,11 +66,12 @@ export class HealthkitService {
     return this.getLastPollTimes().then(dic => {
       let lastPollTime = this.MIN_POLL_TIMESTAMP
       if (healthDataType in dic) lastPollTime = dic[healthDataType]
+      healthDataType = 'weight'
       return CapacitorHealthkit
         .requestAuthorization(
           {
             all: [''],
-            read: [healthDataType], //read only permission
+            read: ['steps'], //read only permission
             write: [''],
           }
         )
@@ -91,14 +92,15 @@ export class HealthkitService {
     let completeData = []
     while (endTime < queryEndTime.getTime()) {
       const queryOptions = {
-        sampleName: dataType,
+        sampleName: 'stepCount',
         startDate: new Date(startTime).toISOString(),
         endDate: new Date(endTime).toISOString(),
         limit: this.MAX_HOURLY_RECORD_LIMIT,
       };
       await CapacitorHealthkit.queryHKitSampleType(queryOptions)
         .then(res => {
-          return (completeData = completeData.concat(res))
+          const data = res.resultData
+          return (completeData = completeData.concat(data))
         })
       startTime = endTime
       endTime = endTime + getMilliseconds({ hours: 1 })

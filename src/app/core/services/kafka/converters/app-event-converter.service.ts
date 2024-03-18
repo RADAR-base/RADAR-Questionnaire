@@ -9,6 +9,7 @@ import { Utility } from 'src/app/shared/utilities/util'
 import { LogService } from '../../misc/log.service'
 import { TokenService } from '../../token/token.service'
 import { ConverterService } from './converter.service'
+import { KeyConverterService } from './key-converter.service'
 
 @Injectable()
 export class AppEventConverterService extends ConverterService {
@@ -16,9 +17,10 @@ export class AppEventConverterService extends ConverterService {
     logger: LogService,
     http: HttpClient,
     token: TokenService,
-    private utility: Utility
+    private utility: Utility,
+    keyConverter: KeyConverterService
   ) {
-    super(logger, http, token)
+    super(logger, http, token, keyConverter)
   }
 
   init() {}

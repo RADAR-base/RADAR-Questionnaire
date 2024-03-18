@@ -1,21 +1,27 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { AnswerValueExport } from 'src/app/shared/models/answer'
-import { KeyExport } from 'src/app/shared/models/kafka'
-import { QuestionType } from 'src/app/shared/models/question'
-import { getSeconds } from 'src/app/shared/utilities/time'
+import { KeyExport, SchemaMetadata } from 'src/app/shared/models/kafka'
+import * as AvroSchema from 'avro-js'
 
 import { LogService } from '../../misc/log.service'
 import { TokenService } from '../../token/token.service'
-import { ConverterService } from './converter.service'
 
 @Injectable()
-export class KeyConverterService extends ConverterService {
-  constructor(logger: LogService, http: HttpClient, token: TokenService) {
-    super(logger, http, token)
+export class KeyConverterService {
+  schemas = {}
+  specifications
+  URI_schema: string = '/schema/subjects/'
+  URI_version: string = '/versions/'
+  BASE_URI: string
+
+  constructor(private logger: LogService, private http: HttpClient, public token: TokenService,
+    ) {
+      this.updateURI()
   }
 
-  init() {}
+  updateURI() {
+    return this.token.getURI().then(uri => (this.BASE_URI = uri))
+  }
 
   getKafkaTopic(payload): Promise<any> {
     return Promise.resolve()
@@ -59,5 +65,18 @@ export class KeyConverterService extends ConverterService {
     }
 
     return key
+  }
+
+  convertToAvro(schema, value): any {
+    return AvroSchema.parse(schema).clone(value, { wrapUnions: true })
+  }
+
+  getLatestKafkaSchemaVersion(uri): Promise<SchemaMetadata> {
+    return this.http
+      .get<SchemaMetadata>(uri)
+      .toPromise()
+      .catch(e => {
+        throw this.logger.error('Failed to get latest Kafka schema versions', e)
+      })
   }
 }

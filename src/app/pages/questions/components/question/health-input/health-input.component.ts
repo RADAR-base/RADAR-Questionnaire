@@ -39,7 +39,7 @@ export class HealthInputComponent implements OnInit {
         this.health_display_time = new Date().toLocaleDateString()
         this.health_display = 'Loading..'
         this.healthKitService.loadData(healthDataType).then(data => {
-          this.health_display = data.length + ' records'
+          this.health_display = 'Loaded records'
           return this.valueChange.emit(data)
         })
       }

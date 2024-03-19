@@ -26,15 +26,15 @@ export enum HealthkitDataType {
 
 export enum HealthkitTopic {
   STEP_COUNT = 'active_apple_healthkit_steps',
-  FLIGHTS_CLIMBED = 'active_apple_healthkit_flights_climbed',
-  DISTANCE_WALKING_RUNNING = 'active_apple_healthkit_distance_walking_running',
-  DISTANCE_CYCLING = 'active_apple_healthkit_distance_cycling',
-  ACTIVE_ENERGY_BURNED = 'active_apple_healthkit_active_energy_burned',
-  BASAL_ENERGY_BURNED = 'active_apple_healthkit_basal_energy_burned',
+  FLIGHTS_CLIMBED = 'active_apple_healthkit_stairs',
+  DISTANCE_WALKING_RUNNING = 'active_apple_healthkit_distance',
+  DISTANCE_CYCLING = 'active_apple_healthkit_distance',
+  ACTIVE_ENERGY_BURNED = 'active_apple_healthkit_calories',
+  BASAL_ENERGY_BURNED = 'active_apple_healthkit_calories',
   HEART_RATE = 'active_apple_healthkit_heart_rate',
   APPLE_EXERCISE_TIME = 'active_apple_healthkit_exercise_time',
   BLOOD_GLUCOSE = 'active_apple_healthkit_blood_glucose',
-  SLEEP_ANALYSIS = 'active_apple_healthkit_sleep_analysis',
+  SLEEP_ANALYSIS = 'active_apple_healthkit_sleep_stage',
   WEIGHT = 'active_apple_healthkit_weight',
   WORKOUT_TYPE = 'active_apple_healthkit_workout_type'
 }

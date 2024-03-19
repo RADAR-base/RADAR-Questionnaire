@@ -36,10 +36,7 @@ export class HealthkitConverterService extends ConverterService {
   init() {}
 
   processData(payload) {
-    return this.processCacheData(payload.data.answers)
-  }
-
-  processCacheData(answers) {
+    const answers = payload.data.answers
     this.logger.log('Answers to process', answers)
     const values = Object.entries(answers).map(([key, value]) => ({
       questionId: key.toString(),

@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing'
 
 import {
   ConverterFactoryServiceMock,
+  KeyConverterServiceMock,
   LocalizationServiceMock,
   LogServiceMock,
   QuestionnaireServiceMock,
@@ -20,6 +21,7 @@ import { LogService } from '../misc/log.service'
 import { GlobalStorageService } from '../storage/global-storage.service'
 import { ConverterFactoryService } from './converters/converter-factory.service.'
 import { SchemaService } from './schema.service'
+import { KeyConverterService } from './converters/key-converter.service'
 
 describe('SchemaService', () => {
   let service
@@ -34,6 +36,7 @@ describe('SchemaService', () => {
         { provide: LocalizationService, useClass: LocalizationServiceMock },
         { provide: SubjectConfigService, useClass: SubjectConfigServiceMock },
         { provide: RemoteConfigService, useClass: RemoteConfigServiceMock },
+        { provide: KeyConverterService, useClass: KeyConverterServiceMock },
         {
           provide: ConverterFactoryService,
           useClass: ConverterFactoryServiceMock

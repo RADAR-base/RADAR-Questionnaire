@@ -1,40 +1,66 @@
-export enum HealthkitFloatDataType {
+export enum HealthkitPermission {
   STAIRS = 'stairs',
   DISTANCE = 'distance',
-  APPLE_EXERCISE_TIME = 'appleExerciseTime',
-  VO2MAX = 'vo2Max',
+  DURATION = 'duration',
   ACTIVITY = 'activity',
-  CALORIES = 'calories'
+  CALORIES = 'calories',
+  BLOOD_GLUCOSE = 'bloodGlucose',
+  WEIGHT = 'weight',
+  HEART_RATE = 'heartRate'
 }
 
 export enum HealthkitDataType {
-  STAIRS = 'stairs',
-  DISTANCE = 'distance',
+  STEP_COUNT = 'stepCount',
+  FLIGHTS_CLIMBED = 'flightsClimbed',
+  DISTANCE_WALKING_RUNNING = 'distanceWalkingRunning',
+  DISTANCE_CYCLING = 'distanceCycling',
+  ACTIVE_ENERGY_BURNED = 'activeEnergyBurned',
+  BASAL_ENERGY_BURNED = 'basalEnergyBurned',
+  HEART_RATE = 'heartRate',
   APPLE_EXERCISE_TIME = 'appleExerciseTime',
-  VO2MAX = 'vo2Max',
-  ACTIVITY = 'activity',
-  CALORIES = 'calories'
+  BLOOD_GLUCOSE = 'bloodGlucose',
+  SLEEP_ANALYSIS = 'sleepAnalysis',
+  WEIGHT = 'weight',
+  WORKOUT_TYPE = 'workoutType'
 }
 
-export enum HealthkitStringDataType {
-  SLEEP = 'sleep',
-  ACTIVITY = 'activity',
-  GENDER = 'gender',
-  DATE_OF_BIRTH = 'date_of_birth'
+export enum HealthkitTopic {
+  STEP_COUNT = 'active_apple_healthkit_steps',
+  FLIGHTS_CLIMBED = 'active_apple_healthkit_flights_climbed',
+  DISTANCE_WALKING_RUNNING = 'active_apple_healthkit_distance_walking_running',
+  DISTANCE_CYCLING = 'active_apple_healthkit_distance_cycling',
+  ACTIVE_ENERGY_BURNED = 'active_apple_healthkit_active_energy_burned',
+  BASAL_ENERGY_BURNED = 'active_apple_healthkit_basal_energy_burned',
+  HEART_RATE = 'active_apple_healthkit_heart_rate',
+  APPLE_EXERCISE_TIME = 'active_apple_healthkit_exercise_time',
+  BLOOD_GLUCOSE = 'active_apple_healthkit_blood_glucose',
+  SLEEP_ANALYSIS = 'active_apple_healthkit_sleep_analysis',
+  WEIGHT = 'active_apple_healthkit_weight',
+  WORKOUT_TYPE = 'active_apple_healthkit_workout_type'
 }
+
+export const HealthkitFloatDataTypes = new Set([
+  HealthkitDataType.STEP_COUNT,
+  HealthkitDataType.FLIGHTS_CLIMBED,
+  HealthkitDataType.DISTANCE_WALKING_RUNNING,
+  HealthkitDataType.DISTANCE_CYCLING,
+  HealthkitDataType.ACTIVE_ENERGY_BURNED,
+  HealthkitDataType.BASAL_ENERGY_BURNED,
+  HealthkitDataType.HEART_RATE,
+  HealthkitDataType.APPLE_EXERCISE_TIME,
+  HealthkitDataType.BLOOD_GLUCOSE,
+  HealthkitDataType.WEIGHT
+])
+
+export const HealthkitStringDataTypes = new Set([
+  HealthkitDataType.SLEEP_ANALYSIS,
+  HealthkitDataType.WORKOUT_TYPE
+])
 
 export enum HealthKitDataTypeKey {
   STRING = 'stringValue',
   FLOAT = 'floatValue',
   DOUBLE = 'doubleValue'
-}
-
-export enum HealthkitSchemaType {
-  ACTIVITY = 'healthkit_activity',
-  BODY_MEASUREMENT = 'healthkit_body_measurement',
-  CALORIES = 'healthkit_calories',
-  HEART_RATE = 'healthkit_heart_rate',
-  VITAL_SIGNS = 'healthkit_vital_signs'
 }
 
 export interface HealthkitValueExport {

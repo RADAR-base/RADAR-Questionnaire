@@ -16,6 +16,7 @@ import {
   SleepData
 } from '@perfood/capacitor-healthkit'
 import { LogService } from '../../../core/services/misc/log.service'
+import { DefaultHealthkitPermissions } from 'src/assets/data/defaultConfig'
 
 declare var Media: any // stops errors w/ cordova-plugin-media-with-compression types
 
@@ -23,12 +24,7 @@ declare var Media: any // stops errors w/ cordova-plugin-media-with-compression 
   providedIn: 'root'
 })
 export class HealthkitService {
-  health_value: any
-  health_display: any
-  health_display_time: any
-  health_time: any
-
-  notSupported = false
+  READ_PERMISSIONS = DefaultHealthkitPermissions
   // The interval days for first query
   DEFAULT_LOOKBACK_INTERVAL = 30
   MIN_POLL_TIMESTAMP = new Date(
@@ -66,12 +62,11 @@ export class HealthkitService {
     return this.getLastPollTimes().then(dic => {
       let lastPollTime = this.MIN_POLL_TIMESTAMP
       if (healthDataType in dic) lastPollTime = dic[healthDataType]
-      healthDataType = 'weight'
       return CapacitorHealthkit
         .requestAuthorization(
           {
             all: [''],
-            read: ['steps'], //read only permission
+            read: this.READ_PERMISSIONS,
             write: [''],
           }
         )
@@ -92,7 +87,7 @@ export class HealthkitService {
     let completeData = []
     while (endTime < queryEndTime.getTime()) {
       const queryOptions = {
-        sampleName: 'stepCount',
+        sampleName: dataType as SampleNames,
         startDate: new Date(startTime).toISOString(),
         endDate: new Date(endTime).toISOString(),
         limit: this.MAX_HOURLY_RECORD_LIMIT,

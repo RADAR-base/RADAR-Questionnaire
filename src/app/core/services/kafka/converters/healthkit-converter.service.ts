@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { AnswerValueExport } from 'src/app/shared/models/answer'
 import {
   HealthKitDataTypeKey,
   HealthkitDataType,
-  HealthkitStringDataType
+  HealthkitStringDataTypes,
+  HealthkitTopic,
+  HealthkitValueExport
 } from 'src/app/shared/models/health'
-import { QuestionType } from 'src/app/shared/models/question'
 import { getSeconds } from 'src/app/shared/utilities/time'
 
 import { LogService } from '../../misc/log.service'
@@ -21,15 +21,6 @@ import { KeyConverterService } from './key-converter.service'
 export class HealthkitConverterService extends ConverterService {
   GENERAL_TOPIC: string = 'questionnaire_response'
   HEALTHKIT_TOPIC = 'active_apple_healthkit_steps'
-
-  HEALTHKIT_KEYS: Set<HealthkitDataType> = new Set([
-    HealthkitDataType.ACTIVITY,
-    HealthkitDataType.APPLE_EXERCISE_TIME,
-    HealthkitDataType.CALORIES,
-    HealthkitDataType.DISTANCE,
-    HealthkitDataType.STAIRS,
-    HealthkitDataType.VO2MAX
-  ])
 
   constructor(
     private healthkit: HealthkitService,
@@ -74,7 +65,7 @@ export class HealthkitConverterService extends ConverterService {
           floatValue: null,
           doubleValue: null,
           stringValue: null
-        },
+        } as HealthkitValueExport,
         { [type]: d.value }
       )
     )
@@ -138,18 +129,16 @@ export class HealthkitConverterService extends ConverterService {
   }
 
   getDataTypeFromKey(key) {
-    if (
-      Object.values(HealthkitStringDataType).includes(
-        key as HealthkitStringDataType
-      )
-    ) {
+    if (HealthkitStringDataTypes.has(key as HealthkitDataType)) {
       return HealthKitDataTypeKey.STRING
     } else return HealthKitDataTypeKey.FLOAT
   }
 
-  getKafkaTopic(payload, topics): Promise<any> {
-    const key = payload.key
-    return Promise.resolve('active_apple_healthkit_' + key)
+  getKafkaTopic(key): String {
+    for (const k in HealthkitDataType) {
+      if (HealthkitDataType[k] == key) return HealthkitTopic[k]
+    }
+    return this.HEALTHKIT_TOPIC
   }
 
   getKafkaPayload(
@@ -159,23 +148,25 @@ export class HealthkitConverterService extends ConverterService {
     cacheKeys: any[],
     topics
   ): Promise<any[]> {
-    return this.getKafkaTopic(kafkaObjects[0], topics).then(topic =>
-      this.getSchemas(topic).then(schema => {
+    return this.getSchemas('')
+      .then(schema => {
         return Promise.all([
           this.keyConverter.convertToRecord(kafkaKey, this.HEALTHKIT_TOPIC, ''),
-          this.batchConvertToRecord(kafkaObjects, topic, schema)
+          this.batchConvertToRecord(kafkaObjects, '', schema)
         ]).then(([key, records]) => {
-          return records.map(v => ({
-            topic: this.HEALTHKIT_TOPIC,
-            cacheKey: cacheKeys,
-            record: {
-              key_schema_id: key.schema,
-              value_schema_id: v[0]['schema'],
-              records: v.map(r => ({ key: key['value'], value: r['value'] }))
+          return records.map(v => {
+            const sample = v[0]
+            return {
+              topic: this.getKafkaTopic(sample.type),
+              cacheKey: cacheKeys,
+              record: {
+                key_schema_id: key.schema,
+                value_schema_id: sample.schema,
+                records: v.map(r => ({ key: key['value'], value: r['value'] }))
+              }
             }
-          }))
+          })
         })
       })
-    )
   }
 }

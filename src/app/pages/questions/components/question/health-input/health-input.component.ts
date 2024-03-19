@@ -31,8 +31,6 @@ export class HealthInputComponent implements OnInit {
 
   loadData() {
     let healthDataType = this.health_question.field_name
-    if (this.health_question.field_name.includes('blood_pressure'))
-      healthDataType = 'blood_pressure'
     this.healthKitService.checkHealthkitSupported().then(() => {
       this.isSupported = true
       if (this.isSupported) {

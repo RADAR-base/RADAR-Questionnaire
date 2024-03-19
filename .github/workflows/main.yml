@@ -78,7 +78,7 @@ jobs:
           node-version: '16'
 
       - name: Install app dependencies
-        run: npm install --force
+        run: npm install --legacy-peer-deps
 
       - name: Run unit tests
         run: npm run test

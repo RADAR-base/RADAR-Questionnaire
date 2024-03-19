@@ -150,12 +150,11 @@ export class KafkaService {
     if (this.isCacheSending) return Promise.resolve([])
     this.cache.setCacheSending(true)
     return Promise.all([
-      this.cache.getCache(),
+      this.cache.getGroupedCache(),
       this.getKafkaHeaders(DefaultKafkaRequestContentType)
     ])
       .then(([cache, headers]) => {
-        const completeCache = { ...cache }
-        return this.convertCacheToRecords(completeCache).then(records => {
+        return this.convertCacheToRecords(cache).then(records => {
           return Promise.all(
             records.map(r =>
               this.sendToKafka(r.topic, r.record, headers)
@@ -172,13 +171,10 @@ export class KafkaService {
         })
       })
       .then(() =>
-        this.cache
-          .removeFromCache(successKeys)
-          .then(() => this.cache.removeFromHealthCache(successKeys))
-          .then(() => {
-            this.cache.setCacheSending(false)
-            return { successKeys, failedKeys }
-          })
+        this.cache.removeFromCache(successKeys).then(() => {
+          this.cache.setCacheSending(false)
+          return { successKeys, failedKeys }
+        })
       )
       .catch(e => {
         this.cache.setCacheSending(false)
@@ -186,32 +182,23 @@ export class KafkaService {
       })
   }
 
-  convertCacheToRecords(cache) {
+  convertCacheToRecords(groupedCache) {
+    // NOTE: This will get the kafka object key first which contains user and project details
     return this.schema.getKafkaObjectKey().then(key => {
-      const groupedCache = {}
-      Object.entries(cache).map(([k, v]: [any, CacheValue]) => {
-        if (!v || !v.kafkaObject) return
-        const type = v.name
-        if (!groupedCache[type]) groupedCache[type] = []
-        groupedCache[type].push({
-          key,
-          value: { key: k, value: v.kafkaObject.value }
-        })
-      })
       let allRecords = []
       Object.entries(groupedCache).map(([k, v]: [any, any]) => {
         const type = k
-        return allRecords.push(
+        return (allRecords = allRecords.concat(
           this.schema.getKafkaPayload(
             type,
-            v[0].key,
-            v.map(a => a.value.value),
-            v.map(a => a.value.key),
+            key,
+            v.map(a => a.value),
+            v.map(a => a.key),
             this.topics
           )
-        )
+        ))
       })
-      return Promise.all(allRecords)
+      return Promise.all(allRecords).then(records => records.flat())
     })
   }
 
@@ -255,13 +242,6 @@ export class KafkaService {
       .toPromise()
   }
 
-  removeFromHealthCache(cacheKeys: number[]) {
-    // if (!cacheKeys.length) return Promise.resolve()
-    // return this.storage
-    //   .removeHealthData(cacheKeys)
-    //   .then(() => this.setLastUploadDate(Date.now()))
-  }
-
   getAccessToken() {
     return Promise.all([this.updateURI(), this.token.refresh()])
       .then(() => this.token.getTokens())
@@ -299,10 +279,6 @@ export class KafkaService {
 
   getLastUploadDate() {
     return this.cache.getLastUploadDate()
-  }
-
-  getHealthCacheSize() {
-    return this.cache.getHealthCacheSize()
   }
 
   getCacheSize() {

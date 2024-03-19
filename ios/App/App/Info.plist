@@ -55,5 +55,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Read Health Data</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>Read Health Data</string>
 </dict>
 </plist>

@@ -1,8 +1,4 @@
 import { Injectable } from '@angular/core'
-import {
-  HealthKitDataTypeKey,
-  HealthkitStringDataType
-} from 'src/app/shared/models/health'
 
 import { ConfigService } from '../../../core/services/config/config.service'
 import { KafkaService } from '../../../core/services/kafka/kafka.service'
@@ -61,7 +57,6 @@ export class FinishTaskService {
       )
       .then(() => this.config.rescheduleNotifications())
   }
-  // TODO process for general questionnaire schema
 
   cancelNotificationsForCompletedTask(task): Promise<any> {
     console.log('Cancelling pending reminders for task..')

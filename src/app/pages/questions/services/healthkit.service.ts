@@ -16,6 +16,7 @@ import {
   SleepData
 } from '@perfood/capacitor-healthkit'
 import { LogService } from '../../../core/services/misc/log.service'
+import { DefaultHealthkitPermissions } from 'src/assets/data/defaultConfig'
 
 declare var Media: any // stops errors w/ cordova-plugin-media-with-compression types
 
@@ -23,18 +24,13 @@ declare var Media: any // stops errors w/ cordova-plugin-media-with-compression 
   providedIn: 'root'
 })
 export class HealthkitService {
-  health_value: any
-  health_display: any
-  health_display_time: any
-  health_time: any
-
-  notSupported = false
+  READ_PERMISSIONS = DefaultHealthkitPermissions
   // The interval days for first query
   DEFAULT_LOOKBACK_INTERVAL = 30
   MIN_POLL_TIMESTAMP = new Date(
     new Date().getTime() - this.DEFAULT_LOOKBACK_INTERVAL * 24 * 60 * 60 * 1000
   )
-  MAX_HOURLY_RECORD_LIMIT = 500
+  MAX_HOURLY_RECORD_LIMIT = 1000
 
   constructor(
     private storage: StorageService
@@ -70,20 +66,13 @@ export class HealthkitService {
         .requestAuthorization(
           {
             all: [''],
-            read: [healthDataType], //read only permission
+            read: this.READ_PERMISSIONS,
             write: [''],
           }
         )
         .then(() => {
-          const endDate = new Date()
-          return this.query(lastPollTime, endDate, healthDataType).then(res => {
-            if (res.length) {
-              const lastDataDate = new Date(res[res.length - 1].endDate)
-              dic[healthDataType] = lastDataDate
-              this.setLastPollTimes(dic)
-            }
-            return res
-          })
+          const currentDate = new Date()
+          return { startTime: lastPollTime, endTime: currentDate }
         })
         .catch(e => {
           console.log(e)
@@ -98,14 +87,15 @@ export class HealthkitService {
     let completeData = []
     while (endTime < queryEndTime.getTime()) {
       const queryOptions = {
-        sampleName: dataType,
+        sampleName: dataType as SampleNames,
         startDate: new Date(startTime).toISOString(),
         endDate: new Date(endTime).toISOString(),
         limit: this.MAX_HOURLY_RECORD_LIMIT,
       };
       await CapacitorHealthkit.queryHKitSampleType(queryOptions)
         .then(res => {
-          return (completeData = completeData.concat(res))
+          const data = res.resultData
+          return (completeData = completeData.concat(data))
         })
       startTime = endTime
       endTime = endTime + getMilliseconds({ hours: 1 })

@@ -10,6 +10,7 @@ import * as YAML from 'yaml'
 
 import { LogService } from '../../misc/log.service'
 import { TokenService } from '../../token/token.service'
+import { KeyConverterService } from './key-converter.service'
 
 @Injectable()
 export abstract class ConverterService {
@@ -22,7 +23,8 @@ export abstract class ConverterService {
   constructor(
     public logger: LogService,
     private http: HttpClient,
-    public token: TokenService
+    public token: TokenService,
+    public keyConverter: KeyConverterService,
   ) {
     this.updateURI()
     this.getRadarSpecifications()
@@ -71,6 +73,32 @@ export abstract class ConverterService {
   batchConvertToAvro(schema, values): any {
     const parsedSchema = AvroSchema.parse(schema)
     return values.map(v => parsedSchema.clone(v, { wrapUnions: true }))
+  }
+
+  getKafkaPayload(
+    type,
+    kafkaKey,
+    kafkaObjects: any[],
+    cacheKeys: any[],
+    topics
+  ): Promise<any[]> {
+    return this.getKafkaTopic(kafkaObjects[0], topics).then(topic =>
+      this.getSchemas(topic).then(schema => {
+        return Promise.all([
+          this.keyConverter
+            .convertToRecord(kafkaKey, topic, ''),
+          this.batchConvertToRecord(kafkaObjects, topic, schema)
+        ]).then(([key, records]) => ([{
+          topic,
+          cacheKey: cacheKeys,
+          record: {
+            key_schema_id: key.schema,
+            value_schema_id: records[0]['schema'],
+            records: records.map(r => ({ key: key.value, value: r['value'] }))
+          }
+        }]))
+      })
+    )
   }
 
   getUniqueTimeNow() {

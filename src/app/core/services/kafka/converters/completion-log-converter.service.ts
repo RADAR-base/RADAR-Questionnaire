@@ -8,11 +8,17 @@ import { getSeconds } from 'src/app/shared/utilities/time'
 import { LogService } from '../../misc/log.service'
 import { TokenService } from '../../token/token.service'
 import { ConverterService } from './converter.service'
+import { KeyConverterService } from './key-converter.service'
 
 @Injectable()
 export class CompletionLogConverterService extends ConverterService {
-  constructor(logger: LogService, http: HttpClient, token: TokenService) {
-    super(logger, http, token)
+  constructor(
+    logger: LogService,
+    http: HttpClient,
+    token: TokenService,
+    keyConverter: KeyConverterService
+  ) {
+    super(logger, http, token, keyConverter)
   }
 
   init() {}

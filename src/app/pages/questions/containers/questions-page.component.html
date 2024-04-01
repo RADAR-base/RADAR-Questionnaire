@@ -1,7 +1,7 @@
 <ion-content [scrollY]="false">
   <div class="wrapper">
     <div class="slide-flex">
-      <swiper-container #swiper>
+      <swiper-container #swiper (swiperreachend)="onSlideFinish()">
         <swiper-slide *ngIf="showIntroductionScreen" class="center">
           <introduction
             [title]="questionTitle"

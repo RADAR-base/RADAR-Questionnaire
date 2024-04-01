@@ -152,7 +152,7 @@ export class QuestionsPageComponent implements OnInit {
     questions.forEach(q => {
       const key =
         q.field_type.includes(this.MATRIX_FIELD_NAME) ||
-        q.field_type.includes(this.HEALTH_FIELD_NAME)
+          q.field_type.includes(this.HEALTH_FIELD_NAME)
           ? q.matrix_group_name
           : q.field_name
       const entry = groupedQuestions.get(key) ? groupedQuestions.get(key) : []
@@ -272,8 +272,19 @@ export class QuestionsPageComponent implements OnInit {
     this.submitTimestamps()
     this.showFinishScreen = true
     this.slides.nativeElement.swiper.allowSlideNext = true
-    this.slides.nativeElement.swiper.slideTo(this.groupedQuestions.size, 500)
+    this.slides.nativeElement.swiper.slideTo(this.groupedQuestions.size, 300)
     this.slides.nativeElement.swiper.allowSlideNext = false
+  }
+
+  onSlideFinish() {
+    this.onQuestionnaireCompleted().then(() => this.showDoneButton = true)
+  }
+
+  onQuestionnaireCompleted() {
+    return this.questionsService.processCompletedQuestionnaire(
+      this.task,
+      this.questions
+    )
   }
 
   updateDoneButton(val: boolean) {
@@ -311,7 +322,7 @@ export class QuestionsPageComponent implements OnInit {
         buttons: [
           {
             text: this.localization.translateKey(LocKeys.BTN_DISMISS),
-            handler: () => {}
+            handler: () => { }
           }
         ]
       })

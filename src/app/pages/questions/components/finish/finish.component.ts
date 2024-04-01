@@ -39,25 +39,13 @@ export class FinishComponent implements OnChanges {
   completedInClinic = false
 
   constructor(
-    private usage: UsageService,
-    private questionsService: QuestionsService
+    private usage: UsageService
   ) {}
 
   ngOnChanges() {
     this.displayNextTaskReminder =
       this.taskType == AssessmentType.SCHEDULED && !this.isLastTask
-    if (this.isShown) {
-      this.onQuestionnaireCompleted()
-      this.usage.setPage(this.constructor.name)
-      setTimeout(() => (this.showDoneButton = true), 10000)
-    }
-  }
-
-  onQuestionnaireCompleted() {
-    return this.questionsService.processCompletedQuestionnaire(
-      this.task,
-      this.questions
-    )
+    if (this.isShown) this.usage.setPage(this.constructor.name)
   }
 
   handleClosePage() {

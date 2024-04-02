@@ -55,3 +55,43 @@ ion-spinner * {
   left: 0;
   width: 100%;
 }
+
+ion-button {
+  --background: transparent;
+
+  animation: progress 5s ease-in-out forwards;
+}
+
+.progress {
+  --box-shadow: inset 40px 0 0 0 var(--cl-primary-20);
+}
+
+@keyframes progress {
+  0% {
+    --box-shadow: inset 40px 0 0 0 var(--cl-primary-20);
+  }
+
+  10% {
+    --box-shadow: inset 100px 0 0 0 var(--cl-primary-20);
+  }
+
+  20% {
+    --box-shadow: inset 150px 0 0 0 var(--cl-primary-20);
+  }
+
+  40% {
+    --box-shadow: inset 200px 0 0 0 var(--cl-primary-20);
+  }
+
+  70% {
+    --box-shadow: inset 250px 0 0 0 var(--cl-primary-20);
+  }
+
+  80% {
+    --box-shadow: inset 300px 0 0 0 var(--cl-primary-20);
+  }
+
+  100% {
+    --box-shadow: inset 350px 0 0 0 var(--cl-primary-20);
+  }
+}

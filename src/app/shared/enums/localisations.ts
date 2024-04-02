@@ -104,6 +104,7 @@ export class LocKeys {
   static BTN_TRY_AGAIN = new LocKeys('BTN_TRY_AGAIN')
   static BTN_UPDATE = new LocKeys('BTN_UPDATE')
   static STATUS_LOADING = new LocKeys('STATUS_LOADING')
+  static STATUS_SENDING = new LocKeys('STATUS_SENDING')
   static STATUS_SUCCESS = new LocKeys('STATUS_SUCCESS')
   static STATUS_FAILURE = new LocKeys('STATUS_FAILURE')
   static STATUS_NOW = new LocKeys('STATUS_NOW')

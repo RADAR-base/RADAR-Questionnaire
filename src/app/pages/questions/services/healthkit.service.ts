@@ -16,7 +16,9 @@ import {
   SleepData
 } from '@perfood/capacitor-healthkit'
 import { LogService } from '../../../core/services/misc/log.service'
-import { DefaultHealthkitPermissions } from 'src/assets/data/defaultConfig'
+import { DefaultHealthkitLookbackInterval, DefaultHealthkitPermissions } from 'src/assets/data/defaultConfig'
+import { RemoteConfigService } from 'src/app/core/services/config/remote-config.service'
+import { ConfigKeys } from 'src/app/shared/enums/config'
 
 declare var Media: any // stops errors w/ cordova-plugin-media-with-compression types
 
@@ -26,23 +28,31 @@ declare var Media: any // stops errors w/ cordova-plugin-media-with-compression 
 export class HealthkitService {
   READ_PERMISSIONS = DefaultHealthkitPermissions
   // The interval days for first query
-  DEFAULT_LOOKBACK_INTERVAL = 30
-  MIN_POLL_TIMESTAMP = new Date(
-    new Date().getTime() - this.DEFAULT_LOOKBACK_INTERVAL * 24 * 60 * 60 * 1000
-  )
-  MAX_HOURLY_RECORD_LIMIT = 1000
+  DEFAULT_LOOKBACK_INTERVAL = 100
+  MIN_POLL_TIMESTAMP = new Date()
 
   constructor(
-    private storage: StorageService
+    private storage: StorageService,
+    private remoteConfig: RemoteConfigService
   ) {
-    this.initLastPollTimes()
+    this.init()
   }
 
-  initLastPollTimes() {
+  init() {
+    this.remoteConfig.subject().subscribe(config => {
+      config
+        .getOrDefault(
+          ConfigKeys.HEALTHKIT_LOOKBACK_INTERVAL_DAYS,
+          String(DefaultHealthkitLookbackInterval)
+        )
+        .then(interval => {
+          this.DEFAULT_LOOKBACK_INTERVAL = Number(interval)
+          this.MIN_POLL_TIMESTAMP = new Date(
+            new Date().getTime() - getMilliseconds({ days: this.DEFAULT_LOOKBACK_INTERVAL }))
+        })
+    })
     return this.getLastPollTimes().then(dic => {
-      if (!dic) {
-        return this.setLastPollTimes({})
-      }
+      if (!dic) return this.setLastPollTimes({})
     })
   }
 
@@ -83,23 +93,19 @@ export class HealthkitService {
 
   async query(queryStartTime: Date, queryEndTime: Date, dataType: string) {
     let startTime = setDateTimeToMidnightEpoch(queryStartTime)
-    let endTime = startTime + getMilliseconds({ hours: 1 })
+    let endTime = setDateTimeToMidnight(queryEndTime)
     let completeData = []
-    while (endTime < queryEndTime.getTime()) {
-      const queryOptions = {
-        sampleName: dataType as SampleNames,
-        startDate: new Date(startTime).toISOString(),
-        endDate: new Date(endTime).toISOString(),
-        limit: this.MAX_HOURLY_RECORD_LIMIT,
-      };
-      await CapacitorHealthkit.queryHKitSampleType(queryOptions)
-        .then(res => {
-          const data = res.resultData
-          return (completeData = completeData.concat(data))
-        })
-      startTime = endTime
-      endTime = endTime + getMilliseconds({ hours: 1 })
-    }
+    const queryOptions = {
+      sampleName: dataType as SampleNames,
+      startDate: new Date(startTime).toISOString(),
+      endDate: new Date(endTime).toISOString(),
+      limit: 0 // This is to get all the data
+    };
+    await CapacitorHealthkit.queryHKitSampleType(queryOptions)
+      .then(res => {
+        const data = res.resultData
+        return (completeData = completeData.concat(data))
+      })
     return completeData
   }
 

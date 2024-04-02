@@ -319,3 +319,6 @@ export const DefaultHealthkitPermissions = [
   HealthkitPermission.STAIRS,
   HealthkitPermission.WEIGHT
 ]
+
+// *Default lookback interval to pull Healthkit data from
+export const DefaultHealthkitLookbackInterval = 100

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core'
 
 @Injectable()
 export class Utility {
-  constructor() {}
+  constructor() { }
 
   /**
    * Partition the given array into two parts.
@@ -66,4 +66,11 @@ export class Utility {
   base64ToUnicode(raw: string): string {
     return decodeURIComponent(escape(atob(raw)))
   }
+
+  chunk(arr: any[], size: number): any[][] {
+    return Array.from({ length: Math.ceil(arr.length / size) }, (_: any, i: number) =>
+      arr.slice(i * size, i * size + size)
+    )
+  }
+
 }

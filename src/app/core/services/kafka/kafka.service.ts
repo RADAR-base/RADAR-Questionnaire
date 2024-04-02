@@ -215,7 +215,7 @@ export class KafkaService {
           this.logger.log('Retrying uncompressed..')
           return this.postData(record, topic, headers)
         }
-        throw e
+        else throw e
       })
       .then(() => this.sendEvent(allRecords[0], DataEventType.SEND_SUCCESS))
       .catch(e => {

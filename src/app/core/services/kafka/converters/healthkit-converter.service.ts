@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core'
 import {
   HealthKitDataTypeKey,
   HealthkitDataType,
+  HealthkitFloatDataTypes,
   HealthkitStringDataTypes,
   HealthkitTopic,
   HealthkitValueExport
@@ -16,15 +17,18 @@ import { HealthkitService } from 'src/app/pages/questions/services/healthkit.ser
 import { StorageService } from '../../storage/storage.service'
 import { StorageKeys } from 'src/app/shared/enums/storage'
 import { KeyConverterService } from './key-converter.service'
+import { Utility } from 'src/app/shared/utilities/util'
 
 @Injectable()
 export class HealthkitConverterService extends ConverterService {
   GENERAL_TOPIC: string = 'questionnaire_response'
   HEALTHKIT_TOPIC = 'active_apple_healthkit_steps'
+  MAX_RECORD_SIZE = 5_000
 
   constructor(
     private healthkit: HealthkitService,
     private storage: StorageService,
+    private util: Utility,
     logger: LogService,
     http: HttpClient,
     token: TokenService,
@@ -33,7 +37,7 @@ export class HealthkitConverterService extends ConverterService {
     super(logger, http, token, keyConverter)
   }
 
-  init() {}
+  init() { }
 
   processData(payload) {
     const answers = payload.data.answers
@@ -45,7 +49,7 @@ export class HealthkitConverterService extends ConverterService {
     return { name: 'healthkit', time: Date.now(), data: values }
   }
 
-  processSingleDatatype(key, data, timeReceived) {
+  processSingleDatatype(key, data, timeReceived): any[][] {
     const type = this.getDataTypeFromKey(key)
     const results = data.map(d =>
       Object.assign(
@@ -66,42 +70,48 @@ export class HealthkitConverterService extends ConverterService {
         { [type]: d.value }
       )
     )
-    return results
+    return this.util.chunk(results, this.MAX_RECORD_SIZE)
   }
 
   batchConvertToRecord(kafkaValues, topic, valueSchemaMetadata) {
     return Promise.all(
       kafkaValues.map(questionnaire =>
         Promise.all(
-          questionnaire.data.map(q => {
-            let dataType = q.questionId
-            const startTime = new Date(q.value.startTime)
-            const endTime = new Date(q.value.endTime)
-            return Promise.all([
-              this.getLastPollTimes(),
-              this.healthkit.query(startTime, endTime, dataType)
-            ])
-              .then(([dic, res]) => {
-                if (res.length) {
-                  const lastDataDate = new Date(res[res.length - 1].endDate)
-                  dic[dataType] = lastDataDate
-                  this.setLastPollTimes(dic)
-                }
-                return this.processSingleDatatype(dataType, res, Date.now())
-              })
-              .then(res => {
-                const value = JSON.parse(valueSchemaMetadata.schema)
-                const result = this.batchConvertToAvro(value, res).map(v => ({
-                  value: v,
-                  schema: valueSchemaMetadata.id,
-                  type: dataType
-                }))
-                return result
-              })
-          })
+          questionnaire.data
+            .filter(q => this.isValidDataType(q.questionId))
+            .map(q => {
+              let dataType = q.questionId
+              const startTime = new Date(q.value.startTime)
+              const endTime = new Date(q.value.endTime)
+              return Promise.all([
+                this.getLastPollTimes(),
+                this.healthkit.query(startTime, endTime, dataType)
+              ])
+                .then(([dic, res]) => {
+                  if (res.length) {
+                    const lastDataDate = new Date(res[res.length - 1].endDate)
+                    dic[dataType] = lastDataDate
+                    this.setLastPollTimes(dic)
+                  }
+                  return this.processSingleDatatype(dataType, res, Date.now())
+                })
+                .then((res: any[][]) => {
+                  let result = []
+                  const value = JSON.parse(valueSchemaMetadata.schema)
+                  res.map(r =>
+                    result.push(
+                      this.batchConvertToAvro(value, r).map(v => ({
+                        value: v,
+                        schema: valueSchemaMetadata.id,
+                        type: dataType
+                      }))
+                    ))
+                  return result
+                })
+            })
         )
       )
-    ).then(res => res.flat().filter(r => r.length))
+    ).then(res => res.flat(2).filter(r => r.length))
   }
   setLastPollTimes(dic: any) {
     return this.storage.set(StorageKeys.HEALTH_LAST_POLL_TIMES, dic)
@@ -125,6 +135,10 @@ export class HealthkitConverterService extends ConverterService {
     }
   }
 
+  isValidDataType(key: HealthkitDataType) {
+    return HealthkitStringDataTypes.has(key) || HealthkitFloatDataTypes.has(key)
+  }
+
   getDataTypeFromKey(key) {
     if (HealthkitStringDataTypes.has(key as HealthkitDataType)) {
       return HealthKitDataTypeKey.STRING
@@ -145,25 +159,24 @@ export class HealthkitConverterService extends ConverterService {
     cacheKeys: any[],
     topics
   ): Promise<any[]> {
-    return this.getSchemas('')
-      .then(schema => {
-        return Promise.all([
-          this.keyConverter.convertToRecord(kafkaKey, this.HEALTHKIT_TOPIC, ''),
-          this.batchConvertToRecord(kafkaObjects, '', schema)
-        ]).then(([key, records]) => {
-          return records.map(v => {
-            const sample = v[0]
-            return {
-              topic: this.getKafkaTopic(sample.type),
-              cacheKey: cacheKeys,
-              record: {
-                key_schema_id: key.schema,
-                value_schema_id: sample.schema,
-                records: v.map(r => ({ key: key['value'], value: r['value'] }))
-              }
+    return this.getSchemas('').then(schema => {
+      return Promise.all([
+        this.keyConverter.convertToRecord(kafkaKey, this.HEALTHKIT_TOPIC, ''),
+        this.batchConvertToRecord(kafkaObjects, '', schema)
+      ]).then(([key, records]) => {
+        return records.map(v => {
+          const sample = v[0]
+          return {
+            topic: this.getKafkaTopic(sample.type),
+            cacheKey: cacheKeys,
+            record: {
+              key_schema_id: key.schema,
+              value_schema_id: sample.schema,
+              records: v.map(r => ({ key: key['value'], value: r['value'] }))
             }
-          })
+          }
         })
       })
+    })
   }
 }

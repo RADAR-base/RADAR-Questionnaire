@@ -18,7 +18,7 @@ export class ScheduleFactoryService extends ScheduleService {
 
   constructor(
     public localScheduleService: LocalScheduleService,
-    public appServerScheduleSerice: AppserverScheduleService,
+    public appServerScheduleService: AppserverScheduleService,
     private remoteConfig: RemoteConfigService,
     private store: GlobalStorageService,
     logger: LogService
@@ -40,7 +40,7 @@ export class ScheduleFactoryService extends ScheduleService {
           case SchedulerType.LOCAL:
             return (this.scheduleService = this.localScheduleService)
           case SchedulerType.APPSERVER:
-            return (this.scheduleService = this.appServerScheduleSerice)
+            return (this.scheduleService = this.appServerScheduleService)
           default:
             throw new Error('No such scheduling service available')
         }
@@ -75,6 +75,6 @@ export class ScheduleFactoryService extends ScheduleService {
   }
 
   updateTaskToComplete(updatedTask): Promise<any> {
-    return this.scheduleService.updateTaskToComplete(updatedTask)
+    return this.appServerScheduleService.updateTaskToComplete(updatedTask)
   }
 }

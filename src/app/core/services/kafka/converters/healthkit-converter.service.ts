@@ -23,7 +23,6 @@ import { Utility } from 'src/app/shared/utilities/util'
 export class HealthkitConverterService extends ConverterService {
   GENERAL_TOPIC: string = 'questionnaire_response'
   HEALTHKIT_TOPIC = 'active_apple_healthkit_steps'
-  MAX_RECORD_SIZE = 5_000
 
   constructor(
     private healthkit: HealthkitService,

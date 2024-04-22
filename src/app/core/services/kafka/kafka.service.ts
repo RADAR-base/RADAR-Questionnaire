@@ -22,6 +22,7 @@ import { TokenService } from '../token/token.service'
 import { AnalyticsService } from '../usage/analytics.service'
 import { CacheService } from './cache.service'
 import { SchemaService } from './schema.service'
+import { Utility } from 'src/app/shared/utilities/util'
 
 @Injectable()
 export class KafkaService {
@@ -29,6 +30,7 @@ export class KafkaService {
 
   URI_topics: string = '/topics/'
   DEFAULT_KAFKA_AVSC = 'questionnaire'
+  MAX_RECORD_SIZE = 5_000
 
   private KAFKA_CLIENT_URL: string
   private isCacheSending: boolean
@@ -45,7 +47,8 @@ export class KafkaService {
     private analytics: AnalyticsService,
     private logger: LogService,
     private http: HttpClient,
-    private remoteConfig: RemoteConfigService
+    private remoteConfig: RemoteConfigService,
+    private util: Utility
   ) {
     this.updateURI()
     this.readTopicCacheValidity()
@@ -157,10 +160,10 @@ export class KafkaService {
         return this.convertCacheToRecords(cache).then(records => {
           return Promise.all(
             records.map(r =>
-              this.sendToKafka(r.topic, r.record, headers)
-                .then(() => (successKeys = successKeys.concat(r.cacheKey)))
+              this.sendToKafka(r['topic'], r['record'], headers)
+                .then(() => (successKeys = successKeys.concat(r['cacheKey'])))
                 .catch(e => {
-                  failedKeys = failedKeys.concat(r.cacheKey)
+                  failedKeys = failedKeys.concat(r['cacheKey'])
                   return this.logger.error(
                     'Failed to send data from cache to kafka',
                     e
@@ -184,6 +187,7 @@ export class KafkaService {
 
   convertCacheToRecords(groupedCache) {
     // NOTE: This will get the kafka object key first which contains user and project details
+    // Then it will convert the cache to kafka payload (avro formatted) then chunk it to the max record size
     return this.schema.getKafkaObjectKey().then(key => {
       let allRecords = []
       Object.entries(groupedCache).map(([k, v]: [any, any]) => {
@@ -198,7 +202,18 @@ export class KafkaService {
           )
         ))
       })
-      return Promise.all(allRecords).then(records => records.flat())
+      return Promise.all(allRecords)
+        .then(records => records.flat())
+        .then(res =>
+          res
+            .map(r => {
+              const recordObject = r['record']
+              return this.util
+                .chunkObject(recordObject, this.MAX_RECORD_SIZE, 'records')
+                .map(c => Object.assign({}, r, { record: c }))
+            })
+            .flat()
+        )
     })
   }
 
@@ -214,8 +229,7 @@ export class KafkaService {
         if (e.name == this.HTTP_ERROR) {
           this.logger.log('Retrying uncompressed..')
           return this.postData(record, topic, headers)
-        }
-        else throw e
+        } else throw e
       })
       .then(() => this.sendEvent(allRecords[0], DataEventType.SEND_SUCCESS))
       .catch(e => {

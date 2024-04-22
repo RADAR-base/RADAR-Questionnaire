@@ -73,4 +73,9 @@ export class Utility {
     )
   }
 
+  chunkObject(obj: Object, size: number, key: string): any[] {
+    return this.chunk(obj[key], size).map((entries: any[]) =>
+      Object.assign({}, obj, { [key]: entries })
+    )
+  }
 }

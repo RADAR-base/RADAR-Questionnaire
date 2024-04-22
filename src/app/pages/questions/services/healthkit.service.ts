@@ -28,7 +28,6 @@ declare var Media: any // stops errors w/ cordova-plugin-media-with-compression 
 export class HealthkitService {
   READ_PERMISSIONS = DefaultHealthkitPermissions
   // The interval days for first query
-  DEFAULT_LOOKBACK_INTERVAL = 100
   MIN_POLL_TIMESTAMP = new Date()
 
   constructor(
@@ -39,16 +38,15 @@ export class HealthkitService {
   }
 
   init() {
-    this.remoteConfig.subject().subscribe(config => {
+    this.remoteConfig.read().then(config => {
       config
         .getOrDefault(
           ConfigKeys.HEALTHKIT_LOOKBACK_INTERVAL_DAYS,
           String(DefaultHealthkitLookbackInterval)
         )
         .then(interval => {
-          this.DEFAULT_LOOKBACK_INTERVAL = Number(interval)
           this.MIN_POLL_TIMESTAMP = new Date(
-            new Date().getTime() - getMilliseconds({ days: this.DEFAULT_LOOKBACK_INTERVAL }))
+            new Date().getTime() - getMilliseconds({ days: Number(interval) }))
         })
     })
     return this.getLastPollTimes().then(dic => {
@@ -71,7 +69,7 @@ export class HealthkitService {
   loadData(healthDataType) {
     return this.getLastPollTimes().then(dic => {
       let lastPollTime = this.MIN_POLL_TIMESTAMP
-      if (healthDataType in dic) lastPollTime = dic[healthDataType]
+      // if (healthDataType in dic) lastPollTime = dic[healthDataType]
       return CapacitorHealthkit
         .requestAuthorization(
           {
@@ -91,22 +89,21 @@ export class HealthkitService {
     })
   }
 
-  async query(queryStartTime: Date, queryEndTime: Date, dataType: string) {
-    let startTime = setDateTimeToMidnightEpoch(queryStartTime)
-    let endTime = setDateTimeToMidnight(queryEndTime)
-    let completeData = []
-    const queryOptions = {
-      sampleName: dataType as SampleNames,
-      startDate: new Date(startTime).toISOString(),
-      endDate: new Date(endTime).toISOString(),
-      limit: 0 // This is to get all the data
-    };
-    await CapacitorHealthkit.queryHKitSampleType(queryOptions)
-      .then(res => {
-        const data = res.resultData
-        return (completeData = completeData.concat(data))
-      })
-    return completeData
+  async query(queryStartTime: Date, queryEndTime: Date, dataTypes: string[]) {
+    try {
+      let startTime = setDateTimeToMidnightEpoch(queryStartTime)
+      let endTime = setDateTimeToMidnight(queryEndTime)
+      const queryOptions = {
+        sampleNames: dataTypes,
+        startDate: new Date(startTime).toISOString(),
+        endDate: new Date(endTime).toISOString(),
+        limit: 0 // This is to get all the data
+      };
+      return await CapacitorHealthkit.multipleQueryHKitSampleType(queryOptions)
+    }
+    catch (e) {
+      return []
+    }
   }
 
   reset() {

@@ -60,19 +60,19 @@ export abstract class ConverterService {
 
   batchConvertToRecord(kafkaValues, topic, valueSchemaMetadata) {
     const value = JSON.parse(valueSchemaMetadata.schema)
-    return this.batchConvertToAvro(value, kafkaValues).map(v => ({
-      value: v,
-      schema: valueSchemaMetadata.id
-    }))
+    return this.batchConvertToAvro(value, kafkaValues, valueSchemaMetadata.id)
   }
 
   convertToAvro(schema, value): any {
     return AvroSchema.parse(schema).clone(value, { wrapUnions: true })
   }
 
-  batchConvertToAvro(schema, values): any {
+  batchConvertToAvro(schema, values, schemaId): any {
     const parsedSchema = AvroSchema.parse(schema)
-    return values.map(v => parsedSchema.clone(v, { wrapUnions: true }))
+    return values.map(v => parsedSchema.clone(v, { wrapUnions: true })).map(v => ({
+      value: v,
+      schema: schemaId
+    }))
   }
 
   getKafkaPayload(

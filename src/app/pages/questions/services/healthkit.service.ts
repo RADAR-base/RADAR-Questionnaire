@@ -92,19 +92,41 @@ export class HealthkitService {
   async query(queryStartTime: Date, queryEndTime: Date, dataTypes: string[]) {
     try {
       let startTime = setDateTimeToMidnightEpoch(queryStartTime)
-      let endTime = setDateTimeToMidnight(queryEndTime)
-      const queryOptions = {
-        sampleNames: dataTypes,
-        startDate: new Date(startTime).toISOString(),
-        endDate: new Date(endTime).toISOString(),
-        limit: 0 // This is to get all the data
-      };
-      return await CapacitorHealthkit.multipleQueryHKitSampleType(queryOptions)
-    }
-    catch (e) {
+      let endTime = startTime + getMilliseconds({ days: 90 })
+      let completeData = []
+      while (endTime < queryEndTime.getTime()) {
+        const queryOptions = {
+          sampleNames: dataTypes,
+          startDate: new Date(startTime).toISOString(),
+          endDate: new Date(endTime).toISOString(),
+          limit: 0 // This is to get all the data
+        }
+        await CapacitorHealthkit.multipleQueryHKitSampleType(queryOptions)
+          .then(res => {
+            return (completeData = completeData.concat(res))
+          })
+        startTime = endTime
+        endTime = endTime + getMilliseconds({ days: 90 })
+      }
+      return this.combineHKSamples(completeData)
+    } catch (e) {
       return []
     }
   }
+
+  combineHKSamples(dataArray: any[]): any {
+    return dataArray.reduce((acc: any, obj: any) => {
+        for (const key in obj) {
+            if (acc.hasOwnProperty(key)) {
+                acc[key].resultData = acc[key].resultData.concat(obj[key].resultData);
+                acc[key].countReturn += obj[key].countReturn;
+            } else {
+                acc[key] = { ...obj[key] };
+            }
+        }
+        return acc;
+    }, {});
+}
 
   reset() {
     return this.setLastPollTimes({})

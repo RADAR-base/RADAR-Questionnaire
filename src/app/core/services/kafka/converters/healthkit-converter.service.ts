@@ -112,6 +112,7 @@ export class HealthkitConverterService extends ConverterService {
       })
     )
   }
+
   setLastPollTimes(dic: any) {
     return this.storage.set(StorageKeys.HEALTH_LAST_POLL_TIMES, dic)
   }
@@ -184,5 +185,9 @@ export class HealthkitConverterService extends ConverterService {
           .flat()
       )
     })
+  }
+
+  getProgress() {
+    return this.healthkit.getQueryProgress()
   }
 }

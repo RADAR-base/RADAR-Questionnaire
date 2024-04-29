@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core'
 import { Router } from '@angular/router'
 import { KeepAwake } from '@capacitor-community/keep-awake'
 import { NavController, Platform } from '@ionic/angular'
-import { Subscription } from 'rxjs'
+import { Observable, Subscription } from 'rxjs'
 
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
@@ -62,6 +62,7 @@ export class QuestionsPageComponent implements OnInit {
   showFinishAndLaunchScreen: boolean = false
   externalAppCanLaunch: boolean = false
   viewEntered = false
+  progressCount$: Observable<string>
 
   SHOW_INTRODUCTION_SET: Set<boolean | ShowIntroductionType> = new Set([
     true,
@@ -87,6 +88,7 @@ export class QuestionsPageComponent implements OnInit {
       this.sendCompletionLog()
       navigator['app'].exitApp()
     })
+    this.progressCount$ = this.questionsService.getProgress()
   }
 
   ionViewDidLeave() {
@@ -157,7 +159,6 @@ export class QuestionsPageComponent implements OnInit {
           : q.field_name
       const entry = groupedQuestions.get(key) ? groupedQuestions.get(key) : []
       entry.push(q)
-      //?
       groupedQuestions.set(key, entry)
     })
 
@@ -272,13 +273,12 @@ export class QuestionsPageComponent implements OnInit {
     this.submitTimestamps()
     this.showFinishScreen = true
     this.slides.nativeElement.swiper.allowSlideNext = true
-    this.slides.nativeElement.swiper.slideTo(this.groupedQuestions.size, 300)
+    this.slides.nativeElement.swiper.slideTo(this.groupedQuestions.size, 500)
     this.slides.nativeElement.swiper.allowSlideNext = false
-  }
-
-  onSlideFinish() {
     this.onQuestionnaireCompleted().then(() => this.showDoneButton = true)
   }
+
+  onSlideFinish() {}
 
   onQuestionnaireCompleted() {
     return this.questionsService.processCompletedQuestionnaire(

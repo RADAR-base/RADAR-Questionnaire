@@ -154,4 +154,8 @@ export abstract class ConverterService {
       return false
     }
   }
+
+  getProgress() {
+    return 1
+  }
 }

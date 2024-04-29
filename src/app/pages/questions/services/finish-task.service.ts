@@ -16,8 +16,11 @@ export class FinishTaskService {
     private config: ConfigService
   ) {}
 
+  getProgress() {
+    return this.kafka.eventCallback$
+  }
+
   processCompletedQuestionnaire(data, task, assessmentMetadata) {
-    // temporarily change both to healthkit
     const type = task.name.toLowerCase().includes('health')
       ? SchemaType.HEALTHKIT
       : SchemaType.ASSESSMENT

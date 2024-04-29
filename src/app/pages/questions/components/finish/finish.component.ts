@@ -34,6 +34,8 @@ export class FinishComponent implements OnChanges {
   task
   @Input()
   questions
+  @Input()
+  progressCount
   @Output()
   exit: EventEmitter<any> = new EventEmitter<any>()
 
@@ -51,14 +53,8 @@ export class FinishComponent implements OnChanges {
       this.taskType == AssessmentType.SCHEDULED && !this.isLastTask
     this.innerText = this.localization.translateKey(LocKeys.STATUS_SENDING)
     if (this.isShown) this.usage.setPage(this.constructor.name)
-    setTimeout(() => {
-      if (!this.showDoneButton)
-        document.getElementById('done').style.animationPlayState = 'paused'
-    }, 20000)
     if (this.showDoneButton) {
       this.innerText = this.localization.translateKey(LocKeys.BTN_DONE)
-      document.getElementById('done').style.animationDuration = '1s'
-      document.getElementById('done').style.animationPlayState = 'running'
     }
   }
 

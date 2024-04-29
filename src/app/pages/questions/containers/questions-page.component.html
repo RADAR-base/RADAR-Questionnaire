@@ -46,6 +46,7 @@
             [taskType]="taskType"
             [showDoneButton]="showDoneButton"
             [isShown]="showFinishScreen"
+            [progressCount]="progressCount$ | async"
             [questions]="questions"
             [task]="task"
             (exit)="handleFinish($event)"
@@ -60,6 +61,7 @@
             [taskType]="taskType"
             [showDoneButton]="showDoneButton"
             [isShown]="showFinishScreen"
+            [progressCount]="progressCount$ | async"
             (exit)="handleFinish($event)"
           ></finish-and-launch>
         </swiper-slide>

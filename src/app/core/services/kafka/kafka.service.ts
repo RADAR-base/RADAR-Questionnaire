@@ -23,6 +23,7 @@ import { AnalyticsService } from '../usage/analytics.service'
 import { CacheService } from './cache.service'
 import { SchemaService } from './schema.service'
 import { Utility } from 'src/app/shared/utilities/util'
+import { Subject } from 'rxjs'
 
 @Injectable()
 export class KafkaService {
@@ -38,6 +39,12 @@ export class KafkaService {
   private lastTopicFetch: number = 0
   private TOPIC_CACHE_VALIDITY = KafkaService.DEFAULT_TOPIC_CACHE_VALIDITY
   HTTP_ERROR = 'HttpErrorResponse'
+
+  conversionProgressByType = {}
+  conversionProgress = 0
+  sendProgress = 0
+  eventCallback = new Subject<any>(); // Source
+  eventCallback$ = this.eventCallback.asObservable(); // Stream
 
   constructor(
     private storage: GlobalStorageService,
@@ -152,6 +159,7 @@ export class KafkaService {
     let failedKeys = []
     if (this.isCacheSending) return Promise.resolve([])
     this.cache.setCacheSending(true)
+    this.resetSendProgress()
     return Promise.all([
       this.cache.getGroupedCache(),
       this.getKafkaHeaders(DefaultKafkaRequestContentType)
@@ -159,8 +167,10 @@ export class KafkaService {
       .then(([cache, headers]) => {
         return this.convertCacheToRecords(cache).then(records => {
           return Promise.all(
-            records.map(r =>
-              this.sendToKafka(r['topic'], r['record'], headers)
+            records.map(r => {
+              this.updateSendProgress(records.indexOf(r) + 1, records.length)
+              this.eventCallback.next(this.getProgress())
+              return this.sendToKafka(r['topic'], r['record'], headers)
                 .then(() => (successKeys = successKeys.concat(r['cacheKey'])))
                 .catch(e => {
                   failedKeys = failedKeys.concat(r['cacheKey'])
@@ -169,6 +179,7 @@ export class KafkaService {
                     e
                   )
                 })
+              }
             )
           )
         })
@@ -185,13 +196,25 @@ export class KafkaService {
       })
   }
 
+  updateProgress(total, type) {
+    this.conversionProgressByType[type] = this.schema.getConversionProgress(type)
+    this.conversionProgress = Object.values(this.conversionProgressByType).reduce<number>(
+      (acc: number, val: number) => acc + val,
+      0
+    ) / total
+    this.eventCallback.next(this.getProgress())
+  }
+
   convertCacheToRecords(groupedCache) {
     // NOTE: This will get the kafka object key first which contains user and project details
     // Then it will convert the cache to kafka payload (avro formatted) then chunk it to the max record size
+    const entries = Object.entries(groupedCache)
     return this.schema.getKafkaObjectKey().then(key => {
       let allRecords = []
-      Object.entries(groupedCache).map(([k, v]: [any, any]) => {
-        const type = k
+      entries.map(([type, v]: [any, any]) => {
+        setInterval(() => {
+          this.updateProgress(entries.length, type)
+        }, 2000)
         return (allRecords = allRecords.concat(
           this.schema.getKafkaPayload(
             type,
@@ -306,6 +329,18 @@ export class KafkaService {
       questionnaire_timestamp: String(timestamp),
       error: JSON.stringify(error)
     })
+  }
+
+  updateSendProgress(progress, total) {
+    this.sendProgress = progress / total
+  }
+
+  getProgress() {
+    return this.sendProgress / 2 + this.conversionProgress / 2
+  }
+
+  resetSendProgress() {
+    this.sendProgress = 0
   }
 
   reset() {

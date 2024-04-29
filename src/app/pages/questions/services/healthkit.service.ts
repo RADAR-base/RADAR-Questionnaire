@@ -29,6 +29,7 @@ export class HealthkitService {
   READ_PERMISSIONS = DefaultHealthkitPermissions
   // The interval days for first query
   MIN_POLL_TIMESTAMP = new Date()
+  queryProgress = 0
 
   constructor(
     private storage: StorageService,
@@ -90,11 +91,14 @@ export class HealthkitService {
   }
 
   async query(queryStartTime: Date, queryEndTime: Date, dataTypes: string[]) {
+    this.resetQueryProgress()
     try {
-      let startTime = setDateTimeToMidnightEpoch(queryStartTime)
-      let endTime = startTime + getMilliseconds({ days: 90 })
       let completeData = []
-      while (endTime < queryEndTime.getTime()) {
+      let startTime = setDateTimeToMidnightEpoch(queryStartTime)
+      let endTime = Math.min(startTime + getMilliseconds({ days: 100 }), queryEndTime.getTime())
+      let i = 0
+      let iterations = Math.ceil((queryEndTime.getTime() - startTime) / getMilliseconds({ days: 100 }))
+      while (i < iterations) {
         const queryOptions = {
           sampleNames: dataTypes,
           startDate: new Date(startTime).toISOString(),
@@ -102,11 +106,10 @@ export class HealthkitService {
           limit: 0 // This is to get all the data
         }
         await CapacitorHealthkit.multipleQueryHKitSampleType(queryOptions)
-          .then(res => {
-            return (completeData = completeData.concat(res))
-          })
+          .then(res => (completeData = completeData.concat(res)))
         startTime = endTime
-        endTime = endTime + getMilliseconds({ days: 90 })
+        endTime = endTime + getMilliseconds({ days: 100 })
+        this.updateQueryProgress(++i, iterations)
       }
       return this.combineHKSamples(completeData)
     } catch (e) {
@@ -126,7 +129,19 @@ export class HealthkitService {
         }
         return acc;
     }, {});
-}
+  }
+
+  updateQueryProgress(progress, total) {
+    this.queryProgress = progress / total
+  }
+
+  getQueryProgress() {
+    return this.queryProgress
+  }
+
+  resetQueryProgress() {
+    this.queryProgress = 0
+  }
 
   reset() {
     return this.setLastPollTimes({})

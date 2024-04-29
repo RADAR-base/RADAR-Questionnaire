@@ -115,7 +115,7 @@
   "devDependencies": {
     "@angular/cli": "^14.2.13",
     "@angular/compiler-cli": "~14.3.0",
-    "@angular/language-service": "~14.3.0",
+    "@angular/language-service": "~17.3.6",
     "@angular/platform-server": "~14.3.0",
     "@capacitor/cli": "5.7.0",
     "@ionic/angular-toolkit": "^7.0.0",

@@ -275,7 +275,8 @@ export class QuestionsPageComponent implements OnInit {
     this.slides.nativeElement.swiper.allowSlideNext = true
     this.slides.nativeElement.swiper.slideTo(this.groupedQuestions.size, 500)
     this.slides.nativeElement.swiper.allowSlideNext = false
-    this.onQuestionnaireCompleted().then(() => this.showDoneButton = true)
+    this.showDoneButton = true
+    this.onQuestionnaireCompleted()
   }
 
   onSlideFinish() {}

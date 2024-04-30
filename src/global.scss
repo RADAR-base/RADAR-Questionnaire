@@ -35,6 +35,7 @@
 // Application
 ion-app.md,
 ion-content {
+  --padding-top: 16px;
   --ion-text-color: white;
   --background: var(--cl-secondary) url('./assets/imgs/bg-mobile.png') no-repeat
     top center / cover;

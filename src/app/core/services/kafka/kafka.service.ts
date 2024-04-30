@@ -45,6 +45,7 @@ export class KafkaService {
   sendProgress = 0
   eventCallback = new Subject<any>(); // Source
   eventCallback$ = this.eventCallback.asObservable(); // Stream
+  intervals = []
 
   constructor(
     private storage: GlobalStorageService,
@@ -166,6 +167,7 @@ export class KafkaService {
     ])
       .then(([cache, headers]) => {
         return this.convertCacheToRecords(cache).then(records => {
+          this.clearIntervals()
           return Promise.all(
             records.map(r => {
               this.updateSendProgress(records.indexOf(r) + 1, records.length)
@@ -196,7 +198,7 @@ export class KafkaService {
       })
   }
 
-  updateProgress(total, type) {
+  updateConversionProgress(total, type) {
     this.conversionProgressByType[type] = this.schema.getConversionProgress(type)
     this.conversionProgress = Object.values(this.conversionProgressByType).reduce<number>(
       (acc: number, val: number) => acc + val,
@@ -212,9 +214,9 @@ export class KafkaService {
     return this.schema.getKafkaObjectKey().then(key => {
       let allRecords = []
       entries.map(([type, v]: [any, any]) => {
-        setInterval(() => {
-          this.updateProgress(entries.length, type)
-        }, 2000)
+        this.intervals.push(setInterval(() => {
+          this.updateConversionProgress(entries.length, type)
+        }, 2000))
         return (allRecords = allRecords.concat(
           this.schema.getKafkaPayload(
             type,
@@ -238,6 +240,11 @@ export class KafkaService {
             .flat()
         )
     })
+  }
+
+  clearIntervals() {
+    this.conversionProgress = 1
+    this.intervals.map(i => clearInterval(i))
   }
 
   sendToKafka(topic, record, headers): Promise<any> {

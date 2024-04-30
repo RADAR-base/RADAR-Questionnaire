@@ -20,7 +20,7 @@
       round
       full
       (click)="handleClosePage()"
-      [class.progress]="!showDoneButton"
+      [ngStyle]="{ '--box-shadow': shadowStyle }"
       [disabled]="!showDoneButton"
     >
       {{ innerText }}

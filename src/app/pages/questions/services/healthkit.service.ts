@@ -95,9 +95,9 @@ export class HealthkitService {
     try {
       let completeData = []
       let startTime = setDateTimeToMidnightEpoch(queryStartTime)
-      let endTime = Math.min(startTime + getMilliseconds({ days: 100 }), queryEndTime.getTime())
+      let endTime = Math.min(startTime + getMilliseconds({ days: 50 }), queryEndTime.getTime())
       let i = 0
-      let iterations = Math.ceil((queryEndTime.getTime() - startTime) / getMilliseconds({ days: 100 }))
+      let iterations = Math.ceil((queryEndTime.getTime() - startTime) / getMilliseconds({ days: 50 }))
       while (i < iterations) {
         const queryOptions = {
           sampleNames: dataTypes,
@@ -108,7 +108,7 @@ export class HealthkitService {
         await CapacitorHealthkit.multipleQueryHKitSampleType(queryOptions)
           .then(res => (completeData = completeData.concat(res)))
         startTime = endTime
-        endTime = endTime + getMilliseconds({ days: 100 })
+        endTime = endTime + getMilliseconds({ days: 50 })
         this.updateQueryProgress(++i, iterations)
       }
       return this.combineHKSamples(completeData)

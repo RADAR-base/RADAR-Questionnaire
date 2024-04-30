@@ -9,7 +9,7 @@
             (start)="handleIntro($event)"
           ></introduction>
         </swiper-slide>
-        <ng-container *ngIf="!showIntroductionScreen">
+        <ng-container>
           <swiper-slide
             *ngFor="
               let item of groupedQuestions | keyvalue : asIsOrder;
@@ -44,7 +44,6 @@
             [isLastTask]="isLastTask"
             [requiresInClinicCompletion]="requiresInClinicCompletion"
             [taskType]="taskType"
-            [showDoneButton]="showDoneButton"
             [isShown]="showFinishScreen"
             [progressCount]="progressCount$ | async"
             [questions]="questions"

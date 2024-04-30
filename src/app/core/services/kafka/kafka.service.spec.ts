@@ -8,7 +8,8 @@ import {
   RemoteConfigServiceMock,
   SchemaServiceMock,
   StorageServiceMock,
-  TokenServiceMock
+  TokenServiceMock,
+  UtilityMock
 } from '../../../shared/testing/mock-services'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { LogService } from '../misc/log.service'
@@ -18,6 +19,7 @@ import { AnalyticsService } from '../usage/analytics.service'
 import { CacheService } from './cache.service'
 import { KafkaService } from './kafka.service'
 import { SchemaService } from './schema.service'
+import { Utility } from 'src/app/shared/utilities/util'
 
 describe('KafkaService', () => {
   let service
@@ -37,7 +39,8 @@ describe('KafkaService', () => {
           provide: AnalyticsService,
           useClass: FirebaseAnalyticsServiceMock
         },
-        { provide: RemoteConfigService, useClass: RemoteConfigServiceMock }
+        { provide: RemoteConfigService, useClass: RemoteConfigServiceMock },
+        { provide: Utility, useClass: UtilityMock }
       ]
     })
   )

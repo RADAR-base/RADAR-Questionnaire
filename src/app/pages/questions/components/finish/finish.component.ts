@@ -42,6 +42,7 @@ export class FinishComponent implements OnChanges {
   innerText = ''
   displayNextTaskReminder = true
   completedInClinic = false
+  shadowStyle = 'inset 100px 0 0 -50px #0B4A59'
 
   constructor(
     private usage: UsageService,
@@ -53,7 +54,9 @@ export class FinishComponent implements OnChanges {
       this.taskType == AssessmentType.SCHEDULED && !this.isLastTask
     this.innerText = this.localization.translateKey(LocKeys.STATUS_SENDING)
     if (this.isShown) this.usage.setPage(this.constructor.name)
-    if (this.showDoneButton) {
+    this.shadowStyle = `inset ${this.progressCount * 400}px 0 0 -50px var(--cl-primary-60)`
+    if (this.progressCount == 1) {
+      this.showDoneButton = true
       this.innerText = this.localization.translateKey(LocKeys.BTN_DONE)
     }
   }

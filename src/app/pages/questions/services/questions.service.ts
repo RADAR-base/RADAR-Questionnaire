@@ -21,6 +21,7 @@ import { Utility } from '../../../shared/utilities/util'
 import { AnswerService } from './answer.service'
 import { FinishTaskService } from './finish-task.service'
 import { TimestampService } from './timestamp.service'
+import { Subject } from 'rxjs'
 
 @Injectable({
   providedIn: 'root'
@@ -293,5 +294,9 @@ export class QuestionsService {
         )
       )
       .then(res => JSON.parse(res))
+  }
+
+  getProgress() {
+    return this.finish.getProgress()
   }
 }

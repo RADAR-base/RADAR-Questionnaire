@@ -174,7 +174,6 @@ export class KafkaService {
       .then(() =>
         this.cache
           .removeFromCache(successKeys)
-          .then(() => this.cache.removeFromHealthCache(successKeys))
           .then(() => {
             this.cache.setCacheSending(false)
             return { successKeys, failedKeys }
@@ -255,13 +254,6 @@ export class KafkaService {
       .toPromise()
   }
 
-  removeFromHealthCache(cacheKeys: number[]) {
-    // if (!cacheKeys.length) return Promise.resolve()
-    // return this.storage
-    //   .removeHealthData(cacheKeys)
-    //   .then(() => this.setLastUploadDate(Date.now()))
-  }
-
   getAccessToken() {
     return Promise.all([this.updateURI(), this.token.refresh()])
       .then(() => this.token.getTokens())
@@ -299,10 +291,6 @@ export class KafkaService {
 
   getLastUploadDate() {
     return this.cache.getLastUploadDate()
-  }
-
-  getHealthCacheSize() {
-    return this.cache.getHealthCacheSize()
   }
 
   getCacheSize() {

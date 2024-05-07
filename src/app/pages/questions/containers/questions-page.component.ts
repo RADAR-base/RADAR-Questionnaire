@@ -88,7 +88,6 @@ export class QuestionsPageComponent implements OnInit {
       this.sendCompletionLog()
       navigator['app'].exitApp()
     })
-    this.progressCount$ = this.questionsService.getProgress()
   }
 
   ionViewDidLeave() {

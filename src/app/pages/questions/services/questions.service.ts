@@ -295,8 +295,4 @@ export class QuestionsService {
       )
       .then(res => JSON.parse(res))
   }
-
-  getProgress() {
-    return this.finish.getProgress()
-  }
 }

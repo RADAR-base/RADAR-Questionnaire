@@ -43,7 +43,7 @@ export class CacheService {
   ) {}
 
   init() {
-    return Promise.all([this.setCache({}), this.setHealthCache({})])
+    return Promise.all([this.setCache({})])
   }
 
   storeInCache(type, kafkaObject: KafkaObject, cacheValue: any) {
@@ -76,29 +76,6 @@ export class CacheService {
     })
   }
 
-  removeFromHealthCache(cacheKeys: number[]) {
-    if (!cacheKeys.length) return Promise.resolve()
-    // return this.healthStore
-    //   .remove(cacheKeys)
-    //   .then(() => this.setLastUploadDate(Date.now()))
-  }
-
-  setHealthCache(cache) {
-    // return this.healthStore.set(StorageKeys.CACHE_ANSWERS, cache)
-  }
-
-  getHealthCache() {
-    return Promise.resolve()
-    // return this.healthStore.get(this.KAFKA_STORE.CACHE_ANSWERS).then(data => {
-    //   return Object.keys(data)
-    //     .slice(0, this.HEALTH_CACHE_LIMIT)
-    //     .reduce((result, key) => {
-    //       result[key] = data[key]
-    //       return result
-    //     }, {})
-    // })
-  }
-
   setCache(cache) {
     return this.storage.set(this.KAFKA_STORE.CACHE_ANSWERS, cache)
   }
@@ -117,10 +94,6 @@ export class CacheService {
 
   getLastUploadDate() {
     return this.storage.get(this.KAFKA_STORE.LAST_UPLOAD_DATE)
-  }
-
-  getHealthCacheSize() {
-    return
   }
 
   getCacheSize() {

@@ -1,7 +1,6 @@
 export interface Settings {
   appVersion?: string
   cacheSize?: number
-  healthCacheSize?: number
   scheduleVersion?: string
   participantLogin?: string
   participantID?: string

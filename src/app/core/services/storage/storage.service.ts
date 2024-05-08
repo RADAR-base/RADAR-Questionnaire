@@ -8,7 +8,7 @@ import { StorageKeys } from '../../../shared/enums/storage'
 import { LogService } from '../misc/log.service'
 
 @Injectable()
-export abstract class StorageService {
+export class StorageService {
   global: { [key: string]: any } = {}
   healthGlobal: { [key: string]: any } = {}
 
@@ -20,6 +20,11 @@ export abstract class StorageService {
     public platform: Platform
   ) {
     this.keyUpdates = new Subject<StorageKeys | null>()
+    this.platform.ready().then(() => {
+      this.prepare().then(() =>
+        this.logger.log('Global configuration', this.global)
+      )
+    })
   }
 
   getStorageState() {

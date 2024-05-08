@@ -39,7 +39,7 @@ export class CacheService {
     private storage: StorageService,
     private analytics: AnalyticsService,
     private logger: LogService
-  ) {}
+  ) { }
 
   init() {
     return Promise.all([this.setCache({})])
@@ -54,7 +54,25 @@ export class CacheService {
     })
   }
 
-  removeFromCache(cacheKeys: number[]) {
+  removeFromCache(cacheKey: string) {
+    return this.getCache().then(cache => {
+      if (cache) {
+        if (cache[cacheKey]) {
+          this.sendDataEvent(
+            DataEventType.REMOVED_FROM_CACHE,
+            cache[cacheKey]
+          )
+          this.logger.log('Deleting ' + cacheKey)
+          delete cache[cacheKey]
+        }
+        this.setLastUploadDate(Date.now())
+        return this.setCache(cache)
+      }
+    })
+  }
+
+
+  removeFromCacheMultiple(cacheKeys: string[]) {
     if (!cacheKeys.length) return Promise.resolve()
     return this.getCache().then(cache => {
       if (cache) {
@@ -88,21 +106,6 @@ export class CacheService {
 
   getCache() {
     return this.storage.get(this.KAFKA_STORE.CACHE_ANSWERS)
-  }
-
-  getGroupedCache() {
-    return this.getCache().then(cache => {
-      const groupedCache = {}
-      Object.entries(cache).map(([k, v]: [any, CacheValue]) => {
-        if (!v || !v.kafkaObject) return
-        const type = v.name
-        if (!groupedCache[type]) groupedCache[type] = []
-        groupedCache[type].push(
-          { key: k, value: v.kafkaObject.value }
-        )
-      })
-      return groupedCache
-    })
   }
 
   getLastUploadDate() {

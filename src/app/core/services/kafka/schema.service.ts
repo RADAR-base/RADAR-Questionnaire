@@ -35,13 +35,13 @@ export class SchemaService {
   getKafkaPayload(
     type,
     kafkaKey,
-    kafkaObjects: any[],
-    cacheKeys: any[],
+    kafkaObject: any,
+    cacheKey: string,
     topics
   ): Promise<any> {
     return this.converterFactory
       .getConverter(type)
-      .getKafkaPayload(type, kafkaKey, kafkaObjects, cacheKeys, topics)
+      .getKafkaPayload(type, kafkaKey, kafkaObject, cacheKey, topics)
   }
 
   getConversionProgress(type) {

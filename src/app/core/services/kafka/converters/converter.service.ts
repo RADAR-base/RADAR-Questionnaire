@@ -78,25 +78,25 @@ export abstract class ConverterService {
   getKafkaPayload(
     type,
     kafkaKey,
-    kafkaObjects: any[],
-    cacheKeys: any[],
+    kafkaObject: any,
+    cacheKey: any,
     topics
   ): Promise<any[]> {
-    return this.getKafkaTopic(kafkaObjects[0], topics).then(topic =>
+    return this.getKafkaTopic(kafkaObject, topics).then(topic =>
       this.getSchemas(topic).then(schema => {
         return Promise.all([
           this.keyConverter
             .convertToRecord(kafkaKey, topic, ''),
-          this.batchConvertToRecord(kafkaObjects, topic, schema)
-        ]).then(([key, records]) => ([{
+          this.convertToRecord(kafkaObject['kafkaObject'].value, topic, schema)
+        ]).then(([key, records]) => ({
           topic,
-          cacheKey: cacheKeys,
+          cacheKey: cacheKey,
           record: {
             key_schema_id: key.schema,
-            value_schema_id: records[0]['schema'],
-            records: records.map(r => ({ key: key.value, value: r['value'] }))
+            value_schema_id: records['schema'],
+            records: [{ key: key.value, value: records['value'] }]
           }
-        }]))
+        }))
       })
     )
   }

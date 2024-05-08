@@ -20,7 +20,6 @@ import { DefaultHealthkitLookbackInterval, DefaultHealthkitPermissions } from 's
 import { RemoteConfigService } from 'src/app/core/services/config/remote-config.service'
 import { ConfigKeys } from 'src/app/shared/enums/config'
 
-declare var Media: any // stops errors w/ cordova-plugin-media-with-compression types
 
 @Injectable({
   providedIn: 'root'
@@ -90,7 +89,7 @@ export class HealthkitService {
     })
   }
 
-  async query(queryStartTime: Date, queryEndTime: Date, dataTypes: string[]) {
+  async query(queryStartTime: Date, queryEndTime: Date, dataType: string) {
     this.resetQueryProgress()
     try {
       let completeData = []
@@ -100,35 +99,21 @@ export class HealthkitService {
       let iterations = Math.ceil((queryEndTime.getTime() - startTime) / getMilliseconds({ days: 50 }))
       while (i < iterations) {
         const queryOptions = {
-          sampleNames: dataTypes,
+          sampleName: dataType,
           startDate: new Date(startTime).toISOString(),
           endDate: new Date(endTime).toISOString(),
           limit: 0 // This is to get all the data
         }
-        await CapacitorHealthkit.multipleQueryHKitSampleType(queryOptions)
-          .then(res => (completeData = completeData.concat(res)))
+        await CapacitorHealthkit.queryHKitSampleType(queryOptions)
+          .then(res => completeData = completeData.concat(res.resultData))
         startTime = endTime
         endTime = endTime + getMilliseconds({ days: 50 })
         this.updateQueryProgress(++i, iterations)
       }
-      return this.combineHKSamples(completeData)
+      return completeData
     } catch (e) {
       return []
     }
-  }
-
-  combineHKSamples(dataArray: any[]): any {
-    return dataArray.reduce((acc: any, obj: any) => {
-        for (const key in obj) {
-            if (acc.hasOwnProperty(key)) {
-                acc[key].resultData = acc[key].resultData.concat(obj[key].resultData);
-                acc[key].countReturn += obj[key].countReturn;
-            } else {
-                acc[key] = { ...obj[key] };
-            }
-        }
-        return acc;
-    }, {});
   }
 
   updateQueryProgress(progress, total) {

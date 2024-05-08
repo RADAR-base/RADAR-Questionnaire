@@ -7,7 +7,6 @@ import {
   StorageServiceMock
 } from '../../../shared/testing/mock-services'
 import { LogService } from '../misc/log.service'
-import { GlobalStorageService } from '../storage/global-storage.service'
 import { StorageService } from '../storage/storage.service'
 import {
   FirebaseRemoteConfigService,
@@ -21,7 +20,7 @@ describe('RemoteConfigService', () => {
     TestBed.configureTestingModule({
       providers: [
         RemoteConfigService,
-        { provide: GlobalStorageService, useClass: StorageServiceMock }
+        { provide: StorageService, useClass: StorageServiceMock }
       ]
     })
   )
@@ -43,7 +42,7 @@ describe('FirebaseRemoteConfig', () => {
       providers: [
         FirebaseRemoteConfigService,
         Platform,
-        { provide: GlobalStorageService, useClass: StorageServiceMock },
+        { provide: StorageService, useClass: StorageServiceMock },
         { provide: LogService, useClass: LogServiceMock },
       ]
     })

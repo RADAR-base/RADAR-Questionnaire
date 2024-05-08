@@ -18,7 +18,6 @@ import { Utility } from '../../../shared/utilities/util'
 import { GithubClient } from '../misc/github-client.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
-import { GlobalStorageService } from '../storage/global-storage.service'
 import { StorageService } from '../storage/storage.service'
 
 @Injectable()
@@ -31,7 +30,7 @@ export class QuestionnaireService {
   LANG_EN = 'en'
 
   constructor(
-    private storage: GlobalStorageService,
+    private storage: StorageService,
     private localization: LocalizationService,
     private githubClient: GithubClient,
     private util: Utility,

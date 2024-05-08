@@ -13,7 +13,6 @@ import { getSeconds } from '../../../shared/utilities/time'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { SubjectConfigService } from '../config/subject-config.service'
 import { LogService } from '../misc/log.service'
-import { GlobalStorageService } from '../storage/global-storage.service'
 import { StorageService } from '../storage/storage.service'
 import { NotificationService } from './notification.service'
 
@@ -24,7 +23,7 @@ export abstract class FcmNotificationService extends NotificationService {
   ttlMinutes = 10
 
   constructor(
-    public store: GlobalStorageService,
+    public store: StorageService,
     public config: SubjectConfigService,
     public platform: Platform,
     public logger: LogService,

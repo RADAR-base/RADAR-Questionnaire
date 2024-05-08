@@ -13,16 +13,16 @@ import {
 } from '../../../shared/models/notification-handler'
 import { LogService } from '../misc/log.service'
 import { ScheduleService } from '../schedule/schedule.service'
-import { GlobalStorageService } from '../storage/global-storage.service'
 import { NotificationGeneratorService } from './notification-generator.service'
 import { NotificationService } from './notification.service'
+import { StorageService } from '../storage/storage.service'
 
 @Injectable()
 export class LocalNotificationService extends NotificationService {
   constructor(
     private notifications: NotificationGeneratorService,
     private schedule: ScheduleService,
-    private store: GlobalStorageService,
+    private store: StorageService,
     private logger: LogService
   ) {
     super(store)

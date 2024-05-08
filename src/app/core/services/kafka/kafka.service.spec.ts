@@ -12,7 +12,6 @@ import {
 } from '../../../shared/testing/mock-services'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { LogService } from '../misc/log.service'
-import { GlobalStorageService } from '../storage/global-storage.service'
 import { TokenService } from '../token/token.service'
 import { AnalyticsService } from '../usage/analytics.service'
 import { CacheService } from './cache.service'
@@ -28,7 +27,7 @@ describe('KafkaService', () => {
         KafkaService,
         HttpClient,
         HttpHandler,
-        { provide: GlobalStorageService, useClass: StorageServiceMock },
+        { provide: StorageService, useClass: StorageServiceMock },
         { provide: LogService, useClass: LogServiceMock },
         { provide: TokenService, useClass: TokenServiceMock },
         { provide: CacheService, useClass: CacheServiceMock },

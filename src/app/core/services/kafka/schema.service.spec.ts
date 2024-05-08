@@ -17,7 +17,6 @@ import { RemoteConfigService } from '../config/remote-config.service'
 import { SubjectConfigService } from '../config/subject-config.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
-import { GlobalStorageService } from '../storage/global-storage.service'
 import { ConverterFactoryService } from './converters/converter-factory.service.'
 import { SchemaService } from './schema.service'
 
@@ -29,7 +28,7 @@ describe('SchemaService', () => {
       providers: [
         SchemaService,
         { provide: QuestionnaireService, useClass: QuestionnaireServiceMock },
-        { provide: GlobalStorageService, useClass: StorageServiceMock },
+        { provide: StorageService, useClass: StorageServiceMock },
         { provide: LogService, useClass: LogServiceMock },
         { provide: LocalizationService, useClass: LocalizationServiceMock },
         { provide: SubjectConfigService, useClass: SubjectConfigServiceMock },

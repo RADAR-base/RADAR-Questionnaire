@@ -11,7 +11,6 @@ import {
 } from '../../../shared/testing/mock-services'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { LogService } from '../misc/log.service'
-import { GlobalStorageService } from '../storage/global-storage.service'
 import { TokenService } from './token.service'
 
 describe('TokenService', () => {
@@ -26,7 +25,7 @@ describe('TokenService', () => {
         Platform,
         { provide: RemoteConfigService, useClass: RemoteConfigServiceMock },
         { provide: JwtHelperService, useClass: JwtHelperServiceMock },
-        { provide: GlobalStorageService, useClass: StorageServiceMock },
+        { provide: StorageService, useClass: StorageServiceMock },
         { provide: LogService, useClass: LogServiceMock }
       ]
     })

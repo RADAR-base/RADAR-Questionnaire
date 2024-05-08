@@ -47,7 +47,6 @@ import { LocalScheduleService } from './core/services/schedule/local-schedule.se
 import { ScheduleFactoryService } from './core/services/schedule/schedule-factory.service'
 import { ScheduleGeneratorService } from './core/services/schedule/schedule-generator.service'
 import { ScheduleService } from './core/services/schedule/schedule.service'
-import { GlobalStorageService } from './core/services/storage/global-storage.service'
 import { StorageService } from './core/services/storage/storage.service'
 import { TokenService } from './core/services/token/token.service'
 import { AnalyticsService } from './core/services/usage/analytics.service'
@@ -107,8 +106,7 @@ import { Utility } from './shared/utilities/util'
     KafkaService,
     LocalizationService,
     ScheduleGeneratorService,
-    GlobalStorageService,
-    { provide: StorageService, useClass: GlobalStorageService },
+    StorageService,
     TranslatePipe,
     UsageService,
     SchemaService,

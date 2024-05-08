@@ -16,7 +16,6 @@ import { CacheValue, KeyValue } from '../../../shared/models/cache'
 import { KafkaObject, SchemaType } from '../../../shared/models/kafka'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { LogService } from '../misc/log.service'
-import { GlobalStorageService } from '../storage/global-storage.service'
 import { StorageService } from '../storage/storage.service'
 import { TokenService } from '../token/token.service'
 import { AnalyticsService } from '../usage/analytics.service'
@@ -38,7 +37,7 @@ export class KafkaService {
   HTTP_ERROR = 'HttpErrorResponse'
 
   constructor(
-    private storage: GlobalStorageService,
+    private storage: StorageService,
     private cache: CacheService,
     private token: TokenService,
     private schema: SchemaService,

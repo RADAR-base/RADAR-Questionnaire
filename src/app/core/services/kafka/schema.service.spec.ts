@@ -19,6 +19,7 @@ import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
 import { ConverterFactoryService } from './converters/converter-factory.service.'
 import { SchemaService } from './schema.service'
+import { StorageService } from '../storage/storage.service'
 
 describe('SchemaService', () => {
   let service

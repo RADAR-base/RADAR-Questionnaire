@@ -12,6 +12,7 @@ import {
 import { RemoteConfigService } from '../config/remote-config.service'
 import { LogService } from '../misc/log.service'
 import { TokenService } from './token.service'
+import { StorageService } from '../storage/storage.service'
 
 describe('TokenService', () => {
   let service

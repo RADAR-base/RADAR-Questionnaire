@@ -6,7 +6,8 @@ export enum HealthkitPermission {
   CALORIES = 'calories',
   BLOOD_GLUCOSE = 'bloodGlucose',
   WEIGHT = 'weight',
-  HEART_RATE = 'heartRate'
+  HEART_RATE = 'heartRate',
+  STEPS = 'steps',
 }
 
 export enum HealthkitDataType {

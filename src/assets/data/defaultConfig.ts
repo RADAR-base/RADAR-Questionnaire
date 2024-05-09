@@ -317,7 +317,8 @@ export const DefaultHealthkitPermissions = [
   HealthkitPermission.DURATION,
   HealthkitPermission.HEART_RATE,
   HealthkitPermission.STAIRS,
-  HealthkitPermission.WEIGHT
+  HealthkitPermission.WEIGHT,
+  HealthkitPermission.STEPS
 ]
 
 // *Default lookback interval to pull Healthkit data from

@@ -21,6 +21,7 @@ import { TokenService } from '../token/token.service'
 import { AnalyticsService } from '../usage/analytics.service'
 import { CacheService } from './cache.service'
 import { SchemaService } from './schema.service'
+import { Subject } from 'rxjs'
 
 @Injectable()
 export class KafkaService {
@@ -35,6 +36,11 @@ export class KafkaService {
   private lastTopicFetch: number = 0
   private TOPIC_CACHE_VALIDITY = KafkaService.DEFAULT_TOPIC_CACHE_VALIDITY
   HTTP_ERROR = 'HttpErrorResponse'
+
+  eventCallback = new Subject<any>(); // Source
+  eventCallback$ = this.eventCallback.asObservable(); // Stream
+  progress = 0
+  cacheSize = 0
 
   constructor(
     private storage: StorageService,
@@ -148,15 +154,20 @@ export class KafkaService {
     this.cache.setCacheSending(true)
     return Promise.all([
       this.cache.getCache(),
+      this.cache.getCacheSize(),
       this.getKafkaHeaders(DefaultKafkaRequestContentType),
       this.schema.getKafkaObjectKey(),
     ])
-      .then(([cache, headers, kafkaKey]) => {
+      .then(([cache, size, headers, kafkaKey]) => {
+        this.progress = 0
+        this.cacheSize = size
         return Promise.all(Object.entries(cache)
           .filter(([k]) => k)
-          .map(([k, v]: [string, any]) =>
-            this.convertEntryToRecord(kafkaKey, k, v)
+          .map((entry, i) => {
+            const [k, v] = entry
+            return this.convertEntryToRecord(kafkaKey, k, v)
               .then(r => {
+                this.updateProgress()
                 return this.sendToKafka(r.topic, r.record, headers)
               }).then(() => {
                 successKeys.push(k)
@@ -164,15 +175,17 @@ export class KafkaService {
               }).catch(e => {
                 failedKeys.push(k)
                 return this.logger.error('Failed to send data from cache to kafka', e)
-              }).finally(() => this.setCacheSending(false))
-          ))
-      }).then(() => ({ successKeys, failedKeys }))
+              }).finally(() => this.updateProgress())
+          }))
+      }).then(() => {
+        this.setCacheSending(false)
+        return ({ successKeys, failedKeys })
+      })
   }
 
   convertEntryToRecord(kafkaKey, k, v) {
     const type = v.name
-    v['kafkaObject'] = { key: kafkaKey, value: v.kafkaObject.value }
-    return this.schema.getKafkaPayload(type, kafkaKey, v, k, this.topics)
+    return this.schema.getKafkaPayload(type, kafkaKey, v.kafkaObject.value, k, this.topics)
   }
 
   sendToKafka(topic, record, headers): Promise<any> {
@@ -197,14 +210,21 @@ export class KafkaService {
       })
   }
 
+  updateProgress() {
+    // Cache size is multiplied by 2 because we have to convert and send
+    this.eventCallback.next(++this.progress / (this.cacheSize * 2))
+  }
+
   sendEvent(record, eventType, error?) {
-    this.sendDataEvent(
-      DataEventType.SEND_SUCCESS,
-      eventType,
-      record.name ? record.value.name : record.value.questionnaireName,
-      record.time,
-      error ? JSON.stringify(error) : ''
-    )
+    if (record && record.value) {
+      this.sendDataEvent(
+        DataEventType.SEND_SUCCESS,
+        eventType,
+        record.value.name ? record.value.name : record.value.questionnaireName,
+        record.time,
+        error ? JSON.stringify(error) : ''
+      )
+    }
   }
 
   postData(data, topic, headers) {

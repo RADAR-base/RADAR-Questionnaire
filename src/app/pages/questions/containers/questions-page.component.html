@@ -48,7 +48,7 @@
             [progressCount]="progressCount$ | async"
             [questions]="questions"
             [task]="task"
-            (exit)="handleFinish($event)"
+            (exit)="handleFinish()"
           ></finish>
           <finish-and-launch
             *ngIf="showFinishScreen && showFinishAndLaunchScreen"
@@ -61,7 +61,7 @@
             [showDoneButton]="showDoneButton"
             [isShown]="showFinishScreen"
             [progressCount]="progressCount$ | async"
-            (exit)="handleFinish($event)"
+            (exit)="handleFinish()"
           ></finish-and-launch>
         </swiper-slide>
       </swiper-container>

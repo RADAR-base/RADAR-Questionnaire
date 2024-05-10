@@ -38,14 +38,8 @@ export class HealthkitConverterService extends ConverterService {
 
   init() { }
 
-  processData(payload) {
-    const answers = payload.data.answers
-    this.logger.log('Answers to process', answers)
-    const values = Object.entries(answers).map(([key, value]) => ({
-      questionId: key.toString(),
-      value: { startTime: value['startTime'], endTime: value['endTime'] }
-    }))
-    return { name: 'healthkit', time: Date.now(), data: values }
+  processData(data) {
+    return { name: 'healthkit', time: Date.now(), data: { key: data.key, value: data.value } }
   }
 
   processSingleDatatype(key, data, timeReceived): any[] {
@@ -73,21 +67,17 @@ export class HealthkitConverterService extends ConverterService {
   }
 
   convertToHealthkitRecord(kafkaValue, valueSchemaMetadata) {
-    const data = kafkaValue.data.filter(q =>
-      this.isValidDataType(q.questionId)
-    )
-    const sampleNames = data.map(d => d.questionId)
-    const name = sampleNames[0]
-    const startTime = new Date(data[0].value.startTime)
-    const endTime = new Date(data[0].value.endTime)
+    const data = kafkaValue.data
+    const name = data.key
+    const startTime = data.value.startTime
+    const endTime = data.value.endTime
     return Promise.all([
       this.getLastPollTimes(),
       this.healthkit.query(startTime, endTime, name)
     ]).then(([dic, res]) => {
       if (res.length) {
-        const resultLength = res.length
-        const sample = res[resultLength - 1]
-        const lastDataDate = new Date(sample.endDate)
+        const sample = res[res.length - 1]
+        const lastDataDate = new Date(sample['endDate'])
         dic[name] = lastDataDate
         this.setLastPollTimes(dic)
         const processedData = this.processSingleDatatype(
@@ -95,11 +85,10 @@ export class HealthkitConverterService extends ConverterService {
           res,
           Date.now()
         )
-        const value = JSON.parse(valueSchemaMetadata.schema)
         const avroData = this.batchConvertToAvro(
-          value,
           processedData,
-          valueSchemaMetadata.id
+          '',
+          valueSchemaMetadata
         )
         return avroData
       }
@@ -115,21 +104,16 @@ export class HealthkitConverterService extends ConverterService {
     return this.storage.get(StorageKeys.HEALTH_LAST_POLL_TIMES)
   }
 
-  getSchemas(topic) {
-    topic = this.HEALTHKIT_TOPIC
-    if (this.schemas[topic]) return this.schemas[topic]
+  getSchemas() {
+    if (this.schemas[this.HEALTHKIT_TOPIC]) return this.schemas[this.HEALTHKIT_TOPIC]
     else {
       const versionStr = this.URI_version + 'latest'
       const uri =
-        this.BASE_URI + this.URI_schema + topic + '-value' + versionStr
+        this.BASE_URI + this.URI_schema + this.HEALTHKIT_TOPIC + '-value' + versionStr
       const schema = this.getLatestKafkaSchemaVersion(uri)
-      this.schemas[topic] = schema
+      this.schemas[this.HEALTHKIT_TOPIC] = schema
       return schema
     }
-  }
-
-  isValidDataType(key: HealthkitDataType) {
-    return HealthkitStringDataTypes.has(key) || HealthkitFloatDataTypes.has(key)
   }
 
   getDataTypeFromKey(key) {
@@ -145,7 +129,6 @@ export class HealthkitConverterService extends ConverterService {
     return this.HEALTHKIT_TOPIC
   }
 
-
   getKafkaPayload(
     type,
     kafkaKey,
@@ -153,28 +136,24 @@ export class HealthkitConverterService extends ConverterService {
     cacheKey: any,
     topics
   ): Promise<any[]> {
-    return this.getSchemas('').then(schema => {
+    return this.getSchemas().then(schema => {
       return Promise.all([
         this.keyConverter.convertToRecord(kafkaKey, this.HEALTHKIT_TOPIC, ''),
-        this.convertToHealthkitRecord(kafkaObject['kafkaObject'].value, schema)
+        this.convertToHealthkitRecord(kafkaObject, schema)
       ]).then(([key, records]) =>
       ({
-        topic: this.getKafkaTopic(records[0]['value']['key']),
+        topic: this.getKafkaTopic(kafkaObject.data.key),
         cacheKey: cacheKey,
         record: {
           key_schema_id: key.schema,
-          value_schema_id: records[0]['schema'],
-          records: records.map(r => ({
-            key: key['value'],
-            value: r['value']
-          }))
+          value_schema_id: schema.id,
+          records: records ? records.map(r => ({
+            key: key.value,
+            value: r
+          })) : []
         }
       })
       )
     })
-  }
-
-  getProgress() {
-    return this.healthkit.getQueryProgress()
   }
 }

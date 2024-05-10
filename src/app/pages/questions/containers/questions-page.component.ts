@@ -88,6 +88,7 @@ export class QuestionsPageComponent implements OnInit {
       this.sendCompletionLog()
       navigator['app'].exitApp()
     })
+    this.progressCount$ = this.questionsService.getProgress()
   }
 
   ionViewDidLeave() {
@@ -176,13 +177,8 @@ export class QuestionsPageComponent implements OnInit {
     } else this.exitQuestionnaire()
   }
 
-  handleFinish(completedInClinic?: boolean) {
-    return this.questionsService
-      .handleClinicalFollowUp(this.assessment, completedInClinic)
-      .then(() => {
-        this.updateDoneButton(false)
-        return this.navCtrl.navigateRoot('/home')
-      })
+  handleFinish() {
+    this.navCtrl.navigateRoot('/home')  
   }
 
   onAnswer(event) {
@@ -285,10 +281,6 @@ export class QuestionsPageComponent implements OnInit {
       this.task,
       this.questions
     )
-  }
-
-  updateDoneButton(val: boolean) {
-    this.showDoneButton = val
   }
 
   sendEvent(type) {

@@ -48,31 +48,15 @@ export abstract class ConverterService {
     }
   }
 
-  convertToRecord(kafkaValue, topic, valueSchemaMetadata) {
-    const value = JSON.parse(valueSchemaMetadata.schema)
-    const record = {
-      schema: valueSchemaMetadata.id,
-      value: this.convertToAvro(value, kafkaValue),
-      topic
-    }
-    return record
+  convertToAvro(kafkaValue, topic, valueSchemaMetadata) {
+    const schema = JSON.parse(valueSchemaMetadata.schema)
+    return AvroSchema.parse(schema).clone(kafkaValue, { wrapUnions: true })
   }
 
-  batchConvertToRecord(kafkaValues, topic, valueSchemaMetadata) {
-    const value = JSON.parse(valueSchemaMetadata.schema)
-    return this.batchConvertToAvro(value, kafkaValues, valueSchemaMetadata.id)
-  }
-
-  convertToAvro(schema, value): any {
-    return AvroSchema.parse(schema).clone(value, { wrapUnions: true })
-  }
-
-  batchConvertToAvro(schema, values, schemaId): any {
+  batchConvertToAvro(kafkaValues, topic, valueSchemaMetadata) {
+    const schema = JSON.parse(valueSchemaMetadata.schema)
     const parsedSchema = AvroSchema.parse(schema)
-    return values.map(v => parsedSchema.clone(v, { wrapUnions: true })).map(v => ({
-      value: v,
-      schema: schemaId
-    }))
+    return kafkaValues.map(v => parsedSchema.clone(v, { wrapUnions: true }))
   }
 
   getKafkaPayload(
@@ -87,14 +71,14 @@ export abstract class ConverterService {
         return Promise.all([
           this.keyConverter
             .convertToRecord(kafkaKey, topic, ''),
-          this.convertToRecord(kafkaObject['kafkaObject'].value, topic, schema)
-        ]).then(([key, records]) => ({
+          this.convertToAvro(kafkaObject, topic, schema)
+        ]).then(([key, record]) => ({
           topic,
           cacheKey: cacheKey,
           record: {
             key_schema_id: key.schema,
-            value_schema_id: records['schema'],
-            records: [{ key: key.value, value: records['value'] }]
+            value_schema_id: schema.id,
+            records: [{ key: key.value, value: record }]
           }
         }))
       })
@@ -153,9 +137,5 @@ export abstract class ConverterService {
       )
       return false
     }
-  }
-
-  getProgress() {
-    return 1
   }
 }

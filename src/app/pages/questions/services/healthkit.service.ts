@@ -90,42 +90,19 @@ export class HealthkitService {
   }
 
   async query(queryStartTime: Date, queryEndTime: Date, dataType: string) {
-    this.resetQueryProgress()
     try {
-      let completeData = []
       let startTime = setDateTimeToMidnightEpoch(queryStartTime)
-      let endTime = Math.min(startTime + getMilliseconds({ days: 50 }), queryEndTime.getTime())
-      let i = 0
-      let iterations = Math.ceil((queryEndTime.getTime() - startTime) / getMilliseconds({ days: 50 }))
-      while (i < iterations) {
-        const queryOptions = {
-          sampleName: dataType,
-          startDate: new Date(startTime).toISOString(),
-          endDate: new Date(endTime).toISOString(),
-          limit: 0 // This is to get all the data
-        }
-        await CapacitorHealthkit.queryHKitSampleType(queryOptions)
-          .then(res => completeData = completeData.concat(res.resultData))
-        startTime = endTime
-        endTime = endTime + getMilliseconds({ days: 50 })
-        this.updateQueryProgress(++i, iterations)
+      let endTime = setDateTimeToMidnight(queryEndTime)
+      const queryOptions = {
+        sampleName: dataType,
+        startDate: new Date(startTime).toISOString(),
+        endDate: new Date(endTime).toISOString(),
+        limit: 0 // This is to get all the data
       }
-      return completeData
+      return (await CapacitorHealthkit.queryHKitSampleType(queryOptions)).resultData
     } catch (e) {
       return []
     }
-  }
-
-  updateQueryProgress(progress, total) {
-    this.queryProgress = progress / total
-  }
-
-  getQueryProgress() {
-    return this.queryProgress
-  }
-
-  resetQueryProgress() {
-    this.queryProgress = 0
   }
 
   reset() {

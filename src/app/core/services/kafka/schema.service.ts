@@ -43,8 +43,4 @@ export class SchemaService {
       .getConverter(type)
       .getKafkaPayload(type, kafkaKey, kafkaObject, cacheKey, topics)
   }
-
-  getConversionProgress(type) {
-    return this.converterFactory.getConverter(type).getProgress()
-  }
 }

@@ -49,8 +49,7 @@ export class KeyConverterService {
         const key = JSON.parse(keySchemaMetadata.schema)
         const record = {
           schema: keySchemaMetadata.id,
-          value: this.convertToAvro(key, kafkaKey),
-          topic
+          value: this.convertToAvro(key, kafkaKey)
         }
         return record
       })

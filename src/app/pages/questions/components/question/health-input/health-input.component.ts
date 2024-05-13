@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core'
 import { Health_Requirement, Question } from 'src/app/shared/models/question'
 
 import { Response } from '../../../../../shared/models/question'
@@ -9,15 +9,15 @@ import { HealthkitService } from '../../../services/healthkit.service'
   templateUrl: 'health-input.component.html',
   styleUrls: ['health-input.component.scss']
 })
-export class HealthInputComponent implements OnInit {
+export class HealthInputComponent implements OnChanges {
   @Output()
   valueChange: EventEmitter<object> = new EventEmitter<object>()
-
   @Input()
   responses: Response[]
-
   @Input()
   health_question: Question
+  @Input()
+  currentlyShown: boolean
 
   health_display: string
   health_display_time: string
@@ -25,8 +25,10 @@ export class HealthInputComponent implements OnInit {
 
   constructor(private healthKitService: HealthkitService) {}
 
-  ngOnInit() {
-    this.loadData()
+  ngOnChanges() {
+    if (this.currentlyShown) {
+      this.loadData()
+    }
   }
 
   loadData() {

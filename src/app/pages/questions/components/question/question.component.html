@@ -57,6 +57,7 @@
         *ngSwitchCase="'health'"
         [responses]="question.select_choices_or_calculations"
         [health_question]="question"
+        [currentlyShown]="currentlyShown"
         (valueChange)="emitAnswer($event)"
       >
       </health-input>

@@ -45,10 +45,10 @@ export class CacheService {
     return Promise.all([this.setCache({})])
   }
 
-  storeInCache(type, kafkaObject: KafkaObject, cacheValue: any) {
+  storeInCache(type, kafkaObject, cacheValue: any) {
     return this.getCache().then(cache => {
       this.logger.log('KAFKA-SERVICE: Caching answers.')
-      cache[kafkaObject.value.time] = cacheValue
+      cache[crypto.randomUUID()] = cacheValue
       this.sendDataEvent(DataEventType.CACHED, cacheValue)
       return this.setCache(cache)
     })

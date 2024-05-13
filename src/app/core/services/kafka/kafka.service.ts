@@ -132,19 +132,18 @@ export class KafkaService {
   prepareKafkaObjectAndStore(type, payload) {
     const name = type == SchemaType.ASSESSMENT ? payload.metadata.name : type
     const value = this.schema.getKafkaObjectValue(type, payload)
-    const kafkaObject: KafkaObject = { value }
     const cacheValue: CacheValue = {
-      kafkaObject,
+      kafkaObject: { value },
       name,
       avsc: payload.metadata ? payload.metadata.avsc : this.DEFAULT_KAFKA_AVSC
     }
     this.sendDataEvent(
       DataEventType.PREPARED_OBJECT,
       name,
-      kafkaObject.value.name,
-      kafkaObject.value.timestamp
+      value['name'],
+      value['timestamp']
     )
-    return this.cache.storeInCache(type, kafkaObject, cacheValue)
+    return this.cache.storeInCache(type, value, cacheValue)
   }
 
   sendAllFromCache(): Promise<any> {

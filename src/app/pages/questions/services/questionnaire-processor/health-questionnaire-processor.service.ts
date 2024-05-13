@@ -19,6 +19,7 @@ export class HealthQuestionnaireProcessorService extends QuestionnaireProcessorS
   ) {
     super(schedule, kafka)
   }
+  HEALTHKIT_QUERY_INTERVAL = 100
 
   process(data, task, assessmentMetadata) {
     const type = SchemaType.HEALTHKIT
@@ -30,27 +31,26 @@ export class HealthQuestionnaireProcessorService extends QuestionnaireProcessorS
         const startTime = value['startTime']
         const endTime = value['endTime']
         const durationInDays = this.calculateDurationInDays(startTime, endTime)
-
-        if (durationInDays <= 100) {
+        if (durationInDays <= this.HEALTHKIT_QUERY_INTERVAL) {
           dividedObjects.push({
-            time: (Date.now() / 1000) + Math.random(),
+            time: data.time,
             timeCompleted: data.timeCompleted,
             key,
             value
           })
         } else {
-          const numberOfObjects = Math.ceil(durationInDays / 100)
+          const numberOfObjects = Math.ceil(durationInDays / this.HEALTHKIT_QUERY_INTERVAL)
           const interval = durationInDays / numberOfObjects
           let currentStartTime = startTime.getTime()
 
           for (let i = 0; i < numberOfObjects; i++) {
-            const currentEndTime = new Date(currentStartTime + interval * 24 * 60 * 60 * 1000)
+            const currentEndTime = new Date(currentStartTime + getMilliseconds({ days: interval }))
             const currentValue = {
               startTime: new Date(currentStartTime),
               endTime: currentEndTime > endTime ? endTime : currentEndTime
             }
             dividedObjects.push({
-              time: (Date.now() / 1000) + Math.random(),
+              time: data.time,
               timeCompleted: data.timeCompleted,
               key,
               value: currentValue

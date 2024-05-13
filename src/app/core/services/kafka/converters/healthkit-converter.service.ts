@@ -39,7 +39,7 @@ export class HealthkitConverterService extends ConverterService {
   init() { }
 
   processData(data) {
-    return { name: 'healthkit', time: Date.now(), data: { key: data.key, value: data.value } }
+    return { name: 'healthkit', time: getSeconds({milliseconds: Date.now()}), data: { key: data.key, value: data.value } }
   }
 
   processSingleDatatype(key, data, timeReceived): any[] {

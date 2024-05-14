@@ -69,7 +69,7 @@ export class HealthkitService {
   loadData(healthDataType) {
     return this.getLastPollTimes().then(dic => {
       let lastPollTime = this.MIN_POLL_TIMESTAMP
-      // if (healthDataType in dic) lastPollTime = dic[healthDataType]
+      if (healthDataType in dic) lastPollTime = dic[healthDataType]
       return CapacitorHealthkit
         .requestAuthorization(
           {

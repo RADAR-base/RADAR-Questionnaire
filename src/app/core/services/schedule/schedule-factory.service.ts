@@ -6,7 +6,6 @@ import { Assessment, AssessmentType } from '../../../shared/models/assessment'
 import { SchedulerType } from '../../../shared/models/notification-handler'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { LogService } from '../misc/log.service'
-import { GlobalStorageService } from '../storage/global-storage.service'
 import { StorageService } from '../storage/storage.service'
 import { AppserverScheduleService } from './appserver-schedule.service'
 import { LocalScheduleService } from './local-schedule.service'
@@ -20,7 +19,7 @@ export class ScheduleFactoryService extends ScheduleService {
     public localScheduleService: LocalScheduleService,
     public appServerScheduleSerice: AppserverScheduleService,
     private remoteConfig: RemoteConfigService,
-    private store: GlobalStorageService,
+    private store: StorageService,
     logger: LogService
   ) {
     super(store, logger)

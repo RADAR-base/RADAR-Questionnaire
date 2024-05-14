@@ -18,7 +18,6 @@ import {
 import { RemoteConfigService } from '../config/remote-config.service'
 import { SubjectConfigService } from '../config/subject-config.service'
 import { LogService } from '../misc/log.service'
-import { GlobalStorageService } from '../storage/global-storage.service'
 import { StorageService } from '../storage/storage.service'
 import { TokenService } from '../token/token.service'
 import { AnalyticsService } from '../usage/analytics.service'
@@ -37,7 +36,7 @@ export class CacheService {
   private isCacheSending: boolean
 
   constructor(
-    private storage: GlobalStorageService,
+    private storage: StorageService,
     private analytics: AnalyticsService,
     private logger: LogService
   ) {}

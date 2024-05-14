@@ -9,9 +9,9 @@ import {
 } from '../../../shared/testing/mock-services'
 import { LogService } from '../misc/log.service'
 import { ScheduleService } from '../schedule/schedule.service'
-import { GlobalStorageService } from '../storage/global-storage.service'
 import { LocalNotificationService } from './local-notification.service'
 import { NotificationGeneratorService } from './notification-generator.service'
+import { StorageService } from '../storage/storage.service'
 
 describe('LocalNotificationService', () => {
   let service
@@ -21,7 +21,7 @@ describe('LocalNotificationService', () => {
       providers: [
         LocalNotificationService,
         { provide: LogService, useClass: LogServiceMock },
-        { provide: GlobalStorageService, useClass: StorageServiceMock },
+        { provide: StorageService, useClass: StorageServiceMock },
         {
           provide: NotificationGeneratorService,
           useClass: NotificationGeneratorServiceMock

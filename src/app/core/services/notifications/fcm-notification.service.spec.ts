@@ -16,7 +16,6 @@ import { SubjectConfigService } from '../config/subject-config.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
 import { ScheduleService } from '../schedule/schedule.service'
-import { GlobalStorageService } from '../storage/global-storage.service'
 import { StorageService } from '../storage/storage.service'
 import { FcmNotificationService } from './fcm-notification.service'
 import { NotificationGeneratorService } from './notification-generator.service'
@@ -30,7 +29,7 @@ describe('FcmNotificationService', () => {
         FcmNotificationService,
         Platform,
         { provide: LogService, useClass: LogServiceMock },
-        { provide: GlobalStorageService, useClass: StorageServiceMock },
+        { provide: StorageService, useClass: StorageServiceMock },
         { provide: SubjectConfigService, useClass: SubjectConfigServiceMock },
         {
           provide: NotificationGeneratorService,

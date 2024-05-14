@@ -10,7 +10,6 @@ import {
 } from '../../../shared/utilities/time'
 import { AppServerService } from '../app-server/app-server.service'
 import { LogService } from '../misc/log.service'
-import { GlobalStorageService } from '../storage/global-storage.service'
 import { StorageService } from '../storage/storage.service'
 import { ScheduleGeneratorService } from './schedule-generator.service'
 
@@ -27,7 +26,7 @@ export abstract class ScheduleService {
   changeDetectionEmitter: EventEmitter<void> = new EventEmitter<void>()
 
   constructor(
-    protected storage: GlobalStorageService,
+    protected storage: StorageService,
     protected logger: LogService
   ) {}
 

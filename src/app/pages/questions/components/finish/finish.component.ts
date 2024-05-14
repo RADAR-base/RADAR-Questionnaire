@@ -52,7 +52,7 @@ export class FinishComponent implements OnChanges {
   ngOnChanges() {
     this.displayNextTaskReminder =
       this.taskType == AssessmentType.SCHEDULED && !this.isLastTask
-    this.innerText = this.localization.translateKey(LocKeys.STATUS_SENDING)
+    this.innerText = this.localization.translateKey(LocKeys.SETTINGS_WAIT_ALERT) + '...'
     if (this.isShown) this.usage.setPage(this.constructor.name)
     this.shadowStyle = `inset ${this.progressCount * 400}px 0 0 -50px var(--cl-primary-60)`
     if (this.progressCount == 1) {

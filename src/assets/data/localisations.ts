@@ -994,16 +994,6 @@ export const Localisations = {
     pl: 'Ładowanie',
     hb: 'טוען'
   },
-  STATUS_SENDING: {
-    da: 'Sender',
-    de: 'Senden',
-    en: 'Sending',
-    es: 'Enviando',
-    it: 'Invio',
-    nl: 'Verzenden',
-    pl: 'Wysyłanie',
-    hb: 'שולח'
-  },
   STATUS_SUCCESS: {
     da: 'Succes',
     de: 'Erfolg',

@@ -43,6 +43,7 @@ export class FinishComponent implements OnChanges {
   displayNextTaskReminder = true
   completedInClinic = false
   shadowStyle = 'inset 100px 0 0 -50px #0B4A59'
+  progressDisplay = 0
 
   constructor(
     private usage: UsageService,
@@ -55,9 +56,11 @@ export class FinishComponent implements OnChanges {
     this.innerText = this.localization.translateKey(LocKeys.SETTINGS_WAIT_ALERT) + '...'
     if (this.isShown) this.usage.setPage(this.constructor.name)
     this.shadowStyle = `inset ${this.progressCount * 400}px 0 0 -50px var(--cl-primary-60)`
+    this.progressDisplay = Math.ceil(this.progressCount) * 100
     if (this.progressCount == 1) {
       this.showDoneButton = true
       this.innerText = this.localization.translateKey(LocKeys.BTN_DONE)
+      this.shadowStyle = `inset 500px 0 0 -50px var(--cl-primary-60)`
     }
   }
 

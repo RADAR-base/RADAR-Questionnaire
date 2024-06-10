@@ -231,7 +231,8 @@ export const DefaultAudioRecordOptions = {
 // *Default question/question input types where the questionnaire will automatically move to the next question upon answering the question.
 export const DefaultAutoNextQuestionnaireTypes = [
   QuestionType.timed,
-  QuestionType.audio
+  QuestionType.audio,
+  QuestionType.health
 ]
 
 // *Default question/question input types where the next button is enabled by default, allowing the question to be skippable.

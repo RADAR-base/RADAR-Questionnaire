@@ -25,5 +25,6 @@
     >
       {{ innerText }}
     </ion-button>
+    <small *ngIf="!showDoneButton"> {{ etaText }} {{ ' (' + progressDisplay + '%) ' }} </small>
   </div>
 </div>

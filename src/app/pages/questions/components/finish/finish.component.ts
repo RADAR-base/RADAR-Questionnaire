@@ -11,6 +11,7 @@ import { AssessmentType } from '../../../../shared/models/assessment'
 import { QuestionsService } from '../../services/questions.service'
 import { LocalizationService } from 'src/app/core/services/misc/localization.service'
 import { LocKeys } from 'src/app/shared/enums/localisations'
+import { getMinutes } from 'src/app/shared/utilities/time'
 
 @Component({
   selector: 'finish',
@@ -43,6 +44,9 @@ export class FinishComponent implements OnChanges {
   displayNextTaskReminder = true
   completedInClinic = false
   shadowStyle = 'inset 100px 0 0 -50px #0B4A59'
+  progressDisplay = 0
+  startTime = Date.now()
+  etaText = ''
 
   constructor(
     private usage: UsageService,
@@ -50,15 +54,14 @@ export class FinishComponent implements OnChanges {
   ) {}
 
   ngOnChanges() {
+    if (this.isShown) this.usage.setPage(this.constructor.name)
+    if (this.progressCount == 1) this.showDoneButton = true
     this.displayNextTaskReminder =
       this.taskType == AssessmentType.SCHEDULED && !this.isLastTask
-    this.innerText = this.localization.translateKey(LocKeys.SETTINGS_WAIT_ALERT) + '...'
-    if (this.isShown) this.usage.setPage(this.constructor.name)
-    this.shadowStyle = `inset ${this.progressCount * 400}px 0 0 -50px var(--cl-primary-60)`
-    if (this.progressCount == 1) {
-      this.showDoneButton = true
-      this.innerText = this.localization.translateKey(LocKeys.BTN_DONE)
-    }
+    this.innerText = this.getFinishButtonText(this.progressCount)
+    this.shadowStyle = this.getProgressBarStyle(this.progressCount)
+    this.progressDisplay = Math.ceil(this.progressCount) * 100
+    this.etaText = this.getEtaText(this.progressDisplay)
   }
 
   handleClosePage() {
@@ -67,5 +70,24 @@ export class FinishComponent implements OnChanges {
 
   toggleChanged(event) {
     this.completedInClinic = event
+  }
+
+  getEtaText(progress) {
+    const duration = getMinutes({ milliseconds: Date.now() - this.startTime })
+    return (
+      'About ' + (duration * (100 - progress)) / progress + ' minutes remaining'
+    )
+  }
+
+  getProgressBarStyle(progress) {
+    return progress >= 1
+      ? `inset 500px 0 0 -50px var(--cl-primary-60)`
+      : `inset ${progress * 400}px 0 0 -50px var(--cl-primary-60)`
+  }
+
+  getFinishButtonText(progress) {
+    return progress < 1
+     ? this.localization.translateKey(LocKeys.SETTINGS_WAIT_ALERT) + '...'
+     : this.localization.translateKey(LocKeys.BTN_DONE)
   }
 }

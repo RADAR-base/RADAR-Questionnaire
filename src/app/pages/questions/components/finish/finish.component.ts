@@ -61,7 +61,7 @@ export class FinishComponent implements OnChanges {
     this.innerText = this.getFinishButtonText(this.progressCount)
     this.shadowStyle = this.getProgressBarStyle(this.progressCount)
     this.progressDisplay = Math.ceil(this.progressCount) * 100
-    this.etaText = this.getEtaText(this.progressCount)
+    this.etaText = this.getEtaText(this.progressDisplay)
   }
 
   handleClosePage() {
@@ -86,7 +86,7 @@ export class FinishComponent implements OnChanges {
   }
 
   getFinishButtonText(progress) {
-    return progress >= 1
+    return progress < 1
      ? this.localization.translateKey(LocKeys.SETTINGS_WAIT_ALERT) + '...'
      : this.localization.translateKey(LocKeys.BTN_DONE)
   }

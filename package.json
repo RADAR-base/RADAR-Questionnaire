@@ -53,7 +53,7 @@
     "@capacitor-firebase/messaging": "^5.0.0",
     "@capacitor-firebase/remote-config": "^5.0.0",
     "@capacitor-mlkit/barcode-scanning": "^5.4.0",
-    "@capacitor/android": "^5.0.3",
+    "@capacitor/android": "^5.7.6",
     "@capacitor/app": "5.0.7",
     "@capacitor/app-launcher": "^5.0.7",
     "@capacitor/browser": "^5.2.0",

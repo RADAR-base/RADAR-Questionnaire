@@ -83,9 +83,10 @@ export abstract class FcmNotificationService extends NotificationService {
   }
 
   async permissionCheck(): Promise<void> {
-    if (!this.platform.is('ios')) return Promise.resolve()
-    const result = await FirebaseMessaging.requestPermissions()
-    return
+    const result = await FirebaseMessaging.checkPermissions()
+    if (result.receive != 'granted') {
+      await FirebaseMessaging.requestPermissions()
+    }
   }
 
   setFCMToken(token) {

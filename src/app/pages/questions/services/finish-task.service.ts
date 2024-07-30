@@ -36,8 +36,7 @@ export class FinishTaskService {
         : [],
       this.kafka
         .prepareKafkaObjectAndStore(SchemaType.TIMEZONE, {})
-        .then(() => this.kafka.sendAllFromCache()),
-      this.cancelNotificationsForCompletedTask(task)
+        .then(() => this.kafka.sendAllFromCache())
     ])
   }
 
@@ -60,12 +59,5 @@ export class FinishTaskService {
         Date.now()
       )
       .then(() => this.config.rescheduleNotifications())
-  }
-  // TODO process for general questionnaire schema
-
-  cancelNotificationsForCompletedTask(task): Promise<any> {
-    console.log('Cancelling pending reminders for task..')
-    const notifications = task.notifications ? task.notifications : []
-    return notifications.forEach(n => this.config.cancelSingleNotification(n))
   }
 }

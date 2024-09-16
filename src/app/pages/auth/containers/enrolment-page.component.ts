@@ -13,7 +13,8 @@ import {
   DefaultSettingsSupportedLanguages,
   DefaultSettingsWeeklyReport,
   DefaultOAuthClientId,
-  DefaultIosPackageName
+  DefaultIosPackageName,
+  DefaultPackageName,
 } from '../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
@@ -29,7 +30,6 @@ import {
   WeeklyReportSubSettings
 } from '../../../shared/models/settings'
 import { AuthService } from '../services/auth.service'
-import { DefaultPackageName } from 'www/assets/data/defaultConfig'
 
 @Component({
   selector: 'page-enrolment',

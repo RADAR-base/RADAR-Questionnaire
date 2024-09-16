@@ -744,6 +744,16 @@ export const Localisations = {
     pl: 'Skanuj',
     hb: 'סרוק'
   },
+  BTN_ENROL_KRATOS: {
+    da: 'Login med Ory',
+    de: 'Mit Ory anmelden',
+    en: 'Login with Ory',
+    es: 'Iniciar sesión con Ory',
+    it: 'Accedi con Ory',
+    nl: 'Inloggen met Ory',
+    pl: 'Zaloguj się z Ory',
+    hb: 'התחברות עם Ory'
+  },
   BTN_ENROL_ENTER_TOKEN: {
     da: 'Indtast Token',
     de: 'Token Eingeben',

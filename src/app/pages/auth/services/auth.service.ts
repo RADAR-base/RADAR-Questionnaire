@@ -44,6 +44,10 @@ export class AuthService {
     })
   }
 
+  authenticateWithOry(authObj) {
+    return this.token.setTokens(authObj).then(() => this.registerAsSource())
+  }
+
   metaTokenUrlAuth(authObj) {
     // NOTE: Meta QR code and new QR code
     return this.getRefreshTokenFromUrl(authObj).then((body: any) => {

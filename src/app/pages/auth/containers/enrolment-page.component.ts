@@ -3,12 +3,17 @@ import { Browser } from '@capacitor/browser'
 import { Device } from '@capacitor/device'
 import { NavController } from '@ionic/angular'
 import { AlertInput } from '@ionic/core'
+import { OAuth2Client } from '@byteowls/capacitor-oauth2'
 
 import {
   DefaultLanguage,
+  DefaultOryEndpoint,
+  DefaultOryScopes,
   DefaultPrivacyPolicyUrl,
   DefaultSettingsSupportedLanguages,
-  DefaultSettingsWeeklyReport
+  DefaultSettingsWeeklyReport,
+  DefaultOAuthClientId,
+  DefaultIosPackageName
 } from '../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
@@ -24,6 +29,7 @@ import {
   WeeklyReportSubSettings
 } from '../../../shared/models/settings'
 import { AuthService } from '../services/auth.service'
+import { DefaultPackageName } from 'www/assets/data/defaultConfig'
 
 @Component({
   selector: 'page-enrolment',
@@ -32,7 +38,7 @@ import { AuthService } from '../services/auth.service'
 })
 export class EnrolmentPageComponent {
   @ViewChild('swiper')
-  slides: ElementRef | undefined;
+  slides: ElementRef | undefined
 
   loading: boolean = false
   showOutcomeStatus: boolean = false
@@ -41,6 +47,27 @@ export class EnrolmentPageComponent {
   reportSettings: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
   language?: LanguageSetting = DefaultLanguage
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
+
+  oauth2Options = {
+    authorizationBaseUrl: DefaultOryEndpoint + '/oauth2/auth',
+    accessTokenEndpoint: DefaultOryEndpoint + '/oauth2/token',
+    scope: DefaultOryScopes,
+    resourceUrl: '',
+    logsEnabled: true,
+    android: {
+      appId: DefaultOAuthClientId,
+      responseType: 'code',
+      redirectUrl: DefaultPackageName + ':/'
+    },
+    ios: {
+      appId: DefaultOAuthClientId,
+      responseType: 'code',
+      redirectUrl: DefaultIosPackageName + ':/'
+    },
+    additionalParameters: {
+      audience: 'res_ManagementPortal'
+    }
+  }
 
   constructor(
     public navCtrl: NavController,
@@ -69,17 +96,35 @@ export class EnrolmentPageComponent {
   }
 
   next() {
-      this.slides.nativeElement.swiper.allowSlideNext = true
-      const index = this.slides.nativeElement.swiper.activeIndex
-      const slideIndex = index + 1
-      this.slides.nativeElement.swiper.slideTo(slideIndex, 500)
-      this.slides.nativeElement.swiper.allowSlideNext = false
-      this.slides.nativeElement.swiper.allowSlidePrev = false
+    this.slides.nativeElement.swiper.allowSlideNext = true
+    const index = this.slides.nativeElement.swiper.activeIndex
+    const slideIndex = index + 1
+    this.slides.nativeElement.swiper.slideTo(slideIndex, 500)
+    this.slides.nativeElement.swiper.allowSlideNext = false
+    this.slides.nativeElement.swiper.allowSlidePrev = false
   }
 
   enterToken() {
     this.enterMetaQR = true
     this.next()
+  }
+
+  loginWithOry() {
+    OAuth2Client.authenticate(this.oauth2Options)
+      .then(response => {
+        return this.auth.authenticateWithOry(response.access_token_response)
+      })
+      .then(() => this.auth.initSubjectInformation())
+      .then(() => {
+        this.usage.sendGeneralEvent(EnrolmentEventType.SUCCESS)
+        this.next()
+        this.next()
+      })
+      .catch(e => {
+        this.handleError(e)
+        this.loading = false
+        this.auth.reset()
+      })
   }
 
   authenticate(authObj) {
@@ -111,8 +156,8 @@ export class EnrolmentPageComponent {
       e.error && e.error.message
         ? e.error.message
         : e.status
-        ? e.statusText + ' (' + e.status + ')'
-        : e
+          ? e.statusText + ' (' + e.status + ')'
+          : e
     this.usage.sendGeneralEvent(
       e.status == 409 ? EnrolmentEventType.ERROR : EnrolmentEventType.FAIL,
       false,
@@ -158,7 +203,7 @@ export class EnrolmentPageComponent {
           label: this.localization.translate(lang.label),
           value: JSON.stringify(lang),
           checked: lang.value === this.language.value
-        } as AlertInput)
+        }) as AlertInput
     )
     return this.alertService.showAlert({
       header: this.localization.translateKey(LocKeys.SETTINGS_LANGUAGE_ALERT),

@@ -97,8 +97,8 @@
           </ion-item>
           <br>
           <p>
-            <ion-button ion-button class="bt" round full (click)="enterStudyId()">
-              Next
+            <ion-button ion-button class="bt" round full (click)="enrol('ory')">
+              {{ 'BTN_NEXT' | translate }}
             </ion-button>
           </p>
         </div>
@@ -109,21 +109,7 @@
     <swiper-slide id="portal-registration">
       <ion-card>
         <div class="registration">
-          <div class="text text-sm">
-            You will now be redirected back to your study portal.
-          </div>
-          <br><br>
-          <img class="portal" src="assets/imgs/paprka.png">
-        </div>
-        <div *ngIf="!(loading | async)" class="mid">
-          <p>
-            <ion-button ion-button class="bt bt--full" round full (click)="goToPortal()">
-              Login to Portal
-            </ion-button>
-          </p>
-        </div>
-        <div class="spn-container" *ngIf="loading | async">
-          <ion-spinner name="lines"></ion-spinner>
+          <ory-form [loading]="loading | async" (data)="authenticate($event)"></ory-form>
         </div>
       </ion-card>
     </swiper-slide>

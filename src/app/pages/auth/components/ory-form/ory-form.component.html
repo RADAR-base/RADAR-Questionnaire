@@ -1,0 +1,13 @@
+<div class="form">
+  <div dir="auto" class="text text-justify">
+    {{ 'ENROL_REGISTRATION_ORY_DESC' | translate }}
+  </div>
+  <div class="qr-code">
+    <img class="portal" src="assets/imgs/paprka.png">
+  </div>
+  <div class="ion-padding bottom" *ngIf="!loading">
+    <ion-button ion-button class="bt bt--full" round full (click)="loginWithOry()">
+      {{ 'BTN_ENROL_KRATOS' | translate }}
+    </ion-button>
+  </div>
+</div>

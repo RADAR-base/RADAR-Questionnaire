@@ -15,6 +15,9 @@ export class QRFormComponent {
   @Output()
   data: EventEmitter<any> = new EventEmitter<any>()
 
+  @Output()
+  enterToken: EventEmitter<any> = new EventEmitter<any>()
+
   constructor(private usage: UsageService) { }
 
   async scanQRHandler() {
@@ -36,5 +39,9 @@ export class QRFormComponent {
     )
     await BarcodeScanner.startScan() // start scanning and wait for a result
     this.usage.sendGeneralEvent(UsageEventType.QR_SCANNED)
+  }
+
+  enterTokenHandler() {
+    this.enterToken.emit()
   }
 }

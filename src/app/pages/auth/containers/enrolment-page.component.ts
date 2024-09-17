@@ -9,7 +9,7 @@ import {
   DefaultLanguage,
   DefaultPrivacyPolicyUrl,
   DefaultSettingsSupportedLanguages,
-  DefaultSettingsWeeklyReport
+  DefaultSettingsWeeklyReport,
 } from '../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
@@ -152,6 +152,9 @@ export class EnrolmentPageComponent {
   }
 
   enrol(method) {
+    if (method === 'ory') {
+      console.log(this.studyId)
+    }
     this.enrolmentMethod = method
     this.removeSlideById('portal-registration')
     this.next()
@@ -273,12 +276,6 @@ export class EnrolmentPageComponent {
     // TODO: Remote config get auth url from study id
     const loginUrl = 'https://dev.radarbasedev.co.uk/kratos-ui/paprka/login';
     this.openWithInAppBrowser(loginUrl)
-  }
-
-  enterStudyId() {
-    console.log(this.studyId)
-    // TODO: Set user property studyid and get url from remote config
-    this.next()
   }
 
   initializeDeepLinking() {

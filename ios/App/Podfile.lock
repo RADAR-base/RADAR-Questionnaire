@@ -1,4 +1,7 @@
 PODS:
+  - ByteowlsCapacitorOauth2 (5.0.0):
+    - Capacitor
+    - OAuthSwift (= 2.2.0)
   - Capacitor (5.7.4):
     - CapacitorCordova
   - CapacitorApp (5.0.7):
@@ -199,11 +202,13 @@ PODS:
     - nanopb/encode (= 2.30909.1)
   - nanopb/decode (2.30909.1)
   - nanopb/encode (2.30909.1)
+  - OAuthSwift (2.2.0)
   - PerfoodCapacitorHealthkit (1.3.0):
     - Capacitor
   - PromisesObjC (2.4.0)
 
 DEPENDENCIES:
+  - "ByteowlsCapacitorOauth2 (from `../../node_modules/@byteowls/capacitor-oauth2`)"
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorApp (from `../../node_modules/@capacitor/app`)"
   - "CapacitorAppLauncher (from `../../node_modules/@capacitor/app-launcher`)"
@@ -253,9 +258,12 @@ SPEC REPOS:
     - MLKitCommon
     - MLKitVision
     - nanopb
+    - OAuthSwift
     - PromisesObjC
 
 EXTERNAL SOURCES:
+  ByteowlsCapacitorOauth2:
+    :path: "../../node_modules/@byteowls/capacitor-oauth2"
   Capacitor:
     :path: "../../node_modules/@capacitor/ios"
   CapacitorApp:
@@ -304,28 +312,29 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@perfood/capacitor-healthkit"
 
 SPEC CHECKSUMS:
-  Capacitor: 4fe9adf012caceb4c71ffea2f1f4d005cdcbeea7
-  CapacitorApp: 17fecd0e6cb23feafac7eb0939417389038b0979
-  CapacitorAppLauncher: 7b2705481a74cbe322441bd374f56194de59ab1a
-  CapacitorBrowser: a6deae9e5bf87f62b62a753cff7992c5def9e771
-  CapacitorCommunityKeepAwake: f3442e3e9b666dd0162522fbd053da1fe81ede20
+  ByteowlsCapacitorOauth2: c576cf8673ff16d2103dc959ea88bd4e0bda0bc2
+  Capacitor: 0b2c8a082fc0335969bdc7d074072ca8c9e064af
+  CapacitorApp: b23ce4279972fa24721b9ad7aefdf05e36c29db7
+  CapacitorAppLauncher: 3c24de236f37bf7ab79e90ecf5576f962cc7d99e
+  CapacitorBrowser: 4dc0624a8c372054f64f31e53c6375ce300b28cc
+  CapacitorCommunityKeepAwake: 6106b37df55fd4f06e47a2af701ce0dd6ffae1ba
   CapacitorCordova: a6e87fccc0307dee7aec1560ec9398485f2b0ce7
-  CapacitorDevice: fc91bdb484dc0e70755e9b621cd557afe642613a
-  CapacitorDialog: ea1beaccb7f825191aa18b72cba8981b881b3b2d
-  CapacitorFilesystem: 9f3e3c7fea2fff12f46dd5b07a2914f2103e4cfc
-  CapacitorFirebaseAnalytics: dfccb704820bb7db82debbc05fded24b096bed71
-  CapacitorFirebaseMessaging: ff3b2e81e11f1e20e4e349dc9a920516cf649345
-  CapacitorFirebaseRemoteConfig: a20f5e883f99e7dd0c243a1e31a0418ea89f08a9
-  CapacitorGrabIntentExtras: f2bf4ebbb94a1cf9466a0e97807cc2d5d1368800
-  CapacitorHaptics: 7c7c206f0c96a628fed073830c96d28c4b2e772e
-  CapacitorKeyboard: aec619a578235c6ce279075009a2689c2cf5c42c
-  CapacitorLocalNotifications: c58afadd159f6bc540ef9b3cbdbc82510a2bf112
-  CapacitorMlkitBarcodeScanning: 8fb81cbef3c6ffe0c0e2dbd15ed6dca889a5a062
-  CapacitorSplashScreen: dd3de3f3644710fa2a697cfb91ec262eece4d242
-  CapacitorStatusBar: f390fbb49b82ffb754ea4b3cf71dc8b048baf3e7
-  CapacitorTextZoom: 69814a62b1d0f23a899cca06ea9838c38de187ff
-  CapacitorVoiceRecorder: d44c1da901cc3918eb9c92c24834d8dc90f071f4
-  CordovaPlugins: a17fcaee819862ac7aca195699992de19cf191d4
+  CapacitorDevice: b8d2ddde4e7f3711f64eb58a69a776e7fc3e53b8
+  CapacitorDialog: 956ded6e159a34ae1689a57d3606184511b1eada
+  CapacitorFilesystem: 38c55dd651d8a11c4fc815ab7fc8b21b4152c419
+  CapacitorFirebaseAnalytics: 1023995c4b63c90e7dcd12f658375df38da1665d
+  CapacitorFirebaseMessaging: ee2a6f40389a0615262c3c20c62663170d6f85e3
+  CapacitorFirebaseRemoteConfig: 1b965ab1810567f574155e88d936831fcd5ba300
+  CapacitorGrabIntentExtras: d8d09d1f663e289571d68fda33e42b1435418843
+  CapacitorHaptics: 85a1ecd1d3026089642518d789f0fb81fe93cf80
+  CapacitorKeyboard: d878396bca6a0fefb313b1546c169648b5ae812a
+  CapacitorLocalNotifications: 40c66684f386e79d421f4099e4bda3d76a6909f8
+  CapacitorMlkitBarcodeScanning: 018a1efa45366e5703b372c1b10bc839dfca7dc3
+  CapacitorSplashScreen: 4ff6258039d0ea77b289edb9503a50ba02d58189
+  CapacitorStatusBar: 37ca5200a1791340c519239521ec2519d384eacb
+  CapacitorTextZoom: 6d63527e15bddd528428d15843b12b738a9781f2
+  CapacitorVoiceRecorder: 27c4c998c2280571d853579f319f6f53f884bdee
+  CordovaPlugins: ac50ef79b47bb555918076fd8a3322c897658a3b
   Firebase: 4453b799f72f625384dc23f412d3be92b0e3b2a0
   FirebaseABTesting: 40774deef367dcc7b736b6c26dd59ce0fab42f41
   FirebaseAnalytics: d275f288881d4417f780115dd52c05fa9752d530
@@ -347,9 +356,10 @@ SPEC CHECKSUMS:
   MLKitCommon: c1b791c3e667091918d91bda4bba69a91011e390
   MLKitVision: 8baa5f46ee3352614169b85250574fde38c36f49
   nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
-  PerfoodCapacitorHealthkit: 88f6e78b319072c4d0aec439b2fcc14d3f05d311
+  OAuthSwift: 75efbb5bd9a4b2b71a37bd7e986bf3f55ddd54c6
+  PerfoodCapacitorHealthkit: 69c66ae8b7a8079586baab13bd6abd5880139263
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
 
-PODFILE CHECKSUM: 819ee8abeaebf087881ec781995944baa241d26f
+PODFILE CHECKSUM: 3a52724a91e434a3261d828c0f7d2a02bd8e54af
 
 COCOAPODS: 1.16.2

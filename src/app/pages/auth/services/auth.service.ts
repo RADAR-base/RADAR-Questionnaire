@@ -32,20 +32,18 @@ export class AuthService {
     this.config.resetAll()
   }
 
-  authenticate(authObj) {
-    return (
-      isValidURL(authObj)
-        ? this.metaTokenUrlAuth(authObj)
-        : this.metaTokenJsonAuth(authObj)
-    ).then(refreshToken => {
-      return this.registerToken(refreshToken)
-        .then(() => this.registerAsSource())
-        .then(() => this.registerToken(refreshToken))
-    })
-  }
-
-  authenticateWithOry(authObj) {
-    return this.token.setTokens(authObj).then(() => this.registerAsSource())
+  authenticate(method, authObj) {
+    switch (method) {
+      case 'qr':
+      case 'token':
+        return this.metaTokenUrlAuth(authObj).then(refreshToken =>
+          this.registerToken(refreshToken)
+            .then(() => this.registerAsSource())
+            .then(() => this.registerToken(refreshToken))
+        )
+      case 'ory':
+        return this.token.setTokens(authObj).then(() => this.registerAsSource())
+    }
   }
 
   metaTokenUrlAuth(authObj) {
@@ -60,11 +58,6 @@ export class AuthService {
         .then(() => this.updateURI())
         .then(() => refreshToken)
     })
-  }
-
-  metaTokenJsonAuth(authObj) {
-    // NOTE: Old QR codes: containing refresh token as JSON
-    return this.updateURI().then(() => JSON.parse(authObj).refreshToken)
   }
 
   updateURI() {

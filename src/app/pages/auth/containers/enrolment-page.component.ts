@@ -7,14 +7,9 @@ import { OAuth2Client } from '@byteowls/capacitor-oauth2'
 
 import {
   DefaultLanguage,
-  DefaultOryEndpoint,
-  DefaultOryScopes,
   DefaultPrivacyPolicyUrl,
   DefaultSettingsSupportedLanguages,
   DefaultSettingsWeeklyReport,
-  DefaultOAuthClientId,
-  DefaultIosPackageName,
-  DefaultPackageName,
 } from '../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
@@ -47,27 +42,7 @@ export class EnrolmentPageComponent {
   reportSettings: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
   language?: LanguageSetting = DefaultLanguage
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
-
-  oauth2Options = {
-    authorizationBaseUrl: DefaultOryEndpoint + '/oauth2/auth',
-    accessTokenEndpoint: DefaultOryEndpoint + '/oauth2/token',
-    scope: DefaultOryScopes,
-    resourceUrl: '',
-    logsEnabled: true,
-    android: {
-      appId: DefaultOAuthClientId,
-      responseType: 'code',
-      redirectUrl: DefaultPackageName + ':/'
-    },
-    ios: {
-      appId: DefaultOAuthClientId,
-      responseType: 'code',
-      redirectUrl: DefaultIosPackageName + ':/'
-    },
-    additionalParameters: {
-      audience: 'res_ManagementPortal'
-    }
-  }
+  enrolmentMethod = 'qr'
 
   constructor(
     public navCtrl: NavController,
@@ -104,49 +79,37 @@ export class EnrolmentPageComponent {
     this.slides.nativeElement.swiper.allowSlidePrev = false
   }
 
-  enterToken() {
-    this.enterMetaQR = true
+  enrol(method) {
+    this.enrolmentMethod = method
     this.next()
   }
 
-  loginWithOry() {
-    OAuth2Client.authenticate(this.oauth2Options)
-      .then(response => {
-        return this.auth.authenticateWithOry(response.access_token_response)
-      })
-      .then(() => this.auth.initSubjectInformation())
-      .then(() => {
-        this.usage.sendGeneralEvent(EnrolmentEventType.SUCCESS)
-        this.next()
-        this.next()
-      })
-      .catch(e => {
-        this.handleError(e)
-        this.loading = false
-        this.auth.reset()
-      })
-  }
-
   authenticate(authObj) {
-    if (!this.enterMetaQR)
+    if (!this.enterMetaQR) {
       this.usage.sendGeneralEvent(UsageEventType.QR_SCANNED)
+    }
     this.loading = true
     this.clearStatus()
     this.auth
-      .authenticate(authObj)
+      .authenticate(this.enrolmentMethod, authObj)
       .catch(e => {
-        if (e.status !== 409) throw e
+        if (e.status !== 409) throw e // Handle conflict error (409)
       })
-      .then(() => this.auth.initSubjectInformation())
-      .then(() => {
-        this.usage.sendGeneralEvent(EnrolmentEventType.SUCCESS)
-        this.next()
-      })
-      .catch(e => {
-        this.handleError(e)
-        this.loading = false
-        this.auth.reset()
-      })
+      .then(() => this.handleAuthenticationSuccess())
+      .catch(e => this.handleAuthenticationError(e))
+  }
+
+  handleAuthenticationSuccess() {
+    this.auth.initSubjectInformation().then(() => {
+      this.usage.sendGeneralEvent(EnrolmentEventType.SUCCESS)
+      this.next()
+    })
+  }
+
+  handleAuthenticationError(e) {
+    this.handleError(e)
+    this.loading = false
+    this.auth.reset()
   }
 
   handleError(e) {

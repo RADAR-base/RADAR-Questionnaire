@@ -85,9 +85,6 @@ export class EnrolmentPageComponent {
   }
 
   authenticate(authObj) {
-    if (!this.enterMetaQR) {
-      this.usage.sendGeneralEvent(UsageEventType.QR_SCANNED)
-    }
     this.loading = true
     this.clearStatus()
     this.auth

@@ -1,7 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core'
-import { OAuth2Client } from '@byteowls/capacitor-oauth2';
-import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
-import { DefaultOryAuthOptions } from 'src/assets/data/defaultConfig';
+import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning'
 
 @Component({
   selector: 'ory-form',
@@ -17,8 +15,21 @@ export class OryFormComponent {
 
   constructor() {}
 
-  loginWithOry() {
-    OAuth2Client.authenticate(DefaultOryAuthOptions)
-    .then(response => this.data.emit(response.access_token_response))
+  async scanQRHandler() {
+    document.querySelector('body').classList.add('scanner-active')
+    // Check camera permission
+    // This is just a simple example, check out the better checks below
+    await BarcodeScanner.requestPermissions()
+
+     // Add the `barcodeScanned` listener
+    const listener = await BarcodeScanner.addListener(
+    'barcodeScanned',
+    async result => {
+      await listener.remove();
+      this.data.emit(result.barcode.rawValue)
+      document.querySelector('body').classList.remove('scanner-active');
+    },
+    );
+    await BarcodeScanner.startScan() // start scanning and wait for a result
   }
 }

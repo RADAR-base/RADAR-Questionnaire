@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core'
-import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
-import { UsageService } from 'src/app/core/services/usage/usage.service';
-import { UsageEventType } from 'src/app/shared/enums/events';
+import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning'
+import { UsageService } from 'src/app/core/services/usage/usage.service'
+import { UsageEventType } from 'src/app/shared/enums/events'
 
 @Component({
   selector: 'qr-form',

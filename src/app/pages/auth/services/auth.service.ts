@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
+import { OAuth2Client } from '@byteowls/capacitor-oauth2'
 
 import {
   DefaultManagementPortalURI,
@@ -12,6 +13,7 @@ import { TokenService } from '../../../core/services/token/token.service'
 import { AnalyticsService } from '../../../core/services/usage/analytics.service'
 import { MetaToken, OAuthToken } from '../../../shared/models/token'
 import { isValidURL } from '../../../shared/utilities/form-validators'
+import { DefaultOryAuthOptions } from 'src/assets/data/defaultConfig'
 
 @Injectable({
   providedIn: 'root'
@@ -42,8 +44,22 @@ export class AuthService {
             .then(() => this.registerToken(refreshToken))
         )
       case 'ory':
-        return this.token.setTokens(authObj).then(() => this.registerAsSource())
+        return this.oryAuth(authObj).then(response =>
+          this.token.setTokens(authObj).then(() => this.registerAsSource())
+        )
     }
+  }
+
+  oryAuth(authObj) {
+    const parsedUrl = new URL(authObj)
+    const baseUrl = parsedUrl.origin
+    const projectId = parsedUrl.searchParams.get('projectId')
+    const options = DefaultOryAuthOptions
+    options.authorizationBaseUrl = baseUrl + '/oauth2/auth'
+    options.accessTokenEndpoint = baseUrl + '/oauth2/token'
+    return OAuth2Client.authenticate(DefaultOryAuthOptions).then(
+      response => response.access_token_response
+    )
   }
 
   metaTokenUrlAuth(authObj) {

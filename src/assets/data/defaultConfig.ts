@@ -21,6 +21,9 @@ export const DefaultAppVersion = '3.0.0-alpha'
 // *Default Android package name
 export const DefaultPackageName = 'org.phidatalab.radar_armt'
 
+// *Default iOS package name
+export const DefaultIosPackageName = 'org.phidatalab.radar-armt'
+
 // *Default iOS app id
 export const DefaultAppId = ''
 
@@ -66,7 +69,7 @@ export const DefaultShowTaskProgressCount = 'false'
 // DEFAULT URI
 
 // *The Default endpoint where the RADAR-base platform is hosted
-export const DefaultEndPoint: string = 'https://stage.radar-base.net'
+export const DefaultEndPoint: string = 'http://192.168.1.10:8080'
 
 export const DefaultManagementPortalURI = '/managementportal'
 export const DefaultRefreshTokenURI = '/oauth/token'
@@ -77,6 +80,9 @@ export const DefaultEnrolmentBaseURL =
 export const DefaultKafkaURI = '/kafka'
 export const DefaultQuestionnaireTypeURI = '_armt'
 export const DefaultQuestionnaireFormatURI = '.json'
+
+export const DefaultOryEndpoint = 'http://192.168.1.10:4444'
+export const DefaultOryScopes = 'SUBJECT.READ SUBJECT.UPDATE PROJECT.READ'
 
 export const DefaultGooglePlaystoreAppURL =
   'https://play.google.com/store/apps/details?id='
@@ -195,6 +201,27 @@ export const DefaultOAuthClientSecret = ''
 
 // *Default length of time to wait before refreshing tokens (REMOTE CONFIG KEY: `oauth_refresh_seconds`)
 export const DefaultTokenRefreshSeconds = 1800 // 30 minutes in s
+
+export const DefaultOryAuthOptions = {
+  authorizationBaseUrl: DefaultOryEndpoint + '/oauth2/auth',
+  accessTokenEndpoint: DefaultOryEndpoint + '/oauth2/token',
+  scope: DefaultOryScopes,
+  resourceUrl: '',
+  logsEnabled: true,
+  android: {
+    appId: DefaultOAuthClientId,
+    responseType: 'code',
+    redirectUrl: DefaultPackageName + ':/'
+  },
+  ios: {
+    appId: DefaultOAuthClientId,
+    responseType: 'code',
+    redirectUrl: DefaultIosPackageName + ':/'
+  },
+  additionalParameters: {
+    audience: 'res_ManagementPortal'
+  }
+}
 
 // DEFAULT HTTP REQUEST VALUES
 

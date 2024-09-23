@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
+import { OAuth2Client } from '@byteowls/capacitor-oauth2'
 
 import {
   DefaultManagementPortalURI,
@@ -12,6 +13,7 @@ import { TokenService } from '../../../core/services/token/token.service'
 import { AnalyticsService } from '../../../core/services/usage/analytics.service'
 import { MetaToken, OAuthToken } from '../../../shared/models/token'
 import { isValidURL } from '../../../shared/utilities/form-validators'
+import { DefaultOryAuthOptions } from 'src/assets/data/defaultConfig'
 
 @Injectable({
   providedIn: 'root'
@@ -32,16 +34,32 @@ export class AuthService {
     this.config.resetAll()
   }
 
-  authenticate(authObj) {
-    return (
-      isValidURL(authObj)
-        ? this.metaTokenUrlAuth(authObj)
-        : this.metaTokenJsonAuth(authObj)
-    ).then(refreshToken => {
-      return this.registerToken(refreshToken)
-        .then(() => this.registerAsSource())
-        .then(() => this.registerToken(refreshToken))
-    })
+  authenticate(method, authObj) {
+    switch (method) {
+      case 'qr':
+      case 'token':
+        return this.metaTokenUrlAuth(authObj).then(refreshToken =>
+          this.registerToken(refreshToken)
+            .then(() => this.registerAsSource())
+            .then(() => this.registerToken(refreshToken))
+        )
+      case 'ory':
+        return this.oryAuth(authObj).then(response =>
+          this.token.setTokens(authObj).then(() => this.registerAsSource())
+        )
+    }
+  }
+
+  oryAuth(authObj) {
+    const parsedUrl = new URL(authObj)
+    const baseUrl = parsedUrl.origin
+    const projectId = parsedUrl.searchParams.get('projectId')
+    const options = DefaultOryAuthOptions
+    options.authorizationBaseUrl = baseUrl + '/oauth2/auth'
+    options.accessTokenEndpoint = baseUrl + '/oauth2/token'
+    return OAuth2Client.authenticate(DefaultOryAuthOptions).then(
+      response => response.access_token_response
+    )
   }
 
   metaTokenUrlAuth(authObj) {
@@ -56,11 +74,6 @@ export class AuthService {
         .then(() => this.updateURI())
         .then(() => refreshToken)
     })
-  }
-
-  metaTokenJsonAuth(authObj) {
-    // NOTE: Old QR codes: containing refresh token as JSON
-    return this.updateURI().then(() => JSON.parse(authObj).refreshToken)
   }
 
   updateURI() {

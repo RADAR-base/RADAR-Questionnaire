@@ -3,12 +3,13 @@ import { Browser } from '@capacitor/browser'
 import { Device } from '@capacitor/device'
 import { NavController } from '@ionic/angular'
 import { AlertInput } from '@ionic/core'
+import { OAuth2Client } from '@byteowls/capacitor-oauth2'
 
 import {
   DefaultLanguage,
   DefaultPrivacyPolicyUrl,
   DefaultSettingsSupportedLanguages,
-  DefaultSettingsWeeklyReport
+  DefaultSettingsWeeklyReport,
 } from '../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
@@ -32,7 +33,7 @@ import { AuthService } from '../services/auth.service'
 })
 export class EnrolmentPageComponent {
   @ViewChild('swiper')
-  slides: ElementRef | undefined;
+  slides: ElementRef | undefined
 
   loading: boolean = false
   showOutcomeStatus: boolean = false
@@ -41,6 +42,7 @@ export class EnrolmentPageComponent {
   reportSettings: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
   language?: LanguageSetting = DefaultLanguage
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
+  enrolmentMethod = 'qr'
 
   constructor(
     public navCtrl: NavController,
@@ -69,39 +71,42 @@ export class EnrolmentPageComponent {
   }
 
   next() {
-      this.slides.nativeElement.swiper.allowSlideNext = true
-      const index = this.slides.nativeElement.swiper.activeIndex
-      const slideIndex = index + 1
-      this.slides.nativeElement.swiper.slideTo(slideIndex, 500)
-      this.slides.nativeElement.swiper.allowSlideNext = false
-      this.slides.nativeElement.swiper.allowSlidePrev = false
+    this.slides.nativeElement.swiper.allowSlideNext = true
+    const index = this.slides.nativeElement.swiper.activeIndex
+    const slideIndex = index + 1
+    this.slides.nativeElement.swiper.slideTo(slideIndex, 500)
+    this.slides.nativeElement.swiper.allowSlideNext = false
+    this.slides.nativeElement.swiper.allowSlidePrev = false
   }
 
-  enterToken() {
-    this.enterMetaQR = true
+  enrol(method) {
+    this.enrolmentMethod = method
     this.next()
   }
 
   authenticate(authObj) {
-    if (!this.enterMetaQR)
-      this.usage.sendGeneralEvent(UsageEventType.QR_SCANNED)
     this.loading = true
     this.clearStatus()
     this.auth
-      .authenticate(authObj)
+      .authenticate(this.enrolmentMethod, authObj)
       .catch(e => {
-        if (e.status !== 409) throw e
+        if (e.status !== 409) throw e // Handle conflict error (409)
       })
-      .then(() => this.auth.initSubjectInformation())
-      .then(() => {
-        this.usage.sendGeneralEvent(EnrolmentEventType.SUCCESS)
-        this.next()
-      })
-      .catch(e => {
-        this.handleError(e)
-        this.loading = false
-        this.auth.reset()
-      })
+      .then(() => this.handleAuthenticationSuccess())
+      .catch(e => this.handleAuthenticationError(e))
+  }
+
+  handleAuthenticationSuccess() {
+    this.auth.initSubjectInformation().then(() => {
+      this.usage.sendGeneralEvent(EnrolmentEventType.SUCCESS)
+      this.next()
+    })
+  }
+
+  handleAuthenticationError(e) {
+    this.handleError(e)
+    this.loading = false
+    this.auth.reset()
   }
 
   handleError(e) {
@@ -111,8 +116,8 @@ export class EnrolmentPageComponent {
       e.error && e.error.message
         ? e.error.message
         : e.status
-        ? e.statusText + ' (' + e.status + ')'
-        : e
+          ? e.statusText + ' (' + e.status + ')'
+          : e
     this.usage.sendGeneralEvent(
       e.status == 409 ? EnrolmentEventType.ERROR : EnrolmentEventType.FAIL,
       false,
@@ -158,7 +163,7 @@ export class EnrolmentPageComponent {
           label: this.localization.translate(lang.label),
           value: JSON.stringify(lang),
           checked: lang.value === this.language.value
-        } as AlertInput)
+        }) as AlertInput
     )
     return this.alertService.showAlert({
       header: this.localization.translateKey(LocKeys.SETTINGS_LANGUAGE_ALERT),

@@ -73,7 +73,7 @@
               class="bt bt--full"
               round
               full
-              (click)="next()"
+              (click)="enrol('qr')"
             >
               {{ 'BTN_ENROL_SCAN' | translate }}
             </ion-button>
@@ -84,9 +84,20 @@
               class="bt bt--full"
               round
               full
-              (click)="enterToken()"
+              (click)="enrol('token')"
             >
               {{ 'BTN_ENROL_ENTER_TOKEN' | translate }}
+            </ion-button>
+          </p>
+          <p>
+            <ion-button
+              ion-button
+              class="bt bt--full"
+              round
+              full
+              (click)="enrol('ory')"
+            >
+              {{ 'BTN_ENROL_KRATOS' | translate }}
             </ion-button>
           </p>
         </div>
@@ -98,20 +109,28 @@
       <ion-card>
         <div class="registration">
           <div class="text text-lg">{{ 'ENROL_REGISTRATION' | translate }}</div>
-          <ng-container *ngIf="enterMetaQR">
-            <token-form
-              [loading]="loading"
-              (data)="authenticate($event)"
-              (focus)="clearStatus()"
-              (errors)="handleError($event)"
-            ></token-form>
-          </ng-container>
-          <ng-container *ngIf="!enterMetaQR">
-            <qr-form
-              [loading]="loading"
-              (data)="authenticate($event)"
-            ></qr-form>
-          </ng-container>
+          <div [ngSwitch]="enrolmentMethod">
+            <ng-container *ngSwitchCase="'token'">
+              <token-form
+                [loading]="loading"
+                (data)="authenticate($event)"
+                (focus)="clearStatus()"
+                (errors)="handleError($event)"
+              ></token-form>
+            </ng-container>
+            <ng-container *ngSwitchCase="'qr'">
+              <qr-form
+                [loading]="loading"
+                (data)="authenticate($event)"
+              ></qr-form>
+            </ng-container>
+            <ng-container *ngSwitchCase="'ory'">
+              <ory-form
+                [loading]="loading"
+                (data)="authenticate($event)"
+              ></ory-form>
+            </ng-container>
+          </div>
         </div>
       </ion-card>
       <div class="status">

@@ -91,7 +91,6 @@
     "cordova-lib": "^9.0.1",
     "cordova-plugin-android-permissions": "^1.1.2",
     "cordova-plugin-app-version": "^0.1.12",
-    "cordova-plugin-badge": "^0.8.8",
     "cordova-plugin-camera": "^5.0.2",
     "cordova-plugin-device": "^2.0.3",
     "cordova-plugin-dialogs": "^2.0.2",
@@ -99,7 +98,6 @@
     "cordova-plugin-insomnia": "^4.3.0",
     "cordova-plugin-ionic-keyboard": "^2.2.0",
     "cordova-plugin-local-notification": "^0.9.0-beta.3",
-    "cordova-plugin-splashscreen": "^6.0.0",
     "cordova-plugin-statusbar": "^2.4.3",
     "cordova-plugin-vibration": "^3.1.1",
     "cordova-support-android-plugin": "^1.0.2",
@@ -141,7 +139,7 @@
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",
     "codelyzer": "^6.0.2",
-    "cordova-android": "^10.1.2",
+    "cordova-android": "^13.0.0",
     "cordova-ios": "^6.3.0",
     "cordova-plugin-app-launcher": "^0.4.0",
     "cordova-plugin-background-mode": "https://bitbucket.org/TheBosZ/cordova-plugin-run-in-background",
@@ -206,12 +204,10 @@
   },
   "cordova": {
     "platforms": [
-      "android",
       "ios"
     ],
     "plugins": {
       "cordova-plugin-device": {},
-      "cordova-plugin-splashscreen": {},
       "cordova-plugin-statusbar": {},
       "cordova-sqlite-storage": {},
       "cordova-plugin-dialogs": {},

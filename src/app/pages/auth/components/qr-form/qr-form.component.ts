@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core'
-import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
+import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning'
 
 @Component({
   selector: 'qr-form',
@@ -21,15 +21,17 @@ export class QRFormComponent {
     // This is just a simple example, check out the better checks below
     await BarcodeScanner.requestPermissions()
 
-     // Add the `barcodeScanned` listener
+    // Add the `barcodeScanned` listener
     const listener = await BarcodeScanner.addListener(
-    'barcodeScanned',
-    async result => {
-      await listener.remove();
-      this.data.emit(result.barcode.rawValue)
-      document.querySelector('body').classList.remove('scanner-active');
-    },
-    );
+      'barcodeScanned',
+      async result => {
+        await listener.remove()
+        this.data.emit(result.barcode.rawValue)
+
+        // Removes the class after the scan (workaround for the camera not closing)
+        document.querySelector('body').classList.remove('scanner-active')
+      }
+    )
     await BarcodeScanner.startScan() // start scanning and wait for a result
   }
 }

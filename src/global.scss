@@ -42,7 +42,6 @@ ion-content {
 
 :root {
   --ion-font-family: 'Montserrat', sans-serif;
-}
 
 body {
   background-color: var(--cl-secondary);
@@ -56,20 +55,25 @@ body {
 
 ion-button {
   margin: 0;
+
   --padding-top: 8px;
   --padding-bottom: 8px;
   --padding-start: 32px;
   --padding-end: 32px;
+
   height: var(--bt-height);
+
   --border-color: white;
   --border-width: 2px;
   --border-style: solid;
   --border-radius: var(--bt-height);
   --background: var(--cl-primary-20);
   --box-shadow: none;
+
   text-transform: none;
   font-size: 18px;
   line-height: 1.35em;
+
   --ripple-color: transparent;
 }
 
@@ -164,31 +168,46 @@ ion-loading.custom-loading {
 }
 
 .li-ionic4-datePicker {
+  ion-button {
+    --ion-color-primary: white;
+    --border-color: none;
+    --border-width: 0 !important;
+  }
+
   .modal-wrapper {
     height: 440px;
     max-height: 100%;
     width: 312px;
+
     ion-button {
       --ion-color-primary: white;
-      --border-radious: 5px;
       --border-color: none;
-      --border-width: 0px !important;
+      --border-width: 0 !important;
     }
+
     ion-footer {
       ion-button {
         --border-width: 2px;
-        --ion-color-primary: var(--ion-color-primary);
+        --border-style: solid;
+        --border-color: white; /* Adjust border color if needed */
+        --background: var(
+          --ion-color-primary
+        ); /* Background uses primary color */
+
+        --color: white; /* Button text color */
       }
     }
 
     .dp-month-year-scroll-container {
       ion-item {
         background-color: var(--ion-color-secondary) !important;
+
         ion-label {
           padding: 5px;
           color: white;
           background-color: var(--ion-color-secondary) !important;
         }
+
         ion-label.dp-selected {
           color: var(--ion-color-primary);
           font-size: 20px;
@@ -199,7 +218,8 @@ ion-loading.custom-loading {
   }
 }
 
-.alert-sub-title.sc-ion-alert-md, .alert-title.sc-ion-alert-md {
+.alert-sub-title.sc-ion-alert-md,
+.alert-title.sc-ion-alert-md {
   color: var(--ion-color-primary) !important;
 }
 
@@ -210,4 +230,5 @@ body.scanner-active {
 
 ion-modal {
   --background: transparent !important;
+}http
 }

@@ -323,4 +323,4 @@ export const DefaultHealthkitPermissions = [
 ]
 
 // *Default lookback interval to pull Healthkit data from
-export const DefaultHealthkitLookbackInterval = 100
+export const DefaultHealthkitLookbackInterval = 1000

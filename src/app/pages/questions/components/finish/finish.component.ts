@@ -54,13 +54,24 @@ export class FinishComponent implements OnChanges {
   ) {}
 
   ngOnChanges() {
-    if (this.isShown) this.usage.setPage(this.constructor.name)
-    if (this.progressCount == 1) this.showDoneButton = true
+    if (this.isShown) {
+      this.usage.setPage(this.constructor.name)
+    }
+
+    this.showDoneButton = this.progressCount >= 1
+
     this.displayNextTaskReminder =
       this.taskType == AssessmentType.SCHEDULED && !this.isLastTask
+
     this.innerText = this.getFinishButtonText(this.progressCount)
     this.shadowStyle = this.getProgressBarStyle(this.progressCount)
-    this.progressDisplay = Math.ceil(this.progressCount) * 100
+
+    // Ensure progress is within a valid range for displaying ETA
+    this.progressDisplay = Math.min(
+      Math.max(Math.ceil(this.progressCount * 100), 1),
+      99
+    )
+
     this.etaText = this.getEtaText(this.progressDisplay)
   }
 
@@ -73,10 +84,14 @@ export class FinishComponent implements OnChanges {
   }
 
   getEtaText(progress) {
-    const duration = getMinutes({ milliseconds: Date.now() - this.startTime })
-    return (
-      'About ' + (duration * (100 - progress)) / progress + ' minutes remaining'
-    )
+    if (progress <= 0) {
+      return 'Calculating time remaining...'
+    }
+
+    const elapsedTime = (Date.now() - this.startTime) / 1000 // Convert milliseconds to seconds
+    const remainingTime = (elapsedTime * (100 - progress)) / progress
+
+    return 'About ' + remainingTime.toFixed(0) + ' seconds remaining'
   }
 
   getProgressBarStyle(progress) {
@@ -87,7 +102,7 @@ export class FinishComponent implements OnChanges {
 
   getFinishButtonText(progress) {
     return progress < 1
-     ? this.localization.translateKey(LocKeys.SETTINGS_WAIT_ALERT) + '...'
-     : this.localization.translateKey(LocKeys.BTN_DONE)
+      ? this.localization.translateKey(LocKeys.SETTINGS_WAIT_ALERT) + '...'
+      : this.localization.translateKey(LocKeys.BTN_DONE)
   }
 }

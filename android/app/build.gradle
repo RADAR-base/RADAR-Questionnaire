@@ -7,7 +7,7 @@ android {
         applicationId "org.phidatalab.radar_armt"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 585
+        versionCode 586
         versionName "3.3.0-alpha"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {

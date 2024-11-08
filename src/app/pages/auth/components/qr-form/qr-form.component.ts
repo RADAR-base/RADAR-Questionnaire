@@ -16,6 +16,7 @@ export class QRFormComponent {
   constructor() {}
 
   async scanQRHandler() {
+    this.loading = true
     document.querySelector('body').classList.add('scanner-active')
     // Check camera permission
     // This is just a simple example, check out the better checks below
@@ -27,6 +28,7 @@ export class QRFormComponent {
     async result => {
       await listener.remove();
       this.data.emit(result.barcode.rawValue)
+      this.loading = false
       document.querySelector('body').classList.remove('scanner-active');
     },
     );

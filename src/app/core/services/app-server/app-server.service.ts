@@ -454,7 +454,6 @@ export class AppServerService {
   }
 
   getFCMToken() {
-    return 'test'
     return this.storage.get(StorageKeys.FCM_TOKEN)
   }
 
@@ -464,7 +463,7 @@ export class AppServerService {
       .then(config =>
         config.getOrDefault(ConfigKeys.APP_SERVER_URL, DefaultAppServerURL)
       )
-      .then(url => (this.APP_SERVER_URL = DefaultAppServerURL))
+      .then(url => (this.APP_SERVER_URL = url))
   }
 
   getAppServerURL() {

@@ -22,6 +22,16 @@ export class RemoteConfigServiceMock {
     return new Subject()
   }
 }
+
+export class KeyConverterServiceMock {
+  getKafkaTopic() {
+    return Promise.resolve()
+  }
+  getSchemas() {
+    return Promise.resolve()
+  }
+}
+
 export class LogServiceMock {
   log() {}
 }

@@ -26,8 +26,8 @@ import { RemoteConfigService } from '../config/remote-config.service'
 import { SubjectConfigService } from '../config/subject-config.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
-import { GlobalStorageService } from '../storage/global-storage.service'
 import { TokenService } from '../token/token.service'
+import { StorageService } from '../storage/storage.service'
 
 @Injectable()
 export class AppServerService {
@@ -43,7 +43,7 @@ export class AppServerService {
   private tokenSubscription: Subscription = null
 
   constructor(
-    public storage: GlobalStorageService,
+    public storage: StorageService,
     public subjectConfig: SubjectConfigService,
     public logger: LogService,
     public remoteConfig: RemoteConfigService,
@@ -94,6 +94,12 @@ export class AppServerService {
             return httpRes
           })
       )
+      .catch(e => {
+        throw new HttpErrorResponse({
+          status: e.status,
+          statusText: 'Unable to connect to the appserver.'
+        })
+      })
   }
 
   getHeaders() {

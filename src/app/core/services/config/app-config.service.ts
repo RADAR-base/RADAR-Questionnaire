@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { AppVersion } from '@ionic-native/app-version/ngx'
+import { App } from '@capacitor/app'
 
 import {
   DefaultAppVersion,
@@ -9,7 +9,7 @@ import {
 } from '../../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { setDateTimeToMidnightEpoch } from '../../../shared/utilities/time'
-import { GlobalStorageService } from '../storage/global-storage.service'
+import { Capacitor } from '@capacitor/core'
 import { StorageService } from '../storage/storage.service'
 
 @Injectable()
@@ -25,10 +25,7 @@ export class AppConfigService {
     SETTINGS_WEEKLYREPORT: StorageKeys.SETTINGS_WEEKLYREPORT
   }
 
-  constructor(
-    public storage: GlobalStorageService,
-    private appVersion: AppVersion
-  ) {}
+  constructor(public storage: StorageService) {}
 
   init(enrolmentDate) {
     return Promise.all([
@@ -40,8 +37,12 @@ export class AppConfigService {
     ])
   }
 
-  getAppVersion() {
-    return this.appVersion.getVersionNumber().catch(() => DefaultAppVersion)
+  async getAppVersion() {
+    if (Capacitor.isNative) {
+      const appInfo = await App.getInfo()
+      return appInfo.version
+    }
+    else return DefaultAppVersion
   }
 
   getStoredAppVersion() {

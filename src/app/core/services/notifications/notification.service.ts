@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core'
 
 import { StorageKeys } from '../../../shared/enums/storage'
-import { GlobalStorageService } from '../storage/global-storage.service'
 import { StorageService } from '../storage/storage.service'
 
 @Injectable({
@@ -12,7 +11,7 @@ export abstract class NotificationService {
     LAST_NOTIFICATION_UPDATE: StorageKeys.LAST_NOTIFICATION_UPDATE,
     NOTIFICATION_MESSAGING_TYPE: StorageKeys.NOTIFICATION_MESSAGING_TYPE
   }
-  constructor(public storage: GlobalStorageService) {}
+  constructor(public storage: StorageService) {}
 
   abstract init()
 

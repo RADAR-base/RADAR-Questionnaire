@@ -5,7 +5,6 @@ import {
   StorageServiceMock,
   TokenServiceMock
 } from '../../../shared/testing/mock-services'
-import { GlobalStorageService } from '../storage/global-storage.service'
 import { StorageService } from '../storage/storage.service'
 import { TokenService } from '../token/token.service'
 import { SubjectConfigService } from './subject-config.service'
@@ -17,7 +16,7 @@ describe('SubjectConfigService', () => {
     TestBed.configureTestingModule({
       providers: [
         SubjectConfigService,
-        { provide: GlobalStorageService, useClass: StorageServiceMock },
+        { provide: StorageService, useClass: StorageServiceMock },
         HttpClient,
         HttpHandler,
         { provide: TokenService, useClass: TokenServiceMock }

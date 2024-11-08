@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { NgModule } from '@angular/core'
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { RouterModule, Routes } from '@angular/router'
 import { IonicModule } from '@ionic/angular'
@@ -29,6 +29,7 @@ const routes: Routes = [
     ReactiveFormsModule
   ],
   declarations: [EnrolmentPageComponent, TokenFormComponent, QRFormComponent],
-  providers: [AuthService, AuthGuard]
+  providers: [AuthService, AuthGuard],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AuthModule {}

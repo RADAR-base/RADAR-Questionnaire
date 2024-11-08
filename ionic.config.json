@@ -1,7 +1,7 @@
 {
-  "name": "radar-questionnaire",
+  "name": "RADAR Active RMT",
   "integrations": {
-    "cordova": {}
+    "capacitor": {}
   },
   "type": "angular"
 }

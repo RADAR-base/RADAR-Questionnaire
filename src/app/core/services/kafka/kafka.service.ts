@@ -16,7 +16,6 @@ import { CacheValue, KeyValue } from '../../../shared/models/cache'
 import { KafkaObject, SchemaType } from '../../../shared/models/kafka'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { LogService } from '../misc/log.service'
-import { GlobalStorageService } from '../storage/global-storage.service'
 import { StorageService } from '../storage/storage.service'
 import { TokenService } from '../token/token.service'
 import { AnalyticsService } from '../usage/analytics.service'
@@ -38,7 +37,7 @@ export class KafkaService {
   HTTP_ERROR = 'HttpErrorResponse'
 
   constructor(
-    private storage: GlobalStorageService,
+    private storage: StorageService,
     private cache: CacheService,
     private token: TokenService,
     private schema: SchemaService,
@@ -151,11 +150,10 @@ export class KafkaService {
     this.cache.setCacheSending(true)
     return Promise.all([
       this.cache.getCache(),
-      this.cache.getHealthCache(),
       this.getKafkaHeaders(DefaultKafkaRequestContentType)
     ])
-      .then(([cache, healthCache, headers]) => {
-        const completeCache = { ...cache, ...healthCache }
+      .then(([cache, headers]) => {
+        const completeCache = { ...cache }
         return this.convertCacheToRecords(completeCache).then(records => {
           return Promise.all(
             records.map(r =>
@@ -175,7 +173,6 @@ export class KafkaService {
       .then(() =>
         this.cache
           .removeFromCache(successKeys)
-          .then(() => this.cache.removeFromHealthCache(successKeys))
           .then(() => {
             this.cache.setCacheSending(false)
             return { successKeys, failedKeys }
@@ -256,13 +253,6 @@ export class KafkaService {
       .toPromise()
   }
 
-  removeFromHealthCache(cacheKeys: number[]) {
-    // if (!cacheKeys.length) return Promise.resolve()
-    // return this.storage
-    //   .removeHealthData(cacheKeys)
-    //   .then(() => this.setLastUploadDate(Date.now()))
-  }
-
   getAccessToken() {
     return Promise.all([this.updateURI(), this.token.refresh()])
       .then(() => this.token.getTokens())
@@ -300,10 +290,6 @@ export class KafkaService {
 
   getLastUploadDate() {
     return this.cache.getLastUploadDate()
-  }
-
-  getHealthCacheSize() {
-    return this.cache.getHealthCacheSize()
   }
 
   getCacheSize() {

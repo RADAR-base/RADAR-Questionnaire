@@ -6,26 +6,6 @@ import { BrowserModule } from '@angular/platform-browser'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { RouterModule } from '@angular/router'
 import { JWT_OPTIONS, JwtModule } from '@auth0/angular-jwt'
-import { Health } from '@awesome-cordova-plugins/health/ngx'
-import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx'
-import { AndroidPermissions } from '@ionic-native/android-permissions/ngx'
-import { AppLauncher } from '@ionic-native/app-launcher/ngx'
-import { AppVersion } from '@ionic-native/app-version/ngx'
-import { BackgroundMode } from '@ionic-native/background-mode/ngx'
-import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx'
-import { Device } from '@ionic-native/device/ngx'
-import { Dialogs } from '@ionic-native/dialogs/ngx'
-import { File } from '@ionic-native/file/ngx'
-import { FirebaseX } from '@ionic-native/firebase-x/ngx'
-import { Globalization } from '@ionic-native/globalization/ngx'
-import { Insomnia } from '@ionic-native/insomnia/ngx'
-import { Keyboard } from '@ionic-native/keyboard/ngx'
-import { LocalNotifications } from '@ionic-native/local-notifications/ngx'
-import { MobileAccessibility } from '@ionic-native/mobile-accessibility/ngx'
-import { SplashScreen } from '@ionic-native/splash-screen/ngx'
-import { StatusBar } from '@ionic-native/status-bar/ngx'
-import { Vibration } from '@ionic-native/vibration/ngx'
-import { WebIntent } from '@ionic-native/web-intent/ngx'
 import { IonicModule } from '@ionic/angular'
 import { IonicStorageModule, Storage } from '@ionic/storage'
 
@@ -67,8 +47,6 @@ import { LocalScheduleService } from './core/services/schedule/local-schedule.se
 import { ScheduleFactoryService } from './core/services/schedule/schedule-factory.service'
 import { ScheduleGeneratorService } from './core/services/schedule/schedule-generator.service'
 import { ScheduleService } from './core/services/schedule/schedule.service'
-import { GlobalStorageService } from './core/services/storage/global-storage.service'
-import { HealthStorageService } from './core/services/storage/health-storage.service'
 import { StorageService } from './core/services/storage/storage.service'
 import { TokenService } from './core/services/token/token.service'
 import { AnalyticsService } from './core/services/usage/analytics.service'
@@ -76,7 +54,6 @@ import { FirebaseAnalyticsService } from './core/services/usage/firebase-analyti
 import { UsageService } from './core/services/usage/usage.service'
 import { PagesModule } from './pages/pages.module'
 import { TranslatePipe } from './shared/pipes/translate/translate'
-import { AndroidPermissionUtility } from './shared/utilities/android-permission'
 import { jwtOptionsFactory } from './shared/utilities/jwtOptionsFactory'
 import { Utility } from './shared/utilities/util'
 
@@ -89,7 +66,8 @@ import { Utility } from './shared/utilities/util'
     IonicModule.forRoot({
       mode: 'md',
       scrollAssist: false,
-      scrollPadding: false
+      scrollPadding: false,
+      innerHTMLTemplatesEnabled: true
     }),
     RouterModule.forRoot([]),
     IonicStorageModule.forRoot({
@@ -110,27 +88,7 @@ import { Utility } from './shared/utilities/util'
   bootstrap: [AppComponent],
   entryComponents: [AppComponent],
   providers: [
-    Health,
-    Device,
-    StatusBar,
-    SplashScreen,
     Utility,
-    BarcodeScanner,
-    Dialogs,
-    Vibration,
-    Globalization,
-    AndroidPermissionUtility,
-    AndroidPermissions,
-    File,
-    AppVersion,
-    WebIntent,
-    MobileAccessibility,
-    Insomnia,
-    InAppBrowser,
-    BackgroundMode,
-    Keyboard,
-    FirebaseX,
-    LocalNotifications,
     LogService,
     LocalScheduleService,
     AppserverScheduleService,
@@ -148,9 +106,7 @@ import { Utility } from './shared/utilities/util'
     KafkaService,
     LocalizationService,
     ScheduleGeneratorService,
-    GlobalStorageService,
-    HealthStorageService,
-    { provide: StorageService, useClass: GlobalStorageService },
+    StorageService,
     TranslatePipe,
     UsageService,
     SchemaService,
@@ -169,8 +125,7 @@ import { Utility } from './shared/utilities/util'
     MessageHandlerService,
     { provide: NotificationService, useClass: NotificationFactoryService },
     { provide: AnalyticsService, useClass: FirebaseAnalyticsService },
-    GithubClient,
-    AppLauncher
+    GithubClient
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

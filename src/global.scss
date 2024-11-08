@@ -164,20 +164,27 @@ ion-loading.custom-loading {
 }
 
 .li-ionic4-datePicker {
+  ion-button {
+    --ion-color-primary: white;
+    --border-color: none;
+    --border-width: 0 !important;
+  }
   .modal-wrapper {
     height: 440px;
     max-height: 100%;
     width: 312px;
     ion-button {
       --ion-color-primary: white;
-      --border-radious: 5px;
       --border-color: none;
-      --border-width: 0px !important;
+      --border-width: 0 !important;
     }
     ion-footer {
       ion-button {
         --border-width: 2px;
-        --ion-color-primary: var(--ion-color-primary);
+        --border-style: solid;
+        --border-color: white; /* Adjust border color if needed */
+        --background: var(--ion-color-primary); /* Background uses primary color */
+        --color: white; /* Button text color */
       }
     }
 
@@ -201,4 +208,13 @@ ion-loading.custom-loading {
 
 .alert-sub-title.sc-ion-alert-md, .alert-title.sc-ion-alert-md {
   color: var(--ion-color-primary) !important;
+}
+
+body.scanner-active {
+  background: transparent;
+  opacity: 0.2;
+}
+
+ion-modal {
+  --background: transparent !important;
 }

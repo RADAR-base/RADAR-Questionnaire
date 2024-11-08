@@ -1,14 +1,6 @@
-import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpResponse
-} from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { FirebaseX } from '@ionic-native/firebase-x/ngx'
-import { WebIntent } from '@ionic-native/web-intent/ngx'
 import { Platform } from '@ionic/angular'
 import { Subscription } from 'rxjs'
-import * as urljoin from 'url-join'
 
 import {
   DefaultPackageName,
@@ -31,10 +23,10 @@ import { SubjectConfigService } from '../config/subject-config.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
 import { ScheduleService } from '../schedule/schedule.service'
-import { GlobalStorageService } from '../storage/global-storage.service'
 import { StorageService } from '../storage/storage.service'
 import { FcmNotificationService } from './fcm-notification.service'
 import { NotificationGeneratorService } from './notification-generator.service'
+import { GrabIntentExtras } from 'capacitor-grab-intent-extras'
 
 @Injectable()
 export class FcmRestNotificationService extends FcmNotificationService {
@@ -46,18 +38,16 @@ export class FcmRestNotificationService extends FcmNotificationService {
 
   constructor(
     public notifications: NotificationGeneratorService,
-    public storage: GlobalStorageService,
+    public storage: StorageService,
     public schedule: ScheduleService,
     public config: SubjectConfigService,
-    public firebase: FirebaseX,
     public platform: Platform,
     public logger: LogService,
     public remoteConfig: RemoteConfigService,
     public localization: LocalizationService,
     private appServerService: AppServerService,
-    private webIntent: WebIntent
   ) {
-    super(storage, config, firebase, platform, logger, remoteConfig)
+    super(storage, config, platform, logger, remoteConfig)
     this.platform.ready().then(() => {
       this.onAppOpen()
       this.resumeListener = this.platform.resume.subscribe(() =>
@@ -71,10 +61,9 @@ export class FcmRestNotificationService extends FcmNotificationService {
   }
 
   onAppOpen() {
-    return this.webIntent.getIntent().then(intent => {
-      if (!intent.extras) return
-      const extras = intent.extras['google.message_id'].split(':')
-      const messageId = extras[extras.length - 1]
+    return GrabIntentExtras.getIntentExtras().then(extras => {
+      if (!extras) return
+      const messageId = extras['google.message_id'].split(':').slice(-1)
       return Promise.all([
         this.getSubjectDetails(),
         this.schedule.getTasks(AssessmentType.ALL)

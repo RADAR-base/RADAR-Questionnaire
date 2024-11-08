@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core'
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core'
 import { Router } from '@angular/router'
-import { Insomnia } from '@ionic-native/insomnia/ngx'
-import { IonSlides, NavController, Platform } from '@ionic/angular'
+import { KeepAwake } from '@capacitor-community/keep-awake'
+import { NavController, Platform } from '@ionic/angular'
 import { Subscription } from 'rxjs'
 
 import { AlertService } from '../../../core/services/misc/alert.service'
@@ -32,7 +32,8 @@ import { QuestionsService } from '../services/questions.service'
   styleUrls: ['questions-page.component.scss']
 })
 export class QuestionsPageComponent implements OnInit {
-  @ViewChild(IonSlides, { static: true }) slides: IonSlides
+  @ViewChild('swiper')
+  slides: ElementRef | undefined
 
   startTime: number
   currentQuestionGroupId = 0
@@ -77,7 +78,6 @@ export class QuestionsPageComponent implements OnInit {
     private questionsService: QuestionsService,
     private usage: UsageService,
     private platform: Platform,
-    private insomnia: Insomnia,
     private localization: LocalizationService,
     private router: Router,
     private appLauncher: AppLauncherService,
@@ -86,14 +86,13 @@ export class QuestionsPageComponent implements OnInit {
     this.backButtonListener = this.platform.backButton.subscribe(() => {
       this.sendCompletionLog()
       navigator['app'].exitApp()
-      // this.platform.exitApp()
     })
   }
 
   ionViewDidLeave() {
+    KeepAwake.allowSleep()
     this.sendCompletionLog()
     this.questionsService.reset()
-    this.insomnia.allowSleepAgain()
     this.backButtonListener.unsubscribe()
   }
 
@@ -109,15 +108,19 @@ export class QuestionsPageComponent implements OnInit {
           this.initQuestionnaire(res)
           return this.updateToolbarButtons()
         })
-      this.sendEvent(UsageEventType.QUESTIONNAIRE_STARTED)
-      this.usage.setPage(this.constructor.name)
-      this.slides.lockSwipes(true)
-      this.insomnia.keepAwake()
     }
   }
 
   ionViewWillEnter() {
-    this.slides.update()
+    this.slides.nativeElement.swiper.update()
+  }
+
+  ionViewDidEnter() {
+    this.sendEvent(UsageEventType.QUESTIONNAIRE_STARTED)
+    this.usage.setPage(this.constructor.name)
+    this.slides.nativeElement.swiper.allowSlideNext = false
+    this.slides.nativeElement.swiper.allowSlidePrev = false
+    KeepAwake.keepAwake()
   }
 
   initQuestionnaire(res) {
@@ -168,7 +171,7 @@ export class QuestionsPageComponent implements OnInit {
       this.taskType
     )
     if (start) {
-      this.slides.update()
+      this.slides.nativeElement.swiper.update()
       this.slideQuestion()
     } else this.exitQuestionnaire()
   }
@@ -187,12 +190,36 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   slideQuestion() {
-    this.slides
-      .lockSwipes(false)
-      .then(() => this.slides.slideTo(this.currentQuestionGroupId, 300))
-      .then(() => this.slides.lockSwipes(true))
+    // Check if swiper instance is available before sliding
+    if (
+      this.slides &&
+      this.slides.nativeElement &&
+      this.slides.nativeElement.swiper
+    ) {
+      // Force swiper to update and prepare for sliding
+      this.slides.nativeElement.swiper.update()
 
-    this.startTime = this.questionsService.getTime()
+      // Allow sliding temporarily
+      this.slides.nativeElement.swiper.allowSlideNext = true
+      this.slides.nativeElement.swiper.allowSlidePrev = true
+
+      // Slide to the target question, with a small delay for stability
+      setTimeout(() => {
+        this.slides.nativeElement.swiper.slideTo(
+          this.currentQuestionGroupId,
+          400
+        )
+
+        // Disable sliding again after moving
+        this.slides.nativeElement.swiper.allowSlideNext = false
+        this.slides.nativeElement.swiper.allowSlidePrev = false
+      }, 100) // Adjust delay as needed
+    } else {
+      console.warn('Swiper instance not ready, retrying...')
+
+      // Retry with a slight delay if Swiper instance isn't available yet
+      setTimeout(() => this.slideQuestion(), 100)
+    }
   }
 
   getCurrentQuestions() {
@@ -263,17 +290,70 @@ export class QuestionsPageComponent implements OnInit {
   exitQuestionnaire() {
     this.sendEvent(UsageEventType.QUESTIONNAIRE_CANCELLED)
     this.navCtrl.navigateBack('/home')
-    // this.navCtrl.pop({ animation: 'wp-transition' })
   }
 
   navigateToFinishPage() {
+    // Send the finish event and submit timestamps
     this.sendEvent(UsageEventType.QUESTIONNAIRE_FINISHED)
     this.submitTimestamps()
+
+    // Set the finish screen to show
     this.showFinishScreen = true
-    this.slides
-      .lockSwipes(false)
-      .then(() => this.slides.slideTo(this.groupedQuestions.size, 500))
-      .then(() => this.slides.lockSwipes(true))
+
+    // Ensure swiper instance is ready before navigating
+    if (
+      this.slides &&
+      this.slides.nativeElement &&
+      this.slides.nativeElement.swiper
+    ) {
+      // Update swiper to sync with current state
+      this.slides.nativeElement.swiper.update()
+
+      // Allow sliding to the final slide
+      this.slides.nativeElement.swiper.allowSlideNext = true
+
+      // Navigate to the last slide (finish screen), with a slight delay for stability
+      const finishIndex = this.groupedQuestions.size
+      setTimeout(() => {
+        this.slides.nativeElement.swiper
+          .slideTo(finishIndex, 500)
+          .then(() => {
+            // Disable sliding after reaching the finish screen
+            this.slides.nativeElement.swiper.allowSlideNext = false
+          })
+          .catch(error => {
+            console.warn('Slide transition to finish page failed:', error)
+            // Retry slide transition if it fails
+            this.retryFinishSlide(finishIndex)
+          })
+      }, 100) // Adjust delay as needed
+    } else {
+      console.warn(
+        'Swiper instance not ready, retrying navigateToFinishPage...'
+      )
+      // Retry if swiper instance isn't available yet
+      setTimeout(() => this.navigateToFinishPage(), 100)
+    }
+  }
+
+  // Retry function for sliding to the finish page
+  retryFinishSlide(targetIndex: number) {
+    if (
+      this.slides &&
+      this.slides.nativeElement &&
+      this.slides.nativeElement.swiper
+    ) {
+      this.slides.nativeElement.swiper.update() // Ensure swiper is updated
+      this.slides.nativeElement.swiper
+        .slideTo(targetIndex, 500)
+        .then(() => {
+          // Disable sliding after reaching the finish screen
+          this.slides.nativeElement.swiper.allowSlideNext = false
+        })
+        .catch(error =>
+          console.warn('Retry failed for finish page transition:', error)
+        )
+    }
   }
 
   updateDoneButton(val: boolean) {

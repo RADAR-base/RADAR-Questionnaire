@@ -1,14 +1,14 @@
 .info-card {
-  padding: 16px;
+  padding: 28px;
   height: 92%;
   -webkit-border-radius: 8px;
   border-radius: 8px;
   background-color: var(--cl-primary-20);
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
 ion-content {
-  width: 75vw;
+  width: 100%;
   --background: transparent;
   mask-image: -webkit-gradient(
     linear,

@@ -1,10 +1,7 @@
-import { Component, ViewChild } from '@angular/core'
-import {
-  InAppBrowser,
-  InAppBrowserOptions
-} from '@awesome-cordova-plugins/in-app-browser/ngx'
-import { Globalization } from '@ionic-native/globalization/ngx'
-import { IonSlides, NavController } from '@ionic/angular'
+import { Component, ElementRef, ViewChild } from '@angular/core'
+import { Browser } from '@capacitor/browser'
+import { Device } from '@capacitor/device'
+import { NavController } from '@ionic/angular'
 import { AlertInput } from '@ionic/core'
 
 import {
@@ -34,7 +31,9 @@ import { AuthService } from '../services/auth.service'
   styleUrls: ['./enrolment-page.component.scss']
 })
 export class EnrolmentPageComponent {
-  @ViewChild(IonSlides, { static: true }) slides: IonSlides
+  @ViewChild('swiper')
+  slides: ElementRef | undefined
+
   loading: boolean = false
   showOutcomeStatus: boolean = false
   outcomeStatus: string
@@ -42,47 +41,90 @@ export class EnrolmentPageComponent {
   reportSettings: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
   language?: LanguageSetting = DefaultLanguage
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
-  browserOptions: InAppBrowserOptions = {
-    location: 'yes',
-    hidenavigationbuttons: 'yes',
-    hideurlbar: 'yes',
-    toolbarcolor: '#6d9aa5',
-    closebuttoncolor: '#ffffff'
-  }
 
   constructor(
     public navCtrl: NavController,
-    private theInAppBrowser: InAppBrowser,
     private auth: AuthService,
     private localization: LocalizationService,
     private alertService: AlertService,
     private usage: UsageService,
-    private logger: LogService,
-    private globalization: Globalization
+    private logger: LogService
   ) {
-    this.globalization.getPreferredLanguage().then(res => {
-      // Language value is in BCP 47 format (e.g. en-US)
-      const tag = res.value.split('-')[0]
-      let lang = this.languagesSelectable.find(a => a.value == tag)
-      this.language = lang ? lang : this.language
-      this.localization.setLanguage(this.language)
-    })
+    this.init()
+  }
+
+  async init() {
+    const languageTag = await Device.getLanguageTag()
+    // Language value is in BCP 47 format (e.g. en-US)
+    const tag = languageTag.value.split('-')[0]
+    let lang = this.languagesSelectable.find(a => a.value == tag)
+    this.language = lang ? lang : this.language
+    this.localization.setLanguage(this.language)
   }
 
   ionViewDidEnter() {
     this.usage.setPage(this.constructor.name)
-    this.slides.lockSwipes(true)
+    this.slides.nativeElement.swiper.allowSlideNext = false
+    this.slides.nativeElement.swiper.allowSlidePrev = false
   }
 
   next() {
-    Promise.all([
-      this.slides.lockSwipes(false),
-      this.slides.getActiveIndex()
-    ]).then(([, index]) => {
-      const slideIndex = index + 1
-      this.slides.slideTo(slideIndex, 500)
-      this.slides.lockSwipes(true)
-    })
+    // Check if swiper instance is available before proceeding
+    if (
+      this.slides &&
+      this.slides.nativeElement &&
+      this.slides.nativeElement.swiper
+    ) {
+      // Force swiper to update in case of any sync issues
+      this.slides.nativeElement.swiper.update()
+
+      // Allow sliding to the next slide temporarily
+      this.slides.nativeElement.swiper.allowSlideNext = true
+
+      // Calculate the next slide index
+      const currentIndex = this.slides.nativeElement.swiper.activeIndex
+      const nextIndex = currentIndex + 1
+
+      // Attempt to slide to the next slide with a delay for stability
+      setTimeout(() => {
+        this.slides.nativeElement.swiper
+          .slideTo(nextIndex, 500)
+          .then(() => {
+            // Disable sliding after moving to the next slide
+            this.slides.nativeElement.swiper.allowSlideNext = false
+            this.slides.nativeElement.swiper.allowSlidePrev = false
+          })
+          .catch(error => {
+            console.warn('Slide transition failed:', error)
+            // Retry the slide transition if it fails
+            this.retrySlideTransition(nextIndex)
+          })
+      }, 100) // Adjust delay as necessary
+    } else {
+      console.warn('Swiper instance not ready, retrying...')
+      // Retry if swiper instance isn't available yet
+      setTimeout(() => this.next(), 100)
+    }
+  }
+
+  retrySlideTransition(targetIndex: number) {
+    if (
+      this.slides &&
+      this.slides.nativeElement &&
+      this.slides.nativeElement.swiper
+    ) {
+      this.slides.nativeElement.swiper.update() // Ensure swiper is updated
+      this.slides.nativeElement.swiper
+        .slideTo(targetIndex, 500)
+        .then(() => {
+          // Disable sliding after moving to the target slide
+          this.slides.nativeElement.swiper.allowSlideNext = false
+          this.slides.nativeElement.swiper.allowSlidePrev = false
+        })
+        .catch(error =>
+          console.warn('Retry failed for slide transition:', error)
+        )
+    }
   }
 
   enterToken() {
@@ -119,8 +161,8 @@ export class EnrolmentPageComponent {
       e.error && e.error.message
         ? e.error.message
         : e.status
-        ? e.statusText + ' (' + e.status + ')'
-        : e
+          ? e.statusText + ' (' + e.status + ')'
+          : e
     this.usage.sendGeneralEvent(
       e.status == 409 ? EnrolmentEventType.ERROR : EnrolmentEventType.FAIL,
       false,
@@ -166,7 +208,7 @@ export class EnrolmentPageComponent {
           label: this.localization.translate(lang.label),
           value: JSON.stringify(lang),
           checked: lang.value === this.language.value
-        } as AlertInput)
+        }) as AlertInput
     )
     return this.alertService.showAlert({
       header: this.localization.translateKey(LocKeys.SETTINGS_LANGUAGE_ALERT),
@@ -180,7 +222,7 @@ export class EnrolmentPageComponent {
     this.openWithInAppBrowser(DefaultPrivacyPolicyUrl)
   }
 
-  openWithInAppBrowser(url: string) {
-    this.theInAppBrowser.create(url, '_blank', this.browserOptions)
+  async openWithInAppBrowser(url: string) {
+    await Browser.open({ url })
   }
 }

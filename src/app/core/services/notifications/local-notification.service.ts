@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core'
-import { LocalNotifications } from '@ionic-native/local-notifications/ngx'
+import {
+  LocalNotifications,
+  ScheduleResult
+} from '@capacitor/local-notifications'
 
 import { DefaultNumberOfNotificationsToSchedule } from '../../../../assets/data/defaultConfig'
 import { StorageKeys } from '../../../shared/enums/storage'
@@ -10,18 +13,16 @@ import {
 } from '../../../shared/models/notification-handler'
 import { LogService } from '../misc/log.service'
 import { ScheduleService } from '../schedule/schedule.service'
-import { GlobalStorageService } from '../storage/global-storage.service'
-import { StorageService } from '../storage/storage.service'
 import { NotificationGeneratorService } from './notification-generator.service'
 import { NotificationService } from './notification.service'
+import { StorageService } from '../storage/storage.service'
 
 @Injectable()
 export class LocalNotificationService extends NotificationService {
   constructor(
     private notifications: NotificationGeneratorService,
     private schedule: ScheduleService,
-    private localNotifications: LocalNotifications,
-    private store: GlobalStorageService,
+    private store: StorageService,
     private logger: LogService
   ) {
     super(store)
@@ -49,7 +50,7 @@ export class LocalNotificationService extends NotificationService {
 
   publishAllNotifications(
     limit: number = DefaultNumberOfNotificationsToSchedule
-  ): Promise<void[]> {
+  ): Promise<void> {
     return this.schedule.getTasks(AssessmentType.ALL).then(tasks => {
       const localNotifications = this.notifications
         .futureNotifications(tasks, limit)
@@ -59,17 +60,15 @@ export class LocalNotificationService extends NotificationService {
         localNotifications
       )
       return Promise.all(
-        localNotifications
-          .map(n => {
-            return this.sendNotification(n)
-          })
-          .concat([this.setLastNotificationUpdate(Date.now())])
-      )
+        localNotifications.map(n => {
+          return this.sendNotification(n)
+        })
+      ).then(() => this.setLastNotificationUpdate(Date.now()))
     })
   }
 
-  private sendNotification(notification): Promise<void> {
-    return Promise.resolve(this.localNotifications.schedule(notification))
+  private sendNotification(notification): Promise<ScheduleResult> {
+    return LocalNotifications.schedule(notification)
   }
 
   private format(notification: SingleNotification) {
@@ -85,20 +84,16 @@ export class LocalNotificationService extends NotificationService {
   }
 
   cancelAllNotifications(user?): Promise<any> {
-    return this.localNotifications.cancelAll()
+    return Promise.resolve()
   }
 
   permissionCheck(): Promise<void> {
-    return Promise.resolve(
-      this.localNotifications.hasPermission().then(p => {
-        if (!p) {
-          this.localNotifications.requestPermission()
-        }
-      })
-    )
+    return LocalNotifications.checkPermissions().then(p => {
+      if (p.display != 'granted') LocalNotifications.requestPermissions()
+    })
   }
 
-  publishTestNotification(): Promise<void> {
+  publishTestNotification(): Promise<ScheduleResult> {
     return this.sendNotification(
       this.format(this.notifications.createTestNotification())
     )

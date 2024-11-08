@@ -78,15 +78,11 @@ jobs:
           node-version: '16'
 
       - name: Install app dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       - name: Run unit tests
         run: npm run test
 
-      - name: Prepare Android
-        run: |
-          ionic cordova platform add android && npm install
-
       - name: Build
         run: |
-          ionic cordova build android
+          ionic capacitor build android

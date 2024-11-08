@@ -10,8 +10,8 @@
   </div>
 
   <div class="report-card">
-    <ion-slides [pager]="true">
-      <ion-slide>
+    <swiper-container #swiper>
+      <swiper-slide>
         <h2 class="report-line">
           Feedback
           <br />
@@ -27,9 +27,9 @@
             </p>
           </div>
         </div>
-      </ion-slide>
+      </swiper-slide>
 
-      <ion-slide>
+      <swiper-slide>
         <h2 class="report-line">
           Steps
           <br />
@@ -43,9 +43,9 @@
             <p class="report-summary-text">"Well done. Keep it up!"</p>
           </div>
         </div>
-      </ion-slide>
+      </swiper-slide>
 
-      <ion-slide>
+      <swiper-slide>
         <h2 class="report-line">
           Heart rate
           <br />
@@ -64,7 +64,7 @@
             </p>
           </div>
         </div>
-      </ion-slide>
-    </ion-slides>
+      </swiper-slide>
+    </swiper-container>
   </div>
 </ion-content>

@@ -12,7 +12,6 @@ import { Utility } from '../../../shared/utilities/util'
 import { GithubClient } from '../misc/github-client.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
-import { GlobalStorageService } from '../storage/global-storage.service'
 import { StorageService } from '../storage/storage.service'
 import { QuestionnaireService } from './questionnaire.service'
 
@@ -25,7 +24,7 @@ describe('QuestionnaireService', () => {
         QuestionnaireService,
         HttpClient,
         HttpHandler,
-        { provide: GlobalStorageService, useClass: StorageServiceMock },
+        { provide: StorageService, useClass: StorageServiceMock },
         { provide: LocalizationService, useClass: LocalizationServiceMock },
         { provide: LogService, useClass: LogServiceMock },
         { provide: Utility, useClass: UtilityMock },

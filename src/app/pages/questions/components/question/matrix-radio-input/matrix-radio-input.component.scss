@@ -14,8 +14,6 @@ ion-item {
   font-size: 12px;
   line-height: 1.35em;
   position: relative;
-  // display: flex;
-  // flex-grow: 1;
   align-items: center;
   justify-content: center;
   text-align: center;
@@ -23,6 +21,7 @@ ion-item {
   border: 2px solid white;
   border-right: none;
   background-color: var(--cl-primary-20);
+
   --ripple-color: transparent;
 }
 
@@ -60,6 +59,7 @@ ion-col:last-child ion-item {
 ion-radio {
   --color: transparent;
   --color-checked: transparent;
+
   width: 0 !important;
   height: 0 !important;
 }
@@ -67,4 +67,5 @@ ion-radio {
 ion-row {
   flex-wrap: nowrap;
   align-items: center;
+  margin-top: 6px;
 }

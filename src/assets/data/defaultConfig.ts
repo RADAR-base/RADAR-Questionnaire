@@ -111,7 +111,7 @@ export const DefaultTask: Task = {
 }
 
 // *Default schedule coverage in years (length of schedule to generate tasks until)
-export const DefaultScheduleYearCoverage: number = 3
+export const DefaultScheduleYearCoverage: number = 10 // Lower value before release
 
 // *Default time interval of protocol
 export const DefaultScheduleTimeInterval = { unit: 'day', amount: 1 }
@@ -322,5 +322,5 @@ export const DefaultHealthkitPermissions = [
   HealthkitPermission.STEPS
 ]
 
-// *Default lookback interval to pull Healthkit data from
-export const DefaultHealthkitLookbackInterval = 2000 // days
+// *Default interval to pull Healthkit data until
+export const DefaultHealthkitInterval = 370 // days

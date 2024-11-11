@@ -58,6 +58,7 @@
         [responses]="question.select_choices_or_calculations"
         [health_question]="question"
         [currentlyShown]="currentlyShown"
+        [refTimestamp]="task.timestamp"
         (valueChange)="emitAnswer($event)"
       >
       </health-input>

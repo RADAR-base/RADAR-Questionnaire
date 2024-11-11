@@ -16,7 +16,7 @@ import {
   SleepData
 } from '@perfood/capacitor-healthkit'
 import { LogService } from '../../../core/services/misc/log.service'
-import { DefaultHealthkitLookbackInterval, DefaultHealthkitPermissions } from 'src/assets/data/defaultConfig'
+import { DefaultHealthkitInterval, DefaultHealthkitPermissions } from 'src/assets/data/defaultConfig'
 import { RemoteConfigService } from 'src/app/core/services/config/remote-config.service'
 import { ConfigKeys } from 'src/app/shared/enums/config'
 
@@ -27,7 +27,7 @@ import { ConfigKeys } from 'src/app/shared/enums/config'
 export class HealthkitService {
   READ_PERMISSIONS = DefaultHealthkitPermissions
   // The interval days for first query
-  MIN_POLL_TIMESTAMP = new Date()
+  HEALTHKIT_INTERVAL_DAYS = String(DefaultHealthkitInterval)
   queryProgress = 0
 
   constructor(
@@ -42,12 +42,11 @@ export class HealthkitService {
       config
         .getOrDefault(
           ConfigKeys.HEALTHKIT_LOOKBACK_INTERVAL_DAYS,
-          String(DefaultHealthkitLookbackInterval)
+          String(DefaultHealthkitInterval)
         )
-        .then(interval => {
-          this.MIN_POLL_TIMESTAMP = new Date(
-            new Date().getTime() - getMilliseconds({ days: Number(interval) }))
-        })
+        .then(interval =>
+          (this.HEALTHKIT_INTERVAL_DAYS = interval)
+        )
     })
     return this.getLastPollTimes().then(dic => {
       if (!dic) return this.setLastPollTimes({})
@@ -66,10 +65,7 @@ export class HealthkitService {
     return CapacitorHealthkit.isAvailable()
   }
 
-  loadData(healthDataType) {
-    return this.getLastPollTimes().then(dic => {
-      let lastPollTime = this.MIN_POLL_TIMESTAMP
-      if (healthDataType in dic) lastPollTime = dic[healthDataType]
+  loadData(healthDataType, startTime) {
       return CapacitorHealthkit
         .requestAuthorization(
           {
@@ -79,14 +75,14 @@ export class HealthkitService {
           }
         )
         .then(() => {
-          const currentDate = new Date()
-          return { startTime: lastPollTime, endTime: currentDate }
+          const endTime = new Date(
+            startTime.getTime() + getMilliseconds({ days: Number(this.HEALTHKIT_INTERVAL_DAYS) }))
+           return { startTime: startTime, endTime: endTime }
         })
         .catch(e => {
           console.log(e)
           return null
         })
-    })
   }
 
   async query(queryStartTime: Date, queryEndTime: Date, dataType: string) {
@@ -106,6 +102,6 @@ export class HealthkitService {
   }
 
   reset() {
-    return this.setLastPollTimes({})
+    return Promise.resolve()
   }
 }

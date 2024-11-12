@@ -33,7 +33,7 @@ import { QuestionsService } from '../services/questions.service'
 })
 export class QuestionsPageComponent implements OnInit {
   @ViewChild('swiper')
-  slides: ElementRef | undefined;
+  slides: ElementRef | undefined
 
   startTime: number
   currentQuestionGroupId = 0
@@ -186,11 +186,36 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   slideQuestion() {
-    this.slides.nativeElement.swiper.allowSlideNext = true
-    this.slides.nativeElement.swiper.allowSlidePrev = true
-    this.slides.nativeElement.swiper.slideTo(this.currentQuestionGroupId, 400)
-    this.slides.nativeElement.swiper.allowSlideNext = false
-    this.slides.nativeElement.swiper.allowSlidePrev = false
+    // Check if swiper instance is available before sliding
+    if (
+      this.slides &&
+      this.slides.nativeElement &&
+      this.slides.nativeElement.swiper
+    ) {
+      // Force swiper to update and prepare for sliding
+      this.slides.nativeElement.swiper.update()
+
+      // Allow sliding temporarily
+      this.slides.nativeElement.swiper.allowSlideNext = true
+      this.slides.nativeElement.swiper.allowSlidePrev = true
+
+      // Slide to the target question, with a small delay for stability
+      setTimeout(() => {
+        this.slides.nativeElement.swiper.slideTo(
+          this.currentQuestionGroupId,
+          400
+        )
+
+        // Disable sliding again after moving
+        this.slides.nativeElement.swiper.allowSlideNext = false
+        this.slides.nativeElement.swiper.allowSlidePrev = false
+      }, 100) // Adjust delay as needed
+    } else {
+      console.warn('Swiper instance not ready, retrying...')
+
+      // Retry with a slight delay if Swiper instance isn't available yet
+      setTimeout(() => this.slideQuestion(), 100)
+    }
   }
 
   getCurrentQuestions() {
@@ -264,14 +289,67 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   navigateToFinishPage() {
+    // Send the finish event and submit timestamps
     this.sendEvent(UsageEventType.QUESTIONNAIRE_FINISHED)
     this.submitTimestamps()
+
+    // Set the finish screen to show
     this.showFinishScreen = true
-    this.slides.nativeElement.swiper.allowSlideNext = true
-    this.slides.nativeElement.swiper.slideTo(this.groupedQuestions.size, 500)
-    this.slides.nativeElement.swiper.allowSlideNext = false
-    this.showDoneButton = true
-    this.onQuestionnaireCompleted()
+
+    // Ensure swiper instance is ready before navigating
+    if (
+      this.slides &&
+      this.slides.nativeElement &&
+      this.slides.nativeElement.swiper
+    ) {
+      // Update swiper to sync with current state
+      this.slides.nativeElement.swiper.update()
+
+      // Allow sliding to the final slide
+      this.slides.nativeElement.swiper.allowSlideNext = true
+
+      // Navigate to the last slide (finish screen), with a slight delay for stability
+      const finishIndex = this.groupedQuestions.size
+      setTimeout(() => {
+        this.slides.nativeElement.swiper
+          .slideTo(finishIndex, 500)
+          .then(() => {
+            // Disable sliding after reaching the finish screen
+            this.slides.nativeElement.swiper.allowSlideNext = false
+          })
+          .catch(error => {
+            console.warn('Slide transition to finish page failed:', error)
+            // Retry slide transition if it fails
+            this.retryFinishSlide(finishIndex)
+          })
+      }, 100) // Adjust delay as needed
+    } else {
+      console.warn(
+        'Swiper instance not ready, retrying navigateToFinishPage...'
+      )
+      // Retry if swiper instance isn't available yet
+      setTimeout(() => this.navigateToFinishPage(), 100)
+    }
+  }
+
+  // Retry function for sliding to the finish page
+  retryFinishSlide(targetIndex: number) {
+    if (
+      this.slides &&
+      this.slides.nativeElement &&
+      this.slides.nativeElement.swiper
+    ) {
+      this.slides.nativeElement.swiper.update() // Ensure swiper is updated
+      this.slides.nativeElement.swiper
+        .slideTo(targetIndex, 500)
+        .then(() => {
+          // Disable sliding after reaching the finish screen
+          this.slides.nativeElement.swiper.allowSlideNext = false
+        })
+        .catch(error =>
+          console.warn('Retry failed for finish page transition:', error)
+        )
+    }
   }
 
   onSlideFinish() {}

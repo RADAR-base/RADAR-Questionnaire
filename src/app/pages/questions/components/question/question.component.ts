@@ -136,17 +136,19 @@ export class QuestionComponent implements OnInit, OnChanges {
   }
 
   emitAnswer(event: any) {
-    // NOTE: On init the component fires the event once
-    if (event) {
-      this.value = event
+    // Only proceed if event is not null or undefined
+    if (event !== null && event !== undefined) {
+      this.value = event;
       this.answer.emit({
         id: this.question.field_name,
         value: this.value,
         type: this.question.field_type
       })
-      if (this.question.isAutoNext)
-        this.nextAction.emit(NextButtonEventType.AUTO)
-      else this.nextAction.emit(NextButtonEventType.ENABLE)
+      if (this.question.isAutoNext) {
+        this.nextAction.emit(NextButtonEventType.AUTO);
+      } else {
+        this.nextAction.emit(NextButtonEventType.ENABLE);
+      }
     }
   }
 

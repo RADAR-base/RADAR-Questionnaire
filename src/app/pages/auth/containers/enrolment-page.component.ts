@@ -32,7 +32,7 @@ import { AuthService } from '../services/auth.service'
 })
 export class EnrolmentPageComponent {
   @ViewChild('swiper')
-  slides: ElementRef | undefined;
+  slides: ElementRef | undefined
 
   loading: boolean = false
   showOutcomeStatus: boolean = false
@@ -69,12 +69,62 @@ export class EnrolmentPageComponent {
   }
 
   next() {
+    // Check if swiper instance is available before proceeding
+    if (
+      this.slides &&
+      this.slides.nativeElement &&
+      this.slides.nativeElement.swiper
+    ) {
+      // Force swiper to update in case of any sync issues
+      this.slides.nativeElement.swiper.update()
+
+      // Allow sliding to the next slide temporarily
       this.slides.nativeElement.swiper.allowSlideNext = true
-      const index = this.slides.nativeElement.swiper.activeIndex
-      const slideIndex = index + 1
-      this.slides.nativeElement.swiper.slideTo(slideIndex, 500)
-      this.slides.nativeElement.swiper.allowSlideNext = false
-      this.slides.nativeElement.swiper.allowSlidePrev = false
+
+      // Calculate the next slide index
+      const currentIndex = this.slides.nativeElement.swiper.activeIndex
+      const nextIndex = currentIndex + 1
+
+      // Attempt to slide to the next slide with a delay for stability
+      setTimeout(() => {
+        this.slides.nativeElement.swiper
+          .slideTo(nextIndex, 500)
+          .then(() => {
+            // Disable sliding after moving to the next slide
+            this.slides.nativeElement.swiper.allowSlideNext = false
+            this.slides.nativeElement.swiper.allowSlidePrev = false
+          })
+          .catch(error => {
+            console.warn('Slide transition failed:', error)
+            // Retry the slide transition if it fails
+            this.retrySlideTransition(nextIndex)
+          })
+      }, 100) // Adjust delay as necessary
+    } else {
+      console.warn('Swiper instance not ready, retrying...')
+      // Retry if swiper instance isn't available yet
+      setTimeout(() => this.next(), 100)
+    }
+  }
+
+  retrySlideTransition(targetIndex: number) {
+    if (
+      this.slides &&
+      this.slides.nativeElement &&
+      this.slides.nativeElement.swiper
+    ) {
+      this.slides.nativeElement.swiper.update() // Ensure swiper is updated
+      this.slides.nativeElement.swiper
+        .slideTo(targetIndex, 500)
+        .then(() => {
+          // Disable sliding after moving to the target slide
+          this.slides.nativeElement.swiper.allowSlideNext = false
+          this.slides.nativeElement.swiper.allowSlidePrev = false
+        })
+        .catch(error =>
+          console.warn('Retry failed for slide transition:', error)
+        )
+    }
   }
 
   enterToken() {
@@ -111,8 +161,8 @@ export class EnrolmentPageComponent {
       e.error && e.error.message
         ? e.error.message
         : e.status
-        ? e.statusText + ' (' + e.status + ')'
-        : e
+          ? e.statusText + ' (' + e.status + ')'
+          : e
     this.usage.sendGeneralEvent(
       e.status == 409 ? EnrolmentEventType.ERROR : EnrolmentEventType.FAIL,
       false,
@@ -158,7 +208,7 @@ export class EnrolmentPageComponent {
           label: this.localization.translate(lang.label),
           value: JSON.stringify(lang),
           checked: lang.value === this.language.value
-        } as AlertInput)
+        }) as AlertInput
     )
     return this.alertService.showAlert({
       header: this.localization.translateKey(LocKeys.SETTINGS_LANGUAGE_ALERT),

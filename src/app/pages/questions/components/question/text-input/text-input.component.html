@@ -30,7 +30,7 @@
       enterkeyhint="next"
       placeholder="{{ 'PLACEHOLDER_TEXT_INPUT' | translate }}"
       [(ngModel)]="textValue"
-      (ionChange)="emitAnswer('')"
+      (ngModelChange)="emitAnswer($event)"
       (ionFocus)="emitKeyboardEvent('focus')"
       (ionBlur)="emitKeyboardEvent('blur')"
       (keyup)="emitKeyboardEvent($event.key)"

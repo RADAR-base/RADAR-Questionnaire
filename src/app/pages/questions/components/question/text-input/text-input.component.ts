@@ -135,7 +135,7 @@ export class TextInputComponent implements OnInit {
   }
 
   datePickerObj: any = {}
-  selectedDate: string = new Date().toLocaleDateString()
+  selectedDate: string = this.localization.moment(Date.now()).format('L')
 
   async openDatePicker() {
     const datePickerModal = await this.modalCtrl.create({
@@ -149,10 +149,11 @@ export class TextInputComponent implements OnInit {
     await datePickerModal.present()
 
     datePickerModal.onDidDismiss().then(data => {
-      this.selectedDate = data.data.date
+      let date = moment(data.data.date)
+      date = date.isValid() ? date : this.localization.moment(this.selectedDate)
+      this.selectedDate = date.format('L')
 
-      // transfer local date format all to US format to easily parse the data
-      const date = moment(data.data.date)
+      // Transfer local date format all to US format to easily parse the data
       this.defaultDatePickerValue = {
         year: date.format('YYYY'),
         month: date.format('M'),

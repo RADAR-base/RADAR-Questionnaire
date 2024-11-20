@@ -3,7 +3,6 @@ import { Browser } from '@capacitor/browser'
 import { Device } from '@capacitor/device'
 import { NavController } from '@ionic/angular'
 import { AlertInput } from '@ionic/core'
-import { OAuth2Client } from '@byteowls/capacitor-oauth2'
 
 import {
   DefaultLanguage,
@@ -71,12 +70,62 @@ export class EnrolmentPageComponent {
   }
 
   next() {
-    this.slides.nativeElement.swiper.allowSlideNext = true
-    const index = this.slides.nativeElement.swiper.activeIndex
-    const slideIndex = index + 1
-    this.slides.nativeElement.swiper.slideTo(slideIndex, 500)
-    this.slides.nativeElement.swiper.allowSlideNext = false
-    this.slides.nativeElement.swiper.allowSlidePrev = false
+    // Check if swiper instance is available before proceeding
+    if (
+      this.slides &&
+      this.slides.nativeElement &&
+      this.slides.nativeElement.swiper
+    ) {
+      // Force swiper to update in case of any sync issues
+      this.slides.nativeElement.swiper.update()
+
+      // Allow sliding to the next slide temporarily
+      this.slides.nativeElement.swiper.allowSlideNext = true
+
+      // Calculate the next slide index
+      const currentIndex = this.slides.nativeElement.swiper.activeIndex
+      const nextIndex = currentIndex + 1
+
+      // Attempt to slide to the next slide with a delay for stability
+      setTimeout(() => {
+        this.slides.nativeElement.swiper
+          .slideTo(nextIndex, 500)
+          .then(() => {
+            // Disable sliding after moving to the next slide
+            this.slides.nativeElement.swiper.allowSlideNext = false
+            this.slides.nativeElement.swiper.allowSlidePrev = false
+          })
+          .catch(error => {
+            console.warn('Slide transition failed:', error)
+            // Retry the slide transition if it fails
+            this.retrySlideTransition(nextIndex)
+          })
+      }, 100) // Adjust delay as necessary
+    } else {
+      console.warn('Swiper instance not ready, retrying...')
+      // Retry if swiper instance isn't available yet
+      setTimeout(() => this.next(), 100)
+    }
+  }
+
+  retrySlideTransition(targetIndex: number) {
+    if (
+      this.slides &&
+      this.slides.nativeElement &&
+      this.slides.nativeElement.swiper
+    ) {
+      this.slides.nativeElement.swiper.update() // Ensure swiper is updated
+      this.slides.nativeElement.swiper
+        .slideTo(targetIndex, 500)
+        .then(() => {
+          // Disable sliding after moving to the target slide
+          this.slides.nativeElement.swiper.allowSlideNext = false
+          this.slides.nativeElement.swiper.allowSlidePrev = false
+        })
+        .catch(error =>
+          console.warn('Retry failed for slide transition:', error)
+        )
+    }
   }
 
   enrol(method) {

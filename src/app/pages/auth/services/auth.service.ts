@@ -55,11 +55,17 @@ export class AuthService {
     const baseUrl = parsedUrl.origin
     const projectId = parsedUrl.searchParams.get('projectId')
     const options = DefaultOryAuthOptions
-    options.authorizationBaseUrl = baseUrl + '/oauth2/auth'
-    options.accessTokenEndpoint = baseUrl + '/oauth2/token'
-    return OAuth2Client.authenticate(DefaultOryAuthOptions).then(
-      response => response.access_token_response
-    )
+    options.authorizationBaseUrl = baseUrl + '/hydra/oauth2/auth'
+    options.accessTokenEndpoint = baseUrl + '/hydra/oauth2/token'
+    this.token.setURI(baseUrl)
+    return OAuth2Client.authenticate(options).then(
+      response => {
+        return response.access_token_response
+  })
+  }
+
+  oryLogout() {
+    return OAuth2Client.logout(DefaultOryAuthOptions)
   }
 
   metaTokenUrlAuth(authObj) {

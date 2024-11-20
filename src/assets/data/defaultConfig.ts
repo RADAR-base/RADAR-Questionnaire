@@ -69,7 +69,7 @@ export const DefaultShowTaskProgressCount = 'false'
 // DEFAULT URI
 
 // *The Default endpoint where the RADAR-base platform is hosted
-export const DefaultEndPoint: string = 'http://192.168.1.10:8080'
+export const DefaultEndPoint: string = 'https://stage.radar-base.net'
 
 export const DefaultManagementPortalURI = '/managementportal'
 export const DefaultRefreshTokenURI = '/oauth/token'
@@ -219,7 +219,7 @@ export const DefaultOryAuthOptions = {
     redirectUrl: DefaultIosPackageName + ':/'
   },
   additionalParameters: {
-    audience: 'res_ManagementPortal'
+    audience: 'res_ManagementPortal res_gateway res_AppServer',
   }
 }
 

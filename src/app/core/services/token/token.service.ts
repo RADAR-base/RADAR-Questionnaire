@@ -5,11 +5,10 @@ import { Platform } from '@ionic/angular'
 
 import {
   DefaultEndPoint,
-  DefaultManagementPortalURI,
   DefaultOAuthClientId,
   DefaultOAuthClientSecret,
-  DefaultRefreshTokenURI,
   DefaultRequestEncodedContentType,
+  DefaultTokenEndPoint,
   DefaultTokenRefreshSeconds
 } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
@@ -26,7 +25,8 @@ import { StorageService } from '../storage/storage.service'
 export class TokenService {
   private readonly TOKEN_STORE = {
     OAUTH_TOKENS: StorageKeys.OAUTH_TOKENS,
-    BASE_URI: StorageKeys.BASE_URI
+    BASE_URI: StorageKeys.BASE_URI,
+    TOKEN_ENDPOINT: StorageKeys.TOKEN_ENDPOINT
   }
   URI_base: string
   private tokenRefreshMillis: number = DefaultTokenRefreshSeconds
@@ -65,6 +65,12 @@ export class TokenService {
       .then(uri => (uri ? uri : DefaultEndPoint))
   }
 
+  getTokenEndpoint() {
+    return this.storage
+      .get(this.TOKEN_STORE.TOKEN_ENDPOINT)
+      .then(uri => (uri ? uri : DefaultTokenEndPoint))
+  }
+
   setTokens(tokens) {
     return this.storage.set(this.TOKEN_STORE.OAUTH_TOKENS, tokens)
   }
@@ -78,20 +84,23 @@ export class TokenService {
     return this.storage.set(this.TOKEN_STORE.BASE_URI, url).then(() => url)
   }
 
+  setTokenEndpoint(uri: string) {
+    return this.storage.set(this.TOKEN_STORE.TOKEN_ENDPOINT, uri)
+  }
+
   static basicCredentials(user: string, password: string): string {
     return 'Basic ' + btoa(`${user}:${password}`)
   }
 
   register(refreshBody): Promise<OAuthToken> {
     return Promise.all([
-      this.getURI(),
+      this.getTokenEndpoint(),
       this.getRegisterHeaders(DefaultRequestEncodedContentType)
     ])
       .then(([uri, headers]) => {
-        const URI = uri + DefaultManagementPortalURI + DefaultRefreshTokenURI
-        this.logger.log(`"Registering with ${URI} and headers`, headers)
+        this.logger.log(`"Registering with ${uri} and headers`, headers)
         return this.http
-          .post(URI, refreshBody, { headers: headers })
+          .post(uri, refreshBody, { headers: headers })
           .toPromise()
       })
       .then(res => this.setTokens(res).then(() => res))

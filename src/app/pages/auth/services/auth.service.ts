@@ -4,7 +4,9 @@ import { OAuth2Client } from '@byteowls/capacitor-oauth2'
 
 import {
   DefaultManagementPortalURI,
-  DefaultSourceTypeModel
+  DefaultSourceTypeModel,
+  DefaultRefreshTokenURI,
+  DefaultOryAuthOptions
 } from '../../../../assets/data/defaultConfig'
 import { ConfigService } from '../../../core/services/config/config.service'
 import { SubjectConfigService } from '../../../core/services/config/subject-config.service'
@@ -12,88 +14,120 @@ import { LogService } from '../../../core/services/misc/log.service'
 import { TokenService } from '../../../core/services/token/token.service'
 import { AnalyticsService } from '../../../core/services/usage/analytics.service'
 import { MetaToken, OAuthToken } from '../../../shared/models/token'
-import { isValidURL } from '../../../shared/utilities/form-validators'
-import { DefaultOryAuthOptions } from 'src/assets/data/defaultConfig'
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  URI_base: string
+  private URI_base: string
 
   constructor(
-    public http: HttpClient,
+    private http: HttpClient,
     private token: TokenService,
     private config: ConfigService,
     private logger: LogService,
     private analytics: AnalyticsService,
     private subjectConfig: SubjectConfigService
-  ) {}
+  ) { }
 
   reset() {
     this.config.resetAll()
   }
 
-  authenticate(method, authObj) {
+  authenticate(method: string, authObj: any) {
     switch (method) {
       case 'qr':
       case 'token':
-        return this.metaTokenUrlAuth(authObj).then(refreshToken =>
-          this.registerToken(refreshToken)
-            .then(() => this.registerAsSource())
-            .then(() => this.registerToken(refreshToken))
-        )
+        return this.handleMetaTokenAuth(authObj)
       case 'ory':
-        return this.oryAuth(authObj).then(response =>
-          this.token.setTokens(authObj).then(() => this.registerAsSource())
+        return this.handleOryAuth(authObj)
+      default:
+        return Promise.reject(
+          new Error(`Unknown authentication method: ${method}`)
         )
     }
   }
 
-  oryAuth(authObj) {
+  private handleMetaTokenAuth(authObj: any) {
+    return this.metaTokenUrlAuth(authObj)
+      .then(refreshToken => this.completeAuthentication(refreshToken))
+      .catch(err => {
+        this.logger.error('MetaTokenUrlAuth failed', err)
+        throw err
+      })
+  }
+
+  private handleOryAuth(authObj: any) {
+    return this.oryAuth(authObj)
+      .then(response => this.completeAuthentication(response.refresh_token))
+      .catch(err => {
+        this.logger.error('OryAuth failed', err)
+        throw err
+      })
+  }
+
+  private completeAuthentication(refreshToken: string) {
+    return this.registerToken(refreshToken)
+      .then(() => this.registerAsSource())
+      .then(() => this.registerToken(refreshToken))
+  }
+
+  private oryAuth(authObj: string) {
     const parsedUrl = new URL(authObj)
     const baseUrl = parsedUrl.origin
-    const projectId = parsedUrl.searchParams.get('projectId')
-    const options = DefaultOryAuthOptions
-    options.authorizationBaseUrl = baseUrl + '/hydra/oauth2/auth'
-    options.accessTokenEndpoint = baseUrl + '/hydra/oauth2/token'
-    this.token.setURI(baseUrl)
-    return OAuth2Client.authenticate(options).then(
-      response => {
-        return response.access_token_response
-  })
+    const options = {
+      ...DefaultOryAuthOptions,
+      authorizationBaseUrl: `${baseUrl}/hydra/oauth2/auth`,
+      accessTokenEndpoint: `${baseUrl}/hydra/oauth2/token`
+    }
+
+    return this.token
+      .setURI(baseUrl)
+      .then(() => this.analytics.setUserProperties({ baseUrl }))
+      .then(() => this.token.setTokenEndpoint(options.accessTokenEndpoint))
+      .then(() => OAuth2Client.authenticate(options))
+      .then(response => response.access_token_response)
   }
 
   oryLogout() {
     return OAuth2Client.logout(DefaultOryAuthOptions)
   }
 
-  metaTokenUrlAuth(authObj) {
-    // NOTE: Meta QR code and new QR code
-    return this.getRefreshTokenFromUrl(authObj).then((body: any) => {
-      this.logger.log(`Retrieved refresh token from ${body.baseUrl}`, body)
-      const refreshToken = body.refreshToken
-      return this.token
-        .setURI(body.baseUrl)
-        .then(baseUrl => this.analytics.setUserProperties({ baseUrl }))
-        .catch()
-        .then(() => this.updateURI())
-        .then(() => refreshToken)
-    })
+  private metaTokenUrlAuth(authObj: string) {
+    return this.getRefreshTokenFromUrl(authObj)
+      .then(body => {
+        const { refreshToken, baseUrl } = body
+        this.logger.log(`Retrieved refresh token from ${baseUrl}`, body)
+
+        return this.token
+          .setURI(baseUrl)
+          .then(() =>
+            this.token.setTokenEndpoint(
+              `${baseUrl}${DefaultManagementPortalURI}${DefaultRefreshTokenURI}`
+            )
+          )
+          .then(() => this.analytics.setUserProperties({ baseUrl }))
+          .then(() => this.updateURI())
+          .then(() => refreshToken)
+      })
+      .catch(err => {
+        this.logger.error('Failed to retrieve refresh token', err)
+        throw err
+      })
   }
 
-  updateURI() {
+  private updateURI() {
     return this.token.getURI().then(uri => {
-      this.URI_base = uri + DefaultManagementPortalURI
+      this.URI_base = `${uri}${DefaultManagementPortalURI}`
     })
   }
 
-  registerToken(registrationToken): Promise<OAuthToken> {
+  private registerToken(registrationToken: string): Promise<OAuthToken> {
     return this.token.register(this.token.getRefreshParams(registrationToken))
   }
 
-  getRefreshTokenFromUrl(url): Promise<MetaToken> {
-    return this.http.get(url).toPromise()
+  private getRefreshTokenFromUrl(url: string): Promise<MetaToken> {
+    return this.http.get<MetaToken>(url).toPromise()
   }
 
   initSubjectInformation() {
@@ -101,26 +135,27 @@ export class AuthService {
       this.token.getURI(),
       this.subjectConfig.pullSubjectInformation()
     ]).then(([baseUrl, subjectInformation]) => {
-      return this.config.setAll({
+      const config = {
         projectId: subjectInformation.project.projectName,
         subjectId: subjectInformation.login,
         sourceId: this.getSourceId(subjectInformation),
         humanReadableId: subjectInformation.externalId,
         enrolmentDate: new Date(subjectInformation.createdDate).getTime(),
-        baseUrl: baseUrl,
+        baseUrl,
         attributes: subjectInformation.attributes
-      })
+      }
+      return this.config.setAll(config)
     })
   }
 
-  getSourceId(response) {
+  private getSourceId(response: any): string {
     const source = response.sources.find(
       s => s.sourceTypeModel === DefaultSourceTypeModel
     )
-    return source !== undefined ? source.sourceId : 'Device not available'
+    return source ? source.sourceId : 'Device not available'
   }
 
-  registerAsSource() {
+  private registerAsSource() {
     return this.subjectConfig.registerSourceToSubject()
   }
 }

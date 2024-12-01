@@ -70,9 +70,10 @@ export const DefaultShowTaskProgressCount = 'false'
 
 // *The Default endpoint where the RADAR-base platform is hosted
 export const DefaultEndPoint: string = 'https://stage.radar-base.net'
-
 export const DefaultManagementPortalURI = '/managementportal'
 export const DefaultRefreshTokenURI = '/oauth/token'
+export const DefaultTokenEndPoint: string =
+  'https://stage.radar-base.net/managementportal/oauth/token'
 export const DefaultSubjectsURI = '/api/subjects/'
 export const DefaultMetaTokenURI: string = '/api/meta-token/'
 export const DefaultEnrolmentBaseURL =
@@ -82,7 +83,8 @@ export const DefaultQuestionnaireTypeURI = '_armt'
 export const DefaultQuestionnaireFormatURI = '.json'
 
 export const DefaultOryEndpoint = 'http://192.168.1.10:4444'
-export const DefaultOryScopes = 'SUBJECT.READ SUBJECT.UPDATE PROJECT.READ'
+export const DefaultOryScopes =
+  'SUBJECT.READ SUBJECT.UPDATE PROJECT.READ offline_access'
 
 export const DefaultGooglePlaystoreAppURL =
   'https://play.google.com/store/apps/details?id='
@@ -219,7 +221,7 @@ export const DefaultOryAuthOptions = {
     redirectUrl: DefaultIosPackageName + ':/'
   },
   additionalParameters: {
-    audience: 'res_ManagementPortal res_gateway res_AppServer',
+    audience: 'res_ManagementPortal res_gateway res_AppServer'
   }
 }
 

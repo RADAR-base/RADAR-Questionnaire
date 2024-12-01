@@ -155,12 +155,9 @@ export class TokenService {
   }
 
   isValid(): Promise<boolean> {
-    return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
-      const token = tokens.refresh_token
-        ? tokens.refresh_token
-        : tokens.access_token
-      return !this.jwtHelper.isTokenExpired(token)
-    })
+    return this.storage
+      .get(StorageKeys.OAUTH_TOKENS)
+      .then(tokens => !this.jwtHelper.isTokenExpired(tokens.refresh_token))
   }
 
   reset() {

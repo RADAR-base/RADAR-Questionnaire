@@ -25,7 +25,6 @@ import {
 import { Task } from '../../../shared/models/task'
 import { AppLauncherService } from '../services/app-launcher.service'
 import { QuestionsService } from '../services/questions.service'
-import { q } from './quest'
 
 @Component({
   selector: 'page-questions',
@@ -45,8 +44,7 @@ export class QuestionsPageComponent implements OnInit {
   isRightButtonDisabled = true
   task: Task
   taskType: AssessmentType
-  questions
-  // : Question[]
+  questions: Question[]
   externalApp: ExternalApp
   // Questions grouped by matrix group if it exists
   groupedQuestions: Map<string, Question[]>
@@ -133,7 +131,6 @@ export class QuestionsPageComponent implements OnInit {
       res.assessment.showIntroduction
     )
     this.questions = res.questions
-    this.questions = q
     this.groupedQuestions = this.groupQuestionsByMatrixGroup(this.questions)
     this.endText =
       res.endText && res.endText.length
@@ -155,7 +152,7 @@ export class QuestionsPageComponent implements OnInit {
     questions.forEach(q => {
       const key =
         q.field_type.includes(this.MATRIX_FIELD_NAME) ||
-        q.field_type.includes(this.HEALTH_FIELD_NAME)
+          q.field_type.includes(this.HEALTH_FIELD_NAME)
           ? q.matrix_group_name
           : q.field_name
       const entry = groupedQuestions.get(key) ? groupedQuestions.get(key) : []
@@ -394,7 +391,7 @@ export class QuestionsPageComponent implements OnInit {
         buttons: [
           {
             text: this.localization.translateKey(LocKeys.BTN_DISMISS),
-            handler: () => {}
+            handler: () => { }
           }
         ]
       })

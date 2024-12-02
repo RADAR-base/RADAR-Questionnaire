@@ -13,23 +13,14 @@
             <ion-item no-lines>
               <span class="info-value">{{ language.label | translate }}</span>
               <span slot="end" (click)="showSelectLanguage()">
-                <ion-icon
-                  class="space-right"
-                  name="caret-down-outline"
-                ></ion-icon>
+                <ion-icon class="space-right" name="caret-down-outline"></ion-icon>
                 {{ 'BTN_SELECT' | translate }}
               </span>
             </ion-item>
           </div>
         </div>
         <div class="bottom">
-          <ion-button
-            ion-button
-            class="bt bt--full"
-            round
-            full
-            (click)="next()"
-          >
+          <ion-button ion-button class="bt bt--full" round full (click)="next()">
             {{ 'BTN_START' | translate }}
           </ion-button>
         </div>
@@ -68,36 +59,13 @@
         </div>
         <div class="bottom">
           <p>
-            <ion-button
-              ion-button
-              class="bt bt--full"
-              round
-              full
-              (click)="enrol('qr')"
-            >
+            <ion-button ion-button class="bt bt--full" round full (click)="enrol('qr')">
               {{ 'BTN_ENROL_SCAN' | translate }}
             </ion-button>
           </p>
           <p>
-            <ion-button
-              ion-button
-              class="bt bt--full"
-              round
-              full
-              (click)="enrol('token')"
-            >
+            <ion-button ion-button class="bt bt--full" round full (click)="enrol('token')">
               {{ 'BTN_ENROL_ENTER_TOKEN' | translate }}
-            </ion-button>
-          </p>
-          <p>
-            <ion-button
-              ion-button
-              class="bt bt--full"
-              round
-              full
-              (click)="enrol('ory')"
-            >
-              {{ 'BTN_ENROL_KRATOS' | translate }}
             </ion-button>
           </p>
         </div>
@@ -111,24 +79,11 @@
           <div class="text text-lg">{{ 'ENROL_REGISTRATION' | translate }}</div>
           <div [ngSwitch]="enrolmentMethod">
             <ng-container *ngSwitchCase="'token'">
-              <token-form
-                [loading]="loading"
-                (data)="authenticate($event)"
-                (focus)="clearStatus()"
-                (errors)="handleError($event)"
-              ></token-form>
+              <token-form [loading]="loading" (data)="authenticate($event)" (focus)="clearStatus()"
+                (errors)="handleError($event)"></token-form>
             </ng-container>
             <ng-container *ngSwitchCase="'qr'">
-              <qr-form
-                [loading]="loading"
-                (data)="authenticate($event)"
-              ></qr-form>
-            </ng-container>
-            <ng-container *ngSwitchCase="'ory'">
-              <ory-form
-                [loading]="loading"
-                (data)="authenticate($event)"
-              ></ory-form>
+              <qr-form [loading]="loading" (data)="authenticate($event)"></qr-form>
             </ng-container>
           </div>
         </div>
@@ -145,38 +100,25 @@
 
     <!-- SLIDE 5 -->
     <swiper-slide id="privacy-policy">
-        <ion-card>
-          <div class="registration">
-            <div class="text-lg">{{ 'ENROL_REGISTRATION' | translate }}</div>
+      <ion-card>
+        <div class="registration">
+          <div class="text-lg">{{ 'ENROL_REGISTRATION' | translate }}</div>
 
-            <div dir="auto" class="text text-justify">
-                {{ 'ENROL_PRIVACY_POLICY_DESC' | translate }}
-              </div>
-            <div class="padding text-justify extra-padding">
-            </div>
+          <div dir="auto" class="text text-justify">
+            {{ 'ENROL_PRIVACY_POLICY_DESC' | translate }}
           </div>
-          <div class="bottom">
-              <ion-button
-              ion-button
-              class="bt bt--full policy"
-              round
-              full
-              (click)="showPrivacyPolicy()"
-            >
-              {{ 'BTN_VIEW_POLICY' | translate }}
-            </ion-button>
-            <ion-button
-              ion-button
-              class="bt bt--full"
-              round
-              full
-              (click)="next()"
-            >
-              {{ 'BTN_NEXT' | translate }}
-            </ion-button>
-          </div>
-        </ion-card>
-      </swiper-slide>
+          <div class="padding text-justify extra-padding"></div>
+        </div>
+        <div class="bottom">
+          <ion-button ion-button class="bt bt--full policy" round full (click)="showPrivacyPolicy()">
+            {{ 'BTN_VIEW_POLICY' | translate }}
+          </ion-button>
+          <ion-button ion-button class="bt bt--full" round full (click)="next()">
+            {{ 'BTN_NEXT' | translate }}
+          </ion-button>
+        </div>
+      </ion-card>
+    </swiper-slide>
 
     <!-- SLIDE 6 -->
     <swiper-slide id="registration-complete">
@@ -192,13 +134,7 @@
         </div>
 
         <div class="bottom">
-          <ion-button
-            ion-button
-            class="bt bt--full"
-            round
-            full
-            (click)="navigateToSplash()"
-          >
+          <ion-button ion-button class="bt bt--full" round full (click)="navigateToSplash()">
             {{ 'BTN_FINISH' | translate }}
           </ion-button>
         </div>

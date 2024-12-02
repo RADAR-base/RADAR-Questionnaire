@@ -1,12 +1,10 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { OAuth2Client } from '@byteowls/capacitor-oauth2'
 
 import {
   DefaultManagementPortalURI,
   DefaultSourceTypeModel,
   DefaultRefreshTokenURI,
-  DefaultOryAuthOptions
 } from '../../../../assets/data/defaultConfig'
 import { ConfigService } from '../../../core/services/config/config.service'
 import { SubjectConfigService } from '../../../core/services/config/subject-config.service'
@@ -22,7 +20,7 @@ export class AuthService {
   private URI_base: string
 
   constructor(
-    private http: HttpClient,
+    public http: HttpClient,
     private token: TokenService,
     private config: ConfigService,
     private logger: LogService,
@@ -34,17 +32,11 @@ export class AuthService {
     this.config.resetAll()
   }
 
-  authenticate(method: string, authObj: any) {
-    switch (method) {
-      case 'qr':
-      case 'token':
-        return this.handleMetaTokenAuth(authObj)
-      case 'ory':
-        return this.handleOryAuth(authObj)
-      default:
-        return Promise.reject(
-          new Error(`Unknown authentication method: ${method}`)
-        )
+  authenticate(authObj: any) {
+    if (authObj instanceof String) {
+      return this.handleMetaTokenAuth(authObj)
+    } else {
+      return this.handleOryAuth(authObj)
     }
   }
 
@@ -58,39 +50,27 @@ export class AuthService {
   }
 
   private handleOryAuth(authObj: any) {
-    return this.oryAuth(authObj)
-      .then(response => this.completeAuthentication(response.refresh_token))
-      .catch(err => {
-        this.logger.error('OryAuth failed', err)
-        throw err
-      })
+    const url = new URL(authObj.url)
+    const encodedData = url.searchParams.get('data')
+    const baseUrl = new URL(url.searchParams.get('referrer')).origin
+    if (encodedData) {
+      const tokenData = JSON.parse(decodeURIComponent(encodedData))
+      return this.token
+        .setURI(baseUrl)
+        .then(() => this.analytics.setUserProperties({ baseUrl }))
+        .then(() =>
+          this.token.setTokenEndpoint(`${baseUrl}/hydra/oauth2/token`)
+        )
+        .then(() => this.completeAuthentication(tokenData.refresh_token))
+    } else {
+      throw new Error('Ory auth failed')
+    }
   }
 
   private completeAuthentication(refreshToken: string) {
     return this.registerToken(refreshToken)
       .then(() => this.registerAsSource())
       .then(() => this.registerToken(refreshToken))
-  }
-
-  private oryAuth(authObj: string) {
-    const parsedUrl = new URL(authObj)
-    const baseUrl = parsedUrl.origin
-    const options = {
-      ...DefaultOryAuthOptions,
-      authorizationBaseUrl: `${baseUrl}/hydra/oauth2/auth`,
-      accessTokenEndpoint: `${baseUrl}/hydra/oauth2/token`
-    }
-
-    return this.token
-      .setURI(baseUrl)
-      .then(() => this.analytics.setUserProperties({ baseUrl }))
-      .then(() => this.token.setTokenEndpoint(options.accessTokenEndpoint))
-      .then(() => OAuth2Client.authenticate(options))
-      .then(response => response.access_token_response)
-  }
-
-  oryLogout() {
-    return OAuth2Client.logout(DefaultOryAuthOptions)
   }
 
   private metaTokenUrlAuth(authObj: string) {

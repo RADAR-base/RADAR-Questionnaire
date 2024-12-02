@@ -11,7 +11,6 @@ import { TokenFormComponent } from './components/token-form/token-form.component
 import { EnrolmentPageComponent } from './containers/enrolment-page.component'
 import { AuthGuard } from './services/auth.guard'
 import { AuthService } from './services/auth.service'
-import { OryFormComponent } from './components/ory-form/ory-form.component'
 
 const routes: Routes = [
   {
@@ -29,8 +28,8 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule
   ],
-  declarations: [EnrolmentPageComponent, TokenFormComponent, QRFormComponent, OryFormComponent],
+  declarations: [EnrolmentPageComponent, TokenFormComponent, QRFormComponent],
   providers: [AuthService, AuthGuard],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AuthModule {}
+export class AuthModule { }

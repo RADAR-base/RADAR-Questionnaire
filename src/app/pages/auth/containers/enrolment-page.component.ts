@@ -1,4 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core'
+import { App } from '@capacitor/app'
 import { Browser } from '@capacitor/browser'
 import { Device } from '@capacitor/device'
 import { NavController } from '@ionic/angular'
@@ -8,7 +9,7 @@ import {
   DefaultLanguage,
   DefaultPrivacyPolicyUrl,
   DefaultSettingsSupportedLanguages,
-  DefaultSettingsWeeklyReport,
+  DefaultSettingsWeeklyReport
 } from '../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
@@ -61,6 +62,7 @@ export class EnrolmentPageComponent {
     let lang = this.languagesSelectable.find(a => a.value == tag)
     this.language = lang ? lang : this.language
     this.localization.setLanguage(this.language)
+    this.initializeDeepLinking()
   }
 
   ionViewDidEnter() {
@@ -108,6 +110,17 @@ export class EnrolmentPageComponent {
     }
   }
 
+  goToSlideById(id: string) {
+    const slides = Array.from(document.querySelectorAll('swiper-slide'))
+    const slideIndex = slides.findIndex(slide => slide.id === id)
+    if (slideIndex !== -1) {
+      this.slides.nativeElement.swiper.allowSlideNext = true
+      this.slides.nativeElement.swiper
+        .slideTo(slideIndex)
+        .then(() => (this.slides.nativeElement.swiper.allowSlideNext = false))
+    }
+  }
+
   retrySlideTransition(targetIndex: number) {
     if (
       this.slides &&
@@ -137,7 +150,7 @@ export class EnrolmentPageComponent {
     this.loading = true
     this.clearStatus()
     this.auth
-      .authenticate(this.enrolmentMethod, authObj)
+      .authenticate(authObj)
       .catch(e => {
         if (e.status !== 409) throw e // Handle conflict error (409)
       })
@@ -148,7 +161,7 @@ export class EnrolmentPageComponent {
   handleAuthenticationSuccess() {
     this.auth.initSubjectInformation().then(() => {
       this.usage.sendGeneralEvent(EnrolmentEventType.SUCCESS)
-      this.next()
+      this.goToSlideById('privacy-policy')
     })
   }
 
@@ -192,7 +205,7 @@ export class EnrolmentPageComponent {
     const buttons = [
       {
         text: this.localization.translateKey(LocKeys.BTN_CANCEL),
-        handler: () => {}
+        handler: () => { }
       },
       {
         text: this.localization.translateKey(LocKeys.BTN_SET),
@@ -228,5 +241,14 @@ export class EnrolmentPageComponent {
 
   async openWithInAppBrowser(url: string) {
     await Browser.open({ url })
+  }
+
+  initializeDeepLinking() {
+    App.addListener('appUrlOpen', event => {
+      const url = new URL(event.url)
+      if (url.hostname === 'enrol') {
+        this.authenticate(event)
+      }
+    })
   }
 }

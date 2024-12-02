@@ -116,7 +116,19 @@ export class TokenService {
       })
       if (tokens.iat + tokens.expires_in < limit) {
         const params = this.getRefreshParams(tokens.refresh_token)
-        return this.register(params)
+        return this.register(params).catch(response => {
+          const error = response.error
+          if (error && error.error === 'invalid_grant') {
+            // Specific check for expired refresh token
+            console.error('Refresh token expired. Please log in again.')
+            this.reset() // Clear tokens and session data
+            throw new Error('Session expired. Please log in again.')
+          }
+
+          // Handle other errors (e.g., network, server issues)
+          console.error('Error refreshing token:', error)
+          throw new Error('Error refreshing token. Please try again.')
+        })
       } else {
         return tokens
       }
@@ -164,9 +176,24 @@ export class TokenService {
   }
 
   isValid(): Promise<boolean> {
-    return this.storage
-      .get(StorageKeys.OAUTH_TOKENS)
-      .then(tokens => !this.jwtHelper.isTokenExpired(tokens.refresh_token))
+    return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
+      if (!tokens || !tokens.refresh_token) {
+        return false // No token available
+      }
+
+      const refreshToken = tokens.refresh_token
+
+      // Check if the token is a JWT (simple heuristic: contains three parts separated by dots)
+      const isJwt = refreshToken.split('.').length === 3
+
+      if (isJwt) {
+        // For JWT tokens, check expiration
+        return !this.jwtHelper.isTokenExpired(refreshToken)
+      } else {
+        // For opaque tokens, assume valid until refreshed
+        return true
+      }
+    })
   }
 
   reset() {

@@ -84,7 +84,7 @@ export const DefaultQuestionnaireFormatURI = '.json'
 
 export const DefaultOryEndpoint = 'http://192.168.1.10:4444'
 export const DefaultOryScopes =
-  'SUBJECT.READ SUBJECT.UPDATE PROJECT.READ offline_access'
+  'SUBJECT.READ SUBJECT.UPDATE PROJECT.READ MEASUREMENT.CREATE SOURCEDATA.CREATE SOURCETYPE.UPDATE offline_access'
 
 export const DefaultGooglePlaystoreAppURL =
   'https://play.google.com/store/apps/details?id='

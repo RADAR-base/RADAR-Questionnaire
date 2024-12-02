@@ -247,7 +247,7 @@ export class EnrolmentPageComponent {
     App.addListener('appUrlOpen', event => {
       const url = new URL(event.url)
       if (url.hostname === 'enrol') {
-        this.authenticate(event)
+        this.authenticate(event.url)
       }
     })
   }

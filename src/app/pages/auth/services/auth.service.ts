@@ -50,7 +50,7 @@ export class AuthService {
   }
 
   private handleOryAuth(authObj: any) {
-    const url = new URL(authObj.url)
+    const url = new URL(authObj)
     const encodedData = url.searchParams.get('data')
     const baseUrl = new URL(url.searchParams.get('referrer')).origin
     if (encodedData) {

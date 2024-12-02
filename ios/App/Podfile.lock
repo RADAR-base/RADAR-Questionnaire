@@ -1,7 +1,4 @@
 PODS:
-  - ByteowlsCapacitorOauth2 (5.0.0):
-    - Capacitor
-    - OAuthSwift (= 2.2.0)
   - Capacitor (5.7.0):
     - CapacitorCordova
   - CapacitorApp (5.0.7):
@@ -202,13 +199,11 @@ PODS:
     - nanopb/encode (= 2.30909.1)
   - nanopb/decode (2.30909.1)
   - nanopb/encode (2.30909.1)
-  - OAuthSwift (2.2.0)
   - PerfoodCapacitorHealthkit (1.3.0):
     - Capacitor
   - PromisesObjC (2.4.0)
 
 DEPENDENCIES:
-  - "ByteowlsCapacitorOauth2 (from `../../node_modules/@byteowls/capacitor-oauth2`)"
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorApp (from `../../node_modules/@capacitor/app`)"
   - "CapacitorAppLauncher (from `../../node_modules/@capacitor/app-launcher`)"
@@ -258,12 +253,9 @@ SPEC REPOS:
     - MLKitCommon
     - MLKitVision
     - nanopb
-    - OAuthSwift
     - PromisesObjC
 
 EXTERNAL SOURCES:
-  ByteowlsCapacitorOauth2:
-    :path: "../../node_modules/@byteowls/capacitor-oauth2"
   Capacitor:
     :path: "../../node_modules/@capacitor/ios"
   CapacitorApp:
@@ -312,7 +304,6 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@perfood/capacitor-healthkit"
 
 SPEC CHECKSUMS:
-  ByteowlsCapacitorOauth2: 9e7cdae2bf251463a6ad89493e27fb288bf694d7
   Capacitor: fc155ee2ee45a2093d716f13cf5aa5a865e2d85a
   CapacitorApp: 17fecd0e6cb23feafac7eb0939417389038b0979
   CapacitorAppLauncher: 7b2705481a74cbe322441bd374f56194de59ab1a
@@ -356,10 +347,9 @@ SPEC CHECKSUMS:
   MLKitCommon: c1b791c3e667091918d91bda4bba69a91011e390
   MLKitVision: 8baa5f46ee3352614169b85250574fde38c36f49
   nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
-  OAuthSwift: 75efbb5bd9a4b2b71a37bd7e986bf3f55ddd54c6
   PerfoodCapacitorHealthkit: 88f6e78b319072c4d0aec439b2fcc14d3f05d311
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
 
-PODFILE CHECKSUM: 16edef3c7e1625a0179cce0d7a8fa47369799d66
+PODFILE CHECKSUM: 1824f14cf780f76e09325666adc4a167d6b3b5b6
 
 COCOAPODS: 1.16.2

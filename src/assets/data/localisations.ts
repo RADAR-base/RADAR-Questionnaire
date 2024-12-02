@@ -93,16 +93,6 @@ export const Localisations = {
     hb:
       'לחץ על כפתור הסריקה וכוון את המצלמה לכיוון קוד הQR שניתן לך על ידי החוקרים. דוגמה לקוד QR מוצגת למטה.'
   },
-  ENROL_REGISTRATION_ORY_DESC: {
-    da: 'Log ind med din Ory identitetsudbyder.',
-    de: 'Melden Sie sich mit Ihrem Ory-Identitätsanbieter an.',
-    en: 'Login with your Ory identity provider.',
-    es: 'Inicie sesión con su proveedor de identidad Ory.',
-    it: 'Accedi con il tuo provider di identità Ory.',
-    nl: 'Log in met uw Ory-identiteitsprovider.',
-    pl: 'Zaloguj się za pomocą dostawcy tożsamości Ory.',
-    hb: 'התחבר באמצעות ספק הזהות Ory שלך.'
-  },
   ENROL_REGISTRATION_TOKEN_DESC: {
     da:
       'Indtast token. Dette skal være tilgængeligt under QR-koden på Management Portal. Hvis ikke, skal du scanne QR-koden.',
@@ -753,16 +743,6 @@ export const Localisations = {
     nl: 'Scan',
     pl: 'Skanuj',
     hb: 'סרוק'
-  },
-  BTN_ENROL_KRATOS: {
-    da: 'Login med Ory',
-    de: 'Mit Ory anmelden',
-    en: 'Login with Ory',
-    es: 'Iniciar sesión con Ory',
-    it: 'Accedi con Ory',
-    nl: 'Inloggen met Ory',
-    pl: 'Zaloguj się z Ory',
-    hb: 'התחברות עם Ory'
   },
   BTN_ENROL_ENTER_TOKEN: {
     da: 'Indtast Token',

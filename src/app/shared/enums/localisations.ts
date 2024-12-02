@@ -82,7 +82,6 @@ export class LocKeys {
   static LANGUAGE_HEBREW = new LocKeys('LANGUAGE_HEBREW')
   static BTN_ENROL_ENROL = new LocKeys('BTN_ENROL_ENROL')
   static BTN_ENROL_SCAN = new LocKeys('BTN_ENROL_SCAN')
-  static BTN_ENROL_KRATOS = new LocKeys('BTN_ENROL_KRATOS')
   static BTN_FINISH = new LocKeys('BTN_FINISH')
   static BTN_DONE = new LocKeys('BTN_DONE')
   static BTN_DISMISS = new LocKeys('BTN_DISMISS')
@@ -199,7 +198,7 @@ export class LocKeys {
     'EXTERNAL_APP_FAILURE_ON_LAUNCH_DESC'
   )
 
-  constructor(public value: string) {}
+  constructor(public value: string) { }
 
   toString() {
     return this.value

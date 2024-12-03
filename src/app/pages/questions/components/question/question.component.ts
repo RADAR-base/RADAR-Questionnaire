@@ -138,16 +138,16 @@ export class QuestionComponent implements OnInit, OnChanges {
   emitAnswer(event: any) {
     // Only proceed if event is not null or undefined
     if (event !== null && event !== undefined) {
-      this.value = event;
+      this.value = event
       this.answer.emit({
         id: this.question.field_name,
         value: this.value,
         type: this.question.field_type
       })
       if (this.question.isAutoNext) {
-        this.nextAction.emit(NextButtonEventType.AUTO);
+        this.nextAction.emit(NextButtonEventType.AUTO)
       } else {
-        this.nextAction.emit(NextButtonEventType.ENABLE);
+        this.nextAction.emit(NextButtonEventType.ENABLE)
       }
     }
   }

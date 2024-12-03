@@ -23,7 +23,16 @@
 	<key>CFBundleShortVersionString</key>
 	<string>3.3.0</string>
 	<key>CFBundleVersion</key>
-	<string>3.3.0</string>
+	<string>1</string>
+  <key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>org.phidatalab.radar-armt</string>
+			</array>
+		</dict>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>

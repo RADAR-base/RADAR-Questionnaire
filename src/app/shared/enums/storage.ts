@@ -37,6 +37,7 @@ export class StorageKeys {
   static LAST_NOTIFICATION_UPDATE = new StorageKeys('LAST_NOTIFICATION_UPDATE')
   static LAST_UPLOAD_DATE = new StorageKeys('LAST_UPLOAD_DATE')
   static BASE_URI = new StorageKeys('BASE_URI')
+  static TOKEN_ENDPOINT = new StorageKeys('TOKEN_ENDPOINT')
 
   static REMOTE_CONFIG_CACHE_TIMEOUT = new StorageKeys(
     'REMOTE_CONFIG_CACHE_TIMEOUT'
@@ -51,7 +52,7 @@ export class StorageKeys {
 
   static HEALTH_LAST_POLL_TIMES = new StorageKeys('HEALTH_LAST_POLL_TIMES')
 
-  constructor(public value: string) {}
+  constructor(public value: string) { }
 
   toString() {
     return this.value

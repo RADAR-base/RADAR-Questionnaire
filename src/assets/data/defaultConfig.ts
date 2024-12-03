@@ -22,6 +22,9 @@ export const DefaultAppVersion = '3.0.0-alpha'
 // *Default Android package name
 export const DefaultPackageName = 'org.phidatalab.radar_armt'
 
+// *Default iOS package name
+export const DefaultIosPackageName = 'org.phidatalab.radar-armt'
+
 // *Default iOS app id
 export const DefaultAppId = ''
 
@@ -68,9 +71,10 @@ export const DefaultShowTaskProgressCount = 'false'
 
 // *The Default endpoint where the RADAR-base platform is hosted
 export const DefaultEndPoint: string = 'https://stage.radar-base.net'
-
 export const DefaultManagementPortalURI = '/managementportal'
 export const DefaultRefreshTokenURI = '/oauth/token'
+export const DefaultTokenEndPoint: string =
+  'https://stage.radar-base.net/managementportal/oauth/token'
 export const DefaultSubjectsURI = '/api/subjects/'
 export const DefaultMetaTokenURI: string = '/api/meta-token/'
 export const DefaultEnrolmentBaseURL =

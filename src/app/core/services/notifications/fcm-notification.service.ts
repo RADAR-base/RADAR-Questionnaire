@@ -115,7 +115,7 @@ export abstract class FcmNotificationService extends NotificationService {
     if (token) {
       this.FCM_TOKEN = token
       return this.setFCMToken(token).then(() =>
-        this.logger.log('[NOTIFICATION SERVICE] Refresh token success')
+        this.logger.log('[NOTIFICATION SERVICE] Refresh FCM token success')
       )
     } else {
       return Promise.resolve()

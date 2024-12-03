@@ -116,7 +116,7 @@ export class EnrolmentPageComponent {
     if (slideIndex !== -1) {
       this.slides.nativeElement.swiper.allowSlideNext = true
       this.slides.nativeElement.swiper
-        .slideTo(slideIndex)
+        .slideTo(slideIndex, 500)
         .then(() => (this.slides.nativeElement.swiper.allowSlideNext = false))
     }
   }
@@ -247,6 +247,7 @@ export class EnrolmentPageComponent {
     App.addListener('appUrlOpen', event => {
       const url = new URL(event.url)
       if (url.hostname === 'enrol') {
+        this.loading = true
         this.authenticate(event.url)
       }
     })

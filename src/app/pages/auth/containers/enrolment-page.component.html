@@ -20,9 +20,14 @@
           </div>
         </div>
         <div class="bottom">
-          <ion-button ion-button class="bt bt--full" round full (click)="next()">
-            {{ 'BTN_START' | translate }}
-          </ion-button>
+          <div *ngIf="!loading">
+            <ion-button ion-button class="bt bt--full" round full (click)="next()">
+              {{ 'BTN_START' | translate }}
+            </ion-button>
+          </div>
+          <div id="loading" *ngIf="loading">
+            {{ 'STATUS_LOADING' | translate }}...
+          </div>
         </div>
       </ion-card>
     </swiper-slide>

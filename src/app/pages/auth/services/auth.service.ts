@@ -5,6 +5,7 @@ import {
   DefaultManagementPortalURI,
   DefaultSourceTypeModel,
   DefaultRefreshTokenURI,
+  DefaultMetaTokenURI,
 } from '../../../../assets/data/defaultConfig'
 import { ConfigService } from '../../../core/services/config/config.service'
 import { SubjectConfigService } from '../../../core/services/config/subject-config.service'
@@ -33,7 +34,7 @@ export class AuthService {
   }
 
   authenticate(authObj: any) {
-    if (authObj instanceof String) {
+    if (authObj.includes(DefaultMetaTokenURI)) {
       return this.handleMetaTokenAuth(authObj)
     } else {
       return this.handleOryAuth(authObj)

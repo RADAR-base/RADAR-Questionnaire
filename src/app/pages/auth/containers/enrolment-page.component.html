@@ -9,7 +9,10 @@
         <div class="text">
           <div class="text-lg">{{ 'ENROL_WELCOME_1' | translate }}</div>
           {{ 'ENROL_WELCOME_2' | translate }}
-          <div class="padding text-justify extra-padding">
+          <div class="spn-container" *ngIf="loading | async">
+            <ion-spinner name="lines"></ion-spinner>
+          </div>
+          <div class="padding text-justify extra-padding" *ngIf="!(loading | async)">
             <ion-item no-lines>
               <span class="info-value">{{ language.label | translate }}</span>
               <span slot="end" (click)="showSelectLanguage()">
@@ -19,15 +22,10 @@
             </ion-item>
           </div>
         </div>
-        <div class="bottom">
-          <div *ngIf="!loading">
-            <ion-button ion-button class="bt bt--full" round full (click)="next()">
-              {{ 'BTN_START' | translate }}
-            </ion-button>
-          </div>
-          <div id="loading" *ngIf="loading">
-            {{ 'STATUS_LOADING' | translate }}...
-          </div>
+        <div class="bottom" *ngIf="!(loading | async)">
+          <ion-button ion-button class="bt bt--full" round full (click)="next()">
+            {{ 'BTN_START' | translate }}
+          </ion-button>
         </div>
       </ion-card>
     </swiper-slide>
@@ -84,11 +82,11 @@
           <div class="text text-lg">{{ 'ENROL_REGISTRATION' | translate }}</div>
           <div [ngSwitch]="enrolmentMethod">
             <ng-container *ngSwitchCase="'token'">
-              <token-form [loading]="loading" (data)="authenticate($event)" (focus)="clearStatus()"
+              <token-form [loading]="loading | async" (data)="authenticate($event)" (focus)="clearStatus()"
                 (errors)="handleError($event)"></token-form>
             </ng-container>
             <ng-container *ngSwitchCase="'qr'">
-              <qr-form [loading]="loading" (data)="authenticate($event)"></qr-form>
+              <qr-form [loading]="loading | async" (data)="authenticate($event)"></qr-form>
             </ng-container>
           </div>
         </div>
@@ -97,7 +95,7 @@
         <div id="outcome" *ngIf="showOutcomeStatus">
           {{ outcomeStatus }}
         </div>
-        <div id="loading" *ngIf="loading && !showOutcomeStatus">
+        <div id="loading" *ngIf="(loading | async) && !showOutcomeStatus">
           {{ 'STATUS_LOADING' | translate }}...
         </div>
       </div>

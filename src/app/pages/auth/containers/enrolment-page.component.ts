@@ -25,6 +25,7 @@ import {
   WeeklyReportSubSettings
 } from '../../../shared/models/settings'
 import { AuthService } from '../services/auth.service'
+import { BehaviorSubject } from 'rxjs'
 
 @Component({
   selector: 'page-enrolment',
@@ -35,7 +36,7 @@ export class EnrolmentPageComponent {
   @ViewChild('swiper')
   slides: ElementRef | undefined
 
-  loading: boolean = false
+  loading = new BehaviorSubject<boolean>(false)
   showOutcomeStatus: boolean = false
   outcomeStatus: string
   enterMetaQR = false
@@ -110,14 +111,30 @@ export class EnrolmentPageComponent {
     }
   }
 
-  goToSlideById(id: string) {
+  findSlideIndexById(id: string) {
     const slides = Array.from(document.querySelectorAll('swiper-slide'))
-    const slideIndex = slides.findIndex(slide => slide.id === id)
+    return slides.findIndex(slide => slide.id === id)
+  }
+
+  goToSlideById(id: string) {
+    const slideIndex = this.findSlideIndexById(id)
     if (slideIndex !== -1) {
       this.slides.nativeElement.swiper.allowSlideNext = true
       this.slides.nativeElement.swiper
         .slideTo(slideIndex, 500)
         .then(() => (this.slides.nativeElement.swiper.allowSlideNext = false))
+    }
+  }
+
+  removeSlideById(id: string) {
+    const slideIndex = this.findSlideIndexById(id)
+    const currentIndex = this.slides.nativeElement.swiper.activeIndex
+    if (currentIndex == slideIndex) {
+      return this.next()
+    }
+    if (slideIndex !== -1) {
+      this.slides.nativeElement.swiper.removeSlide(slideIndex)
+      this.slides.nativeElement.swiper.update()
     }
   }
 
@@ -147,27 +164,28 @@ export class EnrolmentPageComponent {
   }
 
   authenticate(authObj) {
-    this.loading = true
+    this.loading.next(true)
     this.clearStatus()
-    this.auth
+    return this.auth
       .authenticate(authObj)
       .catch(e => {
         if (e.status !== 409) throw e // Handle conflict error (409)
       })
       .then(() => this.handleAuthenticationSuccess())
       .catch(e => this.handleAuthenticationError(e))
+      .then(() => this.loading.next(false))
   }
 
   handleAuthenticationSuccess() {
-    this.auth.initSubjectInformation().then(() => {
+    return this.auth.initSubjectInformation().then(() => {
       this.usage.sendGeneralEvent(EnrolmentEventType.SUCCESS)
-      this.goToSlideById('privacy-policy')
+      this.removeSlideById('qr-registration-choice')
+      return this.removeSlideById('qr-registration')
     })
   }
 
   handleAuthenticationError(e) {
     this.handleError(e)
-    this.loading = false
     this.auth.reset()
   }
 
@@ -247,7 +265,6 @@ export class EnrolmentPageComponent {
     App.addListener('appUrlOpen', event => {
       const url = new URL(event.url)
       if (url.hostname === 'enrol') {
-        this.loading = true
         this.authenticate(event.url)
       }
     })

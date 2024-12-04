@@ -277,7 +277,7 @@ export class QuestionsService {
     this.initQuestionnaireProcessor(task.name)
     return this.questionnaire
       .getAssessmentForTask(type, task)
-      .then(assessment => 
+      .then(assessment =>
         this.questionnaireProcessor.process(
           this.getData(questions),
           task,
@@ -289,6 +289,8 @@ export class QuestionsService {
   initQuestionnaireProcessor(name) {
     if (name.toLowerCase().includes('health')) {
       this.questionnaireProcessor = this.healthProcessor
+    } else {
+      this.questionnaireProcessor = this.defaultQuestionnaireProcessor
     }
   }
 

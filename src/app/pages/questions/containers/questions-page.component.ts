@@ -178,7 +178,7 @@ export class QuestionsPageComponent implements OnInit {
   }
 
   handleFinish() {
-    this.navCtrl.navigateRoot('/home')  
+    this.navCtrl.navigateRoot('/home')
   }
 
   onAnswer(event) {
@@ -352,7 +352,9 @@ export class QuestionsPageComponent implements OnInit {
     }
   }
 
-  onSlideFinish() {}
+  onSlideFinish() {
+    this.onQuestionnaireCompleted()
+  }
 
   onQuestionnaireCompleted() {
     return this.questionsService.processCompletedQuestionnaire(

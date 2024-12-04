@@ -28,7 +28,7 @@ export class AudioRecordService {
     return new Promise((resolve, reject) => {
       return VoiceRecorder.requestAudioRecordingPermission().then(
         (result: GenericResponse) => {
-          return VoiceRecorder.startRecording()
+          return VoiceRecorder.startRecordingWithCompression({ sampleRate: 16000 })
             .then((result: GenericResponse) => {
               this.isRecording = true
             })

@@ -3,13 +3,14 @@ import { Injectable } from '@angular/core'
 import * as AvroSchema from 'avro-js'
 import { SchemaAndValue, SchemaMetadata } from 'src/app/shared/models/kafka'
 import {
-  DefaultEndPoint,
   DefaultSchemaSpecEndpoint
 } from 'src/assets/data/defaultConfig'
 import * as YAML from 'yaml'
 
 import { LogService } from '../../misc/log.service'
 import { TokenService } from '../../token/token.service'
+import { ConfigKeys } from 'src/app/shared/enums/config'
+import { RemoteConfigService } from '../../config/remote-config.service'
 
 @Injectable()
 export abstract class ConverterService {
@@ -22,17 +23,18 @@ export abstract class ConverterService {
   constructor(
     public logger: LogService,
     private http: HttpClient,
-    public token: TokenService
+    public token: TokenService,
+    private remoteConfig: RemoteConfigService
   ) {
     this.updateURI()
     this.getRadarSpecifications()
   }
 
-  init() {}
+  init() { }
 
   abstract getKafkaTopic(payload, topics?)
 
-  processData(data) {}
+  processData(data) { }
 
   getSchemas(topic) {
     if (this.schemas[topic]) return this.schemas[topic]
@@ -87,13 +89,16 @@ export abstract class ConverterService {
   }
 
   getRadarSpecifications(): Promise<any[] | null> {
-    return this.http
-      .get(DefaultSchemaSpecEndpoint)
-      .toPromise()
-      .then(
-        res => (this.specifications = YAML.parse(atob(res['content'])).data)
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        config.getOrDefault(
+          ConfigKeys.KAFKA_SPECIFICATION_URL,
+          DefaultSchemaSpecEndpoint
+        )
       )
-      .then(specs => (this.specifications = specs))
+      .then(url => this.http.get(url).toPromise())
+      .then(res => YAML.parse(atob(res['content'])).data)
       .catch(e => {
         this.logger.error('Failed to get valid RADAR Schema specifications', e)
         return null

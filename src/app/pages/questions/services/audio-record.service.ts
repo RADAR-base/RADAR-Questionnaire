@@ -11,6 +11,8 @@ import {
 
 import { DefaultAudioRecordOptions } from '../../../../assets/data/defaultConfig'
 import { LogService } from '../../../core/services/misc/log.service'
+import { RemoteConfigService } from 'src/app/core/services/config/remote-config.service'
+import { ConfigKeys } from 'src/app/shared/enums/config'
 
 @Injectable({
   providedIn: 'root'
@@ -19,16 +21,31 @@ export class AudioRecordService {
   isRecording: boolean
   encoding = 'base64'
   data: any
+  private audioSamplingRate: number = DefaultAudioRecordOptions.SampleRate
 
   constructor(
-    private logger: LogService
-  ) {}
+    private logger: LogService,
+    private remoteConfig: RemoteConfigService
+  ) {
+    this.remoteConfig
+      .subject()
+      .subscribe(config =>
+        config
+          .getOrDefault(
+            ConfigKeys.AUDIO_SAMPLING_RATE,
+            String(this.audioSamplingRate)
+          )
+          .then(rate => (this.audioSamplingRate = Number(rate)))
+      )
+  }
 
   startAudioRecording(): Promise<any> {
     return new Promise((resolve, reject) => {
       return VoiceRecorder.requestAudioRecordingPermission().then(
         (result: GenericResponse) => {
-          return VoiceRecorder.startRecordingWithCompression({ sampleRate: 16000 })
+          return VoiceRecorder.startRecordingWithCompression({
+            sampleRate: this.audioSamplingRate
+          })
             .then((result: GenericResponse) => {
               this.isRecording = true
             })

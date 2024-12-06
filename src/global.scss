@@ -219,4 +219,17 @@ body.scanner-active {
 
 ion-modal {
   --background: transparent !important;
+
+  ion-header > ion-toolbar {
+    --background: var(--cl-secondary) !important;
+  }
+
+  ion-list > ion-item {
+    --background: transparent !important;
+  }
+}
+
+.dp-month-year-scroll-container {
+  --background: var(--cl-primary-20) !important;
+  background-color: var(--cl-primary-20) !important;
 }

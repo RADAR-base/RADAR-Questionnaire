@@ -103,11 +103,18 @@ export class TokenService {
           .post(uri, refreshBody, { headers: headers })
           .toPromise()
       })
-      .then(res => this.setTokens(res).then(() => res))
+      .then((res: any) => {
+        if (!res.iat)
+          res.iat = this.jwtHelper.decodeToken(res.access_token)['iat']
+        this.setTokens(res)
+        return res
+      })
   }
 
   refresh(): Promise<OAuthToken> {
+    console.log('Refreshing tokenn...')
     return this.getTokens().then(tokens => {
+      console.log(tokens)
       if (!tokens) {
         throw new Error('No tokens are available to refresh')
       }

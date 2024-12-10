@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import {
+  HealthKitDataKey,
   HealthKitDataTypeKey,
   HealthkitDataType,
   HealthkitFloatDataTypes,
@@ -39,11 +40,12 @@ export class HealthkitConverterService extends ConverterService {
   init() { }
 
   processData(data) {
-    return { name: 'healthkit', time: getSeconds({milliseconds: Date.now()}), data: { key: data.key, value: data.value } }
+    return { name: 'healthkit', time: getSeconds({ milliseconds: Date.now() }), data: { key: data.key, value: data.value } }
   }
 
   processSingleDatatype(key, data, timeReceived): any[] {
     const type = this.getDataTypeFromKey(key)
+    const valueKey = this.getValueKey(key)
     const results = data.map(d =>
       Object.assign(
         {},
@@ -53,14 +55,14 @@ export class HealthkitConverterService extends ConverterService {
           timeReceived: timeReceived,
           sourceId: d.sourceBundleId,
           sourceName: d.device.manufacturer + ' ' + d.device.model + ' ' + d.device.hardwareVersion,
-          unit: d.unitName,
+          unit: d.unitName ? d.unitName : '',
           key,
           intValue: null,
           floatValue: null,
           doubleValue: null,
           stringValue: null
         } as HealthkitValueExport,
-        { [type]: d.value }
+        { [type]: d[valueKey] }
       )
     )
     return results
@@ -120,6 +122,12 @@ export class HealthkitConverterService extends ConverterService {
     if (HealthkitStringDataTypes.has(key as HealthkitDataType)) {
       return HealthKitDataTypeKey.STRING
     } else return HealthKitDataTypeKey.FLOAT
+  }
+
+  getValueKey(type) {
+    if (type == HealthkitDataType.SLEEP_ANALYSIS) return HealthKitDataKey.SLEEP_STATE
+    if (type == HealthkitDataType.WORKOUT_TYPE) return HealthKitDataKey.ACTIVITY_TYPE
+    return HealthKitDataKey.DEFAULT
   }
 
   getKafkaTopic(key): String {

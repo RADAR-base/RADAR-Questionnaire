@@ -22,7 +22,12 @@ export enum HealthkitDataType {
   BLOOD_GLUCOSE = 'bloodGlucose',
   SLEEP_ANALYSIS = 'sleepAnalysis',
   WEIGHT = 'weight',
-  WORKOUT_TYPE = 'workoutType'
+  WORKOUT_TYPE = 'workoutType',
+  OXYGEN_SATURATION = 'oxygenSaturation',
+  BLOOD_PRESSURE_SYSTOLIC = 'blooPressureSystolic',
+  BLOOD_PRESSURE_DIASTOLIC = 'bloodPressureDiastolic',
+  RESTING_HEART_RATE = 'restingHeartRate',
+  RESPIRATORY_RATE = 'respiratoryRate'
 }
 
 export enum HealthkitTopic {
@@ -37,7 +42,12 @@ export enum HealthkitTopic {
   BLOOD_GLUCOSE = 'active_apple_healthkit_blood_glucose',
   SLEEP_ANALYSIS = 'active_apple_healthkit_sleep_stage',
   WEIGHT = 'active_apple_healthkit_weight',
-  WORKOUT_TYPE = 'active_apple_healthkit_workout_type'
+  WORKOUT_TYPE = 'active_apple_healthkit_activity',
+  OXYGEN_SATURATION = 'active_apple_healthkit_oxygen_saturation',
+  BLOOD_PRESSURE_SYSTOLIC = 'active_apple_healthkit_blood_pressure',
+  BLOOD_PRESSURE_DIASTOLIC = 'active_apple_healthkit_blood_pressure',
+  RESTING_HEART_RATE = 'active_apple_healthkit_heart_rate',
+  RESPIRATORY_RATE = 'active_apple_healthkit_resp_rate'
 }
 
 export const HealthkitFloatDataTypes = new Set([
@@ -50,7 +60,12 @@ export const HealthkitFloatDataTypes = new Set([
   HealthkitDataType.HEART_RATE,
   HealthkitDataType.APPLE_EXERCISE_TIME,
   HealthkitDataType.BLOOD_GLUCOSE,
-  HealthkitDataType.WEIGHT
+  HealthkitDataType.WEIGHT,
+  HealthkitDataType.OXYGEN_SATURATION,
+  HealthkitDataType.BLOOD_PRESSURE_DIASTOLIC,
+  HealthkitDataType.BLOOD_PRESSURE_SYSTOLIC,
+  HealthkitDataType.RESPIRATORY_RATE,
+  HealthkitDataType.RESTING_HEART_RATE
 ])
 
 export const HealthkitStringDataTypes = new Set([
@@ -62,6 +77,12 @@ export enum HealthKitDataTypeKey {
   STRING = 'stringValue',
   FLOAT = 'floatValue',
   DOUBLE = 'doubleValue'
+}
+
+export enum HealthKitDataKey {
+  DEFAULT = 'value',
+  SLEEP_STATE = 'sleepState',
+  ACTIVITY_TYPE = 'workoutActivityName'
 }
 
 export interface HealthkitValueExport {

@@ -5,7 +5,8 @@ const config: CapacitorConfig = {
   appName: 'RADAR Active RMT',
   webDir: 'www',
   server: {
-    androidScheme: 'https'
+    androidScheme: 'https',
+    "cleartext": true
   },
   loggingBehavior: 'none',
   ios: {
@@ -29,6 +30,9 @@ const config: CapacitorConfig = {
     },
     FirebaseMessaging: {
       presentationOptions: ['badge', 'sound', 'alert']
+    },
+    CapacitorHttp: {
+      enabled: true
     }
   },
   cordova: {

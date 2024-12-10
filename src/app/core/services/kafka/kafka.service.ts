@@ -1,6 +1,11 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http'
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders
+} from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import * as pako from 'pako'
+import { CapacitorHttp } from '@capacitor/core';
 
 import {
   DefaultClientAcceptType,
@@ -37,8 +42,8 @@ export class KafkaService {
   private TOPIC_CACHE_VALIDITY = KafkaService.DEFAULT_TOPIC_CACHE_VALIDITY
   HTTP_ERROR = 'HttpErrorResponse'
 
-  eventCallback = new Subject<any>(); // Source
-  eventCallback$ = this.eventCallback.asObservable(); // Stream
+  eventCallback = new Subject<any>() // Source
+  eventCallback$ = this.eventCallback.asObservable() // Stream
   progress = 0
   cacheSize = 0
 
@@ -160,48 +165,51 @@ export class KafkaService {
       .then(([cache, size, headers, kafkaKey]) => {
         this.progress = 0
         this.cacheSize = size
-        return Promise.all(Object.entries(cache)
-          .filter(([k]) => k)
-          .map((entry, i) => {
-            const [k, v] = entry
-            return this.convertEntryToRecord(kafkaKey, k, v)
-              .then(r => {
-                this.updateProgress()
-                return this.sendToKafka(r.topic, r.record, headers)
-              }).then(() => {
-                successKeys.push(k)
-                return this.cache.removeFromCache(k)
-              }).catch(e => {
-                failedKeys.push(k)
-                return this.logger.error('Failed to send data from cache to kafka', e)
-              }).finally(() => this.updateProgress())
-          }))
-      }).then(() => {
+        return Promise.all(
+          Object.entries(cache)
+            .filter(([k]) => k)
+            .map((entry, i) => {
+              const [k, v] = entry
+              return this.convertEntryToRecord(kafkaKey, k, v)
+                .then(r => {
+                  this.updateProgress()
+                  return this.sendToKafka(r.topic, r.record, headers)
+                })
+                .then(() => {
+                  successKeys.push(k)
+                  return this.cache.removeFromCache(k)
+                })
+                .catch(e => {
+                  failedKeys.push(k)
+                  return this.logger.error(
+                    'Failed to send data from cache to kafka',
+                    e
+                  )
+                })
+                .finally(() => this.updateProgress())
+            })
+        )
+      })
+      .then(() => {
         this.setCacheSending(false)
-        return ({ successKeys, failedKeys })
+        return { successKeys, failedKeys }
       })
   }
 
   convertEntryToRecord(kafkaKey, k, v) {
     const type = v.name
-    return this.schema.getKafkaPayload(type, kafkaKey, v.kafkaObject.value, k, this.topics)
+    return this.schema.getKafkaPayload(
+      type,
+      kafkaKey,
+      v.kafkaObject.value,
+      k,
+      this.topics
+    )
   }
 
   sendToKafka(topic, record, headers): Promise<any> {
     const allRecords = record.records
-    const compressed = pako.gzip(JSON.stringify(record)).buffer
-    return this.postData(
-      compressed,
-      topic,
-      headers.set('Content-Encoding', DefaultCompressedContentEncoding)
-    )
-      .catch(e => {
-        if (e.name == this.HTTP_ERROR) {
-          this.logger.log('Retrying uncompressed..')
-          return this.postData(record, topic, headers)
-        }
-        throw e
-      })
+    return this.postData(JSON.stringify(record), topic, headers)
       .then(() => this.sendEvent(allRecords[0], DataEventType.SEND_SUCCESS))
       .catch(e => {
         this.sendEvent(allRecords[0], DataEventType.SEND_ERROR, e)
@@ -226,11 +234,40 @@ export class KafkaService {
     }
   }
 
-  postData(data, topic, headers) {
-    return this.http
-      .post(this.KAFKA_CLIENT_URL + this.URI_topics + topic, data, {
-        headers
-      }).toPromise()
+  private convertHeaders(headers: HttpHeaders): { [key: string]: string } {
+    const result: { [key: string]: string } = {};
+    headers.keys().forEach((key) => {
+      const values = headers.getAll(key);
+      if (values && values.length > 0) {
+        result[key] = values.join(', '); // Join multiple values, if any
+      }
+    });
+    return result;
+  }
+
+  postData(data: any, topic: string, headers: HttpHeaders): Promise<any> {
+    const nativeHeaders = this.convertHeaders(headers);
+    const request = {
+      url: `${this.KAFKA_CLIENT_URL}${this.URI_topics}${topic}`,
+      data: data,
+      headers: nativeHeaders,
+      method: 'POST',
+    };
+
+    return CapacitorHttp.request(request)
+      .then(response => {
+        if (response.status < 200 || response.status >= 300) {
+          throw new HttpErrorResponse({
+            error: response.data,
+            status: response.status,
+          });
+        }
+        return response;
+      })
+      .catch(error => {
+        console.error('HTTP request failed:', error);
+        throw new Error(`Failed to send data to Kafka: ${error.message}`);
+      });
   }
 
   getAccessToken() {

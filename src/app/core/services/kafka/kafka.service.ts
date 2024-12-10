@@ -172,7 +172,7 @@ export class KafkaService {
               const [k, v] = entry
               return this.convertEntryToRecord(kafkaKey, k, v)
                 .then(r => {
-                  this.updateProgress()
+                  this.updateProgress(++this.progress, this.cacheSize)
                   return this.sendToKafka(r.topic, r.record, headers)
                 })
                 .then(() => {
@@ -186,11 +186,12 @@ export class KafkaService {
                     e
                   )
                 })
-                .finally(() => this.updateProgress())
+                .finally(() => this.updateProgress(++this.progress, this.cacheSize))
             })
         )
       })
       .then(() => {
+        this.updateProgress(this.cacheSize * 2, this.cacheSize)
         this.setCacheSending(false)
         return { successKeys, failedKeys }
       })
@@ -217,9 +218,9 @@ export class KafkaService {
       })
   }
 
-  updateProgress() {
+  updateProgress(progress, cacheSize) {
     // Cache size is multiplied by 2 because we have to convert and send
-    this.eventCallback.next(++this.progress / (this.cacheSize * 2))
+    this.eventCallback.next(progress / (cacheSize * 2))
   }
 
   sendEvent(record, eventType, error?) {

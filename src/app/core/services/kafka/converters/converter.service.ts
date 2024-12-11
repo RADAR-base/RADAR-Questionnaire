@@ -30,11 +30,11 @@ export abstract class ConverterService {
     this.getRadarSpecifications()
   }
 
-  init() {}
+  init() { }
 
   abstract getKafkaTopic(payload, topics?)
 
-  processData(data) {}
+  processData(data) { }
 
   getSchemas(topic) {
     if (this.schemas[topic]) return this.schemas[topic]
@@ -137,5 +137,11 @@ export abstract class ConverterService {
       )
       return false
     }
+  }
+
+  reset() {
+    this.BASE_URI = null
+    this.specifications = null
+    this.schemas = {}
   }
 }

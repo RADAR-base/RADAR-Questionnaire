@@ -15,7 +15,7 @@ export class SchemaService {
     private converterFactory: ConverterFactoryService,
     private subjectConfig: SubjectConfigService,
     public keyConverter: KeyConverterService,
-  ) {}
+  ) { }
 
   getKafkaObjectKey() {
     return this.subjectConfig
@@ -42,5 +42,9 @@ export class SchemaService {
     return this.converterFactory
       .getConverter(type)
       .getKafkaPayload(type, kafkaKey, kafkaObject, cacheKey, topics)
+  }
+
+  reset() {
+    return this.converterFactory.reset()
   }
 }

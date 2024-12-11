@@ -18,9 +18,9 @@ export class ConverterFactoryService {
     private completionLogConverter: CompletionLogConverterService,
     private timzoneConverter: TimezoneConverterService,
     private keyConverter: KeyConverterService
-  ) {}
+  ) { }
 
-  init() {}
+  init() { }
 
   getConverter(type) {
     switch (this.classify(type)) {
@@ -44,5 +44,14 @@ export class ConverterFactoryService {
   classify(type) {
     if (type.includes(SchemaType.HEALTHKIT)) return SchemaType.HEALTHKIT
     else return type
+  }
+
+  reset() {
+    this.healthkitConverter.reset()
+    this.assessmentConverter.reset()
+    this.completionLogConverter.reset()
+    this.timzoneConverter.reset()
+    this.appEventConverter.reset()
+    this.assessmentConverter.reset()
   }
 }

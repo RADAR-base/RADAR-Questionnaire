@@ -86,7 +86,7 @@
     "capacitor-voice-recorder": "^5.0.0",
     "compare-versions": "^5.0.3",
     "core-js": "2.6.8",
-    "dompurify": "^2.2.8",
+    "dompurify": "^2.4.9",
     "execa": "^4.0.3",
     "firebase": "^10.8.0",
     "graphlib": "^2.1.8",

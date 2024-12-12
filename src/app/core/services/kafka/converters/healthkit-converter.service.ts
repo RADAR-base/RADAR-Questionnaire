@@ -54,8 +54,10 @@ export class HealthkitConverterService extends ConverterService {
           endTime: getSeconds({ milliseconds: new Date(d.endDate).getTime() }),
           timeReceived: timeReceived,
           sourceId: d.sourceBundleId,
-          sourceName: d.device.manufacturer + ' ' + d.device.model + ' ' + d.device.hardwareVersion,
-          unit: d.unitName ? d.unitName : '',
+          sourceName: d.device ?
+            `${d.device.manufacturer} ${d.device.model} ${d.device.hardwareVersion}`
+            : d.source,
+          unit: d.unitName ?? '',
           key,
           intValue: null,
           floatValue: null,

@@ -8,7 +8,6 @@ import {
   Output,
   ViewChild
 } from '@angular/core'
-import * as smoothscroll from 'smoothscroll-polyfill'
 
 import {
   KeyboardEventType,
@@ -102,7 +101,6 @@ export class QuestionComponent implements OnInit, OnChanges {
   ])
 
   constructor() {
-    smoothscroll.polyfill()
     this.value = null
   }
 

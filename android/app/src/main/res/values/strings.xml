@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">RADAR Questionnaire</string>
-    <string name="title_activity_main">RADAR Active RMT</string>
+    <string name="title_activity_main">RADAR Questionnaire</string>
     <string name="package_name">org.phidatalab.radar_armt</string>
     <string name="custom_url_scheme">org.phidatalab.radar_armt</string>
 </resources>

@@ -57,6 +57,8 @@
         *ngSwitchCase="'health'"
         [responses]="question.select_choices_or_calculations"
         [health_question]="question"
+        [currentlyShown]="currentlyShown"
+        [refTimestamp]="task.timestamp"
         (valueChange)="emitAnswer($event)"
       >
       </health-input>
@@ -112,7 +114,6 @@
 
       <timed-test
         *ngSwitchCase="'timed'"
-        [heading]="question.field_label"
         [image]="question.field_annotation.image"
         [timer]="question.field_annotation.timer"
         [currentlyShown]="currentlyShown"

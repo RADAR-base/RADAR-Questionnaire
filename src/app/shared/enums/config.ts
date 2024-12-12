@@ -42,6 +42,8 @@ export class ConfigKeys {
 
   static SHOW_TASK_PROGRESS_COUNT = new ConfigKeys('show_task_progress_count')
 
+  static HEALTHKIT_LOOKBACK_INTERVAL_DAYS = new ConfigKeys('healthkit_lookback_interval_days')
+
   constructor(public value: string) {}
 
   toString() {

@@ -50,6 +50,10 @@ export class QuestionsServiceMock {
     return Promise.resolve({})
   }
 
+  getProgress() {
+    return 1
+  }
+
   initRemoteConfigParams() {
     return Promise.resolve({})
   }

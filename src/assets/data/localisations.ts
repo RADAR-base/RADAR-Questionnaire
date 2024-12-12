@@ -991,7 +991,7 @@ export const Localisations = {
     es: 'Cargando',
     it: 'Caricamento',
     nl: 'Laden',
-    pl: 'Ładowanie…',
+    pl: 'Ładowanie',
     hb: 'טוען'
   },
   STATUS_SUCCESS: {

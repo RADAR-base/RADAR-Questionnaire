@@ -39,23 +39,40 @@ export class CacheService {
     private storage: StorageService,
     private analytics: AnalyticsService,
     private logger: LogService
-  ) {}
+  ) { }
 
   init() {
     return Promise.all([this.setCache({})])
   }
 
-  storeInCache(type, kafkaObject: KafkaObject, cacheValue: any) {
-      return this.getCache().then(cache => {
-        this.logger.log('KAFKA-SERVICE: Caching answers.')
-        cache[kafkaObject.value.time] = cacheValue
-        this.sendDataEvent(DataEventType.CACHED, cacheValue)
-        return this.setCache(cache)
-      })
-    
+  storeInCache(type, kafkaObject, cacheValue: any) {
+    return this.getCache().then(cache => {
+      this.logger.log('KAFKA-SERVICE: Caching answers.')
+      cache[crypto.randomUUID()] = cacheValue
+      this.sendDataEvent(DataEventType.CACHED, cacheValue)
+      return this.setCache(cache)
+    })
   }
 
-  removeFromCache(cacheKeys: number[]) {
+  removeFromCache(cacheKey: string) {
+    return this.getCache().then(cache => {
+      if (cache) {
+        if (cache[cacheKey]) {
+          this.sendDataEvent(
+            DataEventType.REMOVED_FROM_CACHE,
+            cache[cacheKey]
+          )
+          this.logger.log('Deleting ' + cacheKey)
+          delete cache[cacheKey]
+        }
+        this.setLastUploadDate(Date.now())
+        return this.setCache(cache)
+      }
+    })
+  }
+
+
+  removeFromCacheMultiple(cacheKeys: string[]) {
     if (!cacheKeys.length) return Promise.resolve()
     return this.getCache().then(cache => {
       if (cache) {
@@ -113,9 +130,6 @@ export class CacheService {
   }
 
   reset() {
-    return Promise.all([
-      this.setCache({}),
-      this.setLastUploadDate(null)
-    ])
+    return Promise.all([this.setCache({}), this.setLastUploadDate(null)])
   }
 }

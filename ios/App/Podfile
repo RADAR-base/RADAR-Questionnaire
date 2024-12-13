@@ -34,7 +34,7 @@ def capacitor_pods
   pod 'CordovaPlugins', :path => '../capacitor-cordova-ios-plugins'
 end
 
-target 'App' do
+target 'RADAR Questionnaire' do
   capacitor_pods
   # Add your Pods here
   pod 'Firebase/Messaging'

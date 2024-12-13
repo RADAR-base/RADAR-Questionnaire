@@ -18,10 +18,13 @@ import { ConfigKeys } from 'src/app/shared/enums/config'
   providedIn: 'root'
 })
 export class AudioRecordService {
+  private samplingRate: number = DefaultAudioRecordOptions.SampleRate
+  private bitRate: number = DefaultAudioRecordOptions.BitRate
+  private encoder: string = DefaultAudioRecordOptions.AudioEncoder
+
   isRecording: boolean
   encoding = 'base64'
   data: any
-  private audioSamplingRate: number = DefaultAudioRecordOptions.SampleRate
 
   constructor(
     private logger: LogService,
@@ -29,13 +32,26 @@ export class AudioRecordService {
   ) {
     this.remoteConfig
       .subject()
-      .subscribe(config =>
+      .subscribe(config => {
         config
           .getOrDefault(
             ConfigKeys.AUDIO_SAMPLING_RATE,
-            String(this.audioSamplingRate)
+            String(this.samplingRate)
           )
-          .then(rate => (this.audioSamplingRate = Number(rate)))
+          .then(rate => (this.samplingRate = Number(rate)))
+        config
+          .getOrDefault(
+            ConfigKeys.AUDIO_BIT_RATE,
+            String(this.bitRate)
+          )
+          .then(rate => (this.bitRate = Number(rate)))
+        config
+          .getOrDefault(
+            ConfigKeys.AUDIO_ENCODER,
+            this.encoder
+          )
+          .then(encoder => (this.encoder = encoder))
+      }
       )
   }
 
@@ -44,7 +60,9 @@ export class AudioRecordService {
       return VoiceRecorder.requestAudioRecordingPermission().then(
         (result: GenericResponse) => {
           return VoiceRecorder.startRecordingWithCompression({
-            sampleRate: this.audioSamplingRate
+            sampleRate: this.samplingRate,
+            bitRate: this.bitRate,
+            audioEncoder: this.encoder
           })
             .then((result: GenericResponse) => {
               this.isRecording = true

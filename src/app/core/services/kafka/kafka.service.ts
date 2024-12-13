@@ -27,6 +27,7 @@ import { AnalyticsService } from '../usage/analytics.service'
 import { CacheService } from './cache.service'
 import { SchemaService } from './schema.service'
 import { Subject } from 'rxjs'
+import { debounceTime } from 'rxjs/operators'
 
 @Injectable()
 export class KafkaService {
@@ -44,6 +45,7 @@ export class KafkaService {
 
   eventCallback = new Subject<any>() // Source
   eventCallback$ = this.eventCallback.asObservable() // Stream
+  private progressSubject = new Subject<number>();
   progress = 0
   cacheSize = 0
 
@@ -59,6 +61,11 @@ export class KafkaService {
   ) {
     this.updateURI()
     this.readTopicCacheValidity()
+    this.progressSubject
+      .pipe(debounceTime(2000))
+      .subscribe((progress) => {
+        this.eventCallback.next(progress);
+      });
   }
 
   init() {
@@ -172,7 +179,6 @@ export class KafkaService {
               const [k, v] = entry
               return this.convertEntryToRecord(kafkaKey, k, v)
                 .then(r => {
-                  this.updateProgress(++this.progress, this.cacheSize)
                   return this.sendToKafka(r.topic, r.record, headers)
                 })
                 .then(() => {
@@ -191,7 +197,7 @@ export class KafkaService {
         )
       })
       .then(() => {
-        this.updateProgress(this.cacheSize * 2, this.cacheSize)
+        this.updateProgress(this.cacheSize, this.cacheSize)
         this.setCacheSending(false)
         return { successKeys, failedKeys }
       })
@@ -219,8 +225,8 @@ export class KafkaService {
   }
 
   updateProgress(progress, cacheSize) {
-    // Cache size is multiplied by 2 because we have to convert and send
-    this.eventCallback.next(progress / (cacheSize * 2))
+    const normalizedProgress = progress / cacheSize
+    this.progressSubject.next(normalizedProgress)
   }
 
   sendEvent(record, eventType, error?) {

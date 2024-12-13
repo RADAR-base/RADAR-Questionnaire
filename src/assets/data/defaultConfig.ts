@@ -327,4 +327,4 @@ export const DefaultHealthkitPermissions = [
 ]
 
 // *Default interval to pull Healthkit data until
-export const DefaultHealthkitInterval = 370 // days
+export const DefaultHealthkitInterval = 3500 // days

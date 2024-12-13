@@ -99,6 +99,7 @@ export abstract class ConverterService {
       )
       .then(url => this.http.get(url).toPromise())
       .then(res => YAML.parse(atob(res['content'])).data)
+      .then(specs => (this.specifications = specs))
       .catch(e => {
         this.logger.error('Failed to get valid RADAR Schema specifications', e)
         return null

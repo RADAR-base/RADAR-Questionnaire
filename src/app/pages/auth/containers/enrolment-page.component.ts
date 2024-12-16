@@ -53,6 +53,7 @@ export class EnrolmentPageComponent {
     private usage: UsageService,
     private logger: LogService
   ) {
+    this.initializeDeepLinking()
     this.init()
   }
 
@@ -63,7 +64,6 @@ export class EnrolmentPageComponent {
     let lang = this.languagesSelectable.find(a => a.value == tag)
     this.language = lang ? lang : this.language
     this.localization.setLanguage(this.language)
-    this.initializeDeepLinking()
   }
 
   ionViewDidEnter() {

@@ -16,37 +16,40 @@ import {
   SleepData
 } from '@perfood/capacitor-healthkit'
 import { LogService } from '../../../core/services/misc/log.service'
+import { DefaultHealthkitInterval, DefaultHealthkitPermissions } from 'src/assets/data/defaultConfig'
+import { RemoteConfigService } from 'src/app/core/services/config/remote-config.service'
+import { ConfigKeys } from 'src/app/shared/enums/config'
 
-declare var Media: any // stops errors w/ cordova-plugin-media-with-compression types
 
 @Injectable({
   providedIn: 'root'
 })
 export class HealthkitService {
-  health_value: any
-  health_display: any
-  health_display_time: any
-  health_time: any
-
-  notSupported = false
+  READ_PERMISSIONS = DefaultHealthkitPermissions
   // The interval days for first query
-  DEFAULT_LOOKBACK_INTERVAL = 30
-  MIN_POLL_TIMESTAMP = new Date(
-    new Date().getTime() - this.DEFAULT_LOOKBACK_INTERVAL * 24 * 60 * 60 * 1000
-  )
-  MAX_HOURLY_RECORD_LIMIT = 500
+  HEALTHKIT_INTERVAL_DAYS = String(DefaultHealthkitInterval)
+  queryProgress = 0
 
   constructor(
-    private storage: StorageService
+    private storage: StorageService,
+    private remoteConfig: RemoteConfigService
   ) {
-    this.initLastPollTimes()
+    this.init()
   }
 
-  initLastPollTimes() {
+  init() {
+    this.remoteConfig.read().then(config => {
+      config
+        .getOrDefault(
+          ConfigKeys.HEALTHKIT_LOOKBACK_INTERVAL_DAYS,
+          String(DefaultHealthkitInterval)
+        )
+        .then(interval =>
+          (this.HEALTHKIT_INTERVAL_DAYS = interval)
+        )
+    })
     return this.getLastPollTimes().then(dic => {
-      if (!dic) {
-        return this.setLastPollTimes({})
-      }
+      if (!dic) return this.setLastPollTimes({})
     })
   }
 
@@ -62,58 +65,43 @@ export class HealthkitService {
     return CapacitorHealthkit.isAvailable()
   }
 
-  loadData(healthDataType) {
-    return this.getLastPollTimes().then(dic => {
-      let lastPollTime = this.MIN_POLL_TIMESTAMP
-      if (healthDataType in dic) lastPollTime = dic[healthDataType]
+  loadData(healthDataType, startTime) {
       return CapacitorHealthkit
         .requestAuthorization(
           {
             all: [''],
-            read: [healthDataType], //read only permission
+            read: this.READ_PERMISSIONS,
             write: [''],
           }
         )
         .then(() => {
-          const endDate = new Date()
-          return this.query(lastPollTime, endDate, healthDataType).then(res => {
-            if (res.length) {
-              const lastDataDate = new Date(res[res.length - 1].endDate)
-              dic[healthDataType] = lastDataDate
-              this.setLastPollTimes(dic)
-            }
-            return res
-          })
+          const endTime = new Date(
+            startTime.getTime() + getMilliseconds({ days: Number(this.HEALTHKIT_INTERVAL_DAYS) }))
+           return { startTime: startTime, endTime: endTime }
         })
         .catch(e => {
           console.log(e)
           return null
         })
-    })
   }
 
   async query(queryStartTime: Date, queryEndTime: Date, dataType: string) {
-    let startTime = setDateTimeToMidnightEpoch(queryStartTime)
-    let endTime = startTime + getMilliseconds({ hours: 1 })
-    let completeData = []
-    while (endTime < queryEndTime.getTime()) {
+    try {
+      let startTime = setDateTimeToMidnightEpoch(queryStartTime)
+      let endTime = setDateTimeToMidnight(queryEndTime)
       const queryOptions = {
         sampleName: dataType,
         startDate: new Date(startTime).toISOString(),
         endDate: new Date(endTime).toISOString(),
-        limit: this.MAX_HOURLY_RECORD_LIMIT,
-      };
-      await CapacitorHealthkit.queryHKitSampleType(queryOptions)
-        .then(res => {
-          return (completeData = completeData.concat(res))
-        })
-      startTime = endTime
-      endTime = endTime + getMilliseconds({ hours: 1 })
+        limit: 0 // This is to get all the data
+      }
+      return (await CapacitorHealthkit.queryHKitSampleType(queryOptions)).resultData
+    } catch (e) {
+      return []
     }
-    return completeData
   }
 
   reset() {
-    return this.setLastPollTimes({})
+    return Promise.resolve()
   }
 }

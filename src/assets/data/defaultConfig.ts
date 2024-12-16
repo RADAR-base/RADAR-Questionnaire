@@ -1,4 +1,5 @@
 // tslint:disable:max-line-length
+import { HealthkitPermission } from 'src/app/shared/models/health'
 import { LocKeys } from '../../app/shared/enums/localisations'
 import { AssessmentType } from '../../app/shared/models/assessment'
 import { QuestionType } from '../../app/shared/models/question'
@@ -114,7 +115,7 @@ export const DefaultTask: Task = {
 }
 
 // *Default schedule coverage in years (length of schedule to generate tasks until)
-export const DefaultScheduleYearCoverage: number = 3
+export const DefaultScheduleYearCoverage: number = 10 // Lower value before release
 
 // *Default time interval of protocol
 export const DefaultScheduleTimeInterval = { unit: 'day', amount: 1 }
@@ -234,7 +235,8 @@ export const DefaultAudioRecordOptions = {
 // *Default question/question input types where the questionnaire will automatically move to the next question upon answering the question.
 export const DefaultAutoNextQuestionnaireTypes = [
   QuestionType.timed,
-  QuestionType.audio
+  QuestionType.audio,
+  QuestionType.health
 ]
 
 // *Default question/question input types where the next button is enabled by default, allowing the question to be skippable.
@@ -310,3 +312,19 @@ export const DefaultPrivacyPolicyUrl =
   'https://radar-base.org/actve-app-armt-privacy-policy/'
 
 export const DefaultHealthkitTopicPrefix = 'active_apple_healthkit_'
+
+// *Default Healthkit data permissions to request
+export const DefaultHealthkitPermissions = [
+  HealthkitPermission.ACTIVITY,
+  HealthkitPermission.BLOOD_GLUCOSE,
+  HealthkitPermission.CALORIES,
+  HealthkitPermission.DISTANCE,
+  HealthkitPermission.DURATION,
+  HealthkitPermission.HEART_RATE,
+  HealthkitPermission.STAIRS,
+  HealthkitPermission.WEIGHT,
+  HealthkitPermission.STEPS
+]
+
+// *Default interval to pull Healthkit data until
+export const DefaultHealthkitInterval = 3500 // days

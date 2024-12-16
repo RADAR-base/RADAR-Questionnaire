@@ -10,6 +10,7 @@ import * as YAML from 'yaml'
 
 import { LogService } from '../../misc/log.service'
 import { TokenService } from '../../token/token.service'
+import { KeyConverterService } from './key-converter.service'
 
 @Injectable()
 export abstract class ConverterService {
@@ -22,17 +23,18 @@ export abstract class ConverterService {
   constructor(
     public logger: LogService,
     private http: HttpClient,
-    public token: TokenService
+    public token: TokenService,
+    public keyConverter: KeyConverterService,
   ) {
     this.updateURI()
     this.getRadarSpecifications()
   }
 
-  init() {}
+  init() { }
 
   abstract getKafkaTopic(payload, topics?)
 
-  processData(data) {}
+  processData(data) { }
 
   getSchemas(topic) {
     if (this.schemas[topic]) return this.schemas[topic]
@@ -46,31 +48,41 @@ export abstract class ConverterService {
     }
   }
 
-  convertToRecord(kafkaValue, topic, valueSchemaMetadata) {
-    const value = JSON.parse(valueSchemaMetadata.schema)
-    const record = {
-      schema: valueSchemaMetadata.id,
-      value: this.convertToAvro(value, kafkaValue),
-      topic
-    }
-    return record
+  convertToAvro(kafkaValue, topic, valueSchemaMetadata) {
+    const schema = JSON.parse(valueSchemaMetadata.schema)
+    return AvroSchema.parse(schema).clone(kafkaValue, { wrapUnions: true })
   }
 
-  batchConvertToRecord(kafkaValues, topic, valueSchemaMetadata) {
-    const value = JSON.parse(valueSchemaMetadata.schema)
-    return this.batchConvertToAvro(value, kafkaValues).map(v => ({
-      value: v,
-      schema: valueSchemaMetadata.id
-    }))
-  }
-
-  convertToAvro(schema, value): any {
-    return AvroSchema.parse(schema).clone(value, { wrapUnions: true })
-  }
-
-  batchConvertToAvro(schema, values): any {
+  batchConvertToAvro(kafkaValues, topic, valueSchemaMetadata) {
+    const schema = JSON.parse(valueSchemaMetadata.schema)
     const parsedSchema = AvroSchema.parse(schema)
-    return values.map(v => parsedSchema.clone(v, { wrapUnions: true }))
+    return kafkaValues.map(v => parsedSchema.clone(v, { wrapUnions: true }))
+  }
+
+  getKafkaPayload(
+    type,
+    kafkaKey,
+    kafkaObject: any,
+    cacheKey: any,
+    topics
+  ): Promise<any[]> {
+    return this.getKafkaTopic(kafkaObject, topics).then(topic =>
+      this.getSchemas(topic).then(schema => {
+        return Promise.all([
+          this.keyConverter
+            .convertToRecord(kafkaKey, topic, ''),
+          this.convertToAvro(kafkaObject, topic, schema)
+        ]).then(([key, record]) => ({
+          topic,
+          cacheKey: cacheKey,
+          record: {
+            key_schema_id: key.schema,
+            value_schema_id: schema.id,
+            records: [{ key: key.value, value: record }]
+          }
+        }))
+      })
+    )
   }
 
   getUniqueTimeNow() {
@@ -125,5 +137,11 @@ export abstract class ConverterService {
       )
       return false
     }
+  }
+
+  reset() {
+    this.BASE_URI = null
+    this.specifications = null
+    this.schemas = {}
   }
 }

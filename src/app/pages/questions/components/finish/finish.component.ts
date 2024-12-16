@@ -51,7 +51,7 @@ export class FinishComponent implements OnChanges {
   constructor(
     private usage: UsageService,
     private localization: LocalizationService
-  ) {}
+  ) { }
 
   ngOnChanges() {
     if (this.isShown) {
@@ -85,13 +85,19 @@ export class FinishComponent implements OnChanges {
 
   getEtaText(progress) {
     if (progress <= 0) {
-      return 'Calculating time remaining...'
+      return 'Calculating time remaining...';
     }
 
-    const elapsedTime = (Date.now() - this.startTime) / 1000 // Convert milliseconds to seconds
-    const remainingTime = (elapsedTime * (100 - progress)) / progress
+    const elapsedTime = (Date.now() - this.startTime) / 1000; // Convert milliseconds to seconds
+    const remainingTime = (elapsedTime * (100 - progress)) / progress;
 
-    return 'About ' + remainingTime.toFixed(0) + ' seconds remaining'
+    if (remainingTime >= 60) {
+      const minutes = Math.floor(remainingTime / 60);
+      const seconds = Math.round(remainingTime % 60);
+      return `About ${minutes} minute${minutes > 1 ? 's' : ''} and ${seconds} second${seconds !== 1 ? 's' : ''} remaining`;
+    }
+
+    return `About ${remainingTime.toFixed(0)} second${remainingTime.toFixed(0) !== '1' ? 's' : ''} remaining`;
   }
 
   getProgressBarStyle(progress) {

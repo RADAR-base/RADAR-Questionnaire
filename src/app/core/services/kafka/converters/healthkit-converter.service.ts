@@ -40,34 +40,67 @@ export class HealthkitConverterService extends ConverterService {
   init() { }
 
   processData(data) {
-    return { name: 'healthkit', time: getSeconds({ milliseconds: Date.now() }), data: { key: data.key, value: data.value } }
+    return {
+      name: 'healthkit',
+      time: getSeconds({ milliseconds: Date.now() }),
+      data: { key: data.key, value: data.value }
+    }
   }
 
-  processSingleDatatype(key, data, timeReceived): any[] {
+  async processSingleDatatype(
+    key: string,
+    data: any[],
+    timeReceived: number
+  ): Promise<any[]> {
     const type = this.getDataTypeFromKey(key)
     const valueKey = this.getValueKey(key)
-    const results = data.map(d =>
-      Object.assign(
-        {},
-        {
-          time: getSeconds({ milliseconds: new Date(d.startDate).getTime() }),
-          endTime: getSeconds({ milliseconds: new Date(d.endDate).getTime() }),
-          timeReceived: timeReceived,
-          sourceId: d.sourceBundleId,
-          sourceName: d.device ?
-            `${d.device.manufacturer} ${d.device.model} ${d.device.hardwareVersion}`
-            : d.source,
-          unit: d.unitName ?? '',
+
+    if (typeof Worker !== 'undefined') {
+      return new Promise((resolve, reject) => {
+        const worker = new Worker(
+          'assets/workers/healthkit-converter.worker.js'
+        )
+
+        worker.onmessage = ({ data }) => {
+          resolve(data)
+          worker.terminate()
+        }
+
+        worker.onerror = error => {
+          reject(error)
+          worker.terminate()
+        }
+        worker.postMessage({
           key,
-          intValue: null,
-          floatValue: null,
-          doubleValue: null,
-          stringValue: null
-        } as HealthkitValueExport,
-        { [type]: d[valueKey] }
+          inputData: data,
+          timeReceived,
+          type,
+          valueKey
+        })
+      })
+    } else {
+      return data.map(d =>
+        Object.assign(
+          {},
+          {
+            time: Math.floor(new Date(d.startDate).getTime() / 1000),
+            endTime: Math.floor(new Date(d.endDate).getTime() / 1000),
+            timeReceived: timeReceived,
+            sourceId: d.sourceBundleId,
+            sourceName: d.device
+              ? `${d.device.manufacturer} ${d.device.model} ${d.device.hardwareVersion}`
+              : d.source,
+            unit: d.unitName ?? '',
+            key,
+            intValue: null,
+            floatValue: null,
+            doubleValue: null,
+            stringValue: null
+          },
+          { [type]: d[valueKey] }
+        )
       )
-    )
-    return results
+    }
   }
 
   convertToHealthkitRecord(kafkaValue, valueSchemaMetadata) {
@@ -78,13 +111,13 @@ export class HealthkitConverterService extends ConverterService {
     return Promise.all([
       this.getLastPollTimes(),
       this.healthkit.query(startTime, endTime, name)
-    ]).then(([dic, res]) => {
+    ]).then(async ([dic, res]) => {
       if (res.length) {
         const sample = res[res.length - 1]
         const lastDataDate = new Date(sample['endDate'])
         dic[name] = lastDataDate
         this.setLastPollTimes(dic)
-        const processedData = this.processSingleDatatype(
+        const processedData = await this.processSingleDatatype(
           name,
           res,
           Date.now()
@@ -109,11 +142,16 @@ export class HealthkitConverterService extends ConverterService {
   }
 
   getSchemas() {
-    if (this.schemas[this.HEALTHKIT_TOPIC]) return this.schemas[this.HEALTHKIT_TOPIC]
+    if (this.schemas[this.HEALTHKIT_TOPIC])
+      return this.schemas[this.HEALTHKIT_TOPIC]
     else {
       const versionStr = this.URI_version + 'latest'
       const uri =
-        this.BASE_URI + this.URI_schema + this.HEALTHKIT_TOPIC + '-value' + versionStr
+        this.BASE_URI +
+        this.URI_schema +
+        this.HEALTHKIT_TOPIC +
+        '-value' +
+        versionStr
       const schema = this.getLatestKafkaSchemaVersion(uri)
       this.schemas[this.HEALTHKIT_TOPIC] = schema
       return schema
@@ -127,8 +165,10 @@ export class HealthkitConverterService extends ConverterService {
   }
 
   getValueKey(type) {
-    if (type == HealthkitDataType.SLEEP_ANALYSIS) return HealthKitDataKey.SLEEP_STATE
-    if (type == HealthkitDataType.WORKOUT_TYPE) return HealthKitDataKey.ACTIVITY_TYPE
+    if (type == HealthkitDataType.SLEEP_ANALYSIS)
+      return HealthKitDataKey.SLEEP_STATE
+    if (type == HealthkitDataType.WORKOUT_TYPE)
+      return HealthKitDataKey.ACTIVITY_TYPE
     return HealthKitDataKey.DEFAULT
   }
 
@@ -150,20 +190,20 @@ export class HealthkitConverterService extends ConverterService {
       return Promise.all([
         this.keyConverter.convertToRecord(kafkaKey, this.HEALTHKIT_TOPIC, ''),
         this.convertToHealthkitRecord(kafkaObject, schema)
-      ]).then(([key, records]) =>
-      ({
+      ]).then(([key, records]) => ({
         topic: this.getKafkaTopic(kafkaObject.data.key),
         cacheKey: cacheKey,
         record: {
           key_schema_id: key.schema,
           value_schema_id: schema.id,
-          records: records ? records.map(r => ({
-            key: key.value,
-            value: r
-          })) : []
+          records: records
+            ? records.map(r => ({
+              key: key.value,
+              value: r
+            }))
+            : []
         }
-      })
-      )
+      }))
     })
   }
 }

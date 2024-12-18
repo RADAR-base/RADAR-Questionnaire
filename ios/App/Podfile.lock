@@ -47,7 +47,7 @@ PODS:
     - Capacitor
   - CapacitorTextZoom (5.0.7):
     - Capacitor
-  - CapacitorVoiceRecorder (5.0.0):
+  - CapacitorVoiceRecorder (6.0.3):
     - Capacitor
   - CordovaPlugins (5.7.0):
     - CapacitorCordova
@@ -324,7 +324,7 @@ SPEC CHECKSUMS:
   CapacitorSplashScreen: dd3de3f3644710fa2a697cfb91ec262eece4d242
   CapacitorStatusBar: f390fbb49b82ffb754ea4b3cf71dc8b048baf3e7
   CapacitorTextZoom: 69814a62b1d0f23a899cca06ea9838c38de187ff
-  CapacitorVoiceRecorder: 872ea857b497ce2c71afe3e4eb5de0a74290c0db
+  CapacitorVoiceRecorder: d44c1da901cc3918eb9c92c24834d8dc90f071f4
   CordovaPlugins: a707edf6d79ba00bd300f341fe9e1ada032d211f
   Firebase: 4453b799f72f625384dc23f412d3be92b0e3b2a0
   FirebaseABTesting: 40774deef367dcc7b736b6c26dd59ce0fab42f41

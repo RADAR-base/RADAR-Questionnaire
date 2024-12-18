@@ -5,7 +5,7 @@
   "author": "RADAR Base",
   "homepage": "http://www.radar-base.org/",
   "scripts": {
-    "preinstall": "npm install --package-lock-only --ignore-scripts && npx npm-force-resolutions",
+    "preinstall": "npm install --ignore-scripts && npx npm-force-resolutions",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",

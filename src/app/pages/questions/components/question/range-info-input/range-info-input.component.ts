@@ -20,6 +20,6 @@ export class RangeInfoInputComponent extends RangeInputComponent {
   }
 
   showDescription(id) {
-    this.itemDescription = this.responses[id].label
+    this.itemDescription = this.responses.find(r => r.code == id).label
   }
 }

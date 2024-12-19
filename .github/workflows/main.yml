@@ -45,9 +45,6 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
 
-      - name: Fix Android directories
-        run: rm -R /usr/local/lib/android/sdk/build-tools/31.0.0/ && rm -R /usr/local/lib/android/sdk/build-tools/32.0.0/ && rm -R /usr/local/lib/android/sdk/build-tools/33.0.0/ && rm -R /usr/local/lib/android/sdk/build-tools/33.0.1/
-
       - name: Copy aRMT secrets
         run: 'echo "$SECRET" > src/assets/data/secret.ts'
         shell: bash

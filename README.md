@@ -1,8 +1,6 @@
 ## RADAR-Questionnaire
 
-![Travis CI](https://travis-ci.org/RADAR-base/RADAR-Questionnaire.svg?branch=master)
-[![BCH compliance](https://bettercodehub.com/edge/badge/RADAR-base/RADAR-Questionnaire?branch=master)](https://bettercodehub.com/)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/03ec17f46bf147278bc71242a769af88)](https://www.codacy.com/app/yatharthranjan89/RADAR-Questionnaire?utm_source=github.com&utm_medium=referral&utm_content=RADAR-base/RADAR-Questionnaire&utm_campaign=Badge_Grade)
+![Build Status](https://img.shields.io/github/actions/workflow/status/RADAR-base/radar-questionnaire/main.yml) [![Known Vulnerabilities](https://snyk.io//test/github/RADAR-base/RADAR-questionnaire/badge.svg?targetFile=package.json)](https://snyk.io//test/github/RADAR-base/RADAR-questionnaire?targetFile=package.json)
 
 A hybrid mobile application to actively capture data for the RADAR-Base Platform.
 

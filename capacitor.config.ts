@@ -2,11 +2,12 @@ import { CapacitorConfig } from '@capacitor/cli'
 
 const config: CapacitorConfig = {
   appId: 'org.phidatalab.radar_armt',
-  appName: 'RADAR Questionnaire',
+  appName: 'RADAR Active RMT',
   webDir: 'www',
   server: {
     androidScheme: 'https'
   },
+  loggingBehavior: 'none',
   plugins: {
     SplashScreen: {
       launchAutoHide: true,

@@ -1,7 +1,9 @@
 .audio-bottom {
-  bottom: 240px;
-  margin-bottom: 40px;
-  width: 100%;
+  position: fixed;
+  bottom: calc(56px + 4vh);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
 }
 
 .audio-container {

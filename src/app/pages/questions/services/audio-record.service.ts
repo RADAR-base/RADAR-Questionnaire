@@ -92,7 +92,7 @@ export class AudioRecordService {
 
   getFormattedAudioData() {
     const mimeType = this.data.mimeType
-    const data = this.cleanBase64String(this.data.recordDataBase64)
+    const data = this.data.recordDataBase64
     return `data:${mimeType};${this.encoding},${data}`
   }
 
@@ -106,10 +106,5 @@ export class AudioRecordService {
 
   failure(error) {
     this.logger.error('Error! ', error)
-  }
-
-  cleanBase64String(base64Data: string): string {
-    // Remove all spaces and line breaks
-    return base64Data.replace(/\s+/g, '')
   }
 }

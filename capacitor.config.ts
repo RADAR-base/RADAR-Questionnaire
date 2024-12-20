@@ -8,9 +8,6 @@ const config: CapacitorConfig = {
     androidScheme: 'https'
   },
   loggingBehavior: 'none',
-  ios: {
-    scheme: 'RADAR Questionnaire'
-  },
   plugins: {
     SplashScreen: {
       launchAutoHide: true,

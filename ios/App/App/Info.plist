@@ -38,9 +38,9 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Need camera access for scanning QR codes</string>
 	<key>NSHealthShareUsageDescription</key>
-	<string>Read Health Data</string>
+	<string>Provide access to your health data to the study</string>
 	<key>NSHealthUpdateUsageDescription</key>
-	<string>Read Health Data</string>
+	<string>Provide access to your health data to the study</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Need microphone access for uploading audio</string>
 	<key>UIBackgroundModes</key>

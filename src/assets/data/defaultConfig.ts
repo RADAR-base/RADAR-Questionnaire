@@ -224,7 +224,8 @@ export const DefaultMaxAudioAttemptsAllowed = 5
 // *Default audio recording settings (sampling rate: 44.1kHz, 32kHz, 16kHz, 12kHz, or 8kHz)
 export const DefaultAudioRecordOptions = {
   SampleRate: 16000,
-  NumberOfChannels: 1
+  BitRate: 16384,
+  AudioEncoder: "AAC"
 }
 
 // *Default question/question input types where the questionnaire will automatically move to the next question upon answering the question.

@@ -3,7 +3,9 @@ import { Injectable } from '@angular/core'
 
 import {
   DefaultManagementPortalURI,
-  DefaultSourceTypeModel
+  DefaultSourceTypeModel,
+  DefaultRefreshTokenURI,
+  DefaultMetaTokenURI,
 } from '../../../../assets/data/defaultConfig'
 import { ConfigService } from '../../../core/services/config/config.service'
 import { SubjectConfigService } from '../../../core/services/config/subject-config.service'
@@ -11,13 +13,12 @@ import { LogService } from '../../../core/services/misc/log.service'
 import { TokenService } from '../../../core/services/token/token.service'
 import { AnalyticsService } from '../../../core/services/usage/analytics.service'
 import { MetaToken, OAuthToken } from '../../../shared/models/token'
-import { isValidURL } from '../../../shared/utilities/form-validators'
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  URI_base: string
+  private URI_base: string
 
   constructor(
     public http: HttpClient,
@@ -26,55 +27,88 @@ export class AuthService {
     private logger: LogService,
     private analytics: AnalyticsService,
     private subjectConfig: SubjectConfigService
-  ) {}
+  ) { }
 
   reset() {
     this.config.resetAll()
   }
 
-  authenticate(authObj) {
-    return (
-      isValidURL(authObj)
-        ? this.metaTokenUrlAuth(authObj)
-        : this.metaTokenJsonAuth(authObj)
-    ).then(refreshToken => {
-      return this.registerToken(refreshToken)
-        .then(() => this.registerAsSource())
-        .then(() => this.registerToken(refreshToken))
-    })
+  authenticate(authObj: any) {
+    if (authObj.includes(DefaultMetaTokenURI)) {
+      return this.handleMetaTokenAuth(authObj)
+    } else {
+      return this.handleOryAuth(authObj)
+    }
   }
 
-  metaTokenUrlAuth(authObj) {
-    // NOTE: Meta QR code and new QR code
-    return this.getRefreshTokenFromUrl(authObj).then((body: any) => {
-      this.logger.log(`Retrieved refresh token from ${body.baseUrl}`, body)
-      const refreshToken = body.refreshToken
+  private handleMetaTokenAuth(authObj: any) {
+    return this.metaTokenUrlAuth(authObj)
+      .then(refreshToken => this.completeAuthentication(refreshToken))
+      .catch(err => {
+        this.logger.error('MetaTokenUrlAuth failed', err)
+        throw err
+      })
+  }
+
+  private handleOryAuth(authObj: any) {
+    const url = new URL(authObj)
+    const encodedData = url.searchParams.get('data')
+    const baseUrl = new URL(url.searchParams.get('referrer')).origin
+    if (encodedData) {
+      const tokenData = JSON.parse(decodeURIComponent(encodedData))
       return this.token
-        .setURI(body.baseUrl)
-        .then(baseUrl => this.analytics.setUserProperties({ baseUrl }))
-        .catch()
-        .then(() => this.updateURI())
-        .then(() => refreshToken)
-    })
+        .setURI(baseUrl)
+        .then(() => this.analytics.setUserProperties({ baseUrl }))
+        .then(() =>
+          this.token.setTokenEndpoint(`${baseUrl}/hydra/oauth2/token`)
+        )
+        .then(() => this.completeAuthentication(tokenData.refresh_token))
+    } else {
+      throw new Error('Ory auth failed')
+    }
   }
 
-  metaTokenJsonAuth(authObj) {
-    // NOTE: Old QR codes: containing refresh token as JSON
-    return this.updateURI().then(() => JSON.parse(authObj).refreshToken)
+  private completeAuthentication(refreshToken: string) {
+    return this.registerToken(refreshToken)
+      .then(() => this.registerAsSource())
+      .then(() => this.registerToken(refreshToken))
   }
 
-  updateURI() {
+  private metaTokenUrlAuth(authObj: string) {
+    return this.getRefreshTokenFromUrl(authObj)
+      .then(body => {
+        const { refreshToken, baseUrl } = body
+        this.logger.log(`Retrieved refresh token from ${baseUrl}`, body)
+
+        return this.token
+          .setURI(baseUrl)
+          .then(() =>
+            this.token.setTokenEndpoint(
+              `${baseUrl}${DefaultManagementPortalURI}${DefaultRefreshTokenURI}`
+            )
+          )
+          .then(() => this.analytics.setUserProperties({ baseUrl }))
+          .then(() => this.updateURI())
+          .then(() => refreshToken)
+      })
+      .catch(err => {
+        this.logger.error('Failed to retrieve refresh token', err)
+        throw err
+      })
+  }
+
+  private updateURI() {
     return this.token.getURI().then(uri => {
-      this.URI_base = uri + DefaultManagementPortalURI
+      this.URI_base = `${uri}${DefaultManagementPortalURI}`
     })
   }
 
-  registerToken(registrationToken): Promise<OAuthToken> {
+  private registerToken(registrationToken: string): Promise<OAuthToken> {
     return this.token.register(this.token.getRefreshParams(registrationToken))
   }
 
-  getRefreshTokenFromUrl(url): Promise<MetaToken> {
-    return this.http.get(url).toPromise()
+  private getRefreshTokenFromUrl(url: string): Promise<MetaToken> {
+    return this.http.get<MetaToken>(url).toPromise()
   }
 
   initSubjectInformation() {
@@ -82,26 +116,27 @@ export class AuthService {
       this.token.getURI(),
       this.subjectConfig.pullSubjectInformation()
     ]).then(([baseUrl, subjectInformation]) => {
-      return this.config.setAll({
+      const config = {
         projectId: subjectInformation.project.projectName,
         subjectId: subjectInformation.login,
         sourceId: this.getSourceId(subjectInformation),
         humanReadableId: subjectInformation.externalId,
         enrolmentDate: new Date(subjectInformation.createdDate).getTime(),
-        baseUrl: baseUrl,
+        baseUrl,
         attributes: subjectInformation.attributes
-      })
+      }
+      return this.config.setAll(config)
     })
   }
 
-  getSourceId(response) {
+  private getSourceId(response: any): string {
     const source = response.sources.find(
       s => s.sourceTypeModel === DefaultSourceTypeModel
     )
-    return source !== undefined ? source.sourceId : 'Device not available'
+    return source ? source.sourceId : 'Device not available'
   }
 
-  registerAsSource() {
+  private registerAsSource() {
     return this.subjectConfig.registerSourceToSubject()
   }
 }

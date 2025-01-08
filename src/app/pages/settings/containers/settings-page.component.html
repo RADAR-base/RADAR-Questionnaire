@@ -9,13 +9,7 @@
   <ion-item-group>
     <ion-item-divider lines="full">{{
       'SETTINGS_USER_INFO' | translate
-    }}</ion-item-divider>
-    <ion-item lines="full">
-      {{ 'SETTINGS_PARTICIPANTNAME' | translate }}
-      <span slot="end" class="info-value">
-        {{ settings.participantID }}
-      </span>
-    </ion-item>
+      }}</ion-item-divider>
     <ion-item lines="full">
       {{ 'SETTINGS_PARTICIPANTID' | translate }}
       <span slot="end" class="info-value-small">
@@ -45,7 +39,7 @@
   <ion-item-group>
     <ion-item-divider lines="full">{{
       'SETTINGS_LANGUAGE' | translate
-    }}</ion-item-divider>
+      }}</ion-item-divider>
     <ion-item lines="full" *ngIf="!showLoading">
       <span class="info-value">
         {{ settings.language?.label | translate }}
@@ -75,7 +69,7 @@
   <ion-item-group>
     <ion-item-divider lines="full">{{
       'SETTINGS_CACHE' | translate
-    }}</ion-item-divider>
+      }}</ion-item-divider>
     <ion-item lines="full">
       {{ 'SETTINGS_CACHE_SIZE' | translate }}
       <span slot="end" class="info-value">
@@ -97,11 +91,7 @@
     <ion-item-divider lines="full">
       {{ 'SETTINGS_VERSION' | translate }}
       <span>
-        <ion-icon
-          name="repeat"
-          (click)="reloadConfig()"
-          *ngIf="!showLoading"
-        ></ion-icon>
+        <ion-icon name="repeat" (click)="reloadConfig()" *ngIf="!showLoading"></ion-icon>
       </span>
     </ion-item-divider>
     <ion-item lines="full">
@@ -125,11 +115,7 @@
     <ion-item-divider lines="full" class="item-divider">
       {{ 'SETTINGS_DEBUGGING' | translate }}
     </ion-item-divider>
-    <ion-item
-      lines="full"
-      class="item-button"
-      (click)="showGenerateTestNotification()"
-    >
+    <ion-item lines="full" class="item-button" (click)="showGenerateTestNotification()">
       <ion-label>
         {{ 'SETTINGS_GENERATE_NOTIFS' | translate }}
       </ion-label>

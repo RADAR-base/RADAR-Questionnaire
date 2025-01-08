@@ -198,7 +198,7 @@ export class LocKeys {
     'EXTERNAL_APP_FAILURE_ON_LAUNCH_DESC'
   )
 
-  constructor(public value: string) {}
+  constructor(public value: string) { }
 
   toString() {
     return this.value

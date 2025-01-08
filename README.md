@@ -1,8 +1,6 @@
 ## RADAR-Questionnaire
 
-![Travis CI](https://travis-ci.org/RADAR-base/RADAR-Questionnaire.svg?branch=master)
-[![BCH compliance](https://bettercodehub.com/edge/badge/RADAR-base/RADAR-Questionnaire?branch=master)](https://bettercodehub.com/)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/03ec17f46bf147278bc71242a769af88)](https://www.codacy.com/app/yatharthranjan89/RADAR-Questionnaire?utm_source=github.com&utm_medium=referral&utm_content=RADAR-base/RADAR-Questionnaire&utm_campaign=Badge_Grade)
+![Build Status](https://img.shields.io/github/actions/workflow/status/RADAR-base/radar-questionnaire/main.yml) [![Known Vulnerabilities](https://snyk.io//test/github/RADAR-base/RADAR-questionnaire/badge.svg?targetFile=package.json)](https://snyk.io//test/github/RADAR-base/RADAR-questionnaire?targetFile=package.json)
 
 A hybrid mobile application to actively capture data for the RADAR-Base Platform.
 
@@ -151,6 +149,9 @@ Certain values can be overriden using Firebase Remote Config. Specifically, the 
 | `skippable_questionnaire_types` | String list of question/question input types where the next button is enabled by default, allowing the question to be skippable.                                                                          | `audio`                                                                                                          |
 | `show_task_calendar_name`       | The task calendar by default shows the task timestamp instead of the task name. This allows showing of the task name instead of the timestamp.                                                            | `false`                                                                                                          |
 | `show_task_progress_count`      | In the questionnaire page, by default, only the task progress bar is shown. This config will enable the showing of the "question number / total questions" count.                                         | `false`                                                                                                          |
+| `audio_sampling_rate`           | The sampling rate (in Hz) for audio recording. Determines the number of audio samples captured per second.                                                                                                | `16000`                                                                                                          |
+| `audio_bit_rate`                | The bit rate (in bits per second) for audio recording. Higher values result in better audio quality and larger files.                                                                                     | `16384`                                                                                                          |
+| `audio_encoder`                 | The audio encoder used for recording. Defines the codec used to encode the audio data (e.g., AAC, AMR_NB, AMR_WB, VORBIS).                                                                                | `AAC`                                                                                                            |
 
 #### Conditions
 

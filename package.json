@@ -1,11 +1,11 @@
 {
   "name": "radar-questionnaire",
   "description": "An application that collects active data for research.",
-  "version": "3.3.0",
+  "version": "3.3.2",
   "author": "RADAR Base",
   "homepage": "http://www.radar-base.org/",
   "scripts": {
-    "preinstall": "npm install --package-lock-only --ignore-scripts && npx npm-force-resolutions",
+    "preinstall": "npm install --ignore-scripts && npx npm-force-resolutions",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
@@ -83,7 +83,7 @@
     "browserify-zlib": "^0.2.0",
     "buffer": "^6.0.3",
     "capacitor-grab-intent-extras": "^0.0.4",
-    "capacitor-voice-recorder": "^5.0.0",
+    "capacitor-voice-recorder": "github:mpgxvii/capacitor-voice-recorder",
     "compare-versions": "^5.0.3",
     "core-js": "2.6.8",
     "dompurify": "^2.2.8",

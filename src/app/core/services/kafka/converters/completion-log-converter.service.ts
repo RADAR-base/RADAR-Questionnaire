@@ -8,14 +8,15 @@ import { getSeconds } from 'src/app/shared/utilities/time'
 import { LogService } from '../../misc/log.service'
 import { TokenService } from '../../token/token.service'
 import { ConverterService } from './converter.service'
+import { RemoteConfigService } from '../../config/remote-config.service'
 
 @Injectable()
 export class CompletionLogConverterService extends ConverterService {
-  constructor(logger: LogService, http: HttpClient, token: TokenService) {
-    super(logger, http, token)
+  constructor(logger: LogService, http: HttpClient, token: TokenService, remoteConfig: RemoteConfigService) {
+    super(logger, http, token, remoteConfig)
   }
 
-  init() {}
+  init() { }
 
   getKafkaTopic(payload): Promise<any> {
     return Promise.resolve('questionnaire_completion_log')

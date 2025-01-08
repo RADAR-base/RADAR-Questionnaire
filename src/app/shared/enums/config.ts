@@ -42,7 +42,13 @@ export class ConfigKeys {
 
   static SHOW_TASK_PROGRESS_COUNT = new ConfigKeys('show_task_progress_count')
 
-  constructor(public value: string) {}
+  static AUDIO_SAMPLING_RATE = new ConfigKeys('audio_sampling_rate')
+
+  static AUDIO_BIT_RATE = new ConfigKeys('audio_bit_rate')
+
+  static AUDIO_ENCODER = new ConfigKeys('audio_encoder')
+
+  constructor(public value: string) { }
 
   toString() {
     return this.value

@@ -21,9 +21,18 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>3.3.0</string>
+	<string>3.3.2</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>org.phidatalab.radar-armt</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
   <key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -38,9 +47,9 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Need camera access for scanning QR codes</string>
 	<key>NSHealthShareUsageDescription</key>
-	<string>Read Health Data</string>
+	<string>Provide access to your health data to the study</string>
 	<key>NSHealthUpdateUsageDescription</key>
-	<string>Read Health Data</string>
+	<string>Provide access to your health data to the study</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Need microphone access for uploading audio</string>
 	<key>UIBackgroundModes</key>

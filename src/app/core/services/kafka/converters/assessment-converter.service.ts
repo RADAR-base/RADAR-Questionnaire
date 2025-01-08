@@ -7,16 +7,17 @@ import { getSeconds } from 'src/app/shared/utilities/time'
 import { LogService } from '../../misc/log.service'
 import { TokenService } from '../../token/token.service'
 import { ConverterService } from './converter.service'
+import { RemoteConfigService } from '../../config/remote-config.service'
 
 @Injectable()
 export class AssessmentConverterService extends ConverterService {
   GENERAL_TOPIC: string = 'questionnaire_response'
 
-  constructor(logger: LogService, http: HttpClient, token: TokenService) {
-    super(logger, http, token)
+  constructor(logger: LogService, http: HttpClient, token: TokenService, remoteConfig: RemoteConfigService) {
+    super(logger, http, token, remoteConfig)
   }
 
-  init() {}
+  init() { }
 
   processData(payload) {
     const task = payload.task

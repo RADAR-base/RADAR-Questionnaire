@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import * as crypto from 'crypto-browserify'
+import { md5 } from 'js-md5'
 
 import { DataEventType } from '../../../shared/enums/events'
 import { StorageKeys } from '../../../shared/enums/storage'
@@ -110,7 +110,7 @@ export class CacheService {
   }
 
   generateCacheKey(prefix: string, data: any): string {
-    const hash = crypto.createHash('md5').update(JSON.stringify(data)).digest('hex')
+    const hash = md5(JSON.stringify(data))
     return `${prefix}:${hash}`
   }
 

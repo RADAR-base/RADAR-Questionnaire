@@ -103,7 +103,12 @@ export class TokenService {
           .post(uri, refreshBody, { headers: headers })
           .toPromise()
       })
-      .then(res => this.setTokens(res).then(() => res))
+      .then((res: any) => {
+        if (!res.iat)
+          res.iat = this.jwtHelper.decodeToken(res.access_token)['iat']
+        this.setTokens(res)
+        return res
+      })
   }
 
   refresh(): Promise<OAuthToken> {

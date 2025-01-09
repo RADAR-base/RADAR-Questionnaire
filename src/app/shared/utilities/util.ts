@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core'
 
 @Injectable()
 export class Utility {
-  constructor() {}
+  constructor() { }
 
   /**
    * Partition the given array into two parts.

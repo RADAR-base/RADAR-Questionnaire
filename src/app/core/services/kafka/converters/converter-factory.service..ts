@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { SchemaType } from 'src/app/shared/models/kafka'
 
@@ -6,7 +5,6 @@ import { AppEventConverterService } from './app-event-converter.service'
 import { AssessmentConverterService } from './assessment-converter.service'
 import { CompletionLogConverterService } from './completion-log-converter.service'
 import { HealthkitConverterService } from './healthkit-converter.service'
-import { KeyConverterService } from './key-converter.service'
 import { TimezoneConverterService } from './timezone-converter.service'
 
 @Injectable()
@@ -17,10 +15,9 @@ export class ConverterFactoryService {
     private appEventConverter: AppEventConverterService,
     private completionLogConverter: CompletionLogConverterService,
     private timzoneConverter: TimezoneConverterService,
-    private keyConverter: KeyConverterService
-  ) {}
+  ) { }
 
-  init() {}
+  init() { }
 
   getConverter(type) {
     switch (this.classify(type)) {
@@ -34,8 +31,6 @@ export class ConverterFactoryService {
         return this.timzoneConverter
       case SchemaType.APP_EVENT:
         return this.appEventConverter
-      case SchemaType.KEY:
-        return this.keyConverter
       default:
         return this.assessmentConverter
     }
@@ -44,5 +39,14 @@ export class ConverterFactoryService {
   classify(type) {
     if (type.includes(SchemaType.HEALTHKIT)) return SchemaType.HEALTHKIT
     else return type
+  }
+
+  reset() {
+    this.healthkitConverter.reset()
+    this.assessmentConverter.reset()
+    this.completionLogConverter.reset()
+    this.timzoneConverter.reset()
+    this.appEventConverter.reset()
+    this.assessmentConverter.reset()
   }
 }

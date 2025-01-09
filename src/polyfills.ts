@@ -70,6 +70,3 @@ import * as crypto from 'crypto-browserify'
 (window as any).crypto = crypto;
 
 global.Buffer = global.Buffer || require('buffer').Buffer;
-
-
-

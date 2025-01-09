@@ -90,7 +90,7 @@ export class HealthkitConverterService extends ConverterService {
             timeReceived: timeReceived,
             sourceId: d.sourceBundleId,
             sourceName: d.device
-              ? `${d.device.manufacturer} ${d.device.model} ${d.device.hardwareVersion}`
+              ? `${d.device.manufacturer}_${d.device.model}_${d.device.hardwareVersion}`
               : d.source,
             unit: d.unitName ?? '',
             key,
@@ -126,7 +126,6 @@ export class HealthkitConverterService extends ConverterService {
         )
         const avroData = this.batchConvertToAvro(
           processedData,
-          '',
           valueSchemaMetadata
         )
         return avroData

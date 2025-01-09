@@ -324,17 +324,3 @@ Add the corresponding topic to the `HealthkitTopic` enum. The topic should be a 
 ### Add to the Appropriate Data Type Sets (if applicable)
 Depending on the data type (e.g., numeric or string), add the new data type to the relevant set: `HealthkitFloatDataTypes` or `HealthkitStringDataTypes`.
 
-## Common Errors
-
-Here are some common errors you might find during installation.
-
-### Error: cordova-custom-config
-
-When you are running `ionic cordova run ios`, you might encounter the problem, we solved this problem by refering this [issue](https://github.com/dpa99c/cordova-custom-config/issues/144) with `cordova-custom-config`.
-
-We enter the following command at the root directory.
-
-```
-cd plugins/cordova-custom-config
-npm install
-```

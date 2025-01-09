@@ -50,12 +50,12 @@ export abstract class ConverterService {
     }
   }
 
-  convertToAvro(kafkaValue, topic, valueSchemaMetadata) {
+  convertToAvro(kafkaValue, valueSchemaMetadata) {
     const schema = JSON.parse(valueSchemaMetadata.schema)
     return AvroSchema.parse(schema).clone(kafkaValue, { wrapUnions: true })
   }
 
-  batchConvertToAvro(kafkaValues, topic, valueSchemaMetadata) {
+  batchConvertToAvro(kafkaValues, valueSchemaMetadata) {
     const schema = JSON.parse(valueSchemaMetadata.schema)
     const parsedSchema = AvroSchema.parse(schema)
     return kafkaValues.map(v => parsedSchema.clone(v, { wrapUnions: true }))
@@ -73,7 +73,7 @@ export abstract class ConverterService {
         return Promise.all([
           this.keyConverter
             .convertToRecord(kafkaKey, topic, ''),
-          this.convertToAvro(kafkaObject, topic, schema)
+          this.convertToAvro(kafkaObject, schema)
         ]).then(([key, record]) => ({
           topic,
           cacheKey: cacheKey,

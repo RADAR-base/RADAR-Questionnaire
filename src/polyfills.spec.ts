@@ -59,15 +59,12 @@ import 'zone.js' // Included with Angular CLI.
 
 import './zone-flags'
 
-import * as crypto from 'crypto-browserify'
-
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
 
 (window as any).global = window;
 (window as any).process = { env: { DEBUG: undefined } };
-(window as any).crypto = crypto;
 
 global.Buffer = global.Buffer || require('buffer').Buffer;
 

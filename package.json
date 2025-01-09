@@ -86,6 +86,7 @@
     "capacitor-voice-recorder": "github:mpgxvii/capacitor-voice-recorder",
     "compare-versions": "^5.0.3",
     "core-js": "2.6.8",
+    "crypto-browserify": "^3.12.1",
     "dompurify": "^2.2.8",
     "emojis-list": "^3.0.0",
     "eventemitter3": "^5.0.1",

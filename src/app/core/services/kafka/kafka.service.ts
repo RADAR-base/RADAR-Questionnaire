@@ -162,7 +162,7 @@ export class KafkaService {
     let successKeys: string[] = []
     let failedKeys: string[] = []
     if (this.isCacheSending) return Promise.resolve([])
-    this.cache.setCacheSending(true)
+    this.setCacheSending(true)
     return Promise.all([
       this.cache.getCache(),
       this.cache.getCacheSize(),

@@ -63,6 +63,12 @@ import './zone-flags'
  * APPLICATION IMPORTS
  */
 
+import * as crypto from 'crypto-browserify';
+
 (window as any).global = window;
+(window as any).process = { env: { DEBUG: undefined } };
+(window as any).crypto = crypto;
+
 global.Buffer = global.Buffer || require('buffer').Buffer
+
 

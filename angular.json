@@ -32,7 +32,9 @@
               }
             ],
             "styles": ["src/theme/variables.scss", "src/global.scss"],
-            "scripts": [],
+            "scripts": [
+              "node_modules/crypto-browserify/index.js"
+            ],
             "vendorChunk": true,
             "extractLicenses": false,
             "buildOptimizer": false,

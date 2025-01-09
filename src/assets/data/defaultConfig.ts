@@ -237,7 +237,7 @@ export const DefaultAudioRecordOptions = {
 export const DefaultAutoNextQuestionnaireTypes = [
   QuestionType.timed,
   QuestionType.audio,
-  QuestionType.health
+  QuestionType.healthkit
 ]
 
 // *Default question/question input types where the next button is enabled by default, allowing the question to be skippable.

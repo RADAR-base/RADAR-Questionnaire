@@ -70,7 +70,7 @@ export class QuestionsPageComponent implements OnInit {
     ShowIntroductionType.ONCE
   ])
   MATRIX_FIELD_NAME = 'matrix'
-  HEALTH_FIELD_NAME = 'health'
+  HEALTH_FIELD_NAME = 'healthkit'
   backButtonListener: Subscription
   showProgressCount: Promise<boolean>
 

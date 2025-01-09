@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core'
-import { Platform } from '@ionic/angular'
 import { StorageService } from 'src/app/core/services/storage/storage.service'
 import { StorageKeys } from 'src/app/shared/enums/storage'
 import {
@@ -7,25 +6,17 @@ import {
   setDateTimeToMidnight,
   setDateTimeToMidnightEpoch
 } from 'src/app/shared/utilities/time'
-import {
-  ActivityData,
-  CapacitorHealthkit,
-  OtherData,
-  QueryOutput,
-  SampleNames,
-  SleepData
-} from '@perfood/capacitor-healthkit'
-import { LogService } from '../../../core/services/misc/log.service'
+import { CapacitorHealthkit } from '@perfood/capacitor-healthkit'
 import { DefaultHealthkitInterval, DefaultHealthkitPermissions } from 'src/assets/data/defaultConfig'
 import { RemoteConfigService } from 'src/app/core/services/config/remote-config.service'
 import { ConfigKeys } from 'src/app/shared/enums/config'
+import { HealthkitPermissionMap } from 'src/app/shared/models/health'
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class HealthkitService {
-  READ_PERMISSIONS = DefaultHealthkitPermissions
   // The interval days for first query
   HEALTHKIT_INTERVAL_DAYS = String(DefaultHealthkitInterval)
   queryProgress = 0
@@ -65,24 +56,24 @@ export class HealthkitService {
     return CapacitorHealthkit.isAvailable()
   }
 
-  loadData(healthDataType, startTime) {
-      return CapacitorHealthkit
-        .requestAuthorization(
-          {
-            all: [''],
-            read: this.READ_PERMISSIONS,
-            write: [''],
-          }
-        )
-        .then(() => {
-          const endTime = new Date(
-            startTime.getTime() + getMilliseconds({ days: Number(this.HEALTHKIT_INTERVAL_DAYS) }))
-           return { startTime: startTime, endTime: endTime }
-        })
-        .catch(e => {
-          console.log(e)
-          return null
-        })
+  loadData(dataType, startTime) {
+    return CapacitorHealthkit
+      .requestAuthorization(
+        {
+          all: [''],
+          read: this.getPermissionForDatatype(dataType),
+          write: [''],
+        }
+      )
+      .then(() => {
+        const endTime = new Date(
+          startTime.getTime() + getMilliseconds({ days: Number(this.HEALTHKIT_INTERVAL_DAYS) }))
+        return { startTime: startTime, endTime: endTime }
+      })
+      .catch(e => {
+        console.log(e)
+        return null
+      })
   }
 
   async query(queryStartTime: Date, queryEndTime: Date, dataType: string) {
@@ -99,6 +90,11 @@ export class HealthkitService {
     } catch (e) {
       return []
     }
+  }
+
+  getPermissionForDatatype(dataType: string): string[] {
+    const permission = HealthkitPermissionMap[dataType as keyof typeof HealthkitPermissionMap]
+    return permission ? [permission] : DefaultHealthkitPermissions
   }
 
   reset() {

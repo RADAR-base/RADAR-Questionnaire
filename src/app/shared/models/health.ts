@@ -98,3 +98,19 @@ export interface HealthkitValueExport {
   doubleValue: number
   stringValue: string
 }
+
+export const HealthkitPermissionMap = {
+  [HealthkitDataType.STEP_COUNT]: HealthkitPermission.STEPS,
+  [HealthkitDataType.FLIGHTS_CLIMBED]: HealthkitPermission.STAIRS,
+  [HealthkitDataType.DISTANCE_WALKING_RUNNING]: HealthkitPermission.DISTANCE,
+  [HealthkitDataType.DISTANCE_CYCLING]: HealthkitPermission.DISTANCE,
+  [HealthkitDataType.ACTIVE_ENERGY_BURNED]: HealthkitPermission.CALORIES,
+  [HealthkitDataType.BASAL_ENERGY_BURNED]: HealthkitPermission.CALORIES,
+  [HealthkitDataType.HEART_RATE]: HealthkitPermission.HEART_RATE,
+  [HealthkitDataType.RESTING_HEART_RATE]: HealthkitPermission.HEART_RATE,
+  [HealthkitDataType.APPLE_EXERCISE_TIME]: HealthkitPermission.DURATION,
+  [HealthkitDataType.BLOOD_GLUCOSE]: HealthkitPermission.BLOOD_GLUCOSE,
+  [HealthkitDataType.SLEEP_ANALYSIS]: HealthkitPermission.ACTIVITY,
+  [HealthkitDataType.WORKOUT_TYPE]: HealthkitPermission.ACTIVITY,
+  [HealthkitDataType.WEIGHT]: HealthkitPermission.WEIGHT,
+}

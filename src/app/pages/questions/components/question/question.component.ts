@@ -81,7 +81,7 @@ export class QuestionComponent implements OnInit, OnChanges {
   ])
   MATRIX_INPUT_SET: Set<QuestionType> = new Set([
     QuestionType.matrix_radio,
-    QuestionType.health
+    QuestionType.healthkit
   ])
 
   // Input set where height is set to auto
@@ -203,7 +203,7 @@ export class QuestionComponent implements OnInit, OnChanges {
     return (
       this.SCROLLBAR_VISIBLE_SET.has(this.question.field_type) &&
       this.inputEl.nativeElement.scrollHeight >
-        this.inputEl.nativeElement.clientHeight
+      this.inputEl.nativeElement.clientHeight
     )
   }
 
@@ -213,7 +213,7 @@ export class QuestionComponent implements OnInit, OnChanges {
       this.showScrollButton &&
       event &&
       event.target.scrollTop >=
-        (event.target.scrollHeight - event.target.clientHeight) * 0.1
+      (event.target.scrollHeight - event.target.clientHeight) * 0.1
     ) {
       this.showScrollButton = false
     }

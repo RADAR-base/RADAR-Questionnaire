@@ -269,7 +269,7 @@ $ANDROID_HOME/build-tools/27.0.2/zipalign -v 4 <your-project-path>/platforms/and
 
 ## Questionnaire Input Types
 
-The questionnaire input types supported are `audio`, `checkbox`, `descriptive`, `info-screen`, `matrix-radio`, `radio`, `range-info`, `range-input`, `slider`, `text`, `date`, `time`, and `timed-test`.
+The questionnaire input types supported are `audio`, `checkbox`, `descriptive`, `info-screen`, `matrix-radio`, `radio`, `range-info`, `range-input`, `slider`, `text`, `date`, `time`, `healthkit`, and `timed-test`.
 
 ### Descriptive Input Type
 
@@ -296,6 +296,33 @@ This is an example of an image:
 Here is the output:
 
 <img src="/.github/etc/descriptive-2.png" width="200px"><img src="/.github/etc/descriptive-1.png" width="200px">
+
+## Healthkit Input Type
+
+Please see `/src/app/shared/models/health.ts` for a list of supported data types. In order to add support for new data types, follow the steps below:
+
+### Add the New Data Type to `HealthkitDataType`
+
+Open the `health.ts` file and add the new data type to the `HealthkitDataType` enum. Use a descriptive key and a string value that matches the Healthkit data type.
+
+```typescript
+export enum HealthkitDataType {
+  ...
+  VO2_MAX = 'vo2Max',
+}
+```
+
+### Add a New Permission to HealthkitPermission
+Add the corresponding permission to the `HealthkitPermission` enum. The permission should match the new data type.
+
+### Map the Data Type to Its Permission
+Update the `HealthkitPermissionMap` object to link the new `HealthkitDataType` to its `HealthkitPermission`.
+
+### Add the Kafka Topic to HealthkitTopic
+Add the corresponding topic to the `HealthkitTopic` enum. The topic should be a descriptive string representing the data type's usage in your system.
+
+### Add to the Appropriate Data Type Sets (if applicable)
+Depending on the data type (e.g., numeric or string), add the new data type to the relevant set: `HealthkitFloatDataTypes` or `HealthkitStringDataTypes`.
 
 ## Common Errors
 

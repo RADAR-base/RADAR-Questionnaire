@@ -59,10 +59,6 @@ export class AssessmentConverterService extends ConverterService {
       if (this.topicExists(specTopic, topics)) {
         return Promise.resolve(specTopic)
       }
-      const questionnaireTopic = `${payload.avsc}_${payload.name}`
-      if (this.topicExists(questionnaireTopic, topics)) {
-        return Promise.resolve(questionnaireTopic)
-      }
       const defaultTopic = this.GENERAL_TOPIC
       if (this.topicExists(defaultTopic, topics)) {
         return Promise.resolve(defaultTopic)

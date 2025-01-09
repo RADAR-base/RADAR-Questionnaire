@@ -72,7 +72,7 @@ export abstract class ConverterService {
       this.getSchemas(topic).then(schema => {
         return Promise.all([
           this.keyConverter
-            .convertToRecord(kafkaKey, topic, ''),
+            .convertToRecord(kafkaKey, topic),
           this.convertToAvro(kafkaObject, schema)
         ]).then(([key, record]) => ({
           topic,

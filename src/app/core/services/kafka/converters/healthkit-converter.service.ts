@@ -189,7 +189,7 @@ export class HealthkitConverterService extends ConverterService {
   ): Promise<any[]> {
     return this.getSchemas().then(schema => {
       return Promise.all([
-        this.keyConverter.convertToRecord(kafkaKey, this.HEALTHKIT_TOPIC, ''),
+        this.keyConverter.convertToRecord(kafkaKey, this.HEALTHKIT_TOPIC),
         this.convertToHealthkitRecord(kafkaObject, schema)
       ]).then(([key, records]) => ({
         topic: this.getKafkaTopic(kafkaObject.data.key),

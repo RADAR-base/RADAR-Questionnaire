@@ -23,37 +23,31 @@ export class KeyConverterService {
     return this.token.getURI().then(uri => (this.BASE_URI = uri))
   }
 
-  getKafkaTopic(payload): Promise<any> {
-    return Promise.resolve()
-  }
-
-  getSchemas(topic) {
-    if (this.schemas[topic]) return this.schemas[topic]
+  async getSchema(topic) {
+    if (this.schemas[topic]) return Promise.resolve(this.schemas[topic])
     else {
       const versionStr = this.URI_version + 'latest'
       const uri =
         this.BASE_URI +
         this.URI_schema +
-        'questionnaire_response' +
+        topic +
         '-key' +
         versionStr
-      const schema = this.getLatestKafkaSchemaVersion(uri)
+      const schema = await this.getLatestKafkaSchemaVersion(uri)
       this.schemas[topic] = schema
       return schema
     }
   }
 
-  convertToRecord(kafkaKey, topics, schema): any {
-    return this.getKafkaTopic(kafkaKey).then(topic =>
-      this.getSchemas(topic).then(keySchemaMetadata => {
-        const key = JSON.parse(keySchemaMetadata.schema)
-        const record = {
-          schema: keySchemaMetadata.id,
-          value: this.convertToAvro(key, kafkaKey)
-        }
-        return record
-      })
-    )
+  convertToRecord(kafkaKey, topic): any {
+    return this.getSchema(topic).then(keySchemaMetadata => {
+      const key = JSON.parse(keySchemaMetadata.schema)
+      const record = {
+        schema: keySchemaMetadata.id,
+        value: this.convertToAvro(key, kafkaKey)
+      }
+      return record
+    })
   }
 
   processData(payload) {

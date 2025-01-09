@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core'
 
 import {
   DefaultAutoNextQuestionnaireTypes,
+  DefaultHealthkitQuestionnaireKey,
   DefaultShowTaskProgressCount,
   DefaultSkippableQuestionnaireTypes
 } from '../../../../assets/data/defaultConfig'
@@ -287,7 +288,7 @@ export class QuestionsService {
   }
 
   initQuestionnaireProcessor(name) {
-    if (name.toLowerCase().includes('health')) {
+    if (name.toLowerCase().includes(DefaultHealthkitQuestionnaireKey)) {
       this.questionnaireProcessor = this.healthProcessor
     } else {
       this.questionnaireProcessor = this.defaultQuestionnaireProcessor

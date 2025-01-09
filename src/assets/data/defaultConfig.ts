@@ -314,6 +314,8 @@ export const DefaultPrivacyPolicyUrl =
 
 export const DefaultHealthkitTopicPrefix = 'active_apple_healthkit_'
 
+export const DefaultHealthkitQuestionnaireKey = 'healthkit'
+
 // *Default Healthkit data permissions to request
 export const DefaultHealthkitPermissions = [
   HealthkitPermission.ACTIVITY,

@@ -9,9 +9,6 @@ const config: CapacitorConfig = {
     "cleartext": true
   },
   loggingBehavior: 'none',
-  ios: {
-    scheme: 'RADAR Questionnaire'
-  },
   plugins: {
     SplashScreen: {
       launchAutoHide: true,

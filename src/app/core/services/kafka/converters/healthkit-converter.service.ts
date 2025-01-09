@@ -19,6 +19,7 @@ import { StorageService } from '../../storage/storage.service'
 import { StorageKeys } from 'src/app/shared/enums/storage'
 import { KeyConverterService } from './key-converter.service'
 import { Utility } from 'src/app/shared/utilities/util'
+import { RemoteConfigService } from '../../config/remote-config.service'
 
 @Injectable()
 export class HealthkitConverterService extends ConverterService {
@@ -32,9 +33,10 @@ export class HealthkitConverterService extends ConverterService {
     logger: LogService,
     http: HttpClient,
     token: TokenService,
-    keyConverter: KeyConverterService
+    keyConverter: KeyConverterService,
+    remoteConfig: RemoteConfigService
   ) {
-    super(logger, http, token, keyConverter)
+    super(logger, http, token, keyConverter, remoteConfig)
   }
 
   init() { }

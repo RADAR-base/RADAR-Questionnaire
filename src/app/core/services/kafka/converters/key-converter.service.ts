@@ -15,8 +15,8 @@ export class KeyConverterService {
   BASE_URI: string
 
   constructor(private logger: LogService, private http: HttpClient, public token: TokenService,
-    ) {
-      this.updateURI()
+  ) {
+    this.updateURI()
   }
 
   updateURI() {

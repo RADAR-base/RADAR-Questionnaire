@@ -10,6 +10,7 @@ import { LogService } from '../../misc/log.service'
 import { TokenService } from '../../token/token.service'
 import { ConverterService } from './converter.service'
 import { KeyConverterService } from './key-converter.service'
+import { RemoteConfigService } from '../../config/remote-config.service'
 
 @Injectable()
 export class AppEventConverterService extends ConverterService {
@@ -18,12 +19,13 @@ export class AppEventConverterService extends ConverterService {
     http: HttpClient,
     token: TokenService,
     private utility: Utility,
-    keyConverter: KeyConverterService
+    keyConverter: KeyConverterService,
+    remoteConfig: RemoteConfigService
   ) {
-    super(logger, http, token, keyConverter)
+    super(logger, http, token, keyConverter, remoteConfig)
   }
 
-  init() {}
+  init() { }
 
   getKafkaTopic(payload): Promise<any> {
     return Promise.resolve('questionnaire_app_event')

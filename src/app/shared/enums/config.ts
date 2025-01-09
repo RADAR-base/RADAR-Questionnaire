@@ -44,7 +44,13 @@ export class ConfigKeys {
 
   static HEALTHKIT_LOOKBACK_INTERVAL_DAYS = new ConfigKeys('healthkit_lookback_interval_days')
 
-  constructor(public value: string) {}
+  static AUDIO_SAMPLING_RATE = new ConfigKeys('audio_sampling_rate')
+
+  static AUDIO_BIT_RATE = new ConfigKeys('audio_bit_rate')
+
+  static AUDIO_ENCODER = new ConfigKeys('audio_encoder')
+
+  constructor(public value: string) { }
 
   toString() {
     return this.value

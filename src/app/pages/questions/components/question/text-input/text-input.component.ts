@@ -105,6 +105,7 @@ export class TextInputComponent implements OnInit {
       month: moment.format('MMM'),
       year: moment.format('YYYY')
     }
+    this.emitAnswer(this.defaultDatePickerValue)
   }
 
   initTime() {

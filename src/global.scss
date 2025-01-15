@@ -164,6 +164,9 @@ ion-loading.custom-loading {
 }
 
 .li-ionic4-datePicker {
+  ion-header {
+    height: fit-content !important;
+  }
   ion-button {
     --ion-color-primary: white;
     --border-color: none;

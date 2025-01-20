@@ -5,11 +5,10 @@ import { Platform } from '@ionic/angular'
 
 import {
   DefaultEndPoint,
-  DefaultManagementPortalURI,
   DefaultOAuthClientId,
   DefaultOAuthClientSecret,
-  DefaultRefreshTokenURI,
   DefaultRequestEncodedContentType,
+  DefaultTokenEndPoint,
   DefaultTokenRefreshSeconds
 } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
@@ -26,7 +25,8 @@ import { StorageService } from '../storage/storage.service'
 export class TokenService {
   private readonly TOKEN_STORE = {
     OAUTH_TOKENS: StorageKeys.OAUTH_TOKENS,
-    BASE_URI: StorageKeys.BASE_URI
+    BASE_URI: StorageKeys.BASE_URI,
+    TOKEN_ENDPOINT: StorageKeys.TOKEN_ENDPOINT
   }
   URI_base: string
   private tokenRefreshMillis: number = DefaultTokenRefreshSeconds
@@ -65,6 +65,12 @@ export class TokenService {
       .then(uri => (uri ? uri : DefaultEndPoint))
   }
 
+  getTokenEndpoint() {
+    return this.storage
+      .get(this.TOKEN_STORE.TOKEN_ENDPOINT)
+      .then(uri => (uri ? uri : DefaultTokenEndPoint))
+  }
+
   setTokens(tokens) {
     return this.storage.set(this.TOKEN_STORE.OAUTH_TOKENS, tokens)
   }
@@ -78,20 +84,23 @@ export class TokenService {
     return this.storage.set(this.TOKEN_STORE.BASE_URI, url).then(() => url)
   }
 
+  setTokenEndpoint(uri: string) {
+    return this.storage.set(this.TOKEN_STORE.TOKEN_ENDPOINT, uri)
+  }
+
   static basicCredentials(user: string, password: string): string {
     return 'Basic ' + btoa(`${user}:${password}`)
   }
 
   register(refreshBody): Promise<OAuthToken> {
     return Promise.all([
-      this.getURI(),
+      this.getTokenEndpoint(),
       this.getRegisterHeaders(DefaultRequestEncodedContentType)
     ])
       .then(([uri, headers]) => {
-        const URI = uri + DefaultManagementPortalURI + DefaultRefreshTokenURI
-        this.logger.log(`"Registering with ${URI} and headers`, headers)
+        this.logger.log(`"Registering with ${uri} and headers`, headers)
         return this.http
-          .post(URI, refreshBody, { headers: headers })
+          .post(uri, refreshBody, { headers: headers })
           .toPromise()
       })
       .then(res => this.setTokens(res).then(() => res))
@@ -107,7 +116,19 @@ export class TokenService {
       })
       if (tokens.iat + tokens.expires_in < limit) {
         const params = this.getRefreshParams(tokens.refresh_token)
-        return this.register(params)
+        return this.register(params).catch(response => {
+          const error = response.error
+          if (error && error.error === 'invalid_grant') {
+            // Specific check for expired refresh token
+            console.error('Refresh token expired. Please log in again.')
+            this.reset() // Clear tokens and session data
+            throw new Error('Session expired. Please log in again.')
+          }
+
+          // Handle other errors (e.g., network, server issues)
+          console.error('Error refreshing token:', error)
+          throw new Error('Error refreshing token. Please try again.')
+        })
       } else {
         return tokens
       }
@@ -155,9 +176,24 @@ export class TokenService {
   }
 
   isValid(): Promise<boolean> {
-    return this.storage
-      .get(StorageKeys.OAUTH_TOKENS)
-      .then(tokens => !this.jwtHelper.isTokenExpired(tokens.refresh_token))
+    return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
+      if (!tokens || !tokens.refresh_token) {
+        return false // No token available
+      }
+
+      const refreshToken = tokens.refresh_token
+
+      // Check if the token is a JWT (simple heuristic: contains three parts separated by dots)
+      const isJwt = refreshToken.split('.').length === 3
+
+      if (isJwt) {
+        // For JWT tokens, check expiration
+        return !this.jwtHelper.isTokenExpired(refreshToken)
+      } else {
+        // For opaque tokens, assume valid until refreshed
+        return true
+      }
+    })
   }
 
   reset() {

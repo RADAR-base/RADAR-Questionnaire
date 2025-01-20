@@ -83,6 +83,7 @@ ion-item.item:last-child {
 
 ion-item-divider.item-divider {
   --background: var(--cl-primary-10);
+
   color: var(--cl-font-light);
   font-size: 2rem;
 }
@@ -112,7 +113,9 @@ ion-card {
   margin-top: 160px;
   margin-bottom: 104px;
   color: white;
+
   --background: transparent;
+
   background: transparent;
 }
 
@@ -126,4 +129,15 @@ swiper-container {
 
 .policy {
   margin-bottom: 16px;
+}
+
+ion-spinner {
+  --color: #fff !important;
+
+  width: 40px;
+  height: 40px;
+}
+
+.spn-container {
+  margin: 40px;
 }

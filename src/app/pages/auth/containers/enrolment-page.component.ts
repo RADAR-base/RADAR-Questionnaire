@@ -1,4 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core'
+import { App } from '@capacitor/app'
 import { Browser } from '@capacitor/browser'
 import { Device } from '@capacitor/device'
 import { NavController } from '@ionic/angular'
@@ -24,6 +25,7 @@ import {
   WeeklyReportSubSettings
 } from '../../../shared/models/settings'
 import { AuthService } from '../services/auth.service'
+import { BehaviorSubject } from 'rxjs'
 
 @Component({
   selector: 'page-enrolment',
@@ -34,13 +36,14 @@ export class EnrolmentPageComponent {
   @ViewChild('swiper')
   slides: ElementRef | undefined
 
-  loading: boolean = false
+  loading = new BehaviorSubject<boolean>(false)
   showOutcomeStatus: boolean = false
   outcomeStatus: string
   enterMetaQR = false
   reportSettings: WeeklyReportSubSettings[] = DefaultSettingsWeeklyReport
   language?: LanguageSetting = DefaultLanguage
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
+  enrolmentMethod = 'qr'
 
   constructor(
     public navCtrl: NavController,
@@ -60,6 +63,7 @@ export class EnrolmentPageComponent {
     let lang = this.languagesSelectable.find(a => a.value == tag)
     this.language = lang ? lang : this.language
     this.localization.setLanguage(this.language)
+    this.initializeDeepLinking()
   }
 
   ionViewDidEnter() {
@@ -107,6 +111,33 @@ export class EnrolmentPageComponent {
     }
   }
 
+  findSlideIndexById(id: string) {
+    const slides = Array.from(document.querySelectorAll('swiper-slide'))
+    return slides.findIndex(slide => slide.id === id)
+  }
+
+  goToSlideById(id: string) {
+    const slideIndex = this.findSlideIndexById(id)
+    if (slideIndex !== -1) {
+      this.slides.nativeElement.swiper.allowSlideNext = true
+      this.slides.nativeElement.swiper
+        .slideTo(slideIndex, 500)
+        .then(() => (this.slides.nativeElement.swiper.allowSlideNext = false))
+    }
+  }
+
+  removeSlideById(id: string) {
+    const slideIndex = this.findSlideIndexById(id)
+    const currentIndex = this.slides.nativeElement.swiper.activeIndex
+    if (currentIndex == slideIndex) {
+      return this.next()
+    }
+    if (slideIndex !== -1) {
+      this.slides.nativeElement.swiper.removeSlide(slideIndex)
+      this.slides.nativeElement.swiper.update()
+    }
+  }
+
   retrySlideTransition(targetIndex: number) {
     if (
       this.slides &&
@@ -127,31 +158,35 @@ export class EnrolmentPageComponent {
     }
   }
 
-  enterToken() {
-    this.enterMetaQR = true
+  enrol(method) {
+    this.enrolmentMethod = method
     this.next()
   }
 
   authenticate(authObj) {
-    if (!this.enterMetaQR)
-      this.usage.sendGeneralEvent(UsageEventType.QR_SCANNED)
-    this.loading = true
+    this.loading.next(true)
     this.clearStatus()
-    this.auth
+    return this.auth
       .authenticate(authObj)
       .catch(e => {
-        if (e.status !== 409) throw e
+        if (e.status !== 409) throw e // Handle conflict error (409)
       })
-      .then(() => this.auth.initSubjectInformation())
-      .then(() => {
-        this.usage.sendGeneralEvent(EnrolmentEventType.SUCCESS)
-        this.next()
-      })
-      .catch(e => {
-        this.handleError(e)
-        this.loading = false
-        this.auth.reset()
-      })
+      .then(() => this.handleAuthenticationSuccess())
+      .catch(e => this.handleAuthenticationError(e))
+      .then(() => this.loading.next(false))
+  }
+
+  handleAuthenticationSuccess() {
+    return this.auth.initSubjectInformation().then(() => {
+      this.usage.sendGeneralEvent(EnrolmentEventType.SUCCESS)
+      this.removeSlideById('qr-registration-choice')
+      return this.removeSlideById('qr-registration')
+    })
+  }
+
+  handleAuthenticationError(e) {
+    this.handleError(e)
+    this.auth.reset()
   }
 
   handleError(e) {
@@ -188,7 +223,7 @@ export class EnrolmentPageComponent {
     const buttons = [
       {
         text: this.localization.translateKey(LocKeys.BTN_CANCEL),
-        handler: () => {}
+        handler: () => { }
       },
       {
         text: this.localization.translateKey(LocKeys.BTN_SET),
@@ -224,5 +259,14 @@ export class EnrolmentPageComponent {
 
   async openWithInAppBrowser(url: string) {
     await Browser.open({ url })
+  }
+
+  initializeDeepLinking() {
+    App.addListener('appUrlOpen', event => {
+      const url = new URL(event.url)
+      if (url.hostname === 'enrol') {
+        this.authenticate(event.url)
+      }
+    })
   }
 }

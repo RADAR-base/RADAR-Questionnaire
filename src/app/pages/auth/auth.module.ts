@@ -32,4 +32,4 @@ const routes: Routes = [
   providers: [AuthService, AuthGuard],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AuthModule {}
+export class AuthModule { }

@@ -152,7 +152,7 @@ export class QuestionsPageComponent implements OnInit {
     questions.forEach(q => {
       const key =
         q.field_type.includes(this.MATRIX_FIELD_NAME) ||
-        q.field_type.includes(this.HEALTH_FIELD_NAME)
+          q.field_type.includes(this.HEALTH_FIELD_NAME)
           ? q.matrix_group_name
           : q.field_name
       const entry = groupedQuestions.get(key) ? groupedQuestions.get(key) : []
@@ -391,7 +391,7 @@ export class QuestionsPageComponent implements OnInit {
         buttons: [
           {
             text: this.localization.translateKey(LocKeys.BTN_DISMISS),
-            handler: () => {}
+            handler: () => { }
           }
         ]
       })

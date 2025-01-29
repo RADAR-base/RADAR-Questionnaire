@@ -7,14 +7,21 @@ import { getSeconds } from 'src/app/shared/utilities/time'
 import { LogService } from '../../misc/log.service'
 import { TokenService } from '../../token/token.service'
 import { ConverterService } from './converter.service'
+import { KeyConverterService } from './key-converter.service'
 import { RemoteConfigService } from '../../config/remote-config.service'
 
 @Injectable()
 export class AssessmentConverterService extends ConverterService {
   GENERAL_TOPIC: string = 'questionnaire_response'
 
-  constructor(logger: LogService, http: HttpClient, token: TokenService, remoteConfig: RemoteConfigService) {
-    super(logger, http, token, remoteConfig)
+  constructor(
+    logger: LogService,
+    http: HttpClient,
+    token: TokenService,
+    keyConverter: KeyConverterService,
+    remoteConfig: RemoteConfigService
+  ) {
+    super(logger, http, token, keyConverter, remoteConfig)
   }
 
   init() { }
@@ -51,10 +58,6 @@ export class AssessmentConverterService extends ConverterService {
     return this.getKafkaTopicFromSpecifications(name).then(specTopic => {
       if (this.topicExists(specTopic, topics)) {
         return Promise.resolve(specTopic)
-      }
-      const questionnaireTopic = `${payload.avsc}_${payload.name}`
-      if (this.topicExists(questionnaireTopic, topics)) {
-        return Promise.resolve(questionnaireTopic)
       }
       const defaultTopic = this.GENERAL_TOPIC
       if (this.topicExists(defaultTopic, topics)) {

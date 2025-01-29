@@ -28,7 +28,6 @@ import { CompletionLogConverterService } from './core/services/kafka/converters/
 import { ConverterFactoryService } from './core/services/kafka/converters/converter-factory.service.'
 import { ConverterService } from './core/services/kafka/converters/converter.service'
 import { HealthkitConverterService } from './core/services/kafka/converters/healthkit-converter.service'
-import { KeyConverterService } from './core/services/kafka/converters/key-converter.service'
 import { TimezoneConverterService } from './core/services/kafka/converters/timezone-converter.service'
 import { KafkaService } from './core/services/kafka/kafka.service'
 import { SchemaService } from './core/services/kafka/schema.service'
@@ -56,6 +55,8 @@ import { PagesModule } from './pages/pages.module'
 import { TranslatePipe } from './shared/pipes/translate/translate'
 import { jwtOptionsFactory } from './shared/utilities/jwtOptionsFactory'
 import { Utility } from './shared/utilities/util'
+import { DefaultKeyConverterService } from './core/services/kafka/converters/default-key-converter.service'
+import { KeyConverterService } from './core/services/kafka/converters/key-converter.service'
 
 @NgModule({
   imports: [
@@ -115,8 +116,8 @@ import { Utility } from './shared/utilities/util'
     AppEventConverterService,
     CompletionLogConverterService,
     TimezoneConverterService,
-    KeyConverterService,
     HealthkitConverterService,
+    { provide: KeyConverterService, useClass: DefaultKeyConverterService },
     CacheService,
     NotificationGeneratorService,
     FcmRestNotificationService,
@@ -129,4 +130,4 @@ import { Utility } from './shared/utilities/util'
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AppModule {}
+export class AppModule { }

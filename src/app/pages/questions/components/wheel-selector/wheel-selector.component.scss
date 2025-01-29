@@ -25,6 +25,11 @@
   background-color: var(--cl-primary-40);
 }
 
+.col {
+  width: fit-content;
+  margin: 8px;
+}
+
 .picker-opts {
   overflow: scroll;
   width: fit-content;
@@ -34,12 +39,6 @@
 }
 
 .grid {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-ion-row {
   display: flex;
   align-items: center;
   justify-content: center;

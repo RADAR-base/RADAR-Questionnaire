@@ -1,6 +1,5 @@
-<ion-grid *ngIf="valuesWithNulls" class="grid">
-  <ion-row>
-    <ion-col *ngFor="let col of keys(valuesWithNulls)">
+<div class="grid">
+  <div class="col" *ngFor="let col of keys(valuesWithNulls)">
       <div class="label">
         <ion-note>{{ labels[col] }}</ion-note>
       </div>
@@ -15,6 +14,5 @@
           </p>
         </div>
       </div>
-    </ion-col>
-  </ion-row>
-</ion-grid>
+  </div>
+</div>

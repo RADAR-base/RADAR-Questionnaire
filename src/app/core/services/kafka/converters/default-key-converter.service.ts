@@ -1,13 +1,13 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { KeyExport, SchemaMetadata } from 'src/app/shared/models/kafka'
-import * as AvroSchema from 'avro-js'
 
 import { LogService } from '../../misc/log.service'
 import { TokenService } from '../../token/token.service'
+import { KeyConverterService } from './key-converter.service'
 
 @Injectable()
-export class DefaultKeyConverterService {
+export class DefaultKeyConverterService extends KeyConverterService {
   schemas = {}
   specifications
   URI_schema: string = '/schema/subjects/'
@@ -16,6 +16,7 @@ export class DefaultKeyConverterService {
 
   constructor(private logger: LogService, private http: HttpClient, public token: TokenService,
   ) {
+    super()
     this.updateURI()
   }
 
@@ -58,10 +59,6 @@ export class DefaultKeyConverterService {
     }
 
     return key
-  }
-
-  convertToAvro(schema, value): any {
-    return AvroSchema.parse(schema).clone(value, { wrapUnions: true })
   }
 
   getLatestKafkaSchemaVersion(uri): Promise<SchemaMetadata> {

@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import * as AvroSchema from 'avro-js'
+
 import { KeyExport } from 'src/app/shared/models/kafka'
 
 @Injectable({
@@ -26,5 +28,7 @@ export abstract class KeyConverterService {
    * @param value The value to convert.
    * @returns The Avro-formatted value.
    */
-  abstract convertToAvro(schema: any, value: any): any
+  convertToAvro(schema, value): any {
+    return AvroSchema.parse(schema).clone(value, { wrapUnions: true })
+  }
 }

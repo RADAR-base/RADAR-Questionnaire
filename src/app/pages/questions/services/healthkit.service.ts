@@ -11,6 +11,7 @@ import { DefaultHealthkitInterval, DefaultHealthkitPermissions } from 'src/asset
 import { RemoteConfigService } from 'src/app/core/services/config/remote-config.service'
 import { ConfigKeys } from 'src/app/shared/enums/config'
 import { HealthkitPermissionMap } from 'src/app/shared/models/health'
+import { Utility } from 'src/app/shared/utilities/util'
 
 
 @Injectable({
@@ -19,11 +20,14 @@ import { HealthkitPermissionMap } from 'src/app/shared/models/health'
 export class HealthkitService {
   // The interval days for first query
   HEALTHKIT_INTERVAL_DAYS = String(DefaultHealthkitInterval)
+  HEALTHKIT_PERMISSIONS = DefaultHealthkitPermissions
+  DELIMITER = ','
   queryProgress = 0
 
   constructor(
     private storage: StorageService,
-    private remoteConfig: RemoteConfigService
+    private remoteConfig: RemoteConfigService,
+    private util: Utility
   ) {
     this.init()
   }
@@ -37,6 +41,14 @@ export class HealthkitService {
         )
         .then(interval =>
           (this.HEALTHKIT_INTERVAL_DAYS = interval)
+        )
+      config
+        .getOrDefault(
+          ConfigKeys.HEALTHKIT_PERMISSIONS,
+          DefaultHealthkitPermissions.toString()
+        )
+        .then(permissions =>
+          (this.HEALTHKIT_PERMISSIONS = this.util.stringToArray(permissions, this.DELIMITER))
         )
     })
     return this.getLastPollTimes().then(dic => {
@@ -61,7 +73,7 @@ export class HealthkitService {
       .requestAuthorization(
         {
           all: [''],
-          read: this.getPermissionForDatatype(dataType),
+          read: this.HEALTHKIT_PERMISSIONS,
           write: [''],
         }
       )
@@ -90,11 +102,6 @@ export class HealthkitService {
     } catch (e) {
       return []
     }
-  }
-
-  getPermissionForDatatype(dataType: string): string[] {
-    const permission = HealthkitPermissionMap[dataType as keyof typeof HealthkitPermissionMap]
-    return permission ? [permission] : DefaultHealthkitPermissions
   }
 
   reset() {

@@ -74,11 +74,11 @@ export class QuestionsService {
       .then(([autoNextSet, skippableSet]) => {
         if (autoNextSet.length)
           this.NEXT_BUTTON_AUTOMATIC_SET = new Set(
-            this.stringToArray(autoNextSet, this.DELIMITER)
+            this.util.stringToArray(autoNextSet, this.DELIMITER)
           )
         if (skippableSet.length)
           this.NEXT_BUTTON_ENABLED_SET = new Set(
-            this.stringToArray(skippableSet, this.DELIMITER)
+            this.util.stringToArray(skippableSet, this.DELIMITER)
           )
       })
   }
@@ -293,10 +293,6 @@ export class QuestionsService {
     } else {
       this.questionnaireProcessor = this.defaultQuestionnaireProcessor
     }
-  }
-
-  stringToArray(array, delimiter) {
-    return array.split(delimiter).map(s => s.trim())
   }
 
   getIsProgressCountShown() {

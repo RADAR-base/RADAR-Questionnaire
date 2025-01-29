@@ -66,4 +66,8 @@ export class Utility {
   base64ToUnicode(raw: string): string {
     return decodeURIComponent(escape(atob(raw)))
   }
+
+  stringToArray(array, delimiter) {
+    return array.split(delimiter).map(s => s.trim())
+  }
 }

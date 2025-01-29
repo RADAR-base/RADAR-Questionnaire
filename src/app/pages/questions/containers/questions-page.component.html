@@ -1,7 +1,7 @@
 <ion-content [scrollY]="false" class="ion-padding-top">
   <div class="wrapper">
     <div class="slide-flex">
-      <swiper-container #swiper>
+      <swiper-container #swiper (swiperreachend)="onSlideFinish()">
         <swiper-slide *ngIf="showIntroductionScreen" class="center">
           <introduction
             [title]="questionTitle"
@@ -9,7 +9,7 @@
             (start)="handleIntro($event)"
           ></introduction>
         </swiper-slide>
-        <ng-container *ngIf="!showIntroductionScreen">
+        <ng-container>
           <swiper-slide
             *ngFor="
               let item of groupedQuestions | keyvalue : asIsOrder;
@@ -44,11 +44,11 @@
             [isLastTask]="isLastTask"
             [requiresInClinicCompletion]="requiresInClinicCompletion"
             [taskType]="taskType"
-            [showDoneButton]="showDoneButton"
             [isShown]="showFinishScreen"
+            [progressCount]="progressCount$ | async"
             [questions]="questions"
             [task]="task"
-            (exit)="handleFinish($event)"
+            (exit)="handleFinish()"
           ></finish>
           <finish-and-launch
             *ngIf="showFinishScreen && showFinishAndLaunchScreen"
@@ -60,7 +60,8 @@
             [taskType]="taskType"
             [showDoneButton]="showDoneButton"
             [isShown]="showFinishScreen"
-            (exit)="handleFinish($event)"
+            [progressCount]="progressCount$ | async"
+            (exit)="handleFinish()"
           ></finish-and-launch>
         </swiper-slide>
       </swiper-container>

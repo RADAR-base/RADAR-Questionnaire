@@ -14,27 +14,17 @@
   </div>
   <div class="done-button">
     <ion-button
+      id="done"
       ion-button
       class="bt bt--full"
       round
       full
-      *ngIf="showDoneButton"
       (click)="handleClosePage()"
+      [ngStyle]="{ '--box-shadow': shadowStyle }"
+      [disabled]="!showDoneButton"
     >
-      {{ 'BTN_DONE' | translate }}
+      {{ innerText }}
     </ion-button>
-    <ng-container *ngIf="!showDoneButton && isShown">
-      <div class="extra-info">
-        <img
-          class="extra-info-icon"
-          src="assets/imgs/warning.png"
-          alt="Warning"
-        />
-        {{ 'WARNING_DO_NOT_CLOSE_APP' | translate }}
-      </div>
-      <div>
-        <ion-spinner name="dots"></ion-spinner>
-      </div>
-    </ng-container>
+    <small *ngIf="!showDoneButton"> {{ etaText }} {{ ' (' + progressDisplay + '%) ' }} </small>
   </div>
 </div>

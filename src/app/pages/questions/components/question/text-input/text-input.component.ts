@@ -59,7 +59,7 @@ export class TextInputComponent implements OnInit {
   constructor(
     private localization: LocalizationService,
     public modalCtrl: ModalController
-  ) {}
+  ) { }
 
   ngOnInit() {
     if (this.type.length) {
@@ -150,8 +150,7 @@ export class TextInputComponent implements OnInit {
 
     datePickerModal.onDidDismiss().then(data => {
       let date = moment(data.data.date)
-      date = date.isValid() ? date : this.localization.moment(this.selectedDate)
-      this.selectedDate = date.format('L')
+      this.selectedDate = date.isValid() ? date.format('L') : this.selectedDate
 
       // Transfer local date format all to US format to easily parse the data
       this.defaultDatePickerValue = {

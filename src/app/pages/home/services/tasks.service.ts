@@ -5,7 +5,8 @@ import {
   DefaultAppCreditsTitle,
   DefaultOnDemandAssessmentIcon,
   DefaultPlatformInstance,
-  DefaultShowTaskCalendarName
+  DefaultShowTaskCalendarName,
+  DefaultShowTaskInfo
 } from '../../../../assets/data/defaultConfig'
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
 import { RemoteConfigService } from '../../../core/services/config/remote-config.service'
@@ -193,6 +194,18 @@ export class TasksService {
         config.getOrDefault(
           ConfigKeys.SHOW_TASK_CALENDAR_NAME,
           DefaultShowTaskCalendarName
+        )
+      )
+      .then(res => JSON.parse(res))
+  }
+
+  getIsTaskInfoShown() {
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        config.getOrDefault(
+          ConfigKeys.SHOW_TASK_INFO,
+          DefaultShowTaskInfo
         )
       )
       .then(res => JSON.parse(res))

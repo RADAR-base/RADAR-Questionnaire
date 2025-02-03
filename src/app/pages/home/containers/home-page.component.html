@@ -75,7 +75,7 @@
 
     <div class="size-static">
       <task-info
-        *ngIf="nextTask"
+        *ngIf="nextTask && (isTaskInfoShown | async)"
         [task]="nextTask"
         [isNow]="taskIsNow"
         [progress]="tasksProgress | async"

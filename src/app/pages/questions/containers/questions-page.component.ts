@@ -157,7 +157,7 @@ export class QuestionsPageComponent implements OnInit {
     const groupedQuestions = new Map<string, Question[]>()
     questions.forEach(q => {
       const key =
-        this.MATRIX_INPUT_SET.has(q.field_type)
+        this.MATRIX_INPUT_SET.has(q.field_type) && q.matrix_group_name
           ? q.matrix_group_name
           : q.field_name
       const entry = groupedQuestions.get(key) ? groupedQuestions.get(key) : []

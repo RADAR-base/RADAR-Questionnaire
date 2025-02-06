@@ -280,7 +280,7 @@ export class QuestionsPageComponent implements OnInit {
     const currentQs = this.getCurrentQuestions()
     if (!currentQs) return
     this.isRightButtonDisabled =
-      !this.questionsService.isAnyAnswered(currentQs) &&
+      !this.questionsService.areAllAnswered(currentQs) &&
       !this.questionsService.getIsAnyNextEnabled(currentQs)
     this.isLeftButtonDisabled =
       this.questionsService.getIsAnyPreviousEnabled(currentQs)

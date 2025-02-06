@@ -31,6 +31,7 @@
                 [task]="task"
                 [currentIndex]="currentQuestionGroupId"
                 [isSectionHeaderHidden]="j != currentQuestionIndices[0]"
+                [isMatrix]="item.value.length > 1"
                 (answer)="onAnswer($event)"
                 (nextAction)="nextAction($event)"
               ></question>

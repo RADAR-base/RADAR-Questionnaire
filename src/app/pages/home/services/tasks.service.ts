@@ -66,7 +66,7 @@ export class TasksService {
       .getTasksForDate(new Date(), AssessmentType.SCHEDULED)
       .then(tasks =>
         tasks.filter(
-          t => !this.isTaskExpired(t) || this.wasTaskCompletedToday(t)
+          t => !this.isTaskExpired(t) || this.wasTaskCompletedToday(t) || this.wasTaskValidToday(t)
         )
       )
   }
@@ -126,6 +126,10 @@ export class TasksService {
 
   wasTaskCompletedToday(task) {
     return task.completed && this.isToday(task.timeCompleted)
+  }
+
+  wasTaskValidToday(task) {
+    return this.isToday(task.timestamp)
   }
 
   /**

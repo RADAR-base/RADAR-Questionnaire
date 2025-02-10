@@ -72,7 +72,8 @@ export class QuestionsPageComponent implements OnInit {
   MATRIX_INPUT_SET: Set<QuestionType> = new Set([
     QuestionType.matrix_radio,
     QuestionType.healthkit,
-    QuestionType.slider
+    QuestionType.slider,
+    QuestionType.yesno
   ])
 
   backButtonListener: Subscription

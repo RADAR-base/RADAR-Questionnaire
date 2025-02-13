@@ -21,14 +21,14 @@ export class StorageService {
   ) {
     this.keyUpdates = new Subject<StorageKeys | null>()
     this.platform.ready().then(() => {
-      this.prepare().then(() =>
+      this.getStorageState().then(() =>
         this.logger.log('Global configuration', this.global)
       )
     })
   }
 
-  getStorageState() {
-    return this.storage.ready()
+  getStorageState(): Promise<any> {
+    return this.storage.ready().then(() => this.prepare())
   }
 
   set(key: StorageKeys, value: any): Promise<any> {
@@ -107,8 +107,8 @@ export class StorageService {
     const errMsg = error.message
       ? error.message
       : error.status
-      ? `${error.status} - ${error.statusText}`
-      : 'error'
+        ? `${error.status} - ${error.statusText}`
+        : 'error'
     return observableThrowError(errMsg)
   }
 }

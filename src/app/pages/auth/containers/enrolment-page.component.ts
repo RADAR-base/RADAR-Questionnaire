@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core'
+import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core'
 import { App } from '@capacitor/app'
 import { Browser } from '@capacitor/browser'
 import { Device } from '@capacitor/device'
@@ -51,7 +51,8 @@ export class EnrolmentPageComponent {
     private localization: LocalizationService,
     private alertService: AlertService,
     private usage: UsageService,
-    private logger: LogService
+    private logger: LogService,
+    private cdr: ChangeDetectorRef
   ) {
     this.init()
   }
@@ -91,18 +92,16 @@ export class EnrolmentPageComponent {
 
       // Attempt to slide to the next slide with a delay for stability
       setTimeout(() => {
-        this.slides.nativeElement.swiper
-          .slideTo(nextIndex, 500)
-          .then(() => {
-            // Disable sliding after moving to the next slide
-            this.slides.nativeElement.swiper.allowSlideNext = false
-            this.slides.nativeElement.swiper.allowSlidePrev = false
-          })
-          .catch(error => {
-            console.warn('Slide transition failed:', error)
-            // Retry the slide transition if it fails
-            this.retrySlideTransition(nextIndex)
-          })
+        try {
+          this.slides.nativeElement.swiper.slideTo(nextIndex, 500)
+          // Disable sliding after moving to the next slide
+          this.slides.nativeElement.swiper.allowSlideNext = false
+          this.slides.nativeElement.swiper.allowSlidePrev = false
+        } catch (error) {
+          console.warn('Slide transition failed:', error)
+          // Retry the slide transition if it fails
+          this.retrySlideTransition(nextIndex)
+        }
       }, 100) // Adjust delay as necessary
     } else {
       console.warn('Swiper instance not ready, retrying...')
@@ -120,9 +119,8 @@ export class EnrolmentPageComponent {
     const slideIndex = this.findSlideIndexById(id)
     if (slideIndex !== -1) {
       this.slides.nativeElement.swiper.allowSlideNext = true
-      this.slides.nativeElement.swiper
-        .slideTo(slideIndex, 500)
-        .then(() => (this.slides.nativeElement.swiper.allowSlideNext = false))
+      this.slides.nativeElement.swiper.slideTo(slideIndex, 500)
+      this.slides.nativeElement.swiper.allowSlideNext = false
     }
   }
 
@@ -145,16 +143,10 @@ export class EnrolmentPageComponent {
       this.slides.nativeElement.swiper
     ) {
       this.slides.nativeElement.swiper.update() // Ensure swiper is updated
-      this.slides.nativeElement.swiper
-        .slideTo(targetIndex, 500)
-        .then(() => {
-          // Disable sliding after moving to the target slide
-          this.slides.nativeElement.swiper.allowSlideNext = false
-          this.slides.nativeElement.swiper.allowSlidePrev = false
-        })
-        .catch(error =>
-          console.warn('Retry failed for slide transition:', error)
-        )
+      this.slides.nativeElement.swiper.slideTo(targetIndex, 500)
+      // Disable sliding after moving to the target slide
+      this.slides.nativeElement.swiper.allowSlideNext = false
+      this.slides.nativeElement.swiper.allowSlidePrev = false
     }
   }
 
@@ -165,6 +157,7 @@ export class EnrolmentPageComponent {
 
   authenticate(authObj) {
     this.loading.next(true)
+    this.cdr.detectChanges()
     this.clearStatus()
     return this.auth
       .authenticate(authObj)
@@ -173,14 +166,18 @@ export class EnrolmentPageComponent {
       })
       .then(() => this.handleAuthenticationSuccess())
       .catch(e => this.handleAuthenticationError(e))
-      .then(() => this.loading.next(false))
+      .then(() => {
+        this.loading.next(false)
+        this.cdr.detectChanges()
+      })
   }
 
   handleAuthenticationSuccess() {
     return this.auth.initSubjectInformation().then(() => {
       this.usage.sendGeneralEvent(EnrolmentEventType.SUCCESS)
       this.removeSlideById('qr-registration-choice')
-      return this.removeSlideById('qr-registration')
+      this.removeSlideById('qr-registration')
+      return this.goToSlideById('privacy-policy')
     })
   }
 
@@ -191,13 +188,16 @@ export class EnrolmentPageComponent {
 
   handleError(e) {
     this.logger.error('Failed to log in', e)
+    setTimeout(() => this.logger.error('Failed to log in', e), 10000)
     this.showStatus()
     this.outcomeStatus =
-      e.error && e.error.message
-        ? e.error.message
-        : e.status
-          ? e.statusText + ' (' + e.status + ')'
-          : e
+      e.error && e.error.error_description
+        ? e.error.error_description
+        : e.error && e.error.message
+          ? e.error.message
+          : e.status
+            ? e.statusText + ' (' + e.status + ')'
+            : e
     this.usage.sendGeneralEvent(
       e.status == 409 ? EnrolmentEventType.ERROR : EnrolmentEventType.FAIL,
       false,
@@ -212,7 +212,10 @@ export class EnrolmentPageComponent {
   }
 
   showStatus() {
-    setTimeout(() => (this.showOutcomeStatus = true), 500)
+    setTimeout(() => {
+      (this.showOutcomeStatus = true)
+      this.cdr.detectChanges()
+    }, 500)
   }
 
   navigateToSplash() {

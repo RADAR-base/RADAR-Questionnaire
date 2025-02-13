@@ -22,6 +22,11 @@
             </ion-item>
           </div>
         </div>
+        <div class="initial-status">
+          <div id="outcome" *ngIf="showOutcomeStatus">
+            {{ outcomeStatus }}
+          </div>
+        </div>
         <div class="bottom" *ngIf="!(loading | async)">
           <ion-button ion-button class="bt bt--full" round full (click)="next()">
             {{ 'BTN_START' | translate }}

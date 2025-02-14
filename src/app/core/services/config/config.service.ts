@@ -59,7 +59,8 @@ export class ConfigService {
       this.hasAppVersionChanged(),
       this.hasTimezoneChanged(),
       this.hasNotificationsExpired(),
-      this.hasNotificationMessagingTypeChanged()
+      this.hasNotificationMessagingTypeChanged(),
+      this.hasParticipantAttributesChanged()
     ])
       .then(
         ([
@@ -67,8 +68,11 @@ export class ConfigService {
           newAppVersion,
           newTimezone,
           newNotifications,
-          newMessagingType
+          newMessagingType,
+          newAttributes
         ]) => {
+          if (newAttributes)
+            return this.fetchConfigState(true)
           if (newProtocol && newAppVersion && newTimezone)
             this.subjectConfig
               .getEnrolmentDate()
@@ -93,6 +97,22 @@ export class ConfigService {
       .catch(e => {
         this.sendConfigChangeEvent(ConfigEventType.ERROR, '', '', e.message)
         throw e
+      })
+  }
+
+  hasParticipantAttributesChanged() {
+    return Promise.all([
+      this.subjectConfig.getParticipantAttributes(),
+      this.subjectConfig.pullSubjectInformation(),
+    ])
+      .then(([attributes, user]) => {
+        const hasChanged = JSON.stringify(attributes) !== JSON.stringify(user.attributes)
+        const newAttributes = hasChanged ? user.attributes : attributes
+        if (hasChanged) {
+          this.subjectConfig.setParticipantAttributes(newAttributes)
+          this.analytics.setUserProperties(newAttributes)
+        }
+        return hasChanged
       })
   }
 

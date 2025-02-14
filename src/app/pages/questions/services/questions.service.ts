@@ -158,8 +158,8 @@ export class QuestionsService {
     return this.answerService.check(id)
   }
 
-  isAnyAnswered(questions: Question[]) {
-    return questions.some(q => this.isAnswered(q))
+  areAllAnswered(questions: Question[]) {
+    return questions.every(q => this.isAnswered(q))
   }
 
   getNextQuestion(groupedQuestions, currentQuestionId): QuestionPosition {

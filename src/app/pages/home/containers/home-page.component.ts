@@ -40,6 +40,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   checkTaskInterval
   showMiscTasksButton: Promise<boolean>
   isTaskCalendarTaskNameShown: Promise<boolean>
+  isTaskInfoShown: Promise<boolean>
   currentDate: number
 
   APP_CREDITS = '&#169; RADAR-Base'
@@ -112,6 +113,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.title = this.tasksService.getPlatformInstanceName()
     this.isTaskCalendarTaskNameShown =
       this.tasksService.getIsTaskCalendarTaskNameShown()
+    this.isTaskInfoShown = this.tasksService.getIsTaskInfoShown()
     this.onDemandIcon = this.tasksService.getOnDemandAssessmentIcon()
     this.showMiscTasksButton = this.getShowMiscTasksButton()
   }

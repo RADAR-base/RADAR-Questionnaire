@@ -106,8 +106,8 @@ export class ConfigService {
       this.subjectConfig.pullSubjectInformation(),
     ])
       .then(([attributes, user]) => {
+        const newAttributes = user.attributes
         const hasChanged = JSON.stringify(attributes) !== JSON.stringify(user.attributes)
-        const newAttributes = hasChanged ? user.attributes : attributes
         if (hasChanged) {
           this.subjectConfig.setParticipantAttributes(newAttributes)
           this.analytics.setUserProperties(newAttributes)

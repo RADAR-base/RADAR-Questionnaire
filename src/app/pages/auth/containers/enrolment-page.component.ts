@@ -54,6 +54,7 @@ export class EnrolmentPageComponent {
     private logger: LogService,
     private cdr: ChangeDetectorRef
   ) {
+    this.initializeDeepLinking()
     this.init()
   }
 
@@ -64,7 +65,6 @@ export class EnrolmentPageComponent {
     let lang = this.languagesSelectable.find(a => a.value == tag)
     this.language = lang ? lang : this.language
     this.localization.setLanguage(this.language)
-    this.initializeDeepLinking()
   }
 
   ionViewDidEnter() {

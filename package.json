@@ -1,7 +1,7 @@
 {
   "name": "radar-questionnaire",
   "description": "An application that collects active data for research.",
-  "version": "3.3.3",
+  "version": "3.3.4",
   "author": "RADAR Base",
   "homepage": "http://www.radar-base.org/",
   "scripts": {

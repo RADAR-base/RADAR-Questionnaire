@@ -112,9 +112,7 @@ export class TokenService {
   }
 
   refresh(): Promise<OAuthToken> {
-    console.log('Refreshing tokenn...')
     return this.getTokens().then(tokens => {
-      console.log(tokens)
       if (!tokens) {
         throw new Error('No tokens are available to refresh')
       }

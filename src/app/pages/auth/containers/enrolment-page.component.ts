@@ -188,7 +188,6 @@ export class EnrolmentPageComponent {
 
   handleError(e) {
     this.logger.error('Failed to log in', e)
-    setTimeout(() => this.logger.error('Failed to log in', e), 10000)
     this.showStatus()
     this.outcomeStatus =
       e.error && e.error.error_description

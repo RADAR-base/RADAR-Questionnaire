@@ -30,7 +30,6 @@ export class QRFormComponent {
       async result => {
         await listener.remove()
         this.data.emit(result.barcode.rawValue)
-        this.loading = false
         // Removes the class after the scan (workaround for the camera not closing)
         document.querySelector('body').classList.remove('scanner-active')
       }

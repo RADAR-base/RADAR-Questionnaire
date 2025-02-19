@@ -132,4 +132,10 @@ export abstract class ConverterService {
       return false
     }
   }
+
+  reset() {
+    this.BASE_URI = null
+    this.specifications = null
+    this.schemas = {}
+  }
 }

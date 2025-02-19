@@ -70,6 +70,13 @@ export class QuestionsPageComponent implements OnInit {
   ])
   MATRIX_FIELD_NAME = 'matrix'
   HEALTH_FIELD_NAME = 'health'
+  MATRIX_INPUT_SET: Set<QuestionType> = new Set([
+    QuestionType.matrix_radio,
+    QuestionType.healthkit,
+    QuestionType.slider,
+    QuestionType.yesno
+  ])
+
   backButtonListener: Subscription
   showProgressCount: Promise<boolean>
 
@@ -151,8 +158,7 @@ export class QuestionsPageComponent implements OnInit {
     const groupedQuestions = new Map<string, Question[]>()
     questions.forEach(q => {
       const key =
-        q.field_type.includes(this.MATRIX_FIELD_NAME) ||
-          q.field_type.includes(this.HEALTH_FIELD_NAME)
+        this.MATRIX_INPUT_SET.has(q.field_type) && q.matrix_group_name
           ? q.matrix_group_name
           : q.field_name
       const entry = groupedQuestions.get(key) ? groupedQuestions.get(key) : []
@@ -281,7 +287,7 @@ export class QuestionsPageComponent implements OnInit {
     const currentQs = this.getCurrentQuestions()
     if (!currentQs) return
     this.isRightButtonDisabled =
-      !this.questionsService.isAnyAnswered(currentQs) &&
+      !this.questionsService.areAllAnswered(currentQs) &&
       !this.questionsService.getIsAnyNextEnabled(currentQs)
     this.isLeftButtonDisabled =
       this.questionsService.getIsAnyPreviousEnabled(currentQs)

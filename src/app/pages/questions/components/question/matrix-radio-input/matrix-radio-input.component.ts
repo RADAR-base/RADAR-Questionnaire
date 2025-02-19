@@ -48,6 +48,6 @@ export class MatrixRadioInputComponent implements OnInit, OnChanges {
   }
 
   onInputChange(event) {
-    this.valueChange.emit(event)
+    this.valueChange.emit(event.detail.value)
   }
 }

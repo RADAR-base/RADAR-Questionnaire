@@ -13,7 +13,7 @@ export class SchemaService {
   constructor(
     private converterFactory: ConverterFactoryService,
     private subjectConfig: SubjectConfigService
-  ) {}
+  ) { }
 
   getKafkaObjectKey() {
     return this.subjectConfig
@@ -58,5 +58,9 @@ export class SchemaService {
         }))
       })
     )
+  }
+
+  reset() {
+    return this.converterFactory.reset()
   }
 }

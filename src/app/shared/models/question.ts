@@ -58,7 +58,6 @@ export class QuestionType {
   static yesno = 'yesno'
   static descriptive = 'descriptive'
   static matrix_radio = 'matrix-radio'
-  static health = 'health'
   static healthkit = 'healthkit'
 }
 

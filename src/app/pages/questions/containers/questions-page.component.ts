@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core'
 import { Router } from '@angular/router'
 import { KeepAwake } from '@capacitor-community/keep-awake'
 import { NavController, Platform } from '@ionic/angular'
-import { Subscription } from 'rxjs'
+import { Observable, Subscription } from 'rxjs'
 
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
@@ -62,6 +62,7 @@ export class QuestionsPageComponent implements OnInit {
   showFinishAndLaunchScreen: boolean = false
   externalAppCanLaunch: boolean = false
   viewEntered = false
+  progressCount$: Observable<string>
 
   SHOW_INTRODUCTION_SET: Set<boolean | ShowIntroductionType> = new Set([
     true,
@@ -69,7 +70,7 @@ export class QuestionsPageComponent implements OnInit {
     ShowIntroductionType.ONCE
   ])
   MATRIX_FIELD_NAME = 'matrix'
-  HEALTH_FIELD_NAME = 'health'
+  HEALTH_FIELD_NAME = 'healthkit'
   MATRIX_INPUT_SET: Set<QuestionType> = new Set([
     QuestionType.matrix_radio,
     QuestionType.healthkit,
@@ -94,6 +95,7 @@ export class QuestionsPageComponent implements OnInit {
       this.sendCompletionLog()
       navigator['app'].exitApp()
     })
+    this.progressCount$ = this.questionsService.getProgress()
   }
 
   ionViewDidLeave() {
@@ -163,7 +165,6 @@ export class QuestionsPageComponent implements OnInit {
           : q.field_name
       const entry = groupedQuestions.get(key) ? groupedQuestions.get(key) : []
       entry.push(q)
-      //?
       groupedQuestions.set(key, entry)
     })
 
@@ -182,13 +183,8 @@ export class QuestionsPageComponent implements OnInit {
     } else this.exitQuestionnaire()
   }
 
-  handleFinish(completedInClinic?: boolean) {
-    return this.questionsService
-      .handleClinicalFollowUp(this.assessment, completedInClinic)
-      .then(() => {
-        this.updateDoneButton(false)
-        return this.navCtrl.navigateRoot('/home')
-      })
+  handleFinish() {
+    this.navCtrl.navigateRoot('/home')
   }
 
   onAnswer(event) {
@@ -362,8 +358,15 @@ export class QuestionsPageComponent implements OnInit {
     }
   }
 
-  updateDoneButton(val: boolean) {
-    this.showDoneButton = val
+  onSlideFinish() {
+    this.onQuestionnaireCompleted()
+  }
+
+  onQuestionnaireCompleted() {
+    return this.questionsService.processCompletedQuestionnaire(
+      this.task,
+      this.questions
+    )
   }
 
   sendEvent(type) {

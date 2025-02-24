@@ -1,4 +1,5 @@
 // tslint:disable:max-line-length
+import { HealthkitPermission } from 'src/app/shared/models/health'
 import { LocKeys } from '../../app/shared/enums/localisations'
 import { AssessmentType } from '../../app/shared/models/assessment'
 import { QuestionType } from '../../app/shared/models/question'
@@ -16,7 +17,7 @@ import { Localisations } from './localisations'
 export const DefaultPlatformInstance = 'RADAR-CNS'
 
 // *Default app version
-export const DefaultAppVersion = '3.0.0-alpha'
+export const DefaultAppVersion = '3.3.5-alpha'
 
 // *Default Android package name
 export const DefaultPackageName = 'org.phidatalab.radar_armt'
@@ -235,7 +236,8 @@ export const DefaultAudioRecordOptions = {
 // *Default question/question input types where the questionnaire will automatically move to the next question upon answering the question.
 export const DefaultAutoNextQuestionnaireTypes = [
   QuestionType.timed,
-  QuestionType.audio
+  QuestionType.audio,
+  QuestionType.healthkit
 ]
 
 // *Default question/question input types where the next button is enabled by default, allowing the question to be skippable.
@@ -311,3 +313,21 @@ export const DefaultPrivacyPolicyUrl =
   'https://radar-base.org/actve-app-armt-privacy-policy/'
 
 export const DefaultHealthkitTopicPrefix = 'active_apple_healthkit_'
+
+export const DefaultHealthkitQuestionnaireKey = 'healthkit'
+
+// *Default Healthkit data permissions to request
+export const DefaultHealthkitPermissions = [
+  HealthkitPermission.ACTIVITY,
+  HealthkitPermission.BLOOD_GLUCOSE,
+  HealthkitPermission.CALORIES,
+  HealthkitPermission.DISTANCE,
+  HealthkitPermission.DURATION,
+  HealthkitPermission.HEART_RATE,
+  HealthkitPermission.STAIRS,
+  HealthkitPermission.WEIGHT,
+  HealthkitPermission.STEPS
+]
+
+// *Default interval to pull Healthkit data until
+export const DefaultHealthkitInterval = 3500 // days

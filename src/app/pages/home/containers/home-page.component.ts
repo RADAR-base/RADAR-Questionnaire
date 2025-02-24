@@ -57,10 +57,9 @@ export class HomePageComponent implements OnInit, OnDestroy {
     private platform: Platform,
     private usage: UsageService
   ) {
-    this.resumeListener = this.platform.resume.subscribe(() => this.onResume())
     this.changeDetectionListener =
       this.tasksService.changeDetectionEmitter.subscribe(() => {
-        console.log('Changes to task service detected')
+        console.log('Changes to task service detected..')
         this.navCtrl.navigateRoot('')
       })
   }
@@ -90,7 +89,10 @@ export class HomePageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.resumeListener.unsubscribe()
+    // Unsubscribe to avoid memory leaks when the page is left
+    if (this.resumeListener) {
+      this.resumeListener.unsubscribe();
+    }
     this.changeDetectionListener.unsubscribe()
   }
 
@@ -101,6 +103,14 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.sortedTasks = this.tasksService.getValidTasksMap()
     this.tasks = this.tasksService.getTasksOfToday()
     this.showCalendar = false
+    this.resumeListener = this.platform.resume.subscribe(() => this.onResume())
+  }
+
+  ionViewWillLeave() {
+    // Unsubscribe to avoid memory leaks when the page is left
+    if (this.resumeListener) {
+      this.resumeListener.unsubscribe();
+    }
   }
 
   init() {
@@ -200,7 +210,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
         buttons: [
           {
             text: this.localization.translateKey(LocKeys.BTN_OKAY),
-            handler: () => {}
+            handler: () => { }
           }
         ]
       })
@@ -218,7 +228,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
       buttons: [
         {
           text: this.localization.translateKey(LocKeys.BTN_OKAY),
-          handler: () => {}
+          handler: () => { }
         }
       ]
     })

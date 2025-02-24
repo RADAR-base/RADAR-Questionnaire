@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core'
 
 import {
   DefaultAutoNextQuestionnaireTypes,
+  DefaultHealthkitQuestionnaireKey,
   DefaultShowTaskProgressCount,
   DefaultSkippableQuestionnaireTypes
 } from '../../../../assets/data/defaultConfig'
@@ -19,8 +20,10 @@ import { parseAndEvalLogic } from '../../../shared/utilities/parsers'
 import { getSeconds } from '../../../shared/utilities/time'
 import { Utility } from '../../../shared/utilities/util'
 import { AnswerService } from './answer.service'
-import { FinishTaskService } from './finish-task.service'
 import { TimestampService } from './timestamp.service'
+import { DefaultQuestionnaireProcessorService } from './questionnaire-processor/default-questionnaire-processor.service'
+import { HealthQuestionnaireProcessorService } from './questionnaire-processor/health-questionnaire-processor.service'
+import { QuestionnaireProcessorService } from './questionnaire-processor/questionnaire-processor.service'
 
 @Injectable({
   providedIn: 'root'
@@ -38,16 +41,20 @@ export class QuestionsService {
   )
   DELIMITER = ','
   isProgressCountShown = false
+  questionnaireProcessor: any
 
   constructor(
     public questionnaire: QuestionnaireService,
     private answerService: AnswerService,
     private timestampService: TimestampService,
     private localization: LocalizationService,
-    private finish: FinishTaskService,
+    private defaultQuestionnaireProcessor: DefaultQuestionnaireProcessorService,
+    private healthProcessor: HealthQuestionnaireProcessorService,
     private remoteConfig: RemoteConfigService,
     private util: Utility
-  ) {}
+  ) {
+    this.questionnaireProcessor = this.defaultQuestionnaireProcessor
+  }
 
   initRemoteConfigParams() {
     return this.remoteConfig
@@ -67,11 +74,11 @@ export class QuestionsService {
       .then(([autoNextSet, skippableSet]) => {
         if (autoNextSet.length)
           this.NEXT_BUTTON_AUTOMATIC_SET = new Set(
-            this.stringToArray(autoNextSet, this.DELIMITER)
+            this.util.stringToArray(autoNextSet, this.DELIMITER)
           )
         if (skippableSet.length)
           this.NEXT_BUTTON_ENABLED_SET = new Set(
-            this.stringToArray(skippableSet, this.DELIMITER)
+            this.util.stringToArray(skippableSet, this.DELIMITER)
           )
       })
   }
@@ -79,6 +86,7 @@ export class QuestionsService {
   reset() {
     this.answerService.reset()
     this.timestampService.reset()
+    this.questionnaireProcessor = this.defaultQuestionnaireProcessor
   }
 
   deleteLastAnswer() {
@@ -206,6 +214,10 @@ export class QuestionsService {
     return Math.ceil((attemptedAnswers.length * 100) / total)
   }
 
+  getProgress() {
+    return this.questionnaireProcessor.getProgress()
+  }
+
   recordTimeStamp(question, startTime) {
     const id = question.field_name
     this.timestampService.add({
@@ -263,10 +275,11 @@ export class QuestionsService {
 
   processCompletedQuestionnaire(task, questions): Promise<any> {
     const type = task.type
+    this.initQuestionnaireProcessor(task.name)
     return this.questionnaire
       .getAssessmentForTask(type, task)
       .then(assessment =>
-        this.finish.processCompletedQuestionnaire(
+        this.questionnaireProcessor.process(
           this.getData(questions),
           task,
           assessment.questionnaire
@@ -274,13 +287,12 @@ export class QuestionsService {
       )
   }
 
-  handleClinicalFollowUp(assessment, completedInClinic?) {
-    if (!completedInClinic) return Promise.resolve()
-    return this.finish.createClinicalFollowUpTask(assessment)
-  }
-
-  stringToArray(array, delimiter) {
-    return array.split(delimiter).map(s => s.trim())
+  initQuestionnaireProcessor(name) {
+    if (name.toLowerCase().includes(DefaultHealthkitQuestionnaireKey)) {
+      this.questionnaireProcessor = this.healthProcessor
+    } else {
+      this.questionnaireProcessor = this.defaultQuestionnaireProcessor
+    }
   }
 
   getIsProgressCountShown() {

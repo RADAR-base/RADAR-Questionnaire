@@ -7,12 +7,14 @@ import {
 } from '../../../shared/models/kafka'
 import { SubjectConfigService } from '../config/subject-config.service'
 import { ConverterFactoryService } from './converters/converter-factory.service.'
+import { KeyConverterService } from './converters/key-converter.service'
 
 @Injectable()
 export class SchemaService {
   constructor(
     private converterFactory: ConverterFactoryService,
-    private subjectConfig: SubjectConfigService
+    private subjectConfig: SubjectConfigService,
+    public keyConverter: KeyConverterService,
   ) { }
 
   getKafkaObjectKey() {
@@ -21,9 +23,7 @@ export class SchemaService {
       .then(
         payload =>
           <KeyExport>(
-            this.converterFactory
-              .getConverter(SchemaType.KEY)
-              .processData(payload)
+            this.keyConverter.processData(payload)
           )
       )
   }
@@ -35,29 +35,13 @@ export class SchemaService {
   getKafkaPayload(
     type,
     kafkaKey,
-    kafkaObjects: any[],
-    cacheKeys: any[],
+    kafkaObject: any,
+    cacheKey: string,
     topics
   ): Promise<any> {
-    const valueConverter = this.converterFactory.getConverter(type)
-    return valueConverter.getKafkaTopic(kafkaObjects[0], topics).then(topic =>
-      valueConverter.getSchemas(topic).then(schema => {
-        return Promise.all([
-          this.converterFactory
-            .getConverter(SchemaType.KEY)
-            .convertToRecord(kafkaKey, topic, ''),
-          valueConverter.batchConvertToRecord(kafkaObjects, topic, schema)
-        ]).then(([key, records]) => ({
-          topic,
-          cacheKey: cacheKeys,
-          record: {
-            key_schema_id: key.schema,
-            value_schema_id: records[0]['schema'],
-            records: records.map(r => ({ key: key.value, value: r['value'] }))
-          }
-        }))
-      })
-    )
+    return this.converterFactory
+      .getConverter(type)
+      .getKafkaPayload(type, kafkaKey, kafkaObject, cacheKey, topics)
   }
 
   reset() {

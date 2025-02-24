@@ -1,61 +1,62 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
+import { md5 } from 'js-md5'
 
-import {
-  DefaultClientAcceptType,
-  DefaultKafkaRequestContentType,
-  DefaultKafkaURI
-} from '../../../../assets/data/defaultConfig'
-import { ConfigKeys } from '../../../shared/enums/config'
 import { DataEventType } from '../../../shared/enums/events'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { CacheValue } from '../../../shared/models/cache'
-import {
-  KafkaObject,
-  KeyExport,
-  SchemaType
-} from '../../../shared/models/kafka'
-import { RemoteConfigService } from '../config/remote-config.service'
-import { SubjectConfigService } from '../config/subject-config.service'
+import { SchemaType } from '../../../shared/models/kafka'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
-import { TokenService } from '../token/token.service'
 import { AnalyticsService } from '../usage/analytics.service'
-import { SchemaService } from './schema.service'
 
 @Injectable()
 export class CacheService {
   URI_topics: string = '/topics/'
-  HEALTH_CACHE_LIMIT = 10000
 
   private readonly KAFKA_STORE = {
     LAST_UPLOAD_DATE: StorageKeys.LAST_UPLOAD_DATE,
     CACHE_ANSWERS: StorageKeys.CACHE_ANSWERS
   }
 
-  private isCacheSending: boolean
-
   constructor(
     private storage: StorageService,
     private analytics: AnalyticsService,
     private logger: LogService
-  ) {}
+  ) { }
 
   init() {
     return Promise.all([this.setCache({})])
   }
 
-  storeInCache(type, kafkaObject: KafkaObject, cacheValue: any) {
-      return this.getCache().then(cache => {
-        this.logger.log('KAFKA-SERVICE: Caching answers.')
-        cache[kafkaObject.value.time] = cacheValue
-        this.sendDataEvent(DataEventType.CACHED, cacheValue)
-        return this.setCache(cache)
-      })
-    
+  storeInCache(type, kafkaObject, cacheValue: any) {
+    return this.getCache().then(cache => {
+      this.logger.log('KAFKA-SERVICE: Caching answers.')
+      const key = this.generateCacheKey(type, kafkaObject)
+      cache[key] = cacheValue
+      this.sendDataEvent(DataEventType.CACHED, cacheValue)
+      return this.setCache(cache)
+    })
   }
 
-  removeFromCache(cacheKeys: number[]) {
+  removeFromCache(cacheKey: string) {
+    return this.getCache().then(cache => {
+      if (cache) {
+        if (cache[cacheKey]) {
+          this.sendDataEvent(
+            DataEventType.REMOVED_FROM_CACHE,
+            cache[cacheKey]
+          )
+          this.logger.log('Deleting ' + cacheKey)
+          delete cache[cacheKey]
+        }
+        this.setLastUploadDate(Date.now())
+        return this.setCache(cache)
+      }
+    })
+  }
+
+
+  removeFromCacheMultiple(cacheKeys: string[]) {
     if (!cacheKeys.length) return Promise.resolve()
     return this.getCache().then(cache => {
       if (cache) {
@@ -77,10 +78,6 @@ export class CacheService {
 
   setCache(cache) {
     return this.storage.set(this.KAFKA_STORE.CACHE_ANSWERS, cache)
-  }
-
-  setCacheSending(val: boolean) {
-    this.isCacheSending = val
   }
 
   setLastUploadDate(date) {
@@ -112,10 +109,12 @@ export class CacheService {
     })
   }
 
+  generateCacheKey(prefix: string, data: any): string {
+    const hash = md5(JSON.stringify(data))
+    return `${prefix}:${hash}`
+  }
+
   reset() {
-    return Promise.all([
-      this.setCache({}),
-      this.setLastUploadDate(null)
-    ])
+    return Promise.all([this.setCache({}), this.setLastUploadDate(null)])
   }
 }

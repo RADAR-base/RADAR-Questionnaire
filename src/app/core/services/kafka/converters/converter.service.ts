@@ -9,6 +9,7 @@ import * as YAML from 'yaml'
 
 import { LogService } from '../../misc/log.service'
 import { TokenService } from '../../token/token.service'
+import { KeyConverterService } from './key-converter.service'
 import { ConfigKeys } from 'src/app/shared/enums/config'
 import { RemoteConfigService } from '../../config/remote-config.service'
 
@@ -24,6 +25,7 @@ export abstract class ConverterService {
     public logger: LogService,
     private http: HttpClient,
     public token: TokenService,
+    public keyConverter: KeyConverterService,
     private remoteConfig: RemoteConfigService
   ) {
     this.updateURI()
@@ -48,31 +50,41 @@ export abstract class ConverterService {
     }
   }
 
-  convertToRecord(kafkaValue, topic, valueSchemaMetadata) {
-    const value = JSON.parse(valueSchemaMetadata.schema)
-    const record = {
-      schema: valueSchemaMetadata.id,
-      value: this.convertToAvro(value, kafkaValue),
-      topic
-    }
-    return record
+  convertToAvro(kafkaValue, valueSchemaMetadata) {
+    const schema = JSON.parse(valueSchemaMetadata.schema)
+    return AvroSchema.parse(schema).clone(kafkaValue, { wrapUnions: true })
   }
 
-  batchConvertToRecord(kafkaValues, topic, valueSchemaMetadata) {
-    const value = JSON.parse(valueSchemaMetadata.schema)
-    return this.batchConvertToAvro(value, kafkaValues).map(v => ({
-      value: v,
-      schema: valueSchemaMetadata.id
-    }))
-  }
-
-  convertToAvro(schema, value): any {
-    return AvroSchema.parse(schema).clone(value, { wrapUnions: true })
-  }
-
-  batchConvertToAvro(schema, values): any {
+  batchConvertToAvro(kafkaValues, valueSchemaMetadata) {
+    const schema = JSON.parse(valueSchemaMetadata.schema)
     const parsedSchema = AvroSchema.parse(schema)
-    return values.map(v => parsedSchema.clone(v, { wrapUnions: true }))
+    return kafkaValues.map(v => parsedSchema.clone(v, { wrapUnions: true }))
+  }
+
+  getKafkaPayload(
+    type,
+    kafkaKey,
+    kafkaObject: any,
+    cacheKey: any,
+    topics
+  ): Promise<any[]> {
+    return this.getKafkaTopic(kafkaObject, topics).then(topic =>
+      this.getSchemas(topic).then(schema => {
+        return Promise.all([
+          this.keyConverter
+            .convertToRecord(kafkaKey, topic),
+          this.convertToAvro(kafkaObject, schema)
+        ]).then(([key, record]) => ({
+          topic,
+          cacheKey: cacheKey,
+          record: {
+            key_schema_id: key.schema,
+            value_schema_id: schema.id,
+            records: [{ key: key.value, value: record }]
+          }
+        }))
+      })
+    )
   }
 
   getUniqueTimeNow() {

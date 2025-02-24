@@ -17,7 +17,7 @@ import { Localisations } from './localisations'
 export const DefaultPlatformInstance = 'RADAR-CNS'
 
 // *Default app version
-export const DefaultAppVersion = '3.3.4-alpha'
+export const DefaultAppVersion = '3.3.5-alpha'
 
 // *Default Android package name
 export const DefaultPackageName = 'org.phidatalab.radar_armt'

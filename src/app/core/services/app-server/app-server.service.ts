@@ -50,56 +50,61 @@ export class AppServerService {
     public localization: LocalizationService,
     private token: TokenService,
     private http: HttpClient
-  ) {}
+  ) { }
 
   init() {
-    // NOTE: Initialising ensures project and subject exists in the app server
-    return this.updateAppServerURL()
-      .then(() =>
-        Promise.all([
-          this.subjectConfig.getParticipantLogin(),
-          this.subjectConfig.getProjectName(),
-          this.subjectConfig.getEnrolmentDate(),
-          this.subjectConfig.getParticipantAttributes(),
-          this.getFCMToken()
-        ])
-      )
-      .then(([subjectId, projectId, enrolmentDate, attributes, fcmToken]) =>
-        this.addProjectIfMissing(projectId)
+    return this.token.isValid().then(valid => {
+      if (valid) {
+        // NOTE: Initialising ensures project and subject exists in the app server
+        return this.updateAppServerURL()
           .then(() =>
-            this.addSubjectIfMissing(
-              subjectId,
-              projectId,
-              enrolmentDate,
-              attributes,
-              fcmToken
-            )
+            Promise.all([
+              this.subjectConfig.getParticipantLogin(),
+              this.subjectConfig.getProjectName(),
+              this.subjectConfig.getEnrolmentDate(),
+              this.subjectConfig.getParticipantAttributes(),
+              this.getFCMToken()
+            ])
           )
-          .then(httpRes => {
-            if (this.tokenSubscription !== null) {
-              this.tokenSubscription.unsubscribe()
-            }
-            this.tokenSubscription = this.storage
-              .observe(StorageKeys.FCM_TOKEN)
-              .pipe(filter(t => t && t !== fcmToken))
-              .subscribe(newFcmToken =>
+          .then(([subjectId, projectId, enrolmentDate, attributes, fcmToken]) =>
+            this.addProjectIfMissing(projectId)
+              .then(() =>
                 this.addSubjectIfMissing(
                   subjectId,
                   projectId,
                   enrolmentDate,
                   attributes,
-                  newFcmToken
+                  fcmToken
                 )
               )
-            return httpRes
+              .then(httpRes => {
+                if (this.tokenSubscription !== null) {
+                  this.tokenSubscription.unsubscribe()
+                }
+                this.tokenSubscription = this.storage
+                  .observe(StorageKeys.FCM_TOKEN)
+                  .pipe(filter(t => t && t !== fcmToken))
+                  .subscribe(newFcmToken =>
+                    this.addSubjectIfMissing(
+                      subjectId,
+                      projectId,
+                      enrolmentDate,
+                      attributes,
+                      newFcmToken
+                    )
+                  )
+                return httpRes
+              })
+          )
+          .catch(e => {
+            throw new HttpErrorResponse({
+              status: e.status,
+              statusText: 'Unable to connect to the appserver.'
+            })
           })
-      )
-      .catch(e => {
-        throw new HttpErrorResponse({
-          status: e.status,
-          statusText: 'Unable to connect to the appserver.'
-        })
-      })
+      }
+      else return
+    })
   }
 
   getHeaders() {
@@ -463,7 +468,10 @@ export class AppServerService {
       .then(config =>
         config.getOrDefault(ConfigKeys.APP_SERVER_URL, DefaultAppServerURL)
       )
-      .then(url => (this.APP_SERVER_URL = url))
+      .then(url => {
+        console.log('Url is: ' + url)
+        return (this.APP_SERVER_URL = url)
+      })
   }
 
   getAppServerURL() {

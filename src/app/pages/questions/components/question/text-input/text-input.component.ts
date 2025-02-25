@@ -53,8 +53,8 @@ export class TextInputComponent implements OnInit {
     ampm: 'AM/PM'
   }
   textValue = ''
-
   value = {}
+  DEFAULT_DATE_FORMAT = 'DD/MM/YYYY'
 
   constructor(
     private localization: LocalizationService,
@@ -80,35 +80,33 @@ export class TextInputComponent implements OnInit {
   }
 
   initDates() {
-    const moment = this.localization.moment(Date.now())
-    const locale = moment.localeData()
-    const formatL = locale.longDateFormat('L')
+    const momentInstance = this.localization.moment(Date.now()) // Use a local instance
     this.datePickerObj = {
-      // User the user's locale format as output format
-      dateFormat: formatL,
+      dateFormat: this.DEFAULT_DATE_FORMAT,
       btnProperties: {
-        expand: 'block', // Default 'block'
-        fill: 'outline', // Default 'solid'
-        size: 'small', // Default 'default'
-        disabled: '', // Default false
-        strong: 'true', // Default false
-        color: 'secondary' // Default ''
+        expand: 'block',
+        fill: 'outline',
+        size: 'small',
+        disabled: '',
+        strong: 'true',
+        color: 'secondary'
       },
       closeOnSelect: 'true'
     }
-    const month = locale.monthsShort()
+    const month = moment.monthsShort()
     const day = this.addLeadingZero(Array.from(Array(32).keys()).slice(1, 32))
     const year = Array.from(Array(31).keys()).map(d => String(d + 2000))
     this.datePickerValues = { day, month, year }
     this.defaultDatePickerValue = {
-      day: moment.format('DD'),
-      month: moment.format('MMM'),
-      year: moment.format('YYYY')
+      day: momentInstance.format('DD'),
+      month: momentInstance.format('MMM'),
+      year: momentInstance.format('YYYY')
     }
+    this.emitAnswer(this.defaultDatePickerValue)
   }
 
   initTime() {
-    const moment = this.localization.moment(Date.now())
+    const momentInstance = this.localization.moment(Date.now())
     const hour = this.addLeadingZero(Array.from(Array(13).keys()).slice(1, 13))
     const minute = this.addLeadingZero(Array.from(Array(60).keys()))
     const second = minute
@@ -116,10 +114,10 @@ export class TextInputComponent implements OnInit {
     this.timePickerValues = { hour, minute, ampm }
     if (this.showSeconds) this.timePickerValues = { hour, minute, second, ampm }
     this.defaultTimePickerValue = {
-      hour: moment.format('hh'),
-      minute: moment.format('mm'),
-      second: this.showSeconds ? moment.format('ss') : '00',
-      ampm: moment.format('A')
+      hour: momentInstance.format('hh'),
+      minute: momentInstance.format('mm'),
+      second: this.showSeconds ? momentInstance.format('ss') : '00',
+      ampm: momentInstance.format('A')
     }
   }
 
@@ -135,7 +133,7 @@ export class TextInputComponent implements OnInit {
   }
 
   datePickerObj: any = {}
-  selectedDate: string = this.localization.moment(Date.now()).format('L')
+  selectedDate: string = this.localization.moment(Date.now()).format(this.DEFAULT_DATE_FORMAT)
 
   async openDatePicker() {
     const datePickerModal = await this.modalCtrl.create({
@@ -149,10 +147,9 @@ export class TextInputComponent implements OnInit {
     await datePickerModal.present()
 
     datePickerModal.onDidDismiss().then(data => {
-      let date = moment(data.data.date)
-      this.selectedDate = date.isValid() ? date.format('L') : this.selectedDate
+      let date = moment(data.data.date, this.DEFAULT_DATE_FORMAT)
+      this.selectedDate = date.isValid() ? date.format(this.DEFAULT_DATE_FORMAT) : this.selectedDate
 
-      // Transfer local date format all to US format to easily parse the data
       this.defaultDatePickerValue = {
         year: date.format('YYYY'),
         month: date.format('M'),

@@ -35,7 +35,6 @@
 // Application
 ion-app.md,
 ion-content {
-  --padding-top: 16px;
   --ion-text-color: white;
   --background: var(--cl-secondary) url('./assets/imgs/bg-mobile.png') no-repeat
     top center / cover;
@@ -165,6 +164,9 @@ ion-loading.custom-loading {
 }
 
 .li-ionic4-datePicker {
+  ion-header {
+    height: fit-content !important;
+  }
   ion-button {
     --ion-color-primary: white;
     --border-color: none;

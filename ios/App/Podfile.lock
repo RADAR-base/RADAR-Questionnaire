@@ -1,5 +1,5 @@
 PODS:
-  - Capacitor (5.7.0):
+  - Capacitor (5.7.4):
     - CapacitorCordova
   - CapacitorApp (5.0.7):
     - Capacitor
@@ -9,7 +9,7 @@ PODS:
     - Capacitor
   - CapacitorCommunityKeepAwake (4.0.0):
     - Capacitor
-  - CapacitorCordova (5.7.0)
+  - CapacitorCordova (5.7.4)
   - CapacitorDevice (5.0.7):
     - Capacitor
   - CapacitorDialog (5.0.7):
@@ -49,7 +49,7 @@ PODS:
     - Capacitor
   - CapacitorVoiceRecorder (6.0.3):
     - Capacitor
-  - CordovaPlugins (5.7.0):
+  - CordovaPlugins (5.7.4):
     - CapacitorCordova
   - Firebase/CoreOnly (10.21.0):
     - FirebaseCore (= 10.21.0)
@@ -304,12 +304,12 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@perfood/capacitor-healthkit"
 
 SPEC CHECKSUMS:
-  Capacitor: fc155ee2ee45a2093d716f13cf5aa5a865e2d85a
+  Capacitor: 4fe9adf012caceb4c71ffea2f1f4d005cdcbeea7
   CapacitorApp: 17fecd0e6cb23feafac7eb0939417389038b0979
   CapacitorAppLauncher: 7b2705481a74cbe322441bd374f56194de59ab1a
   CapacitorBrowser: a6deae9e5bf87f62b62a753cff7992c5def9e771
   CapacitorCommunityKeepAwake: f3442e3e9b666dd0162522fbd053da1fe81ede20
-  CapacitorCordova: e825fce1a2e14e4b5730641c7e098dccf74397b7
+  CapacitorCordova: a6e87fccc0307dee7aec1560ec9398485f2b0ce7
   CapacitorDevice: fc91bdb484dc0e70755e9b621cd557afe642613a
   CapacitorDialog: ea1beaccb7f825191aa18b72cba8981b881b3b2d
   CapacitorFilesystem: 9f3e3c7fea2fff12f46dd5b07a2914f2103e4cfc
@@ -325,7 +325,7 @@ SPEC CHECKSUMS:
   CapacitorStatusBar: f390fbb49b82ffb754ea4b3cf71dc8b048baf3e7
   CapacitorTextZoom: 69814a62b1d0f23a899cca06ea9838c38de187ff
   CapacitorVoiceRecorder: d44c1da901cc3918eb9c92c24834d8dc90f071f4
-  CordovaPlugins: a707edf6d79ba00bd300f341fe9e1ada032d211f
+  CordovaPlugins: a17fcaee819862ac7aca195699992de19cf191d4
   Firebase: 4453b799f72f625384dc23f412d3be92b0e3b2a0
   FirebaseABTesting: 40774deef367dcc7b736b6c26dd59ce0fab42f41
   FirebaseAnalytics: d275f288881d4417f780115dd52c05fa9752d530

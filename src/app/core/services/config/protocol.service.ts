@@ -36,7 +36,7 @@ export class ProtocolService {
     private logger: LogService,
     private analytics: AnalyticsService,
     private util: Utility
-  ) {}
+  ) { }
 
   pull(): Promise<ProtocolMetaData> {
     return Promise.all([this.getProjectTree(), this.getParticipantAttributes()])
@@ -176,20 +176,13 @@ export class ProtocolService {
       .then(cfg =>
         Promise.all([
           this.config.getParticipantAttributes(),
-          this.config.pullSubjectInformation(),
           this.getParticipantAttributeOrder(cfg)
         ])
       )
-      .then(([attributes, user, order]) => {
-        const newAttributes =
-          JSON.stringify(attributes) == JSON.stringify(user.attributes)
-            ? attributes
-            : user.attributes
-        this.config.setParticipantAttributes(newAttributes)
-        this.analytics.setUserProperties(newAttributes)
+      .then(([attributes, order]) => {
         return sortObject(
-          newAttributes,
-          this.formatAttributeOrder(newAttributes, order)
+          attributes,
+          this.formatAttributeOrder(attributes, order)
         )
       })
   }
@@ -201,8 +194,8 @@ export class ProtocolService {
     const orderWithoutNull = {}
     Object.keys(attributes).map(
       k =>
-        (orderWithoutNull[k] =
-          order[k] != null ? order[k] : this.DEFAULT_ATTRIBUTE_ORDER)
+      (orderWithoutNull[k] =
+        order[k] != null ? order[k] : this.DEFAULT_ATTRIBUTE_ORDER)
     )
     return orderWithoutNull
   }

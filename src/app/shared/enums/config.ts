@@ -39,8 +39,8 @@ export class ConfigKeys {
   static TOPIC_CACHE_TIMEOUT = new ConfigKeys('topic_cache_timeout')
 
   static SHOW_TASK_CALENDAR_NAME = new ConfigKeys('show_task_calendar_name')
-
   static SHOW_TASK_PROGRESS_COUNT = new ConfigKeys('show_task_progress_count')
+  static SHOW_TASK_INFO = new ConfigKeys('show_task_info')
 
   static HEALTHKIT_LOOKBACK_INTERVAL_DAYS = new ConfigKeys('healthkit_lookback_interval_days')
   static HEALTHKIT_PERMISSIONS = new ConfigKeys('healthkit_permissions')

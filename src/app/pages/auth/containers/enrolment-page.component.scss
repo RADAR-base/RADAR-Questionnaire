@@ -55,6 +55,15 @@
   text-align: center;
 }
 
+.initial-status {
+  margin-top: 48px;
+  padding: auto;
+  flex: 1 0 100%;
+  width: 100%;
+  height: auto;
+  text-align: center;
+}
+
 #outcome {
   padding: 5px;
   background-color: var(--cl-danger-40);

@@ -468,10 +468,7 @@ export class AppServerService {
       .then(config =>
         config.getOrDefault(ConfigKeys.APP_SERVER_URL, DefaultAppServerURL)
       )
-      .then(url => {
-        console.log('Url is: ' + url)
-        return (this.APP_SERVER_URL = url)
-      })
+      .then(url => (this.APP_SERVER_URL = url))
   }
 
   getAppServerURL() {

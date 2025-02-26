@@ -264,10 +264,13 @@ export class EnrolmentPageComponent {
   }
 
   initializeDeepLinking() {
-    App.addListener('appUrlOpen', event => {
+    App.addListener('appUrlOpen', async event => {
       const url = new URL(event.url)
       if (url.hostname === 'enrol') {
-        this.authenticate(event.url)
+        this.loading.next(true)
+        setTimeout(() => {
+          this.authenticate(event.url)
+        }, 2000)
       }
     })
   }

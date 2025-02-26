@@ -50,7 +50,7 @@ export class AppServerService {
     public localization: LocalizationService,
     private token: TokenService,
     private http: HttpClient
-  ) {}
+  ) { }
 
   init() {
     // NOTE: Initialising ensures project and subject exists in the app server

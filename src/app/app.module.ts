@@ -57,6 +57,7 @@ import { Utility } from './shared/utilities/util'
 import { DefaultKeyConverterService } from './core/services/kafka/converters/default-key-converter.service'
 import { KeyConverterService } from './core/services/kafka/converters/key-converter.service'
 import { IonicStorageModule } from '@ionic/storage-angular'
+import { Drivers } from '@ionic/storage'
 
 export const initializeFn = (storage: StorageService) => {
   return () => storage.init()
@@ -77,7 +78,7 @@ export const initializeFn = (storage: StorageService) => {
     RouterModule.forRoot([]),
     IonicStorageModule.forRoot({
       name: '__appdb',
-      driverOrder: ['sqlite', 'indexeddb', 'websql']
+      driverOrder: [Drivers.IndexedDB, Drivers.LocalStorage] //! sqlite is removed
     }),
     JwtModule.forRoot({
       jwtOptionsProvider: {

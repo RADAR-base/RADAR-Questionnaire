@@ -79,7 +79,7 @@ export const initializeFn = (storage: StorageService) => {
     RouterModule.forRoot([]),
     IonicStorageModule.forRoot({
       name: '__appdb',
-      driverOrder: [CordovaSQLiteDriver._driver, Drivers.IndexedDB, Drivers.LocalStorage] //! sqlite is removed
+      driverOrder: [CordovaSQLiteDriver._driver, Drivers.IndexedDB, Drivers.LocalStorage]
     }),
     JwtModule.forRoot({
       jwtOptionsProvider: {

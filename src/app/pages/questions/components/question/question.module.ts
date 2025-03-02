@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { IonicModule } from '@ionic/angular'
-import { Ionic4DatepickerModule } from '@logisticinfotech/ionic4-datepicker'
 
 import { PipesModule } from '../../../../shared/pipes/pipes.module'
 import { WheelSelectorComponent } from '../wheel-selector/wheel-selector.component'
@@ -45,8 +44,8 @@ const COMPONENTS = [
   imports: [
     CommonModule,
     PipesModule,
-    Ionic4DatepickerModule,
-    IonicModule.forRoot()
+    IonicModule.forRoot(),
+    FormsModule
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS

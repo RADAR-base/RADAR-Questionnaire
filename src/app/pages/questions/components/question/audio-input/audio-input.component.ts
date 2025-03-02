@@ -20,7 +20,8 @@ import { AudioRecordService } from '../../../services/audio-record.service'
 @Component({
   selector: 'audio-input',
   templateUrl: 'audio-input.component.html',
-  styleUrls: ['audio-input.component.scss']
+  styleUrls: ['audio-input.component.scss'],
+  standalone: false,
 })
 export class AudioInputComponent implements OnDestroy, OnInit {
   @Output()

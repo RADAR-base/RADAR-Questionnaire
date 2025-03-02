@@ -18,7 +18,8 @@ import { AppLauncherService } from '../../services/app-launcher.service'
 @Component({
   selector: 'finish-and-launch',
   templateUrl: 'finish-and-launch.component.html',
-  styleUrls: ['finish-and-launch.component.scss']
+  styleUrls: ['finish-and-launch.component.scss'],
+  standalone: false,
 })
 export class FinishAndLaunchComponent implements OnInit, OnChanges {
   @Input()

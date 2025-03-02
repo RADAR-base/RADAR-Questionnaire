@@ -8,7 +8,8 @@ import { OnDemandService } from '../services/on-demand.service'
 @Component({
   selector: 'page-on-demand',
   templateUrl: 'on-demand-page.component.html',
-  styleUrls: ['on-demand-page.component.scss']
+  styleUrls: ['on-demand-page.component.scss'],
+  standalone: false,
 })
 export class OnDemandPageComponent implements OnInit {
   scrollHeight: number = 500

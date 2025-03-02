@@ -3,7 +3,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core'
 @Component({
   selector: 'introduction',
   templateUrl: 'introduction.component.html',
-  styleUrls: ['introduction.component.scss']
+  styleUrls: ['introduction.component.scss'],
+  standalone: false,
 })
 export class IntroductionComponent {
   @Input()

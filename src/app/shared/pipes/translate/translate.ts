@@ -4,7 +4,8 @@ import { LocalizationService } from '../../../core/services/misc/localization.se
 
 @Pipe({
   name: 'translate',
-  pure: false
+  pure: false,
+  standalone: false,
 })
 export class TranslatePipe implements PipeTransform {
   constructor(private localization: LocalizationService) {}

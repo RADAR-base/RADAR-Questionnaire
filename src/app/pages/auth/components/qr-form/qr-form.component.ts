@@ -6,7 +6,8 @@ import { UsageEventType } from 'src/app/shared/enums/events'
 @Component({
   selector: 'qr-form',
   templateUrl: 'qr-form.component.html',
-  styleUrls: ['qr-form.component.scss']
+  styleUrls: ['qr-form.component.scss'],
+  standalone: false,
 })
 export class QRFormComponent {
   @Input()

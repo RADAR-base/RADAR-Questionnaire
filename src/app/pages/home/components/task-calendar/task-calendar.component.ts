@@ -14,7 +14,8 @@ import { Task } from '../../../../shared/models/task'
 @Component({
   selector: 'task-calendar',
   templateUrl: 'task-calendar.component.html',
-  styleUrls: ['task-calendar.component.scss']
+  styleUrls: ['task-calendar.component.scss'],
+  standalone: false,
 })
 export class TaskCalendarComponent implements OnChanges {
   @Input()

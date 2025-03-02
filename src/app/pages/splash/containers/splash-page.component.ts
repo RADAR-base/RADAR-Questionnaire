@@ -16,7 +16,8 @@ declare var window
 @Component({
   selector: 'page-splash',
   templateUrl: 'splash-page.component.html',
-  styleUrls: ['./splash-page.component.scss']
+  styleUrls: ['./splash-page.component.scss'],
+  standalone: false,
 })
 export class SplashPageComponent {
   status = 'Checking enrolment...'

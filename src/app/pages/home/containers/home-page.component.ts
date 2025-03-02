@@ -17,7 +17,8 @@ import { HomePageAnimations } from './home-page.animation'
   selector: 'page-home',
   templateUrl: 'home-page.component.html',
   animations: HomePageAnimations,
-  styleUrls: ['./home-page.component.scss']
+  styleUrls: ['./home-page.component.scss'],
+  standalone: false,
 })
 export class HomePageComponent implements OnInit, OnDestroy {
   title: Promise<string>

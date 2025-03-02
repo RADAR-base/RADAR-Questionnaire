@@ -23,7 +23,8 @@ const { App, BackgroundTask } = Plugins
 @Component({
   selector: 'timed-test',
   templateUrl: 'timed-test.component.html',
-  styleUrls: ['timed-test.component.scss']
+  styleUrls: ['timed-test.component.scss'],
+  standalone: false,
 })
 export class TimedTestComponent implements OnInit, OnChanges, OnDestroy {
   @Output()

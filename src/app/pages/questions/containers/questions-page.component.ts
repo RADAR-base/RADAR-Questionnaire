@@ -29,7 +29,8 @@ import { QuestionsService } from '../services/questions.service'
 @Component({
   selector: 'page-questions',
   templateUrl: 'questions-page.component.html',
-  styleUrls: ['questions-page.component.scss']
+  styleUrls: ['questions-page.component.scss'],
+  standalone: false,
 })
 export class QuestionsPageComponent implements OnInit {
   @ViewChild('swiper')

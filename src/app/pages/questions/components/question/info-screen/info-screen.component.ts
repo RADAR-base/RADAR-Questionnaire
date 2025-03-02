@@ -16,7 +16,8 @@ let uniqueID = 0
 @Component({
   selector: 'info-screen',
   templateUrl: 'info-screen.component.html',
-  styleUrls: ['info-screen.component.scss']
+  styleUrls: ['info-screen.component.scss'],
+  standalone: false,
 })
 export class InfoScreenComponent implements OnInit, OnChanges {
   @ViewChild('content', { static: false }) content: IonContent

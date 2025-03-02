@@ -18,7 +18,8 @@ let uniqueID = 0
 @Component({
   selector: 'descriptive-input',
   templateUrl: 'descriptive-input.component.html',
-  styleUrls: ['descriptive-input.component.scss']
+  styleUrls: ['descriptive-input.component.scss'],
+  standalone: false,
 })
 export class DescriptiveInputComponent implements OnInit, OnChanges {
   @ViewChild('content', { static: false }) content: IonContent

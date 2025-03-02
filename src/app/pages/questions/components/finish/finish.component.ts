@@ -16,7 +16,8 @@ import { getMinutes } from 'src/app/shared/utilities/time'
 @Component({
   selector: 'finish',
   templateUrl: 'finish.component.html',
-  styleUrls: ['finish.component.scss']
+  styleUrls: ['finish.component.scss'],
+  standalone: false,
 })
 export class FinishComponent implements OnChanges {
   @Input()

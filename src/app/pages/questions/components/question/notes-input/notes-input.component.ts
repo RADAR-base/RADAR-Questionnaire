@@ -8,7 +8,8 @@ import { KeyboardEventType } from '../../../../../shared/enums/events'
 @Component({
   selector: 'notes-input',
   templateUrl: 'notes-input.component.html',
-  styleUrls: ['notes-input.component.scss']
+  styleUrls: ['notes-input.component.scss'],
+  standalone: false,
 })
 export class NotesInputComponent implements OnInit {
   @Output()

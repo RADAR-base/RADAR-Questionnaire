@@ -17,7 +17,8 @@ import { KeyboardEventType } from '../../../../../shared/enums/events'
 @Component({
   selector: 'text-input',
   templateUrl: 'text-input.component.html',
-  styleUrls: ['text-input.component.scss']
+  styleUrls: ['text-input.component.scss'],
+  standalone: false,
 })
 export class TextInputComponent implements OnInit {
   @ViewChild('content', { static: false }) content

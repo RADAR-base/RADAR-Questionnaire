@@ -7,7 +7,8 @@ import { TaskProgressAnimations } from './task-progress.animation'
   selector: 'task-progress',
   templateUrl: 'task-progress.component.html',
   animations: TaskProgressAnimations,
-  styleUrls: ['./task-progress.component.scss']
+  styleUrls: ['./task-progress.component.scss'],
+  standalone: false,
 })
 export class TaskProgressComponent implements OnChanges {
   @Input()

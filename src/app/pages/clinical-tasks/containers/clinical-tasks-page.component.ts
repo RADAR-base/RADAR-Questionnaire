@@ -7,7 +7,8 @@ import { ClinicalTasksService } from '../services/clinical-tasks.service'
 @Component({
   selector: 'page-on-demand',
   templateUrl: 'clinical-tasks-page.component.html',
-  styleUrls: ['clinical-tasks-page.component.scss']
+  styleUrls: ['clinical-tasks-page.component.scss'],
+  standalone: false,
 })
 export class ClinicalTasksPageComponent implements OnInit {
   scrollHeight: number = 500

@@ -6,7 +6,8 @@ import { Task } from '../../../../shared/models/task'
 @Component({
   selector: 'task-calendar-row',
   templateUrl: 'task-calendar-row.component.html',
-  styleUrls: ['task-calendar-row.component.scss']
+  styleUrls: ['task-calendar-row.component.scss'],
+  standalone: false,
 })
 export class TaskCalendarRowComponent implements OnInit {
   @Input()

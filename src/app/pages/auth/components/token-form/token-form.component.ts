@@ -12,7 +12,8 @@ import { Capacitor } from '@capacitor/core'
 @Component({
   selector: 'token-form',
   templateUrl: 'token-form.component.html',
-  styleUrls: ['./token-form.component.scss']
+  styleUrls: ['./token-form.component.scss'],
+  standalone: false,
 })
 export class TokenFormComponent {
   @Input()

@@ -24,7 +24,8 @@ import { SettingsService } from '../services/settings.service'
 @Component({
   selector: 'page-settings',
   templateUrl: 'settings-page.component.html',
-  styleUrls: ['settings-page.component.scss']
+  styleUrls: ['settings-page.component.scss'],
+  standalone: false,
 })
 export class SettingsPageComponent {
   settings: Settings = {}

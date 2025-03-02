@@ -30,7 +30,8 @@ import { BehaviorSubject } from 'rxjs'
 @Component({
   selector: 'page-enrolment',
   templateUrl: 'enrolment-page.component.html',
-  styleUrls: ['./enrolment-page.component.scss']
+  styleUrls: ['./enrolment-page.component.scss'],
+  standalone: false,
 })
 export class EnrolmentPageComponent {
   @ViewChild('swiper')

@@ -14,7 +14,8 @@ let uniqueID = 0
 @Component({
   selector: 'matrix-radio-input',
   templateUrl: 'matrix-radio-input.component.html',
-  styleUrls: ['matrix-radio-input.component.scss']
+  styleUrls: ['matrix-radio-input.component.scss'],
+  standalone: false,
 })
 export class MatrixRadioInputComponent implements OnInit, OnChanges {
   @Output()

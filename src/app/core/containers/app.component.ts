@@ -10,7 +10,8 @@ import { TokenService } from '../services/token/token.service'
 @Component({
   selector: 'app-root',
   template: '<ion-app><ion-router-outlet></ion-router-outlet></ion-app>',
-  styleUrls: ['app.component.scss']
+  styleUrls: ['app.component.scss'],
+  standalone: false,
 })
 export class AppComponent {
   rootPage = SplashPageComponent

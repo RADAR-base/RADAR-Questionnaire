@@ -16,7 +16,8 @@ import { Keyboard } from '@capacitor/keyboard'
 @Component({
   selector: 'web-input',
   templateUrl: 'web-input.component.html',
-  styleUrls: ['web-input.component.scss']
+  styleUrls: ['web-input.component.scss'],
+  standalone: false,
 })
 export class WebInputComponent implements OnInit {
   @Output()
@@ -77,7 +78,7 @@ export class WebInputComponent implements OnInit {
 
   getWebUrl() {
     switch(this.type) {
-      case WebInputType.NHS: 
+      case WebInputType.NHS:
         return this.NHS_URL
       default:
         return this.NHS_URL
@@ -86,10 +87,10 @@ export class WebInputComponent implements OnInit {
 
   getInputValidator() {
     switch(this.type) {
-      case WebInputType.NHS: 
+      case WebInputType.NHS:
         return isValidNHSId
       default:
         return isValidNHSId
-    } 
+    }
   }
 }

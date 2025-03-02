@@ -7,7 +7,8 @@ let uniqueID = 0
 @Component({
   selector: 'checkbox-input',
   templateUrl: 'checkbox-input.component.html',
-  styleUrls: ['checkbox-input.component.scss']
+  styleUrls: ['checkbox-input.component.scss'],
+  standalone: false,
 })
 export class CheckboxInputComponent implements OnInit {
   @Output()

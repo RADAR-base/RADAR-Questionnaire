@@ -2,7 +2,7 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,
+  OnChanges, OnInit,
   Output
 } from '@angular/core'
 
@@ -12,9 +12,10 @@ import { LocKeys } from '../../../../shared/enums/localisations'
 @Component({
   selector: 'toolbar',
   templateUrl: 'toolbar.component.html',
-  styleUrls: ['toolbar.component.scss']
+  styleUrls: ['toolbar.component.scss'],
+  standalone: false,
 })
-export class ToolbarComponent implements OnChanges {
+export class ToolbarComponent implements OnInit, OnChanges {
   @Input()
   isLeftButtonDisabled: boolean
   @Input()
@@ -38,10 +39,10 @@ export class ToolbarComponent implements OnChanges {
   tappedDisabledButton: EventEmitter<any> = new EventEmitter<any>()
 
   textValues = {
-    next: this.localization.translateKey(LocKeys.BTN_NEXT),
-    previous: this.localization.translateKey(LocKeys.BTN_PREVIOUS),
-    finish: this.localization.translateKey(LocKeys.BTN_FINISH),
-    close: this.localization.translateKey(LocKeys.BTN_CLOSE)
+    next: '',
+    previous: '',
+    finish: '',
+    close: ''
   }
   rightButtonText = this.textValues.next
   leftButtonText = this.textValues.close
@@ -53,6 +54,15 @@ export class ToolbarComponent implements OnChanges {
   progress: number
 
   constructor(private localization: LocalizationService) {}
+
+  ngOnInit() {
+    this.textValues = {
+      next: this.localization.translateKey(LocKeys.BTN_NEXT),
+      previous: this.localization.translateKey(LocKeys.BTN_PREVIOUS),
+      finish: this.localization.translateKey(LocKeys.BTN_FINISH),
+      close: this.localization.translateKey(LocKeys.BTN_CLOSE)
+    }
+  }
 
   ngOnChanges() {
     this.setButtons()

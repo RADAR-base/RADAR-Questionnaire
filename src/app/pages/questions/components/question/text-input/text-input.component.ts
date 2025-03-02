@@ -57,12 +57,17 @@ export class TextInputComponent implements OnInit {
   value = {}
   DEFAULT_DATE_FORMAT = 'DD/MM/YYYY'
 
+  datePickerObj: any = {}
+  selectedDate?: string
+
   constructor(
     private localization: LocalizationService,
     public modalCtrl: ModalController
   ) { }
 
   ngOnInit() {
+    this.selectedDate = this.localization.moment(Date.now()).format(this.DEFAULT_DATE_FORMAT)
+
     if (this.type.length) {
       this.showDatePicker = this.type.includes('date')
       this.showTimePicker = this.type.includes('time')
@@ -132,9 +137,6 @@ export class TextInputComponent implements OnInit {
   addLeadingZero(values) {
     return values.map(d => (d < 10 ? '0' + d : d)).map(String)
   }
-
-  datePickerObj: any = {}
-  selectedDate: string = this.localization.moment(Date.now()).format(this.DEFAULT_DATE_FORMAT)
 
   async openDatePicker() {
     const datePickerModal = await this.modalCtrl.create({

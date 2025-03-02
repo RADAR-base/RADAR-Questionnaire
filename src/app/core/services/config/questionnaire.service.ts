@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import * as urljoin from 'url-join'
+import urlJoin from 'url-join'
 
 import {
   DefaultQuestionnaireFormatURI,
@@ -98,7 +98,7 @@ export class QuestionnaireService {
     const fileName =
       questionnaireName + metadata.type + suffix + metadata.format
     return (
-      urljoin(
+      urlJoin(
         GIT_API_URI,
         organization,
         repo,

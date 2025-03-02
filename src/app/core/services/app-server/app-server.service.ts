@@ -8,7 +8,7 @@ import { Injectable } from '@angular/core'
 import * as moment from 'moment-timezone'
 import { Subscription } from 'rxjs'
 import { filter } from 'rxjs/operators'
-import * as urljoin from 'url-join'
+import urlJoin from 'url-join'
 
 import {
   DefaultAppServerURL,
@@ -116,7 +116,7 @@ export class AppServerService {
   getProject(projectId): Promise<any> {
     return this.getHeaders().then(headers =>
       this.http
-        .get(urljoin(this.APP_SERVER_URL, this.PROJECT_PATH, projectId), {
+        .get(urlJoin(this.APP_SERVER_URL, this.PROJECT_PATH, projectId), {
           headers
         })
         .toPromise()
@@ -134,7 +134,7 @@ export class AppServerService {
     return this.getHeaders().then(headers =>
       this.http
         .post(
-          urljoin(this.APP_SERVER_URL, this.PROJECT_PATH),
+          urlJoin(this.APP_SERVER_URL, this.PROJECT_PATH),
           { projectId },
           { headers }
         )
@@ -146,7 +146,7 @@ export class AppServerService {
     return this.getHeaders().then(headers =>
       this.http
         .get(
-          urljoin(
+          urlJoin(
             this.APP_SERVER_URL,
             this.PROJECT_PATH,
             projectId,
@@ -200,7 +200,7 @@ export class AppServerService {
     return this.getHeaders().then(headers =>
       this.http
         .post(
-          urljoin(
+          urlJoin(
             this.APP_SERVER_URL,
             this.PROJECT_PATH,
             projectId,
@@ -228,7 +228,7 @@ export class AppServerService {
       const subjectId = subject.subjectId
       return this.http
         .put(
-          urljoin(
+          urlJoin(
             this.APP_SERVER_URL,
             this.PROJECT_PATH,
             projectId,
@@ -246,7 +246,7 @@ export class AppServerService {
   fetchFromGithub(githubUrl: string) {
     return this.getHeaders().then(headers => {
       return this.http
-        .get(urljoin(this.APP_SERVER_URL, this.GITHUB_CONTENT_PATH), {
+        .get(urlJoin(this.APP_SERVER_URL, this.GITHUB_CONTENT_PATH), {
           headers,
           params: { url: githubUrl }
         })
@@ -262,7 +262,7 @@ export class AppServerService {
       return this.getHeaders().then(headers =>
         this.http
           .get(
-            urljoin(
+            urlJoin(
               this.APP_SERVER_URL,
               this.PROJECT_PATH,
               projectId,
@@ -285,7 +285,7 @@ export class AppServerService {
       return this.getHeaders().then(headers =>
         this.http
           .get(
-            urljoin(
+            urlJoin(
               this.APP_SERVER_URL,
               this.PROJECT_PATH,
               projectId,
@@ -315,7 +315,7 @@ export class AppServerService {
       return this.getHeaders().then(headers =>
         this.http
           .post(
-            urljoin(
+            urlJoin(
               this.APP_SERVER_URL,
               this.PROJECT_PATH,
               projectId,
@@ -334,7 +334,7 @@ export class AppServerService {
     return this.getHeaders().then(headers =>
       this.http
         .get(
-          urljoin(
+          urlJoin(
             this.getAppServerURL(),
             this.PROJECT_PATH,
             subject.projectId,
@@ -352,7 +352,7 @@ export class AppServerService {
     return this.getHeaders().then(headers =>
       this.http
         .delete(
-          urljoin(
+          urlJoin(
             this.getAppServerURL(),
             this.PROJECT_PATH,
             subject.projectId,
@@ -375,7 +375,7 @@ export class AppServerService {
       return this.getHeaders().then(headers =>
         this.http
           .post(
-            urljoin(
+            urlJoin(
               this.getAppServerURL(),
               this.PROJECT_PATH,
               projectId,
@@ -402,7 +402,7 @@ export class AppServerService {
     return this.getHeaders().then(headers =>
       this.http
         .post(
-          urljoin(
+          urlJoin(
             this.getAppServerURL(),
             this.PROJECT_PATH,
             subject.projectId,
@@ -423,7 +423,7 @@ export class AppServerService {
     return this.getHeaders().then(headers =>
       this.http
         .post(
-          urljoin(
+          urlJoin(
             this.getAppServerURL(),
             this.PROJECT_PATH,
             projectId,

@@ -9,7 +9,7 @@ import {
 } from '@angular/core'
 import { DomSanitizer } from '@angular/platform-browser'
 import { IonContent } from '@ionic/angular'
-import * as DomPurify from 'dompurify'
+import DOMPurify from "dompurify";
 
 import { InfoItem } from '../../../../../shared/models/question'
 
@@ -45,7 +45,7 @@ export class DescriptiveInputComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(
-      DomPurify.sanitize(this.text, {
+      DOMPurify.sanitize(this.text, {
         ADD_TAGS: this.HTML_ALLOWED_TAGS,
         ADD_ATTR: this.HTML_ALLOWED_ATTR
       })

@@ -58,6 +58,7 @@ import { DefaultKeyConverterService } from './core/services/kafka/converters/def
 import { KeyConverterService } from './core/services/kafka/converters/key-converter.service'
 import { IonicStorageModule } from '@ionic/storage-angular'
 import { Drivers } from '@ionic/storage'
+import CordovaSQLiteDriver from 'localforage-cordovasqlitedriver';
 
 export const initializeFn = (storage: StorageService) => {
   return () => storage.init()
@@ -78,7 +79,7 @@ export const initializeFn = (storage: StorageService) => {
     RouterModule.forRoot([]),
     IonicStorageModule.forRoot({
       name: '__appdb',
-      driverOrder: [Drivers.IndexedDB, Drivers.LocalStorage] //! sqlite is removed
+      driverOrder: [CordovaSQLiteDriver._driver, Drivers.IndexedDB, Drivers.LocalStorage] //! sqlite is removed
     }),
     JwtModule.forRoot({
       jwtOptionsProvider: {

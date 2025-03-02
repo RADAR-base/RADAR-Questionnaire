@@ -28,6 +28,5 @@ const routes: Routes = [
   ],
   declarations: [SettingsPageComponent, CacheSendModalComponent],
   providers: [SettingsService],
-  entryComponents: [CacheSendModalComponent]
 })
 export class SettingsModule {}

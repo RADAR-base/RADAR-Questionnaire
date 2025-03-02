@@ -9,11 +9,12 @@
     "downlevelIteration": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es2015",
+    "target": "es2022",
     "module": "es2020",
-    "lib": ["es2018", "dom", "es2019"],
+    "lib": ["es2019", "dom"],
     "types": ["node"],
     "paths": {
       "zlib": ["node_modules/browserify-zlib"]

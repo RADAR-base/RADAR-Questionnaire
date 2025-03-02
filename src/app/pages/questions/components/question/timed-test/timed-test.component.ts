@@ -8,7 +8,7 @@ import {
   OnInit,
   Output
 } from '@angular/core'
-import { Plugins } from '@capacitor/core'
+// import { Plugins } from '@capacitor/core'
 import { Dialog } from '@capacitor/dialog'
 import { Haptics, ImpactStyle } from '@capacitor/haptics'
 
@@ -18,7 +18,7 @@ import {
   getSeconds
 } from '../../../../../shared/utilities/time'
 
-const { App, BackgroundTask } = Plugins
+// const { App, BackgroundTask } = Plugins
 
 @Component({
   selector: 'timed-test',

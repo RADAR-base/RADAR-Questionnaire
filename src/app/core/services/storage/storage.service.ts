@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { Platform } from '@ionic/angular'
-import { Storage } from '@ionic/storage'
+import { Storage } from '@ionic/storage-angular'
 import { Observable, Subject, throwError as observableThrowError } from 'rxjs'
 import { filter, startWith, switchMap } from 'rxjs/operators'
 
@@ -20,15 +20,20 @@ export class StorageService {
     public platform: Platform
   ) {
     this.keyUpdates = new Subject<StorageKeys | null>()
-    this.platform.ready().then(() => {
-      this.getStorageState().then(() =>
+  }
+
+  init() {
+    return this.platform.ready().then(() => {
+      return this.getStorageState().then(() =>
         this.logger.log('Global configuration', this.global)
       )
     })
   }
 
   getStorageState(): Promise<any> {
-    return this.storage.ready().then(() => this.prepare())
+    return this.storage.create().then(() => {
+      return this.prepare()
+    })
   }
 
   set(key: StorageKeys, value: any): Promise<any> {

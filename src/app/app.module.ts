@@ -1,13 +1,12 @@
 import { DatePipe } from '@angular/common'
 import { HttpClientModule } from '@angular/common/http'
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core'
+import { APP_INITIALIZER, CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { BrowserModule } from '@angular/platform-browser'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { RouterModule } from '@angular/router'
 import { JWT_OPTIONS, JwtModule } from '@auth0/angular-jwt'
 import { IonicModule } from '@ionic/angular'
-import { IonicStorageModule, Storage } from '@ionic/storage'
 
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './core/containers/app.component'
@@ -57,9 +56,11 @@ import { jwtOptionsFactory } from './shared/utilities/jwtOptionsFactory'
 import { Utility } from './shared/utilities/util'
 import { DefaultKeyConverterService } from './core/services/kafka/converters/default-key-converter.service'
 import { KeyConverterService } from './core/services/kafka/converters/key-converter.service'
-import { TokenFactoryService } from './core/services/token/token-factory.service'
-import { MPTokenService } from './core/services/token/mp-token.service'
-import { HydraTokenService } from './core/services/token/hydra-token.service'
+import { IonicStorageModule } from '@ionic/storage-angular'
+
+export const initializeFn = (storage: StorageService) => {
+  return () => storage.init()
+}
 
 @NgModule({
   imports: [
@@ -82,7 +83,7 @@ import { HydraTokenService } from './core/services/token/hydra-token.service'
       jwtOptionsProvider: {
         provide: JWT_OPTIONS,
         useFactory: jwtOptionsFactory,
-        deps: [Storage]
+        deps: [StorageService]
       }
     }),
     FormsModule,
@@ -90,8 +91,13 @@ import { HydraTokenService } from './core/services/token/hydra-token.service'
   ],
   declarations: [AppComponent],
   bootstrap: [AppComponent],
-  entryComponents: [AppComponent],
   providers: [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeFn,
+      deps: [StorageService],
+      multi: true
+    },
     Utility,
     LogService,
     LocalScheduleService,
@@ -106,6 +112,7 @@ import { HydraTokenService } from './core/services/token/hydra-token.service'
     SubjectConfigService,
     ProtocolService,
     QuestionnaireService,
+    TokenService,
     KafkaService,
     LocalizationService,
     ScheduleGeneratorService,
@@ -128,10 +135,7 @@ import { HydraTokenService } from './core/services/token/hydra-token.service'
     MessageHandlerService,
     { provide: NotificationService, useClass: NotificationFactoryService },
     { provide: AnalyticsService, useClass: FirebaseAnalyticsService },
-    { provide: TokenService, useClass: TokenFactoryService },
-    MPTokenService,
-    HydraTokenService,
-    GithubClient
+    GithubClient,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

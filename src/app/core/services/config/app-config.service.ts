@@ -38,7 +38,7 @@ export class AppConfigService {
   }
 
   async getAppVersion() {
-    if (Capacitor.isNative) {
+    if (Capacitor.isNativePlatform()) {
       const appInfo = await App.getInfo()
       return appInfo.version
     }

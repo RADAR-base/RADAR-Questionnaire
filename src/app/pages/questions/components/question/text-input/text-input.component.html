@@ -1,8 +1,15 @@
 <ng-container *ngIf="showDatePicker && currentlyShown">
-  <ion-item (click)="openDatePicker()" color="none">
-    <ion-input [(ngModel)]="selectedDate"> </ion-input>
-    <ion-icon name="calendar" slot="end"></ion-icon>
-  </ion-item>
+<!--  <ion-item (click)="openDatePicker()" color="none">-->
+<!--    <ion-input [(ngModel)]="selectedDate"> </ion-input>-->
+<!--    <ion-icon name="calendar" slot="end"></ion-icon>-->
+<!--  </ion-item>-->
+  <ion-datetime-button color="primary" datetime="datetime" />
+
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime class="date" presentation="date" id="datetime" />
+    </ng-template>
+  </ion-modal>
 </ng-container>
 
 <ng-container *ngIf="showTimePicker && currentlyShown">

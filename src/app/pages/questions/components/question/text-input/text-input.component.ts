@@ -7,8 +7,6 @@ import {
   ViewChild
 } from '@angular/core'
 import { Keyboard } from '@capacitor/keyboard'
-import { ModalController } from '@ionic/angular'
-// import { Ionic4DatepickerModalComponent } from '@logisticinfotech/ionic4-datepicker'
 import * as moment from 'moment'
 
 import { LocalizationService } from '../../../../../core/services/misc/localization.service'
@@ -62,7 +60,6 @@ export class TextInputComponent implements OnInit {
 
   constructor(
     private localization: LocalizationService,
-    public modalCtrl: ModalController
   ) { }
 
   ngOnInit() {
@@ -136,30 +133,6 @@ export class TextInputComponent implements OnInit {
 
   addLeadingZero(values) {
     return values.map(d => (d < 10 ? '0' + d : d)).map(String)
-  }
-
-  async openDatePicker() {
-    // const datePickerModal = await this.modalCtrl.create({
-    //   component: Ionic4DatepickerModalComponent,
-    //   cssClass: 'li-ionic4-datePicker',
-    //   componentProps: {
-    //     objConfig: this.datePickerObj,
-    //     selectedDate: this.selectedDate
-    //   }
-    // })
-    // await datePickerModal.present()
-    //
-    // datePickerModal.onDidDismiss().then(data => {
-    //   let date = moment(data.data.date, this.DEFAULT_DATE_FORMAT)
-    //   this.selectedDate = date.isValid() ? date.format(this.DEFAULT_DATE_FORMAT) : this.selectedDate
-    //
-    //   this.defaultDatePickerValue = {
-    //     year: date.format('YYYY'),
-    //     month: date.format('M'),
-    //     day: date.format('D')
-    //   }
-    //   this.emitAnswer(this.defaultDatePickerValue)
-    // })
   }
 
   emitAnswer(value) {

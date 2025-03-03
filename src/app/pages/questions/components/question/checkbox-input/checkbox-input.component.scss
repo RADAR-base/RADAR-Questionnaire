@@ -8,7 +8,6 @@
 }
 
 ion-item {
-  background-color: transparent;
   --background: transparent;
   width: 100%;
   padding: 8px;
@@ -39,11 +38,9 @@ ion-list {
 }
 
 ion-checkbox {
-  --background: transparent;
-  --background-checked: transparent;
-  width: 4px;
+  --size: 0;
+  --checkbox-background-checked: transparent;
   --border-width: 0px;
-  opacity: 0;
 }
 
 .item-checkbox-checked {

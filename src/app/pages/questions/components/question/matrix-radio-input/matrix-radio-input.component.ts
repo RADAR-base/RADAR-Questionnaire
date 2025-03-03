@@ -33,6 +33,8 @@ export class MatrixRadioInputComponent implements OnInit, OnChanges {
   name = `radio-input-${this.uniqueID}`
   items: Item[] = Array()
 
+  selected?: string | number
+
   ngOnInit() {
     this.responses.map((item, i) => {
       this.items.push({
@@ -49,6 +51,7 @@ export class MatrixRadioInputComponent implements OnInit, OnChanges {
   }
 
   onInputChange(event) {
+    this.selected = event.detail.value
     this.valueChange.emit(event.detail.value)
   }
 }

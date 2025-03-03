@@ -22,6 +22,8 @@ export class RadioInputComponent implements OnInit {
   name = `radio-input-${this.uniqueID}`
   items: Item[] = Array()
 
+  selected: number | null = null
+
   ngOnInit() {
     this.responses.map((item, i) => {
       this.items.push({
@@ -33,6 +35,7 @@ export class RadioInputComponent implements OnInit {
   }
 
   onInputChange(event) {
-    this.valueChange.emit(event.detail.value)
+    this.selected = event
+    this.valueChange.emit(this.selected)
   }
 }

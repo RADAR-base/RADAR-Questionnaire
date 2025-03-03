@@ -29,11 +29,9 @@ ion-radio-group {
 }
 
 ion-item {
-  background-color: transparent;
   --background: transparent;
   width: 100%;
   padding: 8px;
-  height: var(--bt-height);
   border: 2px solid white;
   border-radius: var(--bt-height);
   background-color: var(--cl-primary-20);
@@ -55,4 +53,19 @@ ion-radio {
   --color: transparent;
   --color-checked: transparent;
   width: 0;
+}
+
+ion-radio {
+  --color: #ddd;
+  --color-checked: #6815ec;
+}
+
+ion-radio::part(container) {
+  width: 0;
+  height: 0;
+  border: none;
+}
+
+.checked {
+  background-color: var(--cl-primary) !important;
 }

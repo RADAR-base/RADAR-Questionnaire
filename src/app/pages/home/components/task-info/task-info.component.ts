@@ -4,13 +4,15 @@ import { LocalizationService } from '../../../../core/services/misc/localization
 import { LocKeys } from '../../../../shared/enums/localisations'
 import { Task, TasksProgress } from '../../../../shared/models/task'
 import { TaskInfoAnimations } from './task-info.animation'
+import { NgIf } from '@angular/common'
+import { RoundProgressComponent } from 'angular-svg-round-progressbar'
 
 @Component({
   selector: 'task-info',
   templateUrl: 'task-info.component.html',
   animations: TaskInfoAnimations,
   styleUrls: ['./task-info.component.scss'],
-  standalone: false,
+  imports: [NgIf, RoundProgressComponent]
 })
 export class TaskInfoComponent implements OnChanges {
   @Input()

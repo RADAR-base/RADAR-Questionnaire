@@ -20,12 +20,47 @@ import {
   Response
 } from '../../../../shared/models/question'
 import { Task } from '../../../../shared/models/task'
+import { NgIf, NgSwitch, NgSwitchCase } from '@angular/common'
+import { IonicModule } from '@ionic/angular'
+import { RadioInputComponent } from './radio-input/radio-input.component'
+import { CheckboxInputComponent } from './checkbox-input/checkbox-input.component'
+import { HealthInputComponent } from './health-input/health-input.component'
+import { RangeInputComponent } from './range-input/range-input.component'
+import { RangeInfoInputComponent } from './range-info-input/range-info-input.component'
+import { SliderInputComponent } from './slider-input/slider-input.component'
+import { InfoScreenComponent } from './info-screen/info-screen.component'
+import { AudioInputComponent } from './audio-input/audio-input.component'
+import { TimedTestComponent } from './timed-test/timed-test.component'
+import { TextInputComponent } from './text-input/text-input.component'
+import { DescriptiveInputComponent } from './descriptive-input/descriptive-input.component'
+import { MatrixRadioInputComponent } from './matrix-radio-input/matrix-radio-input.component'
+import { WebInputComponent } from './web-input/web-input.component'
+import { NotesInputComponent } from './notes-input/notes-input.component'
 
 @Component({
   selector: 'question',
   templateUrl: 'question.component.html',
   styleUrls: ['question.component.scss'],
-  standalone: false,
+  imports: [
+    NgIf,
+    IonicModule,
+    NgSwitch,
+    RadioInputComponent,
+    NgSwitchCase,
+    CheckboxInputComponent,
+    HealthInputComponent,
+    RangeInputComponent,
+    RangeInfoInputComponent,
+    SliderInputComponent,
+    InfoScreenComponent,
+    AudioInputComponent,
+    TimedTestComponent,
+    TextInputComponent,
+    DescriptiveInputComponent,
+    MatrixRadioInputComponent,
+    WebInputComponent,
+    NotesInputComponent
+  ]
 })
 export class QuestionComponent implements OnInit, OnChanges {
   @ViewChild('content', { static: false }) content
@@ -199,7 +234,7 @@ export class QuestionComponent implements OnInit, OnChanges {
     return (
       this.SCROLLBAR_VISIBLE_SET.has(this.question.field_type) &&
       this.inputEl.nativeElement.scrollHeight >
-      this.inputEl.nativeElement.clientHeight
+        this.inputEl.nativeElement.clientHeight
     )
   }
 
@@ -209,7 +244,7 @@ export class QuestionComponent implements OnInit, OnChanges {
       this.showScrollButton &&
       event &&
       event.target.scrollTop >=
-      (event.target.scrollHeight - event.target.clientHeight) * 0.1
+        (event.target.scrollHeight - event.target.clientHeight) * 0.1
     ) {
       this.showScrollButton = false
     }

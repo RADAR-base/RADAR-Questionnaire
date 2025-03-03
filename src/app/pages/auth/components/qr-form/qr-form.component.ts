@@ -2,12 +2,15 @@ import { Component, EventEmitter, Input, Output } from '@angular/core'
 import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning'
 import { UsageService } from 'src/app/core/services/usage/usage.service'
 import { UsageEventType } from 'src/app/shared/enums/events'
+import { IonicModule } from '@ionic/angular'
+import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
+import { NgIf } from '@angular/common'
 
 @Component({
   selector: 'qr-form',
   templateUrl: 'qr-form.component.html',
   styleUrls: ['qr-form.component.scss'],
-  standalone: false,
+  imports: [IonicModule, TranslatePipe, NgIf]
 })
 export class QRFormComponent {
   @Input()
@@ -16,7 +19,7 @@ export class QRFormComponent {
   @Output()
   data: EventEmitter<any> = new EventEmitter<any>()
 
-  constructor(private usage: UsageService) { }
+  constructor(private usage: UsageService) {}
 
   async scanQRHandler() {
     this.loading = true

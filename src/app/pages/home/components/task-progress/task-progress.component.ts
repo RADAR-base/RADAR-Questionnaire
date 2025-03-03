@@ -2,13 +2,17 @@ import { Component, Input, OnChanges } from '@angular/core'
 
 import { TasksProgress } from '../../../../shared/models/task'
 import { TaskProgressAnimations } from './task-progress.animation'
+import { NgIf } from '@angular/common'
+import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
+import { RoundProgressComponent } from 'angular-svg-round-progressbar'
+import { IonicModule } from '@ionic/angular'
 
 @Component({
   selector: 'task-progress',
   templateUrl: 'task-progress.component.html',
   animations: TaskProgressAnimations,
   styleUrls: ['./task-progress.component.scss'],
-  standalone: false,
+  imports: [NgIf, TranslatePipe, RoundProgressComponent, IonicModule]
 })
 export class TaskProgressComponent implements OnChanges {
   @Input()

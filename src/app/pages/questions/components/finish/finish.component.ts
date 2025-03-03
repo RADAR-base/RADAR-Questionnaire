@@ -12,12 +12,15 @@ import { QuestionsService } from '../../services/questions.service'
 import { LocalizationService } from 'src/app/core/services/misc/localization.service'
 import { LocKeys } from 'src/app/shared/enums/localisations'
 import { getMinutes } from 'src/app/shared/utilities/time'
+import { IonicModule } from '@ionic/angular'
+import { NgIf, NgStyle } from '@angular/common'
+import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
 
 @Component({
   selector: 'finish',
   templateUrl: 'finish.component.html',
   styleUrls: ['finish.component.scss'],
-  standalone: false,
+  imports: [IonicModule, NgIf, TranslatePipe, NgStyle]
 })
 export class FinishComponent implements OnChanges {
   @Input()
@@ -52,7 +55,7 @@ export class FinishComponent implements OnChanges {
   constructor(
     private usage: UsageService,
     private localization: LocalizationService
-  ) { }
+  ) {}
 
   ngOnChanges() {
     if (this.isShown) {
@@ -86,19 +89,23 @@ export class FinishComponent implements OnChanges {
 
   getEtaText(progress) {
     if (progress <= 0) {
-      return 'Calculating time remaining...';
+      return 'Calculating time remaining...'
     }
 
-    const elapsedTime = (Date.now() - this.startTime) / 1000; // Convert milliseconds to seconds
-    const remainingTime = (elapsedTime * (100 - progress)) / progress;
+    const elapsedTime = (Date.now() - this.startTime) / 1000 // Convert milliseconds to seconds
+    const remainingTime = (elapsedTime * (100 - progress)) / progress
 
     if (remainingTime >= 60) {
-      const minutes = Math.floor(remainingTime / 60);
-      const seconds = Math.round(remainingTime % 60);
-      return `About ${minutes} minute${minutes > 1 ? 's' : ''} and ${seconds} second${seconds !== 1 ? 's' : ''} remaining`;
+      const minutes = Math.floor(remainingTime / 60)
+      const seconds = Math.round(remainingTime % 60)
+      return `About ${minutes} minute${
+        minutes > 1 ? 's' : ''
+      } and ${seconds} second${seconds !== 1 ? 's' : ''} remaining`
     }
 
-    return `About ${remainingTime.toFixed(0)} second${remainingTime.toFixed(0) !== '1' ? 's' : ''} remaining`;
+    return `About ${remainingTime.toFixed(0)} second${
+      remainingTime.toFixed(0) !== '1' ? 's' : ''
+    } remaining`
   }
 
   getProgressBarStyle(progress) {

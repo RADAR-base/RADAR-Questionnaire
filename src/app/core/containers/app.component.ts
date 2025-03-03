@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { Platform } from '@ionic/angular'
+import { IonicModule, Platform } from '@ionic/angular'
 import { register } from 'swiper/element/bundle'
 import { TextZoom } from '@capacitor/text-zoom'
 import { Capacitor } from '@capacitor/core'
@@ -11,7 +11,7 @@ import { TokenService } from '../services/token/token.service'
   selector: 'app-root',
   template: '<ion-app><ion-router-outlet></ion-router-outlet></ion-app>',
   styleUrls: ['app.component.scss'],
-  standalone: false,
+  imports: [IonicModule]
 })
 export class AppComponent {
   rootPage = SplashPageComponent

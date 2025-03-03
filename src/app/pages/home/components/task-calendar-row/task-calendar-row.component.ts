@@ -2,12 +2,14 @@ import { Component, Input, OnInit } from '@angular/core'
 
 import { LocalizationService } from '../../../../core/services/misc/localization.service'
 import { Task } from '../../../../shared/models/task'
+import { IonicModule } from '@ionic/angular'
+import { NgIf } from '@angular/common'
 
 @Component({
   selector: 'task-calendar-row',
   templateUrl: 'task-calendar-row.component.html',
   styleUrls: ['task-calendar-row.component.scss'],
-  standalone: false,
+  imports: [IonicModule, NgIf]
 })
 export class TaskCalendarRowComponent implements OnInit {
   @Input()

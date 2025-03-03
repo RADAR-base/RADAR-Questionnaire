@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
-import { NavController, Platform } from '@ionic/angular'
+import { IonicModule, NavController, Platform } from '@ionic/angular'
 import { Subscription } from 'rxjs'
 
 import { AlertService } from '../../../core/services/misc/alert.service'
@@ -12,13 +12,28 @@ import { Task, TasksProgress } from '../../../shared/models/task'
 import { checkTaskIsNow } from '../../../shared/utilities/check-task-is-now'
 import { TasksService } from '../services/tasks.service'
 import { HomePageAnimations } from './home-page.animation'
+import { AsyncPipe, NgIf } from '@angular/common'
+import { TaskProgressComponent } from '../components/task-progress/task-progress.component'
+import { TickerBarComponent } from '../components/ticker-bar/ticker-bar.component'
+import { TaskInfoComponent } from '../components/task-info/task-info.component'
+import { TaskCalendarComponent } from '../components/task-calendar/task-calendar.component'
+import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home-page.component.html',
   animations: HomePageAnimations,
   styleUrls: ['./home-page.component.scss'],
-  standalone: false,
+  imports: [
+    IonicModule,
+    AsyncPipe,
+    TaskProgressComponent,
+    NgIf,
+    TickerBarComponent,
+    TaskInfoComponent,
+    TaskCalendarComponent,
+    TranslatePipe
+  ]
 })
 export class HomePageComponent implements OnInit, OnDestroy {
   title: Promise<string>
@@ -92,7 +107,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     // Unsubscribe to avoid memory leaks when the page is left
     if (this.resumeListener) {
-      this.resumeListener.unsubscribe();
+      this.resumeListener.unsubscribe()
     }
     this.changeDetectionListener.unsubscribe()
   }
@@ -110,7 +125,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   ionViewWillLeave() {
     // Unsubscribe to avoid memory leaks when the page is left
     if (this.resumeListener) {
-      this.resumeListener.unsubscribe();
+      this.resumeListener.unsubscribe()
     }
   }
 
@@ -211,7 +226,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
         buttons: [
           {
             text: this.localization.translateKey(LocKeys.BTN_OKAY),
-            handler: () => { }
+            handler: () => {}
           }
         ]
       })
@@ -229,7 +244,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
       buttons: [
         {
           text: this.localization.translateKey(LocKeys.BTN_OKAY),
-          handler: () => { }
+          handler: () => {}
         }
       ]
     })

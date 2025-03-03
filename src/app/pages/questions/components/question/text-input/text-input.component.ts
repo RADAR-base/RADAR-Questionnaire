@@ -11,12 +11,23 @@ import * as moment from 'moment'
 
 import { LocalizationService } from '../../../../../core/services/misc/localization.service'
 import { KeyboardEventType } from '../../../../../shared/enums/events'
+import { IonicModule } from '@ionic/angular'
+import { NgIf } from '@angular/common'
+import { WheelSelectorComponent } from '../../wheel-selector/wheel-selector.component'
+import { FormsModule } from '@angular/forms'
+import { TranslatePipe } from '../../../../../shared/pipes/translate/translate'
 
 @Component({
   selector: 'text-input',
   templateUrl: 'text-input.component.html',
   styleUrls: ['text-input.component.scss'],
-  standalone: false,
+  imports: [
+    IonicModule,
+    NgIf,
+    WheelSelectorComponent,
+    FormsModule,
+    TranslatePipe
+  ]
 })
 export class TextInputComponent implements OnInit {
   @ViewChild('content', { static: false }) content
@@ -58,12 +69,12 @@ export class TextInputComponent implements OnInit {
   datePickerObj: any = {}
   selectedDate?: string
 
-  constructor(
-    private localization: LocalizationService,
-  ) { }
+  constructor(private localization: LocalizationService) {}
 
   ngOnInit() {
-    this.selectedDate = this.localization.moment(Date.now()).format(this.DEFAULT_DATE_FORMAT)
+    this.selectedDate = this.localization
+      .moment(Date.now())
+      .format(this.DEFAULT_DATE_FORMAT)
 
     if (this.type.length) {
       this.showDatePicker = this.type.includes('date')

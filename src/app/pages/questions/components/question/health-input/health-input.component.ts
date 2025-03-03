@@ -14,7 +14,6 @@ import { HealthkitService } from '../../../services/healthkit.service'
   selector: 'health-input',
   templateUrl: 'health-input.component.html',
   styleUrls: ['health-input.component.scss'],
-  standalone: false,
 })
 export class HealthInputComponent implements OnChanges {
   @Output()

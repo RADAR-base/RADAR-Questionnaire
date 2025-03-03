@@ -7,7 +7,7 @@ import { RangeInputComponent } from '../range-input/range-input.component'
   selector: 'range-info-input',
   templateUrl: 'range-info-input.component.html',
   styleUrls: ['range-info-input.component.scss'],
-  standalone: false,
+  imports: [RangeInputComponent]
 })
 export class RangeInfoInputComponent extends RangeInputComponent {
   @Input()

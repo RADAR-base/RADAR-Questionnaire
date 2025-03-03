@@ -1,10 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core'
+import { IonicModule } from '@ionic/angular'
+import { FormsModule } from '@angular/forms'
 
 @Component({
   selector: 'slider-input',
   templateUrl: 'slider-input.component.html',
   styleUrls: ['slider-input.component.scss'],
-  standalone: false,
+  imports: [IonicModule, FormsModule]
 })
 export class SliderInputComponent {
   @Output()

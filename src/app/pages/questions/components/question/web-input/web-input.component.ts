@@ -12,12 +12,15 @@ import { WebInputType } from 'src/app/shared/models/question'
 import { isValidNHSId } from 'src/app/shared/utilities/form-validators'
 import { Browser, OpenOptions } from '@capacitor/browser'
 import { Keyboard } from '@capacitor/keyboard'
+import { IonicModule } from '@ionic/angular'
+import { FormsModule } from '@angular/forms'
+import { NgIf } from '@angular/common'
 
 @Component({
   selector: 'web-input',
   templateUrl: 'web-input.component.html',
   styleUrls: ['web-input.component.scss'],
-  standalone: false,
+  imports: [IonicModule, FormsModule, NgIf]
 })
 export class WebInputComponent implements OnInit {
   @Output()
@@ -42,14 +45,14 @@ export class WebInputComponent implements OnInit {
 
   browserOptions: OpenOptions = {
     url: '',
-    toolbarColor: '#6d9aa5',
+    toolbarColor: '#6d9aa5'
   }
 
   constructor() {}
 
   ngOnInit() {
-      this.url = this.getWebUrl()
-      this.validator = this.getInputValidator()
+    this.url = this.getWebUrl()
+    this.validator = this.getInputValidator()
   }
 
   emitAnswer(value) {
@@ -77,7 +80,7 @@ export class WebInputComponent implements OnInit {
   }
 
   getWebUrl() {
-    switch(this.type) {
+    switch (this.type) {
       case WebInputType.NHS:
         return this.NHS_URL
       default:
@@ -86,7 +89,7 @@ export class WebInputComponent implements OnInit {
   }
 
   getInputValidator() {
-    switch(this.type) {
+    switch (this.type) {
       case WebInputType.NHS:
         return isValidNHSId
       default:

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core'
 import { Router } from '@angular/router'
-import { NavController, Platform } from '@ionic/angular'
+import { IonicModule, NavController, Platform } from '@ionic/angular'
 
 import { DefaultPackageName } from '../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../core/services/misc/alert.service'
@@ -17,7 +17,7 @@ declare var window
   selector: 'page-splash',
   templateUrl: 'splash-page.component.html',
   styleUrls: ['./splash-page.component.scss'],
-  standalone: false,
+  imports: [IonicModule]
 })
 export class SplashPageComponent {
   status = 'Checking enrolment...'

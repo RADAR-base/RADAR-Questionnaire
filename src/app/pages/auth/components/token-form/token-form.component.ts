@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core'
-import { FormControl, FormGroup, Validators } from '@angular/forms'
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { Keyboard } from '@capacitor/keyboard'
 
 import {
@@ -8,12 +8,15 @@ import {
 } from '../../../../../assets/data/defaultConfig'
 import { isValidURL } from '../../../../shared/utilities/form-validators'
 import { Capacitor } from '@capacitor/core'
+import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
+import { IonicModule } from '@ionic/angular'
+import { NgIf } from '@angular/common'
 
 @Component({
   selector: 'token-form',
   templateUrl: 'token-form.component.html',
   styleUrls: ['./token-form.component.scss'],
-  standalone: false,
+  imports: [ReactiveFormsModule, TranslatePipe, IonicModule, NgIf]
 })
 export class TokenFormComponent {
   @Input()

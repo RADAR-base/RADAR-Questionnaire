@@ -8,10 +8,11 @@ import {
   ViewChild
 } from '@angular/core'
 import { DomSanitizer } from '@angular/platform-browser'
-import { IonContent } from '@ionic/angular'
+import { IonContent, IonicModule } from '@ionic/angular'
 import DOMPurify from "dompurify";
 
 import { InfoItem } from '../../../../../shared/models/question'
+import { NgIf } from '@angular/common'
 
 let uniqueID = 0
 
@@ -19,7 +20,7 @@ let uniqueID = 0
   selector: 'descriptive-input',
   templateUrl: 'descriptive-input.component.html',
   styleUrls: ['descriptive-input.component.scss'],
-  standalone: false,
+  imports: [IonicModule, NgIf]
 })
 export class DescriptiveInputComponent implements OnInit, OnChanges {
   @ViewChild('content', { static: false }) content: IonContent

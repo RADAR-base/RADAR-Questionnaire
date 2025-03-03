@@ -14,12 +14,15 @@ import { AssessmentType } from '../../../../shared/models/assessment'
 import { ExternalApp } from '../../../../shared/models/question'
 import { Task } from '../../../../shared/models/task'
 import { AppLauncherService } from '../../services/app-launcher.service'
+import { NgIf } from '@angular/common'
+import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
+import { IonicModule } from '@ionic/angular'
 
 @Component({
   selector: 'finish-and-launch',
   templateUrl: 'finish-and-launch.component.html',
   styleUrls: ['finish-and-launch.component.scss'],
-  standalone: false,
+  imports: [NgIf, TranslatePipe, IonicModule]
 })
 export class FinishAndLaunchComponent implements OnInit, OnChanges {
   @Input()
@@ -54,13 +57,18 @@ export class FinishAndLaunchComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit() {
-    this.appLauncher.isExternalAppCanLaunch(this.externalApp, this.task).then(canLaunch=>{
-      this.canLaunch = canLaunch
-      this.externalAppLaunchDescription = this.getExternalAppLaunchDescription(this.canLaunch)
-    }).catch(err=>{
-      console.log(err)
-      this.externalAppLaunchDescription = this.getExternalAppLaunchDescription(false)
-    })
+    this.appLauncher
+      .isExternalAppCanLaunch(this.externalApp, this.task)
+      .then(canLaunch => {
+        this.canLaunch = canLaunch
+        this.externalAppLaunchDescription =
+          this.getExternalAppLaunchDescription(this.canLaunch)
+      })
+      .catch(err => {
+        console.log(err)
+        this.externalAppLaunchDescription =
+          this.getExternalAppLaunchDescription(false)
+      })
   }
 
   ngOnChanges() {
@@ -81,14 +89,24 @@ export class FinishAndLaunchComponent implements OnInit, OnChanges {
       this.externalApp,
       this.task
     )
-    if(canLaunch){
-      return this.externalApp.field_label && this.externalApp.field_label.length ?
-        (this.externalApp.field_label) : (this.localization.translateKey(LocKeys.EXTERNAL_APP_LAUNCH_DESC) + ' ' +
-          (this.externalApp.external_app_name? this.externalApp.external_app_name : options.uri.toString()))
-    }else{
-      return (this.externalApp.external_app_name?
-          this.externalApp.external_app_name : options.uri.toString())
-        + ' ' + this.localization.translateKey(LocKeys.EXTERNAL_APP_FAILURE_ON_VALIDATING)
+    if (canLaunch) {
+      return this.externalApp.field_label && this.externalApp.field_label.length
+        ? this.externalApp.field_label
+        : this.localization.translateKey(LocKeys.EXTERNAL_APP_LAUNCH_DESC) +
+            ' ' +
+            (this.externalApp.external_app_name
+              ? this.externalApp.external_app_name
+              : options.uri.toString())
+    } else {
+      return (
+        (this.externalApp.external_app_name
+          ? this.externalApp.external_app_name
+          : options.uri.toString()) +
+        ' ' +
+        this.localization.translateKey(
+          LocKeys.EXTERNAL_APP_FAILURE_ON_VALIDATING
+        )
+      )
     }
   }
 

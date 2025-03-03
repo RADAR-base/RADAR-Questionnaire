@@ -1,15 +1,17 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
 import { Keyboard } from '@capacitor/keyboard'
-import { ModalController } from '@ionic/angular'
+import { IonicModule, ModalController } from '@ionic/angular'
 
 import { LocalizationService } from '../../../../../core/services/misc/localization.service'
 import { KeyboardEventType } from '../../../../../shared/enums/events'
+import { TranslatePipe } from '../../../../../shared/pipes/translate/translate'
+import { FormsModule } from '@angular/forms'
 
 @Component({
   selector: 'notes-input',
   templateUrl: 'notes-input.component.html',
   styleUrls: ['notes-input.component.scss'],
-  standalone: false,
+  imports: [IonicModule, TranslatePipe, FormsModule]
 })
 export class NotesInputComponent implements OnInit {
   @Output()
@@ -27,7 +29,7 @@ export class NotesInputComponent implements OnInit {
 
   constructor(
     private localization: LocalizationService,
-    public modalCtrl: ModalController,
+    public modalCtrl: ModalController
   ) {}
 
   ngOnInit() {}

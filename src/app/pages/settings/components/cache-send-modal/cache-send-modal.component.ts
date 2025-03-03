@@ -1,11 +1,13 @@
 import { Component } from '@angular/core'
-import { ModalController, NavParams, Platform } from '@ionic/angular'
+import { IonicModule, ModalController, NavParams, Platform } from '@ionic/angular'
+import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
+import { NgForOf, NgIf, NgSwitch, NgSwitchCase } from '@angular/common'
 
 @Component({
   selector: 'cache-send-modal',
   templateUrl: 'cache-send-modal.component.html',
   styleUrls: ['cache-send-modal.component.scss'],
-  standalone: false,
+  imports: [IonicModule, TranslatePipe, NgSwitch, NgIf, NgSwitchCase, NgForOf]
 })
 export class CacheSendModalComponent {
   successes: any[]

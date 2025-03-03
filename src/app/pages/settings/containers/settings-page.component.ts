@@ -1,6 +1,7 @@
 import { Component } from '@angular/core'
 import { Router } from '@angular/router'
 import {
+  IonicModule,
   LoadingController,
   ModalController,
   NavController
@@ -20,12 +21,15 @@ import { Settings } from '../../../shared/models/settings'
 import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 import { CacheSendModalComponent } from '../components/cache-send-modal/cache-send-modal.component'
 import { SettingsService } from '../services/settings.service'
+import { TranslatePipe } from '../../../shared/pipes/translate/translate'
+import { MomentModule } from 'ngx-moment'
+import { NgIf } from '@angular/common'
 
 @Component({
   selector: 'page-settings',
   templateUrl: 'settings-page.component.html',
   styleUrls: ['settings-page.component.scss'],
-  standalone: false,
+  imports: [IonicModule, TranslatePipe, MomentModule, NgIf]
 })
 export class SettingsPageComponent {
   settings: Settings = {}

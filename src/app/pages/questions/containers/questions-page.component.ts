@@ -1,7 +1,7 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core'
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, OnInit, ViewChild } from '@angular/core'
 import { Router } from '@angular/router'
 import { KeepAwake } from '@capacitor-community/keep-awake'
-import { NavController, Platform } from '@ionic/angular'
+import { IonicModule, NavController, Platform } from '@ionic/angular'
 import { Observable, Subscription } from 'rxjs'
 
 import { AlertService } from '../../../core/services/misc/alert.service'
@@ -25,12 +25,30 @@ import {
 import { Task } from '../../../shared/models/task'
 import { AppLauncherService } from '../services/app-launcher.service'
 import { QuestionsService } from '../services/questions.service'
+import { IntroductionComponent } from '../components/introduction/introduction.component'
+import { AsyncPipe, KeyValuePipe, NgForOf, NgIf } from '@angular/common'
+import { QuestionComponent } from '../components/question/question.component'
+import { FinishComponent } from '../components/finish/finish.component'
+import { FinishAndLaunchComponent } from '../components/finish-and-launch/finish-and-launch.component'
+import { ToolbarComponent } from '../components/toolbar/toolbar.component'
 
 @Component({
   selector: 'page-questions',
   templateUrl: 'questions-page.component.html',
   styleUrls: ['questions-page.component.scss'],
-  standalone: false,
+  imports: [
+    IonicModule,
+    IntroductionComponent,
+    NgForOf,
+    KeyValuePipe,
+    QuestionComponent,
+    NgIf,
+    FinishComponent,
+    AsyncPipe,
+    FinishAndLaunchComponent,
+    ToolbarComponent
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class QuestionsPageComponent implements OnInit {
   @ViewChild('swiper')
@@ -401,7 +419,7 @@ export class QuestionsPageComponent implements OnInit {
         buttons: [
           {
             text: this.localization.translateKey(LocKeys.BTN_DISMISS),
-            handler: () => { }
+            handler: () => {}
           }
         ]
       })

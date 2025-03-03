@@ -7,9 +7,10 @@ import {
   Output,
   ViewChild
 } from '@angular/core'
-import { IonContent } from '@ionic/angular'
+import { IonContent, IonicModule } from '@ionic/angular'
 
 import { InfoItem, Section } from '../../../../../shared/models/question'
+import { NgForOf, NgIf } from '@angular/common'
 
 let uniqueID = 0
 
@@ -17,7 +18,7 @@ let uniqueID = 0
   selector: 'info-screen',
   templateUrl: 'info-screen.component.html',
   styleUrls: ['info-screen.component.scss'],
-  standalone: false,
+  imports: [IonicModule, NgIf, NgForOf]
 })
 export class InfoScreenComponent implements OnInit, OnChanges {
   @ViewChild('content', { static: false }) content: IonContent

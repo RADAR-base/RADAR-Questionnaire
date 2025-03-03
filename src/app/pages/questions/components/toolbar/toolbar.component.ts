@@ -8,12 +8,14 @@ import {
 
 import { LocalizationService } from '../../../../core/services/misc/localization.service'
 import { LocKeys } from '../../../../shared/enums/localisations'
+import { IonicModule } from '@ionic/angular'
+import { NgIf } from '@angular/common'
 
 @Component({
   selector: 'toolbar',
   templateUrl: 'toolbar.component.html',
   styleUrls: ['toolbar.component.scss'],
-  standalone: false,
+  imports: [IonicModule, NgIf]
 })
 export class ToolbarComponent implements OnInit, OnChanges {
   @Input()

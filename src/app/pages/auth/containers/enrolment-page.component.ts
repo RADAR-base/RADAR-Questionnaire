@@ -1,8 +1,8 @@
-import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core'
+import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild } from '@angular/core'
 import { App } from '@capacitor/app'
 import { Browser } from '@capacitor/browser'
 import { Device } from '@capacitor/device'
-import { NavController } from '@ionic/angular'
+import { IonicModule, NavController } from '@ionic/angular'
 import { AlertInput } from '@ionic/core'
 
 import {
@@ -26,12 +26,26 @@ import {
 } from '../../../shared/models/settings'
 import { AuthService } from '../services/auth.service'
 import { BehaviorSubject } from 'rxjs'
+import { TranslatePipe } from '../../../shared/pipes/translate/translate'
+import { AsyncPipe, NgIf, NgSwitch, NgSwitchCase } from '@angular/common'
+import { TokenFormComponent } from '../components/token-form/token-form.component'
+import { QRFormComponent } from '../components/qr-form/qr-form.component'
 
 @Component({
   selector: 'page-enrolment',
   templateUrl: 'enrolment-page.component.html',
   styleUrls: ['./enrolment-page.component.scss'],
-  standalone: false,
+  imports: [
+    IonicModule,
+    TranslatePipe,
+    AsyncPipe,
+    NgIf,
+    TokenFormComponent,
+    NgSwitchCase,
+    NgSwitch,
+    QRFormComponent
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class EnrolmentPageComponent {
   @ViewChild('swiper')
@@ -194,10 +208,10 @@ export class EnrolmentPageComponent {
       e.error && e.error.error_description
         ? e.error.error_description
         : e.error && e.error.message
-          ? e.error.message
-          : e.status
-            ? e.statusText + ' (' + e.status + ')'
-            : e
+        ? e.error.message
+        : e.status
+        ? e.statusText + ' (' + e.status + ')'
+        : e
     this.usage.sendGeneralEvent(
       e.status == 409 ? EnrolmentEventType.ERROR : EnrolmentEventType.FAIL,
       false,
@@ -213,7 +227,7 @@ export class EnrolmentPageComponent {
 
   showStatus() {
     setTimeout(() => {
-      (this.showOutcomeStatus = true)
+      this.showOutcomeStatus = true
       this.cdr.detectChanges()
     }, 500)
   }
@@ -226,7 +240,7 @@ export class EnrolmentPageComponent {
     const buttons = [
       {
         text: this.localization.translateKey(LocKeys.BTN_CANCEL),
-        handler: () => { }
+        handler: () => {}
       },
       {
         text: this.localization.translateKey(LocKeys.BTN_SET),
@@ -246,7 +260,7 @@ export class EnrolmentPageComponent {
           label: this.localization.translate(lang.label),
           value: JSON.stringify(lang),
           checked: lang.value === this.language.value
-        }) as AlertInput
+        } as AlertInput)
     )
     return this.alertService.showAlert({
       header: this.localization.translateKey(LocKeys.SETTINGS_LANGUAGE_ALERT),

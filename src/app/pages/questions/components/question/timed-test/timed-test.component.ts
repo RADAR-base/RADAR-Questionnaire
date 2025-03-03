@@ -24,7 +24,6 @@ import {
   selector: 'timed-test',
   templateUrl: 'timed-test.component.html',
   styleUrls: ['timed-test.component.scss'],
-  standalone: false,
 })
 export class TimedTestComponent implements OnInit, OnChanges, OnDestroy {
   @Output()

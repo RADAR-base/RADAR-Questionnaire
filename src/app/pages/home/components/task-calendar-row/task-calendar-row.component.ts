@@ -4,6 +4,8 @@ import { LocalizationService } from '../../../../core/services/misc/localization
 import { Task } from '../../../../shared/models/task'
 import { IonicModule } from '@ionic/angular'
 import { NgIf } from '@angular/common'
+import { addIcons } from 'ionicons'
+import { radioButtonOff } from 'ionicons/icons'
 
 @Component({
   selector: 'task-calendar-row',
@@ -19,7 +21,9 @@ export class TaskCalendarRowComponent implements OnInit {
 
   taskLabel: string
 
-  constructor(private localization: LocalizationService) {}
+  constructor(private localization: LocalizationService) {
+    addIcons({radioButtonOff})
+  }
 
   ngOnInit() {
     if (this.isTaskNameShown) this.taskLabel = this.task.name

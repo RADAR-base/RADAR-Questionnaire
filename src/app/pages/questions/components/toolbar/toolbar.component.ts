@@ -10,6 +10,8 @@ import { LocalizationService } from '../../../../core/services/misc/localization
 import { LocKeys } from '../../../../shared/enums/localisations'
 import { IonicModule } from '@ionic/angular'
 import { NgIf } from '@angular/common'
+import { addIcons } from 'ionicons'
+import { chevronBackOutline, chevronForwardOutline, closeCircle } from 'ionicons/icons'
 
 @Component({
   selector: 'toolbar',
@@ -55,7 +57,9 @@ export class ToolbarComponent implements OnInit, OnChanges {
   iconPrevious: string = this.iconValues.close
   progress: number
 
-  constructor(private localization: LocalizationService) {}
+  constructor(private localization: LocalizationService) {
+    addIcons({chevronForwardOutline, chevronBackOutline, closeCircle})
+  }
 
   ngOnInit() {
     this.textValues = {

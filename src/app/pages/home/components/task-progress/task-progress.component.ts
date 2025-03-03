@@ -6,6 +6,8 @@ import { NgIf } from '@angular/common'
 import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
 import { RoundProgressComponent } from 'angular-svg-round-progressbar'
 import { IonicModule } from '@ionic/angular'
+import { addIcons } from 'ionicons'
+import { checkmark } from 'ionicons/icons'
 
 @Component({
   selector: 'task-progress',
@@ -30,7 +32,9 @@ export class TaskProgressComponent implements OnChanges {
   duration = 300
   complete = false
   showFireworks: boolean = false
-
+  constructor() {
+    addIcons({checkmark})
+  }
   ngOnChanges() {
     this.updateProgress()
   }

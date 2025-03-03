@@ -13,6 +13,8 @@ import DOMPurify from "dompurify";
 
 import { InfoItem } from '../../../../../shared/models/question'
 import { NgIf } from '@angular/common'
+import { addIcons } from 'ionicons'
+import { chevronDownCircleOutline } from 'ionicons/icons'
 
 let uniqueID = 0
 
@@ -42,7 +44,9 @@ export class DescriptiveInputComponent implements OnInit, OnChanges {
   HTML_ALLOWED_TAGS = ['iframe']
   HTML_ALLOWED_ATTR = ['allow', 'allowfullscreen', 'frameborder', 'scrolling']
 
-  constructor(private sanitizer: DomSanitizer) {}
+  constructor(private sanitizer: DomSanitizer) {
+    addIcons({chevronDownCircleOutline})
+  }
 
   ngOnInit() {
     this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(

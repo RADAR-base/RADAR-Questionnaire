@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core'
 import { IonicModule } from '@ionic/angular'
 import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
+import { addIcons } from 'ionicons'
+import { closeCircle } from 'ionicons/icons'
 
 @Component({
   selector: 'introduction',
@@ -16,7 +18,9 @@ export class IntroductionComponent {
   @Output()
   start: EventEmitter<any> = new EventEmitter<any>()
 
-  constructor() {}
+  constructor() {
+    addIcons({closeCircle})
+  }
 
   hideIntro() {
     this.start.emit(false)

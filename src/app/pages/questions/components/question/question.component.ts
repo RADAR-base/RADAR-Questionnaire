@@ -36,6 +36,8 @@ import { DescriptiveInputComponent } from './descriptive-input/descriptive-input
 import { MatrixRadioInputComponent } from './matrix-radio-input/matrix-radio-input.component'
 import { WebInputComponent } from './web-input/web-input.component'
 import { NotesInputComponent } from './notes-input/notes-input.component'
+import { addIcons } from 'ionicons'
+import { chevronDownOutline } from 'ionicons/icons'
 
 @Component({
   selector: 'question',
@@ -133,6 +135,7 @@ export class QuestionComponent implements OnInit, OnChanges {
   ])
 
   constructor() {
+    addIcons({chevronDownOutline})
     this.value = null
   }
 

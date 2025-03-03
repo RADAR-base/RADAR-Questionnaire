@@ -24,6 +24,8 @@ import { SettingsService } from '../services/settings.service'
 import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { MomentModule } from 'ngx-moment'
 import { NgIf } from '@angular/common'
+import { addIcons } from 'ionicons'
+import { caretDownOutline, repeat } from 'ionicons/icons'
 
 @Component({
   selector: 'page-settings',
@@ -58,7 +60,9 @@ export class SettingsPageComponent {
     private usage: UsageService,
     public modalCtrl: ModalController,
     private router: Router
-  ) {}
+  ) {
+    addIcons({caretDownOutline, repeat})
+  }
 
   ionViewWillEnter() {
     this.usage.setPage(this.constructor.name)

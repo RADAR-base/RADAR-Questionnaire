@@ -11,6 +11,8 @@ import { IonContent, IonicModule } from '@ionic/angular'
 
 import { InfoItem, Section } from '../../../../../shared/models/question'
 import { NgForOf, NgIf } from '@angular/common'
+import { addIcons } from 'ionicons'
+import { chevronDownCircle } from 'ionicons/icons'
 
 let uniqueID = 0
 
@@ -41,7 +43,9 @@ export class InfoScreenComponent implements OnInit, OnChanges {
   items: InfoItem[] = Array()
   showScrollButton: boolean
 
-  constructor() {}
+  constructor() {
+    addIcons({chevronDownCircle})
+  }
 
   ngOnInit() {
     this.initSections()

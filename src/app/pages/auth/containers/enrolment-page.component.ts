@@ -30,6 +30,8 @@ import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { AsyncPipe, NgIf, NgSwitch, NgSwitchCase } from '@angular/common'
 import { TokenFormComponent } from '../components/token-form/token-form.component'
 import { QRFormComponent } from '../components/qr-form/qr-form.component'
+import { addIcons } from 'ionicons'
+import { caretDownOutline } from 'ionicons/icons'
 
 @Component({
   selector: 'page-enrolment',
@@ -69,6 +71,7 @@ export class EnrolmentPageComponent {
     private logger: LogService,
     private cdr: ChangeDetectorRef
   ) {
+    addIcons({caretDownOutline})
     this.initializeDeepLinking()
     this.init()
   }

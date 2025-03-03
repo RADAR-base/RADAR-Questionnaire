@@ -18,6 +18,8 @@ import { TickerBarComponent } from '../components/ticker-bar/ticker-bar.componen
 import { TaskInfoComponent } from '../components/task-info/task-info.component'
 import { TaskCalendarComponent } from '../components/task-calendar/task-calendar.component'
 import { TranslatePipe } from '../../../shared/pipes/translate/translate'
+import { addIcons } from 'ionicons'
+import { add, settings } from 'ionicons/icons'
 
 @Component({
   selector: 'page-home',
@@ -73,6 +75,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
     private platform: Platform,
     private usage: UsageService
   ) {
+    addIcons({settings, add})
     this.changeDetectionListener =
       this.tasksService.changeDetectionEmitter.subscribe(() => {
         console.log('Changes to task service detected..')

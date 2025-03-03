@@ -11,7 +11,6 @@ import * as moment from 'moment'
 
 import { LocalizationService } from '../../../../../core/services/misc/localization.service'
 import { KeyboardEventType } from '../../../../../shared/enums/events'
-import { IonicModule } from '@ionic/angular'
 import { NgIf } from '@angular/common'
 import { WheelSelectorComponent } from '../../wheel-selector/wheel-selector.component'
 import { FormsModule } from '@angular/forms'
@@ -23,7 +22,6 @@ import { IonDatetime, IonDatetimeButton, IonInput, IonItem, IonModal } from '@io
   templateUrl: 'text-input.component.html',
   styleUrls: ['text-input.component.scss'],
   imports: [
-    NgIf,
     WheelSelectorComponent,
     FormsModule,
     TranslatePipe,

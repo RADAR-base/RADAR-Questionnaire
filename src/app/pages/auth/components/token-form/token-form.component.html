@@ -23,16 +23,18 @@
       ></ion-input>
     </ion-item>
   </div>
-  <div class="bottom" *ngIf="!loading">
-    <ion-button
-      form="tokenForm"
-      ion-button
-      class="bt bt--full"
-      round
-      full
-      type="submit"
-    >
-      {{ 'BTN_SUBMIT' | translate }}
-    </ion-button>
-  </div>
+  @if (!loading) {
+    <div class="bottom">
+      <ion-button
+        form="tokenForm"
+        ion-button
+        class="bt bt--full"
+        round
+        full
+        type="submit"
+      >
+        {{ 'BTN_SUBMIT' | translate }}
+      </ion-button>
+    </div>
+  }
 </form>

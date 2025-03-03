@@ -1,18 +1,21 @@
 <div class="grid">
-  <div class="col" *ngFor="let col of keys(valuesWithNulls)">
-      <div class="label">
-        <ion-note>{{ labels[col] }}</ion-note>
-      </div>
-      <div class="bg">
-        <div #wheel class="picker-opts inner" (scroll)="selected(col, $event)">
-          <p
-            *ngFor="let row of valuesWithNulls[col]"
-            class="list"
-            id="{{ row }}"
-          >
-            {{ row }}
-          </p>
+  @for (col of keys(valuesWithNulls); track col) {
+    <div class="col">
+        <div class="label">
+          <ion-note>{{ labels[col] }}</ion-note>
         </div>
-      </div>
-  </div>
+        <div class="bg">
+          <div #wheel class="picker-opts inner" (scroll)="selected(col, $event)">
+            @for (row of valuesWithNulls[col]; track row) {
+              <p
+                class="list"
+                id="{{ row }}"
+              >
+                {{ row }}
+              </p>
+            }
+          </div>
+        </div>
+    </div>
+  }
 </div>

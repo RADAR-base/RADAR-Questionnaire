@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core'
-import { IonicModule } from '@ionic/angular'
 import { FormsModule } from '@angular/forms'
 import { IonLabel, IonRange } from '@ionic/angular/standalone'
 

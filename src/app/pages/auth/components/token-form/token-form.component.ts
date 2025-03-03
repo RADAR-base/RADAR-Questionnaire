@@ -9,7 +9,6 @@ import {
 import { isValidURL } from '../../../../shared/utilities/form-validators'
 import { Capacitor } from '@capacitor/core'
 import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
-import { NgIf } from '@angular/common'
 import { IonButton, IonInput, IonItem } from '@ionic/angular/standalone'
 
 @Component({
@@ -19,7 +18,6 @@ import { IonButton, IonInput, IonItem } from '@ionic/angular/standalone'
   imports: [
     ReactiveFormsModule,
     TranslatePipe,
-    NgIf,
     IonItem,
     IonInput,
     IonButton

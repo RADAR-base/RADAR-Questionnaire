@@ -1,6 +1,6 @@
 <div id="task-info-container">
   <div id="questionnaire-progress" [@moveInProgress]="expanded">
-    <ng-container *ngIf="!expanded">
+    @if (!expanded) {
       <round-progress
         [current]="current"
         [max]="max"
@@ -11,7 +11,7 @@
         [clockwise]="true"
       ></round-progress>
       <div id="questionnaire-counter">{{ current }}</div>
-    </ng-container>
+    }
   </div>
   <div class="right-info">
     <div id="questionnaire-metrics" [@alignCenterRightMetrics]="expanded">
@@ -34,7 +34,8 @@
       </span>
     </div>
     <div id="questionnaire-time">
-      <div *ngIf="!isNow && task.showInCalendar" class="text-md">
+      @if (!isNow && task.showInCalendar) {
+      <div class="text-md">
         <div class="time-container" [@moveHour]="expanded">
           {{ getHour() }}
         </div>
@@ -46,15 +47,17 @@
           {{ getMeridiem() }}
         </div>
       </div>
+      }
     </div>
   </div>
 
-  <div
-    *ngIf="task.warning"
-    class="extra-info"
-    [@alignCenterRightExtraInfo]="expanded"
-  >
-    <img class="extra-info-icon" src="assets/imgs/warning.png" />
-    {{ task.warning }}
-  </div>
+  @if (task.warning) {
+    <div
+      class="extra-info"
+      [@alignCenterRightExtraInfo]="expanded"
+    >
+      <img class="extra-info-icon" src="assets/imgs/warning.png" />
+      {{ task.warning }}
+    </div>
+  }
 </div>

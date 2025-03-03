@@ -1,7 +1,6 @@
 import { Component } from '@angular/core'
 import { Router } from '@angular/router'
 import {
-  IonicModule,
   LoadingController,
   ModalController,
   NavController
@@ -23,7 +22,6 @@ import { CacheSendModalComponent } from '../components/cache-send-modal/cache-se
 import { SettingsService } from '../services/settings.service'
 import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { MomentModule } from 'ngx-moment'
-import { NgIf } from '@angular/common'
 import { addIcons } from 'ionicons'
 import { caretDownOutline, repeat } from 'ionicons/icons'
 import {
@@ -43,7 +41,6 @@ import {
   imports: [
     TranslatePipe,
     MomentModule,
-    NgIf,
     IonHeader,
     IonBackButton,
     IonToolbar,

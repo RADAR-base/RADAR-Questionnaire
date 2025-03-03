@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
-import { IonicModule, NavController, Platform } from '@ionic/angular'
+import { NavController, Platform } from '@ionic/angular'
 import { Subscription } from 'rxjs'
 
 import { AlertService } from '../../../core/services/misc/alert.service'
@@ -12,7 +12,7 @@ import { Task, TasksProgress } from '../../../shared/models/task'
 import { checkTaskIsNow } from '../../../shared/utilities/check-task-is-now'
 import { TasksService } from '../services/tasks.service'
 import { HomePageAnimations } from './home-page.animation'
-import { AsyncPipe, NgIf } from '@angular/common'
+import { AsyncPipe } from '@angular/common'
 import { TaskProgressComponent } from '../components/task-progress/task-progress.component'
 import { TickerBarComponent } from '../components/ticker-bar/ticker-bar.component'
 import { TaskInfoComponent } from '../components/task-info/task-info.component'
@@ -38,11 +38,6 @@ import {
   styleUrls: ['./home-page.component.scss'],
   imports: [
     AsyncPipe,
-    TaskProgressComponent,
-    NgIf,
-    TickerBarComponent,
-    TaskInfoComponent,
-    TaskCalendarComponent,
     TranslatePipe,
     IonButton,
     IonHeader,
@@ -53,7 +48,11 @@ import {
     IonFab,
     IonFabButton,
     IonFabList,
-    IonSpinner
+    IonSpinner,
+    TaskProgressComponent,
+    TickerBarComponent,
+    TaskInfoComponent,
+    TaskCalendarComponent
   ]
 })
 export class HomePageComponent implements OnInit, OnDestroy {

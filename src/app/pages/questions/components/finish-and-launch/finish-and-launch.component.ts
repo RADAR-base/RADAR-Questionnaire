@@ -14,16 +14,14 @@ import { AssessmentType } from '../../../../shared/models/assessment'
 import { ExternalApp } from '../../../../shared/models/question'
 import { Task } from '../../../../shared/models/task'
 import { AppLauncherService } from '../../services/app-launcher.service'
-import { NgIf } from '@angular/common'
 import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
-import { IonicModule } from '@ionic/angular'
 import { IonItem, IonLabel, IonSpinner, IonToggle } from '@ionic/angular/standalone'
 
 @Component({
   selector: 'app-finish-and-launch',
   templateUrl: 'finish-and-launch.component.html',
   styleUrls: ['finish-and-launch.component.scss'],
-  imports: [NgIf, TranslatePipe, IonItem, IonLabel, IonToggle, IonSpinner]
+  imports: [TranslatePipe, IonItem, IonLabel, IonToggle, IonSpinner]
 })
 export class FinishAndLaunchComponent implements OnInit, OnChanges {
   @Input()

@@ -9,29 +9,36 @@
         <div class="text">
           <div class="text-lg">{{ 'ENROL_WELCOME_1' | translate }}</div>
           {{ 'ENROL_WELCOME_2' | translate }}
-          <div class="spn-container" *ngIf="loading | async">
-            <ion-spinner name="lines"></ion-spinner>
-          </div>
-          <div class="padding text-justify extra-padding" *ngIf="!(loading | async)">
-            <ion-item no-lines>
-              <span class="info-value">{{ language.label | translate }}</span>
-              <span slot="end" (click)="showSelectLanguage()">
-                <ion-icon class="space-right" name="caret-down-outline"></ion-icon>
-                {{ 'BTN_SELECT' | translate }}
-              </span>
-            </ion-item>
-          </div>
+          @if (loading | async) {
+            <div class="spn-container">
+              <ion-spinner name="lines"></ion-spinner>
+            </div>
+          } @else {
+            <div class="padding text-justify extra-padding">
+              <ion-item no-lines>
+                <span class="info-value">{{ language.label | translate }}</span>
+                <span slot="end" (click)="showSelectLanguage()">
+                  <ion-icon class="space-right" name="caret-down-outline"></ion-icon>
+                  {{ 'BTN_SELECT' | translate }}
+                </span>
+              </ion-item>
+            </div>
+          }
         </div>
         <div class="initial-status">
-          <div id="outcome" *ngIf="showOutcomeStatus">
-            {{ outcomeStatus }}
+          @if (showOutcomeStatus) {
+            <div id="outcome">
+              {{ outcomeStatus }}
+            </div>
+          }
+        </div>
+        @if (!(loading | async)) {
+          <div class="bottom">
+            <ion-button ion-button class="bt bt--full" round full (click)="next()">
+              {{ 'BTN_START' | translate }}
+            </ion-button>
           </div>
-        </div>
-        <div class="bottom" *ngIf="!(loading | async)">
-          <ion-button ion-button class="bt bt--full" round full (click)="next()">
-            {{ 'BTN_START' | translate }}
-          </ion-button>
-        </div>
+        }
       </ion-card>
     </swiper-slide>
 
@@ -85,24 +92,31 @@
       <ion-card>
         <div class="registration">
           <div class="text text-lg">{{ 'ENROL_REGISTRATION' | translate }}</div>
-          <div [ngSwitch]="enrolmentMethod">
-            <ng-container *ngSwitchCase="'token'">
-              <app-token-form [loading]="loading | async" (data)="authenticate($event)" (focus)="clearStatus()"
-                (errors)="handleError($event)"></app-token-form>
-            </ng-container>
-            <ng-container *ngSwitchCase="'qr'">
-              <app-qr-form [loading]="loading | async" (data)="authenticate($event)"></app-qr-form>
-            </ng-container>
+          <div>
+            @switch (enrolmentMethod) {
+              @case ('token') {
+                <app-token-form [loading]="loading | async" (data)="authenticate($event)" (focus)="clearStatus()"
+                                (errors)="handleError($event)"></app-token-form>
+              }
+              @case ('qr') {
+                <app-qr-form [loading]="loading | async" (data)="authenticate($event)"></app-qr-form>
+              }
+            }
           </div>
         </div>
       </ion-card>
       <div class="status">
-        <div id="outcome" *ngIf="showOutcomeStatus">
-          {{ outcomeStatus }}
-        </div>
-        <div id="loading" *ngIf="(loading | async) && !showOutcomeStatus">
-          {{ 'STATUS_LOADING' | translate }}...
-        </div>
+        @if (showOutcomeStatus) {
+          <div id="outcome">
+            {{ outcomeStatus }}
+          </div>
+        } @else {
+          @if ((loading | async)) {
+            <div id="loading">
+              {{ 'STATUS_LOADING' | translate }}...
+            </div>
+          }
+        }
       </div>
     </swiper-slide>
 

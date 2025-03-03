@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core'
-import { IonicModule, NavController } from '@ionic/angular'
+import { NavController } from '@ionic/angular'
 
 import { Assessment } from '../../../shared/models/assessment'
 import { ClinicalTasksService } from '../services/clinical-tasks.service'
 import { TranslatePipe } from '../../../shared/pipes/translate/translate'
-import { NgForOf } from '@angular/common'
 import { IonBackButton, IonCol, IonContent, IonHeader, IonRow, IonTitle, IonToolbar } from '@ionic/angular/standalone'
 
 @Component({
@@ -13,7 +12,6 @@ import { IonBackButton, IonCol, IonContent, IonHeader, IonRow, IonTitle, IonTool
   styleUrls: ['clinical-tasks-page.component.scss'],
   imports: [
     TranslatePipe,
-    NgForOf,
     IonHeader,
     IonToolbar,
     IonBackButton,

@@ -12,8 +12,7 @@ import { QuestionsService } from '../../services/questions.service'
 import { LocalizationService } from 'src/app/core/services/misc/localization.service'
 import { LocKeys } from 'src/app/shared/enums/localisations'
 import { getMinutes } from 'src/app/shared/utilities/time'
-import { IonicModule } from '@ionic/angular'
-import { NgIf, NgStyle } from '@angular/common'
+import { NgStyle } from '@angular/common'
 import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
 import { IonButton, IonItem, IonLabel, IonToggle } from '@ionic/angular/standalone'
 
@@ -22,7 +21,6 @@ import { IonButton, IonItem, IonLabel, IonToggle } from '@ionic/angular/standalo
   templateUrl: 'finish.component.html',
   styleUrls: ['finish.component.scss'],
   imports: [
-    NgIf,
     TranslatePipe,
     NgStyle,
     IonItem,

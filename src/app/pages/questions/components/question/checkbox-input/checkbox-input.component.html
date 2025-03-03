@@ -1,8 +1,10 @@
 <ion-list>
-  <ion-item *ngFor="let item of items" [class.checked]="item.checked" lines="none">
-    <ion-checkbox [value]="item.value"
-                  (click)="onInputChange(item)">
-      <span class="ion-text-wrap">{{ item.response }}</span>
-    </ion-checkbox>
-  </ion-item>
+  @for (item of items; track item.value) {
+    <ion-item [class.checked]="item.checked" lines="none">
+      <ion-checkbox [value]="item.value"
+                    (click)="onInputChange(item)">
+        <span class="ion-text-wrap">{{ item.response }}</span>
+      </ion-checkbox>
+    </ion-item>
+  }
 </ion-list>

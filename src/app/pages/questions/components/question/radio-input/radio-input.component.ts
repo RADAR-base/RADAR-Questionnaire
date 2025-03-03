@@ -12,7 +12,6 @@ let uniqueID = 0
   templateUrl: 'radio-input.component.html',
   styleUrls: ['radio-input.component.scss'],
   imports: [
-    NgForOf,
     IonList,
     IonRadioGroup,
     IonItem,

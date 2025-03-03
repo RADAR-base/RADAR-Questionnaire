@@ -2,15 +2,19 @@
 <h2 class="ion-text-center">{{ content }}</h2>
 <div class="pos-bottom">
   <div class="pos-bottom-90">
-    <div *ngIf="displayNextTaskReminder" class="next-task-highlight">
-      {{ 'FINISH_NEXT_TASK_REMINDER' | translate }}
-    </div>
-    <ion-item color="none" lines="none" *ngIf="requiresInClinicCompletion">
-      <ion-label>
-        {{ 'FINISH_COMPLETED_IN_CLINIC' | translate }}
-      </ion-label>
-      <ion-toggle item-right (ionChange)="toggleChanged($event)"></ion-toggle>
-    </ion-item>
+    @if (displayNextTaskReminder) {
+      <div class="next-task-highlight">
+        {{ 'FINISH_NEXT_TASK_REMINDER' | translate }}
+      </div>
+    }
+    @if (requiresInClinicCompletion) {
+      <ion-item color="none" lines="none">
+        <ion-label>
+          {{ 'FINISH_COMPLETED_IN_CLINIC' | translate }}
+        </ion-label>
+        <ion-toggle item-right (ionChange)="toggleChanged($event)"></ion-toggle>
+      </ion-item>
+    }
   </div>
   <div class="done-button">
     <ion-button
@@ -25,6 +29,8 @@
     >
       {{ innerText }}
     </ion-button>
-    <small *ngIf="!showDoneButton"> {{ etaText }} {{ ' (' + progressDisplay + '%) ' }} </small>
+    @if (!showDoneButton) {
+      <small> {{ etaText }} {{ ' (' + progressDisplay + '%) ' }} </small>
+    }
   </div>
 </div>

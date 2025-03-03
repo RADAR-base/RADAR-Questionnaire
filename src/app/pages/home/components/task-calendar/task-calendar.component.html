@@ -4,18 +4,21 @@
     class="layers"
     [style.height.vh]="show ? 100 : 0"
   >
-    <ng-container *ngIf="tasks">
-      <ng-container *ngFor="let sortedTasks of tasks | keyvalue">
-        <div *ngIf="sortedTasks.key == currentDate" class="date ion-padding">
-          {{ 'TASK_CALENDAR_TITLE' | translate }}
-        </div>
-        <div *ngIf="sortedTasks.key !== currentDate" class="date ion-padding">
-          {{ sortedTasks.key / 1000 | amFromUnix | amDateFormat: 'MMM D' }}
-        </div>
-        <ng-container *ngFor="let task of sortedTasks.value; let i = index">
+    @if (tasks) {
+      @for (sortedTasks of tasks | keyvalue; track sortedTasks.key) {
+        @if (sortedTasks.key === currentDate) {
+          <div class="date ion-padding">
+            {{ 'TASK_CALENDAR_TITLE' | translate }}
+          </div>
+        } @else {
+          <div class="date ion-padding">
+            {{ sortedTasks.key / 1000 | amFromUnix | amDateFormat: 'MMM D' }}
+          </div>
+        }
+        @for (task of sortedTasks.value; track task.id; let i = $index) {
+          @if (i == timeIndex && sortedTasks.key == currentDate) {
           <div
             class="current-time-div"
-            *ngIf="i == timeIndex && sortedTasks.key == currentDate"
           >
             <div id="time-current">
               <ion-row>
@@ -31,16 +34,18 @@
               </ion-row>
             </div>
           </div>
-          <app-task-calendar-row
-            *ngIf="task.showInCalendar"
-            [task]="task"
-            (click)="clicked(task)"
-            [isTaskNameShown]="isTaskNameShown"
-          ></app-task-calendar-row>
-        </ng-container>
+          }
+          @if (task.showInCalendar) {
+            <app-task-calendar-row
+              [task]="task"
+              (click)="clicked(task)"
+              [isTaskNameShown]="isTaskNameShown"
+            ></app-task-calendar-row>
+          }
+        }
+        @if (timeIndex === -1 && sortedTasks.key == currentDate) {
         <div
           class="current-time-div"
-          *ngIf="timeIndex === -1 && sortedTasks.key == currentDate"
         >
           <div id="time-current">
             <ion-row>
@@ -56,7 +61,8 @@
             </ion-row>
           </div>
         </div>
-      </ng-container>
-    </ng-container>
+        }
+      }
+    }
   </ion-content>
 </div>

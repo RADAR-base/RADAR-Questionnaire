@@ -10,7 +10,9 @@
       <div class="info-content" [innerHTML]="sanitizedHtml"></div>
     </div>
   </ion-content>
-  <span *ngIf="showScrollButton" (click)="scrollDown()" class="icon">
-    <ion-icon name="chevron-down-circle-outline"></ion-icon>
-  </span>
+  @if (showScrollButton) {
+    <span (click)="scrollDown()" class="icon">
+      <ion-icon name="chevron-down-circle-outline"></ion-icon>
+    </span>
+  }
 </div>

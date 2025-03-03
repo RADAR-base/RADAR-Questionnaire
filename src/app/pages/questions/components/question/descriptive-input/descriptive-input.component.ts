@@ -11,7 +11,6 @@ import { DomSanitizer } from '@angular/platform-browser'
 import DOMPurify from "dompurify";
 
 import { InfoItem } from '../../../../../shared/models/question'
-import { NgIf } from '@angular/common'
 import { addIcons } from 'ionicons'
 import { chevronDownCircleOutline } from 'ionicons/icons'
 import { IonContent, IonIcon } from '@ionic/angular/standalone'
@@ -22,7 +21,7 @@ let uniqueID = 0
   selector: 'app-descriptive-input',
   templateUrl: 'descriptive-input.component.html',
   styleUrls: ['descriptive-input.component.scss'],
-  imports: [NgIf, IonContent, IonIcon]
+  imports: [IonContent, IonIcon]
 })
 export class DescriptiveInputComponent implements OnInit, OnChanges {
   @ViewChild('content', { static: false }) content: IonContent

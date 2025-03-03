@@ -5,17 +5,21 @@
   [class.content-matrix]="isMatrix"
 >
   <div class="header" dir="auto">
-    <p *ngIf="!isSectionHeaderHidden">{{ question.section_header }}</p>
-    <div
-      *ngIf="!isFieldLabelHidden"
-      class="field-container"
-      [class.field-container-matrix]="isMatrix"
-      dir="auto"
-    >
-      <h2 dir="auto">
-        {{ question.field_label }}
-      </h2>
-    </div>
+    @if (!isSectionHeaderHidden) {
+      <p>{{ question.section_header }}</p>
+    }
+
+    @if (!isFieldLabelHidden) {
+      <div
+        class="field-container"
+        [class.field-container-matrix]="isMatrix"
+        dir="auto"
+      >
+        <h2 dir="auto">
+          {{ question.field_label }}
+        </h2>
+      </div>
+    }
   </div>
   <div
     #input
@@ -23,13 +27,13 @@
     [class.input-scroll]="isScrollable"
     (scroll)="onScroll($event)"
   >
-    <ng-container *ngIf="isLoading">
+    @if (isLoading) {
       <div class="spinner-container">
         <ion-spinner name="dots" color="light"></ion-spinner>
       </div>
-    </ng-container>
+    }
+    @if (!isLoading && inputEl) {
     <div
-      *ngIf="!isLoading && inputEl"
       [style.height.px]="
         isAutoHeight
           ? 'auto'
@@ -37,140 +41,160 @@
             inputEl.nativeElement.previousSibling.offsetHeight -
             margin
       "
-      [ngSwitch]="question.field_type"
     >
-      <app-radio-input
-        *ngSwitchCase="'radio'"
-        [responses]="question.select_choices_or_calculations"
-        (valueChange)="emitAnswer($event)"
-      >
-      </app-radio-input>
+      @switch (question.field_type) {
+        @case ('radio') {
+          <app-radio-input
+            [responses]="question.select_choices_or_calculations"
+            (valueChange)="emitAnswer($event)"
+          >
+          </app-radio-input>
+        }
 
-      <app-checkbox-input
-        *ngSwitchCase="'checkbox'"
-        [responses]="question.select_choices_or_calculations"
-        (valueChange)="emitAnswer($event)"
-      >
-      </app-checkbox-input>
+        @case ('checkbox') {
+          <app-checkbox-input
+            [responses]="question.select_choices_or_calculations"
+            (valueChange)="emitAnswer($event)"
+          >
+          </app-checkbox-input>
+        }
 
-      <app-health-input
-        *ngSwitchCase="'healthkit'"
-        [responses]="question.select_choices_or_calculations"
-        [health_question]="question"
-        [currentlyShown]="currentlyShown"
-        [refTimestamp]="task.timestamp"
-        (valueChange)="emitAnswer($event)"
-      >
-      </app-health-input>
+        @case ('healthkit') {
+          <app-health-input
+            [responses]="question.select_choices_or_calculations"
+            [health_question]="question"
+            [currentlyShown]="currentlyShown"
+            [refTimestamp]="task.timestamp"
+            (valueChange)="emitAnswer($event)"
+          >
+          </app-health-input>
+        }
 
-      <app-range-input
-        *ngSwitchCase="'range'"
-        [min]="question.range.min"
-        [max]="question.range.max"
-        [labelLeft]="question.range.labelLeft"
-        [labelRight]="question.range.labelRight"
-        (valueChange)="emitAnswer($event)"
-      >
-      </app-range-input>
+        @case ('range') {
+          <app-range-input
+            [min]="question.range.min"
+            [max]="question.range.max"
+            [labelLeft]="question.range.labelLeft"
+            [labelRight]="question.range.labelRight"
+            (valueChange)="emitAnswer($event)"
+          >
+          </app-range-input>
+        }
 
-      <app-range-info-input
-        *ngSwitchCase="'range-info'"
-        [min]="question.range.min"
-        [max]="question.range.max"
-        [responses]="question.select_choices_or_calculations"
-        (valueChange)="emitAnswer($event)"
-      >
-      </app-range-info-input>
+        @case ('range-info') {
+          <app-range-info-input
+            [min]="question.range.min"
+            [max]="question.range.max"
+            [responses]="question.select_choices_or_calculations"
+            (valueChange)="emitAnswer($event)"
+          >
+          </app-range-info-input>
+        }
 
-      <app-slider-input
-        *ngSwitchCase="'slider'"
-        [min]="question.range.min"
-        [max]="question.range.max"
-        [step]="question.range.step"
-        [labelLeft]="question.range.labelLeft"
-        [labelRight]="question.range.labelRight"
-        (valueChange)="emitAnswer($event)"
-      >
-      </app-slider-input>
+        @case ('slider') {
+          <app-slider-input
+            [min]="question.range.min"
+            [max]="question.range.max"
+            [step]="question.range.step"
+            [labelLeft]="question.range.labelLeft"
+            [labelRight]="question.range.labelRight"
+            (valueChange)="emitAnswer($event)"
+          >
+          </app-slider-input>
+        }
 
-      <app-info-screen
-        *ngSwitchCase="'info'"
-        [sections]="question.select_choices_or_calculations"
-        [hasFieldLabel]="question.field_label.length > 0"
-        [image]="question.field_annotation?.image"
-        (valueChange)="emitAnswer($event)"
-        [currentlyShown]="currentlyShown"
-      >
-      </app-info-screen>
+        @case ('info') {
+          <app-info-screen
+            [sections]="question.select_choices_or_calculations"
+            [hasFieldLabel]="question.field_label.length > 0"
+            [image]="question.field_annotation?.image"
+            (valueChange)="emitAnswer($event)"
+            [currentlyShown]="currentlyShown"
+          >
+          </app-info-screen>
+        }
 
-      <app-audio-input
-        *ngSwitchCase="'audio'"
-        [text]="question.field_label"
-        [currentlyShown]="currentlyShown"
-        (valueChange)="emitAnswer($event)"
-        (onRecordStart)="onAudioRecordStart($event)"
-      >
-      </app-audio-input>
+        @case ('audio') {
+          <app-audio-input
+            [text]="question.field_label"
+            [currentlyShown]="currentlyShown"
+            (valueChange)="emitAnswer($event)"
+            (onRecordStart)="onAudioRecordStart($event)"
+          >
+          </app-audio-input>
+        }
 
-      <app-timed-test
-        *ngSwitchCase="'timed'"
-        [image]="question.field_annotation.image"
-        [timer]="question.field_annotation.timer"
-        [currentlyShown]="currentlyShown"
-        (valueChange)="emitAnswer($event)"
-      >
-      </app-timed-test>
+        @case ('timed') {
+          <app-timed-test
+            [image]="question.field_annotation.image"
+            [timer]="question.field_annotation.timer"
+            [currentlyShown]="currentlyShown"
+            (valueChange)="emitAnswer($event)"
+          >
+          </app-timed-test>
+        }
 
-      <app-text-input
-        *ngSwitchCase="'text'"
-        (valueChange)="emitAnswer($event)"
-        (keyboardEvent)="onKeyboardEvent($event)"
-        [type]="question.text_validation_type_or_show_slider_number"
-        [currentlyShown]="currentlyShown"
-      ></app-text-input>
+        @case ('text') {
+          <app-text-input
+            (valueChange)="emitAnswer($event)"
+            (keyboardEvent)="onKeyboardEvent($event)"
+            [type]="question.text_validation_type_or_show_slider_number"
+            [currentlyShown]="currentlyShown"
+          ></app-text-input>
+        }
 
-      <app-radio-input
-        *ngSwitchCase="'yesno'"
-        [responses]="defaultYesNoResponse"
-        (valueChange)="emitAnswer($event)"
-      >
-      </app-radio-input>
+        @case ('yesno') {
+          <app-radio-input
+            [responses]="defaultYesNoResponse"
+            (valueChange)="emitAnswer($event)"
+          >
+          </app-radio-input>
+        }
 
-      <app-descriptive-input
-        *ngSwitchCase="'descriptive'"
-        [text]="question.field_label"
-        (valueChange)="emitAnswer($event)"
-        [currentlyShown]="currentlyShown"
-      >
-      </app-descriptive-input>
+        @case ('descriptive') {
+          <app-descriptive-input
+            [text]="question.field_label"
+            (valueChange)="emitAnswer($event)"
+            [currentlyShown]="currentlyShown"
+          >
+          </app-descriptive-input>
+        }
 
-      <app-matrix-radio-input
-        *ngSwitchCase="'matrix-radio'"
-        [responses]="question.select_choices_or_calculations"
-        [currentlyShown]="currentlyShown"
-        [previouslyShown]="previouslyShown"
-        (valueChange)="emitAnswer($event)"
-      >
-      </app-matrix-radio-input>
+        @case ('matrix-radio') {
+          <app-matrix-radio-input
+            [responses]="question.select_choices_or_calculations"
+            [currentlyShown]="currentlyShown"
+            [previouslyShown]="previouslyShown"
+            (valueChange)="emitAnswer($event)"
+          >
+          </app-matrix-radio-input>
+        }
 
-      <app-web-input
-        *ngSwitchCase="'web'"
-        [text]="question.field_label"
-        (valueChange)="emitAnswer($event)"
-        [currentlyShown]="currentlyShown"
-        [type]="question.field_annotation"
-      >
-      </app-web-input>
+        @case ('web') {
+          <app-web-input
+            [text]="question.field_label"
+            (valueChange)="emitAnswer($event)"
+            [currentlyShown]="currentlyShown"
+            [type]="question.field_annotation"
+          >
+          </app-web-input>
+        }
 
-      <app-notes-input
-        *ngSwitchCase="'notes'"
-        (valueChange)="emitAnswer($event)"
-        (keyboardEvent)="onKeyboardEvent($event)"
-        [currentlyShown]="currentlyShown"
-      ></app-notes-input>
+        @case ('notes') {
+          <app-notes-input
+            (valueChange)="emitAnswer($event)"
+            (keyboardEvent)="onKeyboardEvent($event)"
+            [currentlyShown]="currentlyShown"
+          ></app-notes-input>
+        }
+      }
     </div>
+    }
   </div>
-  <div class="arrow-icon" *ngIf="showScrollButton" (click)="scrollDown()">
-    <ion-icon name="chevron-down-outline"></ion-icon>
-  </div>
+
+  @if (showScrollButton) {
+    <div class="arrow-icon" (click)="scrollDown()">
+      <ion-icon name="chevron-down-outline"></ion-icon>
+    </div>
+  }
 </div>

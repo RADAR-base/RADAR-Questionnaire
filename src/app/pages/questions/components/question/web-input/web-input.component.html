@@ -1,6 +1,8 @@
 <ion-content class="content" #content [scrollY]="true">
   <div class="items">
-    <ion-label *ngIf="!inputValid">Please enter a valid NHS number.</ion-label>
+    @if (!inputValid) {
+      <ion-label>Please enter a valid NHS number.</ion-label>
+    }
     <ion-item color="none" class="input">
       <ion-input
         type="text"

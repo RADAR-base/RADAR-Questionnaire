@@ -1,11 +1,13 @@
 <ion-radio-group (ionChange)="onInputChange($event)">
   <ion-row>
-    <ion-col *ngFor="let item of items; let i = index">
+    @for (item of items; track item.value) {
+    <ion-col>
       <ion-item color="none" lines="none" class="item-md" [class.checked]="selected === item.value">
         <ion-radio [value]="item.value">
           <span class="ion-text-wrap">{{ item.response }}</span>
         </ion-radio>
       </ion-item>
     </ion-col>
+    }
   </ion-row>
 </ion-radio-group>

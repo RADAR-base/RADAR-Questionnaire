@@ -6,11 +6,12 @@
           {{ taskLabel }}
         </div>
         <div>
-          <img
-            class="extra-info-icon"
-            *ngIf="task.warning"
-            src="assets/imgs/warning.png"
-          />
+          @if (task.warning) {
+            <img
+              class="extra-info-icon"
+              src="assets/imgs/warning.png"
+            />
+          }
         </div>
       </div>
       <div class="task-info-right">
@@ -30,12 +31,15 @@
           </div>
         </div>
         <div class="status-div">
-          <div *ngIf="!task.completed">
-            <ion-icon name="radio-button-off" class="status"></ion-icon>
-          </div>
-          <div *ngIf="task.completed">
+          @if (!task.completed) {
+            <div>
+              <ion-icon name="radio-button-off" class="status"></ion-icon>
+            </div>
+          } @else {
+          <div>
             <ion-icon name="checkmark" class="status-checked"></ion-icon>
           </div>
+          }
         </div>
       </div>
     </ion-col>

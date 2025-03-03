@@ -20,8 +20,6 @@ import {
   Response
 } from '../../../../shared/models/question'
 import { Task } from '../../../../shared/models/task'
-import { NgIf, NgSwitch, NgSwitchCase } from '@angular/common'
-import { IonicModule } from '@ionic/angular'
 import { RadioInputComponent } from './radio-input/radio-input.component'
 import { CheckboxInputComponent } from './checkbox-input/checkbox-input.component'
 import { HealthInputComponent } from './health-input/health-input.component'
@@ -45,10 +43,9 @@ import { IonIcon, IonSpinner } from '@ionic/angular/standalone'
   templateUrl: 'question.component.html',
   styleUrls: ['question.component.scss'],
   imports: [
-    NgIf,
-    NgSwitch,
+    IonSpinner,
+    IonIcon,
     RadioInputComponent,
-    NgSwitchCase,
     CheckboxInputComponent,
     HealthInputComponent,
     RangeInputComponent,
@@ -61,9 +58,7 @@ import { IonIcon, IonSpinner } from '@ionic/angular/standalone'
     DescriptiveInputComponent,
     MatrixRadioInputComponent,
     WebInputComponent,
-    NotesInputComponent,
-    IonSpinner,
-    IonIcon
+    NotesInputComponent
   ]
 })
 export class QuestionComponent implements OnInit, OnChanges {

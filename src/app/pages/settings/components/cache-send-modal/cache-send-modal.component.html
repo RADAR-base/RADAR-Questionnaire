@@ -30,23 +30,31 @@
       </ion-segment-button>
     </ion-segment>
 
-    <div [ngSwitch]="segementShown">
-      <ng-container *ngIf="errors.length">
-        <div *ngSwitchCase="'error'" class="scroll-error">
-          <ion-list>
-            <ng-container *ngFor="let e of errors; let i = index">
-              <li *ngIf="i < 15">{{ e.message }}</li>
-            </ng-container>
-          </ion-list>
-        </div>
-      </ng-container>
-      <ng-container *ngIf="!errors.length">
-        <div *ngSwitchCase="'success'" class="scroll-success">
-          <button (click)="dismiss()" class="done-btn">
-            {{ 'BTN_DONE' | translate }}
-          </button>
-        </div>
-      </ng-container>
+    <div>
+      @switch (segementShown) {
+        @case ('error') {
+          @if (errors.length) {
+            <div class="scroll-error">
+              <ion-list>
+                @for (e of errors; track e; let i = $index) {
+                  @if (i < 15) {
+                    <li>{{ e.message }}</li>
+                  }
+                }
+              </ion-list>
+            </div>
+          }
+        }
+        @case ('success') {
+          @if (!errors.length) {
+            <div class="scroll-success">
+              <button (click)="dismiss()" class="done-btn">
+                {{ 'BTN_DONE' | translate }}
+              </button>
+            </div>
+          }
+        }
+      }
     </div>
   </div>
 </ion-card>

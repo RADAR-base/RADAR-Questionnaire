@@ -11,7 +11,7 @@
   <ion-row class="ion-align-items-center ion-align-items-end">
     <ion-col size="12" class="center-col ion-text-center">
       <div class="audio-bottom">
-        <ng-container *ngIf="buttonShown">
+        @if (buttonShown) {
           <ion-button
             ion-button
             class="bt bt--full"
@@ -22,7 +22,7 @@
           >
             {{ getRecordingButtonText() }}
           </ion-button>
-        </ng-container>
+        }
       </div>
     </ion-col>
   </ion-row>

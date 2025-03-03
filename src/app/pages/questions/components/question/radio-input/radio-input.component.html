@@ -1,10 +1,11 @@
 <ion-list>
   <ion-radio-group [(ngModel)]="selected">
-
-    <ion-item lines="none" *ngFor="let item of items" [class.checked]="selected === item.value">
-      <ion-radio [value]="item.value" (click)="onInputChange(item.value)">
-        <span class="ion-text-wrap">{{ item.response }}</span>
-      </ion-radio>
-    </ion-item>
+    @for (item of items; track item.value) {
+      <ion-item lines="none" [class.checked]="selected === item.value">
+        <ion-radio [value]="item.value" (click)="onInputChange(item.value)">
+          <span class="ion-text-wrap">{{ item.response }}</span>
+        </ion-radio>
+      </ion-item>
+    }
   </ion-radio-group>
 </ion-list>

@@ -40,18 +40,21 @@
     <ion-item-divider lines="full">{{
       'SETTINGS_LANGUAGE' | translate
       }}</ion-item-divider>
-    <ion-item lines="full" *ngIf="!showLoading">
-      <span class="info-value">
-        {{ settings.language?.label | translate }}
-      </span>
-      <span slot="end" (click)="showSelectLanguage()">
-        <ion-icon class="space-right" name="caret-down-outline"></ion-icon>
-        {{ 'BTN_SELECT' | translate }}
-      </span>
-    </ion-item>
-    <ion-item lines="full" *ngIf="showLoading">
-      <ion-spinner name="dots"></ion-spinner>
-    </ion-item>
+    @if (!showLoading) {
+      <ion-item lines="full">
+        <span class="info-value">
+          {{ settings.language?.label | translate }}
+        </span>
+        <span slot="end" (click)="showSelectLanguage()">
+          <ion-icon class="space-right" name="caret-down-outline"></ion-icon>
+          {{ 'BTN_SELECT' | translate }}
+        </span>
+      </ion-item>
+    } @else {
+      <ion-item lines="full">
+        <ion-spinner name="dots"></ion-spinner>
+      </ion-item>
+    }
   </ion-item-group>
 
   <ion-item-group>
@@ -91,7 +94,9 @@
     <ion-item-divider lines="full">
       {{ 'SETTINGS_VERSION' | translate }}
       <span>
-        <ion-icon name="repeat" (click)="reloadConfig()" *ngIf="!showLoading"></ion-icon>
+        @if (!showLoading) {
+          <ion-icon name="repeat" (click)="reloadConfig()"></ion-icon>
+        }
       </span>
     </ion-item-divider>
     <ion-item lines="full">
@@ -103,10 +108,13 @@
     <ion-item lines="full">
       {{ 'SETTINGS_SCHEDULE' | translate }}
       <span slot="end" class="info-value">
-        <div *ngIf="!showLoading">V{{ settings.scheduleVersion }}</div>
-        <div *ngIf="showLoading" class="spinner-center">
-          <ion-spinner name="dots"></ion-spinner>
-        </div>
+        @if (!showLoading) {
+          <div>V{{ settings.scheduleVersion }}</div>
+        } @else {
+          <div class="spinner-center">
+            <ion-spinner name="dots"></ion-spinner>
+          </div>
+        }
       </span>
     </ion-item>
   </ion-item-group>

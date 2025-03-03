@@ -9,7 +9,6 @@ import {
 } from '@angular/core'
 
 import { InfoItem, Section } from '../../../../../shared/models/question'
-import { NgForOf, NgIf } from '@angular/common'
 import { addIcons } from 'ionicons'
 import { chevronDownCircle } from 'ionicons/icons'
 import { IonContent, IonIcon } from '@ionic/angular/standalone'
@@ -20,7 +19,7 @@ let uniqueID = 0
   selector: 'app-info-screen',
   templateUrl: 'info-screen.component.html',
   styleUrls: ['info-screen.component.scss'],
-  imports: [NgIf, NgForOf, IonContent, IonIcon]
+  imports: [IonContent, IonIcon]
 })
 export class InfoScreenComponent implements OnInit, OnChanges {
   @ViewChild('content', { static: false }) content: IonContent

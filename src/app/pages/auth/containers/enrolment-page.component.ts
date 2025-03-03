@@ -27,7 +27,7 @@ import {
 import { AuthService } from '../services/auth.service'
 import { BehaviorSubject } from 'rxjs'
 import { TranslatePipe } from '../../../shared/pipes/translate/translate'
-import { AsyncPipe, NgIf, NgSwitch, NgSwitchCase } from '@angular/common'
+import { AsyncPipe } from '@angular/common'
 import { TokenFormComponent } from '../components/token-form/token-form.component'
 import { QRFormComponent } from '../components/qr-form/qr-form.component'
 import { addIcons } from 'ionicons'
@@ -41,17 +41,14 @@ import { IonButton, IonCard, IonContent, IonIcon, IonItem, IonSpinner } from '@i
   imports: [
     TranslatePipe,
     AsyncPipe,
-    NgIf,
-    TokenFormComponent,
-    NgSwitchCase,
-    NgSwitch,
-    QRFormComponent,
     IonContent,
     IonCard,
     IonSpinner,
     IonItem,
     IonIcon,
-    IonButton
+    IonButton,
+    TokenFormComponent,
+    QRFormComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

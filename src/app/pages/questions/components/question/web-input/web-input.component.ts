@@ -12,9 +12,7 @@ import { WebInputType } from 'src/app/shared/models/question'
 import { isValidNHSId } from 'src/app/shared/utilities/form-validators'
 import { Browser, OpenOptions } from '@capacitor/browser'
 import { Keyboard } from '@capacitor/keyboard'
-import { IonicModule } from '@ionic/angular'
 import { FormsModule } from '@angular/forms'
-import { NgIf } from '@angular/common'
 import { IonButton, IonContent, IonInput, IonItem, IonLabel } from '@ionic/angular/standalone'
 
 @Component({
@@ -23,7 +21,6 @@ import { IonButton, IonContent, IonInput, IonItem, IonLabel } from '@ionic/angul
   styleUrls: ['web-input.component.scss'],
   imports: [
     FormsModule,
-    NgIf,
     IonContent,
     IonLabel,
     IonItem,

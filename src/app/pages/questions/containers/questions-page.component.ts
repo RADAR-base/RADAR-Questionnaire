@@ -36,18 +36,7 @@ import { ToolbarComponent } from '../components/toolbar/toolbar.component'
   selector: 'app-page-questions',
   templateUrl: 'questions-page.component.html',
   styleUrls: ['questions-page.component.scss'],
-  imports: [
-    IonicModule,
-    IntroductionComponent,
-    NgForOf,
-    KeyValuePipe,
-    QuestionComponent,
-    NgIf,
-    FinishComponent,
-    AsyncPipe,
-    FinishAndLaunchComponent,
-    ToolbarComponent
-  ],
+  imports: [IonicModule, KeyValuePipe, AsyncPipe, IntroductionComponent, QuestionComponent, FinishComponent, FinishAndLaunchComponent, ToolbarComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class QuestionsPageComponent implements OnInit {
@@ -442,4 +431,6 @@ export class QuestionsPageComponent implements OnInit {
         })
     }
   }
+
+  protected readonly q = module
 }

@@ -8,8 +8,6 @@ import {
 
 import { LocalizationService } from '../../../../core/services/misc/localization.service'
 import { LocKeys } from '../../../../shared/enums/localisations'
-import { IonicModule } from '@ionic/angular'
-import { NgIf } from '@angular/common'
 import { addIcons } from 'ionicons'
 import { chevronBackOutline, chevronForwardOutline, closeCircle } from 'ionicons/icons'
 import { IonButton, IonIcon, IonTitle, IonToolbar } from '@ionic/angular/standalone'
@@ -18,7 +16,7 @@ import { IonButton, IonIcon, IonTitle, IonToolbar } from '@ionic/angular/standal
   selector: 'app-toolbar',
   templateUrl: 'toolbar.component.html',
   styleUrls: ['toolbar.component.scss'],
-  imports: [NgIf, IonTitle, IonToolbar, IonButton, IonIcon]
+  imports: [IonTitle, IonToolbar, IonButton, IonIcon]
 })
 export class ToolbarComponent implements OnInit, OnChanges {
   @Input()

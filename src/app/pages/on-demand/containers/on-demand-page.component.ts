@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core'
-import { IonicModule, NavController } from '@ionic/angular'
+import { NavController } from '@ionic/angular'
 
 import { Assessment } from '../../../shared/models/assessment'
 import { QuestionsPageComponent } from '../../questions/containers/questions-page.component'
 import { OnDemandService } from '../services/on-demand.service'
-import { AsyncPipe, NgForOf } from '@angular/common'
+import { AsyncPipe } from '@angular/common'
 import { IonBackButton, IonCol, IonContent, IonHeader, IonRow, IonTitle, IonToolbar } from '@ionic/angular/standalone'
 
 @Component({
@@ -13,7 +13,6 @@ import { IonBackButton, IonCol, IonContent, IonHeader, IonRow, IonTitle, IonTool
   styleUrls: ['on-demand-page.component.scss'],
   imports: [
     AsyncPipe,
-    NgForOf,
     IonHeader,
     IonToolbar,
     IonBackButton,

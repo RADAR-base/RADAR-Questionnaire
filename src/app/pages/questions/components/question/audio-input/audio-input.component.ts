@@ -6,7 +6,7 @@ import {
   OnInit,
   Output
 } from '@angular/core'
-import { IonicModule, NavController, Platform } from '@ionic/angular'
+import { NavController, Platform } from '@ionic/angular'
 import { Subscription } from 'rxjs'
 
 import { DefaultMaxAudioAttemptsAllowed } from '../../../../../../assets/data/defaultConfig'
@@ -16,14 +16,13 @@ import { UsageEventType } from '../../../../../shared/enums/events'
 import { LocKeys } from '../../../../../shared/enums/localisations'
 import { TranslatePipe } from '../../../../../shared/pipes/translate/translate'
 import { AudioRecordService } from '../../../services/audio-record.service'
-import { NgIf } from '@angular/common'
 import { IonButton, IonCol, IonGrid, IonRow } from '@ionic/angular/standalone'
 
 @Component({
   selector: 'app-audio-input',
   templateUrl: 'audio-input.component.html',
   styleUrls: ['audio-input.component.scss'],
-  imports: [NgIf, IonGrid, IonRow, IonCol, IonButton]
+  imports: [IonGrid, IonRow, IonCol, IonButton]
 })
 export class AudioInputComponent implements OnDestroy, OnInit {
   @Output()

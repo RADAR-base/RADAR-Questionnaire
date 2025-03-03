@@ -2,68 +2,69 @@
   <div class="wrapper">
     <div class="slide-flex">
       <swiper-container #swiper (swiperreachend)="onSlideFinish()">
-        <swiper-slide *ngIf="showIntroductionScreen" class="center">
-          <app-introduction
-            [title]="questionTitle"
-            [introduction]="introduction"
-            (start)="handleIntro($event)"
-          ></app-introduction>
-        </swiper-slide>
-        <ng-container>
-          <swiper-slide
-            *ngFor="
-              let item of groupedQuestions | keyvalue : asIsOrder;
-              let i = index
-            "
-          >
-            <div
-              class="q-container"
-              *ngFor="let question of item.value; let j = index"
-            >
-              <app-question
-                *ngIf="
-                  i >= currentQuestionGroupId - 10 &&
-                  i <= currentQuestionGroupId + 10 &&
-                  currentQuestionIndices.includes(j)
-                "
-                [question]="question"
-                [questionIndex]="i"
-                [task]="task"
-                [currentIndex]="currentQuestionGroupId"
-                [isSectionHeaderHidden]="j != currentQuestionIndices[0]"
-                [isMatrix]="item.value.length > 1"
-                (answer)="onAnswer($event)"
-                (nextAction)="nextAction($event)"
-              ></app-question>
-            </div>
+        @if (showIntroductionScreen) {
+          <swiper-slide class="center">
+            <app-introduction
+              [title]="questionTitle"
+              [introduction]="introduction"
+              (start)="handleIntro($event)"
+            ></app-introduction>
           </swiper-slide>
+        }
+        <ng-container>
+          @for (item of groupedQuestions | keyvalue : asIsOrder; let i = $index; track item.key) {
+            <swiper-slide>
+              @for (question of item.value; track question; let j = $index) {
+                <div
+                  class="q-container"
+                >
+                  @if (i >= currentQuestionGroupId - 10 &&
+                  i <= currentQuestionGroupId + 10 &&
+                  currentQuestionIndices.includes(j)) {
+                    <app-question
+                      [question]="question"
+                      [questionIndex]="i"
+                      [task]="task"
+                      [currentIndex]="currentQuestionGroupId"
+                      [isSectionHeaderHidden]="j != currentQuestionIndices[0]"
+                      [isMatrix]="item.value.length > 1"
+                      (answer)="onAnswer($event)"
+                      (nextAction)="nextAction($event)"
+                    ></app-question>
+                  }
+                </div>
+              }
+            </swiper-slide>
+          }
         </ng-container>
         <swiper-slide class="center">
-          <app-finish
-            *ngIf="showFinishScreen && !showFinishAndLaunchScreen"
-            [content]="endText"
-            [isLastTask]="isLastTask"
-            [requiresInClinicCompletion]="requiresInClinicCompletion"
-            [taskType]="taskType"
-            [isShown]="showFinishScreen"
-            [progressCount]="progressCount$ | async"
-            [questions]="questions"
-            [task]="task"
-            (exit)="handleFinish()"
-          ></app-finish>
-          <app-finish-and-launch
-            *ngIf="showFinishScreen && showFinishAndLaunchScreen"
-            [externalApp]="externalApp"
-            [task]="task"
-            [content]="endText"
-            [isLastTask]="isLastTask"
-            [requiresInClinicCompletion]="requiresInClinicCompletion"
-            [taskType]="taskType"
-            [showDoneButton]="showDoneButton"
-            [isShown]="showFinishScreen"
-            [progressCount]="progressCount$ | async"
-            (exit)="handleFinish()"
-          ></app-finish-and-launch>
+          @if (showFinishScreen && !showFinishAndLaunchScreen) {
+            <app-finish
+              [content]="endText"
+              [isLastTask]="isLastTask"
+              [requiresInClinicCompletion]="requiresInClinicCompletion"
+              [taskType]="taskType"
+              [isShown]="showFinishScreen"
+              [progressCount]="progressCount$ | async"
+              [questions]="questions"
+              [task]="task"
+              (exit)="handleFinish()"
+            ></app-finish>
+          }
+          @if (showFinishScreen && showFinishAndLaunchScreen) {
+            <app-finish-and-launch
+              [externalApp]="externalApp"
+              [task]="task"
+              [content]="endText"
+              [isLastTask]="isLastTask"
+              [requiresInClinicCompletion]="requiresInClinicCompletion"
+              [taskType]="taskType"
+              [showDoneButton]="showDoneButton"
+              [isShown]="showFinishScreen"
+              [progressCount]="progressCount$ | async"
+              (exit)="handleFinish()"
+            ></app-finish-and-launch>
+          }
         </swiper-slide>
       </swiper-container>
     </div>

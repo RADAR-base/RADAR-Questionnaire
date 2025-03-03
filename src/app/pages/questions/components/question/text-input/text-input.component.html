@@ -1,36 +1,31 @@
-<ng-container *ngIf="showDatePicker && currentlyShown">
-<!--  <ion-item (click)="openDatePicker()" color="none">-->
-<!--    <ion-input [(ngModel)]="selectedDate"> </ion-input>-->
-<!--    <ion-icon name="calendar" slot="end"></ion-icon>-->
-<!--  </ion-item>-->
+@if (showDatePicker && currentlyShown) {
   <ion-datetime-button color="primary" datetime="datetime" />
-
   <ion-modal [keepContentsMounted]="true">
     <ng-template>
       <ion-datetime class="date" presentation="date" id="datetime" />
     </ng-template>
   </ion-modal>
-</ng-container>
+}
 
-<ng-container *ngIf="showTimePicker && currentlyShown">
+@if (showTimePicker && currentlyShown) {
   <app-wheel-selector
     [values]="timePickerValues"
     [selection]="defaultTimePickerValue"
     [labels]="labels"
     (onSelect)="emitAnswer($event)"
   ></app-wheel-selector>
-</ng-container>
+}
 
-<ng-container *ngIf="showDurationPicker && currentlyShown">
+@if (showDurationPicker && currentlyShown) {
   <app-wheel-selector
     [values]="durationPickerValues"
     [selection]="defaultDurationPickerValue"
     [labels]="labels"
     (onSelect)="emitAnswer($event)"
   ></app-wheel-selector>
-</ng-container>
+}
 
-<ng-container *ngIf="showTextInput && currentlyShown">
+@if (showTextInput && currentlyShown) {
   <ion-item color="none" class="input">
     <ion-input
       type="text"
@@ -43,4 +38,4 @@
       (keyup)="emitKeyboardEvent($event.key)"
     ></ion-input>
   </ion-item>
-</ng-container>
+}

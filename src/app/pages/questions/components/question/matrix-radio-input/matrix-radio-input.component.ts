@@ -8,7 +8,6 @@ import {
 } from '@angular/core'
 
 import { Item, Response } from '../../../../../shared/models/question'
-import { NgForOf } from '@angular/common'
 import { IonCol, IonItem, IonRadio, IonRadioGroup, IonRow } from '@ionic/angular/standalone'
 
 let uniqueID = 0
@@ -17,7 +16,7 @@ let uniqueID = 0
   selector: 'app-matrix-radio-input',
   templateUrl: 'matrix-radio-input.component.html',
   styleUrls: ['matrix-radio-input.component.scss'],
-  imports: [NgForOf, IonRow, IonRadioGroup, IonCol, IonItem, IonRadio]
+  imports: [IonRow, IonRadioGroup, IonCol, IonItem, IonRadio]
 })
 export class MatrixRadioInputComponent implements OnInit, OnChanges {
   @Output()

@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core'
-import { IonicModule } from '@ionic/angular'
 import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
 import { addIcons } from 'ionicons'
 import { closeCircle } from 'ionicons/icons'

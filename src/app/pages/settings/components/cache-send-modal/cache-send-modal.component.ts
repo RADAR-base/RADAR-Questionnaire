@@ -1,7 +1,6 @@
 import { Component } from '@angular/core'
-import { IonicModule, ModalController, NavParams, Platform } from '@ionic/angular'
+import { ModalController, NavParams, Platform } from '@ionic/angular'
 import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
-import { NgForOf, NgIf, NgSwitch, NgSwitchCase } from '@angular/common'
 import { addIcons } from 'ionicons'
 import { alertCircleOutline, checkmarkCircle } from 'ionicons/icons'
 import {
@@ -21,10 +20,6 @@ import {
   styleUrls: ['cache-send-modal.component.scss'],
   imports: [
     TranslatePipe,
-    NgSwitch,
-    NgIf,
-    NgSwitchCase,
-    NgForOf,
     IonCard,
     IonCardHeader,
     IonIcon,

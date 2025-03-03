@@ -1,8 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
 
 import { Item } from '../../../../../shared/models/question'
-import { IonicModule } from '@ionic/angular'
-import { NgForOf } from '@angular/common'
 import { IonCol, IonLabel, IonRadio, IonRadioGroup, IonRow } from '@ionic/angular/standalone'
 
 let uniqueID = 0
@@ -11,7 +9,7 @@ let uniqueID = 0
   selector: 'app-range-input',
   templateUrl: 'range-input.component.html',
   styleUrls: ['range-input.component.scss'],
-  imports: [NgForOf, IonRadio, IonCol, IonRow, IonRadioGroup, IonLabel]
+  imports: [IonRadio, IonCol, IonRow, IonRadioGroup, IonLabel]
 })
 export class RangeInputComponent implements OnInit {
   @Output()

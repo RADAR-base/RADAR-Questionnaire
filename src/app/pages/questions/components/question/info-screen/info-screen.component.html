@@ -1,24 +1,32 @@
-<div class="info-card" *ngIf="sections">
-  <ion-content
-    class="content"
-    #content
-    [scrollY]="true"
-    [scrollEvents]="true"
-    (ionScroll)="onScroll($event)"
-  >
-    <div class="image-container">
-      <img *ngIf="image" src="{{ image }}" class="image" alt="info-screen" />
-    </div>
-    <div class="items">
-      <div *ngFor="let item of items">
-        <p class="info-heading" dir="auto">{{ item.heading }}</p>
-        <div class="info-content">
-          <h2 dir="auto">{{ item.content }}</h2>
-        </div>
+@if (sections) {
+  <div class="info-card">
+    <ion-content
+      class="content"
+      #content
+      [scrollY]="true"
+      [scrollEvents]="true"
+      (ionScroll)="onScroll($event)"
+    >
+      <div class="image-container">
+        @if (image) {
+          <img src="{{ image }}" class="image" alt="info-screen" />
+        }
       </div>
-    </div>
-  </ion-content>
-  <span *ngIf="showScrollButton" (click)="scrollDown()" class="icon">
-    <ion-icon name="chevron-down-circle"></ion-icon>
-  </span>
-</div>
+      <div class="items">
+        @for (item of items; track item.id) {
+          <div>
+            <p class="info-heading" dir="auto">{{ item.heading }}</p>
+            <div class="info-content">
+              <h2 dir="auto">{{ item.content }}</h2>
+            </div>
+          </div>
+        }
+      </div>
+    </ion-content>
+    @if (showScrollButton) {
+      <span (click)="scrollDown()" class="icon">
+        <ion-icon name="chevron-down-circle"></ion-icon>
+      </span>
+    }
+  </div>
+}

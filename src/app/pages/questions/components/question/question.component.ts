@@ -38,6 +38,7 @@ import { WebInputComponent } from './web-input/web-input.component'
 import { NotesInputComponent } from './notes-input/notes-input.component'
 import { addIcons } from 'ionicons'
 import { chevronDownOutline } from 'ionicons/icons'
+import { IonIcon, IonSpinner } from '@ionic/angular/standalone'
 
 @Component({
   selector: 'question',
@@ -45,7 +46,6 @@ import { chevronDownOutline } from 'ionicons/icons'
   styleUrls: ['question.component.scss'],
   imports: [
     NgIf,
-    IonicModule,
     NgSwitch,
     RadioInputComponent,
     NgSwitchCase,
@@ -61,7 +61,9 @@ import { chevronDownOutline } from 'ionicons/icons'
     DescriptiveInputComponent,
     MatrixRadioInputComponent,
     WebInputComponent,
-    NotesInputComponent
+    NotesInputComponent,
+    IonSpinner,
+    IonIcon
   ]
 })
 export class QuestionComponent implements OnInit, OnChanges {
@@ -135,7 +137,7 @@ export class QuestionComponent implements OnInit, OnChanges {
   ])
 
   constructor() {
-    addIcons({chevronDownOutline})
+    addIcons({ chevronDownOutline })
     this.value = null
   }
 

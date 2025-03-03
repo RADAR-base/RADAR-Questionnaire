@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
 import { Item, Response } from '../../../../../shared/models/question'
 import { IonicModule } from '@ionic/angular'
 import { NgForOf } from '@angular/common'
+import { IonItem, IonLabel, IonList, IonRadio, IonRadioGroup } from '@ionic/angular/standalone'
 
 let uniqueID = 0
 
@@ -10,7 +11,7 @@ let uniqueID = 0
   selector: 'radio-input',
   templateUrl: 'radio-input.component.html',
   styleUrls: ['radio-input.component.scss'],
-  imports: [IonicModule, NgForOf]
+  imports: [NgForOf, IonList, IonRadioGroup, IonItem, IonRadio, IonLabel]
 })
 export class RadioInputComponent implements OnInit {
   @Output()

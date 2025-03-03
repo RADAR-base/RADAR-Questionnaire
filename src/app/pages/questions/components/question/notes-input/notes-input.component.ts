@@ -6,12 +6,13 @@ import { LocalizationService } from '../../../../../core/services/misc/localizat
 import { KeyboardEventType } from '../../../../../shared/enums/events'
 import { TranslatePipe } from '../../../../../shared/pipes/translate/translate'
 import { FormsModule } from '@angular/forms'
+import { IonItem, IonTextarea } from '@ionic/angular/standalone'
 
 @Component({
   selector: 'notes-input',
   templateUrl: 'notes-input.component.html',
   styleUrls: ['notes-input.component.scss'],
-  imports: [IonicModule, TranslatePipe, FormsModule]
+  imports: [TranslatePipe, FormsModule, IonTextarea, IonItem]
 })
 export class NotesInputComponent implements OnInit {
   @Output()

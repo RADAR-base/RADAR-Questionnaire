@@ -15,19 +15,22 @@ import { KeyValuePipe, NgForOf, NgIf } from '@angular/common'
 import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
 import { MomentModule } from 'ngx-moment'
 import { TaskCalendarRowComponent } from '../task-calendar-row/task-calendar-row.component'
+import { IonCol, IonContent, IonRow } from '@ionic/angular/standalone'
 
 @Component({
   selector: 'task-calendar',
   templateUrl: 'task-calendar.component.html',
   styleUrls: ['task-calendar.component.scss'],
   imports: [
-    IonicModule,
     NgIf,
     KeyValuePipe,
     TranslatePipe,
     MomentModule,
     NgForOf,
-    TaskCalendarRowComponent
+    TaskCalendarRowComponent,
+    IonContent,
+    IonRow,
+    IonCol
   ]
 })
 export class TaskCalendarComponent implements OnChanges {

@@ -5,12 +5,23 @@ import { Assessment } from '../../../shared/models/assessment'
 import { ClinicalTasksService } from '../services/clinical-tasks.service'
 import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { NgForOf } from '@angular/common'
+import { IonBackButton, IonCol, IonContent, IonHeader, IonRow, IonTitle, IonToolbar } from '@ionic/angular/standalone'
 
 @Component({
   selector: 'page-on-demand',
   templateUrl: 'clinical-tasks-page.component.html',
   styleUrls: ['clinical-tasks-page.component.scss'],
-  imports: [IonicModule, TranslatePipe, NgForOf]
+  imports: [
+    TranslatePipe,
+    NgForOf,
+    IonHeader,
+    IonToolbar,
+    IonBackButton,
+    IonTitle,
+    IonContent,
+    IonRow,
+    IonCol
+  ]
 })
 export class ClinicalTasksPageComponent implements OnInit {
   scrollHeight: number = 500

@@ -12,12 +12,13 @@ import { IonicModule } from '@ionic/angular'
 import { NgIf } from '@angular/common'
 import { addIcons } from 'ionicons'
 import { chevronBackOutline, chevronForwardOutline, closeCircle } from 'ionicons/icons'
+import { IonButton, IonIcon, IonTitle, IonToolbar } from '@ionic/angular/standalone'
 
 @Component({
   selector: 'toolbar',
   templateUrl: 'toolbar.component.html',
   styleUrls: ['toolbar.component.scss'],
-  imports: [IonicModule, NgIf]
+  imports: [NgIf, IonTitle, IonToolbar, IonButton, IonIcon]
 })
 export class ToolbarComponent implements OnInit, OnChanges {
   @Input()
@@ -58,7 +59,7 @@ export class ToolbarComponent implements OnInit, OnChanges {
   progress: number
 
   constructor(private localization: LocalizationService) {
-    addIcons({chevronForwardOutline, chevronBackOutline, closeCircle})
+    addIcons({ chevronForwardOutline, chevronBackOutline, closeCircle })
   }
 
   ngOnInit() {

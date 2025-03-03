@@ -16,17 +16,22 @@ import { NgIf } from '@angular/common'
 import { WheelSelectorComponent } from '../../wheel-selector/wheel-selector.component'
 import { FormsModule } from '@angular/forms'
 import { TranslatePipe } from '../../../../../shared/pipes/translate/translate'
+import { IonDatetime, IonDatetimeButton, IonInput, IonItem, IonModal } from '@ionic/angular/standalone'
 
 @Component({
   selector: 'text-input',
   templateUrl: 'text-input.component.html',
   styleUrls: ['text-input.component.scss'],
   imports: [
-    IonicModule,
     NgIf,
     WheelSelectorComponent,
     FormsModule,
-    TranslatePipe
+    TranslatePipe,
+    IonDatetimeButton,
+    IonModal,
+    IonDatetime,
+    IonItem,
+    IonInput
   ]
 })
 export class TextInputComponent implements OnInit {

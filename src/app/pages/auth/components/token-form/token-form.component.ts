@@ -11,12 +11,20 @@ import { Capacitor } from '@capacitor/core'
 import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
 import { IonicModule } from '@ionic/angular'
 import { NgIf } from '@angular/common'
+import { IonButton, IonInput, IonItem } from '@ionic/angular/standalone'
 
 @Component({
   selector: 'token-form',
   templateUrl: 'token-form.component.html',
   styleUrls: ['./token-form.component.scss'],
-  imports: [ReactiveFormsModule, TranslatePipe, IonicModule, NgIf]
+  imports: [
+    ReactiveFormsModule,
+    TranslatePipe,
+    NgIf,
+    IonItem,
+    IonInput,
+    IonButton
+  ]
 })
 export class TokenFormComponent {
   @Input()

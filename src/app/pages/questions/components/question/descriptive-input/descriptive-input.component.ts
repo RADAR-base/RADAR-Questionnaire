@@ -8,13 +8,13 @@ import {
   ViewChild
 } from '@angular/core'
 import { DomSanitizer } from '@angular/platform-browser'
-import { IonContent, IonicModule } from '@ionic/angular'
 import DOMPurify from "dompurify";
 
 import { InfoItem } from '../../../../../shared/models/question'
 import { NgIf } from '@angular/common'
 import { addIcons } from 'ionicons'
 import { chevronDownCircleOutline } from 'ionicons/icons'
+import { IonContent, IonIcon } from '@ionic/angular/standalone'
 
 let uniqueID = 0
 
@@ -22,7 +22,7 @@ let uniqueID = 0
   selector: 'descriptive-input',
   templateUrl: 'descriptive-input.component.html',
   styleUrls: ['descriptive-input.component.scss'],
-  imports: [IonicModule, NgIf]
+  imports: [NgIf, IonContent, IonIcon]
 })
 export class DescriptiveInputComponent implements OnInit, OnChanges {
   @ViewChild('content', { static: false }) content: IonContent
@@ -45,7 +45,7 @@ export class DescriptiveInputComponent implements OnInit, OnChanges {
   HTML_ALLOWED_ATTR = ['allow', 'allowfullscreen', 'frameborder', 'scrolling']
 
   constructor(private sanitizer: DomSanitizer) {
-    addIcons({chevronDownCircleOutline})
+    addIcons({ chevronDownCircleOutline })
   }
 
   ngOnInit() {

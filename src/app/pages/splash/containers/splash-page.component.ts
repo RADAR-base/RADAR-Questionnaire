@@ -10,6 +10,7 @@ import { LocKeys } from '../../../shared/enums/localisations'
 import { EnrolmentPageComponent } from '../../auth/containers/enrolment-page.component'
 import { HomePageComponent } from '../../home/containers/home-page.component'
 import { SplashService } from '../services/splash.service'
+import { IonContent, IonSpinner } from '@ionic/angular/standalone'
 
 declare var window
 
@@ -17,7 +18,7 @@ declare var window
   selector: 'page-splash',
   templateUrl: 'splash-page.component.html',
   styleUrls: ['./splash-page.component.scss'],
-  imports: [IonicModule]
+  imports: [IonSpinner, IonContent]
 })
 export class SplashPageComponent {
   status = 'Checking enrolment...'

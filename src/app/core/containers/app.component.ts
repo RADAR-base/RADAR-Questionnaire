@@ -6,12 +6,13 @@ import { Capacitor } from '@capacitor/core'
 
 import { SplashPageComponent } from '../../pages/splash/containers/splash-page.component'
 import { TokenService } from '../services/token/token.service'
+import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone'
 
 @Component({
   selector: 'app-root',
   template: '<ion-app><ion-router-outlet></ion-router-outlet></ion-app>',
   styleUrls: ['app.component.scss'],
-  imports: [IonicModule]
+  imports: [IonApp, IonRouterOutlet]
 })
 export class AppComponent {
   rootPage = SplashPageComponent

@@ -32,20 +32,26 @@ import { TokenFormComponent } from '../components/token-form/token-form.componen
 import { QRFormComponent } from '../components/qr-form/qr-form.component'
 import { addIcons } from 'ionicons'
 import { caretDownOutline } from 'ionicons/icons'
+import { IonButton, IonCard, IonContent, IonIcon, IonItem, IonSpinner } from '@ionic/angular/standalone'
 
 @Component({
   selector: 'page-enrolment',
   templateUrl: 'enrolment-page.component.html',
   styleUrls: ['./enrolment-page.component.scss'],
   imports: [
-    IonicModule,
     TranslatePipe,
     AsyncPipe,
     NgIf,
     TokenFormComponent,
     NgSwitchCase,
     NgSwitch,
-    QRFormComponent
+    QRFormComponent,
+    IonContent,
+    IonCard,
+    IonSpinner,
+    IonItem,
+    IonIcon,
+    IonButton
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
@@ -71,7 +77,7 @@ export class EnrolmentPageComponent {
     private logger: LogService,
     private cdr: ChangeDetectorRef
   ) {
-    addIcons({caretDownOutline})
+    addIcons({ caretDownOutline })
     this.initializeDeepLinking()
     this.init()
   }

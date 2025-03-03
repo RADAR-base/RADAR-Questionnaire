@@ -20,6 +20,16 @@ import { TaskCalendarComponent } from '../components/task-calendar/task-calendar
 import { TranslatePipe } from '../../../shared/pipes/translate/translate'
 import { addIcons } from 'ionicons'
 import { add, settings } from 'ionicons/icons'
+import {
+  IonButton,
+  IonContent,
+  IonFab,
+  IonFabButton, IonFabList,
+  IonHeader,
+  IonIcon, IonSpinner,
+  IonTitle,
+  IonToolbar
+} from '@ionic/angular/standalone'
 
 @Component({
   selector: 'page-home',
@@ -27,14 +37,23 @@ import { add, settings } from 'ionicons/icons'
   animations: HomePageAnimations,
   styleUrls: ['./home-page.component.scss'],
   imports: [
-    IonicModule,
     AsyncPipe,
     TaskProgressComponent,
     NgIf,
     TickerBarComponent,
     TaskInfoComponent,
     TaskCalendarComponent,
-    TranslatePipe
+    TranslatePipe,
+    IonButton,
+    IonHeader,
+    IonToolbar,
+    IonIcon,
+    IonContent,
+    IonTitle,
+    IonFab,
+    IonFabButton,
+    IonFabList,
+    IonSpinner
   ]
 })
 export class HomePageComponent implements OnInit, OnDestroy {
@@ -75,7 +94,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
     private platform: Platform,
     private usage: UsageService
   ) {
-    addIcons({settings, add})
+    addIcons({ settings, add })
     this.changeDetectionListener =
       this.tasksService.changeDetectionEmitter.subscribe(() => {
         console.log('Changes to task service detected..')

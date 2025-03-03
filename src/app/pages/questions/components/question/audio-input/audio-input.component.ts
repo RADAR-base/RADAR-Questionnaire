@@ -17,12 +17,13 @@ import { LocKeys } from '../../../../../shared/enums/localisations'
 import { TranslatePipe } from '../../../../../shared/pipes/translate/translate'
 import { AudioRecordService } from '../../../services/audio-record.service'
 import { NgIf } from '@angular/common'
+import { IonButton, IonCol, IonGrid, IonRow } from '@ionic/angular/standalone'
 
 @Component({
   selector: 'audio-input',
   templateUrl: 'audio-input.component.html',
   styleUrls: ['audio-input.component.scss'],
-  imports: [IonicModule, NgIf]
+  imports: [NgIf, IonGrid, IonRow, IonCol, IonButton]
 })
 export class AudioInputComponent implements OnDestroy, OnInit {
   @Output()

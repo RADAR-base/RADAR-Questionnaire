@@ -7,12 +7,12 @@ import {
   Output,
   ViewChild
 } from '@angular/core'
-import { IonContent, IonicModule } from '@ionic/angular'
 
 import { InfoItem, Section } from '../../../../../shared/models/question'
 import { NgForOf, NgIf } from '@angular/common'
 import { addIcons } from 'ionicons'
 import { chevronDownCircle } from 'ionicons/icons'
+import { IonContent, IonIcon } from '@ionic/angular/standalone'
 
 let uniqueID = 0
 
@@ -20,7 +20,7 @@ let uniqueID = 0
   selector: 'info-screen',
   templateUrl: 'info-screen.component.html',
   styleUrls: ['info-screen.component.scss'],
-  imports: [IonicModule, NgIf, NgForOf]
+  imports: [NgIf, NgForOf, IonContent, IonIcon]
 })
 export class InfoScreenComponent implements OnInit, OnChanges {
   @ViewChild('content', { static: false }) content: IonContent
@@ -44,7 +44,7 @@ export class InfoScreenComponent implements OnInit, OnChanges {
   showScrollButton: boolean
 
   constructor() {
-    addIcons({chevronDownCircle})
+    addIcons({ chevronDownCircle })
   }
 
   ngOnInit() {

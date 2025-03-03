@@ -5,12 +5,13 @@ import { UsageEventType } from 'src/app/shared/enums/events'
 import { IonicModule } from '@ionic/angular'
 import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
 import { NgIf } from '@angular/common'
+import { IonButton } from '@ionic/angular/standalone'
 
 @Component({
   selector: 'qr-form',
   templateUrl: 'qr-form.component.html',
   styleUrls: ['qr-form.component.scss'],
-  imports: [IonicModule, TranslatePipe, NgIf]
+  imports: [TranslatePipe, NgIf, IonButton]
 })
 export class QRFormComponent {
   @Input()

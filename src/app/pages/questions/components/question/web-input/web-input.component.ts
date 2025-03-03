@@ -15,12 +15,21 @@ import { Keyboard } from '@capacitor/keyboard'
 import { IonicModule } from '@ionic/angular'
 import { FormsModule } from '@angular/forms'
 import { NgIf } from '@angular/common'
+import { IonButton, IonContent, IonInput, IonItem, IonLabel } from '@ionic/angular/standalone'
 
 @Component({
   selector: 'web-input',
   templateUrl: 'web-input.component.html',
   styleUrls: ['web-input.component.scss'],
-  imports: [IonicModule, FormsModule, NgIf]
+  imports: [
+    FormsModule,
+    NgIf,
+    IonContent,
+    IonLabel,
+    IonItem,
+    IonInput,
+    IonButton
+  ]
 })
 export class WebInputComponent implements OnInit {
   @Output()

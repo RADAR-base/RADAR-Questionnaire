@@ -26,12 +26,39 @@ import { MomentModule } from 'ngx-moment'
 import { NgIf } from '@angular/common'
 import { addIcons } from 'ionicons'
 import { caretDownOutline, repeat } from 'ionicons/icons'
+import {
+  IonBackButton, IonButton, IonButtons,
+  IonContent, IonFooter,
+  IonHeader, IonIcon, IonItem,
+  IonItemDivider,
+  IonItemGroup, IonLabel, IonSpinner,
+  IonTitle,
+  IonToolbar
+} from '@ionic/angular/standalone'
 
 @Component({
   selector: 'page-settings',
   templateUrl: 'settings-page.component.html',
   styleUrls: ['settings-page.component.scss'],
-  imports: [IonicModule, TranslatePipe, MomentModule, NgIf]
+  imports: [
+    TranslatePipe,
+    MomentModule,
+    NgIf,
+    IonHeader,
+    IonBackButton,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonItemGroup,
+    IonItemDivider,
+    IonItem,
+    IonIcon,
+    IonSpinner,
+    IonLabel,
+    IonFooter,
+    IonButtons,
+    IonButton
+  ]
 })
 export class SettingsPageComponent {
   settings: Settings = {}
@@ -61,7 +88,7 @@ export class SettingsPageComponent {
     public modalCtrl: ModalController,
     private router: Router
   ) {
-    addIcons({caretDownOutline, repeat})
+    addIcons({ caretDownOutline, repeat })
   }
 
   ionViewWillEnter() {

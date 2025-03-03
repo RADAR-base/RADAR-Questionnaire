@@ -8,13 +8,14 @@ import { RoundProgressComponent } from 'angular-svg-round-progressbar'
 import { IonicModule } from '@ionic/angular'
 import { addIcons } from 'ionicons'
 import { checkmark } from 'ionicons/icons'
+import { IonIcon } from '@ionic/angular/standalone'
 
 @Component({
   selector: 'task-progress',
   templateUrl: 'task-progress.component.html',
   animations: TaskProgressAnimations,
   styleUrls: ['./task-progress.component.scss'],
-  imports: [NgIf, TranslatePipe, RoundProgressComponent, IonicModule]
+  imports: [NgIf, TranslatePipe, RoundProgressComponent, IonIcon]
 })
 export class TaskProgressComponent implements OnChanges {
   @Input()
@@ -33,7 +34,7 @@ export class TaskProgressComponent implements OnChanges {
   complete = false
   showFireworks: boolean = false
   constructor() {
-    addIcons({checkmark})
+    addIcons({ checkmark })
   }
   ngOnChanges() {
     this.updateProgress()

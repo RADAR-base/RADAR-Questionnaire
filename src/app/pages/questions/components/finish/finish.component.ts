@@ -15,12 +15,21 @@ import { getMinutes } from 'src/app/shared/utilities/time'
 import { IonicModule } from '@ionic/angular'
 import { NgIf, NgStyle } from '@angular/common'
 import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
+import { IonButton, IonItem, IonLabel, IonToggle } from '@ionic/angular/standalone'
 
 @Component({
   selector: 'finish',
   templateUrl: 'finish.component.html',
   styleUrls: ['finish.component.scss'],
-  imports: [IonicModule, NgIf, TranslatePipe, NgStyle]
+  imports: [
+    NgIf,
+    TranslatePipe,
+    NgStyle,
+    IonItem,
+    IonLabel,
+    IonToggle,
+    IonButton
+  ]
 })
 export class FinishComponent implements OnChanges {
   @Input()

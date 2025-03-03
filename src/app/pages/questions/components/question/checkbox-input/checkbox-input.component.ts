@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
 
 import { Item, Response } from '../../../../../shared/models/question'
 import { NgForOf } from '@angular/common'
-import { IonCheckbox, IonItem, IonLabel, IonList } from '@ionic/angular/standalone'
+import { IonCheckbox, IonItem, IonList } from '@ionic/angular/standalone'
 
 let uniqueID = 0
 
@@ -10,7 +10,7 @@ let uniqueID = 0
   selector: 'app-checkbox-input',
   templateUrl: 'checkbox-input.component.html',
   styleUrls: ['checkbox-input.component.scss'],
-  imports: [NgForOf, IonItem, IonList, IonCheckbox, IonLabel]
+  imports: [NgForOf, IonItem, IonList, IonCheckbox]
 })
 export class CheckboxInputComponent implements OnInit {
   @Output()

@@ -18,6 +18,7 @@ import { getSeconds } from '../../../shared/utilities/time'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
+import { DefaultManagementPortalURI, DefaultRefreshTokenURI } from 'www/assets/data/defaultConfig'
 
 @Injectable({
   providedIn: 'root'
@@ -68,7 +69,13 @@ export class TokenService {
   getTokenEndpoint() {
     return this.storage
       .get(this.TOKEN_STORE.TOKEN_ENDPOINT)
-      .then(uri => (uri ? uri : DefaultTokenEndPoint))
+      .then(uri => uri ? uri : this.getMPTokenEndpoint())
+  }
+
+  getMPTokenEndpoint() {
+    return this.getURI().then(baseUrl =>
+      `${baseUrl}${DefaultManagementPortalURI}${DefaultRefreshTokenURI}`
+    )
   }
 
   setTokens(tokens) {

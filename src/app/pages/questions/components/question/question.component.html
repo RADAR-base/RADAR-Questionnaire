@@ -39,21 +39,21 @@
       "
       [ngSwitch]="question.field_type"
     >
-      <radio-input
+      <app-radio-input
         *ngSwitchCase="'radio'"
         [responses]="question.select_choices_or_calculations"
         (valueChange)="emitAnswer($event)"
       >
-      </radio-input>
+      </app-radio-input>
 
-      <checkbox-input
+      <app-checkbox-input
         *ngSwitchCase="'checkbox'"
         [responses]="question.select_choices_or_calculations"
         (valueChange)="emitAnswer($event)"
       >
-      </checkbox-input>
+      </app-checkbox-input>
 
-      <health-input
+      <app-health-input
         *ngSwitchCase="'healthkit'"
         [responses]="question.select_choices_or_calculations"
         [health_question]="question"
@@ -61,9 +61,9 @@
         [refTimestamp]="task.timestamp"
         (valueChange)="emitAnswer($event)"
       >
-      </health-input>
+      </app-health-input>
 
-      <range-input
+      <app-range-input
         *ngSwitchCase="'range'"
         [min]="question.range.min"
         [max]="question.range.max"
@@ -71,18 +71,18 @@
         [labelRight]="question.range.labelRight"
         (valueChange)="emitAnswer($event)"
       >
-      </range-input>
+      </app-range-input>
 
-      <range-info-input
+      <app-range-info-input
         *ngSwitchCase="'range-info'"
         [min]="question.range.min"
         [max]="question.range.max"
         [responses]="question.select_choices_or_calculations"
         (valueChange)="emitAnswer($event)"
       >
-      </range-info-input>
+      </app-range-info-input>
 
-      <slider-input
+      <app-slider-input
         *ngSwitchCase="'slider'"
         [min]="question.range.min"
         [max]="question.range.max"
@@ -91,9 +91,9 @@
         [labelRight]="question.range.labelRight"
         (valueChange)="emitAnswer($event)"
       >
-      </slider-input>
+      </app-slider-input>
 
-      <info-screen
+      <app-info-screen
         *ngSwitchCase="'info'"
         [sections]="question.select_choices_or_calculations"
         [hasFieldLabel]="question.field_label.length > 0"
@@ -101,73 +101,73 @@
         (valueChange)="emitAnswer($event)"
         [currentlyShown]="currentlyShown"
       >
-      </info-screen>
+      </app-info-screen>
 
-      <audio-input
+      <app-audio-input
         *ngSwitchCase="'audio'"
         [text]="question.field_label"
         [currentlyShown]="currentlyShown"
         (valueChange)="emitAnswer($event)"
         (onRecordStart)="onAudioRecordStart($event)"
       >
-      </audio-input>
+      </app-audio-input>
 
-      <timed-test
+      <app-timed-test
         *ngSwitchCase="'timed'"
         [image]="question.field_annotation.image"
         [timer]="question.field_annotation.timer"
         [currentlyShown]="currentlyShown"
         (valueChange)="emitAnswer($event)"
       >
-      </timed-test>
+      </app-timed-test>
 
-      <text-input
+      <app-text-input
         *ngSwitchCase="'text'"
         (valueChange)="emitAnswer($event)"
         (keyboardEvent)="onKeyboardEvent($event)"
         [type]="question.text_validation_type_or_show_slider_number"
         [currentlyShown]="currentlyShown"
-      ></text-input>
+      ></app-text-input>
 
-      <radio-input
+      <app-radio-input
         *ngSwitchCase="'yesno'"
         [responses]="defaultYesNoResponse"
         (valueChange)="emitAnswer($event)"
       >
-      </radio-input>
+      </app-radio-input>
 
-      <descriptive-input
+      <app-descriptive-input
         *ngSwitchCase="'descriptive'"
         [text]="question.field_label"
         (valueChange)="emitAnswer($event)"
         [currentlyShown]="currentlyShown"
       >
-      </descriptive-input>
+      </app-descriptive-input>
 
-      <matrix-radio-input
+      <app-matrix-radio-input
         *ngSwitchCase="'matrix-radio'"
         [responses]="question.select_choices_or_calculations"
         [currentlyShown]="currentlyShown"
         [previouslyShown]="previouslyShown"
         (valueChange)="emitAnswer($event)"
       >
-      </matrix-radio-input>
+      </app-matrix-radio-input>
 
-      <web-input
+      <app-web-input
         *ngSwitchCase="'web'"
         [text]="question.field_label"
         (valueChange)="emitAnswer($event)"
         [currentlyShown]="currentlyShown"
         [type]="question.field_annotation"
       >
-      </web-input>
+      </app-web-input>
 
-      <notes-input
+      <app-notes-input
         *ngSwitchCase="'notes'"
         (valueChange)="emitAnswer($event)"
         (keyboardEvent)="onKeyboardEvent($event)"
         [currentlyShown]="currentlyShown"
-      ></notes-input>
+      ></app-notes-input>
     </div>
   </div>
   <div class="arrow-icon" *ngIf="showScrollButton" (click)="scrollDown()">

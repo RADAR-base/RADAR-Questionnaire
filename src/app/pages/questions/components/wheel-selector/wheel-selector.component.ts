@@ -15,7 +15,7 @@ import { IonicModule } from '@ionic/angular'
 import { NgForOf } from '@angular/common'
 
 @Component({
-  selector: 'wheel-selector',
+  selector: 'app-wheel-selector',
   templateUrl: 'wheel-selector.component.html',
   styleUrls: ['wheel-selector.component.scss'],
   imports: [IonicModule, NgForOf]

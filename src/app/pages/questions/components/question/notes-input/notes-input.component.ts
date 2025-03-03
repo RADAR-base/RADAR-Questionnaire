@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms'
 import { IonItem, IonTextarea } from '@ionic/angular/standalone'
 
 @Component({
-  selector: 'notes-input',
+  selector: 'app-notes-input',
   templateUrl: 'notes-input.component.html',
   styleUrls: ['notes-input.component.scss'],
   imports: [TranslatePipe, FormsModule, IonTextarea, IonItem]

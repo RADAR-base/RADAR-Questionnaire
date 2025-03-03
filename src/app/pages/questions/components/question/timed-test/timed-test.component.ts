@@ -21,7 +21,7 @@ import {
 // const { App, BackgroundTask } = Plugins
 
 @Component({
-  selector: 'timed-test',
+  selector: 'app-timed-test',
   templateUrl: 'timed-test.component.html',
   styleUrls: ['timed-test.component.scss'],
 })

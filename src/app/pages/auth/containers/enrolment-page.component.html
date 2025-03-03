@@ -87,11 +87,11 @@
           <div class="text text-lg">{{ 'ENROL_REGISTRATION' | translate }}</div>
           <div [ngSwitch]="enrolmentMethod">
             <ng-container *ngSwitchCase="'token'">
-              <token-form [loading]="loading | async" (data)="authenticate($event)" (focus)="clearStatus()"
-                (errors)="handleError($event)"></token-form>
+              <app-token-form [loading]="loading | async" (data)="authenticate($event)" (focus)="clearStatus()"
+                (errors)="handleError($event)"></app-token-form>
             </ng-container>
             <ng-container *ngSwitchCase="'qr'">
-              <qr-form [loading]="loading | async" (data)="authenticate($event)"></qr-form>
+              <app-qr-form [loading]="loading | async" (data)="authenticate($event)"></app-qr-form>
             </ng-container>
           </div>
         </div>

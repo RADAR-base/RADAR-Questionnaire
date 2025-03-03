@@ -5,13 +5,12 @@ import { TaskProgressAnimations } from './task-progress.animation'
 import { NgIf } from '@angular/common'
 import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
 import { RoundProgressComponent } from 'angular-svg-round-progressbar'
-import { IonicModule } from '@ionic/angular'
 import { addIcons } from 'ionicons'
 import { checkmark } from 'ionicons/icons'
 import { IonIcon } from '@ionic/angular/standalone'
 
 @Component({
-  selector: 'task-progress',
+  selector: 'app-task-progress',
   templateUrl: 'task-progress.component.html',
   animations: TaskProgressAnimations,
   styleUrls: ['./task-progress.component.scss'],

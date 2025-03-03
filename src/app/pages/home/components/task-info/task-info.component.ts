@@ -8,7 +8,7 @@ import { NgIf } from '@angular/common'
 import { RoundProgressComponent } from 'angular-svg-round-progressbar'
 
 @Component({
-  selector: 'task-info',
+  selector: 'app-task-info',
   templateUrl: 'task-info.component.html',
   animations: TaskInfoAnimations,
   styleUrls: ['./task-info.component.scss'],

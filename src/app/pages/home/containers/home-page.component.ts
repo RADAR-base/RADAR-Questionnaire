@@ -32,7 +32,7 @@ import {
 } from '@ionic/angular/standalone'
 
 @Component({
-  selector: 'page-home',
+  selector: 'app-page-home',
   templateUrl: 'home-page.component.html',
   animations: HomePageAnimations,
   styleUrls: ['./home-page.component.scss'],

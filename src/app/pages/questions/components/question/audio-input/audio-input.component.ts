@@ -20,7 +20,7 @@ import { NgIf } from '@angular/common'
 import { IonButton, IonCol, IonGrid, IonRow } from '@ionic/angular/standalone'
 
 @Component({
-  selector: 'audio-input',
+  selector: 'app-audio-input',
   templateUrl: 'audio-input.component.html',
   styleUrls: ['audio-input.component.scss'],
   imports: [NgIf, IonGrid, IonRow, IonCol, IonButton]

@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms'
 import { IonLabel, IonRange } from '@ionic/angular/standalone'
 
 @Component({
-  selector: 'slider-input',
+  selector: 'app-slider-input',
   templateUrl: 'slider-input.component.html',
   styleUrls: ['slider-input.component.scss'],
   imports: [FormsModule, IonRange, IonLabel]

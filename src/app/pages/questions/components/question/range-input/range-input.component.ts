@@ -8,7 +8,7 @@ import { IonCol, IonLabel, IonRadio, IonRadioGroup, IonRow } from '@ionic/angula
 let uniqueID = 0
 
 @Component({
-  selector: 'range-input',
+  selector: 'app-range-input',
   templateUrl: 'range-input.component.html',
   styleUrls: ['range-input.component.scss'],
   imports: [NgForOf, IonRadio, IonCol, IonRow, IonRadioGroup, IonLabel]

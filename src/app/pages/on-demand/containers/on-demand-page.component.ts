@@ -8,7 +8,7 @@ import { AsyncPipe, NgForOf } from '@angular/common'
 import { IonBackButton, IonCol, IonContent, IonHeader, IonRow, IonTitle, IonToolbar } from '@ionic/angular/standalone'
 
 @Component({
-  selector: 'page-on-demand',
+  selector: 'app-page-on-demand',
   templateUrl: 'on-demand-page.component.html',
   styleUrls: ['on-demand-page.component.scss'],
   imports: [

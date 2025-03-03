@@ -2,14 +2,13 @@ import { Component, Input, OnInit } from '@angular/core'
 
 import { LocalizationService } from '../../../../core/services/misc/localization.service'
 import { Task } from '../../../../shared/models/task'
-import { IonicModule } from '@ionic/angular'
 import { NgIf } from '@angular/common'
 import { addIcons } from 'ionicons'
 import { radioButtonOff } from 'ionicons/icons'
 import { IonCol, IonIcon, IonRow } from '@ionic/angular/standalone'
 
 @Component({
-  selector: 'task-calendar-row',
+  selector: 'app-task-calendar-row',
   templateUrl: 'task-calendar-row.component.html',
   styleUrls: ['task-calendar-row.component.scss'],
   imports: [NgIf, IonRow, IonCol, IonIcon]

@@ -6,7 +6,7 @@ import { closeCircle } from 'ionicons/icons'
 import { IonButton, IonIcon, IonItem } from '@ionic/angular/standalone'
 
 @Component({
-  selector: 'introduction',
+  selector: 'app-introduction',
   templateUrl: 'introduction.component.html',
   styleUrls: ['introduction.component.scss'],
   imports: [TranslatePipe, IonItem, IonIcon, IonButton]

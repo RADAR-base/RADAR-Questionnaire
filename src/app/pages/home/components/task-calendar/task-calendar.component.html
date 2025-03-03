@@ -31,12 +31,12 @@
               </ion-row>
             </div>
           </div>
-          <task-calendar-row
+          <app-task-calendar-row
             *ngIf="task.showInCalendar"
             [task]="task"
             (click)="clicked(task)"
             [isTaskNameShown]="isTaskNameShown"
-          ></task-calendar-row>
+          ></app-task-calendar-row>
         </ng-container>
         <div
           class="current-time-div"

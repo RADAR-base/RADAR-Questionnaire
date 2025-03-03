@@ -8,7 +8,7 @@ import { NgIf } from '@angular/common'
 import { IonButton } from '@ionic/angular/standalone'
 
 @Component({
-  selector: 'qr-form',
+  selector: 'app-qr-form',
   templateUrl: 'qr-form.component.html',
   styleUrls: ['qr-form.component.scss'],
   imports: [TranslatePipe, NgIf, IonButton]

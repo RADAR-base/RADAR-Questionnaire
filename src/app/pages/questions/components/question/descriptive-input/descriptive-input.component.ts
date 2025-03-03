@@ -19,7 +19,7 @@ import { IonContent, IonIcon } from '@ionic/angular/standalone'
 let uniqueID = 0
 
 @Component({
-  selector: 'descriptive-input',
+  selector: 'app-descriptive-input',
   templateUrl: 'descriptive-input.component.html',
   styleUrls: ['descriptive-input.component.scss'],
   imports: [NgIf, IonContent, IonIcon]

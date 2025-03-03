@@ -33,7 +33,7 @@ import { FinishAndLaunchComponent } from '../components/finish-and-launch/finish
 import { ToolbarComponent } from '../components/toolbar/toolbar.component'
 
 @Component({
-  selector: 'page-questions',
+  selector: 'app-page-questions',
   templateUrl: 'questions-page.component.html',
   styleUrls: ['questions-page.component.scss'],
   imports: [

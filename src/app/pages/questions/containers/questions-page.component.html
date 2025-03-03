@@ -3,11 +3,11 @@
     <div class="slide-flex">
       <swiper-container #swiper (swiperreachend)="onSlideFinish()">
         <swiper-slide *ngIf="showIntroductionScreen" class="center">
-          <introduction
+          <app-introduction
             [title]="questionTitle"
             [introduction]="introduction"
             (start)="handleIntro($event)"
-          ></introduction>
+          ></app-introduction>
         </swiper-slide>
         <ng-container>
           <swiper-slide
@@ -20,7 +20,7 @@
               class="q-container"
               *ngFor="let question of item.value; let j = index"
             >
-              <question
+              <app-question
                 *ngIf="
                   i >= currentQuestionGroupId - 10 &&
                   i <= currentQuestionGroupId + 10 &&
@@ -34,12 +34,12 @@
                 [isMatrix]="item.value.length > 1"
                 (answer)="onAnswer($event)"
                 (nextAction)="nextAction($event)"
-              ></question>
+              ></app-question>
             </div>
           </swiper-slide>
         </ng-container>
         <swiper-slide class="center">
-          <finish
+          <app-finish
             *ngIf="showFinishScreen && !showFinishAndLaunchScreen"
             [content]="endText"
             [isLastTask]="isLastTask"
@@ -50,8 +50,8 @@
             [questions]="questions"
             [task]="task"
             (exit)="handleFinish()"
-          ></finish>
-          <finish-and-launch
+          ></app-finish>
+          <app-finish-and-launch
             *ngIf="showFinishScreen && showFinishAndLaunchScreen"
             [externalApp]="externalApp"
             [task]="task"
@@ -63,7 +63,7 @@
             [isShown]="showFinishScreen"
             [progressCount]="progressCount$ | async"
             (exit)="handleFinish()"
-          ></finish-and-launch>
+          ></app-finish-and-launch>
         </swiper-slide>
       </swiper-container>
     </div>
@@ -71,7 +71,7 @@
 </ion-content>
 
 <ion-footer [class.hidden]="showIntroductionScreen || showFinishScreen">
-  <toolbar
+  <app-toolbar
     (next)="nextQuestion()"
     (previous)="previousQuestion()"
     (close)="exitQuestionnaire()"
@@ -82,5 +82,5 @@
     [currentQuestionId]="currentQuestionGroupId"
     [totalQuestions]="groupedQuestions?.size"
     [isProgressCountShown]="showProgressCount | async"
-  ></toolbar>
+  ></app-toolbar>
 </ion-footer>

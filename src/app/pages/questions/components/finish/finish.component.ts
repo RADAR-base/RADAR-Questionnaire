@@ -18,7 +18,7 @@ import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
 import { IonButton, IonItem, IonLabel, IonToggle } from '@ionic/angular/standalone'
 
 @Component({
-  selector: 'finish',
+  selector: 'app-finish',
   templateUrl: 'finish.component.html',
   styleUrls: ['finish.component.scss'],
   imports: [

@@ -13,21 +13,21 @@
 </ng-container>
 
 <ng-container *ngIf="showTimePicker && currentlyShown">
-  <wheel-selector
+  <app-wheel-selector
     [values]="timePickerValues"
     [selection]="defaultTimePickerValue"
     [labels]="labels"
     (onSelect)="emitAnswer($event)"
-  ></wheel-selector>
+  ></app-wheel-selector>
 </ng-container>
 
 <ng-container *ngIf="showDurationPicker && currentlyShown">
-  <wheel-selector
+  <app-wheel-selector
     [values]="durationPickerValues"
     [selection]="defaultDurationPickerValue"
     [labels]="labels"
     (onSelect)="emitAnswer($event)"
-  ></wheel-selector>
+  ></app-wheel-selector>
 </ng-container>
 
 <ng-container *ngIf="showTextInput && currentlyShown">

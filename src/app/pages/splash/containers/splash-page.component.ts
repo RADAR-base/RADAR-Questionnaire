@@ -15,7 +15,7 @@ import { IonContent, IonSpinner } from '@ionic/angular/standalone'
 declare var window
 
 @Component({
-  selector: 'page-splash',
+  selector: 'app-page-splash',
   templateUrl: 'splash-page.component.html',
   styleUrls: ['./splash-page.component.scss'],
   imports: [IonSpinner, IonContent]

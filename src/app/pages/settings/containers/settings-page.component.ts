@@ -37,7 +37,7 @@ import {
 } from '@ionic/angular/standalone'
 
 @Component({
-  selector: 'page-settings',
+  selector: 'app-page-settings',
   templateUrl: 'settings-page.component.html',
   styleUrls: ['settings-page.component.scss'],
   imports: [

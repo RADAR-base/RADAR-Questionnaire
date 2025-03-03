@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
 
 import { Item, Response } from '../../../../../shared/models/question'
-import { IonicModule } from '@ionic/angular'
 import { NgForOf } from '@angular/common'
 import { IonItem, IonLabel, IonList, IonRadio, IonRadioGroup } from '@ionic/angular/standalone'
 import { FormsModule } from '@angular/forms'
@@ -9,7 +8,7 @@ import { FormsModule } from '@angular/forms'
 let uniqueID = 0
 
 @Component({
-  selector: 'radio-input',
+  selector: 'app-radio-input',
   templateUrl: 'radio-input.component.html',
   styleUrls: ['radio-input.component.scss'],
   imports: [

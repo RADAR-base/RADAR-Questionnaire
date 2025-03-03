@@ -8,7 +8,7 @@ import { NgForOf } from '@angular/common'
 import { IonBackButton, IonCol, IonContent, IonHeader, IonRow, IonTitle, IonToolbar } from '@ionic/angular/standalone'
 
 @Component({
-  selector: 'page-on-demand',
+  selector: 'app-page-clinical-tasks',
   templateUrl: 'clinical-tasks-page.component.html',
   styleUrls: ['clinical-tasks-page.component.scss'],
   imports: [

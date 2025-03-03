@@ -19,7 +19,7 @@ import { TranslatePipe } from '../../../../../shared/pipes/translate/translate'
 import { IonDatetime, IonDatetimeButton, IonInput, IonItem, IonModal } from '@ionic/angular/standalone'
 
 @Component({
-  selector: 'text-input',
+  selector: 'app-text-input',
   templateUrl: 'text-input.component.html',
   styleUrls: ['text-input.component.scss'],
   imports: [

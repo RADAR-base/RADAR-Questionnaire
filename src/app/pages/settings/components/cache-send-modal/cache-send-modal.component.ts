@@ -16,7 +16,7 @@ import {
 } from '@ionic/angular/standalone'
 
 @Component({
-  selector: 'cache-send-modal',
+  selector: 'app-cache-send-modal',
   templateUrl: 'cache-send-modal.component.html',
   styleUrls: ['cache-send-modal.component.scss'],
   imports: [

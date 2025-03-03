@@ -15,7 +15,7 @@ import { chevronBackOutline, chevronForwardOutline, closeCircle } from 'ionicons
 import { IonButton, IonIcon, IonTitle, IonToolbar } from '@ionic/angular/standalone'
 
 @Component({
-  selector: 'toolbar',
+  selector: 'app-toolbar',
   templateUrl: 'toolbar.component.html',
   styleUrls: ['toolbar.component.scss'],
   imports: [NgIf, IonTitle, IonToolbar, IonButton, IonIcon]

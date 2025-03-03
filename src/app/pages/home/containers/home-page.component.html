@@ -22,13 +22,13 @@
     [class.hidden]="showCalendar"
     [@moveProgress]="showCalendar"
   >
-    <task-progress
+    <app-task-progress
       *ngIf="tasksProgress | async"
       [progress]="tasksProgress | async"
       [forceComplete]="showCompleted"
       [noTasksToday]="(tasksProgress | async)?.numberOfTasks == 0"
     >
-    </task-progress>
+    </app-task-progress>
   </div>
 
   <div class="bottom-components" [class.bottom-components-up]="showCalendar">
@@ -64,27 +64,27 @@
     </div>
 
     <div #tickerBar class="size-static">
-      <ticker-bar
+      <app-ticker-bar
         [task]="nextTask"
         [isNow]="taskIsNow"
         [timeToNextMilli]="timeToNextTask"
         [showAffirmation]="showCompleted"
         [noTasksToday]="(tasksProgress | async)?.numberOfTasks == 0"
-      ></ticker-bar>
+      ></app-ticker-bar>
     </div>
 
     <div class="size-static">
-      <task-info
+      <app-task-info
         *ngIf="nextTask && (isTaskInfoShown | async)"
         [task]="nextTask"
         [isNow]="taskIsNow"
         [progress]="tasksProgress | async"
         [expanded]="!showCalendar"
         (click)="displayTaskCalendar()"
-      ></task-info>
+      ></app-task-info>
     </div>
     <div #taskCalendar class="taskCalendar" [@displayCalendar]="showCalendar">
-      <task-calendar
+      <app-task-calendar
         *ngIf="
           (sortedTasks | async)?.size &&
           (isTaskCalendarTaskNameShown | async) !== null
@@ -95,7 +95,7 @@
         [currentDate]="currentDate"
         [isTaskNameShown]="isTaskCalendarTaskNameShown | async"
       >
-      </task-calendar>
+      </app-task-calendar>
     </div>
 
     <div class="size-static footer">

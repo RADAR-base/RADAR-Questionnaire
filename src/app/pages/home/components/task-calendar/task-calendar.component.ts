@@ -10,7 +10,6 @@ import { setDateTimeToMidnight } from 'src/app/shared/utilities/time'
 import { LocalizationService } from '../../../../core/services/misc/localization.service'
 import { LogService } from '../../../../core/services/misc/log.service'
 import { Task } from '../../../../shared/models/task'
-import { IonicModule } from '@ionic/angular'
 import { KeyValuePipe, NgForOf, NgIf } from '@angular/common'
 import { TranslatePipe } from '../../../../shared/pipes/translate/translate'
 import { MomentModule } from 'ngx-moment'
@@ -18,7 +17,7 @@ import { TaskCalendarRowComponent } from '../task-calendar-row/task-calendar-row
 import { IonCol, IonContent, IonRow } from '@ionic/angular/standalone'
 
 @Component({
-  selector: 'task-calendar',
+  selector: 'app-task-calendar',
   templateUrl: 'task-calendar.component.html',
   styleUrls: ['task-calendar.component.scss'],
   imports: [

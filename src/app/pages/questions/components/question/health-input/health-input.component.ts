@@ -11,7 +11,7 @@ import { Response } from '../../../../../shared/models/question'
 import { HealthkitService } from '../../../services/healthkit.service'
 
 @Component({
-  selector: 'health-input',
+  selector: 'app-health-input',
   templateUrl: 'health-input.component.html',
   styleUrls: ['health-input.component.scss'],
 })

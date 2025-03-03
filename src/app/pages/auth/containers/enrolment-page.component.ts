@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewC
 import { App } from '@capacitor/app'
 import { Browser } from '@capacitor/browser'
 import { Device } from '@capacitor/device'
-import { IonicModule, NavController } from '@ionic/angular'
+import { NavController } from '@ionic/angular'
 import { AlertInput } from '@ionic/core'
 
 import {
@@ -35,7 +35,7 @@ import { caretDownOutline } from 'ionicons/icons'
 import { IonButton, IonCard, IonContent, IonIcon, IonItem, IonSpinner } from '@ionic/angular/standalone'
 
 @Component({
-  selector: 'page-enrolment',
+  selector: 'app-page-enrolment',
   templateUrl: 'enrolment-page.component.html',
   styleUrls: ['./enrolment-page.component.scss'],
   imports: [

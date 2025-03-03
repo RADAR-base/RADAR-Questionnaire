@@ -7,7 +7,7 @@ import { Task } from '../../../../shared/models/task'
 import { getHours, getMinutes } from '../../../../shared/utilities/time'
 
 @Component({
-  selector: 'ticker-bar',
+  selector: 'app-ticker-bar',
   templateUrl: 'ticker-bar.component.html',
   styleUrls: ['./ticker-bar.component.scss'],
 })

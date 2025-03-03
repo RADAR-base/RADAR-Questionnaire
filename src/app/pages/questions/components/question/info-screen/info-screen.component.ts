@@ -17,7 +17,7 @@ import { IonContent, IonIcon } from '@ionic/angular/standalone'
 let uniqueID = 0
 
 @Component({
-  selector: 'info-screen',
+  selector: 'app-info-screen',
   templateUrl: 'info-screen.component.html',
   styleUrls: ['info-screen.component.scss'],
   imports: [NgIf, NgForOf, IonContent, IonIcon]

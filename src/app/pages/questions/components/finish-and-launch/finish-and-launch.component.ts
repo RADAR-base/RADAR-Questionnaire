@@ -20,7 +20,7 @@ import { IonicModule } from '@ionic/angular'
 import { IonItem, IonLabel, IonSpinner, IonToggle } from '@ionic/angular/standalone'
 
 @Component({
-  selector: 'finish-and-launch',
+  selector: 'app-finish-and-launch',
   templateUrl: 'finish-and-launch.component.html',
   styleUrls: ['finish-and-launch.component.scss'],
   imports: [NgIf, TranslatePipe, IonItem, IonLabel, IonToggle, IonSpinner]

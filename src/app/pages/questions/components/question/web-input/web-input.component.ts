@@ -18,7 +18,7 @@ import { NgIf } from '@angular/common'
 import { IonButton, IonContent, IonInput, IonItem, IonLabel } from '@ionic/angular/standalone'
 
 @Component({
-  selector: 'web-input',
+  selector: 'app-web-input',
   templateUrl: 'web-input.component.html',
   styleUrls: ['web-input.component.scss'],
   imports: [

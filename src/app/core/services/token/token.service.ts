@@ -8,8 +8,9 @@ import {
   DefaultOAuthClientId,
   DefaultOAuthClientSecret,
   DefaultRequestEncodedContentType,
-  DefaultTokenEndPoint,
-  DefaultTokenRefreshSeconds
+  DefaultTokenRefreshSeconds,
+  DefaultManagementPortalURI,
+  DefaultRefreshTokenURI
 } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
 import { StorageKeys } from '../../../shared/enums/storage'
@@ -18,7 +19,6 @@ import { getSeconds } from '../../../shared/utilities/time'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
-import { DefaultManagementPortalURI, DefaultRefreshTokenURI } from 'www/assets/data/defaultConfig'
 
 @Injectable({
   providedIn: 'root'
@@ -75,7 +75,10 @@ export class TokenService {
   getMPTokenEndpoint() {
     return this.getURI().then(baseUrl =>
       `${baseUrl}${DefaultManagementPortalURI}${DefaultRefreshTokenURI}`
-    )
+    ).then(uri => {
+      this.setTokenEndpoint(uri)
+      return uri
+    })
   }
 
   setTokens(tokens) {

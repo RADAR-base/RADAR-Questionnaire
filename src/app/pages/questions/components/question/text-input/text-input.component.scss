@@ -11,3 +11,37 @@ ion-item {
   font-size: 18px;
   line-height: 1.35em;
 }
+
+ion-datetime-button::part(native) {
+  border: none;
+  border-radius: 32px;
+  padding: 16px;
+  background: var(--cl-primary-40);
+  color: #fff;
+  font-size: 20px;
+}
+
+ion-datetime-button::part(native):hover {
+  filter: brightness(1.1);
+}
+
+ion-datetime.date {
+  color: #0b4a59;
+  --background: #fff1f2;
+  --background-rgb: 255, 241, 242;
+
+  border-radius: 16px;
+  box-shadow: rgba(var(--ion-color-rose-rgb), 0.3) 0px 10px 15px -3px;
+}
+
+ion-datetime.time {
+  border-radius: 16px;
+  border: solid 2px #fff; //var(--cl-primary-40);
+  --background: var(--cl-primary-60);
+  //--background-rgb: 255, 241, 242;
+  --wheel-fade-background-rgb: 109,154,165;
+  --wheel-highlight-background: #6d9aa5;
+  --wheel-highlight-border-radius: 16px;
+  //border-radius: 16px;
+  //box-shadow: rgba(var(--ion-color-rose-rgb), 0.3) 0px 10px 15px -3px;
+}

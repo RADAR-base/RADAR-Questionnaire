@@ -21,7 +21,9 @@ import { KeyConverterService } from './key-converter.service'
 import { Utility } from 'src/app/shared/utilities/util'
 import { RemoteConfigService } from '../../config/remote-config.service'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class HealthkitConverterService extends ConverterService {
   GENERAL_TOPIC: string = 'questionnaire_response'
   HEALTHKIT_TOPIC = 'active_apple_healthkit_steps'

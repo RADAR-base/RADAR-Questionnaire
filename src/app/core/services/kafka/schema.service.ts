@@ -9,7 +9,9 @@ import { SubjectConfigService } from '../config/subject-config.service'
 import { ConverterFactoryService } from './converters/converter-factory.service.'
 import { KeyConverterService } from './converters/key-converter.service'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SchemaService {
   constructor(
     private converterFactory: ConverterFactoryService,

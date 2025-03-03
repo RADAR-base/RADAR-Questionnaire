@@ -16,7 +16,9 @@ import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 import { NotificationService } from './notification.service'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export abstract class FcmNotificationService extends NotificationService {
   FCM_TOKEN: string
   upstreamResends: number

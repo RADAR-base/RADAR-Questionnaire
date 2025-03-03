@@ -13,7 +13,9 @@ import { User } from '../../../shared/models/user'
 import { StorageService } from '../storage/storage.service'
 import { TokenService } from '../token/token.service'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SubjectConfigService {
   private readonly SUBJECT_CONFIG_STORE = {
     PARTICIPANTID: StorageKeys.PARTICIPANTID,

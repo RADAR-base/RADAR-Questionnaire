@@ -18,7 +18,9 @@ import { StorageService } from '../storage/storage.service'
 import { ScheduleGeneratorService } from './schedule-generator.service'
 import { ScheduleService } from './schedule.service'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AppserverScheduleService extends ScheduleService {
   constructor(
     private store: StorageService,

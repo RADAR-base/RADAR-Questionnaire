@@ -13,7 +13,9 @@ import { KeyConverterService } from './key-converter.service'
 import { ConfigKeys } from 'src/app/shared/enums/config'
 import { RemoteConfigService } from '../../config/remote-config.service'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export abstract class ConverterService {
   schemas = {}
   specifications

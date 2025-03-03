@@ -29,7 +29,9 @@ import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
 import { NotificationGeneratorService } from '../notifications/notification-generator.service'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ScheduleGeneratorService {
   SCHEDULE_YEAR_COVERAGE = DefaultScheduleYearCoverage
   REFERENCE_TIMESTAMP_FORMAT = 'DD-MM-YYYY:hh:mm'

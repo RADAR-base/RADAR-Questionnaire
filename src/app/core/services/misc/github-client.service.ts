@@ -11,7 +11,9 @@ import { Utility } from '../../../shared/utilities/util'
 import { AppServerService } from '../app-server/app-server.service'
 import { RemoteConfigService } from '../config/remote-config.service'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class GithubClient {
   githubFetchStrategy: string
 

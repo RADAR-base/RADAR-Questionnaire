@@ -12,7 +12,9 @@ import { setDateTimeToMidnightEpoch } from '../../../shared/utilities/time'
 import { Capacitor } from '@capacitor/core'
 import { StorageService } from '../storage/storage.service'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AppConfigService {
   private readonly CONFIG_STORE = {
     SCHEDULE_VERSION: StorageKeys.SCHEDULE_VERSION,

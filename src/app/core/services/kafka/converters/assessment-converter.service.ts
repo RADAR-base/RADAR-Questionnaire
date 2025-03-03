@@ -10,7 +10,9 @@ import { ConverterService } from './converter.service'
 import { KeyConverterService } from './key-converter.service'
 import { RemoteConfigService } from '../../config/remote-config.service'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AssessmentConverterService extends ConverterService {
   GENERAL_TOPIC: string = 'questionnaire_response'
 

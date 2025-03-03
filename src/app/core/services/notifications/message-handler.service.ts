@@ -11,7 +11,9 @@ import { LogService } from '../misc/log.service'
 import { ScheduleService } from '../schedule/schedule.service'
 import { UsageService } from '../usage/usage.service'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class MessageHandlerService implements OnDestroy {
   messageListener: Subscription = new Subscription()
 

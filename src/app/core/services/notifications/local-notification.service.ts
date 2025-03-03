@@ -17,7 +17,9 @@ import { NotificationGeneratorService } from './notification-generator.service'
 import { NotificationService } from './notification.service'
 import { StorageService } from '../storage/storage.service'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class LocalNotificationService extends NotificationService {
   constructor(
     private notifications: NotificationGeneratorService,

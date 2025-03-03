@@ -7,7 +7,9 @@ import { filter, startWith, switchMap } from 'rxjs/operators'
 import { StorageKeys } from '../../../shared/enums/storage'
 import { LogService } from '../misc/log.service'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class StorageService {
   global: { [key: string]: any } = {}
   healthGlobal: { [key: string]: any } = {}

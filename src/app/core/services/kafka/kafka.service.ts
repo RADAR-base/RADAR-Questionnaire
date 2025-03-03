@@ -29,7 +29,9 @@ import { SchemaService } from './schema.service'
 import { Subject } from 'rxjs'
 import { debounceTime } from 'rxjs/operators'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class KafkaService {
   private static DEFAULT_TOPIC_CACHE_VALIDITY = 600_000 // 10 minutes
 

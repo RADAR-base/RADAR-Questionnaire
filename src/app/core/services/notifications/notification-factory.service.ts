@@ -10,7 +10,9 @@ import { FcmRestNotificationService } from './fcm-rest-notification.service'
 import { LocalNotificationService } from './local-notification.service'
 import { NotificationService } from './notification.service'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class NotificationFactoryService extends NotificationService {
   notificationService: NotificationService
 

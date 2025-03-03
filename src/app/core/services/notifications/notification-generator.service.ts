@@ -13,7 +13,9 @@ import { advanceRepeat, getMilliseconds } from '../../../shared/utilities/time'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class NotificationGeneratorService {
   constructor(
     private localization: LocalizationService,

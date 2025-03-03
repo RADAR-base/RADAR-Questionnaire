@@ -29,7 +29,9 @@ import { LogService } from '../misc/log.service'
 import { TokenService } from '../token/token.service'
 import { StorageService } from '../storage/storage.service'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AppServerService {
   private APP_SERVER_URL
   SUBJECT_PATH = 'users'

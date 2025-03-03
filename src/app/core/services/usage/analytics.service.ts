@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core'
 
 import { User } from '../../../shared/models/user'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AnalyticsService {
   logEvent(event: string, params?: any): Promise<void> {
     return undefined

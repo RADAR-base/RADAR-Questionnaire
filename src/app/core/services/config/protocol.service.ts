@@ -23,7 +23,9 @@ import { AnalyticsService } from '../usage/analytics.service'
 import { RemoteConfigService } from './remote-config.service'
 import { SubjectConfigService } from './subject-config.service'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ProtocolService {
   GIT_TREE = 'tree'
   GIT_BRANCHES = 'branches'

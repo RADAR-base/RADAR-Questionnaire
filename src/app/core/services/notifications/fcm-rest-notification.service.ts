@@ -28,7 +28,9 @@ import { FcmNotificationService } from './fcm-notification.service'
 import { NotificationGeneratorService } from './notification-generator.service'
 import { GrabIntentExtras } from 'capacitor-grab-intent-extras'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class FcmRestNotificationService extends FcmNotificationService {
   NOTIFICATIONS_PATH = 'messaging/notifications'
   SUBJECT_PATH = 'users'

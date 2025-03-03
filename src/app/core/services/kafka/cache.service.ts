@@ -9,7 +9,9 @@ import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 import { AnalyticsService } from '../usage/analytics.service'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class CacheService {
   URI_topics: string = '/topics/'
 

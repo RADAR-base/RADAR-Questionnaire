@@ -12,7 +12,9 @@ import { ConverterService } from './converter.service'
 import { KeyConverterService } from './key-converter.service'
 import { RemoteConfigService } from '../../config/remote-config.service'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AppEventConverterService extends ConverterService {
   constructor(
     logger: LogService,

@@ -6,7 +6,9 @@ import { LogService } from '../../misc/log.service'
 import { TokenService } from '../../token/token.service'
 import { KeyConverterService } from './key-converter.service'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class DefaultKeyConverterService extends KeyConverterService {
   schemas = {}
   specifications

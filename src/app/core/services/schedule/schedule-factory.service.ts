@@ -11,7 +11,9 @@ import { AppserverScheduleService } from './appserver-schedule.service'
 import { LocalScheduleService } from './local-schedule.service'
 import { ScheduleService } from './schedule.service'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ScheduleFactoryService extends ScheduleService {
   scheduleService: ScheduleService
 

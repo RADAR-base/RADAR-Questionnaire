@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core'
 import { ConfigService } from '../../../core/services/config/config.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class SettingsService {
   constructor(
     public localization: LocalizationService,

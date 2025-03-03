@@ -7,7 +7,9 @@ import { CompletionLogConverterService } from './completion-log-converter.servic
 import { HealthkitConverterService } from './healthkit-converter.service'
 import { TimezoneConverterService } from './timezone-converter.service'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ConverterFactoryService {
   constructor(
     private assessmentConverter: AssessmentConverterService,

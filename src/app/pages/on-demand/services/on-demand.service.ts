@@ -7,7 +7,9 @@ import { LocalizationService } from '../../../core/services/misc/localization.se
 import { ConfigKeys } from '../../../shared/enums/config'
 import { AssessmentType } from '../../../shared/models/assessment'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class OnDemandService {
   title: Promise<string>
 

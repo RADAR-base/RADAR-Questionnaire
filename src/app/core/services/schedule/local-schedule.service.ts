@@ -12,7 +12,9 @@ import { StorageService } from '../storage/storage.service'
 import { ScheduleGeneratorService } from './schedule-generator.service'
 import { ScheduleService } from './schedule.service'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class LocalScheduleService extends ScheduleService {
   constructor(
     private store: StorageService,

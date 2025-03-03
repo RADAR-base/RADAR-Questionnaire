@@ -20,7 +20,9 @@ import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class QuestionnaireService {
   private readonly QUESTIONNAIRE_STORE = {
     CONFIG_ASSESSMENTS: StorageKeys.CONFIG_ASSESSMENTS,

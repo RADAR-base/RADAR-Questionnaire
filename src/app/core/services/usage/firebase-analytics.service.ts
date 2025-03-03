@@ -8,7 +8,9 @@ import { LogService } from '../misc/log.service'
 import { AnalyticsService } from './analytics.service'
 import { Capacitor } from '@capacitor/core'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class FirebaseAnalyticsService extends AnalyticsService {
   constructor(
     private platform: Platform,
@@ -21,7 +23,7 @@ export class FirebaseAnalyticsService extends AnalyticsService {
   logEvent(event: string, params: { [key: string]: string }): Promise<any> {
     // this.logger.log('Firebase Event', event)
     if (!Capacitor.isNativePlatform()) return Promise.resolve()
-    
+
     const cleanParams = {}
 
     Object.entries(params).forEach(([key, value]) => {

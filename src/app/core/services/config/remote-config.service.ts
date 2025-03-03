@@ -11,7 +11,9 @@ import { LogService } from '../misc/log.service'
 import { Capacitor } from '@capacitor/core'
 import { StorageService } from '../storage/storage.service'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class RemoteConfigService {
   protected timeoutMillis: number = 10_800_000
 
@@ -103,7 +105,9 @@ class FirebaseConfig implements RemoteConfig {
   }
 }
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class FirebaseRemoteConfigService extends RemoteConfigService {
   private readonly configSubject: BehaviorSubject<RemoteConfig>
   private FETCH_TIMEOUT_SECONDS = 20

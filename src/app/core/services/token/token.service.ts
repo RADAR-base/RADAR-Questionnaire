@@ -7,10 +7,7 @@ import {
   DefaultEndPoint,
   DefaultOAuthClientId,
   DefaultOAuthClientSecret,
-  DefaultRequestEncodedContentType,
   DefaultTokenRefreshSeconds,
-  DefaultManagementPortalURI,
-  DefaultRefreshTokenURI
 } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
 import { StorageKeys } from '../../../shared/enums/storage'
@@ -23,8 +20,8 @@ import { StorageService } from '../storage/storage.service'
 @Injectable({
   providedIn: 'root'
 })
-export class TokenService {
-  private readonly TOKEN_STORE = {
+export abstract class TokenService {
+  public readonly TOKEN_STORE = {
     OAUTH_TOKENS: StorageKeys.OAUTH_TOKENS,
     BASE_URI: StorageKeys.BASE_URI,
     TOKEN_ENDPOINT: StorageKeys.TOKEN_ENDPOINT
@@ -35,9 +32,9 @@ export class TokenService {
   constructor(
     public http: HttpClient,
     public storage: StorageService,
-    private jwtHelper: JwtHelperService,
-    private remoteConfig: RemoteConfigService,
-    private logger: LogService,
+    public jwtHelper: JwtHelperService,
+    public remoteConfig: RemoteConfigService,
+    public logger: LogService,
     public platform: Platform
   ) {
     this.platform.ready().then(() => {
@@ -66,20 +63,7 @@ export class TokenService {
       .then(uri => (uri ? uri : DefaultEndPoint))
   }
 
-  getTokenEndpoint() {
-    return this.storage
-      .get(this.TOKEN_STORE.TOKEN_ENDPOINT)
-      .then(uri => uri ? uri : this.getMPTokenEndpoint())
-  }
-
-  getMPTokenEndpoint() {
-    return this.getURI().then(baseUrl =>
-      `${baseUrl}${DefaultManagementPortalURI}${DefaultRefreshTokenURI}`
-    ).then(uri => {
-      this.setTokenEndpoint(uri)
-      return uri
-    })
-  }
+  abstract getTokenEndpoint(): Promise<string>
 
   setTokens(tokens) {
     return this.storage.set(this.TOKEN_STORE.OAUTH_TOKENS, tokens)
@@ -102,24 +86,7 @@ export class TokenService {
     return 'Basic ' + btoa(`${user}:${password}`)
   }
 
-  register(refreshBody): Promise<OAuthToken> {
-    return Promise.all([
-      this.getTokenEndpoint(),
-      this.getRegisterHeaders(DefaultRequestEncodedContentType)
-    ])
-      .then(([uri, headers]) => {
-        this.logger.log(`"Registering with ${uri} and headers`, headers)
-        return this.http
-          .post(uri, refreshBody, { headers: headers })
-          .toPromise()
-      })
-      .then((res: any) => {
-        if (!res.iat)
-          res.iat = this.jwtHelper.decodeToken(res.access_token)['iat']
-        this.setTokens(res)
-        return res
-      })
-  }
+  abstract register(refreshBody): Promise<OAuthToken>
 
   refresh(): Promise<OAuthToken> {
     return this.getTokens().then(tokens => {
@@ -131,23 +98,17 @@ export class TokenService {
       })
       if (tokens.iat + tokens.expires_in < limit) {
         const params = this.getRefreshParams(tokens.refresh_token)
-        return this.register(params).catch(response => {
-          const error = response.error
-          if (error && error.error === 'invalid_grant') {
-            // Specific check for expired refresh token
-            console.error('Refresh token expired. Please log in again.')
-            this.reset() // Clear tokens and session data
-            throw new Error('Session expired. Please log in again.')
-          }
-
-          // Handle other errors (e.g., network, server issues)
-          console.error('Error refreshing token:', error)
-          throw new Error('Error refreshing token. Please try again.')
-        })
+        return this.register(params).catch(response => this.handleError(response.error))
       } else {
         return tokens
       }
     })
+  }
+
+  handleError(error): any {
+    // Handle other errors (e.g., network, server issues)
+    console.error('Error refreshing token:', error)
+    throw new Error('Error refreshing token. Please try again.')
   }
 
   getDecodedSubject() {
@@ -190,26 +151,7 @@ export class TokenService {
       .set('refresh_token', refreshToken)
   }
 
-  isValid(): Promise<boolean> {
-    return this.storage.get(StorageKeys.OAUTH_TOKENS).then(tokens => {
-      if (!tokens || !tokens.refresh_token) {
-        return false // No token available
-      }
-
-      const refreshToken = tokens.refresh_token
-
-      // Check if the token is a JWT (simple heuristic: contains three parts separated by dots)
-      const isJwt = refreshToken.split('.').length === 3
-
-      if (isJwt) {
-        // For JWT tokens, check expiration
-        return !this.jwtHelper.isTokenExpired(refreshToken)
-      } else {
-        // For opaque tokens, assume valid until refreshed
-        return true
-      }
-    })
-  }
+  abstract isValid(): Promise<boolean>
 
   reset() {
     return Promise.all([this.setTokens(null)])

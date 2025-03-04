@@ -57,6 +57,7 @@ import { jwtOptionsFactory } from './shared/utilities/jwtOptionsFactory'
 import { Utility } from './shared/utilities/util'
 import { DefaultKeyConverterService } from './core/services/kafka/converters/default-key-converter.service'
 import { KeyConverterService } from './core/services/kafka/converters/key-converter.service'
+import { TokenFactoryService } from './core/services/token/token-factory.service'
 
 @NgModule({
   imports: [
@@ -103,7 +104,6 @@ import { KeyConverterService } from './core/services/kafka/converters/key-conver
     SubjectConfigService,
     ProtocolService,
     QuestionnaireService,
-    TokenService,
     KafkaService,
     LocalizationService,
     ScheduleGeneratorService,
@@ -126,6 +126,7 @@ import { KeyConverterService } from './core/services/kafka/converters/key-conver
     MessageHandlerService,
     { provide: NotificationService, useClass: NotificationFactoryService },
     { provide: AnalyticsService, useClass: FirebaseAnalyticsService },
+    { provide: TokenService, useClass: TokenFactoryService },
     GithubClient
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

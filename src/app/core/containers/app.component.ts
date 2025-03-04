@@ -5,6 +5,7 @@ import { TextZoom } from '@capacitor/text-zoom'
 import { Capacitor } from '@capacitor/core'
 
 import { SplashPageComponent } from '../../pages/splash/containers/splash-page.component'
+import { TokenService } from '../services/token/token.service'
 
 @Component({
   selector: 'app-root',
@@ -15,7 +16,7 @@ export class AppComponent {
   rootPage = SplashPageComponent
   isAppInitialized: boolean
 
-  constructor(private platform: Platform) {
+  constructor(private platform: Platform, private token: TokenService) {
     register()
     this.platform.ready().then(() => {
       if (Capacitor.isPluginAvailable('TextZoom')) TextZoom.set({ value: 1 })

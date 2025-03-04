@@ -58,6 +58,8 @@ import { Utility } from './shared/utilities/util'
 import { DefaultKeyConverterService } from './core/services/kafka/converters/default-key-converter.service'
 import { KeyConverterService } from './core/services/kafka/converters/key-converter.service'
 import { TokenFactoryService } from './core/services/token/token-factory.service'
+import { MPTokenService } from './core/services/token/mp-token.service'
+import { HydraTokenService } from './core/services/token/hydra-token.service'
 
 @NgModule({
   imports: [
@@ -127,6 +129,8 @@ import { TokenFactoryService } from './core/services/token/token-factory.service
     { provide: NotificationService, useClass: NotificationFactoryService },
     { provide: AnalyticsService, useClass: FirebaseAnalyticsService },
     { provide: TokenService, useClass: TokenFactoryService },
+    MPTokenService,
+    HydraTokenService,
     GithubClient
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

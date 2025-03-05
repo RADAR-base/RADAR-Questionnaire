@@ -15,10 +15,10 @@ import { MPTokenService } from './mp-token.service'
 import { StorageKeys } from 'src/app/shared/enums/storage'
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TokenFactoryService extends TokenService {
-  tokenService: TokenService
+  private tokenService!: TokenService
 
   constructor(
     public http: HttpClient,
@@ -27,39 +27,50 @@ export class TokenFactoryService extends TokenService {
     public remoteConfig: RemoteConfigService,
     public logger: LogService,
     public platform: Platform,
-    public hydraTokenService: HydraTokenService,
-    public mpTokenService: MPTokenService,
+    private hydraTokenService: HydraTokenService,
+    private mpTokenService: MPTokenService
   ) {
     super(http, storage, jwtHelper, remoteConfig, logger, platform)
     this.init()
   }
 
-  init() {
-    return this.storage
-      .get(StorageKeys.PLATFORM_AUTH_TYPE)
-      .then(type => {
-        const authType = type ? type : DefaultAuthType
-        switch (authType) {
-          case AuthType.MP: {
-            return (this.tokenService = this.mpTokenService)
-          }
-          case AuthType.ORY:
-            return (this.tokenService = this.hydraTokenService)
-          default:
-            throw new Error('No such token service available')
-        }
-      })
+  private async init(): Promise<void> {
+    try {
+      let authType = await this.storage.get(StorageKeys.PLATFORM_AUTH_TYPE)
+
+      if (!authType) {
+        const endpoint = await this.storage.get(StorageKeys.TOKEN_ENDPOINT)
+        authType = endpoint ? AuthType.ORY : AuthType.MP
+        await this.storage.set(StorageKeys.PLATFORM_AUTH_TYPE, authType)
+      }
+
+      this.tokenService = this.getTokenServiceByType(authType)
+    } catch (error) {
+      this.logger.error('Error initializing TokenFactoryService', error)
+      throw new Error('Failed to initialize TokenFactoryService')
+    }
   }
 
-  getTokenEndpoint(): Promise<string> {
+  private getTokenServiceByType(authType: AuthType): TokenService {
+    switch (authType) {
+      case AuthType.MP:
+        return this.mpTokenService
+      case AuthType.ORY:
+        return this.hydraTokenService
+      default:
+        return this.mpTokenService
+    }
+  }
+
+  async getTokenEndpoint(): Promise<string> {
     return this.tokenService.getTokenEndpoint()
   }
 
-  register(refreshBody: any): Promise<OAuthToken> {
+  async register(refreshBody: any): Promise<OAuthToken> {
     return this.tokenService.register(refreshBody)
   }
 
-  isValid(): Promise<boolean> {
+  async isValid(): Promise<boolean> {
     return this.tokenService.isValid()
   }
 }

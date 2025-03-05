@@ -19,6 +19,7 @@ import { StorageKeys } from '../../../shared/enums/storage'
 })
 export class TokenFactoryService extends TokenService {
   private tokenService!: TokenService
+  private HYDRA_KEY = 'hydra'
 
   constructor(
     public http: HttpClient,
@@ -40,7 +41,7 @@ export class TokenFactoryService extends TokenService {
 
       if (!authType) {
         const endpoint = await this.storage.get(StorageKeys.TOKEN_ENDPOINT)
-        authType = endpoint ? AuthType.ORY : AuthType.MP
+        authType = endpoint && endpoint.includes(this.HYDRA_KEY) ? AuthType.ORY : AuthType.MP
         await this.storage.set(StorageKeys.PLATFORM_AUTH_TYPE, authType)
       }
 
@@ -71,6 +72,6 @@ export class TokenFactoryService extends TokenService {
   }
 
   async isValid(): Promise<boolean> {
-    return this.tokenService.isValid()
+    return this.init().then(() => this.tokenService.isValid())
   }
 }

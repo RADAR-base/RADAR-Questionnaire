@@ -74,4 +74,8 @@ export class TokenFactoryService extends TokenService {
   async isValid(): Promise<boolean> {
     return this.init().then(() => this.tokenService.isValid())
   }
+
+  reset() {
+    return this.storage.set(StorageKeys.PLATFORM_AUTH_TYPE, null).then(() => super.reset())
+  }
 }

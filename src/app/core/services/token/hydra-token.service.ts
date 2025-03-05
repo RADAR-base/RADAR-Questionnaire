@@ -29,7 +29,9 @@ export class HydraTokenService extends TokenService {
   getTokenEndpoint() {
     return this.storage
       .get(this.TOKEN_STORE.TOKEN_ENDPOINT)
-      .then(uri => uri ? uri : DefaultTokenEndPoint)
+      .then(uri => uri ? uri : this.getURI().then(baseUrl =>
+        `${baseUrl}/hydra/oauth2/token`
+      ))
   }
 
   isValid(): Promise<boolean> {

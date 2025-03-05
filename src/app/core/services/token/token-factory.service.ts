@@ -9,10 +9,10 @@ import { RemoteConfigService } from '../config/remote-config.service'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 import { TokenService } from './token.service'
-import { AuthType } from 'src/app/shared/models/auth'
+import { AuthType } from '../../../shared/models/auth'
 import { HydraTokenService } from './hydra-token.service'
 import { MPTokenService } from './mp-token.service'
-import { StorageKeys } from 'src/app/shared/enums/storage'
+import { StorageKeys } from '../../../shared/enums/storage'
 
 @Injectable({
   providedIn: 'root',

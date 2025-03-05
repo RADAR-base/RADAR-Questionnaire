@@ -2,9 +2,10 @@ import { NO_ERRORS_SCHEMA } from '@angular/core'
 import { ComponentFixture, TestBed, async } from '@angular/core/testing'
 import { Platform } from '@ionic/angular'
 
-import { NotificationServiceMock } from '../../shared/testing/mock-services'
+import { NotificationServiceMock, TokenServiceMock } from '../../shared/testing/mock-services'
 import { NotificationService } from '../services/notifications/notification.service'
 import { AppComponent } from './app.component'
+import { TokenService } from '../services/token/token.service'
 
 describe('AppComponent', () => {
   let component: AppComponent
@@ -16,7 +17,8 @@ describe('AppComponent', () => {
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
         Platform,
-        { provide: NotificationService, useClass: NotificationServiceMock }
+        { provide: NotificationService, useClass: NotificationServiceMock },
+        { provide: TokenService, useClass: TokenServiceMock }
       ]
     }).compileComponents()
 

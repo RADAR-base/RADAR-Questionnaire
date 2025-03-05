@@ -3,7 +3,6 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { RouterModule, Routes } from '@angular/router'
 import { IonicModule } from '@ionic/angular'
-import { TokenService } from 'src/app/core/services/token/token.service'
 
 import { PipesModule } from '../../shared/pipes/pipes.module'
 import { QRFormComponent } from './components/qr-form/qr-form.component'

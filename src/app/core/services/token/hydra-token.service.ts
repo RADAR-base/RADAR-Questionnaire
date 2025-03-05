@@ -8,7 +8,7 @@ import { RemoteConfigService } from '../config/remote-config.service'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 import { TokenService } from './token.service'
-import { OAuthToken } from 'src/app/shared/models/token'
+import { OAuthToken } from '../../../shared/models/token'
 
 @Injectable({
   providedIn: 'root'

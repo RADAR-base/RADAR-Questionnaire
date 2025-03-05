@@ -37,14 +37,12 @@ export class TokenFactoryService extends TokenService {
 
   private async init(): Promise<void> {
     try {
-      let authType = await this.storage.get(StorageKeys.PLATFORM_AUTH_TYPE)
-
+      let authType = await this.getAuthType()
       if (!authType) {
         const endpoint = await this.storage.get(StorageKeys.TOKEN_ENDPOINT)
         authType = endpoint && endpoint.includes(this.HYDRA_KEY) ? AuthType.ORY : AuthType.MP
-        await this.storage.set(StorageKeys.PLATFORM_AUTH_TYPE, authType)
+        await this.setAuthType(authType)
       }
-
       this.tokenService = this.getTokenServiceByType(authType)
     } catch (error) {
       this.logger.error('Error initializing TokenFactoryService', error)

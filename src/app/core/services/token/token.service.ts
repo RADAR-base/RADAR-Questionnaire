@@ -153,6 +153,14 @@ export abstract class TokenService {
 
   abstract isValid(): Promise<boolean>
 
+  setAuthType(type) {
+    return this.storage.set(StorageKeys.PLATFORM_AUTH_TYPE, type)
+  }
+
+  getAuthType() {
+    return this.storage.get(StorageKeys.PLATFORM_AUTH_TYPE)
+  }
+
   reset() {
     return Promise.all([this.setTokens(null)])
   }

@@ -59,6 +59,9 @@ import { KeyConverterService } from './core/services/kafka/converters/key-conver
 import { IonicStorageModule } from '@ionic/storage-angular'
 import { Drivers } from '@ionic/storage'
 import CordovaSQLiteDriver from 'localforage-cordovasqlitedriver';
+import { TokenFactoryService } from './core/services/token/token-factory.service'
+import { MPTokenService } from './core/services/token/mp-token.service'
+import { HydraTokenService } from './core/services/token/hydra-token.service'
 
 export const initializeFn = (storage: StorageService) => {
   return () => storage.init()
@@ -114,7 +117,6 @@ export const initializeFn = (storage: StorageService) => {
     SubjectConfigService,
     ProtocolService,
     QuestionnaireService,
-    TokenService,
     KafkaService,
     LocalizationService,
     ScheduleGeneratorService,
@@ -137,7 +139,10 @@ export const initializeFn = (storage: StorageService) => {
     MessageHandlerService,
     { provide: NotificationService, useClass: NotificationFactoryService },
     { provide: AnalyticsService, useClass: FirebaseAnalyticsService },
-    GithubClient,
+    { provide: TokenService, useClass: TokenFactoryService },
+    MPTokenService,
+    HydraTokenService,
+    GithubClient
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

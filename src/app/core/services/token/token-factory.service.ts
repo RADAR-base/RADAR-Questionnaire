@@ -20,6 +20,7 @@ import { StorageKeys } from '../../../shared/enums/storage'
 export class TokenFactoryService extends TokenService {
   private tokenService!: TokenService
   private HYDRA_KEY = 'hydra'
+  private isInitialised = false
 
   constructor(
     public http: HttpClient,
@@ -36,6 +37,7 @@ export class TokenFactoryService extends TokenService {
   }
 
   private async init(): Promise<void> {
+    if (this.isInitialised) return Promise.resolve()
     try {
       let authType = await this.getAuthType()
       if (!authType) {
@@ -44,6 +46,7 @@ export class TokenFactoryService extends TokenService {
         await this.setAuthType(authType)
       }
       this.tokenService = this.getTokenServiceByType(authType)
+      this.isInitialised = true
     } catch (error) {
       this.logger.error('Error initializing TokenFactoryService', error)
       throw new Error('Failed to initialize TokenFactoryService')

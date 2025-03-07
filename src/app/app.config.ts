@@ -15,7 +15,6 @@ import { JWT_OPTIONS, JwtModule } from '@auth0/angular-jwt'
 import { jwtOptionsFactory } from './shared/utilities/jwtOptionsFactory'
 import { StorageService } from './core/services/storage/storage.service'
 import { DatePipe } from '@angular/common'
-import { IonicStorageModule } from '@ionic/storage-angular'
 import { KeyConverterService } from './core/services/kafka/converters/key-converter.service'
 import { DefaultKeyConverterService } from './core/services/kafka/converters/default-key-converter.service'
 import { NotificationService } from './core/services/notifications/notification.service'
@@ -25,6 +24,11 @@ import { FirebaseAnalyticsService } from './core/services/usage/firebase-analyti
 import { FirebaseRemoteConfigService, RemoteConfigService } from './core/services/config/remote-config.service'
 import { ScheduleService } from './core/services/schedule/schedule.service'
 import { ScheduleFactoryService } from './core/services/schedule/schedule-factory.service'
+import { IonicStorageModule } from '@ionic/storage-angular'
+import { Drivers } from '@ionic/storage'
+import CordovaSQLiteDriver from 'localforage-cordovasqlitedriver';
+import { TokenService } from './core/services/token/token.service'
+import { TokenFactoryService } from './core/services/token/token-factory.service'
 
 const initializerFn = async (
   storageService: StorageService,
@@ -48,7 +52,11 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withPreloading(PreloadAllModules)),
     makeEnvironmentProviders([
       importProvidersFrom([
-        IonicStorageModule.forRoot(),
+        IonicStorageModule.forRoot({
+          name: '__appdb',
+          driverOrder: [CordovaSQLiteDriver._driver, Drivers.IndexedDB, Drivers.LocalStorage]
+        }),
+        //IonicStorageModule.forRoot(),
         JwtModule.forRoot({
           jwtOptionsProvider: {
             provide: JWT_OPTIONS,
@@ -66,6 +74,7 @@ export const appConfig: ApplicationConfig = {
     ]),
 
     ModalController,
+    { provide: TokenService, useClass: TokenFactoryService },
     { provide: RemoteConfigService, useClass: FirebaseRemoteConfigService },
     { provide: ScheduleService, useClass: ScheduleFactoryService },
     { provide: KeyConverterService, useClass: DefaultKeyConverterService },

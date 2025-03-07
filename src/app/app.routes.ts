@@ -30,7 +30,7 @@ export const routes: Routes = [
   {
     path: 'enrol',
     loadComponent: () => import('./pages/auth/containers/enrolment-page.component').then(m => m.EnrolmentPageComponent),
-    canActivate: [AuthGuard],
+    canActivate: [],
   },
   {
     path: '',

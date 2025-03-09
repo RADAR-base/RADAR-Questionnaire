@@ -52,6 +52,8 @@ export class StorageKeys {
 
   static HEALTH_LAST_POLL_TIMES = new StorageKeys('HEALTH_LAST_POLL_TIMES')
 
+  static PLATFORM_AUTH_TYPE = new StorageKeys('PLATFORM_AUTH_TYPE')
+
   constructor(public value: string) { }
 
   toString() {

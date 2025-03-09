@@ -10,6 +10,7 @@ import {
 } from '../../app/shared/models/settings'
 import { Task } from '../../app/shared/models/task'
 import { Localisations } from './localisations'
+import { AuthType } from 'src/app/shared/models/auth'
 
 // DEFAULT APP INFO
 
@@ -82,6 +83,8 @@ export const DefaultEnrolmentBaseURL =
 export const DefaultKafkaURI = '/kafka'
 export const DefaultQuestionnaireTypeURI = '_armt'
 export const DefaultQuestionnaireFormatURI = '.json'
+
+export const DefaultAuthType = AuthType.MP // MP or ORY
 
 export const DefaultGooglePlaystoreAppURL =
   'https://play.google.com/store/apps/details?id='

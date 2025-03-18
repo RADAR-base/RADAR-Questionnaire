@@ -44,6 +44,7 @@ export class EnrolmentPageComponent {
   language?: LanguageSetting = DefaultLanguage
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
   enrolmentMethod = 'qr'
+  studyId: string
 
   constructor(
     public navCtrl: NavController,
@@ -152,11 +153,15 @@ export class EnrolmentPageComponent {
 
   enrol(method) {
     this.enrolmentMethod = method
+    this.removeSlideById('portal-registration')
     this.next()
   }
 
-  authenticate(authObj) {
+  authenticate(authObj, enrolmentMethod = 'qr') {
     this.loading.next(true)
+    if (enrolmentMethod === 'qr') {
+      this.removeSlideById('token-registration')
+    }
     this.cdr.detectChanges()
     this.clearStatus()
     return this.auth
@@ -176,6 +181,7 @@ export class EnrolmentPageComponent {
     return this.auth.initSubjectInformation().then(() => {
       this.usage.sendGeneralEvent(EnrolmentEventType.SUCCESS)
       this.removeSlideById('qr-registration-choice')
+      this.removeSlideById('token-registration')
       this.removeSlideById('qr-registration')
       return this.goToSlideById('privacy-policy')
     })
@@ -263,6 +269,18 @@ export class EnrolmentPageComponent {
     await Browser.open({ url })
   }
 
+  async goToPortal() {
+    // TODO: Remote config get auth url from study id
+    const loginUrl = 'https://dev.radarbasedev.co.uk/kratos-ui/paprka/login';
+    this.openWithInAppBrowser(loginUrl)
+  }
+
+  enterStudyId() {
+    console.log(this.studyId)
+    // TODO: Set user property studyid and get url from remote config
+    this.next()
+  }
+
   initializeDeepLinking() {
     App.addListener('appUrlOpen', async event => {
       const url = new URL(event.url)
@@ -272,6 +290,7 @@ export class EnrolmentPageComponent {
           this.authenticate(event.url)
         }, 2000)
       }
+      // browser.close()
     })
   }
 }

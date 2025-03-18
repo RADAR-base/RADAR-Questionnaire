@@ -60,22 +60,70 @@
     <swiper-slide id="qr-registration-choice">
       <ion-card>
         <div class="registration">
-          <div class="text text-lg">{{ 'ENROL_REGISTRATION' | translate }}</div>
-          <div dir="auto" class="text text-justify">
-            {{ 'ENROL_REGISTRATION_DESC' | translate }}
+          <!-- <div class="text text-lg">{{ 'ENROL_REGISTRATION' | translate }}</div> -->
+          <br><br><br><br>
+          <div dir="auto" class="text text-center">
+            Do you have a QR code?
           </div>
         </div>
-        <div class="bottom">
+        <div class="mid">
           <p>
             <ion-button ion-button class="bt bt--full" round full (click)="enrol('qr')">
               {{ 'BTN_ENROL_SCAN' | translate }}
             </ion-button>
           </p>
+          <br><br>
+          <div dir="auto" class="text text-center">
+            Otherwise, enter your study ID.
+          </div>
           <p>
-            <ion-button ion-button class="bt bt--full" round full (click)="enrol('token')">
-              {{ 'BTN_ENROL_ENTER_TOKEN' | translate }}
+            <ion-button ion-button class="bt bt--full" round full (click)="next()">
+              Enter Study ID
             </ion-button>
           </p>
+        </div>
+      </ion-card>
+    </swiper-slide>
+
+    <!-- SLIDE 4 -->
+    <swiper-slide id="portal-registration">
+      <ion-card>
+        <div class="mid padding-top">
+          Enter your study ID below to continue.
+          <br><br>
+          <ion-item class="input" color="transparent">
+            <ion-input [(ngModel)]="studyId" [required]="true" type="text" placeholder=""
+              [clearOnEdit]="true"></ion-input>
+          </ion-item>
+          <br>
+          <p>
+            <ion-button ion-button class="bt" round full (click)="enterStudyId()">
+              Next
+            </ion-button>
+          </p>
+        </div>
+      </ion-card>
+    </swiper-slide>
+
+    <!-- SLIDE 4 -->
+    <swiper-slide id="portal-registration">
+      <ion-card>
+        <div class="registration">
+          <div class="text text-sm">
+            You will now be redirected back to your study portal.
+          </div>
+          <br><br>
+          <img class="portal" src="assets/imgs/paprka.png">
+        </div>
+        <div *ngIf="!(loading | async)" class="mid">
+          <p>
+            <ion-button ion-button class="bt bt--full" round full (click)="goToPortal()">
+              Login to Portal
+            </ion-button>
+          </p>
+        </div>
+        <div class="spn-container" *ngIf="loading | async">
+          <ion-spinner name="lines"></ion-spinner>
         </div>
       </ion-card>
     </swiper-slide>
@@ -85,15 +133,26 @@
       <ion-card>
         <div class="registration">
           <div class="text text-lg">{{ 'ENROL_REGISTRATION' | translate }}</div>
-          <div [ngSwitch]="enrolmentMethod">
-            <ng-container *ngSwitchCase="'token'">
-              <token-form [loading]="loading | async" (data)="authenticate($event)" (focus)="clearStatus()"
-                (errors)="handleError($event)"></token-form>
-            </ng-container>
-            <ng-container *ngSwitchCase="'qr'">
-              <qr-form [loading]="loading | async" (data)="authenticate($event)"></qr-form>
-            </ng-container>
-          </div>
+          <qr-form [loading]="loading | async" (data)="authenticate($event, 'qr')" (enterToken)="next()"></qr-form>
+        </div>
+      </ion-card>
+      <div class="status">
+        <div id="outcome" *ngIf="showOutcomeStatus">
+          {{ outcomeStatus }}
+        </div>
+        <div id="loading" *ngIf="(loading | async) && !showOutcomeStatus">
+          {{ 'STATUS_LOADING' | translate }}...
+        </div>
+      </div>
+    </swiper-slide>
+
+    <!-- SLIDE 4 -->
+    <swiper-slide id="token-registration">
+      <ion-card>
+        <div class="registration">
+          <div class="text text-lg">{{ 'ENROL_REGISTRATION' | translate }}</div>
+          <token-form [loading]="loading | async" (data)="authenticate($event, 'token')" (focus)="clearStatus()"
+            (errors)="handleError($event)"></token-form>
         </div>
       </ion-card>
       <div class="status">

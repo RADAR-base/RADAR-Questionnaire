@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core'
 import { OAuth2Client } from '@byteowls/capacitor-oauth2';
-import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
-import { DefaultOryAuthOptions } from 'src/assets/data/defaultConfig';
+import { DefaultOryAuthOptions } from '../../../../../assets/data/defaultConfig'
 
 @Component({
   selector: 'ory-form',
@@ -11,14 +10,21 @@ import { DefaultOryAuthOptions } from 'src/assets/data/defaultConfig';
 export class OryFormComponent {
   @Input()
   loading: boolean
+  @Input()
+  baseUrl: string
 
   @Output()
   data: EventEmitter<any> = new EventEmitter<any>()
 
-  constructor() {}
+  constructor() { }
 
   loginWithOry() {
+    DefaultOryAuthOptions.authorizationBaseUrl = this.baseUrl + '/hydra/oauth2/auth'
+    DefaultOryAuthOptions.accessTokenEndpoint = this.baseUrl + '/hydra/oauth2/token'
     OAuth2Client.authenticate(DefaultOryAuthOptions)
-    .then(response => this.data.emit(response.access_token_response))
+      .then(response => {
+        const data = Object.assign({}, response.access_token_response, { url: this.baseUrl })
+        return this.data.emit(data)
+      })
   }
 }

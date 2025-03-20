@@ -10,6 +10,7 @@ import {
   DefaultPrivacyPolicyUrl,
   DefaultSettingsSupportedLanguages,
   DefaultSettingsWeeklyReport,
+  DefaultOryEndpoint
 } from '../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
@@ -26,6 +27,7 @@ import {
 } from '../../../shared/models/settings'
 import { AuthService } from '../services/auth.service'
 import { BehaviorSubject } from 'rxjs'
+import { AuthFactoryService } from '../services/auth-factory.service'
 
 @Component({
   selector: 'page-enrolment',
@@ -45,10 +47,12 @@ export class EnrolmentPageComponent {
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
   enrolmentMethod = 'qr'
   studyId: string
+  baseUrl: string = DefaultOryEndpoint
 
   constructor(
     public navCtrl: NavController,
     private auth: AuthService,
+    private authFactory: AuthFactoryService,
     private localization: LocalizationService,
     private alertService: AlertService,
     private usage: UsageService,
@@ -154,6 +158,7 @@ export class EnrolmentPageComponent {
   enrol(method) {
     if (method === 'ory') {
       console.log(this.studyId)
+      // Pull baseUrl from remote config
     }
     this.enrolmentMethod = method
     this.removeSlideById('portal-registration')
@@ -167,7 +172,7 @@ export class EnrolmentPageComponent {
     }
     this.cdr.detectChanges()
     this.clearStatus()
-    return this.auth
+    return this.authFactory.getAuthService(enrolmentMethod)
       .authenticate(authObj)
       .catch(e => {
         if (e.status !== 409) throw e // Handle conflict error (409)
@@ -272,22 +277,15 @@ export class EnrolmentPageComponent {
     await Browser.open({ url })
   }
 
-  async goToPortal() {
-    // TODO: Remote config get auth url from study id
-    const loginUrl = 'https://dev.radarbasedev.co.uk/kratos-ui/paprka/login';
-    this.openWithInAppBrowser(loginUrl)
-  }
-
   initializeDeepLinking() {
     App.addListener('appUrlOpen', async event => {
       const url = new URL(event.url)
       if (url.hostname === 'enrol') {
         this.loading.next(true)
         setTimeout(() => {
-          this.authenticate(event.url)
+          this.authenticate(event.url, 'ory')
         }, 2000)
       }
-      // browser.close()
     })
   }
 }

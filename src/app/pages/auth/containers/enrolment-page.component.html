@@ -109,7 +109,7 @@
     <swiper-slide id="portal-registration">
       <ion-card>
         <div class="registration">
-          <ory-form [loading]="loading | async" (data)="authenticate($event)"></ory-form>
+          <ory-form [loading]="loading | async" [baseUrl="baseUrl" (data)="authenticate($event, 'ory')"></ory-form>
         </div>
       </ion-card>
     </swiper-slide>

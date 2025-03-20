@@ -11,6 +11,9 @@ import { EnrolmentPageComponent } from './containers/enrolment-page.component'
 import { AuthGuard } from './services/auth.guard'
 import { AuthService } from './services/auth.service'
 import { OryFormComponent } from './components/ory-form/ory-form.component'
+import { AuthFactoryService } from './services/auth-factory.service'
+import { MpAuthService } from './services/mp-auth.service'
+import { OryAuthService } from './services/ory-auth.service'
 
 const routes: Routes = [
   {
@@ -29,7 +32,7 @@ const routes: Routes = [
     ReactiveFormsModule
   ],
   declarations: [EnrolmentPageComponent, TokenFormComponent, QRFormComponent, OryFormComponent],
-  providers: [AuthService, AuthGuard],
+  providers: [MpAuthService, OryAuthService, AuthGuard],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AuthModule { }

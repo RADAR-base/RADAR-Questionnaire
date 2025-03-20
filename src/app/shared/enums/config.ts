@@ -8,6 +8,7 @@ export class ConfigKeys {
   static PROTOCOL_REPO = new ConfigKeys('protocol_repo')
   static NOTIFICATION_TTL_MINUTES = new ConfigKeys('notification_ttl_minutes')
   static PLATFORM_INSTANCE = new ConfigKeys('platform_instance')
+  static PLATFORM_URL = new ConfigKeys('platform_url')
   static QUESTIONS_HIDDEN = new ConfigKeys('questions_hidden')
   static APP_VERSION_LATEST = new ConfigKeys('app_version_latest')
   static NOTIFICATION_MESSAGING_TYPE = new ConfigKeys(

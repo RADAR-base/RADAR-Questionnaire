@@ -112,6 +112,14 @@
           <ory-form [loading]="loading | async" [studyId]="studyId" (data)="authenticate($event, 'ory')"></ory-form>
         </div>
       </ion-card>
+      <div class="status">
+        <div id="outcome" *ngIf="showOutcomeStatus">
+          {{ outcomeStatus }}
+        </div>
+        <div id="loading" *ngIf="(loading | async) && !showOutcomeStatus">
+          {{ 'STATUS_LOADING' | translate }}...
+        </div>
+      </div>
     </swiper-slide>
 
     <!-- SLIDE 4 -->

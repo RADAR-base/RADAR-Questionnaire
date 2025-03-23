@@ -77,7 +77,7 @@
             Otherwise, enter your study ID.
           </div>
           <p>
-            <ion-button ion-button class="bt bt--full" round full (click)="next()">
+            <ion-button ion-button class="bt bt--full" round full (click)="enrol('ory')">
               Enter Study ID
             </ion-button>
           </p>
@@ -86,7 +86,7 @@
     </swiper-slide>
 
     <!-- SLIDE 4 -->
-    <swiper-slide id="portal-registration">
+    <swiper-slide *ngIf="enrolmentMethod == 'ory'" id="portal-reg-id">
       <ion-card>
         <div class="mid padding-top">
           Enter your study ID below to continue.
@@ -97,7 +97,7 @@
           </ion-item>
           <br>
           <p>
-            <ion-button ion-button class="bt" round full (click)="enrol('ory')">
+            <ion-button ion-button class="bt" round full (click)="next()">
               {{ 'BTN_NEXT' | translate }}
             </ion-button>
           </p>
@@ -105,8 +105,8 @@
       </ion-card>
     </swiper-slide>
 
-    <!-- SLIDE 4 -->
-    <swiper-slide id="portal-registration">
+    <!-- SLIDE 5 -->
+    <swiper-slide *ngIf="enrolmentMethod == 'ory'" id="portal-registration">
       <ion-card>
         <div class="registration">
           <ory-form [loading]="loading | async" [studyId]="studyId" (data)="authenticate($event, 'ory')"></ory-form>
@@ -122,12 +122,13 @@
       </div>
     </swiper-slide>
 
-    <!-- SLIDE 4 -->
-    <swiper-slide id="qr-registration">
+    <!-- SLIDE 6 -->
+    <swiper-slide *ngIf="enrolmentMethod == 'qr' || enrolmentMethod == 'token'" id="qr-registration">
       <ion-card>
         <div class="registration">
           <div class="text text-lg">{{ 'ENROL_REGISTRATION' | translate }}</div>
-          <qr-form [loading]="loading | async" (data)="authenticate($event, 'qr')" (enterToken)="next()"></qr-form>
+          <qr-form [loading]="loading | async" (data)="authenticate($event, 'qr')"
+            (enterToken)="enrol('token')"></qr-form>
         </div>
       </ion-card>
       <div class="status">
@@ -140,8 +141,8 @@
       </div>
     </swiper-slide>
 
-    <!-- SLIDE 4 -->
-    <swiper-slide id="token-registration">
+    <!-- SLIDE 7 -->
+    <swiper-slide *ngIf="enrolmentMethod == 'token'" id="token-registration">
       <ion-card>
         <div class="registration">
           <div class="text text-lg">{{ 'ENROL_REGISTRATION' | translate }}</div>
@@ -159,7 +160,7 @@
       </div>
     </swiper-slide>
 
-    <!-- SLIDE 5 -->
+    <!-- SLIDE 8 -->
     <swiper-slide id="privacy-policy">
       <ion-card>
         <div class="registration">
@@ -181,7 +182,7 @@
       </ion-card>
     </swiper-slide>
 
-    <!-- SLIDE 6 -->
+    <!-- SLIDE 9 -->
     <swiper-slide id="registration-complete">
       <ion-card>
         <div class="text text-lg">

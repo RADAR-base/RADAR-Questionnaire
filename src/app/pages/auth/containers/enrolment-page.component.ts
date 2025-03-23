@@ -96,7 +96,7 @@ export class EnrolmentPageComponent {
       // Attempt to slide to the next slide with a delay for stability
       setTimeout(() => {
         try {
-          this.slides.nativeElement.swiper.slideTo(nextIndex, 500)
+          this.slides.nativeElement.swiper.slideTo(nextIndex, 700)
           // Disable sliding after moving to the next slide
           this.slides.nativeElement.swiper.allowSlideNext = false
           this.slides.nativeElement.swiper.allowSlidePrev = false
@@ -105,7 +105,7 @@ export class EnrolmentPageComponent {
           // Retry the slide transition if it fails
           this.retrySlideTransition(nextIndex)
         }
-      }, 100) // Adjust delay as necessary
+      }, 100)
     } else {
       console.warn('Swiper instance not ready, retrying...')
       // Retry if swiper instance isn't available yet
@@ -127,18 +127,6 @@ export class EnrolmentPageComponent {
     }
   }
 
-  removeSlideById(id: string) {
-    const slideIndex = this.findSlideIndexById(id)
-    const currentIndex = this.slides.nativeElement.swiper.activeIndex
-    if (currentIndex == slideIndex) {
-      return this.next()
-    }
-    if (slideIndex !== -1) {
-      this.slides.nativeElement.swiper.removeSlide(slideIndex)
-      this.slides.nativeElement.swiper.update()
-    }
-  }
-
   retrySlideTransition(targetIndex: number) {
     if (
       this.slides &&
@@ -155,15 +143,11 @@ export class EnrolmentPageComponent {
 
   enrol(method) {
     this.enrolmentMethod = method
-    this.removeSlideById('portal-registration')
     this.next()
   }
 
   authenticate(authObj, enrolmentMethod = 'qr') {
     this.loading.next(true)
-    if (enrolmentMethod === 'qr') {
-      this.removeSlideById('token-registration')
-    }
     this.cdr.detectChanges()
     this.clearStatus()
     return this.authFactory.getAuthService(enrolmentMethod)
@@ -182,9 +166,6 @@ export class EnrolmentPageComponent {
   handleAuthenticationSuccess() {
     return this.auth.initSubjectInformation().then(() => {
       this.usage.sendGeneralEvent(EnrolmentEventType.SUCCESS)
-      this.removeSlideById('qr-registration-choice')
-      this.removeSlideById('token-registration')
-      this.removeSlideById('qr-registration')
       return this.goToSlideById('privacy-policy')
     })
   }

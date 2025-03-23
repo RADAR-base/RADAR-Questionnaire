@@ -10,7 +10,6 @@ import {
   DefaultPrivacyPolicyUrl,
   DefaultSettingsSupportedLanguages,
   DefaultSettingsWeeklyReport,
-  DefaultOryEndpoint
 } from '../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
@@ -47,7 +46,6 @@ export class EnrolmentPageComponent {
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
   enrolmentMethod = 'qr'
   studyId: string
-  baseUrl: string = DefaultOryEndpoint
 
   constructor(
     public navCtrl: NavController,
@@ -156,10 +154,6 @@ export class EnrolmentPageComponent {
   }
 
   enrol(method) {
-    if (method === 'ory') {
-      console.log(this.studyId)
-      // Pull baseUrl from remote config
-    }
     this.enrolmentMethod = method
     this.removeSlideById('portal-registration')
     this.next()

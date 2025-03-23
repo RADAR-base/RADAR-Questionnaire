@@ -28,6 +28,7 @@ export class OryAuthService extends AuthService {
 
   authenticate(authObj: any): Promise<any> {
     this.token.setAuthType(AuthType.ORY)
+      .then(() => this.token.updateTokenServiceByType(AuthType.ORY))
     let baseUrl: string
     let refreshToken: string
 

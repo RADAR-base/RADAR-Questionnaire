@@ -9,6 +9,7 @@ import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 import { TokenService } from './token.service'
 import { OAuthToken } from '../../../shared/models/token'
+import { AuthType } from 'src/app/shared/models/auth'
 
 @Injectable({
   providedIn: 'root'
@@ -73,5 +74,7 @@ export class HydraTokenService extends TokenService {
     console.error('Error refreshing token:', error)
     throw new Error('Error refreshing token. Please try again.')
   }
+
+  updateTokenServiceByType(authType: AuthType) { }
 
 }

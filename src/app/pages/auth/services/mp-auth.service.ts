@@ -33,6 +33,7 @@ export class MpAuthService extends AuthService {
 
   authenticate(authObj: string): Promise<any> {
     this.token.setAuthType(AuthType.MP)
+      .then(() => this.token.updateTokenServiceByType(AuthType.MP))
     return this.getRefreshTokenFromUrl(authObj)
       .then(body => {
         const { refreshToken, baseUrl } = body

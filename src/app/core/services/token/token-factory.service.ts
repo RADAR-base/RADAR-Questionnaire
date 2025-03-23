@@ -45,7 +45,7 @@ export class TokenFactoryService extends TokenService {
         authType = endpoint && endpoint.includes(this.HYDRA_KEY) ? AuthType.ORY : AuthType.MP
         await this.setAuthType(authType)
       }
-      this.tokenService = this.getTokenServiceByType(authType)
+      this.updateTokenServiceByType(authType)
       this.isInitialised = true
     } catch (error) {
       this.logger.error('Error initializing TokenFactoryService', error)
@@ -53,14 +53,14 @@ export class TokenFactoryService extends TokenService {
     }
   }
 
-  private getTokenServiceByType(authType: AuthType): TokenService {
+  updateTokenServiceByType(authType: AuthType) {
     switch (authType) {
       case AuthType.MP:
-        return this.mpTokenService
+        return this.tokenService = this.mpTokenService
       case AuthType.ORY:
-        return this.hydraTokenService
+        return this.tokenService = this.hydraTokenService
       default:
-        return this.mpTokenService
+        return this.tokenService = this.mpTokenService
     }
   }
 

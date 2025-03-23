@@ -11,10 +11,8 @@ import { UsageEventType } from 'src/app/shared/enums/events'
 export class QRFormComponent {
   @Input()
   loading: boolean
-
   @Output()
   data: EventEmitter<any> = new EventEmitter<any>()
-
   @Output()
   enterToken: EventEmitter<any> = new EventEmitter<any>()
 

@@ -16,9 +16,11 @@ export class OryFormComponent {
   loading: boolean
   @Input()
   studyId: string
-
   @Output()
   data: EventEmitter<any> = new EventEmitter<any>()
+
+  HYDRA_AUTH_ENDPOINT = '/hydra/oauth2/auth'
+  HYDRA_TOKEN_ENDPOINT = '/hydra/oauth2/token'
 
   constructor(private remoteConfig: RemoteConfigService) { }
 
@@ -31,8 +33,8 @@ export class OryFormComponent {
           DefaultOryEndpoint
         )
       ).then(baseUrl => {
-        DefaultOryAuthOptions.authorizationBaseUrl = baseUrl + '/hydra/oauth2/auth'
-        DefaultOryAuthOptions.accessTokenEndpoint = baseUrl + '/hydra/oauth2/token'
+        DefaultOryAuthOptions.authorizationBaseUrl = baseUrl + this.HYDRA_AUTH_ENDPOINT
+        DefaultOryAuthOptions.accessTokenEndpoint = baseUrl + this.HYDRA_TOKEN_ENDPOINT
         OAuth2Client.authenticate(DefaultOryAuthOptions)
           .then(response => {
             const data = Object.assign({}, response.access_token_response, { url: baseUrl })

@@ -127,8 +127,8 @@
       <ion-card>
         <div class="registration">
           <div class="text text-lg">{{ 'ENROL_REGISTRATION' | translate }}</div>
-          <qr-form [loading]="loading | async" (data)="authenticate($event, 'qr')"
-            (enterToken)="enrol('token')"></qr-form>
+          <qr-form [loading]="loading | async" (qr)="authenticate($event, 'qr')" (ory)="authenticate($event, 'ory')"
+            (token)="enrol('token')"></qr-form>
         </div>
       </ion-card>
       <div class="status">

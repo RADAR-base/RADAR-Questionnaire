@@ -12,9 +12,13 @@ export class QRFormComponent {
   @Input()
   loading: boolean
   @Output()
-  data: EventEmitter<any> = new EventEmitter<any>()
+  ory: EventEmitter<any> = new EventEmitter<any>()
   @Output()
-  enterToken: EventEmitter<any> = new EventEmitter<any>()
+  qr: EventEmitter<any> = new EventEmitter<any>()
+  @Output()
+  token: EventEmitter<any> = new EventEmitter<any>()
+
+  ORY_KEY = 'ory'
 
   constructor(private usage: UsageService) { }
 
@@ -30,7 +34,13 @@ export class QRFormComponent {
       'barcodeScanned',
       async result => {
         await listener.remove()
-        this.data.emit(result.barcode.rawValue)
+        const data = result.barcode.rawValue
+        if (data.includes(this.ORY_KEY)) {
+          this.ory.emit(data)
+        }
+        else {
+          this.qr.emit(data)
+        }
         // Removes the class after the scan (workaround for the camera not closing)
         document.querySelector('body').classList.remove('scanner-active')
       }
@@ -40,6 +50,6 @@ export class QRFormComponent {
   }
 
   enterTokenHandler() {
-    this.enterToken.emit()
+    this.token.emit()
   }
 }

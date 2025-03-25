@@ -34,10 +34,10 @@ export class SplashPageComponent {
       .then(enrolled =>
         enrolled
           ? this.splashService
-              .evalEnrolment()
-              .then(valid =>
-                valid ? !!this.onStart() : !!this.resetAndEnrol()
-              )
+            .evalEnrolment()
+            .then(valid =>
+              valid ? !!this.onStart() : !!this.resetAndEnrol()
+            )
           : this.enrol()
       )
   }
@@ -66,6 +66,7 @@ export class SplashPageComponent {
   }
 
   showFetchConfigFail(e) {
+    console.log('Error fetching config')
     console.log(e)
     this.alertService.showAlert({
       header: this.localization.translateKey(LocKeys.STATUS_FAILURE),
@@ -79,7 +80,7 @@ export class SplashPageComponent {
         },
         {
           text: this.localization.translateKey(LocKeys.BTN_DISMISS),
-          handler: () => {}
+          handler: () => { }
         }
       ]
     })

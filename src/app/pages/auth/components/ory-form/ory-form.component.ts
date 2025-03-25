@@ -5,6 +5,7 @@ import {
 } from '../../../../../assets/data/defaultConfig'
 import { RemoteConfigService } from 'src/app/core/services/config/remote-config.service';
 import { ConfigKeys } from 'src/app/shared/enums/config';
+import { AnalyticsService } from 'src/app/core/services/usage/analytics.service';
 
 @Component({
   selector: 'ory-form',
@@ -22,25 +23,30 @@ export class OryFormComponent {
   HYDRA_AUTH_ENDPOINT = '/hydra/oauth2/auth'
   HYDRA_TOKEN_ENDPOINT = '/hydra/oauth2/token'
 
-  constructor(private remoteConfig: RemoteConfigService) { }
+  constructor(
+    private remoteConfig: RemoteConfigService,
+    private analytics: AnalyticsService
+  ) { }
 
   loginWithOry() {
-    this.remoteConfig
-      .forceFetch()
-      .then(config =>
-        config.getOrDefault(
-          ConfigKeys.PLATFORM_URL,
-          DefaultOryEndpoint
-        )
-      ).then(baseUrl => {
-        DefaultOryAuthOptions.authorizationBaseUrl = baseUrl + this.HYDRA_AUTH_ENDPOINT
-        DefaultOryAuthOptions.accessTokenEndpoint = baseUrl + this.HYDRA_TOKEN_ENDPOINT
-        OAuth2Client.authenticate(DefaultOryAuthOptions)
-          .then(response => {
-            const data = Object.assign({}, response.access_token_response, { url: baseUrl })
-            return this.data.emit(data)
+    this.analytics.setUserProperties({ studyCode: this.studyId })
+      .then(() =>
+        this.remoteConfig
+          .forceFetch()
+          .then(config =>
+            config.getOrDefault(
+              ConfigKeys.PLATFORM_URL,
+              DefaultOryEndpoint
+            )
+          ).then(baseUrl => {
+            DefaultOryAuthOptions.authorizationBaseUrl = baseUrl + this.HYDRA_AUTH_ENDPOINT
+            DefaultOryAuthOptions.accessTokenEndpoint = baseUrl + this.HYDRA_TOKEN_ENDPOINT
+            OAuth2Client.authenticate(DefaultOryAuthOptions)
+              .then(response => {
+                const data = Object.assign({}, response.access_token_response, { url: baseUrl })
+                return this.data.emit(data)
+              })
           })
-      })
-
+      )
   }
 }

@@ -15,11 +15,10 @@ import { AnalyticsService } from 'src/app/core/services/usage/analytics.service'
 export class OryFormComponent {
   @Input()
   loading: boolean
-  @Input()
-  studyId: string
   @Output()
   data: EventEmitter<any> = new EventEmitter<any>()
 
+  studyId: string
   HYDRA_AUTH_ENDPOINT = '/hydra/oauth2/auth'
   HYDRA_TOKEN_ENDPOINT = '/hydra/oauth2/token'
 

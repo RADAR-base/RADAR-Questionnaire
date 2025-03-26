@@ -45,7 +45,6 @@ export class EnrolmentPageComponent {
   language?: LanguageSetting = DefaultLanguage
   languagesSelectable: LanguageSetting[] = DefaultSettingsSupportedLanguages
   enrolmentMethod = 'qr'
-  studyId: string
 
   constructor(
     public navCtrl: NavController,

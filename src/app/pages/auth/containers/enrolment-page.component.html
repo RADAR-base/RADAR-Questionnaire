@@ -63,7 +63,7 @@
           <!-- <div class="text text-lg">{{ 'ENROL_REGISTRATION' | translate }}</div> -->
           <br><br><br><br>
           <div dir="auto" class="text text-center">
-            Do you have a QR code?
+            {{ 'ENROL_REGISRATION_QR' | translate }}
           </div>
         </div>
         <div class="mid">
@@ -74,31 +74,11 @@
           </p>
           <br><br>
           <div dir="auto" class="text text-center">
-            Otherwise, enter your study ID.
+            {{ 'ENROL_REGISRATION_ENTER_STUDY_ID' | translate }}
           </div>
           <p>
             <ion-button ion-button class="bt bt--full" round full (click)="enrol('ory')">
-              Enter Study ID
-            </ion-button>
-          </p>
-        </div>
-      </ion-card>
-    </swiper-slide>
-
-    <!-- SLIDE 4 -->
-    <swiper-slide *ngIf="enrolmentMethod == 'ory'" id="portal-reg-id">
-      <ion-card>
-        <div class="mid padding-top">
-          Enter your study ID below to continue.
-          <br><br>
-          <ion-item class="input" color="transparent">
-            <ion-input [(ngModel)]="studyId" [required]="true" type="text" placeholder=""
-              [clearOnEdit]="true"></ion-input>
-          </ion-item>
-          <br>
-          <p>
-            <ion-button ion-button class="bt" round full (click)="next()">
-              {{ 'BTN_NEXT' | translate }}
+              {{ 'ENROL_REGISRATION_STUDY_ID' | translate }}
             </ion-button>
           </p>
         </div>
@@ -109,7 +89,7 @@
     <swiper-slide *ngIf="enrolmentMethod == 'ory'" id="portal-registration">
       <ion-card>
         <div class="registration">
-          <ory-form [loading]="loading | async" [studyId]="studyId" (data)="authenticate($event, 'ory')"></ory-form>
+          <ory-form [loading]="loading | async" (data)="authenticate($event, 'ory')"></ory-form>
         </div>
       </ion-card>
       <div class="status">

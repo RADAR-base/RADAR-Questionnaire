@@ -93,6 +93,36 @@ export const Localisations = {
     hb:
       'לחץ על כפתור הסריקה וכוון את המצלמה לכיוון קוד הQR שניתן לך על ידי החוקרים. דוגמה לקוד QR מוצגת למטה.'
   },
+  ENROL_REGISTRATION_STUDY_DESC: {
+    da: 'Indtast dit studie-ID nedenfor for at fortsætte.',
+    de: 'Geben Sie unten Ihre Studien-ID ein, um fortzufahren.',
+    en: 'Enter your study ID below to continue.',
+    es: 'Ingresa tu ID de estudio abajo para continuar.',
+    it: 'Inserisci il tuo ID di studio qui sotto per continuare.',
+    nl: 'Voer hieronder je studie-ID in om door te gaan.',
+    pl: 'Wprowadź poniżej swój identyfikator studiów, aby kontynuować.',
+    hb: 'הזן את מזהה הלימודים שלך למטה כדי להמשיך.'
+  },
+  ENROL_REGISTRATION_ENTER_STUDY_ID: {
+    da: 'Ellers skal du indtaste dit studie-ID.',
+    de: 'Andernfalls geben Sie Ihre Studien-ID ein.',
+    en: 'Otherwise, enter your study ID.',
+    es: 'De lo contrario, ingresa tu ID de estudio.',
+    it: 'Altrimenti, inserisci il tuo ID di studio.',
+    nl: 'Anders, voer je studie-ID in.',
+    pl: 'W przeciwnym razie wprowadź swój identyfikator studiów.',
+    hb: 'אחרת, הזן את מזהה הלימודים שלך.'
+  },
+  ENROL_REGISTRATION_STUDY_ID: {
+    da: 'Indtast studie-ID',
+    de: 'Studien-ID eingeben',
+    en: 'Enter Study ID',
+    es: 'Ingresa ID de estudio',
+    it: 'Inserisci ID di studio',
+    nl: 'Voer studie-ID in',
+    pl: 'Wprowadź identyfikator studiów',
+    hb: 'הזן מזהה לימודים'
+  },
   ENROL_REGISTRATION_ORY_DESC: {
     da: 'Log ind med din studieportal e-mail og adgangskode.',
     de: 'Melden Sie sich mit Ihrer Studienportal-E-Mail und Ihrem Passwort an.',
@@ -120,6 +150,16 @@ export const Localisations = {
       'Wprowadź Token. Powinien być widoczny poniżej kodu QR w Mahagement Portal. Jeśli go tam nie znajdziesz, zeskanuj kod QR.',
     hb:
       'הזן את הטוקן. הוא אמור להיות זמין מתחת לקוד הQR בפורטל הניהול. אם הוא לא זמין בבקשה סרוק את קוד הQR.'
+  },
+  ENROL_REGISTRATION_QR: {
+    da: 'Har du en QR-kode?',
+    de: 'Haben Sie einen QR-Code?',
+    en: 'Do you have a QR code?',
+    es: '¿Tienes un código QR?',
+    it: 'Hai un codice QR?',
+    nl: 'Heb je een QR-code?',
+    pl: 'Masz kod QR?',
+    hb: 'האם יש לך קוד QR?'
   },
   ENROL_PREFERENCES: {
     da: 'Præferencer',

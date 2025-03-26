@@ -94,14 +94,14 @@ export const Localisations = {
       'לחץ על כפתור הסריקה וכוון את המצלמה לכיוון קוד הQR שניתן לך על ידי החוקרים. דוגמה לקוד QR מוצגת למטה.'
   },
   ENROL_REGISTRATION_ORY_DESC: {
-    da: 'Log ind med din Ory identitetsudbyder.',
-    de: 'Melden Sie sich mit Ihrem Ory-Identitätsanbieter an.',
-    en: 'Login with your Ory identity provider.',
-    es: 'Inicie sesión con su proveedor de identidad Ory.',
-    it: 'Accedi con il tuo provider di identità Ory.',
-    nl: 'Log in met uw Ory-identiteitsprovider.',
-    pl: 'Zaloguj się za pomocą dostawcy tożsamości Ory.',
-    hb: 'התחבר באמצעות ספק הזהות Ory שלך.'
+    da: 'Log ind med din studieportal e-mail og adgangskode.',
+    de: 'Melden Sie sich mit Ihrer Studienportal-E-Mail und Ihrem Passwort an.',
+    en: 'Login with your study portal email and password.',
+    es: 'Inicia sesión con tu correo y contraseña del portal de estudio.',
+    it: 'Accedi con la tua email e password del portale di studio.',
+    nl: 'Log in met je studieportaal-e-mail en wachtwoord.',
+    pl: 'Zaloguj się za pomocą e-maila i hasła do portalu studiów.',
+    hb: 'התחבר עם הדוא״ל והסיסמה של פורטל הלימודים שלך.'
   },
   ENROL_REGISTRATION_TOKEN_DESC: {
     da:
@@ -755,14 +755,14 @@ export const Localisations = {
     hb: 'סרוק'
   },
   BTN_ENROL_KRATOS: {
-    da: 'Login med Ory',
-    de: 'Mit Ory anmelden',
-    en: 'Login with Ory',
-    es: 'Iniciar sesión con Ory',
-    it: 'Accedi con Ory',
-    nl: 'Inloggen met Ory',
-    pl: 'Zaloguj się z Ory',
-    hb: 'התחברות עם Ory'
+    da: 'Log ind',
+    de: 'Anmelden',
+    en: 'Login',
+    es: 'Iniciar sesión',
+    it: 'Accedi',
+    nl: 'Inloggen',
+    pl: 'Zaloguj się',
+    hb: 'התחברות'
   },
   BTN_ENROL_ENTER_TOKEN: {
     da: 'Indtast Token',

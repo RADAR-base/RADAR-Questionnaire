@@ -66,8 +66,6 @@ export class SplashPageComponent {
   }
 
   showFetchConfigFail(e) {
-    console.log('Error fetching config')
-    console.log(e)
     this.alertService.showAlert({
       header: this.localization.translateKey(LocKeys.STATUS_FAILURE),
       message: this.localization.translateKey(LocKeys.CONFIG_ERROR_DESC),

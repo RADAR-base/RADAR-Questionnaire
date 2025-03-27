@@ -68,8 +68,7 @@ export class HydraTokenService extends TokenService {
     if (error && error.error === 'invalid_grant') {
       // Specific check for expired refresh token
       console.error('Refresh token expired. Please log in again.')
-      return this.getTokenFromStorage().then(token => {
-        console.log(token)
+      return this.getTokenFromRemoteStorage().then(token => {
         if (token) {
           return this.register(this.getRefreshParams(token))
         } else {
@@ -84,7 +83,7 @@ export class HydraTokenService extends TokenService {
 
   updateTokenServiceByType(authType: AuthType) { }
 
-  getTokenFromStorage() {
+  getTokenFromRemoteStorage() {
     return this.remoteConfig
       .read()
       .then(config =>

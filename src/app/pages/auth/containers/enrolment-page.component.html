@@ -89,7 +89,8 @@
     <swiper-slide *ngIf="enrolmentMethod == 'ory'" id="portal-registration">
       <ion-card>
         <div class="registration">
-          <ory-form [loading]="loading | async" (data)="authenticate($event, 'ory')"></ory-form>
+          <ory-form [loading]="loading | async" (data)="authenticate($event, 'ory')" (focus)="clearStatus()"
+            (errors)="handleError($event)"></ory-form>
         </div>
       </ion-card>
       <div class="status">

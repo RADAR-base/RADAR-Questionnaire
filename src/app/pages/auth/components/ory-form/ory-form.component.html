@@ -2,7 +2,7 @@
   <div dir="auto" class="text text-justify">
     {{ 'ENROL_REGISTRATION_ORY_DESC' | translate }}
   </div>
-  <div class="qr-code">
+  <div class="ory-img">
     <img class="portal" src="assets/imgs/paprka.png">
   </div>
   <div class="mid padding-top">
@@ -10,8 +10,7 @@
     <br><br>
     <ion-item class="input" color="transparent">
       <ion-input [(ngModel)]="studyId" [required]="true" type="text" placeholder="" [clearOnEdit]="true"
-        (ionFocus)="hideButton('true')" (ionBlur)="hideButton('false')"
-        (keyup)="onKeyboardEvent($event.key)"></ion-input>
+        (ionFocus)="onFocus('true')" (ionBlur)="onFocus('false')" (keyup)="onKeyboardEvent($event.key)"></ion-input>
     </ion-item>
     <br>
   </div>

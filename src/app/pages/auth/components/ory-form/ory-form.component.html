@@ -9,12 +9,14 @@
     {{ 'ENROL_REGISTRATION_STUDY_DESC' | translate }}
     <br><br>
     <ion-item class="input" color="transparent">
-      <ion-input [(ngModel)]="studyId" [required]="true" type="text" placeholder="" [clearOnEdit]="true"></ion-input>
+      <ion-input [(ngModel)]="studyId" [required]="true" type="text" placeholder="" [clearOnEdit]="true"
+        (ionFocus)="hideButton('true')" (ionBlur)="hideButton('false')"
+        (keyup)="onKeyboardEvent($event.key)"></ion-input>
     </ion-item>
     <br>
   </div>
 </div>
-<div class="ion-padding bottom" *ngIf="!loading">
+<div class="ion-padding bottom" *ngIf="!loading && !buttonHidden">
   <ion-button ion-button class="bt bt--full" round full (click)="loginWithOry()">
     {{ 'BTN_ENROL_KRATOS' | translate }}
   </ion-button>

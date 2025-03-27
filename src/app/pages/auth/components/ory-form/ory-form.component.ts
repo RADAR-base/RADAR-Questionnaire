@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core'
-import { OAuth2Client } from '@byteowls/capacitor-oauth2';
+import { OAuth2Client } from '@byteowls/capacitor-oauth2'
 import {
   DefaultOryAuthOptions, DefaultOryEndpoint
 } from '../../../../../assets/data/defaultConfig'
-import { RemoteConfigService } from 'src/app/core/services/config/remote-config.service';
-import { ConfigKeys } from 'src/app/shared/enums/config';
-import { AnalyticsService } from 'src/app/core/services/usage/analytics.service';
+import { RemoteConfigService } from 'src/app/core/services/config/remote-config.service'
+import { ConfigKeys } from 'src/app/shared/enums/config'
+import { AnalyticsService } from 'src/app/core/services/usage/analytics.service'
+import { KeyboardEventType } from 'src/app/shared/enums/events'
 
 @Component({
   selector: 'ory-form',
@@ -21,6 +22,7 @@ export class OryFormComponent {
   studyId: string
   HYDRA_AUTH_ENDPOINT = '/hydra/oauth2/auth'
   HYDRA_TOKEN_ENDPOINT = '/hydra/oauth2/token'
+  buttonHidden = false
 
   constructor(
     private remoteConfig: RemoteConfigService,
@@ -48,4 +50,15 @@ export class OryFormComponent {
           })
       )
   }
+
+  hideButton(value: string) {
+    setTimeout(() => this.buttonHidden = value === 'true', 200)
+  }
+
+  onKeyboardEvent(value) {
+    value = value.toLowerCase()
+    if (value == KeyboardEventType.ENTER)
+      this.loginWithOry()
+  }
+
 }

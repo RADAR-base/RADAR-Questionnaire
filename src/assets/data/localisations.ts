@@ -94,34 +94,34 @@ export const Localisations = {
       'לחץ על כפתור הסריקה וכוון את המצלמה לכיוון קוד הQR שניתן לך על ידי החוקרים. דוגמה לקוד QR מוצגת למטה.'
   },
   ENROL_REGISTRATION_STUDY_DESC: {
-    da: 'Indtast dit studie-ID nedenfor for at fortsætte.',
-    de: 'Geben Sie unten Ihre Studien-ID ein, um fortzufahren.',
-    en: 'Enter your study ID below to continue.',
-    es: 'Ingresa tu ID de estudio abajo para continuar.',
-    it: 'Inserisci il tuo ID di studio qui sotto per continuare.',
-    nl: 'Voer hieronder je studie-ID in om door te gaan.',
-    pl: 'Wprowadź poniżej swój identyfikator studiów, aby kontynuować.',
-    hb: 'הזן את מזהה הלימודים שלך למטה כדי להמשיך.'
+    da: 'Indtast dit studie navn (f.eks. paprka) for at fortsætte.',
+    de: 'Geben Sie den Namen Ihres Studiums ein (z. B. paprka), um fortzufahren.',
+    en: 'Enter study name (e.g. paprka) to continue.',
+    es: 'Ingresa el nombre de tu estudio (por ejemplo, paprka) para continuar.',
+    it: 'Inserisci il nome del tuo studio (ad esempio, paprka) per continuare.',
+    nl: 'Voer de naam van je studie in (bijv. paprka) om door te gaan.',
+    pl: 'Wprowadź nazwę swojego studium (np. paprka), aby kontynuować.',
+    hb: 'הזן את שם הלימודים שלך (למשל, paprka) כדי להמשיך.'
   },
   ENROL_REGISTRATION_ENTER_STUDY_ID: {
-    da: 'Ellers skal du indtaste dit studie-ID.',
-    de: 'Andernfalls geben Sie Ihre Studien-ID ein.',
-    en: 'Otherwise, enter your study ID.',
-    es: 'De lo contrario, ingresa tu ID de estudio.',
-    it: 'Altrimenti, inserisci il tuo ID di studio.',
-    nl: 'Anders, voer je studie-ID in.',
-    pl: 'W przeciwnym razie wprowadź swój identyfikator studiów.',
-    hb: 'אחרת, הזן את מזהה הלימודים שלך.'
+    da: 'Ellers skal du indtaste dit studie navn.',
+    de: 'Andernfalls geben Sie den Namen Ihres Studiums ein.',
+    en: 'Otherwise, enter your study name.',
+    es: 'De lo contrario, ingresa el nombre de tu estudio.',
+    it: 'Altrimenti, inserisci il nome del tuo studio.',
+    nl: 'Anders, voer de naam van je studie in.',
+    pl: 'W przeciwnym razie wprowadź nazwę swojego studium.',
+    hb: 'אחרת, הזן את שם הלימודים שלך.'
   },
   ENROL_REGISTRATION_STUDY_ID: {
-    da: 'Indtast studie-ID',
-    de: 'Studien-ID eingeben',
-    en: 'Enter Study ID',
-    es: 'Ingresa ID de estudio',
-    it: 'Inserisci ID di studio',
-    nl: 'Voer studie-ID in',
-    pl: 'Wprowadź identyfikator studiów',
-    hb: 'הזן מזהה לימודים'
+    da: 'Indtast studie navn',
+    de: 'Studienname eingeben',
+    en: 'Enter Study Name',
+    es: 'Ingresa nombre del estudio',
+    it: 'Inserisci nome dello studio',
+    nl: 'Voer studie naam in',
+    pl: 'Wprowadź nazwę studiów',
+    hb: 'הזן את שם הלימודים'
   },
   ENROL_REGISTRATION_ORY_DESC: {
     da: 'Log ind med din studieportal e-mail og adgangskode.',
@@ -200,21 +200,14 @@ export const Localisations = {
     hb: 'ההרשמה הושלמה'
   },
   ENROL_REGISTRATION_COMPLETE_DESC: {
-    da:
-      "Du er nu med tilmelding til undersøgelsen. Klik på 'Afslut' for at begynde at generere din spørgeskemaplan og dine meddelelser.",
-    de:
-      "Sie haben sich jetzt erfolgreich für die Studie angemeldet. Klicken Sie auf 'Fertig', um den Zeitplan und die Benachrichtigungen für Ihren Fragebogen zu erstellen.",
-    en:
-      "You have now successfully enrolled in the study. Click 'Finish' to start generating your questionnaire schedule and notifications.",
-    es:
-      "Ahora se ha inscrito con éxito en el estudio. Haga clic en 'Finalizar' para comenzar a generar su calendario de cuestionarios y notificaciones.",
-    it:
-      "Ora ti sei iscritto con successo allo studio. Fai clic su 'Fine' per iniziare a generare la pianificazione del questionario e le notifiche.",
-    nl:
-      "U bent nu succesvol ingeschreven voor het onderzoek. Klik op 'Voltooid' om uw vragenlijstschema en meldingen te genereren.",
-    pl:
-      'Z powodzeniem zarejestrowałeś się w badaniu. Kliknij „Zakończone”, aby wygenerować harmonogram kwestionariusza i powiadomienia',
-    hb: `נרשמת בהצלחה למחקר. לחץ "סיום" כדי ליצור את לוח הזמנים וההתראות שלך .`
+    da: "Alt er klar! Tryk på 'Start' for at begynde dine studieopgaver.",
+    de: "Alles ist bereit! Tippen Sie auf 'Start', um mit Ihren Studienaufgaben zu beginnen.",
+    en: "You're all set! Tap 'Start' to begin your study tasks.",
+    es: "¡Todo listo! Toca 'Iniciar' para comenzar tus tareas de estudio.",
+    it: "Sei pronto! Tocca 'Avvia' per iniziare le tue attività di studio.",
+    nl: "Alles is klaar! Tik op 'Start' om je studieopdrachten te beginnen.",
+    pl: "Wszystko gotowe! Stuknij 'Start', aby rozpocząć swoje zadania badawcze.",
+    hb: "הכל מוכן! לחץ על 'התחל' כדי להתחיל את משימות המחקר שלך."
   },
   ENROL_PRIVACY_POLICY_DESC: {
     da:
@@ -1395,14 +1388,14 @@ export const Localisations = {
     hb: 'החזק מעמד!'
   },
   TASK_BAR_TASK_LEFT_2: {
-    da: 'Der er stadig et par spørgsmål tilbage',
-    de: 'Einige Aufgaben stehen noch aus',
-    en: 'A few questionnaires are still left.',
-    es: 'Todavía quedan algunos cuestionarios',
-    it: 'Mancano ancora pochi questionari',
-    nl: 'Er staan nog een paar vragenlijsten open',
-    pl: 'Zostało jeszcze kilka ankiet.',
-    hb: '.נותרו עדיין מספר שאלונים'
+    da: 'Indlæser dine opgaver.',
+    de: 'Lade deine Aufgaben.',
+    en: 'Loading your tasks.',
+    es: 'Cargando tus tareas.',
+    it: 'Caricamento delle tue attività.',
+    nl: 'Je taken worden geladen.',
+    pl: 'Ładowanie twoich zadań.',
+    hb: 'טוען את המשימות שלך.'
   },
   TASK_BAR_NO_TASK_1: {
     da: 'Tag det roligt!',

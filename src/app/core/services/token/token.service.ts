@@ -99,7 +99,7 @@ export abstract class TokenService {
         milliseconds: new Date().getTime() + this.tokenRefreshMillis
       })
       if (tokens.iat + tokens.expires_in < limit) {
-        const params = this.getRefreshParams('orytest')
+        const params = this.getRefreshParams(tokens.refresh_token)
         return this.register(params)
       } else {
         return tokens

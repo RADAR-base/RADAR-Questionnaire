@@ -16,6 +16,7 @@ import { getSeconds } from '../../../shared/utilities/time'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
+import { AuthType } from 'src/app/shared/models/auth'
 
 @Injectable({
   providedIn: 'root'
@@ -152,6 +153,8 @@ export abstract class TokenService {
   }
 
   abstract isValid(): Promise<boolean>
+
+  abstract updateTokenServiceByType(authType: AuthType)
 
   setAuthType(type) {
     return this.storage.set(StorageKeys.PLATFORM_AUTH_TYPE, type)

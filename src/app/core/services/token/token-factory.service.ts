@@ -73,6 +73,10 @@ export class TokenFactoryService extends TokenService {
       .catch((error) => this.tokenService.handleError(error))
   }
 
+  forceRefresh(): Promise<OAuthToken> {
+    return this.tokenService.forceRefresh()
+  }
+
   async register(refreshBody: any): Promise<OAuthToken> {
     return this.tokenService.register(refreshBody)
   }

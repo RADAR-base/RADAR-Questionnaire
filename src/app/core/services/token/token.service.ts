@@ -88,6 +88,8 @@ export abstract class TokenService {
 
   abstract register(refreshBody): Promise<OAuthToken>
 
+  abstract forceRefresh(): Promise<any>
+
   refresh(): Promise<OAuthToken> {
     return this.getTokens().then(tokens => {
       if (!tokens) {
@@ -97,7 +99,7 @@ export abstract class TokenService {
         milliseconds: new Date().getTime() + this.tokenRefreshMillis
       })
       if (tokens.iat + tokens.expires_in < limit) {
-        const params = this.getRefreshParams(tokens.refresh_token)
+        const params = this.getRefreshParams('orytest')
         return this.register(params)
       } else {
         return tokens

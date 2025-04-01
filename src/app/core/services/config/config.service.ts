@@ -323,7 +323,8 @@ export class ConfigService {
       this.schedule.reset(),
       this.notifications.reset(),
       this.localization.init(),
-      this.healthKitService.reset()
+      this.healthKitService.reset(),
+      this.analytics.reset()
     ])
   }
 

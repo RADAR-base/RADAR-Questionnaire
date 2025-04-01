@@ -38,7 +38,7 @@ export class OryFormComponent {
   ) { }
 
   loginWithOry() {
-    this.analytics.setUserProperties({ studyCode: this.studyId })
+    this.analytics.setUserProperties({ studyCode: this.studyId.toLowerCase() })
       .then(() =>
         this.remoteConfig
           .forceFetch()

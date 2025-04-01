@@ -1,13 +1,17 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core'
 import { OAuth2Client } from '@byteowls/capacitor-oauth2'
 import {
-  DefaultOryAuthOptions, DefaultOryEndpoint
+  DefaultHydraAuthEndpoint,
+  DefaultHydraTokenEndpoint,
+  DefaultOryAuthOptions
 } from '../../../../../assets/data/defaultConfig'
 import { RemoteConfigService } from 'src/app/core/services/config/remote-config.service'
 import { ConfigKeys } from 'src/app/shared/enums/config'
 import { AnalyticsService } from 'src/app/core/services/usage/analytics.service'
 import { KeyboardEventType } from 'src/app/shared/enums/events'
 import { isValidURL } from 'src/app/shared/utilities/form-validators'
+import { LocalizationService } from 'src/app/core/services/misc/localization.service'
+import { LocKeys } from 'src/app/shared/enums/localisations'
 
 @Component({
   selector: 'ory-form',
@@ -26,12 +30,11 @@ export class OryFormComponent {
 
   studyId: string
   buttonHidden = false
-  HYDRA_AUTH_ENDPOINT = '/hydra/oauth2/auth'
-  HYDRA_TOKEN_ENDPOINT = '/hydra/oauth2/token'
 
   constructor(
     private remoteConfig: RemoteConfigService,
-    private analytics: AnalyticsService
+    private analytics: AnalyticsService,
+    private localization: LocalizationService
   ) { }
 
   loginWithOry() {
@@ -43,9 +46,11 @@ export class OryFormComponent {
             config.get(ConfigKeys.PLATFORM_URL)
           ).then(baseUrl => {
             if (!baseUrl || !isValidURL(baseUrl))
-              return this.errors.emit({ error: { message: 'Invalid study code' } })
-            DefaultOryAuthOptions.authorizationBaseUrl = baseUrl + this.HYDRA_AUTH_ENDPOINT
-            DefaultOryAuthOptions.accessTokenEndpoint = baseUrl + this.HYDRA_TOKEN_ENDPOINT
+              return this.errors.emit({
+                error: { message: this.localization.translateKey(LocKeys.ENROL_REGISTRATION_ORY_INVALID_CODE) }
+              })
+            DefaultOryAuthOptions.authorizationBaseUrl = baseUrl + DefaultHydraAuthEndpoint
+            DefaultOryAuthOptions.accessTokenEndpoint = baseUrl + DefaultHydraTokenEndpoint
             OAuth2Client.authenticate(DefaultOryAuthOptions)
               .then(response => {
                 const data = Object.assign({}, response.access_token_response, { url: baseUrl })

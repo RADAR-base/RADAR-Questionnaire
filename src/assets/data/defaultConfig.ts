@@ -208,9 +208,12 @@ export const DefaultOryEndpoint = 'https://dev.radarbasedev.co.uk'
 export const DefaultOryScopes = 'SUBJECT.READ SUBJECT.UPDATE PROJECT.READ offline_access'
 export const DefaultOryAudience = 'res_ManagementPortal res_gateway res_AppServer'
 
+export const DefaultHydraAuthEndpoint = '/hydra/oauth2/auth'
+export const DefaultHydraTokenEndpoint = '/hydra/oauth2/token'
+
 export const DefaultOryAuthOptions = {
-  authorizationBaseUrl: DefaultOryEndpoint + '/hydra/oauth2/auth',
-  accessTokenEndpoint: DefaultOryEndpoint + '/hydra/oauth2/token',
+  authorizationBaseUrl: DefaultOryEndpoint + DefaultHydraAuthEndpoint,
+  accessTokenEndpoint: DefaultOryEndpoint + DefaultHydraTokenEndpoint,
   scope: DefaultOryScopes,
   resourceUrl: '',
   logsEnabled: true,

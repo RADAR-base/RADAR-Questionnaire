@@ -93,15 +93,35 @@ export const Localisations = {
     hb:
       'לחץ על כפתור הסריקה וכוון את המצלמה לכיוון קוד הQR שניתן לך על ידי החוקרים. דוגמה לקוד QR מוצגת למטה.'
   },
+  ENROL_REGISTRATION_NO_QR: {
+    da: 'Har du ikke en QR-kode?',
+    de: 'Haben Sie keinen QR-Code?',
+    en: "Don't have a QR code?",
+    es: '¿No tienes un código QR?',
+    it: 'Non hai un codice QR?',
+    nl: 'Heb je geen QR-code?',
+    pl: 'Nie masz kodu QR?',
+    hb: 'אין לך קוד QR?'
+  },
+  ENROL_REGISTRATION_ENTER_TOKEN: {
+    da: 'Tryk her for at indtaste en login-token i stedet.',
+    de: 'Tippen Sie hier, um stattdessen ein Login-Token einzugeben.',
+    en: 'Tap here to enter a login token instead.',
+    es: 'Toca aquí para ingresar un token de inicio de sesión en su lugar.',
+    it: 'Tocca qui per inserire un token di accesso invece.',
+    nl: 'Tik hier om in plaats daarvan een login-token in te voeren.',
+    pl: 'Stuknij tutaj, aby zamiast tego wprowadzić token logowania.',
+    hb: 'הקש כאן כדי להזין אסימון כניסה במקום.'
+  },
   ENROL_REGISTRATION_STUDY_DESC: {
-    da: 'Indtast dit studie navn (f.eks. paprka) for at fortsætte.',
-    de: 'Geben Sie den Namen Ihres Studiums ein (z. B. paprka), um fortzufahren.',
-    en: 'Enter study name (e.g. paprka) to continue.',
-    es: 'Ingresa el nombre de tu estudio (por ejemplo, paprka) para continuar.',
-    it: 'Inserisci il nome del tuo studio (ad esempio, paprka) per continuare.',
-    nl: 'Voer de naam van je studie in (bijv. paprka) om door te gaan.',
-    pl: 'Wprowadź nazwę swojego studium (np. paprka), aby kontynuować.',
-    hb: 'הזן את שם הלימודים שלך (למשל, paprka) כדי להמשיך.'
+    da: 'Indtast dit studienavn for at fortsætte.',
+    de: 'Geben Sie Ihren Studiennamen ein, um fortzufahren.',
+    en: 'Enter your study name to continue.',
+    es: 'Ingresa el nombre de tu estudio para continuar.',
+    it: 'Inserisci il nome del tuo studio per continuare.',
+    nl: 'Voer je studienaam in om door te gaan.',
+    pl: 'Wprowadź nazwę swojego studium, aby kontynuować.',
+    hb: 'הזן את שם הלימודים שלך כדי להמשיך.'
   },
   ENROL_REGISTRATION_ENTER_STUDY_ID: {
     da: 'Ellers skal du indtaste dit studie navn.',
@@ -122,6 +142,16 @@ export const Localisations = {
     nl: 'Voer studie naam in',
     pl: 'Wprowadź nazwę studiów',
     hb: 'הזן את שם הלימודים'
+  },
+  ENROL_REGISTRATION_ORY_INVALID_CODE: {
+    da: 'Ugyldig studiekode. Tjek venligst din studieportal.',
+    de: 'Ungültiger Studiencode. Bitte überprüfen Sie Ihr Studienportal.',
+    en: 'Invalid study code. Please check your study portal.',
+    es: 'Código de estudio no válido. Por favor, revisa tu portal de estudios.',
+    it: 'Codice di studio non valido. Controlla il tuo portale di studio.',
+    nl: 'Ongeldige studietocode. Controleer je studieportaal.',
+    pl: 'Nieprawidłowy kod studiów. Sprawdź swój portal studencki.',
+    hb: 'קוד לימודים לא חוקי. אנא בדוק את פורטל הלימודים שלך.'
   },
   ENROL_REGISTRATION_ORY_DESC: {
     da: 'Log ind med din studieportal e-mail og adgangskode.',

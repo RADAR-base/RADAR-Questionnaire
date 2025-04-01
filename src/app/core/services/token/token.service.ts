@@ -99,7 +99,7 @@ export abstract class TokenService {
       })
       if (tokens.iat + tokens.expires_in < limit) {
         const params = this.getRefreshParams(tokens.refresh_token)
-        return this.register(params).catch(response => this.handleError(response.error))
+        return this.register(params)
       } else {
         return tokens
       }

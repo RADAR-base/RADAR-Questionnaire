@@ -10,6 +10,7 @@ import { StorageService } from '../storage/storage.service'
 import { TokenService } from './token.service'
 import { OAuthToken } from '../../../shared/models/token'
 import { AuthType } from 'src/app/shared/models/auth'
+import { ConfigKeys } from 'src/app/shared/enums/config'
 
 @Injectable({
   providedIn: 'root'
@@ -67,8 +68,13 @@ export class HydraTokenService extends TokenService {
     if (error && error.error === 'invalid_grant') {
       // Specific check for expired refresh token
       console.error('Refresh token expired. Please log in again.')
-      this.reset() // Clear tokens and session data
-      throw new Error('Session expired. Please log in again.')
+      return this.getTokenFromRemoteStorage().then(token => {
+        if (token) {
+          return this.register(this.getRefreshParams(token))
+        } else {
+          throw new Error('Session expired. Please log in again.')
+        }
+      })
     }
     // Handle other errors (e.g., network, server issues)
     console.error('Error refreshing token:', error)
@@ -76,5 +82,18 @@ export class HydraTokenService extends TokenService {
   }
 
   updateTokenServiceByType(authType: AuthType) { }
+
+  getTokenFromRemoteStorage() {
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        config.get(
+          ConfigKeys.TOKEN_BACKUP
+        )
+      ).then((token) => {
+        if (!token) throw new Error('No token available')
+        return token
+      })
+  }
 
 }

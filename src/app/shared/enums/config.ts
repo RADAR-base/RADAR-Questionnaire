@@ -52,6 +52,8 @@ export class ConfigKeys {
 
   static AUDIO_ENCODER = new ConfigKeys('audio_encoder')
 
+  static TOKEN_BACKUP = new ConfigKeys('token_backup')
+
   constructor(public value: string) { }
 
   toString() {

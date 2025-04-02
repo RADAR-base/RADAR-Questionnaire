@@ -155,6 +155,10 @@ export abstract class TokenService {
 
   abstract isValid(): Promise<boolean>
 
+  init(): Promise<void> {
+    return Promise.resolve()
+  }
+
   setAuthType(type) {
     return this.storage.set(StorageKeys.PLATFORM_AUTH_TYPE, type)
   }

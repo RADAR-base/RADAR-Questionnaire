@@ -43,7 +43,7 @@ export class AuthService {
   }
 
   private handleMetaTokenAuth(authObj: any) {
-    this.token.setAuthType(AuthType.MP)
+    this.token.setAuthType(AuthType.MP).then(() => this.token.init())
     return this.metaTokenUrlAuth(authObj)
       .then(refreshToken => this.completeAuthentication(refreshToken))
       .catch(err => {
@@ -58,7 +58,7 @@ export class AuthService {
     const baseUrl = new URL(url.searchParams.get('referrer')).origin
     if (encodedData) {
       const tokenData = JSON.parse(decodeURIComponent(encodedData))
-      this.token.setAuthType(AuthType.ORY)
+      this.token.setAuthType(AuthType.ORY).then(() => this.token.init())
       return this.token
         .setURI(baseUrl)
         .then(() => this.analytics.setUserProperties({ baseUrl }))

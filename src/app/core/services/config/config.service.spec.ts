@@ -16,7 +16,8 @@ import {
   QuestionnaireServiceMock,
   RemoteConfigServiceMock,
   ScheduleServiceMock,
-  SubjectConfigServiceMock
+  SubjectConfigServiceMock,
+  TokenServiceMock
 } from '../../../shared/testing/mock-services'
 import { AppServerService } from '../app-server/app-server.service'
 import { KafkaService } from '../kafka/kafka.service'
@@ -32,6 +33,7 @@ import { ProtocolService } from './protocol.service'
 import { QuestionnaireService } from './questionnaire.service'
 import { RemoteConfigService } from './remote-config.service'
 import { SubjectConfigService } from './subject-config.service'
+import { TokenService } from '../token/token.service'
 
 describe('ConfigService', () => {
   let service
@@ -58,7 +60,8 @@ describe('ConfigService', () => {
         { provide: RemoteConfigService, useClass: RemoteConfigServiceMock },
         { provide: AppServerService, useClass: AppServerServiceMock },
         { provide: MessageHandlerService, useClass: MessageHandlerServiceMock },
-        { provide: HealthkitService, useClass: HealthkitServiceMock }
+        { provide: HealthkitService, useClass: HealthkitServiceMock },
+        { provide: TokenService, useClass: TokenServiceMock }
       ]
     })
   )

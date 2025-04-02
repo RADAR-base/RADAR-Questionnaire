@@ -58,4 +58,8 @@ export class MPTokenService extends TokenService {
       })
   }
 
+  forceRefresh(): Promise<any> {
+    return this.refresh()
+  }
+
 }

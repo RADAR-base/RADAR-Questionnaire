@@ -33,11 +33,10 @@ export class TokenFactoryService extends TokenService {
     private mpTokenService: MPTokenService
   ) {
     super(http, storage, jwtHelper, remoteConfig, logger, platform)
-    this.init()
+    this.fetchInitialAuthType()
   }
 
-  private async init(): Promise<void> {
-    if (this.isInitialised) return Promise.resolve()
+  async fetchInitialAuthType(): Promise<void> {
     try {
       let authType = await this.getAuthType()
       if (!authType) {
@@ -45,12 +44,16 @@ export class TokenFactoryService extends TokenService {
         authType = endpoint && endpoint.includes(this.HYDRA_KEY) ? AuthType.ORY : AuthType.MP
         await this.setAuthType(authType)
       }
-      this.tokenService = this.getTokenServiceByType(authType)
-      this.isInitialised = true
+      return this.init()
     } catch (error) {
       this.logger.error('Error initializing TokenFactoryService', error)
       throw new Error('Failed to initialize TokenFactoryService')
     }
+  }
+
+  async init(): Promise<void> {
+    let authType = await this.getAuthType()
+    this.tokenService = this.getTokenServiceByType(authType)
   }
 
   private getTokenServiceByType(authType: AuthType): TokenService {
@@ -71,6 +74,10 @@ export class TokenFactoryService extends TokenService {
   refresh(): Promise<OAuthToken> {
     return this.tokenService.refresh()
       .catch((error) => this.tokenService.handleError(error))
+  }
+
+  forceRefresh(): Promise<OAuthToken> {
+    return this.tokenService.forceRefresh()
   }
 
   async register(refreshBody: any): Promise<OAuthToken> {

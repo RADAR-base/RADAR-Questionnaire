@@ -88,6 +88,8 @@ export abstract class TokenService {
 
   abstract register(refreshBody): Promise<OAuthToken>
 
+  abstract forceRefresh(): Promise<any>
+
   refresh(): Promise<OAuthToken> {
     return this.getTokens().then(tokens => {
       if (!tokens) {
@@ -98,7 +100,7 @@ export abstract class TokenService {
       })
       if (tokens.iat + tokens.expires_in < limit) {
         const params = this.getRefreshParams(tokens.refresh_token)
-        return this.register(params).catch(response => this.handleError(response.error))
+        return this.register(params)
       } else {
         return tokens
       }

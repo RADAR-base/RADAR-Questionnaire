@@ -5,7 +5,8 @@ import {
   DefaultAppCreditsTitle,
   DefaultOnDemandAssessmentIcon,
   DefaultPlatformInstance,
-  DefaultShowTaskCalendarName
+  DefaultShowTaskCalendarName,
+  DefaultShowTaskInfo
 } from '../../../../assets/data/defaultConfig'
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
 import { RemoteConfigService } from '../../../core/services/config/remote-config.service'
@@ -65,7 +66,7 @@ export class TasksService {
       .getTasksForDate(new Date(), AssessmentType.SCHEDULED)
       .then(tasks =>
         tasks.filter(
-          t => !this.isTaskExpired(t) || this.wasTaskCompletedToday(t)
+          t => !this.isTaskExpired(t) || this.wasTaskCompletedToday(t) || this.wasTaskValidToday(t)
         )
       )
   }
@@ -125,6 +126,10 @@ export class TasksService {
 
   wasTaskCompletedToday(task) {
     return task.completed && this.isToday(task.timeCompleted)
+  }
+
+  wasTaskValidToday(task) {
+    return this.isToday(task.timestamp)
   }
 
   /**
@@ -196,5 +201,42 @@ export class TasksService {
         )
       )
       .then(res => JSON.parse(res))
+  }
+
+  getIsTaskInfoShown() {
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        config.getOrDefault(
+          ConfigKeys.SHOW_TASK_INFO,
+          DefaultShowTaskInfo
+        )
+      )
+      .then(res => JSON.parse(res))
+  }
+
+  getStreakDays() {
+    return this.schedule.getCompletedTasks().then(tasks => {
+      const completedDays = new Set(
+        tasks.map(task => {
+          const date = new Date(task.timeCompleted)
+          return date.toISOString().split('T')[0]
+        })
+      )
+      let streak = 0
+      let currentDate = new Date()
+
+      while (true) {
+        const dateStr = currentDate.toISOString().split('T')[0]
+        if (completedDays.has(dateStr)) {
+          streak++
+          currentDate.setDate(currentDate.getDate() - 1)
+        } else {
+          break
+        }
+      }
+
+      return streak
+    })
   }
 }

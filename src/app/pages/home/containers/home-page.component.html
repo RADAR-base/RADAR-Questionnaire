@@ -27,6 +27,7 @@
       [progress]="tasksProgress | async"
       [forceComplete]="showCompleted"
       [noTasksToday]="(tasksProgress | async)?.numberOfTasks == 0"
+      [streakDays]="streakDays"
     >
     </task-progress>
   </div>
@@ -75,7 +76,7 @@
 
     <div class="size-static">
       <task-info
-        *ngIf="nextTask"
+        *ngIf="nextTask && (isTaskInfoShown | async)"
         [task]="nextTask"
         [isNow]="taskIsNow"
         [progress]="tasksProgress | async"

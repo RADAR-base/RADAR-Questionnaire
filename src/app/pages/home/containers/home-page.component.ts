@@ -29,6 +29,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   resumeListener: Subscription = new Subscription()
   changeDetectionListener: Subscription = new Subscription()
   lastTaskRefreshTime = Date.now()
+  streakDays = 1
 
   showCalendar = false
   showCompleted = false
@@ -40,6 +41,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   checkTaskInterval
   showMiscTasksButton: Promise<boolean>
   isTaskCalendarTaskNameShown: Promise<boolean>
+  isTaskInfoShown: Promise<boolean>
   currentDate: number
 
   APP_CREDITS = '&#169; RADAR-Base'
@@ -56,10 +58,9 @@ export class HomePageComponent implements OnInit, OnDestroy {
     private platform: Platform,
     private usage: UsageService
   ) {
-    this.resumeListener = this.platform.resume.subscribe(() => this.onResume())
     this.changeDetectionListener =
       this.tasksService.changeDetectionEmitter.subscribe(() => {
-        console.log('Changes to task service detected')
+        console.log('Changes to task service detected..')
         this.navCtrl.navigateRoot('')
       })
   }
@@ -86,10 +87,14 @@ export class HomePageComponent implements OnInit, OnDestroy {
       .ready()
       .then(() => this.tasksService.init().then(() => this.init()))
     this.usage.setPage(this.constructor.name)
+    this.getStreak()
   }
 
   ngOnDestroy() {
-    this.resumeListener.unsubscribe()
+    // Unsubscribe to avoid memory leaks when the page is left
+    if (this.resumeListener) {
+      this.resumeListener.unsubscribe();
+    }
     this.changeDetectionListener.unsubscribe()
   }
 
@@ -100,6 +105,14 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.sortedTasks = this.tasksService.getValidTasksMap()
     this.tasks = this.tasksService.getTasksOfToday()
     this.showCalendar = false
+    this.resumeListener = this.platform.resume.subscribe(() => this.onResume())
+  }
+
+  ionViewWillLeave() {
+    // Unsubscribe to avoid memory leaks when the page is left
+    if (this.resumeListener) {
+      this.resumeListener.unsubscribe();
+    }
   }
 
   init() {
@@ -112,6 +125,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.title = this.tasksService.getPlatformInstanceName()
     this.isTaskCalendarTaskNameShown =
       this.tasksService.getIsTaskCalendarTaskNameShown()
+    this.isTaskInfoShown = this.tasksService.getIsTaskInfoShown()
     this.onDemandIcon = this.tasksService.getOnDemandAssessmentIcon()
     this.showMiscTasksButton = this.getShowMiscTasksButton()
   }
@@ -198,7 +212,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
         buttons: [
           {
             text: this.localization.translateKey(LocKeys.BTN_OKAY),
-            handler: () => {}
+            handler: () => { }
           }
         ]
       })
@@ -216,7 +230,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
       buttons: [
         {
           text: this.localization.translateKey(LocKeys.BTN_OKAY),
-          handler: () => {}
+          handler: () => { }
         }
       ]
     })
@@ -226,5 +240,11 @@ export class HomePageComponent implements OnInit, OnDestroy {
     return Promise.all([this.hasOnDemandTasks, this.hasClinicalTasks]).then(
       ([onDemand, clinical]) => onDemand || clinical
     )
+  }
+
+  getStreak() {
+    this.tasksService.getStreakDays().then(streak => {
+      this.streakDays = streak
+    })
   }
 }

@@ -178,6 +178,7 @@ ion-loading.custom-loading {
     width: 312px;
     ion-button {
       --ion-color-primary: white;
+      --border-radius: 5px;
       --border-color: none;
       --border-width: 0 !important;
     }

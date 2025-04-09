@@ -1,7 +1,4 @@
 PODS:
-  - ByteowlsCapacitorOauth2 (5.0.0):
-    - Capacitor
-    - OAuthSwift (= 2.2.0)
   - Capacitor (5.7.4):
     - CapacitorCordova
   - CapacitorApp (5.0.7):
@@ -10,6 +7,9 @@ PODS:
     - Capacitor
   - CapacitorBrowser (5.2.0):
     - Capacitor
+  - CapacitorCommunityGenericOauth2 (6.1.0):
+    - Capacitor
+    - OAuthSwift (= 2.2.0)
   - CapacitorCommunityKeepAwake (4.0.0):
     - Capacitor
   - CapacitorCordova (5.7.4)
@@ -208,11 +208,11 @@ PODS:
   - PromisesObjC (2.4.0)
 
 DEPENDENCIES:
-  - "ByteowlsCapacitorOauth2 (from `../../node_modules/@byteowls/capacitor-oauth2`)"
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorApp (from `../../node_modules/@capacitor/app`)"
   - "CapacitorAppLauncher (from `../../node_modules/@capacitor/app-launcher`)"
   - "CapacitorBrowser (from `../../node_modules/@capacitor/browser`)"
+  - "CapacitorCommunityGenericOauth2 (from `../../node_modules/@capacitor-community/generic-oauth2`)"
   - "CapacitorCommunityKeepAwake (from `../../node_modules/@capacitor-community/keep-awake`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorDevice (from `../../node_modules/@capacitor/device`)"
@@ -262,8 +262,6 @@ SPEC REPOS:
     - PromisesObjC
 
 EXTERNAL SOURCES:
-  ByteowlsCapacitorOauth2:
-    :path: "../../node_modules/@byteowls/capacitor-oauth2"
   Capacitor:
     :path: "../../node_modules/@capacitor/ios"
   CapacitorApp:
@@ -272,6 +270,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/app-launcher"
   CapacitorBrowser:
     :path: "../../node_modules/@capacitor/browser"
+  CapacitorCommunityGenericOauth2:
+    :path: "../../node_modules/@capacitor-community/generic-oauth2"
   CapacitorCommunityKeepAwake:
     :path: "../../node_modules/@capacitor-community/keep-awake"
   CapacitorCordova:
@@ -312,11 +312,11 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@perfood/capacitor-healthkit"
 
 SPEC CHECKSUMS:
-  ByteowlsCapacitorOauth2: c576cf8673ff16d2103dc959ea88bd4e0bda0bc2
   Capacitor: 0b2c8a082fc0335969bdc7d074072ca8c9e064af
   CapacitorApp: b23ce4279972fa24721b9ad7aefdf05e36c29db7
   CapacitorAppLauncher: 3c24de236f37bf7ab79e90ecf5576f962cc7d99e
   CapacitorBrowser: 4dc0624a8c372054f64f31e53c6375ce300b28cc
+  CapacitorCommunityGenericOauth2: cd98e4a7b684b9fc4c857d6f904fc3fc11812802
   CapacitorCommunityKeepAwake: 6106b37df55fd4f06e47a2af701ce0dd6ffae1ba
   CapacitorCordova: a6e87fccc0307dee7aec1560ec9398485f2b0ce7
   CapacitorDevice: b8d2ddde4e7f3711f64eb58a69a776e7fc3e53b8
@@ -360,6 +360,6 @@ SPEC CHECKSUMS:
   PerfoodCapacitorHealthkit: 69c66ae8b7a8079586baab13bd6abd5880139263
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
 
-PODFILE CHECKSUM: 3a52724a91e434a3261d828c0f7d2a02bd8e54af
+PODFILE CHECKSUM: 83d239301e399b40cc2ecf8a0a5c4f43a5503221
 
 COCOAPODS: 1.16.2

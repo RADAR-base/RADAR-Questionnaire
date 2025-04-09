@@ -164,7 +164,7 @@ export abstract class TokenService {
     return this.storage.get(StorageKeys.PLATFORM_AUTH_TYPE)
   }
 
-  reset() {
-    return Promise.all([this.setTokens(null)])
+  reset(): Promise<any> {
+    return Promise.all([this.setAuthType(null), this.setTokens(null)])
   }
 }

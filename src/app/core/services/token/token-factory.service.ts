@@ -82,6 +82,6 @@ export class TokenFactoryService extends TokenService {
   }
 
   reset() {
-    return this.storage.set(StorageKeys.PLATFORM_AUTH_TYPE, null).then(() => super.reset())
+    return this.tokenService.reset()
   }
 }

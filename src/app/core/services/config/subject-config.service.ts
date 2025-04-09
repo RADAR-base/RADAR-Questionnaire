@@ -29,7 +29,7 @@ export class SubjectConfigService {
     public storage: StorageService,
     private token: TokenService,
     private http: HttpClient
-  ) {}
+  ) { }
 
   init(user: User) {
     return Promise.all([
@@ -133,10 +133,10 @@ export class SubjectConfigService {
       this.http
         .post(
           uri +
-            DefaultManagementPortalURI +
-            DefaultSubjectsURI +
-            subject +
-            '/sources',
+          DefaultManagementPortalURI +
+          DefaultSubjectsURI +
+          subject +
+          '/sources',
           DefaultSourceTypeRegistrationBody,
           {
             headers
@@ -148,13 +148,13 @@ export class SubjectConfigService {
 
   reset() {
     return Promise.all([
+      this.token.reset(),
       this.setParticipantID(null),
       this.setParticipantLogin(null),
       this.setEnrolmentDate(null),
       this.setProjectName(null),
       this.setSourceID(null),
       this.setBaseUrl(null),
-      this.token.setTokens(null),
       this.setParticipantAttributes(null)
     ])
   }

@@ -266,6 +266,16 @@ export const Localisations = {
     pl: 'Dziękujemy za wypełnienie ankiety.',
     hb: '.תודה שמילאת את השאלון'
   },
+  FINISH_THANKS_WAIT: {
+    da: 'Tak fordi du udfyldte spørgeskemaet. Et øjeblik, mens vi sender dine data.',
+    de: 'Vielen Dank für das Ausfüllen des Fragebogens. Einen Moment, wir senden Ihre Daten.',
+    en: 'Thank you for completing the questionnaire. Just a moment while we send your data.',
+    es: 'Gracias por completar el cuestionario. Un momento mientras enviamos tus datos.',
+    it: 'Grazie per aver completato il questionario. Un attimo mentre inviamo i tuoi dati.',
+    nl: 'Bedankt voor het invullen van de vragenlijst. Een ogenblik terwijl we je gegevens verzenden.',
+    pl: 'Dziękujemy za wypełnienie ankiety. Chwileczkę, wysyłamy Twoje dane.',
+    hb: '.תודה שמילאת את השאלון. רגע בזמן שאנו שולחים את הנתונים שלך'
+  },
   FINISH_NEXT_TASK_REMINDER: {
     da: 'Husk, du har stadig udestående opgaver!',
     de: 'Denken Sie daran, Sie haben noch Aufgaben ausstehend!',

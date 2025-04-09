@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core'
-import { OAuth2Client } from '@byteowls/capacitor-oauth2'
+import { GenericOAuth2 } from '@capacitor-community/generic-oauth2'
+
 import {
   DefaultHydraAuthEndpoint,
   DefaultHydraTokenEndpoint,
@@ -47,15 +48,18 @@ export class OryFormComponent {
           ).then(baseUrl => {
             if (!baseUrl || !isValidURL(baseUrl))
               return this.errors.emit({
-                error: { message: this.localization.translateKey(LocKeys.ENROL_REGISTRATION_ORY_INVALID_CODE) }
+                error: {
+                  message: this.localization.translateKey(LocKeys.ENROL_REGISTRATION_ORY_INVALID_CODE)
+                }
               })
             DefaultOryAuthOptions.authorizationBaseUrl = baseUrl + DefaultHydraAuthEndpoint
             DefaultOryAuthOptions.accessTokenEndpoint = baseUrl + DefaultHydraTokenEndpoint
-            OAuth2Client.authenticate(DefaultOryAuthOptions)
-              .then(response => {
-                const data = Object.assign({}, response.access_token_response, { url: baseUrl })
-                return this.data.emit(data)
-              })
+            GenericOAuth2.logout(DefaultOryAuthOptions).then(() => {
+              GenericOAuth2.authenticate(DefaultOryAuthOptions)
+                .then(() => GenericOAuth2.authenticate(DefaultOryAuthOptions)).then(response =>
+                  this.data.emit(Object.assign({}, response.access_token_response, { url: baseUrl }))
+                )
+            })
           })
       )
   }

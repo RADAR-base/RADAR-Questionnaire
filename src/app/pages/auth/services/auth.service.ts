@@ -2,18 +2,14 @@ import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 
 import {
-  DefaultManagementPortalURI,
   DefaultSourceTypeModel,
-  DefaultRefreshTokenURI,
-  DefaultMetaTokenURI,
 } from '../../../../assets/data/defaultConfig'
 import { ConfigService } from '../../../core/services/config/config.service'
 import { SubjectConfigService } from '../../../core/services/config/subject-config.service'
 import { LogService } from '../../../core/services/misc/log.service'
 import { TokenService } from '../../../core/services/token/token.service'
 import { AnalyticsService } from '../../../core/services/usage/analytics.service'
-import { MetaToken, OAuthToken } from '../../../shared/models/token'
-import { AuthType } from '../../../shared/models/auth'
+import { OAuthToken } from '../../../shared/models/token'
 
 @Injectable({
   providedIn: 'root'

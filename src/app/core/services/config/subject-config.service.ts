@@ -22,7 +22,8 @@ export class SubjectConfigService {
     PROJECTNAME: StorageKeys.PROJECTNAME,
     SOURCEID: StorageKeys.SOURCEID,
     ENROLMENTDATE: StorageKeys.ENROLMENTDATE,
-    BASE_URI: StorageKeys.BASE_URI
+    BASE_URI: StorageKeys.BASE_URI,
+    STUDY_CODE: StorageKeys.STUDY_CODE,
   }
 
   constructor(
@@ -74,6 +75,10 @@ export class SubjectConfigService {
     return this.storage.set(this.SUBJECT_CONFIG_STORE.BASE_URI, uri)
   }
 
+  setStudyCode(studyCode) {
+    return this.storage.set(this.SUBJECT_CONFIG_STORE.STUDY_CODE, studyCode)
+  }
+
   getParticipantID(): Promise<String> {
     return this.storage.get(this.SUBJECT_CONFIG_STORE.PARTICIPANTID)
   }
@@ -100,6 +105,10 @@ export class SubjectConfigService {
 
   getBaseUrl(): Promise<String> {
     return this.storage.get(this.SUBJECT_CONFIG_STORE.BASE_URI)
+  }
+
+  getStudyCode(): Promise<String> {
+    return this.storage.get(this.SUBJECT_CONFIG_STORE.STUDY_CODE)
   }
 
   getKafkaObservationKey() {

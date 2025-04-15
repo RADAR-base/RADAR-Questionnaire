@@ -92,6 +92,7 @@ export class LocKeys {
   static BTN_DONE = new LocKeys('BTN_DONE')
   static BTN_DISMISS = new LocKeys('BTN_DISMISS')
   static BTN_START = new LocKeys('BTN_START')
+  static BTN_RETURN_PORTAL = new LocKeys('BTN_RETURN_PORTAL')
   static BTN_STOP = new LocKeys('BTN_STOP')
   static BTN_RESET = new LocKeys('BTN_RESET')
   static BTN_RETRY = new LocKeys('BTN_RETRY')

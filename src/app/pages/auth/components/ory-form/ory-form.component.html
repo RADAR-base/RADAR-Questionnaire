@@ -9,8 +9,8 @@
     {{ 'ENROL_REGISTRATION_STUDY_DESC' | translate }}
     <br><br>
     <ion-item class="input" color="transparent">
-      <ion-input [(ngModel)]="studyId" [required]="true" type="text" placeholder="" [clearOnEdit]="true"
-        (ionFocus)="onFocus('true')" (ionBlur)="onFocus('false')" (keyup)="onKeyboardEvent($event.key)"></ion-input>
+      <ion-input [(ngModel)]="studyId" [required]="true" type="text" [clearOnEdit]="false" (ionFocus)="onFocus('true')"
+        (ionBlur)="onFocus('false')" (keyup)="onKeyboardEvent($event.key)"></ion-input>
     </ion-item>
     <br>
   </div>

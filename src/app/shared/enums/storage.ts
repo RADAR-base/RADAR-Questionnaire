@@ -54,6 +54,8 @@ export class StorageKeys {
 
   static PLATFORM_AUTH_TYPE = new StorageKeys('PLATFORM_AUTH_TYPE')
 
+  static STUDY_CODE = new StorageKeys('STUDY_CODE')
+
   constructor(public value: string) { }
 
   toString() {

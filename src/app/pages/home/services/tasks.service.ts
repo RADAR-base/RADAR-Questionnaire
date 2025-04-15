@@ -6,7 +6,8 @@ import {
   DefaultOnDemandAssessmentIcon,
   DefaultPlatformInstance,
   DefaultShowTaskCalendarName,
-  DefaultShowTaskInfo
+  DefaultShowTaskInfo,
+  DefaultEndPoint
 } from '../../../../assets/data/defaultConfig'
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
 import { RemoteConfigService } from '../../../core/services/config/remote-config.service'
@@ -213,5 +214,13 @@ export class TasksService {
         )
       )
       .then(res => JSON.parse(res))
+  }
+
+  getPortalReturnUrl() {
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        config.getOrDefault(ConfigKeys.PLATFORM_RETURN_URL, DefaultEndPoint)
+      )
   }
 }

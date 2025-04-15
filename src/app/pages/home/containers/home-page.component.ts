@@ -181,6 +181,10 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.usage.sendClickEvent('open_on_demand_tasks')
   }
 
+  openStudyPortal() {
+    this.tasksService.getPortalReturnUrl().then(url => window.open(url, '_system'))
+  }
+
   startQuestionnaire(taskCalendarTask?: Task) {
     // NOTE: User can start questionnaire from task calendar or start button in home.
     const task = taskCalendarTask ? taskCalendarTask : this.nextTask

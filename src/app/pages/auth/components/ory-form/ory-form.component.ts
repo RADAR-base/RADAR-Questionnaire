@@ -13,6 +13,7 @@ import { KeyboardEventType } from 'src/app/shared/enums/events'
 import { isValidURL } from 'src/app/shared/utilities/form-validators'
 import { LocalizationService } from 'src/app/core/services/misc/localization.service'
 import { LocKeys } from 'src/app/shared/enums/localisations'
+import { SubjectConfigService } from 'src/app/core/services/config/subject-config.service'
 
 @Component({
   selector: 'ory-form',
@@ -29,14 +30,23 @@ export class OryFormComponent {
   @Output()
   errors: EventEmitter<any> = new EventEmitter<any>()
 
-  studyId: string
+  studyId: String
   buttonHidden = false
 
   constructor(
     private remoteConfig: RemoteConfigService,
     private analytics: AnalyticsService,
-    private localization: LocalizationService
-  ) { }
+    private localization: LocalizationService,
+    private subjectConfig: SubjectConfigService
+  ) {
+    this.init()
+  }
+
+  init() {
+    this.subjectConfig.getStudyCode().then(studyCode => {
+      this.studyId = studyCode
+    })
+  }
 
   loginWithOry() {
     this.analytics.setUserProperties({ studyCode: this.studyId.toLowerCase() })
@@ -52,6 +62,7 @@ export class OryFormComponent {
                   message: this.localization.translateKey(LocKeys.ENROL_REGISTRATION_ORY_INVALID_CODE)
                 }
               })
+            this.subjectConfig.setStudyCode(this.studyId.toLowerCase())
             DefaultOryAuthOptions.authorizationBaseUrl = baseUrl + DefaultHydraAuthEndpoint
             DefaultOryAuthOptions.accessTokenEndpoint = baseUrl + DefaultHydraTokenEndpoint
             GenericOAuth2.logout(DefaultOryAuthOptions).then(() => {

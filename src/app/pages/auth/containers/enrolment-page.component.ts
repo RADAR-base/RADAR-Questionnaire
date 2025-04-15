@@ -62,8 +62,7 @@ export class EnrolmentPageComponent {
 
   async init() {
     const languageTag = await Device.getLanguageTag()
-    // Language value is in BCP 47 format (e.g. en-US)
-    const tag = languageTag.value.split('-')[0]
+    const tag = languageTag.value.split('-')[0] // Value is in BCP 47 format (e.g. en-US)
     let lang = this.languagesSelectable.find(a => a.value == tag)
     this.language = lang ? lang : this.language
     this.localization.setLanguage(this.language)

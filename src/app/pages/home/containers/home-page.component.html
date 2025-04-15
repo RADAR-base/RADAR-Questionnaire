@@ -100,7 +100,7 @@
 
     <div class="size-static footer">
       <div
-        *ngIf="showCompleted"
+        *ngIf="showCompleted && (studyPortalReturnUrl | async)"
         class="ion-padding"
       >
         <ion-button

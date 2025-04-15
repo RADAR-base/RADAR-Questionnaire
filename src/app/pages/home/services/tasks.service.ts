@@ -220,7 +220,7 @@ export class TasksService {
     return this.remoteConfig
       .read()
       .then(config =>
-        config.getOrDefault(ConfigKeys.PLATFORM_RETURN_URL, DefaultEndPoint)
+        config.get(ConfigKeys.PLATFORM_RETURN_URL)
       )
   }
 }

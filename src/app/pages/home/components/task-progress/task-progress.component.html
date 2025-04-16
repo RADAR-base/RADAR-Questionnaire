@@ -1,9 +1,5 @@
 <div id="task-progress-container">
-  <div
-    [@enterAnimation]
-    class="noTasks-padding container-diary"
-    *ngIf="noTasksToday"
-  >
+  <div [@enterAnimation] class="noTasks-padding container-diary" *ngIf="noTasksToday">
     <img src="assets/imgs/diary.png" class="icon-esm" />
   </div>
 
@@ -12,33 +8,27 @@
 
     <div *ngIf="progress" id="progress">
       <div #progressActive class="progress-sub" *ngIf="!complete">
-        <round-progress
-          id="prog-lg"
-          [current]="current"
-          [max]="max"
-          [responsive]="true"
-          [color]="'#7fcdbb'"
-          [background]="'rgba(255,255,204,0.12)'"
-          [animationDelay]="animationDelay"
-          [duration]="duration"
-          [stroke]="stroke"
-        ></round-progress>
+        <round-progress id="prog-lg" [current]="current" [max]="max" [responsive]="true" [color]="'#7fcdbb'"
+          [background]="'rgba(255,255,204,0.12)'" [animationDelay]="animationDelay" [duration]="duration"
+          [stroke]="stroke"></round-progress>
       </div>
-      <div
-        #progressComplete
-        class="progress-sub"
-        *ngIf="complete"
-        [@enterAnimation]
-      >
+      <div #progressComplete class="progress-sub" *ngIf="complete" [@enterAnimation]>
         <div class="completed">
           <ion-icon #checkmark class="checkmark" name="checkmark"></ion-icon>
         </div>
       </div>
     </div>
-    <div #counter class="counter" [@translateY]="complete">
+    <div #counter [class.counter]="!complete" [class.counter-complete]="complete" [@translateY]="complete">
       <div class="large">{{ current }}</div>
       <div class="small">
         {{ 'TASK_PROGRESS_COMPLETED' | translate }}
+      </div>
+      <div class="streak-card" *ngIf="complete">
+        <ion-title><ion-icon name="leaf-outline" style="vertical-align: middle;opacity:0.2;margin:2px;"></ion-icon>
+          <b>{{ streakDays }} days</b>
+          <ion-icon name="leaf-outline"
+            style="vertical-align: middle;transform: scaleX(-1);opacity:0.2;margin:2px;"></ion-icon></ion-title>
+        <span class="streak">CURRENT STREAK</span>
       </div>
     </div>
   </div>

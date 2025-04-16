@@ -29,6 +29,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   resumeListener: Subscription = new Subscription()
   changeDetectionListener: Subscription = new Subscription()
   lastTaskRefreshTime = Date.now()
+  streakDays = 1
 
   showCalendar = false
   showCompleted = false
@@ -86,6 +87,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
       .ready()
       .then(() => this.tasksService.init().then(() => this.init()))
     this.usage.setPage(this.constructor.name)
+    this.getStreak()
   }
 
   ngOnDestroy() {
@@ -238,5 +240,11 @@ export class HomePageComponent implements OnInit, OnDestroy {
     return Promise.all([this.hasOnDemandTasks, this.hasClinicalTasks]).then(
       ([onDemand, clinical]) => onDemand || clinical
     )
+  }
+
+  getStreak() {
+    this.tasksService.getStreakDays().then(streak => {
+      this.streakDays = streak
+    })
   }
 }

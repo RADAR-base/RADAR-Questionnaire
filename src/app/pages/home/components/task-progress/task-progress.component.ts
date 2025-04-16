@@ -2,6 +2,7 @@ import { Component, Input, OnChanges } from '@angular/core'
 
 import { TasksProgress } from '../../../../shared/models/task'
 import { TaskProgressAnimations } from './task-progress.animation'
+import confetti from 'canvas-confetti';
 
 @Component({
   selector: 'task-progress',
@@ -16,6 +17,8 @@ export class TaskProgressComponent implements OnChanges {
   forceComplete = false
   @Input()
   noTasksToday = false
+  @Input()
+  streakDays = 0
 
   max: number = 1
   current: number = 0
@@ -36,13 +39,17 @@ export class TaskProgressComponent implements OnChanges {
       this.max = this.progress.numberOfTasks
     }
     this.complete = this.forceComplete || this.current >= this.max
-    if (this.complete) this.displayFireworks(800, 980)
+    if (this.complete && !this.showFireworks) {
+      this.displayFireworks()
+      this.showFireworks = true
+    }
   }
 
-  displayFireworks(milliDelay, milliDisplay) {
-    setTimeout(() => {
-      this.showFireworks = true
-      setTimeout(() => (this.showFireworks = false), milliDisplay)
-    }, milliDelay)
+  displayFireworks() {
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 },
+    })
   }
 }

@@ -13,6 +13,7 @@ import { LogService } from '../../../core/services/misc/log.service'
 import { TokenService } from '../../../core/services/token/token.service'
 import { AnalyticsService } from '../../../core/services/usage/analytics.service'
 import { MetaToken, OAuthToken } from '../../../shared/models/token'
+import { AuthType } from '../../../shared/models/auth'
 
 @Injectable({
   providedIn: 'root'
@@ -42,6 +43,7 @@ export class AuthService {
   }
 
   private handleMetaTokenAuth(authObj: any) {
+    this.token.setAuthType(AuthType.MP)
     return this.metaTokenUrlAuth(authObj)
       .then(refreshToken => this.completeAuthentication(refreshToken))
       .catch(err => {
@@ -56,6 +58,7 @@ export class AuthService {
     const baseUrl = new URL(url.searchParams.get('referrer')).origin
     if (encodedData) {
       const tokenData = JSON.parse(decodeURIComponent(encodedData))
+      this.token.setAuthType(AuthType.ORY)
       return this.token
         .setURI(baseUrl)
         .then(() => this.analytics.setUserProperties({ baseUrl }))

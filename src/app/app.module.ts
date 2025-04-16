@@ -28,7 +28,6 @@ import { CompletionLogConverterService } from './core/services/kafka/converters/
 import { ConverterFactoryService } from './core/services/kafka/converters/converter-factory.service.'
 import { ConverterService } from './core/services/kafka/converters/converter.service'
 import { HealthkitConverterService } from './core/services/kafka/converters/healthkit-converter.service'
-import { KeyConverterService } from './core/services/kafka/converters/key-converter.service'
 import { TimezoneConverterService } from './core/services/kafka/converters/timezone-converter.service'
 import { KafkaService } from './core/services/kafka/kafka.service'
 import { SchemaService } from './core/services/kafka/schema.service'
@@ -56,6 +55,11 @@ import { PagesModule } from './pages/pages.module'
 import { TranslatePipe } from './shared/pipes/translate/translate'
 import { jwtOptionsFactory } from './shared/utilities/jwtOptionsFactory'
 import { Utility } from './shared/utilities/util'
+import { DefaultKeyConverterService } from './core/services/kafka/converters/default-key-converter.service'
+import { KeyConverterService } from './core/services/kafka/converters/key-converter.service'
+import { TokenFactoryService } from './core/services/token/token-factory.service'
+import { MPTokenService } from './core/services/token/mp-token.service'
+import { HydraTokenService } from './core/services/token/hydra-token.service'
 
 @NgModule({
   imports: [
@@ -102,7 +106,6 @@ import { Utility } from './shared/utilities/util'
     SubjectConfigService,
     ProtocolService,
     QuestionnaireService,
-    TokenService,
     KafkaService,
     LocalizationService,
     ScheduleGeneratorService,
@@ -115,8 +118,8 @@ import { Utility } from './shared/utilities/util'
     AppEventConverterService,
     CompletionLogConverterService,
     TimezoneConverterService,
-    KeyConverterService,
     HealthkitConverterService,
+    { provide: KeyConverterService, useClass: DefaultKeyConverterService },
     CacheService,
     NotificationGeneratorService,
     FcmRestNotificationService,
@@ -125,8 +128,11 @@ import { Utility } from './shared/utilities/util'
     MessageHandlerService,
     { provide: NotificationService, useClass: NotificationFactoryService },
     { provide: AnalyticsService, useClass: FirebaseAnalyticsService },
+    { provide: TokenService, useClass: TokenFactoryService },
+    MPTokenService,
+    HydraTokenService,
     GithubClient
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AppModule {}
+export class AppModule { }

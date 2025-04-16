@@ -46,7 +46,7 @@ export class UsageService {
     return this.sendEventToKafka({
       eventType: type,
       questionnaireName: taskName,
-      metaData: metadata
+      metadata: metadata
     })
   }
 

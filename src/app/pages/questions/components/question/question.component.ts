@@ -8,7 +8,6 @@ import {
   Output,
   ViewChild
 } from '@angular/core'
-import * as smoothscroll from 'smoothscroll-polyfill'
 
 import {
   KeyboardEventType,
@@ -41,9 +40,10 @@ export class QuestionComponent implements OnInit, OnChanges {
   task: Task
   @Input()
   isSectionHeaderHidden: boolean
-  // isNextAutomatic: automatically slide to next upon answer
   @Input()
-  isNextAutomatic: boolean
+  isNextAutomatic: boolean // Automatically slide to next upon answer
+  @Input()
+  isMatrix = false
   @Output()
   answer: EventEmitter<Answer> = new EventEmitter<Answer>()
   @Output()
@@ -59,7 +59,6 @@ export class QuestionComponent implements OnInit, OnChanges {
   keyboardScrollPadding = 200
   keyboardInputOffset = 0
   inputHeight = 0
-  isMatrix = false
   isAutoHeight = false
   showScrollButton = false
   defaultYesNoResponse: Response[] = [
@@ -80,10 +79,6 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.audio,
     QuestionType.descriptive
   ])
-  MATRIX_INPUT_SET: Set<QuestionType> = new Set([
-    QuestionType.matrix_radio,
-    QuestionType.health
-  ])
 
   // Input set where height is set to auto
   AUTO_HEIGHT_INPUT_SET: Set<QuestionType> = new Set([
@@ -102,7 +97,6 @@ export class QuestionComponent implements OnInit, OnChanges {
   ])
 
   constructor() {
-    smoothscroll.polyfill()
     this.value = null
   }
 
@@ -111,7 +105,6 @@ export class QuestionComponent implements OnInit, OnChanges {
     this.isFieldLabelHidden = this.HIDE_FIELD_LABEL_SET.has(
       this.question.field_type
     )
-    this.isMatrix = this.MATRIX_INPUT_SET.has(this.question.field_type)
     this.isAutoHeight =
       this.isMatrix || this.AUTO_HEIGHT_INPUT_SET.has(this.question.field_type)
     setTimeout(() => {
@@ -205,7 +198,7 @@ export class QuestionComponent implements OnInit, OnChanges {
     return (
       this.SCROLLBAR_VISIBLE_SET.has(this.question.field_type) &&
       this.inputEl.nativeElement.scrollHeight >
-        this.inputEl.nativeElement.clientHeight
+      this.inputEl.nativeElement.clientHeight
     )
   }
 
@@ -215,7 +208,7 @@ export class QuestionComponent implements OnInit, OnChanges {
       this.showScrollButton &&
       event &&
       event.target.scrollTop >=
-        (event.target.scrollHeight - event.target.clientHeight) * 0.1
+      (event.target.scrollHeight - event.target.clientHeight) * 0.1
     ) {
       this.showScrollButton = false
     }

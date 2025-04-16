@@ -38,6 +38,7 @@ import { QuestionsModule } from './questions/questions.module'
 import { ReportModule } from './report/report.module'
 import { SettingsModule } from './settings/settings.module'
 import { SplashModule } from './splash/splash.module'
+import { TokenFactoryService } from '../core/services/token/token-factory.service'
 
 @NgModule({
   imports: [
@@ -60,7 +61,6 @@ import { SplashModule } from './splash/splash.module'
     SubjectConfigService,
     ProtocolService,
     QuestionnaireService,
-    TokenService,
     KafkaService,
     LocalizationService,
     LocalScheduleService,
@@ -77,7 +77,8 @@ import { SplashModule } from './splash/splash.module'
     MessageHandlerService,
     { provide: NotificationService, useClass: NotificationFactoryService },
     { provide: AnalyticsService, useClass: FirebaseAnalyticsService },
+    { provide: TokenService, useClass: TokenFactoryService },
     GithubClient
   ]
 })
-export class PagesModule {}
+export class PagesModule { }

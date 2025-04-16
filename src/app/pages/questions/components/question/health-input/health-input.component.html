@@ -1,23 +1,2 @@
-<!-- <ion-list *ngFor="let r of health_requirements; let index = index">
-  <ion-item>
-    <ion-label position="floating">{{ r.data_name }}</ion-label>
-    <ion-input
-      type="text"
-      [(ngModel)]="health_requirements[index].value"
-      readonly
-    ></ion-input>
-  </ion-item>
-</ion-list> -->
-
 <div className="healthContainer">
-  <!-- <ion-item>
-    <ion-lable type="text" [(ngModel)]="health_time" readonly></ion-input>
-  </ion-item> -->
-  <ion-item *ngIf="!isSupported">
-    <ion-label position="stacked">The device doesn't support Healthkit.</ion-label>
-  </ion-item>
-  <ion-item *ngIf="isSupported">
-    <ion-label position="stacked">{{ health_display_time }}</ion-label>
-    <ion-input type="text" [(ngModel)]="health_display" readonly></ion-input>
-  </ion-item>
 </div>

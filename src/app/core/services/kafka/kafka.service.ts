@@ -70,6 +70,7 @@ export class KafkaService {
 
   init() {
     return Promise.all([
+      this.schema.reset(),
       this.cache.setCache({}),
       this.updateTopicCacheValidity(),
       this.fetchTopics()

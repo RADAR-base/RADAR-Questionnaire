@@ -25,7 +25,7 @@ export class MPTokenService extends TokenService {
     public jwtHelper: JwtHelperService,
     public remoteConfig: RemoteConfigService,
     public logger: LogService,
-    public platform: Platform
+    public platform: Platform,
   ) {
     super(http, storage, jwtHelper, remoteConfig, logger, platform)
   }
@@ -48,13 +48,15 @@ export class MPTokenService extends TokenService {
     ])
       .then(([uri, headers]) => {
         this.logger.log(`"Registering with ${uri} and headers`, headers)
-        return this.http
-          .post(uri, refreshBody, { headers: headers })
-          .toPromise()
-      })
-      .then((res: any) => {
-        this.setTokens(res)
-        return res
+        return this.makeTokenRequest(uri, refreshBody, headers).then(res => {
+          const sources = this.jwtHelper.decodeToken(res.access_token)['sources']
+          this.setTokens(res)
+          if (!sources) {
+            this.registerSourceToSubject()
+              .then(() => this.makeTokenRequest(uri, refreshBody, headers))
+          }
+          return res
+        })
       })
   }
 

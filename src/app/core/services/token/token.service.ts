@@ -88,6 +88,8 @@ export abstract class TokenService {
 
   abstract register(refreshBody): Promise<OAuthToken>
 
+  abstract forceRefresh(): Promise<any>
+
   refresh(): Promise<OAuthToken> {
     return this.getTokens().then(tokens => {
       if (!tokens) {
@@ -152,6 +154,10 @@ export abstract class TokenService {
   }
 
   abstract isValid(): Promise<boolean>
+
+  init(): Promise<void> {
+    return Promise.resolve()
+  }
 
   setAuthType(type) {
     return this.storage.set(StorageKeys.PLATFORM_AUTH_TYPE, type)

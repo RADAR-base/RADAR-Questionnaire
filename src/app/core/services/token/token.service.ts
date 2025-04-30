@@ -8,6 +8,11 @@ import {
   DefaultOAuthClientId,
   DefaultOAuthClientSecret,
   DefaultTokenRefreshSeconds,
+  DefaultManagementPortalURI,
+  DefaultRequestJSONContentType,
+  DefaultSourceTypeRegistrationBody,
+  DefaultSubjectsURI,
+  DefaultRequestEncodedContentType
 } from '../../../../assets/data/defaultConfig'
 import { ConfigKeys } from '../../../shared/enums/config'
 import { StorageKeys } from '../../../shared/enums/storage'
@@ -113,6 +118,40 @@ export abstract class TokenService {
     throw new Error('Error refreshing token. Please try again.')
   }
 
+  registerSourceToSubject() {
+    return Promise.all([
+      this.getAccessHeaders(DefaultRequestJSONContentType),
+      this.getDecodedSubject(),
+      this.getURI()
+    ]).then(([headers, subject, uri]) =>
+      this.http
+        .post(
+          uri +
+          DefaultManagementPortalURI +
+          DefaultSubjectsURI +
+          subject +
+          '/sources',
+          DefaultSourceTypeRegistrationBody,
+          {
+            headers
+          }
+        )
+        .toPromise()
+    )
+  }
+
+  pullSubjectInformation(): Promise<any> {
+    return Promise.all([
+      this.getAccessHeaders(DefaultRequestEncodedContentType),
+      this.getDecodedSubject(),
+      this.getURI()
+    ]).then(([headers, subject, uri]) => {
+      const subjectURI =
+        uri + DefaultManagementPortalURI + DefaultSubjectsURI + subject
+      return this.http.get(subjectURI, { headers }).toPromise()
+    })
+  }
+
   getDecodedSubject() {
     return this.getTokens().then(
       tokens => this.jwtHelper.decodeToken(tokens.access_token)['sub']
@@ -151,6 +190,12 @@ export abstract class TokenService {
     return new HttpParams()
       .set('grant_type', 'refresh_token')
       .set('refresh_token', refreshToken)
+  }
+
+  makeTokenRequest(uri: string, body: any, header): Promise<any> {
+    return this.http
+      .post(uri, body, { headers: header })
+      .toPromise()
   }
 
   abstract isValid(): Promise<boolean>

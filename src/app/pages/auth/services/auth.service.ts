@@ -8,7 +8,6 @@ import {
   DefaultMetaTokenURI,
 } from '../../../../assets/data/defaultConfig'
 import { ConfigService } from '../../../core/services/config/config.service'
-import { SubjectConfigService } from '../../../core/services/config/subject-config.service'
 import { LogService } from '../../../core/services/misc/log.service'
 import { TokenService } from '../../../core/services/token/token.service'
 import { AnalyticsService } from '../../../core/services/usage/analytics.service'
@@ -26,8 +25,7 @@ export class AuthService {
     private token: TokenService,
     private config: ConfigService,
     private logger: LogService,
-    private analytics: AnalyticsService,
-    private subjectConfig: SubjectConfigService
+    private analytics: AnalyticsService
   ) { }
 
   reset() {
@@ -45,7 +43,7 @@ export class AuthService {
   private handleMetaTokenAuth(authObj: any) {
     this.token.setAuthType(AuthType.MP).then(() => this.token.init())
     return this.metaTokenUrlAuth(authObj)
-      .then(refreshToken => this.completeAuthentication(refreshToken))
+      .then(refreshToken => this.registerToken(refreshToken))
       .catch(err => {
         this.logger.error('MetaTokenUrlAuth failed', err)
         throw err
@@ -65,16 +63,10 @@ export class AuthService {
         .then(() =>
           this.token.setTokenEndpoint(`${baseUrl}/hydra/oauth2/token`)
         )
-        .then(() => this.completeAuthentication(tokenData.refresh_token))
+        .then(() => this.registerToken(tokenData.refresh_token))
     } else {
       throw new Error('Ory auth failed')
     }
-  }
-
-  private completeAuthentication(refreshToken: string) {
-    return this.registerToken(refreshToken)
-      .then(() => this.registerAsSource())
-      .then(() => this.registerToken(refreshToken))
   }
 
   private metaTokenUrlAuth(authObj: string) {
@@ -117,7 +109,7 @@ export class AuthService {
   initSubjectInformation() {
     return Promise.all([
       this.token.getURI(),
-      this.subjectConfig.pullSubjectInformation()
+      this.token.pullSubjectInformation()
     ]).then(([baseUrl, subjectInformation]) => {
       const config = {
         projectId: subjectInformation.project.projectName,
@@ -137,9 +129,5 @@ export class AuthService {
       s => s.sourceTypeModel === DefaultSourceTypeModel
     )
     return source ? source.sourceId : 'Device not available'
-  }
-
-  private registerAsSource() {
-    return this.subjectConfig.registerSourceToSubject()
   }
 }

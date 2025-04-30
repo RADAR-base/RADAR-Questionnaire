@@ -29,7 +29,7 @@ export class SubjectConfigService {
     public storage: StorageService,
     private token: TokenService,
     private http: HttpClient
-  ) {}
+  ) { }
 
   init(user: User) {
     return Promise.all([
@@ -110,40 +110,6 @@ export class SubjectConfigService {
     ]).then(([sourceId, projectId, userId]) => {
       return { sourceId, projectId, userId }
     })
-  }
-
-  pullSubjectInformation(): Promise<any> {
-    return Promise.all([
-      this.token.getAccessHeaders(DefaultRequestEncodedContentType),
-      this.token.getDecodedSubject(),
-      this.token.getURI()
-    ]).then(([headers, subject, uri]) => {
-      const subjectURI =
-        uri + DefaultManagementPortalURI + DefaultSubjectsURI + subject
-      return this.http.get(subjectURI, { headers }).toPromise()
-    })
-  }
-
-  registerSourceToSubject() {
-    return Promise.all([
-      this.token.getAccessHeaders(DefaultRequestJSONContentType),
-      this.token.getDecodedSubject(),
-      this.token.getURI()
-    ]).then(([headers, subject, uri]) =>
-      this.http
-        .post(
-          uri +
-            DefaultManagementPortalURI +
-            DefaultSubjectsURI +
-            subject +
-            '/sources',
-          DefaultSourceTypeRegistrationBody,
-          {
-            headers
-          }
-        )
-        .toPromise()
-    )
   }
 
   reset() {

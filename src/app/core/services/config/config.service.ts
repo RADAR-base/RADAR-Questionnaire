@@ -105,7 +105,7 @@ export class ConfigService {
   hasParticipantAttributesChanged() {
     return Promise.all([
       this.subjectConfig.getParticipantAttributes(),
-      this.subjectConfig.pullSubjectInformation(),
+      this.token.pullSubjectInformation(),
     ])
       .then(([attributes, user]) => {
         const newAttributes = user.attributes

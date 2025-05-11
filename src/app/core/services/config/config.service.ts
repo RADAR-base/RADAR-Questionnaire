@@ -27,6 +27,7 @@ import { ProtocolService } from './protocol.service'
 import { QuestionnaireService } from './questionnaire.service'
 import { RemoteConfigService } from './remote-config.service'
 import { SubjectConfigService } from './subject-config.service'
+import { TokenService } from '../token/token.service'
 
 @Injectable({
   providedIn: 'root'
@@ -47,6 +48,7 @@ export class ConfigService {
     private logger: LogService,
     private remoteConfig: RemoteConfigService,
     private messageHandlerService: MessageHandlerService,
+    private token: TokenService
   ) {
     this.notifications.init()
   }
@@ -321,7 +323,8 @@ export class ConfigService {
       this.schedule.reset(),
       this.notifications.reset(),
       this.localization.init(),
-      this.analytics.reset()
+      this.analytics.reset(),
+      this.token.forceRefresh(),
     ])
   }
 

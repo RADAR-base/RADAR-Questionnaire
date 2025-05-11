@@ -89,6 +89,8 @@ export abstract class TokenService {
 
   abstract register(refreshBody): Promise<OAuthToken>
 
+  abstract forceRefresh(): Promise<any>
+
   refresh(): Promise<OAuthToken> {
     return this.getTokens().then(tokens => {
       if (!tokens) {

@@ -33,11 +33,10 @@ export class TokenFactoryService extends TokenService {
     private mpTokenService: MPTokenService
   ) {
     super(http, storage, jwtHelper, remoteConfig, logger, platform)
-    this.init()
+    this.fetchInitialAuthType()
   }
 
-  private async init(): Promise<void> {
-    if (this.isInitialised) return Promise.resolve()
+  async fetchInitialAuthType(): Promise<void> {
     try {
       let authType = await this.getAuthType()
       if (!authType) {
@@ -73,12 +72,16 @@ export class TokenFactoryService extends TokenService {
       .catch((error) => this.tokenService.handleError(error))
   }
 
+  forceRefresh(): Promise<OAuthToken> {
+    return this.tokenService.forceRefresh()
+  }
+
   async register(refreshBody: any): Promise<OAuthToken> {
     return this.tokenService.register(refreshBody)
   }
 
   async isValid(): Promise<boolean> {
-    return this.init().then(() => this.tokenService.isValid())
+    return this.tokenService.isValid()
   }
 
   reset() {

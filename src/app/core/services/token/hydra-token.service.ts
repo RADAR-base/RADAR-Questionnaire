@@ -110,4 +110,12 @@ export class HydraTokenService extends TokenService {
     }).then(() => super.reset())
   }
 
+  forceRefresh(): Promise<any> {
+    return this.getTokenFromRemoteStorage().then(token => {
+      if (token) {
+        return this.register(this.getRefreshParams(token))
+      }
+    }).catch(e => Promise.resolve())
+  }
+
 }

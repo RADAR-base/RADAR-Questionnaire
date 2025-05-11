@@ -61,4 +61,8 @@ export class MPTokenService extends TokenService {
 
   updateTokenServiceByType(authType: AuthType) { }
 
+  forceRefresh(): Promise<any> {
+    return this.refresh()
+  }
+
 }

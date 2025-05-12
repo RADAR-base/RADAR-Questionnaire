@@ -6,4 +6,5 @@ export interface User {
   enrolmentDate?: number
   humanReadableId?: string
   attributes?: any
+  studyCode?: string
 }

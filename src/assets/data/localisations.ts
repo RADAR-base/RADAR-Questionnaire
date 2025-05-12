@@ -93,6 +93,76 @@ export const Localisations = {
     hb:
       'לחץ על כפתור הסריקה וכוון את המצלמה לכיוון קוד הQR שניתן לך על ידי החוקרים. דוגמה לקוד QR מוצגת למטה.'
   },
+  ENROL_REGISTRATION_NO_QR: {
+    da: 'Har du ikke en QR-kode?',
+    de: 'Haben Sie keinen QR-Code?',
+    en: "Don't have a QR code?",
+    es: '¿No tienes un código QR?',
+    it: 'Non hai un codice QR?',
+    nl: 'Heb je geen QR-code?',
+    pl: 'Nie masz kodu QR?',
+    hb: 'אין לך קוד QR?'
+  },
+  ENROL_REGISTRATION_ENTER_TOKEN: {
+    da: 'Tryk her for at indtaste en login-token i stedet.',
+    de: 'Tippen Sie hier, um stattdessen ein Login-Token einzugeben.',
+    en: 'Tap here to enter a login token instead.',
+    es: 'Toca aquí para ingresar un token de inicio de sesión en su lugar.',
+    it: 'Tocca qui per inserire un token di accesso invece.',
+    nl: 'Tik hier om in plaats daarvan een login-token in te voeren.',
+    pl: 'Stuknij tutaj, aby zamiast tego wprowadzić token logowania.',
+    hb: 'הקש כאן כדי להזין אסימון כניסה במקום.'
+  },
+  ENROL_REGISTRATION_STUDY_DESC: {
+    da: 'Indtast dit studienavn for at fortsætte.',
+    de: 'Geben Sie Ihren Studiennamen ein, um fortzufahren.',
+    en: 'Enter your study name to continue.',
+    es: 'Ingresa el nombre de tu estudio para continuar.',
+    it: 'Inserisci il nome del tuo studio per continuare.',
+    nl: 'Voer je studienaam in om door te gaan.',
+    pl: 'Wprowadź nazwę swojego studium, aby kontynuować.',
+    hb: 'הזן את שם הלימודים שלך כדי להמשיך.'
+  },
+  ENROL_REGISTRATION_ENTER_STUDY_ID: {
+    da: 'Ellers skal du indtaste dit studie navn.',
+    de: 'Andernfalls geben Sie den Namen Ihres Studiums ein.',
+    en: 'Otherwise, enter your study name.',
+    es: 'De lo contrario, ingresa el nombre de tu estudio.',
+    it: 'Altrimenti, inserisci il nome del tuo studio.',
+    nl: 'Anders, voer de naam van je studie in.',
+    pl: 'W przeciwnym razie wprowadź nazwę swojego studium.',
+    hb: 'אחרת, הזן את שם הלימודים שלך.'
+  },
+  ENROL_REGISTRATION_STUDY_ID: {
+    da: 'Indtast studie navn',
+    de: 'Studienname eingeben',
+    en: 'Enter Study Name',
+    es: 'Ingresa nombre del estudio',
+    it: 'Inserisci nome dello studio',
+    nl: 'Voer studie naam in',
+    pl: 'Wprowadź nazwę studiów',
+    hb: 'הזן את שם הלימודים'
+  },
+  ENROL_REGISTRATION_ORY_INVALID_CODE: {
+    da: 'Ugyldig studiekode. Tjek venligst din studieportal.',
+    de: 'Ungültiger Studiencode. Bitte überprüfen Sie Ihr Studienportal.',
+    en: 'Invalid study code. Please check your study portal.',
+    es: 'Código de estudio no válido. Por favor, revisa tu portal de estudios.',
+    it: 'Codice di studio non valido. Controlla il tuo portale di studio.',
+    nl: 'Ongeldige studietocode. Controleer je studieportaal.',
+    pl: 'Nieprawidłowy kod studiów. Sprawdź swój portal studencki.',
+    hb: 'קוד לימודים לא חוקי. אנא בדוק את פורטל הלימודים שלך.'
+  },
+  ENROL_REGISTRATION_ORY_DESC: {
+    da: 'Log ind med din studieportal e-mail og adgangskode.',
+    de: 'Melden Sie sich mit Ihrer Studienportal-E-Mail und Ihrem Passwort an.',
+    en: 'Login with your study portal email and password.',
+    es: 'Inicia sesión con tu correo y contraseña del portal de estudio.',
+    it: 'Accedi con la tua email e password del portale di studio.',
+    nl: 'Log in met je studieportaal-e-mail en wachtwoord.',
+    pl: 'Zaloguj się za pomocą e-maila i hasła do portalu studiów.',
+    hb: 'התחבר עם הדוא״ל והסיסמה של פורטל הלימודים שלך.'
+  },
   ENROL_REGISTRATION_TOKEN_DESC: {
     da:
       'Indtast token. Dette skal være tilgængeligt under QR-koden på Management Portal. Hvis ikke, skal du scanne QR-koden.',
@@ -110,6 +180,16 @@ export const Localisations = {
       'Wprowadź Token. Powinien być widoczny poniżej kodu QR w Mahagement Portal. Jeśli go tam nie znajdziesz, zeskanuj kod QR.',
     hb:
       'הזן את הטוקן. הוא אמור להיות זמין מתחת לקוד הQR בפורטל הניהול. אם הוא לא זמין בבקשה סרוק את קוד הQR.'
+  },
+  ENROL_REGISTRATION_QR: {
+    da: 'Har du en QR-kode?',
+    de: 'Haben Sie einen QR-Code?',
+    en: 'Do you have a QR code?',
+    es: '¿Tienes un código QR?',
+    it: 'Hai un codice QR?',
+    nl: 'Heb je een QR-code?',
+    pl: 'Masz kod QR?',
+    hb: 'האם יש לך קוד QR?'
   },
   ENROL_PREFERENCES: {
     da: 'Præferencer',
@@ -150,21 +230,14 @@ export const Localisations = {
     hb: 'ההרשמה הושלמה'
   },
   ENROL_REGISTRATION_COMPLETE_DESC: {
-    da:
-      "Du er nu med tilmelding til undersøgelsen. Klik på 'Afslut' for at begynde at generere din spørgeskemaplan og dine meddelelser.",
-    de:
-      "Sie haben sich jetzt erfolgreich für die Studie angemeldet. Klicken Sie auf 'Fertig', um den Zeitplan und die Benachrichtigungen für Ihren Fragebogen zu erstellen.",
-    en:
-      "You have now successfully enrolled in the study. Click 'Finish' to start generating your questionnaire schedule and notifications.",
-    es:
-      "Ahora se ha inscrito con éxito en el estudio. Haga clic en 'Finalizar' para comenzar a generar su calendario de cuestionarios y notificaciones.",
-    it:
-      "Ora ti sei iscritto con successo allo studio. Fai clic su 'Fine' per iniziare a generare la pianificazione del questionario e le notifiche.",
-    nl:
-      "U bent nu succesvol ingeschreven voor het onderzoek. Klik op 'Voltooid' om uw vragenlijstschema en meldingen te genereren.",
-    pl:
-      'Z powodzeniem zarejestrowałeś się w badaniu. Kliknij „Zakończone”, aby wygenerować harmonogram kwestionariusza i powiadomienia',
-    hb: `נרשמת בהצלחה למחקר. לחץ "סיום" כדי ליצור את לוח הזמנים וההתראות שלך .`
+    da: "Alt er klar! Tryk på 'Start' for at begynde dine studieopgaver.",
+    de: "Alles ist bereit! Tippen Sie auf 'Start', um mit Ihren Studienaufgaben zu beginnen.",
+    en: "You're all set! Tap 'Start' to begin your study tasks.",
+    es: "¡Todo listo! Toca 'Iniciar' para comenzar tus tareas de estudio.",
+    it: "Sei pronto! Tocca 'Avvia' per iniziare le tue attività di studio.",
+    nl: "Alles is klaar! Tik op 'Start' om je studieopdrachten te beginnen.",
+    pl: "Wszystko gotowe! Stuknij 'Start', aby rozpocząć swoje zadania badawcze.",
+    hb: "הכל מוכן! לחץ על 'התחל' כדי להתחיל את משימות המחקר שלך."
   },
   ENROL_PRIVACY_POLICY_DESC: {
     da:
@@ -192,6 +265,16 @@ export const Localisations = {
     nl: 'Bedankt voor het invullen van de vragenlijst.',
     pl: 'Dziękujemy za wypełnienie ankiety.',
     hb: '.תודה שמילאת את השאלון'
+  },
+  FINISH_THANKS_WAIT: {
+    da: 'Et øjeblik, mens vi sender dine data.',
+    de: 'Einen Moment, wir senden Ihre Daten.',
+    en: 'Just a moment while we send your data.',
+    es: 'Un momento mientras enviamos tus datos.',
+    it: 'Un attimo mentre inviamo i tuoi dati.',
+    nl: 'Een ogenblik terwijl we je gegevens verzenden.',
+    pl: 'Chwileczkę, wysyłamy Twoje dane.',
+    hb: 'רגע אחד בזמן שאנו שולחים את הנתונים שלך.'
   },
   FINISH_NEXT_TASK_REMINDER: {
     da: 'Husk, du har stadig udestående opgaver!',
@@ -744,6 +827,16 @@ export const Localisations = {
     pl: 'Skanuj',
     hb: 'סרוק'
   },
+  BTN_ENROL_KRATOS: {
+    da: 'Log ind',
+    de: 'Anmelden',
+    en: 'Login',
+    es: 'Iniciar sesión',
+    it: 'Accedi',
+    nl: 'Inloggen',
+    pl: 'Zaloguj się',
+    hb: 'התחברות'
+  },
   BTN_ENROL_ENTER_TOKEN: {
     da: 'Indtast Token',
     de: 'Token Eingeben',
@@ -803,6 +896,16 @@ export const Localisations = {
     nl: 'Afwijzen',
     pl: 'Odwołać',
     hb: 'לשחרר'
+  },
+  BTN_RETURN_PORTAL: {
+    da: 'Tilbage til studieportalen',
+    de: 'Zurück zum Studienportal',
+    en: 'Return to Study Portal',
+    es: 'Volver al portal de estudio',
+    it: 'Torna al portale di studio',
+    nl: 'Terug naar studieportaal',
+    pl: 'Powrót do portalu edukacyjnego',
+    hb: 'חזרה לפורטל הלימודים'
   },
   BTN_START: {
     da: 'Start',
@@ -1335,14 +1438,14 @@ export const Localisations = {
     hb: 'החזק מעמד!'
   },
   TASK_BAR_TASK_LEFT_2: {
-    da: 'Der er stadig et par spørgsmål tilbage',
-    de: 'Einige Aufgaben stehen noch aus',
-    en: 'A few questionnaires are still left.',
-    es: 'Todavía quedan algunos cuestionarios',
-    it: 'Mancano ancora pochi questionari',
-    nl: 'Er staan nog een paar vragenlijsten open',
-    pl: 'Zostało jeszcze kilka ankiet.',
-    hb: '.נותרו עדיין מספר שאלונים'
+    da: 'Indlæser dine opgaver.',
+    de: 'Lade deine Aufgaben.',
+    en: 'Loading your tasks.',
+    es: 'Cargando tus tareas.',
+    it: 'Caricamento delle tue attività.',
+    nl: 'Je taken worden geladen.',
+    pl: 'Ładowanie twoich zadań.',
+    hb: 'טוען את המשימות שלך.'
   },
   TASK_BAR_NO_TASK_1: {
     da: 'Tag det roligt!',

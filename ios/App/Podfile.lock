@@ -7,6 +7,9 @@ PODS:
     - Capacitor
   - CapacitorBrowser (5.2.0):
     - Capacitor
+  - CapacitorCommunityGenericOauth2 (6.1.0):
+    - Capacitor
+    - OAuthSwift (= 2.2.0)
   - CapacitorCommunityKeepAwake (4.0.0):
     - Capacitor
   - CapacitorCordova (5.7.4)
@@ -199,6 +202,7 @@ PODS:
     - nanopb/encode (= 2.30909.1)
   - nanopb/decode (2.30909.1)
   - nanopb/encode (2.30909.1)
+  - OAuthSwift (2.2.0)
   - PerfoodCapacitorHealthkit (1.3.0):
     - Capacitor
   - PromisesObjC (2.4.0)
@@ -208,6 +212,7 @@ DEPENDENCIES:
   - "CapacitorApp (from `../../node_modules/@capacitor/app`)"
   - "CapacitorAppLauncher (from `../../node_modules/@capacitor/app-launcher`)"
   - "CapacitorBrowser (from `../../node_modules/@capacitor/browser`)"
+  - "CapacitorCommunityGenericOauth2 (from `../../node_modules/@capacitor-community/generic-oauth2`)"
   - "CapacitorCommunityKeepAwake (from `../../node_modules/@capacitor-community/keep-awake`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorDevice (from `../../node_modules/@capacitor/device`)"
@@ -253,6 +258,7 @@ SPEC REPOS:
     - MLKitCommon
     - MLKitVision
     - nanopb
+    - OAuthSwift
     - PromisesObjC
 
 EXTERNAL SOURCES:
@@ -264,6 +270,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/app-launcher"
   CapacitorBrowser:
     :path: "../../node_modules/@capacitor/browser"
+  CapacitorCommunityGenericOauth2:
+    :path: "../../node_modules/@capacitor-community/generic-oauth2"
   CapacitorCommunityKeepAwake:
     :path: "../../node_modules/@capacitor-community/keep-awake"
   CapacitorCordova:
@@ -308,6 +316,7 @@ SPEC CHECKSUMS:
   CapacitorApp: b23ce4279972fa24721b9ad7aefdf05e36c29db7
   CapacitorAppLauncher: 3c24de236f37bf7ab79e90ecf5576f962cc7d99e
   CapacitorBrowser: 4dc0624a8c372054f64f31e53c6375ce300b28cc
+  CapacitorCommunityGenericOauth2: cd98e4a7b684b9fc4c857d6f904fc3fc11812802
   CapacitorCommunityKeepAwake: 6106b37df55fd4f06e47a2af701ce0dd6ffae1ba
   CapacitorCordova: a6e87fccc0307dee7aec1560ec9398485f2b0ce7
   CapacitorDevice: b8d2ddde4e7f3711f64eb58a69a776e7fc3e53b8
@@ -347,9 +356,10 @@ SPEC CHECKSUMS:
   MLKitCommon: c1b791c3e667091918d91bda4bba69a91011e390
   MLKitVision: 8baa5f46ee3352614169b85250574fde38c36f49
   nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
+  OAuthSwift: 75efbb5bd9a4b2b71a37bd7e986bf3f55ddd54c6
   PerfoodCapacitorHealthkit: 69c66ae8b7a8079586baab13bd6abd5880139263
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
 
-PODFILE CHECKSUM: 819ee8abeaebf087881ec781995944baa241d26f
+PODFILE CHECKSUM: 83d239301e399b40cc2ecf8a0a5c4f43a5503221
 
 COCOAPODS: 1.16.2

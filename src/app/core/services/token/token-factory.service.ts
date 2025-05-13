@@ -85,6 +85,8 @@ export class TokenFactoryService extends TokenService {
   }
 
   reset() {
-    return this.tokenService.reset()
+    if (this.tokenService)
+      return this.tokenService.reset()
+    else Promise.resolve()
   }
 }

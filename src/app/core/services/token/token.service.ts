@@ -158,6 +158,8 @@ export abstract class TokenService {
 
   abstract updateTokenServiceByType(authType: AuthType)
 
+  async fetchInitialAuthType(): Promise<void> { }
+
   setAuthType(type) {
     return this.storage.set(StorageKeys.PLATFORM_AUTH_TYPE, type)
   }

@@ -81,7 +81,7 @@ export class TokenFactoryService extends TokenService {
   }
 
   async isValid(): Promise<boolean> {
-    return this.tokenService.isValid()
+    return this.fetchInitialAuthType().then(() => this.tokenService.isValid())
   }
 
   reset() {

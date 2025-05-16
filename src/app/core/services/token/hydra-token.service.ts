@@ -2,8 +2,14 @@ import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { JwtHelperService } from '@auth0/angular-jwt'
 import { Platform } from '@ionic/angular'
+import { GenericOAuth2 } from '@capacitor-community/generic-oauth2'
 
-import { DefaultRequestEncodedContentType, DefaultTokenEndPoint } from '../../../../assets/data/defaultConfig'
+import {
+  DefaultRequestEncodedContentType,
+  DefaultOryAuthOptions,
+  DefaultHydraAuthEndpoint,
+  DefaultHydraTokenEndpoint
+} from '../../../../assets/data/defaultConfig'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
@@ -94,6 +100,14 @@ export class HydraTokenService extends TokenService {
         if (!token) throw new Error('No token available')
         return token
       })
+  }
+
+  reset() {
+    return this.getURI().then((baseUrl) => {
+      DefaultOryAuthOptions.authorizationBaseUrl = baseUrl + DefaultHydraAuthEndpoint
+      DefaultOryAuthOptions.accessTokenEndpoint = baseUrl + DefaultHydraTokenEndpoint
+      return GenericOAuth2.logout(DefaultOryAuthOptions)
+    }).then(() => super.reset())
   }
 
   forceRefresh(): Promise<any> {

@@ -42,6 +42,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   isTaskCalendarTaskNameShown: Promise<boolean>
   isTaskInfoShown: Promise<boolean>
   currentDate: number
+  studyPortalReturnUrl: Promise<string | null>
 
   APP_CREDITS = '&#169; RADAR-Base'
   HTML_BREAK = '<br>'
@@ -62,23 +63,6 @@ export class HomePageComponent implements OnInit, OnDestroy {
         console.log('Changes to task service detected..')
         this.navCtrl.navigateRoot('')
       })
-  }
-
-  getIsLoadingSpinnerShown() {
-    return (
-      (this.startingQuestionnaire && !this.showCalendar) ||
-      (!this.nextTask && !this.showCompleted)
-    )
-  }
-
-  getIsStartButtonShown() {
-    return (
-      this.taskIsNow &&
-      !this.startingQuestionnaire &&
-      !this.showCompleted &&
-      !this.showCalendar &&
-      !this.getIsLoadingSpinnerShown()
-    )
   }
 
   ngOnInit() {
@@ -126,12 +110,31 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.isTaskInfoShown = this.tasksService.getIsTaskInfoShown()
     this.onDemandIcon = this.tasksService.getOnDemandAssessmentIcon()
     this.showMiscTasksButton = this.getShowMiscTasksButton()
+    this.studyPortalReturnUrl = this.tasksService.getPortalReturnUrl()
   }
 
   onResume() {
     this.usage.sendOpenEvent()
     this.checkForNewDate()
     this.usage.sendGeneralEvent(UsageEventType.RESUMED)
+  }
+
+
+  getIsLoadingSpinnerShown() {
+    return (
+      (this.startingQuestionnaire && !this.showCalendar) ||
+      (!this.nextTask && !this.showCompleted)
+    )
+  }
+
+  getIsStartButtonShown() {
+    return (
+      this.taskIsNow &&
+      !this.startingQuestionnaire &&
+      !this.showCompleted &&
+      !this.showCalendar &&
+      !this.getIsLoadingSpinnerShown()
+    )
   }
 
   checkForNewDate() {
@@ -179,6 +182,10 @@ export class HomePageComponent implements OnInit, OnDestroy {
   openOnDemandTasksPage() {
     this.navCtrl.navigateForward('/on-demand')
     this.usage.sendClickEvent('open_on_demand_tasks')
+  }
+
+  async openStudyPortal() {
+    window.open(await this.studyPortalReturnUrl, '_system')
   }
 
   startQuestionnaire(taskCalendarTask?: Task) {

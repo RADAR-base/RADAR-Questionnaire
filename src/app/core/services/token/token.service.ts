@@ -16,6 +16,7 @@ import { getSeconds } from '../../../shared/utilities/time'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
+import { AuthType } from 'src/app/shared/models/auth'
 
 @Injectable({
   providedIn: 'root'
@@ -155,6 +156,10 @@ export abstract class TokenService {
 
   abstract isValid(): Promise<boolean>
 
+  abstract updateTokenServiceByType(authType: AuthType)
+
+  async fetchInitialAuthType(): Promise<void> { }
+
   setAuthType(type) {
     return this.storage.set(StorageKeys.PLATFORM_AUTH_TYPE, type)
   }
@@ -163,7 +168,7 @@ export abstract class TokenService {
     return this.storage.get(StorageKeys.PLATFORM_AUTH_TYPE)
   }
 
-  reset() {
-    return Promise.all([this.setTokens(null)])
+  reset(): Promise<any> {
+    return Promise.all([this.setAuthType(null), this.setTokens(null)])
   }
 }

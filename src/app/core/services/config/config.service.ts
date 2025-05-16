@@ -15,7 +15,6 @@ import {
 import { AssessmentType } from '../../../shared/models/assessment'
 import { NotificationActionType } from '../../../shared/models/notification-handler'
 import { User } from '../../../shared/models/user'
-import { AppServerService } from '../app-server/app-server.service'
 import { KafkaService } from '../kafka/kafka.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
@@ -49,7 +48,6 @@ export class ConfigService {
     private logger: LogService,
     private remoteConfig: RemoteConfigService,
     private messageHandlerService: MessageHandlerService,
-    private healthKitService: HealthkitService,
     private token: TokenService
   ) {
     this.notifications.init()
@@ -325,7 +323,7 @@ export class ConfigService {
       this.schedule.reset(),
       this.notifications.reset(),
       this.localization.init(),
-      this.healthKitService.reset(),
+      this.analytics.reset(),
       this.token.forceRefresh(),
     ])
   }

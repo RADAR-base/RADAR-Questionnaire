@@ -39,6 +39,7 @@ export abstract class ConverterService {
   processData(data) { }
 
   getSchemas(topic) {
+    if (!this.BASE_URI) this.updateURI()
     if (this.schemas[topic]) return this.schemas[topic]
     else {
       const versionStr = this.URI_version + 'latest'

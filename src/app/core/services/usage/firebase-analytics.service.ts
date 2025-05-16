@@ -10,6 +10,8 @@ import { Capacitor } from '@capacitor/core'
 
 @Injectable()
 export class FirebaseAnalyticsService extends AnalyticsService {
+  private readonly CAPACITOR_KEY = 'capacitor'
+
   constructor(
     private platform: Platform,
     private logger: LogService,
@@ -21,7 +23,7 @@ export class FirebaseAnalyticsService extends AnalyticsService {
   logEvent(event: string, params: { [key: string]: string }): Promise<any> {
     // this.logger.log('Firebase Event', event)
     if (!Capacitor.isNativePlatform()) return Promise.resolve()
-    
+
     const cleanParams = {}
 
     Object.entries(params).forEach(([key, value]) => {
@@ -80,7 +82,7 @@ export class FirebaseAnalyticsService extends AnalyticsService {
     userProperties: User | Object,
     keyPrefix?: string
   ): Promise<any> {
-    if (!this.platform.is('cordova'))
+    if (!this.platform.is(this.CAPACITOR_KEY))
       return Promise.resolve('Could not load firebase')
 
     return Promise.all(
@@ -109,7 +111,7 @@ export class FirebaseAnalyticsService extends AnalyticsService {
 
   setUserId(userId: string): Promise<any> {
     if (!Capacitor.isNativePlatform()) return Promise.resolve()
-      return FirebaseAnalytics.setUserId({ userId: userId })
+    return FirebaseAnalytics.setUserId({ userId: userId })
   }
 
   setCurrentScreen(screenName: string): Promise<any> {
@@ -131,9 +133,16 @@ export class FirebaseAnalyticsService extends AnalyticsService {
   }
 
   enableAnalytics() {
-    if (!this.platform.is('cordova'))
+    if (!this.platform.is(this.CAPACITOR_KEY))
       return Promise.resolve('Could not load firebase')
 
     return FirebaseAnalytics.setEnabled({ enabled: true })
+  }
+
+  reset() {
+    if (!this.platform.is(this.CAPACITOR_KEY))
+      return Promise.resolve('Could not load firebase')
+
+    return FirebaseAnalytics.resetAnalyticsData()
   }
 }

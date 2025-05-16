@@ -330,6 +330,7 @@ export class KafkaService {
   }
 
   reset() {
+    this.schema.reset()
     return this.cache.reset()
   }
 }

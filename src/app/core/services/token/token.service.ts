@@ -61,7 +61,16 @@ export abstract class TokenService {
   getURI() {
     return this.storage
       .get(this.TOKEN_STORE.BASE_URI)
-      .then(uri => (uri ? uri : DefaultEndPoint))
+      .then(uri => {
+        if (!uri) {
+          if (this.platform.is('capacitor')) {
+            throw new Error('Base URI not set. Please complete authentication first.')
+          }
+          return DefaultEndPoint
+        }
+        this.URI_base = uri
+        return uri
+      })
   }
 
   abstract getTokenEndpoint(): Promise<string>
@@ -71,12 +80,29 @@ export abstract class TokenService {
   }
 
   setURI(uri: string): Promise<string> {
+    if (!uri) {
+      return Promise.reject(new Error('Base URI cannot be null or empty'))
+    }
+    if (this.platform.is('capacitor')) {
+      try {
+        const url = new URL(uri)
+        if (url.protocol === 'capacitor:') {
+          return Promise.reject(new Error('Invalid base URI for native app. Please use a valid HTTP/HTTPS URL.'))
+        }
+      } catch (e) {
+        return Promise.reject(new Error('Invalid base URI format. Please use a valid URL.'))
+      }
+    }
     let lastSlashIndex = uri.length
     while (lastSlashIndex > 0 && uri[lastSlashIndex - 1] == '/') {
       lastSlashIndex--
     }
     const url = uri.substring(0, lastSlashIndex)
-    return this.storage.set(this.TOKEN_STORE.BASE_URI, url).then(() => url)
+    return this.storage.set(this.TOKEN_STORE.BASE_URI, url)
+      .then(() => {
+        this.URI_base = url
+        return url
+      })
   }
 
   setTokenEndpoint(uri: string) {

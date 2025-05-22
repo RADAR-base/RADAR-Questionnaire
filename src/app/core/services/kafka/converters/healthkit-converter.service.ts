@@ -143,6 +143,9 @@ export class HealthkitConverterService extends ConverterService {
   }
 
   getSchemas() {
+    if (!this.BASE_URI) {
+      return this.updateURI().then(() => this.getSchemas())
+    }
     if (this.schemas[this.HEALTHKIT_TOPIC])
       return this.schemas[this.HEALTHKIT_TOPIC]
     else {

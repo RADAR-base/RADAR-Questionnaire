@@ -33,13 +33,37 @@ export class OryAuthService extends AuthService {
     let refreshToken: string
 
     if (typeof authObj === 'string') {
-      const url = new URL(authObj)
-      const encodedData = url.searchParams.get('data')
-      baseUrl = new URL(url.searchParams.get('referrer')).origin
-      if (!encodedData) throw new Error('Ory auth failed')
-      refreshToken = JSON.parse(decodeURIComponent(encodedData)).refresh_token
+      try {
+        const url = new URL(authObj)
+        const encodedData = url.searchParams.get('data')
+        const referrer = url.searchParams.get('referrer')
+        if (!referrer) {
+          throw new Error('Referrer URL is missing')
+        }
+        baseUrl = new URL(referrer).origin
+        if (!encodedData) {
+          throw new Error('Ory auth data is missing')
+        }
+        const data = JSON.parse(decodeURIComponent(encodedData))
+        if (!data.refresh_token) {
+          throw new Error('Refresh token is missing from auth data')
+        }
+        refreshToken = data.refresh_token
+      } catch (e) {
+        throw new Error(`Invalid auth URL format: ${e.message}`)
+      }
     } else {
-      baseUrl = authObj.url
+      if (!authObj.url) {
+        throw new Error('Base URL is missing from auth object')
+      }
+      try {
+        baseUrl = new URL(authObj.url).origin
+      } catch (e) {
+        throw new Error(`Invalid base URL format: ${authObj.url}`)
+      }
+      if (!authObj.refresh_token) {
+        throw new Error('Refresh token is missing from auth object')
+      }
       refreshToken = authObj.refresh_token
     }
     const tokenEndpoint = `${baseUrl}/hydra/oauth2/token`

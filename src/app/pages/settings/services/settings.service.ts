@@ -8,7 +8,7 @@ export class SettingsService {
   constructor(
     public localization: LocalizationService,
     private config: ConfigService
-  ) {}
+  ) { }
 
   getSettings() {
     return this.config.getAll()
@@ -55,5 +55,9 @@ export class SettingsService {
 
   sendCachedData() {
     return this.config.sendCachedData()
+  }
+
+  getKafkaService() {
+    return this.config.getKafkaService()
   }
 }

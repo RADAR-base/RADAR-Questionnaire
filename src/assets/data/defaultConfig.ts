@@ -205,7 +205,7 @@ export const DefaultOAuthClientSecret = ''
 export const DefaultTokenRefreshSeconds = 1800 // 30 minutes in s
 
 export const DefaultOryEndpoint = 'https://dev.radarbasedev.co.uk'
-export const DefaultOryScopes = 'SUBJECT.READ SUBJECT.UPDATE PROJECT.READ offline_access'
+export const DefaultOryScopes = 'SUBJECT.READ SUBJECT.UPDATE PROJECT.READ MEASUREMENT.CREATE offline_access'
 export const DefaultOryAudience = 'res_ManagementPortal res_gateway res_AppServer'
 
 export const DefaultHydraAuthEndpoint = '/hydra/oauth2/auth'

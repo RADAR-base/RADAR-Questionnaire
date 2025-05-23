@@ -59,7 +59,7 @@ export const Localisations = {
   },
   ENROL_REGISTRATION_DESC: {
     da:
-      'Før du kan begynde at anvende app’en, skal vi registrere den først. Du kan enten scanne QR-koden eller indtaste symbolet.',
+      `Før du kan begynde at anvende app'en, skal vi registrere den først.Du kan enten scanne QR- koden eller indtaste symbolet.`,
     de:
       'Bevor Sie die App verwenden können, müssen Sie sie zuerst registrieren. Sie können entweder den QR-Code scannen oder das Token eingeben.',
     en:
@@ -595,7 +595,7 @@ export const Localisations = {
     nl:
       "Door de cache opnieuw in te stellen, verwijdert u uw gecachte vragenlijstgegevens die niet konden worden verzonden. Probeer eerst de gegevens te verzenden door in de instellingen op 'Cachegegevens verzenden' te tikken",
     pl:
-      'Przez zresetowanie pamięci podręcznej usuwasz buforowane dane kwestionariusza, których nie udało się wysłać. Spróbuj najpierw wysłać dane, dotykając opcji „Wyślij buforowane dane” w ustawieniach',
+      'Przez zresetowanie pamięci podręcznej usuwasz buforowane dane kwestionariusza, których nie udało się wysłać. Spróbuj najpierw wysłać dane, dotykając opcji „Wyślij buforowane dane" w ustawieniach',
     hb:
       "על ידי איפוס המטמון, אתה מוחק את נתוני השאלון המטמון שלך שלא הצליחו לשלוח. אנא נסה לשלוח את הנתונים תחילה על ידי הקשה על 'שלח נתונים במטמון' בהגדרות"
   },
@@ -1573,7 +1573,7 @@ export const Localisations = {
     da:
       'Stop venligst optagelsen, når du er færdig for at aktivere den næste knap.',
     de:
-      'Bitte stoppen Sie die Aufnahme, wenn Sie fertig sind, um die Schaltfläche „Weiter“ zu aktivieren.',
+      'Bitte stoppen Sie die Aufnahme, wenn Sie fertig sind, um die Schaltfläche „Weiter" zu aktivieren.',
     en:
       'Please stop the recording once you are done in order to enable the next button.',
     es:
@@ -1617,7 +1617,7 @@ export const Localisations = {
     nl:
       'Er is een probleem opgetreden bij het bijwerken van uw configuratie. Druk op "Probeer opnieuw" om het opnieuw te proberen. Als je dit probleem regelmatig ervaart, neem dan contact op met je studiecoördinator of probeer de applicatie te resetten in de instellingen.',
     pl:
-      'Podczas aktualizowania konfiguracji wystąpił problem. Naciśnij „Spróbuj ponownie”, aby spróbować ponownie. Jeśli często występuje ten problem, skontaktuj się z koordynatorem badania lub spróbuj zresetować aplikację w ustawieniach.',
+      'Podczas aktualizowania konfiguracji wystąpił problem. Naciśnij „Spróbuj ponownie", aby spróbować ponownie. Jeśli często występuje ten problem, skontaktuj się z koordynatorem badania lub spróbuj zresetować aplikację w ustawieniach.',
     hb:
       'הייתה בעיה בעדכון התצורה שלך. לחץ על "נסה שוב" כדי לנסות שוב. אם אתה נתקל בבעיה זו לעתים קרובות, אנא צור קשר עם רכז הלימוד שלך או נסה לאפס את היישום בהגדרות.'
   },
@@ -1702,5 +1702,16 @@ export const Localisations = {
     nl: 'kan niet worden gestart.',
     pl: 'nie można uruchomić.',
     hb: 'לא ניתן להפעיל.'
+  },
+  DATA_SEND_ERROR_DESC: {
+    en: 'Some data could not be sent successfully. Would you like to retry?',
+    es: 'Algunos datos no se pudieron enviar correctamente. ¿Desea intentarlo de nuevo?',
+    da: 'Nogle data kunne ikke sendes. Vil du prøve igen?',
+    de: 'Einige Daten konnten nicht erfolgreich gesendet werden. Möchten Sie es erneut versuchen?',
+    fr: 'Certaines données n\'ont pas pu être envoyées avec succès. Voulez-vous réessayer?',
+    it: 'Alcuni dati non sono stati inviati con successo. Vuoi riprovare?',
+    nl: 'Sommige gegevens konden niet succesvol worden verzonden. Wilt u het opnieuw proberen?',
+    pl: 'Niektóre dane nie mogły zostać pomyślnie wysłane. Czy chcesz spróbować ponownie?',
+    hb: 'חלק מהנתונים לא נשלחו בהצלחה. האם תרצה לנסות שוב?'
   }
 }

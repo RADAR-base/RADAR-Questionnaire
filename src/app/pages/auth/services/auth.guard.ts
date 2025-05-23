@@ -7,7 +7,7 @@ import { TokenService } from '../../../core/services/token/token.service'
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
-  constructor(private token: TokenService, private router: Router) {}
+  constructor(public token: TokenService, private router: Router) { }
 
   canActivate() {
     return this.token
@@ -17,6 +17,6 @@ export class AuthGuard implements CanActivate {
   }
 
   resetAndEnrol() {
-    return this.token.reset().then(() => this.router.navigate(['/enrol']))
+    return this.router.navigate(['/enrol'])
   }
 }

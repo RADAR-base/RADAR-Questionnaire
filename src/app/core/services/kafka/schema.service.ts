@@ -17,6 +17,10 @@ export class SchemaService {
     public keyConverter: KeyConverterService,
   ) { }
 
+  init() {
+    this.converterFactory.init()
+  }
+
   getKafkaObjectKey() {
     return this.subjectConfig
       .getKafkaObservationKey()

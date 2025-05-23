@@ -72,7 +72,8 @@ export class KafkaService {
     return Promise.all([
       this.cache.setCache({}),
       this.updateTopicCacheValidity(),
-      this.fetchTopics()
+      this.fetchTopics(),
+      this.schema.init(),
     ])
   }
 
@@ -179,6 +180,12 @@ export class KafkaService {
               const [k, v] = entry
               return this.convertEntryToRecord(kafkaKey, k, v)
                 .then(r => {
+                  if (r.record.records.length === 0) {
+                    this.logger.log(
+                      'Kafka record is empty, skipping sending'
+                    )
+                    return Promise.resolve()
+                  }
                   return this.sendToKafka(r.topic, r.record, headers)
                 })
                 .then(() => {

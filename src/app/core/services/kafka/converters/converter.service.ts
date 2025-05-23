@@ -32,7 +32,10 @@ export abstract class ConverterService {
     this.getRadarSpecifications()
   }
 
-  init() { }
+  init() {
+    this.schemas = {}
+    this.updateURI()
+  }
 
   abstract getKafkaTopic(payload, topics?)
 

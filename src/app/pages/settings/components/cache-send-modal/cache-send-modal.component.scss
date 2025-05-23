@@ -1,6 +1,7 @@
 ion-card {
   margin: auto;
   margin-top: 30vh;
+  padding: 16px;
   width: 80%;
   background-color: var(--ion-color-light);
   --background: var(--ion-color-light);
@@ -19,6 +20,11 @@ ion-card {
 
 .error {
   color: var(--cl-danger);
+  font-size: 48px;
+}
+
+.upload {
+  color: var(--ion-color-primary);
   font-size: 48px;
 }
 
@@ -65,4 +71,17 @@ ion-grid {
   color: var(--ion-color-primary);
   text-transform: uppercase;
   font-size: 16px;
+}
+
+.progress-container {
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.progress-text {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--ion-color-medium);
 }

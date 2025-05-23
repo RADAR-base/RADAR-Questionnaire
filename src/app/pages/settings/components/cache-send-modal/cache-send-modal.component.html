@@ -4,49 +4,71 @@
   </ion-card-header>
 
   <div class="center">
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <p>
-            <ion-icon name="checkmark-circle" class="success"></ion-icon>
-          </p>
-          <ion-label> {{ successes.length }} </ion-label>
-        </ion-col>
-        <ion-col>
-          <p><ion-icon name="alert" class="error"></ion-icon></p>
-          <ion-label>
-            {{ errors.length }}
-          </ion-label>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+    <!-- Progress View -->
+    <ng-container *ngIf="!isComplete">
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-label>{{ 'FINISH_THANKS_WAIT' | translate }}</ion-label>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
 
-    <ion-segment (ionChange)="segmentChanged($event)">
-      <ion-segment-button value="success">
-        <ion-label>{{ 'STATUS_SUCCESS' | translate }}</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="error">
-        <ion-label> {{ 'STATUS_FAILURE' | translate }}</ion-label>
-      </ion-segment-button>
-    </ion-segment>
+      <div class="progress-container">
+        <ion-progress-bar [value]="progress / 100"></ion-progress-bar>
+        <div class="progress-text">
+          <span>{{ progress }}%</span>
+          <span>{{ etaText }}</span>
+        </div>
+      </div>
+    </ng-container>
 
-    <div [ngSwitch]="segementShown">
-      <ng-container *ngIf="errors.length">
-        <div *ngSwitchCase="'error'" class="scroll-error">
-          <ion-list>
-            <ng-container *ngFor="let e of errors; let i = index">
-              <li *ngIf="i < 15">{{ e.message }}</li>
-            </ng-container>
-          </ion-list>
-        </div>
-      </ng-container>
-      <ng-container *ngIf="!errors.length">
-        <div *ngSwitchCase="'success'" class="scroll-success">
-          <button (click)="dismiss()" class="done-btn">
-            {{ 'BTN_DONE' | translate }}
-          </button>
-        </div>
-      </ng-container>
-    </div>
+    <!-- Results View -->
+    <ng-container *ngIf="isComplete">
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <p>
+              <ion-icon name="checkmark-circle" class="success"></ion-icon>
+            </p>
+            <ion-label> {{ successes.length }} </ion-label>
+          </ion-col>
+          <ion-col>
+            <p><ion-icon name="alert" class="error"></ion-icon></p>
+            <ion-label>
+              {{ errors.length }}
+            </ion-label>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <ion-segment (ionChange)="segmentChanged($event)">
+        <ion-segment-button value="success">
+          <ion-label>{{ 'STATUS_SUCCESS' | translate }}</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="error">
+          <ion-label> {{ 'STATUS_FAILURE' | translate }}</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+
+      <div [ngSwitch]="segmentShown">
+        <ng-container *ngIf="errors.length">
+          <div *ngSwitchCase="'error'" class="scroll-error">
+            <ion-list>
+              <ng-container *ngFor="let e of errors; let i = index">
+                <li *ngIf="i < 15">{{ e.message }}</li>
+              </ng-container>
+            </ion-list>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="!errors.length">
+          <div *ngSwitchCase="'success'" class="scroll-success">
+            <button (click)="dismiss()" class="done-btn">
+              {{ 'BTN_DONE' | translate }}
+            </button>
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
   </div>
 </ion-card>

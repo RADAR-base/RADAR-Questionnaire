@@ -4,8 +4,7 @@ import {
   HttpHeaders
 } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import * as pako from 'pako'
-import { CapacitorHttp } from '@capacitor/core';
+import { CapacitorHttp } from '@capacitor/core'
 
 import {
   DefaultClientAcceptType,
@@ -45,9 +44,14 @@ export class KafkaService {
 
   eventCallback = new Subject<any>() // Source
   eventCallback$ = this.eventCallback.asObservable() // Stream
-  private progressSubject = new Subject<number>();
+  private progressSubject = new Subject<number>()
   progress = 0
   cacheSize = 0
+
+  resetProgress() {
+    this.progress = 0
+    this.progressSubject.next(0)
+  }
 
   constructor(
     private storage: StorageService,
@@ -61,11 +65,9 @@ export class KafkaService {
   ) {
     this.updateURI()
     this.readTopicCacheValidity()
-    this.progressSubject
-      .pipe(debounceTime(2000))
-      .subscribe((progress) => {
-        this.eventCallback.next(progress);
-      });
+    this.progressSubject.subscribe((progress) => {
+      this.eventCallback.next(progress)
+    })
   }
 
   init() {
@@ -249,24 +251,24 @@ export class KafkaService {
   }
 
   private convertHeaders(headers: HttpHeaders): { [key: string]: string } {
-    const result: { [key: string]: string } = {};
+    const result: { [key: string]: string } = {}
     headers.keys().forEach((key) => {
-      const values = headers.getAll(key);
+      const values = headers.getAll(key)
       if (values && values.length > 0) {
-        result[key] = values.join(', '); // Join multiple values, if any
+        result[key] = values.join(', ') // Join multiple values, if any
       }
-    });
-    return result;
+    })
+    return result
   }
 
   postData(data: any, topic: string, headers: HttpHeaders): Promise<any> {
-    const nativeHeaders = this.convertHeaders(headers);
+    const nativeHeaders = this.convertHeaders(headers)
     const request = {
       url: `${this.KAFKA_CLIENT_URL}${this.URI_topics}${topic}`,
       data: data,
       headers: nativeHeaders,
       method: 'POST',
-    };
+    }
 
     return CapacitorHttp.request(request)
       .then(response => {
@@ -274,14 +276,14 @@ export class KafkaService {
           throw new HttpErrorResponse({
             error: response.data,
             status: response.status,
-          });
+          })
         }
-        return response;
+        return response
       })
       .catch(error => {
-        console.error('HTTP request failed:', error);
-        throw new Error(`Failed to send data to Kafka: ${error.message}`);
-      });
+        console.error('HTTP request failed:', error)
+        throw new Error(`Failed to send data to Kafka: ${error.message}`)
+      })
   }
 
   getAccessToken() {

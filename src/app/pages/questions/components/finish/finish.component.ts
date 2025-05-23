@@ -58,7 +58,7 @@ export class FinishComponent implements OnChanges {
       this.usage.setPage(this.constructor.name)
     }
 
-    this.showDoneButton = this.progressCount >= 0.99
+    this.showDoneButton = this.progressCount >= 1
 
     this.displayNextTaskReminder =
       this.taskType == AssessmentType.SCHEDULED && !this.isLastTask

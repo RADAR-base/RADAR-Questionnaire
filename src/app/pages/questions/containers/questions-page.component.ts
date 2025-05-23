@@ -366,7 +366,36 @@ export class QuestionsPageComponent implements OnInit {
     return this.questionsService.processCompletedQuestionnaire(
       this.task,
       this.questions
-    )
+    ).then(() => {
+      // Check if there are any failed items in the cache
+      return this.questionsService.getKafkaService().getCacheSize().then(size => {
+        if (size > 0) {
+          this.showRetryAlert()
+        }
+      })
+    })
+  }
+
+  showRetryAlert() {
+    this.alertService.showAlert({
+      header: this.localization.translateKey(LocKeys.STATUS_FAILURE),
+      message: this.localization.translateKey(LocKeys.DATA_SEND_ERROR_DESC),
+      buttons: [
+        {
+          text: this.localization.translateKey(LocKeys.BTN_RETRY),
+          handler: () => {
+            // Reset progress and retry sending
+            this.questionsService.resetProgress()
+            this.progressCount$ = this.questionsService.getProgress()
+            this.questionsService.getKafkaService().sendAllFromCache()
+          }
+        },
+        {
+          text: this.localization.translateKey(LocKeys.BTN_DISMISS),
+          handler: () => { }
+        }
+      ]
+    })
   }
 
   sendEvent(type) {

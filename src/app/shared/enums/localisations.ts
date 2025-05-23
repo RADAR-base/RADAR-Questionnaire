@@ -205,6 +205,8 @@ export class LocKeys {
     'EXTERNAL_APP_FAILURE_ON_LAUNCH_DESC'
   )
 
+  static DATA_SEND_ERROR_DESC = new LocKeys('DATA_SEND_ERROR_DESC')
+
   constructor(public value: string) { }
 
   toString() {

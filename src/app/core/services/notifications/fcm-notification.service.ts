@@ -22,6 +22,8 @@ export abstract class FcmNotificationService extends NotificationService {
   upstreamResends: number
   ttlMinutes = 10
 
+  ONE_DAY_MILLIS = 86_400_000
+
   constructor(
     public store: StorageService,
     public config: SubjectConfigService,
@@ -75,6 +77,10 @@ export abstract class FcmNotificationService extends NotificationService {
           return this.cancelAllNotifications(user)
         case NotificationActionType.CANCEL_SINGLE:
           return this.cancelSingleNotification(user, notificationId)
+        case NotificationActionType.SEND_ERROR:
+          return this.publishCustomNotification(
+            user, Date.now() + this.ONE_DAY_MILLIS, 'There was a problem sending your data.', 'Please open the app to retry.'
+          )
         case NotificationActionType.SCHEDULE_ALL:
         default:
           return this.publishAllNotifications(user, limit)
@@ -127,6 +133,8 @@ export abstract class FcmNotificationService extends NotificationService {
   abstract publishAllNotifications(user, limit)
 
   abstract publishTestNotification(user)
+
+  abstract publishCustomNotification(user, timestamp, title, text)
 
   abstract cancelAllNotifications(user)
 

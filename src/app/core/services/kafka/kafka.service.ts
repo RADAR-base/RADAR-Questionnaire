@@ -28,12 +28,15 @@ import { SchemaService } from './schema.service'
 import { Subject } from 'rxjs'
 import { debounceTime } from 'rxjs/operators'
 import pLimit from 'p-limit'
+import { NotificationService } from '../notifications/notification.service'
+import { NotificationActionType } from 'src/app/shared/models/notification-handler'
 
 @Injectable()
 export class KafkaService {
   private static DEFAULT_TOPIC_CACHE_VALIDITY = 600_000 // 10 minutes
   private static BATCH_SIZE = 10
   private static CONCURRENCY_LIMIT = 3
+  private static SEND_ERROR_NOTIFICATION_THRESHOLD = 10
 
   URI_topics: string = '/topics/'
   DEFAULT_KAFKA_AVSC = 'questionnaire'
@@ -64,7 +67,8 @@ export class KafkaService {
     private analytics: AnalyticsService,
     private logger: LogService,
     private http: HttpClient,
-    private remoteConfig: RemoteConfigService
+    private remoteConfig: RemoteConfigService,
+    private notificationService: NotificationService
   ) {
     this.updateURI()
     this.readTopicCacheValidity()
@@ -215,8 +219,12 @@ export class KafkaService {
       }
 
       this.updateProgress(this.cacheSize, this.cacheSize)
+      if (failedKeys.length > KafkaService.SEND_ERROR_NOTIFICATION_THRESHOLD) {
+        await this.sendDataErrorNotification()
+      }
       return { successKeys, failedKeys }
     } catch (error) {
+      this.setCacheSending(false)
       this.logger.error('Error in sendAllFromCache:', error)
       throw error
     } finally {
@@ -260,6 +268,10 @@ export class KafkaService {
         error ? JSON.stringify(error) : ''
       )
     }
+  }
+
+  sendDataErrorNotification() {
+    return this.notificationService.publish(NotificationActionType.SEND_ERROR)
   }
 
   private convertHeaders(headers: HttpHeaders): { [key: string]: string } {

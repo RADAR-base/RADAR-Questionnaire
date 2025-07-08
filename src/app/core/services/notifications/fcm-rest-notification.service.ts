@@ -4,7 +4,8 @@ import { Subscription } from 'rxjs'
 
 import {
   DefaultPackageName,
-  DefaultSourcePrefix
+  DefaultSourcePrefix,
+  DefaultTask
 } from '../../../../assets/data/defaultConfig'
 import {
   FcmNotificationDto,
@@ -14,6 +15,7 @@ import {
 import { AssessmentType } from '../../../shared/models/assessment'
 import {
   NotificationMessagingState,
+  NotificationType,
   SingleNotification
 } from '../../../shared/models/notification-handler'
 import { getMilliseconds } from '../../../shared/utilities/time'
@@ -122,6 +124,19 @@ export class FcmRestNotificationService extends FcmNotificationService {
   publishTestNotification(subject): Promise<any> {
     return this.sendNotification(
       this.format(this.notifications.createTestNotification(), subject),
+      subject.subjectId,
+      subject.projectId
+    )
+  }
+
+  publishCustomNotification(subject, timestamp, title, text): Promise<any> {
+    return this.sendNotification(
+      this.format(this.notifications.createNotification(
+        DefaultTask,
+        timestamp,
+        NotificationType.NOW,
+        { title: { en: title, }, text: { en: text, } }
+      ), subject),
       subject.subjectId,
       subject.projectId
     )

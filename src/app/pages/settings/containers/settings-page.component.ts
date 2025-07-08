@@ -60,7 +60,9 @@ export class SettingsPageComponent {
 
   ionViewWillEnter() {
     this.usage.setPage(this.constructor.name)
-    this.loadSettings()
+    this.loadSettings().then(() => {
+      this.checkForCacheSending()
+    })
   }
 
   loadSettings() {
@@ -113,7 +115,7 @@ export class SettingsPageComponent {
       buttons: [
         {
           text: this.localization.translateKey(LocKeys.BTN_CANCEL),
-          handler: () => {}
+          handler: () => { }
         },
         {
           text: this.localization.translateKey(LocKeys.BTN_RETRY),
@@ -129,7 +131,7 @@ export class SettingsPageComponent {
     const buttons = [
       {
         text: this.localization.translateKey(LocKeys.BTN_CANCEL),
-        handler: () => {}
+        handler: () => { }
       },
       {
         text: this.localization.translateKey(LocKeys.BTN_SET),
@@ -146,12 +148,12 @@ export class SettingsPageComponent {
     ]
     const inputs = this.settings.languagesSelectable.map(
       lang =>
-        ({
-          type: 'radio',
-          label: this.localization.translate(lang.label),
-          value: JSON.stringify(lang),
-          checked: lang.value === this.settings.language.value
-        } as AlertInput)
+      ({
+        type: 'radio',
+        label: this.localization.translate(lang.label),
+        value: JSON.stringify(lang),
+        checked: lang.value === this.settings.language.value
+      } as AlertInput)
     )
     return this.alertService.showAlert({
       header: this.localization.translateKey(LocKeys.SETTINGS_LANGUAGE_ALERT),
@@ -164,7 +166,7 @@ export class SettingsPageComponent {
     const buttons = [
       {
         text: this.localization.translateKey(LocKeys.BTN_OKAY),
-        handler: () => {}
+        handler: () => { }
       }
     ]
     return this.alertService.showAlert({
@@ -246,7 +248,7 @@ export class SettingsPageComponent {
     const buttons = [
       {
         text: this.localization.translateKey(LocKeys.BTN_OKAY),
-        handler: () => {}
+        handler: () => { }
       }
     ]
     return this.alertService.showAlert({
@@ -275,6 +277,13 @@ export class SettingsPageComponent {
   }
 
   async sendCachedData() {
+    // Check if cache is already being sent
+    const kafkaService = this.settingsService.getKafkaService()
+    if (kafkaService.isCacheCurrentlySending()) {
+      this.showCacheSendingAlert()
+      return
+    }
+
     // Reset the service state before starting
     this.cacheSendService.reset()
 
@@ -319,5 +328,25 @@ export class SettingsPageComponent {
       await modal.dismiss()
       throw error
     }
+  }
+
+  checkForCacheSending() {
+    const kafkaService = this.settingsService.getKafkaService()
+    if (kafkaService.isCacheCurrentlySending()) {
+      this.showCacheSendingAlert()
+    }
+  }
+
+  showCacheSendingAlert() {
+    return this.alertService.showAlert({
+      header: this.localization.translateKey(LocKeys.SETTINGS_WAIT_ALERT),
+      message: `We're sending saved data. Please wait until the process is complete.`,
+      buttons: [
+        {
+          text: this.localization.translateKey(LocKeys.BTN_OKAY),
+          handler: () => { }
+        }
+      ]
+    })
   }
 }

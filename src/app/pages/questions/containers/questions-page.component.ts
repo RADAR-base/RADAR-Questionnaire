@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core'
+import { Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/core'
 import { Router } from '@angular/router'
 import { KeepAwake } from '@capacitor-community/keep-awake'
 import { NavController, Platform } from '@ionic/angular'
@@ -31,7 +31,7 @@ import { QuestionsService } from '../services/questions.service'
   templateUrl: 'questions-page.component.html',
   styleUrls: ['questions-page.component.scss']
 })
-export class QuestionsPageComponent implements OnInit {
+export class QuestionsPageComponent implements OnInit, OnDestroy {
   @ViewChild('swiper')
   slides: ElementRef | undefined
 
@@ -63,6 +63,7 @@ export class QuestionsPageComponent implements OnInit {
   externalAppCanLaunch: boolean = false
   viewEntered = false
   progressCount$: Observable<string>
+  retryAlertShownCount = 0
 
   SHOW_INTRODUCTION_SET: Set<boolean | ShowIntroductionType> = new Set([
     true,
@@ -77,6 +78,8 @@ export class QuestionsPageComponent implements OnInit {
     QuestionType.slider,
     QuestionType.yesno
   ])
+  MAX_RETRY_ALERT_COUNT = 5
+  RELOADED_CONFIG_KEY = 'wasReloaded'
 
   backButtonListener: Subscription
   showProgressCount: Promise<boolean>
@@ -89,7 +92,7 @@ export class QuestionsPageComponent implements OnInit {
     private localization: LocalizationService,
     private router: Router,
     private appLauncher: AppLauncherService,
-    private alertService: AlertService
+    private alertService: AlertService,
   ) {
     this.backButtonListener = this.platform.backButton.subscribe(() => {
       this.sendCompletionLog()
@@ -103,6 +106,7 @@ export class QuestionsPageComponent implements OnInit {
     this.sendCompletionLog()
     this.questionsService.reset()
     this.backButtonListener.unsubscribe()
+    sessionStorage.removeItem(this.RELOADED_CONFIG_KEY)
   }
 
   ngOnInit() {
@@ -110,14 +114,32 @@ export class QuestionsPageComponent implements OnInit {
     if (nav) {
       this.task = nav.extras.state as Task
       this.showProgressCount = this.questionsService.getIsProgressCountShown()
-      this.questionsService
-        .initRemoteConfigParams()
-        .then(() => this.questionsService.getQuestionnairePayload(this.task))
-        .then(res => {
-          this.initQuestionnaire(res)
-          return this.updateToolbarButtons()
-        })
+
+      // Check if page was reloaded using sessionStorage
+      const wasReloaded = sessionStorage.getItem(this.RELOADED_CONFIG_KEY) === 'true'
+      if (wasReloaded) {
+        sessionStorage.removeItem(this.RELOADED_CONFIG_KEY)
+        this.handlePageReload()
+      } else {
+        // Set flag for next potential reload
+        sessionStorage.setItem(this.RELOADED_CONFIG_KEY, 'true')
+        // Handle initial load
+        this.questionsService
+          .initRemoteConfigParams()
+          .then(() => this.questionsService.getQuestionnairePayload(this.task))
+          .then(res => {
+            this.initQuestionnaire(res)
+            return this.updateToolbarButtons()
+          })
+      }
     }
+    // Initialize swiper with memory management
+    this.initializeSwiper()
+  }
+
+  private handlePageReload() {
+    // Restore previous state
+    this.handleFinish()
   }
 
   ionViewWillEnter() {
@@ -371,13 +393,14 @@ export class QuestionsPageComponent implements OnInit {
 
   handleProcessingComplete() {
     return this.questionsService.getKafkaService().getCacheSize().then(size => {
-      if (size > 0) {
+      if (size > 0 && this.retryAlertShownCount < this.MAX_RETRY_ALERT_COUNT) {
         this.showRetryAlert()
       }
     })
   }
 
   showRetryAlert() {
+    this.retryAlertShownCount++
     this.alertService.showAlert({
       header: this.localization.translateKey(LocKeys.STATUS_FAILURE),
       message: this.localization.translateKey(LocKeys.DATA_SEND_ERROR_DESC),
@@ -451,6 +474,22 @@ export class QuestionsPageComponent implements OnInit {
           this.showFinishAndLaunchScreen = false
           console.log(err)
         })
+    }
+  }
+
+  private initializeSwiper() {
+    if (this.slides && this.slides.nativeElement && this.slides.nativeElement.swiper) {
+      this.slides.nativeElement.swiper.allowTouchMove = true
+      this.slides.nativeElement.swiper.threshold = 5
+      this.slides.nativeElement.swiper.watchSlidesProgress = true
+      this.slides.nativeElement.swiper.watchSlidesVisibility = true
+    }
+  }
+
+  ngOnDestroy() {
+    // Cleanup swiper
+    if (this.slides && this.slides.nativeElement && this.slides.nativeElement.swiper) {
+      this.slides.nativeElement.swiper.destroy(true, true)
     }
   }
 }

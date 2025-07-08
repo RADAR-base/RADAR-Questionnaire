@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
-import { NavController, Platform } from '@ionic/angular'
+import { NavController, Platform, LoadingController } from '@ionic/angular'
 import { Subscription } from 'rxjs'
 
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { UsageService } from '../../../core/services/usage/usage.service'
+import { ConfigService } from '../../../core/services/config/config.service'
 import { UsageEventType } from '../../../shared/enums/events'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { Task, TasksProgress } from '../../../shared/models/task'
@@ -28,6 +29,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   tasksProgress = Promise.resolve({ numberOfTasks: 0, completedTasks: 5 })
   resumeListener: Subscription = new Subscription()
   changeDetectionListener: Subscription = new Subscription()
+  cacheProgressSubscription: Subscription = new Subscription()
   lastTaskRefreshTime = Date.now()
 
   showCalendar = false
@@ -48,6 +50,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   HTML_BREAK = '<br>'
   // How long to wait before refreshing tasks
   TASK_REFRESH_MILLIS = 600_000
+  CACHE_SENDING_ALERT_TIMEOUT = 300000 // 5 minutes
 
   constructor(
     private router: Router,
@@ -56,7 +59,9 @@ export class HomePageComponent implements OnInit, OnDestroy {
     private tasksService: TasksService,
     private localization: LocalizationService,
     private platform: Platform,
-    private usage: UsageService
+    private usage: UsageService,
+    private configService: ConfigService,
+    private loadingController: LoadingController
   ) {
     this.changeDetectionListener =
       this.tasksService.changeDetectionEmitter.subscribe(() => {
@@ -70,6 +75,11 @@ export class HomePageComponent implements OnInit, OnDestroy {
       .ready()
       .then(() => this.tasksService.init().then(() => this.init()))
     this.usage.setPage(this.constructor.name)
+    this.tasksService.getAutoSendCachedData().then(autoSendCachedData => {
+      if (autoSendCachedData == 'true') {
+        this.sendCachedData()
+      }
+    })
   }
 
   ngOnDestroy() {
@@ -78,6 +88,9 @@ export class HomePageComponent implements OnInit, OnDestroy {
       this.resumeListener.unsubscribe();
     }
     this.changeDetectionListener.unsubscribe()
+    if (this.cacheProgressSubscription) {
+      this.cacheProgressSubscription.unsubscribe();
+    }
   }
 
   ionViewWillEnter() {
@@ -88,6 +101,10 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.tasks = this.tasksService.getTasksOfToday()
     this.showCalendar = false
     this.resumeListener = this.platform.resume.subscribe(() => this.onResume())
+  }
+
+  ionViewDidEnter() {
+    this.sendCachedData()
   }
 
   ionViewWillLeave() {
@@ -111,6 +128,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.onDemandIcon = this.tasksService.getOnDemandAssessmentIcon()
     this.showMiscTasksButton = this.getShowMiscTasksButton()
     this.studyPortalReturnUrl = this.tasksService.getPortalReturnUrl()
+
   }
 
   onResume() {
@@ -118,7 +136,6 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.checkForNewDate()
     this.usage.sendGeneralEvent(UsageEventType.RESUMED)
   }
-
 
   getIsLoadingSpinnerShown() {
     return (
@@ -245,5 +262,62 @@ export class HomePageComponent implements OnInit, OnDestroy {
     return Promise.all([this.hasOnDemandTasks, this.hasClinicalTasks]).then(
       ([onDemand, clinical]) => onDemand || clinical
     )
+  }
+
+  async sendCachedData() {
+    this.configService.sendCachedData()
+    const kafkaService = this.configService.getKafkaService()
+
+    // Create loading overlay with initial message
+    const loading = await this.loadingController.create({
+      message: 'Sending saved data...<br><br>Progress: 0%<br>Calculating time remaining...',
+      spinner: 'lines',
+      backdropDismiss: false
+    })
+
+    await loading.present()
+
+    // Subscribe to progress updates
+    const startTime = Date.now()
+    this.cacheProgressSubscription = kafkaService.eventCallback$.subscribe(progress => {
+      const progressDisplay = Math.min(Math.max(Math.ceil(progress * 100), 1), 99)
+
+      // Calculate time remaining
+      const elapsedTime = (Date.now() - startTime) / 1000
+      const remainingTime = isFinite(elapsedTime * (100 - progressDisplay) / progressDisplay)
+        ? (elapsedTime * (100 - progressDisplay)) / progressDisplay
+        : 0
+
+      let etaText = ''
+      if (remainingTime >= 60) {
+        const minutes = Math.floor(remainingTime / 60)
+        const seconds = Math.round(remainingTime % 60)
+        etaText = `About ${minutes} minute${minutes > 1 ? 's' : ''} and ${seconds} second${seconds !== 1 ? 's' : ''} remaining`
+      } else if (remainingTime > 0) {
+        etaText = `About ${remainingTime.toFixed(0)} second${remainingTime.toFixed(0) !== '1' ? 's' : ''} remaining`
+      } else {
+        etaText = 'Finishing up...'
+      }
+
+      // Update loading message with progress
+      const message = `Sending saved data...<br><br><strong>Progress: ${progressDisplay}%</strong><br>${etaText}`
+      loading.message = message
+
+      // Auto-dismiss when complete
+      if (progressDisplay >= 99 || !kafkaService.isCacheCurrentlySending()) {
+        setTimeout(() => {
+          loading.dismiss()
+          this.cacheProgressSubscription.unsubscribe()
+        }, 1000) // Small delay to show completion
+      }
+    })
+
+    // Fallback: dismiss after 5 minutes if still showing
+    setTimeout(() => {
+      if (loading) {
+        loading.dismiss()
+        this.cacheProgressSubscription.unsubscribe()
+      }
+    }, this.CACHE_SENDING_ALERT_TIMEOUT)
   }
 }

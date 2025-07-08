@@ -1704,14 +1704,14 @@ export const Localisations = {
     hb: 'לא ניתן להפעיל.'
   },
   DATA_SEND_ERROR_DESC: {
-    en: 'Some data could not be sent successfully. Would you like to retry?',
-    es: 'Algunos datos no se pudieron enviar correctamente. ¿Desea intentarlo de nuevo?',
-    da: 'Nogle data kunne ikke sendes. Vil du prøve igen?',
-    de: 'Einige Daten konnten nicht erfolgreich gesendet werden. Möchten Sie es erneut versuchen?',
-    fr: 'Certaines données n\'ont pas pu être envoyées avec succès. Voulez-vous réessayer?',
-    it: 'Alcuni dati non sono stati inviati con successo. Vuoi riprovare?',
-    nl: 'Sommige gegevens konden niet succesvol worden verzonden. Wilt u het opnieuw proberen?',
-    pl: 'Niektóre dane nie mogły zostać pomyślnie wysłane. Czy chcesz spróbować ponownie?',
-    hb: 'חלק מהנתונים לא נשלחו בהצלחה. האם תרצה לנסות שוב?'
+    en: 'We couldn’t send some data, possibly due to a network issue. Would you like to try again?',
+    es: 'No pudimos enviar algunos datos, posiblemente debido a un problema de conexión. ¿Quieres intentarlo de nuevo?',
+    da: 'Vi kunne ikke sende nogle data, muligvis på grund af netværksproblemer. Vil du prøve igen?',
+    de: 'Einige Daten konnten möglicherweise aufgrund eines Netzwerkproblems nicht gesendet werden. Möchten Sie es erneut versuchen?',
+    fr: 'Nous n’avons pas pu envoyer certaines données, peut-être en raison d’un problème de réseau. Voulez-vous réessayer ?',
+    it: 'Non siamo riusciti a inviare alcuni dati, forse a causa di un problema di rete. Vuoi riprovare?',
+    nl: 'We konden sommige gegevens niet verzenden, mogelijk door een netwerkprobleem. Wilt u het opnieuw proberen?',
+    pl: 'Nie udało się wysłać niektórych danych, prawdopodobnie z powodu problemu z siecią. Czy chcesz spróbować ponownie?',
+    hb: 'לא הצלחנו לשלוח חלק מהנתונים, ייתכן עקב בעיית רשת. האם ברצונך לנסות שוב?'
   }
 }

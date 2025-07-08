@@ -27,10 +27,13 @@ import { CacheService } from './cache.service'
 import { SchemaService } from './schema.service'
 import { Subject } from 'rxjs'
 import { debounceTime } from 'rxjs/operators'
+import pLimit from 'p-limit'
 
 @Injectable()
 export class KafkaService {
   private static DEFAULT_TOPIC_CACHE_VALIDITY = 600_000 // 10 minutes
+  private static BATCH_SIZE = 10
+  private static CONCURRENCY_LIMIT = 3
 
   URI_topics: string = '/topics/'
   DEFAULT_KAFKA_AVSC = 'questionnaire'
@@ -161,55 +164,64 @@ export class KafkaService {
     return this.cache.storeInCache(type, value, cacheValue)
   }
 
-  sendAllFromCache(): Promise<any> {
-    let successKeys: string[] = []
-    let failedKeys: string[] = []
+  async sendAllFromCache(): Promise<any> {
     if (this.isCacheSending) return Promise.resolve([])
+
     this.setCacheSending(true)
-    return Promise.all([
-      this.cache.getCache(),
-      this.cache.getCacheSize(),
-      this.getKafkaHeaders(DefaultKafkaRequestContentType),
-      this.schema.getKafkaObjectKey(),
-    ])
-      .then(([cache, size, headers, kafkaKey]) => {
-        this.progress = 0
-        this.cacheSize = size
-        return Promise.all(
-          Object.entries(cache)
-            .filter(([k]) => k)
-            .map((entry, i) => {
-              const [k, v] = entry
-              return this.convertEntryToRecord(kafkaKey, k, v)
-                .then(r => {
-                  if (r.record.records.length === 0) {
-                    this.logger.log(
-                      'Kafka record is empty, skipping sending'
-                    )
-                    return Promise.resolve()
-                  }
-                  return this.sendToKafka(r.topic, r.record, headers)
-                })
-                .then(() => {
-                  successKeys.push(k)
-                  return this.cache.removeFromCache(k)
-                })
-                .catch(e => {
-                  failedKeys.push(k)
-                  return this.logger.error(
-                    'Failed to send data from cache to kafka',
-                    e
-                  )
-                })
-                .finally(() => this.updateProgress(++this.progress, this.cacheSize))
-            })
+    const successKeys: string[] = []
+    const failedKeys: string[] = []
+
+    try {
+      const [cache, size, headers, kafkaKey] = await Promise.all([
+        this.cache.getCache(),
+        this.cache.getCacheSize(),
+        this.getKafkaHeaders(DefaultKafkaRequestContentType),
+        this.schema.getKafkaObjectKey(),
+      ])
+
+      this.progress = 0
+      this.cacheSize = size
+
+      // Process entries in smaller batches for iOS
+      const entries = Object.entries(cache).filter(([k]) => k)
+      const limit = pLimit(KafkaService.CONCURRENCY_LIMIT)
+
+      for (let i = 0; i < entries.length; i += KafkaService.BATCH_SIZE) {
+        const batch = entries.slice(i, i + KafkaService.BATCH_SIZE)
+        this.logger.log(`Processing batch ${i / KafkaService.BATCH_SIZE + 1} of ${Math.ceil(entries.length / KafkaService.BATCH_SIZE)}`)
+
+        const batchPromises = batch.map(([k, v]) =>
+          limit(async () => {
+            try {
+              const record = await this.convertEntryToRecord(kafkaKey, k, v)
+              if (record.record.records.length === 0) {
+                successKeys.push(k)
+                this.logger.log('Kafka record is empty, skipping sending')
+                return
+              }
+              await this.sendToKafka(record.topic, record.record, headers)
+              successKeys.push(k)
+            } catch (e) {
+              failedKeys.push(k)
+              this.logger.error('Failed to send data from cache to kafka', e)
+            } finally {
+              await this.cache.removeFromCacheMultiple(successKeys)
+              this.updateProgress(++this.progress, this.cacheSize)
+            }
+          })
         )
-      })
-      .then(() => {
-        this.updateProgress(this.cacheSize, this.cacheSize)
-        this.setCacheSending(false)
-        return { successKeys, failedKeys }
-      })
+
+        await Promise.all(batchPromises)
+      }
+
+      this.updateProgress(this.cacheSize, this.cacheSize)
+      return { successKeys, failedKeys }
+    } catch (error) {
+      this.logger.error('Error in sendAllFromCache:', error)
+      throw error
+    } finally {
+      this.setCacheSending(false)
+    }
   }
 
   convertEntryToRecord(kafkaKey, k, v) {
@@ -311,6 +323,10 @@ export class KafkaService {
 
   setCacheSending(val: boolean) {
     this.isCacheSending = val
+  }
+
+  isCacheCurrentlySending(): boolean {
+    return this.isCacheSending
   }
 
   setLastUploadDate(date) {

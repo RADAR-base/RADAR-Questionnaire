@@ -59,7 +59,7 @@ export const Localisations = {
   },
   ENROL_REGISTRATION_DESC: {
     da:
-      'Før du kan begynde at anvende app’en, skal vi registrere den først. Du kan enten scanne QR-koden eller indtaste symbolet.',
+      `Før du kan begynde at anvende app'en, skal vi registrere den først.Du kan enten scanne QR- koden eller indtaste symbolet.`,
     de:
       'Bevor Sie die App verwenden können, müssen Sie sie zuerst registrieren. Sie können entweder den QR-Code scannen oder das Token eingeben.',
     en:
@@ -595,7 +595,7 @@ export const Localisations = {
     nl:
       "Door de cache opnieuw in te stellen, verwijdert u uw gecachte vragenlijstgegevens die niet konden worden verzonden. Probeer eerst de gegevens te verzenden door in de instellingen op 'Cachegegevens verzenden' te tikken",
     pl:
-      'Przez zresetowanie pamięci podręcznej usuwasz buforowane dane kwestionariusza, których nie udało się wysłać. Spróbuj najpierw wysłać dane, dotykając opcji „Wyślij buforowane dane” w ustawieniach',
+      'Przez zresetowanie pamięci podręcznej usuwasz buforowane dane kwestionariusza, których nie udało się wysłać. Spróbuj najpierw wysłać dane, dotykając opcji „Wyślij buforowane dane" w ustawieniach',
     hb:
       "על ידי איפוס המטמון, אתה מוחק את נתוני השאלון המטמון שלך שלא הצליחו לשלוח. אנא נסה לשלוח את הנתונים תחילה על ידי הקשה על 'שלח נתונים במטמון' בהגדרות"
   },
@@ -1573,7 +1573,7 @@ export const Localisations = {
     da:
       'Stop venligst optagelsen, når du er færdig for at aktivere den næste knap.',
     de:
-      'Bitte stoppen Sie die Aufnahme, wenn Sie fertig sind, um die Schaltfläche „Weiter“ zu aktivieren.',
+      'Bitte stoppen Sie die Aufnahme, wenn Sie fertig sind, um die Schaltfläche „Weiter" zu aktivieren.',
     en:
       'Please stop the recording once you are done in order to enable the next button.',
     es:
@@ -1617,7 +1617,7 @@ export const Localisations = {
     nl:
       'Er is een probleem opgetreden bij het bijwerken van uw configuratie. Druk op "Probeer opnieuw" om het opnieuw te proberen. Als je dit probleem regelmatig ervaart, neem dan contact op met je studiecoördinator of probeer de applicatie te resetten in de instellingen.',
     pl:
-      'Podczas aktualizowania konfiguracji wystąpił problem. Naciśnij „Spróbuj ponownie”, aby spróbować ponownie. Jeśli często występuje ten problem, skontaktuj się z koordynatorem badania lub spróbuj zresetować aplikację w ustawieniach.',
+      'Podczas aktualizowania konfiguracji wystąpił problem. Naciśnij „Spróbuj ponownie", aby spróbować ponownie. Jeśli często występuje ten problem, skontaktuj się z koordynatorem badania lub spróbuj zresetować aplikację w ustawieniach.',
     hb:
       'הייתה בעיה בעדכון התצורה שלך. לחץ על "נסה שוב" כדי לנסות שוב. אם אתה נתקל בבעיה זו לעתים קרובות, אנא צור קשר עם רכז הלימוד שלך או נסה לאפס את היישום בהגדרות.'
   },
@@ -1702,5 +1702,82 @@ export const Localisations = {
     nl: 'kan niet worden gestart.',
     pl: 'nie można uruchomić.',
     hb: 'לא ניתן להפעיל.'
+  },
+  DATA_SEND_ERROR_DESC: {
+    en: 'We couldn\'t send some data, possibly due to a network issue. Would you like to try again?',
+    es: 'No pudimos enviar algunos datos, posiblemente debido a un problema de conexión. ¿Quieres intentarlo de nuevo?',
+    da: 'Vi kunne ikke sende nogle data, muligvis på grund af netværksproblemer. Vil du prøve igen?',
+    de: 'Einige Daten konnten möglicherweise aufgrund eines Netzwerkproblems nicht gesendet werden. Möchten Sie es erneut versuchen?',
+    fr: 'Nous n\'avons pas pu envoyer certaines données, peut-être en raison d\'un problème de réseau. Voulez-vous réessayer ?',
+    it: 'Non siamo riusciti a inviare alcuni dati, forse a causa di un problema di rete. Vuoi riprovare?',
+    nl: 'We konden sommige gegevens niet verzenden, mogelijk door een netwerkprobleem. Wilt u het opnieuw proberen?',
+    pl: 'Nie udało się wysłać niektórych danych, prawdopodobnie z powodu problemu z siecią. Czy chcesz spróbować ponownie?',
+    hb: 'לא הצלחנו לשלוח חלק מהנתונים, ייתכן עקב בעיית רשת. האם ברצונך לנסות שוב?'
+  },
+  HOME_SENDING_DATA_MESSAGE: {
+    en: 'Sending saved data...',
+    es: 'Enviando datos guardados...',
+    da: 'Sender gemte data...',
+    de: 'Gespeicherte Daten werden gesendet...',
+    fr: 'Envoi des données sauvegardées...',
+    it: 'Invio dati salvati...',
+    nl: 'Opgeslagen gegevens verzenden...',
+    pl: 'Wysyłanie zapisanych danych...',
+    hb: 'שולח נתונים שמורים...'
+  },
+  HOME_SENDING_DATA_PROGRESS: {
+    en: 'Progress',
+    es: 'Progreso',
+    da: 'Fremskridt',
+    de: 'Fortschritt',
+    fr: 'Progrès',
+    it: 'Progresso',
+    nl: 'Voortgang',
+    pl: 'Postęp',
+    hb: 'התקדמות'
+  },
+  HOME_SENDING_DATA_TIME_REMAINING: {
+    en: 'Calculating time remaining...',
+    es: 'Calculando tiempo restante...',
+    da: 'Beregner resterende tid...',
+    de: 'Verbleibende Zeit wird berechnet...',
+    fr: 'Calcul du temps restant...',
+    it: 'Calcolo del tempo rimanente...',
+    nl: 'Resterende tijd berekenen...',
+    pl: 'Obliczanie pozostałego czasu...',
+    hb: 'מחשב זמן נותר...'
+  },
+  HOME_SENDING_DATA_FINISHING: {
+    en: 'Finishing up...',
+    es: 'Terminando...',
+    da: 'Afslutter...',
+    de: 'Abschluss...',
+    fr: 'Finalisation...',
+    it: 'Completamento...',
+    nl: 'Afronden...',
+    pl: 'Kończenie...',
+    hb: 'מסיים...'
+  },
+  HOME_SENDING_DATA_ERROR_TITLE: {
+    en: 'Error',
+    es: 'Error',
+    da: 'Fejl',
+    de: 'Fehler',
+    fr: 'Erreur',
+    it: 'Errore',
+    nl: 'Fout',
+    pl: 'Błąd',
+    hb: 'שגיאה'
+  },
+  HOME_SENDING_DATA_ERROR_MESSAGE: {
+    en: 'Failed to send saved data. Please try again later.',
+    es: 'Error al enviar datos guardados. Por favor, inténtelo de nuevo más tarde.',
+    da: 'Kunne ikke sende gemte data. Prøv igen senere.',
+    de: 'Fehler beim Senden gespeicherter Daten. Bitte versuchen Sie es später erneut.',
+    fr: 'Échec de l\'envoi des données sauvegardées. Veuillez réessayer plus tard.',
+    it: 'Impossibile inviare i dati salvati. Riprova più tardi.',
+    nl: 'Kan opgeslagen gegevens niet verzenden. Probeer het later opnieuw.',
+    pl: 'Nie udało się wysłać zapisanych danych. Spróbuj ponownie później.',
+    hb: 'נכשל בשליחת נתונים שמורים. נסה שוב מאוחר יותר.'
   }
 }

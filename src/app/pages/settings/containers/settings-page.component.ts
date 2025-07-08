@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, ViewChild } from '@angular/core'
 import { Router } from '@angular/router'
 import {
   LoadingController,
@@ -20,6 +20,7 @@ import { Settings } from '../../../shared/models/settings'
 import { SplashPageComponent } from '../../splash/containers/splash-page.component'
 import { CacheSendModalComponent } from '../components/cache-send-modal/cache-send-modal.component'
 import { SettingsService } from '../services/settings.service'
+import { CacheSendService } from '../services/cache-send.service'
 
 @Component({
   selector: 'page-settings',
@@ -27,6 +28,8 @@ import { SettingsService } from '../services/settings.service'
   styleUrls: ['settings-page.component.scss']
 })
 export class SettingsPageComponent {
+  @ViewChild(CacheSendModalComponent) progressModal: CacheSendModalComponent
+
   settings: Settings = {}
   notificationSettings = DefaultSettingsNotifications
   weeklyReport = DefaultSettingsWeeklyReport
@@ -52,12 +55,14 @@ export class SettingsPageComponent {
     private settingsService: SettingsService,
     private usage: UsageService,
     public modalCtrl: ModalController,
-    private router: Router
-  ) {}
+    private cacheSendService: CacheSendService
+  ) { }
 
   ionViewWillEnter() {
     this.usage.setPage(this.constructor.name)
-    this.loadSettings()
+    this.loadSettings().then(() => {
+      this.checkForCacheSending()
+    })
   }
 
   loadSettings() {
@@ -110,7 +115,7 @@ export class SettingsPageComponent {
       buttons: [
         {
           text: this.localization.translateKey(LocKeys.BTN_CANCEL),
-          handler: () => {}
+          handler: () => { }
         },
         {
           text: this.localization.translateKey(LocKeys.BTN_RETRY),
@@ -126,7 +131,7 @@ export class SettingsPageComponent {
     const buttons = [
       {
         text: this.localization.translateKey(LocKeys.BTN_CANCEL),
-        handler: () => {}
+        handler: () => { }
       },
       {
         text: this.localization.translateKey(LocKeys.BTN_SET),
@@ -143,12 +148,12 @@ export class SettingsPageComponent {
     ]
     const inputs = this.settings.languagesSelectable.map(
       lang =>
-        ({
-          type: 'radio',
-          label: this.localization.translate(lang.label),
-          value: JSON.stringify(lang),
-          checked: lang.value === this.settings.language.value
-        } as AlertInput)
+      ({
+        type: 'radio',
+        label: this.localization.translate(lang.label),
+        value: JSON.stringify(lang),
+        checked: lang.value === this.settings.language.value
+      } as AlertInput)
     )
     return this.alertService.showAlert({
       header: this.localization.translateKey(LocKeys.SETTINGS_LANGUAGE_ALERT),
@@ -161,7 +166,7 @@ export class SettingsPageComponent {
     const buttons = [
       {
         text: this.localization.translateKey(LocKeys.BTN_OKAY),
-        handler: () => {}
+        handler: () => { }
       }
     ]
     return this.alertService.showAlert({
@@ -201,7 +206,7 @@ export class SettingsPageComponent {
     const buttons = [
       {
         text: this.localization.translateKey(LocKeys.BTN_CANCEL),
-        handler: () => {}
+        handler: () => { }
       },
       {
         text: this.localization.translateKey(LocKeys.BTN_RESET),
@@ -243,7 +248,7 @@ export class SettingsPageComponent {
     const buttons = [
       {
         text: this.localization.translateKey(LocKeys.BTN_OKAY),
-        handler: () => {}
+        handler: () => { }
       }
     ]
     return this.alertService.showAlert({
@@ -272,25 +277,76 @@ export class SettingsPageComponent {
   }
 
   async sendCachedData() {
-    const loader = await this.loadCtrl.create({
-      message: this.localization.translateKey(LocKeys.SETTINGS_WAIT_ALERT),
-      cssClass: 'custom-loading'
+    // Check if cache is already being sent
+    const kafkaService = this.settingsService.getKafkaService()
+    if (kafkaService.isCacheCurrentlySending()) {
+      this.showCacheSendingAlert()
+      return
+    }
+
+    // Reset the service state before starting
+    this.cacheSendService.reset()
+
+    const modal = await this.modalCtrl.create({
+      component: CacheSendModalComponent
     })
-    loader.present()
-    return this.settingsService.sendCachedData().then(async res => {
-      await loader.dismiss()
-      this.showResult(res)
+    await modal.present()
+
+    // Get initial cache size
+    const startTime = Date.now()
+    let progressDisplay = 0
+    let etaText = ''
+    // Subscribe to progress updates
+    const progressSub = this.settingsService.getKafkaService().eventCallback$.subscribe(progress => {
+      progressDisplay = Math.min(Math.max(Math.ceil(progress * 100), 1), 99)
+
+      // Calculate time remaining
+      const elapsedTime = (Date.now() - startTime) / 1000
+      const remainingTime = (elapsedTime * (100 - progressDisplay)) / progressDisplay
+
+      if (remainingTime >= 60) {
+        const minutes = Math.floor(remainingTime / 60)
+        const seconds = Math.round(remainingTime % 60)
+        etaText = `About ${minutes} minute${minutes > 1 ? 's' : ''} and ${seconds} second${seconds !== 1 ? 's' : ''} remaining`
+      } else {
+        etaText = `About ${remainingTime.toFixed(0)} second${remainingTime.toFixed(0) !== '1' ? 's' : ''} remaining`
+      }
+      // Update progress through the service
+      this.cacheSendService.updateProgress(progressDisplay, etaText)
+    })
+
+    try {
+      const res = await this.settingsService.sendCachedData()
+      progressSub.unsubscribe()
+
+      // Update completion state through the service
+      this.cacheSendService.complete(res)
+
       this.backToHome()
-    })
+    } catch (error) {
+      progressSub.unsubscribe()
+      await modal.dismiss()
+      throw error
+    }
   }
 
-  async showResult(res) {
-    const modal = await this.modalCtrl.create({
-      component: CacheSendModalComponent,
-      componentProps: {
-        data: res
-      }
+  checkForCacheSending() {
+    const kafkaService = this.settingsService.getKafkaService()
+    if (kafkaService.isCacheCurrentlySending()) {
+      this.showCacheSendingAlert()
+    }
+  }
+
+  showCacheSendingAlert() {
+    return this.alertService.showAlert({
+      header: this.localization.translateKey(LocKeys.SETTINGS_WAIT_ALERT),
+      message: `We're sending saved data. Please wait until the process is complete.`,
+      buttons: [
+        {
+          text: this.localization.translateKey(LocKeys.BTN_OKAY),
+          handler: () => { }
+        }
+      ]
     })
-    return await modal.present()
   }
 }

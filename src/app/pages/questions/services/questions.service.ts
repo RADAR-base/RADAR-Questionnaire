@@ -56,6 +56,10 @@ export class QuestionsService {
     this.questionnaireProcessor = this.defaultQuestionnaireProcessor
   }
 
+  getKafkaService() {
+    return this.questionnaireProcessor.kafka
+  }
+
   initRemoteConfigParams() {
     return this.remoteConfig
       .read()
@@ -216,6 +220,10 @@ export class QuestionsService {
 
   getProgress() {
     return this.questionnaireProcessor.getProgress()
+  }
+
+  resetProgress() {
+    this.questionnaireProcessor.resetProgress()
   }
 
   recordTimeStamp(question, startTime) {

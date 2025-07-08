@@ -39,6 +39,8 @@ export class FinishComponent implements OnChanges {
   progressCount
   @Output()
   exit: EventEmitter<any> = new EventEmitter<any>()
+  @Output()
+  processingComplete: EventEmitter<void> = new EventEmitter<void>()
 
   innerText = ''
   displayNextTaskReminder = true
@@ -73,6 +75,12 @@ export class FinishComponent implements OnChanges {
     )
 
     this.etaText = this.getEtaText(this.progressDisplay)
+
+    // Emit processing complete when progress reaches 100%
+    if (this.progressCount >= 1) {
+      this.startTime = Date.now()
+      this.processingComplete.emit()
+    }
   }
 
   handleClosePage() {

@@ -6,6 +6,7 @@ import { PipesModule } from 'src/app/shared/pipes/pipes.module'
 import { AppModule } from '../../../app.module'
 import { SettingsService } from '../services/settings.service'
 import { SettingsPageComponent } from './settings-page.component'
+import { CacheSendService } from '../services/cache-send.service'
 
 describe('SettingsPageComponent', () => {
   let component: any
@@ -15,7 +16,7 @@ describe('SettingsPageComponent', () => {
     TestBed.configureTestingModule({
       imports: [AppModule, IonicModule, PipesModule, MomentModule],
       declarations: [SettingsPageComponent],
-      providers: [NavController, SettingsService]
+      providers: [NavController, SettingsService, CacheSendService]
     }).compileComponents()
 
     fixture = TestBed.createComponent(SettingsPageComponent)

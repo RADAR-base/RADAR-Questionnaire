@@ -51,6 +51,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   // How long to wait before refreshing tasks
   TASK_REFRESH_MILLIS = 600_000
   CACHE_SENDING_ALERT_TIMEOUT = 300000 // 5 minutes
+  MIN_CACHE_SIZE_TO_SEND = 5
 
   constructor(
     private router: Router,
@@ -71,15 +72,17 @@ export class HomePageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.usage.setPage(this.constructor.name)
     this.platform
       .ready()
-      .then(() => this.tasksService.init().then(() => this.init()))
-    this.usage.setPage(this.constructor.name)
-    this.tasksService.getAutoSendCachedData().then(autoSendCachedData => {
-      if (autoSendCachedData == 'true') {
-        this.sendCachedData()
-      }
-    })
+      .then(() => this.tasksService.init().then(() => {
+        this.init()
+        this.tasksService.getAutoSendCachedData().then(autoSendCachedData => {
+          if (autoSendCachedData === 'true') {
+            this.sendCachedData()
+          }
+        })
+      }))
   }
 
   ngOnDestroy() {
@@ -101,10 +104,6 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.tasks = this.tasksService.getTasksOfToday()
     this.showCalendar = false
     this.resumeListener = this.platform.resume.subscribe(() => this.onResume())
-  }
-
-  ionViewDidEnter() {
-    this.sendCachedData()
   }
 
   ionViewWillLeave() {
@@ -265,8 +264,12 @@ export class HomePageComponent implements OnInit, OnDestroy {
   }
 
   async sendCachedData() {
-    this.configService.sendCachedData()
     const kafkaService = this.configService.getKafkaService()
+    const cacheSize = await kafkaService.getCacheSize()
+    if (cacheSize < this.MIN_CACHE_SIZE_TO_SEND) {
+      return
+    }
+    kafkaService.sendAllFromCache()
 
     // Create loading overlay with initial message
     const loading = await this.loadingController.create({

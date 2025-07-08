@@ -29,12 +29,12 @@ export abstract class ConverterService {
     private remoteConfig: RemoteConfigService
   ) {
     this.updateURI()
-    this.getRadarSpecifications()
   }
 
   init() {
     this.schemas = {}
     this.updateURI()
+    this.getRadarSpecifications()
   }
 
   abstract getKafkaTopic(payload, topics?)

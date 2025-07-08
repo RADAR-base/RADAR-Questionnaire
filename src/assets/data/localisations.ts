@@ -1704,14 +1704,80 @@ export const Localisations = {
     hb: 'לא ניתן להפעיל.'
   },
   DATA_SEND_ERROR_DESC: {
-    en: 'We couldn’t send some data, possibly due to a network issue. Would you like to try again?',
+    en: 'We couldn\'t send some data, possibly due to a network issue. Would you like to try again?',
     es: 'No pudimos enviar algunos datos, posiblemente debido a un problema de conexión. ¿Quieres intentarlo de nuevo?',
     da: 'Vi kunne ikke sende nogle data, muligvis på grund af netværksproblemer. Vil du prøve igen?',
     de: 'Einige Daten konnten möglicherweise aufgrund eines Netzwerkproblems nicht gesendet werden. Möchten Sie es erneut versuchen?',
-    fr: 'Nous n’avons pas pu envoyer certaines données, peut-être en raison d’un problème de réseau. Voulez-vous réessayer ?',
+    fr: 'Nous n\'avons pas pu envoyer certaines données, peut-être en raison d\'un problème de réseau. Voulez-vous réessayer ?',
     it: 'Non siamo riusciti a inviare alcuni dati, forse a causa di un problema di rete. Vuoi riprovare?',
     nl: 'We konden sommige gegevens niet verzenden, mogelijk door een netwerkprobleem. Wilt u het opnieuw proberen?',
     pl: 'Nie udało się wysłać niektórych danych, prawdopodobnie z powodu problemu z siecią. Czy chcesz spróbować ponownie?',
     hb: 'לא הצלחנו לשלוח חלק מהנתונים, ייתכן עקב בעיית רשת. האם ברצונך לנסות שוב?'
+  },
+  HOME_SENDING_DATA_MESSAGE: {
+    en: 'Sending saved data...',
+    es: 'Enviando datos guardados...',
+    da: 'Sender gemte data...',
+    de: 'Gespeicherte Daten werden gesendet...',
+    fr: 'Envoi des données sauvegardées...',
+    it: 'Invio dati salvati...',
+    nl: 'Opgeslagen gegevens verzenden...',
+    pl: 'Wysyłanie zapisanych danych...',
+    hb: 'שולח נתונים שמורים...'
+  },
+  HOME_SENDING_DATA_PROGRESS: {
+    en: 'Progress',
+    es: 'Progreso',
+    da: 'Fremskridt',
+    de: 'Fortschritt',
+    fr: 'Progrès',
+    it: 'Progresso',
+    nl: 'Voortgang',
+    pl: 'Postęp',
+    hb: 'התקדמות'
+  },
+  HOME_SENDING_DATA_TIME_REMAINING: {
+    en: 'Calculating time remaining...',
+    es: 'Calculando tiempo restante...',
+    da: 'Beregner resterende tid...',
+    de: 'Verbleibende Zeit wird berechnet...',
+    fr: 'Calcul du temps restant...',
+    it: 'Calcolo del tempo rimanente...',
+    nl: 'Resterende tijd berekenen...',
+    pl: 'Obliczanie pozostałego czasu...',
+    hb: 'מחשב זמן נותר...'
+  },
+  HOME_SENDING_DATA_FINISHING: {
+    en: 'Finishing up...',
+    es: 'Terminando...',
+    da: 'Afslutter...',
+    de: 'Abschluss...',
+    fr: 'Finalisation...',
+    it: 'Completamento...',
+    nl: 'Afronden...',
+    pl: 'Kończenie...',
+    hb: 'מסיים...'
+  },
+  HOME_SENDING_DATA_ERROR_TITLE: {
+    en: 'Error',
+    es: 'Error',
+    da: 'Fejl',
+    de: 'Fehler',
+    fr: 'Erreur',
+    it: 'Errore',
+    nl: 'Fout',
+    pl: 'Błąd',
+    hb: 'שגיאה'
+  },
+  HOME_SENDING_DATA_ERROR_MESSAGE: {
+    en: 'Failed to send saved data. Please try again later.',
+    es: 'Error al enviar datos guardados. Por favor, inténtelo de nuevo más tarde.',
+    da: 'Kunne ikke sende gemte data. Prøv igen senere.',
+    de: 'Fehler beim Senden gespeicherter Daten. Bitte versuchen Sie es später erneut.',
+    fr: 'Échec de l\'envoi des données sauvegardées. Veuillez réessayer plus tard.',
+    it: 'Impossibile inviare i dati salvati. Riprova più tardi.',
+    nl: 'Kan opgeslagen gegevens niet verzenden. Probeer het later opnieuw.',
+    pl: 'Nie udało się wysłać zapisanych danych. Spróbuj ponownie później.',
+    hb: 'נכשל בשליחת נתונים שמורים. נסה שוב מאוחר יותר.'
   }
 }

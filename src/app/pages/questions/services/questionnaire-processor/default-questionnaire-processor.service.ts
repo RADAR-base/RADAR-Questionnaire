@@ -33,7 +33,7 @@ export class DefaultQuestionnaireProcessorService extends QuestionnaireProcessor
   process(data, task, assessmentMetadata): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       if (typeof Worker !== 'undefined') {
-        const worker = new Worker('assets/workers/processor.worker.js')
+        const worker = new Worker('assets/workers/processor.worker.ts')
 
         worker.onmessage = ({ data: result }) => {
           if (result.type === 'progress') {

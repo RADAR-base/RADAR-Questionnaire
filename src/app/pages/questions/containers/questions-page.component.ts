@@ -79,6 +79,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
     QuestionType.yesno
   ])
   MAX_RETRY_ALERT_COUNT = 5
+  MIN_CACHE_SIZE_TO_SHOW_RETRY_ALERT = 2
   RELOADED_CONFIG_KEY = 'wasReloaded'
 
   backButtonListener: Subscription
@@ -393,7 +394,8 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
 
   handleProcessingComplete() {
     return this.questionsService.getKafkaService().getCacheSize().then(size => {
-      if (size > 0 && this.retryAlertShownCount < this.MAX_RETRY_ALERT_COUNT) {
+      if (size > this.MIN_CACHE_SIZE_TO_SHOW_RETRY_ALERT &&
+        this.retryAlertShownCount < this.MAX_RETRY_ALERT_COUNT) {
         this.showRetryAlert()
       }
     })

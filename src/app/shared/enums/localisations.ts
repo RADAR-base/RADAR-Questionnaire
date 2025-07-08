@@ -207,6 +207,14 @@ export class LocKeys {
 
   static DATA_SEND_ERROR_DESC = new LocKeys('DATA_SEND_ERROR_DESC')
 
+  // Homepage modal text
+  static HOME_SENDING_DATA_MESSAGE = new LocKeys('HOME_SENDING_DATA_MESSAGE')
+  static HOME_SENDING_DATA_PROGRESS = new LocKeys('HOME_SENDING_DATA_PROGRESS')
+  static HOME_SENDING_DATA_TIME_REMAINING = new LocKeys('HOME_SENDING_DATA_TIME_REMAINING')
+  static HOME_SENDING_DATA_FINISHING = new LocKeys('HOME_SENDING_DATA_FINISHING')
+  static HOME_SENDING_DATA_ERROR_TITLE = new LocKeys('HOME_SENDING_DATA_ERROR_TITLE')
+  static HOME_SENDING_DATA_ERROR_MESSAGE = new LocKeys('HOME_SENDING_DATA_ERROR_MESSAGE')
+
   constructor(public value: string) { }
 
   toString() {

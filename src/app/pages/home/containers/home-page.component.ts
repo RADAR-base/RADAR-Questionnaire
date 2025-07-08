@@ -50,7 +50,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   HTML_BREAK = '<br>'
   // How long to wait before refreshing tasks
   TASK_REFRESH_MILLIS = 600_000
-  CACHE_SENDING_ALERT_TIMEOUT = 300000 // 5 minutes
+  CACHE_SENDING_ALERT_TIMEOUT = 1_200_000 // 20 minutes
   MIN_CACHE_SIZE_TO_SEND = 5
 
   constructor(
@@ -269,58 +269,77 @@ export class HomePageComponent implements OnInit, OnDestroy {
     if (cacheSize < this.MIN_CACHE_SIZE_TO_SEND) {
       return
     }
-    kafkaService.sendAllFromCache()
-
     // Create loading overlay with initial message
     const loading = await this.loadingController.create({
-      message: 'Sending saved data...<br><br>Progress: 0%<br>Calculating time remaining...',
+      message: this.localization.translateKey(LocKeys.HOME_SENDING_DATA_MESSAGE),
       spinner: 'lines',
       backdropDismiss: false
     })
-
     await loading.present()
 
     // Subscribe to progress updates
     const startTime = Date.now()
-    this.cacheProgressSubscription = kafkaService.eventCallback$.subscribe(progress => {
-      const progressDisplay = Math.min(Math.max(Math.ceil(progress * 100), 1), 99)
+    const progressSub = kafkaService.eventCallback$.subscribe({
+      next: (progress: number) => {
+        const progressDisplay = Math.min(Math.max(Math.ceil(progress * 100), 1), 99)
 
-      // Calculate time remaining
-      const elapsedTime = (Date.now() - startTime) / 1000
-      const remainingTime = isFinite(elapsedTime * (100 - progressDisplay) / progressDisplay)
-        ? (elapsedTime * (100 - progressDisplay)) / progressDisplay
-        : 0
+        let message = this.localization.translateKey(LocKeys.HOME_SENDING_DATA_MESSAGE)
+        message += `<br><br><strong>${this.localization.translateKey(LocKeys.HOME_SENDING_DATA_PROGRESS)}: ${progressDisplay}%</strong>`
 
-      let etaText = ''
-      if (remainingTime >= 60) {
-        const minutes = Math.floor(remainingTime / 60)
-        const seconds = Math.round(remainingTime % 60)
-        etaText = `About ${minutes} minute${minutes > 1 ? 's' : ''} and ${seconds} second${seconds !== 1 ? 's' : ''} remaining`
-      } else if (remainingTime > 0) {
-        etaText = `About ${remainingTime.toFixed(0)} second${remainingTime.toFixed(0) !== '1' ? 's' : ''} remaining`
-      } else {
-        etaText = 'Finishing up...'
-      }
+        // Calculate time remaining
+        const elapsedTime = (Date.now() - startTime) / 1000
+        const remainingTime = isFinite(elapsedTime * (100 - progressDisplay) / progressDisplay)
+          ? (elapsedTime * (100 - progressDisplay)) / progressDisplay
+          : 0
 
-      // Update loading message with progress
-      const message = `Sending saved data...<br><br><strong>Progress: ${progressDisplay}%</strong><br>${etaText}`
-      loading.message = message
+        let etaText = ''
+        if (remainingTime >= 60) {
+          const minutes = Math.floor(remainingTime / 60)
+          const seconds = Math.round(remainingTime % 60)
+          etaText = `About ${minutes} minute${minutes > 1 ? 's' : ''} and ${seconds} second${seconds !== 1 ? 's' : ''} remaining`
+        } else if (remainingTime > 0) {
+          etaText = `About ${remainingTime.toFixed(0)} second${remainingTime.toFixed(0) !== '1' ? 's' : ''} remaining`
+        }
+        message += `<br>${etaText}`
 
-      // Auto-dismiss when complete
-      if (progressDisplay >= 99 || !kafkaService.isCacheCurrentlySending()) {
-        setTimeout(() => {
-          loading.dismiss()
-          this.cacheProgressSubscription.unsubscribe()
-        }, 1000) // Small delay to show completion
+        loading.message = message
+      },
+      error: (error) => {
+        loading.dismiss()
+        this.alertService.showAlert({
+          header: this.localization.translateKey(LocKeys.HOME_SENDING_DATA_ERROR_TITLE),
+          message: this.localization.translateKey(LocKeys.HOME_SENDING_DATA_ERROR_MESSAGE),
+          buttons: [
+            {
+              text: this.localization.translateKey(LocKeys.BTN_OKAY),
+              handler: () => { }
+            }
+          ]
+        })
+        console.error('Error in progress tracking:', error)
       }
     })
 
-    // Fallback: dismiss after 5 minutes if still showing
-    setTimeout(() => {
-      if (loading) {
+    // Send cached data asynchronously
+    kafkaService.sendAllFromCache()
+      .then(() => {
+        progressSub.unsubscribe()
         loading.dismiss()
-        this.cacheProgressSubscription.unsubscribe()
-      }
-    }, this.CACHE_SENDING_ALERT_TIMEOUT)
+      })
+      .catch((error) => {
+        progressSub.unsubscribe()
+        loading.dismiss()
+        this.alertService.showAlert({
+          header: this.localization.translateKey(LocKeys.HOME_SENDING_DATA_ERROR_TITLE),
+          message: this.localization.translateKey(LocKeys.HOME_SENDING_DATA_ERROR_MESSAGE),
+          buttons: [
+            {
+              text: this.localization.translateKey(LocKeys.BTN_OKAY),
+              handler: () => { }
+            }
+          ]
+        })
+        console.error('Error sending cached data:', error)
+      })
   }
 }

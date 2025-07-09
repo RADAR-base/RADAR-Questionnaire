@@ -18,7 +18,7 @@ export class NotificationGeneratorService {
   constructor(
     private localization: LocalizationService,
     private logger: LogService
-  ) {}
+  ) { }
 
   findNotificationByMessageId(tasks: Task[], id: number): SingleNotification {
     return tasks
@@ -103,7 +103,7 @@ export class NotificationGeneratorService {
     )
   }
 
-  private createNotification(
+  createNotification(
     task: Task,
     timestamp: number,
     type: NotificationType,

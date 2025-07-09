@@ -368,6 +368,10 @@ export class ConfigService {
     }
   }
 
+  getKafkaService() {
+    return this.kafka
+  }
+
   sendConfigChangeEvent(type, previous?, current?, error?, data?) {
     this.analytics.logEvent(type, {
       previous: String(previous),

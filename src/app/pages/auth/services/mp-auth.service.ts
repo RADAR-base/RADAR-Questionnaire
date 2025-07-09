@@ -37,9 +37,18 @@ export class MpAuthService extends AuthService {
     return this.getRefreshTokenFromUrl(authObj)
       .then(body => {
         const { refreshToken, baseUrl } = body
-        this.logger.log(`Retrieved refresh token from ${baseUrl}`, body)
-        const tokenEndpoint = `${baseUrl}${DefaultManagementPortalURI}${DefaultRefreshTokenURI}`
-        return this.completeAuthentication(refreshToken, baseUrl, tokenEndpoint)
+        if (!baseUrl) {
+          throw new Error('Base URL is missing from the response')
+        }
+        try {
+          const url = new URL(baseUrl)
+          const formattedBaseUrl = url.origin
+          this.logger.log(`Retrieved refresh token from ${formattedBaseUrl}`, body)
+          const tokenEndpoint = `${formattedBaseUrl}${DefaultManagementPortalURI}${DefaultRefreshTokenURI}`
+          return this.completeAuthentication(refreshToken, formattedBaseUrl, tokenEndpoint)
+        } catch (e) {
+          throw new Error(`Invalid base URL format: ${baseUrl}`)
+        }
       })
       .catch(err => {
         this.logger.error('Failed to retrieve refresh token', err)

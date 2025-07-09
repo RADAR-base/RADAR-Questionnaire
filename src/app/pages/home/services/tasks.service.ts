@@ -160,6 +160,12 @@ export class TasksService {
     return setDateTimeToMidnight(new Date())
   }
 
+  getAutoSendCachedData() {
+    return this.remoteConfig
+      .read()
+      .then(config => config.getOrDefault(ConfigKeys.AUTO_SEND_CACHED_DATA, 'false'))
+  }
+
   getPlatformInstanceName() {
     return this.remoteConfig
       .read()

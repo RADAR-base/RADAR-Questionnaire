@@ -55,6 +55,10 @@ export class ConfigKeys {
 
   static TOKEN_BACKUP = new ConfigKeys('token_backup')
 
+  static AUTO_SEND_CACHED_DATA = new ConfigKeys('auto_send_cached_data')
+
+  static SEND_ERROR_NOTIFICATION = new ConfigKeys('send_error_notification')
+
   constructor(public value: string) { }
 
   toString() {

@@ -23,18 +23,27 @@ export abstract class AuthService {
     public config: ConfigService,
     public logger: LogService,
     public analytics: AnalyticsService,
-    public subjectConfig: SubjectConfigService
+    public subjectConfig: SubjectConfigService,
   ) { }
 
   abstract authenticate(authObj: any): Promise<any>
 
   protected completeAuthentication(refreshToken: string, baseUrl: string, tokenEndpoint: string): Promise<OAuthToken> {
+    if (!baseUrl) {
+      return Promise.reject(new Error('Base URL is required for authentication'))
+    }
+
     return this.token.setURI(baseUrl)
+      .then(() => this.subjectConfig.setBaseUrl(baseUrl))
       .then(() => this.analytics.setUserProperties({ baseUrl }))
       .then(() => this.token.setTokenEndpoint(tokenEndpoint))
       .then(() => this.token.register(this.token.getRefreshParams(refreshToken)))
       .then(() => this.registerAsSource())
       .then(() => this.token.refresh())
+      .catch(error => {
+        this.logger.error('Authentication failed', error)
+        throw error
+      })
   }
 
   reset() {

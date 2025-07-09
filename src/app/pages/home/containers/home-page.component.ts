@@ -75,14 +75,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.usage.setPage(this.constructor.name)
     this.platform
       .ready()
-      .then(() => this.tasksService.init().then(() => {
-        this.init()
-        this.tasksService.getAutoSendCachedData().then(autoSendCachedData => {
-          if (autoSendCachedData === 'true') {
-            this.sendCachedData()
-          }
-        })
-      }))
+      .then(() => this.tasksService.init().then(() => this.init()))
   }
 
   ngOnDestroy() {
@@ -104,6 +97,14 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.tasks = this.tasksService.getTasksOfToday()
     this.showCalendar = false
     this.resumeListener = this.platform.resume.subscribe(() => this.onResume())
+  }
+
+  ionViewDidEnter() {
+    this.tasksService.getAutoSendCachedData().then(autoSendCachedData => {
+      if (autoSendCachedData === 'true') {
+        this.sendCachedData()
+      }
+    })
   }
 
   ionViewWillLeave() {

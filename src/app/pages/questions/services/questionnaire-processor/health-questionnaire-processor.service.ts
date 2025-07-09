@@ -46,8 +46,6 @@ export class HealthQuestionnaireProcessorService extends QuestionnaireProcessorS
 
           if (result.type === 'complete' && result.success) {
             const { kafkaObjects } = result.data
-            console.log("Complete")
-            console.log(kafkaObjects)
 
             // Update task completion status
             this.updateTaskToComplete(task)

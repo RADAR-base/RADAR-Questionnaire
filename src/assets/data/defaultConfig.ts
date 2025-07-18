@@ -204,6 +204,34 @@ export const DefaultOAuthClientSecret = ''
 // *Default length of time to wait before refreshing tokens (REMOTE CONFIG KEY: `oauth_refresh_seconds`)
 export const DefaultTokenRefreshSeconds = 1800 // 30 minutes in s
 
+export const DefaultOryEndpoint = 'https://dev.radarbasedev.co.uk'
+export const DefaultOryScopes = 'SUBJECT.READ SUBJECT.UPDATE PROJECT.READ MEASUREMENT.CREATE offline_access'
+export const DefaultOryAudience = 'res_ManagementPortal res_gateway res_AppServer'
+
+export const DefaultHydraAuthEndpoint = '/hydra/oauth2/auth'
+export const DefaultHydraTokenEndpoint = '/hydra/oauth2/token'
+
+export const DefaultOryAuthOptions = {
+  authorizationBaseUrl: DefaultOryEndpoint + DefaultHydraAuthEndpoint,
+  accessTokenEndpoint: DefaultOryEndpoint + DefaultHydraTokenEndpoint,
+  scope: DefaultOryScopes,
+  resourceUrl: '',
+  logsEnabled: true,
+  android: {
+    appId: DefaultOAuthClientId,
+    responseType: 'code',
+    redirectUrl: DefaultPackageName + ':/'
+  },
+  ios: {
+    appId: DefaultOAuthClientId,
+    responseType: 'code',
+    redirectUrl: DefaultIosPackageName + ':/'
+  },
+  additionalParameters: {
+    audience: DefaultOryAudience
+  }
+}
+
 // DEFAULT HTTP REQUEST VALUES
 
 // *Default HTTP request encoded content type

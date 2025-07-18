@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
-import { NavController, Platform } from '@ionic/angular'
+import { NavController, Platform, LoadingController } from '@ionic/angular'
 import { Subscription } from 'rxjs'
 
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { UsageService } from '../../../core/services/usage/usage.service'
+import { ConfigService } from '../../../core/services/config/config.service'
 import { UsageEventType } from '../../../shared/enums/events'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { Task, TasksProgress } from '../../../shared/models/task'
@@ -28,6 +29,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   tasksProgress = Promise.resolve({ numberOfTasks: 0, completedTasks: 5 })
   resumeListener: Subscription = new Subscription()
   changeDetectionListener: Subscription = new Subscription()
+  cacheProgressSubscription: Subscription = new Subscription()
   lastTaskRefreshTime = Date.now()
   streakDays = 1
 
@@ -43,11 +45,14 @@ export class HomePageComponent implements OnInit, OnDestroy {
   isTaskCalendarTaskNameShown: Promise<boolean>
   isTaskInfoShown: Promise<boolean>
   currentDate: number
+  studyPortalReturnUrl: Promise<string | null>
 
   APP_CREDITS = '&#169; RADAR-Base'
   HTML_BREAK = '<br>'
   // How long to wait before refreshing tasks
   TASK_REFRESH_MILLIS = 600_000
+  CACHE_SENDING_ALERT_TIMEOUT = 1_200_000 // 20 minutes
+  MIN_CACHE_SIZE_TO_SEND = 5
 
   constructor(
     private router: Router,
@@ -56,7 +61,9 @@ export class HomePageComponent implements OnInit, OnDestroy {
     private tasksService: TasksService,
     private localization: LocalizationService,
     private platform: Platform,
-    private usage: UsageService
+    private usage: UsageService,
+    private configService: ConfigService,
+    private loadingController: LoadingController
   ) {
     this.changeDetectionListener =
       this.tasksService.changeDetectionEmitter.subscribe(() => {
@@ -65,29 +72,19 @@ export class HomePageComponent implements OnInit, OnDestroy {
       })
   }
 
-  getIsLoadingSpinnerShown() {
-    return (
-      (this.startingQuestionnaire && !this.showCalendar) ||
-      (!this.nextTask && !this.showCompleted)
-    )
-  }
-
-  getIsStartButtonShown() {
-    return (
-      this.taskIsNow &&
-      !this.startingQuestionnaire &&
-      !this.showCompleted &&
-      !this.showCalendar &&
-      !this.getIsLoadingSpinnerShown()
-    )
-  }
-
   ngOnInit() {
+    this.usage.setPage(this.constructor.name)
     this.platform
       .ready()
-      .then(() => this.tasksService.init().then(() => this.init()))
-    this.usage.setPage(this.constructor.name)
-    this.getStreak()
+      .then(() => this.tasksService.init().then(() => {
+        this.init()
+        this.getStreak()
+        this.tasksService.getAutoSendCachedData().then(autoSendCachedData => {
+          if (autoSendCachedData === 'true') {
+            this.sendCachedData()
+          }
+        })
+      }))
   }
 
   ngOnDestroy() {
@@ -96,6 +93,9 @@ export class HomePageComponent implements OnInit, OnDestroy {
       this.resumeListener.unsubscribe();
     }
     this.changeDetectionListener.unsubscribe()
+    if (this.cacheProgressSubscription) {
+      this.cacheProgressSubscription.unsubscribe();
+    }
   }
 
   ionViewWillEnter() {
@@ -128,12 +128,31 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.isTaskInfoShown = this.tasksService.getIsTaskInfoShown()
     this.onDemandIcon = this.tasksService.getOnDemandAssessmentIcon()
     this.showMiscTasksButton = this.getShowMiscTasksButton()
+    this.studyPortalReturnUrl = this.tasksService.getPortalReturnUrl()
+
   }
 
   onResume() {
     this.usage.sendOpenEvent()
     this.checkForNewDate()
     this.usage.sendGeneralEvent(UsageEventType.RESUMED)
+  }
+
+  getIsLoadingSpinnerShown() {
+    return (
+      (this.startingQuestionnaire && !this.showCalendar) ||
+      (!this.nextTask && !this.showCompleted)
+    )
+  }
+
+  getIsStartButtonShown() {
+    return (
+      this.taskIsNow &&
+      !this.startingQuestionnaire &&
+      !this.showCompleted &&
+      !this.showCalendar &&
+      !this.getIsLoadingSpinnerShown()
+    )
   }
 
   checkForNewDate() {
@@ -181,6 +200,10 @@ export class HomePageComponent implements OnInit, OnDestroy {
   openOnDemandTasksPage() {
     this.navCtrl.navigateForward('/on-demand')
     this.usage.sendClickEvent('open_on_demand_tasks')
+  }
+
+  async openStudyPortal() {
+    window.open(await this.studyPortalReturnUrl, '_system')
   }
 
   startQuestionnaire(taskCalendarTask?: Task) {
@@ -247,4 +270,84 @@ export class HomePageComponent implements OnInit, OnDestroy {
       this.streakDays = streak
     })
   }
+
+  async sendCachedData() {
+    const kafkaService = this.configService.getKafkaService()
+    const cacheSize = await kafkaService.getCacheSize()
+    if (cacheSize < this.MIN_CACHE_SIZE_TO_SEND) {
+      return
+    }
+    // Create loading overlay with initial message
+    const loading = await this.loadingController.create({
+      message: this.localization.translateKey(LocKeys.HOME_SENDING_DATA_MESSAGE),
+      spinner: 'lines',
+      backdropDismiss: false
+    })
+    await loading.present()
+
+    // Subscribe to progress updates
+    const startTime = Date.now()
+    const progressSub = kafkaService.eventCallback$.subscribe({
+      next: (progress: number) => {
+        const progressDisplay = Math.min(Math.max(Math.ceil(progress * 100), 1), 99)
+
+        let message = this.localization.translateKey(LocKeys.HOME_SENDING_DATA_MESSAGE)
+        message += `<br><br><strong>${this.localization.translateKey(LocKeys.HOME_SENDING_DATA_PROGRESS)}: ${progressDisplay}%</strong>`
+
+        // Calculate time remaining
+        const elapsedTime = (Date.now() - startTime) / 1000
+        const remainingTime = isFinite(elapsedTime * (100 - progressDisplay) / progressDisplay)
+          ? (elapsedTime * (100 - progressDisplay)) / progressDisplay
+          : 0
+
+        let etaText = ''
+        if (remainingTime >= 60) {
+          const minutes = Math.floor(remainingTime / 60)
+          const seconds = Math.round(remainingTime % 60)
+          etaText = `About ${minutes} minute${minutes > 1 ? 's' : ''} and ${seconds} second${seconds !== 1 ? 's' : ''} remaining`
+        } else if (remainingTime > 0) {
+          etaText = `About ${remainingTime.toFixed(0)} second${remainingTime.toFixed(0) !== '1' ? 's' : ''} remaining`
+        }
+        message += `<br>${etaText}`
+
+        loading.message = message
+      },
+      error: (error) => {
+        loading.dismiss()
+        this.alertService.showAlert({
+          header: this.localization.translateKey(LocKeys.HOME_SENDING_DATA_ERROR_TITLE),
+          message: this.localization.translateKey(LocKeys.HOME_SENDING_DATA_ERROR_MESSAGE),
+          buttons: [
+            {
+              text: this.localization.translateKey(LocKeys.BTN_OKAY),
+              handler: () => { }
+            }
+          ]
+        })
+        console.error('Error in progress tracking:', error)
+      }
+    })
+
+    // Send cached data asynchronously
+    kafkaService.sendAllFromCache()
+      .then(() => {
+        progressSub.unsubscribe()
+        loading.dismiss()
+      })
+      .catch((error) => {
+        progressSub.unsubscribe()
+        loading.dismiss()
+        this.alertService.showAlert({
+          header: this.localization.translateKey(LocKeys.HOME_SENDING_DATA_ERROR_TITLE),
+          message: this.localization.translateKey(LocKeys.HOME_SENDING_DATA_ERROR_MESSAGE),
+          buttons: [
+            {
+              text: this.localization.translateKey(LocKeys.BTN_OKAY),
+              handler: () => { }
+            }
+          ]
+        })
+        console.error('Error sending cached data:', error)
+      })
+    }
 }

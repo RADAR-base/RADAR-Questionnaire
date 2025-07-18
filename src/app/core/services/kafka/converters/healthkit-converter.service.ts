@@ -39,7 +39,11 @@ export class HealthkitConverterService extends ConverterService {
     super(logger, http, token, keyConverter, remoteConfig)
   }
 
-  init() { }
+  init() {
+    this.schemas = {}
+    this.updateURI()
+    this.getSchemas()
+  }
 
   processData(data) {
     return {
@@ -143,6 +147,9 @@ export class HealthkitConverterService extends ConverterService {
   }
 
   getSchemas() {
+    if (!this.BASE_URI) {
+      return this.updateURI().then(() => this.getSchemas())
+    }
     if (this.schemas[this.HEALTHKIT_TOPIC])
       return this.schemas[this.HEALTHKIT_TOPIC]
     else {

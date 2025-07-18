@@ -59,7 +59,7 @@ export const Localisations = {
   },
   ENROL_REGISTRATION_DESC: {
     da:
-      'Før du kan begynde at anvende app’en, skal vi registrere den først. Du kan enten scanne QR-koden eller indtaste symbolet.',
+      `Før du kan begynde at anvende app'en, skal vi registrere den først.Du kan enten scanne QR- koden eller indtaste symbolet.`,
     de:
       'Bevor Sie die App verwenden können, müssen Sie sie zuerst registrieren. Sie können entweder den QR-Code scannen oder das Token eingeben.',
     en:
@@ -93,6 +93,76 @@ export const Localisations = {
     hb:
       'לחץ על כפתור הסריקה וכוון את המצלמה לכיוון קוד הQR שניתן לך על ידי החוקרים. דוגמה לקוד QR מוצגת למטה.'
   },
+  ENROL_REGISTRATION_NO_QR: {
+    da: 'Har du ikke en QR-kode?',
+    de: 'Haben Sie keinen QR-Code?',
+    en: "Don't have a QR code?",
+    es: '¿No tienes un código QR?',
+    it: 'Non hai un codice QR?',
+    nl: 'Heb je geen QR-code?',
+    pl: 'Nie masz kodu QR?',
+    hb: 'אין לך קוד QR?'
+  },
+  ENROL_REGISTRATION_ENTER_TOKEN: {
+    da: 'Tryk her for at indtaste en login-token i stedet.',
+    de: 'Tippen Sie hier, um stattdessen ein Login-Token einzugeben.',
+    en: 'Tap here to enter a login token instead.',
+    es: 'Toca aquí para ingresar un token de inicio de sesión en su lugar.',
+    it: 'Tocca qui per inserire un token di accesso invece.',
+    nl: 'Tik hier om in plaats daarvan een login-token in te voeren.',
+    pl: 'Stuknij tutaj, aby zamiast tego wprowadzić token logowania.',
+    hb: 'הקש כאן כדי להזין אסימון כניסה במקום.'
+  },
+  ENROL_REGISTRATION_STUDY_DESC: {
+    da: 'Indtast dit studienavn for at fortsætte.',
+    de: 'Geben Sie Ihren Studiennamen ein, um fortzufahren.',
+    en: 'Enter your study name to continue.',
+    es: 'Ingresa el nombre de tu estudio para continuar.',
+    it: 'Inserisci il nome del tuo studio per continuare.',
+    nl: 'Voer je studienaam in om door te gaan.',
+    pl: 'Wprowadź nazwę swojego studium, aby kontynuować.',
+    hb: 'הזן את שם הלימודים שלך כדי להמשיך.'
+  },
+  ENROL_REGISTRATION_ENTER_STUDY_ID: {
+    da: 'Ellers skal du indtaste dit studie navn.',
+    de: 'Andernfalls geben Sie den Namen Ihres Studiums ein.',
+    en: 'Otherwise, enter your study name.',
+    es: 'De lo contrario, ingresa el nombre de tu estudio.',
+    it: 'Altrimenti, inserisci il nome del tuo studio.',
+    nl: 'Anders, voer de naam van je studie in.',
+    pl: 'W przeciwnym razie wprowadź nazwę swojego studium.',
+    hb: 'אחרת, הזן את שם הלימודים שלך.'
+  },
+  ENROL_REGISTRATION_STUDY_ID: {
+    da: 'Indtast studie navn',
+    de: 'Studienname eingeben',
+    en: 'Enter Study Name',
+    es: 'Ingresa nombre del estudio',
+    it: 'Inserisci nome dello studio',
+    nl: 'Voer studie naam in',
+    pl: 'Wprowadź nazwę studiów',
+    hb: 'הזן את שם הלימודים'
+  },
+  ENROL_REGISTRATION_ORY_INVALID_CODE: {
+    da: 'Ugyldig studiekode. Tjek venligst din studieportal.',
+    de: 'Ungültiger Studiencode. Bitte überprüfen Sie Ihr Studienportal.',
+    en: 'Invalid study code. Please check your study portal.',
+    es: 'Código de estudio no válido. Por favor, revisa tu portal de estudios.',
+    it: 'Codice di studio non valido. Controlla il tuo portale di studio.',
+    nl: 'Ongeldige studietocode. Controleer je studieportaal.',
+    pl: 'Nieprawidłowy kod studiów. Sprawdź swój portal studencki.',
+    hb: 'קוד לימודים לא חוקי. אנא בדוק את פורטל הלימודים שלך.'
+  },
+  ENROL_REGISTRATION_ORY_DESC: {
+    da: 'Log ind med din studieportal e-mail og adgangskode.',
+    de: 'Melden Sie sich mit Ihrer Studienportal-E-Mail und Ihrem Passwort an.',
+    en: 'Login with your study portal email and password.',
+    es: 'Inicia sesión con tu correo y contraseña del portal de estudio.',
+    it: 'Accedi con la tua email e password del portale di studio.',
+    nl: 'Log in met je studieportaal-e-mail en wachtwoord.',
+    pl: 'Zaloguj się za pomocą e-maila i hasła do portalu studiów.',
+    hb: 'התחבר עם הדוא״ל והסיסמה של פורטל הלימודים שלך.'
+  },
   ENROL_REGISTRATION_TOKEN_DESC: {
     da:
       'Indtast token. Dette skal være tilgængeligt under QR-koden på Management Portal. Hvis ikke, skal du scanne QR-koden.',
@@ -110,6 +180,16 @@ export const Localisations = {
       'Wprowadź Token. Powinien być widoczny poniżej kodu QR w Mahagement Portal. Jeśli go tam nie znajdziesz, zeskanuj kod QR.',
     hb:
       'הזן את הטוקן. הוא אמור להיות זמין מתחת לקוד הQR בפורטל הניהול. אם הוא לא זמין בבקשה סרוק את קוד הQR.'
+  },
+  ENROL_REGISTRATION_QR: {
+    da: 'Har du en QR-kode?',
+    de: 'Haben Sie einen QR-Code?',
+    en: 'Do you have a QR code?',
+    es: '¿Tienes un código QR?',
+    it: 'Hai un codice QR?',
+    nl: 'Heb je een QR-code?',
+    pl: 'Masz kod QR?',
+    hb: 'האם יש לך קוד QR?'
   },
   ENROL_PREFERENCES: {
     da: 'Præferencer',
@@ -150,21 +230,14 @@ export const Localisations = {
     hb: 'ההרשמה הושלמה'
   },
   ENROL_REGISTRATION_COMPLETE_DESC: {
-    da:
-      "Du er nu med tilmelding til undersøgelsen. Klik på 'Afslut' for at begynde at generere din spørgeskemaplan og dine meddelelser.",
-    de:
-      "Sie haben sich jetzt erfolgreich für die Studie angemeldet. Klicken Sie auf 'Fertig', um den Zeitplan und die Benachrichtigungen für Ihren Fragebogen zu erstellen.",
-    en:
-      "You have now successfully enrolled in the study. Click 'Finish' to start generating your questionnaire schedule and notifications.",
-    es:
-      "Ahora se ha inscrito con éxito en el estudio. Haga clic en 'Finalizar' para comenzar a generar su calendario de cuestionarios y notificaciones.",
-    it:
-      "Ora ti sei iscritto con successo allo studio. Fai clic su 'Fine' per iniziare a generare la pianificazione del questionario e le notifiche.",
-    nl:
-      "U bent nu succesvol ingeschreven voor het onderzoek. Klik op 'Voltooid' om uw vragenlijstschema en meldingen te genereren.",
-    pl:
-      'Z powodzeniem zarejestrowałeś się w badaniu. Kliknij „Zakończone”, aby wygenerować harmonogram kwestionariusza i powiadomienia',
-    hb: `נרשמת בהצלחה למחקר. לחץ "סיום" כדי ליצור את לוח הזמנים וההתראות שלך .`
+    da: "Alt er klar! Tryk på 'Start' for at begynde dine studieopgaver.",
+    de: "Alles ist bereit! Tippen Sie auf 'Start', um mit Ihren Studienaufgaben zu beginnen.",
+    en: "You're all set! Tap 'Start' to begin your study tasks.",
+    es: "¡Todo listo! Toca 'Iniciar' para comenzar tus tareas de estudio.",
+    it: "Sei pronto! Tocca 'Avvia' per iniziare le tue attività di studio.",
+    nl: "Alles is klaar! Tik op 'Start' om je studieopdrachten te beginnen.",
+    pl: "Wszystko gotowe! Stuknij 'Start', aby rozpocząć swoje zadania badawcze.",
+    hb: "הכל מוכן! לחץ על 'התחל' כדי להתחיל את משימות המחקר שלך."
   },
   ENROL_PRIVACY_POLICY_DESC: {
     da:
@@ -192,6 +265,16 @@ export const Localisations = {
     nl: 'Bedankt voor het invullen van de vragenlijst.',
     pl: 'Dziękujemy za wypełnienie ankiety.',
     hb: '.תודה שמילאת את השאלון'
+  },
+  FINISH_THANKS_WAIT: {
+    da: 'Et øjeblik, mens vi sender dine data.',
+    de: 'Einen Moment, wir senden Ihre Daten.',
+    en: 'Just a moment while we send your data.',
+    es: 'Un momento mientras enviamos tus datos.',
+    it: 'Un attimo mentre inviamo i tuoi dati.',
+    nl: 'Een ogenblik terwijl we je gegevens verzenden.',
+    pl: 'Chwileczkę, wysyłamy Twoje dane.',
+    hb: 'רגע אחד בזמן שאנו שולחים את הנתונים שלך.'
   },
   FINISH_NEXT_TASK_REMINDER: {
     da: 'Husk, du har stadig udestående opgaver!',
@@ -512,7 +595,7 @@ export const Localisations = {
     nl:
       "Door de cache opnieuw in te stellen, verwijdert u uw gecachte vragenlijstgegevens die niet konden worden verzonden. Probeer eerst de gegevens te verzenden door in de instellingen op 'Cachegegevens verzenden' te tikken",
     pl:
-      'Przez zresetowanie pamięci podręcznej usuwasz buforowane dane kwestionariusza, których nie udało się wysłać. Spróbuj najpierw wysłać dane, dotykając opcji „Wyślij buforowane dane” w ustawieniach',
+      'Przez zresetowanie pamięci podręcznej usuwasz buforowane dane kwestionariusza, których nie udało się wysłać. Spróbuj najpierw wysłać dane, dotykając opcji „Wyślij buforowane dane" w ustawieniach',
     hb:
       "על ידי איפוס המטמון, אתה מוחק את נתוני השאלון המטמון שלך שלא הצליחו לשלוח. אנא נסה לשלוח את הנתונים תחילה על ידי הקשה על 'שלח נתונים במטמון' בהגדרות"
   },
@@ -744,6 +827,16 @@ export const Localisations = {
     pl: 'Skanuj',
     hb: 'סרוק'
   },
+  BTN_ENROL_KRATOS: {
+    da: 'Log ind',
+    de: 'Anmelden',
+    en: 'Login',
+    es: 'Iniciar sesión',
+    it: 'Accedi',
+    nl: 'Inloggen',
+    pl: 'Zaloguj się',
+    hb: 'התחברות'
+  },
   BTN_ENROL_ENTER_TOKEN: {
     da: 'Indtast Token',
     de: 'Token Eingeben',
@@ -803,6 +896,16 @@ export const Localisations = {
     nl: 'Afwijzen',
     pl: 'Odwołać',
     hb: 'לשחרר'
+  },
+  BTN_RETURN_PORTAL: {
+    da: 'Tilbage til studieportalen',
+    de: 'Zurück zum Studienportal',
+    en: 'Return to Study Portal',
+    es: 'Volver al portal de estudio',
+    it: 'Torna al portale di studio',
+    nl: 'Terug naar studieportaal',
+    pl: 'Powrót do portalu edukacyjnego',
+    hb: 'חזרה לפורטל הלימודים'
   },
   BTN_START: {
     da: 'Start',
@@ -1335,14 +1438,14 @@ export const Localisations = {
     hb: 'החזק מעמד!'
   },
   TASK_BAR_TASK_LEFT_2: {
-    da: 'Der er stadig et par spørgsmål tilbage',
-    de: 'Einige Aufgaben stehen noch aus',
-    en: 'A few questionnaires are still left.',
-    es: 'Todavía quedan algunos cuestionarios',
-    it: 'Mancano ancora pochi questionari',
-    nl: 'Er staan nog een paar vragenlijsten open',
-    pl: 'Zostało jeszcze kilka ankiet.',
-    hb: '.נותרו עדיין מספר שאלונים'
+    da: 'Indlæser dine opgaver.',
+    de: 'Lade deine Aufgaben.',
+    en: 'Loading your tasks.',
+    es: 'Cargando tus tareas.',
+    it: 'Caricamento delle tue attività.',
+    nl: 'Je taken worden geladen.',
+    pl: 'Ładowanie twoich zadań.',
+    hb: 'טוען את המשימות שלך.'
   },
   TASK_BAR_NO_TASK_1: {
     da: 'Tag det roligt!',
@@ -1470,7 +1573,7 @@ export const Localisations = {
     da:
       'Stop venligst optagelsen, når du er færdig for at aktivere den næste knap.',
     de:
-      'Bitte stoppen Sie die Aufnahme, wenn Sie fertig sind, um die Schaltfläche „Weiter“ zu aktivieren.',
+      'Bitte stoppen Sie die Aufnahme, wenn Sie fertig sind, um die Schaltfläche „Weiter" zu aktivieren.',
     en:
       'Please stop the recording once you are done in order to enable the next button.',
     es:
@@ -1514,7 +1617,7 @@ export const Localisations = {
     nl:
       'Er is een probleem opgetreden bij het bijwerken van uw configuratie. Druk op "Probeer opnieuw" om het opnieuw te proberen. Als je dit probleem regelmatig ervaart, neem dan contact op met je studiecoördinator of probeer de applicatie te resetten in de instellingen.',
     pl:
-      'Podczas aktualizowania konfiguracji wystąpił problem. Naciśnij „Spróbuj ponownie”, aby spróbować ponownie. Jeśli często występuje ten problem, skontaktuj się z koordynatorem badania lub spróbuj zresetować aplikację w ustawieniach.',
+      'Podczas aktualizowania konfiguracji wystąpił problem. Naciśnij „Spróbuj ponownie", aby spróbować ponownie. Jeśli często występuje ten problem, skontaktuj się z koordynatorem badania lub spróbuj zresetować aplikację w ustawieniach.',
     hb:
       'הייתה בעיה בעדכון התצורה שלך. לחץ על "נסה שוב" כדי לנסות שוב. אם אתה נתקל בבעיה זו לעתים קרובות, אנא צור קשר עם רכז הלימוד שלך או נסה לאפס את היישום בהגדרות.'
   },
@@ -1599,5 +1702,82 @@ export const Localisations = {
     nl: 'kan niet worden gestart.',
     pl: 'nie można uruchomić.',
     hb: 'לא ניתן להפעיל.'
+  },
+  DATA_SEND_ERROR_DESC: {
+    en: 'We couldn\'t send some data, possibly due to a network issue. Would you like to try again?',
+    es: 'No pudimos enviar algunos datos, posiblemente debido a un problema de conexión. ¿Quieres intentarlo de nuevo?',
+    da: 'Vi kunne ikke sende nogle data, muligvis på grund af netværksproblemer. Vil du prøve igen?',
+    de: 'Einige Daten konnten möglicherweise aufgrund eines Netzwerkproblems nicht gesendet werden. Möchten Sie es erneut versuchen?',
+    fr: 'Nous n\'avons pas pu envoyer certaines données, peut-être en raison d\'un problème de réseau. Voulez-vous réessayer ?',
+    it: 'Non siamo riusciti a inviare alcuni dati, forse a causa di un problema di rete. Vuoi riprovare?',
+    nl: 'We konden sommige gegevens niet verzenden, mogelijk door een netwerkprobleem. Wilt u het opnieuw proberen?',
+    pl: 'Nie udało się wysłać niektórych danych, prawdopodobnie z powodu problemu z siecią. Czy chcesz spróbować ponownie?',
+    hb: 'לא הצלחנו לשלוח חלק מהנתונים, ייתכן עקב בעיית רשת. האם ברצונך לנסות שוב?'
+  },
+  HOME_SENDING_DATA_MESSAGE: {
+    en: 'Sending saved data...',
+    es: 'Enviando datos guardados...',
+    da: 'Sender gemte data...',
+    de: 'Gespeicherte Daten werden gesendet...',
+    fr: 'Envoi des données sauvegardées...',
+    it: 'Invio dati salvati...',
+    nl: 'Opgeslagen gegevens verzenden...',
+    pl: 'Wysyłanie zapisanych danych...',
+    hb: 'שולח נתונים שמורים...'
+  },
+  HOME_SENDING_DATA_PROGRESS: {
+    en: 'Progress',
+    es: 'Progreso',
+    da: 'Fremskridt',
+    de: 'Fortschritt',
+    fr: 'Progrès',
+    it: 'Progresso',
+    nl: 'Voortgang',
+    pl: 'Postęp',
+    hb: 'התקדמות'
+  },
+  HOME_SENDING_DATA_TIME_REMAINING: {
+    en: 'Calculating time remaining...',
+    es: 'Calculando tiempo restante...',
+    da: 'Beregner resterende tid...',
+    de: 'Verbleibende Zeit wird berechnet...',
+    fr: 'Calcul du temps restant...',
+    it: 'Calcolo del tempo rimanente...',
+    nl: 'Resterende tijd berekenen...',
+    pl: 'Obliczanie pozostałego czasu...',
+    hb: 'מחשב זמן נותר...'
+  },
+  HOME_SENDING_DATA_FINISHING: {
+    en: 'Finishing up...',
+    es: 'Terminando...',
+    da: 'Afslutter...',
+    de: 'Abschluss...',
+    fr: 'Finalisation...',
+    it: 'Completamento...',
+    nl: 'Afronden...',
+    pl: 'Kończenie...',
+    hb: 'מסיים...'
+  },
+  HOME_SENDING_DATA_ERROR_TITLE: {
+    en: 'Error',
+    es: 'Error',
+    da: 'Fejl',
+    de: 'Fehler',
+    fr: 'Erreur',
+    it: 'Errore',
+    nl: 'Fout',
+    pl: 'Błąd',
+    hb: 'שגיאה'
+  },
+  HOME_SENDING_DATA_ERROR_MESSAGE: {
+    en: 'Failed to send saved data. Please try again later.',
+    es: 'Error al enviar datos guardados. Por favor, inténtelo de nuevo más tarde.',
+    da: 'Kunne ikke sende gemte data. Prøv igen senere.',
+    de: 'Fehler beim Senden gespeicherter Daten. Bitte versuchen Sie es später erneut.',
+    fr: 'Échec de l\'envoi des données sauvegardées. Veuillez réessayer plus tard.',
+    it: 'Impossibile inviare i dati salvati. Riprova più tardi.',
+    nl: 'Kan opgeslagen gegevens niet verzenden. Probeer het later opnieuw.',
+    pl: 'Nie udało się wysłać zapisanych danych. Spróbuj ponownie później.',
+    hb: 'נכשל בשליחת נתונים שמורים. נסה שוב מאוחר יותר.'
   }
 }

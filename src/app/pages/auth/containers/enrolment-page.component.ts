@@ -9,7 +9,7 @@ import {
   DefaultLanguage,
   DefaultPrivacyPolicyUrl,
   DefaultSettingsSupportedLanguages,
-  DefaultSettingsWeeklyReport
+  DefaultSettingsWeeklyReport,
 } from '../../../../assets/data/defaultConfig'
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
@@ -26,6 +26,7 @@ import {
 } from '../../../shared/models/settings'
 import { AuthService } from '../services/auth.service'
 import { BehaviorSubject } from 'rxjs'
+import { AuthFactoryService } from '../services/auth-factory.service'
 
 @Component({
   selector: 'page-enrolment',
@@ -48,6 +49,7 @@ export class EnrolmentPageComponent {
   constructor(
     public navCtrl: NavController,
     private auth: AuthService,
+    private authFactory: AuthFactoryService,
     private localization: LocalizationService,
     private alertService: AlertService,
     private usage: UsageService,
@@ -60,8 +62,7 @@ export class EnrolmentPageComponent {
 
   async init() {
     const languageTag = await Device.getLanguageTag()
-    // Language value is in BCP 47 format (e.g. en-US)
-    const tag = languageTag.value.split('-')[0]
+    const tag = languageTag.value.split('-')[0] // Value is in BCP 47 format (e.g. en-US)
     let lang = this.languagesSelectable.find(a => a.value == tag)
     this.language = lang ? lang : this.language
     this.localization.setLanguage(this.language)
@@ -93,7 +94,7 @@ export class EnrolmentPageComponent {
       // Attempt to slide to the next slide with a delay for stability
       setTimeout(() => {
         try {
-          this.slides.nativeElement.swiper.slideTo(nextIndex, 500)
+          this.slides.nativeElement.swiper.slideTo(nextIndex, 700)
           // Disable sliding after moving to the next slide
           this.slides.nativeElement.swiper.allowSlideNext = false
           this.slides.nativeElement.swiper.allowSlidePrev = false
@@ -102,7 +103,7 @@ export class EnrolmentPageComponent {
           // Retry the slide transition if it fails
           this.retrySlideTransition(nextIndex)
         }
-      }, 100) // Adjust delay as necessary
+      }, 100)
     } else {
       console.warn('Swiper instance not ready, retrying...')
       // Retry if swiper instance isn't available yet
@@ -121,18 +122,6 @@ export class EnrolmentPageComponent {
       this.slides.nativeElement.swiper.allowSlideNext = true
       this.slides.nativeElement.swiper.slideTo(slideIndex, 500)
       this.slides.nativeElement.swiper.allowSlideNext = false
-    }
-  }
-
-  removeSlideById(id: string) {
-    const slideIndex = this.findSlideIndexById(id)
-    const currentIndex = this.slides.nativeElement.swiper.activeIndex
-    if (currentIndex == slideIndex) {
-      return this.next()
-    }
-    if (slideIndex !== -1) {
-      this.slides.nativeElement.swiper.removeSlide(slideIndex)
-      this.slides.nativeElement.swiper.update()
     }
   }
 
@@ -155,11 +144,11 @@ export class EnrolmentPageComponent {
     this.next()
   }
 
-  authenticate(authObj) {
+  authenticate(authObj, enrolmentMethod = 'qr') {
     this.loading.next(true)
     this.cdr.detectChanges()
     this.clearStatus()
-    return this.auth
+    return this.authFactory.getAuthService(enrolmentMethod)
       .authenticate(authObj)
       .catch(e => {
         if (e.status !== 409) throw e // Handle conflict error (409)
@@ -175,8 +164,6 @@ export class EnrolmentPageComponent {
   handleAuthenticationSuccess() {
     return this.auth.initSubjectInformation().then(() => {
       this.usage.sendGeneralEvent(EnrolmentEventType.SUCCESS)
-      this.removeSlideById('qr-registration-choice')
-      this.removeSlideById('qr-registration')
       return this.goToSlideById('privacy-policy')
     })
   }
@@ -269,7 +256,7 @@ export class EnrolmentPageComponent {
       if (url.hostname === 'enrol') {
         this.loading.next(true)
         setTimeout(() => {
-          this.authenticate(event.url)
+          this.authenticate(event.url, 'ory')
         }, 2000)
       }
     })

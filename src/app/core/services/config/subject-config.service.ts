@@ -22,14 +22,15 @@ export class SubjectConfigService {
     PROJECTNAME: StorageKeys.PROJECTNAME,
     SOURCEID: StorageKeys.SOURCEID,
     ENROLMENTDATE: StorageKeys.ENROLMENTDATE,
-    BASE_URI: StorageKeys.BASE_URI
+    BASE_URI: StorageKeys.BASE_URI,
+    STUDY_CODE: StorageKeys.STUDY_CODE,
   }
 
   constructor(
     public storage: StorageService,
     private token: TokenService,
     private http: HttpClient
-  ) {}
+  ) { }
 
   init(user: User) {
     return Promise.all([
@@ -74,6 +75,10 @@ export class SubjectConfigService {
     return this.storage.set(this.SUBJECT_CONFIG_STORE.BASE_URI, uri)
   }
 
+  setStudyCode(studyCode) {
+    return this.storage.set(this.SUBJECT_CONFIG_STORE.STUDY_CODE, studyCode)
+  }
+
   getParticipantID(): Promise<String> {
     return this.storage.get(this.SUBJECT_CONFIG_STORE.PARTICIPANTID)
   }
@@ -100,6 +105,10 @@ export class SubjectConfigService {
 
   getBaseUrl(): Promise<String> {
     return this.storage.get(this.SUBJECT_CONFIG_STORE.BASE_URI)
+  }
+
+  getStudyCode(): Promise<String> {
+    return this.storage.get(this.SUBJECT_CONFIG_STORE.STUDY_CODE)
   }
 
   getKafkaObservationKey() {
@@ -133,10 +142,10 @@ export class SubjectConfigService {
       this.http
         .post(
           uri +
-            DefaultManagementPortalURI +
-            DefaultSubjectsURI +
-            subject +
-            '/sources',
+          DefaultManagementPortalURI +
+          DefaultSubjectsURI +
+          subject +
+          '/sources',
           DefaultSourceTypeRegistrationBody,
           {
             headers
@@ -148,13 +157,13 @@ export class SubjectConfigService {
 
   reset() {
     return Promise.all([
+      this.token.reset(),
       this.setParticipantID(null),
       this.setParticipantLogin(null),
       this.setEnrolmentDate(null),
       this.setProjectName(null),
       this.setSourceID(null),
       this.setBaseUrl(null),
-      this.token.setTokens(null),
       this.setParticipantAttributes(null)
     ])
   }

@@ -101,6 +101,20 @@
 
     <div class="size-static footer">
       <div
+        *ngIf="showCompleted && (studyPortalReturnUrl | async)"
+        class="ion-padding"
+      >
+        <ion-button
+          ion-button
+          class="bt bt--full"
+          round
+          full
+          (click)="openStudyPortal()"
+        >
+        {{ 'BTN_RETURN_PORTAL' | translate }}
+        </ion-button>
+      </div>
+      <div
         *ngIf="getIsStartButtonShown() && (sortedTasks | async)?.size"
         class="ion-padding"
       >

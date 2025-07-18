@@ -25,6 +25,10 @@ export class DefaultKeyConverterService extends KeyConverterService {
   }
 
   async getSchema(topic) {
+    if (!this.BASE_URI) {
+      this.schemas = {}
+      return this.updateURI().then(() => this.getSchema(topic));
+    }
     if (this.schemas[topic]) return Promise.resolve(this.schemas[topic])
     else {
       const versionStr = this.URI_version + 'latest'

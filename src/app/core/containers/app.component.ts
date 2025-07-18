@@ -16,7 +16,7 @@ export class AppComponent {
   rootPage = SplashPageComponent
   isAppInitialized: boolean
 
-  constructor(private platform: Platform, private token: TokenService) {
+  constructor(private platform: Platform) {
     register()
     this.platform.ready().then(() => {
       if (Capacitor.isPluginAvailable('TextZoom')) TextZoom.set({ value: 1 })

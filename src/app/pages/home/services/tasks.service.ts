@@ -6,7 +6,8 @@ import {
   DefaultOnDemandAssessmentIcon,
   DefaultPlatformInstance,
   DefaultShowTaskCalendarName,
-  DefaultShowTaskInfo
+  DefaultShowTaskInfo,
+  DefaultEndPoint
 } from '../../../../assets/data/defaultConfig'
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
 import { RemoteConfigService } from '../../../core/services/config/remote-config.service'
@@ -159,6 +160,12 @@ export class TasksService {
     return setDateTimeToMidnight(new Date())
   }
 
+  getAutoSendCachedData() {
+    return this.remoteConfig
+      .read()
+      .then(config => config.getOrDefault(ConfigKeys.AUTO_SEND_CACHED_DATA, 'false'))
+  }
+
   getPlatformInstanceName() {
     return this.remoteConfig
       .read()
@@ -238,5 +245,13 @@ export class TasksService {
 
       return streak
     })
+  }
+
+  getPortalReturnUrl() {
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        config.get(ConfigKeys.PLATFORM_RETURN_URL)
+      )
   }
 }

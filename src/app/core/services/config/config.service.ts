@@ -15,7 +15,6 @@ import {
 import { AssessmentType } from '../../../shared/models/assessment'
 import { NotificationActionType } from '../../../shared/models/notification-handler'
 import { User } from '../../../shared/models/user'
-import { AppServerService } from '../app-server/app-server.service'
 import { KafkaService } from '../kafka/kafka.service'
 import { LocalizationService } from '../misc/localization.service'
 import { LogService } from '../misc/log.service'
@@ -28,6 +27,7 @@ import { ProtocolService } from './protocol.service'
 import { QuestionnaireService } from './questionnaire.service'
 import { RemoteConfigService } from './remote-config.service'
 import { SubjectConfigService } from './subject-config.service'
+import { TokenService } from '../token/token.service'
 
 @Injectable({
   providedIn: 'root'
@@ -48,7 +48,7 @@ export class ConfigService {
     private logger: LogService,
     private remoteConfig: RemoteConfigService,
     private messageHandlerService: MessageHandlerService,
-    private healthKitService: HealthkitService
+    private token: TokenService
   ) {
     this.notifications.init()
   }
@@ -323,7 +323,8 @@ export class ConfigService {
       this.schedule.reset(),
       this.notifications.reset(),
       this.localization.init(),
-      this.healthKitService.reset()
+      this.analytics.reset(),
+      this.token.forceRefresh(),
     ])
   }
 
@@ -365,6 +366,10 @@ export class ConfigService {
       lastUploadDate: this.kafka.getLastUploadDate(),
       lastNotificationUpdate: this.notifications.getLastNotificationUpdate()
     }
+  }
+
+  getKafkaService() {
+    return this.kafka
   }
 
   sendConfigChangeEvent(type, previous?, current?, error?, data?) {

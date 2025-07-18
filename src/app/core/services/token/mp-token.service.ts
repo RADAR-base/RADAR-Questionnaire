@@ -13,6 +13,7 @@ import { RemoteConfigService } from '../config/remote-config.service'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 import { TokenService } from './token.service'
+import { AuthType } from 'src/app/shared/models/auth'
 
 @Injectable({
   providedIn: 'root'
@@ -56,6 +57,12 @@ export class MPTokenService extends TokenService {
         this.setTokens(res)
         return res
       })
+  }
+
+  updateTokenServiceByType(authType: AuthType) { }
+
+  forceRefresh(): Promise<any> {
+    return this.refresh()
   }
 
 }

@@ -29,4 +29,8 @@ export abstract class QuestionnaireProcessorService {
   getProgress() {
     return this.kafka.eventCallback$
   }
+
+  resetProgress() {
+    this.kafka.resetProgress()
+  }
 }

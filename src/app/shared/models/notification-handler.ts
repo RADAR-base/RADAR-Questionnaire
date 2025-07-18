@@ -12,7 +12,8 @@ export enum NotificationActionType {
   SCHEDULE_ALL,
   TEST,
   CANCEL_ALL,
-  CANCEL_SINGLE
+  CANCEL_SINGLE,
+  SEND_ERROR
 }
 
 export interface SingleNotification {

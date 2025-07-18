@@ -50,6 +50,7 @@
             [questions]="questions"
             [task]="task"
             (exit)="handleFinish()"
+            (processingComplete)="handleProcessingComplete()"
           ></finish>
           <finish-and-launch
             *ngIf="showFinishScreen && showFinishAndLaunchScreen"

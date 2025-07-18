@@ -31,6 +31,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   changeDetectionListener: Subscription = new Subscription()
   cacheProgressSubscription: Subscription = new Subscription()
   lastTaskRefreshTime = Date.now()
+  streakDays = 1
 
   showCalendar = false
   showCompleted = false
@@ -77,6 +78,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
       .ready()
       .then(() => this.tasksService.init().then(() => {
         this.init()
+        this.getStreak()
         this.tasksService.getAutoSendCachedData().then(autoSendCachedData => {
           if (autoSendCachedData === 'true') {
             this.sendCachedData()
@@ -263,6 +265,12 @@ export class HomePageComponent implements OnInit, OnDestroy {
     )
   }
 
+  getStreak() {
+    this.tasksService.getStreakDays().then(streak => {
+      this.streakDays = streak
+    })
+  }
+
   async sendCachedData() {
     const kafkaService = this.configService.getKafkaService()
     const cacheSize = await kafkaService.getCacheSize()
@@ -341,5 +349,5 @@ export class HomePageComponent implements OnInit, OnDestroy {
         })
         console.error('Error sending cached data:', error)
       })
-  }
+    }
 }

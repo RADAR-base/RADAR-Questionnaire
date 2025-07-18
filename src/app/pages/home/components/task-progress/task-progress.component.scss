@@ -182,6 +182,11 @@ $box-shadow2: ();
   text-align: center;
 }
 
+.counter-complete {
+  margin-top: -48vw;
+  text-align: center;
+}
+
 .large {
   font-size: 24vmin;
   line-height: 0;
@@ -194,4 +199,21 @@ $box-shadow2: ();
 
 .container-diary {
   margin-top: 8vh;
+}
+
+.streak-card {
+  padding: 16px;
+  height: 88%;
+  -webkit-border-radius: 8px;
+  border-radius: 30px;
+  background-color: var(--cl-primary-20);
+  width: 50%;
+  margin: auto;
+  margin-top: 24px;
+}
+
+.streak {
+  font-size: 10px;
+  margin-top: -32px;
+  padding-top: -10px;
 }

@@ -271,7 +271,20 @@ export class KafkaService {
   }
 
   sendDataErrorNotification() {
-    return this.notificationService.publish(NotificationActionType.SEND_ERROR)
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        config.getOrDefault(
+          ConfigKeys.SEND_ERROR_NOTIFICATION,
+          'false'
+        )
+      )
+      .then(enabled => {
+        if (enabled === 'true') {
+          return this.notificationService.publish(NotificationActionType.SEND_ERROR)
+        }
+        return Promise.resolve()
+      })
   }
 
   private convertHeaders(headers: HttpHeaders): { [key: string]: string } {

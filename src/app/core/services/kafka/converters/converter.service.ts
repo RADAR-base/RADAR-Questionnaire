@@ -43,7 +43,7 @@ export abstract class ConverterService {
 
   getSchemas(topic) {
     if (!this.BASE_URI) {
-      return this.updateURI().then(() => this.getSchemas(topic));
+      return this.updateURI().then(() => this.getSchemas(topic))
     }
     if (this.schemas[topic]) return this.schemas[topic]
     else {
@@ -138,11 +138,11 @@ export abstract class ConverterService {
   updateURI() {
     return this.token.getURI().then(uri => {
       if (!uri) {
-        throw new Error('Base URI not set. Please complete authentication first.');
+        throw new Error('Base URI not set. Please complete authentication first.')
       }
-      this.BASE_URI = uri;
-      return uri;
-    });
+      this.BASE_URI = uri
+      return uri
+    })
   }
 
   topicExists(topic: string, topics: string[] | null) {

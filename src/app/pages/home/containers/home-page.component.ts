@@ -13,6 +13,7 @@ import { Task, TasksProgress } from '../../../shared/models/task'
 import { checkTaskIsNow } from '../../../shared/utilities/check-task-is-now'
 import { TasksService } from '../services/tasks.service'
 import { HomePageAnimations } from './home-page.animation'
+import { KeepAwake } from '@capacitor-community/keep-awake'
 
 @Component({
   selector: 'page-home',
@@ -31,6 +32,8 @@ export class HomePageComponent implements OnInit, OnDestroy {
   changeDetectionListener: Subscription = new Subscription()
   cacheProgressSubscription: Subscription = new Subscription()
   lastTaskRefreshTime = Date.now()
+
+  DATA_UPLOAD_TIMEOUT = 600_000 // 10 minutes
 
   showCalendar = false
   showCompleted = false
@@ -105,6 +108,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
         this.sendCachedData()
       }
     })
+    KeepAwake.keepAwake()
   }
 
   ionViewWillLeave() {
@@ -112,6 +116,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
     if (this.resumeListener) {
       this.resumeListener.unsubscribe();
     }
+    KeepAwake.allowSleep()
   }
 
   init() {
@@ -210,9 +215,13 @@ export class HomePageComponent implements OnInit, OnDestroy {
     const task = taskCalendarTask ? taskCalendarTask : this.nextTask
 
     if (this.tasksService.isTaskStartable(task)) {
-      this.usage.sendClickEvent('start_questionnaire')
       this.startingQuestionnaire = true
-      this.navCtrl.navigateForward('/questions', { state: task })
+      if (task.name.toLowerCase().includes('healthkit')) {
+        this.navCtrl.navigateForward('/healthkit', { state: task })
+      } else {
+        this.usage.sendClickEvent('start_questionnaire')
+        this.navCtrl.navigateForward('/questions', { state: task })
+      }
     } else {
       this.showMissedInfo()
     }
@@ -264,83 +273,240 @@ export class HomePageComponent implements OnInit, OnDestroy {
     )
   }
 
-  async sendCachedData() {
+  async sendCachedData(): Promise<void> {
     const kafkaService = this.configService.getKafkaService()
     const cacheSize = await kafkaService.getCacheSize()
+
     if (cacheSize < this.MIN_CACHE_SIZE_TO_SEND) {
       return
     }
-    // Create loading overlay with initial message
-    const loading = await this.loadingController.create({
-      message: this.localization.translateKey(LocKeys.HOME_SENDING_DATA_MESSAGE),
+
+    await this.performCacheUpload(kafkaService, cacheSize)
+  }
+
+  private async performCacheUpload(kafkaService: any, cacheSize: number, isRetry: boolean = false): Promise<void> {
+    const loading = await this.createUploadModal(isRetry)
+    await loading.present()
+
+    const uploadContext = this.initializeUploadContext()
+    const modalTimeout = this.setupModalTimeout(loading, kafkaService, cacheSize)
+    const progressSub = this.setupProgressSubscription(loading, uploadContext, isRetry)
+
+    try {
+      const result = await kafkaService.sendAllFromCache()
+      this.handleUploadSuccess(loading, modalTimeout, progressSub, result)
+    } catch (error) {
+      this.handleUploadError(loading, modalTimeout, progressSub, error)
+    }
+  }
+
+  private async createUploadModal(isRetry: boolean = false) {
+    const message = this.buildInitialModalMessage(isRetry)
+
+    return await this.loadingController.create({
+      message,
       spinner: 'lines',
       backdropDismiss: false
     })
-    await loading.present()
+  }
 
-    // Subscribe to progress updates
-    const startTime = Date.now()
-    const progressSub = kafkaService.eventCallback$.subscribe({
-      next: (progress: number) => {
-        const progressDisplay = Math.min(Math.max(Math.ceil(progress * 100), 1), 99)
+  private buildInitialModalMessage(isRetry: boolean): string {
+    let message = this.localization.translateKey(LocKeys.HOME_SENDING_DATA_MESSAGE)
 
-        let message = this.localization.translateKey(LocKeys.HOME_SENDING_DATA_MESSAGE)
-        message += `<br><br><strong>${this.localization.translateKey(LocKeys.HOME_SENDING_DATA_PROGRESS)}: ${progressDisplay}%</strong>`
+    if (isRetry) {
+      message += '<br><strong>Retrying...</strong>'
+    }
 
-        // Calculate time remaining
-        const elapsedTime = (Date.now() - startTime) / 1000
-        const remainingTime = isFinite(elapsedTime * (100 - progressDisplay) / progressDisplay)
-          ? (elapsedTime * (100 - progressDisplay)) / progressDisplay
-          : 0
+    return message
+  }
 
-        let etaText = ''
-        if (remainingTime >= 60) {
-          const minutes = Math.floor(remainingTime / 60)
-          const seconds = Math.round(remainingTime % 60)
-          etaText = `About ${minutes} minute${minutes > 1 ? 's' : ''} and ${seconds} second${seconds !== 1 ? 's' : ''} remaining`
-        } else if (remainingTime > 0) {
-          etaText = `About ${remainingTime.toFixed(0)} second${remainingTime.toFixed(0) !== '1' ? 's' : ''} remaining`
-        }
-        message += `<br>${etaText}`
+  private initializeUploadContext() {
+    return {
+      startTime: Date.now(),
+      lastProgressUpdate: 0
+    }
+  }
 
-        loading.message = message
-      },
-      error: (error) => {
+  private setupModalTimeout(loading: any, kafkaService: any, cacheSize: number): NodeJS.Timeout {
+    return setTimeout(() => {
+      if (loading) {
         loading.dismiss()
-        this.alertService.showAlert({
-          header: this.localization.translateKey(LocKeys.HOME_SENDING_DATA_ERROR_TITLE),
-          message: this.localization.translateKey(LocKeys.HOME_SENDING_DATA_ERROR_MESSAGE),
-          buttons: [
-            {
-              text: this.localization.translateKey(LocKeys.BTN_OKAY),
-              handler: () => { }
-            }
-          ]
-        })
-        console.error('Error in progress tracking:', error)
+        this.showTimeoutRetryDialog(kafkaService, cacheSize)
       }
-    })
+    }, this.DATA_UPLOAD_TIMEOUT)
+  }
 
-    // Send cached data asynchronously
-    kafkaService.sendAllFromCache()
-      .then(() => {
-        progressSub.unsubscribe()
-        loading.dismiss()
-      })
-      .catch((error) => {
-        progressSub.unsubscribe()
-        loading.dismiss()
-        this.alertService.showAlert({
-          header: this.localization.translateKey(LocKeys.HOME_SENDING_DATA_ERROR_TITLE),
-          message: this.localization.translateKey(LocKeys.HOME_SENDING_DATA_ERROR_MESSAGE),
-          buttons: [
-            {
-              text: this.localization.translateKey(LocKeys.BTN_OKAY),
-              handler: () => { }
-            }
-          ]
-        })
-        console.error('Error sending cached data:', error)
-      })
+  private setupProgressSubscription(loading: any, context: any, isRetry: boolean) {
+    return this.configService.getKafkaService().eventCallback$.subscribe({
+      next: (progress: number) => this.handleProgressUpdate(loading, context, progress, isRetry),
+      error: (error) => this.handleProgressError(loading, error)
+    })
+  }
+
+  private handleProgressUpdate(loading: any, context: any, progress: number, isRetry: boolean): void {
+    try {
+      const validatedProgress = this.validateProgress(progress, context.lastProgressUpdate)
+      const progressDisplay = this.calculateProgressDisplay(validatedProgress)
+      context.lastProgressUpdate = progressDisplay
+
+      const message = this.buildProgressMessage(progressDisplay, context.startTime, isRetry)
+      this.updateModalMessage(loading, message)
+    } catch (error) {
+      console.error('Error updating progress display:', error)
+    }
+  }
+
+  private validateProgress(progress: number, lastUpdate: number): number {
+    return (isNaN(progress) || progress < 0) ? lastUpdate : progress
+  }
+
+  private calculateProgressDisplay(progress: number): number {
+    return Math.min(Math.max(Math.ceil(progress * 100), 1), 99)
+  }
+
+  private buildProgressMessage(progressDisplay: number, startTime: number, isRetry: boolean): string {
+    let message = this.localization.translateKey(LocKeys.HOME_SENDING_DATA_MESSAGE)
+    message += `<br><br><strong>${this.localization.translateKey(LocKeys.HOME_SENDING_DATA_PROGRESS)}: ${progressDisplay}%</strong>`
+
+    const etaText = this.calculateTimeRemaining(progressDisplay, startTime)
+    message += `<br>${etaText} `
+
+    if (isRetry) {
+      message += '<br><strong>Retrying...</strong>'
+    }
+
+    return message
+  }
+
+  private calculateTimeRemaining(progressDisplay: number, startTime: number): string {
+    const elapsedTime = (Date.now() - startTime) / 1000
+    const remainingTime = isFinite(elapsedTime * (100 - progressDisplay) / progressDisplay)
+      ? (elapsedTime * (100 - progressDisplay)) / progressDisplay
+      : 0
+
+    if (remainingTime >= 60) {
+      const minutes = Math.floor(remainingTime / 60)
+      const seconds = Math.round(remainingTime % 60)
+      return `About ${minutes} minute${minutes > 1 ? 's' : ''} and ${seconds} second${seconds !== 1 ? 's' : ''} remaining`
+    } else if (remainingTime > 0) {
+      return `About ${remainingTime.toFixed(0)} second${remainingTime.toFixed(0) !== '1' ? 's' : ''} remaining`
+    }
+
+    return ''
+  }
+
+  private updateModalMessage(loading: any, message: string): void {
+    setTimeout(() => {
+      if (loading) {
+        loading.message = message
+      }
+    }, 0)
+  }
+
+  private handleProgressError(loading: any, error: any): void {
+    if (loading) {
+      loading.dismiss()
+    }
+
+    this.showErrorAlert(
+      this.localization.translateKey(LocKeys.HOME_SENDING_DATA_ERROR_TITLE),
+      this.localization.translateKey(LocKeys.HOME_SENDING_DATA_ERROR_MESSAGE)
+    )
+
+    console.error('Error in progress tracking:', error)
+  }
+
+  private handleUploadSuccess(loading: any, modalTimeout: NodeJS.Timeout, progressSub: any, result: any): void {
+    this.cleanupUploadResources(modalTimeout, progressSub, loading)
+
+    if (result.cancelled) {
+      console.log('Upload was cancelled')
+    } else {
+      this.showUploadCompletionAlert(result)
+    }
+  }
+
+  private handleUploadError(loading: any, modalTimeout: NodeJS.Timeout, progressSub: any, error: any): void {
+    this.cleanupUploadResources(modalTimeout, progressSub, loading)
+
+    this.showErrorAlert(
+      this.localization.translateKey(LocKeys.HOME_SENDING_DATA_ERROR_TITLE),
+      this.localization.translateKey(LocKeys.HOME_SENDING_DATA_ERROR_MESSAGE)
+    )
+
+    console.error('Error sending cached data:', error)
+  }
+
+  private cleanupUploadResources(modalTimeout: NodeJS.Timeout, progressSub: any, loading: any): void {
+    clearTimeout(modalTimeout)
+    progressSub.unsubscribe()
+
+    if (loading) {
+      loading.dismiss()
+    }
+  }
+
+  private showUploadCompletionAlert(result: any): void {
+    const failedText = result.failedKeys.length > 0 ? ` (${result.failedKeys.length} failed)` : ''
+    const message = `Successfully uploaded ${result.successKeys.length} items${failedText}.`
+
+    this.showSuccessAlert('Upload Complete', message)
+  }
+
+  private showSuccessAlert(header: string, message: string): void {
+    this.alertService.showAlert({
+      header,
+      message,
+      buttons: [
+        {
+          text: this.localization.translateKey(LocKeys.BTN_OKAY),
+          handler: () => { }
+        }
+      ]
+    })
+  }
+
+  private showErrorAlert(header: string, message: string): void {
+    this.alertService.showAlert({
+      header,
+      message,
+      buttons: [
+        {
+          text: this.localization.translateKey(LocKeys.BTN_OKAY),
+          handler: () => { }
+        }
+      ]
+    })
+  }
+
+  private showTimeoutRetryDialog(kafkaService: any, cacheSize: number): void {
+    kafkaService.cancelCacheSending()
+
+    this.alertService.showAlert({
+      header: 'Upload Timeout',
+      message: 'The upload is taking longer than expected. This might be due to poor network connection or server issues. Would you like to retry?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Upload cancelled by user after timeout')
+          }
+        },
+        {
+          text: 'Retry',
+          handler: () => this.scheduleRetryAttempt(kafkaService, cacheSize)
+        }
+      ]
+    })
+  }
+
+  private scheduleRetryAttempt(kafkaService: any, cacheSize: number): void {
+    console.log('User requested retry, waiting for cleanup...')
+
+    setTimeout(() => {
+      console.log('Starting retry attempt...')
+      this.performCacheUpload(kafkaService, cacheSize, true)
+    }, 2000)
   }
 }

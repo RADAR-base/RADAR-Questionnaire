@@ -14,12 +14,12 @@ import { getSeconds } from 'src/app/shared/utilities/time'
 import { LogService } from '../../misc/log.service'
 import { TokenService } from '../../token/token.service'
 import { ConverterService } from './converter.service'
-import { HealthkitService } from 'src/app/pages/questions/services/healthkit.service'
 import { StorageService } from '../../storage/storage.service'
 import { StorageKeys } from 'src/app/shared/enums/storage'
 import { KeyConverterService } from './key-converter.service'
 import { Utility } from 'src/app/shared/utilities/util'
 import { RemoteConfigService } from '../../config/remote-config.service'
+import { HealthkitService } from 'src/app/pages/tasks/healthkit/services/healthkit.service'
 
 @Injectable()
 export class HealthkitConverterService extends ConverterService {

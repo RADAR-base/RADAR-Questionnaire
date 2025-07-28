@@ -22,8 +22,6 @@ import { Utility } from '../../../shared/utilities/util'
 import { AnswerService } from './answer.service'
 import { TimestampService } from './timestamp.service'
 import { DefaultQuestionnaireProcessorService } from './questionnaire-processor/default-questionnaire-processor.service'
-import { HealthQuestionnaireProcessorService } from './questionnaire-processor/health-questionnaire-processor.service'
-import { QuestionnaireProcessorService } from './questionnaire-processor/questionnaire-processor.service'
 
 @Injectable({
   providedIn: 'root'
@@ -41,19 +39,16 @@ export class QuestionsService {
   )
   DELIMITER = ','
   isProgressCountShown = false
-  questionnaireProcessor: any
 
   constructor(
     public questionnaire: QuestionnaireService,
     private answerService: AnswerService,
     private timestampService: TimestampService,
     private localization: LocalizationService,
-    private defaultQuestionnaireProcessor: DefaultQuestionnaireProcessorService,
-    private healthProcessor: HealthQuestionnaireProcessorService,
+    private questionnaireProcessor: DefaultQuestionnaireProcessorService,
     private remoteConfig: RemoteConfigService,
     private util: Utility
   ) {
-    this.questionnaireProcessor = this.defaultQuestionnaireProcessor
   }
 
   getKafkaService() {
@@ -90,7 +85,6 @@ export class QuestionsService {
   reset() {
     this.answerService.reset()
     this.timestampService.reset()
-    this.questionnaireProcessor = this.defaultQuestionnaireProcessor
   }
 
   deleteLastAnswer() {
@@ -283,7 +277,6 @@ export class QuestionsService {
 
   processCompletedQuestionnaire(task, questions): Promise<any> {
     const type = task.type
-    this.initQuestionnaireProcessor(task.name)
     return this.questionnaire
       .getAssessmentForTask(type, task)
       .then(assessment =>
@@ -293,14 +286,6 @@ export class QuestionsService {
           assessment.questionnaire
         )
       )
-  }
-
-  initQuestionnaireProcessor(name) {
-    if (name.toLowerCase().includes(DefaultHealthkitQuestionnaireKey)) {
-      this.questionnaireProcessor = this.healthProcessor
-    } else {
-      this.questionnaireProcessor = this.defaultQuestionnaireProcessor
-    }
   }
 
   getIsProgressCountShown() {

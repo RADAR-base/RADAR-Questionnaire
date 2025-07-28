@@ -104,8 +104,41 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
   }
 
   retryProcessing(): void {
-    this.resetProcessingState()
-    this.startHealthDataCollection()
+    this.resetUIState()
+    this.performCacheUploadOnly()
+  }
+
+  private resetUIState(): void {
+    this.isDataProcessing = false
+    this.dataProcessingComplete = false
+    this.hasProcessingError = false
+    this.currentProgress = 0
+    this.progressMessage = ''
+    this.statusMessage = 'Retrying upload...'
+
+    this.uploadStartTime = 0
+    this.lastProgressUpdate = 0
+
+  }
+
+  private async performCacheUploadOnly(): Promise<void> {
+    this.isDataProcessing = true
+    this.currentProgress = 0
+    this.progressMessage = 'Retrying upload...'
+    this.statusMessage = 'Uploading remaining health data...'
+
+    const context = this.initializeProcessingContext()
+    const processingTimeout = this.setupProcessingTimeout()
+
+    try {
+      this.setupProgressTracking(context)
+
+      await this.healthProcessor.sendAllFromCache()
+
+      this.handleProcessingSuccess(processingTimeout)
+    } catch (error) {
+      this.handleProcessingError(processingTimeout, error)
+    }
   }
 
   // Private initialization methods
@@ -114,7 +147,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       this.statusMessage = 'Checking HealthKit support...'
       await this.healthkitService.checkHealthkitSupported()
       this.isHealthKitSupported = true
-      this.statusMessage = `We will collect your physical activity, and related Apple Health data (e.g., heart rate). Tap 'Finish' to initiate the data retrieval process.`
+      this.statusMessage = `We will collect your physical activity, and related Apple Health data (e.g., heart rate). Tap the button below to initiate the data retrieval process.`
       this.usage.sendGeneralEvent(UsageEventType.APP_OPEN)
     } catch (error) {
       this.isHealthKitSupported = false
@@ -143,7 +176,13 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       // Step 2: Process stored health data (like questions page does)
       await this.processStoredHealthData(context)
 
-      this.handleProcessingSuccess(processingTimeout)
+      // Check cache size
+      const cacheSize = await this.healthProcessor.getCacheSize()
+      if (cacheSize > 1) {
+        this.handleProcessingError(processingTimeout, new Error('Some data failed to send'))
+      } else {
+        this.handleProcessingSuccess(processingTimeout)
+      }
     } catch (error) {
       this.handleProcessingError(processingTimeout, error)
     }
@@ -450,7 +489,6 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
     this.uploadStartTime = 0
     this.lastProgressUpdate = 0
 
-    // Clear cached health data (similar to AnswerService.reset())
     this.healthAnswers = {}
     this.healthTimestamps = {}
   }

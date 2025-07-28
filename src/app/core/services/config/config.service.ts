@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core'
 import { compare } from 'compare-versions'
-import { HealthkitService } from 'src/app/pages/questions/services/healthkit.service'
 
 import {
   DefaultAppVersion,

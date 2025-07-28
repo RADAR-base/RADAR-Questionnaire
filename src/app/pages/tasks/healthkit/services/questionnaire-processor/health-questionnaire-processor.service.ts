@@ -179,4 +179,12 @@ export class HealthQuestionnaireProcessorService extends QuestionnaireProcessorS
   isValidDataType(key: HealthkitDataType) {
     return HealthkitStringDataTypes.has(key) || HealthkitFloatDataTypes.has(key)
   }
+
+  sendAllFromCache() {
+    return this.kafka.sendAllFromCache()
+  }
+
+  getCacheSize() {
+    return this.kafka.getCacheSize()
+  }
 }

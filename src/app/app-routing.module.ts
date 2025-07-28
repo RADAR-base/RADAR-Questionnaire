@@ -20,6 +20,11 @@ const routes: Routes = [
       import('./pages/on-demand/on-demand.module').then(m => m.OnDemandModule)
   },
   {
+    path: 'healthkit',
+    loadChildren: () =>
+      import('./pages/tasks/healthkit/healthkit.module').then(m => m.HealthkitModule)
+  },
+  {
     path: 'settings',
     loadChildren: () =>
       import('./pages/settings/settings.module').then(m => m.SettingsModule)

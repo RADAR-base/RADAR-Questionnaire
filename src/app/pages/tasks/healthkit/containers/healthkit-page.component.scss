@@ -1,0 +1,323 @@
+swiper-slide.swiper-slide {
+  align-items: flex-start;
+}
+
+swiper-slide {
+  overflow-x: hidden !important;
+  padding: 24px 24px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+  width: 95vw;
+  height: 99%;
+}
+
+swiper-container {
+  height: 95vh;
+}
+
+.center {
+  text-align: center;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.slide-flex {
+  flex: 1;
+  height: 100%;
+}
+
+.hidden {
+  display: none;
+}
+
+.q-container {
+  width: 88vw;
+}
+
+.matrixGroup {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.header-section {
+  text-align: center;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  
+  ion-icon {
+    margin-bottom: 0.5rem;
+  }
+  
+  h2 {
+    margin: 0.5rem 0;
+    color: var(--ion-color-primary);
+    opacity: 0.8;
+    font-weight: 600;
+  }
+  
+  .status-message {
+    color: var(--ion-color-light);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+}
+
+ion-card {
+  margin-bottom: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  color: var(--cl-light);
+  background-color: var(--cl-primary-20);
+
+  ion-card-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--cl-light);
+  }
+  
+  ion-card-content {
+    padding: 1rem;
+    color: var(--cl-light); 
+    
+    p {
+      margin: 0.5rem 0;
+      line-height: 1.4;
+      color: var(--cl-light);
+    }
+    
+    ol {
+      padding-left: 1.2rem;
+      color: var(--cl-light);
+      
+      li {
+        margin-bottom: 0.5rem;
+        line-height: 1.4;
+        color: var(--cl-light);
+      }
+    }
+  }
+}
+
+.progress-container {
+  margin-bottom: 1rem;
+  
+  ion-progress-bar {
+    height: 8px;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+  }
+  
+  .progress-text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--cl-light);
+    
+    .progress-percentage {
+      font-weight: 600;
+      color: var(--cl-light);
+      font-size: 1.1rem;
+    }
+  }
+  
+  .progress-details {
+    background-color: rgba(var(--cl-light), 0.1);
+    border-radius: 8px;
+    padding: 0.75rem;
+    margin-top: 0.5rem;
+    
+    .progress-status {
+      text-align: center;
+      color: var(--cl-light);
+      line-height: 1.4;
+      font-size: 0.9rem;
+      
+      strong {
+        color: var(--cl-light); 
+        font-weight: 600;
+      }
+      
+      small {
+        font-size: 0.8rem;
+        opacity: 0.9; 
+        color: var(--cl-light);
+        
+        strong {
+          color: var(--ion-color-primary-contrast); 
+        }
+      }
+    }
+  }
+}
+
+.processing-status,
+.success-status,
+.error-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  
+  span {
+    font-weight: 500;
+  }
+}
+
+.processing-status {
+  background-color: rgba(var(--ion-color-primary), 0.1);
+  color: var(--cl-light);
+}
+
+.success-status {
+  background-color: rgba(var(--ion-color-success-rgb), 0.1);
+  color: var(--ion-color-success);
+}
+
+.error-status {
+  background-color: rgba(var(--ion-color-danger-rgb), 0.1);
+  color: var(--ion-color-danger);
+}
+
+.action-buttons {
+  margin-top: 2rem;
+  padding-bottom: 2rem;
+  
+  ion-button {
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .header-section {
+    padding: 0.5rem;
+    
+    h2 {
+      font-size: 1.3rem;
+    }
+  }
+  
+  ion-card {
+    margin-bottom: 0.75rem;
+  }
+  
+  .action-buttons {
+    margin-top: 1.5rem;
+  }
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+  ion-card {
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+  }
+  
+  .processing-status {
+    background-color: rgba(var(--ion-color-primary), 0.2);
+  }
+  
+  .success-status {
+    background-color: rgba(var(--ion-color-success-rgb), 0.2);
+  }
+  
+  .error-status {
+    background-color: rgba(var(--ion-color-danger-rgb), 0.2);
+  }
+}
+
+// Animation for progress updates
+.progress-container {
+  transition: all 0.3s ease;
+}
+
+ion-progress-bar {
+  transition: all 0.5s ease;
+}
+
+// Button animations
+ion-button {
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-1px);
+  }
+}
+
+// Loading spinner animation
+.processing-status ion-spinner {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.toolbar {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+
+  .icon {
+    font-size: 24px;
+  }
+}
+
+ion-button {
+  color: var(--ion-font);
+  font-size: 16px;
+  &.disabled,
+  &.disabled:hover {
+    color: var(--cl-light-40);
+    opacity: 0.4;
+  }
+  --border-width: 0px;
+  --background: transparent;
+  --padding-start: 8px;
+  --padding-end: 8px;
+  text-transform: uppercase;
+  --ripple-color: transparent;
+  --background-hover: transparent;
+  --background-activated: transparent;
+}
+
+ion-icon {
+  padding-right: 4px;
+  padding-left: 4px;
+  padding-top: 4px;
+  font-size: 21px;
+}
+
+.toolbar-label {
+  height: 12px;
+}
+
+ion-toolbar {
+  --background: var(--ion-color-secondary);
+}

@@ -43,6 +43,7 @@ export class KafkaService {
 
   private KAFKA_CLIENT_URL: string
   private isCacheSending: boolean
+  private cancelSending: boolean = false // Add flag to cancel sending
   private topics: string[] = []
   private lastTopicFetch: number = 0
   private TOPIC_CACHE_VALIDITY = KafkaService.DEFAULT_TOPIC_CACHE_VALIDITY
@@ -169,9 +170,13 @@ export class KafkaService {
   }
 
   async sendAllFromCache(): Promise<any> {
-    if (this.isCacheSending) return Promise.resolve([])
+    if (this.isCacheSending) {
+      return Promise.resolve([])
+    }
 
+    this.logger.log('Starting cache send process')
     this.setCacheSending(true)
+    this.cancelSending = false // Reset cancel flag
     const successKeys: string[] = []
     const failedKeys: string[] = []
 
@@ -191,44 +196,95 @@ export class KafkaService {
       const limit = pLimit(KafkaService.CONCURRENCY_LIMIT)
 
       for (let i = 0; i < entries.length; i += KafkaService.BATCH_SIZE) {
+        if (this.cancelSending) {
+          this.logger.log('Cache sending cancelled by user')
+          break
+        }
+
         const batch = entries.slice(i, i + KafkaService.BATCH_SIZE)
         this.logger.log(`Processing batch ${i / KafkaService.BATCH_SIZE + 1} of ${Math.ceil(entries.length / KafkaService.BATCH_SIZE)}`)
 
+        const batchSuccessKeys: string[] = []
+        const batchFailedKeys: string[] = []
+
         const batchPromises = batch.map(([k, v]) =>
           limit(async () => {
+            if (this.cancelSending) {
+              throw new Error('Cache sending cancelled')
+            }
+
             try {
               const record = await this.convertEntryToRecord(kafkaKey, k, v)
               if (record.record.records.length === 0) {
-                successKeys.push(k)
+                batchSuccessKeys.push(k)
                 this.logger.log('Kafka record is empty, skipping sending')
                 return
               }
               await this.sendToKafka(record.topic, record.record, headers)
-              successKeys.push(k)
+              batchSuccessKeys.push(k)
             } catch (e) {
-              failedKeys.push(k)
+              if (e.message === 'Cache sending cancelled') {
+                throw e
+              }
+              batchFailedKeys.push(k)
               this.logger.error('Failed to send data from cache to kafka', e)
-            } finally {
-              await this.cache.removeFromCacheMultiple(successKeys)
-              this.updateProgress(++this.progress, this.cacheSize)
             }
           })
         )
 
-        await Promise.all(batchPromises)
+        try {
+          await Promise.all(batchPromises)
+        } catch (error) {
+          if (error.message === 'Cache sending cancelled') {
+            this.logger.log('Batch processing cancelled')
+            break
+          }
+        }
+
+        if (batchSuccessKeys.length > 0) {
+          try {
+            await this.cache.removeFromCacheMultiple(batchSuccessKeys)
+            successKeys.push(...batchSuccessKeys)
+            this.logger.log(`Removed ${batchSuccessKeys.length} successfully sent items from cache`)
+          } catch (error) {
+            this.logger.error('Failed to remove items from cache:', error)
+            successKeys.push(...batchSuccessKeys)
+          }
+        }
+
+        failedKeys.push(...batchFailedKeys)
+
+        if (!this.cancelSending) {
+          this.progress += (batchSuccessKeys.length + batchFailedKeys.length)
+          this.updateProgress(this.progress, this.cacheSize)
+        }
       }
 
-      this.updateProgress(this.cacheSize, this.cacheSize)
+      if (!this.cancelSending) {
+        this.updateProgress(this.cacheSize, this.cacheSize)
+      }
+
       if (failedKeys.length > KafkaService.SEND_ERROR_NOTIFICATION_THRESHOLD) {
         await this.sendDataErrorNotification()
       }
-      return { successKeys, failedKeys }
+
+      const result = {
+        successKeys,
+        failedKeys,
+        cancelled: this.cancelSending
+      }
+
+      this.logger.log(`Cache send completed. Success: ${successKeys.length}, Failed: ${failedKeys.length}, Cancelled: ${this.cancelSending}`)
+      return result
     } catch (error) {
       this.setCacheSending(false)
+      this.cancelSending = false
       this.logger.error('Error in sendAllFromCache:', error)
       throw error
     } finally {
       this.setCacheSending(false)
+      this.cancelSending = false
+      this.logger.log('Cache send process finished, flags reset')
     }
   }
 
@@ -254,8 +310,18 @@ export class KafkaService {
   }
 
   updateProgress(progress, cacheSize) {
-    const normalizedProgress = progress / cacheSize
-    this.progressSubject.next(normalizedProgress)
+    try {
+      const normalizedProgress = Math.min(Math.max(progress / cacheSize, 0), 1)
+
+      setTimeout(() => {
+        this.progressSubject.next(normalizedProgress)
+      }, 0)
+    } catch (error) {
+      this.logger.error('Error updating progress:', error)
+      setTimeout(() => {
+        this.progressSubject.next(Math.min(Math.max(progress / cacheSize, 0), 1))
+      }, 0)
+    }
   }
 
   sendEvent(record, eventType, error?) {
@@ -300,6 +366,7 @@ export class KafkaService {
 
   postData(data: any, topic: string, headers: HttpHeaders): Promise<any> {
     const nativeHeaders = this.convertHeaders(headers)
+
     const request = {
       url: `${this.KAFKA_CLIENT_URL}${this.URI_topics}${topic}`,
       data: data,
@@ -307,7 +374,7 @@ export class KafkaService {
       method: 'POST',
     }
 
-    return CapacitorHttp.request(request)
+    const requestPromise = CapacitorHttp.request(request)
       .then(response => {
         if (response.status < 200 || response.status >= 300) {
           throw new HttpErrorResponse({
@@ -319,8 +386,15 @@ export class KafkaService {
       })
       .catch(error => {
         console.error('HTTP request failed:', error)
+
+        if (this.cancelSending) {
+          throw new Error('Request cancelled by user')
+        }
+
         throw new Error(`Failed to send data to Kafka: ${error.message}`)
       })
+
+    return requestPromise
   }
 
   getAccessToken() {
@@ -348,6 +422,12 @@ export class KafkaService {
 
   setCacheSending(val: boolean) {
     this.isCacheSending = val
+  }
+
+  cancelCacheSending() {
+    this.logger.log('Cancelling cache sending process')
+    this.cancelSending = true
+    this.isCacheSending = false
   }
 
   isCacheCurrentlySending(): boolean {

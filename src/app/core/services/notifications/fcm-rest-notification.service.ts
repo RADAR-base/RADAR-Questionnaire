@@ -32,6 +32,7 @@ import { GrabIntentExtras } from 'capacitor-grab-intent-extras'
 
 @Injectable()
 export class FcmRestNotificationService extends FcmNotificationService {
+
   NOTIFICATIONS_PATH = 'messaging/notifications'
   SUBJECT_PATH = 'users'
   PROJECT_PATH = 'projects'
@@ -113,11 +114,8 @@ export class FcmRestNotificationService extends FcmNotificationService {
         .map(t => this.format(t, subject))
       this.logger.log('NOTIFICATIONS Scheduling FCM notifications')
       this.logger.log(fcmNotifications)
-      return Promise.all(
-        fcmNotifications.map(n =>
-          this.sendNotification(n, subject.subjectId, subject.projectId)
-        )
-      )
+      const notifications = fcmNotifications.map(n => n.notificationDto)
+      return this.sendNotificationsBundle({notifications}, subject.subjectId, subject.projectId)
     })
   }
 
@@ -153,19 +151,18 @@ export class FcmRestNotificationService extends FcmNotificationService {
       })
   }
 
-  cancelAllNotifications(subject): Promise<any> {
-    return this.appServerService
-      .pullAllPublishedNotifications(subject)
-      .then((res: FcmNotifications) => {
-        const now = Date.now()
-        const notifications = res.notifications
-          .map(n => ({
-            id: n.id,
-            timestamp: getMilliseconds({ seconds: n.scheduledTime })
-          }))
-          .filter(n => n.timestamp > now)
-        notifications.map(o => this.cancelSingleNotification(subject, o))
+  sendNotificationsBundle(notifications, subjectId, projectId) {
+    return this.appServerService.addNotificationsBundle(notifications, subjectId, projectId)
+      .then((resultNotification: FcmNotificationDto) => {
+        this.setLastNotificationUpdate(Date.now())
+        // notification.notification.id = resultNotification.id
+        // return (notification.notification.messageId =
+        //   resultNotification.fcmMessageId)
       })
+  }
+
+  cancelAllNotifications(subject){
+    return this.appServerService.deleteAllUserNotifications(subject);
   }
 
   cancelSingleNotification(subject, notification: SingleNotification) {

@@ -1759,25 +1759,25 @@ export const Localisations = {
     hb: 'מסיים...'
   },
   HOME_SENDING_DATA_ERROR_TITLE: {
-    en: 'Error',
-    es: 'Error',
-    da: 'Fejl',
-    de: 'Fehler',
-    fr: 'Erreur',
-    it: 'Errore',
-    nl: 'Fout',
-    pl: 'Błąd',
-    hb: 'שגיאה'
+    en: 'Still having trouble?',
+    es: '¿Sigues teniendo problemas?',
+    da: 'Har du stadig problemer?',
+    de: 'Haben Sie immer noch Probleme?',
+    fr: 'Vous avez encore des difficultés ?',
+    it: 'Hai ancora problemi?',
+    nl: 'Heb je nog steeds problemen?',
+    pl: 'Masz nadal problemy?',
+    hb: 'עדיין יש לך בעיות?'
   },
   HOME_SENDING_DATA_ERROR_MESSAGE: {
-    en: 'Failed to send saved data. Please try again later.',
-    es: 'Error al enviar datos guardados. Por favor, inténtelo de nuevo más tarde.',
-    da: 'Kunne ikke sende gemte data. Prøv igen senere.',
-    de: 'Fehler beim Senden gespeicherter Daten. Bitte versuchen Sie es später erneut.',
-    fr: 'Échec de l\'envoi des données sauvegardées. Veuillez réessayer plus tard.',
-    it: 'Impossibile inviare i dati salvati. Riprova più tardi.',
-    nl: 'Kan opgeslagen gegevens niet verzenden. Probeer het later opnieuw.',
-    pl: 'Nie udało się wysłać zapisanych danych. Spróbuj ponownie później.',
-    hb: 'נכשל בשליחת נתונים שמורים. נסה שוב מאוחר יותר.'
+    en: `Please make sure you're connected to the internet and wait 2 hours before starting the task again in the home page.`,
+    es: 'Asegúrate de estar conectado a Internet y espera 2 horas antes de volver a iniciar la tarea en la página principal.',
+    da: 'Sørg for, at du er forbundet til internettet, og vent 2 timer, før du starter opgaven igen på startsiden.',
+    de: 'Bitte stellen Sie sicher, dass Sie mit dem Internet verbunden sind, und warten Sie 2 Stunden, bevor Sie die Aufgabe auf der Startseite erneut starten.',
+    fr: 'Assurez-vous d’être connecté à Internet et attendez 2 heures avant de recommencer la tâche depuis la page d’accueil.',
+    it: 'Assicurati di essere connesso a Internet e attendi 2 ore prima di avviare nuovamente l’attività dalla pagina iniziale.',
+    nl: 'Zorg ervoor dat je verbonden bent met het internet en wacht 2 uur voordat je de taak opnieuw start op de startpagina.',
+    pl: 'Upewnij się, że jesteś podłączony do internetu i odczekaj 2 godziny, zanim ponownie rozpoczniesz zadanie na stronie głównej.',
+    hb: 'ודא שאתה מחובר לאינטרנט והמתן שעתיים לפני שתתחיל שוב את המשימה בעמוד הבית.'
   }
 }

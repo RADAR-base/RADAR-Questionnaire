@@ -35,7 +35,7 @@ import { NotificationActionType } from 'src/app/shared/models/notification-handl
 export class KafkaService {
   private static DEFAULT_TOPIC_CACHE_VALIDITY = 600_000 // 10 minutes
   private static BATCH_SIZE = 10
-  private static CONCURRENCY_LIMIT = 3
+  private static CONCURRENCY_LIMIT = 5
   private static SEND_ERROR_NOTIFICATION_THRESHOLD = 10
 
   URI_topics: string = '/topics/'

@@ -66,6 +66,7 @@
     "@capacitor/ios": "5.7.4",
     "@capacitor/keyboard": "^5.0.8",
     "@capacitor/local-notifications": "^5.0.2",
+    "@capacitor/network": "^7.0.1",
     "@capacitor/splash-screen": "^5.0.2",
     "@capacitor/status-bar": "5.0.7",
     "@capacitor/text-zoom": "^5.0.7",

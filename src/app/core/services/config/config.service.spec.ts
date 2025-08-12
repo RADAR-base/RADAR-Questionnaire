@@ -1,6 +1,6 @@
 import { HttpClient, HttpHandler } from '@angular/common/http'
 import { TestBed } from '@angular/core/testing'
-import { HealthkitService } from 'src/app/pages/questions/services/healthkit.service'
+import { HealthkitService } from 'src/app/pages/tasks/healthkit/services/healthkit.service'
 
 import {
   AppConfigServiceMock,

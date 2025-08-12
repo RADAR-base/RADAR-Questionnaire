@@ -66,6 +66,40 @@ swiper-container {
     font-size: 0.9rem;
     margin: 0;
   }
+  
+  .network-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding: 0.75rem;
+    border-radius: 8px;
+    background-color: rgba(var(--cl-light), 0.1);
+    transition: all 0.3s ease;
+    
+    ion-icon {
+      font-size: 1.2rem;
+      margin: 0;
+    }
+    
+    .network-text {
+      font-size: 0.9rem;
+      font-weight: 500;
+      
+      &.connected {
+        color: var(--ion-color-success);
+      }
+      
+      &.disconnected {
+        color: #ff8a80;
+      }
+    }
+    
+    &:hover {
+      background-color: rgba(var(--cl-light), 0.15);
+    }
+  }
 }
 
 ion-card {
@@ -187,8 +221,8 @@ ion-card {
 }
 
 .error-status {
-  background-color: rgba(var(--ion-color-danger-rgb), 0.1);
-  color: var(--ion-color-danger);
+  background-color: rgba(255, 138, 128, 0.1);
+  color: #ff8a80;
 }
 
 .action-buttons {
@@ -239,7 +273,7 @@ ion-card {
   }
   
   .error-status {
-    background-color: rgba(var(--ion-color-danger-rgb), 0.2);
+    background-color: rgba(255, 138, 128, 0.2);
   }
 }
 
@@ -319,4 +353,19 @@ ion-icon {
 
 ion-toolbar {
   --background: var(--ion-color-secondary);
+}
+
+// Disabled close button styling during data processing
+ion-button[disabled] {
+  opacity: 0.3 !important;
+  pointer-events: none;
+  
+  ion-icon {
+    opacity: 0.5;
+  }
+  
+  .toolbar-label {
+    opacity: 0.5;
+    color: var(--ion-color-medium);
+  }
 }

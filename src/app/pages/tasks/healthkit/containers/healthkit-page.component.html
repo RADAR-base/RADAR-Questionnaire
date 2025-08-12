@@ -4,36 +4,46 @@
     <h2>Healthkit Data Collection</h2>
     <p class="status-message" [innerHTML]="statusMessage">
     </p>
+
+    <!-- Network Status Indicator -->
+    <div class="network-status" *ngIf="!isProcessing">
+      <ion-icon [name]="isNetworkConnected ? 'wifi' : 'wifi-outline'"
+        [color]="isNetworkConnected ? 'success' : 'danger'">
+      </ion-icon>
+      <span class="network-text" [class]="isNetworkConnected ? 'connected' : 'disconnected'">
+        {{ networkStatusInfo }}
+      </span>
+    </div>
   </div>
 
-  <ion-card *ngIf="isDataProcessing || dataProcessingComplete || hasProcessingError">
+  <ion-card *ngIf="showProgressBar">
     <ion-card-header>
       <ion-card-title>
-        <ion-icon name="analytics" *ngIf="!hasProcessingError"></ion-icon>
-        <ion-icon name="alert-circle" color="danger" *ngIf="hasProcessingError"></ion-icon>
+        <ion-icon name="analytics" *ngIf="currentProgress.status !== 'error'"></ion-icon>
+        <ion-icon name="alert-circle" color="danger" *ngIf="currentProgress.status === 'error'"></ion-icon>
         Processing Status
       </ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <div class="progress-container">
-        <ion-progress-bar [value]="currentProgress / 100"
-          [color]="hasProcessingError ? 'danger' : (dataProcessingComplete ? 'success' : 'primary')">
+        <ion-progress-bar [value]="currentProgress.progress / 100"
+          [color]="currentProgress.status === 'error' ? 'danger' : (currentProgress.status === 'complete' ? 'success' : 'primary')">
         </ion-progress-bar>
         <div class="progress-text">
-          <span class="progress-percentage">{{ currentProgress }}%</span>
+          <span class="progress-percentage">{{ currentProgress.progress }}%</span>
         </div>
 
-        <div class="progress-details" *ngIf="progressMessage">
-          <div class="progress-status" [innerHTML]="progressMessage"></div>
+        <div class="progress-details" *ngIf="currentProgress.message">
+          <div class="progress-status" [innerHTML]="currentProgress.message"></div>
         </div>
       </div>
 
-      <div class="processing-status" *ngIf="isDataProcessing">
+      <div class="processing-status" *ngIf="isProcessing">
         <ion-spinner name="lines" color="primary"></ion-spinner>
         <span>Processing health data...</span>
       </div>
 
-      <div class="error-status" *ngIf="hasProcessingError">
+      <div class="error-status" *ngIf="currentProgress.status === 'error'">
         <ion-icon name="alert-circle" color="danger" size="large"></ion-icon>
         <span>An error occurred during processing</span>
       </div>
@@ -46,6 +56,13 @@
       color="primary" (click)="startHealthDataCollection()">
       Tap to Start Data Pull
     </ion-button>
+
+    <ng-container *ngIf="showRetryButton">
+      <ion-button ion-button class="bt bt--full" round full expand="block" size="large" color="primary"
+        (click)="retryProcessing()">
+        Retry Data Pull
+      </ion-button>
+    </ng-container>
   </div>
 
 </ion-content>
@@ -53,9 +70,9 @@
 
 <ion-footer>
   <ion-toolbar>
-    <ion-button ion-button slot="start" icon-left (click)="exitQuestionnaire()">
+    <ion-button ion-button slot="start" icon-left [disabled]="isProcessing" (click)="exitTask()">
       <ion-icon name="close"></ion-icon>
-      <div class="toolbar-label">Exit</div>
+      <div class="toolbar-label">Close</div>
     </ion-button>
   </ion-toolbar>
 </ion-footer>

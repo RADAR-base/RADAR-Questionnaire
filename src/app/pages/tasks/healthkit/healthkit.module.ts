@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms'
 import { RouterModule, Routes } from '@angular/router'
 import { IonicModule } from '@ionic/angular'
 
-import { HealthQuestionnaireProcessorService } from './services/questionnaire-processor/health-questionnaire-processor.service'
+import { HealthQuestionnaireProcessorService } from './services/health-questionnaire-processor.service'
 import { HealthkitPageComponent } from './containers/healthkit-page.component'
 import { ToolbarComponent } from '../../questions/components/toolbar/toolbar.component'
 

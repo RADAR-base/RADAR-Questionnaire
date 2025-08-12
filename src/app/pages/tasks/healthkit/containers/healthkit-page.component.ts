@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core'
 import { Router } from '@angular/router'
 import { KeepAwake } from '@capacitor-community/keep-awake'
+import { Network } from '@capacitor/network'
 import { NavController, Platform } from '@ionic/angular'
 import { Subscription } from 'rxjs'
 
@@ -11,13 +12,16 @@ import { ConfigService } from '../../../../core/services/config/config.service'
 import { UsageEventType } from '../../../../shared/enums/events'
 import { LocKeys } from '../../../../shared/enums/localisations'
 import { Task } from '../../../../shared/models/task'
-import { HealthkitService } from '../services/healthkit.service'
-import { HealthQuestionnaireProcessorService } from '../services/questionnaire-processor/health-questionnaire-processor.service'
+import { HealthkitService, ProgressUpdate } from '../services/healthkit.service'
+import { HealthQuestionnaireProcessorService } from '../services/health-questionnaire-processor.service'
 
-interface HealthDataLoadContext {
-  startTime: number
-  lastProgressUpdate: number
-  currentStage: string
+enum ProcessingState {
+  IDLE = 'idle',
+  COLLECTING = 'collecting',
+  PROCESSING = 'processing',
+  UPLOADING = 'uploading',
+  COMPLETE = 'complete',
+  ERROR = 'error'
 }
 
 @Component({
@@ -26,35 +30,29 @@ interface HealthDataLoadContext {
   styleUrls: ['healthkit-page.component.scss']
 })
 export class HealthkitPageComponent implements OnInit, OnDestroy {
-
-  // Component state
+  // Core state
   task: Task | null = null
   isHealthKitSupported = false
-  isDataProcessing = false
-  dataProcessingComplete = false
-  hasProcessingError = false
+  processingState = ProcessingState.IDLE
+  isNetworkConnected = true
 
-  DATA_UPLOAD_TIMEOUT = 1_200_000 // 20 minutes
+  // Progress and retry state
+  currentProgress: ProgressUpdate = { progress: 0, message: 'Ready', status: 'idle' }
+  private retryAttemptCount = 0
+  private progressBaseOffset = 0
 
-  // UI display values
-  statusMessage = 'Checking HealthKit support...'
-  progressMessage = ''
-  currentProgress = 0
-
-  // Progress tracking for ETA calculation
-  private uploadStartTime = 0
-  private lastProgressUpdate = 0
-
-  // Local storage for health data answers (similar to AnswerService)
-  private healthAnswers: Record<string, any> = {}
-  private healthTimestamps: Record<string, number> = {}
-
+  // Subscriptions
+  private progressSubscription: Subscription = new Subscription()
   private kafkaProgressSubscription: Subscription = new Subscription()
+  private processingTimeout: NodeJS.Timeout | null = null
+
+  // Constants
+  private readonly MAX_RETRY_ATTEMPTS = 5
+  private readonly DATA_UPLOAD_TIMEOUT = 1_200_000 // 20 minutes
 
   constructor(
     public navCtrl: NavController,
     private usage: UsageService,
-    private platform: Platform,
     private localization: LocalizationService,
     private router: Router,
     private alertService: AlertService,
@@ -62,7 +60,6 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
     private healthkitService: HealthkitService,
     private healthProcessor: HealthQuestionnaireProcessorService
   ) {
-    // Get task from navigation state
     const navigation = this.router.getCurrentNavigation()
     if (navigation?.extras?.state) {
       this.task = navigation.extras.state as Task
@@ -71,7 +68,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.usage.setPage(this.constructor.name)
-    this.initializeHealthKitSupport()
+    this.initialize()
   }
 
   ngOnDestroy(): void {
@@ -81,6 +78,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
 
   ionViewDidEnter(): void {
     KeepAwake.keepAwake()
+    this.attemptAutoResumeUploadIfNeeded()
   }
 
   ionViewWillLeave(): void {
@@ -88,14 +86,21 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
     KeepAwake.allowSleep()
   }
 
-  // Public methods for UI interaction
+  // Public UI methods
   async startHealthDataCollection(): Promise<void> {
-    if (!this.isHealthKitSupported || !this.task) {
-      return
-    }
+    // Reset base offset for fresh start
+    this.progressBaseOffset = 0
+    this.healthkitService.setProgressBaseOffset(0)
+    await this.processHealthData(false)
+  }
 
-    this.usage.sendClickEvent('start_health_data_collection')
-    await this.performHealthDataProcessing()
+  retryProcessing(): void {
+    this.processHealthData(true)
+  }
+
+  exitTask(): void {
+    this.navCtrl.navigateRoot('/home')
+    this.usage.sendClickEvent('exit_healthkit_task')
   }
 
   handleFinish(): void {
@@ -103,511 +108,348 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
     this.usage.sendClickEvent('finish_healthkit_task')
   }
 
-  retryProcessing(): void {
-    this.resetUIState()
-    this.performCacheUploadOnly()
+  // Private initialization
+  private async initialize(): Promise<void> {
+    await this.initializeHealthKitSupport()
+    this.initializeNetworkMonitoring()
+    this.subscribeToProgress()
   }
 
-  private resetUIState(): void {
-    this.isDataProcessing = false
-    this.dataProcessingComplete = false
-    this.hasProcessingError = false
-    this.currentProgress = 0
-    this.progressMessage = ''
-    this.statusMessage = 'Retrying upload...'
-
-    this.uploadStartTime = 0
-    this.lastProgressUpdate = 0
-
-  }
-
-  private async performCacheUploadOnly(): Promise<void> {
-    this.isDataProcessing = true
-    this.currentProgress = 0
-    this.progressMessage = 'Retrying upload...'
-    this.statusMessage = 'Uploading remaining health data...'
-
-    const context = this.initializeProcessingContext()
-    const processingTimeout = this.setupProcessingTimeout()
-
-    try {
-      this.setupProgressTracking(context)
-
-      await this.healthProcessor.sendAllFromCache()
-
-      this.handleProcessingSuccess(processingTimeout)
-    } catch (error) {
-      this.handleProcessingError(processingTimeout, error)
-    }
-  }
-
-  // Private initialization methods
   private async initializeHealthKitSupport(): Promise<void> {
     try {
-      this.statusMessage = 'Checking HealthKit support...'
       await this.healthkitService.checkHealthkitSupported()
       this.isHealthKitSupported = true
-      this.statusMessage = `We will collect your physical activity, and related Apple Health data (e.g., heart rate). Tap the button below to initiate the data retrieval process.`
+      this.updateProgress({
+        message: 'We will collect your physical activity and related Apple Health data. Tap below to start.',
+        status: 'ready'
+      })
       this.usage.sendGeneralEvent(UsageEventType.APP_OPEN)
     } catch (error) {
       this.isHealthKitSupported = false
-      this.statusMessage = 'HealthKit is not supported on this device'
-      this.handleHealthKitError(error)
+      this.updateProgress({
+        message: 'HealthKit is not supported on this device',
+        status: 'error'
+      })
+      console.error('HealthKit error:', error)
     }
   }
 
-  // Private health data processing methods
-  private async performHealthDataProcessing(): Promise<void> {
-    // Set processing state to show inline loading
-    this.isDataProcessing = true
-    this.currentProgress = 0
-    this.progressMessage = 'Initializing...'
-    this.statusMessage = 'Starting health data processing...'
-
-    const context = this.initializeProcessingContext()
-    const processingTimeout = this.setupProcessingTimeout()
-
-    try {
-      this.setupProgressTracking(context)
-
-      // Step 1: Collect and store health data (like questions page does)
-      await this.collectAndStoreHealthData()
-
-      // Step 2: Process stored health data (like questions page does)
-      await this.processStoredHealthData(context)
-
-      // Check cache size
-      const cacheSize = await this.healthProcessor.getCacheSize()
-      if (cacheSize > 1) {
-        this.handleProcessingError(processingTimeout, new Error('Some data failed to send'))
-      } else {
-        this.handleProcessingSuccess(processingTimeout)
-      }
-    } catch (error) {
-      this.handleProcessingError(processingTimeout, error)
-    }
+  private initializeNetworkMonitoring(): void {
+    Network.getStatus().then(status => this.updateNetworkStatus(status))
+    Network.addListener('networkStatusChange', status => this.updateNetworkStatus(status))
   }
 
-  private async collectAndStoreHealthData(): Promise<void> {
-    if (!this.task) {
-      throw new Error('No task available for health data collection')
-    }
-
-    console.log('Starting health data collection...')
-    this.statusMessage = 'Collecting health data from HealthKit...'
-    this.progressMessage = 'Requesting HealthKit permissions...'
-
-    // Reset previous data
-    this.healthAnswers = {}
-    this.healthTimestamps = {}
-    const currentTime = Date.now()
-
-    // Collect data for each supported health type
-    const healthDataTypes = await this.healthkitService.getDataTypesFromTask(this.task)
-    const totalTypes = healthDataTypes.length
-    for (let i = 0; i < totalTypes; i++) {
-      const dataType = healthDataTypes[i]
-
-      try {
-        console.log(`Loading ${dataType} data...`)
-        this.progressMessage = `Collecting ${dataType} data...`
-
-        // Use the healthkit service loadData method which returns date intervals
-        const data = await this.healthkitService.loadData(dataType, new Date(this.task.timestamp))
-
-        if (data && data.startTime && data.endTime) {
-          // Store in local answers cache (similar to AnswerService.add())
-          this.healthAnswers[dataType] = {
-            startTime: data.startTime,
-            endTime: data.endTime
-          }
-
-          // Store timestamp for when this data was collected
-          this.healthTimestamps[dataType] = currentTime
-
-          console.log(`Successfully stored ${dataType} data:`, {
-            startTime: data.startTime,
-            endTime: data.endTime
-          })
-        } else {
-          console.warn(`No data returned for ${dataType}`)
-        }
-      } catch (error) {
-        console.warn(`Failed to load ${dataType} data:`, error)
-        // Continue with other data types even if one fails
-      }
-    }
-
-    // Validate that we have at least some health data
-    if (Object.keys(this.healthAnswers).length === 0) {
-      throw new Error('No health data could be collected from any supported data types')
-    }
-
-    console.log('Health data collection completed. Stored answers:', this.healthAnswers)
-    this.statusMessage = 'Health data collected, starting processing...'
-    this.progressMessage = 'Collection completed, processing and uploading...'
-  }
-
-  private async processStoredHealthData(context: HealthDataLoadContext): Promise<void> {
-    if (!this.task) {
-      throw new Error('No task available for processing')
-    }
-
-    console.log('Starting health data processing from stored answers...')
-    this.statusMessage = 'Processing and uploading health data...'
-    this.progressMessage = 'Processing data...'
-
-    // Create the data structure in the same format as questions page getData()
-    const healthData = {
-      answers: this.healthAnswers,
-      timestamps: this.healthTimestamps,
-      time: this.task.timestamp,        // Task start time
-      timeCompleted: Date.now()         // Current time as completion time
-    }
-
-    console.log('Processing health data structure:', healthData)
-
-    // Use the health questionnaire processor to handle the data
-    // This is the same call as questions page makes
-    return this.healthProcessor.process(
-      healthData,
-      this.task,
-      { type: 'healthkit', timestamp: Date.now() }
+  private subscribeToProgress(): void {
+    this.progressSubscription = this.healthkitService.progress$.subscribe(
+      progress => this.currentProgress = progress
     )
   }
 
-  private initializeProcessingContext(): HealthDataLoadContext {
-    return {
-      startTime: Date.now(),
-      lastProgressUpdate: 0,
-      currentStage: 'initialization'
+  // Processing logic
+  private async processHealthData(isRetry: boolean): Promise<void> {
+    if (!this.validateProcessingConditions()) return
+
+    if (isRetry && !this.handleRetryLogic()) return
+
+    if (await this.tryResumeFromCache(isRetry)) return
+
+    await this.performFullDataProcessing()
+  }
+
+  private validateProcessingConditions(): boolean {
+    if (!this.isHealthKitSupported || !this.task) return false
+
+    if (!this.isNetworkConnected) {
+      this.handleError(new Error('Network connection lost'))
+      return false
+    }
+
+    return true
+  }
+
+  private handleRetryLogic(): boolean {
+    this.retryAttemptCount++
+
+    if (this.retryAttemptCount > this.MAX_RETRY_ATTEMPTS) {
+      this.showRetryAlert()
+      return false
+    }
+
+    // Preserve progress for resume functionality
+    this.progressBaseOffset = Math.min(Math.max(this.currentProgress.progress, 0), 99)
+    // Set the base offset in the service so it can adjust all progress updates
+    this.healthkitService.setProgressBaseOffset(this.progressBaseOffset)
+    this.processingState = ProcessingState.PROCESSING
+    return true
+  }
+
+  private async tryResumeFromCache(isRetry: boolean): Promise<boolean> {
+    try {
+      const hasCache = await this.healthProcessor.hasHealthkitCache()
+      const isUploadReady = await this.healthkitService.isUploadReady()
+
+      if (hasCache && isUploadReady && this.processingState === ProcessingState.IDLE) {
+        // If this is a retry, set the base offset for cache upload too
+        if (isRetry && this.progressBaseOffset > 0) {
+          this.healthkitService.setProgressBaseOffset(this.progressBaseOffset)
+        }
+        this.updateProgress({
+          message: 'Resuming upload of pending health data...',
+          status: 'uploading'
+        })
+        await this.performCacheUploadOnly()
+        return true
+      }
+    } catch (error) {
+      console.warn('Failed to check cache, proceeding with normal flow', error)
+    }
+
+    return false
+  }
+
+  private async performFullDataProcessing(): Promise<void> {
+    this.processingState = ProcessingState.COLLECTING
+    this.startProcessingTimeout()
+    this.setupKafkaProgressTracking()
+
+    try {
+      await this.healthProcessor.clearHealthkitCache()
+
+      // Step 1: Collect health data
+      const healthData = await this.healthkitService.collectHealthData(this.task!)
+
+      // Step 2: Process the collected data
+      const processedData = this.createHealthDataPayload(healthData)
+      await this.healthProcessor.process(processedData, this.task!, {
+        type: 'healthkit',
+        timestamp: Date.now()
+      })
+
+      // Step 3: Verify upload completion
+      await this.verifyUploadCompletion()
+
+    } catch (error) {
+      this.handleError(error)
     }
   }
 
-  private setupProcessingTimeout(): NodeJS.Timeout {
-    return setTimeout(() => {
-      if (this.isDataProcessing) {
+  private async performCacheUploadOnly(): Promise<void> {
+    this.processingState = ProcessingState.UPLOADING
+    this.startProcessingTimeout()
+    this.setupKafkaProgressTracking()
+
+    try {
+      await this.healthProcessor.sendAllFromCache()
+      await this.verifyUploadCompletion()
+      await this.healthkitService.setUploadReadyFlag(false)
+    } catch (error) {
+      this.handleError(error)
+    }
+  }
+
+  private createHealthDataPayload(healthData: { answers: Record<string, any>, timestamps: Record<string, number> }) {
+    return {
+      answers: healthData.answers,
+      timestamps: healthData.timestamps,
+      time: this.task!.timestamp,
+      timeCompleted: Date.now()
+    }
+  }
+
+  private async verifyUploadCompletion(): Promise<void> {
+    const cacheSize = await this.healthProcessor.getCacheSize()
+
+    if (cacheSize > 1) {
+      throw new Error('Some data failed to send')
+    }
+
+    this.handleSuccess()
+  }
+
+  // Progress and Kafka tracking
+  private setupKafkaProgressTracking(): void {
+    const kafkaService = this.configService.getKafkaService()
+    this.kafkaProgressSubscription = kafkaService.eventCallback$.subscribe({
+      next: (progress: number) => this.handleKafkaProgress(progress),
+      error: (error) => this.handleError(error)
+    })
+  }
+
+  private handleKafkaProgress(progress: number): void {
+    this.healthkitService.stopProgressMessages()
+    this.healthkitService.updateKafkaProgress(progress, this.progressBaseOffset)
+  }
+
+  private updateProgress(update: Partial<ProgressUpdate>): void {
+    this.currentProgress = { ...this.currentProgress, ...update }
+  }
+
+  // Success and error handling
+  private handleSuccess(): void {
+    this.processingState = ProcessingState.COMPLETE
+    this.updateProgress({
+      progress: 100,
+      message: 'All data has been processed and uploaded',
+      status: 'complete'
+    })
+    this.usage.sendGeneralEvent(UsageEventType.QUESTIONNAIRE_FINISHED)
+    this.healthProcessor.updateTaskToComplete(this.task)
+    this.cleanupProcessingResources()
+  }
+
+  private handleError(error: any): void {
+    this.processingState = ProcessingState.ERROR
+
+    const errorMessage = this.getErrorMessage()
+    this.updateProgress({
+      message: errorMessage,
+      status: 'error'
+    })
+
+    console.error('Health data processing error:', error)
+    this.usage.sendGeneralEvent(UsageEventType.QUESTIONNAIRE_CANCELLED)
+    this.cleanupProcessingResources()
+  }
+
+  private getErrorMessage(): string {
+    if (!this.isNetworkConnected) {
+      return 'Please check your internet connection and retry'
+    }
+    return 'Processing failed - you can retry or exit'
+  }
+
+  // Timeout and cleanup
+  private startProcessingTimeout(): void {
+    this.processingTimeout = setTimeout(() => {
+      if (this.isProcessing) {
         this.showProcessingTimeoutDialog()
       }
     }, this.DATA_UPLOAD_TIMEOUT)
   }
 
-  private setupProgressTracking(context: HealthDataLoadContext): void {
-    // Track only kafka service progress for the entire process
-    const kafkaService = this.configService.getKafkaService()
-    this.kafkaProgressSubscription = kafkaService.eventCallback$.subscribe({
-      next: (progress: number) => this.handleKafkaProgress(progress),
-      error: (error) => this.handleProgressError(error)
-    })
-  }
-
-  // Private progress handling methods
-  private handleKafkaProgress(progress: number): void {
-    try {
-      // Use kafka progress directly (0-100%)
-      const kafkaProgressPercentage = Math.min(Math.max(progress * 100, 0), 100)
-      this.currentProgress = Number(kafkaProgressPercentage.toFixed(0))
-
-      // Start timing on first progress update
-      if (this.uploadStartTime === 0 && kafkaProgressPercentage > 0) {
-        this.uploadStartTime = Date.now()
-      }
-
-      if (kafkaProgressPercentage < 100) {
-        this.statusMessage = 'Uploading health data...'
-
-        // Build detailed progress message with ETA and data info
-        let message = `Uploading to server: ${Math.round(kafkaProgressPercentage)}%`
-
-        // Calculate and add ETA
-        const etaText = this.calculateTimeRemaining(kafkaProgressPercentage)
-        if (etaText) {
-          message += `<br>${etaText}`
-        }
-
-        // Add information about data being sent
-        const dataInfo = this.buildDataTypeInfoMessage()
-        if (dataInfo) {
-          message += `<br><br>${dataInfo}`
-        }
-
-        this.progressMessage = message
-      } else {
-        this.currentProgress = 100
-        this.statusMessage = 'Upload complete!'
-        this.progressMessage = 'All health data has been uploaded successfully'
-      }
-
-    } catch (error) {
-      console.error('Error updating kafka progress:', error)
-    }
-  }
-
-  private calculateTimeRemaining(progressPercentage: number): string {
-    if (this.uploadStartTime === 0 || progressPercentage <= 0) {
-      return ''
+  private cleanupProcessingResources(): void {
+    if (this.processingTimeout) {
+      clearTimeout(this.processingTimeout)
+      this.processingTimeout = null
     }
 
-    const elapsedTime = (Date.now() - this.uploadStartTime) / 1000
-    const remainingTime = isFinite(elapsedTime * (100 - progressPercentage) / progressPercentage)
-      ? (elapsedTime * (100 - progressPercentage)) / progressPercentage
-      : 0
-
-    if (remainingTime >= 60) {
-      const minutes = Math.floor(remainingTime / 60)
-      const seconds = Math.round(remainingTime % 60)
-      return `About ${minutes} minute${minutes > 1 ? 's' : ''} and ${seconds} second${seconds !== 1 ? 's' : ''} remaining`
-    } else if (remainingTime > 5) {
-      return `About ${remainingTime.toFixed(0)} second${remainingTime.toFixed(0) !== '1' ? 's' : ''} remaining`
-    }
-
-    return ''
-  }
-
-  private buildDataTypeInfoMessage(): string {
-    const dataTypeEntries = Object.entries(this.healthAnswers)
-    if (dataTypeEntries.length === 0) {
-      return ''
-    }
-
-    // Calculate which data type is currently being processed
-    const totalDataTypes = dataTypeEntries.length
-
-    if (this.currentProgress >= 100) {
-      // All data types completed
-      return `<small><strong>Completed all data types</strong></small>`
-    }
-
-    // Estimate current data type based on progress
-    // Each data type gets roughly equal share of the progress
-    const progressPerDataType = 100 / totalDataTypes
-    const currentIndex = Math.min(
-      Math.floor(this.currentProgress / progressPerDataType),
-      totalDataTypes - 1
-    )
-
-    // Calculate progress within the current data type
-    const progressInCurrentType = (this.currentProgress % progressPerDataType) / progressPerDataType * 100
-
-    const [currentDataType, dateRange] = dataTypeEntries[currentIndex]
-    const startDate = new Date(dateRange.startTime).toLocaleDateString()
-    const endDate = new Date(dateRange.endTime).toLocaleDateString()
-
-    // Format the current data type name
-    const formattedType = this.formatDataTypeName(currentDataType)
-
-    // Show current data type with its progress
-    let message = `<small><strong>Processing:</strong> ${formattedType}<br>`
-    message += `<strong>Date range:</strong> ${startDate} - ${endDate}<br>`
-    message += `<strong>Progress:</strong> ${Math.round(progressInCurrentType)}% of this data type`
-
-    // Show which data type number we're on
-    if (totalDataTypes > 1) {
-      message += `<br><strong>Data type:</strong> ${currentIndex + 1} of ${totalDataTypes}`
-    }
-
-    message += '</small>'
-
-    return message
-  }
-
-  private formatDataTypeName(dataType: string): string {
-    // Convert camelCase to readable format
-    const formatted = dataType
-      .replace(/([A-Z])/g, ' $1') // Add space before capitals
-      .replace(/^./, str => str.toUpperCase()) // Capitalize first letter
-      .trim()
-
-    // Handle special cases
-    const specialCases: Record<string, string> = {
-      'Heart Rate': 'Heart Rate',
-      'Sleep Analysis': 'Sleep Analysis',
-      'Active Energy Burned': 'Active Energy',
-      'Steps': 'Steps'
-    }
-
-    return specialCases[formatted] || formatted
-  }
-
-  private handleProgressError(error: any): void {
-    console.error('Progress tracking error:', error)
-    this.hasProcessingError = true
-    this.statusMessage = 'Error tracking progress'
-    this.progressMessage = 'Progress tracking failed'
-    this.isDataProcessing = false
-  }
-
-  // Private success/error handling methods
-  private handleProcessingSuccess(processingTimeout: NodeJS.Timeout): void {
-    this.cleanupProcessingResources(processingTimeout)
-    this.dataProcessingComplete = true
-    this.isDataProcessing = false
-    this.statusMessage = 'Health data processed successfully!'
-    this.progressMessage = 'All data has been processed and uploaded'
-    this.currentProgress = 100
-
-    // Show completion alert after a brief delay to let user see the progress
-    setTimeout(() => {
-      this.showProcessingCompletionAlert()
-    }, 1000)
-
-    this.usage.sendGeneralEvent(UsageEventType.QUESTIONNAIRE_FINISHED)
-  }
-
-  private handleProcessingError(processingTimeout: NodeJS.Timeout, error: any): void {
-    this.cleanupProcessingResources(processingTimeout)
-    this.hasProcessingError = true
-    this.isDataProcessing = false
-    this.statusMessage = 'Error processing health data'
-    this.progressMessage = 'Processing failed - you can retry or exit'
-
-    console.error('Health data processing error:', error)
-
-    // Show error alert after a brief delay
-    setTimeout(() => {
-      this.showProcessingErrorAlert(error)
-    }, 500)
-
-    this.usage.sendGeneralEvent(UsageEventType.QUESTIONNAIRE_CANCELLED)
-  }
-
-  private cleanupProcessingResources(processingTimeout: NodeJS.Timeout): void {
-    clearTimeout(processingTimeout)
     this.kafkaProgressSubscription.unsubscribe()
-  }
-
-  // Private utility methods
-  private resetProcessingState(): void {
-    this.isDataProcessing = false
-    this.dataProcessingComplete = false
-    this.hasProcessingError = false
-    this.currentProgress = 0
-    this.progressMessage = ''
-    this.statusMessage = 'Ready to process health data'
-
-    // Reset timing variables
-    this.uploadStartTime = 0
-    this.lastProgressUpdate = 0
-
-    this.healthAnswers = {}
-    this.healthTimestamps = {}
+    this.progressBaseOffset = 0
   }
 
   private cleanup(): void {
-    if (this.kafkaProgressSubscription) {
-      this.kafkaProgressSubscription.unsubscribe()
+    this.progressSubscription.unsubscribe()
+    this.kafkaProgressSubscription.unsubscribe()
+    this.cleanupProcessingResources()
+    this.healthkitService.cleanup()
+    Network.removeAllListeners()
+  }
+
+  // Network monitoring
+  private updateNetworkStatus(status: { connected: boolean; connectionType: string }): void {
+    this.isNetworkConnected = status.connected
+
+    if (!this.isNetworkConnected && this.isProcessing) {
+      this.updateProgress({
+        message: 'Please check your internet connection and retry',
+        status: 'error'
+      })
+      this.processingState = ProcessingState.ERROR
+      this.healthProcessor.cancelUpload()
+      this.handleError(new Error('Network connection lost'))
     }
-
-    // Reset timing variables
-    this.uploadStartTime = 0
-    this.lastProgressUpdate = 0
-
-    // Clear health data cache on cleanup
-    this.healthAnswers = {}
-    this.healthTimestamps = {}
   }
 
-  // Private error handling methods
-  private handleHealthKitError(error: any): void {
-    console.error('HealthKit error:', error)
-    this.statusMessage = 'HealthKit not available on this device'
-    this.showHealthKitErrorAlert()
+  // Auto-resume functionality
+  private async attemptAutoResumeUploadIfNeeded(): Promise<void> {
+    const isUploadReady = await this.healthkitService.isUploadReady()
+    if (isUploadReady) {
+      // Auto-resume should start fresh, not as a retry
+      this.progressBaseOffset = 0
+      this.healthkitService.setProgressBaseOffset(0)
+      this.processHealthData(false)
+    }
   }
 
-  private showHealthKitErrorAlert(): void {
+  // Alert dialogs
+  private showRetryAlert(): void {
     this.alertService.showAlert({
-      header: 'HealthKit Not Available',
-      message: 'HealthKit is not supported on this device or access has been denied. Please check your device settings.',
-      buttons: [
-        {
-          text: this.localization.translateKey(LocKeys.BTN_OKAY),
-          handler: () => this.handleFinish()
-        }
-      ]
-    })
-  }
-
-  private showProcessingErrorAlert(error: any): void {
-    const errorMessage = error?.message || 'An unknown error occurred while processing health data.'
-
-    this.alertService.showAlert({
-      header: 'Processing Error',
-      message: `Failed to process health data: ${errorMessage}`,
-      buttons: [
-        {
-          text: 'Retry',
-          handler: () => this.retryProcessing()
-        },
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          handler: () => this.handleFinish()
-        }
-      ]
-    })
-  }
-
-  private showProcessingCompletionAlert(): void {
-    this.alertService.showAlert({
-      header: 'Processing Complete',
-      message: 'Your health data has been successfully processed and uploaded.',
-      buttons: [
-        {
-          text: this.localization.translateKey(LocKeys.BTN_OKAY),
-          handler: () => this.handleFinish()
-        }
-      ]
+      header: this.localization.translateKey(LocKeys.HOME_SENDING_DATA_ERROR_TITLE),
+      message: this.localization.translateKey(LocKeys.HOME_SENDING_DATA_ERROR_MESSAGE),
+      buttons: [{
+        text: 'Return to Home',
+        handler: () => this.exitTask()
+      }]
     })
   }
 
   private showProcessingTimeoutDialog(): void {
     this.alertService.showAlert({
       header: 'Processing Timeout',
-      message: 'Health data processing is taking longer than expected. Would you like to retry?',
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          handler: () => this.handleFinish()
-        },
-        {
-          text: 'Retry',
-          handler: () => this.retryProcessing()
-        }
-      ]
+      message: 'Health data processing is taking longer than expected. Please check your internet connection and try again later.',
+      buttons: [{
+        text: 'Return to Home',
+        handler: () => this.exitTask()
+      }]
     })
   }
 
-  // Public methods for accessing stored health data (for debugging/testing)
-  getStoredHealthAnswers(): Record<string, any> {
-    return { ...this.healthAnswers }
-  }
-
-  getStoredHealthTimestamps(): Record<string, number> {
-    return { ...this.healthTimestamps }
-  }
-
-  exitQuestionnaire(): void {
-    this.navCtrl.navigateRoot('/home')
-  }
-
-  // Getter methods for template
+  // Template getters
   get canStartProcessing(): boolean {
     return this.isHealthKitSupported &&
-      !this.isDataProcessing &&
-      !this.dataProcessingComplete &&
+      this.isNetworkConnected &&
+      this.processingState === ProcessingState.IDLE &&
       !!this.task
   }
 
   get showRetryButton(): boolean {
-    return this.hasProcessingError && !this.isDataProcessing
+    return this.processingState === ProcessingState.ERROR
   }
 
   get showFinishButton(): boolean {
-    return this.dataProcessingComplete || this.hasProcessingError
+    return this.processingState === ProcessingState.COMPLETE ||
+      this.processingState === ProcessingState.ERROR
   }
 
   get showProgressBar(): boolean {
-    return this.isDataProcessing || this.dataProcessingComplete
+    return this.processingState !== ProcessingState.IDLE
+  }
+
+  get isProcessing(): boolean {
+    return [ProcessingState.COLLECTING, ProcessingState.PROCESSING, ProcessingState.UPLOADING]
+      .includes(this.processingState as ProcessingState)
+  }
+
+  get statusMessage(): string {
+    switch (this.processingState) {
+      case ProcessingState.COLLECTING:
+        return 'Collecting health data from HealthKit...'
+      case ProcessingState.PROCESSING:
+        return 'Processing and uploading health data...'
+      case ProcessingState.UPLOADING:
+        return 'Uploading health data...'
+      case ProcessingState.COMPLETE:
+        return 'Health data processed successfully!'
+      case ProcessingState.ERROR:
+        return this.getErrorStatusMessage()
+      default:
+        return this.isHealthKitSupported
+          ? 'Ready to collect health data'
+          : 'Checking HealthKit support...'
+    }
+  }
+
+  private getErrorStatusMessage(): string {
+    if (!this.isNetworkConnected) {
+      return 'Network connection lost during upload'
+    }
+    return 'There was a problem connecting to the server'
+  }
+
+  get networkStatusInfo(): string {
+    if (!this.isNetworkConnected) {
+      return 'No internet connection'
+    }
+    return 'Connected'
   }
 }

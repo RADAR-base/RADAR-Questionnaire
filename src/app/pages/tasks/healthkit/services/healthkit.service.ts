@@ -53,17 +53,16 @@ export class HealthkitService {
           (this.HEALTHKIT_PERMISSIONS = this.util.stringToArray(permissions, this.DELIMITER))
         )
     })
-    return this.getLastPollTimes().then(dic => {
-      if (!dic) return this.setLastPollTimes({})
-    })
   }
 
-  getLastPollTimes() {
-    return this.storage.get(StorageKeys.HEALTH_LAST_POLL_TIMES)
+  // Upload-ready flag controls
+  async setUploadReadyFlag(isReady: boolean): Promise<void> {
+    await this.storage.set(StorageKeys.HEALTHKIT_UPLOAD_READY, isReady)
   }
 
-  setLastPollTimes(value) {
-    this.storage.set(StorageKeys.HEALTH_LAST_POLL_TIMES, value)
+  async isUploadReady(): Promise<boolean> {
+    const val = await this.storage.get(StorageKeys.HEALTHKIT_UPLOAD_READY)
+    return Boolean(val)
   }
 
   checkHealthkitSupported() {
@@ -115,5 +114,4 @@ export class HealthkitService {
         return questions.map(question => question.field_name)
       })
   }
-
 }

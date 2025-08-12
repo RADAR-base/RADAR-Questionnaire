@@ -52,6 +52,9 @@ export class StorageKeys {
 
   static HEALTH_LAST_POLL_TIMES = new StorageKeys('HEALTH_LAST_POLL_TIMES')
 
+  // Flag indicating HealthKit data has been fully prepared and is ready to upload from cache
+  static HEALTHKIT_UPLOAD_READY = new StorageKeys('HEALTHKIT_UPLOAD_READY')
+
   static PLATFORM_AUTH_TYPE = new StorageKeys('PLATFORM_AUTH_TYPE')
 
   static STUDY_CODE = new StorageKeys('STUDY_CODE')

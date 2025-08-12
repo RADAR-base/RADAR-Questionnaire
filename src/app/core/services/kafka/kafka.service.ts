@@ -26,7 +26,6 @@ import { AnalyticsService } from '../usage/analytics.service'
 import { CacheService } from './cache.service'
 import { SchemaService } from './schema.service'
 import { Subject } from 'rxjs'
-import { debounceTime } from 'rxjs/operators'
 import pLimit from 'p-limit'
 import { NotificationService } from '../notifications/notification.service'
 import { NotificationActionType } from 'src/app/shared/models/notification-handler'
@@ -448,6 +447,30 @@ export class KafkaService {
 
   getCacheSize() {
     return this.cache.getCacheSize()
+  }
+
+  async hasCacheEntriesWithPrefix(prefix: string): Promise<boolean> {
+    try {
+      const cache = await this.cache.getCache()
+      if (!cache) return false
+      const prefixWithColon = `${prefix}:`
+      return Object.keys(cache).some((key) => key && key.startsWith(prefixWithColon))
+    } catch (error) {
+      this.logger.error('Error checking cache entries by prefix', error)
+      return false
+    }
+  }
+
+  async deleteCacheEntriesWithPrefix(prefix: string): Promise<void> {
+    try {
+      const cache = await this.cache.getCache()
+      if (!cache) return
+      const prefixWithColon = `${prefix}:`
+      const keysToDelete = Object.keys(cache).filter((key) => key && key.startsWith(prefixWithColon))
+      await this.cache.removeFromCacheMultiple(keysToDelete)
+    } catch (error) {
+      this.logger.error('Error deleting cache entries by prefix', error)
+    }
   }
 
   sendDataEvent(type, name, questionnaire, timestamp, error?) {

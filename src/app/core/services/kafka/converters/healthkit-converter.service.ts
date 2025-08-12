@@ -114,15 +114,10 @@ export class HealthkitConverterService extends ConverterService {
     const name = data.key
     const startTime = data.value.startTime
     const endTime = data.value.endTime
-    return Promise.all([
-      this.getLastPollTimes(),
-      this.healthkit.query(startTime, endTime, name)
-    ]).then(async ([dic, res]) => {
+    return this.healthkit.query(startTime, endTime, name).then(async res => {
       if (res.length) {
         const sample = res[res.length - 1]
         const lastDataDate = new Date(sample['endDate'])
-        dic[name] = lastDataDate
-        this.setLastPollTimes(dic)
         const processedData = await this.processSingleDatatype(
           name,
           res,
@@ -136,14 +131,6 @@ export class HealthkitConverterService extends ConverterService {
       }
       return null
     })
-  }
-
-  setLastPollTimes(dic: any) {
-    return this.storage.set(StorageKeys.HEALTH_LAST_POLL_TIMES, dic)
-  }
-
-  getLastPollTimes() {
-    return this.storage.get(StorageKeys.HEALTH_LAST_POLL_TIMES)
   }
 
   getSchemas() {
@@ -213,5 +200,10 @@ export class HealthkitConverterService extends ConverterService {
         }
       }))
     })
+  }
+
+  reset() {
+    super.reset()
+    this.healthkit.setUploadReadyFlag(false)
   }
 }

@@ -203,10 +203,6 @@ export class HealthQuestionnaireProcessorService extends QuestionnaireProcessorS
     return this.kafka.cancelCacheSending()
   }
 
-  getCacheSize() {
-    return this.kafka.getCacheSize()
-  }
-
   async hasHealthkitCache(): Promise<boolean> {
     return this.kafka.hasCacheEntriesWithPrefix(SchemaType.HEALTHKIT)
   }

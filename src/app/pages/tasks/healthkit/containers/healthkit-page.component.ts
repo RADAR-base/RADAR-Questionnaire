@@ -50,6 +50,8 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
   private readonly MAX_RETRY_ATTEMPTS = 5
   private readonly DATA_UPLOAD_TIMEOUT = 1_200_000 // 20 minutes
 
+  private readonly RELOADED_CONFIG_KEY = 'RELOADED_CONFIG_KEY'
+
   constructor(
     public navCtrl: NavController,
     private usage: UsageService,
@@ -69,6 +71,20 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.usage.setPage(this.constructor.name)
     this.initialize()
+    // Check if page was reloaded using sessionStorage
+    const wasReloaded = sessionStorage.getItem(this.RELOADED_CONFIG_KEY) === 'true'
+    if (wasReloaded) {
+      sessionStorage.removeItem(this.RELOADED_CONFIG_KEY)
+      // Show error
+      this.updateProgress({
+        message: 'Please check your internet connection and retry',
+        status: 'error'
+      })
+      this.handleError(new Error('Page was reloaded'))
+    } else {
+      // Set flag for next potential reload
+      sessionStorage.setItem(this.RELOADED_CONFIG_KEY, 'true')
+    }
   }
 
   ngOnDestroy(): void {
@@ -84,6 +100,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
   ionViewWillLeave(): void {
     this.cleanup()
     KeepAwake.allowSleep()
+    sessionStorage.removeItem(this.RELOADED_CONFIG_KEY)
   }
 
   // Public UI methods
@@ -95,17 +112,19 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
   }
 
   retryProcessing(): void {
+    this.processingState = ProcessingState.IDLE
+    // Check network status
+    Network.getStatus().then(status => this.updateNetworkStatus(status))
     this.processHealthData(true)
   }
 
   exitTask(): void {
-    this.navCtrl.navigateRoot('/home')
-    this.usage.sendClickEvent('exit_healthkit_task')
-  }
-
-  handleFinish(): void {
-    this.navCtrl.navigateRoot('/home')
-    this.usage.sendClickEvent('finish_healthkit_task')
+    if (this.processingState === ProcessingState.COMPLETE) {
+      this.healthkitService.resetProgress()
+    } else {
+      this.navCtrl.navigateRoot('/home')
+      this.usage.sendClickEvent('exit_healthkit_task')
+    }
   }
 
   // Private initialization
@@ -179,7 +198,6 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
     this.progressBaseOffset = Math.min(Math.max(this.currentProgress.progress, 0), 99)
     // Set the base offset in the service so it can adjust all progress updates
     this.healthkitService.setProgressBaseOffset(this.progressBaseOffset)
-    this.processingState = ProcessingState.PROCESSING
     return true
   }
 
@@ -189,6 +207,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       const isUploadReady = await this.healthkitService.isUploadReady()
 
       if (hasCache && isUploadReady && this.processingState === ProcessingState.IDLE) {
+        this.processingState = ProcessingState.PROCESSING
         // If this is a retry, set the base offset for cache upload too
         if (isRetry && this.progressBaseOffset > 0) {
           this.healthkitService.setProgressBaseOffset(this.progressBaseOffset)
@@ -214,6 +233,8 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
 
     try {
       await this.healthProcessor.clearHealthkitCache()
+
+      await new Promise(resolve => setTimeout(resolve, 5000))
 
       // Step 1: Collect health data
       const healthData = await this.healthkitService.collectHealthData(this.task!)
@@ -257,9 +278,9 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
   }
 
   private async verifyUploadCompletion(): Promise<void> {
-    const cacheSize = await this.healthProcessor.getCacheSize()
+    const hasHealthkitCache = await this.healthProcessor.hasHealthkitCache()
 
-    if (cacheSize > 1) {
+    if (hasHealthkitCache) {
       throw new Error('Some data failed to send')
     }
 
@@ -276,6 +297,11 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
   }
 
   private handleKafkaProgress(progress: number): void {
+    if (!this.isNetworkConnected) {
+      this.updateNetworkStatus({ connected: false, connectionType: 'none' })
+      this.healthkitService.stopProgressMessages()
+      return
+    }
     this.healthkitService.stopProgressMessages()
     this.healthkitService.updateKafkaProgress(progress, this.progressBaseOffset)
   }
@@ -305,7 +331,6 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       message: errorMessage,
       status: 'error'
     })
-
     console.error('Health data processing error:', error)
     this.usage.sendGeneralEvent(UsageEventType.QUESTIONNAIRE_CANCELLED)
     this.cleanupProcessingResources()
@@ -346,8 +371,14 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
   }
 
   // Network monitoring
-  private updateNetworkStatus(status: { connected: boolean; connectionType: string }): void {
+  private async updateNetworkStatus(status: { connected: boolean; connectionType: string }): Promise<void> {
     this.isNetworkConnected = status.connected
+    const isUploadReady = await this.healthkitService.isUploadReady()
+
+    // If data is not ready to be uploaded, continue
+    if (!this.isNetworkConnected && !isUploadReady) {
+      return
+    }
 
     if (!this.isNetworkConnected && this.isProcessing) {
       this.updateProgress({
@@ -364,10 +395,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
   private async attemptAutoResumeUploadIfNeeded(): Promise<void> {
     const isUploadReady = await this.healthkitService.isUploadReady()
     if (isUploadReady) {
-      // Auto-resume should start fresh, not as a retry
-      this.progressBaseOffset = 0
-      this.healthkitService.setProgressBaseOffset(0)
-      this.processHealthData(false)
+      this.processHealthData(true)
     }
   }
 

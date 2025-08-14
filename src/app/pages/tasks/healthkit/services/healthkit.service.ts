@@ -114,6 +114,15 @@ export class HealthkitService {
     return Boolean(val)
   }
 
+  async getHealthkitDataSentCount(): Promise<number> {
+    const val = await this.storage.get(StorageKeys.HEALTHKIT_DATA_SENT_COUNT)
+    return val ? Number(val) : 0
+  }
+
+  async setHealthkitDataSentCount(count: number): Promise<void> {
+    await this.storage.set(StorageKeys.HEALTHKIT_DATA_SENT_COUNT, count)
+  }
+
   checkHealthkitSupported() {
     return CapacitorHealthkit.isAvailable()
   }
@@ -300,18 +309,12 @@ export class HealthkitService {
 
     if (kafkaProgressPercentage < 100) {
       // Build detailed progress message with ETA and data info
-      let message = `Uploading to server: ${Math.round(kafkaProgressPercentage)}%`
+      let message = `Uploading to server...`
 
       // Calculate and add ETA
       const etaText = this.calculateTimeRemaining(kafkaProgressPercentage)
       if (etaText) {
         message += `<br>${etaText}`
-      }
-
-      // Add information about data being sent
-      const dataInfo = this.buildDataTypeInfoMessage(finalProgress)
-      if (dataInfo) {
-        message += `<br><br>${dataInfo}`
       }
 
       this.updateProgress({
@@ -323,8 +326,8 @@ export class HealthkitService {
     } else {
       this.updateProgress({
         progress: finalProgress,
-        message: 'All health data has been uploaded successfully',
-        status: kafkaProgressPercentage >= 100 ? 'complete' : 'uploading'
+        message: 'Almost done...',
+        status: 'uploading'
       })
     }
   }
@@ -340,61 +343,20 @@ export class HealthkitService {
       : 0
 
     if (remainingTime >= 60) {
+      const hours = Math.floor(remainingTime / 3600)
       const minutes = Math.floor(remainingTime / 60)
       const seconds = Math.round(remainingTime % 60)
-      return `About ${minutes} minute${minutes > 1 ? 's' : ''} and ${seconds} second${seconds !== 1 ? 's' : ''} remaining`
+      // If hours are 0, return minutes and seconds
+      if (hours === 0) {
+        return `About ${minutes} minute${minutes > 1 ? 's' : ''} and ${seconds} second${seconds !== 1 ? 's' : ''} remaining`
+      }
+      // If hours are not 0, return hours and minutes
+      return `About ${hours} hour${hours > 1 ? 's' : ''} and ${minutes} minute${minutes > 1 ? 's' : ''} remaining`
     } else if (remainingTime > 5) {
       return `About ${remainingTime.toFixed(0)} second${remainingTime.toFixed(0) !== '1' ? 's' : ''} remaining`
     }
 
-    return ''
-  }
-
-  private buildDataTypeInfoMessage(currentProgress: number): string {
-    const dataTypeEntries = Object.entries(this.healthAnswers)
-    if (dataTypeEntries.length === 0) {
-      return ''
-    }
-
-    // Calculate which data type is currently being processed
-    const totalDataTypes = dataTypeEntries.length
-
-    if (currentProgress >= 100) {
-      // All data types completed
-      return `<small><strong>Completed all data types</strong></small>`
-    }
-
-    // Estimate current data type based on progress
-    // Each data type gets roughly equal share of the progress
-    const progressPerDataType = 100 / totalDataTypes
-    const currentIndex = Math.min(
-      Math.floor(currentProgress / progressPerDataType),
-      totalDataTypes - 1
-    )
-
-    // Calculate progress within the current data type
-    const progressInCurrentType = (currentProgress % progressPerDataType) / progressPerDataType * 100
-
-    const [currentDataType, dateRange] = dataTypeEntries[currentIndex]
-    const startDate = new Date(dateRange.startTime).toLocaleDateString()
-    const endDate = new Date(dateRange.endTime).toLocaleDateString()
-
-    // Format the current data type name
-    const formattedType = this.formatDataTypeName(currentDataType)
-
-    // Show current data type with its progress
-    let message = `<small><strong>Processing:</strong> ${formattedType}<br>`
-    message += `<strong>Date range:</strong> ${startDate} - ${endDate}<br>`
-    message += `<strong>Progress:</strong> ${Math.round(progressInCurrentType)}% of this data type`
-
-    // Show which data type number we're on
-    if (totalDataTypes > 1) {
-      message += `<br><strong>Data type:</strong> ${currentIndex + 1} of ${totalDataTypes}`
-    }
-
-    message += '</small>'
-
-    return message
+    return 'Calculating ETA...'
   }
 
   resetProgress(): void {

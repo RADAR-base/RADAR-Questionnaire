@@ -50,6 +50,7 @@ export class ConfigService {
     private token: TokenService
   ) {
     this.notifications.init()
+    this.kafka.init()
   }
 
   fetchConfigState(force?: boolean) {

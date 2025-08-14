@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http'
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import * as AvroSchema from 'avro-js'
 import { SchemaAndValue, SchemaMetadata } from 'src/app/shared/models/kafka'
@@ -12,6 +12,8 @@ import { TokenService } from '../../token/token.service'
 import { KeyConverterService } from './key-converter.service'
 import { ConfigKeys } from 'src/app/shared/enums/config'
 import { RemoteConfigService } from '../../config/remote-config.service'
+import { CapacitorHttp } from '@capacitor/core'
+import { Network } from '@capacitor/network'
 
 @Injectable()
 export abstract class ConverterService {
@@ -97,10 +99,27 @@ export abstract class ConverterService {
     return new Date().getTime() + Math.random()
   }
 
-  getLatestKafkaSchemaVersion(uri): Promise<SchemaMetadata> {
-    return this.http
-      .get<SchemaMetadata>(uri)
-      .toPromise()
+  async getLatestKafkaSchemaVersion(uri): Promise<SchemaMetadata> {
+    // Force refresh Capacitor's network cache
+    await Network.getStatus()
+    // Small delay to let it update
+    await new Promise(resolve => setTimeout(resolve, 500))
+
+    const request = {
+      url: uri,
+      method: 'GET',
+      headers: {
+        'Cache-Control': 'no-store'
+      }
+    }
+
+    return CapacitorHttp.request(request)
+      .then(response => {
+        if (response.status < 200 || response.status >= 300) {
+          throw new Error(`HTTP ${response.status}: ${response.data}`)
+        }
+        return typeof response.data === 'string' ? JSON.parse(response.data) : response.data
+      })
       .catch(e => {
         throw this.logger.error('Failed to get latest Kafka schema versions', e)
       })

@@ -29,6 +29,7 @@ import { Subject } from 'rxjs'
 import pLimit from 'p-limit'
 import { NotificationService } from '../notifications/notification.service'
 import { NotificationActionType } from 'src/app/shared/models/notification-handler'
+import { Network } from '@capacitor/network'
 
 @Injectable()
 export class KafkaService {
@@ -79,7 +80,6 @@ export class KafkaService {
 
   init() {
     return Promise.all([
-      this.cache.setCache({}),
       this.updateTopicCacheValidity(),
       this.fetchTopics(),
       this.schema.init(),
@@ -173,6 +173,10 @@ export class KafkaService {
       return Promise.resolve([])
     }
 
+    await Network.getStatus()
+    // Small delay to let it update
+    await new Promise(resolve => setTimeout(resolve, 500))
+
     this.logger.log('Starting cache send process')
     this.setCacheSending(true)
     this.cancelSending = false // Reset cancel flag
@@ -226,7 +230,7 @@ export class KafkaService {
                 throw e
               }
               batchFailedKeys.push(k)
-              this.logger.error('Failed to send data from cache to kafka', e)
+              // this.logger.error('Failed to send data from cache to kafka', e)
             }
           })
         )
@@ -435,10 +439,6 @@ export class KafkaService {
 
   setLastUploadDate(date) {
     return this.storage.set(StorageKeys.LAST_UPLOAD_DATE, date)
-  }
-
-  setHealthkitPollTimes(dic) {
-    return this.storage.set(StorageKeys.HEALTH_LAST_POLL_TIMES, dic)
   }
 
   getLastUploadDate() {

@@ -48,6 +48,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   isTaskInfoShown: Promise<boolean>
   currentDate: number
   studyPortalReturnUrl: Promise<string | null>
+  showSyncNeeded = false
 
   APP_CREDITS = '&#169; RADAR-Base'
   HTML_BREAK = '<br>'
@@ -209,6 +210,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
       this.startingQuestionnaire = true
       if (task.name.toLowerCase().includes('healthkit')) {
         this.navCtrl.navigateForward('/healthkit', { state: task })
+        this.showSyncNeeded = true
       } else {
         this.usage.sendClickEvent('start_questionnaire')
         this.navCtrl.navigateForward('/questions', { state: task })

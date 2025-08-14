@@ -19,19 +19,22 @@ export class TickerBarComponent implements OnChanges {
   @Input()
   showAffirmation = false
   @Input()
+  showSyncNeeded = false
+  @Input()
   noTasksToday = false
   @Input()
   timeToNextMilli: number
   tickerText: string
   report: ReportScheduling
 
-  constructor(private localization: LocalizationService) {}
+  constructor(private localization: LocalizationService) { }
 
   ngOnChanges() {
     this.updateTickerItem()
   }
 
   updateTickerItem() {
+    if (this.showSyncNeeded) return this.addDataSendNeeded()
     if (!this.tickerText) return this.addTasksRemaining()
     if (this.noTasksToday) return this.addTasksNone()
     if (this.showAffirmation) return this.addAffirmation()
@@ -77,6 +80,10 @@ export class TickerBarComponent implements OnChanges {
       this.localization.translateKey(LocKeys.TASK_BAR_AFFIRMATION_1) +
       '</b> ' +
       this.localization.translateKey(LocKeys.TASK_BAR_AFFIRMATION_2)
+  }
+
+  addDataSendNeeded() {
+    this.tickerText = 'Sync needed to complete.'
   }
 
   addTasksRemaining() {

@@ -350,7 +350,6 @@ export const DefaultHealthkitQuestionnaireKey = 'healthkit'
 // *Default Healthkit data permissions to request
 export const DefaultHealthkitPermissions = [
   HealthkitPermission.ACTIVITY,
-  HealthkitPermission.BLOOD_GLUCOSE,
   HealthkitPermission.CALORIES,
   HealthkitPermission.DISTANCE,
   HealthkitPermission.DURATION,
@@ -361,4 +360,4 @@ export const DefaultHealthkitPermissions = [
 ]
 
 // *Default interval to pull Healthkit data until
-export const DefaultHealthkitInterval = 3500 // days
+export const DefaultHealthkitInterval = 3106 // days

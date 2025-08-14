@@ -236,6 +236,60 @@ ion-card {
     &:last-child {
       margin-bottom: 0;
     }
+    
+    // Retry button specific styling
+    &.retry-button {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.2s ease;
+      border: 0;
+      
+      // Animation triggers on active state (when pressed/tapped)
+      &:active {
+        animation: retryPulse 0.5s ease-out;
+        border: 0;
+      }
+      
+      &:active::before {
+        opacity: 1;
+        width: 300px;
+        height: 300px;
+      }
+      
+      // Ensure text stays above the ripple effect
+      * {
+        position: relative;
+        z-index: 1;
+      }
+    }
+  }
+}
+
+// Retry button animation keyframes
+@keyframes retryPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(var(--ion-color-primary-rgb), 0.7);
+  }
+  
+  20% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 8px rgba(var(--ion-color-primary-rgb), 0.6);
+  }
+  
+  40% {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 15px rgba(var(--ion-color-primary-rgb), 0.4);
+  }
+  
+  70% {
+    transform: scale(0.98);
+    box-shadow: 0 0 0 20px rgba(var(--ion-color-primary-rgb), 0.2);
+  }
+  
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 25px rgba(var(--ion-color-primary-rgb), 0);
   }
 }
 

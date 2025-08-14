@@ -80,7 +80,6 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
   ])
   MAX_RETRY_ALERT_COUNT = 5
   MIN_CACHE_SIZE_TO_SHOW_RETRY_ALERT = 2
-  RELOADED_CONFIG_KEY = 'wasReloaded'
 
   backButtonListener: Subscription
   showProgressCount: Promise<boolean>
@@ -107,7 +106,6 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
     this.sendCompletionLog()
     this.questionsService.reset()
     this.backButtonListener.unsubscribe()
-    sessionStorage.removeItem(this.RELOADED_CONFIG_KEY)
   }
 
   ngOnInit() {
@@ -116,23 +114,14 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
       this.task = nav.extras.state as Task
       this.showProgressCount = this.questionsService.getIsProgressCountShown()
 
-      // Check if page was reloaded using sessionStorage
-      const wasReloaded = sessionStorage.getItem(this.RELOADED_CONFIG_KEY) === 'true'
-      if (wasReloaded) {
-        sessionStorage.removeItem(this.RELOADED_CONFIG_KEY)
-        this.handlePageReload()
-      } else {
-        // Set flag for next potential reload
-        sessionStorage.setItem(this.RELOADED_CONFIG_KEY, 'true')
-        // Handle initial load
-        this.questionsService
-          .initRemoteConfigParams()
-          .then(() => this.questionsService.getQuestionnairePayload(this.task))
-          .then(res => {
-            this.initQuestionnaire(res)
-            return this.updateToolbarButtons()
-          })
-      }
+      // Handle initial load
+      this.questionsService
+        .initRemoteConfigParams()
+        .then(() => this.questionsService.getQuestionnairePayload(this.task))
+        .then(res => {
+          this.initQuestionnaire(res)
+          return this.updateToolbarButtons()
+        })
     }
     // Initialize swiper with memory management
     this.initializeSwiper()

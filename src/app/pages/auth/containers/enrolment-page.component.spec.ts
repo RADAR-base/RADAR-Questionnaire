@@ -7,6 +7,8 @@ import { AppModule } from '../../../app.module'
 import { QRFormComponent } from '../components/qr-form/qr-form.component'
 import { TokenFormComponent } from '../components/token-form/token-form.component'
 import { EnrolmentPageComponent } from './enrolment-page.component'
+import { KafkaService } from 'src/app/core/services/kafka/kafka.service'
+import { KafkaServiceMock } from 'src/app/shared/testing/mock-services'
 
 describe('EnrolmentPagecomponent', () => {
   let component
@@ -26,7 +28,10 @@ describe('EnrolmentPagecomponent', () => {
         TokenFormComponent,
         QRFormComponent
       ],
-      providers: [NavController]
+      providers: [
+        NavController,
+        { provide: KafkaService, useClass: KafkaServiceMock }
+      ]
     }).compileComponents()
 
     fixture = TestBed.createComponent(EnrolmentPageComponent)

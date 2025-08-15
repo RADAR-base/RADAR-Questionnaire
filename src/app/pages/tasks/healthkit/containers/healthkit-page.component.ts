@@ -178,9 +178,9 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
 
   // Processing logic
   private async processHealthData(isRetry: boolean): Promise<void> {
-    if (!this.validateProcessingConditions()) return
-
     if (isRetry && !this.handleRetryLogic()) return
+
+    if (!this.validateProcessingConditions()) return
 
     if (await this.tryResumeFromCache(isRetry)) return
 

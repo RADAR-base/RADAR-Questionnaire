@@ -46,7 +46,9 @@ export class ProtocolServiceMock {}
 export class QuestionnaireServiceMock {}
 export class AppConfigServiceMock {}
 export class SubjectConfigServiceMock {}
-export class KafkaServiceMock {}
+export class KafkaServiceMock {
+  init() {}
+}
 export class LocalizationServiceMock {}
 export class FirebaseAnalyticsServiceMock {}
 export class UtilityMock {}

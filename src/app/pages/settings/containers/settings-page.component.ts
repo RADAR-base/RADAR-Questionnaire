@@ -60,9 +60,7 @@ export class SettingsPageComponent {
 
   ionViewWillEnter() {
     this.usage.setPage(this.constructor.name)
-    this.loadSettings().then(() => {
-      this.checkForCacheSending()
-    })
+    this.loadSettings()
   }
 
   loadSettings() {
@@ -277,16 +275,6 @@ export class SettingsPageComponent {
   }
 
   async sendCachedData() {
-    // Check if cache is already being sent
-    const kafkaService = this.settingsService.getKafkaService()
-    if (kafkaService.isCacheCurrentlySending()) {
-      this.showCacheSendingAlert()
-      return
-    }
-
-    // Reset the service state before starting
-    this.cacheSendService.reset()
-
     const modal = await this.modalCtrl.create({
       component: CacheSendModalComponent
     })
@@ -327,13 +315,6 @@ export class SettingsPageComponent {
       progressSub.unsubscribe()
       await modal.dismiss()
       throw error
-    }
-  }
-
-  checkForCacheSending() {
-    const kafkaService = this.settingsService.getKafkaService()
-    if (kafkaService.isCacheCurrentlySending()) {
-      this.showCacheSendingAlert()
     }
   }
 

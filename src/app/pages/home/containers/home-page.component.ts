@@ -65,8 +65,6 @@ export class HomePageComponent implements OnInit, OnDestroy {
     private localization: LocalizationService,
     private platform: Platform,
     private usage: UsageService,
-    private configService: ConfigService,
-    private loadingController: LoadingController
   ) {
     this.changeDetectionListener =
       this.tasksService.changeDetectionEmitter.subscribe(() => {

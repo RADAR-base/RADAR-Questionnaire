@@ -49,6 +49,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   currentDate: number
   studyPortalReturnUrl: Promise<string | null>
   showSyncNeeded = false
+  portalReturnText: Promise<string>
 
   APP_CREDITS = '&#169; RADAR-Base'
   HTML_BREAK = '<br>'
@@ -123,6 +124,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.onDemandIcon = this.tasksService.getOnDemandAssessmentIcon()
     this.showMiscTasksButton = this.getShowMiscTasksButton()
     this.studyPortalReturnUrl = this.tasksService.getPortalReturnUrl()
+    this.portalReturnText = this.getPortalReturnText()
 
   }
 
@@ -198,6 +200,11 @@ export class HomePageComponent implements OnInit, OnDestroy {
 
   async openStudyPortal() {
     window.open(await this.studyPortalReturnUrl, '_system')
+  }
+
+  async getPortalReturnText() {
+    const portalReturnText = await this.tasksService.getPortalReturnText()
+    return portalReturnText ? portalReturnText : this.localization.translateKey(LocKeys.BTN_RETURN_PORTAL)
   }
 
   startQuestionnaire(taskCalendarTask?: Task) {

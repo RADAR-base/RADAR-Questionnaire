@@ -462,11 +462,11 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
   get statusMessage(): string {
     switch (this.processingState) {
       case ProcessingState.COLLECTING:
-        return 'Collecting health data from HealthKit...'
+        return 'Collecting health data...'
       case ProcessingState.PROCESSING:
-        return 'Processing and uploading health data...'
+        return 'Processing and uploading data...'
       case ProcessingState.UPLOADING:
-        return 'Uploading health data...'
+        return 'Uploading data...'
       case ProcessingState.COMPLETE:
         return 'Health data processed successfully!'
       case ProcessingState.ERROR:

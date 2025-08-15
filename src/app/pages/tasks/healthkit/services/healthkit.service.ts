@@ -312,12 +312,12 @@ export class HealthkitService {
 
     if (kafkaProgressPercentage < 100) {
       // Build detailed progress message with ETA and data info
-      let message = `Uploading to server...`
+      let message = ``
 
       // Calculate and add ETA
       const etaText = this.calculateTimeRemaining(kafkaProgressPercentage)
       if (etaText) {
-        message += `<br>${etaText}`
+        message += `${etaText}`
       }
 
       this.updateProgress({

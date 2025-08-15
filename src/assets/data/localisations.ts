@@ -1770,14 +1770,14 @@ export const Localisations = {
     hb: 'עדיין יש לך בעיות?'
   },
   HOME_SENDING_DATA_ERROR_MESSAGE: {
-    en: `Please make sure you're connected to the internet and wait 2 hours before starting the task again in the home page.`,
-    es: 'Asegúrate de estar conectado a Internet y espera 2 horas antes de volver a iniciar la tarea en la página principal.',
-    da: 'Sørg for, at du er forbundet til internettet, og vent 2 timer, før du starter opgaven igen på startsiden.',
-    de: 'Bitte stellen Sie sicher, dass Sie mit dem Internet verbunden sind, und warten Sie 2 Stunden, bevor Sie die Aufgabe auf der Startseite erneut starten.',
-    fr: 'Assurez-vous d’être connecté à Internet et attendez 2 heures avant de recommencer la tâche depuis la page d’accueil.',
-    it: 'Assicurati di essere connesso a Internet e attendi 2 ore prima di avviare nuovamente l’attività dalla pagina iniziale.',
-    nl: 'Zorg ervoor dat je verbonden bent met het internet en wacht 2 uur voordat je de taak opnieuw start op de startpagina.',
-    pl: 'Upewnij się, że jesteś podłączony do internetu i odczekaj 2 godziny, zanim ponownie rozpoczniesz zadanie na stronie głównej.',
-    hb: 'ודא שאתה מחובר לאינטרנט והמתן שעתיים לפני שתתחיל שוב את המשימה בעמוד הבית.'
+    en: `Please make sure you're connected to the internet and wait 2 hours before starting the task again in the app.`,
+    es: 'Asegúrate de estar conectado/a a Internet y espera 2 horas antes de iniciar la tarea de nuevo en la app.',
+    da: 'Sørg for, at du er forbundet til internettet, og vent 2 timer, før du starter opgaven igen i appen.',
+    de: 'Bitte stelle sicher, dass du mit dem Internet verbunden bist und warte 2 Stunden, bevor du die Aufgabe in der App erneut startest.',
+    fr: `Assurez-vous d'être connecté à Internet et attendez 2 heures avant de relancer la tâche dans l'application.`,
+    it: `Assicurati di essere connesso/a a Internet e attendi 2 ore prima di avviare nuovamente l'attività nell'app.`,
+    nl: 'Zorg ervoor dat je met internet bent verbonden en wacht 2 uur voordat je de taak opnieuw in de app start.',
+    pl: 'Upewnij się, że masz połączenie z internetem i odczekaj 2 godziny, zanim ponownie uruchomisz zadanie w aplikacji.',
+    hb: 'ודא שאתה מחובר לאינטרנט והמתן שעתיים לפני שתתחיל שוב את המשימה באפליקציה.'
   }
 }

@@ -102,15 +102,9 @@ export abstract class ConverterService {
   async getLatestKafkaSchemaVersion(uri): Promise<SchemaMetadata> {
     // Force refresh Capacitor's network cache
     await Network.getStatus()
-    // Small delay to let it update
-    await new Promise(resolve => setTimeout(resolve, 500))
-
     const request = {
       url: uri,
       method: 'GET',
-      headers: {
-        'Cache-Control': 'no-store'
-      }
     }
 
     return CapacitorHttp.request(request)

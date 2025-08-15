@@ -139,7 +139,7 @@ export class HealthkitConverterService extends ConverterService {
       return this.updateURI().then(() => this.getSchemas())
     }
     if (this.schemas[this.HEALTHKIT_TOPIC])
-      return this.schemas[this.HEALTHKIT_TOPIC]
+      return Promise.resolve(this.schemas[this.HEALTHKIT_TOPIC])
     else {
       const versionStr = this.URI_version + 'latest'
       const uri =
@@ -148,9 +148,14 @@ export class HealthkitConverterService extends ConverterService {
         this.HEALTHKIT_TOPIC +
         '-value' +
         versionStr
-      const schema = this.getLatestKafkaSchemaVersion(uri)
-      this.schemas[this.HEALTHKIT_TOPIC] = schema
-      return schema
+      return this.getLatestKafkaSchemaVersion(uri).then(
+        schema => {
+          this.schemas[this.HEALTHKIT_TOPIC] = schema
+          return schema
+        }
+      ).catch(error => {
+        throw error
+      })
     }
   }
 

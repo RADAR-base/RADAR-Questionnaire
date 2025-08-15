@@ -103,7 +103,6 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
     sessionStorage.removeItem(this.RELOADED_CONFIG_KEY)
   }
 
-  // Public UI methods
   async startHealthDataCollection(): Promise<void> {
     // Reset base offset for fresh start
     this.progressBaseOffset = 0
@@ -121,10 +120,9 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
   exitTask(): void {
     if (this.processingState === ProcessingState.COMPLETE) {
       this.healthkitService.resetProgress()
-    } else {
-      this.navCtrl.navigateRoot('/home')
-      this.usage.sendClickEvent('exit_healthkit_task')
     }
+    this.navCtrl.navigateRoot('/home')
+    this.usage.sendClickEvent('exit_healthkit_task')
   }
 
   // Private initialization
@@ -138,6 +136,20 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
     try {
       await this.healthkitService.checkHealthkitSupported()
       this.isHealthKitSupported = true
+      // Estimate percentage already sent from previous attempts
+      try {
+        const [total, unsent] = await Promise.all([
+          this.healthkitService.getTotalHealthkitDataCount(),
+          this.healthProcessor.getUnsentHealthkitCount()
+        ])
+        if (total > 0 && unsent >= 0 && unsent <= total) {
+          const sent = total - unsent
+          const overallPercent = Math.round(15 + (85 * (sent / total)))
+          this.progressBaseOffset = Math.min(Math.max(overallPercent, 0), 99)
+          this.healthkitService.setProgressBaseOffset(this.progressBaseOffset)
+          this.handleKafkaProgress(0)
+        }
+      } catch { }
       this.updateProgress({
         message: 'We will collect your physical activity and related Apple Health data. Tap below to start.',
         status: 'ready'
@@ -399,7 +411,6 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Alert dialogs
   private showRetryAlert(): void {
     this.alertService.showAlert({
       header: this.localization.translateKey(LocKeys.HOME_SENDING_DATA_ERROR_TITLE),

@@ -27,6 +27,7 @@ import { QuestionnaireService } from './questionnaire.service'
 import { RemoteConfigService } from './remote-config.service'
 import { SubjectConfigService } from './subject-config.service'
 import { TokenService } from '../token/token.service'
+import { HealthkitService } from '../../../pages/tasks/healthkit/services/healthkit.service'
 
 @Injectable({
   providedIn: 'root'
@@ -47,7 +48,8 @@ export class ConfigService {
     private logger: LogService,
     private remoteConfig: RemoteConfigService,
     private messageHandlerService: MessageHandlerService,
-    private token: TokenService
+    private token: TokenService,
+    private healthkit: HealthkitService
   ) {
     this.notifications.init()
     this.kafka.init()
@@ -325,6 +327,7 @@ export class ConfigService {
       this.localization.init(),
       this.analytics.reset(),
       this.token.forceRefresh(),
+      this.healthkit.reset()
     ])
   }
 

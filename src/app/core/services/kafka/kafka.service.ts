@@ -449,6 +449,18 @@ export class KafkaService {
     return this.cache.getCacheSize()
   }
 
+  async countCacheEntriesWithPrefix(prefix: string): Promise<number> {
+    try {
+      const cache = await this.cache.getCache()
+      if (!cache) return 0
+      const prefixWithColon = `${prefix}:`
+      return Object.keys(cache).reduce((count, key) => key && key.startsWith(prefixWithColon) ? count + 1 : count, 0)
+    } catch (error) {
+      this.logger.error('Error counting cache entries by prefix', error)
+      return 0
+    }
+  }
+
   async hasCacheEntriesWithPrefix(prefix: string): Promise<boolean> {
     try {
       const cache = await this.cache.getCache()

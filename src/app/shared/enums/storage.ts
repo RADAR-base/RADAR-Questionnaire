@@ -50,7 +50,7 @@ export class StorageKeys {
     'NOTIFICATION_MESSAGING_TYPE'
   )
 
-  static HEALTHKIT_DATA_SENT_COUNT = new StorageKeys('HEALTHKIT_DATA_SENT_COUNT')
+  static HEALTHKIT_TOTAL_DATA_COUNT = new StorageKeys('HEALTHKIT_TOTAL_DATA_COUNT')
 
   // Flag indicating HealthKit data has been fully prepared and is ready to upload from cache
   static HEALTHKIT_UPLOAD_READY = new StorageKeys('HEALTHKIT_UPLOAD_READY')

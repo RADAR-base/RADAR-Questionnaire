@@ -134,7 +134,6 @@ export class HealthkitConverterService extends ConverterService {
   }
 
   getSchemas() {
-    console.log('Getting schemas', this.schemas)
     if (!this.BASE_URI) {
       return this.updateURI().then(() => this.getSchemas())
     }

@@ -114,13 +114,13 @@ export class HealthkitService {
     return Boolean(val)
   }
 
-  async getHealthkitDataSentCount(): Promise<number> {
-    const val = await this.storage.get(StorageKeys.HEALTHKIT_DATA_SENT_COUNT)
+  async getTotalHealthkitDataCount(): Promise<number> {
+    const val = await this.storage.get(StorageKeys.HEALTHKIT_TOTAL_DATA_COUNT)
     return val ? Number(val) : 0
   }
 
-  async setHealthkitDataSentCount(count: number): Promise<void> {
-    await this.storage.set(StorageKeys.HEALTHKIT_DATA_SENT_COUNT, count)
+  async setTotalHealthkitDataCount(count: number): Promise<void> {
+    await this.storage.set(StorageKeys.HEALTHKIT_TOTAL_DATA_COUNT, count)
   }
 
   checkHealthkitSupported() {
@@ -197,7 +197,7 @@ export class HealthkitService {
       const dataType = healthDataTypes[i]
 
       try {
-        const collectionProgress = Math.round((i / totalTypes) * 25) // Collection is 25% of remaining progress
+        const collectionProgress = Math.round((i / totalTypes) * 15) // Collection is 25% of remaining progress
         const adjustedProgress = this.adjustProgressWithOffset(collectionProgress)
 
         this.updateProgress({
@@ -232,7 +232,7 @@ export class HealthkitService {
       throw new Error('No health data could be collected from any supported data types')
     }
 
-    const finalCollectionProgress = this.adjustProgressWithOffset(25)
+    const finalCollectionProgress = this.adjustProgressWithOffset(15)
     this.updateProgress({
       message: 'Collection completed, processing and uploading...',
       progress: finalCollectionProgress,
@@ -297,9 +297,12 @@ export class HealthkitService {
     }
 
     const kafkaProgressPercentage = Math.min(Math.max(progress * 100, 0), 100)
-    // Map kafka progress to the remaining portion after collection (25% to 100%)
-    const remainingProgress = 25 + (75 * (kafkaProgressPercentage / 100))
-    const overallProgress = this.adjustProgressWithOffset(remainingProgress)
+    // If we have a baseOffset (e.g., resuming), start from that exact percentage and
+    // let kafka progress map across the remaining range. Otherwise, map into 15..100.
+    const mappedProgress = this.baseOffset > 0
+      ? kafkaProgressPercentage
+      : 15 + (85 * (kafkaProgressPercentage / 100))
+    const overallProgress = this.adjustProgressWithOffset(mappedProgress)
     const finalProgress = Math.min(100, Math.round(overallProgress))
 
     // Start timing on first progress update
@@ -344,7 +347,7 @@ export class HealthkitService {
 
     if (remainingTime >= 60) {
       const hours = Math.floor(remainingTime / 3600)
-      const minutes = Math.floor(remainingTime / 60)
+      const minutes = Math.floor(remainingTime / 60) - (hours * 60)
       const seconds = Math.round(remainingTime % 60)
       // If hours are 0, return minutes and seconds
       if (hours === 0) {
@@ -385,5 +388,10 @@ export class HealthkitService {
     this.baseOffset = 0
     this.healthAnswers = {}
     this.healthTimestamps = {}
+  }
+
+  reset() {
+    this.setTotalHealthkitDataCount(0)
+    this.setUploadReadyFlag(false)
   }
 }

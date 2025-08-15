@@ -35,6 +35,10 @@ export class HealthQuestionnaireProcessorService extends QuestionnaireProcessorS
     super(schedule, kafka)
   }
 
+  async getUnsentHealthkitCount(): Promise<number> {
+    return this.kafka.countCacheEntriesWithPrefix(SchemaType.HEALTHKIT)
+  }
+
   process(data, task, assessmentMetadata): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       if (typeof Worker !== 'undefined') {
@@ -48,6 +52,9 @@ export class HealthQuestionnaireProcessorService extends QuestionnaireProcessorS
 
           if (result.type === 'complete' && result.success) {
             const { kafkaObjects } = result.data
+
+            // Store total count at the beginning so UI can estimate percentage sent
+            this.healthkit.setTotalHealthkitDataCount(kafkaObjects.length).catch(() => { })
 
             // Process Kafka objects in batches, then send cache, and ONLY THEN mark task complete if all sent
             const batchSize = 10
@@ -120,6 +127,9 @@ export class HealthQuestionnaireProcessorService extends QuestionnaireProcessorS
         this.progressSubject.next({ stage: 'processing', progress: 0, total: 1 })
 
         const dividedObjects = this.processHealthDataSync(data)
+
+        // Store total count for sync path
+        this.healthkit.setTotalHealthkitDataCount(dividedObjects.length).catch(() => { })
 
         // Store all, mark upload-ready, send cache, and ONLY THEN mark task complete if all sent
         return Promise.all(dividedObjects.map(v => this.kafka.prepareKafkaObjectAndStore(type, v)))

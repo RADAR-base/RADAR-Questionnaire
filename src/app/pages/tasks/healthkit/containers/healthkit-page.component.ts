@@ -105,12 +105,14 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
 
   async startHealthDataCollection(): Promise<void> {
     // Reset base offset for fresh start
+    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_STARTED)
     this.progressBaseOffset = 0
     this.healthkitService.setProgressBaseOffset(0)
     await this.processHealthData(false)
   }
 
   retryProcessing(): void {
+    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_RETRY)
     this.processingState = ProcessingState.IDLE
     // Check network status
     Network.getStatus().then(status => this.updateNetworkStatus(status))
@@ -122,7 +124,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       this.healthkitService.resetProgress()
     }
     this.navCtrl.navigateRoot('/home')
-    this.usage.sendClickEvent('exit_healthkit_task')
+    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_EXIT)
   }
 
   // Private initialization
@@ -154,7 +156,6 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
         message: 'We will collect your physical activity and related Apple Health data. Tap below to start.',
         status: 'ready'
       })
-      this.usage.sendGeneralEvent(UsageEventType.APP_OPEN)
     } catch (error) {
       this.isHealthKitSupported = false
       this.updateProgress({
@@ -330,7 +331,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       message: 'All data has been processed and uploaded',
       status: 'complete'
     })
-    this.usage.sendGeneralEvent(UsageEventType.QUESTIONNAIRE_FINISHED)
+    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_FINISHED)
     this.healthProcessor.updateTaskToComplete(this.task)
     this.cleanupProcessingResources()
   }
@@ -344,7 +345,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       status: 'error'
     })
     console.error('Health data processing error:', error)
-    this.usage.sendGeneralEvent(UsageEventType.QUESTIONNAIRE_CANCELLED)
+    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_ERROR)
     this.cleanupProcessingResources()
   }
 

@@ -214,6 +214,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
     if (this.tasksService.isTaskStartable(task)) {
       this.startingQuestionnaire = true
       if (task.name.toLowerCase().includes('healthkit')) {
+        this.usage.sendClickEvent('start_healthkit')
         this.navCtrl.navigateForward('/healthkit', { state: task })
         this.showSyncNeeded = true
       } else {

@@ -86,6 +86,10 @@ export class KafkaService {
     ])
   }
 
+  initCache() {
+    return this.cache.setCache({})
+  }
+
   updateURI() {
     return this.token
       .getURI()

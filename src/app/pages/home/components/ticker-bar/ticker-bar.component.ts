@@ -34,10 +34,10 @@ export class TickerBarComponent implements OnChanges {
   }
 
   updateTickerItem() {
+    if (this.showAffirmation) return this.addAffirmation()
     if (this.showSyncNeeded) return this.addDataSendNeeded()
     if (!this.tickerText) return this.addTasksRemaining()
     if (this.noTasksToday) return this.addTasksNone()
-    if (this.showAffirmation) return this.addAffirmation()
     if (this.task) return this.addTask()
     if (this.report) return this.addReportAvailable()
   }

@@ -349,6 +349,7 @@ export class ConfigService {
         .then(() => this.appConfig.init(user.enrolmentDate)),
       this.localization.init(),
       this.kafka.init(),
+      this.kafka.initCache(),
       this.analytics.enableAnalytics()
     ]).then(() => this.notifications.init())
   }

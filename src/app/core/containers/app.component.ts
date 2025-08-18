@@ -23,7 +23,7 @@ export class AppComponent {
       if (Capacitor.isPluginAvailable('TextZoom')) TextZoom.set({ value: 1 })
       this.isAppInitialized = true
       if (this.router.url === '/' || this.router.url === '') {
-        this.router.navigateByUrl('/home')
+        this.router.navigateByUrl('')
       }
     })
   }

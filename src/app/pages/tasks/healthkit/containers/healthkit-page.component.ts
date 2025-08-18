@@ -50,8 +50,6 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
   private readonly MAX_RETRY_ATTEMPTS = 5
   private readonly DATA_UPLOAD_TIMEOUT = 1_200_000 // 20 minutes
 
-  private readonly RELOADED_CONFIG_KEY = 'RELOADED_CONFIG_KEY'
-
   constructor(
     public navCtrl: NavController,
     private usage: UsageService,
@@ -71,20 +69,6 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.usage.setPage(this.constructor.name)
     this.initialize()
-    // Check if page was reloaded using sessionStorage
-    const wasReloaded = sessionStorage.getItem(this.RELOADED_CONFIG_KEY) === 'true'
-    if (wasReloaded) {
-      sessionStorage.removeItem(this.RELOADED_CONFIG_KEY)
-      // Show error
-      this.updateProgress({
-        message: 'Please check your internet connection and retry',
-        status: 'error'
-      })
-      this.handleError(new Error('Page was reloaded'))
-    } else {
-      // Set flag for next potential reload
-      sessionStorage.setItem(this.RELOADED_CONFIG_KEY, 'true')
-    }
   }
 
   ngOnDestroy(): void {
@@ -100,7 +84,6 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
   ionViewWillLeave(): void {
     this.cleanup()
     KeepAwake.allowSleep()
-    sessionStorage.removeItem(this.RELOADED_CONFIG_KEY)
   }
 
   async startHealthDataCollection(): Promise<void> {
@@ -140,17 +123,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       this.isHealthKitSupported = true
       // Estimate percentage already sent from previous attempts
       try {
-        const [total, unsent] = await Promise.all([
-          this.healthkitService.getTotalHealthkitDataCount(),
-          this.healthProcessor.getUnsentHealthkitCount()
-        ])
-        if (total > 0 && unsent >= 0 && unsent <= total) {
-          const sent = total - unsent
-          const overallPercent = Math.round(15 + (85 * (sent / total)))
-          this.progressBaseOffset = Math.min(Math.max(overallPercent, 0), 99)
-          this.healthkitService.setProgressBaseOffset(this.progressBaseOffset)
-          this.handleKafkaProgress(0)
-        }
+        await this.initializeProgressOffset()
       } catch { }
       this.updateProgress({
         message: 'We will collect your physical activity and related Apple Health data. Tap below to start.',
@@ -163,6 +136,20 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
         status: 'error'
       })
       console.error('HealthKit error:', error)
+    }
+  }
+
+  private async initializeProgressOffset(): Promise<void> {
+    const [total, unsent] = await Promise.all([
+      this.healthkitService.getTotalHealthkitDataCount(),
+      this.healthProcessor.getUnsentHealthkitCount()
+    ])
+    if (total > 0 && unsent >= 0 && unsent <= total) {
+      const sent = total - unsent
+      const overallPercent = Math.round(15 + (85 * (sent / total)))
+      this.progressBaseOffset = Math.min(Math.max(overallPercent, 0), 99)
+      this.healthkitService.setProgressBaseOffset(this.progressBaseOffset)
+      this.handleKafkaProgress(0)
     }
   }
 
@@ -294,6 +281,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
     const hasHealthkitCache = await this.healthProcessor.hasHealthkitCache()
 
     if (hasHealthkitCache) {
+      await this.initializeProgressOffset()
       throw new Error('Some data failed to send')
     }
 

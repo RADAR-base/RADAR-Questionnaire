@@ -171,6 +171,19 @@ ion-card {
     padding: 0.75rem;
     margin-top: 0.5rem;
     
+    .progress-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .progress-inline-spinner {
+      width: 20px;
+      height: 20px;
+      margin-top: 2px; /* slight visual adjustment */
+    }
+
     .progress-status {
       text-align: center;
       color: var(--cl-light);

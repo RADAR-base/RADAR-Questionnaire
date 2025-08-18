@@ -1,7 +1,7 @@
 <ion-content [fullscreen]="true" class="ion-padding-top ion-padding">
 
   <div class="header-section">
-    <h2>Apple Health Data Collection</h2>
+    <h2>Apple Health Task</h2>
     <p class="status-message" [innerHTML]="statusMessage">
     </p>
 
@@ -34,13 +34,12 @@
         </div>
 
         <div class="progress-details" *ngIf="currentProgress.message">
-          <div class="progress-status" [innerHTML]="currentProgress.message"></div>
+          <div class="progress-row">
+            <ion-spinner *ngIf="isProcessing" name="lines" color="primary"
+              class="progress-inline-spinner"></ion-spinner>
+            <div class="progress-status" [innerHTML]="currentProgress.message"></div>
+          </div>
         </div>
-      </div>
-
-      <div class="processing-status" *ngIf="isProcessing">
-        <ion-spinner name="lines" color="primary"></ion-spinner>
-        <span>Processing health data...</span>
       </div>
 
       <div class="error-status" *ngIf="currentProgress.status === 'error'">

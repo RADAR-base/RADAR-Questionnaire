@@ -353,7 +353,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
     if (!this.isNetworkConnected) {
       return 'Please check your internet connection and retry'
     }
-    return 'Processing failed - you can retry or exit'
+    return 'Some of your data failed to send - please retry'
   }
 
   // Timeout and cleanup

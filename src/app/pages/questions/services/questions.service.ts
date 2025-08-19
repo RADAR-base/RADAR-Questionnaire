@@ -212,14 +212,6 @@ export class QuestionsService {
     return Math.ceil((attemptedAnswers.length * 100) / total)
   }
 
-  getProgress() {
-    return this.questionnaireProcessor.getProgress()
-  }
-
-  resetProgress() {
-    this.questionnaireProcessor.resetProgress()
-  }
-
   recordTimeStamp(question, startTime) {
     const id = question.field_name
     this.timestampService.add({

@@ -79,7 +79,6 @@ export class FinishComponent implements OnChanges {
     // Emit processing complete when progress reaches 100%
     if (this.progressCount >= 1) {
       this.startTime = Date.now()
-      this.processingComplete.emit()
     }
   }
 

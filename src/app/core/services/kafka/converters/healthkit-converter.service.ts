@@ -39,12 +39,6 @@ export class HealthkitConverterService extends ConverterService {
     super(logger, http, token, keyConverter, remoteConfig)
   }
 
-  init() {
-    this.schemas = {}
-    this.updateURI()
-    this.getSchemas()
-  }
-
   processData(data) {
     return {
       name: 'healthkit',

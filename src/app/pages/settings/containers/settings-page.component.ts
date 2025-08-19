@@ -95,7 +95,9 @@ export class SettingsPageComponent {
   }
 
   backToSplash() {
-    this.navCtrl.navigateRoot('')
+    this.navCtrl.navigateRoot('').then(() => {
+      window.location.reload()
+    })
   }
 
   notificationChange() {

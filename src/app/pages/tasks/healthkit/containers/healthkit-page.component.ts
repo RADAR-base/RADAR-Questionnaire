@@ -12,7 +12,7 @@ import { ConfigService } from '../../../../core/services/config/config.service'
 import { UsageEventType } from '../../../../shared/enums/events'
 import { LocKeys } from '../../../../shared/enums/localisations'
 import { Task } from '../../../../shared/models/task'
-import { HealthkitService, ProgressUpdate } from '../services/healthkit.service'
+import { AttemptProgress, HealthkitService, ProgressUpdate } from '../services/healthkit.service'
 import { HealthQuestionnaireProcessorService } from '../services/health-questionnaire-processor.service'
 
 enum ProcessingState {
@@ -38,6 +38,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
 
   // Progress and retry state
   currentProgress: ProgressUpdate = { progress: 0, message: 'Ready', status: 'idle' }
+  attemptProgress: AttemptProgress = { success: 0, failed: 0, cacheSize: 0 }
   private retryAttemptCount = 0
   private progressBaseOffset = 0
 
@@ -149,7 +150,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       const overallPercent = Math.round(15 + (85 * (sent / total)))
       this.progressBaseOffset = Math.min(Math.max(overallPercent, 0), 99)
       this.healthkitService.setProgressBaseOffset(this.progressBaseOffset)
-      this.handleKafkaProgress(0)
+      this.handleKafkaProgress(0, 0, total, unsent)
     }
   }
 
@@ -292,19 +293,21 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
   private setupKafkaProgressTracking(): void {
     const kafkaService = this.configService.getKafkaService()
     this.kafkaProgressSubscription = kafkaService.eventCallback$.subscribe({
-      next: (progress: number) => this.handleKafkaProgress(progress),
+      next: ({ success, failed, cacheSize }) => this.handleKafkaProgress(success, failed, cacheSize, cacheSize),
       error: (error) => this.handleError(error)
     })
   }
 
-  private handleKafkaProgress(progress: number): void {
+  private handleKafkaProgress(success: number, failed: number, totalData: number, cacheSize: number): void {
+    const normalizedProgress = Math.min(Math.max(success / totalData, 0), 1)
     if (!this.isNetworkConnected) {
       this.updateNetworkStatus({ connected: false, connectionType: 'none' })
       this.healthkitService.stopProgressMessages()
       return
     }
+    this.attemptProgress = { success, failed, cacheSize }
     this.healthkitService.stopProgressMessages()
-    this.healthkitService.updateKafkaProgress(progress, this.progressBaseOffset)
+    this.healthkitService.updateKafkaProgress(normalizedProgress, this.progressBaseOffset)
   }
 
   private updateProgress(update: Partial<ProgressUpdate>): void {
@@ -341,7 +344,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
     if (!this.isNetworkConnected) {
       return 'Please check your internet connection and retry'
     }
-    return 'Some of your data failed to send - please retry'
+    return `${this.attemptProgress.failed} records failed to send - please retry`
   }
 
   // Timeout and cleanup
@@ -361,6 +364,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
 
     this.kafkaProgressSubscription.unsubscribe()
     this.progressBaseOffset = 0
+    this.attemptProgress = { success: 0, failed: 0, cacheSize: 0 }
   }
 
   private cleanup(): void {
@@ -405,7 +409,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       header: this.localization.translateKey(LocKeys.HOME_SENDING_DATA_ERROR_TITLE),
       message: this.localization.translateKey(LocKeys.HOME_SENDING_DATA_ERROR_MESSAGE),
       buttons: [{
-        text: 'Return to Home',
+        text: 'Return to Start',
         handler: () => this.exitTask()
       }]
     })
@@ -416,7 +420,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       header: 'Processing Timeout',
       message: 'Health data processing is taking longer than expected. Please check your internet connection and try again later.',
       buttons: [{
-        text: 'Return to Home',
+        text: 'Return to Start',
         handler: () => this.exitTask()
       }]
     })

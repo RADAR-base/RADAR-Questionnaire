@@ -30,6 +30,12 @@ export interface ProgressUpdate {
   currentDataType?: string
 }
 
+export interface AttemptProgress {
+  success: number
+  failed: number
+  cacheSize: number
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -336,8 +342,9 @@ export class HealthkitService {
   }
 
   private calculateTimeRemaining(progressPercentage: number): string {
+    const defaultMessage = 'Calculating ETA...'
     if (this.uploadStartTime === 0 || progressPercentage <= 0) {
-      return ''
+      return defaultMessage
     }
 
     const elapsedTime = (Date.now() - this.uploadStartTime) / 1000
@@ -359,7 +366,7 @@ export class HealthkitService {
       return `About ${remainingTime.toFixed(0)} second${remainingTime.toFixed(0) !== '1' ? 's' : ''} remaining`
     }
 
-    return 'Calculating ETA...'
+    return defaultMessage
   }
 
   resetProgress(): void {

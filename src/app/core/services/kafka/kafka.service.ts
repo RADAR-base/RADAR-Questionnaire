@@ -51,13 +51,15 @@ export class KafkaService {
 
   eventCallback = new Subject<any>() // Source
   eventCallback$ = this.eventCallback.asObservable() // Stream
-  private progressSubject = new Subject<number>()
+  private progressSubject = new Subject<{ success: number, failed: number, cacheSize: number }>()
   progress = 0
+  failed = 0
   cacheSize = 0
 
   resetProgress() {
     this.progress = 0
-    this.progressSubject.next(0)
+    this.failed = 0
+    this.progressSubject.next({ success: 0, failed: 0, cacheSize: 0 })
   }
 
   constructor(
@@ -196,6 +198,7 @@ export class KafkaService {
       ])
 
       this.progress = 0
+      this.failed = 0
       this.cacheSize = size
 
       // Process entries in smaller batches for iOS
@@ -262,13 +265,10 @@ export class KafkaService {
         failedKeys.push(...batchFailedKeys)
 
         if (!this.cancelSending) {
-          this.progress += (batchSuccessKeys.length + batchFailedKeys.length)
-          this.updateProgress(this.progress, this.cacheSize)
+          this.progress += batchSuccessKeys.length
+          this.failed += batchFailedKeys.length
+          this.updateProgress(this.progress, this.failed, this.cacheSize)
         }
-      }
-
-      if (!this.cancelSending) {
-        this.updateProgress(this.cacheSize, this.cacheSize)
       }
 
       if (failedKeys.length > KafkaService.SEND_ERROR_NOTIFICATION_THRESHOLD) {
@@ -316,17 +316,16 @@ export class KafkaService {
       })
   }
 
-  updateProgress(progress, cacheSize) {
+  updateProgress(success, failed, cacheSize) {
     try {
-      const normalizedProgress = Math.min(Math.max(progress / cacheSize, 0), 1)
-
+      // const normalizedProgress = Math.min(Math.max(progress / cacheSize, 0), 1)
       setTimeout(() => {
-        this.progressSubject.next(normalizedProgress)
+        this.progressSubject.next({ success, failed, cacheSize })
       }, 0)
     } catch (error) {
       this.logger.error('Error updating progress:', error)
       setTimeout(() => {
-        this.progressSubject.next(Math.min(Math.max(progress / cacheSize, 0), 1))
+        // this.progressSubject.next(Math.min(Math.max(progress / cacheSize, 0), 1))
       }, 0)
     }
   }

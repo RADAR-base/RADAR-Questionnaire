@@ -25,6 +25,11 @@
       </ion-card-title>
     </ion-card-header>
     <ion-card-content>
+      <div class="attempt-container" *ngIf="isProcessing && attemptProgress.cacheSize > 0">
+        <div class="attempt-text">
+          Sending {{ attemptProgress.success + attemptProgress.failed }}/{{ attemptProgress.cacheSize }} records
+        </div>
+      </div>
       <div class="progress-container">
         <ion-progress-bar [value]="currentProgress.progress / 100"
           [color]="currentProgress.status === 'error' ? 'danger' : (currentProgress.status === 'complete' ? 'success' : 'primary')">
@@ -59,7 +64,7 @@
     <ng-container *ngIf="showRetryButton">
       <ion-button ion-button class="bt bt--full retry-button" round full expand="block" size="large" color="primary"
         (click)="retryProcessing()">
-        Retry Data Pull
+        Retry
       </ion-button>
     </ng-container>
   </div>

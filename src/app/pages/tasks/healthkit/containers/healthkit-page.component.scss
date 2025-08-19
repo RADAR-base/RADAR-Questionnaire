@@ -141,6 +141,14 @@ ion-card {
   }
 }
 
+.attempt-container {
+  display: flex;
+  align-items: right;
+  justify-content: right;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
 .progress-container {
   margin-bottom: 1rem;
   

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core'
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core'
 import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning'
 import { UsageService } from 'src/app/core/services/usage/usage.service'
 import { UsageEventType } from 'src/app/shared/enums/events'
@@ -8,7 +8,7 @@ import { UsageEventType } from 'src/app/shared/enums/events'
   templateUrl: 'qr-form.component.html',
   styleUrls: ['qr-form.component.scss']
 })
-export class QRFormComponent {
+export class QRFormComponent implements OnDestroy {
   @Input()
   loading: boolean
   @Output()
@@ -51,5 +51,9 @@ export class QRFormComponent {
 
   enterTokenHandler() {
     this.token.emit()
+  }
+
+  ngOnDestroy() {
+    BarcodeScanner.stopScan()
   }
 }

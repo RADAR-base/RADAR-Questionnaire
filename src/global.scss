@@ -33,13 +33,6 @@
 // automatically applied to the <body> element in the app.
 
 // Application
-html {
-  background-color: var(--cl-secondary);
-  background-image: url('./assets/imgs/bg-mobile.png');
-  background-repeat: no-repeat;
-  background-position: top center;
-  background-size: cover;
-}
 
 ion-app.md,
 ion-content {

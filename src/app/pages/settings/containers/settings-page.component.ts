@@ -94,9 +94,11 @@ export class SettingsPageComponent {
     this.navCtrl.navigateBack('/home')
   }
 
-  backToSplash() {
+  backToSplash(isEnrolmentReset: boolean = false) {
     this.navCtrl.navigateRoot('').then(() => {
-      window.location.reload()
+      if (isEnrolmentReset) {
+        window.location.reload()
+      }
     })
   }
 
@@ -218,7 +220,7 @@ export class SettingsPageComponent {
             promises.push(this.settingsService.resetConfig())
           else if (selected.includes(ResetOption.CACHE))
             promises.push(this.settingsService.resetCache())
-          Promise.all(promises).then(() => this.backToSplash())
+          Promise.all(promises).then(() => this.backToSplash(selected.includes(ResetOption.ENROLMENT)))
         }
       }
     ]

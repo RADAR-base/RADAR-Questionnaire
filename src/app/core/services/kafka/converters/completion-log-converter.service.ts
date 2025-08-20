@@ -23,8 +23,6 @@ export class CompletionLogConverterService extends ConverterService {
     super(logger, http, token, keyConverter, remoteConfig)
   }
 
-  init() { }
-
   getKafkaTopic(payload): Promise<any> {
     return Promise.resolve('questionnaire_completion_log')
   }

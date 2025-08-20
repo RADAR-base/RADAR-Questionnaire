@@ -1,7 +1,7 @@
 /// <reference lib="webworker" />
 
 (() => {
-  const HEALTHKIT_QUERY_INTERVAL = 100
+  const HEALTHKIT_QUERY_INTERVAL = 10
 
   function validateData(data) {
     if (!data) return false

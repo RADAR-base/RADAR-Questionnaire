@@ -8,8 +8,9 @@ import { AssessmentType } from '../../../../shared/models/assessment'
 import { SchemaType } from '../../../../shared/models/kafka'
 import { HealthkitDataType, HealthkitFloatDataTypes, HealthkitStringDataTypes } from '../../../../shared/models/health'
 import { getMilliseconds } from 'src/app/shared/utilities/time'
-import { QuestionnaireProcessorService } from './questionnaire-processor.service'
 import { LogService } from '../../../../core/services/misc/log.service'
+import { QuestionnaireProcessorService } from 'src/app/pages/questions/services/questionnaire-processor/questionnaire-processor.service'
+import { HealthkitService } from './healthkit.service'
 
 interface ProcessingProgress {
   stage: 'validation' | 'processing' | 'compression' | 'complete'
@@ -23,14 +24,19 @@ interface ProcessingProgress {
 export class HealthQuestionnaireProcessorService extends QuestionnaireProcessorService {
   private progressSubject = new Subject<ProcessingProgress>()
   progress$ = this.progressSubject.asObservable()
-  HEALTHKIT_QUERY_INTERVAL = 100
+  HEALTHKIT_QUERY_INTERVAL = 10
 
   constructor(
     schedule: ScheduleService,
     kafka: KafkaService,
-    private logger: LogService
+    private logger: LogService,
+    private healthkit: HealthkitService,
   ) {
     super(schedule, kafka)
+  }
+
+  async getUnsentHealthkitCount(): Promise<number> {
+    return this.kafka.countCacheEntriesWithPrefix(SchemaType.HEALTHKIT)
   }
 
   process(data, task, assessmentMetadata): Promise<void> {
@@ -47,41 +53,49 @@ export class HealthQuestionnaireProcessorService extends QuestionnaireProcessorS
           if (result.type === 'complete' && result.success) {
             const { kafkaObjects } = result.data
 
-            // Update task completion status
-            this.updateTaskToComplete(task)
-              .then(() => {
-                // Process Kafka objects in batches
-                const batchSize = 10
-                const processBatch = (startIndex: number): Promise<void> => {
-                  const endIndex = Math.min(startIndex + batchSize, kafkaObjects.length)
-                  const batch = kafkaObjects.slice(startIndex, endIndex)
+            // Store total count at the beginning so UI can estimate percentage sent
+            this.healthkit.setTotalHealthkitDataCount(kafkaObjects.length).catch(() => { })
 
-                  if (batch.length === 0) {
-                    return Promise.resolve()
-                  }
+            // Process Kafka objects in batches, then send cache, and ONLY THEN mark task complete if all sent
+            const batchSize = 10
+            const processBatch = (startIndex: number): Promise<void> => {
+              const endIndex = Math.min(startIndex + batchSize, kafkaObjects.length)
+              const batch = kafkaObjects.slice(startIndex, endIndex)
 
-                  return Promise.all(
-                    batch.map(obj => this.kafka.prepareKafkaObjectAndStore(obj.type, obj.value))
-                  ).then(() => {
-                    if (endIndex < kafkaObjects.length) {
-                      return processBatch(endIndex)
-                    }
-                  })
+              if (batch.length === 0) {
+                return Promise.resolve()
+              }
+
+              return Promise.all(
+                batch.map(obj => this.kafka.prepareKafkaObjectAndStore(obj.type, obj.value))
+              ).then(() => {
+                if (endIndex < kafkaObjects.length) {
+                  return processBatch(endIndex)
                 }
+              })
+            }
 
-                // Process all batches
-                return processBatch(0)
-                  .then(() => this.kafka.sendAllFromCache())
-                  .then(() => {
-                    // Ensure progress reaches 100% before resolving
-                    this.progressSubject.next({ stage: 'complete', progress: 1, total: 1 })
-                    worker.terminate()
-                    resolve()
-                  })
+            // Process all batches, mark upload-ready, send cache, and update completion only on full success
+            return processBatch(0)
+              .then(() => this.healthkit.setUploadReadyFlag(true))
+              .then(() => this.kafka.sendAllFromCache())
+              .then((sendResult) => {
+                const allSent = sendResult && Array.isArray(sendResult.failedKeys) && sendResult.failedKeys.length === 0 && !sendResult.cancelled
+                if (!allSent) {
+                  worker.terminate()
+                  return Promise.reject(new Error('Not all HealthKit data could be sent.'))
+                }
+                return this.healthkit.setUploadReadyFlag(false)
+              })
+              .then(() => {
+                // Ensure progress reaches 100% before resolving
+                this.progressSubject.next({ stage: 'complete', progress: 1, total: 1 })
+                worker.terminate()
+                resolve()
               })
               .catch(error => {
                 worker.terminate()
-                this.logger.error('Failed to update task completion', error)
+                this.logger.error('Failed to send all HealthKit data or update completion', error)
                 reject(error)
               })
           } else if (result.type === 'error') {
@@ -114,16 +128,27 @@ export class HealthQuestionnaireProcessorService extends QuestionnaireProcessorS
 
         const dividedObjects = this.processHealthDataSync(data)
 
-        return this.updateTaskToComplete(task)
-          .then(() => Promise.all(dividedObjects.map(v => this.kafka.prepareKafkaObjectAndStore(type, v))))
+        // Store total count for sync path
+        this.healthkit.setTotalHealthkitDataCount(dividedObjects.length).catch(() => { })
+
+        // Store all, mark upload-ready, send cache, and ONLY THEN mark task complete if all sent
+        return Promise.all(dividedObjects.map(v => this.kafka.prepareKafkaObjectAndStore(type, v)))
+          .then(() => this.healthkit.setUploadReadyFlag(true))
           .then(() => this.kafka.sendAllFromCache())
+          .then((sendResult) => {
+            const allSent = sendResult && Array.isArray(sendResult.failedKeys) && sendResult.failedKeys.length === 0 && !sendResult.cancelled
+            if (!allSent) {
+              return Promise.reject(new Error('Not all HealthKit data could be sent.'))
+            }
+            return this.healthkit.setUploadReadyFlag(false)
+          })
           .then(() => {
             // Ensure progress reaches 100% before resolving
             this.progressSubject.next({ stage: 'complete', progress: 1, total: 1 })
             resolve()
           })
           .catch(error => {
-            this.logger.error('Synchronous processing failed', error)
+            this.logger.error('Synchronous processing failed or data not fully sent', error)
             reject(error)
           })
       }
@@ -179,4 +204,21 @@ export class HealthQuestionnaireProcessorService extends QuestionnaireProcessorS
   isValidDataType(key: HealthkitDataType) {
     return HealthkitStringDataTypes.has(key) || HealthkitFloatDataTypes.has(key)
   }
+
+  sendAllFromCache() {
+    return this.kafka.sendAllFromCache()
+  }
+
+  cancelUpload() {
+    return this.kafka.cancelCacheSending()
+  }
+
+  async hasHealthkitCache(): Promise<boolean> {
+    return this.kafka.hasCacheEntriesWithPrefix(SchemaType.HEALTHKIT)
+  }
+
+  async clearHealthkitCache(): Promise<void> {
+    return this.kafka.deleteCacheEntriesWithPrefix(SchemaType.HEALTHKIT)
+  }
+
 }

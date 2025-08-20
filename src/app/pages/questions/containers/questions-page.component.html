@@ -46,11 +46,10 @@
             [requiresInClinicCompletion]="requiresInClinicCompletion"
             [taskType]="taskType"
             [isShown]="showFinishScreen"
-            [progressCount]="progressCount$ | async"
+            [progressCount]="progressCount"
             [questions]="questions"
             [task]="task"
             (exit)="handleFinish()"
-            (processingComplete)="handleProcessingComplete()"
           ></finish>
           <finish-and-launch
             *ngIf="showFinishScreen && showFinishAndLaunchScreen"
@@ -62,7 +61,7 @@
             [taskType]="taskType"
             [showDoneButton]="showDoneButton"
             [isShown]="showFinishScreen"
-            [progressCount]="progressCount$ | async"
+            [progressCount]="progressCount"
             (exit)="handleFinish()"
           ></finish-and-launch>
         </swiper-slide>

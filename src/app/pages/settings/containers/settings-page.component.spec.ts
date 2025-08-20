@@ -7,6 +7,8 @@ import { AppModule } from '../../../app.module'
 import { SettingsService } from '../services/settings.service'
 import { SettingsPageComponent } from './settings-page.component'
 import { CacheSendService } from '../services/cache-send.service'
+import { KafkaService } from 'src/app/core/services/kafka/kafka.service'
+import { KafkaServiceMock } from 'src/app/shared/testing/mock-services'
 
 describe('SettingsPageComponent', () => {
   let component: any
@@ -16,7 +18,10 @@ describe('SettingsPageComponent', () => {
     TestBed.configureTestingModule({
       imports: [AppModule, IonicModule, PipesModule, MomentModule],
       declarations: [SettingsPageComponent],
-      providers: [NavController, SettingsService, CacheSendService]
+      providers: [
+        NavController, SettingsService, CacheSendService,
+        { provide: KafkaService, useClass: KafkaServiceMock }
+      ]
     }).compileComponents()
 
     fixture = TestBed.createComponent(SettingsPageComponent)

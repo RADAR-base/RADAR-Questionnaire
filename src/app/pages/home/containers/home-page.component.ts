@@ -13,6 +13,7 @@ import { Task, TasksProgress } from '../../../shared/models/task'
 import { checkTaskIsNow } from '../../../shared/utilities/check-task-is-now'
 import { TasksService } from '../services/tasks.service'
 import { HomePageAnimations } from './home-page.animation'
+import { KeepAwake } from '@capacitor-community/keep-awake'
 
 @Component({
   selector: 'page-home',
@@ -32,6 +33,8 @@ export class HomePageComponent implements OnInit, OnDestroy {
   cacheProgressSubscription: Subscription = new Subscription()
   lastTaskRefreshTime = Date.now()
 
+  DATA_UPLOAD_TIMEOUT = 600_000 // 10 minutes
+
   showCalendar = false
   showCompleted = false
   startingQuestionnaire = false
@@ -45,6 +48,8 @@ export class HomePageComponent implements OnInit, OnDestroy {
   isTaskInfoShown: Promise<boolean>
   currentDate: number
   studyPortalReturnUrl: Promise<string | null>
+  showSyncNeeded = false
+  portalReturnText: Promise<string>
 
   APP_CREDITS = '&#169; RADAR-Base'
   HTML_BREAK = '<br>'
@@ -61,8 +66,6 @@ export class HomePageComponent implements OnInit, OnDestroy {
     private localization: LocalizationService,
     private platform: Platform,
     private usage: UsageService,
-    private configService: ConfigService,
-    private loadingController: LoadingController
   ) {
     this.changeDetectionListener =
       this.tasksService.changeDetectionEmitter.subscribe(() => {
@@ -99,19 +102,12 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.resumeListener = this.platform.resume.subscribe(() => this.onResume())
   }
 
-  ionViewDidEnter() {
-    this.tasksService.getAutoSendCachedData().then(autoSendCachedData => {
-      if (autoSendCachedData === 'true') {
-        this.sendCachedData()
-      }
-    })
-  }
-
   ionViewWillLeave() {
     // Unsubscribe to avoid memory leaks when the page is left
     if (this.resumeListener) {
       this.resumeListener.unsubscribe();
     }
+    KeepAwake.allowSleep()
   }
 
   init() {
@@ -128,6 +124,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.onDemandIcon = this.tasksService.getOnDemandAssessmentIcon()
     this.showMiscTasksButton = this.getShowMiscTasksButton()
     this.studyPortalReturnUrl = this.tasksService.getPortalReturnUrl()
+    this.portalReturnText = this.getPortalReturnText()
 
   }
 
@@ -205,14 +202,25 @@ export class HomePageComponent implements OnInit, OnDestroy {
     window.open(await this.studyPortalReturnUrl, '_system')
   }
 
+  async getPortalReturnText() {
+    const portalReturnText = await this.tasksService.getPortalReturnText()
+    return portalReturnText ? portalReturnText : this.localization.translateKey(LocKeys.BTN_RETURN_PORTAL)
+  }
+
   startQuestionnaire(taskCalendarTask?: Task) {
     // NOTE: User can start questionnaire from task calendar or start button in home.
     const task = taskCalendarTask ? taskCalendarTask : this.nextTask
 
     if (this.tasksService.isTaskStartable(task)) {
-      this.usage.sendClickEvent('start_questionnaire')
       this.startingQuestionnaire = true
-      this.navCtrl.navigateForward('/questions', { state: task })
+      if (task.name.toLowerCase().includes('healthkit')) {
+        this.usage.sendClickEvent('start_healthkit')
+        this.navCtrl.navigateForward('/healthkit', { state: task })
+        this.showSyncNeeded = true
+      } else {
+        this.usage.sendClickEvent('start_questionnaire')
+        this.navCtrl.navigateForward('/questions', { state: task })
+      }
     } else {
       this.showMissedInfo()
     }
@@ -262,85 +270,5 @@ export class HomePageComponent implements OnInit, OnDestroy {
     return Promise.all([this.hasOnDemandTasks, this.hasClinicalTasks]).then(
       ([onDemand, clinical]) => onDemand || clinical
     )
-  }
-
-  async sendCachedData() {
-    const kafkaService = this.configService.getKafkaService()
-    const cacheSize = await kafkaService.getCacheSize()
-    if (cacheSize < this.MIN_CACHE_SIZE_TO_SEND) {
-      return
-    }
-    // Create loading overlay with initial message
-    const loading = await this.loadingController.create({
-      message: this.localization.translateKey(LocKeys.HOME_SENDING_DATA_MESSAGE),
-      spinner: 'lines',
-      backdropDismiss: false
-    })
-    await loading.present()
-
-    // Subscribe to progress updates
-    const startTime = Date.now()
-    const progressSub = kafkaService.eventCallback$.subscribe({
-      next: (progress: number) => {
-        const progressDisplay = Math.min(Math.max(Math.ceil(progress * 100), 1), 99)
-
-        let message = this.localization.translateKey(LocKeys.HOME_SENDING_DATA_MESSAGE)
-        message += `<br><br><strong>${this.localization.translateKey(LocKeys.HOME_SENDING_DATA_PROGRESS)}: ${progressDisplay}%</strong>`
-
-        // Calculate time remaining
-        const elapsedTime = (Date.now() - startTime) / 1000
-        const remainingTime = isFinite(elapsedTime * (100 - progressDisplay) / progressDisplay)
-          ? (elapsedTime * (100 - progressDisplay)) / progressDisplay
-          : 0
-
-        let etaText = ''
-        if (remainingTime >= 60) {
-          const minutes = Math.floor(remainingTime / 60)
-          const seconds = Math.round(remainingTime % 60)
-          etaText = `About ${minutes} minute${minutes > 1 ? 's' : ''} and ${seconds} second${seconds !== 1 ? 's' : ''} remaining`
-        } else if (remainingTime > 0) {
-          etaText = `About ${remainingTime.toFixed(0)} second${remainingTime.toFixed(0) !== '1' ? 's' : ''} remaining`
-        }
-        message += `<br>${etaText}`
-
-        loading.message = message
-      },
-      error: (error) => {
-        loading.dismiss()
-        this.alertService.showAlert({
-          header: this.localization.translateKey(LocKeys.HOME_SENDING_DATA_ERROR_TITLE),
-          message: this.localization.translateKey(LocKeys.HOME_SENDING_DATA_ERROR_MESSAGE),
-          buttons: [
-            {
-              text: this.localization.translateKey(LocKeys.BTN_OKAY),
-              handler: () => { }
-            }
-          ]
-        })
-        console.error('Error in progress tracking:', error)
-      }
-    })
-
-    // Send cached data asynchronously
-    kafkaService.sendAllFromCache()
-      .then(() => {
-        progressSub.unsubscribe()
-        loading.dismiss()
-      })
-      .catch((error) => {
-        progressSub.unsubscribe()
-        loading.dismiss()
-        this.alertService.showAlert({
-          header: this.localization.translateKey(LocKeys.HOME_SENDING_DATA_ERROR_TITLE),
-          message: this.localization.translateKey(LocKeys.HOME_SENDING_DATA_ERROR_MESSAGE),
-          buttons: [
-            {
-              text: this.localization.translateKey(LocKeys.BTN_OKAY),
-              handler: () => { }
-            }
-          ]
-        })
-        console.error('Error sending cached data:', error)
-      })
   }
 }

@@ -69,6 +69,7 @@
         [isNow]="taskIsNow"
         [timeToNextMilli]="timeToNextTask"
         [showAffirmation]="showCompleted"
+        [showSyncNeeded]="showSyncNeeded"
         [noTasksToday]="(tasksProgress | async)?.numberOfTasks == 0"
       ></ticker-bar>
     </div>
@@ -110,7 +111,7 @@
           full
           (click)="openStudyPortal()"
         >
-        {{ 'BTN_RETURN_PORTAL' | translate }}
+          {{ portalReturnText | async }}
         </ion-button>
       </div>
       <div

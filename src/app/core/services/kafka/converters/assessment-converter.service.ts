@@ -24,8 +24,6 @@ export class AssessmentConverterService extends ConverterService {
     super(logger, http, token, keyConverter, remoteConfig)
   }
 
-  init() { }
-
   processData(payload) {
     const task = payload.task
     if (!task) return {}

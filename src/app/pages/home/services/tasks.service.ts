@@ -229,4 +229,12 @@ export class TasksService {
         config.get(ConfigKeys.PLATFORM_RETURN_URL)
       )
   }
+
+  getPortalReturnText() {
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        config.get(ConfigKeys.PLATFORM_RETURN_TEXT)
+      )
+  }
 }

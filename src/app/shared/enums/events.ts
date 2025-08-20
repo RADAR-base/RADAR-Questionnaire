@@ -14,7 +14,12 @@ export enum UsageEventType {
   RESUMED = 'resumed',
   RECORDING_STARTED = 'recording_started',
   RECORDING_STOPPED = 'recording_stopped',
-  RECORDING_ERROR = 'recording_error'
+  RECORDING_ERROR = 'recording_error',
+  HEALTHKIT_STARTED = 'healthkit_started',
+  HEALTHKIT_FINISHED = 'healthkit_finished',
+  HEALTHKIT_ERROR = 'healthkit_error',
+  HEALTHKIT_RETRY = 'healthkit_retry',
+  HEALTHKIT_EXIT = 'healthkit_exit'
 }
 
 export enum EnrolmentEventType {

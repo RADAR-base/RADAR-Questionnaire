@@ -27,7 +27,9 @@ export class SettingsService {
   }
 
   resetEnrolment() {
-    return this.config.resetAll()
+    return this.config.resetAll().then(() => {
+      window.location.reload()
+    })
   }
 
   resetConfig() {

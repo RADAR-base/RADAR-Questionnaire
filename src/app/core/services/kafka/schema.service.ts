@@ -8,6 +8,7 @@ import {
 import { SubjectConfigService } from '../config/subject-config.service'
 import { ConverterFactoryService } from './converters/converter-factory.service.'
 import { KeyConverterService } from './converters/key-converter.service'
+import { Platform } from '@ionic/angular'
 
 @Injectable()
 export class SchemaService {
@@ -15,7 +16,12 @@ export class SchemaService {
     private converterFactory: ConverterFactoryService,
     private subjectConfig: SubjectConfigService,
     public keyConverter: KeyConverterService,
-  ) { }
+    private platform: Platform
+  ) {
+    this.platform.ready().then(() => {
+      this.init()
+    })
+  }
 
   init() {
     this.converterFactory.init()

@@ -27,7 +27,7 @@
     <ion-card-content>
       <div class="attempt-container" *ngIf="isProcessing && attemptProgress.cacheSize > 0">
         <div class="attempt-text">
-          Sending {{ attemptProgress.success + attemptProgress.failed }}/{{ attemptProgress.cacheSize }} records
+          Trying {{ attemptProgress.success + attemptProgress.failed }}/{{ attemptProgress.cacheSize }} records
         </div>
       </div>
       <div class="progress-container">

@@ -49,7 +49,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
 
   // Constants
   private readonly MAX_RETRY_ATTEMPTS = 5
-  private readonly DATA_UPLOAD_TIMEOUT = 1_200_000 // 20 minutes
+  private readonly DATA_UPLOAD_TIMEOUT = 1_800_000 // 30 minutes
 
   constructor(
     public navCtrl: NavController,
@@ -330,7 +330,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
   private handleError(error: any): void {
     this.processingState = ProcessingState.ERROR
 
-    const errorMessage = this.getErrorMessage()
+    const errorMessage = this.getErrorMessage(this.attemptProgress.failed)
     this.updateProgress({
       message: errorMessage,
       status: 'error'
@@ -340,17 +340,24 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
     this.cleanupProcessingResources()
   }
 
-  private getErrorMessage(): string {
+  private getErrorMessage(failCount: number): string {
     if (!this.isNetworkConnected) {
       return 'Please check your internet connection and retry'
     }
-    return `${this.attemptProgress.failed} records failed to send - please retry`
+    return `${failCount} records failed to send - please retry`
   }
 
   // Timeout and cleanup
   private startProcessingTimeout(): void {
     this.processingTimeout = setTimeout(() => {
       if (this.isProcessing) {
+        this.updateProgress({
+          message: 'Processing timeout - please try again later.',
+          status: 'error'
+        })
+        this.processingState = ProcessingState.ERROR
+        this.healthProcessor.cancelUpload()
+        this.handleError(new Error('Processing timeout'))
         this.showProcessingTimeoutDialog()
       }
     }, this.DATA_UPLOAD_TIMEOUT)
@@ -422,7 +429,8 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       buttons: [{
         text: 'Return to Start',
         handler: () => this.exitTask()
-      }]
+      }],
+      backdropDismiss: false
     })
   }
 

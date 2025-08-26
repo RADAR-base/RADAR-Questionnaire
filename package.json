@@ -74,7 +74,7 @@
     "@ionic/angular": "^7.7.3",
     "@ionic/storage": "2.2.0",
     "@logisticinfotech/ionic4-datepicker": "^1.4.4",
-    "@perfood/capacitor-healthkit": "^1.3.0",
+    "@perfood/capacitor-healthkit": "^1.3.2",
     "@types/pako": "^2.0.3",
     "ajv": "^7.2.3",
     "ajv-errors": "^2.0.1",

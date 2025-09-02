@@ -3,6 +3,8 @@ import { IonicModule, NavController, NavParams } from '@ionic/angular'
 
 import { AppModule } from '../../../app.module'
 import { SplashPageComponent } from './splash-page.component'
+import { KafkaService } from 'src/app/core/services/kafka/kafka.service'
+import { KafkaServiceMock } from 'src/app/shared/testing/mock-services'
 
 describe('SpashPageComponent', () => {
   let component: any
@@ -14,6 +16,7 @@ describe('SpashPageComponent', () => {
       declarations: [SplashPageComponent],
       providers: [
         NavController,
+        { provide: KafkaService, useClass: KafkaServiceMock }
       ]
     }).compileComponents()
 

@@ -23,8 +23,6 @@ export class TimezoneConverterService extends ConverterService {
     super(logger, http, token, keyConverter, remoteConfig)
   }
 
-  init() { }
-
   getKafkaTopic(payload): Promise<any> {
     return Promise.resolve('questionnaire_timezone')
   }

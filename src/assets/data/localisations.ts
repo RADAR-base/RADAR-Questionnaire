@@ -1759,25 +1759,25 @@ export const Localisations = {
     hb: 'מסיים...'
   },
   HOME_SENDING_DATA_ERROR_TITLE: {
-    en: 'Error',
-    es: 'Error',
-    da: 'Fejl',
-    de: 'Fehler',
-    fr: 'Erreur',
-    it: 'Errore',
-    nl: 'Fout',
-    pl: 'Błąd',
-    hb: 'שגיאה'
+    en: 'Still having trouble?',
+    es: '¿Sigues teniendo problemas?',
+    da: 'Har du stadig problemer?',
+    de: 'Haben Sie immer noch Probleme?',
+    fr: 'Vous avez encore des difficultés ?',
+    it: 'Hai ancora problemi?',
+    nl: 'Heb je nog steeds problemen?',
+    pl: 'Masz nadal problemy?',
+    hb: 'עדיין יש לך בעיות?'
   },
   HOME_SENDING_DATA_ERROR_MESSAGE: {
-    en: 'Failed to send saved data. Please try again later.',
-    es: 'Error al enviar datos guardados. Por favor, inténtelo de nuevo más tarde.',
-    da: 'Kunne ikke sende gemte data. Prøv igen senere.',
-    de: 'Fehler beim Senden gespeicherter Daten. Bitte versuchen Sie es später erneut.',
-    fr: 'Échec de l\'envoi des données sauvegardées. Veuillez réessayer plus tard.',
-    it: 'Impossibile inviare i dati salvati. Riprova più tardi.',
-    nl: 'Kan opgeslagen gegevens niet verzenden. Probeer het later opnieuw.',
-    pl: 'Nie udało się wysłać zapisanych danych. Spróbuj ponownie później.',
-    hb: 'נכשל בשליחת נתונים שמורים. נסה שוב מאוחר יותר.'
+    en: `Please make sure you're connected to the internet and wait 2 hours before starting the task again in the app.`,
+    es: 'Asegúrate de estar conectado/a a Internet y espera 2 horas antes de iniciar la tarea de nuevo en la app.',
+    da: 'Sørg for, at du er forbundet til internettet, og vent 2 timer, før du starter opgaven igen i appen.',
+    de: 'Bitte stelle sicher, dass du mit dem Internet verbunden bist und warte 2 Stunden, bevor du die Aufgabe in der App erneut startest.',
+    fr: `Assurez-vous d'être connecté à Internet et attendez 2 heures avant de relancer la tâche dans l'application.`,
+    it: `Assicurati di essere connesso/a a Internet e attendi 2 ore prima di avviare nuovamente l'attività nell'app.`,
+    nl: 'Zorg ervoor dat je met internet bent verbonden en wacht 2 uur voordat je de taak opnieuw in de app start.',
+    pl: 'Upewnij się, że masz połączenie z internetem i odczekaj 2 godziny, zanim ponownie uruchomisz zadanie w aplikacji.',
+    hb: 'ודא שאתה מחובר לאינטרנט והמתן שעתיים לפני שתתחיל שוב את המשימה באפליקציה.'
   }
 }

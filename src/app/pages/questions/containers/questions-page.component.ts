@@ -62,7 +62,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
   showFinishAndLaunchScreen: boolean = false
   externalAppCanLaunch: boolean = false
   viewEntered = false
-  progressCount$: Observable<string>
+  progressCount = 0
   retryAlertShownCount = 0
 
   SHOW_INTRODUCTION_SET: Set<boolean | ShowIntroductionType> = new Set([
@@ -80,7 +80,6 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
   ])
   MAX_RETRY_ALERT_COUNT = 5
   MIN_CACHE_SIZE_TO_SHOW_RETRY_ALERT = 2
-  RELOADED_CONFIG_KEY = 'wasReloaded'
 
   backButtonListener: Subscription
   showProgressCount: Promise<boolean>
@@ -99,7 +98,6 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
       this.sendCompletionLog()
       navigator['app'].exitApp()
     })
-    this.progressCount$ = this.questionsService.getProgress()
   }
 
   ionViewDidLeave() {
@@ -107,7 +105,6 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
     this.sendCompletionLog()
     this.questionsService.reset()
     this.backButtonListener.unsubscribe()
-    sessionStorage.removeItem(this.RELOADED_CONFIG_KEY)
   }
 
   ngOnInit() {
@@ -116,23 +113,14 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
       this.task = nav.extras.state as Task
       this.showProgressCount = this.questionsService.getIsProgressCountShown()
 
-      // Check if page was reloaded using sessionStorage
-      const wasReloaded = sessionStorage.getItem(this.RELOADED_CONFIG_KEY) === 'true'
-      if (wasReloaded) {
-        sessionStorage.removeItem(this.RELOADED_CONFIG_KEY)
-        this.handlePageReload()
-      } else {
-        // Set flag for next potential reload
-        sessionStorage.setItem(this.RELOADED_CONFIG_KEY, 'true')
-        // Handle initial load
-        this.questionsService
-          .initRemoteConfigParams()
-          .then(() => this.questionsService.getQuestionnairePayload(this.task))
-          .then(res => {
-            this.initQuestionnaire(res)
-            return this.updateToolbarButtons()
-          })
-      }
+      // Handle initial load
+      this.questionsService
+        .initRemoteConfigParams()
+        .then(() => this.questionsService.getQuestionnairePayload(this.task))
+        .then(res => {
+          this.initQuestionnaire(res)
+          return this.updateToolbarButtons()
+        })
     }
     // Initialize swiper with memory management
     this.initializeSwiper()
@@ -319,6 +307,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
 
   navigateToFinishPage() {
     // Send the finish event and submit timestamps
+    this.progressCount = 1
     this.sendEvent(UsageEventType.QUESTIONNAIRE_FINISHED)
     this.submitTimestamps()
 
@@ -390,38 +379,6 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
       this.task,
       this.questions
     )
-  }
-
-  handleProcessingComplete() {
-    return this.questionsService.getKafkaService().getCacheSize().then(size => {
-      if (size > this.MIN_CACHE_SIZE_TO_SHOW_RETRY_ALERT &&
-        this.retryAlertShownCount < this.MAX_RETRY_ALERT_COUNT) {
-        this.showRetryAlert()
-      }
-    })
-  }
-
-  showRetryAlert() {
-    this.retryAlertShownCount++
-    this.alertService.showAlert({
-      header: this.localization.translateKey(LocKeys.STATUS_FAILURE),
-      message: this.localization.translateKey(LocKeys.DATA_SEND_ERROR_DESC),
-      buttons: [
-        {
-          text: this.localization.translateKey(LocKeys.BTN_RETRY),
-          handler: () => {
-            // Reset progress and retry sending
-            this.questionsService.resetProgress()
-            this.progressCount$ = this.questionsService.getProgress()
-            this.questionsService.getKafkaService().sendAllFromCache()
-          }
-        },
-        {
-          text: this.localization.translateKey(LocKeys.BTN_DISMISS),
-          handler: () => { }
-        }
-      ]
-    })
   }
 
   sendEvent(type) {

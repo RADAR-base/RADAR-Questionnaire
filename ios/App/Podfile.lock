@@ -44,6 +44,8 @@ PODS:
   - CapacitorMlkitBarcodeScanning (5.4.0):
     - Capacitor
     - GoogleMLKit/BarcodeScanning (= 4.0.0)
+  - CapacitorNetwork (7.0.1):
+    - Capacitor
   - CapacitorSplashScreen (5.0.7):
     - Capacitor
   - CapacitorStatusBar (5.0.7):
@@ -227,6 +229,7 @@ DEPENDENCIES:
   - "CapacitorKeyboard (from `../../node_modules/@capacitor/keyboard`)"
   - "CapacitorLocalNotifications (from `../../node_modules/@capacitor/local-notifications`)"
   - "CapacitorMlkitBarcodeScanning (from `../../node_modules/@capacitor-mlkit/barcode-scanning`)"
+  - "CapacitorNetwork (from `../../node_modules/@capacitor/network`)"
   - "CapacitorSplashScreen (from `../../node_modules/@capacitor/splash-screen`)"
   - "CapacitorStatusBar (from `../../node_modules/@capacitor/status-bar`)"
   - "CapacitorTextZoom (from `../../node_modules/@capacitor/text-zoom`)"
@@ -298,6 +301,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/local-notifications"
   CapacitorMlkitBarcodeScanning:
     :path: "../../node_modules/@capacitor-mlkit/barcode-scanning"
+  CapacitorNetwork:
+    :path: "../../node_modules/@capacitor/network"
   CapacitorSplashScreen:
     :path: "../../node_modules/@capacitor/splash-screen"
   CapacitorStatusBar:
@@ -330,6 +335,7 @@ SPEC CHECKSUMS:
   CapacitorKeyboard: d878396bca6a0fefb313b1546c169648b5ae812a
   CapacitorLocalNotifications: 40c66684f386e79d421f4099e4bda3d76a6909f8
   CapacitorMlkitBarcodeScanning: 018a1efa45366e5703b372c1b10bc839dfca7dc3
+  CapacitorNetwork: 15cb4385f0913a8ceb5e9a4d7af1ec554bdb8de8
   CapacitorSplashScreen: 4ff6258039d0ea77b289edb9503a50ba02d58189
   CapacitorStatusBar: 37ca5200a1791340c519239521ec2519d384eacb
   CapacitorTextZoom: 6d63527e15bddd528428d15843b12b738a9781f2
@@ -360,6 +366,6 @@ SPEC CHECKSUMS:
   PerfoodCapacitorHealthkit: 69c66ae8b7a8079586baab13bd6abd5880139263
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
 
-PODFILE CHECKSUM: 83d239301e399b40cc2ecf8a0a5c4f43a5503221
+PODFILE CHECKSUM: f366fcb22639b472c6f7456882af98988ab78137
 
 COCOAPODS: 1.16.2

@@ -1,6 +1,5 @@
 import { HttpClient, HttpHandler } from '@angular/common/http'
 import { TestBed } from '@angular/core/testing'
-import { HealthkitService } from 'src/app/pages/questions/services/healthkit.service'
 
 import {
   AppConfigServiceMock,
@@ -34,6 +33,7 @@ import { QuestionnaireService } from './questionnaire.service'
 import { RemoteConfigService } from './remote-config.service'
 import { SubjectConfigService } from './subject-config.service'
 import { TokenService } from '../token/token.service'
+import { HealthkitService } from 'src/app/pages/tasks/healthkit/services/healthkit.service'
 
 describe('ConfigService', () => {
   let service
@@ -61,7 +61,7 @@ describe('ConfigService', () => {
         { provide: AppServerService, useClass: AppServerServiceMock },
         { provide: MessageHandlerService, useClass: MessageHandlerServiceMock },
         { provide: HealthkitService, useClass: HealthkitServiceMock },
-        { provide: TokenService, useClass: TokenServiceMock }
+        { provide: TokenService, useClass: TokenServiceMock },
       ]
     })
   )

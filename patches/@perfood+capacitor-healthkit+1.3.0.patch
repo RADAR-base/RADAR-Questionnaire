@@ -1,0 +1,12 @@
+diff --git a/node_modules/@perfood/capacitor-healthkit/ios/Plugin/CapacitorHealthkitPlugin.swift b/node_modules/@perfood/capacitor-healthkit/ios/Plugin/CapacitorHealthkitPlugin.swift
+index e1a509f..0853713 100644
+--- a/node_modules/@perfood/capacitor-healthkit/ios/Plugin/CapacitorHealthkitPlugin.swift
++++ b/node_modules/@perfood/capacitor-healthkit/ios/Plugin/CapacitorHealthkitPlugin.swift
+@@ -76,7 +76,6 @@ public class CapacitorHealthkitPlugin: CAPPlugin {
+             case "duration":
+                 types.insert(HKQuantityType.quantityType(forIdentifier: HKQuantityTypeIdentifier.appleExerciseTime)!)
+             case "activity":
+-                types.insert(HKObjectType.categoryType(forIdentifier: HKCategoryTypeIdentifier.sleepAnalysis)!)
+                 types.insert(HKWorkoutType.workoutType())
+             case "calories":
+                 types.insert(HKQuantityType.quantityType(forIdentifier: HKQuantityTypeIdentifier.activeEnergyBurned)!)

@@ -14,12 +14,12 @@ import { getSeconds } from 'src/app/shared/utilities/time'
 import { LogService } from '../../misc/log.service'
 import { TokenService } from '../../token/token.service'
 import { ConverterService } from './converter.service'
-import { HealthkitService } from 'src/app/pages/questions/services/healthkit.service'
 import { StorageService } from '../../storage/storage.service'
 import { StorageKeys } from 'src/app/shared/enums/storage'
 import { KeyConverterService } from './key-converter.service'
 import { Utility } from 'src/app/shared/utilities/util'
 import { RemoteConfigService } from '../../config/remote-config.service'
+import { HealthkitService } from 'src/app/pages/tasks/healthkit/services/healthkit.service'
 
 @Injectable()
 export class HealthkitConverterService extends ConverterService {
@@ -37,12 +37,6 @@ export class HealthkitConverterService extends ConverterService {
     remoteConfig: RemoteConfigService
   ) {
     super(logger, http, token, keyConverter, remoteConfig)
-  }
-
-  init() {
-    this.schemas = {}
-    this.updateURI()
-    this.getSchemas()
   }
 
   processData(data) {
@@ -114,15 +108,10 @@ export class HealthkitConverterService extends ConverterService {
     const name = data.key
     const startTime = data.value.startTime
     const endTime = data.value.endTime
-    return Promise.all([
-      this.getLastPollTimes(),
-      this.healthkit.query(startTime, endTime, name)
-    ]).then(async ([dic, res]) => {
+    return this.healthkit.query(startTime, endTime, name).then(async res => {
       if (res.length) {
         const sample = res[res.length - 1]
         const lastDataDate = new Date(sample['endDate'])
-        dic[name] = lastDataDate
-        this.setLastPollTimes(dic)
         const processedData = await this.processSingleDatatype(
           name,
           res,
@@ -138,20 +127,12 @@ export class HealthkitConverterService extends ConverterService {
     })
   }
 
-  setLastPollTimes(dic: any) {
-    return this.storage.set(StorageKeys.HEALTH_LAST_POLL_TIMES, dic)
-  }
-
-  getLastPollTimes() {
-    return this.storage.get(StorageKeys.HEALTH_LAST_POLL_TIMES)
-  }
-
   getSchemas() {
     if (!this.BASE_URI) {
       return this.updateURI().then(() => this.getSchemas())
     }
     if (this.schemas[this.HEALTHKIT_TOPIC])
-      return this.schemas[this.HEALTHKIT_TOPIC]
+      return Promise.resolve(this.schemas[this.HEALTHKIT_TOPIC])
     else {
       const versionStr = this.URI_version + 'latest'
       const uri =
@@ -160,9 +141,14 @@ export class HealthkitConverterService extends ConverterService {
         this.HEALTHKIT_TOPIC +
         '-value' +
         versionStr
-      const schema = this.getLatestKafkaSchemaVersion(uri)
-      this.schemas[this.HEALTHKIT_TOPIC] = schema
-      return schema
+      return this.getLatestKafkaSchemaVersion(uri).then(
+        schema => {
+          this.schemas[this.HEALTHKIT_TOPIC] = schema
+          return schema
+        }
+      ).catch(error => {
+        throw error
+      })
     }
   }
 
@@ -213,5 +199,10 @@ export class HealthkitConverterService extends ConverterService {
         }
       }))
     })
+  }
+
+  reset() {
+    super.reset()
+    this.healthkit.setUploadReadyFlag(false)
   }
 }

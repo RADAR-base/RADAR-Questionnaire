@@ -60,9 +60,7 @@ export class SettingsPageComponent {
 
   ionViewWillEnter() {
     this.usage.setPage(this.constructor.name)
-    this.loadSettings().then(() => {
-      this.checkForCacheSending()
-    })
+    this.loadSettings()
   }
 
   loadSettings() {
@@ -96,8 +94,12 @@ export class SettingsPageComponent {
     this.navCtrl.navigateBack('/home')
   }
 
-  backToSplash() {
-    this.navCtrl.navigateRoot('')
+  backToSplash(isEnrolmentReset: boolean = false) {
+    this.navCtrl.navigateRoot('').then(() => {
+      if (isEnrolmentReset) {
+        window.location.reload()
+      }
+    })
   }
 
   notificationChange() {
@@ -218,7 +220,7 @@ export class SettingsPageComponent {
             promises.push(this.settingsService.resetConfig())
           else if (selected.includes(ResetOption.CACHE))
             promises.push(this.settingsService.resetCache())
-          Promise.all(promises).then(() => this.backToSplash())
+          Promise.all(promises).then(() => this.backToSplash(selected.includes(ResetOption.ENROLMENT)))
         }
       }
     ]
@@ -277,16 +279,6 @@ export class SettingsPageComponent {
   }
 
   async sendCachedData() {
-    // Check if cache is already being sent
-    const kafkaService = this.settingsService.getKafkaService()
-    if (kafkaService.isCacheCurrentlySending()) {
-      this.showCacheSendingAlert()
-      return
-    }
-
-    // Reset the service state before starting
-    this.cacheSendService.reset()
-
     const modal = await this.modalCtrl.create({
       component: CacheSendModalComponent
     })
@@ -327,13 +319,6 @@ export class SettingsPageComponent {
       progressSub.unsubscribe()
       await modal.dismiss()
       throw error
-    }
-  }
-
-  checkForCacheSending() {
-    const kafkaService = this.settingsService.getKafkaService()
-    if (kafkaService.isCacheCurrentlySending()) {
-      this.showCacheSendingAlert()
     }
   }
 

@@ -67,6 +67,13 @@
         Retry
       </ion-button>
     </ng-container>
+
+    <ng-container *ngIf="showFinishButton && !showRetryButton">
+      <ion-button ion-button class="bt bt--full" round full expand="block" size="large" color="primary"
+        (click)="exitTask()">
+        Finish
+      </ion-button>
+    </ng-container>
   </div>
 
 </ion-content>

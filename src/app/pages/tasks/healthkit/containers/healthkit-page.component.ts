@@ -447,8 +447,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
   }
 
   get showFinishButton(): boolean {
-    return this.processingState === ProcessingState.COMPLETE ||
-      this.processingState === ProcessingState.ERROR
+    return this.processingState === ProcessingState.COMPLETE
   }
 
   get showProgressBar(): boolean {

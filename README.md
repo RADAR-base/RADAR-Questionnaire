@@ -62,10 +62,14 @@ In order to add platforms to target, you must install the required SDKs.
 
 The android platform should already be added in the project. But, you need to have the [Android SDK](https://developer.android.com/studio/index.html) pre installed. This step also adds the plugins listed in `config.xml` to the project.
 
+```
+$ ionic capacitor build android 
+```
+
 Run the app in an Android device:
 
 ```
-$ ionic capacitor run android
+$ ionic capacitor run android 
 ```
 
 This will open android studio, syncing and running gradle builds and run configurations. To make sure they work properly, make sure that JVM and gradle versions are cross compatible.
@@ -75,7 +79,7 @@ This will open android studio, syncing and running gradle builds and run configu
 To add the iOS platform, you need to have [XCode](https://apps.apple.com/us/app/xcode/id497799835?mt=12) pre installed.
 
 ```
-$ ionic capacitor platform add ios
+$ ionic capacitor build ios
 ```
 
 Run the app in an iOS device:

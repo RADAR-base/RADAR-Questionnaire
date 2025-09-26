@@ -2,8 +2,8 @@ apply plugin: 'com.android.application'
 
 android {
     namespace "org.phidatalab.radar_armt"
-  compileSdkVersion rootProject.ext.compileSdkVersion
-  defaultConfig {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    defaultConfig {
         applicationId "org.phidatalab.radar_armt"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion

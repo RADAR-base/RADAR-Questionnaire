@@ -351,6 +351,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
   private startProcessingTimeout(): void {
     this.processingTimeout = setTimeout(() => {
       if (this.isProcessing) {
+        this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_TIMEOUT)
         this.updateProgress({
           message: 'Processing timeout - please try again later.',
           status: 'error'

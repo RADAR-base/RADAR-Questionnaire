@@ -64,6 +64,7 @@ export class HealthkitService {
   private messageInterval: NodeJS.Timeout | null = null
   private uploadStartTime = 0
   private baseOffset = 0
+  private showEtaText = false
 
   constructor(
     private storage: StorageService,
@@ -116,6 +117,14 @@ export class HealthkitService {
         )
         .then(permissions =>
           (this.HEALTHKIT_PERMISSIONS = this.util.stringToArray(permissions, this.DELIMITER))
+        )
+      config
+        .getOrDefault(
+          ConfigKeys.HEALTHKIT_SHOW_ETA_TEXT,
+          'false'
+        )
+        .then(showEta =>
+          (this.showEtaText = showEta.toLowerCase() === 'true')
         )
     })
   }
@@ -276,21 +285,23 @@ export class HealthkitService {
   }
 
   private startProgressMessages(): void {
-    const progressMessages = [
-      'Starting the upload...',
-      'Thank you for your patience...',
-      'We are working on it...'
-    ]
-
     if (this.messageInterval) {
       clearInterval(this.messageInterval)
     }
 
-    this.messageInterval = setInterval(() => {
-      this.updateProgress({
-        message: progressMessages[Math.floor(Math.random() * progressMessages.length)]
-      })
-    }, 5000)
+    // Set up timed messages at specific intervals
+    const messageTimeouts = [
+      { time: 60000, message: 'Data upload in progress' },      // 1 minute
+      { time: 180000, message: 'Data upload in progress' },     // 3 minutes
+      { time: 360000, message: 'This is taking a bit longer than expected, please hang in there' }, // 6 minutes
+      { time: 720000, message: 'Still uploading...let\'s give it another 8 minutes' } // 12 minutes
+    ]
+
+    messageTimeouts.forEach(({ time, message }) => {
+      setTimeout(() => {
+        this.updateProgress({ message })
+      }, time)
+    })
   }
 
   stopProgressMessages(): void {
@@ -342,8 +353,9 @@ export class HealthkitService {
       // Build detailed progress message with ETA and data info
       let message = ``
 
-      // Calculate and add ETA
-      const etaText = this.calculateTimeRemaining(kafkaProgressPercentage)
+      // Calculate and add ETA only if enabled in config
+      const etaText =
+        this.showEtaText ? this.calculateTimeRemaining(kafkaProgressPercentage) : ''
       if (etaText) {
         message += `${etaText}`
       }

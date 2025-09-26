@@ -15,6 +15,7 @@ import { Utility } from 'src/app/shared/utilities/util'
 import { QuestionnaireService } from 'src/app/core/services/config/questionnaire.service'
 import { BehaviorSubject, Observable } from 'rxjs'
 import { Task } from 'src/app/shared/models/task'
+import { App } from '@capacitor/app'
 
 export interface HealthDataLoadContext {
   startTime: number
@@ -46,6 +47,10 @@ export class HealthkitService {
   DELIMITER = ','
   queryProgress = 0
 
+  // Track if a HealthKit authorization prompt is outstanding
+  private pendingAuthorization = false
+  private lastAuthRequestTs = 0
+
   // Progress tracking
   private progressSubject = new BehaviorSubject<ProgressUpdate>({
     progress: 0,
@@ -69,7 +74,32 @@ export class HealthkitService {
     this.init()
   }
 
+  private setupAppStateListener(): void {
+    App.addListener('appStateChange', ({ isActive }) => {
+      if (!isActive) return
+      if (!this.pendingAuthorization) return
+      this.requestHealthkitAuthorization()
+        .catch(() => { /* handled in method */ })
+    })
+  }
+
+  // Request HealthKit authorization with state tracking and throttling
+  private async requestHealthkitAuthorization(): Promise<void> {
+    this.pendingAuthorization = true
+    this.lastAuthRequestTs = Date.now()
+    try {
+      await CapacitorHealthkit.requestAuthorization({
+        all: [''],
+        read: this.HEALTHKIT_PERMISSIONS,
+        write: ['']
+      })
+    } finally {
+      this.pendingAuthorization = false
+    }
+  }
+
   init() {
+    this.setupAppStateListener()
     this.remoteConfig.read().then(config => {
       config
         .getOrDefault(
@@ -133,24 +163,16 @@ export class HealthkitService {
     return CapacitorHealthkit.isAvailable()
   }
 
-  loadData(dataType, startTime) {
-    return CapacitorHealthkit
-      .requestAuthorization(
-        {
-          all: [''],
-          read: this.HEALTHKIT_PERMISSIONS,
-          write: [''],
-        }
-      )
-      .then(() => {
-        const endTime = new Date(
-          startTime.getTime() + getMilliseconds({ days: Number(this.HEALTHKIT_INTERVAL_DAYS) }))
-        return { startTime: startTime, endTime: endTime }
-      })
-      .catch(e => {
-        console.log(e)
-        return null
-      })
+  async loadData(dataType, startTime) {
+    try {
+      await this.requestHealthkitAuthorization()
+      const endTime = new Date(
+        startTime.getTime() + getMilliseconds({ days: Number(this.HEALTHKIT_INTERVAL_DAYS) }))
+      return { startTime: startTime, endTime: endTime }
+    } catch (e) {
+      console.log(e)
+      return null
+    }
   }
 
   async query(queryStartTime: Date, queryEndTime: Date, dataType: string) {
@@ -203,7 +225,7 @@ export class HealthkitService {
       const dataType = healthDataTypes[i]
 
       try {
-        const collectionProgress = Math.round((i / totalTypes) * 15) // Collection is 25% of remaining progress
+        const collectionProgress = Math.round((i / totalTypes) * 15) // Collection is 15% of remaining progress
         const adjustedProgress = this.adjustProgressWithOffset(collectionProgress)
 
         this.updateProgress({

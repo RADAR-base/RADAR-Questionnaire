@@ -136,7 +136,12 @@ export class HealthkitService {
 
   private updateProgress(update: Partial<ProgressUpdate>): void {
     const current = this.progressSubject.value
-    this.progressSubject.next({ ...current, ...update })
+    // Preserve the existing message if the update doesn't provide one or is empty
+    const next = { ...current, ...update }
+    if (update.message === undefined || update.message === '') {
+      next.message = current.message
+    }
+    this.progressSubject.next(next as ProgressUpdate)
   }
 
   setProgressBaseOffset(offset: number): void {
@@ -285,6 +290,7 @@ export class HealthkitService {
   }
 
   private startProgressMessages(): void {
+    console.log('startProgressMessages')
     if (this.messageInterval) {
       clearInterval(this.messageInterval)
     }
@@ -294,12 +300,19 @@ export class HealthkitService {
       { time: 60000, message: 'Data upload in progress' },      // 1 minute
       { time: 180000, message: 'Data upload in progress' },     // 3 minutes
       { time: 360000, message: 'This is taking a bit longer than expected, please hang in there' }, // 6 minutes
-      { time: 720000, message: 'Still uploading...let\'s give it another 8 minutes' } // 12 minutes
+      { time: 720000, message: "Still uploading. Let's give it another 8 minutes" } // 12 minutes
     ]
 
     messageTimeouts.forEach(({ time, message }) => {
       setTimeout(() => {
-        this.updateProgress({ message })
+        const shownMessage = message
+        this.updateProgress({ message: shownMessage })
+        // Auto-clear this message after 30 seconds if no newer message replaced it
+        setTimeout(() => {
+          if (this.progressSubject.value.message === shownMessage) {
+            this.updateProgress({ message: ' ' })
+          }
+        }, 10000)
       }, time)
     })
   }

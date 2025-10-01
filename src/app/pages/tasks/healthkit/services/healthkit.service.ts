@@ -312,7 +312,7 @@ export class HealthkitService {
           if (this.progressSubject.value.message === shownMessage) {
             this.updateProgress({ message: ' ' })
           }
-        }, 10000)
+        }, 30000)
       }, time)
     })
   }

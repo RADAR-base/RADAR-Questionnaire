@@ -81,7 +81,8 @@
 
 <ion-footer>
   <ion-toolbar>
-    <ion-button ion-button slot="start" icon-left [disabled]="isProcessing" (click)="exitTask()">
+    <ion-button *ngIf="!isProcessing && !showFinishButton" ion-button slot="start" icon-left [disabled]="isProcessing"
+      (click)="exitTask()">
       <ion-icon name="close"></ion-icon>
       <div class="toolbar-label">Close</div>
     </ion-button>

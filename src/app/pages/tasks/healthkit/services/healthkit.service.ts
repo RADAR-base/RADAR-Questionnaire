@@ -48,8 +48,9 @@ export class HealthkitService {
   queryProgress = 0
 
   // Track if a HealthKit authorization prompt is outstanding
-  private pendingAuthorization = false
-  private lastAuthRequestTs = 0
+  private isRequestingAuthorization = false
+  private authorizationPromise: Promise<void> | null = null
+  private authRetryDelayMs = 1000
 
   // Progress tracking
   private progressSubject = new BehaviorSubject<ProgressUpdate>({
@@ -62,6 +63,7 @@ export class HealthkitService {
   private healthAnswers: Record<string, any> = {}
   private healthTimestamps: Record<string, number> = {}
   private messageInterval: NodeJS.Timeout | null = null
+  private messageTimeouts: NodeJS.Timeout[] = []
   private uploadStartTime = 0
   private baseOffset = 0
   private showEtaText = false
@@ -75,32 +77,41 @@ export class HealthkitService {
     this.init()
   }
 
-  private setupAppStateListener(): void {
-    App.addListener('appStateChange', ({ isActive }) => {
-      if (!isActive) return
-      if (!this.pendingAuthorization) return
-      this.requestHealthkitAuthorization()
-        .catch(() => { /* handled in method */ })
+  async requestHealthkitAuthorization(): Promise<void> {
+    if (this.authorizationPromise) {
+      return this.authorizationPromise
+    }
+
+    this.isRequestingAuthorization = true
+    this.authorizationPromise = (async () => {
+      let delayMs = this.authRetryDelayMs
+      for (; ;) {
+        try {
+          await CapacitorHealthkit.requestAuthorization({
+            all: [],
+            read: this.HEALTHKIT_PERMISSIONS,
+            write: []
+          })
+          return
+        } catch (error) {
+          console.warn('HealthKit authorization request failed, retrying...', error)
+          await this.delay(delayMs)
+          delayMs = Math.min(delayMs * 2, 60000)
+        }
+      }
+    })().finally(() => {
+      this.isRequestingAuthorization = false
+      this.authorizationPromise = null
     })
+
+    return this.authorizationPromise
   }
 
-  // Request HealthKit authorization with state tracking and throttling
-  private async requestHealthkitAuthorization(): Promise<void> {
-    this.pendingAuthorization = true
-    this.lastAuthRequestTs = Date.now()
-    try {
-      await CapacitorHealthkit.requestAuthorization({
-        all: [''],
-        read: this.HEALTHKIT_PERMISSIONS,
-        write: ['']
-      })
-    } finally {
-      this.pendingAuthorization = false
-    }
+  private delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms))
   }
 
   init() {
-    this.setupAppStateListener()
     this.remoteConfig.read().then(config => {
       config
         .getOrDefault(
@@ -179,7 +190,6 @@ export class HealthkitService {
 
   async loadData(dataType, startTime) {
     try {
-      await this.requestHealthkitAuthorization()
       const endTime = new Date(
         startTime.getTime() + getMilliseconds({ days: Number(this.HEALTHKIT_INTERVAL_DAYS) }))
       return { startTime: startTime, endTime: endTime }
@@ -222,9 +232,12 @@ export class HealthkitService {
     }
 
     this.updateProgress({
+      progress: 0,
       message: 'Requesting HealthKit permissions...',
       status: 'collecting'
     })
+
+    await this.requestHealthkitAuthorization()
 
     // Reset previous data
     this.healthAnswers = {}
@@ -290,10 +303,10 @@ export class HealthkitService {
   }
 
   private startProgressMessages(): void {
-    console.log('startProgressMessages')
     if (this.messageInterval) {
       clearInterval(this.messageInterval)
     }
+    this.clearMessageTimeouts()
 
     // Set up timed messages at specific intervals
     const messageTimeouts = [
@@ -304,17 +317,23 @@ export class HealthkitService {
     ]
 
     messageTimeouts.forEach(({ time, message }) => {
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         const shownMessage = message
         this.updateProgress({ message: shownMessage })
-        // Auto-clear this message after 30 seconds if no newer message replaced it
+
         setTimeout(() => {
           if (this.progressSubject.value.message === shownMessage) {
             this.updateProgress({ message: ' ' })
           }
         }, 30000)
       }, time)
+      this.messageTimeouts.push(timeoutId)
     })
+  }
+
+  private clearMessageTimeouts(): void {
+    this.messageTimeouts.forEach(timeoutId => clearTimeout(timeoutId))
+    this.messageTimeouts = []
   }
 
   stopProgressMessages(): void {
@@ -322,6 +341,7 @@ export class HealthkitService {
       clearInterval(this.messageInterval)
       this.messageInterval = null
     }
+    this.clearMessageTimeouts()
   }
 
   formatDataTypeName(dataType: string): string {
@@ -343,6 +363,10 @@ export class HealthkitService {
   }
 
   updateKafkaProgress(progress: number, baseOffset: number = 0): void {
+    if (this.isRequestingAuthorization) {
+      return
+    }
+
     // Update the base offset if provided
     if (baseOffset > 0) {
       this.setProgressBaseOffset(baseOffset)

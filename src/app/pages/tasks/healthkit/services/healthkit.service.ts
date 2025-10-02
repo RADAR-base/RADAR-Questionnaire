@@ -379,7 +379,7 @@ export class HealthkitService {
       ? kafkaProgressPercentage
       : 15 + (85 * (kafkaProgressPercentage / 100))
     const overallProgress = this.adjustProgressWithOffset(mappedProgress)
-    const finalProgress = Math.min(100, Math.round(overallProgress))
+    const finalProgress = Math.min(100, Math.floor(overallProgress))
 
     // Start timing on first progress update
     if (this.uploadStartTime === 0 && kafkaProgressPercentage > 0) {

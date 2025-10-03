@@ -205,7 +205,7 @@ PODS:
   - nanopb/decode (2.30909.1)
   - nanopb/encode (2.30909.1)
   - OAuthSwift (2.2.0)
-  - PerfoodCapacitorHealthkit (1.3.0):
+  - PerfoodCapacitorHealthkit (1.3.2):
     - Capacitor
   - PromisesObjC (2.4.0)
 
@@ -363,7 +363,7 @@ SPEC CHECKSUMS:
   MLKitVision: 8baa5f46ee3352614169b85250574fde38c36f49
   nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
   OAuthSwift: 75efbb5bd9a4b2b71a37bd7e986bf3f55ddd54c6
-  PerfoodCapacitorHealthkit: 69c66ae8b7a8079586baab13bd6abd5880139263
+  PerfoodCapacitorHealthkit: 0708728954308c0217daa6912deeb73df7cba050
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
 
 PODFILE CHECKSUM: f366fcb22639b472c6f7456882af98988ab78137

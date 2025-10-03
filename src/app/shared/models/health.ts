@@ -1,13 +1,23 @@
 export enum HealthkitPermission {
   STAIRS = 'stairs',
-  DISTANCE = 'distance',
+  DISTANCE_WALKING_RUNNING = 'distanceWalkingRunning',
+  DISTANCE_CYCLING = 'distanceCycling',
   DURATION = 'duration',
   ACTIVITY = 'activity',
-  CALORIES = 'calories',
+  SLEEP_ANALYSIS = 'sleepAnalysis',
+  ACTIVE_CALORIES = 'activeCalories',
+  BASAL_CALORIES = 'basalCalories',
   BLOOD_GLUCOSE = 'bloodGlucose',
   WEIGHT = 'weight',
   HEART_RATE = 'heartRate',
   STEPS = 'steps',
+  BLOOD_PRESSURE_SYSTOLIC = 'bloodPressureSystolic',
+  BLOOD_PRESSURE_DIASTOLIC = 'bloodPressureDiastolic',
+  OXYGEN_SATURATION = 'oxygenSaturation',
+  RESPIRATORY_RATE = 'respiratoryRate',
+  BODY_FAT_PERCENTAGE = 'bodyFatPercentage',
+  BODY_TEMPERATURE = 'bodyTemperature',
+
 }
 
 export enum HealthkitDataType {
@@ -102,10 +112,10 @@ export interface HealthkitValueExport {
 export const HealthkitPermissionMap = {
   [HealthkitDataType.STEP_COUNT]: HealthkitPermission.STEPS,
   [HealthkitDataType.FLIGHTS_CLIMBED]: HealthkitPermission.STAIRS,
-  [HealthkitDataType.DISTANCE_WALKING_RUNNING]: HealthkitPermission.DISTANCE,
-  [HealthkitDataType.DISTANCE_CYCLING]: HealthkitPermission.DISTANCE,
-  [HealthkitDataType.ACTIVE_ENERGY_BURNED]: HealthkitPermission.CALORIES,
-  [HealthkitDataType.BASAL_ENERGY_BURNED]: HealthkitPermission.CALORIES,
+  [HealthkitDataType.DISTANCE_WALKING_RUNNING]: HealthkitPermission.DISTANCE_WALKING_RUNNING,
+  [HealthkitDataType.DISTANCE_CYCLING]: HealthkitPermission.DISTANCE_CYCLING,
+  [HealthkitDataType.ACTIVE_ENERGY_BURNED]: HealthkitPermission.ACTIVE_CALORIES,
+  [HealthkitDataType.BASAL_ENERGY_BURNED]: HealthkitPermission.BASAL_CALORIES,
   [HealthkitDataType.HEART_RATE]: HealthkitPermission.HEART_RATE,
   [HealthkitDataType.RESTING_HEART_RATE]: HealthkitPermission.HEART_RATE,
   [HealthkitDataType.APPLE_EXERCISE_TIME]: HealthkitPermission.DURATION,

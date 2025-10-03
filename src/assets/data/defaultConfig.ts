@@ -350,12 +350,11 @@ export const DefaultHealthkitQuestionnaireKey = 'healthkit'
 // *Default Healthkit data permissions to request
 export const DefaultHealthkitPermissions = [
   HealthkitPermission.ACTIVITY,
-  HealthkitPermission.CALORIES,
-  HealthkitPermission.DISTANCE,
+  HealthkitPermission.ACTIVE_CALORIES,
+  HealthkitPermission.DISTANCE_WALKING_RUNNING,
   HealthkitPermission.DURATION,
   HealthkitPermission.HEART_RATE,
   HealthkitPermission.STAIRS,
-  HealthkitPermission.WEIGHT,
   HealthkitPermission.STEPS
 ]
 

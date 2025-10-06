@@ -368,7 +368,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       clearTimeout(this.processingTimeout)
       this.processingTimeout = null
     }
-
+    this.healthkitService.stopProgressMessages()
     this.kafkaProgressSubscription.unsubscribe()
     this.progressBaseOffset = 0
     this.attemptProgress = { success: 0, failed: 0, cacheSize: 0 }

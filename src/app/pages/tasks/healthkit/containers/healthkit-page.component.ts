@@ -14,6 +14,7 @@ import { LocKeys } from '../../../../shared/enums/localisations'
 import { Task } from '../../../../shared/models/task'
 import { AttemptProgress, HealthkitService, ProgressUpdate } from '../services/healthkit.service'
 import { HealthQuestionnaireProcessorService } from '../services/health-questionnaire-processor.service'
+import { DefaultHealthkitPullTimeout } from 'src/assets/data/defaultConfig'
 
 enum ProcessingState {
   IDLE = 'idle',
@@ -49,7 +50,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
 
   // Constants
   private readonly MAX_RETRY_ATTEMPTS = 5
-  private readonly DATA_UPLOAD_TIMEOUT = 1_200_000 // 20 minutes
+  private readonly DATA_UPLOAD_TIMEOUT = DefaultHealthkitPullTimeout
 
   constructor(
     public navCtrl: NavController,

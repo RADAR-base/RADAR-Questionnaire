@@ -49,7 +49,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
 
   // Constants
   private readonly MAX_RETRY_ATTEMPTS = 5
-  private readonly DATA_UPLOAD_TIMEOUT = 1_800_000 // 30 minutes
+  private readonly DATA_UPLOAD_TIMEOUT = 1_200_000 // 20 minutes
 
   constructor(
     public navCtrl: NavController,
@@ -306,7 +306,6 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       return
     }
     this.attemptProgress = { success, failed, cacheSize }
-    this.healthkitService.stopProgressMessages()
     this.healthkitService.updateKafkaProgress(normalizedProgress, this.progressBaseOffset)
   }
 

@@ -55,7 +55,6 @@ export class HomePageComponent implements OnInit, OnDestroy {
   HTML_BREAK = '<br>'
   // How long to wait before refreshing tasks
   TASK_REFRESH_MILLIS = 600_000
-  CACHE_SENDING_ALERT_TIMEOUT = 1_200_000 // 20 minutes
   MIN_CACHE_SIZE_TO_SEND = 5
 
   constructor(

@@ -14,6 +14,7 @@ import { LocKeys } from '../../../../shared/enums/localisations'
 import { Task } from '../../../../shared/models/task'
 import { AttemptProgress, HealthkitService, ProgressUpdate } from '../services/healthkit.service'
 import { HealthQuestionnaireProcessorService } from '../services/health-questionnaire-processor.service'
+import { DefaultHealthkitPullTimeout } from 'src/assets/data/defaultConfig'
 
 enum ProcessingState {
   IDLE = 'idle',
@@ -49,7 +50,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
 
   // Constants
   private readonly MAX_RETRY_ATTEMPTS = 5
-  private readonly DATA_UPLOAD_TIMEOUT = 1_800_000 // 30 minutes
+  private readonly DATA_UPLOAD_TIMEOUT = DefaultHealthkitPullTimeout
 
   constructor(
     public navCtrl: NavController,
@@ -306,7 +307,6 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       return
     }
     this.attemptProgress = { success, failed, cacheSize }
-    this.healthkitService.stopProgressMessages()
     this.healthkitService.updateKafkaProgress(normalizedProgress, this.progressBaseOffset)
   }
 
@@ -369,7 +369,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       clearTimeout(this.processingTimeout)
       this.processingTimeout = null
     }
-
+    this.healthkitService.stopProgressMessages()
     this.kafkaProgressSubscription.unsubscribe()
     this.progressBaseOffset = 0
     this.attemptProgress = { success: 0, failed: 0, cacheSize: 0 }

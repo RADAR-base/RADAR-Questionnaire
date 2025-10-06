@@ -360,3 +360,9 @@ export const DefaultHealthkitPermissions = [
 
 // *Default interval to pull Healthkit data until
 export const DefaultHealthkitInterval = 3106 // days
+
+// *Default Healthkit pull timeout in milliseconds
+export const DefaultHealthkitPullTimeout = 1_200_000 // 20 minutes
+
+// *Default Healthkit show ETA text
+export const DefaultHealthkitShowEtaText = 'false'

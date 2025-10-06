@@ -16,6 +16,7 @@ import { QuestionnaireService } from 'src/app/core/services/config/questionnaire
 import { BehaviorSubject, Observable } from 'rxjs'
 import { Task } from 'src/app/shared/models/task'
 import { App } from '@capacitor/app'
+import { DefaultHealthkitShowEtaText } from 'src/assets/data/defaultConfig'
 
 export interface HealthDataLoadContext {
   startTime: number
@@ -132,7 +133,7 @@ export class HealthkitService {
       config
         .getOrDefault(
           ConfigKeys.HEALTHKIT_SHOW_ETA_TEXT,
-          'false'
+          DefaultHealthkitShowEtaText
         )
         .then(showEta =>
           (this.showEtaText = showEta.toLowerCase() === 'true')

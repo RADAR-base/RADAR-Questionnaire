@@ -33,39 +33,39 @@ export class KeyConverterServiceMock {
 }
 
 export class LogServiceMock {
-  log() {}
+  log() { }
 }
 
-export class ConverterFactoryServiceMock {}
+export class ConverterFactoryServiceMock { }
 
-export class ScheduleServiceMock {}
+export class ScheduleServiceMock { }
 export class NotificationServiceMock {
-  init() {}
+  init() { }
 }
-export class ProtocolServiceMock {}
-export class QuestionnaireServiceMock {}
-export class AppConfigServiceMock {}
-export class SubjectConfigServiceMock {}
+export class ProtocolServiceMock { }
+export class QuestionnaireServiceMock { }
+export class AppConfigServiceMock { }
+export class SubjectConfigServiceMock { }
 export class KafkaServiceMock {
-  init() {}
+  init() { }
 }
-export class LocalizationServiceMock {}
-export class FirebaseAnalyticsServiceMock {}
-export class UtilityMock {}
+export class LocalizationServiceMock { }
+export class FirebaseAnalyticsServiceMock { }
+export class UtilityMock { }
 export class FirebaseMock {
   setConfigSettings(settings: any) {
     return
   }
 }
-export class AppVersionMock {}
-export class SchemaServiceMock {}
-export class NotificationGeneratorServiceMock {}
-export class LocalNotificationsMock {}
-export class ScheduleGeneratorServiceMock {}
-export class JwtHelperServiceMock {}
-export class WebIntentMock {}
-export class AppServerServiceMock {}
-export class MessageHandlerServiceMock {}
-export class GithubClientMock {}
-export class CacheServiceMock {}
-export class HealthkitServiceMock {}
+export class AppVersionMock { }
+export class SchemaServiceMock { }
+export class NotificationGeneratorServiceMock { }
+export class LocalNotificationsMock { }
+export class ScheduleGeneratorServiceMock { }
+export class JwtHelperServiceMock { }
+export class WebIntentMock { }
+export class AppServerServiceMock { }
+export class MessageHandlerServiceMock { }
+export class GithubClientMock { }
+export class CacheServiceMock { }
+export class HealthPlatformServiceMock { }

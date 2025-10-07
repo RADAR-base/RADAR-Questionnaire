@@ -27,7 +27,7 @@ import { QuestionnaireService } from './questionnaire.service'
 import { RemoteConfigService } from './remote-config.service'
 import { SubjectConfigService } from './subject-config.service'
 import { TokenService } from '../token/token.service'
-import { HealthkitService } from '../../../pages/tasks/healthkit/services/healthkit.service'
+import { HealthPlatformService } from '../../../pages/tasks/healthkit/services/health-platform.base'
 
 @Injectable({
   providedIn: 'root'
@@ -49,7 +49,7 @@ export class ConfigService {
     private remoteConfig: RemoteConfigService,
     private messageHandlerService: MessageHandlerService,
     private token: TokenService,
-    private healthkit: HealthkitService
+    private healthkit: HealthPlatformService
   ) {
     this.notifications.init()
     this.kafka.init()

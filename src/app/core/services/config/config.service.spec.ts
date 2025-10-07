@@ -5,7 +5,7 @@ import {
   AppConfigServiceMock,
   AppServerServiceMock,
   FirebaseAnalyticsServiceMock,
-  HealthkitServiceMock,
+  HealthPlatformServiceMock,
   KafkaServiceMock,
   LocalizationServiceMock,
   LogServiceMock,
@@ -33,7 +33,7 @@ import { QuestionnaireService } from './questionnaire.service'
 import { RemoteConfigService } from './remote-config.service'
 import { SubjectConfigService } from './subject-config.service'
 import { TokenService } from '../token/token.service'
-import { HealthkitService } from 'src/app/pages/tasks/healthkit/services/healthkit.service'
+import { HealthPlatformService } from 'src/app/pages/tasks/healthkit/services/health-platform.base'
 
 describe('ConfigService', () => {
   let service
@@ -60,7 +60,7 @@ describe('ConfigService', () => {
         { provide: RemoteConfigService, useClass: RemoteConfigServiceMock },
         { provide: AppServerService, useClass: AppServerServiceMock },
         { provide: MessageHandlerService, useClass: MessageHandlerServiceMock },
-        { provide: HealthkitService, useClass: HealthkitServiceMock },
+        { provide: HealthPlatformService, useClass: HealthPlatformServiceMock },
         { provide: TokenService, useClass: TokenServiceMock },
       ]
     })

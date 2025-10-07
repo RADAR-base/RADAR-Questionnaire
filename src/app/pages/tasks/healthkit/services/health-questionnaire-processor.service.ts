@@ -10,7 +10,7 @@ import { HealthkitDataType, HealthkitFloatDataTypes, HealthkitStringDataTypes } 
 import { getMilliseconds } from 'src/app/shared/utilities/time'
 import { LogService } from '../../../../core/services/misc/log.service'
 import { QuestionnaireProcessorService } from 'src/app/pages/questions/services/questionnaire-processor/questionnaire-processor.service'
-import { HealthkitService } from './healthkit.service'
+import { HealthPlatformService } from './health-platform.base'
 
 interface ProcessingProgress {
   stage: 'validation' | 'processing' | 'compression' | 'complete'
@@ -30,7 +30,7 @@ export class HealthQuestionnaireProcessorService extends QuestionnaireProcessorS
     schedule: ScheduleService,
     kafka: KafkaService,
     private logger: LogService,
-    private healthkit: HealthkitService,
+    private healthkit: HealthPlatformService,
   ) {
     super(schedule, kafka)
   }

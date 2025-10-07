@@ -19,7 +19,7 @@ import { StorageKeys } from 'src/app/shared/enums/storage'
 import { KeyConverterService } from './key-converter.service'
 import { Utility } from 'src/app/shared/utilities/util'
 import { RemoteConfigService } from '../../config/remote-config.service'
-import { HealthkitService } from 'src/app/pages/tasks/healthkit/services/healthkit.service'
+import { HealthPlatformService } from 'src/app/pages/tasks/healthkit/services/health-platform.base'
 
 @Injectable()
 export class HealthkitConverterService extends ConverterService {
@@ -27,7 +27,7 @@ export class HealthkitConverterService extends ConverterService {
   HEALTHKIT_TOPIC = 'active_apple_healthkit_steps'
 
   constructor(
-    private healthkit: HealthkitService,
+    private healthkit: HealthPlatformService,
     private storage: StorageService,
     private util: Utility,
     logger: LogService,
@@ -108,7 +108,7 @@ export class HealthkitConverterService extends ConverterService {
     const name = data.key
     const startTime = data.value.startTime
     const endTime = data.value.endTime
-    return this.healthkit.query(startTime, endTime, name).then(async res => {
+    return (this.healthkit as any).query(startTime, endTime, name).then(async res => {
       if (res.length) {
         const sample = res[res.length - 1]
         const lastDataDate = new Date(sample['endDate'])

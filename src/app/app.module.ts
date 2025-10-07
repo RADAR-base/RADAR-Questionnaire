@@ -6,7 +6,7 @@ import { BrowserModule } from '@angular/platform-browser'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { RouterModule } from '@angular/router'
 import { JWT_OPTIONS, JwtModule } from '@auth0/angular-jwt'
-import { IonicModule } from '@ionic/angular'
+import { IonicModule, Platform } from '@ionic/angular'
 import { IonicStorageModule, Storage } from '@ionic/storage'
 
 import { AppRoutingModule } from './app-routing.module'
@@ -60,6 +60,9 @@ import { KeyConverterService } from './core/services/kafka/converters/key-conver
 import { TokenFactoryService } from './core/services/token/token-factory.service'
 import { MPTokenService } from './core/services/token/mp-token.service'
 import { HydraTokenService } from './core/services/token/hydra-token.service'
+import { HealthkitIosService } from './pages/tasks/healthkit/services/healthkit.ios.service'
+import { HealthConnectAndroidService } from './pages/tasks/healthkit/services/health-connect.android.service'
+import { HealthPlatformService } from './pages/tasks/healthkit/services/health-platform.base'
 
 @NgModule({
   imports: [
@@ -131,7 +134,13 @@ import { HydraTokenService } from './core/services/token/hydra-token.service'
     { provide: TokenService, useClass: TokenFactoryService },
     MPTokenService,
     HydraTokenService,
-    GithubClient
+    GithubClient,
+    {
+      provide: HealthPlatformService,
+      useFactory: (platform: Platform, ios: HealthkitIosService, android: HealthConnectAndroidService) =>
+        platform.is('android') ? android : ios,
+      deps: [Platform, HealthkitIosService, HealthConnectAndroidService]
+    }
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

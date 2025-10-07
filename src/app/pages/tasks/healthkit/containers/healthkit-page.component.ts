@@ -12,7 +12,8 @@ import { ConfigService } from '../../../../core/services/config/config.service'
 import { UsageEventType } from '../../../../shared/enums/events'
 import { LocKeys } from '../../../../shared/enums/localisations'
 import { Task } from '../../../../shared/models/task'
-import { AttemptProgress, HealthkitService, ProgressUpdate } from '../services/healthkit.service'
+import { ProgressUpdate, AttemptProgress } from '../services/health-platform.base'
+import { HealthPlatformService } from '../services/health-platform.base'
 import { HealthQuestionnaireProcessorService } from '../services/health-questionnaire-processor.service'
 import { DefaultHealthkitPullTimeout } from 'src/assets/data/defaultConfig'
 
@@ -59,7 +60,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
     private router: Router,
     private alertService: AlertService,
     private configService: ConfigService,
-    private healthkitService: HealthkitService,
+    private healthkitService: HealthPlatformService,
     private healthProcessor: HealthQuestionnaireProcessorService
   ) {
     const navigation = this.router.getCurrentNavigation()

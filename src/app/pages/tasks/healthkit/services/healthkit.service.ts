@@ -7,7 +7,11 @@ import {
   setDateTimeToMidnightEpoch
 } from 'src/app/shared/utilities/time'
 import { CapacitorHealthkit } from '@perfood/capacitor-healthkit'
-import { DefaultHealthkitInterval, DefaultHealthkitPermissions } from 'src/assets/data/defaultConfig'
+import {
+  DefaultHealthkitInterval,
+  DefaultHealthkitPermissions,
+  DefaultHealthkitShowEtaText
+} from 'src/assets/data/defaultConfig'
 import { RemoteConfigService } from 'src/app/core/services/config/remote-config.service'
 import { ConfigKeys } from 'src/app/shared/enums/config'
 import { HealthkitPermissionMap } from 'src/app/shared/models/health'
@@ -16,7 +20,6 @@ import { QuestionnaireService } from 'src/app/core/services/config/questionnaire
 import { BehaviorSubject, Observable } from 'rxjs'
 import { Task } from 'src/app/shared/models/task'
 import { App } from '@capacitor/app'
-import { DefaultHealthkitShowEtaText } from 'src/assets/data/defaultConfig'
 
 export interface HealthDataLoadContext {
   startTime: number
@@ -56,7 +59,7 @@ export class HealthkitService {
   // Progress tracking
   private progressSubject = new BehaviorSubject<ProgressUpdate>({
     progress: 0,
-    message: 'Ready',
+    message: '',
     status: 'idle'
   })
 
@@ -234,7 +237,7 @@ export class HealthkitService {
 
     this.updateProgress({
       progress: 0,
-      message: 'Requesting HealthKit permissions...',
+      message: '',
       status: 'collecting'
     })
 

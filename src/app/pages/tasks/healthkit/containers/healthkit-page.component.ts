@@ -344,7 +344,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
     if (!this.isNetworkConnected) {
       return 'Please check your internet connection and retry'
     }
-    return `${failCount} records failed to send - please retry`
+    return ''
   }
 
   // Timeout and cleanup
@@ -419,14 +419,15 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       buttons: [{
         text: 'Return to Start',
         handler: () => this.exitTask()
-      }]
+      }],
+      backdropDismiss: false
     })
   }
 
   private showProcessingTimeoutDialog(): void {
     this.alertService.showAlert({
       header: 'Processing Timeout',
-      message: 'Health data processing is taking longer than expected. Please check your internet connection and try again later.',
+      message: 'Please make sure you’re connected to the internet and wait 2 hours before starting the task again in the app.',
       buttons: [{
         text: 'Return to Start',
         handler: () => this.exitTask()
@@ -471,7 +472,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       case ProcessingState.COMPLETE:
         return 'Health data processed successfully!'
       case ProcessingState.ERROR:
-        return this.getErrorStatusMessage()
+        return ''
       default:
         return this.isHealthKitSupported
           ? 'Ready to collect health data'

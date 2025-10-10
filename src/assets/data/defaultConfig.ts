@@ -352,6 +352,7 @@ export const DefaultHealthkitPermissions = [
   HealthkitPermission.ACTIVITY,
   HealthkitPermission.ACTIVE_CALORIES,
   HealthkitPermission.DISTANCE_WALKING_RUNNING,
+  HealthkitPermission.DISTANCE_CYCLING,
   HealthkitPermission.DURATION,
   HealthkitPermission.HEART_RATE,
   HealthkitPermission.STAIRS,

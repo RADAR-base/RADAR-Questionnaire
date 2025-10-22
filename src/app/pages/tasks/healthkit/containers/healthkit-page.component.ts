@@ -90,14 +90,14 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
 
   async startHealthDataCollection(): Promise<void> {
     // Reset base offset for fresh start
-    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_STARTED)
+    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_STARTED, true)
     this.progressBaseOffset = 0
     this.healthkitService.setProgressBaseOffset(0)
     await this.processHealthData(false)
   }
 
   retryProcessing(): void {
-    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_RETRY)
+    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_RETRY, true)
     this.processingState = ProcessingState.IDLE
     // Check network status
     Network.getStatus().then(status => this.updateNetworkStatus(status))
@@ -109,7 +109,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       this.healthkitService.resetProgress()
     }
     this.navCtrl.navigateRoot('/home')
-    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_EXIT)
+    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_EXIT, true)
   }
 
   // Private initialization
@@ -322,7 +322,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       message: 'All data has been processed and uploaded',
       status: 'complete'
     })
-    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_FINISHED)
+    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_FINISHED, true)
     this.healthProcessor.updateTaskToComplete(this.task)
     this.cleanupProcessingResources()
   }
@@ -336,7 +336,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       status: 'error'
     })
     console.error('Health data processing error:', error)
-    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_ERROR)
+    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_ERROR, true, { error: error })
     this.cleanupProcessingResources()
   }
 
@@ -351,7 +351,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
   private startProcessingTimeout(): void {
     this.processingTimeout = setTimeout(() => {
       if (this.isProcessing) {
-        this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_TIMEOUT)
+        this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_TIMEOUT, true)
         this.updateProgress({
           message: 'Processing timeout - please try again later.',
           status: 'error'

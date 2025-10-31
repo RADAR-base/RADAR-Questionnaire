@@ -39,7 +39,7 @@ export abstract class AuthService {
       .then(() => this.token.setTokenEndpoint(tokenEndpoint))
       .then(() => this.token.register(this.token.getRefreshParams(refreshToken)))
       .then(() => this.registerAsSource())
-      .then(() => this.token.refresh())
+      .then(() => this.token.forceRefresh())
       .catch(error => {
         this.logger.error('Authentication failed', error)
         throw error

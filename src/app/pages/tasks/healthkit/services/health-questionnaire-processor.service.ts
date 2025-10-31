@@ -11,6 +11,7 @@ import { getMilliseconds } from 'src/app/shared/utilities/time'
 import { LogService } from '../../../../core/services/misc/log.service'
 import { QuestionnaireProcessorService } from 'src/app/pages/questions/services/questionnaire-processor/questionnaire-processor.service'
 import { HealthkitService } from './healthkit.service'
+import { NotificationService } from 'src/app/core/services/notifications/notification.service'
 
 interface ProcessingProgress {
   stage: 'validation' | 'processing' | 'compression' | 'complete'
@@ -31,8 +32,9 @@ export class HealthQuestionnaireProcessorService extends QuestionnaireProcessorS
     kafka: KafkaService,
     private logger: LogService,
     private healthkit: HealthkitService,
+    notifications: NotificationService
   ) {
-    super(schedule, kafka)
+    super(schedule, kafka, notifications)
   }
 
   async getUnsentHealthkitCount(): Promise<number> {

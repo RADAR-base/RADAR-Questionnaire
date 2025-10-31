@@ -326,7 +326,7 @@ export class ConfigService {
       this.notifications.reset(),
       this.localization.init(),
       this.analytics.reset(),
-      this.token.forceRefresh(),
+      this.token.refreshFromConfig(),
       this.healthkit.reset()
     ])
   }

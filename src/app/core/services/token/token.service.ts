@@ -115,9 +115,12 @@ export abstract class TokenService {
 
   abstract register(refreshBody): Promise<OAuthToken>
 
-  abstract forceRefresh(): Promise<any>
+  forceRefresh(): Promise<any> {
+    return this.refresh(true)
+      .catch((error) => this.handleError(error))
+  }
 
-  refresh(): Promise<OAuthToken> {
+  refresh(force?: boolean): Promise<OAuthToken> {
     return this.getTokens().then(tokens => {
       if (!tokens) {
         throw new Error('No tokens are available to refresh')
@@ -125,7 +128,7 @@ export abstract class TokenService {
       const limit = getSeconds({
         milliseconds: new Date().getTime() + this.tokenRefreshMillis
       })
-      if (tokens.iat + tokens.expires_in < limit) {
+      if (tokens.iat + tokens.expires_in < limit || force) {
         const params = this.getRefreshParams(tokens.refresh_token)
         return this.register(params)
       } else {
@@ -133,6 +136,8 @@ export abstract class TokenService {
       }
     })
   }
+
+  abstract refreshFromConfig(): Promise<any>
 
   handleError(error): any {
     // Handle other errors (e.g., network, server issues)

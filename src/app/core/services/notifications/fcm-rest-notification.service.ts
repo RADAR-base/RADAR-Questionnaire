@@ -164,17 +164,16 @@ export class FcmRestNotificationService extends FcmNotificationService {
             timestamp: getMilliseconds({ seconds: n.scheduledTime })
           }))
           .filter(n => n.timestamp > now)
-        notifications.map(o => this.cancelSingleNotification(subject, o))
+        notifications.map(o => this.cancelSingleNotification(subject, o.id).then(() => o.id = undefined))
       })
   }
 
-  cancelSingleNotification(subject, notification: SingleNotification) {
-    if (notification.id) {
+  cancelSingleNotification(subject, notificationId) {
+    if (notificationId) {
       return this.appServerService
-        .deleteNotification(subject, notification)
+        .deleteNotification(subject, notificationId)
         .then(() => {
-          this.logger.log('Success cancelling notification ' + notification.id)
-          return (notification.id = undefined)
+          return this.logger.log('Success cancelling notification ' + notificationId)
         })
     } else {
       this.logger.log('Cannot cancel undefined notification id.')

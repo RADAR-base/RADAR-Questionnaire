@@ -348,7 +348,7 @@ export class AppServerService {
     )
   }
 
-  deleteNotification(subject, notification: SingleNotification) {
+  deleteNotification(subject, notificationId) {
     return this.getHeaders().then(headers =>
       this.http
         .delete(
@@ -359,7 +359,7 @@ export class AppServerService {
             this.SUBJECT_PATH,
             subject.subjectId,
             this.NOTIFICATIONS_PATH,
-            notification.id.toString()
+            notificationId.toString()
           ),
           { headers }
         )

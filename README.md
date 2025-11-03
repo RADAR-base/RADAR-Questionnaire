@@ -6,7 +6,7 @@ A hybrid mobile application to actively capture data for the RADAR-Base Platform
 
 ## Note
 
-We use the [Ionic framework](http://ionicframework.com/docs/), which is built with [Angular](https://angular.io/) and wraps [Apache Cordova](https://cordova.apache.org/).
+We use the [Ionic framework](http://ionicframework.com/docs/), which is built with [Angular](https://angular.io/) and wraps [Capacitor](https://capacitorjs.com/).
 
 ### Recommended Package Versions
 
@@ -22,22 +22,16 @@ npm v8.1.0
 
 First install [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/en/docs/install).
 
-Globally install ionic and cordova:
+Globally install ionic:
 
 ```
-$ npm i -g ionic cordova
+$ npm i -g ionic
 ```
 
 In the project folder run `npm i` to install dependencies:
 
 ```
 $ npm i
-```
-
-Cordova provides a simple command to install the plugins and platforms set in `package.json` or `config.xml`.
-
-```
-$ cordova prepare
 ```
 
 To run the application in the browser use:
@@ -66,36 +60,32 @@ In order to add platforms to target, you must install the required SDKs.
 
 ### Android
 
-To add the Android platform, you need to have the [Android SDK](https://developer.android.com/studio/index.html) pre installed. This step also adds the plugins listed in `config.xml` to the project.
+The android platform should already be added in the project. But, you need to have the [Android SDK](https://developer.android.com/studio/index.html) pre installed. This step also adds the plugins listed in `config.xml` to the project.
 
 ```
-$ ionic cordova platform add android
+$ ionic capacitor build android 
 ```
 
 Run the app in an Android device:
 
 ```
-$ ionic cordova run android
+$ ionic capacitor run android 
 ```
 
-Run the app in an Android emulator:
-
-```
-$ ionic cordova emulate android
-```
+This will open android studio, syncing and running gradle builds and run configurations. To make sure they work properly, make sure that JVM and gradle versions are cross compatible.
 
 ### iOS
 
 To add the iOS platform, you need to have [XCode](https://apps.apple.com/us/app/xcode/id497799835?mt=12) pre installed.
 
 ```
-$ ionic cordova platform add ios
+$ ionic capacitor build ios
 ```
 
 Run the app in an iOS device:
 
 ```
-$ ionic cordova run ios
+$ ionic capacitor run ios
 ```
 
 ## Firebase

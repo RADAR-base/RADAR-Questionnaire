@@ -7,7 +7,11 @@ import {
   setDateTimeToMidnightEpoch
 } from 'src/app/shared/utilities/time'
 import { CapacitorHealthkit } from '@perfood/capacitor-healthkit'
-import { DefaultHealthkitInterval, DefaultHealthkitPermissions } from 'src/assets/data/defaultConfig'
+import {
+  DefaultHealthkitInterval,
+  DefaultHealthkitPermissions,
+  DefaultHealthkitShowEtaText
+} from 'src/assets/data/defaultConfig'
 import { RemoteConfigService } from 'src/app/core/services/config/remote-config.service'
 import { ConfigKeys } from 'src/app/shared/enums/config'
 import { HealthkitPermissionMap } from 'src/app/shared/models/health'
@@ -15,6 +19,7 @@ import { Utility } from 'src/app/shared/utilities/util'
 import { QuestionnaireService } from 'src/app/core/services/config/questionnaire.service'
 import { BehaviorSubject, Observable } from 'rxjs'
 import { Task } from 'src/app/shared/models/task'
+import { App } from '@capacitor/app'
 
 export interface HealthDataLoadContext {
   startTime: number
@@ -46,10 +51,15 @@ export class HealthkitService {
   DELIMITER = ','
   queryProgress = 0
 
+  // Track if a HealthKit authorization prompt is outstanding
+  private isRequestingAuthorization = false
+  private authorizationPromise: Promise<void> | null = null
+  private authRetryDelayMs = 1000
+
   // Progress tracking
   private progressSubject = new BehaviorSubject<ProgressUpdate>({
     progress: 0,
-    message: 'Ready',
+    message: '',
     status: 'idle'
   })
 
@@ -57,8 +67,10 @@ export class HealthkitService {
   private healthAnswers: Record<string, any> = {}
   private healthTimestamps: Record<string, number> = {}
   private messageInterval: NodeJS.Timeout | null = null
+  private messageTimeouts: NodeJS.Timeout[] = []
   private uploadStartTime = 0
   private baseOffset = 0
+  private showEtaText = false
 
   constructor(
     private storage: StorageService,
@@ -67,6 +79,40 @@ export class HealthkitService {
     private questionnaire: QuestionnaireService,
   ) {
     this.init()
+  }
+
+  async requestHealthkitAuthorization(): Promise<void> {
+    if (this.authorizationPromise) {
+      return this.authorizationPromise
+    }
+
+    this.isRequestingAuthorization = true
+    this.authorizationPromise = (async () => {
+      let delayMs = this.authRetryDelayMs
+      for (; ;) {
+        try {
+          await CapacitorHealthkit.requestAuthorization({
+            all: [],
+            read: this.HEALTHKIT_PERMISSIONS,
+            write: []
+          })
+          return
+        } catch (error) {
+          console.warn('HealthKit authorization request failed, retrying...', error)
+          await this.delay(delayMs)
+          delayMs = Math.min(delayMs * 2, 60000)
+        }
+      }
+    })().finally(() => {
+      this.isRequestingAuthorization = false
+      this.authorizationPromise = null
+    })
+
+    return this.authorizationPromise
+  }
+
+  private delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms))
   }
 
   init() {
@@ -87,6 +133,14 @@ export class HealthkitService {
         .then(permissions =>
           (this.HEALTHKIT_PERMISSIONS = this.util.stringToArray(permissions, this.DELIMITER))
         )
+      config
+        .getOrDefault(
+          ConfigKeys.HEALTHKIT_SHOW_ETA_TEXT,
+          DefaultHealthkitShowEtaText
+        )
+        .then(showEta =>
+          (this.showEtaText = showEta.toLowerCase() === 'true')
+        )
     })
   }
 
@@ -97,7 +151,12 @@ export class HealthkitService {
 
   private updateProgress(update: Partial<ProgressUpdate>): void {
     const current = this.progressSubject.value
-    this.progressSubject.next({ ...current, ...update })
+    // Preserve the existing message if the update doesn't provide one or is empty
+    const next = { ...current, ...update }
+    if (update.message === undefined || update.message === '') {
+      next.message = current.message
+    }
+    this.progressSubject.next(next as ProgressUpdate)
   }
 
   setProgressBaseOffset(offset: number): void {
@@ -133,24 +192,15 @@ export class HealthkitService {
     return CapacitorHealthkit.isAvailable()
   }
 
-  loadData(dataType, startTime) {
-    return CapacitorHealthkit
-      .requestAuthorization(
-        {
-          all: [''],
-          read: this.HEALTHKIT_PERMISSIONS,
-          write: [''],
-        }
-      )
-      .then(() => {
-        const endTime = new Date(
-          startTime.getTime() + getMilliseconds({ days: Number(this.HEALTHKIT_INTERVAL_DAYS) }))
-        return { startTime: startTime, endTime: endTime }
-      })
-      .catch(e => {
-        console.log(e)
-        return null
-      })
+  async loadData(dataType, startTime) {
+    try {
+      const endTime = new Date(
+        startTime.getTime() + getMilliseconds({ days: Number(this.HEALTHKIT_INTERVAL_DAYS) }))
+      return { startTime: startTime, endTime: endTime }
+    } catch (e) {
+      console.log(e)
+      return null
+    }
   }
 
   async query(queryStartTime: Date, queryEndTime: Date, dataType: string) {
@@ -186,9 +236,12 @@ export class HealthkitService {
     }
 
     this.updateProgress({
-      message: 'Requesting HealthKit permissions...',
+      progress: 0,
+      message: '',
       status: 'collecting'
     })
+
+    await this.requestHealthkitAuthorization()
 
     // Reset previous data
     this.healthAnswers = {}
@@ -203,7 +256,7 @@ export class HealthkitService {
       const dataType = healthDataTypes[i]
 
       try {
-        const collectionProgress = Math.round((i / totalTypes) * 15) // Collection is 25% of remaining progress
+        const collectionProgress = Math.round((i / totalTypes) * 15) // Collection is 15% of remaining progress
         const adjustedProgress = this.adjustProgressWithOffset(collectionProgress)
 
         this.updateProgress({
@@ -254,21 +307,37 @@ export class HealthkitService {
   }
 
   private startProgressMessages(): void {
-    const progressMessages = [
-      'Starting the upload...',
-      'Thank you for your patience...',
-      'We are working on it...'
-    ]
-
     if (this.messageInterval) {
       clearInterval(this.messageInterval)
     }
+    this.clearMessageTimeouts()
 
-    this.messageInterval = setInterval(() => {
-      this.updateProgress({
-        message: progressMessages[Math.floor(Math.random() * progressMessages.length)]
-      })
-    }, 5000)
+    // Set up timed messages at specific intervals
+    const messageTimeouts = [
+      { time: 60000, message: 'Data upload in progress' },      // 1 minute
+      { time: 180000, message: 'Data upload in progress' },     // 3 minutes
+      { time: 360000, message: 'This is taking a bit longer than expected, please hang in there' }, // 6 minutes
+      { time: 720000, message: "Still uploading. Let's give it another 8 minutes" } // 12 minutes
+    ]
+
+    messageTimeouts.forEach(({ time, message }) => {
+      const timeoutId = setTimeout(() => {
+        const shownMessage = message
+        this.updateProgress({ message: shownMessage })
+
+        setTimeout(() => {
+          if (this.progressSubject.value.message === shownMessage) {
+            this.updateProgress({ message: ' ' })
+          }
+        }, 30000)
+      }, time)
+      this.messageTimeouts.push(timeoutId)
+    })
+  }
+
+  private clearMessageTimeouts(): void {
+    this.messageTimeouts.forEach(timeoutId => clearTimeout(timeoutId))
+    this.messageTimeouts = []
   }
 
   stopProgressMessages(): void {
@@ -276,6 +345,7 @@ export class HealthkitService {
       clearInterval(this.messageInterval)
       this.messageInterval = null
     }
+    this.clearMessageTimeouts()
   }
 
   formatDataTypeName(dataType: string): string {
@@ -297,6 +367,10 @@ export class HealthkitService {
   }
 
   updateKafkaProgress(progress: number, baseOffset: number = 0): void {
+    if (this.isRequestingAuthorization) {
+      return
+    }
+
     // Update the base offset if provided
     if (baseOffset > 0) {
       this.setProgressBaseOffset(baseOffset)
@@ -309,7 +383,7 @@ export class HealthkitService {
       ? kafkaProgressPercentage
       : 15 + (85 * (kafkaProgressPercentage / 100))
     const overallProgress = this.adjustProgressWithOffset(mappedProgress)
-    const finalProgress = Math.min(100, Math.round(overallProgress))
+    const finalProgress = Math.min(100, Math.floor(overallProgress))
 
     // Start timing on first progress update
     if (this.uploadStartTime === 0 && kafkaProgressPercentage > 0) {
@@ -320,8 +394,9 @@ export class HealthkitService {
       // Build detailed progress message with ETA and data info
       let message = ``
 
-      // Calculate and add ETA
-      const etaText = this.calculateTimeRemaining(kafkaProgressPercentage)
+      // Calculate and add ETA only if enabled in config
+      const etaText =
+        this.showEtaText ? this.calculateTimeRemaining(kafkaProgressPercentage) : ''
       if (etaText) {
         message += `${etaText}`
       }

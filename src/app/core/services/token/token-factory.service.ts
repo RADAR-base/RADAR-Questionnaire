@@ -76,6 +76,10 @@ export class TokenFactoryService extends TokenService {
     return this.tokenService.forceRefresh()
   }
 
+  refreshFromConfig(): Promise<any> {
+    return this.tokenService.refreshFromConfig()
+  }
+
   async register(refreshBody: any): Promise<OAuthToken> {
     return this.tokenService.register(refreshBody)
   }

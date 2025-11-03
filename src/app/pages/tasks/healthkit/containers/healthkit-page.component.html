@@ -27,7 +27,7 @@
     <ion-card-content>
       <div class="attempt-container" *ngIf="isProcessing && attemptProgress.cacheSize > 0">
         <div class="attempt-text">
-          Sending {{ attemptProgress.success + attemptProgress.failed }}/{{ attemptProgress.cacheSize }} records
+          Trying {{ attemptProgress.success + attemptProgress.failed }}/{{ attemptProgress.cacheSize }} records
         </div>
       </div>
       <div class="progress-container">
@@ -67,6 +67,13 @@
         Retry
       </ion-button>
     </ng-container>
+
+    <ng-container *ngIf="showFinishButton && !showRetryButton">
+      <ion-button ion-button class="bt bt--full" round full expand="block" size="large" color="primary"
+        (click)="exitTask()">
+        Finish
+      </ion-button>
+    </ng-container>
   </div>
 
 </ion-content>
@@ -74,7 +81,8 @@
 
 <ion-footer>
   <ion-toolbar>
-    <ion-button ion-button slot="start" icon-left [disabled]="isProcessing" (click)="exitTask()">
+    <ion-button *ngIf="!isProcessing && !showFinishButton" ion-button slot="start" icon-left [disabled]="isProcessing"
+      (click)="exitTask()">
       <ion-icon name="close"></ion-icon>
       <div class="toolbar-label">Close</div>
     </ion-button>

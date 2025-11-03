@@ -350,14 +350,20 @@ export const DefaultHealthkitQuestionnaireKey = 'healthkit'
 // *Default Healthkit data permissions to request
 export const DefaultHealthkitPermissions = [
   HealthkitPermission.ACTIVITY,
-  HealthkitPermission.CALORIES,
-  HealthkitPermission.DISTANCE,
+  HealthkitPermission.ACTIVE_CALORIES,
+  HealthkitPermission.DISTANCE_WALKING_RUNNING,
+  HealthkitPermission.DISTANCE_CYCLING,
   HealthkitPermission.DURATION,
   HealthkitPermission.HEART_RATE,
   HealthkitPermission.STAIRS,
-  HealthkitPermission.WEIGHT,
   HealthkitPermission.STEPS
 ]
 
 // *Default interval to pull Healthkit data until
 export const DefaultHealthkitInterval = 3106 // days
+
+// *Default Healthkit pull timeout in milliseconds
+export const DefaultHealthkitPullTimeout = 1_200_000 // 20 minutes
+
+// *Default Healthkit show ETA text
+export const DefaultHealthkitShowEtaText = 'false'

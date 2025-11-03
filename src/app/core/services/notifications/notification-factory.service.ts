@@ -53,7 +53,7 @@ export class NotificationFactoryService extends NotificationService {
   permissionCheck(): Promise<any> {
     return this.isPlatformCordova()
       ? this.notificationService.permissionCheck()
-      : true
+      : Promise.resolve(true)
   }
 
   publish(type, limit?, notificationId?): Promise<any> {

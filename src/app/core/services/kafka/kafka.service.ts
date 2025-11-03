@@ -37,6 +37,7 @@ export class KafkaService {
   private static BATCH_SIZE = 10
   private static CONCURRENCY_LIMIT = 5
   private static SEND_ERROR_NOTIFICATION_THRESHOLD = 10
+  private static HTTP_TIMEOUT = 120_000 // 2 minutes
 
   URI_topics: string = '/topics/'
   DEFAULT_KAFKA_AVSC = 'questionnaire'
@@ -333,7 +334,7 @@ export class KafkaService {
   sendEvent(record, eventType, error?) {
     if (record && record.value) {
       this.sendDataEvent(
-        DataEventType.SEND_SUCCESS,
+        eventType,
         eventType,
         record.value.name ? record.value.name : record.value.questionnaireName,
         record.time,
@@ -378,6 +379,8 @@ export class KafkaService {
       data: data,
       headers: nativeHeaders,
       method: 'POST',
+      readTimeout: KafkaService.HTTP_TIMEOUT,
+      connectTimeout: KafkaService.HTTP_TIMEOUT,
     }
 
     const requestPromise = CapacitorHttp.request(request)

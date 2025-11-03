@@ -14,6 +14,7 @@ import { LocKeys } from '../../../../shared/enums/localisations'
 import { Task } from '../../../../shared/models/task'
 import { AttemptProgress, HealthkitService, ProgressUpdate } from '../services/healthkit.service'
 import { HealthQuestionnaireProcessorService } from '../services/health-questionnaire-processor.service'
+import { DefaultHealthkitPullTimeout } from 'src/assets/data/defaultConfig'
 
 enum ProcessingState {
   IDLE = 'idle',
@@ -49,7 +50,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
 
   // Constants
   private readonly MAX_RETRY_ATTEMPTS = 5
-  private readonly DATA_UPLOAD_TIMEOUT = 1_200_000 // 20 minutes
+  private readonly DATA_UPLOAD_TIMEOUT = DefaultHealthkitPullTimeout
 
   constructor(
     public navCtrl: NavController,
@@ -89,14 +90,14 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
 
   async startHealthDataCollection(): Promise<void> {
     // Reset base offset for fresh start
-    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_STARTED)
+    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_STARTED, true)
     this.progressBaseOffset = 0
     this.healthkitService.setProgressBaseOffset(0)
     await this.processHealthData(false)
   }
 
   retryProcessing(): void {
-    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_RETRY)
+    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_RETRY, true)
     this.processingState = ProcessingState.IDLE
     // Check network status
     Network.getStatus().then(status => this.updateNetworkStatus(status))
@@ -108,7 +109,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       this.healthkitService.resetProgress()
     }
     this.navCtrl.navigateRoot('/home')
-    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_EXIT)
+    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_EXIT, true)
   }
 
   // Private initialization
@@ -306,7 +307,6 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       return
     }
     this.attemptProgress = { success, failed, cacheSize }
-    this.healthkitService.stopProgressMessages()
     this.healthkitService.updateKafkaProgress(normalizedProgress, this.progressBaseOffset)
   }
 
@@ -322,7 +322,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       message: 'All data has been processed and uploaded',
       status: 'complete'
     })
-    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_FINISHED)
+    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_FINISHED, true)
     this.healthProcessor.updateTaskToComplete(this.task)
     this.cleanupProcessingResources()
   }
@@ -330,27 +330,35 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
   private handleError(error: any): void {
     this.processingState = ProcessingState.ERROR
 
-    const errorMessage = this.getErrorMessage()
+    const errorMessage = this.getErrorMessage(this.attemptProgress.failed)
     this.updateProgress({
       message: errorMessage,
       status: 'error'
     })
     console.error('Health data processing error:', error)
-    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_ERROR)
+    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_ERROR, true, { error: error })
     this.cleanupProcessingResources()
   }
 
-  private getErrorMessage(): string {
+  private getErrorMessage(failCount: number): string {
     if (!this.isNetworkConnected) {
       return 'Please check your internet connection and retry'
     }
-    return `${this.attemptProgress.failed} records failed to send - please retry`
+    return ''
   }
 
   // Timeout and cleanup
   private startProcessingTimeout(): void {
     this.processingTimeout = setTimeout(() => {
       if (this.isProcessing) {
+        this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_TIMEOUT, true)
+        this.updateProgress({
+          message: 'Processing timeout - please try again later.',
+          status: 'error'
+        })
+        this.processingState = ProcessingState.ERROR
+        this.healthProcessor.cancelUpload()
+        this.handleError(new Error('Processing timeout'))
         this.showProcessingTimeoutDialog()
       }
     }, this.DATA_UPLOAD_TIMEOUT)
@@ -361,7 +369,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       clearTimeout(this.processingTimeout)
       this.processingTimeout = null
     }
-
+    this.healthkitService.stopProgressMessages()
     this.kafkaProgressSubscription.unsubscribe()
     this.progressBaseOffset = 0
     this.attemptProgress = { success: 0, failed: 0, cacheSize: 0 }
@@ -411,18 +419,20 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       buttons: [{
         text: 'Return to Start',
         handler: () => this.exitTask()
-      }]
+      }],
+      backdropDismiss: false
     })
   }
 
   private showProcessingTimeoutDialog(): void {
     this.alertService.showAlert({
       header: 'Processing Timeout',
-      message: 'Health data processing is taking longer than expected. Please check your internet connection and try again later.',
+      message: 'Please make sure you’re connected to the internet and wait 2 hours before starting the task again in the app.',
       buttons: [{
         text: 'Return to Start',
         handler: () => this.exitTask()
-      }]
+      }],
+      backdropDismiss: false
     })
   }
 
@@ -439,8 +449,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
   }
 
   get showFinishButton(): boolean {
-    return this.processingState === ProcessingState.COMPLETE ||
-      this.processingState === ProcessingState.ERROR
+    return this.processingState === ProcessingState.COMPLETE
   }
 
   get showProgressBar(): boolean {
@@ -463,7 +472,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       case ProcessingState.COMPLETE:
         return 'Health data processed successfully!'
       case ProcessingState.ERROR:
-        return this.getErrorStatusMessage()
+        return ''
       default:
         return this.isHealthKitSupported
           ? 'Ready to collect health data'

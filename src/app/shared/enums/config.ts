@@ -47,6 +47,7 @@ export class ConfigKeys {
 
   static HEALTHKIT_LOOKBACK_INTERVAL_DAYS = new ConfigKeys('healthkit_lookback_interval_days')
   static HEALTHKIT_PERMISSIONS = new ConfigKeys('healthkit_permissions')
+  static HEALTHKIT_SHOW_ETA_TEXT = new ConfigKeys('healthkit_show_eta_text')
 
   static AUDIO_SAMPLING_RATE = new ConfigKeys('audio_sampling_rate')
 

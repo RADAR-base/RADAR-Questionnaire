@@ -19,7 +19,8 @@ export enum UsageEventType {
   HEALTHKIT_FINISHED = 'healthkit_finished',
   HEALTHKIT_ERROR = 'healthkit_error',
   HEALTHKIT_RETRY = 'healthkit_retry',
-  HEALTHKIT_EXIT = 'healthkit_exit'
+  HEALTHKIT_EXIT = 'healthkit_exit',
+  HEALTHKIT_TIMEOUT = 'healthkit_timeout'
 }
 
 export enum EnrolmentEventType {

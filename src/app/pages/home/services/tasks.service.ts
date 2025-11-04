@@ -7,7 +7,7 @@ import {
   DefaultPlatformInstance,
   DefaultShowTaskCalendarName,
   DefaultShowTaskInfo,
-  DefaultEndPoint
+  DefaultShowStreak
 } from '../../../../assets/data/defaultConfig'
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
 import { RemoteConfigService } from '../../../core/services/config/remote-config.service'
@@ -92,6 +92,15 @@ export class TasksService {
       numberOfTasks: tasks.length,
       completedTasks: tasks.filter(d => d.completed).length
     }))
+  }
+
+  getIsStreakShown(): Promise<boolean> {
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        config.getOrDefault(ConfigKeys.SHOW_TASK_STREAK, DefaultShowStreak)
+      )
+      .then(res => JSON.parse(res))
   }
 
   updateTaskToReportedCompletion(task) {

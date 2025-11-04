@@ -51,6 +51,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   studyPortalReturnUrl: Promise<string | null>
   showSyncNeeded = false
   portalReturnText: Promise<string>
+  isStreakShown: Promise<boolean>
 
   APP_CREDITS = '&#169; RADAR-Base'
   HTML_BREAK = '<br>'
@@ -125,7 +126,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.showMiscTasksButton = this.getShowMiscTasksButton()
     this.studyPortalReturnUrl = this.tasksService.getPortalReturnUrl()
     this.portalReturnText = this.getPortalReturnText()
-    this.getStreak()
+    this.initStreak()
   }
 
   onResume() {
@@ -272,7 +273,8 @@ export class HomePageComponent implements OnInit, OnDestroy {
     )
   }
 
-  getStreak() {
+  initStreak() {
+    this.isStreakShown = this.tasksService.getIsStreakShown()
     this.tasksService.getStreakDays().then(streak => {
       this.streakDays = streak
     })

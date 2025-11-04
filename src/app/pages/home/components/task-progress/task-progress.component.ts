@@ -19,6 +19,8 @@ export class TaskProgressComponent implements OnChanges {
   noTasksToday = false
   @Input()
   streakDays = 0
+  @Input()
+  isStreakShown = false
 
   max: number = 1
   current: number = 0

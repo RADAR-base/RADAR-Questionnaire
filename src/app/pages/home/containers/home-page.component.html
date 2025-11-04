@@ -28,6 +28,7 @@
       [forceComplete]="showCompleted"
       [noTasksToday]="(tasksProgress | async)?.numberOfTasks == 0"
       [streakDays]="streakDays"
+      [isStreakShown]="isStreakShown"
     >
     </task-progress>
   </div>

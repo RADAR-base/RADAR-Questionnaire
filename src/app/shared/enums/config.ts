@@ -61,6 +61,8 @@ export class ConfigKeys {
 
   static SEND_ERROR_NOTIFICATION = new ConfigKeys('send_error_notification')
 
+  static SHOW_TASK_STREAK = new ConfigKeys('show_task_streak')
+
   constructor(public value: string) { }
 
   toString() {

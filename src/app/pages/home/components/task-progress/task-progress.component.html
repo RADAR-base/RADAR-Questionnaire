@@ -24,7 +24,7 @@
       <div class="small">
         {{ 'TASK_PROGRESS_COMPLETED' | translate }}
       </div>
-      <div class="streak-card" *ngIf="complete">
+      <div class="streak-card" *ngIf="complete && isStreakShown">
         <ion-title><ion-icon name="leaf-outline" style="vertical-align: middle;opacity:0.2;margin:2px;"></ion-icon>
           <b>{{ streakDays }} days</b>
           <ion-icon name="leaf-outline"

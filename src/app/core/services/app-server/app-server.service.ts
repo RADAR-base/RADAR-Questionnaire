@@ -39,6 +39,8 @@ export class AppServerService {
   QUESTIONNAIRE_TASK = 'questionnaire/task'
   QUESTIONNAIRE_STATE_EVENTS_PATH = 'state_events'
   NOTIFICATIONS_PATH = 'messaging/notifications'
+  NOTIFICATIONS_BATCH_PATH = 'messaging/notifications/batch'
+  ALL_PATH = 'all'
   STATE_EVENTS_PATH = 'state_events'
   private tokenSubscription: Subscription = null
 
@@ -367,6 +369,25 @@ export class AppServerService {
     )
   }
 
+  deleteAllUserNotifications(subject) {
+      return this.getHeaders().then(headers =>
+          this.http
+              .delete(
+                  urljoin(
+                      this.getAppServerURL(),
+                      this.PROJECT_PATH,
+                      subject.projectId,
+                      this.SUBJECT_PATH,
+                      subject.subjectId,
+                      this.NOTIFICATIONS_PATH,
+                      this.ALL_PATH
+                  ),
+                  { headers }
+              )
+              .toPromise()
+      )
+  }
+
   updateTaskState(taskId, state) {
     return Promise.all([
       this.subjectConfig.getParticipantLogin(),
@@ -416,6 +437,40 @@ export class AppServerService {
           { headers }
         )
         .toPromise()
+    )
+  }
+
+  addNotificationsBundle(notifications, subjectId, projectId): Promise<any> {
+    return this.getHeaders().then(headers =>
+      this.http
+        .post(
+          urljoin(
+            this.getAppServerURL(),
+            this.PROJECT_PATH,
+            projectId,
+            this.SUBJECT_PATH,
+            subjectId,
+            this.NOTIFICATIONS_BATCH_PATH,
+          ),
+          notifications,
+          { headers, observe: 'response' }
+        )
+        .toPromise()
+        .then((res: HttpResponse<FcmNotificationDto>) => {
+          this.logger.log('Successfully sent! Updating notification Id')
+          return res.body
+        })
+        .catch((err: HttpErrorResponse) => {
+          this.logger.log('Http request returned an error: ' + err.message)
+          // const data: FcmNotificationError = err.error
+          // if (err.status == 409) {
+          //   this.logger.log(
+          //     'Notification already exists, storing notification data..'
+          //   )
+          //   return data.dto ? data.dto : notification.notification
+          // }
+          return this.logger.error('Failed to send notification', err)
+        })
     )
   }
 

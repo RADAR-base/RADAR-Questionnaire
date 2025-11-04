@@ -7,7 +7,7 @@ import {
   DefaultPlatformInstance,
   DefaultShowTaskCalendarName,
   DefaultShowTaskInfo,
-  DefaultEndPoint
+  DefaultShowStreak
 } from '../../../../assets/data/defaultConfig'
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
 import { RemoteConfigService } from '../../../core/services/config/remote-config.service'
@@ -92,6 +92,15 @@ export class TasksService {
       numberOfTasks: tasks.length,
       completedTasks: tasks.filter(d => d.completed).length
     }))
+  }
+
+  getIsStreakShown(): Promise<boolean> {
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        config.getOrDefault(ConfigKeys.SHOW_TASK_STREAK, DefaultShowStreak)
+      )
+      .then(res => JSON.parse(res))
   }
 
   updateTaskToReportedCompletion(task) {
@@ -220,6 +229,31 @@ export class TasksService {
         )
       )
       .then(res => JSON.parse(res))
+  }
+
+  getStreakDays() {
+    return this.schedule.getCompletedTasks().then(tasks => {
+      const completedDays = new Set(
+        tasks.map(task => {
+          const date = new Date(task.timeCompleted)
+          return date.toISOString().split('T')[0]
+        })
+      )
+      let streak = 0
+      let currentDate = new Date()
+
+      while (true) {
+        const dateStr = currentDate.toISOString().split('T')[0]
+        if (completedDays.has(dateStr)) {
+          streak++
+          currentDate.setDate(currentDate.getDate() - 1)
+        } else {
+          break
+        }
+      }
+
+      return streak
+    })
   }
 
   getPortalReturnUrl() {

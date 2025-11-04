@@ -102,10 +102,15 @@ export class FcmRestNotificationService extends FcmNotificationService {
 
   checkForPendingTasks() {
     return this.schedule.getTasksForDate(new Date(), AssessmentType.SCHEDULED).then(tasks => {
-      const hasStartableTask = (tasks || []).some(t =>
-        this.tasksService.isTaskStartable(t)
+      const list = tasks || []
+      const hasStartableTask = list.some(t => this.tasksService.isTaskStartable(t))
+      const hasMissedToday = list.some(t =>
+        this.tasksService.wasTaskValidToday(t) &&
+        this.tasksService.isTaskExpired(t) &&
+        !t.completed
       )
-      if (!hasStartableTask) {
+
+      if (hasMissedToday && !hasStartableTask) {
         this.alertService.showAlert({
           header: this.localization.translateKey(LocKeys.NOTIFICATION_REMINDER_FORGOTTEN),
           message: this.localization.translateKey(LocKeys.NOTIFICATION_REMINDER_FORGOTTEN_ALERT_DEFAULT_DESC),

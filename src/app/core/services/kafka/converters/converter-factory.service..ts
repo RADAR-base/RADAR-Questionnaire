@@ -17,10 +17,16 @@ export class ConverterFactoryService {
     private timzoneConverter: TimezoneConverterService,
   ) { }
 
-  init() { }
+  init() {
+    this.healthkitConverter.init()
+    this.assessmentConverter.init()
+    this.completionLogConverter.init()
+    this.timzoneConverter.init()
+    this.appEventConverter.init()
+  }
 
   getConverter(type) {
-    switch (this.classify(type)) {
+    switch (this.classify(type.toLowerCase())) {
       case SchemaType.HEALTHKIT:
         return this.healthkitConverter
       case SchemaType.ASSESSMENT:

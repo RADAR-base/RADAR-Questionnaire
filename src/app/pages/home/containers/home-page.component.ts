@@ -1,17 +1,19 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
-import { NavController, Platform } from '@ionic/angular'
+import { NavController, Platform, LoadingController } from '@ionic/angular'
 import { Subscription } from 'rxjs'
 
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { UsageService } from '../../../core/services/usage/usage.service'
+import { ConfigService } from '../../../core/services/config/config.service'
 import { UsageEventType } from '../../../shared/enums/events'
 import { LocKeys } from '../../../shared/enums/localisations'
 import { Task, TasksProgress } from '../../../shared/models/task'
 import { checkTaskIsNow } from '../../../shared/utilities/check-task-is-now'
 import { TasksService } from '../services/tasks.service'
 import { HomePageAnimations } from './home-page.animation'
+import { KeepAwake } from '@capacitor-community/keep-awake'
 
 @Component({
   selector: 'page-home',
@@ -28,8 +30,11 @@ export class HomePageComponent implements OnInit, OnDestroy {
   tasksProgress = Promise.resolve({ numberOfTasks: 0, completedTasks: 5 })
   resumeListener: Subscription = new Subscription()
   changeDetectionListener: Subscription = new Subscription()
+  cacheProgressSubscription: Subscription = new Subscription()
   lastTaskRefreshTime = Date.now()
   streakDays = 1
+
+  DATA_UPLOAD_TIMEOUT = 600_000 // 10 minutes
 
   showCalendar = false
   showCompleted = false
@@ -43,11 +48,15 @@ export class HomePageComponent implements OnInit, OnDestroy {
   isTaskCalendarTaskNameShown: Promise<boolean>
   isTaskInfoShown: Promise<boolean>
   currentDate: number
+  studyPortalReturnUrl: Promise<string | null>
+  showSyncNeeded = false
+  portalReturnText: Promise<string>
 
   APP_CREDITS = '&#169; RADAR-Base'
   HTML_BREAK = '<br>'
   // How long to wait before refreshing tasks
   TASK_REFRESH_MILLIS = 600_000
+  MIN_CACHE_SIZE_TO_SEND = 5
 
   constructor(
     private router: Router,
@@ -56,7 +65,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
     private tasksService: TasksService,
     private localization: LocalizationService,
     private platform: Platform,
-    private usage: UsageService
+    private usage: UsageService,
   ) {
     this.changeDetectionListener =
       this.tasksService.changeDetectionEmitter.subscribe(() => {
@@ -65,29 +74,11 @@ export class HomePageComponent implements OnInit, OnDestroy {
       })
   }
 
-  getIsLoadingSpinnerShown() {
-    return (
-      (this.startingQuestionnaire && !this.showCalendar) ||
-      (!this.nextTask && !this.showCompleted)
-    )
-  }
-
-  getIsStartButtonShown() {
-    return (
-      this.taskIsNow &&
-      !this.startingQuestionnaire &&
-      !this.showCompleted &&
-      !this.showCalendar &&
-      !this.getIsLoadingSpinnerShown()
-    )
-  }
-
   ngOnInit() {
+    this.usage.setPage(this.constructor.name)
     this.platform
       .ready()
       .then(() => this.tasksService.init().then(() => this.init()))
-    this.usage.setPage(this.constructor.name)
-    this.getStreak()
   }
 
   ngOnDestroy() {
@@ -96,6 +87,9 @@ export class HomePageComponent implements OnInit, OnDestroy {
       this.resumeListener.unsubscribe();
     }
     this.changeDetectionListener.unsubscribe()
+    if (this.cacheProgressSubscription) {
+      this.cacheProgressSubscription.unsubscribe();
+    }
   }
 
   ionViewWillEnter() {
@@ -113,6 +107,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
     if (this.resumeListener) {
       this.resumeListener.unsubscribe();
     }
+    KeepAwake.allowSleep()
   }
 
   init() {
@@ -128,12 +123,32 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.isTaskInfoShown = this.tasksService.getIsTaskInfoShown()
     this.onDemandIcon = this.tasksService.getOnDemandAssessmentIcon()
     this.showMiscTasksButton = this.getShowMiscTasksButton()
+    this.studyPortalReturnUrl = this.tasksService.getPortalReturnUrl()
+    this.portalReturnText = this.getPortalReturnText()
+    this.getStreak()
   }
 
   onResume() {
     this.usage.sendOpenEvent()
     this.checkForNewDate()
     this.usage.sendGeneralEvent(UsageEventType.RESUMED)
+  }
+
+  getIsLoadingSpinnerShown() {
+    return (
+      (this.startingQuestionnaire && !this.showCalendar) ||
+      (!this.nextTask && !this.showCompleted)
+    )
+  }
+
+  getIsStartButtonShown() {
+    return (
+      this.taskIsNow &&
+      !this.startingQuestionnaire &&
+      !this.showCompleted &&
+      !this.showCalendar &&
+      !this.getIsLoadingSpinnerShown()
+    )
   }
 
   checkForNewDate() {
@@ -183,14 +198,29 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.usage.sendClickEvent('open_on_demand_tasks')
   }
 
+  async openStudyPortal() {
+    window.open(await this.studyPortalReturnUrl, '_system')
+  }
+
+  async getPortalReturnText() {
+    const portalReturnText = await this.tasksService.getPortalReturnText()
+    return portalReturnText ? portalReturnText : this.localization.translateKey(LocKeys.BTN_RETURN_PORTAL)
+  }
+
   startQuestionnaire(taskCalendarTask?: Task) {
     // NOTE: User can start questionnaire from task calendar or start button in home.
     const task = taskCalendarTask ? taskCalendarTask : this.nextTask
 
     if (this.tasksService.isTaskStartable(task)) {
-      this.usage.sendClickEvent('start_questionnaire')
       this.startingQuestionnaire = true
-      this.navCtrl.navigateForward('/questions', { state: task })
+      if (task.name.toLowerCase().includes('healthkit')) {
+        this.usage.sendClickEvent('start_healthkit')
+        this.navCtrl.navigateForward('/healthkit', { state: task })
+        this.showSyncNeeded = true
+      } else {
+        this.usage.sendClickEvent('start_questionnaire')
+        this.navCtrl.navigateForward('/questions', { state: task })
+      }
     } else {
       this.showMissedInfo()
     }

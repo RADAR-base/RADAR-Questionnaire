@@ -1,16 +1,30 @@
 <img src="assets/imgs/checkmark-big.svg" class="icon" alt="Completed" />
-<h2 class="ion-text-center">{{ content }}</h2>
+
+<ng-container *ngIf="!showDoneButton; else showContent">
+  <h2 class="ion-text-center">{{ 'FINISH_THANKS_WAIT' | translate }}</h2>
+</ng-container>
+<ng-template #showContent>
+  <h2 class="ion-text-center">{{ content }}</h2>
+</ng-template>
+
 <div class="pos-bottom">
   <div class="pos-bottom-90">
-    <div *ngIf="displayNextTaskReminder" class="next-task-highlight">
-      {{ 'FINISH_NEXT_TASK_REMINDER' | translate }}
-    </div>
-    <ion-item color="none" lines="none" *ngIf="requiresInClinicCompletion">
-      <ion-label>
-        {{ 'FINISH_COMPLETED_IN_CLINIC' | translate }}
-      </ion-label>
-      <ion-toggle item-right (ionChange)="toggleChanged($event)"></ion-toggle>
-    </ion-item>
+
+    <ng-container *ngIf="displayNextTaskReminder">
+      <div class="next-task-highlight">
+        {{ 'FINISH_NEXT_TASK_REMINDER' | translate }}
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="requiresInClinicCompletion">
+      <ion-item color="none" lines="none">
+        <ion-label>
+          {{ 'FINISH_COMPLETED_IN_CLINIC' | translate }}
+        </ion-label>
+        <ion-toggle item-right (ionChange)="toggleChanged($event)"></ion-toggle>
+      </ion-item>
+    </ng-container>
+
   </div>
   <div class="done-button">
     <ion-button
@@ -25,6 +39,8 @@
     >
       {{ innerText }}
     </ion-button>
-    <small *ngIf="!showDoneButton"> {{ etaText }} {{ ' (' + progressDisplay + '%) ' }} </small>
+    <small *ngIf="!showDoneButton">
+      {{ etaText }} {{ ' (' + progressDisplay + '%) ' }}
+    </small>
   </div>
 </div>

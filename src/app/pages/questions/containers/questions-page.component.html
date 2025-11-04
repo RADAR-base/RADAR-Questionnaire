@@ -46,7 +46,7 @@
             [requiresInClinicCompletion]="requiresInClinicCompletion"
             [taskType]="taskType"
             [isShown]="showFinishScreen"
-            [progressCount]="progressCount$ | async"
+            [progressCount]="progressCount"
             [questions]="questions"
             [task]="task"
             (exit)="handleFinish()"
@@ -61,7 +61,7 @@
             [taskType]="taskType"
             [showDoneButton]="showDoneButton"
             [isShown]="showFinishScreen"
-            [progressCount]="progressCount$ | async"
+            [progressCount]="progressCount"
             (exit)="handleFinish()"
           ></finish-and-launch>
         </swiper-slide>

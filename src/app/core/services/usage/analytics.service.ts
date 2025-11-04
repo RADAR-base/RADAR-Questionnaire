@@ -19,4 +19,7 @@ export class AnalyticsService {
   enableAnalytics(): Promise<any> {
     return undefined
   }
+  reset(): Promise<any> {
+    return undefined
+  }
 }

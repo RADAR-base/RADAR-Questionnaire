@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core'
+import { Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/core'
 import { Router } from '@angular/router'
 import { KeepAwake } from '@capacitor-community/keep-awake'
 import { NavController, Platform } from '@ionic/angular'
@@ -31,7 +31,7 @@ import { QuestionsService } from '../services/questions.service'
   templateUrl: 'questions-page.component.html',
   styleUrls: ['questions-page.component.scss']
 })
-export class QuestionsPageComponent implements OnInit {
+export class QuestionsPageComponent implements OnInit, OnDestroy {
   @ViewChild('swiper')
   slides: ElementRef | undefined
 
@@ -62,7 +62,8 @@ export class QuestionsPageComponent implements OnInit {
   showFinishAndLaunchScreen: boolean = false
   externalAppCanLaunch: boolean = false
   viewEntered = false
-  progressCount$: Observable<string>
+  progressCount = 0
+  retryAlertShownCount = 0
 
   SHOW_INTRODUCTION_SET: Set<boolean | ShowIntroductionType> = new Set([
     true,
@@ -77,6 +78,8 @@ export class QuestionsPageComponent implements OnInit {
     QuestionType.slider,
     QuestionType.yesno
   ])
+  MAX_RETRY_ALERT_COUNT = 5
+  MIN_CACHE_SIZE_TO_SHOW_RETRY_ALERT = 2
 
   backButtonListener: Subscription
   showProgressCount: Promise<boolean>
@@ -89,13 +92,12 @@ export class QuestionsPageComponent implements OnInit {
     private localization: LocalizationService,
     private router: Router,
     private appLauncher: AppLauncherService,
-    private alertService: AlertService
+    private alertService: AlertService,
   ) {
     this.backButtonListener = this.platform.backButton.subscribe(() => {
       this.sendCompletionLog()
       navigator['app'].exitApp()
     })
-    this.progressCount$ = this.questionsService.getProgress()
   }
 
   ionViewDidLeave() {
@@ -110,6 +112,8 @@ export class QuestionsPageComponent implements OnInit {
     if (nav) {
       this.task = nav.extras.state as Task
       this.showProgressCount = this.questionsService.getIsProgressCountShown()
+
+      // Handle initial load
       this.questionsService
         .initRemoteConfigParams()
         .then(() => this.questionsService.getQuestionnairePayload(this.task))
@@ -118,6 +122,13 @@ export class QuestionsPageComponent implements OnInit {
           return this.updateToolbarButtons()
         })
     }
+    // Initialize swiper with memory management
+    this.initializeSwiper()
+  }
+
+  private handlePageReload() {
+    // Restore previous state
+    this.handleFinish()
   }
 
   ionViewWillEnter() {
@@ -296,6 +307,7 @@ export class QuestionsPageComponent implements OnInit {
 
   navigateToFinishPage() {
     // Send the finish event and submit timestamps
+    this.progressCount = 1
     this.sendEvent(UsageEventType.QUESTIONNAIRE_FINISHED)
     this.submitTimestamps()
 
@@ -421,6 +433,22 @@ export class QuestionsPageComponent implements OnInit {
           this.showFinishAndLaunchScreen = false
           console.log(err)
         })
+    }
+  }
+
+  private initializeSwiper() {
+    if (this.slides && this.slides.nativeElement && this.slides.nativeElement.swiper) {
+      this.slides.nativeElement.swiper.allowTouchMove = true
+      this.slides.nativeElement.swiper.threshold = 5
+      this.slides.nativeElement.swiper.watchSlidesProgress = true
+      this.slides.nativeElement.swiper.watchSlidesVisibility = true
+    }
+  }
+
+  ngOnDestroy() {
+    // Cleanup swiper
+    if (this.slides && this.slides.nativeElement && this.slides.nativeElement.swiper) {
+      this.slides.nativeElement.swiper.destroy(true, true)
     }
   }
 }

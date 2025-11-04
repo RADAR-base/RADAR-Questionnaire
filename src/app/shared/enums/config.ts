@@ -8,6 +8,9 @@ export class ConfigKeys {
   static PROTOCOL_REPO = new ConfigKeys('protocol_repo')
   static NOTIFICATION_TTL_MINUTES = new ConfigKeys('notification_ttl_minutes')
   static PLATFORM_INSTANCE = new ConfigKeys('platform_instance')
+  static PLATFORM_URL = new ConfigKeys('platform_url')
+  static PLATFORM_RETURN_URL = new ConfigKeys('platform_return_url')
+  static PLATFORM_RETURN_TEXT = new ConfigKeys('platform_return_text')
   static QUESTIONS_HIDDEN = new ConfigKeys('questions_hidden')
   static APP_VERSION_LATEST = new ConfigKeys('app_version_latest')
   static NOTIFICATION_MESSAGING_TYPE = new ConfigKeys(
@@ -44,6 +47,7 @@ export class ConfigKeys {
 
   static HEALTHKIT_LOOKBACK_INTERVAL_DAYS = new ConfigKeys('healthkit_lookback_interval_days')
   static HEALTHKIT_PERMISSIONS = new ConfigKeys('healthkit_permissions')
+  static HEALTHKIT_SHOW_ETA_TEXT = new ConfigKeys('healthkit_show_eta_text')
 
   static AUDIO_SAMPLING_RATE = new ConfigKeys('audio_sampling_rate')
 
@@ -52,6 +56,10 @@ export class ConfigKeys {
   static AUDIO_ENCODER = new ConfigKeys('audio_encoder')
 
   static TOKEN_BACKUP = new ConfigKeys('token_backup')
+
+  static AUTO_SEND_CACHED_DATA = new ConfigKeys('auto_send_cached_data')
+
+  static SEND_ERROR_NOTIFICATION = new ConfigKeys('send_error_notification')
 
   constructor(public value: string) { }
 

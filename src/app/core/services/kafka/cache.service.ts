@@ -111,7 +111,7 @@ export class CacheService {
 
   generateCacheKey(prefix: string, data: any): string {
     const hash = md5(JSON.stringify(data))
-    return `${prefix}:${hash}`
+    return `${prefix.toLowerCase()}:${hash}`
   }
 
   reset() {

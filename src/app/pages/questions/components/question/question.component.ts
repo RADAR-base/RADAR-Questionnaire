@@ -77,7 +77,8 @@ export class QuestionComponent implements OnInit, OnChanges {
 
   HIDE_FIELD_LABEL_SET: Set<QuestionType> = new Set([
     QuestionType.audio,
-    QuestionType.descriptive
+    QuestionType.descriptive,
+    QuestionType.healthkit
   ])
 
   // Input set where height is set to auto

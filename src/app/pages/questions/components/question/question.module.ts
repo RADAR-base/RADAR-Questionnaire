@@ -9,7 +9,6 @@ import { WheelSelectorComponent } from '../wheel-selector/wheel-selector.compone
 import { AudioInputComponent } from './audio-input/audio-input.component'
 import { CheckboxInputComponent } from './checkbox-input/checkbox-input.component'
 import { DescriptiveInputComponent } from './descriptive-input/descriptive-input.component'
-import { HealthInputComponent } from './health-input/health-input.component'
 import { InfoScreenComponent } from './info-screen/info-screen.component'
 import { MatrixRadioInputComponent } from './matrix-radio-input/matrix-radio-input.component'
 import { NotesInputComponent } from './notes-input/notes-input.component'
@@ -36,7 +35,6 @@ const COMPONENTS = [
   WheelSelectorComponent,
   DescriptiveInputComponent,
   MatrixRadioInputComponent,
-  HealthInputComponent,
   WebInputComponent,
   NotesInputComponent
 ]
@@ -51,4 +49,4 @@ const COMPONENTS = [
   declarations: COMPONENTS,
   exports: COMPONENTS
 })
-export class QuestionModule {}
+export class QuestionModule { }

@@ -16,6 +16,7 @@ import { getSeconds } from '../../../shared/utilities/time'
 import { RemoteConfigService } from '../config/remote-config.service'
 import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
+import { AuthType } from 'src/app/shared/models/auth'
 
 @Injectable({
   providedIn: 'root'
@@ -60,7 +61,16 @@ export abstract class TokenService {
   getURI() {
     return this.storage
       .get(this.TOKEN_STORE.BASE_URI)
-      .then(uri => (uri ? uri : DefaultEndPoint))
+      .then(uri => {
+        if (!uri) {
+          if (this.platform.is('capacitor')) {
+            throw new Error('Base URI not set. Please complete authentication first.')
+          }
+          return DefaultEndPoint
+        }
+        this.URI_base = uri
+        return uri
+      })
   }
 
   abstract getTokenEndpoint(): Promise<string>
@@ -70,12 +80,29 @@ export abstract class TokenService {
   }
 
   setURI(uri: string): Promise<string> {
+    if (!uri) {
+      return Promise.reject(new Error('Base URI cannot be null or empty'))
+    }
+    if (this.platform.is('capacitor')) {
+      try {
+        const url = new URL(uri)
+        if (url.protocol === 'capacitor:') {
+          return Promise.reject(new Error('Invalid base URI for native app. Please use a valid HTTP/HTTPS URL.'))
+        }
+      } catch (e) {
+        return Promise.reject(new Error('Invalid base URI format. Please use a valid URL.'))
+      }
+    }
     let lastSlashIndex = uri.length
     while (lastSlashIndex > 0 && uri[lastSlashIndex - 1] == '/') {
       lastSlashIndex--
     }
     const url = uri.substring(0, lastSlashIndex)
-    return this.storage.set(this.TOKEN_STORE.BASE_URI, url).then(() => url)
+    return this.storage.set(this.TOKEN_STORE.BASE_URI, url)
+      .then(() => {
+        this.URI_base = url
+        return url
+      })
   }
 
   setTokenEndpoint(uri: string) {
@@ -87,6 +114,8 @@ export abstract class TokenService {
   }
 
   abstract register(refreshBody): Promise<OAuthToken>
+
+  abstract forceRefresh(): Promise<any>
 
   refresh(): Promise<OAuthToken> {
     return this.getTokens().then(tokens => {
@@ -153,6 +182,10 @@ export abstract class TokenService {
 
   abstract isValid(): Promise<boolean>
 
+  abstract updateTokenServiceByType(authType: AuthType)
+
+  async fetchInitialAuthType(): Promise<void> { }
+
   setAuthType(type) {
     return this.storage.set(StorageKeys.PLATFORM_AUTH_TYPE, type)
   }
@@ -161,7 +194,7 @@ export abstract class TokenService {
     return this.storage.get(StorageKeys.PLATFORM_AUTH_TYPE)
   }
 
-  reset() {
-    return Promise.all([this.setTokens(null)])
+  reset(): Promise<any> {
+    return Promise.all([this.setAuthType(null), this.setTokens(null)])
   }
 }

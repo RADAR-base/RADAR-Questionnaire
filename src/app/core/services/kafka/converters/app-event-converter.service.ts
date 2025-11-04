@@ -25,8 +25,6 @@ export class AppEventConverterService extends ConverterService {
     super(logger, http, token, keyConverter, remoteConfig)
   }
 
-  init() { }
-
   getKafkaTopic(payload): Promise<any> {
     return Promise.resolve('questionnaire_app_event')
   }

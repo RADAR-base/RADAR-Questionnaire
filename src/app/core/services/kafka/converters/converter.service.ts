@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http'
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import * as AvroSchema from 'avro-js'
 import { SchemaAndValue, SchemaMetadata } from 'src/app/shared/models/kafka'
@@ -12,6 +12,8 @@ import { TokenService } from '../../token/token.service'
 import { KeyConverterService } from './key-converter.service'
 import { ConfigKeys } from 'src/app/shared/enums/config'
 import { RemoteConfigService } from '../../config/remote-config.service'
+import { CapacitorHttp } from '@capacitor/core'
+import { Network } from '@capacitor/network'
 
 @Injectable()
 export abstract class ConverterService {
@@ -29,10 +31,13 @@ export abstract class ConverterService {
     private remoteConfig: RemoteConfigService
   ) {
     this.updateURI()
-    this.getRadarSpecifications()
   }
 
-  init() { }
+  init() {
+    this.schemas = {}
+    this.updateURI()
+    this.getRadarSpecifications()
+  }
 
   abstract getKafkaTopic(payload, topics?)
 
@@ -91,10 +96,21 @@ export abstract class ConverterService {
     return new Date().getTime() + Math.random()
   }
 
-  getLatestKafkaSchemaVersion(uri): Promise<SchemaMetadata> {
-    return this.http
-      .get<SchemaMetadata>(uri)
-      .toPromise()
+  async getLatestKafkaSchemaVersion(uri): Promise<SchemaMetadata> {
+    // Force refresh Capacitor's network cache
+    await Network.getStatus()
+    const request = {
+      url: uri,
+      method: 'GET',
+    }
+
+    return CapacitorHttp.request(request)
+      .then(response => {
+        if (response.status < 200 || response.status >= 300) {
+          throw new Error(`HTTP ${response.status}: ${response.data}`)
+        }
+        return typeof response.data === 'string' ? JSON.parse(response.data) : response.data
+      })
       .catch(e => {
         throw this.logger.error('Failed to get latest Kafka schema versions', e)
       })
@@ -130,7 +146,13 @@ export abstract class ConverterService {
   }
 
   updateURI() {
-    return this.token.getURI().then(uri => (this.BASE_URI = uri))
+    return this.token.getURI().then(uri => {
+      if (!uri) {
+        throw new Error('Base URI not set. Please complete authentication first.')
+      }
+      this.BASE_URI = uri
+      return uri
+    })
   }
 
   topicExists(topic: string, topics: string[] | null) {
@@ -146,7 +168,7 @@ export abstract class ConverterService {
   }
 
   reset() {
-    this.BASE_URI = null
+    this.BASE_URI = ''
     this.specifications = null
     this.schemas = {}
   }

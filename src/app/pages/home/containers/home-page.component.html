@@ -70,6 +70,7 @@
         [isNow]="taskIsNow"
         [timeToNextMilli]="timeToNextTask"
         [showAffirmation]="showCompleted"
+        [showSyncNeeded]="showSyncNeeded"
         [noTasksToday]="(tasksProgress | async)?.numberOfTasks == 0"
       ></ticker-bar>
     </div>
@@ -100,6 +101,20 @@
     </div>
 
     <div class="size-static footer">
+      <div
+        *ngIf="showCompleted && (studyPortalReturnUrl | async)"
+        class="ion-padding"
+      >
+        <ion-button
+          ion-button
+          class="bt bt--full"
+          round
+          full
+          (click)="openStudyPortal()"
+        >
+          {{ portalReturnText | async }}
+        </ion-button>
+      </div>
       <div
         *ngIf="getIsStartButtonShown() && (sortedTasks | async)?.size"
         class="ion-padding"

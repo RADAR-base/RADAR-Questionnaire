@@ -9,6 +9,7 @@ import { AuthGuard } from '../auth/services/auth.guard'
 import { CacheSendModalComponent } from './components/cache-send-modal/cache-send-modal.component'
 import { SettingsPageComponent } from './containers/settings-page.component'
 import { SettingsService } from './services/settings.service'
+import { CacheSendService } from './services/cache-send.service'
 
 const routes: Routes = [
   {
@@ -27,7 +28,7 @@ const routes: Routes = [
     RouterModule.forChild(routes)
   ],
   declarations: [SettingsPageComponent, CacheSendModalComponent],
-  providers: [SettingsService],
+  providers: [SettingsService, CacheSendService],
   entryComponents: [CacheSendModalComponent]
 })
 export class SettingsModule {}

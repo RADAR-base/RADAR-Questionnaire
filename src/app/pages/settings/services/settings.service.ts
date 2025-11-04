@@ -8,7 +8,7 @@ export class SettingsService {
   constructor(
     public localization: LocalizationService,
     private config: ConfigService
-  ) {}
+  ) { }
 
   getSettings() {
     return this.config.getAll()
@@ -27,7 +27,9 @@ export class SettingsService {
   }
 
   resetEnrolment() {
-    return this.config.resetAll()
+    return this.config.resetAll().then(() => {
+      window.location.reload()
+    })
   }
 
   resetConfig() {
@@ -55,5 +57,9 @@ export class SettingsService {
 
   sendCachedData() {
     return this.config.sendCachedData()
+  }
+
+  getKafkaService() {
+    return this.config.getKafkaService()
   }
 }

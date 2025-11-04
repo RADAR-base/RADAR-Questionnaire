@@ -18,7 +18,8 @@
         </div>
       </div>
     </div>
-    <div #counter [class.counter]="!complete" [class.counter-complete]="complete" [@translateY]="complete">
+    <div #counter *ngIf="!complete" [class.counter]="!complete" [class.counter-complete]="complete"
+      [@translateY]="complete">
       <div class="large">{{ current }}</div>
       <div class="small">
         {{ 'TASK_PROGRESS_COMPLETED' | translate }}

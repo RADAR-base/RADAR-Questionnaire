@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core'
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core'
 import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning'
 import { UsageService } from 'src/app/core/services/usage/usage.service'
 import { UsageEventType } from 'src/app/shared/enums/events'
@@ -8,12 +8,17 @@ import { UsageEventType } from 'src/app/shared/enums/events'
   templateUrl: 'qr-form.component.html',
   styleUrls: ['qr-form.component.scss']
 })
-export class QRFormComponent {
+export class QRFormComponent implements OnDestroy {
   @Input()
   loading: boolean
-
   @Output()
-  data: EventEmitter<any> = new EventEmitter<any>()
+  ory: EventEmitter<any> = new EventEmitter<any>()
+  @Output()
+  qr: EventEmitter<any> = new EventEmitter<any>()
+  @Output()
+  token: EventEmitter<any> = new EventEmitter<any>()
+
+  ORY_KEY = 'ory'
 
   constructor(private usage: UsageService) { }
 
@@ -29,12 +34,26 @@ export class QRFormComponent {
       'barcodeScanned',
       async result => {
         await listener.remove()
-        this.data.emit(result.barcode.rawValue)
+        const data = result.barcode.rawValue
+        if (data.includes(this.ORY_KEY)) {
+          this.ory.emit(data)
+        }
+        else {
+          this.qr.emit(data)
+        }
         // Removes the class after the scan (workaround for the camera not closing)
         document.querySelector('body').classList.remove('scanner-active')
       }
     )
     await BarcodeScanner.startScan() // start scanning and wait for a result
     this.usage.sendGeneralEvent(UsageEventType.QR_SCANNED)
+  }
+
+  enterTokenHandler() {
+    this.token.emit()
+  }
+
+  ngOnDestroy() {
+    BarcodeScanner.stopScan()
   }
 }

@@ -1,0 +1,22 @@
+<div class="form">
+  <div dir="auto" class="text text-justify">
+    {{ 'ENROL_REGISTRATION_ORY_DESC' | translate }}
+  </div>
+  <div class="ory-img">
+    <img class="portal" src="assets/imgs/paprka.png">
+  </div>
+  <div class="mid padding-top">
+    {{ 'ENROL_REGISTRATION_STUDY_DESC' | translate }}
+    <br><br>
+    <ion-item class="input" color="transparent">
+      <ion-input [(ngModel)]="studyId" [required]="true" type="text" [clearOnEdit]="false" (ionFocus)="onFocus('true')"
+        (ionBlur)="onFocus('false')" (keyup)="onKeyboardEvent($event.key)"></ion-input>
+    </ion-item>
+    <br>
+  </div>
+</div>
+<div class="ion-padding bottom" *ngIf="!loading && !buttonHidden">
+  <ion-button ion-button class="bt bt--full" round full (click)="loginWithOry()">
+    {{ 'BTN_ENROL_KRATOS' | translate }}
+  </ion-button>
+</div>

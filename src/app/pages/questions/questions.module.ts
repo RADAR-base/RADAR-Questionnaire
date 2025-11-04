@@ -18,7 +18,6 @@ import { AudioRecordService } from './services/audio-record.service'
 import { QuestionsService } from './services/questions.service'
 import { TimestampService } from './services/timestamp.service'
 import { DefaultQuestionnaireProcessorService } from './services/questionnaire-processor/default-questionnaire-processor.service'
-import { HealthQuestionnaireProcessorService } from './services/questionnaire-processor/health-questionnaire-processor.service'
 
 const routes: Routes = [
   {
@@ -49,9 +48,8 @@ const routes: Routes = [
     TimestampService,
     QuestionsService,
     DefaultQuestionnaireProcessorService,
-    HealthQuestionnaireProcessorService,
     AppLauncherService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class QuestionsModule {}
+export class QuestionsModule { }

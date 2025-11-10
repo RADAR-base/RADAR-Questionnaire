@@ -132,7 +132,7 @@
     "@ionic/angular-toolkit": "^7.0.0",
     "@types/jasmine": "~3.6.0",
     "@types/jasminewd2": "~2.0.3",
-    "@types/node": "20.12.2",
+    "@types/node": "24.10.0",
     "codelyzer": "^6.0.2",
     "cordova-sqlite-storage": "^6.0.0",
     "eslint": "^7.6.0",

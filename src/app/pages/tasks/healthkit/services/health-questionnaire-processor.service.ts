@@ -83,7 +83,8 @@ export class HealthQuestionnaireProcessorService extends QuestionnaireProcessorS
               .then(() => this.kafka.sendAllFromCache())
               .then((sendResult) => {
                 const allSent = sendResult && Array.isArray(sendResult.failedKeys) && sendResult.failedKeys.length === 0 && !sendResult.cancelled
-                if (!allSent) {
+                const hasHealthkitFailedKeys = sendResult && Array.isArray(sendResult.failedKeys) && sendResult.failedKeys.filter((key) => key.startsWith(SchemaType.HEALTHKIT)).length > 0
+                if (!allSent && hasHealthkitFailedKeys) {
                   worker.terminate()
                   return Promise.reject(new Error('Not all HealthKit data could be sent.'))
                 }
@@ -139,7 +140,8 @@ export class HealthQuestionnaireProcessorService extends QuestionnaireProcessorS
           .then(() => this.kafka.sendAllFromCache())
           .then((sendResult) => {
             const allSent = sendResult && Array.isArray(sendResult.failedKeys) && sendResult.failedKeys.length === 0 && !sendResult.cancelled
-            if (!allSent) {
+            const hasHealthkitFailedKeys = sendResult && Array.isArray(sendResult.failedKeys) && sendResult.failedKeys.filter((key) => key.startsWith(SchemaType.HEALTHKIT)).length > 0
+            if (!allSent && hasHealthkitFailedKeys) {
               return Promise.reject(new Error('Not all HealthKit data could be sent.'))
             }
             return this.healthkit.setUploadReadyFlag(false)

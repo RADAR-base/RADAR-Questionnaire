@@ -7,8 +7,8 @@ android {
         applicationId "org.phidatalab.radar_armt"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 599
-        versionName "3.3.10-alpha"
+        versionCode 600
+        versionName "3.3.12"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // placeholder substitution but no value for <appAuthRedirectScheme>
         manifestPlaceholders = [appAuthRedirectScheme: "com.getcapacitor.community.genericoauth2app"]

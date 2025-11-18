@@ -90,14 +90,14 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
 
   async startHealthDataCollection(): Promise<void> {
     // Reset base offset for fresh start
-    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_STARTED)
+    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_STARTED, true)
     this.progressBaseOffset = 0
     this.healthkitService.setProgressBaseOffset(0)
     await this.processHealthData(false)
   }
 
   retryProcessing(): void {
-    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_RETRY)
+    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_RETRY, true)
     this.processingState = ProcessingState.IDLE
     // Check network status
     Network.getStatus().then(status => this.updateNetworkStatus(status))
@@ -109,7 +109,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       this.healthkitService.resetProgress()
     }
     this.navCtrl.navigateRoot('/home')
-    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_EXIT)
+    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_EXIT, true)
   }
 
   // Private initialization
@@ -205,10 +205,9 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
 
   private async tryResumeFromCache(isRetry: boolean): Promise<boolean> {
     try {
-      const hasCache = await this.healthProcessor.hasHealthkitCache()
       const isUploadReady = await this.healthkitService.isUploadReady()
 
-      if (hasCache && isUploadReady && this.processingState === ProcessingState.IDLE) {
+      if (isUploadReady && this.processingState === ProcessingState.IDLE) {
         this.processingState = ProcessingState.PROCESSING
         // If this is a retry, set the base offset for cache upload too
         if (isRetry && this.progressBaseOffset > 0) {
@@ -322,7 +321,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       message: 'All data has been processed and uploaded',
       status: 'complete'
     })
-    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_FINISHED)
+    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_FINISHED, true)
     this.healthProcessor.updateTaskToComplete(this.task)
     this.cleanupProcessingResources()
   }
@@ -336,7 +335,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       status: 'error'
     })
     console.error('Health data processing error:', error)
-    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_ERROR)
+    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_ERROR, true, { error: error })
     this.cleanupProcessingResources()
   }
 
@@ -344,14 +343,14 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
     if (!this.isNetworkConnected) {
       return 'Please check your internet connection and retry'
     }
-    return `${failCount} records failed to send - please retry`
+    return ''
   }
 
   // Timeout and cleanup
   private startProcessingTimeout(): void {
     this.processingTimeout = setTimeout(() => {
       if (this.isProcessing) {
-        this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_TIMEOUT)
+        this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_TIMEOUT, true)
         this.updateProgress({
           message: 'Processing timeout - please try again later.',
           status: 'error'
@@ -419,14 +418,15 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       buttons: [{
         text: 'Return to Start',
         handler: () => this.exitTask()
-      }]
+      }],
+      backdropDismiss: false
     })
   }
 
   private showProcessingTimeoutDialog(): void {
     this.alertService.showAlert({
       header: 'Processing Timeout',
-      message: 'Health data processing is taking longer than expected. Please check your internet connection and try again later.',
+      message: 'Please make sure you’re connected to the internet and wait 2 hours before starting the task again in the app.',
       buttons: [{
         text: 'Return to Start',
         handler: () => this.exitTask()
@@ -471,7 +471,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       case ProcessingState.COMPLETE:
         return 'Health data processed successfully!'
       case ProcessingState.ERROR:
-        return this.getErrorStatusMessage()
+        return ''
       default:
         return this.isHealthKitSupported
           ? 'Ready to collect health data'

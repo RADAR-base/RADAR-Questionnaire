@@ -5,7 +5,7 @@
   <div class="qr-code">
     <img src="assets/imgs/radar-qr-code.png" alt="RADAR QR code" />
   </div>
-  <div dir="auto" class="text text-justify" (click)="enterTokenHandler()">
+  <div *ngIf="!loading" dir="auto" class="text text-justify" (click)="enterTokenHandler()">
     {{ 'ENROL_REGISTRATION_NO_QR' | translate }}<br>
     <span class="token">{{ 'ENROL_REGISTRATION_ENTER_TOKEN' | translate }}</span>
   </div>

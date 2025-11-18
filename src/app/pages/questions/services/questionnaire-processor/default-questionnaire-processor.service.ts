@@ -6,6 +6,7 @@ import { ScheduleService } from '../../../../core/services/schedule/schedule.ser
 import { AssessmentType } from '../../../../shared/models/assessment'
 import { SchemaType } from '../../../../shared/models/kafka'
 import { QuestionnaireProcessorService } from './questionnaire-processor.service'
+import { NotificationService } from 'src/app/core/services/notifications/notification.service'
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +15,9 @@ export class DefaultQuestionnaireProcessorService extends QuestionnaireProcessor
   constructor(
     schedule: ScheduleService,
     kafka: KafkaService,
+    notifications: NotificationService
   ) {
-    super(schedule, kafka)
+    super(schedule, kafka, notifications)
   }
 
   process(data, task, assessmentMetadata) {

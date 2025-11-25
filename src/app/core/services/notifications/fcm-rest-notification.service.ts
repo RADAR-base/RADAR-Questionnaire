@@ -68,6 +68,9 @@ export class FcmRestNotificationService extends FcmNotificationService {
   }
 
   onAppOpen() {
+    // Check if there are tasks that expired today and were not complete
+    this.checkForExpiredTasks()
+
     return GrabIntentExtras.getIntentExtras().then(extras => {
       if (!extras) return
       const messageId = extras['google.message_id'] ?
@@ -78,7 +81,6 @@ export class FcmRestNotificationService extends FcmNotificationService {
         this.schedule.getTasks(AssessmentType.ALL)
       ]).then(([subject, tasks]) => {
         if (!messageId) return
-        this.checkForPendingTasks()
         const notification = this.notifications.findNotificationByMessageId(
           tasks,
           messageId
@@ -100,7 +102,7 @@ export class FcmRestNotificationService extends FcmNotificationService {
     })
   }
 
-  checkForPendingTasks() {
+  checkForExpiredTasks() {
     return this.schedule.getTasksForDate(new Date(), AssessmentType.SCHEDULED).then(tasks => {
       const list = tasks || []
       const hasStartableTask = list.some(t => this.tasksService.isTaskStartable(t))

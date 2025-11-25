@@ -252,7 +252,7 @@ export class TasksService {
         }
       }
 
-      return streak
+      return streak > 0 ? streak - 1 : 0
     })
   }
 

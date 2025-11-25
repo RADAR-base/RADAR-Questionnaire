@@ -101,6 +101,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.tasks = this.tasksService.getTasksOfToday()
     this.showCalendar = false
     this.resumeListener = this.platform.resume.subscribe(() => this.onResume())
+    this.initStreak()
   }
 
   ionViewWillLeave() {
@@ -126,7 +127,6 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.showMiscTasksButton = this.getShowMiscTasksButton()
     this.studyPortalReturnUrl = this.tasksService.getPortalReturnUrl()
     this.portalReturnText = this.getPortalReturnText()
-    this.initStreak()
   }
 
   onResume() {

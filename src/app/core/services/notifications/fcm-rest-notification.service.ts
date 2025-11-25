@@ -31,6 +31,7 @@ import { NotificationGeneratorService } from './notification-generator.service'
 import { GrabIntentExtras } from 'capacitor-grab-intent-extras'
 import { TasksService } from '../../../pages/home/services/tasks.service'
 import { AlertService } from '../misc/alert.service'
+import { StorageKeys } from '../../../shared/enums/storage'
 import { LocKeys } from '../../../shared/enums/localisations'
 
 @Injectable()
@@ -103,28 +104,58 @@ export class FcmRestNotificationService extends FcmNotificationService {
   }
 
   checkForExpiredTasks() {
-    return this.schedule.getTasksForDate(new Date(), AssessmentType.SCHEDULED).then(tasks => {
+    return Promise.all([
+      this.getLastMissedTaskAlertTimestamp(),
+      this.schedule.getTasksForDate(new Date(), AssessmentType.SCHEDULED)
+    ]).then(([lastAlertTs, tasks]) => {
       const list = tasks || []
-      const hasStartableTask = list.some(t => this.tasksService.isTaskStartable(t))
-      const hasMissedToday = list.some(t =>
-        this.tasksService.wasTaskValidToday(t) &&
-        this.tasksService.isTaskExpired(t) &&
-        !t.completed
+
+      const missedToday = list.filter(
+        t =>
+          this.tasksService.wasTaskValidToday(t) &&
+          this.tasksService.isTaskExpired(t) &&
+          !t.completed
       )
 
-      if (hasMissedToday && !hasStartableTask) {
+      const hasStartableTask = list.some(t =>
+        this.tasksService.isTaskStartable(t)
+      )
+
+      const latestMissedTimestamp = missedToday.reduce(
+        (max, t) => (t.timestamp > max ? t.timestamp : max),
+        0
+      )
+
+      const hasNewMissedSinceAlert =
+        !!latestMissedTimestamp &&
+        (!lastAlertTs || latestMissedTimestamp > lastAlertTs)
+
+      if (hasNewMissedSinceAlert && !hasStartableTask) {
         this.alertService.showAlert({
-          header: this.localization.translateKey(LocKeys.NOTIFICATION_REMINDER_FORGOTTEN),
-          message: this.localization.translateKey(LocKeys.NOTIFICATION_REMINDER_FORGOTTEN_ALERT_DEFAULT_DESC),
+          header: this.localization.translateKey(
+            LocKeys.NOTIFICATION_REMINDER_FORGOTTEN
+          ),
+          message: this.localization.translateKey(
+            LocKeys.NOTIFICATION_REMINDER_FORGOTTEN_ALERT_DEFAULT_DESC
+          ),
           buttons: [
             {
               text: this.localization.translateKey(LocKeys.BTN_OKAY),
-              handler: () => { }
+              handler: () => {
+                this.storage.set(
+                  StorageKeys.LAST_MISSED_TASK_ALERT_TS,
+                  latestMissedTimestamp || Date.now()
+                )
+              }
             }
           ]
         })
       }
     })
+  }
+
+  getLastMissedTaskAlertTimestamp() {
+    return this.storage.get(StorageKeys.LAST_MISSED_TASK_ALERT_TS)
   }
 
   getSubjectDetails() {

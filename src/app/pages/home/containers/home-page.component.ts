@@ -12,6 +12,7 @@ import { LocKeys } from '../../../shared/enums/localisations'
 import { Task, TasksProgress } from '../../../shared/models/task'
 import { checkTaskIsNow } from '../../../shared/utilities/check-task-is-now'
 import { TasksService } from '../services/tasks.service'
+import { TaskStreakService } from '../services/task-streak.service'
 import { HomePageAnimations } from './home-page.animation'
 import { KeepAwake } from '@capacitor-community/keep-awake'
 
@@ -67,6 +68,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
     private localization: LocalizationService,
     private platform: Platform,
     private usage: UsageService,
+    private taskStreakService: TaskStreakService,
   ) {
     this.changeDetectionListener =
       this.tasksService.changeDetectionEmitter.subscribe(() => {
@@ -275,7 +277,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
 
   initStreak() {
     this.isStreakShown = this.tasksService.getIsStreakShown()
-    this.tasksService.getStreakDays().then(streak => {
+    this.taskStreakService.getStreakDays().then(streak => {
       this.streakDays = streak
     })
   }

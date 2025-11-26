@@ -231,31 +231,6 @@ export class TasksService {
       .then(res => JSON.parse(res))
   }
 
-  getStreakDays() {
-    return this.schedule.getCompletedTasks().then(tasks => {
-      const completedDays = new Set(
-        tasks.map(task => {
-          const date = new Date(task.timeCompleted)
-          return date.toISOString().split('T')[0]
-        })
-      )
-      let streak = 0
-      let currentDate = new Date()
-
-      while (true) {
-        const dateStr = currentDate.toISOString().split('T')[0]
-        if (completedDays.has(dateStr)) {
-          streak++
-          currentDate.setDate(currentDate.getDate() - 1)
-        } else {
-          break
-        }
-      }
-
-      return streak > 0 ? streak - 1 : 0
-    })
-  }
-
   getPortalReturnUrl() {
     return this.remoteConfig
       .read()

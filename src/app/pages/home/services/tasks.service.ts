@@ -19,6 +19,8 @@ import {
   setDateTimeToMidnight,
   setDateTimeToMidnightEpoch
 } from '../../../shared/utilities/time'
+import { StorageService } from '../../../core/services/storage/storage.service'
+import { StorageKeys } from '../../../shared/enums/storage'
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +31,8 @@ export class TasksService {
   constructor(
     private schedule: ScheduleService,
     private questionnaire: QuestionnaireService,
-    private remoteConfig: RemoteConfigService
+    private remoteConfig: RemoteConfigService,
+    private storage: StorageService
   ) {
     this.schedule.changeDetectionEmitter.subscribe(() => {
       console.log('Changes detected to schedule..')
@@ -114,7 +117,11 @@ export class TasksService {
   }
 
   areAllTasksComplete(tasks) {
-    return !tasks || tasks.every(t => t.completed || !this.isTaskStartable(t))
+    return !tasks || tasks.every(t => t.completed)
+  }
+
+  areAllTasksExpired(tasks) {
+    return !tasks || tasks.every(t => this.isTaskExpired(t) || t.completed)
   }
 
   isLastTask(tasks) {
@@ -245,5 +252,13 @@ export class TasksService {
       .then(config =>
         config.get(ConfigKeys.PLATFORM_RETURN_TEXT)
       )
+  }
+
+  setLastMissedTaskAlertTimestamp(timestamp: number) {
+    this.storage.set(StorageKeys.LAST_MISSED_TASK_ALERT_TS, timestamp)
+  }
+
+  getLastMissedTaskAlertTimestamp() {
+    return null
   }
 }

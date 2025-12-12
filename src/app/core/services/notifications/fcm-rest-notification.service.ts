@@ -29,10 +29,6 @@ import { StorageService } from '../storage/storage.service'
 import { FcmNotificationService } from './fcm-notification.service'
 import { NotificationGeneratorService } from './notification-generator.service'
 import { GrabIntentExtras } from 'capacitor-grab-intent-extras'
-import { TasksService } from '../../../pages/home/services/tasks.service'
-import { AlertService } from '../misc/alert.service'
-import { StorageKeys } from '../../../shared/enums/storage'
-import { LocKeys } from '../../../shared/enums/localisations'
 
 @Injectable()
 export class FcmRestNotificationService extends FcmNotificationService {
@@ -52,8 +48,6 @@ export class FcmRestNotificationService extends FcmNotificationService {
     public remoteConfig: RemoteConfigService,
     public localization: LocalizationService,
     private appServerService: AppServerService,
-    private tasksService: TasksService,
-    private alertService: AlertService
   ) {
     super(storage, config, platform, logger, remoteConfig)
     this.platform.ready().then(() => {
@@ -69,9 +63,6 @@ export class FcmRestNotificationService extends FcmNotificationService {
   }
 
   onAppOpen() {
-    // Check if there are tasks that expired today and were not complete
-    this.checkForExpiredTasks()
-
     return GrabIntentExtras.getIntentExtras().then(extras => {
       if (!extras) return
       const messageId = extras['google.message_id'] ?
@@ -103,60 +94,6 @@ export class FcmRestNotificationService extends FcmNotificationService {
     })
   }
 
-  checkForExpiredTasks() {
-    return Promise.all([
-      this.getLastMissedTaskAlertTimestamp(),
-      this.schedule.getTasksForDate(new Date(), AssessmentType.SCHEDULED)
-    ]).then(([lastAlertTs, tasks]) => {
-      const list = tasks || []
-
-      const missedToday = list.filter(
-        t =>
-          this.tasksService.wasTaskValidToday(t) &&
-          this.tasksService.isTaskExpired(t) &&
-          !t.completed
-      )
-
-      const hasStartableTask = list.some(t =>
-        this.tasksService.isTaskStartable(t)
-      )
-
-      const latestMissedTimestamp = missedToday.reduce(
-        (max, t) => (t.timestamp > max ? t.timestamp : max),
-        0
-      )
-
-      const hasNewMissedSinceAlert =
-        !!latestMissedTimestamp &&
-        (!lastAlertTs || latestMissedTimestamp > lastAlertTs)
-
-      if (hasNewMissedSinceAlert && !hasStartableTask) {
-        this.alertService.showAlert({
-          header: this.localization.translateKey(
-            LocKeys.NOTIFICATION_REMINDER_FORGOTTEN
-          ),
-          message: this.localization.translateKey(
-            LocKeys.NOTIFICATION_REMINDER_FORGOTTEN_ALERT_DEFAULT_DESC
-          ),
-          buttons: [
-            {
-              text: this.localization.translateKey(LocKeys.BTN_OKAY),
-              handler: () => {
-                this.storage.set(
-                  StorageKeys.LAST_MISSED_TASK_ALERT_TS,
-                  latestMissedTimestamp || Date.now()
-                )
-              }
-            }
-          ]
-        })
-      }
-    })
-  }
-
-  getLastMissedTaskAlertTimestamp() {
-    return this.storage.get(StorageKeys.LAST_MISSED_TASK_ALERT_TS)
-  }
 
   getSubjectDetails() {
     return Promise.all([

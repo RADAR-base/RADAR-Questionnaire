@@ -21,6 +21,8 @@ export class TickerBarComponent implements OnChanges {
   @Input()
   showSyncNeeded = false
   @Input()
+  showExpired = false
+  @Input()
   noTasksToday = false
   @Input()
   timeToNextMilli: number
@@ -38,6 +40,7 @@ export class TickerBarComponent implements OnChanges {
     if (this.showSyncNeeded) return this.addDataSendNeeded()
     if (!this.tickerText) return this.addTasksRemaining()
     if (this.noTasksToday) return this.addTasksNone()
+    if (this.showExpired) return this.addTasksExpired()
     if (this.task) return this.addTask()
     if (this.report) return this.addReportAvailable()
   }
@@ -100,6 +103,10 @@ export class TickerBarComponent implements OnChanges {
       this.localization.translateKey(LocKeys.TASK_BAR_NO_TASK_1) +
       ' </b>' +
       this.localization.translateKey(LocKeys.TASK_BAR_NO_TASK_2)
+  }
+
+  addTasksExpired() {
+    this.tickerText = '<b>Oh no!</b> You missed some tasks today.'
   }
 
   getTimeToNextString() {

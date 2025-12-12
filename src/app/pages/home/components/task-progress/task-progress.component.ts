@@ -44,7 +44,7 @@ export class TaskProgressComponent implements OnChanges {
       this.max = this.progress.numberOfTasks
     }
     this.complete = this.forceComplete || this.current >= this.max
-    if (this.complete && !this.showFireworks) {
+    if (this.complete && !this.showFireworks && !this.noTasksToday) {
       this.displayFireworks()
       this.showFireworks = true
     }

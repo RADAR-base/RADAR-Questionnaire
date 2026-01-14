@@ -94,7 +94,7 @@
     "emojis-list": "^3.0.0",
     "eventemitter3": "^5.0.1",
     "execa": "^4.0.3",
-    "firebase": "^10.8.0",
+    "firebase": "^12.8.0",
     "follow-redirects": "^1.15.6",
     "graphlib": "^2.1.8",
     "install": "^0.13.0",

@@ -38,7 +38,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular-devkit/build-angular": "~14.2.13",
+    "@angular-devkit/build-angular": "~21.1.2",
     "@angular/animations": "~14.3.0",
     "@angular/cdk": "^14.2.7",
     "@angular/common": "~14.3.0",
@@ -123,11 +123,11 @@
     "zone.js": "~0.14.4"
   },
   "devDependencies": {
-    "@angular/cli": "^14.2.13",
+    "@angular/cli": "^21.1.2",
     "@angular/compiler-cli": "~14.3.0",
     "@angular/language-service": "~14.3.0",
     "@angular/platform-server": "~14.3.0",
-    "@capacitor/cli": "5.7.4",
+    "@capacitor/cli": "8.0.2",
     "@ionic/angular-toolkit": "^7.0.0",
     "@types/jasmine": "~3.6.0",
     "@types/jasminewd2": "~2.0.3",

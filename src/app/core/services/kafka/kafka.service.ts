@@ -4,7 +4,12 @@ import {
   HttpHeaders
 } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { CapacitorHttp } from '@capacitor/core'
+import { Network } from '@capacitor/network'
+import * as pako from 'pako'
+import { fromByteArray } from 'base64-js'
+import { Subject } from 'rxjs'
+import pLimit from 'p-limit'
+import { Http } from '@capacitor-community/http'
 
 import {
   DefaultClientAcceptType,
@@ -25,11 +30,8 @@ import { TokenService } from '../token/token.service'
 import { AnalyticsService } from '../usage/analytics.service'
 import { CacheService } from './cache.service'
 import { SchemaService } from './schema.service'
-import { Subject } from 'rxjs'
-import pLimit from 'p-limit'
 import { NotificationService } from '../notifications/notification.service'
 import { NotificationActionType } from 'src/app/shared/models/notification-handler'
-import { Network } from '@capacitor/network'
 
 @Injectable()
 export class KafkaService {
@@ -287,7 +289,7 @@ export class KafkaService {
     } catch (error) {
       this.setCacheSending(false)
       this.cancelSending = false
-      this.logger.error('Error in sendAllFromCache:', error)
+      this.logger.log('Error in sendAllFromCache:', error)
       throw error
     } finally {
       this.setCacheSending(false)
@@ -309,7 +311,23 @@ export class KafkaService {
 
   sendToKafka(topic, record, headers): Promise<any> {
     const allRecords = record.records
-    return this.postData(JSON.stringify(record), topic, headers)
+    const jsonData = JSON.stringify(record)
+    // Compress with pako and convert directly to base64
+    const gzippedBytesB64 = fromByteArray(pako.gzip(jsonData))
+
+    return this.postData(
+      gzippedBytesB64,
+      topic,
+      headers.set('Content-Encoding', DefaultCompressedContentEncoding),
+      true // isBase64 flag
+    )
+      .catch(e => {
+        if (e.name == this.HTTP_ERROR) {
+          this.logger.log('Retrying uncompressed..')
+          return this.postData(record, topic, headers, false)
+        }
+        throw e
+      })
       .then(() => this.sendEvent(allRecords[0], DataEventType.SEND_SUCCESS))
       .catch(e => {
         this.sendEvent(allRecords[0], DataEventType.SEND_ERROR, e)
@@ -371,19 +389,24 @@ export class KafkaService {
     return result
   }
 
-  postData(data: any, topic: string, headers: HttpHeaders): Promise<any> {
+  postData(data: any, topic: string, headers: HttpHeaders, isBase64: boolean = false): Promise<any> {
     const nativeHeaders = this.convertHeaders(headers)
-
-    const request = {
+    const request: any = {
       url: `${this.KAFKA_CLIENT_URL}${this.URI_topics}${topic}`,
-      data: data,
       headers: nativeHeaders,
       method: 'POST',
-      readTimeout: KafkaService.HTTP_TIMEOUT,
-      connectTimeout: KafkaService.HTTP_TIMEOUT,
     }
 
-    const requestPromise = CapacitorHttp.request(request)
+    if (isBase64) {
+      request.data = data // base64 string
+      request.dataIsBase64 = true
+    } else {
+      request.data = data
+    }
+    request.connectionTimeout = KafkaService.HTTP_TIMEOUT
+    request.readTimeout = KafkaService.HTTP_TIMEOUT
+
+    const requestPromise = Http.request(request)
       .then(response => {
         if (response.status < 200 || response.status >= 300) {
           throw new HttpErrorResponse({

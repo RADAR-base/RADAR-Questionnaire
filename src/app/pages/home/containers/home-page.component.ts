@@ -39,6 +39,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
 
   showCalendar = false
   showCompleted = false
+  showExpired = false
   startingQuestionnaire = false
   hasClinicalTasks: Promise<boolean>
   hasOnDemandTasks: Promise<boolean>
@@ -129,6 +130,9 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.showMiscTasksButton = this.getShowMiscTasksButton()
     this.studyPortalReturnUrl = this.tasksService.getPortalReturnUrl()
     this.portalReturnText = this.getPortalReturnText()
+
+    // Check if there are tasks that expired today and were not complete
+    this.checkForExpiredTasks()
   }
 
   onResume() {
@@ -140,7 +144,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   getIsLoadingSpinnerShown() {
     return (
       (this.startingQuestionnaire && !this.showCalendar) ||
-      (!this.nextTask && !this.showCompleted)
+      (!this.nextTask && !this.showCompleted && !this.showExpired) || (!this.nextTask && !this.showExpired)
     )
   }
 
@@ -173,6 +177,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
         this.taskIsNow = false
         this.nextTask = null
         this.showCompleted = this.tasksService.areAllTasksComplete(tasks)
+        this.showExpired = this.tasksService.areAllTasksExpired(tasks)
         if (this.showCompleted) {
           clearInterval(this.checkTaskInterval)
           this.showCalendar = false
@@ -281,4 +286,61 @@ export class HomePageComponent implements OnInit, OnDestroy {
       this.streakDays = streak
     })
   }
+
+
+  checkForExpiredTasks() {
+    console.log('checkForExpiredTasks')
+    return Promise.all([
+      this.tasksService.getLastMissedTaskAlertTimestamp(),
+      this.tasksService.getTasksOfToday()
+    ]).then(([lastAlertTs, tasks]) => {
+      const list = tasks || []
+
+      const missedToday = list.filter(
+        t =>
+          this.tasksService.wasTaskValidToday(t) &&
+          this.tasksService.isTaskExpired(t) &&
+          !t.completed
+      )
+
+      console.log('missedToday', missedToday)
+
+      const hasStartableTask = list.some(t =>
+        this.tasksService.isTaskStartable(t)
+      )
+
+      console.log('hasStartableTask', hasStartableTask)
+
+      const latestMissedTimestamp = missedToday.reduce(
+        (max, t) => (t.timestamp > max ? t.timestamp : max),
+        0
+      )
+
+      const hasNewMissedSinceAlert =
+        !!latestMissedTimestamp &&
+        (!lastAlertTs || latestMissedTimestamp > lastAlertTs)
+
+      if (hasNewMissedSinceAlert && !hasStartableTask) {
+        this.alertService.showAlert({
+          header: this.localization.translateKey(
+            LocKeys.NOTIFICATION_REMINDER_FORGOTTEN
+          ),
+          message: this.localization.translateKey(
+            LocKeys.NOTIFICATION_REMINDER_FORGOTTEN_ALERT_DEFAULT_DESC
+          ),
+          buttons: [
+            {
+              text: this.localization.translateKey(LocKeys.BTN_OKAY),
+              handler: () => {
+                this.tasksService.setLastMissedTaskAlertTimestamp(
+                  latestMissedTimestamp || Date.now()
+                )
+              }
+            }
+          ]
+        })
+      }
+    })
+  }
+
 }

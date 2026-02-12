@@ -69,7 +69,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
     private localization: LocalizationService,
     private platform: Platform,
     private usage: UsageService,
-    private taskStreakService: TaskStreakService,
+    private taskStreakService: TaskStreakService
   ) {
     this.changeDetectionListener =
       this.tasksService.changeDetectionEmitter.subscribe(() => {
@@ -88,11 +88,11 @@ export class HomePageComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     // Unsubscribe to avoid memory leaks when the page is left
     if (this.resumeListener) {
-      this.resumeListener.unsubscribe();
+      this.resumeListener.unsubscribe()
     }
     this.changeDetectionListener.unsubscribe()
     if (this.cacheProgressSubscription) {
-      this.cacheProgressSubscription.unsubscribe();
+      this.cacheProgressSubscription.unsubscribe()
     }
   }
 
@@ -110,7 +110,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   ionViewWillLeave() {
     // Unsubscribe to avoid memory leaks when the page is left
     if (this.resumeListener) {
-      this.resumeListener.unsubscribe();
+      this.resumeListener.unsubscribe()
     }
     KeepAwake.allowSleep()
   }
@@ -144,7 +144,8 @@ export class HomePageComponent implements OnInit, OnDestroy {
   getIsLoadingSpinnerShown() {
     return (
       (this.startingQuestionnaire && !this.showCalendar) ||
-      (!this.nextTask && !this.showCompleted && !this.showExpired) || (!this.nextTask && !this.showExpired)
+      (!this.nextTask && !this.showCompleted && !this.showExpired) ||
+      (!this.nextTask && !this.showExpired)
     )
   }
 
@@ -212,7 +213,9 @@ export class HomePageComponent implements OnInit, OnDestroy {
 
   async getPortalReturnText() {
     const portalReturnText = await this.tasksService.getPortalReturnText()
-    return portalReturnText ? portalReturnText : this.localization.translateKey(LocKeys.BTN_RETURN_PORTAL)
+    return portalReturnText
+      ? portalReturnText
+      : this.localization.translateKey(LocKeys.BTN_RETURN_PORTAL)
   }
 
   startQuestionnaire(taskCalendarTask?: Task) {
@@ -250,7 +253,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
         buttons: [
           {
             text: this.localization.translateKey(LocKeys.BTN_OKAY),
-            handler: () => { }
+            handler: () => {}
           }
         ]
       })
@@ -268,7 +271,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
       buttons: [
         {
           text: this.localization.translateKey(LocKeys.BTN_OKAY),
-          handler: () => { }
+          handler: () => {}
         }
       ]
     })
@@ -287,60 +290,30 @@ export class HomePageComponent implements OnInit, OnDestroy {
     })
   }
 
-
   checkForExpiredTasks() {
-    console.log('checkForExpiredTasks')
-    return Promise.all([
-      this.tasksService.getLastMissedTaskAlertTimestamp(),
-      this.tasksService.getTasksOfToday()
-    ]).then(([lastAlertTs, tasks]) => {
-      const list = tasks || []
-
-      const missedToday = list.filter(
-        t =>
-          this.tasksService.wasTaskValidToday(t) &&
-          this.tasksService.isTaskExpired(t) &&
-          !t.completed
-      )
-
-      console.log('missedToday', missedToday)
-
-      const hasStartableTask = list.some(t =>
-        this.tasksService.isTaskStartable(t)
-      )
-
-      console.log('hasStartableTask', hasStartableTask)
-
-      const latestMissedTimestamp = missedToday.reduce(
-        (max, t) => (t.timestamp > max ? t.timestamp : max),
-        0
-      )
-
-      const hasNewMissedSinceAlert =
-        !!latestMissedTimestamp &&
-        (!lastAlertTs || latestMissedTimestamp > lastAlertTs)
-
-      if (hasNewMissedSinceAlert && !hasStartableTask) {
-        this.alertService.showAlert({
-          header: this.localization.translateKey(
-            LocKeys.NOTIFICATION_REMINDER_FORGOTTEN
-          ),
-          message: this.localization.translateKey(
-            LocKeys.NOTIFICATION_REMINDER_FORGOTTEN_ALERT_DEFAULT_DESC
-          ),
-          buttons: [
-            {
-              text: this.localization.translateKey(LocKeys.BTN_OKAY),
-              handler: () => {
-                this.tasksService.setLastMissedTaskAlertTimestamp(
-                  latestMissedTimestamp || Date.now()
-                )
+    return this.tasksService
+      .checkForExpiredTasks()
+      .then(({ shouldShowAlert, latestMissedTimestamp }) => {
+        if (shouldShowAlert) {
+          this.alertService.showAlert({
+            header: this.localization.translateKey(
+              LocKeys.NOTIFICATION_REMINDER_FORGOTTEN
+            ),
+            message: this.localization.translateKey(
+              LocKeys.NOTIFICATION_REMINDER_FORGOTTEN_ALERT_DEFAULT_DESC
+            ),
+            buttons: [
+              {
+                text: this.localization.translateKey(LocKeys.BTN_OKAY),
+                handler: () => {
+                  this.tasksService.setLastMissedTaskAlertTimestamp(
+                    latestMissedTimestamp || Date.now()
+                  )
+                }
               }
-            }
-          ]
-        })
-      }
-    })
+            ]
+          })
+        }
+      })
   }
-
 }

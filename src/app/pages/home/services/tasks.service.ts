@@ -70,7 +70,10 @@ export class TasksService {
       .getTasksForDate(new Date(), AssessmentType.SCHEDULED)
       .then(tasks =>
         tasks.filter(
-          t => !this.isTaskExpired(t) || this.wasTaskCompletedToday(t) || this.wasTaskValidToday(t)
+          t =>
+            !this.isTaskExpired(t) ||
+            this.wasTaskCompletedToday(t) ||
+            this.wasTaskValidToday(t)
         )
       )
   }
@@ -179,7 +182,9 @@ export class TasksService {
   getAutoSendCachedData() {
     return this.remoteConfig
       .read()
-      .then(config => config.getOrDefault(ConfigKeys.AUTO_SEND_CACHED_DATA, 'false'))
+      .then(config =>
+        config.getOrDefault(ConfigKeys.AUTO_SEND_CACHED_DATA, 'false')
+      )
   }
 
   getPlatformInstanceName() {
@@ -230,10 +235,7 @@ export class TasksService {
     return this.remoteConfig
       .read()
       .then(config =>
-        config.getOrDefault(
-          ConfigKeys.SHOW_TASK_INFO,
-          DefaultShowTaskInfo
-        )
+        config.getOrDefault(ConfigKeys.SHOW_TASK_INFO, DefaultShowTaskInfo)
       )
       .then(res => JSON.parse(res))
   }
@@ -241,17 +243,13 @@ export class TasksService {
   getPortalReturnUrl() {
     return this.remoteConfig
       .read()
-      .then(config =>
-        config.get(ConfigKeys.PLATFORM_RETURN_URL)
-      )
+      .then(config => config.get(ConfigKeys.PLATFORM_RETURN_URL))
   }
 
   getPortalReturnText() {
     return this.remoteConfig
       .read()
-      .then(config =>
-        config.get(ConfigKeys.PLATFORM_RETURN_TEXT)
-      )
+      .then(config => config.get(ConfigKeys.PLATFORM_RETURN_TEXT))
   }
 
   setLastMissedTaskAlertTimestamp(timestamp: number) {
@@ -259,6 +257,46 @@ export class TasksService {
   }
 
   getLastMissedTaskAlertTimestamp() {
-    return null
+    return this.storage
+      .get(StorageKeys.LAST_MISSED_TASK_ALERT_TS)
+      .then(timestamp => (timestamp ? new Date(timestamp) : null))
+  }
+
+  /**
+   * Checks for expired tasks and determines if an alert should be shown.
+   * @returns Promise containing shouldShowAlert flag and latestMissedTimestamp
+   */
+  checkForExpiredTasks(): Promise<{
+    shouldShowAlert: boolean
+    latestMissedTimestamp: number
+  }> {
+    return Promise.all([
+      this.getLastMissedTaskAlertTimestamp(),
+      this.getTasksOfToday()
+    ]).then(([lastAlertTs, tasks]) => {
+      const list = tasks || []
+
+      const missedToday = list.filter(
+        t => this.wasTaskValidToday(t) && this.isTaskExpired(t) && !t.completed
+      )
+
+      const hasStartableTask = list.some(t => this.isTaskStartable(t))
+
+      const latestMissedTimestamp = missedToday.reduce(
+        (max, t) => (t.timestamp > max ? t.timestamp : max),
+        0
+      )
+
+      const hasNewMissedSinceAlert =
+        !!latestMissedTimestamp &&
+        (!lastAlertTs || latestMissedTimestamp > lastAlertTs.getTime())
+
+      const shouldShowAlert = hasNewMissedSinceAlert && !hasStartableTask
+
+      return {
+        shouldShowAlert,
+        latestMissedTimestamp
+      }
+    })
   }
 }

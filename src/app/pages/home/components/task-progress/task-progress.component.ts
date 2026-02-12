@@ -30,9 +30,12 @@ export class TaskProgressComponent implements OnChanges {
   duration = 300
   complete = false
   showFireworks: boolean = false
+  streakLabel: string = 'CURRENT STREAK'
+  streakText: string = 'days'
 
   ngOnChanges() {
     this.updateProgress()
+    this.updateStreakText()
   }
 
   updateProgress() {
@@ -41,10 +44,14 @@ export class TaskProgressComponent implements OnChanges {
       this.max = this.progress.numberOfTasks
     }
     this.complete = this.forceComplete || this.current >= this.max
-    if (this.complete && !this.showFireworks) {
+    if (this.complete && !this.showFireworks && !this.noTasksToday) {
       this.displayFireworks()
       this.showFireworks = true
     }
+  }
+
+  updateStreakText() {
+    this.streakText = this.streakDays > 1 ? `${this.streakDays} days` : '1 day'
   }
 
   displayFireworks() {

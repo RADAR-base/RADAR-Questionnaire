@@ -180,11 +180,13 @@ $box-shadow2: ();
 .counter {
   margin-top: -34vw;
   text-align: center;
+  margin-bottom: 128px;
 }
 
 .counter-complete {
   margin-top: -48vw;
   text-align: center;
+  margin-bottom: 128px;
 }
 
 .large {
@@ -210,10 +212,24 @@ $box-shadow2: ();
   width: 50%;
   margin: auto;
   margin-top: 24px;
+  text-align: center;
 }
 
 .streak {
   font-size: 10px;
   margin-top: -32px;
   padding-top: -10px;
+}
+
+.streak-icon {
+  vertical-align: middle;
+  opacity: 0.2;
+  margin: 2px;
+}
+
+.streak-icon-flipped {
+  vertical-align: middle;
+  opacity: 0.2;
+  margin: 2px;
+  transform: scaleX(-1);
 }

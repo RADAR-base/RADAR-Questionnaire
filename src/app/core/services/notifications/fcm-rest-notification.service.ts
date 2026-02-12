@@ -29,9 +29,6 @@ import { StorageService } from '../storage/storage.service'
 import { FcmNotificationService } from './fcm-notification.service'
 import { NotificationGeneratorService } from './notification-generator.service'
 import { GrabIntentExtras } from 'capacitor-grab-intent-extras'
-import { TasksService } from '../../../pages/home/services/tasks.service'
-import { AlertService } from '../misc/alert.service'
-import { LocKeys } from '../../../shared/enums/localisations'
 
 @Injectable()
 export class FcmRestNotificationService extends FcmNotificationService {
@@ -51,8 +48,6 @@ export class FcmRestNotificationService extends FcmNotificationService {
     public remoteConfig: RemoteConfigService,
     public localization: LocalizationService,
     private appServerService: AppServerService,
-    private tasksService: TasksService,
-    private alertService: AlertService
   ) {
     super(storage, config, platform, logger, remoteConfig)
     this.platform.ready().then(() => {
@@ -78,7 +73,6 @@ export class FcmRestNotificationService extends FcmNotificationService {
         this.schedule.getTasks(AssessmentType.ALL)
       ]).then(([subject, tasks]) => {
         if (!messageId) return
-        this.checkForPendingTasks()
         const notification = this.notifications.findNotificationByMessageId(
           tasks,
           messageId
@@ -100,30 +94,6 @@ export class FcmRestNotificationService extends FcmNotificationService {
     })
   }
 
-  checkForPendingTasks() {
-    return this.schedule.getTasksForDate(new Date(), AssessmentType.SCHEDULED).then(tasks => {
-      const list = tasks || []
-      const hasStartableTask = list.some(t => this.tasksService.isTaskStartable(t))
-      const hasMissedToday = list.some(t =>
-        this.tasksService.wasTaskValidToday(t) &&
-        this.tasksService.isTaskExpired(t) &&
-        !t.completed
-      )
-
-      if (hasMissedToday && !hasStartableTask) {
-        this.alertService.showAlert({
-          header: this.localization.translateKey(LocKeys.NOTIFICATION_REMINDER_FORGOTTEN),
-          message: this.localization.translateKey(LocKeys.NOTIFICATION_REMINDER_FORGOTTEN_ALERT_DEFAULT_DESC),
-          buttons: [
-            {
-              text: this.localization.translateKey(LocKeys.BTN_OKAY),
-              handler: () => { }
-            }
-          ]
-        })
-      }
-    })
-  }
 
   getSubjectDetails() {
     return Promise.all([

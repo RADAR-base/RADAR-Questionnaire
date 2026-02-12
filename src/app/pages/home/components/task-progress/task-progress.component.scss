@@ -220,3 +220,16 @@ $box-shadow2: ();
   margin-top: -32px;
   padding-top: -10px;
 }
+
+.streak-icon {
+  vertical-align: middle;
+  opacity: 0.2;
+  margin: 2px;
+}
+
+.streak-icon-flipped {
+  vertical-align: middle;
+  opacity: 0.2;
+  margin: 2px;
+  transform: scaleX(-1);
+}

@@ -253,7 +253,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
         buttons: [
           {
             text: this.localization.translateKey(LocKeys.BTN_OKAY),
-            handler: () => {}
+            handler: () => { }
           }
         ]
       })
@@ -271,7 +271,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
       buttons: [
         {
           text: this.localization.translateKey(LocKeys.BTN_OKAY),
-          handler: () => {}
+          handler: () => { }
         }
       ]
     })

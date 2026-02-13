@@ -69,6 +69,9 @@ export const DefaultShowTaskProgressCount = 'false'
 export const DefaultShowTaskInfo = 'true'
 export const DefaultShowStreak = 'false'
 
+// *Whether streak requires ALL startable tasks completed (true) or at least one (false)
+export const DefaultStreakRequireAllTasks = 'false'
+
 // DEFAULT URI
 
 // *The Default endpoint where the RADAR-base platform is hosted

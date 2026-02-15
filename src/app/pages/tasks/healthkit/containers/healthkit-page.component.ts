@@ -205,10 +205,9 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
 
   private async tryResumeFromCache(isRetry: boolean): Promise<boolean> {
     try {
-      const hasCache = await this.healthProcessor.hasHealthkitCache()
       const isUploadReady = await this.healthkitService.isUploadReady()
 
-      if (hasCache && isUploadReady && this.processingState === ProcessingState.IDLE) {
+      if (isUploadReady && this.processingState === ProcessingState.IDLE) {
         this.processingState = ProcessingState.PROCESSING
         // If this is a retry, set the base offset for cache upload too
         if (isRetry && this.progressBaseOffset > 0) {

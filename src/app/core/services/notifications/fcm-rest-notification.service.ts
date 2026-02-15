@@ -65,11 +65,14 @@ export class FcmRestNotificationService extends FcmNotificationService {
   onAppOpen() {
     return GrabIntentExtras.getIntentExtras().then(extras => {
       if (!extras) return
-      const messageId = extras['google.message_id'].split(':').slice(-1)
+      const messageId = extras['google.message_id'] ?
+        extras['google.message_id'].split(':').slice(-1) : extras['gcm.message_id'] ?
+          extras['gcm.message_id'].split(':').slice(-1) : null
       return Promise.all([
         this.getSubjectDetails(),
         this.schedule.getTasks(AssessmentType.ALL)
       ]).then(([subject, tasks]) => {
+        if (!messageId) return
         const notification = this.notifications.findNotificationByMessageId(
           tasks,
           messageId
@@ -90,6 +93,7 @@ export class FcmRestNotificationService extends FcmNotificationService {
       })
     })
   }
+
 
   getSubjectDetails() {
     return Promise.all([

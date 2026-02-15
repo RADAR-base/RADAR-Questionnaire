@@ -35,11 +35,29 @@
         </div>
       </div>
     </div>
-    <div #counter *ngIf="!complete" class="counter" [@translateY]="complete">
+    <div
+      #counter
+      *ngIf="!complete"
+      [class.counter]="!complete"
+      [class.counter-complete]="complete"
+      [@translateY]="complete"
+    >
       <div class="large">{{ current }}</div>
       <div class="small">
         {{ 'TASK_PROGRESS_COMPLETED' | translate }}
       </div>
+    </div>
+    <div
+      class="streak-card"
+      *ngIf="isStreakShown && streakDays > 0"
+      [@enterAnimation]
+    >
+      <ion-title>
+        <ion-icon name="leaf-outline" class="streak-icon"></ion-icon>
+        <b>{{ streakText }}</b>
+        <ion-icon name="leaf-outline" class="streak-icon-flipped"></ion-icon>
+      </ion-title>
+      <span class="streak">{{ streakLabel }}</span>
     </div>
   </div>
 </div>

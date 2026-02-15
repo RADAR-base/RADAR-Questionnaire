@@ -7,7 +7,7 @@ import {
   DefaultPlatformInstance,
   DefaultShowTaskCalendarName,
   DefaultShowTaskInfo,
-  DefaultEndPoint
+  DefaultShowStreak
 } from '../../../../assets/data/defaultConfig'
 import { QuestionnaireService } from '../../../core/services/config/questionnaire.service'
 import { RemoteConfigService } from '../../../core/services/config/remote-config.service'
@@ -19,6 +19,8 @@ import {
   setDateTimeToMidnight,
   setDateTimeToMidnightEpoch
 } from '../../../shared/utilities/time'
+import { StorageService } from '../../../core/services/storage/storage.service'
+import { StorageKeys } from '../../../shared/enums/storage'
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +31,8 @@ export class TasksService {
   constructor(
     private schedule: ScheduleService,
     private questionnaire: QuestionnaireService,
-    private remoteConfig: RemoteConfigService
+    private remoteConfig: RemoteConfigService,
+    private storage: StorageService
   ) {
     this.schedule.changeDetectionEmitter.subscribe(() => {
       console.log('Changes detected to schedule..')
@@ -67,7 +70,10 @@ export class TasksService {
       .getTasksForDate(new Date(), AssessmentType.SCHEDULED)
       .then(tasks =>
         tasks.filter(
-          t => !this.isTaskExpired(t) || this.wasTaskCompletedToday(t) || this.wasTaskValidToday(t)
+          t =>
+            !this.isTaskExpired(t) ||
+            this.wasTaskCompletedToday(t) ||
+            this.wasTaskValidToday(t)
         )
       )
   }
@@ -94,6 +100,15 @@ export class TasksService {
     }))
   }
 
+  getIsStreakShown(): Promise<boolean> {
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        config.getOrDefault(ConfigKeys.SHOW_TASK_STREAK, DefaultShowStreak)
+      )
+      .then(res => JSON.parse(res))
+  }
+
   updateTaskToReportedCompletion(task) {
     this.schedule.updateTaskToReportedCompletion(task)
   }
@@ -105,7 +120,11 @@ export class TasksService {
   }
 
   areAllTasksComplete(tasks) {
-    return !tasks || tasks.every(t => t.completed || !this.isTaskStartable(t))
+    return !tasks || tasks.every(t => t.completed)
+  }
+
+  areAllTasksExpired(tasks) {
+    return !tasks || tasks.every(t => this.isTaskExpired(t) || t.completed)
   }
 
   isLastTask(tasks) {
@@ -160,12 +179,6 @@ export class TasksService {
     return setDateTimeToMidnight(new Date())
   }
 
-  getAutoSendCachedData() {
-    return this.remoteConfig
-      .read()
-      .then(config => config.getOrDefault(ConfigKeys.AUTO_SEND_CACHED_DATA, 'false'))
-  }
-
   getPlatformInstanceName() {
     return this.remoteConfig
       .read()
@@ -214,10 +227,7 @@ export class TasksService {
     return this.remoteConfig
       .read()
       .then(config =>
-        config.getOrDefault(
-          ConfigKeys.SHOW_TASK_INFO,
-          DefaultShowTaskInfo
-        )
+        config.getOrDefault(ConfigKeys.SHOW_TASK_INFO, DefaultShowTaskInfo)
       )
       .then(res => JSON.parse(res))
   }
@@ -225,16 +235,56 @@ export class TasksService {
   getPortalReturnUrl() {
     return this.remoteConfig
       .read()
-      .then(config =>
-        config.get(ConfigKeys.PLATFORM_RETURN_URL)
-      )
+      .then(config => config.get(ConfigKeys.PLATFORM_RETURN_URL))
   }
 
   getPortalReturnText() {
     return this.remoteConfig
       .read()
-      .then(config =>
-        config.get(ConfigKeys.PLATFORM_RETURN_TEXT)
+      .then(config => config.get(ConfigKeys.PLATFORM_RETURN_TEXT))
+  }
+
+  setLastMissedTaskAlertTimestamp(timestamp: number) {
+    this.storage.set(StorageKeys.LAST_MISSED_TASK_ALERT_TS, timestamp)
+  }
+
+  getLastMissedTaskAlertTimestamp() {
+    return this.storage
+      .get(StorageKeys.LAST_MISSED_TASK_ALERT_TS)
+      .then(timestamp => (timestamp ? new Date(timestamp) : null))
+  }
+
+  checkForExpiredTasks(): Promise<{
+    shouldShowAlert: boolean
+    latestMissedTimestamp: number
+  }> {
+    return Promise.all([
+      this.getLastMissedTaskAlertTimestamp(),
+      this.getTasksOfToday()
+    ]).then(([lastAlertTs, tasks]) => {
+      const list = tasks || []
+
+      const missedToday = list.filter(
+        t => this.wasTaskValidToday(t) && this.isTaskExpired(t) && !t.completed
       )
+
+      const hasStartableTask = list.some(t => this.isTaskStartable(t))
+
+      const latestMissedTimestamp = missedToday.reduce(
+        (max, t) => (t.timestamp > max ? t.timestamp : max),
+        0
+      )
+
+      const hasNewMissedSinceAlert =
+        !!latestMissedTimestamp &&
+        (!lastAlertTs || latestMissedTimestamp > lastAlertTs.getTime())
+
+      const shouldShowAlert = hasNewMissedSinceAlert && !hasStartableTask
+
+      return {
+        shouldShowAlert,
+        latestMissedTimestamp
+      }
+    })
   }
 }

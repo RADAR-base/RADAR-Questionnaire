@@ -31,6 +31,10 @@ import { NotificationService } from '../notifications/notification.service'
 import { NotificationActionType } from 'src/app/shared/models/notification-handler'
 import { Network } from '@capacitor/network'
 
+interface PrepareKafkaOptions {
+  sendEvent?: boolean
+}
+
 @Injectable()
 export class KafkaService {
   private static DEFAULT_TOPIC_CACHE_VALIDITY = 600_000 // 10 minutes
@@ -158,21 +162,52 @@ export class KafkaService {
     }
   }
 
-  prepareKafkaObjectAndStore(type, payload) {
+  private buildCacheValue(type, payload): CacheValue {
     const name = type == SchemaType.ASSESSMENT ? payload.metadata.name : type
     const value = this.schema.getKafkaObjectValue(type, payload)
-    const cacheValue: CacheValue = {
+    return {
       kafkaObject: { value },
       name,
       avsc: payload.metadata ? payload.metadata.avsc : this.DEFAULT_KAFKA_AVSC
     }
-    this.sendDataEvent(
-      DataEventType.PREPARED_OBJECT,
-      name,
-      value['name'],
-      value['timestamp']
-    )
-    return this.cache.storeInCache(type, value, cacheValue)
+  }
+
+  prepareKafkaObjectAndStore(type, payload, options: PrepareKafkaOptions = {}) {
+    const cacheValue = this.buildCacheValue(type, payload)
+    const value = cacheValue.kafkaObject.value
+    if (options.sendEvent !== false) {
+      this.sendDataEvent(
+        DataEventType.PREPARED_OBJECT,
+        cacheValue.name,
+        value['name'],
+        value['timestamp']
+      )
+    }
+    return this.cache.storeInCache(type, value, cacheValue, options)
+  }
+
+  prepareKafkaObjectsAndStore(type, payloads: any[], options: PrepareKafkaOptions = {}) {
+    if (!payloads || !payloads.length) return Promise.resolve()
+
+    const cacheValuesWithObjects = payloads.map(payload => {
+      const cacheValue = this.buildCacheValue(type, payload)
+      return {
+        kafkaObject: cacheValue.kafkaObject.value,
+        cacheValue
+      }
+    })
+
+    const firstValue = cacheValuesWithObjects[0].cacheValue.kafkaObject.value
+    if (options.sendEvent !== false) {
+      this.analytics.logEvent(DataEventType.PREPARED_OBJECT_BATCH, {
+        name: type,
+        questionnaire_name: firstValue['name'] || '',
+        questionnaire_timestamp: String(firstValue['timestamp'] || ''),
+        batch_size: String(cacheValuesWithObjects.length)
+      })
+    }
+
+    return this.cache.storeInCacheMultiple(type, cacheValuesWithObjects, options)
   }
 
   async sendAllFromCache(): Promise<any> {
@@ -254,7 +289,7 @@ export class KafkaService {
 
         if (batchSuccessKeys.length > 0) {
           try {
-            await this.cache.removeFromCacheMultiple(batchSuccessKeys)
+            await this.cache.removeFromCacheMultiple(batchSuccessKeys, { sendEvent: false })
             successKeys.push(...batchSuccessKeys)
             this.logger.log(`Removed ${batchSuccessKeys.length} successfully sent items from cache`)
           } catch (error) {
@@ -275,6 +310,8 @@ export class KafkaService {
       if (failedKeys.length > KafkaService.SEND_ERROR_NOTIFICATION_THRESHOLD) {
         await this.sendDataErrorNotification()
       }
+
+      this.sendCacheSendSummary(successKeys.length, failedKeys.length, this.cancelSending)
 
       const result = {
         successKeys,
@@ -308,13 +345,7 @@ export class KafkaService {
   }
 
   sendToKafka(topic, record, headers): Promise<any> {
-    const allRecords = record.records
     return this.postData(JSON.stringify(record), topic, headers)
-      .then(() => this.sendEvent(allRecords[0], DataEventType.SEND_SUCCESS))
-      .catch(e => {
-        this.sendEvent(allRecords[0], DataEventType.SEND_ERROR, e)
-        throw e
-      })
   }
 
   updateProgress(success, failed, cacheSize) {
@@ -328,18 +359,6 @@ export class KafkaService {
       setTimeout(() => {
         // this.progressSubject.next(Math.min(Math.max(progress / cacheSize, 0), 1))
       }, 0)
-    }
-  }
-
-  sendEvent(record, eventType, error?) {
-    if (record && record.value) {
-      this.sendDataEvent(
-        eventType,
-        eventType,
-        record.value.name ? record.value.name : record.value.questionnaireName,
-        record.time,
-        error ? JSON.stringify(error) : ''
-      )
     }
   }
 
@@ -492,12 +511,37 @@ export class KafkaService {
   }
 
   sendDataEvent(type, name, questionnaire, timestamp, error?) {
+    if (!type) return
     this.analytics.logEvent(type, {
       name,
       questionnaire_name: questionnaire,
       questionnaire_timestamp: String(timestamp),
       error: JSON.stringify(error)
     })
+  }
+
+  private sendCacheSendSummary(successCount: number, failedCount: number, cancelled: boolean) {
+    if (successCount === 0 && failedCount === 0) return
+
+    this.analytics.logEvent(DataEventType.SEND_SUMMARY, {
+      success_count: String(successCount),
+      failed_count: String(failedCount),
+      cancelled: String(cancelled)
+    })
+
+    if (successCount > 0) {
+      this.analytics.logEvent(DataEventType.SEND_SUCCESS, {
+        name: 'cache_batch',
+        batch_size: String(successCount)
+      })
+    }
+
+    if (failedCount > 0) {
+      this.analytics.logEvent(DataEventType.SEND_ERROR, {
+        name: 'cache_batch',
+        batch_size: String(failedCount)
+      })
+    }
   }
 
   reset() {

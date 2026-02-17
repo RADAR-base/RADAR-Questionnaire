@@ -9,6 +9,10 @@ import { LogService } from '../misc/log.service'
 import { StorageService } from '../storage/storage.service'
 import { AnalyticsService } from '../usage/analytics.service'
 
+interface CacheEventOptions {
+  sendEvent?: boolean
+}
+
 @Injectable()
 export class CacheService {
   URI_topics: string = '/topics/'
@@ -28,24 +32,47 @@ export class CacheService {
     return Promise.all([this.setCache({})])
   }
 
-  storeInCache(type, kafkaObject, cacheValue: any) {
+  storeInCache(type, kafkaObject, cacheValue: any, options: CacheEventOptions = {}) {
     return this.getCache().then(cache => {
       this.logger.log('KAFKA-SERVICE: Caching answers.')
       const key = this.generateCacheKey(type, kafkaObject)
       cache[key] = cacheValue
-      this.sendDataEvent(DataEventType.CACHED, cacheValue)
+      if (options.sendEvent !== false) {
+        this.sendDataEvent(DataEventType.CACHED, cacheValue)
+      }
       return this.setCache(cache)
     })
   }
 
-  removeFromCache(cacheKey: string) {
+  storeInCacheMultiple(type, kafkaObjectsAndValues: { kafkaObject: any, cacheValue: CacheValue }[], options: CacheEventOptions = {}) {
+    if (!kafkaObjectsAndValues.length) return Promise.resolve()
+    return this.getCache().then(cache => {
+      this.logger.log(`KAFKA-SERVICE: Caching ${kafkaObjectsAndValues.length} answers in batch.`)
+      kafkaObjectsAndValues.forEach(({ kafkaObject, cacheValue }) => {
+        const key = this.generateCacheKey(type, kafkaObject)
+        cache[key] = cacheValue
+      })
+      if (options.sendEvent !== false) {
+        const firstCacheValue = kafkaObjectsAndValues[0].cacheValue
+        this.analytics.logEvent(DataEventType.CACHED_BATCH, {
+          name: firstCacheValue.repository ? SchemaType.ASSESSMENT : firstCacheValue.name,
+          batch_size: String(kafkaObjectsAndValues.length)
+        })
+      }
+      return this.setCache(cache)
+    })
+  }
+
+  removeFromCache(cacheKey: string, options: CacheEventOptions = {}) {
     return this.getCache().then(cache => {
       if (cache) {
         if (cache[cacheKey]) {
-          this.sendDataEvent(
-            DataEventType.REMOVED_FROM_CACHE,
-            cache[cacheKey]
-          )
+          if (options.sendEvent !== false) {
+            this.sendDataEvent(
+              DataEventType.REMOVED_FROM_CACHE,
+              cache[cacheKey]
+            )
+          }
           this.logger.log('Deleting ' + cacheKey)
           delete cache[cacheKey]
         }
@@ -56,16 +83,18 @@ export class CacheService {
   }
 
 
-  removeFromCacheMultiple(cacheKeys: string[]) {
+  removeFromCacheMultiple(cacheKeys: string[], options: CacheEventOptions = {}) {
     if (!cacheKeys.length) return Promise.resolve()
     return this.getCache().then(cache => {
       if (cache) {
         cacheKeys.map(cacheKey => {
           if (cache[cacheKey]) {
-            this.sendDataEvent(
-              DataEventType.REMOVED_FROM_CACHE,
-              cache[cacheKey]
-            )
+            if (options.sendEvent !== false) {
+              this.sendDataEvent(
+                DataEventType.REMOVED_FROM_CACHE,
+                cache[cacheKey]
+              )
+            }
             this.logger.log('Deleting ' + cacheKey)
             delete cache[cacheKey]
           }

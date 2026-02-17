@@ -391,6 +391,7 @@ export class KafkaService {
   }
 
   postData(data: any, topic: string, headers: HttpHeaders): Promise<any> {
+    // TEMP
     console.log("Posting data to Kafka")
     const nativeHeaders = this.convertHeaders(headers)
 

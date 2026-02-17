@@ -41,6 +41,8 @@ export interface AttemptProgress {
   cacheSize: number
 }
 
+type HKitSample = Record<string, any> & { uuid?: string; startDate?: string; endDate?: string };
+
 @Injectable({
   providedIn: 'root'
 })
@@ -217,6 +219,105 @@ export class HealthkitService {
     } catch (e) {
       return []
     }
+  }
+
+  async queryPage(
+    queryStartTime: Date,
+    queryEndTime: Date,
+    dataType: string,
+    limit: number
+  ): Promise<HKitSample[]> {
+    try {
+      const startTime = setDateTimeToMidnightEpoch(queryStartTime);
+      const endTime = setDateTimeToMidnight(queryEndTime);
+
+      const queryOptions = {
+        sampleName: dataType,
+        startDate: new Date(startTime).toISOString(),
+        endDate: new Date(endTime).toISOString(),
+        limit,
+      };
+
+      const res = await CapacitorHealthkit.queryHKitSampleType(queryOptions);
+      const rows: HKitSample[] = res?.resultData ?? [];
+
+      rows.sort((a, b) => {
+        const as = +new Date(a.startDate ?? 0);
+        const bs = +new Date(b.startDate ?? 0);
+        if (as !== bs) return as - bs;
+        const ae = +new Date(a.endDate ?? 0);
+        const be = +new Date(b.endDate ?? 0);
+        return ae - be;
+      });
+
+      return rows;
+    } catch {
+      return [];
+    }
+  }
+
+  queryPaged$(
+    queryStartTime: Date,
+    queryEndTime: Date,
+    dataType: string,
+    pageSize = 500
+  ): Observable<HKitSample[]> {
+    return new Observable<HKitSample[]>(subscriber => {
+      let cancelled = false;
+
+      (async () => {
+        try {
+          let cursorStart = new Date(queryStartTime);
+          let boundaryStartMs = +cursorStart;
+          let boundaryUUIDs = new Set<string>();
+
+          while (!cancelled) {
+            const page = await this.queryPage(cursorStart, queryEndTime, dataType, pageSize);
+            if (!page.length) {
+              subscriber.complete();
+              return;
+            }
+
+            const filtered: HKitSample[] = [];
+            for (const s of page) {
+              const sStartMs = +new Date(s.startDate);
+              const id = s.uuid ?? `${s.startDate}|${s.endDate}`;
+              if (sStartMs === boundaryStartMs && boundaryUUIDs.has(id)) continue;
+              filtered.push(s);
+            }
+
+            if (!filtered.length) {
+              subscriber.complete();
+              return;
+            }
+
+            subscriber.next(filtered);
+
+            const last = filtered[filtered.length - 1];
+            const lastStartMs = +new Date(last.startDate);
+
+            if (lastStartMs === boundaryStartMs) {
+              for (const s of filtered) {
+                if (+new Date(s.startDate) === boundaryStartMs) {
+                  boundaryUUIDs.add(s.uuid ?? `${s.startDate}|${s.endDate}`);
+                }
+              }
+              cursorStart = new Date(boundaryStartMs);
+            } else {
+              boundaryStartMs = lastStartMs;
+              boundaryUUIDs = new Set<string>();
+              cursorStart = new Date(boundaryStartMs);
+            }
+          }
+        } catch (e) {
+          subscriber.error(e);
+        }
+      })();
+
+      return () => {
+        cancelled = true;
+      };
+    });
   }
 
   getDataTypesFromTask(task) {

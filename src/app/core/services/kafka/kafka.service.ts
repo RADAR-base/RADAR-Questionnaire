@@ -186,7 +186,7 @@ export class KafkaService {
     return this.cache.storeInCache(type, value, cacheValue, options)
   }
 
-  prepareKafkaObjectsAndStore(type, payloads: any[], options: PrepareKafkaOptions = {}) {
+  prepareKafkaObjectsAndStoreMultiple(type, payloads: any[], options: PrepareKafkaOptions = {}) {
     if (!payloads || !payloads.length) return Promise.resolve()
 
     const cacheValuesWithObjects = payloads.map(payload => {
@@ -391,6 +391,7 @@ export class KafkaService {
   }
 
   postData(data: any, topic: string, headers: HttpHeaders): Promise<any> {
+    console.log("Posting data to Kafka")
     const nativeHeaders = this.convertHeaders(headers)
 
     const request = {

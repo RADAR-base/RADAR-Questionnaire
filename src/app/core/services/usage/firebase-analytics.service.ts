@@ -41,7 +41,7 @@ export class FirebaseAnalyticsService extends AnalyticsService {
     
     return FirebaseAnalytics.logEvent({ name: event, params: cleanParams })
       .then((res: any) => {
-        this.logger.log('firebase analytics service', res)
+        // this.logger.log('firebase analytics service', res)
         return res
       })
       .catch((error: any) => {

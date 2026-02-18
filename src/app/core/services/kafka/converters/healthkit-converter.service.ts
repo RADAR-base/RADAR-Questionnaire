@@ -20,6 +20,7 @@ import { KeyConverterService } from './key-converter.service'
 import { Utility } from 'src/app/shared/utilities/util'
 import { RemoteConfigService } from '../../config/remote-config.service'
 import { HealthkitService } from 'src/app/pages/tasks/healthkit/services/healthkit.service'
+import { concatMap, defaultIfEmpty, from, map, Observable, switchMap } from 'rxjs'
 
 @Injectable()
 export class HealthkitConverterService extends ConverterService {
@@ -110,8 +111,6 @@ export class HealthkitConverterService extends ConverterService {
     const endTime = data.value.endTime
     return this.healthkit.query(startTime, endTime, name).then(async res => {
       if (res.length) {
-        const sample = res[res.length - 1]
-        const lastDataDate = new Date(sample['endDate'])
         const processedData = await this.processSingleDatatype(
           name,
           res,
@@ -125,6 +124,22 @@ export class HealthkitConverterService extends ConverterService {
       }
       return null
     })
+  }
+
+  convertToHealthkitRecordPaged$(
+    kafkaValue,
+    valueSchemaMetadata,
+    pageSize = 28800
+  ): Observable<any[]> {
+    const data = kafkaValue.data
+    const name = data.key
+    const startTime = data.value.startTime
+    const endTime = data.value.endTime
+
+    return this.healthkit.queryPaged$(startTime, endTime, name, pageSize).pipe(
+      concatMap(res => from(this.processSingleDatatype(name, res, Date.now()))),
+      map(processedData => this.batchConvertToAvro(processedData, valueSchemaMetadata))
+    )
   }
 
   getSchemas() {
@@ -178,27 +193,67 @@ export class HealthkitConverterService extends ConverterService {
     kafkaKey,
     kafkaObject: any,
     cacheKey: any,
-    topics
-  ): Promise<any[]> {
-    return this.getSchemas().then(schema => {
-      return Promise.all([
-        this.keyConverter.convertToRecord(kafkaKey, this.HEALTHKIT_TOPIC),
-        this.convertToHealthkitRecord(kafkaObject, schema)
-      ]).then(([key, records]) => ({
-        topic: this.getKafkaTopic(kafkaObject.data.key),
-        cacheKey: cacheKey,
-        record: {
-          key_schema_id: key.schema,
-          value_schema_id: schema.id,
-          records: records
-            ? records.map(r => ({
-              key: key.value,
-              value: r
-            }))
-            : []
-        }
-      }))
-    })
+    topics,
+    options?: { stream?: boolean, pageSize?: number }
+  ): Promise<any[]> | Observable<any> {
+    const stream = options?.stream !== false
+    const topic = this.getKafkaTopic(kafkaObject.data.key)
+
+    if (!stream) {
+      return this.getSchemas().then(schema => {
+        return Promise.all([
+          this.keyConverter.convertToRecord(kafkaKey, this.HEALTHKIT_TOPIC),
+          this.convertToHealthkitRecord(kafkaObject, schema)
+        ]).then(([key, records]) => ({
+          topic,
+          cacheKey,
+          record: {
+            key_schema_id: key.schema,
+            value_schema_id: schema.id,
+            records: records
+              ? records.map(r => ({
+                key: key.value,
+                value: r
+              }))
+              : []
+          }
+        }))
+      })
+    }
+
+    return from(this.getSchemas()).pipe(
+      switchMap((schema: any) =>
+        from(this.keyConverter.convertToRecord(kafkaKey, this.HEALTHKIT_TOPIC)).pipe(
+          switchMap((key: any) => {
+            const records$ = this.convertToHealthkitRecordPaged$(kafkaObject, schema, options?.pageSize)
+
+            return records$.pipe(
+              map(records => ({
+                topic,
+                cacheKey,
+                record: {
+                  key_schema_id: key.schema,
+                  value_schema_id: schema.id,
+                  records: records.map(r => ({
+                    key: key.value,
+                    value: r
+                  }))
+                }
+              })),
+              defaultIfEmpty({
+                topic,
+                cacheKey,
+                record: {
+                  key_schema_id: key.schema,
+                  value_schema_id: schema.id,
+                  records: []
+                }
+              })
+            )
+          })
+        )
+      )
+    )
   }
 
   reset() {

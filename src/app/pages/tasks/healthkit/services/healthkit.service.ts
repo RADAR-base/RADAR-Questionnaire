@@ -228,96 +228,98 @@ export class HealthkitService {
     limit: number
   ): Promise<HKitSample[]> {
     try {
-      const startTime = setDateTimeToMidnightEpoch(queryStartTime);
-      const endTime = setDateTimeToMidnight(queryEndTime);
-
-      const queryOptions = {
+        const queryOptions = {
         sampleName: dataType,
-        startDate: new Date(startTime).toISOString(),
-        endDate: new Date(endTime).toISOString(),
+        startDate: queryStartTime.toISOString(),
+        endDate: queryEndTime.toISOString(),
         limit,
-      };
+      }
 
-      const res = await CapacitorHealthkit.queryHKitSampleType(queryOptions);
-      const rows: HKitSample[] = res?.resultData ?? [];
+      const res = await CapacitorHealthkit.queryHKitSampleType(queryOptions)
+      const rows: HKitSample[] = res?.resultData ?? []
 
-      rows.sort((a, b) => {
-        const as = +new Date(a.startDate ?? 0);
-        const bs = +new Date(b.startDate ?? 0);
-        if (as !== bs) return as - bs;
-        const ae = +new Date(a.endDate ?? 0);
-        const be = +new Date(b.endDate ?? 0);
-        return ae - be;
-      });
-
-      return rows;
+      return rows
     } catch {
-      return [];
+      return []
     }
+  }
+
+  private getSampleId(sample: HKitSample): string {
+    return sample.uuid ?? `${sample.startDate}|${sample.endDate}`
   }
 
   queryPaged$(
     queryStartTime: Date,
     queryEndTime: Date,
     dataType: string,
-    pageSize = 500
+    pageSize = 28800
   ): Observable<HKitSample[]> {
     return new Observable<HKitSample[]>(subscriber => {
-      let cancelled = false;
-
-      (async () => {
+      console.log('query start: ', queryStartTime, queryEndTime, dataType)
+      let cancelled = false
+      ;(async () => {
         try {
-          let cursorStart = new Date(queryStartTime);
-          let boundaryStartMs = +cursorStart;
-          let boundaryUUIDs = new Set<string>();
+          let cursorStartMs = setDateTimeToMidnightEpoch(queryStartTime)
+          const queryEnd = queryEndTime
+          let boundaryStartMs = cursorStartMs
+          let boundaryUUIDs = new Set<string>()
 
           while (!cancelled) {
-            const page = await this.queryPage(cursorStart, queryEndTime, dataType, pageSize);
-            if (!page.length) {
-              subscriber.complete();
-              return;
+            console.log('cursorStartMs', new Date(cursorStartMs).toISOString(), 'boundaryStartMs', new Date(boundaryStartMs), 'queryStart', queryStartTime, 'queryEnd', queryEndTime)
+            if (cursorStartMs > queryEnd.getTime()) {
+              subscriber.complete()
+              return
             }
 
-            const filtered: HKitSample[] = [];
+            const page = await this.queryPage(new Date(cursorStartMs), queryEnd, dataType, pageSize)
+            if (!page.length) {
+              subscriber.complete()
+              return
+            }
+
+            const filtered: HKitSample[] = []
             for (const s of page) {
-              const sStartMs = +new Date(s.startDate);
-              const id = s.uuid ?? `${s.startDate}|${s.endDate}`;
-              if (sStartMs === boundaryStartMs && boundaryUUIDs.has(id)) continue;
-              filtered.push(s);
+              const sStartMs = +new Date(s.startDate)
+              if (!Number.isFinite(sStartMs) || sStartMs < cursorStartMs) continue
+              const id = this.getSampleId(s)
+              if (sStartMs === boundaryStartMs && boundaryUUIDs.has(id)) continue
+              filtered.push(s)
             }
 
             if (!filtered.length) {
-              subscriber.complete();
-              return;
+              cursorStartMs = boundaryStartMs + 1
+              boundaryStartMs = cursorStartMs
+              boundaryUUIDs = new Set<string>()
+              continue
             }
 
-            subscriber.next(filtered);
+            subscriber.next(filtered)
 
-            const last = filtered[filtered.length - 1];
-            const lastStartMs = +new Date(last.startDate);
+            const last = filtered[filtered.length - 1]
+            const lastStartMs = +new Date(last.startDate)
+            const lastBoundaryIds = new Set<string>(
+              filtered
+                .filter(s => +new Date(s.startDate) === lastStartMs)
+                .map(s => this.getSampleId(s))
+            )
 
             if (lastStartMs === boundaryStartMs) {
-              for (const s of filtered) {
-                if (+new Date(s.startDate) === boundaryStartMs) {
-                  boundaryUUIDs.add(s.uuid ?? `${s.startDate}|${s.endDate}`);
-                }
-              }
-              cursorStart = new Date(boundaryStartMs);
+              lastBoundaryIds.forEach(id => boundaryUUIDs.add(id))
             } else {
-              boundaryStartMs = lastStartMs;
-              boundaryUUIDs = new Set<string>();
-              cursorStart = new Date(boundaryStartMs);
+              boundaryStartMs = lastStartMs
+              boundaryUUIDs = lastBoundaryIds
             }
+            cursorStartMs = boundaryStartMs
           }
         } catch (e) {
-          subscriber.error(e);
+          subscriber.error(e)
         }
-      })();
+      })()
 
       return () => {
-        cancelled = true;
-      };
-    });
+        cancelled = true
+      }
+    })
   }
 
   getDataTypesFromTask(task) {

@@ -25,7 +25,8 @@ import { TokenService } from '../token/token.service'
 import { AnalyticsService } from '../usage/analytics.service'
 import { CacheService } from './cache.service'
 import { SchemaService } from './schema.service'
-import { Subject } from 'rxjs'
+import { from, isObservable, Observable, of, Subject } from 'rxjs'
+import { concatMap } from 'rxjs/operators'
 import pLimit from 'p-limit'
 import { NotificationService } from '../notifications/notification.service'
 import { NotificationActionType } from 'src/app/shared/models/notification-handler'
@@ -33,6 +34,16 @@ import { Network } from '@capacitor/network'
 
 interface PrepareKafkaOptions {
   sendEvent?: boolean
+}
+
+interface KafkaPayloadStreamOptions {
+  stream?: boolean
+  pageSize?: number
+}
+
+interface SendFromCacheOptions {
+  streamHealthkitPayloads?: boolean
+  healthkitPageSize?: number
 }
 
 @Injectable()
@@ -210,7 +221,7 @@ export class KafkaService {
     return this.cache.storeInCacheMultiple(type, cacheValuesWithObjects, options)
   }
 
-  async sendAllFromCache(): Promise<any> {
+  async sendAllFromCache(options: SendFromCacheOptions = {}): Promise<any> {
     if (this.isCacheSending) {
       return Promise.resolve([])
     }
@@ -260,13 +271,14 @@ export class KafkaService {
             }
 
             try {
-              const record = await this.convertEntryToRecord(kafkaKey, k, v)
-              if (record.record.records.length === 0) {
-                batchSuccessKeys.push(k)
-                this.logger.log('Kafka record is empty, skipping sending')
-                return
-              }
-              await this.sendToKafka(record.topic, record.record, headers)
+              const sentRecordCount = await this.sendCacheEntry(
+                kafkaKey,
+                k,
+                v,
+                headers,
+                options
+              )
+              if (sentRecordCount === 0) this.logger.log('Kafka record is empty, skipping sending')
               batchSuccessKeys.push(k)
             } catch (e) {
               if (e.message === 'Cache sending cancelled') {
@@ -333,18 +345,84 @@ export class KafkaService {
     }
   }
 
-  convertEntryToRecord(kafkaKey, k, v) {
+  convertEntryToRecord(kafkaKey, k, v, options: SendFromCacheOptions = {}) {
     const type = v.name
+    const payloadOptions: KafkaPayloadStreamOptions = {
+      stream: this.shouldStreamKafkaPayload(type, options),
+      pageSize: options.healthkitPageSize
+    }
     return this.schema.getKafkaPayload(
       type,
       kafkaKey,
       v.kafkaObject.value,
       k,
-      this.topics
+      this.topics,
+      payloadOptions
     )
   }
 
+  private async sendCacheEntry(
+    kafkaKey,
+    cacheKey,
+    cacheValue,
+    headers: HttpHeaders,
+    options: SendFromCacheOptions = {}
+  ): Promise<number> {
+    const payloadOrStream = this.convertEntryToRecord(kafkaKey, cacheKey, cacheValue, options)
+    if (isObservable(payloadOrStream)) {
+      return this.sendStreamToKafka(payloadOrStream, headers)
+    }
+    const payload = await payloadOrStream
+    return this.sendPayloadToKafka(payload, headers)
+  }
+
+  private sendStreamToKafka(payloadStream: Observable<any>, headers: HttpHeaders): Promise<number> {
+    let sentRecordCount = 0
+
+    return new Promise((resolve, reject) => {
+      payloadStream
+        .pipe(
+          concatMap(payload => {
+            if (this.cancelSending) {
+              throw new Error('Cache sending cancelled')
+            }
+            if (!payload?.record?.records?.length) {
+              return of(0)
+            }
+            return from(
+              this.sendToKafka(payload.topic, payload.record, headers).then(
+                () => payload.record.records.length
+              )
+            )
+          })
+        )
+        .subscribe({
+          next: sentCount => {
+            sentRecordCount += sentCount
+          },
+          error: error => reject(error),
+          complete: () => resolve(sentRecordCount)
+        })
+    })
+  }
+
+  private async sendPayloadToKafka(payload, headers: HttpHeaders): Promise<number> {
+    if (!payload?.record?.records?.length) {
+      return 0
+    }
+    await this.sendToKafka(payload.topic, payload.record, headers)
+    return payload.record.records.length
+  }
+
+  private shouldStreamKafkaPayload(type: string, options: SendFromCacheOptions): boolean {
+    if (!(typeof type === 'string' && type.toLowerCase().includes(SchemaType.HEALTHKIT))) {
+      return false
+    }
+    return options.streamHealthkitPayloads !== false
+  }
+
   sendToKafka(topic, record, headers): Promise<any> {
+    console.log('send to kafka', record.records.length)
     return this.postData(JSON.stringify(record), topic, headers)
   }
 
@@ -391,8 +469,7 @@ export class KafkaService {
   }
 
   postData(data: any, topic: string, headers: HttpHeaders): Promise<any> {
-    // TEMP
-    console.log("Posting data to Kafka")
+
     const nativeHeaders = this.convertHeaders(headers)
 
     const request = {

@@ -1,5 +1,5 @@
 diff --git a/node_modules/@perfood/capacitor-healthkit/ios/Plugin/CapacitorHealthkitPlugin.swift b/node_modules/@perfood/capacitor-healthkit/ios/Plugin/CapacitorHealthkitPlugin.swift
-index 0c5d95c..38f98be 100644
+index 0c5d95c..e56b155 100644
 --- a/node_modules/@perfood/capacitor-healthkit/ios/Plugin/CapacitorHealthkitPlugin.swift
 +++ b/node_modules/@perfood/capacitor-healthkit/ios/Plugin/CapacitorHealthkitPlugin.swift
 @@ -92,13 +92,16 @@ public class CapacitorHealthkitPlugin: CAPPlugin {
@@ -28,7 +28,7 @@ index 0c5d95c..38f98be 100644
          }
 -
 -        let query = HKSampleQuery(sampleType: sampleType, predicate: predicate, limit: limit, sortDescriptors: nil) {
-+        let sortDescriptors = [NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: True)]
++        let sortDescriptors = [NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: true)]
 +        let query = HKSampleQuery(sampleType: sampleType, predicate: predicate, limit: limit, sortDescriptors: sortDescriptors) {
              _, results, _ in
              guard let output: [[String: Any]] = self.generateOutput(sampleName: _sampleName, results: results) else {
@@ -39,7 +39,7 @@ index 0c5d95c..38f98be 100644
          }
 -
 -        let query = HKSampleQuery(sampleType: sampleType, predicate: predicate, limit: limit, sortDescriptors: nil) {
-+        let sortDescriptors = [NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: True)]
++        let sortDescriptors = [NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: true)]
 +        let query = HKSampleQuery(sampleType: sampleType, predicate: predicate, limit: limit, sortDescriptors: sortDescriptors) {
              _, results, _ in
              guard let output: [[String: Any]] = self.generateOutput(sampleName: sampleName, results: results) else {

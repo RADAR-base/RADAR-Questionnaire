@@ -129,7 +129,7 @@ export class HealthkitConverterService extends ConverterService {
   convertToHealthkitRecordPaged$(
     kafkaValue,
     valueSchemaMetadata,
-    pageSize = 28800
+    pageSize = 3600
   ): Observable<any[]> {
     const data = kafkaValue.data
     const name = data.key

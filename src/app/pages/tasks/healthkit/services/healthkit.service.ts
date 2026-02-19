@@ -252,10 +252,9 @@ export class HealthkitService {
     queryStartTime: Date,
     queryEndTime: Date,
     dataType: string,
-    pageSize = 28800
+    pageSize = 3600
   ): Observable<HKitSample[]> {
     return new Observable<HKitSample[]>(subscriber => {
-      console.log('query start: ', queryStartTime, queryEndTime, dataType)
       let cancelled = false
       ;(async () => {
         try {
@@ -265,7 +264,6 @@ export class HealthkitService {
           let boundaryUUIDs = new Set<string>()
 
           while (!cancelled) {
-            console.log('cursorStartMs', new Date(cursorStartMs).toISOString(), 'boundaryStartMs', new Date(boundaryStartMs), 'queryStart', queryStartTime, 'queryEnd', queryEndTime)
             if (cursorStartMs > queryEnd.getTime()) {
               subscriber.complete()
               return

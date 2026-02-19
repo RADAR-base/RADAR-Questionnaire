@@ -422,7 +422,6 @@ export class KafkaService {
   }
 
   sendToKafka(topic, record, headers): Promise<any> {
-    console.log('send to kafka', record.records.length)
     return this.postData(JSON.stringify(record), topic, headers)
   }
 

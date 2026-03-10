@@ -179,14 +179,6 @@ export class TasksService {
     return setDateTimeToMidnight(new Date())
   }
 
-  getAutoSendCachedData() {
-    return this.remoteConfig
-      .read()
-      .then(config =>
-        config.getOrDefault(ConfigKeys.AUTO_SEND_CACHED_DATA, 'false')
-      )
-  }
-
   getPlatformInstanceName() {
     return this.remoteConfig
       .read()
@@ -262,10 +254,6 @@ export class TasksService {
       .then(timestamp => (timestamp ? new Date(timestamp) : null))
   }
 
-  /**
-   * Checks for expired tasks and determines if an alert should be shown.
-   * @returns Promise containing shouldShowAlert flag and latestMissedTimestamp
-   */
   checkForExpiredTasks(): Promise<{
     shouldShowAlert: boolean
     latestMissedTimestamp: number

@@ -63,6 +63,8 @@ export class ConfigKeys {
 
   static SHOW_TASK_STREAK = new ConfigKeys('show_task_streak')
 
+  static TASK_STREAK_REQUIRE_ALL_TASKS = new ConfigKeys('task_streak_require_all_tasks')
+
   constructor(public value: string) { }
 
   toString() {

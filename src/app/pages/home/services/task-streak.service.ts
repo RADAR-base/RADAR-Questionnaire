@@ -1,85 +1,173 @@
 import { Injectable } from '@angular/core'
 
+import { RemoteConfigService } from '../../../core/services/config/remote-config.service'
 import { ScheduleService } from '../../../core/services/schedule/schedule.service'
+import { DefaultStreakRequireAllTasks } from '../../../../assets/data/defaultConfig'
+import { ConfigKeys } from '../../../shared/enums/config'
 import { AssessmentType } from '../../../shared/models/assessment'
 import { Task } from '../../../shared/models/task'
+
+export enum StreakMode {
+  AT_LEAST_ONE = 'at_least_one',
+  ALL_TASKS = 'all_tasks'
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class TaskStreakService {
-  constructor(private schedule: ScheduleService) {}
+  private readonly MAX_DAYS_LOOKBACK = 365
 
-  private isTaskExpired(task: Task) {
-    // NOTE: This checks if completion window has passed or task is complete
-    return (
-      task.timestamp + task.completionWindow < new Date().getTime() ||
-      task.completed
+  constructor(
+    private schedule: ScheduleService,
+    private remoteConfig: RemoteConfigService
+  ) { }
+
+  /**
+   * Get the configured streak mode from remote config
+   */
+  private async getStreakMode(): Promise<StreakMode> {
+    const config = await this.remoteConfig.read()
+    const requireAll = await config.getOrDefault(
+      ConfigKeys.TASK_STREAK_REQUIRE_ALL_TASKS,
+      DefaultStreakRequireAllTasks
+    )
+    return requireAll === 'true' ? StreakMode.ALL_TASKS : StreakMode.AT_LEAST_ONE
+  }
+
+  /**
+   * Calculate the end of a given day (23:59:59.999)
+   */
+  private getDayEndTime(date: Date): number {
+    const dayEnd = new Date(date.getTime())
+    dayEnd.setHours(23, 59, 59, 999)
+    return dayEnd.getTime()
+  }
+
+  /**
+   * Check if a task's completion window expired by the reference time
+   */
+  private isTaskExpiredByTime(task: Task, referenceTime: number): boolean {
+    return task.timestamp + task.completionWindow < referenceTime
+  }
+
+  /**
+   * Check if a task was scheduled to start by end of day
+   */
+  private wasTaskScheduledByEndOfDay(task: Task, dayEndTime: number): boolean {
+    return task.timestamp <= dayEndTime
+  }
+
+  /**
+   * Get tasks that were available (startable) on this day
+   * Includes both completed and incomplete tasks that were scheduled for the day
+   * and had not expired (or were completed before expiring)
+   */
+  private getAvailableTasksForDay(tasks: Task[], dayEndTime: number): Task[] {
+    return tasks.filter(task => {
+      const wasScheduled = this.wasTaskScheduledByEndOfDay(task, dayEndTime)
+      if (!wasScheduled) return false
+
+      // If completed, it was available (regardless of expiry)
+      if (task.completed) return true
+
+      // If not completed, check if it's still not expired
+      return !this.isTaskExpiredByTime(task, dayEndTime)
+    })
+  }
+
+  /**
+   * Get tasks that were completed and scheduled by end of day
+   * These are the tasks that contribute positively to the streak
+   */
+  private getCompletedTasksForDay(tasks: Task[], dayEndTime: number): Task[] {
+    return tasks.filter(task =>
+      task.completed && this.wasTaskScheduledByEndOfDay(task, dayEndTime)
     )
   }
 
-  private isTaskStartable(task: Task) {
-    // NOTE: This checks if the task timestamp has passed and if task is valid
-    return task.timestamp <= new Date().getTime() && !this.isTaskExpired(task)
-  }
-
-  private areAllTasksComplete(tasks: Task[]) {
-    return !tasks || tasks.every(t => t.completed || !this.isTaskStartable(t))
-  }
-
+  /**
+   * Calculate the current task completion streak
+   */
   async getStreakDays(): Promise<number> {
-    // A "streak day" is counted only if:
-    // 1) At least one task was completed on that calendar day
-    // 2) All startable tasks scheduled for that day are completed
-    // Days are based on LOCAL midnight boundaries (12am → new day).
-
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-
-    const completedTasks = await this.schedule.getCompletedTasks()
-
-    // Map of "day at local midnight (epoch ms)" -> at least one task completed that day
-    const completedDays = new Set<number>()
-    completedTasks.forEach(task => {
-      const date = new Date(task.timeCompleted)
-      date.setHours(0, 0, 0, 0)
-      completedDays.add(date.getTime())
-    })
+    const mode = await this.getStreakMode()
+    const today = this.getTodayAtMidnight()
 
     let streak = 0
     let currentDate = new Date(today.getTime())
 
-    // Walk backwards day by day from today.
-    // - Days with no scheduled tasks are skipped (do not break the streak).
-    // - Days with tasks but no completions, or with incomplete startable tasks, break the streak.
-    // Each loop iteration represents a new calendar day starting at 12am.
-    const MAX_DAYS_LOOKBACK = 365
+    for (let i = 0; i < this.MAX_DAYS_LOOKBACK; i++) {
+      const dayTasks = await this.getTasksForDay(currentDate)
 
-    for (let i = 0; i < MAX_DAYS_LOOKBACK; i++) {
-      const dayTasks = await this.schedule.getTasksForDate(
-        new Date(currentDate.getTime()),
-        AssessmentType.SCHEDULED
-      )
-
-      // If there are no scheduled tasks this day, skip it without affecting streak.
-      if (!Array.isArray(dayTasks) || dayTasks.length === 0) {
-        currentDate.setDate(currentDate.getDate() - 1)
+      // Skip days with no scheduled tasks (doesn't break streak)
+      if (!dayTasks || dayTasks.length === 0) {
+        currentDate = this.getPreviousDay(currentDate)
         continue
       }
 
-      const dayKey = currentDate.getTime()
+      const dayEndTime = this.getDayEndTime(currentDate)
 
-      // If there are scheduled tasks but none completed that day, streak ends.
-      if (!completedDays.has(dayKey)) break
+      // Get tasks that were scheduled for this day
+      const scheduledTasks = dayTasks.filter(task =>
+        this.wasTaskScheduledByEndOfDay(task, dayEndTime)
+      )
 
-      // If not all startable tasks are complete, streak ends.
-      if (!this.areAllTasksComplete(dayTasks)) break
+      // Skip days with no scheduled tasks (doesn't break or count toward streak)
+      if (scheduledTasks.length === 0) {
+        currentDate = this.getPreviousDay(currentDate)
+        continue
+      }
+
+      // Get completed tasks for this day
+      const completedTasks = this.getCompletedTasksForDay(dayTasks, dayEndTime)
+
+      // Check if day qualifies based on mode (LENIENT: ignores incomplete tasks)
+      let qualifies = false
+      if (mode === StreakMode.ALL_TASKS) {
+        // All scheduled tasks must be completed
+        qualifies = completedTasks.length === scheduledTasks.length
+      } else {
+        // At least one scheduled task must be completed
+        qualifies = completedTasks.length > 0
+      }
+
+      if (!qualifies) {
+        break
+      }
 
       streak++
-      currentDate.setDate(currentDate.getDate() - 1)
+      currentDate = this.getPreviousDay(currentDate)
     }
 
     return streak
+  }
+
+  /**
+   * Get today's date at midnight
+   */
+  private getTodayAtMidnight(): Date {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    return today
+  }
+
+  /**
+   * Get the previous day from a given date
+   */
+  private getPreviousDay(date: Date): Date {
+    const previousDay = new Date(date.getTime())
+    previousDay.setDate(previousDay.getDate() - 1)
+    return previousDay
+  }
+
+  /**
+   * Get scheduled tasks for a specific day
+   */
+  private async getTasksForDay(date: Date): Promise<Task[]> {
+    return this.schedule.getTasksForDate(
+      new Date(date.getTime()),
+      AssessmentType.SCHEDULED
+    )
   }
 }
 

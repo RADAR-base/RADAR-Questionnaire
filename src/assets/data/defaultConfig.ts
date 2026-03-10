@@ -69,6 +69,9 @@ export const DefaultShowTaskProgressCount = 'false'
 export const DefaultShowTaskInfo = 'true'
 export const DefaultShowStreak = 'false'
 
+// *Whether streak requires ALL startable tasks completed (true) or at least one (false)
+export const DefaultStreakRequireAllTasks = 'false'
+
 // DEFAULT URI
 
 // *The Default endpoint where the RADAR-base platform is hosted
@@ -150,8 +153,8 @@ export const DefaultMaxUpstreamResends = 100
 // *Default number of notifications to schedule
 export const DefaultNumberOfNotificationsToSchedule: number = 100
 
-// *Default length of time to wait before refreshing notifications (15 mins in ms)
-export const DefaultNotificationRefreshTime: number = 900000
+// *Default length of time to wait before refreshing notifications (1 hr in ms)
+export const DefaultNotificationRefreshTime: number = 3600000
 
 // *Default TTL or lifespan of FCM notifications (will try to send during lifespan before being discarded) (10 mins)
 export const DefaultNotificationTtlMinutes: number = 10

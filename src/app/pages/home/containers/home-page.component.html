@@ -27,6 +27,8 @@
       [progress]="tasksProgress | async"
       [forceComplete]="showCompleted"
       [noTasksToday]="(tasksProgress | async)?.numberOfTasks == 0"
+      [streakDays]="streakDays"
+      [isStreakShown]="isStreakShown | async"
     >
     </task-progress>
   </div>
@@ -70,6 +72,7 @@
         [timeToNextMilli]="timeToNextTask"
         [showAffirmation]="showCompleted"
         [showSyncNeeded]="showSyncNeeded"
+        [showExpired]="showExpired"
         [noTasksToday]="(tasksProgress | async)?.numberOfTasks == 0"
       ></ticker-bar>
     </div>

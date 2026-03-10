@@ -59,6 +59,9 @@ export class StorageKeys {
 
   static STUDY_CODE = new StorageKeys('STUDY_CODE')
 
+  // Tracks the latest missed task timestamp for which the user has already seen an alert
+  static LAST_MISSED_TASK_ALERT_TS = new StorageKeys('LAST_MISSED_TASK_ALERT_TS')
+
   constructor(public value: string) { }
 
   toString() {

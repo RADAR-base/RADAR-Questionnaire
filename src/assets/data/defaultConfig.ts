@@ -67,6 +67,7 @@ export const DefaultAppCreditsBody = JSON.stringify(
 export const DefaultShowTaskCalendarName = 'false'
 export const DefaultShowTaskProgressCount = 'false'
 export const DefaultShowTaskInfo = 'true'
+export const DefaultShowStreak = 'false'
 
 // DEFAULT URI
 

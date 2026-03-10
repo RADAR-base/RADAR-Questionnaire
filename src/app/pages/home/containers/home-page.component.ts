@@ -12,6 +12,7 @@ import { LocKeys } from '../../../shared/enums/localisations'
 import { Task, TasksProgress } from '../../../shared/models/task'
 import { checkTaskIsNow } from '../../../shared/utilities/check-task-is-now'
 import { TasksService } from '../services/tasks.service'
+import { TaskStreakService } from '../services/task-streak.service'
 import { HomePageAnimations } from './home-page.animation'
 import { KeepAwake } from '@capacitor-community/keep-awake'
 
@@ -32,11 +33,13 @@ export class HomePageComponent implements OnInit, OnDestroy {
   changeDetectionListener: Subscription = new Subscription()
   cacheProgressSubscription: Subscription = new Subscription()
   lastTaskRefreshTime = Date.now()
+  streakDays = 1
 
   DATA_UPLOAD_TIMEOUT = 600_000 // 10 minutes
 
   showCalendar = false
   showCompleted = false
+  showExpired = false
   startingQuestionnaire = false
   hasClinicalTasks: Promise<boolean>
   hasOnDemandTasks: Promise<boolean>
@@ -50,6 +53,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   studyPortalReturnUrl: Promise<string | null>
   showSyncNeeded = false
   portalReturnText: Promise<string>
+  isStreakShown: Promise<boolean>
 
   APP_CREDITS = '&#169; RADAR-Base'
   HTML_BREAK = '<br>'
@@ -65,6 +69,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
     private localization: LocalizationService,
     private platform: Platform,
     private usage: UsageService,
+    private taskStreakService: TaskStreakService
   ) {
     this.changeDetectionListener =
       this.tasksService.changeDetectionEmitter.subscribe(() => {
@@ -83,11 +88,11 @@ export class HomePageComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     // Unsubscribe to avoid memory leaks when the page is left
     if (this.resumeListener) {
-      this.resumeListener.unsubscribe();
+      this.resumeListener.unsubscribe()
     }
     this.changeDetectionListener.unsubscribe()
     if (this.cacheProgressSubscription) {
-      this.cacheProgressSubscription.unsubscribe();
+      this.cacheProgressSubscription.unsubscribe()
     }
   }
 
@@ -99,12 +104,13 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.tasks = this.tasksService.getTasksOfToday()
     this.showCalendar = false
     this.resumeListener = this.platform.resume.subscribe(() => this.onResume())
+    this.initStreak()
   }
 
   ionViewWillLeave() {
     // Unsubscribe to avoid memory leaks when the page is left
     if (this.resumeListener) {
-      this.resumeListener.unsubscribe();
+      this.resumeListener.unsubscribe()
     }
     KeepAwake.allowSleep()
   }
@@ -125,6 +131,8 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.studyPortalReturnUrl = this.tasksService.getPortalReturnUrl()
     this.portalReturnText = this.getPortalReturnText()
 
+    // Check if there are tasks that expired today and were not complete
+    this.checkForExpiredTasks()
   }
 
   onResume() {
@@ -136,7 +144,8 @@ export class HomePageComponent implements OnInit, OnDestroy {
   getIsLoadingSpinnerShown() {
     return (
       (this.startingQuestionnaire && !this.showCalendar) ||
-      (!this.nextTask && !this.showCompleted)
+      (!this.nextTask && !this.showCompleted && !this.showExpired) ||
+      (!this.nextTask && !this.showExpired)
     )
   }
 
@@ -169,6 +178,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
         this.taskIsNow = false
         this.nextTask = null
         this.showCompleted = this.tasksService.areAllTasksComplete(tasks)
+        this.showExpired = this.tasksService.areAllTasksExpired(tasks)
         if (this.showCompleted) {
           clearInterval(this.checkTaskInterval)
           this.showCalendar = false
@@ -203,7 +213,9 @@ export class HomePageComponent implements OnInit, OnDestroy {
 
   async getPortalReturnText() {
     const portalReturnText = await this.tasksService.getPortalReturnText()
-    return portalReturnText ? portalReturnText : this.localization.translateKey(LocKeys.BTN_RETURN_PORTAL)
+    return portalReturnText
+      ? portalReturnText
+      : this.localization.translateKey(LocKeys.BTN_RETURN_PORTAL)
   }
 
   startQuestionnaire(taskCalendarTask?: Task) {
@@ -269,5 +281,39 @@ export class HomePageComponent implements OnInit, OnDestroy {
     return Promise.all([this.hasOnDemandTasks, this.hasClinicalTasks]).then(
       ([onDemand, clinical]) => onDemand || clinical
     )
+  }
+
+  initStreak() {
+    this.isStreakShown = this.tasksService.getIsStreakShown()
+    this.taskStreakService.getStreakDays().then(streak => {
+      this.streakDays = streak
+    })
+  }
+
+  checkForExpiredTasks() {
+    return this.tasksService
+      .checkForExpiredTasks()
+      .then(({ shouldShowAlert, latestMissedTimestamp }) => {
+        if (shouldShowAlert) {
+          this.alertService.showAlert({
+            header: this.localization.translateKey(
+              LocKeys.NOTIFICATION_REMINDER_FORGOTTEN
+            ),
+            message: this.localization.translateKey(
+              LocKeys.NOTIFICATION_REMINDER_FORGOTTEN_ALERT_DEFAULT_DESC
+            ),
+            buttons: [
+              {
+                text: this.localization.translateKey(LocKeys.BTN_OKAY),
+                handler: () => {
+                  this.tasksService.setLastMissedTaskAlertTimestamp(
+                    latestMissedTimestamp || Date.now()
+                  )
+                }
+              }
+            ]
+          })
+        }
+      })
   }
 }

@@ -58,10 +58,10 @@ export class SplashPageComponent {
           .sendMissedQuestionnaireLogs()
           .then(() => this.splashService.sendReportedIncompleteTasks())
           .catch(e => console.warn('Background log sending failed:', e))
-
         return this.navCtrl.navigateRoot('/home')
       })
       .catch(e => this.showFetchConfigFail(e))
+      .finally(() => this.navCtrl.navigateRoot('/home'))
   }
 
   showFetchConfigFail(e) {

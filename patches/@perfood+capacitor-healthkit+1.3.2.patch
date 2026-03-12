@@ -1,5 +1,5 @@
 diff --git a/node_modules/@perfood/capacitor-healthkit/ios/Plugin/CapacitorHealthkitPlugin.swift b/node_modules/@perfood/capacitor-healthkit/ios/Plugin/CapacitorHealthkitPlugin.swift
-index 0c5d95c..56bf5db 100644
+index 0c5d95c..e56b155 100644
 --- a/node_modules/@perfood/capacitor-healthkit/ios/Plugin/CapacitorHealthkitPlugin.swift
 +++ b/node_modules/@perfood/capacitor-healthkit/ios/Plugin/CapacitorHealthkitPlugin.swift
 @@ -92,13 +92,16 @@ public class CapacitorHealthkitPlugin: CAPPlugin {
@@ -22,3 +22,25 @@ index 0c5d95c..56bf5db 100644
                  types.insert(HKQuantityType.quantityType(forIdentifier: HKQuantityTypeIdentifier.distanceCycling)!)
              case "bloodGlucose":
                  types.insert(HKQuantityType.quantityType(forIdentifier: HKQuantityTypeIdentifier.bloodGlucose)!)
+@@ -552,8 +555,8 @@ public class CapacitorHealthkitPlugin: CAPPlugin {
+         guard let sampleType: HKSampleType = getSampleType(sampleName: _sampleName) else {
+             return call.reject("Error in sample name")
+         }
+-
+-        let query = HKSampleQuery(sampleType: sampleType, predicate: predicate, limit: limit, sortDescriptors: nil) {
++        let sortDescriptors = [NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: true)]
++        let query = HKSampleQuery(sampleType: sampleType, predicate: predicate, limit: limit, sortDescriptors: sortDescriptors) {
+             _, results, _ in
+             guard let output: [[String: Any]] = self.generateOutput(sampleName: _sampleName, results: results) else {
+                 return call.reject("Error happened while generating outputs")
+@@ -664,8 +667,8 @@ public class CapacitorHealthkitPlugin: CAPPlugin {
+         guard let sampleType: HKSampleType = getSampleType(sampleName: sampleName) else {
+             return completion(.failure(HKSampleError.sampleTypeFailed))
+         }
+-
+-        let query = HKSampleQuery(sampleType: sampleType, predicate: predicate, limit: limit, sortDescriptors: nil) {
++        let sortDescriptors = [NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: true)]
++        let query = HKSampleQuery(sampleType: sampleType, predicate: predicate, limit: limit, sortDescriptors: sortDescriptors) {
+             _, results, _ in
+             guard let output: [[String: Any]] = self.generateOutput(sampleName: sampleName, results: results) else {
+                 return completion(.failure(HKSampleError.sampleTypeFailed))

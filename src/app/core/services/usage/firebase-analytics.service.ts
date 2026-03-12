@@ -38,7 +38,7 @@ export class FirebaseAnalyticsService extends AnalyticsService {
         `Firebase analytics value for ${key} is too long, cropping to 100 characters: ${value}`
       )
     })
-
+    
     return FirebaseAnalytics.logEvent({ name: event, params: cleanParams })
       .then((res: any) => {
         // this.logger.log('firebase analytics service', res)

@@ -54,15 +54,14 @@ export class SplashPageComponent {
     return this.splashService
       .loadConfig()
       .then(() => {
-        this.status = this.localization.translateKey(
-          LocKeys.SPLASH_STATUS_SENDING_LOGS
-        )
-        return this.splashService
+        this.splashService
           .sendMissedQuestionnaireLogs()
           .then(() => this.splashService.sendReportedIncompleteTasks())
+          .catch(e => console.warn('Background log sending failed:', e))
+        return this.navCtrl.navigateRoot('/home')
       })
       .catch(e => this.showFetchConfigFail(e))
-      .then(() => this.navCtrl.navigateRoot('/home'))
+      .finally(() => this.navCtrl.navigateRoot('/home'))
   }
 
   showFetchConfigFail(e) {

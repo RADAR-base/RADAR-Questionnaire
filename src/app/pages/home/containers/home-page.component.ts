@@ -33,7 +33,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   changeDetectionListener: Subscription = new Subscription()
   cacheProgressSubscription: Subscription = new Subscription()
   lastTaskRefreshTime = Date.now()
-  streakDays = 1
+  streakDays = 0
 
   DATA_UPLOAD_TIMEOUT = 600_000 // 10 minutes
 

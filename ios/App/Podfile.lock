@@ -10,6 +10,8 @@ PODS:
   - CapacitorCommunityGenericOauth2 (6.1.0):
     - Capacitor
     - OAuthSwift (= 2.2.0)
+  - CapacitorCommunityHttp (2.0.0-0):
+    - Capacitor
   - CapacitorCommunityKeepAwake (4.0.0):
     - Capacitor
   - CapacitorCordova (5.7.4)
@@ -215,6 +217,7 @@ DEPENDENCIES:
   - "CapacitorAppLauncher (from `../../node_modules/@capacitor/app-launcher`)"
   - "CapacitorBrowser (from `../../node_modules/@capacitor/browser`)"
   - "CapacitorCommunityGenericOauth2 (from `../../node_modules/@capacitor-community/generic-oauth2`)"
+  - "CapacitorCommunityHttp (from `../../node_modules/@capacitor-community/http`)"
   - "CapacitorCommunityKeepAwake (from `../../node_modules/@capacitor-community/keep-awake`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorDevice (from `../../node_modules/@capacitor/device`)"
@@ -275,6 +278,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/browser"
   CapacitorCommunityGenericOauth2:
     :path: "../../node_modules/@capacitor-community/generic-oauth2"
+  CapacitorCommunityHttp:
+    :path: "../../node_modules/@capacitor-community/http"
   CapacitorCommunityKeepAwake:
     :path: "../../node_modules/@capacitor-community/keep-awake"
   CapacitorCordova:
@@ -322,6 +327,7 @@ SPEC CHECKSUMS:
   CapacitorAppLauncher: 3c24de236f37bf7ab79e90ecf5576f962cc7d99e
   CapacitorBrowser: 4dc0624a8c372054f64f31e53c6375ce300b28cc
   CapacitorCommunityGenericOauth2: cd98e4a7b684b9fc4c857d6f904fc3fc11812802
+  CapacitorCommunityHttp: 21fc56d3c3b5b360dea544409b9d6dd92a73b925
   CapacitorCommunityKeepAwake: 6106b37df55fd4f06e47a2af701ce0dd6ffae1ba
   CapacitorCordova: a6e87fccc0307dee7aec1560ec9398485f2b0ce7
   CapacitorDevice: b8d2ddde4e7f3711f64eb58a69a776e7fc3e53b8
@@ -366,6 +372,6 @@ SPEC CHECKSUMS:
   PerfoodCapacitorHealthkit: 0708728954308c0217daa6912deeb73df7cba050
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
 
-PODFILE CHECKSUM: f366fcb22639b472c6f7456882af98988ab78137
+PODFILE CHECKSUM: ca9271ce01fe21f103b377734134f2a263996099
 
 COCOAPODS: 1.16.2

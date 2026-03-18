@@ -5,6 +5,8 @@
   height: 40px;
   text-align: center;
   font-size: 20px;
+  font-weight: 500;
+  color: var(--cl-font);
   scroll-snap-align: start;
 }
 
@@ -21,8 +23,9 @@
 }
 
 .bg {
-  border-radius: 28px;
-  background-color: var(--cl-primary-40);
+  border-radius: var(--cl-radius);
+  background-color: var(--cl-surface);
+  border: 1px solid var(--cl-border);
 }
 
 .col {
@@ -45,11 +48,12 @@
 }
 
 ion-note {
-  color: var(--cl-secondary-light) !important;
+  color: var(--cl-font-light) !important;
   font-size: 10px;
 }
 
 .label {
   margin-bottom: 2px;
   text-align: center;
+  color: var(--cl-font);
 }

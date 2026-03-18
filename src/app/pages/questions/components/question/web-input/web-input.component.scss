@@ -1,15 +1,16 @@
 .info-card {
   padding: 16px;
   height: 92%;
-  -webkit-border-radius: 8px;
-  border-radius: 8px;
-  background-color: var(--cl-primary-20);
+  border-radius: var(--cl-radius);
+  background-color: var(--cl-surface);
+  border: 1px solid var(--cl-border);
   overflow: scroll;
 }
 
 ion-label {
   margin-left: 4px;
-  font-size: 12px;
+  font-size: 13px;
+  color: var(--cl-font);
 }
 
 ion-content {
@@ -53,7 +54,7 @@ ion-content {
 }
 
 ion-icon {
-  color: var(--cl-light-40);
+  color: var(--cl-font-light);
   font-size: 40px;
 }
 

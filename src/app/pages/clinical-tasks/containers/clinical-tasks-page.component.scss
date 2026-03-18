@@ -1,9 +1,10 @@
 ion-header .toolbar-background {
-  --background: var(--ion-color-secondary);
+  --background: var(--cl-surface);
 }
 
 ion-toolbar {
-  --background: var(--ion-color-secondary);
+  --background: var(--cl-surface);
+  --border-width: 0;
 }
 
 ion-toolbar > ion-button {
@@ -11,14 +12,19 @@ ion-toolbar > ion-button {
   --background: transparent;
   --padding-start: 12px;
   --padding-end: 12px;
+  --color: var(--cl-primary);
 }
 
 ion-title {
   margin: -4px;
+  color: var(--cl-font);
+  font-weight: 700;
 }
 
 .date {
   font-size: 20px;
+  font-weight: 600;
+  color: var(--cl-font);
 }
 
 .layers {
@@ -37,7 +43,7 @@ ion-title {
   margin-top: 10px;
   width: 100%;
   height: 2px;
-  background-color: var(--cl-warning);
+  background-color: var(--cl-primary);
 }
 
 .time-current-division.left {
@@ -49,23 +55,28 @@ ion-title {
 }
 
 .time-current {
-  color: var(--cl-light-80);
+  color: var(--cl-primary);
   text-align: center;
   font-size: 18px;
+  font-weight: 600;
 }
 
 #task-item {
   display: block;
-  margin-bottom: 3px;
+  margin-bottom: 4px;
   padding: 3px 9px;
   padding-bottom: 0;
-  background-color: var(--cl-primary-40);
+  background-color: var(--cl-surface);
+  border-radius: var(--cl-radius-sm);
+  border: 1px solid var(--cl-border);
   text-align: center;
   font-size: 18px;
+  color: var(--cl-font);
 }
 
 .units {
   font-size: 12px;
+  color: var(--cl-font-light);
 }
 
 .icon-padding {
@@ -78,7 +89,7 @@ ion-title {
 }
 
 ion-icon {
-  color: white;
+  color: var(--cl-primary);
 }
 
 .task-info-left {
@@ -93,6 +104,7 @@ ion-icon {
   float: left;
   width: 64px;
   white-space: nowrap;
+  color: var(--cl-font-light);
 }
 
 .status-div {

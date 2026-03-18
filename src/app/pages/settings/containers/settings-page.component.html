@@ -1,137 +1,140 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-back-button slot="start"></ion-back-button>
-    <ion-title>{{ 'SETTINGS_SETTINGS' | translate }}</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
-  <ion-item-group>
-    <ion-item-divider lines="full">{{
-      'SETTINGS_USER_INFO' | translate
-      }}</ion-item-divider>
-    <ion-item lines="full">
-      {{ 'SETTINGS_PARTICIPANTID' | translate }}
-      <span slot="end" class="info-value-small">
-        {{ settings.participantLogin }}
-      </span>
-    </ion-item>
-    <ion-item lines="full">
-      {{ 'SETTINGS_PROJECTNAME' | translate }}
-      <span slot="end" class="info-value">
-        {{ settings.projectName }}
-      </span>
-    </ion-item>
-    <ion-item lines="full">
-      {{ 'SETTINGS_ENROL_DATE' | translate }}
-      <span slot="end" class="info-value">
-        {{ settings.enrolmentDate | amCalendar }}
-      </span>
-    </ion-item>
-    <ion-item lines="full">
-      {{ 'SETTINGS_DAYS_SINCE_ENROL' | translate }}
-      <span slot="end" class="info-value">
-        {{ daysSinceEnrolment }}
-      </span>
-    </ion-item>
-  </ion-item-group>
+  <div class="page-header">
+    <div class="header-top">
+      <div class="avatar">
+        <ion-icon name="person-outline"></ion-icon>
+      </div>
+      <div class="header-actions">
+        <ion-icon name="notifications-outline" class="bell-icon"></ion-icon>
+      </div>
+    </div>
+    <h1 class="page-title">{{ 'SETTINGS_SETTINGS' | translate }}</h1>
+  </div>
 
-  <ion-item-group>
-    <ion-item-divider lines="full">{{
-      'SETTINGS_LANGUAGE' | translate
-      }}</ion-item-divider>
-    <ion-item lines="full" *ngIf="!showLoading">
-      <span class="info-value">
-        {{ settings.language?.label | translate }}
-      </span>
-      <span slot="end" (click)="showSelectLanguage()">
-        <ion-icon class="space-right" name="caret-down-outline"></ion-icon>
-        {{ 'BTN_SELECT' | translate }}
-      </span>
-    </ion-item>
-    <ion-item lines="full" *ngIf="showLoading">
-      <ion-spinner name="dots"></ion-spinner>
-    </ion-item>
-  </ion-item-group>
+  <div class="settings-content">
+    <ion-item-group>
+      <ion-item-divider lines="full">{{
+        'SETTINGS_USER_INFO' | translate
+        }}</ion-item-divider>
+      <ion-item lines="full">
+        {{ 'SETTINGS_PARTICIPANTID' | translate }}
+        <span slot="end" class="info-value-small">
+          {{ settings.participantLogin }}
+        </span>
+      </ion-item>
+      <ion-item lines="full">
+        {{ 'SETTINGS_PROJECTNAME' | translate }}
+        <span slot="end" class="info-value">
+          {{ settings.projectName }}
+        </span>
+      </ion-item>
+      <ion-item lines="full">
+        {{ 'SETTINGS_ENROL_DATE' | translate }}
+        <span slot="end" class="info-value">
+          {{ settings.enrolmentDate | amCalendar }}
+        </span>
+      </ion-item>
+      <ion-item lines="full">
+        {{ 'SETTINGS_DAYS_SINCE_ENROL' | translate }}
+        <span slot="end" class="info-value">
+          {{ daysSinceEnrolment }}
+        </span>
+      </ion-item>
+    </ion-item-group>
 
-  <ion-item-group>
-    <ion-item-divider lines="full" class="item-divider">
-      {{ 'SETTINGS_NOTIFICATIONS' | translate }}
-    </ion-item-divider>
-    <ion-item lines="full">
-      {{ 'SETTINGS_LAST_NOTIFICATION_UPDATE' | translate }}
-      <span slot="end" class="info-value">
-        {{ settings.lastNotificationUpdate | amCalendar }}
-      </span>
-    </ion-item>
-  </ion-item-group>
+    <ion-item-group>
+      <ion-item-divider lines="full">{{
+        'SETTINGS_LANGUAGE' | translate
+        }}</ion-item-divider>
+      <ion-item lines="full" *ngIf="!showLoading">
+        <span class="info-value">
+          {{ settings.language?.label | translate }}
+        </span>
+        <span slot="end" (click)="showSelectLanguage()">
+          <ion-icon class="space-right" name="caret-down-outline"></ion-icon>
+          {{ 'BTN_SELECT' | translate }}
+        </span>
+      </ion-item>
+      <ion-item lines="full" *ngIf="showLoading">
+        <ion-spinner name="dots"></ion-spinner>
+      </ion-item>
+    </ion-item-group>
 
-  <ion-item-group>
-    <ion-item-divider lines="full">{{
-      'SETTINGS_CACHE' | translate
-      }}</ion-item-divider>
-    <ion-item lines="full">
-      {{ 'SETTINGS_CACHE_SIZE' | translate }}
-      <span slot="end" class="info-value">
-        {{ settings.cacheSize }}
-      </span>
-    </ion-item>
-    <ion-item lines="full">
-      {{ 'SETTINGS_LAST_UPLOAD_TO_SERVER' | translate }}
-      <span slot="end" class="info-value">
-        {{ settings.lastUploadDate | amCalendar }}
-      </span>
-    </ion-item>
-    <ion-item lines="full" class="item-button" (click)="sendCachedData()">
-      <ion-label>{{ 'SETTINGS_SEND_CACHED_DATA' | translate }}</ion-label>
-    </ion-item>
-  </ion-item-group>
+    <ion-item-group>
+      <ion-item-divider lines="full" class="item-divider">
+        {{ 'SETTINGS_NOTIFICATIONS' | translate }}
+      </ion-item-divider>
+      <ion-item lines="full">
+        {{ 'SETTINGS_LAST_NOTIFICATION_UPDATE' | translate }}
+        <span slot="end" class="info-value">
+          {{ settings.lastNotificationUpdate | amCalendar }}
+        </span>
+      </ion-item>
+    </ion-item-group>
 
-  <ion-item-group>
-    <ion-item-divider lines="full">
-      {{ 'SETTINGS_VERSION' | translate }}
-      <span>
-        <ion-icon name="repeat" (click)="reloadConfig()" *ngIf="!showLoading"></ion-icon>
-      </span>
-    </ion-item-divider>
-    <ion-item lines="full">
-      App
-      <span slot="end" class="info-value">
-        <div>V{{ settings.appVersion }}</div>
-      </span>
-    </ion-item>
-    <ion-item lines="full">
-      {{ 'SETTINGS_SCHEDULE' | translate }}
-      <span slot="end" class="info-value">
-        <div *ngIf="!showLoading">V{{ settings.scheduleVersion }}</div>
-        <div *ngIf="showLoading" class="spinner-center">
-          <ion-spinner name="dots"></ion-spinner>
-        </div>
-      </span>
-    </ion-item>
-  </ion-item-group>
+    <ion-item-group>
+      <ion-item-divider lines="full">{{
+        'SETTINGS_CACHE' | translate
+        }}</ion-item-divider>
+      <ion-item lines="full">
+        {{ 'SETTINGS_CACHE_SIZE' | translate }}
+        <span slot="end" class="info-value">
+          {{ settings.cacheSize }}
+        </span>
+      </ion-item>
+      <ion-item lines="full">
+        {{ 'SETTINGS_LAST_UPLOAD_TO_SERVER' | translate }}
+        <span slot="end" class="info-value">
+          {{ settings.lastUploadDate | amCalendar }}
+        </span>
+      </ion-item>
+      <ion-item lines="full" class="item-button" (click)="sendCachedData()">
+        <ion-label>{{ 'SETTINGS_SEND_CACHED_DATA' | translate }}</ion-label>
+      </ion-item>
+    </ion-item-group>
 
-  <ion-item-group>
-    <ion-item-divider lines="full" class="item-divider">
-      {{ 'SETTINGS_DEBUGGING' | translate }}
-    </ion-item-divider>
-    <ion-item lines="full" class="item-button" (click)="showGenerateTestNotification()">
-      <ion-label>
-        {{ 'SETTINGS_GENERATE_NOTIFS' | translate }}
-      </ion-label>
-    </ion-item>
-    <ion-item lines="full" class="item-button">
-      <ion-label>{{ 'SETTINGS_LOG_NOTIFS' | translate }}</ion-label>
-    </ion-item>
-  </ion-item-group>
-</ion-content>
+    <ion-item-group>
+      <ion-item-divider lines="full">
+        {{ 'SETTINGS_VERSION' | translate }}
+        <span>
+          <ion-icon name="repeat" (click)="reloadConfig()" *ngIf="!showLoading"></ion-icon>
+        </span>
+      </ion-item-divider>
+      <ion-item lines="full">
+        App
+        <span slot="end" class="info-value">
+          <div>V{{ settings.appVersion }}</div>
+        </span>
+      </ion-item>
+      <ion-item lines="full">
+        {{ 'SETTINGS_SCHEDULE' | translate }}
+        <span slot="end" class="info-value">
+          <div *ngIf="!showLoading">V{{ settings.scheduleVersion }}</div>
+          <div *ngIf="showLoading" class="spinner-center">
+            <ion-spinner name="dots"></ion-spinner>
+          </div>
+        </span>
+      </ion-item>
+    </ion-item-group>
 
-<ion-footer>
-  <ion-toolbar class="footer">
-    <ion-buttons>
-      <ion-button class="bt bt--full" round full (click)="showConfirmReset()">
+    <ion-item-group>
+      <ion-item-divider lines="full" class="item-divider">
+        {{ 'SETTINGS_DEBUGGING' | translate }}
+      </ion-item-divider>
+      <ion-item lines="full" class="item-button" (click)="showGenerateTestNotification()">
+        <ion-label>
+          {{ 'SETTINGS_GENERATE_NOTIFS' | translate }}
+        </ion-label>
+      </ion-item>
+      <ion-item lines="full" class="item-button">
+        <ion-label>{{ 'SETTINGS_LOG_NOTIFS' | translate }}</ion-label>
+      </ion-item>
+    </ion-item-group>
+
+    <div class="reset-section">
+      <ion-button class="bt bt--full reset-btn" expand="block" (click)="showConfirmReset()">
         {{ 'BTN_RESET' | translate }}
       </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-footer>
+    </div>
+  </div>
+</ion-content>

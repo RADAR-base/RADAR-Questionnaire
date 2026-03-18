@@ -7,8 +7,9 @@
 }
 
 .value-number {
-  color: var(--ion-font);
+  color: var(--cl-font);
   font-size: 18px;
+  font-weight: 600;
   line-height: 1.35em;
   display: flex;
   align-items: center;
@@ -16,20 +17,22 @@
   padding: 4px 16px;
   width: 128px;
   height: var(--label-height);
-  border-radius: var(--label-height);
-  background-color: var(--cl-primary-40);
+  border-radius: var(--cl-radius-pill);
+  background-color: var(--cl-primary-20);
 }
 
 ion-label {
   padding-bottom: 0;
-  color: var(--ion-font);
-  font-size: 18px;
+  color: var(--cl-font);
+  font-size: 15px;
+  font-weight: 500;
   line-height: 1.35em;
 }
 
 .padding {
   margin: -10px 5px;
   font-size: 80%;
+  color: var(--cl-font-light);
 }
 
 .labelLeft {

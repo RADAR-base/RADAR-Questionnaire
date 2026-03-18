@@ -193,7 +193,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   }
 
   openSettingsPage() {
-    this.navCtrl.navigateForward('settings')
+    this.navCtrl.navigateForward('/tabs/settings')
     this.usage.sendClickEvent('open_settings')
   }
 
@@ -203,7 +203,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   }
 
   openOnDemandTasksPage() {
-    this.navCtrl.navigateForward('/on-demand')
+    this.navCtrl.navigateForward('/tabs/on-demand')
     this.usage.sendClickEvent('open_on_demand_tasks')
   }
 

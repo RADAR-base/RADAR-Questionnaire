@@ -1,5 +1,11 @@
 .checked {
   background-color: var(--cl-primary) !important;
+  border-color: var(--cl-primary) !important;
+  color: #ffffff !important;
+
+  ion-label {
+    color: #ffffff !important;
+  }
 }
 
 .checkbox-icon {
@@ -12,25 +18,28 @@ ion-item {
   --background: transparent;
   width: 100%;
   padding: 8px;
-  border: 2px solid white;
-  border-radius: var(--bt-height);
-  background-color: var(--cl-primary-20);
-  color: white;
-  font-size: 18px;
+  border: 2px solid var(--cl-border);
+  border-radius: var(--cl-radius-pill);
+  background-color: var(--cl-surface);
+  color: var(--cl-font);
+  font-size: 15px;
   position: relative;
   display: flex;
   flex-grow: 1;
   align-items: center;
   justify-content: flex-start;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   --ripple-color: transparent;
   --background-hover: none;
+  box-shadow: none;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
 ion-label {
-  color: white !important;
+  color: var(--cl-font) !important;
   word-wrap: break-word !important;
   white-space: normal !important;
+  font-weight: 500;
 }
 
 ion-list {
@@ -48,4 +57,9 @@ ion-checkbox {
 
 .item-checkbox-checked {
   background-color: var(--cl-primary) !important;
+  border-color: var(--cl-primary) !important;
+
+  ion-label {
+    color: #ffffff !important;
+  }
 }

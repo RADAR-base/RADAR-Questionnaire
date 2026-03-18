@@ -15,24 +15,29 @@ const routes: Routes = [
       )
   },
   {
-    path: 'on-demand',
-    loadChildren: () =>
-      import('./pages/on-demand/on-demand.module').then(m => m.OnDemandModule)
-  },
-  {
     path: 'healthkit',
     loadChildren: () =>
       import('./pages/tasks/healthkit/healthkit.module').then(m => m.HealthkitModule)
   },
   {
-    path: 'settings',
+    path: 'tabs',
     loadChildren: () =>
-      import('./pages/settings/settings.module').then(m => m.SettingsModule)
+      import('./pages/tabs/tabs.module').then(m => m.TabsModule)
   },
   {
     path: 'home',
-    loadChildren: () =>
-      import('./pages/home/home.module').then(m => m.HomeModule)
+    redirectTo: 'tabs/home',
+    pathMatch: 'full'
+  },
+  {
+    path: 'settings',
+    redirectTo: 'tabs/settings',
+    pathMatch: 'full'
+  },
+  {
+    path: 'on-demand',
+    redirectTo: 'tabs/on-demand',
+    pathMatch: 'full'
   },
   {
     path: 'enrol',
@@ -53,4 +58,4 @@ const routes: Routes = [
   ],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

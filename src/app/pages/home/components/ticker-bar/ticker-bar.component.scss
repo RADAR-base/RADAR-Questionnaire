@@ -1,13 +1,17 @@
 #ticker-bar-container {
   display: flex;
-  margin-bottom: 2px;
-  padding: 7px 0;
-  background-color: var(--cl-primary-40);
-  font-size: 18px;
+  margin-bottom: 4px;
+  padding: 12px 16px;
+  background-color: var(--cl-surface);
+  border-radius: var(--cl-radius);
+  border: 1px solid var(--cl-border);
+  font-size: 14px;
+  color: var(--cl-font);
 }
 
 #report {
-  color: #ff8;
+  color: var(--cl-primary);
+  font-weight: 600;
 }
 
 .ticker-item {
@@ -17,5 +21,5 @@
 }
 
 .bold {
-  font-weight: bold;
+  font-weight: 600;
 }

@@ -9,21 +9,26 @@
 }
 
 ion-button {
-  color: var(--ion-font);
-  font-size: 16px;
+  --color: var(--cl-font);
+  color: var(--cl-font);
+  font-size: 14px;
+  font-weight: 600;
   &.disabled,
   &.disabled:hover {
-    color: var(--cl-light-40);
+    --color: var(--cl-font-light);
+    color: var(--cl-font-light);
     opacity: 0.4;
   }
   --border-width: 0px;
   --background: transparent;
-  --padding-start: 8px;
-  --padding-end: 8px;
-  text-transform: uppercase;
-  --ripple-color: transparent;
   --background-hover: transparent;
   --background-activated: transparent;
+  --background-focused: transparent;
+  --padding-start: 8px;
+  --padding-end: 8px;
+  --box-shadow: none;
+  text-transform: uppercase;
+  --ripple-color: transparent;
 }
 
 ion-icon {
@@ -31,6 +36,7 @@ ion-icon {
   padding-left: 4px;
   padding-top: 4px;
   font-size: 21px;
+  color: var(--cl-primary);
 }
 
 .toolbar-label {
@@ -38,7 +44,8 @@ ion-icon {
 }
 
 ion-toolbar {
-  --background: var(--ion-color-secondary);
+  --background: var(--cl-surface);
+  --border-width: 0;
 }
 
 .toolbar-progress {
@@ -47,10 +54,14 @@ ion-toolbar {
   left: 0;
   width: 100%;
   height: 4px;
-  background-color: var(--cl-secondary-light);
+  background-color: var(--cl-border);
+  border-radius: 2px;
+  overflow: hidden;
 }
 
 .toolbar-progress-bar {
   height: 100%;
-  background-color: var(--cl-primary-60);
+  background: var(--cl-primary);
+  border-radius: 2px;
+  transition: width 0.3s ease;
 }

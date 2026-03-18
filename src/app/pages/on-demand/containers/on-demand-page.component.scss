@@ -1,101 +1,152 @@
-ion-header .toolbar-background {
-  --background: var(--ion-color-secondary);
+.page-header {
+  padding: 16px 20px 0;
 }
 
-ion-toolbar {
-  --background: var(--ion-color-secondary);
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
 }
 
-ion-toolbar > ion-button {
-  --border-width: 0 !important;
-  --background: transparent;
-  --padding-start: 12px;
-  --padding-end: 12px;
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--cl-primary-10);
+  border: 1px solid var(--cl-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ion-icon {
+    font-size: 20px;
+    color: var(--cl-primary);
+  }
 }
 
-ion-title {
-  margin: -4px;
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.date {
-  font-size: 20px;
+.bell-icon {
+  font-size: 22px;
+  color: var(--cl-font-light);
+  padding: 8px;
+  border-radius: 50%;
+  background: transparent;
 }
 
-.layers {
-  position: relative;
-  padding-top: 40px;
+.page-title {
+  margin: 12px 0 8px;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--cl-font);
+  letter-spacing: -0.01em;
 }
 
-#time-current {
-  top: 0;
-  left: 0;
-  z-index: 2;
-  width: 100%;
+.assessments-content {
+  padding: 0 16px 24px;
 }
 
-.time-current-division {
-  margin-top: 10px;
-  width: 100%;
-  height: 2px;
-  background-color: var(--cl-warning);
+.task-card {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  background: var(--cl-surface);
+  border-radius: var(--cl-radius);
+  border: 1px solid var(--cl-border);
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:active {
+    background: var(--cl-primary-10);
+  }
 }
 
-.time-current-division.left {
-  margin-left: -5px;
+.task-card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--cl-primary-10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  ion-icon {
+    font-size: 22px;
+    color: var(--cl-primary);
+  }
 }
 
-.time-current-division.right {
-  margin-left: 5px;
+.task-card-content {
+  flex: 1;
+  margin-left: 14px;
 }
 
-.time-current {
-  color: var(--cl-light-80);
-  text-align: center;
+.task-card-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--cl-font);
+  margin-bottom: 2px;
+}
+
+.task-card-meta {
+  font-size: 13px;
+  color: var(--cl-font-light);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.task-card-arrow {
   font-size: 18px;
-}
-
-#task-item {
-  display: block;
-  margin-bottom: 3px;
-  padding: 3px 9px;
-  padding-bottom: 0;
-  background-color: var(--cl-primary-40);
-  text-align: center;
-  font-size: 18px;
+  color: var(--cl-font-light);
+  flex-shrink: 0;
 }
 
 .units {
   font-size: 12px;
+  color: var(--cl-font-light);
 }
 
 .icon-padding {
-  padding-right: 5px;
-  padding-left: 5px;
+  padding-right: 4px;
 }
 
 .icon-xsm {
   height: 14px;
 }
 
-ion-icon {
-  color: white;
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  text-align: center;
 }
 
-.task-info-left {
-  float: left;
+.empty-icon {
+  font-size: 64px;
+  color: var(--cl-font-light);
+  margin-bottom: 16px;
+  opacity: 0.4;
 }
 
-.task-info-right {
-  float: right;
+.empty-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--cl-font);
+  margin: 0 0 4px;
 }
 
-.metrics {
-  float: left;
-  width: 64px;
-  white-space: nowrap;
-}
-
-.status-div {
-  float: right;
-  padding-left: 10px;
+.empty-subtext {
+  font-size: 14px;
+  color: var(--cl-font-light);
+  margin: 0;
 }

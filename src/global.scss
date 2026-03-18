@@ -16,37 +16,22 @@
 @import '~@ionic/angular/css/text-transformation.css';
 @import '~@ionic/angular/css/flex-utils.css';
 
-// http://ionicframework.com/docs/v2/theming/
-
-// App Global Sass
-// --------------------------------------------------
-// Put style rules here that you want to apply globally. These
-// styles are for the entire app and not just one component.
-// Additionally, this file can be also used as an entry point
-// to import other Sass files to be included in the output CSS.
-//
-// Shared Sass variables, which can be used to adjust Ionic's
-// default Sass variables, belong in "theme/variables.scss".
-//
-// To declare rules for a specific mode, create a child rule
-// for the .md, .ios, or .wp mode classes. The mode class is
-// automatically applied to the <body> element in the app.
-
 // Application
 
 ion-app.md,
 ion-content {
-  --ion-text-color: white;
-  --background: var(--cl-secondary) url('./assets/imgs/bg-mobile.png') no-repeat
-    top center / cover;
+  --ion-text-color: var(--cl-font);
+  --background: var(--cl-bg);
 }
 
 :root {
-  --ion-font-family: 'Montserrat', sans-serif;
+  --ion-font-family: 'Inter', sans-serif;
 }
 
 body {
-  background-color: var(--cl-secondary);
+  background-color: var(--cl-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .icons-big {
@@ -57,21 +42,27 @@ body {
 
 ion-button {
   margin: 0;
-  --padding-top: 8px;
-  --padding-bottom: 8px;
-  --padding-start: 32px;
-  --padding-end: 32px;
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+  --padding-start: 28px;
+  --padding-end: 28px;
   height: var(--bt-height);
-  --border-color: white;
-  --border-width: 2px;
-  --border-style: solid;
-  --border-radius: var(--bt-height);
-  --background: var(--cl-primary-20);
+  --border-color: transparent;
+  --border-width: 0;
+  --border-style: none;
+  --border-radius: var(--cl-radius-pill);
+  --background: var(--cl-primary);
+  --color: #ffffff;
   --box-shadow: none;
   text-transform: none;
-  font-size: 18px;
-  line-height: 1.35em;
-  --ripple-color: transparent;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  --ripple-color: rgba(92, 106, 192, 0.12);
+  --background-hover: var(--ion-color-primary-shade);
+  --background-activated: var(--ion-color-primary-shade);
+  transition: opacity 0.2s ease;
 }
 
 .bt--full {
@@ -85,39 +76,42 @@ ion-button {
 // Fonts
 h1 {
   @include font-title;
-
   margin: 1em 8px;
 }
 
 h2 {
   font-size: 18px;
-  color: white !important;
+  font-weight: 600;
+  color: var(--cl-font) !important;
   margin: 1em 8px;
 }
 
 h3 {
-  color: var(--ion-font);
-  font-size: 14px;
+  color: var(--cl-font);
+  font-size: 15px;
+  font-weight: 600;
 }
 
 h4 {
-  color: var(--ion-font);
-  font-size: 12px;
+  color: var(--cl-font-light);
+  font-size: 13px;
+  font-weight: 500;
 }
 
 h5 {
-  color: var(--ion-font);
-  font-size: 10px;
+  color: var(--cl-font-light);
+  font-size: 12px;
+  font-weight: 500;
 }
 
 h6 {
-  color: var(--ion-font);
-  font-size: 8px;
+  color: var(--cl-font-light);
+  font-size: 11px;
+  font-weight: 500;
 }
 
 p {
   @include font-body;
-
   margin: 1em 8px;
 }
 
@@ -134,7 +128,10 @@ p {
 }
 
 ion-toolbar {
-  --background: #f2f2f2;
+  --background: var(--cl-surface);
+  --border-width: 0;
+  --border-color: transparent;
+  border-bottom: 1px solid var(--cl-border);
 }
 
 .button-inner {
@@ -142,26 +139,29 @@ ion-toolbar {
 }
 
 .alert-wrapper {
-  border-radius: 8px !important;
-  background-color: var(--ion-color-light);
+  border-radius: var(--cl-radius) !important;
+  background-color: var(--cl-surface);
+  border: 1px solid var(--cl-border);
+  box-shadow: var(--cl-shadow);
 }
 
 .card-md {
   padding: 4px;
-  border-radius: 8px !important;
-  background-color: var(--ion-color-light);
+  border-radius: var(--cl-radius) !important;
+  background-color: var(--cl-surface);
+  border: 1px solid var(--cl-border);
+  box-shadow: none;
 }
 
 ion-loading.custom-loading {
-  --background: #e3edff;
+  --background: var(--cl-surface);
   --spinner-color: var(--ion-color-primary);
-
   color: var(--ion-color-primary);
 }
 
 .modal-wrapper,
 .inner-scroll {
-  background: transparent !important;
+  background: var(--cl-bg) !important;
 }
 
 .li-ionic4-datePicker {
@@ -169,42 +169,45 @@ ion-loading.custom-loading {
     height: fit-content !important;
   }
   ion-button {
-    --ion-color-primary: white;
+    --ion-color-primary: var(--cl-primary);
     --border-color: none;
     --border-width: 0 !important;
+    --color: #ffffff;
   }
   .modal-wrapper {
     height: 440px;
     max-height: 100%;
     width: 312px;
+    border-radius: var(--cl-radius);
+    overflow: hidden;
+
     ion-button {
-      --ion-color-primary: white;
-      --border-radius: 5px;
+      --ion-color-primary: var(--cl-primary);
+      --border-radius: var(--cl-radius-sm);
       --border-color: none;
       --border-width: 0 !important;
     }
     ion-footer {
       ion-button {
-        --border-width: 2px;
-        --border-style: solid;
-        --border-color: white; /* Adjust border color if needed */
-        --background: var(--ion-color-primary); /* Background uses primary color */
-        --color: white; /* Button text color */
+        --border-width: 0;
+        --border-style: none;
+        --background: var(--cl-primary);
+        --color: #ffffff;
       }
     }
 
     .dp-month-year-scroll-container {
       ion-item {
-        background-color: var(--ion-color-secondary) !important;
+        background-color: var(--cl-surface) !important;
         ion-label {
           padding: 5px;
-          color: white;
-          background-color: var(--ion-color-secondary) !important;
+          color: var(--cl-font);
+          background-color: var(--cl-surface) !important;
         }
         ion-label.dp-selected {
-          color: var(--ion-color-primary);
+          color: var(--cl-primary);
           font-size: 20px;
-          font-weight: 500;
+          font-weight: 600;
         }
       }
     }
@@ -212,7 +215,7 @@ ion-loading.custom-loading {
 }
 
 .alert-sub-title.sc-ion-alert-md, .alert-title.sc-ion-alert-md {
-  color: var(--ion-color-primary) !important;
+  color: var(--cl-font) !important;
 }
 
 body.scanner-active {
@@ -221,18 +224,19 @@ body.scanner-active {
 }
 
 ion-modal {
-  --background: transparent !important;
+  --background: var(--cl-bg) !important;
+  --border-radius: var(--cl-radius);
 
   ion-header > ion-toolbar {
-    --background: var(--cl-secondary) !important;
+    --background: var(--cl-surface) !important;
   }
 
   ion-list > ion-item {
-    --background: transparent !important;
+    --background: var(--cl-surface) !important;
   }
 }
 
 .dp-month-year-scroll-container {
-  --background: var(--cl-primary-20) !important;
-  background-color: var(--cl-primary-20) !important;
+  --background: var(--cl-surface) !important;
+  background-color: var(--cl-surface) !important;
 }

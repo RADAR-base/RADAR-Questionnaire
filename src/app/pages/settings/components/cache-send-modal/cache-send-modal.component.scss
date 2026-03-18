@@ -1,20 +1,23 @@
 ion-card {
   margin: auto;
   margin-top: 30vh;
-  padding: 16px;
+  padding: 20px;
   width: 80%;
-  background-color: var(--ion-color-light);
-  --background: var(--ion-color-light);
-  color: var(--ion-color-primary);
-  --color: var(--ion-color-primary);
+  background-color: var(--cl-surface);
+  --background: var(--cl-surface);
+  color: var(--cl-font);
+  --color: var(--cl-font);
+  border-radius: var(--cl-radius);
+  box-shadow: var(--cl-shadow-md);
 }
 
 .header {
-  color: var(--ion-color-primary);
+  color: var(--cl-font);
+  font-weight: 700;
 }
 
 .success {
-  color: var(--toggle-md-track-background-color-on);
+  color: var(--ion-color-success);
   font-size: 48px;
 }
 
@@ -24,7 +27,7 @@ ion-card {
 }
 
 .upload {
-  color: var(--ion-color-primary);
+  color: var(--cl-primary);
   font-size: 48px;
 }
 
@@ -39,6 +42,7 @@ li {
   padding: 4px;
   white-space: nowrap;
   font-size: 12px;
+  color: var(--cl-font-light);
 }
 
 button {
@@ -46,11 +50,12 @@ button {
 }
 
 ion-label {
-  font-size: 16px;
+  font-size: 15px;
+  color: var(--cl-font);
 }
 
 ion-list {
-  color: gray;
+  color: var(--cl-font-light);
 }
 
 .scroll-error {
@@ -68,9 +73,10 @@ ion-grid {
 }
 
 .done-btn {
-  color: var(--ion-color-primary);
+  color: var(--cl-primary);
   text-transform: uppercase;
-  font-size: 16px;
+  font-size: 15px;
+  font-weight: 600;
 }
 
 .progress-container {
@@ -83,5 +89,5 @@ ion-grid {
   justify-content: space-between;
   margin-top: 8px;
   font-size: 14px;
-  color: var(--ion-color-medium);
+  color: var(--cl-font-light);
 }

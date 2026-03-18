@@ -1,10 +1,10 @@
 .test-card {
   overflow: hidden;
-  padding: 10px;
+  padding: 16px;
   height: 92%;
-  -webkit-border-radius: 8px;
-  border-radius: 8px;
-  background-color: var(--cl-primary-20);
+  border-radius: var(--cl-radius);
+  background-color: var(--cl-surface);
+  border: 1px solid var(--cl-border);
 }
 
 .content {
@@ -18,12 +18,15 @@
   padding-top: 10px;
   padding-bottom: 10px;
   font-size: 18px;
+  font-weight: 600;
+  color: var(--cl-font);
 }
 
 .timer {
   margin: 10px;
-  color: white;
+  color: var(--cl-primary);
   font-size: 140px;
+  font-weight: 700;
 }
 
 .image {

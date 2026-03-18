@@ -4,9 +4,9 @@ ion-spinner * {
   padding-left: 10px;
   width: 10px;
   height: 30px;
-  background-color: #fff;
-  fill: #fff;
-  stroke: #fff;
+  background-color: var(--cl-primary);
+  fill: var(--cl-primary);
+  stroke: var(--cl-primary);
 }
 
 .position-center {
@@ -22,4 +22,5 @@ ion-spinner * {
   margin-top: 15px;
   text-align: center;
   font-size: 14px;
+  color: var(--cl-font-light);
 }

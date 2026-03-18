@@ -14,7 +14,7 @@
 
 .bt-stop {
   background-color: var(--cl-danger-40);
-  border-radius: var(--border-radius);
+  border-radius: var(--cl-radius-sm);
 }
 
 .center-col {
@@ -24,16 +24,17 @@
 .info-card {
   overflow: auto;
   margin-top: 16px;
-  padding: 10px;
+  padding: 16px;
   height: 88%;
-  -webkit-border-radius: 8px;
-  border-radius: 8px;
-  background-color: var(--cl-primary-10);
+  border-radius: var(--cl-radius);
+  background-color: var(--cl-surface);
+  border: 1px solid var(--cl-border);
 }
 
 .info-card h2 {
-  color: var(--ion-font);
+  color: var(--cl-font);
   font-size: 16px;
+  font-weight: 600;
 }
 
 ion-grid {

@@ -36,17 +36,17 @@
 p {
   margin-top: 8px;
   margin-bottom: 0;
-  color: var(--cl-light-80);
+  color: var(--cl-font-light);
   opacity: 0.8;
 }
 
 h2 {
   margin-top: 16px;
   margin-bottom: 16px;
+  color: var(--cl-font);
 }
 
 .field-container {
-  // max-height: 50vh !important;
 }
 
 .field-container-matrix {
@@ -78,11 +78,11 @@ h2 {
   text-align: center;
 }
 
-
 .arrow-icon {
   position: absolute;
   bottom: 0;
   left: 45%;
   font-size: 40px;
   animation: bounce 1s;
+  color: var(--cl-primary);
 }

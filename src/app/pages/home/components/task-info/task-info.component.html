@@ -1,15 +1,8 @@
 <div id="task-info-container">
   <div id="questionnaire-progress" [@moveInProgress]="expanded">
     <ng-container *ngIf="!expanded">
-      <round-progress
-        [current]="current"
-        [max]="max"
-        [radius]="radius"
-        [color]="'#7fcdbb'"
-        [background]="'rgba(255,255,204,0.12)'"
-        [stroke]="stroke"
-        [clockwise]="true"
-      ></round-progress>
+      <round-progress [current]="current" [max]="max" [radius]="radius" [color]="'#5C6AC0'"
+        [background]="'rgba(92, 106, 192, 0.08)'" [stroke]="stroke" [clockwise]="true"></round-progress>
       <div id="questionnaire-counter">{{ current }}</div>
     </ng-container>
   </div>
@@ -23,12 +16,7 @@
       {{ task.estimatedCompletionTime }}
       <span class="units">min</span>
     </div>
-    <div
-      id="questionnaire-time"
-      [class.status-collapsed]="!expanded"
-      [@scaleStatus]="expanded"
-      #status
-    >
+    <div id="questionnaire-time" [class.status-collapsed]="!expanded" [@scaleStatus]="expanded" #status>
       <span class="text-md">
         {{ nextTaskStatus }}
       </span>
@@ -49,11 +37,7 @@
     </div>
   </div>
 
-  <div
-    *ngIf="task.warning"
-    class="extra-info"
-    [@alignCenterRightExtraInfo]="expanded"
-  >
+  <div *ngIf="task.warning" class="extra-info" [@alignCenterRightExtraInfo]="expanded">
     <img class="extra-info-icon" src="assets/imgs/warning.png" />
     {{ task.warning }}
   </div>

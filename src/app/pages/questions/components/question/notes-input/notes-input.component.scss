@@ -3,13 +3,18 @@ ion-item {
 }
 
 .input {
-  padding-left: 0;
+  padding-left: 12px;
   width: 80vw;
-  border-start-end-radius: 20px;
-  border-start-start-radius: 20px;
-  border-bottom: 2px solid white;
-  background-color: var(--cl-primary-10);
-  color: var(--ion-font);
-  font-size: 18px;
+  border-start-end-radius: var(--cl-radius-sm);
+  border-start-start-radius: var(--cl-radius-sm);
+  border-bottom: 2px solid var(--cl-border);
+  background-color: var(--cl-surface);
+  color: var(--cl-font);
+  font-size: 15px;
   line-height: 1.35em;
+  transition: border-color 0.2s ease;
+
+  &:focus {
+    border-bottom-color: var(--cl-primary);
+  }
 }

@@ -1,146 +1,83 @@
-<ion-header>
-  <ion-toolbar color="secondary">
-    <ion-button
-      class="logo-small"
-      ion-button
-      menuToggle
-      slot="start"
-      (click)="showCredits()"
-    >
-      <img class="logo-small" src="assets/imgs/radar-logo.svg" alt="Logo" />
-    </ion-button>
-    <ion-button ion-button menuToggle slot="end" (click)="openSettingsPage()">
-      <ion-icon name="settings"></ion-icon>
-    </ion-button>
-    <ion-title class="ion-text-center">{{ title | async }}</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
-  <div
-    class="size-dynamic"
-    [class.hidden]="showCalendar"
-    [@moveProgress]="showCalendar"
-  >
-    <task-progress
-      *ngIf="tasksProgress | async"
-      [progress]="tasksProgress | async"
-      [forceComplete]="showCompleted"
-      [noTasksToday]="(tasksProgress | async)?.numberOfTasks == 0"
-      [streakDays]="streakDays"
-      [isStreakShown]="isStreakShown | async"
-    >
-    </task-progress>
+  <div class="page-header">
+    <div class="header-top">
+      <div class="avatar" (click)="showCredits()">
+        <ion-icon name="person-outline"></ion-icon>
+      </div>
+      <div class="header-actions">
+        <ion-icon name="notifications-outline" class="bell-icon"></ion-icon>
+      </div>
+    </div>
+    <h1 class="page-title">{{ title | async }}</h1>
   </div>
 
-  <div class="bottom-components" [class.bottom-components-up]="showCalendar">
-    <div class="clinical-container" *ngIf="showMiscTasksButton | async">
-      <ion-fab
-        left
-        bottom
-        class="clinical-button"
-        [class.clinical-button-bottom]="showCalendar"
-      >
-        <ion-fab-button ion-fab class="fab">
-          <ion-icon name="add"></ion-icon>
-        </ion-fab-button>
-        <ion-fab-list side="top">
-          <ion-fab-button
-            *ngIf="hasClinicalTasks | async"
-            class="clinical-icon"
-            ion-fab
-            (click)="openClinicalTasksPage()"
-          >
-            <img src="assets/imgs/clinical.png" class="icon-clinical" />
-          </ion-fab-button>
-          <ion-fab-button
-            *ngIf="hasOnDemandTasks | async"
-            class="clinical-icon"
-            ion-fab
-            (click)="openOnDemandTasksPage()"
-          >
-            <img src="{{ onDemandIcon | async }}" class="icon-clinical" />
-          </ion-fab-button>
-        </ion-fab-list>
-      </ion-fab>
-    </div>
+  <!-- Hero Card: Progress + Task Info + Start -->
+  <div class="hero-card" [class.hidden]="showCalendar" [@moveProgress]="showCalendar">
+    <div class="hero-card-inner">
 
-    <div #tickerBar class="size-static">
-      <ticker-bar
-        [task]="nextTask"
-        [isNow]="taskIsNow"
-        [timeToNextMilli]="timeToNextTask"
-        [showAffirmation]="showCompleted"
-        [showSyncNeeded]="showSyncNeeded"
-        [showExpired]="showExpired"
-        [noTasksToday]="(tasksProgress | async)?.numberOfTasks == 0"
-      ></ticker-bar>
-    </div>
-
-    <div class="size-static">
-      <task-info
-        *ngIf="nextTask && (isTaskInfoShown | async)"
-        [task]="nextTask"
-        [isNow]="taskIsNow"
-        [progress]="tasksProgress | async"
-        [expanded]="!showCalendar"
-        (click)="displayTaskCalendar()"
-      ></task-info>
-    </div>
-    <div #taskCalendar class="taskCalendar" [@displayCalendar]="showCalendar">
-      <task-calendar
-        *ngIf="
-          (sortedTasks | async)?.size &&
-          (isTaskCalendarTaskNameShown | async) !== null
-        "
-        [show]="showCalendar"
-        (task)="startQuestionnaire($event)"
-        [tasks]="sortedTasks | async"
-        [currentDate]="currentDate"
-        [isTaskNameShown]="isTaskCalendarTaskNameShown | async"
-      >
-      </task-calendar>
-    </div>
-
-    <div class="size-static footer">
-      <div
-        *ngIf="showCompleted && (studyPortalReturnUrl | async)"
-        class="ion-padding"
-      >
-        <ion-button
-          ion-button
-          class="bt bt--full"
-          round
-          full
-          (click)="openStudyPortal()"
-        >
-          {{ portalReturnText | async }}
-        </ion-button>
+      <!-- Progress Section -->
+      <div class="hero-progress" *ngIf="tasksProgress | async">
+        <task-progress [progress]="tasksProgress | async" [forceComplete]="showCompleted"
+          [noTasksToday]="(tasksProgress | async)?.numberOfTasks == 0" [streakDays]="streakDays"
+          [isStreakShown]="isStreakShown | async">
+        </task-progress>
       </div>
-      <div
-        *ngIf="getIsStartButtonShown() && (sortedTasks | async)?.size"
-        class="ion-padding"
-      >
-        <ion-button
-          ion-button
-          class="bt bt--full"
-          round
-          full
-          (click)="startQuestionnaire(null)"
-        >
+      <br><br>
+
+      <!-- Task Info Row -->
+      <div class="hero-info-row" *ngIf="nextTask && (isTaskInfoShown | async)">
+        <div class="hero-info-item">
+          <ion-icon name="help-circle-outline" class="hero-info-icon"></ion-icon>
+          <div class="hero-info-detail">
+            <span class="hero-info-value">{{ nextTask.nQuestions }}</span>
+            <span class="hero-info-label">Questions</span>
+          </div>
+        </div>
+        <div class="hero-info-divider"></div>
+        <div class="hero-info-item">
+          <ion-icon name="time-outline" class="hero-info-icon"></ion-icon>
+          <div class="hero-info-detail">
+            <span class="hero-info-value">{{ nextTask.estimatedCompletionTime }}</span>
+            <span class="hero-info-label">Minutes</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Start Button inside card -->
+      <div class="hero-start" *ngIf="getIsStartButtonShown() && (sortedTasks | async)?.size">
+        <button class="hero-start-btn" (click)="startQuestionnaire(null)">
+          <ion-icon name="play" class="hero-start-icon"></ion-icon>
           {{ 'BTN_START' | translate }}
-        </ion-button>
+        </button>
       </div>
-      <div
-        *ngIf="
+
+      <!-- Study Portal Button inside card -->
+      <div class="hero-start" *ngIf="showCompleted && (studyPortalReturnUrl | async)">
+        <button class="hero-start-btn portal-btn" (click)="openStudyPortal()">
+          <ion-icon name="open-outline" class="hero-start-icon"></ion-icon>
+          {{ portalReturnText | async }}
+        </button>
+      </div>
+
+      <!-- Loading -->
+      <div *ngIf="
           getIsLoadingSpinnerShown() ||
           (!(sortedTasks | async)?.size &&
             (tasksProgress | async)?.numberOfTasks)
-        "
-        class="spinner-center"
-      >
+        " class="hero-spinner">
         <ion-spinner name="dots"></ion-spinner>
       </div>
     </div>
+  </div>
+
+  <!-- Bottom Section -->
+  <div class="bottom-section" [class.bottom-section-up]="showCalendar">
+    <!-- Ticker -->
+    <div class="info-card-row">
+      <ticker-bar [task]="nextTask" [isNow]="taskIsNow" [timeToNextMilli]="timeToNextTask"
+        [showAffirmation]="showCompleted" [showSyncNeeded]="showSyncNeeded" [showExpired]="showExpired"
+        [noTasksToday]="(tasksProgress | async)?.numberOfTasks == 0"></ticker-bar>
+    </div>
+
   </div>
 </ion-content>

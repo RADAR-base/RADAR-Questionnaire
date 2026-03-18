@@ -1,0 +1,80 @@
+.page-header {
+  padding: 16px 20px 0;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--cl-primary-10);
+  border: 1px solid var(--cl-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ion-icon {
+    font-size: 20px;
+    color: var(--cl-primary);
+  }
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bell-icon {
+  font-size: 22px;
+  color: var(--cl-font-light);
+  padding: 8px;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.page-title {
+  margin: 12px 0 8px;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--cl-font);
+  letter-spacing: -0.01em;
+}
+
+.tasks-content {
+  padding: 0 12px 24px;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 64px;
+  color: var(--cl-checkmark);
+  margin-bottom: 16px;
+}
+
+.empty-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--cl-font);
+  margin: 0 0 4px;
+}
+
+.empty-subtext {
+  font-size: 14px;
+  color: var(--cl-font-light);
+  margin: 0;
+}

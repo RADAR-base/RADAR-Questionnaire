@@ -1,110 +1,256 @@
-.scroll-content {
+// Header
+.page-header {
+  padding: 16px 20px 0;
+}
+
+.header-top {
   display: flex;
-  flex-flow: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--cl-primary-10);
+  border: 1px solid var(--cl-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  ion-icon {
+    font-size: 20px;
+    color: var(--cl-primary);
+  }
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bell-icon {
+  font-size: 22px;
+  color: var(--cl-font-light);
+  padding: 8px;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.page-title {
+  margin: 12px 0 4px;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--cl-font);
+  letter-spacing: -0.01em;
+}
+
+// Hero Card
+.hero-card {
+  padding: 0 16px;
+  margin-top: 12px;
+}
+
+.hero-card-inner {
+  background: var(--cl-surface);
+  border-radius: var(--cl-radius);
+  border: 1px solid var(--cl-border);
+  padding: 20px 16px;
   overflow: hidden;
 }
 
-.size-static {
-  flex-basis: auto;
+.hero-progress {
+  ::ng-deep #task-progress-container {
+    padding: 0 0 8px;
+    font-size: 20px;
+  }
+
+  ::ng-deep #navigation {
+    padding: 4px 0 12px;
+  }
+
+  ::ng-deep #progress {
+    width: 48vw;
+  }
+
+  ::ng-deep .progress-sub {
+    flex: 1 0 48vw;
+  }
+
+  ::ng-deep .completed {
+    width: 44vw;
+    height: 44vw;
+  }
+
+  ::ng-deep .checkmark {
+    font-size: 46vw;
+  }
+
+  ::ng-deep .counter {
+    margin-top: -26vw;
+    margin-bottom: 16px;
+  }
+
+  ::ng-deep .counter-complete {
+    margin-top: -38vw;
+    margin-bottom: 16px;
+  }
+
+  ::ng-deep .large {
+    font-size: 18vmin;
+  }
+
+  ::ng-deep .small {
+    padding-top: 9vmin;
+    font-size: 3.5vmin;
+  }
+
+  ::ng-deep .streak-card {
+    width: 65%;
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 12px;
+    background-color: var(--cl-primary-10);
+    box-shadow: none;
+  }
+
+  ::ng-deep .noTasks-padding {
+    height: 8vh;
+  }
+
+  ::ng-deep .container-diary {
+    margin-top: 2vh;
+  }
 }
 
-.bottom-components {
-  position: absolute;
-  bottom: 0;
+// Info Row
+.hero-info-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 12px 0 4px;
+  margin: 4px 0 0;
+  border-top: 1px solid var(--cl-border);
+}
+
+.hero-info-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  justify-content: center;
+}
+
+.hero-info-icon {
+  font-size: 22px;
+  color: var(--cl-primary);
+}
+
+.hero-info-detail {
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-info-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--cl-font);
+  line-height: 1.2;
+}
+
+.hero-info-label {
+  font-size: 12px;
+  color: var(--cl-font-light);
+  font-weight: 500;
+}
+
+.hero-info-divider {
+  width: 1px;
+  height: 36px;
+  background-color: var(--cl-border);
+}
+
+// Start Button
+.hero-start {
+  padding-top: 16px;
+}
+
+.hero-start-btn {
   width: 100%;
+  height: 48px;
+  border: none;
+  border-radius: var(--cl-radius-sm);
+  background: var(--cl-primary);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+
+  &:active {
+    opacity: 0.85;
+  }
 }
 
-.bottom-components-up {
+.portal-btn {
+  background: var(--ion-color-success);
+}
+
+.hero-start-icon {
+  font-size: 20px;
+  color: #ffffff;
+}
+
+.hero-spinner {
+  text-align: center;
+  padding: 16px 0 0;
+}
+
+// Bottom Section
+.bottom-section {
+  position: relative;
+  width: 100%;
+  padding: 12px 12px 0;
+}
+
+.bottom-section-up {
   position: absolute;
   top: 0;
   width: 100%;
 }
 
-.size-dynamic {
-  flex-grow: 1;
+.info-card-row {
+  margin-bottom: 4px;
 }
 
-ion-header .toolbar-background {
-  background-color: var(--ion-color-secondary);
-}
-
-ion-toolbar {
-  --background: var(--ion-color-secondary);
-}
-
-ion-toolbar > ion-button {
-  --border-width: 0;
-  --background: transparent;
-  --padding-start: 12px;
-  --padding-end: 12px;
-  --ripple-color: transparent;
-  --background-hover: transparent;
-  --background-activated: transparent;
-}
-
-.toolbar-title {
-  color: var(--ion-font);
-}
-
-.toolbar-background {
-  background-color: var(--ion-color-secondary);
-  --background: var(--ion-color-secondary);
-}
-
-.bar-button {
-  color: var(--ion-font);
-}
-
-.icon-small-75 {
-  height: 75%;
-}
-
-.icon-small-50 {
-  height: 50%;
-}
-
-.logo-small {
-  height: 40px;
-}
-
-.footer {
-  background-color: var(--cl-primary-40);
-}
-
-.notification {
-  width: 99%;
-}
-
-.spinner-center {
-  margin-left: 50%;
-}
-
-ion-spinner * {
-  margin-left: -15px;
-  padding-left: 10px;
-  width: 10px;
-  height: 30px;
-  background-color: #fff;
-  fill: #fff;
-  stroke: #fff;
+// FAB
+.clinical-container {
+  position: relative;
 }
 
 .clinical-icon {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-color: var(--cl-primary-60);
+  background-color: var(--cl-primary);
+  box-shadow: var(--cl-shadow-md);
 }
 
 ion-fab-button {
-  --background: var(--cl-primary-60);
-  --box-shadow: none;
-  --background-hover: var(--cl-primary-60);
-  --background-activated: var(--cl-primary-60);
-}
-
-.clinical-container {
-  position: relative;
+  --background: var(--cl-primary);
+  --box-shadow: var(--cl-shadow);
+  --background-hover: var(--ion-color-primary-shade);
+  --background-activated: var(--ion-color-primary-shade);
+  --color: #ffffff;
 }
 
 ion-fab > ion-button {
@@ -128,6 +274,13 @@ ion-fab > ion-button {
 .icon-clinical {
   width: 32px;
   height: 32px;
+}
+
+// Spinner
+ion-spinner * {
+  background-color: var(--cl-primary);
+  fill: var(--cl-primary);
+  stroke: var(--cl-primary);
 }
 
 .hidden {

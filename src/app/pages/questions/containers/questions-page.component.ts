@@ -25,6 +25,7 @@ import {
 import { Task } from '../../../shared/models/task'
 import { AppLauncherService } from '../services/app-launcher.service'
 import { QuestionsService } from '../services/questions.service'
+import { q } from './quest'
 
 @Component({
   selector: 'page-questions',
@@ -150,7 +151,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
     this.showIntroductionScreen = this.SHOW_INTRODUCTION_SET.has(
       res.assessment.showIntroduction
     )
-    this.questions = res.questions
+    this.questions = q
     this.groupedQuestions = this.groupQuestionsByMatrixGroup(this.questions)
     this.endText =
       res.endText && res.endText.length
@@ -195,7 +196,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
   }
 
   handleFinish() {
-    this.navCtrl.navigateRoot('/home')
+    this.navCtrl.navigateRoot('/tabs/home')
   }
 
   onAnswer(event) {
@@ -302,7 +303,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
 
   exitQuestionnaire() {
     this.sendEvent(UsageEventType.QUESTIONNAIRE_CANCELLED)
-    this.navCtrl.navigateBack('/home')
+    this.navCtrl.navigateBack('/tabs/home')
   }
 
   navigateToFinishPage() {

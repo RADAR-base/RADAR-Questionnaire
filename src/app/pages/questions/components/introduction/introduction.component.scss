@@ -3,7 +3,10 @@
 }
 
 .questionnaire-title {
-  font-size: 32px;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--cl-font);
+  letter-spacing: -0.02em;
 }
 
 .icons-big {
@@ -12,12 +15,11 @@
 
 .intro {
   align-items: center;
-  //margin-right: 10%;
-  //margin-left: 10%;
 }
 
 h2 {
   font-size: 15px !important;
+  color: var(--cl-font-light);
 }
 
 .pos-bottom {

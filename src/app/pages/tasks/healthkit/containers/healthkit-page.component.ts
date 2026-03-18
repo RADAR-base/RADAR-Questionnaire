@@ -108,7 +108,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
     if (this.processingState === ProcessingState.COMPLETE) {
       this.healthkitService.resetProgress()
     }
-    this.navCtrl.navigateRoot('/home')
+    this.navCtrl.navigateRoot('/tabs/home')
     this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_EXIT, true)
   }
 

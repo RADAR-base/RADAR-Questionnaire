@@ -9,7 +9,7 @@
 }
 
 :root {
-  color: var(--cl-light);
+  color: var(--cl-font);
 }
 
 .logo {
@@ -25,7 +25,8 @@
 .text {
   margin: auto;
   width: 88vw;
-  font-size: 18px;
+  font-size: 16px;
+  color: var(--cl-font);
 }
 
 .text-justify {
@@ -34,11 +35,15 @@
 
 .text-lg {
   margin-bottom: 2vh;
-  font-size: 40px;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--cl-font);
+  letter-spacing: -0.02em;
 }
 
 .text-sm {
   font-size: 14px;
+  color: var(--cl-font-light);
 }
 
 .padding {
@@ -69,9 +74,12 @@
 }
 
 #outcome {
-  padding: 5px;
-  background-color: var(--cl-danger-40);
+  padding: 8px 12px;
+  background-color: var(--cl-danger-20);
+  border-radius: var(--cl-radius-sm);
   animation: fadeIn 1s;
+  color: var(--cl-danger);
+  font-weight: 500;
 }
 
 #loading {
@@ -82,7 +90,8 @@ ion-input {
   margin-left: auto;
   margin-right: auto;
   width: 90%;
-  border-color: white;
+  border-color: var(--cl-border);
+  color: var(--cl-font);
 }
 
 .bottom {
@@ -109,12 +118,22 @@ ion-input {
 }
 
 .proj-input {
-  border-radius: 20px;
+  border-radius: var(--cl-radius-pill);
+  border: 2px solid var(--cl-border);
+  background-color: var(--cl-surface);
+  padding: 4px 12px;
+  transition: border-color 0.2s ease;
+
+  &:focus-within {
+    border-color: var(--cl-primary);
+  }
 }
 
 ion-item.item {
   --margin-bottom: var(--item-separation-distance);
-  --background: var(--cl-primary-40);
+  --background: var(--cl-surface);
+  border-radius: var(--cl-radius-sm);
+  border: 1px solid var(--cl-border);
 }
 
 ion-item.item:last-child {
@@ -122,8 +141,7 @@ ion-item.item:last-child {
 }
 
 ion-item-divider.item-divider {
-  --background: var(--cl-primary-10);
-
+  --background: transparent;
   color: var(--cl-font-light);
   font-size: 2rem;
 }
@@ -152,10 +170,9 @@ ion-card {
   height: 100%;
   margin-top: 160px;
   margin-bottom: 104px;
-  color: white;
+  color: var(--cl-font);
 
   --background: transparent;
-
   background: transparent;
 }
 
@@ -172,8 +189,7 @@ swiper-container {
 }
 
 ion-spinner {
-  --color: #fff !important;
-
+  --color: var(--cl-primary) !important;
   width: 40px;
   height: 40px;
 }

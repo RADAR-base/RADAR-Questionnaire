@@ -1,13 +1,23 @@
 #task-info-container {
   overflow: hidden;
-  margin-bottom: 2px;
-  padding: 8px 16px;
-  background-color: var(--cl-primary-40);
-  font-size: 22px;
+  margin-bottom: 4px;
+  padding: 14px 16px;
+  background-color: var(--cl-surface);
+  border-radius: var(--cl-radius);
+  border: 1px solid var(--cl-border);
+  font-size: 20px;
+  color: var(--cl-font);
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:active {
+    background: var(--cl-primary-10);
+  }
 }
 
 .units {
   font-size: 0.7em;
+  color: var(--cl-font-light);
 }
 
 #questionnaire-progress {
@@ -20,11 +30,16 @@
   margin-bottom: 12px;
   text-align: center;
   font-size: 1.5em;
+  font-weight: 700;
+  color: var(--cl-primary);
 }
 
 #questionnaire-metrics {
   float: left;
   margin: auto;
+  color: var(--cl-font);
+  font-size: 15px;
+  font-weight: 500;
 }
 
 .right-info {
@@ -38,11 +53,14 @@
   max-width: 72%;
   white-space: nowrap;
   line-height: 2.5em;
+  color: var(--cl-font);
 }
 
 .text-md {
   float: left;
-  font-size: 2.5em;
+  font-size: 2.2em;
+  font-weight: 700;
+  color: var(--cl-primary);
 }
 
 .extra-info {
@@ -50,6 +68,7 @@
   width: 100%;
   text-align: center;
   font-size: 0.7em;
+  color: var(--cl-font-light);
 }
 
 .extra-info-icon {
@@ -67,6 +86,7 @@
 .meridiem {
   margin-left: -8px;
   font-size: 2.5vh;
+  color: var(--cl-font-light);
 }
 
 .time-container {

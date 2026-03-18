@@ -7,24 +7,12 @@
     {{ currentQuestionId + 1 + '/' + totalQuestions }}
   </ion-title>
 
-  <ion-button
-    ion-button
-    slot="start"
-    icon-left
-    [class.disabled]="isLeftButtonDisabled"
-    (click)="leftButtonHandler()"
-  >
+  <ion-button fill="clear" slot="start" icon-left [class.disabled]="isLeftButtonDisabled" (click)="leftButtonHandler()">
     <ion-icon [name]="iconPrevious"></ion-icon>
     <div class="toolbar-label">{{ leftButtonText }}</div>
   </ion-button>
-  <ion-button
-    mode="ios"
-    ion-button
-    slot="end"
-    icon-right
-    [class.disabled]="isRightButtonDisabled"
-    (click)="rightButtonHandler()"
-  >
+  <ion-button fill="clear" mode="ios" ion-button slot="end" icon-right [class.disabled]="isRightButtonDisabled"
+    (click)="rightButtonHandler()">
     <div class="toolbar-label">{{ rightButtonText }}</div>
     <ion-icon name="chevron-forward-outline"></ion-icon>
   </ion-button>

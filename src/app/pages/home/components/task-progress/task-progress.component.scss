@@ -5,8 +5,6 @@ $height: 300;
 $box-shadow: ();
 $box-shadow2: ();
 
-// Create the explosion...
-
 @for $i from 0 through $particles {
   $box-shadow: $box-shadow,
     random($width) -
@@ -84,7 +82,6 @@ $box-shadow2: ();
 @include keyframes(gravity) {
   to {
     @include transform(translateY(350px));
-
     opacity: 0;
   }
 }
@@ -148,6 +145,11 @@ $box-shadow2: ();
 #navigation {
   padding: 15px 0 20px;
   text-align: center;
+  color: var(--cl-font-light);
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 #progress {
@@ -169,12 +171,13 @@ $box-shadow2: ();
   width: 56vw;
   height: 56vw;
   border-radius: 100%;
-  background-color: #7fcdbb;
+  background: var(--cl-checkmark);
 }
 
 .checkmark {
   font-size: 58vw;
   transition: transform 0.8s ease-in;
+  color: #ffffff;
 }
 
 .counter {
@@ -192,11 +195,15 @@ $box-shadow2: ();
 .large {
   font-size: 24vmin;
   line-height: 0;
+  font-weight: 700;
+  color: var(--cl-primary);
 }
 
 .small {
   padding-top: 12vmin;
   font-size: 4vmin;
+  color: var(--cl-font-light);
+  font-weight: 500;
 }
 
 .container-diary {
@@ -206,9 +213,9 @@ $box-shadow2: ();
 .streak-card {
   padding: 16px;
   height: 88%;
-  -webkit-border-radius: 8px;
-  border-radius: 30px;
-  background-color: var(--cl-primary-20);
+  border-radius: var(--cl-radius);
+  background-color: var(--cl-surface);
+  border: 1px solid var(--cl-border);
   width: 50%;
   margin: auto;
   margin-top: 24px;
@@ -216,9 +223,11 @@ $box-shadow2: ();
 }
 
 .streak {
-  font-size: 10px;
+  font-size: 11px;
   margin-top: -32px;
   padding-top: -10px;
+  color: var(--cl-font-light);
+  font-weight: 500;
 }
 
 .streak-icon {

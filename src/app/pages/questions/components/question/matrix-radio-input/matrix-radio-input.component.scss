@@ -1,5 +1,6 @@
 ion-label {
-  color: white !important;
+  color: var(--cl-font) !important;
+  font-weight: 500;
 }
 
 .item-md {
@@ -10,39 +11,43 @@ ion-label {
 }
 
 ion-item {
-  color: var(--ion-font);
+  color: var(--cl-font);
   font-size: 12px;
+  font-weight: 500;
   line-height: 1.35em;
   position: relative;
   align-items: center;
   justify-content: center;
   text-align: center;
   height: var(--bt-height);
-  border: 2px solid white;
+  border: 2px solid var(--cl-border);
   border-right: none;
-  background-color: var(--cl-primary-20);
+  background-color: var(--cl-surface);
+  transition: background-color 0.2s ease;
 
   --ripple-color: transparent;
 }
 
 .item-radio-checked {
   background-color: var(--cl-primary) !important;
+  color: #ffffff !important;
 }
 
 ion-col:first-child ion-item {
-  border-top-left-radius: 8px;
-  border-bottom-left-radius: 8px;
+  border-top-left-radius: var(--cl-radius-sm);
+  border-bottom-left-radius: var(--cl-radius-sm);
 }
 
 ion-col:last-child ion-item {
-  border-right: 2px solid white;
-  border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
+  border-right: 2px solid var(--cl-border);
+  border-top-right-radius: var(--cl-radius-sm);
+  border-bottom-right-radius: var(--cl-radius-sm);
 }
 
 .padding {
   margin: 10px 3px;
   font-size: 80%;
+  color: var(--cl-font-light);
 }
 
 .labelLeft {
@@ -59,7 +64,6 @@ ion-col:last-child ion-item {
 ion-radio {
   --color: transparent;
   --color-checked: transparent;
-
   width: 0 !important;
   height: 0 !important;
 }

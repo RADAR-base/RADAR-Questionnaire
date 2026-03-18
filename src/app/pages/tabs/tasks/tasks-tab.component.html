@@ -1,0 +1,28 @@
+<ion-content [scrollY]="true">
+  <div class="page-header">
+    <div class="header-top">
+      <div class="avatar">
+        <ion-icon name="person-outline"></ion-icon>
+      </div>
+      <div class="header-actions">
+        <ion-icon name="notifications-outline" class="bell-icon"></ion-icon>
+      </div>
+    </div>
+    <h1 class="page-title">Your Tasks</h1>
+  </div>
+
+  <div class="tasks-content">
+    <task-calendar *ngIf="
+        (sortedTasks | async)?.size &&
+        (isTaskCalendarTaskNameShown | async) !== null
+      " [show]="true" (task)="startQuestionnaire($event)" [tasks]="sortedTasks | async" [currentDate]="currentDate"
+      [isTaskNameShown]="isTaskCalendarTaskNameShown | async">
+    </task-calendar>
+
+    <div *ngIf="!(sortedTasks | async)?.size" class="empty-state">
+      <ion-icon name="checkmark-circle-outline" class="empty-icon"></ion-icon>
+      <p class="empty-text">No tasks scheduled</p>
+      <p class="empty-subtext">Check back later for new tasks</p>
+    </div>
+  </div>
+</ion-content>

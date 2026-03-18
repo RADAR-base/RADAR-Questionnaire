@@ -1,13 +1,20 @@
 .input {
-  color: var(--ion-font);
-  font-size: 18px;
+  color: var(--cl-font);
+  font-size: 16px;
+  font-weight: 500;
   line-height: 1.35em;
   margin: 24px auto;
-  padding-left: 0;
+  padding-left: 12px;
   width: 80vw;
-  height: 40px;
-  border-bottom: 2px solid white;
-  background-color: transparent !important;
+  height: 48px;
+  border: 2px solid var(--cl-border);
+  border-radius: var(--cl-radius-sm);
+  background-color: var(--cl-surface) !important;
+  transition: border-color 0.2s ease;
+
+  &:focus {
+    border-color: var(--cl-primary);
+  }
 }
 
 .form {
@@ -27,7 +34,8 @@
 .text {
   margin: auto;
   width: 90vw;
-  font-size: 18px;
+  font-size: 16px;
+  color: var(--cl-font);
 }
 
 .text-justify {

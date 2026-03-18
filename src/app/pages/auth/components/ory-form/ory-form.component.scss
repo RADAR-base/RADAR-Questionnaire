@@ -26,11 +26,19 @@
 }
 
 .portal {
-  transition: all 0.2s ease-in-out; /* Add smooth transition */
+  transition: all 0.2s ease-in-out;
   height: 30vh;
 }
 
 ion-input {
   padding: 12px;
   padding-top: 16px;
+  border: 2px solid var(--cl-border);
+  border-radius: var(--cl-radius-sm);
+  background-color: var(--cl-surface);
+  color: var(--cl-font);
+
+  &:focus-within {
+    border-color: var(--cl-primary);
+  }
 }

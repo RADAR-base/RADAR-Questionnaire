@@ -91,7 +91,7 @@ export class SettingsPageComponent {
   }
 
   backToHome() {
-    this.navCtrl.navigateBack('/home')
+    this.navCtrl.navigateBack('/tabs/home')
   }
 
   backToSplash(isEnrolmentReset: boolean = false) {

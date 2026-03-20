@@ -60,8 +60,8 @@ export abstract class AuthService {
         subjectId: subjectInformation.login,
         sourceId: this.getSourceId(subjectInformation),
         humanReadableId: subjectInformation.externalId,
-        enrolmentDate: subjectInformation.enrolmentDate ?
-          new Date(subjectInformation.enrolmentDate).getTime() : new Date(subjectInformation.createdDate).getTime(),
+        enrolmentDate: subjectInformation.enrollmentDate ?
+          new Date(subjectInformation.enrollmentDate).getTime() : new Date(subjectInformation.createdDate).getTime(),
         baseUrl,
         attributes: subjectInformation.attributes
       }

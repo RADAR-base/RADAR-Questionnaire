@@ -45,7 +45,7 @@ export class SplashPageComponent implements OnDestroy {
       )
       .catch(e => {
         console.error('[SPLASH] Unhandled error in init chain:', e)
-        this.navigateAway('/enrol')
+        this.navigateAway('/home')
       })
   }
 
@@ -63,7 +63,7 @@ export class SplashPageComponent implements OnDestroy {
   private onSafetyTimeout() {
     console.error('[SPLASH] Safety timeout reached — forcing navigation away from splash screen')
     if (!this.navigated) {
-      this.navigateAway('/enrol')
+      this.navigateAway('/home')
     }
   }
 

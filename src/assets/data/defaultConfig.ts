@@ -151,7 +151,7 @@ export const FCMPluginProjectSenderId: string = '430900191220'
 export const DefaultMaxUpstreamResends = 100
 
 // *Default number of notifications to schedule
-export const DefaultNumberOfNotificationsToSchedule: number = 100
+export const DefaultNumberOfNotificationsToSchedule: number = 50
 
 // *Default length of time to wait before refreshing notifications (1 hr in ms)
 export const DefaultNotificationRefreshTime: number = 3600000

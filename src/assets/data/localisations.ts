@@ -1127,6 +1127,16 @@ export const Localisations = {
     pl: 'Nie udało się',
     hb: 'נכשל'
   },
+  STATUS_SORRY: {
+    da: 'Beklager',
+    de: 'Entschuldigung',
+    en: 'Sorry',
+    es: 'Lo sentimos',
+    it: 'Scusa',
+    nl: 'Excuseer',
+    pl: 'Przepraszamy',
+    hb: 'מצטערים'
+  },
   STATUS_UPDATE_AVAILABLE: {
     da: 'Ny Version Tilgængelig',
     de: 'Neue Version Verfügbar',
@@ -1606,20 +1616,20 @@ export const Localisations = {
   },
   CONFIG_ERROR_DESC: {
     da:
-      'Der opstod et problem med at opdatere din konfiguration. Tryk på "Prøve igen" for at prøve igen. Hvis du ofte oplever dette problem, skal du kontakte din studiekoordinator eller forsøge at nulstille applikationen i indstillingerne.',
+      'Vi kunne ikke opdatere din konfiguration lige nu. Det kan skyldes et midlertidigt netværksproblem. Tryk på "Prøv igen" for at prøve igen, eller tryk på "Afskedige" for at fortsætte med at bruge appen. Hvis denne besked vises igen næste gang, du åbner appen, bedes du kontakte din studiekoordinator.',
     de:
-      'Beim Aktualisieren Ihrer Konfiguration ist ein Problem aufgetreten. Drücken Sie "Wiederholen", um es erneut zu versuchen. Wenn dieses Problem häufig auftritt, wenden Sie sich an Ihren Studienkoordinator oder versuchen Sie, die Anwendung in den Einstellungen zurückzusetzen.',
+      'Wir konnten Ihre Konfiguration gerade nicht aktualisieren. Das könnte ein vorübergehendes Netzwerkproblem sein. Tippen Sie auf "Wiederholen", um es erneut zu versuchen, oder auf "Entlassen", um die App weiter zu nutzen. Wenn diese Meldung beim nächsten Öffnen der App erneut erscheint, wenden Sie sich bitte an Ihren Studienkoordinator.',
     en:
-      'There was a problem updating your config. Press "Retry" to try again. If you are experiencing this problem frequently, please contact your study coordinator or try to reset the application in the settings.',
+      'We couldn’t update your configuration right now. This may be a temporary network issue. You can tap "Retry" to try again, or tap "Dismiss" to continue using the app. If this message appears again next time you open the app, please contact your study coordinator.',
     es:
-      'Hubo un problema al actualizar su configuración. Presione "Reintentar" para volver a intentarlo. Si tiene este problema con frecuencia, comuníquese con su coordinador de estudio o intente restablecer la aplicación en la configuración.',
-    it: `Si è verificato un problema durante l'aggiornamento della configurazione. Premi "Riprovare" per riprovare. Se si riscontra questo problema frequentemente, contattare il coordinatore dello studio o provare a ripristinare l'applicazione nelle impostazioni.`,
+      'No pudimos actualizar su configuración ahora mismo. Puede deberse a un problema temporal de red. Puede tocar "Reintentar" para volver a intentarlo, o tocar "Descartar" para seguir usando la aplicación. Si este mensaje aparece de nuevo la próxima vez que abra la aplicación, comuníquese con su coordinador de estudio.',
+    it: `Non siamo riusciti ad aggiornare la configurazione in questo momento. Potrebbe essere un problema temporaneo di rete. Puoi toccare "Riprovare" per riprovare oppure "Respingere" per continuare a usare l’app. Se questo messaggio ricompare la prossima volta che apri l’app, contatta il tuo coordinatore dello studio.`,
     nl:
-      'Er is een probleem opgetreden bij het bijwerken van uw configuratie. Druk op "Probeer opnieuw" om het opnieuw te proberen. Als je dit probleem regelmatig ervaart, neem dan contact op met je studiecoördinator of probeer de applicatie te resetten in de instellingen.',
+      'We konden je configuratie nu niet bijwerken. Dit kan een tijdelijk netwerkprobleem zijn. Tik op "Probeer opnieuw" om het opnieuw te proberen, of tik op "Afwijzen" om door te gaan met het gebruik van de app. Als dit bericht de volgende keer dat je de app opent weer verschijnt, neem dan contact op met je studiecoördinator.',
     pl:
-      'Podczas aktualizowania konfiguracji wystąpił problem. Naciśnij „Spróbuj ponownie", aby spróbować ponownie. Jeśli często występuje ten problem, skontaktuj się z koordynatorem badania lub spróbuj zresetować aplikację w ustawieniach.',
+      'Nie udało się teraz zaktualizować konfiguracji. To może być chwilowy problem z siecią. Możesz nacisnąć „Spróbuj ponownie”, aby spróbować ponownie, albo „Odwołać”, aby kontynuować korzystanie z aplikacji. Jeśli ten komunikat pojawi się ponownie następnym razem, gdy otworzysz aplikację, skontaktuj się z koordynatorem badania.',
     hb:
-      'הייתה בעיה בעדכון התצורה שלך. לחץ על "נסה שוב" כדי לנסות שוב. אם אתה נתקל בבעיה זו לעתים קרובות, אנא צור קשר עם רכז הלימוד שלך או נסה לאפס את היישום בהגדרות.'
+      'לא הצלחנו לעדכן את ההגדרות שלך כרגע. ייתכן שמדובר בבעיה זמנית ברשת. אפשר ללחוץ על "נסה שוב" כדי לנסות שוב, או ללחוץ על "לשחרר" כדי להמשיך להשתמש באפליקציה. אם ההודעה הזו תופיע שוב בפעם הבאה שתפתח/י את האפליקציה, נא ליצור קשר עם רכז/ת המחקר.'
   },
   SPLASH_STATUS_UPDATING_CONFIG: {
     da: 'Opdaterer underretninger og planlæg...',

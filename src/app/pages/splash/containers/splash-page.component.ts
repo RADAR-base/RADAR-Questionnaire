@@ -1,5 +1,4 @@
-import { Component } from '@angular/core'
-import { Router } from '@angular/router'
+import { Component, OnDestroy } from '@angular/core'
 import { NavController, Platform } from '@ionic/angular'
 
 import { DefaultPackageName } from '../../../../assets/data/defaultConfig'
@@ -7,28 +6,32 @@ import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { UsageService } from '../../../core/services/usage/usage.service'
 import { LocKeys } from '../../../shared/enums/localisations'
-import { EnrolmentPageComponent } from '../../auth/containers/enrolment-page.component'
-import { HomePageComponent } from '../../home/containers/home-page.component'
 import { SplashService } from '../services/splash.service'
 
 declare var window
+
+const SPLASH_SAFETY_TIMEOUT_MS = 120_000
 
 @Component({
   selector: 'page-splash',
   templateUrl: 'splash-page.component.html',
   styleUrls: ['./splash-page.component.scss']
 })
-export class SplashPageComponent {
+export class SplashPageComponent implements OnDestroy {
   status = 'Checking enrolment...'
+  private navigated = false
+  private safetyTimer: any
+
   constructor(
     public navCtrl: NavController,
     private splashService: SplashService,
     private alertService: AlertService,
     private localization: LocalizationService,
     private usage: UsageService,
-    private platform: Platform,
-    private router: Router
+    private platform: Platform
   ) {
+    this.safetyTimer = setTimeout(() => this.onSafetyTimeout(), SPLASH_SAFETY_TIMEOUT_MS)
+
     this.splashService
       .isEnrolled()
       .then(enrolled =>
@@ -40,6 +43,35 @@ export class SplashPageComponent {
             )
           : this.enrol()
       )
+      .catch(e => {
+        console.error('[SPLASH] Unhandled error in init chain:', e)
+        this.navigateAway('/enrol')
+      })
+  }
+
+  ngOnDestroy() {
+    this.clearSafetyTimer()
+  }
+
+  private clearSafetyTimer() {
+    if (this.safetyTimer) {
+      clearTimeout(this.safetyTimer)
+      this.safetyTimer = null
+    }
+  }
+
+  private onSafetyTimeout() {
+    console.error('[SPLASH] Safety timeout reached — forcing navigation away from splash screen')
+    if (!this.navigated) {
+      this.navigateAway('/enrol')
+    }
+  }
+
+  private navigateAway(route: string) {
+    if (this.navigated) return Promise.resolve(false)
+    this.navigated = true
+    this.clearSafetyTimer()
+    return this.navCtrl.navigateRoot(route)
   }
 
   onStart() {
@@ -51,6 +83,7 @@ export class SplashPageComponent {
     this.splashService
       .isAppUpdateAvailable()
       .then(res => (res ? this.showAppUpdateAvailable() : []))
+      .catch(() => { })
     return this.splashService
       .loadConfig()
       .then(() => {
@@ -58,15 +91,15 @@ export class SplashPageComponent {
           .sendMissedQuestionnaireLogs()
           .then(() => this.splashService.sendReportedIncompleteTasks())
           .catch(e => console.warn('Background log sending failed:', e))
-        return this.navCtrl.navigateRoot('/home')
+        return this.navigateAway('/home')
       })
       .catch(e => this.showFetchConfigFail(e))
-      .finally(() => this.navCtrl.navigateRoot('/home'))
+      .finally(() => this.navigateAway('/home'))
   }
 
   showFetchConfigFail(e) {
     this.alertService.showAlert({
-      header: this.localization.translateKey(LocKeys.STATUS_FAILURE),
+      header: this.localization.translateKey(LocKeys.STATUS_SORRY) + "!",
       message: this.localization.translateKey(LocKeys.CONFIG_ERROR_DESC),
       buttons: [
         {
@@ -108,10 +141,12 @@ export class SplashPageComponent {
   }
 
   resetAndEnrol() {
-    return this.splashService.reset().then(() => this.enrol())
+    return this.splashService.reset()
+      .catch(e => console.warn('[SPLASH] Reset failed, proceeding to enrol:', e))
+      .then(() => this.enrol())
   }
 
   enrol() {
-    return this.navCtrl.navigateRoot('/enrol')
+    return this.navigateAway('/enrol')
   }
 }

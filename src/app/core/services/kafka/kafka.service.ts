@@ -4,7 +4,11 @@ import {
   HttpHeaders
 } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { CapacitorHttp } from '@capacitor/core'
+import { Network } from '@capacitor/network'
+import * as pako from 'pako'
+import { fromByteArray } from 'base64-js'
+import pLimit from 'p-limit'
+import { Http } from '@capacitor-community/http'
 
 import {
   DefaultClientAcceptType,
@@ -25,11 +29,24 @@ import { TokenService } from '../token/token.service'
 import { AnalyticsService } from '../usage/analytics.service'
 import { CacheService } from './cache.service'
 import { SchemaService } from './schema.service'
-import { Subject } from 'rxjs'
-import pLimit from 'p-limit'
+import { from, isObservable, Observable, of, Subject } from 'rxjs'
+import { concatMap } from 'rxjs/operators'
 import { NotificationService } from '../notifications/notification.service'
 import { NotificationActionType } from 'src/app/shared/models/notification-handler'
-import { Network } from '@capacitor/network'
+
+interface PrepareKafkaOptions {
+  sendEvent?: boolean
+}
+
+interface KafkaPayloadStreamOptions {
+  stream?: boolean
+  pageSize?: number
+}
+
+interface SendFromCacheOptions {
+  streamHealthkitPayloads?: boolean
+  healthkitPageSize?: number
+}
 
 @Injectable()
 export class KafkaService {
@@ -158,24 +175,55 @@ export class KafkaService {
     }
   }
 
-  prepareKafkaObjectAndStore(type, payload) {
+  private buildCacheValue(type, payload): CacheValue {
     const name = type == SchemaType.ASSESSMENT ? payload.metadata.name : type
     const value = this.schema.getKafkaObjectValue(type, payload)
-    const cacheValue: CacheValue = {
+    return {
       kafkaObject: { value },
       name,
       avsc: payload.metadata ? payload.metadata.avsc : this.DEFAULT_KAFKA_AVSC
     }
-    this.sendDataEvent(
-      DataEventType.PREPARED_OBJECT,
-      name,
-      value['name'],
-      value['timestamp']
-    )
-    return this.cache.storeInCache(type, value, cacheValue)
   }
 
-  async sendAllFromCache(): Promise<any> {
+  prepareKafkaObjectAndStore(type, payload, options: PrepareKafkaOptions = {}) {
+    const cacheValue = this.buildCacheValue(type, payload)
+    const value = cacheValue.kafkaObject.value
+    if (options.sendEvent !== false) {
+      this.sendDataEvent(
+        DataEventType.PREPARED_OBJECT,
+        cacheValue.name,
+        value['name'],
+        value['timestamp']
+      )
+    }
+    return this.cache.storeInCache(type, value, cacheValue, options)
+  }
+
+  prepareKafkaObjectsAndStoreMultiple(type, payloads: any[], options: PrepareKafkaOptions = {}) {
+    if (!payloads || !payloads.length) return Promise.resolve()
+
+    const cacheValuesWithObjects = payloads.map(payload => {
+      const cacheValue = this.buildCacheValue(type, payload)
+      return {
+        kafkaObject: cacheValue.kafkaObject.value,
+        cacheValue
+      }
+    })
+
+    const firstValue = cacheValuesWithObjects[0].cacheValue.kafkaObject.value
+    if (options.sendEvent !== false) {
+      this.analytics.logEvent(DataEventType.PREPARED_OBJECT_BATCH, {
+        name: type,
+        questionnaire_name: firstValue['name'] || '',
+        questionnaire_timestamp: String(firstValue['timestamp'] || ''),
+        batch_size: String(cacheValuesWithObjects.length)
+      })
+    }
+
+    return this.cache.storeInCacheMultiple(type, cacheValuesWithObjects, options)
+  }
+
+  async sendAllFromCache(options: SendFromCacheOptions = {}): Promise<any> {
     if (this.isCacheSending) {
       return Promise.resolve([])
     }
@@ -225,13 +273,14 @@ export class KafkaService {
             }
 
             try {
-              const record = await this.convertEntryToRecord(kafkaKey, k, v)
-              if (record.record.records.length === 0) {
-                batchSuccessKeys.push(k)
-                this.logger.log('Kafka record is empty, skipping sending')
-                return
-              }
-              await this.sendToKafka(record.topic, record.record, headers)
+              const sentRecordCount = await this.sendCacheEntry(
+                kafkaKey,
+                k,
+                v,
+                headers,
+                options
+              )
+              if (sentRecordCount === 0) this.logger.log('Kafka record is empty, skipping sending')
               batchSuccessKeys.push(k)
             } catch (e) {
               if (e.message === 'Cache sending cancelled') {
@@ -254,7 +303,7 @@ export class KafkaService {
 
         if (batchSuccessKeys.length > 0) {
           try {
-            await this.cache.removeFromCacheMultiple(batchSuccessKeys)
+            await this.cache.removeFromCacheMultiple(batchSuccessKeys, { sendEvent: false })
             successKeys.push(...batchSuccessKeys)
             this.logger.log(`Removed ${batchSuccessKeys.length} successfully sent items from cache`)
           } catch (error) {
@@ -276,6 +325,8 @@ export class KafkaService {
         await this.sendDataErrorNotification()
       }
 
+      this.sendCacheSendSummary(successKeys.length, failedKeys.length, this.cancelSending)
+
       const result = {
         successKeys,
         failedKeys,
@@ -287,7 +338,7 @@ export class KafkaService {
     } catch (error) {
       this.setCacheSending(false)
       this.cancelSending = false
-      this.logger.error('Error in sendAllFromCache:', error)
+      this.logger.log('Error in sendAllFromCache:', error)
       throw error
     } finally {
       this.setCacheSending(false)
@@ -296,23 +347,99 @@ export class KafkaService {
     }
   }
 
-  convertEntryToRecord(kafkaKey, k, v) {
+  convertEntryToRecord(kafkaKey, k, v, options: SendFromCacheOptions = {}) {
     const type = v.name
+    const payloadOptions: KafkaPayloadStreamOptions = {
+      stream: this.shouldStreamKafkaPayload(type, options),
+      pageSize: options.healthkitPageSize
+    }
     return this.schema.getKafkaPayload(
       type,
       kafkaKey,
       v.kafkaObject.value,
       k,
-      this.topics
+      this.topics,
+      payloadOptions
     )
+  }
+
+  private async sendCacheEntry(
+    kafkaKey,
+    cacheKey,
+    cacheValue,
+    headers: HttpHeaders,
+    options: SendFromCacheOptions = {}
+  ): Promise<number> {
+    const payloadOrStream = this.convertEntryToRecord(kafkaKey, cacheKey, cacheValue, options)
+    if (isObservable(payloadOrStream)) {
+      return this.sendStreamToKafka(payloadOrStream, headers)
+    }
+    const payload = await payloadOrStream
+    return this.sendPayloadToKafka(payload, headers)
+  }
+
+  private sendStreamToKafka(payloadStream: Observable<any>, headers: HttpHeaders): Promise<number> {
+    let sentRecordCount = 0
+
+    return new Promise((resolve, reject) => {
+      payloadStream
+        .pipe(
+          concatMap(payload => {
+            if (this.cancelSending) {
+              throw new Error('Cache sending cancelled')
+            }
+            if (!payload?.record?.records?.length) {
+              return of(0)
+            }
+            return from(
+              this.sendToKafka(payload.topic, payload.record, headers).then(
+                () => payload.record.records.length
+              )
+            )
+          })
+        )
+        .subscribe({
+          next: sentCount => {
+            sentRecordCount += sentCount
+          },
+          error: error => reject(error),
+          complete: () => resolve(sentRecordCount)
+        })
+    })
+  }
+
+  private async sendPayloadToKafka(payload, headers: HttpHeaders): Promise<number> {
+    if (!payload?.record?.records?.length) {
+      return 0
+    }
+    await this.sendToKafka(payload.topic, payload.record, headers)
+    return payload.record.records.length
+  }
+
+  private shouldStreamKafkaPayload(type: string, options: SendFromCacheOptions): boolean {
+    if (!(typeof type === 'string' && type.toLowerCase().includes(SchemaType.HEALTHKIT))) {
+      return false
+    }
+    return options.streamHealthkitPayloads !== false
   }
 
   sendToKafka(topic, record, headers): Promise<any> {
     const allRecords = record.records
-    return this.postData(JSON.stringify(record), topic, headers)
-      .then(() => this.sendEvent(allRecords[0], DataEventType.SEND_SUCCESS))
+    const jsonData = JSON.stringify(record)
+    // Compress with pako and convert directly to base64
+    const gzippedBytesB64 = fromByteArray(pako.gzip(jsonData))
+
+    return this.postData(
+      gzippedBytesB64,
+      topic,
+      headers.set('Content-Encoding', DefaultCompressedContentEncoding),
+      true // isBase64 flag
+    )
       .catch(e => {
-        this.sendEvent(allRecords[0], DataEventType.SEND_ERROR, e)
+        if (e.name == this.HTTP_ERROR) {
+          this.logger.log('Retrying uncompressed..')
+          return this.postData(record, topic, headers, false)
+        }
         throw e
       })
   }
@@ -328,18 +455,6 @@ export class KafkaService {
       setTimeout(() => {
         // this.progressSubject.next(Math.min(Math.max(progress / cacheSize, 0), 1))
       }, 0)
-    }
-  }
-
-  sendEvent(record, eventType, error?) {
-    if (record && record.value) {
-      this.sendDataEvent(
-        eventType,
-        eventType,
-        record.value.name ? record.value.name : record.value.questionnaireName,
-        record.time,
-        error ? JSON.stringify(error) : ''
-      )
     }
   }
 
@@ -371,19 +486,24 @@ export class KafkaService {
     return result
   }
 
-  postData(data: any, topic: string, headers: HttpHeaders): Promise<any> {
+  postData(data: any, topic: string, headers: HttpHeaders, isBase64: boolean = false): Promise<any> {
     const nativeHeaders = this.convertHeaders(headers)
-
-    const request = {
+    const request: any = {
       url: `${this.KAFKA_CLIENT_URL}${this.URI_topics}${topic}`,
-      data: data,
       headers: nativeHeaders,
       method: 'POST',
-      readTimeout: KafkaService.HTTP_TIMEOUT,
-      connectTimeout: KafkaService.HTTP_TIMEOUT,
     }
 
-    const requestPromise = CapacitorHttp.request(request)
+    if (isBase64) {
+      request.data = data // base64 string
+      request.dataIsBase64 = true
+    } else {
+      request.data = data
+    }
+    request.connectionTimeout = KafkaService.HTTP_TIMEOUT
+    request.readTimeout = KafkaService.HTTP_TIMEOUT
+
+    const requestPromise = Http.request(request)
       .then(response => {
         if (response.status < 200 || response.status >= 300) {
           throw new HttpErrorResponse({
@@ -492,12 +612,37 @@ export class KafkaService {
   }
 
   sendDataEvent(type, name, questionnaire, timestamp, error?) {
+    if (!type) return
     this.analytics.logEvent(type, {
       name,
       questionnaire_name: questionnaire,
       questionnaire_timestamp: String(timestamp),
       error: JSON.stringify(error)
     })
+  }
+
+  private sendCacheSendSummary(successCount: number, failedCount: number, cancelled: boolean) {
+    if (successCount === 0 && failedCount === 0) return
+
+    this.analytics.logEvent(DataEventType.SEND_SUMMARY, {
+      success_count: String(successCount),
+      failed_count: String(failedCount),
+      cancelled: String(cancelled)
+    })
+
+    if (successCount > 0) {
+      this.analytics.logEvent(DataEventType.SEND_SUCCESS, {
+        name: 'cache_batch',
+        batch_size: String(successCount)
+      })
+    }
+
+    if (failedCount > 0) {
+      this.analytics.logEvent(DataEventType.SEND_ERROR, {
+        name: 'cache_batch',
+        batch_size: String(failedCount)
+      })
+    }
   }
 
   reset() {

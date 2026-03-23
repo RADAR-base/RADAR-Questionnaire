@@ -31,10 +31,13 @@ export enum EnrolmentEventType {
 
 export enum DataEventType {
   PREPARED_OBJECT = 'prepared_kafka_object',
+  PREPARED_OBJECT_BATCH = 'prepared_kafka_object_batch',
   CACHED = 'send_to_cache',
+  CACHED_BATCH = 'send_to_cache_batch',
   REMOVED_FROM_CACHE = 'removed_from_cache',
   SEND_SUCCESS = 'send_success',
-  SEND_ERROR = 'send_error'
+  SEND_ERROR = 'send_error',
+  SEND_SUMMARY = 'send_summary'
 }
 
 export enum ConfigEventType {

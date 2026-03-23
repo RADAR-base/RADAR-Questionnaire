@@ -6,6 +6,7 @@ import {
   DefaultSchemaSpecEndpoint
 } from 'src/assets/data/defaultConfig'
 import * as YAML from 'yaml'
+import { Observable } from 'rxjs'
 
 import { LogService } from '../../misc/log.service'
 import { TokenService } from '../../token/token.service'
@@ -71,8 +72,9 @@ export abstract class ConverterService {
     kafkaKey,
     kafkaObject: any,
     cacheKey: any,
-    topics
-  ): Promise<any[]> {
+    topics,
+    options?: any
+  ): Promise<any[]> | Observable<any> {
     return this.getKafkaTopic(kafkaObject, topics).then(topic =>
       this.getSchemas(topic).then(schema => {
         return Promise.all([

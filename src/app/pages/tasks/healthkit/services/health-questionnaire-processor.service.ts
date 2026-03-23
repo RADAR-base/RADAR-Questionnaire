@@ -68,9 +68,7 @@ export class HealthQuestionnaireProcessorService extends QuestionnaireProcessorS
                 return Promise.resolve()
               }
 
-              return Promise.all(
-                batch.map(obj => this.kafka.prepareKafkaObjectAndStore(obj.type, obj.value))
-              ).then(() => {
+              return this.storeKafkaBatch(batch).then(() => {
                 if (endIndex < kafkaObjects.length) {
                   return processBatch(endIndex)
                 }
@@ -135,7 +133,7 @@ export class HealthQuestionnaireProcessorService extends QuestionnaireProcessorS
         this.healthkit.setTotalHealthkitDataCount(dividedObjects.length).catch(() => { })
 
         // Store all, mark upload-ready, send cache, and ONLY THEN mark task complete if all sent
-        return Promise.all(dividedObjects.map(v => this.kafka.prepareKafkaObjectAndStore(type, v)))
+        return this.kafka.prepareKafkaObjectsAndStoreMultiple(type, dividedObjects, { sendEvent: false })
           .then(() => this.healthkit.setUploadReadyFlag(true))
           .then(() => this.kafka.sendAllFromCache())
           .then((sendResult) => {
@@ -207,6 +205,20 @@ export class HealthQuestionnaireProcessorService extends QuestionnaireProcessorS
 
   isValidDataType(key: HealthkitDataType) {
     return HealthkitStringDataTypes.has(key) || HealthkitFloatDataTypes.has(key)
+  }
+
+  private storeKafkaBatch(batch: Array<{ type: SchemaType, value: any }>): Promise<any> {
+    if (!batch.length) return Promise.resolve()
+    const groupedByType = batch.reduce((acc: Record<string, any[]>, entry) => {
+      if (!acc[entry.type]) acc[entry.type] = []
+      acc[entry.type].push(entry.value)
+      return acc
+    }, {})
+
+    const storePromises = Object.keys(groupedByType).map((type) => {
+      return this.kafka.prepareKafkaObjectsAndStoreMultiple(type, groupedByType[type], { sendEvent: false })
+    })
+    return Promise.all(storePromises)
   }
 
   sendAllFromCache() {

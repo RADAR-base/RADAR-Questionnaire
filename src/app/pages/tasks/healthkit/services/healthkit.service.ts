@@ -41,6 +41,8 @@ export interface AttemptProgress {
   cacheSize: number
 }
 
+type HKitSample = Record<string, any> & { uuid?: string; startDate?: string; endDate?: string };
+
 @Injectable({
   providedIn: 'root'
 })
@@ -217,6 +219,105 @@ export class HealthkitService {
     } catch (e) {
       return []
     }
+  }
+
+  async queryPage(
+    queryStartTime: Date,
+    queryEndTime: Date,
+    dataType: string,
+    limit: number
+  ): Promise<HKitSample[]> {
+    try {
+        const queryOptions = {
+        sampleName: dataType,
+        startDate: queryStartTime.toISOString(),
+        endDate: queryEndTime.toISOString(),
+        limit,
+      }
+
+      const res = await CapacitorHealthkit.queryHKitSampleType(queryOptions)
+      const rows: HKitSample[] = res?.resultData ?? []
+
+      return rows
+    } catch {
+      return []
+    }
+  }
+
+  private getSampleId(sample: HKitSample): string {
+    return sample.uuid ?? `${sample.startDate}|${sample.endDate}`
+  }
+
+  queryPaged$(
+    queryStartTime: Date,
+    queryEndTime: Date,
+    dataType: string,
+    pageSize = 3600
+  ): Observable<HKitSample[]> {
+    return new Observable<HKitSample[]>(subscriber => {
+      let cancelled = false
+      ;(async () => {
+        try {
+          let cursorStartMs = setDateTimeToMidnightEpoch(queryStartTime)
+          const queryEnd = queryEndTime
+          let boundaryStartMs = cursorStartMs
+          let boundaryUUIDs = new Set<string>()
+
+          while (!cancelled) {
+            if (cursorStartMs > queryEnd.getTime()) {
+              subscriber.complete()
+              return
+            }
+
+            const page = await this.queryPage(new Date(cursorStartMs), queryEnd, dataType, pageSize)
+            if (!page.length) {
+              subscriber.complete()
+              return
+            }
+
+            const filtered: HKitSample[] = []
+            for (const s of page) {
+              const sStartMs = +new Date(s.startDate)
+              if (!Number.isFinite(sStartMs) || sStartMs < cursorStartMs) continue
+              const id = this.getSampleId(s)
+              if (sStartMs === boundaryStartMs && boundaryUUIDs.has(id)) continue
+              filtered.push(s)
+            }
+
+            if (!filtered.length) {
+              cursorStartMs = boundaryStartMs + 1
+              boundaryStartMs = cursorStartMs
+              boundaryUUIDs = new Set<string>()
+              continue
+            }
+
+            subscriber.next(filtered)
+
+            const last = filtered[filtered.length - 1]
+            const lastStartMs = +new Date(last.startDate)
+            const lastBoundaryIds = new Set<string>(
+              filtered
+                .filter(s => +new Date(s.startDate) === lastStartMs)
+                .map(s => this.getSampleId(s))
+            )
+
+            if (lastStartMs === boundaryStartMs) {
+              lastBoundaryIds.forEach(id => boundaryUUIDs.add(id))
+            } else {
+              boundaryStartMs = lastStartMs
+              boundaryUUIDs = lastBoundaryIds
+            }
+            cursorStartMs = boundaryStartMs
+          }
+        } catch (e) {
+          subscriber.error(e)
+        }
+      })()
+
+      return () => {
+        cancelled = true
+      }
+    })
   }
 
   getDataTypesFromTask(task) {

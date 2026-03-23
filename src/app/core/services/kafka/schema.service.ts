@@ -9,6 +9,7 @@ import { SubjectConfigService } from '../config/subject-config.service'
 import { ConverterFactoryService } from './converters/converter-factory.service.'
 import { KeyConverterService } from './converters/key-converter.service'
 import { Platform } from '@ionic/angular'
+import { Observable } from 'rxjs'
 
 @Injectable()
 export class SchemaService {
@@ -47,11 +48,12 @@ export class SchemaService {
     kafkaKey,
     kafkaObject: any,
     cacheKey: string,
-    topics
-  ): Promise<any> {
+    topics,
+    options?: any
+  ): Promise<any> | Observable<any> {
     return this.converterFactory
       .getConverter(type)
-      .getKafkaPayload(type, kafkaKey, kafkaObject, cacheKey, topics)
+      .getKafkaPayload(type, kafkaKey, kafkaObject, cacheKey, topics, options)
   }
 
   reset() {

@@ -54,8 +54,7 @@ export class MPTokenService extends TokenService {
           .toPromise()
       })
       .then((res: any) => {
-        this.setTokens(res)
-        return res
+        return this.setTokens(res).then(() => res)
       })
   }
 

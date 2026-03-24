@@ -65,8 +65,7 @@ export class HydraTokenService extends TokenService {
       })
       .then((res: any) => {
         res.iat = this.jwtHelper.decodeToken(res.access_token)['iat']
-        this.setTokens(res)
-        return res
+        return this.setTokens(res).then(() => res)
       })
   }
 

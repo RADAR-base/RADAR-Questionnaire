@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core'
+import { CapacitorCookies } from '@capacitor/core'
 import { compare } from 'compare-versions'
 
 import {
@@ -313,7 +314,11 @@ export class ConfigService {
     this.sendConfigChangeEvent(ConfigEventType.APP_RESET)
     this.cancelNotifications()
     this.notifications.unregisterFromNotifications()
-    return Promise.all([this.resetConfig(), this.resetCache()]).then(() =>
+    return Promise.all([
+      this.resetConfig(),
+      this.resetCache(),
+      CapacitorCookies.clearAllCookies().catch(() => { })
+    ]).then(() =>
       this.subjectConfig.reset()
     )
   }

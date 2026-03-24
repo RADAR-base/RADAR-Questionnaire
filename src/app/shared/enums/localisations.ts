@@ -113,6 +113,7 @@ export class LocKeys {
   static STATUS_LOADING = new LocKeys('STATUS_LOADING')
   static STATUS_SUCCESS = new LocKeys('STATUS_SUCCESS')
   static STATUS_FAILURE = new LocKeys('STATUS_FAILURE')
+  static STATUS_SORRY = new LocKeys('STATUS_SORRY')
   static STATUS_NOW = new LocKeys('STATUS_NOW')
   static STATUS_UPDATE_AVAILABLE = new LocKeys('STATUS_UPDATE_AVAILABLE')
   static STATUS_UPDATE_AVAILABLE_DESC = new LocKeys(

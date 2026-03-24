@@ -6,6 +6,17 @@ import { NotificationService } from '../../../core/services/notifications/notifi
 import { ScheduleService } from '../../../core/services/schedule/schedule.service'
 import { TokenService } from '../../../core/services/token/token.service'
 import { UsageService } from '../../../core/services/usage/usage.service'
+import { withTimeout, withTimeoutAndDefault } from '../../../shared/utilities/timeout-promise'
+
+const TIMEOUT = {
+  STORAGE: 10_000,
+  TOKEN_REFRESH: 30_000,
+  NOTIFICATION_INIT: 15_000,
+  PERMISSION_CHECK: 10_000,
+  SCHEDULE_INIT: 15_000,
+  CONFIG_FETCH: 60_000,
+  EVAL_ENROLMENT: 45_000,
+}
 
 @Injectable({
   providedIn: 'root'
@@ -18,34 +29,68 @@ export class SplashService {
     private schedule: ScheduleService,
     private usage: UsageService,
     private notificationService: NotificationService
-  ) {}
+  ) { }
 
   evalEnrolment() {
-    return this.token
-      .refresh()
-      .catch(e => {
-        if (e.status == 401) {
-          if (
-            e.error.error_description &&
-            e.error.error_description.includes(this.INVALID_USER_ERROR)
-          )
-            return this.token.setTokens(null)
-        } else return
-      })
-      .then(() => this.token.isValid().catch(() => false))
+    return withTimeout(
+      this.token
+        .refresh()
+        .catch(e => {
+          if (e.status == 401) {
+            if (
+              e.error.error_description &&
+              e.error.error_description.includes(this.INVALID_USER_ERROR)
+            )
+              return this.token.setTokens(null)
+          } else return
+        })
+        .then(() => this.token.isValid().catch(() => false)),
+      TIMEOUT.EVAL_ENROLMENT,
+      'evalEnrolment'
+    ).catch(e => {
+      console.warn('[SPLASH] evalEnrolment failed, treating as invalid:', e.message || e)
+      return false
+    })
   }
 
   isEnrolled() {
-    return this.token.getTokens().then(tokens => !!tokens)
+    return withTimeoutAndDefault(
+      this.token.getTokens().then(tokens => !!tokens),
+      TIMEOUT.STORAGE,
+      false,
+      'isEnrolled'
+    )
   }
 
   loadConfig() {
-    return this.token
-      .refresh()
-      .then(() => this.notificationService.init())
-      .then(() => this.notificationService.permissionCheck())
-      .then(() => this.schedule.init())
-      .then(() => this.config.fetchConfigState())
+    return withTimeout(
+      this.token.refresh(),
+      TIMEOUT.TOKEN_REFRESH,
+      'token.refresh'
+    )
+      .then(() => withTimeoutAndDefault(
+        this.notificationService.init(),
+        TIMEOUT.NOTIFICATION_INIT,
+        undefined,
+        'notification.init'
+      ))
+      .then(() => withTimeoutAndDefault(
+        this.notificationService.permissionCheck(),
+        TIMEOUT.PERMISSION_CHECK,
+        undefined,
+        'notification.permissionCheck'
+      ))
+      .then(() => withTimeoutAndDefault(
+        this.schedule.init(),
+        TIMEOUT.SCHEDULE_INIT,
+        undefined,
+        'schedule.init'
+      ))
+      .then(() => withTimeout(
+        this.config.fetchConfigState(),
+        TIMEOUT.CONFIG_FETCH,
+        'config.fetchConfigState'
+      ))
   }
 
   isAppUpdateAvailable() {

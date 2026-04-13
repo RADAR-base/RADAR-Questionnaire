@@ -48,6 +48,12 @@ export class QuestionComponent implements OnInit, OnChanges {
   answer: EventEmitter<Answer> = new EventEmitter<Answer>()
   @Output()
   nextAction: EventEmitter<any> = new EventEmitter<any>()
+  @Output()
+  readAloud: EventEmitter<string> = new EventEmitter<string>()
+  @Input()
+  isReadAloudAvailable = false
+  @Input()
+  isReadAloudActive = false
 
   value: any
   currentlyShown = false
@@ -227,5 +233,13 @@ export class QuestionComponent implements OnInit, OnChanges {
   onAudioRecordStart(start: boolean) {
     if (start) this.nextAction.emit(NextButtonEventType.DISABLE)
     else this.nextAction.emit(NextButtonEventType.ENABLE)
+  }
+
+  onReadAloudTap() {
+    if (!this.isReadAloudAvailable || !this.content?.nativeElement) return
+    const text = this.content.nativeElement.innerText
+      .replace(/\s+/g, ' ')
+      .trim()
+    this.readAloud.emit(text)
   }
 }

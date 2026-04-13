@@ -6,6 +6,7 @@ import { Observable, Subscription } from 'rxjs'
 
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
+import { TextToSpeechService } from '../../../core/services/misc/text-to-speech.service'
 import { UsageService } from '../../../core/services/usage/usage.service'
 import {
   NextButtonEventType,
@@ -83,6 +84,8 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
 
   backButtonListener: Subscription
   showProgressCount: Promise<boolean>
+  isReadAloudAvailable = false
+  isReadAloudActive = false
 
   constructor(
     public navCtrl: NavController,
@@ -93,6 +96,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
     private router: Router,
     private appLauncher: AppLauncherService,
     private alertService: AlertService,
+    private textToSpeechService: TextToSpeechService,
   ) {
     this.backButtonListener = this.platform.backButton.subscribe(() => {
       this.sendCompletionLog()
@@ -102,12 +106,16 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
 
   ionViewDidLeave() {
     KeepAwake.allowSleep()
+    this.stopReadAloud()
     this.sendCompletionLog()
     this.questionsService.reset()
     this.backButtonListener.unsubscribe()
   }
 
   ngOnInit() {
+    void this.textToSpeechService
+      .isReadAloudAvailable()
+      .then(v => (this.isReadAloudAvailable = v))
     const nav = this.router.getCurrentNavigation()
     if (nav) {
       this.task = nav.extras.state as Task
@@ -260,6 +268,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
   }
 
   nextQuestion() {
+    this.stopReadAloud()
     const questionPosition = this.questionsService.getNextQuestion(
       this.groupedQuestions,
       this.currentQuestionGroupId
@@ -277,6 +286,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
   }
 
   previousQuestion() {
+    this.stopReadAloud()
     const currentQuestions = this.getCurrentQuestions()
     this.questionOrder.pop()
     this.currentQuestionGroupId =
@@ -306,6 +316,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
   }
 
   navigateToFinishPage() {
+    this.stopReadAloud()
     // Send the finish event and submit timestamps
     this.progressCount = 1
     this.sendEvent(UsageEventType.QUESTIONNAIRE_FINISHED)
@@ -445,7 +456,24 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
     }
   }
 
+  onReadAloud(textToRead: string) {
+    if (!this.isReadAloudAvailable) return
+    if (this.isReadAloudActive) return this.stopReadAloud()
+    if (!textToRead?.trim()) return
+    const language = this.localization.getLanguage()?.value
+    this.isReadAloudActive = true
+    this.textToSpeechService
+      .speak(textToRead, language)
+      .finally(() => (this.isReadAloudActive = false))
+  }
+
+  private stopReadAloud() {
+    this.textToSpeechService.stop()
+    this.isReadAloudActive = false
+  }
+
   ngOnDestroy() {
+    this.stopReadAloud()
     // Cleanup swiper
     if (this.slides && this.slides.nativeElement && this.slides.nativeElement.swiper) {
       this.slides.nativeElement.swiper.destroy(true, true)

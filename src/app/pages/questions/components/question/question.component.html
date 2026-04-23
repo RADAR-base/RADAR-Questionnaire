@@ -1,9 +1,9 @@
 <div class="content" #content [class.fade]="!currentlyShown" [class.content-matrix]="isMatrix">
   <div class="header" dir="auto">
-    <p *ngIf="!isSectionHeaderHidden" [innerHTML]="question.section_header"></p>
+    <p *ngIf="!isSectionHeaderHidden" [innerHTML]="sanitizedSectionHeader"></p>
     <div *ngIf="!isFieldLabelHidden" class="field-container" [class.field-container-matrix]="isMatrix" dir="auto">
       <div class="question-title-row">
-        <h2 dir="auto" [innerHTML]="question.field_label"></h2>
+        <h2 dir="auto" [innerHTML]="sanitizedFieldLabel"></h2>
         <ion-button *ngIf="isReadAloudAvailable && currentlyShown" fill="clear" size="small" color="medium"
           class="read-aloud-icon-button" (click)="onReadAloudTap()"
           [attr.aria-label]="isReadAloudActive ? 'Stop reading question aloud' : 'Read question aloud'">

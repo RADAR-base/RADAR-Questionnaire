@@ -6,8 +6,10 @@ import {
   OnChanges,
   OnInit,
   Output,
+  SecurityContext,
   ViewChild
 } from '@angular/core'
+import { DomSanitizer } from '@angular/platform-browser'
 
 import {
   KeyboardEventType,
@@ -67,6 +69,8 @@ export class QuestionComponent implements OnInit, OnChanges {
   inputHeight = 0
   isAutoHeight = false
   showScrollButton = false
+  sanitizedSectionHeader = ''
+  sanitizedFieldLabel = ''
   defaultYesNoResponse: Response[] = [
     { code: '1', label: 'Yes' },
     { code: '0', label: 'No' }
@@ -105,11 +109,12 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.checkbox
   ])
 
-  constructor() {
+  constructor(private sanitizer: DomSanitizer) {
     this.value = null
   }
 
   ngOnInit() {
+    this.updateSanitizedHtml()
     this.isScrollable = !this.NON_SCROLLABLE_SET.has(this.question.field_type)
     this.isFieldLabelHidden = this.HIDE_FIELD_LABEL_SET.has(
       this.question.field_type
@@ -129,6 +134,7 @@ export class QuestionComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
+    this.updateSanitizedHtml()
     this.initRange()
     if (this.questionIndex === this.currentIndex) {
       this.currentlyShown = true
@@ -243,5 +249,14 @@ export class QuestionComponent implements OnInit, OnChanges {
       .replace(/\s+/g, ' ')
       .trim()
     this.readAloud.emit(text)
+  }
+
+  private sanitizeHtml(value: string): string {
+    return this.sanitizer.sanitize(SecurityContext.HTML, value || '') || ''
+  }
+
+  private updateSanitizedHtml() {
+    this.sanitizedSectionHeader = this.sanitizeHtml(this.question?.section_header)
+    this.sanitizedFieldLabel = this.sanitizeHtml(this.question?.field_label)
   }
 }

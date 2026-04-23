@@ -15,6 +15,14 @@ ion-radio-group {
   align-content: center;
 }
 
+ion-radio-group.image-only-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  align-items: stretch;
+}
+
 .item-radio-checked {
   background-color: var(--cl-primary) !important;
 }
@@ -55,4 +63,57 @@ ion-radio {
   --color: transparent;
   --color-checked: transparent;
   width: 0;
+}
+
+.radio-option-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.radio-option-image {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+ion-item.image-only-option {
+  width: calc(50% - 6px);
+  aspect-ratio: 1 / 1;
+  height: auto;
+  min-width: 0;
+  padding: 4px;
+  margin-bottom: 0;
+  border-radius: 18px;
+  justify-content: center;
+  align-items: center;
+  --padding-start: 0;
+  --padding-end: 0;
+  --inner-padding-start: 0;
+  --inner-padding-end: 0;
+}
+
+ion-item.image-only-option .radio-option-content {
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+ion-item.image-only-option ion-label {
+  margin: 0 !important;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+ion-item.image-only-option .radio-option-image {
+  width: 90%;
+  height: 90%;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 12px;
+  background: transparent;
 }

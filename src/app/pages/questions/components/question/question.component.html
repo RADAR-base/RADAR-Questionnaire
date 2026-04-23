@@ -57,6 +57,12 @@
         (valueChange)="emitAnswer($event)" (onRecordStart)="onAudioRecordStart($event)">
       </audio-input>
 
+      <guided-audio-input *ngSwitchCase="'guided-audio'" [text]="question.field_label"
+        [image]="question.field_annotation?.image" [config]="question.field_annotation"
+        [currentlyShown]="currentlyShown" (valueChange)="emitAnswer($event)"
+        (onRecordStart)="onAudioRecordStart($event)">
+      </guided-audio-input>
+
       <timed-test *ngSwitchCase="'timed'" [image]="question.field_annotation.image"
         [timer]="question.field_annotation.timer" [currentlyShown]="currentlyShown" (valueChange)="emitAnswer($event)">
       </timed-test>

@@ -29,7 +29,8 @@ import { DefaultQuestionnaireProcessorService } from './questionnaire-processor/
 export class QuestionsService {
   PREVIOUS_BUTTON_DISABLED_SET: Set<QuestionType> = new Set([
     QuestionType.timed,
-    QuestionType.audio
+    QuestionType.audio,
+    QuestionType.guided_audio
   ])
   NEXT_BUTTON_ENABLED_SET: Set<QuestionType> = new Set(
     DefaultSkippableQuestionnaireTypes

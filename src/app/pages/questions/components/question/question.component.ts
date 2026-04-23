@@ -75,6 +75,7 @@ export class QuestionComponent implements OnInit, OnChanges {
   NON_SCROLLABLE_SET: Set<QuestionType> = new Set([
     QuestionType.timed,
     QuestionType.audio,
+    QuestionType.guided_audio,
     QuestionType.info,
     QuestionType.text,
     QuestionType.descriptive,
@@ -83,6 +84,7 @@ export class QuestionComponent implements OnInit, OnChanges {
 
   HIDE_FIELD_LABEL_SET: Set<QuestionType> = new Set([
     QuestionType.audio,
+    QuestionType.guided_audio,
     QuestionType.descriptive,
     QuestionType.healthkit
   ])

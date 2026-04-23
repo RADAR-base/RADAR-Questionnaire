@@ -52,6 +52,7 @@ export class QuestionType {
   static range = 'range'
   static slider = 'slider'
   static audio = 'audio'
+  static guided_audio = 'guided-audio'
   static timed = 'timed'
   static info = 'info'
   static text = 'text'
@@ -59,6 +60,31 @@ export class QuestionType {
   static descriptive = 'descriptive'
   static matrix_radio = 'matrix-radio'
   static healthkit = 'healthkit'
+}
+
+/**
+ * Configuration for the guided-audio question type.
+ * Set via `field_annotation` in the questionnaire JSON.
+ */
+export interface GuidedAudioAnnotation {
+  /** Automatically read the prompt aloud via TTS when the question becomes visible. */
+  auto_tts?: boolean
+  /** Optional pre-recorded prompt audio to play instead of TTS. */
+  prompt_audio_src?: string
+  /** Delay in milliseconds before auto prompt starts (audio file or TTS). */
+  prompt_start_delay_ms?: number
+  /** Automatically start recording after TTS finishes (requires auto_tts). */
+  auto_record_after_tts?: boolean
+  /** Fixed recording duration in seconds. 0 = unlimited (manual stop only). */
+  record_seconds?: number
+  /** Show a "Replay instructions" button (allowed once per item). */
+  allow_replay_prompt?: boolean
+  /** Hide the on-screen prompt text (`field_label`) while keeping TTS behavior. */
+  hide_field_label?: boolean
+  /** Show an "Unable to speak" path with reason selection. */
+  unable_to_speak_option?: boolean
+  /** Optional image stimulus URL displayed above the prompt text. */
+  image?: string
 }
 
 export interface Response {
@@ -83,6 +109,7 @@ export interface Item {
   id: string
   response?: string
   value: any
+  image?: string
 }
 
 export interface InfoItem {

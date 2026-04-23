@@ -272,6 +272,7 @@ export const DefaultAudioRecordOptions = {
 export const DefaultAutoNextQuestionnaireTypes = [
   QuestionType.timed,
   QuestionType.audio,
+  QuestionType.guided_audio,
   QuestionType.healthkit
 ]
 

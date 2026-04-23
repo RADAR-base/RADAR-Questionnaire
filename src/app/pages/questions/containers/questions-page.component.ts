@@ -7,11 +7,13 @@ import { Observable, Subscription } from 'rxjs'
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { TextToSpeechService } from '../../../core/services/misc/text-to-speech.service'
+import { RemoteConfigService } from '../../../core/services/config/remote-config.service'
 import { UsageService } from '../../../core/services/usage/usage.service'
 import {
   NextButtonEventType,
   UsageEventType
 } from '../../../shared/enums/events'
+import { ConfigKeys } from '../../../shared/enums/config'
 import { LocKeys } from '../../../shared/enums/localisations'
 import {
   Assessment,
@@ -86,6 +88,10 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
   showProgressCount: Promise<boolean>
   isReadAloudAvailable = false
   isReadAloudActive = false
+  isAutoReadAloudEnabled = false
+  private autoReadAloudEnabledKey = new ConfigKeys(
+    'text_to_speech_auto_readaloud_enabled'
+  )
 
   constructor(
     public navCtrl: NavController,
@@ -97,6 +103,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
     private appLauncher: AppLauncherService,
     private alertService: AlertService,
     private textToSpeechService: TextToSpeechService,
+    private remoteConfig: RemoteConfigService
   ) {
     this.backButtonListener = this.platform.backButton.subscribe(() => {
       this.sendCompletionLog()
@@ -113,9 +120,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    void this.textToSpeechService
-      .isReadAloudAvailable()
-      .then(v => (this.isReadAloudAvailable = v))
+    void this.initReadAloudConfig()
     const nav = this.router.getCurrentNavigation()
     if (nav) {
       this.task = nav.extras.state as Task
@@ -127,7 +132,8 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
         .then(() => this.questionsService.getQuestionnairePayload(this.task))
         .then(res => {
           this.initQuestionnaire(res)
-          return this.updateToolbarButtons()
+          this.updateToolbarButtons()
+          this.autoReadAloudCurrentQuestion()
         })
     }
     // Initialize swiper with memory management
@@ -199,6 +205,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
     if (start) {
       this.slides.nativeElement.swiper.update()
       this.slideQuestion()
+      this.autoReadAloudCurrentQuestion()
     } else this.exitQuestionnaire()
   }
 
@@ -283,6 +290,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
     this.currentQuestionGroupId = this.nextQuestionGroupId
     this.slideQuestion()
     this.updateToolbarButtons()
+    this.autoReadAloudCurrentQuestion()
   }
 
   previousQuestion() {
@@ -297,6 +305,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
     if (!this.isRightButtonDisabled)
       this.questionsService.deleteLastAnswers(currentQuestions)
     this.slideQuestion()
+    this.autoReadAloudCurrentQuestion()
   }
 
   updateToolbarButtons() {
@@ -415,7 +424,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
   showDisabledButtonAlert() {
     const currentQuestionType = this.getCurrentQuestions()[0].field_type
     // NOTE: Show alert when next is tapped without finishing audio question
-    if (currentQuestionType == QuestionType.audio)
+    if (currentQuestionType == QuestionType.audio || currentQuestionType == QuestionType.guided_audio)
       this.alertService.showAlert({
         message: this.localization.translateKey(
           LocKeys.AUDIO_TASK_BUTTON_ALERT_DESC
@@ -460,11 +469,48 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
     if (!this.isReadAloudAvailable) return
     if (this.isReadAloudActive) return this.stopReadAloud()
     if (!textToRead?.trim()) return
+    this.startReadAloud(textToRead)
+  }
+
+  private startReadAloud(textToRead: string) {
     const language = this.localization.getLanguage()?.value
     this.isReadAloudActive = true
     this.textToSpeechService
       .speak(textToRead, language)
       .finally(() => (this.isReadAloudActive = false))
+  }
+
+  private autoReadAloudCurrentQuestion() {
+    if (!this.isAutoReadAloudEnabled || !this.isReadAloudAvailable) return
+    const currentQuestions = this.getCurrentQuestions()
+    if (!currentQuestions?.length) return
+
+    const textToRead = currentQuestions
+      .map(q => this.stripHtml(q.field_label || ''))
+      .join(' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+
+    if (!textToRead) return
+
+    this.stopReadAloud()
+    this.startReadAloud(textToRead)
+  }
+
+  private stripHtml(value: string): string {
+    return value.replace(/<[^>]*>/g, ' ')
+  }
+
+  private async initReadAloudConfig() {
+    this.isReadAloudAvailable = await this.textToSpeechService.isReadAloudAvailable()
+    const conf = await this.remoteConfig.read()
+    const autoReadAloud = (
+      await conf.getOrDefault(this.autoReadAloudEnabledKey, 'false')
+    )
+      .trim()
+      .toLowerCase()
+    this.isAutoReadAloudEnabled =
+      autoReadAloud === 'true' || autoReadAloud === '1' || autoReadAloud === 'yes'
   }
 
   private stopReadAloud() {

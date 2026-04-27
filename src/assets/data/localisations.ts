@@ -1661,6 +1661,16 @@ export const Localisations = {
     pl: 'Wprowadź tekst',
     hb: 'הזן טקסט'
   },
+   TEXT_INPUT_WARNING: {
+    da: 'Dette felt accepterer kun tal. Indtast venligst ikke specialtegn.',
+    de: 'Dieses Feld akzeptiert nur Zahlen. Bitte geben Sie keine Sonderzeichen ein.',
+    en: 'This field only accepts numbers. Please don\'t enter any special characters.',
+    es: 'Este campo solo acepta números. Por favor, no ingrese caracteres especiales.',
+    it: 'Questo campo accetta solo numeri. Per favore, non inserire caratteri speciali.',
+    nl: 'Dit veld accepteert alleen cijfers. Voer alstublieft geen speciale tekens in.',
+    pl: 'To pole akceptuje tylko liczby. Proszę nie wprowadzać znaków specjalnych.',
+    hb: 'שדה זה מקבל רק מספרים. אנא אל תכניס תווים מיוחדים.'
+  },
   EXTERNAL_APP_LAUNCH_DESC: {
     da: 'Afslut spørgeskemaet og start',
     de: 'Beenden Sie den Fragebogen und starten Sie',
@@ -1789,5 +1799,5 @@ export const Localisations = {
     nl: 'Zorg ervoor dat je met internet bent verbonden en wacht 2 uur voordat je de taak opnieuw in de app start.',
     pl: 'Upewnij się, że masz połączenie z internetem i odczekaj 2 godziny, zanim ponownie uruchomisz zadanie w aplikacji.',
     hb: 'ודא שאתה מחובר לאינטרנט והמתן שעתיים לפני שתתחיל שוב את המשימה באפליקציה.'
-  }
+  },
 }

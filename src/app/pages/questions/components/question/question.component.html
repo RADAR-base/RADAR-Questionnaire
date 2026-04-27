@@ -124,7 +124,7 @@
         *ngSwitchCase="'text'"
         (valueChange)="emitAnswer($event)"
         (keyboardEvent)="onKeyboardEvent($event)"
-        [type]="question.text_validation_type_or_show_slider_number"
+        [validationType]="question.text_validation_type_or_show_slider_number"
         [currentlyShown]="currentlyShown"
       ></text-input>
 

@@ -196,21 +196,6 @@ export class TextInputComponent implements OnInit, OnChanges {
     }
   }
 
-  // onInput(event: any) {
-  //   if (this.isNumeric) {
-  //     const input = event.target
-  //     // const value = input.value.replace(/[^0-9]/g, '')
-  //     if (!value.isdigit()) {
-  //       this.isFieldLabelHidden = false
-  //       console.log(`"You can't enter non-numeric value: ${this.value}"  `)
-  //     }
-  //     if (input.value !== value) {
-  //       input.value = value
-  //       this.textValue = value
-  //     }
-  //   }
-  // }
-
   async emitKeyboardEvent(value) {
     value = value.toLowerCase()
     if (value == KeyboardEventType.ENTER) await Keyboard.hide()

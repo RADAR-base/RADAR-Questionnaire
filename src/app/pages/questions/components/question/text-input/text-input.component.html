@@ -24,9 +24,13 @@
 </ng-container>
 
 <ng-container *ngIf="showTextInput && currentlyShown">
+  <ion-label *ngIf="showWarningField">
+    {{ 'TEXT_INPUT_WARNING' | translate }}
+  </ion-label>
   <ion-item color="none" class="input">
     <ion-input
       type="text"
+      [inputmode]="inputModeType"
       enterkeyhint="next"
       placeholder="{{ 'PLACEHOLDER_TEXT_INPUT' | translate }}"
       [(ngModel)]="textValue"

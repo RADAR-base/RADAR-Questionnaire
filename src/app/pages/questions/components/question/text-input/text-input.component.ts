@@ -2,8 +2,10 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnInit,
   Output,
+  SimpleChanges,
   ViewChild
 } from '@angular/core'
 import { Keyboard } from '@capacitor/keyboard'
@@ -19,7 +21,7 @@ import { KeyboardEventType } from '../../../../../shared/enums/events'
   templateUrl: 'text-input.component.html',
   styleUrls: ['text-input.component.scss']
 })
-export class TextInputComponent implements OnInit {
+export class TextInputComponent implements OnInit, OnChanges {
   @ViewChild('content', { static: false }) content
 
   @Output()
@@ -30,10 +32,13 @@ export class TextInputComponent implements OnInit {
   type: string
   @Input()
   currentlyShown: boolean
+  @Input()
+  validationType= ''
 
   showDatePicker: boolean
   showTimePicker: boolean
   showDurationPicker: boolean
+  showWarningField = false
   showTextInput = true
   showSeconds: boolean
 
@@ -54,12 +59,13 @@ export class TextInputComponent implements OnInit {
   }
   textValue = ''
   value = {}
+  inputModeType = 'text'
   DEFAULT_DATE_FORMAT = 'DD/MM/YYYY'
 
   constructor(
     private localization: LocalizationService,
     public modalCtrl: ModalController
-  ) { }
+  ) {}
 
   ngOnInit() {
     if (this.type.length) {
@@ -73,10 +79,17 @@ export class TextInputComponent implements OnInit {
     this.initValues()
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.validationType) {
+      this.inputModeType = this.validationType === 'number' ? 'numeric' : 'text'
+    }
+  }
+
   initValues() {
     if (this.showDatePicker) this.initDates()
     if (this.showTimePicker) this.initTime()
     if (this.showDurationPicker) this.initDuration()
+    this.inputModeType = this.validationType === 'number' ? 'numeric' : 'text'
   }
 
   initDates() {
@@ -133,7 +146,9 @@ export class TextInputComponent implements OnInit {
   }
 
   datePickerObj: any = {}
-  selectedDate: string = this.localization.moment(Date.now()).format(this.DEFAULT_DATE_FORMAT)
+  selectedDate: string = this.localization
+    .moment(Date.now())
+    .format(this.DEFAULT_DATE_FORMAT)
 
   async openDatePicker() {
     const datePickerModal = await this.modalCtrl.create({
@@ -148,7 +163,9 @@ export class TextInputComponent implements OnInit {
 
     datePickerModal.onDidDismiss().then(data => {
       let date = moment(data.data.date, this.DEFAULT_DATE_FORMAT)
-      this.selectedDate = date.isValid() ? date.format(this.DEFAULT_DATE_FORMAT) : this.selectedDate
+      this.selectedDate = date.isValid()
+        ? date.format(this.DEFAULT_DATE_FORMAT)
+        : this.selectedDate
 
       this.defaultDatePickerValue = {
         year: date.format('YYYY'),
@@ -164,8 +181,35 @@ export class TextInputComponent implements OnInit {
     if (typeof value !== 'string') {
       this.value = Object.assign(this.value, value)
       this.valueChange.emit(JSON.stringify(this.value))
-    } else this.valueChange.emit(value)
+    } else {
+      this.numberInputValidation(value)
+      this.valueChange.emit(value)
+    }
   }
+
+  numberInputValidation(value) {
+    if (this.validationType === 'number' && !/^[\d\s+]+$/.test(value)) {
+      this.showWarningField = true
+      console.log(`You can't enter non-numeric value: ${value}`)
+    } else {
+      this.showWarningField = false
+    }
+  }
+
+  // onInput(event: any) {
+  //   if (this.isNumeric) {
+  //     const input = event.target
+  //     // const value = input.value.replace(/[^0-9]/g, '')
+  //     if (!value.isdigit()) {
+  //       this.isFieldLabelHidden = false
+  //       console.log(`"You can't enter non-numeric value: ${this.value}"  `)
+  //     }
+  //     if (input.value !== value) {
+  //       input.value = value
+  //       this.textValue = value
+  //     }
+  //   }
+  // }
 
   async emitKeyboardEvent(value) {
     value = value.toLowerCase()

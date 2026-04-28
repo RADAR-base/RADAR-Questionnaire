@@ -26,6 +26,9 @@ export class ConfigKeys {
     'participant_attribute_order'
   )
   static SCHEDULE_YEAR_COVERAGE = new ConfigKeys('schedule_year_coverage')
+  static SCHEDULE_SAVE_TASKS_FROM_BEGINNING = new ConfigKeys(
+    'schedule_save_tasks_from_beginning'
+  )
 
   static APP_CREDITS_TITLE = new ConfigKeys('app_credits_title')
   static APP_CREDITS_BODY = new ConfigKeys('app_credits_body')

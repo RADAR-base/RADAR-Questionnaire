@@ -161,10 +161,10 @@ export class TasksService {
   getNextTask(tasks: Task[]): Task | undefined {
     let nextTask: Task = undefined
     if (tasks) {
-      const nextTasksNow = tasks.filter(task => this.isTaskStartable(task))
+      const nextTasksNow = this.getStartableTasks(tasks)
       const isLastTask = this.isLastTask(tasks)
       if (nextTasksNow.length) {
-        nextTask = nextTasksNow.sort((a, b) => a.order - b.order)[0]
+        nextTask = nextTasksNow[0]
       } else {
         nextTask = tasks.find(task => !this.isTaskExpired(task))
       }
@@ -173,6 +173,25 @@ export class TasksService {
       }
     }
     return nextTask
+  }
+
+  shouldShowIntroductionForFirstStartable(
+    tasks: Task[],
+    selectedTask: Task
+  ): boolean {
+    const startableTasks = this.getStartableTasks(tasks)
+
+    if (startableTasks.length <= 1) {
+      return true
+    }
+
+    return startableTasks[0].id === selectedTask.id
+  }
+
+  private getStartableTasks(tasks: Task[]): Task[] {
+    return (tasks || [])
+      .filter(task => this.isTaskStartable(task))
+      .sort((a, b) => a.order - b.order || a.timestamp - b.timestamp)
   }
 
   getCurrentDateMidnight() {

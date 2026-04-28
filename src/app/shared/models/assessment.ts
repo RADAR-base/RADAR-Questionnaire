@@ -31,6 +31,7 @@ export interface QuestionnaireMetadata {
 export enum ShowIntroductionType {
   ALWAYS = 'always',
   ONCE = 'once',
+  FIRST_STARTABLE = 'first_startable',
   NEVER = 'never'
 }
 

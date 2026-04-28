@@ -83,6 +83,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
 
   backButtonListener: Subscription
   showProgressCount: Promise<boolean>
+  showIntroductionForPendingSet = true
 
   constructor(
     public navCtrl: NavController,
@@ -110,7 +111,13 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
   ngOnInit() {
     const nav = this.router.getCurrentNavigation()
     if (nav) {
-      this.task = nav.extras.state as Task
+      const state = nav.extras.state as {
+        task?: Task
+        showIntroductionForPendingSet?: boolean
+      }
+      this.task = state?.task ? state.task : (state as unknown as Task)
+      this.showIntroductionForPendingSet =
+        state?.showIntroductionForPendingSet !== false
       this.showProgressCount = this.questionsService.getIsProgressCountShown()
 
       // Handle initial load
@@ -147,7 +154,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
     this.startTime = this.questionsService.getTime()
     this.questionTitle = res.title
     this.introduction = res.introduction
-    this.showIntroductionScreen = this.SHOW_INTRODUCTION_SET.has(
+    this.showIntroductionScreen = this.getIsIntroductionScreenShown(
       res.assessment.showIntroduction
     )
     this.questions = res.questions
@@ -165,6 +172,16 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
       this.groupedQuestions.get(groupKeys[0])
     ).map(Number)
     this.allQuestionIndices[0] = this.currentQuestionIndices
+  }
+
+  getIsIntroductionScreenShown(
+    showIntroduction: boolean | ShowIntroductionType
+  ): boolean {
+    if (showIntroduction === ShowIntroductionType.FIRST_STARTABLE) {
+      return this.showIntroductionForPendingSet
+    }
+
+    return this.SHOW_INTRODUCTION_SET.has(showIntroduction)
   }
 
   groupQuestionsByMatrixGroup(questions: Question[]) {

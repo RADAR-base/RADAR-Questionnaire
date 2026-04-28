@@ -147,7 +147,10 @@ export class QuestionsService {
   }
 
   updateAssessmentIntroduction(assessment, taskType) {
-    if (assessment.showIntroduction !== ShowIntroductionType.ALWAYS) {
+    if (
+      assessment.showIntroduction !== ShowIntroductionType.ALWAYS &&
+      assessment.showIntroduction !== ShowIntroductionType.FIRST_STARTABLE
+    ) {
       assessment.showIntroduction = false
       this.questionnaire.updateAssessment(taskType, assessment)
     }

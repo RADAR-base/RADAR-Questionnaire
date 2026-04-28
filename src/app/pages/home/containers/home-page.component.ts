@@ -218,7 +218,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
       : this.localization.translateKey(LocKeys.BTN_RETURN_PORTAL)
   }
 
-  startQuestionnaire(taskCalendarTask?: Task) {
+  async startQuestionnaire(taskCalendarTask?: Task) {
     // NOTE: User can start questionnaire from task calendar or start button in home.
     const task = taskCalendarTask ? taskCalendarTask : this.nextTask
 
@@ -229,8 +229,13 @@ export class HomePageComponent implements OnInit, OnDestroy {
         this.navCtrl.navigateForward('/healthkit', { state: task })
         this.showSyncNeeded = true
       } else {
+        const tasks = await this.tasks
+        const showIntroductionForPendingSet =
+          this.tasksService.shouldShowIntroductionForFirstStartable(tasks, task)
         this.usage.sendClickEvent('start_questionnaire')
-        this.navCtrl.navigateForward('/questions', { state: task })
+        this.navCtrl.navigateForward('/questions', {
+          state: { task, showIntroductionForPendingSet }
+        })
       }
     } else {
       this.showMissedInfo()

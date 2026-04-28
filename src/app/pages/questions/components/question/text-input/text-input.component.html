@@ -25,7 +25,11 @@
 
 <ng-container *ngIf="showTextInput && currentlyShown">
   <ion-label *ngIf="showWarningField">
-    {{ 'TEXT_INPUT_WARNING' | translate }}
+    {{
+      validationType === 'number'
+        ? ('NUMBER_INPUT_WARNING' | translate)
+        : ('TEXT_INPUT_WARNING' | translate)
+    }}
   </ion-label>
   <ion-item color="none" class="input">
     <ion-input

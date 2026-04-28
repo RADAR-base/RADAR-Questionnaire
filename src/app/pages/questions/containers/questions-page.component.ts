@@ -64,6 +64,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
   viewEntered = false
   progressCount = 0
   retryAlertShownCount = 0
+  isWarningFieldVisible = false
 
   SHOW_INTRODUCTION_SET: Set<boolean | ShowIntroductionType> = new Set([
     true,
@@ -273,6 +274,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
       this.currentQuestionIndices
     this.submitTimestamps()
     this.currentQuestionGroupId = this.nextQuestionGroupId
+    this.isWarningFieldVisible = false
     this.slideQuestion()
     this.updateToolbarButtons()
   }
@@ -284,6 +286,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
       this.questionOrder[this.questionOrder.length - 1]
     this.currentQuestionIndices =
       this.allQuestionIndices[this.currentQuestionGroupId]
+    this.isWarningFieldVisible = false
     this.updateToolbarButtons()
     if (!this.isRightButtonDisabled)
       this.questionsService.deleteLastAnswers(currentQuestions)
@@ -295,10 +298,16 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
     const currentQs = this.getCurrentQuestions()
     if (!currentQs) return
     this.isRightButtonDisabled =
-      !this.questionsService.areAllAnswered(currentQs) &&
-      !this.questionsService.getIsAnyNextEnabled(currentQs)
+      (!this.questionsService.areAllAnswered(currentQs) &&
+      !this.questionsService.getIsAnyNextEnabled(currentQs)) ||
+      this.isWarningFieldVisible
     this.isLeftButtonDisabled =
       this.questionsService.getIsAnyPreviousEnabled(currentQs)
+  }
+
+  handleWarningState(showWarning: boolean) {
+    this.isWarningFieldVisible = showWarning
+    this.updateToolbarButtons()
   }
 
   exitQuestionnaire() {

@@ -27,8 +27,8 @@ import { Task } from '../../../../shared/models/task'
   styleUrls: ['question.component.scss']
 })
 export class QuestionComponent implements OnInit, OnChanges {
-  @ViewChild('content', { static: false }) content
-  @ViewChild('input', { read: ElementRef, static: false }) inputEl
+  @ViewChild('content', { static: false }) content: ElementRef
+  @ViewChild('input', { read: ElementRef, static: false }) inputEl: ElementRef
 
   @Input()
   question: Question
@@ -48,6 +48,8 @@ export class QuestionComponent implements OnInit, OnChanges {
   answer: EventEmitter<Answer> = new EventEmitter<Answer>()
   @Output()
   nextAction: EventEmitter<any> = new EventEmitter<any>()
+  @Output()
+  warningState: EventEmitter<boolean> = new EventEmitter<boolean>()
 
   value: any
   currentlyShown = false
@@ -66,7 +68,7 @@ export class QuestionComponent implements OnInit, OnChanges {
     { code: '0', label: 'No' }
   ]
 
-  NON_SCROLLABLE_SET: Set<QuestionType> = new Set([
+  readonly NON_SCROLLABLE_SET: Set<QuestionType> = new Set([
     QuestionType.timed,
     QuestionType.audio,
     QuestionType.info,
@@ -75,14 +77,14 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.slider
   ])
 
-  HIDE_FIELD_LABEL_SET: Set<QuestionType> = new Set([
+  readonly HIDE_FIELD_LABEL_SET: Set<QuestionType> = new Set([
     QuestionType.audio,
     QuestionType.descriptive,
     QuestionType.healthkit
   ])
 
   // Input set where height is set to auto
-  AUTO_HEIGHT_INPUT_SET: Set<QuestionType> = new Set([
+  readonly AUTO_HEIGHT_INPUT_SET: Set<QuestionType> = new Set([
     QuestionType.radio,
     QuestionType.checkbox,
     QuestionType.yesno,
@@ -92,7 +94,7 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.matrix_radio
   ])
 
-  SCROLLBAR_VISIBLE_SET: Set<QuestionType> = new Set([
+  readonly SCROLLBAR_VISIBLE_SET: Set<QuestionType> = new Set([
     QuestionType.radio,
     QuestionType.checkbox
   ])
@@ -140,12 +142,26 @@ export class QuestionComponent implements OnInit, OnChanges {
         value: this.value,
         type: this.question.field_type
       })
+
+      if (this.isBlankTextInput()) {
+        this.nextAction.emit(NextButtonEventType.DISABLE)
+        return
+      }
+
       if (this.question.isAutoNext) {
         this.nextAction.emit(NextButtonEventType.AUTO)
       } else {
         this.nextAction.emit(NextButtonEventType.ENABLE)
       }
     }
+  }
+
+  isBlankTextInput(): boolean {
+    return (
+      this.question.field_type === QuestionType.text &&
+      (this.value === null ||
+        (typeof this.value === 'string' && this.value.trim().length === 0))
+    )
   }
 
   initRange() {
@@ -187,7 +203,11 @@ export class QuestionComponent implements OnInit, OnChanges {
         break
       }
       case KeyboardEventType.ENTER: {
-        this.nextAction.emit(NextButtonEventType.AUTO)
+        if (this.isBlankTextInput()) {
+          this.nextAction.emit(NextButtonEventType.DISABLE)
+        } else {
+          this.nextAction.emit(NextButtonEventType.AUTO)
+        }
         break
       }
       default:
@@ -199,7 +219,7 @@ export class QuestionComponent implements OnInit, OnChanges {
     return (
       this.SCROLLBAR_VISIBLE_SET.has(this.question.field_type) &&
       this.inputEl.nativeElement.scrollHeight >
-      this.inputEl.nativeElement.clientHeight
+        this.inputEl.nativeElement.clientHeight
     )
   }
 
@@ -209,7 +229,7 @@ export class QuestionComponent implements OnInit, OnChanges {
       this.showScrollButton &&
       event &&
       event.target.scrollTop >=
-      (event.target.scrollHeight - event.target.clientHeight) * 0.1
+        (event.target.scrollHeight - event.target.clientHeight) * 0.1
     ) {
       this.showScrollButton = false
     }
@@ -222,6 +242,10 @@ export class QuestionComponent implements OnInit, OnChanges {
       left: 0,
       behavior: 'smooth'
     })
+  }
+
+  onWarningFieldChange(showWarning: boolean) {
+    this.warningState.emit(showWarning)
   }
 
   onAudioRecordStart(start: boolean) {

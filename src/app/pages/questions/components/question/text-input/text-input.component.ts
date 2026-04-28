@@ -2,10 +2,8 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,
   OnInit,
   Output,
-  SimpleChanges,
   ViewChild
 } from '@angular/core'
 import { Keyboard } from '@capacitor/keyboard'
@@ -21,19 +19,21 @@ import { KeyboardEventType } from '../../../../../shared/enums/events'
   templateUrl: 'text-input.component.html',
   styleUrls: ['text-input.component.scss']
 })
-export class TextInputComponent implements OnInit, OnChanges {
+export class TextInputComponent implements OnInit {
   @ViewChild('content', { static: false }) content
 
   @Output()
   valueChange: EventEmitter<string> = new EventEmitter<string>()
   @Output()
   keyboardEvent: EventEmitter<string> = new EventEmitter<string>()
-  @Input()
-  type: string
+  @Output()
+  showWarningChange: EventEmitter<boolean> = new EventEmitter<boolean>()
   @Input()
   currentlyShown: boolean
   @Input()
-  validationType= ''
+  validationType = ''
+  @Input()
+  requiredField: string | boolean = false
 
   showDatePicker: boolean
   showTimePicker: boolean
@@ -68,28 +68,22 @@ export class TextInputComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit() {
-    if (this.type.length) {
-      this.showDatePicker = this.type.includes('date')
-      this.showTimePicker = this.type.includes('time')
-      this.showDurationPicker = this.type.includes('duration')
+    if (this.validationType.length) {
+      this.showDatePicker = this.validationType.includes('date')
+      this.showTimePicker = this.validationType.includes('time')
+      this.showDurationPicker = this.validationType.includes('duration')
+      this.inputModeType = this.validationType === 'number' ? 'numeric' : 'text'
     }
     this.showTextInput =
       !this.showDatePicker && !this.showTimePicker && !this.showDurationPicker
-    this.showSeconds = this.type.includes('second')
+    this.showSeconds = this.validationType.includes('second')
     this.initValues()
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.validationType) {
-      this.inputModeType = this.validationType === 'number' ? 'numeric' : 'text'
-    }
   }
 
   initValues() {
     if (this.showDatePicker) this.initDates()
     if (this.showTimePicker) this.initTime()
     if (this.showDurationPicker) this.initDuration()
-    this.inputModeType = this.validationType === 'number' ? 'numeric' : 'text'
   }
 
   initDates() {
@@ -188,18 +182,52 @@ export class TextInputComponent implements OnInit, OnChanges {
   }
 
   numberInputValidation(value) {
-    if (this.validationType === 'number' && !/^[\d\s+]+$/.test(value)) {
+    const isOptionalBlankText =
+      this.validationType === 'number' &&
+      this.isBlankTextInput &&
+      !this.isRequiredField
+
+    if (
+      this.validationType === 'number' &&
+      !isOptionalBlankText &&
+      !/^[\d]*$/.test(value)
+    ) {
       this.showWarningField = true
       console.log(`You can't enter non-numeric value: ${value}`)
     } else {
       this.showWarningField = false
     }
+    this.showWarningChange.emit(this.showWarningField)
+  }
+
+  private get isBlankTextInput(): boolean {
+    return (
+      typeof this.textValue === 'string' &&
+      this.textValue.trim().length === 0
+    )
+  }
+
+  private get isRequiredField(): boolean {
+    return (
+      this.requiredField === true ||
+      this.requiredField === 'true' ||
+      this.requiredField === '1'
+    )
   }
 
   async emitKeyboardEvent(value) {
     value = value.toLowerCase()
-    if (value == KeyboardEventType.ENTER) await Keyboard.hide()
-
+    if (value == KeyboardEventType.ENTER) {
+      if (this.isBlankTextInput && this.isRequiredField) {
+        this.showWarningField = true
+        this.showWarningChange.emit(this.showWarningField)
+        return
+      }
+      if (this.showWarningField) {
+        return
+      }
+      await Keyboard.hide()
+    }
     this.keyboardEvent.emit(value)
   }
 }

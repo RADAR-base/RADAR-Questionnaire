@@ -55,9 +55,6 @@
           <ion-button class="bt bt--full" (click)="confirmRecording()">
             {{ 'GUIDED_AUDIO_CONFIRM' | translate }}
           </ion-button>
-          <ion-button *ngIf="recordAttempts < maxAttempts" class="bt retry-btn" (click)="retryRecording()">
-            {{ 'GUIDED_AUDIO_RETRY' | translate }}
-          </ion-button>
         </div>
       </div>
 

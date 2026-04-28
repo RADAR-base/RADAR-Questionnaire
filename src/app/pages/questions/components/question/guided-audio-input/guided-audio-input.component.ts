@@ -235,15 +235,6 @@ export class GuidedAudioInputComponent implements OnInit, OnChanges, OnDestroy {
     this.valueChange.emit(this.audioRecordService.getFormattedAudioData())
   }
 
-  retryRecording() {
-    if (this.recordAttempts >= this.maxAttempts) {
-      this.confirmRecording()
-      return
-    }
-    this.state = 'idle'
-    this.ref.markForCheck()
-  }
-
   // ─── Utilities ──────────────────────────────────────────────────────────────
 
   private cleanup() {

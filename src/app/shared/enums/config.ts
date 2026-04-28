@@ -63,6 +63,7 @@ export class ConfigKeys {
   static AUTO_SEND_CACHED_DATA = new ConfigKeys('auto_send_cached_data')
 
   static SEND_ERROR_NOTIFICATION = new ConfigKeys('send_error_notification')
+  static EVENT_NAME_TARGET = new ConfigKeys('event_name_target')
 
   static SHOW_TASK_STREAK = new ConfigKeys('show_task_streak')
 

@@ -27,13 +27,15 @@ export abstract class QuestionnaireProcessorService {
     protocolMetaData?: ProtocolEventMetaData
   ) {
     if (!assessmentMetadata) return assessmentMetadata
-    const displayName = await this.templateRenderer.renderProtocolDisplayName(
+    const computedEventName = await this.templateRenderer.renderProtocolDisplayName(
       task,
       assessmentMetadata,
       protocolMetaData
     )
-    if (!displayName) return assessmentMetadata
-    return Object.assign({}, assessmentMetadata, { displayName })
+    if (!computedEventName) return assessmentMetadata
+    return Object.assign({}, assessmentMetadata, {
+      computedEventName
+    })
   }
 
   updateTaskToComplete(task): Promise<any> {

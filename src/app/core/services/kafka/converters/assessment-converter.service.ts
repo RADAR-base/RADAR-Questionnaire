@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core'
 import { AnswerValueExport } from 'src/app/shared/models/answer'
 import { QuestionType } from 'src/app/shared/models/question'
 import { getSeconds } from 'src/app/shared/utilities/time'
+import { ConfigKeys } from 'src/app/shared/enums/config'
+import { DefaultEventNameTarget } from 'src/assets/data/defaultConfig'
 
 import { LogService } from '../../misc/log.service'
 import { TokenService } from '../../token/token.service'
@@ -13,32 +15,62 @@ import { RemoteConfigService } from '../../config/remote-config.service'
 @Injectable()
 export class AssessmentConverterService extends ConverterService {
   GENERAL_TOPIC: string = 'questionnaire_response'
+  EVENT_NAME_TARGET = DefaultEventNameTarget
+  EVENT_NAME_TARGET_NAME = 'name'
+  EVENT_NAME_TARGET_METADATA = 'metadata'
 
   constructor(
     logger: LogService,
     http: HttpClient,
     token: TokenService,
     keyConverter: KeyConverterService,
-    remoteConfig: RemoteConfigService
+    private assessmentRemoteConfig: RemoteConfigService
   ) {
-    super(logger, http, token, keyConverter, remoteConfig)
+    super(logger, http, token, keyConverter, assessmentRemoteConfig)
+    this.updateEventNameTarget()
   }
 
   processData(payload) {
     const task = payload.task
     if (!task) return {}
     const metadata = payload.metadata || {}
+    const computedEventName =
+      metadata.computedEventName ||
+      metadata.renderedEventName
     const data = payload.data
     const processedAnswers = this.processAnswers(data.answers, data.timestamps)
+    const name = this.resolveQuestionnaireName(task.name, computedEventName)
     const Answer: AnswerValueExport = {
-      name: metadata.displayName || task.name,
+      name,
       version: 'version',
       answers: processedAnswers,
       time: data.time,
       timeCompleted: data.timeCompleted,
       timeNotification: getSeconds({ milliseconds: task.timestamp })
     }
+    if (this.shouldStoreRenderedNameInMetadata() && computedEventName) {
+      ; (Answer as any).metadata = { eventName: computedEventName }
+    }
     return Answer
+  }
+
+  private resolveQuestionnaireName(taskName: string, computedEventName: string) {
+    if (this.shouldStoreRenderedNameInMetadata()) return taskName
+    return computedEventName || taskName
+  }
+
+  private shouldStoreRenderedNameInMetadata() {
+    return this.EVENT_NAME_TARGET === this.EVENT_NAME_TARGET_METADATA
+  }
+
+  private updateEventNameTarget() {
+    return this.assessmentRemoteConfig
+      .read()
+      .then(config =>
+        config.getOrDefault(ConfigKeys.EVENT_NAME_TARGET, DefaultEventNameTarget)
+      )
+      .then(value => (this.EVENT_NAME_TARGET = (value || '').toLowerCase()))
+      .catch(e => this.logger.error('Failed to fetch event_name_target config', e))
   }
 
   processAnswers(answers, timestamps) {

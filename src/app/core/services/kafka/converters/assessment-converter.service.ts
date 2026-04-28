@@ -27,10 +27,11 @@ export class AssessmentConverterService extends ConverterService {
   processData(payload) {
     const task = payload.task
     if (!task) return {}
+    const metadata = payload.metadata || {}
     const data = payload.data
     const processedAnswers = this.processAnswers(data.answers, data.timestamps)
     const Answer: AnswerValueExport = {
-      name: task.name,
+      name: metadata.displayName || task.name,
       version: 'version',
       answers: processedAnswers,
       time: data.time,

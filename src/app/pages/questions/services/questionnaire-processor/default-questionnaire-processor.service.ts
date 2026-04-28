@@ -7,6 +7,7 @@ import { AssessmentType } from '../../../../shared/models/assessment'
 import { SchemaType } from '../../../../shared/models/kafka'
 import { QuestionnaireProcessorService } from './questionnaire-processor.service'
 import { NotificationService } from 'src/app/core/services/notifications/notification.service'
+import { TemplateRendererService } from 'src/app/core/services/misc/template-renderer.service'
 
 @Injectable({
   providedIn: 'root'
@@ -15,12 +16,18 @@ export class DefaultQuestionnaireProcessorService extends QuestionnaireProcessor
   constructor(
     schedule: ScheduleService,
     kafka: KafkaService,
-    notifications: NotificationService
+    notifications: NotificationService,
+    templateRenderer: TemplateRendererService
   ) {
-    super(schedule, kafka, notifications)
+    super(schedule, kafka, notifications, templateRenderer)
   }
 
-  process(data, task, assessmentMetadata) {
+  async process(data, task, assessmentMetadata, protocolMetaData?) {
+    const kafkaMetadata = await this.addAssessmentDisplayNameToMetadata(
+      task,
+      assessmentMetadata,
+      protocolMetaData
+    )
     const type = SchemaType.ASSESSMENT
     return Promise.all([
       this.updateTaskToComplete(task),
@@ -28,7 +35,7 @@ export class DefaultQuestionnaireProcessorService extends QuestionnaireProcessor
         ? this.kafka.prepareKafkaObjectAndStore(type, {
           task,
           data,
-          metadata: assessmentMetadata
+          metadata: kafkaMetadata
         })
         : [],
       this.kafka

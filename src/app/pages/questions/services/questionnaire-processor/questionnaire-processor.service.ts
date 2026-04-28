@@ -5,18 +5,36 @@ import { ScheduleService } from '../../../../core/services/schedule/schedule.ser
 import { AssessmentType } from '../../../../shared/models/assessment'
 import { NotificationService } from '../../../../core/services/notifications/notification.service'
 import { NotificationActionType } from 'src/app/shared/models/notification-handler'
+import { ProtocolEventMetaData } from 'src/app/shared/models/protocol'
+import { TemplateRendererService } from 'src/app/core/services/misc/template-renderer.service'
 
 @Injectable({
   providedIn: 'root'
 })
 export abstract class QuestionnaireProcessorService {
   constructor(
-    private schedule: ScheduleService,
+    protected schedule: ScheduleService,
     public kafka: KafkaService,
-    protected notifications: NotificationService
+    protected notifications: NotificationService,
+    protected templateRenderer: TemplateRendererService
   ) { }
 
-  process(data, task, assessmentMetadata) { }
+  process(data, task, assessmentMetadata, protocolMetaData?: ProtocolEventMetaData) { }
+
+  protected async addAssessmentDisplayNameToMetadata(
+    task,
+    assessmentMetadata,
+    protocolMetaData?: ProtocolEventMetaData
+  ) {
+    if (!assessmentMetadata) return assessmentMetadata
+    const displayName = await this.templateRenderer.renderProtocolDisplayName(
+      task,
+      assessmentMetadata,
+      protocolMetaData
+    )
+    if (!displayName) return assessmentMetadata
+    return Object.assign({}, assessmentMetadata, { displayName })
+  }
 
   updateTaskToComplete(task): Promise<any> {
     return Promise.all([

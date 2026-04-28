@@ -14,6 +14,7 @@ export interface Protocol {
   onDemandProtocol?
   completionWindow?: TimeInterval
   referenceTimestamp?: string | ProtocolReferenceTimestamp
+  metaData?: ProtocolEventMetaData
 }
 
 export interface ProtocolReferenceTimestamp {
@@ -40,6 +41,19 @@ export enum TaskState {
 export interface ProtocolMetaData {
   protocol: string
   url?: string
+}
+
+export interface ProtocolEventMetaData {
+  series?: string
+  prefix?: string
+  displayTemplate?: string
+}
+
+export enum ProtocolDisplayTemplateKey {
+  NAME = 'name',
+  PREFIX = 'prefix',
+  AUTO_INDEX = 'autoIndex',
+  SERIES = 'series'
 }
 
 export interface TimeInterval {

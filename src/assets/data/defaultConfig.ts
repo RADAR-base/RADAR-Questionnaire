@@ -123,6 +123,7 @@ export const DefaultTask: Task = {
 
 // *Default schedule coverage in years (length of schedule to generate tasks until)
 export const DefaultScheduleYearCoverage: number = 3
+export const DefaultScheduleSaveTasksFromBeginning = 'false'
 
 // *Default time interval of protocol
 export const DefaultScheduleTimeInterval = { unit: 'day', amount: 1 }
@@ -371,3 +372,6 @@ export const DefaultHealthkitPullTimeout = 1_200_000 // 20 minutes
 
 // *Default Healthkit show ETA text
 export const DefaultHealthkitShowEtaText = 'false'
+
+// *Target field for rendered assessment event names: `name` (default) or `metadata`
+export const DefaultEventNameTarget = 'name'

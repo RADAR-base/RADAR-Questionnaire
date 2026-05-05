@@ -20,4 +20,7 @@ export interface AnswerValueExport {
   time: number
   timeCompleted: number
   timeNotification: Object
+  metadata?: {
+    eventName?: string
+  }
 }

@@ -34,6 +34,10 @@ export class TextInputComponent implements OnInit {
   validationType = ''
   @Input()
   requiredField: string | boolean = false
+  @Input()
+  textValidationMin: string
+  @Input()
+  textValidationMax: string
 
   showDatePicker: boolean
   showTimePicker: boolean
@@ -60,12 +64,13 @@ export class TextInputComponent implements OnInit {
   textValue = ''
   value = {}
   inputModeType = 'text'
+  inputType = 'text'
   DEFAULT_DATE_FORMAT = 'DD/MM/YYYY'
 
   constructor(
     private localization: LocalizationService,
     public modalCtrl: ModalController
-  ) {}
+  ) { }
 
   ngOnInit() {
     if (this.validationType.length) {
@@ -73,6 +78,7 @@ export class TextInputComponent implements OnInit {
       this.showTimePicker = this.validationType.includes('time')
       this.showDurationPicker = this.validationType.includes('duration')
       this.inputModeType = this.validationType === 'number' ? 'numeric' : 'text'
+      this.inputType = this.validationType === 'number' ? 'number' : 'text'
     }
     this.showTextInput =
       !this.showDatePicker && !this.showTimePicker && !this.showDurationPicker
@@ -186,18 +192,51 @@ export class TextInputComponent implements OnInit {
       this.validationType === 'number' &&
       this.isBlankTextInput &&
       !this.isRequiredField
+    const isNumberType = this.validationType === 'number'
+    const isNumericValue = /^[\d]*$/.test(value)
+    const hasMinMaxViolation =
+      isNumberType &&
+      !isOptionalBlankText &&
+      isNumericValue &&
+      this.isOutOfRange(value)
 
     if (
-      this.validationType === 'number' &&
+      isNumberType &&
       !isOptionalBlankText &&
-      !/^[\d]*$/.test(value)
+      (!isNumericValue || hasMinMaxViolation)
     ) {
       this.showWarningField = true
-      console.log(`You can't enter non-numeric value: ${value}`)
+      if (!isNumericValue) {
+        console.log(`You can't enter non-numeric value: ${value}`)
+      }
     } else {
       this.showWarningField = false
     }
     this.showWarningChange.emit(this.showWarningField)
+  }
+
+  private isOutOfRange(value: string): boolean {
+    const numericValue = Number(value)
+    if (Number.isNaN(numericValue)) return false
+    if (this.hasMinValue && numericValue < this.minValue) return true
+    if (this.hasMaxValue && numericValue > this.maxValue) return true
+    return false
+  }
+
+  private get hasMinValue(): boolean {
+    return this.textValidationMin !== undefined && this.textValidationMin !== null && this.textValidationMin !== ''
+  }
+
+  private get hasMaxValue(): boolean {
+    return this.textValidationMax !== undefined && this.textValidationMax !== null && this.textValidationMax !== ''
+  }
+
+  private get minValue(): number {
+    return Number(this.textValidationMin)
+  }
+
+  private get maxValue(): number {
+    return Number(this.textValidationMax)
   }
 
   private get isBlankTextInput(): boolean {

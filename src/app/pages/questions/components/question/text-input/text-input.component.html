@@ -33,8 +33,10 @@
   </ion-label>
   <ion-item color="none" class="input">
     <ion-input
-      type="text"
+      [type]="inputType"
       [inputmode]="inputModeType"
+      [min]="textValidationMin"
+      [max]="textValidationMax"
       enterkeyhint="next"
       placeholder="{{ 'PLACEHOLDER_TEXT_INPUT' | translate }}"
       [(ngModel)]="textValue"

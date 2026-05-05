@@ -65,6 +65,9 @@ export class TextInputComponent implements OnInit {
   value = {}
   inputModeType = 'text'
   inputType = 'text'
+  inputStep = 'any'
+  isNumericType = false
+  isIntegerType = false
   DEFAULT_DATE_FORMAT = 'DD/MM/YYYY'
 
   constructor(
@@ -77,8 +80,16 @@ export class TextInputComponent implements OnInit {
       this.showDatePicker = this.validationType.includes('date')
       this.showTimePicker = this.validationType.includes('time')
       this.showDurationPicker = this.validationType.includes('duration')
-      this.inputModeType = this.validationType === 'number' ? 'numeric' : 'text'
-      this.inputType = this.validationType === 'number' ? 'number' : 'text'
+      this.isIntegerType = this.validationType === 'integer'
+      this.isNumericType = this.validationType === 'number' || this.isIntegerType
+      if (this.isNumericType) {
+        this.inputModeType = this.isIntegerType ? 'numeric' : 'decimal'
+        this.inputType = 'number'
+        this.inputStep = this.isIntegerType ? '1' : 'any'
+      } else {
+        this.inputModeType = 'text'
+        this.inputType = 'text'
+      }
     }
     this.showTextInput =
       !this.showDatePicker && !this.showTimePicker && !this.showDurationPicker
@@ -188,23 +199,24 @@ export class TextInputComponent implements OnInit {
   }
 
   numberInputValidation(value) {
+    if (!this.isNumericType) {
+      this.showWarningField = false
+      this.showWarningChange.emit(this.showWarningField)
+      return
+    }
+
     const isOptionalBlankText =
-      this.validationType === 'number' &&
       this.isBlankTextInput &&
       !this.isRequiredField
-    const isNumberType = this.validationType === 'number'
-    const isNumericValue = /^[\d]*$/.test(value)
+    const isNumericValue = this.isIntegerType
+      ? /^[\d]*$/.test(value)
+      : /^[\d]*\.?[\d]*$/.test(value)
     const hasMinMaxViolation =
-      isNumberType &&
       !isOptionalBlankText &&
       isNumericValue &&
       this.isOutOfRange(value)
 
-    if (
-      isNumberType &&
-      !isOptionalBlankText &&
-      (!isNumericValue || hasMinMaxViolation)
-    ) {
+    if (!isOptionalBlankText && (!isNumericValue || hasMinMaxViolation)) {
       this.showWarningField = true
       if (!isNumericValue) {
         console.log(`You can't enter non-numeric value: ${value}`)
@@ -218,25 +230,17 @@ export class TextInputComponent implements OnInit {
   private isOutOfRange(value: string): boolean {
     const numericValue = Number(value)
     if (Number.isNaN(numericValue)) return false
-    if (this.hasMinValue && numericValue < this.minValue) return true
-    if (this.hasMaxValue && numericValue > this.maxValue) return true
+    const minValue = this.getBoundValue(this.textValidationMin)
+    const maxValue = this.getBoundValue(this.textValidationMax)
+    if (minValue !== null && numericValue < minValue) return true
+    if (maxValue !== null && numericValue > maxValue) return true
     return false
   }
 
-  private get hasMinValue(): boolean {
-    return this.textValidationMin !== undefined && this.textValidationMin !== null && this.textValidationMin !== ''
-  }
-
-  private get hasMaxValue(): boolean {
-    return this.textValidationMax !== undefined && this.textValidationMax !== null && this.textValidationMax !== ''
-  }
-
-  private get minValue(): number {
-    return Number(this.textValidationMin)
-  }
-
-  private get maxValue(): number {
-    return Number(this.textValidationMax)
+  private getBoundValue(value: string): number | null {
+    if (value === undefined || value === null || value === '') return null
+    const parsedValue = Number(value)
+    return Number.isNaN(parsedValue) ? null : parsedValue
   }
 
   private get isBlankTextInput(): boolean {

@@ -26,15 +26,16 @@
 <ng-container *ngIf="showTextInput && currentlyShown">
   <ion-label *ngIf="showWarningField">
     {{
-      validationType === 'number'
-        ? ('NUMBER_INPUT_WARNING' | translate)
-        : ('TEXT_INPUT_WARNING' | translate)
+    isNumericType
+    ? ('NUMBER_INPUT_WARNING' | translate)
+    : ('TEXT_INPUT_WARNING' | translate)
     }}
   </ion-label>
   <ion-item color="none" class="input">
     <ion-input
       [type]="inputType"
       [inputmode]="inputModeType"
+      [step]="inputStep"
       [min]="textValidationMin"
       [max]="textValidationMax"
       enterkeyhint="next"

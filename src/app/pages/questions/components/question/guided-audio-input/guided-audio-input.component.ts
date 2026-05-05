@@ -63,7 +63,12 @@ export class GuidedAudioInputComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   get shouldAllowManualStart(): boolean {
-    return this.config?.auto_record_after_tts !== true
+    return !this.isAutoRecordEnabled
+  }
+
+  private get isAutoRecordEnabled(): boolean {
+    const autoRecordAfterTts = (this.config as any)?.auto_record_after_tts
+    return autoRecordAfterTts === true || autoRecordAfterTts === 'true' || autoRecordAfterTts === 1
   }
 
   private recordingTimer: ReturnType<typeof setInterval>
@@ -129,7 +134,7 @@ export class GuidedAudioInputComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     // Allow auto-recording even when TTS is disabled.
-    if (this.config?.auto_record_after_tts) {
+    if (this.isAutoRecordEnabled) {
       this.doStartRecording()
     }
   }
@@ -161,7 +166,7 @@ export class GuidedAudioInputComponent implements OnInit, OnChanges, OnDestroy {
 
   private onTtsDone() {
     if (this.isDestroyed || this.state !== 'speaking') return
-    if (this.config?.auto_record_after_tts) {
+    if (this.isAutoRecordEnabled) {
       this.doStartRecording()
     } else {
       this.state = 'idle'

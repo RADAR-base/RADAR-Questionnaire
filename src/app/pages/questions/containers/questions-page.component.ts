@@ -305,9 +305,8 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
   updateToolbarButtons() {
     // NOTE: Only the first question of each question group is used
     const currentQs = this.getCurrentQuestions()
-    if (!currentQs) returng
+    if (!currentQs) return
 
-    console.log(currentQs[0])
     const isBlankOnRequiredQs = !this.questionsService.areAllAnswered(currentQs)
 
     console.log({

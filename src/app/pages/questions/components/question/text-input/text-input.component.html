@@ -26,7 +26,7 @@
 <ng-container *ngIf="showTextInput && currentlyShown">
   <ion-label *ngIf="showWarningField">
     {{
-      validationType === 'number'
+      validationType === ValidationType.NUMBER
         ? ('NUMBER_INPUT_WARNING' | translate)
         : ('TEXT_INPUT_WARNING' | translate)
     }}

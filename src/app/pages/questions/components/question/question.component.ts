@@ -22,6 +22,7 @@ import {
   Response
 } from '../../../../shared/models/question'
 import { Task } from '../../../../shared/models/task'
+import { AnswerService } from '../../services/answer.service'
 
 @Component({
   selector: 'question',
@@ -46,6 +47,8 @@ export class QuestionComponent implements OnInit, OnChanges {
   isNextAutomatic: boolean // Automatically slide to next upon answer
   @Input()
   isMatrix = false
+  @Input()
+  canGoNextOnEnter = false
   @Output()
   answer: EventEmitter<Answer> = new EventEmitter<Answer>()
   @Output()
@@ -72,7 +75,7 @@ export class QuestionComponent implements OnInit, OnChanges {
     { code: '0', label: 'No' }
   ]
 
-  readonly NON_SCROLLABLE_SET: Set<QuestionType> = new Set([
+  NON_SCROLLABLE_SET: Set<QuestionType> = new Set([
     QuestionType.timed,
     QuestionType.audio,
     QuestionType.info,
@@ -82,14 +85,14 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.slider_vertical
   ])
 
-  readonly HIDE_FIELD_LABEL_SET: Set<QuestionType> = new Set([
+  HIDE_FIELD_LABEL_SET: Set<QuestionType> = new Set([
     QuestionType.audio,
     QuestionType.descriptive,
     QuestionType.healthkit
   ])
 
   // Input set where height is set to auto
-  readonly AUTO_HEIGHT_INPUT_SET: Set<QuestionType> = new Set([
+  AUTO_HEIGHT_INPUT_SET: Set<QuestionType> = new Set([
     QuestionType.radio,
     QuestionType.checkbox,
     QuestionType.yesno,
@@ -100,12 +103,15 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.matrix_radio
   ])
 
-  readonly SCROLLBAR_VISIBLE_SET: Set<QuestionType> = new Set([
+  SCROLLBAR_VISIBLE_SET: Set<QuestionType> = new Set([
     QuestionType.radio,
     QuestionType.checkbox
   ])
 
-  constructor(private sanitizer: DomSanitizer) {
+  constructor(
+    private sanitizer: DomSanitizer,
+    private answerService: AnswerService
+  ) {
     this.value = null
   }
 
@@ -127,6 +133,9 @@ export class QuestionComponent implements OnInit, OnChanges {
     setTimeout(() => {
       this.showScrollButton = this.isScrollbarVisible()
     }, 900)
+
+    // Initialize value from stored answer
+    this.value = this.answerService.answers[this.question.field_name] || null
   }
 
   ngOnChanges() {
@@ -145,7 +154,9 @@ export class QuestionComponent implements OnInit, OnChanges {
   }
 
   private updateSanitizedHtml() {
-    this.sanitizedSectionHeader = this.sanitizeHtml(this.question?.section_header)
+    this.sanitizedSectionHeader = this.sanitizeHtml(
+      this.question?.section_header
+    )
     this.sanitizedFieldLabel = this.sanitizeHtml(this.question?.field_label)
   }
 
@@ -158,26 +169,12 @@ export class QuestionComponent implements OnInit, OnChanges {
         value: this.value,
         type: this.question.field_type
       })
-
-      if (this.isBlankTextInput()) {
-        this.nextAction.emit(NextButtonEventType.DISABLE)
-        return
-      }
-
       if (this.question.isAutoNext) {
         this.nextAction.emit(NextButtonEventType.AUTO)
       } else {
         this.nextAction.emit(NextButtonEventType.ENABLE)
       }
     }
-  }
-
-  isBlankTextInput(): boolean {
-    return (
-      this.question.field_type === QuestionType.text &&
-      (this.value === null ||
-        (typeof this.value === 'string' && this.value.trim().length === 0))
-    )
   }
 
   initRange() {
@@ -219,11 +216,7 @@ export class QuestionComponent implements OnInit, OnChanges {
         break
       }
       case KeyboardEventType.ENTER: {
-        if (this.isBlankTextInput()) {
-          this.nextAction.emit(NextButtonEventType.DISABLE)
-        } else {
-          this.nextAction.emit(NextButtonEventType.AUTO)
-        }
+        this.nextAction.emit(NextButtonEventType.AUTO)
         break
       }
       default:

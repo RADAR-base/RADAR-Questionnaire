@@ -1,4 +1,4 @@
-<ion-radio-group (ionChange)="onInputChange($event)">
+<ion-radio-group (ionChange)="onInputChange($event)" [value]="selectedValue">
   <ion-row>
     <ion-col *ngFor="let item of items; let i = index">
       <ion-item color="none" lines="none" class="item-md">

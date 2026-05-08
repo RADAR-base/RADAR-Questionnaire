@@ -118,6 +118,7 @@
         (showWarningChange)="onWarningFieldChange($event)"
         [validationType]="question.text_validation_type_or_show_slider_number"
         [currentlyShown]="currentlyShown"
+        [canSubmitOnEnter]="canGoNextOnEnter"
       ></text-input>
 
       <radio-input
@@ -140,9 +141,9 @@
         [responses]="question.select_choices_or_calculations"
         [currentlyShown]="currentlyShown"
         [previouslyShown]="previouslyShown"
+        [value]="value"
         (valueChange)="emitAnswer($event)"
-      >
-      </matrix-radio-input>
+      ></matrix-radio-input>
 
       <web-input
         *ngSwitchCase="'web'"

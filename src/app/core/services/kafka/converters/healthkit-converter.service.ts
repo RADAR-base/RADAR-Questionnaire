@@ -114,7 +114,7 @@ export class HealthkitConverterService extends ConverterService {
         const processedData = await this.processSingleDatatype(
           name,
           res,
-          Date.now()
+          Date.now() / 1000
         )
         const avroData = this.batchConvertToAvro(
           processedData,
@@ -129,15 +129,15 @@ export class HealthkitConverterService extends ConverterService {
   convertToHealthkitRecordPaged$(
     kafkaValue,
     valueSchemaMetadata,
-    pageSize = 3600
+    pageSize = 1000
   ): Observable<any[]> {
     const data = kafkaValue.data
     const name = data.key
-    const startTime = data.value.startTime
-    const endTime = data.value.endTime
+    const startTime = new Date(data.value.startTime)
+    const endTime = new Date(data.value.endTime)
 
     return this.healthkit.queryPaged$(startTime, endTime, name, pageSize).pipe(
-      concatMap(res => from(this.processSingleDatatype(name, res, Date.now()))),
+      concatMap(res => from(this.processSingleDatatype(name, res, Date.now() / 1000))),
       map(processedData => this.batchConvertToAvro(processedData, valueSchemaMetadata))
     )
   }

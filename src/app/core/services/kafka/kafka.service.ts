@@ -8,7 +8,7 @@ import { Network } from '@capacitor/network'
 import * as pako from 'pako'
 import { fromByteArray } from 'base64-js'
 import pLimit from 'p-limit'
-import { Http } from '@capacitor-community/http'
+import { Http, HttpOptions } from '@capacitor-community/http'
 
 import {
   DefaultClientAcceptType,
@@ -34,6 +34,10 @@ import { mergeMap } from 'rxjs/operators'
 import { NotificationService } from '../notifications/notification.service'
 import { NotificationActionType } from 'src/app/shared/models/notification-handler'
 
+type NativeHttpOptions = HttpOptions & {
+  dataIsBase64?: boolean
+}
+
 interface PrepareKafkaOptions {
   sendEvent?: boolean
 }
@@ -52,10 +56,10 @@ interface SendFromCacheOptions {
 export class KafkaService {
   private static DEFAULT_TOPIC_CACHE_VALIDITY = 600_000 // 10 minutes
   private static BATCH_SIZE = 10
-  private static CONCURRENCY_LIMIT = 1
+  private static CONCURRENCY_LIMIT = 4
   private static SEND_ERROR_NOTIFICATION_THRESHOLD = 10
-  private static HTTP_TIMEOUT = 120_000 // 2 minutes
-  private static HTTP_RETRY_MAX_ATTEMPTS = 3
+  private static HTTP_TIMEOUT = 20_000 // 20 second [old: 120_000 // 2 minutes]
+  private static HTTP_RETRY_MAX_ATTEMPTS = 5
   private static HTTP_RETRY_BASE_DELAY_MS = 1000
 
   URI_topics: string = '/topics/'
@@ -491,33 +495,21 @@ export class KafkaService {
 
   async postData(data: any, topic: string, headers: HttpHeaders, isBase64: boolean = false): Promise<any> {
     const nativeHeaders = this.convertHeaders(headers)
-    const request: any = {
+    const request: NativeHttpOptions = {
       url: `${this.KAFKA_CLIENT_URL}${this.URI_topics}${topic}`,
       headers: nativeHeaders,
       method: 'POST',
     }
-
-    if (isBase64) {
-      request.data = data // base64 string
-      request.dataIsBase64 = true
-    } else {
-      request.data = data
-    }
-    request.connectionTimeout = KafkaService.HTTP_TIMEOUT
+    request.data = data 
+    request.dataIsBase64 = isBase64
+    request.connectTimeout = KafkaService.HTTP_TIMEOUT
     request.readTimeout = KafkaService.HTTP_TIMEOUT
-
     for (let attempt = 1; attempt <= KafkaService.HTTP_RETRY_MAX_ATTEMPTS; attempt++) {
-      // const httpStart = Date.now()
       try {
-        const response = await Http.request(request)
-        // console.log('Kafka HTTP request time', {
-        //   topic,
-        //   status: response.status,
-        //   compressed: isBase64,
-        //   bytes: typeof data === 'string' ? data.length : undefined,
-        //   attempt,
-        //   milliseconds: Date.now() - httpStart
-        // })
+        const response = await this.withHttpTimeout(
+          Http.request(request),
+          KafkaService.HTTP_TIMEOUT
+        )
         if (response.status < 200 || response.status >= 300) {
           if (this.shouldRetryHttpStatus(response.status, attempt)) {
             await this.delayHttpRetry(attempt, response.status, topic)
@@ -530,19 +522,11 @@ export class KafkaService {
         }
         return response
       } catch (error) {
-        // console.log('Kafka HTTP request failed time', {
-        //   topic,
-        //   compressed: isBase64,
-        //   bytes: typeof data === 'string' ? data.length : undefined,
-        //   attempt,
-        //   milliseconds: Date.now() - httpStart
-        // })
-        console.error('HTTP request failed:', error)
         if (this.cancelSending) {
           throw new Error('Request cancelled by user')
         }
-        if (this.shouldRetryHttpStatus(error?.status, attempt)) {
-          await this.delayHttpRetry(attempt, error.status, topic)
+        if (this.shouldRetryHttpError(error, attempt)) {
+          await this.delayHttpRetry(attempt, error?.status || 'timeout', topic)
           continue
         }
         throw error
@@ -556,15 +540,35 @@ export class KafkaService {
     return attempt < KafkaService.HTTP_RETRY_MAX_ATTEMPTS && (status === 500 || status === 503)
   }
 
-  private delayHttpRetry(attempt: number, status: number, topic: string): Promise<void> {
+  private shouldRetryHttpError(error: any, attempt: number): boolean {
+    if (attempt >= KafkaService.HTTP_RETRY_MAX_ATTEMPTS) return false
+    if (error?.status === 500 || error?.status === 503) return true
+    return this.isHttpTimeoutError(error)
+  }
+
+  private withHttpTimeout<T>(requestPromise: Promise<T>, timeoutMs: number): Promise<T> {
+    let timeoutId: any
+    const timeoutPromise = new Promise<T>((_, reject) => {
+      timeoutId = setTimeout(() => {
+        const error: any = new Error(`Kafka HTTP request timed out after ${timeoutMs}ms`)
+        error.name = 'KafkaHttpTimeoutError'
+        error.status = 'timeout'
+        reject(error)
+      }, timeoutMs)
+    })
+
+    return Promise.race([requestPromise, timeoutPromise])
+      .finally(() => clearTimeout(timeoutId))
+  }
+
+  private isHttpTimeoutError(error: any): boolean {
+    return error?.name === 'KafkaHttpTimeoutError' ||
+      error?.status === 'timeout' ||
+      error?.code === -1001
+  }
+
+  private delayHttpRetry(attempt: number, status: number | string, topic: string): Promise<void> {
     const delayMs = KafkaService.HTTP_RETRY_BASE_DELAY_MS * attempt
-    // console.log('Retrying Kafka HTTP request', {
-    //   topic,
-    //   status,
-    //   attempt,
-    //   nextAttempt: attempt + 1,
-    //   delayMs
-    // })
     return new Promise(resolve => setTimeout(resolve, delayMs))
   }
 

@@ -77,6 +77,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
     QuestionType.matrix_radio,
     QuestionType.healthkit,
     QuestionType.slider,
+    QuestionType.slider_vertical,
     QuestionType.yesno
   ])
   MAX_RETRY_ALERT_COUNT = 5

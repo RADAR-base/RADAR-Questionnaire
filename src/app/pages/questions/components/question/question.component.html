@@ -83,6 +83,17 @@
       >
       </slider-input>
 
+      <slider-vertical-input
+        *ngSwitchCase="'slider-vertical'"
+        [min]="question.range.min"
+        [max]="question.range.max"
+        [step]="question.range.step"
+        [labelLeft]="question.range.labelLeft"
+        [labelRight]="question.range.labelRight"
+        (valueChange)="emitAnswer($event)"
+      >
+      </slider-vertical-input>
+
       <info-screen
         *ngSwitchCase="'info'"
         [sections]="question.select_choices_or_calculations"

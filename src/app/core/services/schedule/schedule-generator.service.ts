@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core'
 
 import {
+  DefaultScheduleSaveTasksFromBeginning,
   DefaultScheduleYearCoverage,
   DefaultTask,
   DefaultTaskCompletionWindow
@@ -32,6 +33,7 @@ import { NotificationGeneratorService } from '../notifications/notification-gene
 @Injectable()
 export class ScheduleGeneratorService {
   SCHEDULE_YEAR_COVERAGE = DefaultScheduleYearCoverage
+  SCHEDULE_SAVE_TASKS_FROM_BEGINNING = false
   REFERENCE_TIMESTAMP_FORMAT = 'DD-MM-YYYY:hh:mm'
 
   constructor(
@@ -41,7 +43,7 @@ export class ScheduleGeneratorService {
     private remoteConfig: RemoteConfigService,
     private logger: LogService,
     private util: Utility
-  ) {}
+  ) { }
 
   runScheduler(
     refTimestamp,
@@ -50,7 +52,8 @@ export class ScheduleGeneratorService {
   ): Promise<SchedulerResult> {
     return Promise.all([
       this.questionnaire.getAssessments(AssessmentType.SCHEDULED),
-      this.fetchScheduleYearCoverage()
+      this.fetchScheduleYearCoverage(),
+      this.fetchScheduleTaskWindowMode()
     ]).then(([assessments]) => {
       const schedule: Task[] = assessments.reduce(
         (list: Task[], assessment) => {
@@ -143,6 +146,7 @@ export class ScheduleGeneratorService {
       if (!repeatP) break
       refTime = advanceRepeat(refTime, repeatP)
     }
+    if (this.SCHEDULE_SAVE_TASKS_FROM_BEGINNING) return tasks
     return tasks.filter(t => t.timestamp + t.completionWindow > today)
   }
 
@@ -253,6 +257,21 @@ export class ScheduleGeneratorService {
         )
       )
       .then(coverage => (this.SCHEDULE_YEAR_COVERAGE = parseFloat(coverage)))
+      .catch(e => {
+        throw this.logger.error('Failed to fetch Firebase config', e)
+      })
+  }
+
+  fetchScheduleTaskWindowMode() {
+    return this.remoteConfig
+      .read()
+      .then(config =>
+        config.getOrDefault(
+          ConfigKeys.SCHEDULE_SAVE_TASKS_FROM_BEGINNING,
+          DefaultScheduleSaveTasksFromBeginning
+        )
+      )
+      .then(value => (this.SCHEDULE_SAVE_TASKS_FROM_BEGINNING = value === 'true'))
       .catch(e => {
         throw this.logger.error('Failed to fetch Firebase config', e)
       })

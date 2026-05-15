@@ -74,7 +74,8 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.info,
     QuestionType.text,
     QuestionType.descriptive,
-    QuestionType.slider
+    QuestionType.slider,
+    QuestionType.slider_vertical
   ])
 
   readonly HIDE_FIELD_LABEL_SET: Set<QuestionType> = new Set([
@@ -89,6 +90,7 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.checkbox,
     QuestionType.yesno,
     QuestionType.slider,
+    QuestionType.slider_vertical,
     QuestionType.range,
     QuestionType.text,
     QuestionType.matrix_radio

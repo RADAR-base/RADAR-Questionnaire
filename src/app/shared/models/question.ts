@@ -97,6 +97,29 @@ export interface QuestionPosition {
   questionIndices: number[]
 }
 
+export enum ValidationType {
+  NUMBER = 'number',
+  EMAIL = 'email',
+  INTEGER = 'integer',
+  DATE_DMY = 'date_dmy',
+  DATE_MDY = 'date_mdy',
+  DATE_YMD = 'date_ymd',
+  TIME = 'time',
+  PHONE = 'phone'
+}
+
+export enum InputModeType {
+  TEXT = 'text',
+  NUMBER = 'numeric',
+  EMAIL = 'email',
+  PHONE = 'phone'
+}
+
+export enum RequiredField {
+  TRUE = 'y',
+  FALSE = ''
+}
+
 export enum WebInputType {
   NHS = 'nhs'
 }

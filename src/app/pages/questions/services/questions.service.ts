@@ -14,7 +14,8 @@ import { ShowIntroductionType } from '../../../shared/models/assessment'
 import {
   Question,
   QuestionPosition,
-  QuestionType
+  QuestionType,
+  RequiredField
 } from '../../../shared/models/question'
 import { parseAndEvalLogic } from '../../../shared/utilities/parsers'
 import { getSeconds } from '../../../shared/utilities/time'
@@ -48,8 +49,7 @@ export class QuestionsService {
     private questionnaireProcessor: DefaultQuestionnaireProcessorService,
     private remoteConfig: RemoteConfigService,
     private util: Utility
-  ) {
-  }
+  ) {}
 
   getKafkaService() {
     return this.questionnaireProcessor.kafka
@@ -164,8 +164,23 @@ export class QuestionsService {
     return this.answerService.check(id)
   }
 
-  areAllAnswered(questions: Question[]) {
-    return questions.every(q => this.isAnswered(q))
+  // Check if a question is required based on its required_field property
+  isRequired(question: Question): boolean {
+    return question.required_field === RequiredField.TRUE
+  }
+
+  // Check if the answer for a question is blank (null, empty string, or empty array)
+  isAnswerBlank(question: Question): boolean {
+    const answer = this.answerService.answers[question.field_name]
+    if (answer == null) return true
+    if (typeof answer === 'string') return answer.trim() === ''
+    if (Array.isArray(answer)) return answer.length === 0
+    return false
+  }
+
+  // Check if all required questions have non-blank answers
+  areAllAnswered(questions: Question[]): boolean {
+    return questions.every(q => !this.isRequired(q) || !this.isAnswerBlank(q))
   }
 
   getNextQuestion(groupedQuestions, currentQuestionId): QuestionPosition {

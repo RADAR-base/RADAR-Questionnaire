@@ -13,6 +13,10 @@ import * as moment from 'moment'
 
 import { LocalizationService } from '../../../../../core/services/misc/localization.service'
 import { KeyboardEventType } from '../../../../../shared/enums/events'
+import {
+  ValidationType,
+  InputModeType
+} from '../../../../../shared/models/question'
 
 @Component({
   selector: 'text-input',
@@ -38,6 +42,17 @@ export class TextInputComponent implements OnInit {
   textValidationMin: string
   @Input()
   textValidationMax: string
+
+  /** 
+   * Controls whether Enter key submission is allowed.
+   * Set to true when all required questions are answered and current answer is valid.
+   * When false, pressing Enter will show a warning instead of proceeding to the next question.
+   */
+  @Input()
+  canSubmitOnEnter = false
+
+  ValidationType = ValidationType
+  InputModeType = InputModeType
 
   showDatePicker: boolean
   showTimePicker: boolean
@@ -69,6 +84,9 @@ export class TextInputComponent implements OnInit {
   isNumericType = false
   isIntegerType = false
   DEFAULT_DATE_FORMAT = 'DD/MM/YYYY'
+  // Regex pattern to validate numeric input (only digits allowed)
+  DIGIT_PATTERN = /^\d*$/
+  DIGITAL_PATTERN = /^[\d]*$/
 
   constructor(
     private localization: LocalizationService,
@@ -77,8 +95,20 @@ export class TextInputComponent implements OnInit {
 
   ngOnInit() {
     if (this.validationType.length) {
-      this.showDatePicker = this.validationType.includes('date')
-      this.showTimePicker = this.validationType.includes('time')
+      const inputModeMap = {
+        [ValidationType.NUMBER]: InputModeType.NUMBER,
+        [ValidationType.EMAIL]: InputModeType.EMAIL,
+        [ValidationType.PHONE]: InputModeType.PHONE
+      }
+      this.inputModeType =
+        inputModeMap[this.validationType] || InputModeType.TEXT
+
+      this.showDatePicker = [
+        ValidationType.DATE_DMY,
+        ValidationType.DATE_MDY,
+        ValidationType.DATE_YMD
+      ].includes(this.validationType as ValidationType)
+      this.showTimePicker = this.validationType === ValidationType.TIME
       this.showDurationPicker = this.validationType.includes('duration')
       this.isIntegerType = this.validationType === 'integer'
       this.isNumericType = this.validationType === 'number' || this.isIntegerType
@@ -260,17 +290,26 @@ export class TextInputComponent implements OnInit {
 
   async emitKeyboardEvent(value) {
     value = value.toLowerCase()
-    if (value == KeyboardEventType.ENTER) {
-      if (this.isBlankTextInput && this.isRequiredField) {
-        this.showWarningField = true
-        this.showWarningChange.emit(this.showWarningField)
-        return
-      }
-      if (this.showWarningField) {
-        return
-      }
-      await Keyboard.hide()
+    const isEnter = value === KeyboardEventType.ENTER
+    const isInvalidNumber =
+      isEnter &&
+      this.validationType === ValidationType.NUMBER &&
+      !this.DIGIT_PATTERN.test(this.textValue)
+
+    if (isInvalidNumber) {
+      this.showWarningField = true
     }
+
+    // Block Enter if canSubmitOnEnter is false OR if the number input is invalid
+    const shouldBlockEnter =
+      isEnter && (!this.canSubmitOnEnter || isInvalidNumber)
+
+    if (shouldBlockEnter) {
+      this.showWarningField = true
+      this.showWarningChange.emit(this.showWarningField)
+      return
+    }
+
     this.keyboardEvent.emit(value)
   }
 }

@@ -131,6 +131,7 @@
         [textValidationMin]="question.text_validation_min"
         [textValidationMax]="question.text_validation_max"
         [currentlyShown]="currentlyShown"
+        [canSubmitOnEnter]="canGoNextOnEnter"
       ></text-input>
 
       <radio-input
@@ -153,9 +154,9 @@
         [responses]="question.select_choices_or_calculations"
         [currentlyShown]="currentlyShown"
         [previouslyShown]="previouslyShown"
+        [value]="value"
         (valueChange)="emitAnswer($event)"
-      >
-      </matrix-radio-input>
+      ></matrix-radio-input>
 
       <web-input
         *ngSwitchCase="'web'"

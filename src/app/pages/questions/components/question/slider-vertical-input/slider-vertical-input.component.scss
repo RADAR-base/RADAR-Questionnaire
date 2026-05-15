@@ -1,0 +1,142 @@
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 30px;          /* Increased clickable area for better UX */
+  height: 300px;        /* The vertical height */
+  background: transparent;
+  writing-mode: bt-lr;  /* Standard for vertical */
+  cursor: pointer;
+}
+
+/* The Track (The thin line) */
+input[type="range"]::-webkit-slider-runnable-track {
+  width: 2px;           /* This makes it a thin line */
+  height: 100%;
+  background: var(--cl-secondary, rgba(255, 255, 255, 0.4));
+  border-radius: 2px;
+  margin: 0 auto;       /* Centers the thin line within the 30px input */
+}
+
+input[type="range"]::-moz-range-track {
+  width: 2px;
+  height: 100%;
+  background: var(--cl-secondary, rgba(255, 255, 255, 0.4));
+  border-radius: 2px;
+}
+
+/* The Thumb (The small handle) */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 12px;
+  width: 12px;
+  background: var(--cl-secondary, #fff);
+  border-radius: 50%;
+  /* Centers the 16px circle on the 2px line */
+  margin-left: -5px; 
+}
+
+input[type="range"]::-moz-range-thumb {
+  height: 12px;
+  width: 12px;
+  background: var(--cl-secondary, #fff);
+  border-radius: 50%;
+  border: none;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 0;
+}
+
+.value-number {
+  color: var(--ion-font);
+  font-size: 18px;
+  line-height: 1.35em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 16px;
+  min-width: 52px;
+  height: var(--label-height);
+  border-radius: var(--label-height);
+  background-color: var(--cl-primary-40);
+  margin-bottom: 16px;
+}
+
+.slider-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.label-top,
+.label-bottom {
+  color: var(--ion-font);
+  font-size: 14px;
+  line-height: 1.35em;
+  text-align: center;
+  max-width: 160px;
+}
+
+/* Row containing just the track + right-side bounds numbers */
+.track-row {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+
+/* Vertical native range — drag up = higher value */
+.vertical-range {
+  -webkit-appearance: slider-vertical;
+  writing-mode: vertical-lr;
+  direction: rtl;
+  height: 280px;
+  width: 40px;
+  cursor: pointer;
+  accent-color: var(--ion-color-secondary, #3dc2ff);
+}
+
+/* Max at top, min at bottom — floats to the right without affecting centering */
+.bounds-side {
+  position: absolute;
+  left: calc(100%);
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.range-bound {
+  color: var(--ion-font);
+  font-size: 16px;
+  line-height: 1;
+}
+
+.thumb-tooltip {
+  position: absolute;
+  left: calc(100% + 8px);
+  transform: translateY(-50%);
+  background: var(--ion-color-secondary, #3dc2ff);
+  color: #fff;
+  font-size: 13px;
+  padding: 3px 8px;
+  border-radius: 10px;
+  white-space: nowrap;
+  pointer-events: none;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    transform: translateY(-50%);
+    border: 5px solid transparent;
+    border-right-color: var(--ion-color-secondary, #3dc2ff);
+  }
+}

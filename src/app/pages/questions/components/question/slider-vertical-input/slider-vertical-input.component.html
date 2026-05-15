@@ -1,0 +1,20 @@
+<div class="container">
+  <div class="value-number">{{ value }}</div>
+
+  <div class="slider-side">
+    <div class="label-top">{{ labelRight }}</div>
+
+    <div class="track-row">
+      <input type="range" class="vertical-range" [min]="min" [max]="max" [step]="step" [(ngModel)]="value"
+        (ngModelChange)="onInputChange()" (pointerdown)="showTooltip = true" (pointerup)="showTooltip = false"
+        (pointercancel)="showTooltip = false" />
+      <div class="thumb-tooltip" *ngIf="showTooltip && value !== null" [style.top.px]="thumbTopPx">{{ value }}</div>
+      <div class="bounds-side">
+        <span class="range-bound">{{ max }}</span>
+        <span class="range-bound">{{ min }}</span>
+      </div>
+    </div>
+
+    <div class="label-bottom">{{ labelLeft }}</div>
+  </div>
+</div>

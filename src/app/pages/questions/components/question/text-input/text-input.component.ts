@@ -38,7 +38,7 @@ export class TextInputComponent implements OnInit {
   validationType = ''
   @Input()
   requiredField = false
-  /** 
+  /**
    * Controls whether Enter key submission is allowed.
    * Set to true when all required questions are answered and current answer is valid.
    * When false, pressing Enter will show a warning instead of proceeding to the next question.
@@ -50,6 +50,7 @@ export class TextInputComponent implements OnInit {
   InputModeType = InputModeType
 
   showDatePicker: boolean
+  showDateTimePicker = false
   showTimePicker: boolean
   showDurationPicker: boolean
   showWarningField = false
@@ -78,6 +79,12 @@ export class TextInputComponent implements OnInit {
   // Regex pattern to validate numeric input (only digits allowed)
   DIGIT_PATTERN = /^\d*$/
   DIGITAL_PATTERN = /^[\d]*$/
+  // Partial<Record<...>> allows only a subset of ValidationType keys without TypeScript complaining about missing entries
+  INPUT_MODE_MAP: Partial<Record<ValidationType, InputModeType>> = {
+    [ValidationType.NUMBER]: InputModeType.NUMBER,
+    [ValidationType.EMAIL]: InputModeType.EMAIL,
+    [ValidationType.PHONE]: InputModeType.PHONE
+  }
 
   constructor(
     private localization: LocalizationService,
@@ -86,31 +93,37 @@ export class TextInputComponent implements OnInit {
 
   ngOnInit() {
     if (this.validationType.length) {
-      const inputModeMap = {
-        [ValidationType.NUMBER]: InputModeType.NUMBER,
-        [ValidationType.EMAIL]: InputModeType.EMAIL,
-        [ValidationType.PHONE]: InputModeType.PHONE
-      }
       this.inputModeType =
-        inputModeMap[this.validationType] || InputModeType.TEXT
+        this.INPUT_MODE_MAP[this.validationType as ValidationType] ||
+        InputModeType.TEXT
 
       this.showDatePicker = [
         ValidationType.DATE_DMY,
         ValidationType.DATE_MDY,
         ValidationType.DATE_YMD
       ].includes(this.validationType as ValidationType)
+      this.showDateTimePicker = [
+        ValidationType.DATETIME_DMY,
+        ValidationType.DATETIME_MDY,
+        ValidationType.DATETIME_YMD
+      ].includes(this.validationType as ValidationType)
       this.showTimePicker = this.validationType === ValidationType.TIME
-      this.showDurationPicker = this.validationType.includes('duration')
+      this.showDurationPicker = this.validationType.includes(
+        ValidationType.DURATION
+      )
     }
     this.showTextInput =
-      !this.showDatePicker && !this.showTimePicker && !this.showDurationPicker
-    this.showSeconds = this.validationType.includes('second')
+      !this.showDatePicker &&
+      !this.showDateTimePicker &&
+      !this.showTimePicker &&
+      !this.showDurationPicker
+    this.showSeconds = this.validationType.includes(ValidationType.SECOND)
     this.initValues()
   }
 
   initValues() {
-    if (this.showDatePicker) this.initDates()
-    if (this.showTimePicker) this.initTime()
+    if (this.showDatePicker || this.showDateTimePicker) this.initDates()
+    if (this.showTimePicker || this.showDateTimePicker) this.initTime()
     if (this.showDurationPicker) this.initDuration()
   }
 

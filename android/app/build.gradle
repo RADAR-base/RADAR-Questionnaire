@@ -7,7 +7,7 @@ android {
         applicationId "org.phidatalab.radar_armt"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 602
+        versionCode 603
         versionName "3.3.15"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // placeholder substitution but no value for <appAuthRedirectScheme>

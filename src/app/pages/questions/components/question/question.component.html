@@ -5,16 +5,14 @@
   [class.content-matrix]="isMatrix"
 >
   <div class="header" dir="auto">
-    <p *ngIf="!isSectionHeaderHidden">{{ question.section_header }}</p>
+    <p *ngIf="!isSectionHeaderHidden" [innerHTML]="sanitizedSectionHeader"></p>
     <div
       *ngIf="!isFieldLabelHidden"
       class="field-container"
       [class.field-container-matrix]="isMatrix"
       dir="auto"
     >
-      <h2 dir="auto">
-        {{ question.field_label }}
-      </h2>
+      <h2 dir="auto" [innerHTML]="sanitizedFieldLabel"></h2>
     </div>
   </div>
   <div
@@ -82,6 +80,17 @@
         (valueChange)="emitAnswer($event)"
       >
       </slider-input>
+
+      <slider-vertical-input
+        *ngSwitchCase="'slider-vertical'"
+        [min]="question.range.min"
+        [max]="question.range.max"
+        [step]="question.range.step"
+        [labelLeft]="question.range.labelLeft"
+        [labelRight]="question.range.labelRight"
+        (valueChange)="emitAnswer($event)"
+      >
+      </slider-vertical-input>
 
       <info-screen
         *ngSwitchCase="'info'"

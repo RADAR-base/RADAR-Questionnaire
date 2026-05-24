@@ -32,8 +32,10 @@
                 [currentIndex]="currentQuestionGroupId"
                 [isSectionHeaderHidden]="j != currentQuestionIndices[0]"
                 [isMatrix]="item.value.length > 1"
+                [canGoNextOnEnter]="canGoNextOnEnter"
                 (answer)="onAnswer($event)"
                 (nextAction)="nextAction($event)"
+                (warningState)="handleWarningState($event)"
               ></question>
             </div>
           </swiper-slide>

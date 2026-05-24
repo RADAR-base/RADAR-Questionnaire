@@ -51,6 +51,7 @@ export class QuestionType {
   static radio = 'radio'
   static range = 'range'
   static slider = 'slider'
+  static slider_vertical = 'slider-vertical'
   static audio = 'audio'
   static timed = 'timed'
   static info = 'info'

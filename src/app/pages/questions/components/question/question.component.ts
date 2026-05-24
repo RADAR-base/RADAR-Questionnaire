@@ -6,8 +6,10 @@ import {
   OnChanges,
   OnInit,
   Output,
+  SecurityContext,
   ViewChild
 } from '@angular/core'
+import { DomSanitizer } from '@angular/platform-browser'
 
 import {
   KeyboardEventType,
@@ -49,6 +51,8 @@ export class QuestionComponent implements OnInit, OnChanges {
   @Output()
   nextAction: EventEmitter<any> = new EventEmitter<any>()
 
+  sanitizedSectionHeader = ''
+  sanitizedFieldLabel = ''
   value: any
   currentlyShown = false
   previouslyShown = false
@@ -72,7 +76,8 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.info,
     QuestionType.text,
     QuestionType.descriptive,
-    QuestionType.slider
+    QuestionType.slider,
+    QuestionType.slider_vertical
   ])
 
   HIDE_FIELD_LABEL_SET: Set<QuestionType> = new Set([
@@ -87,6 +92,7 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.checkbox,
     QuestionType.yesno,
     QuestionType.slider,
+    QuestionType.slider_vertical,
     QuestionType.range,
     QuestionType.text,
     QuestionType.matrix_radio
@@ -97,11 +103,12 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.checkbox
   ])
 
-  constructor() {
+  constructor(private sanitizer: DomSanitizer) {
     this.value = null
   }
 
   ngOnInit() {
+    this.updateSanitizedHtml()
     this.isScrollable = !this.NON_SCROLLABLE_SET.has(this.question.field_type)
     this.isFieldLabelHidden = this.HIDE_FIELD_LABEL_SET.has(
       this.question.field_type
@@ -129,6 +136,15 @@ export class QuestionComponent implements OnInit, OnChanges {
         Math.abs(this.questionIndex - this.currentIndex) == 1
       this.currentlyShown = false
     }
+  }
+
+  private sanitizeHtml(value: string): string {
+    return this.sanitizer.sanitize(SecurityContext.HTML, value || '') || ''
+  }
+
+  private updateSanitizedHtml() {
+    this.sanitizedSectionHeader = this.sanitizeHtml(this.question?.section_header)
+    this.sanitizedFieldLabel = this.sanitizeHtml(this.question?.field_label)
   }
 
   emitAnswer(event: any) {

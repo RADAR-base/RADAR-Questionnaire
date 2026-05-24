@@ -275,7 +275,8 @@ export class QuestionsService {
         this.questionnaireProcessor.process(
           this.getData(questions),
           task,
-          assessment.questionnaire
+          assessment.questionnaire,
+          assessment.protocol?.metaData
         )
       )
   }

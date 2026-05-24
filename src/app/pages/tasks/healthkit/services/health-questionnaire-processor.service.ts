@@ -12,6 +12,7 @@ import { LogService } from '../../../../core/services/misc/log.service'
 import { QuestionnaireProcessorService } from 'src/app/pages/questions/services/questionnaire-processor/questionnaire-processor.service'
 import { HealthkitService } from './healthkit.service'
 import { NotificationService } from 'src/app/core/services/notifications/notification.service'
+import { TemplateRendererService } from 'src/app/core/services/misc/template-renderer.service'
 
 interface ProcessingProgress {
   stage: 'validation' | 'processing' | 'compression' | 'complete'
@@ -32,9 +33,10 @@ export class HealthQuestionnaireProcessorService extends QuestionnaireProcessorS
     kafka: KafkaService,
     private logger: LogService,
     private healthkit: HealthkitService,
-    notifications: NotificationService
+    notifications: NotificationService,
+    templateRenderer: TemplateRendererService
   ) {
-    super(schedule, kafka, notifications)
+    super(schedule, kafka, notifications, templateRenderer)
   }
 
   async getUnsentHealthkitCount(): Promise<number> {
@@ -80,9 +82,14 @@ export class HealthQuestionnaireProcessorService extends QuestionnaireProcessorS
               .then(() => this.healthkit.setUploadReadyFlag(true))
               .then(() => this.kafka.sendAllFromCache())
               .then((sendResult) => {
-                const allSent = sendResult && Array.isArray(sendResult.failedKeys) && sendResult.failedKeys.length === 0 && !sendResult.cancelled
-                const hasHealthkitFailedKeys = sendResult && Array.isArray(sendResult.failedKeys) && sendResult.failedKeys.filter((key) => key.startsWith(SchemaType.HEALTHKIT)).length > 0
-                if (!allSent && hasHealthkitFailedKeys) {
+                const failedKeys = sendResult && Array.isArray(sendResult.failedKeys) ? sendResult.failedKeys : []
+                const cancelled = Boolean(sendResult && sendResult.cancelled)
+                const hasHealthkitFailedKeys = failedKeys.filter((key) => key.startsWith(SchemaType.HEALTHKIT)).length > 0
+                if (cancelled) {
+                  worker.terminate()
+                  return Promise.reject(new Error('HealthKit upload was cancelled before completion.'))
+                }
+                if (hasHealthkitFailedKeys) {
                   worker.terminate()
                   return Promise.reject(new Error('Not all HealthKit data could be sent.'))
                 }
@@ -137,9 +144,13 @@ export class HealthQuestionnaireProcessorService extends QuestionnaireProcessorS
           .then(() => this.healthkit.setUploadReadyFlag(true))
           .then(() => this.kafka.sendAllFromCache())
           .then((sendResult) => {
-            const allSent = sendResult && Array.isArray(sendResult.failedKeys) && sendResult.failedKeys.length === 0 && !sendResult.cancelled
-            const hasHealthkitFailedKeys = sendResult && Array.isArray(sendResult.failedKeys) && sendResult.failedKeys.filter((key) => key.startsWith(SchemaType.HEALTHKIT)).length > 0
-            if (!allSent && hasHealthkitFailedKeys) {
+            const failedKeys = sendResult && Array.isArray(sendResult.failedKeys) ? sendResult.failedKeys : []
+            const cancelled = Boolean(sendResult && sendResult.cancelled)
+            const hasHealthkitFailedKeys = failedKeys.filter((key) => key.startsWith(SchemaType.HEALTHKIT)).length > 0
+            if (cancelled) {
+              return Promise.reject(new Error('HealthKit upload was cancelled before completion.'))
+            }
+            if (hasHealthkitFailedKeys) {
               return Promise.reject(new Error('Not all HealthKit data could be sent.'))
             }
             return this.healthkit.setUploadReadyFlag(false)

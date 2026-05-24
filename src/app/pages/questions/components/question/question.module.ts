@@ -19,6 +19,7 @@ import { RangeInputComponent } from './range-input/range-input.component'
 import { SliderInputComponent } from './slider-input/slider-input.component'
 import { TextInputComponent } from './text-input/text-input.component'
 import { TimedTestComponent } from './timed-test/timed-test.component'
+import { SliderVerticalInputComponent } from './slider-vertical-input/slider-vertical-input.component'
 import { WebInputComponent } from './web-input/web-input.component'
 
 const COMPONENTS = [
@@ -28,6 +29,7 @@ const COMPONENTS = [
   RadioInputComponent,
   RangeInputComponent,
   SliderInputComponent,
+  SliderVerticalInputComponent,
   TimedTestComponent,
   InfoScreenComponent,
   RangeInfoInputComponent,

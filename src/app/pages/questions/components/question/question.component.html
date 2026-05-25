@@ -5,16 +5,14 @@
   [class.content-matrix]="isMatrix"
 >
   <div class="header" dir="auto">
-    <p *ngIf="!isSectionHeaderHidden">{{ question.section_header }}</p>
+    <p *ngIf="!isSectionHeaderHidden" [innerHTML]="sanitizedSectionHeader"></p>
     <div
       *ngIf="!isFieldLabelHidden"
       class="field-container"
       [class.field-container-matrix]="isMatrix"
       dir="auto"
     >
-      <h2 dir="auto">
-        {{ question.field_label }}
-      </h2>
+      <h2 dir="auto" [innerHTML]="sanitizedFieldLabel"></h2>
     </div>
   </div>
   <div

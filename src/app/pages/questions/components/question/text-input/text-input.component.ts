@@ -43,7 +43,7 @@ export class TextInputComponent implements OnInit {
   @Input()
   textValidationMax: string
 
-  /** 
+  /**
    * Controls whether Enter key submission is allowed.
    * Set to true when all required questions are answered and current answer is valid.
    * When false, pressing Enter will show a warning instead of proceeding to the next question.
@@ -55,6 +55,7 @@ export class TextInputComponent implements OnInit {
   InputModeType = InputModeType
 
   showDatePicker: boolean
+  showDateTimePicker = false
   showTimePicker: boolean
   showDurationPicker: boolean
   showWarningField = false
@@ -87,6 +88,12 @@ export class TextInputComponent implements OnInit {
   // Regex pattern to validate numeric input (only digits allowed)
   DIGIT_PATTERN = /^\d*$/
   DIGITAL_PATTERN = /^[\d]*$/
+  // Partial<Record<...>> allows only a subset of ValidationType keys without TypeScript complaining about missing entries
+  INPUT_MODE_MAP: Partial<Record<ValidationType, InputModeType>> = {
+    [ValidationType.NUMBER]: InputModeType.NUMBER,
+    [ValidationType.EMAIL]: InputModeType.EMAIL,
+    [ValidationType.PHONE]: InputModeType.PHONE
+  }
 
   constructor(
     private localization: LocalizationService,
@@ -95,41 +102,39 @@ export class TextInputComponent implements OnInit {
 
   ngOnInit() {
     if (this.validationType.length) {
-      const inputModeMap = {
-        [ValidationType.NUMBER]: InputModeType.NUMBER,
-        [ValidationType.EMAIL]: InputModeType.EMAIL,
-        [ValidationType.PHONE]: InputModeType.PHONE
-      }
       this.inputModeType =
-        inputModeMap[this.validationType] || InputModeType.TEXT
+        this.INPUT_MODE_MAP[this.validationType as ValidationType] ||
+        InputModeType.TEXT
 
       this.showDatePicker = [
         ValidationType.DATE_DMY,
         ValidationType.DATE_MDY,
         ValidationType.DATE_YMD
       ].includes(this.validationType as ValidationType)
+      this.showDateTimePicker = [
+        ValidationType.DATETIME_DMY,
+        ValidationType.DATETIME_MDY,
+        ValidationType.DATETIME_YMD
+      ].includes(this.validationType as ValidationType)
       this.showTimePicker = this.validationType === ValidationType.TIME
-      this.showDurationPicker = this.validationType.includes('duration')
-      this.isIntegerType = this.validationType === 'integer'
-      this.isNumericType = this.validationType === 'number' || this.isIntegerType
-      if (this.isNumericType) {
-        this.inputModeType = this.isIntegerType ? 'numeric' : 'decimal'
-        this.inputType = 'number'
-        this.inputStep = this.isIntegerType ? '1' : 'any'
-      } else {
-        this.inputModeType = 'text'
-        this.inputType = 'text'
-      }
+      this.showDurationPicker = this.validationType.includes(
+        ValidationType.DURATION
+      )
     }
     this.showTextInput =
-      !this.showDatePicker && !this.showTimePicker && !this.showDurationPicker
-    this.showSeconds = this.validationType.includes('second')
+      !this.showDatePicker &&
+      !this.showDateTimePicker &&
+      !this.showTimePicker &&
+      !this.showDurationPicker
+    this.showSeconds = this.validationType.includes(ValidationType.SECOND)
+    this.isIntegerType = this.validationType === 'integer'
+    this.inputStep = this.isIntegerType ? '1' : 'any'
     this.initValues()
   }
 
   initValues() {
-    if (this.showDatePicker) this.initDates()
-    if (this.showTimePicker) this.initTime()
+    if (this.showDatePicker || this.showDateTimePicker) this.initDates()
+    if (this.showTimePicker || this.showDateTimePicker) this.initTime()
     if (this.showDurationPicker) this.initDuration()
   }
 
@@ -223,34 +228,17 @@ export class TextInputComponent implements OnInit {
       this.value = Object.assign(this.value, value)
       this.valueChange.emit(JSON.stringify(this.value))
     } else {
-      this.numberInputValidation(value)
+      this.inputValidation(value)
       this.valueChange.emit(value)
     }
   }
 
-  numberInputValidation(value) {
-    if (!this.isNumericType) {
-      this.showWarningField = false
-      this.showWarningChange.emit(this.showWarningField)
-      return
-    }
-
-    const isOptionalBlankText =
-      this.isBlankTextInput &&
-      !this.isRequiredField
-    const isNumericValue = this.isIntegerType
-      ? /^[\d]*$/.test(value)
-      : /^[\d]*\.?[\d]*$/.test(value)
-    const hasMinMaxViolation =
-      !isOptionalBlankText &&
-      isNumericValue &&
-      this.isOutOfRange(value)
-
-    if (!isOptionalBlankText && (!isNumericValue || hasMinMaxViolation)) {
+  inputValidation(value) {
+    if (
+      this.validationType === ValidationType.NUMBER &&
+      !this.DIGIT_PATTERN.test(value)
+    ) {
       this.showWarningField = true
-      if (!isNumericValue) {
-        console.log(`You can't enter non-numeric value: ${value}`)
-      }
     } else {
       this.showWarningField = false
     }
@@ -271,21 +259,6 @@ export class TextInputComponent implements OnInit {
     if (value === undefined || value === null || value === '') return null
     const parsedValue = Number(value)
     return Number.isNaN(parsedValue) ? null : parsedValue
-  }
-
-  private get isBlankTextInput(): boolean {
-    return (
-      typeof this.textValue === 'string' &&
-      this.textValue.trim().length === 0
-    )
-  }
-
-  private get isRequiredField(): boolean {
-    return (
-      this.requiredField === true ||
-      this.requiredField === 'true' ||
-      this.requiredField === '1'
-    )
   }
 
   async emitKeyboardEvent(value) {

@@ -72,6 +72,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
   progressCount = 0
   retryAlertShownCount = 0
   isWarningFieldVisible = false
+  canGoNextOnEnter = false
   RequiredField = RequiredField
 
   SHOW_INTRODUCTION_SET: Set<boolean | ShowIntroductionType> = new Set([
@@ -102,7 +103,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
     private localization: LocalizationService,
     private router: Router,
     private appLauncher: AppLauncherService,
-    private alertService: AlertService,
+    private alertService: AlertService
   ) {
     this.backButtonListener = this.platform.backButton.subscribe(() => {
       this.sendCompletionLog()
@@ -307,18 +308,10 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
     const currentQs = this.getCurrentQuestions()
     if (!currentQs) return
 
-    const isBlankOnRequiredQs = !this.questionsService.areAllAnswered(currentQs)
-
-    console.log({
-      requiredField: currentQs[0].required_field,
-      allAnswered: this.questionsService.areAllAnswered(currentQs),
-      anyNextEnabled: this.questionsService.getIsAnyNextEnabled(currentQs),
-      isBlankOnRequiredQs,
-      warning: this.isWarningFieldVisible
-    })
+    this.canGoNextOnEnter = this.questionsService.areAllAnswered(currentQs)
 
     const disableByQuestionType =
-      isBlankOnRequiredQs &&
+      !this.canGoNextOnEnter &&
       !this.questionsService.getIsAnyNextEnabled(currentQs)
 
     this.isRightButtonDisabled =
@@ -444,7 +437,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
         buttons: [
           {
             text: this.localization.translateKey(LocKeys.BTN_DISMISS),
-            handler: () => {}
+            handler: () => { }
           }
         ]
       })

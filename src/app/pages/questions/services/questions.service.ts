@@ -41,6 +41,12 @@ export class QuestionsService {
   DELIMITER = ','
   isProgressCountShown = false
 
+  REQUIRED_FIELD_VALUES: Array<string | undefined> = [
+    RequiredField.TRUE,
+    RequiredField.EMPTY,
+    undefined
+  ]
+
   constructor(
     public questionnaire: QuestionnaireService,
     private answerService: AnswerService,
@@ -49,7 +55,7 @@ export class QuestionsService {
     private questionnaireProcessor: DefaultQuestionnaireProcessorService,
     private remoteConfig: RemoteConfigService,
     private util: Utility
-  ) {}
+  ) { }
 
   getKafkaService() {
     return this.questionnaireProcessor.kafka
@@ -164,9 +170,9 @@ export class QuestionsService {
     return this.answerService.check(id)
   }
 
-  // Check if a question is required based on its required_field property
+  // Makes a question required if the required_field value is in the REQUIRED_FIELD_VALUES array
   isRequired(question: Question): boolean {
-    return question.required_field === RequiredField.TRUE
+    return this.REQUIRED_FIELD_VALUES.includes(question.required_field)
   }
 
   // Check if the answer for a question is blank (null, empty string, or empty array)

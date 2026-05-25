@@ -6,8 +6,10 @@ import {
   OnChanges,
   OnInit,
   Output,
+  SecurityContext,
   ViewChild
 } from '@angular/core'
+import { DomSanitizer } from '@angular/platform-browser'
 
 import {
   KeyboardEventType,
@@ -54,6 +56,8 @@ export class QuestionComponent implements OnInit, OnChanges {
   @Output()
   warningState: EventEmitter<boolean> = new EventEmitter<boolean>()
 
+  sanitizedSectionHeader = ''
+  sanitizedFieldLabel = ''
   value: any
   currentlyShown = false
   previouslyShown = false
@@ -104,12 +108,15 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.checkbox
   ])
 
-  // Inject AnswerService to retrieve and store answers
-  constructor(private answerService: AnswerService) {
+  constructor(
+    private sanitizer: DomSanitizer,
+    private answerService: AnswerService
+  ) {
     this.value = null
   }
 
   ngOnInit() {
+    this.updateSanitizedHtml()
     this.isScrollable = !this.NON_SCROLLABLE_SET.has(this.question.field_type)
     this.isFieldLabelHidden = this.HIDE_FIELD_LABEL_SET.has(
       this.question.field_type
@@ -126,9 +133,10 @@ export class QuestionComponent implements OnInit, OnChanges {
     setTimeout(() => {
       this.showScrollButton = this.isScrollbarVisible()
     }, 900)
- 
+
     // Initialize value from stored answer
-    this.value = this.answerService.answers[this.question.field_name] || null  }
+    this.value = this.answerService.answers[this.question.field_name] || null
+  }
 
   ngOnChanges() {
     this.initRange()
@@ -139,6 +147,17 @@ export class QuestionComponent implements OnInit, OnChanges {
         Math.abs(this.questionIndex - this.currentIndex) == 1
       this.currentlyShown = false
     }
+  }
+
+  private sanitizeHtml(value: string): string {
+    return this.sanitizer.sanitize(SecurityContext.HTML, value || '') || ''
+  }
+
+  private updateSanitizedHtml() {
+    this.sanitizedSectionHeader = this.sanitizeHtml(
+      this.question?.section_header
+    )
+    this.sanitizedFieldLabel = this.sanitizeHtml(this.question?.field_label)
   }
 
   emitAnswer(event: any) {
@@ -209,7 +228,7 @@ export class QuestionComponent implements OnInit, OnChanges {
     return (
       this.SCROLLBAR_VISIBLE_SET.has(this.question.field_type) &&
       this.inputEl.nativeElement.scrollHeight >
-        this.inputEl.nativeElement.clientHeight
+      this.inputEl.nativeElement.clientHeight
     )
   }
 
@@ -219,7 +238,7 @@ export class QuestionComponent implements OnInit, OnChanges {
       this.showScrollButton &&
       event &&
       event.target.scrollTop >=
-        (event.target.scrollHeight - event.target.clientHeight) * 0.1
+      (event.target.scrollHeight - event.target.clientHeight) * 0.1
     ) {
       this.showScrollButton = false
     }

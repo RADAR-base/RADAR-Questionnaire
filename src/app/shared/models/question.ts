@@ -104,6 +104,11 @@ export enum ValidationType {
   DATE_DMY = 'date_dmy',
   DATE_MDY = 'date_mdy',
   DATE_YMD = 'date_ymd',
+  DATETIME_DMY = 'datetime_dmy',
+  DATETIME_MDY = 'datetime_mdy',
+  DATETIME_YMD = 'datetime_ymd',
+  DURATION = 'duration',
+  SECOND = 'second',
   TIME = 'time',
   PHONE = 'phone'
 }
@@ -117,7 +122,8 @@ export enum InputModeType {
 
 export enum RequiredField {
   TRUE = 'y',
-  FALSE = ''
+  FALSE = 'n',
+  EMPTY = ''
 }
 
 export enum WebInputType {

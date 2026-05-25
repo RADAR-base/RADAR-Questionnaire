@@ -5,6 +5,19 @@
   </ion-item>
 </ng-container>
 
+<ng-container *ngIf="showDateTimePicker && currentlyShown">
+  <ion-item (click)="openDatePicker()" color="none">
+    <ion-input [(ngModel)]="selectedDate"> </ion-input>
+    <ion-icon name="calendar" slot="end"></ion-icon>
+  </ion-item>
+  <wheel-selector
+    [values]="timePickerValues"
+    [selection]="defaultTimePickerValue"
+    [labels]="labels"
+    (onSelect)="emitAnswer($event)"
+  ></wheel-selector>
+</ng-container>
+
 <ng-container *ngIf="showTimePicker && currentlyShown">
   <wheel-selector
     [values]="timePickerValues"

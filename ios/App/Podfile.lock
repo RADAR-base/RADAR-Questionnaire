@@ -10,7 +10,7 @@ PODS:
   - CapacitorCommunityGenericOauth2 (6.1.0):
     - Capacitor
     - OAuthSwift (= 2.2.0)
-  - CapacitorCommunityHttp (2.0.0-0):
+  - CapacitorCommunityHttp (2.0.1):
     - Capacitor
   - CapacitorCommunityKeepAwake (4.0.0):
     - Capacitor
@@ -311,7 +311,7 @@ SPEC CHECKSUMS:
   CapacitorAppLauncher: 4584773578ec21018b228fe214430dbb00e13bd5
   CapacitorBrowser: f13ada96777742309ae17a974e934eda8e102508
   CapacitorCommunityGenericOauth2: cd98e4a7b684b9fc4c857d6f904fc3fc11812802
-  CapacitorCommunityHttp: 21fc56d3c3b5b360dea544409b9d6dd92a73b925
+  CapacitorCommunityHttp: 8aeef698e0a6d35edbb6bb2dc511de3fbfef6417
   CapacitorCommunityKeepAwake: 6106b37df55fd4f06e47a2af701ce0dd6ffae1ba
   CapacitorCordova: c07921bdcfec6f691bae22274446b4d606ebf6a4
   CapacitorDevice: 4aceb502ce1142ea45a2aece603169d7479cd271

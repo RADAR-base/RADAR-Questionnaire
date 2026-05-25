@@ -234,11 +234,12 @@ export class TextInputComponent implements OnInit {
   }
 
   inputValidation(value) {
-    if (
-      this.validationType === ValidationType.NUMBER &&
-      !this.DIGIT_PATTERN.test(value)
-    ) {
-      this.showWarningField = true
+    if (this.validationType === ValidationType.NUMBER) {
+      if (this.isOutOfRange(value) || !this.DIGIT_PATTERN.test(value)) {
+        this.showWarningField = true
+      } else {
+        this.showWarningField = false
+      }
     } else {
       this.showWarningField = false
     }

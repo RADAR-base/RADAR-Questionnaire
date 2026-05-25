@@ -31,20 +31,13 @@ export const Localisations = {
     hb: 'RADAR-Base-ל'
   },
   ENROL_WELCOME_DESC: {
-    da:
-      'Tak fordi  du vil deltage i dette studie.  Lad os komme i gang med at opstarte registreringsprocessen.',
-    de:
-      'Danke, dass Sie an dieser Studie teilnehmen. Um loszulegen, lassen Sie uns den Registrierungsprozess starten.',
-    en:
-      "Thank you for taking part in this study. Let's start the enrolment process to get you set up.",
-    es:
-      'Gracias por tomar parte en este estudio. Comencemos el proceso de registro para configurarlo',
-    it:
-      'Grazie per aver preso parte al nostro studio. Iniziamo il processo di arruolamento.',
-    nl:
-      'Bedankt voor uw deelname aan dit onderzoek. Laten we starten met het registratie-proces.',
-    pl:
-      'Dziękujemy za wzięcie udziału w badaniu. Przejdź przez proces rejestracji, byś mógł zacząć korzystać z aplikacji',
+    da: 'Tak fordi  du vil deltage i dette studie.  Lad os komme i gang med at opstarte registreringsprocessen.',
+    de: 'Danke, dass Sie an dieser Studie teilnehmen. Um loszulegen, lassen Sie uns den Registrierungsprozess starten.',
+    en: "Thank you for taking part in this study. Let's start the enrolment process to get you set up.",
+    es: 'Gracias por tomar parte en este estudio. Comencemos el proceso de registro para configurarlo',
+    it: 'Grazie per aver preso parte al nostro studio. Iniziamo il processo di arruolamento.',
+    nl: 'Bedankt voor uw deelname aan dit onderzoek. Laten we starten met het registratie-proces.',
+    pl: 'Dziękujemy za wzięcie udziału w badaniu. Przejdź przez proces rejestracji, byś mógł zacząć korzystać z aplikacji',
     hb: 'תודה על השתתפותך במחקר. בוא נתחיל את תהליך ההרשמה.'
   },
   ENROL_REGISTRATION: {
@@ -58,40 +51,24 @@ export const Localisations = {
     hb: 'הרשמה'
   },
   ENROL_REGISTRATION_DESC: {
-    da:
-      `Før du kan begynde at anvende app'en, skal vi registrere den først.Du kan enten scanne QR- koden eller indtaste symbolet.`,
-    de:
-      'Bevor Sie die App verwenden können, müssen Sie sie zuerst registrieren. Sie können entweder den QR-Code scannen oder das Token eingeben.',
-    en:
-      'Before you can start using the app, we need to register it first. You can either scan the QR code or enter the token.',
-    es:
-      'Antes de poder usar esta aplicación, debe registrarse. Puede escanear el código QR o ingresar el token.',
-    it:
-      'Prima di poter usare questa app, devi registrarti. Puoi scansionare il codice QR o inserire il token.',
-    nl:
-      'Voordat u de app kunt gebruiken, moeten we de app eerst registreren. U kunt de QR code scannen of het token invoeren.',
-    pl:
-      'Zanim będziesz mógł korzystać z aplikacji, musisz się zarejestrować. Możesz zeskanować kod QR lub wpisać Token',
-    hb:
-      'לפני שתוכל להתשתמש באפליקציה אנו צריכים שתרשם אליה. תוכל לעשות זאת באמצעות קוד QR או הזנת טוקן.'
+    da: `Før du kan begynde at anvende app'en, skal vi registrere den først.Du kan enten scanne QR- koden eller indtaste symbolet.`,
+    de: 'Bevor Sie die App verwenden können, müssen Sie sie zuerst registrieren. Sie können entweder den QR-Code scannen oder das Token eingeben.',
+    en: 'Before you can start using the app, we need to register it first. You can either scan the QR code or enter the token.',
+    es: 'Antes de poder usar esta aplicación, debe registrarse. Puede escanear el código QR o ingresar el token.',
+    it: 'Prima di poter usare questa app, devi registrarti. Puoi scansionare il codice QR o inserire il token.',
+    nl: 'Voordat u de app kunt gebruiken, moeten we de app eerst registreren. U kunt de QR code scannen of het token invoeren.',
+    pl: 'Zanim będziesz mógł korzystać z aplikacji, musisz się zarejestrować. Możesz zeskanować kod QR lub wpisać Token',
+    hb: 'לפני שתוכל להתשתמש באפליקציה אנו צריכים שתרשם אליה. תוכל לעשות זאת באמצעות קוד QR או הזנת טוקן.'
   },
   ENROL_REGISTRATION_SCAN_DESC: {
-    da:
-      'Klik på "Scan" knappen og hold kameraet over QR-koden som du får udleveret af forskeren. Du kan se et eksempel på en QR-kode herunder.',
-    de:
-      'Klicken Sie auf die Schaltfläche "Scannen" und richten Sie die Kamera auf den von Ihrem Forscher angegebenen QR-Code. Ein Beispiel für einen QR-Code finden Sie unten.',
-    en:
-      'Click the "Scan" button and point the camera onto the QR code, given by your researcher. An example QR code is below.',
-    es:
-      'Presione el botón "Escanear" e ingrese el código QR que le dio el personal del estudio. A continuación puede ver un ejemplo de código QR',
-    it:
-      'Premi il pulsante "Scan" e inquadra il codice QR che hai ricevuto dal personale dello studio. Qui sotto puoi vedere un QR di esempio.',
-    nl:
-      'Klik op de "Scan" knop en richt de camera op de QR code die u heeft ontvangen van de onderzoeker. Hieronder staat een voorbeeld van een QR code afgebeeld.',
-    pl:
-      'Kliknij przycisk Skanuj i skieruj aparat telefonu na kod QR, który otrzymałeś od badacza. Przykładowy kod QR znajduje się poniżej.',
-    hb:
-      'לחץ על כפתור הסריקה וכוון את המצלמה לכיוון קוד הQR שניתן לך על ידי החוקרים. דוגמה לקוד QR מוצגת למטה.'
+    da: 'Klik på "Scan" knappen og hold kameraet over QR-koden som du får udleveret af forskeren. Du kan se et eksempel på en QR-kode herunder.',
+    de: 'Klicken Sie auf die Schaltfläche "Scannen" und richten Sie die Kamera auf den von Ihrem Forscher angegebenen QR-Code. Ein Beispiel für einen QR-Code finden Sie unten.',
+    en: 'Click the "Scan" button and point the camera onto the QR code, given by your researcher. An example QR code is below.',
+    es: 'Presione el botón "Escanear" e ingrese el código QR que le dio el personal del estudio. A continuación puede ver un ejemplo de código QR',
+    it: 'Premi il pulsante "Scan" e inquadra il codice QR che hai ricevuto dal personale dello studio. Qui sotto puoi vedere un QR di esempio.',
+    nl: 'Klik op de "Scan" knop en richt de camera op de QR code die u heeft ontvangen van de onderzoeker. Hieronder staat een voorbeeld van een QR code afgebeeld.',
+    pl: 'Kliknij przycisk Skanuj i skieruj aparat telefonu na kod QR, który otrzymałeś od badacza. Przykładowy kod QR znajduje się poniżej.',
+    hb: 'לחץ על כפתור הסריקה וכוון את המצלמה לכיוון קוד הQR שניתן לך על ידי החוקרים. דוגמה לקוד QR מוצגת למטה.'
   },
   ENROL_REGISTRATION_NO_QR: {
     da: 'Har du ikke en QR-kode?',
@@ -164,22 +141,14 @@ export const Localisations = {
     hb: 'התחבר עם הדוא״ל והסיסמה של פורטל הלימודים שלך.'
   },
   ENROL_REGISTRATION_TOKEN_DESC: {
-    da:
-      'Indtast token. Dette skal være tilgængeligt under QR-koden på Management Portal. Hvis ikke, skal du scanne QR-koden.',
-    de:
-      'Geben Sie das Token ein. Dies sollte unterhalb des QR-Codes im Management Portal verfügbar sein. Wenn nicht vorhanden, scannen Sie bitte den QR-Code.',
-    en:
-      'Enter the token. This should be available below the QR code on Management Portal. If not present, please scan the QR code.',
-    es:
-      'Introduzca el token. Esto debería estar disponible debajo del código QR en el Portal de administración. Si no está presente, escanee el código QR.',
-    it:
-      'Inserisci il token. Questo dovrebbe essere disponibile sotto il codice QR sul portale di gestione. Se non è presente, scansiona il codice QR.',
-    nl:
-      'Voer het token in. Dit moet beschikbaar zijn onder de QR-code op Management Portal. Indien niet aanwezig, scan de QR-code.',
-    pl:
-      'Wprowadź Token. Powinien być widoczny poniżej kodu QR w Mahagement Portal. Jeśli go tam nie znajdziesz, zeskanuj kod QR.',
-    hb:
-      'הזן את הטוקן. הוא אמור להיות זמין מתחת לקוד הQR בפורטל הניהול. אם הוא לא זמין בבקשה סרוק את קוד הQR.'
+    da: 'Indtast token. Dette skal være tilgængeligt under QR-koden på Management Portal. Hvis ikke, skal du scanne QR-koden.',
+    de: 'Geben Sie das Token ein. Dies sollte unterhalb des QR-Codes im Management Portal verfügbar sein. Wenn nicht vorhanden, scannen Sie bitte den QR-Code.',
+    en: 'Enter the token. This should be available below the QR code on Management Portal. If not present, please scan the QR code.',
+    es: 'Introduzca el token. Esto debería estar disponible debajo del código QR en el Portal de administración. Si no está presente, escanee el código QR.',
+    it: 'Inserisci il token. Questo dovrebbe essere disponibile sotto il codice QR sul portale di gestione. Se non è presente, scansiona il codice QR.',
+    nl: 'Voer het token in. Dit moet beschikbaar zijn onder de QR-code op Management Portal. Indien niet aanwezig, scan de QR-code.',
+    pl: 'Wprowadź Token. Powinien być widoczny poniżej kodu QR w Mahagement Portal. Jeśli go tam nie znajdziesz, zeskanuj kod QR.',
+    hb: 'הזן את הטוקן. הוא אמור להיות זמין מתחת לקוד הQR בפורטל הניהול. אם הוא לא זמין בבקשה סרוק את קוד הQR.'
   },
   ENROL_REGISTRATION_QR: {
     da: 'Har du en QR-kode?',
@@ -202,22 +171,14 @@ export const Localisations = {
     hb: 'העדפות'
   },
   ENROL_PREFERENCES_DESC: {
-    da:
-      'Vi sender dig en ugentlig opsummering om de data du har sendt til os. Vælg lige så mange emner du ønsker at modtage information om.',
-    de:
-      'Wir senden Ihnen wöchentliche Zusammenfassungen über die Daten, die Sie uns senden. Wählen Sie beliebig viele Themen aus, zu denen Sie Informationen erhalten möchten.',
-    en:
-      "We will send you weekly summaries about the data you'll be sending us. Feel free to select as many topics you would like to receive information about.",
-    es:
-      'Le enviaremos cada semana un resumen de los datos que nos envía. Siéntase libre de seleccionar solo los temas sobre los cuales desea recibir información',
-    it:
-      'Ti invieremo ogni settimana un riepilogo dei dati raccolti. Sentiti libero di selezionare solo gli argomenti di cui vuoi ricevere le informazioni.',
-    nl:
-      'We zullen u wekelijks samenvattingen sturen over uw verzamelde gegevens. U kunt zelf de onderwerpen selecteren waarover uw informatie wilt ontvangen.',
-    pl:
-      'Co tydzień wyślemy Ci podsumowanie zebranych przez nas danych. Wybierz wszystkie tematy, na temat których chciałbyś uzyskiwać informacje.',
-    hb:
-      'נשלח לך סיכומים שבועיים על המידע שאתה שולח לנו. תרגיש חופשי לבחור כמה נושאים שתרצה לקבל עליהם מידע.'
+    da: 'Vi sender dig en ugentlig opsummering om de data du har sendt til os. Vælg lige så mange emner du ønsker at modtage information om.',
+    de: 'Wir senden Ihnen wöchentliche Zusammenfassungen über die Daten, die Sie uns senden. Wählen Sie beliebig viele Themen aus, zu denen Sie Informationen erhalten möchten.',
+    en: "We will send you weekly summaries about the data you'll be sending us. Feel free to select as many topics you would like to receive information about.",
+    es: 'Le enviaremos cada semana un resumen de los datos que nos envía. Siéntase libre de seleccionar solo los temas sobre los cuales desea recibir información',
+    it: 'Ti invieremo ogni settimana un riepilogo dei dati raccolti. Sentiti libero di selezionare solo gli argomenti di cui vuoi ricevere le informazioni.',
+    nl: 'We zullen u wekelijks samenvattingen sturen over uw verzamelde gegevens. U kunt zelf de onderwerpen selecteren waarover uw informatie wilt ontvangen.',
+    pl: 'Co tydzień wyślemy Ci podsumowanie zebranych przez nas danych. Wybierz wszystkie tematy, na temat których chciałbyś uzyskiwać informacje.',
+    hb: 'נשלח לך סיכומים שבועיים על המידע שאתה שולח לנו. תרגיש חופשי לבחור כמה נושאים שתרצה לקבל עליהם מידע.'
   },
   ENROL_REGISTRATION_COMPLETE: {
     da: 'Registrering Afsluttet',
@@ -240,20 +201,13 @@ export const Localisations = {
     hb: "הכל מוכן! לחץ על 'התחל' כדי להתחיל את משימות המחקר שלך."
   },
   ENROL_PRIVACY_POLICY_DESC: {
-    da:
-      "Ved at tilmelde dig undersøgelsen accepterer du indsamling og brug af oplysninger i forhold til vores privatlivspolitik.",
-    de:
-      "Indem Sie sich für die Studie anmelden, stimmen Sie der Erfassung und Verwendung von Informationen in Bezug auf unsere Datenschutzrichtlinie zu.",
-    en:
-      "By enrolling in the study, you agree to the collection and use of information in relation to our privacy policy.",
-    es:
-      "Al inscribirse en el estudio, acepta la recopilación y el uso de información en relación con nuestra política de privacidad.",
-    it:
-      "Iscrivendoti allo studio, accetti la raccolta e l'utilizzo delle informazioni in relazione alla nostra politica sulla privacy.",
-    nl:
-      "Door u in te schrijven voor het onderzoek gaat u akkoord met het verzamelen en gebruiken van informatie in verband met ons privacybeleid.",
-    pl:
-      'Zapisując się do badania, zgadzasz się na gromadzenie i wykorzystywanie informacji w związku z naszą polityką prywatności.',
+    da: 'Ved at tilmelde dig undersøgelsen accepterer du indsamling og brug af oplysninger i forhold til vores privatlivspolitik.',
+    de: 'Indem Sie sich für die Studie anmelden, stimmen Sie der Erfassung und Verwendung von Informationen in Bezug auf unsere Datenschutzrichtlinie zu.',
+    en: 'By enrolling in the study, you agree to the collection and use of information in relation to our privacy policy.',
+    es: 'Al inscribirse en el estudio, acepta la recopilación y el uso de información en relación con nuestra política de privacidad.',
+    it: "Iscrivendoti allo studio, accetti la raccolta e l'utilizzo delle informazioni in relazione alla nostra politica sulla privacy.",
+    nl: 'Door u in te schrijven voor het onderzoek gaat u akkoord met het verzamelen en gebruiken van informatie in verband met ons privacybeleid.',
+    pl: 'Zapisując się do badania, zgadzasz się na gromadzenie i wykorzystywanie informacji w związku z naszą polityką prywatności.',
     hb: `בהצטרפות למחקר, אתה מסכים לאיסוף ושימוש במידע ביחס למדיניות הפרטיות שלנו.`
   },
   FINISH_THANKS: {
@@ -308,18 +262,12 @@ export const Localisations = {
   },
   CALENDAR_TASK_MISSED_DESC: {
     da: 'Spørgsmålet kan ikke besvares længere.',
-    de:
-      'Leider können Sie diesen Fragebogen nur zum angegebenen Zeitpunkt beantworten.',
-    en:
-      'Unfortunately, you can only answer this questionnaire at the notified time.',
-    es:
-      'Lamentablemente, solo puede responder este cuestionario en el momento de la notificación.',
-    it:
-      'Sfortunatamente, puoi rispondere a questo questionario solo al momento della notifica.',
-    nl:
-      'Helaas kunt u deze vragenlijst alleen op het aangegeven tijdstip beantwoorden.',
-    pl:
-      'Niestety kwestionariusz można wypełniać tylko po otrzymaniu powiadomienia',
+    de: 'Leider können Sie diesen Fragebogen nur zum angegebenen Zeitpunkt beantworten.',
+    en: 'Unfortunately, you can only answer this questionnaire at the notified time.',
+    es: 'Lamentablemente, solo puede responder este cuestionario en el momento de la notificación.',
+    it: 'Sfortunatamente, puoi rispondere a questo questionario solo al momento della notifica.',
+    nl: 'Helaas kunt u deze vragenlijst alleen op het aangegeven tijdstip beantwoorden.',
+    pl: 'Niestety kwestionariusz można wypełniać tylko po otrzymaniu powiadomienia',
     hb: '.לצערנו, אתה יכול לענות על השאלון רק כשיש ההתראה'
   },
   CLINICAL_TASKS: {
@@ -474,13 +422,10 @@ export const Localisations = {
   },
   SETTINGS_NOTIFICATIONS_NIGHTMOD_DESC: {
     da: 'Nattilstand stopper alle notifikationer imellem kl. 22:00 og 07:30.',
-    de:
-      'Der Nachtmodus stoppt alle Benachrichtigungen zwischen 22:00 und 07:30.',
+    de: 'Der Nachtmodus stoppt alle Benachrichtigungen zwischen 22:00 und 07:30.',
     en: 'Night Mode stops all notifications between 22:00 and 07:30.',
-    es:
-      'La modalidad nocturna detiene todas las notificaciones entre las  22 y las  7:30 horas',
-    it:
-      "La modalità notte bloccherà tutte le notifiche dell'app tra le 22:00 e le 7:30.",
+    es: 'La modalidad nocturna detiene todas las notificaciones entre las  22 y las  7:30 horas',
+    it: "La modalità notte bloccherà tutte le notifiche dell'app tra le 22:00 e le 7:30.",
     nl: 'De nachtmodus blokkeert alle notificaties tussen 22:00u en 7:30u.',
     pl: 'Tryb nocny blokuje wszystkie powiadomienia między 22:00 a 07:30.',
     hb: '.מצב לילה עוצר את כל ההתראות בין 22:00 ל- 7:30 למחרת'
@@ -546,76 +491,44 @@ export const Localisations = {
     hb: '.אתה עומד לאפס את האפליקציה'
   },
   SETTINGS_RESET_ALERT_OPTION_DESC: {
-    da:
-      'Vælg at nulstille din cache, tilmelding eller appkonfiguration (dette inkluderer dine meddelelser og plan).<br><br>Du kan også vælge at nulstille mere end en mulighed.',
-    de:
-      'Wählen Sie, ob Sie Ihren Cache, Ihre Registrierung oder Ihre App-Konfiguration zurücksetzen möchten (dies schließt Ihre Benachrichtigungen und Ihren Zeitplan ein).<br><br>Sie können auch mehrere Optionen zurücksetzen.',
-    en:
-      'Choose options to reset.<br><br>You may also choose to reset more than one option. To do a full reset, select all the options.',
-    es:
-      'Elija restablecer su caché, inscripción o configuración de la aplicación (esto incluye sus notificaciones y programación).<br><br>También puede optar por restablecer más de una opción.',
-    it:
-      "Scegli di reimpostare la cache, la registrazione o la configurazione dell'app (ciò include le notifiche e la pianificazione).<br><br>Puoi anche scegliere di ripristinare più di un'opzione.",
-    nl:
-      'Kies ervoor om uw cache, inschrijving of app-configuratie opnieuw in te stellen (dit omvat uw meldingen en planning).<br><br>U kunt er ook voor kiezen om meer dan één optie opnieuw in te stellen.',
-    pl:
-      'Wybierz zresetowanie pamięci podręcznej, rejestracji lub konfiguracji aplikacji (dotyczy to również powiadomień i harmonogramu).<br><br>Możesz także zresetować więcej niż jedną opcję.',
-    hb:
-      'בחר לאפס את זיכרון המטמון, ההרשמה או התצורה של האפליקציה שלך (זה כולל את ההודעות ולוח הזמנים שלך).<br><br> אתה יכול גם לבחור לאפס יותר מאפשרות אחת.'
+    da: 'Vælg at nulstille din cache, tilmelding eller appkonfiguration (dette inkluderer dine meddelelser og plan).<br><br>Du kan også vælge at nulstille mere end en mulighed.',
+    de: 'Wählen Sie, ob Sie Ihren Cache, Ihre Registrierung oder Ihre App-Konfiguration zurücksetzen möchten (dies schließt Ihre Benachrichtigungen und Ihren Zeitplan ein).<br><br>Sie können auch mehrere Optionen zurücksetzen.',
+    en: 'Choose options to reset.<br><br>You may also choose to reset more than one option. To do a full reset, select all the options.',
+    es: 'Elija restablecer su caché, inscripción o configuración de la aplicación (esto incluye sus notificaciones y programación).<br><br>También puede optar por restablecer más de una opción.',
+    it: "Scegli di reimpostare la cache, la registrazione o la configurazione dell'app (ciò include le notifiche e la pianificazione).<br><br>Puoi anche scegliere di ripristinare più di un'opzione.",
+    nl: 'Kies ervoor om uw cache, inschrijving of app-configuratie opnieuw in te stellen (dit omvat uw meldingen en planning).<br><br>U kunt er ook voor kiezen om meer dan één optie opnieuw in te stellen.',
+    pl: 'Wybierz zresetowanie pamięci podręcznej, rejestracji lub konfiguracji aplikacji (dotyczy to również powiadomień i harmonogramu).<br><br>Możesz także zresetować więcej niż jedną opcję.',
+    hb: 'בחר לאפס את זיכרון המטמון, ההרשמה או התצורה של האפליקציה שלך (זה כולל את ההודעות ולוח הזמנים שלך).<br><br> אתה יכול גם לבחור לאפס יותר מאפשרות אחת.'
   },
   SETTINGS_RESET_ALERT_ENROLMENT_DESC: {
-    da:
-      'Ved at nulstille tilmeldingen nulstiller du også konfigs. Når du nulstiller, bliver du logget ud af appen.',
-    de:
-      'Durch Zurücksetzen der Registrierung setzen Sie auch die Konfigurationen zurück. Nach dem Zurücksetzen werden Sie von der App abgemeldet.',
-    en:
-      'By resetting enrolment, you are also resetting the configs. Once you reset you will be logged out of the app.',
-    es:
-      'Al restablecer la inscripción, también restablece las configuraciones. Una vez que reinicie, se cerrará la sesión de la aplicación.',
-    it:
-      "Ripristinando la registrazione, si ripristinano anche le configurazioni. Una volta ripristinato, verrai disconnesso dall'app.",
-    nl:
-      'Door de inschrijving opnieuw in te stellen, zet u ook de configuraties terug. Zodra u opnieuw instelt, wordt u uitgelogd bij de app.',
-    pl:
-      'Przez zresetowanie rejestracji resetujesz także konfiguracje. Po zresetowaniu nastąpi wylogowanie z aplikacji.',
-    hb:
-      "על ידי איפוס הרשמה, אתה מאפס מחדש את הקונפיג 'ים. לאחר שתאפס, תתנתק מהאפליקציה."
+    da: 'Ved at nulstille tilmeldingen nulstiller du også konfigs. Når du nulstiller, bliver du logget ud af appen.',
+    de: 'Durch Zurücksetzen der Registrierung setzen Sie auch die Konfigurationen zurück. Nach dem Zurücksetzen werden Sie von der App abgemeldet.',
+    en: 'By resetting enrolment, you are also resetting the configs. Once you reset you will be logged out of the app.',
+    es: 'Al restablecer la inscripción, también restablece las configuraciones. Una vez que reinicie, se cerrará la sesión de la aplicación.',
+    it: "Ripristinando la registrazione, si ripristinano anche le configurazioni. Una volta ripristinato, verrai disconnesso dall'app.",
+    nl: 'Door de inschrijving opnieuw in te stellen, zet u ook de configuraties terug. Zodra u opnieuw instelt, wordt u uitgelogd bij de app.',
+    pl: 'Przez zresetowanie rejestracji resetujesz także konfiguracje. Po zresetowaniu nastąpi wylogowanie z aplikacji.',
+    hb: "על ידי איפוס הרשמה, אתה מאפס מחדש את הקונפיג 'ים. לאחר שתאפס, תתנתק מהאפליקציה."
   },
   SETTINGS_RESET_ALERT_CACHE_DESC: {
-    da:
-      "Ved at nulstille cachen sletter du dine cache-spurgte data, der ikke kunne sendes. Prøv at sende dataene først ved at trykke på 'Send cache-data' i indstillingerne",
-    de:
-      'Durch Zurücksetzen des Caches löschen Sie Ihre zwischengespeicherten Fragebogendaten, die nicht gesendet werden konnten. Bitte versuchen Sie zuerst, die Daten zu senden, indem Sie in den Einstellungen auf "Zwischengespeicherte Daten senden" tippen',
-    en:
-      'By resetting the cache, you are deleting your cached questionnaire data that failed to send. Please try sending the data first by tapping `Send Cached Data` in the settings.',
-    es:
-      'Al restablecer el caché, está eliminando los datos del cuestionario en caché que no se pudieron enviar. Intente enviar los datos primero tocando `Enviar datos en caché` en la configuración',
-    it:
-      'Ripristinando la cache, si eliminano i dati del questionario memorizzati nella cache che non è stato possibile inviare. Prova a inviare prima i dati toccando "Invia dati memorizzati nella cache" nelle impostazioni',
-    nl:
-      "Door de cache opnieuw in te stellen, verwijdert u uw gecachte vragenlijstgegevens die niet konden worden verzonden. Probeer eerst de gegevens te verzenden door in de instellingen op 'Cachegegevens verzenden' te tikken",
-    pl:
-      'Przez zresetowanie pamięci podręcznej usuwasz buforowane dane kwestionariusza, których nie udało się wysłać. Spróbuj najpierw wysłać dane, dotykając opcji „Wyślij buforowane dane" w ustawieniach',
-    hb:
-      "על ידי איפוס המטמון, אתה מוחק את נתוני השאלון המטמון שלך שלא הצליחו לשלוח. אנא נסה לשלוח את הנתונים תחילה על ידי הקשה על 'שלח נתונים במטמון' בהגדרות"
+    da: "Ved at nulstille cachen sletter du dine cache-spurgte data, der ikke kunne sendes. Prøv at sende dataene først ved at trykke på 'Send cache-data' i indstillingerne",
+    de: 'Durch Zurücksetzen des Caches löschen Sie Ihre zwischengespeicherten Fragebogendaten, die nicht gesendet werden konnten. Bitte versuchen Sie zuerst, die Daten zu senden, indem Sie in den Einstellungen auf "Zwischengespeicherte Daten senden" tippen',
+    en: 'By resetting the cache, you are deleting your cached questionnaire data that failed to send. Please try sending the data first by tapping `Send Cached Data` in the settings.',
+    es: 'Al restablecer el caché, está eliminando los datos del cuestionario en caché que no se pudieron enviar. Intente enviar los datos primero tocando `Enviar datos en caché` en la configuración',
+    it: 'Ripristinando la cache, si eliminano i dati del questionario memorizzati nella cache che non è stato possibile inviare. Prova a inviare prima i dati toccando "Invia dati memorizzati nella cache" nelle impostazioni',
+    nl: "Door de cache opnieuw in te stellen, verwijdert u uw gecachte vragenlijstgegevens die niet konden worden verzonden. Probeer eerst de gegevens te verzenden door in de instellingen op 'Cachegegevens verzenden' te tikken",
+    pl: 'Przez zresetowanie pamięci podręcznej usuwasz buforowane dane kwestionariusza, których nie udało się wysłać. Spróbuj najpierw wysłać dane, dotykając opcji „Wyślij buforowane dane" w ustawieniach',
+    hb: "על ידי איפוס המטמון, אתה מוחק את נתוני השאלון המטמון שלך שלא הצליחו לשלוח. אנא נסה לשלוח את הנתונים תחילה על ידי הקשה על 'שלח נתונים במטמון' בהגדרות"
   },
   SETTINGS_RESET_ALERT_CONFIG_DESC: {
-    da:
-      'Ved at nulstille konfigurationerne trækker du spørgeskemaer, regenererer din spørgeskemaplan og omplanlægger meddelelser.',
-    de:
-      'Durch Zurücksetzen der Konfigurationen ziehen Sie Fragebögen erneut ab, generieren Ihren Fragebogenplan neu und planen Benachrichtigungen neu.',
-    en:
-      'By resetting the configurations, you are re-pulling questionnaires, regenerating your questionnaire schedule, and rescheduling notifications.',
-    es:
-      'Al restablecer las configuraciones, está volviendo a extraer los cuestionarios, regenerando la programación de su cuestionario y reprogramando las notificaciones.',
-    it:
-      'Ripristinando le configurazioni, si stanno rielaborando i questionari, rigenerando la pianificazione del questionario e riprogrammando le notifiche.',
-    nl:
-      'Door de configuraties opnieuw in te stellen, trekt u de vragenlijsten opnieuw, genereert u uw vragenlijstschema opnieuw en plant u de meldingen opnieuw.',
-    pl:
-      'Po zresetowaniu konfiguracji ponownie pobierasz kwestionariusze, odnawiasz harmonogram ankiety i ponownie planujesz powiadomienia.',
-    hb:
-      'על ידי איפוס התצורות, אתה מושך שאלונים מחדש, מחדש את לוח הזמנים לשאלון שלך ומזמן מחדש התראות.'
+    da: 'Ved at nulstille konfigurationerne trækker du spørgeskemaer, regenererer din spørgeskemaplan og omplanlægger meddelelser.',
+    de: 'Durch Zurücksetzen der Konfigurationen ziehen Sie Fragebögen erneut ab, generieren Ihren Fragebogenplan neu und planen Benachrichtigungen neu.',
+    en: 'By resetting the configurations, you are re-pulling questionnaires, regenerating your questionnaire schedule, and rescheduling notifications.',
+    es: 'Al restablecer las configuraciones, está volviendo a extraer los cuestionarios, regenerando la programación de su cuestionario y reprogramando las notificaciones.',
+    it: 'Ripristinando le configurazioni, si stanno rielaborando i questionari, rigenerando la pianificazione del questionario e riprogrammando le notifiche.',
+    nl: 'Door de configuraties opnieuw in te stellen, trekt u de vragenlijsten opnieuw, genereert u uw vragenlijstschema opnieuw en plant u de meldingen opnieuw.',
+    pl: 'Po zresetowaniu konfiguracji ponownie pobierasz kwestionariusze, odnawiasz harmonogram ankiety i ponownie planujesz powiadomienia.',
+    hb: 'על ידי איפוס התצורות, אתה מושך שאלונים מחדש, מחדש את לוח הזמנים לשאלון שלך ומזמן מחדש התראות.'
   },
   SETTINGS_ENROLMENT: {
     da: 'Inschrijving',
@@ -1178,16 +1091,12 @@ export const Localisations = {
     hb: 'זאת התראת מבחן'
   },
   NOTIFICATION_REMINDER_SOON: {
-    da:
-      'RADAR-CNS spørgsmålene skal være færdige imorgen, husk venligst på dette.',
-    de:
-      'Der RADAR-CNS Fragebogen muss morgen ausgefüllt werden – bitte denken Sie daran.',
-    en:
-      'RADAR-CNS questionnaire needs to be completed tomorrow – please remember.',
+    da: 'RADAR-CNS spørgsmålene skal være færdige imorgen, husk venligst på dette.',
+    de: 'Der RADAR-CNS Fragebogen muss morgen ausgefüllt werden – bitte denken Sie daran.',
+    en: 'RADAR-CNS questionnaire needs to be completed tomorrow – please remember.',
     es: 'Recuerde que mañana tendrá que completar el cuestionario RADAR-CNS.',
     it: 'Ti ricordiamo che domani dovrai compilare il questionario RADAR-CNS.',
-    nl:
-      'Vergeet u s.v.p. niet om de RADAR-CNS vragenlijst uiterlijk morgen in te vullen?',
+    nl: 'Vergeet u s.v.p. niet om de RADAR-CNS vragenlijst uiterlijk morgen in te vullen?',
     pl: 'Ankietę RADAR-CNS powinieneś wypełnić jutro – prosimy pamiętaj',
     hb: 'נא לזכור ששאלון RADAR-CNS צריך להיענות מחר בבוקר'
   },
@@ -1195,12 +1104,9 @@ export const Localisations = {
     da: 'Husk at sætte lidt tid af i morgen, til at svare på et par spørgsmål.',
     de: 'Denken Sie daran, morgen etwas Zeit für ein paar Fragebögen zu haben.',
     en: 'Remember to put some time aside for a few questionnaires tomorrow.',
-    es:
-      'Recuerde reservarse el tiempo mañana para contestar algunos cuestionarios',
-    it:
-      'Domani ricordati di lasciare del tempo libero per rispondere a brevi questionari.',
-    nl:
-      'Vergeet u niet om morgen wat tijd vrij te maken voor het invullen van enkele vragenlijsten?',
+    es: 'Recuerde reservarse el tiempo mañana para contestar algunos cuestionarios',
+    it: 'Domani ricordati di lasciare del tempo libero per rispondere a brevi questionari.',
+    nl: 'Vergeet u niet om morgen wat tijd vrij te maken voor het invullen van enkele vragenlijsten?',
     pl: 'Pamiętaj, by jutro zachować trochę czasu na wypełnienie ankiety.',
     hb: 'תזכור לפנות קצת זמן להשלים שאלונים מחר'
   },
@@ -1245,42 +1151,27 @@ export const Localisations = {
     hb: '?פספסת שאלון'
   },
   NOTIFICATION_REMINDER_FORGOTTEN_DESC: {
-    da:
-      'Det ser ud til at du ikke har fået svaret på alle spørgsmålene. Kunne du gøre dette med det samme?',
-    de:
-      'Es scheint, Sie haben nicht alle unsere Fragen beantwortet. Könnten Sie dies bitte jetzt nachholen?',
-    en:
-      "It seems you haven't answered all of our questions. Could you please do that now?",
-    es:
-      'Parece que no ha respondido todas las preguntas. ¿Podría hacerlo ahora?',
-    it:
-      'Sembra che ti sia dimenticato di rispondere ad alcune domande. Puoi farlo ora?',
-    nl:
-      'Het lijkt erop dat u niet alle vragen heeft beantwoord. Zou u dit nu alsnog willen doen?',
-    pl:
-      'Wygląda na to, że nie odpowiedziałeś na wszystkie pytania. Czy mógłbyś zrobić to teraz?',
+    da: 'Det ser ud til at du ikke har fået svaret på alle spørgsmålene. Kunne du gøre dette med det samme?',
+    de: 'Es scheint, Sie haben nicht alle unsere Fragen beantwortet. Könnten Sie dies bitte jetzt nachholen?',
+    en: "It seems you haven't answered all of our questions. Could you please do that now?",
+    es: 'Parece que no ha respondido todas las preguntas. ¿Podría hacerlo ahora?',
+    it: 'Sembra che ti sia dimenticato di rispondere ad alcune domande. Puoi farlo ora?',
+    nl: 'Het lijkt erop dat u niet alle vragen heeft beantwoord. Zou u dit nu alsnog willen doen?',
+    pl: 'Wygląda na to, że nie odpowiedziałeś na wszystkie pytania. Czy mógłbyś zrobić to teraz?',
     hb: '?נראה שלא ענית על כל השאלות. תוכל לעשות זאת כעת'
   },
   NOTIFICATION_REMINDER_FORGOTTEN_ALERT_DEFAULT_DESC: {
-    da:
-      'Du har ikke nået at svare på dette. Ingen problemer! De næste spørgsmål kommer snart',
-    de:
-      'Du hast die letzten Fragen verpasst. Mach dir keine Sorgen! Der nächste Fragebogen wird bald fällig.',
-    en:
-      "You've missed this one. Dont worry! The next quesionnaire will be due soon.",
-    es:
-      'No ha llegado a contestarlo, no se preocupe! El siguiente cuestionario aparecerá pronto.',
-    it:
-      'Hai perso questo. Non preoccuparti! Il prossimo quesionario sarà presto disponibile.',
-    nl:
-      'Je hebt deze gemist. Maak je geen zorgen! De volgende vragenlijst zal binnenkort verschijnen.',
-    pl:
-      'Pominąłeś to pytanie. Nie przejmuj się! Następna ankieta będzie dostępna wkrótce.',
+    da: 'Du har ikke nået at svare på dette. Ingen problemer! De næste spørgsmål kommer snart',
+    de: 'Du hast die letzten Fragen verpasst. Mach dir keine Sorgen! Der nächste Fragebogen wird bald fällig.',
+    en: "You've missed this one. Dont worry! The next quesionnaire will be due soon.",
+    es: 'No ha llegado a contestarlo, no se preocupe! El siguiente cuestionario aparecerá pronto.',
+    it: 'Hai perso questo. Non preoccuparti! Il prossimo quesionario sarà presto disponibile.',
+    nl: 'Je hebt deze gemist. Maak je geen zorgen! De volgende vragenlijst zal binnenkort verschijnen.',
+    pl: 'Pominąłeś to pytanie. Nie przejmuj się! Następna ankieta będzie dostępna wkrótce.',
     hb: 'פספסת את שאלון זה. אל תדאג! השאלון הבא יהיה בקרוב'
   },
   NOTIFICATION_REMINDER_FORGOTTEN_ALERT_LASTOFNIGHT_DESC: {
-    da:
-      'Du har ikke nået at svare på sidste spørgsmål. Ingen problemer! Hav en god aften.',
+    da: 'Du har ikke nået at svare på sidste spørgsmål. Ingen problemer! Hav en god aften.',
     de: 'Du hast den letzten verpasst. Mach dir keine Sorgen! Gute Nacht.',
     en: "You've missed the last one. Dont worry! Have a good night.",
     es: 'No ha llegado a contestar el último. No se preocupe! Buenas noches!',
@@ -1330,22 +1221,14 @@ export const Localisations = {
     hb: 'נקודות'
   },
   CREDITS_BODY: {
-    da:
-      'Lavet med &hearts; til dig af RADAR-Base-samfundet. For mere information click <a href="http://radar-base.org">her</a>.',
-    de:
-      'Von der RADAR-Base-Community gemacht mit &hearts; für Sie gemacht. Für weitere Informationen klicken Sie <a href="http://radar-base.org">hier</a>.',
-    en:
-      'Made with &hearts; for you by the RADAR-Base community. For more information click <a href="http://radar-base.org">here</a>.',
-    es:
-      'Hecho con &hearts;  para usted por la comunidad RADAR-Base. Para obtener más información, haga clic  en <a href="http://radar-base.org">aquí</a>.',
-    it:
-      'Fatto con il &hearts; per te dalla comunità RADAR-Base. Per maggiori informazioni clicca <a href="http://radar-base.org">qui</a>.',
-    nl:
-      'Met &hearts; voor u gemaakt door de RADAR-Base community. Voor meer informatie klik <a href="http://radar-base.org">here</a>.',
-    pl:
-      'przygotowane dla Ciebie przez RADAR-Base. Aby uzyskać więcej informacji kliknij <a href="http://radar-base.org">aquí</a>.',
-    hb:
-      'נעשה עבורך באהבה על ידי קונצרסיום RADAR-Base. למידע נוסף לחץ- http://radar-base.org'
+    da: 'Lavet med &hearts; til dig af RADAR-Base-samfundet. For mere information click <a href="http://radar-base.org">her</a>.',
+    de: 'Von der RADAR-Base-Community gemacht mit &hearts; für Sie gemacht. Für weitere Informationen klicken Sie <a href="http://radar-base.org">hier</a>.',
+    en: 'Made with &hearts; for you by the RADAR-Base community. For more information click <a href="http://radar-base.org">here</a>.',
+    es: 'Hecho con &hearts;  para usted por la comunidad RADAR-Base. Para obtener más información, haga clic  en <a href="http://radar-base.org">aquí</a>.',
+    it: 'Fatto con il &hearts; per te dalla comunità RADAR-Base. Per maggiori informazioni clicca <a href="http://radar-base.org">qui</a>.',
+    nl: 'Met &hearts; voor u gemaakt door de RADAR-Base community. Voor meer informatie klik <a href="http://radar-base.org">here</a>.',
+    pl: 'przygotowane dla Ciebie przez RADAR-Base. Aby uzyskać więcej informacji kliknij <a href="http://radar-base.org">aquí</a>.',
+    hb: 'נעשה עבורך באהבה על ידי קונצרסיום RADAR-Base. למידע נוסף לחץ- http://radar-base.org'
   },
   TASK_CALENDAR_TITLE: {
     da: 'Dagens opgaver',
@@ -1529,11 +1412,9 @@ export const Localisations = {
   },
   TESTING_NOTIFICATIONS_MESSAGE: {
     da: 'Luk nu appen og vent i 3 minutter for testmeddelelsen.',
-    de:
-      'Schließen Sie nun die App und warten Sie 3 Minuten auf die Testbenachrichtigung.',
+    de: 'Schließen Sie nun die App und warten Sie 3 Minuten auf die Testbenachrichtigung.',
     en: 'Now close the app and wait for 3 minutes for the test notification.',
-    es:
-      'Ahora cierre la aplicación y espere 3 minutos para la notificación de prueba.',
+    es: 'Ahora cierre la aplicación y espere 3 minutos para la notificación de prueba.',
     it: "Ora chiudi l'app e attendi 3 minuti per la notifica del test.",
     nl: 'Sluit nu de app en wacht 3 minuten op de testmelding.',
     pl: 'Zamknij aplikację i poczekaj 3 minuty na powiadomienie testowe',
@@ -1580,16 +1461,11 @@ export const Localisations = {
     hb: 'המשימה הופסקה, התחל מחדש'
   },
   AUDIO_TASK_BUTTON_ALERT_DESC: {
-    da:
-      'Stop venligst optagelsen, når du er færdig for at aktivere den næste knap.',
-    de:
-      'Bitte stoppen Sie die Aufnahme, wenn Sie fertig sind, um die Schaltfläche „Weiter" zu aktivieren.',
-    en:
-      'Please stop the recording once you are done in order to enable the next button.',
-    es:
-      'Detenga la grabación una vez que haya terminado para habilitar el siguiente botón.',
-    it:
-      'Interrompi la registrazione una volta che hai finito per abilitare il pulsante successivo.',
+    da: 'Stop venligst optagelsen, når du er færdig for at aktivere den næste knap.',
+    de: 'Bitte stoppen Sie die Aufnahme, wenn Sie fertig sind, um die Schaltfläche „Weiter" zu aktivieren.',
+    en: 'Please stop the recording once you are done in order to enable the next button.',
+    es: 'Detenga la grabación una vez que haya terminado para habilitar el siguiente botón.',
+    it: 'Interrompi la registrazione una volta che hai finito per abilitare il pulsante successivo.',
     nl: 'Stop de opname als u klaar bent om de volgende knop in te schakelen.',
     pl: 'Po zakończeniu zatrzymaj nagrywanie, aby włączyć następny przycisk.',
     hb: 'אנא עצור את ההקלטה לאחר שתסיים כדי להפעיל את הכפתור הבא.'
@@ -1615,21 +1491,14 @@ export const Localisations = {
     hb: 'לשלוח הקלטה?'
   },
   CONFIG_ERROR_DESC: {
-    da:
-      'Vi kunne ikke opdatere din konfiguration lige nu. Det kan skyldes et midlertidigt netværksproblem. Tryk på "Prøv igen" for at prøve igen, eller tryk på "Afskedige" for at fortsætte med at bruge appen. Hvis denne besked vises igen næste gang, du åbner appen, bedes du kontakte din studiekoordinator.',
-    de:
-      'Wir konnten Ihre Konfiguration gerade nicht aktualisieren. Das könnte ein vorübergehendes Netzwerkproblem sein. Tippen Sie auf "Wiederholen", um es erneut zu versuchen, oder auf "Entlassen", um die App weiter zu nutzen. Wenn diese Meldung beim nächsten Öffnen der App erneut erscheint, wenden Sie sich bitte an Ihren Studienkoordinator.',
-    en:
-      'We couldn’t update your configuration right now. This may be a temporary network issue. You can tap "Retry" to try again, or tap "Dismiss" to continue using the app. If this message appears again next time you open the app, please contact your study coordinator.',
-    es:
-      'No pudimos actualizar su configuración ahora mismo. Puede deberse a un problema temporal de red. Puede tocar "Reintentar" para volver a intentarlo, o tocar "Descartar" para seguir usando la aplicación. Si este mensaje aparece de nuevo la próxima vez que abra la aplicación, comuníquese con su coordinador de estudio.',
+    da: 'Vi kunne ikke opdatere din konfiguration lige nu. Det kan skyldes et midlertidigt netværksproblem. Tryk på "Prøv igen" for at prøve igen, eller tryk på "Afskedige" for at fortsætte med at bruge appen. Hvis denne besked vises igen næste gang, du åbner appen, bedes du kontakte din studiekoordinator.',
+    de: 'Wir konnten Ihre Konfiguration gerade nicht aktualisieren. Das könnte ein vorübergehendes Netzwerkproblem sein. Tippen Sie auf "Wiederholen", um es erneut zu versuchen, oder auf "Entlassen", um die App weiter zu nutzen. Wenn diese Meldung beim nächsten Öffnen der App erneut erscheint, wenden Sie sich bitte an Ihren Studienkoordinator.',
+    en: 'We couldn’t update your configuration right now. This may be a temporary network issue. You can tap "Retry" to try again, or tap "Dismiss" to continue using the app. If this message appears again next time you open the app, please contact your study coordinator.',
+    es: 'No pudimos actualizar su configuración ahora mismo. Puede deberse a un problema temporal de red. Puede tocar "Reintentar" para volver a intentarlo, o tocar "Descartar" para seguir usando la aplicación. Si este mensaje aparece de nuevo la próxima vez que abra la aplicación, comuníquese con su coordinador de estudio.',
     it: `Non siamo riusciti ad aggiornare la configurazione in questo momento. Potrebbe essere un problema temporaneo di rete. Puoi toccare "Riprovare" per riprovare oppure "Respingere" per continuare a usare l’app. Se questo messaggio ricompare la prossima volta che apri l’app, contatta il tuo coordinatore dello studio.`,
-    nl:
-      'We konden je configuratie nu niet bijwerken. Dit kan een tijdelijk netwerkprobleem zijn. Tik op "Probeer opnieuw" om het opnieuw te proberen, of tik op "Afwijzen" om door te gaan met het gebruik van de app. Als dit bericht de volgende keer dat je de app opent weer verschijnt, neem dan contact op met je studiecoördinator.',
-    pl:
-      'Nie udało się teraz zaktualizować konfiguracji. To może być chwilowy problem z siecią. Możesz nacisnąć „Spróbuj ponownie”, aby spróbować ponownie, albo „Odwołać”, aby kontynuować korzystanie z aplikacji. Jeśli ten komunikat pojawi się ponownie następnym razem, gdy otworzysz aplikację, skontaktuj się z koordynatorem badania.',
-    hb:
-      'לא הצלחנו לעדכן את ההגדרות שלך כרגע. ייתכן שמדובר בבעיה זמנית ברשת. אפשר ללחוץ על "נסה שוב" כדי לנסות שוב, או ללחוץ על "לשחרר" כדי להמשיך להשתמש באפליקציה. אם ההודעה הזו תופיע שוב בפעם הבאה שתפתח/י את האפליקציה, נא ליצור קשר עם רכז/ת המחקר.'
+    nl: 'We konden je configuratie nu niet bijwerken. Dit kan een tijdelijk netwerkprobleem zijn. Tik op "Probeer opnieuw" om het opnieuw te proberen, of tik op "Afwijzen" om door te gaan met het gebruik van de app. Als dit bericht de volgende keer dat je de app opent weer verschijnt, neem dan contact op met je studiecoördinator.',
+    pl: 'Nie udało się teraz zaktualizować konfiguracji. To może być chwilowy problem z siecią. Możesz nacisnąć „Spróbuj ponownie”, aby spróbować ponownie, albo „Odwołać”, aby kontynuować korzystanie z aplikacji. Jeśli ten komunikat pojawi się ponownie następnym razem, gdy otworzysz aplikację, skontaktuj się z koordynatorem badania.',
+    hb: 'לא הצלחנו לעדכן את ההגדרות שלך כרגע. ייתכן שמדובר בבעיה זמנית ברשת. אפשר ללחוץ על "נסה שוב" כדי לנסות שוב, או ללחוץ על "לשחרר" כדי להמשיך להשתמש באפליקציה. אם ההודעה הזו תופיע שוב בפעם הבאה שתפתח/י את האפליקציה, נא ליצור קשר עם רכז/ת המחקר.'
   },
   SPLASH_STATUS_UPDATING_CONFIG: {
     da: 'Opdaterer underretninger og planlæg...',
@@ -1661,6 +1530,26 @@ export const Localisations = {
     pl: 'Wprowadź tekst',
     hb: 'הזן טקסט'
   },
+  NUMBER_INPUT_WARNING: {
+    da: 'Dette felt accepterer kun tal. Sørg for ikke at indtaste specialtegn.',
+    de: 'Dieses Feld akzeptiert nur Zahlen. Stellen Sie sicher, dass Sie keine Sonderzeichen eingeben.',
+    en: "This field only accepts numbers. Make sure you don't enter any special characters.",
+    es: 'Este campo solo acepta números. Asegúrate de no ingresar caracteres especiales.',
+    it: 'Questo campo accetta solo numeri. Assicurati di non inserire caratteri speciali.',
+    nl: 'Dit veld accepteert alleen nummers. Zorg ervoor dat u geen speciale tekens invoert.',
+    pl: 'To pole akceptuje tylko liczby. Upewnij się, że nie wprowadzasz żadnych znaków specjalnych.',
+    hb: 'שדה זה מקבל רק מספרים. ודא שלא הזנת תווים מיוחדים.'
+  },
+  TEXT_INPUT_WARNING: {
+    da: 'Skriv venligst dit svar for at fortsætte.',
+    de: 'Bitte schreiben Sie Ihre Antwort, um fortzufahren.',
+    en: 'Please write your answer to continue.',
+    es: 'Por favor, escriba su respuesta para continuar.',
+    it: 'Per favore, scrivi la tua risposta per continuare.',
+    nl: 'Schrijf uw antwoord om door te gaan.',
+    pl: 'Proszę napisać swoją odpowiedź, aby kontynuować.',
+    hb: 'אנא כתוב את התשובה שלך כדי להמשיך.'
+  },
   EXTERNAL_APP_LAUNCH_DESC: {
     da: 'Afslut spørgeskemaet og start',
     de: 'Beenden Sie den Fragebogen und starten Sie',
@@ -1683,14 +1572,12 @@ export const Localisations = {
   },
   EXTERNAL_APP_FAILURE_ON_VALIDATING: {
     da: 'er ikke installeret på din enhed eller understøtter ikke dybe links.',
-    de:
-      'nicht auf Ihrem Gerät installiert ist oder Deep Linking nicht unterstützt.',
+    de: 'nicht auf Ihrem Gerät installiert ist oder Deep Linking nicht unterstützt.',
     en: 'is not installed on your device or does not support deep linking.',
     es: 'no está instalado en su dispositivo o no admite enlaces profundos.',
     it: 'non è installato sul tuo dispositivo o non supporta il deep linking.',
     nl: 'is niet op uw apparaat geïnstalleerd of ondersteunt geen deeplinking.',
-    pl:
-      'nie jest zainstalowany na Twoim urządzeniu lub nie obsługuje precyzyjnych linków.',
+    pl: 'nie jest zainstalowany na Twoim urządzeniu lub nie obsługuje precyzyjnych linków.',
     hb: 'אינו מותקן במכשיר שלך או אינו תומך בקישור עמוק.'
   },
   EXTERNAL_APP_FAILURE_ON_LAUNCH_TITLE: {
@@ -1714,11 +1601,11 @@ export const Localisations = {
     hb: 'לא ניתן להפעיל.'
   },
   DATA_SEND_ERROR_DESC: {
-    en: 'We couldn\'t send some data, possibly due to a network issue. Would you like to try again?',
+    en: "We couldn't send some data, possibly due to a network issue. Would you like to try again?",
     es: 'No pudimos enviar algunos datos, posiblemente debido a un problema de conexión. ¿Quieres intentarlo de nuevo?',
     da: 'Vi kunne ikke sende nogle data, muligvis på grund af netværksproblemer. Vil du prøve igen?',
     de: 'Einige Daten konnten möglicherweise aufgrund eines Netzwerkproblems nicht gesendet werden. Möchten Sie es erneut versuchen?',
-    fr: 'Nous n\'avons pas pu envoyer certaines données, peut-être en raison d\'un problème de réseau. Voulez-vous réessayer ?',
+    fr: "Nous n'avons pas pu envoyer certaines données, peut-être en raison d'un problème de réseau. Voulez-vous réessayer ?",
     it: 'Non siamo riusciti a inviare alcuni dati, forse a causa di un problema di rete. Vuoi riprovare?',
     nl: 'We konden sommige gegevens niet verzenden, mogelijk door een netwerkprobleem. Wilt u het opnieuw proberen?',
     pl: 'Nie udało się wysłać niektórych danych, prawdopodobnie z powodu problemu z siecią. Czy chcesz spróbować ponownie?',

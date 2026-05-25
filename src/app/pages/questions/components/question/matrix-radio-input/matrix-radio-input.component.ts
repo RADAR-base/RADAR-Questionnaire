@@ -26,8 +26,10 @@ export class MatrixRadioInputComponent implements OnInit, OnChanges {
   currentlyShown: boolean
   @Input()
   previouslyShown: boolean
+  @Input()
+  value: number
 
-  value: number = null
+  selectedValue: number = null
   uniqueID: number = uniqueID++
   name = `radio-input-${this.uniqueID}`
   items: Item[] = Array()
@@ -40,10 +42,12 @@ export class MatrixRadioInputComponent implements OnInit, OnChanges {
         value: item.code
       })
     })
+    // Initialize selectedValue from the input value to restore previous selections
+    this.selectedValue = this.value || null
   }
 
   ngOnChanges() {
-    if (this.currentlyShown && !this.previouslyShown)
+    if (this.currentlyShown && !this.previouslyShown && !this.selectedValue)
       setTimeout(() => this.onInputChange(this.responses[0].code), 100)
   }
 

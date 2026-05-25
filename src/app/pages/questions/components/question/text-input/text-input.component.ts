@@ -13,6 +13,10 @@ import * as moment from 'moment'
 
 import { LocalizationService } from '../../../../../core/services/misc/localization.service'
 import { KeyboardEventType } from '../../../../../shared/enums/events'
+import {
+  ValidationType,
+  InputModeType
+} from '../../../../../shared/models/question'
 
 @Component({
   selector: 'text-input',
@@ -26,14 +30,30 @@ export class TextInputComponent implements OnInit {
   valueChange: EventEmitter<string> = new EventEmitter<string>()
   @Output()
   keyboardEvent: EventEmitter<string> = new EventEmitter<string>()
-  @Input()
-  type: string
+  @Output()
+  showWarningChange: EventEmitter<boolean> = new EventEmitter<boolean>()
   @Input()
   currentlyShown: boolean
+  @Input()
+  validationType = ''
+  @Input()
+  requiredField = false
+  /**
+   * Controls whether Enter key submission is allowed.
+   * Set to true when all required questions are answered and current answer is valid.
+   * When false, pressing Enter will show a warning instead of proceeding to the next question.
+   */
+  @Input()
+  canSubmitOnEnter = false
+
+  ValidationType = ValidationType
+  InputModeType = InputModeType
 
   showDatePicker: boolean
+  showDateTimePicker = false
   showTimePicker: boolean
   showDurationPicker: boolean
+  showWarningField = false
   showTextInput = true
   showSeconds: boolean
 
@@ -54,28 +74,56 @@ export class TextInputComponent implements OnInit {
   }
   textValue = ''
   value = {}
+  inputModeType = 'text'
   DEFAULT_DATE_FORMAT = 'DD/MM/YYYY'
+  // Regex pattern to validate numeric input (only digits allowed)
+  DIGIT_PATTERN = /^\d*$/
+  DIGITAL_PATTERN = /^[\d]*$/
+  // Partial<Record<...>> allows only a subset of ValidationType keys without TypeScript complaining about missing entries
+  INPUT_MODE_MAP: Partial<Record<ValidationType, InputModeType>> = {
+    [ValidationType.NUMBER]: InputModeType.NUMBER,
+    [ValidationType.EMAIL]: InputModeType.EMAIL,
+    [ValidationType.PHONE]: InputModeType.PHONE
+  }
 
   constructor(
     private localization: LocalizationService,
     public modalCtrl: ModalController
-  ) { }
+  ) {}
 
   ngOnInit() {
-    if (this.type.length) {
-      this.showDatePicker = this.type.includes('date')
-      this.showTimePicker = this.type.includes('time')
-      this.showDurationPicker = this.type.includes('duration')
+    if (this.validationType.length) {
+      this.inputModeType =
+        this.INPUT_MODE_MAP[this.validationType as ValidationType] ||
+        InputModeType.TEXT
+
+      this.showDatePicker = [
+        ValidationType.DATE_DMY,
+        ValidationType.DATE_MDY,
+        ValidationType.DATE_YMD
+      ].includes(this.validationType as ValidationType)
+      this.showDateTimePicker = [
+        ValidationType.DATETIME_DMY,
+        ValidationType.DATETIME_MDY,
+        ValidationType.DATETIME_YMD
+      ].includes(this.validationType as ValidationType)
+      this.showTimePicker = this.validationType === ValidationType.TIME
+      this.showDurationPicker = this.validationType.includes(
+        ValidationType.DURATION
+      )
     }
     this.showTextInput =
-      !this.showDatePicker && !this.showTimePicker && !this.showDurationPicker
-    this.showSeconds = this.type.includes('second')
+      !this.showDatePicker &&
+      !this.showDateTimePicker &&
+      !this.showTimePicker &&
+      !this.showDurationPicker
+    this.showSeconds = this.validationType.includes(ValidationType.SECOND)
     this.initValues()
   }
 
   initValues() {
-    if (this.showDatePicker) this.initDates()
-    if (this.showTimePicker) this.initTime()
+    if (this.showDatePicker || this.showDateTimePicker) this.initDates()
+    if (this.showTimePicker || this.showDateTimePicker) this.initTime()
     if (this.showDurationPicker) this.initDuration()
   }
 
@@ -133,7 +181,9 @@ export class TextInputComponent implements OnInit {
   }
 
   datePickerObj: any = {}
-  selectedDate: string = this.localization.moment(Date.now()).format(this.DEFAULT_DATE_FORMAT)
+  selectedDate: string = this.localization
+    .moment(Date.now())
+    .format(this.DEFAULT_DATE_FORMAT)
 
   async openDatePicker() {
     const datePickerModal = await this.modalCtrl.create({
@@ -148,7 +198,9 @@ export class TextInputComponent implements OnInit {
 
     datePickerModal.onDidDismiss().then(data => {
       let date = moment(data.data.date, this.DEFAULT_DATE_FORMAT)
-      this.selectedDate = date.isValid() ? date.format(this.DEFAULT_DATE_FORMAT) : this.selectedDate
+      this.selectedDate = date.isValid()
+        ? date.format(this.DEFAULT_DATE_FORMAT)
+        : this.selectedDate
 
       this.defaultDatePickerValue = {
         year: date.format('YYYY'),
@@ -164,12 +216,45 @@ export class TextInputComponent implements OnInit {
     if (typeof value !== 'string') {
       this.value = Object.assign(this.value, value)
       this.valueChange.emit(JSON.stringify(this.value))
-    } else this.valueChange.emit(value)
+    } else {
+      this.inputValidation(value)
+      this.valueChange.emit(value)
+    }
+  }
+
+  inputValidation(value) {
+    if (
+      this.validationType === ValidationType.NUMBER &&
+      !this.DIGIT_PATTERN.test(value)
+    ) {
+      this.showWarningField = true
+    } else {
+      this.showWarningField = false
+    }
+    this.showWarningChange.emit(this.showWarningField)
   }
 
   async emitKeyboardEvent(value) {
     value = value.toLowerCase()
-    if (value == KeyboardEventType.ENTER) await Keyboard.hide()
+    const isEnter = value === KeyboardEventType.ENTER
+    const isInvalidNumber =
+      isEnter &&
+      this.validationType === ValidationType.NUMBER &&
+      !this.DIGIT_PATTERN.test(this.textValue)
+
+    if (isInvalidNumber) {
+      this.showWarningField = true
+    }
+
+    // Block Enter if canSubmitOnEnter is false OR if the number input is invalid
+    const shouldBlockEnter =
+      isEnter && (!this.canSubmitOnEnter || isInvalidNumber)
+
+    if (shouldBlockEnter) {
+      this.showWarningField = true
+      this.showWarningChange.emit(this.showWarningField)
+      return
+    }
 
     this.keyboardEvent.emit(value)
   }

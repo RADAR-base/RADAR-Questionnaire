@@ -22,6 +22,7 @@ import {
   Response
 } from '../../../../shared/models/question'
 import { Task } from '../../../../shared/models/task'
+import { AnswerService } from '../../services/answer.service'
 
 @Component({
   selector: 'question',
@@ -29,8 +30,8 @@ import { Task } from '../../../../shared/models/task'
   styleUrls: ['question.component.scss']
 })
 export class QuestionComponent implements OnInit, OnChanges {
-  @ViewChild('content', { static: false }) content
-  @ViewChild('input', { read: ElementRef, static: false }) inputEl
+  @ViewChild('content', { static: false }) content: ElementRef
+  @ViewChild('input', { read: ElementRef, static: false }) inputEl: ElementRef
 
   @Input()
   question: Question
@@ -46,10 +47,14 @@ export class QuestionComponent implements OnInit, OnChanges {
   isNextAutomatic: boolean // Automatically slide to next upon answer
   @Input()
   isMatrix = false
+  @Input()
+  canGoNextOnEnter = false
   @Output()
   answer: EventEmitter<Answer> = new EventEmitter<Answer>()
   @Output()
   nextAction: EventEmitter<any> = new EventEmitter<any>()
+  @Output()
+  warningState: EventEmitter<boolean> = new EventEmitter<boolean>()
 
   sanitizedSectionHeader = ''
   sanitizedFieldLabel = ''
@@ -103,7 +108,10 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.checkbox
   ])
 
-  constructor(private sanitizer: DomSanitizer) {
+  constructor(
+    private sanitizer: DomSanitizer,
+    private answerService: AnswerService
+  ) {
     this.value = null
   }
 
@@ -125,6 +133,9 @@ export class QuestionComponent implements OnInit, OnChanges {
     setTimeout(() => {
       this.showScrollButton = this.isScrollbarVisible()
     }, 900)
+
+    // Initialize value from stored answer
+    this.value = this.answerService.answers[this.question.field_name] || null
   }
 
   ngOnChanges() {
@@ -143,7 +154,9 @@ export class QuestionComponent implements OnInit, OnChanges {
   }
 
   private updateSanitizedHtml() {
-    this.sanitizedSectionHeader = this.sanitizeHtml(this.question?.section_header)
+    this.sanitizedSectionHeader = this.sanitizeHtml(
+      this.question?.section_header
+    )
     this.sanitizedFieldLabel = this.sanitizeHtml(this.question?.field_label)
   }
 
@@ -215,7 +228,7 @@ export class QuestionComponent implements OnInit, OnChanges {
     return (
       this.SCROLLBAR_VISIBLE_SET.has(this.question.field_type) &&
       this.inputEl.nativeElement.scrollHeight >
-      this.inputEl.nativeElement.clientHeight
+        this.inputEl.nativeElement.clientHeight
     )
   }
 
@@ -225,7 +238,7 @@ export class QuestionComponent implements OnInit, OnChanges {
       this.showScrollButton &&
       event &&
       event.target.scrollTop >=
-      (event.target.scrollHeight - event.target.clientHeight) * 0.1
+        (event.target.scrollHeight - event.target.clientHeight) * 0.1
     ) {
       this.showScrollButton = false
     }
@@ -238,6 +251,10 @@ export class QuestionComponent implements OnInit, OnChanges {
       left: 0,
       behavior: 'smooth'
     })
+  }
+
+  onWarningFieldChange(showWarning: boolean) {
+    this.warningState.emit(showWarning)
   }
 
   onAudioRecordStart(start: boolean) {

@@ -10,54 +10,32 @@
     <ion-input [(ngModel)]="selectedDate"> </ion-input>
     <ion-icon name="calendar" slot="end"></ion-icon>
   </ion-item>
-  <wheel-selector
-    [values]="timePickerValues"
-    [selection]="defaultTimePickerValue"
-    [labels]="labels"
-    (onSelect)="emitAnswer($event)"
-  ></wheel-selector>
+  <wheel-selector [values]="timePickerValues" [selection]="defaultTimePickerValue" [labels]="labels"
+    (onSelect)="emitAnswer($event)"></wheel-selector>
 </ng-container>
 
 <ng-container *ngIf="showTimePicker && currentlyShown">
-  <wheel-selector
-    [values]="timePickerValues"
-    [selection]="defaultTimePickerValue"
-    [labels]="labels"
-    (onSelect)="emitAnswer($event)"
-  ></wheel-selector>
+  <wheel-selector [values]="timePickerValues" [selection]="defaultTimePickerValue" [labels]="labels"
+    (onSelect)="emitAnswer($event)"></wheel-selector>
 </ng-container>
 
 <ng-container *ngIf="showDurationPicker && currentlyShown">
-  <wheel-selector
-    [values]="durationPickerValues"
-    [selection]="defaultDurationPickerValue"
-    [labels]="labels"
-    (onSelect)="emitAnswer($event)"
-  ></wheel-selector>
+  <wheel-selector [values]="durationPickerValues" [selection]="defaultDurationPickerValue" [labels]="labels"
+    (onSelect)="emitAnswer($event)"></wheel-selector>
 </ng-container>
 
 <ng-container *ngIf="showTextInput && currentlyShown">
   <ion-label *ngIf="showWarningField">
     {{
-      validationType === ValidationType.NUMBER
-        ? ('NUMBER_INPUT_WARNING' | translate)
-        : ('TEXT_INPUT_WARNING' | translate)
+    isNumericType && useNumberInputWarning
+    ? ('NUMBER_INPUT_WARNING' | translate)
+    : ('TEXT_INPUT_WARNING' | translate)
     }}
   </ion-label>
   <ion-item color="none" class="input">
-    <ion-input
-      [type]="inputType"
-      [inputmode]="inputModeType"
-      [step]="inputStep"
-      [min]="textValidationMin"
-      [max]="textValidationMax"
-      enterkeyhint="next"
-      placeholder="{{ 'PLACEHOLDER_TEXT_INPUT' | translate }}"
-      [(ngModel)]="textValue"
-      (ngModelChange)="emitAnswer($event)"
-      (ionFocus)="emitKeyboardEvent('focus')"
-      (ionBlur)="emitKeyboardEvent('blur')"
-      (keyup)="emitKeyboardEvent($event.key)"
-    ></ion-input>
+    <ion-input [type]="inputType" [inputmode]="inputModeType" [step]="inputStep" [min]="textValidationMin"
+      [max]="textValidationMax" enterkeyhint="next" placeholder="{{ 'PLACEHOLDER_TEXT_INPUT' | translate }}"
+      [(ngModel)]="textValue" (ngModelChange)="emitAnswer($event)" (ionFocus)="emitKeyboardEvent('focus')"
+      (ionBlur)="emitKeyboardEvent('blur')" (keyup)="emitKeyboardEvent($event.key)"></ion-input>
   </ion-item>
 </ng-container>

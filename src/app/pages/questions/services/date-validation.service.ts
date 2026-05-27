@@ -2,20 +2,22 @@ import { Injectable } from '@angular/core'
 import { Moment } from 'moment'
 
 import { LocalizationService } from '../../../core/services/misc/localization.service'
-import { RedcapDateKeyword, ValidationType } from '../../../shared/models/question'
+import { DateValidationKeyword } from '../../../shared/models/question'
 import {
+  ANSWER_DATE_FORMATS,
+  BOUND_DATE_FORMAT,
+  BOUND_DATETIME_FORMAT,
   DateAnswerParts,
-  DateBoundRole,
-  DatePickerBounds,
   DATE_DISPLAY_FORMAT,
-  getParseFormats,
+  DatePickerBounds,
+  DateValidationContext,
+  edgeOfBound,
   isDateTimeValidationType,
-  parseRedcapDateKeyword,
-  RedcapDateValidationContext
-} from '../validation/redcap-date-validation'
+  parseDateValidationKeyword
+} from '../validation/date-validation'
 
 @Injectable({ providedIn: 'root' })
-export class RedcapDateValidationService {
+export class DateValidationService {
   readonly displayFormat = DATE_DISPLAY_FORMAT
 
   constructor(private localization: LocalizationService) {}
@@ -25,8 +27,9 @@ export class RedcapDateValidationService {
     return parsed.isValid() ? parsed : null
   }
 
-  getPickerBounds(context: RedcapDateValidationContext): DatePickerBounds {
-    const { min, max } = this.getBounds(context)
+  getPickerBounds(context: DateValidationContext): DatePickerBounds {
+    const min = this.resolveBound(context.textValidationMin, context, 'min')
+    const max = this.resolveBound(context.textValidationMax, context, 'max')
     return {
       ...(min && { fromDate: min.toDate() }),
       ...(max && { toDate: max.toDate() })
@@ -35,7 +38,7 @@ export class RedcapDateValidationService {
 
   applyPickerBounds(
     pickerConfig: Record<string, unknown>,
-    context: RedcapDateValidationContext
+    context: DateValidationContext
   ): void {
     const { fromDate, toDate } = this.getPickerBounds(context)
     if (fromDate) pickerConfig.fromDate = fromDate
@@ -54,19 +57,19 @@ export class RedcapDateValidationService {
 
   momentFromAnswerParts(
     parts: DateAnswerParts,
-    context: RedcapDateValidationContext,
+    context: DateValidationContext,
     defaultTime?: DateAnswerParts
   ): Moment | null {
     if (!parts.year || !parts.month || !parts.day) return null
 
-    const dateMoment = this.localization.moment(
+    const date = this.localization.moment(
       `${parts.year}-${parts.month}-${parts.day}`,
-      ['YYYY-M-D', 'YYYY-MMM-D', 'YYYY-MM-DD', ...getParseFormats(context.validationType as ValidationType)],
+      ANSWER_DATE_FORMATS,
       true
     )
-    if (!dateMoment.isValid()) return null
+    if (!date.isValid()) return null
     if (!isDateTimeValidationType(context.validationType)) {
-      return dateMoment.startOf('day')
+      return date.startOf('day')
     }
 
     const time = this.localization.moment(
@@ -74,9 +77,9 @@ export class RedcapDateValidationService {
       'hh:mm:ss A',
       true
     )
-    if (!time.isValid()) return dateMoment.startOf('day')
+    if (!time.isValid()) return date.startOf('day')
 
-    return dateMoment.set({
+    return date.set({
       hour: time.hour(),
       minute: time.minute(),
       second: time.second()
@@ -85,24 +88,25 @@ export class RedcapDateValidationService {
 
   isAnswerValid(
     parts: DateAnswerParts,
-    context: RedcapDateValidationContext,
+    context: DateValidationContext,
     defaultTime?: DateAnswerParts
   ): boolean {
     const value = this.momentFromAnswerParts(parts, context, defaultTime)
-    if (!value) return true
-    return !this.isOutOfRange(value, context)
+    return !value || !this.isOutOfRange(value, context)
   }
 
-  clampToBounds(m: Moment, context: RedcapDateValidationContext): Moment {
-    const { min, max } = this.getBounds(context)
+  clampToBounds(m: Moment, context: DateValidationContext): Moment {
+    const min = this.resolveBound(context.textValidationMin, context, 'min')
+    const max = this.resolveBound(context.textValidationMax, context, 'max')
     let result = m.clone()
     if (min?.isAfter(result)) result = min.clone()
     if (max?.isBefore(result)) result = max.clone()
     return result
   }
 
-  isOutOfRange(m: Moment, context: RedcapDateValidationContext): boolean {
-    const { min, max } = this.getBounds(context)
+  isOutOfRange(m: Moment, context: DateValidationContext): boolean {
+    const min = this.resolveBound(context.textValidationMin, context, 'min')
+    const max = this.resolveBound(context.textValidationMax, context, 'max')
     if (!min && !max) return false
 
     const value = isDateTimeValidationType(context.validationType)
@@ -114,58 +118,44 @@ export class RedcapDateValidationService {
     )
   }
 
-  private getBounds(context: RedcapDateValidationContext): {
-    min: Moment | null
-    max: Moment | null
-  } {
-    return {
-      min: this.resolveBound(context, context.textValidationMin, 'min'),
-      max: this.resolveBound(context, context.textValidationMax, 'max')
-    }
-  }
-
   private resolveBound(
-    context: RedcapDateValidationContext,
     raw: string | undefined,
-    role: DateBoundRole
+    context: DateValidationContext,
+    role: 'min' | 'max'
   ): Moment | null {
     if (!raw?.trim()) return null
 
-    const keyword = parseRedcapDateKeyword(raw)
+    const keyword = parseDateValidationKeyword(raw)
     if (keyword) return this.boundFromKeyword(keyword, role)
 
-    const parsed = this.parseFixedDate(context, raw.trim())
+    const parsed = this.parseBoundDate(raw.trim(), context)
     if (!parsed) return null
 
-    return this.alignBound(parsed, role, isDateTimeValidationType(context.validationType))
+    return edgeOfBound(
+      parsed,
+      role,
+      isDateTimeValidationType(context.validationType)
+    )
   }
 
-  private boundFromKeyword(keyword: RedcapDateKeyword, role: DateBoundRole): Moment {
+  private boundFromKeyword(
+    keyword: DateValidationKeyword,
+    role: 'min' | 'max'
+  ): Moment {
     const now = this.localization.moment()
-    if (keyword === RedcapDateKeyword.NOW) return now.clone()
+    if (keyword === DateValidationKeyword.NOW) return now.clone()
     return role === 'min' ? now.clone().startOf('day') : now.clone().endOf('day')
   }
 
-  private parseFixedDate(
-    context: RedcapDateValidationContext,
-    raw: string
-  ): Moment | null {
-    for (const format of getParseFormats(context.validationType as ValidationType)) {
+  private parseBoundDate(raw: string, context: DateValidationContext): Moment | null {
+    const formats = isDateTimeValidationType(context.validationType)
+      ? [BOUND_DATETIME_FORMAT, BOUND_DATE_FORMAT]
+      : [BOUND_DATE_FORMAT]
+
+    for (const format of formats) {
       const parsed = this.localization.moment(raw, format, true)
       if (parsed.isValid()) return parsed
     }
-    const loose = this.localization.moment(raw)
-    return loose.isValid() ? loose : null
-  }
-
-  private alignBound(
-    parsed: Moment,
-    role: DateBoundRole,
-    isDatetime: boolean
-  ): Moment {
-    if (isDatetime) {
-      return role === 'min' ? parsed.clone().startOf('second') : parsed.clone().endOf('second')
-    }
-    return role === 'min' ? parsed.clone().startOf('day') : parsed.clone().endOf('day')
+    return null
   }
 }

@@ -13,12 +13,12 @@ import * as moment from 'moment'
 import { LocalizationService } from '../../../../../core/services/misc/localization.service'
 import { KeyboardEventType } from '../../../../../shared/enums/events'
 import { InputModeType, ValidationType } from '../../../../../shared/models/question'
-import { RedcapDateValidationService } from '../../../services/redcap-date-validation.service'
+import { DateValidationService } from '../../../services/date-validation.service'
 import {
   isDateOnlyValidationType,
   isDateTimeValidationType,
   isDateValidationType
-} from '../../../validation/redcap-date-validation'
+} from '../../../validation/date-validation'
 
 @Component({
   selector: 'text-input',
@@ -98,7 +98,7 @@ export class TextInputComponent implements OnInit {
 
   constructor(
     private localization: LocalizationService,
-    private redcapDateValidation: RedcapDateValidationService,
+    private dateValidation: DateValidationService,
     public modalCtrl: ModalController
   ) { }
 
@@ -134,7 +134,7 @@ export class TextInputComponent implements OnInit {
     this.inputStep = this.isIntegerType ? '1' : 'any'
     this.selectedDate = this.localization
       .moment(Date.now())
-      .format(this.redcapDateValidation.displayFormat)
+      .format(this.dateValidation.displayFormat)
     this.initValues()
   }
 
@@ -145,7 +145,7 @@ export class TextInputComponent implements OnInit {
   }
 
   initDates() {
-    const momentInstance = this.redcapDateValidation.clampToBounds(
+    const momentInstance = this.dateValidation.clampToBounds(
       this.localization.moment(Date.now()),
       this.dateValidationContext
     )
@@ -155,8 +155,8 @@ export class TextInputComponent implements OnInit {
     const year = Array.from(Array(31).keys()).map(d => String(d + 2000))
     this.datePickerValues = { day, month, year }
     this.defaultDatePickerValue =
-      this.redcapDateValidation.toAnswerDateParts(momentInstance)
-    this.selectedDate = momentInstance.format(this.redcapDateValidation.displayFormat)
+      this.dateValidation.toAnswerDateParts(momentInstance)
+    this.selectedDate = momentInstance.format(this.dateValidation.displayFormat)
     this.emitDateAnswer(this.defaultDatePickerValue)
   }
 
@@ -191,7 +191,7 @@ export class TextInputComponent implements OnInit {
   selectedDate: string
 
   async openDatePicker() {
-    this.redcapDateValidation.applyPickerBounds(
+    this.dateValidation.applyPickerBounds(
       this.datePickerObj,
       this.dateValidationContext
     )
@@ -208,18 +208,18 @@ export class TextInputComponent implements OnInit {
     datePickerModal.onDidDismiss().then(data => {
       if (!data?.data?.date) return
 
-      const date = this.redcapDateValidation.parseDisplayDate(data.data.date)
+      const date = this.dateValidation.parseDisplayDate(data.data.date)
       if (!date) return
 
-      if (this.redcapDateValidation.isOutOfRange(date, this.dateValidationContext)) {
+      if (this.dateValidation.isOutOfRange(date, this.dateValidationContext)) {
         this.setDateWarning(true)
         return
       }
 
       this.setDateWarning(false)
-      this.selectedDate = date.format(this.redcapDateValidation.displayFormat)
+      this.selectedDate = date.format(this.dateValidation.displayFormat)
       this.defaultDatePickerValue =
-        this.redcapDateValidation.toAnswerDateParts(date)
+        this.dateValidation.toAnswerDateParts(date)
       this.emitDateAnswer(this.defaultDatePickerValue)
     })
   }
@@ -242,7 +242,7 @@ export class TextInputComponent implements OnInit {
   private emitDateAnswer(parts: Record<string, string>) {
     this.value = { ...this.value, ...parts }
     if (
-      !this.redcapDateValidation.isAnswerValid(
+      !this.dateValidation.isAnswerValid(
         this.value as Record<string, string>,
         this.dateValidationContext,
         this.defaultTimePickerValue
@@ -298,7 +298,7 @@ export class TextInputComponent implements OnInit {
 
   private buildDatePickerObj(): void {
     this.datePickerObj = {
-      dateFormat: this.redcapDateValidation.displayFormat,
+      dateFormat: this.dateValidation.displayFormat,
       btnProperties: {
         expand: 'block',
         fill: 'outline',
@@ -309,7 +309,7 @@ export class TextInputComponent implements OnInit {
       },
       closeOnSelect: 'true'
     }
-    this.redcapDateValidation.applyPickerBounds(
+    this.dateValidation.applyPickerBounds(
       this.datePickerObj,
       this.dateValidationContext
     )

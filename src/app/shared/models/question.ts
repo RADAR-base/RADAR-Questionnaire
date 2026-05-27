@@ -113,8 +113,8 @@ export enum ValidationType {
   PHONE = 'phone'
 }
 
-/** REDCap dynamic min/max keywords for date and datetime text validation. */
-export enum RedcapDateKeyword {
+/** Dynamic min/max keywords for date and datetime text validation (e.g. today, now). */
+export enum DateValidationKeyword {
   TODAY = 'today',
   NOW = 'now'
 }

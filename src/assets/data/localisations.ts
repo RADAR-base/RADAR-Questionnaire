@@ -1531,14 +1531,14 @@ export const Localisations = {
     hb: 'הזן טקסט'
   },
   NUMBER_INPUT_WARNING: {
-    da: 'Dette felt accepterer kun tal. Sørg for ikke at indtaste specialtegn.',
-    de: 'Dieses Feld akzeptiert nur Zahlen. Stellen Sie sicher, dass Sie keine Sonderzeichen eingeben.',
-    en: "This field only accepts numbers. Make sure you don't enter any special characters.",
-    es: 'Este campo solo acepta números. Asegúrate de no ingresar caracteres especiales.',
-    it: 'Questo campo accetta solo numeri. Assicurati di non inserire caratteri speciali.',
-    nl: 'Dit veld accepteert alleen nummers. Zorg ervoor dat u geen speciale tekens invoert.',
-    pl: 'To pole akceptuje tylko liczby. Upewnij się, że nie wprowadzasz żadnych znaków specjalnych.',
-    hb: 'שדה זה מקבל רק מספרים. ודא שלא הזנת תווים מיוחדים.'
+    da: 'Vælg et tal inden for det tilladte interval.',
+    de: 'Bitte wählen Sie eine Zahl innerhalb des zulässigen Bereichs.',
+    en: 'Please choose a number within the allowed range.',
+    es: 'Elija un número dentro del rango permitido.',
+    it: 'Scegli un numero entro l\'intervallo consentito.',
+    nl: 'Kies een getal binnen het toegestane bereik.',
+    pl: 'Wybierz liczbę z dozwolonego zakresu.',
+    hb: 'אנא בחר מספר בטווח המותר.'
   },
   DATE_INPUT_WARNING: {
     da: 'Vælg en dato inden for det tilladte interval.',

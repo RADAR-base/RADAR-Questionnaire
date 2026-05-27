@@ -12,10 +12,13 @@ import * as moment from 'moment'
 
 import { LocalizationService } from '../../../../../core/services/misc/localization.service'
 import { KeyboardEventType } from '../../../../../shared/enums/events'
+import { InputModeType, ValidationType } from '../../../../../shared/models/question'
+import { RedcapDateValidationService } from '../../../services/redcap-date-validation.service'
 import {
-  ValidationType,
-  InputModeType
-} from '../../../../../shared/models/question'
+  isDateOnlyValidationType,
+  isDateTimeValidationType,
+  isDateValidationType
+} from '../../../validation/redcap-date-validation'
 
 @Component({
   selector: 'text-input',
@@ -57,6 +60,7 @@ export class TextInputComponent implements OnInit {
   showDurationPicker: boolean
   showWarningField = false
   useNumberInputWarning = false
+  useDateInputWarning = false
   showTextInput = true
   showSeconds: boolean
 
@@ -82,7 +86,6 @@ export class TextInputComponent implements OnInit {
   inputStep = 'any'
   isNumericType = false
   isIntegerType = false
-  DEFAULT_DATE_FORMAT = 'DD/MM/YYYY'
   // Regex pattern to validate numeric input (only digits allowed)
   DIGIT_PATTERN = /^\d*$/
   // Partial<Record<...>> allows only a subset of ValidationType keys without TypeScript complaining about missing entries
@@ -95,8 +98,17 @@ export class TextInputComponent implements OnInit {
 
   constructor(
     private localization: LocalizationService,
+    private redcapDateValidation: RedcapDateValidationService,
     public modalCtrl: ModalController
   ) { }
+
+  private get dateValidationContext() {
+    return {
+      validationType: this.validationType,
+      textValidationMin: this.textValidationMin,
+      textValidationMax: this.textValidationMax
+    }
+  }
 
   ngOnInit() {
     if (this.validationType.length) {
@@ -104,16 +116,8 @@ export class TextInputComponent implements OnInit {
         this.INPUT_MODE_MAP[this.validationType as ValidationType] ||
         InputModeType.TEXT
 
-      this.showDatePicker = [
-        ValidationType.DATE_DMY,
-        ValidationType.DATE_MDY,
-        ValidationType.DATE_YMD
-      ].includes(this.validationType as ValidationType)
-      this.showDateTimePicker = [
-        ValidationType.DATETIME_DMY,
-        ValidationType.DATETIME_MDY,
-        ValidationType.DATETIME_YMD
-      ].includes(this.validationType as ValidationType)
+      this.showDatePicker = isDateOnlyValidationType(this.validationType)
+      this.showDateTimePicker = isDateTimeValidationType(this.validationType)
       this.showTimePicker = this.validationType === ValidationType.TIME
       this.showDurationPicker = this.validationType.includes(
         ValidationType.DURATION
@@ -128,39 +132,32 @@ export class TextInputComponent implements OnInit {
     this.isNumericType = this.isNumericValidationType()
     this.isIntegerType = this.validationType === ValidationType.INTEGER
     this.inputStep = this.isIntegerType ? '1' : 'any'
+    this.selectedDate = this.localization
+      .moment(Date.now())
+      .format(this.redcapDateValidation.displayFormat)
     this.initValues()
   }
 
   initValues() {
-    if (this.showDatePicker || this.showDateTimePicker) this.initDates()
     if (this.showTimePicker || this.showDateTimePicker) this.initTime()
+    if (this.showDatePicker || this.showDateTimePicker) this.initDates()
     if (this.showDurationPicker) this.initDuration()
   }
 
   initDates() {
-    const momentInstance = this.localization.moment(Date.now()) // Use a local instance
-    this.datePickerObj = {
-      dateFormat: this.DEFAULT_DATE_FORMAT,
-      btnProperties: {
-        expand: 'block',
-        fill: 'outline',
-        size: 'small',
-        disabled: '',
-        strong: 'true',
-        color: 'secondary'
-      },
-      closeOnSelect: 'true'
-    }
+    const momentInstance = this.redcapDateValidation.clampToBounds(
+      this.localization.moment(Date.now()),
+      this.dateValidationContext
+    )
+    this.buildDatePickerObj()
     const month = moment.monthsShort()
     const day = this.addLeadingZero(Array.from(Array(32).keys()).slice(1, 32))
     const year = Array.from(Array(31).keys()).map(d => String(d + 2000))
     this.datePickerValues = { day, month, year }
-    this.defaultDatePickerValue = {
-      day: momentInstance.format('DD'),
-      month: momentInstance.format('MMM'),
-      year: momentInstance.format('YYYY')
-    }
-    this.emitAnswer(this.defaultDatePickerValue)
+    this.defaultDatePickerValue =
+      this.redcapDateValidation.toAnswerDateParts(momentInstance)
+    this.selectedDate = momentInstance.format(this.redcapDateValidation.displayFormat)
+    this.emitDateAnswer(this.defaultDatePickerValue)
   }
 
   initTime() {
@@ -191,11 +188,13 @@ export class TextInputComponent implements OnInit {
   }
 
   datePickerObj: any = {}
-  selectedDate: string = this.localization
-    .moment(Date.now())
-    .format(this.DEFAULT_DATE_FORMAT)
+  selectedDate: string
 
   async openDatePicker() {
+    this.redcapDateValidation.applyPickerBounds(
+      this.datePickerObj,
+      this.dateValidationContext
+    )
     const datePickerModal = await this.modalCtrl.create({
       component: Ionic4DatepickerModalComponent,
       cssClass: 'li-ionic4-datePicker',
@@ -207,29 +206,53 @@ export class TextInputComponent implements OnInit {
     await datePickerModal.present()
 
     datePickerModal.onDidDismiss().then(data => {
-      let date = moment(data.data.date, this.DEFAULT_DATE_FORMAT)
-      this.selectedDate = date.isValid()
-        ? date.format(this.DEFAULT_DATE_FORMAT)
-        : this.selectedDate
+      if (!data?.data?.date) return
 
-      this.defaultDatePickerValue = {
-        year: date.format('YYYY'),
-        month: date.format('M'),
-        day: date.format('D')
+      const date = this.redcapDateValidation.parseDisplayDate(data.data.date)
+      if (!date) return
+
+      if (this.redcapDateValidation.isOutOfRange(date, this.dateValidationContext)) {
+        this.setDateWarning(true)
+        return
       }
-      this.emitAnswer(this.defaultDatePickerValue)
+
+      this.setDateWarning(false)
+      this.selectedDate = date.format(this.redcapDateValidation.displayFormat)
+      this.defaultDatePickerValue =
+        this.redcapDateValidation.toAnswerDateParts(date)
+      this.emitDateAnswer(this.defaultDatePickerValue)
     })
   }
 
   emitAnswer(value) {
     if (!value) value = this.textValue
     if (typeof value !== 'string') {
+      if (isDateValidationType(this.validationType)) {
+        this.emitDateAnswer(value as Record<string, string>)
+        return
+      }
       this.value = Object.assign(this.value, value)
       this.valueChange.emit(JSON.stringify(this.value))
     } else {
       this.inputValidation(value)
       this.valueChange.emit(value)
     }
+  }
+
+  private emitDateAnswer(parts: Record<string, string>) {
+    this.value = { ...this.value, ...parts }
+    if (
+      !this.redcapDateValidation.isAnswerValid(
+        this.value as Record<string, string>,
+        this.dateValidationContext,
+        this.defaultTimePickerValue
+      )
+    ) {
+      this.setDateWarning(true)
+      return
+    }
+    this.setDateWarning(false)
+    this.valueChange.emit(JSON.stringify(this.value))
   }
 
   inputValidation(value: string) {
@@ -271,6 +294,31 @@ export class TextInputComponent implements OnInit {
     if (value === undefined || value === null || value === '') return null
     const parsedValue = Number(value)
     return Number.isNaN(parsedValue) ? null : parsedValue
+  }
+
+  private buildDatePickerObj(): void {
+    this.datePickerObj = {
+      dateFormat: this.redcapDateValidation.displayFormat,
+      btnProperties: {
+        expand: 'block',
+        fill: 'outline',
+        size: 'small',
+        disabled: '',
+        strong: 'true',
+        color: 'secondary'
+      },
+      closeOnSelect: 'true'
+    }
+    this.redcapDateValidation.applyPickerBounds(
+      this.datePickerObj,
+      this.dateValidationContext
+    )
+  }
+
+  private setDateWarning(active: boolean): void {
+    this.showWarningField = active
+    this.useDateInputWarning = active
+    this.showWarningChange.emit(active)
   }
 
   async emitKeyboardEvent(value) {

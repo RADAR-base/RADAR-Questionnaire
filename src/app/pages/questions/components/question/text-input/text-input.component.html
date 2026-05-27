@@ -1,4 +1,7 @@
 <ng-container *ngIf="showDatePicker && currentlyShown">
+  <ion-label *ngIf="showWarningField && useDateInputWarning">
+    {{ 'DATE_INPUT_WARNING' | translate }}
+  </ion-label>
   <ion-item (click)="openDatePicker()" color="none">
     <ion-input [(ngModel)]="selectedDate"> </ion-input>
     <ion-icon name="calendar" slot="end"></ion-icon>
@@ -6,6 +9,9 @@
 </ng-container>
 
 <ng-container *ngIf="showDateTimePicker && currentlyShown">
+  <ion-label *ngIf="showWarningField && useDateInputWarning">
+    {{ 'DATE_INPUT_WARNING' | translate }}
+  </ion-label>
   <ion-item (click)="openDatePicker()" color="none">
     <ion-input [(ngModel)]="selectedDate"> </ion-input>
     <ion-icon name="calendar" slot="end"></ion-icon>

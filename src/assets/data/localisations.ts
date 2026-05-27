@@ -1540,6 +1540,16 @@ export const Localisations = {
     pl: 'To pole akceptuje tylko liczby. Upewnij się, że nie wprowadzasz żadnych znaków specjalnych.',
     hb: 'שדה זה מקבל רק מספרים. ודא שלא הזנת תווים מיוחדים.'
   },
+  DATE_INPUT_WARNING: {
+    da: 'Vælg en dato inden for det tilladte interval.',
+    de: 'Bitte wählen Sie ein Datum innerhalb des zulässigen Bereichs.',
+    en: 'Please choose a date within the allowed range.',
+    es: 'Elija una fecha dentro del rango permitido.',
+    it: 'Scegli una data entro l\'intervallo consentito.',
+    nl: 'Kies een datum binnen het toegestane bereik.',
+    pl: 'Wybierz datę z dozwolonego zakresu.',
+    hb: 'אנא בחר תאריך בטווח המותר.'
+  },
   TEXT_INPUT_WARNING: {
     da: 'Skriv venligst dit svar for at fortsætte.',
     de: 'Bitte schreiben Sie Ihre Antwort, um fortzufahren.',

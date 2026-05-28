@@ -126,6 +126,8 @@
         (keyboardEvent)="onKeyboardEvent($event)"
         (showWarningChange)="onWarningFieldChange($event)"
         [validationType]="question.text_validation_type_or_show_slider_number"
+        [textValidationMin]="question.text_validation_min"
+        [textValidationMax]="question.text_validation_max"
         [currentlyShown]="currentlyShown"
         [canSubmitOnEnter]="canGoNextOnEnter"
       ></text-input>

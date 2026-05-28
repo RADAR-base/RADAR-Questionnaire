@@ -437,7 +437,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
         buttons: [
           {
             text: this.localization.translateKey(LocKeys.BTN_DISMISS),
-            handler: () => {}
+            handler: () => { }
           }
         ]
       })

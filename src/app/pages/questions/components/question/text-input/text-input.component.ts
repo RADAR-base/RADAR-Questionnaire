@@ -6,17 +6,19 @@ import {
   Output,
   ViewChild
 } from '@angular/core'
-import { Keyboard } from '@capacitor/keyboard'
 import { ModalController } from '@ionic/angular'
 import { Ionic4DatepickerModalComponent } from '@logisticinfotech/ionic4-datepicker'
 import * as moment from 'moment'
 
 import { LocalizationService } from '../../../../../core/services/misc/localization.service'
 import { KeyboardEventType } from '../../../../../shared/enums/events'
+import { InputModeType, ValidationType } from '../../../../../shared/models/question'
+import { DateValidationService } from '../../../services/date-validation.service'
 import {
-  ValidationType,
-  InputModeType
-} from '../../../../../shared/models/question'
+  isDateOnlyValidationType,
+  isDateTimeValidationType,
+  isDateValidationType
+} from '../../../validation/date-validation'
 
 @Component({
   selector: 'text-input',
@@ -37,7 +39,10 @@ export class TextInputComponent implements OnInit {
   @Input()
   validationType = ''
   @Input()
-  requiredField = false
+  textValidationMin: string
+  @Input()
+  textValidationMax: string
+
   /**
    * Controls whether Enter key submission is allowed.
    * Set to true when all required questions are answered and current answer is valid.
@@ -54,6 +59,8 @@ export class TextInputComponent implements OnInit {
   showTimePicker: boolean
   showDurationPicker: boolean
   showWarningField = false
+  useNumberInputWarning = false
+  useDateInputWarning = false
   showTextInput = true
   showSeconds: boolean
 
@@ -75,21 +82,33 @@ export class TextInputComponent implements OnInit {
   textValue = ''
   value = {}
   inputModeType = 'text'
-  DEFAULT_DATE_FORMAT = 'DD/MM/YYYY'
+  inputType = 'text'
+  inputStep = 'any'
+  isNumericType = false
+  isIntegerType = false
   // Regex pattern to validate numeric input (only digits allowed)
   DIGIT_PATTERN = /^\d*$/
-  DIGITAL_PATTERN = /^[\d]*$/
   // Partial<Record<...>> allows only a subset of ValidationType keys without TypeScript complaining about missing entries
   INPUT_MODE_MAP: Partial<Record<ValidationType, InputModeType>> = {
     [ValidationType.NUMBER]: InputModeType.NUMBER,
+    [ValidationType.INTEGER]: InputModeType.NUMBER,
     [ValidationType.EMAIL]: InputModeType.EMAIL,
     [ValidationType.PHONE]: InputModeType.PHONE
   }
 
   constructor(
     private localization: LocalizationService,
+    private dateValidation: DateValidationService,
     public modalCtrl: ModalController
-  ) {}
+  ) { }
+
+  private get dateValidationContext() {
+    return {
+      validationType: this.validationType,
+      textValidationMin: this.textValidationMin,
+      textValidationMax: this.textValidationMax
+    }
+  }
 
   ngOnInit() {
     if (this.validationType.length) {
@@ -97,16 +116,8 @@ export class TextInputComponent implements OnInit {
         this.INPUT_MODE_MAP[this.validationType as ValidationType] ||
         InputModeType.TEXT
 
-      this.showDatePicker = [
-        ValidationType.DATE_DMY,
-        ValidationType.DATE_MDY,
-        ValidationType.DATE_YMD
-      ].includes(this.validationType as ValidationType)
-      this.showDateTimePicker = [
-        ValidationType.DATETIME_DMY,
-        ValidationType.DATETIME_MDY,
-        ValidationType.DATETIME_YMD
-      ].includes(this.validationType as ValidationType)
+      this.showDatePicker = isDateOnlyValidationType(this.validationType)
+      this.showDateTimePicker = isDateTimeValidationType(this.validationType)
       this.showTimePicker = this.validationType === ValidationType.TIME
       this.showDurationPicker = this.validationType.includes(
         ValidationType.DURATION
@@ -118,39 +129,35 @@ export class TextInputComponent implements OnInit {
       !this.showTimePicker &&
       !this.showDurationPicker
     this.showSeconds = this.validationType.includes(ValidationType.SECOND)
+    this.isNumericType = this.isNumericValidationType()
+    this.isIntegerType = this.validationType === ValidationType.INTEGER
+    this.inputStep = this.isIntegerType ? '1' : 'any'
+    this.selectedDate = this.localization
+      .moment(Date.now())
+      .format(this.dateValidation.displayFormat)
     this.initValues()
   }
 
   initValues() {
-    if (this.showDatePicker || this.showDateTimePicker) this.initDates()
     if (this.showTimePicker || this.showDateTimePicker) this.initTime()
+    if (this.showDatePicker || this.showDateTimePicker) this.initDates()
     if (this.showDurationPicker) this.initDuration()
   }
 
   initDates() {
-    const momentInstance = this.localization.moment(Date.now()) // Use a local instance
-    this.datePickerObj = {
-      dateFormat: this.DEFAULT_DATE_FORMAT,
-      btnProperties: {
-        expand: 'block',
-        fill: 'outline',
-        size: 'small',
-        disabled: '',
-        strong: 'true',
-        color: 'secondary'
-      },
-      closeOnSelect: 'true'
-    }
+    const momentInstance = this.dateValidation.clampToBounds(
+      this.localization.moment(Date.now()),
+      this.dateValidationContext
+    )
+    this.buildDatePickerObj()
     const month = moment.monthsShort()
     const day = this.addLeadingZero(Array.from(Array(32).keys()).slice(1, 32))
     const year = Array.from(Array(31).keys()).map(d => String(d + 2000))
     this.datePickerValues = { day, month, year }
-    this.defaultDatePickerValue = {
-      day: momentInstance.format('DD'),
-      month: momentInstance.format('MMM'),
-      year: momentInstance.format('YYYY')
-    }
-    this.emitAnswer(this.defaultDatePickerValue)
+    this.defaultDatePickerValue =
+      this.dateValidation.toAnswerDateParts(momentInstance)
+    this.selectedDate = momentInstance.format(this.dateValidation.displayFormat)
+    this.emitDateAnswer(this.defaultDatePickerValue)
   }
 
   initTime() {
@@ -181,11 +188,13 @@ export class TextInputComponent implements OnInit {
   }
 
   datePickerObj: any = {}
-  selectedDate: string = this.localization
-    .moment(Date.now())
-    .format(this.DEFAULT_DATE_FORMAT)
+  selectedDate: string
 
   async openDatePicker() {
+    this.dateValidation.applyPickerBounds(
+      this.datePickerObj,
+      this.dateValidationContext
+    )
     const datePickerModal = await this.modalCtrl.create({
       component: Ionic4DatepickerModalComponent,
       cssClass: 'li-ionic4-datePicker',
@@ -197,23 +206,31 @@ export class TextInputComponent implements OnInit {
     await datePickerModal.present()
 
     datePickerModal.onDidDismiss().then(data => {
-      let date = moment(data.data.date, this.DEFAULT_DATE_FORMAT)
-      this.selectedDate = date.isValid()
-        ? date.format(this.DEFAULT_DATE_FORMAT)
-        : this.selectedDate
+      if (!data?.data?.date) return
 
-      this.defaultDatePickerValue = {
-        year: date.format('YYYY'),
-        month: date.format('M'),
-        day: date.format('D')
+      const date = this.dateValidation.parseDisplayDate(data.data.date)
+      if (!date) return
+
+      if (this.dateValidation.isOutOfRange(date, this.dateValidationContext)) {
+        this.setDateWarning(true)
+        return
       }
-      this.emitAnswer(this.defaultDatePickerValue)
+
+      this.setDateWarning(false)
+      this.selectedDate = date.format(this.dateValidation.displayFormat)
+      this.defaultDatePickerValue =
+        this.dateValidation.toAnswerDateParts(date)
+      this.emitDateAnswer(this.defaultDatePickerValue)
     })
   }
 
   emitAnswer(value) {
     if (!value) value = this.textValue
     if (typeof value !== 'string') {
+      if (isDateValidationType(this.validationType)) {
+        this.emitDateAnswer(value as Record<string, string>)
+        return
+      }
       this.value = Object.assign(this.value, value)
       this.valueChange.emit(JSON.stringify(this.value))
     } else {
@@ -222,35 +239,106 @@ export class TextInputComponent implements OnInit {
     }
   }
 
-  inputValidation(value) {
+  private emitDateAnswer(parts: Record<string, string>) {
+    this.value = { ...this.value, ...parts }
     if (
-      this.validationType === ValidationType.NUMBER &&
-      !this.DIGIT_PATTERN.test(value)
+      !this.dateValidation.isAnswerValid(
+        this.value as Record<string, string>,
+        this.dateValidationContext,
+        this.defaultTimePickerValue
+      )
     ) {
-      this.showWarningField = true
+      this.setDateWarning(true)
+      return
+    }
+    this.setDateWarning(false)
+    this.valueChange.emit(JSON.stringify(this.value))
+  }
+
+  inputValidation(value: string) {
+    if (this.isNumericValidationType()) {
+      const invalid = this.isInvalidNumericValue(value)
+      this.showWarningField = invalid
+      this.useNumberInputWarning = invalid
     } else {
       this.showWarningField = false
+      this.useNumberInputWarning = false
     }
     this.showWarningChange.emit(this.showWarningField)
+  }
+
+  private isNumericValidationType(): boolean {
+    return (
+      this.validationType === ValidationType.NUMBER ||
+      this.validationType === ValidationType.INTEGER
+    )
+  }
+
+  private isInvalidNumericValue(value: string): boolean {
+    if (!this.DIGIT_PATTERN.test(value)) return true
+    return this.isOutOfRange(value)
+  }
+
+  private isOutOfRange(value: string): boolean {
+    if (value === '') return false
+    const numericValue = Number(value)
+    if (Number.isNaN(numericValue)) return false
+    const minValue = this.getBoundValue(this.textValidationMin)
+    const maxValue = this.getBoundValue(this.textValidationMax)
+    if (minValue !== null && numericValue < minValue) return true
+    if (maxValue !== null && numericValue > maxValue) return true
+    return false
+  }
+
+  private getBoundValue(value: string): number | null {
+    if (value === undefined || value === null || value === '') return null
+    const parsedValue = Number(value)
+    return Number.isNaN(parsedValue) ? null : parsedValue
+  }
+
+  private buildDatePickerObj(): void {
+    this.datePickerObj = {
+      dateFormat: this.dateValidation.displayFormat,
+      btnProperties: {
+        expand: 'block',
+        fill: 'outline',
+        size: 'small',
+        disabled: '',
+        strong: 'true',
+        color: 'secondary'
+      },
+      closeOnSelect: 'true'
+    }
+    this.dateValidation.applyPickerBounds(
+      this.datePickerObj,
+      this.dateValidationContext
+    )
+  }
+
+  private setDateWarning(active: boolean): void {
+    this.showWarningField = active
+    this.useDateInputWarning = active
+    this.showWarningChange.emit(active)
   }
 
   async emitKeyboardEvent(value) {
     value = value.toLowerCase()
     const isEnter = value === KeyboardEventType.ENTER
-    const isInvalidNumber =
-      isEnter &&
-      this.validationType === ValidationType.NUMBER &&
-      !this.DIGIT_PATTERN.test(this.textValue)
 
-    if (isInvalidNumber) {
-      this.showWarningField = true
+    if (isEnter && this.isNumericValidationType()) {
+      this.inputValidation(this.textValue)
     }
 
-    // Block Enter if canSubmitOnEnter is false OR if the number input is invalid
+    const isInvalidNumeric =
+      isEnter &&
+      this.isNumericValidationType() &&
+      this.isInvalidNumericValue(this.textValue)
+
     const shouldBlockEnter =
-      isEnter && (!this.canSubmitOnEnter || isInvalidNumber)
+      isEnter && (!this.canSubmitOnEnter || isInvalidNumeric)
 
     if (shouldBlockEnter) {
+      this.useNumberInputWarning = isInvalidNumeric
       this.showWarningField = true
       this.showWarningChange.emit(this.showWarningField)
       return

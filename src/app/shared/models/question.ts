@@ -113,6 +113,12 @@ export enum ValidationType {
   PHONE = 'phone'
 }
 
+/** Dynamic min/max keywords for date and datetime text validation (e.g. today, now). */
+export enum DateValidationKeyword {
+  TODAY = 'today',
+  NOW = 'now'
+}
+
 export enum InputModeType {
   TEXT = 'text',
   NUMBER = 'numeric',

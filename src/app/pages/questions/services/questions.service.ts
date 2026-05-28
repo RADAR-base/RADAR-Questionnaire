@@ -55,7 +55,7 @@ export class QuestionsService {
     private questionnaireProcessor: DefaultQuestionnaireProcessorService,
     private remoteConfig: RemoteConfigService,
     private util: Utility
-  ) {}
+  ) { }
 
   getKafkaService() {
     return this.questionnaireProcessor.kafka

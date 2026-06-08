@@ -79,6 +79,7 @@ export class TextInputComponent implements OnInit {
     second: 'Second',
     ampm: 'AM/PM'
   }
+  numberRangeLabel = ''
   textValue = ''
   value = {}
   inputModeType = 'text'
@@ -136,6 +137,7 @@ export class TextInputComponent implements OnInit {
       .moment(Date.now())
       .format(this.dateValidation.displayFormat)
     this.initValues()
+    this.numberRangeLabel = this.buildNumberRangeLabel()
   }
 
   initValues() {
@@ -288,6 +290,15 @@ export class TextInputComponent implements OnInit {
     if (minValue !== null && numericValue < minValue) return true
     if (maxValue !== null && numericValue > maxValue) return true
     return false
+  }
+
+  private buildNumberRangeLabel(): string {
+    const min = this.getBoundValue(this.textValidationMin)
+    const max = this.getBoundValue(this.textValidationMax)
+    if (min !== null && max !== null) return `(${min} – ${max})`
+    if (min !== null) return `(≥ ${min})`
+    if (max !== null) return `(≤ ${max})`
+    return ''
   }
 
   private getBoundValue(value: string): number | null {

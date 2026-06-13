@@ -112,6 +112,12 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
     this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_EXIT, true)
   }
 
+  skipTask(): void {
+    this.healthProcessor.updateTaskToComplete(this.task)
+    this.navCtrl.navigateRoot('/home')
+    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_EXIT, true)
+  }
+
   // Private initialization
   private async initialize(): Promise<void> {
     await this.initializeHealthKitSupport()
@@ -473,10 +479,15 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       case ProcessingState.ERROR:
         return ''
       default:
-        return this.isHealthKitSupported
-          ? 'Ready to collect health data'
-          : 'Checking HealthKit support...'
+        if (!this.isHealthKitSupported) {
+          return 'Apple Health is not available on this device. You can skip this task.'
+        }
+        return 'Ready to collect health data'
     }
+  }
+
+  get showSkipButton(): boolean {
+    return !this.isHealthKitSupported && this.processingState === ProcessingState.IDLE
   }
 
   private getErrorStatusMessage(): string {

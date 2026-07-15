@@ -1,12 +1,5 @@
 <ion-grid class="guided-audio-grid">
 
-  <!-- ── Image stimulus ─────────────────────────────────────────── -->
-  <ion-row *ngIf="image" class="stimulus-row">
-    <ion-col size="12" class="ion-text-center">
-      <img [src]="image" alt="" class="stimulus-image" />
-    </ion-col>
-  </ion-row>
-
   <!-- ── Prompt text + optional replay button ───────────────────── -->
   <ion-row class="prompt-row" *ngIf="shouldShowPromptRow">
     <ion-col size="12">
@@ -18,6 +11,13 @@
           {{ 'GUIDED_AUDIO_REPLAY_PROMPT' | translate }}
         </ion-button>
       </div>
+    </ion-col>
+  </ion-row>
+
+  <!-- ── Image stimulus ─────────────────────────────────────────── -->
+  <ion-row *ngIf="image" class="stimulus-row">
+    <ion-col size="12" class="ion-text-center">
+      <img [src]="image" alt="" class="stimulus-image" />
     </ion-col>
   </ion-row>
 

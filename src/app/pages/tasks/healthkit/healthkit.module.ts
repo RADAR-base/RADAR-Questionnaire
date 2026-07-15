@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms'
 import { RouterModule, Routes } from '@angular/router'
 import { IonicModule } from '@ionic/angular'
 
+import { PipesModule } from '../../../shared/pipes/pipes.module'
 import { HealthQuestionnaireProcessorService } from './services/health-questionnaire-processor.service'
 import { HealthkitPageComponent } from './containers/healthkit-page.component'
 import { ToolbarComponent } from '../../questions/components/toolbar/toolbar.component'
@@ -20,7 +21,8 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule.forRoot(),
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    PipesModule
   ],
   declarations: [
     HealthkitPageComponent,],

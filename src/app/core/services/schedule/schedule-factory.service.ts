@@ -37,17 +37,20 @@ export class ScheduleFactoryService extends ScheduleService {
       .then(type => {
         switch (type) {
           case SchedulerType.LOCAL:
-            return (this.scheduleService = this.localScheduleService)
+            this.scheduleService = this.localScheduleService
+            break
           case SchedulerType.APPSERVER:
-            return (this.scheduleService = this.appServerScheduleSerice)
+            this.scheduleService = this.appServerScheduleSerice
+            break
           default:
             throw new Error('No such scheduling service available')
         }
+        return this.scheduleService.init()
       })
   }
 
   isInitialised() {
-    return this.scheduleService != null || this.scheduleService != undefined
+    return this.scheduleService != null
   }
 
   generateSchedule(referenceTimestamp, utcOffsetPrev) {

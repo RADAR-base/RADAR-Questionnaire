@@ -63,7 +63,8 @@ export class ConfigService {
       this.hasTimezoneChanged(),
       this.hasNotificationsExpired(),
       this.hasNotificationMessagingTypeChanged(),
-      this.hasParticipantAttributesChanged()
+      this.hasParticipantAttributesChanged(),
+      this.hasEnrolmentDateChanged()
     ])
       .then(
         ([
@@ -72,7 +73,8 @@ export class ConfigService {
           newTimezone,
           newNotifications,
           newMessagingType,
-          newAttributes
+          newAttributes,
+          newEnrolmentDate
         ]) => {
           if (newAttributes)
             return this.fetchConfigState(true)
@@ -94,6 +96,7 @@ export class ConfigService {
             return this.updateConfigStateOnAppVersionChange(newAppVersion)
           if (newTimezone)
             return this.updateConfigStateOnTimezoneChange(newTimezone)
+          if (newEnrolmentDate) return this.regenerateSchedule()
           if (newNotifications) return this.rescheduleNotifications(false)
         }
       )
@@ -117,6 +120,29 @@ export class ConfigService {
         }
         return hasChanged
       })
+  }
+
+  hasEnrolmentDateChanged() {
+    return Promise.all([
+      this.subjectConfig.getEnrolmentDate(),
+      this.subjectConfig.pullSubjectInformation()
+    ]).then(([storedDate, user]) => {
+      const newDate = user.enrollmentDate
+        ? new Date(user.enrollmentDate).getTime()
+        : new Date(user.createdDate).getTime()
+      if (storedDate === newDate) return false
+      return this.subjectConfig
+        .setEnrolmentDate(newDate)
+        .then(() => this.appConfig.setReferenceDate(newDate))
+        .then(() => {
+          this.sendConfigChangeEvent(
+            ConfigEventType.ENROLMENT_DATE_CHANGE,
+            storedDate,
+            newDate
+          )
+          return true
+        })
+    })
   }
 
   hasProtocolChanged(force?) {

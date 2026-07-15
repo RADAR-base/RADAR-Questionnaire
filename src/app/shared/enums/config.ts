@@ -69,6 +69,8 @@ export class ConfigKeys {
 
   static TASK_STREAK_REQUIRE_ALL_TASKS = new ConfigKeys('task_streak_require_all_tasks')
 
+  static NOTIFICATION_DEDUPLICATION = new ConfigKeys('notification_deduplication')
+
   constructor(public value: string) { }
 
   toString() {

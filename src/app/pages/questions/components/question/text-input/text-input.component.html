@@ -32,11 +32,10 @@
 
 <ng-container *ngIf="showTextInput && currentlyShown">
   <ion-label *ngIf="showWarningField">
-    {{
-    isNumericType && useNumberInputWarning
-    ? ('NUMBER_INPUT_WARNING' | translate)
-    : ('TEXT_INPUT_WARNING' | translate)
-    }}
+    <ng-container *ngIf="isNumericType && useNumberInputWarning; else textWarning">
+      {{ 'NUMBER_INPUT_WARNING' | translate }}<ng-container *ngIf="numberRangeLabel"> {{ numberRangeLabel }}</ng-container>
+    </ng-container>
+    <ng-template #textWarning>{{ 'TEXT_INPUT_WARNING' | translate }}</ng-template>
   </ion-label>
   <ion-item color="none" class="input">
     <ion-input [type]="inputType" [inputmode]="inputModeType" [step]="inputStep" [min]="textValidationMin"

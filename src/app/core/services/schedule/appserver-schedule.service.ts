@@ -4,8 +4,8 @@ import * as moment from 'moment'
 import { Assessment, AssessmentType } from '../../../shared/models/assessment'
 import { TaskState } from '../../../shared/models/protocol'
 import { Task } from '../../../shared/models/task'
+import { compareTasks } from '../../../shared/utilities/compare-tasks'
 import {
-  advanceRepeat,
   getMilliseconds,
   setDateTimeToMidnight,
   setDateTimeToMidnightEpoch
@@ -25,12 +25,15 @@ export class AppserverScheduleService extends ScheduleService {
     logger: LogService,
     private appServer: AppServerService,
     private localization: LocalizationService,
-    private questionnaire: QuestionnaireService
+    private questionnaire: QuestionnaireService,
+    private scheduleGenerator: ScheduleGeneratorService
   ) {
     super(store, logger)
   }
 
-  init() {}
+  init() {
+    return this.appServer.init()
+  }
 
   getTasksForDate(date: Date, type: AssessmentType) {
     const startTime = setDateTimeToMidnight(date)
@@ -39,14 +42,16 @@ export class AppserverScheduleService extends ScheduleService {
     return this.appServer
       .getScheduleForDates(startTime, endTime)
       .then(tasks => {
-        if (tasks == null || !tasks.length) throw new Error()
+        if (tasks == null || !tasks.length) {
+          return this.getLocalTasksForDate(date, type)
+        }
         return Promise.all<Task>(
-          tasks.map(t => this.mapTaskDTO(t, AssessmentType.SCHEDULED))
-        ).then(res => this.setTasks(AssessmentType.SCHEDULED, res))
+          tasks.map(t => this.mapTaskDTO(t, type))
+        )
       })
       .catch(e => {
-        console.log('Error pulling tasks.. ' + e)
-        return this.getLocalTasksForDate(date, AssessmentType.SCHEDULED)
+        this.logger.error('Failed to pull tasks from appserver', e)
+        return this.getLocalTasksForDate(date, type)
       })
   }
 
@@ -67,25 +72,34 @@ export class AppserverScheduleService extends ScheduleService {
 
   generateSchedule(referenceTimestamp, utcOffsetPrev) {
     this.logger.log('Updating schedule..', referenceTimestamp)
-    return Promise.all([this.appServer.init(), this.getCompletedTasks()]).then(
-      ([, completedTasks]) => {
-        return this.appServer
-          .getSchedule()
-          .then(tasks =>
-            Promise.all<Task>(
-              tasks.map(t => this.mapTaskDTO(t, AssessmentType.SCHEDULED))
-            )
+    return this.getCompletedTasks().then(completedTasks => {
+      return this.appServer
+        .getSchedule()
+        .then(tasks =>
+          Promise.all<Task>(
+            tasks.map(t => this.mapTaskDTO(t, AssessmentType.SCHEDULED))
           )
-          .then(res => this.setTasks(AssessmentType.SCHEDULED, res))
-      }
-    )
+        )
+        .then(mappedTasks => {
+          const completed = mappedTasks.filter(t => t.completed)
+          return Promise.all([
+            this.setTasks(AssessmentType.SCHEDULED, mappedTasks),
+            this.setCompletedTasks(completed)
+          ])
+        })
+    })
   }
 
   updateTaskToComplete(updatedTask): Promise<any> {
     return this.appServer
       .updateTaskState(updatedTask.id, TaskState.COMPLETED)
-      .then(() => super.updateTaskToReportedCompletion(updatedTask))
-      .catch(() => super.updateTaskToComplete(updatedTask))
+      .then(
+        () =>
+          super
+            .updateTaskToComplete(updatedTask)
+            .then(() => super.updateTaskToReportedCompletion(updatedTask)),
+        () => super.updateTaskToComplete(updatedTask)
+      )
   }
 
   generateSingleAssessmentTask(
@@ -93,14 +107,27 @@ export class AppserverScheduleService extends ScheduleService {
     assessmentType,
     referenceDate: number
   ) {
-    return
+    return this.getTasks(assessmentType).then((tasks: Task[]) => {
+      const schedule = this.scheduleGenerator.buildTasksForSingleAssessment(
+        assessment,
+        tasks ? tasks.length : 0,
+        referenceDate,
+        assessmentType
+      )
+      const newTasks = (tasks ? tasks.concat(schedule) : schedule).sort(
+        compareTasks
+      )
+      this.changeDetectionEmitter.emit()
+      return this.setTasks(assessmentType, newTasks)
+    })
   }
 
-  mapTaskDTO(task: Task, assesmentType: AssessmentType): Promise<Task> {
+  mapTaskDTO(task: Task, assessmentType: AssessmentType): Promise<Task> {
     return this.questionnaire
-      .getAssessmentForTask(assesmentType, task)
+      .getAssessmentForTask(assessmentType, task)
       .then(assessment => {
-        const newTask = Object.assign(task, {
+        return Object.assign({}, task, {
+          completed: !!task.completed,
           reportedCompletion: !!task.completed,
           nQuestions: assessment ? assessment.questions.length : 1,
           warning: assessment
@@ -111,7 +138,6 @@ export class AppserverScheduleService extends ScheduleService {
             : false,
           notifications: []
         })
-        return newTask
       })
   }
 }

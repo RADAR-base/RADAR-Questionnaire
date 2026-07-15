@@ -3,10 +3,12 @@ import { Platform } from '@ionic/angular'
 import { Subscription } from 'rxjs'
 
 import {
+  DefaultNotificationDeduplicationEnabled,
   DefaultPackageName,
   DefaultSourcePrefix,
   DefaultTask
 } from '../../../../assets/data/defaultConfig'
+import { ConfigKeys } from '../../../shared/enums/config'
 import {
   FcmNotificationDto,
   FcmNotificationError,
@@ -111,10 +113,25 @@ export class FcmRestNotificationService extends FcmNotificationService {
   }
 
   publishAllNotifications(subject, limit): Promise<any> {
-    return this.schedule.getTasks(AssessmentType.ALL).then(tasks => {
-      const fcmNotifications = this.notifications
+    return Promise.all([
+      this.schedule.getTasks(AssessmentType.ALL),
+      this.remoteConfig
+        .forceFetch()
+        .then(config =>
+          config.getOrDefault(
+            ConfigKeys.NOTIFICATION_DEDUPLICATION,
+            DefaultNotificationDeduplicationEnabled.toString()
+          )
+        )
+        .then(val => val === 'true')
+        .catch(() => false)
+    ]).then(([tasks, deduplicationEnabled]) => {
+      let fcmNotifications = this.notifications
         .futureNotifications(tasks, limit)
         .map(t => this.format(t, subject))
+      if (deduplicationEnabled) {
+        fcmNotifications = this.deduplicateNotifications(fcmNotifications)
+      }
       this.logger.log('NOTIFICATIONS Scheduling FCM notifications')
       this.logger.log(fcmNotifications)
       return Promise.all(
@@ -122,6 +139,22 @@ export class FcmRestNotificationService extends FcmNotificationService {
           this.sendNotification(n, subject.subjectId, subject.projectId)
         )
       )
+    })
+  }
+
+  private deduplicateNotifications(notifications: any[]): any[] {
+    const seen = new Set<string>()
+    return notifications.filter(n => {
+      const dto = n.notificationDto
+      const key = `${dto.title}|${dto.body}|${new Date(dto.scheduledTime).getTime()}`
+      if (seen.has(key)) {
+        this.logger.log(
+          `NOTIFICATIONS Dedup: skipping duplicate notification "${dto.title}" at ${dto.scheduledTime}`
+        )
+        return false
+      }
+      seen.add(key)
+      return true
     })
   }
 

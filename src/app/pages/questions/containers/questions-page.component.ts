@@ -1,4 +1,10 @@
-import { Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/core'
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+  OnDestroy
+} from '@angular/core'
 import { Router } from '@angular/router'
 import { KeepAwake } from '@capacitor-community/keep-awake'
 import { NavController, Platform } from '@ionic/angular'
@@ -23,7 +29,8 @@ import {
 import {
   ExternalApp,
   Question,
-  QuestionType
+  QuestionType,
+  RequiredField
 } from '../../../shared/models/question'
 import { Task } from '../../../shared/models/task'
 import { AppLauncherService } from '../services/app-launcher.service'
@@ -67,6 +74,9 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
   viewEntered = false
   progressCount = 0
   retryAlertShownCount = 0
+  isWarningFieldVisible = false
+  canGoNextOnEnter = false
+  RequiredField = RequiredField
 
   SHOW_INTRODUCTION_SET: Set<boolean | ShowIntroductionType> = new Set([
     true,
@@ -79,6 +89,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
     QuestionType.matrix_radio,
     QuestionType.healthkit,
     QuestionType.slider,
+    QuestionType.slider_vertical,
     QuestionType.yesno
   ])
   MAX_RETRY_ALERT_COUNT = 5
@@ -95,7 +106,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
 
   constructor(
     public navCtrl: NavController,
-    private questionsService: QuestionsService,
+    public questionsService: QuestionsService,
     private usage: UsageService,
     private platform: Platform,
     private localization: LocalizationService,
@@ -215,6 +226,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
 
   onAnswer(event) {
     if (event.id) this.questionsService.submitAnswer(event)
+    this.updateToolbarButtons()
   }
 
   slideQuestion() {
@@ -288,6 +300,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
       this.currentQuestionIndices
     this.submitTimestamps()
     this.currentQuestionGroupId = this.nextQuestionGroupId
+    this.isWarningFieldVisible = false
     this.slideQuestion()
     this.updateToolbarButtons()
     this.autoReadAloudCurrentQuestion()
@@ -301,6 +314,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
       this.questionOrder[this.questionOrder.length - 1]
     this.currentQuestionIndices =
       this.allQuestionIndices[this.currentQuestionGroupId]
+    this.isWarningFieldVisible = false
     this.updateToolbarButtons()
     if (!this.isRightButtonDisabled)
       this.questionsService.deleteLastAnswers(currentQuestions)
@@ -312,11 +326,22 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
     // NOTE: Only the first question of each question group is used
     const currentQs = this.getCurrentQuestions()
     if (!currentQs) return
-    this.isRightButtonDisabled =
-      !this.questionsService.areAllAnswered(currentQs) &&
+
+    this.canGoNextOnEnter = this.questionsService.areAllAnswered(currentQs)
+
+    const disableByQuestionType =
+      !this.canGoNextOnEnter &&
       !this.questionsService.getIsAnyNextEnabled(currentQs)
+
+    this.isRightButtonDisabled =
+      disableByQuestionType || this.isWarningFieldVisible
     this.isLeftButtonDisabled =
       this.questionsService.getIsAnyPreviousEnabled(currentQs)
+  }
+
+  handleWarningState(showWarning: boolean) {
+    this.isWarningFieldVisible = showWarning
+    this.updateToolbarButtons()
   }
 
   exitQuestionnaire() {
@@ -457,7 +482,11 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
   }
 
   private initializeSwiper() {
-    if (this.slides && this.slides.nativeElement && this.slides.nativeElement.swiper) {
+    if (
+      this.slides &&
+      this.slides.nativeElement &&
+      this.slides.nativeElement.swiper
+    ) {
       this.slides.nativeElement.swiper.allowTouchMove = true
       this.slides.nativeElement.swiper.threshold = 5
       this.slides.nativeElement.swiper.watchSlidesProgress = true
@@ -521,7 +550,11 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.stopReadAloud()
     // Cleanup swiper
-    if (this.slides && this.slides.nativeElement && this.slides.nativeElement.swiper) {
+    if (
+      this.slides &&
+      this.slides.nativeElement &&
+      this.slides.nativeElement.swiper
+    ) {
       this.slides.nativeElement.swiper.destroy(true, true)
     }
   }

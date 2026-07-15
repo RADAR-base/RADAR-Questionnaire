@@ -120,6 +120,7 @@ export abstract class ScheduleService {
         ])
       ).values()
     ]
+    this.assignTaskAssessmentIndices(uniqueTasks)
     switch (type) {
       case AssessmentType.SCHEDULED:
         return this.setScheduledTasks(uniqueTasks)
@@ -128,6 +129,17 @@ export abstract class ScheduleService {
       case AssessmentType.CLINICAL:
         return this.setClinicalTasks(uniqueTasks)
     }
+  }
+
+  private assignTaskAssessmentIndices(tasks: Task[]) {
+    const taskCounts = new Map<string, number>()
+    const sortedTasks = [...tasks].sort(compareTasks)
+    sortedTasks.forEach(task => {
+      const currentCount = taskCounts.get(task.name) || 0
+      const nextCount = currentCount + 1
+      task.assessmentIdx = nextCount
+      taskCounts.set(task.name, nextCount)
+    })
   }
 
   setOnDemandTasks(tasks) {
@@ -187,8 +199,7 @@ export abstract class ScheduleService {
         .slice(-10)
         .map(
           t =>
-            `${t.timestamp}-${t.name} DATE ${new Date(t.timestamp)} NAME ${
-              t.name
+            `${t.timestamp}-${t.name} DATE ${new Date(t.timestamp)} NAME ${t.name
             }`
         )
         .reduce((a, b) => a + '\n' + b)

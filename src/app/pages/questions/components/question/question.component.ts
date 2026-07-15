@@ -22,6 +22,7 @@ import {
   Response
 } from '../../../../shared/models/question'
 import { Task } from '../../../../shared/models/task'
+import { AnswerService } from '../../services/answer.service'
 
 @Component({
   selector: 'question',
@@ -29,8 +30,8 @@ import { Task } from '../../../../shared/models/task'
   styleUrls: ['question.component.scss']
 })
 export class QuestionComponent implements OnInit, OnChanges {
-  @ViewChild('content', { static: false }) content
-  @ViewChild('input', { read: ElementRef, static: false }) inputEl
+  @ViewChild('content', { static: false }) content: ElementRef
+  @ViewChild('input', { read: ElementRef, static: false }) inputEl: ElementRef
 
   @Input()
   question: Question
@@ -46,6 +47,8 @@ export class QuestionComponent implements OnInit, OnChanges {
   isNextAutomatic: boolean // Automatically slide to next upon answer
   @Input()
   isMatrix = false
+  @Input()
+  canGoNextOnEnter = false
   @Output()
   answer: EventEmitter<Answer> = new EventEmitter<Answer>()
   @Output()
@@ -57,6 +60,10 @@ export class QuestionComponent implements OnInit, OnChanges {
   @Input()
   isReadAloudActive = false
 
+  warningState: EventEmitter<boolean> = new EventEmitter<boolean>()
+
+  sanitizedSectionHeader = ''
+  sanitizedFieldLabel = ''
   value: any
   currentlyShown = false
   previouslyShown = false
@@ -69,8 +76,6 @@ export class QuestionComponent implements OnInit, OnChanges {
   inputHeight = 0
   isAutoHeight = false
   showScrollButton = false
-  sanitizedSectionHeader = ''
-  sanitizedFieldLabel = ''
   defaultYesNoResponse: Response[] = [
     { code: '1', label: 'Yes' },
     { code: '0', label: 'No' }
@@ -83,7 +88,8 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.info,
     QuestionType.text,
     QuestionType.descriptive,
-    QuestionType.slider
+    QuestionType.slider,
+    QuestionType.slider_vertical
   ])
 
   HIDE_FIELD_LABEL_SET: Set<QuestionType> = new Set([
@@ -99,6 +105,7 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.checkbox,
     QuestionType.yesno,
     QuestionType.slider,
+    QuestionType.slider_vertical,
     QuestionType.range,
     QuestionType.text,
     QuestionType.matrix_radio
@@ -109,7 +116,10 @@ export class QuestionComponent implements OnInit, OnChanges {
     QuestionType.checkbox
   ])
 
-  constructor(private sanitizer: DomSanitizer) {
+  constructor(
+    private sanitizer: DomSanitizer,
+    private answerService: AnswerService
+  ) {
     this.value = null
   }
 
@@ -131,6 +141,9 @@ export class QuestionComponent implements OnInit, OnChanges {
     setTimeout(() => {
       this.showScrollButton = this.isScrollbarVisible()
     }, 900)
+
+    // Initialize value from stored answer
+    this.value = this.answerService.answers[this.question.field_name] || null
   }
 
   ngOnChanges() {
@@ -236,6 +249,10 @@ export class QuestionComponent implements OnInit, OnChanges {
       left: 0,
       behavior: 'smooth'
     })
+  }
+
+  onWarningFieldChange(showWarning: boolean) {
+    this.warningState.emit(showWarning)
   }
 
   onAudioRecordStart(start: boolean) {

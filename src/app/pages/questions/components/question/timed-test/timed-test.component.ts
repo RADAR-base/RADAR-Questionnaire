@@ -8,8 +8,6 @@ import {
   OnInit,
   Output
 } from '@angular/core'
-import { Plugins } from '@capacitor/core'
-import { Dialog } from '@capacitor/dialog'
 import { Haptics, ImpactStyle } from '@capacitor/haptics'
 
 import { TaskTimer, Timer } from '../../../../../shared/models/timer'
@@ -17,8 +15,6 @@ import {
   getMilliseconds,
   getSeconds
 } from '../../../../../shared/utilities/time'
-
-const { App, BackgroundTask } = Plugins
 
 @Component({
   selector: 'timed-test',
@@ -41,13 +37,13 @@ export class TimedTestComponent implements OnInit, OnChanges, OnDestroy {
   startTime: number
   endTime: number
 
-  constructor(private ref: ChangeDetectorRef) {}
+  constructor(private ref: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.initTimer()
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() { }
 
   ngOnChanges() {
     if (this.currentlyShown) {

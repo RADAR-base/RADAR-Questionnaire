@@ -48,6 +48,11 @@
         (valueChange)="emitAnswer($event)">
       </slider-input>
 
+      <slider-vertical-input *ngSwitchCase="'slider-vertical'" [min]="question.range.min" [max]="question.range.max"
+        [step]="question.range.step" [labelLeft]="question.range.labelLeft" [labelRight]="question.range.labelRight"
+        (valueChange)="emitAnswer($event)">
+      </slider-vertical-input>
+
       <info-screen *ngSwitchCase="'info'" [sections]="question.select_choices_or_calculations"
         [hasFieldLabel]="question.field_label.length > 0" [image]="question.field_annotation?.image"
         (valueChange)="emitAnswer($event)" [currentlyShown]="currentlyShown">
@@ -68,7 +73,12 @@
       </timed-test>
 
       <text-input *ngSwitchCase="'text'" (valueChange)="emitAnswer($event)" (keyboardEvent)="onKeyboardEvent($event)"
-        [type]="question.text_validation_type_or_show_slider_number" [currentlyShown]="currentlyShown"></text-input>
+        (showWarningChange)="onWarningFieldChange($event)"
+        [validationType]="question.text_validation_type_or_show_slider_number"
+        [textValidationMin]="question.text_validation_min"
+        [textValidationMax]="question.text_validation_max"
+        [currentlyShown]="currentlyShown"
+        [canSubmitOnEnter]="canGoNextOnEnter"></text-input>
 
       <radio-input *ngSwitchCase="'yesno'" [responses]="defaultYesNoResponse" (valueChange)="emitAnswer($event)">
       </radio-input>
@@ -78,7 +88,8 @@
       </descriptive-input>
 
       <matrix-radio-input *ngSwitchCase="'matrix-radio'" [responses]="question.select_choices_or_calculations"
-        [currentlyShown]="currentlyShown" [previouslyShown]="previouslyShown" (valueChange)="emitAnswer($event)">
+        [currentlyShown]="currentlyShown" [previouslyShown]="previouslyShown" [value]="value"
+        (valueChange)="emitAnswer($event)">
       </matrix-radio-input>
 
       <web-input *ngSwitchCase="'web'" [text]="question.field_label" (valueChange)="emitAnswer($event)"

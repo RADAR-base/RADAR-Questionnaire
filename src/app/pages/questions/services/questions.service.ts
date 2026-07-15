@@ -14,7 +14,8 @@ import { ShowIntroductionType } from '../../../shared/models/assessment'
 import {
   Question,
   QuestionPosition,
-  QuestionType
+  QuestionType,
+  RequiredField
 } from '../../../shared/models/question'
 import { parseAndEvalLogic } from '../../../shared/utilities/parsers'
 import { getSeconds } from '../../../shared/utilities/time'
@@ -41,6 +42,12 @@ export class QuestionsService {
   DELIMITER = ','
   isProgressCountShown = false
 
+  REQUIRED_FIELD_VALUES: Array<string | undefined> = [
+    RequiredField.TRUE,
+    RequiredField.EMPTY,
+    undefined
+  ]
+
   constructor(
     public questionnaire: QuestionnaireService,
     private answerService: AnswerService,
@@ -49,8 +56,7 @@ export class QuestionsService {
     private questionnaireProcessor: DefaultQuestionnaireProcessorService,
     private remoteConfig: RemoteConfigService,
     private util: Utility
-  ) {
-  }
+  ) { }
 
   getKafkaService() {
     return this.questionnaireProcessor.kafka
@@ -165,8 +171,23 @@ export class QuestionsService {
     return this.answerService.check(id)
   }
 
-  areAllAnswered(questions: Question[]) {
-    return questions.every(q => this.isAnswered(q))
+  // Makes a question required if the required_field value is in the REQUIRED_FIELD_VALUES array
+  isRequired(question: Question): boolean {
+    return this.REQUIRED_FIELD_VALUES.includes(question.required_field)
+  }
+
+  // Check if the answer for a question is blank (null, empty string, or empty array)
+  isAnswerBlank(question: Question): boolean {
+    const answer = this.answerService.answers[question.field_name]
+    if (answer == null) return true
+    if (typeof answer === 'string') return answer.trim() === ''
+    if (Array.isArray(answer)) return answer.length === 0
+    return false
+  }
+
+  // Check if all required questions have non-blank answers
+  areAllAnswered(questions: Question[]): boolean {
+    return questions.every(q => !this.isRequired(q) || !this.isAnswerBlank(q))
   }
 
   getNextQuestion(groupedQuestions, currentQuestionId): QuestionPosition {
@@ -276,7 +297,8 @@ export class QuestionsService {
         this.questionnaireProcessor.process(
           this.getData(questions),
           task,
-          assessment.questionnaire
+          assessment.questionnaire,
+          assessment.protocol?.metaData
         )
       )
   }

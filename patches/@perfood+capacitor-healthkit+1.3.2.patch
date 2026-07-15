@@ -1,5 +1,5 @@
 diff --git a/node_modules/@perfood/capacitor-healthkit/ios/Plugin/CapacitorHealthkitPlugin.swift b/node_modules/@perfood/capacitor-healthkit/ios/Plugin/CapacitorHealthkitPlugin.swift
-index 0c5d95c..e56b155 100644
+index 0c5d95c..ec2ed01 100644
 --- a/node_modules/@perfood/capacitor-healthkit/ios/Plugin/CapacitorHealthkitPlugin.swift
 +++ b/node_modules/@perfood/capacitor-healthkit/ios/Plugin/CapacitorHealthkitPlugin.swift
 @@ -92,13 +92,16 @@ public class CapacitorHealthkitPlugin: CAPPlugin {
@@ -22,7 +22,48 @@ index 0c5d95c..e56b155 100644
                  types.insert(HKQuantityType.quantityType(forIdentifier: HKQuantityTypeIdentifier.distanceCycling)!)
              case "bloodGlucose":
                  types.insert(HKQuantityType.quantityType(forIdentifier: HKQuantityTypeIdentifier.bloodGlucose)!)
-@@ -552,8 +555,8 @@ public class CapacitorHealthkitPlugin: CAPPlugin {
+@@ -308,6 +311,7 @@ public class CapacitorHealthkitPlugin: CAPPlugin {
+ 
+     func generateOutput(sampleName: String, results: [HKSample]?) -> [[String: Any]]? {
+         var output: [[String: Any]] = []
++        let dateFormatter = ISO8601DateFormatter()
+         if results == nil {
+             return output
+         }
+@@ -324,8 +328,8 @@ public class CapacitorHealthkitPlugin: CAPPlugin {
+                 let constructedSample: [String: Any] = [
+                     "uuid": sample.uuid.uuidString,
+                     "timeZone": getTimeZoneString(sample: sample) as String,
+-                    "startDate": ISO8601DateFormatter().string(from: sample.startDate),
+-                    "endDate": ISO8601DateFormatter().string(from: sample.endDate),
++                    "startDate": dateFormatter.string(from: sample.startDate),
++                    "endDate": dateFormatter.string(from: sample.endDate),
+                     "duration": sleepHoursBetweenDates,
+                     "sleepState": sleepState,
+                     "source": sample.sourceRevision.source.name,
+@@ -386,8 +390,8 @@ public class CapacitorHealthkitPlugin: CAPPlugin {
+ 
+                 output.append([
+                     "uuid": sample.uuid.uuidString,
+-                    "startDate": ISO8601DateFormatter().string(from: sample.startDate),
+-                    "endDate": ISO8601DateFormatter().string(from: sample.endDate),
++                    "startDate": dateFormatter.string(from: sample.startDate),
++                    "endDate": dateFormatter.string(from: sample.endDate),
+                     "duration": workoutHoursBetweenDates,
+                     "source": sample.sourceRevision.source.name,
+                     "sourceBundleId": sample.sourceRevision.source.bundleIdentifier,
+@@ -468,8 +472,8 @@ public class CapacitorHealthkitPlugin: CAPPlugin {
+                     "uuid": sample.uuid.uuidString,
+                     "value": sample.quantity.doubleValue(for: unit!),
+                     "unitName": unitName!,
+-                    "startDate": ISO8601DateFormatter().string(from: sample.startDate),
+-                    "endDate": ISO8601DateFormatter().string(from: sample.endDate),
++                    "startDate": dateFormatter.string(from: sample.startDate),
++                    "endDate": dateFormatter.string(from: sample.endDate),
+                     "duration": quantityHoursBetweenDates,
+                     "source": sample.sourceRevision.source.name,
+                     "sourceBundleId": sample.sourceRevision.source.bundleIdentifier,
+@@ -552,8 +556,8 @@ public class CapacitorHealthkitPlugin: CAPPlugin {
          guard let sampleType: HKSampleType = getSampleType(sampleName: _sampleName) else {
              return call.reject("Error in sample name")
          }
@@ -33,7 +74,7 @@ index 0c5d95c..e56b155 100644
              _, results, _ in
              guard let output: [[String: Any]] = self.generateOutput(sampleName: _sampleName, results: results) else {
                  return call.reject("Error happened while generating outputs")
-@@ -664,8 +667,8 @@ public class CapacitorHealthkitPlugin: CAPPlugin {
+@@ -664,8 +668,8 @@ public class CapacitorHealthkitPlugin: CAPPlugin {
          guard let sampleType: HKSampleType = getSampleType(sampleName: sampleName) else {
              return completion(.failure(HKSampleError.sampleTypeFailed))
          }

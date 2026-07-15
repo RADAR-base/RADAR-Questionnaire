@@ -26,6 +26,9 @@ export class ConfigKeys {
     'participant_attribute_order'
   )
   static SCHEDULE_YEAR_COVERAGE = new ConfigKeys('schedule_year_coverage')
+  static SCHEDULE_SAVE_TASKS_FROM_BEGINNING = new ConfigKeys(
+    'schedule_save_tasks_from_beginning'
+  )
 
   static APP_CREDITS_TITLE = new ConfigKeys('app_credits_title')
   static APP_CREDITS_BODY = new ConfigKeys('app_credits_body')
@@ -60,10 +63,13 @@ export class ConfigKeys {
   static AUTO_SEND_CACHED_DATA = new ConfigKeys('auto_send_cached_data')
 
   static SEND_ERROR_NOTIFICATION = new ConfigKeys('send_error_notification')
+  static EVENT_NAME_TARGET = new ConfigKeys('event_name_target')
 
   static SHOW_TASK_STREAK = new ConfigKeys('show_task_streak')
 
   static TASK_STREAK_REQUIRE_ALL_TASKS = new ConfigKeys('task_streak_require_all_tasks')
+
+  static NOTIFICATION_DEDUPLICATION = new ConfigKeys('notification_deduplication')
 
   constructor(public value: string) { }
 

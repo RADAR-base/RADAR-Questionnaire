@@ -123,6 +123,7 @@ export const DefaultTask: Task = {
 
 // *Default schedule coverage in years (length of schedule to generate tasks until)
 export const DefaultScheduleYearCoverage: number = 3
+export const DefaultScheduleSaveTasksFromBeginning = 'false'
 
 // *Default time interval of protocol
 export const DefaultScheduleTimeInterval = { unit: 'day', amount: 1 }
@@ -151,7 +152,10 @@ export const FCMPluginProjectSenderId: string = '430900191220'
 export const DefaultMaxUpstreamResends = 100
 
 // *Default number of notifications to schedule
-export const DefaultNumberOfNotificationsToSchedule: number = 50
+export const DefaultNumberOfNotificationsToSchedule: number = 100
+
+// *Default notification deduplication enabled (if true, duplicate notifications will be filtered out before sending)
+export const DefaultNotificationDeduplicationEnabled: boolean = true
 
 // *Default length of time to wait before refreshing notifications (1 hr in ms)
 export const DefaultNotificationRefreshTime: number = 3600000
@@ -372,3 +376,6 @@ export const DefaultHealthkitPullTimeout = 1_200_000 // 20 minutes
 
 // *Default Healthkit show ETA text
 export const DefaultHealthkitShowEtaText = 'false'
+
+// *Target field for rendered assessment event names: `name` (default) or `metadata`
+export const DefaultEventNameTarget = 'name'

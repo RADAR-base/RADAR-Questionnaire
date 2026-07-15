@@ -51,8 +51,6 @@ PODS:
     - Capacitor
   - CapacitorSplashScreen (5.0.8):
     - Capacitor
-  - CapacitorStatusBar (5.0.7):
-    - Capacitor
   - CapacitorTextZoom (8.0.1):
     - Capacitor
   - CapacitorVoiceRecorder (6.0.3):
@@ -218,7 +216,6 @@ DEPENDENCIES:
   - "CapacitorMlkitBarcodeScanning (from `../../node_modules/@capacitor-mlkit/barcode-scanning`)"
   - "CapacitorNetwork (from `../../node_modules/@capacitor/network`)"
   - "CapacitorSplashScreen (from `../../node_modules/@capacitor/splash-screen`)"
-  - "CapacitorStatusBar (from `../../node_modules/@capacitor/status-bar`)"
   - "CapacitorTextZoom (from `../../node_modules/@capacitor/text-zoom`)"
   - CapacitorVoiceRecorder (from `../../node_modules/capacitor-voice-recorder`)
   - CordovaPlugins (from `../capacitor-cordova-ios-plugins`)
@@ -294,8 +291,6 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/network"
   CapacitorSplashScreen:
     :path: "../../node_modules/@capacitor/splash-screen"
-  CapacitorStatusBar:
-    :path: "../../node_modules/@capacitor/status-bar"
   CapacitorTextZoom:
     :path: "../../node_modules/@capacitor/text-zoom"
   CapacitorVoiceRecorder:
@@ -327,7 +322,6 @@ SPEC CHECKSUMS:
   CapacitorMlkitBarcodeScanning: 31c6af9f39873ff69e16ed5b39ebe2e1915f16fe
   CapacitorNetwork: b719d692a8d1310da8d26d6648d3aa1ef1e100e1
   CapacitorSplashScreen: 0b962a2bee014151569dc59b089ba0e93daeeaf0
-  CapacitorStatusBar: 37ca5200a1791340c519239521ec2519d384eacb
   CapacitorTextZoom: b3c80b09abef831245bc3434b1c03aa898ad4762
   CapacitorVoiceRecorder: 27c4c998c2280571d853579f319f6f53f884bdee
   CordovaPlugins: 641afcfc8b28942f8b339c59f0cd5605e2a5c3cf
@@ -356,6 +350,6 @@ SPEC CHECKSUMS:
   PerfoodCapacitorHealthkit: 0708728954308c0217daa6912deeb73df7cba050
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
 
-PODFILE CHECKSUM: 1a8d6fc7b486bbb8291d9ae589b8f48c65672af5
+PODFILE CHECKSUM: 35e6c1ebec9ab177a6825d0a989638426c6254dc
 
 COCOAPODS: 1.16.2

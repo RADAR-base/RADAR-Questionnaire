@@ -4,6 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
 import com.getcapacitor.BridgeActivity;
 import com.getcapacitor.JSObject;
 
@@ -13,6 +17,18 @@ import java.util.Set;
 import es.rentingjob.plugins.capgrabintentextras.GrabIntentExtrasPlugin;
 
 public class MainActivity extends BridgeActivity {
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+    // Handle edge-to-edge insets for Android 15+ (SDK 35)
+    ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content), (v, windowInsets) -> {
+      Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+      v.setPadding(insets.left, insets.top, insets.right, insets.bottom);
+      return WindowInsetsCompat.CONSUMED;
+    });
+  }
+
   @Override
   protected void onNewIntent(Intent intent) {
     Bundle bundle = intent.getExtras();

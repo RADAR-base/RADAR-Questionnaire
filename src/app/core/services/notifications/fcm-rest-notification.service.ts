@@ -3,6 +3,7 @@ import { Platform } from '@ionic/angular'
 import { Subscription } from 'rxjs'
 
 import {
+  DefaultNotificationDeduplicationEnabled,
   DefaultPackageName,
   DefaultSourcePrefix,
   DefaultTask
@@ -119,7 +120,7 @@ export class FcmRestNotificationService extends FcmNotificationService {
         .then(config =>
           config.getOrDefault(
             ConfigKeys.NOTIFICATION_DEDUPLICATION,
-            'false'
+            DefaultNotificationDeduplicationEnabled.toString()
           )
         )
         .then(val => val === 'true')

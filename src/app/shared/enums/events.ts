@@ -45,6 +45,7 @@ export enum ConfigEventType {
   APP_VERSION_CHANGE = 'app_version_change',
   APP_UPDATE_AVAILABLE = 'app_update_available',
   TIMEZONE_CHANGE = 'timezone_change',
+  ENROLMENT_DATE_CHANGE = 'enrolment_date_change',
   ERROR = 'config_error',
   APP_RESET = 'app_reset',
   APP_RESET_PARTIAL = 'app_reset_partial'

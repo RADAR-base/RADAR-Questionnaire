@@ -124,8 +124,12 @@
         *ngSwitchCase="'text'"
         (valueChange)="emitAnswer($event)"
         (keyboardEvent)="onKeyboardEvent($event)"
-        [type]="question.text_validation_type_or_show_slider_number"
+        (showWarningChange)="onWarningFieldChange($event)"
+        [validationType]="question.text_validation_type_or_show_slider_number"
+        [textValidationMin]="question.text_validation_min"
+        [textValidationMax]="question.text_validation_max"
         [currentlyShown]="currentlyShown"
+        [canSubmitOnEnter]="canGoNextOnEnter"
       ></text-input>
 
       <radio-input
@@ -148,9 +152,9 @@
         [responses]="question.select_choices_or_calculations"
         [currentlyShown]="currentlyShown"
         [previouslyShown]="previouslyShown"
+        [value]="value"
         (valueChange)="emitAnswer($event)"
-      >
-      </matrix-radio-input>
+      ></matrix-radio-input>
 
       <web-input
         *ngSwitchCase="'web'"

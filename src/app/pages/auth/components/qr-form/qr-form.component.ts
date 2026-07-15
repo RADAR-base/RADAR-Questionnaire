@@ -31,10 +31,10 @@ export class QRFormComponent implements OnDestroy {
 
     // Add the `barcodeScanned` listener
     const listener = await BarcodeScanner.addListener(
-      'barcodeScanned',
+      'barcodesScanned',
       async result => {
         await listener.remove()
-        const data = result.barcode.rawValue
+        const data = result.barcodes[0].rawValue
         if (data.includes(this.ORY_KEY)) {
           this.ory.emit(data)
         }

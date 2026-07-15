@@ -25,7 +25,7 @@ export class AppConfigService {
     SETTINGS_WEEKLYREPORT: StorageKeys.SETTINGS_WEEKLYREPORT
   }
 
-  constructor(public storage: StorageService) {}
+  constructor(public storage: StorageService) { }
 
   init(enrolmentDate) {
     return Promise.all([
@@ -38,7 +38,7 @@ export class AppConfigService {
   }
 
   async getAppVersion() {
-    if (Capacitor.isNative) {
+    if (Capacitor.isNativePlatform()) {
       const appInfo = await App.getInfo()
       return appInfo.version
     }

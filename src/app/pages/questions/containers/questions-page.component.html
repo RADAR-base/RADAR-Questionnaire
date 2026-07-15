@@ -20,7 +20,7 @@
                 [isMatrix]="item.value.length > 1" [isReadAloudAvailable]="isReadAloudAvailable"
                 [isReadAloudActive]="isReadAloudActive" [canGoNextOnEnter]="canGoNextOnEnter"
                 (answer)="onAnswer($event)" (nextAction)="nextAction($event)" (readAloud)="onReadAloud($event)"
-                (warningState)="handleWarningState($event)">
+                (warningState)="handleWarningState($any($event))">
               </question>
             </div>
           </swiper-slide>

@@ -1,8 +1,13 @@
 <ion-list>
-  <ion-radio-group (ionChange)="onInputChange($event)">
-    <ion-item lines="none" *ngFor="let item of items">
+  <ion-radio-group (ionChange)="onInputChange($event)" [class.image-only-grid]="hasImageOnlyOptions">
+    <ion-item lines="none" *ngFor="let item of items" [class.image-only-option]="item.image && !item.response">
       <ion-radio [value]="item.value" [id]="item.id"></ion-radio>
-      <ion-label dir="auto">{{ item.response }}</ion-label>
+      <ion-label dir="auto">
+        <div class="radio-option-content">
+          <img *ngIf="item.image" [src]="item.image" alt="" class="radio-option-image" />
+          <span *ngIf="item.response">{{ item.response }}</span>
+        </div>
+      </ion-label>
     </ion-item>
   </ion-radio-group>
 </ion-list>

@@ -1490,6 +1490,166 @@ export const Localisations = {
     pl: 'Dodaj nagranie',
     hb: 'לשלוח הקלטה?'
   },
+  GUIDED_AUDIO_SPEAKING: {
+    da: 'Læser instruktioner højt...',
+    de: 'Anweisungen werden vorgelesen...',
+    en: 'Reading instructions aloud...',
+    es: 'Leyendo instrucciones en voz alta...',
+    it: 'Lettura delle istruzioni ad alta voce...',
+    nl: 'Instructies worden voorgelezen...',
+    pl: 'Czytanie instrukcji na głos...',
+    hb: 'קורא הוראות בקול...'
+  },
+  GUIDED_AUDIO_SKIP_TTS: {
+    da: 'Spring over',
+    de: 'Überspringen',
+    en: 'Skip',
+    es: 'Omitir',
+    it: 'Salta',
+    nl: 'Overslaan',
+    pl: 'Pomiń',
+    hb: 'דלג'
+  },
+  GUIDED_AUDIO_REPLAY_PROMPT: {
+    da: 'Afspil instruktioner igen',
+    de: 'Anweisungen wiederholen',
+    en: 'Replay instructions',
+    es: 'Repetir instrucciones',
+    it: 'Ripeti le istruzioni',
+    nl: 'Instructies opnieuw afspelen',
+    pl: 'Odtwórz instrukcje ponownie',
+    hb: 'השמע הוראות שוב'
+  },
+  GUIDED_AUDIO_RECORDING: {
+    da: 'Optager...',
+    de: 'Aufnahme läuft...',
+    en: 'Recording...',
+    es: 'Grabando...',
+    it: 'Registrazione in corso...',
+    nl: 'Opnemen...',
+    pl: 'Nagrywanie...',
+    hb: 'מקליט...'
+  },
+  GUIDED_AUDIO_STOP_RECORDING: {
+    da: 'Stop optagelse',
+    de: 'Aufnahme stoppen',
+    en: 'Stop recording',
+    es: 'Detener grabación',
+    it: 'Interrompi registrazione',
+    nl: 'Stop opname',
+    pl: 'Zatrzymaj nagrywanie',
+    hb: 'עצור הקלטה'
+  },
+  GUIDED_AUDIO_START_RECORDING: {
+    da: 'Start optagelse',
+    de: 'Aufnahme starten',
+    en: 'Start recording',
+    es: 'Iniciar grabación',
+    it: 'Avvia registrazione',
+    nl: 'Start opname',
+    pl: 'Rozpocznij nagrywanie',
+    hb: 'התחל הקלטה'
+  },
+  GUIDED_AUDIO_RECORDED: {
+    da: 'Optagelse registreret',
+    de: 'Aufnahme gespeichert',
+    en: 'Recording captured',
+    es: 'Grabación capturada',
+    it: 'Registrazione acquisita',
+    nl: 'Opname vastgelegd',
+    pl: 'Nagranie zarejestrowane',
+    hb: 'הקלטה נלכדה'
+  },
+  GUIDED_AUDIO_CONFIRM: {
+    da: 'Brug denne optagelse',
+    de: 'Diese Aufnahme verwenden',
+    en: 'Use this recording',
+    es: 'Usar esta grabación',
+    it: 'Usa questa registrazione',
+    nl: 'Gebruik deze opname',
+    pl: 'Użyj tego nagrania',
+    hb: 'השתמש בהקלטה זו'
+  },
+  GUIDED_AUDIO_RETRY: {
+    da: 'Prøv igen',
+    de: 'Erneut versuchen',
+    en: 'Try again',
+    es: 'Intentar de nuevo',
+    it: 'Riprova',
+    nl: 'Probeer opnieuw',
+    pl: 'Spróbuj ponownie',
+    hb: 'נסה שוב'
+  },
+  GUIDED_AUDIO_UNABLE_TO_SPEAK: {
+    da: 'Jeg kan ikke tale lige nu',
+    de: 'Ich kann gerade nicht sprechen',
+    en: 'I cannot speak right now',
+    es: 'No puedo hablar ahora mismo',
+    it: 'Non riesco a parlare adesso',
+    nl: 'Ik kan nu niet spreken',
+    pl: 'Nie mogę teraz mówić',
+    hb: 'אני לא יכול לדבר כרגע'
+  },
+  GUIDED_AUDIO_UNABLE_REASON: {
+    da: 'Hvad forhindrer dig i at tale?',
+    de: 'Was hindert Sie am Sprechen?',
+    en: 'What is preventing you from speaking?',
+    es: '¿Qué le impide hablar?',
+    it: 'Cosa le impedisce di parlare?',
+    nl: 'Wat verhindert u te spreken?',
+    pl: 'Co uniemożliwia Ci mówienie?',
+    hb: 'מה מונע ממך לדבר?'
+  },
+  GUIDED_AUDIO_REASON_NO_OUTPUT: {
+    da: 'Ingen verbal output',
+    de: 'Keine Sprachausgabe',
+    en: 'No verbal output',
+    es: 'Sin producción verbal',
+    it: 'Nessun output verbale',
+    nl: 'Geen verbale uitvoer',
+    pl: 'Brak mowy',
+    hb: 'אין פלט מילולי'
+  },
+  GUIDED_AUDIO_REASON_FATIGUE: {
+    da: 'For træt',
+    de: 'Zu erschöpft',
+    en: 'Too fatigued',
+    es: 'Demasiado fatigado',
+    it: 'Troppo affaticato',
+    nl: 'Te vermoeid',
+    pl: 'Zbyt zmęczony/a',
+    hb: 'עייפות רבה מדי'
+  },
+  GUIDED_AUDIO_REASON_TECHNICAL: {
+    da: 'Teknisk problem',
+    de: 'Technisches Problem',
+    en: 'Technical problem',
+    es: 'Problema técnico',
+    it: 'Problema tecnico',
+    nl: 'Technisch probleem',
+    pl: 'Problem techniczny',
+    hb: 'בעיה טכנית'
+  },
+  GUIDED_AUDIO_REASON_OTHER: {
+    da: 'Anden årsag',
+    de: 'Anderer Grund',
+    en: 'Other reason',
+    es: 'Otra razón',
+    it: 'Altro motivo',
+    nl: 'Andere reden',
+    pl: 'Inny powód',
+    hb: 'סיבה אחרת'
+  },
+  GUIDED_AUDIO_SKIP_CONFIRM: {
+    da: 'Bekræft og fortsæt',
+    de: 'Bestätigen und fortfahren',
+    en: 'Confirm and continue',
+    es: 'Confirmar y continuar',
+    it: 'Conferma e continua',
+    nl: 'Bevestigen en doorgaan',
+    pl: 'Potwierdź i kontynuuj',
+    hb: 'אשר והמשך'
+  },
   CONFIG_ERROR_DESC: {
     da: 'Vi kunne ikke opdatere din konfiguration lige nu. Det kan skyldes et midlertidigt netværksproblem. Tryk på "Prøv igen" for at prøve igen, eller tryk på "Afskedige" for at fortsætte med at bruge appen. Hvis denne besked vises igen næste gang, du åbner appen, bedes du kontakte din studiekoordinator.',
     de: 'Wir konnten Ihre Konfiguration gerade nicht aktualisieren. Das könnte ein vorübergehendes Netzwerkproblem sein. Tippen Sie auf "Wiederholen", um es erneut zu versuchen, oder auf "Entlassen", um die App weiter zu nutzen. Wenn diese Meldung beim nächsten Öffnen der App erneut erscheint, wenden Sie sich bitte an Ihren Studienkoordinator.',

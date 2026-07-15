@@ -7,6 +7,7 @@ import { Ionic4DatepickerModule } from '@logisticinfotech/ionic4-datepicker'
 import { PipesModule } from '../../../../shared/pipes/pipes.module'
 import { WheelSelectorComponent } from '../wheel-selector/wheel-selector.component'
 import { AudioInputComponent } from './audio-input/audio-input.component'
+import { GuidedAudioInputComponent } from './guided-audio-input/guided-audio-input.component'
 import { CheckboxInputComponent } from './checkbox-input/checkbox-input.component'
 import { DescriptiveInputComponent } from './descriptive-input/descriptive-input.component'
 import { InfoScreenComponent } from './info-screen/info-screen.component'
@@ -25,6 +26,7 @@ import { WebInputComponent } from './web-input/web-input.component'
 const COMPONENTS = [
   QuestionComponent,
   AudioInputComponent,
+  GuidedAudioInputComponent,
   CheckboxInputComponent,
   RadioInputComponent,
   RangeInputComponent,

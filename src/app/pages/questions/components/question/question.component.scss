@@ -45,8 +45,32 @@ h2 {
   margin-bottom: 16px;
 }
 
-.field-container {
-  // max-height: 50vh !important;
+.question-title-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.question-title-row h2 {
+  flex: 1;
+  margin-right: 4px;
+}
+
+.read-aloud-icon-button {
+  margin: 0;
+  min-width: 22px;
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --border-width: 0;
+  --box-shadow: none;
+  --background: transparent;
+  height: 22px;
+}
+
+.read-aloud-icon-button ion-icon {
+  font-size: 16px;
 }
 
 .field-container-matrix {

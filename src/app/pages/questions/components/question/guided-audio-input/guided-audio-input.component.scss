@@ -1,0 +1,234 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 90%;
+  overflow: hidden;
+}
+
+ion-grid.guided-audio-grid {
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  padding: 0 8px;
+  overflow: hidden;
+
+  // Keep guided-audio buttons visually consistent with app defaults.
+  ion-button.bt {
+    --background: var(--cl-primary-20);
+    --border-color: white;
+    --border-width: 2px;
+    --border-style: solid;
+    --border-radius: var(--bt-height);
+    --box-shadow: none;
+  }
+}
+
+// ── Image stimulus ────────────────────────────────────────────────────────────
+
+.stimulus-row {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-y: auto;
+  background-color: var(--cl-primary-20);
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.stimulus-image {
+  width: 100%;
+  border-radius: 8px;
+}
+
+// ── Prompt ────────────────────────────────────────────────────────────────────
+
+.prompt-row {
+  flex: 0 0 auto;
+}
+
+.prompt-card {
+  padding: 12px 4px 8px;
+  border-radius: 8px;
+  transition: background 0.3s ease;
+
+  &.prompt-speaking {
+    background-color: var(--cl-primary-10);
+  }
+
+  h2.prompt-text {
+    font-size: 18px;
+    line-height: 1.5;
+    margin: 0 0 6px;
+  }
+
+  .replay-btn {
+    margin-top: 2px;
+  }
+}
+
+// ── Action area ───────────────────────────────────────────────────────────────
+
+.action-row {
+  flex: 0 0 120px;
+}
+
+.state-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 4px 0;
+  width: 100%;
+
+  ion-button {
+    height: 36px;
+    font-size: 13px;
+  }
+}
+
+// Speaking state
+.speaking-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+
+  .speaking-icon {
+    font-size: 44px;
+    color: var(--ion-color-primary);
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+
+  p {
+    margin: 0;
+    font-size: 15px;
+    color: var(--ion-color-medium);
+  }
+}
+
+// Countdown state
+.countdown-ring {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: var(--ion-color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulse 0.9s ease-in-out infinite;
+
+  .countdown-number {
+    font-size: 44px;
+    font-weight: bold;
+    color: white;
+    line-height: 1;
+  }
+}
+
+// Recording state
+.recording-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+
+  .recording-dot {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background-color: var(--cl-danger-40);
+    animation: blink 1s step-start infinite;
+  }
+
+  .recording-label {
+    margin: 0;
+    font-size: 15px;
+    color: var(--ion-color-medium);
+  }
+
+  .timer-label {
+    margin: 0;
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--ion-color-primary);
+  }
+}
+
+.bt-stop {
+  background-color: var(--cl-danger-40);
+  border-radius: var(--bt-height);
+  --background: var(--cl-danger-40);
+  --border-radius: var(--bt-height);
+}
+
+// Recorded state
+.done-icon {
+  font-size: 52px;
+  color: var(--ion-color-success);
+}
+
+.recorded-label {
+  margin: 0;
+  font-size: 15px;
+  color: var(--ion-color-medium);
+}
+
+.confirm-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  width: 100%;
+}
+
+// ── Skip / reason panel ───────────────────────────────────────────────────────
+
+.skip-row {
+  flex: 1 1 auto;
+
+  .skip-question {
+    font-size: 17px;
+    font-weight: 500;
+    margin: 12px 0 10px;
+  }
+
+  .skip-list {
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 16px;
+
+    ion-item {
+      --background: var(--cl-primary-10);
+      --border-color: var(--ion-color-light);
+      cursor: pointer;
+
+      &.selected {
+        --background: rgba(var(--ion-color-primary-rgb), 0.12);
+      }
+    }
+  }
+
+  .cancel-skip-btn {
+    margin-top: 6px;
+  }
+}
+
+// ── Shared button helpers ─────────────────────────────────────────────────────
+
+// ── Animations ────────────────────────────────────────────────────────────────
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.82;
+  }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}

@@ -1,0 +1,71 @@
+<ion-grid class="guided-audio-grid">
+
+  <!-- ── Prompt text + optional replay button ───────────────────── -->
+  <ion-row class="prompt-row" *ngIf="shouldShowPromptRow">
+    <ion-col size="12">
+      <div class="prompt-card" [class.prompt-speaking]="state === 'speaking'">
+        <h2 *ngIf="shouldShowFieldLabel" dir="auto" class="prompt-text">{{ text }}</h2>
+        <ion-button *ngIf="config?.allow_replay_prompt && !hasReplayedPrompt && state === 'idle'" size="small"
+          class="bt replay-btn" (click)="replayPrompt()">
+          <ion-icon slot="start" name="volume-high-outline"></ion-icon>
+          {{ 'GUIDED_AUDIO_REPLAY_PROMPT' | translate }}
+        </ion-button>
+      </div>
+    </ion-col>
+  </ion-row>
+
+  <!-- ── Image stimulus ─────────────────────────────────────────── -->
+  <ion-row *ngIf="image" class="stimulus-row">
+    <ion-col size="12" class="ion-text-center">
+      <img [src]="image" alt="" class="stimulus-image" />
+    </ion-col>
+  </ion-row>
+
+  <!-- ── State-driven action area ───────────────────────────────── -->
+  <ion-row class="action-row ion-justify-content-center ion-align-items-center">
+    <ion-col size="12" class="ion-text-center">
+
+      <!-- Speaking -->
+      <div *ngIf="state === 'speaking'" class="state-block">
+        <div class="speaking-indicator">
+          <ion-icon name="volume-high-outline" class="speaking-icon"></ion-icon>
+          <p>{{ 'GUIDED_AUDIO_SPEAKING' | translate }}</p>
+        </div>
+      </div>
+
+      <!-- Recording -->
+      <div *ngIf="state === 'recording'" class="state-block">
+        <div class="recording-indicator">
+          <div class="recording-dot"></div>
+          <p class="recording-label">{{ 'GUIDED_AUDIO_RECORDING' | translate }}</p>
+          <p *ngIf="(config?.record_seconds ?? 0) > 0" class="timer-label">
+            {{ recordSecondsRemaining }}s
+          </p>
+        </div>
+        <ion-button class="bt bt--full bt-stop" (click)="handleManualStop()">
+          {{ 'GUIDED_AUDIO_STOP_RECORDING' | translate }}
+        </ion-button>
+      </div>
+
+      <!-- Recorded – awaiting confirmation -->
+      <div *ngIf="state === 'recorded'" class="state-block">
+        <ion-icon name="checkmark-circle-outline" class="done-icon"></ion-icon>
+        <p class="recorded-label">{{ 'GUIDED_AUDIO_RECORDED' | translate }}</p>
+        <div class="confirm-buttons">
+          <ion-button class="bt bt--full" (click)="confirmRecording()">
+            {{ 'GUIDED_AUDIO_CONFIRM' | translate }}
+          </ion-button>
+        </div>
+      </div>
+
+      <!-- Idle – manual start -->
+      <div *ngIf="state === 'idle' && shouldAllowManualStart" class="state-block">
+        <ion-button class="bt bt--full" (click)="startRecording()">
+          {{ 'GUIDED_AUDIO_START_RECORDING' | translate }}
+        </ion-button>
+      </div>
+
+    </ion-col>
+  </ion-row>
+
+</ion-grid>

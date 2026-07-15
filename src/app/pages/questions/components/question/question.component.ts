@@ -54,6 +54,12 @@ export class QuestionComponent implements OnInit, OnChanges {
   @Output()
   nextAction: EventEmitter<any> = new EventEmitter<any>()
   @Output()
+  readAloud: EventEmitter<string> = new EventEmitter<string>()
+  @Input()
+  isReadAloudAvailable = false
+  @Input()
+  isReadAloudActive = false
+
   warningState: EventEmitter<boolean> = new EventEmitter<boolean>()
 
   sanitizedSectionHeader = ''
@@ -78,6 +84,7 @@ export class QuestionComponent implements OnInit, OnChanges {
   NON_SCROLLABLE_SET: Set<QuestionType> = new Set([
     QuestionType.timed,
     QuestionType.audio,
+    QuestionType.guided_audio,
     QuestionType.info,
     QuestionType.text,
     QuestionType.descriptive,
@@ -87,6 +94,7 @@ export class QuestionComponent implements OnInit, OnChanges {
 
   HIDE_FIELD_LABEL_SET: Set<QuestionType> = new Set([
     QuestionType.audio,
+    QuestionType.guided_audio,
     QuestionType.descriptive,
     QuestionType.healthkit
   ])
@@ -139,6 +147,7 @@ export class QuestionComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
+    this.updateSanitizedHtml()
     this.initRange()
     if (this.questionIndex === this.currentIndex) {
       this.currentlyShown = true
@@ -147,17 +156,6 @@ export class QuestionComponent implements OnInit, OnChanges {
         Math.abs(this.questionIndex - this.currentIndex) == 1
       this.currentlyShown = false
     }
-  }
-
-  private sanitizeHtml(value: string): string {
-    return this.sanitizer.sanitize(SecurityContext.HTML, value || '') || ''
-  }
-
-  private updateSanitizedHtml() {
-    this.sanitizedSectionHeader = this.sanitizeHtml(
-      this.question?.section_header
-    )
-    this.sanitizedFieldLabel = this.sanitizeHtml(this.question?.field_label)
   }
 
   emitAnswer(event: any) {
@@ -260,5 +258,22 @@ export class QuestionComponent implements OnInit, OnChanges {
   onAudioRecordStart(start: boolean) {
     if (start) this.nextAction.emit(NextButtonEventType.DISABLE)
     else this.nextAction.emit(NextButtonEventType.ENABLE)
+  }
+
+  onReadAloudTap() {
+    if (!this.isReadAloudAvailable || !this.content?.nativeElement) return
+    const text = this.content.nativeElement.innerText
+      .replace(/\s+/g, ' ')
+      .trim()
+    this.readAloud.emit(text)
+  }
+
+  private sanitizeHtml(value: string): string {
+    return this.sanitizer.sanitize(SecurityContext.HTML, value || '') || ''
+  }
+
+  private updateSanitizedHtml() {
+    this.sanitizedSectionHeader = this.sanitizeHtml(this.question?.section_header)
+    this.sanitizedFieldLabel = this.sanitizeHtml(this.question?.field_label)
   }
 }

@@ -1686,5 +1686,225 @@ export const Localisations = {
     nl: 'Zorg ervoor dat je met internet bent verbonden en wacht 2 uur voordat je de taak opnieuw in de app start.',
     pl: 'Upewnij się, że masz połączenie z internetem i odczekaj 2 godziny, zanim ponownie uruchomisz zadanie w aplikacji.',
     hb: 'ודא שאתה מחובר לאינטרנט והמתן שעתיים לפני שתתחיל שוב את המשימה באפליקציה.'
+  },
+  BTN_SKIP: {
+    en: 'Skip',
+    da: 'Spring over',
+    de: 'Überspringen',
+    es: 'Omitir',
+    it: 'Salta',
+    nl: 'Overslaan',
+    pl: 'Pomiń',
+    hb: 'דלג'
+  },
+  HEALTHKIT_TITLE: {
+    en: 'Apple Health Task',
+    da: 'Apple Health-opgave',
+    de: 'Apple Health-Aufgabe',
+    es: 'Tarea de Apple Health',
+    it: 'Attività Apple Health',
+    nl: 'Apple Health-taak',
+    pl: 'Zadanie Apple Health',
+    hb: 'משימת Apple Health'
+  },
+  HEALTHKIT_PROCESSING_STATUS: {
+    en: 'Processing Status',
+    da: 'Behandlingsstatus',
+    de: 'Verarbeitungsstatus',
+    es: 'Estado de procesamiento',
+    it: 'Stato di elaborazione',
+    nl: 'Verwerkingsstatus',
+    pl: 'Status przetwarzania',
+    hb: 'סטטוס עיבוד'
+  },
+  HEALTHKIT_ERROR_PROCESSING: {
+    en: 'An error occurred during processing',
+    da: 'Der opstod en fejl under behandlingen',
+    de: 'Bei der Verarbeitung ist ein Fehler aufgetreten',
+    es: 'Se produjo un error durante el procesamiento',
+    it: "Si è verificato un errore durante l'elaborazione",
+    nl: 'Er is een fout opgetreden tijdens de verwerking',
+    pl: 'Wystąpił błąd podczas przetwarzania',
+    hb: 'אירעה שגיאה במהלך העיבוד'
+  },
+  HEALTHKIT_TAP_TO_START: {
+    en: 'Tap to Start Data Pull',
+    da: 'Tryk for at starte datahentning',
+    de: 'Tippen, um Datenabruf zu starten',
+    es: 'Toque para iniciar la extracción de datos',
+    it: 'Tocca per avviare il recupero dati',
+    nl: 'Tik om gegevens op te halen',
+    pl: 'Dotknij, aby rozpocząć pobieranie danych',
+    hb: 'הקש כדי להתחיל שליפת נתונים'
+  },
+  HEALTHKIT_READY_DESC: {
+    en: 'We will collect your physical activity and related Apple Health data. Tap below to start.',
+    da: 'Vi indsamler din fysiske aktivitet og relaterede Apple Health-data. Tryk nedenfor for at starte.',
+    de: 'Wir erfassen Ihre körperliche Aktivität und zugehörige Apple Health-Daten. Tippen Sie unten, um zu starten.',
+    es: 'Recopilaremos su actividad física y datos relacionados de Apple Health. Toque abajo para comenzar.',
+    it: 'Raccoglieremo la tua attività fisica e i dati correlati di Apple Health. Tocca sotto per iniziare.',
+    nl: 'We verzamelen uw fysieke activiteit en gerelateerde Apple Health-gegevens. Tik hieronder om te starten.',
+    pl: 'Zbierzemy dane o Twojej aktywności fizycznej z Apple Health. Dotknij poniżej, aby rozpocząć.',
+    hb: 'נאסוף את נתוני הפעילות הגופנית שלך מ-Apple Health. הקש למטה כדי להתחיל.'
+  },
+  HEALTHKIT_NOT_SUPPORTED: {
+    en: 'HealthKit is not supported on this device',
+    da: 'HealthKit understøttes ikke på denne enhed',
+    de: 'HealthKit wird auf diesem Gerät nicht unterstützt',
+    es: 'HealthKit no es compatible con este dispositivo',
+    it: 'HealthKit non è supportato su questo dispositivo',
+    nl: 'HealthKit wordt niet ondersteund op dit apparaat',
+    pl: 'HealthKit nie jest obsługiwany na tym urządzeniu',
+    hb: 'HealthKit אינו נתמך במכשיר זה'
+  },
+  HEALTHKIT_RESUMING: {
+    en: 'Resuming upload of pending health data...',
+    da: 'Genoptager upload af ventende sundhedsdata...',
+    de: 'Upload ausstehender Gesundheitsdaten wird fortgesetzt...',
+    es: 'Reanudando la carga de datos de salud pendientes...',
+    it: 'Ripresa del caricamento dei dati sanitari in sospeso...',
+    nl: 'Upload van wachtende gezondheidsgegevens hervatten...',
+    pl: 'Wznawianie przesyłania oczekujących danych zdrowotnych...',
+    hb: 'ממשיך בהעלאת נתוני בריאות ממתינים...'
+  },
+  HEALTHKIT_COMPLETE: {
+    en: 'All data has been processed and uploaded',
+    da: 'Alle data er blevet behandlet og uploadet',
+    de: 'Alle Daten wurden verarbeitet und hochgeladen',
+    es: 'Todos los datos han sido procesados y cargados',
+    it: 'Tutti i dati sono stati elaborati e caricati',
+    nl: 'Alle gegevens zijn verwerkt en geüpload',
+    pl: 'Wszystkie dane zostały przetworzone i przesłane',
+    hb: 'כל הנתונים עובדו והועלו'
+  },
+  HEALTHKIT_CHECK_CONNECTION: {
+    en: 'Please check your internet connection and retry',
+    da: 'Kontroller din internetforbindelse og prøv igen',
+    de: 'Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut',
+    es: 'Verifique su conexión a Internet e intente de nuevo',
+    it: 'Controlla la tua connessione Internet e riprova',
+    nl: 'Controleer je internetverbinding en probeer het opnieuw',
+    pl: 'Sprawdź połączenie internetowe i spróbuj ponownie',
+    hb: 'בדוק את חיבור האינטרנט שלך ונסה שוב'
+  },
+  HEALTHKIT_TIMEOUT_MSG: {
+    en: 'Processing timeout - please try again later.',
+    da: 'Behandlingstimeout - prøv igen senere.',
+    de: 'Zeitüberschreitung bei der Verarbeitung - bitte versuchen Sie es später erneut.',
+    es: 'Tiempo de procesamiento agotado - intente de nuevo más tarde.',
+    it: 'Timeout di elaborazione - riprova più tardi.',
+    nl: 'Verwerkingstimeout - probeer het later opnieuw.',
+    pl: 'Przekroczono limit czasu przetwarzania - spróbuj ponownie później.',
+    hb: 'חריגה מזמן עיבוד - נסה שוב מאוחר יותר.'
+  },
+  HEALTHKIT_RETURN_HOME: {
+    en: 'Return to Start',
+    da: 'Vend tilbage til start',
+    de: 'Zurück zum Start',
+    es: 'Volver al inicio',
+    it: "Torna all'inizio",
+    nl: 'Terug naar start',
+    pl: 'Powrót do początku',
+    hb: 'חזרה להתחלה'
+  },
+  HEALTHKIT_TIMEOUT_TITLE: {
+    en: 'Processing Timeout',
+    da: 'Behandlingstimeout',
+    de: 'Zeitüberschreitung bei der Verarbeitung',
+    es: 'Tiempo de procesamiento agotado',
+    it: 'Timeout di elaborazione',
+    nl: 'Verwerkingstimeout',
+    pl: 'Przekroczono limit czasu przetwarzania',
+    hb: 'חריגה מזמן עיבוד'
+  },
+  HEALTHKIT_COLLECTING: {
+    en: 'Collecting health data...',
+    da: 'Indsamler sundhedsdata...',
+    de: 'Gesundheitsdaten werden erfasst...',
+    es: 'Recopilando datos de salud...',
+    it: 'Raccolta dati sanitari...',
+    nl: 'Gezondheidsgegevens verzamelen...',
+    pl: 'Zbieranie danych zdrowotnych...',
+    hb: 'אוסף נתוני בריאות...'
+  },
+  HEALTHKIT_PROCESSING_UPLOADING: {
+    en: 'Processing and uploading data...',
+    da: 'Behandler og uploader data...',
+    de: 'Daten werden verarbeitet und hochgeladen...',
+    es: 'Procesando y cargando datos...',
+    it: 'Elaborazione e caricamento dati...',
+    nl: 'Gegevens verwerken en uploaden...',
+    pl: 'Przetwarzanie i przesyłanie danych...',
+    hb: 'מעבד ומעלה נתונים...'
+  },
+  HEALTHKIT_UPLOADING: {
+    en: 'Uploading data...',
+    da: 'Uploader data...',
+    de: 'Daten werden hochgeladen...',
+    es: 'Cargando datos...',
+    it: 'Caricamento dati...',
+    nl: 'Gegevens uploaden...',
+    pl: 'Przesyłanie danych...',
+    hb: 'מעלה נתונים...'
+  },
+  HEALTHKIT_SUCCESS: {
+    en: 'Health data processed successfully!',
+    da: 'Sundhedsdata behandlet med succes!',
+    de: 'Gesundheitsdaten erfolgreich verarbeitet!',
+    es: '¡Datos de salud procesados con éxito!',
+    it: 'Dati sanitari elaborati con successo!',
+    nl: 'Gezondheidsgegevens succesvol verwerkt!',
+    pl: 'Dane zdrowotne przetworzone pomyślnie!',
+    hb: 'נתוני בריאות עובדו בהצלחה!'
+  },
+  HEALTHKIT_NOT_AVAILABLE: {
+    en: 'Apple Health is not available on this device. You can skip this task.',
+    da: 'Apple Health er ikke tilgængelig på denne enhed. Du kan springe denne opgave over.',
+    de: 'Apple Health ist auf diesem Gerät nicht verfügbar. Sie können diese Aufgabe überspringen.',
+    es: 'Apple Health no está disponible en este dispositivo. Puede omitir esta tarea.',
+    it: 'Apple Health non è disponibile su questo dispositivo. Puoi saltare questa attività.',
+    nl: 'Apple Health is niet beschikbaar op dit apparaat. U kunt deze taak overslaan.',
+    pl: 'Apple Health nie jest dostępny na tym urządzeniu. Możesz pominąć to zadanie.',
+    hb: 'Apple Health אינו זמין במכשיר זה. ניתן לדלג על משימה זו.'
+  },
+  HEALTHKIT_READY: {
+    en: 'Ready to collect health data',
+    da: 'Klar til at indsamle sundhedsdata',
+    de: 'Bereit, Gesundheitsdaten zu erfassen',
+    es: 'Listo para recopilar datos de salud',
+    it: 'Pronto per raccogliere dati sanitari',
+    nl: 'Klaar om gezondheidsgegevens te verzamelen',
+    pl: 'Gotowy do zbierania danych zdrowotnych',
+    hb: 'מוכן לאיסוף נתוני בריאות'
+  },
+  HEALTHKIT_SERVER_ERROR: {
+    en: 'There was a problem connecting to the server',
+    da: 'Der opstod et problem med at oprette forbindelse til serveren',
+    de: 'Es gab ein Problem bei der Verbindung zum Server',
+    es: 'Hubo un problema al conectarse al servidor',
+    it: 'Si è verificato un problema di connessione al server',
+    nl: 'Er was een probleem bij het verbinden met de server',
+    pl: 'Wystąpił problem z połączeniem z serwerem',
+    hb: 'אירעה בעיה בהתחברות לשרת'
+  },
+  HEALTHKIT_NO_CONNECTION: {
+    en: 'No internet connection',
+    da: 'Ingen internetforbindelse',
+    de: 'Keine Internetverbindung',
+    es: 'Sin conexión a Internet',
+    it: 'Nessuna connessione Internet',
+    nl: 'Geen internetverbinding',
+    pl: 'Brak połączenia z internetem',
+    hb: 'אין חיבור לאינטרנט'
+  },
+  HEALTHKIT_CONNECTED: {
+    en: 'Connected',
+    da: 'Forbundet',
+    de: 'Verbunden',
+    es: 'Conectado',
+    it: 'Connesso',
+    nl: 'Verbonden',
+    pl: 'Połączony',
+    hb: 'מחובר'
   }
 }

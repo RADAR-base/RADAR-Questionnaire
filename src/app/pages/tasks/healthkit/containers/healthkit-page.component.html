@@ -1,7 +1,7 @@
 <ion-content [fullscreen]="true" class="ion-padding-top ion-padding">
 
   <div class="header-section">
-    <h2>Apple Health Task</h2>
+    <h2>{{ 'HEALTHKIT_TITLE' | translate }}</h2>
     <p class="status-message" [innerHTML]="statusMessage">
     </p>
 
@@ -21,13 +21,13 @@
       <ion-card-title>
         <ion-icon name="analytics" *ngIf="currentProgress.status !== 'error'"></ion-icon>
         <ion-icon name="alert-circle" color="danger" *ngIf="currentProgress.status === 'error'"></ion-icon>
-        Processing Status
+        {{ 'HEALTHKIT_PROCESSING_STATUS' | translate }}
       </ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <div class="attempt-container" *ngIf="isProcessing && attemptProgress.cacheSize > 0">
         <div class="attempt-text">
-          Trying {{ attemptProgress.success + attemptProgress.failed }}/{{ attemptProgress.cacheSize }} records
+          {{ attemptStatusText }}
         </div>
       </div>
       <div class="progress-container">
@@ -49,7 +49,7 @@
 
       <div class="error-status" *ngIf="currentProgress.status === 'error'">
         <ion-icon name="alert-circle" color="danger" size="large"></ion-icon>
-        <span>An error occurred during processing</span>
+        <span>{{ 'HEALTHKIT_ERROR_PROCESSING' | translate }}</span>
       </div>
     </ion-card-content>
   </ion-card>
@@ -58,20 +58,25 @@
   <div class="action-buttons">
     <ion-button ion-button class="bt bt--full" round full *ngIf="canStartProcessing" expand="block" size="large"
       color="primary" (click)="startHealthDataCollection()">
-      Tap to Start Data Pull
+      {{ 'HEALTHKIT_TAP_TO_START' | translate }}
+    </ion-button>
+
+    <ion-button ion-button class="bt bt--full" round full *ngIf="showSkipButton" expand="block" size="large"
+      color="medium" (click)="skipTask()">
+      {{ 'BTN_SKIP' | translate }}
     </ion-button>
 
     <ng-container *ngIf="showRetryButton">
       <ion-button ion-button class="bt bt--full retry-button" round full expand="block" size="large" color="primary"
         (click)="retryProcessing()">
-        Retry
+        {{ 'BTN_RETRY' | translate }}
       </ion-button>
     </ng-container>
 
     <ng-container *ngIf="showFinishButton && !showRetryButton">
       <ion-button ion-button class="bt bt--full" round full expand="block" size="large" color="primary"
         (click)="exitTask()">
-        Finish
+        {{ 'BTN_FINISH' | translate }}
       </ion-button>
     </ng-container>
   </div>
@@ -84,7 +89,7 @@
     <ion-button *ngIf="!isProcessing && !showFinishButton" ion-button slot="start" icon-left [disabled]="isProcessing"
       (click)="exitTask()">
       <ion-icon name="close"></ion-icon>
-      <div class="toolbar-label">Close</div>
+      <div class="toolbar-label">{{ 'BTN_CLOSE' | translate }}</div>
     </ion-button>
   </ion-toolbar>
 </ion-footer>

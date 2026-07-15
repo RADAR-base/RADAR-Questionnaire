@@ -112,6 +112,12 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
     this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_EXIT, true)
   }
 
+  skipTask(): void {
+    this.healthProcessor.updateTaskToComplete(this.task)
+    this.navCtrl.navigateRoot('/home')
+    this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_EXIT, true)
+  }
+
   // Private initialization
   private async initialize(): Promise<void> {
     await this.initializeHealthKitSupport()
@@ -128,13 +134,13 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
         await this.initializeProgressOffset()
       } catch { }
       this.updateProgress({
-        message: 'We will collect your physical activity and related Apple Health data. Tap below to start.',
+        message: this.localization.translateKey(LocKeys.HEALTHKIT_READY_DESC),
         status: 'ready'
       })
     } catch (error) {
       this.isHealthKitSupported = false
       this.updateProgress({
-        message: 'HealthKit is not supported on this device',
+        message: this.localization.translateKey(LocKeys.HEALTHKIT_NOT_SUPPORTED),
         status: 'error'
       })
       console.error('HealthKit error:', error)
@@ -214,7 +220,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
           this.healthkitService.setProgressBaseOffset(this.progressBaseOffset)
         }
         this.updateProgress({
-          message: 'Resuming upload of pending health data...',
+          message: this.localization.translateKey(LocKeys.HEALTHKIT_RESUMING),
           status: 'uploading'
         })
         await this.performCacheUploadOnly()
@@ -318,7 +324,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
     this.processingState = ProcessingState.COMPLETE
     this.updateProgress({
       progress: 100,
-      message: 'All data has been processed and uploaded',
+      message: this.localization.translateKey(LocKeys.HEALTHKIT_COMPLETE),
       status: 'complete'
     })
     this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_FINISHED, true)
@@ -341,7 +347,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
 
   private getErrorMessage(failCount: number): string {
     if (!this.isNetworkConnected) {
-      return 'Please check your internet connection and retry'
+      return this.localization.translateKey(LocKeys.HEALTHKIT_CHECK_CONNECTION)
     }
     return ''
   }
@@ -352,7 +358,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       if (this.isProcessing) {
         this.usage.sendGeneralEvent(UsageEventType.HEALTHKIT_TIMEOUT, true)
         this.updateProgress({
-          message: 'Processing timeout - please try again later.',
+          message: this.localization.translateKey(LocKeys.HEALTHKIT_TIMEOUT_MSG),
           status: 'error'
         })
         this.processingState = ProcessingState.ERROR
@@ -394,7 +400,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
 
     if (!this.isNetworkConnected && this.isProcessing) {
       this.updateProgress({
-        message: 'Please check your internet connection and retry',
+        message: this.localization.translateKey(LocKeys.HEALTHKIT_CHECK_CONNECTION),
         status: 'error'
       })
       this.processingState = ProcessingState.ERROR
@@ -416,7 +422,7 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
       header: this.localization.translateKey(LocKeys.HOME_SENDING_DATA_ERROR_TITLE),
       message: this.localization.translateKey(LocKeys.HOME_SENDING_DATA_ERROR_MESSAGE),
       buttons: [{
-        text: 'Return to Start',
+        text: this.localization.translateKey(LocKeys.HEALTHKIT_RETURN_HOME),
         handler: () => this.exitTask()
       }],
       backdropDismiss: false
@@ -425,10 +431,10 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
 
   private showProcessingTimeoutDialog(): void {
     this.alertService.showAlert({
-      header: 'Processing Timeout',
-      message: 'Please make sure you’re connected to the internet and wait 2 hours before starting the task again in the app.',
+      header: this.localization.translateKey(LocKeys.HEALTHKIT_TIMEOUT_TITLE),
+      message: this.localization.translateKey(LocKeys.HOME_SENDING_DATA_ERROR_MESSAGE),
       buttons: [{
-        text: 'Return to Start',
+        text: this.localization.translateKey(LocKeys.HEALTHKIT_RETURN_HOME),
         handler: () => this.exitTask()
       }],
       backdropDismiss: false
@@ -463,33 +469,43 @@ export class HealthkitPageComponent implements OnInit, OnDestroy {
   get statusMessage(): string {
     switch (this.processingState) {
       case ProcessingState.COLLECTING:
-        return 'Collecting health data...'
+        return this.localization.translateKey(LocKeys.HEALTHKIT_COLLECTING)
       case ProcessingState.PROCESSING:
-        return 'Processing and uploading data...'
+        return this.localization.translateKey(LocKeys.HEALTHKIT_PROCESSING_UPLOADING)
       case ProcessingState.UPLOADING:
-        return 'Uploading data...'
+        return this.localization.translateKey(LocKeys.HEALTHKIT_UPLOADING)
       case ProcessingState.COMPLETE:
-        return 'Health data processed successfully!'
+        return this.localization.translateKey(LocKeys.HEALTHKIT_SUCCESS)
       case ProcessingState.ERROR:
         return ''
       default:
-        return this.isHealthKitSupported
-          ? 'Ready to collect health data'
-          : 'Checking HealthKit support...'
+        if (!this.isHealthKitSupported) {
+          return this.localization.translateKey(LocKeys.HEALTHKIT_NOT_AVAILABLE)
+        }
+        return this.localization.translateKey(LocKeys.HEALTHKIT_READY)
     }
+  }
+
+  get showSkipButton(): boolean {
+    return !this.isHealthKitSupported && this.processingState === ProcessingState.IDLE
   }
 
   private getErrorStatusMessage(): string {
     if (!this.isNetworkConnected) {
-      return 'Network connection lost during upload'
+      return this.localization.translateKey(LocKeys.HEALTHKIT_CHECK_CONNECTION)
     }
-    return 'There was a problem connecting to the server'
+    return this.localization.translateKey(LocKeys.HEALTHKIT_SERVER_ERROR)
+  }
+
+  get attemptStatusText(): string {
+    const sent = this.attemptProgress.success + this.attemptProgress.failed
+    return `${sent}/${this.attemptProgress.cacheSize}`
   }
 
   get networkStatusInfo(): string {
     if (!this.isNetworkConnected) {
-      return 'No internet connection'
+      return this.localization.translateKey(LocKeys.HEALTHKIT_NO_CONNECTION)
     }
-    return 'Connected'
+    return this.localization.translateKey(LocKeys.HEALTHKIT_CONNECTED)
   }
 }

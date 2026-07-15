@@ -1,8 +1,10 @@
 package org.phidatalab.radar_armt;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -22,7 +24,10 @@ public class MainActivity extends BridgeActivity {
     super.onCreate(savedInstanceState);
 
     // Handle edge-to-edge insets for Android 15+ (SDK 35)
-    ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content), (v, windowInsets) -> {
+    View contentView = findViewById(android.R.id.content);
+    contentView.setBackgroundColor(Color.parseColor("#0b4a59"));
+
+    ViewCompat.setOnApplyWindowInsetsListener(contentView, (v, windowInsets) -> {
       Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
       v.setPadding(insets.left, insets.top, insets.right, insets.bottom);
       return WindowInsetsCompat.CONSUMED;

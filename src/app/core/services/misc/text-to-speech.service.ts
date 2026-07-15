@@ -68,11 +68,37 @@ export class TextToSpeechService {
     return enabled !== 'false' && enabled !== '0' && enabled !== 'no'
   }
 
+  private pickVoice(lang?: string): SpeechSynthesisVoice | null {
+    const voices = window.speechSynthesis.getVoices()
+    if (!voices.length) return null
+
+    // Prefer higher-quality voices (neural / enhanced / Google)
+    const qualityKeywords = ['neural', 'enhanced', 'premium', 'natural', 'google']
+    const matchesLang = (v: SpeechSynthesisVoice) =>
+      !lang || v.lang.toLowerCase().startsWith(lang.toLowerCase().split('-')[0])
+
+    const candidates = voices.filter(matchesLang)
+    const pool = candidates.length ? candidates : voices
+
+    for (const keyword of qualityKeywords) {
+      const match = pool.find(v => v.name.toLowerCase().includes(keyword))
+      if (match) return match
+    }
+
+    return pool.find(v => v.default) || pool[0] || null
+  }
+
   private speakBrowser(text: string, lang?: string): Promise<void> {
     if (!this.isSupported()) return Promise.resolve()
 
     this.utterance = new SpeechSynthesisUtterance(text)
     if (lang) this.utterance.lang = lang
+
+    const voice = this.pickVoice(lang)
+    if (voice) this.utterance.voice = voice
+
+    this.utterance.rate = 0.9
+    this.utterance.pitch = 0.85
     this.isSpeaking = true
 
     return new Promise(resolve => {

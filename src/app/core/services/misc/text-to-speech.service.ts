@@ -1,118 +1,135 @@
 import { Injectable } from '@angular/core'
+import { TextToSpeech } from '@capacitor-community/text-to-speech'
 
 import { ConfigKeys } from '../../../shared/enums/config'
 import { RemoteConfigService } from '../config/remote-config.service'
-
-type TtsProvider = 'browser'
 
 @Injectable({
   providedIn: 'root'
 })
 export class TextToSpeechService {
-  private utterance: SpeechSynthesisUtterance | undefined
   private isSpeaking = false
-  private readonly providerKey = new ConfigKeys('text_to_speech_provider')
+  private cachedVoice: number | undefined
   private readonly enabledKey = new ConfigKeys('text_to_speech_enabled')
 
   constructor(private remoteConfig: RemoteConfigService) { }
 
   isSupported(): boolean {
-    return typeof window !== 'undefined' && 'speechSynthesis' in window
+    return true
   }
 
   getSpeakingState(): boolean {
     return this.isSpeaking
   }
 
-  /** True when the configured provider is available. */
   async isReadAloudAvailable(): Promise<boolean> {
     const isEnabled = await this.isFeatureEnabled()
-    if (!isEnabled) return false
-
-    const provider = await this.getProvider()
-    if (provider === 'browser') return this.isSupported()
-    return false
+    return isEnabled
   }
 
   async speak(text: string, lang?: string): Promise<void> {
-    if (!text?.trim()) return Promise.resolve()
+    if (!text?.trim()) return
     const isEnabled = await this.isFeatureEnabled()
-    if (!isEnabled) return Promise.resolve()
+    if (!isEnabled) return
 
     this.stop()
+    this.isSpeaking = true
 
-    const provider = await this.getProvider()
-    if (provider === 'browser') return this.speakBrowser(text, lang)
-    return Promise.resolve()
+    try {
+      const voice = await this.pickBestVoice(lang || 'en')
+      await TextToSpeech.speak({
+        text,
+        lang: lang || 'en-US',
+        rate: 0.6,
+        pitch: 0.8,
+        voice
+      })
+    } catch (e) {
+      // speech was stopped or failed
+    } finally {
+      this.isSpeaking = false
+    }
   }
 
   stop() {
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      window.speechSynthesis.cancel()
-    }
-    this.utterance = undefined
+    TextToSpeech.stop().catch(() => { })
     this.isSpeaking = false
   }
 
-  private async getProvider(): Promise<TtsProvider> {
-    // Uses a free-form key so provider switching can be remote-configured later.
-    const conf = await this.remoteConfig.read()
-    const provider = (await conf.getOrDefault(this.providerKey, 'browser')).trim().toLowerCase()
+  private async pickBestVoice(lang: string): Promise<number | undefined> {
+    if (this.cachedVoice !== undefined) return this.cachedVoice
 
-    return provider === 'browser' ? 'browser' : 'browser'
+    try {
+      const { voices } = await TextToSpeech.getSupportedVoices()
+      if (!voices?.length) return undefined
+
+      const langPrefix = lang.toLowerCase().split('-')[0]
+      const langVoices = voices.filter(v => v.lang?.toLowerCase().startsWith(langPrefix))
+
+      console.log('[TTS] Available voices for "' + langPrefix + '":', langVoices.map((v, i) => ({
+        idx: voices.indexOf(v),
+        name: v.name,
+        lang: v.lang,
+        voiceURI: v.voiceURI
+      })))
+
+      // Prefer higher-quality voices by checking both name and voiceURI
+      const qualityKeywords = ['enhanced', 'premium', 'neural', 'natural']
+      const siriKeywords = ['siri']
+      const preferredNames = ['samantha', 'karen', 'daniel', 'nicky', 'aaron']
+
+      const findVoice = (matchFn: (v: { name: string, voiceURI: string }) => boolean) =>
+        voices.findIndex(v =>
+          v.lang?.toLowerCase().startsWith(langPrefix) && matchFn(v)
+        )
+
+      // 1. Enhanced/neural voices (best quality)
+      for (const keyword of qualityKeywords) {
+        const idx = findVoice(v =>
+          v.name?.toLowerCase().includes(keyword) ||
+          v.voiceURI?.toLowerCase().includes(keyword)
+        )
+        if (idx >= 0) {
+          console.log('[TTS] Selected voice:', voices[idx].name, 'at index', idx)
+          this.cachedVoice = idx
+          return this.cachedVoice
+        }
+      }
+
+      // 2. Siri voices (good quality)
+      for (const keyword of siriKeywords) {
+        const idx = findVoice(v =>
+          v.name?.toLowerCase().includes(keyword) ||
+          v.voiceURI?.toLowerCase().includes(keyword)
+        )
+        if (idx >= 0) {
+          console.log('[TTS] Selected voice:', voices[idx].name, 'at index', idx)
+          this.cachedVoice = idx
+          return this.cachedVoice
+        }
+      }
+
+      // 3. Known natural-sounding voices by name
+      for (const name of preferredNames) {
+        const idx = findVoice(v => v.name?.toLowerCase() === name)
+        if (idx >= 0) {
+          console.log('[TTS] Selected voice:', voices[idx].name, 'at index', idx)
+          this.cachedVoice = idx
+          return this.cachedVoice
+        }
+      }
+
+      console.log('[TTS] No quality voice found, using default')
+    } catch (e) {
+      console.log('[TTS] getSupportedVoices error:', e)
+    }
+
+    return undefined
   }
 
   private async isFeatureEnabled(): Promise<boolean> {
     const conf = await this.remoteConfig.read()
     const enabled = (await conf.getOrDefault(this.enabledKey, 'true')).trim().toLowerCase()
     return enabled !== 'false' && enabled !== '0' && enabled !== 'no'
-  }
-
-  private pickVoice(lang?: string): SpeechSynthesisVoice | null {
-    const voices = window.speechSynthesis.getVoices()
-    if (!voices.length) return null
-
-    // Prefer higher-quality voices (neural / enhanced / Google)
-    const qualityKeywords = ['neural', 'enhanced', 'premium', 'natural', 'google']
-    const matchesLang = (v: SpeechSynthesisVoice) =>
-      !lang || v.lang.toLowerCase().startsWith(lang.toLowerCase().split('-')[0])
-
-    const candidates = voices.filter(matchesLang)
-    const pool = candidates.length ? candidates : voices
-
-    for (const keyword of qualityKeywords) {
-      const match = pool.find(v => v.name.toLowerCase().includes(keyword))
-      if (match) return match
-    }
-
-    return pool.find(v => v.default) || pool[0] || null
-  }
-
-  private speakBrowser(text: string, lang?: string): Promise<void> {
-    if (!this.isSupported()) return Promise.resolve()
-
-    this.utterance = new SpeechSynthesisUtterance(text)
-    if (lang) this.utterance.lang = lang
-
-    const voice = this.pickVoice(lang)
-    if (voice) this.utterance.voice = voice
-
-    this.utterance.rate = 0.9
-    this.utterance.pitch = 0.85
-    this.isSpeaking = true
-
-    return new Promise(resolve => {
-      this.utterance.onend = () => {
-        this.isSpeaking = false
-        this.utterance = undefined
-        resolve()
-      }
-      this.utterance.onerror = () => {
-        this.isSpeaking = false
-        this.utterance = undefined
-        resolve()
-      }
-      window.speechSynthesis.speak(this.utterance)
-    })
   }
 }

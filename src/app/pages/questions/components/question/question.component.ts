@@ -261,10 +261,17 @@ export class QuestionComponent implements OnInit, OnChanges {
   }
 
   onReadAloudTap() {
-    if (!this.isReadAloudAvailable || !this.content?.nativeElement) return
-    const text = this.content.nativeElement.innerText
-      .replace(/\s+/g, ' ')
-      .trim()
+    if (!this.isReadAloudAvailable) return
+    const parts: string[] = []
+    if (this.question?.section_header?.trim()) {
+      parts.push(this.question.section_header.replace(/<[^>]*>/g, '').trim())
+    }
+    if (this.question?.field_label?.trim()) {
+      parts.push(this.question.field_label.replace(/<[^>]*>/g, '').trim())
+    }
+    if (!parts.length) return
+    // Join with period + pause so TTS adds a natural break between parts
+    const text = parts.join('. ')
     this.readAloud.emit(text)
   }
 

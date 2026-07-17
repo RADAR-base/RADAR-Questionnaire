@@ -12,6 +12,7 @@ dependencies {
     implementation project(':capacitor-community-generic-oauth2')
     implementation project(':capacitor-community-http')
     implementation project(':capacitor-community-keep-awake')
+    implementation project(':capacitor-community-text-to-speech')
     implementation project(':capacitor-firebase-analytics')
     implementation project(':capacitor-firebase-messaging')
     implementation project(':capacitor-firebase-remote-config')

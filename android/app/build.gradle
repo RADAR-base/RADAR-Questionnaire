@@ -8,7 +8,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 604
-        versionName "3.3.16"
+        versionName "3.3.17-alpha"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // placeholder substitution but no value for <appAuthRedirectScheme>
         manifestPlaceholders = [appAuthRedirectScheme: "com.getcapacitor.community.genericoauth2app"]

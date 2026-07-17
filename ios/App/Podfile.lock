@@ -14,6 +14,8 @@ PODS:
     - Capacitor
   - CapacitorCommunityKeepAwake (4.0.0):
     - Capacitor
+  - CapacitorCommunityTextToSpeech (8.0.2):
+    - Capacitor
   - CapacitorCordova (8.3.4)
   - CapacitorDevice (5.0.8):
     - Capacitor
@@ -201,6 +203,7 @@ DEPENDENCIES:
   - "CapacitorCommunityGenericOauth2 (from `../../node_modules/@capacitor-community/generic-oauth2`)"
   - "CapacitorCommunityHttp (from `../../node_modules/@capacitor-community/http`)"
   - "CapacitorCommunityKeepAwake (from `../../node_modules/@capacitor-community/keep-awake`)"
+  - "CapacitorCommunityTextToSpeech (from `../../node_modules/@capacitor-community/text-to-speech`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorDevice (from `../../node_modules/@capacitor/device`)"
   - "CapacitorDialog (from `../../node_modules/@capacitor/dialog`)"
@@ -263,6 +266,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor-community/http"
   CapacitorCommunityKeepAwake:
     :path: "../../node_modules/@capacitor-community/keep-awake"
+  CapacitorCommunityTextToSpeech:
+    :path: "../../node_modules/@capacitor-community/text-to-speech"
   CapacitorCordova:
     :path: "../../node_modules/@capacitor/ios"
   CapacitorDevice:
@@ -308,6 +313,7 @@ SPEC CHECKSUMS:
   CapacitorCommunityGenericOauth2: cd98e4a7b684b9fc4c857d6f904fc3fc11812802
   CapacitorCommunityHttp: 8aeef698e0a6d35edbb6bb2dc511de3fbfef6417
   CapacitorCommunityKeepAwake: 6106b37df55fd4f06e47a2af701ce0dd6ffae1ba
+  CapacitorCommunityTextToSpeech: a9f7c5bcdc424197d11bb7ae3e9010b415e931b0
   CapacitorCordova: c07921bdcfec6f691bae22274446b4d606ebf6a4
   CapacitorDevice: 4aceb502ce1142ea45a2aece603169d7479cd271
   CapacitorDialog: 31f0f4391e42e93c0f0f7731409b92faaf505fc2
@@ -350,6 +356,6 @@ SPEC CHECKSUMS:
   PerfoodCapacitorHealthkit: 0708728954308c0217daa6912deeb73df7cba050
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
 
-PODFILE CHECKSUM: 35e6c1ebec9ab177a6825d0a989638426c6254dc
+PODFILE CHECKSUM: 29c01969dc23de266df65e9e55a84469dd81c860
 
 COCOAPODS: 1.16.2

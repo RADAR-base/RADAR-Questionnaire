@@ -34,6 +34,7 @@ import {
 } from '../../../shared/models/question'
 import { Task } from '../../../shared/models/task'
 import { AppLauncherService } from '../services/app-launcher.service'
+import { AudioRecordService } from '../services/audio-record.service'
 import { QuestionsService } from '../services/questions.service'
 
 @Component({
@@ -114,7 +115,8 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
     private appLauncher: AppLauncherService,
     private alertService: AlertService,
     private textToSpeechService: TextToSpeechService,
-    private remoteConfig: RemoteConfigService
+    private remoteConfig: RemoteConfigService,
+    private audioRecordService: AudioRecordService
   ) {
     this.backButtonListener = this.platform.backButton.subscribe(() => {
       this.sendCompletionLog()
@@ -190,6 +192,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
       this.groupedQuestions.get(groupKeys[0])
     ).map(Number)
     this.allQuestionIndices[0] = this.currentQuestionIndices
+    this.requestAudioPermissionIfNeeded()
   }
 
   groupQuestionsByMatrixGroup(questions: Question[]) {
@@ -514,12 +517,31 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
     const currentQuestions = this.getCurrentQuestions()
     if (!currentQuestions?.length) return
 
-    const textToRead = currentQuestions
-      .map(q => this.stripHtml(q.field_label || ''))
-      .join(' ')
-      .replace(/\s+/g, ' ')
-      .trim()
+    const strip = (v: string) => this.stripHtml(v || '').replace(/\s+/g, ' ').trim()
+    const parts: string[] = []
 
+    const sectionHeader = strip(currentQuestions[0]?.section_header)
+    if (sectionHeader) parts.push(sectionHeader)
+
+    for (const q of currentQuestions) {
+      const label = strip(q.field_label)
+      if (label) parts.push(label)
+      if (q.select_choices_or_calculations?.length) {
+        const isImageOnly = q.select_choices_or_calculations.every(
+          c => c.label?.startsWith('img:') && !c.label.includes('|')
+        )
+        if (!isImageOnly) {
+          const choices = q.select_choices_or_calculations
+            .map(c => c.label?.startsWith('img:')
+              ? strip((c.label.split('|')[1] || ''))
+              : strip(c.label))
+            .filter(Boolean)
+          if (choices.length) parts.push(choices.join(', '))
+        }
+      }
+    }
+
+    const textToRead = parts.join('. ').trim()
     if (!textToRead) return
 
     this.stopReadAloud()
@@ -528,6 +550,15 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
 
   private stripHtml(value: string): string {
     return value.replace(/<[^>]*>/g, ' ')
+  }
+
+  private requestAudioPermissionIfNeeded() {
+    const hasAudio = this.questions?.some(
+      q => q.field_type === QuestionType.audio || q.field_type === QuestionType.guided_audio
+    )
+    if (hasAudio) {
+      this.audioRecordService.requestPermission()
+    }
   }
 
   private async initReadAloudConfig() {

@@ -6,7 +6,7 @@
 }
 
 ion-grid.guided-audio-grid {
-  height: 80%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   padding: 0 8px;
@@ -46,7 +46,7 @@ ion-grid.guided-audio-grid {
 }
 
 .prompt-card {
-  padding: 12px 4px 8px;
+  padding: 8px 4px 4px;
   border-radius: 8px;
   transition: background 0.3s ease;
 
@@ -55,9 +55,9 @@ ion-grid.guided-audio-grid {
   }
 
   h2.prompt-text {
-    font-size: 18px;
-    line-height: 1.5;
-    margin: 0 0 6px;
+    font-size: 17px;
+    line-height: 1.4;
+    margin: 0 0 4px;
   }
 
   .replay-btn {
@@ -68,7 +68,8 @@ ion-grid.guided-audio-grid {
 // ── Action area ───────────────────────────────────────────────────────────────
 
 .action-row {
-  flex: 0 0 120px;
+  flex: 0 0 auto;
+  padding-bottom: 8px;
 }
 
 .state-block {
@@ -79,11 +80,6 @@ ion-grid.guided-audio-grid {
   gap: 8px;
   padding: 4px 0;
   width: 100%;
-
-  ion-button {
-    height: 36px;
-    font-size: 13px;
-  }
 }
 
 // Speaking state
@@ -103,25 +99,6 @@ ion-grid.guided-audio-grid {
     margin: 0;
     font-size: 15px;
     color: var(--ion-color-medium);
-  }
-}
-
-// Countdown state
-.countdown-ring {
-  width: 84px;
-  height: 84px;
-  border-radius: 50%;
-  background: var(--ion-color-primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: pulse 0.9s ease-in-out infinite;
-
-  .countdown-number {
-    font-size: 44px;
-    font-weight: bold;
-    color: white;
-    line-height: 1;
   }
 }
 
@@ -172,48 +149,6 @@ ion-grid.guided-audio-grid {
   font-size: 15px;
   color: var(--ion-color-medium);
 }
-
-.confirm-buttons {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 10px;
-  width: 100%;
-}
-
-// ── Skip / reason panel ───────────────────────────────────────────────────────
-
-.skip-row {
-  flex: 1 1 auto;
-
-  .skip-question {
-    font-size: 17px;
-    font-weight: 500;
-    margin: 12px 0 10px;
-  }
-
-  .skip-list {
-    border-radius: 8px;
-    overflow: hidden;
-    margin-bottom: 16px;
-
-    ion-item {
-      --background: var(--cl-primary-10);
-      --border-color: var(--ion-color-light);
-      cursor: pointer;
-
-      &.selected {
-        --background: rgba(var(--ion-color-primary-rgb), 0.12);
-      }
-    }
-  }
-
-  .cancel-skip-btn {
-    margin-top: 6px;
-  }
-}
-
-// ── Shared button helpers ─────────────────────────────────────────────────────
 
 // ── Animations ────────────────────────────────────────────────────────────────
 

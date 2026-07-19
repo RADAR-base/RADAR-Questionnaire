@@ -262,15 +262,26 @@ export class QuestionComponent implements OnInit, OnChanges {
 
   onReadAloudTap() {
     if (!this.isReadAloudAvailable) return
+    const strip = (v: string) => (v || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
     const parts: string[] = []
-    if (this.question?.section_header?.trim()) {
-      parts.push(this.question.section_header.replace(/<[^>]*>/g, '').trim())
-    }
-    if (this.question?.field_label?.trim()) {
-      parts.push(this.question.field_label.replace(/<[^>]*>/g, '').trim())
+    const sectionText = strip(this.question?.section_header)
+    const labelText = strip(this.question?.field_label)
+    if (sectionText) parts.push(sectionText)
+    if (labelText) parts.push(labelText)
+    if (this.question?.select_choices_or_calculations?.length) {
+      const isImageOnly = this.question.select_choices_or_calculations.every(
+        c => c.label?.startsWith('img:') && !c.label.includes('|')
+      )
+      if (!isImageOnly) {
+        const choices = this.question.select_choices_or_calculations
+          .map(c => c.label?.startsWith('img:')
+            ? strip((c.label.split('|')[1] || ''))
+            : strip(c.label))
+          .filter(Boolean)
+        if (choices.length) parts.push(choices.join(', '))
+      }
     }
     if (!parts.length) return
-    // Join with period + pause so TTS adds a natural break between parts
     const text = parts.join('. ')
     this.readAloud.emit(text)
   }

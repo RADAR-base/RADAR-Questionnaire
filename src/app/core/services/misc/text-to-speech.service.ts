@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core'
+import { Capacitor } from '@capacitor/core'
 import { TextToSpeech } from '@capacitor-community/text-to-speech'
 
 import { ConfigKeys } from '../../../shared/enums/config'
@@ -15,7 +16,7 @@ export class TextToSpeechService {
   constructor(private remoteConfig: RemoteConfigService) { }
 
   isSupported(): boolean {
-    return true
+    return Capacitor.isNativePlatform()
   }
 
   getSpeakingState(): boolean {
@@ -23,11 +24,13 @@ export class TextToSpeechService {
   }
 
   async isReadAloudAvailable(): Promise<boolean> {
+    if (!this.isSupported()) return false
     const isEnabled = await this.isFeatureEnabled()
     return isEnabled
   }
 
   async speak(text: string, lang?: string): Promise<void> {
+    if (!this.isSupported()) return
     if (!text?.trim()) return
     const isEnabled = await this.isFeatureEnabled()
     if (!isEnabled) return
@@ -41,7 +44,7 @@ export class TextToSpeechService {
         text,
         lang: lang || 'en-US',
         rate: 0.6,
-        pitch: 0.8,
+        pitch: 1.0,
         voice
       })
     } catch (e) {
@@ -52,6 +55,7 @@ export class TextToSpeechService {
   }
 
   stop() {
+    if (!this.isSupported()) return
     TextToSpeech.stop().catch(() => { })
     this.isSpeaking = false
   }
@@ -64,60 +68,103 @@ export class TextToSpeechService {
       if (!voices?.length) return undefined
 
       const langPrefix = lang.toLowerCase().split('-')[0]
+
+      const isCompact = (v: { voiceURI?: string, name?: string }) =>
+        v.voiceURI?.toLowerCase().includes('compact') ||
+        v.name?.toLowerCase().includes('compact')
+
+      // Novelty and robotic voices that should never be selected
+      const isNoveltyOrRobotic = (v: { voiceURI?: string }) => {
+        const uri = v.voiceURI?.toLowerCase() || ''
+        return uri.includes('speech.synthesis.voice') || uri.includes('eloquence')
+      }
+
+      const isSiri = (v: { voiceURI?: string, name?: string }) =>
+        v.voiceURI?.toLowerCase().includes('siri') ||
+        v.name?.toLowerCase().includes('siri')
+
       const langVoices = voices.filter(v => v.lang?.toLowerCase().startsWith(langPrefix))
 
-      console.log('[TTS] Available voices for "' + langPrefix + '":', langVoices.map((v, i) => ({
+      console.log('[TTS] Available voices for "' + langPrefix + '":', langVoices.map(v => ({
         idx: voices.indexOf(v),
         name: v.name,
         lang: v.lang,
-        voiceURI: v.voiceURI
+        voiceURI: v.voiceURI,
+        compact: isCompact(v),
+        novelty: isNoveltyOrRobotic(v)
       })))
 
-      // Prefer higher-quality voices by checking both name and voiceURI
       const qualityKeywords = ['enhanced', 'premium', 'neural', 'natural']
-      const siriKeywords = ['siri']
       const preferredNames = ['samantha', 'karen', 'daniel', 'nicky', 'aaron']
 
-      const findVoice = (matchFn: (v: { name: string, voiceURI: string }) => boolean) =>
+      // Prefer en-GB, then exact locale, then any locale for the language
+      const exactLocale = lang.toLowerCase()
+      const preferredLocale = langPrefix === 'en' ? 'en-gb' : exactLocale
+
+      const findVoice = (matchFn: (v: { name: string, voiceURI: string }) => boolean, excludeCompact: boolean, locale?: string) =>
         voices.findIndex(v =>
-          v.lang?.toLowerCase().startsWith(langPrefix) && matchFn(v)
+          (locale
+            ? v.lang?.toLowerCase() === locale
+            : v.lang?.toLowerCase().startsWith(langPrefix)) &&
+          !isNoveltyOrRobotic(v) &&
+          (!excludeCompact || !isCompact(v)) &&
+          matchFn(v)
         )
 
-      // 1. Enhanced/neural voices (best quality)
+      // Helper: try preferred locale (en-GB for English), then any locale for the language
+      const findVoiceWithLocalePref = (matchFn: (v: { name: string, voiceURI: string }) => boolean, excludeCompact: boolean) => {
+        if (preferredLocale.includes('-')) {
+          const idx = findVoice(matchFn, excludeCompact, preferredLocale)
+          if (idx >= 0) return idx
+        }
+        return findVoice(matchFn, excludeCompact)
+      }
+
+      const selectVoice = (label: string, idx: number) => {
+        console.log('[TTS] Selected voice (' + label + '):', voices[idx].name, voices[idx].voiceURI)
+        this.cachedVoice = idx
+        return this.cachedVoice
+      }
+
+      // 1. Enhanced/neural voices (iOS)
       for (const keyword of qualityKeywords) {
-        const idx = findVoice(v =>
+        const idx = findVoiceWithLocalePref(v =>
           v.name?.toLowerCase().includes(keyword) ||
-          v.voiceURI?.toLowerCase().includes(keyword)
+          v.voiceURI?.toLowerCase().includes(keyword),
+          true
         )
-        if (idx >= 0) {
-          console.log('[TTS] Selected voice:', voices[idx].name, 'at index', idx)
-          this.cachedVoice = idx
-          return this.cachedVoice
+        if (idx >= 0) return selectVoice('enhanced', idx)
+      }
+
+      // 2. Android network voices (cloud, highest quality)
+      const networkIdx = findVoiceWithLocalePref(
+        v => v.voiceURI?.toLowerCase().endsWith('-network'), false
+      )
+      if (networkIdx >= 0) return selectVoice('network', networkIdx)
+
+      // 3. Siri voices (iOS) — prefer non-compact, fall back to compact
+      for (const excludeCompact of [true, false]) {
+        const idx = findVoiceWithLocalePref(v => isSiri(v), excludeCompact)
+        if (idx >= 0) return selectVoice('siri', idx)
+      }
+
+      // 4. Android local voices (downloaded, good quality offline)
+      const localIdx = findVoiceWithLocalePref(
+        v => v.voiceURI?.toLowerCase().endsWith('-local'), false
+      )
+      if (localIdx >= 0) return selectVoice('local', localIdx)
+
+      // 5. Known iOS voices — prefer non-compact, fall back to compact
+      for (const excludeCompact of [true, false]) {
+        for (const name of preferredNames) {
+          const idx = findVoiceWithLocalePref(v => v.name?.toLowerCase() === name, excludeCompact)
+          if (idx >= 0) return selectVoice('named', idx)
         }
       }
 
-      // 2. Siri voices (good quality)
-      for (const keyword of siriKeywords) {
-        const idx = findVoice(v =>
-          v.name?.toLowerCase().includes(keyword) ||
-          v.voiceURI?.toLowerCase().includes(keyword)
-        )
-        if (idx >= 0) {
-          console.log('[TTS] Selected voice:', voices[idx].name, 'at index', idx)
-          this.cachedVoice = idx
-          return this.cachedVoice
-        }
-      }
-
-      // 3. Known natural-sounding voices by name
-      for (const name of preferredNames) {
-        const idx = findVoice(v => v.name?.toLowerCase() === name)
-        if (idx >= 0) {
-          console.log('[TTS] Selected voice:', voices[idx].name, 'at index', idx)
-          this.cachedVoice = idx
-          return this.cachedVoice
-        }
-      }
+      // 6. Any non-novelty voice for this language
+      const fallbackIdx = findVoiceWithLocalePref(() => true, false)
+      if (fallbackIdx >= 0) return selectVoice('fallback', fallbackIdx)
 
       console.log('[TTS] No quality voice found, using default')
     } catch (e) {

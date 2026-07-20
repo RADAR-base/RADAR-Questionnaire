@@ -549,7 +549,8 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
   }
 
   private stripHtml(value: string): string {
-    return value.replace(/<[^>]*>/g, ' ')
+    const doc = new DOMParser().parseFromString(value || '', 'text/html')
+    return doc.body.textContent || ''
   }
 
   private requestAudioPermissionIfNeeded() {

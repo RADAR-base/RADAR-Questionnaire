@@ -262,7 +262,10 @@ export class QuestionComponent implements OnInit, OnChanges {
 
   onReadAloudTap() {
     if (!this.isReadAloudAvailable) return
-    const strip = (v: string) => (v || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
+    const strip = (v: string) => {
+      const doc = new DOMParser().parseFromString(v || '', 'text/html')
+      return (doc.body.textContent || '').trim()
+    }
     const parts: string[] = []
     const sectionText = strip(this.question?.section_header)
     const labelText = strip(this.question?.field_label)

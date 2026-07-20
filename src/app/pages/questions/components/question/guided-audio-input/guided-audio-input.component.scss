@@ -1,0 +1,169 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 90%;
+  overflow: hidden;
+}
+
+ion-grid.guided-audio-grid {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0 8px;
+  overflow: hidden;
+
+  // Keep guided-audio buttons visually consistent with app defaults.
+  ion-button.bt {
+    --background: var(--cl-primary-20);
+    --border-color: white;
+    --border-width: 2px;
+    --border-style: solid;
+    --border-radius: var(--bt-height);
+    --box-shadow: none;
+  }
+}
+
+// ── Image stimulus ────────────────────────────────────────────────────────────
+
+.stimulus-row {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-y: auto;
+  background-color: var(--cl-primary-20);
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.stimulus-image {
+  width: 100%;
+  border-radius: 8px;
+}
+
+// ── Prompt ────────────────────────────────────────────────────────────────────
+
+.prompt-row {
+  flex: 0 0 auto;
+}
+
+.prompt-card {
+  padding: 8px 4px 4px;
+  border-radius: 8px;
+  transition: background 0.3s ease;
+
+  &.prompt-speaking {
+    background-color: var(--cl-primary-10);
+  }
+
+  h2.prompt-text {
+    font-size: 17px;
+    line-height: 1.4;
+    margin: 0 0 4px;
+  }
+
+  .replay-btn {
+    margin-top: 2px;
+  }
+}
+
+// ── Action area ───────────────────────────────────────────────────────────────
+
+.action-row {
+  flex: 0 0 auto;
+  padding-bottom: 8px;
+}
+
+.state-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 4px 0;
+  width: 100%;
+}
+
+// Speaking state
+.speaking-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+
+  .speaking-icon {
+    font-size: 44px;
+    color: var(--ion-color-primary);
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+
+  p {
+    margin: 0;
+    font-size: 15px;
+    color: var(--ion-color-medium);
+  }
+}
+
+// Recording state
+.recording-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+
+  .recording-dot {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background-color: var(--cl-danger-40);
+    animation: blink 1s step-start infinite;
+  }
+
+  .recording-label {
+    margin: 0;
+    font-size: 15px;
+    color: var(--ion-color-medium);
+  }
+
+  .timer-label {
+    margin: 0;
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--ion-color-primary);
+  }
+}
+
+.bt-stop {
+  background-color: var(--cl-danger-40);
+  border-radius: var(--bt-height);
+  --background: var(--cl-danger-40);
+  --border-radius: var(--bt-height);
+}
+
+// Recorded state
+.done-icon {
+  font-size: 52px;
+  color: var(--ion-color-success);
+}
+
+.recorded-label {
+  margin: 0;
+  font-size: 15px;
+  color: var(--ion-color-medium);
+}
+
+// ── Animations ────────────────────────────────────────────────────────────────
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.82;
+  }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}

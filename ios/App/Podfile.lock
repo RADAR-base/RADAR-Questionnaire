@@ -14,6 +14,8 @@ PODS:
     - Capacitor
   - CapacitorCommunityKeepAwake (4.0.0):
     - Capacitor
+  - CapacitorCommunityTextToSpeech (8.0.2):
+    - Capacitor
   - CapacitorCordova (8.3.4)
   - CapacitorDevice (5.0.8):
     - Capacitor
@@ -50,8 +52,6 @@ PODS:
   - CapacitorNetwork (7.0.4):
     - Capacitor
   - CapacitorSplashScreen (5.0.8):
-    - Capacitor
-  - CapacitorStatusBar (5.0.7):
     - Capacitor
   - CapacitorTextZoom (8.0.1):
     - Capacitor
@@ -203,6 +203,7 @@ DEPENDENCIES:
   - "CapacitorCommunityGenericOauth2 (from `../../node_modules/@capacitor-community/generic-oauth2`)"
   - "CapacitorCommunityHttp (from `../../node_modules/@capacitor-community/http`)"
   - "CapacitorCommunityKeepAwake (from `../../node_modules/@capacitor-community/keep-awake`)"
+  - "CapacitorCommunityTextToSpeech (from `../../node_modules/@capacitor-community/text-to-speech`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorDevice (from `../../node_modules/@capacitor/device`)"
   - "CapacitorDialog (from `../../node_modules/@capacitor/dialog`)"
@@ -218,7 +219,6 @@ DEPENDENCIES:
   - "CapacitorMlkitBarcodeScanning (from `../../node_modules/@capacitor-mlkit/barcode-scanning`)"
   - "CapacitorNetwork (from `../../node_modules/@capacitor/network`)"
   - "CapacitorSplashScreen (from `../../node_modules/@capacitor/splash-screen`)"
-  - "CapacitorStatusBar (from `../../node_modules/@capacitor/status-bar`)"
   - "CapacitorTextZoom (from `../../node_modules/@capacitor/text-zoom`)"
   - CapacitorVoiceRecorder (from `../../node_modules/capacitor-voice-recorder`)
   - CordovaPlugins (from `../capacitor-cordova-ios-plugins`)
@@ -266,6 +266,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor-community/http"
   CapacitorCommunityKeepAwake:
     :path: "../../node_modules/@capacitor-community/keep-awake"
+  CapacitorCommunityTextToSpeech:
+    :path: "../../node_modules/@capacitor-community/text-to-speech"
   CapacitorCordova:
     :path: "../../node_modules/@capacitor/ios"
   CapacitorDevice:
@@ -294,8 +296,6 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/network"
   CapacitorSplashScreen:
     :path: "../../node_modules/@capacitor/splash-screen"
-  CapacitorStatusBar:
-    :path: "../../node_modules/@capacitor/status-bar"
   CapacitorTextZoom:
     :path: "../../node_modules/@capacitor/text-zoom"
   CapacitorVoiceRecorder:
@@ -313,6 +313,7 @@ SPEC CHECKSUMS:
   CapacitorCommunityGenericOauth2: cd98e4a7b684b9fc4c857d6f904fc3fc11812802
   CapacitorCommunityHttp: 8aeef698e0a6d35edbb6bb2dc511de3fbfef6417
   CapacitorCommunityKeepAwake: 6106b37df55fd4f06e47a2af701ce0dd6ffae1ba
+  CapacitorCommunityTextToSpeech: a9f7c5bcdc424197d11bb7ae3e9010b415e931b0
   CapacitorCordova: c07921bdcfec6f691bae22274446b4d606ebf6a4
   CapacitorDevice: 4aceb502ce1142ea45a2aece603169d7479cd271
   CapacitorDialog: 31f0f4391e42e93c0f0f7731409b92faaf505fc2
@@ -327,7 +328,6 @@ SPEC CHECKSUMS:
   CapacitorMlkitBarcodeScanning: 31c6af9f39873ff69e16ed5b39ebe2e1915f16fe
   CapacitorNetwork: b719d692a8d1310da8d26d6648d3aa1ef1e100e1
   CapacitorSplashScreen: 0b962a2bee014151569dc59b089ba0e93daeeaf0
-  CapacitorStatusBar: 37ca5200a1791340c519239521ec2519d384eacb
   CapacitorTextZoom: b3c80b09abef831245bc3434b1c03aa898ad4762
   CapacitorVoiceRecorder: 27c4c998c2280571d853579f319f6f53f884bdee
   CordovaPlugins: 641afcfc8b28942f8b339c59f0cd5605e2a5c3cf
@@ -356,6 +356,6 @@ SPEC CHECKSUMS:
   PerfoodCapacitorHealthkit: 0708728954308c0217daa6912deeb73df7cba050
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
 
-PODFILE CHECKSUM: 1a8d6fc7b486bbb8291d9ae589b8f48c65672af5
+PODFILE CHECKSUM: 29c01969dc23de266df65e9e55a84469dd81c860
 
 COCOAPODS: 1.16.2

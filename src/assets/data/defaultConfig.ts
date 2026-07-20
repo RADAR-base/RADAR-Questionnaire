@@ -152,7 +152,10 @@ export const FCMPluginProjectSenderId: string = '430900191220'
 export const DefaultMaxUpstreamResends = 100
 
 // *Default number of notifications to schedule
-export const DefaultNumberOfNotificationsToSchedule: number = 50
+export const DefaultNumberOfNotificationsToSchedule: number = 100
+
+// *Default notification deduplication enabled (if true, duplicate notifications will be filtered out before sending)
+export const DefaultNotificationDeduplicationEnabled: boolean = true
 
 // *Default length of time to wait before refreshing notifications (1 hr in ms)
 export const DefaultNotificationRefreshTime: number = 3600000
@@ -273,6 +276,7 @@ export const DefaultAudioRecordOptions = {
 export const DefaultAutoNextQuestionnaireTypes = [
   QuestionType.timed,
   QuestionType.audio,
+  QuestionType.guided_audio,
   QuestionType.healthkit
 ]
 

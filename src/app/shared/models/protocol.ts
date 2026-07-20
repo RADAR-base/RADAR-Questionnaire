@@ -15,6 +15,12 @@ export interface Protocol {
   completionWindow?: TimeInterval
   referenceTimestamp?: string | ProtocolReferenceTimestamp
   metaData?: ProtocolEventMetaData
+  healthkitQuery?: HealthkitQueryWindow
+}
+
+export interface HealthkitQueryWindow {
+  lookbackInterval?: TimeInterval
+  forwardInterval?: TimeInterval
 }
 
 export interface ProtocolReferenceTimestamp {

@@ -2,10 +2,12 @@ import { Injectable } from '@angular/core'
 import { StorageService } from 'src/app/core/services/storage/storage.service'
 import { StorageKeys } from 'src/app/shared/enums/storage'
 import {
+  advanceRepeat,
   getMilliseconds,
   setDateTimeToMidnight,
   setDateTimeToMidnightEpoch
 } from 'src/app/shared/utilities/time'
+import { HealthkitQueryWindow } from 'src/app/shared/models/protocol'
 import { CapacitorHealthkit } from '@perfood/capacitor-healthkit'
 import {
   DefaultHealthkitInterval,
@@ -194,11 +196,25 @@ export class HealthkitService {
     return CapacitorHealthkit.isAvailable()
   }
 
-  async loadData(dataType, startTime) {
+  async loadData(dataType, taskTimestamp: Date, queryWindow?: HealthkitQueryWindow) {
     try {
+      if (queryWindow?.lookbackInterval) {
+        const endTime = new Date(taskTimestamp.getTime())
+        const startTime = new Date(advanceRepeat(taskTimestamp.getTime(), {
+          unit: queryWindow.lookbackInterval.unit,
+          amount: -(queryWindow.lookbackInterval.amount)
+        }))
+        return { startTime, endTime }
+      }
+      if (queryWindow?.forwardInterval) {
+        const startTime = new Date(taskTimestamp.getTime())
+        const endTime = new Date(advanceRepeat(taskTimestamp.getTime(), queryWindow.forwardInterval))
+        return { startTime, endTime }
+      }
+      // Fallback: forward from task timestamp by configured interval days
       const endTime = new Date(
-        startTime.getTime() + getMilliseconds({ days: Number(this.HEALTHKIT_INTERVAL_DAYS) }))
-      return { startTime: startTime, endTime: endTime }
+        taskTimestamp.getTime() + getMilliseconds({ days: Number(this.HEALTHKIT_INTERVAL_DAYS) }))
+      return { startTime: taskTimestamp, endTime }
     } catch (e) {
       console.log(e)
       return null
@@ -350,7 +366,9 @@ export class HealthkitService {
     const currentTime = Date.now()
 
     // Collect data for each supported health type
-    const healthDataTypes = await this.getDataTypesFromTask(task)
+    const assessment = await this.questionnaire.getAssessmentForTask(task.type, task)
+    const healthDataTypes = assessment.questions.map(q => q.field_name)
+    const queryWindow = assessment.protocol.healthkitQuery
     const totalTypes = healthDataTypes.length
 
     for (let i = 0; i < totalTypes; i++) {
@@ -365,7 +383,7 @@ export class HealthkitService {
           progress: adjustedProgress
         })
 
-        const data = await this.loadData(dataType, new Date(task.timestamp))
+        const data = await this.loadData(dataType, new Date(task.timestamp), queryWindow)
 
         if (data && data.startTime && data.endTime) {
           this.healthAnswers[dataType] = {

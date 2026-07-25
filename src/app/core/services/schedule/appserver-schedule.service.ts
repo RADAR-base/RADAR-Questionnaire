@@ -46,8 +46,13 @@ export class AppserverScheduleService extends ScheduleService {
           return this.getLocalTasksForDate(date, type)
         }
         return Promise.all<Task>(
-          tasks.map(t => this.mapTaskDTO(t, type))
-        )
+          tasks.map(t => this.mapTaskDTO(t, t.type || type))
+        ).then(mappedTasks => {
+          // Cache fetched tasks into local storage so they survive offline restarts.
+          // Group by type and merge with existing local tasks per type.
+          this.cacheTasksByType(mappedTasks)
+          return mappedTasks
+        })
       })
       .catch(e => {
         this.logger.error('Failed to pull tasks from appserver', e)
@@ -56,18 +61,19 @@ export class AppserverScheduleService extends ScheduleService {
   }
 
   getLocalTasksForDate(date: Date, type: AssessmentType) {
-    return this.getTasks(type).then(schedule => {
-      const startTime = setDateTimeToMidnightEpoch(date)
-      const endTime = startTime + getMilliseconds({ days: 1 })
-      return schedule
-        ? schedule.filter(d => {
-            return (
-              d.timestamp + d.completionWindow > startTime &&
-              d.timestamp < endTime
-            )
-          })
-        : []
-    })
+    const startTime = setDateTimeToMidnightEpoch(date)
+    const endTime = startTime + getMilliseconds({ days: 1 })
+    const filterByDate = (tasks: Task[]) =>
+      (tasks || []).filter(
+        d => d.timestamp + d.completionWindow > startTime && d.timestamp < endTime
+      )
+    // Return both scheduled and triggered tasks from local cache
+    return Promise.all([
+      this.getTasks(AssessmentType.SCHEDULED),
+      this.getTasks(AssessmentType.TRIGGERED)
+    ]).then(([scheduled, triggered]) =>
+      filterByDate(scheduled).concat(filterByDate(triggered))
+    )
   }
 
   generateSchedule(referenceTimestamp, utcOffsetPrev) {
@@ -77,13 +83,16 @@ export class AppserverScheduleService extends ScheduleService {
         .getSchedule()
         .then(tasks =>
           Promise.all<Task>(
-            tasks.map(t => this.mapTaskDTO(t, AssessmentType.SCHEDULED))
+            tasks.map(t => this.mapTaskDTO(t, t.type || AssessmentType.SCHEDULED))
           )
         )
         .then(mappedTasks => {
+          const scheduled = mappedTasks.filter(t => t.type !== AssessmentType.TRIGGERED)
+          const triggered = mappedTasks.filter(t => t.type === AssessmentType.TRIGGERED)
           const completed = mappedTasks.filter(t => t.completed)
           return Promise.all([
-            this.setTasks(AssessmentType.SCHEDULED, mappedTasks),
+            this.setTasks(AssessmentType.SCHEDULED, scheduled),
+            this.setTasks(AssessmentType.TRIGGERED, triggered),
             this.setCompletedTasks(completed)
           ])
         })
@@ -119,6 +128,26 @@ export class AppserverScheduleService extends ScheduleService {
       )
       this.changeDetectionEmitter.emit()
       return this.setTasks(assessmentType, newTasks)
+    })
+  }
+
+  private cacheTasksByType(tasks: Task[]) {
+    const grouped = new Map<AssessmentType, Task[]>()
+    for (const t of tasks) {
+      const type = t.type || AssessmentType.SCHEDULED
+      if (!grouped.has(type)) grouped.set(type, [])
+      grouped.get(type).push(t)
+    }
+    grouped.forEach((fetched, type) => {
+      this.getTasks(type).then(existing => {
+        const fetchedKeys = new Set(
+          fetched.map(t => t.timestamp + '-' + t.name)
+        )
+        const kept = (existing || []).filter(
+          t => !fetchedKeys.has(t.timestamp + '-' + t.name)
+        )
+        this.setTasks(type, kept.concat(fetched)).catch(() => {})
+      }).catch(() => {})
     })
   }
 

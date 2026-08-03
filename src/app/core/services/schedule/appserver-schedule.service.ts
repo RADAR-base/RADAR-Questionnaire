@@ -35,11 +35,13 @@ export class AppserverScheduleService extends ScheduleService {
     return this.appServer.init()
   }
 
+  private readonly FETCH_TASKS_TIMEOUT_MS = 8000
+
   getTasksForDate(date: Date, type: AssessmentType) {
     const startTime = setDateTimeToMidnight(date)
     const endTime = moment(startTime).add(1, 'days').toDate()
 
-    return this.appServer
+    const fetchFromServer = this.appServer
       .getScheduleForDates(startTime, endTime)
       .then(tasks => {
         if (tasks == null || !tasks.length) {
@@ -54,6 +56,13 @@ export class AppserverScheduleService extends ScheduleService {
           return mappedTasks
         })
       })
+
+    // Race against a timeout — fall back to cache if appserver is slow
+    const timeout = new Promise<Task[]>((_, reject) =>
+      setTimeout(() => reject(new Error('Appserver fetch timed out')), this.FETCH_TASKS_TIMEOUT_MS)
+    )
+
+    return Promise.race([fetchFromServer, timeout])
       .catch(e => {
         this.logger.error('Failed to pull tasks from appserver', e)
         return this.getLocalTasksForDate(date, type)

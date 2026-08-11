@@ -11,6 +11,8 @@ type TtsProvider = 'browser'
 export class TextToSpeechService {
   private utterance: SpeechSynthesisUtterance | undefined
   private isSpeaking = false
+  private speakingPromise: Promise<void> = Promise.resolve()
+  private resolveSpeaking: (() => void) | null = null
   private readonly providerKey = new ConfigKeys('text_to_speech_provider')
   private readonly enabledKey = new ConfigKeys('text_to_speech_enabled')
 
@@ -22,6 +24,11 @@ export class TextToSpeechService {
 
   getSpeakingState(): boolean {
     return this.isSpeaking
+  }
+
+  /** Resolves when any in-progress speech finishes. */
+  waitForCompletion(): Promise<void> {
+    return this.speakingPromise
   }
 
   /** True when the configured provider is available. */
@@ -42,7 +49,10 @@ export class TextToSpeechService {
     this.stop()
 
     const provider = await this.getProvider()
-    if (provider === 'browser') return this.speakBrowser(text, lang)
+    if (provider === 'browser') {
+      this.speakingPromise = this.speakBrowser(text, lang)
+      return this.speakingPromise
+    }
     return Promise.resolve()
   }
 
@@ -52,6 +62,12 @@ export class TextToSpeechService {
     }
     this.utterance = undefined
     this.isSpeaking = false
+    // Resolve any pending speakingPromise so waitForCompletion() callers
+    // are unblocked even if the browser never fires onend/onerror after cancel().
+    if (this.resolveSpeaking) {
+      this.resolveSpeaking()
+      this.resolveSpeaking = null
+    }
   }
 
   private async getProvider(): Promise<TtsProvider> {
@@ -102,14 +118,17 @@ export class TextToSpeechService {
     this.isSpeaking = true
 
     return new Promise(resolve => {
+      this.resolveSpeaking = resolve
       this.utterance.onend = () => {
         this.isSpeaking = false
         this.utterance = undefined
+        this.resolveSpeaking = null
         resolve()
       }
       this.utterance.onerror = () => {
         this.isSpeaking = false
         this.utterance = undefined
+        this.resolveSpeaking = null
         resolve()
       }
       window.speechSynthesis.speak(this.utterance)

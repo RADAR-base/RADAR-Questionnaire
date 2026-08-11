@@ -32,6 +32,11 @@ import {
   QuestionType,
   RequiredField
 } from '../../../shared/models/question'
+
+const TTS_SELF_MANAGED_TYPES: Set<string> = new Set([
+  QuestionType.guided_audio,
+  QuestionType.audio
+])
 import { Task } from '../../../shared/models/task'
 import { AppLauncherService } from '../services/app-launcher.service'
 import { QuestionsService } from '../services/questions.service'
@@ -117,6 +122,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
     private remoteConfig: RemoteConfigService
   ) {
     this.backButtonListener = this.platform.backButton.subscribe(() => {
+      this.stopReadAloud()
       this.sendCompletionLog()
       navigator['app'].exitApp()
     })
@@ -221,6 +227,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
   }
 
   handleFinish() {
+    this.stopReadAloud()
     this.navCtrl.navigateRoot('/home')
   }
 
@@ -345,6 +352,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
   }
 
   exitQuestionnaire() {
+    this.stopReadAloud()
     this.sendEvent(UsageEventType.QUESTIONNAIRE_CANCELLED)
     this.navCtrl.navigateBack('/home')
   }
@@ -513,6 +521,10 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
     if (!this.isAutoReadAloudEnabled || !this.isReadAloudAvailable) return
     const currentQuestions = this.getCurrentQuestions()
     if (!currentQuestions?.length) return
+
+    // Skip auto-read for question types that manage their own TTS
+    if (currentQuestions.some(q => TTS_SELF_MANAGED_TYPES.has(q.field_type)))
+      return
 
     const textToRead = currentQuestions
       .map(q => this.stripHtml(q.field_label || ''))

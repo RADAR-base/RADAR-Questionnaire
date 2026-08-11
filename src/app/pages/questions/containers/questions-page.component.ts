@@ -106,6 +106,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
   isReadAloudAvailable = false
   isReadAloudActive = false
   isAutoReadAloudEnabled = false
+  private readAloudConfigReady: Promise<void>
   private autoReadAloudEnabledKey = new ConfigKeys(
     'text_to_speech_auto_readaloud_enabled'
   )
@@ -139,7 +140,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    void this.initReadAloudConfig()
+    this.readAloudConfigReady = this.initReadAloudConfig()
     const nav = this.router.getCurrentNavigation()
     if (nav) {
       this.task = nav.extras.state as Task
@@ -520,14 +521,11 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
       .finally(() => (this.isReadAloudActive = false))
   }
 
-  private autoReadAloudCurrentQuestion() {
+  private async autoReadAloudCurrentQuestion() {
+    await this.readAloudConfigReady
     if (!this.isAutoReadAloudEnabled || !this.isReadAloudAvailable) return
     const currentQuestions = this.getCurrentQuestions()
     if (!currentQuestions?.length) return
-
-    // Skip auto-read for question types that manage their own TTS
-    if (currentQuestions.some(q => TTS_SELF_MANAGED_TYPES.has(q.field_type)))
-      return
 
     const strip = (v: string) => this.stripHtml(v || '').replace(/\s+/g, ' ').trim()
     const parts: string[] = []
@@ -536,6 +534,10 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
     if (sectionHeader) parts.push(sectionHeader)
 
     for (const q of currentQuestions) {
+      // Skip field_label and choices for types that manage their own TTS
+      // (the component reads the label itself after waitForCompletion)
+      if (TTS_SELF_MANAGED_TYPES.has(q.field_type)) continue
+
       const label = strip(q.field_label)
       if (label) parts.push(label)
       if (q.select_choices_or_calculations?.length) {

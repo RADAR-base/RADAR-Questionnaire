@@ -14,10 +14,31 @@ export class TextToSpeechService {
   private resolveSpeaking: (() => void) | null = null
   private utterance: SpeechSynthesisUtterance | undefined
   private cachedVoice: number | undefined
+  private initReady: Promise<void>
   private readonly providerKey = new ConfigKeys('text_to_speech_provider')
   private readonly enabledKey = new ConfigKeys('text_to_speech_enabled')
 
-  constructor(private remoteConfig: RemoteConfigService) { }
+  constructor(private remoteConfig: RemoteConfigService) {}
+
+  /** Initialise the TTS engine early so the first speak() call isn't slow. */
+  init(): Promise<void> {
+    if (!this.initReady) {
+      this.initReady = this.doInit()
+    }
+    return this.initReady
+  }
+
+  private async doInit(): Promise<void> {
+    if (!Capacitor.isNativePlatform()) return
+    try {
+      let { voices } = await TextToSpeech.getSupportedVoices()
+      // On a fresh install the OS may not have loaded voices yet — retry once.
+      if (!voices?.length) {
+        await new Promise(r => setTimeout(r, 2000))
+        ;({ voices } = await TextToSpeech.getSupportedVoices())
+      }
+    } catch {}
+  }
 
   isSupported(): boolean {
     return Capacitor.isNativePlatform()
@@ -43,6 +64,7 @@ export class TextToSpeechService {
     if (!text?.trim()) return
     const isEnabled = await this.isFeatureEnabled()
     if (!isEnabled) return
+    await this.initReady
 
     this.stop()
     this.isSpeaking = true
@@ -53,20 +75,23 @@ export class TextToSpeechService {
       return this.speakingPromise
     }
 
-    try {
-      const voice = await this.pickBestVoice(lang || 'en')
-      await TextToSpeech.speak({
-        text,
-        lang: lang || 'en-US',
-        rate: 0.6,
-        pitch: 1.0,
-        voice
-      })
-    } catch (e) {
-      // speech was stopped or failed
-    } finally {
-      this.isSpeaking = false
-    }
+    this.speakingPromise = (async () => {
+      try {
+        const voice = await this.pickBestVoice(lang || 'en')
+        await TextToSpeech.speak({
+          text,
+          lang: lang || 'en-US',
+          rate: 0.6,
+          pitch: 1.0,
+          voice
+        })
+      } catch (e) {
+        // speech was stopped or failed
+      } finally {
+        this.isSpeaking = false
+      }
+    })()
+    return this.speakingPromise
   }
 
   stop() {

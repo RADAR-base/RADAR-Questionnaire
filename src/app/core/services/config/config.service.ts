@@ -28,6 +28,7 @@ import { QuestionnaireService } from './questionnaire.service'
 import { RemoteConfigService } from './remote-config.service'
 import { SubjectConfigService } from './subject-config.service'
 import { TokenService } from '../token/token.service'
+import { TextToSpeechService } from '../misc/text-to-speech.service'
 import { HealthkitService } from '../../../pages/tasks/healthkit/services/healthkit.service'
 
 @Injectable({
@@ -50,10 +51,12 @@ export class ConfigService {
     private remoteConfig: RemoteConfigService,
     private messageHandlerService: MessageHandlerService,
     private token: TokenService,
-    private healthkit: HealthkitService
+    private healthkit: HealthkitService,
+    private tts: TextToSpeechService
   ) {
     this.notifications.init()
     this.kafka.init()
+    this.tts.init()
   }
 
   fetchConfigState(force?: boolean) {

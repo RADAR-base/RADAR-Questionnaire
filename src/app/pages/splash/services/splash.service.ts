@@ -6,6 +6,7 @@ import { NotificationService } from '../../../core/services/notifications/notifi
 import { ScheduleService } from '../../../core/services/schedule/schedule.service'
 import { TokenService } from '../../../core/services/token/token.service'
 import { UsageService } from '../../../core/services/usage/usage.service'
+import { AssessmentType } from '../../../shared/models/assessment'
 import { withTimeout, withTimeoutAndDefault } from '../../../shared/utilities/timeout-promise'
 
 const TIMEOUT = {
@@ -16,6 +17,7 @@ const TIMEOUT = {
   SCHEDULE_INIT: 15_000,
   CONFIG_FETCH: 60_000,
   EVAL_ENROLMENT: 45_000,
+  PREFETCH_TASKS: 10_000,
 }
 
 @Injectable({
@@ -90,6 +92,12 @@ export class SplashService {
         this.config.fetchConfigState(),
         TIMEOUT.CONFIG_FETCH,
         'config.fetchConfigState'
+      ))
+      .then(() => withTimeoutAndDefault(
+        this.schedule.getTasksForDate(new Date(), AssessmentType.SCHEDULED),
+        TIMEOUT.PREFETCH_TASKS,
+        undefined,
+        'prefetchTodayTasks'
       ))
   }
 

@@ -47,15 +47,10 @@
         </ion-button>
       </div>
 
-      <!-- Recorded – awaiting confirmation -->
+      <!-- Recorded – done -->
       <div *ngIf="state === 'recorded'" class="state-block">
         <ion-icon name="checkmark-circle-outline" class="done-icon"></ion-icon>
         <p class="recorded-label">{{ 'GUIDED_AUDIO_RECORDED' | translate }}</p>
-        <div class="confirm-buttons">
-          <ion-button class="bt bt--full" (click)="confirmRecording()">
-            {{ 'GUIDED_AUDIO_CONFIRM' | translate }}
-          </ion-button>
-        </div>
       </div>
 
       <!-- Idle – manual start -->

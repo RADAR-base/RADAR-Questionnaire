@@ -78,9 +78,7 @@ export class AudioInputComponent implements OnDestroy, OnInit {
     } else {
       this.stopRecording().catch(e => this.showTaskInterruptedAlert())
       this.onRecordStart.emit(false)
-      if (this.recordAttempts == DefaultMaxAudioAttemptsAllowed)
-        this.finishRecording()
-      else this.showAfterAttemptAlert()
+      this.finishRecording()
     }
   }
 
@@ -131,32 +129,4 @@ export class AudioInputComponent implements OnDestroy, OnInit {
     })
   }
 
-  showAfterAttemptAlert() {
-    const attemptsLeft = DefaultMaxAudioAttemptsAllowed - this.recordAttempts
-    this.alertService.showAlert({
-      header: this.translate.transform(
-        LocKeys.AUDIO_TASK_HAPPY_ALERT.toString()
-      ),
-      message:
-        this.translate.transform(LocKeys.AUDIO_TASK_ATTEMPT_ALERT.toString()) +
-        ': ' +
-        attemptsLeft,
-      buttons: [
-        {
-          text: this.translate.transform(LocKeys.BTN_YES.toString()),
-          handler: () => {
-            this.finishRecording()
-          }
-        },
-        {
-          text:
-            this.translate.transform(LocKeys.BTN_NO.toString()) +
-            ', ' +
-            this.translate.transform(LocKeys.BTN_TRY_AGAIN.toString()),
-          handler: () => {}
-        }
-      ],
-      backdropDismiss: false
-    })
-  }
 }

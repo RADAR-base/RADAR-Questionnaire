@@ -96,6 +96,12 @@ export class AudioRecordService {
     return `data:${mimeType};${this.encoding},${data}`
   }
 
+  requestPermission(): Promise<boolean> {
+    return VoiceRecorder.requestAudioRecordingPermission()
+      .then((result: GenericResponse) => result.value)
+      .catch(() => false)
+  }
+
   getIsRecording() {
     return this.isRecording
   }

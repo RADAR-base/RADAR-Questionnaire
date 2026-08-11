@@ -1,7 +1,7 @@
 {
   "name": "radar-questionnaire",
   "description": "An application that collects active data for research.",
-  "version": "3.3.16",
+  "version": "3.3.17",
   "author": "RADAR Base",
   "homepage": "http://www.radar-base.org/",
   "scripts": {
@@ -52,6 +52,7 @@
     "@capacitor-community/generic-oauth2": "^6.1.0",
     "@capacitor-community/http": "github:mpgxvii/capacitor-http",
     "@capacitor-community/keep-awake": "^4.0.0",
+    "@capacitor-community/text-to-speech": "^8.0.2",
     "@capacitor-firebase/analytics": "^8.2.0",
     "@capacitor-firebase/messaging": "^8.2.0",
     "@capacitor-firebase/remote-config": "^8.2.0",

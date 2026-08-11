@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -32,7 +33,8 @@ export type GuidedAudioState =
 @Component({
   selector: 'guided-audio-input',
   templateUrl: 'guided-audio-input.component.html',
-  styleUrls: ['guided-audio-input.component.scss']
+  styleUrls: ['guided-audio-input.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GuidedAudioInputComponent implements OnInit, OnChanges, OnDestroy {
   private readonly AUTO_TTS_START_DELAY_MS = 1000
@@ -67,8 +69,8 @@ export class GuidedAudioInputComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private get isAutoRecordEnabled(): boolean {
-    const autoRecordAfterTts = (this.config as any)?.auto_record_after_tts
-    return autoRecordAfterTts === true || autoRecordAfterTts === 'true' || autoRecordAfterTts === 1
+    const val: unknown = this.config?.auto_record_after_tts
+    return val === true || val === 'true' || val === 1
   }
 
   private recordingTimer: ReturnType<typeof setInterval>
@@ -233,13 +235,14 @@ export class GuidedAudioInputComponent implements OnInit, OnChanges, OnDestroy {
         if (this.isDestroyed) return
         this.state = 'recorded'
         this.ref.markForCheck()
+        this.confirmRecording()
       })
       .catch(() => {
         if (!this.isDestroyed) this.showInterruptedAlert()
       })
   }
 
-  confirmRecording() {
+  private confirmRecording() {
     this.valueChange.emit(this.audioRecordService.getFormattedAudioData())
   }
 

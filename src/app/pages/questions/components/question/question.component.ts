@@ -261,10 +261,31 @@ export class QuestionComponent implements OnInit, OnChanges {
   }
 
   onReadAloudTap() {
-    if (!this.isReadAloudAvailable || !this.content?.nativeElement) return
-    const text = this.content.nativeElement.innerText
-      .replace(/\s+/g, ' ')
-      .trim()
+    if (!this.isReadAloudAvailable) return
+    const strip = (v: string) => {
+      const doc = new DOMParser().parseFromString(v || '', 'text/html')
+      return (doc.body.textContent || '').trim()
+    }
+    const parts: string[] = []
+    const sectionText = strip(this.question?.section_header)
+    const labelText = strip(this.question?.field_label)
+    if (sectionText) parts.push(sectionText)
+    if (labelText) parts.push(labelText)
+    if (this.question?.select_choices_or_calculations?.length) {
+      const isImageOnly = this.question.select_choices_or_calculations.every(
+        c => c.label?.startsWith('img:') && !c.label.includes('|')
+      )
+      if (!isImageOnly) {
+        const choices = this.question.select_choices_or_calculations
+          .map(c => c.label?.startsWith('img:')
+            ? strip((c.label.split('|')[1] || ''))
+            : strip(c.label))
+          .filter(Boolean)
+        if (choices.length) parts.push(choices.join(', '))
+      }
+    }
+    if (!parts.length) return
+    const text = parts.join('. ')
     this.readAloud.emit(text)
   }
 

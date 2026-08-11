@@ -20,11 +20,15 @@ export class StorageKeys {
   static CONFIG_CLINICAL_ASSESSMENTS = new StorageKeys(
     'CONFIG_CLINICAL_ASSESSMENTS'
   )
+  static CONFIG_TRIGGERED_ASSESSMENTS = new StorageKeys(
+    'CONFIG_TRIGGERED_ASSESSMENTS'
+  )
   static SCHEDULE_VERSION = new StorageKeys('SCHEDULE_VERSION')
   static SCHEDULE_HASH_URL = new StorageKeys('SCHEDULE_HASH_URL')
   static SCHEDULE_TASKS = new StorageKeys('SCHEDULE_TASKS')
   static SCHEDULE_TASKS_ON_DEMAND = new StorageKeys('SCHEDULE_TASKS_ON_DEMAND')
   static SCHEDULE_TASKS_CLINICAL = new StorageKeys('SCHEDULE_TASKS_CLINICAL')
+  static SCHEDULE_TASKS_TRIGGERED = new StorageKeys('SCHEDULE_TASKS_TRIGGERED')
 
   // NOTE: SCHEDULE_TASKS_COMPLETED: All completed tasks from midnight of last schedule generation date
   static SCHEDULE_TASKS_COMPLETED = new StorageKeys('SCHEDULE_TASKS_COMPLETED')

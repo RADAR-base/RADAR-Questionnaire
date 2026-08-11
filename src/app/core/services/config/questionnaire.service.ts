@@ -25,7 +25,8 @@ export class QuestionnaireService {
   private readonly QUESTIONNAIRE_STORE = {
     CONFIG_ASSESSMENTS: StorageKeys.CONFIG_ASSESSMENTS,
     CONIFG_ON_DEMAND_ASSESSMENTS: StorageKeys.CONFIG_ON_DEMAND_ASSESSMENTS,
-    CONFIG_CLINICAL_ASSESSMENTS: StorageKeys.CONFIG_CLINICAL_ASSESSMENTS
+    CONFIG_CLINICAL_ASSESSMENTS: StorageKeys.CONFIG_CLINICAL_ASSESSMENTS,
+    CONFIG_TRIGGERED_ASSESSMENTS: StorageKeys.CONFIG_TRIGGERED_ASSESSMENTS
   }
   LANG_EN = 'en'
 
@@ -140,6 +141,9 @@ export class QuestionnaireService {
       (!a.type && a.protocol.clinicalProtocol)
     )
       return AssessmentType.CLINICAL
+
+    if (a.type == AssessmentType.TRIGGERED)
+      return AssessmentType.TRIGGERED
   }
 
   updateAssessment(type: AssessmentType, assessment: Assessment) {
@@ -154,9 +158,17 @@ export class QuestionnaireService {
   }
 
   getAssessmentForTask(type: AssessmentType, task: Task) {
-    return this.getAssessments(type).then(assessments =>
-      assessments.find(a => a.name === task.name)
-    )
+    return this.getAssessments(type).then(assessments => {
+      const found = (assessments || []).find(a => a.name === task.name)
+      if (found) return found
+      // Triggered tasks may have their definition stored under SCHEDULED
+      if (type === AssessmentType.TRIGGERED) {
+        return this.getAssessments(AssessmentType.SCHEDULED).then(
+          scheduled => (scheduled || []).find(a => a.name === task.name)
+        )
+      }
+      return undefined
+    })
   }
 
   getAssessments(type) {
@@ -185,6 +197,8 @@ export class QuestionnaireService {
         return this.QUESTIONNAIRE_STORE.CONIFG_ON_DEMAND_ASSESSMENTS
       case AssessmentType.CLINICAL:
         return this.QUESTIONNAIRE_STORE.CONFIG_CLINICAL_ASSESSMENTS
+      case AssessmentType.TRIGGERED:
+        return this.QUESTIONNAIRE_STORE.CONFIG_TRIGGERED_ASSESSMENTS
       case AssessmentType.SCHEDULED:
       default:
         return this.QUESTIONNAIRE_STORE.CONFIG_ASSESSMENTS
@@ -207,7 +221,8 @@ export class QuestionnaireService {
     return Promise.all([
       this.setAssessments(AssessmentType.ON_DEMAND, []),
       this.setAssessments(AssessmentType.CLINICAL, []),
-      this.setAssessments(AssessmentType.SCHEDULED, [])
+      this.setAssessments(AssessmentType.SCHEDULED, []),
+      this.setAssessments(AssessmentType.TRIGGERED, [])
     ])
   }
 }

@@ -77,11 +77,11 @@ export class MessageHandlerService implements OnDestroy {
         UsageEventType.QUESTIONNAIRE_TRIGGER_DEFINITION_PULL_SUCCESS
       )
       return this.questionnaireService
-        .addToAssessments(AssessmentType.SCHEDULED, questionnaireWithDef)
+        .addToAssessments(AssessmentType.TRIGGERED, questionnaireWithDef)
         .then(() =>
           this.schedule.generateSingleAssessmentTask(
             questionnaireWithDef,
-            AssessmentType.SCHEDULED,
+            AssessmentType.TRIGGERED,
             refTimestamp
           )
         )

@@ -21,6 +21,7 @@ export abstract class ScheduleService {
     SCHEDULE_TASKS: StorageKeys.SCHEDULE_TASKS,
     SCHEDULE_TASKS_ON_DEMAND: StorageKeys.SCHEDULE_TASKS_ON_DEMAND,
     SCHEDULE_TASKS_CLINICAL: StorageKeys.SCHEDULE_TASKS_CLINICAL,
+    SCHEDULE_TASKS_TRIGGERED: StorageKeys.SCHEDULE_TASKS_TRIGGERED,
     SCHEDULE_TASKS_COMPLETED: StorageKeys.SCHEDULE_TASKS_COMPLETED
   }
   changeDetectionEmitter: EventEmitter<void> = new EventEmitter<void>()
@@ -54,15 +55,19 @@ export abstract class ScheduleService {
         return this.getOnDemandTasks()
       case AssessmentType.CLINICAL:
         return this.getClinicalTasks()
+      case AssessmentType.TRIGGERED:
+        return this.getTriggeredTasks()
       case AssessmentType.ALL:
         return Promise.all([
           this.getScheduledTasks(),
           this.getClinicalTasks(),
-          this.getOnDemandTasks()
-        ]).then(([scheduledTasks, clinicalTasks, onDemandTasks]) => {
+          this.getOnDemandTasks(),
+          this.getTriggeredTasks()
+        ]).then(([scheduledTasks, clinicalTasks, onDemandTasks, triggeredTasks]) => {
           const allTasks = (scheduledTasks || [])
             .concat(onDemandTasks || [])
             .concat(clinicalTasks || [])
+            .concat(triggeredTasks || [])
           allTasks.forEach(t => {
             if (t.notifications === undefined) {
               t.notifications = []
@@ -83,6 +88,10 @@ export abstract class ScheduleService {
 
   getClinicalTasks(): Promise<Task[]> {
     return this.storage.get(this.SCHEDULE_STORE.SCHEDULE_TASKS_CLINICAL)
+  }
+
+  getTriggeredTasks(): Promise<Task[]> {
+    return this.storage.get(this.SCHEDULE_STORE.SCHEDULE_TASKS_TRIGGERED)
   }
 
   getCompletedTasks(): Promise<Task[]> {
@@ -128,6 +137,8 @@ export abstract class ScheduleService {
         return this.setOnDemandTasks(uniqueTasks)
       case AssessmentType.CLINICAL:
         return this.setClinicalTasks(uniqueTasks)
+      case AssessmentType.TRIGGERED:
+        return this.setTriggeredTasks(uniqueTasks)
     }
   }
 
@@ -148,6 +159,10 @@ export abstract class ScheduleService {
 
   setClinicalTasks(tasks) {
     return this.storage.set(this.SCHEDULE_STORE.SCHEDULE_TASKS_CLINICAL, tasks)
+  }
+
+  setTriggeredTasks(tasks) {
+    return this.storage.set(this.SCHEDULE_STORE.SCHEDULE_TASKS_TRIGGERED, tasks)
   }
 
   setScheduledTasks(tasks) {
@@ -187,6 +202,7 @@ export abstract class ScheduleService {
       this.setClinicalTasks([]),
       this.setOnDemandTasks([]),
       this.setScheduledTasks([]),
+      this.setTriggeredTasks([]),
       this.setCompletedTasks([])
     ])
   }

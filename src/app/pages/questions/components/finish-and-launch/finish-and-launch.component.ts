@@ -64,7 +64,7 @@ export class FinishAndLaunchComponent implements OnInit, OnChanges {
 
   ngOnChanges() {
     this.displayNextTaskReminder =
-      this.taskType == AssessmentType.SCHEDULED && !this.isLastTask
+      (this.taskType == AssessmentType.SCHEDULED || this.taskType == AssessmentType.TRIGGERED) && !this.isLastTask
     if (this.isShown) {
       this.usage.setPage(this.constructor.name)
       setTimeout(() => (this.showDoneButton = true), 15000)

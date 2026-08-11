@@ -145,7 +145,10 @@ export class GuidedAudioInputComponent implements OnInit, OnChanges, OnDestroy {
 
   // ─── TTS ────────────────────────────────────────────────────────────────────
 
-  private playPrompt() {
+  private async playPrompt() {
+    // Wait for any in-progress TTS (e.g. auto-read-aloud) to finish first
+    await this.textToSpeechService.waitForCompletion()
+    if (this.isDestroyed || !this.currentlyShown) return
     if (this.config?.prompt_audio_src) {
       this.playPromptAudio(this.config.prompt_audio_src)
       return

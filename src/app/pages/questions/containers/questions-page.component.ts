@@ -13,13 +13,11 @@ import { Observable, Subscription } from 'rxjs'
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { TextToSpeechService } from '../../../core/services/misc/text-to-speech.service'
-import { RemoteConfigService } from '../../../core/services/config/remote-config.service'
 import { UsageService } from '../../../core/services/usage/usage.service'
 import {
   NextButtonEventType,
   UsageEventType
 } from '../../../shared/enums/events'
-import { ConfigKeys } from '../../../shared/enums/config'
 import { LocKeys } from '../../../shared/enums/localisations'
 import {
   Assessment,
@@ -105,11 +103,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
   showProgressCount: Promise<boolean>
   isReadAloudAvailable = false
   isReadAloudActive = false
-  isAutoReadAloudEnabled = false
   private readAloudConfigReady: Promise<void>
-  private autoReadAloudEnabledKey = new ConfigKeys(
-    'text_to_speech_auto_readaloud_enabled'
-  )
 
   constructor(
     public navCtrl: NavController,
@@ -121,7 +115,6 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
     private appLauncher: AppLauncherService,
     private alertService: AlertService,
     private textToSpeechService: TextToSpeechService,
-    private remoteConfig: RemoteConfigService,
     private audioRecordService: AudioRecordService
   ) {
     this.backButtonListener = this.platform.backButton.subscribe(() => {
@@ -523,9 +516,12 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
 
   private async autoReadAloudCurrentQuestion() {
     await this.readAloudConfigReady
-    if (!this.isAutoReadAloudEnabled || !this.isReadAloudAvailable) return
+    if (!this.isReadAloudAvailable) return
     const currentQuestions = this.getCurrentQuestions()
     if (!currentQuestions?.length) return
+    // Only auto-read for guided_audio questions; other types use the mic icon
+    if (!currentQuestions.some(q => q.field_type === QuestionType.guided_audio))
+      return
 
     const strip = (v: string) => this.stripHtml(v || '').replace(/\s+/g, ' ').trim()
     const parts: string[] = []
@@ -578,14 +574,6 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
 
   private async initReadAloudConfig() {
     this.isReadAloudAvailable = await this.textToSpeechService.isReadAloudAvailable()
-    const conf = await this.remoteConfig.read()
-    const autoReadAloud = (
-      await conf.getOrDefault(this.autoReadAloudEnabledKey, 'false')
-    )
-      .trim()
-      .toLowerCase()
-    this.isAutoReadAloudEnabled =
-      autoReadAloud === 'true' || autoReadAloud === '1' || autoReadAloud === 'yes'
   }
 
   private stopReadAloud() {

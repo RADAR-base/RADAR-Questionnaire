@@ -76,9 +76,12 @@ export class AudioInputComponent implements OnDestroy, OnInit {
       if (this.recordAttempts <= DefaultMaxAudioAttemptsAllowed)
         this.startRecording().catch(e => this.showTaskInterruptedAlert())
     } else {
-      this.stopRecording().catch(e => this.showTaskInterruptedAlert())
-      this.onRecordStart.emit(false)
-      this.finishRecording()
+      this.stopRecording()
+        .then(() => {
+          this.onRecordStart.emit(false)
+          this.showRetryOrSubmitAlert()
+        })
+        .catch(() => this.showTaskInterruptedAlert())
     }
   }
 
@@ -108,6 +111,33 @@ export class AudioInputComponent implements OnDestroy, OnInit {
         ? LocKeys.BTN_STOP.toString()
         : LocKeys.BTN_START.toString()
     )
+  }
+
+  showRetryOrSubmitAlert() {
+    const buttons: any[] = [
+      {
+        text: this.translate.transform(LocKeys.GUIDED_AUDIO_CONFIRM.toString()),
+        handler: () => {
+          this.finishRecording()
+        }
+      }
+    ]
+    if (this.recordAttempts < DefaultMaxAudioAttemptsAllowed) {
+      buttons.push({
+        text: this.translate.transform(LocKeys.GUIDED_AUDIO_RETRY.toString()),
+        handler: () => {
+          this.startRecording().catch(() => this.showTaskInterruptedAlert())
+        }
+      })
+    } else {
+      this.finishRecording()
+      return
+    }
+    this.alertService.showAlert({
+      header: this.translate.transform(LocKeys.GUIDED_AUDIO_RECORDED.toString()),
+      buttons,
+      backdropDismiss: false
+    })
   }
 
   showTaskInterruptedAlert() {

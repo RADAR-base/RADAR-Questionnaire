@@ -16,11 +16,13 @@
             ion-button
             class="bt bt--full"
             [class.bt-stop]="isRecording()"
+            [disabled]="isStarting"
             round
             full
             (click)="handleRecording()"
           >
-            {{ getRecordingButtonText() }}
+            <ion-spinner *ngIf="isStarting" name="crescent"></ion-spinner>
+            <span *ngIf="!isStarting">{{ getRecordingButtonText() }}</span>
           </ion-button>
         </ng-container>
       </div>

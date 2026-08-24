@@ -10,10 +10,35 @@ import { RemoteConfigService } from '../config/remote-config.service'
 })
 export class TextToSpeechService {
   private isSpeaking = false
+  private speakingPromise: Promise<void> = Promise.resolve()
+  private resolveSpeaking: (() => void) | null = null
+  private utterance: SpeechSynthesisUtterance | undefined
   private cachedVoice: number | undefined
+  private initReady: Promise<void>
+  private readonly providerKey = new ConfigKeys('text_to_speech_provider')
   private readonly enabledKey = new ConfigKeys('text_to_speech_enabled')
 
-  constructor(private remoteConfig: RemoteConfigService) { }
+  constructor(private remoteConfig: RemoteConfigService) {}
+
+  /** Initialise the TTS engine early so the first speak() call isn't slow. */
+  init(): Promise<void> {
+    if (!this.initReady) {
+      this.initReady = this.doInit()
+    }
+    return this.initReady
+  }
+
+  private async doInit(): Promise<void> {
+    if (!Capacitor.isNativePlatform()) return
+    try {
+      let { voices } = await TextToSpeech.getSupportedVoices()
+      // On a fresh install the OS may not have loaded voices yet — retry once.
+      if (!voices?.length) {
+        await new Promise(r => setTimeout(r, 2000))
+        ;({ voices } = await TextToSpeech.getSupportedVoices())
+      }
+    } catch {}
+  }
 
   isSupported(): boolean {
     return Capacitor.isNativePlatform()
@@ -21,6 +46,11 @@ export class TextToSpeechService {
 
   getSpeakingState(): boolean {
     return this.isSpeaking
+  }
+
+  /** Resolves when any in-progress speech finishes. */
+  waitForCompletion(): Promise<void> {
+    return this.speakingPromise
   }
 
   async isReadAloudAvailable(): Promise<boolean> {
@@ -34,30 +64,47 @@ export class TextToSpeechService {
     if (!text?.trim()) return
     const isEnabled = await this.isFeatureEnabled()
     if (!isEnabled) return
+    await this.initReady
 
     this.stop()
     this.isSpeaking = true
 
-    try {
-      const voice = await this.pickBestVoice(lang || 'en')
-      await TextToSpeech.speak({
-        text,
-        lang: lang || 'en-US',
-        rate: 0.6,
-        pitch: 1.0,
-        voice
-      })
-    } catch (e) {
-      // speech was stopped or failed
-    } finally {
-      this.isSpeaking = false
+    const provider = await this.getProvider()
+    if (provider === 'browser') {
+      this.speakingPromise = this.speakBrowser(text, lang)
+      return this.speakingPromise
     }
+
+    this.speakingPromise = (async () => {
+      try {
+        const voice = await this.pickBestVoice(lang || 'en')
+        await TextToSpeech.speak({
+          text,
+          lang: lang || 'en-US',
+          rate: 0.6,
+          pitch: 1.0,
+          voice
+        })
+      } catch (e) {
+        // speech was stopped or failed
+      } finally {
+        this.isSpeaking = false
+      }
+    })()
+    return this.speakingPromise
   }
 
   stop() {
     if (!this.isSupported()) return
     TextToSpeech.stop().catch(() => { })
+    window.speechSynthesis?.cancel()
     this.isSpeaking = false
+    // Resolve any pending speakingPromise so waitForCompletion() callers
+    // are unblocked even if the browser never fires onend/onerror after cancel().
+    if (this.resolveSpeaking) {
+      this.resolveSpeaking()
+      this.resolveSpeaking = null
+    }
   }
 
   private async pickBestVoice(lang: string): Promise<number | undefined> {
@@ -178,5 +225,61 @@ export class TextToSpeechService {
     const conf = await this.remoteConfig.read()
     const enabled = (await conf.getOrDefault(this.enabledKey, 'true')).trim().toLowerCase()
     return enabled !== 'false' && enabled !== '0' && enabled !== 'no'
+  }
+
+  private async getProvider(): Promise<string> {
+    const conf = await this.remoteConfig.read()
+    return (await conf.getOrDefault(this.providerKey, 'native')).trim().toLowerCase()
+  }
+
+  private pickVoice(lang?: string): SpeechSynthesisVoice | null {
+    const voices = window.speechSynthesis.getVoices()
+    if (!voices.length) return null
+
+    // Prefer higher-quality voices (neural / enhanced / Google)
+    const qualityKeywords = ['neural', 'enhanced', 'premium', 'natural', 'google']
+    const matchesLang = (v: SpeechSynthesisVoice) =>
+      !lang || v.lang.toLowerCase().startsWith(lang.toLowerCase().split('-')[0])
+
+    const candidates = voices.filter(matchesLang)
+    const pool = candidates.length ? candidates : voices
+
+    for (const keyword of qualityKeywords) {
+      const match = pool.find(v => v.name.toLowerCase().includes(keyword))
+      if (match) return match
+    }
+
+    return pool.find(v => v.default) || pool[0] || null
+  }
+
+  private speakBrowser(text: string, lang?: string): Promise<void> {
+    if (!this.isSupported()) return Promise.resolve()
+
+    this.utterance = new SpeechSynthesisUtterance(text)
+    if (lang) this.utterance.lang = lang
+
+    const voice = this.pickVoice(lang)
+    if (voice) this.utterance.voice = voice
+
+    this.utterance.rate = 0.9
+    this.utterance.pitch = 0.85
+    this.isSpeaking = true
+
+    return new Promise(resolve => {
+      this.resolveSpeaking = resolve
+      this.utterance.onend = () => {
+        this.isSpeaking = false
+        this.utterance = undefined
+        this.resolveSpeaking = null
+        resolve()
+      }
+      this.utterance.onerror = () => {
+        this.isSpeaking = false
+        this.utterance = undefined
+        this.resolveSpeaking = null
+        resolve()
+      }
+      window.speechSynthesis.speak(this.utterance)
+    })
   }
 }

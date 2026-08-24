@@ -193,9 +193,10 @@ export class ScheduleGeneratorService {
     if (completedTasks && completedTasks.length > 0) {
       // NOTE: If utcOffsetPrev exists, timezone has changed
       const currentMidnight = setDateTimeToMidnightEpoch(new Date())
+      const currentOffset = new Date().getTimezoneOffset()
       const prevMidnight = advanceRepeat(currentMidnight, {
         unit: 'min',
-        amount: utcOffsetPrev
+        amount: utcOffsetPrev - currentOffset
       })
       completedTasks.map(d => {
         const task = schedule.find(

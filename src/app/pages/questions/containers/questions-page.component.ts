@@ -13,13 +13,11 @@ import { Observable, Subscription } from 'rxjs'
 import { AlertService } from '../../../core/services/misc/alert.service'
 import { LocalizationService } from '../../../core/services/misc/localization.service'
 import { TextToSpeechService } from '../../../core/services/misc/text-to-speech.service'
-import { RemoteConfigService } from '../../../core/services/config/remote-config.service'
 import { UsageService } from '../../../core/services/usage/usage.service'
 import {
   NextButtonEventType,
   UsageEventType
 } from '../../../shared/enums/events'
-import { ConfigKeys } from '../../../shared/enums/config'
 import { LocKeys } from '../../../shared/enums/localisations'
 import {
   Assessment,
@@ -32,6 +30,11 @@ import {
   QuestionType,
   RequiredField
 } from '../../../shared/models/question'
+
+const TTS_SELF_MANAGED_TYPES: Set<string> = new Set([
+  QuestionType.guided_audio,
+  QuestionType.audio
+])
 import { Task } from '../../../shared/models/task'
 import { AppLauncherService } from '../services/app-launcher.service'
 import { AudioRecordService } from '../services/audio-record.service'
@@ -100,10 +103,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
   showProgressCount: Promise<boolean>
   isReadAloudAvailable = false
   isReadAloudActive = false
-  isAutoReadAloudEnabled = false
-  private autoReadAloudEnabledKey = new ConfigKeys(
-    'text_to_speech_auto_readaloud_enabled'
-  )
+  private readAloudConfigReady: Promise<void>
 
   constructor(
     public navCtrl: NavController,
@@ -115,10 +115,10 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
     private appLauncher: AppLauncherService,
     private alertService: AlertService,
     private textToSpeechService: TextToSpeechService,
-    private remoteConfig: RemoteConfigService,
     private audioRecordService: AudioRecordService
   ) {
     this.backButtonListener = this.platform.backButton.subscribe(() => {
+      this.stopReadAloud()
       this.sendCompletionLog()
       navigator['app'].exitApp()
     })
@@ -133,7 +133,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    void this.initReadAloudConfig()
+    this.readAloudConfigReady = this.initReadAloudConfig()
     const nav = this.router.getCurrentNavigation()
     if (nav) {
       this.task = nav.extras.state as Task
@@ -224,6 +224,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
   }
 
   handleFinish() {
+    this.stopReadAloud()
     this.navCtrl.navigateRoot('/home')
   }
 
@@ -348,6 +349,7 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
   }
 
   exitQuestionnaire() {
+    this.stopReadAloud()
     this.sendEvent(UsageEventType.QUESTIONNAIRE_CANCELLED)
     this.navCtrl.navigateBack('/home')
   }
@@ -512,10 +514,14 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
       .finally(() => (this.isReadAloudActive = false))
   }
 
-  private autoReadAloudCurrentQuestion() {
-    if (!this.isAutoReadAloudEnabled || !this.isReadAloudAvailable) return
+  private async autoReadAloudCurrentQuestion() {
+    await this.readAloudConfigReady
+    if (!this.isReadAloudAvailable) return
     const currentQuestions = this.getCurrentQuestions()
     if (!currentQuestions?.length) return
+    // Only auto-read for guided_audio questions; other types use the mic icon
+    if (!currentQuestions.some(q => q.field_type === QuestionType.guided_audio))
+      return
 
     const strip = (v: string) => this.stripHtml(v || '').replace(/\s+/g, ' ').trim()
     const parts: string[] = []
@@ -524,6 +530,10 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
     if (sectionHeader) parts.push(sectionHeader)
 
     for (const q of currentQuestions) {
+      // Skip field_label and choices for types that manage their own TTS
+      // (the component reads the label itself after waitForCompletion)
+      if (TTS_SELF_MANAGED_TYPES.has(q.field_type)) continue
+
       const label = strip(q.field_label)
       if (label) parts.push(label)
       if (q.select_choices_or_calculations?.length) {
@@ -564,14 +574,6 @@ export class QuestionsPageComponent implements OnInit, OnDestroy {
 
   private async initReadAloudConfig() {
     this.isReadAloudAvailable = await this.textToSpeechService.isReadAloudAvailable()
-    const conf = await this.remoteConfig.read()
-    const autoReadAloud = (
-      await conf.getOrDefault(this.autoReadAloudEnabledKey, 'false')
-    )
-      .trim()
-      .toLowerCase()
-    this.isAutoReadAloudEnabled =
-      autoReadAloud === 'true' || autoReadAloud === '1' || autoReadAloud === 'yes'
   }
 
   private stopReadAloud() {

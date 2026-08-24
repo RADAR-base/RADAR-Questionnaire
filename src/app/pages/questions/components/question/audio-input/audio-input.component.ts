@@ -34,6 +34,7 @@ export class AudioInputComponent implements OnDestroy, OnInit {
 
   recordAttempts = 0
   buttonShown = true
+  isStarting = false
   pauseListener: Subscription
   showInfoCard: boolean
   textLengthThreshold = 400
@@ -71,10 +72,11 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   }
 
   handleRecording() {
+    if (this.isStarting) return
     if (!this.isRecording()) {
       this.recordAttempts++
       if (this.recordAttempts <= DefaultMaxAudioAttemptsAllowed)
-        this.startRecording().catch(e => this.showTaskInterruptedAlert())
+        this.startRecording().catch(() => this.showTaskInterruptedAlert())
     } else {
       this.stopRecording()
         .then(() => {
@@ -91,9 +93,15 @@ export class AudioInputComponent implements OnDestroy, OnInit {
   }
 
   startRecording() {
+    this.isStarting = true
     this.onRecordStart.emit(true)
     this.usage.sendGeneralEvent(UsageEventType.RECORDING_STARTED, true)
-    return this.audioRecordService.startAudioRecording()
+    return this.audioRecordService.startAudioRecording().then(() => {
+      this.isStarting = false
+    }).catch(error => {
+      this.isStarting = false
+      return Promise.reject(error)
+    })
   }
 
   stopRecording() {

@@ -56,23 +56,15 @@ export class AudioRecordService {
   }
 
   startAudioRecording(): Promise<any> {
-    return new Promise((resolve, reject) => {
-      return VoiceRecorder.requestAudioRecordingPermission().then(
-        (result: GenericResponse) => {
-          return VoiceRecorder.startRecordingWithCompression({
-            sampleRate: this.samplingRate,
-            bitRate: this.bitRate,
-            audioEncoder: this.encoder
-          })
-            .then((result: GenericResponse) => {
-              this.isRecording = true
-            })
-            .catch(error => {
-              this.isRecording = false
-              reject()
-            })
-        }
-      )
+    return VoiceRecorder.startRecordingWithCompression({
+      sampleRate: this.samplingRate,
+      bitRate: this.bitRate,
+      audioEncoder: this.encoder
+    }).then(() => {
+      this.isRecording = true
+    }).catch(error => {
+      this.isRecording = false
+      return Promise.reject(error)
     })
   }
 

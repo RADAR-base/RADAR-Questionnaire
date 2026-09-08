@@ -26,6 +26,9 @@ export const DefaultPackageName = 'org.phidatalab.radar_armt'
 // *Default iOS package name
 export const DefaultIosPackageName = 'org.phidatalab.radar-armt'
 
+// *Default OAuth redirect scheme (must not contain underscores for Hydra compatibility)
+export const DefaultRedirectScheme = 'org.phidatalab.radar-armt'
+
 // *Default iOS app id
 export const DefaultAppId = ''
 
@@ -220,21 +223,14 @@ export const DefaultHydraAuthEndpoint = '/hydra/oauth2/auth'
 export const DefaultHydraTokenEndpoint = '/hydra/oauth2/token'
 
 export const DefaultOryAuthOptions = {
+  appId: DefaultOAuthClientId,
   authorizationBaseUrl: DefaultOryEndpoint + DefaultHydraAuthEndpoint,
   accessTokenEndpoint: DefaultOryEndpoint + DefaultHydraTokenEndpoint,
   scope: DefaultOryScopes,
+  responseType: 'code',
+  redirectUrl: DefaultRedirectScheme + ':/',
   resourceUrl: '',
   logsEnabled: true,
-  android: {
-    appId: DefaultOAuthClientId,
-    responseType: 'code',
-    redirectUrl: DefaultPackageName + ':/'
-  },
-  ios: {
-    appId: DefaultOAuthClientId,
-    responseType: 'code',
-    redirectUrl: DefaultIosPackageName + ':/'
-  },
   additionalParameters: {
     audience: DefaultOryAudience
   }

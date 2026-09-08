@@ -63,7 +63,7 @@ export class FinishComponent implements OnChanges {
     this.showDoneButton = this.progressCount >= 1
 
     this.displayNextTaskReminder =
-      this.taskType == AssessmentType.SCHEDULED && !this.isLastTask
+      (this.taskType == AssessmentType.SCHEDULED || this.taskType == AssessmentType.TRIGGERED) && !this.isLastTask
 
     this.innerText = this.getFinishButtonText(this.progressCount)
     this.shadowStyle = this.getProgressBarStyle(this.progressCount)

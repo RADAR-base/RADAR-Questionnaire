@@ -44,7 +44,7 @@ export abstract class QuestionnaireProcessorService {
         .updateTaskToComplete(task)
         .then(res => this.schedule.updateTaskToReportedCompletion(task))
         .then(res => this.cancelRemindersForTask(task)),
-      task.type == AssessmentType.SCHEDULED
+      task.type == AssessmentType.SCHEDULED || task.type == AssessmentType.TRIGGERED
         ? this.schedule.addToCompletedTasks(task)
         : Promise.resolve()
     ])

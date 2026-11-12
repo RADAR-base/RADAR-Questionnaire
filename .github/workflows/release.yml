@@ -50,7 +50,7 @@ jobs:
           bundler-cache: true
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
 
       # 4. Inject application variables/secrets
       - name: Copy aRMT secrets

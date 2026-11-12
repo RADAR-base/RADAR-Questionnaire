@@ -42,16 +42,17 @@ export class MessageHandlerService implements OnDestroy {
         )
         this.logger.log('A questionnaire was triggered!')
         const questionnaire = <Assessment>JSON.parse(data.get('questionnaire'))
-        const metadata = new Map<string, string>(
-          Object.entries(JSON.parse(data.get('metadata')))
-        )
         return this.triggerQuestionnaire(questionnaire)
           .then(() =>
-            this.usage.sendQuestionnaireEvent(
+            // Firebase only: QUESTIONNAIRE_TRIGGERED is no longer in the
+            // questionnaire_app_event schema, so it cannot be sent to Kafka.
+            this.usage.sendGeneralEvent(
               UsageEventType.QUESTIONNAIRE_TRIGGERED,
-              questionnaire.name,
-              Date.now(),
-              metadata
+              false,
+              {
+                questionnaire_timestamp: String(Date.now()),
+                questionnaire_name: questionnaire.name
+              }
             )
           )
           .catch(e =>
